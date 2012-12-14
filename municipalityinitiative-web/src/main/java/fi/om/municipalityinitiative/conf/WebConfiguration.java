@@ -225,11 +225,16 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
     }
 
     @Bean
-    public  InitiativeController initiativeController() {
+    public InitiativeController initiativeController() {
         return new InitiativeController(
                 optimizeResources(env),
                 resourcesVersion(env),
                 omPiwicId(env));
+    }
+
+    @Bean
+    public KuntalaisaloiteController mcontroller() {
+        return new KuntalaisaloiteController(optimizeResources(env), resourcesVersion(env));
     }
     
     @Bean

@@ -26,9 +26,10 @@ public final class Views {
     public static final String DUMMY_LOGIN_VIEW = "dummy-login";
     
     public static final String VETUMA_LOGIN_VIEW = "vetuma-login";
-    
+
     public static final String SEARCH_VIEW = "search";
-    
+    public static final String SEARCHM_VIEW = "searchm";
+
     public static final String INDEX_VIEW = "index";
 
     public static final String STATUS_VIEW = "status";

@@ -60,8 +60,10 @@ public final class Urls {
     public static final String VIEW_SV = CREATE_SV + "/" + ID_PARAMETER;
     
     public static final String SEARCH_FI =    "/fi/hae";
+    public static final String SEARCHM_FI = "/fi/haem";
     
     public static final String SEARCH_SV =    "/sv/sok";
+    public static final String SEARCHM_SV =     "/sv/sokm";
     
     public static final String MY_ACCOUNT_FI =    "/fi/omat-tiedot";
     
@@ -150,7 +152,7 @@ public final class Urls {
     private final String baseUrl;
     
     private final Locale locale;
-    
+
     public static void initUrls(String baseUrl) {
         FI = new Urls(baseUrl, LOCALE_FI);
         SV = new Urls(baseUrl, LOCALE_SV);
@@ -224,6 +226,10 @@ public final class Urls {
     
     public String search() {
         return getLocalizedPageUrl(SEARCH_FI, SEARCH_SV);
+    }
+
+    public String searchm() {
+        return getLocalizedPageUrl(SEARCHM_FI, SEARCHM_SV);
     }
     
     public String news() {
