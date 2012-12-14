@@ -16,7 +16,7 @@ public class SQLExceptionTranslatorAspect {
         this.translator = translator;
     }
 
-    @AfterThrowing(pointcut="@within(fi.om.initiative.dao.SQLExceptionTranslated) or @annotation(fi.om.initiative.dao.SQLExceptionTranslated)", throwing="ex", argNames="ex")
+    @AfterThrowing(pointcut="@within(fi.om.municipalityinitiative.dao.SQLExceptionTranslated) or @annotation(fi.om.municipalityinitiative.dao.SQLExceptionTranslated)", throwing="ex", argNames="ex")
     public void translateException(JoinPoint jp, RuntimeException ex) {
         Throwable t = ex.getCause();
         if (t instanceof SQLException) {

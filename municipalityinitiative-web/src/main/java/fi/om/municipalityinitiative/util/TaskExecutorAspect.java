@@ -29,7 +29,7 @@ public class TaskExecutorAspect {
         return queueLength.get();
     }
 
-    @Around("execution(public void *(..)) and (@within(fi.om.initiative.util.Task) or @annotation(fi.om.initiative.util.Task))")
+    @Around("execution(public void *(..)) and (@within(fi.om.municipalityinitiative.util.Task) or @annotation(fi.om.municipalityinitiative.util.Task))")
     public void executeTask(final ProceedingJoinPoint pjp) {
         queueLength.incrementAndGet(); // Increment queue when submitting task.
         executorService.execute(new Runnable() {

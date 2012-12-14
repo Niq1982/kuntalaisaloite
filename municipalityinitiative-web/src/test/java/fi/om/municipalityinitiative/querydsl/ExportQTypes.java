@@ -31,7 +31,7 @@ public class ExportQTypes {
         Configuration configuration = ctx.getBean(Configuration.class);
         
         MetaDataExporter exporter = new MetaDataExporter();
-        exporter.setPackageName("fi.om.initiative.sql");
+        exporter.setPackageName("fi.om.municipalityinitiative.sql");
         exporter.setSchemaPattern("initiative");
         exporter.setInnerClassesForKeys(false);
         exporter.setNamePrefix("Q");

@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <!-- The Basics -->
-    <groupId>fi.om.initiative</groupId>
+    <groupId>fi.om.municipalityinitiative</groupId>
     <artifactId>municipalityinitiative-web</artifactId>
     <name>Aloitepalvelu</name>
     <version>1.0.7-SNAPSHOT</version>
