@@ -1,6 +1,6 @@
 # NOTE: Set passwords in ~/.pgpass, e.g.
 # localhost:5432:*:postgres:postgres
-# localhost:5432:*:initest:1nitest
+# localhost:5432:*:muninitest:1nitest
 
 if [ ! -f schema/01_schema.sql ]
 then
@@ -13,30 +13,30 @@ echo "== create_test_schema.sh =="
 export PGCLIENTENCODING="UTF8"
 
 # Drop/create schema 
-psql -U postgres -d initdb <<EOF
-DROP SCHEMA IF EXISTS initest CASCADE;
-DROP USER IF EXISTS initest;
+psql -U postgres -d muninitdb <<EOF
+DROP SCHEMA IF EXISTS muninitest CASCADE;
+DROP USER IF EXISTS muninitest;
 
-CREATE SCHEMA initest;
-CREATE USER initest WITH PASSWORD '1nitest';
+CREATE SCHEMA muninitest;
+CREATE USER muninitest WITH PASSWORD '1nitest';
 \q
 EOF
 
 # Create tables 
-export PGOPTIONS='--client-min-messages=warning --search-path=initest'
+export PGOPTIONS='--client-min-messages=warning --search-path=muninitest'
 
 ls schema/*.sql | sort -f |
   while read file
   do
     echo "-- $file"
-    psql -U postgres -d initdb --single-transaction -f "$file"
+    psql -U postgres -d muninitdb --single-transaction -f "$file"
   done
 
 # Grant required rights
-psql -U postgres -d initdb <<EOF
-GRANT CONNECT, TEMP ON DATABASE initdb TO initest;
-GRANT USAGE ON SCHEMA initest TO initest;
-GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA initest TO initest;
-GRANT ALL ON ALL SEQUENCES IN SCHEMA  initest TO initest;
+psql -U postgres -d muninitdb <<EOF
+GRANT CONNECT, TEMP ON DATABASE muninitdb TO muninitest;
+GRANT USAGE ON SCHEMA muninitest TO muninitest;
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA muninitest TO muninitest;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA  muninitest TO muninitest;
 \q
 EOF
