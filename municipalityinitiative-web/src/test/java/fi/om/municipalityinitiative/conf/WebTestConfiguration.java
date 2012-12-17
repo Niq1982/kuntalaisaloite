@@ -44,7 +44,8 @@ public class WebTestConfiguration {
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         File file = new File(System.getProperty("user.dir"), "src/main/webapp/WEB-INF/messages");
-        messageSource.setBasename(file.toURI().toString());
+        File file2 = new File(System.getProperty("user.dir"), "src/main/webapp/WEB-INF/m");
+        messageSource.setBasenames(file.toURI().toString(), file2.toURI().toString());
         return messageSource;
     }
     
