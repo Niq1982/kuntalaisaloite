@@ -1,0 +1,97 @@
+// Gradients are made as images for IE
+
+.large-button, .small-button, .gray, .disabled {
+    background:#fff url("../img/ie/gradient-gray.png?version=20121217143255") left bottom repeat-x;
+    
+    &:hover { background:#fff url("../img/ie/gradient-gray-hover.png?version=20121217143255") left bottom repeat-x; }
+    &:active { background:#fff url("../img/ie/gradient-gray-active.png?version=20121217143255") left bottom repeat-x; }
+}
+
+.modal {
+    .modal-header {
+        background:#fff url("../img/ie/gradient-gray.png?version=20121217143255") left bottom repeat-x;
+        
+        .close {
+            background:#fff url("../img/ie/gradient-gray.png?version=20121217143255") left bottom repeat-x;
+        
+            &:hover { background:#fff url("../img/ie/gradient-gray-hover.png?version=20121217143255") left bottom repeat-x; }
+            &:active { background:#fff url("../img/ie/gradient-gray-active.png?version=20121217143255") left bottom repeat-x; }
+        }
+    }
+}
+
+// Search results
+.search-results .support-votes-details .bar {
+    background:#76b522 url("../img/ie/gradient-green.png?version=20121217143255") left bottom repeat-x;
+}
+
+// IE 6 & 7 specific styles
+.ie6, .ie7  {
+    #header { position:relative; }
+
+    .support-votes, .font-size-toggle a,
+    .initiative-content-row { display:inline-block; }
+    
+    .font-size-toggle a {
+        line-height:19px;
+    }
+
+    
+    .add-link {
+        .link-input-description, .link-input-url {
+            width:49%;
+        }
+    }
+    .remove-link {
+        bottom:1px;
+    }
+    
+    // CSS Tables
+    .table {
+        display:inline-block;
+    
+        .row { 
+            clear:both;
+        }
+        .cell {
+            float:left;
+        }
+    }
+    
+    // Icons 
+    .icon-small { margin-bottom:0.3em; }
+    .push { position:static; margin-left:1em; }
+    
+    // Other browsers uses display:table-cell for vertical-align
+    .flow-state-content {
+        span {
+            display:inline-block;
+            margin-top:1em;
+            line-height:1.3em;
+        }
+        
+        
+    }
+    .canceled {
+        .flow-state-content {
+            span {
+                margin-top:0;
+            }
+        }
+    }        
+} 
+
+// IE 6 & 7 & specific styles
+.ie6, .ie7, .ie8  {
+
+    .expose-mask {
+        background:#eee;
+        filter: progid:DXImageTransform.Microsoft.Alpha(opacity = 90);
+    }
+
+    .large-button, .small-button {
+        &.disabled {
+           filter: progid:DXImageTransform.Microsoft.Alpha(opacity = 60);
+        }
+    }  
+}
