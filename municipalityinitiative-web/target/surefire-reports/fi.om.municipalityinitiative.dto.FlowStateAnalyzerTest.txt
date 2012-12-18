@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: fi.om.municipalityinitiative.dto.FlowStateAnalyzerTest
--------------------------------------------------------------------------------
-Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 sec
