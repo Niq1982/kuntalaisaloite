@@ -1,8 +1,13 @@
 package fi.om.municipalityinitiative.dao;
 
+import com.mysema.query.Tuple;
 import com.mysema.query.sql.dml.SQLInsertClause;
+import com.mysema.query.sql.postgres.PostgresQuery;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
+import com.mysema.query.types.Expression;
+import com.mysema.query.types.MappingProjection;
 import fi.om.municipalityinitiative.dto.MunicipalityInitiativeCreateDto;
+import fi.om.municipalityinitiative.dto.MunicipalityInitiativeInfo;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,12 +24,12 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
     @Override
     @Transactional(readOnly = true)
     public QMunicipalityInitiative find() {
-        return null;
+        throw new RuntimeException("Not implemented");
     }
 
     @Override
     @Transactional(readOnly = false)
-    public QMunicipalityInitiative create(MunicipalityInitiativeCreateDto dto) {
+    public Long create(MunicipalityInitiativeCreateDto dto) {
         SQLInsertClause insert = queryFactory.insert(municipalityInitiative);
 
         setInitiativeBasicInfo(dto, insert);
@@ -32,7 +37,7 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
 
         Long createId = insert.executeWithKey(municipalityInitiative.id);
 
-        return null;
+        return createId;
 
     }
 
@@ -46,6 +51,34 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
     private void setInitiativeBasicInfo(MunicipalityInitiativeCreateDto dto, SQLInsertClause insert) {
         insert.set(municipalityInitiative.name, dto.name);
         insert.set(municipalityInitiative.proposal, dto.proposal);
-        insert.set(municipalityInitiative.municipalityId, -5L);
+        insert.set(municipalityInitiative.municipalityId, dto.municipalityId);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public MunicipalityInitiativeInfo getById(Long createId) {
+
+        PostgresQuery query = queryFactory
+                .from(municipalityInitiative)
+                .where(municipalityInitiative.id.eq(createId));
+
+        Expression<MunicipalityInitiativeInfo> initiativeInfoMapping =
+                new MappingProjection<MunicipalityInitiativeInfo>(MunicipalityInitiativeInfo.class, municipalityInitiative.all()) {
+                    @Override
+                    protected MunicipalityInitiativeInfo map(Tuple row) {
+                        MunicipalityInitiativeInfo info = new MunicipalityInitiativeInfo();
+                        info.name = row.get(municipalityInitiative.name);
+                        info.proposal = row.get(municipalityInitiative.proposal);
+                        info.contactAddress = row.get(municipalityInitiative.contactAddress);
+                        info.contactEmail = row.get(municipalityInitiative.contactEmail);
+                        info.contactName = row.get(municipalityInitiative.contactName);
+                        info.contactPhone = row.get(municipalityInitiative.contactPhone);
+                        return info;
+                    }
+                };
+
+        return query.uniqueResult(initiativeInfoMapping);
+
+
     }
 }
