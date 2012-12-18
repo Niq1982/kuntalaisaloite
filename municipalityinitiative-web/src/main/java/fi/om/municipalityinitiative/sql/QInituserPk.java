@@ -14,22 +14,22 @@ import javax.annotation.Generated;
 @Generated("com.mysema.query.sql.codegen.MetaDataSerializer")
 public class QInituserPk extends com.mysema.query.sql.RelationalPathBase<QInituserPk> {
 
-    private static final long serialVersionUID = 1722252682;
+    private static final long serialVersionUID = -1476800634;
 
     public static final QInituserPk inituserPk = new QInituserPk("inituser_pk");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public QInituserPk(String variable) {
-        super(QInituserPk.class, forVariable(variable), "initiative", "inituser_pk");
+        super(QInituserPk.class, forVariable(variable), "municipalityinitiative", "inituser_pk");
     }
 
     public QInituserPk(Path<? extends QInituserPk> path) {
-        super(path.getType(), path.getMetadata(), "initiative", "inituser_pk");
+        super(path.getType(), path.getMetadata(), "municipalityinitiative", "inituser_pk");
     }
 
     public QInituserPk(PathMetadata<?> metadata) {
-        super(QInituserPk.class, metadata, "initiative", "inituser_pk");
+        super(QInituserPk.class, metadata, "municipalityinitiative", "inituser_pk");
     }
 
 }

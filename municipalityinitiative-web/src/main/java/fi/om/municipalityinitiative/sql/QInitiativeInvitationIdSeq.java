@@ -14,7 +14,7 @@ import javax.annotation.Generated;
 @Generated("com.mysema.query.sql.codegen.MetaDataSerializer")
 public class QInitiativeInvitationIdSeq extends com.mysema.query.sql.RelationalPathBase<QInitiativeInvitationIdSeq> {
 
-    private static final long serialVersionUID = -1573325397;
+    private static final long serialVersionUID = -2056197073;
 
     public static final QInitiativeInvitationIdSeq initiativeInvitationIdSeq = new QInitiativeInvitationIdSeq("initiative_invitation_id_seq");
 
@@ -39,15 +39,15 @@ public class QInitiativeInvitationIdSeq extends com.mysema.query.sql.RelationalP
     public final NumberPath<Long> startValue = createNumber("start_value", Long.class);
 
     public QInitiativeInvitationIdSeq(String variable) {
-        super(QInitiativeInvitationIdSeq.class, forVariable(variable), "initiative", "initiative_invitation_id_seq");
+        super(QInitiativeInvitationIdSeq.class, forVariable(variable), "municipalityinitiative", "initiative_invitation_id_seq");
     }
 
     public QInitiativeInvitationIdSeq(Path<? extends QInitiativeInvitationIdSeq> path) {
-        super(path.getType(), path.getMetadata(), "initiative", "initiative_invitation_id_seq");
+        super(path.getType(), path.getMetadata(), "municipalityinitiative", "initiative_invitation_id_seq");
     }
 
     public QInitiativeInvitationIdSeq(PathMetadata<?> metadata) {
-        super(QInitiativeInvitationIdSeq.class, metadata, "initiative", "initiative_invitation_id_seq");
+        super(QInitiativeInvitationIdSeq.class, metadata, "municipalityinitiative", "initiative_invitation_id_seq");
     }
 
 }

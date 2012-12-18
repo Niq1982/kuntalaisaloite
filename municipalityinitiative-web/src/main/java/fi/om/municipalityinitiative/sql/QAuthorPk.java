@@ -14,7 +14,7 @@ import javax.annotation.Generated;
 @Generated("com.mysema.query.sql.codegen.MetaDataSerializer")
 public class QAuthorPk extends com.mysema.query.sql.RelationalPathBase<QAuthorPk> {
 
-    private static final long serialVersionUID = -1663619270;
+    private static final long serialVersionUID = 558747702;
 
     public static final QAuthorPk authorPk = new QAuthorPk("author_pk");
 
@@ -23,15 +23,15 @@ public class QAuthorPk extends com.mysema.query.sql.RelationalPathBase<QAuthorPk
     public final NumberPath<Long> userId = createNumber("user_id", Long.class);
 
     public QAuthorPk(String variable) {
-        super(QAuthorPk.class, forVariable(variable), "initiative", "author_pk");
+        super(QAuthorPk.class, forVariable(variable), "municipalityinitiative", "author_pk");
     }
 
     public QAuthorPk(Path<? extends QAuthorPk> path) {
-        super(path.getType(), path.getMetadata(), "initiative", "author_pk");
+        super(path.getType(), path.getMetadata(), "municipalityinitiative", "author_pk");
     }
 
     public QAuthorPk(PathMetadata<?> metadata) {
-        super(QAuthorPk.class, metadata, "initiative", "author_pk");
+        super(QAuthorPk.class, metadata, "municipalityinitiative", "author_pk");
     }
 
 }

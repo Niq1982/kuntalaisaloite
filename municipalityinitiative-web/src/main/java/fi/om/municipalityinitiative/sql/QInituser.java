@@ -14,7 +14,7 @@ import javax.annotation.Generated;
 @Generated("com.mysema.query.sql.codegen.MetaDataSerializer")
 public class QInituser extends com.mysema.query.sql.RelationalPathBase<QInituser> {
 
-    private static final long serialVersionUID = 1467712303;
+    private static final long serialVersionUID = -604888021;
 
     public static final QInituser inituser = new QInituser("inituser");
 
@@ -41,15 +41,15 @@ public class QInituser extends com.mysema.query.sql.RelationalPathBase<QInituser
     public final com.mysema.query.sql.ForeignKey<QInitiativeAuthor> _authorUserIdFk = createInvForeignKey(id, "user_id");
 
     public QInituser(String variable) {
-        super(QInituser.class, forVariable(variable), "initiative", "inituser");
+        super(QInituser.class, forVariable(variable), "municipalityinitiative", "inituser");
     }
 
     public QInituser(Path<? extends QInituser> path) {
-        super(path.getType(), path.getMetadata(), "initiative", "inituser");
+        super(path.getType(), path.getMetadata(), "municipalityinitiative", "inituser");
     }
 
     public QInituser(PathMetadata<?> metadata) {
-        super(QInituser.class, metadata, "initiative", "inituser");
+        super(QInituser.class, metadata, "municipalityinitiative", "inituser");
     }
 
 }

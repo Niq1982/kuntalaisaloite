@@ -14,7 +14,7 @@ import javax.annotation.Generated;
 @Generated("com.mysema.query.sql.codegen.MetaDataSerializer")
 public class QSupportVoteBatchIdSeq extends com.mysema.query.sql.RelationalPathBase<QSupportVoteBatchIdSeq> {
 
-    private static final long serialVersionUID = 339755151;
+    private static final long serialVersionUID = -203417325;
 
     public static final QSupportVoteBatchIdSeq supportVoteBatchIdSeq = new QSupportVoteBatchIdSeq("support_vote_batch_id_seq");
 
@@ -39,15 +39,15 @@ public class QSupportVoteBatchIdSeq extends com.mysema.query.sql.RelationalPathB
     public final NumberPath<Long> startValue = createNumber("start_value", Long.class);
 
     public QSupportVoteBatchIdSeq(String variable) {
-        super(QSupportVoteBatchIdSeq.class, forVariable(variable), "initiative", "support_vote_batch_id_seq");
+        super(QSupportVoteBatchIdSeq.class, forVariable(variable), "municipalityinitiative", "support_vote_batch_id_seq");
     }
 
     public QSupportVoteBatchIdSeq(Path<? extends QSupportVoteBatchIdSeq> path) {
-        super(path.getType(), path.getMetadata(), "initiative", "support_vote_batch_id_seq");
+        super(path.getType(), path.getMetadata(), "municipalityinitiative", "support_vote_batch_id_seq");
     }
 
     public QSupportVoteBatchIdSeq(PathMetadata<?> metadata) {
-        super(QSupportVoteBatchIdSeq.class, metadata, "initiative", "support_vote_batch_id_seq");
+        super(QSupportVoteBatchIdSeq.class, metadata, "municipalityinitiative", "support_vote_batch_id_seq");
     }
 
 }
