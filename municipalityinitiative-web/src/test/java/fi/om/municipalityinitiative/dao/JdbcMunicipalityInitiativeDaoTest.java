@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.conf.NEWIntegrationTestConfiguration;
+import fi.om.municipalityinitiative.dto.MunicipalityInfo;
 import fi.om.municipalityinitiative.dto.MunicipalityInitiativeCreateDto;
 import fi.om.municipalityinitiative.dto.MunicipalityInitiativeInfo;
 import org.junit.Before;
@@ -25,11 +26,17 @@ public class JdbcMunicipalityInitiativeDaoTest {
     MunicipalityInitiativeDao municipalityInitiativeDao;
 
     @Resource
+    MunicipalityDao municipalityDao; // This is used as util to confirm correct convertion of municipalities
+
+    @Resource
     NEWTestHelper testHelper;
+
+    private MunicipalityInfo tempMunicipalityFromDatabase;
 
     @Before
     public void setup() {
         testHelper.dbCleanup();
+        tempMunicipalityFromDatabase = getTempMunicipalityFromDatabase();
     }
 
     @Test
@@ -62,18 +69,21 @@ public class JdbcMunicipalityInitiativeDaoTest {
         List<MunicipalityInitiativeInfo> result = municipalityInitiativeDao.findAllNewestFirst();
         assertCreateAndGetDtos(create2, result.get(0));
         assertCreateAndGetDtos(create1, result.get(1));
-
     }
 
-    private static MunicipalityInitiativeCreateDto createDto() {
+    private MunicipalityInfo getTempMunicipalityFromDatabase() {
+        return municipalityDao.findMunicipalities().get(15);
+    }
+
+    private MunicipalityInitiativeCreateDto createDto() {
         MunicipalityInitiativeCreateDto dto = new MunicipalityInitiativeCreateDto();
 
-        dto.name = "name"+randomString();
+        dto.name = "initiativename"+randomString();
         dto.proposal = "proposal"+randomString();
-        dto.municipalityId = 1L;
+        dto.municipalityId = tempMunicipalityFromDatabase.id;
 
         dto.contactAddress = "address"+randomString();
-        dto.contactName = "name"+randomString();
+        dto.contactName = "contactname"+randomString();
         dto.contactEmail = "email"+randomString();
         dto.contactPhone = "phone"+randomString();
         return dto;
@@ -83,13 +93,13 @@ public class JdbcMunicipalityInitiativeDaoTest {
         return String.valueOf(new Random().nextLong());
     }
 
-    private static void assertCreateAndGetDtos(MunicipalityInitiativeCreateDto create, MunicipalityInitiativeInfo get) {
+    private void assertCreateAndGetDtos(MunicipalityInitiativeCreateDto create, MunicipalityInitiativeInfo get) {
         assertThat(get.proposal, is(create.proposal));
         assertThat(get.name, is(create.name));
         assertThat(get.contactName, is(create.contactName));
         assertThat(get.contactPhone, is(create.contactPhone));
         assertThat(get.contactEmail, is(create.contactEmail));
         assertThat(get.contactAddress, is(create.contactAddress));
-//        assertThat(get.municipalityName, is("Akaa"));
+        assertThat(get.municipalityName, is(tempMunicipalityFromDatabase.name));
     }
 }

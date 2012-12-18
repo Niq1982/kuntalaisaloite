@@ -8,6 +8,7 @@ import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
 import fi.om.municipalityinitiative.dto.MunicipalityInitiativeCreateDto;
 import fi.om.municipalityinitiative.dto.MunicipalityInitiativeInfo;
+import fi.om.municipalityinitiative.sql.QMunicipality;
 import org.springframework.transaction.annotation.Transactional;
 
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
@@ -27,6 +28,7 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
     public List<MunicipalityInitiativeInfo> findAllNewestFirst() {
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
+                .leftJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
                 .orderBy(municipalityInitiative.id.desc());
 
         return query.list(initiativeInfoMapping);
@@ -66,6 +68,7 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
 
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
+                .leftJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
                 .where(municipalityInitiative.id.eq(createId));
 
         return query.uniqueResult(initiativeInfoMapping);
@@ -76,7 +79,7 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
     // Mappings:
 
     Expression<MunicipalityInitiativeInfo> initiativeInfoMapping =
-            new MappingProjection<MunicipalityInitiativeInfo>(MunicipalityInitiativeInfo.class, municipalityInitiative.all()) {
+            new MappingProjection<MunicipalityInitiativeInfo>(MunicipalityInitiativeInfo.class, municipalityInitiative.all(), QMunicipality.municipality.all()) {
                 @Override
                 protected MunicipalityInitiativeInfo map(Tuple row) {
                     MunicipalityInitiativeInfo info = new MunicipalityInitiativeInfo();
@@ -86,6 +89,7 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
                     info.contactEmail = row.get(municipalityInitiative.contactEmail);
                     info.contactName = row.get(municipalityInitiative.contactName);
                     info.contactPhone = row.get(municipalityInitiative.contactPhone);
+                    info.municipalityName = row.get(QMunicipality.municipality.name);
                     return info;
                 }
             };
