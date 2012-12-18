@@ -33,7 +33,7 @@ public class JdbcMunicipalityInitiativeDaoTest {
     }
 
     @Test
-    public void testCreateAndGet() {
+    public void create_and_get() {
         MunicipalityInitiativeCreateDto create = createDto();
         Long createId = municipalityInitiativeDao.create(create);
 

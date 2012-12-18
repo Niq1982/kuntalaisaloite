@@ -130,6 +130,11 @@ public class AppConfiguration {
     public MunicipalityInitiativeDao municipalityInitiativeDao() {
         return new JdbcMunicipalityInitiativeDao();
     }
+
+    @Bean
+    public MunicipalityDao municipalityDao() {
+        return new JdbcMunicipalityDao();
+    }
     
     @Bean
     public StatusService statusService() {
