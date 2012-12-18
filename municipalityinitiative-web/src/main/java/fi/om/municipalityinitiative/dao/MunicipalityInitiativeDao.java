@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface MunicipalityInitiativeDao {
 
-    List<MunicipalityInitiativeInfo> findNewestFirst();
+    List<MunicipalityInitiativeInfo> findAllNewestFirst();
 
     Long create(MunicipalityInitiativeCreateDto dto);
 

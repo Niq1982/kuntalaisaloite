@@ -47,7 +47,7 @@ public class JdbcMunicipalityInitiativeDaoTest {
         municipalityInitiativeDao.create(createDto());
         municipalityInitiativeDao.create(createDto());
 
-        List<MunicipalityInitiativeInfo> result = municipalityInitiativeDao.findNewestFirst();
+        List<MunicipalityInitiativeInfo> result = municipalityInitiativeDao.findAllNewestFirst();
         assertThat(result.size(), is(2));
     }
 
@@ -59,13 +59,13 @@ public class JdbcMunicipalityInitiativeDaoTest {
         municipalityInitiativeDao.create(create1);
         municipalityInitiativeDao.create(create2);
 
-        List<MunicipalityInitiativeInfo> result = municipalityInitiativeDao.findNewestFirst();
+        List<MunicipalityInitiativeInfo> result = municipalityInitiativeDao.findAllNewestFirst();
         assertCreateAndGetDtos(create2, result.get(0));
         assertCreateAndGetDtos(create1, result.get(1));
 
     }
 
-    private MunicipalityInitiativeCreateDto createDto() {
+    private static MunicipalityInitiativeCreateDto createDto() {
         MunicipalityInitiativeCreateDto dto = new MunicipalityInitiativeCreateDto();
 
         dto.name = "name"+randomString();
@@ -79,16 +79,17 @@ public class JdbcMunicipalityInitiativeDaoTest {
         return dto;
     }
 
-    private String randomString() {
+    private static String randomString() {
         return String.valueOf(new Random().nextLong());
     }
 
-    private void assertCreateAndGetDtos(MunicipalityInitiativeCreateDto create, MunicipalityInitiativeInfo get) {
+    private static void assertCreateAndGetDtos(MunicipalityInitiativeCreateDto create, MunicipalityInitiativeInfo get) {
         assertThat(get.proposal, is(create.proposal));
         assertThat(get.name, is(create.name));
         assertThat(get.contactName, is(create.contactName));
         assertThat(get.contactPhone, is(create.contactPhone));
         assertThat(get.contactEmail, is(create.contactEmail));
         assertThat(get.contactAddress, is(create.contactAddress));
+//        assertThat(get.municipalityName, is("Akaa"));
     }
 }

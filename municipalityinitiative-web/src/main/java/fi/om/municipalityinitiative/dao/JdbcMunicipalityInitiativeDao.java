@@ -24,7 +24,7 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
 
     @Override
     @Transactional(readOnly = true)
-    public List<MunicipalityInitiativeInfo> findNewestFirst() {
+    public List<MunicipalityInitiativeInfo> findAllNewestFirst() {
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
                 .orderBy(municipalityInitiative.id.desc());
