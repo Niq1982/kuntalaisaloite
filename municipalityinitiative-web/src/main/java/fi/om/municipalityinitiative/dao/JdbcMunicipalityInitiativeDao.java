@@ -8,12 +8,13 @@ import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
 import fi.om.municipalityinitiative.dto.MunicipalityInitiativeCreateDto;
 import fi.om.municipalityinitiative.dto.MunicipalityInitiativeInfo;
-import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import org.springframework.transaction.annotation.Transactional;
 
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 
 import javax.annotation.Resource;
+
+import java.util.List;
 
 @SQLExceptionTranslated
 public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao {
@@ -23,8 +24,13 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
 
     @Override
     @Transactional(readOnly = true)
-    public QMunicipalityInitiative find() {
-        throw new RuntimeException("Not implemented");
+    public List<MunicipalityInitiativeInfo> findNewestFirst() {
+        PostgresQuery query = queryFactory
+                .from(municipalityInitiative)
+                .orderBy(municipalityInitiative.id.desc());
+
+        return query.list(initiativeInfoMapping);
+
     }
 
     @Override
@@ -62,23 +68,25 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
                 .from(municipalityInitiative)
                 .where(municipalityInitiative.id.eq(createId));
 
-        Expression<MunicipalityInitiativeInfo> initiativeInfoMapping =
-                new MappingProjection<MunicipalityInitiativeInfo>(MunicipalityInitiativeInfo.class, municipalityInitiative.all()) {
-                    @Override
-                    protected MunicipalityInitiativeInfo map(Tuple row) {
-                        MunicipalityInitiativeInfo info = new MunicipalityInitiativeInfo();
-                        info.name = row.get(municipalityInitiative.name);
-                        info.proposal = row.get(municipalityInitiative.proposal);
-                        info.contactAddress = row.get(municipalityInitiative.contactAddress);
-                        info.contactEmail = row.get(municipalityInitiative.contactEmail);
-                        info.contactName = row.get(municipalityInitiative.contactName);
-                        info.contactPhone = row.get(municipalityInitiative.contactPhone);
-                        return info;
-                    }
-                };
-
         return query.uniqueResult(initiativeInfoMapping);
 
-
     }
+
+
+    // Mappings:
+
+    Expression<MunicipalityInitiativeInfo> initiativeInfoMapping =
+            new MappingProjection<MunicipalityInitiativeInfo>(MunicipalityInitiativeInfo.class, municipalityInitiative.all()) {
+                @Override
+                protected MunicipalityInitiativeInfo map(Tuple row) {
+                    MunicipalityInitiativeInfo info = new MunicipalityInitiativeInfo();
+                    info.name = row.get(municipalityInitiative.name);
+                    info.proposal = row.get(municipalityInitiative.proposal);
+                    info.contactAddress = row.get(municipalityInitiative.contactAddress);
+                    info.contactEmail = row.get(municipalityInitiative.contactEmail);
+                    info.contactName = row.get(municipalityInitiative.contactName);
+                    info.contactPhone = row.get(municipalityInitiative.contactPhone);
+                    return info;
+                }
+            };
 }

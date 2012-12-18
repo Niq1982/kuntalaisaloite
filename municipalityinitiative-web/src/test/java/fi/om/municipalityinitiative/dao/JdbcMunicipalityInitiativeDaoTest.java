@@ -3,7 +3,6 @@ package fi.om.municipalityinitiative.dao;
 import fi.om.municipalityinitiative.conf.NEWIntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dto.MunicipalityInitiativeCreateDto;
 import fi.om.municipalityinitiative.dto.MunicipalityInitiativeInfo;
-import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +10,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
+
+import java.util.List;
+import java.util.Random;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -32,32 +34,61 @@ public class JdbcMunicipalityInitiativeDaoTest {
 
     @Test
     public void testCreateAndGet() {
-        MunicipalityInitiativeCreateDto dto = createDto();
-        Long createId = municipalityInitiativeDao.create(dto);
+        MunicipalityInitiativeCreateDto create = createDto();
+        Long createId = municipalityInitiativeDao.create(create);
 
-        MunicipalityInitiativeInfo result = municipalityInitiativeDao.getById(createId);
-
-        assertThat(result.proposal, is(dto.proposal));
-        assertThat(result.name, is(dto.name));
-        assertThat(result.contactName, is(dto.contactName));
-        assertThat(result.contactPhone, is(dto.contactPhone));
-        assertThat(result.contactEmail, is(dto.contactEmail));
-        assertThat(result.contactAddress, is(dto.contactAddress));
+        MunicipalityInitiativeInfo get = municipalityInitiativeDao.getById(createId);
+        assertCreateAndGetDtos(create, get);
     }
 
+    @Test
+    public void testFindReturnsAll() {
 
+        municipalityInitiativeDao.create(createDto());
+        municipalityInitiativeDao.create(createDto());
+
+        List<MunicipalityInitiativeInfo> result = municipalityInitiativeDao.findNewestFirst();
+        assertThat(result.size(), is(2));
+    }
+
+    @Test
+    public void findReturnsInCorrectOrder() {
+        MunicipalityInitiativeCreateDto create1 = createDto();
+        MunicipalityInitiativeCreateDto create2 = createDto();
+
+        municipalityInitiativeDao.create(create1);
+        municipalityInitiativeDao.create(create2);
+
+        List<MunicipalityInitiativeInfo> result = municipalityInitiativeDao.findNewestFirst();
+        assertCreateAndGetDtos(create2, result.get(0));
+        assertCreateAndGetDtos(create1, result.get(1));
+
+    }
 
     private MunicipalityInitiativeCreateDto createDto() {
         MunicipalityInitiativeCreateDto dto = new MunicipalityInitiativeCreateDto();
 
-        dto.name = "initiative name";
-        dto.proposal = "initiative proposal";
+        dto.name = "name"+randomString();
+        dto.proposal = "proposal"+randomString();
         dto.municipalityId = 1L;
 
-        dto.contactAddress = "contact address";
-        dto.contactName = "contact name";
-        dto.contactEmail = "contact email";
-        dto.contactPhone = "contact phone";
+        dto.contactAddress = "address"+randomString();
+        dto.contactName = "name"+randomString();
+        dto.contactEmail = "email"+randomString();
+        dto.contactPhone = "phone"+randomString();
         return dto;
+    }
+
+    private String randomString() {
+        return String.valueOf(new Random().nextLong());
+    }
+
+    private void assertCreateAndGetDtos(MunicipalityInitiativeCreateDto create, MunicipalityInitiativeInfo get) {
+        assertThat(get.proposal, is(create.proposal));
+        assertThat(get.name, is(create.name));
+        assertThat(get.contactName, is(create.contactName));
+        assertThat(get.contactPhone, is(create.contactPhone));
+        assertThat(get.contactEmail, is(create.contactEmail));
+        assertThat(get.contactAddress, is(create.contactAddress));
     }
 }
