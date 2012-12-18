@@ -353,8 +353,8 @@ $(document).ready(function () {
 	
 /**
  * 
- * MUNICIPALITY STUFF STARTS
- * =======================================
+ * Expand and minify form blocks
+ * =============================
  * 
  * */
  	var showFormBlock = function(blockHeader){
@@ -384,26 +384,16 @@ $(document).ready(function () {
  		showFormBlock($(this));
  	});
 
- 	// Chosen
- 	$(".chzn-select").chosen();
-
  	// Action for wizard's continue button
  	proceedTo = function(step){
- 		var blockHeader = $('#form-step-'+step).prev('.content-block-header');
+ 		var blockHeader = $('#step-'+step).prev('.content-block-header');
 		showFormBlock(blockHeader);
 
- 		return false;
+ 		//return false;
  	};
 
 
- /**
- * 
- * MUNICIPALITY STUFF ENDS
- * =======================================
- * 
- * */
-	
-	
+
 /**
  * 
  * Add and remove link
@@ -464,7 +454,76 @@ $(document).ready(function () {
 		
 		return false;
 	});
+
 	
+
+/**
+* Chosen - Replacement for municipality select
+* ============================================
+*/	
+ 	// Initialize chosen
+ 	$(".chzn-select").chosen();
+
+ 	// Listen the first chosen element
+	$('#municipality').live('change', function() {
+		var selectedMunicipality = $(this).val();
+
+		$('#selected-municipality').text(selectedMunicipality);
+		$('#homeMunicipality')
+		.val(selectedMunicipality)
+		.trigger("liszt:updated"); // updates dynamically the second chosen element
+	});
+
+/**
+* Toggle collect people
+* ====================
+* - Toggles an element depending on the selection of other element (radiobutton or checkbox)
+* - If the input is clicked hidden:
+* 		* the input is disabled so that value will not be saved
+* 		* the value is not removed so that the value can be retrieved
+* 		  when clicked back to visible 
+* - TODO: Bit HardCoded now. Make more generic if needed.
+*/
+var toggleArea, $toggleAreaLabel, radioTrue, $toggleField, toggleBlock;
+
+toggleArea =		'.gather-people-details';
+$toggleAreaLabel =	$('#gather-people-container label');
+radioTrue =		'gather-people-true';
+$toggleField =		$('#initiativeSecret');
+
+toggleBlock = function(clicker, input){
+	if( input.attr('id') == radioTrue){		
+		clicker.siblings(toggleArea).slideDown({
+			duration: speedVeryFast, 
+			easing: 'easeOutExpo'
+		});
+		$toggleField.removeAttr('disabled');
+	} else {
+		clicker.siblings(toggleArea).slideUp({
+			duration: speedVeryFast, 
+			easing: 'easeOutExpo'
+		});
+		$toggleField.attr('disabled','disabled');
+	}	
+};
+
+$toggleAreaLabel.each(function (){
+	var clicker, input;
+	clicker = $(this);
+	input = clicker.find("input:first");
+	
+	if( input.is(':checked') && input.attr('id') == radioTrue){
+		$toggleField.removeAttr('disabled');
+		$(toggleArea).show();
+	}
+	
+	clicker.click(function(){
+		if(clicker.children('input[type="radio"]').length > 0){
+			toggleBlock($(this), input);
+		}
+	});
+	
+});
 	
 
 	

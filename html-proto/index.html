@@ -66,7 +66,7 @@
     <div id="header-tools">
         <div id="header-tools-content">
             <div id="aloite-links">
-                <a class="" href="fi">Kansalaisaloite.fi</a><span class="hide"> | </span><a class="active" href="fi/tietoa/tietoa-kuntalaisaloite_fi-palvelusta">Kuntalaisaloite.fi</a>
+                <a class="" href="https://www.kansalaisaloite.fi">Kansalaisaloite.fi</a><span class="hide"> | </span><a class="active" href="#">Kuntalaisaloite.fi</a>
             </div>
             <div class="other-services-container">
                 <a class="other-services-select" href="http://www.otakantaa.fi/fi-FI" target="_blank"> 
@@ -74,6 +74,7 @@
                 </a>
             </div>
                        
+            <!--
             <div class="logged-in-info">
                     <div class="dropdown">
                         <a href="#" class="header-tool-link user-name dropdown-toggle">Anna Testi<span class="icon-small settings"></span></a>
@@ -83,6 +84,7 @@
                     </div>
                     <a href="fi/logout" id="logout" class="header-tool-link logout">Kirjaudu ulos<span class="icon-small logout"></span></a>
             </div>
+        	-->
         </div>
     </div>
       
@@ -105,11 +107,11 @@
 
                 <div id="main-navigation">
                     <ul>                    
-                        <li ><a href="fi">Etusivu</a></li>
-                        <li ><a href="fi/hae">Selaa kansalaisaloitteita</a></li>
-                        <li class="active"><a href="fi/aloite">Tee kuntalaisaloite</a></li>
-                        <li ><a href="fi/uutiset">Avaa tekemäsi aloite</a></li>
-                        <li ><a href="fi/ohjeet">Ohjeet</a></li>
+                        <li ><a href="view.html">Etusivu</a></li>
+                        <li ><a href="view.html">Selaa kansalaisaloitteita</a></li>
+                        <li class="active"><a href="index.html">Tee kuntalaisaloite</a></li>
+                        <li ><a href="view.html">Avaa tekemäsi aloite</a></li>
+                        <li ><a href="view.html">Ohjeet</a></li>
                     </ul>
                 </div>
         
@@ -135,11 +137,11 @@
 
     <div class="form-block-container">
    
-    <div class="content-block-header edit open">
-        <h2>1. Valitse kunta</h2><span class="arrow"> </span>
+    <div id="step-header-1" class="content-block-header edit open">
+        <h2>1. Valitse kunta</h2><span class="arrow hidden"> </span>
     </div>    
 
-    <div id="form-step-1" class="input-block cf" data-form-step="1">
+    <div id="step-1" class="input-block cf">
     
         <div class="input-block-content">
 	        <div class="system-msg msg-info ">
@@ -161,344 +163,344 @@
 		        Valitse kunta, jolle haluat tehdä aloitteen <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span>
 		    </label>
 
-			<select data-placeholder="Valitse kunta" id="municipality.fi" name="municipality.fi" tabindex="1" class="chzn-select">
+			<select data-placeholder="Valitse kunta" id="municipality" name="municipality" tabindex="1" class="chzn-select">
 		        <option value=""></option> 
-		        <option value="">Akaa</option>
-		        <option value="">Alajärvi</option>
-		        <option value="">Alavieska</option>
-		        <option value="">Alavus</option>
-		        <option value="">Asikkala</option>
-		        <option value="">Askola</option>
-		        <option value="">Aura</option>
-		        <option value="">Brändö</option>
-		        <option value="">Eckerö</option>
-		        <option value="">Enonkoski</option>
-		        <option value="">Enontekiö</option>
-		        <option value="">Espoo</option>
-		        <option value="">Eura</option>
-		        <option value="">Eurajoki</option>
-		        <option value="">Evijärvi</option>
-		        <option value="">Finström</option>
-		        <option value="">Forssa</option>
-		        <option value="">Föglö</option>
-		        <option value="">Geta</option>
-		        <option value="">Haapajärvi</option>
-		        <option value="">Haapavesi</option>
-		        <option value="">Hailuoto</option>
-		        <option value="">Halsua</option>
-		        <option value="">Hamina</option>
-		        <option value="">Hammarland</option>
-		        <option value="">Hankasalmi</option>
-		        <option value="">Hanko</option>
-		        <option value="">Harjavalta</option>
-		        <option value="">Hartola</option>
-		        <option value="">Hattula</option>
-		        <option value="">Haukipudas</option>
-		        <option value="">Hausjärvi</option>
-		        <option value="">Heinola</option>
-		        <option value="">Heinävesi</option>
-		        <option value="">Helsinki</option>
-		        <option value="">Hirvensalmi</option>
-		        <option value="">Hollola</option>
-		        <option value="">Honkajoki</option>
-		        <option value="">Huittinen</option>
-		        <option value="">Humppila</option>
-		        <option value="">Hyrynsalmi</option>
-		        <option value="">Hyvinkää</option>
-		        <option value="">Hämeenkoski</option>
-		        <option value="">Hämeenkyrö</option>
-		        <option value="">Hämeenlinna</option>
-		        <option value="">Ii</option>
-		        <option value="">Iisalmi</option>
-		        <option value="">Iitti</option>
-		        <option value="">Ikaalinen</option>
-		        <option value="">Ilmajoki</option>
-		        <option value="">Ilomantsi</option>
-		        <option value="">Imatra</option>
-		        <option value="">Inari</option>
-		        <option value="">Inkoo</option>
-		        <option value="">Isojoki</option>
-		        <option value="">Isokyrö</option>
-		        <option value="">Jalasjärvi</option>
-		        <option value="">Janakkala</option>
-		        <option value="">Joensuu</option>
-		        <option value="">Jokioinen</option>
-		        <option value="">Jomala</option>
-		        <option value="">Joroinen</option>
-		        <option value="">Joutsa</option>
-		        <option value="">Juankoski</option>
-		        <option value="">Juuka</option>
-		        <option value="">Juupajoki</option>
-		        <option value="">Juva</option>
-		        <option value="">Jyväskylä</option>
-		        <option value="">Jämijärvi</option>
-		        <option value="">Jämsä</option>
-		        <option value="">Järvenpää</option>
-		        <option value="">Kaarina</option>
-		        <option value="">Kaavi</option>
-		        <option value="">Kajaani</option>
-		        <option value="">Kalajoki</option>
-		        <option value="">Kangasala</option>
-		        <option value="">Kangasniemi</option>
-		        <option value="">Kankaanpää</option>
-		        <option value="">Kannonkoski</option>
-		        <option value="">Kannus</option>
-		        <option value="">Karijoki</option>
-		        <option value="">Karjalohja</option>
-		        <option value="">Karkkila</option>
-		        <option value="">Karstula</option>
-		        <option value="">Karvia</option>
-		        <option value="">Kaskinen</option>
-		        <option value="">Kauhajoki</option>
-		        <option value="">Kauhava</option>
-		        <option value="">Kauniainen</option>
-		        <option value="">Kaustinen</option>
-		        <option value="">Keitele</option>
-		        <option value="">Kemi</option>
-		        <option value="">Kemijärvi</option>
-		        <option value="">Keminmaa</option>
-		        <option value="">Kemiönsaari</option>
-		        <option value="">Kempele</option>
-		        <option value="">Kerava</option>
-		        <option value="">Kerimäki</option>
-		        <option value="">Kesälahti</option>
-		        <option value="">Keuruu</option>
-		        <option value="">Kihniö</option>
-		        <option value="">Kiikoinen</option>
-		        <option value="">Kiiminki</option>
-		        <option value="">Kinnula</option>
-		        <option value="">Kirkkonummi</option>
-		        <option value="">Kitee</option>
-		        <option value="">Kittilä</option>
-		        <option value="">Kiuruvesi</option>
-		        <option value="">Kivijärvi</option>
-		        <option value="">Kokemäki</option>
-		        <option value="">Kokkola</option>
-		        <option value="">Kolari</option>
-		        <option value="">Konnevesi</option>
-		        <option value="">Kontiolahti</option>
-		        <option value="">Korsnäs</option>
-		        <option value="">Koski Tl</option>
-		        <option value="">Kotka</option>
-		        <option value="">Kouvola</option>
-		        <option value="">Kristiinankaupunki</option>
-		        <option value="">Kruunupyy</option>
-		        <option value="">Kuhmo</option>
-		        <option value="">Kuhmoinen</option>
-		        <option value="">Kumlinge</option>
-		        <option value="">Kuopio</option>
-		        <option value="">Kuortane</option>
-		        <option value="">Kurikka</option>
-		        <option value="">Kustavi</option>
-		        <option value="">Kuusamo</option>
-		        <option value="">Kyyjärvi</option>
-		        <option value="">Kärkölä</option>
-		        <option value="">Kärsämäki</option>
-		        <option value="">Kökar</option>
-		        <option value="">Köyliö</option>
-		        <option value="">Lahti</option>
-		        <option value="">Laihia</option>
-		        <option value="">Laitila</option>
-		        <option value="">Lapinjärvi</option>
-		        <option value="">Lapinlahti</option>
-		        <option value="">Lappajärvi</option>
-		        <option value="">Lappeenranta</option>
-		        <option value="">Lapua</option>
-		        <option value="">Laukaa</option>
-		        <option value="">Lavia</option>
-		        <option value="">Lemi</option>
-		        <option value="">Lemland</option>
-		        <option value="">Lempäälä</option>
-		        <option value="">Leppävirta</option>
-		        <option value="">Lestijärvi</option>
-		        <option value="">Lieksa</option>
-		        <option value="">Lieto</option>
-		        <option value="">Liminka</option>
-		        <option value="">Liperi</option>
-		        <option value="">Lohja</option>
-		        <option value="">Loimaa</option>
-		        <option value="">Loppi</option>
-		        <option value="">Loviisa</option>
-		        <option value="">Luhanka</option>
-		        <option value="">Lumijoki</option>
-		        <option value="">Lumparland</option>
-		        <option value="">Luoto</option>
-		        <option value="">Luumäki</option>
-		        <option value="">Luvia</option>
-		        <option value="">Maalahti</option>
-		        <option value="">Maaninka</option>
-		        <option value="">Maarianhamina</option>
-		        <option value="">Marttila</option>
-		        <option value="">Masku</option>
-		        <option value="">Merijärvi</option>
-		        <option value="">Merikarvia</option>
-		        <option value="">Miehikkälä</option>
-		        <option value="">Mikkeli</option>
-		        <option value="">Muhos</option>
-		        <option value="">Multia</option>
-		        <option value="">Muonio</option>
-		        <option value="">Mustasaari</option>
-		        <option value="">Muurame</option>
-		        <option value="">Mynämäki</option>
-		        <option value="">Myrskylä</option>
-		        <option value="">Mäntsälä</option>
-		        <option value="">Mänttä-Vilppula</option>
-		        <option value="">Mäntyharju</option>
-		        <option value="">Naantali</option>
-		        <option value="">Nakkila</option>
-		        <option value="">Nastola</option>
-		        <option value="">Nilsiä</option>
-		        <option value="">Nivala</option>
-		        <option value="">Nokia</option>
-		        <option value="">Nousiainen</option>
-		        <option value="">Nummi-Pusula</option>
-		        <option value="">Nurmes</option>
-		        <option value="">Nurmijärvi</option>
-		        <option value="">Närpiö</option>
-		        <option value="">Orimattila</option>
-		        <option value="">Oripää</option>
-		        <option value="">Orivesi</option>
-		        <option value="">Oulainen</option>
-		        <option value="">Oulu</option>
-		        <option value="">Oulunsalo</option>
-		        <option value="">Outokumpu</option>
-		        <option value="">Padasjoki</option>
-		        <option value="">Paimio</option>
-		        <option value="">Paltamo</option>
-		        <option value="">Parainen</option>
-		        <option value="">Parikkala</option>
-		        <option value="">Parkano</option>
-		        <option value="">Pedersören kunta</option>
-		        <option value="">Pelkosenniemi</option>
-		        <option value="">Pello</option>
-		        <option value="">Perho</option>
-		        <option value="">Pertunmaa</option>
-		        <option value="">Petäjävesi</option>
-		        <option value="">Pieksämäki</option>
-		        <option value="">Pielavesi</option>
-		        <option value="">Pietarsaari</option>
-		        <option value="">Pihtipudas</option>
-		        <option value="">Pirkkala</option>
-		        <option value="">Polvijärvi</option>
-		        <option value="">Pomarkku</option>
-		        <option value="">Pori</option>
-		        <option value="">Pornainen</option>
-		        <option value="">Porvoo</option>
-		        <option value="">Posio</option>
-		        <option value="">Pudasjärvi</option>
-		        <option value="">Pukkila</option>
-		        <option value="">Punkaharju</option>
-		        <option value="">Punkalaidun</option>
-		        <option value="">Puolanka</option>
-		        <option value="">Puumala</option>
-		        <option value="">Pyhtää</option>
-		        <option value="">Pyhäjoki</option>
-		        <option value="">Pyhäjärvi</option>
-		        <option value="">Pyhäntä</option>
-		        <option value="">Pyhäranta</option>
-		        <option value="">Pälkäne</option>
-		        <option value="">Pöytyä</option>
-		        <option value="">Raahe</option>
-		        <option value="">Raasepori</option>
-		        <option value="">Raisio</option>
-		        <option value="">Rantasalmi</option>
-		        <option value="">Ranua</option>
-		        <option value="">Rauma</option>
-		        <option value="">Rautalampi</option>
-		        <option value="">Rautavaara</option>
-		        <option value="">Rautjärvi</option>
-		        <option value="">Reisjärvi</option>
-		        <option value="">Riihimäki</option>
-		        <option value="">Ristiina</option>
-		        <option value="">Ristijärvi</option>
-		        <option value="">Rovaniemi</option>
-		        <option value="">Ruokolahti</option>
-		        <option value="">Ruovesi</option>
-		        <option value="">Rusko</option>
-		        <option value="">Rääkkylä</option>
-		        <option value="">Saarijärvi</option>
-		        <option value="">Salla</option>
-		        <option value="">Salo</option>
-		        <option value="">Saltvik</option>
-		        <option value="">Sastamala</option>
-		        <option value="">Sauvo</option>
-		        <option value="">Savitaipale</option>
-		        <option value="">Savonlinna</option>
-		        <option value="">Savukoski</option>
-		        <option value="">Seinäjoki</option>
-		        <option value="">Sievi</option>
-		        <option value="">Siikainen</option>
-		        <option value="">Siikajoki</option>
-		        <option value="">Siikalatva</option>
-		        <option value="">Siilinjärvi</option>
-		        <option value="">Simo</option>
-		        <option value="">Sipoo</option>
-		        <option value="">Siuntio</option>
-		        <option value="">Sodankylä</option>
-		        <option value="">Soini</option>
-		        <option value="">Somero</option>
-		        <option value="">Sonkajärvi</option>
-		        <option value="">Sotkamo</option>
-		        <option value="">Sottunga</option>
-		        <option value="">Sulkava</option>
-		        <option value="">Sund</option>
-		        <option value="">Suomenniemi</option>
-		        <option value="">Suomussalmi</option>
-		        <option value="">Suonenjoki</option>
-		        <option value="">Sysmä</option>
-		        <option value="">Säkylä</option>
-		        <option value="">Taipalsaari</option>
-		        <option value="">Taivalkoski</option>
-		        <option value="">Taivassalo</option>
-		        <option value="">Tammela</option>
-		        <option value="">Tampere</option>
-		        <option value="">Tarvasjoki</option>
-		        <option value="">Tervo</option>
-		        <option value="">Tervola</option>
-		        <option value="">Teuva</option>
-		        <option value="">Tohmajärvi</option>
-		        <option value="">Toholampi</option>
-		        <option value="">Toivakka</option>
-		        <option value="">Tornio</option>
-		        <option value="">Turku</option>
-		        <option value="">Tuusniemi</option>
-		        <option value="">Tuusula</option>
-		        <option value="">Tyrnävä</option>
-		        <option value="">Töysä</option>
-		        <option value="">Ulvila</option>
-		        <option value="">Urjala</option>
-		        <option value="">Utajärvi</option>
-		        <option value="">Utsjoki</option>
-		        <option value="">Uurainen</option>
-		        <option value="">Uusikaarlepyy</option>
-		        <option value="">Uusikaupunki</option>
-		        <option value="">Vaala</option>
-		        <option value="">Vaasa</option>
-		        <option value="">Valkeakoski</option>
-		        <option value="">Valtimo</option>
-		        <option value="">Vantaa</option>
-		        <option value="">Varkaus</option>
-		        <option value="">Vehmaa</option>
-		        <option value="">Vesanto</option>
-		        <option value="">Vesilahti</option>
-		        <option value="">Veteli</option>
-		        <option value="">Vieremä</option>
-		        <option value="">Vihanti</option>
-		        <option value="">Vihti</option>
-		        <option value="">Viitasaari</option>
-		        <option value="">Vimpeli</option>
-		        <option value="">Virolahti</option>
-		        <option value="">Virrat</option>
-		        <option value="">Vårdö</option>
-		        <option value="">Vähäkyrö</option>
-		        <option value="">Vöyri</option>
-		        <option value="">Yli-Ii</option>
-		        <option value="">Ylitornio</option>
-		        <option value="">Ylivieska</option>
-		        <option value="">Ylöjärvi</option>
-		        <option value="">Ypäjä</option>
-		        <option value="">Ähtäri</option>
-		        <option value="">Äänekoski</option>             
+		        <option value="Akaa">Akaa</option>
+		        <option value="Alajärvi">Alajärvi</option>
+		        <option value="Alavieska">Alavieska</option>
+		        <option value="Alavus">Alavus</option>
+		        <option value="Asikkala">Asikkala</option>
+		        <option value="Askola">Askola</option>
+		        <option value="Aura">Aura</option>
+		        <option value="Brändö">Brändö</option>
+		        <option value="Eckerö">Eckerö</option>
+		        <option value="Enonkoski">Enonkoski</option>
+		        <option value="Enontekiö">Enontekiö</option>
+		        <option value="Espoo">Espoo</option>
+		        <option value="Eura">Eura</option>
+		        <option value="Eurajoki">Eurajoki</option>
+		        <option value="Evijärvi">Evijärvi</option>
+		        <option value="Finström">Finström</option>
+		        <option value="Forssa">Forssa</option>
+		        <option value="Föglö">Föglö</option>
+		        <option value="Geta">Geta</option>
+		        <option value="Haapajärvi">Haapajärvi</option>
+		        <option value="Haapavesi">Haapavesi</option>
+		        <option value="Hailuoto">Hailuoto</option>
+		        <option value="Halsua">Halsua</option>
+		        <option value="Hamina">Hamina</option>
+		        <option value="Hammarland">Hammarland</option>
+		        <option value="Hankasalmi">Hankasalmi</option>
+		        <option value="Hanko">Hanko</option>
+		        <option value="Harjavalta">Harjavalta</option>
+		        <option value="Hartola">Hartola</option>
+		        <option value="Hattula">Hattula</option>
+		        <option value="Haukipudas">Haukipudas</option>
+		        <option value="Hausjärvi">Hausjärvi</option>
+		        <option value="Heinola">Heinola</option>
+		        <option value="Heinävesi">Heinävesi</option>
+		        <option value="Helsinki">Helsinki</option>
+		        <option value="Hirvensalmi">Hirvensalmi</option>
+		        <option value="Hollola">Hollola</option>
+		        <option value="Honkajoki">Honkajoki</option>
+		        <option value="Huittinen">Huittinen</option>
+		        <option value="Humppila">Humppila</option>
+		        <option value="Hyrynsalmi">Hyrynsalmi</option>
+		        <option value="Hyvinkää">Hyvinkää</option>
+		        <option value="Hämeenkoski">Hämeenkoski</option>
+		        <option value="Hämeenkyrö">Hämeenkyrö</option>
+		        <option value="Hämeenlinna">Hämeenlinna</option>
+		        <option value="Ii">Ii</option>
+		        <option value="Iisalmi">Iisalmi</option>
+		        <option value="Iitti">Iitti</option>
+		        <option value="Ikaalinen">Ikaalinen</option>
+		        <option value="Ilmajoki">Ilmajoki</option>
+		        <option value="Ilomantsi">Ilomantsi</option>
+		        <option value="Imatra">Imatra</option>
+		        <option value="Inari">Inari</option>
+		        <option value="Inkoo">Inkoo</option>
+		        <option value="Isojoki">Isojoki</option>
+		        <option value="Isokyrö">Isokyrö</option>
+		        <option value="Jalasjärvi">Jalasjärvi</option>
+		        <option value="Janakkala">Janakkala</option>
+		        <option value="Joensuu">Joensuu</option>
+		        <option value="Jokioinen">Jokioinen</option>
+		        <option value="Jomala">Jomala</option>
+		        <option value="Joroinen">Joroinen</option>
+		        <option value="Joutsa">Joutsa</option>
+		        <option value="Juankoski">Juankoski</option>
+		        <option value="Juuka">Juuka</option>
+		        <option value="Juupajoki">Juupajoki</option>
+		        <option value="Juva">Juva</option>
+		        <option value="Jyväskylä">Jyväskylä</option>
+		        <option value="Jämijärvi">Jämijärvi</option>
+		        <option value="Jämsä">Jämsä</option>
+		        <option value="Järvenpää">Järvenpää</option>
+		        <option value="Kaarina">Kaarina</option>
+		        <option value="Kaavi">Kaavi</option>
+		        <option value="Kajaani">Kajaani</option>
+		        <option value="Kalajoki">Kalajoki</option>
+		        <option value="Kangasala">Kangasala</option>
+		        <option value="Kangasniemi">Kangasniemi</option>
+		        <option value="Kankaanpää">Kankaanpää</option>
+		        <option value="Kannonkoski">Kannonkoski</option>
+		        <option value="Kannus">Kannus</option>
+		        <option value="Karijoki">Karijoki</option>
+		        <option value="Karjalohja">Karjalohja</option>
+		        <option value="Karkkila">Karkkila</option>
+		        <option value="Karstula">Karstula</option>
+		        <option value="Karvia">Karvia</option>
+		        <option value="Kaskinen">Kaskinen</option>
+		        <option value="Kauhajoki">Kauhajoki</option>
+		        <option value="Kauhava">Kauhava</option>
+		        <option value="Kauniainen">Kauniainen</option>
+		        <option value="Kaustinen">Kaustinen</option>
+		        <option value="Keitele">Keitele</option>
+		        <option value="Kemi">Kemi</option>
+		        <option value="Kemijärvi">Kemijärvi</option>
+		        <option value="Keminmaa">Keminmaa</option>
+		        <option value="Kemiönsaari">Kemiönsaari</option>
+		        <option value="Kempele">Kempele</option>
+		        <option value="Kerava">Kerava</option>
+		        <option value="Kerimäki">Kerimäki</option>
+		        <option value="Kesälahti">Kesälahti</option>
+		        <option value="Keuruu">Keuruu</option>
+		        <option value="Kihniö">Kihniö</option>
+		        <option value="Kiikoinen">Kiikoinen</option>
+		        <option value="Kiiminki">Kiiminki</option>
+		        <option value="Kinnula">Kinnula</option>
+		        <option value="Kirkkonummi">Kirkkonummi</option>
+		        <option value="Kitee">Kitee</option>
+		        <option value="Kittilä">Kittilä</option>
+		        <option value="Kiuruvesi">Kiuruvesi</option>
+		        <option value="Kivijärvi">Kivijärvi</option>
+		        <option value="Kokemäki">Kokemäki</option>
+		        <option value="Kokkola">Kokkola</option>
+		        <option value="Kolari">Kolari</option>
+		        <option value="Konnevesi">Konnevesi</option>
+		        <option value="Kontiolahti">Kontiolahti</option>
+		        <option value="Korsnäs">Korsnäs</option>
+		        <option value="Koski Tl">Koski Tl</option>
+		        <option value="Kotka">Kotka</option>
+		        <option value="Kouvola">Kouvola</option>
+		        <option value="Kristiinankaupunki">Kristiinankaupunki</option>
+		        <option value="Kruunupyy">Kruunupyy</option>
+		        <option value="Kuhmo">Kuhmo</option>
+		        <option value="Kuhmoinen">Kuhmoinen</option>
+		        <option value="Kumlinge">Kumlinge</option>
+		        <option value="Kuopio">Kuopio</option>
+		        <option value="Kuortane">Kuortane</option>
+		        <option value="Kurikka">Kurikka</option>
+		        <option value="Kustavi">Kustavi</option>
+		        <option value="Kuusamo">Kuusamo</option>
+		        <option value="Kyyjärvi">Kyyjärvi</option>
+		        <option value="Kärkölä">Kärkölä</option>
+		        <option value="Kärsämäki">Kärsämäki</option>
+		        <option value="Kökar">Kökar</option>
+		        <option value="Köyliö">Köyliö</option>
+		        <option value="Lahti">Lahti</option>
+		        <option value="Laihia">Laihia</option>
+		        <option value="Laitila">Laitila</option>
+		        <option value="Lapinjärvi">Lapinjärvi</option>
+		        <option value="Lapinlahti">Lapinlahti</option>
+		        <option value="Lappajärvi">Lappajärvi</option>
+		        <option value="Lappeenranta">Lappeenranta</option>
+		        <option value="Lapua">Lapua</option>
+		        <option value="Laukaa">Laukaa</option>
+		        <option value="Lavia">Lavia</option>
+		        <option value="Lemi">Lemi</option>
+		        <option value="Lemland">Lemland</option>
+		        <option value="Lempäälä">Lempäälä</option>
+		        <option value="Leppävirta">Leppävirta</option>
+		        <option value="Lestijärvi">Lestijärvi</option>
+		        <option value="Lieksa">Lieksa</option>
+		        <option value="Lieto">Lieto</option>
+		        <option value="Liminka">Liminka</option>
+		        <option value="Liperi">Liperi</option>
+		        <option value="Lohja">Lohja</option>
+		        <option value="Loimaa">Loimaa</option>
+		        <option value="Loppi">Loppi</option>
+		        <option value="Loviisa">Loviisa</option>
+		        <option value="Luhanka">Luhanka</option>
+		        <option value="Lumijoki">Lumijoki</option>
+		        <option value="Lumparland">Lumparland</option>
+		        <option value="Luoto">Luoto</option>
+		        <option value="Luumäki">Luumäki</option>
+		        <option value="Luvia">Luvia</option>
+		        <option value="Maalahti">Maalahti</option>
+		        <option value="Maaninka">Maaninka</option>
+		        <option value="Maarianhamina">Maarianhamina</option>
+		        <option value="Marttila">Marttila</option>
+		        <option value="Masku">Masku</option>
+		        <option value="Merijärvi">Merijärvi</option>
+		        <option value="Merikarvia">Merikarvia</option>
+		        <option value="Miehikkälä">Miehikkälä</option>
+		        <option value="Mikkeli">Mikkeli</option>
+		        <option value="Muhos">Muhos</option>
+		        <option value="Multia">Multia</option>
+		        <option value="Muonio">Muonio</option>
+		        <option value="Mustasaari">Mustasaari</option>
+		        <option value="Muurame">Muurame</option>
+		        <option value="Mynämäki">Mynämäki</option>
+		        <option value="Myrskylä">Myrskylä</option>
+		        <option value="Mäntsälä">Mäntsälä</option>
+		        <option value="Mänttä-Vilppula">Mänttä-Vilppula</option>
+		        <option value="Mäntyharju">Mäntyharju</option>
+		        <option value="Naantali">Naantali</option>
+		        <option value="Nakkila">Nakkila</option>
+		        <option value="Nastola">Nastola</option>
+		        <option value="Nilsiä">Nilsiä</option>
+		        <option value="Nivala">Nivala</option>
+		        <option value="Nokia">Nokia</option>
+		        <option value="Nousiainen">Nousiainen</option>
+		        <option value="Nummi-Pusula">Nummi-Pusula</option>
+		        <option value="Nurmes">Nurmes</option>
+		        <option value="Nurmijärvi">Nurmijärvi</option>
+		        <option value="Närpiö">Närpiö</option>
+		        <option value="Orimattila">Orimattila</option>
+		        <option value="Oripää">Oripää</option>
+		        <option value="Orivesi">Orivesi</option>
+		        <option value="Oulainen">Oulainen</option>
+		        <option value="Oulu">Oulu</option>
+		        <option value="Oulunsalo">Oulunsalo</option>
+		        <option value="Outokumpu">Outokumpu</option>
+		        <option value="Padasjoki">Padasjoki</option>
+		        <option value="Paimio">Paimio</option>
+		        <option value="Paltamo">Paltamo</option>
+		        <option value="Parainen">Parainen</option>
+		        <option value="Parikkala">Parikkala</option>
+		        <option value="Parkano">Parkano</option>
+		        <option value="Pedersören kunta">Pedersören kunta</option>
+		        <option value="Pelkosenniemi">Pelkosenniemi</option>
+		        <option value="Pello">Pello</option>
+		        <option value="Perho">Perho</option>
+		        <option value="Pertunmaa">Pertunmaa</option>
+		        <option value="Petäjävesi">Petäjävesi</option>
+		        <option value="Pieksämäki">Pieksämäki</option>
+		        <option value="Pielavesi">Pielavesi</option>
+		        <option value="Pietarsaari">Pietarsaari</option>
+		        <option value="Pihtipudas">Pihtipudas</option>
+		        <option value="Pirkkala">Pirkkala</option>
+		        <option value="Polvijärvi">Polvijärvi</option>
+		        <option value="Pomarkku">Pomarkku</option>
+		        <option value="Pori">Pori</option>
+		        <option value="Pornainen">Pornainen</option>
+		        <option value="Porvoo">Porvoo</option>
+		        <option value="Posio">Posio</option>
+		        <option value="Pudasjärvi">Pudasjärvi</option>
+		        <option value="Pukkila">Pukkila</option>
+		        <option value="Punkaharju">Punkaharju</option>
+		        <option value="Punkalaidun">Punkalaidun</option>
+		        <option value="Puolanka">Puolanka</option>
+		        <option value="Puumala">Puumala</option>
+		        <option value="Pyhtää">Pyhtää</option>
+		        <option value="Pyhäjoki">Pyhäjoki</option>
+		        <option value="Pyhäjärvi">Pyhäjärvi</option>
+		        <option value="Pyhäntä">Pyhäntä</option>
+		        <option value="Pyhäranta">Pyhäranta</option>
+		        <option value="Pälkäne">Pälkäne</option>
+		        <option value="Pöytyä">Pöytyä</option>
+		        <option value="Raahe">Raahe</option>
+		        <option value="Raasepori">Raasepori</option>
+		        <option value="Raisio">Raisio</option>
+		        <option value="Rantasalmi">Rantasalmi</option>
+		        <option value="Ranua">Ranua</option>
+		        <option value="Rauma">Rauma</option>
+		        <option value="Rautalampi">Rautalampi</option>
+		        <option value="Rautavaara">Rautavaara</option>
+		        <option value="Rautjärvi">Rautjärvi</option>
+		        <option value="Reisjärvi">Reisjärvi</option>
+		        <option value="Riihimäki">Riihimäki</option>
+		        <option value="Ristiina">Ristiina</option>
+		        <option value="Ristijärvi">Ristijärvi</option>
+		        <option value="Rovaniemi">Rovaniemi</option>
+		        <option value="Ruokolahti">Ruokolahti</option>
+		        <option value="Ruovesi">Ruovesi</option>
+		        <option value="Rusko">Rusko</option>
+		        <option value="Rääkkylä">Rääkkylä</option>
+		        <option value="Saarijärvi">Saarijärvi</option>
+		        <option value="Salla">Salla</option>
+		        <option value="Salo">Salo</option>
+		        <option value="Saltvik">Saltvik</option>
+		        <option value="Sastamala">Sastamala</option>
+		        <option value="Sauvo">Sauvo</option>
+		        <option value="Savitaipale">Savitaipale</option>
+		        <option value="Savonlinna">Savonlinna</option>
+		        <option value="Savukoski">Savukoski</option>
+		        <option value="Seinäjoki">Seinäjoki</option>
+		        <option value="Sievi">Sievi</option>
+		        <option value="Siikainen">Siikainen</option>
+		        <option value="Siikajoki">Siikajoki</option>
+		        <option value="Siikalatva">Siikalatva</option>
+		        <option value="Siilinjärvi">Siilinjärvi</option>
+		        <option value="Simo">Simo</option>
+		        <option value="Sipoo">Sipoo</option>
+		        <option value="Siuntio">Siuntio</option>
+		        <option value="Sodankylä">Sodankylä</option>
+		        <option value="Soini">Soini</option>
+		        <option value="Somero">Somero</option>
+		        <option value="Sonkajärvi">Sonkajärvi</option>
+		        <option value="Sotkamo">Sotkamo</option>
+		        <option value="Sottunga">Sottunga</option>
+		        <option value="Sulkava">Sulkava</option>
+		        <option value="Sund">Sund</option>
+		        <option value="Suomenniemi">Suomenniemi</option>
+		        <option value="Suomussalmi">Suomussalmi</option>
+		        <option value="Suonenjoki">Suonenjoki</option>
+		        <option value="Sysmä">Sysmä</option>
+		        <option value="Säkylä">Säkylä</option>
+		        <option value="Taipalsaari">Taipalsaari</option>
+		        <option value="Taivalkoski">Taivalkoski</option>
+		        <option value="Taivassalo">Taivassalo</option>
+		        <option value="Tammela">Tammela</option>
+		        <option value="Tampere">Tampere</option>
+		        <option value="Tarvasjoki">Tarvasjoki</option>
+		        <option value="Tervo">Tervo</option>
+		        <option value="Tervola">Tervola</option>
+		        <option value="Teuva">Teuva</option>
+		        <option value="Tohmajärvi">Tohmajärvi</option>
+		        <option value="Toholampi">Toholampi</option>
+		        <option value="Toivakka">Toivakka</option>
+		        <option value="Tornio">Tornio</option>
+		        <option value="Turku">Turku</option>
+		        <option value="Tuusniemi">Tuusniemi</option>
+		        <option value="Tuusula">Tuusula</option>
+		        <option value="Tyrnävä">Tyrnävä</option>
+		        <option value="Töysä">Töysä</option>
+		        <option value="Ulvila">Ulvila</option>
+		        <option value="Urjala">Urjala</option>
+		        <option value="Utajärvi">Utajärvi</option>
+		        <option value="Utsjoki">Utsjoki</option>
+		        <option value="Uurainen">Uurainen</option>
+		        <option value="Uusikaarlepyy">Uusikaarlepyy</option>
+		        <option value="Uusikaupunki">Uusikaupunki</option>
+		        <option value="Vaala">Vaala</option>
+		        <option value="Vaasa">Vaasa</option>
+		        <option value="Valkeakoski">Valkeakoski</option>
+		        <option value="Valtimo">Valtimo</option>
+		        <option value="Vantaa">Vantaa</option>
+		        <option value="Varkaus">Varkaus</option>
+		        <option value="Vehmaa">Vehmaa</option>
+		        <option value="Vesanto">Vesanto</option>
+		        <option value="Vesilahti">Vesilahti</option>
+		        <option value="Veteli">Veteli</option>
+		        <option value="Vieremä">Vieremä</option>
+		        <option value="Vihanti">Vihanti</option>
+		        <option value="Vihti">Vihti</option>
+		        <option value="Viitasaari">Viitasaari</option>
+		        <option value="Vimpeli">Vimpeli</option>
+		        <option value="Virolahti">Virolahti</option>
+		        <option value="Virrat">Virrat</option>
+		        <option value="Vårdö">Vårdö</option>
+		        <option value="Vähäkyrö">Vähäkyrö</option>
+		        <option value="Vöyri">Vöyri</option>
+		        <option value="Yli-Ii">Yli-Ii</option>
+		        <option value="Ylitornio">Ylitornio</option>
+		        <option value="Ylivieska">Ylivieska</option>
+		        <option value="Ylöjärvi">Ylöjärvi</option>
+		        <option value="Ypäjä">Ypäjä</option>
+		        <option value="Ähtäri">Ähtäri</option>
+		        <option value="Äänekoski">Äänekoski</option>        
 			</select>
 
 	    </div>
@@ -508,8 +510,10 @@
 		        <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span> Pakollinen tieto
 		    </p>
 
-		    <a class="small-button disable-dbl-click-check" onClick="proceedTo(2);">Jatka &raquo;</a>
-    		<a href="#" class="push">Peruuta</a>
+	    	
+		    <a href="#step-header-2" class="small-button disable-dbl-click-check" onClick="proceedTo(2);"><span class="small-icon next">Jatka</span></a>
+		    <a href="index.html" class="push">Peruuta</a>
+    		
 	    </div>
 
 	</div>
@@ -519,11 +523,11 @@
     <!--  FORM BLOCK: Kirjoita aloite -->
     <div class="form-block-container">
 
-    <div class="content-block-header edit">
-        <h2>2. Kirjoita aloite</h2><span class="arrow"> </span>
+    <div id="step-header-2" class="content-block-header edit">
+        <h2>2. Kirjoita aloite</h2><span class="arrow hidden"> </span>
     </div>
 
-    <div id="form-step-2" class="input-block cf js-hide" data-form-step="2">
+    <div id="step-2" class="input-block cf js-hide">
     
         <div class="input-block-content">
 	        <div class="system-msg msg-info ">
@@ -540,10 +544,10 @@
 				</div>
 		    </div>
 
-		    <div class="input-header">
+		    <div class="input-header hidden">
 		        Kunta
 		    </div>
-		    <p>Oulu</p>
+		    <p id="selected-municipality" class="hidden">Ei valittu</p>
     
             
 		    <label for="name.fi" class="input-header">
@@ -553,7 +557,7 @@
     		<input type="text" maxlength="512" class="large dirty" value="" name="name.fi" id="name.fi" /> 
 		</div>
 
-		<div class="input-block-content">
+		<div class="input-block-content no-top-margin">
 	    
 		    <div class="input-block-extra helpProposal js-hide hidden">
 		        <div class="input-block-extra-content" style="">
@@ -570,7 +574,7 @@
 
         </div>
 
-        <div class="input-block-content">
+        <div class="input-block-content no-top-margin">
 	    
 		    <div class="input-block-extra helpProposal js-hide hidden">
 		        <div class="input-block-extra-content" style="">
@@ -590,13 +594,10 @@
         </div>
 
 		<div class="input-block-content">
-	 	   	<!--<p class="required-info right">
-		        <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span> Pakollinen tieto
-		    </p>-->
-
-		    <a class="small-button disable-dbl-click-check" onClick="proceedTo(3);">Jatka &raquo;</a>
-    		<a href="#" class="push">Peruuta</a>
+		    <a href="#step-header-3" class="small-button disable-dbl-click-check" onClick="proceedTo(3);"><span class="small-icon next">Jatka</span></a>
+    		<a href="index.html" class="push">Peruuta</a>
 	    </div>
+
 	</div>
 
 	</div>
@@ -604,11 +605,11 @@
 	<!--  FORM BLOCK: Kirjoita aloite -->
 	<div class="form-block-container">
 
-    <div class="content-block-header edit">
-        <h2>3. Anna omat tietosi</h2><span class="arrow"> </span>
+    <div id="step-header-3" class="content-block-header edit">
+        <h2>3. Anna omat tietosi</h2><span class="arrow hidden"> </span>
     </div>
 
-    <div id="form-step-3" class="input-block cf js-hide" data-form-step="3">
+    <div id="step-3" class="input-block cf js-hide">
     
         <div class="input-block-content">
 	        <div class="system-msg msg-info ">
@@ -643,344 +644,344 @@
 			        Kotikunta <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span>
 			    </label>
 
-				<select data-placeholder="Valitse kunta" id="homeMunicipality.fi" name="homeMunicipality.fi" tabindex="1" class="chzn-select">
+				<select data-placeholder="Valitse kunta" id="homeMunicipality" name="homeMunicipality" tabindex="2" class="chzn-select">
 			        <option value=""></option> 
-			        <option value="">Akaa</option>
-			        <option value="">Alajärvi</option>
-			        <option value="">Alavieska</option>
-			        <option value="">Alavus</option>
-			        <option value="">Asikkala</option>
-			        <option value="">Askola</option>
-			        <option value="">Aura</option>
-			        <option value="">Brändö</option>
-			        <option value="">Eckerö</option>
-			        <option value="">Enonkoski</option>
-			        <option value="">Enontekiö</option>
-			        <option value="">Espoo</option>
-			        <option value="">Eura</option>
-			        <option value="">Eurajoki</option>
-			        <option value="">Evijärvi</option>
-			        <option value="">Finström</option>
-			        <option value="">Forssa</option>
-			        <option value="">Föglö</option>
-			        <option value="">Geta</option>
-			        <option value="">Haapajärvi</option>
-			        <option value="">Haapavesi</option>
-			        <option value="">Hailuoto</option>
-			        <option value="">Halsua</option>
-			        <option value="">Hamina</option>
-			        <option value="">Hammarland</option>
-			        <option value="">Hankasalmi</option>
-			        <option value="">Hanko</option>
-			        <option value="">Harjavalta</option>
-			        <option value="">Hartola</option>
-			        <option value="">Hattula</option>
-			        <option value="">Haukipudas</option>
-			        <option value="">Hausjärvi</option>
-			        <option value="">Heinola</option>
-			        <option value="">Heinävesi</option>
-			        <option value="">Helsinki</option>
-			        <option value="">Hirvensalmi</option>
-			        <option value="">Hollola</option>
-			        <option value="">Honkajoki</option>
-			        <option value="">Huittinen</option>
-			        <option value="">Humppila</option>
-			        <option value="">Hyrynsalmi</option>
-			        <option value="">Hyvinkää</option>
-			        <option value="">Hämeenkoski</option>
-			        <option value="">Hämeenkyrö</option>
-			        <option value="">Hämeenlinna</option>
-			        <option value="">Ii</option>
-			        <option value="">Iisalmi</option>
-			        <option value="">Iitti</option>
-			        <option value="">Ikaalinen</option>
-			        <option value="">Ilmajoki</option>
-			        <option value="">Ilomantsi</option>
-			        <option value="">Imatra</option>
-			        <option value="">Inari</option>
-			        <option value="">Inkoo</option>
-			        <option value="">Isojoki</option>
-			        <option value="">Isokyrö</option>
-			        <option value="">Jalasjärvi</option>
-			        <option value="">Janakkala</option>
-			        <option value="">Joensuu</option>
-			        <option value="">Jokioinen</option>
-			        <option value="">Jomala</option>
-			        <option value="">Joroinen</option>
-			        <option value="">Joutsa</option>
-			        <option value="">Juankoski</option>
-			        <option value="">Juuka</option>
-			        <option value="">Juupajoki</option>
-			        <option value="">Juva</option>
-			        <option value="">Jyväskylä</option>
-			        <option value="">Jämijärvi</option>
-			        <option value="">Jämsä</option>
-			        <option value="">Järvenpää</option>
-			        <option value="">Kaarina</option>
-			        <option value="">Kaavi</option>
-			        <option value="">Kajaani</option>
-			        <option value="">Kalajoki</option>
-			        <option value="">Kangasala</option>
-			        <option value="">Kangasniemi</option>
-			        <option value="">Kankaanpää</option>
-			        <option value="">Kannonkoski</option>
-			        <option value="">Kannus</option>
-			        <option value="">Karijoki</option>
-			        <option value="">Karjalohja</option>
-			        <option value="">Karkkila</option>
-			        <option value="">Karstula</option>
-			        <option value="">Karvia</option>
-			        <option value="">Kaskinen</option>
-			        <option value="">Kauhajoki</option>
-			        <option value="">Kauhava</option>
-			        <option value="">Kauniainen</option>
-			        <option value="">Kaustinen</option>
-			        <option value="">Keitele</option>
-			        <option value="">Kemi</option>
-			        <option value="">Kemijärvi</option>
-			        <option value="">Keminmaa</option>
-			        <option value="">Kemiönsaari</option>
-			        <option value="">Kempele</option>
-			        <option value="">Kerava</option>
-			        <option value="">Kerimäki</option>
-			        <option value="">Kesälahti</option>
-			        <option value="">Keuruu</option>
-			        <option value="">Kihniö</option>
-			        <option value="">Kiikoinen</option>
-			        <option value="">Kiiminki</option>
-			        <option value="">Kinnula</option>
-			        <option value="">Kirkkonummi</option>
-			        <option value="">Kitee</option>
-			        <option value="">Kittilä</option>
-			        <option value="">Kiuruvesi</option>
-			        <option value="">Kivijärvi</option>
-			        <option value="">Kokemäki</option>
-			        <option value="">Kokkola</option>
-			        <option value="">Kolari</option>
-			        <option value="">Konnevesi</option>
-			        <option value="">Kontiolahti</option>
-			        <option value="">Korsnäs</option>
-			        <option value="">Koski Tl</option>
-			        <option value="">Kotka</option>
-			        <option value="">Kouvola</option>
-			        <option value="">Kristiinankaupunki</option>
-			        <option value="">Kruunupyy</option>
-			        <option value="">Kuhmo</option>
-			        <option value="">Kuhmoinen</option>
-			        <option value="">Kumlinge</option>
-			        <option value="">Kuopio</option>
-			        <option value="">Kuortane</option>
-			        <option value="">Kurikka</option>
-			        <option value="">Kustavi</option>
-			        <option value="">Kuusamo</option>
-			        <option value="">Kyyjärvi</option>
-			        <option value="">Kärkölä</option>
-			        <option value="">Kärsämäki</option>
-			        <option value="">Kökar</option>
-			        <option value="">Köyliö</option>
-			        <option value="">Lahti</option>
-			        <option value="">Laihia</option>
-			        <option value="">Laitila</option>
-			        <option value="">Lapinjärvi</option>
-			        <option value="">Lapinlahti</option>
-			        <option value="">Lappajärvi</option>
-			        <option value="">Lappeenranta</option>
-			        <option value="">Lapua</option>
-			        <option value="">Laukaa</option>
-			        <option value="">Lavia</option>
-			        <option value="">Lemi</option>
-			        <option value="">Lemland</option>
-			        <option value="">Lempäälä</option>
-			        <option value="">Leppävirta</option>
-			        <option value="">Lestijärvi</option>
-			        <option value="">Lieksa</option>
-			        <option value="">Lieto</option>
-			        <option value="">Liminka</option>
-			        <option value="">Liperi</option>
-			        <option value="">Lohja</option>
-			        <option value="">Loimaa</option>
-			        <option value="">Loppi</option>
-			        <option value="">Loviisa</option>
-			        <option value="">Luhanka</option>
-			        <option value="">Lumijoki</option>
-			        <option value="">Lumparland</option>
-			        <option value="">Luoto</option>
-			        <option value="">Luumäki</option>
-			        <option value="">Luvia</option>
-			        <option value="">Maalahti</option>
-			        <option value="">Maaninka</option>
-			        <option value="">Maarianhamina</option>
-			        <option value="">Marttila</option>
-			        <option value="">Masku</option>
-			        <option value="">Merijärvi</option>
-			        <option value="">Merikarvia</option>
-			        <option value="">Miehikkälä</option>
-			        <option value="">Mikkeli</option>
-			        <option value="">Muhos</option>
-			        <option value="">Multia</option>
-			        <option value="">Muonio</option>
-			        <option value="">Mustasaari</option>
-			        <option value="">Muurame</option>
-			        <option value="">Mynämäki</option>
-			        <option value="">Myrskylä</option>
-			        <option value="">Mäntsälä</option>
-			        <option value="">Mänttä-Vilppula</option>
-			        <option value="">Mäntyharju</option>
-			        <option value="">Naantali</option>
-			        <option value="">Nakkila</option>
-			        <option value="">Nastola</option>
-			        <option value="">Nilsiä</option>
-			        <option value="">Nivala</option>
-			        <option value="">Nokia</option>
-			        <option value="">Nousiainen</option>
-			        <option value="">Nummi-Pusula</option>
-			        <option value="">Nurmes</option>
-			        <option value="">Nurmijärvi</option>
-			        <option value="">Närpiö</option>
-			        <option value="">Orimattila</option>
-			        <option value="">Oripää</option>
-			        <option value="">Orivesi</option>
-			        <option value="">Oulainen</option>
-			        <option value="">Oulu</option>
-			        <option value="">Oulunsalo</option>
-			        <option value="">Outokumpu</option>
-			        <option value="">Padasjoki</option>
-			        <option value="">Paimio</option>
-			        <option value="">Paltamo</option>
-			        <option value="">Parainen</option>
-			        <option value="">Parikkala</option>
-			        <option value="">Parkano</option>
-			        <option value="">Pedersören kunta</option>
-			        <option value="">Pelkosenniemi</option>
-			        <option value="">Pello</option>
-			        <option value="">Perho</option>
-			        <option value="">Pertunmaa</option>
-			        <option value="">Petäjävesi</option>
-			        <option value="">Pieksämäki</option>
-			        <option value="">Pielavesi</option>
-			        <option value="">Pietarsaari</option>
-			        <option value="">Pihtipudas</option>
-			        <option value="">Pirkkala</option>
-			        <option value="">Polvijärvi</option>
-			        <option value="">Pomarkku</option>
-			        <option value="">Pori</option>
-			        <option value="">Pornainen</option>
-			        <option value="">Porvoo</option>
-			        <option value="">Posio</option>
-			        <option value="">Pudasjärvi</option>
-			        <option value="">Pukkila</option>
-			        <option value="">Punkaharju</option>
-			        <option value="">Punkalaidun</option>
-			        <option value="">Puolanka</option>
-			        <option value="">Puumala</option>
-			        <option value="">Pyhtää</option>
-			        <option value="">Pyhäjoki</option>
-			        <option value="">Pyhäjärvi</option>
-			        <option value="">Pyhäntä</option>
-			        <option value="">Pyhäranta</option>
-			        <option value="">Pälkäne</option>
-			        <option value="">Pöytyä</option>
-			        <option value="">Raahe</option>
-			        <option value="">Raasepori</option>
-			        <option value="">Raisio</option>
-			        <option value="">Rantasalmi</option>
-			        <option value="">Ranua</option>
-			        <option value="">Rauma</option>
-			        <option value="">Rautalampi</option>
-			        <option value="">Rautavaara</option>
-			        <option value="">Rautjärvi</option>
-			        <option value="">Reisjärvi</option>
-			        <option value="">Riihimäki</option>
-			        <option value="">Ristiina</option>
-			        <option value="">Ristijärvi</option>
-			        <option value="">Rovaniemi</option>
-			        <option value="">Ruokolahti</option>
-			        <option value="">Ruovesi</option>
-			        <option value="">Rusko</option>
-			        <option value="">Rääkkylä</option>
-			        <option value="">Saarijärvi</option>
-			        <option value="">Salla</option>
-			        <option value="">Salo</option>
-			        <option value="">Saltvik</option>
-			        <option value="">Sastamala</option>
-			        <option value="">Sauvo</option>
-			        <option value="">Savitaipale</option>
-			        <option value="">Savonlinna</option>
-			        <option value="">Savukoski</option>
-			        <option value="">Seinäjoki</option>
-			        <option value="">Sievi</option>
-			        <option value="">Siikainen</option>
-			        <option value="">Siikajoki</option>
-			        <option value="">Siikalatva</option>
-			        <option value="">Siilinjärvi</option>
-			        <option value="">Simo</option>
-			        <option value="">Sipoo</option>
-			        <option value="">Siuntio</option>
-			        <option value="">Sodankylä</option>
-			        <option value="">Soini</option>
-			        <option value="">Somero</option>
-			        <option value="">Sonkajärvi</option>
-			        <option value="">Sotkamo</option>
-			        <option value="">Sottunga</option>
-			        <option value="">Sulkava</option>
-			        <option value="">Sund</option>
-			        <option value="">Suomenniemi</option>
-			        <option value="">Suomussalmi</option>
-			        <option value="">Suonenjoki</option>
-			        <option value="">Sysmä</option>
-			        <option value="">Säkylä</option>
-			        <option value="">Taipalsaari</option>
-			        <option value="">Taivalkoski</option>
-			        <option value="">Taivassalo</option>
-			        <option value="">Tammela</option>
-			        <option value="">Tampere</option>
-			        <option value="">Tarvasjoki</option>
-			        <option value="">Tervo</option>
-			        <option value="">Tervola</option>
-			        <option value="">Teuva</option>
-			        <option value="">Tohmajärvi</option>
-			        <option value="">Toholampi</option>
-			        <option value="">Toivakka</option>
-			        <option value="">Tornio</option>
-			        <option value="">Turku</option>
-			        <option value="">Tuusniemi</option>
-			        <option value="">Tuusula</option>
-			        <option value="">Tyrnävä</option>
-			        <option value="">Töysä</option>
-			        <option value="">Ulvila</option>
-			        <option value="">Urjala</option>
-			        <option value="">Utajärvi</option>
-			        <option value="">Utsjoki</option>
-			        <option value="">Uurainen</option>
-			        <option value="">Uusikaarlepyy</option>
-			        <option value="">Uusikaupunki</option>
-			        <option value="">Vaala</option>
-			        <option value="">Vaasa</option>
-			        <option value="">Valkeakoski</option>
-			        <option value="">Valtimo</option>
-			        <option value="">Vantaa</option>
-			        <option value="">Varkaus</option>
-			        <option value="">Vehmaa</option>
-			        <option value="">Vesanto</option>
-			        <option value="">Vesilahti</option>
-			        <option value="">Veteli</option>
-			        <option value="">Vieremä</option>
-			        <option value="">Vihanti</option>
-			        <option value="">Vihti</option>
-			        <option value="">Viitasaari</option>
-			        <option value="">Vimpeli</option>
-			        <option value="">Virolahti</option>
-			        <option value="">Virrat</option>
-			        <option value="">Vårdö</option>
-			        <option value="">Vähäkyrö</option>
-			        <option value="">Vöyri</option>
-			        <option value="">Yli-Ii</option>
-			        <option value="">Ylitornio</option>
-			        <option value="">Ylivieska</option>
-			        <option value="">Ylöjärvi</option>
-			        <option value="">Ypäjä</option>
-			        <option value="">Ähtäri</option>
-			        <option value="">Äänekoski</option>             
+			        <option value="Akaa">Akaa</option>
+			        <option value="Alajärvi">Alajärvi</option>
+			        <option value="Alavieska">Alavieska</option>
+			        <option value="Alavus">Alavus</option>
+			        <option value="Asikkala">Asikkala</option>
+			        <option value="Askola">Askola</option>
+			        <option value="Aura">Aura</option>
+			        <option value="Brändö">Brändö</option>
+			        <option value="Eckerö">Eckerö</option>
+			        <option value="Enonkoski">Enonkoski</option>
+			        <option value="Enontekiö">Enontekiö</option>
+			        <option value="Espoo">Espoo</option>
+			        <option value="Eura">Eura</option>
+			        <option value="Eurajoki">Eurajoki</option>
+			        <option value="Evijärvi">Evijärvi</option>
+			        <option value="Finström">Finström</option>
+			        <option value="Forssa">Forssa</option>
+			        <option value="Föglö">Föglö</option>
+			        <option value="Geta">Geta</option>
+			        <option value="Haapajärvi">Haapajärvi</option>
+			        <option value="Haapavesi">Haapavesi</option>
+			        <option value="Hailuoto">Hailuoto</option>
+			        <option value="Halsua">Halsua</option>
+			        <option value="Hamina">Hamina</option>
+			        <option value="Hammarland">Hammarland</option>
+			        <option value="Hankasalmi">Hankasalmi</option>
+			        <option value="Hanko">Hanko</option>
+			        <option value="Harjavalta">Harjavalta</option>
+			        <option value="Hartola">Hartola</option>
+			        <option value="Hattula">Hattula</option>
+			        <option value="Haukipudas">Haukipudas</option>
+			        <option value="Hausjärvi">Hausjärvi</option>
+			        <option value="Heinola">Heinola</option>
+			        <option value="Heinävesi">Heinävesi</option>
+			        <option value="Helsinki">Helsinki</option>
+			        <option value="Hirvensalmi">Hirvensalmi</option>
+			        <option value="Hollola">Hollola</option>
+			        <option value="Honkajoki">Honkajoki</option>
+			        <option value="Huittinen">Huittinen</option>
+			        <option value="Humppila">Humppila</option>
+			        <option value="Hyrynsalmi">Hyrynsalmi</option>
+			        <option value="Hyvinkää">Hyvinkää</option>
+			        <option value="Hämeenkoski">Hämeenkoski</option>
+			        <option value="Hämeenkyrö">Hämeenkyrö</option>
+			        <option value="Hämeenlinna">Hämeenlinna</option>
+			        <option value="Ii">Ii</option>
+			        <option value="Iisalmi">Iisalmi</option>
+			        <option value="Iitti">Iitti</option>
+			        <option value="Ikaalinen">Ikaalinen</option>
+			        <option value="Ilmajoki">Ilmajoki</option>
+			        <option value="Ilomantsi">Ilomantsi</option>
+			        <option value="Imatra">Imatra</option>
+			        <option value="Inari">Inari</option>
+			        <option value="Inkoo">Inkoo</option>
+			        <option value="Isojoki">Isojoki</option>
+			        <option value="Isokyrö">Isokyrö</option>
+			        <option value="Jalasjärvi">Jalasjärvi</option>
+			        <option value="Janakkala">Janakkala</option>
+			        <option value="Joensuu">Joensuu</option>
+			        <option value="Jokioinen">Jokioinen</option>
+			        <option value="Jomala">Jomala</option>
+			        <option value="Joroinen">Joroinen</option>
+			        <option value="Joutsa">Joutsa</option>
+			        <option value="Juankoski">Juankoski</option>
+			        <option value="Juuka">Juuka</option>
+			        <option value="Juupajoki">Juupajoki</option>
+			        <option value="Juva">Juva</option>
+			        <option value="Jyväskylä">Jyväskylä</option>
+			        <option value="Jämijärvi">Jämijärvi</option>
+			        <option value="Jämsä">Jämsä</option>
+			        <option value="Järvenpää">Järvenpää</option>
+			        <option value="Kaarina">Kaarina</option>
+			        <option value="Kaavi">Kaavi</option>
+			        <option value="Kajaani">Kajaani</option>
+			        <option value="Kalajoki">Kalajoki</option>
+			        <option value="Kangasala">Kangasala</option>
+			        <option value="Kangasniemi">Kangasniemi</option>
+			        <option value="Kankaanpää">Kankaanpää</option>
+			        <option value="Kannonkoski">Kannonkoski</option>
+			        <option value="Kannus">Kannus</option>
+			        <option value="Karijoki">Karijoki</option>
+			        <option value="Karjalohja">Karjalohja</option>
+			        <option value="Karkkila">Karkkila</option>
+			        <option value="Karstula">Karstula</option>
+			        <option value="Karvia">Karvia</option>
+			        <option value="Kaskinen">Kaskinen</option>
+			        <option value="Kauhajoki">Kauhajoki</option>
+			        <option value="Kauhava">Kauhava</option>
+			        <option value="Kauniainen">Kauniainen</option>
+			        <option value="Kaustinen">Kaustinen</option>
+			        <option value="Keitele">Keitele</option>
+			        <option value="Kemi">Kemi</option>
+			        <option value="Kemijärvi">Kemijärvi</option>
+			        <option value="Keminmaa">Keminmaa</option>
+			        <option value="Kemiönsaari">Kemiönsaari</option>
+			        <option value="Kempele">Kempele</option>
+			        <option value="Kerava">Kerava</option>
+			        <option value="Kerimäki">Kerimäki</option>
+			        <option value="Kesälahti">Kesälahti</option>
+			        <option value="Keuruu">Keuruu</option>
+			        <option value="Kihniö">Kihniö</option>
+			        <option value="Kiikoinen">Kiikoinen</option>
+			        <option value="Kiiminki">Kiiminki</option>
+			        <option value="Kinnula">Kinnula</option>
+			        <option value="Kirkkonummi">Kirkkonummi</option>
+			        <option value="Kitee">Kitee</option>
+			        <option value="Kittilä">Kittilä</option>
+			        <option value="Kiuruvesi">Kiuruvesi</option>
+			        <option value="Kivijärvi">Kivijärvi</option>
+			        <option value="Kokemäki">Kokemäki</option>
+			        <option value="Kokkola">Kokkola</option>
+			        <option value="Kolari">Kolari</option>
+			        <option value="Konnevesi">Konnevesi</option>
+			        <option value="Kontiolahti">Kontiolahti</option>
+			        <option value="Korsnäs">Korsnäs</option>
+			        <option value="Koski Tl">Koski Tl</option>
+			        <option value="Kotka">Kotka</option>
+			        <option value="Kouvola">Kouvola</option>
+			        <option value="Kristiinankaupunki">Kristiinankaupunki</option>
+			        <option value="Kruunupyy">Kruunupyy</option>
+			        <option value="Kuhmo">Kuhmo</option>
+			        <option value="Kuhmoinen">Kuhmoinen</option>
+			        <option value="Kumlinge">Kumlinge</option>
+			        <option value="Kuopio">Kuopio</option>
+			        <option value="Kuortane">Kuortane</option>
+			        <option value="Kurikka">Kurikka</option>
+			        <option value="Kustavi">Kustavi</option>
+			        <option value="Kuusamo">Kuusamo</option>
+			        <option value="Kyyjärvi">Kyyjärvi</option>
+			        <option value="Kärkölä">Kärkölä</option>
+			        <option value="Kärsämäki">Kärsämäki</option>
+			        <option value="Kökar">Kökar</option>
+			        <option value="Köyliö">Köyliö</option>
+			        <option value="Lahti">Lahti</option>
+			        <option value="Laihia">Laihia</option>
+			        <option value="Laitila">Laitila</option>
+			        <option value="Lapinjärvi">Lapinjärvi</option>
+			        <option value="Lapinlahti">Lapinlahti</option>
+			        <option value="Lappajärvi">Lappajärvi</option>
+			        <option value="Lappeenranta">Lappeenranta</option>
+			        <option value="Lapua">Lapua</option>
+			        <option value="Laukaa">Laukaa</option>
+			        <option value="Lavia">Lavia</option>
+			        <option value="Lemi">Lemi</option>
+			        <option value="Lemland">Lemland</option>
+			        <option value="Lempäälä">Lempäälä</option>
+			        <option value="Leppävirta">Leppävirta</option>
+			        <option value="Lestijärvi">Lestijärvi</option>
+			        <option value="Lieksa">Lieksa</option>
+			        <option value="Lieto">Lieto</option>
+			        <option value="Liminka">Liminka</option>
+			        <option value="Liperi">Liperi</option>
+			        <option value="Lohja">Lohja</option>
+			        <option value="Loimaa">Loimaa</option>
+			        <option value="Loppi">Loppi</option>
+			        <option value="Loviisa">Loviisa</option>
+			        <option value="Luhanka">Luhanka</option>
+			        <option value="Lumijoki">Lumijoki</option>
+			        <option value="Lumparland">Lumparland</option>
+			        <option value="Luoto">Luoto</option>
+			        <option value="Luumäki">Luumäki</option>
+			        <option value="Luvia">Luvia</option>
+			        <option value="Maalahti">Maalahti</option>
+			        <option value="Maaninka">Maaninka</option>
+			        <option value="Maarianhamina">Maarianhamina</option>
+			        <option value="Marttila">Marttila</option>
+			        <option value="Masku">Masku</option>
+			        <option value="Merijärvi">Merijärvi</option>
+			        <option value="Merikarvia">Merikarvia</option>
+			        <option value="Miehikkälä">Miehikkälä</option>
+			        <option value="Mikkeli">Mikkeli</option>
+			        <option value="Muhos">Muhos</option>
+			        <option value="Multia">Multia</option>
+			        <option value="Muonio">Muonio</option>
+			        <option value="Mustasaari">Mustasaari</option>
+			        <option value="Muurame">Muurame</option>
+			        <option value="Mynämäki">Mynämäki</option>
+			        <option value="Myrskylä">Myrskylä</option>
+			        <option value="Mäntsälä">Mäntsälä</option>
+			        <option value="Mänttä-Vilppula">Mänttä-Vilppula</option>
+			        <option value="Mäntyharju">Mäntyharju</option>
+			        <option value="Naantali">Naantali</option>
+			        <option value="Nakkila">Nakkila</option>
+			        <option value="Nastola">Nastola</option>
+			        <option value="Nilsiä">Nilsiä</option>
+			        <option value="Nivala">Nivala</option>
+			        <option value="Nokia">Nokia</option>
+			        <option value="Nousiainen">Nousiainen</option>
+			        <option value="Nummi-Pusula">Nummi-Pusula</option>
+			        <option value="Nurmes">Nurmes</option>
+			        <option value="Nurmijärvi">Nurmijärvi</option>
+			        <option value="Närpiö">Närpiö</option>
+			        <option value="Orimattila">Orimattila</option>
+			        <option value="Oripää">Oripää</option>
+			        <option value="Orivesi">Orivesi</option>
+			        <option value="Oulainen">Oulainen</option>
+			        <option value="Oulu">Oulu</option>
+			        <option value="Oulunsalo">Oulunsalo</option>
+			        <option value="Outokumpu">Outokumpu</option>
+			        <option value="Padasjoki">Padasjoki</option>
+			        <option value="Paimio">Paimio</option>
+			        <option value="Paltamo">Paltamo</option>
+			        <option value="Parainen">Parainen</option>
+			        <option value="Parikkala">Parikkala</option>
+			        <option value="Parkano">Parkano</option>
+			        <option value="Pedersören kunta">Pedersören kunta</option>
+			        <option value="Pelkosenniemi">Pelkosenniemi</option>
+			        <option value="Pello">Pello</option>
+			        <option value="Perho">Perho</option>
+			        <option value="Pertunmaa">Pertunmaa</option>
+			        <option value="Petäjävesi">Petäjävesi</option>
+			        <option value="Pieksämäki">Pieksämäki</option>
+			        <option value="Pielavesi">Pielavesi</option>
+			        <option value="Pietarsaari">Pietarsaari</option>
+			        <option value="Pihtipudas">Pihtipudas</option>
+			        <option value="Pirkkala">Pirkkala</option>
+			        <option value="Polvijärvi">Polvijärvi</option>
+			        <option value="Pomarkku">Pomarkku</option>
+			        <option value="Pori">Pori</option>
+			        <option value="Pornainen">Pornainen</option>
+			        <option value="Porvoo">Porvoo</option>
+			        <option value="Posio">Posio</option>
+			        <option value="Pudasjärvi">Pudasjärvi</option>
+			        <option value="Pukkila">Pukkila</option>
+			        <option value="Punkaharju">Punkaharju</option>
+			        <option value="Punkalaidun">Punkalaidun</option>
+			        <option value="Puolanka">Puolanka</option>
+			        <option value="Puumala">Puumala</option>
+			        <option value="Pyhtää">Pyhtää</option>
+			        <option value="Pyhäjoki">Pyhäjoki</option>
+			        <option value="Pyhäjärvi">Pyhäjärvi</option>
+			        <option value="Pyhäntä">Pyhäntä</option>
+			        <option value="Pyhäranta">Pyhäranta</option>
+			        <option value="Pälkäne">Pälkäne</option>
+			        <option value="Pöytyä">Pöytyä</option>
+			        <option value="Raahe">Raahe</option>
+			        <option value="Raasepori">Raasepori</option>
+			        <option value="Raisio">Raisio</option>
+			        <option value="Rantasalmi">Rantasalmi</option>
+			        <option value="Ranua">Ranua</option>
+			        <option value="Rauma">Rauma</option>
+			        <option value="Rautalampi">Rautalampi</option>
+			        <option value="Rautavaara">Rautavaara</option>
+			        <option value="Rautjärvi">Rautjärvi</option>
+			        <option value="Reisjärvi">Reisjärvi</option>
+			        <option value="Riihimäki">Riihimäki</option>
+			        <option value="Ristiina">Ristiina</option>
+			        <option value="Ristijärvi">Ristijärvi</option>
+			        <option value="Rovaniemi">Rovaniemi</option>
+			        <option value="Ruokolahti">Ruokolahti</option>
+			        <option value="Ruovesi">Ruovesi</option>
+			        <option value="Rusko">Rusko</option>
+			        <option value="Rääkkylä">Rääkkylä</option>
+			        <option value="Saarijärvi">Saarijärvi</option>
+			        <option value="Salla">Salla</option>
+			        <option value="Salo">Salo</option>
+			        <option value="Saltvik">Saltvik</option>
+			        <option value="Sastamala">Sastamala</option>
+			        <option value="Sauvo">Sauvo</option>
+			        <option value="Savitaipale">Savitaipale</option>
+			        <option value="Savonlinna">Savonlinna</option>
+			        <option value="Savukoski">Savukoski</option>
+			        <option value="Seinäjoki">Seinäjoki</option>
+			        <option value="Sievi">Sievi</option>
+			        <option value="Siikainen">Siikainen</option>
+			        <option value="Siikajoki">Siikajoki</option>
+			        <option value="Siikalatva">Siikalatva</option>
+			        <option value="Siilinjärvi">Siilinjärvi</option>
+			        <option value="Simo">Simo</option>
+			        <option value="Sipoo">Sipoo</option>
+			        <option value="Siuntio">Siuntio</option>
+			        <option value="Sodankylä">Sodankylä</option>
+			        <option value="Soini">Soini</option>
+			        <option value="Somero">Somero</option>
+			        <option value="Sonkajärvi">Sonkajärvi</option>
+			        <option value="Sotkamo">Sotkamo</option>
+			        <option value="Sottunga">Sottunga</option>
+			        <option value="Sulkava">Sulkava</option>
+			        <option value="Sund">Sund</option>
+			        <option value="Suomenniemi">Suomenniemi</option>
+			        <option value="Suomussalmi">Suomussalmi</option>
+			        <option value="Suonenjoki">Suonenjoki</option>
+			        <option value="Sysmä">Sysmä</option>
+			        <option value="Säkylä">Säkylä</option>
+			        <option value="Taipalsaari">Taipalsaari</option>
+			        <option value="Taivalkoski">Taivalkoski</option>
+			        <option value="Taivassalo">Taivassalo</option>
+			        <option value="Tammela">Tammela</option>
+			        <option value="Tampere">Tampere</option>
+			        <option value="Tarvasjoki">Tarvasjoki</option>
+			        <option value="Tervo">Tervo</option>
+			        <option value="Tervola">Tervola</option>
+			        <option value="Teuva">Teuva</option>
+			        <option value="Tohmajärvi">Tohmajärvi</option>
+			        <option value="Toholampi">Toholampi</option>
+			        <option value="Toivakka">Toivakka</option>
+			        <option value="Tornio">Tornio</option>
+			        <option value="Turku">Turku</option>
+			        <option value="Tuusniemi">Tuusniemi</option>
+			        <option value="Tuusula">Tuusula</option>
+			        <option value="Tyrnävä">Tyrnävä</option>
+			        <option value="Töysä">Töysä</option>
+			        <option value="Ulvila">Ulvila</option>
+			        <option value="Urjala">Urjala</option>
+			        <option value="Utajärvi">Utajärvi</option>
+			        <option value="Utsjoki">Utsjoki</option>
+			        <option value="Uurainen">Uurainen</option>
+			        <option value="Uusikaarlepyy">Uusikaarlepyy</option>
+			        <option value="Uusikaupunki">Uusikaupunki</option>
+			        <option value="Vaala">Vaala</option>
+			        <option value="Vaasa">Vaasa</option>
+			        <option value="Valkeakoski">Valkeakoski</option>
+			        <option value="Valtimo">Valtimo</option>
+			        <option value="Vantaa">Vantaa</option>
+			        <option value="Varkaus">Varkaus</option>
+			        <option value="Vehmaa">Vehmaa</option>
+			        <option value="Vesanto">Vesanto</option>
+			        <option value="Vesilahti">Vesilahti</option>
+			        <option value="Veteli">Veteli</option>
+			        <option value="Vieremä">Vieremä</option>
+			        <option value="Vihanti">Vihanti</option>
+			        <option value="Vihti">Vihti</option>
+			        <option value="Viitasaari">Viitasaari</option>
+			        <option value="Vimpeli">Vimpeli</option>
+			        <option value="Virolahti">Virolahti</option>
+			        <option value="Virrat">Virrat</option>
+			        <option value="Vårdö">Vårdö</option>
+			        <option value="Vähäkyrö">Vähäkyrö</option>
+			        <option value="Vöyri">Vöyri</option>
+			        <option value="Yli-Ii">Yli-Ii</option>
+			        <option value="Ylitornio">Ylitornio</option>
+			        <option value="Ylivieska">Ylivieska</option>
+			        <option value="Ylöjärvi">Ylöjärvi</option>
+			        <option value="Ypäjä">Ypäjä</option>
+			        <option value="Ähtäri">Ähtäri</option>
+			        <option value="Äänekoski">Äänekoski</option>           
 				</select>
 			</div>
 	            
@@ -1034,8 +1035,8 @@
 		        <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span> Pakollinen tieto
 		    </p>-->
 
-		    <a class="small-button disable-dbl-click-check" onClick="proceedTo(4);">Jatka &raquo;</a>
-    		<a href="#" class="push">Peruuta</a>
+		    <a href="#step-header-4" class="small-button disable-dbl-click-check" onClick="proceedTo(4);"><span class="small-icon next">Jatka</span></a>
+    		<a href="index.html" class="push">Peruuta</a>
 	    </div>
 
 	</div>
@@ -1045,11 +1046,11 @@
     <!--  FORM BLOCK: Kirjoita aloite -->
     <div class="form-block-container">
 
-    <div class="content-block-header edit">
-        <h2>4. Kerro haluatko kerätä muita tekijöitä ja tallenna aloite</h2><span class="arrow"> </span>
+    <div id="step-header-4" class="content-block-header edit">
+        <h2>4. Kerro haluatko kerätä muita tekijöitä ja tallenna aloite</h2><span class="arrow hidden"> </span>
     </div>
 
-    <div id="form-step-4" class="input-block cf js-hide" data-form-step="4">
+    <div id="step-4" class="input-block cf js-hide">
     
         <div class="input-block-content">
 	        <div class="system-msg msg-info ">
@@ -1057,7 +1058,7 @@
 	        </div>
         </div>
         
-        <div class="input-block-content">      
+        <div class="input-block-content" id="gather-people-container">      
 		    <div class="input-block-extra helpName js-hide hidden">
 		        <div class="input-block-extra-content">
 		            <h4>Valitse kunta</h4>
@@ -1066,15 +1067,42 @@
 		  	</div>
 
 		  	<div class="input-header">
-		        Äänioikeus <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span>
+		        Tekijöiden keräys aloitteelle <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span>
 		    </div>
 
 		    <label>
-    			<input type="radio" name="gather-people" /><span class="label">En halua kerätä aloitteelle lisää tekijöitä vaan haluan lähettää aloitteen suoraan kuntaan</span>
+    			<input type="radio" name="gather-people" id="gather-people-false" /><span class="label">En halua kerätä aloitteelle lisää tekijöitä vaan haluan lähettää aloitteen suoraan kuntaan</span>
 			</label>
 			<label>
-    			<input type="radio" name="gather-people" /><span class="label">Haluan kerätä aloitteelle lisää tekijöitä Kuntalaisaloite.fi:ssä</span>
+    			<input type="radio" name="gather-people" id="gather-people-true" /><span class="label">Haluan kerätä aloitteelle lisää tekijöitä Kuntalaisaloite.fi:ssä</span>
 			</label>
+
+			<div class="gather-people-details js-hide">
+				<br/>
+				<div class="system-msg msg-info ">
+		           Sinun tulee antaa tunnistautumistiedot, jotta voit myöhemmin palata lähettämään tämän aloitteen kuntaan. Tämän aloitteen www-osoite ja tunnistautumistiedot lähetetään antamaasi sähköpostiosoitteeseen. Tunnistautumistietoja ei näytetä julkisesti Kuntalaisaloite.fi-palvelussa.
+		        </div>
+		        <br/>
+
+		        <p>Keksi aloitteelle tunnus, joka tulee olemaan käytössä vain tälle aloitteelle.</p>
+
+		        <div class="column col-1of2">
+
+			        <label for="email" class="input-header">
+				        Sähköpostiosoite
+				    </label>
+
+				    <input type="text" maxlength="128" class="medium" value="" name="email" id="email" />
+				</div>
+				<div class="column col-1of2 last">
+				    <label for="initiativeSecret" class="input-header">
+				        Aloitetunnus
+				    </label>
+
+				    <input type="text" maxlength="128" class="medium" value="" name="initiativeSecret" id="initiativeSecret" />
+			    </div>
+            </div>
+
 		</div>
 
 		<div class="input-block-content">
@@ -1082,8 +1110,8 @@
 		        <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span> Pakollinen tieto
 		    </p>-->
 
-		    <button class="small-button">Tallenna aloite</button>
-    		<a href="#" class="push">Peruuta</a>
+		    <button class="small-button"><span class="small-icon save-and-send">Tallenna aloite</span></button>
+    		<a href="index.html" class="push">Peruuta</a>
 	    </div>
 	</div>
 

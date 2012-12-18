@@ -112,6 +112,24 @@
     -o-transition: @property @delay @easing;
 }
 
+.grayGradient (){
+    background: @grayGradient2;
+    background: -webkit-gradient(linear, left top, left bottom, from(@grayGradient1), to(@grayGradient2));
+    background: -moz-linear-gradient(top,  @grayGradient1,  @grayGradient2);
+    background: -o-linear-gradient(top,  @grayGradient1,  @grayGradient2);
+}
+.grayGradientHover (){
+    background: @grayGradientHover2;
+    background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientHover1), to(@grayGradientHover2));
+    background: -moz-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
+    background: -o-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
+}
+.grayGradientActive (){
+    background: @grayGradientActive2;
+    background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientActive1), to(@grayGradientActive2));
+    background: -moz-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
+    background: -o-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
+}
 
 html {
     height:100%;
@@ -424,9 +442,9 @@ body {
 
     #logo {
         display:block;
-        width: 360px;
+        width: 345px;
         height:72px;
-        background:url("../img/logo.png?version=${timestamp}") 0 0 no-repeat;
+        background:url("../img/logo-kuntalaisaloite.png?version=${timestamp}") 0 0 no-repeat;
     }
     #logo span { display:none; }
 
@@ -788,6 +806,8 @@ a.block-link {
     background:#fff;
 }
 .input-block {
+    width: 866px; // Predefined width removes jumpyness bug in slideToggle. could be calculated with JS for dynamic widths.
+
     .input-block-action {
         width:585px;
     }
@@ -956,25 +976,17 @@ a.block-link {
 
     color: @bodyColor;
     border: solid 1px @borderGray;
-    background: @grayGradient2;
-    background: -webkit-gradient(linear, left top, left bottom, from(@grayGradient1), to(@grayGradient2));
-    background: -moz-linear-gradient(top,  @grayGradient1,  @grayGradient2);
-    background: -o-linear-gradient(top,  @grayGradient1,  @grayGradient2);
+    .grayGradient();
 
     &:hover, &.disabled:hover {
-        background: @grayGradientHover2;
-        background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientHover1), to(@grayGradientHover2));
-        background: -moz-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
-        background: -o-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
+        .grayGradientHover();
         color: @black;
         border-color: #b7b7b7;
         text-decoration: none;
     }
     &:active, &.disabled:active, &:focus {
         color: @black;
-        background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientActive1), to(@grayGradientActive2));
-        background: -moz-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
-        background: -o-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
+        .grayGradientActive();
     }
     &.disabled {
        opacity:@dimmed;
@@ -1607,11 +1619,12 @@ label  {
     .arrow {
         position:absolute;
         right:20px;
-        top:1.2em;
+        top:50%;
         display:block;
         width:17px;
         height:17px;
-        background:url("../img/arrows-white.png?version=${timestamp}") no-repeat 0 0;    
+        margin-top:-8px;
+        background:url("../img/icon-expand.png?version=${timestamp}") no-repeat 0 0;    
     }
     &.open {
         .arrow {
@@ -1698,8 +1711,8 @@ label  {
 }
 
 .initiative-content-row {
-    border-bottom: 1px solid @borderGray;
-    margin-bottom: 0.7em;
+    //border-bottom: 1px solid @borderGray;
+    //margin-bottom: 0.7em;
     padding-bottom: 0.7em;
     
     .header {
@@ -2150,6 +2163,9 @@ h2 {
     margin-bottom:0.5em;
     font-weight:normal;
 }
+.view-block h2 {
+    color:#017380;
+}
 
 h3 {
     color: #111;
@@ -2204,7 +2220,7 @@ blockquote {
     font-style:italic;
 }
 
-.vote-count {
+.user-count {
     font-size:1.7em;
     font-style:italic;
 }
@@ -2421,6 +2437,20 @@ table.data {
         box-shadow:none;
         
         .transition(box-shadow, 0.2s, ease-in);
+
+        div {
+            width:33px;
+            border-left:1px solid @borderGray;
+            .grayGradient();
+
+            &:hover {
+                .grayGradientHover();
+            }
+
+            b {
+                background:url("../img/icon-arrow-down.png?version=${timestamp}") no-repeat 50% 50%; 
+            }
+        }
     }
 
     input[type="text"]:focus {
@@ -2443,8 +2473,10 @@ table.data {
         }
     }
 
-    .chzn-container-single .chzn-drop {
+    &.chzn-container-single .chzn-drop {
         border-radius:0;
     }
+
+    
 }
 
