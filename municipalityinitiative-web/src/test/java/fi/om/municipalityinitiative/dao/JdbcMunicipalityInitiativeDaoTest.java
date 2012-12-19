@@ -1,9 +1,11 @@
 package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.conf.NEWIntegrationTestConfiguration;
-import fi.om.municipalityinitiative.dto.MunicipalityInfo;
-import fi.om.municipalityinitiative.dto.MunicipalityInitiativeCreateDto;
-import fi.om.municipalityinitiative.dto.MunicipalityInitiativeInfo;
+import fi.om.municipalityinitiative.newdao.MunicipalityDao;
+import fi.om.municipalityinitiative.newdao.MunicipalityInitiativeDao;
+import fi.om.municipalityinitiative.newdto.MunicipalityInfo;
+import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeCreateDto;
+import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeInfo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

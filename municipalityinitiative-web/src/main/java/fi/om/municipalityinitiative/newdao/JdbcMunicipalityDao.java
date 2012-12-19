@@ -1,21 +1,17 @@
-package fi.om.municipalityinitiative.dao;
+package fi.om.municipalityinitiative.newdao;
 
 import com.mysema.query.Tuple;
 import com.mysema.query.sql.postgres.PostgresQuery;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
-import fi.om.municipalityinitiative.dto.MunicipalityInfo;
-import fi.om.municipalityinitiative.dto.MunicipalityInitiativeInfo;
+import fi.om.municipalityinitiative.newdto.MunicipalityInfo;
 import fi.om.municipalityinitiative.sql.QMunicipality;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 
 public class JdbcMunicipalityDao implements MunicipalityDao {
 

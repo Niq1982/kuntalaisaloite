@@ -1,14 +1,13 @@
 package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.conf.NEWIntegrationTestConfiguration;
-import fi.om.municipalityinitiative.dto.MunicipalityInfo;
-import org.apache.commons.lang.ArrayUtils;
+import fi.om.municipalityinitiative.newdao.MunicipalityDao;
+import fi.om.municipalityinitiative.newdto.MunicipalityInfo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 
