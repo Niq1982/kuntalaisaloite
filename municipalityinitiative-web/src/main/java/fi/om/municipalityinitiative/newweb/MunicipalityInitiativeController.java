@@ -1,12 +1,16 @@
-package fi.om.municipalityinitiative.web;
+package fi.om.municipalityinitiative.newweb;
 
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
+import fi.om.municipalityinitiative.newdao.MunicipalityDao;
+import fi.om.municipalityinitiative.newdao.MunicipalityInitiativeDao;
+import fi.om.municipalityinitiative.web.BaseController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import java.util.Locale;
@@ -18,11 +22,18 @@ import static fi.om.municipalityinitiative.web.Views.SEARCHM_VIEW;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
-public class KuntalaisaloiteController extends BaseController {
+public class MunicipalityInitiativeController extends BaseController {
 
-    private final Logger log = LoggerFactory.getLogger(KuntalaisaloiteController.class);
+    private final Logger log = LoggerFactory.getLogger(MunicipalityInitiativeController.class);
 
-    public KuntalaisaloiteController(boolean optimizeResources, String resourcesVersion) {
+    @Resource
+    private MunicipalityDao municipalityDao;
+
+    @Resource
+    private MunicipalityInitiativeDao municipalityInitiativeDao;
+
+
+    public MunicipalityInitiativeController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
     }
 
@@ -36,6 +47,8 @@ public class KuntalaisaloiteController extends BaseController {
         String at = "omg";
         System.out.println("old: "+ request.getSession().getAttribute(at));
         request.getSession().setAttribute(at, String.valueOf(new Random().nextInt()));
+
+        model.addAttribute("municipalities", municipalityDao.findMunicipalities());
 
         return SEARCHM_VIEW;
 

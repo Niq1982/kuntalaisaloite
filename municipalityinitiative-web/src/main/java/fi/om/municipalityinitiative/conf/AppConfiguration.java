@@ -139,7 +139,17 @@ public class AppConfiguration {
     public MunicipalityDao municipalityDao() {
         return new JdbcMunicipalityDao();
     }
-    
+
+    @Bean
+    public MunicipalityInitiativeService municipalityInitiativeService() {
+        return new MunicipalityInitiativeService();
+    }
+
+    @Bean
+    public MunicipalityService municipalityService() {
+        return new MunicipalityService();
+    }
+
     @Bean
     public StatusService statusService() {
         String testEmailSendTo = env.getProperty(PropertyNames.testEmailSendTo);

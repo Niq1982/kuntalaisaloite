@@ -10,6 +10,7 @@ import fi.om.municipalityinitiative.conf.WebConfiguration.WebDevConfiguration;
 import fi.om.municipalityinitiative.conf.WebConfiguration.WebProdConfiguration;
 import fi.om.municipalityinitiative.dto.vetuma.VetumaLoginRequest;
 import fi.om.municipalityinitiative.json.JsonIdAnnotationIntrospector;
+import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeController;
 import fi.om.municipalityinitiative.web.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -233,8 +234,8 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
     }
 
     @Bean
-    public KuntalaisaloiteController mcontroller() {
-        return new KuntalaisaloiteController(optimizeResources(env), resourcesVersion(env));
+    public MunicipalityInitiativeController mcontroller() {
+        return new MunicipalityInitiativeController(optimizeResources(env), resourcesVersion(env));
     }
     
     @Bean

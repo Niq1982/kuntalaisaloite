@@ -13,6 +13,10 @@
 
 <p>lorem ipsum dolor ...</p>
 
+<#list municipalities as municipality>
+    ${municipality.name}
+</#list>
+
 
 </@l.main>
 
