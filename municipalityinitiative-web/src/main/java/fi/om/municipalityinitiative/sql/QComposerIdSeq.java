@@ -9,14 +9,14 @@ import javax.annotation.Generated;
 
 
 /**
- * QSupportVoteBatchIdSeq is a Querydsl query type for QSupportVoteBatchIdSeq
+ * QComposerIdSeq is a Querydsl query type for QComposerIdSeq
  */
 @Generated("com.mysema.query.sql.codegen.MetaDataSerializer")
-public class QSupportVoteBatchIdSeq extends com.mysema.query.sql.RelationalPathBase<QSupportVoteBatchIdSeq> {
+public class QComposerIdSeq extends com.mysema.query.sql.RelationalPathBase<QComposerIdSeq> {
 
-    private static final long serialVersionUID = -203417325;
+    private static final long serialVersionUID = 13244084;
 
-    public static final QSupportVoteBatchIdSeq supportVoteBatchIdSeq = new QSupportVoteBatchIdSeq("support_vote_batch_id_seq");
+    public static final QComposerIdSeq composerIdSeq = new QComposerIdSeq("composer_id_seq");
 
     public final NumberPath<Long> cacheValue = createNumber("cache_value", Long.class);
 
@@ -38,16 +38,16 @@ public class QSupportVoteBatchIdSeq extends com.mysema.query.sql.RelationalPathB
 
     public final NumberPath<Long> startValue = createNumber("start_value", Long.class);
 
-    public QSupportVoteBatchIdSeq(String variable) {
-        super(QSupportVoteBatchIdSeq.class, forVariable(variable), "municipalityinitiative", "support_vote_batch_id_seq");
+    public QComposerIdSeq(String variable) {
+        super(QComposerIdSeq.class, forVariable(variable), "municipalityinitiative", "composer_id_seq");
     }
 
-    public QSupportVoteBatchIdSeq(Path<? extends QSupportVoteBatchIdSeq> path) {
-        super(path.getType(), path.getMetadata(), "municipalityinitiative", "support_vote_batch_id_seq");
+    public QComposerIdSeq(Path<? extends QComposerIdSeq> path) {
+        super(path.getType(), path.getMetadata(), "municipalityinitiative", "composer_id_seq");
     }
 
-    public QSupportVoteBatchIdSeq(PathMetadata<?> metadata) {
-        super(QSupportVoteBatchIdSeq.class, metadata, "municipalityinitiative", "support_vote_batch_id_seq");
+    public QComposerIdSeq(PathMetadata<?> metadata) {
+        super(QComposerIdSeq.class, metadata, "municipalityinitiative", "composer_id_seq");
     }
 
 }

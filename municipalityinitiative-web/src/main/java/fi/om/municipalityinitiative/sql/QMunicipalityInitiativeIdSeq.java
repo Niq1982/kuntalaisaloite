@@ -9,14 +9,14 @@ import javax.annotation.Generated;
 
 
 /**
- * QSupportVoteBatchIdSeq is a Querydsl query type for QSupportVoteBatchIdSeq
+ * QMunicipalityInitiativeIdSeq is a Querydsl query type for QMunicipalityInitiativeIdSeq
  */
 @Generated("com.mysema.query.sql.codegen.MetaDataSerializer")
-public class QSupportVoteBatchIdSeq extends com.mysema.query.sql.RelationalPathBase<QSupportVoteBatchIdSeq> {
+public class QMunicipalityInitiativeIdSeq extends com.mysema.query.sql.RelationalPathBase<QMunicipalityInitiativeIdSeq> {
 
-    private static final long serialVersionUID = -203417325;
+    private static final long serialVersionUID = 45913388;
 
-    public static final QSupportVoteBatchIdSeq supportVoteBatchIdSeq = new QSupportVoteBatchIdSeq("support_vote_batch_id_seq");
+    public static final QMunicipalityInitiativeIdSeq municipalityInitiativeIdSeq = new QMunicipalityInitiativeIdSeq("municipality_initiative_id_seq");
 
     public final NumberPath<Long> cacheValue = createNumber("cache_value", Long.class);
 
@@ -38,16 +38,16 @@ public class QSupportVoteBatchIdSeq extends com.mysema.query.sql.RelationalPathB
 
     public final NumberPath<Long> startValue = createNumber("start_value", Long.class);
 
-    public QSupportVoteBatchIdSeq(String variable) {
-        super(QSupportVoteBatchIdSeq.class, forVariable(variable), "municipalityinitiative", "support_vote_batch_id_seq");
+    public QMunicipalityInitiativeIdSeq(String variable) {
+        super(QMunicipalityInitiativeIdSeq.class, forVariable(variable), "municipalityinitiative", "municipality_initiative_id_seq");
     }
 
-    public QSupportVoteBatchIdSeq(Path<? extends QSupportVoteBatchIdSeq> path) {
-        super(path.getType(), path.getMetadata(), "municipalityinitiative", "support_vote_batch_id_seq");
+    public QMunicipalityInitiativeIdSeq(Path<? extends QMunicipalityInitiativeIdSeq> path) {
+        super(path.getType(), path.getMetadata(), "municipalityinitiative", "municipality_initiative_id_seq");
     }
 
-    public QSupportVoteBatchIdSeq(PathMetadata<?> metadata) {
-        super(QSupportVoteBatchIdSeq.class, metadata, "municipalityinitiative", "support_vote_batch_id_seq");
+    public QMunicipalityInitiativeIdSeq(PathMetadata<?> metadata) {
+        super(QMunicipalityInitiativeIdSeq.class, metadata, "municipalityinitiative", "municipality_initiative_id_seq");
     }
 
 }

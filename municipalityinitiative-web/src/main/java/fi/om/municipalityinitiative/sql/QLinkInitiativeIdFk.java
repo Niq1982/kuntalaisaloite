@@ -14,22 +14,22 @@ import javax.annotation.Generated;
 @Generated("com.mysema.query.sql.codegen.MetaDataSerializer")
 public class QLinkInitiativeIdFk extends com.mysema.query.sql.RelationalPathBase<QLinkInitiativeIdFk> {
 
-    private static final long serialVersionUID = -1842636966;
+    private static final long serialVersionUID = -67490474;
 
     public static final QLinkInitiativeIdFk linkInitiativeIdFk = new QLinkInitiativeIdFk("link_initiative_id_fk");
 
     public final NumberPath<Long> initiativeId = createNumber("initiative_id", Long.class);
 
     public QLinkInitiativeIdFk(String variable) {
-        super(QLinkInitiativeIdFk.class, forVariable(variable), "initiative", "link_initiative_id_fk");
+        super(QLinkInitiativeIdFk.class, forVariable(variable), "municipalityinitiative", "link_initiative_id_fk");
     }
 
     public QLinkInitiativeIdFk(Path<? extends QLinkInitiativeIdFk> path) {
-        super(path.getType(), path.getMetadata(), "initiative", "link_initiative_id_fk");
+        super(path.getType(), path.getMetadata(), "municipalityinitiative", "link_initiative_id_fk");
     }
 
     public QLinkInitiativeIdFk(PathMetadata<?> metadata) {
-        super(QLinkInitiativeIdFk.class, metadata, "initiative", "link_initiative_id_fk");
+        super(QLinkInitiativeIdFk.class, metadata, "municipalityinitiative", "link_initiative_id_fk");
     }
 
 }

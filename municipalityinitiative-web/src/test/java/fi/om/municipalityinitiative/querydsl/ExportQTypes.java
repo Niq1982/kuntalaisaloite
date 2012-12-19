@@ -18,7 +18,7 @@ import com.mysema.query.sql.codegen.MetaDataExporter;
 import fi.om.municipalityinitiative.conf.JdbcConfiguration;
 
 public class ExportQTypes {
-    
+
     @org.springframework.context.annotation.Configuration
     @Import(JdbcConfiguration.class)
     @PropertySource("classpath:test.properties")
@@ -29,10 +29,10 @@ public class ExportQTypes {
         ApplicationContext ctx = new AnnotationConfigApplicationContext(StandaloneJdbcConfiguration.class);
         DataSource dataSource = ctx.getBean(DataSource.class);
         Configuration configuration = ctx.getBean(Configuration.class);
-        
+
         MetaDataExporter exporter = new MetaDataExporter();
         exporter.setPackageName("fi.om.municipalityinitiative.sql");
-        exporter.setSchemaPattern("initiative");
+        exporter.setSchemaPattern("municipalityinitiative");
         exporter.setInnerClassesForKeys(false);
         exporter.setNamePrefix("Q");
         exporter.setNamingStrategy(new DefaultNamingStrategy());

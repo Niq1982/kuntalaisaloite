@@ -14,7 +14,7 @@ import javax.annotation.Generated;
 @Generated("com.mysema.query.sql.codegen.MetaDataSerializer")
 public class QInituserIdSeq extends com.mysema.query.sql.RelationalPathBase<QInituserIdSeq> {
 
-    private static final long serialVersionUID = -56258731;
+    private static final long serialVersionUID = -2024264743;
 
     public static final QInituserIdSeq inituserIdSeq = new QInituserIdSeq("inituser_id_seq");
 
@@ -39,15 +39,15 @@ public class QInituserIdSeq extends com.mysema.query.sql.RelationalPathBase<QIni
     public final NumberPath<Long> startValue = createNumber("start_value", Long.class);
 
     public QInituserIdSeq(String variable) {
-        super(QInituserIdSeq.class, forVariable(variable), "initiative", "inituser_id_seq");
+        super(QInituserIdSeq.class, forVariable(variable), "municipalityinitiative", "inituser_id_seq");
     }
 
     public QInituserIdSeq(Path<? extends QInituserIdSeq> path) {
-        super(path.getType(), path.getMetadata(), "initiative", "inituser_id_seq");
+        super(path.getType(), path.getMetadata(), "municipalityinitiative", "inituser_id_seq");
     }
 
     public QInituserIdSeq(PathMetadata<?> metadata) {
-        super(QInituserIdSeq.class, metadata, "initiative", "inituser_id_seq");
+        super(QInituserIdSeq.class, metadata, "municipalityinitiative", "inituser_id_seq");
     }
 
 }

@@ -125,6 +125,16 @@ public class AppConfiguration {
     public HttpUserServiceImpl userService() {
         return new HttpUserServiceImpl(userDao(), encryptionService());
     }
+
+    @Bean
+    public MunicipalityInitiativeDao municipalityInitiativeDao() {
+        return new JdbcMunicipalityInitiativeDao();
+    }
+
+    @Bean
+    public MunicipalityDao municipalityDao() {
+        return new JdbcMunicipalityDao();
+    }
     
     @Bean
     public StatusService statusService() {

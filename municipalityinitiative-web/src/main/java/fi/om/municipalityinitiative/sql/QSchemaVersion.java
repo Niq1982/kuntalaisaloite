@@ -14,7 +14,7 @@ import javax.annotation.Generated;
 @Generated("com.mysema.query.sql.codegen.MetaDataSerializer")
 public class QSchemaVersion extends com.mysema.query.sql.RelationalPathBase<QSchemaVersion> {
 
-    private static final long serialVersionUID = -158125533;
+    private static final long serialVersionUID = -2126131545;
 
     public static final QSchemaVersion schemaVersion = new QSchemaVersion("schema_version");
 
@@ -25,15 +25,15 @@ public class QSchemaVersion extends com.mysema.query.sql.RelationalPathBase<QSch
     public final com.mysema.query.sql.PrimaryKey<QSchemaVersion> schemaVersionScriptPk = createPrimaryKey(script);
 
     public QSchemaVersion(String variable) {
-        super(QSchemaVersion.class, forVariable(variable), "initiative", "schema_version");
+        super(QSchemaVersion.class, forVariable(variable), "municipalityinitiative", "schema_version");
     }
 
     public QSchemaVersion(Path<? extends QSchemaVersion> path) {
-        super(path.getType(), path.getMetadata(), "initiative", "schema_version");
+        super(path.getType(), path.getMetadata(), "municipalityinitiative", "schema_version");
     }
 
     public QSchemaVersion(PathMetadata<?> metadata) {
-        super(QSchemaVersion.class, metadata, "initiative", "schema_version");
+        super(QSchemaVersion.class, metadata, "municipalityinitiative", "schema_version");
     }
 
 }

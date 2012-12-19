@@ -14,7 +14,7 @@ import javax.annotation.Generated;
 @Generated("com.mysema.query.sql.codegen.MetaDataSerializer")
 public class QSupportVotePk extends com.mysema.query.sql.RelationalPathBase<QSupportVotePk> {
 
-    private static final long serialVersionUID = -820807328;
+    private static final long serialVersionUID = 1506153956;
 
     public static final QSupportVotePk supportVotePk = new QSupportVotePk("support_vote_pk");
 
@@ -23,15 +23,15 @@ public class QSupportVotePk extends com.mysema.query.sql.RelationalPathBase<QSup
     public final StringPath supportid = createString("supportid");
 
     public QSupportVotePk(String variable) {
-        super(QSupportVotePk.class, forVariable(variable), "initiative", "support_vote_pk");
+        super(QSupportVotePk.class, forVariable(variable), "municipalityinitiative", "support_vote_pk");
     }
 
     public QSupportVotePk(Path<? extends QSupportVotePk> path) {
-        super(path.getType(), path.getMetadata(), "initiative", "support_vote_pk");
+        super(path.getType(), path.getMetadata(), "municipalityinitiative", "support_vote_pk");
     }
 
     public QSupportVotePk(PathMetadata<?> metadata) {
-        super(QSupportVotePk.class, metadata, "initiative", "support_vote_pk");
+        super(QSupportVotePk.class, metadata, "municipalityinitiative", "support_vote_pk");
     }
 
 }

@@ -14,22 +14,22 @@ import javax.annotation.Generated;
 @Generated("com.mysema.query.sql.codegen.MetaDataSerializer")
 public class QSchemaVersionScriptPk extends com.mysema.query.sql.RelationalPathBase<QSchemaVersionScriptPk> {
 
-    private static final long serialVersionUID = 1110153065;
+    private static final long serialVersionUID = 566980589;
 
     public static final QSchemaVersionScriptPk schemaVersionScriptPk = new QSchemaVersionScriptPk("schema_version_script_pk");
 
     public final StringPath script = createString("script");
 
     public QSchemaVersionScriptPk(String variable) {
-        super(QSchemaVersionScriptPk.class, forVariable(variable), "initiative", "schema_version_script_pk");
+        super(QSchemaVersionScriptPk.class, forVariable(variable), "municipalityinitiative", "schema_version_script_pk");
     }
 
     public QSchemaVersionScriptPk(Path<? extends QSchemaVersionScriptPk> path) {
-        super(path.getType(), path.getMetadata(), "initiative", "schema_version_script_pk");
+        super(path.getType(), path.getMetadata(), "municipalityinitiative", "schema_version_script_pk");
     }
 
     public QSchemaVersionScriptPk(PathMetadata<?> metadata) {
-        super(QSchemaVersionScriptPk.class, metadata, "initiative", "schema_version_script_pk");
+        super(QSchemaVersionScriptPk.class, metadata, "municipalityinitiative", "schema_version_script_pk");
     }
 
 }
