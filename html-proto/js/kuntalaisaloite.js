@@ -204,6 +204,7 @@ $(document).ready(function () {
  *  Known issues:
  *  - In some case when removing link-rows help text overflows
  */
+ /*
 	var $allHelps = $('.input-block-extra');
 	var toggleHelpTexts = function (elem,close) {
 		var initPadding, initMargin, thisElem, elemParent, originalHeight, elemHeight, hd, parentBlock, elemParentTopPos;
@@ -269,10 +270,7 @@ $(document).ready(function () {
 		var $thisHelp = $(this).parents('.input-block-content:first').find('.input-block-extra:first');		 
 		toggleHelpTexts($thisHelp,false);
 	});
-	// FIXME: Blur hiding is bit phony in some cases
-	/*$('input[type=text],textarea').live('blur', function(){
-		$allHelps.fadeOut(speedFast);
-	});*/
+*/
 	
 /**
  *	Toggle dropdown menus
@@ -461,17 +459,46 @@ $(document).ready(function () {
 * Chosen - Replacement for municipality select
 * ============================================
 */	
+	var municipalitySelect, homeMunicipalitySelect, selectedMunicipality, differentMunicipality, sameMunicipality;
+
+	municipalitySelect =		 $('#municipality');
+	homeMunicipalitySelect =	 $('#homeMunicipality');
+	selectedMunicipalityElem =	 $('#selected-municipality');
+	differentMunicipality =		 $('.different-municipality');
+	sameMunicipality =			 $('.same-municipality');
+
+
  	// Initialize chosen
  	$(".chzn-select").chosen();
 
  	// Listen the first chosen element
-	$('#municipality').live('change', function() {
+	municipalitySelect.live('change', function() {
 		var selectedMunicipality = $(this).val();
 
-		$('#selected-municipality').text(selectedMunicipality);
-		$('#homeMunicipality')
-		.val(selectedMunicipality)
-		.trigger("liszt:updated"); // updates dynamically the second chosen element
+		// update text in the municipality data in Step 2
+		selectedMunicipalityElem.text(selectedMunicipality);
+
+		// if user has changed the homeMunicipality value we will not mess it up
+		if ( !homeMunicipalitySelect.hasClass('updated') ){			
+			homeMunicipalitySelect
+			.val(selectedMunicipality)
+			.trigger("liszt:updated"); // updates dynamically the second chosen element
+		}
+	});
+
+	// Toggle suffrage fields according to user's choice
+	homeMunicipalitySelect.live('change', function() {
+		var thisSelect = $(this);
+
+		thisSelect.addClass("updated");
+
+		if( thisSelect.val() == municipalitySelect.val() ){
+			differentMunicipality.hide();
+			sameMunicipality.show();
+		} else {
+			differentMunicipality.show();
+			sameMunicipality.hide();
+		}
 	});
 
 /**

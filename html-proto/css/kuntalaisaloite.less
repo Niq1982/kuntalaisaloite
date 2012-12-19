@@ -779,7 +779,7 @@ a.block-link {
     position: relative;
     //z-index: 3;
     background: #fff url("../img/input-block-extra-bg.png?version=${timestamp}") repeat-y top right;
-    border-left: 4px solid #0ea9bc;
+    border-left: 4px solid #017380;
     
     padding:0 35px 30px 55px;
     
@@ -802,6 +802,7 @@ a.block-link {
     }
 }
 .view-block {
+    margin-bottom:3em;
     padding-top:35px;
     background:#fff;
 }
@@ -1604,7 +1605,7 @@ label  {
 
 .content-block-header {
     position:relative;
-    background: #0ea9bc;
+    background: #017380;
     //border-left: 4px solid #0ea9bc;
     padding:0.5em 25px 0.5em 30px;
     cursor:pointer;
@@ -1669,14 +1670,10 @@ label  {
 }
 
 .input-block-extra {
-    position:absolute;
-    top:-6px;
-    right:-306px;
-    width: 235px;
-    margin:0 0px 0px 10px;
-    padding: 10px 0px 20px 33px;
-    height:0;
-    background: transparent url("../img/input-block-extra-indicator.png?version=${timestamp}") no-repeat 9px 6px;
+    float:right;
+    width:220px;
+    margin:20px -15px 0 0;
+    //background: transparent url("../img/input-block-extra-indicator.png?version=${timestamp}") no-repeat 9px 6px;
     font-size: 90%;
     color: #787878;
 
@@ -1692,6 +1689,11 @@ label  {
 .input-block-action {
     clear:both;
     margin-top:25px;
+}
+
+.required-info {
+    float:right;
+    margin-bottom:0.67em;
 }
 
 .no-js-help-container{

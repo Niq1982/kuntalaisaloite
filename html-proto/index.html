@@ -122,16 +122,13 @@
         <div id="content">
 
 
-    <h1>Tee kuntalaisaloite</h1>
+    <h1 class="inline-header">Tee kuntalaisaloite</h1>
 
     <!--  FORM BLOCK: Valitse kunta -->
 
-
-    <!--
-	   		<p class="required-info align-right">
-	        <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span> Pakollinen tieto
-	    </p>
-	-->
+	<div class="required-info">
+        <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span> Pakollinen tieto
+    </div>
 
 	<form method="POST" id="form-initiative" class="sodirty">
 
@@ -142,6 +139,13 @@
     </div>    
 
     <div id="step-1" class="input-block cf">
+
+		<div class="input-block-extra">
+	        <div class="input-block-extra-content">
+	            <h4>Valitse kunta</h4>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at lacus malesuada justo posuere ullamcorper. Curabitur scelerisque, tortor ultrices malesuada laoreet, enim metus convallis lacus, sed eleifend orci metus non orci. Vivamus lacus elit, tempus et interdum accumsan, elementum ut risus.</p>
+			</div>
+	  	</div>
     
         <div class="input-block-content">
 	        <div class="system-msg msg-info ">
@@ -151,14 +155,7 @@
         </div>
         
         <div class="input-block-content">       
-		    <div class="input-block-extra helpName js-hide hidden">
-		        <div class="input-block-extra-content">
-		            <h4>Valitse kunta</h4>
-					<p>Kirjoita kansalaisaloitteen otsikko. Otsikon tulee olla selkeä ja varsinaista sisältöä kuvaava. Jos keräät kannatusilmoituksia myös paperilla tai muissa verkkopalveluissa, huomaathan, että kaikissa kannatusilmoituksissa on oltava sama otsikko.</p>
-				</div>
-		  	</div>
-
-        
+		            
 		    <label class="input-header" for="municipality.fi">
 		        Valitse kunta, jolle haluat tehdä aloitteen <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span>
 		    </label>
@@ -506,11 +503,10 @@
 	    </div>
 
     	<div class="input-block-content">
-    		<p class="required-info right">
+    		<!--<p class="required-info right">
 		        <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span> Pakollinen tieto
-		    </p>
+		    </p>-->
 
-	    	
 		    <a href="#step-header-2" class="small-button disable-dbl-click-check" onClick="proceedTo(2);"><span class="small-icon next">Jatka</span></a>
 		    <a href="index.html" class="push">Peruuta</a>
     		
@@ -528,6 +524,16 @@
     </div>
 
     <div id="step-2" class="input-block cf js-hide">
+
+		<div class="input-block-extra">
+	        <div class="input-block-extra-content">
+	            <h4>Aloitteen otsikko</h4>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at lacus malesuada justo posuere ullamcorper. Curabitur scelerisque, tortor ultrices malesuada laoreet, enim metus convallis lacus, sed eleifend orci metus non orci. Vivamus lacus elit, tempus et interdum accumsan, elementum ut risus.</p>
+
+				<h4>Aloitteen sisältö</h4>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at lacus malesuada justo posuere ullamcorper. Curabitur scelerisque, tortor ultrices malesuada laoreet, enim metus convallis lacus, sed eleifend orci metus non orci. Vivamus lacus elit, tempus et interdum accumsan, elementum ut risus.</p>
+			</div>
+	  	</div>
     
         <div class="input-block-content">
 	        <div class="system-msg msg-info ">
@@ -610,6 +616,21 @@
     </div>
 
     <div id="step-3" class="input-block cf js-hide">
+    	<div class="input-block-extra">
+	        <div class="input-block-extra-content">
+	            <h4>Nimi</h4>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at lacus malesuada justo posuere ullamcorper.</p>
+
+				<h4>Kotikunta</h4>
+				<p>Curabitur scelerisque, tortor ultrices malesuada laoreet, enim metus convallis lacus, sed eleifend orci metus non orci. Vivamus lacus elit, tempus et interdum accumsan, elementum ut risus.</p>
+
+				<h4>Äänioikeus</h4>
+				<p>Proin at lacus malesuada justo posuere ullamcorper. Curabitur scelerisque, tortor ultrices malesuada laoreet, enim metus convallis lacus, sed eleifend orci metus non orci. Vivamus lacus elit, tempus et interdum accumsan, elementum ut risus.</p>
+
+				<h4>Omat yhteystiedot</h4>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at lacus malesuada justo posuere ullamcorper.</p>
+			</div>
+	  	</div>
     
         <div class="input-block-content">
 	        <div class="system-msg msg-info ">
@@ -638,6 +659,7 @@
 	   	</div>
 
         <div class="input-block-content">
+
         	<div class="column col-1of2">
 
 	        	<label class="input-header" for="homeMunicipality.fi">
@@ -986,16 +1008,30 @@
 			</div>
 	            
             <div class="column col-1of2 last">
-                <div class="input-header">
-			        Äänioikeus <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span>
-			    </div>
+            	<div class="same-municipality">
+	                <div class="input-header">
+				        Äänioikeus <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span>
+				    </div>
 
-			    <label>
-	    			<input type="radio" name="kunnan-asukas" /><span class="label">Olen äänioikeutettu kunnan asukas</span>
-    			</label>
-    			<label>
-	    			<input type="radio" name="kunnan-asukas" /><span class="label">En ole äänioikeutettu kunnan asukas</span>
-    			</label>
+				    <label>
+		    			<input type="radio" name="kunnan-asukas" /><span class="label">Olen äänioikeutettu kunnan asukas</span>
+	    			</label>
+	    			<label>
+		    			<input type="radio" name="kunnan-asukas" /><span class="label">En ole äänioikeutettu kunnan asukas</span>
+	    			</label>
+	    		</div>
+	    		<div class="different-municipality js-hide hidden">
+	                <div class="input-header">
+				        Kotikuntasi ei ole kunta, jota aloite koskee. Voit silti liittyä aloitteen tekijäksi, jos olet aloitteen kunnan jäsen <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span>
+				    </div>
+
+				    <label>
+		    			<input type="radio" name="kunnan-jasen" /><span class="label">Olen sen kunnan jäsen, jota aloite koskee</span>
+	    			</label>
+	    			<label>
+		    			<input type="radio" name="kunnan-jasen" /><span class="label">En ole aloitteen kunnan jäsen</span>
+	    			</label>
+	    		</div>
             </div>
 
     	</div>
@@ -1051,6 +1087,12 @@
     </div>
 
     <div id="step-4" class="input-block cf js-hide">
+    	<div class="input-block-extra">
+	        <div class="input-block-extra-content">
+	            <h4>Tekijöiden keräys aloitteelle</h4>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at lacus malesuada justo posuere ullamcorper. Curabitur scelerisque, tortor ultrices malesuada laoreet, enim metus convallis lacus, sed eleifend orci metus non orci. Vivamus lacus elit, tempus et interdum accumsan, elementum ut risus.</p>
+			</div>
+	  	</div>
     
         <div class="input-block-content">
 	        <div class="system-msg msg-info ">
