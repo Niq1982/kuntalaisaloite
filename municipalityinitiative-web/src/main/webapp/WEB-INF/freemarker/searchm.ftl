@@ -13,9 +13,13 @@
 
 <p>lorem ipsum dolor ...</p>
 
-<#list municipalities as municipality>
-    ${municipality.name}
-</#list>
+<div class="municipalities">
+
+    <#list municipalities as municipality>
+        ${municipality.name}
+    </#list>
+
+</div>
 
 
 </@l.main>
