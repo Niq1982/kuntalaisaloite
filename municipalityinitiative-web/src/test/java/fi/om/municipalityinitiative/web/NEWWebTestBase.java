@@ -73,16 +73,18 @@ public class NEWWebTestBase {
 
         String driverType = env.getProperty("test.web-driver", "hu");
         System.out.println("*** driverType = " + driverType);
-        if ("ie".equals(driverType)) {
-            driver = new InternetExplorerDriver();
-            driver.get(urls.frontpage());
-            driver.navigate().to("javascript:document.getElementById('overridelink').click()"); // to skip security certificate problem page
-        }
-        else if ("ff".equals(driverType)) {
-            driver = new FirefoxDriver();
-        }
-        else {
-            driver = new HtmlUnitDriver(true);
+        switch (driverType) {
+            case "ie":
+                driver = new InternetExplorerDriver();
+                driver.get(urls.frontpage());
+                driver.navigate().to("javascript:document.getElementById('overridelink').click()"); // to skip security certificate problem page
+                break;
+            case "ff":
+                driver = new FirefoxDriver();
+                break;
+            default:
+                driver = new HtmlUnitDriver(true);
+                break;
         }
 
         driver.manage().timeouts().implicitlyWait(50, TimeUnit.SECONDS); // default is 0!!!
