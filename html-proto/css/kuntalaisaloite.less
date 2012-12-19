@@ -846,35 +846,6 @@ a.block-link {
 
 }
 
-.extra-body {
-    font-size: 0.8em;
-    margin-bottom: 2em;
-}
-
-.intro, .workflow-intro {
-    .rounded-corners;
-
-    padding:20px 30px 10px 30px;
-    font-size: 0.9em;
-    color: white;
-    background: @mainColor url("../img/input-block-intro-glow.png?version=${timestamp}") no-repeat top left;
-    margin: 0em 0em 1em 0em;
-
-    .required {
-        background-position: right 3px;
-    }
-
-    a {
-        color: #ffc9e7;
-        text-decoration: underline;
-    }
-    .icon-info {
-        min-height:40px;
-        background: transparent url("../img/icon-msg-info.png?version=${timestamp}") no-repeat 0px 5px;
-        padding-left: 40px;
-    }
-}
-
 .sidebar {
     float: left;
     width: 300px;
@@ -1422,6 +1393,15 @@ label  {
     &.last { margin:0; }
 }
 
+// Dynamic CSS3 columns
+.css-cols-3 {
+    -moz-column-count: 3;
+    -moz-column-gap: 20px;
+    -webkit-column-count: 3;
+    -webkit-column-gap: 20px;
+    column-count: 3;
+    column-gap: 20px;
+}
 
 // Help and required
 // 
@@ -1696,6 +1676,8 @@ label  {
     margin-bottom:0.67em;
 }
 
+
+// TODO: this can be removed
 .no-js-help-container{
     position:relative;
     right:-25px;
@@ -1735,12 +1717,9 @@ label  {
     right:35px;
 
 }
-.show-alternative-lang {
-    float:right;
-    font-size:0.9em;
-    //position: absolute;
-    //top: 28px;
-    //right:315px;
+
+.join-as-user {
+    padding-top:0.4em;
 }
 
 .no-top-margin {
@@ -2222,14 +2201,18 @@ blockquote {
     font-style:italic;
 }
 
+.user-count-total {
+    float:left;
+    margin:0 40px 0 0;
+    font-size:3em;
+    font-style:italic;
+    line-height:1em;
+}
 .user-count {
     font-size:1.7em;
     font-style:italic;
 }
-.internal-vote-count {
-    font-size:1.2em;
-    font-style:italic;
-}
+
 
 // Tables
 // FIXME: Does not work on IE7. Use float for IE7.
@@ -2265,7 +2248,6 @@ blockquote {
     &.full {
         width:100%;
     }
-
 }
 
 // Search results

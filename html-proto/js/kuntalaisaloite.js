@@ -654,7 +654,15 @@ $toggleAreaLabel.each(function (){
  * 
  * */
 
-// ADD LOADERS HERE
+ 	// Show initiative's public user list
+	$('.show-user-list-1').click(function(){
+		try {
+			generateModal(modalData.userList(), 'full');
+			return false;
+		} catch(e) {
+			console.log(e);
+		}
+	});
 
 	
 /**
@@ -929,7 +937,8 @@ $.tools.validator.addEffect("inline", function(errors, event) {
 * Bind checkbox
 * =============
 * - Binds checkbox '.binder' with submit button '.bind'.
-* - Button is enabled when checkbox is checked otherwise disabled
+* - Binds radiobuttons as well
+* - Button is enabled when checkbox/radio is checked otherwise disabled
 */
 jQuery.fn.bindCheckbox = function(){
 	var cb, btn, cbVal;

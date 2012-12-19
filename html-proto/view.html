@@ -151,22 +151,55 @@
 
                 <div class="initiative-content-row last">
                     <h2>Aloitteen tekijät</h2>
-                    <div>
-                        <span class="user-count">353</span> yhteensä <button class="small-button push"><span class="small-icon save-and-send">Liity tekijäksi</span></button>
-                        <a href="#" class="push">Mitä tämä tarkoittaa?</a>
+
+                    <span class="user-count-total">353</span>
+                    <div class="join-as-user">
+                        <button class="small-button"><span class="small-icon save-and-send">Liity tekijäksi</span></button>
+                        <a href="#" class="push">Mitä tekijäksi liittyminen tarkoittaa?</a>
                     </div>
-                    <br/>
-                    <p>Äänioikeutettuja Oulun kunnan jäseniä yhteensä <strong>217</strong> kpl<br/>
-                    <a href="#" class="trigger-tooltip" title="Näytä nimensä julkistaneiden lista"><strong>195</strong> julkista nimeä</a>. Lisäksi 22 nimeä, jotka eivät ole julkisia.</p>
-                    <!--<p><a href="#">Näytä nimensä julkistaneiden lista</a> (195 nimeä)<span class="push">Lisäksi 22 nimeä, jotka eivät ole julkisia</span></p>-->
+                    <br class="clear" />
 
-                    <p>Ei äänioikeutettuja ja muita kuin Oulun kunnan jäseniä yhteensä <strong>136</strong> kpl<br/>
-                    <a href="#" class="trigger-tooltip" title="Näytä nimensä julkistaneiden lista"><strong>102</strong> julkista nimeä</a>. Lisäksi 34 nimeä, jotka eivät ole julkisia.</p>
-                    <!--<p><a href="#">Näytä nimensä julkistaneiden lista</a> (102 nimeä)<span class="push">Lisäksi 34 nimeä, jotka eivät ole julkisia</span></p>-->
+                    <div class="top-margin cf">
+                        <div class="column col-1of2">
+                            <p>Äänioikeutettuja Oulun kunnan jäseniä yhteensä<br/>
+                            <span class="user-count">217</span><br />
+                            <a href="#" class="trigger-tooltip show-user-list-1" title="Näytä nimensä julkistaneiden lista">195 julkista nimeä</a><br/>22 ei julkista nimeä</p>
+                        </div>
+                        <div class="column col-1of2 last">
+                            <p>Ei äänioikeutettuja ja muita kuin Oulun kunnan jäseniä yhteensä<br/>
+                            <span class="user-count">195</span><br />
+                            <a href="#" class="trigger-tooltip show-user-list-1" title="Näytä nimensä julkistaneiden lista">102 julkista nimeä</a><br/>34 ei julkista nimeä</p>
+                        </div>
+                    </div>
 
-                    <!--<button class="small-button"><span class="small-icon save-and-send">Liity tekijäksi</span></button>-->
+
                 </div>     
             </div>
+
+                <script id="modal-template" type="text/x-jsrender">
+        
+                    <div class="modal">
+                        <div class="modal-header">
+                            <span class="modal-title">{{:title}}</span>
+                            <a class="close" title="Sulje">x</a>
+                        </div>
+                        <div class="modal-content">
+                            {{:content}}
+                        </div>
+                    </div>
+                    
+                </script>
+
+            <script type="text/javascript">
+                var modalData = {};
+
+                modalData.userList = function() {
+                    return [{
+                        title:      'Äänioikeutettuja Oulun kunnan jäsenet (julkiset)',
+                        content:    '<div class="css-cols-3"><ul class="no-style"><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li></ul></div>'
+                    }]
+                };
+            </script>
 
             <div class="some-links">
                 <a class="icon-some facebook trigger-tooltip" target="_blank" title="Jaa Facebookiin" href="http://www.facebook.com/sharer.php?u=#&amp;t=Testi%20kuntalaisaloite"> </a>
@@ -214,6 +247,8 @@
     
 </div>
     
+
+    <div id="modal-container"></div>
 
   <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
   <script type="text/javascript" src="js/jquery.easing.min.js"></script>
