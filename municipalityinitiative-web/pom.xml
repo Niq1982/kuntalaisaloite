@@ -60,6 +60,16 @@
             </snapshots>
         </repository>
         <repository>
+            <id>libs-milestone</id>
+            <url>http://repo.springsource.org/libs-milestone</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
             <releases>
