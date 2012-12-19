@@ -60,6 +60,16 @@
             </snapshots>
         </repository>
         <repository>
+            <id>libs-milestone</id>
+            <url>http://repo.springsource.org/libs-milestone</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
             <releases>
@@ -96,6 +106,12 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-library</artifactId>
             <version>1.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test-mvc</artifactId>
+            <version>1.0.0.M2</version>
             <scope>test</scope>
         </dependency>
 

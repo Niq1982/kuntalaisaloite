@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.dao;
+package fi.om.municipalityinitiative.newdao;
 
 import com.mysema.query.Tuple;
 import com.mysema.query.sql.dml.SQLInsertClause;
@@ -6,16 +6,17 @@ import com.mysema.query.sql.postgres.PostgresQuery;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
-import fi.om.municipalityinitiative.dto.MunicipalityInitiativeCreateDto;
-import fi.om.municipalityinitiative.dto.MunicipalityInitiativeInfo;
+import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
+import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeCreateDto;
+import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeInfo;
 import fi.om.municipalityinitiative.sql.QMunicipality;
 import org.springframework.transaction.annotation.Transactional;
-
-import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 
 import javax.annotation.Resource;
 
 import java.util.List;
+
+import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 
 @SQLExceptionTranslated
 public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao {

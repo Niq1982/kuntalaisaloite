@@ -1,9 +1,8 @@
 package fi.om.municipalityinitiative.conf;
 
-import java.io.File;
-
-import javax.inject.Inject;
-
+import fi.om.municipalityinitiative.dao.NEWTestHelper;
+import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.service.EncryptionService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,8 +12,9 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.core.env.Environment;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import fi.om.municipalityinitiative.dao.TestHelper;
-import fi.om.municipalityinitiative.service.EncryptionService;
+import javax.inject.Inject;
+
+import java.io.File;
 
 
 @Configuration
@@ -28,6 +28,11 @@ public class WebTestConfiguration {
     @Bean
     public TestHelper testHelper() {
         return new TestHelper();
+    }
+
+    @Bean
+    public NEWTestHelper newTestHelper() {
+        return new NEWTestHelper();
     }
 
     @Bean

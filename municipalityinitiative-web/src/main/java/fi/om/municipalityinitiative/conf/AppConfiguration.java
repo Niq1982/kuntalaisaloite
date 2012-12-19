@@ -9,6 +9,10 @@ import fi.om.municipalityinitiative.conf.AppConfiguration.TestPropertiesConfigur
 import fi.om.municipalityinitiative.dao.*;
 import fi.om.municipalityinitiative.dto.FlowStateAnalyzer;
 import fi.om.municipalityinitiative.dto.InitiativeSettings;
+import fi.om.municipalityinitiative.newdao.JdbcMunicipalityDao;
+import fi.om.municipalityinitiative.newdao.JdbcMunicipalityInitiativeDao;
+import fi.om.municipalityinitiative.newdao.MunicipalityDao;
+import fi.om.municipalityinitiative.newdao.MunicipalityInitiativeDao;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.util.TaskExecutorAspect;
 import fi.om.municipalityinitiative.validation.LocalValidatorFactoryBeanFix;
@@ -135,7 +139,17 @@ public class AppConfiguration {
     public MunicipalityDao municipalityDao() {
         return new JdbcMunicipalityDao();
     }
-    
+
+    @Bean
+    public MunicipalityInitiativeService municipalityInitiativeService() {
+        return new MunicipalityInitiativeService();
+    }
+
+    @Bean
+    public MunicipalityService municipalityService() {
+        return new MunicipalityService();
+    }
+
     @Bean
     public StatusService statusService() {
         String testEmailSendTo = env.getProperty(PropertyNames.testEmailSendTo);
