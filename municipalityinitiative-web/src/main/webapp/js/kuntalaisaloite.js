@@ -1,3 +1,11 @@
+/**
+ * TODO: Remove all initiattive-web stuff
+
+*/
+
+
+
+
 var generateModal, localization, validateForm, modalContent, modalType;
 
 /**
@@ -196,6 +204,7 @@ $(document).ready(function () {
  *  Known issues:
  *  - In some case when removing link-rows help text overflows
  */
+ /*
 	var $allHelps = $('.input-block-extra');
 	var toggleHelpTexts = function (elem,close) {
 		var initPadding, initMargin, thisElem, elemParent, originalHeight, elemHeight, hd, parentBlock, elemParentTopPos;
@@ -261,10 +270,7 @@ $(document).ready(function () {
 		var $thisHelp = $(this).parents('.input-block-content:first').find('.input-block-extra:first');		 
 		toggleHelpTexts($thisHelp,false);
 	});
-	// FIXME: Blur hiding is bit phony in some cases
-	/*$('input[type=text],textarea').live('blur', function(){
-		$allHelps.fadeOut(speedFast);
-	});*/
+*/
 	
 /**
  *	Toggle dropdown menus
@@ -343,46 +349,57 @@ $(document).ready(function () {
 		return false;
 	});
 	
-
 /**
  * 
- * Toggle alternative language form fields
- * =======================================
+ * Expand and minify form blocks
+ * =============================
  * 
  * */
-	var $altLangLink = $('#show-alternative-lang');
-		
-	$altLangLink.click(function() {		
-		var thisLink = $(this);
-		thisLink.switchContent();
-		// FIXME: Use slideDown/UP instead of toggle (causes issues in primaryLang)
-		$('.alt-lang').stop(false,true).slideToggle({
+ 	var showFormBlock = function(blockHeader){
+ 		var thisHeader, thisBlock, otherHeaders, otherBlocks;
+
+		thisHeader = blockHeader;
+ 		thisBlock = thisHeader.next('.input-block');
+ 		otherHeaders = thisHeader.parent().siblings().children('.content-block-header');
+ 		otherBlocks = thisHeader.parent().siblings().children('.input-block');
+
+ 		otherBlocks.stop(false,true).slideUp({
 			duration: speedFast, 
 			easing: 'easeOutExpo'
 		});
-		
-		if( thisLink.data('translation') ){
-			thisLink.attr('data-translation','false');
-		} else {
-			thisLink.attr('data-translation','true');
-		}
-		
-		return false;
-	});
-	
-	// Use hide-button if initiative has translation
-	if($altLangLink.data('translation')){
-		$altLangLink.switchContent();
-		$('.alt-lang').show();
-	}
-	
-	
+		otherHeaders.removeClass('open');
+
+ 		thisBlock.stop(false,true).slideToggle({
+			duration: speedFast, 
+			easing: 'easeOutExpo'
+		});
+		thisHeader.toggleClass('open');
+ 	};
+
+ 	var $formHeader = $('.content-block-header');
+
+ 	$formHeader.click(function(){
+ 		showFormBlock($(this));
+ 	});
+
+ 	// Action for wizard's continue button
+ 	proceedTo = function(step){
+ 		var blockHeader = $('#step-'+step).prev('.content-block-header');
+		showFormBlock(blockHeader);
+
+ 		//return false;
+ 	};
+
+
+
 /**
  * 
  * Add and remove link
  * ===================
  * - Uses jsRender to render link-row template
  * - Handles adding and removing a link-row
+ *
+ * TODO: remove from kuntalaisaloite if not needed
  * 
  * */
 	var $linkContainer = $('#link-container');
@@ -424,16 +441,6 @@ $(document).ready(function () {
 		return false;
 	});
 	
-	// TODO: Genetare better positioned remove link
-	/*$('.add-link').each(function(){
-		var removeLink = $(this).children('.remove-link');
-		var urlInput = $(this).children('.link-input-url').find('input:first');
-		var posY = urlInput.position().top;
-		
-		removeLink.css('top',posY+'px');
-	});*/
-
-	
 	// Remove link (clear values and hide fields)
 	$('.remove-link').live('click', function(){
 		//var removedLink = $(this).parent();
@@ -445,7 +452,107 @@ $(document).ready(function () {
 		
 		return false;
 	});
+
 	
+
+/**
+* Chosen - Replacement for municipality select
+* ============================================
+*/	
+	var municipalitySelect, homeMunicipalitySelect, selectedMunicipality, differentMunicipality, sameMunicipality;
+
+	municipalitySelect =		 $('#municipality');
+	homeMunicipalitySelect =	 $('#homeMunicipality');
+	selectedMunicipalityElem =	 $('#selected-municipality');
+	differentMunicipality =		 $('.different-municipality');
+	sameMunicipality =			 $('.same-municipality');
+
+
+ 	// Initialize chosen
+ 	$(".chzn-select").chosen();
+
+ 	// Listen the first chosen element
+	municipalitySelect.live('change', function() {
+		var selectedMunicipality = $(this).val();
+
+		// update text in the municipality data in Step 2
+		selectedMunicipalityElem.text(selectedMunicipality);
+
+		// if user has changed the homeMunicipality value we will not mess it up
+		if ( !homeMunicipalitySelect.hasClass('updated') ){			
+			homeMunicipalitySelect
+			.val(selectedMunicipality)
+			.trigger("liszt:updated"); // updates dynamically the second chosen element
+		}
+	});
+
+	// Toggle suffrage fields according to user's choice
+	homeMunicipalitySelect.live('change', function() {
+		var thisSelect = $(this);
+
+		thisSelect.addClass("updated");
+
+		console.log("test: "+municipalitySelect.val());
+
+		if( !municipalitySelect.val() || (thisSelect.val() == municipalitySelect.val())){
+			differentMunicipality.hide();
+			sameMunicipality.show();
+		} else {
+			differentMunicipality.show();
+			sameMunicipality.hide();
+		}
+	});
+
+/**
+* Toggle collect people
+* ====================
+* - Toggles an element depending on the selection of other element (radiobutton or checkbox)
+* - If the input is clicked hidden:
+* 		* the input is disabled so that value will not be saved
+* 		* the value is not removed so that the value can be retrieved
+* 		  when clicked back to visible 
+* - TODO: Bit HardCoded now. Make more generic if needed.
+*/
+var toggleArea, $toggleAreaLabel, radioTrue, $toggleField, toggleBlock;
+
+toggleArea =		'.gather-people-details';
+$toggleAreaLabel =	$('#gather-people-container label');
+radioTrue =		'gather-people-true';
+$toggleField =		$('#initiativeSecret');
+
+toggleBlock = function(clicker, input){
+	if( input.attr('id') == radioTrue){		
+		clicker.siblings(toggleArea).slideDown({
+			duration: speedVeryFast, 
+			easing: 'easeOutExpo'
+		});
+		$toggleField.removeAttr('disabled');
+	} else {
+		clicker.siblings(toggleArea).slideUp({
+			duration: speedVeryFast, 
+			easing: 'easeOutExpo'
+		});
+		$toggleField.attr('disabled','disabled');
+	}	
+};
+
+$toggleAreaLabel.each(function (){
+	var clicker, input;
+	clicker = $(this);
+	input = clicker.find("input:first");
+	
+	if( input.is(':checked') && input.attr('id') == radioTrue){
+		$toggleField.removeAttr('disabled');
+		$(toggleArea).show();
+	}
+	
+	clicker.click(function(){
+		if(clicker.children('input[type="radio"]').length > 0){
+			toggleBlock($(this), input);
+		}
+	});
+	
+});
 	
 
 	
@@ -548,82 +655,41 @@ $(document).ready(function () {
  * - Calls generateModal() with modalData variable which includes all HTML content for the modal
  * 
  * */
-	
-	// Initiative saved and invitations sent successfully
-	if( typeof modalData != 'undefined' && typeof modalData.requestMessage != 'undefined' ){
-		generateModal(modalData.requestMessage(), 'minimal');
-	}	
-	
-	// Confirm invitation decline
-	$('.invitation-decline-confirm').click(function(){
+
+ 	// Show initiative's public user list
+	$('.show-user-list-1').click(function(){
 		try {
-			generateModal(modalData.invitationDecline(), 'minimal');
+			generateModal(modalData.userList(), 'full');
 			return false;
 		} catch(e) {
 			console.log(e);
 		}
 	});
-	
-	// Accept invitation
-	if( typeof modalData != 'undefined' && typeof modalData.invitationAccept != 'undefined' ){
-		generateModal(modalData.invitationAccept(), 'full');
-	}
-	
-	// Confirm send to OM
-	$('.send-to-om-confirm').click(function(){
+
+	// Show initiative's public user list
+	$('.js-join-as-user').click(function(){
+		var ajaxForProto = function(){
+			/*$.get('liity-tekijaksi-tmpl.html', function(data) {
+					alert("Data Loaded: " + data);
+			  return data;
+			});*/
+			$.ajax({
+			  url: 'liity-tekijaksi-tmpl.html',
+			  dataType: "html",
+			  success: function(data) {
+
+			    return data;
+			  }
+			});
+		};
+
 		try {
-			generateModal(modalData.sendToOmConfirm(), 'minimal');
+			generateModal(modalData.joinAsUser(ajaxForProto()), 'full');
 			return false;
 		} catch(e) {
 			console.log(e);
 		}
 	});
-	
-	// OM accepts
-	$('.om-accept-initiative').click(function(){
-		try {
-			generateModal(modalData.omAcceptInitiative(), 'full');
-			return false;
-		} catch(e) {
-			console.log(e);
-		}
-	});
-	
-	// OM rejects
-	$('.om-reject-initiative').click(function(){
-		try {
-			generateModal(modalData.omRejectInitiative(), 'full');
-			return false;
-		} catch(e) {
-			console.log(e);
-		}
-	});
-	
-	// Voted successfully - using general requestMessage
-	/*if( typeof modalData != 'undefined' && typeof modalData.voteSuccess != 'undefined' ){
-		generateModal(modalData.voteSuccess(), 'minimal');
-	}*/
-	
-	// Confirm send to VRK
-	$('.send-to-vrk-confirm').click(function(){
-		try {
-			generateModal(modalData.sendToVRKConfirm(), 'minimal');
-			return false;
-		} catch(e) {
-			console.log(e);
-		}
-	});
-	
-	// Confirm remove support votes
-	$('.remove-support-votes').click(function(){
-		try {
-			generateModal(modalData.removeSupportVotesConfirm(), 'minimal');
-			return false;
-		} catch(e) {
-			console.log(e);
-		}
-	});
-	
 
 	
 /**
@@ -885,394 +951,21 @@ $.tools.validator.addEffect("inline", function(errors, event) {
  
 });
 
-/**
-* Toggle financial URL
-* ====================
-* - Toggles an element depending on the selection of other element (radiobutton or checkbox)
-* - If the input is clicked hidden:
-* 		* the input is disabled so that value will not be saved
-* 		* the value is not removed so that the value can be retrieved
-* 		  when clicked back to visible 
-* - TODO: Bit HardCoded now. Make more generic if needed.
-*/
-var financeUrlArea, $financeAreaLabel, idHasSupport, $financialSupportURL, toggleFinancialUrl;
-
-financeUrlArea =		'.initiative-finance-url-area';
-$financeAreaLabel =		$('.initiative-finance-area label');
-idHasSupport =			'initiative.financialSupport.true';
-$financialSupportURL =	$('#financialSupportURL');
-
-toggleFinancialUrl = function(clicker, input){
-	if( input.attr('id') == idHasSupport){		
-		clicker.siblings(financeUrlArea).slideDown(speedVeryFast);
-		$financialSupportURL.removeAttr('disabled');
-	} else {
-		clicker.siblings(financeUrlArea).slideUp(speedVeryFast);
-		$financialSupportURL.attr('disabled','disabled');
-	}	
-};
-
-$financeAreaLabel.each(function (){
-	var clicker, input;
-	clicker = $(this);
-	input = clicker.find("input:first");
-	
-	if( input.is(':checked') && input.attr('id') == idHasSupport){
-		$financialSupportURL.removeAttr('disabled');
-		$(financeUrlArea).show();
-	}
-	
-	clicker.click(function(){
-		if(clicker.children('input[type="radio"]').length > 0){
-			toggleFinancialUrl($(this), input);
-		}
-	});
-	
-});
-
-/**
-* Toggle external support votes
-* =============================
-* 
-* NOTE: This could be made more generic and combined with the Toggle financial URL -function
-*/
-var $supportNotificationLabel, $externalSupportCount, $externalSupportCountField, $supportStatementsInWeb, $supportStatementsOnPaper;
-
-$supportNotificationLabel =		$('.initiative-support-notifications-area label');
-$externalSupportCount =			$('.initiative-external-support-count');
-$externalSupportCountField =	$externalSupportCount.find('input[type=text]:first');
-$supportStatementsInWeb =	$("#supportStatementsInWeb");
-$supportStatementsOnPaper =	$("#supportStatementsOnPaper");
-
-// Replace empty val with 0
-$externalSupportCountField.blur(function(){
-	var input = $(this);
-	if (input.val() == ""){
-		input.val(0);
-	}
-});
-
-$supportNotificationLabel.each(function (){
-	var clicker, input, toggleField;
-	clicker = $(this);
-	input = clicker.find("input:first");
-	
-	toggleField = function(){
-		if( $supportStatementsInWeb.is(':checked') || $supportStatementsOnPaper.is(':checked') ){
-			$externalSupportCountField.removeAttr('disabled');
-			// Animation causes issues in input field's visibility with IE7
-			if (isIE7){
-				$externalSupportCount.show();
-				
-			} else {
-				$externalSupportCount.stop(true, true).slideDown(speedVeryFast);
-			}
-			
-			return true;
-		} else {
-			$externalSupportCountField.attr('disabled','disabled');
-			// Animation causes issues in input field's visibility with IE7
-			if (isIE7){
-				$externalSupportCount.hide();
-				
-			} else {
-				$externalSupportCount.stop(true, true).slideUp(speedVeryFast);
-			}
-			return false;
-		}
-	}
-	
-	toggleField();
-	
-	clicker.click(function(){
-		toggleField();
-	});
-});
 
 
-/**
-* Handle VEV selection
-* ====================
-* - Gets saved emails from textarea and adds them to a list element
-* - Parses and validates typed emails and adds them to a list element.
-*/
-$('form .email-field').each(function() {
-    var field, newIndex, input, inputBox, name, parseEmails, parseCurrentEmails, addEmail, removeEmail,
-    	ul, li, unifyHeights,
-    	sentInvitations, getSentInvitations,
-    	sentInvitationsUl, sentInvitationsLi, emailPlaceHolder;
-    
-    field 				= $(this);
-    newIndex			= field.children(".invitation-data:first" ).data("index");
-    name 				= field.data('name');
-    sentInvitations 	= field.data('sent-invitations');
-    ul 					= $('<ul class="emails no-style" />');
-    inputBox 			= $('<div class="email-input" />');
-    input 				= $('<textarea rows="1" />');
-    sentInvitationsUl 	= $('<ul class="sent-invitations no-style" />');
-    sentInvitationsLi 	= $('<li class="disabled" />');
-    emailPlaceHolder	= $('<span class="email-place-holder">malli@esimerkki.fi</span>');
-    
-    
-    // Vertical align elements
-    unifyHeights = function() {
-        var fields, h;
-        h = 0;
-        fields = field.siblings('.email-field').add(field);
-        fields.each(function() {
-            var ip;
-            ip = $(this).find('.email-input');
-            ip.css('height', 'auto');
-            if (ip.height() > h) {
-                return h = ip.height();
-            }
-        });
-    
-        return fields.each(function() {
-            return $(this).find('.email-input').height(h);
-        });
-    };
-    
-    // Remove email from list and empty corresponding input-field
-    removeEmail = function(x,id){
-    	$('input[name="'+id+'"]').val('');
-        x.parent().remove();    
-        
-        if( $('.email-input').find('.invalid').length == 0){
-    		var authorArea = $('.initiative-authors-area');
-    		
-    		authorArea.find('.msg-error').fadeOut(speedSlow,function(){
-    			$(this).remove();
-    		});
-    	}
-    };
-    
-    
-    // Add a list element
-    addEmail = function(x, email, index, addSaved, invalid){
-    	if ( addSaved == null){
-    		addSaved = false;
-    	}
-    	if ( invalid == null){
-    		invalid = false;
-    	}
-    	
-    	var invitationName = name + '['+index+'].email';
-    	li = $('<li />').text(email).attr('id',invitationName);
-    	if(invalid){
-    		li.addClass('invalid');
-    	}
-        x = $('<a href="#" class="remove">x</a>');
-        
-        // Don't add existing emails
-        if(addSaved && !invalid){
-	        hid = $('<input type="hidden" />').attr('name', invitationName).val(email);
-	        
-	        field.prepend(hid);
-        }
-        
-    	x.click(function() {    		
-    		removeEmail(x,invitationName);        
-            return false;
-        });
-    	
-    	li.append(x);
-        ul.append(li);
-    };
-  
-    // NOTE: We might not use this. Done with freemarker instead of JS.
-	/*getSentInvitations = function(){
-		if (sentInvitations > 0){
-			sentInvitationsLi.text(sentInvitations+" kutsu lähetetty");
-		} else {
-			sentInvitationsLi.text("ei lähetettyjä kutsuja");
-		}
-		inputBox.prepend(sentInvitationsUl);
-		sentInvitationsUl.append(sentInvitationsLi);
-	}
-	getSentInvitations();*/
-    
-    // Parse and add current emails in the UL-list
-    parseCurrentEmails = function(){
-		
-	    $.each(field.children('input[type="text"]'), function(index){
-	    	var x, email;
-	    	email = $(this).val();
-	    	
-	    	if (validateEmail(email)) {
-	    		addEmail(x, email, index);
-	    		return unifyHeights();
-	    	}
-	    	
-	    });
-    }
 
-    // Parse and add typed emails in the UL-list
-    parseEmails = function(e, blur) {
-        var emails, val;
-        if (e == null) {
-            e = null;
-        }
-        if (blur == null) {
-            blur = false;
-        }
-        val = input.val();
-        emails = val.split(/[\s\n\t\v,;]+/);
-        
-        if (emails.length > 1 || blur) {
-            $.each(emails, function(k, email) {
-                var hid, x;
-                email = $.trim(email);
-                if (validateEmail(email)) {
-                	addEmail(x, email, newIndex++, true);
-                    emails.splice(k, 1);
-                    return unifyHeights();
-                } else if (email != "" && blur) {
-                	addEmail(x, email, newIndex++, true, true);
-                	emails.splice(k, 1);
-                	return unifyHeights();
-                }
-            });
-            
-            return input.val($.trim(emails.join(' ')));
-        }
-    };
-  
-    input.keydown(function(e) {
-        if ((input.val()).length === 0 && e.keyCode === 8) {
-        	var lastLi = ul.find('li').last();
-        	lastLi.remove();
-            removeEmail( lastLi.find('.remove'), lastLi.attr('id') );
-        }
-        if (e.keyCode === 13) {
-            return parseEmails(e);
-        }
-    });
-    
-    input.keyup(function(e) {
-        return parseEmails(e);
-    });
-    
-    input.focusout(function(e){
-    	return parseEmails(e, true);
-    });
-    
-    
-    input.blur(function(e) {
-        return parseEmails(e, true);
-    });
-    
-    parseCurrentEmails();
-    
-    inputBox.append(ul);
-    inputBox.append(input);
-    inputBox.append(emailPlaceHolder);
-    if (ul.children().length > 0){
-    	emailPlaceHolder.hide();
-    }
-    
-    inputBox.click(function() {
-        return input.focus();
-    });
-    input.focus(function () {
-    	emailPlaceHolder.stop(false,true).fadeOut(speedFast);
-    	$(this).parent().addClass("focus");
-    });
-    inputBox.focusout(function(e) {
-    	if (ul.children().length == 0){
-    		emailPlaceHolder.stop(false,true).fadeIn(speedFast);
-    	}
-    	$(this).removeClass("focus");
-    });
-    
-    // Filling up the loading cap that might occur in slow connections with certain browsers.
-    // Removed. Is this real case? / mikkole
-    //$(".invitation-loader").remove(); 
-    
-    field.append(inputBox);
 
-});
 
-/**
-* Validate VEV roles
-* ==================
-* Disables selections that cannot be submitted.
-* - User must be one of these: initiator, representative or reserve
-* - But he/she cannot be representative and reserve at the same time
-*/
 
-$('.validate-roles').each(function() {
-	var 	container, $field, initiator, representative, reserve,
-			validateRoles, disableFields, enableFields; 
-	container = $(this); 
-	$field = container.find('input[type=checkbox]');
-	
-	// Match inputs with roles.
-	$field.each(function(){
-		var input = $(this);
-		
-		switch( input.attr('id').split('.').pop() ) {
-			case 'reserve':
-				reserve = input;
-				break;
-			case 'representative':
-				representative = input;
-				break;
-			default:
-				initiator = input;
-		}		
-	});
 
-	// Enables/disables role checkboxes
-	// Shows/hides user's name in organizer invitations block
-	validateRoles = function(){
-		$('ul li.user-role').hide();
-		
-		if( initiator.is(':checked') ){
-			$('#user-role-initiator').show();
-		}
-		if( representative.is(':checked') ){
-			disableFields(reserve);
-			$('#user-role-representative').show();
-		} else { enableFields(reserve); }
-		
-		if( reserve.is(':checked') ){
-			disableFields(representative);
-			$('#user-role-reserve').show();
-		} else { enableFields(representative); }
-	};
-	
-	disableFields = function(elem){
-		elem.attr('disabled','disabled');
-		elem.closest('label').addClass('disabled-input');
-	};
-	
-	enableFields = function(elem){
-		elem.removeAttr('disabled');
-		elem.closest('label').removeClass('disabled-input');
-	};
-
-	if ( (representative.is(':checked') && reserve.is(':checked')) ) {
-		$.each([representative, reserve], function() { 
-			$(this).closest('label').addClass('has-error');
-		});
-	} else {
-		validateRoles();
-	}
-	
-	$field.click(function(){
-		validateRoles();
-		$field.closest('label').removeClass('has-error');
-	});
-	
-});
 
 
 /**
 * Bind checkbox
 * =============
 * - Binds checkbox '.binder' with submit button '.bind'.
-* - Button is enabled when checkbox is checked otherwise disabled
+* - Binds radiobuttons as well
+* - Button is enabled when checkbox/radio is checked otherwise disabled
 */
 jQuery.fn.bindCheckbox = function(){
 	var cb, btn, cbVal;

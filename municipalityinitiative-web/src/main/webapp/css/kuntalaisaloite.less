@@ -1,3 +1,5 @@
+// TODO remove initiative web stuff
+
 // 1. Basic colors                          - Styleguide 1
 // 2. Mixings                               - Styleguide 2
 //   2.1. Rounded corners                   - Styleguide 2.1
@@ -110,6 +112,24 @@
     -o-transition: @property @delay @easing;
 }
 
+.grayGradient (){
+    background: @grayGradient2;
+    background: -webkit-gradient(linear, left top, left bottom, from(@grayGradient1), to(@grayGradient2));
+    background: -moz-linear-gradient(top,  @grayGradient1,  @grayGradient2);
+    background: -o-linear-gradient(top,  @grayGradient1,  @grayGradient2);
+}
+.grayGradientHover (){
+    background: @grayGradientHover2;
+    background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientHover1), to(@grayGradientHover2));
+    background: -moz-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
+    background: -o-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
+}
+.grayGradientActive (){
+    background: @grayGradientActive2;
+    background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientActive1), to(@grayGradientActive2));
+    background: -moz-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
+    background: -o-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
+}
 
 html {
     height:100%;
@@ -293,14 +313,6 @@ body {
             }
         }
 
-        /*span {
-            color: black;
-            font-size: 0.8em;
-            position: absolute;
-            top: 17px;
-            right: 280px;
-        }*/
-
         img {
             margin-top: 5px;
         }
@@ -333,9 +345,7 @@ body {
             z-index: 999;
             color: #444;
             background: #fff;
-            
-            
-            
+
             .icon-small.dropdown-icon { background-position:-96px -13px; }
         }        
     }
@@ -432,9 +442,9 @@ body {
 
     #logo {
         display:block;
-        width: 360px;
+        width: 345px;
         height:72px;
-        background:url("../img/logo.png?version=${timestamp}") 0 0 no-repeat;
+        background:url("../img/logo-kuntalaisaloite.png?version=${timestamp}") 0 0 no-repeat;
     }
     #logo span { display:none; }
 
@@ -724,7 +734,7 @@ a.block-link {
     min-height:441px;
     margin:-10px -60px 0px -66px;
     padding:325px 0 0 66px;
-    background:url("../img/bg-front.jpg?version=${timestamp}") -2px 0 no-repeat;
+    //background:url("../img/bg-front.jpg?version=${timestamp}") -2px 0 no-repeat;
     
     .faux-columns {
         width:960px;
@@ -757,16 +767,19 @@ a.block-link {
     }
 }
 
+.form-block-container {
+    margin-bottom: 2em;
+}
+
 .initiative-content-header {
     position:relative;
 }
 
 .input-block, .view-block {
-    margin-bottom: 3em;
     position: relative;
     //z-index: 3;
     background: #fff url("../img/input-block-extra-bg.png?version=${timestamp}") repeat-y top right;
-    border-left: 4px solid #087480;
+    border-left: 4px solid #017380;
     
     padding:0 35px 30px 55px;
     
@@ -789,10 +802,13 @@ a.block-link {
     }
 }
 .view-block {
+    margin-bottom:3em;
     padding-top:35px;
     background:#fff;
 }
 .input-block {
+    width: 866px; // Predefined width removes jumpyness bug in slideToggle. could be calculated with JS for dynamic widths.
+
     .input-block-action {
         width:585px;
     }
@@ -828,35 +844,6 @@ a.block-link {
         font-size: 1.2em;
     }
 
-}
-
-.extra-body {
-    font-size: 0.8em;
-    margin-bottom: 2em;
-}
-
-.intro, .workflow-intro {
-    .rounded-corners;
-
-    padding:20px 30px 10px 30px;
-    font-size: 0.9em;
-    color: white;
-    background: @mainColor url("../img/input-block-intro-glow.png?version=${timestamp}") no-repeat top left;
-    margin: 0em 0em 1em 0em;
-
-    .required {
-        background-position: right 3px;
-    }
-
-    a {
-        color: #ffc9e7;
-        text-decoration: underline;
-    }
-    .icon-info {
-        min-height:40px;
-        background: transparent url("../img/icon-msg-info.png?version=${timestamp}") no-repeat 0px 5px;
-        padding-left: 40px;
-    }
 }
 
 .sidebar {
@@ -961,25 +948,17 @@ a.block-link {
 
     color: @bodyColor;
     border: solid 1px @borderGray;
-    background: @grayGradient2;
-    background: -webkit-gradient(linear, left top, left bottom, from(@grayGradient1), to(@grayGradient2));
-    background: -moz-linear-gradient(top,  @grayGradient1,  @grayGradient2);
-    background: -o-linear-gradient(top,  @grayGradient1,  @grayGradient2);
+    .grayGradient();
 
     &:hover, &.disabled:hover {
-        background: @grayGradientHover2;
-        background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientHover1), to(@grayGradientHover2));
-        background: -moz-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
-        background: -o-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
+        .grayGradientHover();
         color: @black;
         border-color: #b7b7b7;
         text-decoration: none;
     }
     &:active, &.disabled:active, &:focus {
         color: @black;
-        background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientActive1), to(@grayGradientActive2));
-        background: -moz-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
-        background: -o-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
+        .grayGradientActive();
     }
     &.disabled {
        opacity:@dimmed;
@@ -1002,66 +981,6 @@ a.block-link {
     //padding: 10px 12px;
     
 }
-
-
-
-// Green button
-//
-// :hover       - hover state
-// :active      - active state
-// 
-// Styleguide 4.1.
-/*
-.green {
-    color: #e8f0de;
-    border: solid 1px @greenGradient2;
-    background: @mainColor;
-    background: -webkit-gradient(linear, left top, left bottom, from(@greenGradient1), to(@greenGradient2));
-    background: -moz-linear-gradient(top,  @greenGradient1,  @greenGradient2);
-    background: -o-linear-gradient(top,  @greenGradient1,  @greenGradient2);
-}
-.green:hover {
-    background: #538018;
-    background: -webkit-gradient(linear, left top, left bottom, from(@greenGradientHover1), to(@greenGradientHover2));
-    background: -moz-linear-gradient(top,  @greenGradientHover1,  @greenGradientHover2);
-    background: -o-linear-gradient(top,  @greenGradientHover1,  @greenGradientHover2);
-    color: white;
-}
-.green:active, .green:focus {
-    background: -webkit-gradient(linear, left top, left bottom, from(@greenGradientActive1), to(@greenGradientActive2));
-    background: -moz-linear-gradient(top,  @greenGradientActive1,  @greenGradientActive2);
-    background: -o-linear-gradient(top,  @greenGradientActive1,  @greenGradientActive2);
-}
-
-
-// Red button
-//
-// :hover       - hover state
-// :active      - active state
-//
-// Styleguide 4.1.2.
-.red {
-    color: #faddde;
-    border: solid 1px @redGradient2;
-    background: #d81b21;
-    background: -webkit-gradient(linear, left top, left bottom, from(@redGradient1), to(@redGradient2));
-    background: -moz-linear-gradient(top, @redGradient1,  @redGradient2);
-    background: -o-linear-gradient(top, @redGradient1,  @redGradient2);
-}
-.red:hover {
-    color: white;
-    background: #b61318;
-    background: -webkit-gradient(linear, left top, left bottom, from(@redGradientHover1), to(@redGradientHover2));
-    background: -moz-linear-gradient(top,  @redGradientHover1,  @redGradientHover2);
-    background: -o-linear-gradient(top,  @redGradientHover1,  @redGradientHover2);
-}
-.red:active, .red:focus {
-    color: white;
-    background: -webkit-gradient(linear, left top, left bottom, from(@redGradientActive1), to(@redGradientActive2));
-    background: -moz-linear-gradient(top,  @redGradientActive1,  @redGradientActive2);
-    background: -o-linear-gradient(top,  @redGradientActive1,  @redGradientActive2);
-}
-*/
 
 // Gray and disabled button
 //
@@ -1266,6 +1185,11 @@ label  {
         margin: 2px 8px 0 0;
         float: left;
     }
+
+    .label {
+        display:block;
+        margin-left:1.5em;
+    }
     
     &.inline { display:inline; }
     
@@ -1370,67 +1294,9 @@ label  {
 }
 
 
-// Workflow
-//
-// Styleguide xxx
-
-/*
-.workflow-step {
-    width: 14%;
-    float: left;
-    margin-right: 2px;
-}
-
-.workflow-digit {
-    position: Relative;
-    font-size: 1.2em;
-    text-shadow: #40052b 1px 1px 1px;
-    color: white;
-    font-weight: bold;
-    padding: 0.6em 1em;
-    text-align: center;
-    border-radius: 100%;
-    background: @secondaryColor url("../img/input-block-intro-glow.png?version=${timestamp}") no-repeat top left;
-    margin-left: 2px;
-}
-
-.step1 {
-    margin-left: -10px;
-}
-
-
-.workflow-description {
-    margin-top: -3px;
-    display: block;
-    height: 100px;
-    padding: 1.6em 1em 1em 1em;
-    color: @secondaryTextColor;
-    background: white;
-    font-size: 0.8em;
-    margin-left: 10px;
-    box-shadow: 1px 1px 0px @borderGray;
-}
-
-.workflow-intro {
-    font-family: times new roman, serif;
-    font-size: 1.2em;
-    color: @secondaryTextColor;
-    margin-bottom: 1.2em;
-}
-*/
-
-.front-page-intro {
-    
-    font-size: 0.9em;
-    position: relative;
-
-    .front-page-intro-image {
-        float: right;
-        margin: 0px 0px 2em 2em;
-    }
-}
-
 // Add/remove link
+//
+// TODO: remove from kuntalaisaloite if not needed
 //
 // Styleguide xxx
 
@@ -1527,6 +1393,15 @@ label  {
     &.last { margin:0; }
 }
 
+// Dynamic CSS3 columns
+.css-cols-3 {
+    -moz-column-count: 3;
+    -moz-column-gap: 20px;
+    -webkit-column-count: 3;
+    -webkit-column-gap: 20px;
+    column-count: 3;
+    column-gap: 20px;
+}
 
 // Help and required
 // 
@@ -1710,21 +1585,34 @@ label  {
 
 .content-block-header {
     position:relative;
-    background: #fff url("../img/input-block-extra-bg.png?version=${timestamp}") repeat-y top right;
-    border-left: 4px solid #087480;
-    padding:20px 25px 0 55px;
-    
-    /*background: @mainColor url("../img/input-block-intro-glow.png?version=${timestamp}") no-repeat top left;
-    margin: 0px;
-    color: white;
-    position: relative;
-    -webkit-border-top-left-radius: @cornerRadius;
-    -webkit-border-top-right-radius: @cornerRadius;
-    -moz-border-radius-topleft: @cornerRadius;
-    -moz-border-radius-topright: @cornerRadius;
-    border-top-left-radius: @cornerRadius;
-    border-top-right-radius: @cornerRadius;
-    padding: 1em;*/
+    background: #017380;
+    //border-left: 4px solid #0ea9bc;
+    padding:0.5em 25px 0.5em 30px;
+    cursor:pointer;
+
+    .transition(background, 0.2s, ease-in);
+
+    &:hover {
+        background: #0c93a4;
+        //border-left: 4px solid #0c93a4;
+    }
+
+    .arrow {
+        position:absolute;
+        right:20px;
+        top:50%;
+        display:block;
+        width:17px;
+        height:17px;
+        margin-top:-8px;
+        background:url("../img/icon-expand.png?version=${timestamp}") no-repeat 0 0;    
+    }
+    &.open {
+        .arrow {
+            background-position:0 -70px;
+        }
+    }
+
     
     &.view {
         z-index:3;
@@ -1741,9 +1629,8 @@ label  {
 
     h2 {
         margin: 0;
-        color: #087480;
+        color: #fff;
         font-weight:normal;
-        //text-shadow: #0b3911 1px 1px 1px;
     }
 }
 
@@ -1763,14 +1650,10 @@ label  {
 }
 
 .input-block-extra {
-    position:absolute;
-    top:-6px;
-    right:-306px;
-    width: 235px;
-    margin:0 0px 0px 10px;
-    padding: 10px 0px 20px 33px;
-    height:0;
-    background: transparent url("../img/input-block-extra-indicator.png?version=${timestamp}") no-repeat 9px 6px;
+    float:right;
+    width:220px;
+    margin:20px -15px 0 0;
+    //background: transparent url("../img/input-block-extra-indicator.png?version=${timestamp}") no-repeat 9px 6px;
     font-size: 90%;
     color: #787878;
 
@@ -1788,6 +1671,13 @@ label  {
     margin-top:25px;
 }
 
+.required-info {
+    float:right;
+    margin-bottom:0.67em;
+}
+
+
+// TODO: this can be removed
 .no-js-help-container{
     position:relative;
     right:-25px;
@@ -1805,8 +1695,8 @@ label  {
 }
 
 .initiative-content-row {
-    border-bottom: 1px solid @borderGray;
-    margin-bottom: 0.7em;
+    //border-bottom: 1px solid @borderGray;
+    //margin-bottom: 0.7em;
     padding-bottom: 0.7em;
     
     .header {
@@ -1827,12 +1717,9 @@ label  {
     right:35px;
 
 }
-.show-alternative-lang {
-    float:right;
-    font-size:0.9em;
-    //position: absolute;
-    //top: 28px;
-    //right:315px;
+
+.join-as-user {
+    padding-top:0.4em;
 }
 
 .no-top-margin {
@@ -2125,7 +2012,7 @@ a.caldisabled {
         min-height:67px;
         margin-bottom:30px;
         border:0;
-        border-left:4px solid #bc448e;
+        border-left:4px solid #c3cc13;
         padding-left:126px;
         background:#fff url("../img/icon-msg-summary.png?version=${timestamp}") no-repeat 32px 27px;
         
@@ -2257,6 +2144,9 @@ h2 {
     margin-bottom:0.5em;
     font-weight:normal;
 }
+.view-block h2 {
+    color:#017380;
+}
 
 h3 {
     color: #111;
@@ -2300,19 +2190,29 @@ ul, ol {
     }
 }
 
+.right { float:right; }
+.left { float:left; }
+.align-right { text-align:right; }
+.align-left { text-align:left; }
+.align-center { text-align:center; }
+
 blockquote {
     margin-bottom:2em;
     font-style:italic;
 }
 
-.vote-count {
+.user-count-total {
+    float:left;
+    margin:0 40px 0 0;
+    font-size:3em;
+    font-style:italic;
+    line-height:1em;
+}
+.user-count {
     font-size:1.7em;
     font-style:italic;
 }
-.internal-vote-count {
-    font-size:1.2em;
-    font-style:italic;
-}
+
 
 // Tables
 // FIXME: Does not work on IE7. Use float for IE7.
@@ -2348,7 +2248,6 @@ blockquote {
     &.full {
         width:100%;
     }
-
 }
 
 // Search results
@@ -2448,147 +2347,6 @@ blockquote {
 }
 
 
-// TODO: move to better place
-.js .email-field {
-    position:relative;
-    min-height:135px;
-}
-.email-input {
-    position:relative;
-    overflow:hidden;
-    padding:2px;
-    border:1px solid @borderGray;
-    background:#fff;
-    min-height:6em;
-    font-size:0.9em;
-    
-    .transition(box-shadow, 0.1s, ease-in);
-
-    li {
-        position:relative;
-        overflow:hidden;
-        margin-bottom:1px;
-        padding:0 20px 0 3px;
-        background:@greenGradient1;
-        border-radius:2px;
-        -moz-border-radius:2px;
-        -webkit-border-radius:2px;
-        
-        &.invalid {
-            color:#fff;
-            background:@redGradient1;
-        }
-        
-        &.disabled {
-            color:#fff;
-            background:@grayGradientActive2;
-        }
-        
-        a {
-            position:absolute;
-            top:0; right:5px;
-            color:#fff;
-        }
-    }
-
-    textarea {
-        border:0;
-        padding:0;
-        margin:0;
-        height:auto;
-        resize: none;
-        
-        &:focus {
-            box-shadow:none;
-        }
-    }
-    
-    .email-place-holder {
-        position:absolute;
-        top:3px;
-        left:5px;
-        opacity:1;
-        color:#888;
-
-        //.transition(opacity, 0.3s, linear);
-    }
-}
-
-
-
-// Flow state indicator 
-
-.flow-state-indicator {
-    overflow: hidden;
-    margin-bottom:30px;
-    color: #4e4e4e;
-    font-size:1em;
-    line-height:1.1em;
-
-    .flow-state-content {
-        display:table-cell;
-        vertical-align:middle;
-        height:70px;
-        padding:0 65px 0 40px;
-    
-        background:url("../img/flow-state-indicator.png?version=${timestamp}") no-repeat right -75px;    
-    }
-    
-
-    .flow-state-step {
-        display: table;
-        float: left;
-        width: 319px;
-        position: relative;
-        
-        background:url("../img/flow-state-indicator.png?version=${timestamp}") no-repeat left 0;
-
-        &.active {
-            background-position:left -150px;
-            color:#fff;
-        
-            .flow-state-content {
-                background-position:right -225px;
-            }
-        }
-        
-        &.checked {
-            background-position:left -300px;
-        
-            .flow-state-content {
-                background-position:right -375px;
-            }
-        }
-        
-        &.failed {
-            background-position:left -450px;
-            color:#000;
-        
-            .flow-state-content {
-                background-position:right -525px;
-            }
-        }
-
-         &.done, &.canceled {
-            float:none;
-            display:block;
-            width:50%;
-            margin:0 auto;
-            text-align: center;
-            font-size:1.2em;
-            background:#fff;
-    
-            .flow-state-content {
-                display:block;
-                height:auto;
-                padding:1em 0;
-                background:none;
-                line-height:26px;
-            }
-        }
-    }
-}
-
 // SOME buttons
 .some-links { 
     text-align:center;
@@ -2644,3 +2402,65 @@ table.data {
     
     td:first-child { width:300px; }
 }
+
+
+// Chosen overrides
+.chzn-select {
+    width:250px;
+}
+.chzn-container {
+    font-size:1em;
+
+    .chzn-single {
+        border: 1px solid @borderGray;
+        background: #fff;
+        font-size: 1em;
+        padding: 0.3em;
+        margin: 0.2em 0 0 0;
+        border-radius:0;
+        box-shadow:none;
+        
+        .transition(box-shadow, 0.2s, ease-in);
+
+        div {
+            width:33px;
+            border-left:1px solid @borderGray;
+            .grayGradient();
+
+            &:hover {
+                .grayGradientHover();
+            }
+
+            b {
+                background:url("../img/icon-arrow-down.png?version=${timestamp}") no-repeat 50% 50%; 
+            }
+        }
+    }
+
+    input[type="text"]:focus {
+        box-shadow:none;
+    }
+
+    .chzn-results {
+        padding:0 4px;
+
+        .highlighted {
+            background-color: #0c93a4;
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0ea9bc', endColorstr='#0c93a4', GradientType=0 );  
+            background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(20%, #0ea9bc), color-stop(90%, #0c93a4));
+            background-image: -webkit-linear-gradient(top, #0ea9bc 20%, #0c93a4 90%);
+            background-image: -moz-linear-gradient(top, #0ea9bc 20%, #0c93a4 90%);
+            background-image: -o-linear-gradient(top, #0ea9bc 20%, #0c93a4 90%);
+            background-image: linear-gradient(#0ea9bc 20%, #0c93a4 90%);
+            color: #fff;
+            border:0;
+        }
+    }
+
+    &.chzn-container-single .chzn-drop {
+        border-radius:0;
+    }
+
+    
+}
+

@@ -45,7 +45,7 @@
  * @param required generates an icon and can be used in JS-validation
  * @param optional additional information for label
 -->
-<#macro formLabel path required optional>
+<#macro formLabel path required>
     <#assign labelKey = fieldLabelKey(path) />
     <#if spring.status.value?? && spring.status.value?is_hash>
         <#assign forAttr = spring.status.expression+"."+locale />
@@ -55,9 +55,6 @@
             
     <label class="input-header" for="${forAttr!""}">
         <@u.message labelKey /> <#if required != ""><@u.icon type="required" size="small" /></#if>
-        <#if optional>
-            <span class="instruction-text"><@u.message labelKey + ".optional" /></span>
-        </#if>
     </label>
 
     <#nested/>
@@ -76,11 +73,11 @@
  * @param fieldType text, date, email, ...
  * 
 -->
-<#macro textField path required optional cssClass="" attributes="" maxLength="" fieldType="text">
+<#macro textField path required cssClass="" attributes="" maxLength="" fieldType="text">
     <@spring.bind path />  
     <@localizePath path spring.status.value />
     
-    <@formLabel pathLocale required optional>
+    <@formLabel pathLocale required>
         <#--
             TODO: add attribute required to attributes for jQueryTools validation
             <#if required?has_content>required="required"</#if>
@@ -132,7 +129,7 @@
     <@spring.bind path />
     <@localizePath path spring.status.value />  
 
-    <@formLabel pathLocale required optional>
+    <@formLabel pathLocale required>
         <#--
             TODO: add attribute required to attributes for jQueryTools validation
             <#if required?has_content>required="required"</#if>
@@ -208,16 +205,9 @@
  * @param path the name of the field to bind to
  * @param noscript use 'noscript' if message for noscript-users
 -->
-<#macro helpText path noscript="" href="">
-    <#if noscript!="noscript">
-    <span class="icon-small help trigger-tooltip hidden" title="<@u.message path+".iconTitle" />" data-name="${path!""}"></span>
-    </#if>    
-    <div class="input-block-extra ${path!""} js-hide ${(noscript="noscript")?string('','hidden')}">
-        <div class="input-block-extra-content">
-            <h4><@u.message path+".title" /></h4>
-            <@u.messageHTML key=path+".description" args=[href] />
-        </div>
-    </div>
+<#macro helpText path href="">
+    <h4><@u.message path+".title" /></h4>
+    <@u.messageHTML key=path+".description" args=[href] />
 </#macro>
 
 <#--
@@ -312,6 +302,7 @@
         <#assign editRoles=false />
     </#if>
 
+    <#--
     <div class="input-block-content top-margin">
         <div class="input-header">
             <@u.message "initiative.currentAuthor.myRoles" /> <#if editRoles?? && editRoles><@u.icon type="required" size="small" /></#if>
@@ -337,6 +328,7 @@
             </#if>
         </div> 
     </div>
+    -->
         
     <div class="input-block-content">
         <div class="input-header">
