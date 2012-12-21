@@ -390,6 +390,10 @@ $(document).ready(function () {
  		//return false;
  	};
 
+ 	// Open blocks by hash - TODO
+ 	/*if(window.location.hash != "") {
+	    loadContent(window.location.hash);
+	}*/
 
 
 /**
@@ -492,7 +496,9 @@ $(document).ready(function () {
 
 		thisSelect.addClass("updated");
 
-		if( thisSelect.val() == municipalitySelect.val() ){
+		console.log("test: "+municipalitySelect.val());
+
+		if( !municipalitySelect.val() || (thisSelect.val() == municipalitySelect.val())){
 			differentMunicipality.hide();
 			sameMunicipality.show();
 		} else {
@@ -515,7 +521,7 @@ var toggleArea, $toggleAreaLabel, radioTrue, $toggleField, toggleBlock;
 
 toggleArea =		'.gather-people-details';
 $toggleAreaLabel =	$('#gather-people-container label');
-radioTrue =		'gather-people-true';
+radioTrue =		'gatherPeople.true';
 $toggleField =		$('#initiativeSecret');
 
 toggleBlock = function(clicker, input){
@@ -658,6 +664,31 @@ $toggleAreaLabel.each(function (){
 	$('.show-user-list-1').click(function(){
 		try {
 			generateModal(modalData.userList(), 'full');
+			return false;
+		} catch(e) {
+			console.log(e);
+		}
+	});
+
+	// Show initiative's public user list
+	$('.js-join-as-user').click(function(){
+		var ajaxForProto = function(){
+			/*$.get('liity-tekijaksi-tmpl.html', function(data) {
+					alert("Data Loaded: " + data);
+			  return data;
+			});*/
+			$.ajax({
+			  url: 'liity-tekijaksi-tmpl.html',
+			  dataType: "html",
+			  success: function(data) {
+
+			    return data;
+			  }
+			});
+		};
+
+		try {
+			generateModal(modalData.joinAsUser(ajaxForProto()), 'full');
 			return false;
 		} catch(e) {
 			console.log(e);
@@ -925,14 +956,6 @@ $.tools.validator.addEffect("inline", function(errors, event) {
 });
 
 
-
-
-
-
-
-
-
-
 /**
 * Bind checkbox
 * =============
@@ -952,10 +975,24 @@ jQuery.fn.bindCheckbox = function(){
 			btn.attr('disabled','disabled').addClass('disabled');
 		}
 	};
+
+	var updateSaveButtonText = function( thisCb ){
+		var btnSaveText = $('button[name="save"] span');
+
+		if(thisCb.val() == 'FALSE'){
+			btnSaveText.text(btnSaveText.data('textsend'));
+		} else {
+			btnSaveText.text(btnSaveText.data('textsave'));
+		}
+	}
 	
 	cbVal();
 	cb.change(function(){
 		cbVal();
+
+		if (btn.attr('name') == 'save'){
+			updateSaveButtonText( $(this) );
+		}
 	});
 };
 $('.binder').bindCheckbox();
@@ -963,7 +1000,7 @@ $('.binder').bindCheckbox();
 
 /**
  * 
- * Show hide more details
+ * Show hide more details - TODO REMOVE FROM MUNICIPALITY IF NOT NEEDED
  * ======================
  * 
  * */

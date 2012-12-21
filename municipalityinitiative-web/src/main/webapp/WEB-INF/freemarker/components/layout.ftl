@@ -98,10 +98,9 @@
 <#assign naviItems = [
       {"naviName":"page.frontpage", "naviUrl":urls.frontpage()},
       {"naviName":"page.searchm", "naviUrl":urls.searchm()},
-      {"naviName":"page.search", "naviUrl":urls.search()},
       {"naviName":"page.createNew", "naviUrl":urls.createNew()},
-      {"naviName":"page.help", "naviUrl":urls.helpIndex()},
-      {"naviName":"page.news", "naviUrl":urls.news()}
+      {"naviName":"page.browseOwn", "naviUrl":"#"},
+      {"naviName":"page.help", "naviUrl":urls.helpIndex()}
     ] />
 
 <#assign currentPage>
@@ -161,21 +160,22 @@
     <#if optimizeResources>
         <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/style.min.css?version=${resourcesVersion}" />
         <!--[if IE ]>
-        <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/aloitepalvelu-ie.css?version=${resourcesVersion}" />
+        <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-ie.css?version=${resourcesVersion}" />
         <![endif]-->
         
         <link rel="stylesheet" type="text/css" media="print" href="${urls.baseUrl}/css/print.css?version=${resourcesVersion}" />
     <#else>
         <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/normalize.css?version=${resourcesVersion}" />
         <noscript>
-            <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/aloitepalvelu.css" />
+            <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite.css" />
             <!--[if IE ]>
-                <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/aloitepalvelu-ie.css" />
+                <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-ie.css" />
             <![endif]-->
         </noscript>
-        <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/aloitepalvelu.less" />
+        <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/chosen.css" />
+        <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite.less" />
         <!--[if IE ]>
-            <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/aloitepalvelu-ie.less">
+            <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-ie.less">
         <![endif]-->
         
         <link rel="stylesheet/less" type="text/css" media="print" href="${urls.baseUrl}/css/print.less" />
@@ -222,21 +222,8 @@
                 <a class="other-services-select" href="http://www.otakantaa.fi/${locale}-FI" target="_blank"> <#-- Add class "dropdown-toggle" for dropdown -->
                     <@u.message "otherServices.otaKantaa"/><span class="icon-small arrow-right"></span>
                 </a>
-                <#--
-                <a class="other-services-select dropdown-toggle">
-                    <@u.message "otherServices"/><span class="icon-small arrow-right"></span>
-                </a>
-                
-                <ul class="dropdown-menu">
-                    <li><a href="#">Ensimmäinen linkki</a></li>
-                    <li><a hreF="#">Toinen linkki</a></li>
-                    <li><a hreF="#">Toinen linkki</a></li>
-                    <li><a hreF="#">Toinen linkki</a></li>
-                    <li><a hreF="#">Toinen linkki</a></li>
-                    <li><a hreF="#">Toinen linkki</a></li>
-                </ul>-->
             </div>
-                       
+            
             <div class="logged-in-info">
                 <#-- Authenticated = Logged in -->
                 <#if currentUser.authenticated>
@@ -260,6 +247,7 @@
                     <a href="${urls.login(springMacroRequestContext.requestUri)}" title="<@u.message "common.login"/>" class="header-tool-link login"><@u.message "common.login"/></a>
                 </#if>
             </div>
+                       
         </div>
     </div>
       
@@ -297,17 +285,6 @@
     
     <div class="container">
         <div id="content">
-        
-            <#-- Breadcrumb - do not show in Frontpage -->
-            <#-- Do we really need breadcumb as there is only one sublevel?
-            <#if page != "page.frontpage" >
-                <div id="breadcrumb">
-                    <ul>
-                        <li><a href="${urls.frontpage()}"><@u.message "page.frontpage" /></a>&rarr;</li><li><span class="last-node">${currentPage}</span></li>
-                    </ul>
-                </div> 
-            </#if>
-            -->
 
             <#if requestMessages?? >
                 <@u.requestMessage requestMessages />
@@ -339,11 +316,12 @@
             </div>
             <div class="footer-links">
                 <ul>
-                    <li><span class="icon-small arrow-right-2"></span> <a href="${urls.infoIndex()}/<@u.enumDescription InfoPage.FEEDBACK />"><@u.message "page.info.feedback.title" /></a></li>
+                    <li>Kuntalaisaloitteen linkit tähän</li>
+                    <#--<li><span class="icon-small arrow-right-2"></span> <a href="${urls.infoIndex()}/<@u.enumDescription InfoPage.FEEDBACK />"><@u.message "page.info.feedback.title" /></a></li>
                     <li><span class="icon-small arrow-right-2"></span> <a href="${urls.infoIndex()}/<@u.enumDescription InfoPage.PERSON_REGISTER />"><@u.message "page.info.person-register.title" /></a></li>
                     <li><span class="icon-small arrow-right-2"></span> <a href="${urls.infoIndex()}/<@u.enumDescription InfoPage.PRIVACY />"><@u.message "page.info.privacy.title" /></a></li>
                     <li><span class="icon-small arrow-right-2"></span> <a href="${urls.infoIndex()}/<@u.enumDescription InfoPage.DEVELOPERS />"><@u.message "page.info.developers.title" /></a></li>
-                    <li><span class="icon-small arrow-right-2"></span> <a href="${urls.infoIndex()}/<@u.enumDescription InfoPage.BRIEFLY_IN_ENGLISH />"><@u.message "page.info.briefly-in-english.link" /></a></li>
+                    <li><span class="icon-small arrow-right-2"></span> <a href="${urls.infoIndex()}/<@u.enumDescription InfoPage.BRIEFLY_IN_ENGLISH />"><@u.message "page.info.briefly-in-english.link" /></a></li>-->
                 </ul>
             </div>
             <br class="clear"/>
@@ -375,7 +353,8 @@
       <script type="text/javascript" src="${urls.baseUrl}/js/jquery.cookie.js?version=${resourcesVersion}"></script>
       <script type="text/javascript" src="${urls.baseUrl}/js/jquery.dirtyforms.min.js?version=${resourcesVersion}"></script>
       <script type="text/javascript" src="${urls.baseUrl}/js/jsrender.min.js?version=${resourcesVersion}"></script>
-      <script type="text/javascript" src="${urls.baseUrl}/js/aloitepalvelu.js?version=${resourcesVersion}"></script>
+      <script type="text/javascript" src="${urls.baseUrl}/js/chosen.jquery.min.js?version=${resourcesVersion}"></script>
+      <script type="text/javascript" src="${urls.baseUrl}/js/kuntalaisaloite.js?version=${resourcesVersion}"></script>
     </#if>
     
     <#-- Initialize variables for JavaScript -->

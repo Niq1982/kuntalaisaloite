@@ -1,6 +1,5 @@
 <#import "components/layout.ftl" as l />
 <#import "components/utils.ftl" as u />
-<#import "components/flow-state.ftl" as flow />
 
 
 <#escape x as x?html>
@@ -15,9 +14,11 @@
 
 <div class="municipalities">
 
+
     <#list municipalities as municipality>
-        ${municipality.name}
+        ${municipality.name}<br/>
     </#list>
+
 
 </div>
 

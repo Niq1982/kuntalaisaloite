@@ -42,8 +42,6 @@
     <span class="extra-info"><@u.localDate initiative.startDate /> - <@u.message "page.management" /></span>
     </#if>
     
-    <@flow.flowStateIndicator initiative />
-    
     <#--
       * Logic for showing info-message wrapper
       * - Known issue: Shows incorrectly in VRK-view in REVIEW-state
@@ -57,16 +55,8 @@
     
     <#-- TOP CONTRIBUTION -->
     <#if showInfoMsg>
-        <@m.initiativeVoteInfo />
-        
         <div class="system-msg msg-summary">
-            <@m.initiativeVote />
-            <@m.votingSuspended />
-            <@m.votingEnded />
-            
             <#noescape>${topContribution!""}</#noescape>
-            
-            <@m.supportStatementsRemoved />
         </div>
     </#if>
         
@@ -102,60 +92,30 @@
            <input type="hidden" name="edit" value="${managementSettings.editMode}" />
     </#if>
 
-        <#-- Parameters for edit: BASIC, EXTRA, ORGANIZERS, CURRENT_AUTHOR -->        
-        <#if managementSettings.editMode == EditMode.BASIC || managementSettings.editMode == EditMode.FULL>
-            <div <#if showExposeMask??>class="expose"</#if>>
-                <@edit.blockHeader "initiative.basicDetails.title" />
-                <@edit.basicDetails />
+        <#if managementSettings.editMode == EditMode.FULL>
+        
+            <div class="form-block-container">
+                <@edit.blockHeader key="initiative.municipality.title" step=1 />
+                <@edit.municipalityBlock step=1 />
             </div>
-        <#else>
-            <@edit.blockHeader key="initiative.basicDetails.title" edit="BASIC" disabled=(managementSettings.allowEditBasic)?string('','disabled') />
-            <div class="view-block"><@view.basicDetails /></div>
+        
+            <div class="form-block-container">
+                <@edit.blockHeader key="initiative.initiative.title" step=2 />
+                <@edit.initiativeBlock step=2 />
+            </div>
+        
+            <div class="form-block-container">
+                <@edit.blockHeader key="initiative.currentAuthor.title" step=3 />
+                <@edit.currentAuthorBlock step=3 />
+            </div>
+        
+            <div class="form-block-container">
+                <@edit.blockHeader key="initiative.save.title" step=4 />
+                <@edit.saveBlock step=4 />
+            </div>
+        
         </#if>
 
-        <#if managementSettings.editMode == EditMode.EXTRA || managementSettings.editMode == EditMode.FULL>
-            <div <#if showExposeMask??>class="expose"</#if>>
-                <@edit.blockHeader key="initiative.extraDetails.title" />
-                <@edit.extraDetails />
-            </div>
-        <#else>
-            <@edit.blockHeader key="initiative.extraDetails.title" edit="EXTRA" disabled=(managementSettings.allowEditExtra)?string('','disabled') />                
-            <div class="view-block"><@view.extraDetails /></div>
-        </#if>
-        
-        <#if managementSettings.editMode == EditMode.CURRENT_AUTHOR || managementSettings.editMode == EditMode.FULL>
-            <div <#if showExposeMask??>class="expose"</#if>>
-                <@edit.blockHeader key="initiative.currentAuthorDetails.title" />
-                <@edit.currentAuthorDetails />
-            </div>
-        <#elseif initiative.currentAuthor??>
-            <@edit.blockHeader key="initiative.currentAuthorDetails.title" edit="CURRENT_AUTHOR" disabled=(managementSettings.allowEditCurrentAuthor)?string('','disabled') />
-            <@view.currentAuthorDetails />
-        </#if>
-        
-        <#if managementSettings.editMode == EditMode.ORGANIZERS || managementSettings.editMode == EditMode.FULL>
-            <div <#if showExposeMask??>class="expose"</#if>>
-                <@edit.blockHeader key="initiative.organizerDetails.title" />
-                <@edit.organizerDetails />
-            </div>
-        <#else>
-            <@edit.blockHeader key="initiative.organizerDetails.title" edit="ORGANIZERS" disabled=(managementSettings.allowEditOrganizers)?string('','disabled') />    
-            <@view.organizerDetails />
-        </#if>  
-        
-        <#if managementSettings.editMode == EditMode.FULL>
-            <div id="form-action-panel" class="">
-                
-                <div class="system-msg msg-summary">
-                    <#assign href>${urls.infoIndex()}/<@u.enumDescription InfoPage.ORGANIZER_ASSURANCE /></#assign>
-                    <@u.systemMessage path="userConfirmation.create" type="info" showClose=false args=[href] />
-                </div>
-                
-                <button type="submit" name="${UrlConstants.ACTION_SAVE_AND_SEND_INVITATIONS}" value="true" class="large-button green"><span class="large-icon save-and-send"><@u.messageHTML 'action.saveAndSend' /></span></button>
-                <button type="submit" name="${UrlConstants.ACTION_SAVE}" value="<@u.messageHTML 'action.saveAsDraft' />" class="large-button gray"><span class="large-icon save-as-draft"><@u.messageHTML 'action.saveAsDraft' /></span></button>
-                <a class="large-button red" href="${urls.baseUrl}/${locale}"><span class="large-icon cancel"><@u.messageHTML 'action.cancelAndReturn' /></span></a>
-            </div>
-        </#if>
         
     <#if managementSettings.editMode != EditMode.NONE>
         </form>
@@ -164,13 +124,7 @@
     <#-- BOTTOM CONTRIBUTION -->
     <#if showInfoMsg>
         <div class="system-msg msg-summary">
-            <@m.initiativeVote />
-            <@m.votingSuspended />
-            <@m.votingEnded />
-            
             <#noescape>${bottomContribution!""}</#noescape>
-            
-            <@m.supportStatementsRemoved />
         </div>
     </#if>
     
@@ -181,72 +135,12 @@
  * Same content is generated for NOSCRIPT and for modals.
  *
  * Modals:
- *  Request message (defined in macro u.requestMessage)
- *  Confirm send to OM
- *  Respond by OM
- *  Confirm send to VRK
  *  Form modified notification (dirtyform)
 -->
 <@u.modalTemplate />
 
 <script type="text/javascript">
     var modalData = {};
-    
-    <#-- Modal: Request messages. Also in public-view. Check for components/utils.ftl -->
-    <#if requestMessageModalHTML??>    
-        modalData.requestMessage = function() {
-            return [{
-                title:      '<@u.message requestMessageModalTitle+".title" />',
-                content:    '<#noescape>${requestMessageModalHTML?replace("'","&#39;")}</#noescape>'
-            }]
-        };
-    </#if>
-    
-    <#-- Modal: Confirm send to OM -->
-    <#if managementSettings.allowSendToOM>    
-        modalData.sendToOmConfirm = function() {
-            return [{
-                title:      '<@u.message "modal.sendToOm.confirm.title" />',
-                content:    '<#noescape>${sendToOMConfirmHtml?replace("'","&#39;")!""}</#noescape>'
-            }]
-        };
-    </#if>
-    
-    <#-- Modal: Respond by OM -->
-    <#if managementSettings.allowRespondByOM>
-        modalData.omAcceptInitiative = function() {
-            return [{
-                title:      '<@u.message "initiative.acceptInitiative" />',
-                content:    '<#noescape>${omAcceptInitiativeHtml?replace("'","&#39;")!""}</#noescape>'
-            }]
-        };
-        modalData.omRejectInitiative = function() {
-            return [{
-                title:      '<@u.message "initiative.rejectInitiative" />',
-                content:    '<#noescape>${omRejectInitiativeHtml?replace("'","&#39;")!""}</#noescape>'
-            }]
-        };
-    </#if>
-    
-    <#-- Modal: Confirm send to VRK -->
-    <#if managementSettings.allowSendToVRK>
-        modalData.sendToVRKConfirm = function() {
-            return [{
-                title:      '<@u.message "modal.sendToVRK.confirm.title" />',
-                content:    '<#noescape>${sendToVRKConfirmHtml?replace("'","&#39;")!""}</#noescape>'
-            }]
-        };
-    </#if>
-
-    <#-- Modal: Confirm remove Support votes -->
-    <#if managementSettings.allowRemoveSupportVotes>    
-        modalData.removeSupportVotesConfirm = function() {
-            return [{
-                title:      '<@u.message "removeSupportVotes.confirm.title" />',
-                content:    '<#noescape>${removeSupportVotesConfirmHtml?replace("'","&#39;")!""}</#noescape>'
-            }]
-        };
-    </#if>
 
     <#-- Modal: Form modified notification. Uses dirtyforms jQuery-plugin. -->
     modalData.formModifiedNotification = function() {
@@ -258,41 +152,6 @@
 </script>
 
 
-<#if managementSettings.editMode != EditMode.NONE>
-<script type="text/javascript">
-    modalData.sessionHasEnded = function() {
-        return [{
-            title:      '<@u.message "modal.sessionHasEnded.title" />',
-            content:    '<@u.messageHTML "modal.sessionHasEnded" />'
-        }]
-    };
 
-    var keepaliveTimeout, maxKeepAlive, maxTimes, i = 0;
-
-    keepaliveTimeout = 1000 * 60 * 3; // 3 minutes
-    maxKeepAlive = 1000 * 60 * 60 * 2; // 2 hours
-    maxTimes = maxKeepAlive / keepaliveTimeout; // 40 
-
-    function keepSessionAlive() {
-      $.post(
-          "${urls.baseUrl}${UrlConstants.KEEPALIVE}", 
-          "CSRFToken=${CSRFToken}",
-          function (ok) {
-              if (ok && i <= maxTimes) {
-                  setTimeout("keepSessionAlive()", keepaliveTimeout);
-                  i++;
-              } else {
-                  generateModal(modalData.sessionHasEnded(), 'minimal');
-              }
-          }
-      ).error(function () {
-          setTimeout("keepSessionAlive()", keepaliveTimeout);
-          i++;
-      });
-    }
-    setTimeout("keepSessionAlive()", keepaliveTimeout);
-</script>
-</#if>
-    
 </@l.main>
 </#escape> 
