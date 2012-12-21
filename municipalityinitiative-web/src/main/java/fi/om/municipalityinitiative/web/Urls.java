@@ -60,10 +60,8 @@ public final class Urls {
     public static final String VIEW_SV = CREATE_SV + "/" + ID_PARAMETER;
     
     public static final String SEARCH_FI =    "/fi/hae";
-    public static final String SEARCHM_FI = "/fi/haem";
     
     public static final String SEARCH_SV =    "/sv/sok";
-    public static final String SEARCHM_SV =     "/sv/sokm";
     
     public static final String MY_ACCOUNT_FI =    "/fi/omat-tiedot";
     
@@ -148,7 +146,12 @@ public final class Urls {
     public static final int MAX_INITIATIVE_JSON_RESULT_COUNT = 50;
 
     public static final int DEFAULT_INITIATIVE_JSON_RESULT_COUNT = 20;
-    
+
+    // New uris
+
+    public static final String SEARCHM_FI = "/fi/haem";
+    public static final String SEARCHM_SV = "/sv/sokm";
+
     private final String baseUrl;
     
     private final Locale locale;

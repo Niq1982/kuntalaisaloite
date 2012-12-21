@@ -15,7 +15,9 @@ public class InitiativeSearch {
 
     //TODO: add OM/VRK cases
 
-    public InitiativeSearch() {}
+    public InitiativeSearch() {
+        System.out.println("what");
+    }
 
     public InitiativeSearch(boolean includePublic, boolean includeOwn) {
         this.includePublic = includePublic;

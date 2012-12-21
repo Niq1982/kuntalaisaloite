@@ -1,18 +1,19 @@
 package fi.om.municipalityinitiative.web;
 
-import static org.junit.Assert.assertNotNull;
-import mockit.Delegate;
-import mockit.Mocked;
-import mockit.NonStrictExpectations;
-
-import org.joda.time.LocalDate;
-import org.junit.Test;
-
 import fi.om.municipalityinitiative.dto.InitiativeManagement;
 import fi.om.municipalityinitiative.dto.Invitation;
 import fi.om.municipalityinitiative.service.EmailServiceImpl;
 import fi.om.municipalityinitiative.util.MutableObject;
+import mockit.Delegate;
+import mockit.Mocked;
+import mockit.NonStrictExpectations;
+import org.joda.time.LocalDate;
+import org.junit.Ignore;
+import org.junit.Test;
 
+import static org.junit.Assert.assertNotNull;
+
+@Ignore
 public class AuthorWebTest extends WebTestBase {
     
 //    private static final Municipality HELSINKI = new Municipality("90", "Helsinki", "Helsingfors");
