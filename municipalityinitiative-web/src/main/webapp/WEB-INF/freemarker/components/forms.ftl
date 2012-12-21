@@ -334,11 +334,7 @@
         <div class="input-header">
             <@u.message "initiative.currentAuthor.contactDetails" /> <@u.icon type="required" size="small" />
         </div>
-        
-        <#if mode == "full">
-            <@f.helpText "helpOwnDetails" />
-        </#if>
-        
+
         <@spring.bind path+".contactInfo" />
         <@f.showError />
         
@@ -359,7 +355,7 @@
                 <label>
                     <@u.message "initiative.currentAuthor.contactInfo.address" />
                     <#--<@spring.formTextarea path+'.contactInfo.address', 'class="address-field noresize" maxlength="'+InitiativeConstants.AUTHOR_ADDRESS_MAX?string("#")+'"' />-->
-                    <#-- NOTE: maxlenght 1024 will cause an error -->
+                    <#-- NOTE: maxlength 1024 will cause an error -->
                     <@spring.formTextarea path+'.contactInfo.address', 'class="address-field noresize" maxlength="1000"' />
                 </label>
             </div>

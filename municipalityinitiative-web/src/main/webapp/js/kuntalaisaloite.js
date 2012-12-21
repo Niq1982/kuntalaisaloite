@@ -390,6 +390,10 @@ $(document).ready(function () {
  		//return false;
  	};
 
+ 	// Open blocks by hash - TODO
+ 	/*if(window.location.hash != "") {
+	    loadContent(window.location.hash);
+	}*/
 
 
 /**
@@ -517,7 +521,7 @@ var toggleArea, $toggleAreaLabel, radioTrue, $toggleField, toggleBlock;
 
 toggleArea =		'.gather-people-details';
 $toggleAreaLabel =	$('#gather-people-container label');
-radioTrue =		'gather-people-true';
+radioTrue =		'gatherPeople.true';
 $toggleField =		$('#initiativeSecret');
 
 toggleBlock = function(clicker, input){
@@ -952,14 +956,6 @@ $.tools.validator.addEffect("inline", function(errors, event) {
 });
 
 
-
-
-
-
-
-
-
-
 /**
 * Bind checkbox
 * =============
@@ -979,10 +975,24 @@ jQuery.fn.bindCheckbox = function(){
 			btn.attr('disabled','disabled').addClass('disabled');
 		}
 	};
+
+	var updateSaveButtonText = function( thisCb ){
+		var btnSaveText = $('button[name="save"] span');
+
+		if(thisCb.val() == 'FALSE'){
+			btnSaveText.text(btnSaveText.data('textsend'));
+		} else {
+			btnSaveText.text(btnSaveText.data('textsave'));
+		}
+	}
 	
 	cbVal();
 	cb.change(function(){
 		cbVal();
+
+		if (btn.attr('name') == 'save'){
+			updateSaveButtonText( $(this) );
+		}
 	});
 };
 $('.binder').bindCheckbox();
@@ -990,7 +1000,7 @@ $('.binder').bindCheckbox();
 
 /**
  * 
- * Show hide more details
+ * Show hide more details - TODO REMOVE FROM MUNICIPALITY IF NOT NEEDED
  * ======================
  * 
  * */

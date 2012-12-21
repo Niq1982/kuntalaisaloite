@@ -19,8 +19,8 @@
  * 
  * @param key is for example "initiative.basicDetails.title"
  -->
-<#macro blockHeader key>
-    <div id="step-header-1" class="content-block-header edit open">
+<#macro blockHeader key step=0>
+    <div id="step-header-${step}" class="content-block-header edit ${(step == 1)?string('open','')}">
         <h2><@u.message key!"" /></h2><span class="arrow hidden"> </span>
     </div>
 </#macro>
@@ -36,7 +36,7 @@
 <#macro buttons type="" nextStep="0">
     <div class="input-block-content">
         <#if type == "next">
-            <a href="#step-header-${nextStep}" class="small-button disable-dbl-click-check" onClick="proceedTo(${nextStep});"><span class="small-icon next">Jatka</span></a>
+            <a href="#step-header-${nextStep}" class="small-button disable-dbl-click-check ignoredirty" onClick="proceedTo(${nextStep});"><span class="small-icon next">Jatka</span></a>
         <#elseif type == "save">
             <button type="submit" name="save" class="small-button bind" ><span class="small-icon save-and-send" data-textsend="Tallenna ja lähetä aloite" data-textsave="Tallenna aloite">Tallenna aloite</span></button>
         </#if>
@@ -51,9 +51,9 @@
  *
  * Prints help-texts and validation errors in this block
  -->
-<#macro municipalityBlock>      
+<#macro municipalityBlock step>      
 
-    <div id="step-1" class="input-block cf">
+    <div id="step-${step}" class="input-block cf">
         <div class="input-block-extra">
             <div class="input-block-extra-content">
                 <@f.helpText "help.municipality" />
@@ -78,10 +78,17 @@
             <select data-placeholder="Valitse kunta" id="municipality" name="municipality" tabindex="1" class="chzn-select">
                 <option value=""></option> 
                 <option value="TODO">TODO</option>
+                <option value="TODO">TODO</option>
+                <option value="TODO">TODO</option>
+                <option value="TODO">TODO</option>
             </select>
+            
+                <#list municipalities as municipality>
+        ${municipality.name}<br/>
+    </#list>
         </div>
 
-        <@buttons type="next" nextStep="2" />
+        <@buttons type="next" nextStep=step+1 />
     </div>
 </#macro>
 
@@ -92,8 +99,8 @@
  *
  * Prints help-texts and validation errors in this block
  -->
-<#macro initiativeBlock>      
-    <div id="step-2" class="input-block cf">
+<#macro initiativeBlock step>      
+    <div id="step-${step}" class="input-block cf js-hide">
         <div class="input-block-extra">
             <div class="input-block-extra-content">
                 <@f.helpText "help.title" />
@@ -122,13 +129,13 @@
             <@f.textarea path="initiative.proposal" required="required" optional=true cssClass="textarea-tall" />
         </div>
         
-        <@buttons type="next" nextStep="3" />
+        <@buttons type="next" nextStep=step+1 />
     </div>
 </#macro>
 
 
 <#--
- * currentAuthorDetails
+ * currentAuthorBlock
  *
  * Add author details
  *  - Name, Home municipality, suffrage
@@ -136,8 +143,8 @@
  *
  * Prints help-texts and validation errors in this block
  -->
-<#macro currentAuthorDetails>
-    <div id="step-3" class="input-block cf">
+<#macro currentAuthorBlock step>
+    <div id="step-${step}" class="input-block cf js-hide">
         <div class="input-block-extra">
             <div class="input-block-extra-content">
                 <@f.helpText "help.currentAuthor.name" />
@@ -161,7 +168,8 @@
         </div>
         
         <div class="input-block-content">
-            <@f.textField path="currentAuthor.name" required="required" cssClass="large" maxLength="512" />
+            <p>TODO: nimi</p>
+            <#--<@f.textField path="currentAuthor.name" required="required" cssClass="large" maxLength="512" />-->
 
             <label>
                 <input type="checkbox" /> Nimeni saa näkyä tämän aloitteen tekijänä Kuntalaisaloite.fi-palvelussa.
@@ -219,7 +227,7 @@
 
         <@f.currentAuthor path="initiative.currentAuthor" realPath=initiative.currentAuthor mode="full" />
         
-        <@buttons type="next" nextStep="4" />
+        <@buttons type="next" nextStep=step+1 />
     </div>
 </#macro>
       
@@ -230,8 +238,8 @@
  *
  * Prints help-texts and validation errors in this block
  -->
-<#macro saveBlock>      
-    <div id="step-2" class="input-block cf">
+<#macro saveBlock step>      
+    <div id="step-${step}" class="input-block cf js-hide">
         <div class="input-block-extra">
             <div class="input-block-extra-content">
                 <@f.helpText "help.title" />

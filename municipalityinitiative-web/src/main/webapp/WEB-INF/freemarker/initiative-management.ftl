@@ -95,23 +95,23 @@
         <#if managementSettings.editMode == EditMode.FULL>
         
             <div class="form-block-container">
-                <@edit.blockHeader "initiative.municipality.title" />
-                <@edit.municipalityBlock />
+                <@edit.blockHeader key="initiative.municipality.title" step=1 />
+                <@edit.municipalityBlock step=1 />
             </div>
         
             <div class="form-block-container">
-                <@edit.blockHeader "initiative.initiative.title" />
-                <@edit.initiativeBlock />
+                <@edit.blockHeader key="initiative.initiative.title" step=2 />
+                <@edit.initiativeBlock step=2 />
             </div>
         
             <div class="form-block-container">
-                <@edit.blockHeader "initiative.currentAuthor.title" />
-                <@edit.currentAuthorBlock />
+                <@edit.blockHeader key="initiative.currentAuthor.title" step=3 />
+                <@edit.currentAuthorBlock step=3 />
             </div>
         
             <div class="form-block-container">
-                <@edit.blockHeader "initiative.save.title" />
-                <@edit.saveBlock />
+                <@edit.blockHeader key="initiative.save.title" step=4 />
+                <@edit.saveBlock step=4 />
             </div>
         
         </#if>

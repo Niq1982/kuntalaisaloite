@@ -172,6 +172,7 @@
                 <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-ie.css" />
             <![endif]-->
         </noscript>
+        <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/chosen.css" />
         <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite.less" />
         <!--[if IE ]>
             <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-ie.less">
@@ -352,7 +353,8 @@
       <script type="text/javascript" src="${urls.baseUrl}/js/jquery.cookie.js?version=${resourcesVersion}"></script>
       <script type="text/javascript" src="${urls.baseUrl}/js/jquery.dirtyforms.min.js?version=${resourcesVersion}"></script>
       <script type="text/javascript" src="${urls.baseUrl}/js/jsrender.min.js?version=${resourcesVersion}"></script>
-      <script type="text/javascript" src="${urls.baseUrl}/js/aloitepalvelu.js?version=${resourcesVersion}"></script>
+      <script type="text/javascript" src="${urls.baseUrl}/js/chosen.jquery.min.js?version=${resourcesVersion}"></script>
+      <script type="text/javascript" src="${urls.baseUrl}/js/kuntalaisaloite.js?version=${resourcesVersion}"></script>
     </#if>
     
     <#-- Initialize variables for JavaScript -->
