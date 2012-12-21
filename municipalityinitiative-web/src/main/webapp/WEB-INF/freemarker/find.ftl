@@ -4,9 +4,9 @@
 
 <#escape x as x?html>
 
-<#assign pageTitle><@u.messageHTML "initiative.searchm.public.title" /></#assign>
+<#assign pageTitle><@u.messageHTML "initiative.find.public.title" /></#assign>
 
-<@l.main "page.searchm" pageTitle!"">
+<@l.main "page.find" pageTitle!"">
 
 <h1>${pageTitle}</h1>
 

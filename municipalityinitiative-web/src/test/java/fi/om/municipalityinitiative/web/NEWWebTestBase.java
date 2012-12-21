@@ -32,7 +32,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={WebTestConfiguration.class})
-public class NEWWebTestBase {
+public abstract class NEWWebTestBase {
 
     protected static final int PORT = 8445; // NOTE: must match port in test.properties/baseUrl
 
