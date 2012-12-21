@@ -97,7 +97,7 @@
 <#-- Main navigation navigation items for HTML title, navigation and breadcrumb -->
 <#assign naviItems = [
       {"naviName":"page.frontpage", "naviUrl":urls.frontpage()},
-      {"naviName":"page.searchm", "naviUrl":urls.searchm()},
+      {"naviName":"page.find", "naviUrl":urls.searchm()},
       {"naviName":"page.createNew", "naviUrl":urls.createNew()},
       {"naviName":"page.browseOwn", "naviUrl":"#"},
       {"naviName":"page.help", "naviUrl":urls.helpIndex()}
