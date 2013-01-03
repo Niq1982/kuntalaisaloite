@@ -354,6 +354,8 @@ $(document).ready(function () {
  * Expand and minify form blocks
  * =============================
  * 
+ * FIXME: Clicking Continue-button causes jumping off the header anchor. Try solving by jumping to anchor after animation or removing the animation
+ * 
  * */
  	var showFormBlock = function(blockHeader){
  		var thisHeader, thisBlock, otherHeaders, otherBlocks;
