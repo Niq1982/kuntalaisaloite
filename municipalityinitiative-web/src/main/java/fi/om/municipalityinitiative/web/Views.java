@@ -52,6 +52,7 @@ public final class Views {
     // New views
 
     public static final String SEARCHM_VIEW = "find";
+    public static final String CREATEM_VIEW = "create";
     
     /**
      * Context relative redirect: context is prefixed to relative URLs.

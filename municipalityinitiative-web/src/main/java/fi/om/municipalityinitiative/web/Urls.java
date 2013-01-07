@@ -148,9 +148,11 @@ public final class Urls {
     public static final int DEFAULT_INITIATIVE_JSON_RESULT_COUNT = 20;
 
     // New uris
-
+    // XXX: Temporarily names, fix when old stuff is deleted
     public static final String SEARCHM_FI = "/fi/haem";
     public static final String SEARCHM_SV = "/sv/sokm";
+    public static final String CREATEM_FI =    "/fi/aloitem";
+    public static final String CREATEM_SV =    "/sv/initiativm";
 
     private final String baseUrl;
     

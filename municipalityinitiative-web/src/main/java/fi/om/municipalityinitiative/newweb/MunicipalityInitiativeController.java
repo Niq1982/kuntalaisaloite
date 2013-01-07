@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 import java.util.Random;
 
-import static fi.om.municipalityinitiative.web.Urls.SEARCHM_FI;
-import static fi.om.municipalityinitiative.web.Urls.SEARCHM_SV;
+import static fi.om.municipalityinitiative.web.Urls.*;
+import static fi.om.municipalityinitiative.web.Views.CREATEM_VIEW;
 import static fi.om.municipalityinitiative.web.Views.SEARCHM_VIEW;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -52,8 +52,13 @@ public class MunicipalityInitiativeController extends BaseController {
 
         return SEARCHM_VIEW;
 
+    }
 
-
+    @RequestMapping(value={ CREATEM_FI, CREATEM_SV }, method=GET)
+    public String createGet(Model model, Locale locale, HttpServletRequest request) {
+        MunicipalityInitiativeUICreateDto initiative = new MunicipalityInitiativeUICreateDto();
+        model.addAttribute("initiative", initiative);
+        return CREATEM_VIEW;
     }
 
 }
