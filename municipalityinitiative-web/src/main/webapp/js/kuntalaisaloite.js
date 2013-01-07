@@ -193,6 +193,11 @@ $(document).ready(function () {
 	$topRibbon
 	.after('<div style="height:'+$topRibbon.outerHeight()+'px" />')
 	.css('position','fixed');
+
+	// Scroll to hash
+	function scrollTo(hash) {
+	    location.hash = "#" + hash;
+	}
 	
 
 /**
@@ -370,11 +375,18 @@ $(document).ready(function () {
 			easing: 'easeOutExpo'
 		});
 		otherHeaders.removeClass('open');
+		
+		location.hash = "#step-header-2";
 
  		thisBlock.stop(false,true).slideToggle({
 			duration: speedFast, 
 			easing: 'easeOutExpo'
+		}, function() {
+		    // Animation complete.
+			console.log("done");
 		});
+ 		
+ 		//scrollTo();
 		thisHeader.toggleClass('open');
  	};
 
