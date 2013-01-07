@@ -43,10 +43,6 @@ public final class Urls {
     
     public static final String INFO_SV =    INFO_INDEX_SV + "/" + INFO_PAGE_PARAMETER;
 
-    public static final String CREATE_FI =    "/fi/aloite";
-    
-    public static final String CREATE_SV =    "/sv/initiativ";
-
     public static final String LOGIN_FI =        "/fi/login";
 
     public static final String LOGIN_SV =        "/sv/login";
@@ -54,14 +50,10 @@ public final class Urls {
     public static final String LOGOUT_FI =       "/fi/logout";
     
     public static final String LOGOUT_SV =       "/sv/logout";
-    
-    public static final String VIEW_FI = CREATE_FI + "/" + ID_PARAMETER;
 
-    public static final String VIEW_SV = CREATE_SV + "/" + ID_PARAMETER;
+    public static final String SEARCH_OLD_FI =    "/fi/haeOLD";
     
-    public static final String SEARCH_FI =    "/fi/hae";
-    
-    public static final String SEARCH_SV =    "/sv/sok";
+    public static final String SEARCH_OLD_SV =    "/sv/sokOLD";
     
     public static final String MY_ACCOUNT_FI =    "/fi/omat-tiedot";
     
@@ -149,10 +141,17 @@ public final class Urls {
 
     // New uris
     // XXX: Temporarily names, fix when old stuff is deleted
-    public static final String SEARCHM_FI = "/fi/haem";
-    public static final String SEARCHM_SV = "/sv/sokm";
-    public static final String CREATEM_FI =    "/fi/aloitem";
-    public static final String CREATEM_SV =    "/sv/initiativm";
+    public static final String SEARCH_FI = "/fi/hae";
+
+    public static final String SEARCH_SV = "/sv/sok";
+
+    public static final String CREATE_FI =    "/fi/aloite";
+
+    public static final String CREATE_SV =    "/sv/initiativ";
+
+    public static final String VIEW_FI = CREATE_FI + "/" + ID_PARAMETER;
+
+    public static final String VIEW_SV = CREATE_SV + "/" + ID_PARAMETER;
 
     private final String baseUrl;
     
@@ -230,11 +229,11 @@ public final class Urls {
     }
     
     public String search() {
-        return getLocalizedPageUrl(SEARCH_FI, SEARCH_SV);
+        return getLocalizedPageUrl(SEARCH_OLD_FI, SEARCH_OLD_SV);
     }
 
     public String searchm() {
-        return getLocalizedPageUrl(SEARCHM_FI, SEARCHM_SV);
+        return getLocalizedPageUrl(SEARCH_FI, SEARCH_SV);
     }
     
     public String news() {

@@ -41,7 +41,7 @@ public class MunicipalityInitiativeController extends BaseController {
     /*
  * Search
  */
-    @RequestMapping(value={ SEARCHM_FI, SEARCHM_SV }, method=GET)
+    @RequestMapping(value={SEARCH_FI, SEARCH_SV}, method=GET)
     public String search(InitiativeSearch search, Model model, Locale locale, HttpServletRequest request) {
 
         String at = "omg";

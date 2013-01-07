@@ -188,7 +188,7 @@ public class InitiativeController extends BaseController {
     /*
      * OM Search for invitations with votes to be removed
      */
-    @RequestMapping(value={ SEARCH_FI, SEARCH_SV }, method=GET, params=SEARCH_UNREMOVED_VOTES)
+    @RequestMapping(value={SEARCH_OLD_FI, SEARCH_OLD_SV}, method=GET, params=SEARCH_UNREMOVED_VOTES)
     public String searchUnremovedVotes(@RequestParam(SEARCH_UNREMOVED_VOTES) String beforeDeadLine,  Model model, Locale locale) {
         Urls urls = Urls.get(locale);
 
@@ -213,7 +213,7 @@ public class InitiativeController extends BaseController {
     /*
      * Search
      */
-    @RequestMapping(value={ SEARCH_FI, SEARCH_SV }, method=GET)
+    @RequestMapping(value={SEARCH_OLD_FI, SEARCH_OLD_SV}, method=GET)
     public String search(InitiativeSearch search, Model model, Locale locale) {
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().search());
