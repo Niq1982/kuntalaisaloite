@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.newdao.MunicipalityInitiativeDao;
 import fi.om.municipalityinitiative.newdto.MunicipalityInfo;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeCreateDto;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeInfo;
+import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,6 +41,12 @@ public class JdbcMunicipalityInitiativeDaoTest {
     }
 
     @Test
+    public void create() {
+        municipalityInitiativeDao.create(createDto());
+        assertThat(testHelper.countAll(QMunicipalityInitiative.municipalityInitiative), is(1L));
+    }
+
+    @Test
     public void create_and_get() {
         MunicipalityInitiativeCreateDto create = createDto();
         Long createId = municipalityInitiativeDao.create(create);
@@ -49,7 +56,7 @@ public class JdbcMunicipalityInitiativeDaoTest {
     }
 
     @Test
-    public void testFindReturnsAll() {
+    public void find_returns_all() {
 
         municipalityInitiativeDao.create(createDto());
         municipalityInitiativeDao.create(createDto());
@@ -59,7 +66,7 @@ public class JdbcMunicipalityInitiativeDaoTest {
     }
 
     @Test
-    public void findReturnsInCorrectOrder() {
+    public void find_returns_in_correct_order() {
         MunicipalityInitiativeCreateDto create1 = createDto();
         MunicipalityInitiativeCreateDto create2 = createDto();
 
