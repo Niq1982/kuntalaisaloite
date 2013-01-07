@@ -193,11 +193,6 @@ $(document).ready(function () {
 	$topRibbon
 	.after('<div style="height:'+$topRibbon.outerHeight()+'px" />')
 	.css('position','fixed');
-
-	// Scroll to hash
-	function scrollTo(hash) {
-	    location.hash = "#" + hash;
-	}
 	
 
 /**
@@ -359,49 +354,50 @@ $(document).ready(function () {
  * Expand and minify form blocks
  * =============================
  * 
- * FIXME: Clicking Continue-button causes jumping off the header anchor. Try solving by jumping to anchor after animation or removing the animation
+ * TODO: Improve animation vs. scrolling
  * 
  * */
- 	var showFormBlock = function(blockHeader){
+ 	var showFormBlock = function(blockHeader, scrollId){
  		var thisHeader, thisBlock, otherHeaders, otherBlocks;
 
 		thisHeader = blockHeader;
  		thisBlock = thisHeader.next('.input-block');
  		otherHeaders = thisHeader.parent().siblings().children('.content-block-header');
  		otherBlocks = thisHeader.parent().siblings().children('.input-block');
-
+ 		
  		otherBlocks.stop(false,true).slideUp({
 			duration: speedFast, 
 			easing: 'easeOutExpo'
 		});
 		otherHeaders.removeClass('open');
 		
-		location.hash = "#step-header-2";
-
- 		thisBlock.stop(false,true).slideToggle({
+		
+ 		/*thisBlock.stop(false,true).slideToggle({
 			duration: speedFast, 
 			easing: 'easeOutExpo'
 		}, function() {
 		    // Animation complete.
-			console.log("done");
-		});
+		});*/
  		
- 		//scrollTo();
+ 		thisBlock.stop(false,true).slideToggle('fast', function() {
+ 			$.scrollTo( "#"+scrollId , 800, {easing:'easeOutExpo'});
+ 		  });
+ 		
 		thisHeader.toggleClass('open');
  	};
 
  	var $formHeader = $('.content-block-header');
 
  	$formHeader.click(function(){
- 		showFormBlock($(this));
+ 		showFormBlock($(this), $(this).attr('id'));
  	});
 
  	// Action for wizard's continue button
  	proceedTo = function(step){
  		var blockHeader = $('#step-'+step).prev('.content-block-header');
-		showFormBlock(blockHeader);
+		showFormBlock(blockHeader, "#step-header-"+step);
 
- 		//return false;
+ 		return false;
  	};
 
  	// Open blocks by hash - TODO
@@ -505,19 +501,26 @@ $(document).ready(function () {
 	});
 
 	// Toggle suffrage fields according to user's choice
+	// FIXME: Changing #municipality should also toggle the block, altought it is not very common use case.
 	homeMunicipalitySelect.live('change', function() {
 		var thisSelect = $(this);
 
 		thisSelect.addClass("updated");
 
-		console.log("test: "+municipalitySelect.val());
-
 		if( !municipalitySelect.val() || (thisSelect.val() == municipalitySelect.val())){
-			differentMunicipality.hide();
-			sameMunicipality.show();
+			
+			differentMunicipality.stop(false,true).slideUp({
+				duration: speedFast, 
+				easing: 'easeOutExpo'
+			});
+			
 		} else {
-			differentMunicipality.show();
-			sameMunicipality.hide();
+			
+			differentMunicipality.stop(false,true).slideDown({
+				duration: speedFast, 
+				easing: 'easeOutExpo'
+			});
+			
 		}
 	});
 

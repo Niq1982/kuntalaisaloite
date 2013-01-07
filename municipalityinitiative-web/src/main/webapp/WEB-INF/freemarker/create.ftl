@@ -26,9 +26,8 @@
     <@u.errorsSummary path="initiative.*" prefix="initiative."/>
 
     <#-- FORM. Use class 'sodirty' to enable dirtylisten. -->
-    <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-initiative" class="sodirty" >
+    <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-initiative" class="dirtylisten" >
         <#--<input type="hidden" name="CSRFToken" value="${CSRFToken}"/>-->
-        <input type="hidden" name="edit" value="${managementSettings.editMode}" />
 
         <div class="form-block-container">
             <@edit.blockHeader key="initiative.municipality.title" step=1 />

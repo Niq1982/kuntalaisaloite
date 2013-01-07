@@ -14,7 +14,7 @@
 -->
 <#macro text localizedMap>
 <@compress single_line=true>
-    <#assign escapedText>${(localizedMap[locale]!localizedMap[altLocale]!"")}</#assign>
+    <#assign escapedText>${(localizedMap[locale]!"")}</#assign>
     <#noescape>${escapedText?replace('\n\n','</p><p>')?replace('\n','<br/>')}</#noescape>
 </@compress>
 </#macro>
@@ -245,18 +245,20 @@
  *
  * First chapter of the initiative proposal. Summary length is defined in SummaryMethod.java
  * 
- * @param locale 'fi' or 'sv'
+ * @param locale 'fi'
  * @param type 'text' or 'html'
  -->
-<#macro shortenText localizedMap type="text">   
+<#macro shortenText localizedMap type="text">
+<#-- FIXME: Does not work in municipality initiative ATM.
 <@compress single_line=true>
-    <#assign inputText>${summaryMethod(localizedMap[locale]!localizedMap[altLocale]!"")}</#assign>
+    <#assign inputText>${summaryMethod(localizedMap[locale]!"")}</#assign>
     <#if type == "html">
         <#noescape>${inputText?replace('\n','<br/>')}</#noescape>
     <#else>
         <#noescape>${inputText}</#noescape>
     </#if>
 </@compress>
+-->
 </#macro>
 
 <#--

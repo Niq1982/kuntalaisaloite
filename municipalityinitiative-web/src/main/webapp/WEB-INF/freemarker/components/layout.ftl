@@ -292,10 +292,6 @@
             
             <#-- Main content -->
             <#nested />
-
-            <#if initiative?? && initiative.state == InitiativeState.ACCEPTED>
-                <@some.some pageTitle=currentPage />
-            </#if>
             
         </div>
     </div>
@@ -349,6 +345,7 @@
       <script type="text/javascript" src="${urls.baseUrl}/js/jquery.dirtyforms.min.js?version=${resourcesVersion}"></script>
       <script type="text/javascript" src="${urls.baseUrl}/js/jsrender.min.js?version=${resourcesVersion}"></script>
       <script type="text/javascript" src="${urls.baseUrl}/js/chosen.jquery.min.js?version=${resourcesVersion}"></script>
+      <script type="text/javascript" src="${urls.baseUrl}/js/jquery.scrollTo.min.js?version=${resourcesVersion}"></script>
       <script type="text/javascript" src="${urls.baseUrl}/js/kuntalaisaloite.js?version=${resourcesVersion}"></script>
     </#if>
     
@@ -358,8 +355,7 @@
     
     var Init = {
         getLocale:function(){return "${locale}"},
-        getDateFormat:function(){return "${springMacroRequestContext.getMessage('date.format')?string?lower_case}"},
-        getViewMode:function(){return "<#if managementSettings??>${managementSettings.editMode}<#else>VIEW</#if>"}
+        getDateFormat:function(){return "${springMacroRequestContext.getMessage('date.format')?string?lower_case}"}
     };
     
     /*]]>*/

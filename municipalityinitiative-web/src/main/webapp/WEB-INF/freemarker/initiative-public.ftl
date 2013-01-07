@@ -99,6 +99,8 @@
     </#if>
     <#if bottomContribution??><#noescape>${bottomContribution}</#noescape></#if>
     
+    <@some.some pageTitle=currentPage />
+    
 <#--
  * Public VIEW modals
  * 

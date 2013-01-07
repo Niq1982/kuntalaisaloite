@@ -1,6 +1,13 @@
 <#import "utils.ftl" as u />
 <#import "forms.ftl" as f />
 
+<#--
+ *
+ * TODO:
+ * - Use real fields when MunicipalityInitiativeUICreateDto.java has defined them.
+ *
+-->
+
 <#escape x as x?html> 
 
 <#--
@@ -26,17 +33,17 @@
  * @param nextStep is the number of the following block
  -->
 <#macro buttons type="" nextStep="0">
-    <div class="input-block-content">
-        <#if type == "next">
-            <a href="#step-header-${nextStep}" class="small-button disable-dbl-click-check hidden ignoredirty" onClick="proceedTo(${nextStep});"><span class="small-icon next">Jatka</span></a>
-            <a href="index.html" class="push hidden">Peruuta</a>
-        <#elseif type == "save-and-send">
-            <button type="submit" name="save" class="small-button bind" ><span class="small-icon save-and-send" data-textsend="Tallenna ja lähetä aloite" data-textsave="Tallenna aloite">Tallenna aloite</span></button>
-            <a href="index.html" class="push">Peruuta</a>
-        <#elseif type == "save">
-            <button type="submit" name="save" class="small-button bind" ><span class="small-icon save-and-send" data-textsend="Tallenna ja aloita kerääminen" data-textsave="Tallenna ja lähetä aloite">Tallenna ja aloita kerääminen</span></button>
-        </#if>
-    </div>
+    <#if type == "next">
+        <a href="#step-header-${nextStep}" class="small-button disable-dbl-click-check hidden ignoredirty" onClick="proceedTo(${nextStep}); return false;"><span class="small-icon next">Jatka</span></a>
+        <a href="index.html" class="push hidden">Peruuta</a>
+    <#elseif type == "save-and-send">
+        <button type="submit" name="save" class="small-button bind" ><span class="small-icon mail" data-textsend="Tallenna ja lähetä" data-textsave="Tallenna ja lähetä">Tallenna ja lähetä</span></button>
+        
+        <br/><br/>
+        <a href="index.html" class="">Peruuta</a>
+    <#elseif type == "save">
+        <button type="submit" name="save" class="small-button bind" ><span class="small-icon save-and-send" data-textsend="Tallenna ja aloita kerääminen" data-textsave="Tallenna ja lähetä">Tallenna ja aloita kerääminen</span></button>
+    </#if>
 </#macro>
 
 <#--
@@ -113,16 +120,35 @@
                 ${municipality.name}<br/>
             </#list>-->
         </div>
+        <br class="clear" />
+        
+
         
         <#-- TODO: NOJS vs. JS -->
+        <div class="different-municipality js-hide hidden">
+            <div class="input-block-content">
+                <div class="system-msg msg-info ">Kotikuntasi ei ole kunta, jota aloite koskee. Voit silti liittyä aloitteen tekijäksi, jos olet aloitteen kunnan jäsen</div>
+            </div>
+            <div class="input-block-content">
+                <label>
+                    <input type="checkbox" name="municipalCitizen" /><span class="label">Vakuutan, että olen vähintään sen kunnan jäsen jota aloite koskee ja ymmärrän <a href="#" rel="external" class="external">ehdot</a>.</span>
+                </label>
+            </div>
+        </div>
+        
+        
+        <noscript>
         <div class="input-block-content">
             <label>
                 <input type="checkbox" name="municipalCitizen" /><span class="label">Vakuutan, että olen vähintään sen kunnan jäsen jota aloite koskee ja ymmärrän <a href="#" rel="external" class="external">ehdot</a>.</span>
                 <#--<input type="checkbox" name="municipalCitizen" /><span class="label">Vakuutan, että kotikuntani on oikein ja ymmärrän <a href="#" rel="external" class="external">ehdot</a>.</span>-->
             </label>
         </div>
+        </noscript>
 
-        <@buttons type="next" nextStep=step+1 />
+        <div class="input-block-content">
+            <@buttons type="next" nextStep=step+1 />
+        </div>
     </div>
 </#macro>
 
@@ -157,14 +183,29 @@
             </div>
             <p id="selected-municipality" class="hidden">Ei valittu</p>
             
-            <@f.textField path="initiative.name" required="required" cssClass="large" maxLength=InitiativeConstants.INITIATIVE_NAME_MAX?string("#") />
+            <label for="name.fi" class="input-header">
+                Kuntalaisaloitteen otsikko <span class="icon-small required trigger-tooltip"></span>
+            </label>
+            <input type="text" maxlength="512" class="large" value="" name="name.fi" id="name.fi">
+            
+            <#--<@f.textField path="initiative.name" required="required" cssClass="large" maxLength=InitiativeConstants.INITIATIVE_NAME_MAX?string("#") />-->
         </div>
 
         <div class="input-block-content no-top-margin">
-            <@f.textarea path="initiative.proposal" required="" optional=true cssClass="textarea-tall" />
+            <div class="input-block-content no-top-margin">
+                <label for="proposal.fi" class="input-header">
+                    Aloitteen sisältö 
+                </label>
+            
+                <textarea class="textarea-tall" name="proposal.fi" id="proposal.fi"></textarea>
+            </div>
+        
+            <#--<@f.textarea path="initiative.proposal" required="" optional=true cssClass="textarea-tall" />-->
         </div>
         
-        <@buttons type="next" nextStep=step+1 />
+        <div class="input-block-content">
+            <@buttons type="next" nextStep=step+2 />
+        </div>
     </div>
 </#macro>
 
@@ -192,11 +233,9 @@
         </div>
     
         <#-- Block-edit errors -->
-        <#if managementSettings.editMode != EditMode.FULL>
         <div class="input-block-content">
             <@u.errorsSummary path="initiative.*" prefix="initiative."/>
         </div>
-        </#if>
     
          <div class="input-block-content">
             <div class="system-msg msg-info ">
@@ -223,10 +262,36 @@
             </div>
         </div>
 
-        <#-- <@f.currentAuthor path="initiative.author" realPath=initiative.author mode="full" /> -->
-        <@f.currentAuthor path="initiative.currentAuthor" realPath=initiative.currentAuthor mode="full" />
+        <div class="input-block-content">
+            <div class="input-header">
+                Omat yhteystiedot <span class="icon-small required trigger-tooltip"></span>
+            </div>
+    
+            <div class="initiative-own-details-area">
+                <div class="column col-1of2">
+                    <label>
+                        Sähköposti    <input type="text" maxlength="256" class="medium" value="" name="currentAuthor.contactInfo.email" id="currentAuthor.contactInfo.email">
+                    </label>
+                    
+                    <label>
+                        Puhelin    <input type="text" maxlength="128" class="medium" value="" name="currentAuthor.contactInfo.phone" id="currentAuthor.contactInfo.phone">
+                    </label>
+                </div>
+                
+                <div class="column col-1of2 last">
+                    <label>
+                        Osoite    <textarea maxlength="1000" class="address-field noresize" name="currentAuthor.contactInfo.address" id="currentAuthor.contactInfo.address"></textarea>
+                    </label>
+                </div>
+            </div>
+        </div>
         
-        <@buttons type="next" nextStep=step+1 />
+        
+        <#--<@f.currentAuthor path="initiative.currentAuthor" realPath=initiative.currentAuthor mode="full" />-->
+        
+        <div class="input-block-content">
+            <@buttons type="next" nextStep=step+3 />
+        </div>
     </div>
 </#macro>
       
@@ -273,6 +338,7 @@
                 <label>
                     <input type="radio" name="rightToVote" value="false" /><span class="label">En ole äänioikeutettu kunnan asukas</span>
                 </label>
+                <br/>
             </div>
             
             <div class="column col-1of2">
