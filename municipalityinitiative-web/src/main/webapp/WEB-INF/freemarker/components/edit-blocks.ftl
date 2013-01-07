@@ -20,7 +20,7 @@
  -->
 <#macro blockHeader key step=0>
     <div id="step-header-${step}" class="content-block-header edit ${(step == 1)?string('open','')}">
-        <h2><@u.message key!"" /></h2><span class="arrow hidden"> </span>
+        <h2>${step}. <@u.message key!"" /></h2><span class="arrow hidden"> </span>
     </div>
 </#macro>
 
@@ -34,15 +34,14 @@
  -->
 <#macro buttons type="" nextStep="0">
     <#if type == "next">
-        <a href="#step-header-${nextStep}" class="small-button disable-dbl-click-check hidden ignoredirty" onClick="proceedTo(${nextStep}); return false;"><span class="small-icon next">Jatka</span></a>
+        <a href="#step-header-${nextStep}" id="button-next-${nextStep}" class="small-button disable-dbl-click-check hidden ignoredirty" onClick="proceedTo(${nextStep}); return false;"><span class="small-icon next">Jatka</span></a>
         <a href="index.html" class="push hidden">Peruuta</a>
     <#elseif type == "save-and-send">
-        <button type="submit" name="save" class="small-button bind" ><span class="small-icon mail" data-textsend="Tallenna ja lähetä" data-textsave="Tallenna ja lähetä">Tallenna ja lähetä</span></button>
-        
+        <button type="submit" name="save" class="small-button" ><span class="small-icon mail" data-textsend="Tallenna ja lähetä" data-textsave="Tallenna ja lähetä">Tallenna ja lähetä</span></button>
         <br/><br/>
         <a href="index.html" class="">Peruuta</a>
     <#elseif type == "save">
-        <button type="submit" name="save" class="small-button bind" ><span class="small-icon save-and-send" data-textsend="Tallenna ja aloita kerääminen" data-textsave="Tallenna ja lähetä">Tallenna ja aloita kerääminen</span></button>
+        <button type="submit" name="save" class="small-button" ><span class="small-icon save-and-send" data-textsend="Tallenna ja aloita kerääminen" data-textsave="Tallenna ja lähetä">Tallenna ja aloita kerääminen</span></button>
     </#if>
 </#macro>
 
@@ -115,10 +114,10 @@
                     <option value="Enontekiö">Enontekiö</option>
                 </select>
             
-                <#-- TODO: Get municipalities from backend -->
+                <#-- TODO: Get municipalities from backend --> 
                 <#--<#list municipalities as municipality>
-                ${municipality.name}<br/>
-            </#list>-->
+                     ${municipality.name}<br/>
+                 </#list>-->
         </div>
         <br class="clear" />
         
@@ -131,7 +130,7 @@
             </div>
             <div class="input-block-content">
                 <label>
-                    <input type="checkbox" name="municipalCitizen" /><span class="label">Vakuutan, että olen vähintään sen kunnan jäsen jota aloite koskee ja ymmärrän <a href="#" rel="external" class="external">ehdot</a>.</span>
+                    <input type="checkbox" name="municipalMembership" id="municipalMembership" /><span class="label">Vakuutan, että olen vähintään sen kunnan jäsen jota aloite koskee ja ymmärrän <a href="#" rel="external" class="external">ehdot</a>.</span>
                 </label>
             </div>
         </div>

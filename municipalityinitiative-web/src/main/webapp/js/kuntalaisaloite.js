@@ -389,7 +389,11 @@ $(document).ready(function () {
  	var $formHeader = $('.content-block-header');
 
  	$formHeader.click(function(){
- 		showFormBlock($(this), $(this).attr('id'));
+ 		var thisClicker = $(this);
+ 		
+ 		if ( !thisClicker.hasClass('disabled')){
+ 			showFormBlock(thisClicker, thisClicker.attr('id'));
+ 		}
  	});
 
  	// Action for wizard's continue button
@@ -404,6 +408,155 @@ $(document).ready(function () {
  	/*if(window.location.hash != "") {
 	    loadContent(window.location.hash);
 	}*/
+	
+
+/**
+* Chosen - Replacement for municipality select
+* ============================================
+*/	
+	var municipalitySelect, homeMunicipalitySelect, selectedMunicipality, differentMunicipality, sameMunicipality;
+
+	municipalitySelect =		 $('#municipality');
+	homeMunicipalitySelect =	 $('#homeMunicipality');
+	selectedMunicipalityElem =	 $('#selected-municipality');
+	differentMunicipality =		 $('.different-municipality');
+	sameMunicipality =			 $('.same-municipality');
+
+
+ 	// Initialize chosen
+ 	$(".chzn-select").chosen();
+
+ 	// Listen the first chosen element
+	municipalitySelect.live('change', function() {
+		var selectedMunicipality = $(this).val();
+
+		// update text in the municipality data in Step 2
+		selectedMunicipalityElem.text(selectedMunicipality);
+
+		// if user has changed the homeMunicipality value we will not mess it up
+		if ( !homeMunicipalitySelect.hasClass('updated') ){			
+			homeMunicipalitySelect
+			.val(selectedMunicipality)
+			.trigger("liszt:updated"); // updates dynamically the second chosen element
+		}
+	});
+
+	// Toggle suffrage fields according to user's choice
+	// FIXME: Changing #municipality should also toggle the block, altought it is not very common use case.
+	homeMunicipalitySelect.live('change', function() {
+		var thisSelect = $(this);
+
+		thisSelect.addClass("updated");
+
+		if( !municipalitySelect.val() || (thisSelect.val() == municipalitySelect.val())){
+			
+			differentMunicipality.stop(false,true).slideUp({
+				duration: speedFast, 
+				easing: 'easeOutExpo'
+			});
+
+		} else {
+			
+			differentMunicipality.stop(false,true).slideDown({
+				duration: speedFast, 
+				easing: 'easeOutExpo'
+			});
+			
+			disableContinuing(true);
+			
+		}
+	});
+	
+	
+	// TODO: Fix this!
+	var cbMunicipalMembership = $("#municipalMembership");
+	
+	jQuery.fn.assureMembership = function(){
+		var cb, btn, cbVal;
+		
+		cb = $(this);
+		btn = $('#button-next-2');
+		cbVal = function(){
+			if (cb.is(':checked')){
+				btn.removeAttr('disabled').removeClass('disabled');
+				disableContinuing(false);
+			} else {
+				btn.attr('disabled','disabled').addClass('disabled');
+				disableContinuing(true);
+			}
+		};
+		
+		cbVal();
+		cb.change(function(){
+			cbVal();
+		});
+	};
+	cbMunicipalMembership.assureMembership();
+	
+	var disableContinuing = function(value){
+		console.log("value: "+value);
+		
+		if (value) {
+			$("#button-next-2").addClass('disabled');
+			$("#step-header-2, #step-header-3, #step-header-4").addClass('disabled');
+		} else {
+			$("#button-next-2").removeClass('disabled');
+			$("#step-header-2, #step-header-3, #step-header-4").removeClass('disabled');
+		}
+	};
+	
+
+/**
+* Toggle collect people
+* ====================
+* - Toggles an element depending on the selection of other element (radiobutton or checkbox)
+* - If the input is clicked hidden:
+* 		* the input is disabled so that value will not be saved
+* 		* the value is not removed so that the value can be retrieved
+* 		  when clicked back to visible 
+* - TODO: Bit HardCoded now. Make more generic if needed.
+*/
+var toggleArea, $toggleAreaLabel, radioTrue, $toggleField, toggleBlock;
+
+toggleArea =		'.gather-people-details';
+$toggleAreaLabel =	$('#gather-people-container label');
+radioTrue =		'gatherPeople.true';
+$toggleField =		$('#initiativeSecret');
+
+toggleBlock = function(clicker, input){
+	if( input.attr('id') == radioTrue){		
+		clicker.siblings(toggleArea).slideDown({
+			duration: speedVeryFast, 
+			easing: 'easeOutExpo'
+		});
+		$toggleField.removeAttr('disabled');
+	} else {
+		clicker.siblings(toggleArea).slideUp({
+			duration: speedVeryFast, 
+			easing: 'easeOutExpo'
+		});
+		$toggleField.attr('disabled','disabled');
+	}	
+};
+
+$toggleAreaLabel.each(function (){
+	var clicker, input;
+	clicker = $(this);
+	input = clicker.find("input:first");
+	
+	if( input.is(':checked') && input.attr('id') == radioTrue){
+		$toggleField.removeAttr('disabled');
+		$(toggleArea).show();
+	}
+	
+	clicker.click(function(){
+		if(clicker.children('input[type="radio"]').length > 0){
+			toggleBlock($(this), input);
+		}
+	});
+	
+});
+	
 
 
 /**
@@ -466,116 +619,6 @@ $(document).ready(function () {
 		
 		return false;
 	});
-
-	
-
-/**
-* Chosen - Replacement for municipality select
-* ============================================
-*/	
-	var municipalitySelect, homeMunicipalitySelect, selectedMunicipality, differentMunicipality, sameMunicipality;
-
-	municipalitySelect =		 $('#municipality');
-	homeMunicipalitySelect =	 $('#homeMunicipality');
-	selectedMunicipalityElem =	 $('#selected-municipality');
-	differentMunicipality =		 $('.different-municipality');
-	sameMunicipality =			 $('.same-municipality');
-
-
- 	// Initialize chosen
- 	$(".chzn-select").chosen();
-
- 	// Listen the first chosen element
-	municipalitySelect.live('change', function() {
-		var selectedMunicipality = $(this).val();
-
-		// update text in the municipality data in Step 2
-		selectedMunicipalityElem.text(selectedMunicipality);
-
-		// if user has changed the homeMunicipality value we will not mess it up
-		if ( !homeMunicipalitySelect.hasClass('updated') ){			
-			homeMunicipalitySelect
-			.val(selectedMunicipality)
-			.trigger("liszt:updated"); // updates dynamically the second chosen element
-		}
-	});
-
-	// Toggle suffrage fields according to user's choice
-	// FIXME: Changing #municipality should also toggle the block, altought it is not very common use case.
-	homeMunicipalitySelect.live('change', function() {
-		var thisSelect = $(this);
-
-		thisSelect.addClass("updated");
-
-		if( !municipalitySelect.val() || (thisSelect.val() == municipalitySelect.val())){
-			
-			differentMunicipality.stop(false,true).slideUp({
-				duration: speedFast, 
-				easing: 'easeOutExpo'
-			});
-			
-		} else {
-			
-			differentMunicipality.stop(false,true).slideDown({
-				duration: speedFast, 
-				easing: 'easeOutExpo'
-			});
-			
-		}
-	});
-
-/**
-* Toggle collect people
-* ====================
-* - Toggles an element depending on the selection of other element (radiobutton or checkbox)
-* - If the input is clicked hidden:
-* 		* the input is disabled so that value will not be saved
-* 		* the value is not removed so that the value can be retrieved
-* 		  when clicked back to visible 
-* - TODO: Bit HardCoded now. Make more generic if needed.
-*/
-var toggleArea, $toggleAreaLabel, radioTrue, $toggleField, toggleBlock;
-
-toggleArea =		'.gather-people-details';
-$toggleAreaLabel =	$('#gather-people-container label');
-radioTrue =		'gatherPeople.true';
-$toggleField =		$('#initiativeSecret');
-
-toggleBlock = function(clicker, input){
-	if( input.attr('id') == radioTrue){		
-		clicker.siblings(toggleArea).slideDown({
-			duration: speedVeryFast, 
-			easing: 'easeOutExpo'
-		});
-		$toggleField.removeAttr('disabled');
-	} else {
-		clicker.siblings(toggleArea).slideUp({
-			duration: speedVeryFast, 
-			easing: 'easeOutExpo'
-		});
-		$toggleField.attr('disabled','disabled');
-	}	
-};
-
-$toggleAreaLabel.each(function (){
-	var clicker, input;
-	clicker = $(this);
-	input = clicker.find("input:first");
-	
-	if( input.is(':checked') && input.attr('id') == radioTrue){
-		$toggleField.removeAttr('disabled');
-		$(toggleArea).show();
-	}
-	
-	clicker.click(function(){
-		if(clicker.children('input[type="radio"]').length > 0){
-			toggleBlock($(this), input);
-		}
-	});
-	
-});
-	
-
 	
 /**
  * 

@@ -1586,7 +1586,6 @@ label  {
 .content-block-header {
     position:relative;
     background: #017380;
-    //border-left: 4px solid #0ea9bc;
     padding:0.5em 25px 0.5em 30px;
     cursor:pointer;
 
@@ -1594,7 +1593,6 @@ label  {
 
     &:hover {
         background: #0c93a4;
-        //border-left: 4px solid #0c93a4;
     }
 
     .arrow {
@@ -1613,6 +1611,14 @@ label  {
         }
     }
 
+    &.disabled {
+        opacity:@dimmed;
+        cursor:default;
+        
+        .arrow {
+            display:none;
+        }
+    }
     
     &.view {
         z-index:3;
