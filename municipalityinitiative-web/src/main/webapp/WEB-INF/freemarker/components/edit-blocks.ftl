@@ -4,15 +4,6 @@
 <#escape x as x?html> 
 
 <#--
- * Toggle the visibility of alternative language fields.
--->
-<#global altLangClass="hide" />
-<#if initiative.hasTranslation(altLocale) >
-    <#global altLangClass="" />
-</#if>
-
-
-<#--
  * blockHeader
  *
  * Block header for management-view.

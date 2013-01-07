@@ -334,11 +334,6 @@
     <@r.bottomRibbon/>
     <#-- NOTE: Extra footer for test sites ENDS ------------------------------- -->
     
-    <#-- Expose mask for block edit -->
-    <#if showExposeMask??>
-        <div class="expose-mask">&#160;</div>
-    </#if>
-    
     </div>
     
     <#-- Modal container is moved to here. Because it was easier to handle styles for IE7. -->

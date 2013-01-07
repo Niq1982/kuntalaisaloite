@@ -282,52 +282,6 @@
         
     </script>
 </#macro>
- 
-
-<#--
- * organizers
- * 
- * Prints organizers-list in initiative's view-template. Edit-template is provided in forms.ftl as invitations-macro.
- *
- * @param path the name of the field to bind to
- * @param cssClass is for column styling. Multiple classes are separated with a space.
--->
-<#macro organizers path cssClass="">
-    <#assign organizerList=initiative[path + "s"] />
-    <#if initiative.currentAuthor??>
-        <#assign invitationsList=initiative[path + "Invitations"] />    
-        <#assign sentInvitationsList=initiative[path + "SentInvitations"] />
-    </#if>
-
-    <div class="initiative-content-row ${cssClass}">
-        <h4 class="header"><@message "initiative."+path+"s" /></h4>
-        <#list organizerList as organizer>
-            <div class="column ${((organizer_index + 1) % 3 == 0)?string("last","")}">
-                <p>
-                    <#if initiative.currentAuthor?? && !organizer.confirmed??><@icon type="unconfirmed" size="small" /> </#if>${organizer.firstNames!""} ${organizer.lastName!""},
-                    <#if (organizer.dateOfBirth)??><@localDate organizer.dateOfBirth/>, </#if>
-                    <@text organizer.homeMunicipality />
-                    <br/>
-                    <#if (organizer.contactInfo.address)??>${organizer.contactInfo.address}<br/></#if>
-                    <#if (organizer.contactInfo.email)??><@scrambleEmail organizer.contactInfo.email!"" /><br/></#if>
-                    <#if (organizer.contactInfo.phone)??>${organizer.contactInfo.phone!""}<br/></#if>
-                    
-                </p>  
-            </div>
-            <#if !organizer_has_next><br class="clear" /></#if>
-        </#list>
-        <#if organizerList?size == 0><@message "initiative."+path+"s.empty" /><br/><br/></#if>
-        <#if initiative.currentAuthor?? && (sentInvitationsList?size > 0)>
-            <#assign args = [sentInvitationsList?size]/>
-            <@message "initiative.invitationsSent" args /><br />
-        </#if>
-        <#if initiative.currentAuthor?? && (invitationsList?size > 0)>
-            <#assign args = [invitationsList?size]/>
-            <@message "initiative.invitationsPending" args />
-        </#if>
-    </div>
-    
-</#macro>
 
 <#--
  * errorsSummary
@@ -385,16 +339,5 @@ ${email?split("@")?first}&#064;<span class="hide">null</span>${email?split("@")?
         <p><@message "page.help.faq.a"+item /></p>
     </div>
 </#macro>
-
-
-<#--
-<#macro faqItem item topic="">
-    <#if topic!="0"><h3><@message "page.help.faq.topic"+topic /></h3></#if>
-    <div class="faq-item view-block">
-        <h4>${item}. <@message "page.help.faq.q"+item /></h4>
-        <p><@message "page.help.faq.a"+item /></p>
-    </div>
-</#macro>
--->
 
 </#escape>

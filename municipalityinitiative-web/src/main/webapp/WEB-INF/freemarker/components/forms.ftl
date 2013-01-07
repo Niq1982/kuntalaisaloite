@@ -13,10 +13,8 @@
 <#macro localizePath path value="">
     <#if value?? && value?is_hash>
         <#global pathLocale>${path+"."+locale}</#global>
-        <#global pathAltLocale>${path+"."+altLocale}</#global>
     <#else>
         <#global pathLocale>${path}</#global>
-        <#global pathAltLocale="" />
     </#if>
 </#macro>
 
@@ -63,7 +61,7 @@
 <#--
  * textField
  *
- * Textfield with label and alternative language -option
+ * Textfield with label -option
  *
  * @param path the name of the field to bind to
  * @param required generates an icon and can be used in JS-validation
@@ -86,21 +84,12 @@
         <@showError />
         <@spring.formInput pathLocale, 'class="'+cssClass+'" maxlength="'+maxLength+'" '+attributes fieldType />
     </@formLabel>
-
-    <#if pathAltLocale != "">
-        <div class="alt-lang pullup ${altLangClass}">
-            <@u.message pathAltLocale/>
-            <@spring.bind pathAltLocale />
-            <@showError />
-            <@spring.formInput pathAltLocale, 'class="'+cssClass+'"' fieldType />
-        </div>
-    </#if>
 </#macro>
 
 <#--
  * simpleTextField
  *
- * Simple TextField without label and alternative language -option
+ * Simple TextField without label -option
  *
  * @param path the name of the field to bind to
  * @param cssClass for custom styling. Multiple classes are separated with a space
@@ -139,15 +128,6 @@
         <@spring.formTextarea pathLocale, 'class="'+cssClass+'"' />
     
     </@formLabel>
-    
-    <#if pathAltLocale != "">
-        <div class="alt-lang ${altLangClass}">
-            <@u.message pathAltLocale/>
-            <@spring.bind pathAltLocale />
-            <@showError />
-            <@spring.formTextarea pathAltLocale, 'class="'+cssClass+'"' />
-        </div>
-    </#if>
 </#macro>
 
 <#--
@@ -210,74 +190,6 @@
     <@u.messageHTML key=path+".description" args=[href] />
 </#macro>
 
-<#--
- * invitations
- *
- * Organizer Invitations
- * 
- * @param path the name of the field to bind to (initiator, representative, reserve)
- * @param cssClass for styling. Multiple classes are separated with a space
--->
-<#macro invitations path cssClass="">
-    <#assign invitationsPath>${"initiative."+path+"Invitations"}</#assign>    
-    <#assign sentInvitationsList=initiative[path + "SentInvitations"] />
-    <@spring.bind invitationsPath />
-    <#assign invitationsList=spring.status.value />
-
-    <div class="column email-field ${cssClass}" data-name="${spring.status.expression}" data-sent-invitations="${sentInvitationsList?size}">
-        
-        <div class="input-header no-top-margin">
-            <@u.message invitationsPath />
-        </div>
-        
-        <#assign invitationIndex=invitationsList?size />
-        <div class="invitation-data" data-index="${invitationIndex}"></div>
-    
-        <#if (sentInvitationsList?size > 0)>
-            <#assign args = [sentInvitationsList?size]/>
-            <span class="instruction-text"><@u.message "initiative.invitationsWaiting" args /></span>
-        <#elseif (initiative.sentInvitations?size > 0)>
-            <span class="instruction-text"><@u.message "initiative.noSentInvitations" /></span>
-        </#if>
-        
-        <#-- Filling up the loading cap that might occur in slow connections with certain browsers. -->
-        <#-- Is this real case?  / mikkole -->
-        <#--<span class="hidden invitation-loader loader gray-loader"></span>-->
-        <#list invitationsList as invitation>
-           <@simpleTextField path="${invitationsPath}[${invitation_index}].email" cssClass="medium js-hide" cssErrorClass="small" maxLength=InitiativeConstants.INVITATION_EMAIL_MAX?string("#") />
-        </#list>
-    
-        <noscript>
-            <@simpleTextField path="${invitationsPath}[${invitationIndex}].email" cssClass="medium" cssErrorClass="small" maxLength=InitiativeConstants.INVITATION_EMAIL_MAX?string("#") />
-        </noscript>    
-    </div>
-</#macro>
-
-<#--
- * organizers
- *
- * Organizers' list in edit-form
- *
- * @param cssClass for styling. Multiple classes are separated with a space
--->
-<#macro organizers path cssClass="">
-    <#assign organizerList=initiative[path + "s"] />
-
-    <div class="column ${cssClass}"> 
-        <h4 class="input-header no-top-margin"><@u.message "initiative."+path+"Invitations" /></h4>
-        
-        <ul class="organizers no-style">
-            <#list organizerList as organizer>
-                <li id="user-role-${path}" class="user-role">${organizer.firstNames!""} ${organizer.lastName!""} <#if initiative.state != InitiativeState.DRAFT><#if organizer.confirmed??><@u.icon type="confirmed" size="small" /><#else><@u.icon type="unconfirmed" size="small" /></#if></#if></li>
-            </#list>
-            <#-- We need to be able to toggle all user roles in DRAFT-mode as user clicks checboxes in currentAuthor-block -->
-            <#if managementSettings.editMode == EditMode.FULL && !initiative.currentAuthor[path]>
-                <li id="user-role-${path}" class="user-role" style="display:none;">${currentUser.firstNames!""} ${currentUser.lastName!""}</li>
-            </#if>
-        </ul>
-    </div>
-</#macro>
-
 
 <#--
  * currentAuthor
@@ -296,40 +208,6 @@
 -->
 <#macro currentAuthor path realPath="" mode="" prefix="" cssClass="">
 
-    <#if !managementSettings?? || (managementSettings?? && managementSettings.allowEditOrganizers)>
-        <#assign editRoles=true />
-    <#elseif realPath != "">
-        <#assign editRoles=false />
-    </#if>
-
-    <#--
-    <div class="input-block-content top-margin">
-        <div class="input-header">
-            <@u.message "initiative.currentAuthor.myRoles" /> <#if editRoles?? && editRoles><@u.icon type="required" size="small" /></#if>
-        </div>
-        <div class="initiative-own-roles-area validate-roles">    
-            <#if mode == "full">
-                <@f.helpText "helpOwnRoles" />
-            </#if>
-            
-            <@spring.bind path+".roles" />
-            <@showError cssClass="" />
-         
-            <#if editRoles?? && editRoles>
-                <@formCheckbox path=path+".initiator" prefix=prefix />
-                <@formCheckbox path=path+".representative" prefix=prefix />
-                <@formCheckbox path=path+".reserve" prefix=prefix />
-            <#elseif !editRoles>
-                <ul class="no-style">
-                    <#if realPath["initiator"]><li><@u.message "initiative.currentAuthor.initiator" /></li></#if>
-                    <#if realPath["representative"]><li><@u.message "initiative.currentAuthor.representative" /></li></#if>
-                    <#if realPath["reserve"]><li><@u.message "initiative.currentAuthor.reserve" /></li></#if>
-                </ul>
-            </#if>
-        </div> 
-    </div>
-    -->
-        
     <div class="input-block-content">
         <div class="input-header">
             <@u.message "initiative.currentAuthor.contactDetails" /> <@u.icon type="required" size="small" />

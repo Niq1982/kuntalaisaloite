@@ -5,8 +5,6 @@
 <#import "components/edit-blocks.ftl" as edit />
 <#import "components/some.ftl" as some />
 
-<#-- TODO: Remove this file. Use initiative-create.ftl instead. -->
-
 <#escape x as x?html> 
 
 <#--
