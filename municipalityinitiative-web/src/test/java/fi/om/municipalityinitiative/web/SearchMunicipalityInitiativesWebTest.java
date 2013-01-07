@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.web;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -17,12 +18,14 @@ public class SearchMunicipalityInitiativesWebTest extends NEWWebTestBase {
     }
 
     @Test
+    @Ignore
     // XXX: This is just an example test case.
     public void helsinki_is_listed_as_one_municipality() {
+        newTestHelper.createTestMunicipality("Tuusula");
         open(urls.searchm());
 
         WebElement municipalities = driver.findElement(By.className("municipalities"));
-        assertThat(municipalities.getText(), containsString("Helsinki"));
+        assertThat(municipalities.getText(), containsString("Tuusula"));
 
 
     }

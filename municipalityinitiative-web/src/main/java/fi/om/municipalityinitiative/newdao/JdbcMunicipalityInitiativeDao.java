@@ -19,13 +19,13 @@ import java.util.List;
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 
 @SQLExceptionTranslated
+@Transactional(readOnly = true)
 public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao {
 
     @Resource
     PostgresQueryFactory queryFactory;
 
     @Override
-    @Transactional(readOnly = true)
     public List<MunicipalityInitiativeInfo> findAllNewestFirst() {
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
@@ -64,7 +64,6 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
     }
 
     @Override
-    @Transactional(readOnly = false)
     public MunicipalityInitiativeInfo getById(Long createId) {
 
         PostgresQuery query = queryFactory

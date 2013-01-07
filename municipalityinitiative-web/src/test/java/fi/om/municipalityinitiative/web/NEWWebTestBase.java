@@ -87,8 +87,8 @@ public abstract class NEWWebTestBase {
                 break;
         }
 
-        driver.manage().timeouts().implicitlyWait(50, TimeUnit.SECONDS); // default is 0!!!
-        driver.manage().timeouts().setScriptTimeout(50, TimeUnit.SECONDS); // default is 0!!!
+        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS); // default is 0!!!
+        driver.manage().timeouts().setScriptTimeout(5, TimeUnit.SECONDS); // default is 0!!!
 
         if (urls == null) {
             Urls.initUrls("https://localhost:" + PORT);
@@ -138,19 +138,19 @@ public abstract class NEWWebTestBase {
     }
 
     protected void clickByName(String name) {
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, 5);
         WebElement link = wait.until(ExpectedConditions.elementToBeClickable(By.name(name)));
         link.click();
     }
 
     protected void clickById(String id) {
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, 5);
         WebElement link = wait.until(ExpectedConditions.elementToBeClickable(By.id(id)));
         link.click();
     }
 
     protected void clickLinkContaining(String text) {
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, 5);
         WebElement link = wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText(text)));
         link.click();
     }

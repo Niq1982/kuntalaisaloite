@@ -1,11 +1,11 @@
 package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.conf.NEWIntegrationTestConfiguration;
-import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdao.MunicipalityInitiativeDao;
 import fi.om.municipalityinitiative.newdto.MunicipalityInfo;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeCreateDto;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeInfo;
+import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,17 +28,22 @@ public class JdbcMunicipalityInitiativeDaoTest {
     MunicipalityInitiativeDao municipalityInitiativeDao;
 
     @Resource
-    MunicipalityDao municipalityDao; // This is used as util to confirm correct convertion of municipalities
-
-    @Resource
     NEWTestHelper testHelper;
 
-    private MunicipalityInfo tempMunicipalityFromDatabase;
+    private MunicipalityInfo testMunicipality;
 
     @Before
     public void setup() {
         testHelper.dbCleanup();
-        tempMunicipalityFromDatabase = getTempMunicipalityFromDatabase();
+        testMunicipality = new MunicipalityInfo();
+        testMunicipality.name = "Test municipality";
+        testMunicipality.id = testHelper.createTestMunicipality(testMunicipality.name);
+    }
+
+    @Test
+    public void create() {
+        municipalityInitiativeDao.create(createDto());
+        assertThat(testHelper.countAll(QMunicipalityInitiative.municipalityInitiative), is(1L));
     }
 
     @Test
@@ -51,7 +56,7 @@ public class JdbcMunicipalityInitiativeDaoTest {
     }
 
     @Test
-    public void testFindReturnsAll() {
+    public void find_returns_all() {
 
         municipalityInitiativeDao.create(createDto());
         municipalityInitiativeDao.create(createDto());
@@ -61,7 +66,7 @@ public class JdbcMunicipalityInitiativeDaoTest {
     }
 
     @Test
-    public void findReturnsInCorrectOrder() {
+    public void find_returns_in_correct_order() {
         MunicipalityInitiativeCreateDto create1 = createDto();
         MunicipalityInitiativeCreateDto create2 = createDto();
 
@@ -73,16 +78,12 @@ public class JdbcMunicipalityInitiativeDaoTest {
         assertCreateAndGetDtos(create1, result.get(1));
     }
 
-    private MunicipalityInfo getTempMunicipalityFromDatabase() {
-        return municipalityDao.findMunicipalities().get(15);
-    }
-
     private MunicipalityInitiativeCreateDto createDto() {
         MunicipalityInitiativeCreateDto dto = new MunicipalityInitiativeCreateDto();
 
         dto.name = "initiativename"+randomString();
         dto.proposal = "proposal"+randomString();
-        dto.municipalityId = tempMunicipalityFromDatabase.id;
+        dto.municipalityId = testMunicipality.id;
 
         dto.contactAddress = "address"+randomString();
         dto.contactName = "contactname"+randomString();
@@ -102,6 +103,6 @@ public class JdbcMunicipalityInitiativeDaoTest {
         assertThat(get.contactPhone, is(create.contactPhone));
         assertThat(get.contactEmail, is(create.contactEmail));
         assertThat(get.contactAddress, is(create.contactAddress));
-        assertThat(get.municipalityName, is(tempMunicipalityFromDatabase.name));
+        assertThat(get.municipalityName, is(testMunicipality.name));
     }
 }

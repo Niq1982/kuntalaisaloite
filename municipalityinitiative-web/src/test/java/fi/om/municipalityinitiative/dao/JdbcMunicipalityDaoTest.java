@@ -33,7 +33,10 @@ public class JdbcMunicipalityDaoTest {
 
     @Test
     public void find_all_municipalities() {
-        assertThat(municipalityDao.findMunicipalities(), is(not(empty())));
+        testHelper.createTestMunicipality("some test municipality");
+        List<MunicipalityInfo> result = municipalityDao.findMunicipalities();
+        assertThat(result, is(not(empty())));
+        assertThat(result.get(0).name, is("some test municipality"));
     }
 
     @Test

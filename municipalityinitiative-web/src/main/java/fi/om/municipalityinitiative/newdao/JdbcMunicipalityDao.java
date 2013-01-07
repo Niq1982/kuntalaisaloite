@@ -5,6 +5,7 @@ import com.mysema.query.sql.postgres.PostgresQuery;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
+import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.newdto.MunicipalityInfo;
 import fi.om.municipalityinitiative.sql.QMunicipality;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,13 +14,14 @@ import javax.annotation.Resource;
 
 import java.util.List;
 
+@SQLExceptionTranslated
+@Transactional(readOnly = true)
 public class JdbcMunicipalityDao implements MunicipalityDao {
 
     @Resource
     PostgresQueryFactory queryFactory;
 
     @Override
-    @Transactional(readOnly = true)
     public List<MunicipalityInfo> findMunicipalities() {
         PostgresQuery query = queryFactory.from(QMunicipality.municipality)
                 .orderBy(QMunicipality.municipality.name.asc());
