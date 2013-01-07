@@ -36,8 +36,8 @@ public class JdbcMunicipalityInitiativeDaoTest {
     public void setup() {
         testHelper.dbCleanup();
         testMunicipality = new MunicipalityInfo();
-        testMunicipality.name = "Test municipality";
-        testMunicipality.id = testHelper.createTestMunicipality(testMunicipality.name);
+        testMunicipality.setName("Test municipality");
+        testMunicipality.setId(testHelper.createTestMunicipality(testMunicipality.getName()));
     }
 
     @Test
@@ -83,7 +83,7 @@ public class JdbcMunicipalityInitiativeDaoTest {
 
         dto.name = "initiativename"+randomString();
         dto.proposal = "proposal"+randomString();
-        dto.municipalityId = testMunicipality.id;
+        dto.municipalityId = testMunicipality.getId();
 
         dto.contactAddress = "address"+randomString();
         dto.contactName = "contactname"+randomString();
@@ -103,6 +103,6 @@ public class JdbcMunicipalityInitiativeDaoTest {
         assertThat(get.contactPhone, is(create.contactPhone));
         assertThat(get.contactEmail, is(create.contactEmail));
         assertThat(get.contactAddress, is(create.contactAddress));
-        assertThat(get.municipalityName, is(testMunicipality.name));
+        assertThat(get.municipalityName, is(testMunicipality.getName()));
     }
 }

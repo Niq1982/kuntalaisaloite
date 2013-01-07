@@ -36,7 +36,7 @@ public class JdbcMunicipalityDaoTest {
         testHelper.createTestMunicipality("some test municipality");
         List<MunicipalityInfo> result = municipalityDao.findMunicipalities();
         assertThat(result, is(not(empty())));
-        assertThat(result.get(0).name, is("some test municipality"));
+        assertThat(result.get(0).getName(), is("some test municipality"));
     }
 
     @Test
@@ -45,14 +45,14 @@ public class JdbcMunicipalityDaoTest {
 
         String last = null;
         for (MunicipalityInfo municipalityInfo : result) {
-            if (municipalityInfo.name.toLowerCase().contains("å")) {
+            if (municipalityInfo.getName().toLowerCase().contains("å")) {
                 continue; // Posgtre seems to think that ä is before å at the alphabets
             }
 
             if (last != null) {
-                assertThat(municipalityInfo.name, is(greaterThan(last)));
+                assertThat(municipalityInfo.getName(), is(greaterThan(last)));
             }
-            last = municipalityInfo.name;
+            last = municipalityInfo.getName();
         }
     }
 }

@@ -3,7 +3,10 @@ package fi.om.municipalityinitiative.web;
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import fi.om.municipalityinitiative.dto.*;
-import fi.om.municipalityinitiative.service.*;
+import fi.om.municipalityinitiative.service.InitiativeService;
+import fi.om.municipalityinitiative.service.Role;
+import fi.om.municipalityinitiative.service.StatusService;
+import fi.om.municipalityinitiative.service.SupportVoteService;
 import fi.om.municipalityinitiative.util.Locales;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
@@ -61,27 +64,27 @@ public class InitiativeController extends BaseController {
     /*
      * Create
      */
-    @RequestMapping(value={ CREATE_FI, CREATE_SV }, method=GET)
-    public String createGet(Model model, Locale locale, HttpServletRequest request) {
-        Urls urls = Urls.get(locale);
-        model.addAttribute(ALT_URI_ATTR, urls.alt().createNew());
-
-        User user;
-        try {
-            user = userService.getUserInRole(Role.AUTHENTICATED);
-        } catch (AuthenticationRequiredException e) {
-            return BEFORE_CREATE_VIEW;
-        }
-
-        if (!user.isAdult()) {
-            addRequestMessage(RequestMessage.ADULT_REQUIRED_AS_AUTHOR, model, request);
-        }
-
-        Author author = toAuthor(user);
-        InitiativeManagement initiative = new InitiativeManagement(author, Locales.LOCALE_SV.equals(locale) ? LanguageCode.SV : LanguageCode.FI);
-
-        return managementView(model, initiative, null, FULL, request);
-    }
+//    @RequestMapping(value={ CREATE_FI, CREATE_SV }, method=GET)
+//    public String createGet(Model model, Locale locale, HttpServletRequest request) {
+//        Urls urls = Urls.get(locale);
+//        model.addAttribute(ALT_URI_ATTR, urls.alt().createNew());
+//
+//        User user;
+//        try {
+//            user = userService.getUserInRole(Role.AUTHENTICATED);
+//        } catch (AuthenticationRequiredException e) {
+//            return BEFORE_CREATE_VIEW;
+//        }
+//
+//        if (!user.isAdult()) {
+//            addRequestMessage(RequestMessage.ADULT_REQUIRED_AS_AUTHOR, model, request);
+//        }
+//
+//        Author author = toAuthor(user);
+//        InitiativeManagement initiative = new InitiativeManagement(author, Locales.LOCALE_SV.equals(locale) ? LanguageCode.SV : LanguageCode.FI);
+//
+//        return managementView(model, initiative, null, FULL, request);
+//    }
 
     @RequestMapping(value={ CREATE_FI, CREATE_SV }, method=POST) // , params=ACTION_SAVE - default action
     public String createPost(@ModelAttribute("initiative") InitiativeManagement initiative, BindingResult bindingResult, Model model, Locale locale, HttpServletRequest request) {

@@ -54,10 +54,11 @@ public class MunicipalityInitiativeController extends BaseController {
 
     }
 
-    @RequestMapping(value={ CREATEM_FI, CREATEM_SV }, method=GET)
+    @RequestMapping(value={ CREATE_FI, CREATE_SV }, method=GET)
     public String createGet(Model model, Locale locale, HttpServletRequest request) {
         MunicipalityInitiativeUICreateDto initiative = new MunicipalityInitiativeUICreateDto();
         model.addAttribute("initiative", initiative);
+        model.addAttribute("municipalities", municipalityDao.findMunicipalities());
         return CREATEM_VIEW;
     }
 

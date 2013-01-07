@@ -35,8 +35,8 @@ public class JdbcMunicipalityDao implements MunicipalityDao {
                 @Override
                 protected MunicipalityInfo map(Tuple row) {
                     MunicipalityInfo dto = new MunicipalityInfo();
-                    dto.id = row.get(QMunicipality.municipality.id);
-                    dto.name = row.get(QMunicipality.municipality.name);
+                    dto.setId(row.get(QMunicipality.municipality.id));
+                    dto.setName(row.get(QMunicipality.municipality.name));
                     return dto;
                 }
             };

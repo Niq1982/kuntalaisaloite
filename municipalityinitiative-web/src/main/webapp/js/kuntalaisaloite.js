@@ -428,15 +428,16 @@ $(document).ready(function () {
 
  	// Listen the first chosen element
 	municipalitySelect.live('change', function() {
-		var selectedMunicipality = $(this).val();
+		var selectedMunicipalityId = $(this).val();
+		var selectedMunicipalityName = $(this).find('option:selected').text();
 
 		// update text in the municipality data in Step 2
-		selectedMunicipalityElem.text(selectedMunicipality);
+		selectedMunicipalityElem.text(selectedMunicipalityName);
 
 		// if user has changed the homeMunicipality value we will not mess it up
 		if ( !homeMunicipalitySelect.hasClass('updated') ){			
 			homeMunicipalitySelect
-			.val(selectedMunicipality)
+			.val(selectedMunicipalityId)
 			.trigger("liszt:updated"); // updates dynamically the second chosen element
 		}
 	});

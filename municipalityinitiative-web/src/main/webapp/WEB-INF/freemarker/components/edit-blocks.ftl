@@ -76,20 +76,11 @@
                 Valitse kunta, jolle haluat tehdä aloitteen <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span>
             </label>
 
-            <#-- TODO: Get municipalities from backend -->
             <select data-placeholder="Valitse kunta" id="municipality" name="municipality" tabindex="1" class="chzn-select">
-                <option value=""></option> 
-                <option value="Akaa">Akaa</option>
-                <option value="Alajärvi">Alajärvi</option>
-                <option value="Alavieska">Alavieska</option>
-                <option value="Alavus">Alavus</option>
-                <option value="Asikkala">Asikkala</option>
-                <option value="Askola">Askola</option>
-                <option value="Aura">Aura</option>
-                <option value="Brändö">Brändö</option>
-                <option value="Eckerö">Eckerö</option>
-                <option value="Enonkoski">Enonkoski</option>
-                <option value="Enontekiö">Enontekiö</option>
+                <option value=""></option>
+                <#list municipalities as municipality>
+                    <#noescape><option value="${municipality.id}">${municipality.name}</option></#noescape>
+                </#list>
             </select>
         </div>
         <div class="input-block-content">
@@ -98,26 +89,13 @@
                     Kotikunta <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span>
                 </label>
 
-                <#-- TODO: Get municipalities from backend -->
                 <select data-placeholder="Valitse kunta" id="homeMunicipality" name="homeMunicipality" tabindex="2" class="chzn-select">
                     <option value=""></option> 
-                    <option value="Akaa">Akaa</option>
-                    <option value="Alajärvi">Alajärvi</option>
-                    <option value="Alavieska">Alavieska</option>
-                    <option value="Alavus">Alavus</option>
-                    <option value="Asikkala">Asikkala</option>
-                    <option value="Askola">Askola</option>
-                    <option value="Aura">Aura</option>
-                    <option value="Brändö">Brändö</option>
-                    <option value="Eckerö">Eckerö</option>
-                    <option value="Enonkoski">Enonkoski</option>
-                    <option value="Enontekiö">Enontekiö</option>
+                        <#list municipalities as municipality>
+                            <#noescape><option value="${municipality.id}">${municipality.name}</option></#noescape>
+                        </#list>
                 </select>
-            
-                <#-- TODO: Get municipalities from backend --> 
-                <#--<#list municipalities as municipality>
-                     ${municipality.name}<br/>
-                 </#list>-->
+
         </div>
         <br class="clear" />
         
