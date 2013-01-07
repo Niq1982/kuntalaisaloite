@@ -15,9 +15,9 @@
 <div class="municipalities">
 
 
-    <#list municipalities as municipality>
-        ${municipality.name}<br/>
-    </#list>
+    <#--<#list municipalities as municipality>
+         ${municipality.name}<br/>
+     </#list>-->
 
 
 </div>
