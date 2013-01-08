@@ -32,16 +32,17 @@
  * @param type is the type of the button: next, save-and-send, save
  * @param nextStep is the number of the following block
  -->
+<#-- TODO: remove data-attributes if not needed -->
 <#macro buttons type="" nextStep="0">
     <#if type == "next">
-        <a href="#step-header-${nextStep}" id="button-next-${nextStep}" class="small-button disable-dbl-click-check hidden ignoredirty" onClick="proceedTo(${nextStep}); return false;"><span class="small-icon next">Jatka</span></a>
-        <a href="index.html" class="push hidden">Peruuta</a>
+        <a href="#step-header-${nextStep}" id="button-next-${nextStep}" class="small-button disable-dbl-click-check ignoredirty" onClick="proceedTo(${nextStep}); return false;"><span class="small-icon next"><@u.message "action.continue" /></span></a>
+        <a href="index.html" class="push"><@u.message "action.cancel" /></a>
     <#elseif type == "save-and-send">
-        <button type="submit" name="save" class="small-button" ><span class="small-icon mail" data-textsend="Tallenna ja lähetä" data-textsave="Tallenna ja lähetä">Tallenna ja lähetä</span></button>
-        <br/><br/>
-        <a href="index.html" class="">Peruuta</a>
+        <button type="submit" name="save" class="small-button" ><span class="small-icon mail" data-textsend="Tallenna ja lähetä" data-textsave="Tallenna ja lähetä"><@u.message "action.saveAndSend" /></span></button>
+        <#--<br/><br/>
+        <a href="index.html" class=""><@u.message "action.cancel" /></a>-->
     <#elseif type == "save">
-        <button type="submit" name="save" class="small-button" ><span class="small-icon save-and-send" data-textsend="Tallenna ja aloita kerääminen" data-textsave="Tallenna ja lähetä">Tallenna ja aloita kerääminen</span></button>
+        <button type="submit" name="save" class="small-button" ><span class="small-icon save-and-send" data-textsend="Tallenna ja aloita kerääminen" data-textsave="Tallenna ja lähetä"><@u.message "action.save" /></span></button>
     </#if>
 </#macro>
 
@@ -65,7 +66,7 @@
         <div class="input-block-content">
             <#--<@u.systemMessage path="initiative.municipality.description" type="info" showClose=false />-->
             <div class="system-msg msg-info ">
-                Valitse kunta, jolle haluat aloitteen tehdä<br/>
+                <#--Valitse kunta, jolle haluat tehdä aloitteen<br/>-->
                 <a href="#" rel="external" class="external">Mille kunnalle minulla on oikeus tehdä aloite?</a>  
             </div>
         </div>
@@ -73,11 +74,12 @@
         <div class="input-block-content">       
                     
             <label class="input-header" for="municipality">
-                Valitse kunta, jolle haluat tehdä aloitteen <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span>
+                Valitse kunta, jolle teet aloitteen <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span>
             </label>
 
             <select data-placeholder="Valitse kunta" id="municipality" name="municipality" tabindex="1" class="chzn-select">
                 <option value=""></option>
+                <#--<noscript><option value="">Valitse</option></noscript>-->
                 <#list municipalities as municipality>
                     <option value="${municipality.id}">${municipality.name}</option>
                 </#list>
@@ -86,11 +88,12 @@
         <div class="input-block-content">
             
             <label class="input-header" for="homeMunicipality">
-                    Kotikunta <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span>
+                    Valitse oma kotikuntasi <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span>
                 </label>
 
                 <select data-placeholder="Valitse kunta" id="homeMunicipality" name="homeMunicipality" tabindex="2" class="chzn-select">
-                    <option value=""></option> 
+                    <option value=""></option>
+                    <#--<noscript><option value="">Valitse</option></noscript>-->
                     <#list municipalities as municipality>
                         <option value="${municipality.id}">${municipality.name}</option>
                     </#list>
@@ -104,25 +107,35 @@
         <#-- TODO: NOJS vs. JS -->
         <div class="different-municipality js-hide hidden">
             <div class="input-block-content">
-                <div class="system-msg msg-info ">Kotikuntasi ei ole kunta, jota aloite koskee. Voit silti liittyä aloitteen tekijäksi, jos olet aloitteen kunnan jäsen</div>
+                <div class="system-msg msg-info ">
+                    Kotikuntasi ei ole kunta, jota aloite koskee. Voit silti liittyä aloitteen tekijäksi, jos olet aloitteen kunnan jäsen. <a href="#" rel="external" class="external">Mitä tämä tarkoittaa?</a>    
+                </div>
             </div>
             <div class="input-block-content">
-                <label>
+                
+                <#--<label>
                     <input type="checkbox" name="municipalMembership" id="municipalMembership" /><span class="label">Vakuutan, että olen vähintään sen kunnan jäsen jota aloite koskee ja ymmärrän <a href="#" rel="external" class="external">ehdot</a>.</span>
+                </label>-->
+                
+                <label>
+                    <input type="radio" name="municipalMembership" value="true" class="" /><span class="label">Olen sen kunnan jäsen, jota aloite koskee</span>
+                </label>
+                <label>
+                    <input type="radio" name="municipalMembership" value="false" class="" /><span class="label">En ole aloitteen kunnan jäsen</span>
                 </label>
             </div>
         </div>
-        
-        
+
         <noscript>
         <div class="input-block-content">
             <label>
-                <input type="checkbox" name="municipalMembership" id="municipalMembership" /><span class="label">Vakuutan, että olen vähintään sen kunnan jäsen jota aloite koskee ja ymmärrän <a href="#" rel="external" class="external">ehdot</a>.</span>
+                <input type="checkbox" name="municipalMembership" id="municipalMembership" checked="checked" disabled="disabled" /><span class="label">Jos aloitteen kunta on eri kuin kotikuntani, vakuutan olevani aloitteen kunnan jäsen. <a href="#" rel="external" class="external">Mitä tämä tarkoittaa?</a></span>
+                
             </label>
         </div>
         </noscript>
 
-        <div class="input-block-content">
+        <div class="input-block-content hidden">
             <@buttons type="next" nextStep=step+1 />
         </div>
     </div>
@@ -148,7 +161,7 @@
         <div class="input-block-content">
             <#--<@u.systemMessage path="initiative.municipality.description" type="info" showClose=false />-->
             <div class="system-msg msg-info ">
-                Täytä aloitteen sisältö<br/>
+                <#--Täytä aloitteen sisältö<br/>-->
                 <a href="#" rel="external" class="external">Vinkkejä hyvän aloitteen kirjoittamiseen</a>  
             </div>
         </div>
@@ -166,7 +179,7 @@
             <@f.textarea path="initiative.proposal" required="" optional=false cssClass="textarea-tall" />
         </div>
         
-        <div class="input-block-content">
+        <div class="input-block-content hidden">
             <@buttons type="next" nextStep=step+1 />
         </div>
     </div>
@@ -247,7 +260,7 @@
         
         <#--<@f.currentAuthor path="initiative.currentAuthor" realPath=initiative.currentAuthor mode="full" />-->
         
-        <div class="input-block-content">
+        <div class="input-block-content hidden">
             <@buttons type="next" nextStep=step+1 />
         </div>
     </div>
@@ -279,26 +292,79 @@
         </div>
         
         <div class="input-block-content">
+        
+            <div class="column-separator cf">
+                <div class="column col-1of2">
+                    <div class="test-box">
+                        <div class="title">Lähetä suoraan kuntaan</div>
+                    </div>
+                    
+                    <p>En halua kerätä lisää tekijöitä vaan haluan lähettää aloitteen suoraan kuntaan.</p>
+                </div>
+                    
+                <div class="column col-1of2 last cf">
+                    <div class="test-box">
+                        <div class="title">Kerää tekijöitä</div>
+                    </div>
+                
+                    <p>Haluan kerätä aloitteelle lisää tekijöitä Kuntalaisaloite.fi:ssä.</p>
+    
+                    <div id="franchise" class="">
+                        <@f.radiobutton path="initiative.franchise" required="required" options={"false":"initiative.franchise.false", "true":"initiative.franchise.true"} attributes="" />
+                    </div>
+    
+                    <br/>
+                </div>
+               
+                <div class="column col-1of2">
+                    <@buttons type="save-and-send" />
+                </div>
+                    
+                <div class="column col-1of2 last cf">
+                    <@buttons type="save" />
+                </div>
+            </div>
 
+            <#--
+            <br class="clear" /><br />
             <div class="column col-1of2">
-                <p>En halua kerätä lisää tekijöitä vaan haluan lähettää aloitteen suoraan kuntaan.</p>
+                <div class="test-box">
+                    <div class="title">Lähetä suoraan kuntaan</div>
+                    
+                    <div class="content">
+                        <p>En halua kerätä lisää tekijöitä vaan haluan lähettää aloitteen suoraan kuntaan.</p>
+                        
+                        <@buttons type="save-and-send" />
+                    </div>
+                </div>
             </div>
                 
             <div class="column col-1of2 last cf">
-                <p>Haluan kerätä aloitteelle lisää tekijöitä Kuntalaisaloite.fi:ssä.</p>
-
-                <@f.radiobutton path="initiative.franchise" required="required" options={"false":"initiative.franchise.false", "true":"initiative.franchise.true"} attributes="" />
-
-                <br/>
+                <div class="test-box">
+                    <div class="title">Kerää tekijöitä</div>
+                    
+                    <div class="content">
+                        <p>Haluan kerätä aloitteelle lisää tekijöitä Kuntalaisaloite.fi:ssä.</p>
+        
+                        <div id="franchise" class="">
+                            <@f.radiobutton path="initiative.franchise" required="required" options={"false":"initiative.franchise.false", "true":"initiative.franchise.true"} attributes="" />
+                        </div>
+        
+                        <br/>
+                        <@buttons type="save" />
+                    </div>
+                </div>
             </div>
-            
+            -->
+
+             <#--            
             <div class="column col-1of2">
                 <@buttons type="save-and-send" />
             </div>
                 
             <div class="column col-1of2 last cf">
                 <@buttons type="save" />
-            </div>
+            </div>-->
             
             
         </div>

@@ -457,6 +457,9 @@ $(document).ready(function () {
 			});
 
 			disableContinuing(false);
+			
+			console.log("piilota");
+			$('#franchise').removeClass('js-hide'); // TODO: finalize
 		} else {
 			
 			differentMunicipality.stop(false,true).slideDown({
@@ -466,6 +469,9 @@ $(document).ready(function () {
 			
 			disableContinuing(true);
 			
+			console.log("näytä");
+			$('#franchise').addClass('js-hide'); // TODO: finalize
+			
 		}
 	});
 	
@@ -474,7 +480,7 @@ $(document).ready(function () {
 	// Make more dynamic disableContinuing and assureMembership
 	var disableContinuing = function(value){
 		console.log("value: "+value);
-		
+
 		if (value) {
 			$("#button-next-2").addClass('disabled').attr('onClick','return false;');
 			$("#step-header-2, #step-header-3, #step-header-4").addClass('disabled');
@@ -484,7 +490,7 @@ $(document).ready(function () {
 		}
 	};
 	
-	var cbMunicipalMembership = $("#municipalMembership");
+	var cbMunicipalMembership = $("input[name=municipalMembership]");
 	
 	jQuery.fn.assureMembership = function(){
 		var cb, btn, cbVal;
@@ -492,10 +498,13 @@ $(document).ready(function () {
 		cb = $(this);
 		btn = $('#button-next-2');
 		cbVal = function(){
-			if (cb.is(':checked')){
+			//if (cb.is(':checked')){
+			if ($("input[name=municipalMembership]:checked").val() == "true"){
+				console.log("juu:"+cb.val());
 				btn.removeAttr('disabled').removeClass('disabled');
 				disableContinuing(false);
 			} else {
+				console.log("ei: "+cb.val());
 				btn.attr('disabled','disabled').addClass('disabled');
 				disableContinuing(true);
 			}
@@ -504,7 +513,6 @@ $(document).ready(function () {
 		//cbVal();
 		cb.change(function(){
 			cbVal();
-			console.log("sd");
 		});
 	};
 	cbMunicipalMembership.assureMembership();
