@@ -43,7 +43,7 @@
  * @param required generates an icon and can be used in JS-validation
  * @param optional additional information for label
 -->
-<#macro formLabel path required>
+<#macro formLabel path required optional>
     <#assign labelKey = fieldLabelKey(path) />
     <#if spring.status.value?? && spring.status.value?is_hash>
         <#assign forAttr = spring.status.expression+"."+locale />
@@ -53,6 +53,9 @@
             
     <label class="input-header" for="${forAttr!""}">
         <@u.message labelKey /> <#if required != ""><@u.icon type="required" size="small" /></#if>
+        <#if optional>
+            <span class="instruction-text"><@u.message labelKey + ".optional" /></span>
+        </#if>
     </label>
 
     <#nested/>
@@ -71,11 +74,11 @@
  * @param fieldType text, date, email, ...
  * 
 -->
-<#macro textField path required cssClass="" attributes="" maxLength="" fieldType="text">
+<#macro textField path required optional cssClass="" attributes="" maxLength="" fieldType="text">
     <@spring.bind path />  
     <@localizePath path spring.status.value />
     
-    <@formLabel pathLocale required>
+    <@formLabel pathLocale required optional>
         <#--
             TODO: add attribute required to attributes for jQueryTools validation
             <#if required?has_content>required="required"</#if>
@@ -118,7 +121,7 @@
     <@spring.bind path />
     <@localizePath path spring.status.value />  
 
-    <@formLabel pathLocale required>
+    <@formLabel pathLocale required optional>
         <#--
             TODO: add attribute required to attributes for jQueryTools validation
             <#if required?has_content>required="required"</#if>
