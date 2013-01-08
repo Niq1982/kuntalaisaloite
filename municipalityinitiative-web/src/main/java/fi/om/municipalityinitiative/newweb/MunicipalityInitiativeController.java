@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.newweb;
 
-import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdao.MunicipalityInitiativeDao;
 import fi.om.municipalityinitiative.web.BaseController;
@@ -16,7 +15,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import java.util.Locale;
-import java.util.Random;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
 import static fi.om.municipalityinitiative.web.Views.CREATE_VIEW;
@@ -45,14 +43,8 @@ public class MunicipalityInitiativeController extends BaseController {
  * Search
  */
     @RequestMapping(value={SEARCH_FI, SEARCH_SV}, method=GET)
-    public String search(InitiativeSearch search, Model model, Locale locale, HttpServletRequest request) {
-
-        String at = "omg";
-        System.out.println("old: "+ request.getSession().getAttribute(at));
-        request.getSession().setAttribute(at, String.valueOf(new Random().nextInt()));
-
+    public String search(Model model, Locale locale, HttpServletRequest request) {
         model.addAttribute("municipalities", municipalityDao.findMunicipalities());
-
         return SEARCH_VIEW;
 
     }
