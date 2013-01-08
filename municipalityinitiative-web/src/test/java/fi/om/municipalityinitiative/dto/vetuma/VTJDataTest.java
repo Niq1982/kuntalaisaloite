@@ -1,24 +1,23 @@
 package fi.om.municipalityinitiative.dto.vetuma;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
-
-import javax.annotation.Resource;
-
+import fi.om.municipalityinitiative.conf.WebTestConfiguration;
+import fi.om.municipalityinitiative.dto.LocalizedString;
+import fi.om.municipalityinitiative.util.Locales;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.context.MessageSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import fi.om.municipalityinitiative.conf.WebTestConfiguration;
-import fi.om.municipalityinitiative.dto.LocalizedString;
-import fi.om.municipalityinitiative.util.Locales;
+import javax.annotation.Resource;
+
+import static junit.framework.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={WebTestConfiguration.class})  //for messageSource
+@Ignore
 public class VTJDataTest {
 
     @Resource private MessageSource messageSource;
