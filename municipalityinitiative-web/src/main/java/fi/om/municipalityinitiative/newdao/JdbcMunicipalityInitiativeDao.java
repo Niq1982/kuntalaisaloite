@@ -44,9 +44,7 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
         setInitiativeBasicInfo(dto, insert);
         setContactInfo(dto, insert);
 
-        Long createId = insert.executeWithKey(municipalityInitiative.id);
-
-        return createId;
+        return insert.executeWithKey(municipalityInitiative.id);
 
     }
 
@@ -83,13 +81,13 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
                 @Override
                 protected MunicipalityInitiativeInfo map(Tuple row) {
                     MunicipalityInitiativeInfo info = new MunicipalityInitiativeInfo();
-                    info.name = row.get(municipalityInitiative.name);
-                    info.proposal = row.get(municipalityInitiative.proposal);
-                    info.contactAddress = row.get(municipalityInitiative.contactAddress);
-                    info.contactEmail = row.get(municipalityInitiative.contactEmail);
-                    info.contactName = row.get(municipalityInitiative.contactName);
-                    info.contactPhone = row.get(municipalityInitiative.contactPhone);
-                    info.municipalityName = row.get(QMunicipality.municipality.name);
+                    info.setName(row.get(municipalityInitiative.name));
+                    info.setProposal(row.get(municipalityInitiative.proposal));
+                    info.setContactAddress(row.get(municipalityInitiative.contactAddress));
+                    info.setContactEmail(row.get(municipalityInitiative.contactEmail));
+                    info.setContactName(row.get(municipalityInitiative.contactName));
+                    info.setContactPhone(row.get(municipalityInitiative.contactPhone));
+                    info.setMunicipalityName(row.get(QMunicipality.municipality.name));
                     return info;
                 }
             };

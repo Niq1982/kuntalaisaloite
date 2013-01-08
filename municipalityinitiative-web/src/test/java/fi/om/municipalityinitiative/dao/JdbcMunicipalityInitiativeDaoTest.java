@@ -97,12 +97,12 @@ public class JdbcMunicipalityInitiativeDaoTest {
     }
 
     private void assertCreateAndGetDtos(MunicipalityInitiativeCreateDto create, MunicipalityInitiativeInfo get) {
-        assertThat(get.proposal, is(create.proposal));
-        assertThat(get.name, is(create.name));
-        assertThat(get.contactName, is(create.contactName));
-        assertThat(get.contactPhone, is(create.contactPhone));
-        assertThat(get.contactEmail, is(create.contactEmail));
-        assertThat(get.contactAddress, is(create.contactAddress));
-        assertThat(get.municipalityName, is(testMunicipality.getName()));
+        assertThat(get.getProposal(), is(create.proposal));
+        assertThat(get.getName(), is(create.name));
+        assertThat(get.getContactName(), is(create.contactName));
+        assertThat(get.getContactPhone(), is(create.contactPhone));
+        assertThat(get.getContactEmail(), is(create.contactEmail));
+        assertThat(get.getContactAddress(), is(create.contactAddress));
+        assertThat(get.getMunicipalityName(), is(testMunicipality.getName()));
     }
 }
