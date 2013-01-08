@@ -1,7 +1,7 @@
 package fi.om.municipalityinitiative.newweb;
 
-import fi.om.municipalityinitiative.newdao.MunicipalityDao;
-import fi.om.municipalityinitiative.newdao.MunicipalityInitiativeDao;
+import fi.om.municipalityinitiative.service.MunicipalityInitiativeService;
+import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.web.BaseController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +28,10 @@ public class MunicipalityInitiativeController extends BaseController {
     private final Logger log = LoggerFactory.getLogger(MunicipalityInitiativeController.class);
 
     @Resource
-    private MunicipalityDao municipalityDao;
+    private MunicipalityService municipalityService;
 
     @Resource
-    private MunicipalityInitiativeDao municipalityInitiativeDao;
+    private MunicipalityInitiativeService municipalityInitiativeService;
 
 
     public MunicipalityInitiativeController(boolean optimizeResources, String resourcesVersion) {
@@ -44,7 +44,7 @@ public class MunicipalityInitiativeController extends BaseController {
  */
     @RequestMapping(value={SEARCH_FI, SEARCH_SV}, method=GET)
     public String search(Model model, Locale locale, HttpServletRequest request) {
-        model.addAttribute("municipalities", municipalityDao.findMunicipalities());
+        model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
         return SEARCH_VIEW;
 
     }
@@ -53,7 +53,7 @@ public class MunicipalityInitiativeController extends BaseController {
     public String createGet(Model model, Locale locale, HttpServletRequest request) {
         MunicipalityInitiativeUICreateDto initiative = new MunicipalityInitiativeUICreateDto();
         model.addAttribute("initiative", initiative);
-        model.addAttribute("municipalities", municipalityDao.findMunicipalities());
+        model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
         return CREATE_VIEW;
     }
 
