@@ -2,7 +2,6 @@ package fi.om.municipalityinitiative.newdto;
 
 public class MunicipalityInitiativeCreateDto {
 
-    // TODO: Validations
     public String name;
     public String proposal;
 

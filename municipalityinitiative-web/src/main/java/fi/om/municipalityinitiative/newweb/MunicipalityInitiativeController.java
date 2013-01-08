@@ -46,7 +46,6 @@ public class MunicipalityInitiativeController extends BaseController {
     public String search(Model model, Locale locale, HttpServletRequest request) {
         model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
         return SEARCH_VIEW;
-
     }
 
     @RequestMapping(value={ CREATE_FI, CREATE_SV }, method=GET)
@@ -64,7 +63,7 @@ public class MunicipalityInitiativeController extends BaseController {
                             Locale locale,
                             HttpServletRequest request) {
 
-        // TODO: Add initiative
+        municipalityInitiativeService.addMunicipalityInitiative(createDto);
         return SEARCH_VIEW;
 
     }

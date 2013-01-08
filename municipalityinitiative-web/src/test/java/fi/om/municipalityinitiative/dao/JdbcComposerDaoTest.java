@@ -53,6 +53,17 @@ public class JdbcComposerDaoTest {
 
     }
 
+    @Test
+    public void wont_fail_if_counting_supports_when_no_supports() {
+        Long municipalityId = testHelper.createTestMunicipality("Municipality");
+        Long initiativeId = testHelper.createTestInitiative(municipalityId);
+
+        SupportCount supportCount = composerDao.countSupports(initiativeId);
+        assertThat(supportCount.no_right_of_voting, is(0L));
+        assertThat(supportCount.right_of_voting, is(0L));
+
+    }
+
     private ComposerCreateDto composerCreateDto() {
         Long municipalityId = testHelper.createTestMunicipality("Some municipality");
         Long municipalityId2 = testHelper.createTestMunicipality("Other municipality");

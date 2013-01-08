@@ -40,8 +40,8 @@ public class JdbcComposerDao implements ComposerDao {
                 .map(composer.isMunicipalityCitizen, Wildcard.count);
 
         SupportCount supportCount = new SupportCount();
-        supportCount.no_right_of_voting = map.get(false);
-        supportCount.right_of_voting = map.get(true);
+        supportCount.no_right_of_voting = !map.containsKey(false) ? 0 : map.get(false);
+        supportCount.right_of_voting = !map.containsKey(true) ? 0 : map.get(true);
         return supportCount;
     }
 }
