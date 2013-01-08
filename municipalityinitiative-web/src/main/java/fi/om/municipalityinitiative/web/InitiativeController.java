@@ -86,25 +86,25 @@ public class InitiativeController extends BaseController {
 //        return managementView(model, initiative, null, FULL, request);
 //    }
 
-    @RequestMapping(value={ CREATE_FI, CREATE_SV }, method=POST) // , params=ACTION_SAVE - default action
-    public String createPost(@ModelAttribute("initiative") InitiativeManagement initiative, BindingResult bindingResult, Model model, Locale locale, HttpServletRequest request) {
-        Urls urls = Urls.get(locale);
-        if (create(initiative, bindingResult, model, locale, request)) {
-            return redirectWithMessage(urls.view(initiative.getId()), RequestMessage.SAVE, request);
-        } else {
-            return managementView(model, initiative, bindingResult, FULL, request);
-        }
-    }
-
-    @RequestMapping(value={ CREATE_FI, CREATE_SV }, method=POST, params=ACTION_SAVE_AND_SEND_INVITATIONS)
-    public String createAndSendInvitationsPost(@ModelAttribute("initiative") InitiativeManagement initiative, BindingResult bindingResult, Model model, Locale locale, HttpServletRequest request) {
-        Urls urls = Urls.get(locale);
-        if (create(initiative, bindingResult, model, locale, request)) {
-            return sendInvitations(initiative.getId(), urls, FULL, model, RequestMessage.SAVE_AND_SEND_INVITATIONS, RequestMessage.SAVE, locale, request);
-        } else {
-            return managementView(model, initiative, bindingResult, FULL, request);
-        }
-    }
+//    @RequestMapping(value={ CREATE_FI, CREATE_SV }, method=POST) // , params=ACTION_SAVE - default action
+//    public String createPost(@ModelAttribute("initiative") InitiativeManagement initiative, BindingResult bindingResult, Model model, Locale locale, HttpServletRequest request) {
+//        Urls urls = Urls.get(locale);
+//        if (create(initiative, bindingResult, model, locale, request)) {
+//            return redirectWithMessage(urls.view(initiative.getId()), RequestMessage.SAVE, request);
+//        } else {
+//            return managementView(model, initiative, bindingResult, FULL, request);
+//        }
+//    }
+//
+//    @RequestMapping(value={ CREATE_FI, CREATE_SV }, method=POST, params=ACTION_SAVE_AND_SEND_INVITATIONS)
+//    public String createAndSendInvitationsPost(@ModelAttribute("initiative") InitiativeManagement initiative, BindingResult bindingResult, Model model, Locale locale, HttpServletRequest request) {
+//        Urls urls = Urls.get(locale);
+//        if (create(initiative, bindingResult, model, locale, request)) {
+//            return sendInvitations(initiative.getId(), urls, FULL, model, RequestMessage.SAVE_AND_SEND_INVITATIONS, RequestMessage.SAVE, locale, request);
+//        } else {
+//            return managementView(model, initiative, bindingResult, FULL, request);
+//        }
+//    }
 
     private boolean create(InitiativeManagement initiative, BindingResult bindingResult, Model model, Locale locale, HttpServletRequest request) {
         Urls urls = Urls.get(locale);
@@ -206,7 +206,7 @@ public class InitiativeController extends BaseController {
             model.addAttribute(ALT_URI_ATTR, urls.alt().searchUnremovedVotes(beforeDeadLine));
             model.addAttribute(SEARCH_UNREMOVED_VOTES, beforeDeadLine);
             model.addAttribute("initiatives", initiativeService.findInitiativesWithUnremovedVotes(beforeDeadLinePeriod));
-            return SEARCH_VIEW;
+            return SEARCH_VIEW_OLD;
         }
     }
 
@@ -227,7 +227,7 @@ public class InitiativeController extends BaseController {
             model.addAttribute("currentSearch", search);
             model.addAttribute("initiatives", initiativeService.findInitiatives(search));
 
-            return SEARCH_VIEW;
+            return SEARCH_VIEW_OLD;
         }
     }
     

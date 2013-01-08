@@ -27,7 +27,7 @@ public final class Views {
     
     public static final String VETUMA_LOGIN_VIEW = "vetuma-login";
 
-    public static final String SEARCH_VIEW = "search";
+    public static final String SEARCH_VIEW_OLD = "search";
 
     public static final String INDEX_VIEW = "index";
 
@@ -51,8 +51,8 @@ public final class Views {
 
     // New views
 
-    public static final String SEARCHM_VIEW = "find";
-    public static final String CREATEM_VIEW = "create";
+    public static final String SEARCH_VIEW = "find";
+    public static final String CREATE_VIEW = "create";
     
     /**
      * Context relative redirect: context is prefixed to relative URLs.
