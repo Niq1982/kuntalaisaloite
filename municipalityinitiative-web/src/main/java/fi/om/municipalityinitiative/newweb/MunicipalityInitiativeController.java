@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
@@ -18,7 +19,8 @@ import java.util.Locale;
 import java.util.Random;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
-import static fi.om.municipalityinitiative.web.Views.*;
+import static fi.om.municipalityinitiative.web.Views.CREATE_VIEW;
+import static fi.om.municipalityinitiative.web.Views.SEARCH_VIEW;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -51,7 +53,7 @@ public class MunicipalityInitiativeController extends BaseController {
 
         model.addAttribute("municipalities", municipalityDao.findMunicipalities());
 
-        return SEARCHM_VIEW;
+        return SEARCH_VIEW;
 
     }
 
@@ -60,11 +62,11 @@ public class MunicipalityInitiativeController extends BaseController {
         MunicipalityInitiativeUICreateDto initiative = new MunicipalityInitiativeUICreateDto();
         model.addAttribute("initiative", initiative);
         model.addAttribute("municipalities", municipalityDao.findMunicipalities());
-        return CREATEM_VIEW;
+        return CREATE_VIEW;
     }
 
     @RequestMapping(value={ CREATE_FI, CREATE_SV }, method=POST)
-    public String createPost(MunicipalityInitiativeUICreateDto createDto,
+    public String createPost(@ModelAttribute("initiative") MunicipalityInitiativeUICreateDto createDto,
                             BindingResult bindingResult,
                             Model model,
                             Locale locale,

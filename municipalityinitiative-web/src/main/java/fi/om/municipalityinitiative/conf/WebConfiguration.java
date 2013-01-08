@@ -234,7 +234,7 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
     }
 
     @Bean
-    public MunicipalityInitiativeController mcontroller() {
+    public MunicipalityInitiativeController municipalityInitiativeController() {
         return new MunicipalityInitiativeController(optimizeResources(env), resourcesVersion(env));
     }
     
