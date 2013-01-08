@@ -456,6 +456,7 @@ $(document).ready(function () {
 				easing: 'easeOutExpo'
 			});
 
+			disableContinuing(false);
 		} else {
 			
 			differentMunicipality.stop(false,true).slideDown({
@@ -469,7 +470,20 @@ $(document).ready(function () {
 	});
 	
 	
-	// TODO: Fix this!
+	// TODO: Finalize after prototype is done
+	// Make more dynamic disableContinuing and assureMembership
+	var disableContinuing = function(value){
+		console.log("value: "+value);
+		
+		if (value) {
+			$("#button-next-2").addClass('disabled').attr('onClick','return false;');
+			$("#step-header-2, #step-header-3, #step-header-4").addClass('disabled');
+		} else {
+			$("#button-next-2").removeClass('disabled').attr('onClick','proceedTo(2); return false;');
+			$("#step-header-2, #step-header-3, #step-header-4").removeClass('disabled');
+		}
+	};
+	
 	var cbMunicipalMembership = $("#municipalMembership");
 	
 	jQuery.fn.assureMembership = function(){
@@ -487,24 +501,15 @@ $(document).ready(function () {
 			}
 		};
 		
-		cbVal();
+		//cbVal();
 		cb.change(function(){
 			cbVal();
+			console.log("sd");
 		});
 	};
 	cbMunicipalMembership.assureMembership();
 	
-	var disableContinuing = function(value){
-		console.log("value: "+value);
-		
-		if (value) {
-			$("#button-next-2").addClass('disabled');
-			$("#step-header-2, #step-header-3, #step-header-4").addClass('disabled');
-		} else {
-			$("#button-next-2").removeClass('disabled');
-			$("#step-header-2, #step-header-3, #step-header-4").removeClass('disabled');
-		}
-	};
+	
 	
 
 /**

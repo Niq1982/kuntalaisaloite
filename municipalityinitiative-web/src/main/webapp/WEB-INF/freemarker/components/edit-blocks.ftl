@@ -79,21 +79,21 @@
             <select data-placeholder="Valitse kunta" id="municipality" name="municipality" tabindex="1" class="chzn-select">
                 <option value=""></option>
                 <#list municipalities as municipality>
-                    <#noescape><option value="${municipality.id}">${municipality.name}</option></#noescape>
+                    <option value="${municipality.id}">${municipality.name}</option>
                 </#list>
             </select>
         </div>
         <div class="input-block-content">
             
-            <label class="input-header" for="homeMunicipality.fi">
+            <label class="input-header" for="homeMunicipality">
                     Kotikunta <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span>
                 </label>
 
                 <select data-placeholder="Valitse kunta" id="homeMunicipality" name="homeMunicipality" tabindex="2" class="chzn-select">
                     <option value=""></option> 
-                        <#list municipalities as municipality>
-                            <#noescape><option value="${municipality.id}">${municipality.name}</option></#noescape>
-                        </#list>
+                    <#list municipalities as municipality>
+                        <option value="${municipality.id}">${municipality.name}</option>
+                    </#list>
                 </select>
 
         </div>
@@ -117,8 +117,7 @@
         <noscript>
         <div class="input-block-content">
             <label>
-                <input type="checkbox" name="municipalCitizen" /><span class="label">Vakuutan, että olen vähintään sen kunnan jäsen jota aloite koskee ja ymmärrän <a href="#" rel="external" class="external">ehdot</a>.</span>
-                <#--<input type="checkbox" name="municipalCitizen" /><span class="label">Vakuutan, että kotikuntani on oikein ja ymmärrän <a href="#" rel="external" class="external">ehdot</a>.</span>-->
+                <input type="checkbox" name="municipalMembership" id="municipalMembership" /><span class="label">Vakuutan, että olen vähintään sen kunnan jäsen jota aloite koskee ja ymmärrän <a href="#" rel="external" class="external">ehdot</a>.</span>
             </label>
         </div>
         </noscript>
@@ -158,30 +157,17 @@
             <div class="input-header hidden">
                 Kunta
             </div>
-            <p id="selected-municipality" class="hidden">Ei valittu</p>
+            <p id="selected-municipality" class="hidden"><i>Ei valittu</i></p>
             
-            <label for="name.fi" class="input-header">
-                Kuntalaisaloitteen otsikko <span class="icon-small required trigger-tooltip"></span>
-            </label>
-            <input type="text" maxlength="512" class="large" value="" name="name.fi" id="name.fi">
-            
-            <#--<@f.textField path="initiative.name" required="required" cssClass="large" maxLength=InitiativeConstants.INITIATIVE_NAME_MAX?string("#") />-->
+            <@f.textField path="initiative.name" required="required" optional=true cssClass="large" maxLength=InitiativeConstants.INITIATIVE_NAME_MAX?string("#") />
         </div>
 
         <div class="input-block-content no-top-margin">
-            <div class="input-block-content no-top-margin">
-                <label for="proposal.fi" class="input-header">
-                    Aloitteen sisältö 
-                </label>
-            
-                <textarea class="textarea-tall" name="proposal.fi" id="proposal.fi"></textarea>
-            </div>
-        
-            <#--<@f.textarea path="initiative.proposal" required="" optional=true cssClass="textarea-tall" />-->
+            <@f.textarea path="initiative.proposal" required="" optional=false cssClass="textarea-tall" />
         </div>
         
         <div class="input-block-content">
-            <@buttons type="next" nextStep=step+2 />
+            <@buttons type="next" nextStep=step+1 />
         </div>
     </div>
 </#macro>
@@ -208,12 +194,7 @@
                 <@f.helpText "help.currentAuthor.contactDetails" />
             </div>
         </div>
-    
-        <#-- Block-edit errors -->
-        <div class="input-block-content">
-            <@u.errorsSummary path="initiative.*" prefix="initiative."/>
-        </div>
-    
+
          <div class="input-block-content">
             <div class="system-msg msg-info ">
                 Anna omat tietosi. Vaikka voit piilottaa nimesi Kuntalaisaloite.fi-palvelussa, voi kunta silti julkistaa sinun ja muiden tekijöiden nimet aloitetta käsitellessään.  
@@ -267,7 +248,7 @@
         <#--<@f.currentAuthor path="initiative.currentAuthor" realPath=initiative.currentAuthor mode="full" />-->
         
         <div class="input-block-content">
-            <@buttons type="next" nextStep=step+3 />
+            <@buttons type="next" nextStep=step+1 />
         </div>
     </div>
 </#macro>
@@ -305,16 +286,9 @@
                 
             <div class="column col-1of2 last cf">
                 <p>Haluan kerätä aloitteelle lisää tekijöitä Kuntalaisaloite.fi:ssä.</p>
-                <div class="input-header">
-                    Äänioikeus <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span>
-                </div>
 
-                <label>
-                    <input type="radio" name="rightToVote" value="true" /><span class="label">Olen äänioikeutettu kunnan asukas</span>
-                </label>
-                <label>
-                    <input type="radio" name="rightToVote" value="false" /><span class="label">En ole äänioikeutettu kunnan asukas</span>
-                </label>
+                <@f.radiobutton path="initiative.franchise" required="required" options={"false":"initiative.franchise.false", "true":"initiative.franchise.true"} attributes="" />
+
                 <br/>
             </div>
             

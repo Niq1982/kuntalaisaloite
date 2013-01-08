@@ -1,14 +1,19 @@
 <#import "components/layout.ftl" as l />
 <#import "components/utils.ftl" as u />
 
-
 <#escape x as x?html>
 
-<#assign pageTitle><@u.messageHTML "initiative.find.public.title" /></#assign>
+<#--
+ * Layout parameters for HTML-title and navigation.
+ * 
+ * @param page is "page.find"
+ * @param pageTitle can be assigned as custom HTML title
+-->
+<#assign page="page.find" />
 
 <@l.main "page.find" pageTitle!"">
 
-<h1>${pageTitle}</h1>
+<h1><@u.message page /></h1>
 
 <p>lorem ipsum dolor ...</p>
 
