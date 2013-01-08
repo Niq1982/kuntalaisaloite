@@ -216,12 +216,12 @@ public class InitiativeController extends BaseController {
     @RequestMapping(value={SEARCH_OLD_FI, SEARCH_OLD_SV}, method=GET)
     public String search(InitiativeSearch search, Model model, Locale locale) {
         Urls urls = Urls.get(locale);
-        model.addAttribute(ALT_URI_ATTR, urls.alt().search());
+        model.addAttribute(ALT_URI_ATTR, urls.alt().search_old());
 
         addPiwicIdIfNotAuthenticated(model);
 
         if (search.isEmptyCondition()) {    // this condition is result of changing url parameters 
-            return contextRelativeRedirect(urls.search()); // default search
+            return contextRelativeRedirect(urls.search_old()); // default search_old
         } 
         else {
             model.addAttribute("currentSearch", search);

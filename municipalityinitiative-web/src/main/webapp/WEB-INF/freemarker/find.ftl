@@ -20,9 +20,17 @@
 <div class="municipalities">
 
 
-    <#--<#list municipalities as municipality>
-         ${municipality.name}<br/>
-     </#list>-->
+    <table>
+    <tr>
+         <th>Kunta</th><th>Otsikko</th><th>Teksti</th>
+    </tr>
+    <#list initiatives as initiative>
+    <tr>
+        <td>${initiative.municipalityName}</td>
+        <td>${initiative.name}</td>
+        <td>${initiative.proposal}</td>
+    </tr>
+    </#list>
 
 
 </div>

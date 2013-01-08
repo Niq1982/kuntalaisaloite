@@ -32,8 +32,8 @@ public class AuthorWebTest extends WebTestBase {
     private static final String MSG_CONTINUE_BROWSING = "modal.continueBrowsing";
     private static final String MSG_PAGE_FRONTPAGE = "page.frontpage";
     private static final String MSG_PAGE_BEFORECREATE = "page.beforeCreate";
-    private static final String MSG_PAGE_SEARCH = "page.search";
-    private static final String MSG_PAGE_OWN_INITIATIVES = "initiative.search.own.title";
+    private static final String MSG_PAGE_SEARCH = "page.search_old";
+    private static final String MSG_PAGE_OWN_INITIATIVES = "initiative.search_old.own.title";
     private static final String MSG_SEARCH_RESULTS_EMPTY = "searchResults.public.empty";
     private static final String MSG_AUTHENTICATE = "beforeCreate.authenticateAndCreate";
     private static final String MSG_SUCCESS_SAVE = "success.save";
@@ -118,7 +118,7 @@ public class AuthorWebTest extends WebTestBase {
         voteByUserNotAllowed("Urho", "Ulkomaalainen", normalSSN, false);
         
         // Kalle supports inititative
-        // NO initiatives found in public search page since vote count is under limit
+        // NO initiatives found in public search_old page since vote count is under limit
         emptyPublicSearchResult();
         open(viewUrl);
         voteByUser("Kalle Kannattaja", true);

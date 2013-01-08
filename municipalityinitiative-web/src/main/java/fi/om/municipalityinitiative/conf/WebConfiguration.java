@@ -10,7 +10,8 @@ import fi.om.municipalityinitiative.conf.WebConfiguration.WebDevConfiguration;
 import fi.om.municipalityinitiative.conf.WebConfiguration.WebProdConfiguration;
 import fi.om.municipalityinitiative.dto.vetuma.VetumaLoginRequest;
 import fi.om.municipalityinitiative.json.JsonIdAnnotationIntrospector;
-import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeController;
+import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeCreateController;
+import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeViewController;
 import fi.om.municipalityinitiative.web.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -234,8 +235,13 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
     }
 
     @Bean
-    public MunicipalityInitiativeController municipalityInitiativeController() {
-        return new MunicipalityInitiativeController(optimizeResources(env), resourcesVersion(env));
+    public MunicipalityInitiativeCreateController municipalityInitiativeCreateController() {
+        return new MunicipalityInitiativeCreateController(optimizeResources(env), resourcesVersion(env));
+    }
+
+    @Bean
+    public MunicipalityInitiativeViewController municipalityInitiativeViewController() {
+        return new MunicipalityInitiativeViewController(optimizeResources(env), resourcesVersion(env));
     }
     
     @Bean

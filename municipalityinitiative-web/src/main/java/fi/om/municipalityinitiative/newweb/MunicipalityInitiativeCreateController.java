@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.newweb;
 import fi.om.municipalityinitiative.service.MunicipalityInitiativeService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.web.BaseController;
+import fi.om.municipalityinitiative.web.Urls;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -16,16 +17,17 @@ import javax.servlet.http.HttpServletRequest;
 
 import java.util.Locale;
 
-import static fi.om.municipalityinitiative.web.Urls.*;
+import static fi.om.municipalityinitiative.web.Urls.CREATE_FI;
+import static fi.om.municipalityinitiative.web.Urls.CREATE_SV;
 import static fi.om.municipalityinitiative.web.Views.CREATE_VIEW;
-import static fi.om.municipalityinitiative.web.Views.SEARCH_VIEW;
+import static fi.om.municipalityinitiative.web.Views.contextRelativeRedirect;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
-public class MunicipalityInitiativeController extends BaseController {
+public class MunicipalityInitiativeCreateController extends BaseController {
 
-    private final Logger log = LoggerFactory.getLogger(MunicipalityInitiativeController.class);
+    private final Logger log = LoggerFactory.getLogger(MunicipalityInitiativeCreateController.class);
 
     @Resource
     private MunicipalityService municipalityService;
@@ -34,18 +36,8 @@ public class MunicipalityInitiativeController extends BaseController {
     private MunicipalityInitiativeService municipalityInitiativeService;
 
 
-    public MunicipalityInitiativeController(boolean optimizeResources, String resourcesVersion) {
+    public MunicipalityInitiativeCreateController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
-    }
-
-
-    /*
- * Search
- */
-    @RequestMapping(value={SEARCH_FI, SEARCH_SV}, method=GET)
-    public String search(Model model, Locale locale, HttpServletRequest request) {
-        model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
-        return SEARCH_VIEW;
     }
 
     @RequestMapping(value={ CREATE_FI, CREATE_SV }, method=GET)
@@ -64,7 +56,9 @@ public class MunicipalityInitiativeController extends BaseController {
                             HttpServletRequest request) {
 
         municipalityInitiativeService.addMunicipalityInitiative(createDto);
-        return SEARCH_VIEW;
+
+        Urls urls = Urls.get(locale);
+        return contextRelativeRedirect(urls.alt().search());
 
     }
 

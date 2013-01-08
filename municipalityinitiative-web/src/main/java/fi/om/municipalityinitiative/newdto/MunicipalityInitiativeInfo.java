@@ -9,4 +9,32 @@ public class MunicipalityInitiativeInfo {
     public String contactEmail;
     public String contactPhone;
     public String contactAddress;
+
+    public String getName() {
+        return name;
+    }
+
+    public String getProposal() {
+        return proposal;
+    }
+
+    public String getMunicipalityName() {
+        return municipalityName;
+    }
+
+    public String getContactName() {
+        return contactName;
+    }
+
+    public String getContactEmail() {
+        return contactEmail;
+    }
+
+    public String getContactPhone() {
+        return contactPhone;
+    }
+
+    public String getContactAddress() {
+        return contactAddress;
+    }
 }

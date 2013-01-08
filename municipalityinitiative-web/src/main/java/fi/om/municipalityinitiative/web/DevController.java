@@ -1,19 +1,11 @@
 package fi.om.municipalityinitiative.web;
 
-import static fi.om.municipalityinitiative.util.Locales.asLocalizedString;
-import static fi.om.municipalityinitiative.web.Urls.*;
-import static fi.om.municipalityinitiative.web.Views.DUMMY_LOGIN_VIEW;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.google.common.collect.Lists;
+import fi.om.municipalityinitiative.dto.InitiativeManagement;
+import fi.om.municipalityinitiative.dto.User;
+import fi.om.municipalityinitiative.service.Role;
+import fi.om.municipalityinitiative.service.TestDataService;
+import fi.om.municipalityinitiative.util.TestDataTemplates;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,13 +15,19 @@ import org.springframework.web.servlet.FlashMap;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
-import com.google.common.collect.Lists;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import fi.om.municipalityinitiative.dto.InitiativeManagement;
-import fi.om.municipalityinitiative.dto.User;
-import fi.om.municipalityinitiative.service.Role;
-import fi.om.municipalityinitiative.service.TestDataService;
-import fi.om.municipalityinitiative.util.TestDataTemplates;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import static fi.om.municipalityinitiative.util.Locales.asLocalizedString;
+import static fi.om.municipalityinitiative.web.Urls.*;
+import static fi.om.municipalityinitiative.web.Views.DUMMY_LOGIN_VIEW;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 @Profile("dev")
@@ -129,7 +127,7 @@ public class DevController extends BaseLoginController {
         testDataService.createTestInitiativesFromTemplates(selectedInitiatives, currentUser, authorEmail0, authorEmail1);
         
         
-        //TODO: return links to this page instead of redirect to search ?
+        //TODO: return links to this page instead of redirect to search_old ?
         putResultInfo("Linkit aloitteisiin ...", request);
         //return redirect(urls.fullUrl(request.getPathInfo()));
         return Views.contextRelativeRedirect(urls.searchOwnOnly());

@@ -27,7 +27,7 @@ public final class Views {
     
     public static final String VETUMA_LOGIN_VIEW = "vetuma-login";
 
-    public static final String SEARCH_VIEW_OLD = "search";
+    public static final String SEARCH_VIEW_OLD = "search_old";
 
     public static final String INDEX_VIEW = "index";
 

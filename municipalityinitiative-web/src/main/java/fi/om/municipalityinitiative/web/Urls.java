@@ -228,11 +228,11 @@ public final class Urls {
         return view(initiativeId) + "?" + ACTION_ACCEPT_INVITATION;
     }
     
-    public String search() {
+    public String search_old() {
         return getLocalizedPageUrl(SEARCH_OLD_FI, SEARCH_OLD_SV);
     }
 
-    public String searchm() {
+    public String search() {
         return getLocalizedPageUrl(SEARCH_FI, SEARCH_SV);
     }
     
@@ -241,15 +241,15 @@ public final class Urls {
     }
 
     public String searchUnremovedVotes() {
-        return searchUnremovedVotes(""); // default search 
+        return searchUnremovedVotes(""); // default search_old
     }
     
     public String searchUnremovedVotes(String periodBeforeDeadLine) {
-        return search() +  "?" + SEARCH_UNREMOVED_VOTES + "=" + periodBeforeDeadLine;
+        return search_old() +  "?" + SEARCH_UNREMOVED_VOTES + "=" + periodBeforeDeadLine;
     }
     
     public String searchOwnOnly() {
-        return search() + "?" + SEARCH_OWN_ONLY;
+        return search_old() + "?" + SEARCH_OWN_ONLY;
     }
     
     public String createNew() {

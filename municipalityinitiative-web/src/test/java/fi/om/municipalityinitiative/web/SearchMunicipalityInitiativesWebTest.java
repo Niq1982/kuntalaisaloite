@@ -13,7 +13,7 @@ public class SearchMunicipalityInitiativesWebTest extends NEWWebTestBase {
 
     @Test
     public void page_opens_when_navigation_link_clicked() {
-        open(urls.searchm());
+        open(urls.search());
         assertThat(pageTitle(), is("Selaa kuntalaisaloitteita - Kuntalaisaloitepalvelu"));
     }
 
@@ -22,7 +22,7 @@ public class SearchMunicipalityInitiativesWebTest extends NEWWebTestBase {
     // XXX: This is just an example test case.
     public void helsinki_is_listed_as_one_municipality() {
         newTestHelper.createTestMunicipality("Tuusula");
-        open(urls.searchm());
+        open(urls.search());
 
         WebElement municipalities = driver.findElement(By.className("municipalities"));
         assertThat(municipalities.getText(), containsString("Tuusula"));
