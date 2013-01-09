@@ -1,6 +1,45 @@
 package fi.om.municipalityinitiative.newdto;
 
 public class SupportCount {
-    public long right_of_voting;
-    public long no_right_of_voting;
+    private final SupportNames rightOfVoting;
+    private final SupportNames noRightOfVoting;
+
+
+    public SupportCount() {
+        rightOfVoting = new SupportNames();
+        noRightOfVoting = new SupportNames();
+    }
+
+    public SupportNames getRightOfVoting() {
+        return rightOfVoting;
+    }
+
+    public SupportNames getNoRightOfVoting() {
+        return noRightOfVoting;
+    }
+
+    public class SupportNames {
+
+        private long publicNames = 0;
+        private long privateNames = 0;
+
+        public SupportNames() {
+        }
+
+        public long getPublicNames() {
+            return publicNames;
+        }
+
+        public long getPrivateNames() {
+            return privateNames;
+        }
+
+        public void setPublicNames(long publicNames) {
+            this.publicNames = publicNames;
+        }
+
+        public void setPrivateNames(long privateNames) {
+            this.privateNames = privateNames;
+        }
+    }
 }

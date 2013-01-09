@@ -5,7 +5,6 @@ import fi.om.municipalityinitiative.newdao.MunicipalityInitiativeDao;
 import fi.om.municipalityinitiative.newdto.ComposerCreateDto;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeCreateDto;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeInfo;
-import fi.om.municipalityinitiative.newdto.SupportCount;
 import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeUICreateDto;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,10 +30,6 @@ public class MunicipalityInitiativeService {
 
         Long municipalityInitiativeId = municipalityInitiativeDao.create(parse(createDto));
         composerDao.add(parse(createDto, municipalityInitiativeId));
-
-        SupportCount supportCount = composerDao.countSupports(municipalityInitiativeId);
-
-        System.out.println(supportCount);
     }
 
     static MunicipalityInitiativeCreateDto parse(MunicipalityInitiativeUICreateDto source) {
