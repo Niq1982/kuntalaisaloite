@@ -12,5 +12,5 @@ public interface MunicipalityInitiativeDao {
 
     Long create(MunicipalityInitiativeCreateDto dto);
 
-    MunicipalityInitiativeInfo getById(Long createId);
+    MunicipalityInitiativeInfo getById(Long id);
 }

@@ -85,12 +85,12 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
     }
 
     @Override
-    public MunicipalityInitiativeInfo getById(Long createId) {
+    public MunicipalityInitiativeInfo getById(Long id) {
 
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
                 .leftJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
-                .where(municipalityInitiative.id.eq(createId));
+                .where(municipalityInitiative.id.eq(id));
 
         return query.uniqueResult(initiativeInfoMapping);
 
