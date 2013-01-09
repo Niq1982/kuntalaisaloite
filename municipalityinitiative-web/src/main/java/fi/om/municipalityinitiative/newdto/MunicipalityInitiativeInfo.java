@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.newdto;
 import org.joda.time.DateTime;
 
 public class MunicipalityInitiativeInfo {
+    private Long id;
     private String name;
     private String proposal;
     private String municipalityName;
@@ -75,5 +76,13 @@ public class MunicipalityInitiativeInfo {
 
     public void setCreateTime(DateTime createTime) {
         this.createTime = createTime;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
