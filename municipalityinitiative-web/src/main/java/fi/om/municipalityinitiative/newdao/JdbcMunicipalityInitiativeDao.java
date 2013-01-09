@@ -88,6 +88,7 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
                     info.setContactName(row.get(municipalityInitiative.contactName));
                     info.setContactPhone(row.get(municipalityInitiative.contactPhone));
                     info.setMunicipalityName(row.get(QMunicipality.municipality.name));
+                    info.setCreateTime(row.get(municipalityInitiative.modified));
                     return info;
                 }
             };

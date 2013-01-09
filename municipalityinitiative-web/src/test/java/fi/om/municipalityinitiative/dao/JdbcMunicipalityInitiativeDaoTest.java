@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Random;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -104,5 +105,6 @@ public class JdbcMunicipalityInitiativeDaoTest {
         assertThat(get.getContactEmail(), is(create.contactEmail));
         assertThat(get.getContactAddress(), is(create.contactAddress));
         assertThat(get.getMunicipalityName(), is(testMunicipality.getName()));
+        assertThat(get.getCreateTime(), is(notNullValue()));
     }
 }

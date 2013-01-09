@@ -1,5 +1,7 @@
 package fi.om.municipalityinitiative.newdto;
 
+import org.joda.time.DateTime;
+
 public class MunicipalityInitiativeInfo {
     private String name;
     private String proposal;
@@ -9,6 +11,7 @@ public class MunicipalityInitiativeInfo {
     private String contactEmail;
     private String contactPhone;
     private String contactAddress;
+    private DateTime createTime;
 
     public String getName() {
         return name;
@@ -64,5 +67,13 @@ public class MunicipalityInitiativeInfo {
 
     public void setContactAddress(String contactAddress) {
         this.contactAddress = contactAddress;
+    }
+
+    public DateTime getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(DateTime createTime) {
+        this.createTime = createTime;
     }
 }
