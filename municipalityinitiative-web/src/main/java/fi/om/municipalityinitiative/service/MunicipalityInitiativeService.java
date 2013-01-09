@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.newdao.MunicipalityInitiativeDao;
 import fi.om.municipalityinitiative.newdto.ComposerCreateDto;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeCreateDto;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeInfo;
+import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeSearch;
 import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeUICreateDto;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,8 +21,8 @@ public class MunicipalityInitiativeService {
     @Resource
     private ComposerDao composerDao;
 
-    public List<MunicipalityInitiativeInfo> findAllMunicipalityInitiatives() {
-        return municipalityInitiativeDao.findAllNewestFirst();
+    public List<MunicipalityInitiativeInfo> findMunicipalityInitiatives(MunicipalityInitiativeSearch search) {
+        return municipalityInitiativeDao.findNewestFirst(search);
     }
 
     @Transactional(readOnly = false)
@@ -62,7 +63,7 @@ public class MunicipalityInitiativeService {
     // TODO: Implement correct dao method
     // TODO: Add SupportCount info to MunicipalityInitiativeInfo
     public MunicipalityInitiativeInfo getMunicipalityInitiative(Long initiativeId) {
-        for (MunicipalityInitiativeInfo initiativeInfo : municipalityInitiativeDao.findAllNewestFirst()) {
+        for (MunicipalityInitiativeInfo initiativeInfo : municipalityInitiativeDao.findNewestFirst(new MunicipalityInitiativeSearch())) {
             if (initiativeInfo.getId().equals(initiativeId)) {
                 return initiativeInfo;
             }

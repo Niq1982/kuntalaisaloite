@@ -40,13 +40,17 @@ public class NEWTestHelper {
 
     @Transactional
     public Long createTestInitiative(Long municipalityId) {
+        return createTestInitiative(municipalityId, "name");
+    }
+    @Transactional
+    public Long createTestInitiative(Long municipalityId, String name) {
         SQLInsertClause insert = queryFactory.insert(municipalityInitiative);
 
         insert.set(municipalityInitiative.contactAddress, "contact_address");
         insert.set(municipalityInitiative.contactEmail, "contact_email");
         insert.set(municipalityInitiative.contactPhone, "contact_phone");
         insert.set(municipalityInitiative.contactName, "contact_name");
-        insert.set(municipalityInitiative.name, "name");
+        insert.set(municipalityInitiative.name, name);
         insert.set(municipalityInitiative.proposal, "proposal");
         insert.set(municipalityInitiative.municipalityId, municipalityId);
 

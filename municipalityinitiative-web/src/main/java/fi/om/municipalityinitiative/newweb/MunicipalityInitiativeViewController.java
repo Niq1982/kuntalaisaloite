@@ -33,8 +33,8 @@ public class MunicipalityInitiativeViewController extends BaseController {
     }
 
     @RequestMapping(value={SEARCH_FI, SEARCH_SV}, method=GET)
-    public String search(Model model, Locale locale, HttpServletRequest request) {
-        model.addAttribute("initiatives", municipalityInitiativeService.findAllMunicipalityInitiatives());
+    public String search(MunicipalityInitiativeSearch search, Model model, Locale locale, HttpServletRequest request) {
+        model.addAttribute("initiatives", municipalityInitiativeService.findMunicipalityInitiatives(search));
         model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
         return SEARCH_VIEW;
     }

@@ -6,9 +6,12 @@ import com.mysema.query.sql.postgres.PostgresQuery;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
+import com.mysema.query.types.Predicate;
+import com.mysema.query.types.path.StringPath;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeCreateDto;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeInfo;
+import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeSearch;
 import fi.om.municipalityinitiative.sql.QMunicipality;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,14 +29,34 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
     PostgresQueryFactory queryFactory;
 
     @Override
-    public List<MunicipalityInitiativeInfo> findAllNewestFirst() {
+    public List<MunicipalityInitiativeInfo> findNewestFirst(MunicipalityInitiativeSearch search) {
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
                 .leftJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
                 .orderBy(municipalityInitiative.id.desc());
 
+        searchParameters(query, search);
+
         return query.list(initiativeInfoMapping);
 
+    }
+
+    private void searchParameters(PostgresQuery query, MunicipalityInitiativeSearch search) {
+        if (search.getMunicipality() != null) {
+            query.where(municipalityInitiative.municipalityId.eq(search.getMunicipality()));
+        }
+        if (search.getSearch() != null) {
+            query.where(toLikePredicate(municipalityInitiative.name, search.getSearch()));
+        }
+    }
+
+    private Predicate toLikePredicate(StringPath name, String search) {
+        return name.toLowerCase().like(toLikePattern(search).toLowerCase());
+    }
+
+    private static String toLikePattern(String search) {
+        //TODO: Parse % and _
+        return "%"+search+"%";
     }
 
     @Override

@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.newdao.MunicipalityInitiativeDao;
 import fi.om.municipalityinitiative.newdto.MunicipalityInfo;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeCreateDto;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeInfo;
+import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeSearch;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +20,7 @@ import java.util.Random;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -62,7 +64,7 @@ public class JdbcMunicipalityInitiativeDaoTest {
         municipalityInitiativeDao.create(createDto());
         municipalityInitiativeDao.create(createDto());
 
-        List<MunicipalityInitiativeInfo> result = municipalityInitiativeDao.findAllNewestFirst();
+        List<MunicipalityInitiativeInfo> result = municipalityInitiativeDao.findNewestFirst(new MunicipalityInitiativeSearch());
         assertThat(result.size(), is(2));
     }
 
@@ -74,9 +76,41 @@ public class JdbcMunicipalityInitiativeDaoTest {
         municipalityInitiativeDao.create(create1);
         municipalityInitiativeDao.create(create2);
 
-        List<MunicipalityInitiativeInfo> result = municipalityInitiativeDao.findAllNewestFirst();
+        List<MunicipalityInitiativeInfo> result = municipalityInitiativeDao.findNewestFirst(new MunicipalityInitiativeSearch());
         assertCreateAndGetDtos(create2, result.get(0));
         assertCreateAndGetDtos(create1, result.get(1));
+    }
+
+    @Test
+    public void finds_by_municipality() {
+
+        Long municipalityId = testHelper.createTestMunicipality("Some municipality");
+        Long shouldBeFound = testHelper.createTestInitiative(municipalityId);
+
+        Long shouldNotBeFound = testHelper.createTestInitiative(testMunicipality.getId());
+
+        MunicipalityInitiativeSearch search = new MunicipalityInitiativeSearch();
+        search.setMunicipality(municipalityId);
+
+        List<MunicipalityInitiativeInfo> result = municipalityInitiativeDao.findNewestFirst(search);
+        assertThat(result, hasSize(1));
+        assertThat(result.get(0).getId(), is(shouldBeFound));
+    }
+
+    @Test
+    public void finds_by_name() {
+
+        testHelper.createTestInitiative(testMunicipality.getId(), "name that should not be found");
+        Long shouldBeFound = testHelper.createTestInitiative(testMunicipality.getId(), "name that should be found ääöö");
+
+        MunicipalityInitiativeSearch search = new MunicipalityInitiativeSearch();
+        search.setSearch("SHOULD be found ääöö");
+
+        List<MunicipalityInitiativeInfo> result = municipalityInitiativeDao.findNewestFirst(search);
+
+        assertThat(result, hasSize(1));
+        assertThat(result.get(0).getId(), is(shouldBeFound));
+
     }
 
     private MunicipalityInitiativeCreateDto createDto() {
