@@ -805,6 +805,8 @@ a.block-link {
     margin-bottom:3em;
     padding-top:35px;
     background:#fff;
+    
+    &.last { margin-bottom:2em; }
 }
 .input-block {
     width: 866px; // Predefined width removes jumpyness bug in slideToggle. could be calculated with JS for dynamic widths.
@@ -2358,6 +2360,12 @@ blockquote {
 
 
 // SOME buttons
+//
+// .facebook    - Facebook
+// .google      - Google
+// .twitter     - Twitter
+// 
+// Styleguide 11.
 .some-links { 
     text-align:center;
 
@@ -2370,15 +2378,19 @@ blockquote {
     
     .icon-some {
         display:inline-block;
-        height:32px;
-        width:32px;
+        height:48px;
+        width:48px;
         margin-right:1em;
+        opacity:0.9;
+        .transition(opacity, 0.1s, ease-in);
         
         background:url("../img/icons-sprite.png?version=${timestamp}") no-repeat 0 -196px;
         
         &.facebook  { background-position:0 -196px; }
         &.google    { background-position:-64px -196px; }
         &.twitter   { background-position:-128px -196px; }
+        
+        &:hover { opacity:1; }
     }
 }
 

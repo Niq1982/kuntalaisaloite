@@ -88,16 +88,16 @@
         <div class="input-block-content">
             
             <label class="input-header" for="homeMunicipality">
-                    Valitse oma kotikuntasi <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span>
-                </label>
+                Valitse oma kotikuntasi <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span>
+            </label>
 
-                <select data-placeholder="Valitse kunta" id="homeMunicipality" name="homeMunicipality" tabindex="2" class="chzn-select municipality-select">
-                    <option value=""></option>
-                    <#--<noscript><option value="">Valitse</option></noscript>-->
-                    <#list municipalities as municipality>
-                        <option value="${municipality.id}">${municipality.name}</option>
-                    </#list>
-                </select>
+            <select data-placeholder="Valitse kunta" id="homeMunicipality" name="homeMunicipality" tabindex="2" class="chzn-select municipality-select">
+                <option value=""></option>
+                <#--<noscript><option value="">Valitse</option></noscript>-->
+                <#list municipalities as municipality>
+                    <option value="${municipality.id}">${municipality.name}</option>
+                </#list>
+            </select>
 
         </div>
         <br class="clear" />

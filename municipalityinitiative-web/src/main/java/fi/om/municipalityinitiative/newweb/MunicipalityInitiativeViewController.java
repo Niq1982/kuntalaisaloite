@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.newweb;
 
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeInfo;
 import fi.om.municipalityinitiative.service.MunicipalityInitiativeService;
+import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.web.BaseController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +23,9 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 public class MunicipalityInitiativeViewController extends BaseController {
 
     @Resource
+    private MunicipalityService municipalityService;
+    
+    @Resource
     private MunicipalityInitiativeService municipalityInitiativeService;
 
     public MunicipalityInitiativeViewController(boolean optimizeResources, String resourcesVersion) {
@@ -31,6 +35,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
     @RequestMapping(value={SEARCH_FI, SEARCH_SV}, method=GET)
     public String search(Model model, Locale locale, HttpServletRequest request) {
         model.addAttribute("initiatives", municipalityInitiativeService.findAllMunicipalityInitiatives());
+        model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
         return SEARCH_VIEW;
     }
 
