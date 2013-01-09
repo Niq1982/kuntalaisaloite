@@ -24,17 +24,14 @@
             <li <#if initiative_index == 0>class="first"</#if>>
                 
                 
-                <span class="support-votes-details">
+                <#--<span class="support-votes-details">
                     <span class="support-votes-container">
                         <span class="support-votes">TODO: count</span>
                     </span>
-                </span>
+                </span>-->
                 
-
-                <#--<span class="date trigger-tooltip" title="<@u.message "searchResults.initiative.date" />" ><@u.localDate initiative.startDate /></span>-->
-                <span class="date trigger-tooltip" title="<@u.message "searchResults.initiative.date" />" >TODO: date</span>
-                <#--<a href="${urls.view(initiative.id)}" class="title"><span class="name">${initiative.name}</span></a>-->
-                <a href="" class="title"><span class="name">${initiative.name}</span></a>
+                <span class="date trigger-tooltip" title="<@u.message "searchResults.initiative.date" />" ><@u.localDate initiative.createTime /></span>
+                <a href="${urls.view(initiative.id)}" class="title"><span class="name">${initiative.name}</span></a>
                 <span class="info">${initiative.municipalityName}</span>
                 <#-- ${initiative.proposal} -->
                 
@@ -56,8 +53,6 @@
     </#if>
     
     </div>
-
-
 </div>
 
 

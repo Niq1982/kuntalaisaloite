@@ -441,7 +441,7 @@ $(document).ready(function () {
 
 	municipalitySelect =		 $('#municipality');
 	homeMunicipalitySelect =	 $('#homeMunicipality');
-	selectedMunicipalityElem =	 $('#selected-municipality');
+	selectedMunicipalityElem =	 $('#selected-municipality'); // Municipality text in the second step in the form
 	municipalityDiffers =		 $('.municipalitys-differs');
 	municipalMembershipRadios =  $("input[name=municipalMembership]");
 	// Checks which one of the selects we are using
@@ -508,6 +508,8 @@ $(document).ready(function () {
 	var preventContinuing = function(prevent){
 		var formBlockHeaders = $("#step-header-2, #step-header-3, #step-header-4");
 			
+		//$("#button-next-2").disableBtn(prevent);
+		
 		if (prevent) {
 			$("#button-next-2").addClass('disabled').attr('onClick','return false;');
 			formBlockHeaders.addClass('disabled');
@@ -517,6 +519,26 @@ $(document).ready(function () {
 		}
 	};
 	
+	// Disable button
+	// FIXME: Has issues with revolving values
+	/*jQuery.fn.disableBtn = function(disable){
+		var defaultVal = 'return false;';
+		
+		if (disable && ($(this).attr('onClick') != defaultVal)) {
+			$(this)
+			.addClass('disabled')
+			.data('onClickTmp',$(this).attr('onClick'))
+			.attr('onClick',defaultVal);
+		} else {
+			$(this)
+			.removeClass('disabled')
+			.data($(this).attr('onClick'),'onClickTmp');
+		}
+		
+		console.log($(this).data('onClickTmp')+" | "+$(this).attr('onClick'));
+	};*/
+	
+	// Assure membership for the municipality
 	jQuery.fn.assureMembership = function(){
 		var cb, btn, cbVal;
 		
@@ -555,8 +577,10 @@ $(document).ready(function () {
 		console.log("checked: "+municipalMembershipRadios.attr('checked'));
 		
 		// Disable / enable proceeding to the next form steps
-		if ( !municipalMembershipRadios.attr('checked')){
+		if ( $("input[name=municipalMembership]:checked").length == 0){
 			preventContinuing(!equalMunicipalitys());
+		} else {
+			municipalMembershipRadios.removeAttr('checked');
 		}
 	});
 	
