@@ -58,7 +58,7 @@ public class MunicipalityInitiativeCreateController extends BaseController {
         municipalityInitiativeService.addMunicipalityInitiative(createDto);
 
         Urls urls = Urls.get(locale);
-        return contextRelativeRedirect(urls.alt().search());
+        return contextRelativeRedirect(urls.search());
 
     }
 

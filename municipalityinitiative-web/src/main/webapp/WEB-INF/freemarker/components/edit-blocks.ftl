@@ -77,7 +77,7 @@
                 Valitse kunta, jolle teet aloitteen <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span>
             </label>
 
-            <select data-placeholder="Valitse kunta" id="municipality" name="municipality" tabindex="1" class="chzn-select">
+            <select data-placeholder="Valitse kunta" id="municipality" name="municipality" tabindex="1" class="chzn-select municipality-select">
                 <option value=""></option>
                 <#--<noscript><option value="">Valitse</option></noscript>-->
                 <#list municipalities as municipality>
@@ -91,7 +91,7 @@
                     Valitse oma kotikuntasi <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span>
                 </label>
 
-                <select data-placeholder="Valitse kunta" id="homeMunicipality" name="homeMunicipality" tabindex="2" class="chzn-select">
+                <select data-placeholder="Valitse kunta" id="homeMunicipality" name="homeMunicipality" tabindex="2" class="chzn-select municipality-select">
                     <option value=""></option>
                     <#--<noscript><option value="">Valitse</option></noscript>-->
                     <#list municipalities as municipality>
@@ -105,7 +105,7 @@
 
         
         <#-- TODO: NOJS vs. JS -->
-        <div class="different-municipality js-hide hidden">
+        <div class="municipalitys-differs js-hide hidden">
             <div class="input-block-content">
                 <div class="system-msg msg-info ">
                     Kotikuntasi ei ole kunta, jota aloite koskee. Voit silti liittyä aloitteen tekijäksi, jos olet aloitteen kunnan jäsen. <a href="#" rel="external" class="external">Mitä tämä tarkoittaa?</a>    

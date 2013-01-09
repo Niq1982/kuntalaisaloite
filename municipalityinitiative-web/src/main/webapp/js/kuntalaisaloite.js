@@ -23,7 +23,22 @@ generateModal = function (modalContent, modalType) {
 	return false;
 };
 
+/**
+ * 
+ * Localization
+ * ==============
+ * - Returns localized texts for JavaScript-elements.
+ * 
+ * */
 localization = {
+	
+	chosenNoResults:function(locale){
+    	if (locale == 'sv'){
+    		return "Inga träffar"
+    	} else {
+    		return "Ei tuloksia"
+    	}
+	},
 	getSubmitInfo:function(locale){
     	if (locale == 'sv'){
     		return "Det verkar räcka längre än väntat att utföra funktionen. Vänligen vänta en stund."
@@ -62,7 +77,7 @@ validateForm = function (formBlock) {
 
 $(document).ready(function () {	
 	// Define general variables
-	var $body, speedFast, speedSlow, speedVeryFast, speedAutoHide, vpHeight, vpWidth, validateEmail, isIE7;
+	var $body, speedFast, speedSlow, speedVeryFast, speedAutoHide, vpHeight, vpWidth, validateEmail, isIE7, isIE8, locale;
 	$body = $('body');
 	speedFast = '200';					// General speeds for animations
 	speedVeryFast = '10';			 
@@ -72,6 +87,7 @@ $(document).ready(function () {
 	vpWidth =  $(window).width();		// Viewport width
 	isIE7 = $('html').hasClass('ie7');	// Boolean for IE7. Used browser detection instead of jQuery.support().
 	isIE8 = $('html').hasClass('ie8');	// Boolean for IE8. Used browser detection instead of jQuery.support().
+	locale = Init.getLocale();			// Current locale: fi, sv
 	
 /**
  * Common helpers
@@ -139,8 +155,8 @@ $(document).ready(function () {
 			firstBtnInForm = btnClicked.parents('form').find('button:first');
 			siblingButtons = btnClicked.siblings('.small-button, .large-button');
 			$loader = $('<span class="loader" />');
-			$submitInfo = $('<div class="system-msg msg-info">'+localization.getSubmitInfo(Init.getLocale())+'</div>');
-			$submitWarning = $('<div id="submit-warning" class="system-msg msg-warning">'+localization.getSubmitWarning(Init.getLocale())+'</div>');
+			$submitInfo = $('<div class="system-msg msg-info">'+localization.getSubmitInfo(locale)+'</div>');
+			$submitWarning = $('<div id="submit-warning" class="system-msg msg-warning">'+localization.getSubmitWarning(locale)+'</div>');
 			
 			$("#submit-warning").remove(); // Clear warning
 			
@@ -411,27 +427,54 @@ $(document).ready(function () {
 	
 
 /**
-* Chosen - Replacement for municipality select
-* ============================================
+* Municipality selection
+* ======================
+* 
+* - Initializes Chosen select
+* - Updates home municipality automatically
+* - Toggles home municipality membership radiobuttons
+* - Prevents or allows proceeding to next step in the form
+* 
 */	
-	var municipalitySelect, homeMunicipalitySelect, selectedMunicipality, differentMunicipality, sameMunicipality;
+	var municipalitySelect, homeMunicipalitySelect, selectedMunicipality, municipalityDiffers, municipalMembershipRadios,
+	isHomeMunicipality, equalMunicipalitys, slideOptions;
 
 	municipalitySelect =		 $('#municipality');
 	homeMunicipalitySelect =	 $('#homeMunicipality');
 	selectedMunicipalityElem =	 $('#selected-municipality');
-	differentMunicipality =		 $('.different-municipality');
-	sameMunicipality =			 $('.same-municipality');
+	municipalityDiffers =		 $('.municipalitys-differs');
+	municipalMembershipRadios =  $("input[name=municipalMembership]");
+	// Checks which one of the selects we are using
+	isHomeMunicipality = function(select){
+		if (select.attr('id') == homeMunicipalitySelect.attr('id') ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	equalMunicipalitys = function(){
+		if (municipalitySelect.val() == homeMunicipalitySelect.val()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	slideOptions = {
+		duration: speedFast, 
+		easing: 'easeOutExpo'
+	};
 
+ 	// Initialize chosen with localized text
+ 	$(".chzn-select").chosen({no_results_text: localization.chosenNoResults(locale)});
+	
+ 	// Update home municipality automatically
+	var updateHomeMunicipality = function(select){
+		var selectedMunicipalityId, selectedMunicipalityName;
+		
+		selectedMunicipalityId = select.val();
+		selectedMunicipalityName = select.find('option:selected').text();
 
- 	// Initialize chosen
- 	$(".chzn-select").chosen();
-
- 	// Listen the first chosen element
-	municipalitySelect.live('change', function() {
-		var selectedMunicipalityId = $(this).val();
-		var selectedMunicipalityName = $(this).find('option:selected').text();
-
-		// update text in the municipality data in Step 2
+		// update text in the municipality data in the form step 2
 		selectedMunicipalityElem.text(selectedMunicipalityName);
 
 		// if user has changed the homeMunicipality value we will not mess it up
@@ -440,57 +483,39 @@ $(document).ready(function () {
 			.val(selectedMunicipalityId)
 			.trigger("liszt:updated"); // updates dynamically the second chosen element
 		}
-	});
-
-	// Toggle suffrage fields according to user's choice
-	// FIXME: Changing #municipality should also toggle the block, altought it is not very common use case.
-	homeMunicipalitySelect.live('change', function() {
-		var thisSelect = $(this);
-
-		thisSelect.addClass("updated");
-
-		if( !municipalitySelect.val() || (thisSelect.val() == municipalitySelect.val())){
+	};
+	
+	// Show or hide the radiobutton selection for municipality membership
+	var toggleMembershipRadios = function(select){
+		if( equalMunicipalitys() ){
+			municipalityDiffers.stop(false,true).slideUp(slideOptions);
+			preventContinuing(false);
 			
-			differentMunicipality.stop(false,true).slideUp({
-				duration: speedFast, 
-				easing: 'easeOutExpo'
-			});
-
-			disableContinuing(false);
+			// Clear radiobuttons
+			municipalMembershipRadios.removeAttr('checked');
 			
-			console.log("piilota");
 			$('#franchise').removeClass('js-hide'); // TODO: finalize
 		} else {
+			municipalityDiffers.stop(false,true).slideDown(slideOptions);
+			preventContinuing(true);
 			
-			differentMunicipality.stop(false,true).slideDown({
-				duration: speedFast, 
-				easing: 'easeOutExpo'
-			});
-			
-			disableContinuing(true);
-			
-			console.log("näytä");
 			$('#franchise').addClass('js-hide'); // TODO: finalize
-			
-		}
-	});
-	
-	
-	// TODO: Finalize after prototype is done
-	// Make more dynamic disableContinuing and assureMembership
-	var disableContinuing = function(value){
-		console.log("value: "+value);
-
-		if (value) {
-			$("#button-next-2").addClass('disabled').attr('onClick','return false;');
-			$("#step-header-2, #step-header-3, #step-header-4").addClass('disabled');
-		} else {
-			$("#button-next-2").removeClass('disabled').attr('onClick','proceedTo(2); return false;');
-			$("#step-header-2, #step-header-3, #step-header-4").removeClass('disabled');
 		}
 	};
 	
-	var cbMunicipalMembership = $("input[name=municipalMembership]");
+	// Disable or enable the next button and clicking the other form block
+	// TODO: Make more dynamic
+	var preventContinuing = function(prevent){
+		var formBlockHeaders = $("#step-header-2, #step-header-3, #step-header-4");
+			
+		if (prevent) {
+			$("#button-next-2").addClass('disabled').attr('onClick','return false;');
+			formBlockHeaders.addClass('disabled');
+		} else {
+			$("#button-next-2").removeClass('disabled').attr('onClick','proceedTo(2); return false;');
+			formBlockHeaders.removeClass('disabled');
+		}
+	};
 	
 	jQuery.fn.assureMembership = function(){
 		var cb, btn, cbVal;
@@ -498,24 +523,43 @@ $(document).ready(function () {
 		cb = $(this);
 		btn = $('#button-next-2');
 		cbVal = function(){
-			//if (cb.is(':checked')){
 			if ($("input[name=municipalMembership]:checked").val() == "true"){
-				console.log("juu:"+cb.val());
 				btn.removeAttr('disabled').removeClass('disabled');
-				disableContinuing(false);
+				preventContinuing(false);
 			} else {
-				console.log("ei: "+cb.val());
 				btn.attr('disabled','disabled').addClass('disabled');
-				disableContinuing(true);
+				preventContinuing(true);
 			}
 		};
 		
-		//cbVal();
 		cb.change(function(){
 			cbVal();
 		});
 	};
-	cbMunicipalMembership.assureMembership();
+	municipalMembershipRadios.assureMembership();
+	
+	// Listen municipality selects
+	$('.municipality-select').live('change', function() {
+		var thisSelect = $(this);
+		
+		// Update home municipality automatically
+		if (!isHomeMunicipality(thisSelect)){
+			updateHomeMunicipality(thisSelect);
+		} else {
+			homeMunicipalitySelect.addClass("updated");
+		}
+		
+		// Toggle membership radiobuttons
+		toggleMembershipRadios(thisSelect);
+		
+		console.log("checked: "+municipalMembershipRadios.attr('checked'));
+		
+		// Disable / enable proceeding to the next form steps
+		if ( !municipalMembershipRadios.attr('checked')){
+			preventContinuing(!equalMunicipalitys());
+		}
+	});
+	
 	
 	
 	

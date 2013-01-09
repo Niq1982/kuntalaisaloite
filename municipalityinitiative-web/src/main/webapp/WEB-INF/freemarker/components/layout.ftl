@@ -223,30 +223,6 @@
                     <@u.message "otherServices.otaKantaa"/><span class="icon-small arrow-right"></span>
                 </a>
             </div>
-            
-            <div class="logged-in-info">
-                <#-- Authenticated = Logged in -->
-                <#if currentUser.authenticated>
-                    <#if currentUser.registered>
-                    <div class="dropdown">
-                        <a href="#" class="header-tool-link user-name dropdown-toggle">${currentUser.firstNames} ${currentUser.lastName}<span class="icon-small settings"></span></a>
-                        <ul id="user-menu" class="dropdown-menu user-menu">
-                            <#--<li><a href="${urls.myAccount()}">Omat tiedot</a></li>-->
-                            <#-- Registered = Authenticated and has initiatives (except OM/VRK-users) -->
-                            <li><a href="${urls.searchOwnOnly()}"><@u.message "user.myInitiatives"/></a></li>
-                            <#-- Show to OM user initiatives that have removable support votes. -->
-                            <#if currentUser.om><li><a href="${urls.searchUnremovedVotes()}"><@u.message "user.initiativesRemovableSupportVotes"/></a></li></#if>
-                            
-                        </ul>
-                    </div>
-                    <#else>
-                        <span class="header-tool-text">${currentUser.firstNames} ${currentUser.lastName}</span>
-                    </#if>
-                    <a href="${urls.logout()}" id="logout" class="header-tool-link logout"><@u.message "common.logout"/><span class="icon-small logout"></span></a>
-                <#else>
-                    <a href="${urls.login(springMacroRequestContext.requestUri)}" title="<@u.message "common.login"/>" class="header-tool-link login"><@u.message "common.login"/></a>
-                </#if>
-            </div>
                        
         </div>
     </div>
