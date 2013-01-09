@@ -25,10 +25,14 @@ public class JdbcComposerDaoTest {
 
     @Resource
     NEWTestHelper testHelper;
+    private Long testMunicipalityId;
+    private Long testInitiativeId;
 
     @Before
     public void setup() {
         testHelper.dbCleanup();
+        testMunicipalityId = testHelper.createTestMunicipality("Municipality");
+        testInitiativeId = testHelper.createTestInitiative(testMunicipalityId);
     }
 
     @Test
@@ -38,41 +42,60 @@ public class JdbcComposerDaoTest {
     }
 
     @Test
-    public void counts_all_supports_according_to_right_of_voting() {
-        ComposerCreateDto composerCreateDto = composerCreateDto();
-        composerCreateDto.right_of_voting = true;
-        composerDao.add(composerCreateDto);
-        composerDao.add(composerCreateDto);
+    public void counts_all_supports_according_to_right_of_voting_and_publicity_of_names() {
+        boolean rightOfVoting = true;
+        boolean publicName = true;
 
-        composerCreateDto.right_of_voting = false;
-        composerDao.add(composerCreateDto);
+        Long municipalityId = testHelper.createTestMunicipality("Other municipality");
+        Long initiativeId = testHelper.createTestInitiative(municipalityId);
 
-        SupportCount supportCount = composerDao.countSupports(composerCreateDto.municipalityInitiativeId);
-        assertThat(supportCount.no_right_of_voting, is(1L));
-        assertThat(supportCount.right_of_voting, is(2L));
+        createComposer(initiativeId, true, true);
+
+        createComposer(initiativeId, true, false);
+        createComposer(initiativeId, true, false);
+
+        createComposer(initiativeId, false, true);
+        createComposer(initiativeId, false, true);
+        createComposer(initiativeId, false, true);
+
+        createComposer(initiativeId, false, false);
+        createComposer(initiativeId, false, false);
+        createComposer(initiativeId, false, false);
+        createComposer(initiativeId, false, false);
+
+        SupportCount supportCount = composerDao.countSupports(initiativeId);
+        assertThat(supportCount.getRightOfVoting().getPublicNames(), is(1L));
+        assertThat(supportCount.getRightOfVoting().getPrivateNames(), is(2L));
+        assertThat(supportCount.getNoRightOfVoting().getPublicNames(), is(3L));
+        assertThat(supportCount.getNoRightOfVoting().getPrivateNames(), is(4L));
 
     }
 
     @Test
     public void wont_fail_if_counting_supports_when_no_supports() {
-        Long municipalityId = testHelper.createTestMunicipality("Municipality");
-        Long initiativeId = testHelper.createTestInitiative(municipalityId);
-
-        SupportCount supportCount = composerDao.countSupports(initiativeId);
-        assertThat(supportCount.no_right_of_voting, is(0L));
-        assertThat(supportCount.right_of_voting, is(0L));
-
+        SupportCount supportCount = composerDao.countSupports(testInitiativeId);
+        assertThat(supportCount.getRightOfVoting().getPublicNames(), is(0L));
+        assertThat(supportCount.getRightOfVoting().getPrivateNames(), is(0L));
+        assertThat(supportCount.getNoRightOfVoting().getPublicNames(), is(0L));
+        assertThat(supportCount.getNoRightOfVoting().getPrivateNames(), is(0L));
     }
 
-    private ComposerCreateDto composerCreateDto() {
-        Long municipalityId = testHelper.createTestMunicipality("Some municipality");
-        Long municipalityId2 = testHelper.createTestMunicipality("Other municipality");
-        Long initiativeId = testHelper.createTestInitiative(municipalityId);
-
+    private ComposerCreateDto createComposer(long initiativeId, boolean rightOfVoting, boolean publicName) {
         ComposerCreateDto composerCreateDto = new ComposerCreateDto();
         composerCreateDto.municipalityInitiativeId = initiativeId;
         composerCreateDto.name ="Composers name";
-        composerCreateDto.municipalityId = municipalityId2;
+        composerCreateDto.municipalityId = testMunicipalityId;
+        composerCreateDto.right_of_voting = rightOfVoting;
+        composerCreateDto.showName = publicName;
+        composerDao.add(composerCreateDto);
+        return composerCreateDto;
+    }
+
+    private ComposerCreateDto composerCreateDto() {
+        ComposerCreateDto composerCreateDto = new ComposerCreateDto();
+        composerCreateDto.municipalityInitiativeId = testInitiativeId;
+        composerCreateDto.name ="Composers name";
+        composerCreateDto.municipalityId = testMunicipalityId;
         composerCreateDto.right_of_voting = true;
         composerCreateDto.showName = true;
         return composerCreateDto;
