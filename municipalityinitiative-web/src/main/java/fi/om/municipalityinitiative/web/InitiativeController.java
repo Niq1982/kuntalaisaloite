@@ -29,7 +29,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import static fi.om.municipalityinitiative.dto.EditMode.FULL;
 import static fi.om.municipalityinitiative.dto.EditMode.NONE;
 import static fi.om.municipalityinitiative.web.Urls.*;
 import static fi.om.municipalityinitiative.web.Views.*;
@@ -234,51 +233,51 @@ public class InitiativeController extends BaseController {
     /*
      * View  
      */
-    @RequestMapping(value={ VIEW_FI, VIEW_SV }, method=GET)
-    public String view(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
-        Urls urls = Urls.get(locale);
-        model.addAttribute(ALT_URI_ATTR, urls.alt().view(initiativeId));
-        User user = userService.getCurrentUser();
-        Author author = getCurrentAuthor(initiativeId, user.getId());
-        
-        String invitationCode = getSessionInvitationCode(initiativeId, request);
-
-        addPiwicIdIfNotAuthenticated(model);
-        
-        // User needs to respond to invitation
-        if (invitationCode != null) {
-            InitiativePublic initiative = initiativeService.getInitiativeForPublic(initiativeId);
-            
-            model.addAttribute(ATTR_INVITATION_CODE, invitationCode); // May be null
-            model.addAttribute("initiative", initiative);
-
-            addVotingInfo(initiative, model);
-    
-            return INVITATION_VIEW;
-        }
-        // Management view for authors, om and vrk officials 
-        else if (author != null || user.isOm() || user.isVrk()) {
-            InitiativeManagement initiative = initiativeService.getInitiativeForManagement(initiativeId);
-
-            EditMode editMode;
-            if (initiative.getState() == InitiativeState.DRAFT) {
-                editMode = FULL;
-            } else {
-                editMode = getEditMode(request);
-            }
-            return managementView(model, initiative, null, editMode, request);
-        }
-        // Public view for anyone else
-        else {
-            InitiativePublic initiative = initiativeService.getInitiativeForPublic(initiativeId);
-            
-            model.addAttribute("initiative", initiative);
-            addVotingInfo(initiative, model);
-    
-            return PUBLIC_VIEW;
-        }
-       
-    }
+//    @RequestMapping(value={ VIEW_FI, VIEW_SV }, method=GET)
+//    public String view(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
+//        Urls urls = Urls.get(locale);
+//        model.addAttribute(ALT_URI_ATTR, urls.alt().view(initiativeId));
+//        User user = userService.getCurrentUser();
+//        Author author = getCurrentAuthor(initiativeId, user.getId());
+//
+//        String invitationCode = getSessionInvitationCode(initiativeId, request);
+//
+//        addPiwicIdIfNotAuthenticated(model);
+//
+//        // User needs to respond to invitation
+//        if (invitationCode != null) {
+//            InitiativePublic initiative = initiativeService.getInitiativeForPublic(initiativeId);
+//
+//            model.addAttribute(ATTR_INVITATION_CODE, invitationCode); // May be null
+//            model.addAttribute("initiative", initiative);
+//
+//            addVotingInfo(initiative, model);
+//
+//            return INVITATION_VIEW;
+//        }
+//        // Management view for authors, om and vrk officials
+//        else if (author != null || user.isOm() || user.isVrk()) {
+//            InitiativeManagement initiative = initiativeService.getInitiativeForManagement(initiativeId);
+//
+//            EditMode editMode;
+//            if (initiative.getState() == InitiativeState.DRAFT) {
+//                editMode = FULL;
+//            } else {
+//                editMode = getEditMode(request);
+//            }
+//            return managementView(model, initiative, null, editMode, request);
+//        }
+//        // Public view for anyone else
+//        else {
+//            InitiativePublic initiative = initiativeService.getInitiativeForPublic(initiativeId);
+//
+//            model.addAttribute("initiative", initiative);
+//            addVotingInfo(initiative, model);
+//
+//            return PUBLIC_VIEW;
+//        }
+//
+//    }
 
     @ModelAttribute
     public void addInitiativeDefaults(Locale locale, HttpServletRequest request, Model model) {

@@ -59,4 +59,14 @@ public class MunicipalityInitiativeService {
         return composerCreateDto;
     }
 
+    // TODO: Implement correct dao method
+    // TODO: Add SupportCount info to MunicipalityInitiativeInfo
+    public MunicipalityInitiativeInfo getMunicipalityInitiative(Long initiativeId) {
+        for (MunicipalityInitiativeInfo initiativeInfo : municipalityInitiativeDao.findAllNewestFirst()) {
+            if (initiativeInfo.getId().equals(initiativeId)) {
+                return initiativeInfo;
+            }
+        }
+        throw new NullPointerException("Initiative not found with id:" + initiativeId);
+    }
 }
