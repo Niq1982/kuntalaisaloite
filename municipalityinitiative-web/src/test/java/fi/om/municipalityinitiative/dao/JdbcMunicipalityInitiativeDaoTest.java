@@ -106,5 +106,6 @@ public class JdbcMunicipalityInitiativeDaoTest {
         assertThat(get.getContactAddress(), is(create.contactAddress));
         assertThat(get.getMunicipalityName(), is(testMunicipality.getName()));
         assertThat(get.getCreateTime(), is(notNullValue()));
+        assertThat(get.getId(), is(notNullValue()));
     }
 }

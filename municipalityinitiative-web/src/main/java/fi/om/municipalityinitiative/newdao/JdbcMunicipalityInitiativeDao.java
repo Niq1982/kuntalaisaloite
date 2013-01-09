@@ -81,6 +81,7 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
                 @Override
                 protected MunicipalityInitiativeInfo map(Tuple row) {
                     MunicipalityInitiativeInfo info = new MunicipalityInitiativeInfo();
+                    info.setId(row.get(municipalityInitiative.id));
                     info.setName(row.get(municipalityInitiative.name));
                     info.setProposal(row.get(municipalityInitiative.proposal));
                     info.setContactAddress(row.get(municipalityInitiative.contactAddress));
