@@ -36,6 +36,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
     public String search(MunicipalityInitiativeSearch search, Model model, Locale locale, HttpServletRequest request) {
         model.addAttribute("initiatives", municipalityInitiativeService.findMunicipalityInitiatives(search));
         model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
+        model.addAttribute("currentSearch", search);
         return SEARCH_VIEW;
     }
 
