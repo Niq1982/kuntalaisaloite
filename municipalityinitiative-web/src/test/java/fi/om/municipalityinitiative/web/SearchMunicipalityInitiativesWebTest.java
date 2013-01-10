@@ -18,9 +18,7 @@ public class SearchMunicipalityInitiativesWebTest extends NEWWebTestBase {
     }
 
     @Test
-    @Ignore
-    // XXX: This is just an example test case.
-    public void helsinki_is_listed_as_one_municipality() {
+    public void tuusula_is_listed_as_one_municipality() {
         newTestHelper.createTestMunicipality("Tuusula");
         open(urls.search());
 
