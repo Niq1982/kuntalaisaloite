@@ -1,17 +1,15 @@
 package fi.om.municipalityinitiative.web;
 
-import java.io.IOException;
-import java.util.Locale;
-
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
+import fi.om.municipalityinitiative.util.Locales;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
-
-import fi.om.municipalityinitiative.util.Locales;
+import java.io.IOException;
+import java.util.Locale;
 
 public class InfoRibbon {
     

@@ -1,33 +1,27 @@
 package fi.om.municipalityinitiative.web;
 
-import static fi.om.municipalityinitiative.util.Locales.LOCALE_FI;
-import static fi.om.municipalityinitiative.util.Locales.LOCALE_SV;
-import static fi.om.municipalityinitiative.web.Urls.*;
-import static fi.om.municipalityinitiative.web.Views.INDEX_VIEW;
-import static fi.om.municipalityinitiative.web.Views.HELP_VIEW;
-import static fi.om.municipalityinitiative.web.Views.NEWS_VIEW;
-import static fi.om.municipalityinitiative.web.Views.INFO_VIEW;
-import static fi.om.municipalityinitiative.web.Views.contextRelativeRedirect;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
+import com.google.common.base.Optional;
+import fi.om.municipalityinitiative.dao.NotFoundException;
+import fi.om.municipalityinitiative.util.Locales;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.google.common.base.Optional;
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
-import fi.om.municipalityinitiative.dao.NotFoundException;
-import fi.om.municipalityinitiative.util.Locales;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
+import static fi.om.municipalityinitiative.util.Locales.LOCALE_FI;
+import static fi.om.municipalityinitiative.util.Locales.LOCALE_SV;
+import static fi.om.municipalityinitiative.web.Urls.*;
+import static fi.om.municipalityinitiative.web.Views.*;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
 public class StaticPageController extends BaseController {

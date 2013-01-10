@@ -6,14 +6,15 @@ import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import fi.om.municipalityinitiative.conf.AppConfiguration.AppDevConfiguration;
 import fi.om.municipalityinitiative.conf.AppConfiguration.ProdPropertiesConfiguration;
 import fi.om.municipalityinitiative.conf.AppConfiguration.TestPropertiesConfigurer;
-import fi.om.municipalityinitiative.dao.*;
-import fi.om.municipalityinitiative.dto.FlowStateAnalyzer;
-import fi.om.municipalityinitiative.dto.InitiativeSettings;
+import fi.om.municipalityinitiative.dao.SQLExceptionTranslatorAspect;
 import fi.om.municipalityinitiative.newdao.*;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.util.TaskExecutorAspect;
 import fi.om.municipalityinitiative.validation.LocalValidatorFactoryBeanFix;
-import fi.om.municipalityinitiative.web.*;
+import fi.om.municipalityinitiative.web.CacheHeaderFilter;
+import fi.om.municipalityinitiative.web.ErrorFilter;
+import fi.om.municipalityinitiative.web.SecurityFilter;
+import fi.om.municipalityinitiative.web.Urls;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.utility.XmlEscape;
@@ -86,10 +87,6 @@ public class AppConfiguration {
     @Profile({"dev", "test"})
     public static class AppDevConfiguration {
 
-        @Bean
-        public TestDataService testDataService() {
-            return new TestDataServiceImpl();
-        }
 
     }
     
@@ -98,33 +95,8 @@ public class AppConfiguration {
      * BEANS
      */
     
-    @Bean
-    public InitiativeDao initiativeDao() {
-        return new InitiativeDaoImpl(queryFactory());
-    }
-    
-    @Bean
-    public SupportVoteDao supportVoteDao() {
-        return new SupportVoteDaoImpl();
-    }
-    
     private PostgresQueryFactory queryFactory() {
         return jdbcConfiguration.queryFactory();
-    }
-    
-    @Bean
-    public InitiativeService initiativesService() {
-        return new InitiativeServiceImpl();
-    }
-    
-    @Bean
-    public SupportVoteService supportVoteService() {
-        return new SupportVoteServiceImpl();
-    }
-    
-    @Bean
-    public HttpUserServiceImpl userService() {
-        return new HttpUserServiceImpl(userDao(), encryptionService());
     }
 
     @Bean
@@ -152,26 +124,6 @@ public class AppConfiguration {
         return new MunicipalityService();
     }
 
-    @Bean
-    public StatusService statusService() {
-        String testEmailSendTo = env.getProperty(PropertyNames.testEmailSendTo);
-        boolean testEmailConsoleOutput = env.getProperty(PropertyNames.testEmailConsoleOutput, Boolean.class, TEST_EMAIL_CONSOLE_OUTPUT_DEFAULT);
-        int messageSourceCacheSeconds = env.getProperty(PropertyNames.testMessageSourceCacheSeconds, Integer.class, TEST_MESSAGE_SOURCE_CACHE_SECONDS_DEFAULT);
-        boolean testFreemarkerShowErrorsOnPage = env.getProperty(PropertyNames.testFreemarkerShowErrorsOnPage, Boolean.class, TEST_FREEMARKER_SHOW_ERRORS_ON_PAGE_DEFAULT);
-
-        return new StatusServiceImpl(testEmailSendTo,
-                testEmailConsoleOutput, messageSourceCacheSeconds, testFreemarkerShowErrorsOnPage,
-                    WebConfiguration.optimizeResources(env),
-                WebConfiguration.resourcesVersion(env),
-                WebConfiguration.omPiwicId(env),
-                WebConfiguration.appVersion(env));
-    }
-    
-    @Bean
-    public UserDao userDao() {
-        return new UserDaoImpl(queryFactory());
-    }
-    
     @Bean
     public EncryptionService encryptionService() {
         return new EncryptionService(
@@ -228,27 +180,7 @@ public class AppConfiguration {
         }
         return sender;
     }
-    
-    @Bean 
-    public InitiativeSettings initiativeSettings() {
-        return new InitiativeSettings(
-                env.getRequiredProperty(PropertyNames.invitationExpirationDays, Integer.class), 
-                env.getRequiredProperty(PropertyNames.minSupportCountForSearch, Integer.class),
-                env.getRequiredProperty(PropertyNames.requiredVoteCount, Integer.class), 
-                getRequiredPeriod(PropertyNames.requiredMinSupportCountDuration), 
-                getRequiredPeriod(PropertyNames.votingDuration), 
-                getRequiredPeriod(PropertyNames.sendToVrkDuration), 
-                getRequiredPeriod(PropertyNames.sendToParliamentDuration),
-                getRequiredPeriod(PropertyNames.votesRemovalDuration),
-                getRequiredPeriod(PropertyNames.omSearchBeforeVotesRemovalDuration)
-            );
-    }
-    
-    @Bean
-    public FlowStateAnalyzer flowStateAnalyzer() {
-        return new FlowStateAnalyzer(initiativeSettings());
-    }
-    
+
     private Period getRequiredPeriod(String key) {
         return periodFormatter.parsePeriod(env.getRequiredProperty(key));
     }

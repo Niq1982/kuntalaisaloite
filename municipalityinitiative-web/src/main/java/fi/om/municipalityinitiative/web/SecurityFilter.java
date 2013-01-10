@@ -1,22 +1,17 @@
 package fi.om.municipalityinitiative.web;
 
-import java.io.IOException;
+import com.google.common.base.Throwables;
+import fi.om.municipalityinitiative.service.AuthenticationRequiredException;
+import org.springframework.web.util.NestedServletException;
+import org.springframework.web.util.UrlPathHelper;
 
-import javax.annotation.Resource;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.web.util.NestedServletException;
-import org.springframework.web.util.UrlPathHelper;
-
-import com.google.common.base.Throwables;
-
-import fi.om.municipalityinitiative.service.AuthenticationRequiredException;
+import java.io.IOException;
 
 public class SecurityFilter implements Filter {
-    
-    @Resource HttpUserService userService;
     
     private UrlPathHelper urlPathHelper = new UrlPathHelper();
     
@@ -39,7 +34,7 @@ public class SecurityFilter implements Filter {
         setNoCache(response);
         
         try {
-            userService.verifyCSRFToken(request);
+            // userService.verifyCSRFToken(request);
             chain.doFilter(servletRequest, servletResponse);
         } catch (CSRFException e) {
             csrfException(e, request, response);
@@ -65,7 +60,7 @@ public class SecurityFilter implements Filter {
     }
 
     private void csrfException(Exception e, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        userService.logout(request, response);
+        //userService.logout(request, response);
         propagateException(e);
     }
     
