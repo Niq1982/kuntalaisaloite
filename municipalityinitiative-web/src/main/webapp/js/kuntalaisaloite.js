@@ -639,6 +639,21 @@ $toggleAreaLabel.each(function (){
 	
 });
 	
+/**
+* Search form
+* ===========
+* 
+*/
+
+//Listen search form select
+$('.municipality-filter').live('change', function() {
+	var thisSelect = $(this);
+	
+	console.log("FIRED");
+	//$('#search').focus();
+	setTimeout(function () { $('#search').focus(); }, 50);
+	//$('#search').trigger('focus');
+});
 
 
 /**
