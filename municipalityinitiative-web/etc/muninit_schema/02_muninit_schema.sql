@@ -1,9 +1,12 @@
 create table municipality (
 	id bigserial,
-	name varchar(30),
+	name varchar(30) constraint municipality_name_nn not null,
+	name_sv varchar(30) constraint municipality_name_sv_nn not null,
+	email varchar(256),
 
 	constraint municipality_pk primary key(id),
-	constraint municipality_name_u unique(name)
+	constraint municipality_name_u unique(name),
+	constraint municipality_name_sv_u unique(name)
 );
 
 create index municipality_id_index on municipality(id);
@@ -16,6 +19,7 @@ create table municipality_initiative (
 
     name varchar(512) constraint municipality_initiative_name_nn not null,
     proposal text,
+    management_hash char(40),
 
     contact_name varchar(256),
     contact_email varchar(256),
@@ -36,7 +40,7 @@ create table composer (
 
 	municipality_id bigserial,
     show_name boolean constraint composer_public_name not null,
-    is_municipality_citizen boolean,
+    franchise boolean,
 
     constraint composer_pk primary key (id),
     constraint composer_municipality_initiative_id foreign key (municipality_initiative_id) references municipality_initiative(id)

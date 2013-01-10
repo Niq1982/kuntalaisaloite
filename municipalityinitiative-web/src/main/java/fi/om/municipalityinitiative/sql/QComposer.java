@@ -1,11 +1,14 @@
 package fi.om.municipalityinitiative.sql;
 
-import static com.mysema.query.types.PathMetadataFactory.*;
-
-import com.mysema.query.types.*;
-import com.mysema.query.types.path.*;
+import com.mysema.query.types.Path;
+import com.mysema.query.types.PathMetadata;
+import com.mysema.query.types.path.BooleanPath;
+import com.mysema.query.types.path.NumberPath;
+import com.mysema.query.types.path.StringPath;
 
 import javax.annotation.Generated;
+
+import static com.mysema.query.types.PathMetadataFactory.forVariable;
 
 
 /**
@@ -18,9 +21,9 @@ public class QComposer extends com.mysema.query.sql.RelationalPathBase<QComposer
 
     public static final QComposer composer = new QComposer("composer");
 
-    public final NumberPath<Long> id = createNumber("id", Long.class);
+    public final BooleanPath franchise = createBoolean("franchise");
 
-    public final BooleanPath isMunicipalityCitizen = createBoolean("is_municipality_citizen");
+    public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final NumberPath<Long> municipalityId = createNumber("municipality_id", Long.class);
 
