@@ -1,11 +1,12 @@
 package fi.om.municipalityinitiative.conf;
 
-import java.sql.Connection;
-
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.sql.DataSource;
-
+import com.jolbox.bonecp.BoneCPDataSource;
+import com.mysema.query.sql.PostgresTemplates;
+import com.mysema.query.sql.SQLTemplates;
+import com.mysema.query.sql.postgres.PostgresQueryFactory;
+import com.mysema.query.sql.types.DateTimeType;
+import com.mysema.query.sql.types.LocalDateType;
+import com.mysema.query.types.Ops;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -15,19 +16,11 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import com.jolbox.bonecp.BoneCPDataSource;
-import com.mysema.query.sql.PostgresTemplates;
-import com.mysema.query.sql.SQLTemplates;
-import com.mysema.query.sql.postgres.PostgresQueryFactory;
-import com.mysema.query.sql.types.DateTimeType;
-import com.mysema.query.sql.types.EnumAsObjectType;
-import com.mysema.query.sql.types.LocalDateType;
-import com.mysema.query.types.Ops;
+import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.sql.DataSource;
 
-import fi.om.municipalityinitiative.dto.AuthorRole;
-import fi.om.municipalityinitiative.dto.InitiativeState;
-import fi.om.municipalityinitiative.dto.LanguageCode;
-import fi.om.municipalityinitiative.dto.ProposalType;
+import java.sql.Connection;
 
 @Configuration
 public class JdbcConfiguration {
@@ -70,11 +63,6 @@ public class JdbcConfiguration {
         com.mysema.query.sql.Configuration configuration = new com.mysema.query.sql.Configuration(templates());
         configuration.register(new DateTimeType());
         configuration.register(new LocalDateType());
-        configuration.register("initiative", "proposalType", new EnumAsObjectType<ProposalType>(ProposalType.class));
-        configuration.register("initiative", "state", new EnumAsObjectType<InitiativeState>(InitiativeState.class));
-        configuration.register("initiative", "primaryLanguage", new EnumAsObjectType<LanguageCode>(LanguageCode.class));
-        configuration.register("initiative_author", "role", new EnumAsObjectType<AuthorRole>(AuthorRole.class));
-        configuration.register("initiative_invitation", "role", new EnumAsObjectType<AuthorRole>(AuthorRole.class));
         
         return configuration;
     }

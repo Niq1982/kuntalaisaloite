@@ -23,7 +23,7 @@ public class JdbcComposerDao implements ComposerDao {
     @Transactional(readOnly = false)
     public Long add(ComposerCreateDto createDto) {
         return queryFactory.insert(composer)
-                .set(composer.isMunicipalityCitizen, createDto.right_of_voting)
+                .set(composer.franchise, createDto.right_of_voting)
                 .set(composer.municipalityId, createDto.municipalityId)
                 .set(composer.municipalityInitiativeId, createDto.municipalityInitiativeId)
                 .set(composer.name, createDto.name)
@@ -36,9 +36,9 @@ public class JdbcComposerDao implements ComposerDao {
         List<Object[]> resultRowArray = queryFactory.query()
                 .from(composer)
                 .where(composer.municipalityInitiativeId.eq(municipalityId))
-                .groupBy(composer.isMunicipalityCitizen)
+                .groupBy(composer.franchise)
                 .groupBy(composer.showName)
-                .list(composer.id.count(), composer.isMunicipalityCitizen, composer.showName);
+                .list(composer.id.count(), composer.franchise, composer.showName);
 
         return parseToSupportCount(resultRowArray);
 

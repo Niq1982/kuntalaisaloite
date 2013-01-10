@@ -1,13 +1,12 @@
 package fi.om.municipalityinitiative.web;
 
-import java.util.Locale;
+import fi.om.municipalityinitiative.util.Locales;
+import org.springframework.web.servlet.LocaleResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.web.servlet.LocaleResolver;
-
-import fi.om.municipalityinitiative.util.Locales;
+import java.util.Locale;
 
 public class URILocaleResolver implements LocaleResolver {
 

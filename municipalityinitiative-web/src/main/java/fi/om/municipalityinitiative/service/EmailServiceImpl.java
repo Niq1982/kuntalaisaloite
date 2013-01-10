@@ -1,16 +1,16 @@
 package fi.om.municipalityinitiative.service;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.mysema.commons.lang.Assert;
+import fi.om.municipalityinitiative.util.Locales;
+import fi.om.municipalityinitiative.util.Task;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -18,21 +18,15 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Splitter;
-import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.mysema.commons.lang.Assert;
+import javax.annotation.Resource;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 
-import fi.om.municipalityinitiative.dto.*;
-import fi.om.municipalityinitiative.util.Locales;
-import fi.om.municipalityinitiative.util.Task;
-import fi.om.municipalityinitiative.web.SummaryMethod;
-import fi.om.municipalityinitiative.web.Urls;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.List;
+import java.util.Map;
 
 @Task
 public class EmailServiceImpl implements EmailService {
@@ -79,224 +73,8 @@ public class EmailServiceImpl implements EmailService {
         this.testConsoleOutput = testConsoleOutput;
     }
 
-    /* (non-Javadoc)
-     * @see fi.om.initiative.service.EmailService#sendInvitation(fi.om.initiative.dto.InitiativeManagement, fi.om.initiative.dto.Invitation)
-     */
-    @Override
-    public void sendInvitation(InitiativeManagement initiative, Invitation invitation) {
-        Assert.notNull(invitation, "invitation");
-        Assert.notNull(initiative, "initiative");
-        Author currentAuthor =  initiative.getCurrentAuthor();
-        Assert.notNull(currentAuthor, "currentAuthor");
 
-        String emailSendTo = invitation.getEmail();
-        //String emailReplyTo = initiative.getCurrentAuthor().getContactInfo().getEmail();
-        String emailReplyTo = null; // currently we use only default reply to address
-        String emailSubject;
 
-        if (invitation.isInitiator()) {
-            emailSubject = getEmailSubject("invitation.initiator");
-        } else if (invitation.isRepresentative()) {
-            emailSubject = getEmailSubject("invitation.representative");
-        } else if (invitation.isReserve()) {
-            emailSubject = getEmailSubject("invitation.reserve");
-        } else {
-            throw new IllegalArgumentException("Invitation is not representative, reserver nor initiator");
-        }
-        
-        Map<String, Object> dataMap = initMap(new InitiativePublic(initiative), new AuthorInfo(currentAuthor));
-        dataMap.put("invitation", invitation);
-        dataMap.put("expirationDays", invitationExpirationDays);
-
-        sendEmail(emailSendTo, emailReplyTo, emailSubject, "invitation", dataMap);
-    }
-
-    /* (non-Javadoc)
-     * @see fi.om.initiative.service.EmailService#sendInvitationSummary(fi.om.initiative.dto.InitiativeManagement)
-     */
-    @Override
-    public void sendInvitationSummary(InitiativeManagement initiative) {
-        Assert.notNull(initiative, "initiative");
-        Author currentAuthor =  initiative.getCurrentAuthor();
-        Assert.notNull(currentAuthor, "currentAuthor");
-
-        String emailSendTo = initiative.getCurrentAuthor().getContactInfo().getEmail();
-        if (Strings.isNullOrEmpty(emailSendTo)) {
-            return;
-        }
-
-        String emailSubject = getEmailSubject("invitation.summary");
-
-        Map<String, Object> dataMap = initMap(new InitiativePublic(initiative), new AuthorInfo(currentAuthor));
-        dataMap.put("expirationDays", invitationExpirationDays);
-        
-        sendEmail(emailSendTo, null, emailSubject, "invitationsummary", dataMap);
-    }
-
-    /* (non-Javadoc)
-     * @see fi.om.initiative.service.EmailService#sendNotificationToOM(fi.om.initiative.dto.InitiativeManagement)
-     */
-    @Override
-    public void sendNotificationToOM(InitiativeManagement initiative) {
-        Assert.notNull(initiative, "initiative");
-        sendNotificationTo(initiative, NotificationKey.OM, sendToOM, initMap(new InitiativePublic(initiative)));
-    }
-    
-    /* (non-Javadoc)
-     * @see fi.om.initiative.service.EmailService#sendNotificationToVRK(fi.om.initiative.dto.InitiativeManagement, int)
-     */
-    @Override
-    public void sendNotificationToVRK(InitiativeManagement initiative, int batchSize) {
-        Assert.notNull(initiative, "initiative");
-        Map<String, Object> dataMap = initMap(new InitiativePublic(initiative));
-        dataMap.put("batchSize", batchSize);
-        sendNotificationTo(initiative, NotificationKey.VRK, sendToVRK, dataMap);
-    }
-
-    private void sendNotificationTo(InitiativeManagement initiative, NotificationKey key, String emailSendTo, Map<String, Object> dataMap) {
-        Assert.notNull(initiative, "initiative");
-        
-        String initiativeName = initiative.getName().getFi();
-        if (initiativeName == null) {
-            initiativeName = initiative.getName().getSv();
-        } else if (initiative.getName().getSv() != null) {
-            initiativeName += " / " + initiative.getName().getSv();
-        }
-        String emailSubject = getEmailSubject("notification.to." + key, initiativeName);
-
-        sendEmail(emailSendTo, null, emailSubject, "notification-to-" + key, dataMap);
-    }
-    
-    
-    /* (non-Javadoc)
-     * @see fi.om.initiative.service.EmailService#sendInvitationRejectedInfoToVEVs(fi.om.initiative.dto.InitiativePublic, java.lang.String, java.util.List)
-     */
-    @Override
-    public void sendInvitationRejectedInfoToVEVs(InitiativeManagement initiative, String rejectedEmail, List<String> authorEmails) {
-        Assert.notNull(initiative, "initiative");
-        
-        Map<String, Object> dataMap = initMap(initiative);
-        dataMap.put("rejectedEmail", rejectedEmail);
-        dataMap.put("enoughConfirmedAuthors", initiative.isEnoughConfirmedAuthors());
-        dataMap.put("totalUnconfirmedCount", initiative.getTotalUnconfirmedCount());
-
-        sendStatusInfoToVEVs(initiative, authorEmails, EmailMessageType.INVITATION_REJECTED, dataMap);
-    }
-
-    @Override
-    public void sendInvitationAcceptedInfoToVEVs(InitiativeManagement initiative, List<String> authorEmails) {
-        Assert.notNull(initiative, "initiative");
-        Author currentAuthor =  initiative.getCurrentAuthor();
-        sendAuthorStatusInfoToVEVs(initiative, currentAuthor, authorEmails, EmailMessageType.INVITATION_ACCEPTED);
-    }
-
-    @Override
-    public void sendAuthorConfirmedInfoToVEVs(InitiativeManagement initiative, List<String> authorEmails) {
-        Assert.notNull(initiative, "initiative");
-        Author currentAuthor =  initiative.getCurrentAuthor();
-        sendAuthorStatusInfoToVEVs(initiative, currentAuthor, authorEmails, EmailMessageType.AUTHOR_CONFIRMED);
-    }
-
-    @Override
-    public void sendAuthorRemovedInfoToVEVs(InitiativeManagement initiative, Author removedAuthor, List<String> authorEmails) {
-        sendAuthorStatusInfoToVEVs(initiative, removedAuthor, authorEmails, EmailMessageType.AUTHOR_REMOVED);
-    }
-    
-    private void sendAuthorStatusInfoToVEVs(InitiativeManagement initiative, Author changedAuthor, List<String> authorEmails, EmailMessageType emailMessageType) {
-        Assert.notNull(initiative, "initiative");
-        Assert.notNull(changedAuthor, "changedAuthor");
-        
-        Map<String, Object> dataMap = initMap(initiative, new AuthorInfo(changedAuthor));
-        dataMap.put("enoughConfirmedAuthors", initiative.isEnoughConfirmedAuthors());
-        dataMap.put("totalUnconfirmedCount", initiative.getTotalUnconfirmedCount());
-
-        sendStatusInfoToVEVs(initiative, authorEmails, emailMessageType, dataMap);
-    }
-
-    
-    
-    /* (non-Javadoc)
-     * @see fi.om.initiative.service.EmailService#sendConfirmationRequest(fi.om.initiative.dto.InitiativeManagement, fi.om.initiative.dto.Author)
-     */
-    @Override
-    public void sendConfirmationRequest(InitiativeManagement initiative, Author author) {
-        Assert.notNull(initiative, "initiative");
-        Assert.notNull(author, "author");
-
-        String emailSendTo = author.getContactInfo().getEmail();
-        if (Strings.isNullOrEmpty(emailSendTo)) {
-            return;
-
-        }
-        sendStatusInfoToVEVs(new InitiativePublic(initiative), addAuthorEmail(author, Lists.<String>newArrayList()), EmailMessageType.CONFIRM_ROLE, null);
-    }
-    
-    private List<String> addAuthorEmail(Author author, List<String> emails) {
-        String emailSendTo = author.getContactInfo().getEmail();
-        if (!Strings.isNullOrEmpty(emailSendTo)) {
-            emails.add(emailSendTo);
-        }
-        return emails;
-    }
-
-    /* (non-Javadoc)
-     * @see fi.om.initiative.service.EmailService#sendStatusInfoToVEVs(fi.om.initiative.dto.InitiativeManagement, fi.om.initiative.service.EmailMessageType)
-     */
-    @Override
-    public void sendStatusInfoToVEVs(InitiativeManagement initiative, EmailMessageType emailMessageType) {
-        Assert.notNull(initiative, "initiative");
-        
-        Map<String, Object> dataMap = initMap(initiative);
-        if (emailMessageType == EmailMessageType.ACCEPTED_BY_OM || emailMessageType == EmailMessageType.REJECTED_BY_OM) {
-            dataMap.put("stateComment", initiative.getStateComment());
-            dataMap.put("acceptanceIdentifier", initiative.getAcceptanceIdentifier());
-        }
-        
-        sendStatusInfoToVEVs(initiative, getConfirmedAuthorEmails(initiative.getAuthors()), emailMessageType, dataMap);
-    }
-
-    private void sendStatusInfoToVEVs(InitiativeBase initiative, List<String> authorEmails, EmailMessageType emailMessageType, Map<String, Object> dataMap) {
-        Assert.notNull(initiative, "initiative");
-
-        String emailSubject = getEmailSubject("status.info." + emailMessageType);
-
-        if (dataMap == null) {
-            dataMap = initMap(initiative);
-        }
-        addEnum(EmailMessageType.class, dataMap);
-        dataMap.put("emailMessageType", emailMessageType);
-        
-        sendEmails(authorEmails, null, emailSubject, "status-info-to-vev", dataMap);
-    }
-
-    private List<String> getConfirmedAuthorEmails(List<Author> authors) {
-        List<String> emails = Lists.newArrayList();
-        for (Author author : authors) {
-            if (!author.isUnconfirmed()) {
-                addAuthorEmail(author, emails);
-            }
-        }
-        return emails;
-    }
-
-    private Map<String, Object> initMap(InitiativeBase initiative) {
-        return initMap(initiative, null);
-    }
-    
-    private Map<String, Object> initMap(InitiativeBase initiative, AuthorInfo currentAuthor) {
-        Map<String, Object> dataMap = new HashMap<String, Object>();
-        dataMap.put("baseURL", baseURL);
-        dataMap.put("urlsFi", Urls.get(Locales.LOCALE_FI));
-        dataMap.put("urlsSv", Urls.get(Locales.LOCALE_SV));
-        dataMap.put("summaryMethod", SummaryMethod.INSTANCE);
-        dataMap.put("dateFormatFi", messageSource.getMessage("date.format", null, Locales.LOCALE_FI));
-        dataMap.put("dateFormatSv", messageSource.getMessage("date.format", null, Locales.LOCALE_SV));
-        dataMap.put("initiative", initiative);
-        if (currentAuthor != null) {
-            dataMap.put("currentAuthor", currentAuthor);
-        }
-        return dataMap;
-    }
 
     private <T extends Enum<?>> void addEnum(Class<T> enumType, Map<String, Object> dataMap) {
         Map<String, T> values = Maps.newHashMap();
@@ -386,15 +164,6 @@ public class EmailServiceImpl implements EmailService {
             throw new RuntimeException(e);
         }
     }
-
-    /* (non-Javadoc)
-     * @see fi.om.initiative.service.EmailService#sendVRKResolutionToVEVs(fi.om.initiative.dto.InitiativeManagement)
-     */
-    @Override
-    public void sendVRKResolutionToVEVs(InitiativeManagement initiative) {
-        sendStatusInfoToVEVs(initiative, EmailMessageType.VRK_RESOLUTION);
-    }
-
     private String stripTextRows(String text, int maxEmptyRows) {
 //        Iterable<String> textRows = Splitter.on('\n').trimResults().split(text);
         List<String> rows = Lists.newArrayList(Splitter.on('\n').trimResults().split(text));

@@ -35,6 +35,7 @@ public class NEWTestHelper {
     public Long createTestMunicipality(String name) {
         return queryFactory.insert(QMunicipality.municipality)
                     .set(QMunicipality.municipality.name, name)
+                    .set(QMunicipality.municipality.nameSv, name)
                 .executeWithKey(QMunicipality.municipality.id);
     }
 

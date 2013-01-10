@@ -8,11 +8,13 @@ import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import fi.om.municipalityinitiative.conf.WebConfiguration.WebDevConfiguration;
 import fi.om.municipalityinitiative.conf.WebConfiguration.WebProdConfiguration;
-import fi.om.municipalityinitiative.dto.vetuma.VetumaLoginRequest;
 import fi.om.municipalityinitiative.json.JsonIdAnnotationIntrospector;
 import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeCreateController;
 import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeViewController;
-import fi.om.municipalityinitiative.web.*;
+import fi.om.municipalityinitiative.web.ErrorController;
+import fi.om.municipalityinitiative.web.JsonpMessageConverter;
+import fi.om.municipalityinitiative.web.StaticPageController;
+import fi.om.municipalityinitiative.web.URILocaleResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -35,8 +37,6 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Locale;
 
-import static fi.om.municipalityinitiative.dto.vetuma.VetumaRequest.Action.EXTAUTH;
-import static fi.om.municipalityinitiative.dto.vetuma.VetumaRequest.Type.LOGIN;
 
 @Configuration
 //@EnableWebMvc -- replaced by "extends WebMvcConfigurationSupport"
@@ -54,15 +54,6 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
     public static class WebDevConfiguration {
 
         @Inject Environment env;
-
-        @Bean
-        public DevController devController() {
-            return new DevController(
-                    env.getRequiredProperty(PropertyNames.baseURL),
-                    optimizeResources(env),
-                    resourcesVersion(env)
-                    );
-        }
 
     }
 
@@ -94,40 +85,6 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
     @Configuration
     @Profile("prod")
     public static class WebProdConfiguration {
-
-        @Inject Environment env;
-        @Bean
-        public VetumaController vetumaController() {
-            // FIXME: Ugly: ensure that vetuma.sharedSecret is defined - used by EncryptionService
-            env.getRequiredProperty(PropertyNames.vetumaSharedSecret);
-            return new VetumaController(
-                    env.getRequiredProperty(PropertyNames.vetumaURL),
-                    env.getRequiredProperty(PropertyNames.baseURL),
-                    optimizeResources(env),
-                    resourcesVersion(env)
-                );
-        }
-
-        @Bean
-        public VetumaLoginRequest loginRequestDefaults() {
-            VetumaLoginRequest request = new VetumaLoginRequest();
-
-            // Constants
-            request.setTYPE(LOGIN);
-            request.setAU(EXTAUTH);
-            request.setEXTRADATA("VTJTT=VTJ-VETUMA-Perus");
-
-            // Configured (encrypted)
-            request.setRCVID(env.getRequiredProperty(PropertyNames.vetumaRCVID));
-            request.setSO(env.getRequiredProperty(PropertyNames.vetumaSO));
-            request.setSOLIST(env.getRequiredProperty(PropertyNames.vetumaSOLIST));
-            request.setAP(env.getRequiredProperty(PropertyNames.vetumaAP));
-            request.setAPPNAME(env.getRequiredProperty(PropertyNames.vetumaAPPNAME));
-            request.setAPPID(env.getRequiredProperty(PropertyNames.vetumaAPPID));
-
-            return request;
-        }
-
     }
 
 
@@ -226,13 +183,6 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
         return new JsonpMessageConverter<>(jsonConverter());
     }
 
-    @Bean
-    public InitiativeController initiativeController() {
-        return new InitiativeController(
-                optimizeResources(env),
-                resourcesVersion(env),
-                omPiwicId(env));
-    }
 
     @Bean
     public MunicipalityInitiativeCreateController municipalityInitiativeCreateController() {
@@ -250,16 +200,6 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
                 optimizeResources(env),
                 resourcesVersion(env),
                 omPiwicId(env));
-    }
-
-    @Bean
-    public SupportVoteController supportVoteController() {
-        return new SupportVoteController(optimizeResources(env), resourcesVersion(env));
-    }
-
-    @Bean
-    public UserController userController() {
-        return new UserController(optimizeResources(env), resourcesVersion(env));
     }
     
     @Bean
