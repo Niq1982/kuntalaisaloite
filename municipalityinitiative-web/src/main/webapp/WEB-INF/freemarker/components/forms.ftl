@@ -11,6 +11,7 @@
  * @param value is the spring.status.value of the current field
 -->
 <#macro localizePath path value="">
+    
     <#if value?? && value?is_hash>
         <#global pathLocale>${path+"."+locale}</#global>
     <#else>
@@ -45,11 +46,7 @@
 -->
 <#macro formLabel path required optional>
     <#assign labelKey = fieldLabelKey(path) />
-    <#if spring.status.value?? && spring.status.value?is_hash>
-        <#assign forAttr = spring.status.expression+"."+locale />
-    <#else>
-        <#assign forAttr = spring.status.expression />
-    </#if>
+    <#assign forAttr = spring.status.expression />
             
     <label class="input-header" for="${forAttr!""}">
         <@u.message labelKey /> <#if required != ""><@u.icon type="required" size="small" /></#if>
@@ -76,16 +73,16 @@
 -->
 <#macro textField path required optional cssClass="" attributes="" maxLength="" fieldType="text">
     <@spring.bind path />  
-    <@localizePath path spring.status.value />
+    <#--<@localizePath path spring.status.value />-->
     
-    <@formLabel pathLocale required optional>
+    <@formLabel path required optional>
         <#--
             TODO: add attribute required to attributes for jQueryTools validation
             <#if required?has_content>required="required"</#if>
         -->
-        <@spring.bind pathLocale />
+        
         <@showError />
-        <@spring.formInput pathLocale, 'class="'+cssClass+'" maxlength="'+maxLength+'" '+attributes fieldType />
+        <@spring.formInput path, 'class="'+cssClass+'" maxlength="'+maxLength+'" '+attributes fieldType />
     </@formLabel>
 </#macro>
 
@@ -102,11 +99,11 @@
 -->
 <#macro simpleTextField path cssClass="" attributes="" maxLength="" cssErrorClass="">
     <@spring.bind path />  
-    <@localizePath path spring.status.value />
+    <#--<@localizePath path spring.status.value />-->
     
     <@showError cssClass=cssErrorClass />
     
-    <@spring.formInput pathLocale, 'class="'+cssClass+'" maxlength="'+maxLength+'" '+attributes />
+    <@spring.formInput path, 'class="'+cssClass+'" maxlength="'+maxLength+'" '+attributes />
 </#macro>
 
 <#--
@@ -119,16 +116,16 @@
 -->
 <#macro textarea path required optional cssClass="">
     <@spring.bind path />
-    <@localizePath path spring.status.value />  
+    <#--<@localizePath path spring.status.value />-->  
 
-    <@formLabel pathLocale required optional>
+    <@formLabel path required optional>
         <#--
             TODO: add attribute required to attributes for jQueryTools validation
             <#if required?has_content>required="required"</#if>
         -->
-        <@spring.bind pathLocale />
+        
         <@showError />
-        <@spring.formTextarea pathLocale, 'class="'+cssClass+'"' />
+        <@spring.formTextarea path, 'class="'+cssClass+'"' />
     
     </@formLabel>
 </#macro>
@@ -163,21 +160,62 @@
  * @param required generates an icon and can be used in JS-validation
  * @param attributes an additional string of arbitrary tags or text to be included within the HTML tag itself
 -->
-<#macro radiobutton path options required="" attributes="">
+<#macro radiobutton path options required="" attributes="" header=true>
     <@spring.bind path />  
  
-    <div class="input-header">
-        <@u.message path /><#if required != ""> <@u.icon type="required" size="small" /></#if>
-    </div>
+    <#if header>
+        <div class="input-header">
+            <@u.message path /><#if required != ""> <@u.icon type="required" size="small" /></#if>
+        </div>
+    </#if>
     
     <#list options?keys as value>
-        <label class="inline">
+        <label>
             <input type="radio" id="${options[value]}" name="${spring.status.expression}" value="${value}"
                 <#if spring.stringStatusValue == value>checked="checked"</#if> ${attributes}
             <@spring.closeTag/>
-            <@u.message "${options[value]}" /><br />
+            <span class="label"><@u.message "${options[value]}" /></span>
         </label>
     </#list>
+</#macro>
+
+<#--
+ * formSingleSelect
+ *
+ * Show a selectbox (dropdown) input element allowing a single value to be chosen
+ * from a list of options.
+ *
+ * @param path the name of the field to bind to
+ * @param options a map (value=label) of all the available options
+ * @param attributes any additional attributes for the element (such as class
+ *        or CSS styles or size
+-->
+<#macro formSingleSelect path options required="" cssClass="" attributes="">
+    <@spring.bind path />
+    
+    <@formLabel path required false />
+    
+    <select name="${spring.status.expression}" id="${spring.status.expression}" ${attributes} class="chzn-select ${cssClass}" data-placeholder="<@u.message "initiative.chooseMunicipality" />">
+        <option value="default"><@u.message "initiative.chooseMunicipality" /></option>
+        <#list options as option>
+            <option value="${option.id}"<@checkSelected option.id />>${option.name}</option>
+        </#list>
+    </select>
+</#macro>
+
+<#--
+ * checkSelected
+ *
+ * Check a value in a list to see if it is the currently selected value.
+ * If so, add the 'selected="selected"' text to the output.
+ * Handles values of numeric and string types.
+ * This function is used internally but can be accessed by user code if required.
+ *
+ * @param value the current value in a list iteration
+-->
+<#macro checkSelected value>
+    <#if spring.stringStatusValue?is_number && spring.stringStatusValue == value?number>selected="selected"</#if>
+    <#if spring.stringStatusValue?is_string && spring.stringStatusValue == value?string>selected="selected"</#if>
 </#macro>
 
 <#--

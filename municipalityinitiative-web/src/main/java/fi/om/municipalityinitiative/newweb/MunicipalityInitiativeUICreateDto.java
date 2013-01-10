@@ -13,6 +13,14 @@ public class MunicipalityInitiativeUICreateDto {
     private long municipality;
     
     private long homeMunicipality;
+    
+    private String contactName;
+    
+    private String contactEmail;
+    
+    private String contactPhone;
+    
+    private String contactAddress;
 
     public String getName() {
         return name;
@@ -60,6 +68,38 @@ public class MunicipalityInitiativeUICreateDto {
 
     public void setHomeMunicipality(long homeMunicipality) {
         this.homeMunicipality = homeMunicipality;
+    }
+
+    public String getContactName() {
+        return contactName;
+    }
+
+    public void setContactName(String contactName) {
+        this.contactName = contactName;
+    }
+
+    public String getContactEmail() {
+        return contactEmail;
+    }
+
+    public void setContactEmail(String contactEmail) {
+        this.contactEmail = contactEmail;
+    }
+
+    public String getContactPhone() {
+        return contactPhone;
+    }
+
+    public void setContactPhone(String contactPhone) {
+        this.contactPhone = contactPhone;
+    }
+
+    public String getContactAddress() {
+        return contactAddress;
+    }
+
+    public void setContactAddress(String contactAddress) {
+        this.contactAddress = contactAddress;
     }
     
 }

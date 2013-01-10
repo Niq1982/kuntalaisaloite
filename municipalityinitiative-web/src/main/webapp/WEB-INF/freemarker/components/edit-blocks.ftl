@@ -64,73 +64,34 @@
         </div>
 
         <div class="input-block-content">
-            <#--<@u.systemMessage path="initiative.municipality.description" type="info" showClose=false />-->
-            <div class="system-msg msg-info ">
-                <#--Valitse kunta, jolle haluat tehdä aloitteen<br/>-->
-                <a href="#" rel="external" class="external">Mille kunnalle minulla on oikeus tehdä aloite?</a>  
-            </div>
+            <#assign href="#" />
+            <@u.systemMessage path="initiative.municipality.description" type="info" showClose=false args=[href] />
         </div>
         
         <div class="input-block-content">       
-                    
-            <label class="input-header" for="municipality">
-                Valitse kunta, jolle teet aloitteen <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span>
-            </label>
-
-            <select data-placeholder="Valitse kunta" id="municipality" name="municipality" tabindex="1" class="chzn-select municipality-select">
-                <option value=""></option>
-                <#--<noscript><option value="">Valitse</option></noscript>-->
-                <#list municipalities as municipality>
-                    <option value="${municipality.id}">${municipality.name}</option>
-                </#list>
-            </select>
+            <@f.formSingleSelect path="initiative.municipality" options=municipalities required="required" cssClass="municipality-select" />
         </div>
         <div class="input-block-content">
-            
-            <label class="input-header" for="homeMunicipality">
-                Valitse oma kotikuntasi <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span>
-            </label>
-
-            <select data-placeholder="Valitse kunta" id="homeMunicipality" name="homeMunicipality" tabindex="2" class="chzn-select municipality-select">
-                <option value=""></option>
-                <#--<noscript><option value="">Valitse</option></noscript>-->
-                <#list municipalities as municipality>
-                    <option value="${municipality.id}">${municipality.name}</option>
-                </#list>
-            </select>
-
+            <@f.formSingleSelect path="initiative.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" />
         </div>
         <br class="clear" />
         
-
-        
-        <#-- TODO: NOJS vs. JS -->
         <div class="municipalitys-differs js-hide hidden">
             <div class="input-block-content">
-                <div class="system-msg msg-info ">
-                    Kotikuntasi ei ole kunta, jota aloite koskee. Voit silti liittyä aloitteen tekijäksi, jos olet aloitteen kunnan jäsen. <a href="#" rel="external" class="external">Mitä tämä tarkoittaa?</a>    
-                </div>
+                <#assign href="#" />
+                <@u.systemMessage path="initiative.municipality.municipalitysDiffers" type="info" showClose=false args=[href] />
             </div>
             <div class="input-block-content">
-                
-                <#--<label>
-                    <input type="checkbox" name="municipalMembership" id="municipalMembership" /><span class="label">Vakuutan, että olen vähintään sen kunnan jäsen jota aloite koskee ja ymmärrän <a href="#" rel="external" class="external">ehdot</a>.</span>
-                </label>-->
-                
-                <label>
-                    <input type="radio" name="municipalMembership" value="true" class="" /><span class="label">Olen sen kunnan jäsen, jota aloite koskee</span>
-                </label>
-                <label>
-                    <input type="radio" name="municipalMembership" value="false" class="" /><span class="label">En ole aloitteen kunnan jäsen</span>
-                </label>
+                <@f.radiobutton path="initiative.municipalMembership" required="" options={"true":"initiative.municipalMembership.true", "false":"initiative.municipalMembership.false"} attributes="" header=false />
             </div>
         </div>
 
+        <#-- Different treat for NOSCRIPT-users. Dummy checkbox for better UX. -->
         <noscript>
         <div class="input-block-content">
             <label>
-                <input type="checkbox" name="municipalMembership" id="municipalMembership" checked="checked" disabled="disabled" /><span class="label">Jos aloitteen kunta on eri kuin kotikuntani, vakuutan olevani aloitteen kunnan jäsen. <a href="#" rel="external" class="external">Mitä tämä tarkoittaa?</a></span>
-                
+                <#assign href="#" />
+                <input type="checkbox" name="municipalMembership" id="municipalMembership" checked="checked" disabled="disabled" /><span class="label"><@u.messageHTML key="initiative.checkMembership" args=[href] /></span>
             </label>
         </div>
         </noscript>
@@ -159,18 +120,15 @@
         </div>
 
         <div class="input-block-content">
-            <#--<@u.systemMessage path="initiative.municipality.description" type="info" showClose=false />-->
-            <div class="system-msg msg-info ">
-                <#--Täytä aloitteen sisältö<br/>-->
-                <a href="#" rel="external" class="external">Vinkkejä hyvän aloitteen kirjoittamiseen</a>  
-            </div>
+            <#assign href="#" />
+            <@u.systemMessage path="initiative.proposal.description" type="info" showClose=false args=[href] />  
         </div>
         
         <div class="input-block-content">      
             <div class="input-header hidden">
-                Kunta
+                <@u.message "selectedMunicipality.title" />
             </div>
-            <p id="selected-municipality" class="hidden"><i>Ei valittu</i></p>
+            <p id="selected-municipality" class="hidden"><i><@u.message "selectedMunicipality.notSelected" /></i></p>
             
             <@f.textField path="initiative.name" required="required" optional=true cssClass="large" maxLength=InitiativeConstants.INITIATIVE_NAME_MAX?string("#") />
         </div>
@@ -209,28 +167,25 @@
         </div>
 
          <div class="input-block-content">
-            <div class="system-msg msg-info ">
-                Anna omat tietosi. Vaikka voit piilottaa nimesi Kuntalaisaloite.fi-palvelussa, voi kunta silti julkistaa sinun ja muiden tekijöiden nimet aloitetta käsitellessään.  
-            </div>
+            <@u.systemMessage path="initiative.ownDetails.description" type="info" showClose=false />  
         </div>
         
         <div class="input-block-content">
             <label for="author.name" class="input-header">
                 Nimi <span title="Pakollinen kenttä" class="icon-small required trigger-tooltip"></span>
             </label>
-            <input type="text" maxlength="512" class="large" value="" name="author.name" id="author.name">
+            <@f.textField path="initiative.contactName" required="required" optional=true cssClass="large" maxLength="512" />
             
             <#--<@f.textField path="author.name" required="required" cssClass="large" maxLength="512" />-->
 
             <label>
-                <input type="checkbox" /> Nimeni saa näkyä tämän aloitteen tekijänä Kuntalaisaloite.fi-palvelussa.
+                <input type="checkbox" id="allowPublicName" name="allowPublicName"><span class="label"><@u.message "initiative.allowPublicName" /></a></span>
             </label>
+            
         </div>
 
         <div class="input-block-content">
-            <div class="system-msg msg-info ">
-                Anna vähintään yksi yhteystieto. Nämä eivät tule näkyviin Kuntalaisaloite.fi-palvelussa, mutta ne näkyvät valitsemallasi kunnalle. Kunta voi ottaa sinuun yhteyttä näiden yhteystietojen kautta. Tekemäsi aloitteen linkki lähetetään antamaasi sähköpostiosoitteeseen.
-            </div>
+            <@u.systemMessage path="initiative.contactInfo.description" type="info" showClose=false />
         </div>
 
         <div class="input-block-content">
@@ -241,17 +196,17 @@
             <div class="initiative-own-details-area">
                 <div class="column col-1of2">
                     <label>
-                        Sähköposti    <input type="text" maxlength="256" class="medium" value="" name="currentAuthor.contactInfo.email" id="currentAuthor.contactInfo.email">
+                        Sähköposti    <input type="text" maxlength="256" class="medium" value="" name="initiative.contactEmail" id="currentAuthor.contactEmail" />
                     </label>
                     
                     <label>
-                        Puhelin    <input type="text" maxlength="128" class="medium" value="" name="currentAuthor.contactInfo.phone" id="currentAuthor.contactInfo.phone">
+                        Puhelin    <input type="text" maxlength="128" class="medium" value="" name="initiative.contactPhone" id="initiative.contactPhone" />
                     </label>
                 </div>
                 
                 <div class="column col-1of2 last">
                     <label>
-                        Osoite    <textarea maxlength="1000" class="address-field noresize" name="currentAuthor.contactInfo.address" id="currentAuthor.contactInfo.address"></textarea>
+                        Osoite    <textarea maxlength="1000" class="address-field noresize" name="initiative.contactAddress" id="initiative.contactAddress"></textarea>
                     </label>
                 </div>
             </div>
@@ -285,12 +240,10 @@
         </div>
 
         <div class="input-block-content">
-            <#--<@u.systemMessage path="initiative.municipality.description" type="info" showClose=false />-->
-                <div class="system-msg msg-info ">
-                   Valitse, haluatko lähettää aloitteen keti kuntaan vai kerätä siihen ensin lisää tekijöitä Kuntalaisaloite.fi:ssä. Tekijäksi liittyminen on mahdollista heti kun aloite tallennetaan. Kun kunta aikanaan saa aloitteen, se voi halutessaan julkaista keikkien tekijöiden nimet.
-                </div>
+            <@u.systemMessage path="initiative.save.description" type="info" showClose=false />
         </div>
         
+        <#-- TODO: Finalize the test layout.-->
         <div class="input-block-content">
         
             <div class="column-separator cf">

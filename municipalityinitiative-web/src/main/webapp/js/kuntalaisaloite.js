@@ -436,9 +436,10 @@ $(document).ready(function () {
 * - Prevents or allows proceeding to next step in the form
 * 
 */	
-	var municipalitySelect, homeMunicipalitySelect, selectedMunicipality, municipalityDiffers, municipalMembershipRadios,
+	var chznSelect, municipalitySelect, homeMunicipalitySelect, selectedMunicipality, municipalityDiffers, municipalMembershipRadios,
 	isHomeMunicipality, equalMunicipalitys, slideOptions;
 
+	chznSelect = 				 $(".chzn-select");
 	municipalitySelect =		 $('#municipality');
 	homeMunicipalitySelect =	 $('#homeMunicipality');
 	selectedMunicipalityElem =	 $('#selected-municipality'); // Municipality text in the second step in the form
@@ -464,8 +465,10 @@ $(document).ready(function () {
 		easing: 'easeOutExpo'
 	};
 
- 	// Initialize chosen with localized text
- 	$(".chzn-select").chosen({no_results_text: localization.chosenNoResults(locale)});
+ 	// Chosen.js requires that first option is empty. We empty the default value which is for NOSCRIPT-users.
+	chznSelect.find('option:first').text('');
+	// Initialize chosen with localized text
+	chznSelect.chosen({no_results_text: localization.chosenNoResults(locale)});
 	
  	// Update home municipality automatically
 	var updateHomeMunicipality = function(select){
@@ -585,6 +588,19 @@ $(document).ready(function () {
 	});
 	
 	
+/**
+* Search form
+* ===========
+* 
+*/
+
+//Listen search form select
+$('.municipality-filter').live('change', function() {
+	var thisSelect = $(this);
+	
+	// Set a small delay so that focus is correctly fired after chance-event.
+	setTimeout(function () { $('#search').focus(); }, 50);
+});	
 	
 	
 
@@ -597,7 +613,9 @@ $(document).ready(function () {
 * 		* the value is not removed so that the value can be retrieved
 * 		  when clicked back to visible 
 * - TODO: Bit HardCoded now. Make more generic if needed.
+* 			WE MIGHT NOT NEED THIS ANYMORE as secret edit-url is generated after form submit.
 */
+/*
 var toggleArea, $toggleAreaLabel, radioTrue, $toggleField, toggleBlock;
 
 toggleArea =		'.gather-people-details';
@@ -638,22 +656,7 @@ $toggleAreaLabel.each(function (){
 	});
 	
 });
-	
-/**
-* Search form
-* ===========
-* 
 */
-
-//Listen search form select
-$('.municipality-filter').live('change', function() {
-	var thisSelect = $(this);
-	
-	console.log("FIRED");
-	//$('#search').focus();
-	setTimeout(function () { $('#search').focus(); }, 50);
-	//$('#search').trigger('focus');
-});
 
 
 /**
