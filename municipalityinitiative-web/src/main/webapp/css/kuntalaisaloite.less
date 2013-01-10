@@ -1067,6 +1067,7 @@ a.block-link {
     &.previous {            background-position: 0 -1640px;  }
     &.add {                 background-position: 0 -1790px;  }
     &.logout {              background-position: 0 -2090px;  }
+    &.search {              background-position: 0 -2240px;  }
 }
 
 .file-icon {
@@ -1137,6 +1138,15 @@ input[type="text"] {
     &.small {
         width:60px;
     }
+    &.search-field {
+        width:250px;
+        height:34px;
+        line-height:34px;
+        padding:0 0.3em;
+    }
+    
+    
+    
 }
 
 textarea {
@@ -1163,7 +1173,13 @@ textarea:focus, input[type="text"]:focus, .email-input.focus {
 }
 
 
+input:-moz-placeholder, textarea:-moz-placeholder { color:#999; }
+::-webkit-input-placeholder, ::-webkit-textarea-placeholder { color:#999; }
+input:-ms-input-placeholder, input:-ms-textarea-placeholder { color:#999;  }// for IE10 
+
 textarea, input[type="text"] {
+    font-family: 'PT Sans', "Trebuchet MS", Helvetica, sans-serif;
+
     &.has-error {
         border-color:#be3730 !important;  box-shadow:inset 2px 2px 2px rgba(0,0,0,0.1);
     }
@@ -2260,6 +2276,12 @@ blockquote {
     &.full {
         width:100%;
     }
+    
+    &.valign-bottom {
+        .cell {
+            vertical-align:bottom;
+        }
+    }
 }
 
 // Search results
@@ -2272,6 +2294,24 @@ blockquote {
     padding-left: 1.3em;
     font-size:0.725em;
     font-weight:normal;
+}
+.search-options {
+    margin-bottom:2em;
+
+    .search-form {
+        button {
+            margin-left:32px;
+            vertical-align:bottom;
+        }
+    }
+}
+.search-terms {
+    margin-bottom:2em;
+
+    .search-term {
+        font-style:italic;
+        font-weight:bold;
+    }
 }
 .search-results {
     ul {
@@ -2431,14 +2471,18 @@ table.data {
     width:250px;
 }
 .chzn-container {
+    display:block;
     font-size:1em;
 
     .chzn-single {
+        height:34px;
+        line-height:34px;
+        margin: 0.2em 0 0 0;
+        padding:0 0.3em;
         border: 1px solid @borderGray;
         background: #fff;
         font-size: 1em;
-        padding: 0.3em;
-        margin: 0.2em 0 0 0;
+        
         border-radius:0;
         box-shadow:none;
         

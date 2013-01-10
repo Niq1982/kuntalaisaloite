@@ -23,7 +23,7 @@
     <link href="${urls.baseUrl}/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
    
     <link rel="stylesheet" type="text/css" href="${urls.baseUrl}/css/normalize.css" />
-    <link rel="stylesheet" type="text/css" href="${urls.baseUrl}/css/aloitepalvelu.css" />
+    <link rel="stylesheet" type="text/css" href="${urls.baseUrl}/css/kuntalaisaloite.css" />
 </head>
 <body>
 <div id="wrapper">
@@ -216,7 +216,7 @@
     <div id="header-tools">
         <div id="header-tools-content">
             <div id="aloite-links">
-                <a href="${urls.baseUrl}/${locale}">Kansalaisaloite.fi</a><span class="hide"> | </span><a class="active" href="${urls.infoIndex()}/<@u.message "InfoPage.MUNICIPALITY_INITIATIVE" />">Kuntalaisaloite.fi</a>
+                <a href="https://www.kansalaisaloite.fi">Kansalaisaloite.fi</a><span class="hide"> | </span><a class="active" href="${urls.baseUrl}/${locale}">Kuntalaisaloite.fi</a>
             </div>
             <div class="other-services-container">
                 <a class="other-services-select" href="http://www.otakantaa.fi/${locale}-FI" target="_blank"> <#-- Add class "dropdown-toggle" for dropdown -->
