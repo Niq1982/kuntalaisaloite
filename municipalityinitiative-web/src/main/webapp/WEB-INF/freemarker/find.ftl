@@ -91,7 +91,7 @@
 
 <div class="search-terms">
     <#if searchMunicipality != "">
-        <h2>Aloitteet kunnassa: ${searchMunicipality} (TODO: getNameById())</h2>
+        <h2>Aloitteet kunnassa: ${currentMunicipality}</h2>
     </#if>
     
     <#if searchTerm != "">

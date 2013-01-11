@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newweb;
 
+import fi.om.municipalityinitiative.newdto.MunicipalityInfo;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeInfo;
 import fi.om.municipalityinitiative.service.MunicipalityInitiativeService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.List;
 import java.util.Locale;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
@@ -34,9 +36,13 @@ public class MunicipalityInitiativeViewController extends BaseController {
 
     @RequestMapping(value={SEARCH_FI, SEARCH_SV}, method=GET)
     public String search(MunicipalityInitiativeSearch search, Model model, Locale locale, HttpServletRequest request) {
+        List<MunicipalityInfo> municipalities = municipalityService.findAllMunicipalities();
+
         model.addAttribute("initiatives", municipalityInitiativeService.findMunicipalityInitiatives(search));
-        model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
+        model.addAttribute("municipalities", municipalities);
         model.addAttribute("currentSearch", search);
+
+        model.addAttribute("currentMunicipality", solveMunicipalityFromListById(municipalities, search.getMunicipality()));
         return SEARCH_VIEW;
     }
 
@@ -48,5 +54,15 @@ public class MunicipalityInitiativeViewController extends BaseController {
         model.addAttribute("initiative", initiativeInfo);
         return VIEW_VIEW;
 
+    }
+
+    private static String solveMunicipalityFromListById(List<MunicipalityInfo> municipalities, Long municipalityId){
+        if (municipalityId == null)
+            return null;
+        for (MunicipalityInfo municipality : municipalities) {
+            if (municipality.getId().equals(municipalityId))
+                return municipality.getName();
+        }
+        return null;
     }
 }
