@@ -12,6 +12,7 @@ public class MunicipalityInitiativeInfo {
     private String contactEmail;
     private String contactPhone;
     private String contactAddress;
+    private boolean showName;
     private DateTime createTime;
 
     public String getName() {
@@ -68,6 +69,14 @@ public class MunicipalityInitiativeInfo {
 
     public void setContactAddress(String contactAddress) {
         this.contactAddress = contactAddress;
+    }
+    
+    public boolean isShowName() {
+        return showName;
+    }
+
+    public void setShowName(boolean showName) {
+        this.showName = showName;
     }
 
     public DateTime getCreateTime() {

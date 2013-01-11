@@ -175,6 +175,8 @@
                 Nimi <span title="Pakollinen kenttä" class="icon-small required trigger-tooltip"></span>
             </label>-->
             <@f.textField path="initiative.contactName" required="required" optional=true cssClass="large" maxLength="512" />
+            
+            <@f.formCheckbox path="initiative.showName" />
 
             <label>
                 <input type="checkbox" id="initiative.showName" name="initiative.showName"><span class="label"><@u.message "initiative.allowPublicName" /></a></span>

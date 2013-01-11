@@ -22,10 +22,14 @@
 
 <@l.main page pageTitle>
 
+    <div class="municipality">${initiative.municipalityName}</div>
+
     <h1 class="name">${initiative.name}</h1>
     <#if initiative.createTime??>
-        <span class="extra-info"><@u.localDate initiative.createTime /></span>
+        <span class="extra-info">Aloite lähetetty kuntaan <@u.localDate initiative.createTime /></span>
     </#if>
+    
+    
     
 
     
@@ -34,22 +38,24 @@
 
     <#-- VIEW BLOCKS -->
     <div class="view-block public">
+    
         <h2>Aloitteen sisältö</h2>
         
         ${initiative.proposal}
-    </div>
-    
-    <#-- TODO: Extra details -->
-    <div class="view-block public last">
-        <div class="initiative-content-row last">
-            
-            
-            <#-- One man's initiative -->
+        
+        <br />
+        <br />
+         <#-- One man's initiative -->
+         <#if initiative.showName>
             <h2>Aloitteen tekijä</h2>
             <p>${initiative.contactName}</p>
+        </#if>
+    </div>
+    
+    <#-- TODO: Extra details
+    <div class="view-block public last">
+        <div class="initiative-content-row last">
 
-            <#-- Initiative with more authors -->
-            <#--
             <h2>Aloitteen tekijät - TODO</h2>
             <span class="user-count-total">353</span>
             <div class="join-as-user">
@@ -70,10 +76,10 @@
                     <a class="trigger-tooltip show-user-list-1" href="#" title="Näytä nimensä julkistaneiden lista">102 julkista nimeä</a><br>34 ei julkista nimeä</p>
                 </div>
             </div>
-            -->
 
         </div>     
     </div>
+     -->
 
     
     <#-- BOTTOM CONTRIBUTION -->

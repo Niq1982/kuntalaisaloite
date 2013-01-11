@@ -21,10 +21,10 @@ public class MunicipalityInitiativeServiceTest {
         assertThat(municipalityInitiativeCreateDto.name, is(createDto.getName()));
         assertThat(municipalityInitiativeCreateDto.proposal, is(createDto.getProposal()));
 
-        assertThat(municipalityInitiativeCreateDto.contactAddress, is(nullValue()));
-        assertThat(municipalityInitiativeCreateDto.contactEmail, is(nullValue()));
-        assertThat(municipalityInitiativeCreateDto.contactName, is(nullValue()));
-        assertThat(municipalityInitiativeCreateDto.contactPhone, is(nullValue()));
+        assertThat(municipalityInitiativeCreateDto.contactAddress, is(createDto.getContactAddress()));
+        assertThat(municipalityInitiativeCreateDto.contactEmail, is(createDto.getContactEmail()));
+        assertThat(municipalityInitiativeCreateDto.contactName, is(createDto.getContactName()));
+        assertThat(municipalityInitiativeCreateDto.contactPhone, is(createDto.getContactPhone()));
     }
 
     @Test
@@ -36,8 +36,8 @@ public class MunicipalityInitiativeServiceTest {
         assertThat(composerCreateDto.right_of_voting, is(true));
         assertThat(composerCreateDto.municipalityInitiativeId, is(117L));
 
-        assertThat(composerCreateDto.showName, is(false)); // TODO: Fix
-        assertThat(composerCreateDto.name, is(nullValue()));
+        assertThat(composerCreateDto.showName, is(createDto.isShowName())); // TODO: Fix
+        assertThat(composerCreateDto.name, is(createDto.getContactName()));
     }
 
     private MunicipalityInitiativeUICreateDto createDtoFillAllFields() {
@@ -48,6 +48,10 @@ public class MunicipalityInitiativeServiceTest {
         createDto.setMunicipality(15);
         createDto.setName("name field");
         createDto.setProposal("proposal");
+        createDto.setContactAddress("contact address");
+        createDto.setContactEmail("contact@email.com");
+        createDto.setContactName("contact name");
+        createDto.setContactPhone("123456789");
         return createDto;
     }
 

@@ -50,8 +50,8 @@ public class JdbcComposerDao implements ComposerDao {
     private static SupportCount parseToSupportCount(List<Object[]> resultRowList) {
         SupportCount supportCount = new SupportCount();
         for (Object[] row : resultRowList) {
-            if (row[1] == true) {
-                if (row[2] == true) {
+            if ((Boolean)row[1] == true) {
+                if ((Boolean)row[2] == true) {
                     supportCount.getRightOfVoting().setPublicNames((Long) row[0]);
                 }
                 else {
@@ -59,7 +59,7 @@ public class JdbcComposerDao implements ComposerDao {
                 }
             }
             else {
-                if (row[2] == true) {
+                if ((Boolean)row[2] == true) {
                     supportCount.getNoRightOfVoting().setPublicNames((Long) row[0]);
                 }
                 else {
