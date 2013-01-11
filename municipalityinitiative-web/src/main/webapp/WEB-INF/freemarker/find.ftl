@@ -1,6 +1,7 @@
 <#import "/spring.ftl" as spring />
 <#import "components/layout.ftl" as l />
 <#import "components/utils.ftl" as u />
+<#import "components/forms.ftl" as f />
 
 <#escape x as x?html>
 
@@ -48,6 +49,10 @@
 </div>
 -->
 
+<#assign searchMunicipality = RequestParameters['municipality']!"" />
+<#assign searchTerm = RequestParameters['search']!"" />
+
+
 <#-- 
  * TODO:
  * - FIX layout for IE7
@@ -57,22 +62,12 @@
     <form action="${springMacroRequestContext.requestUri}" method="GET" id="search-form" class="search-form">
     <div class="table full valign-bottom">
         <div class="cell cell-1of3">
-            <label class="input-header" for="municipality">
-                Rajaa aloitteet kunnan mukaan
-            </label>
-        
-            <select data-placeholder="Valitse kunta" id="municipality" name="municipality" tabindex="2" class="chzn-select municipality-filter">
-                <option value=""></option>
-                <#list municipalities as municipality>
-                    <option value="${municipality.id}">${municipality.name}</option>
-                </#list>
-            </select>
+            <@f.formSingleSelect path="currentSearch.municipality" options=municipalities required="" cssClass="municipality-filter" />
         </div>
         <div class="cell cell-2of3">
-            <label for="search" class="input-header">
-                Etsi vapaalla sanalla
-            </label>
-            <input type="text" maxlength="512" class="search-field" value="" name="search" id="search" placeholder="Hakusana.." />
+            <#assign placeholder><@u.message "currentSearch.placeholder" /></#assign>
+            <@f.textField path="currentSearch.search" required="" optional=false cssClass="search-field" maxLength="512" attributes="placeholder='${placeholder}'" />
+            
             <button type="submit" class="small-button"><span class="small-icon search">Hae</span></button>
         </div>
         <#--
@@ -85,9 +80,6 @@
     </form>
 </div>
 
-
-<#assign searchMunicipality = RequestParameters['municipality']!"" />
-<#assign searchTerm = RequestParameters['search']!"" />
 
 <div class="search-terms">
     <#if searchMunicipality != "">
