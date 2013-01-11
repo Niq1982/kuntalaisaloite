@@ -56,7 +56,7 @@
 <#-- 
  * TODO:
  * - FIX layout for IE7
- * - Input placeholder for IE browser, make a general plugin
+ * - Input placeholder for IE browser, make a general js plugin
 -->
 <div class="view-block search-options cf">
     <form action="${springMacroRequestContext.requestUri}" method="GET" id="search-form" class="search-form">
@@ -68,7 +68,7 @@
             <#assign placeholder><@u.message "currentSearch.placeholder" /></#assign>
             <@f.textField path="currentSearch.search" required="" optional=false cssClass="search-field" maxLength="512" attributes="placeholder='${placeholder}'" />
             
-            <button type="submit" class="small-button"><span class="small-icon search">Hae</span></button>
+            <button type="submit" class="small-button"><span class="small-icon search"><@u.message "btn.search" /></span></button>
         </div>
         <#--
         <div class="cell cell-1of3">
