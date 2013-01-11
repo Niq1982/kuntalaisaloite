@@ -21,6 +21,8 @@ public class MunicipalityInitiativeUICreateDto {
     private String contactPhone;
     
     private String contactAddress;
+    
+    private boolean showName;
 
     public String getName() {
         return name;
@@ -101,5 +103,12 @@ public class MunicipalityInitiativeUICreateDto {
     public void setContactAddress(String contactAddress) {
         this.contactAddress = contactAddress;
     }
-    
+
+    public boolean isShowName() {
+        return showName;
+    }
+
+    public void setShowName(boolean showName) {
+        this.showName = showName;
+    }
 }

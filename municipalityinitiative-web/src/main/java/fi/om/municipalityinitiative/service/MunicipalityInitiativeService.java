@@ -40,10 +40,10 @@ public class MunicipalityInitiativeService {
         municipalityInitiativeCreateDto.name = source.getName();
         municipalityInitiativeCreateDto.proposal = source.getProposal();
         municipalityInitiativeCreateDto.municipalityId = source.getMunicipality();
-        municipalityInitiativeCreateDto.contactName = null; // TODO: Contact info
-        municipalityInitiativeCreateDto.contactPhone= null;
-        municipalityInitiativeCreateDto.contactAddress = null;
-        municipalityInitiativeCreateDto.contactEmail = null;
+        municipalityInitiativeCreateDto.contactName = source.getContactName();
+        municipalityInitiativeCreateDto.contactPhone= source.getContactPhone();
+        municipalityInitiativeCreateDto.contactAddress = source.getContactAddress();
+        municipalityInitiativeCreateDto.contactEmail = source.getContactEmail();
 
         return municipalityInitiativeCreateDto;
     }
@@ -54,8 +54,8 @@ public class MunicipalityInitiativeService {
         composerCreateDto.municipalityInitiativeId = municipalityInitiativeId;
         composerCreateDto.right_of_voting = source.isFranchise();
 
-        composerCreateDto.showName = false; // TODO: Contact info
-        composerCreateDto.name = null;
+        composerCreateDto.showName = source.isShowName();
+        composerCreateDto.name = source.getContactName();
         composerCreateDto.municipalityId = source.getHomeMunicipality();
         return composerCreateDto;
     }

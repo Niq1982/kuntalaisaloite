@@ -27,6 +27,8 @@
         <span class="extra-info"><@u.localDate initiative.createTime /></span>
     </#if>
     
+
+    
     <#-- TOP CONTRIBUTION -->
     <#if topContribution??><#noescape>${topContribution}</#noescape></#if>
 
@@ -40,8 +42,15 @@
     <#-- TODO: Extra details -->
     <div class="view-block public last">
         <div class="initiative-content-row last">
-            <h2>Aloitteen tekijät - TODO</h2>
+            
+            
+            <#-- One man's initiative -->
+            <h2>Aloitteen tekijä</h2>
+            <p>${initiative.contactName}</p>
 
+            <#-- Initiative with more authors -->
+            <#--
+            <h2>Aloitteen tekijät - TODO</h2>
             <span class="user-count-total">353</span>
             <div class="join-as-user">
                 <button class="small-button"><span class="small-icon save-and-send">Liity tekijäksi</span></button>
@@ -61,7 +70,7 @@
                     <a class="trigger-tooltip show-user-list-1" href="#" title="Näytä nimensä julkistaneiden lista">102 julkista nimeä</a><br>34 ei julkista nimeä</p>
                 </div>
             </div>
-
+            -->
 
         </div>     
     </div>

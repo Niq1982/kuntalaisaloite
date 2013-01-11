@@ -233,7 +233,7 @@
 
 
 <#--
- * currentAuthor
+ * contactInfo
  *
  * Prints the edit block for current author's roles and contact details
  *
@@ -243,39 +243,36 @@
  * @param prefix for custom messages
  * @param cssClass for styling. Multiple classes are separated with a space
  *
- * FIXME:
- *      - Use correct path in user names
- *       - Remove realPath if possible somehow ?!
+ * TODO: Add proper path and bindings
 -->
-<#macro currentAuthor path realPath="" mode="" prefix="" cssClass="">
+<#macro contactInfo path realPath="" mode="" prefix="" cssClass="">
 
     <div class="input-block-content">
         <div class="input-header">
-            <@u.message "initiative.currentAuthor.contactDetails" /> <@u.icon type="required" size="small" />
+            <@u.message "initiative.contactInfo" /> <@u.icon type="required" size="small" />
         </div>
 
-        <@spring.bind path+".contactInfo" />
+        <#--<@spring.bind path+".contactInfo" />-->
         <@f.showError />
         
         <div class="initiative-own-details-area">
             <div class="column col-1of2">
                 <label>
-                    <@u.message "initiative.currentAuthor.contactInfo.email" />
-                    <@spring.formInput path+'.contactInfo.email', 'class="medium" maxlength="'+InitiativeConstants.AUTHOR_EMAIL_MAX?string("#")+'"' />
+                    <@u.message "initiative.contactEmail" />
+                    <@spring.formInput "initiative.contactEmail", 'class="medium" maxlength="'+InitiativeConstants.AUTHOR_EMAIL_MAX?string("#")+'"' />
                 </label>
                 
                 <label>
-                    <@u.message "initiative.currentAuthor.contactInfo.phone" />
-                    <@spring.formInput path+'.contactInfo.phone', 'class="medium" maxlength="'+InitiativeConstants.AUTHOR_PHONE_MAX?string("#")+'"' />
+                    <@u.message "initiative.contactPhone" />
+                    <@spring.formInput "initiative.contactPhone", 'class="medium" maxlength="'+InitiativeConstants.AUTHOR_PHONE_MAX?string("#")+'"' />
                 </label>
             </div>
             
             <div class="column col-1of2 last">
                 <label>
-                    <@u.message "initiative.currentAuthor.contactInfo.address" />
-                    <#--<@spring.formTextarea path+'.contactInfo.address', 'class="address-field noresize" maxlength="'+InitiativeConstants.AUTHOR_ADDRESS_MAX?string("#")+'"' />-->
+                    <@u.message "initiative.contactAddress" />
                     <#-- NOTE: maxlength 1024 will cause an error -->
-                    <@spring.formTextarea path+'.contactInfo.address', 'class="address-field noresize" maxlength="1000"' />
+                    <@spring.formTextarea "initiative.contactAddress", 'class="address-field noresize" maxlength="1000"' />
                 </label>
             </div>
         

@@ -171,15 +171,13 @@
         </div>
         
         <div class="input-block-content">
-            <label for="author.name" class="input-header">
+            <#--<label for="author.name" class="input-header">
                 Nimi <span title="Pakollinen kenttä" class="icon-small required trigger-tooltip"></span>
-            </label>
+            </label>-->
             <@f.textField path="initiative.contactName" required="required" optional=true cssClass="large" maxLength="512" />
-            
-            <#--<@f.textField path="author.name" required="required" cssClass="large" maxLength="512" />-->
 
             <label>
-                <input type="checkbox" id="allowPublicName" name="allowPublicName"><span class="label"><@u.message "initiative.allowPublicName" /></a></span>
+                <input type="checkbox" id="initiative.showName" name="initiative.showName"><span class="label"><@u.message "initiative.allowPublicName" /></a></span>
             </label>
             
         </div>
@@ -188,6 +186,7 @@
             <@u.systemMessage path="initiative.contactInfo.description" type="info" showClose=false />
         </div>
 
+        <#--
         <div class="input-block-content">
             <div class="input-header">
                 Omat yhteystiedot <span class="icon-small required trigger-tooltip"></span>
@@ -211,9 +210,10 @@
                 </div>
             </div>
         </div>
+        -->
         
-        
-        <#--<@f.currentAuthor path="initiative.currentAuthor" realPath=initiative.currentAuthor mode="full" />-->
+        <#-- TODO: Add proper path and bindings -->
+        <@f.contactInfo path="initiative.contactInfo" realPath=initiative.contactInfo mode="full" />
         
         <div class="input-block-content hidden">
             <@buttons type="next" nextStep=step+1 />
