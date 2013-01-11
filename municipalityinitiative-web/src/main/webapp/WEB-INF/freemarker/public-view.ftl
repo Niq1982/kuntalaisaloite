@@ -25,6 +25,7 @@
     <div class="municipality">${initiative.municipalityName}</div>
 
     <h1 class="name">${initiative.name}</h1>
+    <#-- TODO: Initiative state -->
     <#if initiative.createTime??>
         <span class="extra-info">Aloite lähetetty kuntaan <@u.localDate initiative.createTime /></span>
     </#if>
@@ -46,9 +47,14 @@
         <br />
         <br />
          <#-- One man's initiative -->
+         <h2>Aloitteen tekijä</h2>
+         TODO
          <#if initiative.showName>
             <h2>Aloitteen tekijä</h2>
             <p>${initiative.contactName}</p>
+            
+        <#else>
+           
         </#if>
     </div>
     

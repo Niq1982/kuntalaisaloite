@@ -171,17 +171,9 @@
         </div>
         
         <div class="input-block-content">
-            <#--<label for="author.name" class="input-header">
-                Nimi <span title="Pakollinen kenttä" class="icon-small required trigger-tooltip"></span>
-            </label>-->
-            <@f.textField path="initiative.contactName" required="required" optional=true cssClass="large" maxLength="512" />
+            <@f.textField path="initiative.contactName" required="required" optional=false cssClass="large" maxLength="512" />
             
             <@f.formCheckbox path="initiative.showName" />
-
-            <label>
-                <input type="checkbox" id="initiative.showName" name="initiative.showName"><span class="label"><@u.message "initiative.allowPublicName" /></a></span>
-            </label>
-            
         </div>
 
         <div class="input-block-content">
