@@ -103,7 +103,7 @@ public abstract class NEWWebTestBase {
         driver.get(href);
     }
 
-        protected void assertTextByTag(String tag, String text) {
+    protected void assertTextByTag(String tag, String text) {
         List<WebElement> elements = driver.findElements(By.tagName(tag));
         for (WebElement element : elements) {
             assertNotNull(element);
@@ -116,6 +116,22 @@ public abstract class NEWWebTestBase {
             System.out.println("*** '" + element.getText().trim() + "'");
         }
         fail(tag + " tag with text " + text + " not found");
+    }
+    
+    protected void assertTextContainedByXPath(String xpathExpression, String text) {
+        List<WebElement> elements = driver.findElements(By.xpath(xpathExpression));
+        for (WebElement element : elements) {
+            assertNotNull(element); 
+            String elementText = element.getText().trim();
+            if (elementText.contains(text)) {
+                return;
+            }
+        }
+        System.out.println("--- assertTextContainedByXPath --------------- " + xpathExpression + ": " + text);
+        for (WebElement element : elements) {
+            System.out.println("*** '" + element.getText().trim() + "'");
+        }
+        fail(xpathExpression + " xpath with text " + text + " not found");
     }
 
     protected String pageTitle() {
