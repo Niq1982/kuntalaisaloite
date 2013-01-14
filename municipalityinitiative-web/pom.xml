@@ -403,6 +403,7 @@
                         <cssSourceDir>css</cssSourceDir>
                         <cssSourceFiles>
                             <cssSourceFile>normalize.css</cssSourceFile>
+                            <cssSourceFile>chosen.css</cssSourceFile>
                             <cssSourceFile>kuntalaisaloite.css</cssSourceFile>
                         </cssSourceFiles>
                         <cssFinalFile>style.css</cssFinalFile>

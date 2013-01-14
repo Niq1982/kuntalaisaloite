@@ -5,6 +5,8 @@ import fi.om.municipalityinitiative.conf.PropertyNames;
 import fi.om.municipalityinitiative.conf.WebTestConfiguration;
 import fi.om.municipalityinitiative.dao.NEWTestHelper;
 import org.eclipse.jetty.server.Server;
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -96,6 +98,24 @@ public abstract class NEWWebTestBase {
         }
         newTestHelper.dbCleanup();
     }
+    
+    /* TODO: Enable
+    @After
+    public void endTest() {
+        if (driver != null) {
+            driver.quit(); // Quits this driver, closing every associated window.
+            driver = null;
+        }
+    }
+    
+    @AfterClass
+    public static void destroy() {
+        try {
+            jettyServer.stop();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }*/
 
     // Helpers
 
