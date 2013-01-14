@@ -21,7 +21,9 @@ public class SearchMunicipalityInitiativesWebTest extends NEWWebTestBase {
         newTestHelper.createTestMunicipality("Tuusula");
         open(urls.search());
 
-        WebElement municipalities = driver.findElement(By.id("municipality"));
+        WebElement municipalities = driver.findElement(By.id("municipality_chzn"));
+
+        System.out.println(municipalities.getText());
         assertThat(municipalities.getText(), containsString("Tuusula"));
 
 

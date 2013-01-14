@@ -26,11 +26,13 @@ public class MunicipalityInitiativeService {
     }
 
     @Transactional(readOnly = false)
-    public void addMunicipalityInitiative(MunicipalityInitiativeUICreateDto createDto) {
+    public Long addMunicipalityInitiative(MunicipalityInitiativeUICreateDto createDto) {
         // TODO: Validate ?
 
         Long municipalityInitiativeId = municipalityInitiativeDao.create(parse(createDto));
         composerDao.add(parse(createDto, municipalityInitiativeId));
+
+        return municipalityInitiativeId;
     }
 
     static MunicipalityInitiativeCreateDto parse(MunicipalityInitiativeUICreateDto source) {
