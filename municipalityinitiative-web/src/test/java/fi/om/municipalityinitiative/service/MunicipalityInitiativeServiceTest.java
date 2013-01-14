@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 
 public class MunicipalityInitiativeServiceTest {
 
@@ -36,7 +35,7 @@ public class MunicipalityInitiativeServiceTest {
         assertThat(composerCreateDto.right_of_voting, is(true));
         assertThat(composerCreateDto.municipalityInitiativeId, is(117L));
 
-        assertThat(composerCreateDto.showName, is(createDto.isShowName())); // TODO: Fix
+        assertThat(composerCreateDto.showName, is(createDto.getShowName())); // TODO: Fix XXX what?
         assertThat(composerCreateDto.name, is(createDto.getContactName()));
     }
 
@@ -44,14 +43,15 @@ public class MunicipalityInitiativeServiceTest {
         MunicipalityInitiativeUICreateDto createDto = new MunicipalityInitiativeUICreateDto();
         createDto.setFranchise(true);
         createDto.setMunicipalMembership(true);
-        createDto.setHomeMunicipality(7);
-        createDto.setMunicipality(15);
+        createDto.setHomeMunicipality(7L);
+        createDto.setMunicipality(15L);
         createDto.setName("name field");
         createDto.setProposal("proposal");
         createDto.setContactAddress("contact address");
         createDto.setContactEmail("contact@email.com");
         createDto.setContactName("contact name");
         createDto.setContactPhone("123456789");
+        createDto.setShowName(true);
         return createDto;
     }
 

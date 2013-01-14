@@ -1,18 +1,26 @@
 package fi.om.municipalityinitiative.newweb;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.NotNull;
+
 public class MunicipalityInitiativeUICreateDto {
 
+    @NotEmpty
     private String name;
-    
+
+    @NotEmpty
     private String proposal;
     
-    private boolean municipalMembership;
-    
-    private boolean franchise;
-    
-    private long municipality;
-    
-    private long homeMunicipality;
+    private Boolean municipalMembership;
+
+    private Boolean franchise;
+
+    @NotNull
+    private Long municipality;
+
+    @NotNull
+    private Long homeMunicipality;
     
     private String contactName;
     
@@ -22,7 +30,7 @@ public class MunicipalityInitiativeUICreateDto {
     
     private String contactAddress;
     
-    private boolean showName;
+    private Boolean showName;
 
     public String getName() {
         return name;
@@ -39,36 +47,32 @@ public class MunicipalityInitiativeUICreateDto {
     public void setProposal(String proposal) {
         this.proposal = proposal;
     }
-    
-    public boolean isMunicipalMembership() {
-        return municipalMembership;
-    }
 
-    public void setMunicipalMembership(boolean municipalMembership) {
+    public void setMunicipalMembership(Boolean municipalMembership) {
         this.municipalMembership = municipalMembership;
     }
     
-    public boolean isFranchise() {
+    public Boolean getFranchise() {
         return franchise;
     }
 
-    public void setFranchise(boolean franchise) {
+    public void setFranchise(Boolean franchise) {
         this.franchise = franchise;
     }
     
-    public long getMunicipality() {
+    public Long getMunicipality() {
         return municipality;
     }
 
-    public void setMunicipality(long municipality) {
+    public void setMunicipality(Long municipality) {
         this.municipality = municipality;
     }
 
-    public long getHomeMunicipality() {
+    public Long getHomeMunicipality() {
         return homeMunicipality;
     }
 
-    public void setHomeMunicipality(long homeMunicipality) {
+    public void setHomeMunicipality(Long homeMunicipality) {
         this.homeMunicipality = homeMunicipality;
     }
 
@@ -104,11 +108,15 @@ public class MunicipalityInitiativeUICreateDto {
         this.contactAddress = contactAddress;
     }
 
-    public boolean isShowName() {
+    public Boolean getShowName() {
         return showName;
     }
 
-    public void setShowName(boolean showName) {
+    public void setShowName(Boolean showName) {
         this.showName = showName;
+    }
+
+    public Boolean getMunicipalMembership() {
+        return municipalMembership;
     }
 }
