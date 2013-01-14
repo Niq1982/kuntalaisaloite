@@ -195,6 +195,8 @@
     
     <@formLabel path required false />
     
+    <@showError />
+    
     <select name="${spring.status.expression}" id="${spring.status.expression}" ${attributes} class="chzn-select ${cssClass}" data-placeholder="<@u.message "initiative.chooseMunicipality" />">
         <option value="default"><@u.message "initiative.chooseMunicipality" /></option>
         <#list options as option>

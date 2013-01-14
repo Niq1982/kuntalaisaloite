@@ -294,10 +294,10 @@
  * @param prefix can be used for messages
 -->
 <#macro errorsSummary path prefix>
-    <#assign hasErrors=false />
+    <#global hasErrors=false />
     <@spring.bind path />
     <#if spring.status.error>
-        <#assign hasErrors=true />
+        <#global hasErrors=true />
         <div id="errors-summary" class="system-msg msg-error expose">
             <@message "formError.summary.title" />
             <ul>
