@@ -51,10 +51,10 @@ public class MunicipalityInitiativeService {
     static ComposerCreateDto parse(MunicipalityInitiativeUICreateDto source, Long municipalityInitiativeId) {
         ComposerCreateDto composerCreateDto = new ComposerCreateDto();
 
-        composerCreateDto.municipalityInitiativeId = municipalityInitiativeId;
-        composerCreateDto.right_of_voting = source.isFranchise();
+        composerCreateDto.municipalityInitiativeId = municipalityInitiativeId; // TODO: Fix null possibilities after valdiations are complete
+        composerCreateDto.right_of_voting = source.getFranchise() == null ? false : source.getFranchise();
 
-        composerCreateDto.showName = source.isShowName();
+        composerCreateDto.showName = source.getShowName() == null ? false : source.getShowName();
         composerCreateDto.name = source.getContactName();
         composerCreateDto.municipalityId = source.getHomeMunicipality();
         return composerCreateDto;
