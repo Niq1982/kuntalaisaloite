@@ -26,6 +26,7 @@ public class InitiativeCreateWebTest extends NEWWebTestBase {
     private static final String CONTACT_ADDRESS = "Osoitekatu 1 A, 00000 Helsinki";
     
     private static final String BTN_CONTINUE = "Jatka";
+    private static final String SELECT_MUNICIPALITY = "Valitse kunta";
 
     // TODO: Fix this test to work with Chosen.js
     /*@Test
@@ -60,8 +61,8 @@ public class InitiativeCreateWebTest extends NEWWebTestBase {
         open(urls.createNew());
         
         waitms(500); // Tiny delay is required if run from Eclipse.
-        clickById("municipality_chzn");
-        wait100(); // Tiny delay is required if run from Eclipse.
+        clickLinkContaining(SELECT_MUNICIPALITY);
+        waitms(500); // Tiny delay is required if run from Eclipse.
         clickById("municipality_chzn_o_1");
         
         clickLinkContaining(BTN_CONTINUE);
