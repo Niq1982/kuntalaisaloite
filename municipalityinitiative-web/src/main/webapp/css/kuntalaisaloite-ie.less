@@ -1,6 +1,10 @@
 // Gradients are made as images for IE
 
-.large-button, .small-button, .gray, .disabled {
+/*.dimmed (@opacity) {
+    filter: progid:DXImageTransform.Microsoft.Alpha(opacity = @opacity);
+}*/
+
+.large-button, .small-button, .gray, a.disabled, button.disabled {
     background:#fff url("../img/ie/gradient-gray.png?version=${timestamp}") left bottom repeat-x;
     
     &:hover { background:#fff url("../img/ie/gradient-gray-hover.png?version=${timestamp}") left bottom repeat-x; }
@@ -93,5 +97,10 @@
         &.disabled {
            filter: progid:DXImageTransform.Microsoft.Alpha(opacity = 60);
         }
+    }
+    
+    .content-block-header.disabled {
+       //dimmed(60);
+       filter: progid:DXImageTransform.Microsoft.Alpha(opacity = 60);
     }  
 }

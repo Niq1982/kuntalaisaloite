@@ -1659,6 +1659,22 @@ label  {
     }
 }
 
+// If create form has validation errors
+.has-errors {
+    .content-block-header {
+        cursor:default;
+        
+        &:hover {
+            background: #017380;
+        }
+        
+        .arrow {
+            display:none;
+        }
+    }
+}
+
+
 .input-block-content, .input-block-extra, .input-block-action {
     float: left;
 }
@@ -1742,7 +1758,8 @@ label  {
     margin-top: 1em;
 }
 
-// TEST
+// Testing the last step of the form
+// TODO: finalize visuals and CSS
 .test-box {
     margin-bottom:0.7em;
     

@@ -29,7 +29,7 @@
 <#macro showError cssClass="">
     <#if spring.status.error>
         <#list spring.status.errorMessages as error>
-            <#noescape><div id="${spring.status.expression}" class="system-msg msg-error ${cssClass}">${error!''}</div></#noescape>
+            <#noescape><div id="${spring.status.expression}-error" class="system-msg msg-error ${cssClass}">${error!''}</div></#noescape>
         </#list>
     </#if>
 </#macro>
@@ -198,7 +198,7 @@
     <@showError />
     
     <select name="${spring.status.expression}" id="${spring.status.expression}" ${attributes} class="chzn-select ${cssClass}" data-placeholder="<@u.message "initiative.chooseMunicipality" />">
-        <option value="default"><@u.message "initiative.chooseMunicipality" /></option>
+        <option value=""><@u.message "initiative.chooseMunicipality" /></option>
         <#list options as option>
             <option value="${option.id}"<@checkSelected option.id />>${option.name}</option>
         </#list>

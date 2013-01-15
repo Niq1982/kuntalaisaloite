@@ -9,7 +9,6 @@ public class MunicipalityInitiativeUICreateDto {
     @NotEmpty
     private String name;
 
-    @NotEmpty
     private String proposal;
     
     private Boolean municipalMembership;
@@ -22,6 +21,7 @@ public class MunicipalityInitiativeUICreateDto {
     @NotNull
     private Long homeMunicipality;
     
+    @NotEmpty
     private String contactName;
     
     private String contactEmail;

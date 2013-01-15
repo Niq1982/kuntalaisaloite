@@ -22,17 +22,13 @@
 
 <@l.main page pageTitle>
 
-    <div class="municipality">${initiative.municipalityName}</div>
+    <div class="municipality">${initiative.municipalityName!""}</div>
 
-    <h1 class="name">${initiative.name}</h1>
+    <h1 class="name">${initiative.name!""}</h1>
     <#-- TODO: Initiative state -->
     <#if initiative.createTime??>
         <span class="extra-info">Aloite lähetetty kuntaan <@u.localDate initiative.createTime /></span>
     </#if>
-    
-    
-    
-
     
     <#-- TOP CONTRIBUTION -->
     <#if topContribution??><#noescape>${topContribution}</#noescape></#if>
@@ -40,18 +36,20 @@
     <#-- VIEW BLOCKS -->
     <div class="view-block public">
     
-        <h2>Aloitteen sisältö</h2>
+        <#if initiative.proposal??>
+            <h2>Aloitteen sisältö</h2>
+            
+            ${initiative.proposal!""}
+            
+            <br /><br />
+        </#if>
         
-        ${initiative.proposal}
-        
-        <br />
-        <br />
          <#-- One man's initiative -->
          <h2>Aloitteen tekijä</h2>
-         ${initiative.contactName} (TODO: Piilotus)
+         ${initiative.contactName!""} (TODO: Piilotus)
          <#if initiative.showName> Näkyy
             <h2>Aloitteen tekijä</h2>
-            <p>${initiative.contactName}</p>
+            <p>${initiative.contactName!""}</p>
             
         <#else>
            

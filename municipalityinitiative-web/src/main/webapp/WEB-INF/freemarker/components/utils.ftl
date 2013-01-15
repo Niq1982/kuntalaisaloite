@@ -302,7 +302,7 @@
             <@message "formError.summary.title" />
             <ul>
                 <#list spring.status.errors.allErrors as error>
-                    <li><#if error.field??><strong><a href="#${error.field}"><@message prefix+fieldLabelKey(error.field) /></a>:</strong> </#if><#noescape>${springMacroRequestContext.getMessage(error)}</#noescape></li>
+                    <li><#if error.field??><strong><a href="#${error.field}-error"><@message prefix+fieldLabelKey(error.field) /></a>:</strong> </#if><#noescape>${springMacroRequestContext.getMessage(error)}</#noescape></li>
                 </#list>
             </ul>
         </div>

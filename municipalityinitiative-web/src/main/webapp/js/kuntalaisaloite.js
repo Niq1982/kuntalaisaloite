@@ -332,8 +332,10 @@ $(document).ready(function () {
  * - Sets and gets fontSizeClass-cookie
  * 
  * */
-	var $fontSizeToggler = $('.font-size-toggle a');
-	var fontSizeClass = "font-size-medium";
+	var $fontSizeToggler, fontSizeClass;
+	
+	$fontSizeToggler = $('.font-size-toggle a');
+	fontSizeClass = "font-size-medium";
 	
 	// Get cookie value for the fontSize
 	if( $.cookie("fontSizeClass") != null ){
@@ -373,7 +375,13 @@ $(document).ready(function () {
  * TODO: Improve animation vs. scrolling
  * 
  * */
- 	var showFormBlock = function(blockHeader, scrollId){
+	var validationErrors, showFormBlock, $formHeader;
+	
+	// If form has validation errors: true / false
+	validationErrors = $('#form-initiative').hasClass('has-errors');
+	
+	// Show this block, hide others
+ 	showFormBlock = function(blockHeader, scrollId){
  		var thisHeader, thisBlock, otherHeaders, otherBlocks;
 
 		thisHeader = blockHeader;
@@ -386,14 +394,6 @@ $(document).ready(function () {
 			easing: 'easeOutExpo'
 		});
 		otherHeaders.removeClass('open');
-		
-		
- 		/*thisBlock.stop(false,true).slideToggle({
-			duration: speedFast, 
-			easing: 'easeOutExpo'
-		}, function() {
-		    // Animation complete.
-		});*/
  		
  		thisBlock.stop(false,true).slideToggle('fast', function() {
  			$.scrollTo( "#"+scrollId , 800, {easing:'easeOutExpo'});
@@ -402,23 +402,41 @@ $(document).ready(function () {
 		thisHeader.toggleClass('open');
  	};
 
- 	var $formHeader = $('.content-block-header');
+ 	$formHeader = $('.content-block-header');
 
  	$formHeader.click(function(){
  		var thisClicker = $(this);
  		
- 		if ( !thisClicker.hasClass('disabled')){
+ 		if ( !validationErrors && !thisClicker.hasClass('disabled')){
  			showFormBlock(thisClicker, thisClicker.attr('id'));
  		}
  	});
 
  	// Action for wizard's continue button
  	proceedTo = function(step){
- 		var blockHeader = $('#step-'+step).prev('.content-block-header');
-		showFormBlock(blockHeader, "#step-header-"+step);
+ 		var headerNextStep = "#step-header-"+step;
+ 		
+ 		if ( !validationErrors ){
+	 		var blockHeader = $('#step-'+step).prev('.content-block-header');
+			showFormBlock(blockHeader, headerNextStep);
+ 		} else {
+ 			$.scrollTo( headerNextStep , 800, {easing:'easeOutExpo'});
+ 		}
 
  		return false;
  	};
+ 	
+ 	// In case of validation error
+ 	if ( validationErrors ){
+ 		$('.input-block').show();
+ 	}
+ 	$('#errors-summary a').click(function(){
+ 		var errorAnchor = $(this);
+ 		
+ 		$.scrollTo( errorAnchor.attr('href') , 800, {easing:'easeOutExpo'});
+ 		
+ 		return false;
+ 	});
 
  	// Open blocks by hash - TODO
  	/*if(window.location.hash != "") {
@@ -577,7 +595,7 @@ $(document).ready(function () {
 		// Toggle membership radiobuttons
 		toggleMembershipRadios(thisSelect);
 		
-		console.log("checked: "+municipalMembershipRadios.attr('checked'));
+		//console.log("checked: "+municipalMembershipRadios.attr('checked'));
 		
 		// Disable / enable proceeding to the next form steps
 		if ( $("input[name=municipalMembership]:checked").length == 0){
