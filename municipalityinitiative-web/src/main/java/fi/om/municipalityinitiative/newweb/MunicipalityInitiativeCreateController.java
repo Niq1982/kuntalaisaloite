@@ -70,10 +70,11 @@ public class MunicipalityInitiativeCreateController extends BaseController {
             model.addAttribute("errors", bindingResult);
             return CREATE_VIEW;
         }
-        municipalityInitiativeService.addMunicipalityInitiative(initiative);
+
+        Long initiativeId = municipalityInitiativeService.addMunicipalityInitiative(initiative);
 
         Urls urls = Urls.get(locale);
-        return contextRelativeRedirect(urls.search());
+        return contextRelativeRedirect(urls.view(initiativeId));
 
     }
 
