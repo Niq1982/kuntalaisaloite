@@ -1,7 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
-import fi.om.municipalityinitiative.newdto.ComposerCreateDto;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeCreateDto;
+import fi.om.municipalityinitiative.newdto.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeUICreateDto;
 import org.junit.Test;
 
@@ -29,14 +29,14 @@ public class MunicipalityInitiativeServiceTest {
     @Test
     public void parse_composerCreateDto() {
         MunicipalityInitiativeUICreateDto createDto = createDtoFillAllFields();
-        ComposerCreateDto composerCreateDto = MunicipalityInitiativeService.parse(createDto, 117L);
+        ParticipantCreateDto participantCreateDto = MunicipalityInitiativeService.parse(createDto, 117L);
 
-        assertThat(composerCreateDto.municipalityId, is(createDto.getHomeMunicipality()));
-        assertThat(composerCreateDto.right_of_voting, is(true));
-        assertThat(composerCreateDto.municipalityInitiativeId, is(117L));
+        assertThat(participantCreateDto.municipalityId, is(createDto.getHomeMunicipality()));
+        assertThat(participantCreateDto.franchise, is(true));
+        assertThat(participantCreateDto.municipalityInitiativeId, is(117L));
 
-        assertThat(composerCreateDto.showName, is(createDto.getShowName())); // TODO: Fix XXX what?
-        assertThat(composerCreateDto.name, is(createDto.getContactName()));
+        assertThat(participantCreateDto.showName, is(createDto.getShowName())); // TODO: Fix XXX what?
+        assertThat(participantCreateDto.name, is(createDto.getContactName()));
     }
 
     private MunicipalityInitiativeUICreateDto createDtoFillAllFields() {

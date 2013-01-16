@@ -1,11 +1,11 @@
 package fi.om.municipalityinitiative.newdto;
 
-public class SupportCount {
+public class ParticipantCount {
     private final SupportNames rightOfVoting;
     private final SupportNames noRightOfVoting;
 
 
-    public SupportCount() {
+    public ParticipantCount() {
         rightOfVoting = new SupportNames();
         noRightOfVoting = new SupportNames();
     }
