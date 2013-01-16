@@ -63,8 +63,8 @@ public class NEWTestHelper {
                 .set(QParticipant.participant.municipalityId, municipalityId)
                 .set(QParticipant.participant.municipalityInitiativeId, initiativeId)
                 .set(QParticipant.participant.name, "Antti Author")
-                .set(QParticipant.participant.showName, true)
-                .set(QParticipant.participant.franchise, true)
+                .set(QParticipant.participant.showName, true) // Changing these will affect on tests
+                .set(QParticipant.participant.franchise, true) //
                 .executeWithKey(QParticipant.participant.id);
 
         queryFactory.update(municipalityInitiative)

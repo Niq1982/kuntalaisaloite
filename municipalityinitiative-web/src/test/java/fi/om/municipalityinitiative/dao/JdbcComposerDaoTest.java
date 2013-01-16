@@ -38,7 +38,7 @@ public class JdbcComposerDaoTest {
     @Test
     public void adds_new_composers() {
         composerDao.add(composerCreateDto());
-        assertThat(testHelper.countAll(QParticipant.participant), is(1L));
+        assertThat(testHelper.countAll(QParticipant.participant), is(2L)); // Creator plus this
     }
 
     @Test
@@ -49,7 +49,7 @@ public class JdbcComposerDaoTest {
         Long municipalityId = testHelper.createTestMunicipality("Other municipality");
         Long initiativeId = testHelper.createTestInitiative(municipalityId);
 
-        createComposer(initiativeId, true, true);
+        //createComposer(initiativeId, true, true); // This is the default author created by testHelper
 
         createComposer(initiativeId, true, false);
         createComposer(initiativeId, true, false);
@@ -74,7 +74,7 @@ public class JdbcComposerDaoTest {
     @Test
     public void wont_fail_if_counting_supports_when_no_supports() {
         SupportCount supportCount = composerDao.countSupports(testInitiativeId);
-        assertThat(supportCount.getRightOfVoting().getPublicNames(), is(0L));
+        assertThat(supportCount.getRightOfVoting().getPublicNames(), is(1L)); // This is the default author
         assertThat(supportCount.getRightOfVoting().getPrivateNames(), is(0L));
         assertThat(supportCount.getNoRightOfVoting().getPublicNames(), is(0L));
         assertThat(supportCount.getNoRightOfVoting().getPrivateNames(), is(0L));
