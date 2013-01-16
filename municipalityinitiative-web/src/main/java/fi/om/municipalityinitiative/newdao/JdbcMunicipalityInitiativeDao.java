@@ -80,6 +80,7 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
 
     private void setInitiativeBasicInfo(MunicipalityInitiativeCreateDto dto, SQLInsertClause insert) {
         insert.set(municipalityInitiative.name, dto.name);
+        insert.setNull(municipalityInitiative.authorId);
         insert.set(municipalityInitiative.proposal, dto.proposal);
         insert.set(municipalityInitiative.municipalityId, dto.municipalityId);
     }

@@ -21,6 +21,8 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
 
     public static final QMunicipalityInitiative municipalityInitiative = new QMunicipalityInitiative("municipality_initiative");
 
+    public final NumberPath<Long> authorId = createNumber("author_id", Long.class);
+
     public final StringPath contactAddress = createString("contact_address");
 
     public final StringPath contactEmail = createString("contact_email");
@@ -41,11 +43,15 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
 
     public final StringPath proposal = createString("proposal");
 
+    public final DateTimePath<org.joda.time.DateTime> sent = createDateTime("sent", org.joda.time.DateTime.class);
+
     public final com.mysema.query.sql.PrimaryKey<QMunicipalityInitiative> municipalityInitiativePk = createPrimaryKey(id);
+
+    public final com.mysema.query.sql.ForeignKey<QParticipant> municipalityInitiativeAuthorFk = createForeignKey(authorId, "id");
 
     public final com.mysema.query.sql.ForeignKey<QMunicipality> municipalityInitiativeMunicipalityFk = createForeignKey(municipalityId, "id");
 
-    public final com.mysema.query.sql.ForeignKey<QComposer> _composerMunicipalityInitiativeId = createInvForeignKey(id, "municipality_initiative_id");
+    public final com.mysema.query.sql.ForeignKey<QParticipant> _participantMunicipalityInitiativeId = createInvForeignKey(id, "municipality_initiative_id");
 
     public QMunicipalityInitiative(String variable) {
         super(QMunicipalityInitiative.class, forVariable(variable), "municipalityinitiative", "municipality_initiative");

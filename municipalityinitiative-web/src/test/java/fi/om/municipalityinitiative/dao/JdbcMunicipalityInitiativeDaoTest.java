@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeCreateDto;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeInfo;
 import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeSearch;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,6 +45,12 @@ public class JdbcMunicipalityInitiativeDaoTest {
     }
 
     @Test
+    public void testCreateASd() {
+        testHelper.createTestInitiative(testMunicipality.getId(), "jokunimi");
+    }
+
+
+    @Test
     public void create() {
         municipalityInitiativeDao.create(createDto());
         assertThat(testHelper.countAll(QMunicipalityInitiative.municipalityInitiative), is(1L));
@@ -51,18 +58,17 @@ public class JdbcMunicipalityInitiativeDaoTest {
 
     @Test
     public void create_and_get() {
-        MunicipalityInitiativeCreateDto create = createDto();
-        Long createId = municipalityInitiativeDao.create(create);
+        Long initiativeId = testHelper.createTestInitiative(testMunicipality.getId(), "Some name");
 
-        MunicipalityInitiativeInfo get = municipalityInitiativeDao.getById(createId);
-        assertCreateAndGetDtos(create, get);
+        MunicipalityInitiativeInfo get = municipalityInitiativeDao.getById(initiativeId);
+        assertThat(1, Matchers.is(2));
     }
 
     @Test
     public void find_returns_all() {
 
-        municipalityInitiativeDao.create(createDto());
-        municipalityInitiativeDao.create(createDto());
+        testHelper.createTestInitiative(testMunicipality.getId(), "First");
+        testHelper.createTestInitiative(testMunicipality.getId(), "Second");
 
         List<MunicipalityInitiativeInfo> result = municipalityInitiativeDao.findNewestFirst(new MunicipalityInitiativeSearch());
         assertThat(result.size(), is(2));
@@ -70,15 +76,12 @@ public class JdbcMunicipalityInitiativeDaoTest {
 
     @Test
     public void find_returns_in_correct_order() {
-        MunicipalityInitiativeCreateDto create1 = createDto();
-        MunicipalityInitiativeCreateDto create2 = createDto();
-
-        municipalityInitiativeDao.create(create1);
-        municipalityInitiativeDao.create(create2);
+        Long first = testHelper.createTestInitiative(testMunicipality.getId(), "First");
+        Long second = testHelper.createTestInitiative(testMunicipality.getId(), "Second");
 
         List<MunicipalityInitiativeInfo> result = municipalityInitiativeDao.findNewestFirst(new MunicipalityInitiativeSearch());
-        assertCreateAndGetDtos(create2, result.get(0));
-        assertCreateAndGetDtos(create1, result.get(1));
+        assertThat(second, Matchers.is(result.get(0).getId()));
+        assertThat(first, Matchers.is(result.get(1).getId()));
     }
 
     @Test

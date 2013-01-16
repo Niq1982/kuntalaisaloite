@@ -4,7 +4,7 @@ import fi.om.municipalityinitiative.conf.NEWIntegrationTestConfiguration;
 import fi.om.municipalityinitiative.newdao.ComposerDao;
 import fi.om.municipalityinitiative.newdto.ComposerCreateDto;
 import fi.om.municipalityinitiative.newdto.SupportCount;
-import fi.om.municipalityinitiative.sql.QComposer;
+import fi.om.municipalityinitiative.sql.QParticipant;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,7 +38,7 @@ public class JdbcComposerDaoTest {
     @Test
     public void adds_new_composers() {
         composerDao.add(composerCreateDto());
-        assertThat(testHelper.countAll(QComposer.composer), is(1L));
+        assertThat(testHelper.countAll(QParticipant.participant), is(1L));
     }
 
     @Test
