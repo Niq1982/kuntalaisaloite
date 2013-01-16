@@ -30,7 +30,8 @@ public class MunicipalityInitiativeService {
         // TODO: Validate ?
 
         Long municipalityInitiativeId = municipalityInitiativeDao.create(parse(createDto));
-        composerDao.add(parse(createDto, municipalityInitiativeId));
+        Long participantId = composerDao.add(parse(createDto, municipalityInitiativeId));
+        municipalityInitiativeDao.assignAuthor(municipalityInitiativeId, participantId);
 
         return municipalityInitiativeId;
     }

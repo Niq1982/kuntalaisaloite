@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newdao;
 
+import com.mysema.commons.lang.Assert;
 import com.mysema.query.Tuple;
 import com.mysema.query.sql.dml.SQLInsertClause;
 import com.mysema.query.sql.postgres.PostgresQuery;
@@ -24,6 +25,10 @@ import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipal
 @SQLExceptionTranslated
 @Transactional(readOnly = true)
 public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao {
+
+    // This is for querydsl for not being able to create a row with DEFERRED not-null-check value being null..
+    // Querydsl always assigned some value to it and setting it to null was not an option.
+    private static final Long PREPARATION_ID = -1L;
 
     @Resource
     PostgresQueryFactory queryFactory;
@@ -79,8 +84,8 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
     }
 
     private void setInitiativeBasicInfo(MunicipalityInitiativeCreateDto dto, SQLInsertClause insert) {
+        insert.set(municipalityInitiative.authorId, PREPARATION_ID);
         insert.set(municipalityInitiative.name, dto.name);
-        insert.setNull(municipalityInitiative.authorId);
         insert.set(municipalityInitiative.proposal, dto.proposal);
         insert.set(municipalityInitiative.municipalityId, dto.municipalityId);
     }
@@ -95,6 +100,16 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
 
         return query.uniqueResult(initiativeInfoMapping);
 
+    }
+
+    @Override
+    public void assignAuthor(Long municipalityInitiativeId, Long participantId) {
+        long affectedRows = queryFactory.update(municipalityInitiative)
+                .set(municipalityInitiative.authorId, participantId)
+                .where(municipalityInitiative.authorId.eq(PREPARATION_ID))
+                .where(municipalityInitiative.id.eq(municipalityInitiativeId))
+                .execute();
+        Assert.isTrue(affectedRows == 1, "About to update " + affectedRows + " instead of 1.");
     }
 
 
