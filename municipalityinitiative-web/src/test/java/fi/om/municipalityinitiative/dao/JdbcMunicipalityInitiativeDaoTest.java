@@ -1,6 +1,6 @@
 package fi.om.municipalityinitiative.dao;
 
-import fi.om.municipalityinitiative.conf.NEWIntegrationTestConfiguration;
+import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.newdao.MunicipalityInitiativeDao;
 import fi.om.municipalityinitiative.newdto.MunicipalityInfo;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeInfo;
@@ -21,14 +21,14 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes={NEWIntegrationTestConfiguration.class})
+@ContextConfiguration(classes={IntegrationTestConfiguration.class})
 public class JdbcMunicipalityInitiativeDaoTest {
 
     @Resource
     MunicipalityInitiativeDao municipalityInitiativeDao;
 
     @Resource
-    NEWTestHelper testHelper;
+    TestHelper testHelper;
 
     private MunicipalityInfo testMunicipality;
 

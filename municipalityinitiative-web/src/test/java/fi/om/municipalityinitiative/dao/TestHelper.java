@@ -12,15 +12,15 @@ import javax.annotation.Resource;
 
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 
-public class NEWTestHelper {
+public class TestHelper {
 
     @Resource
     PostgresQueryFactory queryFactory;
 
-    public NEWTestHelper() {
+    public TestHelper() {
     }
 
-    public NEWTestHelper(PostgresQueryFactory queryFactory) {
+    public TestHelper(PostgresQueryFactory queryFactory) {
         this.queryFactory = queryFactory;
     }
 

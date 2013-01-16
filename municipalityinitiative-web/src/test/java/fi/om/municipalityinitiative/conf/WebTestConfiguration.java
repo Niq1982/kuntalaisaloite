@@ -1,6 +1,6 @@
 package fi.om.municipalityinitiative.conf;
 
-import fi.om.municipalityinitiative.dao.NEWTestHelper;
+import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.service.EncryptionService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -25,8 +25,8 @@ public class WebTestConfiguration {
     @Inject Environment env;
 
     @Bean
-    public NEWTestHelper newTestHelper() {
-        return new NEWTestHelper();
+    public TestHelper newTestHelper() {
+        return new TestHelper();
     }
 
     @Bean

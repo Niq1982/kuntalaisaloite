@@ -3,10 +3,8 @@ package fi.om.municipalityinitiative.web;
 import fi.om.municipalityinitiative.StartJetty;
 import fi.om.municipalityinitiative.conf.PropertyNames;
 import fi.om.municipalityinitiative.conf.WebTestConfiguration;
-import fi.om.municipalityinitiative.dao.NEWTestHelper;
+import fi.om.municipalityinitiative.dao.TestHelper;
 import org.eclipse.jetty.server.Server;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -34,12 +32,12 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={WebTestConfiguration.class})
-public abstract class NEWWebTestBase {
+public abstract class WebTestBase {
 
     protected static final int PORT = 8445; // NOTE: must match port in test.properties/baseUrl
 
     @Resource
-    protected NEWTestHelper newTestHelper;
+    protected TestHelper testHelper;
     @Resource
     protected MessageSource messageSource;
 
@@ -96,7 +94,7 @@ public abstract class NEWWebTestBase {
             Urls.initUrls("https://localhost:" + PORT);
             urls = Urls.FI;
         }
-        newTestHelper.dbCleanup();
+        testHelper.dbCleanup();
     }
     
     /* TODO: Enable

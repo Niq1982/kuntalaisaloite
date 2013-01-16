@@ -1,7 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
-import fi.om.municipalityinitiative.conf.NEWIntegrationTestConfiguration;
-import fi.om.municipalityinitiative.dao.NEWTestHelper;
+import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
+import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.newdto.MunicipalityInfo;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeCreateDto;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeInfo;
@@ -25,14 +25,14 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes={NEWIntegrationTestConfiguration.class})
+@ContextConfiguration(classes={IntegrationTestConfiguration.class})
 public class MunicipalityInitiativeServiceIntegrationTest {
 
     @Resource
     private MunicipalityInitiativeService service;
 
     @Resource
-    NEWTestHelper testHelper;
+    TestHelper testHelper;
 
     private MunicipalityInfo testMunicipality;
 
