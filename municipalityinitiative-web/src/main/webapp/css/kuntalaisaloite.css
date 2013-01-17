@@ -220,7 +220,7 @@ label input[type="text"]{display:block;}
 .input-block-extra{float:right;width:220px;margin:20px -15px 0 0;font-size:90%;color:#787878;}.input-block-extra .input-block-extra-content{position:relative;}.input-block-extra .input-block-extra-content p{margin:0px 0px 1em 0px;}
 .input-block-action{clear:both;margin-top:25px;}
 .required-info{float:right;margin-bottom:0.67em;}
-.initiative-content-row{padding-bottom:0.7em;}.initiative-content-row .header{display:block;font-weight:bold;}
+.initiative-content-row{margin-bottom:2em;}.initiative-content-row .header{display:block;font-weight:bold;}
 .initiative-content-row.last{margin:0;padding:0;border:0;}
 .initiative-content-tools{position:absolute;top:23px;right:35px;}
 .join-as-user{padding-top:0.4em;}

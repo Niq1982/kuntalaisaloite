@@ -10,4 +10,5 @@ public class MunicipalityInitiativeCreateDto {
     public String contactPhone;
     public String contactAddress;
     public Long municipalityId;
+    public String managementHash;
 }

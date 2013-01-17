@@ -54,6 +54,8 @@ public final class Views {
     public static final String SEARCH_VIEW = "find";
     public static final String CREATE_VIEW = "create";
     public static final String VIEW_VIEW = "public-view";
+    public static final String SINGLE_VIEW = "single-view";
+    public static final String COLLECT_VIEW = "collect-view";
     
     /**
      * Context relative redirect: context is prefixed to relative URLs.

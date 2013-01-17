@@ -17,8 +17,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
-import static fi.om.municipalityinitiative.web.Views.SEARCH_VIEW;
-import static fi.om.municipalityinitiative.web.Views.VIEW_VIEW;
+import static fi.om.municipalityinitiative.web.Views.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
@@ -52,8 +51,14 @@ public class MunicipalityInitiativeViewController extends BaseController {
         InitiativeViewInfo initiativeInfo = municipalityInitiativeService.getMunicipalityInitiative(initiativeId);
 
         model.addAttribute("initiative", initiativeInfo);
-        return VIEW_VIEW;
+        //return VIEW_VIEW;
 
+        if( initiativeInfo.getManagementHash() != null ){
+            return COLLECT_VIEW;
+            
+        } else {
+            return SINGLE_VIEW;
+        }
     }
 
     private static String solveMunicipalityFromListById(List<MunicipalityInfo> municipalities, Long municipalityId){
