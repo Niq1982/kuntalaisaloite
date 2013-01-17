@@ -32,7 +32,7 @@ body{height:100%;font-family:'PT Sans',"Trebuchet MS",Helvetica,sans-serif;color
 .dropdown-menu a:hover{color:black;background:#f1f1f1;}
 .no-js #header-tools #header-tools-content .other-services-container:hover .other-services-select,.no-js #header-tools #header-tools-content .logged-in-info:hover .other-services-select{border:1px solid silver;border-bottom:0;z-index:999;color:#444;background:#fff;}.no-js #header-tools #header-tools-content .other-services-container:hover .other-services-select .icon-small.dropdown-icon,.no-js #header-tools #header-tools-content .logged-in-info:hover .other-services-select .icon-small.dropdown-icon{background:#ffffff url("../img/icons-sprite.png?version=${timestamp}") no-repeat -96px -13px;}
 .no-js #header-tools #header-tools-content .other-services-container:hover .dropdown-menu,.no-js #header-tools #header-tools-content .logged-in-info:hover .dropdown-menu{display:block;}
-#header{width:100%;padding-top:18px;margin-bottom:2.3em;background:#fff;border-bottom:1px solid #cccccc;}#header #header-content{position:relative;height:130px;width:960px;margin:0 auto;}#header #header-content #header-additional-content{position:absolute;right:0px;top:20px;text-align:right;}
+#header{width:100%;padding-top:18px;margin-bottom:1.3em;background:#fff;border-bottom:1px solid #cccccc;}#header #header-content{position:relative;height:130px;width:960px;margin:0 auto;}#header #header-content #header-additional-content{position:absolute;right:0px;top:20px;text-align:right;}
 #header #logo{display:block;width:345px;height:72px;background:url("../img/logo-kuntalaisaloite.png?version=${timestamp}") 0 0 no-repeat;}
 #header #logo span{display:none;}
 #header #main-navigation{margin:0;padding:0;position:absolute;left:0;bottom:0;border-left:1px solid #ccc;}#header #main-navigation a{display:inline-block;text-decoration:none;color:#111;font-size:1.1em;padding:0.2em 0.9em 0.5em 0.9em;border-right:1px solid #cccccc;transition:color 0.2s ease-in;-moz-transition:color 0.2s ease-in;-webkit-transition:color 0.2s ease-in;-o-transition:color 0.2s ease-in;}
@@ -159,6 +159,7 @@ label.inline{display:inline;}
 label input[type="text"]{display:block;}
 .disabled-input{opacity:0.6;}
 .input-header{position:relative display: block;margin-right:30px;margin-bottom:0.2em;font-size:1em;}
+.initiative-contact-details .input-header{margin:0;}
 .alt-lang{padding-top:0.2em;}
 .highlighted{padding:5px;margin:-6px;background:#eee;border:1px solid #cccccc;}
 .icon-small{display:inline-block;width:12px;height:12px;background:transparent url("../img/icons-sprite.png?version=${timestamp}") 0 0 no-repeat;}.icon-small.settings,.icon-small.logout{position:absolute;right:15px;top:50%;margin-top:-6px;}
@@ -268,7 +269,7 @@ a.caldisabled{background-color:#efefef !important;color:#cccccc !important;curso
 .system-msg .close-msg{position:absolute;right:15px;top:18px;display:inline-block;width:16px;height:16px;line-height:13px;text-align:center;font-size:0.85em;color:#fff;opacity:0.5;cursor:pointer;transition:opacity 0.3s ease-in;-moz-transition:opacity 0.3s ease-in;-webkit-transition:opacity 0.3s ease-in;-o-transition:opacity 0.3s ease-in;}
 .system-msg:hover .close-msg{opacity:1;}
 h1,h2,h3,h4,h5,h6,p{margin-top:0;}
-h1{font-size:1.5em;line-height:1em;clear:both;color:#111;font-weight:normal;}h1.inline-header{display:inline-block;}
+h1{margin-top:1em;font-size:1.5em;line-height:1em;clear:both;color:#111;font-weight:normal;}h1.inline-header{display:inline-block;}
 .extra-info{display:block;margin:-0.7em 0 2em 0;}
 h2{color:#111;margin-bottom:0.5em;font-weight:normal;}
 .view-block h2{color:#017380;}
@@ -285,7 +286,7 @@ ul.roman,ol.roman{list-style-type:lower-roman;}
 .align-left{text-align:left;}
 .align-center{text-align:center;}
 blockquote{margin-bottom:2em;font-style:italic;}
-.municipality{margin:-0.5em 0 0.5em 0;font-size:3em;text-align:center;}
+.municipality{margin:0 0 0.5em 0;font-size:3em;text-align:center;line-height:1em;}
 .user-count-total{float:left;margin:0 40px 0 0;font-size:3em;font-style:italic;line-height:1em;}
 .user-count{font-size:1.7em;font-style:italic;}
 .table{display:table;margin-bottom:1em;}.table .row{display:table-row;}
