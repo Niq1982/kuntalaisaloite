@@ -35,7 +35,7 @@ public class MunicipalityInitiativeServiceTest {
         assertThat(participantCreateDto.franchise, is(true));
         assertThat(participantCreateDto.municipalityInitiativeId, is(117L));
 
-        assertThat(participantCreateDto.showName, is(createDto.getShowName())); // TODO: Fix XXX what?
+        assertThat(participantCreateDto.showName, is(createDto.getShowName()));
         assertThat(participantCreateDto.name, is(createDto.getContactName()));
     }
 
