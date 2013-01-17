@@ -48,10 +48,10 @@
         <br />
          <#-- One man's initiative -->
          <h2>Aloitteen tekijä</h2>
-         ${initiative.contactName} (TODO: Piilotus)
+         ${initiative.authorName} (TODO: Piilotus)
          <#if initiative.showName> Näkyy
             <h2>Aloitteen tekijä</h2>
-            <p>${initiative.contactName}</p>
+            <p>${initiative.authorName}</p>
             
         <#else>
            

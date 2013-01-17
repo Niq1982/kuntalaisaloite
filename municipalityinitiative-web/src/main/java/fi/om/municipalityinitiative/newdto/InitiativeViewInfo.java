@@ -2,16 +2,13 @@ package fi.om.municipalityinitiative.newdto;
 
 import org.joda.time.DateTime;
 
-public class MunicipalityInitiativeInfo {
+public class InitiativeViewInfo {
     private Long id;
     private String name;
     private String proposal;
     private String municipalityName;
 
-    private String contactName;
-    private String contactEmail;
-    private String contactPhone;
-    private String contactAddress;
+    private String authorName;
     private boolean showName;
     private DateTime createTime;
 
@@ -27,20 +24,8 @@ public class MunicipalityInitiativeInfo {
         return municipalityName;
     }
 
-    public String getContactName() {
-        return contactName;
-    }
-
-    public String getContactEmail() {
-        return contactEmail;
-    }
-
-    public String getContactPhone() {
-        return contactPhone;
-    }
-
-    public String getContactAddress() {
-        return contactAddress;
+    public String getAuthorName() {
+        return authorName;
     }
 
     public void setName(String name) {
@@ -55,20 +40,8 @@ public class MunicipalityInitiativeInfo {
         this.municipalityName = municipalityName;
     }
 
-    public void setContactName(String contactName) {
-        this.contactName = contactName;
-    }
-
-    public void setContactEmail(String contactEmail) {
-        this.contactEmail = contactEmail;
-    }
-
-    public void setContactPhone(String contactPhone) {
-        this.contactPhone = contactPhone;
-    }
-
-    public void setContactAddress(String contactAddress) {
-        this.contactAddress = contactAddress;
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
     }
     
     public boolean isShowName() {

@@ -2,9 +2,9 @@ package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.newdto.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.MunicipalityInfo;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeCreateDto;
-import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeInfo;
 import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeUICreateDto;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.TestUtils;
@@ -55,19 +55,18 @@ public class MunicipalityInitiativeServiceIntegrationTest {
     public void create_and_get() {
         MunicipalityInitiativeUICreateDto createDto = createDto();
         Long initiativeId = service.addMunicipalityInitiative(createDto);
-        MunicipalityInitiativeInfo initiative = service.getMunicipalityInitiative(initiativeId);
+        InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
 
         assertThat(initiative.getId(), is(initiativeId));
-        assertThat(initiative.getContactAddress(), is(createDto.getContactAddress()));
-        assertThat(initiative.getContactEmail(), is(createDto.getContactEmail()));
-        assertThat(initiative.getContactName(), is(createDto.getContactName()));
-        assertThat(initiative.getContactPhone(), is(createDto.getContactPhone()));
+        assertThat(initiative.getAuthorName(), is(createDto.getContactName()));
         assertThat(initiative.getName(), is(createDto.getName()));
         assertThat(initiative.getProposal(), is(createDto.getProposal()));
-//        assertThat(initiative.isShowName(), is(createDto.getShowName())); // TODO
+        assertThat(initiative.isShowName(), is(createDto.getShowName()));
         assertThat(initiative.getMunicipalityName(), is(testMunicipality.getName()));
 
         assertThat(initiative.getCreateTime(), is(notNullValue()));
+
+        // TODO: Verify all other values somehow
 
     }
 
@@ -94,13 +93,10 @@ public class MunicipalityInitiativeServiceIntegrationTest {
         return String.valueOf(new Random().nextInt());
     }
 
-    private void assertCreateAndGetDtos(MunicipalityInitiativeCreateDto create, MunicipalityInitiativeInfo get) {
+    private void assertCreateAndGetDtos(MunicipalityInitiativeCreateDto create, InitiativeViewInfo get) {
         Assert.assertThat(get.getProposal(), CoreMatchers.is(create.proposal));
         Assert.assertThat(get.getName(), CoreMatchers.is(create.name));
-        Assert.assertThat(get.getContactName(), CoreMatchers.is(create.contactName));
-        Assert.assertThat(get.getContactPhone(), CoreMatchers.is(create.contactPhone));
-        Assert.assertThat(get.getContactEmail(), CoreMatchers.is(create.contactEmail));
-        Assert.assertThat(get.getContactAddress(), CoreMatchers.is(create.contactAddress));
+        Assert.assertThat(get.getAuthorName(), CoreMatchers.is(create.contactName));
         //Assert.assertThat(get.getMunicipalityName(), CoreMatchers.is(testMunicipality.getName()));
         Assert.assertThat(get.getCreateTime(), CoreMatchers.is(CoreMatchers.notNullValue()));
         Assert.assertThat(get.getId(), CoreMatchers.is(CoreMatchers.notNullValue()));

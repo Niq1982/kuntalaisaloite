@@ -2,8 +2,8 @@ package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.newdao.MunicipalityInitiativeDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
+import fi.om.municipalityinitiative.newdto.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeCreateDto;
-import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeInfo;
 import fi.om.municipalityinitiative.newdto.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeSearch;
 import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeUICreateDto;
@@ -21,7 +21,7 @@ public class MunicipalityInitiativeService {
     @Resource
     private ParticipantDao participantDao;
 
-    public List<MunicipalityInitiativeInfo> findMunicipalityInitiatives(MunicipalityInitiativeSearch search) {
+    public List<InitiativeViewInfo> findMunicipalityInitiatives(MunicipalityInitiativeSearch search) {
         return municipalityInitiativeDao.findNewestFirst(search);
     }
 
@@ -63,7 +63,7 @@ public class MunicipalityInitiativeService {
         return participantCreateDto;
     }
 
-    public MunicipalityInitiativeInfo getMunicipalityInitiative(Long initiativeId) {
+    public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId) {
         return municipalityInitiativeDao.getById(initiativeId);
     }
 }

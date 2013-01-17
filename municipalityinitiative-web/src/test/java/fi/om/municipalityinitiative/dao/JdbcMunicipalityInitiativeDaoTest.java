@@ -2,8 +2,8 @@ package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.newdao.MunicipalityInitiativeDao;
+import fi.om.municipalityinitiative.newdto.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.MunicipalityInfo;
-import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeInfo;
 import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeSearch;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -48,7 +48,7 @@ public class JdbcMunicipalityInitiativeDaoTest {
         testHelper.createTestInitiative(testMunicipality.getId(), "First");
         testHelper.createTestInitiative(testMunicipality.getId(), "Second");
 
-        List<MunicipalityInitiativeInfo> result = municipalityInitiativeDao.findNewestFirst(new MunicipalityInitiativeSearch());
+        List<InitiativeViewInfo> result = municipalityInitiativeDao.findNewestFirst(new MunicipalityInitiativeSearch());
         assertThat(result.size(), is(2));
     }
 
@@ -57,7 +57,7 @@ public class JdbcMunicipalityInitiativeDaoTest {
         Long first = testHelper.createTestInitiative(testMunicipality.getId(), "First");
         Long second = testHelper.createTestInitiative(testMunicipality.getId(), "Second");
 
-        List<MunicipalityInitiativeInfo> result = municipalityInitiativeDao.findNewestFirst(new MunicipalityInitiativeSearch());
+        List<InitiativeViewInfo> result = municipalityInitiativeDao.findNewestFirst(new MunicipalityInitiativeSearch());
         assertThat(second, Matchers.is(result.get(0).getId()));
         assertThat(first, Matchers.is(result.get(1).getId()));
     }
@@ -73,7 +73,7 @@ public class JdbcMunicipalityInitiativeDaoTest {
         MunicipalityInitiativeSearch search = new MunicipalityInitiativeSearch();
         search.setMunicipality(municipalityId);
 
-        List<MunicipalityInitiativeInfo> result = municipalityInitiativeDao.findNewestFirst(search);
+        List<InitiativeViewInfo> result = municipalityInitiativeDao.findNewestFirst(search);
         assertThat(result, hasSize(1));
         assertThat(result.get(0).getId(), is(shouldBeFound));
     }
@@ -87,7 +87,7 @@ public class JdbcMunicipalityInitiativeDaoTest {
         MunicipalityInitiativeSearch search = new MunicipalityInitiativeSearch();
         search.setSearch("SHOULD be found ääöö");
 
-        List<MunicipalityInitiativeInfo> result = municipalityInitiativeDao.findNewestFirst(search);
+        List<InitiativeViewInfo> result = municipalityInitiativeDao.findNewestFirst(search);
 
         assertThat(result, hasSize(1));
         assertThat(result.get(0).getId(), is(shouldBeFound));

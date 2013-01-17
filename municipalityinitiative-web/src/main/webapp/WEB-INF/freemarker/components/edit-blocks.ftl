@@ -173,7 +173,7 @@
         <div class="input-block-content">
             <@f.textField path="initiative.contactName" required="required" optional=false cssClass="large" maxLength="512" />
             
-            <@f.formCheckbox path="initiative.showName" />
+            <@f.formCheckbox path="initiative.contactName" />
         </div>
 
         <div class="input-block-content">

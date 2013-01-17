@@ -10,10 +10,11 @@ import com.mysema.query.types.MappingProjection;
 import com.mysema.query.types.Predicate;
 import com.mysema.query.types.path.StringPath;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
+import fi.om.municipalityinitiative.newdto.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeCreateDto;
-import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeInfo;
 import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeSearch;
 import fi.om.municipalityinitiative.sql.QMunicipality;
+import fi.om.municipalityinitiative.sql.QParticipant;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -34,10 +35,11 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
     PostgresQueryFactory queryFactory;
 
     @Override
-    public List<MunicipalityInitiativeInfo> findNewestFirst(MunicipalityInitiativeSearch search) {
+    public List<InitiativeViewInfo> findNewestFirst(MunicipalityInitiativeSearch search) {
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
                 .leftJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
+                .leftJoin(municipalityInitiative.municipalityInitiativeAuthorFk, QParticipant.participant)
                 .orderBy(municipalityInitiative.id.desc());
 
         searchParameters(query, search);
@@ -91,10 +93,11 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
     }
 
     @Override
-    public MunicipalityInitiativeInfo getById(Long id) {
+    public InitiativeViewInfo getById(Long id) {
 
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
+                .leftJoin(municipalityInitiative.municipalityInitiativeAuthorFk, QParticipant.participant)
                 .leftJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
                 .where(municipalityInitiative.id.eq(id));
 
@@ -115,20 +118,21 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
 
     // Mappings:
 
-    Expression<MunicipalityInitiativeInfo> initiativeInfoMapping =
-            new MappingProjection<MunicipalityInitiativeInfo>(MunicipalityInitiativeInfo.class, municipalityInitiative.all(), QMunicipality.municipality.all()) {
+    Expression<InitiativeViewInfo> initiativeInfoMapping =
+            new MappingProjection<InitiativeViewInfo>(InitiativeViewInfo.class,
+                    municipalityInitiative.all(),
+                    QMunicipality.municipality.all(),
+                    QParticipant.participant.all()) {
                 @Override
-                protected MunicipalityInitiativeInfo map(Tuple row) {
-                    MunicipalityInitiativeInfo info = new MunicipalityInitiativeInfo();
+                protected InitiativeViewInfo map(Tuple row) {
+                    InitiativeViewInfo info = new InitiativeViewInfo();
                     info.setId(row.get(municipalityInitiative.id));
+                    info.setCreateTime(row.get(municipalityInitiative.modified));
+                    info.setMunicipalityName(row.get(QMunicipality.municipality.name));
                     info.setName(row.get(municipalityInitiative.name));
                     info.setProposal(row.get(municipalityInitiative.proposal));
-                    info.setContactAddress(row.get(municipalityInitiative.contactAddress));
-                    info.setContactEmail(row.get(municipalityInitiative.contactEmail));
-                    info.setContactName(row.get(municipalityInitiative.contactName));
-                    info.setContactPhone(row.get(municipalityInitiative.contactPhone));
-                    info.setMunicipalityName(row.get(QMunicipality.municipality.name));
-                    info.setCreateTime(row.get(municipalityInitiative.modified));
+                    info.setAuthorName(row.get(QParticipant.participant.name));
+                    info.setShowName(row.get(QParticipant.participant.showName));
                     return info;
                 }
             };
