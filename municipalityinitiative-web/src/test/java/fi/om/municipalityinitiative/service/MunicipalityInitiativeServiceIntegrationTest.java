@@ -4,14 +4,9 @@ import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.newdto.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.MunicipalityInfo;
-import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeCreateDto;
 import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeUICreateDto;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.TestUtils;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.core.IsNull;
-import org.hibernate.validator.internal.constraintvalidators.NullValidator;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,8 +18,8 @@ import javax.annotation.Resource;
 import java.util.Random;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={IntegrationTestConfiguration.class})
@@ -58,6 +53,13 @@ public class MunicipalityInitiativeServiceIntegrationTest {
         service.addMunicipalityInitiative(createDto(), true);
         assertThat(testHelper.countAll(QMunicipalityInitiative.municipalityInitiative), is(1L));
     }    
+
+    @Test
+    public void all_fields_are_set_when_getting_municipalityInitiativeInfo() {
+        Long initiativeId = service.addMunicipalityInitiative(createDto(), true);
+        InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
+        TestUtils.assertNoNullFields(initiative);
+    }
 
     @Test
     public void create_and_get() {
@@ -110,15 +112,6 @@ public class MunicipalityInitiativeServiceIntegrationTest {
 
     private static String randomString() {
         return String.valueOf(new Random().nextInt());
-    }
-
-    private void assertCreateAndGetDtos(MunicipalityInitiativeCreateDto create, InitiativeViewInfo get) {
-        Assert.assertThat(get.getProposal(), CoreMatchers.is(create.proposal));
-        Assert.assertThat(get.getName(), CoreMatchers.is(create.name));
-        Assert.assertThat(get.getAuthorName(), CoreMatchers.is(create.contactName));
-        //Assert.assertThat(get.getMunicipalityName(), CoreMatchers.is(testMunicipality.getName()));
-        Assert.assertThat(get.getCreateTime(), CoreMatchers.is(CoreMatchers.notNullValue()));
-        Assert.assertThat(get.getId(), CoreMatchers.is(CoreMatchers.notNullValue()));
     }
 
 }
