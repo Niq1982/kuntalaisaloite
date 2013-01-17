@@ -4,18 +4,20 @@
 
 <#-- 
  * localizedMap
- * 
- * Prints the value of the map with current locale.
- * If the value is undefined with current locale, alternative locale is used, otherwise empty string.
+ *
+ * Puts text content inside paragraph.
+ * Replaced double linebreaks with paragraph break and then single linebreak with linebreak. 
+ *
  * IMPORTANT!
  *   Escape characters first and then replace line-breaks with <br/> and unescape returned value  
  *
- * @param localizedMap is the localization key 
+ * @param content as String 
 -->
-<#macro text localizedMap>
+<#macro text content>
 <@compress single_line=true>
-    <#assign escapedText>${(localizedMap[locale]!"")}</#assign>
-    <#noescape>${escapedText?replace('\n\n','</p><p>')?replace('\n','<br/>')}</#noescape>
+    <#-- FIXME: Does not create paragraph breaks. -->
+    <#assign escapedText>${content!""}</#assign>
+    <#noescape><p>${escapedText?replace('\n\n','</p><p>')?replace('\n','<br/>')}</p></#noescape>
 </@compress>
 </#macro>
 
@@ -214,7 +216,8 @@
                     
                     <#-- Save initiative -->
                     <#if requestMessage == "success.save">
-                        <@messageHTML key=requestMessage args=[currentUri] />
+                        <#assign managementURL=currentUri+"?mgmnt=true" />
+                        <@messageHTML key=requestMessage args=[managementURL] />
                         <a class="small-button gray close hidden"><@message "modal.close" /></a>
                     <#else>
                         <@messageHTML requestMessage />

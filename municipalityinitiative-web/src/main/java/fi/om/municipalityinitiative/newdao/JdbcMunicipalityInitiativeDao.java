@@ -90,6 +90,7 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
         insert.set(municipalityInitiative.name, dto.name);
         insert.set(municipalityInitiative.proposal, dto.proposal);
         insert.set(municipalityInitiative.municipalityId, dto.municipalityId);
+        insert.set(municipalityInitiative.managementHash, dto.managementHash);
     }
 
     @Override
@@ -133,6 +134,7 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
                     info.setProposal(row.get(municipalityInitiative.proposal));
                     info.setAuthorName(row.get(QParticipant.participant.name));
                     info.setShowName(row.get(QParticipant.participant.showName));
+                    info.setManagementHash(row.get(municipalityInitiative.managementHash));
                     return info;
                 }
             };

@@ -79,7 +79,7 @@ public class MunicipalityInitiativeCreateController extends BaseController {
             return CREATE_VIEW;
         }
 
-        Long initiativeId = municipalityInitiativeService.addMunicipalityInitiative(initiative);
+        Long initiativeId = municipalityInitiativeService.addMunicipalityInitiative(initiative, false);
 
         Urls urls = Urls.get(locale);
         //return contextRelativeRedirect(urls.view(initiativeId));
@@ -103,7 +103,7 @@ public class MunicipalityInitiativeCreateController extends BaseController {
             return CREATE_VIEW;
         }
 
-        Long initiativeId = municipalityInitiativeService.addMunicipalityInitiative(initiative);
+        Long initiativeId = municipalityInitiativeService.addMunicipalityInitiative(initiative, true);
 
         Urls urls = Urls.get(locale);
         return redirectWithMessage(urls.view(initiativeId), RequestMessage.SAVE, request);

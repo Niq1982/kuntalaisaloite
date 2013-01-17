@@ -9,6 +9,8 @@ import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeUICreateDto;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.TestUtils;
 import org.hamcrest.CoreMatchers;
+import org.hamcrest.core.IsNull;
+import org.hibernate.validator.internal.constraintvalidators.NullValidator;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,8 +23,8 @@ import javax.annotation.Resource;
 import java.util.Random;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+
+import static org.hamcrest.Matchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={IntegrationTestConfiguration.class})
@@ -46,15 +48,21 @@ public class MunicipalityInitiativeServiceIntegrationTest {
 
 
     @Test
-    public void create() {
-        service.addMunicipalityInitiative(createDto());
+    public void createNotCollectable() {
+        service.addMunicipalityInitiative(createDto(), false);
         assertThat(testHelper.countAll(QMunicipalityInitiative.municipalityInitiative), is(1L));
     }
+    
+    @Test
+    public void createCollectable() {
+        service.addMunicipalityInitiative(createDto(), true);
+        assertThat(testHelper.countAll(QMunicipalityInitiative.municipalityInitiative), is(1L));
+    }    
 
     @Test
     public void create_and_get() {
         MunicipalityInitiativeUICreateDto createDto = createDto();
-        Long initiativeId = service.addMunicipalityInitiative(createDto);
+        Long initiativeId = service.addMunicipalityInitiative(createDto, false);
         InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
 
         assertThat(initiative.getId(), is(initiativeId));
@@ -65,8 +73,19 @@ public class MunicipalityInitiativeServiceIntegrationTest {
         assertThat(initiative.getMunicipalityName(), is(testMunicipality.getName()));
 
         assertThat(initiative.getCreateTime(), is(notNullValue()));
+        assertThat(initiative.getManagementHash(), is(org.hamcrest.Matchers.nullValue()));
 
         // TODO: Verify all other values somehow
+
+    }
+    
+    @Test
+    public void creating_collectable_initiative_adds_hash() {
+        MunicipalityInitiativeUICreateDto createDto = createDto();
+        Long initiativeId = service.addMunicipalityInitiative(createDto, true);
+        InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
+        
+        assertThat(initiative.getManagementHash(), is("0000000000111111111122222222223333333333"));
 
     }
 

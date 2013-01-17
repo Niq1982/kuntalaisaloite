@@ -11,6 +11,8 @@ public class InitiativeViewInfo {
     private String authorName;
     private boolean showName;
     private DateTime createTime;
+    
+    private String managementHash;
 
     public String getName() {
         return name;
@@ -67,4 +69,13 @@ public class InitiativeViewInfo {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public String getManagementHash() {
+        return managementHash;
+    }
+
+    public void setManagementHash(String managementHash) {
+        this.managementHash = managementHash;
+    }
+    
 }
