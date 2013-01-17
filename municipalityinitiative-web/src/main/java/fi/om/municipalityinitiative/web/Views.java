@@ -31,8 +31,6 @@ public final class Views {
 
     public static final String INDEX_VIEW = "index";
 
-    public static final String STATUS_VIEW = "status";
-    
     public static final String REGISTERED_USER = "registered-user";
 
     public static final String TEST_DATA_GENERATION = "test-data-generation";
@@ -56,6 +54,7 @@ public final class Views {
     public static final String VIEW_VIEW = "public-view";
     public static final String SINGLE_VIEW = "single-view";
     public static final String COLLECT_VIEW = "collect-view";
+    public static final String STATUS_VIEW = "status";
     
     /**
      * Context relative redirect: context is prefixed to relative URLs.

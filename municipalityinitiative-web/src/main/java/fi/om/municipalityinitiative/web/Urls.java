@@ -71,8 +71,6 @@ public final class Urls {
 
     public static final String INITIATIVE =   INITIATIVES + "/" + ID_PARAMETER;
 
-    public static final String STATUS =  "/status";
-
     
     public static final String SERVICES = "/services";
     
@@ -140,7 +138,7 @@ public final class Urls {
     public static final int DEFAULT_INITIATIVE_JSON_RESULT_COUNT = 20;
 
     // New uris
-    // XXX: Temporarily names, fix when old stuff is deleted
+
     public static final String SEARCH_FI = "/fi/hae";
 
     public static final String SEARCH_SV = "/sv/sok";
@@ -152,6 +150,8 @@ public final class Urls {
     public static final String VIEW_FI = CREATE_FI + "/" + ID_PARAMETER;
 
     public static final String VIEW_SV = CREATE_SV + "/" + ID_PARAMETER;
+
+    public static final String STATUS =  "/status";
 
     private final String baseUrl;
     
@@ -179,11 +179,11 @@ public final class Urls {
             return stringBuilder.append(svSuffix).toString();
         }
     }
-    
+
     public String frontpage() {
         return getLocalizedPageUrl(FRONT_FI, FRONT_SV);
     }
-    
+
     public String helpIndex() {
         return getLocalizedPageUrl(HELP_INDEX_FI, HELP_INDEX_SV);
     }
@@ -203,15 +203,19 @@ public final class Urls {
     public String view(Long initiativeId) {
         return getLocalizedPageUrl(VIEW_FI, VIEW_SV).replace(ID_PARAMETER, initiativeId.toString());
     }
-    
+
     public String vote(Long initiativeId) {
         return view(initiativeId) + "?" + ACTION_VOTE;
     }
-    
+
     public String initiative(Long initiativeId) {
         return baseUrl + INITIATIVE.replace(ID_PARAMETER, initiativeId.toString());
     }
-    
+
+    public String getStatusPage() {
+        return baseUrl + STATUS;
+    }
+
     public String initiatives() {
         return baseUrl + INITIATIVES;
     }

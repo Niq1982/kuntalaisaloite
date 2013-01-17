@@ -11,10 +11,7 @@ import fi.om.municipalityinitiative.conf.WebConfiguration.WebProdConfiguration;
 import fi.om.municipalityinitiative.json.JsonIdAnnotationIntrospector;
 import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeCreateController;
 import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeViewController;
-import fi.om.municipalityinitiative.web.ErrorController;
-import fi.om.municipalityinitiative.web.JsonpMessageConverter;
-import fi.om.municipalityinitiative.web.StaticPageController;
-import fi.om.municipalityinitiative.web.URILocaleResolver;
+import fi.om.municipalityinitiative.web.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -201,7 +198,16 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
                 resourcesVersion(env),
                 omPiwicId(env));
     }
-    
+
+    @Bean
+    public StatusPageController statusPageController() {
+        return new StatusPageController(
+                optimizeResources(env),
+                resourcesVersion(env
+                )
+        );
+    }
+
     @Bean
     public ErrorController errorController() {
         return new ErrorController();

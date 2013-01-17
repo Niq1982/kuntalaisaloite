@@ -125,6 +125,20 @@ public class AppConfiguration {
     }
 
     @Bean
+    public StatusService statusService() {
+        String testEmailSendTo = env.getProperty(PropertyNames.testEmailSendTo);
+        boolean testEmailConsoleOutput = env.getProperty(PropertyNames.testEmailConsoleOutput, Boolean.class, TEST_EMAIL_CONSOLE_OUTPUT_DEFAULT);
+        int messageSourceCacheSeconds = env.getProperty(PropertyNames.testMessageSourceCacheSeconds, Integer.class, TEST_MESSAGE_SOURCE_CACHE_SECONDS_DEFAULT);
+        boolean testFreemarkerShowErrorsOnPage = env.getProperty(PropertyNames.testFreemarkerShowErrorsOnPage, Boolean.class, TEST_FREEMARKER_SHOW_ERRORS_ON_PAGE_DEFAULT);
+
+        return new StatusServiceImpl(testEmailSendTo,
+                testEmailConsoleOutput, messageSourceCacheSeconds, testFreemarkerShowErrorsOnPage,
+                WebConfiguration.optimizeResources(env),
+                WebConfiguration.resourcesVersion(env),
+                WebConfiguration.appVersion(env));
+    }
+
+    @Bean
     public EncryptionService encryptionService() {
         return new EncryptionService(
                 env.getRequiredProperty(PropertyNames.registeredUserSecret),
