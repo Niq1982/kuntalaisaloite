@@ -56,16 +56,22 @@
         </#if>
     </div>
     
-    <#-- TODO: Extra details
+
+    <#-- TODO: Extra details -->
     <div class="view-block public last">
         <div class="initiative-content-row last">
 
             <h2>Aloitteen tekijät - TODO</h2>
             <span class="user-count-total">353</span>
-            <div class="join-as-user">
-                <button class="small-button"><span class="small-icon save-and-send">Liity tekijäksi</span></button>
-                <a class="push" href="#">Mitä tekijäksi liittyminen tarkoittaa?</a>
-            </div>
+            
+            <#-- Disable joining when modal request message is showed. -->
+            <#-- TODO: Should be disabled when user has just joined to initiative. What should happen with create success-modal? -->
+            <#if !requestMessageModalHTML??>
+                <div class="join-as-user">
+                    <button class="small-button"><span class="small-icon save-and-send">Liity tekijäksi</span></button>
+                    <a class="push" href="#">Mitä tekijäksi liittyminen tarkoittaa?</a>
+                </div>
+            </#if>
             <br class="clear">
 
             <div class="top-margin cf">
@@ -83,7 +89,7 @@
 
         </div>     
     </div>
-     -->
+    
 
     
     <#-- BOTTOM CONTRIBUTION -->

@@ -251,23 +251,30 @@
 
     <div class="input-block-content">
         <div class="input-header">
-            <@u.message "initiative.contactInfo" /> <@u.icon type="required" size="small" />
+            <@u.message "initiative.contactInfo" />
         </div>
 
-        <#--<@spring.bind path+".contactInfo" />-->
-        <@f.showError />
-        
-        <div class="initiative-own-details-area">
+        <div class="initiative-contact-details">
             <div class="column col-1of2">
+                <@textField path="initiative.contactEmail" required="required" optional=false cssClass="medium" maxLength="512" />
+            
+                <#--
                 <label>
-                    <@u.message "initiative.contactEmail" />
+                    <@u.message "initiative.contactEmail" /> <@u.icon type="required" size="small" />
+                    <@spring.bind "initiative.contactEmail" />
+                    <@showError />
                     <@spring.formInput "initiative.contactEmail", 'class="medium" maxlength="'+InitiativeConstants.AUTHOR_EMAIL_MAX?string("#")+'"' />
                 </label>
+                -->
                 
+                <@textField path="initiative.contactPhone" required="" optional=false cssClass="medium" maxLength="512" />
+                
+                <#--
                 <label>
                     <@u.message "initiative.contactPhone" />
                     <@spring.formInput "initiative.contactPhone", 'class="medium" maxlength="'+InitiativeConstants.AUTHOR_PHONE_MAX?string("#")+'"' />
                 </label>
+                -->
             </div>
             
             <div class="column col-1of2 last">
