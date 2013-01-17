@@ -1,6 +1,6 @@
 package fi.om.municipalityinitiative.conf;
 
-import fi.om.municipalityinitiative.dao.NEWTestHelper;
+import fi.om.municipalityinitiative.dao.TestHelper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -11,11 +11,11 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Import(AppConfiguration.class)
 @PropertySource({"classpath:default.properties", "classpath:test.properties"})
 @EnableTransactionManagement(proxyTargetClass=false)
-public class NEWIntegrationTestConfiguration {
+public class IntegrationTestConfiguration {
 
     @Bean
-    public NEWTestHelper testHelper() {
-        return new NEWTestHelper();
+    public TestHelper testHelper() {
+        return new TestHelper();
     }
 }
 

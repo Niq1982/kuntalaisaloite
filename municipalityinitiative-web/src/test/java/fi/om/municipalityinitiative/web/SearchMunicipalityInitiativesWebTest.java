@@ -9,7 +9,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
-public class SearchMunicipalityInitiativesWebTest extends NEWWebTestBase {
+public class SearchMunicipalityInitiativesWebTest extends WebTestBase {
 
     @Test
     public void page_opens_when_navigation_link_clicked() {
@@ -20,7 +20,7 @@ public class SearchMunicipalityInitiativesWebTest extends NEWWebTestBase {
     @Test
     @Ignore("Wont work due usage of chosen.js. Fix or implement another test which verifies that the list works.")
     public void municipalities_are_listed() {
-        newTestHelper.createTestMunicipality("Tuusula");
+        testHelper.createTestMunicipality("Tuusula");
         open(urls.search());
 
         WebElement municipalities = driver.findElement(By.id("municipality_chzn"));

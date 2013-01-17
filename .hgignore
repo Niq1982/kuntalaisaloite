@@ -22,9 +22,15 @@ syntax: regexp
 ^municipalityinitiative-web/src/test/resources/bonecp-config\.xml$
 
 syntax:regexp
-^municipalityinitiative-web/(.+)\.iml$
+.iml$
+syntax:regexp
+.DS_Store$
+syntax:regexp
+.class$
+syntax:regexp
+.orig
 syntax: glob
-municipalityinitiative-web/.idea/*
+.idea/*
 
 syntax:regexp
 ^(.+)\.iml$

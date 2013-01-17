@@ -13,4 +13,6 @@ public interface MunicipalityInitiativeDao {
     Long create(MunicipalityInitiativeCreateDto dto);
 
     MunicipalityInitiativeInfo getById(Long id);
+
+    void assignAuthor(Long municipalityInitiativeId, Long participantId);
 }

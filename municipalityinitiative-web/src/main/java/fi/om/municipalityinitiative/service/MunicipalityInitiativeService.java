@@ -1,10 +1,10 @@
 package fi.om.municipalityinitiative.service;
 
-import fi.om.municipalityinitiative.newdao.ComposerDao;
 import fi.om.municipalityinitiative.newdao.MunicipalityInitiativeDao;
-import fi.om.municipalityinitiative.newdto.ComposerCreateDto;
+import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeCreateDto;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeInfo;
+import fi.om.municipalityinitiative.newdto.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeSearch;
 import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeUICreateDto;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +19,7 @@ public class MunicipalityInitiativeService {
     private MunicipalityInitiativeDao municipalityInitiativeDao;
 
     @Resource
-    private ComposerDao composerDao;
+    private ParticipantDao participantDao;
 
     public List<MunicipalityInitiativeInfo> findMunicipalityInitiatives(MunicipalityInitiativeSearch search) {
         return municipalityInitiativeDao.findNewestFirst(search);
@@ -30,7 +30,8 @@ public class MunicipalityInitiativeService {
         // TODO: Validate ?
 
         Long municipalityInitiativeId = municipalityInitiativeDao.create(parse(createDto));
-        composerDao.add(parse(createDto, municipalityInitiativeId));
+        Long participantId = participantDao.add(parse(createDto, municipalityInitiativeId));
+        municipalityInitiativeDao.assignAuthor(municipalityInitiativeId, participantId);
 
         return municipalityInitiativeId;
     }
@@ -50,16 +51,16 @@ public class MunicipalityInitiativeService {
         return municipalityInitiativeCreateDto;
     }
 
-    static ComposerCreateDto parse(MunicipalityInitiativeUICreateDto source, Long municipalityInitiativeId) {
-        ComposerCreateDto composerCreateDto = new ComposerCreateDto();
+    static ParticipantCreateDto parse(MunicipalityInitiativeUICreateDto source, Long municipalityInitiativeId) {
+        ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
 
-        composerCreateDto.municipalityInitiativeId = municipalityInitiativeId; // TODO: Fix null possibilities after valdiations are complete
-        composerCreateDto.right_of_voting = source.getFranchise() == null ? false : source.getFranchise();
+        participantCreateDto.municipalityInitiativeId = municipalityInitiativeId; // TODO: Fix null possibilities after valdiations are complete
+        participantCreateDto.franchise = source.getFranchise() == null ? false : source.getFranchise();
 
-        composerCreateDto.showName = source.getShowName() == null ? false : source.getShowName();
-        composerCreateDto.name = source.getContactName();
-        composerCreateDto.municipalityId = source.getHomeMunicipality();
-        return composerCreateDto;
+        participantCreateDto.showName = source.getShowName() == null ? false : source.getShowName();
+        participantCreateDto.name = source.getContactName();
+        participantCreateDto.municipalityId = source.getHomeMunicipality();
+        return participantCreateDto;
     }
 
     public MunicipalityInitiativeInfo getMunicipalityInitiative(Long initiativeId) {

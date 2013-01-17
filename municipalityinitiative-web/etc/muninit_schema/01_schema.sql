@@ -14,12 +14,14 @@ create index municipality_id_index on municipality(id);
 create table municipality_initiative (
 	id bigserial,
 	municipality_id bigserial,
+	author_id bigserial,
 
     modified timestamp constraint municipality_initiative_modified_nn not null default now(),
 
     name varchar(512) constraint municipality_initiative_name_nn not null,
     proposal text,
     management_hash char(40),
+    sent timestamp,
 
     contact_name varchar(256),
     contact_email varchar(256),
@@ -32,18 +34,19 @@ create table municipality_initiative (
 
 create index municipality_initiative_id_index on municipality_initiative(id);
 
-create table composer (
+create table participant (
 	id bigserial,
 	municipality_initiative_id bigserial,
 
 	name varchar(256),
 
 	municipality_id bigserial,
-    show_name boolean constraint composer_public_name not null,
+    show_name boolean constraint participant_public_name not null,
     franchise boolean,
 
-    constraint composer_pk primary key (id),
-    constraint composer_municipality_initiative_id foreign key (municipality_initiative_id) references municipality_initiative(id)
+    constraint participant_pk primary key (id),
+    constraint participant_municipality_initiative_id foreign key (municipality_initiative_id) references municipality_initiative(id)
 );
+create index participant_id_index on participant(id);
 
-create index composer_id_index on composer(id);
+alter table municipality_initiative add constraint municipality_initiative_author_fk foreign key(author_id) references participant(id) INITIALLY DEFERRED;

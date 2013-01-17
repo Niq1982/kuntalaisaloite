@@ -110,8 +110,8 @@ public class AppConfiguration {
     }
 
     @Bean
-    public ComposerDao composerDao() {
-        return new JdbcComposerDao();
+    public ParticipantDao composerDao() {
+        return new JdbcParticipantDao();
     }
 
     @Bean

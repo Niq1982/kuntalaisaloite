@@ -3,30 +3,30 @@ package fi.om.municipalityinitiative.dao;
 import com.mysema.query.sql.RelationalPathBase;
 import com.mysema.query.sql.dml.SQLInsertClause;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
-import fi.om.municipalityinitiative.sql.QComposer;
 import fi.om.municipalityinitiative.sql.QMunicipality;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
+import fi.om.municipalityinitiative.sql.QParticipant;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 
-public class NEWTestHelper {
+public class TestHelper {
 
     @Resource
     PostgresQueryFactory queryFactory;
 
-    public NEWTestHelper() {
+    public TestHelper() {
     }
 
-    public NEWTestHelper(PostgresQueryFactory queryFactory) {
+    public TestHelper(PostgresQueryFactory queryFactory) {
         this.queryFactory = queryFactory;
     }
 
     @Transactional(readOnly=false)
     public void dbCleanup() {
-        queryFactory.delete(QComposer.composer).execute();
+        queryFactory.delete(QParticipant.participant).execute();
         queryFactory.delete(QMunicipalityInitiative.municipalityInitiative).execute();
         queryFactory.delete(QMunicipality.municipality).execute();
     }
@@ -54,8 +54,26 @@ public class NEWTestHelper {
         insert.set(municipalityInitiative.name, name);
         insert.set(municipalityInitiative.proposal, "proposal");
         insert.set(municipalityInitiative.municipalityId, municipalityId);
+        insert.set(municipalityInitiative.authorId, -1L);
+        //insert.setNull(municipalityInitiative.authorId); // TODO
 
-        return insert.executeWithKey(municipalityInitiative.id);
+        Long initiativeId = insert.executeWithKey(municipalityInitiative.id);
+
+        Long participantId = queryFactory.insert(QParticipant.participant)
+                .set(QParticipant.participant.municipalityId, municipalityId)
+                .set(QParticipant.participant.municipalityInitiativeId, initiativeId)
+                .set(QParticipant.participant.name, "Antti Author")
+                .set(QParticipant.participant.showName, true) // Changing these will affect on tests
+                .set(QParticipant.participant.franchise, true) //
+                .executeWithKey(QParticipant.participant.id);
+
+        queryFactory.update(municipalityInitiative)
+                .set(municipalityInitiative.authorId, participantId)
+                .where(municipalityInitiative.id.eq(initiativeId))
+                .execute();
+
+        return initiativeId;
+
     }
 
     @Transactional
@@ -64,3 +82,4 @@ public class NEWTestHelper {
     }
 
 }
+

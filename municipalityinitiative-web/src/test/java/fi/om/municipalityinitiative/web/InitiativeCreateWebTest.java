@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-public class InitiativeCreateWebTest extends NEWWebTestBase {
+public class InitiativeCreateWebTest extends WebTestBase {
     
     private static final String MUNICIPALITY_1 = "Vantaa";
     private static final String MUNICIPALITY_2 = "Helsinki";
@@ -38,8 +38,8 @@ public class InitiativeCreateWebTest extends NEWWebTestBase {
     }
 
     public void select_municipality() {
-        newTestHelper.createTestMunicipality(MUNICIPALITY_1);
-        newTestHelper.createTestMunicipality(MUNICIPALITY_2);
+        testHelper.createTestMunicipality(MUNICIPALITY_1);
+        testHelper.createTestMunicipality(MUNICIPALITY_2);
 
         open(urls.createNew());
         
