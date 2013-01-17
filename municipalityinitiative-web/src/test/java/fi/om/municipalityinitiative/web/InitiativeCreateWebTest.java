@@ -29,7 +29,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     
     // Create an initiative that has only one author
     @Test
-    //@Ignore("Fix this test")
+    @Ignore("Fix this test")
     public void create_and_send_initiative() {
         select_municipality();
         add_initiative_content();
