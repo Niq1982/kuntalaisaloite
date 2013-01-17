@@ -1,7 +1,7 @@
 package fi.om.municipalityinitiative.newweb;
 
+import fi.om.municipalityinitiative.newdto.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.MunicipalityInfo;
-import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeInfo;
 import fi.om.municipalityinitiative.service.MunicipalityInitiativeService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.web.BaseController;
@@ -49,7 +49,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
     @RequestMapping(value={ VIEW_FI, VIEW_SV }, method=GET)
     public String view(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
 
-        MunicipalityInitiativeInfo initiativeInfo = municipalityInitiativeService.getMunicipalityInitiative(initiativeId);
+        InitiativeViewInfo initiativeInfo = municipalityInitiativeService.getMunicipalityInitiative(initiativeId);
 
         model.addAttribute("initiative", initiativeInfo);
         return VIEW_VIEW;

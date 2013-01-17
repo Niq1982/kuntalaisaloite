@@ -29,6 +29,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import static fi.om.municipalityinitiative.web.Views.contextRelativeRedirect;
+import static fi.om.municipalityinitiative.web.Urls.ACTION_SAVE;
 import static fi.om.municipalityinitiative.web.Urls.CREATE_FI;
 import static fi.om.municipalityinitiative.web.Urls.CREATE_SV;
 import static fi.om.municipalityinitiative.web.Views.CREATE_VIEW;
@@ -82,9 +83,30 @@ public class MunicipalityInitiativeCreateController extends BaseController {
 
         Urls urls = Urls.get(locale);
         //return contextRelativeRedirect(urls.view(initiativeId));
-        //return redirectWithMessage(urls.view(initiativeId), RequestMessage.SAVE_AND_SEND, request);
-        return redirectWithMessage(urls.view(initiativeId), RequestMessage.SAVE, request);
+        return redirectWithMessage(urls.view(initiativeId), RequestMessage.SAVE_AND_SEND, request);
+    }
+    
+    @RequestMapping(value={ CREATE_FI, CREATE_SV }, method=POST, params=ACTION_SAVE)
+    public String createAndCollectPost(@ModelAttribute("initiative") MunicipalityInitiativeUICreateDto initiative,
+                            BindingResult bindingResult,
+                            Model model,
+                            Locale locale,
+                            HttpServletRequest request) {
 
+
+        // TODO: Extract all validations to own service for encapsulation and testability
+        validator.validate(initiative, bindingResult);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("initiative", initiative);
+            model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
+            model.addAttribute("errors", bindingResult);
+            return CREATE_VIEW;
+        }
+
+        Long initiativeId = municipalityInitiativeService.addMunicipalityInitiative(initiative);
+
+        Urls urls = Urls.get(locale);
+        return redirectWithMessage(urls.view(initiativeId), RequestMessage.SAVE, request);
     }
 
     @InitBinder

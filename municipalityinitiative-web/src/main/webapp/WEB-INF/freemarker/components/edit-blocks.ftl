@@ -38,11 +38,11 @@
         <a href="#step-header-${nextStep}" id="button-next-${nextStep}" class="small-button disable-dbl-click-check ignoredirty" onClick="proceedTo(${nextStep}); return false;"><span class="small-icon next"><@u.message "action.continue" /></span></a>
         <a href="index.html" class="push"><@u.message "action.cancel" /></a>
     <#elseif type == "save-and-send">
-        <button type="submit" name="save" class="small-button" ><span class="small-icon mail" data-textsend="Tallenna ja lähetä" data-textsave="Tallenna ja lähetä"><@u.message "action.saveAndSend" /></span></button>
+        <button type="submit" name="action-save-and-send" class="small-button" ><span class="small-icon mail" data-textsend="Tallenna ja lähetä" data-textsave="Tallenna ja lähetä"><@u.message "action.saveAndSend" /></span></button>
         <#--<br/><br/>
         <a href="index.html" class=""><@u.message "action.cancel" /></a>-->
     <#elseif type == "save">
-        <button type="submit" name="save" class="small-button" ><span class="small-icon save-and-send" data-textsend="Tallenna ja aloita kerääminen" data-textsave="Tallenna ja lähetä"><@u.message "action.save" /></span></button>
+        <button type="submit" name="action-save" class="small-button" ><span class="small-icon save-and-send" data-textsend="Tallenna ja aloita kerääminen" data-textsave="Tallenna ja lähetä"><@u.message "action.save" /></span></button>
     </#if>
 </#macro>
 
@@ -173,7 +173,7 @@
         <div class="input-block-content">
             <@f.textField path="initiative.contactName" required="required" optional=false cssClass="large" maxLength="512" />
             
-            <@f.formCheckbox path="initiative.showName" />
+            <@f.formCheckbox path="initiative.contactName" />
         </div>
 
         <div class="input-block-content">
