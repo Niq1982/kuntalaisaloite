@@ -837,6 +837,11 @@ $toggleAreaLabel.each(function (){
  * - Calls generateModal() with modalData variable which includes all HTML content for the modal
  * 
  * */
+	
+	// Initiative saved and ready to collect participants
+	if( typeof modalData != 'undefined' && typeof modalData.requestMessage != 'undefined' ){
+		generateModal(modalData.requestMessage(), 'minimal');
+	}	
 
  	// Show initiative's public user list
 	$('.show-user-list-1').click(function(){

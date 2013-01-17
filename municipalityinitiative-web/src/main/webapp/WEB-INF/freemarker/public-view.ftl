@@ -105,7 +105,7 @@
 <script type="text/javascript">
     var modalData = {};
     
-    <#-- Modal: Request messages. Also in management-view. Check for components/utils.ftl -->
+    <#-- Modal: Request messages. Check for components/utils.ftl -->
     <#if requestMessageModalHTML??>    
         modalData.requestMessage = function() {
             return [{

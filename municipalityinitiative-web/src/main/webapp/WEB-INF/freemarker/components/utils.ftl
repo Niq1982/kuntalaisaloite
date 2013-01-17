@@ -211,15 +211,13 @@
             <#-- NOTE: successMessageModalHTML needs to be global for modals. -->
             <#global requestMessageModalHTML>
                 <@compress single_line=true>
-                    <@messageHTML requestMessage />
                     
-                    <#-- Save initiative and send invitations -->
-                    <#if requestMessage == "success.save-and-send-invitations">
+                    <#-- Save initiative -->
+                    <#if requestMessage == "success.save">
+                        <@messageHTML key=requestMessage args=[currentUri] />
                         <a class="small-button gray close hidden"><@message "modal.close" /></a>
-                    </#if>
-                    <#-- Voted successfully -->
-                    <#if requestMessage == "success.confirm-vote">
-                        <a href="${urls.logout()}" class="small-button gray"><span class="small-icon logout"><@message "common.logout" /></span></a><a href="${urls.baseUrl}/${locale}" class="small-button gray push close"><@message "modal.continueBrowsing" /></a>
+                    <#else>
+                        <@messageHTML requestMessage />
                     </#if>
                     
                 </@compress>

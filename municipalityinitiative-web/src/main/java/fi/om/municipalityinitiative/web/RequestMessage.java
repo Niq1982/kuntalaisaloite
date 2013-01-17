@@ -2,8 +2,12 @@ package fi.om.municipalityinitiative.web;
 import static fi.om.municipalityinitiative.web.RequestMessageType.SUCCESS;
 import static fi.om.municipalityinitiative.web.RequestMessageType.WARNING;
 public enum RequestMessage {
+    // Success messages - Municipality
+    SAVE_AND_SEND (SUCCESS),
+    SAVE (SUCCESS, true),
+    
     // Success messages
-    SAVE (SUCCESS),
+    //SAVE (SUCCESS),
     SEND_INVITATIONS (SUCCESS),
     SAVE_AND_SEND_INVITATIONS (SUCCESS, true),
     ACCEPT_INVITATION (SUCCESS),
