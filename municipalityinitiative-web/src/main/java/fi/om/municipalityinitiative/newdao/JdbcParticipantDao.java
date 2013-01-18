@@ -21,7 +21,7 @@ public class JdbcParticipantDao implements ParticipantDao {
 
     @Override
     @Transactional(readOnly = false)
-    public Long add(ParticipantCreateDto createDto) {
+    public Long create(ParticipantCreateDto createDto) {
         return queryFactory.insert(participant)
                 .set(participant.franchise, createDto.franchise)
                 .set(participant.municipalityId, createDto.municipalityId)

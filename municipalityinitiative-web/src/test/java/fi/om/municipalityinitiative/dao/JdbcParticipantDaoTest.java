@@ -37,7 +37,7 @@ public class JdbcParticipantDaoTest {
 
     @Test
     public void adds_new_composers() {
-        participantDao.add(composerCreateDto());
+        participantDao.create(composerCreateDto());
         assertThat(testHelper.countAll(QParticipant.participant), is(2L)); // Creator plus this
     }
 
@@ -87,7 +87,7 @@ public class JdbcParticipantDaoTest {
         participantCreateDto.municipalityId = testMunicipalityId;
         participantCreateDto.franchise = rightOfVoting;
         participantCreateDto.showName = publicName;
-        participantDao.add(participantCreateDto);
+        participantDao.create(participantCreateDto);
         return participantCreateDto;
     }
 

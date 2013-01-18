@@ -22,7 +22,7 @@ public class MunicipalityInitiativeService {
     }
 
     @Transactional(readOnly = false)
-    public Long addMunicipalityInitiative(MunicipalityInitiativeUICreateDto createDto, boolean isCollectable) {
+    public Long createMunicipalityInitiative(MunicipalityInitiativeUICreateDto createDto, boolean isCollectable) {
         // TODO: Validate ?
 
         MunicipalityInitiativeCreateDto municipalityInitiativeCreateDto = parse(createDto);
@@ -30,7 +30,7 @@ public class MunicipalityInitiativeService {
             municipalityInitiativeCreateDto.managementHash = "0000000000111111111122222222223333333333";
         }    
         Long municipalityInitiativeId = municipalityInitiativeDao.create(municipalityInitiativeCreateDto);
-        Long participantId = participantDao.add(parse(createDto, municipalityInitiativeId));
+        Long participantId = participantDao.create(parse(createDto, municipalityInitiativeId));
         municipalityInitiativeDao.assignAuthor(municipalityInitiativeId, participantId);
 
         return municipalityInitiativeId;
