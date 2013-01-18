@@ -31,12 +31,12 @@ public class MunicipalityInitiativeServiceTest {
         MunicipalityInitiativeUICreateDto createDto = createDtoFillAllFields();
         ParticipantCreateDto participantCreateDto = MunicipalityInitiativeService.parse(createDto, 117L);
 
-        assertThat(participantCreateDto.municipalityId, is(createDto.getHomeMunicipality()));
-        assertThat(participantCreateDto.franchise, is(true));
-        assertThat(participantCreateDto.municipalityInitiativeId, is(117L));
+        assertThat(participantCreateDto.getMunicipalityId(), is(createDto.getHomeMunicipality()));
+        assertThat(participantCreateDto.getFranchise(), is(true));
+        assertThat(participantCreateDto.getMunicipalityInitiativeId(), is(117L));
 
-        assertThat(participantCreateDto.showName, is(createDto.getShowName()));
-        assertThat(participantCreateDto.name, is(createDto.getContactName()));
+        assertThat(participantCreateDto.getShowName(), is(createDto.getShowName()));
+        assertThat(participantCreateDto.getName(), is(createDto.getContactName()));
     }
 
     private MunicipalityInitiativeUICreateDto createDtoFillAllFields() {
