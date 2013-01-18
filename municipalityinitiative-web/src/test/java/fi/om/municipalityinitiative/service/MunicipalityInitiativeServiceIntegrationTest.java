@@ -79,9 +79,8 @@ public class MunicipalityInitiativeServiceIntegrationTest {
         assertThat(initiative.isCollectable(), is(false));
 
         // TODO: Verify all other values somehow
-
     }
-    
+
     @Test
     public void creating_collectable_initiative_adds_hash() {
         MunicipalityInitiativeUICreateDto createDto = createDto();

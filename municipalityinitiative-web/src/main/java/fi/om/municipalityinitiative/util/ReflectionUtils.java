@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 
 public class ReflectionUtils {
 
-    public static void copyFieldValuesToChild(Object parent, Object child) {
+    public static <T, E extends T> void copyFieldValuesToChild(T parent, E child) {
 
         try {
             for (Field field : parent.getClass().getDeclaredFields()) {

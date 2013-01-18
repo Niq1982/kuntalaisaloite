@@ -22,7 +22,7 @@ public class ValidationServiceImpl implements ValidationService{
     }
 
     @Override
-    public boolean validatorErrors(Object o, BindingResult bindingResult, Model model) {
+    public boolean validationErrors(Object o, BindingResult bindingResult, Model model) {
         return !validationSuccessful(o, bindingResult, model);
     }
 }

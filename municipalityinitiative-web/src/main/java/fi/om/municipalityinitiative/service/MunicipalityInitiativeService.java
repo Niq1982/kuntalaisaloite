@@ -3,11 +3,13 @@ package fi.om.municipalityinitiative.service;
 import fi.om.municipalityinitiative.newdao.MunicipalityInitiativeDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.*;
+import fi.om.municipalityinitiative.util.ReflectionUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
 import java.util.List;
+
 
 public class MunicipalityInitiativeService {
 
@@ -35,6 +37,14 @@ public class MunicipalityInitiativeService {
         municipalityInitiativeDao.assignAuthor(municipalityInitiativeId, participantId);
 
         return municipalityInitiativeId;
+    }
+
+    @Transactional(readOnly = false)
+    public Long createParticipant(ParticipantUIICreateDto participant, Long initiativeId) {
+        ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
+        ReflectionUtils.copyFieldValuesToChild(participant, participantCreateDto);
+        participantCreateDto.setMunicipalityInitiativeId(initiativeId);
+        return participantDao.create(participantCreateDto);
     }
 
     static MunicipalityInitiativeCreateDto parse(MunicipalityInitiativeUICreateDto source) {
@@ -66,9 +76,5 @@ public class MunicipalityInitiativeService {
 
     public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId) {
         return municipalityInitiativeDao.getById(initiativeId);
-    }
-
-    public void createParticipant(ParticipantUIICreateDto participant, Long initiativeId) {
-//        return participantDao.create()
     }
 }

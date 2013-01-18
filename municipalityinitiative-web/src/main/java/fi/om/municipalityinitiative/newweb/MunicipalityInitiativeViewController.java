@@ -83,11 +83,6 @@ public class MunicipalityInitiativeViewController extends BaseController {
         model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
         model.addAttribute("initiative", participant);
         return COLLECT_VIEW;
-
-
-
-
-
     }
 
 
