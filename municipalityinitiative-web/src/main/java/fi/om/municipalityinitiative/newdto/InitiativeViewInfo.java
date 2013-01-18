@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newdto;
 
+import com.google.common.base.Optional;
 import org.joda.time.DateTime;
 
 public class InitiativeViewInfo {
@@ -12,7 +13,7 @@ public class InitiativeViewInfo {
     private boolean showName;
     private DateTime createTime;
     
-    private String managementHash;
+    private Optional<String> maybeManagementHash = Optional.absent();
 
     public String getName() {
         return name;
@@ -70,12 +71,15 @@ public class InitiativeViewInfo {
         this.id = id;
     }
 
-    public String getManagementHash() {
-        return managementHash;
+    public void setMaybeManagementHash(Optional<String> maybeManagementHash) {
+        this.maybeManagementHash = maybeManagementHash;
     }
 
-    public void setManagementHash(String managementHash) {
-        this.managementHash = managementHash;
+    public String getManagementHash() {
+        return maybeManagementHash.orNull();
     }
-    
+
+    public boolean isCollectable() {
+        return maybeManagementHash.isPresent();
+    }
 }

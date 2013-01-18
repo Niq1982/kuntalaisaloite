@@ -76,6 +76,7 @@ public class MunicipalityInitiativeServiceIntegrationTest {
 
         assertThat(initiative.getCreateTime(), is(notNullValue()));
         assertThat(initiative.getManagementHash(), is(org.hamcrest.Matchers.nullValue()));
+        assertThat(initiative.isCollectable(), is(false));
 
         // TODO: Verify all other values somehow
 
@@ -88,6 +89,7 @@ public class MunicipalityInitiativeServiceIntegrationTest {
         InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
         
         assertThat(initiative.getManagementHash(), is("0000000000111111111122222222223333333333"));
+        assertThat(initiative.isCollectable(), is(true));
 
     }
 

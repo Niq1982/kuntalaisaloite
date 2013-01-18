@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newdao;
 
+import com.google.common.base.Optional;
 import com.mysema.commons.lang.Assert;
 import com.mysema.query.Tuple;
 import com.mysema.query.sql.dml.SQLInsertClause;
@@ -134,7 +135,7 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
                     info.setProposal(row.get(municipalityInitiative.proposal));
                     info.setAuthorName(row.get(QParticipant.participant.name));
                     info.setShowName(row.get(QParticipant.participant.showName));
-                    info.setManagementHash(row.get(municipalityInitiative.managementHash));
+                    info.setMaybeManagementHash(Optional.of(row.get(municipalityInitiative.managementHash)));
                     return info;
                 }
             };

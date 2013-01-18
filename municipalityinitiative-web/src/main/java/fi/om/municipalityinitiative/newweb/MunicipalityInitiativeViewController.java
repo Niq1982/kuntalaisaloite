@@ -54,7 +54,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
 
         model.addAttribute("initiative", initiativeInfo);
 
-        if( initiativeInfo.getManagementHash() != null ){
+        if (initiativeInfo.isCollectable()){
             model.addAttribute("participant", new ParticipantUICreateDto()); // TODO: If not sent to municipality
             model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
             return COLLECT_VIEW;
