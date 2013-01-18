@@ -50,7 +50,7 @@
                 <#if urls.baseUrl?starts_with(testSite) || urls.baseUrl?starts_with(prodTestSite)>
                     Tämä on oikeusministeriön kuntalaisaloiteverkkopalvelun testisivusto, joka on kehityksen alla.
                 <#elseif urls.baseUrl?starts_with(devSite) >
-                    Tämä on oikeusministeriön kansalaisaloiteverkkopalvelun kehitysversio.
+                    Tämä on oikeusministeriön kuntalaisaloiteverkkopalvelun kehitysversio.
                     <br/>Sovellus voi toimia arvaamattomasti ja sisältää päätöntä dataa.
                 </#if>
             </div>
