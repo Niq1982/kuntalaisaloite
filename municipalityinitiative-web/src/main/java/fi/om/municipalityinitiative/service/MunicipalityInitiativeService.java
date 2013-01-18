@@ -67,4 +67,8 @@ public class MunicipalityInitiativeService {
     public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId) {
         return municipalityInitiativeDao.getById(initiativeId);
     }
+
+    public void createParticipant(ParticipantUIICreateDto participant, Long initiativeId) {
+//        return participantDao.create()
+    }
 }

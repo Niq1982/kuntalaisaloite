@@ -6,9 +6,11 @@ import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeSearch;
 import fi.om.municipalityinitiative.newdto.ParticipantUIICreateDto;
 import fi.om.municipalityinitiative.service.MunicipalityInitiativeService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
+import fi.om.municipalityinitiative.service.ValidationService;
 import fi.om.municipalityinitiative.web.BaseController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -21,6 +23,7 @@ import java.util.Locale;
 import static fi.om.municipalityinitiative.web.Urls.*;
 import static fi.om.municipalityinitiative.web.Views.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 public class MunicipalityInitiativeViewController extends BaseController {
@@ -30,6 +33,9 @@ public class MunicipalityInitiativeViewController extends BaseController {
     
     @Resource
     private MunicipalityInitiativeService municipalityInitiativeService;
+
+    @Resource
+    private ValidationService validationService;
 
     public MunicipalityInitiativeViewController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
@@ -62,6 +68,29 @@ public class MunicipalityInitiativeViewController extends BaseController {
             return SINGLE_VIEW;
         }
     }
+
+    @RequestMapping(value={ VIEW_FI, VIEW_SV }, method=POST)
+    public String participate(@PathVariable("id") Long initiativeId, ParticipantUIICreateDto participant,
+                              BindingResult bindingResult, Model model, Locale locale, HttpServletRequest request) {
+
+        // TODO Check id collectable
+        // TODO: If not sent to municipality
+        if (validationService.validationSuccessful(participant, bindingResult, model)) {
+            municipalityInitiativeService.createParticipant(participant, initiativeId);
+        }
+
+        model.addAttribute("participant", new ParticipantUIICreateDto());
+        model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
+        model.addAttribute("initiative", participant);
+        return COLLECT_VIEW;
+
+
+
+
+
+    }
+
+
 
     private static String solveMunicipalityFromListById(List<MunicipalityInfo> municipalities, Long municipalityId){
         if (municipalityId == null)
