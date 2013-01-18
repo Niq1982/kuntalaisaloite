@@ -40,12 +40,12 @@
 
             <div class="top-margin cf">
                 <div class="column col-1of2">
-                    <p>Äänioikeutettuja Oulun kunnan jäseniä yhteensä<br>
+                    <p>Äänioikeutettuja jäseniä yhteensä kunnassa Oulu<br />
                     <span class="user-count">217</span><br>
                     <a class="trigger-tooltip show-user-list-1" href="#" title="Näytä nimensä julkistaneiden lista">195 julkista nimeä</a><br>22 ei julkista nimeä</p>
                 </div>
                 <div class="column col-1of2 last">
-                    <p>Ei äänioikeutettuja ja muita kuin Oulun kunnan jäseniä yhteensä<br>
+                    <p>Ei äänioikeutettuja ja muita kuin Oulun kunnan jäseniä yhteensä<br />
                     <span class="user-count">195</span><br>
                     <a class="trigger-tooltip show-user-list-1" href="#" title="Näytä nimensä julkistaneiden lista">102 julkista nimeä</a><br>34 ei julkista nimeä</p>
                 </div>

@@ -84,9 +84,9 @@ public class MunicipalityInitiativeViewController extends BaseController {
             return redirectWithMessage(urls.view(initiativeId), RequestMessage.SAVE, request);
         }
         else {
-            model.addAttribute("participant", new ParticipantUIICreateDto());
+            model.addAttribute("participant", participant);
             model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
-            model.addAttribute("initiative", participant);
+            model.addAttribute("initiative", municipalityInitiativeService.getMunicipalityInitiative(initiativeId));
             return COLLECT_VIEW;
         }
     }
