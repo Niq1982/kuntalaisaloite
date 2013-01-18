@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.newweb;
 
 import fi.om.municipalityinitiative.service.MunicipalityInitiativeService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
+import fi.om.municipalityinitiative.service.ValidationService;
 import fi.om.municipalityinitiative.web.BaseController;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
@@ -11,7 +12,6 @@ import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -39,7 +39,7 @@ public class MunicipalityInitiativeCreateController extends BaseController {
     private MunicipalityInitiativeService municipalityInitiativeService;
 
     @Resource
-    SmartValidator validator;
+    ValidationService validator;
 
     public MunicipalityInitiativeCreateController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
@@ -60,10 +60,7 @@ public class MunicipalityInitiativeCreateController extends BaseController {
                             Locale locale,
                             HttpServletRequest request) {
 
-
-        // TODO: Extract all validations to own service for encapsulation and testability
-        validator.validate(initiative, bindingResult);
-        if (bindingResult.hasErrors()) {
+        if (validator.validatorErrors(initiative, bindingResult, model)) {
             model.addAttribute("initiative", initiative);
             model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
             model.addAttribute("errors", bindingResult);
@@ -84,13 +81,9 @@ public class MunicipalityInitiativeCreateController extends BaseController {
                             Locale locale,
                             HttpServletRequest request) {
 
-
-        // TODO: Extract all validations to own service for encapsulation and testability
-        validator.validate(initiative, bindingResult);
-        if (bindingResult.hasErrors()) {
+        if (validator.validatorErrors(initiative, bindingResult, model)) {
             model.addAttribute("initiative", initiative);
             model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
-            model.addAttribute("errors", bindingResult);
             return CREATE_VIEW;
         }
 
