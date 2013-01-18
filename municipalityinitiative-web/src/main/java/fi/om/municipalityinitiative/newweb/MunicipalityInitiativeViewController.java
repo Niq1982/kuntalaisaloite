@@ -70,6 +70,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
             model.addAttribute("participant", new ParticipantUIICreateDto()); // TODO: If not sent to municipality
             model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
             model.addAttribute("participantCount", participantService.getParticipantCount(initiativeId));
+            model.addAttribute("participants", participantService.findParticipants(initiativeId));
             return COLLECT_VIEW;
         } else {
             return SINGLE_VIEW;
