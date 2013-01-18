@@ -63,7 +63,7 @@ public class JdbcParticipantDaoTest {
         createComposer(initiativeId, false, false);
         createComposer(initiativeId, false, false);
 
-        ParticipantCount participantCount = participantDao.countSupports(initiativeId);
+        ParticipantCount participantCount = participantDao.getParticipantCount(initiativeId);
         assertThat(participantCount.getRightOfVoting().getPublicNames(), is(1L));
         assertThat(participantCount.getRightOfVoting().getPrivateNames(), is(2L));
         assertThat(participantCount.getNoRightOfVoting().getPublicNames(), is(3L));
@@ -73,7 +73,7 @@ public class JdbcParticipantDaoTest {
 
     @Test
     public void wont_fail_if_counting_supports_when_no_supports() {
-        ParticipantCount participantCount = participantDao.countSupports(testInitiativeId);
+        ParticipantCount participantCount = participantDao.getParticipantCount(testInitiativeId);
         assertThat(participantCount.getRightOfVoting().getPublicNames(), is(1L)); // This is the default author
         assertThat(participantCount.getRightOfVoting().getPrivateNames(), is(0L));
         assertThat(participantCount.getNoRightOfVoting().getPublicNames(), is(0L));

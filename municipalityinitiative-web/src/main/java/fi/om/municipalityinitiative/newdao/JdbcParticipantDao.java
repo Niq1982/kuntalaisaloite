@@ -32,10 +32,10 @@ public class JdbcParticipantDao implements ParticipantDao {
     }
 
     @Override
-    public ParticipantCount countSupports(Long municipalityId) {
+    public ParticipantCount getParticipantCount(Long initiativeId) {
         List<Object[]> resultRowArray = queryFactory.query()
                 .from(participant)
-                .where(participant.municipalityInitiativeId.eq(municipalityId))
+                .where(participant.municipalityInitiativeId.eq(initiativeId))
                 .groupBy(participant.franchise)
                 .groupBy(participant.showName)
                 .list(participant.id.count(), participant.franchise, participant.showName);

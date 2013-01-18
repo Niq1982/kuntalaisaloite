@@ -6,6 +6,7 @@ import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeSearch;
 import fi.om.municipalityinitiative.newdto.ParticipantUIICreateDto;
 import fi.om.municipalityinitiative.service.MunicipalityInitiativeService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
+import fi.om.municipalityinitiative.service.ParticipantService;
 import fi.om.municipalityinitiative.service.ValidationService;
 import fi.om.municipalityinitiative.web.BaseController;
 import fi.om.municipalityinitiative.web.RequestMessage;
@@ -39,6 +40,9 @@ public class MunicipalityInitiativeViewController extends BaseController {
     @Resource
     private ValidationService validationService;
 
+    @Resource
+    private ParticipantService participantService;
+
     public MunicipalityInitiativeViewController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
     }
@@ -65,6 +69,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
         if (initiativeInfo.isCollectable()){
             model.addAttribute("participant", new ParticipantUIICreateDto()); // TODO: If not sent to municipality
             model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
+            model.addAttribute("participantCount", participantService.getParticipantCount(initiativeId));
             return COLLECT_VIEW;
         } else {
             return SINGLE_VIEW;

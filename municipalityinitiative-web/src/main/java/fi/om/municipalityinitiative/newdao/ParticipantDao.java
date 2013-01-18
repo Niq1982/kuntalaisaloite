@@ -7,5 +7,5 @@ public interface ParticipantDao {
 
     Long create(ParticipantCreateDto createDto);
 
-    ParticipantCount countSupports(Long municipalityId);
+    ParticipantCount getParticipantCount(Long municipalityId);
 }

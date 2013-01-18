@@ -39,7 +39,6 @@ public class MunicipalityInitiativeService {
         return municipalityInitiativeId;
     }
 
-    @Transactional(readOnly = false)
     public Long createParticipant(ParticipantUIICreateDto participant, Long initiativeId) {
         ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
         ReflectionUtils.copyFieldValuesToChild(participant, participantCreateDto);

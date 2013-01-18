@@ -125,6 +125,11 @@ public class AppConfiguration {
     }
 
     @Bean
+    public ParticipantService participantService() {
+        return new ParticipantService();
+    }
+
+    @Bean
     public StatusService statusService() {
         String testEmailSendTo = env.getProperty(PropertyNames.testEmailSendTo);
         boolean testEmailConsoleOutput = env.getProperty(PropertyNames.testEmailConsoleOutput, Boolean.class, TEST_EMAIL_CONSOLE_OUTPUT_DEFAULT);
