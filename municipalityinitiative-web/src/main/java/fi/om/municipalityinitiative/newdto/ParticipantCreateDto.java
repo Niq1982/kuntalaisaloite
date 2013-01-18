@@ -1,6 +1,6 @@
 package fi.om.municipalityinitiative.newdto;
 
-public class ParticipantCreateDto extends ParticipantUICreateDto {
+public class ParticipantCreateDto extends ParticipantUIICreateDto {
 
     private Long municipalityInitiativeId;
 

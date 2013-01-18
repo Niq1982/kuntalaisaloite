@@ -2,7 +2,7 @@ package fi.om.municipalityinitiative.newdto;
 
 import javax.validation.constraints.NotNull;
 
-public class ParticipantUICreateDto {
+public class ParticipantUIICreateDto {
 
     @NotNull
     private String name;

@@ -3,7 +3,7 @@ package fi.om.municipalityinitiative.newweb;
 import fi.om.municipalityinitiative.newdto.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.MunicipalityInfo;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeSearch;
-import fi.om.municipalityinitiative.newdto.ParticipantUICreateDto;
+import fi.om.municipalityinitiative.newdto.ParticipantUIICreateDto;
 import fi.om.municipalityinitiative.service.MunicipalityInitiativeService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.web.BaseController;
@@ -55,7 +55,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
         model.addAttribute("initiative", initiativeInfo);
 
         if (initiativeInfo.isCollectable()){
-            model.addAttribute("participant", new ParticipantUICreateDto()); // TODO: If not sent to municipality
+            model.addAttribute("participant", new ParticipantUIICreateDto()); // TODO: If not sent to municipality
             model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
             return COLLECT_VIEW;
         } else {
