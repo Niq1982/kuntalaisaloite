@@ -84,7 +84,7 @@ public class JdbcParticipantDaoTest {
         ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
         participantCreateDto.setMunicipalityInitiativeId(initiativeId);
         participantCreateDto.setName("Composers name");
-        participantCreateDto.setMunicipalityId(testMunicipalityId);
+        participantCreateDto.setHomeMunicipality(testMunicipalityId);
         participantCreateDto.setFranchise(rightOfVoting);
         participantCreateDto.setShowName(publicName);
         participantDao.create(participantCreateDto);
@@ -95,7 +95,7 @@ public class JdbcParticipantDaoTest {
         ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
         participantCreateDto.setMunicipalityInitiativeId(testInitiativeId);
         participantCreateDto.setName("Composers name");
-        participantCreateDto.setMunicipalityId(testMunicipalityId);
+        participantCreateDto.setHomeMunicipality(testMunicipalityId);
         participantCreateDto.setFranchise(true);
         participantCreateDto.setShowName(true);
         return participantCreateDto;

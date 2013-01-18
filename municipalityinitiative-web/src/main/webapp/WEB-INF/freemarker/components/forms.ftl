@@ -190,7 +190,7 @@
  * @param attributes any additional attributes for the element (such as class
  *        or CSS styles or size
 -->
-<#macro formSingleSelect path options required="" cssClass="" attributes="">
+<#macro formSingleSelect path options required="" cssClass="" attributes="" preSelected="">
     <@spring.bind path />
     
     <@formLabel path required false />

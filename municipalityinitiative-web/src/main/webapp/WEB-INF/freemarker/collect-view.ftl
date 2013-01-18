@@ -32,7 +32,7 @@
             <#-- TODO: Should be disabled when user has just joined to initiative. What should happen with create success-modal? -->
             <#if !requestMessageModalHTML??>
                 <div class="join-as-user">
-                    <a class="small-button js-participate"><span class="small-icon save-and-send">Liity tekijäksi</span></a>
+                    <a class="small-button js-participate"><span class="small-icon save-and-send">Osallistu aloitteeseen</span></a>
                     <a class="push" href="#">Mitä tekijäksi liittyminen tarkoittaa?</a>
                 </div>
             </#if>
@@ -74,74 +74,27 @@
 <@compress single_line=true>
 
     <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-participate" class="dirtylisten">
-
-    <#-- TODO: Preselect municipality -->
-<#--
-     <div class="input-block-content">
-        <@f.textField path="initiative.authorName" required="required" optional=false cssClass="large" maxLength="512" />
-        
-        <@f.formCheckbox path="initiative.showName" />
-    </div>
-
-    <div class="input-block-content">
-        <@f.formSingleSelect path="initiative.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" />
-    </div>
--->
-
-    <div class="input-block-content flexible">
-        <label for="contactName" class="input-header">
-            Nimi <span class="icon-small required trigger-tooltip"></span>
-        </label>
-            
-        <input type="text" maxlength="512" class="large" value="" name="contactName" id="contactName">
-                
-        <input type="hidden" value="on" name="_showName">   
-
-        <label class="inline">
-            <input type="checkbox" name="showName" id="showName">
-            Nimeni saa näkyä tämän aloitteen tekijänä Kuntalaisaloite.fi-palvelussa.<br>
-        </label>
+    
+     <div class="input-block-content no-top-margin flexible">
+        <@f.textField path="participant.name" required="required" optional=false cssClass="large" maxLength="512" />
+        <@f.formCheckbox path="participant.showName" />
     </div>
 
     <div class="column col-1of2">
-    
         <div class="input-block-content flexible">
-            <label for="homeMunicipality" class="input-header">
-                Valitse oma kotikuntasi <span class="icon-small required trigger-tooltip"></span>
-            </label>
-    
-            <select data-placeholder="Valitse kunta" class="chzn-select municipality-select" id="homeMunicipality" name="homeMunicipality">
-                <option value=""></option>
-                <option value="1">Akaa</option>
-                <option value="2">Alajärvi</option>
-                <option value="3">Alavieska</option>
-            </select>
+            <#-- TODO: Preselect municipality -->
+            <@f.formSingleSelect path="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" />
         </div>
-    
     </div>
-
     <div class="column col-1of2 last">
- 
-        <div class="input-block-content flexible">
-            <div class="input-header">
-                Äänioikeus <span class="icon-small required trigger-tooltip"></span>
-            </div>
-        
-            <label>
-                <input type="radio" value="false" name="franchise" id="initiative.franchise.false">
-                <span class="label">En ole äänioikeutettu aloitteen kunnan asukas</span>
-            </label>
-            <label>
-                <input type="radio" value="true" name="franchise" id="initiative.franchise.true">
-                <span class="label">Olen äänioikeutettu aloitteen kunnan asukas</span>
-            </label>
-
+        <div id="franchise" class="input-block-content flexible">
+            <@f.radiobutton path="participant.franchise" required="required" options={"false":"initiative.franchise.false", "true":"initiative.franchise.true"} attributes="" />
         </div>
     </div>
     
     <div class="input-block-content flexible">
         <button type="submit" name="action-save" class="small-button" ><span class="small-icon save-and-send"><@u.message "action.save" /></span></button>
-        <a href="index.html" class="push"><@u.message "action.cancel" /></a>
+        <a href="index.html" class="push close"><@u.message "action.cancel" /></a>
     </div>
     
     </form>

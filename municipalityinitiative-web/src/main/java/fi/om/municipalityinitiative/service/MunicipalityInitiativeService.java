@@ -60,7 +60,7 @@ public class MunicipalityInitiativeService {
 
         participantCreateDto.setShowName(source.getShowName() == null ? false : source.getShowName());
         participantCreateDto.setName(source.getContactName());
-        participantCreateDto.setMunicipalityId(source.getHomeMunicipality());
+        participantCreateDto.setHomeMunicipality(source.getHomeMunicipality());
         return participantCreateDto;
     }
 

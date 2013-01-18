@@ -8,7 +8,7 @@ public class ParticipantUIICreateDto {
     private String name;
 
     @NotNull
-    private Long municipalityId;
+    private Long homeMunicipality;
 
     @NotNull
     private Boolean showName;
@@ -24,12 +24,12 @@ public class ParticipantUIICreateDto {
         this.name = name;
     }
 
-    public Long getMunicipalityId() {
-        return municipalityId;
+    public Long getHomeMunicipality() {
+        return homeMunicipality;
     }
 
-    public void setMunicipalityId(Long municipalityId) {
-        this.municipalityId = municipalityId;
+    public void setHomeMunicipality(Long homeMunicipality) {
+        this.homeMunicipality = homeMunicipality;
     }
 
     public Boolean getShowName() {
