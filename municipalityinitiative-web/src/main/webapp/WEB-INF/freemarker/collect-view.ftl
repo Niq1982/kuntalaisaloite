@@ -25,15 +25,16 @@
     <div class="view-block public last">
         <div class="initiative-content-row last">
 
-            <h2>Aloitteen tekijät - TODO</h2>
+            <h2>Osallistujat</h2>
             <span class="user-count-total">353</span>
             
             <#-- Disable joining when modal request message is showed. -->
             <#-- TODO: Should be disabled when user has just joined to initiative. What should happen with create success-modal? -->
-            <#if !requestMessageModalHTML??>
+            <#--<#if !requestMessageModalHTML??>-->
+            <#if requestMessages?? && !(requestMessages?size > 0) >
                 <div class="join-as-user">
                     <a class="small-button js-participate"><span class="small-icon save-and-send">Osallistu aloitteeseen</span></a>
-                    <a class="push" href="#">Mitä tekijäksi liittyminen tarkoittaa?</a>
+                    <a class="push" href="#">Mitä aloitteeseen osallistuminen tarkoittaa?</a>
                 </div>
             </#if>
             <br class="clear">
@@ -73,7 +74,10 @@
 <#assign participateFormHTML>
 <@compress single_line=true>
 
-    <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-participate" class="dirtylisten">
+    <#-- Full edit form errors summary -->
+    <@u.errorsSummary path="participant.*" prefix="participant."/>
+
+    <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-participate" class="sodirty">
     
      <div class="input-block-content no-top-margin flexible">
         <@f.textField path="participant.participantName" required="required" optional=false cssClass="large" maxLength="512" />

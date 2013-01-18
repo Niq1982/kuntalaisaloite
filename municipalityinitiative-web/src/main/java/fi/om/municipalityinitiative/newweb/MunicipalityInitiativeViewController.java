@@ -86,7 +86,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
         if (validationService.validationSuccessful(participant, bindingResult, model)) {
             municipalityInitiativeService.createParticipant(participant, initiativeId);
             Urls urls = Urls.get(locale);
-            return redirectWithMessage(urls.view(initiativeId), RequestMessage.SAVE, request);
+            return redirectWithMessage(urls.view(initiativeId), RequestMessage.PARTICIPATE, request);
         }
         else {
             model.addAttribute("participant", participant);

@@ -810,6 +810,9 @@ $toggleAreaLabel.each(function (){
 		    		$(this).bindCheckbox();					// Bind checkbox with submit button (used in remove support votes for example)
 		    	});
 		    	$(".chzn-select").loadChosen();
+		    	
+		    	// TODO: Test this properly. We might want to use this.
+		    	setTimeout(function () { modal.find('input[type="text"]:first, textarea:first').focus(); }, 50);
 		    },
 		    closeOnClick: false,	// disable this for modal dialog-type of overlays
 		    load: true				// load it immediately after the construction
@@ -874,7 +877,7 @@ $toggleAreaLabel.each(function (){
 	$('.js-participate').click(function(){
 
 		try {
-			generateModal(modalData.participateForm(), 'full');
+			generateModal(modalData.participateForm(), 'minimal');
 			return false;
 		} catch(e) {
 			console.log(e);
