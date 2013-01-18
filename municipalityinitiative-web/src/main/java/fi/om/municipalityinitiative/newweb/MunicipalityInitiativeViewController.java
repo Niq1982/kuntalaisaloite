@@ -8,6 +8,8 @@ import fi.om.municipalityinitiative.service.MunicipalityInitiativeService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.service.ValidationService;
 import fi.om.municipalityinitiative.web.BaseController;
+import fi.om.municipalityinitiative.web.RequestMessage;
+import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -75,14 +77,18 @@ public class MunicipalityInitiativeViewController extends BaseController {
 
         // TODO Check id collectable
         // TODO: If not sent to municipality
+
         if (validationService.validationSuccessful(participant, bindingResult, model)) {
             municipalityInitiativeService.createParticipant(participant, initiativeId);
+            Urls urls = Urls.get(locale);
+            return redirectWithMessage(urls.view(initiativeId), RequestMessage.SAVE, request);
         }
-
-        model.addAttribute("participant", participant);
-        model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
-        model.addAttribute("initiative", municipalityInitiativeService.getMunicipalityInitiative(initiativeId));
-        return COLLECT_VIEW;
+        else {
+            model.addAttribute("participant", new ParticipantUIICreateDto());
+            model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
+            model.addAttribute("initiative", participant);
+            return COLLECT_VIEW;
+        }
     }
 
 
