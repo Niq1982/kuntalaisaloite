@@ -18,6 +18,10 @@ public class ParticipantCount {
         return noRightOfVoting;
     }
 
+    public long getTotal() {
+        return rightOfVoting.getTotal() + noRightOfVoting.getTotal();
+    }
+
     public class SupportNames {
 
         private long publicNames = 0;

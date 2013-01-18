@@ -26,7 +26,7 @@
         <div class="initiative-content-row last">
 
             <h2>Osallistujat</h2>
-            <span class="user-count-total">353</span>
+            <span class="user-count-total">${participantCount.total}</span>
             
             <#-- Disable joining when modal request message is showed. -->
             <#-- TODO: Should be disabled when user has just joined to initiative. What should happen with create success-modal? -->
