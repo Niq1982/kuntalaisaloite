@@ -37,7 +37,6 @@ public class InitiativeCreateWebTest extends WebTestBase {
     private static final String SELECT_MUNICIPALITY = "Valitse kunta";
 
     @Test
-    @Ignore("Ignore while testing another test")
     public void page_opens() {
         open(urls.createNew());
         assertTitle("Tee kuntalaisaloite - Kuntalaisaloitepalvelu");

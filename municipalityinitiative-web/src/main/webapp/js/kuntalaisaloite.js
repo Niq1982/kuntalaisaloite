@@ -6,22 +6,8 @@
 
 
 
-var generateModal, localization, validateForm, modalContent, modalType;
+var localization, generateModal, loadChosen, validateForm, modalContent, modalType;
 
-/**
- * 
- * Generate modal
- * ==============
- * - Gets modalContent containing all HTML
- * - Uses jsRender to render template into the modal container
- * - Shows modal template with the defined content
- * 
- * */
-generateModal = function (modalContent, modalType) {
-	$("#modal-container").html($("#modal-template").render(modalContent));
-	$(".modal").loadModal(modalType);
-	return false;
-};
 
 /**
  * 
@@ -54,6 +40,39 @@ localization = {
     	}
 	}
 };
+
+/**
+ * 
+ * Generate modal
+ * ==============
+ * - Gets modalContent containing all HTML
+ * - Uses jsRender to render template into the modal container
+ * - Shows modal template with the defined content
+ * 
+ * */
+generateModal = function (modalContent, modalType) {
+	$("#modal-container").html($("#modal-template").render(modalContent));
+	$(".modal").loadModal(modalType);
+	return false;
+};
+
+/**
+ * 
+ * Load chosen
+ * ===========
+ * Little helper for loading chosen
+ * 
+ * - Chosen.js requires that first option is empty. We empty the default value which is for NOSCRIPT-users.
+ * - Initialize chosen with localized text
+ * 
+ * */
+jQuery.fn.loadChosen = function(){
+	var self = $(this);
+	
+	self.find('option:first').text('');
+	self.chosen({no_results_text: localization.chosenNoResults(Init.getLocale())});
+};
+
 
 
 //TODO: JS validation
@@ -482,11 +501,8 @@ $(document).ready(function () {
 		duration: speedFast, 
 		easing: 'easeOutExpo'
 	};
-
- 	// Chosen.js requires that first option is empty. We empty the default value which is for NOSCRIPT-users.
-	chznSelect.find('option:first').text('');
-	// Initialize chosen with localized text
-	chznSelect.chosen({no_results_text: localization.chosenNoResults(locale)});
+	
+	$(".chzn-select").loadChosen();
 	
  	// Update home municipality automatically
 	var updateHomeMunicipality = function(select){
@@ -793,6 +809,7 @@ $toggleAreaLabel.each(function (){
 		    	$('.binder').each(function(){
 		    		$(this).bindCheckbox();					// Bind checkbox with submit button (used in remove support votes for example)
 		    	});
+		    	$(".chzn-select").loadChosen();
 		    },
 		    closeOnClick: false,	// disable this for modal dialog-type of overlays
 		    load: true				// load it immediately after the construction
@@ -854,24 +871,10 @@ $toggleAreaLabel.each(function (){
 	});
 
 	// Show initiative's public user list
-	$('.js-join-as-user').click(function(){
-		var ajaxForProto = function(){
-			/*$.get('liity-tekijaksi-tmpl.html', function(data) {
-					alert("Data Loaded: " + data);
-			  return data;
-			});*/
-			$.ajax({
-			  url: 'liity-tekijaksi-tmpl.html',
-			  dataType: "html",
-			  success: function(data) {
-
-			    return data;
-			  }
-			});
-		};
+	$('.js-participate').click(function(){
 
 		try {
-			generateModal(modalData.joinAsUser(ajaxForProto()), 'full');
+			generateModal(modalData.participateForm(), 'full');
 			return false;
 		} catch(e) {
 			console.log(e);
