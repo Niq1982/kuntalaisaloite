@@ -135,7 +135,7 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
                     info.setProposal(row.get(municipalityInitiative.proposal));
                     info.setAuthorName(row.get(QParticipant.participant.name));
                     info.setShowName(row.get(QParticipant.participant.showName));
-                    info.setMaybeManagementHash(Optional.of(row.get(municipalityInitiative.managementHash)));
+                    info.setMaybeManagementHash(Optional.fromNullable(row.get(municipalityInitiative.managementHash)));
                     return info;
                 }
             };
