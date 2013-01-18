@@ -21,7 +21,7 @@ public class MessageSourceTest {
 
     @Test
     public void Load_Message() {
-        assertEquals("Tallenna ja aloita kerääminen", messageSource.getMessage("action.save", null, Locales.LOCALE_FI));
+        assertEquals("Tallenna", messageSource.getMessage("action.save", null, Locales.LOCALE_FI));
     }
     
 }
