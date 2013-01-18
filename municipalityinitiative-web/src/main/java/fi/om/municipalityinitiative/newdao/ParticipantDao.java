@@ -5,7 +5,7 @@ import fi.om.municipalityinitiative.newdto.ParticipantCreateDto;
 
 public interface ParticipantDao {
 
-    Long add(ParticipantCreateDto createDto);
+    Long create(ParticipantCreateDto createDto);
 
     ParticipantCount countSupports(Long municipalityId);
 }

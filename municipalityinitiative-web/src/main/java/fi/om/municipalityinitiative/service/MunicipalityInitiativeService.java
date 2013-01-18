@@ -2,11 +2,7 @@ package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.newdao.MunicipalityInitiativeDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
-import fi.om.municipalityinitiative.newdto.InitiativeViewInfo;
-import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeCreateDto;
-import fi.om.municipalityinitiative.newdto.ParticipantCreateDto;
-import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeSearch;
-import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeUICreateDto;
+import fi.om.municipalityinitiative.newdto.*;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -26,15 +22,16 @@ public class MunicipalityInitiativeService {
     }
 
     @Transactional(readOnly = false)
-    public Long addMunicipalityInitiative(MunicipalityInitiativeUICreateDto createDto, boolean isCollectable) {
+    public Long createMunicipalityInitiative(MunicipalityInitiativeUICreateDto createDto, boolean isCollectable) {
         // TODO: Validate ?
 
         MunicipalityInitiativeCreateDto municipalityInitiativeCreateDto = parse(createDto);
         if (isCollectable) {
             municipalityInitiativeCreateDto.managementHash = "0000000000111111111122222222223333333333";
-        }    
+        }
+
         Long municipalityInitiativeId = municipalityInitiativeDao.create(municipalityInitiativeCreateDto);
-        Long participantId = participantDao.add(parse(createDto, municipalityInitiativeId));
+        Long participantId = participantDao.create(parse(createDto, municipalityInitiativeId));
         municipalityInitiativeDao.assignAuthor(municipalityInitiativeId, participantId);
 
         return municipalityInitiativeId;
@@ -58,12 +55,12 @@ public class MunicipalityInitiativeService {
     static ParticipantCreateDto parse(MunicipalityInitiativeUICreateDto source, Long municipalityInitiativeId) {
         ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
 
-        participantCreateDto.municipalityInitiativeId = municipalityInitiativeId; // TODO: Fix null possibilities after valdiations are complete
-        participantCreateDto.franchise = source.getFranchise() == null ? false : source.getFranchise();
+        participantCreateDto.setMunicipalityInitiativeId(municipalityInitiativeId); // TODO: Fix null possibilities after valdiations are complete
+        participantCreateDto.setFranchise(source.getFranchise() == null ? false : source.getFranchise());
 
-        participantCreateDto.showName = source.getShowName() == null ? false : source.getShowName();
-        participantCreateDto.name = source.getContactName();
-        participantCreateDto.municipalityId = source.getHomeMunicipality();
+        participantCreateDto.setShowName(source.getShowName() == null ? false : source.getShowName());
+        participantCreateDto.setName(source.getContactName());
+        participantCreateDto.setMunicipalityId(source.getHomeMunicipality());
         return participantCreateDto;
     }
 

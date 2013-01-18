@@ -21,13 +21,13 @@ public class JdbcParticipantDao implements ParticipantDao {
 
     @Override
     @Transactional(readOnly = false)
-    public Long add(ParticipantCreateDto createDto) {
+    public Long create(ParticipantCreateDto createDto) {
         return queryFactory.insert(participant)
-                .set(participant.franchise, createDto.franchise)
-                .set(participant.municipalityId, createDto.municipalityId)
-                .set(participant.municipalityInitiativeId, createDto.municipalityInitiativeId)
-                .set(participant.name, createDto.name)
-                .set(participant.showName, createDto.showName)
+                .set(participant.franchise, createDto.getFranchise())
+                .set(participant.municipalityId, createDto.getMunicipalityId())
+                .set(participant.municipalityInitiativeId, createDto.getMunicipalityInitiativeId())
+                .set(participant.name, createDto.getName())
+                .set(participant.showName, createDto.getShowName())
                 .executeWithKey(participant.id);
     }
 

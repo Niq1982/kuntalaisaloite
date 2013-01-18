@@ -139,6 +139,11 @@ public class AppConfiguration {
     }
 
     @Bean
+    public ValidationService validationService() {
+        return new ValidationServiceImpl();
+    }
+
+    @Bean
     public EncryptionService encryptionService() {
         return new EncryptionService(
                 env.getRequiredProperty(PropertyNames.registeredUserSecret),

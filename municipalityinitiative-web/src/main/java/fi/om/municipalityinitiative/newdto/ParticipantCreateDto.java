@@ -1,10 +1,14 @@
 package fi.om.municipalityinitiative.newdto;
 
-public class ParticipantCreateDto {
+public class ParticipantCreateDto extends ParticipantUIICreateDto {
 
-    public long municipalityInitiativeId;
-    public String name;
-    public Long municipalityId;
-    public boolean showName;
-    public boolean franchise;
+    private Long municipalityInitiativeId;
+
+    public Long getMunicipalityInitiativeId() {
+        return municipalityInitiativeId;
+    }
+
+    public void setMunicipalityInitiativeId(Long municipalityInitiativeId) {
+        this.municipalityInitiativeId = municipalityInitiativeId;
+    }
 }

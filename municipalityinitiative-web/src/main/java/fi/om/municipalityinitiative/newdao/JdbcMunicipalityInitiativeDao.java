@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newdao;
 
+import com.google.common.base.Optional;
 import com.mysema.commons.lang.Assert;
 import com.mysema.query.Tuple;
 import com.mysema.query.sql.dml.SQLInsertClause;
@@ -12,7 +13,7 @@ import com.mysema.query.types.path.StringPath;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.newdto.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeCreateDto;
-import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeSearch;
+import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeSearch;
 import fi.om.municipalityinitiative.sql.QMunicipality;
 import fi.om.municipalityinitiative.sql.QParticipant;
 import org.springframework.transaction.annotation.Transactional;
@@ -134,7 +135,7 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
                     info.setProposal(row.get(municipalityInitiative.proposal));
                     info.setAuthorName(row.get(QParticipant.participant.name));
                     info.setShowName(row.get(QParticipant.participant.showName));
-                    info.setManagementHash(row.get(municipalityInitiative.managementHash));
+                    info.setMaybeManagementHash(Optional.fromNullable(row.get(municipalityInitiative.managementHash)));
                     return info;
                 }
             };

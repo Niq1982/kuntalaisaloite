@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.newweb;
+package fi.om.municipalityinitiative.newdto;
 
 public class MunicipalityInitiativeSearch {
     private Long municipality;

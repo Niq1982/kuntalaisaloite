@@ -2,7 +2,7 @@ package fi.om.municipalityinitiative.newdao;
 
 import fi.om.municipalityinitiative.newdto.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeCreateDto;
-import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeSearch;
+import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeSearch;
 
 import java.util.List;
 
