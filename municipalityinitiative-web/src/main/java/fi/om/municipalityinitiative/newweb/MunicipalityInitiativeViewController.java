@@ -79,9 +79,9 @@ public class MunicipalityInitiativeViewController extends BaseController {
             municipalityInitiativeService.createParticipant(participant, initiativeId);
         }
 
-        model.addAttribute("participant", new ParticipantUIICreateDto());
+        model.addAttribute("participant", participant);
         model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
-        model.addAttribute("initiative", participant);
+        model.addAttribute("initiative", municipalityInitiativeService.getMunicipalityInitiative(initiativeId));
         return COLLECT_VIEW;
     }
 

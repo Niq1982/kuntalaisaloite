@@ -37,7 +37,7 @@ public class MunicipalityInitiativeServiceTest {
         assertThat(participantCreateDto.getMunicipalityInitiativeId(), is(117L));
 
         assertThat(participantCreateDto.getShowName(), is(createDto.getShowName()));
-        assertThat(participantCreateDto.getName(), is(createDto.getContactName()));
+        assertThat(participantCreateDto.getParticipantName(), is(createDto.getContactName()));
     }
 
     @Test

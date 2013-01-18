@@ -76,7 +76,7 @@
     <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-participate" class="dirtylisten">
     
      <div class="input-block-content no-top-margin flexible">
-        <@f.textField path="participant.name" required="required" optional=false cssClass="large" maxLength="512" />
+        <@f.textField path="participant.participantName" required="required" optional=false cssClass="large" maxLength="512" />
         <@f.formCheckbox path="participant.showName" />
     </div>
 

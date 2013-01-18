@@ -26,7 +26,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .set(participant.franchise, createDto.getFranchise())
                 .set(participant.municipalityId, createDto.getHomeMunicipality())
                 .set(participant.municipalityInitiativeId, createDto.getMunicipalityInitiativeId())
-                .set(participant.name, createDto.getName())
+                .set(participant.name, createDto.getParticipantName())
                 .set(participant.showName, createDto.getShowName())
                 .executeWithKey(participant.id);
     }

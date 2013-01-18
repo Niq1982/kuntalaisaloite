@@ -5,7 +5,7 @@ import javax.validation.constraints.NotNull;
 public class ParticipantUIICreateDto {
 
     @NotNull
-    private String name;
+    private String participantName;
 
     @NotNull
     private Long homeMunicipality;
@@ -16,12 +16,12 @@ public class ParticipantUIICreateDto {
     @NotNull
     private Boolean franchise;
 
-    public String getName() {
-        return name;
+    public String getParticipantName() {
+        return participantName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setParticipantName(String name) {
+        this.participantName = name;
     }
 
     public Long getHomeMunicipality() {
