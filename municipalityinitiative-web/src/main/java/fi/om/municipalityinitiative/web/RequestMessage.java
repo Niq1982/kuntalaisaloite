@@ -2,13 +2,10 @@ package fi.om.municipalityinitiative.web;
 
 import static fi.om.municipalityinitiative.web.RequestMessageType.SUCCESS;
 public enum RequestMessage {
-    // Success messages - Municipality
+    // Success messages
     SAVE_AND_SEND (SUCCESS),
     SAVE (SUCCESS, true),
-    
-    // Success messages
-    //SAVE (SUCCESS),
-
+    PARTICIPATE (SUCCESS)
     ;
     
     private final boolean modal;

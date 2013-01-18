@@ -25,15 +25,16 @@
     <div class="view-block public last">
         <div class="initiative-content-row last">
 
-            <h2>Aloitteen tekijät - TODO</h2>
+            <h2>Osallistujat</h2>
             <span class="user-count-total">353</span>
             
             <#-- Disable joining when modal request message is showed. -->
             <#-- TODO: Should be disabled when user has just joined to initiative. What should happen with create success-modal? -->
-            <#if !requestMessageModalHTML??>
+            <#--<#if !requestMessageModalHTML??>-->
+            <#if requestMessages?? && !(requestMessages?size > 0) >
                 <div class="join-as-user">
                     <a class="small-button js-participate"><span class="small-icon save-and-send">Osallistu aloitteeseen</span></a>
-                    <a class="push" href="#">Mitä tekijäksi liittyminen tarkoittaa?</a>
+                    <a class="push" href="#">Mitä aloitteeseen osallistuminen tarkoittaa?</a>
                 </div>
             </#if>
             <br class="clear">
@@ -41,13 +42,13 @@
             <div class="top-margin cf">
                 <div class="column col-1of2">
                     <p>Äänioikeutettuja jäseniä yhteensä kunnassa Oulu<br />
-                    <span class="user-count">217</span><br>
-                    <a class="trigger-tooltip show-user-list-1" href="#" title="Näytä nimensä julkistaneiden lista">195 julkista nimeä</a><br>22 ei julkista nimeä</p>
+                    <span class="user-count">${participantCount.rightOfVoting.total}</span><br>
+                    <a class="trigger-tooltip show-user-list-1" href="#" title="Näytä nimensä julkistaneiden lista">${participantCount.rightOfVoting.publicNames} julkista nimeä</a><br>${participantCount.rightOfVoting.privateNames} ei julkista nimeä</p>
                 </div>
                 <div class="column col-1of2 last">
                     <p>Ei äänioikeutettuja ja muita kuin Oulun kunnan jäseniä yhteensä<br />
-                    <span class="user-count">195</span><br>
-                    <a class="trigger-tooltip show-user-list-1" href="#" title="Näytä nimensä julkistaneiden lista">102 julkista nimeä</a><br>34 ei julkista nimeä</p>
+                    <span class="user-count">${participantCount.noRightOfVoting.total}</span><br>
+                    <a class="trigger-tooltip show-user-list-1" href="#" title="Näytä nimensä julkistaneiden lista">${participantCount.noRightOfVoting.publicNames} julkista nimeä</a><br>${participantCount.noRightOfVoting.privateNames} ei julkista nimeä</p>
                 </div>
             </div>
 
@@ -73,7 +74,10 @@
 <#assign participateFormHTML>
 <@compress single_line=true>
 
-    <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-participate" class="dirtylisten">
+    <#-- Full edit form errors summary -->
+    <@u.errorsSummary path="participant.*" prefix="participant."/>
+
+    <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-participate" class="sodirty">
     
      <div class="input-block-content no-top-margin flexible">
         <@f.textField path="participant.participantName" required="required" optional=false cssClass="large" maxLength="512" />
