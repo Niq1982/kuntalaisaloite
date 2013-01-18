@@ -1,7 +1,11 @@
 package fi.om.municipalityinitiative.newdao;
 
+import com.mysema.query.Tuple;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
+import com.mysema.query.types.Expression;
+import com.mysema.query.types.MappingProjection;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
+import fi.om.municipalityinitiative.newdto.Participant;
 import fi.om.municipalityinitiative.newdto.ParticipantCount;
 import fi.om.municipalityinitiative.newdto.ParticipantCreateDto;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +47,26 @@ public class JdbcParticipantDao implements ParticipantDao {
         return parseToSupportCount(resultRowArray);
 
     }
+
+    @Override
+    public List<Participant> findPublicParticipants(Long initiativeId) {
+        return queryFactory.query()
+                .from(participant)
+                .where(participant.municipalityInitiativeId.eq(initiativeId))
+                .where(participant.showName.eq(true))
+                .orderBy(participant.id.asc())
+                .list(participantMapping);
+
+    }
+
+    Expression<Participant> participantMapping =
+        new MappingProjection<Participant>(Participant.class,
+                participant.all()) {
+            @Override
+            protected Participant map(Tuple row) {
+                return new Participant(row.get(participant.name), row.get(participant.franchise));
+            }
+        };
 
     // XXX: This looks pretty messed up. Does querydsl support some other way of doing this?
     // Row headers are:

@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
+import fi.om.municipalityinitiative.newdto.Participant;
 import fi.om.municipalityinitiative.newdto.ParticipantCount;
 import fi.om.municipalityinitiative.newdto.ParticipantCreateDto;
 import fi.om.municipalityinitiative.sql.QParticipant;
@@ -13,7 +14,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
 
+import java.util.List;
+
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -37,31 +41,28 @@ public class JdbcParticipantDaoTest {
 
     @Test
     public void adds_new_composers() {
-        participantDao.create(composerCreateDto());
+        participantDao.create(participantCreateDto());
         assertThat(testHelper.countAll(QParticipant.participant), is(2L)); // Creator plus this
     }
 
     @Test
     public void counts_all_supports_according_to_right_of_voting_and_publicity_of_names() {
-        boolean rightOfVoting = true;
-        boolean publicName = true;
-
         Long municipalityId = testHelper.createTestMunicipality("Other municipality");
         Long initiativeId = testHelper.createTestInitiative(municipalityId);
 
-        //createComposer(initiativeId, true, true); // This is the default author created by testHelper
+        //createParticipant(initiativeId, true, true); // This is the default author created by testHelper
 
-        createComposer(initiativeId, true, false);
-        createComposer(initiativeId, true, false);
+        createParticipant(initiativeId, true, false);
+        createParticipant(initiativeId, true, false);
 
-        createComposer(initiativeId, false, true);
-        createComposer(initiativeId, false, true);
-        createComposer(initiativeId, false, true);
+        createParticipant(initiativeId, false, true);
+        createParticipant(initiativeId, false, true);
+        createParticipant(initiativeId, false, true);
 
-        createComposer(initiativeId, false, false);
-        createComposer(initiativeId, false, false);
-        createComposer(initiativeId, false, false);
-        createComposer(initiativeId, false, false);
+        createParticipant(initiativeId, false, false);
+        createParticipant(initiativeId, false, false);
+        createParticipant(initiativeId, false, false);
+        createParticipant(initiativeId, false, false);
 
         ParticipantCount participantCount = participantDao.getParticipantCount(initiativeId);
         assertThat(participantCount.getRightOfVoting().getPublicNames(), is(1L));
@@ -80,10 +81,32 @@ public class JdbcParticipantDaoTest {
         assertThat(participantCount.getNoRightOfVoting().getPrivateNames(), is(0L));
     }
 
-    private ParticipantCreateDto createComposer(long initiativeId, boolean rightOfVoting, boolean publicName) {
+    @Test
+    public void getParticipantNames_returns_public_names() {
+
+        Long municipalityId = testHelper.createTestMunicipality("Other municipality");
+        Long initiativeId = testHelper.createTestInitiative(municipalityId, "Any title", false);
+
+        createParticipant(initiativeId, false, false, "no right no public");
+        createParticipant(initiativeId, true, false, "yes right no public");
+        createParticipant(initiativeId, false, true, "no right yes public");
+        createParticipant(initiativeId, true, true, "yes right yes public");
+
+        List<Participant> participants = participantDao.findPublicParticipants(initiativeId);
+
+        assertThat(participants, hasSize(2));
+        assertThat(participants.get(0).getName(), is("no right yes public"));
+        assertThat(participants.get(1).getName(), is("yes right yes public"));
+    }
+
+    private ParticipantCreateDto createParticipant(long initiativeId, boolean rightOfVoting, boolean publicName) {
+        return createParticipant(initiativeId, rightOfVoting, publicName, "Composers name");
+    }
+
+    private ParticipantCreateDto createParticipant(long initiativeId, boolean rightOfVoting, boolean publicName, String participantName) {
         ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
         participantCreateDto.setMunicipalityInitiativeId(initiativeId);
-        participantCreateDto.setParticipantName("Composers name");
+        participantCreateDto.setParticipantName(participantName);
         participantCreateDto.setHomeMunicipality(testMunicipalityId);
         participantCreateDto.setFranchise(rightOfVoting);
         participantCreateDto.setShowName(publicName);
@@ -91,7 +114,7 @@ public class JdbcParticipantDaoTest {
         return participantCreateDto;
     }
 
-    private ParticipantCreateDto composerCreateDto() {
+    private ParticipantCreateDto participantCreateDto() {
         ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
         participantCreateDto.setMunicipalityInitiativeId(testInitiativeId);
         participantCreateDto.setParticipantName("Composers name");

@@ -43,8 +43,14 @@ public class TestHelper {
     public Long createTestInitiative(Long municipalityId) {
         return createTestInitiative(municipalityId, "name");
     }
+
     @Transactional
     public Long createTestInitiative(Long municipalityId, String name) {
+        return createTestInitiative(municipalityId, name, true);
+    }
+
+    @Transactional
+    public Long createTestInitiative(Long municipalityId, String name, boolean publicName) {
         SQLInsertClause insert = queryFactory.insert(municipalityInitiative);
 
         insert.set(municipalityInitiative.contactAddress, "contact_address");
@@ -63,8 +69,8 @@ public class TestHelper {
                 .set(QParticipant.participant.municipalityId, municipalityId)
                 .set(QParticipant.participant.municipalityInitiativeId, initiativeId)
                 .set(QParticipant.participant.name, "Antti Author")
-                .set(QParticipant.participant.showName, true) // Changing these will affect on tests
-                .set(QParticipant.participant.franchise, true) //
+                .set(QParticipant.participant.showName, publicName)
+                .set(QParticipant.participant.franchise, true) // Changing these will affect on tests
                 .executeWithKey(QParticipant.participant.id);
 
         queryFactory.update(municipalityInitiative)
