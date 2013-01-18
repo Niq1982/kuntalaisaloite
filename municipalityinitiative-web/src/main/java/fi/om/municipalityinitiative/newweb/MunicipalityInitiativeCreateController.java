@@ -39,7 +39,7 @@ public class MunicipalityInitiativeCreateController extends BaseController {
     private MunicipalityInitiativeService municipalityInitiativeService;
 
     @Resource
-    ValidationService validator;
+    ValidationService validionService;
 
     public MunicipalityInitiativeCreateController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
@@ -60,7 +60,7 @@ public class MunicipalityInitiativeCreateController extends BaseController {
                             Locale locale,
                             HttpServletRequest request) {
 
-        if (validator.validatorErrors(initiative, bindingResult, model)) {
+        if (validionService.validatorErrors(initiative, bindingResult, model)) {
             model.addAttribute("initiative", initiative);
             model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
             model.addAttribute("errors", bindingResult);
@@ -81,7 +81,7 @@ public class MunicipalityInitiativeCreateController extends BaseController {
                             Locale locale,
                             HttpServletRequest request) {
 
-        if (validator.validatorErrors(initiative, bindingResult, model)) {
+        if (validionService.validatorErrors(initiative, bindingResult, model)) {
             model.addAttribute("initiative", initiative);
             model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
             return CREATE_VIEW;
