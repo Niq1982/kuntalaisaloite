@@ -41,5 +41,9 @@ public class ParticipantCount {
         public void setPrivateNames(long privateNames) {
             this.privateNames = privateNames;
         }
+        
+        public long getTotal() {
+            return publicNames+privateNames;
+        }
     }
 }
