@@ -103,7 +103,11 @@ public final class Urls {
     
     public static final String ACTION_SEND_INVITATIONS = "action-send-invitations";
     
+    // In Municipality initiative
     public static final String ACTION_SAVE = "action-save";
+    
+    // In Municipality initiative
+    public static final String ACTION_SAVE_AND_SEND = "action-save-and-send";
 
     public static final String ACTION_ACCEPT_INVITATION = "action-accept-invitation";
 

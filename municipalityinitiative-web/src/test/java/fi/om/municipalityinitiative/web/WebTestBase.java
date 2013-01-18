@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.web;
 
+import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.StartJetty;
 import fi.om.municipalityinitiative.conf.PropertyNames;
 import fi.om.municipalityinitiative.conf.WebTestConfiguration;
@@ -116,7 +117,18 @@ public abstract class WebTestBase {
     }*/
 
     // Helpers
-
+    protected String getMessage(String code) {
+        return getMessage(code, null);
+    }
+    
+    protected String getMessage(String code, Object arg) {
+        Object[] args = {arg};
+        String text = messageSource.getMessage(code, args, Locales.LOCALE_FI);
+        text = text.replace('\u00A0', ' '); //replace non breaking space with normal space, because it would be rendered to it
+        text = text.trim();
+        return text;
+    }
+    
     protected void open(String href) {
         driver.get(href);
     }
@@ -134,6 +146,28 @@ public abstract class WebTestBase {
             System.out.println("*** '" + element.getText().trim() + "'");
         }
         fail(tag + " tag with text " + text + " not found");
+    }
+    
+    protected void assertMsgContainedByClass(String className, String messageKey) {
+        String text = getMessage(messageKey);
+        assertTextContainedByClass(className, text);
+    }
+    
+    protected void assertTextContainedByClass(String className, String text) {
+        System.out.println("--- assertTextContainedByClass --------------- " + className + ": " + text);
+        List<WebElement> elements = driver.findElements(By.className(className));
+        for (WebElement element : elements) {
+            assertNotNull(element); 
+            String elementText = element.getText().trim();
+            if (elementText.contains(text)) {
+                return;
+            }
+        }
+        System.out.println("--- assertTextContainedByClass --------------- " + className + ": " + text);
+        for (WebElement element : elements) {
+            System.out.println("*** '" + element.getText().trim() + "'");
+        }
+        fail(className + " class with text " + text + " not found");
     }
     
     protected void assertTextContainedByXPath(String xpathExpression, String text) {

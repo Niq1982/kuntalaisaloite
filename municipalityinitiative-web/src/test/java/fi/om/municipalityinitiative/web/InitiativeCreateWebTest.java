@@ -5,8 +5,23 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import fi.om.municipalityinitiative.web.Urls;
+
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.*;
+
 public class InitiativeCreateWebTest extends WebTestBase {
     
+    /**
+     * Localization keys as constants.
+     */
+    private static final String MSG_SUCCESS_SAVE_AND_SEND = "success.save-and-send";
+    private static final String MSG_SUCCESS_SAVE_TITLE = "success.save.title";
+    private static final String MSG_BTN_CONTINUE = "action.continue";
+    
+    /**
+     * Form values as constants.
+     */
     private static final String MUNICIPALITY_1 = "Vantaa";
     private static final String MUNICIPALITY_2 = "Helsinki";
     
@@ -18,10 +33,11 @@ public class InitiativeCreateWebTest extends WebTestBase {
     private static final String CONTACT_PHONE = "012-3456789";
     private static final String CONTACT_ADDRESS = "Osoitekatu 1 A, 00000 Helsinki";
     
-    private static final String BTN_CONTINUE = "Jatka";
+    
     private static final String SELECT_MUNICIPALITY = "Valitse kunta";
 
     @Test
+    @Ignore("Ignore while testing another test")
     public void page_opens() {
         open(urls.createNew());
         assertTitle("Tee kuntalaisaloite - Kuntalaisaloitepalvelu");
@@ -29,12 +45,20 @@ public class InitiativeCreateWebTest extends WebTestBase {
     
     // Create an initiative that has only one author
     @Test
-    @Ignore("Fix this test")
     public void create_and_send_initiative() {
         select_municipality();
         add_initiative_content();
         add_contact_info();
-        //save_initiative();
+        save_initiative(false);
+    }
+    
+    // Create an initiative and start collecting participants
+    @Test
+    public void create_and_start_collecting() {
+        select_municipality();
+        add_initiative_content();
+        add_contact_info();
+        save_initiative(true);
     }
 
     public void select_municipality() {
@@ -48,7 +72,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         waitms(500); // Tiny delay is required if run from Eclipse.
         clickById("municipality_chzn_o_1");
         
-        clickLinkContaining(BTN_CONTINUE);
+        clickLinkContaining(getMessage(MSG_BTN_CONTINUE));
         
         assertTextContainedByXPath("//p[@id='selected-municipality']", MUNICIPALITY_2);
         
@@ -63,12 +87,11 @@ public class InitiativeCreateWebTest extends WebTestBase {
         inputText("name", NAME);
         inputText("proposal", PROPOSAL);
         
-        clickLinkContaining(BTN_CONTINUE);
+        clickLinkContaining(getMessage(MSG_BTN_CONTINUE));
 
         wait100();
         
-        driver.findElement(By.xpath("//div[@id='step-3']")).isDisplayed(); // This is just call-function which returns true/false if the element is displayed
-        // TODO: assertThat(driver.findElement(By.xpath("//div[@id='step-3']")).isDisplayed(), is(true));
+        assertThat(driver.findElement(By.xpath("//div[@id='step-3']")).isDisplayed(), is(true));
         
         System.out.println("--- add_initiative_content OK");
     }
@@ -81,24 +104,28 @@ public class InitiativeCreateWebTest extends WebTestBase {
         inputText("contactPhone", CONTACT_PHONE);
         inputText("contactAddress", CONTACT_ADDRESS);
         
-        clickLinkContaining(BTN_CONTINUE);
+        clickLinkContaining(getMessage(MSG_BTN_CONTINUE));
         
         wait100();
         
-        driver.findElement(By.xpath("//div[@id='step-4']")).isDisplayed();
+        assertThat(driver.findElement(By.xpath("//div[@id='step-4']")).isDisplayed(), is(true));
         
         System.out.println("--- add_contact_info OK");
     }
     
-    // TODO: Option for "Tallenna ja aloita kerääminen"
-    public void save_initiative() {
+    public void save_initiative(boolean startCollecting) {
         wait100();
         
-        clickByName("save");
+        if (startCollecting) {
+            clickByName(Urls.ACTION_SAVE);
+            
+            assertMsgContainedByClass("modal-title", MSG_SUCCESS_SAVE_TITLE);
+        } else {
+            clickByName(Urls.ACTION_SAVE_AND_SEND);
 
-        wait100();
-        
-        assertTextContainedByXPath("//div[@class='search-results']//li[@class='first']//span[@class='name']",NAME);
+            assertMsgContainedByClass("msg-success", MSG_SUCCESS_SAVE_AND_SEND);
+            assertTextByTag("h1", NAME);
+        }
         
         System.out.println("--- save_initiative OK");
     }

@@ -51,7 +51,6 @@ public class MunicipalityInitiativeViewController extends BaseController {
         InitiativeViewInfo initiativeInfo = municipalityInitiativeService.getMunicipalityInitiative(initiativeId);
 
         model.addAttribute("initiative", initiativeInfo);
-        //return VIEW_VIEW;
 
         if( initiativeInfo.getManagementHash() != null ){
             return COLLECT_VIEW;
