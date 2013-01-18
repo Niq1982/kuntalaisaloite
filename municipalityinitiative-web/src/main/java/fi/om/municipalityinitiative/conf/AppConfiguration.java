@@ -100,8 +100,8 @@ public class AppConfiguration {
     }
 
     @Bean
-    public MunicipalityInitiativeDao municipalityInitiativeDao() {
-        return new JdbcMunicipalityInitiativeDao();
+    public InitiativeDao municipalityInitiativeDao() {
+        return new JdbcInitiativeDao();
     }
 
     @Bean
@@ -115,8 +115,8 @@ public class AppConfiguration {
     }
 
     @Bean
-    public MunicipalityInitiativeService municipalityInitiativeService() {
-        return new MunicipalityInitiativeService();
+    public InitiativeService municipalityInitiativeService() {
+        return new InitiativeService();
     }
 
     @Bean

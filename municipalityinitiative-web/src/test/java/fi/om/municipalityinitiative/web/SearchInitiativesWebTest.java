@@ -9,7 +9,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
-public class SearchMunicipalityInitiativesWebTest extends WebTestBase {
+public class SearchInitiativesWebTest extends WebTestBase {
 
     @Test
     public void page_opens_when_navigation_link_clicked() {

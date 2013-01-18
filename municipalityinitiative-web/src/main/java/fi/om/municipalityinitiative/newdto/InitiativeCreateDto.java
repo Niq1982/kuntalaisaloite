@@ -1,6 +1,6 @@
 package fi.om.municipalityinitiative.newdto;
 
-public class MunicipalityInitiativeCreateDto {
+public class InitiativeCreateDto {
 
     public String name;
     public String proposal;

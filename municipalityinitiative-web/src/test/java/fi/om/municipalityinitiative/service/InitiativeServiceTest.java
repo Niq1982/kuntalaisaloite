@@ -1,7 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
-import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeCreateDto;
-import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeUICreateDto;
+import fi.om.municipalityinitiative.newdto.InitiativeCreateDto;
+import fi.om.municipalityinitiative.newdto.InitiativeUICreateDto;
 import fi.om.municipalityinitiative.newdto.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.ParticipantUIICreateDto;
 import org.junit.Test;
@@ -9,28 +9,28 @@ import org.junit.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class MunicipalityInitiativeServiceTest {
+public class InitiativeServiceTest {
 
     @Test
     public void parse_municipalityInitiativeCreateDto() {
 
-        MunicipalityInitiativeUICreateDto createDto = createDtoFillAllFields();
-        MunicipalityInitiativeCreateDto municipalityInitiativeCreateDto = MunicipalityInitiativeService.parse(createDto);
+        InitiativeUICreateDto createDto = createDtoFillAllFields();
+        InitiativeCreateDto initiativeCreateDto = InitiativeService.parse(createDto);
 
-        assertThat(municipalityInitiativeCreateDto.municipalityId, is(createDto.getMunicipality()));
-        assertThat(municipalityInitiativeCreateDto.name, is(createDto.getName()));
-        assertThat(municipalityInitiativeCreateDto.proposal, is(createDto.getProposal()));
+        assertThat(initiativeCreateDto.municipalityId, is(createDto.getMunicipality()));
+        assertThat(initiativeCreateDto.name, is(createDto.getName()));
+        assertThat(initiativeCreateDto.proposal, is(createDto.getProposal()));
 
-        assertThat(municipalityInitiativeCreateDto.contactAddress, is(createDto.getContactAddress()));
-        assertThat(municipalityInitiativeCreateDto.contactEmail, is(createDto.getContactEmail()));
-        assertThat(municipalityInitiativeCreateDto.contactName, is(createDto.getContactName()));
-        assertThat(municipalityInitiativeCreateDto.contactPhone, is(createDto.getContactPhone()));
+        assertThat(initiativeCreateDto.contactAddress, is(createDto.getContactAddress()));
+        assertThat(initiativeCreateDto.contactEmail, is(createDto.getContactEmail()));
+        assertThat(initiativeCreateDto.contactName, is(createDto.getContactName()));
+        assertThat(initiativeCreateDto.contactPhone, is(createDto.getContactPhone()));
     }
 
     @Test
     public void parse_composerCreateDto() {
-        MunicipalityInitiativeUICreateDto createDto = createDtoFillAllFields();
-        ParticipantCreateDto participantCreateDto = MunicipalityInitiativeService.parse(createDto, 117L);
+        InitiativeUICreateDto createDto = createDtoFillAllFields();
+        ParticipantCreateDto participantCreateDto = InitiativeService.parse(createDto, 117L);
 
         assertThat(participantCreateDto.getHomeMunicipality(), is(createDto.getHomeMunicipality()));
         assertThat(participantCreateDto.getFranchise(), is(true));
@@ -45,12 +45,12 @@ public class MunicipalityInitiativeServiceTest {
 
         // TODO:
         ParticipantUIICreateDto participantUIICreateDto = new ParticipantUIICreateDto();
-        MunicipalityInitiativeService service = new MunicipalityInitiativeService();
+        InitiativeService service = new InitiativeService();
     }
 
 
-    private MunicipalityInitiativeUICreateDto createDtoFillAllFields() {
-        MunicipalityInitiativeUICreateDto createDto = new MunicipalityInitiativeUICreateDto();
+    private InitiativeUICreateDto createDtoFillAllFields() {
+        InitiativeUICreateDto createDto = new InitiativeUICreateDto();
         createDto.setFranchise(true);
         createDto.setMunicipalMembership(true);
         createDto.setHomeMunicipality(7L);

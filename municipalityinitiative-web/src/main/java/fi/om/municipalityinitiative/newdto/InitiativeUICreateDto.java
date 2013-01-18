@@ -5,7 +5,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-public class MunicipalityInitiativeUICreateDto {
+public class InitiativeUICreateDto {
     
     /**
      *  Using @Pattern instead of @Email, because hibernate's email validation was quite not good enough.

@@ -1,10 +1,10 @@
 package fi.om.municipalityinitiative.newweb;
 
+import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.MunicipalityInfo;
-import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeSearch;
 import fi.om.municipalityinitiative.newdto.ParticipantUIICreateDto;
-import fi.om.municipalityinitiative.service.MunicipalityInitiativeService;
+import fi.om.municipalityinitiative.service.InitiativeService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.service.ParticipantService;
 import fi.om.municipalityinitiative.service.ValidationService;
@@ -35,7 +35,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
     private MunicipalityService municipalityService;
     
     @Resource
-    private MunicipalityInitiativeService municipalityInitiativeService;
+    private InitiativeService initiativeService;
 
     @Resource
     private ValidationService validationService;
@@ -48,10 +48,10 @@ public class MunicipalityInitiativeViewController extends BaseController {
     }
 
     @RequestMapping(value={SEARCH_FI, SEARCH_SV}, method=GET)
-    public String search(MunicipalityInitiativeSearch search, Model model, Locale locale, HttpServletRequest request) {
+    public String search(InitiativeSearch search, Model model, Locale locale, HttpServletRequest request) {
         List<MunicipalityInfo> municipalities = municipalityService.findAllMunicipalities();
 
-        model.addAttribute("initiatives", municipalityInitiativeService.findMunicipalityInitiatives(search));
+        model.addAttribute("initiatives", initiativeService.findMunicipalityInitiatives(search));
         model.addAttribute("municipalities", municipalities);
         model.addAttribute("currentSearch", search);
 
@@ -62,7 +62,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
     @RequestMapping(value={ VIEW_FI, VIEW_SV }, method=GET)
     public String view(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
 
-        InitiativeViewInfo initiativeInfo = municipalityInitiativeService.getMunicipalityInitiative(initiativeId);
+        InitiativeViewInfo initiativeInfo = initiativeService.getMunicipalityInitiative(initiativeId);
 
         model.addAttribute("initiative", initiativeInfo);
 
@@ -85,14 +85,14 @@ public class MunicipalityInitiativeViewController extends BaseController {
         // TODO: If not sent to municipality
 
         if (validationService.validationSuccessful(participant, bindingResult, model)) {
-            municipalityInitiativeService.createParticipant(participant, initiativeId);
+            initiativeService.createParticipant(participant, initiativeId);
             Urls urls = Urls.get(locale);
             return redirectWithMessage(urls.view(initiativeId), RequestMessage.PARTICIPATE, request);
         }
         else {
             model.addAttribute("participant", participant);
             model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
-            model.addAttribute("initiative", municipalityInitiativeService.getMunicipalityInitiative(initiativeId));
+            model.addAttribute("initiative", initiativeService.getMunicipalityInitiative(initiativeId));
             return COLLECT_VIEW;
         }
     }

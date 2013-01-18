@@ -1,6 +1,6 @@
 package fi.om.municipalityinitiative.newdto;
 
-public class MunicipalityInitiativeSearch {
+public class InitiativeSearch {
     private Long municipality;
     private String search;
 

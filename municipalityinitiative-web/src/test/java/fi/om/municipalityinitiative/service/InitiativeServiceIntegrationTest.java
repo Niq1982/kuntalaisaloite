@@ -2,9 +2,9 @@ package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.newdto.InitiativeUICreateDto;
 import fi.om.municipalityinitiative.newdto.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.MunicipalityInfo;
-import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeUICreateDto;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.TestUtils;
 import org.junit.Before;
@@ -23,10 +23,10 @@ import static org.hamcrest.Matchers.notNullValue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={IntegrationTestConfiguration.class})
-public class MunicipalityInitiativeServiceIntegrationTest {
+public class InitiativeServiceIntegrationTest {
 
     @Resource
-    private MunicipalityInitiativeService service;
+    private InitiativeService service;
 
     @Resource
     TestHelper testHelper;
@@ -63,7 +63,7 @@ public class MunicipalityInitiativeServiceIntegrationTest {
 
     @Test
     public void create_and_get() {
-        MunicipalityInitiativeUICreateDto createDto = createDto();
+        InitiativeUICreateDto createDto = createDto();
         Long initiativeId = service.createMunicipalityInitiative(createDto, false);
         InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
 
@@ -83,7 +83,7 @@ public class MunicipalityInitiativeServiceIntegrationTest {
 
     @Test
     public void creating_collectable_initiative_adds_hash() {
-        MunicipalityInitiativeUICreateDto createDto = createDto();
+        InitiativeUICreateDto createDto = createDto();
         Long initiativeId = service.createMunicipalityInitiative(createDto, true);
         InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
         
@@ -92,8 +92,8 @@ public class MunicipalityInitiativeServiceIntegrationTest {
 
     }
 
-    private MunicipalityInitiativeUICreateDto createDto() {
-        MunicipalityInitiativeUICreateDto createDto = new MunicipalityInitiativeUICreateDto();
+    private InitiativeUICreateDto createDto() {
+        InitiativeUICreateDto createDto = new InitiativeUICreateDto();
         createDto.setContactAddress("contact address " +randomString());
         createDto.setContactPhone("contact phone " +randomString());
         createDto.setContactName("contact name " + randomString());

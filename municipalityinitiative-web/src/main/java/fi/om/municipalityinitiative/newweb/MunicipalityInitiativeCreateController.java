@@ -1,7 +1,7 @@
 package fi.om.municipalityinitiative.newweb;
 
-import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeUICreateDto;
-import fi.om.municipalityinitiative.service.MunicipalityInitiativeService;
+import fi.om.municipalityinitiative.newdto.InitiativeUICreateDto;
+import fi.om.municipalityinitiative.service.InitiativeService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.service.ValidationService;
 import fi.om.municipalityinitiative.web.BaseController;
@@ -37,7 +37,7 @@ public class MunicipalityInitiativeCreateController extends BaseController {
     private MunicipalityService municipalityService;
 
     @Resource
-    private MunicipalityInitiativeService municipalityInitiativeService;
+    private InitiativeService initiativeService;
 
     @Resource
     ValidationService validionService;
@@ -48,14 +48,14 @@ public class MunicipalityInitiativeCreateController extends BaseController {
 
     @RequestMapping(value={ CREATE_FI, CREATE_SV }, method=GET)
     public String createGet(Model model, Locale locale, HttpServletRequest request) {
-        MunicipalityInitiativeUICreateDto initiative = new MunicipalityInitiativeUICreateDto();
+        InitiativeUICreateDto initiative = new InitiativeUICreateDto();
         model.addAttribute("initiative", initiative);
         model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
         return CREATE_VIEW;
     }
 
     @RequestMapping(value={ CREATE_FI, CREATE_SV }, method=POST)
-    public String createPost(@ModelAttribute("initiative") MunicipalityInitiativeUICreateDto initiative,
+    public String createPost(@ModelAttribute("initiative") InitiativeUICreateDto initiative,
                             BindingResult bindingResult,
                             Model model,
                             Locale locale,
@@ -68,7 +68,7 @@ public class MunicipalityInitiativeCreateController extends BaseController {
             return CREATE_VIEW;
         }
 
-        Long initiativeId = municipalityInitiativeService.createMunicipalityInitiative(initiative, false);
+        Long initiativeId = initiativeService.createMunicipalityInitiative(initiative, false);
 
         Urls urls = Urls.get(locale);
         //return contextRelativeRedirect(urls.view(initiativeId));
@@ -76,7 +76,7 @@ public class MunicipalityInitiativeCreateController extends BaseController {
     }
     
     @RequestMapping(value={ CREATE_FI, CREATE_SV }, method=POST, params=ACTION_SAVE)
-    public String createAndCollectPost(@ModelAttribute("initiative") MunicipalityInitiativeUICreateDto initiative,
+    public String createAndCollectPost(@ModelAttribute("initiative") InitiativeUICreateDto initiative,
                             BindingResult bindingResult,
                             Model model,
                             Locale locale,
@@ -88,7 +88,7 @@ public class MunicipalityInitiativeCreateController extends BaseController {
             return CREATE_VIEW;
         }
 
-        Long initiativeId = municipalityInitiativeService.createMunicipalityInitiative(initiative, true);
+        Long initiativeId = initiativeService.createMunicipalityInitiative(initiative, true);
 
         Urls urls = Urls.get(locale);
         return redirectWithMessage(urls.view(initiativeId), RequestMessage.SAVE, request);

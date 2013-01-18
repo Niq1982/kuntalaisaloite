@@ -11,10 +11,10 @@ import com.mysema.query.types.MappingProjection;
 import com.mysema.query.types.Predicate;
 import com.mysema.query.types.path.StringPath;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
+import fi.om.municipalityinitiative.newdto.InitiativeCreateDto;
 import fi.om.municipalityinitiative.newdto.InitiativeListInfo;
+import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.InitiativeViewInfo;
-import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeCreateDto;
-import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeSearch;
 import fi.om.municipalityinitiative.sql.QMunicipality;
 import fi.om.municipalityinitiative.sql.QParticipant;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +27,7 @@ import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipal
 
 @SQLExceptionTranslated
 @Transactional(readOnly = true)
-public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao {
+public class JdbcInitiativeDao implements InitiativeDao {
 
     // This is for querydsl for not being able to create a row with DEFERRED not-null-check value being null..
     // Querydsl always assigned some value to it and setting it to null was not an option.
@@ -37,7 +37,7 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
     PostgresQueryFactory queryFactory;
 
     @Override
-    public List<InitiativeListInfo> findNewestFirst(MunicipalityInitiativeSearch search) {
+    public List<InitiativeListInfo> findNewestFirst(InitiativeSearch search) {
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
                 .leftJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
@@ -50,7 +50,7 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
 
     }
 
-    private void searchParameters(PostgresQuery query, MunicipalityInitiativeSearch search) {
+    private void searchParameters(PostgresQuery query, InitiativeSearch search) {
         if (search.getMunicipality() != null) {
             query.where(municipalityInitiative.municipalityId.eq(search.getMunicipality()));
         }
@@ -70,7 +70,7 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
 
     @Override
     @Transactional(readOnly = false)
-    public Long create(MunicipalityInitiativeCreateDto dto) {
+    public Long create(InitiativeCreateDto dto) {
         SQLInsertClause insert = queryFactory.insert(municipalityInitiative);
 
         setInitiativeBasicInfo(dto, insert);
@@ -80,14 +80,14 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
 
     }
 
-    private void setContactInfo(MunicipalityInitiativeCreateDto dto, SQLInsertClause insert) {
+    private void setContactInfo(InitiativeCreateDto dto, SQLInsertClause insert) {
         insert.set(municipalityInitiative.contactAddress, dto.contactAddress);
         insert.set(municipalityInitiative.contactEmail, dto.contactEmail);
         insert.set(municipalityInitiative.contactPhone, dto.contactPhone);
         insert.set(municipalityInitiative.contactName, dto.contactName);
     }
 
-    private void setInitiativeBasicInfo(MunicipalityInitiativeCreateDto dto, SQLInsertClause insert) {
+    private void setInitiativeBasicInfo(InitiativeCreateDto dto, SQLInsertClause insert) {
         insert.set(municipalityInitiative.authorId, PREPARATION_ID);
         insert.set(municipalityInitiative.name, dto.name);
         insert.set(municipalityInitiative.proposal, dto.proposal);
