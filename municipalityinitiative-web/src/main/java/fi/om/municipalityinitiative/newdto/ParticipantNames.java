@@ -7,13 +7,13 @@ import java.util.List;
 public class ParticipantNames {
 
     private List<String> franchise = Lists.newArrayList();
-    private List<String> noFrancise = Lists.newArrayList();
+    private List<String> noFranchise = Lists.newArrayList();
 
     public List<String> getFranchise() {
         return franchise;
     }
 
-    public List<String> getNoFrancise() {
-        return noFrancise;
+    public List<String> getNoFranchise() {
+        return noFranchise;
     }
 }
