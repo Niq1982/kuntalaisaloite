@@ -1,11 +1,12 @@
 package fi.om.municipalityinitiative.web;
 
-import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.StartJetty;
 import fi.om.municipalityinitiative.conf.PropertyNames;
 import fi.om.municipalityinitiative.conf.WebTestConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.util.Locales;
 import org.eclipse.jetty.server.Server;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -96,6 +97,11 @@ public abstract class WebTestBase {
             urls = Urls.FI;
         }
         testHelper.dbCleanup();
+    }
+
+    @After
+    public void teardown() {
+        driver.close();
     }
     
     /* TODO: Enable
