@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newweb;
 
+import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeUICreateDto;
 import fi.om.municipalityinitiative.service.MunicipalityInitiativeService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.service.ValidationService;

@@ -4,7 +4,7 @@ import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.newdao.MunicipalityInitiativeDao;
 import fi.om.municipalityinitiative.newdto.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.MunicipalityInfo;
-import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeSearch;
+import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeSearch;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;

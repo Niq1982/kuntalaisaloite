@@ -2,11 +2,7 @@ package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.newdao.MunicipalityInitiativeDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
-import fi.om.municipalityinitiative.newdto.InitiativeViewInfo;
-import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeCreateDto;
-import fi.om.municipalityinitiative.newdto.ParticipantCreateDto;
-import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeSearch;
-import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeUICreateDto;
+import fi.om.municipalityinitiative.newdto.*;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;

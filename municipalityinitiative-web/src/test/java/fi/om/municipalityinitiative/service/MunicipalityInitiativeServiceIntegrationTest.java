@@ -4,7 +4,7 @@ import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.newdto.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.MunicipalityInfo;
-import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeUICreateDto;
+import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeUICreateDto;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.TestUtils;
 import org.junit.Before;

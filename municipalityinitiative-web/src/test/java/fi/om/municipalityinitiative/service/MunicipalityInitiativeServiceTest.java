@@ -1,8 +1,8 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeCreateDto;
+import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeUICreateDto;
 import fi.om.municipalityinitiative.newdto.ParticipantCreateDto;
-import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeUICreateDto;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;

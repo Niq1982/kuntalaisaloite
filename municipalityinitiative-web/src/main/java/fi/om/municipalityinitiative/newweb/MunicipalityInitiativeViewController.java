@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.newweb;
 
 import fi.om.municipalityinitiative.newdto.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.MunicipalityInfo;
+import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeSearch;
 import fi.om.municipalityinitiative.service.MunicipalityInitiativeService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.web.BaseController;
