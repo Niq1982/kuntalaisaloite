@@ -19,7 +19,7 @@ public class MunicipalityInitiativeService {
     @Resource
     private ParticipantDao participantDao;
 
-    public List<InitiativeViewInfo> findMunicipalityInitiatives(MunicipalityInitiativeSearch search) {
+    public List<InitiativeListInfo> findMunicipalityInitiatives(MunicipalityInitiativeSearch search) {
         return municipalityInitiativeDao.findNewestFirst(search);
     }
 

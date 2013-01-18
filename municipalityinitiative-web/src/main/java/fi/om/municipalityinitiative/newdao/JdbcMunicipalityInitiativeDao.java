@@ -11,6 +11,7 @@ import com.mysema.query.types.MappingProjection;
 import com.mysema.query.types.Predicate;
 import com.mysema.query.types.path.StringPath;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
+import fi.om.municipalityinitiative.newdto.InitiativeListInfo;
 import fi.om.municipalityinitiative.newdto.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeCreateDto;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeSearch;
@@ -36,7 +37,7 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
     PostgresQueryFactory queryFactory;
 
     @Override
-    public List<InitiativeViewInfo> findNewestFirst(MunicipalityInitiativeSearch search) {
+    public List<InitiativeListInfo> findNewestFirst(MunicipalityInitiativeSearch search) {
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
                 .leftJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
@@ -45,7 +46,7 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
 
         searchParameters(query, search);
 
-        return query.list(initiativeInfoMapping);
+        return query.list(initiativeListInfoMapping);
 
     }
 
@@ -136,6 +137,22 @@ public class JdbcMunicipalityInitiativeDao implements MunicipalityInitiativeDao 
                     info.setAuthorName(row.get(QParticipant.participant.name));
                     info.setShowName(row.get(QParticipant.participant.showName));
                     info.setMaybeManagementHash(Optional.fromNullable(row.get(municipalityInitiative.managementHash)));
+                    return info;
+                }
+            };
+
+    Expression<InitiativeListInfo> initiativeListInfoMapping =
+            new MappingProjection<InitiativeListInfo>(InitiativeListInfo.class,
+                    municipalityInitiative.all(),
+                    QMunicipality.municipality.all(),
+                    QParticipant.participant.all()) {
+                @Override
+                protected InitiativeListInfo map(Tuple row) {
+                    InitiativeListInfo info = new InitiativeListInfo();
+                    info.setId(row.get(municipalityInitiative.id));
+                    info.setCreateTime(row.get(municipalityInitiative.modified));
+                    info.setMunicipalityName(row.get(QMunicipality.municipality.name));
+                    info.setName(row.get(municipalityInitiative.name));
                     return info;
                 }
             };

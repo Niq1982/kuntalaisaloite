@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newdao;
 
+import fi.om.municipalityinitiative.newdto.InitiativeListInfo;
 import fi.om.municipalityinitiative.newdto.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeCreateDto;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeSearch;
@@ -8,7 +9,7 @@ import java.util.List;
 
 public interface MunicipalityInitiativeDao {
 
-    List<InitiativeViewInfo> findNewestFirst(MunicipalityInitiativeSearch search);
+    List<InitiativeListInfo> findNewestFirst(MunicipalityInitiativeSearch search);
 
     Long create(MunicipalityInitiativeCreateDto dto);
 
