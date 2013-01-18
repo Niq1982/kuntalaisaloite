@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.service;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeCreateDto;
 import fi.om.municipalityinitiative.newdto.MunicipalityInitiativeUICreateDto;
 import fi.om.municipalityinitiative.newdto.ParticipantCreateDto;
+import fi.om.municipalityinitiative.newdto.ParticipantUIICreateDto;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -38,6 +39,15 @@ public class MunicipalityInitiativeServiceTest {
         assertThat(participantCreateDto.getShowName(), is(createDto.getShowName()));
         assertThat(participantCreateDto.getName(), is(createDto.getContactName()));
     }
+
+    @Test
+    public void create_participant() {
+
+        // TODO:
+        ParticipantUIICreateDto participantUIICreateDto = new ParticipantUIICreateDto();
+        MunicipalityInitiativeService service = new MunicipalityInitiativeService();
+    }
+
 
     private MunicipalityInitiativeUICreateDto createDtoFillAllFields() {
         MunicipalityInitiativeUICreateDto createDto = new MunicipalityInitiativeUICreateDto();
