@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                       http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -13,9 +13,9 @@
     <properties>
         <finalName>root</finalName>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        
-       <timestamp>${maven.build.timestamp}</timestamp>
-       <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
+
+        <timestamp>${maven.build.timestamp}</timestamp>
+        <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
 
         <!-- Dependency Versions -->
         <jetty.version>7.5.4.v20111024</jetty.version>
@@ -35,7 +35,7 @@
                 <testResources>
                     <testResource>
                         <directory>src/profiles/ci/resources</directory>
-                        <filtering>true</filtering>                        
+                        <filtering>true</filtering>
                     </testResource>
                 </testResources>
             </build>
@@ -97,26 +97,18 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.googlecode.jmockit</groupId>
-            <artifactId>jmockit</artifactId>
-            <version>${jmockit.version}</version>
-            <scope>test</scope>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>1.9.5-rc1</version>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-library</artifactId>
-            <version>1.3</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test-mvc</artifactId>
-            <version>1.0.0.M2</version>
             <scope>test</scope>
         </dependency>
 
         <!-- Misc -->
-        <!-- <dependency> <groupId>org.apache.commons</groupId> <artifactId>commons-lang3</artifactId> 
+        <!-- <dependency> <groupId>org.apache.commons</groupId> <artifactId>commons-lang3</artifactId>
             <version>3.0.1</version> </dependency> -->
         <dependency>
             <groupId>joda-time</groupId>
@@ -284,7 +276,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.10</version>
+            <version>4.11</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -327,6 +319,23 @@
             </exclusions>
         </dependency>
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest-library</artifactId>
+                <version>1.3</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest-core</artifactId>
+                <version>1.3</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <finalName>${finalName}</finalName>
@@ -389,79 +398,81 @@
                         </goals>
                     </execution>
                 </executions>
+
             </plugin>
-        <plugin>
-            <groupId>com.samaxes.maven</groupId>
-            <artifactId>minify-maven-plugin</artifactId>
-            <version>1.5.2</version>
-            <executions>
-                <execution>
-                    <id>default-minify</id>
-                    <phase>process-resources</phase>
-                    <configuration>
-                        <webappTargetDir>${basedir}/src/main/webapp</webappTargetDir>
-                        <cssSourceDir>css</cssSourceDir>
-                        <cssSourceFiles>
-                            <cssSourceFile>normalize.css</cssSourceFile>
-                            <cssSourceFile>chosen.css</cssSourceFile>
-                            <cssSourceFile>kuntalaisaloite.css</cssSourceFile>
-                        </cssSourceFiles>
-                        <cssFinalFile>style.css</cssFinalFile>
-                        <jsSourceDir>js</jsSourceDir>
-                        <jsSourceFiles>
-                            <jsSourceFile>jquery-1.7.2.min.js</jsSourceFile>
-                            <jsSourceFile>jquery.easing.min.js</jsSourceFile>
-                            <jsSourceFile>jquery.tools.min.js</jsSourceFile>
-                            <jsSourceFile>jquery.cookie.js</jsSourceFile>
-                            <jsSourceFile>jquery.dirtyforms.min.js</jsSourceFile>
-                            <jsSourceFile>jsrender.min.js</jsSourceFile>
-                            <jsSourceFile>jquery.dirtyforms.min.js</jsSourceFile>
-                            <jsSourceFile>jsrender.min.js</jsSourceFile>
-                            <jsSourceFile>chosen.jquery.min.js</jsSourceFile>
-                            <jsSourceFile>jquery.scrollTo.min.js</jsSourceFile>
-                            <jsSourceFile>kuntalaisaloite.js</jsSourceFile>
-                        </jsSourceFiles>
-                        <jsFinalFile>script.js</jsFinalFile>
-                    </configuration>
-                    <goals>
-                        <goal>minify</goal>
-                    </goals>
-                </execution>
-            </executions>
-        </plugin>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-war-plugin</artifactId>
-            <configuration>
-                <webResources>
-                    <resource>
-                    <!-- this is relative to the pom.xml directory -->
-                        <directory>src/main/webapp/css</directory>
-                        <targetPath>css</targetPath>
-                        <filtering>true</filtering>
-                    </resource>
-                </webResources>
-            </configuration>
-        </plugin>
-          <!-- 
+
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>buildnumber-maven-plugin</artifactId>
+                <groupId>com.samaxes.maven</groupId>
+                <artifactId>minify-maven-plugin</artifactId>
+                <version>1.5.2</version>
                 <executions>
                     <execution>
-                        <phase>validate</phase>
+                        <id>default-minify</id>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <webappTargetDir>${basedir}/src/main/webapp</webappTargetDir>
+                            <cssSourceDir>css</cssSourceDir>
+                            <cssSourceFiles>
+                                <cssSourceFile>normalize.css</cssSourceFile>
+                                <cssSourceFile>chosen.css</cssSourceFile>
+                                <cssSourceFile>kuntalaisaloite.css</cssSourceFile>
+                            </cssSourceFiles>
+                            <cssFinalFile>style.css</cssFinalFile>
+                            <jsSourceDir>js</jsSourceDir>
+                            <jsSourceFiles>
+                                <jsSourceFile>jquery-1.7.2.min.js</jsSourceFile>
+                                <jsSourceFile>jquery.easing.min.js</jsSourceFile>
+                                <jsSourceFile>jquery.tools.min.js</jsSourceFile>
+                                <jsSourceFile>jquery.cookie.js</jsSourceFile>
+                                <jsSourceFile>jquery.dirtyforms.min.js</jsSourceFile>
+                                <jsSourceFile>jsrender.min.js</jsSourceFile>
+                                <jsSourceFile>jquery.dirtyforms.min.js</jsSourceFile>
+                                <jsSourceFile>jsrender.min.js</jsSourceFile>
+                                <jsSourceFile>chosen.jquery.min.js</jsSourceFile>
+                                <jsSourceFile>jquery.scrollTo.min.js</jsSourceFile>
+                                <jsSourceFile>kuntalaisaloite.js</jsSourceFile>
+                            </jsSourceFiles>
+                            <jsFinalFile>script.js</jsFinalFile>
+                        </configuration>
                         <goals>
-                            <goal>create</goal>
+                            <goal>minify</goal>
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
                 <configuration>
-                    <doCheck>false</doCheck>
-                    <doUpdate>false</doUpdate>
-                    <timestampFormat>{0, date, yyyyMMddHHmmss}</timestampFormat>
+                    <webResources>
+                        <resource>
+                            <!-- this is relative to the pom.xml directory -->
+                            <directory>src/main/webapp/css</directory>
+                            <targetPath>css</targetPath>
+                            <filtering>true</filtering>
+                        </resource>
+                    </webResources>
                 </configuration>
             </plugin>
-             -->
+            <!--
+              <plugin>
+                  <groupId>org.codehaus.mojo</groupId>
+                  <artifactId>buildnumber-maven-plugin</artifactId>
+                  <executions>
+                      <execution>
+                          <phase>validate</phase>
+                          <goals>
+                              <goal>create</goal>
+                          </goals>
+                      </execution>
+                  </executions>
+                  <configuration>
+                      <doCheck>false</doCheck>
+                      <doUpdate>false</doUpdate>
+                      <timestampFormat>{0, date, yyyyMMddHHmmss}</timestampFormat>
+                  </configuration>
+              </plugin>
+               -->
         </plugins>
     </build>
 </project>
