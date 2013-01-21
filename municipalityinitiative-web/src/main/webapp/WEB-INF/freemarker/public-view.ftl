@@ -48,6 +48,43 @@
         </#if>
     </div>
     
+    +
+        <@u.errorsSummary path="participant.*" prefix="participant."/>
+    <@spring.bind "participant.*" />
+    <#if spring.status.error>
+        virhe
+    </#if>
+    <#list spring.status.errors.allErrors as error>
+        * ${springMacroRequestContext.getMessage(error)}
+    </#list>
+    +
+
+    <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-participate" class="sodirty">
+    
+     <div class="input-block-content no-top-margin flexible">
+        <@f.textField path="participant.participantName" required="required" optional=false cssClass="large" maxLength="512" />
+        <@f.formCheckbox path="participant.showName" />
+    </div>
+
+    <div class="column col-1of2">
+        <div class="input-block-content flexible">
+            <#-- TODO: Preselect municipality -->
+            <@f.formSingleSelect path="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" />
+        </div>
+    </div>
+    <div class="column col-1of2 last">
+        <div id="franchise" class="input-block-content flexible">
+            <@f.radiobutton path="participant.franchise" required="required" options={"false":"initiative.franchise.false", "true":"initiative.franchise.true"} attributes="" />
+        </div>
+    </div>
+    
+    <div class="input-block-content flexible">
+        <button type="submit" name="action-save" class="small-button" ><span class="small-icon save-and-send"><@u.message "action.save" /></span></button>
+        <a href="${springMacroRequestContext.requestUri}#participants" class="push close"><@u.message "action.cancel" /></a>
+    </div>
+    
+    </form>
+    <br class="clear" />
     
     <#-- BOTTOM CONTRIBUTION -->
     <#if bottomContribution??><#noescape>${bottomContribution}</#noescape></#if>
