@@ -64,7 +64,6 @@ public class MunicipalityInitiativeCreateController extends BaseController {
         if (validionService.validationErrors(initiative, bindingResult, model)) {
             model.addAttribute("initiative", initiative);
             model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
-            model.addAttribute("errors", bindingResult);
             return CREATE_VIEW;
         }
 

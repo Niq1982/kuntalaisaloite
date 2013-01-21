@@ -770,15 +770,18 @@ $toggleAreaLabel.each(function (){
  *  
  * */
 	jQuery.fn.loadModal = function(modalType){
-		var modal, topPos, modalFixed, maxTopPos, modalHeight, $modalContent;
+		var modal, topPos, modalFixed, maxTopPos, modalHeight, $modalContent, $scrollable;
 		modal = $(this);
+		
 		$modalContent = modal.children('.modal-content');
+		$scrollable = $modalContent.children('.scrollable'); // Used when content can be very long. For examples in namelists.
 		
 		modalHeight = function(){
 			return modal.height();
 		}
+		
 		topPos = function(){
-			if ((modalType == "full") && (modalHeight() < vpHeight) ) {
+			if ((modalType == "full" || modalType == "fixed") && (modalHeight() < vpHeight) ) {
 				return Math.floor((vpHeight-modalHeight())/2);
 			} else if (modalType == "minimal") {
 				// 10% of viewport's size seems to be fine
@@ -819,23 +822,25 @@ $toggleAreaLabel.each(function (){
 		}).addClass(modalType);
 		
 		// Adjust modal after load
-		adjustModal(modal, $modalContent, topPos());
+		adjustModal(modal, $modalContent, $scrollable);
 
 		// Adjust modal when user resizes viewport
 		$(window).bind('resize', function(){
 			vpHeight = $(this).height();
 			vpWidth = $(this).width();
-			modal.css('top',topPos()+'px');
+			//modal.css('top',topPos()+'px');
 			
-			adjustModal(modal, $modalContent, topPos());
+			adjustModal(modal, $modalContent, $scrollable);
 		});
 	};
 	
 	// Adjust modal's position and height
-	var adjustModal = function(modal, $modalContent, topPos){
+	var adjustModal = function(modal, $modalContent,$scrollable){
 		var modalPosX;
 		modalPosX = (vpWidth - modal.width())/2;
 		modal.css('left',modalPosX);
+		
+		$scrollable.css('max-height', 0.75*vpHeight);
 
 		if (modalType == "minimal"){
 			if (modal.height() > vpHeight) {
@@ -864,9 +869,18 @@ $toggleAreaLabel.each(function (){
 	}	
 
  	// Show initiative's public user list
-	$('.show-user-list-1').click(function(){
+	$('.js-show-franchise-list').click(function(){
 		try {
-			generateModal(modalData.userList(), 'full');
+			generateModal(modalData.participantListFranchise(), 'full');
+			return false;
+		} catch(e) {
+			console.log(e);
+		}
+	});
+	
+	$('.js-show-no-franchise-list').click(function(){
+		try {
+			generateModal(modalData.participantListNoFranchise(), 'full');
 			return false;
 		} catch(e) {
 			console.log(e);
@@ -875,7 +889,6 @@ $toggleAreaLabel.each(function (){
 
 	// Show initiative's public user list
 	$('.js-participate').click(function(){
-
 		try {
 			generateModal(modalData.participateForm(), 'minimal');
 			return false;

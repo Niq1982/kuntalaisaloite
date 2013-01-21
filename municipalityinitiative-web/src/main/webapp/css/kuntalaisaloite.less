@@ -1748,10 +1748,6 @@ label  {
 
 }
 
-.join-as-user {
-    padding-top:0.4em;
-}
-
 .no-top-margin {
     margin-top: 0;
 }
@@ -1762,6 +1758,20 @@ label  {
 
 .top-margin {
     margin-top: 1em;
+}
+
+
+// Participate
+.participate {
+    padding-top:0.4em;
+}
+// Participate form for NOSCRIPT
+.participate-form {
+    margin: 2em 0;
+    padding: 2em;
+    background:#f5f5f5;
+    border: 1px solid @borderGray;
+    
 }
 
 // Testing the last step of the form
@@ -1803,6 +1813,17 @@ label  {
     
     &.full {
         width:700px;
+    }
+    
+    &.fixed {
+        position:fixed !important;
+        top:20px;
+        bottom:20px;
+        
+        .modal-content {
+            //max-height:500px;
+            overflow:auto;
+        }
     }
     
     .modal-header {
@@ -1851,7 +1872,7 @@ label  {
     }
  
     .modal-content {
-        overflow:auto;
+        //overflow:auto;
         padding:20px 30px 30px 30px;
         background-color:#fff;
         border-bottom-left-radius:@cornerRadiusSmall;
@@ -1877,6 +1898,45 @@ label  {
         }
     }
 }
+
+
+.scrollable {
+    overflow:auto;
+
+    // Modal scroll bar for safari & chrome
+    &::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    
+    &::-webkit-scrollbar-button:start:decrement,
+    &::-webkit-scrollbar-button:end:increment {
+        height: 1px;
+        display: block;
+        background-color: #f1f1f1;
+    }
+    
+    &::-webkit-scrollbar-button:horizontal:start:decrement,
+    &::-webkit-scrollbar-button:horizontal:end:increment {
+        height: 1px;
+        display: block;
+        background-color: #f1f1f1;
+    }
+    
+    &::-webkit-scrollbar-track-piece {
+        background-color: #f1f1f1;
+    }
+    
+    &::-webkit-scrollbar-thumb:vertical,
+    &::-webkit-scrollbar-thumb:horizontal {
+        background-color: #ccc;
+        border: 1px solid #ccc;
+        -webkit-border-radius: 4px;
+    }
+}
+
+
+
 
 // Tooltip
 // 

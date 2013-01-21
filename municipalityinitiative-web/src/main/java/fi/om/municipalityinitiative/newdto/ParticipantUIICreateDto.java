@@ -2,9 +2,11 @@ package fi.om.municipalityinitiative.newdto;
 
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class ParticipantUIICreateDto {
 
-    @NotNull
+    @NotEmpty
     private String participantName;
 
     @NotNull

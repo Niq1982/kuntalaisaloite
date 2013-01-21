@@ -48,6 +48,7 @@
         </#if>
     </div>
     
+    
     <#-- BOTTOM CONTRIBUTION -->
     <#if bottomContribution??><#noescape>${bottomContribution}</#noescape></#if>
     
