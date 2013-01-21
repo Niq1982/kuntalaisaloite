@@ -192,7 +192,7 @@
  * @param attributes any additional attributes for the element (such as class
  *        or CSS styles or size
 -->
-<#macro formSingleSelect path options required="" cssClass="" attributes="" preSelected="">
+<#macro formSingleSelect path options required="" cssClass="" attributes="" preSelected=-1>
     <@spring.bind path />
     
     <@formLabel path required false />
@@ -202,7 +202,7 @@
     <select name="${spring.status.expression}" id="${spring.status.expression}" ${attributes} class="chzn-select ${cssClass}" data-placeholder="<@u.message "initiative.chooseMunicipality" />">
         <option value=""><@u.message "initiative.chooseMunicipality" /></option>
         <#list options as option>
-            <option value="${option.id}"<@checkSelected option.id />>${option.name}</option>
+            <option value="${option.id}"<@checkSelected option.id preSelected />>${option.name}</option>
         </#list>
     </select>
 </#macro>
@@ -216,10 +216,16 @@
  * This function is used internally but can be accessed by user code if required.
  *
  * @param value the current value in a list iteration
+ * @param preSelected option. If spring.status.value has value select it.
 -->
-<#macro checkSelected value>
-    <#if spring.stringStatusValue?is_number && spring.stringStatusValue == value?number>selected="selected"</#if>
-    <#if spring.stringStatusValue?is_string && spring.stringStatusValue == value?string>selected="selected"</#if>
+<#macro checkSelected value preSelected>
+    <#if spring.stringStatusValue?has_content>
+        <#if spring.stringStatusValue?is_number && spring.stringStatusValue == value?number>selected="selected"</#if>
+        <#if spring.stringStatusValue?is_string && spring.stringStatusValue == value?string>selected="selected"</#if>
+    <#else>
+        <#if preSelected?is_number && preSelected == value?number>selected="selected"</#if>
+        <#if preSelected?is_string && preSelected == value?string>selected="selected"</#if>
+    </#if>
 </#macro>
 
 <#--

@@ -4,7 +4,6 @@
 
 <#escape x as x?html> 
 
-<#-- TODO: NoSript -->
 <#assign participateFormHTML>
 <@compress single_line=true>
 
@@ -21,13 +20,21 @@
     <div class="column col-1of2">
         <div class="input-block-content flexible">
             <#-- TODO: Preselect municipality -->
-            <@f.formSingleSelect path="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" />
+            <@f.formSingleSelect path="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipalityId />
         </div>
     </div>
     <div class="column col-1of2 last">
         <div id="franchise" class="input-block-content flexible">
             <@f.radiobutton path="participant.franchise" required="required" options={"false":"initiative.franchise.false", "true":"initiative.franchise.true"} attributes="" />
         </div>
+    </div>
+    
+    <#-- Do not use NOSCRIPT here as it will be descendant of another NOSCRIPT. -->
+    <div class="input-block-content hidden">
+        <label>
+            <#assign href="#" />
+            <input type="checkbox" name="municipalMembership" id="municipalMembership" checked="checked" disabled="disabled" /><span class="label"><@u.messageHTML key="initiative.checkMembership" args=[href] /></span>
+        </label>
     </div>
     
     <div class="input-block-content flexible">

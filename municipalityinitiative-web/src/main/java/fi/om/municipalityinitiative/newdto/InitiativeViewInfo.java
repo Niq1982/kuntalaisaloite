@@ -8,6 +8,7 @@ public class InitiativeViewInfo {
     private String name;
     private String proposal;
     private String municipalityName;
+    private Long municipalityId;
 
     private String authorName;
     private boolean showName;
@@ -26,6 +27,10 @@ public class InitiativeViewInfo {
     public String getMunicipalityName() {
         return municipalityName;
     }
+    
+    public Long getMunicipalityId() {
+        return municipalityId;
+    }
 
     public String getAuthorName() {
         return authorName;
@@ -41,6 +46,10 @@ public class InitiativeViewInfo {
 
     public void setMunicipalityName(String municipalityName) {
         this.municipalityName = municipalityName;
+    }
+
+    public void setMunicipalityId(Long municipalityId) {
+        this.municipalityId = municipalityId;
     }
 
     public void setAuthorName(String authorName) {
