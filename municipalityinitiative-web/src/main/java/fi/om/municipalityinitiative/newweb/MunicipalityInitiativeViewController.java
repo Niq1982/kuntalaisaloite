@@ -14,6 +14,7 @@ import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -78,7 +79,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
     }
 
     @RequestMapping(value={ VIEW_FI, VIEW_SV }, method=POST)
-    public String participate(@PathVariable("id") Long initiativeId, ParticipantUIICreateDto participant,
+    public String participate(@PathVariable("id") Long initiativeId, @ModelAttribute("participant") ParticipantUIICreateDto participant,
                               BindingResult bindingResult, Model model, Locale locale, HttpServletRequest request) {
 
         // TODO Check id collectable
@@ -98,8 +99,6 @@ public class MunicipalityInitiativeViewController extends BaseController {
             return COLLECT_VIEW;
         }
     }
-
-
 
     private static String solveMunicipalityFromListById(List<MunicipalityInfo> municipalities, Long municipalityId){
         if (municipalityId == null)

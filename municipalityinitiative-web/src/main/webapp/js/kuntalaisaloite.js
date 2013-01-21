@@ -840,7 +840,7 @@ $toggleAreaLabel.each(function (){
 		modalPosX = (vpWidth - modal.width())/2;
 		modal.css('left',modalPosX);
 		
-		$scrollable.css('max-height', 0.75*vpHeight);
+		$scrollable.css('max-height', 0.75*vpHeight); // Adjust value if needed
 
 		if (modalType == "minimal"){
 			if (modal.height() > vpHeight) {
@@ -896,6 +896,10 @@ $toggleAreaLabel.each(function (){
 			console.log(e);
 		}
 	});
+	
+	if( typeof modalData != 'undefined' && typeof modalData.participateFormInvalid != 'undefined' ){
+		generateModal(modalData.participateFormInvalid(), 'minimal');
+	}
 
 	
 /**

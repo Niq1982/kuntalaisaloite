@@ -8,17 +8,8 @@
 <#assign participateFormHTML>
 <@compress single_line=true>
 
-    <#-- Participate form errors summary -->
-    +
+    <#-- Participate form errors summary -->    
     <@u.errorsSummary path="participant.*" prefix="participant."/>
-    <@spring.bind "participant.participantName" />
-    <#if spring.status.error>
-        virhe
-    </#if>
-    <#list spring.status.errors.allErrors as error>
-        * ${springMacroRequestContext.getMessage(error)}
-    </#list>
-    -
 
     <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-participate" class="sodirty">
     
@@ -102,10 +93,13 @@
             <h2>Osallistujat</h2>
             <span class="user-count-total">${participantCount.total!""}</span>
             
-            <#-- Disable joining when modal request message is showed. -->
-            <#-- TODO: Should be disabled when user has just joined to initiative. What should happen with create success-modal? -->
-            <#--<#if !requestMessageModalHTML??>-->
-            <#if requestMessages?? && !(requestMessages?size > 0) && !(RequestParameters['participateForm']?? && RequestParameters['participateForm'] == "true")>
+            <#--
+             * Disable participate button:
+             *  - when modal request message is showed
+             *  - when participate form is showed (NOSCRIPT)
+             *  - when the form has validation errors
+            -->
+            <#if requestMessages?? && !(requestMessages?size > 0) && !((hasErrors?? && hasErrors) || (RequestParameters['participateForm']?? && RequestParameters['participateForm'] == "true"))>
                 <div class="participate">
                     <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send">Osallistu aloitteeseen</span></a>
                     <a class="push" href="#">Mitä aloitteeseen osallistuminen tarkoittaa?</a>
@@ -113,12 +107,11 @@
             </#if>
             <br class="clear">
 
-            <#--<#if RequestParameters['participateForm']?? && RequestParameters['participateForm'] == "true">
+            <#if (hasErrors?? && hasErrors) || (RequestParameters['participateForm']?? && RequestParameters['participateForm'] == "true")>
                 <#noescape><noscript>
                     <div id="participate-form" class="participate-form cf top-margin">${participateFormHTML!""}</div>
                 </noscript></#noescape>
-            </#if>-->
-            <#--<#noescape><div id="participate-form" class="participate-form cf top-margin">${participateFormHTML!""}</div></#noescape>-->
+            </#if>
 
             <div class="top-margin cf">
                 <div class="column col-1of2">
@@ -135,8 +128,6 @@
             
         </div>     
     </div>
-    
-    
     
     <#--
      * Show management block
@@ -163,8 +154,19 @@
                 content:    '<#noescape>${participateFormHTML?replace("'","&#39;")}</#noescape>'
             }]
         };
+        
+        <#-- Autoload modal if it has errors -->
+        <#if hasErrors>
+        modalData.participateFormInvalid = function() {
+            return [{
+                title:      'Osallistu aloitteeseen',
+                content:    '<#noescape>${participateFormHTML?replace("'","&#39;")}</#noescape>'
+            }]
+        };
+        </#if>
     </#if>
     
+    <#-- TODO: Fix namelist columns in IE. -->
     modalData.participantListFranchise = function() {
         return [{
             title:      'Äänioikeutetut julkiset osallistujat kunnassa ${initiative.municipalityName!""}',

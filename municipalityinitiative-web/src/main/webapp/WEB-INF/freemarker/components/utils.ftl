@@ -278,7 +278,7 @@
                 <span class="modal-title">{{:title}}</span>
                 <a class="close" title="<@message "action.close" />">x</a>
             </div>
-            <div class="modal-content">
+            <div class="modal-content cf">
                 {{:content}}
             </div>
         </div>

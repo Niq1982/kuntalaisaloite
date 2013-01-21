@@ -169,6 +169,8 @@
         </div>
     </#if>
     
+    <@showError />
+    
     <#list options?keys as value>
         <label>
             <input type="radio" id="${options[value]}" name="${spring.status.expression}" value="${value}"
