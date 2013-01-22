@@ -17,6 +17,9 @@ public class ParticipantUIICreateDto {
 
     @NotNull
     private Boolean franchise;
+    
+    // TODO: Added by mikkole. Do we really need this?
+    private Boolean municipalMembership;
 
     public String getParticipantName() {
         return participantName;
@@ -48,5 +51,13 @@ public class ParticipantUIICreateDto {
 
     public void setFranchise(Boolean franchise) {
         this.franchise = franchise;
+    }
+    
+    public Boolean getMunicipalMembership() {
+        return municipalMembership;
+    }
+
+    public void setMunicipalMembership(Boolean municipalMembership) {
+        this.municipalMembership = municipalMembership;
     }
 }

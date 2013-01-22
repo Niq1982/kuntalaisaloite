@@ -472,6 +472,7 @@ $(document).ready(function () {
 * - Toggles home municipality membership radiobuttons
 * - Prevents or allows proceeding to next step in the form
 * 
+* TODO: Finalize this block when UX is done.
 */	
 	var chznSelect, municipalitySelect, homeMunicipalitySelect, selectedMunicipality, municipalityDiffers, municipalMembershipRadios,
 	isHomeMunicipality, equalMunicipalitys, slideOptions;
@@ -489,14 +490,16 @@ $(document).ready(function () {
 		} else {
 			return false;
 		}
-	}
+	};
 	equalMunicipalitys = function(){
-		if (municipalitySelect.val() == homeMunicipalitySelect.val()) {
+		//if (municipalitySelect.val() == homeMunicipalitySelect.val()) {
+		// TODO: Use variables in selectors. Issue: They need to updated when modal is loaded.
+		if ( $('#homeMunicipality').data("init-municipality") == "" ||  $('#homeMunicipality').val() ==  $('#homeMunicipality').data("init-municipality")) {
 			return true;
 		} else {
 			return false;
 		}
-	}
+	};
 	slideOptions = {
 		duration: speedFast, 
 		easing: 'easeOutExpo'
@@ -529,14 +532,19 @@ $(document).ready(function () {
 			preventContinuing(false);
 			
 			// Clear radiobuttons
-			municipalMembershipRadios.removeAttr('checked');
+			//municipalMembershipRadios.removeAttr('checked');
+			// TODO: Use variables in selectors. Issue: They need to updated when modal is loaded. 
+			$("input[name=municipalMembership]").removeAttr('checked');
 			
 			$('#franchise').removeClass('js-hide'); // TODO: finalize
+			$('#municipalMembership').addClass('js-hide'); // TODO: finalize
+			
 		} else {
 			municipalityDiffers.stop(false,true).slideDown(slideOptions);
 			preventContinuing(true);
 			
 			$('#franchise').addClass('js-hide'); // TODO: finalize
+			$('#municipalMembership').removeClass('js-hide'); // TODO: finalize
 		}
 	};
 	
@@ -549,9 +557,11 @@ $(document).ready(function () {
 		
 		if (prevent) {
 			$("#button-next-2").addClass('disabled').attr('onClick','return false;');
+			$("#submit-participate").addClass('disabled').attr('disabled','disabled');
 			formBlockHeaders.addClass('disabled');
 		} else {
 			$("#button-next-2").removeClass('disabled').attr('onClick','proceedTo(2); return false;');
+			$("#submit-participate").removeClass('disabled').removeAttr('disabled');
 			formBlockHeaders.removeClass('disabled');
 		}
 	};
@@ -580,7 +590,7 @@ $(document).ready(function () {
 		var cb, btn, cbVal;
 		
 		cb = $(this);
-		btn = $('#button-next-2');
+		btn = $('#button-next-2, #submit-participate');
 		cbVal = function(){
 			if ($("input[name=municipalMembership]:checked").val() == "true"){
 				btn.removeAttr('disabled').removeClass('disabled');
@@ -591,7 +601,8 @@ $(document).ready(function () {
 			}
 		};
 		
-		cb.change(function(){
+		// Use live as this is fired also in the modal
+		cb.live('change',function(){
 			cbVal();
 		});
 	};
@@ -604,6 +615,7 @@ $(document).ready(function () {
 		// Update home municipality automatically
 		if (!isHomeMunicipality(thisSelect)){
 			updateHomeMunicipality(thisSelect);
+			homeMunicipalitySelect.data("init-municipality",municipalitySelect.val());
 		} else {
 			homeMunicipalitySelect.addClass("updated");
 		}
@@ -778,7 +790,7 @@ $toggleAreaLabel.each(function (){
 		
 		modalHeight = function(){
 			return modal.height();
-		}
+		};
 		
 		topPos = function(){
 			if ((modalType == "full" || modalType == "fixed") && (modalHeight() < vpHeight) ) {
@@ -790,14 +802,14 @@ $toggleAreaLabel.each(function (){
 				return 10; // 10 px
 			}
 			
-		}
+		};
 		modalFixed = function(){
 			if(modalType == "full") {
 				return false;
 			} else {
 				return true;
 			} 
-		}
+		};
 		
 		modal.overlay({
 		    fixed: modalFixed(),	// modal position
@@ -822,20 +834,20 @@ $toggleAreaLabel.each(function (){
 		}).addClass(modalType);
 		
 		// Adjust modal after load
-		adjustModal(modal, $modalContent, $scrollable);
+		adjustModal(modal, modalType, $modalContent, $scrollable);
 
 		// Adjust modal when user resizes viewport
 		$(window).bind('resize', function(){
 			vpHeight = $(this).height();
 			vpWidth = $(this).width();
-			//modal.css('top',topPos()+'px');
+			modal.css('top',topPos()+'px');
 			
-			adjustModal(modal, $modalContent, $scrollable);
+			adjustModal(modal, modalType, $modalContent, $scrollable);
 		});
 	};
 	
 	// Adjust modal's position and height
-	var adjustModal = function(modal, $modalContent,$scrollable){
+	var adjustModal = function(modal, modalType, $modalContent,$scrollable){
 		var modalPosX;
 		modalPosX = (vpWidth - modal.width())/2;
 		modal.css('left',modalPosX);
@@ -843,6 +855,7 @@ $toggleAreaLabel.each(function (){
 		$scrollable.css('max-height', 0.75*vpHeight); // Adjust value if needed
 
 		if (modalType == "minimal"){
+			
 			if (modal.height() > vpHeight) {
 				modal.css('position','absolute');
 			} else {
@@ -890,7 +903,7 @@ $toggleAreaLabel.each(function (){
 	// Show initiative's public user list
 	$('.js-participate').click(function(){
 		try {
-			generateModal(modalData.participateForm(), 'minimal');
+			generateModal(modalData.participateForm(), 'full');
 			return false;
 		} catch(e) {
 			console.log(e);
@@ -898,7 +911,7 @@ $toggleAreaLabel.each(function (){
 	});
 	
 	if( typeof modalData != 'undefined' && typeof modalData.participateFormInvalid != 'undefined' ){
-		generateModal(modalData.participateFormInvalid(), 'minimal');
+		generateModal(modalData.participateFormInvalid(), 'full');
 	}
 
 	

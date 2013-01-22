@@ -191,15 +191,16 @@
  * @param options a map (value=label) of all the available options
  * @param attributes any additional attributes for the element (such as class
  *        or CSS styles or size
+ * @param preSelected the predefined value for the select
 -->
-<#macro formSingleSelect path options required="" cssClass="" attributes="" preSelected=-1>
+<#macro formSingleSelect path options required="" cssClass="" attributes="" preSelected="">
     <@spring.bind path />
     
     <@formLabel path required false />
     
     <@showError />
     
-    <select name="${spring.status.expression}" id="${spring.status.expression}" ${attributes} class="chzn-select ${cssClass}" data-placeholder="<@u.message "initiative.chooseMunicipality" />">
+    <select name="${spring.status.expression}" id="${spring.status.expression}" ${attributes} class="chzn-select ${cssClass}" data-init-municipality="${preSelected}" data-placeholder="<@u.message "initiative.chooseMunicipality" />">
         <option value=""><@u.message "initiative.chooseMunicipality" /></option>
         <#list options as option>
             <option value="${option.id}"<@checkSelected option.id preSelected />>${option.name}</option>

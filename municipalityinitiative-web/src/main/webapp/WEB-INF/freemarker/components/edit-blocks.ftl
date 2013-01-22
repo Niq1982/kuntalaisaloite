@@ -256,7 +256,7 @@
                     <p>Haluan kerätä aloitteelle lisää tekijöitä Kuntalaisaloite.fi:ssä.</p>
     
                     <div id="franchise" class="">
-                        <@f.radiobutton path="initiative.franchise" required="required" options={"false":"initiative.franchise.false", "true":"initiative.franchise.true"} attributes="" />
+                        <@f.radiobutton path="initiative.franchise" required="required" options={"true":"initiative.franchise.true", "false":"initiative.franchise.false"} attributes="" />
                     </div>
     
                     <br/>
