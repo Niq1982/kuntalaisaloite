@@ -34,7 +34,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
      */
     
     @Test
-    @Ignore("TODO")
+    //@Ignore("TODO")
     public void participate_initiative() {
         Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
         Long municipality2Id = testHelper.createTestMunicipality(MUNICIPALITY_2);
@@ -50,6 +50,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         waitms(500); // Shorten or remove if possible
         
         inputText("participantName", PARTICIPANT_NAME);
+        clickByName("showName"); // TODO: Use text instead
         
         /* TODO: Enable this when user wants to select another municipality
         waitms(500); // Tiny delay is required if run from Eclipse.
@@ -60,11 +61,15 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         
         // TODO: Other options: franchise and municipality membership
         waitms(500);
-        clickLinkContaining(getMessage(RADIO_FRANCHISE_TRUE));
+        //clickLinkContaining(getMessage(RADIO_FRANCHISE_TRUE));
+        clickById("initiative.franchise.true"); // TODO: Use text instead
         
         
-        clickLinkContaining(MSG_BTN_SAVE);
+        //clickLinkContaining(getMessage(MSG_BTN_SAVE));
+        clickByName("action-save"); // TODO: Use text instead
         
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_PARTICIPATE);
+        // TODO: Assert participants counts
+        //assertMsgContainedByClass("js-show-franchise-list", MSG_SUCCESS_PARTICIPATE);
     }
 }
