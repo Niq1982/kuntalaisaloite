@@ -119,7 +119,7 @@
             -->
             <#if requestMessages?? && !(requestMessages?size > 0) && !((hasErrors?? && hasErrors) || (RequestParameters['participateForm']?? && RequestParameters['participateForm'] == "true"))>
                 <div class="participate">
-                    <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send">Osallistu aloitteeseen</span></a>
+                    <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>
                     <a class="push" href="#">Mitä aloitteeseen osallistuminen tarkoittaa?</a>
                 </div>
             </#if>
@@ -136,14 +136,16 @@
                     <p>Äänioikeutettuja jäseniä yhteensä kunnassa ${initiative.municipalityName!""}<br />
                     <span class="user-count">${participantCount.rightOfVoting.total!""}</span><br />
                     <#if (participantCount.rightOfVoting.total > 0)>
-                        <a class="trigger-tooltip js-show-franchise-list" href="#" title="Näytä nimensä julkistaneiden lista">${participantCount.rightOfVoting.publicNames!""} julkista nimeä</a><br>${participantCount.rightOfVoting.privateNames!""} ei julkista nimeä</p>
+                        <#if (participantCount.rightOfVoting.publicNames > 0)><a class="trigger-tooltip js-show-franchise-list" href="#" title="Näytä nimensä julkistaneiden lista">${participantCount.rightOfVoting.publicNames!""} julkista nimeä</a><br /></#if>
+                        <#if (participantCount.rightOfVoting.privateNames > 0)>${participantCount.rightOfVoting.privateNames!""} ei julkista nimeä</p></#if>
                     </#if>
                 </div>
                 <div class="column col-1of2 last">
                     <p>Ei äänioikeutettuja jäseniä yhteensä kunnassa ${initiative.municipalityName!""}<br />
                     <span class="user-count">${participantCount.noRightOfVoting.total!""}</span><br>
                     <#if (participantCount.noRightOfVoting.total > 0)>
-                        <a class="trigger-tooltip js-show-no-franchise-list" href="#" title="Näytä nimensä julkistaneiden lista">${participantCount.noRightOfVoting.publicNames!""} julkista nimeä</a><br>${participantCount.noRightOfVoting.privateNames!""} ei julkista nimeä</p>
+                        <#if (participantCount.noRightOfVoting.publicNames > 0)><a class="trigger-tooltip js-show-no-franchise-list" href="#" title="Näytä nimensä julkistaneiden lista">${participantCount.noRightOfVoting.publicNames!""} julkista nimeä</a><br></#if>
+                        <#if (participantCount.noRightOfVoting.privateNames > 0)>${participantCount.noRightOfVoting.privateNames!""} ei julkista nimeä</p></#if>
                     </#if>
                 </div>
             </div>
