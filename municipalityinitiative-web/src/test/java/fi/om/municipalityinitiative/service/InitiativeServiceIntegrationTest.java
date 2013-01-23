@@ -5,9 +5,12 @@ import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.newdto.InitiativeUICreateDto;
 import fi.om.municipalityinitiative.newdto.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.MunicipalityInfo;
+import fi.om.municipalityinitiative.newdto.ParticipantUIICreateDto;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
+import fi.om.municipalityinitiative.util.ParticipatingUnallowedException;
 import fi.om.municipalityinitiative.util.TestUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -18,8 +21,8 @@ import javax.annotation.Resource;
 import java.util.Random;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.fail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={IntegrationTestConfiguration.class})
@@ -90,6 +93,38 @@ public class InitiativeServiceIntegrationTest {
         assertThat(initiative.getManagementHash(), is("0000000000111111111122222222223333333333"));
         assertThat(initiative.isCollectable(), is(true));
 
+    }
+
+    @Test
+    public void participating_to_non_collectable_initiative_is_forbidden() {
+        Long initiative = testHelper.createTestInitiative(testMunicipality.getId());
+        ParticipantUIICreateDto participant = new ParticipantUIICreateDto();
+        participant.setParticipantName("Some Name");
+        participant.setShowName(true);
+        participant.setHomeMunicipality(testMunicipality.getId());
+        try {
+            service.createParticipant(participant, initiative);
+            fail("Expected ParticipatingUnallowedException");
+        } catch(ParticipatingUnallowedException e) {
+            assertThat(e.getMessage(), containsString("Initiative not collectable"));
+        }
+    }
+
+    @Test(expected = ParticipatingUnallowedException.class)
+    @Ignore("Implement after sent-info is shown")
+    public void participating_to_sent_initiative_is_forbiden() {
+        Long initiativeId = testHelper.createTestInitiative(testMunicipality.getId(), "Some Name", false, true);
+        ParticipantUIICreateDto participant = new ParticipantUIICreateDto();
+        participant.setParticipantName("Some Name");
+        participant.setShowName(true);
+        participant.setHomeMunicipality(testMunicipality.getId());
+
+        try {
+            service.createParticipant(participant, initiativeId);
+            fail("Expected ParticipatingUnallowedException");
+        } catch(ParticipatingUnallowedException e) {
+            assertThat(e.getMessage(), is("moi"));
+        }
     }
 
     private InitiativeUICreateDto createDto() {

@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.service;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.*;
+import fi.om.municipalityinitiative.util.ParticipatingUnallowedException;
 import fi.om.municipalityinitiative.util.ReflectionUtils;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,11 +40,26 @@ public class InitiativeService {
         return municipalityInitiativeId;
     }
 
+    @Transactional
     public Long createParticipant(ParticipantUIICreateDto participant, Long initiativeId) {
+
+        checkAllowedToParticipate(initiativeId);
+
         ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
         ReflectionUtils.copyFieldValuesToChild(participant, participantCreateDto);
         participantCreateDto.setMunicipalityInitiativeId(initiativeId);
         return participantDao.create(participantCreateDto);
+    }
+
+    private void checkAllowedToParticipate(Long initiativeId) {
+        InitiativeViewInfo initiative = initiativeDao.getById(initiativeId);
+        if (initiative.getManagementHash() == null) {
+            throw new ParticipatingUnallowedException("Initiative not collectable: " + initiativeId);
+        }
+        if (initiative == null) {
+            throw new ParticipatingUnallowedException("Initiative not collectable: " + initiativeId);
+        }
+
     }
 
     static InitiativeCreateDto parse(InitiativeUICreateDto source) {

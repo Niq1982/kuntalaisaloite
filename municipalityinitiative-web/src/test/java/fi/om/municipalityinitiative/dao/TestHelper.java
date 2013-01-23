@@ -1,12 +1,13 @@
 package fi.om.municipalityinitiative.dao;
 
-import com.google.common.base.Optional;
 import com.mysema.query.sql.RelationalPathBase;
 import com.mysema.query.sql.dml.SQLInsertClause;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
+import com.mysema.query.types.expr.DateTimeExpression;
 import fi.om.municipalityinitiative.sql.QMunicipality;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.sql.QParticipant;
+import org.joda.time.DateTime;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -65,6 +66,9 @@ public class TestHelper {
         //insert.setNull(municipalityInitiative.authorId); // TODO
         if (collectable) {
             insert.set(municipalityInitiative.managementHash,"0000000000111111111122222222223333333333");            
+        }
+        else {
+            insert.set(municipalityInitiative.sent, DateTimeExpression.currentTimestamp(DateTime.class));
         }
 
         Long initiativeId = insert.executeWithKey(municipalityInitiative.id);
