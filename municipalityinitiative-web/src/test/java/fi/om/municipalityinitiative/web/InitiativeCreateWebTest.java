@@ -18,12 +18,13 @@ public class InitiativeCreateWebTest extends WebTestBase {
     private static final String MSG_SUCCESS_SAVE_AND_SEND = "success.save-and-send";
     private static final String MSG_SUCCESS_SAVE_TITLE = "success.save.title";
     private static final String MSG_BTN_CONTINUE = "action.continue";
+    private static final String SELECT_MUNICIPALITY = "initiative.chooseMunicipality";
     
     /**
      * Form values as constants.
      */
-    private static final String MUNICIPALITY_1 = "Vantaa";
-    private static final String MUNICIPALITY_2 = "Helsinki";
+    private static final String MUNICIPALITY_1 = "Vantaa";      // ID 280
+    private static final String MUNICIPALITY_2 = "Helsinki";    // ID 281
     
     private static final String NAME = "Aloitteen otsikko";
     private static final String PROPOSAL = "Aloitteen sisältö";
@@ -32,9 +33,6 @@ public class InitiativeCreateWebTest extends WebTestBase {
     private static final String CONTACT_EMAIL = "test@test.com";
     private static final String CONTACT_PHONE = "012-3456789";
     private static final String CONTACT_ADDRESS = "Osoitekatu 1 A, 00000 Helsinki";
-    
-    
-    private static final String SELECT_MUNICIPALITY = "Valitse kunta";
 
     @Test
     public void page_opens() {

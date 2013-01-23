@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.dao;
 
+import com.google.common.base.Optional;
 import com.mysema.query.sql.RelationalPathBase;
 import com.mysema.query.sql.dml.SQLInsertClause;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
@@ -46,11 +47,11 @@ public class TestHelper {
 
     @Transactional
     public Long createTestInitiative(Long municipalityId, String name) {
-        return createTestInitiative(municipalityId, name, true);
+        return createTestInitiative(municipalityId, name, true, false);
     }
 
     @Transactional
-    public Long createTestInitiative(Long municipalityId, String name, boolean publicName) {
+    public Long createTestInitiative(Long municipalityId, String name, boolean publicName, boolean collectable) {
         SQLInsertClause insert = queryFactory.insert(municipalityInitiative);
 
         insert.set(municipalityInitiative.contactAddress, "contact_address");
@@ -62,6 +63,9 @@ public class TestHelper {
         insert.set(municipalityInitiative.municipalityId, municipalityId);
         insert.set(municipalityInitiative.authorId, -1L);
         //insert.setNull(municipalityInitiative.authorId); // TODO
+        if (collectable) {
+            insert.set(municipalityInitiative.managementHash,"0000000000111111111122222222223333333333");            
+        }
 
         Long initiativeId = insert.executeWithKey(municipalityInitiative.id);
 
