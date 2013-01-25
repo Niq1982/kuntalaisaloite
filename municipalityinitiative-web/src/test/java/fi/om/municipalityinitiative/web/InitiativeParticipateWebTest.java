@@ -1,7 +1,16 @@
 package fi.om.municipalityinitiative.web;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Ignore;
 import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
 
 public class InitiativeParticipateWebTest extends WebTestBase {
     
@@ -34,7 +43,6 @@ public class InitiativeParticipateWebTest extends WebTestBase {
      */
     
     @Test
-    //@Ignore("TODO")
     public void participate_initiative() {
         Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
         Long municipality2Id = testHelper.createTestMunicipality(MUNICIPALITY_2);
@@ -43,33 +51,30 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         
         open(urls.view(initiativeId));
         
-        waitms(500);
+        wait100();
         
         clickLinkContaining(getMessage(MSG_BTN_PARTICIPATE));
         
-        waitms(500); // Shorten or remove if possible
+        wait100();
         
         inputText("participantName", PARTICIPANT_NAME);
         clickByName("showName"); // TODO: Use text instead
         
-        /* TODO: Enable this when user wants to select another municipality
-        waitms(500); // Tiny delay is required if run from Eclipse.
-        clickLinkContaining(SELECT_MUNICIPALITY);
-        waitms(500); // Tiny delay is required if run from Eclipse.
-        clickById("municipality_chzn_o_1");
-        */
+        /* TODO: Select another municipality
+        waitms(500);;
+        clickLinkContaining(MUNICIPALITY_1);
+        waitms(500);
+        getElemContaining(MUNICIPALITY_2, "li").click(); */
+
         
         // TODO: Other options: franchise and municipality membership
-        waitms(500);
-        //clickLinkContaining(getMessage(RADIO_FRANCHISE_TRUE));
-        clickById("initiative.franchise.true"); // TODO: Use text instead
+        wait100();
         
+        getElemContaining(getMessage(RADIO_FRANCHISE_TRUE), "label").click();
         
-        //clickLinkContaining(getMessage(MSG_BTN_SAVE));
-        clickByName("action-save"); // TODO: Use text instead
+        getElemContaining(getMessage(MSG_BTN_SAVE), "button").click();
         
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_PARTICIPATE);
-        // TODO: Assert participants counts
-        //assertMsgContainedByClass("js-show-franchise-list", MSG_SUCCESS_PARTICIPATE);
     }
+    
 }
