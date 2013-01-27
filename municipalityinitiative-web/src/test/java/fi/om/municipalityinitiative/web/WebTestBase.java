@@ -228,6 +228,18 @@ public abstract class WebTestBase {
         WebElement link = wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText(text)));
         link.click();
     }
+    
+    protected WebElement getElemContaining(String linkText, String tagName) {
+        List<WebElement> htmlElements = driver.findElements(By.tagName(tagName));
+        // wait.until(ExpectedConditions.elementToBeClickable(By.name(name)));
+       
+        for (WebElement e : htmlElements) {
+          if (e.getText().contains(linkText)) {
+            return e;
+          }
+        }
+        throw new NullPointerException("Label not found with text: " + linkText);
+    }
 
     protected String getPageUrl() {
         return driver.getCurrentUrl();

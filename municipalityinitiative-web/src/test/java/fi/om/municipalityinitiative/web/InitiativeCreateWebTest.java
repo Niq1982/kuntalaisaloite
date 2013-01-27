@@ -5,8 +5,6 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import fi.om.municipalityinitiative.web.Urls;
-
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
@@ -15,16 +13,21 @@ public class InitiativeCreateWebTest extends WebTestBase {
     /**
      * Localization keys as constants.
      */
+    
+    private static final String MSG_SITE_NAME = "siteName";
+    private static final String MSG_PAGE_CREATE_NEW = "page.createNew";
     private static final String MSG_SUCCESS_SAVE_AND_SEND = "success.save-and-send";
     private static final String MSG_SUCCESS_SAVE_TITLE = "success.save.title";
     private static final String MSG_BTN_CONTINUE = "action.continue";
+    private static final String MSG_BTN_SAVE_AND_SEND = "action.saveAndSend";
+    private static final String MSG_BTN_SAVE_AND_COLLECT = "action.saveAndCollect";
     private static final String SELECT_MUNICIPALITY = "initiative.chooseMunicipality";
     
     /**
      * Form values as constants.
      */
-    private static final String MUNICIPALITY_1 = "Vantaa";      // ID 280
-    private static final String MUNICIPALITY_2 = "Helsinki";    // ID 281
+    private static final String MUNICIPALITY_1 = "Vantaa";
+    private static final String MUNICIPALITY_2 = "Helsinki";
     
     private static final String NAME = "Aloitteen otsikko";
     private static final String PROPOSAL = "Aloitteen sisältö";
@@ -37,7 +40,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     @Test
     public void page_opens() {
         open(urls.createNew());
-        assertTitle("Tee kuntalaisaloite - Kuntalaisaloitepalvelu");
+        assertTitle(getMessage(MSG_PAGE_CREATE_NEW) + " - " + getMessage(MSG_SITE_NAME));
     }
     
     // Create an initiative that has only one author
@@ -65,13 +68,13 @@ public class InitiativeCreateWebTest extends WebTestBase {
         open(urls.createNew());
         
         waitms(500); // Tiny delay is required if run from Eclipse.
-        clickLinkContaining(SELECT_MUNICIPALITY);
+        clickLinkContaining(getMessage(SELECT_MUNICIPALITY));
         waitms(500); // Tiny delay is required if run from Eclipse.
-        clickById("municipality_chzn_o_1");
+        getElemContaining(MUNICIPALITY_1, "li").click();
         
         clickLinkContaining(getMessage(MSG_BTN_CONTINUE));
         
-        assertTextContainedByXPath("//p[@id='selected-municipality']", MUNICIPALITY_2);
+        assertTextContainedByXPath("//p[@id='selected-municipality']", MUNICIPALITY_1);
         
         wait100();
         
@@ -114,11 +117,11 @@ public class InitiativeCreateWebTest extends WebTestBase {
         wait100();
         
         if (startCollecting) {
-            clickByName(Urls.ACTION_SAVE);
+            getElemContaining(getMessage(MSG_BTN_SAVE_AND_COLLECT), "button").click();
             
             assertMsgContainedByClass("modal-title", MSG_SUCCESS_SAVE_TITLE);
         } else {
-            clickByName(Urls.ACTION_SAVE_AND_SEND);
+            getElemContaining(getMessage(MSG_BTN_SAVE_AND_SEND), "button").click();
 
             assertMsgContainedByClass("msg-success", MSG_SUCCESS_SAVE_AND_SEND);
             assertTextByTag("h1", NAME);
