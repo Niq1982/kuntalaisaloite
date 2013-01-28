@@ -22,6 +22,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     private static final String MSG_BTN_SAVE_AND_SEND = "action.saveAndSend";
     private static final String MSG_BTN_SAVE_AND_COLLECT = "action.saveAndCollect";
     private static final String SELECT_MUNICIPALITY = "initiative.chooseMunicipality";
+    private static final String RADIO_FRANCHISE_TRUE = "initiative.franchise.true";
     
     /**
      * Form values as constants.
@@ -119,6 +120,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         wait100();
         
         if (startCollecting) {
+            getElemContaining(getMessage(RADIO_FRANCHISE_TRUE), "label").click();
             getElemContaining(getMessage(MSG_BTN_SAVE_AND_COLLECT), "button").click();
             
             assertMsgContainedByClass("modal-title", MSG_SUCCESS_SAVE_TITLE);
