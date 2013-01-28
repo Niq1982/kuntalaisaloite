@@ -205,7 +205,7 @@
         <#if spring.stringStatusValue?is_number && spring.stringStatusValue == value?number>selected="selected"</#if>
         <#if spring.stringStatusValue?is_string && spring.stringStatusValue == value?string>selected="selected"</#if>
     <#else>
-        <#if preSelected?is_number && preSelected == value?number>selected="selected"</#if>
+        <#if preSelected?is_number && value?is_number && preSelected == value?number>selected="selected"</#if>
         <#if preSelected?is_string && preSelected == value?string>selected="selected"</#if>
     </#if>
 </#macro>
