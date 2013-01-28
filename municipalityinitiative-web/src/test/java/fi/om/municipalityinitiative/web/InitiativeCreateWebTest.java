@@ -39,13 +39,16 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
     @Test
     public void page_opens() {
-        open(urls.createNew());
-        assertTitle(getMessage(MSG_PAGE_CREATE_NEW) + " - " + getMessage(MSG_SITE_NAME));
+        openAndAssertCreatePage();
     }
-    
+
     // Create an initiative that has only one author
     @Test
     public void create_and_send_initiative() {
+        testHelper.createTestMunicipality(MUNICIPALITY_1);
+        testHelper.createTestMunicipality(MUNICIPALITY_2);
+        
+        openAndAssertCreatePage();
         select_municipality();
         add_initiative_content();
         add_contact_info();
@@ -55,6 +58,10 @@ public class InitiativeCreateWebTest extends WebTestBase {
     // Create an initiative and start collecting participants
     @Test
     public void create_and_start_collecting() {
+        testHelper.createTestMunicipality(MUNICIPALITY_1);
+        testHelper.createTestMunicipality(MUNICIPALITY_2);
+        
+        openAndAssertCreatePage();
         select_municipality();
         add_initiative_content();
         add_contact_info();
@@ -62,11 +69,6 @@ public class InitiativeCreateWebTest extends WebTestBase {
     }
 
     public void select_municipality() {
-        testHelper.createTestMunicipality(MUNICIPALITY_1);
-        testHelper.createTestMunicipality(MUNICIPALITY_2);
-
-        open(urls.createNew());
-        
         waitms(500); // Tiny delay is required if run from Eclipse.
         clickLinkContaining(getMessage(SELECT_MUNICIPALITY));
         waitms(500); // Tiny delay is required if run from Eclipse.
@@ -130,6 +132,11 @@ public class InitiativeCreateWebTest extends WebTestBase {
         System.out.println("--- save_initiative OK");
     }
 
+    private void openAndAssertCreatePage() {
+        open(urls.createNew());
+        assertTitle(getMessage(MSG_PAGE_CREATE_NEW) + " - " + getMessage(MSG_SITE_NAME));
+    }
+    
     private WebElement getSelectByLabel(String labelText) {
         return driver.findElement(By.xpath("//label[contains(normalize-space(text()), '" + labelText + "')]/following-sibling::select"));
     }

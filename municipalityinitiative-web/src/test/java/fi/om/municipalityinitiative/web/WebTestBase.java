@@ -102,18 +102,11 @@ public abstract class WebTestBase {
 
     @After
     public void teardown() {
-        driver.close();
+        driver.quit();
     }
     
-    @After
-    public void endTest() {
-        if (driver != null) {
-            driver.quit(); // Quits this driver, closing every associated window.
-            driver = null;
-        }
-    }
     
-    @AfterClass
+    //@AfterClass
     public static void destroy() {
         try {
             jettyServer.stop();
