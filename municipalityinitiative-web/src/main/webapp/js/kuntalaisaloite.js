@@ -372,16 +372,12 @@ $(document).ready(function () {
 		}
 	};
 	equalMunicipalitys = function(){
-		console.log($('#municipality').data("init-municipality") +" : "+ $('#homeMunicipality').val());
-		
 		//if (municipalitySelect.val() == homeMunicipalitySelect.val()) {
 		// TODO: Use variables in selectors. Issue: They need to updated when modal is loaded.
 		//if ( $('#homeMunicipality').data("init-municipality") == "" ||  $('#municipality').data("init-municipality") == $('#homeMunicipality').val() ) {
 		if ( $('#municipality').val() == $('#homeMunicipality').val() ) {
-			console.log("true");
 			return true;
 		} else {
-			console.log("false");
 			return false;
 		}
 	};
@@ -447,6 +443,16 @@ $(document).ready(function () {
 		}
 	};
 	
+	function disableSaveAndCollect(disable){
+		var btnSaveAndSend = $('button[name=action-save]');
+		
+		if (disable) {
+			btnSaveAndSend.addClass('disabled').attr('disabled','disabled');
+		} else {
+			btnSaveAndSend.removeClass('disabled').removeAttr('disabled');
+		}
+	}
+	
 	// Show or hide the radiobutton selection for municipality membership
 	var toggleMembershipRadios = function(select){
 		if( equalMunicipalitys() ){
@@ -459,12 +465,18 @@ $(document).ready(function () {
 			
 			$("input[name=municipalMembership]").removeAttr('checked');
 			
+			disableSaveAndCollect(true);
+			
 			$('#franchise').removeClass('js-hide'); // TODO: finalize
 			$('#municipalMembership').addClass('js-hide'); // TODO: finalize
 			
 		} else {
 			municipalityDiffers.stop(false,true).slideDown(slideOptions);
 			preventContinuing(true);
+			
+			$('button[name=action-save]').removeClass('disabled');
+			
+			disableSaveAndCollect(false);
 			
 			if (validationErrors){
 				$("input[name=municipalMembership]").removeAttr('checked');
@@ -476,8 +488,14 @@ $(document).ready(function () {
 	};
 	if (validationErrors){
 		toggleMembershipRadios(homeMunicipalitySelect);
-		console.log("toggleMembershipRadios");
+		$('input[name=franchise]').removeAttr('checked');
 	}
+	
+	$('input[name=franchise]').click(function(){
+		var isFranchise = ( $(this).attr('value') == 'true' );
+		
+		disableSaveAndCollect(!isFranchise);
+	});
 	
 	// Disable button
 	// FIXME: Has issues with revolving values
@@ -535,8 +553,6 @@ $(document).ready(function () {
 		
 		// Toggle membership radiobuttons
 		toggleMembershipRadios(thisSelect);
-		
-		//console.log("checked: "+municipalMembershipRadios.attr('checked'));
 		
 		// Disable / enable proceeding to the next form steps
 		if ( $("input[name=municipalMembership]:checked").length == 0){
