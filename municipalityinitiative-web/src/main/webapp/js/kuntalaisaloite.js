@@ -1,13 +1,5 @@
-/**
- * TODO: Remove all initiattive-web stuff
-
-*/
-
-
-
 
 var localization, generateModal, loadChosen, validateForm, modalContent, modalType;
-
 
 /**
  * 
@@ -74,26 +66,6 @@ jQuery.fn.loadChosen = function(){
 };
 
 
-
-//TODO: JS validation
-// We do not use JS validation for the form at this moment.
-// This JS validation is a special case for organizer emails.
-// Should be refactored after the global JS validation is enabled
-// Localize error message
-validateForm = function (formBlock) {	
-	if(formBlock === "organizers") {
-		if( $('.email-input').find('.invalid').length > 0){
-			var authorArea = $('.initiative-authors-area');
-			if( authorArea.find('.msg-error').length === 0){
-				authorArea.prepend('<div class="system-msg msg-error">Sähköpostiosoitteissa on virheitä.</div>');
-			}
-		} else {
-			$('form#form-initiative').submit();
-		}
-	}
-};
-
-
 $(document).ready(function () {	
 	// Define general variables
 	var $body, speedFast, speedSlow, speedVeryFast, speedAutoHide, vpHeight, vpWidth, validateEmail, isIE7, isIE8, locale;
@@ -112,23 +84,13 @@ $(document).ready(function () {
  * Common helpers
  * ==============
  */
-	// Hide all elements that should not be seen with JS
-	// Moved in CSS
-	//$('.js-hide').hide();
-	
 	// Wait a while and hide removable message
 	if ( $('.auto-hide').length > 0 ){
 		setTimeout(function() {
 			$('.auto-hide').fadeOut(speedSlow);
 		}, speedAutoHide);
 	}
-	
-	// Jump to errors-summary
-	// NOTE: Disabled ATM, because needs to work for NOSCPRIPT-users also
-	/*if ($('#errors-summary').length > 0) {
-		window.location.hash="errors-summary";
-	}*/
-	
+
 	// Validate emails
 	validateEmail = function (email) {
 	    var re;
@@ -380,11 +342,6 @@ $(document).ready(function () {
  		return false;
  	});
 
- 	// Open blocks by hash - TODO
- 	/*if(window.location.hash != "") {
-	    loadContent(window.location.hash);
-	}*/
-	
 
 /**
 * Municipality selection
@@ -415,9 +372,12 @@ $(document).ready(function () {
 		}
 	};
 	equalMunicipalitys = function(){
+		console.log($('#municipality').data("init-municipality") +" : "+ $('#homeMunicipality').val());
+		
 		//if (municipalitySelect.val() == homeMunicipalitySelect.val()) {
 		// TODO: Use variables in selectors. Issue: They need to updated when modal is loaded.
-		if ( $('#homeMunicipality').data("init-municipality") == "" ||  $('#homeMunicipality').data("init-municipality") == $('#homeMunicipality').val() ) {
+		//if ( $('#homeMunicipality').data("init-municipality") == "" ||  $('#municipality').data("init-municipality") == $('#homeMunicipality').val() ) {
+		if ( $('#municipality').val() == $('#homeMunicipality').val() ) {
 			console.log("true");
 			return true;
 		} else {
@@ -495,7 +455,8 @@ $(document).ready(function () {
 			
 			// Clear radiobuttons
 			//municipalMembershipRadios.removeAttr('checked');
-			// TODO: Use variables in selectors. Issue: They need to updated when modal is loaded. 
+			// TODO: Use variables in selectors. Issue: They need to updated when modal is loaded.
+			
 			$("input[name=municipalMembership]").removeAttr('checked');
 			
 			$('#franchise').removeClass('js-hide'); // TODO: finalize
@@ -505,12 +466,17 @@ $(document).ready(function () {
 			municipalityDiffers.stop(false,true).slideDown(slideOptions);
 			preventContinuing(true);
 			
+			if (validationErrors){
+				$("input[name=municipalMembership]").removeAttr('checked');
+			}
+			
 			$('#franchise').addClass('js-hide'); // TODO: finalize
 			$('#municipalMembership').removeClass('js-hide'); // TODO: finalize
 		}
 	};
 	if (validationErrors){
 		toggleMembershipRadios(homeMunicipalitySelect);
+		console.log("toggleMembershipRadios");
 	}
 	
 	// Disable button
