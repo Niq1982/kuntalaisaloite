@@ -417,7 +417,7 @@ $(document).ready(function () {
 	equalMunicipalitys = function(){
 		//if (municipalitySelect.val() == homeMunicipalitySelect.val()) {
 		// TODO: Use variables in selectors. Issue: They need to updated when modal is loaded.
-		if ( $('#homeMunicipality').data("init-municipality") == "" ||  $('#homeMunicipality').val() ==  $('#homeMunicipality').data("init-municipality")) {
+		if ( $('#homeMunicipality').data("init-municipality") == "" ||  $('#homeMunicipality').data("init-municipality") == $('#homeMunicipality').val() ) {
 			console.log("true");
 			return true;
 		} else {
