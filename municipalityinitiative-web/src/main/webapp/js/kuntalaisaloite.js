@@ -633,67 +633,6 @@ $toggleAreaLabel.each(function (){
 });
 */
 
-
-/**
- * 
- * Add and remove link
- * ===================
- * - Uses jsRender to render link-row template
- * - Handles adding and removing a link-row
- *
- * TODO: remove from kuntalaisaloite if not needed
- * 
- * */
-	var $linkContainer = $('#link-container');
-	var index = $linkContainer.data("index");
-	
-	// TODO: Genetare better positioned remove link
-	var createRemoveLink = function(elem){
-		var linkHeight, $removeLink;
-		
-		linkHeight = elem.innerHeight();
-		$removeLink = $('<a class="remove-link ignoredirty" style="height:'+linkHeight+'px">x</a>');
-		elem.wrap('<div style="position:relative;">');
-		elem.after($removeLink);
-	};
-	
-	// Use jsRender to render a new link row
-	var createLinkRow = function(){
-		var links = { linkIndex:""+index };
-		$linkContainer.append( $( "#linkTemplate" ).render( links ) );
-		
-		//createRemoveLink();
-		
-		// FIXME: This does not work as the data value is not correct --> Returns string?
-		if($altLangLink.data('translation')){ 
-			$('.alt-lang').show();
-		} else {
-		}
-		index++;
-	}
-	
-	// Create one as default and other ones with a click.
-	if ( $linkContainer.length > 0) {
-		createLinkRow();
-	}
-	
-	$('#add-new-link').live('click', function(){
-		createLinkRow();
-        
-		return false;
-	});
-	
-	// Remove link (clear values and hide fields)
-	$('.remove-link').live('click', function(){
-		//var removedLink = $(this).parent();
-		var removedLink = $(this).closest('.add-link');
-		
-		removedLink.slideUp(speedFast, function() {
-			// Animation complete.
-		}).find("input").attr("value","");
-		
-		return false;
-	});
 	
 /**
  * 
@@ -1006,39 +945,6 @@ $.tools.validator.localize("sv", {
 
 
 /**
-* Custom validation for current user's roles
-* ====================
-* Disables selections that cannot be submitted.
-* - User must be one of these: initiator, representative or reserve
-* - But he/she cannot be representative and reserve at the same time
-*/
-/*
-$.tools.validator.addMethod('rolesCheckbox', function (val, elt) {
-    var valid = false;
-
-    $('input[name=' + $(elt).attr('name') + ']:checkbox').each(function(inx, elt) {
-        if (elt.checked === true) {
-            valid = true;
-            return;
-        }
-    });
-
-    return valid;
-}, function()  {
- 
-});*/
-
-
-    
-/*
-$.tools.validator.fn("[name=currentAuthor.initiator]", "Value not equal with the $1 field", function(input) {
-    var name = input.attr("data-equals"),
-    field = this.getInputs().filter("[name=" + name + "]");
-    return input.val() == field.val() ? true : [name];
-    });
-*/
-
-/**
  * TODO: Clean the validation code 
  *  - If the custom-effect 'inline' is used, remove unneeded options
  *  - Error-messages gets multiplied after each failed form send
@@ -1144,33 +1050,6 @@ jQuery.fn.bindCheckbox = function(){
 	});
 };
 $('.binder').bindCheckbox();
-
-
-/**
- * 
- * Show hide more details - TODO REMOVE FROM MUNICIPALITY IF NOT NEEDED
- * ======================
- * 
- * */
-$('.toggler').click(function(){
-	var toggler = $(this);
-	var toggled = toggler.parent().next('.toggled');
-	
-	toggler.find('span').toggleClass('less')
-	toggler.next('h4').toggleClass('subtle'); // relies on h4
-	toggler.switchContent(toggler.find('.text:first'));
-	
-	if(isIE7){
-		toggled.stop(false,true).toggle(); // content disappeared in ie7 after animation
-	} else {
-		toggled.stop(false,true).slideToggle({
-			duration: speedFast, 
-			easing: 'easeOutExpo'
-		});
-	}
-	
-	return false;
-});
 
 
 });
