@@ -140,6 +140,7 @@ public class InitiativeServiceIntegrationTest {
         createDto.setMunicipality(testMunicipality.getId());
         createDto.setHomeMunicipality(testMunicipality.getId());
         createDto.setMunicipalMembership(true);
+        createDto.setCollectable(true);
 
         TestUtils.assertNoNullFields(createDto);
         return createDto;
