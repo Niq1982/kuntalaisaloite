@@ -4,7 +4,9 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class ParticipantUIICreateDto {
+@ValidFranchise
+@ValidMunicipalMembership
+public class ParticipantUIICreateDto implements ParticipantFranchise {
 
     @NotEmpty
     private String participantName;
@@ -15,11 +17,16 @@ public class ParticipantUIICreateDto {
     @NotNull
     private Boolean showName;
 
-    @NotNull
     private Boolean franchise;
-    
-    // TODO: Added by mikkole. Do we really need this?
+
     private Boolean municipalMembership;
+
+    @NotNull
+    private Long municipality;
+
+    public void setMunicipality(Long municipality) {
+        this.municipality = municipality;
+    }
 
     public String getParticipantName() {
         return participantName;
@@ -29,8 +36,14 @@ public class ParticipantUIICreateDto {
         this.participantName = name;
     }
 
+    @Override
     public Long getHomeMunicipality() {
         return homeMunicipality;
+    }
+
+    @Override
+    public Long getMunicipality() {
+        return municipality;
     }
 
     public void setHomeMunicipality(Long homeMunicipality) {
@@ -45,6 +58,7 @@ public class ParticipantUIICreateDto {
         this.showName = showName;
     }
 
+    @Override
     public Boolean getFranchise() {
         return franchise;
     }
@@ -52,7 +66,8 @@ public class ParticipantUIICreateDto {
     public void setFranchise(Boolean franchise) {
         this.franchise = franchise;
     }
-    
+
+    @Override
     public Boolean getMunicipalMembership() {
         return municipalMembership;
     }

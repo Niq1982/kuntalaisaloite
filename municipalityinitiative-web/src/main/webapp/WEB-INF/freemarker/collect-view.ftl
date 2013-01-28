@@ -11,6 +11,8 @@
     <@u.errorsSummary path="participant.*" prefix="participant."/>
 
     <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-participate" class="sodirty">
+
+    <input type="hidden" name="municipality" value="${initiative.municipalityId}"/>
     
     <div class="input-block-content no-top-margin flexible">
         <@u.systemMessage path="initiative.ownDetails.description" type="info" showClose=false />  

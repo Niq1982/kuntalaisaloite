@@ -5,7 +5,9 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-public class InitiativeUICreateDto {
+@ValidFranchise
+@ValidMunicipalMembership
+public class InitiativeUICreateDto implements ParticipantFranchise{
     
     /**
      *  Using @Pattern instead of @Email, because hibernate's email validation was quite not good enough.
@@ -20,7 +22,7 @@ public class InitiativeUICreateDto {
     private String name;
 
     private String proposal;
-    
+
     private Boolean municipalMembership;
 
     private Boolean franchise;
@@ -63,7 +65,8 @@ public class InitiativeUICreateDto {
     public void setMunicipalMembership(Boolean municipalMembership) {
         this.municipalMembership = municipalMembership;
     }
-    
+
+    @Override
     public Boolean getFranchise() {
         return franchise;
     }
@@ -71,7 +74,8 @@ public class InitiativeUICreateDto {
     public void setFranchise(Boolean franchise) {
         this.franchise = franchise;
     }
-    
+
+    @Override
     public Long getMunicipality() {
         return municipality;
     }
@@ -80,6 +84,7 @@ public class InitiativeUICreateDto {
         this.municipality = municipality;
     }
 
+    @Override
     public Long getHomeMunicipality() {
         return homeMunicipality;
     }
@@ -128,6 +133,7 @@ public class InitiativeUICreateDto {
         this.showName = showName;
     }
 
+    @Override
     public Boolean getMunicipalMembership() {
         return municipalMembership;
     }
