@@ -25,6 +25,7 @@ public class InitiativeUICreateDto implements ParticipantFranchise{
 
     private Boolean municipalMembership;
 
+    // TODO: Validate franchise if (municipality == homeMunicipality)
     private Boolean franchise;
 
     @NotNull

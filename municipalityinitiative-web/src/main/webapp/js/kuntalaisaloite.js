@@ -1,13 +1,5 @@
-/**
- * TODO: Remove all initiattive-web stuff
-
-*/
-
-
-
 
 var localization, generateModal, loadChosen, validateForm, modalContent, modalType;
-
 
 /**
  * 
@@ -74,26 +66,6 @@ jQuery.fn.loadChosen = function(){
 };
 
 
-
-//TODO: JS validation
-// We do not use JS validation for the form at this moment.
-// This JS validation is a special case for organizer emails.
-// Should be refactored after the global JS validation is enabled
-// Localize error message
-validateForm = function (formBlock) {	
-	if(formBlock === "organizers") {
-		if( $('.email-input').find('.invalid').length > 0){
-			var authorArea = $('.initiative-authors-area');
-			if( authorArea.find('.msg-error').length === 0){
-				authorArea.prepend('<div class="system-msg msg-error">Sähköpostiosoitteissa on virheitä.</div>');
-			}
-		} else {
-			$('form#form-initiative').submit();
-		}
-	}
-};
-
-
 $(document).ready(function () {	
 	// Define general variables
 	var $body, speedFast, speedSlow, speedVeryFast, speedAutoHide, vpHeight, vpWidth, validateEmail, isIE7, isIE8, locale;
@@ -112,23 +84,13 @@ $(document).ready(function () {
  * Common helpers
  * ==============
  */
-	// Hide all elements that should not be seen with JS
-	// Moved in CSS
-	//$('.js-hide').hide();
-	
 	// Wait a while and hide removable message
 	if ( $('.auto-hide').length > 0 ){
 		setTimeout(function() {
 			$('.auto-hide').fadeOut(speedSlow);
 		}, speedAutoHide);
 	}
-	
-	// Jump to errors-summary
-	// NOTE: Disabled ATM, because needs to work for NOSCPRIPT-users also
-	/*if ($('#errors-summary').length > 0) {
-		window.location.hash="errors-summary";
-	}*/
-	
+
 	// Validate emails
 	validateEmail = function (email) {
 	    var re;
@@ -228,84 +190,7 @@ $(document).ready(function () {
 	$topRibbon
 	.after('<div style="height:'+$topRibbon.outerHeight()+'px" />')
 	.css('position','fixed');
-	
 
-/**
- * Toggle form help texts
- * ======================
- *  - Help text fires up when user clicks help-icon or focuses to a text-input or a textarea
- *  - Both inputs and helps needs to be descendants of the same parent element ".input-block-content"
- *  - Adjust container's height if adjustment is needed
- *  Known issues:
- *  - In some case when removing link-rows help text overflows
- */
- /*
-	var $allHelps = $('.input-block-extra');
-	var toggleHelpTexts = function (elem,close) {
-		var initPadding, initMargin, thisElem, elemParent, originalHeight, elemHeight, hd, parentBlock, elemParentTopPos;
-		
-		initPadding = 25; 	// hardcoded value from CSS: .input-block:			padding:25px
-		initMargin = 35; 	// hardcoded value from CSS: .input-block-content:	margin-top:2em -> 35 (px)
-		
-		thisElem = elem.children('.input-block-extra-content');
-		elemParent = elem.closest(".input-block-content");
-		parentBlock = elem.closest(".input-block");
-		originalHeight = parentBlock.height();
-		elemHeight = thisElem.outerHeight();
-		hd = elemParent.height() - elemHeight;
-
-		if ( elem.is(':visible')){
-			if (close){
-				elem.fadeOut(speedFast, function(){
-					// Reset the height if needed
-					if (hd < 0){
-						parentBlock.stop(false,true).animate({
-							paddingBottom: initPadding+'px'
-						}, speedFast, function(){
-							parentBlock.removeAttr('style'); // clear styles after animation
-						});
-					}
-				});
-			}
-		} else {
-			$allHelps.fadeOut(speedFast);
-			elem.fadeIn(speedFast);
-			
-			// Selenium htmlUnitDriver throws null pointer in elemParent.position() !?
-			elemParentTopPos = 0;
-			if( elemParent.position() != null){
-				elemParentTopPos = elemParent.position().top;
-			}
-			
-			elemHeight = elem.children('.input-block-extra-content').outerHeight();
-			hd = (elemHeight + elemParentTopPos + initMargin) - parentBlock.height();
-
-			// Adjust the height if needed
-			if (hd > initPadding){
-				parentBlock.stop(false,true).animate({
-					paddingBottom: hd+"px"
-				}, speedFast, function(){
-					parentBlock.css('min-height',parentBlock.height()+'px'); // create min-height so that when opening another smaller help container would not collapse
-				});
-			}
-		}
-	};
-		
-	// Matches with data-name of the help-icon and the class-name of the help-text container
-	$('.help').click(function (){
-		var help, $thisHelp;
-		help = $(this).data('name');
-		$thisHelp = $('.input-block-extra.'+help);
-		
-		toggleHelpTexts($thisHelp,true);
-	});
-	
-	// Matches class-name "input-block-extra" within the same block
-	$('input[type=text],textarea').live('focus', function(){
-		var $thisHelp = $(this).parents('.input-block-content:first').find('.input-block-extra:first');		 
-		toggleHelpTexts($thisHelp,false);
-	});
-*/
 	
 /**
  *	Toggle dropdown menus
@@ -457,11 +342,6 @@ $(document).ready(function () {
  		return false;
  	});
 
- 	// Open blocks by hash - TODO
- 	/*if(window.location.hash != "") {
-	    loadContent(window.location.hash);
-	}*/
-	
 
 /**
 * Municipality selection
@@ -494,7 +374,8 @@ $(document).ready(function () {
 	equalMunicipalitys = function(){
 		//if (municipalitySelect.val() == homeMunicipalitySelect.val()) {
 		// TODO: Use variables in selectors. Issue: They need to updated when modal is loaded.
-		if ( $('#homeMunicipality').data("init-municipality") == "" ||  $('#homeMunicipality').val() ==  $('#homeMunicipality').data("init-municipality")) {
+		//if ( $('#homeMunicipality').data("init-municipality") == "" ||  $('#municipality').data("init-municipality") == $('#homeMunicipality').val() ) {
+		if ( $('#municipality').val() == $('#homeMunicipality').val() ) {
 			return true;
 		} else {
 			return false;
@@ -507,6 +388,16 @@ $(document).ready(function () {
 	
 	$(".chzn-select").loadChosen();
 	
+	// update text in the municipality data in the form step 2
+	var updateSelectedMunicipality = function(){
+		var selectedMunicipality = municipalitySelect.find('option:selected').text();
+		if (selectedMunicipality != "") {
+			selectedMunicipalityElem.text(selectedMunicipality);
+		}
+	};
+	
+	updateSelectedMunicipality();
+	
  	// Update home municipality automatically
 	var updateHomeMunicipality = function(select){
 		var selectedMunicipalityId, selectedMunicipalityName;
@@ -514,8 +405,7 @@ $(document).ready(function () {
 		selectedMunicipalityId = select.val();
 		selectedMunicipalityName = select.find('option:selected').text();
 
-		// update text in the municipality data in the form step 2
-		selectedMunicipalityElem.text(selectedMunicipalityName);
+		updateSelectedMunicipality();
 
 		// if user has changed the homeMunicipality value we will not mess it up
 		if ( !homeMunicipalitySelect.hasClass('updated') ){			
@@ -525,6 +415,44 @@ $(document).ready(function () {
 		}
 	};
 	
+	// Disable or enable the next button and clicking the other form block
+	// TODO: Make more dynamic
+	var preventContinuing = function(prevent){
+		var formBlockHeaders = $("#step-header-2, #step-header-3, #step-header-4");
+		var formBlocks = $("#step-2, #step-3, #step-4");
+		
+		//$("#button-next-2").disableBtn(prevent);
+		
+		if (prevent) {
+			$("#button-next-2").addClass('disabled').attr('onClick','return false;');
+			$("#submit-participate").addClass('disabled').attr('disabled','disabled');
+			formBlockHeaders.addClass('disabled');
+			
+			if (validationErrors){
+				formBlocks.hide();
+			}
+			
+		} else {
+			$("#button-next-2").removeClass('disabled').attr('onClick','proceedTo(2); return false;');
+			$("#submit-participate").removeClass('disabled').removeAttr('disabled');
+			formBlockHeaders.removeClass('disabled');
+			
+			if (validationErrors){
+				formBlocks.show();
+			}
+		}
+	};
+	
+	function disableSaveAndCollect(disable){
+		var btnSaveAndSend = $('button[name=action-save]');
+		
+		if (disable) {
+			btnSaveAndSend.addClass('disabled').attr('disabled','disabled');
+		} else {
+			btnSaveAndSend.removeClass('disabled').removeAttr('disabled');
+		}
+	}
+	
 	// Show or hide the radiobutton selection for municipality membership
 	var toggleMembershipRadios = function(select){
 		if( equalMunicipalitys() ){
@@ -533,8 +461,11 @@ $(document).ready(function () {
 			
 			// Clear radiobuttons
 			//municipalMembershipRadios.removeAttr('checked');
-			// TODO: Use variables in selectors. Issue: They need to updated when modal is loaded. 
+			// TODO: Use variables in selectors. Issue: They need to updated when modal is loaded.
+			
 			$("input[name=municipalMembership]").removeAttr('checked');
+			
+			disableSaveAndCollect(true);
 			
 			$('#franchise').removeClass('js-hide'); // TODO: finalize
 			$('#municipalMembership').addClass('js-hide'); // TODO: finalize
@@ -543,28 +474,28 @@ $(document).ready(function () {
 			municipalityDiffers.stop(false,true).slideDown(slideOptions);
 			preventContinuing(true);
 			
+			$('button[name=action-save]').removeClass('disabled');
+			
+			disableSaveAndCollect(false);
+			
+			if (validationErrors){
+				$("input[name=municipalMembership]").removeAttr('checked');
+			}
+			
 			$('#franchise').addClass('js-hide'); // TODO: finalize
 			$('#municipalMembership').removeClass('js-hide'); // TODO: finalize
 		}
 	};
+	if (validationErrors){
+		toggleMembershipRadios(homeMunicipalitySelect);
+		$('input[name=franchise]').removeAttr('checked');
+	}
 	
-	// Disable or enable the next button and clicking the other form block
-	// TODO: Make more dynamic
-	var preventContinuing = function(prevent){
-		var formBlockHeaders = $("#step-header-2, #step-header-3, #step-header-4");
-			
-		//$("#button-next-2").disableBtn(prevent);
+	$('input[name=franchise]').click(function(){
+		var isFranchise = ( $(this).attr('value') == 'true' );
 		
-		if (prevent) {
-			$("#button-next-2").addClass('disabled').attr('onClick','return false;');
-			$("#submit-participate").addClass('disabled').attr('disabled','disabled');
-			formBlockHeaders.addClass('disabled');
-		} else {
-			$("#button-next-2").removeClass('disabled').attr('onClick','proceedTo(2); return false;');
-			$("#submit-participate").removeClass('disabled').removeAttr('disabled');
-			formBlockHeaders.removeClass('disabled');
-		}
-	};
+		disableSaveAndCollect(!isFranchise);
+	});
 	
 	// Disable button
 	// FIXME: Has issues with revolving values
@@ -622,8 +553,6 @@ $(document).ready(function () {
 		
 		// Toggle membership radiobuttons
 		toggleMembershipRadios(thisSelect);
-		
-		//console.log("checked: "+municipalMembershipRadios.attr('checked'));
 		
 		// Disable / enable proceeding to the next form steps
 		if ( $("input[name=municipalMembership]:checked").length == 0){
@@ -704,67 +633,6 @@ $toggleAreaLabel.each(function (){
 });
 */
 
-
-/**
- * 
- * Add and remove link
- * ===================
- * - Uses jsRender to render link-row template
- * - Handles adding and removing a link-row
- *
- * TODO: remove from kuntalaisaloite if not needed
- * 
- * */
-	var $linkContainer = $('#link-container');
-	var index = $linkContainer.data("index");
-	
-	// TODO: Genetare better positioned remove link
-	var createRemoveLink = function(elem){
-		var linkHeight, $removeLink;
-		
-		linkHeight = elem.innerHeight();
-		$removeLink = $('<a class="remove-link ignoredirty" style="height:'+linkHeight+'px">x</a>');
-		elem.wrap('<div style="position:relative;">');
-		elem.after($removeLink);
-	};
-	
-	// Use jsRender to render a new link row
-	var createLinkRow = function(){
-		var links = { linkIndex:""+index };
-		$linkContainer.append( $( "#linkTemplate" ).render( links ) );
-		
-		//createRemoveLink();
-		
-		// FIXME: This does not work as the data value is not correct --> Returns string?
-		if($altLangLink.data('translation')){ 
-			$('.alt-lang').show();
-		} else {
-		}
-		index++;
-	}
-	
-	// Create one as default and other ones with a click.
-	if ( $linkContainer.length > 0) {
-		createLinkRow();
-	}
-	
-	$('#add-new-link').live('click', function(){
-		createLinkRow();
-        
-		return false;
-	});
-	
-	// Remove link (clear values and hide fields)
-	$('.remove-link').live('click', function(){
-		//var removedLink = $(this).parent();
-		var removedLink = $(this).closest('.add-link');
-		
-		removedLink.slideUp(speedFast, function() {
-			// Animation complete.
-		}).find("input").attr("value","");
-		
-		return false;
-	});
 	
 /**
  * 
@@ -1077,39 +945,6 @@ $.tools.validator.localize("sv", {
 
 
 /**
-* Custom validation for current user's roles
-* ====================
-* Disables selections that cannot be submitted.
-* - User must be one of these: initiator, representative or reserve
-* - But he/she cannot be representative and reserve at the same time
-*/
-/*
-$.tools.validator.addMethod('rolesCheckbox', function (val, elt) {
-    var valid = false;
-
-    $('input[name=' + $(elt).attr('name') + ']:checkbox').each(function(inx, elt) {
-        if (elt.checked === true) {
-            valid = true;
-            return;
-        }
-    });
-
-    return valid;
-}, function()  {
- 
-});*/
-
-
-    
-/*
-$.tools.validator.fn("[name=currentAuthor.initiator]", "Value not equal with the $1 field", function(input) {
-    var name = input.attr("data-equals"),
-    field = this.getInputs().filter("[name=" + name + "]");
-    return input.val() == field.val() ? true : [name];
-    });
-*/
-
-/**
  * TODO: Clean the validation code 
  *  - If the custom-effect 'inline' is used, remove unneeded options
  *  - Error-messages gets multiplied after each failed form send
@@ -1215,33 +1050,6 @@ jQuery.fn.bindCheckbox = function(){
 	});
 };
 $('.binder').bindCheckbox();
-
-
-/**
- * 
- * Show hide more details - TODO REMOVE FROM MUNICIPALITY IF NOT NEEDED
- * ======================
- * 
- * */
-$('.toggler').click(function(){
-	var toggler = $(this);
-	var toggled = toggler.parent().next('.toggled');
-	
-	toggler.find('span').toggleClass('less')
-	toggler.next('h4').toggleClass('subtle'); // relies on h4
-	toggler.switchContent(toggler.find('.text:first'));
-	
-	if(isIE7){
-		toggled.stop(false,true).toggle(); // content disappeared in ie7 after animation
-	} else {
-		toggled.stop(false,true).slideToggle({
-			duration: speedFast, 
-			easing: 'easeOutExpo'
-		});
-	}
-	
-	return false;
-});
 
 
 });

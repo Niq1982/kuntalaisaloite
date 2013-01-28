@@ -34,7 +34,7 @@
     <div id="municipalMembership" class="js-hide hidden">
         <div class="input-block-content flexible">
             <#assign href="#" />
-            <@u.systemMessage path="initiative.municipality.municipalitysDiffers" type="info" showClose=false args=[href] />
+            <@u.systemMessage path="participant.municipalMembership.info" type="info" showClose=false args=[href] />
         </div>
         <div class="input-block-content flexible">
             <@f.radiobutton path="participant.municipalMembership" required="" options={"true":"initiative.municipalMembership.true", "false":"initiative.municipalMembership.false"} attributes="" header=false />
