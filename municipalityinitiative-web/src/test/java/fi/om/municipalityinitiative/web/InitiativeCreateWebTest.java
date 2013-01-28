@@ -88,11 +88,11 @@ public class InitiativeCreateWebTest extends WebTestBase {
         
         inputText("name", NAME);
         inputText("proposal", PROPOSAL);
-        
+
+        wait100();
         clickLinkContaining(getMessage(MSG_BTN_CONTINUE));
 
         wait100();
-        
         assertThat(driver.findElement(By.xpath("//div[@id='step-3']")).isDisplayed(), is(true));
         
         System.out.println("--- add_initiative_content OK");
@@ -105,11 +105,13 @@ public class InitiativeCreateWebTest extends WebTestBase {
         inputText("contactEmail", CONTACT_EMAIL);
         inputText("contactPhone", CONTACT_PHONE);
         inputText("contactAddress", CONTACT_ADDRESS);
-        
-        clickLinkContaining(getMessage(MSG_BTN_CONTINUE));
-        
+
         wait100();
-        
+
+        clickLinkContaining(getMessage(MSG_BTN_CONTINUE));
+
+        wait100();
+
         assertThat(driver.findElement(By.xpath("//div[@id='step-4']")).isDisplayed(), is(true));
         
         System.out.println("--- add_contact_info OK");
