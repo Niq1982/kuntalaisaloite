@@ -228,84 +228,7 @@ $(document).ready(function () {
 	$topRibbon
 	.after('<div style="height:'+$topRibbon.outerHeight()+'px" />')
 	.css('position','fixed');
-	
 
-/**
- * Toggle form help texts
- * ======================
- *  - Help text fires up when user clicks help-icon or focuses to a text-input or a textarea
- *  - Both inputs and helps needs to be descendants of the same parent element ".input-block-content"
- *  - Adjust container's height if adjustment is needed
- *  Known issues:
- *  - In some case when removing link-rows help text overflows
- */
- /*
-	var $allHelps = $('.input-block-extra');
-	var toggleHelpTexts = function (elem,close) {
-		var initPadding, initMargin, thisElem, elemParent, originalHeight, elemHeight, hd, parentBlock, elemParentTopPos;
-		
-		initPadding = 25; 	// hardcoded value from CSS: .input-block:			padding:25px
-		initMargin = 35; 	// hardcoded value from CSS: .input-block-content:	margin-top:2em -> 35 (px)
-		
-		thisElem = elem.children('.input-block-extra-content');
-		elemParent = elem.closest(".input-block-content");
-		parentBlock = elem.closest(".input-block");
-		originalHeight = parentBlock.height();
-		elemHeight = thisElem.outerHeight();
-		hd = elemParent.height() - elemHeight;
-
-		if ( elem.is(':visible')){
-			if (close){
-				elem.fadeOut(speedFast, function(){
-					// Reset the height if needed
-					if (hd < 0){
-						parentBlock.stop(false,true).animate({
-							paddingBottom: initPadding+'px'
-						}, speedFast, function(){
-							parentBlock.removeAttr('style'); // clear styles after animation
-						});
-					}
-				});
-			}
-		} else {
-			$allHelps.fadeOut(speedFast);
-			elem.fadeIn(speedFast);
-			
-			// Selenium htmlUnitDriver throws null pointer in elemParent.position() !?
-			elemParentTopPos = 0;
-			if( elemParent.position() != null){
-				elemParentTopPos = elemParent.position().top;
-			}
-			
-			elemHeight = elem.children('.input-block-extra-content').outerHeight();
-			hd = (elemHeight + elemParentTopPos + initMargin) - parentBlock.height();
-
-			// Adjust the height if needed
-			if (hd > initPadding){
-				parentBlock.stop(false,true).animate({
-					paddingBottom: hd+"px"
-				}, speedFast, function(){
-					parentBlock.css('min-height',parentBlock.height()+'px'); // create min-height so that when opening another smaller help container would not collapse
-				});
-			}
-		}
-	};
-		
-	// Matches with data-name of the help-icon and the class-name of the help-text container
-	$('.help').click(function (){
-		var help, $thisHelp;
-		help = $(this).data('name');
-		$thisHelp = $('.input-block-extra.'+help);
-		
-		toggleHelpTexts($thisHelp,true);
-	});
-	
-	// Matches class-name "input-block-extra" within the same block
-	$('input[type=text],textarea').live('focus', function(){
-		var $thisHelp = $(this).parents('.input-block-content:first').find('.input-block-extra:first');		 
-		toggleHelpTexts($thisHelp,false);
-	});
-*/
 	
 /**
  *	Toggle dropdown menus
@@ -495,8 +418,10 @@ $(document).ready(function () {
 		//if (municipalitySelect.val() == homeMunicipalitySelect.val()) {
 		// TODO: Use variables in selectors. Issue: They need to updated when modal is loaded.
 		if ( $('#homeMunicipality').data("init-municipality") == "" ||  $('#homeMunicipality').val() ==  $('#homeMunicipality').data("init-municipality")) {
+			console.log("true");
 			return true;
 		} else {
+			console.log("false");
 			return false;
 		}
 	};
@@ -507,6 +432,16 @@ $(document).ready(function () {
 	
 	$(".chzn-select").loadChosen();
 	
+	// update text in the municipality data in the form step 2
+	var updateSelectedMunicipality = function(){
+		var selectedMunicipality = municipalitySelect.find('option:selected').text();
+		if (selectedMunicipality != "") {
+			selectedMunicipalityElem.text(selectedMunicipality);
+		}
+	};
+	
+	updateSelectedMunicipality();
+	
  	// Update home municipality automatically
 	var updateHomeMunicipality = function(select){
 		var selectedMunicipalityId, selectedMunicipalityName;
@@ -514,14 +449,41 @@ $(document).ready(function () {
 		selectedMunicipalityId = select.val();
 		selectedMunicipalityName = select.find('option:selected').text();
 
-		// update text in the municipality data in the form step 2
-		selectedMunicipalityElem.text(selectedMunicipalityName);
+		updateSelectedMunicipality();
 
 		// if user has changed the homeMunicipality value we will not mess it up
 		if ( !homeMunicipalitySelect.hasClass('updated') ){			
 			homeMunicipalitySelect
 			.val(selectedMunicipalityId)
 			.trigger("liszt:updated"); // updates dynamically the second chosen element
+		}
+	};
+	
+	// Disable or enable the next button and clicking the other form block
+	// TODO: Make more dynamic
+	var preventContinuing = function(prevent){
+		var formBlockHeaders = $("#step-header-2, #step-header-3, #step-header-4");
+		var formBlocks = $("#step-2, #step-3, #step-4");
+		
+		//$("#button-next-2").disableBtn(prevent);
+		
+		if (prevent) {
+			$("#button-next-2").addClass('disabled').attr('onClick','return false;');
+			$("#submit-participate").addClass('disabled').attr('disabled','disabled');
+			formBlockHeaders.addClass('disabled');
+			
+			if (validationErrors){
+				formBlocks.hide();
+			}
+			
+		} else {
+			$("#button-next-2").removeClass('disabled').attr('onClick','proceedTo(2); return false;');
+			$("#submit-participate").removeClass('disabled').removeAttr('disabled');
+			formBlockHeaders.removeClass('disabled');
+			
+			if (validationErrors){
+				formBlocks.show();
+			}
 		}
 	};
 	
@@ -547,24 +509,9 @@ $(document).ready(function () {
 			$('#municipalMembership').removeClass('js-hide'); // TODO: finalize
 		}
 	};
-	
-	// Disable or enable the next button and clicking the other form block
-	// TODO: Make more dynamic
-	var preventContinuing = function(prevent){
-		var formBlockHeaders = $("#step-header-2, #step-header-3, #step-header-4");
-			
-		//$("#button-next-2").disableBtn(prevent);
-		
-		if (prevent) {
-			$("#button-next-2").addClass('disabled').attr('onClick','return false;');
-			$("#submit-participate").addClass('disabled').attr('disabled','disabled');
-			formBlockHeaders.addClass('disabled');
-		} else {
-			$("#button-next-2").removeClass('disabled').attr('onClick','proceedTo(2); return false;');
-			$("#submit-participate").removeClass('disabled').removeAttr('disabled');
-			formBlockHeaders.removeClass('disabled');
-		}
-	};
+	if (validationErrors){
+		toggleMembershipRadios(homeMunicipalitySelect);
+	}
 	
 	// Disable button
 	// FIXME: Has issues with revolving values

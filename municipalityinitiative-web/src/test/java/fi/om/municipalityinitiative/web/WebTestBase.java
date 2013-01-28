@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.util.Locales;
 import org.eclipse.jetty.server.Server;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -104,7 +105,6 @@ public abstract class WebTestBase {
         driver.close();
     }
     
-    /* TODO: Enable
     @After
     public void endTest() {
         if (driver != null) {
@@ -120,7 +120,7 @@ public abstract class WebTestBase {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }*/
+    }
 
     // Helpers
     protected String getMessage(String code) {
