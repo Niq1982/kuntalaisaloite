@@ -3,21 +3,21 @@ package fi.om.municipalityinitiative.newdto;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class ValidFranchiseValidator implements ConstraintValidator<ValidFranchise, ParticipantFranchise> {
+public class ValidParticipateFranchiseValidator implements ConstraintValidator<ValidParticipateFranchise, ParticipantValidationInfo> {
 
     @Override
-    public void initialize(ValidFranchise constraintAnnotation) {
+    public void initialize(ValidParticipateFranchise constraintAnnotation) {
     }
 
     @Override
-    public boolean isValid(ParticipantFranchise value, ConstraintValidatorContext context) {
+    public boolean isValid(ParticipantValidationInfo value, ConstraintValidatorContext context) {
 
         if (value.getMunicipality() == null || value.getHomeMunicipality() == null)
             return true; // This should be validated else where.
 
         if (value.getMunicipality().equals(value.getHomeMunicipality())) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("ValidFranchise")
+            context.buildConstraintViolationWithTemplate("ValidParticipateFranchise")
                     .addNode("franchise")
                     .addConstraintViolation();
             return value.getFranchise() != null;

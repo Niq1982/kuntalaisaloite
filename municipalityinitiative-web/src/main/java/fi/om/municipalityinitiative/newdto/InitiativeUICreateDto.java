@@ -5,9 +5,9 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-@ValidFranchise
 @ValidMunicipalMembership
-public class InitiativeUICreateDto implements ParticipantFranchise{
+@ValidCreateFranchise
+public class InitiativeUICreateDto implements InitiativeCreateParticipantValidationInfo {
     
     /**
      *  Using @Pattern instead of @Email, because hibernate's email validation was quite not good enough.
@@ -46,6 +46,16 @@ public class InitiativeUICreateDto implements ParticipantFranchise{
     private String contactAddress;
     
     private Boolean showName;
+
+    private Boolean collectable;
+
+    public Boolean getCollectable() {
+        return collectable;
+    }
+
+    public void setCollectable(Boolean collectable) {
+        this.collectable = collectable;
+    }
 
     public String getName() {
         return name;

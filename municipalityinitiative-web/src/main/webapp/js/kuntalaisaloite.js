@@ -444,7 +444,7 @@ $(document).ready(function () {
 	};
 	
 	function disableSaveAndCollect(disable){
-		var btnSaveAndSend = $('button[name=action-save]');
+		var btnSaveAndSend = $('button[name=collectable]');
 		
 		if (disable) {
 			btnSaveAndSend.addClass('disabled').attr('disabled','disabled');
@@ -474,7 +474,7 @@ $(document).ready(function () {
 			municipalityDiffers.stop(false,true).slideDown(slideOptions);
 			preventContinuing(true);
 			
-			$('button[name=action-save]').removeClass('disabled');
+			$('button[name=collectable]').removeClass('disabled');
 			
 			disableSaveAndCollect(false);
 			

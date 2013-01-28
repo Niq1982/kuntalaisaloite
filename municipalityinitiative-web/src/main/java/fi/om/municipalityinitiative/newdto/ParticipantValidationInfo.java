@@ -1,6 +1,6 @@
 package fi.om.municipalityinitiative.newdto;
 
-public interface ParticipantFranchise {
+public interface ParticipantValidationInfo {
 
     Long getHomeMunicipality();
     Long getMunicipality();

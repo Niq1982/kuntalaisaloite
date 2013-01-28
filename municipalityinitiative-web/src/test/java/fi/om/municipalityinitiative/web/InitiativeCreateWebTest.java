@@ -1,12 +1,11 @@
 package fi.om.municipalityinitiative.web;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class InitiativeCreateWebTest extends WebTestBase {
     
@@ -23,6 +22,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     private static final String MSG_BTN_SAVE_AND_COLLECT = "action.saveAndCollect";
     private static final String SELECT_MUNICIPALITY = "initiative.chooseMunicipality";
     private static final String RADIO_FRANCHISE_TRUE = "initiative.franchise.true";
+    private static final String RADIO_MUNICIPAL_MEMBERSHIP_TRUE = "initiative.municipalMembership.true";
     
     /**
      * Form values as constants.
@@ -125,6 +125,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
             
             assertMsgContainedByClass("modal-title", MSG_SUCCESS_SAVE_TITLE);
         } else {
+            getElemContaining(getMessage(RADIO_MUNICIPAL_MEMBERSHIP_TRUE), "label").click();
             getElemContaining(getMessage(MSG_BTN_SAVE_AND_SEND), "button").click();
 
             assertMsgContainedByClass("msg-success", MSG_SUCCESS_SAVE_AND_SEND);

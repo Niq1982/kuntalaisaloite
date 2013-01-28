@@ -3,7 +3,7 @@ package fi.om.municipalityinitiative.newweb;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.MunicipalityInfo;
-import fi.om.municipalityinitiative.newdto.ParticipantUIICreateDto;
+import fi.om.municipalityinitiative.newdto.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.service.InitiativeService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.service.ParticipantService;
@@ -68,7 +68,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
         model.addAttribute("initiative", initiativeInfo);
 
         if (initiativeInfo.isCollectable()){
-            model.addAttribute("participant", new ParticipantUIICreateDto()); // TODO: If not sent to municipality
+            model.addAttribute("participant", new ParticipantUICreateDto()); // TODO: If not sent to municipality
             model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
             model.addAttribute("participantCount", participantService.getParticipantCount(initiativeId));
             model.addAttribute("participants", participantService.findParticipants(initiativeId));
@@ -79,7 +79,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
     }
 
     @RequestMapping(value={ VIEW_FI, VIEW_SV }, method=POST)
-    public String participate(@PathVariable("id") Long initiativeId, @ModelAttribute("participant") ParticipantUIICreateDto participant,
+    public String participate(@PathVariable("id") Long initiativeId, @ModelAttribute("participant") ParticipantUICreateDto participant,
                               BindingResult bindingResult, Model model, Locale locale, HttpServletRequest request) {
 
         // TODO Check id collectable

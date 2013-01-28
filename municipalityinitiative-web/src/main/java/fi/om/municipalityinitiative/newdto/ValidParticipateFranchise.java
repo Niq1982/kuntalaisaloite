@@ -13,9 +13,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target( { TYPE, ANNOTATION_TYPE })
 @Retention(RUNTIME)
-@Constraint(validatedBy = ValidFranchiseValidator.class)
+@Constraint(validatedBy = ValidParticipateFranchiseValidator.class)
 @Documented
-public @interface ValidFranchise {
+public @interface ValidParticipateFranchise {
 
     String message() default "{NotNull}";
 

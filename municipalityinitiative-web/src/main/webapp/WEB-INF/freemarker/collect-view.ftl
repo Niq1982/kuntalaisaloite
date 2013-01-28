@@ -51,7 +51,7 @@
     </div>
     
     <div class="input-block-content flexible">
-        <button id="submit-participate" type="submit" name="action-save" class="small-button" ><span class="small-icon save-and-send"><@u.message "action.save" /></span></button>
+        <button id="submit-participate" type="submit" name="collectable" value="true" class="small-button" ><span class="small-icon save-and-send"><@u.message "action.save" /></span></button>
         <a href="${springMacroRequestContext.requestUri}#participants" class="push close"><@u.message "action.cancel" /></a>
     </div>
     

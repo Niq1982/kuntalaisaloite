@@ -5,7 +5,7 @@ import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.newdto.InitiativeUICreateDto;
 import fi.om.municipalityinitiative.newdto.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.MunicipalityInfo;
-import fi.om.municipalityinitiative.newdto.ParticipantUIICreateDto;
+import fi.om.municipalityinitiative.newdto.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.ParticipatingUnallowedException;
 import fi.om.municipalityinitiative.util.TestUtils;
@@ -98,7 +98,7 @@ public class InitiativeServiceIntegrationTest {
     @Test
     public void participating_to_non_collectable_initiative_is_forbidden() {
         Long initiative = testHelper.createTestInitiative(testMunicipality.getId());
-        ParticipantUIICreateDto participant = new ParticipantUIICreateDto();
+        ParticipantUICreateDto participant = new ParticipantUICreateDto();
         participant.setParticipantName("Some Name");
         participant.setShowName(true);
         participant.setHomeMunicipality(testMunicipality.getId());
@@ -114,7 +114,7 @@ public class InitiativeServiceIntegrationTest {
     @Ignore("Implement after sent-info is shown")
     public void participating_to_sent_initiative_is_forbiden() {
         Long initiativeId = testHelper.createTestInitiative(testMunicipality.getId(), "Some Name", false, true);
-        ParticipantUIICreateDto participant = new ParticipantUIICreateDto();
+        ParticipantUICreateDto participant = new ParticipantUICreateDto();
         participant.setParticipantName("Some Name");
         participant.setShowName(true);
         participant.setHomeMunicipality(testMunicipality.getId());

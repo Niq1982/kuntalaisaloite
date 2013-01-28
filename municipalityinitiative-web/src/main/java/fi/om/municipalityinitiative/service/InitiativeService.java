@@ -41,7 +41,7 @@ public class InitiativeService {
     }
 
     @Transactional
-    public Long createParticipant(ParticipantUIICreateDto participant, Long initiativeId) {
+    public Long createParticipant(ParticipantUICreateDto participant, Long initiativeId) {
 
         checkAllowedToParticipate(initiativeId);
 

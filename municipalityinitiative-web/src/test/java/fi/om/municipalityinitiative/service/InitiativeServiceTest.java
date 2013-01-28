@@ -3,7 +3,7 @@ package fi.om.municipalityinitiative.service;
 import fi.om.municipalityinitiative.newdto.InitiativeCreateDto;
 import fi.om.municipalityinitiative.newdto.InitiativeUICreateDto;
 import fi.om.municipalityinitiative.newdto.ParticipantCreateDto;
-import fi.om.municipalityinitiative.newdto.ParticipantUIICreateDto;
+import fi.om.municipalityinitiative.newdto.ParticipantUICreateDto;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -44,7 +44,7 @@ public class InitiativeServiceTest {
     public void create_participant() {
 
         // TODO:
-        ParticipantUIICreateDto participantUIICreateDto = new ParticipantUIICreateDto();
+        ParticipantUICreateDto participantUICreateDto = new ParticipantUICreateDto();
         InitiativeService service = new InitiativeService();
     }
 

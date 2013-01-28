@@ -42,7 +42,7 @@
         <#--<br/><br/>
         <a href="index.html" class=""><@u.message "action.cancel" /></a>-->
     <#elseif type == "save">
-        <button type="submit" name="action-save" class="small-button" ><span class="small-icon save-and-send" data-textsend="Tallenna ja aloita kerääminen" data-textsave="Tallenna ja lähetä"><@u.message "action.saveAndCollect" /></span></button>
+        <button type="submit" name="collectable" class="small-button" value="true" ><span class="small-icon save-and-send" data-textsend="Tallenna ja aloita kerääminen" data-textsave="Tallenna ja lähetä"><@u.message "action.saveAndCollect" /></span></button>
     </#if>
 </#macro>
 

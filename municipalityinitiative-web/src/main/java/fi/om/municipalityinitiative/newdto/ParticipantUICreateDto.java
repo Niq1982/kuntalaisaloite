@@ -1,12 +1,12 @@
 package fi.om.municipalityinitiative.newdto;
 
-import javax.validation.constraints.NotNull;
-
 import org.hibernate.validator.constraints.NotEmpty;
 
-@ValidFranchise
+import javax.validation.constraints.NotNull;
+
+@ValidParticipateFranchise
 @ValidMunicipalMembership
-public class ParticipantUIICreateDto implements ParticipantFranchise {
+public class ParticipantUICreateDto implements ParticipantValidationInfo {
 
     @NotEmpty
     private String participantName;
@@ -14,7 +14,6 @@ public class ParticipantUIICreateDto implements ParticipantFranchise {
     @NotNull
     private Long homeMunicipality;
 
-    @NotNull
     private Boolean showName;
 
     private Boolean franchise;
