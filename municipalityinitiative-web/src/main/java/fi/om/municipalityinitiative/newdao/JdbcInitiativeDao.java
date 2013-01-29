@@ -12,6 +12,7 @@ import com.mysema.query.types.Predicate;
 import com.mysema.query.types.expr.DateTimeExpression;
 import com.mysema.query.types.path.StringPath;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
+import fi.om.municipalityinitiative.exceptions.NotCollectableException;
 import fi.om.municipalityinitiative.newdto.InitiativeCreateDto;
 import fi.om.municipalityinitiative.newdto.InitiativeListInfo;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
@@ -114,6 +115,22 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .where(municipalityInitiative.id.eq(id));
 
         return query.uniqueResult(initiativeInfoMapping);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void markAsSended(Long initiativeId) {
+
+        long affectedRows = queryFactory.update(municipalityInitiative)
+                .set(municipalityInitiative.sent, new DateTime())
+                .where(municipalityInitiative.id.eq(initiativeId))
+                .where(municipalityInitiative.managementHash.isNotNull())
+                .where(municipalityInitiative.sent.isNull())
+                .execute();
+
+        if (affectedRows != 1) {
+            throw new NotCollectableException("Initiative already sent or not collectable");
+        }
 
     }
 
