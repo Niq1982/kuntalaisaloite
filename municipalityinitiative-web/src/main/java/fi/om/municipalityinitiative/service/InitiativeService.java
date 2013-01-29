@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
 import com.google.common.base.Optional;
+import fi.om.municipalityinitiative.exceptions.NotCollectableException;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.*;
@@ -16,7 +17,7 @@ import java.util.List;
 public class InitiativeService {
 
     @Resource
-    private InitiativeDao initiativeDao;
+    InitiativeDao initiativeDao;
 
     @Resource
     private ParticipantDao participantDao;
@@ -27,7 +28,6 @@ public class InitiativeService {
 
     @Transactional(readOnly = false)
     public Long createMunicipalityInitiative(InitiativeUICreateDto createDto, boolean isCollectable) {
-        // TODO: Validate ?
 
         InitiativeCreateDto initiativeCreateDto = parse(createDto);
         if (isCollectable) {
@@ -44,7 +44,35 @@ public class InitiativeService {
         return municipalityInitiativeId;
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
+    public void sendToMunicipality(Long initiativeId, String hashCode) {
+
+        InitiativeViewInfo initiativeInfo = initiativeDao.getById(initiativeId);
+
+        checkAllowedToSendToMunicipality(initiativeInfo);
+        checkHashCode(hashCode, initiativeInfo);
+
+        // TODO: Send the email.
+        initiativeDao.markAsSended(initiativeId);
+
+    }
+
+    private void checkAllowedToSendToMunicipality(InitiativeViewInfo initiativeViewInfo) {
+        if (!initiativeViewInfo.isCollectable()) {
+            throw new NotCollectableException("Initiative is not collectable");
+        }
+        if (initiativeViewInfo.getSentTime().isPresent()) {
+            throw new NotCollectableException("Initiative already sent");
+        }
+    }
+
+    private void checkHashCode(String hashCode, InitiativeViewInfo initiativeInfo) {
+        if (!initiativeInfo.getManagementHash().equals(hashCode)) {
+            throw new AccessDeniedException("Invalid initiative verifier");
+        }
+    }
+
+    @Transactional(readOnly = false)
     public Long createParticipant(ParticipantUICreateDto participant, Long initiativeId) {
 
         checkAllowedToParticipate(initiativeId);

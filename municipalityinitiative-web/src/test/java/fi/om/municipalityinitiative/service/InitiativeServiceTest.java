@@ -1,13 +1,18 @@
 package fi.om.municipalityinitiative.service;
 
-import fi.om.municipalityinitiative.newdto.InitiativeCreateDto;
-import fi.om.municipalityinitiative.newdto.InitiativeUICreateDto;
-import fi.om.municipalityinitiative.newdto.ParticipantCreateDto;
-import fi.om.municipalityinitiative.newdto.ParticipantUICreateDto;
+import com.google.common.base.Optional;
+import fi.om.municipalityinitiative.exceptions.NotCollectableException;
+import fi.om.municipalityinitiative.newdao.InitiativeDao;
+import fi.om.municipalityinitiative.newdto.*;
+import org.joda.time.DateTime;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 
 public class InitiativeServiceTest {
 
@@ -28,7 +33,7 @@ public class InitiativeServiceTest {
     }
 
     @Test
-    public void parse_composerCreateDto() {
+    public void parse_participantCreateDto() {
         InitiativeUICreateDto createDto = createDtoFillAllFields();
         ParticipantCreateDto participantCreateDto = InitiativeService.parse(createDto, 117L);
 
@@ -38,6 +43,77 @@ public class InitiativeServiceTest {
 
         assertThat(participantCreateDto.getShowName(), is(createDto.getShowName()));
         assertThat(participantCreateDto.getParticipantName(), is(createDto.getContactName()));
+    }
+
+    @Test
+    public void fails_sending_to_municipality_if_not_collectable() {
+        InitiativeDao initiativeDao = mock(InitiativeDao.class);
+        InitiativeService service = new InitiativeService();
+        service.initiativeDao = initiativeDao;
+
+        InitiativeViewInfo initiativeViewInfo = new InitiativeViewInfo();
+        initiativeViewInfo.setMaybeManagementHash(Optional.<String>absent());
+        stub(initiativeDao.getById(any(Long.class))).toReturn(initiativeViewInfo);
+
+        try {
+            service.sendToMunicipality(0L, "anyhashcode");
+            fail("Should have thrown exception");
+        } catch (NotCollectableException e) {
+            assertThat(e.getMessage(), containsString("Initiative is not collectable"));
+        }
+    }
+
+    @Test
+    public void fails_sending_to_municipality_if_already_sent() {
+        InitiativeDao initiativeDao = mock(InitiativeDao.class);
+        InitiativeService service = new InitiativeService();
+        service.initiativeDao = initiativeDao;
+
+        InitiativeViewInfo initiativeViewInfo = new InitiativeViewInfo();
+        initiativeViewInfo.setMaybeManagementHash(Optional.of("anyHash"));
+        initiativeViewInfo.setSentTime(Optional.of(new DateTime()));
+        stub(initiativeDao.getById(any(Long.class))).toReturn(initiativeViewInfo);
+
+        try {
+            service.sendToMunicipality(0L, "anyOtherHashCode");
+            fail("Should have thrown exception");
+        } catch (NotCollectableException e) {
+            assertThat(e.getMessage(), containsString("Initiative already sent"));
+        }
+    }
+
+    @Test
+    public void fails_sending_to_municipality_if_hashcode_does_not_match() {
+        InitiativeDao initiativeDao = mock(InitiativeDao.class);
+        InitiativeService service = new InitiativeService();
+        service.initiativeDao = initiativeDao;
+
+        InitiativeViewInfo initiativeViewInfo = new InitiativeViewInfo();
+        initiativeViewInfo.setMaybeManagementHash(Optional.of("some hash"));
+        stub(initiativeDao.getById(any(Long.class))).toReturn(initiativeViewInfo);
+
+        try {
+            service.sendToMunicipality(0L, "another hash");
+            fail("Should have thrown exception");
+        } catch (AccessDeniedException e) {
+            assertThat(e.getMessage(), containsString("Invalid initiative verifier"));
+        }
+    }
+
+    @Test
+    public void succeeds_in_sending_to_municipality() {
+
+        InitiativeDao initiativeDao = mock(InitiativeDao.class);
+        InitiativeService service = new InitiativeService();
+        service.initiativeDao = initiativeDao;
+
+        InitiativeViewInfo initiativeViewInfo = new InitiativeViewInfo();
+        initiativeViewInfo.setMaybeManagementHash(Optional.of("hashCode"));
+        stub(initiativeDao.getById(any(Long.class))).toReturn(initiativeViewInfo);
+
+        service.sendToMunicipality(0L, "hashCode");
+
+        verify(initiativeDao).markAsSended(0L);
     }
 
     @Test
