@@ -38,11 +38,11 @@
         <a href="#step-header-${nextStep}" id="button-next-${nextStep}" class="small-button disable-dbl-click-check ignoredirty" onClick="proceedTo(${nextStep}); return false;"><span class="small-icon next"><@u.message "action.continue" /></span></a>
         <a href="index.html" class="push"><@u.message "action.cancel" /></a>
     <#elseif type == "save-and-send">
-        <button type="submit" name="action-save-and-send" class="small-button" ><span class="small-icon mail" data-textsend="Tallenna ja lähetä" data-textsave="Tallenna ja lähetä"><@u.message "action.saveAndSend" /></span></button>
+        <button type="submit" name="action-save-and-send" class="small-button" ><span class="small-icon mail"><@u.message "action.saveAndSend" /></span></button>
         <#--<br/><br/>
         <a href="index.html" class=""><@u.message "action.cancel" /></a>-->
     <#elseif type == "save">
-        <button type="submit" name="collectable" class="small-button" value="true" ><span class="small-icon save-and-send" data-textsend="Tallenna ja aloita kerääminen" data-textsave="Tallenna ja lähetä"><@u.message "action.saveAndCollect" /></span></button>
+        <button type="submit" name="collectable" class="small-button" value="true" ><span class="small-icon save-and-send"><@u.message "action.saveAndCollect" /></span></button>
     </#if>
 </#macro>
 
@@ -236,7 +236,7 @@
             <@u.systemMessage path="initiative.save.description" type="info" showClose=false />
         </div>
         
-        <#-- TODO: Finalize the test layout.-->
+        <#-- TODO: Testing the layout. Finalize the test layout.-->
         <div class="input-block-content">
         
             <div class="column-separator cf">
@@ -250,7 +250,7 @@
                     
                 <div class="column col-1of2 last cf">
                     <div class="test-box">
-                        <div class="title">Kerää tekijöitä</div>
+                        <div class="title">Kerää osallistujia</div>
                     </div>
                 
                     <p>Haluan kerätä aloitteelle lisää tekijöitä Kuntalaisaloite.fi:ssä.</p>

@@ -10,9 +10,11 @@
     <#-- Participate form errors summary -->    
     <@u.errorsSummary path="participant.*" prefix="participant."/>
 
-    <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-participate" class="sodirty">
+    <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-participate" class="sodirty <#if hasErrors>has-errors</#if>">
 
     <input type="hidden" name="municipality" value="${initiative.municipalityId}"/>
+    
+    <input type="hidden" name="municipalMembership" value="true" class="js-remove" />
     
     <div class="input-block-content no-top-margin flexible">
         <@u.systemMessage path="initiative.ownDetails.description" type="info" showClose=false />  
@@ -46,8 +48,11 @@
     <div class="input-block-content js-hide">
         <label>
             <#assign href="#" />
-            <input type="checkbox" name="municipalMembership" id="municipalMembership" checked="checked" disabled="disabled" /><span class="label"><@u.messageHTML key="initiative.checkMembership" args=[href] /></span>
+            <input type="checkbox" name="municipalMembershipNOJS" id="municipalMembershipNOJS" checked="checked" disabled="disabled" /><span class="label"><@u.messageHTML key="initiative.checkMembership" args=[href] /></span>
         </label>
+        
+        <#--<@f.formCheckbox path="participant.municipalMembership" />-->
+        
     </div>
     
     <div class="input-block-content flexible">

@@ -191,6 +191,12 @@ $(document).ready(function () {
 	.after('<div style="height:'+$topRibbon.outerHeight()+'px" />')
 	.css('position','fixed');
 
+	// Remove elements from DOM
+	function jsRemove(){
+		$('.js-remove').remove();
+	}
+	jsRemove();
+	
 	
 /**
  *	Toggle dropdown menus
@@ -492,9 +498,9 @@ $(document).ready(function () {
 	}
 	
 	$('input[name=franchise]').click(function(){
-		var isFranchise = ( $(this).attr('value') == 'true' );
-		
-		disableSaveAndCollect(!isFranchise);
+		//var isFranchise = ( $(this).attr('value') == 'true' );
+		//disableSaveAndCollect(!isFranchise);
+		disableSaveAndCollect(false);
 	});
 	
 	// Disable button
@@ -695,7 +701,13 @@ $toggleAreaLabel.each(function (){
 		    	$(".chzn-select").loadChosen();
 		    	
 		    	// TODO: Test this properly. We might want to use this.
-		    	setTimeout(function () { modal.find('input[type="text"]:first, textarea:first').focus(); }, 50);
+		    	setTimeout(function () {
+		    		jsRemove();
+		    		
+		    		if (!$('form').hasClass('has-errors')) {
+		    			modal.find('input[type="text"]:first, textarea:first').focus();
+		    		}
+	    		}, 50);
 		    },
 		    closeOnClick: false,	// disable this for modal dialog-type of overlays
 		    load: true				// load it immediately after the construction
@@ -1017,6 +1029,7 @@ $.tools.validator.addEffect("inline", function(errors, event) {
 * - Binds radiobuttons as well
 * - Button is enabled when checkbox/radio is checked otherwise disabled
 */
+/* TODO: remove if not needed
 jQuery.fn.bindCheckbox = function(){
 	var cb, btn, cbVal;
 	
@@ -1050,6 +1063,6 @@ jQuery.fn.bindCheckbox = function(){
 	});
 };
 $('.binder').bindCheckbox();
-
+*/
 
 });
