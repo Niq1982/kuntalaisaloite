@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.dao;
 import com.mysema.query.sql.RelationalPathBase;
 import com.mysema.query.sql.dml.SQLInsertClause;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
+import com.mysema.query.types.Path;
 import com.mysema.query.types.expr.DateTimeExpression;
 import fi.om.municipalityinitiative.sql.QMunicipality;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
@@ -13,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 public class TestHelper {
 
@@ -95,5 +98,14 @@ public class TestHelper {
         return queryFactory.from(relationalPathBase).count();
     }
 
+    @Transactional(readOnly = false)
+    public void updateField(Long initiativeId, Path field, Object value) {
+        long affectedRows = queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
+                .set(field, value)
+                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
+                .execute();
+
+        assertThat("Unable to update initiative", affectedRows, is(1L));
+    }
 }
 

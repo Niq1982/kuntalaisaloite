@@ -9,8 +9,8 @@ import fi.om.municipalityinitiative.newdto.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.ParticipatingUnallowedException;
 import fi.om.municipalityinitiative.util.TestUtils;
+import org.joda.time.DateTime;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -119,20 +119,21 @@ public class InitiativeServiceIntegrationTest {
         }
     }
 
-    @Test(expected = ParticipatingUnallowedException.class)
-    @Ignore("Implement after sent-info is shown")
-    public void participating_to_sent_initiative_is_forbiden() {
-        Long initiativeId = testHelper.createTestInitiative(testMunicipality.getId(), "Some Name", false, true);
+    @Test
+    public void participating_to_sent_but_collectable_initiative_is_forbidden() {
+        Long initiativeId = testHelper.createTestInitiative(testMunicipality.getId(), "initiative title", false, true);
         ParticipantUICreateDto participant = new ParticipantUICreateDto();
         participant.setParticipantName("Some Name");
         participant.setShowName(true);
         participant.setHomeMunicipality(testMunicipality.getId());
 
+        testHelper.updateField(initiativeId, QMunicipalityInitiative.municipalityInitiative.sent, new DateTime());
+
         try {
             service.createParticipant(participant, initiativeId);
             fail("Expected ParticipatingUnallowedException");
         } catch(ParticipatingUnallowedException e) {
-            assertThat(e.getMessage(), is("moi"));
+            assertThat(e.getMessage(), containsString("Initiative already sent"));
         }
     }
 

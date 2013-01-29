@@ -57,11 +57,12 @@ public class InitiativeService {
 
     private void checkAllowedToParticipate(Long initiativeId) {
         InitiativeViewInfo initiative = initiativeDao.getById(initiativeId);
-        if (initiative.getManagementHash() == null) {
+
+        if (!initiative.isCollectable()) {
             throw new ParticipatingUnallowedException("Initiative not collectable: " + initiativeId);
         }
-        if (initiative == null) {
-            throw new ParticipatingUnallowedException("Initiative not collectable: " + initiativeId);
+        else if (initiative.getSentTime().isPresent()) {
+            throw new ParticipatingUnallowedException("Initiative already sent: " + initiativeId);
         }
 
     }
