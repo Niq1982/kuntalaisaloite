@@ -191,6 +191,12 @@ $(document).ready(function () {
 	.after('<div style="height:'+$topRibbon.outerHeight()+'px" />')
 	.css('position','fixed');
 
+	// Remove elements from DOM
+	function jsRemove(){
+		$('.js-remove').remove();
+	}
+	jsRemove();
+	
 	
 /**
  *	Toggle dropdown menus
@@ -696,6 +702,8 @@ $toggleAreaLabel.each(function (){
 		    	
 		    	// TODO: Test this properly. We might want to use this.
 		    	setTimeout(function () {
+		    		jsRemove();
+		    		
 		    		if (!$('form').hasClass('has-errors')) {
 		    			modal.find('input[type="text"]:first, textarea:first').focus();
 		    		}

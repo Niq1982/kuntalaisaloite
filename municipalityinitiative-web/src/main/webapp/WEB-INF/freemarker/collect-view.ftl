@@ -14,6 +14,8 @@
 
     <input type="hidden" name="municipality" value="${initiative.municipalityId}"/>
     
+    <input type="hidden" name="municipalMembership" value="true" class="js-remove" />
+    
     <div class="input-block-content no-top-margin flexible">
         <@u.systemMessage path="initiative.ownDetails.description" type="info" showClose=false />  
     </div>
@@ -48,6 +50,9 @@
             <#assign href="#" />
             <input type="checkbox" name="municipalMembershipNOJS" id="municipalMembershipNOJS" checked="checked" disabled="disabled" /><span class="label"><@u.messageHTML key="initiative.checkMembership" args=[href] /></span>
         </label>
+        
+        <#--<@f.formCheckbox path="participant.municipalMembership" />-->
+        
     </div>
     
     <div class="input-block-content flexible">
