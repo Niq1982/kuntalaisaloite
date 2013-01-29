@@ -1029,6 +1029,7 @@ $.tools.validator.addEffect("inline", function(errors, event) {
 * - Binds radiobuttons as well
 * - Button is enabled when checkbox/radio is checked otherwise disabled
 */
+/* TODO: remove if not needed
 jQuery.fn.bindCheckbox = function(){
 	var cb, btn, cbVal;
 	
@@ -1062,6 +1063,6 @@ jQuery.fn.bindCheckbox = function(){
 	});
 };
 $('.binder').bindCheckbox();
-
+*/
 
 });
