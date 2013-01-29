@@ -2,12 +2,17 @@ package fi.om.municipalityinitiative.newdao;
 
 import com.mysema.query.Tuple;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
+import com.mysema.query.support.Expressions;
+import com.mysema.query.types.ConstantImpl;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
+import com.mysema.query.types.expr.CaseBuilder;
+import com.mysema.query.types.expr.SimpleExpression;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.newdto.Participant;
 import fi.om.municipalityinitiative.newdto.ParticipantCount;
 import fi.om.municipalityinitiative.newdto.ParticipantCreateDto;
+import fi.om.municipalityinitiative.util.OptionalHashMap;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -35,16 +40,31 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .executeWithKey(participant.id);
     }
 
+    // TODO: Fix magic strings to enum constats or something.
     @Override
     public ParticipantCount getParticipantCount(Long initiativeId) {
-        List<Object[]> resultRowArray = queryFactory.query()
+
+        Expression<String> caseBuilder = new CaseBuilder()
+                .when(participant.franchise.isTrue().and(participant.showName.isTrue())).then(new ConstantImpl<String>("11"))
+                .when(participant.franchise.isTrue().and(participant.showName.isFalse())).then(new ConstantImpl<String>("10"))
+                .when(participant.franchise.isFalse().and(participant.showName.isTrue())).then(new ConstantImpl<String>("01"))
+                .when(participant.franchise.isFalse().and(participant.showName.isFalse())).then(new ConstantImpl<String>("00"))
+                .otherwise(new ConstantImpl<String>("XX"));
+
+
+        SimpleExpression<String> simpleExpression = Expressions.as(caseBuilder, "testi");
+        OptionalHashMap<String, Long> map = new OptionalHashMap<String, Long>(queryFactory
                 .from(participant)
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
-                .groupBy(participant.franchise)
-                .groupBy(participant.showName)
-                .list(participant.id.count(), participant.franchise, participant.showName);
+                .groupBy(simpleExpression)
+                .map(simpleExpression, participant.count()));
 
-        return parseToSupportCount(resultRowArray);
+        ParticipantCount participantCount = new ParticipantCount();
+        participantCount.getRightOfVoting().setPublicNames(map.get("11").or(0L));
+        participantCount.getRightOfVoting().setPrivateNames(map.get("10").or(0L));
+        participantCount.getNoRightOfVoting().setPublicNames(map.get("01").or(0L));
+        participantCount.getNoRightOfVoting().setPrivateNames(map.get("00").or(0L));
+        return participantCount;
 
     }
 
@@ -68,29 +88,4 @@ public class JdbcParticipantDao implements ParticipantDao {
             }
         };
 
-    // XXX: This looks pretty messed up. Does querydsl support some other way of doing this?
-    // Row headers are:
-    // count(id) | hasRightOfVoting | showName
-    private static ParticipantCount parseToSupportCount(List<Object[]> resultRowList) {
-        ParticipantCount participantCount = new ParticipantCount();
-        for (Object[] row : resultRowList) {
-            if ((Boolean) row[1]) {
-                if ((Boolean) row[2]) {
-                    participantCount.getRightOfVoting().setPublicNames((Long) row[0]);
-                }
-                else {
-                    participantCount.getRightOfVoting().setPrivateNames((Long) row[0]);
-                }
-            }
-            else {
-                if ((Boolean) row[2]) {
-                    participantCount.getNoRightOfVoting().setPublicNames((Long) row[0]);
-                }
-                else {
-                    participantCount.getNoRightOfVoting().setPrivateNames((Long) row[0]);
-                }
-            }
-        }
-        return participantCount;
-    }
 }
