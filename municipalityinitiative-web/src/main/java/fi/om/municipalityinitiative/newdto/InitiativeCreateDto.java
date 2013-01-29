@@ -1,5 +1,7 @@
 package fi.om.municipalityinitiative.newdto;
 
+import com.google.common.base.Optional;
+
 public class InitiativeCreateDto {
 
     public String name;
@@ -10,5 +12,5 @@ public class InitiativeCreateDto {
     public String contactPhone;
     public String contactAddress;
     public Long municipalityId;
-    public String managementHash;
+    public Optional<String> managementHash;
 }

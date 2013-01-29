@@ -80,6 +80,7 @@ public class InitiativeServiceIntegrationTest {
         assertThat(initiative.getCreateTime(), is(notNullValue()));
         assertThat(initiative.getManagementHash(), is(org.hamcrest.Matchers.nullValue()));
         assertThat(initiative.isCollectable(), is(false));
+        assertThat(initiative.getSentTime().isPresent(), is(true));
 
         // TODO: Verify all other values somehow
     }
@@ -89,10 +90,18 @@ public class InitiativeServiceIntegrationTest {
         InitiativeUICreateDto createDto = createDto();
         Long initiativeId = service.createMunicipalityInitiative(createDto, true);
         InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
-        
+
         assertThat(initiative.getManagementHash(), is("0000000000111111111122222222223333333333"));
         assertThat(initiative.isCollectable(), is(true));
+    }
 
+    @Test
+    public void creating_collectable_initiative_leaves_sent_time_null() {
+        InitiativeUICreateDto createDto = createDto();
+        Long initiativeId = service.createMunicipalityInitiative(createDto, true);
+        InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
+
+        assertThat(initiative.getSentTime().isPresent(), is(false));
     }
 
     @Test

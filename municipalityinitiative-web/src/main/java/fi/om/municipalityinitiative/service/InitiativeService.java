@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.service;
 
+import com.google.common.base.Optional;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.*;
@@ -30,7 +31,10 @@ public class InitiativeService {
 
         InitiativeCreateDto initiativeCreateDto = parse(createDto);
         if (isCollectable) {
-            initiativeCreateDto.managementHash = "0000000000111111111122222222223333333333";
+            initiativeCreateDto.managementHash = Optional.of("0000000000111111111122222222223333333333");
+        }
+        else {
+            initiativeCreateDto.managementHash = Optional.absent();
         }
 
         Long municipalityInitiativeId = initiativeDao.create(initiativeCreateDto);

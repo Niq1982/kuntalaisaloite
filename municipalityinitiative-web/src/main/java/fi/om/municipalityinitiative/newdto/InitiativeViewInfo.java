@@ -15,6 +15,7 @@ public class InitiativeViewInfo {
     private DateTime createTime;
     
     private Optional<String> maybeManagementHash = Optional.absent();
+    private Optional<DateTime> sentTime = Optional.absent();
 
     public String getName() {
         return name;
@@ -90,5 +91,13 @@ public class InitiativeViewInfo {
 
     public boolean isCollectable() {
         return maybeManagementHash.isPresent();
+    }
+
+    public Optional<DateTime> getSentTime() {
+        return sentTime;
+    }
+
+    public void setSentTime(Optional<DateTime> sentTime) {
+        this.sentTime = sentTime;
     }
 }

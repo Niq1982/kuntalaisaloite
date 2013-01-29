@@ -9,6 +9,7 @@ import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
 import com.mysema.query.types.Predicate;
+import com.mysema.query.types.expr.DateTimeExpression;
 import com.mysema.query.types.path.StringPath;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.newdto.InitiativeCreateDto;
@@ -17,6 +18,7 @@ import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.InitiativeViewInfo;
 import fi.om.municipalityinitiative.sql.QMunicipality;
 import fi.om.municipalityinitiative.sql.QParticipant;
+import org.joda.time.DateTime;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -32,6 +34,8 @@ public class JdbcInitiativeDao implements InitiativeDao {
     // This is for querydsl for not being able to create a row with DEFERRED not-null-check value being null..
     // Querydsl always assigned some value to it and setting it to null was not an option.
     private static final Long PREPARATION_ID = -1L;
+
+    private static final Expression<DateTime> CURRENT_TIME = DateTimeExpression.currentTimestamp(DateTime.class);
 
     @Resource
     PostgresQueryFactory queryFactory;
@@ -92,7 +96,12 @@ public class JdbcInitiativeDao implements InitiativeDao {
         insert.set(municipalityInitiative.name, dto.name);
         insert.set(municipalityInitiative.proposal, dto.proposal);
         insert.set(municipalityInitiative.municipalityId, dto.municipalityId);
-        insert.set(municipalityInitiative.managementHash, dto.managementHash);
+        if (dto.managementHash.isPresent()) {
+            insert.set(municipalityInitiative.managementHash, dto.managementHash.get());
+        }
+        else {
+            insert.set(municipalityInitiative.sent, CURRENT_TIME);
+        }
     }
 
     @Override
@@ -138,6 +147,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     info.setAuthorName(row.get(QParticipant.participant.name));
                     info.setShowName(row.get(QParticipant.participant.showName));
                     info.setMaybeManagementHash(Optional.fromNullable(row.get(municipalityInitiative.managementHash)));
+                    info.setSentTime(Optional.fromNullable(row.get(municipalityInitiative.sent)));
                     return info;
                 }
             };
