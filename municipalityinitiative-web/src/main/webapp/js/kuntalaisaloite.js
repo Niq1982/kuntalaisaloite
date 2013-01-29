@@ -492,9 +492,9 @@ $(document).ready(function () {
 	}
 	
 	$('input[name=franchise]').click(function(){
-		var isFranchise = ( $(this).attr('value') == 'true' );
-		
-		disableSaveAndCollect(!isFranchise);
+		//var isFranchise = ( $(this).attr('value') == 'true' );
+		//disableSaveAndCollect(!isFranchise);
+		disableSaveAndCollect(false);
 	});
 	
 	// Disable button
@@ -695,7 +695,11 @@ $toggleAreaLabel.each(function (){
 		    	$(".chzn-select").loadChosen();
 		    	
 		    	// TODO: Test this properly. We might want to use this.
-		    	setTimeout(function () { modal.find('input[type="text"]:first, textarea:first').focus(); }, 50);
+		    	setTimeout(function () {
+		    		if (!$('form').hasClass('has-errors')) {
+		    			modal.find('input[type="text"]:first, textarea:first').focus();
+		    		}
+	    		}, 50);
 		    },
 		    closeOnClick: false,	// disable this for modal dialog-type of overlays
 		    load: true				// load it immediately after the construction
