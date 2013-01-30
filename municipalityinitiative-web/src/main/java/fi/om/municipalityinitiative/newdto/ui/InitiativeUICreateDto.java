@@ -1,5 +1,8 @@
-package fi.om.municipalityinitiative.newdto;
+package fi.om.municipalityinitiative.newdto.ui;
 
+import fi.om.municipalityinitiative.validation.InitiativeCreateParticipantValidationInfo;
+import fi.om.municipalityinitiative.validation.ValidCreateFranchise;
+import fi.om.municipalityinitiative.validation.ValidMunicipalMembership;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;

@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.newdto;
+package fi.om.municipalityinitiative.validation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.newdto;
+package fi.om.municipalityinitiative.newdto.service;
 
 import com.google.common.base.Optional;
 

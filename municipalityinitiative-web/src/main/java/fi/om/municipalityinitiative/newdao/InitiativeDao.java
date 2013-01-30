@@ -1,9 +1,9 @@
 package fi.om.municipalityinitiative.newdao;
 
-import fi.om.municipalityinitiative.newdto.InitiativeCreateDto;
-import fi.om.municipalityinitiative.newdto.InitiativeListInfo;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
-import fi.om.municipalityinitiative.newdto.InitiativeViewInfo;
+import fi.om.municipalityinitiative.newdto.service.InitiativeCreateDto;
+import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
+import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

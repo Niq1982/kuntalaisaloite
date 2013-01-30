@@ -6,7 +6,7 @@ import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
-import fi.om.municipalityinitiative.newdto.MunicipalityInfo;
+import fi.om.municipalityinitiative.newdto.ui.MunicipalityInfo;
 import fi.om.municipalityinitiative.sql.QMunicipality;
 import org.springframework.transaction.annotation.Transactional;
 

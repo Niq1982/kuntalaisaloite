@@ -3,7 +3,11 @@ package fi.om.municipalityinitiative.service;
 import com.google.common.base.Optional;
 import fi.om.municipalityinitiative.exceptions.NotCollectableException;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
-import fi.om.municipalityinitiative.newdto.*;
+import fi.om.municipalityinitiative.newdto.service.InitiativeCreateDto;
+import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
+import fi.om.municipalityinitiative.newdto.ui.InitiativeUICreateDto;
+import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
+import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateDto;
 import org.joda.time.DateTime;
 import org.junit.Test;
 

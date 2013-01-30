@@ -185,6 +185,7 @@ public class AppConfiguration {
     
     @Bean
     public BeansWrapper freemarkerObjectWrapper() {
+        freemarkerConfig().getConfiguration().setNumberFormat("#");
         boolean testFreemarkerShowErrorsOnPage = env.getProperty(PropertyNames.testFreemarkerShowErrorsOnPage, Boolean.class, TEST_FREEMARKER_SHOW_ERRORS_ON_PAGE_DEFAULT);
         if (!testFreemarkerShowErrorsOnPage) {
             freemarkerConfig().getConfiguration().setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);

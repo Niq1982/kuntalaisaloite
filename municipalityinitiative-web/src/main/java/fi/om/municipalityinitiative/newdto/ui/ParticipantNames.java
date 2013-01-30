@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.newdto;
+package fi.om.municipalityinitiative.newdto.ui;
 
 import com.google.common.collect.Lists;
 

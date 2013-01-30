@@ -2,8 +2,8 @@ package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
-import fi.om.municipalityinitiative.newdto.Participant;
-import fi.om.municipalityinitiative.newdto.ParticipantNames;
+import fi.om.municipalityinitiative.newdto.service.Participant;
+import fi.om.municipalityinitiative.newdto.ui.ParticipantNames;
 import org.junit.Before;
 import org.junit.Test;
 

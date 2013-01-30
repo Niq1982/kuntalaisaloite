@@ -1,7 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
-import fi.om.municipalityinitiative.newdto.MunicipalityInfo;
+import fi.om.municipalityinitiative.newdto.ui.MunicipalityInfo;
 
 import javax.annotation.Resource;
 

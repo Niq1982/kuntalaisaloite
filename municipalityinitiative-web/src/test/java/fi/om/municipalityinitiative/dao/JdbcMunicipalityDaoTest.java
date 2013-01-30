@@ -2,7 +2,7 @@ package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
-import fi.om.municipalityinitiative.newdto.MunicipalityInfo;
+import fi.om.municipalityinitiative.newdto.ui.MunicipalityInfo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
