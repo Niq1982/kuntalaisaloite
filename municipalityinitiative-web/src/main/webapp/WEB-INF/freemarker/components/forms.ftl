@@ -234,8 +234,7 @@
  * @param mode is either 'modal' or 'full'
  * @param prefix for custom messages
  * @param cssClass for styling. Multiple classes are separated with a space
- *
- * TODO: Add proper path and bindings
+
 -->
 <#macro contactInfo path realPath="" mode="" prefix="" cssClass="">
 
@@ -247,30 +246,13 @@
         <div class="initiative-contact-details">
             <div class="column col-1of2">
                 <@textField path="initiative.contactEmail" required="required" optional=false cssClass="medium" maxLength="512" />
-            
-                <#--
-                <label>
-                    <@u.message "initiative.contactEmail" /> <@u.icon type="required" size="small" />
-                    <@spring.bind "initiative.contactEmail" />
-                    <@showError />
-                    <@spring.formInput "initiative.contactEmail", 'class="medium" maxlength="'+InitiativeConstants.AUTHOR_EMAIL_MAX?string("#")+'"' />
-                </label>
-                -->
                 
                 <@textField path="initiative.contactPhone" required="" optional=false cssClass="medium" maxLength="512" />
-                
-                <#--
-                <label>
-                    <@u.message "initiative.contactPhone" />
-                    <@spring.formInput "initiative.contactPhone", 'class="medium" maxlength="'+InitiativeConstants.AUTHOR_PHONE_MAX?string("#")+'"' />
-                </label>
-                -->
             </div>
             
             <div class="column col-1of2 last">
                 <label>
                     <@u.message "initiative.contactAddress" />
-                    <#-- NOTE: maxlength 1024 will cause an error -->
                     <@spring.formTextarea "initiative.contactAddress", 'class="address-field noresize" maxlength="1000"' />
                 </label>
             </div>

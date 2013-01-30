@@ -567,6 +567,29 @@ $(document).ready(function () {
 			municipalMembershipRadios.removeAttr('checked');
 		}
 	});
+
+
+/**
+* Send to municipality
+* ===========
+* 
+*/
+(function() {
+	var sendToMun =  $('.js-send-to-municipality');
+	var sendToMunForm =  $('.js-send-to-municipality-form');
+	var sendToMunBtn = sendToMun.find('button[name=action-send]');
+	
+	sendToMunBtn.click(function(){
+		sendToMun.hide();
+		sendToMunForm.fadeIn(speedFast, function() {
+	        // Animation complete
+	      });
+		
+		return false;
+	});
+	
+}());
+	
 	
 	
 /**

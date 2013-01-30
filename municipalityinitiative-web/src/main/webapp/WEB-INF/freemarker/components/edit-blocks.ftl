@@ -180,31 +180,6 @@
             <@u.systemMessage path="initiative.contactInfo.description" type="info" showClose=false />
         </div>
 
-        <#--
-        <div class="input-block-content">
-            <div class="input-header">
-                Omat yhteystiedot <span class="icon-small required trigger-tooltip"></span>
-            </div>
-    
-            <div class="initiative-own-details-area">
-                <div class="column col-1of2">
-                    <label>
-                        Sähköposti    <input type="text" maxlength="256" class="medium" value="" name="initiative.contactEmail" id="currentAuthor.contactEmail" />
-                    </label>
-                    
-                    <label>
-                        Puhelin    <input type="text" maxlength="128" class="medium" value="" name="initiative.contactPhone" id="initiative.contactPhone" />
-                    </label>
-                </div>
-                
-                <div class="column col-1of2 last">
-                    <label>
-                        Osoite    <textarea maxlength="1000" class="address-field noresize" name="initiative.contactAddress" id="initiative.contactAddress"></textarea>
-                    </label>
-                </div>
-            </div>
-        </div>
-        -->
         
         <@f.contactInfo path="initiative.contactInfo" realPath=initiative.contactInfo mode="full" />
         
@@ -270,125 +245,8 @@
                     <@buttons type="save" />
                 </div>
             </div>
-
-            <#--
-            <br class="clear" /><br />
-            <div class="column col-1of2">
-                <div class="test-box">
-                    <div class="title">Lähetä suoraan kuntaan</div>
-                    
-                    <div class="content">
-                        <p>En halua kerätä lisää tekijöitä vaan haluan lähettää aloitteen suoraan kuntaan.</p>
-                        
-                        <@buttons type="save-and-send" />
-                    </div>
-                </div>
-            </div>
-                
-            <div class="column col-1of2 last cf">
-                <div class="test-box">
-                    <div class="title">Kerää tekijöitä</div>
-                    
-                    <div class="content">
-                        <p>Haluan kerätä aloitteelle lisää tekijöitä Kuntalaisaloite.fi:ssä.</p>
-        
-                        <div id="franchise" class="">
-                            <@f.radiobutton path="initiative.franchise" required="required" options={"false":"initiative.franchise.false", "true":"initiative.franchise.true"} attributes="" />
-                        </div>
-        
-                        <br/>
-                        <@buttons type="save" />
-                    </div>
-                </div>
-            </div>
-            -->
-
-             <#--            
-            <div class="column col-1of2">
-                <@buttons type="save-and-send" />
-            </div>
-                
-            <div class="column col-1of2 last cf">
-                <@buttons type="save" />
-            </div>-->
-            
             
         </div>
-        
-        <#--
-        <div class="input-block-content" id="gather-people-container">      
-            <div class="input-block-extra helpName js-hide hidden">
-                <div class="input-block-extra-content">
-                    <h4>Valitse kunta</h4>
-                    <p>Kirjoita kansalaisaloitteen otsikko. Otsikon tulee olla selkeä ja varsinaista sisältöä kuvaava. Jos keräät kannatusilmoituksia myös paperilla tai muissa verkkopalveluissa, huomaathan, että kaikissa kannatusilmoituksissa on oltava sama otsikko.</p>
-                </div>
-            </div>
-
-            <div class="input-header">
-                Tekijöiden keräys aloitteelle <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span>
-            </div>
-
-            <label>
-                <input type="radio" name="gatherPeople" id="gatherPeople.false" value="FALSE" class="binder" /><span class="label">En halua kerätä aloitteelle lisää tekijöitä vaan haluan lähettää aloitteen suoraan kuntaan</span>
-            </label>
-            <label>
-                <input type="radio" name="gatherPeople" id="gatherPeople.true" value="TRUE" class="binder" /><span class="label">Haluan kerätä aloitteelle lisää tekijöitä Kuntalaisaloite.fi:ssä</span>
-            </label>
-            
-            <div class="same-municipality">
-                <div class="input-header">
-                    Äänioikeus <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span>
-                </div>
-
-                <label>
-                    <input type="radio" name="municipalCitizen" /><span class="label">Olen äänioikeutettu kunnan asukas</span>
-                </label>
-                <label>
-                    <input type="radio" name="municipalCitizen" /><span class="label">En ole äänioikeutettu kunnan asukas</span>
-                </label>
-            </div>
-            <div class="different-municipality js-hide hidden">
-                <div class="input-header">
-                    Kotikuntasi ei ole kunta, jota aloite koskee. Voit silti liittyä aloitteen tekijäksi, jos olet aloitteen kunnan jäsen <span class="icon-small required trigger-tooltip" title="Pakollinen kentt&auml;"></span>
-                </div>
-
-                <label>
-                    <input type="radio" name="municipalMember" /><span class="label">Olen sen kunnan jäsen, jota aloite koskee</span>
-                </label>
-                <label>
-                    <input type="radio" name="municipalMember" /><span class="label">En ole aloitteen kunnan jäsen</span>
-                </label>
-            </div>
-
-            <div class="gather-people-details js-hide">
-                <br/>
-                <div class="system-msg msg-info ">
-                   Sinun tulee antaa tunnistautumistiedot, jotta voit myöhemmin palata lähettämään tämän aloitteen kuntaan. Tämän aloitteen www-osoite ja tunnistautumistiedot lähetetään antamaasi sähköpostiosoitteeseen. Tunnistautumistietoja ei näytetä julkisesti Kuntalaisaloite.fi-palvelussa.
-                </div>
-                <br/>
-
-                <p>Keksi aloitteelle tunnus, joka tulee olemaan käytössä vain tälle aloitteelle.</p>
-
-                <div class="column col-1of2">
-
-                    <label for="email" class="input-header">
-                        Sähköpostiosoite
-                    </label>
-
-                    <input type="text" maxlength="128" class="medium" name="email" id="email" />
-                </div>
-                <div class="column col-1of2 last">
-                    <label for="password" class="input-header">
-                        Aloitetunnus
-                    </label>
-
-                    <input type="text" maxlength="128" class="medium" name="password" id="password" />
-                </div>
-            </div>
-
-        </div>
-        -->
-        
         
     </div>
 </#macro>

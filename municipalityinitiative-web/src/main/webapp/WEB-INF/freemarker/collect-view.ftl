@@ -134,7 +134,10 @@
 
             <#if (hasErrors?? && hasErrors) || (RequestParameters['participateForm']?? && RequestParameters['participateForm'] == "true")>
                 <#noescape><noscript>
-                    <div id="participate-form" class="participate-form cf top-margin">${participateFormHTML!""}</div>
+                    <div id="participate-form" class="participate-form cf top-margin">
+                        <h3>Osallistu aloitteeseen</h3>
+                        ${participateFormHTML!""}
+                    </div>
                 </noscript></#noescape>
             </#if>
 
@@ -165,11 +168,70 @@
     -->
     <#-- TODO: This should come from bottomContribution. When different views for one person and multiple person initiatives are ready. -->
     <#if RequestParameters['mgmnt']?? && RequestParameters['mgmnt'] == "true">
-        <div class="system-msg msg-summary">
-            <div class="system-msg msg-info">
+        <div class="system-msg msg-summary cf">
+            <div class="system-msg msg-info js-send-to-municipality">
                 <p>Voit nyt lähettää aloitteen kuntaan. <a href="#">Mitä kuntaan lähettäminen tarkoittaa?</a></p>
-                <button type="submit" name="action-send" class="small-button"><span class="small-icon save-and-send"><@u.message "action.send" /></span></button>
+                <button type="submit" name="action-send" class="small-button"><span class="small-icon mail"><@u.message "action.send" /></span></button>
             </div>
+            
+            <div id="send-to-municipality-form" class="js-send-to-municipality-form js-hide" style="font-size:1.1em;">
+                <h2>Lähetä aloite kuntaan</h2>
+    
+                <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-send" class="sodirty <#if hasErrors>has-errors</#if>">        
+                    
+                    <div class="input-block-content">
+                        <label for="comment" class="input-header">
+                            Saate kunnalle (vapaaehtoinen)
+                        </label> 
+                        <textarea class="" name="comment" id="comment"></textarea>
+                    </div>
+                    
+                    <div class="input-block-content">
+                        <div id="contact-prefilled" class="hidden">
+                            <p>Teppo Testaaja</p>
+                            <p>testi@osoite.fi</p>
+                            <p>012-345 6789</p>
+                            <p>Osoitekatu 1 A 50<br/>00000 Helsinki</p>
+                            <a href="#" id="update-contact-info">Muuta yhteystietoja</a>
+                        </div>
+                        <div id="contact-update-fields" class="js-hide">
+                        
+                            <div class="input-header">Omat yhteystiedot</div>
+                            <div class="initiative-contact-details">
+                                <div class="column col-1of2">
+                                    <label for="contactEmail" class="input-header">
+                                        Sähköposti <span title="Pakollinen kenttä" class="icon-small required trigger-tooltip"></span>
+                                    </label>
+        
+                                    <input type="text" maxlength="512" class="medium" value="" name="contactEmail" id="contactEmail">
+        
+                                    <label for="contactPhone" class="input-header">
+                                        Puhelin 
+                                    </label>
+        
+                                    <input type="text" maxlength="512" class="medium" value="" name="contactPhone" id="contactPhone">
+                                </div>
+                                
+                                <div class="column col-1of2 last">
+                                    <label>Osoite<textarea maxlength="1000" class="address-field noresize" name="contactAddress" id="contactAddress"></textarea>
+                                    </label>
+                                </div>
+                            </div>
+                        
+                        </div>
+                    </div>
+                    
+                    <div class="input-block-content">
+                        <button type="submit" name="action-send" class="small-button"><span class="small-icon mail"><@u.message "action.send" /></span></button>
+                        <a href="${springMacroRequestContext.requestUri}#participants" class="push close"><@u.message "action.cancel" /></a>
+                    </div>
+                    <br/><br/>
+
+                </form>
+            </div>
+            
+            
+            
         </div>
     </#if>
 
