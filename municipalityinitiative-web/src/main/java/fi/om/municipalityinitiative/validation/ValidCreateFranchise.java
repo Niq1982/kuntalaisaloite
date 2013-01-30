@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.newdto;
+package fi.om.municipalityinitiative.validation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -13,9 +13,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target( { TYPE, ANNOTATION_TYPE })
 @Retention(RUNTIME)
-@Constraint(validatedBy = ValidMunicipalMembershipValidator.class)
+@Constraint(validatedBy = ValidCreateFranchiseValidator.class)
 @Documented
-public @interface ValidMunicipalMembership {
+public @interface ValidCreateFranchise {
 
     String message() default "{NotNull}";
 
@@ -24,5 +24,4 @@ public @interface ValidMunicipalMembership {
     Class<? extends Payload>[] payload() default {};
 
 }
-
 

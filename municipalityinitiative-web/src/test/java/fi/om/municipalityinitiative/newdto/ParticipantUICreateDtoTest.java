@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newdto;
 
+import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateDto;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

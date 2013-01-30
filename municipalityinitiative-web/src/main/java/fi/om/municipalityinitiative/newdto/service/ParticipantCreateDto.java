@@ -1,4 +1,6 @@
-package fi.om.municipalityinitiative.newdto;
+package fi.om.municipalityinitiative.newdto.service;
+
+import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateDto;
 
 public class ParticipantCreateDto extends ParticipantUICreateDto {
 

@@ -1,6 +1,6 @@
 package fi.om.municipalityinitiative.newdao;
 
-import fi.om.municipalityinitiative.newdto.MunicipalityInfo;
+import fi.om.municipalityinitiative.newdto.ui.MunicipalityInfo;
 
 import java.util.List;
 

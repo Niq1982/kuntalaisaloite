@@ -9,9 +9,9 @@ import com.mysema.query.types.MappingProjection;
 import com.mysema.query.types.expr.CaseBuilder;
 import com.mysema.query.types.expr.SimpleExpression;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
-import fi.om.municipalityinitiative.newdto.Participant;
-import fi.om.municipalityinitiative.newdto.ParticipantCount;
-import fi.om.municipalityinitiative.newdto.ParticipantCreateDto;
+import fi.om.municipalityinitiative.newdto.service.Participant;
+import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
+import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.util.OptionalHashMap;
 import org.springframework.transaction.annotation.Transactional;
 
