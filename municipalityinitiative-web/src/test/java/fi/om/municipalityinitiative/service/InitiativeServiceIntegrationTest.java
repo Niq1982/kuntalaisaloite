@@ -2,10 +2,7 @@ package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeUICreateDto;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
-import fi.om.municipalityinitiative.newdto.ui.MunicipalityInfo;
-import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateDto;
+import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.ParticipatingUnallowedException;
 import fi.om.municipalityinitiative.util.TestUtils;
@@ -71,7 +68,7 @@ public class InitiativeServiceIntegrationTest {
         InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
 
         assertThat(initiative.getId(), is(initiativeId));
-        assertThat(initiative.getAuthorName(), is(createDto.getContactName()));
+        assertThat(initiative.getAuthorName(), is(createDto.getContactInfo().getName()));
         assertThat(initiative.getName(), is(createDto.getName()));
         assertThat(initiative.getProposal(), is(createDto.getProposal()));
         assertThat(initiative.isShowName(), is(createDto.getShowName()));
@@ -139,10 +136,6 @@ public class InitiativeServiceIntegrationTest {
 
     private InitiativeUICreateDto createDto() {
         InitiativeUICreateDto createDto = new InitiativeUICreateDto();
-        createDto.setContactAddress("contact address " +randomString());
-        createDto.setContactPhone("contact phone " +randomString());
-        createDto.setContactName("contact name " + randomString());
-        createDto.setContactEmail("contact email " + randomString());
         createDto.setProposal("Proposal " + randomString());
         createDto.setName("Name " + randomString());
         createDto.setFranchise(true);
@@ -151,6 +144,12 @@ public class InitiativeServiceIntegrationTest {
         createDto.setHomeMunicipality(testMunicipality.getId());
         createDto.setMunicipalMembership(true);
         createDto.setCollectable(true);
+
+        createDto.setContactInfo(new ContactInfo());
+        createDto.getContactInfo().setAddress("contact address " + randomString());
+        createDto.getContactInfo().setPhone("contact phone " + randomString());
+        createDto.getContactInfo().setName("contact name " + randomString());
+        createDto.getContactInfo().setEmail("contact email " + randomString());
 
         TestUtils.assertNoNullFields(createDto);
         return createDto;

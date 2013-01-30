@@ -6,20 +6,10 @@ import fi.om.municipalityinitiative.validation.ValidMunicipalMembership;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 @ValidMunicipalMembership
 @ValidCreateFranchise
 public class InitiativeUICreateDto implements InitiativeCreateParticipantValidationInfo {
-    
-    /**
-     *  Using @Pattern instead of @Email, because hibernate's email validation was quite not good enough.
-     *  Hibernate's Email validator passes emails like: "address@domain", "address@domain.com."
-     *  
-     *  Regexp is from: http://www.mkyong.com/regular-expressions/how-to-validate-email-address-with-regular-expression/
-     *  - Added char '+' and '-' for the original regexp. 
-     */
-    public static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-\\+]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
 
     @NotEmpty
     private String name;
@@ -28,7 +18,6 @@ public class InitiativeUICreateDto implements InitiativeCreateParticipantValidat
 
     private Boolean municipalMembership;
 
-    // TODO: Validate franchise if (municipality == homeMunicipality)
     private Boolean franchise;
 
     @NotNull
@@ -36,18 +25,9 @@ public class InitiativeUICreateDto implements InitiativeCreateParticipantValidat
 
     @NotNull
     private Long homeMunicipality;
-    
-    @NotEmpty
-    private String contactName;
-    
-    @NotEmpty
-    @Pattern(regexp = EMAIL_PATTERN)
-    private String contactEmail;
-    
-    private String contactPhone;
-    
-    private String contactAddress;
-    
+
+    private ContactInfo contactInfo;
+
     private Boolean showName;
 
     private Boolean collectable;
@@ -107,38 +87,6 @@ public class InitiativeUICreateDto implements InitiativeCreateParticipantValidat
         this.homeMunicipality = homeMunicipality;
     }
 
-    public String getContactName() {
-        return contactName;
-    }
-
-    public void setContactName(String contactName) {
-        this.contactName = contactName;
-    }
-
-    public String getContactEmail() {
-        return contactEmail;
-    }
-
-    public void setContactEmail(String contactEmail) {
-        this.contactEmail = contactEmail;
-    }
-
-    public String getContactPhone() {
-        return contactPhone;
-    }
-
-    public void setContactPhone(String contactPhone) {
-        this.contactPhone = contactPhone;
-    }
-
-    public String getContactAddress() {
-        return contactAddress;
-    }
-
-    public void setContactAddress(String contactAddress) {
-        this.contactAddress = contactAddress;
-    }
-
     public Boolean getShowName() {
         return showName;
     }
@@ -150,5 +98,13 @@ public class InitiativeUICreateDto implements InitiativeCreateParticipantValidat
     @Override
     public Boolean getMunicipalMembership() {
         return municipalMembership;
+    }
+
+    public ContactInfo getContactInfo() {
+        return contactInfo;
+    }
+
+    public void setContactInfo(ContactInfo contactInfo) {
+        this.contactInfo = contactInfo;
     }
 }

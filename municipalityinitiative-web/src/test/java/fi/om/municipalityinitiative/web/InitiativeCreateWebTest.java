@@ -101,10 +101,10 @@ public class InitiativeCreateWebTest extends WebTestBase {
     public void add_contact_info() {
         wait100();
         
-        inputText("contactName", CONTACT_NAME);
-        inputText("contactEmail", CONTACT_EMAIL);
-        inputText("contactPhone", CONTACT_PHONE);
-        inputText("contactAddress", CONTACT_ADDRESS);
+        inputText("contactInfo.name", CONTACT_NAME);
+        inputText("contactInfo.email", CONTACT_EMAIL);
+        inputText("contactInfo.phone", CONTACT_PHONE);
+        inputText("contactInfo.address", CONTACT_ADDRESS);
 
         wait100();
 

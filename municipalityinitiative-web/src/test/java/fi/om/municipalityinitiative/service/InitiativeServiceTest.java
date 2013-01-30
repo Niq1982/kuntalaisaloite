@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.exceptions.NotCollectableException;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdto.service.InitiativeCreateDto;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
+import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUICreateDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateDto;
@@ -30,10 +31,10 @@ public class InitiativeServiceTest {
         assertThat(initiativeCreateDto.name, is(createDto.getName()));
         assertThat(initiativeCreateDto.proposal, is(createDto.getProposal()));
 
-        assertThat(initiativeCreateDto.contactAddress, is(createDto.getContactAddress()));
-        assertThat(initiativeCreateDto.contactEmail, is(createDto.getContactEmail()));
-        assertThat(initiativeCreateDto.contactName, is(createDto.getContactName()));
-        assertThat(initiativeCreateDto.contactPhone, is(createDto.getContactPhone()));
+        assertThat(initiativeCreateDto.contactAddress, is(createDto.getContactInfo().getAddress()));
+        assertThat(initiativeCreateDto.contactEmail, is(createDto.getContactInfo().getEmail()));
+        assertThat(initiativeCreateDto.contactName, is(createDto.getContactInfo().getName()));
+        assertThat(initiativeCreateDto.contactPhone, is(createDto.getContactInfo().getPhone()));
     }
 
     @Test
@@ -46,7 +47,7 @@ public class InitiativeServiceTest {
         assertThat(participantCreateDto.getMunicipalityInitiativeId(), is(117L));
 
         assertThat(participantCreateDto.getShowName(), is(createDto.getShowName()));
-        assertThat(participantCreateDto.getParticipantName(), is(createDto.getContactName()));
+        assertThat(participantCreateDto.getParticipantName(), is(createDto.getContactInfo().getName()));
     }
 
     @Test
@@ -137,11 +138,12 @@ public class InitiativeServiceTest {
         createDto.setMunicipality(15L);
         createDto.setName("name field");
         createDto.setProposal("proposal");
-        createDto.setContactAddress("contact address");
-        createDto.setContactEmail("contact@email.com");
-        createDto.setContactName("contact name");
-        createDto.setContactPhone("123456789");
         createDto.setShowName(true);
+        createDto.setContactInfo(new ContactInfo());
+        createDto.getContactInfo().setAddress("contact address");
+        createDto.getContactInfo().setEmail("contact@email.com");
+        createDto.getContactInfo().setName("contact name");
+        createDto.getContactInfo().setPhone("123456789");
         return createDto;
     }
 

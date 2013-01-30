@@ -108,10 +108,10 @@ public class InitiativeService {
         initiativeCreateDto.name = source.getName();
         initiativeCreateDto.proposal = source.getProposal();
         initiativeCreateDto.municipalityId = source.getMunicipality();
-        initiativeCreateDto.contactName = source.getContactName();
-        initiativeCreateDto.contactPhone= source.getContactPhone();
-        initiativeCreateDto.contactAddress = source.getContactAddress();
-        initiativeCreateDto.contactEmail = source.getContactEmail();
+        initiativeCreateDto.contactName = source.getContactInfo().getName();
+        initiativeCreateDto.contactPhone= source.getContactInfo().getPhone();
+        initiativeCreateDto.contactAddress = source.getContactInfo().getAddress();
+        initiativeCreateDto.contactEmail = source.getContactInfo().getEmail();
 
         return initiativeCreateDto;
     }
@@ -123,7 +123,7 @@ public class InitiativeService {
         participantCreateDto.setFranchise(source.getFranchise() == null ? false : source.getFranchise());
 
         participantCreateDto.setShowName(source.getShowName() == null ? false : source.getShowName());
-        participantCreateDto.setParticipantName(source.getContactName());
+        participantCreateDto.setParticipantName(source.getContactInfo().getName());
         participantCreateDto.setHomeMunicipality(source.getHomeMunicipality());
         return participantCreateDto;
     }

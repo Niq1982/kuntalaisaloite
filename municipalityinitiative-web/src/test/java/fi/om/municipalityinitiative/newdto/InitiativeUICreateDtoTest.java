@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newdto;
 
+import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUICreateDto;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -121,9 +122,10 @@ public class InitiativeUICreateDtoTest {
 
     private InitiativeUICreateDto createInitiativeWithBasicDetails() {
         InitiativeUICreateDto dto = new InitiativeUICreateDto();
-        dto.setContactEmail("some@email.com");
         dto.setName("Some initiative name");
-        dto.setContactName("Some contact name");
+        dto.setContactInfo(new ContactInfo());
+        dto.getContactInfo().setEmail("some@email.com");
+        dto.getContactInfo().setName("Some contact name");
         return dto;
     }
 

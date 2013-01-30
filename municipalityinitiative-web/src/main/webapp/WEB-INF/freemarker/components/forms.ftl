@@ -245,15 +245,15 @@
 
         <div class="initiative-contact-details">
             <div class="column col-1of2">
-                <@textField path="initiative.contactEmail" required="required" optional=false cssClass="medium" maxLength="512" />
+                <@textField path="initiative.contactInfo.email" required="required" optional=false cssClass="medium" maxLength="512" />
                 
-                <@textField path="initiative.contactPhone" required="" optional=false cssClass="medium" maxLength="512" />
+                <@textField path="initiative.contactInfo.phone" required="" optional=false cssClass="medium" maxLength="512" />
             </div>
             
             <div class="column col-1of2 last">
                 <label>
-                    <@u.message "initiative.contactAddress" />
-                    <@spring.formTextarea "initiative.contactAddress", 'class="address-field noresize" maxlength="1000"' />
+                    <@u.message "initiative.contactInfo.Address" />
+                    <@spring.formTextarea "initiative.contactInfo.address", 'class="address-field noresize" maxlength="1000"' />
                 </label>
             </div>
         
