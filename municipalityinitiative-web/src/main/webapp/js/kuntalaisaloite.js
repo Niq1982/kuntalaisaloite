@@ -360,28 +360,30 @@ $(document).ready(function () {
 * 
 * TODO: Finalize this block when UX is done.
 */	
-	var chznSelect, municipalitySelect, homeMunicipalitySelect, selectedMunicipality, municipalityDiffers, municipalMembershipRadios,
-	isHomeMunicipality, equalMunicipalitys, slideOptions;
+(function() {
+	var chznSelect, municipalitySelect, homeMunicipalitySelect,
+		selectedMunicipality, municipalityNotEqual, municipalMembershipRadios, 
+		isHomeMunicipality, equalMunicipalitys, slideOptions;
 
 	chznSelect = 				 $(".chzn-select");
-	municipalitySelect =		 $('#municipality');
-	homeMunicipalitySelect =	 $('#homeMunicipality');
-	selectedMunicipalityElem =	 $('#selected-municipality'); // Municipality text in the second step in the form
-	municipalityDiffers =		 $('.municipalitys-differs');
-	municipalMembershipRadios =  $("input[name=municipalMembership]");
+	municipalitySelect =		 $('#municipality');					// Targets select-element
+	homeMunicipalitySelect =	 $('#homeMunicipality');				// Targets select-element
+	selectedMunicipalityElem =	 $('#selected-municipality'); 			// Municipality text in the second step in the form
+	municipalityNotEqual =		 $('.municipality-not-equal');			// Membership selections if municipalitys are not same
+	municipalMembershipRadios =  $("input[name=municipalMembership]");  // Membership radiobuttons for initiative's municipality
+	
 	// Checks which one of the selects we are using
 	isHomeMunicipality = function(select){
-		if (select.attr('id') == homeMunicipalitySelect.attr('id') ) {
+		if (select.attr('id') === homeMunicipalitySelect.attr('id') ) {
 			return true;
 		} else {
 			return false;
 		}
 	};
 	equalMunicipalitys = function(){
-		//if (municipalitySelect.val() == homeMunicipalitySelect.val()) {
-		// TODO: Use variables in selectors. Issue: They need to updated when modal is loaded.
-		//if ( $('#homeMunicipality').data("init-municipality") == "" ||  $('#municipality').data("init-municipality") == $('#homeMunicipality').val() ) {
-		if ( $('#municipality').val() == $('#homeMunicipality').val() ) {
+		var select = $('#homeMunicipality');
+		
+		if ( select.val() == select.data('initiative-municipality') ) {
 			return true;
 		} else {
 			return false;
@@ -394,18 +396,29 @@ $(document).ready(function () {
 	
 	$(".chzn-select").loadChosen();
 	
+	// Initialize form state on page load
+	var Init = function(){
+		updateSelectedMunicipality();
+		
+		if (validationErrors){
+			toggleMembershipRadios(homeMunicipalitySelect);
+			$('input[name=franchise]').removeAttr('checked');
+		}
+		
+		showFranchise(equalMunicipalitys());
+	};
+	
+	
 	// update text in the municipality data in the form step 2
-	var updateSelectedMunicipality = function(){
+	function updateSelectedMunicipality(){
 		var selectedMunicipality = municipalitySelect.find('option:selected').text();
 		if (selectedMunicipality != "") {
 			selectedMunicipalityElem.text(selectedMunicipality);
 		}
 	};
 	
-	updateSelectedMunicipality();
-	
  	// Update home municipality automatically
-	var updateHomeMunicipality = function(select){
+	function updateHomeMunicipality(select){
 		var selectedMunicipalityId, selectedMunicipalityName;
 		
 		selectedMunicipalityId = select.val();
@@ -414,7 +427,7 @@ $(document).ready(function () {
 		updateSelectedMunicipality();
 
 		// if user has changed the homeMunicipality value we will not mess it up
-		if ( !homeMunicipalitySelect.hasClass('updated') ){			
+		if ( !homeMunicipalitySelect.hasClass('updated')  && !validationErrors){			
 			homeMunicipalitySelect
 			.val(selectedMunicipalityId)
 			.trigger("liszt:updated"); // updates dynamically the second chosen element
@@ -422,16 +435,16 @@ $(document).ready(function () {
 	};
 	
 	// Disable or enable the next button and clicking the other form block
-	// TODO: Make more dynamic
-	var preventContinuing = function(prevent){
-		var formBlockHeaders = $("#step-header-2, #step-header-3, #step-header-4");
-		var formBlocks = $("#step-2, #step-3, #step-4");
+	function preventContinuing(prevent){
 		
-		//$("#button-next-2").disableBtn(prevent);
+		var formBlockHeaders 	= $("#step-header-2, #step-header-3, #step-header-4"),	// Form step header blocks
+			formBlocks			= $("#step-2, #step-3, #step-4"),						// Form step input blocks
+			btnStep2			= $("#button-next-2"),									// Continue button for second step
+			btnParticipate 		= $("#submit-participate");								// Participate button
 		
 		if (prevent) {
-			$("#button-next-2").addClass('disabled').attr('onClick','return false;');
-			$("#submit-participate").addClass('disabled').attr('disabled','disabled');
+			btnStep2.addClass('disabled').attr('onClick','return false;');
+			btnParticipate.addClass('disabled').attr('disabled','disabled');
 			formBlockHeaders.addClass('disabled');
 			
 			if (validationErrors){
@@ -439,8 +452,8 @@ $(document).ready(function () {
 			}
 			
 		} else {
-			$("#button-next-2").removeClass('disabled').attr('onClick','proceedTo(2); return false;');
-			$("#submit-participate").removeClass('disabled').removeAttr('disabled');
+			btnStep2.removeClass('disabled').attr('onClick','proceedTo(2); return false;');
+			btnParticipate.removeClass('disabled').removeAttr('disabled');
 			formBlockHeaders.removeClass('disabled');
 			
 			if (validationErrors){
@@ -449,141 +462,176 @@ $(document).ready(function () {
 		}
 	};
 	
+	// Disable or enable submitting "Save and collect"
 	function disableSaveAndCollect(disable){
-		var btnSaveAndSend = $('button[name=collectable]');
-		
-		if (disable) {
-			btnSaveAndSend.addClass('disabled').attr('disabled','disabled');
-		} else {
-			btnSaveAndSend.removeClass('disabled').removeAttr('disabled');
-		}
+		$('button[name=collectable]').disableButton(disable);
 	}
 	
 	// Show or hide the radiobutton selection for municipality membership
-	var toggleMembershipRadios = function(select){
+	function toggleMembershipRadios(select){
+		var franchise			= $('#franchise'),
+			municipalMembership	= $('#municipalMembership'),
+			btnCollectable		= $('button[name=collectable]');
+		
 		if( equalMunicipalitys() ){
-			municipalityDiffers.stop(false,true).slideUp(slideOptions);
+			municipalityNotEqual.stop(false,true).slideUp(slideOptions);
 			preventContinuing(false);
 			
 			// Clear radiobuttons
 			//municipalMembershipRadios.removeAttr('checked');
 			// TODO: Use variables in selectors. Issue: They need to updated when modal is loaded.
-			
 			$("input[name=municipalMembership]").removeAttr('checked');
 			
 			disableSaveAndCollect(true);
-			
-			$('#franchise').removeClass('js-hide'); // TODO: finalize
-			$('#municipalMembership').addClass('js-hide'); // TODO: finalize
+			showFranchise(true);
+//			franchise.removeClass('js-hide');
+//			municipalMembership.addClass('js-hide');
 			
 		} else {
-			municipalityDiffers.stop(false,true).slideDown(slideOptions);
-			preventContinuing(true);
-			
-			$('button[name=collectable]').removeClass('disabled');
-			
-			disableSaveAndCollect(false);
-			
-			if (validationErrors){
-				$("input[name=municipalMembership]").removeAttr('checked');
+			municipalityNotEqual.stop(false,true).slideDown(slideOptions);
+			if (!validationErrors){
+				preventContinuing(true);
 			}
 			
-			$('#franchise').addClass('js-hide'); // TODO: finalize
-			$('#municipalMembership').removeClass('js-hide'); // TODO: finalize
+			btnCollectable.removeClass('disabled');
+			disableSaveAndCollect(false);
+			showFranchise(false);
+//			franchise.addClass('js-hide');
+//			municipalMembership.removeClass('js-hide');
 		}
 	};
-	if (validationErrors){
-		toggleMembershipRadios(homeMunicipalitySelect);
-		$('input[name=franchise]').removeAttr('checked');
+	
+	// Hide or show warning for not being a member of the municipality
+	function warningNotMember(show){
+		var warning = $('.is-not-member');
+		
+		if (show){
+			warning.fadeIn(speedFast);
+		} else {
+			warning.hide();
+		}
+	}
+	
+	function showFranchise(show){
+		var franchise			= $('#franchise'),
+			municipalMembership	= $('#municipalMembership');
+		
+		if (show){
+			franchise.addClass('js-hide');
+			municipalMembership.removeClass('js-hide');
+		} else {
+			franchise.removeClass('js-hide');
+			municipalMembership.addClass('js-hide');
+		}
+		
 	}
 	
 	$('input[name=franchise]').click(function(){
-		//var isFranchise = ( $(this).attr('value') == 'true' );
-		//disableSaveAndCollect(!isFranchise);
 		disableSaveAndCollect(false);
 	});
-	
-	// Disable button
-	// FIXME: Has issues with revolving values
-	/*jQuery.fn.disableBtn = function(disable){
-		var defaultVal = 'return false;';
-		
-		if (disable && ($(this).attr('onClick') != defaultVal)) {
-			$(this)
-			.addClass('disabled')
-			.data('onClickTmp',$(this).attr('onClick'))
-			.attr('onClick',defaultVal);
-		} else {
-			$(this)
-			.removeClass('disabled')
-			.data($(this).attr('onClick'),'onClickTmp');
-		}
-		
-		console.log($(this).data('onClickTmp')+" | "+$(this).attr('onClick'));
-	};*/
-	
-	// Assure membership for the municipality
+
+	// Assure that is member of the chosen municipality
 	jQuery.fn.assureMembership = function(){
 		var cb, btn, cbVal;
 		
 		cb = $(this);
 		btn = $('#button-next-2, #submit-participate');
-		cbVal = function(){
-			if ($("input[name=municipalMembership]:checked").val() == "true"){
-				btn.removeAttr('disabled').removeClass('disabled');
-				preventContinuing(false);
-			} else {
-				btn.attr('disabled','disabled').addClass('disabled');
-				preventContinuing(true);
-			}
+		cbVal = function(){			
+			return ( $("input[name=municipalMembership]:checked").val() === "true" );
 		};
 		
 		// Use live as this is fired also in the modal
 		cb.live('change',function(){
-			cbVal();
+			var isMember = cbVal();
+			
+			btn.disableButton( !isMember );
+			preventContinuing( !isMember );
+			warningNotMember( !isMember );
 		});
 	};
 	municipalMembershipRadios.assureMembership();
 	
+	// Disable or enable button
+	jQuery.fn.disableButton = function(disable){
+		var btn = $(this);
+		
+		if (disable) {
+			btn.attr('disabled','disabled').addClass('disabled');
+		} else {
+			btn.removeAttr('disabled').removeClass('disabled');
+		}	
+	};
+	
 	// Listen municipality selects
 	$('.municipality-select').live('change', function() {
-		var thisSelect = $(this);
+		var thisSelect			= $(this),
+			checkedMembership	= $("input[name=municipalMembership]:checked");
 		
 		// Update home municipality automatically
 		if (!isHomeMunicipality(thisSelect)){
 			updateHomeMunicipality(thisSelect);
-			homeMunicipalitySelect.data("init-municipality",municipalitySelect.val());
+			homeMunicipalitySelect.data("initiative-municipality",municipalitySelect.val());
 		} else {
 			homeMunicipalitySelect.addClass("updated");
 		}
 		
-		// Toggle membership radiobuttons
 		toggleMembershipRadios(thisSelect);
+		warningNotMember(false);
 		
 		// Disable / enable proceeding to the next form steps
-		if ( $("input[name=municipalMembership]:checked").length == 0){
+		if ( checkedMembership.length === 0){
 			preventContinuing(!equalMunicipalitys());
 		} else {
 			municipalMembershipRadios.removeAttr('checked');
 		}
 	});
+	
+	// Initialize form state on page load
+	Init();
+	
+}());
 
 
 /**
 * Send to municipality
 * ===========
 * 
+* TODO: Make one click event for handling
 */
 (function() {
-	var sendToMun =  $('.js-send-to-municipality');
-	var sendToMunForm =  $('.js-send-to-municipality-form');
-	var sendToMunBtn = sendToMun.find('button[name=action-send]');
+	var sendToMun 				= $('.js-send-to-municipality'),
+		sendToMunForm 			= $('.js-send-to-municipality-form'),
+		sendToMunBtn 			= sendToMun.find('button[name=action-send]:first'),
+		sendToMunCloseBtn 		= sendToMunForm.find('.close:first'),
+		updateContactInfo 		= $('#contact-update-fields'),
+		prefilledContactInfo 	= $('#contact-prefilled'),
+		updateContactInfoBtn 	= $('#update-contact-info'),
+		closeUpdateBtn 			= $('#close-update-contact-info');
 	
 	sendToMunBtn.click(function(){
 		sendToMun.hide();
-		sendToMunForm.fadeIn(speedFast, function() {
-	        // Animation complete
-	      });
+		sendToMunForm.fadeIn(speedFast);
+		
+		return false;
+	});
+	
+	sendToMunCloseBtn.click(function(){
+		sendToMunForm.hide();
+		sendToMun.fadeIn(speedFast);
+		
+		return false;
+	});
+	
+	updateContactInfoBtn.click(function(){
+		prefilledContactInfo.hide();
+		updateContactInfo.fadeIn(speedFast);
+		
+		return false;
+	});
+	
+	closeUpdateBtn.click(function(){
+		updateContactInfo.hide();
+		prefilledContactInfo.fadeIn(speedFast);
 		
 		return false;
 	});
@@ -605,62 +653,6 @@ $('.municipality-filter').live('change', function() {
 	// Set a small delay so that focus is correctly fired after chance-event.
 	setTimeout(function () { $('#search').focus(); }, 50);
 });	
-	
-	
-
-/**
-* Toggle collect people
-* ====================
-* - Toggles an element depending on the selection of other element (radiobutton or checkbox)
-* - If the input is clicked hidden:
-* 		* the input is disabled so that value will not be saved
-* 		* the value is not removed so that the value can be retrieved
-* 		  when clicked back to visible 
-* - TODO: Bit HardCoded now. Make more generic if needed.
-* 			WE MIGHT NOT NEED THIS ANYMORE as secret edit-url is generated after form submit.
-*/
-/*
-var toggleArea, $toggleAreaLabel, radioTrue, $toggleField, toggleBlock;
-
-toggleArea =		'.gather-people-details';
-$toggleAreaLabel =	$('#gather-people-container label');
-radioTrue =		'gatherPeople.true';
-$toggleField =		$('#initiativeSecret');
-
-toggleBlock = function(clicker, input){
-	if( input.attr('id') == radioTrue){		
-		clicker.siblings(toggleArea).slideDown({
-			duration: speedVeryFast, 
-			easing: 'easeOutExpo'
-		});
-		$toggleField.removeAttr('disabled');
-	} else {
-		clicker.siblings(toggleArea).slideUp({
-			duration: speedVeryFast, 
-			easing: 'easeOutExpo'
-		});
-		$toggleField.attr('disabled','disabled');
-	}	
-};
-
-$toggleAreaLabel.each(function (){
-	var clicker, input;
-	clicker = $(this);
-	input = clicker.find("input:first");
-	
-	if( input.is(':checked') && input.attr('id') == radioTrue){
-		$toggleField.removeAttr('disabled');
-		$(toggleArea).show();
-	}
-	
-	clicker.click(function(){
-		if(clicker.children('input[type="radio"]').length > 0){
-			toggleBlock($(this), input);
-		}
-	});
-	
-});
-*/
 
 	
 /**

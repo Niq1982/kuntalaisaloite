@@ -22,7 +22,7 @@
     
      <div class="input-block-content flexible">
         <@f.textField path="participant.participantName" required="required" optional=false cssClass="large" maxLength="512" />
-        <@f.formCheckbox path="participant.showName" />
+        <@f.formCheckbox path="participant.showName" checked=true />
     </div>
     
     <div class="input-block-content flexible">
@@ -40,6 +40,7 @@
         </div>
         <div class="input-block-content flexible">
             <@f.radiobutton path="participant.municipalMembership" required="" options={"true":"initiative.municipalMembership.true", "false":"initiative.municipalMembership.false"} attributes="" header=false />
+            <div class="system-msg msg-warning js-hide is-not-member">Et ole kunnan jäsen, joten et voi osallistua aloitteeseen. Kiitos mielenkiinnosta!</div>
         </div>
     </div>
 
@@ -101,7 +102,7 @@
     -->    
     <span class="extra-info">
         <#if initiative.createTime??>Aloite luotu <@u.localDate initiative.createTime /></#if>
-        <br />Aloitetta ei vielä ole lähetetty kunnalle vaan siihen kerätään ensin tekijöitä
+        <br />Aloitetta ei vielä ole lähetetty kunnalle vaan siihen kerätään ensin osallistujia
     </span>
 
 </#assign>
@@ -188,13 +189,11 @@
                     
                     <div class="input-block-content">
                         <div id="contact-prefilled" class="hidden">
-                            <p>Teppo Testaaja</p>
-                            <p>testi@osoite.fi</p>
-                            <p>012-345 6789</p>
-                            <p>Osoitekatu 1 A 50<br/>00000 Helsinki</p>
+                            <h4>Teppo Testaaja</h4>
+                            <p>testi@osoite.fi<br/>Osoitekatu 1 A 50<br/>012-345 6789<br/>00000 Helsinki</p>
                             <a href="#" id="update-contact-info">Muuta yhteystietoja</a>
                         </div>
-                        <div id="contact-update-fields" class="js-hide">
+                        <div id="contact-update-fields" class="js-contact-update-fields js-hide">
                         
                             <div class="input-header">Omat yhteystiedot</div>
                             <div class="initiative-contact-details">
@@ -216,6 +215,8 @@
                                     <label>Osoite<textarea maxlength="1000" class="address-field noresize" name="contactAddress" id="contactAddress"></textarea>
                                     </label>
                                 </div>
+                                
+                                <a href="#" id="close-update-contact-info">Sulje muokkaus</a>
                             </div>
                         
                         </div>

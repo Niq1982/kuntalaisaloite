@@ -1,13 +1,6 @@
 <#import "utils.ftl" as u />
 <#import "forms.ftl" as f />
 
-<#--
- *
- * TODO:
- * - Use real fields when MunicipalityInitiativeUICreateDto.java has defined them.
- *
--->
-
 <#escape x as x?html> 
 
 <#--
@@ -76,22 +69,27 @@
         </div>
         <br class="clear" />
         
-        <div class="municipalitys-differs js-hide hidden">
+        <div class="municipality-not-equal js-hide hidden">
             <div class="input-block-content">
                 <#assign href="#" />
-                <@u.systemMessage path="initiative.municipality.municipalitysDiffers" type="info" showClose=false args=[href] />
+                <@u.systemMessage path="initiative.municipality.notEqual" type="info" showClose=false args=[href] />
             </div>
             <div class="input-block-content">
                 <@f.radiobutton path="initiative.municipalMembership" required="" options={"true":"initiative.municipalMembership.true", "false":"initiative.municipalMembership.false"} attributes="" header=false />
             </div>
+            
+            <div class="input-block-content is-not-member js-hide">
+                <div class="system-msg msg-warning">Et ole kunnan jäsen, joten et voi luoda aloitetta. Kiitos mielenkiinnosta!</div>
+            </div>
         </div>
 
-        <#-- Different treat for NOSCRIPT-users. Dummy checkbox for better UX. -->
+        <#-- Different treat for NOSCRIPT-users. Dummy checkbox and hidden field for better UX. -->
         <noscript>
         <div class="input-block-content">
             <label>
+                <input type="hidden" name="municipalMembership" value="true" />
                 <#assign href="#" />
-                <input type="checkbox" name="municipalMembership" id="municipalMembership" checked="checked" disabled="disabled" /><span class="label"><@u.messageHTML key="initiative.checkMembership" args=[href] /></span>
+                <input type="checkbox" name="placeholder" id="placeholder" checked="checked" disabled="disabled" /><span class="label"><@u.messageHTML key="initiative.checkMembership" args=[href] /></span>
             </label>
         </div>
         </noscript>
@@ -173,7 +171,7 @@
         <div class="input-block-content">
             <@f.textField path="initiative.contactInfo.name" required="required" optional=false cssClass="large" maxLength="512" />
             
-            <@f.formCheckbox path="initiative.showName" />
+            <@f.formCheckbox path="initiative.showName" checked=true />
         </div>
 
         <div class="input-block-content">
@@ -228,7 +226,7 @@
                         <div class="title">Kerää osallistujia</div>
                     </div>
                 
-                    <p>Haluan kerätä aloitteelle lisää tekijöitä Kuntalaisaloite.fi:ssä.</p>
+                    <p>Haluan kerätä aloitteelle lisää osallistujia Kuntalaisaloite.fi:ssä.</p>
     
                     <div id="franchise" class="">
                         <@f.radiobutton path="initiative.franchise" required="required" options={"true":"initiative.franchise.true", "false":"initiative.franchise.false"} attributes="" />

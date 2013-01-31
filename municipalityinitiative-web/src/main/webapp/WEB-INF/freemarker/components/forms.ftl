@@ -118,16 +118,16 @@
  * @param attributes an additional string of arbitrary tags or text to be included within the HTML tag itself
  * @param prefix for custom messages
 -->
-<#macro formCheckbox path attributes="" prefix="">
+<#macro formCheckbox path checked=false attributes="" prefix="">
     <@spring.bind path />
     <#assign id="${spring.status.expression}">
     <#assign isSelected = spring.status.value?? && spring.status.value?string=="true">
-    <input type="hidden" name="_${id}" value="on"/>   
+    <input type="hidden" name="_${id}" value="on" />   
     
     <@showError />
      
     <label class="inline">
-        <input type="checkbox" id="${id}" name="${id}"<#if isSelected> checked="checked"</#if> ${attributes}/>
+        <input type="checkbox" id="${id}" name="${id}"<#if isSelected || checked> checked="checked"</#if> ${attributes}/>
         <@u.message (prefix!="")?string(prefix+".",'')+path /><br />
     </label>
 </#macro>
@@ -181,7 +181,7 @@
     
     <@showError />
     
-    <select name="${spring.status.expression}" id="${spring.status.expression}" ${attributes} class="chzn-select ${cssClass}" data-init-municipality="${spring.status.value!preSelected}" data-placeholder="<@u.message "initiative.chooseMunicipality" />">
+    <select name="${spring.status.expression}" id="${spring.status.expression}" ${attributes} class="chzn-select ${cssClass}" data-initiative-municipality="${spring.status.value!preSelected}" data-placeholder="<@u.message "initiative.chooseMunicipality" />">
         <option value=""><@u.message "initiative.chooseMunicipality" /></option>
         <#list options as option>
             <option value="${option.id}"<@checkSelected option.id preSelected />>${option.name}</option>
@@ -252,7 +252,7 @@
             
             <div class="column col-1of2 last">
                 <label>
-                    <@u.message "initiative.contactInfo.Address" />
+                    <@u.message "initiative.contactInfo.address" />
                     <@spring.formTextarea "initiative.contactInfo.address", 'class="address-field noresize" maxlength="1000"' />
                 </label>
             </div>

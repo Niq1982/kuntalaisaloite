@@ -181,16 +181,17 @@
  * NOTE that HTML is unescaped.
  *
  * @param html is the content inside the message wrapper
+ * @param type like success, info, summary
  * @param noscript creates NOSCRIPT-tag.
 -->
 <#macro systemMessageHTML html type noscript="" cssClass="">
 <#noescape>
     ${(noscript="noscript")?string('<noscript>','')}
     <div class="system-msg msg-${type} ${cssClass}">
-        <#if type == 'info' || type == 'summary'><span class="icon-small arrow-right-3 floated"></span></#if>
+        <#--<#if type == 'info' || type == 'summary'><span class="icon-small arrow-right-3 floated"></span></#if>-->
+        <#if type == 'info'><span class="icon-small arrow-right-3 floated"></span></#if>
         ${html}
     </div>
-    <#--<br/>-->
     ${(noscript="noscript")?string('</noscript>','')}
 </#noescape>
 </#macro>
@@ -225,7 +226,7 @@
                     
                 </@compress>
             </#global>
-            <@systemMessageHTML requestMessageModalHTML "info" "noscript" />
+            <@systemMessageHTML requestMessageModalHTML "summary" "noscript" />
             
         <#else>
             <#if requestMessage.type == RequestMessageType.SUCCESS>
