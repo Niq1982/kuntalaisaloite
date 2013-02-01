@@ -163,7 +163,7 @@
 </#macro>
 
 <#--
- * formSingleSelect
+ * municipalitySelect
  *
  * Show a selectbox (dropdown) input element allowing a single value to be chosen
  * from a list of options.
@@ -174,14 +174,24 @@
  *        or CSS styles or size
  * @param preSelected the predefined value for the select
 -->
-<#macro formSingleSelect path options required="" cssClass="" attributes="" preSelected="">
+<#macro municipalitySelect path options required="" cssClass="" attributes="" preSelected="">
     <@spring.bind path />
     
     <@formLabel path required false />
     
     <@showError />
     
-    <select name="${spring.status.expression}" id="${spring.status.expression}" ${attributes} class="chzn-select ${cssClass}" data-initiative-municipality="${spring.status.value!preSelected}" data-placeholder="<@u.message "initiative.chooseMunicipality" />">
+    <#--
+     * This is crucial for JavaScript. It sets correct value both in double selects and single selects
+     * with pre selected values and when error occurs in the form.
+    -->
+    <#if preSelected?string != "">
+        <#assign data = preSelected />
+    <#else>
+        <#assign data = spring.status.value!"" />
+    </#if>
+
+    <select name="${spring.status.expression}" id="${spring.status.expression}" ${attributes} class="chzn-select ${cssClass}" data-initiative-municipality="${data}" data-placeholder="<@u.message "initiative.chooseMunicipality" />">
         <option value=""><@u.message "initiative.chooseMunicipality" /></option>
         <#list options as option>
             <option value="${option.id}"<@checkSelected option.id preSelected />>${option.name}</option>

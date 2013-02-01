@@ -357,8 +357,6 @@ $(document).ready(function () {
 * - Updates home municipality automatically
 * - Toggles home municipality membership radiobuttons
 * - Prevents or allows proceeding to next step in the form
-* 
-* TODO: Finalize this block when UX is done.
 */	
 (function() {
 	var chznSelect, municipalitySelect, homeMunicipalitySelect,
@@ -381,12 +379,23 @@ $(document).ready(function () {
 		}
 	};
 	equalMunicipalitys = function(){
-		var select = $('#homeMunicipality');
-		
-		if ( select.val() == select.data('initiative-municipality') ) {
-			return true;
+		var selectHome	= $('#homeMunicipality'),
+			select		= $('#municipality');
+
+		// In the create form we have two selects
+		if (select.length > 0){
+			if ( selectHome.val() == select.val() ) {
+				return true;
+			} else {
+				return false;
+			}
+		// If only one select
 		} else {
-			return false;
+			if ( selectHome.val() == selectHome.data('initiative-municipality') ) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	};
 	slideOptions = {
@@ -402,12 +411,13 @@ $(document).ready(function () {
 		
 		if (validationErrors){
 			toggleMembershipRadios(homeMunicipalitySelect);
-			$('input[name=franchise]').removeAttr('checked');
 		}
 		
-		showFranchise(equalMunicipalitys());
+		// Tiny delay for the modal to catch up.
+		setTimeout(function () {
+			showFranchise(equalMunicipalitys());
+		}, 50);
 	};
-	
 	
 	// update text in the municipality data in the form step 2
 	function updateSelectedMunicipality(){
@@ -426,8 +436,8 @@ $(document).ready(function () {
 
 		updateSelectedMunicipality();
 
-		// if user has changed the homeMunicipality value we will not mess it up
-		if ( !homeMunicipalitySelect.hasClass('updated')  && !validationErrors){			
+		// Update home municipality automatically only if it is empty.
+		if ( homeMunicipalitySelect.val() == ""){
 			homeMunicipalitySelect
 			.val(selectedMunicipalityId)
 			.trigger("liszt:updated"); // updates dynamically the second chosen element
@@ -467,7 +477,7 @@ $(document).ready(function () {
 		$('button[name=collectable]').disableButton(disable);
 	}
 	
-	// Show or hide the radiobutton selection for municipality membership
+	// Toggle the radiobutton selection for municipality membership
 	function toggleMembershipRadios(select){
 		var franchise			= $('#franchise'),
 			municipalMembership	= $('#municipalMembership'),
@@ -476,32 +486,20 @@ $(document).ready(function () {
 		if( equalMunicipalitys() ){
 			municipalityNotEqual.stop(false,true).slideUp(slideOptions);
 			preventContinuing(false);
-			
-			// Clear radiobuttons
-			//municipalMembershipRadios.removeAttr('checked');
-			// TODO: Use variables in selectors. Issue: They need to updated when modal is loaded.
-			$("input[name=municipalMembership]").removeAttr('checked');
-			
 			disableSaveAndCollect(true);
 			showFranchise(true);
-//			franchise.removeClass('js-hide');
-//			municipalMembership.addClass('js-hide');
-			
 		} else {
 			municipalityNotEqual.stop(false,true).slideDown(slideOptions);
 			if (!validationErrors){
 				preventContinuing(true);
 			}
-			
-			btnCollectable.removeClass('disabled');
+
 			disableSaveAndCollect(false);
 			showFranchise(false);
-//			franchise.addClass('js-hide');
-//			municipalMembership.removeClass('js-hide');
 		}
 	};
 	
-	// Hide or show warning for not being a member of the municipality
+	// Toggle warning for not being a member of the municipality
 	function warningNotMember(show){
 		var warning = $('.is-not-member');
 		
@@ -512,18 +510,20 @@ $(document).ready(function () {
 		}
 	}
 	
+	// Toggle franchise and membership radiobuttons
 	function showFranchise(show){
 		var franchise			= $('#franchise'),
 			municipalMembership	= $('#municipalMembership');
 		
 		if (show){
-			franchise.addClass('js-hide');
-			municipalMembership.removeClass('js-hide');
-		} else {
+			console.log("äänioikeus");
 			franchise.removeClass('js-hide');
 			municipalMembership.addClass('js-hide');
-		}
-		
+		} else {
+			console.log("jäsenyys");
+			franchise.addClass('js-hide');
+			municipalMembership.removeClass('js-hide');
+		}		
 	}
 	
 	$('input[name=franchise]').click(function(){
@@ -565,7 +565,9 @@ $(document).ready(function () {
 	// Listen municipality selects
 	$('.municipality-select').live('change', function() {
 		var thisSelect			= $(this),
-			checkedMembership	= $("input[name=municipalMembership]:checked");
+			checkedMembership	= $("input[name=municipalMembership]:checked"),
+			radioMunicipalMembership = $("input[name=municipalMembership]"),
+			radioFranchise = $("input[name=franchise]");
 		
 		// Update home municipality automatically
 		if (!isHomeMunicipality(thisSelect)){
@@ -574,6 +576,10 @@ $(document).ready(function () {
 		} else {
 			homeMunicipalitySelect.addClass("updated");
 		}
+		
+		// Clear radiobutton on change.
+		radioMunicipalMembership.removeAttr('checked');
+		radioFranchise.removeAttr('checked');
 		
 		toggleMembershipRadios(thisSelect);
 		warningNotMember(false);
@@ -596,7 +602,7 @@ $(document).ready(function () {
 * Send to municipality
 * ===========
 * 
-* TODO: Make one click event for handling
+* TODO: Clean up
 */
 (function() {
 	var sendToMun 				= $('.js-send-to-municipality'),
@@ -647,7 +653,7 @@ $(document).ready(function () {
 */
 
 //Listen search form select
-$('.municipality-filter').live('change', function() {
+$('.municipality-filter').change( function() {
 	var thisSelect = $(this);
 	
 	// Set a small delay so that focus is correctly fired after chance-event.

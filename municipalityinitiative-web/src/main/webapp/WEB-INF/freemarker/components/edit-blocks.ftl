@@ -62,14 +62,14 @@
         </div>
         
         <div class="input-block-content">       
-            <@f.formSingleSelect path="initiative.municipality" options=municipalities required="required" cssClass="municipality-select" />
+            <@f.municipalitySelect path="initiative.municipality" options=municipalities required="required" cssClass="municipality-select" />
         </div>
         <div class="input-block-content">
-            <@f.formSingleSelect path="initiative.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" />
+            <@f.municipalitySelect path="initiative.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" />
         </div>
         <br class="clear" />
         
-        <div class="municipality-not-equal js-hide hidden">
+        <div id="municipalMembership" class="municipality-not-equal js-hide hidden">
             <div class="input-block-content">
                 <#assign href="#" />
                 <@u.systemMessage path="initiative.municipality.notEqual" type="info" showClose=false args=[href] />

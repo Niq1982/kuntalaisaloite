@@ -26,7 +26,7 @@
     </div>
     
     <div class="input-block-content flexible">
-        <@f.formSingleSelect path="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipalityId />
+        <@f.municipalitySelect path="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipalityId />
     </div>
 
     <div id="franchise" class="input-block-content flexible">
@@ -57,7 +57,7 @@
     </div>
     
     <div class="input-block-content flexible">
-        <button id="submit-participate" type="submit" name="collectable" value="true" class="small-button" ><span class="small-icon save-and-send"><@u.message "action.save" /></span></button>
+        <button id="submit-participate" type="submit" name="save" value="true" class="small-button" ><span class="small-icon save-and-send"><@u.message "action.save" /></span></button>
         <a href="${springMacroRequestContext.requestUri}#participants" class="push close"><@u.message "action.cancel" /></a>
     </div>
     

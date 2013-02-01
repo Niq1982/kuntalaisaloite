@@ -62,7 +62,7 @@
     <form action="${springMacroRequestContext.requestUri}" method="GET" id="search-form" class="search-form">
     <div class="table full valign-bottom">
         <div class="cell cell-1of3">
-            <@f.formSingleSelect path="currentSearch.municipality" options=municipalities required="" cssClass="municipality-filter" />
+            <@f.municipalitySelect path="currentSearch.municipality" options=municipalities required="" cssClass="municipality-filter" />
         </div>
         <div class="cell cell-2of3">
             <#assign placeholder><@u.message "currentSearch.placeholder" /></#assign>
