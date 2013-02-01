@@ -116,14 +116,18 @@
  * @param label is the text for the link
  * @param rel for example 'external'. External link is opened in new browser tab with JavaScript. 
 -->
-<#macro link href label rel="" blockStyle=false>
-    <#assign escapedLabel>${label}</#assign>
+<#macro link href label="" labelKey="" rel="" blockStyle=false cssClass="">
+    <#if labelKey != "">
+        <#assign escapedLabel><@message labelKey /></#assign>
+    <#else>
+        <#assign escapedLabel>${label}</#assign>
+    </#if>
     <#assign escapedHref>${href}</#assign>
    
     <#if rel == "external">
-        <#noescape><a href="${escapedHref?replace('&amp;','&')}" class="${rel} ${blockStyle?string('ellipsis','')} trigger-tooltip" rel="${rel}" title="<@message "common.link.external"/>">${escapedLabel?replace('&amp;','&')}</a></#noescape>
+        <#noescape><a href="${escapedHref?replace('&amp;','&')}" class="${rel} ${cssClass} ${blockStyle?string('ellipsis','')} trigger-tooltip" rel="${rel}" title="<@message "common.link.external"/>">${escapedLabel?replace('&amp;','&')}</a></#noescape>
     <#else>
-        <#noescape><a href="${escapedHref?replace('&amp;','&')}" title="${escapedLabel}" ${blockStyle?string('class="ellipsis"','')}>${escapedLabel?replace('&amp;','&')}</a></#noescape>
+        <#noescape><a href="${escapedHref?replace('&amp;','&')}" title="${escapedLabel}" class="${cssClass} ${blockStyle?string('ellipsis','')}">${escapedLabel?replace('&amp;','&')}</a></#noescape>
     </#if>
 </#macro>
 

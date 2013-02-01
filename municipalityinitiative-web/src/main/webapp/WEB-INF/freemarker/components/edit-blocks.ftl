@@ -214,19 +214,19 @@
         
             <div class="column-separator cf">
                 <div class="column col-1of2">
-                    <div class="test-box">
-                        <div class="title">Lähetä suoraan kuntaan</div>
+                    <div class="highlight-box">
+                        <div class="title"><@u.message "initiative.send.title" /></div>
                     </div>
                     
-                    <p>En halua kerätä lisää tekijöitä vaan haluan lähettää aloitteen suoraan kuntaan.</p>
+                    <p><@u.message "initiative.send.description" /></p>
                 </div>
                     
                 <div class="column col-1of2 last cf">
-                    <div class="test-box">
-                        <div class="title">Kerää osallistujia</div>
+                    <div class="highlight-box">
+                        <div class="title"><@u.message "initiative.collect.title" /></div>
                     </div>
                 
-                    <p>Haluan kerätä aloitteelle lisää osallistujia Kuntalaisaloite.fi:ssä.</p>
+                    <p><@u.message "initiative.collect.description" /></p>
     
                     <div id="franchise" class="">
                         <@f.radiobutton path="initiative.franchise" required="required" options={"true":"initiative.franchise.true", "false":"initiative.franchise.false"} attributes="" />

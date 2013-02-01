@@ -14,8 +14,6 @@
 
     <input type="hidden" name="municipality" value="${initiative.municipalityId}"/>
     
-    <input type="hidden" name="municipalMembership" value="true" class="js-remove" />
-    
     <div class="input-block-content no-top-margin flexible">
         <@u.systemMessage path="initiative.ownDetails.description" type="info" showClose=false />  
     </div>
@@ -49,13 +47,12 @@
     
     <#-- Do not use NOSCRIPT here as it will be descendant of another NOSCRIPT. -->
     <div class="input-block-content js-hide">
+        <#-- Hidden field for NOSCRIPT users. This element is removed with JS. -->
+        <input type="hidden" name="municipalMembership" value="true" class="js-remove" />
         <label>
             <#assign href="#" />
-            <input type="checkbox" name="municipalMembershipNOJS" id="municipalMembershipNOJS" checked="checked" disabled="disabled" /><span class="label"><@u.messageHTML key="initiative.checkMembership" args=[href] /></span>
+            <input type="checkbox" name="placeholder" id="placeholder" checked="checked" disabled="disabled" /><span class="label"><@u.messageHTML key="initiative.checkMembership" args=[href] /></span>
         </label>
-        
-        <#--<@f.formCheckbox path="participant.municipalMembership" />-->
-        
     </div>
     
     <div class="input-block-content flexible">
@@ -119,7 +116,7 @@
     <div id="participants" class="view-block public last">
         <div class="initiative-content-row last">
 
-            <h2>Osallistujat</h2>
+            <h2><@u.message "participants.title" /></h2>
             <span class="user-count-total">${participantCount.total!""}</span>
             
             <#--
@@ -131,7 +128,7 @@
             <#if requestMessages?? && !(requestMessages?size > 0) && !((hasErrors?? && hasErrors) || (RequestParameters['participateForm']?? && RequestParameters['participateForm'] == "true"))>
                 <div class="participate">
                     <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>
-                    <a class="push" href="#">Mitä aloitteeseen osallistuminen tarkoittaa?</a>
+                    <@u.link href="#" labelKey="action.participate.infoLink" cssClass="push" />
                 </div>
             </#if>
             <br class="clear">
@@ -139,7 +136,7 @@
             <#if (hasErrors?? && hasErrors) || (RequestParameters['participateForm']?? && RequestParameters['participateForm'] == "true")>
                 <#noescape><noscript>
                     <div id="participate-form" class="participate-form cf top-margin">
-                        <h3>Osallistu aloitteeseen</h3>
+                        <h3><@u.message "participate.title" /></h3>
                         ${participateFormHTML!""}
                     </div>
                 </noscript></#noescape>
@@ -147,19 +144,19 @@
 
             <div class="top-margin cf">
                 <div class="column col-1of2">
-                    <p>Äänioikeutettuja jäseniä yhteensä kunnassa ${initiative.municipalityName!""}<br />
+                    <p><@u.message key="participantCount.rightOfVoting.total" args=[initiative.municipalityName!""] /><br />
                     <span class="user-count">${participantCount.rightOfVoting.total!""}</span><br />
                     <#if (participantCount.rightOfVoting.total > 0)>
-                        <#if (participantCount.rightOfVoting.publicNames > 0)><a class="trigger-tooltip js-show-franchise-list" href="#" title="Näytä nimensä julkistaneiden lista">${participantCount.rightOfVoting.publicNames!""} julkista nimeä</a><br /></#if>
-                        <#if (participantCount.rightOfVoting.privateNames > 0)>${participantCount.rightOfVoting.privateNames!""} ei julkista nimeä</p></#if>
+                        <#if (participantCount.rightOfVoting.publicNames > 0)><a class="trigger-tooltip js-show-franchise-list" href="#" title="<@u.message key="participantCount.publicNames.show"/>"><@u.message key="participantCount.publicNames" args=[participantCount.rightOfVoting.publicNames!""] /></a><br /></#if>
+                        <#if (participantCount.rightOfVoting.privateNames > 0)><@u.message key="participantCount.privateNames" args=[participantCount.rightOfVoting.privateNames!""] /></p></#if>
                     </#if>
                 </div>
                 <div class="column col-1of2 last">
-                    <p>Ei äänioikeutettuja jäseniä yhteensä kunnassa ${initiative.municipalityName!""}<br />
+                    <p><@u.message key="participantCount.noRightOfVoting.total" args=[initiative.municipalityName!""] /><br />
                     <span class="user-count">${participantCount.noRightOfVoting.total!""}</span><br>
                     <#if (participantCount.noRightOfVoting.total > 0)>
-                        <#if (participantCount.noRightOfVoting.publicNames > 0)><a class="trigger-tooltip js-show-no-franchise-list" href="#" title="Näytä nimensä julkistaneiden lista">${participantCount.noRightOfVoting.publicNames!""} julkista nimeä</a><br></#if>
-                        <#if (participantCount.noRightOfVoting.privateNames > 0)>${participantCount.noRightOfVoting.privateNames!""} ei julkista nimeä</p></#if>
+                        <#if (participantCount.noRightOfVoting.publicNames > 0)><a class="trigger-tooltip js-show-no-franchise-list" href="#" title="<@u.message key="participantCount.publicNames.show"/>"><@u.message key="participantCount.publicNames" args=[participantCount.noRightOfVoting.publicNames!""] /></a><br></#if>
+                        <#if (participantCount.noRightOfVoting.privateNames > 0)><@u.message key="participantCount.privateNames" args=[participantCount.noRightOfVoting.privateNames!""] /></p></#if>
                     </#if>
                 </div>
             </div>
@@ -197,6 +194,8 @@
                             <a href="#" id="update-contact-info">Muuta yhteystietoja</a>
                         </div>
                         <div id="contact-update-fields" class="js-contact-update-fields js-hide">
+                        
+                            <#-- TODO: System info-message here -->
                         
                             <div class="input-header">Omat yhteystiedot</div>
                             <div class="initiative-contact-details">
@@ -247,7 +246,7 @@
     <#if participateFormHTML??>    
         modalData.participateForm = function() {
             return [{
-                title:      'Osallistu aloitteeseen',
+                title:      '<@u.message "participate.title" />',
                 content:    '<#noescape>${participateFormHTML?replace("'","&#39;")}</#noescape>'
             }]
         };
@@ -256,7 +255,7 @@
         <#if hasErrors>
         modalData.participateFormInvalid = function() {
             return [{
-                title:      'Osallistu aloitteeseen',
+                title:      '<@u.message "participate.title" />',
                 content:    '<#noescape>${participateFormHTML?replace("'","&#39;")}</#noescape>'
             }]
         };
@@ -266,14 +265,14 @@
     <#-- TODO: Fix namelist columns in IE. -->
     modalData.participantListFranchise = function() {
         return [{
-            title:      'Äänioikeutetut julkiset osallistujat kunnassa ${initiative.municipalityName!""}',
+            title:      '<@u.message key="participantCount.rightOfVoting.total" args=[initiative.municipalityName!""] />',
             content:    '<#noescape><div class="css-cols-3 scrollable">${participantListFranchiseHTML}</div><br/><a href="index.html" class="small-button close"><@u.message "action.close" /></a></#noescape>'
         }]
     };
     
     modalData.participantListNoFranchise = function() {
         return [{
-            title:      'Ei äänioikeutetut julkiset osallistujat kunnassa ${initiative.municipalityName!""}',
+            title:      '<@u.message key="participantCount.noRightOfVoting.total" args=[initiative.municipalityName!""] />',
             content:    '<#noescape><div class="css-cols-3 scrollable">${participantListNoFranchiseHTML}</div><br/><a href="index.html" class="small-button close"><@u.message "action.close" /></a></#noescape>'
         }]
     };
