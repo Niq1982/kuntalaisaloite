@@ -40,7 +40,9 @@
         </div>
         <div class="input-block-content flexible">
             <@f.radiobutton path="participant.municipalMembership" required="" options={"true":"initiative.municipalMembership.true", "false":"initiative.municipalMembership.false"} attributes="" header=false />
-            <div class="system-msg msg-warning js-hide is-not-member">Et ole kunnan jäsen, joten et voi osallistua aloitteeseen. Kiitos mielenkiinnosta!</div>
+        </div>
+        <div class="input-block-content flexible js-hide is-not-member">
+            <@u.systemMessage path="warning.initiative.notMember" type="warning" showClose=false />
         </div>
     </div>
 
@@ -101,8 +103,9 @@
      * Initiative date and state
     -->    
     <span class="extra-info">
-        <#if initiative.createTime??>Aloite luotu <@u.localDate initiative.createTime /></#if>
-        <br />Aloitetta ei vielä ole lähetetty kunnalle vaan siihen kerätään ensin osallistujia
+        <#assign createTime><@u.localDate initiative.createTime /></#assign>
+        <#if initiative.createTime??><@u.message key="initiative.date.create" args=[createTime] /></#if>
+        <br /><@u.message "initiative.state.collecting" />
     </span>
 
 </#assign>

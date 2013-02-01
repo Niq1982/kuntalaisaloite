@@ -8,7 +8,10 @@
 
     <#-- Sent to municipality -->
     <#if initiative.createTime??>
-        <span class="extra-info">Aloite lähetetty kuntaan <@u.localDate initiative.createTime /></span>
+        <span class="extra-info">
+            <#assign createTime><@u.localDate initiative.createTime /></#assign>
+            <#if initiative.createTime??><@u.message key="initiative.date.sent" args=[createTime] /></#if>
+        </span>
     </#if>
 
 </#assign>

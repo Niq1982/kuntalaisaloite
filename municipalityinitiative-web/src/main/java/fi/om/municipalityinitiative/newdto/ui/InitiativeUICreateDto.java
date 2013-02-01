@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.validation.ValidCreateFranchise;
 import fi.om.municipalityinitiative.validation.ValidMunicipalMembership;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 @ValidMunicipalMembership
@@ -14,6 +15,7 @@ public class InitiativeUICreateDto implements InitiativeCreateParticipantValidat
     @NotEmpty
     private String name;
 
+    @NotEmpty
     private String proposal;
 
     private Boolean municipalMembership;
@@ -26,6 +28,7 @@ public class InitiativeUICreateDto implements InitiativeCreateParticipantValidat
     @NotNull
     private Long homeMunicipality;
 
+    @Valid
     private ContactInfo contactInfo;
 
     private Boolean showName;

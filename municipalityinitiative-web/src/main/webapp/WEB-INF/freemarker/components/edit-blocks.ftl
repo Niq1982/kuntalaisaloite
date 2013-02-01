@@ -79,7 +79,7 @@
             </div>
             
             <div class="input-block-content is-not-member js-hide">
-                <div class="system-msg msg-warning">Et ole kunnan jäsen, joten et voi luoda aloitetta. Kiitos mielenkiinnosta!</div>
+                <@u.systemMessage path="warning.initiative.notMember" type="warning" showClose=false />
             </div>
         </div>
 
@@ -132,7 +132,7 @@
         </div>
 
         <div class="input-block-content no-top-margin">
-            <@f.textarea path="initiative.proposal" required="" optional=false cssClass="textarea-tall" />
+            <@f.textarea path="initiative.proposal" required="required" optional=false cssClass="textarea-tall" />
         </div>
         
         <div class="input-block-content hidden">
