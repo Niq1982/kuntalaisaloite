@@ -123,6 +123,7 @@ public class InitiativeUICreateDtoTest {
     private InitiativeUICreateDto createInitiativeWithBasicDetails() {
         InitiativeUICreateDto dto = new InitiativeUICreateDto();
         dto.setName("Some initiative name");
+        dto.setProposal("Some initiative content");
         dto.setContactInfo(new ContactInfo());
         dto.getContactInfo().setEmail("some@email.com");
         dto.getContactInfo().setName("Some contact name");
