@@ -72,6 +72,9 @@ public class MunicipalityInitiativeViewController extends BaseController {
                     participantService.findParticipants(initiativeId));
             model.addAttribute("participant", new ParticipantUICreateDto());
 
+            // TODO Remove when not needed and using separated views for management and view
+            model.addAttribute("sendToMunicipality", initiativeService.getSendToMunicipalityData(initiativeId));
+
             return COLLECT_VIEW;
         }
         else {
@@ -113,7 +116,6 @@ public class MunicipalityInitiativeViewController extends BaseController {
                 participantService.findParticipants(initiativeId));
 
         model.addAttribute("sendToMunicipality", initiativeService.getSendToMunicipalityData(initiativeId)); // TODO Implement method to service that it receives old contactInfo from initiative
-        model.addAttribute("managementView", true); // TODO: Remove when not needed anymore
         model.addAttribute("participant", new ParticipantUICreateDto()); // TODO: Remove when not needed anymore
 
         return COLLECT_VIEW; // TODO: MANAGEMENT_VIEW

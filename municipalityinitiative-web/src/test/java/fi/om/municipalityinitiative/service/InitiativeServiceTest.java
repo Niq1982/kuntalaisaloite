@@ -128,7 +128,6 @@ public class InitiativeServiceTest {
         assertThat(service.getSendToMunicipalityData(0L).getContactInfo().getPhone(), is("phone"));
     }
 
-
     private InitiativeUICreateDto createDtoFillAllFields() {
         InitiativeUICreateDto createDto = new InitiativeUICreateDto();
         createDto.setFranchise(true);
