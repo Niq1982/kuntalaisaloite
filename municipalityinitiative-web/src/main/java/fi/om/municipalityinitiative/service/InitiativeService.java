@@ -134,6 +134,8 @@ public class InitiativeService {
     }
 
     public SendToMunicipalityDto getSendToMunicipalityData(Long initiativeId) {
-        return new SendToMunicipalityDto();
+        SendToMunicipalityDto sendToMunicipalityDto = new SendToMunicipalityDto();
+        sendToMunicipalityDto.setContactInfo(initiativeDao.getContactInfo(initiativeId));
+        return sendToMunicipalityDto;
     }
 }

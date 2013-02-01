@@ -15,6 +15,7 @@ import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.exceptions.NotCollectableException;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.service.InitiativeCreateDto;
+import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.sql.QMunicipality;
@@ -144,8 +145,29 @@ public class JdbcInitiativeDao implements InitiativeDao {
         Assert.isTrue(affectedRows == 1, "About to update " + affectedRows + " instead of 1.");
     }
 
+    @Override
+    public ContactInfo getContactInfo(Long initiativeId) {
+        return queryFactory.from(municipalityInitiative)
+                .where(municipalityInitiative.id.eq(initiativeId))
+                .uniqueResult(contactInfoMapping);
+    }
 
     // Mappings:
+
+    private Expression<ContactInfo> contactInfoMapping =
+            new MappingProjection<ContactInfo>(ContactInfo.class,
+                    municipalityInitiative.all()) {
+
+                @Override
+                protected ContactInfo map(Tuple row) {
+                    ContactInfo contactInfo = new ContactInfo();
+                    contactInfo.setAddress(row.get(municipalityInitiative.contactAddress));
+                    contactInfo.setEmail(row.get(municipalityInitiative.contactEmail));
+                    contactInfo.setName(row.get(municipalityInitiative.contactName));
+                    contactInfo.setPhone(row.get(municipalityInitiative.contactPhone));
+                    return contactInfo;
+                }
+            };
 
     Expression<InitiativeViewInfo> initiativeInfoMapping =
             new MappingProjection<InitiativeViewInfo>(InitiativeViewInfo.class,

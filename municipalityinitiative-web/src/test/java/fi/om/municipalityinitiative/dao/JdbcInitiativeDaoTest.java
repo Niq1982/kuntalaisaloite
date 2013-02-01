@@ -4,6 +4,7 @@ import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.exceptions.NotCollectableException;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
+import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.ui.MunicipalityInfo;
@@ -137,5 +138,15 @@ public class JdbcInitiativeDaoTest {
         }
     }
 
+    @Test
+    public void find_contact_info() {
+        Long initiativeId = testHelper.createTestInitiative(testMunicipality.getId());
+
+        ContactInfo contactInfo = initiativeDao.getContactInfo(initiativeId);
+        assertThat(contactInfo.getName(), is("contact_name"));
+        assertThat(contactInfo.getAddress(), is("contact_address"));
+        assertThat(contactInfo.getEmail(), is("contact_email"));
+        assertThat(contactInfo.getPhone(), is("contact_phone"));
+    }
 
 }

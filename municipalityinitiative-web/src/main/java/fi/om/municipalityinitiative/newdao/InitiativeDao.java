@@ -2,9 +2,9 @@ package fi.om.municipalityinitiative.newdao;
 
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.service.InitiativeCreateDto;
+import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,6 +18,7 @@ public interface InitiativeDao {
 
     void assignAuthor(Long municipalityInitiativeId, Long participantId);
 
-    @Transactional(readOnly = false)
     void markAsSended(Long initiativeId);
+
+    ContactInfo getContactInfo(Long initiativeId);
 }
