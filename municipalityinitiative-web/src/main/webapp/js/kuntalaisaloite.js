@@ -360,15 +360,15 @@ $(document).ready(function () {
 */	
 (function() {
 	var chznSelect, municipalitySelect, homeMunicipalitySelect,
-		selectedMunicipality, municipalityNotEqual, municipalMembershipRadios, 
+		selectedMunicipality, municipalityNotEqual, municipalMembershipRadios,
 		isHomeMunicipality, equalMunicipalitys, slideOptions;
 
-	chznSelect = 				 $(".chzn-select");
-	municipalitySelect =		 $('#municipality');					// Targets select-element
-	homeMunicipalitySelect =	 $('#homeMunicipality');				// Targets select-element
-	selectedMunicipalityElem =	 $('#selected-municipality'); 			// Municipality text in the second step in the form
-	municipalityNotEqual =		 $('.municipality-not-equal');			// Membership selections if municipalitys are not same
-	municipalMembershipRadios =  $("input[name=municipalMembership]");  // Membership radiobuttons for initiative's municipality
+	chznSelect					= $(".chzn-select");
+	municipalitySelect			= $('#municipality');					// Targets select-element
+	homeMunicipalitySelect		= $('#homeMunicipality');				// Targets select-element
+	selectedMunicipalityElem	= $('#selected-municipality'); 			// Municipality text in the second step in the form
+	municipalityNotEqual		= $('.municipality-not-equal');			// Membership selections if municipalitys are not same
+	municipalMembershipRadios	= $("input[name=municipalMembership]");  // Membership radiobuttons for initiative's municipality
 	
 	// Checks which one of the selects we are using
 	isHomeMunicipality = function(select){
@@ -452,9 +452,10 @@ $(document).ready(function () {
 			btnStep2			= $("#button-next-2"),									// Continue button for second step
 			btnParticipate 		= $("#submit-participate");								// Participate button
 		
+		btnParticipate.disableButton(prevent);
+		
 		if (prevent) {
 			btnStep2.addClass('disabled').attr('onClick','return false;');
-			btnParticipate.addClass('disabled').attr('disabled','disabled');
 			formBlockHeaders.addClass('disabled');
 			
 			if (validationErrors){
@@ -463,7 +464,6 @@ $(document).ready(function () {
 			
 		} else {
 			btnStep2.removeClass('disabled').attr('onClick','proceedTo(2); return false;');
-			btnParticipate.removeClass('disabled').removeAttr('disabled');
 			formBlockHeaders.removeClass('disabled');
 			
 			if (validationErrors){
@@ -473,8 +473,10 @@ $(document).ready(function () {
 	};
 	
 	// Disable or enable submitting "Save and collect"
-	function disableSaveAndCollect(disable){
+	function disableSubmit(disable){
+		console.log("disableSubmit: "+disable);
 		$('button[name=collectable]').disableButton(disable);
+		$("#submit-participate").disableButton(disable);
 	}
 	
 	// Toggle the radiobutton selection for municipality membership
@@ -486,15 +488,14 @@ $(document).ready(function () {
 		if( equalMunicipalitys() ){
 			municipalityNotEqual.stop(false,true).slideUp(slideOptions);
 			preventContinuing(false);
-			disableSaveAndCollect(true);
+			disableSubmit(true);
 			showFranchise(true);
 		} else {
 			municipalityNotEqual.stop(false,true).slideDown(slideOptions);
 			if (!validationErrors){
 				preventContinuing(true);
 			}
-
-			disableSaveAndCollect(false);
+			disableSubmit(false);
 			showFranchise(false);
 		}
 	};
@@ -516,18 +517,16 @@ $(document).ready(function () {
 			municipalMembership	= $('#municipalMembership');
 		
 		if (show){
-			console.log("äänioikeus");
 			franchise.removeClass('js-hide');
 			municipalMembership.addClass('js-hide');
 		} else {
-			console.log("jäsenyys");
 			franchise.addClass('js-hide');
 			municipalMembership.removeClass('js-hide');
 		}		
 	}
 	
-	$('input[name=franchise]').click(function(){
-		disableSaveAndCollect(false);
+	$('input[name=franchise]').live('click', function(){
+		disableSubmit(false);
 	});
 
 	// Assure that is member of the chosen municipality

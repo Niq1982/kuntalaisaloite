@@ -228,8 +228,8 @@ label input[type="text"]{display:block;}
 .top-margin{margin-top:1em;}
 .participate{padding-top:0.4em;}
 .participate-form{margin:2em 0;padding:2em;background:#f5f5f5;border:1px solid #cccccc;}
-.test-box{margin-bottom:0.7em;}.test-box .title{padding:0.2em 0.7em;background:#017380;font-size:20px;color:#fff;}
-.test-box .content{padding:0.7em;}
+.highlight-box{margin-bottom:0.7em;}.highlight-box .title{padding:0.2em 0.7em;background:#017380;font-size:20px;color:#fff;}
+.highlight-box .content{padding:0.7em;}
 .column-separator{background:url("../img/border.png?version=${timestamp}") 291px 0 repeat-y;}
 .modal{display:none;z-index:9999;width:600px;max-width:95%;background:#fff;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px;box-shadow:3px 3px 3px rgba(0, 0, 0, 0.1);-moz-box-shadow:3px 3px 3px rgba(0, 0, 0, 0.1);-webkit-box-shadow:3px 3px 3px rgba(0, 0, 0, 0.1);}.modal.full{width:700px;}
 .modal.fixed{position:fixed !important;top:20px;bottom:20px;}.modal.fixed .modal-content{overflow:auto;}

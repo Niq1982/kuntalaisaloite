@@ -4,6 +4,12 @@
 
 <#escape x as x?html> 
 
+<#-- TODO: MANAGEMENT VIEW AS IT'S OWN -->
+<#assign managementView = false />
+<#if RequestParameters['mgmnt']?? && RequestParameters['mgmnt'] == "true">
+    <#assign managementView = true />
+</#if>
+
 <#assign participateFormHTML>
 <@compress single_line=true>
 
@@ -40,7 +46,7 @@
             <@f.radiobutton path="participant.municipalMembership" required="" options={"true":"initiative.municipalMembership.true", "false":"initiative.municipalMembership.false"} attributes="" header=false />
         </div>
         <div class="input-block-content flexible js-hide is-not-member">
-            <@u.systemMessage path="warning.initiative.notMember" type="warning" showClose=false />
+            <@u.systemMessage path="warning.participate.notMember" type="warning" showClose=false />
         </div>
     </div>
 
@@ -125,7 +131,7 @@
              *  - when participate form is showed (NOSCRIPT)
              *  - when the form has validation errors
             -->
-            <#if requestMessages?? && !(requestMessages?size > 0) && !((hasErrors?? && hasErrors) || (RequestParameters['participateForm']?? && RequestParameters['participateForm'] == "true"))>
+            <#if !managementView && requestMessages?? && !(requestMessages?size > 0) && !((hasErrors?? && hasErrors) || (RequestParameters['participateForm']?? && RequestParameters['participateForm'] == "true"))>
                 <div class="participate">
                     <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>
                     <@u.link href="#" labelKey="action.participate.infoLink" cssClass="push" />
@@ -165,17 +171,17 @@
     </div>
     
     <#--
-     * Show management block
+     * Show management block - TODO: Move in management-view
     -->
     <#-- TODO: This should come from bottomContribution. When different views for one person and multiple person initiatives are ready. -->
-    <#if RequestParameters['mgmnt']?? && RequestParameters['mgmnt'] == "true">
+    <#if managementView>
         <div class="system-msg msg-summary cf">
             <div class="system-msg msg-info js-send-to-municipality">
                 <p>Voit nyt lähettää aloitteen kuntaan. <a href="#">Mitä kuntaan lähettäminen tarkoittaa?</a></p>
                 <button type="submit" name="action-send" class="small-button"><span class="small-icon mail"><@u.message "action.send" /></span></button>
             </div>
-            
-            <div id="send-to-municipality-form" class="js-send-to-municipality-form js-hide" style="font-size:1.1em;">
+
+            <div id="send-to-municipality-form" class="send-to-municipality cf js-send-to-municipality-form js-hide" style="font-size:1.1em;">
                 <h2>Lähetä aloite kuntaan</h2>
     
                 <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-send" class="sodirty <#if hasErrors>has-errors</#if>">        
@@ -186,19 +192,27 @@
                         </label> 
                         <textarea class="" name="comment" id="comment"></textarea>
                     </div>
+
                     
                     <div class="input-block-content">
-                        <div id="contact-prefilled" class="hidden">
+                        <div id="contact-prefilled" class="manage-block collapse hidden">
+                            <#-- TODO: Link could be created with JS -->
+                            <a href="#" id="update-contact-info" class="manage" title="Muuta yhteystietoja"><span class="small-icon-plain edit"></span></a>
                             <h4>Teppo Testaaja</h4>
-                            <p>testi@osoite.fi<br/>Osoitekatu 1 A 50<br/>012-345 6789<br/>00000 Helsinki</p>
-                            <a href="#" id="update-contact-info">Muuta yhteystietoja</a>
+                            <p>testi@osoite.fi<br/>Osoitekatu 1 A 50<br/>00000 Helsinki<br/>012-345 6789</p>
                         </div>
-                        <div id="contact-update-fields" class="js-contact-update-fields js-hide">
                         
+                        <div id="contact-update-fields" class="manage-block js-contact-update-fields js-hide">
+                            <#-- TODO: Link could be created with JS -->
+                            <a href="#" id="close-update-contact-info" class="manage" title="Sulje muokkaus"><span class="small-icon-plain cancel"></a>
+                            
                             <#-- TODO: System info-message here -->
                         
                             <div class="input-header">Omat yhteystiedot</div>
                             <div class="initiative-contact-details">
+                                <label for="participantName" class="input-header"> Nimi <span title="Pakollinen kenttä" class="icon-small required trigger-tooltip"></span> </label>
+                                <input type="text" maxlength="512" class="large" value="" name="participantName" id="participantName" />
+                            
                                 <div class="column col-1of2">
                                     <label for="contactEmail" class="input-header">
                                         Sähköposti <span title="Pakollinen kenttä" class="icon-small required trigger-tooltip"></span>
@@ -217,10 +231,7 @@
                                     <label>Osoite<textarea maxlength="1000" class="address-field noresize" name="contactAddress" id="contactAddress"></textarea>
                                     </label>
                                 </div>
-                                
-                                <a href="#" id="close-update-contact-info">Sulje muokkaus</a>
                             </div>
-                        
                         </div>
                     </div>
                     
@@ -232,9 +243,6 @@
 
                 </form>
             </div>
-            
-            
-            
         </div>
     </#if>
 
@@ -278,8 +286,6 @@
     };
     
 </#assign>
-
-
 
 <#include "public-view.ftl" />
 

@@ -1021,7 +1021,7 @@ a.block-link {
 }
 
 
-// Large icons
+// Large icons for buttons
 //
 // Styleguide 4.2.1
 .large-icon {
@@ -1045,7 +1045,7 @@ a.block-link {
     &.stop {                background-position: 0 -1950px;  }
 }
 
-// Small icons
+// Small icons for buttons
 //
 // Styleguide 4.2.2
 .small-icon {
@@ -1069,6 +1069,34 @@ a.block-link {
     &.logout {              background-position: 0 -2090px;  }
     &.search {              background-position: 0 -2240px;  }
 }
+
+// Small icons standalone
+//
+// Styleguide 4.2.2
+.small-icon-plain {
+    display:inline-block;
+    width:16px;
+    height:16px;
+    
+    background: transparent url("../img/button-small-sprite.png?version=${timestamp}") no-repeat 0 0;
+
+    &.save-and-send {       background-position: 0 0;     }
+    &.save-as-draft {       background-position: 0 -150px;   }
+    &.cancel {              background-position: 0 -301px;   }
+    &.edit {                background-position: 0 -450px;   }
+    &.next {                background-position: 0 -601px;   }
+    &.delete {              background-position: 0 -750px;   }
+    &.mail {                background-position: 0 -900px;   }
+    &.document {            background-position: 0 -1050px;  }
+    &.folder {              background-position: 0 -1200px;  }
+    &.upload {              background-position: 0 -1351px;  }
+    &.download {            background-position: 0 -1501px;  }
+    &.previous {            background-position: 0 -1650px;  }
+    &.add {                 background-position: 0 -1800px;  }
+    &.logout {              background-position: 0 -2100px;  }
+    &.search {              background-position: 0 -2250px;  }
+}
+
 
 .file-icon {
     display:inline-block;
@@ -1772,6 +1800,29 @@ label  {
     background:#f5f5f5;
     border: 1px solid @borderGray;
     
+}
+
+.send-to-municipality {
+    padding:30px 0;
+    
+    .manage-block {
+        position:relative;
+        padding-right:20px;
+        
+        &.collapse {
+            display:inline-block;
+        }
+        
+        .manage {
+            position:absolute;
+            right:0;
+            top:0; 
+            display:block;
+            width:16px;
+            height:16px;
+        }
+        
+    }
 }
 
 // Create form submit section

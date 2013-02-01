@@ -34,7 +34,7 @@
     
         <#if initiative.proposal??>
             <div class="initiative-content-row <#if !initiative.showName>last</#if>">
-                <h2>Aloitteen sisältö</h2>
+                <h2><@u.message "initiative.content.title" /></h2>
                 
                 <@u.text initiative.proposal!"" />
             </div>
@@ -42,7 +42,7 @@
         
          <#if initiative.showName>
              <div class="initiative-content-row last">
-                <h2>Aloitteen tekijä</h2>
+                <h2><@u.message "initiative.author.title" /></h2>
                 <p>${initiative.authorName!""}</p>
             </div>
         </#if>
