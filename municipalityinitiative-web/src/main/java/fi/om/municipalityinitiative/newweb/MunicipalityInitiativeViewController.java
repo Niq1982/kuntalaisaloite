@@ -1,9 +1,7 @@
 package fi.om.municipalityinitiative.newweb;
 
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
-import fi.om.municipalityinitiative.newdto.ui.MunicipalityInfo;
-import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateDto;
+import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.service.InitiativeService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.service.ParticipantService;
@@ -65,25 +63,27 @@ public class MunicipalityInitiativeViewController extends BaseController {
 
         InitiativeViewInfo initiativeInfo = initiativeService.getMunicipalityInitiative(initiativeId);
 
-        model.addAttribute("initiative", initiativeInfo);
+        if (initiativeInfo.isCollectable()){// TODO: If not sent to municipality
 
-        if (initiativeInfo.isCollectable()){
-            model.addAttribute("participant", new ParticipantUICreateDto()); // TODO: If not sent to municipality
-            model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
-            model.addAttribute("participantCount", participantService.getParticipantCount(initiativeId));
-            model.addAttribute("participants", participantService.findParticipants(initiativeId));
+            addModelAttributesToCollectView(model,
+                    initiativeInfo,
+                    municipalityService.findAllMunicipalities(),
+                    participantService.getParticipantCount(initiativeId),
+                    participantService.findParticipants(initiativeId));
+            model.addAttribute("participant", new ParticipantUICreateDto());
+
             return COLLECT_VIEW;
-        } else {
+        }
+        else {
+            model.addAttribute("initiative", initiativeInfo);
             return SINGLE_VIEW;
         }
     }
 
     @RequestMapping(value={ VIEW_FI, VIEW_SV }, method=POST)
-    public String participate(@PathVariable("id") Long initiativeId, @ModelAttribute("participant") ParticipantUICreateDto participant,
+    public String participate(@PathVariable("id") Long initiativeId,
+                              @ModelAttribute("participant") ParticipantUICreateDto participant,
                               BindingResult bindingResult, Model model, Locale locale, HttpServletRequest request) {
-
-        // TODO Check id collectable
-        // TODO: If not sent to municipality
 
         if (validationService.validationSuccessful(participant, bindingResult, model)) {
             initiativeService.createParticipant(participant, initiativeId);
@@ -91,13 +91,39 @@ public class MunicipalityInitiativeViewController extends BaseController {
             return redirectWithMessage(urls.view(initiativeId), RequestMessage.PARTICIPATE, request);
         }
         else {
-            model.addAttribute("participant", participant);
-            model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
-            model.addAttribute("initiative", initiativeService.getMunicipalityInitiative(initiativeId));
-            model.addAttribute("participantCount", participantService.getParticipantCount(initiativeId));
+            addModelAttributesToCollectView(model,
+                    initiativeService.getMunicipalityInitiative(initiativeId),
+                    municipalityService.findAllMunicipalities(),
+                    participantService.getParticipantCount(initiativeId),
+                    participantService.findParticipants(initiativeId));
             model.addAttribute("participants", participantService.findParticipants(initiativeId));
             return COLLECT_VIEW;
         }
+    }
+
+    @RequestMapping(value={ MANAGEMENT_FI, MANAGEMENT_SV }, method=GET)
+    public String managementView(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
+
+        // TODO Check id collectable and not sended
+
+        addModelAttributesToCollectView(model,
+                initiativeService.getMunicipalityInitiative(initiativeId),
+                municipalityService.findAllMunicipalities(),
+                participantService.getParticipantCount(initiativeId),
+                participantService.findParticipants(initiativeId));
+
+        model.addAttribute("sendToMunicipality", initiativeService.getSendToMunicipalityData(initiativeId)); // TODO Implement method to service that it receives old contactInfo from initiative
+        model.addAttribute("managementView", true); // TODO: Remove when not needed anymore
+        model.addAttribute("participant", new ParticipantUICreateDto()); // TODO: Remove when not needed anymore
+
+        return COLLECT_VIEW; // TODO: MANAGEMENT_VIEW
+    }
+
+    private void addModelAttributesToCollectView(Model model, InitiativeViewInfo municipalityInitiative, List<MunicipalityInfo> allMunicipalities, ParticipantCount participantCount, ParticipantNames participants) {
+        model.addAttribute("initiative", municipalityInitiative);
+        model.addAttribute("municipalities", allMunicipalities);
+        model.addAttribute("participantCount", participantCount);
+        model.addAttribute("participants", participants);
     }
 
     private static String solveMunicipalityFromListById(List<MunicipalityInfo> municipalities, Long municipalityId){

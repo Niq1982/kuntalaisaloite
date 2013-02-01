@@ -2,7 +2,7 @@ create table municipality (
 	id bigserial,
 	name varchar(30) constraint municipality_name_nn not null,
 	name_sv varchar(30) constraint municipality_name_sv_nn not null,
-	email varchar(256),
+	email varchar(100),
 
 	constraint municipality_pk primary key(id),
 	constraint municipality_name_u unique(name),
@@ -23,8 +23,8 @@ create table municipality_initiative (
     management_hash char(40),
     sent timestamp,
 
-    contact_name varchar(256),
-    contact_email varchar(256),
+    contact_name varchar(100),
+    contact_email varchar(100),
     contact_phone varchar(30),
     contact_address varchar(256),
 
@@ -38,7 +38,7 @@ create table participant (
 	id bigserial,
 	municipality_initiative_id bigserial,
 
-	name varchar(256),
+	name varchar(100),
 
 	municipality_id bigserial,
     show_name boolean constraint participant_public_name not null,

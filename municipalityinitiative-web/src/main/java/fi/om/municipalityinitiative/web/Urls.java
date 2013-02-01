@@ -155,6 +155,10 @@ public final class Urls {
 
     public static final String VIEW_SV = CREATE_SV + "/" + ID_PARAMETER;
 
+    public static final String MANAGEMENT_FI = "/fi/hallinta" + "/" + ID_PARAMETER;
+
+    public static final String MANAGEMENT_SV = "/sv/management" + "/" + ID_PARAMETER;
+
     public static final String STATUS =  "/status";
 
     private final String baseUrl;
@@ -218,6 +222,10 @@ public final class Urls {
 
     public String getStatusPage() {
         return baseUrl + STATUS;
+    }
+
+    public String getManagement(Long id) {
+        return getLocalizedPageUrl(MANAGEMENT_FI, MANAGEMENT_SV).replace(ID_PARAMETER, id.toString());
     }
 
     public String initiatives() {

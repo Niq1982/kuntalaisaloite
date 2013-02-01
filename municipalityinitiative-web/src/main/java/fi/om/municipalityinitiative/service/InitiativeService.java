@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
 import com.google.common.base.Optional;
+import fi.om.municipalityinitiative.dto.SendToMunicipalityDto;
 import fi.om.municipalityinitiative.exceptions.NotCollectableException;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
@@ -130,5 +131,9 @@ public class InitiativeService {
 
     public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId) {
         return initiativeDao.getById(initiativeId);
+    }
+
+    public SendToMunicipalityDto getSendToMunicipalityData(Long initiativeId) {
+        return new SendToMunicipalityDto();
     }
 }
