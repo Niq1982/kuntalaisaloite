@@ -8,8 +8,8 @@ import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUICreateDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
-import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateDto;
 import org.joda.time.DateTime;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -20,6 +20,16 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 public class InitiativeServiceTest {
+
+    private InitiativeService service;
+    private InitiativeDao initiativeDao;
+
+    @Before
+    public void setup() {
+        initiativeDao = mock(InitiativeDao.class);
+        service = new InitiativeService();
+        service.initiativeDao = initiativeDao;
+    }
 
     @Test
     public void parse_municipalityInitiativeCreateDto() {
@@ -52,9 +62,6 @@ public class InitiativeServiceTest {
 
     @Test
     public void fails_sending_to_municipality_if_not_collectable() {
-        InitiativeDao initiativeDao = mock(InitiativeDao.class);
-        InitiativeService service = new InitiativeService();
-        service.initiativeDao = initiativeDao;
 
         InitiativeViewInfo initiativeViewInfo = new InitiativeViewInfo();
         initiativeViewInfo.setMaybeManagementHash(Optional.<String>absent());
@@ -70,9 +77,6 @@ public class InitiativeServiceTest {
 
     @Test
     public void fails_sending_to_municipality_if_already_sent() {
-        InitiativeDao initiativeDao = mock(InitiativeDao.class);
-        InitiativeService service = new InitiativeService();
-        service.initiativeDao = initiativeDao;
 
         InitiativeViewInfo initiativeViewInfo = new InitiativeViewInfo();
         initiativeViewInfo.setMaybeManagementHash(Optional.of("anyHash"));
@@ -89,9 +93,6 @@ public class InitiativeServiceTest {
 
     @Test
     public void fails_sending_to_municipality_if_hashcode_does_not_match() {
-        InitiativeDao initiativeDao = mock(InitiativeDao.class);
-        InitiativeService service = new InitiativeService();
-        service.initiativeDao = initiativeDao;
 
         InitiativeViewInfo initiativeViewInfo = new InitiativeViewInfo();
         initiativeViewInfo.setMaybeManagementHash(Optional.of("some hash"));
@@ -108,10 +109,6 @@ public class InitiativeServiceTest {
     @Test
     public void succeeds_in_sending_to_municipality() {
 
-        InitiativeDao initiativeDao = mock(InitiativeDao.class);
-        InitiativeService service = new InitiativeService();
-        service.initiativeDao = initiativeDao;
-
         InitiativeViewInfo initiativeViewInfo = new InitiativeViewInfo();
         initiativeViewInfo.setMaybeManagementHash(Optional.of("hashCode"));
         stub(initiativeDao.getById(any(Long.class))).toReturn(initiativeViewInfo);
@@ -122,11 +119,13 @@ public class InitiativeServiceTest {
     }
 
     @Test
-    public void create_participant() {
+    public void set_contact_info_to_SendToMunicipalityDto() {
 
-        // TODO:
-        ParticipantUICreateDto participantUICreateDto = new ParticipantUICreateDto();
-        InitiativeService service = new InitiativeService();
+        ContactInfo contactInfo = new ContactInfo();
+        contactInfo.setPhone("phone");
+        stub(initiativeDao.getContactInfo(any(Long.class))).toReturn(contactInfo);
+
+        assertThat(service.getSendToMunicipalityData(0L).getContactInfo().getPhone(), is("phone"));
     }
 
 
