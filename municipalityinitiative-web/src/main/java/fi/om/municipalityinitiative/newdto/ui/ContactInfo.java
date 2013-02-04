@@ -1,8 +1,10 @@
 package fi.om.municipalityinitiative.newdto.ui;
 
+import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 public class ContactInfo {
 
@@ -16,14 +18,18 @@ public class ContactInfo {
     public static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-\\+]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
 
     @NotEmpty
+    @Size(max = InitiativeConstants.CONTACT_NAME_MAX)
     private String name;
 
     @NotEmpty
     @Pattern(regexp = EMAIL_PATTERN)
+    @Size(max = InitiativeConstants.CONTACT_EMAIL_MAX)
     private String email;
 
+    @Size(max = InitiativeConstants.CONTACT_PHONE_MAX)
     private String phone;
 
+    @Size(max = InitiativeConstants.CONTACT_ADDRESS_MAX)
     private String address;
 
 

@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newdto.ui;
 
+import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.validation.InitiativeCreateParticipantValidationInfo;
 import fi.om.municipalityinitiative.validation.ValidCreateFranchise;
 import fi.om.municipalityinitiative.validation.ValidMunicipalMembership;
@@ -7,15 +8,18 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @ValidMunicipalMembership
 @ValidCreateFranchise
 public class InitiativeUICreateDto implements InitiativeCreateParticipantValidationInfo {
 
     @NotEmpty
+    @Size(max = InitiativeConstants.INITIATIVE_NAME_MAX)
     private String name;
 
     @NotEmpty
+    @Size(max = InitiativeConstants.INITIATIVE_PROPOSAL_MAX)
     private String proposal;
 
     private Boolean municipalMembership;

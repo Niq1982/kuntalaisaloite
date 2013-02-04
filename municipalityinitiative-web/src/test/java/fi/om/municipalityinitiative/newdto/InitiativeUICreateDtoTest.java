@@ -120,6 +120,18 @@ public class InitiativeUICreateDtoTest {
         assertThat(violations, hasSize(0));
     }
 
+    @Test
+    public void validates_email_length() {
+        InitiativeUICreateDto dto = createValidInitiativeWithBasicDetails();
+        dto.getContactInfo().setPhone("0123456789012345678901234567891");
+
+        Set<ConstraintViolation<InitiativeUICreateDto>> violations = validator.validate(dto);
+
+        assertThat(violations, hasSize(1));
+        assertThat(getFirst(violations).getMessage(), is("size must be between 0 and 30"));
+
+    }
+
     private InitiativeUICreateDto createInitiativeWithBasicDetails() {
         InitiativeUICreateDto dto = new InitiativeUICreateDto();
         dto.setName("Some initiative name");
@@ -127,6 +139,14 @@ public class InitiativeUICreateDtoTest {
         dto.setContactInfo(new ContactInfo());
         dto.getContactInfo().setEmail("some@email.com");
         dto.getContactInfo().setName("Some contact name");
+        return dto;
+    }
+
+    private InitiativeUICreateDto createValidInitiativeWithBasicDetails() {
+        InitiativeUICreateDto dto = createInitiativeWithBasicDetails();
+        dto.setMunicipality(1L);
+        dto.setHomeMunicipality(2L);
+        dto.setMunicipalMembership(true);
         return dto;
     }
 
