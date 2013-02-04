@@ -16,6 +16,6 @@
 
 </#assign>
 
-<#include "public-view.ftl" />
+<#include "initiative.ftl" />
 
 </#escape> 

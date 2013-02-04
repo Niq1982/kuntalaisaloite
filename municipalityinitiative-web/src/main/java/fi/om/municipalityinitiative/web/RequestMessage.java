@@ -5,6 +5,7 @@ public enum RequestMessage {
     // Success messages
     SAVE_AND_SEND (SUCCESS),
     SAVE (SUCCESS, true),
+    SEND (SUCCESS),
     PARTICIPATE (SUCCESS)
     ;
     

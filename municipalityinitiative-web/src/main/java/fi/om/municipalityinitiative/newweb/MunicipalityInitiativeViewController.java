@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newweb;
 
+import fi.om.municipalityinitiative.dto.SendToMunicipalityDto;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.service.InitiativeService;
@@ -15,6 +16,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.google.common.cache.RemovalCause;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -118,6 +121,29 @@ public class MunicipalityInitiativeViewController extends BaseController {
         model.addAttribute("sendToMunicipality", initiativeService.getSendToMunicipalityData(initiativeId));
 
         return MANAGEMENT_VIEW;
+    }
+    
+    @RequestMapping(value={ MANAGEMENT_FI, MANAGEMENT_SV }, method=POST)
+    public String managementView(@PathVariable("id") Long initiativeId, 
+                                SendToMunicipalityDto sendToMunicipalityDto,
+                                BindingResult bindingResult,Model model, Locale locale, HttpServletRequest request) {
+       
+        if (validationService.validationSuccessful(sendToMunicipalityDto, bindingResult, model)) {
+            initiativeService.sendToMunicipality(initiativeId, "0000000000111111111122222222223333333333");
+            Urls urls = Urls.get(locale);
+            return redirectWithMessage(urls.view(initiativeId),RequestMessage.SEND, request); 
+        }
+        else {
+            addModelAttributesToCollectView(model,
+                    initiativeService.getMunicipalityInitiative(initiativeId),
+                    municipalityService.findAllMunicipalities(),
+                    participantService.getParticipantCount(initiativeId),
+                    participantService.findParticipants(initiativeId));
+
+            model.addAttribute("sendToMunicipality", sendToMunicipalityDto);
+            return MANAGEMENT_VIEW;
+        }
+        
     }
 
     private void addModelAttributesToCollectView(Model model, InitiativeViewInfo municipalityInitiative, List<MunicipalityInfo> allMunicipalities, ParticipantCount participantCount, ParticipantNames participants) {

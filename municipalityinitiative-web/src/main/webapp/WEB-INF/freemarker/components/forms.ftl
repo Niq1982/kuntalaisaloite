@@ -254,20 +254,20 @@
     </div>
     
     <#if showName>
-        <@textField path=path+".name" required="required" optional=false cssClass="large" maxLength="512" />
+        <@textField path=path+".name" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_NAME_MAX />
     </#if>
 
     <div class="initiative-contact-details">
         <div class="column col-1of2">
-            <@textField path=path+".email" required="required" optional=false cssClass="medium" maxLength="512" />
+            <@textField path=path+".email" required="required" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
             
-            <@textField path=path+".phone" required="" optional=false cssClass="medium" maxLength="512" />
+            <@textField path=path+".phone" required="" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_PHONE_MAX />
         </div>
         
         <div class="column col-1of2 last">
             <label>
                 <@u.message path+".address" />
-                <@spring.formTextarea path+".address", 'class="address-field noresize" maxlength="1000"' />
+                <@spring.formTextarea path+".address", 'class="address-field noresize" maxlength="'+InitiativeConstants.CONTACT_ADDRESS_MAX+'"' />
             </label>
         </div>
     

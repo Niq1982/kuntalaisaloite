@@ -4,30 +4,10 @@ package fi.om.municipalityinitiative.web;
 public final class Views {
 
     private Views() {}
-    
-    public static final String INITIATIVE_AUTHOR = "initiative-author";
-    
-    public static final String INITIATIVE_OM = "initiative-om";
-    
-    public static final String INITIATIVE_VRK = "initiative-vrk";
-    
-    public static final String BEFORE_CREATE_VIEW = "before-create";
-    
-    public static final String PUBLIC_VIEW = "initiative-public";
-    
-    public static final String INVITATION_VIEW = "invitation-response";
-    
-    public static final String ACCEPT_INVITATION_VIEW = "invitation-accept";
-    
-    public static final String UNCONFIRMED_AUTHOR = "unconfirmed-author";
-    
-    public static final String VOTE_VIEW = "vote";
-    
+
     public static final String DUMMY_LOGIN_VIEW = "dummy-login";
     
     public static final String VETUMA_LOGIN_VIEW = "vetuma-login";
-
-    public static final String SEARCH_VIEW_OLD = "search_old";
 
     public static final String INDEX_VIEW = "index";
 
@@ -51,7 +31,7 @@ public final class Views {
 
     public static final String SEARCH_VIEW = "find";
     public static final String CREATE_VIEW = "create";
-    public static final String VIEW_VIEW = "public-view";
+    public static final String VIEW_VIEW = "initiative";
     public static final String SINGLE_VIEW = "single-view";
     public static final String COLLECT_VIEW = "collect-view";
     public static final String MANAGEMENT_VIEW = "management-view";
