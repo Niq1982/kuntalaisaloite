@@ -222,7 +222,7 @@
                     <#-- Save initiative -->
                     <#if requestMessage == "success.save">
                         <#assign managementURL=currentUri+"?mgmnt=true" />
-                        <@messageHTML key=requestMessage args=[managementURL] />
+                        <@messageHTML key=requestMessage args=[urls.management(initiative.id, initiative.managementHash)] />
                         <a class="small-button gray close hidden"><@message "modal.close" /></a>
                     <#else>
                         <@messageHTML requestMessage />

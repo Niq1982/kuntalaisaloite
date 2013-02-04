@@ -244,33 +244,35 @@
  * @param mode is either 'modal' or 'full'
  * @param prefix for custom messages
  * @param cssClass for styling. Multiple classes are separated with a space
+ * @param showName true or false for showing name-field
 
 -->
-<#macro contactInfo path realPath="" mode="" prefix="" cssClass="">
+<#macro contactInfo path realPath="" mode="" prefix="" cssClass="" showName=false>
 
-    <div class="input-block-content">
-        <div class="input-header">
-            <@u.message "initiative.contactInfo" />
-        </div>
+    <div class="input-header">
+        <@u.message path />
+    </div>
+    
+    <#if showName>
+        <@textField path=path+".name" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_NAME_MAX />
+    </#if>
 
-        <div class="initiative-contact-details">
-            <div class="column col-1of2">
-                <@textField path="initiative.contactInfo.email" required="required" optional=false cssClass="medium" maxLength="512" />
-                
-                <@textField path="initiative.contactInfo.phone" required="" optional=false cssClass="medium" maxLength="512" />
-            </div>
+    <div class="initiative-contact-details">
+        <div class="column col-1of2">
+            <@textField path=path+".email" required="required" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
             
-            <div class="column col-1of2 last">
-                <label>
-                    <@u.message "initiative.contactInfo.address" />
-                    <@spring.formTextarea "initiative.contactInfo.address", 'class="address-field noresize" maxlength="1000"' />
-                </label>
-            </div>
-        
+            <@textField path=path+".phone" required="" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_PHONE_MAX />
         </div>
+        
+        <div class="column col-1of2 last">
+            <label>
+                <@u.message path+".address" />
+                <@spring.formTextarea path+".address", 'class="address-field noresize" maxlength="'+InitiativeConstants.CONTACT_ADDRESS_MAX+'"' />
+            </label>
+        </div>
+    
     </div>
         
 </#macro>
-
 
 </#escape> 

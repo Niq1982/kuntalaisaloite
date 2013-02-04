@@ -128,7 +128,7 @@
             </div>
             <p id="selected-municipality" class="hidden"><i><@u.message "selectedMunicipality.notSelected" /></i></p>
             
-            <@f.textField path="initiative.name" required="required" optional=true cssClass="large" maxLength=InitiativeConstants.INITIATIVE_NAME_MAX?string("#") />
+            <@f.textField path="initiative.name" required="required" optional=true cssClass="large" maxLength=InitiativeConstants.INITIATIVE_NAME_MAX />
         </div>
 
         <div class="input-block-content no-top-margin">
@@ -169,7 +169,7 @@
         </div>
         
         <div class="input-block-content">
-            <@f.textField path="initiative.contactInfo.name" required="required" optional=false cssClass="large" maxLength="512" />
+            <@f.textField path="initiative.contactInfo.name" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_NAME_MAX />
             
             <@f.formCheckbox path="initiative.showName" checked=true />
         </div>
@@ -178,8 +178,9 @@
             <@u.systemMessage path="initiative.contactInfo.description" type="info" showClose=false />
         </div>
 
-        
-        <@f.contactInfo path="initiative.contactInfo" realPath=initiative.contactInfo mode="full" />
+        <div class="input-block-content">
+            <@f.contactInfo path="initiative.contactInfo" realPath=initiative.contactInfo mode="full" />
+        </div>
         
         <div class="input-block-content hidden">
             <@buttons type="next" nextStep=step+1 />

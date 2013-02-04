@@ -104,6 +104,9 @@ public final class Urls {
     public static final String ACTION_SEND_INVITATIONS = "action-send-invitations";
     
     // In Municipality initiative
+    public static final String PARAM_MANAGEMENT_CODE = "management";
+    
+    // In Municipality initiative
     public static final String ACTION_SAVE = "collectable";
     
     // In Municipality initiative
@@ -157,7 +160,7 @@ public final class Urls {
 
     public static final String MANAGEMENT_FI = "/fi/hallinta" + "/" + ID_PARAMETER;
 
-    public static final String MANAGEMENT_SV = "/sv/management" + "/" + ID_PARAMETER;
+    public static final String MANAGEMENT_SV = "/sv/administration" + "/" + ID_PARAMETER;
 
     public static final String STATUS =  "/status";
 
@@ -210,6 +213,10 @@ public final class Urls {
 
     public String view(Long initiativeId) {
         return getLocalizedPageUrl(VIEW_FI, VIEW_SV).replace(ID_PARAMETER, initiativeId.toString());
+    }
+    
+    public String management(Long initiativeId, String managementHash) {
+        return getManagement(initiativeId) + "?" + PARAM_MANAGEMENT_CODE + "=" + managementHash;
     }
 
     public String vote(Long initiativeId) {
