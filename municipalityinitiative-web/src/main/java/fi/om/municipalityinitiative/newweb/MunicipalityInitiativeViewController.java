@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.google.common.cache.RemovalCause;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -106,31 +104,32 @@ public class MunicipalityInitiativeViewController extends BaseController {
     }
 
     @RequestMapping(value={ MANAGEMENT_FI, MANAGEMENT_SV }, method=GET)
-    public String managementView(@PathVariable("id") Long initiativeId, @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash, Model model, Locale locale, HttpServletRequest request) {
+    public String managementView(@PathVariable("id") Long initiativeId,
+                                 @RequestParam String management,
+                                 Model model, Locale locale, HttpServletRequest request) {
 
-        // TODO: Pauli auditoi tämä!
         InitiativeViewInfo initiativeInfo = initiativeService.getMunicipalityInitiative(initiativeId);
 
-        if (initiativeInfo.isCollectable()){
-            addModelAttributesToCollectView(model,
-                    initiativeService.getMunicipalityInitiative(initiativeId),
-                    municipalityService.findAllMunicipalities(),
-                    participantService.getParticipantCount(initiativeId),
-                    participantService.findParticipants(initiativeId));
-    
-            if (!initiativeInfo.getSentTime().isPresent() && managementHash.equals(initiativeInfo.getManagementHash())){
-                model.addAttribute("participants", participantService.findParticipants(initiativeId));
-                model.addAttribute("sendToMunicipality", initiativeService.getSendToMunicipalityData(initiativeId));
-                
-                return MANAGEMENT_VIEW;
-            } else {
-                model.addAttribute("participant", new ParticipantUICreateDto());
-                
-                return COLLECT_VIEW;
-            }
-        } else {
-            model.addAttribute("initiative", initiativeInfo);
-            return SINGLE_VIEW;
+        if (!initiativeInfo.isCollectable() || initiativeInfo.isSent()) { // Practically initiative should always be sent if it's not collectable...
+            Urls urls = Urls.get(locale);
+            return contextRelativeRedirect(urls.view(initiativeId));
+        }
+
+        addModelAttributesToCollectView(model,
+                initiativeService.getMunicipalityInitiative(initiativeId),
+                municipalityService.findAllMunicipalities(),
+                participantService.getParticipantCount(initiativeId),
+                participantService.findParticipants(initiativeId));
+
+        if (management.equals(initiativeInfo.getManagementHash())){
+            model.addAttribute("participants", participantService.findParticipants(initiativeId));
+            model.addAttribute("sendToMunicipality", initiativeService.getSendToMunicipalityData(initiativeId));
+            return MANAGEMENT_VIEW;
+        }
+        else {
+            // Redirecting would be nicer but let's make it more difficult for the possible hackers to brute force the management-hash
+            model.addAttribute("participant", new ParticipantUICreateDto());
+            return COLLECT_VIEW;
         }
     }
     

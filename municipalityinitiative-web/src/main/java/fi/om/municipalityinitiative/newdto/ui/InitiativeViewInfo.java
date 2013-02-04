@@ -93,6 +93,10 @@ public class InitiativeViewInfo {
         return maybeManagementHash.isPresent();
     }
 
+    public boolean isSent() {
+        return sentTime.isPresent();
+    }
+
     public Optional<DateTime> getSentTime() {
         return sentTime;
     }
