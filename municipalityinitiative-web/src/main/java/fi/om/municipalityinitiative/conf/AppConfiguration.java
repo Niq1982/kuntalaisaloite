@@ -211,13 +211,15 @@ public class AppConfiguration {
     }
     
     @Bean
-    public EmailService emailService() {
+    public EmailService emailService(FreeMarkerConfigurer freeMarkerConfigurer,
+                                     MessageSource messageSource,
+                                     JavaMailSender javaMailSender) {
         Urls.initUrls(env.getRequiredProperty(PropertyNames.baseURL)); //FIXME: quick hack, move this to right place!!!
 
         String defaultReplyTo = env.getRequiredProperty(PropertyNames.emailDefaultReplyTo);
         String testSendTo = env.getProperty(PropertyNames.testEmailSendTo);
         boolean testConsoleOutput = env.getProperty(PropertyNames.testEmailConsoleOutput, Boolean.class, TEST_EMAIL_CONSOLE_OUTPUT_DEFAULT);
-        return new MailSenderEmailService(freemarkerConfig(), messageSource(), javaMailSender(), defaultReplyTo, testSendTo, testConsoleOutput);
+        return new MailSenderEmailService(freeMarkerConfigurer, messageSource, javaMailSender, defaultReplyTo, testSendTo, testConsoleOutput);
     }
     
     @Bean

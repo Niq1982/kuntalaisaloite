@@ -4,5 +4,5 @@ import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 
 public interface EmailService {
 
-    void sendEmail(InitiativeViewInfo initiative);
+    void sendToMunicipality(InitiativeViewInfo initiative, String municipalityEmail);
 }

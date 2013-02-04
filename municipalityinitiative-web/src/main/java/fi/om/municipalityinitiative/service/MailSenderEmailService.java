@@ -25,11 +25,14 @@ import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Task
 public class MailSenderEmailService implements EmailService {
+
+    private static final String MUNICIPALITY_TEMPLATE = "municipality";
 
     @Resource
     FreeMarkerConfigurer freemarkerConfig;
@@ -69,18 +72,19 @@ public class MailSenderEmailService implements EmailService {
     }
 
     @Override
-    public void sendEmail(InitiativeViewInfo initiative) {
+    public void sendToMunicipality(InitiativeViewInfo initiative, String municipalityEmail) {
 
         if (initiative.isCollectable()) {
 
         }
         else {
 
+            sendEmail(municipalityEmail, "", MUNICIPALITY_TEMPLATE, new HashMap<String, Object>());
         }
 
     }
 
-    private void sendEmail(String sendTo, String replyTo, String subject, String templateName,  Map<String, Object> dataMap) {
+    private void sendEmail(String sendTo, String subject, String templateName,  Map<String, Object> dataMap) {
         Assert.notNull(sendTo, "sendTo");
 
         String text = processTemplate(templateName + "-text", dataMap); 
@@ -93,9 +97,8 @@ public class MailSenderEmailService implements EmailService {
             html = "TEST OPTION REPLACED THE EMAIL ADDRESS!\nThe original address was: " + sendTo + "<hr>" + html;
             sendTo = testSendTo;
         }
-        if (replyTo == null) {
-            replyTo = defaultReplyTo;
-        }
+
+        String replyTo = defaultReplyTo;
         
         if (testConsoleOutput) {
             System.out.println("----------------------------------------------------------");
