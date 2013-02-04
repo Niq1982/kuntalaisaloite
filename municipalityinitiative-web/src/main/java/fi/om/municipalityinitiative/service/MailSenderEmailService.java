@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 @Task
-public class EmailServiceImpl implements EmailService {
+public class MailSenderEmailService implements EmailService {
 
     @Resource
     FreeMarkerConfigurer freemarkerConfig;
@@ -43,26 +43,18 @@ public class EmailServiceImpl implements EmailService {
     @Resource
     MunicipalityDao municipalityDao;
 
-    private static final Logger log = LoggerFactory.getLogger(EmailServiceImpl.class); 
+    private static final Logger log = LoggerFactory.getLogger(MailSenderEmailService.class);
 
     private final String defaultReplyTo;
     private final String testSendTo;
     private final boolean testConsoleOutput;
 
-    private enum NotificationKey {
-        OM,
-        VRK;
-        public String toString() {
-            return super.toString().toLowerCase();
-        }
-    }
-    
-    public EmailServiceImpl(FreeMarkerConfigurer freemarkerConfig,
-                            MessageSource messageSource,
-                            JavaMailSender javaMailSender,
-                            String defaultReplyTo,
-                            String testSendTo,
-                            boolean testConsoleOutput) {
+    public MailSenderEmailService(FreeMarkerConfigurer freemarkerConfig,
+                                  MessageSource messageSource,
+                                  JavaMailSender javaMailSender,
+                                  String defaultReplyTo,
+                                  String testSendTo,
+                                  boolean testConsoleOutput) {
         this.freemarkerConfig = freemarkerConfig;
         this.messageSource = messageSource;
         this.javaMailSender = javaMailSender;
@@ -142,14 +134,11 @@ public class EmailServiceImpl implements EmailService {
             template.process(dataMap, out);
             out.flush();
             return out.toString();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (TemplateException e) {
+        } catch (IOException | TemplateException e) {
             throw new RuntimeException(e);
         }
     }
     private String stripTextRows(String text, int maxEmptyRows) {
-//        Iterable<String> textRows = Splitter.on('\n').trimResults().split(text);
         List<String> rows = Lists.newArrayList(Splitter.on('\n').trimResults().split(text));
        
         int emptyRows = maxEmptyRows;
@@ -168,8 +157,7 @@ public class EmailServiceImpl implements EmailService {
         while (rows.size() > 0 && Strings.isNullOrEmpty(rows.get(0))) {
             rows.remove(0);
         }
-        
-        String result = Joiner.on("\r\n").join(rows); // Splitter removes '\r' characters
-        return result;
+
+        return Joiner.on("\r\n").join(rows);
     }
 }
