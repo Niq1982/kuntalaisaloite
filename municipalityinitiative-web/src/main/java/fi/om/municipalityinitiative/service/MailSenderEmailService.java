@@ -33,7 +33,7 @@ import java.util.Map;
 @Task
 public class MailSenderEmailService implements EmailService {
 
-    private static final String MUNICIPALITY_TEMPLATE = "municipality";
+    private static final String MUNICIPALITY_TEMPLATE = "municipality-not-collectable";
 
     @Resource
     FreeMarkerConfigurer freemarkerConfig;
@@ -73,18 +73,17 @@ public class MailSenderEmailService implements EmailService {
     }
 
     @Override
+    // TODO: Create own InitiativeEmailInfo or something. Should the same object be used with collectable and non-collectable initiatives?
     public void sendToMunicipality(InitiativeViewInfo initiative, String municipalityEmail) {
 
-        if (initiative.isCollectable()) {
 
-        }
-        else {
-
-            sendEmail(municipalityEmail,
-                    messageSource.getMessage("email.not.collectable.municipality.subject", null, Locales.LOCALE_FI),
-                    MUNICIPALITY_TEMPLATE,
-                    new HashMap<String, Object>());
-        }
+        // TODO: Collectable and not collectable
+        HashMap<String, Object> dataMap = new HashMap<String, Object>();
+        dataMap.put("initiative", initiative);
+        sendEmail(municipalityEmail,
+                messageSource.getMessage("email.not.collectable.municipality.subject", null, Locales.LOCALE_FI),
+                MUNICIPALITY_TEMPLATE,
+                dataMap);
 
     }
 
