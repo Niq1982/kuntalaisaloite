@@ -31,6 +31,7 @@ public class MailSenderEmailServiceTest {
 
     @Before
     public void setup() {
+        javaMailSenderFake.getSentMessages().clear();
 
     }
 
