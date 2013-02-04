@@ -4,13 +4,13 @@ import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.cfg.DatabindVersion;
-import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import fi.om.municipalityinitiative.conf.WebConfiguration.WebDevConfiguration;
 import fi.om.municipalityinitiative.conf.WebConfiguration.WebProdConfiguration;
 import fi.om.municipalityinitiative.json.JsonIdAnnotationIntrospector;
 import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeCreateController;
 import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeViewController;
+import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -66,13 +66,13 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
         return env.getProperty(PropertyNames.appVersion, "<no version>");
     }
 
-    public static Optional<Integer> omPiwicId(Environment env) {
+    public static Maybe<Integer> omPiwicId(Environment env) {
         String piwicId = env.getProperty(PropertyNames.omPiwicId);
         if (Strings.isNullOrEmpty(piwicId)) {
-            return Optional.absent();
+            return Maybe.absent();
         }
         else {
-            return Optional.of(Integer.valueOf(piwicId));
+            return Maybe.of(Integer.valueOf(piwicId));
         }
     }
 

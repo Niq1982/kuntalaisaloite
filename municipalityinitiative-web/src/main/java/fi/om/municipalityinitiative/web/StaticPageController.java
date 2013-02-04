@@ -1,8 +1,8 @@
 package fi.om.municipalityinitiative.web;
 
-import com.google.common.base.Optional;
 import fi.om.municipalityinitiative.dao.NotFoundException;
 import fi.om.municipalityinitiative.util.Locales;
+import fi.om.municipalityinitiative.util.Maybe;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,7 +39,7 @@ public class StaticPageController extends BaseController {
     private final Map<String, InfoPage> infoPageEnumsSv = new HashMap<>();
     private final InfoPage defaultInfoPage = InfoPage.OM;
     
-    public StaticPageController(boolean optimizeResources, String resourcesVersion, Optional<Integer> omPiwicId) {
+    public StaticPageController(boolean optimizeResources, String resourcesVersion, Maybe<Integer> omPiwicId) {
         super(optimizeResources, resourcesVersion, omPiwicId);
     }
     

@@ -1,6 +1,6 @@
 package fi.om.municipalityinitiative.newdto.service;
 
-import com.google.common.base.Optional;
+import fi.om.municipalityinitiative.util.Maybe;
 
 public class InitiativeCreateDto {
 
@@ -12,5 +12,5 @@ public class InitiativeCreateDto {
     public String contactPhone;
     public String contactAddress;
     public Long municipalityId;
-    public Optional<String> managementHash;
+    public Maybe<String> managementHash;
 }

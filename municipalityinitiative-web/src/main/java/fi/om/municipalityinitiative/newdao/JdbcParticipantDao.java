@@ -12,7 +12,7 @@ import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
-import fi.om.municipalityinitiative.util.OptionalHashMap;
+import fi.om.municipalityinitiative.util.MaybeHoldingHashMap;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -53,7 +53,7 @@ public class JdbcParticipantDao implements ParticipantDao {
 
 
         SimpleExpression<String> simpleExpression = Expressions.as(caseBuilder, "testi");
-        OptionalHashMap<String, Long> map = new OptionalHashMap<String, Long>(queryFactory
+        MaybeHoldingHashMap<String, Long> map = new MaybeHoldingHashMap<String, Long>(queryFactory
                 .from(participant)
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
                 .groupBy(simpleExpression)

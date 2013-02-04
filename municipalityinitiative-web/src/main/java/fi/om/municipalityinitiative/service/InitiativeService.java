@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.service;
 
-import com.google.common.base.Optional;
 import fi.om.municipalityinitiative.dto.SendToMunicipalityDto;
 import fi.om.municipalityinitiative.exceptions.NotCollectableException;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
@@ -12,6 +11,7 @@ import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUICreateDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateDto;
+import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.ParticipatingUnallowedException;
 import fi.om.municipalityinitiative.util.ReflectionUtils;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,10 +38,10 @@ public class InitiativeService {
 
         InitiativeCreateDto initiativeCreateDto = parse(createDto);
         if (createDto.isCollectable()) {
-            initiativeCreateDto.managementHash = Optional.of("0000000000111111111122222222223333333333");
+            initiativeCreateDto.managementHash = Maybe.of("0000000000111111111122222222223333333333");
         }
         else {
-            initiativeCreateDto.managementHash = Optional.absent();
+            initiativeCreateDto.managementHash = Maybe.absent();
         }
 
         Long municipalityInitiativeId = initiativeDao.create(initiativeCreateDto);

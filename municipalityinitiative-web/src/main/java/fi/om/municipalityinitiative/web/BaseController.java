@@ -1,9 +1,9 @@
 package fi.om.municipalityinitiative.web;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
+import fi.om.municipalityinitiative.util.Maybe;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.TemplateModelException;
 import org.springframework.ui.Model;
@@ -36,13 +36,13 @@ public class BaseController {
     
     private final String resourcesVersion;
 
-    private final Optional<Integer> omPiwicId;
+    private final Maybe<Integer> omPiwicId;
     
     public BaseController(boolean optimizeResources, String resourcesVersion) {
-        this(optimizeResources, resourcesVersion, Optional.<Integer>absent());
+        this(optimizeResources, resourcesVersion, Maybe.<Integer>absent());
     }
     
-    public BaseController(boolean optimizeResources, String resourcesVersion, Optional<Integer> omPiwicId) {
+    public BaseController(boolean optimizeResources, String resourcesVersion, Maybe<Integer> omPiwicId) {
         this.optimizeResources = optimizeResources;
         this.resourcesVersion = resourcesVersion;
         this.omPiwicId = omPiwicId;

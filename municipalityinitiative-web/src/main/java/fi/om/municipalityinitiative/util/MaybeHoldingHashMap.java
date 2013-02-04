@@ -1,19 +1,18 @@
 package fi.om.municipalityinitiative.util;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 
 import java.util.Collection;
 import java.util.Map;
 
-public class OptionalHashMap<T, E>{
+public class MaybeHoldingHashMap<T, E>{
 
     Map<T, E> hashMap;
 
-    public OptionalHashMap() {
+    public MaybeHoldingHashMap() {
         hashMap = Maps.newHashMap();
     }
-    public OptionalHashMap(Map<T, E> originalMap) {
+    public MaybeHoldingHashMap(Map<T, E> originalMap) {
         hashMap = originalMap;
     }
 
@@ -25,9 +24,9 @@ public class OptionalHashMap<T, E>{
         return hashMap.isEmpty();
     }
 
-    public Optional<E> get(T key) {
+    public Maybe<E> get(T key) {
         E maybeKey = hashMap.get(key);
-        return Optional.fromNullable(maybeKey);
+        return Maybe.fromNullable(maybeKey);
     }
 
     public E put(T key, E value) {

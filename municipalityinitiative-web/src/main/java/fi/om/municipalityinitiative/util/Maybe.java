@@ -43,4 +43,8 @@ public class Maybe<T> {
     public T orNull() {
         return optional.orNull();
     }
+
+    public T or(T l) {
+        return optional.or(l);
+    }
 }
