@@ -7,12 +7,10 @@
 <#assign topContribution>
 
     <#-- Sent to municipality -->
-    <#if initiative.createTime??>
-        <span class="extra-info">
-            <#assign createTime><@u.localDate initiative.createTime /></#assign>
-            <@u.message key="initiative.date.sent" args=[createTime] />
-        </span>
-    </#if>
+    <span class="extra-info">
+        <#assign createTime><@u.localDate initiative.sentTime.value /></#assign>
+        <@u.message key="initiative.date.sent" args=[createTime] />
+    </span>
 
 </#assign>
 
