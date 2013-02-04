@@ -1,6 +1,6 @@
 package fi.om.municipalityinitiative.newdto.ui;
 
-import com.google.common.base.Optional;
+import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.DateTime;
 
 public class InitiativeViewInfo {
@@ -14,8 +14,8 @@ public class InitiativeViewInfo {
     private boolean showName;
     private DateTime createTime;
     
-    private Optional<String> maybeManagementHash = Optional.absent();
-    private Optional<DateTime> sentTime = Optional.absent();
+    private Maybe<String> maybeManagementHash = Maybe.absent();
+    private Maybe<DateTime> sentTime = Maybe.absent();
 
     public String getName() {
         return name;
@@ -81,7 +81,7 @@ public class InitiativeViewInfo {
         this.id = id;
     }
 
-    public void setMaybeManagementHash(Optional<String> maybeManagementHash) {
+    public void setMaybeManagementHash(Maybe<String> maybeManagementHash) {
         this.maybeManagementHash = maybeManagementHash;
     }
 
@@ -97,11 +97,11 @@ public class InitiativeViewInfo {
         return sentTime.isPresent();
     }
 
-    public Optional<DateTime> getSentTime() {
+    public Maybe<DateTime> getSentTime() {
         return sentTime;
     }
 
-    public void setSentTime(Optional<DateTime> sentTime) {
+    public void setSentTime(Maybe<DateTime> sentTime) {
         this.sentTime = sentTime;
     }
 }

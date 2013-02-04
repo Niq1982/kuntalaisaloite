@@ -107,14 +107,13 @@
             <@u.message key="initiative.date.create" args=[createTime] />
         </#if>
         <br />
-        <#-- TODO: fix optional date
+
         <#if initiative.sentTime.present>
-            <#assign sentTime><@u.localDate initiative.sentTime /></#assign>
+            <#assign sentTime><@u.localDate initiative.sentTime.value /></#assign>
             <@u.message key="initiative.date.sent" args=[sentTime] />
         <#else>
             <@u.message "initiative.state.collecting" />
         </#if>
-        -->
     </span>
 
 </#assign>
