@@ -115,10 +115,9 @@ public class MunicipalityInitiativeViewController extends BaseController {
                 participantService.getParticipantCount(initiativeId),
                 participantService.findParticipants(initiativeId));
 
-        model.addAttribute("sendToMunicipality", initiativeService.getSendToMunicipalityData(initiativeId)); // TODO Implement method to service that it receives old contactInfo from initiative
-        model.addAttribute("participant", new ParticipantUICreateDto()); // TODO: Remove when not needed anymore
+        model.addAttribute("sendToMunicipality", initiativeService.getSendToMunicipalityData(initiativeId));
 
-        return COLLECT_VIEW; // TODO: MANAGEMENT_VIEW
+        return MANAGEMENT_VIEW;
     }
 
     private void addModelAttributesToCollectView(Model model, InitiativeViewInfo municipalityInitiative, List<MunicipalityInfo> allMunicipalities, ParticipantCount participantCount, ParticipantNames participants) {

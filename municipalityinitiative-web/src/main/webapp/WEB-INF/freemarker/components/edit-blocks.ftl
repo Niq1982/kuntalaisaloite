@@ -178,8 +178,9 @@
             <@u.systemMessage path="initiative.contactInfo.description" type="info" showClose=false />
         </div>
 
-        
-        <@f.contactInfo path="initiative.contactInfo" realPath=initiative.contactInfo mode="full" />
+        <div class="input-block-content">
+            <@f.contactInfo path="initiative.contactInfo" realPath=initiative.contactInfo mode="full" />
+        </div>
         
         <div class="input-block-content hidden">
             <@buttons type="next" nextStep=step+1 />

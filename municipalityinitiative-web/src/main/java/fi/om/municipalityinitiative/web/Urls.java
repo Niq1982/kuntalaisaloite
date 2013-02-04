@@ -157,7 +157,7 @@ public final class Urls {
 
     public static final String MANAGEMENT_FI = "/fi/hallinta" + "/" + ID_PARAMETER;
 
-    public static final String MANAGEMENT_SV = "/sv/management" + "/" + ID_PARAMETER;
+    public static final String MANAGEMENT_SV = "/sv/administration" + "/" + ID_PARAMETER;
 
     public static final String STATUS =  "/status";
 

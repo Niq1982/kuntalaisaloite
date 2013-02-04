@@ -2,7 +2,6 @@
 var localization, generateModal, loadChosen, validateForm, modalContent, modalType;
 
 /**
- * 
  * Localization
  * ==============
  * - Returns localized texts for JavaScript-elements.
@@ -34,7 +33,6 @@ localization = {
 };
 
 /**
- * 
  * Generate modal
  * ==============
  * - Gets modalContent containing all HTML
@@ -49,7 +47,6 @@ generateModal = function (modalContent, modalType) {
 };
 
 /**
- * 
  * Load chosen
  * ===========
  * Little helper for loading chosen
@@ -65,6 +62,44 @@ jQuery.fn.loadChosen = function(){
 	self.chosen({no_results_text: localization.chosenNoResults(Init.getLocale())});
 };
 
+/**
+ * Detect support for HTML5 placeholder
+ * ====================================
+ * 
+ * returns true / false
+ * 
+ * */
+jQuery.support.placeholder = (function(){
+    var i = document.createElement('input');
+    return 'placeholder' in i;
+})();
+
+/**
+ * 
+ * HTML5 placeholder polyfill
+ * ==========================
+ * 
+ * FIXME: does not work yet
+ * 
+ * */
+jQuery.fn.placeholder = (function(){
+    //if (!$.support.placeholder){
+    	var thisInput = $(this);
+    	
+    	thisInput.hide();
+    	
+    	thisInput.val('Test placeholder');
+    	thisInput.focus(function() {
+    		thisInput.val('');
+    	});
+    	thisInput.blur(function() {
+    		if (thisInput.val() === '' || thisInput.val() == 'Test placeholder'){
+    			thisInput.val('Test placeholder');
+    		}
+    	});
+    //}
+	
+})();
 
 $(document).ready(function () {	
 	// Define general variables
@@ -611,7 +646,8 @@ $(document).ready(function () {
 		updateContactInfo 		= $('#contact-update-fields'),
 		prefilledContactInfo 	= $('#contact-prefilled'),
 		updateContactInfoBtn 	= $('#update-contact-info'),
-		closeUpdateBtn 			= $('#close-update-contact-info');
+		closeUpdateBtn 			= $('#close-update-contact-info'),
+		contactAddressTArea		= $('#comment');
 	
 	sendToMunBtn.click(function(){
 		sendToMun.hide();
@@ -639,6 +675,10 @@ $(document).ready(function () {
 		prefilledContactInfo.fadeIn(speedFast);
 		
 		return false;
+	});
+	
+	contactAddressTArea.focus(function(){
+		$(this).addClass("expand");
 	});
 	
 }());

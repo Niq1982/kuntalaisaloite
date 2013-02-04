@@ -71,6 +71,7 @@
 </@compress>
 </#assign>
 
+<#-- TODO: Member lists as component -->
 <#assign participantListFranchiseHTML>
 <@compress single_line=true>
 <#-- Testing modal with large list -->

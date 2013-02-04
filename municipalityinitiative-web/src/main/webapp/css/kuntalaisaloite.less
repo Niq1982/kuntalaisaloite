@@ -1193,6 +1193,7 @@ textarea {
     &.textarea-tall {
         min-height: 17em;
     }
+    
 }
 textarea:focus, input[type="text"]:focus, .email-input.focus {
     box-shadow:0 0 5px rgba(0,0,0,0.2);
@@ -1442,6 +1443,10 @@ label  {
         width:auto; min-width:32%;
     }
     &.last { margin:0; }
+    
+    textarea {
+        width:96%;
+    }
 }
 
 // Dynamic CSS3 columns
@@ -1803,11 +1808,16 @@ label  {
 }
 
 .send-to-municipality {
-    padding:30px 0;
+    padding:15px 0;
+    //font-size:1.1em;
     
     .manage-block {
         position:relative;
-        padding-right:20px;
+        //padding-right:20px;
+        
+        .small-button {
+            float:right;
+        }
         
         &.collapse {
             display:inline-block;
@@ -1822,6 +1832,16 @@ label  {
             height:16px;
         }
         
+    }
+    
+    textarea#comment {
+        height: 1.5em;
+        
+        .transition(height, 0.15s, ease-in);
+        
+        &.expand {
+            height:6em;
+        }
     }
 }
 
