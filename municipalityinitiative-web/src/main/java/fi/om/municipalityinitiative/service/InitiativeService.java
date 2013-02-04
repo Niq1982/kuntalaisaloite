@@ -34,10 +34,10 @@ public class InitiativeService {
     }
 
     @Transactional(readOnly = false)
-    public Long createMunicipalityInitiative(InitiativeUICreateDto createDto, boolean isCollectable) {
+    public Long createMunicipalityInitiative(InitiativeUICreateDto createDto) {
 
         InitiativeCreateDto initiativeCreateDto = parse(createDto);
-        if (isCollectable) {
+        if (createDto.isCollectable()) {
             initiativeCreateDto.managementHash = Optional.of("0000000000111111111122222222223333333333");
         }
         else {

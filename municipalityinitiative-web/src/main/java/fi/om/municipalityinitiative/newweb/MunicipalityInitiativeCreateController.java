@@ -69,12 +69,12 @@ public class MunicipalityInitiativeCreateController extends BaseController {
         }
 
         Urls urls = Urls.get(locale);
-        if (Boolean.TRUE.equals(initiative.getCollectable())) {
-            Long initiativeId = initiativeService.createMunicipalityInitiative(initiative, true);
+        if (initiative.isCollectable()) {
+            Long initiativeId = initiativeService.createMunicipalityInitiative(initiative);
             return redirectWithMessage(urls.view(initiativeId), RequestMessage.SAVE, request);
         }
         else {
-            Long initiativeId = initiativeService.createMunicipalityInitiative(initiative, false);
+            Long initiativeId = initiativeService.createMunicipalityInitiative(initiative);
             return redirectWithMessage(urls.view(initiativeId), RequestMessage.SAVE_AND_SEND, request);
         }
     }

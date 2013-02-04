@@ -15,7 +15,7 @@ public class ValidCreateFranchiseValidator implements ConstraintValidator<ValidC
         if (value.getMunicipality() == null || value.getHomeMunicipality() == null)
             return true; // This should be validated else where.
 
-        if (Boolean.TRUE.equals(value.getCollectable()) &&
+        if (value.isCollectable() &&
                 value.getMunicipality().equals(value.getHomeMunicipality())) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("ValidCreateFranchise")

@@ -33,13 +33,13 @@ public class InitiativeUICreateDto implements InitiativeCreateParticipantValidat
 
     private Boolean showName;
 
-    private Boolean collectable;
+    private boolean collectable = false; // Will be false if true is not received from the view
 
-    public Boolean getCollectable() {
+    public boolean isCollectable() {
         return collectable;
     }
 
-    public void setCollectable(Boolean collectable) {
+    public void setCollectable(boolean collectable) {
         this.collectable = collectable;
     }
 
