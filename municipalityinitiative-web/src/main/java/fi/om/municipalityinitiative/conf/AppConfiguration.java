@@ -36,6 +36,7 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import javax.annotation.Resource;
 import javax.inject.Inject;
 
+import java.io.File;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -164,7 +165,12 @@ public class AppConfiguration {
     @Bean
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasenames("WEB-INF/messages", "WEB-INF/m");
+       // messageSource.setBasenames("WEB-INF/messages");
+//        messageSource.getMessage("siteName", null, Locales.LOCALE_FI);
+
+        File file = new File(System.getProperty("user.dir"), "src/main/webapp/WEB-INF/messages");
+        messageSource.setBasenames(file.toURI().toString());
+
         messageSource.setCacheSeconds(env.getProperty(PropertyNames.testMessageSourceCacheSeconds, Integer.class, TEST_MESSAGE_SOURCE_CACHE_SECONDS_DEFAULT));
         return messageSource;
     }

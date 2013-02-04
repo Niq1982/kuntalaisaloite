@@ -7,6 +7,7 @@ import com.google.common.collect.Lists;
 import com.mysema.commons.lang.Assert;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
+import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Task;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -79,7 +80,10 @@ public class MailSenderEmailService implements EmailService {
         }
         else {
 
-            sendEmail(municipalityEmail, "", MUNICIPALITY_TEMPLATE, new HashMap<String, Object>());
+            sendEmail(municipalityEmail,
+                    messageSource.getMessage("email.not.collectable.municipality.subject", null, Locales.LOCALE_FI),
+                    MUNICIPALITY_TEMPLATE,
+                    new HashMap<String, Object>());
         }
 
     }
@@ -97,13 +101,11 @@ public class MailSenderEmailService implements EmailService {
             html = "TEST OPTION REPLACED THE EMAIL ADDRESS!\nThe original address was: " + sendTo + "<hr>" + html;
             sendTo = testSendTo;
         }
-
-        String replyTo = defaultReplyTo;
         
         if (testConsoleOutput) {
             System.out.println("----------------------------------------------------------");
             System.out.println("To: " + sendTo);
-            System.out.println("Reply-to: " + replyTo);
+            System.out.println("Reply-to: " + defaultReplyTo);
             System.out.println("Subject: " + subject);
             System.out.println("---");
             System.out.println(text);
@@ -116,7 +118,7 @@ public class MailSenderEmailService implements EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             helper.setTo(sendTo);
             helper.setFrom(defaultReplyTo); //to avoid spam filters
-            helper.setReplyTo(replyTo);
+            helper.setReplyTo(defaultReplyTo);
             helper.setSubject(subject);
             helper.setText(text, html);
         } catch (MessagingException e) {

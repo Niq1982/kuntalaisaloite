@@ -24,30 +24,32 @@ public class MailSenderEmailServiceTest {
     @Resource
     private EmailService emailService;
 
+    // This replaces the JavaMailSender used by EmailService.
+    // May be used for asserting "sent" emails.
     @Resource
     private JavaMailSenderFake javaMailSenderFake;
 
-    private final Long MUNICIPALITY_ID = -5L;
-    private final String MUNICIPALITY_EMAIL = "some@example.com";
-    private static final String REPLY_TO = "reply_to@example.com";
-    private static final String TEST_SEND_TO = "test_send_to@example.com";
-
     @Before
     public void setup() {
+
     }
 
     @Test
     public void assigns_municipality_email_to_sendTo_field() throws MessagingException, InterruptedException {
         InitiativeViewInfo initiative = new InitiativeViewInfo();
-        initiative.setMunicipalityId(MUNICIPALITY_ID);
-
         emailService.sendToMunicipality(initiative, "some_test_address@example.com");
-
-        assertThat(getSentMessage().getAllRecipients().length, is(1));
-        assertThat(getSentMessage().getAllRecipients()[0].toString(), is("some_test_address@example.com"));
+        assertThat(getSingleSentMessage().getAllRecipients().length, is(1));
+        assertThat(getSingleSentMessage().getAllRecipients()[0].toString(), is("some_test_address@example.com"));
     }
 
-    private MimeMessage getSentMessage() throws InterruptedException {
+    @Test
+    public void reads_subject_to_email() throws InterruptedException, MessagingException {
+        InitiativeViewInfo initiative = new InitiativeViewInfo();
+        emailService.sendToMunicipality(initiative, "some_test_address@example.com");
+        assertThat(getSingleSentMessage().getSubject(), is("Uusi aloite"));
+    }
+
+    private MimeMessage getSingleSentMessage() throws InterruptedException {
         waitUntilEmailSent();
         assertThat(javaMailSenderFake.getSentMessages(), hasSize(1));
         return javaMailSenderFake.getSentMessages().get(0);
