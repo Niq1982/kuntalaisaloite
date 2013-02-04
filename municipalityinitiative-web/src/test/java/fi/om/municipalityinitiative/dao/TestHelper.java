@@ -41,6 +41,7 @@ public class TestHelper {
         return queryFactory.insert(QMunicipality.municipality)
                     .set(QMunicipality.municipality.name, name)
                     .set(QMunicipality.municipality.nameSv, name)
+                    .set(QMunicipality.municipality.email, "aloite@"+name)
                 .executeWithKey(QMunicipality.municipality.id);
     }
 

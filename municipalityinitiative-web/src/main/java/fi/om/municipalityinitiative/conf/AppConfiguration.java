@@ -213,16 +213,11 @@ public class AppConfiguration {
     @Bean
     public EmailService emailService() {
         Urls.initUrls(env.getRequiredProperty(PropertyNames.baseURL)); //FIXME: quick hack, move this to right place!!!
-        
-        String baseURL = env.getRequiredProperty(PropertyNames.baseURL);
-        String defaultReplyTo = env.getRequiredProperty(PropertyNames.emailDefaultReplyTo);
-        String sendToOM = env.getRequiredProperty(PropertyNames.emailSendToOM);
-        String sendToVRK = env.getRequiredProperty(PropertyNames.emailSendToVRK);
-        int invitationExpirationDays = env.getRequiredProperty(PropertyNames.invitationExpirationDays, Integer.class);
 
+        String defaultReplyTo = env.getRequiredProperty(PropertyNames.emailDefaultReplyTo);
         String testSendTo = env.getProperty(PropertyNames.testEmailSendTo);
         boolean testConsoleOutput = env.getProperty(PropertyNames.testEmailConsoleOutput, Boolean.class, TEST_EMAIL_CONSOLE_OUTPUT_DEFAULT);
-        return new EmailServiceImpl(freemarkerConfig(), messageSource(), javaMailSender(), baseURL, defaultReplyTo, sendToOM, sendToVRK, invitationExpirationDays, testSendTo, testConsoleOutput);
+        return new EmailServiceImpl(freemarkerConfig(), messageSource(), javaMailSender(), defaultReplyTo, testSendTo, testConsoleOutput);
     }
     
     @Bean

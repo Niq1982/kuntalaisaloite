@@ -7,4 +7,6 @@ import java.util.List;
 public interface MunicipalityDao {
 
     List<MunicipalityInfo> findMunicipalities();
+
+    public String getMunicipalityEmail(Long municipalityId);
 }

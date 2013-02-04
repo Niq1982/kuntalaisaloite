@@ -4,9 +4,9 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.mysema.commons.lang.Assert;
-import fi.om.municipalityinitiative.util.Locales;
+import fi.om.municipalityinitiative.newdao.MunicipalityDao;
+import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.util.Task;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -31,19 +31,23 @@ import java.util.Map;
 @Task
 public class EmailServiceImpl implements EmailService {
 
-    @Resource FreeMarkerConfigurer freemarkerConfig;
-    @Resource MessageSource messageSource;
-    @Resource JavaMailSender javaMailSender;
+    @Resource
+    FreeMarkerConfigurer freemarkerConfig;
+
+    @Resource
+    MessageSource messageSource;
+
+    @Resource
+    JavaMailSender javaMailSender;
+
+    @Resource
+    MunicipalityDao municipalityDao;
 
     private static final Logger log = LoggerFactory.getLogger(EmailServiceImpl.class); 
-    
-    private final String baseURL;
+
     private final String defaultReplyTo;
     private final String testSendTo;
     private final boolean testConsoleOutput;
-    private final int invitationExpirationDays;
-    private String sendToOM;
-    private String sendToVRK;
 
     private enum NotificationKey {
         OM,
@@ -53,17 +57,16 @@ public class EmailServiceImpl implements EmailService {
         }
     }
     
-    public EmailServiceImpl(FreeMarkerConfigurer freemarkerConfig, MessageSource messageSource, JavaMailSender javaMailSender, 
-                        String baseURL, String defaultReplyTo, String sendToOM, String sendToVRK, 
-                        int invitationExpirationDays, String testSendTo, boolean testConsoleOutput) {
+    public EmailServiceImpl(FreeMarkerConfigurer freemarkerConfig,
+                            MessageSource messageSource,
+                            JavaMailSender javaMailSender,
+                            String defaultReplyTo,
+                            String testSendTo,
+                            boolean testConsoleOutput) {
         this.freemarkerConfig = freemarkerConfig;
         this.messageSource = messageSource;
         this.javaMailSender = javaMailSender;
-        this.baseURL = baseURL;
         this.defaultReplyTo = defaultReplyTo;
-        this.invitationExpirationDays = invitationExpirationDays;
-        this.sendToOM = sendToOM;
-        this.sendToVRK = sendToVRK;
         
         if (Strings.isNullOrEmpty(testSendTo)) {
             this.testSendTo = null;
@@ -73,35 +76,16 @@ public class EmailServiceImpl implements EmailService {
         this.testConsoleOutput = testConsoleOutput;
     }
 
+    @Override
+    public void sendEmail(InitiativeViewInfo initiative) {
 
+        if (initiative.isCollectable()) {
 
-
-    private <T extends Enum<?>> void addEnum(Class<T> enumType, Map<String, Object> dataMap) {
-        Map<String, T> values = Maps.newHashMap();
-        for (T value : enumType.getEnumConstants()) {
-            values.put(value.name(), value);
         }
-        dataMap.put(enumType.getSimpleName(), values);
-    }
+        else {
 
-    private String getEmailSubject(String code, String param) {
-        code = "email.subject." + code;
-        if (param == null) {
-            return messageSource.getMessage(code, null, Locales.LOCALE_FI);
-        } else {
-            Object[] args = {param};
-            return messageSource.getMessage(code, args, Locales.LOCALE_FI);
         }
-    }
-    
-    private String getEmailSubject(String code) {
-        return getEmailSubject(code, null);
-    }
 
-    private void sendEmails(List<String> sendTos, String replyTo, String subject, String templateName,  Map<String, Object> dataMap) {
-        for (String sendTo : sendTos) {
-            sendEmail(sendTo, replyTo, subject, templateName,  dataMap);
-        }
     }
 
     private void sendEmail(String sendTo, String replyTo, String subject, String templateName,  Map<String, Object> dataMap) {

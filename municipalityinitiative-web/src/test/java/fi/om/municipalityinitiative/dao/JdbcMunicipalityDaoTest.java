@@ -55,4 +55,12 @@ public class JdbcMunicipalityDaoTest {
             last = municipalityInfo.getName();
         }
     }
+
+    @Test
+    public void get_municipality_email() {
+        Long municipalityId = testHelper.createTestMunicipality("tuusula");
+
+        String email = municipalityDao.getMunicipalityEmail(municipalityId);
+        assertThat(email, is("aloite@tuusula"));
+    }
 }
