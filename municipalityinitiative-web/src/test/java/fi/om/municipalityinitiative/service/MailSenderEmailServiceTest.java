@@ -1,6 +1,6 @@
 package fi.om.municipalityinitiative.service;
 
-import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
+import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.util.JavaMailSenderFake;
 import org.junit.Before;
@@ -18,7 +18,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes={IntegrationTestConfiguration.class})
+@ContextConfiguration(classes={IntegrationTestFakeEmailConfiguration.class})
 public class MailSenderEmailServiceTest {
 
     @Resource
