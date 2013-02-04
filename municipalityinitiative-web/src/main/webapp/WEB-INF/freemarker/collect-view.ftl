@@ -100,15 +100,21 @@
     <#--
      * Initiative date and state
     -->    
+    
     <span class="extra-info">
-        <#assign createTime><@u.localDate initiative.createTime /></#assign>
-        <#if initiative.createTime??><@u.message key="initiative.date.create" args=[createTime] /></#if>
+        <#if initiative.createTime??>
+            <#assign createTime><@u.localDate initiative.createTime /></#assign>
+            <@u.message key="initiative.date.create" args=[createTime] />
+        </#if>
         <br />
-        <#if initiative.sentTime??>
-            <@u.message key="initiative.date.sent" args=[createTime] />
+        <#-- TODO: fix optional date
+        <#if initiative.sentTime.present>
+            <#assign sentTime><@u.localDate initiative.sentTime /></#assign>
+            <@u.message key="initiative.date.sent" args=[sentTime] />
         <#else>
             <@u.message "initiative.state.collecting" />
         </#if>
+        -->
     </span>
 
 </#assign>

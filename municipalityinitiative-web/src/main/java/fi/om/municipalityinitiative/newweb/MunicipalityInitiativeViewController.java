@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.google.common.cache.RemovalCause;
 
@@ -75,9 +76,6 @@ public class MunicipalityInitiativeViewController extends BaseController {
                     participantService.findParticipants(initiativeId));
             model.addAttribute("participant", new ParticipantUICreateDto());
 
-            // TODO Remove when not needed and using separated views for management and view
-            model.addAttribute("sendToMunicipality", initiativeService.getSendToMunicipalityData(initiativeId));
-
             return COLLECT_VIEW;
         }
         else {
@@ -108,19 +106,32 @@ public class MunicipalityInitiativeViewController extends BaseController {
     }
 
     @RequestMapping(value={ MANAGEMENT_FI, MANAGEMENT_SV }, method=GET)
-    public String managementView(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
+    public String managementView(@PathVariable("id") Long initiativeId, @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash, Model model, Locale locale, HttpServletRequest request) {
 
-        // TODO Check id collectable and not sended
+        // TODO: Pauli auditoi tämä!
+        InitiativeViewInfo initiativeInfo = initiativeService.getMunicipalityInitiative(initiativeId);
 
-        addModelAttributesToCollectView(model,
-                initiativeService.getMunicipalityInitiative(initiativeId),
-                municipalityService.findAllMunicipalities(),
-                participantService.getParticipantCount(initiativeId),
-                participantService.findParticipants(initiativeId));
-
-        model.addAttribute("sendToMunicipality", initiativeService.getSendToMunicipalityData(initiativeId));
-
-        return MANAGEMENT_VIEW;
+        if (initiativeInfo.isCollectable()){
+            addModelAttributesToCollectView(model,
+                    initiativeService.getMunicipalityInitiative(initiativeId),
+                    municipalityService.findAllMunicipalities(),
+                    participantService.getParticipantCount(initiativeId),
+                    participantService.findParticipants(initiativeId));
+    
+            if (!initiativeInfo.getSentTime().isPresent() && managementHash.equals(initiativeInfo.getManagementHash())){
+                model.addAttribute("participants", participantService.findParticipants(initiativeId));
+                model.addAttribute("sendToMunicipality", initiativeService.getSendToMunicipalityData(initiativeId));
+                
+                return MANAGEMENT_VIEW;
+            } else {
+                model.addAttribute("participant", new ParticipantUICreateDto());
+                
+                return COLLECT_VIEW;
+            }
+        } else {
+            model.addAttribute("initiative", initiativeInfo);
+            return SINGLE_VIEW;
+        }
     }
     
     @RequestMapping(value={ MANAGEMENT_FI, MANAGEMENT_SV }, method=POST)
