@@ -12,7 +12,7 @@
 
     <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-participate" class="sodirty <#if hasErrors>has-errors</#if>">
 
-    <input type="hidden" name="municipality" value="${initiative.municipalityId}"/>
+    <input type="hidden" name="municipality" value="${initiative.municipalityId!""}"/>
     
     <div class="input-block-content no-top-margin flexible">
         <@u.systemMessage path="initiative.ownDetails.description" type="info" showClose=false />  
@@ -120,7 +120,7 @@
 
 <#assign bottomContribution>
 
-    <#-- TODO: Extra details when collecting participants. -->
+    <#-- TODO: As component -->
     <#--
      * Show participants
     -->
@@ -135,11 +135,20 @@
              *  - when modal request message is showed
              *  - when participate form is showed (NOSCRIPT)
              *  - when the form has validation errors
+             *  - when sent to municipality (initiative.sentTime.present)
             -->
-            <#if requestMessages?? && !(requestMessages?size > 0) && !((hasErrors?? && hasErrors) || (RequestParameters['participateForm']?? && RequestParameters['participateForm'] == "true"))>
+            <#if !initiative.sentTime.present &&
+                 requestMessages?? && !(requestMessages?size > 0) &&
+                 !((hasErrors?? && hasErrors) || (RequestParameters['participateForm']?? && RequestParameters['participateForm'] == "true"))>
+                 
                 <div class="participate">
                     <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>
                     <@u.link href="#" labelKey="action.participate.infoLink" cssClass="push" />
+                </div>
+            </#if>
+            <#if initiative.sentTime.present>
+                <div class="participate not-allowed">
+                    <@u.systemMessage path="participate.sentToMunicipality" type="info" showClose=false />
                 </div>
             </#if>
             <br class="clear">
@@ -199,7 +208,11 @@
         </#if>
     </#if>
     
-    <#-- TODO: Fix namelist columns in IE. -->
+    <#-- TODO:
+     *  1. Fix namelist columns in IE
+     *  2. Show list for NOSCRIPT users
+     *
+    -->
     modalData.participantListFranchise = function() {
         return [{
             title:      '<@u.message key="participantCount.rightOfVoting.total" args=[initiative.municipalityName!""] />',

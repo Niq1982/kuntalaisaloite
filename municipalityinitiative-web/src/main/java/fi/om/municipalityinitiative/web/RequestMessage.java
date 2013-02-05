@@ -5,7 +5,7 @@ public enum RequestMessage {
     // Success messages
     SAVE_AND_SEND (SUCCESS),
     SAVE (SUCCESS, true),
-    SEND (SUCCESS),
+    SEND (SUCCESS, true),
     PARTICIPATE (SUCCESS);
     
     private final boolean modal;
