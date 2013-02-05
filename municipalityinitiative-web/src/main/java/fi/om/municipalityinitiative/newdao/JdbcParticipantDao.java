@@ -32,11 +32,11 @@ public class JdbcParticipantDao implements ParticipantDao {
     @Transactional(readOnly = false)
     public Long create(ParticipantCreateDto createDto) {
         return queryFactory.insert(participant)
-                .set(participant.franchise, createDto.getFranchise() == null ? false : createDto.getFranchise())
+                .set(participant.franchise, createDto.isFranchise())
                 .set(participant.municipalityId, createDto.getHomeMunicipality())
                 .set(participant.municipalityInitiativeId, createDto.getMunicipalityInitiativeId())
                 .set(participant.name, createDto.getParticipantName())
-                .set(participant.showName, createDto.getShowName())
+                .set(participant.showName, createDto.isShowName())
                 .executeWithKey(participant.id);
     }
 

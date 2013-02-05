@@ -24,6 +24,7 @@ public class ReflectionTestUtils {
                     field.set(bean, randomValue(field.getType()));
             }
 
+//        assertNoNullFields(bean);
         return bean;
     }
 

@@ -13,7 +13,6 @@ import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.ParticipatingUnallowedException;
-import fi.om.municipalityinitiative.util.ReflectionUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -86,8 +85,7 @@ public class InitiativeService {
 
         checkAllowedToParticipate(initiativeId);
 
-        ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
-        ReflectionUtils.copyFieldValuesToChild(participant, participantCreateDto);
+        ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(participant,  initiativeId);
         participantCreateDto.setMunicipalityInitiativeId(initiativeId);
         return participantDao.create(participantCreateDto);
     }

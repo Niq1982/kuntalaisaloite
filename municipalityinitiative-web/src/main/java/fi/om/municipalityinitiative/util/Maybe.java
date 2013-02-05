@@ -47,4 +47,9 @@ public class Maybe<T> {
     public T or(T l) {
         return optional.or(l);
     }
+
+    @Override
+    public String toString() {
+        return optional.toString();
+    }
 }
