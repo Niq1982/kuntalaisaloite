@@ -14,7 +14,7 @@ public class InitiativeCreateDtoTest {
     public void parse_from_uicreateDto() throws Exception {
 
         InitiativeUICreateDto createDto = ReflectionTestUtils.modifyAllFields(new InitiativeUICreateDto());
-        InitiativeCreateDto initiativeCreateDto = InitiativeCreateDto.parse(createDto);
+        InitiativeCreateDto initiativeCreateDto = InitiativeCreateDto.parse(createDto, Maybe.of("management hash"));
 
         assertThat(initiativeCreateDto.municipalityId, is(createDto.getMunicipality()));
         assertThat(initiativeCreateDto.name, is(createDto.getName()));
@@ -25,7 +25,6 @@ public class InitiativeCreateDtoTest {
         assertThat(initiativeCreateDto.contactName, is(createDto.getContactInfo().getName()));
         assertThat(initiativeCreateDto.contactPhone, is(createDto.getContactInfo().getPhone()));
 
-        initiativeCreateDto.managementHash = Maybe.absent(); // This is supposed to be null so setting value for notNullCheck
         ReflectionTestUtils.assertNoNullFields(initiativeCreateDto);
 
     }

@@ -10,7 +10,7 @@ import static org.hamcrest.Matchers.is;
 public class ParticipantCreateDtoTest {
 
     @Test
-    public void parse_from_uicreatedto() throws IllegalAccessException {
+    public void parse_from_uicreatedto() throws Exception {
         InitiativeUICreateDto createDto = ReflectionTestUtils.modifyAllFields(new InitiativeUICreateDto());
         ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(createDto, 117L);
 

@@ -1,56 +1,33 @@
 package fi.om.municipalityinitiative.newdto.email;
 
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
+import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 
 public class InitiativeEmailInfo {
 
-    private String name;
+    public String name;
 
-    private String proposal;
+    public String proposal;
 
-    private String municipalityName;
+    public String municipalityName;
 
-    private String url;
+    public String url;
 
-    private ContactInfo contactInfo;
+    public ContactInfo contactInfo;
 
-    public ContactInfo getContactInfo() {
-        return contactInfo;
+    public static InitiativeEmailInfo parse(ContactInfo contactInfo, InitiativeViewInfo initiative, String url) {
+
+        InitiativeEmailInfo initiativeEmailInfo = new InitiativeEmailInfo();
+
+        initiativeEmailInfo.name = initiative.getName();
+        initiativeEmailInfo.proposal = initiative.getProposal();
+        initiativeEmailInfo.municipalityName = initiative.getMunicipalityName();
+        initiativeEmailInfo.url = url;
+        initiativeEmailInfo.contactInfo = contactInfo;
+
+        return initiativeEmailInfo;
+
     }
 
-    public void setContactInfo(ContactInfo contactInfo) {
-        this.contactInfo = contactInfo;
-    }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getProposal() {
-        return proposal;
-    }
-
-    public void setProposal(String proposal) {
-        this.proposal = proposal;
-    }
-
-    public String getMunicipalityName() {
-        return municipalityName;
-    }
-
-    public void setMunicipalityName(String municipalityName) {
-        this.municipalityName = municipalityName;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
 }

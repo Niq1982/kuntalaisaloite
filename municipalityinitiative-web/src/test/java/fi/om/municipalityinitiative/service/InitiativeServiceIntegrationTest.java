@@ -55,7 +55,7 @@ public class InitiativeServiceIntegrationTest {
     }    
 
     @Test
-    public void all_fields_are_set_when_getting_municipalityInitiativeInfo() {
+    public void all_fields_are_set_when_getting_municipalityInitiativeInfo() throws Exception {
         Long initiativeId = service.createMunicipalityInitiative(createDto(true));
         InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
         ReflectionTestUtils.assertNoNullFields(initiative);

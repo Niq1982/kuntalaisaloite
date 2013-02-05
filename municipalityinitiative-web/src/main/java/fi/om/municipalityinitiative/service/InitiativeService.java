@@ -36,13 +36,15 @@ public class InitiativeService {
     @Transactional(readOnly = false)
     public Long createMunicipalityInitiative(InitiativeUICreateDto createDto) {
 
-        InitiativeCreateDto initiativeCreateDto = InitiativeCreateDto.parse(createDto);
+        Maybe<String> managementHash;
         if (createDto.isCollectable()) {
-            initiativeCreateDto.managementHash = Maybe.of("0000000000111111111122222222223333333333");
+            managementHash = Maybe.of("0000000000111111111122222222223333333333");
         }
         else {
-            initiativeCreateDto.managementHash = Maybe.absent();
+            managementHash = Maybe.absent();
         }
+
+        InitiativeCreateDto initiativeCreateDto = InitiativeCreateDto.parse(createDto, managementHash);
 
         Long municipalityInitiativeId = initiativeDao.create(initiativeCreateDto);
         Long participantId = participantDao.create(ParticipantCreateDto.parse(createDto, municipalityInitiativeId));

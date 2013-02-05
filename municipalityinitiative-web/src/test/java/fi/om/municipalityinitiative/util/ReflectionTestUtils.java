@@ -1,15 +1,19 @@
 package fi.om.municipalityinitiative.util;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.hamcrest.Matchers;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
-import org.junit.Assert;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Random;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 
 public class ReflectionTestUtils {
 
@@ -48,6 +52,9 @@ public class ReflectionTestUtils {
         if (type == LocalDateTime.class) {
             return new LocalDateTime(randomLong());
         }
+        if (type == DateTime.class) {
+            return new DateTime(randomLong());
+        }
         if (type == Maybe.class) {
             return Maybe.absent(); // TODO: find out the type of the optional object and recursively generate a random non-absent value
         }
@@ -56,21 +63,19 @@ public class ReflectionTestUtils {
             return modifyAllFields(new ContactInfo());
         }
 
-
         throw new IllegalArgumentException("unsupported type: " + type);
     }
 
-    public static void assertNoNullFields(Object o) {
-        for (Field field : o.getClass().getDeclaredFields()) {
-            Object fieldValue = null;
-            try {
-                field.setAccessible(true);
-                fieldValue = field.get(o);
-            } catch (IllegalAccessException e) {
-                Assert.fail("Unable to get field value: " + field.getName());
-            }
-            assertThat("Field supposed to have value: "+ field.getName(), fieldValue, Matchers.is(Matchers.notNullValue()));
+    public static void assertNoNullFields(Object o){
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setVisibilityChecker(mapper.getVisibilityChecker()
+                .withFieldVisibility(JsonAutoDetect.Visibility.ANY));
+        try {
+            assertThat(mapper.writeValueAsString(o), not(containsString(":null")));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+
     }
 
     private static int randomInt() {
