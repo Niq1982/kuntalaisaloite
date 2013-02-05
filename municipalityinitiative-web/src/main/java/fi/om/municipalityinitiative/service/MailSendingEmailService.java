@@ -6,7 +6,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.mysema.commons.lang.Assert;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
+import fi.om.municipalityinitiative.newdto.email.InitiativeEmailInfo;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Task;
 import freemarker.template.Configuration;
@@ -74,22 +74,28 @@ public class MailSendingEmailService implements EmailService {
     }
 
     @Override
-    // TODO: Create own InitiativeEmailInfo or something. Should the same object be used with collectable and non-collectable initiatives?
-    public void sendToMunicipality(InitiativeViewInfo initiative, String municipalityEmail) {
+    public void sendNotCollectableToMunicipality(InitiativeEmailInfo emailInfo, String municipalityEmail) {
 
-
-        // TODO: Collectable and not collectable
         HashMap<String, Object> dataMap = new HashMap<String, Object>();
-        dataMap.put("initiative", initiative);
+        dataMap.put("emailInfo", emailInfo);
         sendEmail(municipalityEmail,
-                messageSource.getMessage("email.not.collectable.municipality.subject", new String[] { initiative.getName() }, Locales.LOCALE_FI),
+                messageSource.getMessage("email.not.collectable.municipality.subject", new String[] {emailInfo.getName()}, Locales.LOCALE_FI),
+                MUNICIPALITY_TEMPLATE,
+                dataMap);
+    }
+
+    @Override
+    public void sendNotCollectableToAuthor(InitiativeEmailInfo emailInfo) {
+        HashMap<String, Object> dataMap = new HashMap<String, Object>();
+        dataMap.put("emailInfo", emailInfo);
+        sendEmail(emailInfo.getContactInfo().getEmail(),
+                messageSource.getMessage("email.not.collectable.author.subject", new String[] {emailInfo.getName()}, Locales.LOCALE_FI),
                 MUNICIPALITY_TEMPLATE,
                 dataMap);
 
     }
 
     private void sendEmail(String sendTo, String subject, String templateName,  Map<String, Object> dataMap) {
-        Assert.notNull(sendTo, "sendTo");
 
         String text = processTemplate(templateName + "-text", dataMap); 
         String html = processTemplate(templateName + "-html", dataMap); 
@@ -101,6 +107,8 @@ public class MailSendingEmailService implements EmailService {
             html = "TEST OPTION REPLACED THE EMAIL ADDRESS!\nThe original address was: " + sendTo + "<hr>" + html;
             sendTo = testSendTo;
         }
+
+        Assert.notNull(sendTo, "sendTo"); // TODO: Move to the beginning of the function?
         
         if (testConsoleOutput) {
             System.out.println("----------------------------------------------------------");

@@ -3,16 +3,17 @@ package fi.om.municipalityinitiative.service;
 import fi.om.municipalityinitiative.dto.SendToMunicipalityDto;
 import fi.om.municipalityinitiative.exceptions.NotCollectableException;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
+import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
+import fi.om.municipalityinitiative.newdto.email.InitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.service.InitiativeCreateDto;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeUICreateDto;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
-import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateDto;
+import fi.om.municipalityinitiative.newdto.ui.*;
+import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.ParticipatingUnallowedException;
+import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -27,6 +28,12 @@ public class InitiativeService {
 
     @Resource
     private ParticipantDao participantDao;
+
+    @Resource
+    private EmailService emailService;
+
+    @Resource
+    private MunicipalityDao municipalityDao;
 
     public List<InitiativeListInfo> findMunicipalityInitiatives(InitiativeSearch search) {
         return initiativeDao.findNewestFirst(search);
@@ -45,11 +52,28 @@ public class InitiativeService {
 
         InitiativeCreateDto initiativeCreateDto = InitiativeCreateDto.parse(createDto, managementHash);
 
-        Long municipalityInitiativeId = initiativeDao.create(initiativeCreateDto);
-        Long participantId = participantDao.create(ParticipantCreateDto.parse(createDto, municipalityInitiativeId));
-        initiativeDao.assignAuthor(municipalityInitiativeId, participantId);
+        Long initiativeId = initiativeDao.create(initiativeCreateDto);
+        Long participantId = participantDao.create(ParticipantCreateDto.parse(createDto, initiativeId));
+        initiativeDao.assignAuthor(initiativeId, participantId);
 
-        return municipalityInitiativeId;
+        if (!createDto.isCollectable()) {
+            sendNotCollectableEmails(initiativeId);
+        }
+
+        return initiativeId;
+    }
+
+    private void sendNotCollectableEmails(Long initiativeId) {
+
+        InitiativeViewInfo initiative = initiativeDao.getById(initiativeId);
+        ContactInfo contactInfo = initiativeDao.getContactInfo(initiativeId);
+        String url = Urls.get(Locales.LOCALE_FI).view(initiativeId);
+
+        InitiativeEmailInfo emailInfo = InitiativeEmailInfo.parse(contactInfo, initiative, url);
+
+        emailService.sendNotCollectableToMunicipality(emailInfo, municipalityDao.getMunicipalityEmail(initiative.getMunicipalityId()));
+        emailService.sendNotCollectableToAuthor(emailInfo);
+
     }
 
     @Transactional(readOnly = false)

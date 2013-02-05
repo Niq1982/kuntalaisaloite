@@ -5,29 +5,67 @@ import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 
 public class InitiativeEmailInfo {
 
-    public String name;
+    private String name;
 
-    public String proposal;
+    private String proposal;
 
-    public String municipalityName;
+    private String municipalityName;
 
-    public String url;
+    private String url;
 
-    public ContactInfo contactInfo;
+    private ContactInfo contactInfo;
 
     public static InitiativeEmailInfo parse(ContactInfo contactInfo, InitiativeViewInfo initiative, String url) {
 
         InitiativeEmailInfo initiativeEmailInfo = new InitiativeEmailInfo();
 
-        initiativeEmailInfo.name = initiative.getName();
-        initiativeEmailInfo.proposal = initiative.getProposal();
-        initiativeEmailInfo.municipalityName = initiative.getMunicipalityName();
-        initiativeEmailInfo.url = url;
-        initiativeEmailInfo.contactInfo = contactInfo;
+        initiativeEmailInfo.setName(initiative.getName());
+        initiativeEmailInfo.setProposal(initiative.getProposal());
+        initiativeEmailInfo.setMunicipalityName(initiative.getMunicipalityName());
+        initiativeEmailInfo.setUrl(url);
+        initiativeEmailInfo.setContactInfo(contactInfo);
 
         return initiativeEmailInfo;
 
     }
 
+    public String getName() {
+        return name;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getProposal() {
+        return proposal;
+    }
+
+    public void setProposal(String proposal) {
+        this.proposal = proposal;
+    }
+
+    public String getMunicipalityName() {
+        return municipalityName;
+    }
+
+    public void setMunicipalityName(String municipalityName) {
+        this.municipalityName = municipalityName;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public ContactInfo getContactInfo() {
+        return contactInfo;
+    }
+
+    public void setContactInfo(ContactInfo contactInfo) {
+        this.contactInfo = contactInfo;
+    }
 }

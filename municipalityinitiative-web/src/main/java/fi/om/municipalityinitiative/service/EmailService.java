@@ -1,8 +1,10 @@
 package fi.om.municipalityinitiative.service;
 
-import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
+import fi.om.municipalityinitiative.newdto.email.InitiativeEmailInfo;
 
 public interface EmailService {
 
-    void sendToMunicipality(InitiativeViewInfo initiative, String municipalityEmail);
+    void sendNotCollectableToMunicipality(InitiativeEmailInfo initiative, String municipalityEmail);
+
+    void sendNotCollectableToAuthor(InitiativeEmailInfo initiativeEmailInfo);
 }
