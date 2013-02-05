@@ -185,7 +185,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     info.setProposal(row.get(municipalityInitiative.proposal));
                     info.setAuthorName(row.get(QParticipant.participant.name));
                     info.setShowName(row.get(QParticipant.participant.showName));
-                    info.setMaybeManagementHash(Maybe.fromNullable(row.get(municipalityInitiative.managementHash)));
+                    info.setManagementHash(Maybe.fromNullable(row.get(municipalityInitiative.managementHash)));
                     info.setSentTime(Maybe.fromNullable(row.get(municipalityInitiative.sent)));
                     return info;
                 }

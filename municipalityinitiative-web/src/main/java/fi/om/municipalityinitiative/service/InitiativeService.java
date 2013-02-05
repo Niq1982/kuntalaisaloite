@@ -13,7 +13,6 @@ import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.ParticipatingUnallowedException;
-import fi.om.municipalityinitiative.util.ReflectionUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -36,16 +35,18 @@ public class InitiativeService {
     @Transactional(readOnly = false)
     public Long createMunicipalityInitiative(InitiativeUICreateDto createDto) {
 
-        InitiativeCreateDto initiativeCreateDto = parse(createDto);
+        Maybe<String> managementHash;
         if (createDto.isCollectable()) {
-            initiativeCreateDto.managementHash = Maybe.of("0000000000111111111122222222223333333333");
+            managementHash = Maybe.of("0000000000111111111122222222223333333333");
         }
         else {
-            initiativeCreateDto.managementHash = Maybe.absent();
+            managementHash = Maybe.absent();
         }
 
+        InitiativeCreateDto initiativeCreateDto = InitiativeCreateDto.parse(createDto, managementHash);
+
         Long municipalityInitiativeId = initiativeDao.create(initiativeCreateDto);
-        Long participantId = participantDao.create(parse(createDto, municipalityInitiativeId));
+        Long participantId = participantDao.create(ParticipantCreateDto.parse(createDto, municipalityInitiativeId));
         initiativeDao.assignAuthor(municipalityInitiativeId, participantId);
 
         return municipalityInitiativeId;
@@ -74,7 +75,7 @@ public class InitiativeService {
     }
 
     private void checkHashCode(String hashCode, InitiativeViewInfo initiativeInfo) {
-        if (!initiativeInfo.getManagementHash().equals(hashCode)) {
+        if (!hashCode.equals(initiativeInfo.getManagementHash().get())) {
             throw new AccessDeniedException("Invalid initiative verifier");
         }
     }
@@ -84,8 +85,7 @@ public class InitiativeService {
 
         checkAllowedToParticipate(initiativeId);
 
-        ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
-        ReflectionUtils.copyFieldValuesToChild(participant, participantCreateDto);
+        ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(participant,  initiativeId);
         participantCreateDto.setMunicipalityInitiativeId(initiativeId);
         return participantDao.create(participantCreateDto);
     }
@@ -100,33 +100,6 @@ public class InitiativeService {
             throw new ParticipatingUnallowedException("Initiative already sent: " + initiativeId);
         }
 
-    }
-
-    static InitiativeCreateDto parse(InitiativeUICreateDto source) {
-
-        InitiativeCreateDto initiativeCreateDto = new InitiativeCreateDto();
-
-        initiativeCreateDto.name = source.getName();
-        initiativeCreateDto.proposal = source.getProposal();
-        initiativeCreateDto.municipalityId = source.getMunicipality();
-        initiativeCreateDto.contactName = source.getContactInfo().getName();
-        initiativeCreateDto.contactPhone= source.getContactInfo().getPhone();
-        initiativeCreateDto.contactAddress = source.getContactInfo().getAddress();
-        initiativeCreateDto.contactEmail = source.getContactInfo().getEmail();
-
-        return initiativeCreateDto;
-    }
-
-    static ParticipantCreateDto parse(InitiativeUICreateDto source, Long municipalityInitiativeId) {
-        ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
-
-        participantCreateDto.setMunicipalityInitiativeId(municipalityInitiativeId); // TODO: Fix null possibilities after valdiations are complete
-        participantCreateDto.setFranchise(source.getFranchise() == null ? false : source.getFranchise());
-
-        participantCreateDto.setShowName(source.getShowName() == null ? false : source.getShowName());
-        participantCreateDto.setParticipantName(source.getContactInfo().getName());
-        participantCreateDto.setHomeMunicipality(source.getHomeMunicipality());
-        return participantCreateDto;
     }
 
     public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId) {

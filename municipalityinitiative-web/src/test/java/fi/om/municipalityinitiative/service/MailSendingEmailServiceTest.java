@@ -46,8 +46,9 @@ public class MailSendingEmailServiceTest {
     @Test
     public void reads_subject_to_email() throws InterruptedException, MessagingException {
         InitiativeViewInfo initiative = createInitiativeInfo();
+        initiative.setName("Skeittiramppeja kamppiin");
         emailService.sendToMunicipality(initiative, "some_test_address@example.com");
-        assertThat(getSingleSentMessage().getSubject(), is("Uusi aloite"));
+        assertThat(getSingleSentMessage().getSubject(), is("Kuntalaisaloite: " +"Skeittiramppeja kamppiin"));
     }
 
     @Test

@@ -82,7 +82,7 @@ public class MailSendingEmailService implements EmailService {
         HashMap<String, Object> dataMap = new HashMap<String, Object>();
         dataMap.put("initiative", initiative);
         sendEmail(municipalityEmail,
-                messageSource.getMessage("email.not.collectable.municipality.subject", null, Locales.LOCALE_FI),
+                messageSource.getMessage("email.not.collectable.municipality.subject", new String[] { initiative.getName() }, Locales.LOCALE_FI),
                 MUNICIPALITY_TEMPLATE,
                 dataMap);
 

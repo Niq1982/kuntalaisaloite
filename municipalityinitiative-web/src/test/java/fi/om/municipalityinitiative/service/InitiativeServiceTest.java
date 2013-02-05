@@ -2,8 +2,6 @@ package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.exceptions.NotCollectableException;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
-import fi.om.municipalityinitiative.newdto.service.InitiativeCreateDto;
-import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUICreateDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
@@ -32,39 +30,10 @@ public class InitiativeServiceTest {
     }
 
     @Test
-    public void parse_municipalityInitiativeCreateDto() {
-
-        InitiativeUICreateDto createDto = createDtoFillAllFields();
-        InitiativeCreateDto initiativeCreateDto = InitiativeService.parse(createDto);
-
-        assertThat(initiativeCreateDto.municipalityId, is(createDto.getMunicipality()));
-        assertThat(initiativeCreateDto.name, is(createDto.getName()));
-        assertThat(initiativeCreateDto.proposal, is(createDto.getProposal()));
-
-        assertThat(initiativeCreateDto.contactAddress, is(createDto.getContactInfo().getAddress()));
-        assertThat(initiativeCreateDto.contactEmail, is(createDto.getContactInfo().getEmail()));
-        assertThat(initiativeCreateDto.contactName, is(createDto.getContactInfo().getName()));
-        assertThat(initiativeCreateDto.contactPhone, is(createDto.getContactInfo().getPhone()));
-    }
-
-    @Test
-    public void parse_participantCreateDto() {
-        InitiativeUICreateDto createDto = createDtoFillAllFields();
-        ParticipantCreateDto participantCreateDto = InitiativeService.parse(createDto, 117L);
-
-        assertThat(participantCreateDto.getHomeMunicipality(), is(createDto.getHomeMunicipality()));
-        assertThat(participantCreateDto.getFranchise(), is(true));
-        assertThat(participantCreateDto.getMunicipalityInitiativeId(), is(117L));
-
-        assertThat(participantCreateDto.getShowName(), is(createDto.getShowName()));
-        assertThat(participantCreateDto.getParticipantName(), is(createDto.getContactInfo().getName()));
-    }
-
-    @Test
     public void fails_sending_to_municipality_if_not_collectable() {
 
         InitiativeViewInfo initiativeViewInfo = new InitiativeViewInfo();
-        initiativeViewInfo.setMaybeManagementHash(Maybe.<String>absent());
+        initiativeViewInfo.setManagementHash(Maybe.<String>absent());
         stub(initiativeDao.getById(any(Long.class))).toReturn(initiativeViewInfo);
 
         try {
@@ -79,7 +48,7 @@ public class InitiativeServiceTest {
     public void fails_sending_to_municipality_if_already_sent() {
 
         InitiativeViewInfo initiativeViewInfo = new InitiativeViewInfo();
-        initiativeViewInfo.setMaybeManagementHash(Maybe.of("anyHash"));
+        initiativeViewInfo.setManagementHash(Maybe.of("anyHash"));
         initiativeViewInfo.setSentTime(Maybe.of(new DateTime()));
         stub(initiativeDao.getById(any(Long.class))).toReturn(initiativeViewInfo);
 
@@ -95,7 +64,7 @@ public class InitiativeServiceTest {
     public void fails_sending_to_municipality_if_hashcode_does_not_match() {
 
         InitiativeViewInfo initiativeViewInfo = new InitiativeViewInfo();
-        initiativeViewInfo.setMaybeManagementHash(Maybe.of("some hash"));
+        initiativeViewInfo.setManagementHash(Maybe.of("some hash"));
         stub(initiativeDao.getById(any(Long.class))).toReturn(initiativeViewInfo);
 
         try {
@@ -110,7 +79,7 @@ public class InitiativeServiceTest {
     public void succeeds_in_sending_to_municipality() {
 
         InitiativeViewInfo initiativeViewInfo = new InitiativeViewInfo();
-        initiativeViewInfo.setMaybeManagementHash(Maybe.of("hashCode"));
+        initiativeViewInfo.setManagementHash(Maybe.of("hashCode"));
         stub(initiativeDao.getById(any(Long.class))).toReturn(initiativeViewInfo);
 
         service.sendToMunicipality(0L, "hashCode");

@@ -5,7 +5,7 @@ import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.ParticipatingUnallowedException;
-import fi.om.municipalityinitiative.util.TestUtils;
+import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,10 +55,10 @@ public class InitiativeServiceIntegrationTest {
     }    
 
     @Test
-    public void all_fields_are_set_when_getting_municipalityInitiativeInfo() {
+    public void all_fields_are_set_when_getting_municipalityInitiativeInfo() throws Exception {
         Long initiativeId = service.createMunicipalityInitiative(createDto(true));
         InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
-        TestUtils.assertNoNullFields(initiative);
+        ReflectionTestUtils.assertNoNullFields(initiative);
     }
 
     @Test
@@ -75,11 +75,12 @@ public class InitiativeServiceIntegrationTest {
         assertThat(initiative.getMunicipalityName(), is(testMunicipality.getName()));
 
         assertThat(initiative.getCreateTime(), is(notNullValue()));
-        assertThat(initiative.getManagementHash(), is(org.hamcrest.Matchers.nullValue()));
+        assertThat(initiative.getManagementHash().isPresent(), is(false));
         assertThat(initiative.isCollectable(), is(false));
         assertThat(initiative.getSentTime().isPresent(), is(true));
 
-        // TODO: Verify all other values somehow
+        ReflectionTestUtils.assertNoNullFields(initiative);
+
     }
 
     @Test
@@ -88,7 +89,7 @@ public class InitiativeServiceIntegrationTest {
         Long initiativeId = service.createMunicipalityInitiative(createDto);
         InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
 
-        assertThat(initiative.getManagementHash(), is("0000000000111111111122222222223333333333"));
+        assertThat(initiative.getManagementHash().get(), is("0000000000111111111122222222223333333333"));
         assertThat(initiative.isCollectable(), is(true));
     }
 
@@ -99,6 +100,15 @@ public class InitiativeServiceIntegrationTest {
         InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
 
         assertThat(initiative.getSentTime().isPresent(), is(false));
+    }
+
+    @Test
+    public void creating_not_collectable_initiative_sets_sent_time() {
+        InitiativeUICreateDto createDto = createDto(false);
+        Long initiativeId = service.createMunicipalityInitiative(createDto);
+        InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
+
+        assertThat(initiative.getSentTime().isPresent(), is(true));
     }
 
     @Test
@@ -151,7 +161,7 @@ public class InitiativeServiceIntegrationTest {
         createDto.getContactInfo().setName("contact name " + randomString());
         createDto.getContactInfo().setEmail("contact email " + randomString());
 
-        TestUtils.assertNoNullFields(createDto);
+        ReflectionTestUtils.assertNoNullFields(createDto);
         return createDto;
     }
 
