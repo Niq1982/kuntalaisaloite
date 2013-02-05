@@ -1,6 +1,8 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
+import fi.om.municipalityinitiative.newdto.email.InitiativeEmailInfo;
+import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.util.JavaMailSenderFake;
 import org.junit.Before;
@@ -21,6 +23,14 @@ import static org.hamcrest.Matchers.*;
 @ContextConfiguration(classes={IntegrationTestFakeEmailConfiguration.class})
 public class MailSendingEmailServiceTest {
 
+    public static final String INITIATIVE_NAME = "Some name whatever";
+    public static final String INITIATIVE_PROPOSAL = "Some proposal whatever";
+    public static final String INITIATIVE_MUNICIPALITY = "Some municipality";
+    public static final String CONTACT_PHONE = "Phone number";
+    public static final String CONTACT_EMAIL = "sender.email@example.com";
+    public static final String CONTACT_NAME = "Sender Name";
+    public static final String CONTACT_ADDRESS = "Sender address";
+    public static final String INITIATIVE_URL = "http://www.some.example.url.to.initiative";
     @Resource
     private EmailService emailService;
 
@@ -36,41 +46,87 @@ public class MailSendingEmailServiceTest {
     }
 
     @Test
-    public void assigns_municipality_email_to_sendTo_field() throws MessagingException, InterruptedException {
-        InitiativeViewInfo initiative = createInitiativeInfo();
-        emailService.sendToMunicipality(initiative, "some_test_address@example.com");
+    public void send_straight_to_municipality_assigns_municipality_email_to_sendTo_field() throws MessagingException, InterruptedException {
+        InitiativeEmailInfo initiative = createEmailInfo();
+        emailService.sendNotCollectableToMunicipality(initiative, "some_test_address@example.com");
         assertThat(getSingleSentMessage().getAllRecipients().length, is(1));
         assertThat(getSingleSentMessage().getAllRecipients()[0].toString(), is("some_test_address@example.com"));
     }
 
     @Test
-    public void reads_subject_to_email() throws InterruptedException, MessagingException {
-        InitiativeViewInfo initiative = createInitiativeInfo();
-        initiative.setName("Skeittiramppeja kamppiin");
-        emailService.sendToMunicipality(initiative, "some_test_address@example.com");
-        assertThat(getSingleSentMessage().getSubject(), is("Kuntalaisaloite: " +"Skeittiramppeja kamppiin"));
+    public void send_straight_to_municipality_reads_subject_to_email() throws InterruptedException, MessagingException {
+        InitiativeEmailInfo initiative = createEmailInfo();
+        emailService.sendNotCollectableToMunicipality(initiative, "some_test_address@example.com");
+        assertThat(getSingleSentMessage().getSubject(), is("Kuntalaisaloite: " + INITIATIVE_NAME));
     }
 
     @Test
-    public void adds_initiative_name_and_proposal_to_email_message() throws Exception {
-        InitiativeViewInfo initiative = createInitiativeInfo();
-        initiative.setName("Initiative name");
-        initiative.setProposal("Initiative proposal");
-        emailService.sendToMunicipality(initiative, "some_test_address@example.com");
+    public void send_straight_to_municipality_adds_initiativeInfo_and_contactInfo_to_email_message() throws Exception {
+        InitiativeEmailInfo initiative = createEmailInfo();
+        emailService.sendNotCollectableToMunicipality(initiative, "some_test_address@example.com");
 
-        MessageContent messageContent = getMessageContent();
-        assertThat(messageContent.html, containsString("Initiative name"));
-        assertThat(messageContent.html, containsString("Initiative name"));
-        assertThat(messageContent.text, containsString("Initiative proposal"));
-        assertThat(messageContent.text, containsString("Initiative proposal"));
+        assertEmailHasInitiativeDetailsAndContactInfo();
 
     }
 
-    private InitiativeViewInfo createInitiativeInfo() {
+    @Test
+    public void send_straight_to_author_assign_author_email_to_sendTo_field() throws InterruptedException, MessagingException {
+        InitiativeEmailInfo initiative = createEmailInfo();
+        emailService.sendNotCollectableToAuthor(initiative);
+        assertThat(getSingleSentMessage().getAllRecipients().length, is(1));
+        assertThat(getSingleSentMessage().getAllRecipients()[0].toString(), is(CONTACT_EMAIL));
+    }
+
+    @Test
+    public void send_straight_to_author_reads_subject_to_email() throws InterruptedException, MessagingException {
+        InitiativeEmailInfo initiative = createEmailInfo();
+        emailService.sendNotCollectableToAuthor(initiative);
+        assertThat(getSingleSentMessage().getSubject(), is("Aloite on lähetetty kuntaan"));
+    }
+
+    @Test
+    public void send_straight_to_author_adds_initiativeInfo_and_contactInfo_to_email_message() throws Exception {
+        InitiativeEmailInfo initiative = createEmailInfo();
+        emailService.sendNotCollectableToAuthor(initiative);
+
+        assertEmailHasInitiativeDetailsAndContactInfo();
+
+    }
+
+    private void assertEmailHasInitiativeDetailsAndContactInfo() throws Exception {
+        MessageContent messageContent = getMessageContent();
+        assertThat(messageContent.html, containsString(INITIATIVE_NAME));
+        assertThat(messageContent.html, containsString(INITIATIVE_NAME));
+        assertThat(messageContent.text, containsString(INITIATIVE_PROPOSAL));
+        assertThat(messageContent.text, containsString(INITIATIVE_PROPOSAL));
+        assertThat(messageContent.html, containsString(INITIATIVE_MUNICIPALITY));
+        assertThat(messageContent.text, containsString(INITIATIVE_MUNICIPALITY));
+        assertThat(messageContent.html, containsString(INITIATIVE_URL));
+        assertThat(messageContent.text, containsString(INITIATIVE_URL));
+
+        assertThat(messageContent.html, containsString(CONTACT_PHONE));
+        assertThat(messageContent.text, containsString(CONTACT_PHONE));
+        assertThat(messageContent.html, containsString(CONTACT_EMAIL));
+        assertThat(messageContent.text, containsString(CONTACT_EMAIL));
+        assertThat(messageContent.html, containsString(CONTACT_ADDRESS));
+        assertThat(messageContent.text, containsString(CONTACT_ADDRESS));
+        assertThat(messageContent.html, containsString(CONTACT_NAME));
+        assertThat(messageContent.text, containsString(CONTACT_NAME));
+    }
+
+    private static InitiativeEmailInfo createEmailInfo() {
         InitiativeViewInfo initiativeViewInfo = new InitiativeViewInfo();
-        initiativeViewInfo.setName("Some name whatever");
-        initiativeViewInfo.setProposal("Some proposal whatever");
-        return initiativeViewInfo;
+        initiativeViewInfo.setName(INITIATIVE_NAME);
+        initiativeViewInfo.setProposal(INITIATIVE_PROPOSAL);
+        initiativeViewInfo.setMunicipalityName(INITIATIVE_MUNICIPALITY);
+
+        ContactInfo contactInfo = new ContactInfo();
+        contactInfo.setPhone(CONTACT_PHONE);
+        contactInfo.setEmail(CONTACT_EMAIL);
+        contactInfo.setName(CONTACT_NAME);
+        contactInfo.setAddress(CONTACT_ADDRESS);
+
+        return InitiativeEmailInfo.parse(contactInfo, initiativeViewInfo, INITIATIVE_URL);
     }
 
     // TODO: Examine this whole MimeMultipart - why is the data stored that deep in the MimeMultipart.
