@@ -2,7 +2,6 @@ package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.exceptions.NotCollectableException;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
-import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUICreateDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
@@ -28,19 +27,6 @@ public class InitiativeServiceTest {
         initiativeDao = mock(InitiativeDao.class);
         service = new InitiativeService();
         service.initiativeDao = initiativeDao;
-    }
-
-    @Test
-    public void parse_participantCreateDto() {
-        InitiativeUICreateDto createDto = createDtoFillAllFields();
-        ParticipantCreateDto participantCreateDto = InitiativeService.parse(createDto, 117L);
-
-        assertThat(participantCreateDto.getHomeMunicipality(), is(createDto.getHomeMunicipality()));
-        assertThat(participantCreateDto.getFranchise(), is(true));
-        assertThat(participantCreateDto.getMunicipalityInitiativeId(), is(117L));
-
-        assertThat(participantCreateDto.getShowName(), is(createDto.getShowName()));
-        assertThat(participantCreateDto.getParticipantName(), is(createDto.getContactInfo().getName()));
     }
 
     @Test

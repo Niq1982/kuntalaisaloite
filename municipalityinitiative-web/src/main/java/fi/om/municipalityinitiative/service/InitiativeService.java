@@ -45,7 +45,7 @@ public class InitiativeService {
         }
 
         Long municipalityInitiativeId = initiativeDao.create(initiativeCreateDto);
-        Long participantId = participantDao.create(parse(createDto, municipalityInitiativeId));
+        Long participantId = participantDao.create(ParticipantCreateDto.parse(createDto, municipalityInitiativeId));
         initiativeDao.assignAuthor(municipalityInitiativeId, participantId);
 
         return municipalityInitiativeId;
@@ -100,20 +100,6 @@ public class InitiativeService {
             throw new ParticipatingUnallowedException("Initiative already sent: " + initiativeId);
         }
 
-    }
-
-
-
-    static ParticipantCreateDto parse(InitiativeUICreateDto source, Long municipalityInitiativeId) {
-        ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
-
-        participantCreateDto.setMunicipalityInitiativeId(municipalityInitiativeId); // TODO: Fix null possibilities after valdiations are complete
-        participantCreateDto.setFranchise(source.getFranchise() == null ? false : source.getFranchise());
-
-        participantCreateDto.setShowName(source.getShowName() == null ? false : source.getShowName());
-        participantCreateDto.setParticipantName(source.getContactInfo().getName());
-        participantCreateDto.setHomeMunicipality(source.getHomeMunicipality());
-        return participantCreateDto;
     }
 
     public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId) {

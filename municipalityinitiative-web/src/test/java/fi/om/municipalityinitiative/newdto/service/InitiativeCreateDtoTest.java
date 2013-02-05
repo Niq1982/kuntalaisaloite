@@ -11,7 +11,7 @@ import static org.hamcrest.Matchers.is;
 public class InitiativeCreateDtoTest {
 
     @Test
-    public void parse_municipalityInitiativeCreateDto() throws Exception {
+    public void parse_from_uicreateDto() throws Exception {
 
         InitiativeUICreateDto createDto = ReflectionTestUtils.modifyAllFields(new InitiativeUICreateDto());
         InitiativeCreateDto initiativeCreateDto = InitiativeCreateDto.parse(createDto);
