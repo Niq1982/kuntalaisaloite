@@ -1,7 +1,7 @@
 package fi.om.municipalityinitiative.conf;
 
 import fi.om.municipalityinitiative.service.EmailService;
-import fi.om.municipalityinitiative.service.MailSenderEmailService;
+import fi.om.municipalityinitiative.service.MailSendingEmailService;
 import fi.om.municipalityinitiative.util.JavaMailSenderFake;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +22,7 @@ public class IntegrationTestFakeEmailConfiguration {
 
         boolean testConsoleOutput = false;
         String testSendTo = null;
-        return new MailSenderEmailService(freeMarkerConfigurer, messageSource, javaMailSender, EMAIL_DEFAULT_REPLY_TO, testSendTo, testConsoleOutput);
+        return new MailSendingEmailService(freeMarkerConfigurer, messageSource, javaMailSender, EMAIL_DEFAULT_REPLY_TO, testSendTo, testConsoleOutput);
     }
 
     @Bean

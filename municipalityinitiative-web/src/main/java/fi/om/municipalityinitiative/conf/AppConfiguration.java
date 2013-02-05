@@ -223,7 +223,7 @@ public class AppConfiguration {
         String defaultReplyTo = env.getRequiredProperty(PropertyNames.emailDefaultReplyTo);
         String testSendTo = env.getProperty(PropertyNames.testEmailSendTo);
         boolean testConsoleOutput = env.getProperty(PropertyNames.testEmailConsoleOutput, Boolean.class, TEST_EMAIL_CONSOLE_OUTPUT_DEFAULT);
-        return new MailSenderEmailService(freeMarkerConfigurer, messageSource, javaMailSender, defaultReplyTo, testSendTo, testConsoleOutput);
+        return new MailSendingEmailService(freeMarkerConfigurer, messageSource, javaMailSender, defaultReplyTo, testSendTo, testConsoleOutput);
     }
     
     @Bean

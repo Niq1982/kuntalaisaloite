@@ -31,9 +31,10 @@ import java.util.List;
 import java.util.Map;
 
 @Task
-public class MailSenderEmailService implements EmailService {
+public class MailSendingEmailService implements EmailService {
 
     private static final String MUNICIPALITY_TEMPLATE = "municipality-not-collectable";
+    private static final String AUTHOR_TEMPLATE = "author-not-collectable";
 
     @Resource
     FreeMarkerConfigurer freemarkerConfig;
@@ -47,18 +48,18 @@ public class MailSenderEmailService implements EmailService {
     @Resource
     MunicipalityDao municipalityDao;
 
-    private static final Logger log = LoggerFactory.getLogger(MailSenderEmailService.class);
+    private static final Logger log = LoggerFactory.getLogger(MailSendingEmailService.class);
 
     private final String defaultReplyTo;
     private final String testSendTo;
     private final boolean testConsoleOutput;
 
-    public MailSenderEmailService(FreeMarkerConfigurer freemarkerConfig,
-                                  MessageSource messageSource,
-                                  JavaMailSender javaMailSender,
-                                  String defaultReplyTo,
-                                  String testSendTo,
-                                  boolean testConsoleOutput) {
+    public MailSendingEmailService(FreeMarkerConfigurer freemarkerConfig,
+                                   MessageSource messageSource,
+                                   JavaMailSender javaMailSender,
+                                   String defaultReplyTo,
+                                   String testSendTo,
+                                   boolean testConsoleOutput) {
         this.freemarkerConfig = freemarkerConfig;
         this.messageSource = messageSource;
         this.javaMailSender = javaMailSender;
