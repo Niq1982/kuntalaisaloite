@@ -14,7 +14,7 @@ public class InitiativeViewInfo {
     private boolean showName;
     private DateTime createTime;
     
-    private Maybe<String> maybeManagementHash = Maybe.absent();
+    private Maybe<String> managementHash = Maybe.absent();
     private Maybe<DateTime> sentTime = Maybe.absent();
 
     public String getName() {
@@ -81,16 +81,16 @@ public class InitiativeViewInfo {
         this.id = id;
     }
 
-    public void setMaybeManagementHash(Maybe<String> maybeManagementHash) {
-        this.maybeManagementHash = maybeManagementHash;
+    public void setManagementHash(Maybe<String> managementHash) {
+        this.managementHash = managementHash;
     }
 
-    public String getManagementHash() {
-        return maybeManagementHash.orNull();
+    public Maybe<String> getManagementHash() {
+        return managementHash;
     }
 
     public boolean isCollectable() {
-        return maybeManagementHash.isPresent();
+        return managementHash.isPresent();
     }
 
     public boolean isSent() {

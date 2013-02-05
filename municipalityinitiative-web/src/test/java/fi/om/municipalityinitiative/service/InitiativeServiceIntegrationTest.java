@@ -75,11 +75,12 @@ public class InitiativeServiceIntegrationTest {
         assertThat(initiative.getMunicipalityName(), is(testMunicipality.getName()));
 
         assertThat(initiative.getCreateTime(), is(notNullValue()));
-        assertThat(initiative.getManagementHash(), is(org.hamcrest.Matchers.nullValue()));
+        assertThat(initiative.getManagementHash().isPresent(), is(false));
         assertThat(initiative.isCollectable(), is(false));
         assertThat(initiative.getSentTime().isPresent(), is(true));
 
-        // TODO: Verify all other values somehow
+        ReflectionTestUtils.assertNoNullFields(initiative);
+
     }
 
     @Test
@@ -88,7 +89,7 @@ public class InitiativeServiceIntegrationTest {
         Long initiativeId = service.createMunicipalityInitiative(createDto);
         InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
 
-        assertThat(initiative.getManagementHash(), is("0000000000111111111122222222223333333333"));
+        assertThat(initiative.getManagementHash().get(), is("0000000000111111111122222222223333333333"));
         assertThat(initiative.isCollectable(), is(true));
     }
 

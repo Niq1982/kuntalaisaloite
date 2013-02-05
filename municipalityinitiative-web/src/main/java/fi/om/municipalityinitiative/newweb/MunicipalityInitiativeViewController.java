@@ -121,7 +121,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
                 participantService.getParticipantCount(initiativeId),
                 participantService.findParticipants(initiativeId));
 
-        if (managementHash.equals(initiativeInfo.getManagementHash())){
+        if (managementHash.equals(initiativeInfo.getManagementHash().get())){
             model.addAttribute("participants", participantService.findParticipants(initiativeId));
             model.addAttribute("sendToMunicipality", initiativeService.getSendToMunicipalityData(initiativeId));
             return MANAGEMENT_VIEW;

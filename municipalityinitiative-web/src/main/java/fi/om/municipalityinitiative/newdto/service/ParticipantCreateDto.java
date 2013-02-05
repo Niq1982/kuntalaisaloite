@@ -36,7 +36,7 @@ public class ParticipantCreateDto {
 
     private static boolean solveFranchise(ParticipantValidationInfo participant) {
         return participant.getHomeMunicipality().equals(participant.getMunicipality())
-                && participant.getFranchise();
+                && Boolean.TRUE.equals(participant.getFranchise());
     }
 
     public Long getMunicipalityInitiativeId() {

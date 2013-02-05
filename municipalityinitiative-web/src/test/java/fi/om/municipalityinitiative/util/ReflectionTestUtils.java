@@ -1,7 +1,12 @@
 package fi.om.municipalityinitiative.util;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.joda.time.DateTime;
@@ -24,7 +29,7 @@ public class ReflectionTestUtils {
                     field.set(bean, randomValue(field.getType()));
             }
 
-//        assertNoNullFields(bean);
+        assertNoNullFields(bean);
         return bean;
     }
 
@@ -71,9 +76,13 @@ public class ReflectionTestUtils {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setVisibilityChecker(mapper.getVisibilityChecker()
                 .withFieldVisibility(JsonAutoDetect.Visibility.ANY));
+
+        mapper.registerModule(new MaybeModule());
+
         try {
             assertThat(mapper.writeValueAsString(o), not(containsString(":null")));
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new RuntimeException(e);
         }
 
@@ -89,5 +98,41 @@ public class ReflectionTestUtils {
 
     private static String randomString() {
         return RandomStringUtils.randomAlphabetic(5);
+    }
+
+    public static final class MaybeModule extends SimpleModule {
+        public MaybeModule() {
+            addSerializer(Maybe.class, new MaybeSerializer());
+            addSerializer(DateTime.class, new DateTimeSerializer());
+        }
+    }
+
+    private static class DateTimeSerializer extends StdSerializer<DateTime> {
+        protected DateTimeSerializer() {
+            super(DateTime.class);
+        }
+
+        @Override
+        public void serialize(DateTime value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonGenerationException {
+            jgen.writeString(value == null ? "null" : value.toString());
+        }
+    }
+
+    private static class MaybeSerializer extends StdSerializer<Maybe> {
+
+        protected MaybeSerializer() {
+            super(Maybe.class);
+        }
+
+        @Override
+        public void serialize(Maybe value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonGenerationException {
+            if (value.isPresent()) {
+                jgen.writeString(value.get().toString());
+            }
+            else {
+                jgen.writeString("absent");
+            }
+        }
+
     }
 }

@@ -75,7 +75,7 @@ public class InitiativeService {
     }
 
     private void checkHashCode(String hashCode, InitiativeViewInfo initiativeInfo) {
-        if (!initiativeInfo.getManagementHash().equals(hashCode)) {
+        if (!hashCode.equals(initiativeInfo.getManagementHash().get())) {
             throw new AccessDeniedException("Invalid initiative verifier");
         }
     }

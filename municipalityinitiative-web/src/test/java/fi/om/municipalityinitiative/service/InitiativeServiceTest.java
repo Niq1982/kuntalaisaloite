@@ -33,7 +33,7 @@ public class InitiativeServiceTest {
     public void fails_sending_to_municipality_if_not_collectable() {
 
         InitiativeViewInfo initiativeViewInfo = new InitiativeViewInfo();
-        initiativeViewInfo.setMaybeManagementHash(Maybe.<String>absent());
+        initiativeViewInfo.setManagementHash(Maybe.<String>absent());
         stub(initiativeDao.getById(any(Long.class))).toReturn(initiativeViewInfo);
 
         try {
@@ -48,7 +48,7 @@ public class InitiativeServiceTest {
     public void fails_sending_to_municipality_if_already_sent() {
 
         InitiativeViewInfo initiativeViewInfo = new InitiativeViewInfo();
-        initiativeViewInfo.setMaybeManagementHash(Maybe.of("anyHash"));
+        initiativeViewInfo.setManagementHash(Maybe.of("anyHash"));
         initiativeViewInfo.setSentTime(Maybe.of(new DateTime()));
         stub(initiativeDao.getById(any(Long.class))).toReturn(initiativeViewInfo);
 
@@ -64,7 +64,7 @@ public class InitiativeServiceTest {
     public void fails_sending_to_municipality_if_hashcode_does_not_match() {
 
         InitiativeViewInfo initiativeViewInfo = new InitiativeViewInfo();
-        initiativeViewInfo.setMaybeManagementHash(Maybe.of("some hash"));
+        initiativeViewInfo.setManagementHash(Maybe.of("some hash"));
         stub(initiativeDao.getById(any(Long.class))).toReturn(initiativeViewInfo);
 
         try {
@@ -79,7 +79,7 @@ public class InitiativeServiceTest {
     public void succeeds_in_sending_to_municipality() {
 
         InitiativeViewInfo initiativeViewInfo = new InitiativeViewInfo();
-        initiativeViewInfo.setMaybeManagementHash(Maybe.of("hashCode"));
+        initiativeViewInfo.setManagementHash(Maybe.of("hashCode"));
         stub(initiativeDao.getById(any(Long.class))).toReturn(initiativeViewInfo);
 
         service.sendToMunicipality(0L, "hashCode");

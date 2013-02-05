@@ -50,6 +50,6 @@ public class Maybe<T> {
 
     @Override
     public String toString() {
-        return optional.toString();
+        return optional.isPresent() ? optional.toString() : "";
     }
 }
