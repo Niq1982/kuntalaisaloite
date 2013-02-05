@@ -68,11 +68,14 @@ jQuery.fn.loadChosen = function(){
  * 
  * returns true / false
  * 
+ * TODO: Check if we need this and fix. 
+ * 
  * */
+/*
 jQuery.support.placeholder = (function(){
     var i = document.createElement('input');
     return 'placeholder' in i;
-})();
+})();*/
 
 /**
  * 
@@ -82,7 +85,7 @@ jQuery.support.placeholder = (function(){
  * FIXME: does not work yet
  * 
  * */
-jQuery.fn.placeholder = (function(){
+/*jQuery.fn.placeholder = (function(){
     //if (!$.support.placeholder){
     	var thisInput = $(this);
     	
@@ -99,7 +102,7 @@ jQuery.fn.placeholder = (function(){
     	});
     //}
 	
-})();
+})();*/
 
 $(document).ready(function () {	
 	// Define general variables
@@ -114,7 +117,7 @@ $(document).ready(function () {
 	isIE7 = $('html').hasClass('ie7');	// Boolean for IE7. Used browser detection instead of jQuery.support().
 	isIE8 = $('html').hasClass('ie8');	// Boolean for IE8. Used browser detection instead of jQuery.support().
 	locale = Init.getLocale();			// Current locale: fi, sv
-	
+
 /**
  * Common helpers
  * ==============
@@ -641,12 +644,8 @@ $(document).ready(function () {
 (function() {
 	var sendToMun 				= $('.js-send-to-municipality'),
 		sendToMunForm 			= $('.js-send-to-municipality-form'),
-		sendToMunBtn 			= sendToMun.find('button[name=action-send]:first'),
+		sendToMunBtn 			= $('#js-send-to-municipality'),
 		sendToMunCloseBtn 		= sendToMunForm.find('.close:first'),
-		updateContactInfo 		= $('#contact-update-fields'),
-		prefilledContactInfo 	= $('#contact-prefilled'),
-		updateContactInfoBtn 	= $('#update-contact-info'),
-		closeUpdateBtn 			= $('#close-update-contact-info'),
 		contactAddressTArea		= $('#comment');
 	
 	sendToMunBtn.click(function(){
@@ -659,20 +658,6 @@ $(document).ready(function () {
 	sendToMunCloseBtn.click(function(){
 		sendToMunForm.hide();
 		sendToMun.fadeIn(speedFast);
-		
-		return false;
-	});
-	
-	updateContactInfoBtn.click(function(){
-		prefilledContactInfo.hide();
-		updateContactInfo.fadeIn(speedFast);
-		
-		return false;
-	});
-	
-	closeUpdateBtn.click(function(){
-		updateContactInfo.hide();
-		prefilledContactInfo.fadeIn(speedFast);
 		
 		return false;
 	});
@@ -1060,6 +1045,7 @@ $.tools.validator.localize("sv", {
 /*
  * TODO: ADD keyup-event for validating inputs.
  */
+/*
 $.tools.validator.addEffect("inline", function(errors, event) {
  
 	// add error before errorenous input
@@ -1080,7 +1066,7 @@ $.tools.validator.addEffect("inline", function(errors, event) {
 }, function(inputs)  {
  
 });
-
+*/
 
 /**
 * Bind checkbox

@@ -99,7 +99,7 @@
             <div class="js-send-to-municipality hidden">
                 <#assign href="#" />
                 <p><@u.messageHTML key="sendToMunicipality.description" args=[href] /></p>
-                <button type="submit" name="action-send" class="small-button"><span class="small-icon mail"><@u.message "action.send" /></span></button>
+                <a href="#" id="js-send-to-municipality" class="small-button"><span class="small-icon mail"><@u.message "action.send" /></span></a>
             </div>
         </#if>
 
@@ -116,30 +116,7 @@
                 </div>
 
                 <div class="input-block-content">
-                    <#if !hasErrors>
-                        <div id="contact-prefilled" class="manage-block hidden">
-                            <a href="#" id="update-contact-info" class="small-button"><span class="small-icon edit">Muokkaa yhteystietoja</span></a>
-                            
-                            <div class="input-header">
-                                <@u.message "sendToMunicipality.contactInfo" />
-                            </div>
-                            
-                            <p>
-                                <#if sendToMunicipality.contactInfo.name??><strong>${sendToMunicipality.contactInfo.name!""}</strong><br/></#if>
-                                <#if sendToMunicipality.contactInfo.email??>${sendToMunicipality.contactInfo.email!""}<br/></#if>
-                                <#if sendToMunicipality.contactInfo.address??>${sendToMunicipality.contactInfo.address!""}<br/></#if>
-                                <#if sendToMunicipality.contactInfo.phone??>${sendToMunicipality.contactInfo.phone!""}</#if>
-                            </p>
-                        </div>
-                    </#if>
-                    
-                    <div id="contact-update-fields" class="manage-block js-contact-update-fields <#if !hasErrors>js-hide</#if>">
-                        <#if !hasErrors>
-                            <a href="#" id="close-update-contact-info" class="small-button hidden"><span class="small-icon cancel">Peruuta muokkaus</span></a>
-                        </#if>
-                        
-                        <@f.contactInfo path="sendToMunicipality.contactInfo" mode="full" showName=true />
-                    </div>
+                    <@f.contactInfo path="sendToMunicipality.contactInfo" mode="full" showName=true />
                 </div>
                 
                 <div class="input-block-content">
@@ -147,7 +124,8 @@
                     <#if !hasErrors>
                         <a href="${springMacroRequestContext.requestUri}#participants" class="push close hidden"><@u.message "action.cancel" /></a>
                     <#else>
-                        <a href="${urls.management(initiative.id, initiative.managementHash)}" class="push"><@u.message "action.cancel" /></a>
+                        <#-- In case of errors cancel-link clears data by refreshing management page. -->
+                        <a href="${urls.management(initiative.id, initiative.managementHash)}" class="push hidden"><@u.message "action.cancel" /></a>
                     </#if>
                 </div>
                 <br/><br/>
