@@ -102,6 +102,15 @@ public class InitiativeServiceIntegrationTest {
     }
 
     @Test
+    public void creating_not_collectable_initiative_sets_sent_time() {
+        InitiativeUICreateDto createDto = createDto(false);
+        Long initiativeId = service.createMunicipalityInitiative(createDto);
+        InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
+
+        assertThat(initiative.getSentTime().isPresent(), is(true));
+    }
+
+    @Test
     public void participating_to_non_collectable_initiative_is_forbidden() {
         Long initiative = testHelper.createTestInitiative(testMunicipality.getId());
         ParticipantUICreateDto participant = new ParticipantUICreateDto();
