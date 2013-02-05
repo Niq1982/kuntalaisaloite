@@ -40,8 +40,10 @@
      * Initiative date and state
     -->    
     <span class="extra-info">
-        <#assign createTime><@u.localDate initiative.createTime /></#assign>
-        <#if initiative.createTime??><@u.message key="initiative.date.create" args=[createTime] /></#if>
+        <#if initiative.createTime??>
+            <#assign createTime><@u.localDate initiative.createTime /></#assign>
+            <@u.message key="initiative.date.create" args=[createTime] />
+        </#if>
         <br /><@u.message "initiative.state.collecting" />
     </span>
 
@@ -85,23 +87,27 @@
     <#--
      * Show management block
     -->
-    <#-- TODO: This should come from bottomContribution. When different views for one person and multiple person initiatives are ready. -->
-    
     <div class="view-block public">
         <h2><@u.message "sendToMunicipality.title" /></h2>
         
-    <#--<div class="system-msg msg-summary cf">-->
-        <div class="js-send-to-municipality hidden">
-            <#assign href="#" />
-            <p><@u.messageHTML key="sendToMunicipality.description" args=[href] /></p>
-            <button type="submit" name="action-send" class="small-button"><span class="small-icon mail"><@u.message "action.send" /></span></button>
+        <#-- Participate form errors summary -->
+        <div class="input-block-content no-top-margin">    
+            <@u.errorsSummary path="sendToMunicipality.*" prefix="sendToMunicipality."/>
         </div>
+        
+        <#if !hasErrors>
+            <div class="js-send-to-municipality hidden">
+                <#assign href="#" />
+                <p><@u.messageHTML key="sendToMunicipality.description" args=[href] /></p>
+                <button type="submit" name="action-send" class="small-button"><span class="small-icon mail"><@u.message "action.send" /></span></button>
+            </div>
+        </#if>
 
-        <div id="send-to-municipality-form" class="send-to-municipality cf js-send-to-municipality-form js-hide">
-            
+        <div id="send-to-municipality-form" class="send-to-municipality cf js-send-to-municipality-form <#if !hasErrors>js-hide</#if>">
+
             <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-send" class="sodirty">        
                 
-                <div class="input-block-content no-top-margin">
+                <div class="input-block-content <#if !hasErrors>no-top-margin</#if>">
                     <@f.textarea path="sendToMunicipality.comment" required="" optional=false />
                 </div>
                 
@@ -110,27 +116,27 @@
                 </div>
 
                 <div class="input-block-content">
-                    <div id="contact-prefilled" class="manage-block hidden">
-                        <a href="#" id="update-contact-info" class="small-button"><span class="small-icon edit">Muokkaa yhteystietoja</span></a>
-                        
-                        <div class="input-header">
-                            <@u.message "sendToMunicipality.contactInfo" />
+                    <#if !hasErrors>
+                        <div id="contact-prefilled" class="manage-block hidden">
+                            <a href="#" id="update-contact-info" class="small-button"><span class="small-icon edit">Muokkaa yhteystietoja</span></a>
+                            
+                            <div class="input-header">
+                                <@u.message "sendToMunicipality.contactInfo" />
+                            </div>
+                            
+                            <p>
+                                <#if sendToMunicipality.contactInfo.name??><strong>${sendToMunicipality.contactInfo.name!""}</strong><br/></#if>
+                                <#if sendToMunicipality.contactInfo.email??>${sendToMunicipality.contactInfo.email!""}<br/></#if>
+                                <#if sendToMunicipality.contactInfo.address??>${sendToMunicipality.contactInfo.address!""}<br/></#if>
+                                <#if sendToMunicipality.contactInfo.phone??>${sendToMunicipality.contactInfo.phone!""}</#if>
+                            </p>
                         </div>
-                        
-                        <p>
-                            <#if sendToMunicipality.contactInfo.name??><strong>${sendToMunicipality.contactInfo.name!""}</strong><br/></#if>
-                            <#if sendToMunicipality.contactInfo.email??>${sendToMunicipality.contactInfo.email!""}<br/></#if>
-                            <#if sendToMunicipality.contactInfo.address??>${sendToMunicipality.contactInfo.address!""}<br/></#if>
-                            <#if sendToMunicipality.contactInfo.phone??>${sendToMunicipality.contactInfo.phone!""}</#if>
-                        </p>
-                    </div>
+                    </#if>
                     
-                    <div id="contact-update-fields" class="manage-block js-contact-update-fields js-hide">
-                        <#-- TODO: Link could be created with JS
-                        <a href="#" id="close-update-contact-info" class="manage" title="Sulje muokkaus"><span class="small-icon-plain cancel"></a>
-                         -->
-                        
-                        <a href="#" id="close-update-contact-info" class="small-button hidden"><span class="small-icon cancel">Peruuta muokkaus</span></a>
+                    <div id="contact-update-fields" class="manage-block js-contact-update-fields <#if !hasErrors>js-hide</#if>">
+                        <#if !hasErrors>
+                            <a href="#" id="close-update-contact-info" class="small-button hidden"><span class="small-icon cancel">Peruuta muokkaus</span></a>
+                        </#if>
                         
                         <@f.contactInfo path="sendToMunicipality.contactInfo" mode="full" showName=true />
                     </div>
@@ -138,20 +144,27 @@
                 
                 <div class="input-block-content">
                     <button type="submit" name="action-send" class="small-button"><span class="small-icon mail"><@u.message "action.send" /></span></button>
-                    <a href="${springMacroRequestContext.requestUri}#participants" class="push close"><@u.message "action.cancel" /></a>
+                    <#if !hasErrors>
+                        <a href="${springMacroRequestContext.requestUri}#participants" class="push close hidden"><@u.message "action.cancel" /></a>
+                    <#else>
+                        <a href="${urls.management(initiative.id, initiative.managementHash)}" class="push"><@u.message "action.cancel" /></a>
+                    </#if>
                 </div>
                 <br/><br/>
 
             </form>
         </div>
-    <#--</div>-->
     </div>
 
 </#assign>
 
 <#assign modalData>
     
-    <#-- TODO: Fix namelist columns in IE. -->
+    <#-- TODO:
+     *  1. Fix namelist columns in IE
+     *  2. Show list for NOSCRIPT users
+     *
+    -->
     modalData.participantListFranchise = function() {
         return [{
             title:      '<@u.message key="participantCount.rightOfVoting.total" args=[initiative.municipalityName!""] />',

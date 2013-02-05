@@ -135,7 +135,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
     
     @RequestMapping(value={ MANAGEMENT_FI, MANAGEMENT_SV }, method=POST)
     public String managementView(@PathVariable("id") Long initiativeId, 
-                                SendToMunicipalityDto sendToMunicipalityDto,
+                                @ModelAttribute ("sendToMunicipality") SendToMunicipalityDto sendToMunicipalityDto,
                                 BindingResult bindingResult,Model model, Locale locale, HttpServletRequest request) {
        
         if (validationService.validationSuccessful(sendToMunicipalityDto, bindingResult, model)) {

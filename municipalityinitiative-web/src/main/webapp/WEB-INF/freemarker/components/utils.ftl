@@ -218,12 +218,16 @@
             <#-- NOTE: successMessageModalHTML needs to be global for modals. -->
             <#global requestMessageModalHTML>
                 <@compress single_line=true>
-                    
                     <#-- Save initiative -->
-                    <#if requestMessage == "success.save">
-                        <#assign managementURL=currentUri+"?mgmnt=true" />
+                    <#if requestMessage == RequestMessage.SAVE>
                         <@messageHTML key=requestMessage args=[urls.management(initiative.id, initiative.managementHash.value)] />
                         <a class="small-button gray close hidden"><@message "modal.close" /></a>
+                        
+                    <#-- Send to municipality -->
+                    <#elseif requestMessage == RequestMessage.SEND>
+                        <@messageHTML requestMessage />
+                        <a class="small-button gray close hidden"><@message "modal.close" /></a>
+                        
                     <#else>
                         <@messageHTML requestMessage />
                     </#if>
