@@ -19,7 +19,7 @@ import static org.hamcrest.Matchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={IntegrationTestFakeEmailConfiguration.class})
-public class MailSenderEmailServiceTest {
+public class MailSendingEmailServiceTest {
 
     @Resource
     private EmailService emailService;

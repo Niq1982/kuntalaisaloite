@@ -1,3 +1,5 @@
+Aloite toimitettu kuntaan.
+
 Otsikko:
 ${initiative.name}
 

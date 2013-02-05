@@ -105,7 +105,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
 
     @RequestMapping(value={ MANAGEMENT_FI, MANAGEMENT_SV }, method=GET)
     public String managementView(@PathVariable("id") Long initiativeId,
-                                 @RequestParam String management,
+                                 @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                                  Model model, Locale locale, HttpServletRequest request) {
 
         InitiativeViewInfo initiativeInfo = initiativeService.getMunicipalityInitiative(initiativeId);
@@ -121,7 +121,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
                 participantService.getParticipantCount(initiativeId),
                 participantService.findParticipants(initiativeId));
 
-        if (management.equals(initiativeInfo.getManagementHash())){
+        if (managementHash.equals(initiativeInfo.getManagementHash())){
             model.addAttribute("participants", participantService.findParticipants(initiativeId));
             model.addAttribute("sendToMunicipality", initiativeService.getSendToMunicipalityData(initiativeId));
             return MANAGEMENT_VIEW;
