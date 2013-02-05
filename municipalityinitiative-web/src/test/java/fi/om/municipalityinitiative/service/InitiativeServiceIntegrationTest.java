@@ -5,7 +5,7 @@ import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.ParticipatingUnallowedException;
-import fi.om.municipalityinitiative.util.TestUtils;
+import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,7 +58,7 @@ public class InitiativeServiceIntegrationTest {
     public void all_fields_are_set_when_getting_municipalityInitiativeInfo() {
         Long initiativeId = service.createMunicipalityInitiative(createDto(true));
         InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
-        TestUtils.assertNoNullFields(initiative);
+        ReflectionTestUtils.assertNoNullFields(initiative);
     }
 
     @Test
@@ -160,7 +160,7 @@ public class InitiativeServiceIntegrationTest {
         createDto.getContactInfo().setName("contact name " + randomString());
         createDto.getContactInfo().setEmail("contact email " + randomString());
 
-        TestUtils.assertNoNullFields(createDto);
+        ReflectionTestUtils.assertNoNullFields(createDto);
         return createDto;
     }
 

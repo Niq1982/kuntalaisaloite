@@ -36,7 +36,7 @@ public class InitiativeService {
     @Transactional(readOnly = false)
     public Long createMunicipalityInitiative(InitiativeUICreateDto createDto) {
 
-        InitiativeCreateDto initiativeCreateDto = parse(createDto);
+        InitiativeCreateDto initiativeCreateDto = InitiativeCreateDto.parse(createDto);
         if (createDto.isCollectable()) {
             initiativeCreateDto.managementHash = Maybe.of("0000000000111111111122222222223333333333");
         }
@@ -102,20 +102,7 @@ public class InitiativeService {
 
     }
 
-    static InitiativeCreateDto parse(InitiativeUICreateDto source) {
 
-        InitiativeCreateDto initiativeCreateDto = new InitiativeCreateDto();
-
-        initiativeCreateDto.name = source.getName();
-        initiativeCreateDto.proposal = source.getProposal();
-        initiativeCreateDto.municipalityId = source.getMunicipality();
-        initiativeCreateDto.contactName = source.getContactInfo().getName();
-        initiativeCreateDto.contactPhone= source.getContactInfo().getPhone();
-        initiativeCreateDto.contactAddress = source.getContactInfo().getAddress();
-        initiativeCreateDto.contactEmail = source.getContactInfo().getEmail();
-
-        return initiativeCreateDto;
-    }
 
     static ParticipantCreateDto parse(InitiativeUICreateDto source, Long municipalityInitiativeId) {
         ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
