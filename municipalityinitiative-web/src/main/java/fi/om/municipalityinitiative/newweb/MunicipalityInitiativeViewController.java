@@ -139,7 +139,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
                                 BindingResult bindingResult,Model model, Locale locale, HttpServletRequest request) {
        
         if (validationService.validationSuccessful(sendToMunicipalityDto, bindingResult, model)) {
-            initiativeService.sendToMunicipality(initiativeId, "0000000000111111111122222222223333333333");
+            initiativeService.sendToMunicipality(initiativeId, "0000000000111111111122222222223333333333", locale);
             Urls urls = Urls.get(locale);
             return redirectWithMessage(urls.view(initiativeId),RequestMessage.SEND, request); 
         }
