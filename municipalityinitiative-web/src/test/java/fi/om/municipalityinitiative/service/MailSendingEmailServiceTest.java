@@ -6,6 +6,7 @@ import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.util.JavaMailSenderFake;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -66,6 +67,14 @@ public class MailSendingEmailServiceTest {
         emailService.sendNotCollectableToMunicipality(initiative, "some_test_address@example.com");
 
         assertEmailHasInitiativeDetailsAndContactInfo();
+    }
+
+    @Test
+    @Ignore("Un-comment implementation")
+    public void send_straight_to_municipality_assigns_senders_email_to_repllyTo_field() throws InterruptedException, MessagingException {
+        InitiativeEmailInfo initiative = createEmailInfo();
+        emailService.sendNotCollectableToMunicipality(initiative, "some_test_address@example.com");
+        assertThat(getSingleSentMessage().getReplyTo()[0].toString(), is(CONTACT_EMAIL));
 
     }
 
