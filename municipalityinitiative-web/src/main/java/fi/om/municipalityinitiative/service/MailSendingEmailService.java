@@ -190,8 +190,8 @@ public class MailSendingEmailService implements EmailService {
             this.locale = locale;
         }
 
-        public String getMessage(String key) {
-            return messageSource.getMessage(key, null, locale);
+        public String getMessage(String key, Object ... args) {
+            return messageSource.getMessage(key, args, locale);
         }
     }
 }
