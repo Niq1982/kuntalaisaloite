@@ -79,6 +79,7 @@ public class MailSendingEmailService implements EmailService {
         HashMap<String, Object> dataMap = new HashMap<String, Object>();
         dataMap.put("emailInfo", emailInfo);
         sendEmail(municipalityEmail,
+                emailInfo.getContactInfo().getEmail(),
                 messageSource.getMessage("email.not.collectable.municipality.subject", new String[] {emailInfo.getName()}, Locales.LOCALE_FI),
                 MUNICIPALITY_TEMPLATE,
                 dataMap);
@@ -89,13 +90,14 @@ public class MailSendingEmailService implements EmailService {
         HashMap<String, Object> dataMap = new HashMap<String, Object>();
         dataMap.put("emailInfo", emailInfo);
         sendEmail(emailInfo.getContactInfo().getEmail(),
+                defaultReplyTo,
                 messageSource.getMessage("email.not.collectable.author.subject", new String[] {emailInfo.getName()}, Locales.LOCALE_FI),
                 MUNICIPALITY_TEMPLATE,
                 dataMap);
 
     }
 
-    private void sendEmail(String sendTo, String subject, String templateName,  Map<String, Object> dataMap) {
+    private void sendEmail(String sendTo, String replyTo, String subject, String templateName,  Map<String, Object> dataMap) {
 
         String text = processTemplate(templateName + "-text", dataMap); 
         String html = processTemplate(templateName + "-html", dataMap); 
@@ -125,7 +127,8 @@ public class MailSendingEmailService implements EmailService {
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             helper.setTo(sendTo);
-            helper.setFrom(defaultReplyTo); //to avoid spam filters
+            helper.setFrom(defaultReplyTo);
+//            helper.setReplyTo(replyTo);
             helper.setReplyTo(defaultReplyTo);
             helper.setSubject(subject);
             helper.setText(text, html);
