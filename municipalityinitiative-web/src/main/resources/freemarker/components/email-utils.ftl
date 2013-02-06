@@ -1,7 +1,23 @@
 <#import "/spring.ftl" as spring />
-<#import "utils.ftl" as u />
 
 <#escape x as x?html> 
+
+
+<#--
+ * message
+ *
+ * Macro for generating PlainText messages. NOTE that these messages are escaped.
+ *
+ * @param key is the localization key
+ * @param args is the list of arguments for the message
+-->
+<#macro message key args=[]>
+    <@spring.messageArgsText key args "[" + key + "]"/>
+</#macro>
+
+
+
+
 
 <#-- 
  * localizedMap

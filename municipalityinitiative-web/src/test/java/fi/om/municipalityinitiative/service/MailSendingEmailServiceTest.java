@@ -70,6 +70,16 @@ public class MailSendingEmailServiceTest {
     }
 
     @Test
+    public void send_straight_to_municipality_uses_localizations_at_content() throws Exception {
+        InitiativeEmailInfo initiativeEmailInfo = createEmailInfo();
+        emailService.sendNotCollectableToMunicipality(initiativeEmailInfo, "some@example.com");
+
+        MessageContent messageContent = getMessageContent();
+        assertThat(messageContent.html, containsString("Yhteystiedot"));
+        assertThat(messageContent.text, containsString("Yhteystiedot"));
+    }
+
+    @Test
     @Ignore("Un-comment implementation")
     public void send_straight_to_municipality_assigns_senders_email_to_repllyTo_field() throws InterruptedException, MessagingException {
         InitiativeEmailInfo initiative = createEmailInfo();
@@ -99,7 +109,16 @@ public class MailSendingEmailServiceTest {
         emailService.sendNotCollectableToAuthor(initiative);
 
         assertEmailHasInitiativeDetailsAndContactInfo();
+    }
 
+    @Test
+    public void send_straight_to_author_uses_localizations_at_content() throws Exception {
+        InitiativeEmailInfo initiativeEmailInfo = createEmailInfo();
+        emailService.sendNotCollectableToAuthor(initiativeEmailInfo);
+
+        MessageContent messageContent = getMessageContent();
+        assertThat(messageContent.html, containsString("Yhteystiedot"));
+        assertThat(messageContent.text, containsString("Yhteystiedot"));
     }
 
     private void assertEmailHasInitiativeDetailsAndContactInfo() throws Exception {

@@ -10,11 +10,8 @@ ${emailInfo.proposal}
 ${emailInfo.url}
 ${emailInfo.municipalityName}
 
-<p>Yhteystietoi:</p>
+${localizations.getMessage("initiative.currentAuthor.contactInfo")}
 ${emailInfo.contactInfo.name}
 ${emailInfo.contactInfo.address!""}
 ${emailInfo.contactInfo.phone!""}
 ${emailInfo.contactInfo.email}
-
-
-
