@@ -139,13 +139,14 @@
 -->
 <#macro localDate date="">
 <@compress single_line=true>
-<#assign dateFormat><@message "date.format" /></#assign>
-<#-- TODO: FIX DATES - tests breaks. -->
-    <#--<#if date?is_hash>
-        ${date.toString(dateFormat)!""}
+    <#-- TODO: FIX DATES - tests breaks. -->
+    <#if date?is_hash>
+        hash 
+        ${date.toString(localizations.getMessage("date.format", args))!""}
     <#else>
-        ${date?string(dateFormat)!""}
-    </#if>-->
+        not hash
+        ${date?string(localizations.getMessage("date.format", args))!""}
+    </#if>
 </@compress>
 </#macro>
 

@@ -62,7 +62,7 @@
     <#if type == "html">
         <h4 style="font-size:12px; margin:1em 0 0 0;">${emailInfo.name!""}</h4>
         <p style="margin:0 0 1em 0;"><@u.message "email.date.create" /> <@u.localDate emailInfo.createTime />
-        <#if emailInfo.sentTime.present><br/><@u.message "email.date.sent" /> <@u.localDate emailInfo.sentTime.value /></#if></p>
+        <br/><@u.message "email.date.sent" /> <@u.localDate emailInfo.sentTime /></p>
         <@u.text emailInfo.proposal />
     <#else>
         <@u.message "email.initiative" />:

@@ -1,4 +1,4 @@
-<#-- TODO: Txt version
+
 
 Aloite toimitettu kuntaan.
 
@@ -18,7 +18,7 @@ ${emailInfo.contactInfo.address!""}
 ${emailInfo.contactInfo.phone!""}
 ${emailInfo.contactInfo.email}
 
-
+<#-- TODO: Txt version
 
 <#import "../components/email-layout-html.ftl" as el />
 <#import "../components/email-utils.ftl" as eu />
