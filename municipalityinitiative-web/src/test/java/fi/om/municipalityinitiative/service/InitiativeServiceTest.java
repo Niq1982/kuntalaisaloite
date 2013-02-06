@@ -37,7 +37,7 @@ public class InitiativeServiceTest {
         stub(initiativeDao.getById(any(Long.class))).toReturn(initiativeViewInfo);
 
         try {
-            service.sendToMunicipality(0L, "anyhashcode");
+            service.sendToMunicipality(0L, "anyhashcode", null);
             fail("Should have thrown exception");
         } catch (NotCollectableException e) {
             assertThat(e.getMessage(), containsString("Initiative is not collectable"));
@@ -53,7 +53,7 @@ public class InitiativeServiceTest {
         stub(initiativeDao.getById(any(Long.class))).toReturn(initiativeViewInfo);
 
         try {
-            service.sendToMunicipality(0L, "anyOtherHashCode");
+            service.sendToMunicipality(0L, "anyOtherHashCode", null);
             fail("Should have thrown exception");
         } catch (NotCollectableException e) {
             assertThat(e.getMessage(), containsString("Initiative already sent"));
@@ -68,7 +68,7 @@ public class InitiativeServiceTest {
         stub(initiativeDao.getById(any(Long.class))).toReturn(initiativeViewInfo);
 
         try {
-            service.sendToMunicipality(0L, "another hash");
+            service.sendToMunicipality(0L, "another hash", null);
             fail("Should have thrown exception");
         } catch (AccessDeniedException e) {
             assertThat(e.getMessage(), containsString("Invalid initiative verifier"));
@@ -82,7 +82,7 @@ public class InitiativeServiceTest {
         initiativeViewInfo.setManagementHash(Maybe.of("hashCode"));
         stub(initiativeDao.getById(any(Long.class))).toReturn(initiativeViewInfo);
 
-        service.sendToMunicipality(0L, "hashCode");
+        service.sendToMunicipality(0L, "hashCode", null);
 
         verify(initiativeDao).markAsSended(0L);
     }

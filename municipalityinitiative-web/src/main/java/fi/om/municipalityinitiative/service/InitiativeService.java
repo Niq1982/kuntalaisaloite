@@ -77,16 +77,26 @@ public class InitiativeService {
     }
 
     @Transactional(readOnly = false)
-    public void sendToMunicipality(Long initiativeId, String hashCode) {
+    public void sendToMunicipality(Long initiativeId, String hashCode, Locale locale) {
 
         InitiativeViewInfo initiativeInfo = initiativeDao.getById(initiativeId);
 
         checkAllowedToSendToMunicipality(initiativeInfo);
         checkHashCode(hashCode, initiativeInfo);
 
-        // TODO: Send the email.
         initiativeDao.markAsSended(initiativeId);
+        sendCollectedInitiativeEmails(initiativeId, locale);
+    }
 
+    private void sendCollectedInitiativeEmails(Long initiativeId, Locale locale) {
+        InitiativeViewInfo initiative = initiativeDao.getById(initiativeId);
+        ContactInfo contactInfo = initiativeDao.getContactInfo(initiativeId);
+        String url = Urls.get(Locales.LOCALE_FI).view(initiativeId);
+
+        InitiativeEmailInfo emailInfo = InitiativeEmailInfo.parse(contactInfo, initiative, url);
+
+        emailService.sendCollectableToMunicipality(emailInfo, municipalityDao.getMunicipalityEmail(initiative.getMunicipalityId()), locale);
+        emailService.sendCollectableToAuthor(emailInfo, locale);
     }
 
     private void checkAllowedToSendToMunicipality(InitiativeViewInfo initiativeViewInfo) {

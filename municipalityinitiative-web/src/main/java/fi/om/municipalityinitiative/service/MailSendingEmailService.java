@@ -7,7 +7,6 @@ import com.google.common.collect.Lists;
 import com.mysema.commons.lang.Assert;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdto.email.InitiativeEmailInfo;
-import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Task;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -80,7 +79,7 @@ public class MailSendingEmailService implements EmailService {
                 emailInfo.getContactInfo().getEmail(),
                 messageSource.getMessage("email.not.collectable.municipality.subject", new String[]{emailInfo.getName()}, locale),
                 MUNICIPALITY_TEMPLATE,
-                dataMap(emailInfo));
+                dataMap(emailInfo, locale));
     }
 
     @Override
@@ -89,7 +88,7 @@ public class MailSendingEmailService implements EmailService {
                 defaultReplyTo,
                 messageSource.getMessage("email.not.collectable.author.subject", new String[] {emailInfo.getName()}, locale),
                 AUTHOR_TEMPLATE,
-                dataMap(emailInfo));
+                dataMap(emailInfo, locale));
     }
 
     @Override
@@ -98,7 +97,7 @@ public class MailSendingEmailService implements EmailService {
                 emailInfo.getContactInfo().getEmail(),
                 messageSource.getMessage("email.not.collectable.municipality.subject", new String[]{emailInfo.getName()}, locale),
                 MUNICIPALITY_TEMPLATE,
-                dataMap(emailInfo));
+                dataMap(emailInfo, locale));
     }
 
     @Override
@@ -107,14 +106,14 @@ public class MailSendingEmailService implements EmailService {
                 defaultReplyTo,
                 messageSource.getMessage("email.not.collectable.author.subject", new String[] {emailInfo.getName()}, locale),
                 AUTHOR_TEMPLATE,
-                dataMap(emailInfo));
+                dataMap(emailInfo, locale));
     }
 
 
-    private HashMap<String, Object> dataMap(InitiativeEmailInfo emailInfo) {
+    private HashMap<String, Object> dataMap(InitiativeEmailInfo emailInfo, Locale locale) {
         HashMap<String, Object> dataMap = new HashMap<String, Object>();
         dataMap.put("emailInfo", emailInfo);
-        dataMap.put("localizations", new EmailLocalizationProvider(messageSource, Locales.LOCALE_FI));
+        dataMap.put("localizations", new EmailLocalizationProvider(messageSource, locale));
         return dataMap;
     }
 
