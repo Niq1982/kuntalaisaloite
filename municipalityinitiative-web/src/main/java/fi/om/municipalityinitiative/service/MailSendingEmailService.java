@@ -75,29 +75,47 @@ public class MailSendingEmailService implements EmailService {
     }
 
     @Override
-    public void sendNotCollectableToMunicipality(InitiativeEmailInfo emailInfo, String municipalityEmail) {
-
-        HashMap<String, Object> dataMap = new HashMap<String, Object>();
-        dataMap.put("emailInfo", emailInfo);
-        dataMap.put("localizations", new EmailLocalizationProvider(messageSource, Locales.LOCALE_FI));
+    public void sendNotCollectableToMunicipality(InitiativeEmailInfo emailInfo, String municipalityEmail, Locale locale) {
         sendEmail(municipalityEmail,
                 emailInfo.getContactInfo().getEmail(),
-                messageSource.getMessage("email.not.collectable.municipality.subject", new String[]{emailInfo.getName()}, Locales.LOCALE_FI),
+                messageSource.getMessage("email.not.collectable.municipality.subject", new String[]{emailInfo.getName()}, locale),
                 MUNICIPALITY_TEMPLATE,
-                dataMap);
+                dataMap(emailInfo));
     }
 
     @Override
-    public void sendNotCollectableToAuthor(InitiativeEmailInfo emailInfo) {
+    public void sendNotCollectableToAuthor(InitiativeEmailInfo emailInfo, Locale locale) {
+        sendEmail(emailInfo.getContactInfo().getEmail(),
+                defaultReplyTo,
+                messageSource.getMessage("email.not.collectable.author.subject", new String[] {emailInfo.getName()}, locale),
+                AUTHOR_TEMPLATE,
+                dataMap(emailInfo));
+    }
+
+    @Override
+    public void sendCollectableToMunicipality(InitiativeEmailInfo emailInfo, String municipalityEmail, Locale locale) {
+        sendEmail(municipalityEmail,
+                emailInfo.getContactInfo().getEmail(),
+                messageSource.getMessage("email.not.collectable.municipality.subject", new String[]{emailInfo.getName()}, locale),
+                MUNICIPALITY_TEMPLATE,
+                dataMap(emailInfo));
+    }
+
+    @Override
+    public void sendCollectableToAuthor(InitiativeEmailInfo emailInfo, Locale locale) {
+        sendEmail(emailInfo.getContactInfo().getEmail(),
+                defaultReplyTo,
+                messageSource.getMessage("email.not.collectable.author.subject", new String[] {emailInfo.getName()}, locale),
+                AUTHOR_TEMPLATE,
+                dataMap(emailInfo));
+    }
+
+
+    private HashMap<String, Object> dataMap(InitiativeEmailInfo emailInfo) {
         HashMap<String, Object> dataMap = new HashMap<String, Object>();
         dataMap.put("emailInfo", emailInfo);
         dataMap.put("localizations", new EmailLocalizationProvider(messageSource, Locales.LOCALE_FI));
-        sendEmail(emailInfo.getContactInfo().getEmail(),
-                defaultReplyTo,
-                messageSource.getMessage("email.not.collectable.author.subject", new String[] {emailInfo.getName()}, Locales.LOCALE_FI),
-                AUTHOR_TEMPLATE,
-                dataMap);
-
+        return dataMap;
     }
 
     private void sendEmail(String sendTo, String replyTo, String subject, String templateName,  Map<String, Object> dataMap) {

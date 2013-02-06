@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 
 import java.util.List;
+import java.util.Locale;
 
 
 public class InitiativeService {
@@ -40,7 +41,7 @@ public class InitiativeService {
     }
 
     @Transactional(readOnly = false)
-    public Long createMunicipalityInitiative(InitiativeUICreateDto createDto) {
+    public Long createMunicipalityInitiative(InitiativeUICreateDto createDto, Locale locale) {
 
         Maybe<String> managementHash;
         if (createDto.isCollectable()) {
@@ -57,13 +58,13 @@ public class InitiativeService {
         initiativeDao.assignAuthor(initiativeId, participantId);
 
         if (!createDto.isCollectable()) {
-            sendNotCollectableEmails(initiativeId);
+            sendNotCollectableEmails(initiativeId, locale);
         }
 
         return initiativeId;
     }
 
-    private void sendNotCollectableEmails(Long initiativeId) {
+    private void sendNotCollectableEmails(Long initiativeId, Locale locale) {
 
         InitiativeViewInfo initiative = initiativeDao.getById(initiativeId);
         ContactInfo contactInfo = initiativeDao.getContactInfo(initiativeId);
@@ -71,9 +72,8 @@ public class InitiativeService {
 
         InitiativeEmailInfo emailInfo = InitiativeEmailInfo.parse(contactInfo, initiative, url);
 
-        emailService.sendNotCollectableToMunicipality(emailInfo, municipalityDao.getMunicipalityEmail(initiative.getMunicipalityId()));
-        emailService.sendNotCollectableToAuthor(emailInfo);
-
+        emailService.sendNotCollectableToMunicipality(emailInfo, municipalityDao.getMunicipalityEmail(initiative.getMunicipalityId()), locale);
+        emailService.sendNotCollectableToAuthor(emailInfo, locale);
     }
 
     @Transactional(readOnly = false)

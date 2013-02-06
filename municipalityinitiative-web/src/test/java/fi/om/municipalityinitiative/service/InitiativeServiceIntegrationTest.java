@@ -44,19 +44,19 @@ public class InitiativeServiceIntegrationTest {
 
     @Test
     public void createNotCollectable() {
-        service.createMunicipalityInitiative(createDto(false));
+        service.createMunicipalityInitiative(createDto(false), null);
         assertThat(testHelper.countAll(QMunicipalityInitiative.municipalityInitiative), is(1L));
     }
     
     @Test
     public void createCollectable() {
-        service.createMunicipalityInitiative(createDto(true));
+        service.createMunicipalityInitiative(createDto(true), null);
         assertThat(testHelper.countAll(QMunicipalityInitiative.municipalityInitiative), is(1L));
     }    
 
     @Test
     public void all_fields_are_set_when_getting_municipalityInitiativeInfo() throws Exception {
-        Long initiativeId = service.createMunicipalityInitiative(createDto(true));
+        Long initiativeId = service.createMunicipalityInitiative(createDto(true), null);
         InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
         ReflectionTestUtils.assertNoNullFields(initiative);
     }
@@ -64,7 +64,7 @@ public class InitiativeServiceIntegrationTest {
     @Test
     public void create_and_get() {
         InitiativeUICreateDto createDto = createDto(false);
-        Long initiativeId = service.createMunicipalityInitiative(createDto);
+        Long initiativeId = service.createMunicipalityInitiative(createDto, null);
         InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
 
         assertThat(initiative.getId(), is(initiativeId));
@@ -86,7 +86,7 @@ public class InitiativeServiceIntegrationTest {
     @Test
     public void creating_collectable_initiative_adds_hash() {
         InitiativeUICreateDto createDto = createDto(true);
-        Long initiativeId = service.createMunicipalityInitiative(createDto);
+        Long initiativeId = service.createMunicipalityInitiative(createDto, null);
         InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
 
         assertThat(initiative.getManagementHash().get(), is("0000000000111111111122222222223333333333"));
@@ -96,7 +96,7 @@ public class InitiativeServiceIntegrationTest {
     @Test
     public void creating_collectable_initiative_leaves_sent_time_null() {
         InitiativeUICreateDto createDto = createDto(true);
-        Long initiativeId = service.createMunicipalityInitiative(createDto);
+        Long initiativeId = service.createMunicipalityInitiative(createDto, null);
         InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
 
         assertThat(initiative.getSentTime().isPresent(), is(false));
@@ -105,7 +105,7 @@ public class InitiativeServiceIntegrationTest {
     @Test
     public void creating_not_collectable_initiative_sets_sent_time() {
         InitiativeUICreateDto createDto = createDto(false);
-        Long initiativeId = service.createMunicipalityInitiative(createDto);
+        Long initiativeId = service.createMunicipalityInitiative(createDto, null);
         InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
 
         assertThat(initiative.getSentTime().isPresent(), is(true));

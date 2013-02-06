@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.newdto.email.InitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.util.JavaMailSenderFake;
+import fi.om.municipalityinitiative.util.Locales;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -32,6 +33,8 @@ public class MailSendingEmailServiceTest {
     public static final String CONTACT_NAME = "Sender Name";
     public static final String CONTACT_ADDRESS = "Sender address";
     public static final String INITIATIVE_URL = "http://www.some.example.url.to.initiative";
+    public static final String MUNICIPALITY_EMAIL = "some_test_address@example.com";
+
     @Resource
     private EmailService emailService;
 
@@ -45,34 +48,37 @@ public class MailSendingEmailServiceTest {
         javaMailSenderFake.getSentMessages().clear();
 
     }
+    
+    
+    // Not Collectable
 
     @Test
-    public void send_straight_to_municipality_assigns_municipality_email_to_sendTo_field() throws MessagingException, InterruptedException {
+    public void notCollectable_to_municipality_assigns_municipality_email_to_sendTo_field() throws MessagingException, InterruptedException {
         InitiativeEmailInfo initiative = createEmailInfo();
-        emailService.sendNotCollectableToMunicipality(initiative, "some_test_address@example.com");
+        emailService.sendNotCollectableToMunicipality(initiative, MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
         assertThat(getSingleSentMessage().getAllRecipients().length, is(1));
-        assertThat(getSingleSentMessage().getAllRecipients()[0].toString(), is("some_test_address@example.com"));
+        assertThat(getSingleSentMessage().getAllRecipients()[0].toString(), is(MUNICIPALITY_EMAIL));
     }
 
     @Test
-    public void send_straight_to_municipality_reads_subject_to_email() throws InterruptedException, MessagingException {
+    public void notCollectable_to_municipality_reads_subject_to_email() throws InterruptedException, MessagingException {
         InitiativeEmailInfo initiative = createEmailInfo();
-        emailService.sendNotCollectableToMunicipality(initiative, "some_test_address@example.com");
+        emailService.sendNotCollectableToMunicipality(initiative, MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
         assertThat(getSingleSentMessage().getSubject(), is("Kuntalaisaloite: " + INITIATIVE_NAME));
     }
 
     @Test
-    public void send_straight_to_municipality_adds_initiativeInfo_and_contactInfo_to_email_message() throws Exception {
+    public void notCollectable_to_municipality_adds_initiativeInfo_and_contactInfo_to_email_message() throws Exception {
         InitiativeEmailInfo initiative = createEmailInfo();
-        emailService.sendNotCollectableToMunicipality(initiative, "some_test_address@example.com");
+        emailService.sendNotCollectableToMunicipality(initiative, MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
 
         assertEmailHasInitiativeDetailsAndContactInfo();
     }
 
     @Test
-    public void send_straight_to_municipality_uses_localizations_at_content() throws Exception {
+    public void notCollectable_to_municipality_uses_localizations_at_content() throws Exception {
         InitiativeEmailInfo initiativeEmailInfo = createEmailInfo();
-        emailService.sendNotCollectableToMunicipality(initiativeEmailInfo, "some@example.com");
+        emailService.sendNotCollectableToMunicipality(initiativeEmailInfo, MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
 
         MessageContent messageContent = getMessageContent();
         assertThat(messageContent.html, containsString("Yhteystiedot"));
@@ -81,45 +87,122 @@ public class MailSendingEmailServiceTest {
 
     @Test
     @Ignore("Un-comment implementation")
-    public void send_straight_to_municipality_assigns_senders_email_to_repllyTo_field() throws InterruptedException, MessagingException {
+    public void notCollectable_to_municipality_assigns_senders_email_to_repllyTo_field() throws InterruptedException, MessagingException {
         InitiativeEmailInfo initiative = createEmailInfo();
-        emailService.sendNotCollectableToMunicipality(initiative, "some_test_address@example.com");
+        emailService.sendNotCollectableToMunicipality(initiative, MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
         assertThat(getSingleSentMessage().getReplyTo()[0].toString(), is(CONTACT_EMAIL));
 
     }
 
     @Test
-    public void send_straight_to_author_assign_author_email_to_sendTo_field() throws InterruptedException, MessagingException {
+    public void notCollectable_to_author_assign_author_email_to_sendTo_field() throws InterruptedException, MessagingException {
         InitiativeEmailInfo initiative = createEmailInfo();
-        emailService.sendNotCollectableToAuthor(initiative);
+        emailService.sendNotCollectableToAuthor(initiative, Locales.LOCALE_FI);
         assertThat(getSingleSentMessage().getAllRecipients().length, is(1));
         assertThat(getSingleSentMessage().getAllRecipients()[0].toString(), is(CONTACT_EMAIL));
     }
 
     @Test
-    public void send_straight_to_author_reads_subject_to_email() throws InterruptedException, MessagingException {
+    public void notCollectable_to_author_reads_subject_to_email() throws InterruptedException, MessagingException {
         InitiativeEmailInfo initiative = createEmailInfo();
-        emailService.sendNotCollectableToAuthor(initiative);
+        emailService.sendNotCollectableToAuthor(initiative, Locales.LOCALE_FI);
         assertThat(getSingleSentMessage().getSubject(), is("Aloite on lähetetty kuntaan"));
     }
 
     @Test
-    public void send_straight_to_author_adds_initiativeInfo_and_contactInfo_to_email_message() throws Exception {
+    public void notCollectable_to_author_adds_initiativeInfo_and_contactInfo_to_email_message() throws Exception {
         InitiativeEmailInfo initiative = createEmailInfo();
-        emailService.sendNotCollectableToAuthor(initiative);
+        emailService.sendNotCollectableToAuthor(initiative, Locales.LOCALE_FI);
 
         assertEmailHasInitiativeDetailsAndContactInfo();
     }
 
     @Test
-    public void send_straight_to_author_uses_localizations_at_content() throws Exception {
+    public void notCollectable_to_author_uses_localizations_at_content() throws Exception {
         InitiativeEmailInfo initiativeEmailInfo = createEmailInfo();
-        emailService.sendNotCollectableToAuthor(initiativeEmailInfo);
+        emailService.sendNotCollectableToAuthor(initiativeEmailInfo, Locales.LOCALE_FI);
 
         MessageContent messageContent = getMessageContent();
         assertThat(messageContent.html, containsString("Yhteystiedot"));
         assertThat(messageContent.text, containsString("Yhteystiedot"));
     }
+    
+    // Collectable
+
+    @Test
+    public void collectable_to_municipality_assigns_municipality_email_to_sendTo_field() throws MessagingException, InterruptedException {
+        InitiativeEmailInfo initiative = createEmailInfo();
+        emailService.sendNotCollectableToMunicipality(initiative, MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
+        assertThat(getSingleSentMessage().getAllRecipients().length, is(1));
+        assertThat(getSingleSentMessage().getAllRecipients()[0].toString(), is(MUNICIPALITY_EMAIL));
+    }
+
+    @Test
+    public void collectable_to_municipality_reads_subject_to_email() throws InterruptedException, MessagingException {
+        InitiativeEmailInfo initiative = createEmailInfo();
+        emailService.sendCollectableToMunicipality(initiative, MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
+        assertThat(getSingleSentMessage().getSubject(), is("Kuntalaisaloite: " + INITIATIVE_NAME));
+    }
+
+    @Test
+    public void collectable_to_municipality_adds_initiativeInfo_and_contactInfo_to_email_message() throws Exception {
+        InitiativeEmailInfo initiative = createEmailInfo();
+        emailService.sendCollectableToMunicipality(initiative, MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
+
+        assertEmailHasInitiativeDetailsAndContactInfo();
+    }
+
+    @Test
+    public void collectable_to_municipality_uses_localizations_at_content() throws Exception {
+        InitiativeEmailInfo initiativeEmailInfo = createEmailInfo();
+        emailService.sendCollectableToMunicipality(initiativeEmailInfo, MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
+
+        MessageContent messageContent = getMessageContent();
+        assertThat(messageContent.html, containsString("Yhteystiedot"));
+        assertThat(messageContent.text, containsString("Yhteystiedot"));
+    }
+
+    @Test
+    @Ignore("Un-comment implementation")
+    public void collectable_to_municipality_assigns_senders_email_to_repllyTo_field() throws InterruptedException, MessagingException {
+        InitiativeEmailInfo initiative = createEmailInfo();
+        emailService.sendCollectableToMunicipality(initiative, MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
+        assertThat(getSingleSentMessage().getReplyTo()[0].toString(), is(CONTACT_EMAIL));
+
+    }
+
+    @Test
+    public void collectable_to_author_assign_author_email_to_sendTo_field() throws InterruptedException, MessagingException {
+        InitiativeEmailInfo initiative = createEmailInfo();
+        emailService.sendCollectableToAuthor(initiative, Locales.LOCALE_FI);
+        assertThat(getSingleSentMessage().getAllRecipients().length, is(1));
+        assertThat(getSingleSentMessage().getAllRecipients()[0].toString(), is(CONTACT_EMAIL));
+    }
+
+    @Test
+    public void collectable_to_author_reads_subject_to_email() throws InterruptedException, MessagingException {
+        InitiativeEmailInfo initiative = createEmailInfo();
+        emailService.sendCollectableToAuthor(initiative, Locales.LOCALE_FI);
+        assertThat(getSingleSentMessage().getSubject(), is("Aloite on lähetetty kuntaan"));
+    }
+
+    @Test
+    public void collectable_to_author_adds_initiativeInfo_and_contactInfo_to_email_message() throws Exception {
+        InitiativeEmailInfo initiative = createEmailInfo();
+        emailService.sendCollectableToAuthor(initiative, Locales.LOCALE_FI);
+
+        assertEmailHasInitiativeDetailsAndContactInfo();
+    }
+
+    @Test
+    public void collectable_to_author_uses_localizations_at_content() throws Exception {
+        InitiativeEmailInfo initiativeEmailInfo = createEmailInfo();
+        emailService.sendCollectableToAuthor(initiativeEmailInfo, Locales.LOCALE_FI);
+
+        MessageContent messageContent = getMessageContent();
+        assertThat(messageContent.html, containsString("Yhteystiedot"));
+        assertThat(messageContent.text, containsString("Yhteystiedot"));
+    }    
 
     private void assertEmailHasInitiativeDetailsAndContactInfo() throws Exception {
         MessageContent messageContent = getMessageContent();
