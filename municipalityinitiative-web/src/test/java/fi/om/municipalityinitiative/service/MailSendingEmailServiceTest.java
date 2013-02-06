@@ -118,13 +118,21 @@ public class MailSendingEmailServiceTest {
     }
 
     @Test
-    public void notCollectable_to_author_uses_localizations_at_content() throws Exception {
+    public void notCollectable_to_author_uses_finnish_localization() throws Exception {
         InitiativeEmailInfo initiativeEmailInfo = createEmailInfo();
         emailService.sendNotCollectableToAuthor(initiativeEmailInfo, Locales.LOCALE_FI);
 
         MessageContent messageContent = getMessageContent();
         assertThat(messageContent.html, containsString("Yhteystiedot"));
-        assertThat(messageContent.text, containsString("Yhteystiedot"));
+    }
+
+    @Test
+    public void notCollectable_to_author_uses_sv_localization_localization() throws Exception {
+        InitiativeEmailInfo initiativeEmailInfo = createEmailInfo();
+        emailService.sendNotCollectableToAuthor(initiativeEmailInfo, Locales.LOCALE_SV);
+
+        MessageContent messageContent = getMessageContent();
+        assertThat(messageContent.html, containsString("Kontakt information"));
     }
     
     // Collectable
