@@ -1,4 +1,4 @@
-<#import "email-utils.ftl" as eu />
+<#import "email-utils.ftl" as u />
 
 <#escape x as x?html>
 
@@ -7,45 +7,41 @@
     <table border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, sans-serif;" width="100%" bgcolor="#f0f0f0">
     <tr>
         <td align="center">
-            <@eu.spacer "15" />
+            <@u.spacer "15" />
             
             <#-- TODO: IF comment (Saate) exists
             <@comment "fi" "html" />
-            <@eu.spacer "15" />
+            <@u.spacer "15" />
             -->
             
             <table border="0" cellspacing="0" cellpadding="0" width="640" style="background:#fff; border-radius:5px; text-align:left; font-family:Arial, sans-serif;">        
                 <tr style="color:#fff;">
-                    <td width="20" style="background:#fff;"><@eu.spacer "0" /></td>
-                    <td width="550" style="background:#fff; text-align:left;"><@eu.spacer "15" /><h4 style="font-size:20px; margin:0; color:#087480; font-weight:normal; font-family:'PT Sans','Trebuchet MS',Helvetica,sans-serif">${title}</h4></th>
-                    <td width="20" style="background:#fff;"><@eu.spacer "0" /></td>
+                    <td width="20" style="background:#fff;"><@u.spacer "0" /></td>
+                    <td width="550" style="background:#fff; text-align:left;"><@u.spacer "15" /><h4 style="font-size:20px; margin:0; color:#087480; font-weight:normal; font-family:'PT Sans','Trebuchet MS',Helvetica,sans-serif">${title}</h4></th>
+                    <td width="20" style="background:#fff;"><@u.spacer "0" /></td>
                 </tr>
                 <tr>
                     <td colspan="3" style="">
                     <table border="0" cellspacing="0" cellpadding="0" style="width:100%;">
                         <tr>
-                            <td width="20" ><@eu.spacer "0" /></td>
+                            <td width="20" ><@u.spacer "0" /></td>
                             <td style="font-size:12px; font-family:'PT Sans','Trebuchet MS',Helvetica,sans-serif;">
-                                <#--<@eu.spacer "5" />-->
     
                                 <#-- Email content -->
                                 <#nested />
                                         
-                                <@eu.spacer "5" />
+                                <@u.spacer "5" />
                             </td>
-                            <td width="20"><@eu.spacer "0" /></td>
+                            <td width="20"><@u.spacer "0" /></td>
                         </tr>
                     </table>
                     </td>
                 </tr>
             </table>
 
-            <#if lang == "fi">
-                <p style="color:#686868; font-size:12px;">Epäiletkö että viesti tuli väärään osoitteeseen? Ole hyvä ja poista tämä viesti.</p>
-            <#else>
-                <p style="color:#686868; font-size:12px;">Misstänker du att meddelandet kom till fel adress? Var god och radera detta meddelandet.</p>
-            </#if>
-            <@eu.spacer "15" />
+            <p style="color:#686868; font-size:12px;"><@u.message "email.footer" /></p>
+
+            <@u.spacer "15" />
                     
         </td>
     </tr>
@@ -63,30 +59,18 @@
  * @param type 'text' or 'html'
  -->
 <#macro initiativeDetails lang="" type="">
-    <#if lang == "fi">
-        <#if type == "html">
-            <h4 style="font-size:12px; margin:1em 0 0 0;">${emailInfo.name!""}</h4>
-            <p style="margin:0 0 1em 0;">Aloite luotu Kuntalaisaloite.fi-palveluun: <@eu.localDate emailInfo.createTime /><br/>
-            <#if emailInfo.sentTime.present>Lähetetty kuntaan: <@eu.localDate emailInfo.sentTime.value /></#if></p>
-            <@eu.text emailInfo.proposal />
-        <#else>
-            Kuntalaisaloite:
-            "${emailInfo.name!""}"
-            Aloite luotu: <@eu.localDate emailInfo.createTime />
-            
-            ${emailInfo.proposal}
-        </#if>
-    <#elseif lang == "sv">
-        <#if type == "html">
-            <h4 style="font-size:12px; margin:1em 0 0 0;">${emailInfo.name!""}</h4>
-            <p style="margin:0 0 1em 0;">Initiativet har skapats: <@eu.localDate emailInfo.createTime /></p>
-            <@eu.text emailInfo.proposal />
-        <#else>
-            Invånarinitiativ:
-            "${emailInfo.name!""}"
-            Invånarinitiativet har skapats: <@eu.localDate emailInfo.createTime />
-        </#if>    
-    </#if>        
+    <#if type == "html">
+        <h4 style="font-size:12px; margin:1em 0 0 0;">${emailInfo.name!""}</h4>
+        <p style="margin:0 0 1em 0;"><@u.message "email.date.create" /> <@u.localDate emailInfo.createTime />
+        <#if emailInfo.sentTime.present><br/><@u.message "email.date.sent" /> <@u.localDate emailInfo.sentTime.value /></#if></p>
+        <@u.text emailInfo.proposal />
+    <#else>
+        <@u.message "email.initiative" />:
+        "${emailInfo.name!""}"
+        <@u.message "email.date.create" /> <@u.localDate emailInfo.createTime />
+        
+        ${emailInfo.proposal}
+    </#if>       
 </#macro>
 
 <#--
@@ -98,34 +82,18 @@
  * @param type 'text' or 'html'
  -->
 <#macro contactInfo lang="" type="">
-    <#if lang == "fi">
-        <#if type == "html">
-            <h4 style="font-size:12px; margin:1em 0 0 0;">${localizations.getMessage("email.contact.info")}</h4>
-            <p style="margin:0 0 1em 0;">${emailInfo.contactInfo.name!""}<br/>
-            ${emailInfo.contactInfo.email!""}<br/>
-            ${emailInfo.contactInfo.phone!""}<br/>
-            ${emailInfo.contactInfo.address!""}</p>
-        <#else>
-            Yhteystiedot:
-            ${emailInfo.contactInfo.name!""}
-            ${emailInfo.contactInfo.email!""}
-            ${emailInfo.contactInfo.phone!""}
-            ${emailInfo.contactInfo.address!""}
-        </#if>
-    <#elseif lang == "sv">
-        <#if type == "html">
-            <h4 style="font-size:12px; margin:1em 0 0 0;">Kontaktuppgifter</h4>
-            <p style="margin:0 0 1em 0;">${emailInfo.contactInfo.name!""}<br/>
-            ${emailInfo.contactInfo.email!""}<br/>
-            ${emailInfo.contactInfo.phone!""}<br/>
-            ${emailInfo.contactInfo.address!""}</p>
-        <#else>
-            Kontaktuppgifter:
-            ${emailInfo.contactInfo.name!""}
-            ${emailInfo.contactInfo.email!""}
-            ${emailInfo.contactInfo.phone!""}
-            ${emailInfo.contactInfo.address!""}
-        </#if>    
+    <#if type == "html">
+        <h4 style="font-size:12px; margin:1em 0 0 0;"><@u.message "email.contact.info" /></h4>
+        <p style="margin:0 0 1em 0;">${emailInfo.contactInfo.name!""}<br/>
+        ${emailInfo.contactInfo.email!""}<br/>
+        ${emailInfo.contactInfo.phone!""}<br/>
+        ${emailInfo.contactInfo.address!""}</p>
+    <#else>
+        <@u.message "email.contact.info" />:
+        ${emailInfo.contactInfo.name!""}
+        ${emailInfo.contactInfo.email!""}
+        ${emailInfo.contactInfo.phone!""}
+        ${emailInfo.contactInfo.address!""}
     </#if>        
 </#macro>
 
@@ -138,24 +106,28 @@
  * @param lang 'fi' or 'sv'
  * @param type 'text' or 'html'
  * @param sentTo 'show' shows additional info
+ *
+ * TODO: Check if we need this.
  -->
+ <#--
 <#macro emailBottom lang="" type="" sentTo="">
     <#if lang == "fi">
         <#if type == "html">
-            <p style="margin:1em 0 0.5em 0;">Aloite sijaitsee osoitteessa: <@eu.link viewUrlFi /></p>
+            <p style="margin:1em 0 0.5em 0;">Aloite sijaitsee osoitteessa: <@u.link viewUrlFi /></p>
         <#else>
             Aloitteesi sijaitsee osoitteessa:
             ${viewUrlFi}        
         </#if>
     <#elseif lang == "sv">
         <#if type == "html">
-            <p style="margin:1em 0 0.5em 0;">Initiativet finns på adressen: <@eu.link viewUrlSv /></p>
+            <p style="margin:1em 0 0.5em 0;">Initiativet finns på adressen: <@u.link viewUrlSv /></p>
         <#else>
             Initiativet finns på adressen:
             ${viewUrlSv}
         </#if>    
     </#if>        
 </#macro>
+-->
 
 <#--
  * comment
@@ -166,50 +138,29 @@
  * @param type 'text' or 'html'
  -->
 <#macro comment lang="" type="">
-    <#if lang == "fi">
-        <#if type == "html">
-            
-
-            <table border="0" cellspacing="0" cellpadding="0" width="640" style="background:#fff; border-radius:5px; text-align:left; font-family:Arial, sans-serif;">        
-                <#--<tr style="color:#fff;">
-                    <td width="20" style="background:#fff;"><@eu.spacer "0" /></td>
-                    <td width="550" style="background:#fff; text-align:left;"><@eu.spacer "15" /><h4 style="font-size:20px; margin:0; color:#087480; font-weight:normal; font-family:'PT Sans','Trebuchet MS',Helvetica,sans-serif">${title}</h4></th>
-                    <td width="20" style="background:#fff;"><@eu.spacer "0" /></td>
-                </tr>-->
-                <tr>
-                    <td colspan="3" style="">
-                    <table border="0" cellspacing="0" cellpadding="0" style="width:100%;">
-                        <tr>
-                            <td width="20" ><@eu.spacer "0" /></td>
-                            <td style="font-size:12px; font-family:'PT Sans','Trebuchet MS',Helvetica,sans-serif;">
-                                <#--<@eu.spacer "5" />-->
-    
-                                <h4 style="font-size:12px; margin:1em 0 0 0;">Saate</h4>
-                                <p style="margin:0.5em 0;">Tähän tulee saateen teksti, jahka se on tehty.</p>
-                                        
-                                <@eu.spacer "5" />
-                            </td>
-                            <td width="20"><@eu.spacer "0" /></td>
-                        </tr>
-                    </table>
-                    </td>
-                </tr>
-            </table>
-
-
-
-        <#else>
-            Aloitteesi sijaitsee osoitteessa:
-            ${viewUrlFi}        
-        </#if>
-    <#elseif lang == "sv">
-        <#if type == "html">
-            <p style="margin:1em 0 0.5em 0;">Initiativet finns på adressen: <@eu.link viewUrlSv /></p>
-        <#else>
-            Initiativet finns på adressen:
-            ${viewUrlSv}
-        </#if>    
-    </#if>        
+    <#if type == "html">
+        <table border="0" cellspacing="0" cellpadding="0" width="640" style="background:#fff; border-radius:5px; text-align:left; font-family:Arial, sans-serif;">        
+            <tr>
+                <td colspan="3" style="">
+                <table border="0" cellspacing="0" cellpadding="0" style="width:100%;">
+                    <tr>
+                        <td width="20" ><@u.spacer "0" /></td>
+                        <td style="font-size:12px; font-family:'PT Sans','Trebuchet MS',Helvetica,sans-serif;">
+                            <h4 style="font-size:12px; margin:1em 0 0 0;"><@u.message "email.commentToMunicipality" /></h4>
+                            <p style="margin:0.5em 0;">Tähän tulee saateen teksti, jahka se on tehty.</p>
+                                    
+                            <@u.spacer "5" />
+                        </td>
+                        <td width="20"><@u.spacer "0" /></td>
+                    </tr>
+                </table>
+                </td>
+            </tr>
+        </table>
+    <#else>
+        <@u.message "email.commentToMunicipality" />:
+        Tähän tulee saateen teksti, jahka se on tehty.        
+    </#if>
 </#macro>
 
 <#--
@@ -219,16 +170,18 @@
  * 
  * @param lang 'fi' or 'sv'
  * @param type 'text' or 'html'
+ *
+ * TODO: Check if we need this.
  -->
 <#macro abstract lang="" type="">
     <#if lang == "fi">
         <#if type == "html">
             <h4 style="font-size:12px; margin:1em 0 0.5em 0;">Tiivistelmä kuntalaisloitteesta</h4>
-            <p style="margin:0.5em 0;"><@eu.shortenText initiative.proposal "fi" "html" /></p>
-            <p style="margin:0.5em 0;"><@eu.link viewUrlFi "Näytä aloitteen koko sisältö &rarr;" /></p>
+            <p style="margin:0.5em 0;"><@u.shortenText initiative.proposal "fi" "html" /></p>
+            <p style="margin:0.5em 0;"><@u.link viewUrlFi "Näytä aloitteen koko sisältö &rarr;" /></p>
         <#else>
             Tiivistelmä kuntalaisloitteesta:
-            <@eu.shortenText initiative.proposal "fi" "text" />
+            <@u.shortenText initiative.proposal "fi" "text" />
             
             
             Näytä aloitteen koko sisältö:
@@ -237,11 +190,11 @@
     <#elseif lang == "sv">
         <#if type == "html">
             <h4 style="font-size:12px; margin:1em 0 0.5em 0;">Initiativets sammanfattning</h4>
-            <p style="margin:0.5em 0;"><@eu.shortenText initiative.proposal "sv" "html" /></p>
-            <p style="margin:0.5em 0;"><@eu.link viewUrlSv "Visa initiativets innehåll &rarr;" /></p>
+            <p style="margin:0.5em 0;"><@u.shortenText initiative.proposal "sv" "html" /></p>
+            <p style="margin:0.5em 0;"><@u.link viewUrlSv "Visa initiativets innehåll &rarr;" /></p>
         <#else>
             Sammandrag av invånarinitiativ:
-            <@eu.shortenText initiative.proposal "sv" "text" />
+            <@u.shortenText initiative.proposal "sv" "text" />
             
             
             Visa initiativets innehåll:

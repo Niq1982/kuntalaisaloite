@@ -12,11 +12,8 @@
  * @param args is the list of arguments for the message
 -->
 <#macro message key args=[]>
-    <@spring.messageArgsText key args "[" + key + "]"/>
+    ${localizations.getMessage(key, args)}
 </#macro>
-
-
-
 
 
 <#-- 
@@ -96,7 +93,7 @@
  -->
 <#macro titleBlock title="">
 <#noescape>
-    <table border="0" cellspacing="0" cellpadding="0" width="100%">        
+    <table border="0" cellspacing="0" cellpadding="0" width="100%">
         <tr style="color:#fff;">
             <th width="20" style="background:#aaa; border-top-left-radius:5px;"><@spacer "0" /></th>
             <th style="background:#aaa; text-align:left;"><h4 style="font-size:13px; margin:1em 0; font-family:Arial,sans-serif;">${title}</h4></th>
@@ -142,6 +139,7 @@
 -->
 <#macro localDate date="" lang="">
 <@compress single_line=true>
+<#-- TODO: FIX DATES - tests breaks. -->
     <#--<#if date?is_hash>
         ${date.toString("dd.MM.yyyy")!""}
     <#else>
