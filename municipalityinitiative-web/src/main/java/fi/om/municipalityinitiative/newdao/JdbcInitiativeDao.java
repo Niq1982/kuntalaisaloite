@@ -120,10 +120,14 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     @Transactional(readOnly = false)
-    public void markAsSended(Long initiativeId) {
+    public void markAsSended(Long initiativeId, ContactInfo contactInfo) {
 
         long affectedRows = queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.sent, new DateTime())
+                .set(municipalityInitiative.contactPhone, contactInfo.getPhone())
+                .set(municipalityInitiative.contactEmail, contactInfo.getEmail())
+                .set(municipalityInitiative.contactAddress, contactInfo.getAddress())
+                .set(municipalityInitiative.contactName, contactInfo.getName())
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .where(municipalityInitiative.managementHash.isNotNull())
                 .where(municipalityInitiative.sent.isNull())

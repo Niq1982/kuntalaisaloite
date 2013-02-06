@@ -33,6 +33,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.inject.Inject;
 
@@ -69,7 +70,6 @@ public class AppConfiguration {
         public static EncryptablePropertiesConfigurer propertyProcessor() {
             return new EncryptablePropertiesConfigurer(new ClassPathResource("app.properties"));
         }
-        
     }
     
     /**
@@ -213,39 +213,38 @@ public class AppConfiguration {
     private Period getRequiredPeriod(String key) {
         return periodFormatter.parsePeriod(env.getRequiredProperty(key));
     }
-    
+
     @Bean
     public EmailService emailService(FreeMarkerConfigurer freeMarkerConfigurer,
                                      MessageSource messageSource,
                                      JavaMailSender javaMailSender) {
-        Urls.initUrls(env.getRequiredProperty(PropertyNames.baseURL)); //FIXME: quick hack, move this to right place!!!
 
         String defaultReplyTo = env.getRequiredProperty(PropertyNames.emailDefaultReplyTo);
         String testSendTo = env.getProperty(PropertyNames.testEmailSendTo);
         boolean testConsoleOutput = env.getProperty(PropertyNames.testEmailConsoleOutput, Boolean.class, TEST_EMAIL_CONSOLE_OUTPUT_DEFAULT);
         return new MailSendingEmailService(freeMarkerConfigurer, messageSource, javaMailSender, defaultReplyTo, testSendTo, testConsoleOutput);
     }
-    
+
     @Bean
     public LocalValidatorFactoryBeanFix validator() {
         return new LocalValidatorFactoryBeanFix();
     }
-    
+
     @Bean
     public SQLExceptionTranslator sqlExceptionTranslator() {
         return new SQLErrorCodeSQLExceptionTranslator(jdbcConfiguration.dataSource());
     }
-    
+
     @Bean
     public SQLExceptionTranslatorAspect sqlExceptionTranslatorAspect() {
         return new SQLExceptionTranslatorAspect(sqlExceptionTranslator());
     }
-    
-    @Bean 
+
+    @Bean
     public TaskExecutorAspect taskExecutorAspect() {
         return new TaskExecutorAspect();
     }
-    
+
     @Bean
     public ExecutorService executorService() {
         final ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -256,12 +255,12 @@ public class AppConfiguration {
          });
         return executorService;
     }
-    
+
     @Bean
     public SecurityFilter securityFilter() {
         return new SecurityFilter();
     }
-    
+
     @Bean
     public ErrorFilter errorFilter() {
         return new ErrorFilter(env.getRequiredProperty(PropertyNames.errorFeedbackEmail));
@@ -280,5 +279,10 @@ public class AppConfiguration {
     @Bean
     public CacheHeaderFilter apiFilter() {
         return new CacheHeaderFilter(WebConfiguration.optimizeResources(env), 5);
+    }
+
+    @PostConstruct
+    public void initUrls() {
+        Urls.initUrls(env.getRequiredProperty(PropertyNames.baseURL));
     }
 }

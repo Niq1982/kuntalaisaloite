@@ -18,7 +18,7 @@ public interface InitiativeDao {
 
     void assignAuthor(Long municipalityInitiativeId, Long participantId);
 
-    void markAsSended(Long initiativeId);
+    void markAsSended(Long initiativeId, ContactInfo contactInfo);
 
     ContactInfo getContactInfo(Long initiativeId);
 }
