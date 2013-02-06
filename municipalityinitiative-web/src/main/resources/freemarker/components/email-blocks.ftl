@@ -2,7 +2,7 @@
 
 <#escape x as x?html>
 
-<#macro emailTemplate lang="fi" title="">
+<#macro emailTemplate title="">
 
     <table border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, sans-serif;" width="100%" bgcolor="#f0f0f0">
     <tr>
@@ -10,7 +10,7 @@
             <@u.spacer "15" />
             
             <#-- TODO: IF comment (Saate) exists
-            <@comment "fi" "html" />
+            <@comment "html" />
             <@u.spacer "15" />
             -->
             
@@ -55,10 +55,10 @@
  *
  * Common initiative details for top section of the email.
  * 
- * @param lang 'fi' or 'sv'
+
  * @param type 'text' or 'html'
  -->
-<#macro initiativeDetails lang="" type="">
+<#macro initiativeDetails type="">
     <#if type == "html">
         <h4 style="font-size:12px; margin:1em 0 0 0;">${emailInfo.name!""}</h4>
         <p style="margin:0 0 1em 0;"><@u.message "email.date.create" /> <@u.localDate emailInfo.createTime />
@@ -78,10 +78,9 @@
  *
  * Contact's name, email, phone and address
  * 
- * @param lang 'fi' or 'sv'
  * @param type 'text' or 'html'
  -->
-<#macro contactInfo lang="" type="">
+<#macro contactInfo type="">
     <#if type == "html">
         <h4 style="font-size:12px; margin:1em 0 0 0;"><@u.message "email.contact.info" /></h4>
         <p style="margin:0 0 1em 0;">${emailInfo.contactInfo.name!""}<br/>
@@ -134,10 +133,9 @@
  *
  * Common initiative details for bottom section of the email.
  * 
- * @param lang 'fi' or 'sv'
  * @param type 'text' or 'html'
  -->
-<#macro comment lang="" type="">
+<#macro comment type="">
     <#if type == "html">
         <table border="0" cellspacing="0" cellpadding="0" width="640" style="background:#fff; border-radius:5px; text-align:left; font-family:Arial, sans-serif;">        
             <tr>

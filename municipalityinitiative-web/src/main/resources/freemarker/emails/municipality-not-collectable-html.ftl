@@ -9,10 +9,10 @@
 <@l.emailHtml "municipality-initiative" title>
 
     <#-- FINNISH -->
-    <@b.emailTemplate "fi" title>
-        <@b.initiativeDetails "fi" "html" />
+    <@b.emailTemplate title>
+        <@b.initiativeDetails "html" />
         
-        <@b.contactInfo "fi" "html" />
+        <@b.contactInfo "html" />
         
         <p style="margin:0 0 1em 0;"><@u.message "email.municipality.sendFrom" /><br/><@u.link emailInfo.url /></p>
         <p style="margin:0 0 1em 0;"><@u.message "email.municipality.replyTo" /></p>
