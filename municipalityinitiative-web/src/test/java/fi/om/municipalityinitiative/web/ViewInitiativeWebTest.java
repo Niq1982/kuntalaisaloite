@@ -9,8 +9,13 @@ import static org.hamcrest.Matchers.is;
 
 public class ViewInitiativeWebTest extends WebTestBase {
 
+    /**
+     * Localization keys as constants.
+     */
+    private static final String MSG_BTN_SEND = "action.send";
+    private static final String MSG_BTN_PARTICIPATE = "action.participate";
+    
     @Test
-    @Ignore("Implement")
     public void manage_view_shows_send_to_municipality_button() {
 
         Long municipalityId = testHelper.createTestMunicipality("Tuusula");
@@ -18,8 +23,8 @@ public class ViewInitiativeWebTest extends WebTestBase {
 
         open(urls.management(initiativeId, "0000000000111111111122222222223333333333"));
 
-        assertTitle("Hallintasivu");
-        assertThat(driver.findElement(By.tagName("button")).getText(), is("Lähetä kuntaan tms"));
+//        assertTitle("Hallintasivu"); // There is no such title. 
+        assertThat(driver.findElement(By.id("js-send-to-municipality")).getText(), is(getMessage(MSG_BTN_SEND)));
     }
 
     @Test
@@ -29,8 +34,8 @@ public class ViewInitiativeWebTest extends WebTestBase {
 
         open(urls.management(initiativeId, "wrong_hash"));
 
-        System.out.println(driver.getPageSource());
-        // TODO: assert that is default view instead of management view
+        // NOTE: ATM the check for public view is that Participate button exists. This might change in the future.
+        assertThat(driver.findElement(By.className("js-participate")).getText(), is(getMessage(MSG_BTN_PARTICIPATE)));
 
     }
 

@@ -20,18 +20,18 @@
 
 
 <#-- 
- * localizedMap
- * 
- * Prints the value of the map with current locale. 
+ * text
+ *  
  * Line breaks are replaced with HTML line-breaks (<br/>).
  * NOTE that returned value is unescaped.
  *
- * @param localizedMap is the localization key 
+ * @param content is the content as string 
 -->
-<#macro text localizedMap locale="fi">
+<#macro text content>
 <@compress single_line=true>
-    <#assign escapedText>${(localizedMap[locale]!"")}</#assign>
-    <#noescape>${escapedText?replace('\n','<br/>')}</#noescape>
+    <#-- FIXME: Does not create paragraph breaks. -->
+    <#assign escapedText>${content!""}</#assign>
+    <#noescape><p style="margin:1em 0 1em 0;">${escapedText?replace('\n\n','</p><p>')?replace('\n','<br/>')}</p></#noescape>
 </@compress>
 </#macro>
 
@@ -142,10 +142,10 @@
 -->
 <#macro localDate date="" lang="">
 <@compress single_line=true>
-    <#if lang == "sv">
-        ${date.toString(dateFormatSv)!""}
+    <#if date?is_hash>
+        ${date.toString("dd.MM.yyyy")!""}
     <#else>
-        ${date.toString(dateFormatFi)!""}
+        ${date?string("dd.MM.yyyy")!""}
     </#if>
 </@compress>
 </#macro>
