@@ -1,5 +1,4 @@
 <#import "/spring.ftl" as spring />
-<#import "utils.ftl" as u />
 
 <#escape x as x?html> 
 
@@ -126,11 +125,11 @@
 -->
 <#macro localDate date="" lang="">
 <@compress single_line=true>
-    <#if date?is_hash>
+    <#--<#if date?is_hash>
         ${date.toString("dd.MM.yyyy")!""}
     <#else>
         ${date?string("dd.MM.yyyy")!""}
-    </#if>
+    </#if>-->
 </@compress>
 </#macro>
 

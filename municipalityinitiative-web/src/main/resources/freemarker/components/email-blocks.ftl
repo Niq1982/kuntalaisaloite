@@ -67,7 +67,7 @@
         <#if type == "html">
             <h4 style="font-size:12px; margin:1em 0 0 0;">${emailInfo.name!""}</h4>
             <p style="margin:0 0 1em 0;">Aloite luotu Kuntalaisaloite.fi-palveluun: <@eu.localDate emailInfo.createTime /><br/>
-            Lähetetty kuntaan: <@eu.localDate emailInfo.sentTime.value /></p>
+            <#if emailInfo.sentTime.present>Lähetetty kuntaan: <@eu.localDate emailInfo.sentTime.value /></#if></p>
             <@eu.text emailInfo.proposal />
         <#else>
             Kuntalaisaloite:
