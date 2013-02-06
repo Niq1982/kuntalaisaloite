@@ -2,11 +2,6 @@
 
 <#escape x as x?html>
 
-<#global viewUrlFi>${urlsFi.view(initiative.id)}</#global>
-<#global viewUrlSv>${urlsSv.view(initiative.id)}</#global>
-<#global defaultFi>Ei käännettyä sisältöä</#global>
-<#global defaultSv>Detta innehåll har ingen översättning</#global>
-
 <#macro emailHtml template title="">
 <html>
 <head>

@@ -1,20 +1,32 @@
-<h2>Aloite toimitettu kuntaan</h2>
+<#import "../components/email-layout-html.ftl" as el />
+<#import "../components/email-utils.ftl" as eu />
+<#import "../components/email-blocks.ftl" as eb />
 
-<p>Otsikko:</p>
-${emailInfo.name}
+<#escape x as x?html> 
 
-<p>Ehdotus:</p>
-${emailInfo.proposal}
+<#assign titleFi="Aloite toimitettu kuntaan" />
+<#assign titleSv="SV Aloite toimitettu kuntaan" />
 
-<p>Muuta shaibaa</p>
-${emailInfo.url}
-${emailInfo.municipalityName}
+<@el.emailHtml "sent-to-municipality" titleFi>
 
-<p>Yhteystietoi:</p>
-${emailInfo.contactInfo.name}
-${emailInfo.contactInfo.address!""}
-${emailInfo.contactInfo.phone!""}
-${emailInfo.contactInfo.email}
+    <#-- FINNISH -->
+    <@eb.emailTemplate "fi" titleFi>
+        <@eb.initiativeDetails "fi" "html" />
+        
+        <@eb.contactInfo "fi" "html" />
 
+        <p>Siirry käsittelemään aloitetta:<br/><@eu.link emailInfo.url /></p>
+    </@eb.emailTemplate>
+    
+    <#-- SWEDISH -->      
+    <@eb.emailTemplate "sv" titleSv>
+        <@eb.initiativeDetails "sv" "html" />
+        
+        <@eb.contactInfo "sv" "html" />
 
+        <p>Övergå till att behandla initiativet:<br/><@eu.link emailInfo.url /></p>
+    </@eb.emailTemplate>
 
+</@el.emailHtml>
+
+</#escape>  

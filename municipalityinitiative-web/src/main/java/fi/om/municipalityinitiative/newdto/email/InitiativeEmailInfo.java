@@ -1,13 +1,20 @@
 package fi.om.municipalityinitiative.newdto.email;
 
+import org.joda.time.DateTime;
+
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
+import fi.om.municipalityinitiative.util.Maybe;
 
 public class InitiativeEmailInfo {
 
     private String name;
 
     private String proposal;
+    
+    private DateTime createTime;
+    
+    private Maybe<DateTime> sentTime;
 
     private String municipalityName;
 
@@ -21,12 +28,13 @@ public class InitiativeEmailInfo {
 
         initiativeEmailInfo.setName(initiative.getName());
         initiativeEmailInfo.setProposal(initiative.getProposal());
+        initiativeEmailInfo.setCreateTime(initiative.getCreateTime());
+        initiativeEmailInfo.setSentTime(initiative.getSentTime());
         initiativeEmailInfo.setMunicipalityName(initiative.getMunicipalityName());
         initiativeEmailInfo.setUrl(url);
         initiativeEmailInfo.setContactInfo(contactInfo);
 
         return initiativeEmailInfo;
-
     }
 
     public String getName() {
@@ -44,7 +52,23 @@ public class InitiativeEmailInfo {
     public void setProposal(String proposal) {
         this.proposal = proposal;
     }
+    
+    public DateTime getCreateTime() {
+        return createTime;
+    }
 
+    public void setCreateTime(DateTime createTime) {
+        this.createTime = createTime;
+    }
+
+    public Maybe<DateTime> getSentTime() {
+        return sentTime;
+    }
+
+    public void setSentTime(Maybe<DateTime> sentTime) {
+        this.sentTime = sentTime;
+    }
+    
     public String getMunicipalityName() {
         return municipalityName;
     }
