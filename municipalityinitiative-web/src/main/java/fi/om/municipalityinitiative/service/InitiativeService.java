@@ -71,8 +71,8 @@ public class InitiativeService {
 
         InitiativeEmailInfo emailInfo = InitiativeEmailInfo.parse(contactInfo, initiative, url);
 
-        emailService.sendNotCollectableToMunicipality(emailInfo, municipalityDao.getMunicipalityEmail(initiative.getMunicipalityId()));
-        emailService.sendNotCollectableToAuthor(emailInfo);
+        emailService.sendNotCollectableToMunicipality(emailInfo, municipalityDao.getMunicipalityEmail(initiative.getMunicipalityId()), Locales.LOCALE_FI);
+        emailService.sendNotCollectableToAuthor(emailInfo, Locales.LOCALE_FI);
 
     }
 
