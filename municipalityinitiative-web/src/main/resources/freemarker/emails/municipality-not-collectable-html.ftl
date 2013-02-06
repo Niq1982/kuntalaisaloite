@@ -19,7 +19,8 @@
         <p style="margin:0 0 1em 0;">Tähän sähköpostiin lähetetty vastaus menee suoraan aloitteen tekijän antamaan sähköpostiosoitteeseen.</p>
     </@eb.emailTemplate>
     
-    <#-- SWEDISH -->      
+    <#-- SWEDISH -->
+    <#-- TODO: Should use localizations      
     <@eb.emailTemplate "sv" titleSv>
         <@eb.initiativeDetails "sv" "html" />
         
@@ -27,6 +28,7 @@
 
         <p>Initiativet har skickats från <@eu.link "https://kuntalaisaloite.fi" "Invånarinitiativ.fi" />-webtjänst. Initiativet finns på adressen:<br/><@eu.link emailInfo.url /></p>
     </@eb.emailTemplate>
+    -->
 
 </@el.emailHtml>
 
