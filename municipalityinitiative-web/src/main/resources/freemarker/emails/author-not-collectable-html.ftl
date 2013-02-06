@@ -9,6 +9,13 @@
 
 <@el.emailHtml "sent-to-municipality" titleFi>
 
+<<<<<<< local
+${localizations.getMessage("initiative.currentAuthor.contactInfo")}
+${emailInfo.contactInfo.name}
+${emailInfo.contactInfo.address!""}
+${emailInfo.contactInfo.phone!""}
+${emailInfo.contactInfo.email}
+=======
     <#-- FINNISH -->
     <@eb.emailTemplate "fi" titleFi>
         <@eb.initiativeDetails "fi" "html" />
@@ -29,4 +36,4 @@
 
 </@el.emailHtml>
 
-</#escape>  
+</#escape>  >>>>>>> other

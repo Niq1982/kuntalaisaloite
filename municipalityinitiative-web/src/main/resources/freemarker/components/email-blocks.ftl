@@ -100,7 +100,7 @@
 <#macro contactInfo lang="" type="">
     <#if lang == "fi">
         <#if type == "html">
-            <h4 style="font-size:12px; margin:1em 0 0 0;">Yhteystiedot</h4>
+            <h4 style="font-size:12px; margin:1em 0 0 0;">${localizations.getMessage("email.contact.info")}</h4>
             <p style="margin:0 0 1em 0;">${emailInfo.contactInfo.name!""}<br/>
             ${emailInfo.contactInfo.email!""}<br/>
             ${emailInfo.contactInfo.phone!""}<br/>

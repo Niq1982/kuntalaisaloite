@@ -10,11 +10,13 @@ Muuta shaibaa
 ${emailInfo.url}
 ${emailInfo.municipalityName}
 
-Yhteystietoi:
+${localizations.getMessage("initiative.currentAuthor.contactInfo")}
 ${emailInfo.contactInfo.name}
 ${emailInfo.contactInfo.address!""}
 ${emailInfo.contactInfo.phone!""}
 ${emailInfo.contactInfo.email}
+<<<<<<< local
+=======
 
 
 <#import "../components/email-layout-html.ftl" as el />
@@ -61,3 +63,4 @@ ${emailInfo.contactInfo.email}
 </@el.emailHtml>
 
 </#escape> 
+>>>>>>> other

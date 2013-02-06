@@ -28,6 +28,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 @Task
@@ -78,9 +79,10 @@ public class MailSendingEmailService implements EmailService {
 
         HashMap<String, Object> dataMap = new HashMap<String, Object>();
         dataMap.put("emailInfo", emailInfo);
+        dataMap.put("localizations", new EmailLocalizationProvider(messageSource, Locales.LOCALE_FI));
         sendEmail(municipalityEmail,
                 emailInfo.getContactInfo().getEmail(),
-                messageSource.getMessage("email.not.collectable.municipality.subject", new String[] {emailInfo.getName()}, Locales.LOCALE_FI),
+                messageSource.getMessage("email.not.collectable.municipality.subject", new String[]{emailInfo.getName()}, Locales.LOCALE_FI),
                 MUNICIPALITY_TEMPLATE,
                 dataMap);
     }
@@ -89,10 +91,11 @@ public class MailSendingEmailService implements EmailService {
     public void sendNotCollectableToAuthor(InitiativeEmailInfo emailInfo) {
         HashMap<String, Object> dataMap = new HashMap<String, Object>();
         dataMap.put("emailInfo", emailInfo);
+        dataMap.put("localizations", new EmailLocalizationProvider(messageSource, Locales.LOCALE_FI));
         sendEmail(emailInfo.getContactInfo().getEmail(),
                 defaultReplyTo,
                 messageSource.getMessage("email.not.collectable.author.subject", new String[] {emailInfo.getName()}, Locales.LOCALE_FI),
-                MUNICIPALITY_TEMPLATE,
+                AUTHOR_TEMPLATE,
                 dataMap);
 
     }
@@ -175,5 +178,20 @@ public class MailSendingEmailService implements EmailService {
         }
 
         return Joiner.on("\r\n").join(rows);
+    }
+
+    public static class EmailLocalizationProvider {
+        private final Locale locale;
+        private final MessageSource messageSource;
+
+
+        public EmailLocalizationProvider(MessageSource messageSource, Locale locale) {
+            this.messageSource = messageSource;
+            this.locale = locale;
+        }
+
+        public String getMessage(String key) {
+            return messageSource.getMessage(key, null, locale);
+        }
     }
 }
