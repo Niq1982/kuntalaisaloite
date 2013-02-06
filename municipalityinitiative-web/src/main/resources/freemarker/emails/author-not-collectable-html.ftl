@@ -4,18 +4,11 @@
 
 <#escape x as x?html> 
 
-<#assign titleFi="Aloite toimitettu kuntaan" />
-<#assign titleSv="SV Aloite toimitettu kuntaan" />
+<#assign titleFi="Aloite toimitettu kuntaan "+emailInfo.municipalityName!"" />
+<#assign titleSv="Initiativet har skicats till "+emailInfo.municipalityName!"" />
 
 <@el.emailHtml "sent-to-municipality" titleFi>
 
-<<<<<<< local
-${localizations.getMessage("initiative.currentAuthor.contactInfo")}
-${emailInfo.contactInfo.name}
-${emailInfo.contactInfo.address!""}
-${emailInfo.contactInfo.phone!""}
-${emailInfo.contactInfo.email}
-=======
     <#-- FINNISH -->
     <@eb.emailTemplate "fi" titleFi>
         <@eb.initiativeDetails "fi" "html" />
@@ -36,4 +29,4 @@ ${emailInfo.contactInfo.email}
 
 </@el.emailHtml>
 
-</#escape>  >>>>>>> other
+</#escape>
