@@ -8,7 +8,10 @@
 
 <@l.emailHtml "municipality-initiative" title>
 
-    <#-- FINNISH -->
+    <#if emailInfo.comment??>
+        <@b.commentBlock "html" emailInfo.comment />
+    </#if>
+
     <@b.emailTemplate title>
         <@b.initiativeDetails "html" />
 

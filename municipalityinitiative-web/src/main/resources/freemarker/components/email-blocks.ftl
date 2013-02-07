@@ -9,11 +9,6 @@
         <td align="center">
             <@u.spacer "15" />
 
-            <#-- TODO: IF comment (Saate) exists. use with emailInfo.comment. Also remove @Ignore at MailSendingEmailServiceTest#collectable_to_municipality_adds_comment_to_email
-            <@comment "html" />
-            <@u.spacer "15" />
-            -->
-
             <table border="0" cellspacing="0" cellpadding="0" width="640" style="background:#fff; border-radius:5px; text-align:left; font-family:Arial, sans-serif;">
                 <tr style="color:#fff;">
                     <td width="20" style="background:#fff;"><@u.spacer "0" /></td>
@@ -42,7 +37,6 @@
             <p style="color:#686868; font-size:12px;"><@u.message "email.footer" /></p>
 
             <@u.spacer "15" />
-
         </td>
     </tr>
     </table>
@@ -55,7 +49,6 @@
  *
  * Common initiative details for top section of the email.
  *
-
  * @param type 'text' or 'html'
  -->
 <#macro initiativeDetails type="">
@@ -65,7 +58,6 @@
         <br/><@u.message "email.date.sent" /> <@u.localDate emailInfo.sentTime /></p>
         <@u.text emailInfo.proposal />
     <#else>
-        <@u.message "email.initiative" />:
         "${emailInfo.name!""}"
         <@u.message "email.date.create" /> <@u.localDate emailInfo.createTime />
 
@@ -96,108 +88,47 @@
     </#if>
 </#macro>
 
-
 <#--
- * emailBottom
- *
- * Common initiative details for bottom section of the email.
- *
- * @param lang 'fi' or 'sv'
- * @param type 'text' or 'html'
- * @param sentTo 'show' shows additional info
- *
- * TODO: Check if we need this.
- -->
- <#--
-<#macro emailBottom lang="" type="" sentTo="">
-    <#if lang == "fi">
-        <#if type == "html">
-            <p style="margin:1em 0 0.5em 0;">Aloite sijaitsee osoitteessa: <@u.link viewUrlFi /></p>
-        <#else>
-            Aloitteesi sijaitsee osoitteessa:
-            ${viewUrlFi}
-        </#if>
-    <#elseif lang == "sv">
-        <#if type == "html">
-            <p style="margin:1em 0 0.5em 0;">Initiativet finns på adressen: <@u.link viewUrlSv /></p>
-        <#else>
-            Initiativet finns på adressen:
-            ${viewUrlSv}
-        </#if>
-    </#if>
-</#macro>
--->
-
-<#--
- * comment
+ * commentBlock
  *
  * Common initiative details for bottom section of the email.
  *
  * @param type 'text' or 'html'
+ * @param msg is the textual comment
  -->
-<#macro comment type="">
+<#macro commentBlock type="" msg="">
     <#if type == "html">
-        <table border="0" cellspacing="0" cellpadding="0" width="640" style="background:#fff; border-radius:5px; text-align:left; font-family:Arial, sans-serif;">
+        <@u.spacer "15" />
+        <table border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, sans-serif;" width="100%" bgcolor="#f0f0f0">
             <tr>
-                <td colspan="3" style="">
-                <table border="0" cellspacing="0" cellpadding="0" style="width:100%;">
-                    <tr>
-                        <td width="20" ><@u.spacer "0" /></td>
-                        <td style="font-size:12px; font-family:'PT Sans','Trebuchet MS',Helvetica,sans-serif;">
-                            <h4 style="font-size:12px; margin:1em 0 0 0;"><@u.message "email.commentToMunicipality" /></h4>
-                            <p style="margin:0.5em 0;">Tähän tulee saateen teksti, jahka se on tehty.</p>
-
-                            <@u.spacer "5" />
-                        </td>
-                        <td width="20"><@u.spacer "0" /></td>
-                    </tr>
-                </table>
+                <td align="center">
+    
+                    <table border="0" cellspacing="0" cellpadding="0" width="640" style="background:#fff; border-radius:5px; text-align:left; font-family:Arial, sans-serif;">
+                        <tr>
+                            <td colspan="3" style="">
+                            <table border="0" cellspacing="0" cellpadding="0" style="width:100%;">
+                                <tr>
+                                    <td width="20" ><@u.spacer "0" /></td>
+                                    <td style="font-size:12px; font-family:'PT Sans','Trebuchet MS',Helvetica,sans-serif;">
+                                        <h4 style="font-size:12px; margin:1em 0 0 0;"><@u.message "email.commentToMunicipality" /></h4>
+                                        <p style="margin:0.5em 0;">${msg}</p>
+            
+                                        <@u.spacer "5" />
+                                    </td>
+                                    <td width="20"><@u.spacer "0" /></td>
+                                </tr>
+                            </table>
+                            </td>
+                        </tr>
+                    </table>
+                    
                 </td>
             </tr>
         </table>
+        <@u.spacer "5" />
     <#else>
         <@u.message "email.commentToMunicipality" />:
-        Tähän tulee saateen teksti, jahka se on tehty.
-    </#if>
-</#macro>
-
-<#--
- * abstract
- *
- * First chapter of the initiative proposal.
- * 
- * @param lang 'fi' or 'sv'
- * @param type 'text' or 'html'
- *
- * TODO: Check if we need this.
- -->
-<#macro abstract lang="" type="">
-    <#if lang == "fi">
-        <#if type == "html">
-            <h4 style="font-size:12px; margin:1em 0 0.5em 0;">Tiivistelmä kuntalaisloitteesta</h4>
-            <p style="margin:0.5em 0;"><@u.shortenText initiative.proposal "fi" "html" /></p>
-            <p style="margin:0.5em 0;"><@u.link viewUrlFi "Näytä aloitteen koko sisältö &rarr;" /></p>
-        <#else>
-            Tiivistelmä kuntalaisloitteesta:
-            <@u.shortenText initiative.proposal "fi" "text" />
-            
-            
-            Näytä aloitteen koko sisältö:
-            ${viewUrlFi}
-        </#if>
-    <#elseif lang == "sv">
-        <#if type == "html">
-            <h4 style="font-size:12px; margin:1em 0 0.5em 0;">Initiativets sammanfattning</h4>
-            <p style="margin:0.5em 0;"><@u.shortenText initiative.proposal "sv" "html" /></p>
-            <p style="margin:0.5em 0;"><@u.link viewUrlSv "Visa initiativets innehåll &rarr;" /></p>
-        <#else>
-            Sammandrag av invånarinitiativ:
-            <@u.shortenText initiative.proposal "sv" "text" />
-            
-            
-            Visa initiativets innehåll:
-            ${viewUrlSv}
-        </#if>
+        ${msg}
     </#if>
 </#macro>
 
