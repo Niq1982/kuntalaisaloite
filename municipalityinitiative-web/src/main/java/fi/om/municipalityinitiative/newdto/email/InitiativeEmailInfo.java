@@ -20,6 +20,8 @@ public class InitiativeEmailInfo {
 
     private ContactInfo contactInfo;
 
+    InitiativeEmailInfo() { }
+
     public static InitiativeEmailInfo parse(ContactInfo contactInfo, InitiativeViewInfo initiative, String url) {
 
         InitiativeEmailInfo initiativeEmailInfo = new InitiativeEmailInfo();
@@ -33,6 +35,15 @@ public class InitiativeEmailInfo {
         initiativeEmailInfo.setContactInfo(contactInfo);
 
         return initiativeEmailInfo;
+    }
+    InitiativeEmailInfo(InitiativeEmailInfo original) {
+        setName(original.getName());
+        setProposal(original.getProposal());
+        setCreateTime(original.getCreateTime());
+        setSentTime(original.getSentTime());
+        setMunicipalityName(original.getMunicipalityName());
+        setUrl(original.getUrl());
+        setContactInfo(original.getContactInfo());
     }
 
     public String getName() {

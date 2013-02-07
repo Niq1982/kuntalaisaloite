@@ -8,13 +8,13 @@
     <tr>
         <td align="center">
             <@u.spacer "15" />
-            
-            <#-- TODO: IF comment (Saate) exists
+
+            <#-- TODO: IF comment (Saate) exists. use with emailInfo.comment. Also remove @Ignore at MailSendingEmailServiceTest#collectable_to_municipality_adds_comment_to_email
             <@comment "html" />
             <@u.spacer "15" />
             -->
-            
-            <table border="0" cellspacing="0" cellpadding="0" width="640" style="background:#fff; border-radius:5px; text-align:left; font-family:Arial, sans-serif;">        
+
+            <table border="0" cellspacing="0" cellpadding="0" width="640" style="background:#fff; border-radius:5px; text-align:left; font-family:Arial, sans-serif;">
                 <tr style="color:#fff;">
                     <td width="20" style="background:#fff;"><@u.spacer "0" /></td>
                     <td width="550" style="background:#fff; text-align:left;"><@u.spacer "15" /><h4 style="font-size:20px; margin:0; color:#087480; font-weight:normal; font-family:'PT Sans','Trebuchet MS',Helvetica,sans-serif">${title}</h4></th>
@@ -26,7 +26,7 @@
                         <tr>
                             <td width="20" ><@u.spacer "0" /></td>
                             <td style="font-size:12px; font-family:'PT Sans','Trebuchet MS',Helvetica,sans-serif;">
-    
+
                                 <#-- Email content -->
                                 <#nested />
                                         
@@ -42,7 +42,7 @@
             <p style="color:#686868; font-size:12px;"><@u.message "email.footer" /></p>
 
             <@u.spacer "15" />
-                    
+
         </td>
     </tr>
     </table>
@@ -54,7 +54,7 @@
  * initiativeDetails
  *
  * Common initiative details for top section of the email.
- * 
+ *
 
  * @param type 'text' or 'html'
  -->
@@ -65,18 +65,19 @@
         <br/><@u.message "email.date.sent" /> <@u.localDate emailInfo.sentTime /></p>
         <@u.text emailInfo.proposal />
     <#else>
+        <@u.message "email.initiative" />:
         "${emailInfo.name!""}"
         <@u.message "email.date.create" /> <@u.localDate emailInfo.createTime />
-        
+
         ${emailInfo.proposal}
-    </#if>       
+    </#if>
 </#macro>
 
 <#--
  * contactInfo
  *
  * Contact's name, email, phone and address
- * 
+ *
  * @param type 'text' or 'html'
  -->
 <#macro contactInfo type="">
@@ -92,7 +93,7 @@
         ${emailInfo.contactInfo.email!""}
         ${emailInfo.contactInfo.phone!""}
         ${emailInfo.contactInfo.address!""}
-    </#if>        
+    </#if>
 </#macro>
 
 
@@ -100,21 +101,21 @@
  * emailBottom
  *
  * Common initiative details for bottom section of the email.
- * 
+ *
  * @param lang 'fi' or 'sv'
  * @param type 'text' or 'html'
  * @param sentTo 'show' shows additional info
  *
  * TODO: Check if we need this.
  -->
-<#--
+ <#--
 <#macro emailBottom lang="" type="" sentTo="">
     <#if lang == "fi">
         <#if type == "html">
             <p style="margin:1em 0 0.5em 0;">Aloite sijaitsee osoitteessa: <@u.link viewUrlFi /></p>
         <#else>
             Aloitteesi sijaitsee osoitteessa:
-            ${viewUrlFi}        
+            ${viewUrlFi}
         </#if>
     <#elseif lang == "sv">
         <#if type == "html">
@@ -122,8 +123,8 @@
         <#else>
             Initiativet finns på adressen:
             ${viewUrlSv}
-        </#if>    
-    </#if>        
+        </#if>
+    </#if>
 </#macro>
 -->
 
@@ -131,12 +132,12 @@
  * comment
  *
  * Common initiative details for bottom section of the email.
- * 
+ *
  * @param type 'text' or 'html'
  -->
 <#macro comment type="">
     <#if type == "html">
-        <table border="0" cellspacing="0" cellpadding="0" width="640" style="background:#fff; border-radius:5px; text-align:left; font-family:Arial, sans-serif;">        
+        <table border="0" cellspacing="0" cellpadding="0" width="640" style="background:#fff; border-radius:5px; text-align:left; font-family:Arial, sans-serif;">
             <tr>
                 <td colspan="3" style="">
                 <table border="0" cellspacing="0" cellpadding="0" style="width:100%;">
@@ -145,7 +146,7 @@
                         <td style="font-size:12px; font-family:'PT Sans','Trebuchet MS',Helvetica,sans-serif;">
                             <h4 style="font-size:12px; margin:1em 0 0 0;"><@u.message "email.commentToMunicipality" /></h4>
                             <p style="margin:0.5em 0;">Tähän tulee saateen teksti, jahka se on tehty.</p>
-                                    
+
                             <@u.spacer "5" />
                         </td>
                         <td width="20"><@u.spacer "0" /></td>
@@ -156,7 +157,7 @@
         </table>
     <#else>
         <@u.message "email.commentToMunicipality" />:
-        Tähän tulee saateen teksti, jahka se on tehty.        
+        Tähän tulee saateen teksti, jahka se on tehty.
     </#if>
 </#macro>
 

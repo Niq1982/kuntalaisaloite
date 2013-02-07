@@ -1,6 +1,4 @@
-package fi.om.municipalityinitiative.dto;
-
-import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
+package fi.om.municipalityinitiative.newdto.ui;
 
 import javax.validation.Valid;
 

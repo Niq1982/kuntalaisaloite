@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 
@@ -17,20 +19,43 @@ import java.lang.reflect.Field;
 import java.util.Random;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.fail;
 
+/**
+ * Sets random values to all fields and parents fields.
+
+ */
 public class ReflectionTestUtils {
 
-    public static <T> T modifyAllFields(T bean) throws IllegalAccessException {
-            for (Field field : bean.getClass().getDeclaredFields()) {
+    public static <T> T modifyAllFields(T bean)  {
+
+        Class clazz = bean.getClass();
+        do {
+            for (Field field : clazz.getDeclaredFields()) {
                 field.setAccessible(true);
                 if (!java.lang.reflect.Modifier.isStatic(field.getModifiers()))
-                    field.set(bean, randomValue(field.getType()));
+                    try {
+                        field.set(bean, randomValue(field.getType()));
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
             }
+            clazz = clazz.getSuperclass();
+        }
+        while (clazz != null && clazz != Object.class);
 
-        assertNoNullFields(bean);
+        try {
+            assertNoNullFields(bean);
+        } catch (AssertionError e) {
+            fail("Unable to randomize all field values, something was null: " + e.getMessage());
+        }
         return bean;
+    }
+
+    public static <T> void assertReflectionEquals(T o1, T o2) {
+        assertThat("Reflected fields should match", ReflectionToStringBuilder.reflectionToString(o1, ToStringStyle.SHORT_PREFIX_STYLE),
+                is(ReflectionToStringBuilder.reflectionToString(o2, ToStringStyle.SHORT_PREFIX_STYLE)));
     }
 
     private static Object randomValue(Class<?> type) throws IllegalAccessException {
@@ -72,6 +97,10 @@ public class ReflectionTestUtils {
         throw new IllegalArgumentException("unsupported type: " + type);
     }
 
+    /**
+     * Asserts if any fields are null.
+     * @param o
+     */
     public static void assertNoNullFields(Object o){
         ObjectMapper mapper = new ObjectMapper();
         mapper.setVisibilityChecker(mapper.getVisibilityChecker()

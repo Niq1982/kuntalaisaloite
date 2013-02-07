@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
+import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.email.InitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
@@ -39,6 +40,7 @@ public class MailSendingEmailServiceTest {
     public static final String CONTACT_ADDRESS = "Sender address";
     public static final String INITIATIVE_URL = "http://www.some.example.url.to.initiative";
     public static final String MUNICIPALITY_EMAIL = "some_test_address@example.com";
+    private static final String COMMENT = "Some state comment";
 
     @Resource
     private EmailService emailService;
@@ -155,14 +157,14 @@ public class MailSendingEmailServiceTest {
 
     @Test
     public void collectable_to_municipality_reads_subject_to_email() throws InterruptedException, MessagingException {
-        InitiativeEmailInfo initiative = createEmailInfo();
+        CollectableInitiativeEmailInfo initiative = createCollectableEmailInfo();
         emailService.sendCollectableToMunicipality(initiative, MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
         assertThat(getSingleSentMessage().getSubject(), is("Kuntalaisaloite: " + INITIATIVE_NAME));
     }
 
     @Test
     public void collectable_to_municipality_adds_initiativeInfo_and_contactInfo_to_email_message() throws Exception {
-        InitiativeEmailInfo initiative = createEmailInfo();
+        CollectableInitiativeEmailInfo initiative = createCollectableEmailInfo();
         emailService.sendCollectableToMunicipality(initiative, MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
 
         assertEmailHasInitiativeDetailsAndContactInfo();
@@ -170,7 +172,7 @@ public class MailSendingEmailServiceTest {
 
     @Test
     public void collectable_to_municipality_uses_localizations_at_content() throws Exception {
-        InitiativeEmailInfo initiativeEmailInfo = createEmailInfo();
+        CollectableInitiativeEmailInfo initiativeEmailInfo = createCollectableEmailInfo();
         emailService.sendCollectableToMunicipality(initiativeEmailInfo, MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
 
         MessageContent messageContent = getMessageContent();
@@ -181,7 +183,7 @@ public class MailSendingEmailServiceTest {
     @Test
     @Ignore("Un-comment implementation")
     public void collectable_to_municipality_assigns_senders_email_to_repllyTo_field() throws InterruptedException, MessagingException {
-        InitiativeEmailInfo initiative = createEmailInfo();
+        CollectableInitiativeEmailInfo initiative = createCollectableEmailInfo();
         emailService.sendCollectableToMunicipality(initiative, MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
         assertThat(getSingleSentMessage().getReplyTo()[0].toString(), is(CONTACT_EMAIL));
 
@@ -189,7 +191,7 @@ public class MailSendingEmailServiceTest {
 
     @Test
     public void collectable_to_author_assign_author_email_to_sendTo_field() throws InterruptedException, MessagingException {
-        InitiativeEmailInfo initiative = createEmailInfo();
+        CollectableInitiativeEmailInfo initiative = createCollectableEmailInfo();
         emailService.sendCollectableToAuthor(initiative, Locales.LOCALE_FI);
         assertThat(getSingleSentMessage().getAllRecipients().length, is(1));
         assertThat(getSingleSentMessage().getAllRecipients()[0].toString(), is(CONTACT_EMAIL));
@@ -197,14 +199,14 @@ public class MailSendingEmailServiceTest {
 
     @Test
     public void collectable_to_author_reads_subject_to_email() throws InterruptedException, MessagingException {
-        InitiativeEmailInfo initiative = createEmailInfo();
+        CollectableInitiativeEmailInfo initiative = createCollectableEmailInfo();
         emailService.sendCollectableToAuthor(initiative, Locales.LOCALE_FI);
         assertThat(getSingleSentMessage().getSubject(), is("Aloite on lähetetty kuntaan"));
     }
 
     @Test
     public void collectable_to_author_adds_initiativeInfo_and_contactInfo_to_email_message() throws Exception {
-        InitiativeEmailInfo initiative = createEmailInfo();
+        CollectableInitiativeEmailInfo initiative = createCollectableEmailInfo();
         emailService.sendCollectableToAuthor(initiative, Locales.LOCALE_FI);
 
         assertEmailHasInitiativeDetailsAndContactInfo();
@@ -212,13 +214,24 @@ public class MailSendingEmailServiceTest {
 
     @Test
     public void collectable_to_author_uses_localizations_at_content() throws Exception {
-        InitiativeEmailInfo initiativeEmailInfo = createEmailInfo();
+        CollectableInitiativeEmailInfo initiativeEmailInfo = createCollectableEmailInfo();
         emailService.sendCollectableToAuthor(initiativeEmailInfo, Locales.LOCALE_FI);
 
         MessageContent messageContent = getMessageContent();
         assertThat(messageContent.html, containsString("Yhteystiedot"));
         assertThat(messageContent.text, containsString("Yhteystiedot"));
-    }    
+    }
+
+    @Test
+    @Ignore("Create own view for collectable initiative, then un-ignore this.")
+    public void collectable_to_municipality_adds_comment_to_email() throws Exception {
+        CollectableInitiativeEmailInfo collectableEmailInfo = createCollectableEmailInfo();
+        emailService.sendCollectableToMunicipality(collectableEmailInfo, MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
+
+        MessageContent messageContent = getMessageContent();
+        assertThat(messageContent.html, containsString(COMMENT));
+        assertThat(messageContent.text, containsString(COMMENT));
+    }
 
     private void assertEmailHasInitiativeDetailsAndContactInfo() throws Exception {
         MessageContent messageContent = getMessageContent();
@@ -256,6 +269,11 @@ public class MailSendingEmailServiceTest {
         contactInfo.setAddress(CONTACT_ADDRESS);
 
         return InitiativeEmailInfo.parse(contactInfo, initiativeViewInfo, INITIATIVE_URL);
+    }
+
+    private static CollectableInitiativeEmailInfo createCollectableEmailInfo() {
+        InitiativeEmailInfo emailInfo = createEmailInfo();
+        return CollectableInitiativeEmailInfo.parse(emailInfo, COMMENT);
     }
 
     // TODO: Examine this whole MimeMultipart - why is the data stored that deep in the MimeMultipart.
