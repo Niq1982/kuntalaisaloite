@@ -60,7 +60,7 @@ public class TestHelper {
         SQLInsertClause insert = queryFactory.insert(municipalityInitiative);
 
         insert.set(municipalityInitiative.contactAddress, "contact_address");
-        insert.set(municipalityInitiative.contactEmail, "contact_email");
+        insert.set(municipalityInitiative.contactEmail, "contact_email@xxx.yyy");
         insert.set(municipalityInitiative.contactPhone, "contact_phone");
         insert.set(municipalityInitiative.contactName, "contact_name");
         insert.set(municipalityInitiative.name, name);
