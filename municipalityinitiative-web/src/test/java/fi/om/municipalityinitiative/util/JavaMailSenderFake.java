@@ -24,7 +24,17 @@ public class JavaMailSenderFake implements JavaMailSender {
     }
 
     public List<MimeMessage> getSentMessages() {
-        return sentMessages;
+        for (int i = 0; i < 50; ++i) {
+            if (sentMessages.size() == 0)
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            else
+                return sentMessages;
+        }
+        throw new RuntimeException("Email was not sent in time");
     }
 
     // Not used:
@@ -62,5 +72,9 @@ public class JavaMailSenderFake implements JavaMailSender {
     @Override
     public void send(SimpleMailMessage[] simpleMessages) throws MailException {
         throw new RuntimeException("Not implemented");
+    }
+
+    public void clearSentMessages() {
+        sentMessages.clear();
     }
 }

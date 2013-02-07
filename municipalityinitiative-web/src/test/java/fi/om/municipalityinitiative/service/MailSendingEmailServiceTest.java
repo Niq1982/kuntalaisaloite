@@ -9,6 +9,7 @@ import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.DateTime;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +20,8 @@ import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -45,13 +48,16 @@ public class MailSendingEmailServiceTest {
     @Resource
     private JavaMailSenderFake javaMailSenderFake;
 
-    @Before
-    public void setup() {
-        javaMailSenderFake.getSentMessages().clear();
-
+    @BeforeClass
+    public static void beforeClass() throws InterruptedException {
+        Thread.sleep(1000); // This is here to make sure old email-sending-tasks have sent their emails.
     }
-    
-    
+
+    @Before
+    public void setup(){
+        javaMailSenderFake.clearSentMessages();
+    }
+
     // Not Collectable
 
     @Test
@@ -273,19 +279,9 @@ public class MailSendingEmailServiceTest {
     }
 
     private MimeMessage getSingleSentMessage() throws InterruptedException {
-        waitUntilEmailSent();
-        assertThat(javaMailSenderFake.getSentMessages(), hasSize(1));
-        return javaMailSenderFake.getSentMessages().get(0);
-    }
-
-    private void waitUntilEmailSent() throws InterruptedException {
-        for (int i = 0; i < 50; ++i) {
-            if (javaMailSenderFake.getSentMessages().size() == 0)
-                Thread.sleep(100);
-            else
-                return;
-        }
-        throw new RuntimeException("Email was not sent in time");
+        List<MimeMessage> sentMessages = javaMailSenderFake.getSentMessages();
+        assertThat(sentMessages, hasSize(1));
+        return sentMessages.get(0);
     }
 
 }

@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.service;
 
-import fi.om.municipalityinitiative.dto.SendToMunicipalityDto;
 import fi.om.municipalityinitiative.exceptions.NotCollectableException;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
@@ -19,7 +18,8 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.stub;
 
 public class InitiativeServiceTest {
 
@@ -85,21 +85,6 @@ public class InitiativeServiceTest {
         } catch (AccessDeniedException e) {
             assertThat(e.getMessage(), containsString("Invalid initiative verifier"));
         }
-    }
-
-    @Test
-    public void succeeds_in_sending_to_municipality() {
-
-        InitiativeViewInfo initiativeViewInfo = new InitiativeViewInfo();
-        initiativeViewInfo.setManagementHash(Maybe.of("hashCode"));
-        stub(initiativeDao.getById(any(Long.class))).toReturn(initiativeViewInfo);
-
-        ContactInfo newContactInfo = new ContactInfo();
-        SendToMunicipalityDto sendToMunicipalityDto = new SendToMunicipalityDto();
-        sendToMunicipalityDto.setContactInfo(newContactInfo);
-
-        service.sendToMunicipality(0L, sendToMunicipalityDto, "hashCode", null);
-        verify(initiativeDao).markAsSended(0L, newContactInfo);
     }
 
     @Test
