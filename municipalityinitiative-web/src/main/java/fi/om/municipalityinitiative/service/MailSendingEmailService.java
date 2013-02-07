@@ -101,7 +101,7 @@ public class MailSendingEmailService implements EmailService {
     }
 
     @Override
-    public void sendCollectableToAuthor(InitiativeEmailInfo emailInfo, Locale locale) {
+    public void sendCollectableToAuthor(CollectableInitiativeEmailInfo emailInfo, Locale locale) {
         sendEmail(emailInfo.getContactInfo().getEmail(),
                 defaultReplyTo,
                 messageSource.getMessage("email.not.collectable.author.subject", new String[] {emailInfo.getName()}, locale),

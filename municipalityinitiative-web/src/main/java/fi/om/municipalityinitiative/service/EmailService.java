@@ -13,5 +13,5 @@ public interface EmailService {
 
     void sendCollectableToMunicipality(CollectableInitiativeEmailInfo emailInfo, String municipalityEmail, Locale locale);
 
-    void sendCollectableToAuthor(InitiativeEmailInfo emailInfo, Locale locale);
+    void sendCollectableToAuthor(CollectableInitiativeEmailInfo emailInfo, Locale locale);
 }

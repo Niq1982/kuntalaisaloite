@@ -113,7 +113,7 @@ public class InitiativeService {
         CollectableInitiativeEmailInfo collectableEmailInfo = CollectableInitiativeEmailInfo.parse(emailInfo, comment);
 
         emailService.sendCollectableToMunicipality(collectableEmailInfo, municipalityDao.getMunicipalityEmail(initiative.getMunicipalityId()), locale);
-        emailService.sendCollectableToAuthor(emailInfo, locale);
+        emailService.sendCollectableToAuthor(collectableEmailInfo, locale);
     }
 
     @Transactional(readOnly = false)

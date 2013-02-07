@@ -191,7 +191,7 @@ public class MailSendingEmailServiceTest {
 
     @Test
     public void collectable_to_author_assign_author_email_to_sendTo_field() throws InterruptedException, MessagingException {
-        InitiativeEmailInfo initiative = createEmailInfo();
+        CollectableInitiativeEmailInfo initiative = createCollectableEmailInfo();
         emailService.sendCollectableToAuthor(initiative, Locales.LOCALE_FI);
         assertThat(getSingleSentMessage().getAllRecipients().length, is(1));
         assertThat(getSingleSentMessage().getAllRecipients()[0].toString(), is(CONTACT_EMAIL));
@@ -199,14 +199,14 @@ public class MailSendingEmailServiceTest {
 
     @Test
     public void collectable_to_author_reads_subject_to_email() throws InterruptedException, MessagingException {
-        InitiativeEmailInfo initiative = createEmailInfo();
+        CollectableInitiativeEmailInfo initiative = createCollectableEmailInfo();
         emailService.sendCollectableToAuthor(initiative, Locales.LOCALE_FI);
         assertThat(getSingleSentMessage().getSubject(), is("Aloite on lähetetty kuntaan"));
     }
 
     @Test
     public void collectable_to_author_adds_initiativeInfo_and_contactInfo_to_email_message() throws Exception {
-        InitiativeEmailInfo initiative = createEmailInfo();
+        CollectableInitiativeEmailInfo initiative = createCollectableEmailInfo();
         emailService.sendCollectableToAuthor(initiative, Locales.LOCALE_FI);
 
         assertEmailHasInitiativeDetailsAndContactInfo();
@@ -214,7 +214,7 @@ public class MailSendingEmailServiceTest {
 
     @Test
     public void collectable_to_author_uses_localizations_at_content() throws Exception {
-        InitiativeEmailInfo initiativeEmailInfo = createEmailInfo();
+        CollectableInitiativeEmailInfo initiativeEmailInfo = createCollectableEmailInfo();
         emailService.sendCollectableToAuthor(initiativeEmailInfo, Locales.LOCALE_FI);
 
         MessageContent messageContent = getMessageContent();
