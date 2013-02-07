@@ -50,6 +50,9 @@ public class MunicipalityInitiativeViewController extends BaseController {
 
     @RequestMapping(value={SEARCH_FI, SEARCH_SV}, method=GET)
     public String search(InitiativeSearch search, Model model, Locale locale, HttpServletRequest request) {
+        Urls urls = Urls.get(locale);
+        model.addAttribute(ALT_URI_ATTR, urls.alt().search());
+        
         List<MunicipalityInfo> municipalities = municipalityService.findAllMunicipalities();
 
         model.addAttribute("initiatives", initiativeService.findMunicipalityInitiatives(search));
@@ -62,7 +65,9 @@ public class MunicipalityInitiativeViewController extends BaseController {
 
     @RequestMapping(value={ VIEW_FI, VIEW_SV }, method=GET)
     public String view(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
-
+        Urls urls = Urls.get(locale);
+        model.addAttribute(ALT_URI_ATTR, urls.alt().view(initiativeId));
+        
         InitiativeViewInfo initiativeInfo = initiativeService.getMunicipalityInitiative(initiativeId);
 
         if (initiativeInfo.isCollectable()){// TODO: If not sent to municipality
@@ -107,11 +112,13 @@ public class MunicipalityInitiativeViewController extends BaseController {
     public String managementView(@PathVariable("id") Long initiativeId,
                                  @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                                  Model model, Locale locale, HttpServletRequest request) {
+        
+        Urls urls = Urls.get(locale);
+        model.addAttribute(ALT_URI_ATTR, urls.alt().management(initiativeId, managementHash));
 
         InitiativeViewInfo initiativeInfo = initiativeService.getMunicipalityInitiative(initiativeId);
 
         if (!initiativeInfo.isCollectable() || initiativeInfo.isSent()) { // Practically initiative should always be sent if it's not collectable...
-            Urls urls = Urls.get(locale);
             return contextRelativeRedirect(urls.view(initiativeId));
         }
 

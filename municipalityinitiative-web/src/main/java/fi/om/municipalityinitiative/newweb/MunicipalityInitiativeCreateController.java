@@ -49,6 +49,9 @@ public class MunicipalityInitiativeCreateController extends BaseController {
 
     @RequestMapping(value={ CREATE_FI, CREATE_SV }, method=GET)
     public String createGet(Model model, Locale locale, HttpServletRequest request) {
+        Urls urls = Urls.get(locale);
+        model.addAttribute(ALT_URI_ATTR, urls.alt().createNew());
+        
         InitiativeUICreateDto initiative = new InitiativeUICreateDto();
         model.addAttribute("initiative", initiative);
         model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
