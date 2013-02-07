@@ -445,14 +445,16 @@ var municipalitySelection = (function() {
 	var Init = function(){
 		$(".chzn-select").loadChosen();
 		
-		if (!$("input[name=franchise], input[name=municipalMembership]").is(':checked')){
-			disableSubmit(true);
-		}
-		
 		updateSelectedMunicipality();
 		
 		if (validationErrors){
 			toggleMembershipRadios(homeMunicipalitySelect);
+		}
+		
+		if (!$("input[name=franchise], input[name=municipalMembership]").is(':checked')){
+			disableSubmit(true);
+		} else {
+			disableSubmit(false);
 		}
 		
 		showFranchise(equalMunicipalitys());
@@ -591,10 +593,14 @@ var municipalitySelection = (function() {
 	jQuery.fn.disableButton = function(disable){
 		var btn = $(this);
 		
+		console.log("first:"+disable);
+		
 		if (disable) {
 			btn.attr('disabled','disabled').addClass('disabled');
+			console.log("disable");
 		} else {
 			btn.removeAttr('disabled').removeClass('disabled');
+			console.log("enable");
 		}	
 	};
 	
