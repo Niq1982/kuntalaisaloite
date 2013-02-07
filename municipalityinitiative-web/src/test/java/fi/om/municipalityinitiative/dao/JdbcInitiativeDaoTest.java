@@ -167,7 +167,7 @@ public class JdbcInitiativeDaoTest {
         ContactInfo contactInfo = initiativeDao.getContactInfo(initiativeId);
         assertThat(contactInfo.getName(), is("contact_name"));
         assertThat(contactInfo.getAddress(), is("contact_address"));
-        assertThat(contactInfo.getEmail(), is("contact_email"));
+        assertThat(contactInfo.getEmail(), is("contact_email@xxx.yyy"));
         assertThat(contactInfo.getPhone(), is("contact_phone"));
     }
 

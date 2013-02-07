@@ -237,7 +237,7 @@
             <#-- Language toggle, text size -->
             <div id="header-additional-content">
                 <div class="additional-tools">
-                    <a href="${altUri!'/sv'}" class="language-selection"><@u.message "lang.alternative"/></a>
+                    <a href="${altUri!"/"+altLocale}" class="language-selection"><@u.message "lang.alternative"/></a>
                     <#-- NOTE: ATM the font-size-toggle works only with JS hence the links are also generated with JS. -->
                     <script type="text/javascript">                    
                         document.write('<span class="font-size"><@u.message "common.fontsize" />:</span>');
