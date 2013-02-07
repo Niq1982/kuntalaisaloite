@@ -88,17 +88,6 @@ public class InitiativeService {
         sendCollectedInitiativeEmails(initiativeId, locale);
     }
 
-    private void sendCollectedInitiativeEmails(Long initiativeId, Locale locale) {
-        InitiativeViewInfo initiative = initiativeDao.getById(initiativeId);
-        ContactInfo contactInfo = initiativeDao.getContactInfo(initiativeId);
-        String url = Urls.get(Locales.LOCALE_FI).view(initiativeId);
-
-        InitiativeEmailInfo emailInfo = InitiativeEmailInfo.parse(contactInfo, initiative, url);
-
-        emailService.sendCollectableToMunicipality(emailInfo, municipalityDao.getMunicipalityEmail(initiative.getMunicipalityId()), locale);
-        emailService.sendCollectableToAuthor(emailInfo, locale);
-    }
-
     private void checkAllowedToSendToMunicipality(InitiativeViewInfo initiativeViewInfo) {
         if (!initiativeViewInfo.isCollectable()) {
             throw new NotCollectableException("Initiative is not collectable");
@@ -112,6 +101,17 @@ public class InitiativeService {
         if (!hashCode.equals(initiativeInfo.getManagementHash().get())) {
             throw new AccessDeniedException("Invalid initiative verifier");
         }
+    }
+
+    private void sendCollectedInitiativeEmails(Long initiativeId, Locale locale) {
+        InitiativeViewInfo initiative = initiativeDao.getById(initiativeId);
+        ContactInfo contactInfo = initiativeDao.getContactInfo(initiativeId);
+        String url = Urls.get(Locales.LOCALE_FI).view(initiativeId);
+
+        InitiativeEmailInfo emailInfo = InitiativeEmailInfo.parse(contactInfo, initiative, url);
+
+        emailService.sendCollectableToMunicipality(emailInfo, municipalityDao.getMunicipalityEmail(initiative.getMunicipalityId()), locale);
+        emailService.sendCollectableToAuthor(emailInfo, locale);
     }
 
     @Transactional(readOnly = false)

@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 
@@ -17,20 +19,28 @@ import java.lang.reflect.Field;
 import java.util.Random;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 
 public class ReflectionTestUtils {
 
-    public static <T> T modifyAllFields(T bean) throws IllegalAccessException {
+    public static <T> T modifyAllFields(T bean)  {
             for (Field field : bean.getClass().getDeclaredFields()) {
                 field.setAccessible(true);
                 if (!java.lang.reflect.Modifier.isStatic(field.getModifiers()))
-                    field.set(bean, randomValue(field.getType()));
+                    try {
+                        field.set(bean, randomValue(field.getType()));
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
             }
 
         assertNoNullFields(bean);
         return bean;
+    }
+
+    public static <T> void assertReflectionEquals(T o1, T o2) {
+        assertThat("Reflected fields should match", ReflectionToStringBuilder.reflectionToString(o1, ToStringStyle.SHORT_PREFIX_STYLE),
+                is(ReflectionToStringBuilder.reflectionToString(o2, ToStringStyle.SHORT_PREFIX_STYLE)));
     }
 
     private static Object randomValue(Class<?> type) throws IllegalAccessException {

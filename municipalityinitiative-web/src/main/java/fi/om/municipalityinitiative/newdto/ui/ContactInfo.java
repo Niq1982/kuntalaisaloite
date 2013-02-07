@@ -32,6 +32,15 @@ public class ContactInfo {
     @Size(max = InitiativeConstants.CONTACT_ADDRESS_MAX)
     private String address;
 
+    public ContactInfo(ContactInfo original) {
+        this.name = original.name;
+        this.email = original.email;
+        this.phone = original.phone;
+        this.address = original.address;
+    }
+
+    public ContactInfo() { }
+
 
     public String getName() {
         return name;
