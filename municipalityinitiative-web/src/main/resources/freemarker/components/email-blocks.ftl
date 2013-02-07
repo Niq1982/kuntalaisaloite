@@ -65,7 +65,6 @@
         <br/><@u.message "email.date.sent" /> <@u.localDate emailInfo.sentTime /></p>
         <@u.text emailInfo.proposal />
     <#else>
-        <@u.message "email.initiative" />:
         "${emailInfo.name!""}"
         <@u.message "email.date.create" /> <@u.localDate emailInfo.createTime />
         
@@ -108,7 +107,7 @@
  *
  * TODO: Check if we need this.
  -->
- <#--
+<#--
 <#macro emailBottom lang="" type="" sentTo="">
     <#if lang == "fi">
         <#if type == "html">

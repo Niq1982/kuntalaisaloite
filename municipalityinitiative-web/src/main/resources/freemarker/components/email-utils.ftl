@@ -7,13 +7,12 @@
  * message
  *
  * Macro for generating PlainText messages. NOTE that these messages are escaped.
+ * Keep in one line for TEXT version or use 'compress single_line=true'
  *
  * @param key is the localization key
  * @param args is the list of arguments for the message
 -->
-<#macro message key args=[]>
-    ${localizations.getMessage(key, args)}
-</#macro>
+<#macro message key args=[]>${localizations.getMessage(key, args)}</#macro>
 
 
 <#-- 
@@ -139,12 +138,9 @@
 -->
 <#macro localDate date="">
 <@compress single_line=true>
-    <#-- TODO: FIX DATES - tests breaks. -->
     <#if date?is_hash>
-        hash 
         ${date.toString(localizations.getMessage("date.format", args))!""}
     <#else>
-        not hash
         ${date?string(localizations.getMessage("date.format", args))!""}
     </#if>
 </@compress>

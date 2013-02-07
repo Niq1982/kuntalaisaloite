@@ -8,7 +8,6 @@
 
 <@l.emailHtml "municipality-initiative" title>
 
-    <#-- FINNISH -->
     <@b.emailTemplate title>
         <@b.initiativeDetails "html" />
         
