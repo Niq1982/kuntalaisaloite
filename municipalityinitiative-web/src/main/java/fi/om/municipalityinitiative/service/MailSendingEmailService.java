@@ -34,7 +34,8 @@ import java.util.Map;
 @Task
 public class MailSendingEmailService implements EmailService {
 
-    private static final String MUNICIPALITY_TEMPLATE = "municipality-not-collectable";
+    private static final String NOT_COLLECTABLE_TEMPLATE = "municipality-not-collectable";
+    private static final String COLLECTABLE_TEMPLATE = "municipality-collectable";
 
     @Resource
     FreeMarkerConfigurer freemarkerConfig;
@@ -78,8 +79,8 @@ public class MailSendingEmailService implements EmailService {
         sendEmail(municipalityEmail,
                 emailInfo.getContactInfo().getEmail(),
                 messageSource.getMessage("email.not.collectable.municipality.subject", new String[]{emailInfo.getName()}, locale),
-                MUNICIPALITY_TEMPLATE,
-                notCollectableDataMap(emailInfo, locale));
+                NOT_COLLECTABLE_TEMPLATE,
+                setDataMap(emailInfo, locale));
     }
 
     @Override
@@ -87,8 +88,8 @@ public class MailSendingEmailService implements EmailService {
         sendEmail(emailInfo.getContactInfo().getEmail(),
                 defaultReplyTo,
                 messageSource.getMessage("email.not.collectable.author.subject", new String[] {emailInfo.getName()}, locale),
-                MUNICIPALITY_TEMPLATE,
-                notCollectableDataMap(emailInfo, locale));
+                NOT_COLLECTABLE_TEMPLATE,
+                setDataMap(emailInfo, locale));
     }
 
     @Override
@@ -96,8 +97,8 @@ public class MailSendingEmailService implements EmailService {
         sendEmail(municipalityEmail,
                 emailInfo.getContactInfo().getEmail(),
                 messageSource.getMessage("email.not.collectable.municipality.subject", new String[]{emailInfo.getName()}, locale),
-                MUNICIPALITY_TEMPLATE,
-                notCollectableDataMap(emailInfo, locale));
+                COLLECTABLE_TEMPLATE,
+                setDataMap(emailInfo, locale));
     }
 
     @Override
@@ -105,11 +106,11 @@ public class MailSendingEmailService implements EmailService {
         sendEmail(emailInfo.getContactInfo().getEmail(),
                 defaultReplyTo,
                 messageSource.getMessage("email.not.collectable.author.subject", new String[] {emailInfo.getName()}, locale),
-                MUNICIPALITY_TEMPLATE,
-                notCollectableDataMap(emailInfo, locale));
+                COLLECTABLE_TEMPLATE,
+                setDataMap(emailInfo, locale));
     }
 
-    private HashMap<String, Object> notCollectableDataMap(InitiativeEmailInfo emailInfo, Locale locale) {
+    private HashMap<String, Object> setDataMap(InitiativeEmailInfo emailInfo, Locale locale) {
         HashMap<String, Object> dataMap = new HashMap<String, Object>();
         dataMap.put("emailInfo", emailInfo);
         dataMap.put("localizations", new EmailLocalizationProvider(messageSource, locale));
