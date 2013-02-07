@@ -157,6 +157,10 @@ public final class Urls {
     public static final String VIEW_FI = CREATE_FI + "/" + ID_PARAMETER;
 
     public static final String VIEW_SV = CREATE_SV + "/" + ID_PARAMETER;
+    
+    public static final String PARITICIPANT_LIST_FI = VIEW_FI + "/osallistujat";
+
+    public static final String PARITICIPANT_LIST_SV = VIEW_SV + "/deltagarna";
 
     public static final String MANAGEMENT_FI = "/fi/hallinta" + "/" + ID_PARAMETER;
 
@@ -213,6 +217,10 @@ public final class Urls {
 
     public String view(Long initiativeId) {
         return getLocalizedPageUrl(VIEW_FI, VIEW_SV).replace(ID_PARAMETER, initiativeId.toString());
+    }
+    
+    public String participantList(Long initiativeId) {
+        return getLocalizedPageUrl(PARITICIPANT_LIST_FI, PARITICIPANT_LIST_SV).replace(ID_PARAMETER, initiativeId.toString());
     }
     
     public String management(Long initiativeId, String managementHash) {

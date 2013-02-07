@@ -35,6 +35,7 @@ public final class Views {
     public static final String SINGLE_VIEW = "single-view";
     public static final String COLLECT_VIEW = "collect-view";
     public static final String MANAGEMENT_VIEW = "management-view";
+    public static final String PARTICIPANT_LIST = "participant-list";
     public static final String STATUS_VIEW = "status";
     
     /**

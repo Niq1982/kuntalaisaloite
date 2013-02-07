@@ -40,7 +40,7 @@
     <#--
      * Warning message for the management page.
     -->
-    <@u.systemMessage path="management.warning" type="warning" showClose=false />
+    <@u.systemMessage path="management.warning" type="warning" args=[urls.view(initiative.id)] showClose=false />
 </#assign>
 
 <#--

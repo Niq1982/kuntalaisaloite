@@ -107,6 +107,26 @@ public class MunicipalityInitiativeViewController extends BaseController {
             return COLLECT_VIEW;
         }
     }
+    
+    @RequestMapping(value={ PARITICIPANT_LIST_FI, PARITICIPANT_LIST_SV }, method=GET)
+    public String participantList(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
+        Urls urls = Urls.get(locale);
+        model.addAttribute(ALT_URI_ATTR, urls.alt().view(initiativeId));
+        
+        InitiativeViewInfo initiativeInfo = initiativeService.getMunicipalityInitiative(initiativeId);
+
+        if (initiativeInfo.isCollectable()){
+            model.addAttribute("initiative",  initiativeInfo);
+            model.addAttribute("participantCount", participantService.getParticipantCount(initiativeId));
+            model.addAttribute("participants", participantService.findParticipants(initiativeId));
+
+            return PARTICIPANT_LIST;
+        }
+        else {
+            model.addAttribute("initiative", initiativeInfo);
+            return SINGLE_VIEW;
+        }
+    }
 
     @RequestMapping(value={ MANAGEMENT_FI, MANAGEMENT_SV }, method=GET)
     public String managementView(@PathVariable("id") Long initiativeId,
