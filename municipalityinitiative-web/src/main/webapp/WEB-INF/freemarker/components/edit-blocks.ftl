@@ -35,7 +35,7 @@
         <#--<br/><br/>
         <a href="index.html" class=""><@u.message "action.cancel" /></a>-->
     <#elseif type == "save">
-        <button type="submit" name="collectable" class="small-button" value="true" ><span class="small-icon save-and-send"><@u.message "action.saveAndCollect" /></span></button>
+        <button type="submit" id="collectable" name="collectable" class="small-button" value="true" ><span class="small-icon save-and-send"><@u.message "action.saveAndCollect" /></span></button>
     </#if>
 </#macro>
 

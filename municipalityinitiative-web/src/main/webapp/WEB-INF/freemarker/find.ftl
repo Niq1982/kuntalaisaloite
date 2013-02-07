@@ -104,7 +104,7 @@
             </span>-->
             
             <span class="date trigger-tooltip" title="<@u.message "searchResults.initiative.date" />" ><@u.localDate initiative.createTime /></span>
-            <a href="${urls.view(initiative.id)}" class="title"><span class="name">${initiative.name}</span></a>
+            <span class="title"><a href="${urls.view(initiative.id)}" class="name">${initiative.name}</a></span>
             <span class="info">${initiative.municipalityName}</span>
             <#-- ${initiative.proposal} -->
             
