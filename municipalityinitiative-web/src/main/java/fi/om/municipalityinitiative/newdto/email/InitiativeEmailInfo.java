@@ -1,10 +1,8 @@
 package fi.om.municipalityinitiative.newdto.email;
 
-import org.joda.time.DateTime;
-
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
-import fi.om.municipalityinitiative.util.Maybe;
+import org.joda.time.DateTime;
 
 public class InitiativeEmailInfo {
 

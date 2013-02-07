@@ -7,7 +7,6 @@ import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.util.JavaMailSenderFake;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Maybe;
-
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -241,8 +240,8 @@ public class MailSendingEmailServiceTest {
         initiativeViewInfo.setName(INITIATIVE_NAME);
         initiativeViewInfo.setProposal(INITIATIVE_PROPOSAL);
         initiativeViewInfo.setMunicipalityName(INITIATIVE_MUNICIPALITY);
-        initiativeViewInfo.setCreateTime(new DateTime(2013,1,1,0,0));
-        initiativeViewInfo.setSentTime(Maybe.of(new DateTime(2013,1,1,0,0)));
+        initiativeViewInfo.setCreateTime(new DateTime(2013, 1, 1, 0, 0));
+        initiativeViewInfo.setSentTime(Maybe.of(new DateTime(2013, 1, 1, 0, 0)));
 
         ContactInfo contactInfo = new ContactInfo();
         contactInfo.setPhone(CONTACT_PHONE);

@@ -31,10 +31,10 @@ public class InitiativeService {
     private ParticipantDao participantDao;
 
     @Resource
-    private EmailService emailService;
+    EmailService emailService;
 
     @Resource
-    private MunicipalityDao municipalityDao;
+    MunicipalityDao municipalityDao;
 
     public List<InitiativeListInfo> findMunicipalityInitiatives(InitiativeSearch search) {
         return initiativeDao.findNewestFirst(search);
@@ -77,14 +77,14 @@ public class InitiativeService {
     }
 
     @Transactional(readOnly = false)
-    public void sendToMunicipality(Long initiativeId, String hashCode, Locale locale) {
+    public void sendToMunicipality(Long initiativeId, SendToMunicipalityDto sendToMunicipalityDto, String hashCode, Locale locale) {
 
         InitiativeViewInfo initiativeInfo = initiativeDao.getById(initiativeId);
 
         checkAllowedToSendToMunicipality(initiativeInfo);
         checkHashCode(hashCode, initiativeInfo);
 
-        initiativeDao.markAsSended(initiativeId);
+        initiativeDao.markAsSended(initiativeId, sendToMunicipalityDto.getContactInfo());
         sendCollectedInitiativeEmails(initiativeId, locale);
     }
 

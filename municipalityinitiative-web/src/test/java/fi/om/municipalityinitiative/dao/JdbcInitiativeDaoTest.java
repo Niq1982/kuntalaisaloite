@@ -105,7 +105,7 @@ public class JdbcInitiativeDaoTest {
         InitiativeViewInfo initiative = initiativeDao.getById(initiativeId);
         assertThat(initiative.getSentTime().isPresent(), is(false)); // Precondition
 
-        initiativeDao.markAsSended(initiativeId);
+        initiativeDao.markAsSended(initiativeId, contactInfo());
         initiative = initiativeDao.getById(initiativeId);
         assertThat(initiative.getSentTime().isPresent(), is(true));
     }
@@ -117,7 +117,7 @@ public class JdbcInitiativeDaoTest {
         InitiativeViewInfo initiative = initiativeDao.getById(initiativeId);
         assertThat(initiative.isCollectable(), is(false)); // Precondition
 
-        initiativeDao.markAsSended(initiativeId);
+        initiativeDao.markAsSended(initiativeId, contactInfo());
     }
 
     @Test
@@ -128,14 +128,36 @@ public class JdbcInitiativeDaoTest {
         assertThat(initiative.isCollectable(), is(true)); // Precondition
         assertThat(initiative.getSentTime().isPresent(), is(false)); // Precondition
 
-        initiativeDao.markAsSended(initiativeId);
+        initiativeDao.markAsSended(initiativeId, contactInfo());
 
         try {
-            initiativeDao.markAsSended(initiativeId);
+            initiativeDao.markAsSended(initiativeId, contactInfo());
             fail("Should have thrown exception");
         } catch (NotCollectableException e) {
 
         }
+    }
+
+    @Test
+    public void marking_as_sent_updates_contact_information() {
+        Long initiativeId = testHelper.createTestInitiative(testMunicipality.getId(), "Some initiative name", false, true);
+        ContactInfo original = new ContactInfo();
+        original.setAddress("new address");
+        original.setPhone("new phone");
+        original.setEmail("new email");
+        original.setName("new name");
+        initiativeDao.markAsSended(initiativeId, original);
+
+        ContactInfo updated = initiativeDao.getContactInfo(initiativeId);
+        assertThat(updated.getPhone(), Matchers.is(original.getPhone()));
+        assertThat(updated.getName(), Matchers.is(original.getName()));
+        assertThat(updated.getEmail(), Matchers.is(original.getEmail()));
+        assertThat(updated.getAddress(), Matchers.is(original.getAddress()));
+
+    }
+
+    private static ContactInfo contactInfo() {
+        return new ContactInfo();
     }
 
     @Test

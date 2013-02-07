@@ -1,9 +1,11 @@
 package fi.om.municipalityinitiative.service;
 
-import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
+import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.dto.SendToMunicipalityDto;
 import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
+import fi.om.municipalityinitiative.util.JavaMailSenderFake;
 import fi.om.municipalityinitiative.util.ParticipatingUnallowedException;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.joda.time.DateTime;
@@ -22,11 +24,14 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.fail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes={IntegrationTestConfiguration.class})
+@ContextConfiguration(classes={IntegrationTestFakeEmailConfiguration.class})
 public class InitiativeServiceIntegrationTest {
 
     @Resource
     private InitiativeService service;
+
+    @Resource
+    private JavaMailSenderFake javaMailSenderFake;
 
     @Resource
     TestHelper testHelper;
@@ -143,6 +148,32 @@ public class InitiativeServiceIntegrationTest {
             assertThat(e.getMessage(), containsString("Initiative already sent"));
         }
     }
+
+    @Test
+    public void sending_collectable_initiative_to_municipality_saves_new_contact_information_to_initiative() {
+
+        Long initiativeId = testHelper.createTestInitiative(testMunicipality.getId(), "Initiative name", true, true);
+
+        SendToMunicipalityDto sendToMunicipalityDto = new SendToMunicipalityDto();
+        sendToMunicipalityDto.setContactInfo(new ContactInfo());
+
+        sendToMunicipalityDto.getContactInfo().setAddress("New Address");
+        sendToMunicipalityDto.getContactInfo().setName("New Name");
+        sendToMunicipalityDto.getContactInfo().setEmail("new_email@example.com");
+        sendToMunicipalityDto.getContactInfo().setPhone("555");
+
+        service.sendToMunicipality(initiativeId,sendToMunicipalityDto, "0000000000111111111122222222223333333333", null);
+
+        ContactInfo newContactInfo = service.getSendToMunicipalityData(initiativeId).getContactInfo();
+
+        // TODO: Do not use getSendToMunicipalityData for receiving current contact information, it's misleading.
+        assertThat(newContactInfo.getEmail(), is("new_email@example.com"));
+        assertThat(newContactInfo.getName(), is("New Name"));
+        assertThat(newContactInfo.getAddress(), is("New Address"));
+        assertThat(newContactInfo.getPhone(), is("555"));
+
+    }
+
 
     private InitiativeUICreateDto createDto(boolean collectable) {
         InitiativeUICreateDto createDto = new InitiativeUICreateDto();
