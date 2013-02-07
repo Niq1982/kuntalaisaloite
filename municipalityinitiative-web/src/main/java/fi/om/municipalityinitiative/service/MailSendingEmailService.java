@@ -6,6 +6,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.mysema.commons.lang.Assert;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
+import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.email.InitiativeEmailInfo;
 import fi.om.municipalityinitiative.util.Task;
 import freemarker.template.Configuration;
@@ -34,7 +35,6 @@ import java.util.Map;
 public class MailSendingEmailService implements EmailService {
 
     private static final String MUNICIPALITY_TEMPLATE = "municipality-not-collectable";
-    private static final String AUTHOR_TEMPLATE = "author-not-collectable";
 
     @Resource
     FreeMarkerConfigurer freemarkerConfig;
@@ -79,7 +79,7 @@ public class MailSendingEmailService implements EmailService {
                 emailInfo.getContactInfo().getEmail(),
                 messageSource.getMessage("email.not.collectable.municipality.subject", new String[]{emailInfo.getName()}, locale),
                 MUNICIPALITY_TEMPLATE,
-                dataMap(emailInfo, locale));
+                notCollectableDataMap(emailInfo, locale));
     }
 
     @Override
@@ -87,17 +87,17 @@ public class MailSendingEmailService implements EmailService {
         sendEmail(emailInfo.getContactInfo().getEmail(),
                 defaultReplyTo,
                 messageSource.getMessage("email.not.collectable.author.subject", new String[] {emailInfo.getName()}, locale),
-                AUTHOR_TEMPLATE,
-                dataMap(emailInfo, locale));
+                MUNICIPALITY_TEMPLATE,
+                notCollectableDataMap(emailInfo, locale));
     }
 
     @Override
-    public void sendCollectableToMunicipality(InitiativeEmailInfo emailInfo, String municipalityEmail, Locale locale) {
+    public void sendCollectableToMunicipality(CollectableInitiativeEmailInfo emailInfo, String municipalityEmail, Locale locale) {
         sendEmail(municipalityEmail,
                 emailInfo.getContactInfo().getEmail(),
                 messageSource.getMessage("email.not.collectable.municipality.subject", new String[]{emailInfo.getName()}, locale),
                 MUNICIPALITY_TEMPLATE,
-                dataMap(emailInfo, locale));
+                notCollectableDataMap(emailInfo, locale));
     }
 
     @Override
@@ -105,17 +105,17 @@ public class MailSendingEmailService implements EmailService {
         sendEmail(emailInfo.getContactInfo().getEmail(),
                 defaultReplyTo,
                 messageSource.getMessage("email.not.collectable.author.subject", new String[] {emailInfo.getName()}, locale),
-                AUTHOR_TEMPLATE,
-                dataMap(emailInfo, locale));
+                MUNICIPALITY_TEMPLATE,
+                notCollectableDataMap(emailInfo, locale));
     }
 
-
-    private HashMap<String, Object> dataMap(InitiativeEmailInfo emailInfo, Locale locale) {
+    private HashMap<String, Object> notCollectableDataMap(InitiativeEmailInfo emailInfo, Locale locale) {
         HashMap<String, Object> dataMap = new HashMap<String, Object>();
         dataMap.put("emailInfo", emailInfo);
         dataMap.put("localizations", new EmailLocalizationProvider(messageSource, locale));
         return dataMap;
     }
+
 
     private void sendEmail(String sendTo, String replyTo, String subject, String templateName,  Map<String, Object> dataMap) {
 

@@ -6,6 +6,7 @@ import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
+import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.email.InitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.service.InitiativeCreateDto;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
@@ -85,7 +86,7 @@ public class InitiativeService {
         checkHashCode(hashCode, initiativeInfo);
 
         initiativeDao.markAsSended(initiativeId, sendToMunicipalityDto.getContactInfo());
-        sendCollectedInitiativeEmails(initiativeId, locale);
+        sendCollectedInitiativeEmails(initiativeId, locale, sendToMunicipalityDto.getComment());
     }
 
     private void checkAllowedToSendToMunicipality(InitiativeViewInfo initiativeViewInfo) {
@@ -103,14 +104,15 @@ public class InitiativeService {
         }
     }
 
-    private void sendCollectedInitiativeEmails(Long initiativeId, Locale locale) {
+    private void sendCollectedInitiativeEmails(Long initiativeId, Locale locale, String comment) {
         InitiativeViewInfo initiative = initiativeDao.getById(initiativeId);
         ContactInfo contactInfo = initiativeDao.getContactInfo(initiativeId);
         String url = Urls.get(Locales.LOCALE_FI).view(initiativeId);
 
         InitiativeEmailInfo emailInfo = InitiativeEmailInfo.parse(contactInfo, initiative, url);
+        CollectableInitiativeEmailInfo collectableEmailInfo = CollectableInitiativeEmailInfo.parse(emailInfo, comment);
 
-        emailService.sendCollectableToMunicipality(emailInfo, municipalityDao.getMunicipalityEmail(initiative.getMunicipalityId()), locale);
+        emailService.sendCollectableToMunicipality(collectableEmailInfo, municipalityDao.getMunicipalityEmail(initiative.getMunicipalityId()), locale);
         emailService.sendCollectableToAuthor(emailInfo, locale);
     }
 
