@@ -5,12 +5,16 @@ public class CollectableInitiativeEmailInfo extends InitiativeEmailInfo {
     private String comment;
     // TODO: Participants
 
-    public static CollectableInitiativeEmailInfo parse(InitiativeEmailInfo initiativeEmailInfo, String comment) {
-        CollectableInitiativeEmailInfo collectableInitiativeEmailInfo = new CollectableInitiativeEmailInfo();
-        collectableInitiativeEmailInfo.setComment(comment);
-//        return collectableInitiativeEmailInfo;
-        throw new RuntimeException();
+    CollectableInitiativeEmailInfo() { }
 
+    public CollectableInitiativeEmailInfo(InitiativeEmailInfo initiativeEmailInfo, String comment) {
+        super(initiativeEmailInfo);
+        this.comment = comment;
+    }
+
+    public CollectableInitiativeEmailInfo(CollectableInitiativeEmailInfo original) {
+        super(original);
+        this.comment = original.getComment();
     }
 
     public String getComment() {
@@ -20,12 +24,4 @@ public class CollectableInitiativeEmailInfo extends InitiativeEmailInfo {
     public void setComment(String comment) {
         this.comment = comment;
     }
-//
-//    public InitiativeEmailInfo getInitiativeEmailInfo() {
-//        return initiativeEmailInfo;
-//    }
-//
-//    public void setInitiativeEmailInfo(InitiativeEmailInfo initiativeEmailInfo) {
-//        this.initiativeEmailInfo = initiativeEmailInfo;
-//    }
 }

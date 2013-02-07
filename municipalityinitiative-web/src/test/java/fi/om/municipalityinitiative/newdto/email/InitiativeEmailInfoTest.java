@@ -36,4 +36,12 @@ public class InitiativeEmailInfoTest {
         ReflectionTestUtils.assertNoNullFields(emailInfo);
 
     }
+
+    @Test
+    public void constuctor_fill_all_fields() {
+        InitiativeEmailInfo original = ReflectionTestUtils.modifyAllFields(new InitiativeEmailInfo());
+        InitiativeEmailInfo copy = new InitiativeEmailInfo(original);
+        ReflectionTestUtils.assertNoNullFields(copy);
+        ReflectionTestUtils.assertReflectionEquals(copy, original);
+    }
 }

@@ -20,11 +20,19 @@ import java.util.Random;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.fail;
 
+/**
+ * Sets random values to all fields and parents fields.
+
+ */
 public class ReflectionTestUtils {
 
     public static <T> T modifyAllFields(T bean)  {
-            for (Field field : bean.getClass().getDeclaredFields()) {
+
+        Class clazz = bean.getClass();
+        do {
+            for (Field field : clazz.getDeclaredFields()) {
                 field.setAccessible(true);
                 if (!java.lang.reflect.Modifier.isStatic(field.getModifiers()))
                     try {
@@ -33,8 +41,15 @@ public class ReflectionTestUtils {
                         throw new RuntimeException(e);
                     }
             }
+            clazz = clazz.getSuperclass();
+        }
+        while (clazz != null && clazz != Object.class);
 
-        assertNoNullFields(bean);
+        try {
+            assertNoNullFields(bean);
+        } catch (AssertionError e) {
+            fail("Unable to randomize all field values, something was null: " + e.getMessage());
+        }
         return bean;
     }
 
@@ -82,6 +97,10 @@ public class ReflectionTestUtils {
         throw new IllegalArgumentException("unsupported type: " + type);
     }
 
+    /**
+     * Asserts if any fields are null.
+     * @param o
+     */
     public static void assertNoNullFields(Object o){
         ObjectMapper mapper = new ObjectMapper();
         mapper.setVisibilityChecker(mapper.getVisibilityChecker()
