@@ -1,35 +1,23 @@
-<#import "../components/email-layout-html.ftl" as el />
-<#import "../components/email-utils.ftl" as eu />
-<#import "../components/email-blocks.ftl" as eb />
+<#import "../components/email-layout-html.ftl" as l />
+<#import "../components/email-utils.ftl" as u />
+<#import "../components/email-blocks.ftl" as b />
 
 <#escape x as x?html> 
 
-<#assign titleFi="Kuntalaisaloite - "+emailInfo.municipalityName!"" />
-<#assign titleSv="Invånarinitiativ - "+emailInfo.municipalityName!"" />
+<#assign title><@u.message "email.initiative" /> - ${emailInfo.municipalityName!""}</#assign>
 
-<@el.emailHtml "municipality-initiative" titleFi>
+<@l.emailHtml "municipality-initiative" title>
 
     <#-- FINNISH -->
-    <@eb.emailTemplate "fi" titleFi>
-        <@eb.initiativeDetails "fi" "html" />
+    <@b.emailTemplate title>
+        <@b.initiativeDetails "html" />
         
-        <@eb.contactInfo "fi" "html" />
+        <@b.contactInfo "html" />
         
-        <p style="margin:0 0 1em 0;">Tämä aloite lähetettiin Kuntalaisaloite.fi-palvelun kautta. Katso aloite palvelussa<br/><@eu.link emailInfo.url /></p>
-        <p style="margin:0 0 1em 0;">Tähän sähköpostiin lähetetty vastaus menee suoraan aloitteen tekijän antamaan sähköpostiosoitteeseen.</p>
-    </@eb.emailTemplate>
-    
-    <#-- SWEDISH -->
-    <#-- TODO: Should use localizations      
-    <@eb.emailTemplate "sv" titleSv>
-        <@eb.initiativeDetails "sv" "html" />
-        
-        <@eb.contactInfo "sv" "html" />
+        <p style="margin:0 0 1em 0;"><@u.message "email.municipality.sendFrom" /><br/><@u.link emailInfo.url /></p>
+        <p style="margin:0 0 1em 0;"><@u.message "email.municipality.replyTo" /></p>
+    </@b.emailTemplate>
 
-        <p>Initiativet har skickats från <@eu.link "https://kuntalaisaloite.fi" "Invånarinitiativ.fi" />-webtjänst. Initiativet finns på adressen:<br/><@eu.link emailInfo.url /></p>
-    </@eb.emailTemplate>
-    -->
-
-</@el.emailHtml>
+</@l.emailHtml>
 
 </#escape>  

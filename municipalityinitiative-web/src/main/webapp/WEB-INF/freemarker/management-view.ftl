@@ -4,7 +4,7 @@
 
 <#escape x as x?html> 
 
-<#-- TODO: Member lists as component -->
+<#-- TODO: Member lists as own VIEW -->
 <#assign participantListFranchiseHTML>
 <@compress single_line=true>
 <#-- Testing modal with large list -->
@@ -33,7 +33,19 @@
 </@compress>
 </#assign>
 
+<#--
+ * Top Info elements for the top section of the initiative's management-view page
+-->
+<#assign topInfo>
+    <#--
+     * Warning message for the management page.
+    -->
+    <@u.systemMessage path="management.warning" type="warning" showClose=false />
+</#assign>
 
+<#--
+ * Elements for the top section of the initiative's management-view page
+-->
 <#assign topContribution>
 
     <#--
@@ -49,6 +61,9 @@
 
 </#assign>
 
+<#--
+ * Elements for the bottom section of the initiative's management-view page
+-->
 <#assign bottomContribution>
 
     <#-- TODO: As component -->

@@ -1,3 +1,5 @@
+
+
 Aloite toimitettu kuntaan.
 
 Otsikko:
@@ -15,9 +17,8 @@ ${emailInfo.contactInfo.name}
 ${emailInfo.contactInfo.address!""}
 ${emailInfo.contactInfo.phone!""}
 ${emailInfo.contactInfo.email}
-<<<<<<< local
-=======
 
+<#-- TODO: Txt version
 
 <#import "../components/email-layout-html.ftl" as el />
 <#import "../components/email-utils.ftl" as eu />
@@ -30,9 +31,8 @@ ${emailInfo.contactInfo.email}
 
 <@el.emailHtml "sent-to-municipality" titleFi>
 
-    <#-- FINNISH -->
-    <@eb.emailTemplate "fi" titleFi>
-        <@eb.initiativeDetails "fi" "html" />
+    <@eb.emailTemplate titleFi>
+        <@eb.initiativeDetails "html" />
         
         Otsikko:
         ${emailInfo.name}
@@ -50,17 +50,10 @@ ${emailInfo.contactInfo.email}
         ${emailInfo.contactInfo.phone!""}
         ${emailInfo.contactInfo.email}
         
-        <#--<@eb.abstract "fi" "html" />-->
     </@eb.emailTemplate>
-    
-    <#-- SWEDISH -->      
-    <@eb.emailTemplate "sv" titleSv>
-        
-        <p>Innehåll saknas i svensk version.</p>
 
-    </@eb.emailTemplate>
 
 </@el.emailHtml>
 
 </#escape> 
->>>>>>> other
+-->

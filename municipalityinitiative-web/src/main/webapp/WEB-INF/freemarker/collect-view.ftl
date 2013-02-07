@@ -1,6 +1,7 @@
 <#import "/spring.ftl" as spring />
 <#import "components/utils.ftl" as u />
 <#import "components/forms.ftl" as f />
+<#import "components/some.ftl" as some />
 
 <#escape x as x?html> 
 
@@ -65,7 +66,7 @@
 </@compress>
 </#assign>
 
-<#-- TODO: Member lists as component -->
+<#-- TODO: Member lists as own VIEW -->
 <#assign participantListFranchiseHTML>
 <@compress single_line=true>
 <#-- Testing modal with large list -->
@@ -94,7 +95,9 @@
 </@compress>
 </#assign>
 
-
+<#--
+ * Elements for the top section of the initiative's management-view page
+-->
 <#assign topContribution>
 
     <#--
@@ -118,6 +121,9 @@
 
 </#assign>
 
+<#--
+ * Elements for the bottom section of the initiative's management-view page
+-->
 <#assign bottomContribution>
 
     <#-- TODO: As component -->
@@ -183,6 +189,11 @@
             
         </div>     
     </div>
+
+    <#--
+     * Social media buttons
+    -->
+    <@some.some pageTitle=currentPage />
 
 </#assign>
 
