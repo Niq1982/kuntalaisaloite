@@ -150,7 +150,7 @@ public class InitiativeServiceIntegrationTest {
     }
 
     @Test
-    public void sending_collectable_initiative_to_municipality_saves_new_contact_information_to_initiative() {
+    public void sending_collectable_initiative_to_municipality_saves_new_contact_information_to_initiative_and_marks_it_as_sended() {
 
         Long initiativeId = testHelper.createTestInitiative(testMunicipality.getId(), "Initiative name", true, true);
 
@@ -164,14 +164,19 @@ public class InitiativeServiceIntegrationTest {
 
         service.sendToMunicipality(initiativeId,sendToMunicipalityDto, "0000000000111111111122222222223333333333", null);
 
-        ContactInfo newContactInfo = service.getSendToMunicipalityData(initiativeId).getContactInfo();
-
         // TODO: Do not use getSendToMunicipalityData for receiving current contact information, it's misleading.
+        ContactInfo newContactInfo = service.getSendToMunicipalityData(initiativeId).getContactInfo();
         assertThat(newContactInfo.getEmail(), is("new_email@example.com"));
         assertThat(newContactInfo.getName(), is("New Name"));
         assertThat(newContactInfo.getAddress(), is("New Address"));
         assertThat(newContactInfo.getPhone(), is("555"));
+        // TODO: DO not use getInitiative either, implement needed functionality to testHelper.
+        assertThat(service.getMunicipalityInitiative(initiativeId).getSentTime().isPresent(), is(true));
 
+    }
+
+    public void succeeds_in_sending_to_municipality() {
+        // TODO: Implement some test that ensures that emailservice is really used. (verifying by mock is ok)
     }
 
 
