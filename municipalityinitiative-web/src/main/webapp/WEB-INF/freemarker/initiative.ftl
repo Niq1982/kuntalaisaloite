@@ -1,6 +1,5 @@
 <#import "components/layout.ftl" as l />
 <#import "components/utils.ftl" as u />
-<#import "components/some.ftl" as some />
 
 <#escape x as x?html> 
 
@@ -21,6 +20,9 @@
 </#if>
 
 <@l.main page pageTitle>
+
+    <#-- TOP INFOS -->
+    <#if topInfo??><#noescape>${topInfo}</#noescape></#if>
 
     <div class="municipality">${initiative.municipalityName!""}</div>
 
@@ -52,7 +54,7 @@
     <#-- BOTTOM CONTRIBUTION -->
     <#if bottomContribution??><#noescape>${bottomContribution}</#noescape></#if>
     
-    <@some.some pageTitle=currentPage />
+    
     
     <#--
      * Public VIEW modals
