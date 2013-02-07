@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.newweb;
 
-import fi.om.municipalityinitiative.dto.SendToMunicipalityDto;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.service.InitiativeService;

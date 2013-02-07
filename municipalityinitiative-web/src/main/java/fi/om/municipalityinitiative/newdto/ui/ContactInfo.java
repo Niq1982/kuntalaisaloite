@@ -15,7 +15,7 @@ public class ContactInfo {
      *  Regexp is from: http://www.mkyong.com/regular-expressions/how-to-validate-email-address-with-regular-expression/
      *  - Added char '+' and '-' for the original regexp.
      */
-    public static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-\\+]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+    public static final String EMAIL_PATTERN = "^([_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-\\+]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})|)$";
 
     @NotEmpty
     @Size(max = InitiativeConstants.CONTACT_NAME_MAX)
