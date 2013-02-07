@@ -396,7 +396,7 @@ $(document).ready(function () {
 * - Toggles home municipality membership radiobuttons
 * - Prevents or allows proceeding to next step in the form
 */	
-(function() {
+var municipalitySelection = (function() {
 	var chznSelect, municipalitySelect, homeMunicipalitySelect,
 		selectedMunicipality, municipalityNotEqual, municipalMembershipRadios,
 		isHomeMunicipality, equalMunicipalitys, slideOptions;
@@ -406,7 +406,7 @@ $(document).ready(function () {
 	homeMunicipalitySelect		= $('#homeMunicipality');				// Targets select-element
 	selectedMunicipalityElem	= $('#selected-municipality'); 			// Municipality text in the second step in the form
 	municipalityNotEqual		= $('.municipality-not-equal');			// Membership selections if municipalitys are not same
-	municipalMembershipRadios	= $("input[name=municipalMembership]");  // Membership radiobuttons for initiative's municipality
+	municipalMembershipRadios	= $("input[name=municipalMembership]"); // Membership radiobuttons for initiative's municipality
 	
 	// Checks which one of the selects we are using
 	isHomeMunicipality = function(select){
@@ -441,20 +441,21 @@ $(document).ready(function () {
 		easing: 'easeOutExpo'
 	};
 	
-	$(".chzn-select").loadChosen();
-	
 	// Initialize form state on page load
 	var Init = function(){
+		$(".chzn-select").loadChosen();
+		
+		if (!$("input[name=franchise], input[name=municipalMembership]").is(':checked')){
+			disableSubmit(true);
+		}
+		
 		updateSelectedMunicipality();
 		
 		if (validationErrors){
 			toggleMembershipRadios(homeMunicipalitySelect);
 		}
 		
-		// Tiny delay for the modal to catch up.
-		setTimeout(function () {
-			showFranchise(equalMunicipalitys());
-		}, 50);
+		showFranchise(equalMunicipalitys());
 	};
 	
 	// update text in the municipality data in the form step 2
@@ -488,7 +489,7 @@ $(document).ready(function () {
 		var formBlockHeaders 	= $("#step-header-2, #step-header-3, #step-header-4"),	// Form step header blocks
 			formBlocks			= $("#step-2, #step-3, #step-4"),						// Form step input blocks
 			btnStep2			= $("#button-next-2"),									// Continue button for second step
-			btnParticipate 		= $("#submit-participate");								// Participate button
+			btnParticipate 		= $("button#participate");								// Participate button
 		
 		btnParticipate.disableButton(prevent);
 		
@@ -512,16 +513,14 @@ $(document).ready(function () {
 	
 	// Disable or enable submitting "Save and collect"
 	function disableSubmit(disable){
-		console.log("disableSubmit: "+disable);
-		$('button[name=collectable]').disableButton(disable);
-		$("#submit-participate").disableButton(disable);
+		$('button#collectable, button#participate').disableButton(disable);
 	}
 	
 	// Toggle the radiobutton selection for municipality membership
 	function toggleMembershipRadios(select){
 		var franchise			= $('#franchise'),
 			municipalMembership	= $('#municipalMembership'),
-			btnCollectable		= $('button[name=collectable]');
+			btnCollectable		= $('button#collectable');
 		
 		if( equalMunicipalitys() ){
 			municipalityNotEqual.stop(false,true).slideUp(slideOptions);
@@ -572,7 +571,7 @@ $(document).ready(function () {
 		var cb, btn, cbVal;
 		
 		cb = $(this);
-		btn = $('#button-next-2, #submit-participate');
+		btn = $('#button-next-2, button#participate');
 		cbVal = function(){			
 			return ( $("input[name=municipalMembership]:checked").val() === "true" );
 		};
@@ -631,6 +630,11 @@ $(document).ready(function () {
 	
 	// Initialize form state on page load
 	Init();
+	
+	return {
+		// Return Init-function for the modal
+		Init: Init
+    };
 	
 }());
 
@@ -743,7 +747,9 @@ $('.municipality-filter').change( function() {
 		    	$('.binder').each(function(){
 		    		$(this).bindCheckbox();					// Bind checkbox with submit button (used in remove support votes for example)
 		    	});
-		    	$(".chzn-select").loadChosen();
+		    	
+		    	// Initialize municipality selections
+		    	municipalitySelection.Init();
 		    	
 		    	// TODO: Test this properly. We might want to use this.
 		    	setTimeout(function () {
