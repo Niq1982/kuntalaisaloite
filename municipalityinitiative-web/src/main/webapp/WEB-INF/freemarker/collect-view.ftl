@@ -99,11 +99,9 @@
  * Elements for the top section of the initiative's management-view page
 -->
 <#assign topContribution>
-
     <#--
      * Initiative date and state
-    -->    
-    
+    -->
     <span class="extra-info">
         <#if initiative.createTime??>
             <#assign createTime><@u.localDate initiative.createTime /></#assign>
@@ -118,7 +116,6 @@
             <@u.message "initiative.state.collecting" />
         </#if>
     </span>
-
 </#assign>
 
 <#--
