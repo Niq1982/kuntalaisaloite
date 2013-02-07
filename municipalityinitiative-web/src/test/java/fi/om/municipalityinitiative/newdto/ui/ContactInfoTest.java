@@ -12,8 +12,7 @@ import javax.validation.ValidatorFactory;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 public class ContactInfoTest {
 
@@ -36,7 +35,19 @@ public class ContactInfoTest {
         assertThat(validationErrors, hasSize(1));
         assertThat(getFirst(validationErrors).getPropertyPath().toString(), is("email"));
         assertThat(getFirst(validationErrors).getMessage(), is("may not be empty"));
+    }
 
+    @Test
+    public void validate_invalid_email() {
+        ContactInfo contactInfo = new ContactInfo();
+        contactInfo.setName("name");
+        contactInfo.setEmail("wrong_email");
+
+        Set<ConstraintViolation<ContactInfo>> validationErrors = validator.validate(contactInfo);
+
+        assertThat(validationErrors, hasSize(1));
+        assertThat(getFirst(validationErrors).getPropertyPath().toString(), is("email"));
+        assertThat(getFirst(validationErrors).getMessage(), containsString("must match"));
     }
 
     @Test
