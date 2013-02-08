@@ -1,5 +1,6 @@
 <#import "components/layout.ftl" as l />
 <#import "components/utils.ftl" as u />
+<#import "components/elements.ftl" as e />
 
 <#escape x as x?html> 
 
@@ -28,6 +29,8 @@
 
     <h1 class="name">${initiative.name!""}</h1>
     
+    <@e.stateDates initiative.collectable />
+
     <#-- TOP CONTRIBUTION -->
     <#if topContribution??><#noescape>${topContribution}</#noescape></#if>
 
@@ -85,7 +88,6 @@
     
     </script>
 
-    
 </@l.main>
 </#escape> 
 

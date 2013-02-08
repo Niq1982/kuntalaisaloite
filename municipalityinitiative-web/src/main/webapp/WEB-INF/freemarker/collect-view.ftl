@@ -1,5 +1,6 @@
 <#import "/spring.ftl" as spring />
 <#import "components/utils.ftl" as u />
+<#import "components/elements.ftl" as e />
 <#import "components/forms.ftl" as f />
 <#import "components/some.ftl" as some />
 
@@ -58,7 +59,7 @@
     
     <div class="input-block-content flexible">
         <button id="participate" type="submit" name="save" value="true" class="small-button"><span class="small-icon save-and-send"><@u.message "action.save" /></span></button>
-        <a href="${springMacroRequestContext.requestUri}#participants" class="push close"><@u.message "action.cancel" /></a>
+        <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
     </div>
     
     </form>
@@ -66,66 +67,20 @@
 </@compress>
 </#assign>
 
-<#-- TODO: Member lists as own VIEW -->
-<#assign participantListFranchiseHTML>
-<@compress single_line=true>
-<#-- Testing modal with large list -->
-<#--<div class="css-cols-3"><ul class="no-style"><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li></ul></div>-->
-
-    <#if participants??>
-        <#list participants.franchise as participant>
-            <#if participant_index == 0><ul class="participants no-style"></#if>
-                <li>${participant}</li>
-            <#if !participant_has_next></ul></#if>
-        </#list>
-    </#if>
-
-</@compress>
-</#assign>
-
-<#assign participantListNoFranchiseHTML>
-<@compress single_line=true>
-    <#if participants??>
-        <#list participants.noFranchise as participant>
-            <#if participant_index == 0><ul class="participants no-style"></#if>
-                <li>${participant}</li>
-            <#if !participant_has_next></ul></#if>
-        </#list>
-    </#if>
-</@compress>
-</#assign>
 
 <#--
  * Elements for the top section of the initiative's management-view page
 -->
 <#assign topContribution>
-    <#--
-     * Initiative date and state
-    -->
-    <span class="extra-info">
-        <#if initiative.createTime??>
-            <#assign createTime><@u.localDate initiative.createTime /></#assign>
-            <@u.message key="initiative.date.create" args=[createTime] />
-        </#if>
-        <br />
 
-        <#if initiative.sentTime.present>
-            <#assign sentTime><@u.localDate initiative.sentTime.value /></#assign>
-            <@u.message key="initiative.date.sent" args=[sentTime] />
-        <#else>
-            <@u.message "initiative.state.collecting" />
-        </#if>
-    </span>
 </#assign>
 
 <#--
  * Elements for the bottom section of the initiative's management-view page
 -->
 <#assign bottomContribution>
-
-    <#-- TODO: As component -->
     <#--
-     * Show participants
+     * Show participant counts and participate form
     -->
     <div id="participants" class="view-block public last">
         <div class="initiative-content-row last">
@@ -134,16 +89,15 @@
             <span class="user-count-total">${participantCount.total!""}</span>
             
             <#--
-             * Disable participate button:
+             * Do NOT show participate button:
              *  - when modal request message is showed
-             *  - when participate form is showed (NOSCRIPT)
+             *  - when participate form is showed (RequestParameter for NOSCRIPT)
              *  - when the form has validation errors
              *  - when sent to municipality (initiative.sentTime.present)
             -->
-            <#if !initiative.sentTime.present &&
-                 requestMessages?? && !(requestMessages?size > 0) &&
-                 !((hasErrors?? && hasErrors) || (RequestParameters['participateForm']?? && RequestParameters['participateForm'] == "true"))>
-                 
+            <#assign showParticipateForm = (hasErrors?? && hasErrors) || (RequestParameters['participateForm']?? && RequestParameters['participateForm'] == "true") />
+            
+            <#if !initiative.sentTime.present && requestMessages?? && !(requestMessages?size > 0) && !showParticipateForm>
                 <div class="participate">
                     <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>
                     <@u.link href="#" labelKey="action.participate.infoLink" cssClass="push" />
@@ -154,9 +108,10 @@
                     <@u.systemMessage path="participate.sentToMunicipality" type="info" showClose=false />
                 </div>
             </#if>
-            <br class="clear">
+            <br class="clear" />
 
-            <#if (hasErrors?? && hasErrors) || (RequestParameters['participateForm']?? && RequestParameters['participateForm'] == "true")>
+            <#-- NOSCRIPT participate -->
+            <#if showParticipateForm>
                 <#noescape><noscript>
                     <div id="participate-form" class="participate-form cf top-margin">
                         <h3><@u.message "participate.title" /></h3>
@@ -165,24 +120,7 @@
                 </noscript></#noescape>
             </#if>
 
-            <div class="top-margin cf">
-                <div class="column col-1of2">
-                    <p><@u.message key="participantCount.rightOfVoting.total" args=[initiative.municipalityName!""] /><br />
-                    <span class="user-count">${participantCount.rightOfVoting.total!""}</span><br />
-                    <#if (participantCount.rightOfVoting.total > 0)>
-                        <#if (participantCount.rightOfVoting.publicNames > 0)><a class="trigger-tooltip" href="${urls.participantList(initiative.id)}" title="<@u.message key="participantCount.publicNames.show"/>"><@u.message key="participantCount.publicNames" args=[participantCount.rightOfVoting.publicNames!""] /></a><br /></#if>
-                        <#if (participantCount.rightOfVoting.privateNames > 0)><@u.message key="participantCount.privateNames" args=[participantCount.rightOfVoting.privateNames!""] /></p></#if>
-                    </#if>
-                </div>
-                <div class="column col-1of2 last">
-                    <p><@u.message key="participantCount.noRightOfVoting.total" args=[initiative.municipalityName!""] /><br />
-                    <span class="user-count">${participantCount.noRightOfVoting.total!""}</span><br>
-                    <#if (participantCount.noRightOfVoting.total > 0)>
-                        <#if (participantCount.noRightOfVoting.publicNames > 0)><a class="trigger-tooltip js-show-no-franchise-list" href="#" title="<@u.message key="participantCount.publicNames.show"/>"><@u.message key="participantCount.publicNames" args=[participantCount.noRightOfVoting.publicNames!""] /></a><br></#if>
-                        <#if (participantCount.noRightOfVoting.privateNames > 0)><@u.message key="participantCount.privateNames" args=[participantCount.noRightOfVoting.privateNames!""] /></p></#if>
-                    </#if>
-                </div>
-            </div>
+            <@e.participantCounts />
             
         </div>     
     </div>
@@ -215,26 +153,6 @@
         };
         </#if>
     </#if>
-    
-    <#-- TODO:
-     *  1. Fix namelist columns in IE
-     *  2. Show list for NOSCRIPT users
-     *
-    
-    modalData.participantListFranchise = function() {
-        return [{
-            title:      '<@u.message key="participantCount.rightOfVoting.total" args=[initiative.municipalityName!""] />',
-            content:    '<#noescape><div class="css-cols-3 scrollable">${participantListFranchiseHTML}</div><br/><a href="index.html" class="small-button close"><@u.message "action.close" /></a></#noescape>'
-        }]
-    };
-    
-    modalData.participantListNoFranchise = function() {
-        return [{
-            title:      '<@u.message key="participantCount.noRightOfVoting.total" args=[initiative.municipalityName!""] />',
-            content:    '<#noescape><div class="css-cols-3 scrollable">${participantListNoFranchiseHTML}</div><br/><a href="index.html" class="small-button close"><@u.message "action.close" /></a></#noescape>'
-        }]
-    };
-    -->
     
 </#assign>
 
