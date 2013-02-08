@@ -223,7 +223,6 @@ public class MailSendingEmailServiceTest {
     }
 
     @Test
-    @Ignore("Create own view for collectable initiative, then un-ignore this.")
     public void collectable_to_municipality_adds_comment_to_email() throws Exception {
         CollectableInitiativeEmailInfo collectableEmailInfo = createCollectableEmailInfo();
         emailService.sendCollectableToMunicipality(collectableEmailInfo, MUNICIPALITY_EMAIL, Locales.LOCALE_FI);

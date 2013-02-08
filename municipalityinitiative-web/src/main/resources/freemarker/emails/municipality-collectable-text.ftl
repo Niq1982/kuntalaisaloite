@@ -1,17 +1,19 @@
-Aloite toimitettu kuntaan
+<#import "../components/email-utils.ftl" as u />
+<#import "../components/email-blocks.ftl" as b />
 
-Otsikko:
-${emailInfo.name}
+<#if (emailInfo.comment)?has_content>
+    <@b.commentBlock "text" emailInfo.comment />
+</#if>
 
-Ehdotus:
-${emailInfo.proposal}
+<@u.message "email.initiative" /> - ${emailInfo.municipalityName!""}
 
-Muuta shaibaa
+<@b.initiativeDetails "text" />
+
+----
+
+<@b.contactInfo "text" />
+
+<@u.message "email.municipality.sendFrom" />:
 ${emailInfo.url}
-${emailInfo.municipalityName}
 
-${localizations.getMessage("initiative.currentAuthor.contactInfo")}
-${emailInfo.contactInfo.name}
-${emailInfo.contactInfo.address!""}
-${emailInfo.contactInfo.phone!""}
-${emailInfo.contactInfo.email}
+<@u.message "email.municipality.replyTo" />
