@@ -2,7 +2,7 @@
 <#import "../components/email-blocks.ftl" as b />
 
 <#if (emailInfo.comment)?has_content>
-    <@b.commentBlock "text" emailInfo.comment />
+    <@b.comment "text" emailInfo.comment />
 </#if>
 
 <@u.message "email.initiative" /> - ${emailInfo.municipalityName!""}
@@ -16,4 +16,6 @@
 <@u.message "email.municipality.sendFrom" />:
 ${emailInfo.url}
 
+<#-- TODO: Reply to not yet done
 <@u.message "email.municipality.replyTo" />
+-->

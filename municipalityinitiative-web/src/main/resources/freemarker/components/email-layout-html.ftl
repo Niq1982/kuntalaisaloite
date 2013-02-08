@@ -1,4 +1,6 @@
-<#import "email-utils.ftl" as eu />
+<#import "email-utils.ftl" as u />
+
+<#include "../includes/styles.ftl" />
 
 <#escape x as x?html>
 
@@ -22,12 +24,24 @@
     </style>
     
 </head>
-<body style="background:#f0f0f0;">
+<body style="background:${bodyBGcolor!""};">
 <#-- Extra div as Gmail strips off body-tag -->
-<div style="background:#f0f0f0;">
+<div style="background:${bodyBGcolor!""};">
 
-    <#-- Email content -->
-    <#nested />
+    <table border="0" cellspacing="0" cellpadding="0" style="font-family:${defaultFontFamily!"Arial, sans-serif"};" width="100%" bgcolor="${bodyBGcolor!""}">
+    <tr>
+        <td align="center">
+            <@u.spacer "15" />
+
+            <#-- Email content -->
+            <#nested />
+            
+            <p style="${footerFont!""}"><@u.message "email.footer" /></p>
+
+            <@u.spacer "15" />
+        </td>
+    </tr>
+    </table>
 
 </div>
 </body>

@@ -12,4 +12,6 @@
 <@u.message "email.municipality.sendFrom" />:
 ${emailInfo.url}
 
+<#-- TODO: Reply to not yet done
 <@u.message "email.municipality.replyTo" />
+-->

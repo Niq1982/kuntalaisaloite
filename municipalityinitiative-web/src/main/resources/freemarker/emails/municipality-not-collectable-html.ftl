@@ -2,20 +2,25 @@
 <#import "../components/email-utils.ftl" as u />
 <#import "../components/email-blocks.ftl" as b />
 
+<#include "../includes/styles.ftl" />
+
 <#escape x as x?html> 
 
 <#assign title><@u.message "email.initiative" /> - ${emailInfo.municipalityName!""}</#assign>
 
-<@l.emailHtml "municipality-initiative" title>
+<@l.emailHtml "municipality-not-collectable" title>
 
-    <@b.emailTemplate title>
+    <@b.mainContentBlock title>
         <@b.initiativeDetails "html" />
-        
         <@b.contactInfo "html" />
-        
-        <p style="margin:0 0 1em 0;"><@u.message "email.municipality.sendFrom" /><br/><@u.link emailInfo.url /></p>
-        <p style="margin:0 0 1em 0;"><@u.message "email.municipality.replyTo" /></p>
-    </@b.emailTemplate>
+    </@b.mainContentBlock>
+    
+    <@b.contentBlock "html">
+        <p style="${pBothMargins!""}"><@u.message "email.municipality.sendFrom" /><br/><@u.link emailInfo.url /></p>
+        <#-- TODO: Reply to not yet done
+        <p style="${pBothMargins!""}"><@u.message "email.municipality.replyTo" /></p>
+        -->
+    </@b.contentBlock>
 
 </@l.emailHtml>
 
