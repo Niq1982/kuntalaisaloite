@@ -98,11 +98,12 @@
  -->
 <#macro commentBlock type="" msg="">
     <#if type == "html">
-        <@u.spacer "15" />
+        
         <table border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, sans-serif;" width="100%" bgcolor="#f0f0f0">
             <tr>
                 <td align="center">
     
+                    <@u.spacer "15" />
                     <table border="0" cellspacing="0" cellpadding="0" width="640" style="background:#fff; border-radius:5px; text-align:left; font-family:Arial, sans-serif;">
                         <tr>
                             <td colspan="3" style="">
@@ -121,11 +122,12 @@
                             </td>
                         </tr>
                     </table>
+                    <@u.spacer "5" />
                     
                 </td>
             </tr>
         </table>
-        <@u.spacer "5" />
+        
     <#else>
         <@u.message "email.commentToMunicipality" />:
         ${msg}

@@ -8,7 +8,7 @@
 
 <@l.emailHtml "municipality-initiative" title>
 
-    <#if emailInfo.comment??>
+    <#if (emailInfo.comment)?has_content>
         <@b.commentBlock "html" emailInfo.comment />
     </#if>
 
