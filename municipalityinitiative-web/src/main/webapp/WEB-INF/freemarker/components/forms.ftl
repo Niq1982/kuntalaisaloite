@@ -121,13 +121,17 @@
 <#macro formCheckbox path checked=false attributes="" prefix="">
     <@spring.bind path />
     <#assign id="${spring.status.expression}">
-    <#assign isSelected = spring.status.value?? && spring.status.value?string=="true">
+    <#if spring.status.value??>
+        <#assign isSelected = spring.status.value?string=="true" />
+    <#else>
+        <#assign isSelected = checked />
+    </#if>
     <input type="hidden" name="_${id}" value="on" />   
     
     <@showError />
      
     <label class="inline">
-        <input type="checkbox" id="${id}" name="${id}"<#if isSelected || checked> checked="checked"</#if> ${attributes}/>
+        <input type="checkbox" id="${id}" name="${id}"<#if isSelected> checked="checked"</#if> ${attributes}/>
         <@u.message (prefix!="")?string(prefix+".",'')+path /><br />
     </label>
 </#macro>
