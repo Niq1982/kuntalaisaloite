@@ -329,9 +329,9 @@
     </#if>
     
     <#-- Testing WYSIHTML5 editor -->
-    <#-- wysihtml5 parser rules -->
+    <!-- wysihtml5 parser rules -->
     <script src="/js/wysihtml5/parser_rules/simple.js"></script>
-    <#-- Library -->
+    <!-- Library -->
     <script src="/js/wysihtml5/dist/wysihtml5-0.3.0.min.js"></script>
     <!--[if lt IE 9]>
       <script src='http://html5shiv.googlecode.com/svn/trunk/html5.js'></script>
