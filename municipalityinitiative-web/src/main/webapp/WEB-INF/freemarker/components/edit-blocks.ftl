@@ -53,6 +53,7 @@
         <div class="input-block-extra">
             <div class="input-block-extra-content">
                 <@f.helpText "help.municipality" />
+                <@f.helpText "help.homeMunicipality" />
             </div>
         </div>
 
@@ -112,7 +113,7 @@
     <div id="step-${step}" class="input-block cf js-hide">
         <div class="input-block-extra">
             <div class="input-block-extra-content">
-                <@f.helpText "help.title" />
+                <@f.helpText "help.name" />
                 <@f.helpText "help.proposal" />
             </div>
         </div>
@@ -157,10 +158,8 @@
     <div id="step-${step}" class="input-block cf js-hide">
         <div class="input-block-extra">
             <div class="input-block-extra-content">
-                <@f.helpText "help.currentAuthor.name" />
-                <@f.helpText "help.currentAuthor.homeMunicipality" />
-                <@f.helpText "help.currentAuthor.suffrage" />
-                <@f.helpText "help.currentAuthor.contactDetails" />
+                <@f.helpText "help.contactInfo.name" />
+                <@f.helpText "help.contactInfo.contactDetails" />
             </div>
         </div>
 
@@ -201,8 +200,8 @@
     <div id="step-${step}" class="input-block cf js-hide">
         <div class="input-block-extra">
             <div class="input-block-extra-content">
-                <@f.helpText "help.title" />
-                <@f.helpText "help.proposal" />
+                <@f.helpText "help.send" />
+                <@f.helpText "help.collect" />
             </div>
         </div>
 

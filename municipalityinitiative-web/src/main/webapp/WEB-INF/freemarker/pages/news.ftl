@@ -8,34 +8,65 @@
  
  <#if locale == "fi">
  
-    <span class="news-date">3.12.2012</span> 
+    <div id="wysihtml5-editor-toolbar">
+      <header>
+        <ul class="commands">
+          <li data-wysihtml5-command="bold" title="Make text bold (CTRL + B)" class="command"></li>
+          <li data-wysihtml5-command="italic" title="Make text italic (CTRL + I)" class="command"></li>
+          <li data-wysihtml5-command="insertUnorderedList" title="Insert an unordered list" class="command"></li>
+          <li data-wysihtml5-command="insertOrderedList" title="Insert an ordered list" class="command"></li>
+          <li data-wysihtml5-command="createLink" title="Insert a link" class="command"></li>
+          <li data-wysihtml5-command="insertImage" title="Insert an image" class="command"></li>
+          <li data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h1" title="Insert headline 1" class="command"></li>
+          <li data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h2" title="Insert headline 2" class="command"></li>
+          <#--<li data-wysihtml5-command-group="foreColor" class="fore-color" title="Color the selected text" class="command">
+            <ul>
+              <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="silver"></li>
+              <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="gray"></li>
+              <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="maroon"></li>
+              <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="red"></li>
+              <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="purple"></li>
+              <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="green"></li>
+              <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="olive"></li>
+              <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="navy"></li>
+              <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="blue"></li>
+            </ul>
+          </li>
+          <li data-wysihtml5-command="insertSpeech" title="Insert speech" class="command"></li>-->
+          <li data-wysihtml5-action="change_view" title="Show HTML" class="action"></li>
+        </ul>
+      </header>
+      <div data-wysihtml5-dialog="createLink" style="display: none;">
+        <label>
+          Link:
+          <input data-wysihtml5-dialog-field="href" value="http://">
+        </label>
+        <a data-wysihtml5-dialog-action="save">OK</a>&nbsp;<a data-wysihtml5-dialog-action="cancel">Cancel</a>
+      </div>
+
+      <div data-wysihtml5-dialog="insertImage" style="display: none;">
+        <label>
+          Image:
+          <input data-wysihtml5-dialog-field="src" value="http://">
+        </label>
+        <a data-wysihtml5-dialog-action="save">OK</a>&nbsp;<a data-wysihtml5-dialog-action="cancel">Cancel</a>
+      </div>
+    </div>
+ 
+ 
+    <form><textarea id="wysihtml5-textarea"  spellcheck="false" wrap="off" autofocus style="height:100%;" placeholder="Enter your text ..." autofocus>
 
     <p>Ensimmäiset kansalaisaloitteet on nyt tarkastettu oikeusministeriössä. Ajantasaisia uutisia saat parhaiten seuraamalla "Kansalaisaloite - Medborgarinitativ" -ryhmää Facebookissa tai Otakantaa-blogia.</p> 
-    
-    <p><@u.link href="https://www.facebook.com/aloite" label="https://www.facebook.com/aloite" rel="external" /></p>
 
-    <p><@u.link href="http://blogi.otakantaa.fi" label="http://blogi.otakantaa.fi" rel="external" /></p>
-    
-    <span class="news-date">3.12.2012</span> 
 
     <p>Danske Bank on on saanut tunnistautumista koskevan ongelman korjattua.<br/>
-    <@u.link href="http://yle.fi/uutiset/danske_bankin_verkkomaksupalveluvika_korjattu/6399294" label="Lue lisää" rel="external" /></p>  
- 
-    <span class="news-date">1.12.2012</span>
     
     <p>Valitettavasti Danske Bank –tunnistautumisessa on havaittu 1.12.2012 klo 11.30 ongelmia. Ongelma vaikuttaisi olevan kansalaisaloite.fi-palvelun ulkopuolella ja tilannetta seurataan.</p>
 
     <p>Seuraa myös "Kansalaisaloite - Medborgarinitativ" -ryhmää Facebookissa tai Otakantaa-blogia.</p>
 
-    <p><@u.link href="https://www.facebook.com/aloite" label="https://www.facebook.com/aloite" rel="external" /></p>
-
-    <p><@u.link href="http://blogi.otakantaa.fi" label="http://blogi.otakantaa.fi" rel="external" /></p>
-
-    <span class="news-date">1.12.2012</span>
-
     <p>Palvelu julkaistiin klo 11:40.</p>
     
-    <span class="news-date">30.11.2012</span>
     <h3>OIKEUSMINISTERIÖ TIEDOTTAA</h3>
     
     <p>Kansalaisaloite-verkkopalvelu avataan 1. joulukuuta</p>
@@ -60,15 +91,12 @@
     
     <p>Lisätietoja:</p>
     <ul> 
-        <li>projektipäällikkö Teemu Ropponen, puh. 050 520 9340, <@u.scrambleEmail "etunimi.sukunumi@om.fi" /></li>
-        <li>Viestintävirasto: apulaispäällikkö Aki Tauriainen, puh. 09 696 6624 tai 040 521 1542, <@u.scrambleEmail "etunimi.sukunumi@ficora.fi" /></li>  
-        <li>Väestörekisterikeskus: tietopalvelupäällikkö Timo Salovaara,  puh. 09 2291 6551 tai 050 344 3111, <@u.scrambleEmail "etunimi.sukunumi@vrk.fi" /></li>
-    </ul>
+        <li>projektipäällikkö Teemu Ropponen, puh. 050 520 9340, </li>
+        <li>Viestintävirasto: apulaispäällikkö Aki Tauriainen, puh. 09 696 6624 tai 040 521 1542, </li>  
+        <li>Väestörekisterikeskus: tietopalvelupäällikkö Timo Salovaara,  puh. 09 2291 6551 tai 050 344 3111, </li>
+    </ul> 
 
-    <p><@u.link href="https://www.kansalaisaloite.fi" label="https://www.kansalaisaloite.fi" /></p>    
-    
-    <p><@u.link href="https://www.facebook.com/aloite" label="https://www.facebook.com/aloite" rel="external" /></p> 
-
+    </textarea></form>
     
 <#else>
 

@@ -182,6 +182,9 @@
         
         <script src="${urls.baseUrl}/js/less-1.3.0.min.js" type="text/javascript"></script>
     </#if>
+    
+    <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/wysihtml5/stylesheet.css" />
+    
     <link href='https://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic' rel='stylesheet' type='text/css' />    
 </head>
 <body class="${locale}">
@@ -324,6 +327,34 @@
       <script type="text/javascript" src="${urls.baseUrl}/js/jquery.scrollTo.min.js?version=${resourcesVersion}"></script>
       <script type="text/javascript" src="${urls.baseUrl}/js/kuntalaisaloite.js?version=${resourcesVersion}"></script>
     </#if>
+    
+    <#-- Testing WYSIHTML5 editor -->
+    <#-- wysihtml5 parser rules -->
+    <script src="/js/wysihtml5/parser_rules/simple.js"></script>
+    <#-- Library -->
+    <script src="/js/wysihtml5/dist/wysihtml5-0.3.0.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src='http://html5shiv.googlecode.com/svn/trunk/html5.js'></script>
+    <![endif]-->
+    
+    <script>
+    /*<![CDATA[*/
+        var editor = new wysihtml5.Editor("wysihtml5-textarea", { // id of textarea element
+          toolbar:      "wysihtml5-toolbar", // id of toolbar element
+          parserRules:  wysihtml5ParserRules, // defined in parser rules set
+          stylesheets: ["${urls.baseUrl}/css/wysihtml5/editor.css"] 
+        });
+        
+        /*editor.on("load", function() {
+            var composer = editor.composer,
+                h1 = editor.composer.element.querySelector("h1");
+            if (h1) {
+              composer.selection.selectNode(h1);
+            }
+          });*/
+    /*]]>*/
+    </script>
+    <#-- Testing WYSIHTML5 editor ENDS -->
     
     <#-- Initialize variables for JavaScript -->
     <script type="text/javascript">
