@@ -4,6 +4,7 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
 import org.joda.time.DateTime;
 
 import java.io.FileOutputStream;
@@ -16,7 +17,7 @@ public class ParticipantToPdfExporter {
     private static Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD);
     private static Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
 
-    public static void main(String[] args) {
+    public static void main(CollectableInitiativeEmailInfo emailInfo) {
         try {
             Document document = new Document();
             PdfWriter.getInstance(document, new FileOutputStream(FILE));

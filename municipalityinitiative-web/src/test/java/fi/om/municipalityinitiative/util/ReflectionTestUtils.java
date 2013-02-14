@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
+import fi.om.municipalityinitiative.newdto.ui.ParticipantNames;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -16,6 +17,8 @@ import org.joda.time.LocalDateTime;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -92,6 +95,13 @@ public class ReflectionTestUtils {
 
         if (type == ContactInfo.class) {
             return modifyAllFields(new ContactInfo());
+        }
+
+        if (type == ParticipantNames.class) {
+            return modifyAllFields(new ParticipantNames());
+        }
+        if (type.equals(List.class)) {
+            return new ArrayList<>();
         }
 
         throw new IllegalArgumentException("unsupported type: " + type);

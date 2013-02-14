@@ -76,38 +76,42 @@ public class MailSendingEmailService implements EmailService {
 
     @Override
     public void sendNotCollectableToMunicipality(InitiativeEmailInfo emailInfo, String municipalityEmail, Locale locale) {
-        sendEmail(municipalityEmail,
+        send(createEmailMessage(municipalityEmail,
                 emailInfo.getContactInfo().getEmail(),
                 messageSource.getMessage("email.not.collectable.municipality.subject", new String[]{emailInfo.getName()}, locale),
                 NOT_COLLECTABLE_TEMPLATE,
-                setDataMap(emailInfo, locale));
+                setDataMap(emailInfo, locale)));
     }
 
     @Override
     public void sendNotCollectableToAuthor(InitiativeEmailInfo emailInfo, Locale locale) {
-        sendEmail(emailInfo.getContactInfo().getEmail(),
+        send(createEmailMessage(emailInfo.getContactInfo().getEmail(),
                 defaultReplyTo,
-                messageSource.getMessage("email.not.collectable.author.subject", new String[] {emailInfo.getName()}, locale),
+                messageSource.getMessage("email.not.collectable.author.subject", new String[]{emailInfo.getName()}, locale),
                 NOT_COLLECTABLE_TEMPLATE,
-                setDataMap(emailInfo, locale));
+                setDataMap(emailInfo, locale)));
     }
 
     @Override
     public void sendCollectableToMunicipality(CollectableInitiativeEmailInfo emailInfo, String municipalityEmail, Locale locale) {
-        sendEmail(municipalityEmail,
+        MimeMessage emailMessage = createEmailMessage(municipalityEmail,
                 emailInfo.getContactInfo().getEmail(),
                 messageSource.getMessage("email.not.collectable.municipality.subject", new String[]{emailInfo.getName()}, locale),
                 COLLECTABLE_TEMPLATE,
                 setDataMap(emailInfo, locale));
+
+//        addAttachment(emailMessage, ParticipantToPdfExporter.)
+
+        send(emailMessage);
     }
 
     @Override
     public void sendCollectableToAuthor(CollectableInitiativeEmailInfo emailInfo, Locale locale) {
-        sendEmail(emailInfo.getContactInfo().getEmail(),
+        send(createEmailMessage(emailInfo.getContactInfo().getEmail(),
                 defaultReplyTo,
-                messageSource.getMessage("email.not.collectable.author.subject", new String[] {emailInfo.getName()}, locale),
+                messageSource.getMessage("email.not.collectable.author.subject", new String[]{emailInfo.getName()}, locale),
                 COLLECTABLE_TEMPLATE,
-                setDataMap(emailInfo, locale));
+                setDataMap(emailInfo, locale)));
     }
 
     private HashMap<String, Object> setDataMap(InitiativeEmailInfo emailInfo, Locale locale) {
@@ -118,7 +122,7 @@ public class MailSendingEmailService implements EmailService {
     }
 
 
-    private void sendEmail(String sendTo, String replyTo, String subject, String templateName,  Map<String, Object> dataMap) {
+    private MimeMessage createEmailMessage(String sendTo, String replyTo, String subject, String templateName, Map<String, Object> dataMap) {
 
         String text = processTemplate(templateName + "-text", dataMap); 
         String html = processTemplate(templateName + "-html", dataMap); 
@@ -141,7 +145,7 @@ public class MailSendingEmailService implements EmailService {
             System.out.println("---");
             System.out.println(text);
             System.out.println("----------------------------------------------------------");
-            return;
+            return null;
         }
 
         MimeMessage message = javaMailSender.createMimeMessage();
@@ -157,8 +161,13 @@ public class MailSendingEmailService implements EmailService {
             throw new RuntimeException(e);
         }
 
+        log.info("About to send email to " + sendTo + ": " + subject);
+        return message;
+    }
+
+    private void send(MimeMessage message) {
         javaMailSender.send(message);
-        log.info("Email message sent to " + sendTo + ": " + subject);
+        log.info("Email sent.");
     }
 
     private String processTemplate(String templateName, Map<String, Object> dataMap) {

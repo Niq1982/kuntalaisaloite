@@ -22,6 +22,7 @@ create table municipality_initiative (
     proposal text,
     management_hash char(40),
     sent timestamp,
+    comment varchar(1024),
 
     contact_name varchar(100),
     contact_email varchar(100),
@@ -40,12 +41,15 @@ create table participant (
 
 	name varchar(100),
 
+	participate_time date default now(),
+
 	municipality_id bigserial,
     show_name boolean constraint participant_public_name not null,
     franchise boolean,
 
     constraint participant_pk primary key (id),
-    constraint participant_municipality_initiative_id foreign key (municipality_initiative_id) references municipality_initiative(id)
+    constraint participant_municipality_initiative_id_fk foreign key (municipality_initiative_id) references municipality_initiative(id),
+    constraint participant_municipality_fk foreign key (municipality_id) references municipality(id)
 );
 create index participant_id_index on participant(id);
 

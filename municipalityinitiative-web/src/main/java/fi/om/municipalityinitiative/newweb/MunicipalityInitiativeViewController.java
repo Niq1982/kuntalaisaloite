@@ -75,7 +75,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
                     initiativeInfo,
                     municipalityService.findAllMunicipalities(),
                     participantService.getParticipantCount(initiativeId),
-                    participantService.findParticipants(initiativeId));
+                    participantService.findPublicParticipants(initiativeId));
             model.addAttribute("participant", new ParticipantUICreateDto());
 
             return COLLECT_VIEW;
@@ -101,8 +101,8 @@ public class MunicipalityInitiativeViewController extends BaseController {
                     initiativeService.getMunicipalityInitiative(initiativeId),
                     municipalityService.findAllMunicipalities(),
                     participantService.getParticipantCount(initiativeId),
-                    participantService.findParticipants(initiativeId));
-            model.addAttribute("participants", participantService.findParticipants(initiativeId));
+                    participantService.findPublicParticipants(initiativeId));
+            model.addAttribute("participants", participantService.findPublicParticipants(initiativeId));
             return COLLECT_VIEW;
         }
     }
@@ -117,7 +117,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
         if (initiativeInfo.isCollectable()){
             model.addAttribute("initiative",  initiativeInfo);
             model.addAttribute("participantCount", participantService.getParticipantCount(initiativeId));
-            model.addAttribute("participants", participantService.findParticipants(initiativeId));
+            model.addAttribute("participants", participantService.findPublicParticipants(initiativeId));
 
             return PARTICIPANT_LIST;
         }
@@ -145,10 +145,10 @@ public class MunicipalityInitiativeViewController extends BaseController {
                 initiativeService.getMunicipalityInitiative(initiativeId),
                 municipalityService.findAllMunicipalities(),
                 participantService.getParticipantCount(initiativeId),
-                participantService.findParticipants(initiativeId));
+                participantService.findPublicParticipants(initiativeId));
 
         if (managementHash.equals(initiativeInfo.getManagementHash().get())){
-            model.addAttribute("participants", participantService.findParticipants(initiativeId));
+            model.addAttribute("participants", participantService.findPublicParticipants(initiativeId));
             model.addAttribute("sendToMunicipality", initiativeService.getSendToMunicipalityData(initiativeId));
             return MANAGEMENT_VIEW;
         }
@@ -174,7 +174,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
                     initiativeService.getMunicipalityInitiative(initiativeId),
                     municipalityService.findAllMunicipalities(),
                     participantService.getParticipantCount(initiativeId),
-                    participantService.findParticipants(initiativeId));
+                    participantService.findPublicParticipants(initiativeId));
 
             model.addAttribute("sendToMunicipality", sendToMunicipalityDto);
             return MANAGEMENT_VIEW;

@@ -4,6 +4,7 @@ import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
+import fi.om.municipalityinitiative.newdto.service.PublicParticipant;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.sql.QParticipant;
 import org.junit.Before;
@@ -92,11 +93,11 @@ public class JdbcParticipantDaoTest {
         createParticipant(initiativeId, false, true, "no right yes public");
         createParticipant(initiativeId, true, true, "yes right yes public");
 
-        List<Participant> participants = participantDao.findPublicParticipants(initiativeId);
+        List<PublicParticipant> publicParticipants = participantDao.findPublicParticipants(initiativeId);
 
-        assertThat(participants, hasSize(2));
-        assertThat(participants.get(0).getName(), is("no right yes public"));
-        assertThat(participants.get(1).getName(), is("yes right yes public"));
+        assertThat(publicParticipants, hasSize(2));
+        assertThat(publicParticipants.get(0).getName(), is("no right yes public"));
+        assertThat(publicParticipants.get(1).getName(), is("yes right yes public"));
     }
 
     @Test
@@ -110,31 +111,51 @@ public class JdbcParticipantDaoTest {
         createParticipant(initiativeId, false, true, "no right yes public");
         createParticipant(initiativeId, true, true, "yes right yes public");
 
-        List<Participant> participants = participantDao.findAllParticipants(initiativeId);
+        List<Participant> publicParticipants = participantDao.findAllParticipants(initiativeId);
 
-        assertThat(participants, hasSize(5)); // Four and the creator
+        assertThat(publicParticipants, hasSize(5)); // Four and the creator
 
     }
 
-    private ParticipantCreateDto createParticipant(long initiativeId, boolean rightOfVoting, boolean publicName) {
-        return createParticipant(initiativeId, rightOfVoting, publicName, "Composers name");
+
+    @Test
+    public void getAllParticipants_adds_municipality_name_and_franchise_to_participant_data() {
+
+        Long otherMunicipality = testHelper.createTestMunicipality("Some other Municipality");
+        createParticipant(testInitiativeId, otherMunicipality, true, false, "Participant Name");
+
+        List<Participant> publicParticipants = participantDao.findAllParticipants(testInitiativeId);
+
+        Participant participant = publicParticipants.get(1); // Skip first because the author is the first.
+        assertThat(participant.getHomeMunicipality(), is("Some other Municipality"));
+        assertThat(participant.isFranchise(), is(true));
+
+
     }
 
-    private ParticipantCreateDto createParticipant(long initiativeId, boolean rightOfVoting, boolean publicName, String participantName) {
+    private Long createParticipant(Long initiativeId, Long homeMunicipality, boolean rightOfVoting, boolean publicName, String participantName) {
         ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
         participantCreateDto.setMunicipalityInitiativeId(initiativeId);
         participantCreateDto.setParticipantName(participantName);
-        participantCreateDto.setHomeMunicipality(testMunicipalityId);
+        participantCreateDto.setHomeMunicipality(homeMunicipality);
         participantCreateDto.setFranchise(rightOfVoting);
         participantCreateDto.setShowName(publicName);
-        participantDao.create(participantCreateDto);
-        return participantCreateDto;
+        return participantDao.create(participantCreateDto);
+    }
+
+
+    private Long createParticipant(long initiativeId, boolean rightOfVoting, boolean publicName) {
+        return createParticipant(initiativeId, rightOfVoting, publicName, "Composers name");
+    }
+
+    private Long createParticipant(long initiativeId, boolean rightOfVoting, boolean publicName, String participantName) {
+        return createParticipant(initiativeId, testMunicipalityId, rightOfVoting, publicName, participantName);
     }
 
     private ParticipantCreateDto participantCreateDto() {
         ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
         participantCreateDto.setMunicipalityInitiativeId(testInitiativeId);
-        participantCreateDto.setParticipantName("Composers name");
+        participantCreateDto.setParticipantName("Participants Name");
         participantCreateDto.setHomeMunicipality(testMunicipalityId);
         participantCreateDto.setFranchise(true);
         participantCreateDto.setShowName(true);

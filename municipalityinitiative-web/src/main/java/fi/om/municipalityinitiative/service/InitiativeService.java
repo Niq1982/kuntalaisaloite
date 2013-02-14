@@ -109,7 +109,8 @@ public class InitiativeService {
         String url = Urls.get(Locales.LOCALE_FI).view(initiativeId);
 
         InitiativeEmailInfo emailInfo = InitiativeEmailInfo.parse(contactInfo, initiative, url);
-        CollectableInitiativeEmailInfo collectableEmailInfo = CollectableInitiativeEmailInfo.parse(emailInfo, comment);
+        CollectableInitiativeEmailInfo collectableEmailInfo
+                = CollectableInitiativeEmailInfo.parse(emailInfo, comment, participantDao.findAllParticipants(initiativeId));
 
         emailService.sendCollectableToMunicipality(collectableEmailInfo, municipalityDao.getMunicipalityEmail(initiative.getMunicipalityId()), locale);
         emailService.sendCollectableToAuthor(collectableEmailInfo, locale);
