@@ -31,64 +31,29 @@
     <h1 class="name">${initiative.name!""}</h1>
     
     <@e.stateDates initiative.collectable />
+    
+    <@returnPrevious />
 
     <#-- VIEW BLOCKS -->
-    <div class="view-block public">
+    <div class="view-block single public">
     
-        <#-- TODO: The spec is unfinished. On hold. -->
-    
-        <h2>Äänioikeutetut osallistujat</h2>
-        
-        <#-- Testing modal with large list -->
-        <#--<div class="css-cols-3"><ul class="no-style"><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li><li>Matti Meikäläinen</li></ul></div>-->
-        
-        <#-- TODO: Generate as a component. Make cue points for columns -->
-        <ul class="no-style">
-            <#assign x = 100 />
-            
-            <#if ( x > 30)>
-                <#assign columns=2 />
-            <#elseif (x > 90)>
-                <#assign columns=3 />
-            <#else>
-                <#assign columns=1 />
-            </#if>
-            
-            <#list 1..x as i>
-                <li>Matti Meikäläinen</li>
-            </#list>
-        </ul>
-
-    <#--        
-        <#if participants??>
-            <#list participants.franchise as participant>
-                <#if participant_index == 0><ul class="participants no-style"></#if>
-                    <li>${participant}</li>
-                <#if !participant_has_next></ul></#if>
-            </#list>
-        </#if>-->
-
-        <#--
-        <h2>Ei-äänioikeutetut osallistujat</h2>
-        <#if participants??>
-            <#list participants.noFranchise as participant>
-                <#if participant_index == 0><ul class="participants no-style"></#if>
-                    <li>${participant}</li>
-                <#if !participant_has_next></ul></#if>
-            </#list>
+        <#-- TODO: Using request parameters. Finalize when we are sure that we want 2 different views-->
+        <#if RequestParameters['show']?? && RequestParameters['show'] == "others">
+            <h2><@u.message "participantList.noRightOfVoting.title" /></h2>
+            <@participantList participants.noFranchise />
+        <#else>
+            <h2><@u.message "participantList.rightOfVoting.title" /></h2>
+            <@participantList participants.franchise />
         </#if>
-        -->
-        
-        <br/>
-        <p><a href="${urls.view(initiative.id)}">Palaa aloitteen näkymään</a></p>
-        
+
     </div>
+    
+    <@returnPrevious />
 
     
     <#-- BOTTOM CONTRIBUTION
     <#if bottomContribution??><#noescape>${bottomContribution}</#noescape></#if>
      -->
-    
     
     <#--
      * Public VIEW modals
@@ -118,5 +83,47 @@
 
     
 </@l.main>
+
+<#macro participantList participants>
+
+    <#assign participantCount = participants?size />
+    <#assign cue = (participantCount/2)?ceiling />
+        
+    <#assign columns=1 />    
+    <#-- We could use multiple columns -->
+    <#--<#if ( participantCount > 19)>
+        <#assign columns=2 />
+    </#if>-->
+
+    <div class="column col-1of2">
+
+        <#list participants as participant>
+            <#if participant_index == 0><ul class="participant-list no-style"></#if>
+                <li><span class="date">01.01.2013</span> <span class="name-container"><span class="name">${participant}</span> <span class="home-municipality">Kunta todo</span></span></li>
+                
+                <#if columns == 2 && participant_index == cue>
+                    </ul></div>
+                    <div class="column col-1of2 last"><ul class="participant-list no-style">
+                </#if>
+                
+            <#if !participant_has_next></ul></#if>
+        </#list>
+            
+    </div>
+    <br class="clear" />
+
+</#macro>
+
+<#-- TODO: return to view or management -->
+<#-- IF referrer == management, goto management, otherwise goto view page -->
+<#macro returnPrevious>
+    <p><a href="${urls.view(initiative.id)}">&laquo; <@u.message "participantList.return.view" /></a></p>
+    
+    <#--
+    <p><a href="${urls.management(initiative.id, initiative.managementHash.value)}">&laquo; <@u.message "participantList.return.management" /></a></p>
+    -->
+</#macro>
+
+
 </#escape> 
 
