@@ -8,10 +8,12 @@ import com.mysema.commons.lang.Assert;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.email.InitiativeEmailInfo;
+import fi.om.municipalityinitiative.pdf.ParticipantToPdfExporter;
 import fi.om.municipalityinitiative.util.Task;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -19,6 +21,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -26,6 +30,7 @@ import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -36,6 +41,7 @@ public class MailSendingEmailService implements EmailService {
 
     private static final String NOT_COLLECTABLE_TEMPLATE = "municipality-not-collectable";
     private static final String COLLECTABLE_TEMPLATE = "municipality-collectable";
+    private static final String FILE_NAME = "Kuntalaisaloite_{0}_{1}_osallistujat.pdf";
 
     @Resource
     FreeMarkerConfigurer freemarkerConfig;
@@ -76,42 +82,67 @@ public class MailSendingEmailService implements EmailService {
 
     @Override
     public void sendNotCollectableToMunicipality(InitiativeEmailInfo emailInfo, String municipalityEmail, Locale locale) {
-        send(createEmailMessage(municipalityEmail,
+        MimeMessage message = javaMailSender.createMimeMessage();
+        parseBasicEmailData(message,
+                municipalityEmail,
                 emailInfo.getContactInfo().getEmail(),
                 messageSource.getMessage("email.not.collectable.municipality.subject", new String[]{emailInfo.getName()}, locale),
                 NOT_COLLECTABLE_TEMPLATE,
-                setDataMap(emailInfo, locale)));
+                setDataMap(emailInfo, locale));
+        send(message);
     }
 
     @Override
     public void sendNotCollectableToAuthor(InitiativeEmailInfo emailInfo, Locale locale) {
-        send(createEmailMessage(emailInfo.getContactInfo().getEmail(),
+        MimeMessage message = javaMailSender.createMimeMessage();
+        parseBasicEmailData(message,
+                emailInfo.getContactInfo().getEmail(),
                 defaultReplyTo,
                 messageSource.getMessage("email.not.collectable.author.subject", new String[]{emailInfo.getName()}, locale),
                 NOT_COLLECTABLE_TEMPLATE,
-                setDataMap(emailInfo, locale)));
+                setDataMap(emailInfo, locale));
+        send(message);
     }
 
     @Override
     public void sendCollectableToMunicipality(CollectableInitiativeEmailInfo emailInfo, String municipalityEmail, Locale locale) {
-        MimeMessage emailMessage = createEmailMessage(municipalityEmail,
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = parseBasicEmailData(message, emailInfo.getContactInfo().getEmail(), // XXX: Temporarily is set to same as authors email.
                 emailInfo.getContactInfo().getEmail(),
                 messageSource.getMessage("email.not.collectable.municipality.subject", new String[]{emailInfo.getName()}, locale),
                 COLLECTABLE_TEMPLATE,
                 setDataMap(emailInfo, locale));
 
-//        addAttachment(emailMessage, ParticipantToPdfExporter.)
+        addAttachment(mimeMessageHelper, emailInfo);
 
-        send(emailMessage);
+        send(message);
     }
 
     @Override
     public void sendCollectableToAuthor(CollectableInitiativeEmailInfo emailInfo, Locale locale) {
-        send(createEmailMessage(emailInfo.getContactInfo().getEmail(),
+        MimeMessage message = javaMailSender.createMimeMessage();
+
+        parseBasicEmailData(message,
+                emailInfo.getContactInfo().getEmail(),
                 defaultReplyTo,
                 messageSource.getMessage("email.not.collectable.author.subject", new String[]{emailInfo.getName()}, locale),
                 COLLECTABLE_TEMPLATE,
-                setDataMap(emailInfo, locale)));
+                setDataMap(emailInfo, locale));
+        send(message);
+    }
+
+    private void addAttachment(MimeMessageHelper multipart, CollectableInitiativeEmailInfo emailInfo) {
+
+        DataSource dataSource = new FileDataSource("asdasd");
+
+        try {
+            ParticipantToPdfExporter.createPdf(emailInfo, dataSource.getOutputStream());
+            String fileName = MessageFormat.format(FILE_NAME, new LocalDate().toString("yyyy-mm-dd"), "ID");
+            log.info("Attaching "+fileName);
+            multipart.addAttachment(fileName, dataSource);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private HashMap<String, Object> setDataMap(InitiativeEmailInfo emailInfo, Locale locale) {
@@ -121,8 +152,7 @@ public class MailSendingEmailService implements EmailService {
         return dataMap;
     }
 
-
-    private MimeMessage createEmailMessage(String sendTo, String replyTo, String subject, String templateName, Map<String, Object> dataMap) {
+    private MimeMessageHelper parseBasicEmailData(MimeMessage mimeMessage, String sendTo, String replyTo, String subject, String templateName, Map<String, Object> dataMap) {
 
         String text = processTemplate(templateName + "-text", dataMap); 
         String html = processTemplate(templateName + "-html", dataMap); 
@@ -148,21 +178,21 @@ public class MailSendingEmailService implements EmailService {
             return null;
         }
 
-        MimeMessage message = javaMailSender.createMimeMessage();
         try {
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
             helper.setTo(sendTo);
             helper.setFrom(defaultReplyTo);
 //            helper.setReplyTo(replyTo);
             helper.setReplyTo(defaultReplyTo);
             helper.setSubject(subject);
             helper.setText(text, html);
+            log.info("About to send email to " + sendTo + ": " + subject);
+            return helper;
+
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
 
-        log.info("About to send email to " + sendTo + ": " + subject);
-        return message;
     }
 
     private void send(MimeMessage message) {
@@ -210,7 +240,6 @@ public class MailSendingEmailService implements EmailService {
     public static class EmailLocalizationProvider {
         private final Locale locale;
         private final MessageSource messageSource;
-
 
         public EmailLocalizationProvider(MessageSource messageSource, Locale locale) {
             this.messageSource = messageSource;
