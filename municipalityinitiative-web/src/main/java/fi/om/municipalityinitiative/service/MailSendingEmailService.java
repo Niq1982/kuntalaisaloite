@@ -133,16 +133,16 @@ public class MailSendingEmailService implements EmailService {
     }
 
     private void addAttachment(MimeMessageHelper multipart, CollectableInitiativeEmailInfo emailInfo) {
-
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-        byte[] bytes = outputStream.toByteArray();
-        DataSource dataSource = new ByteArrayDataSource(bytes, "application/pdf");
-
         try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             ParticipantToPdfExporter.createPdf(emailInfo, outputStream);
+
+            byte[] bytes = outputStream.toByteArray();
+            DataSource dataSource = new ByteArrayDataSource(bytes, "application/pdf");
+
             String fileName = MessageFormat.format(FILE_NAME, new LocalDate().toString("yyyy-MM-dd"), "ID");
-            log.info("Attaching "+fileName);
+
+            log.info("Attaching "+fileName +" to email.");
             multipart.addAttachment(fileName, dataSource);
         } catch (Exception e) {
             throw new RuntimeException(e);
