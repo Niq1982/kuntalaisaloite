@@ -1,8 +1,10 @@
 package fi.om.municipalityinitiative.service;
 
+import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
 import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.email.InitiativeEmailInfo;
+import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.util.JavaMailSenderFake;
@@ -82,7 +84,7 @@ public class MailSendingEmailServiceTest {
         InitiativeEmailInfo initiative = createEmailInfo();
         emailService.sendNotCollectableToMunicipality(initiative, MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
 
-        assertEmailHasInitiativeDetailsAndContactInfo();
+        assertEmailHasInitiativeDetailsAndContactInfo(false);
     }
 
     @Test
@@ -90,7 +92,7 @@ public class MailSendingEmailServiceTest {
         InitiativeEmailInfo initiativeEmailInfo = createEmailInfo();
         emailService.sendNotCollectableToMunicipality(initiativeEmailInfo, MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
 
-        MessageContent messageContent = getMessageContent();
+        MessageContent messageContent = getMessageContent(false);
         assertThat(messageContent.html, containsString("Yhteystiedot"));
         assertThat(messageContent.text, containsString("Yhteystiedot"));
     }
@@ -124,7 +126,7 @@ public class MailSendingEmailServiceTest {
         InitiativeEmailInfo initiative = createEmailInfo();
         emailService.sendNotCollectableToAuthor(initiative, Locales.LOCALE_FI);
 
-        assertEmailHasInitiativeDetailsAndContactInfo();
+        assertEmailHasInitiativeDetailsAndContactInfo(false);
     }
 
     @Test
@@ -132,7 +134,7 @@ public class MailSendingEmailServiceTest {
         InitiativeEmailInfo initiativeEmailInfo = createEmailInfo();
         emailService.sendNotCollectableToAuthor(initiativeEmailInfo, Locales.LOCALE_FI);
 
-        MessageContent messageContent = getMessageContent();
+        MessageContent messageContent = getMessageContent(false);
         assertThat(messageContent.html, containsString("Yhteystiedot"));
     }
 
@@ -141,7 +143,7 @@ public class MailSendingEmailServiceTest {
         InitiativeEmailInfo initiativeEmailInfo = createEmailInfo();
         emailService.sendNotCollectableToAuthor(initiativeEmailInfo, Locales.LOCALE_SV);
 
-        MessageContent messageContent = getMessageContent();
+        MessageContent messageContent = getMessageContent(false);
         assertThat(messageContent.html, containsString("Kontaktuppgifter"));
     }
     
@@ -167,7 +169,7 @@ public class MailSendingEmailServiceTest {
         CollectableInitiativeEmailInfo initiative = createCollectableEmailInfo();
         emailService.sendCollectableToMunicipality(initiative, MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
 
-        assertEmailHasInitiativeDetailsAndContactInfo();
+        assertEmailHasInitiativeDetailsAndContactInfo(true);
     }
 
     @Test
@@ -175,7 +177,7 @@ public class MailSendingEmailServiceTest {
         CollectableInitiativeEmailInfo initiativeEmailInfo = createCollectableEmailInfo();
         emailService.sendCollectableToMunicipality(initiativeEmailInfo, MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
 
-        MessageContent messageContent = getMessageContent();
+        MessageContent messageContent = getMessageContent(true);
         assertThat(messageContent.html, containsString("Yhteystiedot"));
         assertThat(messageContent.text, containsString("Yhteystiedot"));
     }
@@ -209,7 +211,7 @@ public class MailSendingEmailServiceTest {
         CollectableInitiativeEmailInfo initiative = createCollectableEmailInfo();
         emailService.sendCollectableToAuthor(initiative, Locales.LOCALE_FI);
 
-        assertEmailHasInitiativeDetailsAndContactInfo();
+        assertEmailHasInitiativeDetailsAndContactInfo(false);
     }
 
     @Test
@@ -217,7 +219,7 @@ public class MailSendingEmailServiceTest {
         CollectableInitiativeEmailInfo initiativeEmailInfo = createCollectableEmailInfo();
         emailService.sendCollectableToAuthor(initiativeEmailInfo, Locales.LOCALE_FI);
 
-        MessageContent messageContent = getMessageContent();
+        MessageContent messageContent = getMessageContent(false);
         assertThat(messageContent.html, containsString("Yhteystiedot"));
         assertThat(messageContent.text, containsString("Yhteystiedot"));
     }
@@ -227,13 +229,13 @@ public class MailSendingEmailServiceTest {
         CollectableInitiativeEmailInfo collectableEmailInfo = createCollectableEmailInfo();
         emailService.sendCollectableToMunicipality(collectableEmailInfo, MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
 
-        MessageContent messageContent = getMessageContent();
+        MessageContent messageContent = getMessageContent(true);
         assertThat(messageContent.html, containsString(COMMENT));
         assertThat(messageContent.text, containsString(COMMENT));
     }
 
-    private void assertEmailHasInitiativeDetailsAndContactInfo() throws Exception {
-        MessageContent messageContent = getMessageContent();
+    private void assertEmailHasInitiativeDetailsAndContactInfo(boolean isCollectable) throws Exception {
+        MessageContent messageContent = getMessageContent(isCollectable);
         assertThat(messageContent.html, containsString(INITIATIVE_NAME));
         assertThat(messageContent.html, containsString(INITIATIVE_NAME));
         assertThat(messageContent.text, containsString(INITIATIVE_PROPOSAL));
@@ -272,14 +274,19 @@ public class MailSendingEmailServiceTest {
 
     private static CollectableInitiativeEmailInfo createCollectableEmailInfo() {
         InitiativeEmailInfo emailInfo = createEmailInfo();
-        return CollectableInitiativeEmailInfo.parse(emailInfo, COMMENT);
+        return CollectableInitiativeEmailInfo.parse(emailInfo, COMMENT, Lists.<Participant>newArrayList());
     }
 
     // TODO: Examine this whole MimeMultipart - why is the data stored that deep in the MimeMultipart.
-    private MessageContent getMessageContent() throws Exception {
+    private MessageContent getMessageContent(boolean hasEmail) throws Exception {
         MimeMultipart singleSentMessage = (MimeMultipart) getSingleSentMessage().getContent();
         while (!(singleSentMessage.getBodyPart(0).getContent() instanceof String)) {
-            assertThat(singleSentMessage.getCount(), is(1)); // This is not necessary, I'm just not clear how this content stuff works and why. Would like to know if count greater than 1 and why.
+//            if (hasEmail) {
+//                assertThat(singleSentMessage.getCount(), is(2));
+//            }
+//            else {
+//                assertThat(singleSentMessage.getCount(), is(1));
+//            }
             singleSentMessage = (MimeMultipart) singleSentMessage.getBodyPart(0).getContent();
         }
         return new MessageContent(singleSentMessage);

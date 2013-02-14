@@ -240,6 +240,11 @@
             <artifactId>aspectjweaver</artifactId>
             <version>1.6.12</version>
         </dependency>
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>itextpdf</artifactId>
+            <version>5.3.4</version>
+        </dependency>
 
         <!-- Jasypt -->
         <dependency>

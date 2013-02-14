@@ -4,7 +4,6 @@ public class ParticipantCount {
     private final SupportNames rightOfVoting;
     private final SupportNames noRightOfVoting;
 
-
     public ParticipantCount() {
         rightOfVoting = new SupportNames();
         noRightOfVoting = new SupportNames();

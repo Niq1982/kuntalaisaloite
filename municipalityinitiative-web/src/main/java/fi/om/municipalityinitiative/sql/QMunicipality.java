@@ -30,6 +30,8 @@ public class QMunicipality extends com.mysema.query.sql.RelationalPathBase<QMuni
 
     public final com.mysema.query.sql.PrimaryKey<QMunicipality> municipalityPk = createPrimaryKey(id);
 
+    public final com.mysema.query.sql.ForeignKey<QParticipant> _participantMunicipalityFk = createInvForeignKey(id, "municipality_id");
+
     public final com.mysema.query.sql.ForeignKey<QMunicipalityInitiative> _municipalityInitiativeMunicipalityFk = createInvForeignKey(id, "municipality_id");
 
     public QMunicipality(String variable) {

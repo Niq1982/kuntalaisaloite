@@ -2,7 +2,7 @@ package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
-import fi.om.municipalityinitiative.newdto.service.Participant;
+import fi.om.municipalityinitiative.newdto.service.PublicParticipant;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantNames;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,14 +29,14 @@ public class ParticipantServiceTest {
     @Test
     public void parses_participants_according_to_franchise() {
 
-        List<Participant> participants = Lists.newArrayList();
-        participants.add(new Participant("HasFranchise Foo", true));
-        participants.add(new Participant("HasFranchise Bar", true));
-        participants.add(new Participant("HasNoFranchise Winamp", false));
+        List<PublicParticipant> publicParticipants = Lists.newArrayList();
+        publicParticipants.add(new PublicParticipant("HasFranchise Foo", true));
+        publicParticipants.add(new PublicParticipant("HasFranchise Bar", true));
+        publicParticipants.add(new PublicParticipant("HasNoFranchise Winamp", false));
 
-        stub(participantDaoMock.findPublicParticipants(ID)).toReturn(participants);
+        stub(participantDaoMock.findPublicParticipants(ID)).toReturn(publicParticipants);
 
-        ParticipantNames result = participantService.findParticipants(ID);
+        ParticipantNames result = participantService.findPublicParticipants(ID);
 
         assertThat(result.getFranchise().size(), is(2));
         assertThat(result.getNoFranchise().size(), is(1));

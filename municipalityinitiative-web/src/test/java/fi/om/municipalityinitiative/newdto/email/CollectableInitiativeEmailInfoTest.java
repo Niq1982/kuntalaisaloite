@@ -1,5 +1,7 @@
 package fi.om.municipalityinitiative.newdto.email;
 
+import com.google.common.collect.Lists;
+import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.junit.Test;
 
@@ -20,7 +22,7 @@ public class CollectableInitiativeEmailInfoTest {
     @Test
     public void parse_fills_all_fields() {
         InitiativeEmailInfo initiativeEmailInfo = ReflectionTestUtils.modifyAllFields(new InitiativeEmailInfo());
-        CollectableInitiativeEmailInfo collectableInitiativeEmailInfo = CollectableInitiativeEmailInfo.parse(initiativeEmailInfo, "comment");
+        CollectableInitiativeEmailInfo collectableInitiativeEmailInfo = CollectableInitiativeEmailInfo.parse(initiativeEmailInfo, "comment", Lists.<Participant>newArrayList());
 
         assertThat(collectableInitiativeEmailInfo.getComment(), is("comment"));
         ReflectionTestUtils.assertNoNullFields(collectableInitiativeEmailInfo);

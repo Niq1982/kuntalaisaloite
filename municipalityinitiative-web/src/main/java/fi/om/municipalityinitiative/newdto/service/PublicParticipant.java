@@ -1,10 +1,10 @@
 package fi.om.municipalityinitiative.newdto.service;
 
-public class Participant {
+public class PublicParticipant {
     private String name;
     private boolean franchise;
 
-    public Participant(String name, boolean franchise) {
+    public PublicParticipant(String name, boolean franchise) {
         this.name = name;
         this.franchise = franchise;
     }
