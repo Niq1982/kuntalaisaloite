@@ -183,7 +183,7 @@
         <script src="${urls.baseUrl}/js/less-1.3.0.min.js" type="text/javascript"></script>
     </#if>
     
-    <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/wysihtml5/stylesheet.css" />
+    <#--<link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/wysihtml5/stylesheet.css" />-->
     
     <link href='https://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic' rel='stylesheet' type='text/css' />    
 </head>
@@ -330,13 +330,13 @@
     
     <#-- Testing WYSIHTML5 editor -->
     <!-- wysihtml5 parser rules -->
-    <script src="/js/wysihtml5/parser_rules/simple.js"></script>
+    <#-- <script src="/js/wysihtml5/parser_rules/simple.js"></script>--
     <!-- Library -->
-    <script src="/js/wysihtml5/dist/wysihtml5-0.3.0.min.js"></script>
+    <#-- <script src="/js/wysihtml5/dist/wysihtml5-0.3.0.min.js"></script> -->
     <!--[if lt IE 9]>
-      <script src='http://html5shiv.googlecode.com/svn/trunk/html5.js'></script>
+     <#--  <script src='http://html5shiv.googlecode.com/svn/trunk/html5.js'></script>-->
     <![endif]-->
-    
+    <#-- 
     <script>
     /*<![CDATA[*/
         var editor = new wysihtml5.Editor("wysihtml5-textarea", { // id of textarea element
@@ -354,6 +354,8 @@
           });*/
     /*]]>*/
     </script>
+    -->
+     
     <#-- Testing WYSIHTML5 editor ENDS -->
     
     <#-- Initialize variables for JavaScript -->

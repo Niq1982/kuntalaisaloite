@@ -7,22 +7,45 @@
  * 
  * Generates initiative's state dates
  *
- * @param collectable true or false depending on initiative.collectable 
+ * @param thisInitiative is initiative
 -->
-<#macro stateDates collectable=false>
+<#macro stateDates thisInitiative>
     
     <span class="extra-info">
-        <#if collectable && initiative.createTime??>
-            <#assign createTime><@u.localDate initiative.createTime /></#assign>
+        <#if thisInitiative.collectable && thisInitiative.createTime??>
+            <#assign createTime><@u.localDate thisInitiative.createTime /></#assign>
             <@u.message key="initiative.date.create" args=[createTime] />
             <br />
         </#if>
 
-        <#if initiative.sentTime.present>
-            <#assign sentTime><@u.localDate initiative.sentTime.value /></#assign>
+        <#if thisInitiative.sentTime.present>
+            <#assign sentTime><@u.localDate thisInitiative.sentTime.value /></#assign>
             <@u.message key="initiative.date.sent" args=[sentTime] />
-        <#elseif collectable>
+        <#elseif thisInitiative.collectable>
             <@u.message "initiative.state.collecting" />
+        </#if>
+    </span>
+
+</#macro>
+
+<#-- 
+ * initiativeStateInfo
+ * 
+ * Generates initiative's state with dates
+ *
+ * @param thisInitiative is initiative
+-->
+<#macro initiativeStateInfo thisInitiative>
+    
+    <span class="state">
+        <#if thisInitiative.sentTime.present>
+            <#assign sentTime><@u.localDate thisInitiative.sentTime.value /></#assign>
+            <@u.message key="initiative.date.sent" args=[sentTime] />
+        <#elseif thisInitiative.collectable>
+            <@u.message "initiative.state.collecting" />
+        <#else>
+            <#assign createTime><@u.localDate thisInitiative.createTime /></#assign>
+            <@u.message key="initiative.date.create" args=[createTime] />
         </#if>
     </span>
 
@@ -35,6 +58,7 @@
  *
 -->
 <#macro participantCounts>
+
     <div class="top-margin cf">
         <div class="column col-1of2">
             <p><@u.message key="participantCount.rightOfVoting.total" args=[initiative.municipalityName!""] /><br />
@@ -53,6 +77,7 @@
             </#if>
         </div>
     </div>
+    
 </#macro>
 
 </#escape> 

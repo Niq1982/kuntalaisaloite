@@ -178,10 +178,12 @@
  *        or CSS styles or size
  * @param preSelected the predefined value for the select
 -->
-<#macro municipalitySelect path options required="" cssClass="" attributes="" preSelected="">
+<#macro municipalitySelect path options required="" cssClass="" attributes="" preSelected="" showLabel=true>
     <@spring.bind path />
     
-    <@formLabel path required false />
+    <#if showLabel>
+        <@formLabel path required false />
+    </#if>
     
     <@showError />
     

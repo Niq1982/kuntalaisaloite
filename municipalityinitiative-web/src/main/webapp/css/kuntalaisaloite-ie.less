@@ -11,6 +11,22 @@
     &:active { background:#fff url("../img/ie/gradient-gray-active.png?version=${timestamp}") left bottom repeat-x; }
 }
 
+.search-parameters {
+    background:#fff url("../img/ie/gradient-gray-light.png?version=${timestamp}") center bottom repeat-x;
+    
+    a {
+        &:hover { background:#fff url("../img/ie/gradient-gray-hover.png?version=${timestamp}") center bottom repeat-x; }
+        &.active { background:#09a3b4 url("../img/ie/gradient-turquoise.png?version=${timestamp}") center bottom repeat-x; }
+    }
+}
+.search-sort-links {
+    a {
+        &.active {
+            background:#09a3b4 url("../img/ie/gradient-turquoise.png?version=${timestamp}") center bottom repeat-x;
+        }
+    }
+}
+
 .modal {
     .modal-header {
         background:#fff url("../img/ie/gradient-gray.png?version=${timestamp}") left bottom repeat-x;
@@ -22,11 +38,6 @@
             &:active { background:#fff url("../img/ie/gradient-gray-active.png?version=${timestamp}") left bottom repeat-x; }
         }
     }
-}
-
-// Search results
-.search-results .support-votes-details .bar {
-    background:#76b522 url("../img/ie/gradient-green.png?version=${timestamp}") left bottom repeat-x;
 }
 
 // IE 6 & 7 specific styles
