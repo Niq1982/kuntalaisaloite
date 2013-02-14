@@ -82,7 +82,7 @@ public class JdbcParticipantDaoTest {
     }
 
     @Test
-    public void getParticipantNames_returns_public_names() {
+    public void getPublicParticipants_returns_public_names() {
 
         Long municipalityId = testHelper.createTestMunicipality("Other municipality");
         Long initiativeId = testHelper.createTestInitiative(municipalityId, "Any title", false, false);
@@ -97,6 +97,23 @@ public class JdbcParticipantDaoTest {
         assertThat(participants, hasSize(2));
         assertThat(participants.get(0).getName(), is("no right yes public"));
         assertThat(participants.get(1).getName(), is("yes right yes public"));
+    }
+
+    @Test
+    public void getAllParticipants_returns_public_and_private_names() {
+
+        Long municipalityId = testHelper.createTestMunicipality("Other municipality");
+        Long initiativeId = testHelper.createTestInitiative(municipalityId, "Any title", false, false);
+
+        createParticipant(initiativeId, false, false, "no right no public");
+        createParticipant(initiativeId, true, false, "yes right no public");
+        createParticipant(initiativeId, false, true, "no right yes public");
+        createParticipant(initiativeId, true, true, "yes right yes public");
+
+        List<Participant> participants = participantDao.findAllParticipants(initiativeId);
+
+        assertThat(participants, hasSize(5)); // Four and the creator
+
     }
 
     private ParticipantCreateDto createParticipant(long initiativeId, boolean rightOfVoting, boolean publicName) {

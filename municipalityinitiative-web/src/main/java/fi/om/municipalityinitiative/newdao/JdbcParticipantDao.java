@@ -76,7 +76,15 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .where(participant.showName.eq(true))
                 .orderBy(participant.id.asc())
                 .list(participantMapping);
+    }
 
+    @Override
+    public List<Participant> findAllParticipants(Long initiativeId) {
+        return queryFactory.query()
+                .from(participant)
+                .where(participant.municipalityInitiativeId.eq(initiativeId))
+                .orderBy(participant.id.asc())
+                .list(participantMapping);
     }
 
     Expression<Participant> participantMapping =
