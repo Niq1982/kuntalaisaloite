@@ -1,5 +1,4 @@
 package fi.om.municipalityinitiative.newdao;
-
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.service.PublicParticipant;
