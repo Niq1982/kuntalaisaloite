@@ -22,11 +22,12 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import javax.activation.DataSource;
-import javax.activation.FileDataSource;
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.mail.util.ByteArrayDataSource;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -133,11 +134,14 @@ public class MailSendingEmailService implements EmailService {
 
     private void addAttachment(MimeMessageHelper multipart, CollectableInitiativeEmailInfo emailInfo) {
 
-        DataSource dataSource = new FileDataSource("asdasd");
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        byte[] bytes = outputStream.toByteArray();
+        DataSource dataSource = new ByteArrayDataSource(bytes, "application/pdf");
 
         try {
-            ParticipantToPdfExporter.createPdf(emailInfo, dataSource.getOutputStream());
-            String fileName = MessageFormat.format(FILE_NAME, new LocalDate().toString("yyyy-mm-dd"), "ID");
+            ParticipantToPdfExporter.createPdf(emailInfo, outputStream);
+            String fileName = MessageFormat.format(FILE_NAME, new LocalDate().toString("yyyy-MM-dd"), "ID");
             log.info("Attaching "+fileName);
             multipart.addAttachment(fileName, dataSource);
         } catch (Exception e) {
