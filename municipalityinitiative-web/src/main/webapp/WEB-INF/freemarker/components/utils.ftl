@@ -333,6 +333,22 @@ ${email?split("@")?first}&#064;<span class="hide">null</span>${email?split("@")?
 </#macro>
 
 <#--
+ * searchLink
+ *     
+ * Generates search filter or sort link.
+ * Compress to remove whitespaces 
+ *
+ * @param parameter: parameters for filtering or sorting
+ * @param cssClass: active
+ * @param count: initiative count, do not display if not defined
+-->
+<#macro searchLink parameter cssClass="" count=-1 tooltip=true>
+<@compress single_line=true>
+    <a href="${urls.search()}${searchParameters[parameter]}" class="${cssClass}<#if tooltip> trigger-tooltip</#if>" <#if tooltip>title="<@message "searchParameters."+parameter+".tooltip" />"</#if>><@message "searchParameters."+parameter /><#if (count > -1)><span class="count">${count}</span></#if></a>
+</@compress>
+</#macro>
+
+<#--
  * faqItem
  *  
  * Produces FAQ item.   

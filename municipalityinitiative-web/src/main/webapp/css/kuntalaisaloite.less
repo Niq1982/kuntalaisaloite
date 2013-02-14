@@ -65,6 +65,7 @@
 
 @cornerRadius: 0.8em;
 @cornerRadiusSmall: 0.4em;
+@cornerRadiusXtraSmall: 0.2em;
 
 @dimmed: 0.6;
 
@@ -110,6 +111,12 @@
     -moz-transition: @property @delay @easing;
     -webkit-transition: @property @delay @easing;
     -o-transition: @property @delay @easing;
+}
+.gradient (@start, @stop){
+    background: @start;
+    background: -webkit-gradient(linear, left top, left bottom, from(@start), to(@stop));
+    background: -moz-linear-gradient(top,  @start, @stop);
+    background: -o-linear-gradient(top,  @start, @stop);
 }
 
 .grayGradient (){
@@ -807,6 +814,7 @@ a.block-link {
     background:#fff;
     
     &.last { margin-bottom:2em; }
+    &.single  { margin-bottom:1em; }
 }
 .input-block {
     width: 866px; // Predefined width removes jumpyness bug in slideToggle. could be calculated with JS for dynamic widths.
@@ -1346,72 +1354,6 @@ label  {
 }
 
 
-// Add/remove link
-//
-// TODO: remove from kuntalaisaloite if not needed
-//
-// Styleguide xxx
-
-.add-link {
-    position:relative;
-    display: block;
-
-    .link-input-description, .link-input-url {
-        position:relative;
-        float: left;
-        width:50%;
-        padding-bottom:1em;
-        
-        label {
-            position:relative;
-        }
-    }
-    
-    label span {
-        font-size:0.9em;
-        
-    }
-    .input-header {
-        margin-bottom:0;
-    }
-
-
-}
-
-.remove-link {
-    position:absolute;
-    right:-13px;
-    //top:25px;
-    bottom:0;
-    display:block;
-    width:16px;
-    height:30px;
-    line-height:30px;
-    
-    font-size:11px;
-    text-align:center;
-    color:#333;
-    
-    border:1px solid @borderGray;
-    border-top-right-radius:0.4em;
-    border-bottom-right-radius:0.4em;
-    
-    background: @grayGradient2;
-    background: -webkit-gradient(linear, left top, left bottom, from(@grayGradient1), to(@grayGradient2));
-    background: -moz-linear-gradient(top,  @grayGradient1,  @grayGradient2);
-    background: -o-linear-gradient(top,  @grayGradient1,  @grayGradient2);
-
-    &:hover, &:active {
-        border:solid 1px @redGradient2;
-        color: white;
-        background: #b61318;
-        background: -webkit-gradient(linear, left top, left bottom, from(@redGradientHover1), to(@redGradientHover2));
-        background: -moz-linear-gradient(top,  @redGradientHover1,  @redGradientHover2);
-        background: -o-linear-gradient(top,  @redGradientHover1,  @redGradientHover2);
-    
-    }
-}
-
 
 .column {
     width: 32%;
@@ -1816,6 +1758,29 @@ label  {
     border: 1px solid @borderGray;
     
 }
+
+.participant-list {
+    .date {
+        float:left;
+        width:5em;
+        color:#999;
+    }
+    
+    .name-container {
+        display:block;
+        margin-left:6em;
+    }
+    
+    .name {
+        //color:#000;
+        margin-right:1em;
+    }
+    
+    .home-municipality {
+        color:#999;
+    }
+}
+
 
 .send-to-municipality {
     padding:15px 0;
@@ -2515,17 +2480,18 @@ blockquote {
         overflow:hidden; // clearfix
         position:relative;
         display:block;
-        margin-bottom:0.7em;
-        padding-top:0.7em;
+        //margin-bottom:0.7em;
+        //padding-top:0.7em;
+        padding:0.7em 0.3em;
         //border-top:1px solid #eee;
         
         &.first { border:0; }
+        
+        &:hover { background:#eaeaea; }
     }
     
     .date {
         float:left;
-        //display:inline-block;
-        //width:5em;
     }
     .title {
         display:block;
@@ -2536,55 +2502,253 @@ blockquote {
         font-size:0.9em;
         margin-left:100px;
     }
+    .state {
+        margin-left:1em;
+    }
     
-    .support-votes-details {
+    .participants {
         float:right;
         width:13em;
+        text-align:right;
         
-        .support-votes-container {
-            position:relative;
-            display:block;
-            overflow:hidden;
-            padding:0.3em 0.7em;
-            background:#f7f7f7;
-            border:1px solid @borderGray;
-            border-radius:0.3em;
-        }
-        
-        .support-votes {
-            position:relative;
-            z-index:2;
-            font-size:1.3em;
+        .participant-count {
+            padding-right:42px;
+            font-size:1.45em;
             font-style:italic;
             color:@bodyColor;
             text-shadow:0 1px 0 rgba(255,255,255,0.3);
+            
+            /*
+            background:url("../img/icons-search.png?version=${timestamp}") no-repeat right -125px;
+            
+            &.one {
+                background-position:right -189px;
+            }*/
+            
+            // 24px
+            background:url("../img/icons-search-2.png?version=${timestamp}") no-repeat right -119px;
+            
+            &.one {
+                background-position:right -183px;
+            }
         }
         
-        .bar {
-            position:absolute;
-            left:0;
-            top:0;
-            min-width:1px;
-            height:50px;
-            background: @mainColor;
-            background: -webkit-gradient(linear, left top, left bottom, from(@greenGradient1), to(@greenGradient2));
-            background: -moz-linear-gradient(top,  @greenGradient1,  @greenGradient2);
-            background: -o-linear-gradient(top,  @greenGradient1,  @greenGradient2);
+        .no-participants {
+            font-style:italic;
+            font-size:0.9em;
+        }
+    }   
+}
+
+// Search filtering
+// 
+// Styleguide 9.1
+.search-parameters-title {
+    float:left;
+    width:100px;
+    
+    &.filter {
+        line-height:35px;
+    }
+    
+    &.sort {
+        padding:0.1em 0;
+    }
+}
+
+// Search filtering
+// 
+//  .active     - Active link
+//  :hover      - Hovered link
+//
+// Styleguide 9.1
+.search-parameters-container {
+    margin-left:100px;
+    margin-bottom:1em;
+    
+    /*
+    .search-parameters {
+        
+        &:first-child {
+            margin-bottom:0.2em;
+        }
+    
+        a {
+            padding:0 10px;
+        }
+    }*/
+
+}
+.search-parameters {
+    //margin-left:140px;
+    display:inline-block;
+    //float:right;
+    //margin-bottom:1em;
+    margin-bottom:0.2em;
+    text-align:right;
+    border:1px solid @borderGray;
+    .rounded-corners(@cornerRadiusXtraSmall);
+    
+    .gradient (#fff, #f5f5f5);
+    
+    a {
+        display:inline-block;
+        padding:5px 20px;
+        //line-height:35px;
+        color:#444;
+        text-align:center;
+        
+        &:first-child {
+            .rounded-corners-top-left (@cornerRadiusXtraSmall);
+            .rounded-corners-bottom-left (@cornerRadiusXtraSmall);
+        }
+        &:last-child {
+            .rounded-corners-top-right (@cornerRadiusXtraSmall);
+            .rounded-corners-bottom-right (@cornerRadiusXtraSmall);
         }
         
-        .internal-support-votes {
-            display:inline-block;
-            width:100%;
-            text-align:right;
-            font-size:0.8em;
+        &:hover {
+            .gradient (#fff, #ddd);
+            color:#000;
         }
-        .internal-count {
-            font-size:1.2em;
+        
+        &.active {
+            .gradient (#09a3b4, #067582);
+            color:#fff;
+            text-shadow:0px 1px 1px rgba(0,0,0,0.3);
+        }
+        
+        .count {
+            display:block; margin:0 auto;
+            font-weight:bold;
+            font-size:0.9em;
+        }
+    }
+}
+/*.font-size-large {
+    .search-parameters-title {
+        width:100px;
+    }
+    .search-parameters {
+        a { padding:0 14px; }
+    }
+}*/
+
+.search-sort-links {
+    display:inline;
+
+    a {
+        display:inline-block;
+        padding:0.1em 0.5em;
+        
+        &.active {
+            .gradient (#09a3b4, #067582);
+            .rounded-corners(@cornerRadiusXtraSmall);
+            color:#fff;
+            text-shadow:0px 1px 1px rgba(0,0,0,0.3);
+        }
+    }
+}
+
+// Search filtering
+// 
+//  .by-support-statements      - Sort by support statements
+//
+// Styleguide 9.2
+.search-sort {
+    width:370px;
+}
+.icon-search-sort {
+    margin-right:0.5em;
+    background:url("../img/icons-search-2.png?version=${timestamp}") no-repeat 0 0; 
+    
+    &.by-support-statements {
+        background-position:0 -126px;
+    }
+    
+    &.by-date-accepted {
+        margin-right:0;
+    }
+    
+}
+
+// Pagination
+// 
+// Styleguide 9.3
+.pagination {
+    margin:2em 0 1em;
+    //padding-left:100px;
+    
+    &.top {
+        padding-bottom:0.5em;
+        border-bottom: 1px solid @borderGray;
+    }
+    &.bottom {
+        margin-top:2em;
+        padding-top:0.5em;
+        border-top: 1px solid @borderGray;
+    }
+    
+    
+    .pagination-limiter {
+        float:right;
+        
+        * { margin-left:1em; }
+        
+        .active {
             font-weight:bold;
         }
-        
     }
+    
+    .pagination-links {
+        float:left;
+    }
+    
+    .separator {
+        margin:0 0.5em;
+        color:@lightGray;
+    }
+}
+.pagination-number-container {
+    text-align:center;
+}
+.pagination-numbers {
+    
+    a {
+        margin:0 0.2em;
+        padding:0.2em 0.5em;
+        //background:#fff;
+        color:#444;
+        .gradient (#fff, #f5f5f5);
+        border:1px solid @borderGray;
+        
+        &:hover {
+            .gradient (#fff, #ddd);
+            color:#000;
+        }
+        
+        &.next, &.prev {
+            background:none;
+            border:none;
+            color:#0089f2;
+        }
+    }
+    span {
+        margin:0 0.2em;
+        padding:0.2em 0.5em;
+        .gradient (#09a3b4, #067582);
+        border:1px solid @borderGray;
+        color:#fff;
+    }
+    
+}
+.page-numbers {
+    margin:0 1em;
+}
 
+span.next, span.prev {
+    opacity:@dimmed;
+    //color:@lightGray;
 }
 
 

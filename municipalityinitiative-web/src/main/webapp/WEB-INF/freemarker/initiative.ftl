@@ -29,7 +29,7 @@
 
     <h1 class="name">${initiative.name!""}</h1>
     
-    <@e.stateDates initiative.collectable />
+    <@e.stateDates initiative />
 
     <#-- TOP CONTRIBUTION -->
     <#if topContribution??><#noescape>${topContribution}</#noescape></#if>
