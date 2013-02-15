@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
 import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.email.InitiativeEmailInfo;
-import fi.om.municipalityinitiative.newdto.service.Participant;
+import fi.om.municipalityinitiative.newdto.service.PublicParticipant;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.util.JavaMailSenderFake;
@@ -274,7 +274,7 @@ public class MailSendingEmailServiceTest {
 
     private static CollectableInitiativeEmailInfo createCollectableEmailInfo() {
         InitiativeEmailInfo emailInfo = createEmailInfo();
-        return CollectableInitiativeEmailInfo.parse(emailInfo, COMMENT, Lists.<Participant>newArrayList());
+        return CollectableInitiativeEmailInfo.parse(emailInfo, COMMENT, Lists.<PublicParticipant>newArrayList());
     }
 
     // TODO: Examine this whole MimeMultipart - why is the data stored that deep in the MimeMultipart.

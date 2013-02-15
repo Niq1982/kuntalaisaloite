@@ -32,9 +32,9 @@ public class ParticipantServiceTest {
     public void parses_participants_according_to_franchise() {
 
         List<PublicParticipant> publicParticipants = Lists.newArrayList();
-        publicParticipants.add(new PublicParticipant(DATE, "HasFranchise Foo", true));
-        publicParticipants.add(new PublicParticipant(DATE, "HasFranchise Bar", true));
-        publicParticipants.add(new PublicParticipant(DATE, "HasNoFranchise Winamp", false));
+        publicParticipants.add(new PublicParticipant(DATE, "HasFranchise Foo", true, "Municipality"));
+        publicParticipants.add(new PublicParticipant(DATE, "HasFranchise Bar", true,"Municipality"));
+        publicParticipants.add(new PublicParticipant(DATE, "HasNoFranchise Winamp", false,"Municipality"));
 
         stub(participantDaoMock.findPublicParticipants(ID)).toReturn(publicParticipants);
 

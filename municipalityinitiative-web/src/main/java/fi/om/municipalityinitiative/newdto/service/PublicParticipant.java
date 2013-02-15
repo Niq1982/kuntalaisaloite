@@ -6,11 +6,13 @@ public class PublicParticipant {
     private String name;
     private boolean franchise;
     private LocalDate participateDate;
+    private final String homeMunicipality;
 
-    public PublicParticipant(LocalDate participateDate, String name, boolean franchise) {
+    public PublicParticipant(LocalDate participateDate, String name, boolean franchise, String homeMunicipality) {
         this.name = name;
         this.franchise = franchise;
         this.participateDate = participateDate;
+        this.homeMunicipality = homeMunicipality;
     }
 
     public String getName() {
@@ -23,5 +25,9 @@ public class PublicParticipant {
 
     public LocalDate getParticipateDate() {
         return participateDate;
+    }
+
+    public String getHomeMunicipality() {
+        return homeMunicipality;
     }
 }

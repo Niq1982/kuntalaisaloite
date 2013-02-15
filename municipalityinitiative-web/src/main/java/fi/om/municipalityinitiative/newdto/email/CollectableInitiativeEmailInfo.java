@@ -1,13 +1,13 @@
 package fi.om.municipalityinitiative.newdto.email;
 
-import fi.om.municipalityinitiative.newdto.service.Participant;
+import fi.om.municipalityinitiative.newdto.service.PublicParticipant;
 
 import java.util.List;
 
 public class CollectableInitiativeEmailInfo extends InitiativeEmailInfo {
 
     private String comment;
-    private List<Participant> participants;
+    private List<PublicParticipant> participants;
     // TODO: Participants
 
     CollectableInitiativeEmailInfo() { }
@@ -18,7 +18,7 @@ public class CollectableInitiativeEmailInfo extends InitiativeEmailInfo {
         this.participants = original.participants;
     }
 
-    public static CollectableInitiativeEmailInfo parse(InitiativeEmailInfo initiativeEmailInfo, String comment, List<Participant> participants) {
+    public static CollectableInitiativeEmailInfo parse(InitiativeEmailInfo initiativeEmailInfo, String comment, List<PublicParticipant> participants) {
         CollectableInitiativeEmailInfo collectableInitiativeEmailInfo = new CollectableInitiativeEmailInfo(initiativeEmailInfo);
         collectableInitiativeEmailInfo.comment = comment;
         collectableInitiativeEmailInfo.participants = participants;
@@ -37,7 +37,7 @@ public class CollectableInitiativeEmailInfo extends InitiativeEmailInfo {
         this.comment = comment;
     }
 
-    public List<Participant> getParticipants() {
+    public List<PublicParticipant> getParticipants() {
         return participants;
     }
 }

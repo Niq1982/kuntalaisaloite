@@ -1,5 +1,5 @@
 package fi.om.municipalityinitiative.newdao;
-import fi.om.municipalityinitiative.newdto.service.Participant;
+
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.service.PublicParticipant;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
@@ -14,5 +14,5 @@ public interface ParticipantDao {
 
     List<PublicParticipant> findPublicParticipants(Long initiativeId);
 
-    List<Participant> findAllParticipants(Long initiativeId);
+    List<PublicParticipant> findAllParticipants(Long initiativeId);
 }

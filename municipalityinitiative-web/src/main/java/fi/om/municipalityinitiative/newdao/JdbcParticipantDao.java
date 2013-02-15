@@ -9,7 +9,6 @@ import com.mysema.query.types.MappingProjection;
 import com.mysema.query.types.expr.CaseBuilder;
 import com.mysema.query.types.expr.SimpleExpression;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
-import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.service.PublicParticipant;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
@@ -75,13 +74,14 @@ public class JdbcParticipantDao implements ParticipantDao {
         return queryFactory.query()
                 .from(participant)
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
+                .leftJoin(participant.participantMunicipalityFk, QMunicipality.municipality)
                 .where(participant.showName.eq(true))
                 .orderBy(participant.id.asc())
-                .list(publicParticipantMapping);
+                .list(participantMapping);
     }
 
     @Override
-    public List<Participant> findAllParticipants(Long initiativeId) {
+    public List<PublicParticipant> findAllParticipants(Long initiativeId) {
         return queryFactory.query()
                 .from(participant)
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
@@ -90,21 +90,12 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .list(participantMapping);
     }
 
-    Expression<PublicParticipant> publicParticipantMapping =
+    Expression<PublicParticipant> participantMapping =
             new MappingProjection<PublicParticipant>(PublicParticipant.class,
-                    participant.all()) {
-                @Override
-                protected PublicParticipant map(Tuple row) {
-                    return new PublicParticipant(row.get(participant.participateTime), row.get(participant.name), row.get(participant.franchise));
-                }
-            };
-
-    Expression<Participant> participantMapping =
-            new MappingProjection<Participant>(PublicParticipant.class,
                     participant.all(), QMunicipality.municipality.all()) {
                 @Override
-                protected Participant map(Tuple row) {
-                    return new Participant(
+                protected PublicParticipant map(Tuple row) {
+                    return new PublicParticipant(
                             row.get(participant.participateTime),
                             row.get(participant.name),
                             row.get(participant.franchise),

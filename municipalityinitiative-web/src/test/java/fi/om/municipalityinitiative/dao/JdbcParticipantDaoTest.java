@@ -2,7 +2,6 @@ package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
-import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.service.PublicParticipant;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
@@ -110,7 +109,7 @@ public class JdbcParticipantDaoTest {
         createParticipant(initiativeId, false, true, "no right yes public");
         createParticipant(initiativeId, true, true, "yes right yes public");
 
-        List<Participant> publicParticipants = participantDao.findAllParticipants(initiativeId);
+        List<PublicParticipant> publicParticipants = participantDao.findAllParticipants(initiativeId);
 
         assertThat(publicParticipants, hasSize(5)); // Four and the creator
 
@@ -123,17 +122,30 @@ public class JdbcParticipantDaoTest {
         Long otherMunicipality = testHelper.createTestMunicipality("Some other Municipality");
         createParticipant(testInitiativeId, otherMunicipality, true, false, "Participant Name");
 
-        List<Participant> publicParticipants = participantDao.findAllParticipants(testInitiativeId);
+        List<PublicParticipant> publicParticipants = participantDao.findAllParticipants(testInitiativeId);
 
-        Participant participant = publicParticipants.get(1); // Skip first because the author is the first.
+        PublicParticipant participant = publicParticipants.get(1); // Skip first because the author is the first.
+        assertThat(participant.getHomeMunicipality(), is("Some other Municipality"));
+        assertThat(participant.isFranchise(), is(true));
+    }
+
+    @Test
+    public void getPublicParticipants_adds_municipality_name_and_franchise_to_participant_data() {
+
+        Long otherMunicipality = testHelper.createTestMunicipality("Some other Municipality");
+        createParticipant(testInitiativeId, otherMunicipality, true, true, "Participant Name");
+
+        List<PublicParticipant> publicParticipants = participantDao.findPublicParticipants(testInitiativeId);
+
+        PublicParticipant participant = publicParticipants.get(1); // Skip first because the author is the first.
         assertThat(participant.getHomeMunicipality(), is("Some other Municipality"));
         assertThat(participant.isFranchise(), is(true));
     }
 
     @Test
     public void getAllParticipants_adds_participateTime_to_data() {
-        List<Participant> publicParticipants = participantDao.findAllParticipants(testInitiativeId);
-        Participant participant = publicParticipants.get(0); // Skip first because the author is the first.
+        List<PublicParticipant> publicParticipants = participantDao.findAllParticipants(testInitiativeId);
+        PublicParticipant participant = publicParticipants.get(0); // Skip first because the author is the first.
         assertThat(participant.getParticipateDate(), is(notNullValue()));
     }
 
