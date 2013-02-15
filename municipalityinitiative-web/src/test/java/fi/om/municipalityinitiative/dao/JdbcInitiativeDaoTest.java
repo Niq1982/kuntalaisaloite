@@ -92,6 +92,35 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
+    public void does_not_set_collectable_to_listView() {
+
+        testHelper.createTestInitiative(testMunicipality.getId(), "Not collectable", false, false);
+        List<InitiativeListInfo> all = initiativeDao.findNewestFirst(new InitiativeSearch());
+        assertThat(all, hasSize(1));
+        assertThat(all.get(0).isCollectable(), is(false));
+    }
+
+    @Test
+    public void sets_sent_time_to_listView_initiative_is_sent() {
+
+        testHelper.createTestInitiative(testMunicipality.getId(), "Not collectable", false, false);
+
+        List<InitiativeListInfo> all = initiativeDao.findNewestFirst(new InitiativeSearch());
+        assertThat(all, hasSize(1));
+        assertThat(all.get(0).getSentTime().isPresent(), is(true));
+    }
+
+    @Test
+    public void sets_sent_time_to_listView_if_initiative_is_not_sent() {
+
+        testHelper.createTestInitiative(testMunicipality.getId(), "Collectable", true, true);
+
+        List<InitiativeListInfo> all = initiativeDao.findNewestFirst(new InitiativeSearch());
+        assertThat(all, hasSize(1));
+        assertThat(all.get(0).getSentTime().isPresent(), is(false));
+    }
+
+    @Test
     public void finds_by_name() {
 
         testHelper.createTestInitiative(testMunicipality.getId(), "name that should not be found");
