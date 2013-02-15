@@ -7,6 +7,7 @@ public class InitiativeListInfo {
     private String name;
     private String municipalityName;
     private DateTime createTime;
+    private boolean collectable;
 
     public Long getId() {
         return id;
@@ -38,5 +39,13 @@ public class InitiativeListInfo {
 
     public void setCreateTime(DateTime createTime) {
         this.createTime = createTime;
+    }
+
+    public boolean isCollectable() {
+        return collectable;
+    }
+
+    public void setCollectable(boolean collectable) {
+        this.collectable = collectable;
     }
 }

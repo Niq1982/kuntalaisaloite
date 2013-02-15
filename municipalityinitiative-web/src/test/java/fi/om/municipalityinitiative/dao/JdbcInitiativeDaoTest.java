@@ -83,6 +83,15 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
+    public void sets_collectable_to_listView() {
+        testHelper.createTestInitiative(testMunicipality.getId(), "Collectable", true, true);
+
+        List<InitiativeListInfo> all = initiativeDao.findNewestFirst(new InitiativeSearch());
+        assertThat(all, hasSize(1));
+        assertThat(all.get(0).isCollectable(), is(true));
+    }
+
+    @Test
     public void finds_by_name() {
 
         testHelper.createTestInitiative(testMunicipality.getId(), "name that should not be found");

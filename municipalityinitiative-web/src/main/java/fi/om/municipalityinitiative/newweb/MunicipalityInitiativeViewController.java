@@ -182,7 +182,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
         
     }
 
-    private void addModelAttributesToCollectView(Model model, InitiativeViewInfo municipalityInitiative, List<MunicipalityInfo> allMunicipalities, ParticipantCount participantCount, ParticipantNames participants) {
+    private void addModelAttributesToCollectView(Model model, InitiativeViewInfo municipalityInitiative, List<MunicipalityInfo> allMunicipalities, ParticipantCount participantCount, Participants participants) {
         model.addAttribute("initiative", municipalityInitiative);
         model.addAttribute("municipalities", allMunicipalities);
         model.addAttribute("participantCount", participantCount);

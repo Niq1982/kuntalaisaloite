@@ -3,7 +3,7 @@ package fi.om.municipalityinitiative.service;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
-import fi.om.municipalityinitiative.newdto.ui.ParticipantNames;
+import fi.om.municipalityinitiative.newdto.ui.Participants;
 
 import javax.annotation.Resource;
 
@@ -25,22 +25,22 @@ public class ParticipantService {
         return participantDao.getParticipantCount(initiativeId);
     }
 
-    public ParticipantNames findPublicParticipants(Long initiativeId) {
+    public Participants findPublicParticipants(Long initiativeId) {
         return toParticipantNames(participantDao.findPublicParticipants(initiativeId));
     }
 
-    public static <E extends Participant> ParticipantNames toParticipantNames(List<E> publicPublicParticipants) {
-        ParticipantNames participantNames = new ParticipantNames();
+    public static <E extends Participant> Participants toParticipantNames(List<E> publicPublicParticipants) {
+        Participants participants = new Participants();
 
         for (Participant participant : publicPublicParticipants) {
             if (participant.isFranchise()) {
-                participantNames.getFranchise().add(participant.getName());
+                participants.getFranchise().add(participant);
             }
             else {
-                participantNames.getNoFranchise().add(participant.getName());
+                participants.getNoFranchise().add(participant);
             }
         }
 
-        return participantNames;
+        return participants;
     }
 }

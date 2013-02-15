@@ -3,7 +3,7 @@ package fi.om.municipalityinitiative.service;
 import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.service.Participant;
-import fi.om.municipalityinitiative.newdto.ui.ParticipantNames;
+import fi.om.municipalityinitiative.newdto.ui.Participants;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +11,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.stub;
 
@@ -38,13 +38,15 @@ public class ParticipantServiceTest {
 
         stub(participantDaoMock.findPublicParticipants(ID)).toReturn(participants);
 
-        ParticipantNames result = participantService.findPublicParticipants(ID);
+        Participants result = participantService.findPublicParticipants(ID);
 
         assertThat(result.getFranchise().size(), is(2));
         assertThat(result.getNoFranchise().size(), is(1));
 
-        assertThat(result.getFranchise(), containsInAnyOrder("HasFranchise Foo", "HasFranchise Bar"));
-        assertThat(result.getNoFranchise(), contains("HasNoFranchise Winamp"));
+        assertThat(result.getFranchise().get(0).getName(), is("HasFranchise Foo")); // Might be in another order?
+        assertThat(result.getFranchise().get(1).getName(), is("HasFranchise Bar"));
+
+        assertThat(result.getNoFranchise().get(0).getName(), is("HasNoFranchise Winamp"));
 
     }
 
