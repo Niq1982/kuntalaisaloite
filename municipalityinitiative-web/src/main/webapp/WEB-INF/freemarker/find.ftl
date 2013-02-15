@@ -164,23 +164,21 @@
             
             <span class="participants">
                 <span class="participants-container">
-                    <#-- TODO: counts / isCollectable. For dummy testing every fourth initiative is not collectable here. -->
-                    <#if (initiative.id%4 == 0)>
+                    <#if !initiative.collectable>
                         <span class="no-participants">Ei kerännyt osallistujia</span>
                     <#else>
-                        <#if (initiative.id%2 == 0)>
-                            <span class="participant-count one trigger-tooltip" title="Osallistujia yhteensä">1</span>
-                        <#else>
-                            <span class="participant-count trigger-tooltip" title="Osallistujia yhteensä">${3*initiative_index}</span>
-                        </#if>
+                        <span class="participant-count trigger-tooltip" title="Osallistujia yhteensä">${initiative.participantCount}</span>
                     </#if>
                 </span>
             </span>
             
             <span class="date trigger-tooltip" title="<@u.message "searchResults.initiative.date" />" ><@u.localDate initiative.createTime /></span>
             <span class="title"><a href="${urls.view(initiative.id)}" class="name">${initiative.name}</a></span>
-            <#-- TODO: Initiative state -->
-            <span class="info">${initiative.municipalityName}<span class="bull">&bull;</span><span class="state">Aloite lähetetty kuntaan 08.02.2013</span></span>
+            <#if initiative.collectable && !initiative.sentTime.present>
+            <span class="info">${initiative.municipalityName}<span class="bull">&bull;</span><span class="state">Aloitteeseen kerätään tekijöitä</span></span>
+            <#else>
+            <span class="info">${initiative.municipalityName}<span class="bull">&bull;</span><span class="state">Aloite lähetetty kuntaan ${initiative.sentTime.value}</span></span>
+            </#if>
             
         </li>
         <#if !initiative_has_next></ul></#if>
