@@ -2,13 +2,13 @@ package fi.om.municipalityinitiative.newdto.service;
 
 import org.joda.time.LocalDate;
 
-public class PublicParticipant {
+public class Participant {
     private String name;
     private boolean franchise;
     private LocalDate participateDate;
     private final String homeMunicipality;
 
-    public PublicParticipant(LocalDate participateDate, String name, boolean franchise, String homeMunicipality) {
+    public Participant(LocalDate participateDate, String name, boolean franchise, String homeMunicipality) {
         this.name = name;
         this.franchise = franchise;
         this.participateDate = participateDate;

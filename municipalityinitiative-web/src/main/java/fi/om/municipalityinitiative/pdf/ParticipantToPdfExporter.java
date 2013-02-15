@@ -6,7 +6,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
-import fi.om.municipalityinitiative.newdto.service.PublicParticipant;
+import fi.om.municipalityinitiative.newdto.service.Participant;
 import org.joda.time.DateTime;
 
 import java.io.OutputStream;
@@ -58,8 +58,8 @@ public class ParticipantToPdfExporter {
         preface.add(new Paragraph(emailInfo.getName(), smallBold));
         addEmptyLine(preface, 3);
 
-        List<PublicParticipant> participantsFranchise = Lists.newArrayList();
-        List<PublicParticipant> participantsNoFranchise = Lists.newArrayList();
+        List<Participant> participantsFranchise = Lists.newArrayList();
+        List<Participant> participantsNoFranchise = Lists.newArrayList();
 
         parseParticipants(emailInfo.getParticipants(), participantsFranchise, participantsNoFranchise);
 
@@ -74,10 +74,10 @@ public class ParticipantToPdfExporter {
         document.add(preface);
     }
 
-    private static void parseParticipants(List<PublicParticipant> allParticipants,
-                                          List<PublicParticipant> participantsFranchise,
-                                          List<PublicParticipant> participantsNoFranchise) {
-        for (PublicParticipant participant : allParticipants) {
+    private static void parseParticipants(List<Participant> allParticipants,
+                                          List<Participant> participantsFranchise,
+                                          List<Participant> participantsNoFranchise) {
+        for (Participant participant : allParticipants) {
             if (participant.isFranchise()) {
                 participantsFranchise.add(participant);
             }
@@ -87,7 +87,7 @@ public class ParticipantToPdfExporter {
         }
     }
 
-    private static void createTable(Paragraph subCatPart, List<PublicParticipant> participants)
+    private static void createTable(Paragraph subCatPart, List<Participant> participants)
             throws DocumentException {
         PdfPTable table = new PdfPTable(3);
         table.setWidths(new int[] {40, 200, 100});
@@ -99,7 +99,7 @@ public class ParticipantToPdfExporter {
         table.setHeaderRows(1);
 
         int count = 0;
-        for (PublicParticipant participant : participants) {
+        for (Participant participant : participants) {
             ++count;
             table.addCell(String.valueOf(count));
             table.addCell(participant.getName());
