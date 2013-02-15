@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.service.PublicParticipant;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantNames;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,6 +18,7 @@ import static org.mockito.Mockito.stub;
 public class ParticipantServiceTest {
 
     private static final Long ID = -5L;
+    public static final LocalDate DATE = new LocalDate(2010, 1, 1);
     private ParticipantDao participantDaoMock;
     private ParticipantService participantService;
 
@@ -30,9 +32,9 @@ public class ParticipantServiceTest {
     public void parses_participants_according_to_franchise() {
 
         List<PublicParticipant> publicParticipants = Lists.newArrayList();
-        publicParticipants.add(new PublicParticipant("HasFranchise Foo", true));
-        publicParticipants.add(new PublicParticipant("HasFranchise Bar", true));
-        publicParticipants.add(new PublicParticipant("HasNoFranchise Winamp", false));
+        publicParticipants.add(new PublicParticipant(DATE, "HasFranchise Foo", true));
+        publicParticipants.add(new PublicParticipant(DATE, "HasFranchise Bar", true));
+        publicParticipants.add(new PublicParticipant(DATE, "HasNoFranchise Winamp", false));
 
         stub(participantDaoMock.findPublicParticipants(ID)).toReturn(publicParticipants);
 

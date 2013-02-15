@@ -42,7 +42,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .executeWithKey(participant.id);
     }
 
-    // TODO: Fix magic strings to enum constats or something.
+    // TODO: Fix magic strings to enum constants or something.
     @Override
     public ParticipantCount getParticipantCount(Long initiativeId) {
 
@@ -95,7 +95,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                     participant.all()) {
                 @Override
                 protected PublicParticipant map(Tuple row) {
-                    return new PublicParticipant(row.get(participant.name), row.get(participant.franchise));
+                    return new PublicParticipant(row.get(participant.participateTime), row.get(participant.name), row.get(participant.franchise));
                 }
             };
 
@@ -104,7 +104,11 @@ public class JdbcParticipantDao implements ParticipantDao {
                     participant.all(), QMunicipality.municipality.all()) {
                 @Override
                 protected Participant map(Tuple row) {
-                    return new Participant(row.get(participant.name), row.get(participant.franchise), row.get(QMunicipality.municipality.name));
+                    return new Participant(
+                            row.get(participant.participateTime),
+                            row.get(participant.name),
+                            row.get(participant.franchise),
+                            row.get(QMunicipality.municipality.name));
                 }
             };
 

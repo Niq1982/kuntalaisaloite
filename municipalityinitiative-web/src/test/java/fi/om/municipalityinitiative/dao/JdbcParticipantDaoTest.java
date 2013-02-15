@@ -18,8 +18,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={IntegrationTestConfiguration.class})
@@ -129,8 +128,20 @@ public class JdbcParticipantDaoTest {
         Participant participant = publicParticipants.get(1); // Skip first because the author is the first.
         assertThat(participant.getHomeMunicipality(), is("Some other Municipality"));
         assertThat(participant.isFranchise(), is(true));
+    }
 
+    @Test
+    public void getAllParticipants_adds_participateTime_to_data() {
+        List<Participant> publicParticipants = participantDao.findAllParticipants(testInitiativeId);
+        Participant participant = publicParticipants.get(0); // Skip first because the author is the first.
+        assertThat(participant.getParticipateDate(), is(notNullValue()));
+    }
 
+    @Test
+    public void getPublicParticipants_adds_participateTime_to_data() {
+        List<PublicParticipant> publicParticipants = participantDao.findPublicParticipants(testInitiativeId);
+        PublicParticipant participant = publicParticipants.get(0);
+        assertThat(participant.getParticipateDate(), is(notNullValue()));
     }
 
     private Long createParticipant(Long initiativeId, Long homeMunicipality, boolean rightOfVoting, boolean publicName, String participantName) {
