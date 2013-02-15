@@ -53,13 +53,19 @@ generateModal = function (modalContent, modalType) {
  * 
  * - Chosen.js requires that first option is empty. We empty the default value which is for NOSCRIPT-users.
  * - Initialize chosen with localized text
+ * - Set option for clearing selection
  * 
  * */
 jQuery.fn.loadChosen = function(){
 	var self = $(this);
 	
 	self.find('option:first').text('');
-	self.chosen({no_results_text: localization.chosenNoResults(Init.getLocale())});
+	self.chosen(
+		{
+			no_results_text: localization.chosenNoResults(Init.getLocale()),
+			allow_single_deselect: true
+		}
+	);
 };
 
 /**
@@ -443,7 +449,10 @@ var municipalitySelection = (function() {
 	
 	// Initialize form state on page load
 	var Init = function(){
-		$(".chzn-select").loadChosen();
+		// IE7 not supported
+		if(!isIE7){
+			$(".chzn-select").loadChosen();
+		}
 		
 		updateSelectedMunicipality();
 		
@@ -593,14 +602,10 @@ var municipalitySelection = (function() {
 	jQuery.fn.disableButton = function(disable){
 		var btn = $(this);
 		
-		console.log("first:"+disable);
-		
 		if (disable) {
 			btn.attr('disabled','disabled').addClass('disabled');
-			console.log("disable");
 		} else {
 			btn.removeAttr('disabled').removeClass('disabled');
-			console.log("enable");
 		}	
 	};
 	
@@ -691,7 +696,11 @@ $('.municipality-filter').change( function() {
 	var thisSelect = $(this);
 	
 	// Set a small delay so that focus is correctly fired after chance-event.
-	setTimeout(function () { $('#search').focus(); }, 50);
+	// Free text search not yet implemented
+	//setTimeout(function () { $('#search').focus(); }, 50);
+	
+	$('#search-form').submit();
+	
 });	
 
 	

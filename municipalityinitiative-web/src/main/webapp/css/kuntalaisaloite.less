@@ -2436,6 +2436,16 @@ blockquote {
             vertical-align:bottom;
         }
     }
+    &.valign-top {
+        .cell {
+            vertical-align:top;
+        }
+    }
+    &.no-pad {
+        .cell {
+            padding:0;
+        }
+    }
 }
 
 // Search results
@@ -2457,6 +2467,10 @@ blockquote {
             margin-left:32px;
             vertical-align:bottom;
         }
+        
+        select {
+            margin-top:0.5em;
+        }
     }
 }
 .search-terms {
@@ -2474,6 +2488,8 @@ blockquote {
         list-style:none;
         
         color:@secondaryTextColor;
+        border-top:1px solid #ddd;
+        border-bottom:1px solid #f3f3f3;
     }
     
     li {
@@ -2483,9 +2499,12 @@ blockquote {
         //margin-bottom:0.7em;
         //padding-top:0.7em;
         padding:0.7em 0.3em;
-        //border-top:1px solid #eee;
+        border-bottom:1px solid #ddd;
+        border-top:1px solid #f3f3f3;
         
-        &.first { border:0; }
+        &.first { 
+            border-top:1px solid #f3f3f3;
+        }
         
         &:hover { background:#eaeaea; }
     }
@@ -2502,8 +2521,13 @@ blockquote {
         font-size:0.9em;
         margin-left:100px;
     }
-    .state {
+    /*.state {
         margin-left:1em;
+    }*/
+    .bull {
+        margin:0 0.5em;
+        font-size:0.8em;
+        color:@borderGray;
     }
     
     .participants {
@@ -2526,7 +2550,7 @@ blockquote {
             }*/
             
             // 24px
-            background:url("../img/icons-search-2.png?version=${timestamp}") no-repeat right -119px;
+            background:url("../img/icons-search.png?version=${timestamp}") no-repeat right -119px;
             
             &.one {
                 background-position:right -183px;
@@ -2587,7 +2611,7 @@ blockquote {
     margin-bottom:0.2em;
     text-align:right;
     border:1px solid @borderGray;
-    .rounded-corners(@cornerRadiusXtraSmall);
+    //.rounded-corners(@cornerRadiusXtraSmall);
     
     .gradient (#fff, #f5f5f5);
     
@@ -2598,14 +2622,14 @@ blockquote {
         color:#444;
         text-align:center;
         
-        &:first-child {
+        /*&:first-child {
             .rounded-corners-top-left (@cornerRadiusXtraSmall);
             .rounded-corners-bottom-left (@cornerRadiusXtraSmall);
         }
         &:last-child {
             .rounded-corners-top-right (@cornerRadiusXtraSmall);
             .rounded-corners-bottom-right (@cornerRadiusXtraSmall);
-        }
+        }*/
         
         &:hover {
             .gradient (#fff, #ddd);
@@ -2641,12 +2665,18 @@ blockquote {
         display:inline-block;
         padding:0.1em 0.5em;
         
+        &:hover {
+            .gradient (#fff, #ddd);
+            color:#000;
+        }
+        
         &.active {
             .gradient (#09a3b4, #067582);
-            .rounded-corners(@cornerRadiusXtraSmall);
+            //.rounded-corners(@cornerRadiusXtraSmall);
             color:#fff;
             text-shadow:0px 1px 1px rgba(0,0,0,0.3);
         }
+        
     }
 }
 
@@ -2656,11 +2686,12 @@ blockquote {
 //
 // Styleguide 9.2
 .search-sort {
-    width:370px;
+    //width:370px;
+    width:300px;
 }
 .icon-search-sort {
     margin-right:0.5em;
-    background:url("../img/icons-search-2.png?version=${timestamp}") no-repeat 0 0; 
+    background:url("../img/icons-search.png?version=${timestamp}") no-repeat 0 0; 
     
     &.by-support-statements {
         background-position:0 -126px;
@@ -2708,6 +2739,15 @@ blockquote {
         margin:0 0.5em;
         color:@lightGray;
     }
+    
+    .page-numbers {
+        margin:0 1em;
+    }
+    
+    span.next, span.prev {
+        opacity:@dimmed;
+        //color:@lightGray;
+    }
 }
 .pagination-number-container {
     text-align:center;
@@ -2741,14 +2781,6 @@ blockquote {
         color:#fff;
     }
     
-}
-.page-numbers {
-    margin:0 1em;
-}
-
-span.next, span.prev {
-    opacity:@dimmed;
-    //color:@lightGray;
 }
 
 
@@ -2830,7 +2862,7 @@ table.data {
     .chzn-single {
         height:34px;
         line-height:34px;
-        margin: 0.2em 0 0 0;
+        //margin: 0.2em 0 0 0;
         padding:0 0.3em;
         border: 1px solid @borderGray;
         background: #fff;
@@ -2850,10 +2882,34 @@ table.data {
                 .grayGradientHover();
             }
 
-            b {
-                background:url("../img/icon-arrow-down.png?version=${timestamp}") no-repeat 50% 50%; 
+            b { 
+                background:url("../img/chosen-sprite.png?version=${timestamp}") no-repeat 11px 50%;
             }
         }
+        
+        // Clear selection button
+        abbr {
+            top:50%;
+            right:39px;
+            height:10px;
+            width:10px;
+            margin-top:-5px;
+            background:url("../img/chosen-sprite.png?version=${timestamp}") no-repeat -64px 50%;
+            
+            &:hover {
+                background-position:-96px 50%;
+            }
+        }
+        
+        // Dropdown active
+        &.chzn-single-with-drop {
+            div {
+                b {
+                    background-position:-21px 50%;
+                }
+            }
+        }
+        
     }
 
     input[type="text"]:focus {
@@ -2879,7 +2935,5 @@ table.data {
     &.chzn-container-single .chzn-drop {
         border-radius:0;
     }
-
-    
 }
 

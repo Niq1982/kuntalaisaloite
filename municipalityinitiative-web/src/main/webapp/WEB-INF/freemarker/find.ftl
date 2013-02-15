@@ -44,18 +44,28 @@
     </div>
     </form>-->
     
-    <#--<div class="view-block search-options cf">-->
+<div class="view-block search-options cf">
+
+    <#--
+     * Municipality filter
+     * 
+     * TODO: Search button for NOSCRIPT
+    -->
     <span class="search-parameters-title filter"><label for="municipality">Kunta</label></span>
-    <div class="search-parameters-container">
+    <div class="search-parameters-container cf">
         <form action="${springMacroRequestContext.requestUri}" method="GET" id="search-form" class="search-form">
-            <div class="cell cell-1of3">
+            <div class="column col-1of3">
                 <@f.municipalitySelect path="currentSearch.municipality" options=municipalities required="" cssClass="municipality-filter" showLabel=false />
-            </div> 
+            </div>
+            
+            <#-- Submit button for users that do not have Chosen.js (NOSCRIPT and IE7-) -->
+            <noscript>
+            <div class="column col">
+                <button type="submit" class="small-button"><span class="small-icon search"><@u.message "btn.search" /></span></button>
+            </div>
+            </noscript>
         </form>
     </div>
-    
-
-    <br/>
     
     <#--
      * Search filter and sort states
@@ -71,11 +81,17 @@
     <span class="search-parameters-title filter"><@u.message "searchOptions.filter" /></span>
     <div class="search-parameters-container">
         <div class="search-parameters">
+            <a href="#" class="active">Kerätään osallistujia<span class="count">798</span></a>
+            <a href="#" class="">Lähetetty kuntaan<span class="count">375</span></a>
+            <a href="#" class="">Suljetut<span class="count">150</span></a>
+            <a href="#" class="">Kaikki<span class="count">1500</span></a>
+        </div>
+        <#--<div class="search-parameters">
             <a href="#" class="active trigger-tooltip" title="Kerätään osallistujia">Kerätään osallistujia<span class="count">798</span></a>
             <a href="#" class=" trigger-tooltip" title="Lähetetty kuntaan">Lähetetty kuntaan<span class="count">375</span></a>
             <a href="#" class=" trigger-tooltip" title="Suljetut">Suljetut<span class="count">150</span></a>
             <a href="#" class=" trigger-tooltip" title="Kaikki">Kaikki<span class="count">1500</span></a>
-        </div>
+        </div>-->
         <br class="clear" />
     </div>
     
@@ -105,7 +121,7 @@
         <div class="column search-sort">
             <span class="small-icon icon-search-sort by-support-statements"><@u.message "searchOptions.participants" /></span>
             <div class="search-sort-links">
-                <a href="#" class="active" title="">eniten</a>
+                <a href="#" class="" title="">eniten</a>
                 <a href="#" class="" title="">vähiten</a>
                 <#--<@u.searchLink parameter="withOrderByMostSupports" cssClass=(currentSearch.orderBy == "mostSupports")?string('active','') tooltip=false />
                 <@u.searchLink parameter="withOrderByLeastSupports" cssClass=(currentSearch.orderBy == "leastSupports")?string('active','') tooltip=false />-->
@@ -116,7 +132,7 @@
         
     <#--</#if>-->
 
-<#--</div>-->
+</div>
 
     <#--
      * TODO: Search pagination - also in the bottom of rearch results
@@ -153,9 +169,9 @@
                         <span class="no-participants">Ei kerännyt osallistujia</span>
                     <#else>
                         <#if (initiative.id%2 == 0)>
-                            <span class="participant-count one">1</span>
+                            <span class="participant-count one trigger-tooltip" title="Osallistujia yhteensä">1</span>
                         <#else>
-                            <span class="participant-count">${3*initiative_index}</span>
+                            <span class="participant-count trigger-tooltip" title="Osallistujia yhteensä">${3*initiative_index}</span>
                         </#if>
                     </#if>
                 </span>
@@ -164,7 +180,7 @@
             <span class="date trigger-tooltip" title="<@u.message "searchResults.initiative.date" />" ><@u.localDate initiative.createTime /></span>
             <span class="title"><a href="${urls.view(initiative.id)}" class="name">${initiative.name}</a></span>
             <#-- TODO: Initiative state -->
-            <span class="info">${initiative.municipalityName}<span class="state">Aloite lähetetty kuntaan 08.02.2013</span></span>
+            <span class="info">${initiative.municipalityName}<span class="bull">&bull;</span><span class="state">Aloite lähetetty kuntaan 08.02.2013</span></span>
             
         </li>
         <#if !initiative_has_next></ul></#if>
