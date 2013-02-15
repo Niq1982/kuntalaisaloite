@@ -4,7 +4,6 @@ import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
-import fi.om.municipalityinitiative.newdto.service.PublicParticipant;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.sql.QParticipant;
 import org.junit.Before;
@@ -18,8 +17,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={IntegrationTestConfiguration.class})
@@ -93,11 +91,11 @@ public class JdbcParticipantDaoTest {
         createParticipant(initiativeId, false, true, "no right yes public");
         createParticipant(initiativeId, true, true, "yes right yes public");
 
-        List<PublicParticipant> publicParticipants = participantDao.findPublicParticipants(initiativeId);
+        List<Participant> participants = participantDao.findPublicParticipants(initiativeId);
 
-        assertThat(publicParticipants, hasSize(2));
-        assertThat(publicParticipants.get(0).getName(), is("no right yes public"));
-        assertThat(publicParticipants.get(1).getName(), is("yes right yes public"));
+        assertThat(participants, hasSize(2));
+        assertThat(participants.get(0).getName(), is("no right yes public"));
+        assertThat(participants.get(1).getName(), is("yes right yes public"));
     }
 
     @Test
@@ -111,9 +109,9 @@ public class JdbcParticipantDaoTest {
         createParticipant(initiativeId, false, true, "no right yes public");
         createParticipant(initiativeId, true, true, "yes right yes public");
 
-        List<Participant> publicParticipants = participantDao.findAllParticipants(initiativeId);
+        List<Participant> participants = participantDao.findAllParticipants(initiativeId);
 
-        assertThat(publicParticipants, hasSize(5)); // Four and the creator
+        assertThat(participants, hasSize(5)); // Four and the creator
 
     }
 
@@ -124,13 +122,38 @@ public class JdbcParticipantDaoTest {
         Long otherMunicipality = testHelper.createTestMunicipality("Some other Municipality");
         createParticipant(testInitiativeId, otherMunicipality, true, false, "Participant Name");
 
-        List<Participant> publicParticipants = participantDao.findAllParticipants(testInitiativeId);
+        List<Participant> participants = participantDao.findAllParticipants(testInitiativeId);
 
-        Participant participant = publicParticipants.get(1); // Skip first because the author is the first.
+        Participant participant = participants.get(1); // Skip first because the author is the first.
         assertThat(participant.getHomeMunicipality(), is("Some other Municipality"));
         assertThat(participant.isFranchise(), is(true));
+    }
 
+    @Test
+    public void getPublicParticipants_adds_municipality_name_and_franchise_to_participant_data() {
 
+        Long otherMunicipality = testHelper.createTestMunicipality("Some other Municipality");
+        createParticipant(testInitiativeId, otherMunicipality, true, true, "Participant Name");
+
+        List<Participant> participants = participantDao.findPublicParticipants(testInitiativeId);
+
+        Participant participant = participants.get(1); // Skip first because the author is the first.
+        assertThat(participant.getHomeMunicipality(), is("Some other Municipality"));
+        assertThat(participant.isFranchise(), is(true));
+    }
+
+    @Test
+    public void getAllParticipants_adds_participateTime_to_data() {
+        List<Participant> participants = participantDao.findAllParticipants(testInitiativeId);
+        Participant participant = participants.get(0); // Skip first because the author is the first.
+        assertThat(participant.getParticipateDate(), is(notNullValue()));
+    }
+
+    @Test
+    public void getPublicParticipants_adds_participateTime_to_data() {
+        List<Participant> participants = participantDao.findPublicParticipants(testInitiativeId);
+        Participant participant = participants.get(0);
+        assertThat(participant.getParticipateDate(), is(notNullValue()));
     }
 
     private Long createParticipant(Long initiativeId, Long homeMunicipality, boolean rightOfVoting, boolean publicName, String participantName) {
