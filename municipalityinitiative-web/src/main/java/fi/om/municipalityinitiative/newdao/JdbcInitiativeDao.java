@@ -52,7 +52,18 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
         searchParameters(query, search);
 
-        return query.list(initiativeListInfoMapping);
+        List<InitiativeListInfo> list = query.list(initiativeListInfoMapping);
+
+
+        // TODO: de-normalize count to own column
+        for (InitiativeListInfo initiativeListInfo : list) {
+            initiativeListInfo.setParticipantCount(
+                    queryFactory.from(QParticipant.participant)
+                    .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeListInfo.getId()))
+                    .count());
+        }
+
+        return list;
 
     }
 

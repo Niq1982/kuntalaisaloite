@@ -101,6 +101,14 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
+    public void counts_participants_to_listView() {
+        testHelper.createTestInitiative(testMunicipality.getId(), "Not collectable", false, false);
+        List<InitiativeListInfo> all = initiativeDao.findNewestFirst(new InitiativeSearch());
+        assertThat(all, hasSize(1));
+        assertThat(all.get(0).getParticipantCount(), is(1L));
+    }
+
+    @Test
     public void sets_sent_time_to_listView_initiative_is_sent() {
 
         testHelper.createTestInitiative(testMunicipality.getId(), "Not collectable", false, false);

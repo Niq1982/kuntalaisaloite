@@ -10,6 +10,7 @@ public class InitiativeListInfo {
     private DateTime createTime;
     private boolean collectable;
     private Maybe<DateTime> sentTime;
+    private long participantCount;
 
     public Long getId() {
         return id;
@@ -57,5 +58,13 @@ public class InitiativeListInfo {
 
     public void setSentTime(Maybe<DateTime> sentTime) {
         this.sentTime = sentTime;
+    }
+
+    public void setParticipantCount(long participantCount) {
+        this.participantCount = participantCount;
+    }
+
+    public long getParticipantCount() {
+        return participantCount;
     }
 }
