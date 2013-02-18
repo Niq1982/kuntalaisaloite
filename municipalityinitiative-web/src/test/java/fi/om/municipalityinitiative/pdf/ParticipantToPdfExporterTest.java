@@ -18,7 +18,8 @@ import java.util.Random;
 
 public class ParticipantToPdfExporterTest {
 
-    private static String FILE = "/Users/paulika/Documents/test.pdf";
+//    private static String FILE = "/Users/paulika/Documents/test.pdf";
+    private static String FILE = "/Users/mikkole/Documents/Kuntalaisaloite/Testi-PDF/test.pdf";
 
     public static void main(String[] moimoiii) throws FileNotFoundException {
         FileOutputStream outputStream = new FileOutputStream(FILE);
