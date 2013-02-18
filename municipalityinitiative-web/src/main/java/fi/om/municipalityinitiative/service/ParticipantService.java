@@ -17,7 +17,7 @@ public class ParticipantService {
     public ParticipantService() {
     }
 
-    public ParticipantService(ParticipantDao participantDao) {
+    ParticipantService(ParticipantDao participantDao) {
         this.participantDao = participantDao;
     }
 
@@ -29,7 +29,7 @@ public class ParticipantService {
         return toParticipantNames(participantDao.findPublicParticipants(initiativeId));
     }
 
-    public static <E extends Participant> Participants toParticipantNames(List<E> publicPublicParticipants) {
+    public static Participants toParticipantNames(List<Participant> publicPublicParticipants) {
         Participants participants = new Participants();
 
         for (Participant participant : publicPublicParticipants) {

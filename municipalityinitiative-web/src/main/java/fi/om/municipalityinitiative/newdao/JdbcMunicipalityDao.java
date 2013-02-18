@@ -29,6 +29,13 @@ public class JdbcMunicipalityDao implements MunicipalityDao {
         return query.list(municipalityInfoMapper);
     }
 
+    @Override
+    public String getMunicipalityEmail(Long municipalityId) {
+        return queryFactory.from(QMunicipality.municipality)
+                .where(QMunicipality.municipality.id.eq(municipalityId))
+                .singleResult(QMunicipality.municipality.email);
+    }
+
     private static Expression<MunicipalityInfo> municipalityInfoMapper =
             new MappingProjection<MunicipalityInfo>(MunicipalityInfo.class, QMunicipality.municipality.all()) {
 
@@ -40,11 +47,4 @@ public class JdbcMunicipalityDao implements MunicipalityDao {
                     return dto;
                 }
             };
-
-    @Override
-    public String getMunicipalityEmail(Long municipalityId) {
-        return queryFactory.from(QMunicipality.municipality)
-                .where(QMunicipality.municipality.id.eq(municipalityId))
-                .singleResult(QMunicipality.municipality.email);
-    }
 }

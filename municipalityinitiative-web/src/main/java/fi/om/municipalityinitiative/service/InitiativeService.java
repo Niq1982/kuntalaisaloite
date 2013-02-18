@@ -84,7 +84,7 @@ public class InitiativeService {
         checkAllowedToSendToMunicipality(initiativeInfo);
         checkHashCode(hashCode, initiativeInfo);
 
-        initiativeDao.markAsSended(initiativeId, sendToMunicipalityDto.getContactInfo());
+        initiativeDao.markAsSendedAndUpdateContactInfo(initiativeId, sendToMunicipalityDto.getContactInfo());
         sendCollectedInitiativeEmails(initiativeId, locale, sendToMunicipalityDto.getComment());
     }
 

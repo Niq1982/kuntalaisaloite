@@ -131,7 +131,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     @Transactional(readOnly = false)
-    public void markAsSended(Long initiativeId, ContactInfo contactInfo) {
+    public void markAsSendedAndUpdateContactInfo(Long initiativeId, ContactInfo contactInfo) {
 
         long affectedRows = queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.sent, new DateTime())

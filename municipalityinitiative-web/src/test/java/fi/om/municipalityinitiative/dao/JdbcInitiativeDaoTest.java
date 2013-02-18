@@ -70,8 +70,8 @@ public class JdbcInitiativeDaoTest {
     public void finds_by_municipality() {
 
         Long municipalityId = testHelper.createTestMunicipality("Some municipality");
-        Long shouldBeFound = testHelper.createTestInitiative(municipalityId);
 
+        Long shouldBeFound = testHelper.createTestInitiative(municipalityId);
         Long shouldNotBeFound = testHelper.createTestInitiative(testMunicipality.getId());
 
         InitiativeSearch search = new InitiativeSearch();
@@ -83,7 +83,7 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
-    public void sets_collectable_to_listView() {
+    public void sets_collectable_to_listView_if_collectable() {
         testHelper.createTestInitiative(testMunicipality.getId(), "Collectable", true, true);
 
         List<InitiativeListInfo> all = initiativeDao.findNewestFirst(new InitiativeSearch());
@@ -92,7 +92,7 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
-    public void does_not_set_collectable_to_listView() {
+    public void does_not_set_collectable_to_listView_if_not_collectable() {
 
         testHelper.createTestInitiative(testMunicipality.getId(), "Not collectable", false, false);
         List<InitiativeListInfo> all = initiativeDao.findNewestFirst(new InitiativeSearch());
@@ -109,7 +109,7 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
-    public void sets_sent_time_to_listView_initiative_is_sent() {
+    public void sets_sent_time_to_listView_if_initiative_is_sent() {
 
         testHelper.createTestInitiative(testMunicipality.getId(), "Not collectable", false, false);
 
@@ -119,7 +119,7 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
-    public void sets_sent_time_to_listView_if_initiative_is_not_sent() {
+    public void sets_sent_time_as_absent_to_listView_if_initiative_is_not_sent() {
 
         testHelper.createTestInitiative(testMunicipality.getId(), "Collectable", true, true);
 
@@ -151,7 +151,7 @@ public class JdbcInitiativeDaoTest {
         InitiativeViewInfo initiative = initiativeDao.getById(initiativeId);
         assertThat(initiative.getSentTime().isPresent(), is(false)); // Precondition
 
-        initiativeDao.markAsSended(initiativeId, contactInfo());
+        initiativeDao.markAsSendedAndUpdateContactInfo(initiativeId, contactInfo());
         initiative = initiativeDao.getById(initiativeId);
         assertThat(initiative.getSentTime().isPresent(), is(true));
     }
@@ -163,7 +163,7 @@ public class JdbcInitiativeDaoTest {
         InitiativeViewInfo initiative = initiativeDao.getById(initiativeId);
         assertThat(initiative.isCollectable(), is(false)); // Precondition
 
-        initiativeDao.markAsSended(initiativeId, contactInfo());
+        initiativeDao.markAsSendedAndUpdateContactInfo(initiativeId, contactInfo());
     }
 
     @Test
@@ -174,10 +174,10 @@ public class JdbcInitiativeDaoTest {
         assertThat(initiative.isCollectable(), is(true)); // Precondition
         assertThat(initiative.getSentTime().isPresent(), is(false)); // Precondition
 
-        initiativeDao.markAsSended(initiativeId, contactInfo());
+        initiativeDao.markAsSendedAndUpdateContactInfo(initiativeId, contactInfo());
 
         try {
-            initiativeDao.markAsSended(initiativeId, contactInfo());
+            initiativeDao.markAsSendedAndUpdateContactInfo(initiativeId, contactInfo());
             fail("Should have thrown exception");
         } catch (NotCollectableException e) {
 
@@ -192,13 +192,13 @@ public class JdbcInitiativeDaoTest {
         original.setPhone("new phone");
         original.setEmail("new email");
         original.setName("new name");
-        initiativeDao.markAsSended(initiativeId, original);
+        initiativeDao.markAsSendedAndUpdateContactInfo(initiativeId, original);
 
         ContactInfo updated = initiativeDao.getContactInfo(initiativeId);
-        assertThat(updated.getPhone(), Matchers.is(original.getPhone()));
-        assertThat(updated.getName(), Matchers.is(original.getName()));
-        assertThat(updated.getEmail(), Matchers.is(original.getEmail()));
-        assertThat(updated.getAddress(), Matchers.is(original.getAddress()));
+        assertThat(updated.getPhone(), is(original.getPhone()));
+        assertThat(updated.getName(), is(original.getName()));
+        assertThat(updated.getEmail(), is(original.getEmail()));
+        assertThat(updated.getAddress(), is(original.getAddress()));
 
     }
 
