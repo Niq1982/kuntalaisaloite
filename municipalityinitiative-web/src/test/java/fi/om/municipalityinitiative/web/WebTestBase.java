@@ -7,8 +7,6 @@ import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.service.MailSendingEmailService;
 import fi.om.municipalityinitiative.util.Locales;
 import mockit.Mocked;
-import mockit.NonStrictExpectations;
-
 import org.eclipse.jetty.server.Server;
 import org.junit.After;
 import org.junit.Before;
@@ -97,8 +95,8 @@ public abstract class WebTestBase {
                 break;
         }
 
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS); // default is 0!!!
-        driver.manage().timeouts().setScriptTimeout(5, TimeUnit.SECONDS); // default is 0!!!
+        driver.manage().timeouts().implicitlyWait(50, TimeUnit.SECONDS); // default is 0!!!
+        driver.manage().timeouts().setScriptTimeout(50, TimeUnit.SECONDS); // default is 0!!!
 
         if (urls == null) {
             Urls.initUrls("https://localhost:" + PORT);
