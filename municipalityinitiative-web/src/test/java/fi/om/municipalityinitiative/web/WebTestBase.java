@@ -4,7 +4,11 @@ import fi.om.municipalityinitiative.StartJetty;
 import fi.om.municipalityinitiative.conf.PropertyNames;
 import fi.om.municipalityinitiative.conf.WebTestConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.service.MailSendingEmailService;
 import fi.om.municipalityinitiative.util.Locales;
+import mockit.Mocked;
+import mockit.NonStrictExpectations;
+
 import org.eclipse.jetty.server.Server;
 import org.junit.After;
 import org.junit.Before;
@@ -38,6 +42,9 @@ public abstract class WebTestBase {
 
     protected static final int PORT = 8445; // NOTE: must match port in test.properties/baseUrl
 
+    @Mocked
+    MailSendingEmailService emailService;
+    
     @Resource
     protected TestHelper testHelper;
 
@@ -98,6 +105,7 @@ public abstract class WebTestBase {
             urls = Urls.FI;
         }
         testHelper.dbCleanup();
+        
     }
 
     @After

@@ -4,6 +4,11 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import fi.om.municipalityinitiative.service.MailSendingEmailService;
+
+import mockit.Mocked;
+import mockit.NonStrictExpectations;
+
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -41,10 +46,11 @@ public class InitiativeCreateWebTest extends WebTestBase {
     public void page_opens() {
         openAndAssertCreatePage();
     }
-
+    
     // Create an initiative that has only one author
     @Test
     public void create_and_send_initiative() {
+        
         testHelper.createTestMunicipality(MUNICIPALITY_1);
         testHelper.createTestMunicipality(MUNICIPALITY_2);
         
