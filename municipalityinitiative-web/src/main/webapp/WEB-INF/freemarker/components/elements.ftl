@@ -22,7 +22,7 @@
             <#assign sentTime><@u.localDate thisInitiative.sentTime.value /></#assign>
             <@u.message key="initiative.date.sent" args=[sentTime] />
         <#elseif thisInitiative.collectable>
-            <@u.message "initiative.state.collecting" />
+            <@u.message "initiative.state.collecting.long" />
         </#if>
     </span>
 
@@ -42,7 +42,7 @@
             <#assign sentTime><@u.localDate thisInitiative.sentTime.value /></#assign>
             <@u.message key="initiative.date.sent" args=[sentTime] />
         <#elseif thisInitiative.collectable>
-            <@u.message "initiative.state.collecting" />
+            <@u.message "initiative.state.collecting.long" />
         <#else>
             <#assign createTime><@u.localDate thisInitiative.createTime /></#assign>
             <@u.message key="initiative.date.create" args=[createTime] />

@@ -23,42 +23,19 @@
 <#assign searchTerm = RequestParameters['search']!"" />
 
 
-<#-- 
- * TODO:
- * - FIX layout for IE7
- * - Input placeholder for IE browser, make a general js plugin
--->
-<#--<div class="view-block search-options cf">-->
-    <#--<form action="${springMacroRequestContext.requestUri}" method="GET" id="search-form" class="search-form">
-    <div class="table full valign-bottom">
-        <div class="cell cell-1of3">
-            <@f.municipalitySelect path="currentSearch.municipality" options=municipalities required="" cssClass="municipality-filter" />
-        </div> 
-        <div class="cell cell-2of3">
-            <#assign placeholder><@u.message "currentSearch.placeholder" /></#assign>
-            <@f.textField path="currentSearch.search" required="" optional=false cssClass="search-field" maxLength="512" attributes="placeholder='${placeholder}'" />
-            
-            <button type="submit" class="small-button"><span class="small-icon search"><@u.message "btn.search" /></span></button>
-        </div>
-    
-    </div>
-    </form>-->
-    
 <div class="view-block search-options cf">
 
     <#--
      * Municipality filter
-     * 
-     * TODO: Search button for NOSCRIPT
     -->
-    <span class="search-parameters-title filter"><label for="municipality">Kunta</label></span>
+    <span class="search-parameters-title filter"><label for="municipality"><@u.message "searchOptions.municipality" /></label></span>
     <div class="search-parameters-container cf">
         <form action="${springMacroRequestContext.requestUri}" method="GET" id="search-form" class="search-form">
             <div class="column col-1of3">
                 <@f.municipalitySelect path="currentSearch.municipality" options=municipalities required="" cssClass="municipality-filter" showLabel=false />
             </div>
             
-            <#-- Submit button for users that do not have Chosen.js (NOSCRIPT and IE7-) -->
+            <#-- Submit button for NOSCRIPT users -->
             <noscript>
             <div class="column col">
                 <button type="submit" class="small-button"><span class="small-icon search"><@u.message "btn.search" /></span></button>
@@ -146,7 +123,7 @@
 
 <div class="search-terms">
     <#if searchMunicipality != "">
-        <h2>Aloitteet kunnassa: ${currentMunicipality}</h2>
+        <h2><@u.message "searchResults.initiativesInMunicipality" />: ${currentMunicipality!""}</h2>
     </#if>
     
     <#--
@@ -165,19 +142,20 @@
             <span class="participants">
                 <span class="participants-container">
                     <#if !initiative.collectable>
-                        <span class="no-participants">Ei kerännyt osallistujia</span>
+                        <span class="no-participants"><@u.message "searchResults.notCollectable" /></span>
                     <#else>
-                        <span class="participant-count trigger-tooltip" title="Osallistujia yhteensä">${initiative.participantCount}</span>
+                        <span class="participant-count ${(initiative.participantCount<2)?string("one","")} trigger-tooltip" title="<@u.message "searchResults.sumOfParticipants" />">${initiative.participantCount!""}</span>
                     </#if>
                 </span>
             </span>
             
-            <span class="date trigger-tooltip" title="<@u.message "searchResults.initiative.date" />" ><@u.localDate initiative.createTime /></span>
-            <span class="title"><a href="${urls.view(initiative.id)}" class="name">${initiative.name}</a></span>
+            <span class="date trigger-tooltip" title="<@u.message "searchResults.initiative.date" />" ><@u.localDate initiative.createTime!"" /></span>
+            <span class="title"><a href="${urls.view(initiative.id)}" class="name">${initiative.name!""}</a></span>
             <#if initiative.collectable && !initiative.sentTime.present>
-            <span class="info">${initiative.municipalityName}<span class="bull">&bull;</span><span class="state">Aloitteeseen kerätään tekijöitä</span></span>
+                <span class="info">${initiative.municipalityName!""}<span class="bull">&bull;</span><span class="state"><@u.message "initiative.state.collecting" /></span></span>
             <#else>
-            <span class="info">${initiative.municipalityName}<span class="bull">&bull;</span><span class="state">Aloite lähetetty kuntaan ${initiative.sentTime.value}</span></span>
+                <#assign sentTime><@u.localDate initiative.sentTime.value!"" /></#assign>
+                <span class="info">${initiative.municipalityName!""}<span class="bull">&bull;</span><span class="state"><@u.message key="initiative.date.sent" args=[sentTime] /></span></span>
             </#if>
             
         </li>
@@ -187,7 +165,7 @@
 <#-- Search results EMPTY -->
 <#else>
     <#assign emptySearchResultsHTML>
-        Valitsemallasi rajauksella ei löytynyt yhtään aloitetta.
+        <@u.message "searchResults.noResults" />
     </#assign>
 
     <div class="system-msg msg-summary">

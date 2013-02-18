@@ -128,7 +128,7 @@
     <#--
      * Social media buttons
     -->
-    <@some.some pageTitle=currentPage />
+    <@some.some pageTitle=initiative.name!"" />
 
 </#assign>
 
