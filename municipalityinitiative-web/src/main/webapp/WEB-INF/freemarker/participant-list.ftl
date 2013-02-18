@@ -99,7 +99,7 @@
 
         <#list participants as participant>
             <#if participant_index == 0><ul class="participant-list no-style"></#if>
-                <li><span class="date">01.01.2013</span> <span class="name-container"><span class="name">${participant}</span> <span class="home-municipality">Kunta todo</span></span></li>
+                <li><span class="date">${participant.participateDate}</span> <span class="name-container"><span class="name">${participant.name}</span> <span class="home-municipality">${participant.homeMunicipality}</span></span></li>
                 
                 <#if columns == 2 && participant_index == cue>
                     </ul></div>

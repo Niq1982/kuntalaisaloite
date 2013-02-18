@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newdto.ui;
 
+import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.DateTime;
 
 public class InitiativeListInfo {
@@ -7,6 +8,9 @@ public class InitiativeListInfo {
     private String name;
     private String municipalityName;
     private DateTime createTime;
+    private boolean collectable;
+    private Maybe<DateTime> sentTime;
+    private long participantCount;
 
     public Long getId() {
         return id;
@@ -38,5 +42,29 @@ public class InitiativeListInfo {
 
     public void setCreateTime(DateTime createTime) {
         this.createTime = createTime;
+    }
+
+    public boolean isCollectable() {
+        return collectable;
+    }
+
+    public void setCollectable(boolean collectable) {
+        this.collectable = collectable;
+    }
+
+    public Maybe<DateTime> getSentTime() {
+        return sentTime;
+    }
+
+    public void setSentTime(Maybe<DateTime> sentTime) {
+        this.sentTime = sentTime;
+    }
+
+    public void setParticipantCount(long participantCount) {
+        this.participantCount = participantCount;
+    }
+
+    public long getParticipantCount() {
+        return participantCount;
     }
 }
