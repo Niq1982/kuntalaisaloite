@@ -16,6 +16,17 @@
 
 
 <#-- 
+ * messageHTML
+ * 
+ * Macro for generating HTML messages. NOTE that these messages are unescaped.
+ *
+ * @param key is the localization key
+ * @param args list of arguments for the message 
+-->
+<#macro messageHTML key args=[]><#noescape>${localizations.getMessage(key, args, key, false)}</#noescape></#macro>
+
+
+<#-- 
  * text
  *  
  * Line breaks are replaced with HTML line-breaks (<br/>).

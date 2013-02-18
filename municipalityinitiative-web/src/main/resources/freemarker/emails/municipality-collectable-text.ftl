@@ -13,9 +13,14 @@
 
 <@b.contactInfo "text" />
 
+----
+
+<@b.participants "text" />
+
+----
+
 <@u.message "email.municipality.sendFrom" />:
 ${emailInfo.url}
 
-<#-- TODO: Reply to not yet done
-<@u.message "email.municipality.replyTo" />
--->
+
+<@u.message "email.footer" />

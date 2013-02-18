@@ -43,38 +43,28 @@
  -->
 <#macro contentBlock type="">
     <#if type == "html">
-        
-        <table border="0" cellspacing="0" cellpadding="0" style="${defaultFont!""}" width="100%" bgcolor="${bodyBGcolor!""}">
-            <tr>
-                <td align="center">
 
-                    <@u.spacer "15" />
-                    <table border="0" cellspacing="0" cellpadding="0" width="640" style="background:${blockBGcolor!""}; border-radius:5px; text-align:left; ${defaultFont!""}">
-                        <tr>
-                            <td width="640">
-                            <table border="0" cellspacing="0" cellpadding="0" style="width:100%;">
-                                <tr>
-                                    <td width="20" ><@u.spacer "0" /></td>
-                                    <td style="${defaultFont!""}">
-                                        <@u.spacer "5" />
-                                        
-                                        <#-- HTML content -->
-                                        <#nested />
-            
-                                        <@u.spacer "5" />
-                                    </td>
-                                    <td width="20"><@u.spacer "0" /></td>
-                                </tr>
-                            </table>
-                            </td>
-                        </tr>
-                    </table>
-                    <@u.spacer "15" />
-                    
+        <table border="0" cellspacing="0" cellpadding="0" width="640" style="background:${blockBGcolor!""}; border-radius:5px; text-align:left; ${defaultFont!""}">
+            <tr>
+                <td width="640">
+                <table border="0" cellspacing="0" cellpadding="0" style="width:100%;">
+                    <tr>
+                        <td width="20" ><@u.spacer "0" /></td>
+                        <td style="${defaultFont!""}">
+                            <@u.spacer "5" />
+                            
+                            <#-- HTML content -->
+                            <#nested />
+
+                            <@u.spacer "5" />
+                        </td>
+                        <td width="20"><@u.spacer "0" /></td>
+                    </tr>
+                </table>
                 </td>
             </tr>
         </table>
-        
+
     <#else>
         <#nested />
     </#if>
@@ -123,6 +113,26 @@
         ${emailInfo.contactInfo.email!""}
         ${emailInfo.contactInfo.phone!""}
         ${emailInfo.contactInfo.address!""}
+    </#if>
+</#macro>
+
+<#--
+ * participants
+ *
+ * Print the participant counts.
+ *
+ * @param type 'text' or 'html'
+ -->
+<#macro participants type="">
+    <#if type == "html">
+        <p style="${pBothMargins!""}"><@u.messageHTML key="email.participantCount.total."+type args=["TODO"] /></p>
+        <p style="${pBothMargins!""}"><@u.messageHTML key="email.participantCount.rightOfVoting.total."+type args=["TODO"] /><br />
+        <@u.messageHTML key="email.participantCount.noRightOfVoting.total."+type args=["TODO"] /></p>
+    <#else>
+        <@u.message key="email.participantCount.total" args=["TODO"] />
+        
+        <@u.message key="email.participantCount.rightOfVoting.total" args=["TODO"] />
+        <@u.message key="email.participantCount.noRightOfVoting.total" args=["TODO"] />
     </#if>
 </#macro>
 

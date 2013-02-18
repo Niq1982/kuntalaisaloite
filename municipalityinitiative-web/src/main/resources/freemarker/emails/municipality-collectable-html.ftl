@@ -12,19 +12,26 @@
 
     <#if (emailInfo.comment)?has_content>
         <@b.comment "html" emailInfo.comment />
+        <@u.spacer "15" />
     </#if>
 
     <@b.mainContentBlock title>
         <@b.initiativeDetails "html" />
-        <@b.contactInfo "html" />
     </@b.mainContentBlock>
     
+    <@u.spacer "15" />
+    
     <@b.contentBlock "html">
-        <p style="${pBothMargins!""}"><@u.message "email.municipality.sendFrom" /><br/><@u.link emailInfo.url /></p>
-        <#-- TODO: Reply to not yet done
-        <p style="${pBothMargins!""}"><@u.message "email.municipality.replyTo" /></p>
-        -->
+        <@b.contactInfo "html" />
     </@b.contentBlock>
+    
+    <@u.spacer "15" />
+    
+    <@b.contentBlock "html">
+        <@b.participants "html" />
+    </@b.contentBlock>
+    
+    <@u.spacer "15" />
 
 </@l.emailHtml>
 
