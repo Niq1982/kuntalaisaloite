@@ -76,7 +76,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
                 .leftJoin(participant.participantMunicipalityFk, QMunicipality.municipality)
                 .where(participant.showName.eq(true))
-                .orderBy(participant.id.asc())
+                .orderBy(participant.id.desc())
                 .list(participantMapping);
     }
 
@@ -86,7 +86,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .from(participant)
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
                 .leftJoin(participant.participantMunicipalityFk, QMunicipality.municipality)
-                .orderBy(participant.id.asc())
+                .orderBy(participant.id.desc())
                 .list(participantMapping);
     }
 
