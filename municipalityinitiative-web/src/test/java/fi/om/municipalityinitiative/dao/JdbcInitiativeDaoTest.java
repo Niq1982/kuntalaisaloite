@@ -8,7 +8,9 @@ import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.ui.MunicipalityInfo;
+import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import org.hamcrest.Matchers;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,7 +54,7 @@ public class JdbcInitiativeDaoTest {
         testHelper.createTestInitiative(testMunicipality.getId(), "First");
         testHelper.createTestInitiative(testMunicipality.getId(), "Second");
 
-        List<InitiativeListInfo> result = initiativeDao.findNewestFirst(new InitiativeSearch());
+        List<InitiativeListInfo> result = initiativeDao.find(new InitiativeSearch());
         assertThat(result.size(), is(2));
     }
 
@@ -61,7 +63,7 @@ public class JdbcInitiativeDaoTest {
         Long first = testHelper.createTestInitiative(testMunicipality.getId(), "First");
         Long second = testHelper.createTestInitiative(testMunicipality.getId(), "Second");
 
-        List<InitiativeListInfo> result = initiativeDao.findNewestFirst(new InitiativeSearch());
+        List<InitiativeListInfo> result = initiativeDao.find(new InitiativeSearch());
         assertThat(second, Matchers.is(result.get(0).getId()));
         assertThat(first, Matchers.is(result.get(1).getId()));
     }
@@ -77,7 +79,7 @@ public class JdbcInitiativeDaoTest {
         InitiativeSearch search = new InitiativeSearch();
         search.setMunicipality(municipalityId);
 
-        List<InitiativeListInfo> result = initiativeDao.findNewestFirst(search);
+        List<InitiativeListInfo> result = initiativeDao.find(search);
         assertThat(result, hasSize(1));
         assertThat(result.get(0).getId(), is(shouldBeFound));
     }
@@ -86,7 +88,7 @@ public class JdbcInitiativeDaoTest {
     public void sets_collectable_to_listView_if_collectable() {
         testHelper.createTestInitiative(testMunicipality.getId(), "Collectable", true, true);
 
-        List<InitiativeListInfo> all = initiativeDao.findNewestFirst(new InitiativeSearch());
+        List<InitiativeListInfo> all = initiativeDao.find(new InitiativeSearch().setShow(InitiativeSearch.Show.all));
         assertThat(all, hasSize(1));
         assertThat(all.get(0).isCollectable(), is(true));
     }
@@ -95,7 +97,7 @@ public class JdbcInitiativeDaoTest {
     public void does_not_set_collectable_to_listView_if_not_collectable() {
 
         testHelper.createTestInitiative(testMunicipality.getId(), "Not collectable", false, false);
-        List<InitiativeListInfo> all = initiativeDao.findNewestFirst(new InitiativeSearch());
+        List<InitiativeListInfo> all = initiativeDao.find(new InitiativeSearch());
         assertThat(all, hasSize(1));
         assertThat(all.get(0).isCollectable(), is(false));
     }
@@ -103,7 +105,7 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void counts_participants_to_listView() {
         testHelper.createTestInitiative(testMunicipality.getId(), "Not collectable", false, false);
-        List<InitiativeListInfo> all = initiativeDao.findNewestFirst(new InitiativeSearch());
+        List<InitiativeListInfo> all = initiativeDao.find(new InitiativeSearch());
         assertThat(all, hasSize(1));
         assertThat(all.get(0).getParticipantCount(), is(1L));
     }
@@ -113,7 +115,7 @@ public class JdbcInitiativeDaoTest {
 
         testHelper.createTestInitiative(testMunicipality.getId(), "Not collectable", false, false);
 
-        List<InitiativeListInfo> all = initiativeDao.findNewestFirst(new InitiativeSearch());
+        List<InitiativeListInfo> all = initiativeDao.find(new InitiativeSearch());
         assertThat(all, hasSize(1));
         assertThat(all.get(0).getSentTime().isPresent(), is(true));
     }
@@ -123,7 +125,7 @@ public class JdbcInitiativeDaoTest {
 
         testHelper.createTestInitiative(testMunicipality.getId(), "Collectable", true, true);
 
-        List<InitiativeListInfo> all = initiativeDao.findNewestFirst(new InitiativeSearch());
+        List<InitiativeListInfo> all = initiativeDao.find(new InitiativeSearch().setShow(InitiativeSearch.Show.all));
         assertThat(all, hasSize(1));
         assertThat(all.get(0).getSentTime().isPresent(), is(false));
     }
@@ -137,10 +139,37 @@ public class JdbcInitiativeDaoTest {
         InitiativeSearch search = new InitiativeSearch();
         search.setSearch("SHOULD be found ääöö");
 
-        List<InitiativeListInfo> result = initiativeDao.findNewestFirst(search);
+        List<InitiativeListInfo> result = initiativeDao.find(search);
 
         assertThat(result, hasSize(1));
         assertThat(result.get(0).getId(), is(shouldBeFound));
+    }
+
+    @Test
+    public void finds_by_sent_finds_collectable_if_sent() {
+        Long collectableSent = testHelper.createTestInitiative(testMunicipality.getId(), "Title", true, true);
+        testHelper.updateField(collectableSent, QMunicipalityInitiative.municipalityInitiative.sent, new DateTime());
+
+        List<InitiativeListInfo> result = initiativeDao.find(new InitiativeSearch().setShow(InitiativeSearch.Show.sent));
+        assertThat(result, hasSize(1));
+        assertThat(result.get(0).getId(), Matchers.is(collectableSent));
+    }
+
+    @Test
+    public void finds_by_sent_does_not_find_collectable_if_not_sent() {
+        testHelper.createTestInitiative(testMunicipality.getId(), "Title", true, true);
+        List<InitiativeListInfo> result = initiativeDao.find(new InitiativeSearch().setShow(InitiativeSearch.Show.sent));
+        assertThat(result, hasSize(0));
+    }
+
+    @Test
+    public void finds_by_sent_finds_not_collectable() {
+        Long notCollectable = testHelper.createTestInitiative(testMunicipality.getId(), "Title", false, false);
+
+        List<InitiativeListInfo> result = initiativeDao.find(new InitiativeSearch().setShow(InitiativeSearch.Show.sent));
+
+        assertThat(result, hasSize(1));
+        assertThat(result.get(0).getId(), Matchers.is(notCollectable));
 
     }
 

@@ -78,7 +78,8 @@ public class InitiativeSearch {
 
     public enum Show {
         collecting,
-        sent
+        sent,
+        all
     }
 
     public enum OrderBy {

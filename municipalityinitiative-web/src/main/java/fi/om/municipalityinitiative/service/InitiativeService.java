@@ -37,7 +37,7 @@ public class InitiativeService {
     MunicipalityDao municipalityDao;
 
     public List<InitiativeListInfo> findMunicipalityInitiatives(InitiativeSearch search) {
-        return initiativeDao.findNewestFirst(search);
+        return initiativeDao.find(search);
     }
 
     @Transactional(readOnly = false)

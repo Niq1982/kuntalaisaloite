@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface InitiativeDao {
 
-    List<InitiativeListInfo> findNewestFirst(InitiativeSearch search);
+    List<InitiativeListInfo> find(InitiativeSearch search);
 
     Long create(InitiativeCreateDto dto);
 

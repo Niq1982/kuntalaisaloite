@@ -18,6 +18,7 @@ import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.sql.QMunicipality;
+import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.sql.QParticipant;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.DateTime;
@@ -43,12 +44,14 @@ public class JdbcInitiativeDao implements InitiativeDao {
     PostgresQueryFactory queryFactory;
 
     @Override
-    public List<InitiativeListInfo> findNewestFirst(InitiativeSearch search) {
+    public List<InitiativeListInfo> find(InitiativeSearch search) {
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
                 .leftJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
                 .leftJoin(municipalityInitiative.municipalityInitiativeAuthorFk, QParticipant.participant)
                 .orderBy(municipalityInitiative.id.desc());
+
+        generateWhere(query, search);
 
         searchParameters(query, search);
 
@@ -65,6 +68,22 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
         return list;
 
+    }
+
+    private static void generateWhere(PostgresQuery query, InitiativeSearch search) {
+        switch (search.getShow()) {
+            case sent:
+                query.where(QMunicipalityInitiative.municipalityInitiative.sent.isNotNull());
+                break;
+            case collecting:
+                query.where(QMunicipalityInitiative.municipalityInitiative.sent.isNull())
+                     .where(QMunicipalityInitiative.municipalityInitiative.managementHash.isNotNull());
+                break;
+            case all:
+                break;
+            default:
+                throw new RuntimeException("Unknown initiative state: " + search.getShow());
+        }
     }
 
     private void searchParameters(PostgresQuery query, InitiativeSearch search) {
