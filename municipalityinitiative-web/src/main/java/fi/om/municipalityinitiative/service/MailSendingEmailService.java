@@ -140,7 +140,7 @@ public class MailSendingEmailService implements EmailService {
             byte[] bytes = outputStream.toByteArray();
             DataSource dataSource = new ByteArrayDataSource(bytes, "application/pdf");
 
-            String fileName = MessageFormat.format(FILE_NAME, new LocalDate().toString("yyyy-MM-dd"), "ID");
+            String fileName = MessageFormat.format(FILE_NAME, new LocalDate().toString("yyyy-MM-dd"), emailInfo.getId());
 
             log.info("Attaching "+fileName +" to email.");
             multipart.addAttachment(fileName, dataSource);

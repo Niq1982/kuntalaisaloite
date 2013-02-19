@@ -6,6 +6,8 @@ import org.joda.time.DateTime;
 
 public class InitiativeEmailInfo {
 
+    private Long id;
+    
     private String name;
 
     private String proposal;
@@ -26,6 +28,7 @@ public class InitiativeEmailInfo {
 
         InitiativeEmailInfo initiativeEmailInfo = new InitiativeEmailInfo();
 
+        initiativeEmailInfo.setId(initiative.getId());
         initiativeEmailInfo.setName(initiative.getName());
         initiativeEmailInfo.setProposal(initiative.getProposal());
         initiativeEmailInfo.setCreateTime(initiative.getCreateTime());
@@ -37,6 +40,7 @@ public class InitiativeEmailInfo {
         return initiativeEmailInfo;
     }
     InitiativeEmailInfo(InitiativeEmailInfo original) {
+        setId(original.getId());
         setName(original.getName());
         setProposal(original.getProposal());
         setCreateTime(original.getCreateTime());
@@ -44,6 +48,15 @@ public class InitiativeEmailInfo {
         setMunicipalityName(original.getMunicipalityName());
         setUrl(original.getUrl());
         setContactInfo(original.getContactInfo());
+    }
+    
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
