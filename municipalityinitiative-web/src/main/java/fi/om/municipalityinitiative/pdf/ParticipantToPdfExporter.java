@@ -124,9 +124,9 @@ public class ParticipantToPdfExporter {
 
         table.setHeaderRows(1);
 
-        int count = 0;
+        int count = participants.size() + 1;
         for (Participant participant : participants) {
-            ++count;
+            --count;
             table.addCell(createCell(String.valueOf(count), false));
             table.addCell(createCell(participant.getParticipateDate().toString(DATE_FORMAT), false));
             table.addCell(createCell(participant.getName(), false));
