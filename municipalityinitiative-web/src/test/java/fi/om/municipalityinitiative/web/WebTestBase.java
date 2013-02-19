@@ -95,8 +95,8 @@ public abstract class WebTestBase {
                 break;
         }
 
-        driver.manage().timeouts().implicitlyWait(50, TimeUnit.SECONDS); // default is 0!!!
-        driver.manage().timeouts().setScriptTimeout(50, TimeUnit.SECONDS); // default is 0!!!
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS); // default is 0!!!
+        driver.manage().timeouts().setScriptTimeout(10, TimeUnit.SECONDS); // default is 0!!!
 
         if (urls == null) {
             Urls.initUrls("https://localhost:" + PORT);
@@ -203,29 +203,28 @@ public abstract class WebTestBase {
     }
 
     protected void inputText(String fieldName, String text) {
-        driver.findElement(By.name(fieldName)).sendKeys(text);
+        waitUntilEnabled(By.name(fieldName)).sendKeys(text);
     }
 
     protected void inputTextByCSS(String css, String text) {
-        driver.findElement(By.cssSelector(css)).sendKeys(text);
+        waitUntilEnabled(By.cssSelector(css)).sendKeys(text);
     }
 
     protected void clickByName(String name) {
-        WebDriverWait wait = new WebDriverWait(driver, 5);
-        WebElement link = wait.until(ExpectedConditions.elementToBeClickable(By.name(name)));
-        link.click();
+        waitUntilEnabled(By.name(name)).click();
     }
 
     protected void clickById(String id) {
-        WebDriverWait wait = new WebDriverWait(driver, 5);
-        WebElement link = wait.until(ExpectedConditions.elementToBeClickable(By.id(id)));
-        link.click();
+        waitUntilEnabled(By.id(id)).click();
     }
 
     protected void clickLinkContaining(String text) {
-        WebDriverWait wait = new WebDriverWait(driver, 5);
-        WebElement link = wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText(text)));
-        link.click();
+        waitUntilEnabled(By.partialLinkText(text)).click();
+    }
+
+    protected WebElement waitUntilEnabled(By by) {
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        return wait.until(ExpectedConditions.elementToBeClickable(by));
     }
     
     protected WebElement getElemContaining(String linkText, String tagName) {

@@ -4,11 +4,6 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import fi.om.municipalityinitiative.service.MailSendingEmailService;
-
-import mockit.Mocked;
-import mockit.NonStrictExpectations;
-
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -75,57 +70,49 @@ public class InitiativeCreateWebTest extends WebTestBase {
     }
 
     public void select_municipality() {
-        waitms(500); // Tiny delay is required if run from Eclipse.
         clickLinkContaining(getMessage(SELECT_MUNICIPALITY));
-        waitms(500); // Tiny delay is required if run from Eclipse.
         getElemContaining(MUNICIPALITY_1, "li").click();
         
         clickLinkContaining(getMessage(MSG_BTN_CONTINUE));
         
         assertTextContainedByXPath("//p[@id='selected-municipality']", MUNICIPALITY_1);
-        
-        wait100();
-        
+
         System.out.println("--- select_municipality OK");
     }
     
     public void add_initiative_content() {
-        wait100();
-        
+
         inputText("name", NAME);
         inputText("proposal", PROPOSAL);
 
-        wait100();
         clickLinkContaining(getMessage(MSG_BTN_CONTINUE));
 
-        wait100();
-        assertThat(driver.findElement(By.xpath("//div[@id='step-3']")).isDisplayed(), is(true));
+
+        assertThat(waitUntilEnabled(By.xpath("//div[@id='step-3']")).isDisplayed(), is(true));
+//        assertThat(driver.findElement(By.xpath("//div[@id='step-3']")).isDisplayed(), is(true));
         
         System.out.println("--- add_initiative_content OK");
     }
     
     public void add_contact_info() {
-        wait100();
-        
+
         inputText("contactInfo.name", CONTACT_NAME);
         inputText("contactInfo.email", CONTACT_EMAIL);
         inputText("contactInfo.phone", CONTACT_PHONE);
         inputText("contactInfo.address", CONTACT_ADDRESS);
 
-        wait100();
 
         clickLinkContaining(getMessage(MSG_BTN_CONTINUE));
 
-        wait100();
 
-        assertThat(driver.findElement(By.xpath("//div[@id='step-4']")).isDisplayed(), is(true));
+        assertThat(waitUntilEnabled(By.xpath("//div[@id='step-4']")).isDisplayed(), is(true));
+//        assertThat(driver.findElement(By.xpath("//div[@id='step-4']")).isDisplayed(), is(true));
         
         System.out.println("--- add_contact_info OK");
     }
     
     public void save_initiative(boolean startCollecting) {
-        wait100();
-        
+
         if (startCollecting) {
             getElemContaining(getMessage(RADIO_FRANCHISE_TRUE), "label").click();
             getElemContaining(getMessage(MSG_BTN_SAVE_AND_COLLECT), "button").click();
