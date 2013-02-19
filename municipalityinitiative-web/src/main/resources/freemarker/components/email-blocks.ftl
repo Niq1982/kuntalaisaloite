@@ -125,14 +125,15 @@
  -->
 <#macro participants type="">
     <#if type == "html">
-        <p style="${pBothMargins!""}"><@u.messageHTML key="email.participantCount.total."+type args=["TODO"] /></p>
-        <p style="${pBothMargins!""}"><@u.messageHTML key="email.participantCount.rightOfVoting.total."+type args=["TODO"] /><br />
-        <@u.messageHTML key="email.participantCount.noRightOfVoting.total."+type args=["TODO"] /></p>
+        <p style="${pBothMargins!""}"><@u.messageHTML key="email.participantCount.total."+type args=[emailInfo.participantCount!""] /></p>
+        <p style="${pBothMargins!""}"><@u.messageHTML key="email.participantCount.rightOfVoting.total."+type args=[emailInfo.participantFranchiseCount!""] /><br />
+        <@u.messageHTML key="email.participantCount.noRightOfVoting.total."+type args=[emailInfo.participantNoFranchiseCount!""] /></p>
     <#else>
-        <@u.message key="email.participantCount.total" args=["TODO"] />
+        <@u.message key="email.participantCount.total" args=[emailInfo.participantCount!""] />
         
-        <@u.message key="email.participantCount.rightOfVoting.total" args=["TODO"] />
-        <@u.message key="email.participantCount.noRightOfVoting.total" args=["TODO"] />
+        <@u.message key="email.participantCount.rightOfVoting.total" args=[emailInfo.participantFranchiseCount!""] />
+        
+        <@u.message key="email.participantCount.noRightOfVoting.total" args=[emailInfo.participantNoFranchiseCount!""] />
     </#if>
 </#macro>
 

@@ -23,7 +23,8 @@
  * @param key is the localization key
  * @param args list of arguments for the message 
 -->
-<#macro messageHTML key args=[]><#noescape>${localizations.getMessage(key, args, key, false)}</#noescape></#macro>
+
+<#macro messageHTML key args=[]><#noescape>${localizations.getMessage(key, args)}</#noescape></#macro>
 
 
 <#-- 
