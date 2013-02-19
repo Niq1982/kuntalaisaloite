@@ -144,6 +144,9 @@ public final class Urls {
 
     public static final int DEFAULT_INITIATIVE_JSON_RESULT_COUNT = 20;
 
+    public static final int DEFAULT_INITIATIVE_SEARCH_LIMIT = 20;
+    public static final int MAX_INITIATIVE_SEARCH_LIMIT = 500;
+
     // New uris
 
     public static final String SEARCH_FI = "/fi/hae";
@@ -382,5 +385,5 @@ public final class Urls {
     public boolean isLoginPage(String target) {
         return target.startsWith(login());
     }
-    
+
 }

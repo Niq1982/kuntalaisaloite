@@ -81,7 +81,9 @@ public class ReflectionTestUtils {
         }
         if (type.isEnum()) {
             Object[] constants = type.getEnumConstants();
-            return constants[randomInt() % constants.length];
+            int i = randomInt() % constants.length;
+            if (i < 0) i*= -1;
+            return constants[i];
         }
         if (type == LocalDateTime.class) {
             return new LocalDateTime(randomLong());
