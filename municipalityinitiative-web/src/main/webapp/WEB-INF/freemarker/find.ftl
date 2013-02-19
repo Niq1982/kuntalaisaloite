@@ -144,7 +144,7 @@
                     <#if !initiative.collectable>
                         <span class="no-participants"><@u.message "searchResults.notCollectable" /></span>
                     <#else>
-                        <span class="participant-count ${(initiative.participantCount<2)?string("one","")} trigger-tooltip" title="<@u.message "searchResults.sumOfParticipants" />">${initiative.participantCount!""}</span>
+                        <span class="participant-count trigger-tooltip" title="<@u.message "searchResults.sumOfParticipants" />">${initiative.participantCount!""}</span>
                     </#if>
                 </span>
             </span>
