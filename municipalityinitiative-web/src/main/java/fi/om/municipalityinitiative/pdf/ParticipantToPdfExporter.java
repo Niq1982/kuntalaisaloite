@@ -1,17 +1,24 @@
 package fi.om.municipalityinitiative.pdf;
 
-import com.google.common.collect.Lists;
-import com.itextpdf.text.*;
+import java.io.OutputStream;
+import java.util.List;
+
+import org.joda.time.DateTime;
+
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
 import com.itextpdf.text.Font.FontFamily;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+
 import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.service.Participant;
-import org.joda.time.DateTime;
-
-import java.io.OutputStream;
-import java.util.List;
 
 public class ParticipantToPdfExporter {
 
@@ -68,16 +75,11 @@ public class ParticipantToPdfExporter {
         preface.add(new Paragraph(emailInfo.getName(), bodyText));
         addEmptyLine(preface, 1);
 
-        List<Participant> participantsFranchise = Lists.newArrayList();
-        List<Participant> participantsNoFranchise = Lists.newArrayList();
-
-        parseParticipants(emailInfo.getParticipants(), participantsFranchise, participantsNoFranchise);
-
         preface.add(new Paragraph("Äänioikeutetut kunnan asukkaat", subTitle));
         
-        if (!participantsFranchise.isEmpty()) {
+        if (!emailInfo.getParticipantsFranchise().isEmpty()) {
             addEmptyLine(preface, 1);
-            createTable(preface, participantsFranchise);
+            createTable(preface, emailInfo.getParticipantsFranchise());
         } else {
             preface.add(new Paragraph("Ei osallistujia", bodyTextItalic));
         }
@@ -86,27 +88,14 @@ public class ParticipantToPdfExporter {
         
         preface.add(new Paragraph("Muut kunnan jäsenet ja ei-äänioikeutetut asukkaat", subTitle));
         
-        if (!participantsNoFranchise.isEmpty()) {
+        if (!emailInfo.getParticipantsNoFranchise().isEmpty()) {
             addEmptyLine(preface, 1);
-            createTable(preface, participantsNoFranchise);
+            createTable(preface, emailInfo.getParticipantsNoFranchise());
         } else {
             preface.add(new Paragraph("Ei osallistujia", bodyTextItalic));
         }
 
         document.add(preface);
-    }
-
-    private static void parseParticipants(List<Participant> allParticipants,
-                                          List<Participant> participantsFranchise,
-                                          List<Participant> participantsNoFranchise) {
-        for (Participant participant : allParticipants) {
-            if (participant.isFranchise()) {
-                participantsFranchise.add(participant);
-            }
-            else {
-                participantsNoFranchise.add(participant);
-            }
-        }
     }
 
     private static void createTable(Paragraph subCatPart, List<Participant> participants)
@@ -124,9 +113,9 @@ public class ParticipantToPdfExporter {
 
         table.setHeaderRows(1);
 
-        int count = 0;
+        int count = participants.size() + 1;
         for (Participant participant : participants) {
-            ++count;
+            --count;
             table.addCell(createCell(String.valueOf(count), false));
             table.addCell(createCell(participant.getParticipateDate().toString(DATE_FORMAT), false));
             table.addCell(createCell(participant.getName(), false));
