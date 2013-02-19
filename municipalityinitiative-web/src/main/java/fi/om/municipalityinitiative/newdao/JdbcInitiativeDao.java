@@ -51,12 +51,12 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .leftJoin(municipalityInitiative.municipalityInitiativeAuthorFk, QParticipant.participant)
                 .orderBy(municipalityInitiative.id.desc());
 
-        generateWhere(query, search);
-
-        searchParameters(query, search);
+        filterByTitle(query, search);
+        filterByMunicipality(query, search);
+        filterByState(query, search);
+        restrictResults(query, search);
 
         List<InitiativeListInfo> list = query.list(initiativeListInfoMapping);
-
 
         // TODO: de-normalize count to own column
         for (InitiativeListInfo initiativeListInfo : list) {
@@ -70,7 +70,19 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     }
 
-    private static void generateWhere(PostgresQuery query, InitiativeSearch search) {
+    private static void filterByTitle(PostgresQuery query, InitiativeSearch search) {
+        if (search.getSearch() != null) {
+            query.where(toLikePredicate(municipalityInitiative.name, search.getSearch()));
+        }
+    }
+
+    private static void filterByMunicipality(PostgresQuery query, InitiativeSearch search) {
+        if (search.getMunicipality() != null) {
+            query.where(municipalityInitiative.municipalityId.eq(search.getMunicipality()));
+        }
+    }
+
+    private static void filterByState(PostgresQuery query, InitiativeSearch search) {
         switch (search.getShow()) {
             case sent:
                 query.where(QMunicipalityInitiative.municipalityInitiative.sent.isNotNull());
@@ -86,16 +98,15 @@ public class JdbcInitiativeDao implements InitiativeDao {
         }
     }
 
-    private void searchParameters(PostgresQuery query, InitiativeSearch search) {
-        if (search.getMunicipality() != null) {
-            query.where(municipalityInitiative.municipalityId.eq(search.getMunicipality()));
-        }
-        if (search.getSearch() != null) {
-            query.where(toLikePredicate(municipalityInitiative.name, search.getSearch()));
+    private static void restrictResults(PostgresQuery query, InitiativeSearch search) {
+        query.limit(search.getLimit());
+        if (search.getOffset() != null) {
+            query.offset(search.getOffset());
         }
     }
 
-    private Predicate toLikePredicate(StringPath name, String search) {
+
+    private static Predicate toLikePredicate(StringPath name, String search) {
         return name.toLowerCase().like(toLikePattern(search).toLowerCase());
     }
 

@@ -59,6 +59,30 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
+    public void find_with_limit() {
+        testHelper.createTestInitiative(testMunicipality.getId(), "First");
+        testHelper.createTestInitiative(testMunicipality.getId(), "Second");
+
+        InitiativeSearch search = new InitiativeSearch().setShow(InitiativeSearch.Show.all);
+
+        assertThat(initiativeDao.find(search.setLimit(2)), hasSize(2));
+        assertThat(initiativeDao.find(search.setLimit(1)), hasSize(1));
+    }
+
+    @Test
+    public void find_with_offset() {
+        testHelper.createTestInitiative(testMunicipality.getId(), "First");
+        testHelper.createTestInitiative(testMunicipality.getId(), "Second");
+
+        InitiativeSearch search = new InitiativeSearch().setShow(InitiativeSearch.Show.all);
+        assertThat(initiativeDao.find(search), hasSize(2)); // Precondition
+
+        assertThat(initiativeDao.find(search.setOffset(1)), hasSize(1));
+        assertThat(initiativeDao.find(search.setOffset(2)), hasSize(0));
+
+    }
+
+    @Test
     public void find_returns_in_correct_order() {
         Long first = testHelper.createTestInitiative(testMunicipality.getId(), "First");
         Long second = testHelper.createTestInitiative(testMunicipality.getId(), "Second");
