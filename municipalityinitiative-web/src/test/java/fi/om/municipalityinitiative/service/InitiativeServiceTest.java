@@ -108,7 +108,7 @@ public class InitiativeServiceTest {
         createDto.setShowName(true);
         createDto.setContactInfo(new ContactInfo());
         createDto.getContactInfo().setAddress("contact address");
-        createDto.getContactInfo().setEmail("contact@email.com");
+        createDto.getContactInfo().setEmail("contact@example.com");
         createDto.getContactInfo().setName("contact name");
         createDto.getContactInfo().setPhone("123456789");
         return createDto;

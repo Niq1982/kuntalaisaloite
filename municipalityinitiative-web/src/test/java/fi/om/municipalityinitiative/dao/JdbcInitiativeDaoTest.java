@@ -190,7 +190,7 @@ public class JdbcInitiativeDaoTest {
         ContactInfo original = new ContactInfo();
         original.setAddress("new address");
         original.setPhone("new phone");
-        original.setEmail("new email");
+        original.setEmail("email@example.com");
         original.setName("new name");
         initiativeDao.markAsSendedAndUpdateContactInfo(initiativeId, original);
 

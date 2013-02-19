@@ -137,7 +137,7 @@ public class InitiativeUICreateDtoTest {
         dto.setName("Some initiative name");
         dto.setProposal("Some initiative content");
         dto.setContactInfo(new ContactInfo());
-        dto.getContactInfo().setEmail("some@email.com");
+        dto.getContactInfo().setEmail("some@example.com");
         dto.getContactInfo().setName("Some contact name");
         return dto;
     }

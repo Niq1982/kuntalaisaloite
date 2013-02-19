@@ -61,6 +61,6 @@ public class JdbcMunicipalityDaoTest {
         Long municipalityId = testHelper.createTestMunicipality("tuusula");
 
         String email = municipalityDao.getMunicipalityEmail(municipalityId);
-        assertThat(email, is("aloite@tuusula"));
+        assertThat(email, is("tuusula@example.com"));
     }
 }
