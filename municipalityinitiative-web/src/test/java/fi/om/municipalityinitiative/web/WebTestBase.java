@@ -203,26 +203,26 @@ public abstract class WebTestBase {
     }
 
     protected void inputText(String fieldName, String text) {
-        waitUntilEnabled(By.name(fieldName)).sendKeys(text);
+        findElementWhenClickable(By.name(fieldName)).sendKeys(text);
     }
 
     protected void inputTextByCSS(String css, String text) {
-        waitUntilEnabled(By.cssSelector(css)).sendKeys(text);
+        findElementWhenClickable(By.cssSelector(css)).sendKeys(text);
     }
 
     protected void clickByName(String name) {
-        waitUntilEnabled(By.name(name)).click();
+        findElementWhenClickable(By.name(name)).click();
     }
 
     protected void clickById(String id) {
-        waitUntilEnabled(By.id(id)).click();
+        findElementWhenClickable(By.id(id)).click();
     }
 
     protected void clickLinkContaining(String text) {
-        waitUntilEnabled(By.partialLinkText(text)).click();
+        findElementWhenClickable(By.partialLinkText(text)).click();
     }
 
-    protected WebElement waitUntilEnabled(By by) {
+    protected WebElement findElementWhenClickable(By by) {
         WebDriverWait wait = new WebDriverWait(driver, 10);
         return wait.until(ExpectedConditions.elementToBeClickable(by));
     }
@@ -238,28 +238,5 @@ public abstract class WebTestBase {
         }
         throw new NullPointerException("Label not found with text: " + linkText);
     }
-
-    protected String getPageUrl() {
-        return driver.getCurrentUrl();
-    }
-
-    protected void assertValue(String fieldName, String value) {
-//        WebDriverWait wait = new WebDriverWait(driver,10);
-//        wait.until(pageContainsElement(By.name(fieldName)));
-
-        assertEquals(value, driver.findElement(By.name(fieldName)).getAttribute("value"));
-    }
-
-    protected void wait100() {
-        waitms(100);
-    }
-    protected synchronized void waitms(int timeout) {
-        try {
-            wait(timeout);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 
 }

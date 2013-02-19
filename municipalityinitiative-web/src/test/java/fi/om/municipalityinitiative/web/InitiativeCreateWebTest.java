@@ -87,10 +87,8 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
         clickLinkContaining(getMessage(MSG_BTN_CONTINUE));
 
+        assertThat(findElementWhenClickable(By.xpath("//div[@id='step-3']")).isDisplayed(), is(true));
 
-        assertThat(waitUntilEnabled(By.xpath("//div[@id='step-3']")).isDisplayed(), is(true));
-//        assertThat(driver.findElement(By.xpath("//div[@id='step-3']")).isDisplayed(), is(true));
-        
         System.out.println("--- add_initiative_content OK");
     }
     
@@ -105,9 +103,8 @@ public class InitiativeCreateWebTest extends WebTestBase {
         clickLinkContaining(getMessage(MSG_BTN_CONTINUE));
 
 
-        assertThat(waitUntilEnabled(By.xpath("//div[@id='step-4']")).isDisplayed(), is(true));
-//        assertThat(driver.findElement(By.xpath("//div[@id='step-4']")).isDisplayed(), is(true));
-        
+        assertThat(findElementWhenClickable(By.xpath("//div[@id='step-4']")).isDisplayed(), is(true));
+
         System.out.println("--- add_contact_info OK");
     }
     
