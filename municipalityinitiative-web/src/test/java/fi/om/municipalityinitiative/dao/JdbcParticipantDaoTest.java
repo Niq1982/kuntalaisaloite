@@ -94,8 +94,8 @@ public class JdbcParticipantDaoTest {
         List<Participant> participants = participantDao.findPublicParticipants(initiativeId);
 
         assertThat(participants, hasSize(2));
-        assertThat(participants.get(0).getName(), is("no right yes public"));
-        assertThat(participants.get(1).getName(), is("yes right yes public"));
+        assertThat(participants.get(0).getName(), is("yes right yes public"));
+        assertThat(participants.get(1).getName(), is("no right yes public"));
     }
 
     @Test
@@ -124,7 +124,7 @@ public class JdbcParticipantDaoTest {
 
         List<Participant> participants = participantDao.findAllParticipants(testInitiativeId);
 
-        Participant participant = participants.get(1); // Skip first because the author is the first.
+        Participant participant = participants.get(0);
         assertThat(participant.getHomeMunicipality(), is("Some other Municipality"));
         assertThat(participant.isFranchise(), is(true));
     }
@@ -137,7 +137,7 @@ public class JdbcParticipantDaoTest {
 
         List<Participant> participants = participantDao.findPublicParticipants(testInitiativeId);
 
-        Participant participant = participants.get(1); // Skip first because the author is the first.
+        Participant participant = participants.get(0);
         assertThat(participant.getHomeMunicipality(), is("Some other Municipality"));
         assertThat(participant.isFranchise(), is(true));
     }
@@ -145,7 +145,7 @@ public class JdbcParticipantDaoTest {
     @Test
     public void getAllParticipants_adds_participateTime_to_data() {
         List<Participant> participants = participantDao.findAllParticipants(testInitiativeId);
-        Participant participant = participants.get(0); // Skip first because the author is the first.
+        Participant participant = participants.get(0);
         assertThat(participant.getParticipateDate(), is(notNullValue()));
     }
 

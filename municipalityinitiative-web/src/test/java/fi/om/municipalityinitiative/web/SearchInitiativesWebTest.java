@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.web;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -18,7 +17,6 @@ public class SearchInitiativesWebTest extends WebTestBase {
     }
 
     @Test
-    @Ignore("Wont work due usage of chosen.js. Fix or implement another test which verifies that the list works.")
     public void municipalities_are_listed() {
         testHelper.createTestMunicipality("Tuusula");
         open(urls.search());

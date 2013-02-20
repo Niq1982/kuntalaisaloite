@@ -1,52 +1,31 @@
 
 syntax: regexp
 ^municipalityinitiative-web/target$
-syntax: regexp
 ^municipalityinitiative-web/\.classpath$
-syntax: regexp
 ^municipalityinitiative-web/\.project$
-syntax: regexp
 ^municipalityinitiative-web/\.pom\.xml\.swp$
-syntax: regexp
 ^municipalityinitiative-web/\.settings$
-syntax: regexp
 ^municipalityinitiative-web/scrap\.jpage$
-syntax: regexp
 ^municipalityinitiative-web/src/test/resources/app\.properties$
+^municipalityinitiative-web/src/test/resources/bonecp-config\.xml$
 
 syntax: glob
 municipalityinitiative-loadtests/results/*.jtl
 municipalityinitiative-loadtests/*.log
 municipalityinitiative-loadtests/*.pyc
-syntax: regexp
-^municipalityinitiative-web/src/test/resources/bonecp-config\.xml$
 
-syntax:regexp
-.iml$
-syntax:regexp
-.DS_Store$
-syntax:regexp
-.class$
-syntax:regexp
-.orig
 syntax: glob
+**.DS_Store
+**.orig
+**.iml
 .idea/*
+municipalityinitiative-web/.idea/*
 
-syntax:regexp
-^(.+)\.iml$
-syntax: glob
-.idea/*
 syntax: regexp
 ^municipalityinitiative-web/src/main/webapp/css/aloitepalvelu-ie\.css$
-syntax: regexp
 ^municipalityinitiative-web/src/main/webapp/css/aloitepalvelu\.css$
-syntax: regexp
 ^municipalityinitiative-web/src/main/webapp/css/aloitepalvelu-new\.css$
-syntax: regexp
 ^municipalityinitiative-web/src/main/webapp/css/style\.min\.css$
-syntax: regexp
 ^municipalityinitiative-web/src/main/webapp/js/script\.min\.js$
-syntax: regexp
 ^municipalityinitiative-web/src/main/webapp/css/style\.css$
-syntax: regexp
 ^municipalityinitiative-web/src/main/webapp/js/script\.js$

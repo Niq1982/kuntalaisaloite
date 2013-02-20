@@ -41,7 +41,7 @@ public class ContactInfoTest {
     public void validate_invalid_email() {
         ContactInfo contactInfo = new ContactInfo();
         contactInfo.setName("name");
-        contactInfo.setEmail("wrong_email");
+        contactInfo.setEmail("invalid_email");
 
         Set<ConstraintViolation<ContactInfo>> validationErrors = validator.validate(contactInfo);
 

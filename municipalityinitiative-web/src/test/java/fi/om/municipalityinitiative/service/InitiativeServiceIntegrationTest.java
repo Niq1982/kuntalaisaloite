@@ -194,7 +194,7 @@ public class InitiativeServiceIntegrationTest {
         createDto.getContactInfo().setAddress("contact address " + randomString());
         createDto.getContactInfo().setPhone("contact phone " + randomString());
         createDto.getContactInfo().setName("contact name " + randomString());
-        createDto.getContactInfo().setEmail("contact email " + randomString());
+        createDto.getContactInfo().setEmail(randomString()+"@example.com");
 
         ReflectionTestUtils.assertNoNullFields(createDto);
         return createDto;

@@ -1,16 +1,6 @@
 package fi.om.municipalityinitiative.web;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Ignore;
 import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import com.gargoylesoftware.htmlunit.html.HtmlElement;
 
 public class InitiativeParticipateWebTest extends WebTestBase {
     
@@ -50,26 +40,19 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         Long initiativeId = testHelper.createTestInitiative(municipality1Id, "Testi aloite", true, true);
         
         open(urls.view(initiativeId));
-        
-        wait100();
-        
+
         clickLinkContaining(getMessage(MSG_BTN_PARTICIPATE));
-        
-        wait100();
-        
+
         inputText("participantName", PARTICIPANT_NAME);
         clickByName("showName"); // TODO: Use text instead
         
         /* TODO: Select another municipality
-        waitms(500);;
         clickLinkContaining(MUNICIPALITY_1);
-        waitms(500);
         getElemContaining(MUNICIPALITY_2, "li").click(); */
 
         
         // TODO: Other options: franchise and municipality membership
-        wait100();
-        
+
         getElemContaining(getMessage(RADIO_FRANCHISE_TRUE), "label").click();
         
         getElemContaining(getMessage(MSG_BTN_SAVE), "button").click();
