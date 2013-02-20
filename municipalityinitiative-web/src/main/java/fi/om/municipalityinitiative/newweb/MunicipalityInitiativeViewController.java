@@ -1,12 +1,12 @@
 package fi.om.municipalityinitiative.newweb;
 
-import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.service.InitiativeService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.service.ParticipantService;
 import fi.om.municipalityinitiative.service.ValidationService;
+import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.BaseController;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.SearchParameterGenerator;
@@ -61,7 +61,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
         model.addAttribute("currentSearch", search);
         model.addAttribute("searchParameters", new SearchParameterGenerator(search));
         model.addAttribute("currentMunicipality", solveMunicipalityFromListById(municipalities, search.getMunicipality()));
-        model.addAttribute("initiativeCounts", new InitiativeCounts());
+        model.addAttribute("initiativeCounts", initiativeService.getInitiativeCounts(Maybe.fromNullable(search.getMunicipality())));
         return SEARCH_VIEW;
     }
 

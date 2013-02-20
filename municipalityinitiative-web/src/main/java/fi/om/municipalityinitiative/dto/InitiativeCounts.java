@@ -1,18 +1,18 @@
 package fi.om.municipalityinitiative.dto;
 
 public class InitiativeCounts {
-    public int collecting = 0;
-    public int sent = 0;
+    public long collecting = 0;
+    public long sent = 0;
 
-    public int getCollecting() {
+    public long getCollecting() {
         return collecting;
     }
 
-    public int getSent() {
+    public long getSent() {
         return sent;
     }
 
-    public int getAll() {
+    public long getAll() {
         return collecting+sent;
     }
 }

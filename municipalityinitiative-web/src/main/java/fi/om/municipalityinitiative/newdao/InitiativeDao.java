@@ -1,10 +1,12 @@
 package fi.om.municipalityinitiative.newdao;
 
+import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.service.InitiativeCreateDto;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
+import fi.om.municipalityinitiative.util.Maybe;
 
 import java.util.List;
 
@@ -21,4 +23,6 @@ public interface InitiativeDao {
     void markAsSendedAndUpdateContactInfo(Long initiativeId, ContactInfo contactInfo);
 
     ContactInfo getContactInfo(Long initiativeId);
+
+    InitiativeCounts getInitiativeCounts(Maybe<Long> municipality);
 }

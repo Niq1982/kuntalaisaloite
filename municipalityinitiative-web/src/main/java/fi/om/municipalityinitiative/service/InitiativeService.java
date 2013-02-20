@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.service;
 
+import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.exceptions.NotCollectableException;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
@@ -146,5 +147,9 @@ public class InitiativeService {
         SendToMunicipalityDto sendToMunicipalityDto = new SendToMunicipalityDto();
         sendToMunicipalityDto.setContactInfo(initiativeDao.getContactInfo(initiativeId));
         return sendToMunicipalityDto;
+    }
+
+    public InitiativeCounts getInitiativeCounts(Maybe<Long> municipality) {
+        return initiativeDao.getInitiativeCounts(municipality);
     }
 }

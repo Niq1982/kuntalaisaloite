@@ -5,12 +5,17 @@ import com.mysema.query.Tuple;
 import com.mysema.query.sql.dml.SQLInsertClause;
 import com.mysema.query.sql.postgres.PostgresQuery;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
+import com.mysema.query.support.Expressions;
+import com.mysema.query.types.ConstantImpl;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
 import com.mysema.query.types.Predicate;
+import com.mysema.query.types.expr.CaseBuilder;
 import com.mysema.query.types.expr.DateTimeExpression;
+import com.mysema.query.types.expr.SimpleExpression;
 import com.mysema.query.types.path.StringPath;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
+import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.exceptions.NotCollectableException;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.service.InitiativeCreateDto;
@@ -18,9 +23,9 @@ import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.sql.QMunicipality;
-import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.sql.QParticipant;
 import fi.om.municipalityinitiative.util.Maybe;
+import fi.om.municipalityinitiative.util.MaybeHoldingHashMap;
 import org.joda.time.DateTime;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,27 +78,23 @@ public class JdbcInitiativeDao implements InitiativeDao {
     private static void orderBy(PostgresQuery query, InitiativeSearch.OrderBy orderBy) {
         switch (orderBy) {
             case latestSent:
-                query.orderBy(QMunicipalityInitiative.municipalityInitiative.sent.desc(),
-                        QMunicipalityInitiative.municipalityInitiative.id.desc());
+                query.orderBy(municipalityInitiative.sent.desc(), municipalityInitiative.id.desc());
                 break;
             case oldestSent:
-                query.orderBy(QMunicipalityInitiative.municipalityInitiative.sent.asc(),
-                        QMunicipalityInitiative.municipalityInitiative.id.asc());
+                query.orderBy(municipalityInitiative.sent.asc(), municipalityInitiative.id.asc());
                 break;
             case latest:
-                query.orderBy(QMunicipalityInitiative.municipalityInitiative.modified.desc(),
-                        QMunicipalityInitiative.municipalityInitiative.id.desc());
+                query.orderBy(municipalityInitiative.modified.desc(), municipalityInitiative.id.desc());
                 break;
             case oldest:
-                query.orderBy(QMunicipalityInitiative.municipalityInitiative.modified.asc(),
-                        QMunicipalityInitiative.municipalityInitiative.id.asc());
+                query.orderBy(municipalityInitiative.modified.asc(), municipalityInitiative.id.asc());
                 break;
             case id:
-                query.orderBy(QMunicipalityInitiative.municipalityInitiative.id.desc());
+                query.orderBy(municipalityInitiative.id.desc());
                 break;
             case mostParticipants:
             case leastParticipants:
-                query.orderBy(QMunicipalityInitiative.municipalityInitiative.id.desc()); // TODO: Write test and implement
+                query.orderBy(municipalityInitiative.id.desc()); // TODO: Write test and implement
                 break;
             default:
                 throw new RuntimeException("Order by not implemented:" + orderBy);
@@ -115,11 +116,11 @@ public class JdbcInitiativeDao implements InitiativeDao {
     private static void filterByState(PostgresQuery query, InitiativeSearch search) {
         switch (search.getShow()) {
             case sent:
-                query.where(QMunicipalityInitiative.municipalityInitiative.sent.isNotNull());
+                query.where(municipalityInitiative.sent.isNotNull());
                 break;
             case collecting:
-                query.where(QMunicipalityInitiative.municipalityInitiative.sent.isNull())
-                     .where(QMunicipalityInitiative.municipalityInitiative.managementHash.isNotNull());
+                query.where(municipalityInitiative.sent.isNull())
+                     .where(municipalityInitiative.managementHash.isNotNull());
                 break;
             case all:
                 break;
@@ -225,6 +226,31 @@ public class JdbcInitiativeDao implements InitiativeDao {
         return queryFactory.from(municipalityInitiative)
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .uniqueResult(contactInfoMapping);
+    }
+
+    @Override
+    public InitiativeCounts getInitiativeCounts(Maybe<Long> municipality) {
+        Expression<String> caseBuilder = new CaseBuilder()
+                .when(municipalityInitiative.sent.isNull().and(municipalityInitiative.managementHash.isNotNull()))
+                    .then(new ConstantImpl<String>(InitiativeSearch.Show.collecting.name()))
+                .otherwise(new ConstantImpl<String>(InitiativeSearch.Show.sent.name()));
+
+        SimpleExpression<String> simpleExpression = Expressions.as(caseBuilder, "showCategory");
+
+        PostgresQuery from = queryFactory.from(municipalityInitiative);
+
+        if (municipality.isPresent()) {
+            from.where(municipalityInitiative.municipalityId.eq(municipality.get()));
+        }
+
+        MaybeHoldingHashMap<String, Long> map = new MaybeHoldingHashMap<>(from
+                .groupBy(simpleExpression)
+                .map(simpleExpression, municipalityInitiative.count()));
+
+        InitiativeCounts counts = new InitiativeCounts();
+        counts.sent = map.get(InitiativeSearch.Show.sent.name()).or(0L);
+        counts.collecting = map.get(InitiativeSearch.Show.collecting.name()).or(0L);
+        return counts;
     }
 
     // Mappings:

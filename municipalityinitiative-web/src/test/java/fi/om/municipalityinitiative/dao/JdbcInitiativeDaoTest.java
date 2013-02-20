@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
+import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.exceptions.NotCollectableException;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
@@ -9,6 +10,7 @@ import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.ui.MunicipalityInfo;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
+import fi.om.municipalityinitiative.util.Maybe;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.joda.time.DateTime;
@@ -285,14 +287,6 @@ public class JdbcInitiativeDaoTest {
 
     }
 
-    private static ContactInfo contactInfo() {
-        return new ContactInfo();
-    }
-
-    private static InitiativeSearch initiativeSearch() {
-        return new InitiativeSearch().setShow(InitiativeSearch.Show.all);
-    }
-
     @Test
     public void find_contact_info() {
         Long initiativeId = testHelper.createTestInitiative(testMunicipality.getId());
@@ -302,6 +296,44 @@ public class JdbcInitiativeDaoTest {
         assertThat(contactInfo.getAddress(), is("contact_address"));
         assertThat(contactInfo.getEmail(), is("contact_email@xxx.yyy"));
         assertThat(contactInfo.getPhone(), is("contact_phone"));
+    }
+
+    @Test
+    public void counts_initiatives_by_state_no_municipalityId_given() {
+        testHelper.createTestInitiative(testMunicipality.getId(), "title", true, true);
+        testHelper.createTestInitiative(testMunicipality.getId(), "title", true, true);
+        testHelper.createTestInitiative(testMunicipality.getId(), "title", false, false);
+
+        InitiativeCounts initiativeCounts = initiativeDao.getInitiativeCounts(Maybe.<Long>absent());
+
+        assertThat(initiativeCounts.getCollecting(), Matchers.is(2L));
+        assertThat(initiativeCounts.getSent(), Matchers.is(1L));
+        assertThat(initiativeCounts.getAll(), Matchers.is(3L));
+    }
+
+    @Test
+    public void counts_initiatives_by_state_if_municipalityId_is_given() {
+
+        Long otherMunicipality = testHelper.createTestMunicipality("OtherMunicipality");
+
+        testHelper.createTestInitiative(otherMunicipality, "title", true, true);
+        testHelper.createTestInitiative(otherMunicipality, "title", true, true);
+        testHelper.createTestInitiative(testMunicipality.getId(), "title", false, false);
+
+        InitiativeCounts initiativeCounts = initiativeDao.getInitiativeCounts(Maybe.of(testMunicipality.getId()));
+
+        assertThat(initiativeCounts.getCollecting(), Matchers.is(0L));
+        assertThat(initiativeCounts.getSent(), Matchers.is(1L));
+        assertThat(initiativeCounts.getAll(), Matchers.is(1L));
+
+    }
+
+    private static ContactInfo contactInfo() {
+        return new ContactInfo();
+    }
+
+    private static InitiativeSearch initiativeSearch() {
+        return new InitiativeSearch().setShow(InitiativeSearch.Show.all);
     }
 
 }
