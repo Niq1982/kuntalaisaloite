@@ -52,11 +52,11 @@ public class SearchParameterGenerator {
                 .append(fieldValue.toString());
     }
 
-    public String getWithLimit(Integer limit) {
+    public String getWithLimit(int limit) {
         return generateParameters(original.copy().setLimit(limit));
     }
 
-    public String getWithOffset(Integer offset) {
+    public String getWithOffset(int offset) {
         return generateParameters(original.copy().setOffset(offset));
     }
 

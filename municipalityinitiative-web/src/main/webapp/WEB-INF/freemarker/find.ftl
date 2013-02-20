@@ -101,16 +101,6 @@
 
 </div>
 
-    <#--
-     * TODO: Search pagination - also in the bottom of rearch results
-    -->
-    <#--
-    <#if searchMode != "own">
-        <@p.pagination currentSearch.limit!500 currentSearch.offset!0 "top" />
-    </#if>
-    -->
-
-
 <div class="search-terms">
     <#if searchMunicipality != "">
         <h2><@u.message "searchResults.initiativesInMunicipality" />: ${currentMunicipality!""}</h2>
@@ -122,6 +112,8 @@
     </#if>
     -->
 </div>
+
+<@p.pagination currentSearch.limit!500 currentSearch.offset!0 "top" />
 
 <div class="search-results">
 <#if initiatives?? && (initiatives?size > 0)>
@@ -165,6 +157,8 @@
 </#if>
 
 </div>
+
+<@p.pagination currentSearch.limit!500 currentSearch.offset!0 "bottom" />
 
 
 </@l.main>

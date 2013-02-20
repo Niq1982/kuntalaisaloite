@@ -44,7 +44,7 @@ public class InitiativeSearch {
         return this;
     }
 
-    public int getLimit() {
+    public Integer getLimit() {
         if (limit == null)
             return Urls.DEFAULT_INITIATIVE_SEARCH_LIMIT;
         else
