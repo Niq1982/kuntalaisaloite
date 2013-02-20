@@ -55,7 +55,7 @@ public class JdbcInitiativeDaoTest {
         testHelper.createTestInitiative(testMunicipality.getId(), "First");
         testHelper.createTestInitiative(testMunicipality.getId(), "Second");
 
-        List<InitiativeListInfo> result = initiativeDao.find(new InitiativeSearch());
+        List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch());
         assertThat(result.size(), is(2));
     }
 
@@ -64,7 +64,7 @@ public class JdbcInitiativeDaoTest {
         testHelper.createTestInitiative(testMunicipality.getId(), "First");
         testHelper.createTestInitiative(testMunicipality.getId(), "Second");
 
-        InitiativeSearch search = new InitiativeSearch().setShow(InitiativeSearch.Show.all);
+        InitiativeSearch search = initiativeSearch().setShow(InitiativeSearch.Show.all);
 
         assertThat(initiativeDao.find(search.setLimit(2)), hasSize(2));
         assertThat(initiativeDao.find(search.setLimit(1)), hasSize(1));
@@ -75,7 +75,7 @@ public class JdbcInitiativeDaoTest {
         testHelper.createTestInitiative(testMunicipality.getId(), "First");
         testHelper.createTestInitiative(testMunicipality.getId(), "Second");
 
-        InitiativeSearch search = new InitiativeSearch().setShow(InitiativeSearch.Show.all);
+        InitiativeSearch search = initiativeSearch().setShow(InitiativeSearch.Show.all);
         precondition(initiativeDao.find(search), hasSize(2));
 
         assertThat(initiativeDao.find(search.setOffset(1)), hasSize(1));
@@ -92,7 +92,7 @@ public class JdbcInitiativeDaoTest {
         testHelper.updateField(oldestId, QMunicipalityInitiative.municipalityInitiative.sent, oldestSentTime);
         testHelper.updateField(latestId, QMunicipalityInitiative.municipalityInitiative.sent, latestSentTime);
 
-        InitiativeSearch initiativeSearch = new InitiativeSearch().setShow(InitiativeSearch.Show.all);
+        InitiativeSearch initiativeSearch = initiativeSearch().setShow(InitiativeSearch.Show.all);
 
         List<InitiativeListInfo> oldestSentFirst = initiativeDao.find(initiativeSearch.setOrderBy(InitiativeSearch.OrderBy.oldestSent));
         precondition(oldestSentFirst, hasSize(2)); // Precondition
@@ -117,7 +117,7 @@ public class JdbcInitiativeDaoTest {
         Long first = testHelper.createTestInitiative(testMunicipality.getId(), "First");
         Long second = testHelper.createTestInitiative(testMunicipality.getId(), "Second");
 
-        List<InitiativeListInfo> result = initiativeDao.find(new InitiativeSearch());
+        List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch());
         assertThat(second, Matchers.is(result.get(0).getId()));
         assertThat(first, Matchers.is(result.get(1).getId()));
     }
@@ -130,7 +130,7 @@ public class JdbcInitiativeDaoTest {
         Long shouldBeFound = testHelper.createTestInitiative(municipalityId);
         Long shouldNotBeFound = testHelper.createTestInitiative(testMunicipality.getId());
 
-        InitiativeSearch search = new InitiativeSearch();
+        InitiativeSearch search = initiativeSearch();
         search.setMunicipality(municipalityId);
 
         List<InitiativeListInfo> result = initiativeDao.find(search);
@@ -142,7 +142,7 @@ public class JdbcInitiativeDaoTest {
     public void sets_collectable_to_listView_if_collectable() {
         testHelper.createTestInitiative(testMunicipality.getId(), "Collectable", true, true);
 
-        List<InitiativeListInfo> all = initiativeDao.find(new InitiativeSearch().setShow(InitiativeSearch.Show.all));
+        List<InitiativeListInfo> all = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.all));
         assertThat(all, hasSize(1));
         assertThat(all.get(0).isCollectable(), is(true));
     }
@@ -151,7 +151,7 @@ public class JdbcInitiativeDaoTest {
     public void does_not_set_collectable_to_listView_if_not_collectable() {
 
         testHelper.createTestInitiative(testMunicipality.getId(), "Not collectable", false, false);
-        List<InitiativeListInfo> all = initiativeDao.find(new InitiativeSearch());
+        List<InitiativeListInfo> all = initiativeDao.find(initiativeSearch());
         assertThat(all, hasSize(1));
         assertThat(all.get(0).isCollectable(), is(false));
     }
@@ -159,7 +159,7 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void counts_participants_to_listView() {
         testHelper.createTestInitiative(testMunicipality.getId(), "Not collectable", false, false);
-        List<InitiativeListInfo> all = initiativeDao.find(new InitiativeSearch());
+        List<InitiativeListInfo> all = initiativeDao.find(initiativeSearch());
         assertThat(all, hasSize(1));
         assertThat(all.get(0).getParticipantCount(), is(1L));
     }
@@ -169,7 +169,7 @@ public class JdbcInitiativeDaoTest {
 
         testHelper.createTestInitiative(testMunicipality.getId(), "Not collectable", false, false);
 
-        List<InitiativeListInfo> all = initiativeDao.find(new InitiativeSearch());
+        List<InitiativeListInfo> all = initiativeDao.find(initiativeSearch());
         assertThat(all, hasSize(1));
         assertThat(all.get(0).getSentTime().isPresent(), is(true));
     }
@@ -179,7 +179,7 @@ public class JdbcInitiativeDaoTest {
 
         testHelper.createTestInitiative(testMunicipality.getId(), "Collectable", true, true);
 
-        List<InitiativeListInfo> all = initiativeDao.find(new InitiativeSearch().setShow(InitiativeSearch.Show.all));
+        List<InitiativeListInfo> all = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.all));
         assertThat(all, hasSize(1));
         assertThat(all.get(0).getSentTime().isPresent(), is(false));
     }
@@ -190,7 +190,7 @@ public class JdbcInitiativeDaoTest {
         testHelper.createTestInitiative(testMunicipality.getId(), "name that should not be found");
         Long shouldBeFound = testHelper.createTestInitiative(testMunicipality.getId(), "name that should be found ääöö");
 
-        InitiativeSearch search = new InitiativeSearch();
+        InitiativeSearch search = initiativeSearch();
         search.setSearch("SHOULD be found ääöö");
 
         List<InitiativeListInfo> result = initiativeDao.find(search);
@@ -204,7 +204,7 @@ public class JdbcInitiativeDaoTest {
         Long collectableSent = testHelper.createTestInitiative(testMunicipality.getId(), "Title", true, true);
         testHelper.updateField(collectableSent, QMunicipalityInitiative.municipalityInitiative.sent, new DateTime());
 
-        List<InitiativeListInfo> result = initiativeDao.find(new InitiativeSearch().setShow(InitiativeSearch.Show.sent));
+        List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.sent));
         assertThat(result, hasSize(1));
         assertThat(result.get(0).getId(), Matchers.is(collectableSent));
     }
@@ -212,7 +212,7 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void finds_by_sent_does_not_find_collectable_if_not_sent() {
         testHelper.createTestInitiative(testMunicipality.getId(), "Title", true, true);
-        List<InitiativeListInfo> result = initiativeDao.find(new InitiativeSearch().setShow(InitiativeSearch.Show.sent));
+        List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.sent));
         assertThat(result, hasSize(0));
     }
 
@@ -220,7 +220,7 @@ public class JdbcInitiativeDaoTest {
     public void finds_by_sent_finds_not_collectable() {
         Long notCollectable = testHelper.createTestInitiative(testMunicipality.getId(), "Title", false, false);
 
-        List<InitiativeListInfo> result = initiativeDao.find(new InitiativeSearch().setShow(InitiativeSearch.Show.sent));
+        List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.sent));
 
         assertThat(result, hasSize(1));
         assertThat(result.get(0).getId(), Matchers.is(notCollectable));
@@ -287,6 +287,10 @@ public class JdbcInitiativeDaoTest {
 
     private static ContactInfo contactInfo() {
         return new ContactInfo();
+    }
+
+    private static InitiativeSearch initiativeSearch() {
+        return new InitiativeSearch().setShow(InitiativeSearch.Show.all);
     }
 
     @Test
