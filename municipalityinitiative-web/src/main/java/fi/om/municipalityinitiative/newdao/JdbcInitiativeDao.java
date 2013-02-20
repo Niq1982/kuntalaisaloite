@@ -48,13 +48,13 @@ public class JdbcInitiativeDao implements InitiativeDao {
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
                 .leftJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
-                .leftJoin(municipalityInitiative.municipalityInitiativeAuthorFk, QParticipant.participant)
-                .orderBy(municipalityInitiative.id.desc());
+                .leftJoin(municipalityInitiative.municipalityInitiativeAuthorFk, QParticipant.participant);
 
-        filterByTitle(query, search);
-        filterByMunicipality(query, search);
+        filterByTitle(query, search.getSearch());
+        filterByMunicipality(query, search.getMunicipality());
         filterByState(query, search);
         restrictResults(query, search);
+        orderBy(query, search.getOrderBy());
 
         List<InitiativeListInfo> list = query.list(initiativeListInfoMapping);
 
@@ -62,23 +62,45 @@ public class JdbcInitiativeDao implements InitiativeDao {
         for (InitiativeListInfo initiativeListInfo : list) {
             initiativeListInfo.setParticipantCount(
                     queryFactory.from(QParticipant.participant)
-                    .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeListInfo.getId()))
-                    .count());
+                            .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeListInfo.getId()))
+                            .count());
         }
 
         return list;
 
     }
 
-    private static void filterByTitle(PostgresQuery query, InitiativeSearch search) {
-        if (search.getSearch() != null) {
-            query.where(toLikePredicate(municipalityInitiative.name, search.getSearch()));
+    private static void orderBy(PostgresQuery query, InitiativeSearch.OrderBy orderBy) {
+        switch (orderBy) {
+            case latestSent:
+                query.orderBy(QMunicipalityInitiative.municipalityInitiative.sent.desc(),
+                        QMunicipalityInitiative.municipalityInitiative.id.desc());
+                break;
+            case oldestSent:
+                query.orderBy(QMunicipalityInitiative.municipalityInitiative.sent.asc(),
+                        QMunicipalityInitiative.municipalityInitiative.id.asc());
+                break;
+            case id:
+                query.orderBy(QMunicipalityInitiative.municipalityInitiative.id.desc());
+                break;
+            case mostParticipants:
+            case leastParticipants:
+                query.orderBy(QMunicipalityInitiative.municipalityInitiative.id.desc()); // TODO: Write test and implement
+                break;
+            default:
+                throw new RuntimeException("Order by not implemented:" + orderBy);
         }
     }
 
-    private static void filterByMunicipality(PostgresQuery query, InitiativeSearch search) {
-        if (search.getMunicipality() != null) {
-            query.where(municipalityInitiative.municipalityId.eq(search.getMunicipality()));
+    private static void filterByTitle(PostgresQuery query, String search) {
+        if (search != null) {
+            query.where(toLikePredicate(municipalityInitiative.name, search));
+        }
+    }
+
+    private static void filterByMunicipality(PostgresQuery query, Long municipalityId) {
+        if (municipalityId != null) {
+            query.where(municipalityInitiative.municipalityId.eq(municipalityId));
         }
     }
 

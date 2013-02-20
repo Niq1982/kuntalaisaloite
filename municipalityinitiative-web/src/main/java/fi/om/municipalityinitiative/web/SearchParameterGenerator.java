@@ -72,6 +72,14 @@ public class SearchParameterGenerator {
         return generateParameters(original.copy().setOrderBy(InitiativeSearch.OrderBy.latestSent));
     }
 
+    public String getWithOrderByMostParticipants() {
+        return generateParameters(original.copy().setOrderBy(InitiativeSearch.OrderBy.mostParticipants));
+    }
+
+    public String getWithOrderByLeastParticipants() {
+        return generateParameters(original.copy().setOrderBy(InitiativeSearch.OrderBy.leastParticipants));
+    }
+
     public String getWithStateSent() {
         return generateParameters(new InitiativeSearch()
                 .setShow(InitiativeSearch.Show.sent));

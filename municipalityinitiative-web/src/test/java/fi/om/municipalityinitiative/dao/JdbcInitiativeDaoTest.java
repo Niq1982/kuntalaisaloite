@@ -9,6 +9,7 @@ import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.ui.MunicipalityInfo;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
+import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -75,11 +76,40 @@ public class JdbcInitiativeDaoTest {
         testHelper.createTestInitiative(testMunicipality.getId(), "Second");
 
         InitiativeSearch search = new InitiativeSearch().setShow(InitiativeSearch.Show.all);
-        assertThat(initiativeDao.find(search), hasSize(2)); // Precondition
+        precondition(initiativeDao.find(search), hasSize(2));
 
         assertThat(initiativeDao.find(search.setOffset(1)), hasSize(1));
         assertThat(initiativeDao.find(search.setOffset(2)), hasSize(0));
+    }
 
+    @Test
+    public void find_orders_by_sent() {
+        Long oldestId = testHelper.createTestInitiative(testMunicipality.getId(), "First");
+        Long latestId = testHelper.createTestInitiative(testMunicipality.getId(), "Second");
+
+        DateTime oldestSentTime = new DateTime(2010, 1, 1, 0, 0);
+        DateTime latestSentTime = new DateTime(2020, 1, 1, 0, 0);
+        testHelper.updateField(oldestId, QMunicipalityInitiative.municipalityInitiative.sent, oldestSentTime);
+        testHelper.updateField(latestId, QMunicipalityInitiative.municipalityInitiative.sent, latestSentTime);
+
+        InitiativeSearch initiativeSearch = new InitiativeSearch().setShow(InitiativeSearch.Show.all);
+
+        List<InitiativeListInfo> oldestSentFirst = initiativeDao.find(initiativeSearch.setOrderBy(InitiativeSearch.OrderBy.oldestSent));
+        precondition(oldestSentFirst, hasSize(2)); // Precondition
+        assertThat(oldestSentFirst.get(0).getId(), is(oldestId));
+
+        List<InitiativeListInfo> latestSentFirst = initiativeDao.find(initiativeSearch.setOrderBy(InitiativeSearch.OrderBy.latestSent));
+        precondition(latestSentFirst, hasSize(2)); // Precondition
+        assertThat(latestSentFirst.get(0).getId(), is(latestId));
+    }
+
+    @Test // TODO: Write test and implement after participantcount is denormalized
+    public void find_orders_by_participants() {
+
+    }
+
+    private static <T> void precondition(T actual, Matcher<? super T> matcher) {
+        assertThat("Precondition failed", actual, matcher);
     }
 
     @Test

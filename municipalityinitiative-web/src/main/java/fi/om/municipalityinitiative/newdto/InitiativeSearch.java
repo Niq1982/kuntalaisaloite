@@ -83,6 +83,6 @@ public class InitiativeSearch {
     }
 
     public enum OrderBy {
-        oldestSent, latestSent, id
+        oldestSent, latestSent, id, mostParticipants, leastParticipants
     }
 }

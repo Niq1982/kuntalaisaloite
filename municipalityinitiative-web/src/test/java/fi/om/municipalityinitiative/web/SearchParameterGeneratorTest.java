@@ -59,6 +59,18 @@ public class SearchParameterGeneratorTest {
     }
 
     @Test
+    public void orderBy_leastParticipants() {
+        String parameters = new SearchParameterGenerator(initiativeSearch).getWithOrderByLeastParticipants();
+        assertThat(parameters, is("?offset=5&limit=10&orderBy=leastParticipants&show=sent&municipality=1&search=pattern"));
+    }
+
+    @Test
+    public void orderBy_mostParticipants() {
+        String parameters = new SearchParameterGenerator(initiativeSearch).getWithOrderByMostParticipants();
+        assertThat(parameters, is("?offset=5&limit=10&orderBy=mostParticipants&show=sent&municipality=1&search=pattern"));
+    }
+
+    @Test
     public void get_with_show_only_sent() {
         initiativeSearch.setShow(InitiativeSearch.Show.collecting);
         String parameters = new SearchParameterGenerator(initiativeSearch).getWithStateSent();
