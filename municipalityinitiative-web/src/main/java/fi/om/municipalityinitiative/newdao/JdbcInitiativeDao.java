@@ -80,6 +80,14 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 query.orderBy(QMunicipalityInitiative.municipalityInitiative.sent.asc(),
                         QMunicipalityInitiative.municipalityInitiative.id.asc());
                 break;
+            case latest:
+                query.orderBy(QMunicipalityInitiative.municipalityInitiative.modified.desc(),
+                        QMunicipalityInitiative.municipalityInitiative.id.desc());
+                break;
+            case oldest:
+                query.orderBy(QMunicipalityInitiative.municipalityInitiative.modified.asc(),
+                        QMunicipalityInitiative.municipalityInitiative.id.asc());
+                break;
             case id:
                 query.orderBy(QMunicipalityInitiative.municipalityInitiative.id.desc());
                 break;

@@ -58,17 +58,10 @@
     <span class="search-parameters-title filter"><@u.message "searchOptions.filter" /></span>
     <div class="search-parameters-container">
         <div class="search-parameters">
-            <a href="#" class="active">Kerätään osallistujia<span class="count">798</span></a>
-            <a href="#" class="">Lähetetty kuntaan<span class="count">375</span></a>
-            <a href="#" class="">Suljetut<span class="count">150</span></a>
-            <a href="#" class="">Kaikki<span class="count">1500</span></a>
+            <@u.searchLink parameter="withStateCollecting" cssClass=(currentSearch.show == "collecting")?string('active','') count=initiativeCounts.collecting />
+            <@u.searchLink parameter="withStateSent" cssClass=(currentSearch.show == "sent")?string('active','') count=initiativeCounts.sent/>
+            <@u.searchLink parameter="withStateAll" cssClass=(currentSearch.show == "all")?string('active','') count=initiativeCounts.all/>
         </div>
-        <#--<div class="search-parameters">
-            <a href="#" class="active trigger-tooltip" title="Kerätään osallistujia">Kerätään osallistujia<span class="count">798</span></a>
-            <a href="#" class=" trigger-tooltip" title="Lähetetty kuntaan">Lähetetty kuntaan<span class="count">375</span></a>
-            <a href="#" class=" trigger-tooltip" title="Suljetut">Suljetut<span class="count">150</span></a>
-            <a href="#" class=" trigger-tooltip" title="Kaikki">Kaikki<span class="count">1500</span></a>
-        </div>-->
         <br class="clear" />
     </div>
     
@@ -80,28 +73,25 @@
     <#--<#if (initiativeCounts[currentSearch.show] > 1)>-->
         <span class="search-parameters-title sort"><@u.message "searchOptions.sort" /></span>
         <div class="column search-sort">
-            <#--<#if currentSearch.show == "running">
-                <span class="small-icon icon-search-sort by-time-left"><@u.message "searchOptions.runningTimeLeft" /></span>
+            <#if currentSearch.show == "sent">
+                <span class="small-icon icon-search-sort by-date-accepted">&#160;</span>
                 <div class="search-sort-links">
-                    <@u.searchLink parameter="withOrderByMostTimeLeft" cssClass=(currentSearch.orderBy == "mostTimeLeft")?string('active','') tooltip=false />
-                    <@u.searchLink parameter="withOrderByLeastTimeLeft" cssClass=(currentSearch.orderBy == "leastTimeLeft")?string('active','') tooltip=false />
+                    <@u.searchLink parameter="withOrderByLatestSent" cssClass=(currentSearch.orderBy == "latestSent")?string('active','') tooltip=false />
+                    <@u.searchLink parameter="withOrderByOldestSent" cssClass=(currentSearch.orderBy == "oldestSent")?string('active','') tooltip=false />
                 </div>
-            <#else>-->
-                <span class="small-icon icon-search-sort by-date-accepted">&#160;</span><div class="search-sort-links">
-                    <a href="#" class="active" title="">Uusin ensin</a>
-                    <a href="#" class="" title="">Vanhin ensin</a>
-                    <#--<@u.searchLink parameter="withOrderByCreatedNewest" cssClass=(currentSearch.orderBy == "createdNewest")?string('active','') tooltip=false />
-                    <@u.searchLink parameter="withOrderByCreatedOldest" cssClass=(currentSearch.orderBy == "createdOldest")?string('active','') tooltip=false />-->
+            <#else>
+                <span class="small-icon icon-search-sort by-date-accepted">&#160;</span>
+                <div class="search-sort-links">
+                    <@u.searchLink parameter="withOrderByLatest" cssClass=(currentSearch.orderBy == "latest")?string('active','') tooltip=false />
+                    <@u.searchLink parameter="withOrderByOldest" cssClass=(currentSearch.orderBy == "oldest")?string('active','') tooltip=false />
                 </div>
-            <#--</#if>-->
+            </#if>
         </div>
         <div class="column search-sort">
             <span class="small-icon icon-search-sort by-support-statements"><@u.message "searchOptions.participants" /></span>
             <div class="search-sort-links">
-                <a href="#" class="" title="">eniten</a>
-                <a href="#" class="" title="">vähiten</a>
-                <#--<@u.searchLink parameter="withOrderByMostSupports" cssClass=(currentSearch.orderBy == "mostSupports")?string('active','') tooltip=false />
-                <@u.searchLink parameter="withOrderByLeastSupports" cssClass=(currentSearch.orderBy == "leastSupports")?string('active','') tooltip=false />-->
+                <@u.searchLink parameter="withOrderByMostParticipants" cssClass=(currentSearch.orderBy == "mostParticipants")?string('active','') tooltip=false />
+                <@u.searchLink parameter="withOrderByLeastParticipants" cssClass=(currentSearch.orderBy == "leastParticipants")?string('active','') tooltip=false />
             </div>
         </div>
         <br class="clear" />

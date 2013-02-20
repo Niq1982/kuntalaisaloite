@@ -80,17 +80,28 @@ public class SearchParameterGenerator {
         return generateParameters(original.copy().setOrderBy(InitiativeSearch.OrderBy.leastParticipants));
     }
 
+    public String getWithOrderByLatest() {
+        return generateParameters(original.copy().setOrderBy(InitiativeSearch.OrderBy.latest));
+    }
+
+    public String getWithOrderByOldest() {
+        return generateParameters(original.copy().setOrderBy(InitiativeSearch.OrderBy.oldest));
+    }
+
     public String getWithStateSent() {
         return generateParameters(new InitiativeSearch()
-                .setShow(InitiativeSearch.Show.sent));
+                .setShow(InitiativeSearch.Show.sent)
+                .setOrderBy(InitiativeSearch.OrderBy.latestSent));
     }
     public String getWithStateCollecting() {
         return generateParameters(new InitiativeSearch()
-                .setShow(InitiativeSearch.Show.collecting));
+                .setShow(InitiativeSearch.Show.collecting)
+                .setOrderBy(InitiativeSearch.OrderBy.latest));
     }
     public String getWithStateAll() {
         return generateParameters(new InitiativeSearch()
-                .setShow(InitiativeSearch.Show.all));
+                .setShow(InitiativeSearch.Show.all)
+                .setOrderBy(InitiativeSearch.OrderBy.latest));
     }
 
 

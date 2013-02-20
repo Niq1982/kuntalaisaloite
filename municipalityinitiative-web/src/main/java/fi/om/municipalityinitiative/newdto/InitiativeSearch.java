@@ -5,8 +5,8 @@ import fi.om.municipalityinitiative.web.Urls;
 public class InitiativeSearch {
     private Integer offset;
     private Integer limit;
-    private OrderBy orderBy = OrderBy.latestSent;
-    private Show show = Show.sent;
+    private OrderBy orderBy = OrderBy.latest;
+    private Show show = Show.collecting;
     private Long municipality;
     private String search;
 
@@ -34,6 +34,7 @@ public class InitiativeSearch {
         initiativeSearch.orderBy = this.orderBy;
         initiativeSearch.municipality = this.municipality;
         initiativeSearch.search = this.search;
+        initiativeSearch.show = this.show;
         return initiativeSearch;
     }
 
@@ -83,6 +84,9 @@ public class InitiativeSearch {
     }
 
     public enum OrderBy {
-        oldestSent, latestSent, id, mostParticipants, leastParticipants
+        oldestSent, latestSent,
+        id,
+        mostParticipants, leastParticipants,
+        oldest, latest
     }
 }
