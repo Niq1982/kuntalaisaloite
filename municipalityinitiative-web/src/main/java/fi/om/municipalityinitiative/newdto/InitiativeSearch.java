@@ -14,8 +14,9 @@ public class InitiativeSearch {
         return municipality;
     }
 
-    public void setMunicipality(Long municipality) {
+    public InitiativeSearch setMunicipality(Long municipality) {
         this.municipality = municipality;
+        return this;
     }
 
     public String getSearch() {

@@ -91,16 +91,19 @@ public class SearchParameterGenerator {
     public String getWithStateSent() {
         return generateParameters(new InitiativeSearch()
                 .setShow(InitiativeSearch.Show.sent)
+                .setMunicipality(original.getMunicipality())
                 .setOrderBy(InitiativeSearch.OrderBy.latestSent));
     }
     public String getWithStateCollecting() {
         return generateParameters(new InitiativeSearch()
                 .setShow(InitiativeSearch.Show.collecting)
+                .setMunicipality(original.getMunicipality())
                 .setOrderBy(InitiativeSearch.OrderBy.latest));
     }
     public String getWithStateAll() {
         return generateParameters(new InitiativeSearch()
                 .setShow(InitiativeSearch.Show.all)
+                .setMunicipality(original.getMunicipality())
                 .setOrderBy(InitiativeSearch.OrderBy.latest));
     }
 

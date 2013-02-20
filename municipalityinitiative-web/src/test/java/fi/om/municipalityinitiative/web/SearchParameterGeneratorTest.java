@@ -85,19 +85,19 @@ public class SearchParameterGeneratorTest {
     @Test
     public void get_with_show_only_sent() {
         String parameters = new SearchParameterGenerator(initiativeSearch).getWithStateSent();
-        assertThat(parameters, is("?orderBy=latestSent&show=sent"));
+        assertThat(parameters, is("?orderBy=latestSent&show=sent&municipality=1"));
     }
 
     @Test
     public void get_with_show_only_collecting() {
         String parameters = new SearchParameterGenerator(initiativeSearch).getWithStateCollecting();
-        assertThat(parameters, is("?orderBy=latest&show=collecting"));
+        assertThat(parameters, is("?orderBy=latest&show=collecting&municipality=1"));
     }
 
     @Test
     public void get_with_show_all() {
         String parameters = new SearchParameterGenerator(initiativeSearch).getWithStateAll();
-        assertThat(parameters, is("?orderBy=latest&show=all"));
+        assertThat(parameters, is("?orderBy=latest&show=all&municipality=1"));
     }
 
 }
