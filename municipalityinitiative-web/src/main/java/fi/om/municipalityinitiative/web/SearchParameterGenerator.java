@@ -84,5 +84,14 @@ public class SearchParameterGenerator {
         return generateParameters(new InitiativeSearch()
                 .setShow(InitiativeSearch.Show.sent));
     }
+    public String getWithStateCollecting() {
+        return generateParameters(new InitiativeSearch()
+                .setShow(InitiativeSearch.Show.collecting));
+    }
+    public String getWithStateAll() {
+        return generateParameters(new InitiativeSearch()
+                .setShow(InitiativeSearch.Show.all));
+    }
+
 
 }
