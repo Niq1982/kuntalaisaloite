@@ -64,20 +64,20 @@ public class JdbcParticipantDaoTest {
         createParticipant(initiativeId, false, false);
 
         ParticipantCount participantCount = participantDao.getParticipantCount(initiativeId);
-        assertThat(participantCount.getRightOfVoting().getPublicNames(), is(1L));
-        assertThat(participantCount.getRightOfVoting().getPrivateNames(), is(2L));
-        assertThat(participantCount.getNoRightOfVoting().getPublicNames(), is(3L));
-        assertThat(participantCount.getNoRightOfVoting().getPrivateNames(), is(4L));
+        assertThat(participantCount.getFranchise().getPublicNames(), is(1L));
+        assertThat(participantCount.getFranchise().getPrivateNames(), is(2L));
+        assertThat(participantCount.getNoFranchise().getPublicNames(), is(3L));
+        assertThat(participantCount.getNoFranchise().getPrivateNames(), is(4L));
 
     }
 
     @Test
     public void wont_fail_if_counting_supports_when_no_supports() {
         ParticipantCount participantCount = participantDao.getParticipantCount(testInitiativeId);
-        assertThat(participantCount.getRightOfVoting().getPublicNames(), is(1L)); // This is the default author
-        assertThat(participantCount.getRightOfVoting().getPrivateNames(), is(0L));
-        assertThat(participantCount.getNoRightOfVoting().getPublicNames(), is(0L));
-        assertThat(participantCount.getNoRightOfVoting().getPrivateNames(), is(0L));
+        assertThat(participantCount.getFranchise().getPublicNames(), is(1L)); // This is the default author
+        assertThat(participantCount.getFranchise().getPrivateNames(), is(0L));
+        assertThat(participantCount.getNoFranchise().getPublicNames(), is(0L));
+        assertThat(participantCount.getNoFranchise().getPrivateNames(), is(0L));
     }
 
     @Test
@@ -156,23 +156,23 @@ public class JdbcParticipantDaoTest {
         assertThat(participant.getParticipateDate(), is(notNullValue()));
     }
 
-    private Long createParticipant(Long initiativeId, Long homeMunicipality, boolean rightOfVoting, boolean publicName, String participantName) {
+    private Long createParticipant(Long initiativeId, Long homeMunicipality, boolean franchise, boolean publicName, String participantName) {
         ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
         participantCreateDto.setMunicipalityInitiativeId(initiativeId);
         participantCreateDto.setParticipantName(participantName);
         participantCreateDto.setHomeMunicipality(homeMunicipality);
-        participantCreateDto.setFranchise(rightOfVoting);
+        participantCreateDto.setFranchise(franchise);
         participantCreateDto.setShowName(publicName);
         return participantDao.create(participantCreateDto);
     }
 
 
-    private Long createParticipant(long initiativeId, boolean rightOfVoting, boolean publicName) {
-        return createParticipant(initiativeId, rightOfVoting, publicName, "Composers name");
+    private Long createParticipant(long initiativeId, boolean franchise, boolean publicName) {
+        return createParticipant(initiativeId, franchise, publicName, "Composers name");
     }
 
-    private Long createParticipant(long initiativeId, boolean rightOfVoting, boolean publicName, String participantName) {
-        return createParticipant(initiativeId, testMunicipalityId, rightOfVoting, publicName, participantName);
+    private Long createParticipant(long initiativeId, boolean franchise, boolean publicName, String participantName) {
+        return createParticipant(initiativeId, testMunicipalityId, franchise, publicName, participantName);
     }
 
     private ParticipantCreateDto participantCreateDto() {

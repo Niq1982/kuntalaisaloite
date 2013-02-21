@@ -39,10 +39,10 @@
     
         <#-- TODO: Using request parameters. Finalize when we are sure that we want 2 different views-->
         <#if RequestParameters['show']?? && RequestParameters['show'] == "others">
-            <h2><@u.message "participantList.noRightOfVoting.title" /></h2>
+            <h2><@u.message "participantList.noFranchise.title" /></h2>
             <@participantList participants.noFranchise />
         <#else>
-            <h2><@u.message "participantList.rightOfVoting.title" /></h2>
+            <h2><@u.message "participantList.franchise.title" /></h2>
             <@participantList participants.franchise />
         </#if>
 

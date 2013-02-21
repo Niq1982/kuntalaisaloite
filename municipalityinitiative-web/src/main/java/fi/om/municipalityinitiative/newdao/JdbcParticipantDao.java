@@ -62,10 +62,10 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .map(simpleExpression, participant.count()));
 
         ParticipantCount participantCount = new ParticipantCount();
-        participantCount.getRightOfVoting().setPublicNames(map.get("11").or(0L));
-        participantCount.getRightOfVoting().setPrivateNames(map.get("10").or(0L));
-        participantCount.getNoRightOfVoting().setPublicNames(map.get("01").or(0L));
-        participantCount.getNoRightOfVoting().setPrivateNames(map.get("00").or(0L));
+        participantCount.getFranchise().setPublicNames(map.get("11").or(0L));
+        participantCount.getFranchise().setPrivateNames(map.get("10").or(0L));
+        participantCount.getNoFranchise().setPublicNames(map.get("01").or(0L));
+        participantCount.getNoFranchise().setPrivateNames(map.get("00").or(0L));
         return participantCount;
 
     }

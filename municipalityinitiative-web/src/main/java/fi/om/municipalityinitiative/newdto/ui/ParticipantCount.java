@@ -1,24 +1,24 @@
 package fi.om.municipalityinitiative.newdto.ui;
 
 public class ParticipantCount {
-    private final SupportNames rightOfVoting;
-    private final SupportNames noRightOfVoting;
+    private final SupportNames franchise;
+    private final SupportNames noFranchise;
 
     public ParticipantCount() {
-        rightOfVoting = new SupportNames();
-        noRightOfVoting = new SupportNames();
+        franchise = new SupportNames();
+        noFranchise = new SupportNames();
     }
 
-    public SupportNames getRightOfVoting() {
-        return rightOfVoting;
+    public SupportNames getFranchise() {
+        return franchise;
     }
 
-    public SupportNames getNoRightOfVoting() {
-        return noRightOfVoting;
+    public SupportNames getNoFranchise() {
+        return noFranchise;
     }
 
     public long getTotal() {
-        return rightOfVoting.getTotal() + noRightOfVoting.getTotal();
+        return franchise.getTotal() + noFranchise.getTotal();
     }
 
     public class SupportNames {
