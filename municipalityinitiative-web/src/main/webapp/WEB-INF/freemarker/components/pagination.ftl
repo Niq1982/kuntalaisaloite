@@ -109,15 +109,6 @@
             <#else>
                 <span class="active">${l}</span>
             </#if>
-
-            <#if !l_has_next>
-            <span class="separator hide">|</span>
-                <#if limit != maxLimit>
-                    <a href="${urls.search()}${searchParameters.withMaxLimit}"><@u.message "pagination.withMaxLimit" /></a>
-                <#else>
-                    <span class="active"><@u.message "pagination.withMaxLimit" /></span>
-                </#if>
-            </#if>
         </#list>
     </span>
 </@compress>
@@ -127,13 +118,13 @@
  * pagination
  *
  * Print pagination if more than 1 page
- * Show always limiters
+ * Show pagination when more than minimum pagination count
  *
  * @param limit is the current limit
  * @param offset is the current offset
 -->
 <#macro pagination limit offset cssClass="">
-    <#assign limits = [20, 100]>
+    <#assign limits = [20, 100, 500]>
     <#assign totalInitiatives = initiativeCounts[currentSearch.show] />
     <#assign totalPages = (totalInitiatives / limit)?ceiling />
     <#assign showPagination = currentSearch.limit ?? && (totalPages > 1) />

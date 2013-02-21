@@ -114,14 +114,20 @@
 
 </#macro>
 
-<#-- TODO: return to view or management -->
-<#-- IF referrer == management, goto management, otherwise goto view page -->
+<#-- 
+ * returnPrevious
+ *
+ *  If request header referer equals management
+ *      previousPageURI is the management URI
+ *  Otherwise
+ *      previousPageURI is the public view URI
+-->
 <#macro returnPrevious>
-    <p><a href="${urls.view(initiative.id)}">&laquo; <@u.message "participantList.return.view" /></a></p>
-    
-    <#--
-    <p><a href="${urls.management(initiative.id, initiative.managementHash.value)}">&laquo; <@u.message "participantList.return.management" /></a></p>
-    -->
+    <#if previousPageURI == urls.management(initiative.id, initiative.managementHash.value)>
+        <p><a href="${previousPageURI}">&laquo; <@u.message "participantList.return.management" /></a></p>
+    <#else>
+        <p><a href="${previousPageURI}">&laquo; <@u.message "participantList.return.view" /></a></p>
+    </#if>
 </#macro>
 
 

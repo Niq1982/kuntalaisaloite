@@ -121,6 +121,14 @@ public class MunicipalityInitiativeViewController extends BaseController {
             model.addAttribute("initiative",  initiativeInfo);
             model.addAttribute("participantCount", participantService.getParticipantCount(initiativeId));
             model.addAttribute("participants", participantService.findPublicParticipants(initiativeId));
+            
+            String managementURI = urls.management(initiativeId, initiativeInfo.getManagementHash().get());
+            
+            if (request.getHeader("referer") != null && request.getHeader("referer").equals(managementURI)) {
+                model.addAttribute("previousPageURI", managementURI);
+            } else {
+                model.addAttribute("previousPageURI", urls.view(initiativeId));
+            }
 
             return PARTICIPANT_LIST;
         }

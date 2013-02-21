@@ -1345,6 +1345,15 @@ label  {
             margin:0.2em 0 0 -16px;
         }
     }
+    &.arrow-left {
+        background-position:-192px 1px;
+    }
+    &.arrow-left-2 {
+        background-position:-208px 1px;
+    }
+    &.arrow-left-3 {
+        background-position:-208px -15px;
+    }
     
     &.help {
         width:27px;
@@ -1763,7 +1772,7 @@ label  {
     .date {
         float:left;
         width:5em;
-        color:#999;
+        color:@secondaryTextColor;
     }
     
     .name-container {
@@ -1771,13 +1780,12 @@ label  {
         margin-left:6em;
     }
     
-    /*.name {
-        color:#000;
-        margin-right:1em;
-    }*/
+    .name {
+        color:@black;
+    }
     
     .home-municipality {
-        color:#999;
+        color:@secondaryTextColor;
     }
 }
 
@@ -2710,14 +2718,14 @@ blockquote {
     margin:2em 0 1em;
     //padding-left:100px;
     
-    &.top {
+    /*&.top {
         padding-bottom:0.5em;
         border-bottom: 1px solid @borderGray;
-    }
+    }*/
     &.bottom {
         margin-top:2em;
-        padding-top:0.5em;
-        border-top: 1px solid @borderGray;
+        //padding-top:0.5em;
+        //border-top: 1px solid @borderGray;
     }
     
     

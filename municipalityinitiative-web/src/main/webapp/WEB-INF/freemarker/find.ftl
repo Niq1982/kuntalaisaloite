@@ -101,16 +101,6 @@
 
 </div>
 
-    <#--
-     * TODO: Search pagination - also in the bottom of rearch results
-    -->
-    <#--
-    <#if searchMode != "own">
-        <@p.pagination currentSearch.limit!500 currentSearch.offset!0 "top" />
-    </#if>
-    -->
-
-
 <div class="search-terms">
     <#if searchMunicipality != "">
         <h2><@u.message "searchResults.initiativesInMunicipality" />: ${currentMunicipality!""}</h2>
@@ -123,6 +113,8 @@
     -->
 </div>
 
+<@p.pagination currentSearch.limit!500 currentSearch.offset!0 "top" />
+
 <div class="search-results">
 <#if initiatives?? && (initiatives?size > 0)>
     <#list initiatives as initiative>
@@ -134,7 +126,7 @@
                     <#if !initiative.collectable>
                         <span class="no-participants"><@u.message "searchResults.notCollectable" /></span>
                     <#else>
-                        <span class="participant-count ${(initiative.participantCount<2)?string("one","")} trigger-tooltip" title="<@u.message "searchResults.sumOfParticipants" />">${initiative.participantCount!""}</span>
+                        <span class="participant-count trigger-tooltip" title="<@u.message "searchResults.sumOfParticipants" />">${initiative.participantCount!""}</span>
                     </#if>
                 </span>
             </span>
@@ -165,6 +157,8 @@
 </#if>
 
 </div>
+
+<@p.pagination currentSearch.limit!500 currentSearch.offset!0 "bottom" />
 
 
 </@l.main>
