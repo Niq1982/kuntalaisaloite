@@ -283,7 +283,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     info.setId(row.get(municipalityInitiative.id));
                     info.setCreateTime(row.get(municipalityInitiative.modified).toLocalDate());
                     info.setMunicipality(new Municipality(row.get(QMunicipality.municipality.name), row.get(QMunicipality.municipality.id)));
-                    info.setMunicipalityId(row.get(QMunicipality.municipality.id));
                     info.setName(row.get(municipalityInitiative.name));
                     info.setMunicipality(new Municipality(row.get(QMunicipality.municipality.name), row.get(QMunicipality.municipality.id)));
                     info.setProposal(row.get(municipalityInitiative.proposal));

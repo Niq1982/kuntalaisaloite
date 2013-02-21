@@ -14,7 +14,6 @@ public class InitiativeViewInfo {
     private Long id;
     private String name;
     private String proposal;
-    private Long municipalityId;
     private Municipality municipality;
 
     private String authorName;
@@ -44,10 +43,6 @@ public class InitiativeViewInfo {
 
     public void setProposal(String proposal) {
         this.proposal = proposal;
-    }
-
-    public void setMunicipalityId(Long municipalityId) {
-        this.municipalityId = municipalityId;
     }
 
     public void setAuthorName(String authorName) {
