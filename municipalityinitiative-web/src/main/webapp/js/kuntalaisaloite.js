@@ -326,8 +326,6 @@ $(document).ready(function () {
  * Expand and minify form blocks
  * =============================
  * 
- * TODO: Improve animation vs. scrolling
- * 
  * */
 	var validationErrors, showFormBlock, $formHeader;
 	
@@ -367,18 +365,22 @@ $(document).ready(function () {
  	});
 
  	// Action for wizard's continue button
- 	proceedTo = function(step){
- 		var headerNextStep = "#step-header-"+step;
+ 	$('.js-proceed-to-next').click(function(){
+ 		var	thisBtn			= $(this),
+ 			step			= thisBtn.data('next-step'),
+ 			headerNextStep	= "#step-header-"+step;
  		
- 		if ( !validationErrors ){
-	 		var blockHeader = $('#step-'+step).prev('.content-block-header');
-			showFormBlock(blockHeader, headerNextStep);
- 		} else {
- 			$.scrollTo( headerNextStep , 800, {easing:'easeOutExpo'});
+ 		if (!thisBtn.hasClass('disabled')){
+	 		if ( !validationErrors ){
+		 		var blockHeader = $('#step-'+step).prev('.content-block-header');
+				showFormBlock(blockHeader, headerNextStep);
+	 		} else {
+	 			$.scrollTo( headerNextStep , 800, {easing:'easeOutExpo'});
+	 		}
  		}
 
  		return false;
- 	};
+ 	});
  	
  	// In case of validation error
  	if ( validationErrors ){
@@ -505,7 +507,7 @@ var municipalitySelection = (function() {
 		btnParticipate.disableButton(prevent);
 		
 		if (prevent) {
-			btnStep2.addClass('disabled').attr('onClick','return false;');
+			btnStep2.addClass('disabled');
 			formBlockHeaders.addClass('disabled');
 			
 			if (validationErrors){
@@ -513,7 +515,7 @@ var municipalitySelection = (function() {
 			}
 			
 		} else {
-			btnStep2.removeClass('disabled').attr('onClick','proceedTo(2); return false;');
+			btnStep2.removeClass('disabled');
 			formBlockHeaders.removeClass('disabled');
 			
 			if (validationErrors){
@@ -925,10 +927,6 @@ $('.municipality-filter').change( function() {
  * - To improve usage, LiveQuery could be used
  *   http://brandonaaron.net/code/livequery/docs
  * - $.DirtyForms.dialog overrides plugin's default facebox-dialog
- *   
- * TODO:
- * - Fix dynamic links (for example "Add new link")
- * - Check methods: refire and stash
  * 
  * */
 	

@@ -47,13 +47,20 @@
     -->
     <div class="view-block public">
         <h2><@u.message "sendToMunicipality.title" /></h2>
+
+        <#-- Check is form has errors -->
+        <@spring.bind "sendToMunicipality.*" />
+        <#assign hasErrors = false />
+        <#if spring.status.error>
+            <#assign hasErrors = true />
+        </#if>
         
         <#-- Participate form errors summary -->
-        <div class="input-block-content no-top-margin">    
-            <@u.errorsSummary path="sendToMunicipality.*" prefix="sendToMunicipality."/>
-        </div>
-        
-        <#if !hasErrors>
+        <#if hasErrors>
+            <div class="input-block-content no-top-margin">    
+                <@u.errorsSummary path="sendToMunicipality.*" prefix="sendToMunicipality."/>
+            </div>
+        <#else>
             <div class="js-send-to-municipality hidden">
                 <#assign href="#" />
                 <p><@u.messageHTML key="sendToMunicipality.description" args=[href] /></p>
@@ -83,11 +90,10 @@
                         <a href="${springMacroRequestContext.requestUri}#participants" class="push close hidden"><@u.message "action.cancel" /></a>
                     <#else>
                         <#-- In case of errors cancel-link clears data by refreshing management page. -->
-                        <a href="${urls.management(initiative.id, initiative.managementHash)}" class="push hidden"><@u.message "action.cancel" /></a>
+                        <a href="${urls.management(initiative.id, initiative.managementHash.value)}" class="push hidden"><@u.message "action.cancel" /></a>
                     </#if>
                 </div>
                 <br/><br/>
-
             </form>
         </div>
     </div>

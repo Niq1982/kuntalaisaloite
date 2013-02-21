@@ -83,6 +83,14 @@
             };
         </#if>
     
+        <#-- Modal: Form modified notification. Uses dirtyforms jQuery-plugin. -->
+        modalData.formModifiedNotification = function() {
+            return [{
+                title:      '<@u.message "form.modified.notification.title" />',
+                content:    '<@u.messageHTML "form.modified.notification" />'
+            }]
+        };
+    
         <#-- MODAL DATA (from collect-view.ftl) -->
         <#if modalData??><#noescape>${modalData}</#noescape></#if>
     

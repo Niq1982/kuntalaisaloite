@@ -26,7 +26,7 @@
     <@u.errorsSummary path="initiative.*" prefix="initiative."/>
 
     <#-- FORM. Use class 'sodirty' to enable dirtylisten. -->
-    <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-initiative" class="sodirty <#if hasErrors>has-errors</#if>">
+    <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-initiative" class="sodirty dirtylisten <#if hasErrors>has-errors</#if>">
         <#--<input type="hidden" name="CSRFToken" value="${CSRFToken}"/>-->
 
         <div class="form-block-container">

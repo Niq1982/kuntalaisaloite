@@ -25,15 +25,11 @@
  * @param type is the type of the button: next, save-and-send, save
  * @param nextStep is the number of the following block
  -->
-<#-- TODO: remove data-attributes if not needed -->
 <#macro buttons type="" nextStep="0">
     <#if type == "next">
-        <a href="#step-header-${nextStep}" id="button-next-${nextStep}" class="small-button disable-dbl-click-check ignoredirty" onClick="proceedTo(${nextStep}); return false;"><span class="small-icon next"><@u.message "action.continue" /></span></a>
-        <a href="index.html" class="push"><@u.message "action.cancel" /></a>
+        <a href="#step-header-${nextStep}" id="button-next-${nextStep}" class="small-button disable-dbl-click-check ignoredirty js-proceed-to-next" data-next-step="${nextStep}"><span class="small-icon next"><@u.message "action.continue" /></span></a>
     <#elseif type == "save-and-send">
         <button type="submit" name="action-save-and-send" class="small-button" ><span class="small-icon mail"><@u.message "action.saveAndSend" /></span></button>
-        <#--<br/><br/>
-        <a href="index.html" class=""><@u.message "action.cancel" /></a>-->
     <#elseif type == "save">
         <button type="submit" id="collectable" name="collectable" class="small-button" value="true" ><span class="small-icon save-and-send"><@u.message "action.saveAndCollect" /></span></button>
     </#if>
