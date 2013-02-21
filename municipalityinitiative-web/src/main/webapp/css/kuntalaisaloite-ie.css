@@ -16,4 +16,4 @@
 .ie6 .participant-list li,.ie7 .participant-list li,.ie6 .search-results li,.ie7 .search-results li{height:1%;}
 .ie6 .expose-mask,.ie7 .expose-mask,.ie8 .expose-mask{background:#eee;filter:progid:dximagetransform.microsoft.alpha(opacity=90);}
 .ie6 .large-button.disabled,.ie7 .large-button.disabled,.ie8 .large-button.disabled,.ie6 .small-button.disabled,.ie7 .small-button.disabled,.ie8 .small-button.disabled{filter:progid:dximagetransform.microsoft.alpha(opacity=60);}
-.ie6 .content-block-header.disabled,.ie7 .content-block-header.disabled,.ie8 .content-block-header.disabled{filter:progid:dximagetransform.microsoft.alpha(opacity=60);}
+.ie6 .content-block-header.disabled,.ie7 .content-block-header.disabled,.ie8 .content-block-header.disabled{background:#60a5ad;}

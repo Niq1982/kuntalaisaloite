@@ -248,7 +248,7 @@ label input[type="text"]{display:block;}
 .participant-list .name-container{display:block;margin-left:6em;}
 .participant-list .name{color:#000000;}
 .participant-list .home-municipality{color:#686868;}
-.send-to-municipality{padding:15px 0;}
+.send-to-municipality{clear:both;}
 .js .send-to-municipality textarea#comment{height:1.5em;transition:height 0.15s ease-in;-moz-transition:height 0.15s ease-in;-webkit-transition:height 0.15s ease-in;-o-transition:height 0.15s ease-in;}.js .send-to-municipality textarea#comment.expand{height:6em;}
 .highlight-box{margin-bottom:0.7em;}.highlight-box .title{padding:0.2em 0.7em;background:#017380;font-size:20px;color:#fff;}
 .highlight-box .content{padding:0.7em;}
