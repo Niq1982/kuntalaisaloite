@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.pdf;
 import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.email.InitiativeEmailInfo;
+import fi.om.municipalityinitiative.newdto.json.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
@@ -39,7 +40,7 @@ public class ParticipantToPdfExporterTest {
         List<Participant> participants = Lists.newArrayList();
 
         for (int i = 0; i < 1000; ++i) {
-            Participant participant = new Participant(new LocalDate(), RandomStringUtils.randomAlphabetic(20), new Random().nextBoolean(), RandomStringUtils.randomAlphabetic(10));
+            Participant participant = new Participant(new LocalDate(), RandomStringUtils.randomAlphabetic(20), new Random().nextBoolean(), new Municipality(RandomStringUtils.randomAlphabetic(10), new Random().nextLong()));
             participants.add(participant);
         }
 

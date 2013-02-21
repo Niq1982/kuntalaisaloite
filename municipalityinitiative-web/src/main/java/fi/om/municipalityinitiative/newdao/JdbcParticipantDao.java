@@ -9,6 +9,7 @@ import com.mysema.query.types.MappingProjection;
 import com.mysema.query.types.expr.CaseBuilder;
 import com.mysema.query.types.expr.SimpleExpression;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
+import fi.om.municipalityinitiative.newdto.json.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
@@ -99,7 +100,11 @@ public class JdbcParticipantDao implements ParticipantDao {
                             row.get(participant.participateTime),
                             row.get(participant.name),
                             row.get(participant.franchise),
-                            row.get(QMunicipality.municipality.name));
+                            new Municipality(
+                                    row.get(QMunicipality.municipality.name),
+                                    row.get(QMunicipality.municipality.id)
+                            )
+                    );
                 }
             };
 
