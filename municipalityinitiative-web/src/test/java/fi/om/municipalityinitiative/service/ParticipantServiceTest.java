@@ -2,7 +2,7 @@ package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
-import fi.om.municipalityinitiative.newdto.json.Municipality;
+import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.ui.Participants;
 import org.joda.time.LocalDate;

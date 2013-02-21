@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.newdto.json;
+package fi.om.municipalityinitiative.newdto.service;
 
 public class Municipality {
     private String name;

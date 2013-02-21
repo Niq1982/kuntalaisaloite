@@ -1,6 +1,6 @@
 package fi.om.municipalityinitiative.newdto.ui;
 
-import fi.om.municipalityinitiative.newdto.json.Municipality;
+import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.LocalDate;
 

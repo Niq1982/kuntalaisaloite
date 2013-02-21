@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.json.JsonId;
 import fi.om.municipalityinitiative.json.LocalDateJsonSerializer;
+import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;

@@ -1,7 +1,7 @@
 package fi.om.municipalityinitiative.newdto.email;
 
 import com.google.common.collect.Lists;
-import fi.om.municipalityinitiative.newdto.json.Municipality;
+import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.joda.time.LocalDate;

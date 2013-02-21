@@ -18,8 +18,8 @@ import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.exceptions.NotCollectableException;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
-import fi.om.municipalityinitiative.newdto.json.Municipality;
 import fi.om.municipalityinitiative.newdto.service.InitiativeCreateDto;
+import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
@@ -66,6 +66,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
         List<InitiativeListInfo> list = query.list(initiativeListInfoMapping);
 
         // TODO: de-normalize count to own column
+        // TODO: Non-collectable initiatives should have participantCount as 0
         for (InitiativeListInfo initiativeListInfo : list) {
             initiativeListInfo.setParticipantCount(
                     queryFactory.from(QParticipant.participant)

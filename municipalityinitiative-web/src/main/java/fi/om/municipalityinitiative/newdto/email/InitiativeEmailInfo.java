@@ -1,6 +1,6 @@
 package fi.om.municipalityinitiative.newdto.email;
 
-import fi.om.municipalityinitiative.newdto.json.Municipality;
+import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import org.joda.time.LocalDate;
