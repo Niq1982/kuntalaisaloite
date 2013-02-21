@@ -14,7 +14,7 @@
 
     <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-participate" class="sodirty <#if hasErrors>has-errors</#if>">
 
-    <input type="hidden" name="municipality" value="${initiative.municipalityId!""}"/>
+    <input type="hidden" name="municipality" value="${initiative.municipality.id!""}"/>
     
     <div class="input-block-content no-top-margin flexible">
         <@u.systemMessage path="initiative.ownDetails.description" type="info" showClose=false />  
@@ -26,7 +26,7 @@
     </div>
     
     <div class="input-block-content flexible">
-        <@f.municipalitySelect path="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipalityId />
+        <@f.municipalitySelect path="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipality.id />
     </div>
 
     <div id="franchise" class="input-block-content flexible">

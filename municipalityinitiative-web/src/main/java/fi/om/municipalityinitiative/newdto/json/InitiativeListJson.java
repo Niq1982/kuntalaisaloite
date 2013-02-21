@@ -28,10 +28,6 @@ public class InitiativeListJson {
         return initiative.getMunicipality();
     }
 
-    public String getAuthorName() {
-        return initiative.isShowName() ? initiative.getAuthorName() : null;
-    }
-
     @JsonSerialize(using=LocalDateJsonSerializer.class)
     public LocalDate getCreateTime() {
         return initiative.getCreateTime();
@@ -43,7 +39,7 @@ public class InitiativeListJson {
 
     @JsonSerialize(using=LocalDateJsonSerializer.class)
     public LocalDate getSentTime() {
-        return initiative.isSent() ? initiative.getSentTime().get() : null;
+        return initiative.getSentTime().isPresent() ? initiative.getSentTime().get() : null;
     }
 
 }

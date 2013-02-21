@@ -45,7 +45,7 @@ public class ParticipantToPdfExporter {
     // Reader
     // under File -> Properties
     private static void addMetaData(Document document, CollectableInitiativeEmailInfo emailInfo) {
-        document.addTitle("Kuntalaisaloite " + emailInfo.getMunicipalityName());
+        document.addTitle("Kuntalaisaloite " + emailInfo.getMunicipality().getName());
         document.addSubject(emailInfo.getName());
         document.addKeywords("Java, PDF, iText"); // TODO: Remove
         document.addAuthor("Lars Vogel");
@@ -58,7 +58,7 @@ public class ParticipantToPdfExporter {
         // We add one empty line
 //        addEmptyLine(preface, 1);
         // Lets write a big header
-        preface.add(new Paragraph("Kuntalaisaloite - " + emailInfo.getMunicipalityName(), mainTitle));
+        preface.add(new Paragraph("Kuntalaisaloite - " + emailInfo.getMunicipality().getName(), mainTitle));
         preface.add(new Paragraph("Aloite lähetetty kuntaan " + new DateTime().toString(DATETIME_FORMAT), bodyText));
         addEmptyLine(preface, 1);
 
