@@ -120,6 +120,11 @@ public class AppConfiguration {
     }
 
     @Bean
+    public JsonDataService jsonDataService() {
+        return new JsonDataService();
+    }
+
+    @Bean
     public MunicipalityService municipalityService() {
         return new MunicipalityService();
     }

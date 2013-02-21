@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.service;
 
-import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.exceptions.NotCollectableException;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
@@ -154,7 +153,4 @@ public class InitiativeService {
         return initiativeDao.getInitiativeCounts(municipality);
     }
 
-    public List<InitiativeViewInfo> findJsonInitiatives(InitiativeSearch search) {
-        return Lists.newArrayList();
-    }
 }

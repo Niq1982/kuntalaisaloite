@@ -1,8 +1,9 @@
 package fi.om.municipalityinitiative.newweb;
 
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
-import fi.om.municipalityinitiative.service.InitiativeService;
+import fi.om.municipalityinitiative.newdto.json.InitiativeJson;
+import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
+import fi.om.municipalityinitiative.service.JsonDataService;
 import fi.om.municipalityinitiative.web.BaseController;
 import fi.om.municipalityinitiative.web.JsonpObject;
 import fi.om.municipalityinitiative.web.Views;
@@ -25,7 +26,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 public class ApiController extends BaseController {
 
     @Resource
-    InitiativeService initiativeService;
+    JsonDataService jsonDataService;
 
     public ApiController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
@@ -38,8 +39,8 @@ public class ApiController extends BaseController {
 
     @RequestMapping(value=INITIATIVES, method=GET, produces=JSON)
     public @ResponseBody
-    List<InitiativeViewInfo> jsonList(@RequestParam(value = JSON_OFFSET, required = false) Integer offset,
-                                  @RequestParam(value = JSON_LIMIT, required = false) Integer limit) {
+    List<InitiativeListInfo> jsonList(@RequestParam(value = JSON_OFFSET, required = false) Integer offset,
+                                      @RequestParam(value = JSON_LIMIT, required = false) Integer limit) {
 
         if (limit == null) {
             limit = DEFAULT_INITIATIVE_JSON_RESULT_COUNT;
@@ -53,22 +54,24 @@ public class ApiController extends BaseController {
         if (offset != null) {
             search.setOffset(offset);
         }
-        return initiativeService.findJsonInitiatives(search);
+        return jsonDataService.findJsonInitiatives(search);
     }
 
     @RequestMapping(value=INITIATIVES, method=GET, produces=JSONP, params=JSONP_CALLBACK)
-    public @ResponseBody JsonpObject<List<InitiativeViewInfo>> jsonpList(@RequestParam(JSONP_CALLBACK) String callback,
-                                                                     @RequestParam(value = JSON_OFFSET, required = false) Integer offset,
-                                                                     @RequestParam(value = JSON_LIMIT, required = false) Integer limit) {
-        return new JsonpObject<List<InitiativeViewInfo>>(callback, jsonList(offset, limit));
+    public @ResponseBody JsonpObject<List<InitiativeListInfo>> jsonpList(@RequestParam(JSONP_CALLBACK) String callback,
+                                                                         @RequestParam(value = JSON_OFFSET, required = false) Integer offset,
+                                                                         @RequestParam(value = JSON_LIMIT, required = false) Integer limit) {
+        return new JsonpObject<List<InitiativeListInfo>>(callback, jsonList(offset, limit));
     }
 
     @RequestMapping(value=INITIATIVE, method=GET, produces=JSON)
-    public @ResponseBody InitiativeViewInfo jsonGet(@PathVariable Long id) {
-        return initiativeService.getMunicipalityInitiative(id);
+    public @ResponseBody InitiativeJson jsonGet(@PathVariable Long id) {
+        return jsonDataService.getInitiative(id);
     }
     @RequestMapping(value=INITIATIVE, method=GET, produces=JSONP, params=JSONP_CALLBACK)
-    public @ResponseBody JsonpObject<InitiativeViewInfo> jsonGet(@PathVariable Long id, @RequestParam(JSONP_CALLBACK) String callback) {
-        return new JsonpObject<InitiativeViewInfo>(callback, jsonGet(id));
+    public @ResponseBody JsonpObject<InitiativeJson> jsonGet(
+            @PathVariable Long id,
+            @RequestParam(JSONP_CALLBACK) String callback) {
+        return new JsonpObject<InitiativeJson>(callback, jsonGet(id));
     }
 }
