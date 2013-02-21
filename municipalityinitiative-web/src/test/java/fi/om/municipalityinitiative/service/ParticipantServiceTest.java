@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
+import fi.om.municipalityinitiative.newdto.json.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.ui.Participants;
 import org.joda.time.LocalDate;
@@ -19,6 +20,7 @@ public class ParticipantServiceTest {
 
     private static final Long ID = -5L;
     public static final LocalDate DATE = new LocalDate(2010, 1, 1);
+    private static final Municipality MUNICIPALITY = new Municipality("Municipality", 1L);
     private ParticipantDao participantDaoMock;
     private ParticipantService participantService;
 
@@ -32,9 +34,9 @@ public class ParticipantServiceTest {
     public void parses_participants_according_to_franchise() {
 
         List<Participant> participants = Lists.newArrayList();
-        participants.add(new Participant(DATE, "HasFranchise Foo", true, "Municipality"));
-        participants.add(new Participant(DATE, "HasFranchise Bar", true,"Municipality"));
-        participants.add(new Participant(DATE, "HasNoFranchise Winamp", false,"Municipality"));
+        participants.add(new Participant(DATE, "HasFranchise Foo", true, MUNICIPALITY));
+        participants.add(new Participant(DATE, "HasFranchise Bar", true,MUNICIPALITY));
+        participants.add(new Participant(DATE, "HasNoFranchise Winamp", false,MUNICIPALITY));
 
         stub(participantDaoMock.findPublicParticipants(ID)).toReturn(participants);
 

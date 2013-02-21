@@ -152,4 +152,5 @@ public class InitiativeService {
     public InitiativeCounts getInitiativeCounts(Maybe<Long> municipality) {
         return initiativeDao.getInitiativeCounts(municipality);
     }
+
 }

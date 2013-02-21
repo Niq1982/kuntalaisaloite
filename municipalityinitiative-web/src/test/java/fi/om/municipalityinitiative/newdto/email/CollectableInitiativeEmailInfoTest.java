@@ -1,18 +1,21 @@
 package fi.om.municipalityinitiative.newdto.email;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
+import fi.om.municipalityinitiative.newdto.json.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
-
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 
 public class CollectableInitiativeEmailInfoTest {
+
+    private static final Municipality MUNICIPALITY = new Municipality("Municipality", 1L);
 
     @Test
     public void constructor_fills_all_fields() {
@@ -41,8 +44,8 @@ public class CollectableInitiativeEmailInfoTest {
         
         List<Participant> participants = Lists.newArrayList();
         
-        participants.add(new Participant(new LocalDate(2010, 1, 1), "FranchiseGuy Name", true, "Municipality"));
-        participants.add(new Participant(new LocalDate(2010, 1, 1), "NoFranchiseGuy Name", false, "Municipality"));
+        participants.add(new Participant(new LocalDate(2010, 1, 1), "FranchiseGuy Name", true, MUNICIPALITY));
+        participants.add(new Participant(new LocalDate(2010, 1, 1), "NoFranchiseGuy Name", false, MUNICIPALITY));
         
         CollectableInitiativeEmailInfo collectableInitiativeEmailInfo = CollectableInitiativeEmailInfo.parse(initiativeEmailInfo, "comment", participants);
 

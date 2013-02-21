@@ -8,7 +8,7 @@ import fi.om.municipalityinitiative.newdto.ui.InitiativeUICreateDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.Urls;
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -61,7 +61,7 @@ public class InitiativeServiceTest {
 
         InitiativeViewInfo initiativeViewInfo = new InitiativeViewInfo();
         initiativeViewInfo.setManagementHash(Maybe.of("anyHash"));
-        initiativeViewInfo.setSentTime(Maybe.of(new DateTime()));
+        initiativeViewInfo.setSentTime(Maybe.of(new LocalDate()));
         stub(initiativeDao.getById(any(Long.class))).toReturn(initiativeViewInfo);
 
         try {

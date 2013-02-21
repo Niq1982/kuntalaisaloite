@@ -9,6 +9,7 @@ import com.mysema.query.types.MappingProjection;
 import com.mysema.query.types.expr.CaseBuilder;
 import com.mysema.query.types.expr.SimpleExpression;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
+import fi.om.municipalityinitiative.newdto.json.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
@@ -61,10 +62,10 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .map(simpleExpression, participant.count()));
 
         ParticipantCount participantCount = new ParticipantCount();
-        participantCount.getRightOfVoting().setPublicNames(map.get("11").or(0L));
-        participantCount.getRightOfVoting().setPrivateNames(map.get("10").or(0L));
-        participantCount.getNoRightOfVoting().setPublicNames(map.get("01").or(0L));
-        participantCount.getNoRightOfVoting().setPrivateNames(map.get("00").or(0L));
+        participantCount.getFranchise().setPublicNames(map.get("11").or(0L));
+        participantCount.getFranchise().setPrivateNames(map.get("10").or(0L));
+        participantCount.getNoFranchise().setPublicNames(map.get("01").or(0L));
+        participantCount.getNoFranchise().setPrivateNames(map.get("00").or(0L));
         return participantCount;
 
     }
@@ -99,7 +100,11 @@ public class JdbcParticipantDao implements ParticipantDao {
                             row.get(participant.participateTime),
                             row.get(participant.name),
                             row.get(participant.franchise),
-                            row.get(QMunicipality.municipality.name));
+                            new Municipality(
+                                    row.get(QMunicipality.municipality.name),
+                                    row.get(QMunicipality.municipality.id)
+                            )
+                    );
                 }
             };
 
