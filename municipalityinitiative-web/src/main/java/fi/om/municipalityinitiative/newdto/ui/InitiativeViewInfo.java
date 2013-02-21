@@ -3,7 +3,7 @@ package fi.om.municipalityinitiative.newdto.ui;
 import fi.om.municipalityinitiative.json.JsonId;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.Urls;
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 public class InitiativeViewInfo {
 
@@ -16,10 +16,10 @@ public class InitiativeViewInfo {
 
     private String authorName;
     private boolean showName;
-    private DateTime createTime;
+    private LocalDate createTime;
     
     private Maybe<String> managementHash = Maybe.absent();
-    private Maybe<DateTime> sentTime = Maybe.absent();
+    private Maybe<LocalDate> sentTime = Maybe.absent();
 
     public String getName() {
         return name;
@@ -69,11 +69,11 @@ public class InitiativeViewInfo {
         this.showName = showName;
     }
 
-    public DateTime getCreateTime() {
+    public LocalDate getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(DateTime createTime) {
+    public void setCreateTime(LocalDate createTime) {
         this.createTime = createTime;
     }
 
@@ -101,11 +101,11 @@ public class InitiativeViewInfo {
         return sentTime.isPresent();
     }
 
-    public Maybe<DateTime> getSentTime() {
+    public Maybe<LocalDate> getSentTime() {
         return sentTime;
     }
 
-    public void setSentTime(Maybe<DateTime> sentTime) {
+    public void setSentTime(Maybe<LocalDate> sentTime) {
         this.sentTime = sentTime;
     }
 }

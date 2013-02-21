@@ -2,7 +2,7 @@ package fi.om.municipalityinitiative.newdto.email;
 
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 public class InitiativeEmailInfo {
 
@@ -12,9 +12,9 @@ public class InitiativeEmailInfo {
 
     private String proposal;
     
-    private DateTime createTime;
+    private LocalDate createTime;
     
-    private DateTime sentTime;
+    private LocalDate sentTime;
 
     private String municipalityName;
 
@@ -75,19 +75,19 @@ public class InitiativeEmailInfo {
         this.proposal = proposal;
     }
     
-    public DateTime getCreateTime() {
+    public LocalDate getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(DateTime createTime) {
+    public void setCreateTime(LocalDate createTime) {
         this.createTime = createTime;
     }
 
-    public DateTime getSentTime() {
+    public LocalDate getSentTime() {
         return sentTime;
     }
 
-    public void setSentTime(DateTime sentTime) {
+    public void setSentTime(LocalDate sentTime) {
         this.sentTime = sentTime;
     }
     

@@ -13,6 +13,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
 import java.io.IOException;
@@ -88,6 +89,10 @@ public class ReflectionTestUtils {
         if (type == LocalDateTime.class) {
             return new LocalDateTime(randomLong());
         }
+        if (type == LocalDate.class){
+            return new LocalDate(randomLong());
+        }
+
         if (type == DateTime.class) {
             return new DateTime(randomLong());
         }
@@ -145,6 +150,7 @@ public class ReflectionTestUtils {
         public MaybeModule() {
             addSerializer(Maybe.class, new MaybeSerializer());
             addSerializer(DateTime.class, new DateTimeSerializer());
+            addSerializer(LocalDate.class, new LocalDateSerializer());
         }
     }
 
@@ -155,6 +161,17 @@ public class ReflectionTestUtils {
 
         @Override
         public void serialize(DateTime value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonGenerationException {
+            jgen.writeString(value == null ? "null" : value.toString());
+        }
+    }
+
+    private static class LocalDateSerializer extends StdSerializer<LocalDate> {
+        protected LocalDateSerializer() {
+            super(LocalDate.class);
+        }
+
+        @Override
+        public void serialize(LocalDate value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonGenerationException {
             jgen.writeString(value == null ? "null" : value.toString());
         }
     }

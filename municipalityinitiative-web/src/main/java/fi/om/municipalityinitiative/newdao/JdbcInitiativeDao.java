@@ -27,6 +27,7 @@ import fi.om.municipalityinitiative.sql.QParticipant;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.MaybeHoldingHashMap;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -279,7 +280,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 protected InitiativeViewInfo map(Tuple row) {
                     InitiativeViewInfo info = new InitiativeViewInfo();
                     info.setId(row.get(municipalityInitiative.id));
-                    info.setCreateTime(row.get(municipalityInitiative.modified));
+                    info.setCreateTime(row.get(municipalityInitiative.modified).toLocalDate());
                     info.setMunicipalityName(row.get(QMunicipality.municipality.name));
                     info.setMunicipalityId(row.get(QMunicipality.municipality.id));
                     info.setName(row.get(municipalityInitiative.name));
@@ -287,10 +288,17 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     info.setAuthorName(row.get(QParticipant.participant.name));
                     info.setShowName(row.get(QParticipant.participant.showName));
                     info.setManagementHash(Maybe.fromNullable(row.get(municipalityInitiative.managementHash)));
-                    info.setSentTime(Maybe.fromNullable(row.get(municipalityInitiative.sent)));
+                    info.setSentTime(maybeLocalDate(row.get(municipalityInitiative.sent)));
                     return info;
                 }
             };
+
+    private static Maybe<LocalDate> maybeLocalDate(DateTime sentTime) {
+        if (sentTime != null) {
+            return Maybe.of(sentTime.toLocalDate());
+        }
+        return Maybe.absent();
+    }
 
     Expression<InitiativeListInfo> initiativeListInfoMapping =
             new MappingProjection<InitiativeListInfo>(InitiativeListInfo.class,
@@ -305,9 +313,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     info.setMunicipalityName(row.get(QMunicipality.municipality.name));
                     info.setName(row.get(municipalityInitiative.name));
                     info.setCollectable(row.get(municipalityInitiative.managementHash) != null);
-                    DateTime object = row.get(municipalityInitiative.sent);
-                    info.setSentTime(Maybe.fromNullable(object));
-
+                    info.setSentTime(maybeLocalDate(row.get(municipalityInitiative.sent)));
                     return info;
                 }
             };

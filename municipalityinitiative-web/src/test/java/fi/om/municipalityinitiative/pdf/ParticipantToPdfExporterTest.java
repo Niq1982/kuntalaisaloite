@@ -8,7 +8,6 @@ import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import java.io.FileNotFoundException;
@@ -31,7 +30,7 @@ public class ParticipantToPdfExporterTest {
     private static CollectableInitiativeEmailInfo createEmailInfo() {
 
         InitiativeViewInfo initiative = new InitiativeViewInfo();
-        initiative.setSentTime(Maybe.of(new DateTime()));
+        initiative.setSentTime(Maybe.of(new LocalDate()));
         initiative.setMunicipalityName("Helsinki");
 
         initiative.setName("Koira pois lähiöistä");
