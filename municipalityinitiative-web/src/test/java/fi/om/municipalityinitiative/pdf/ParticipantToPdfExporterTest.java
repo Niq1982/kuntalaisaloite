@@ -32,7 +32,7 @@ public class ParticipantToPdfExporterTest {
 
         InitiativeViewInfo initiative = new InitiativeViewInfo();
         initiative.setSentTime(Maybe.of(new LocalDate()));
-        initiative.setMunicipalityName("Helsinki");
+        initiative.setMunicipality(new Municipality("Helsinki", 1));
 
         initiative.setName("Koira pois lähiöistä");
         InitiativeEmailInfo emailInfo = InitiativeEmailInfo.parse(new ContactInfo(), initiative, "");

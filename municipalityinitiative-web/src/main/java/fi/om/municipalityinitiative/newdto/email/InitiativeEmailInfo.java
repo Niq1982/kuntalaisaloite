@@ -33,7 +33,7 @@ public class InitiativeEmailInfo {
         initiativeEmailInfo.setProposal(initiative.getProposal());
         initiativeEmailInfo.setCreateTime(initiative.getCreateTime());
         initiativeEmailInfo.setSentTime(initiative.getSentTime().get());
-        initiativeEmailInfo.setMunicipalityName(initiative.getMunicipalityName());
+        initiativeEmailInfo.setMunicipalityName(initiative.getMunicipality().getName());
         initiativeEmailInfo.setUrl(url);
         initiativeEmailInfo.setContactInfo(contactInfo);
 

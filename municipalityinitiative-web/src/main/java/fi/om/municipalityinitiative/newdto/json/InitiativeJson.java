@@ -36,7 +36,7 @@ public class InitiativeJson {
     }
 
     public Municipality getMunicipality() {
-        return new Municipality(initiative.getMunicipalityName(), initiative.getMunicipalityId());
+        return initiative.getMunicipality();
     }
 
     public String getAuthorName() {

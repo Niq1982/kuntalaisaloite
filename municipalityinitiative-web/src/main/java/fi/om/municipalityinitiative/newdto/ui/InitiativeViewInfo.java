@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.newdto.ui;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import fi.om.municipalityinitiative.json.JsonId;
 import fi.om.municipalityinitiative.json.LocalDateJsonSerializer;
+import fi.om.municipalityinitiative.newdto.json.Municipality;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.Urls;
 import org.joda.time.LocalDate;
@@ -13,8 +14,8 @@ public class InitiativeViewInfo {
     private Long id;
     private String name;
     private String proposal;
-    private String municipalityName;
     private Long municipalityId;
+    private Municipality municipality;
 
     private String authorName;
     private boolean showName;
@@ -33,14 +34,6 @@ public class InitiativeViewInfo {
         return proposal;
     }
 
-    public String getMunicipalityName() {
-        return municipalityName;
-    }
-    
-    public Long getMunicipalityId() {
-        return municipalityId;
-    }
-
     public String getAuthorName() {
         return authorName;
     }
@@ -51,10 +44,6 @@ public class InitiativeViewInfo {
 
     public void setProposal(String proposal) {
         this.proposal = proposal;
-    }
-
-    public void setMunicipalityName(String municipalityName) {
-        this.municipalityName = municipalityName;
     }
 
     public void setMunicipalityId(Long municipalityId) {
@@ -111,5 +100,13 @@ public class InitiativeViewInfo {
 
     public void setSentTime(Maybe<LocalDate> sentTime) {
         this.sentTime = sentTime;
+    }
+
+    public void setMunicipality(Municipality municipality) {
+        this.municipality = municipality;
+    }
+
+    public Municipality getMunicipality() {
+        return municipality;
     }
 }
