@@ -62,11 +62,6 @@ public class StaticPageController extends BaseController {
         return INDEX_VIEW;
     }
 
-    @RequestMapping(API)
-    public String api() {
-        return Views.API_VIEW;
-    }
-
     @RequestMapping({ HELP_INDEX_FI, HELP_INDEX_SV })
     public String helpIndex(Model model, Locale locale) {
         Urls urls = Urls.get(locale);

@@ -1,9 +1,13 @@
 package fi.om.municipalityinitiative.newdto.ui;
 
+import fi.om.municipalityinitiative.json.JsonId;
 import fi.om.municipalityinitiative.util.Maybe;
+import fi.om.municipalityinitiative.web.Urls;
 import org.joda.time.DateTime;
 
 public class InitiativeViewInfo {
+
+    @JsonId(path= Urls.INITIATIVE)
     private Long id;
     private String name;
     private String proposal;

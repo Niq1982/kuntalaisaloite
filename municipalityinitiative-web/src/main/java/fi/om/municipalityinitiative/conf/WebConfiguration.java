@@ -8,6 +8,7 @@ import com.google.common.base.Strings;
 import fi.om.municipalityinitiative.conf.WebConfiguration.WebDevConfiguration;
 import fi.om.municipalityinitiative.conf.WebConfiguration.WebProdConfiguration;
 import fi.om.municipalityinitiative.json.JsonIdAnnotationIntrospector;
+import fi.om.municipalityinitiative.newweb.ApiController;
 import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeCreateController;
 import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeViewController;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -189,6 +190,11 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
     @Bean
     public MunicipalityInitiativeViewController municipalityInitiativeViewController() {
         return new MunicipalityInitiativeViewController(optimizeResources(env), resourcesVersion(env));
+    }
+
+    @Bean
+    public ApiController apiController() {
+        return new ApiController(optimizeResources(env), resourcesVersion(env));
     }
     
     @Bean

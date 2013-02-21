@@ -107,5 +107,4 @@ public class SearchParameterGenerator {
                 .setOrderBy(InitiativeSearch.OrderBy.latest));
     }
 
-
 }
