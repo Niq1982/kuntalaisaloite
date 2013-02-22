@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newdto.email;
 
+import fi.om.municipalityinitiative.newdto.json.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import org.joda.time.LocalDate;
@@ -16,11 +17,11 @@ public class InitiativeEmailInfo {
     
     private LocalDate sentTime;
 
-    private String municipalityName;
-
     private String url;
 
     private ContactInfo contactInfo;
+
+    private Municipality municipality;
 
     InitiativeEmailInfo() { }
 
@@ -33,7 +34,7 @@ public class InitiativeEmailInfo {
         initiativeEmailInfo.setProposal(initiative.getProposal());
         initiativeEmailInfo.setCreateTime(initiative.getCreateTime());
         initiativeEmailInfo.setSentTime(initiative.getSentTime().get());
-        initiativeEmailInfo.setMunicipalityName(initiative.getMunicipalityName());
+        initiativeEmailInfo.setMunicipality(initiative.getMunicipality());
         initiativeEmailInfo.setUrl(url);
         initiativeEmailInfo.setContactInfo(contactInfo);
 
@@ -45,7 +46,7 @@ public class InitiativeEmailInfo {
         setProposal(original.getProposal());
         setCreateTime(original.getCreateTime());
         setSentTime(original.getSentTime());
-        setMunicipalityName(original.getMunicipalityName());
+        setMunicipality(original.getMunicipality());
         setUrl(original.getUrl());
         setContactInfo(original.getContactInfo());
     }
@@ -90,14 +91,6 @@ public class InitiativeEmailInfo {
     public void setSentTime(LocalDate sentTime) {
         this.sentTime = sentTime;
     }
-    
-    public String getMunicipalityName() {
-        return municipalityName;
-    }
-
-    public void setMunicipalityName(String municipalityName) {
-        this.municipalityName = municipalityName;
-    }
 
     public String getUrl() {
         return url;
@@ -113,5 +106,13 @@ public class InitiativeEmailInfo {
 
     public void setContactInfo(ContactInfo contactInfo) {
         this.contactInfo = contactInfo;
+    }
+
+    public void setMunicipality(Municipality municipality) {
+        this.municipality = municipality;
+    }
+
+    public Municipality getMunicipality() {
+        return municipality;
     }
 }

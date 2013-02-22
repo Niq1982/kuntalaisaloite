@@ -18,6 +18,7 @@ import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.exceptions.NotCollectableException;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
+import fi.om.municipalityinitiative.newdto.json.Municipality;
 import fi.om.municipalityinitiative.newdto.service.InitiativeCreateDto;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
@@ -281,9 +282,9 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     InitiativeViewInfo info = new InitiativeViewInfo();
                     info.setId(row.get(municipalityInitiative.id));
                     info.setCreateTime(row.get(municipalityInitiative.modified).toLocalDate());
-                    info.setMunicipalityName(row.get(QMunicipality.municipality.name));
-                    info.setMunicipalityId(row.get(QMunicipality.municipality.id));
+                    info.setMunicipality(new Municipality(row.get(QMunicipality.municipality.name), row.get(QMunicipality.municipality.id)));
                     info.setName(row.get(municipalityInitiative.name));
+                    info.setMunicipality(new Municipality(row.get(QMunicipality.municipality.name), row.get(QMunicipality.municipality.id)));
                     info.setProposal(row.get(municipalityInitiative.proposal));
                     info.setAuthorName(row.get(QParticipant.participant.name));
                     info.setShowName(row.get(QParticipant.participant.showName));
@@ -309,9 +310,9 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 protected InitiativeListInfo map(Tuple row) {
                     InitiativeListInfo info = new InitiativeListInfo();
                     info.setId(row.get(municipalityInitiative.id));
-                    info.setCreateTime(row.get(municipalityInitiative.modified));
-                    info.setMunicipalityName(row.get(QMunicipality.municipality.name));
+                    info.setCreateTime(row.get(municipalityInitiative.modified).toLocalDate());
                     info.setName(row.get(municipalityInitiative.name));
+                    info.setMunicipality(new Municipality(row.get(QMunicipality.municipality.name), row.get(QMunicipality.municipality.id)));
                     info.setCollectable(row.get(municipalityInitiative.managementHash) != null);
                     info.setSentTime(maybeLocalDate(row.get(municipalityInitiative.sent)));
                     return info;

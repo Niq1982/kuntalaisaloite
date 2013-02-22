@@ -73,7 +73,7 @@ public class InitiativeService {
 
         InitiativeEmailInfo emailInfo = InitiativeEmailInfo.parse(contactInfo, initiative, url);
 
-        emailService.sendNotCollectableToMunicipality(emailInfo, municipalityDao.getMunicipalityEmail(initiative.getMunicipalityId()), locale);
+        emailService.sendNotCollectableToMunicipality(emailInfo, municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), locale);
         emailService.sendNotCollectableToAuthor(emailInfo, locale);
     }
 
@@ -113,7 +113,7 @@ public class InitiativeService {
         CollectableInitiativeEmailInfo collectableEmailInfo
                 = CollectableInitiativeEmailInfo.parse(emailInfo, comment, participantDao.findAllParticipants(initiativeId));
 
-        emailService.sendCollectableToMunicipality(collectableEmailInfo, municipalityDao.getMunicipalityEmail(initiative.getMunicipalityId()), locale);
+        emailService.sendCollectableToMunicipality(collectableEmailInfo, municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), locale);
         emailService.sendCollectableToAuthor(collectableEmailInfo, locale);
     }
 

@@ -1,9 +1,11 @@
 package fi.om.municipalityinitiative.service;
 
+import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.json.InitiativeJson;
+import fi.om.municipalityinitiative.newdto.json.InitiativeListJson;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
 
 import javax.annotation.Resource;
@@ -18,8 +20,12 @@ public class JsonDataService {
     @Resource
     ParticipantDao participantDao;
 
-    public List<InitiativeListInfo> findJsonInitiatives(InitiativeSearch search) {
-        return initiativeDao.find(search); // TODO: Implement own json-dto
+    public List<InitiativeListJson> findJsonInitiatives(InitiativeSearch search) {
+        List<InitiativeListJson> result = Lists.newArrayList();
+        for (InitiativeListInfo initiativeListInfo : initiativeDao.find(search)) {
+            result.add(new InitiativeListJson(initiativeListInfo));
+        }
+        return result;
     }
 
     public InitiativeJson getInitiative(Long id) {

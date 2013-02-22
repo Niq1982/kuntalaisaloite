@@ -76,7 +76,7 @@ public class InitiativeServiceIntegrationTest {
         assertThat(initiative.getName(), is(createDto.getName()));
         assertThat(initiative.getProposal(), is(createDto.getProposal()));
         assertThat(initiative.isShowName(), is(createDto.getShowName()));
-        assertThat(initiative.getMunicipalityName(), is(testMunicipality.getName()));
+        assertThat(initiative.getMunicipality().getName(), is(testMunicipality.getName()));
 
         assertThat(initiative.getCreateTime(), is(notNullValue()));
         assertThat(initiative.getManagementHash().isPresent(), is(false));

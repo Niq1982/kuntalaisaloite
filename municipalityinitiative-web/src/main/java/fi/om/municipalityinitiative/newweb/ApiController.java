@@ -2,7 +2,7 @@ package fi.om.municipalityinitiative.newweb;
 
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.json.InitiativeJson;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
+import fi.om.municipalityinitiative.newdto.json.InitiativeListJson;
 import fi.om.municipalityinitiative.service.JsonDataService;
 import fi.om.municipalityinitiative.web.BaseController;
 import fi.om.municipalityinitiative.web.JsonpObject;
@@ -39,7 +39,7 @@ public class ApiController extends BaseController {
 
     @RequestMapping(value=INITIATIVES, method=GET, produces=JSON)
     public @ResponseBody
-    List<InitiativeListInfo> jsonList(@RequestParam(value = JSON_OFFSET, required = false) Integer offset,
+    List<InitiativeListJson> jsonList(@RequestParam(value = JSON_OFFSET, required = false) Integer offset,
                                       @RequestParam(value = JSON_LIMIT, required = false) Integer limit) {
 
         if (limit == null) {
@@ -58,10 +58,10 @@ public class ApiController extends BaseController {
     }
 
     @RequestMapping(value=INITIATIVES, method=GET, produces=JSONP, params=JSONP_CALLBACK)
-    public @ResponseBody JsonpObject<List<InitiativeListInfo>> jsonpList(@RequestParam(JSONP_CALLBACK) String callback,
-                                                                         @RequestParam(value = JSON_OFFSET, required = false) Integer offset,
-                                                                         @RequestParam(value = JSON_LIMIT, required = false) Integer limit) {
-        return new JsonpObject<List<InitiativeListInfo>>(callback, jsonList(offset, limit));
+    public @ResponseBody JsonpObject<List<InitiativeListJson>> jsonpList(@RequestParam(JSONP_CALLBACK) String callback,
+                                                    @RequestParam(value = JSON_OFFSET, required = false) Integer offset,
+                                                    @RequestParam(value = JSON_LIMIT, required = false) Integer limit) {
+        return new JsonpObject<List<InitiativeListJson>>(callback, jsonList(offset, limit));
     }
 
     @RequestMapping(value=INITIATIVE, method=GET, produces=JSON)

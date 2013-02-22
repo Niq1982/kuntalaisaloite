@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.newdto.json;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.json.JsonId;
 import fi.om.municipalityinitiative.json.LocalDateJsonSerializer;
 import fi.om.municipalityinitiative.newdto.service.Participant;
@@ -35,7 +36,7 @@ public class InitiativeJson {
     }
 
     public Municipality getMunicipality() {
-        return new Municipality(initiative.getMunicipalityName(), initiative.getMunicipalityId());
+        return initiative.getMunicipality();
     }
 
     public String getAuthorName() {
@@ -61,7 +62,9 @@ public class InitiativeJson {
             return new CollectableInitiativeJson(initiativeInfo, publicParticipants, participantCount);
         }
         else {
-            return new InitiativeJson(initiativeInfo);
+//            return new InitiativeJson(initiativeInfo);
+            // XXX: MMh... Whould it be better if non-collectable initiative would not return any participantinformation at all or not?
+            return new CollectableInitiativeJson(initiativeInfo, Lists.<Participant>newArrayList(), new ParticipantCount());
         }
     }
 

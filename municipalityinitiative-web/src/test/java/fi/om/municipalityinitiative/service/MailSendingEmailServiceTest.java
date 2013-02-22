@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
 import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.email.InitiativeEmailInfo;
+import fi.om.municipalityinitiative.newdto.json.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
@@ -36,6 +37,7 @@ public class MailSendingEmailServiceTest {
     public static final String INITIATIVE_NAME = "Some name whatever";
     public static final String INITIATIVE_PROPOSAL = "Some proposal whatever";
     public static final String INITIATIVE_MUNICIPALITY = "Some municipality";
+    public static final long INITIATIVE_MUNICIPALITY_ID = 1L;
     public static final String CONTACT_PHONE = "Phone number";
     public static final String CONTACT_EMAIL = "sender.email@example.com";
     public static final String CONTACT_NAME = "Sender Name";
@@ -259,7 +261,7 @@ public class MailSendingEmailServiceTest {
         InitiativeViewInfo initiativeViewInfo = new InitiativeViewInfo();
         initiativeViewInfo.setName(INITIATIVE_NAME);
         initiativeViewInfo.setProposal(INITIATIVE_PROPOSAL);
-        initiativeViewInfo.setMunicipalityName(INITIATIVE_MUNICIPALITY);
+        initiativeViewInfo.setMunicipality(new Municipality(INITIATIVE_MUNICIPALITY, INITIATIVE_MUNICIPALITY_ID));
         initiativeViewInfo.setCreateTime(new LocalDate(2013, 1, 1));
         initiativeViewInfo.setSentTime(Maybe.of(new LocalDate(2013, 1, 1)));
 

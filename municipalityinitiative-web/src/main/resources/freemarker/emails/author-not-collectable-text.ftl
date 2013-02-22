@@ -1,7 +1,7 @@
 <#import "../components/email-utils.ftl" as u />
 <#import "../components/email-blocks.ftl" as b />
 
- <@u.message "email.author.sentToMunicipality.title" /> ${emailInfo.municipalityName!""}
+ <@u.message "email.author.sentToMunicipality.title" /> ${emailInfo.municipality.name!""}
 
 <@b.initiativeDetails "text" />
 

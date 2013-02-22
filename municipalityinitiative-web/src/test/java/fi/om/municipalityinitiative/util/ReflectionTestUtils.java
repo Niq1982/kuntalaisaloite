@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import fi.om.municipalityinitiative.newdto.json.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.Participants;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -107,6 +108,10 @@ public class ReflectionTestUtils {
         if (type == Participants.class) {
             return modifyAllFields(new Participants());
         }
+        if (type == Municipality.class) {
+            return modifyAllFields(new Municipality("", 0));
+        }
+
         if (type.equals(List.class)) {
             return new ArrayList<>();
         }
