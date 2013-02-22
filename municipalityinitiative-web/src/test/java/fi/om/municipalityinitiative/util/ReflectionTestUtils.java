@@ -1,10 +1,6 @@
 package fi.om.municipalityinitiative.util;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import fi.om.municipalityinitiative.json.LocalDateJsonSerializer;
-import fi.om.municipalityinitiative.json.MaybeSerializer;
+import fi.om.municipalityinitiative.json.ObjectSerializer;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.Participants;
@@ -15,7 +11,6 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -122,20 +117,7 @@ public class ReflectionTestUtils {
      * @param o
      */
     public static void assertNoNullFields(Object o){
-            assertThat(objectToString(o), not(containsString(":null")));
-    }
-
-    private static String objectToString(Object o) {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.setVisibilityChecker(mapper.getVisibilityChecker()
-                .withFieldVisibility(JsonAutoDetect.Visibility.ANY));
-
-        mapper.registerModule(new MaybeModule());
-        try {
-            return mapper.writeValueAsString(o);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+            assertThat(ObjectSerializer.objectToString(o), not(containsString(":null")));
     }
 
     private static int randomInt() {
@@ -148,13 +130,6 @@ public class ReflectionTestUtils {
 
     private static String randomString() {
         return RandomStringUtils.randomAlphabetic(5);
-    }
-
-    public static final class MaybeModule extends SimpleModule {
-        public MaybeModule() {
-            addSerializer(Maybe.class, new MaybeSerializer());
-            addSerializer(LocalDate.class, new LocalDateJsonSerializer());
-        }
     }
 
 }
