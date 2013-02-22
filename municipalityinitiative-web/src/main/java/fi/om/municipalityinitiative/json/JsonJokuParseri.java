@@ -9,11 +9,6 @@ import java.util.Map;
 
 public class JsonJokuParseri {
 
-
-    public static String toJson(Object o) {
-        return "";
-    }
-
     public static List<IndentedString> toParts(String jsonData) {
         jsonData = addEndlines(jsonData, "{", "},", ",", "[", "]");
         jsonData = jsonData.replace("}", "\n}");
@@ -79,7 +74,7 @@ public class JsonJokuParseri {
         }
 
         public int getIndent() {
-            return indent;
+            return indent*2;
         }
 
         public String getValue() {
@@ -91,19 +86,24 @@ public class JsonJokuParseri {
         }
 
         public String getLocalizationKey() {
-            if (value.contains("\"")) {
-                return parseValue(parent) +"."+ parseValue(value);
-            }
-            return "";
-
+            if (hasProperty(value))
+                return "api"+parseValue(this.parent) + parseValue(value);
+            return "api";
         }
 
         private static String parseValue(String value) {
-            if (value.contains("\"")) {
-                return value.split("\"")[1];
-
+            if (hasProperty(value)) {
+                return "."+ getProperty(value);
             }
             return "";
+        }
+
+        private static String getProperty(String value) {
+            return value.split("\"")[1];
+        }
+
+        private static boolean hasProperty(String value) {
+            return value.contains("\"");
         }
     }
 

@@ -2,9 +2,6 @@ package fi.om.municipalityinitiative.json;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import fi.om.municipalityinitiative.util.Maybe;
-import org.joda.time.LocalDate;
 
 import java.io.IOException;
 
@@ -14,7 +11,8 @@ public class ObjectSerializer {
         mapper.setVisibilityChecker(mapper.getVisibilityChecker()
                 .withFieldVisibility(JsonAutoDetect.Visibility.PUBLIC_ONLY));
 
-        mapper.registerModule(new MaybeModule());
+//        mapper.registerModule(new MaybeModule());
+        mapper.setAnnotationIntrospector(new JsonIdAnnotationIntrospector("asd"));
         try {
             return mapper.writeValueAsString(o);
         } catch (IOException e) {
@@ -22,10 +20,10 @@ public class ObjectSerializer {
         }
     }
 
-    public static final class MaybeModule extends SimpleModule {
-        public MaybeModule() {
-            addSerializer(Maybe.class, new MaybeSerializer());
-            addSerializer(LocalDate.class, new LocalDateJsonSerializer());
-        }
-    }
+//    public static final class MaybeModule extends SimpleModule {
+//        public MaybeModule() {
+//            addSerializer(Maybe.class, new MaybeSerializer());
+//            addSerializer(LocalDate.class, new LocalDateJsonSerializer());
+//        }
+//    }
 }
