@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import java.util.Locale;
 
+import static fi.om.municipalityinitiative.web.Urls.ACTION_SAVE_AND_SEND;
 import static fi.om.municipalityinitiative.web.Urls.CREATE_FI;
 import static fi.om.municipalityinitiative.web.Urls.CREATE_SV;
 import static fi.om.municipalityinitiative.web.Views.CREATE_VIEW;
@@ -58,6 +59,25 @@ public class MunicipalityInitiativeCreateController extends BaseController {
         return CREATE_VIEW;
     }
 
+    @RequestMapping(value={ CREATE_FI, CREATE_SV }, method=POST, params=ACTION_SAVE_AND_SEND)
+    public String createAndSendPost(@ModelAttribute("initiative") InitiativeUICreateDto initiative,
+                            BindingResult bindingResult,
+                            Model model,
+                            Locale locale,
+                            HttpServletRequest request) {
+
+        if (validionService.validationErrors(initiative, bindingResult, model)) {
+            model.addAttribute("initiative", initiative);
+            model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
+            return CREATE_VIEW;
+        }
+
+        Urls urls = Urls.get(locale);
+
+        Long initiativeId = initiativeService.createMunicipalityInitiative(initiative, locale);
+        return redirectWithMessage(urls.view(initiativeId), RequestMessage.SAVE_AND_SEND, request);
+    }
+    
     @RequestMapping(value={ CREATE_FI, CREATE_SV }, method=POST)
     public String createPost(@ModelAttribute("initiative") InitiativeUICreateDto initiative,
                             BindingResult bindingResult,
@@ -72,16 +92,14 @@ public class MunicipalityInitiativeCreateController extends BaseController {
         }
 
         Urls urls = Urls.get(locale);
-        if (initiative.isCollectable()) {
-            Long initiativeId = initiativeService.createMunicipalityInitiative(initiative, locale);
-            return redirectWithMessage(urls.view(initiativeId), RequestMessage.SAVE, request);
-        }
-        else {
-            Long initiativeId = initiativeService.createMunicipalityInitiative(initiative, locale);
-            return redirectWithMessage(urls.view(initiativeId), RequestMessage.SAVE_AND_SEND, request);
-        }
-    }
 
+        initiative.setCollectable(true);
+        
+        Long initiativeId = initiativeService.createMunicipalityInitiative(initiative, locale);
+        return redirectWithMessage(urls.view(initiativeId), RequestMessage.SAVE, request);
+        
+    }
+    
     @InitBinder
     public void initBinder(WebDataBinder binder, Locale locale) {
         binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));

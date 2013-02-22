@@ -107,7 +107,7 @@ public final class Urls {
     public static final String PARAM_MANAGEMENT_CODE = "management";
     
     // In Municipality initiative
-    public static final String ACTION_SAVE = "collectable";
+    public static final String ACTION_SAVE = "action-save";
     
     // In Municipality initiative
     public static final String ACTION_SAVE_AND_SEND = "action-save-and-send";
