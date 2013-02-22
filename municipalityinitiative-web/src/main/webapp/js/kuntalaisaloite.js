@@ -526,14 +526,14 @@ var municipalitySelection = (function() {
 	
 	// Disable or enable submitting "Save and collect"
 	function disableSubmit(disable){
-		$('button#collectable, button#participate').disableButton(disable);
+		$('button#action-save, button#participate').disableButton(disable);
 	}
 	
 	// Toggle the radiobutton selection for municipality membership
 	function toggleMembershipRadios(select){
 		var franchise			= $('#franchise'),
 			municipalMembership	= $('#municipalMembership'),
-			btnCollectable		= $('button#collectable');
+			btnCollectable		= $('button#action-save');
 		
 		if( equalMunicipalitys() ){
 			municipalityNotEqual.stop(false,true).slideUp(slideOptions);

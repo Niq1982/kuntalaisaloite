@@ -29,9 +29,9 @@
     <#if type == "next">
         <a href="#step-header-${nextStep}" id="button-next-${nextStep}" class="small-button disable-dbl-click-check ignoredirty js-proceed-to-next" data-next-step="${nextStep}"><span class="small-icon next"><@u.message "action.continue" /></span></a>
     <#elseif type == "save-and-send">
-        <button type="submit" name="action-save-and-send" class="small-button" ><span class="small-icon mail"><@u.message "action.saveAndSend" /></span></button>
+        <button type="submit" name="action-save-and-send" class="small-button"><span class="small-icon mail"><@u.message "action.saveAndSend" /></span></button>
     <#elseif type == "save">
-        <button type="submit" id="collectable" name="collectable" class="small-button" value="true" ><span class="small-icon save-and-send"><@u.message "action.saveAndCollect" /></span></button>
+        <button type="submit" id="action-save" name="action-save" class="small-button" value="true" ><span class="small-icon save-and-send"><@u.message "action.saveAndCollect" /></span></button>
     </#if>
 </#macro>
 
