@@ -1,12 +1,10 @@
 package fi.om.municipalityinitiative.util;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import fi.om.municipalityinitiative.json.LocalDateJsonSerializer;
+import fi.om.municipalityinitiative.json.MaybeSerializer;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.Participants;
@@ -124,19 +122,20 @@ public class ReflectionTestUtils {
      * @param o
      */
     public static void assertNoNullFields(Object o){
+            assertThat(objectToString(o), not(containsString(":null")));
+    }
+
+    private static String objectToString(Object o) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setVisibilityChecker(mapper.getVisibilityChecker()
                 .withFieldVisibility(JsonAutoDetect.Visibility.ANY));
 
         mapper.registerModule(new MaybeModule());
-
         try {
-            assertThat(mapper.writeValueAsString(o), not(containsString(":null")));
-        }
-        catch (IOException e) {
+            return mapper.writeValueAsString(o);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     private static int randomInt() {
@@ -154,48 +153,8 @@ public class ReflectionTestUtils {
     public static final class MaybeModule extends SimpleModule {
         public MaybeModule() {
             addSerializer(Maybe.class, new MaybeSerializer());
-            addSerializer(DateTime.class, new DateTimeSerializer());
-            addSerializer(LocalDate.class, new LocalDateSerializer());
+            addSerializer(LocalDate.class, new LocalDateJsonSerializer());
         }
     }
 
-    private static class DateTimeSerializer extends StdSerializer<DateTime> {
-        protected DateTimeSerializer() {
-            super(DateTime.class);
-        }
-
-        @Override
-        public void serialize(DateTime value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonGenerationException {
-            jgen.writeString(value == null ? "null" : value.toString());
-        }
-    }
-
-    private static class LocalDateSerializer extends StdSerializer<LocalDate> {
-        protected LocalDateSerializer() {
-            super(LocalDate.class);
-        }
-
-        @Override
-        public void serialize(LocalDate value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonGenerationException {
-            jgen.writeString(value == null ? "null" : value.toString());
-        }
-    }
-
-    private static class MaybeSerializer extends StdSerializer<Maybe> {
-
-        protected MaybeSerializer() {
-            super(Maybe.class);
-        }
-
-        @Override
-        public void serialize(Maybe value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonGenerationException {
-            if (value.isPresent()) {
-                jgen.writeString(value.get().toString());
-            }
-            else {
-                jgen.writeString("absent");
-            }
-        }
-
-    }
 }
