@@ -11,7 +11,6 @@ import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.ui.MunicipalityInfo;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.Maybe;
-import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -24,6 +23,7 @@ import javax.annotation.Resource;
 
 import java.util.List;
 
+import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
@@ -108,10 +108,6 @@ public class JdbcInitiativeDaoTest {
     @Test // TODO: Write test and implement after participantcount is denormalized
     public void find_orders_by_participants() {
 
-    }
-
-    private static <T> void precondition(T actual, Matcher<? super T> matcher) {
-        assertThat("Precondition failed", actual, matcher);
     }
 
     @Test

@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.JavaMailSenderFake;
@@ -16,8 +17,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
 
+import java.util.List;
 import java.util.Random;
 
+import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.fail;
@@ -178,6 +181,37 @@ public class InitiativeServiceIntegrationTest {
         // TODO: Implement some test that ensures that emailservice is really used. (verifying by mock is ok)
     }
 
+    @Test
+    public void sets_participant_count_to_one_when_adding_new_collectable_initiative() {
+        service.createMunicipalityInitiative(createDto(true), null);
+        List<InitiativeListInfo> initiatives = service.findMunicipalityInitiatives(new InitiativeSearch().setShow(InitiativeSearch.Show.all));
+        precondition(initiatives, hasSize(1));
+        assertThat(initiatives.get(0).getParticipantCount(), is(1L));
+    }
+
+    @Test
+    public void leaves_participant_count_to_zero_when_adding_new_non_collectable_initiative() {
+        service.createMunicipalityInitiative(createDto(false), null);
+        List<InitiativeListInfo> initiatives = service.findMunicipalityInitiatives(new InitiativeSearch().setShow(InitiativeSearch.Show.all));
+        precondition(initiatives, hasSize(1));
+        assertThat(initiatives.get(0).getParticipantCount(), is(0L));
+    }
+
+    @Test
+    public void increases_participant_count_when_participating_to_collectable_initiative() {
+        Long municipalityInitiative = service.createMunicipalityInitiative(createDto(true), null);
+
+        ParticipantUICreateDto participant = new ParticipantUICreateDto();
+        participant.setParticipantName("name");
+        participant.setHomeMunicipality(testMunicipality.getId());
+        participant.setFranchise(true);
+        participant.setShowName(true);
+        service.createParticipant(participant, municipalityInitiative);
+
+        List<InitiativeListInfo> initiatives = service.findMunicipalityInitiatives(new InitiativeSearch().setShow(InitiativeSearch.Show.all));
+        precondition(initiatives, hasSize(1));
+        assertThat(initiatives.get(0).getParticipantCount(), is(2L));
+    }
 
     private InitiativeUICreateDto createDto(boolean collectable) {
         InitiativeUICreateDto createDto = new InitiativeUICreateDto();

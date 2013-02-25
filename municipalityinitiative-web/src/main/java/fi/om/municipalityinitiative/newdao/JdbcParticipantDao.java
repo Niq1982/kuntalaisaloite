@@ -14,6 +14,7 @@ import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.sql.QMunicipality;
+import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.MaybeHoldingHashMap;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,13 +34,24 @@ public class JdbcParticipantDao implements ParticipantDao {
     @Override
     @Transactional(readOnly = false)
     public Long create(ParticipantCreateDto createDto) {
-        return queryFactory.insert(participant)
+        Long participantId = queryFactory.insert(participant)
                 .set(participant.franchise, createDto.isFranchise())
                 .set(participant.municipalityId, createDto.getHomeMunicipality())
                 .set(participant.municipalityInitiativeId, createDto.getMunicipalityInitiativeId())
                 .set(participant.name, createDto.getParticipantName())
                 .set(participant.showName, createDto.isShowName())
                 .executeWithKey(participant.id);
+
+        // Increase denormalized participantCount if collectable initiative.
+        // DB constraint will also fail if trying to increase count for non-collectable initiative
+        queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
+                .set(QMunicipalityInitiative.municipalityInitiative.participantCount,
+                        QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
+                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(createDto.getMunicipalityInitiativeId()))
+                .where(QMunicipalityInitiative.municipalityInitiative.managementHash.isNotNull())
+                .execute();
+
+        return participantId;
     }
 
     // TODO: Fix magic strings to enum constants or something.
