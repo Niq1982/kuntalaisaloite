@@ -87,8 +87,10 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 query.orderBy(municipalityInitiative.id.desc());
                 break;
             case mostParticipants:
+                query.orderBy(municipalityInitiative.participantCount.desc(), municipalityInitiative.id.desc());
+                break;
             case leastParticipants:
-                query.orderBy(municipalityInitiative.id.desc()); // TODO: Write test and implement
+                query.orderBy(municipalityInitiative.participantCount.asc(), municipalityInitiative.id.asc());
                 break;
             default:
                 throw new RuntimeException("Order by not implemented:" + orderBy);

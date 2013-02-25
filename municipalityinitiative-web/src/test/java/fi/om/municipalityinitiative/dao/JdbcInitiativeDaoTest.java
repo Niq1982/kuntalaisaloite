@@ -105,8 +105,27 @@ public class JdbcInitiativeDaoTest {
         assertThat(latestSentFirst.get(0).getId(), is(latestId));
     }
 
-    @Test // TODO: Write test and implement after participantcount is denormalized
+    @Test
     public void find_orders_by_participants() {
+
+        Long mostParticipants = testHelper.createTestInitiative(testMunicipality.getId(), "MostParticipants", true, true);
+        Long leastParticipants = testHelper.createTestInitiative(testMunicipality.getId(), "LeastParticipants", true, true);
+        Long someParticipants = testHelper.createTestInitiative(testMunicipality.getId(), "LeastParticipants", true, true);
+
+        testHelper.updateField(leastParticipants, QMunicipalityInitiative.municipalityInitiative.participantCount, 1);
+        testHelper.updateField(mostParticipants, QMunicipalityInitiative.municipalityInitiative.participantCount, 10);
+        testHelper.updateField(someParticipants, QMunicipalityInitiative.municipalityInitiative.participantCount, 5);
+
+
+        InitiativeSearch initiativeSearch = initiativeSearch().setShow(InitiativeSearch.Show.all);
+
+        List<InitiativeListInfo> mostParticipantsFirst = initiativeDao.find(initiativeSearch.setOrderBy(InitiativeSearch.OrderBy.mostParticipants));
+        precondition(mostParticipantsFirst, hasSize(3)); // Precondition
+        assertThat(mostParticipantsFirst.get(0).getId(), is(mostParticipants));
+
+        List<InitiativeListInfo> leastParticipantsFirst = initiativeDao.find(initiativeSearch.setOrderBy(InitiativeSearch.OrderBy.leastParticipants));
+        precondition(leastParticipantsFirst, hasSize(3)); // Precondition
+        assertThat(leastParticipantsFirst.get(0).getId(), is(leastParticipants));
 
     }
 
