@@ -12,7 +12,7 @@ public class ObjectSerializer {
     public static String objectToString(Object o) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setVisibilityChecker(mapper.getVisibilityChecker()
-                .withFieldVisibility(JsonAutoDetect.Visibility.PUBLIC_ONLY));
+                .withFieldVisibility(JsonAutoDetect.Visibility.ANY));
 
         mapper.registerModule(new MaybeModule());
         try {
