@@ -53,7 +53,7 @@ public class SearchParameterGenerator {
     }
 
     public String getWithLimit(int limit) {
-        return generateParameters(original.copy().setLimit(limit));
+        return generateParameters(original.copy().setOffset(0).setLimit(limit));
     }
 
     public String getWithOffset(int offset) {

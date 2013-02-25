@@ -28,9 +28,9 @@ public class SearchParameterGeneratorTest {
     }
 
     @Test
-    public void changes_limit() {
+    public void changes_limit_and_clears_offset() {
         String parameters = new SearchParameterGenerator(initiativeSearch).getWithLimit(17);
-        assertThat(parameters, is("?offset=5&limit=17&orderBy=id&show=collecting&municipality=1&search=pattern"));
+        assertThat(parameters, is("?offset=0&limit=17&orderBy=id&show=collecting&municipality=1&search=pattern"));
     }
 
     @Test
