@@ -14,6 +14,7 @@ import com.mysema.query.types.expr.CaseBuilder;
 import com.mysema.query.types.expr.DateTimeExpression;
 import com.mysema.query.types.expr.SimpleExpression;
 import com.mysema.query.types.path.StringPath;
+import fi.om.municipalityinitiative.dao.NotFoundException;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.exceptions.NotCollectableException;
@@ -183,7 +184,11 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .leftJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
                 .where(municipalityInitiative.id.eq(id));
 
-        return query.uniqueResult(initiativeInfoMapping);
+        InitiativeViewInfo initiativeViewInfo = query.uniqueResult(initiativeInfoMapping);
+        if (initiativeViewInfo == null) {
+            throw new NotFoundException("initiative", id);
+        }
+        return initiativeViewInfo;
     }
 
     @Override

@@ -363,6 +363,11 @@ public class JdbcInitiativeDaoTest {
 
     }
 
+    @Test(expected = NotFoundException.class)
+    public void throws_exception_if_initiative_is_not_found() {
+        initiativeDao.getById(-1L);
+    }
+
     private static ContactInfo contactInfo() {
         return new ContactInfo();
     }
