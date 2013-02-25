@@ -2,12 +2,12 @@ package fi.om.municipalityinitiative.newweb;
 
 import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.json.JsonJokuParseri;
-import fi.om.municipalityinitiative.json.ObjectSerializer;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.json.InitiativeJson;
 import fi.om.municipalityinitiative.newdto.json.InitiativeListJson;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
+import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.service.JsonDataService;
@@ -16,7 +16,7 @@ import fi.om.municipalityinitiative.web.BaseController;
 import fi.om.municipalityinitiative.web.JsonpObject;
 import fi.om.municipalityinitiative.web.Views;
 import org.joda.time.LocalDate;
-import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +27,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -43,20 +45,35 @@ public class ApiController extends BaseController {
     JsonDataService jsonDataService;
 
     @Resource
-    HttpMessageConverter jsonConverter;
+    MappingJackson2HttpMessageConverter jsonConverter;
 
     public ApiController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
     }
 
     @RequestMapping(API)
-    public String api(Model model, Locale locale, HttpServletRequest request) {
+    public String api(Model model, Locale locale, HttpServletRequest request) throws IOException {
 
         InitiativeJson initiativeJsonObject = createInitiativeJsonObject();
-        String json = ObjectSerializer.objectToString(initiativeJsonObject);
+        String json = jsonConverter.getObjectMapper().writeValueAsString(initiativeJsonObject);
         model.addAttribute("publicInitiative", JsonJokuParseri.toParts(json));
 
+        List<InitiativeListJson> initiativeListJson = createInitiativeListJsonObject();
+        json = jsonConverter.getObjectMapper().writeValueAsString(initiativeListJson);
+        model.addAttribute("initiativeList", JsonJokuParseri.toParts(json));
         return Views.API_VIEW;
+    }
+
+    private List<InitiativeListJson> createInitiativeListJsonObject() {
+        InitiativeListInfo initiative = new InitiativeListInfo();
+        initiative.setMunicipality(new Municipality("Tampere", 1));
+        initiative.setSentTime(Maybe.of(new LocalDate(2012, 12, 24)));
+        initiative.setCollectable(true);
+        initiative.setCreateTime(new LocalDate(2012, 12, 1));
+        initiative.setId(1L);
+        initiative.setName("Koirat pois lähiöistä");
+        initiative.setParticipantCount(2);
+        return Collections.singletonList(new InitiativeListJson(initiative));
     }
 
     private InitiativeJson createInitiativeJsonObject() {
@@ -70,7 +87,7 @@ public class ApiController extends BaseController {
 
         ArrayList<Participant> publicParticipants = Lists.<Participant>newArrayList();
         publicParticipants.add(new Participant(new LocalDate(2010, 1, 1), "Teemu Teekkari", true, TAMPERE));
-        publicParticipants.add(new Participant(new LocalDate(2010, 1, 1), "Taina Teekkari", false, new Municipality("Helsinki", 2L)));
+//        publicParticipants.add(new Participant(new LocalDate(2010, 1, 1), "Taina Teekkari", false, new Municipality("Helsinki", 2L)));
 
         InitiativeViewInfo initiativeInfo = new InitiativeViewInfo();
         initiativeInfo.setId(1L);

@@ -56,4 +56,30 @@ Id of an initiative is an URI of initiative details in <a href="http://www.json.
   </tbody>
 </table>
 
+<h3 id="properties">Initiative list</h3>
+
+<table class="data">
+  <thead>
+    <tr>
+        <th>Example
+        </th>
+        <th>Data Type
+        </th>
+        <th>Description
+        </th>
+    </tr>
+  </thead>
+  <tbody>
+    <#list initiativeList as i>
+    <tr>
+        <td class="apiExample" style="padding-left:${i.indent}0px">
+            ${i.value}
+        </td>
+        <td><@u.message i.localizationKey +".datatype" /></td>
+        <td><@u.message i.localizationKey /></td>
+        </tr>
+    </#list>
+  </tbody>
+</table>
+
 </@l.main> </#escape>

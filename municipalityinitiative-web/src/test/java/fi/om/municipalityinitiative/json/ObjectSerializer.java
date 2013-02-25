@@ -12,7 +12,6 @@ public class ObjectSerializer {
                 .withFieldVisibility(JsonAutoDetect.Visibility.PUBLIC_ONLY));
 
 //        mapper.registerModule(new MaybeModule());
-        mapper.setAnnotationIntrospector(new JsonIdAnnotationIntrospector("asd"));
         try {
             return mapper.writeValueAsString(o);
         } catch (IOException e) {

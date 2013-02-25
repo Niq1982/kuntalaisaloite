@@ -147,7 +147,7 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
     }
 
     @Bean
-    public HttpMessageConverter<?> jsonConverter() {
+    public MappingJackson2HttpMessageConverter jsonConverter() {
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
 
         ObjectMapper objectMapper = new ObjectMapper();
