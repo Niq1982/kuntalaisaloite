@@ -65,15 +65,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
         List<InitiativeListInfo> list = query.list(initiativeListInfoMapping);
 
-        // TODO: de-normalize count to own column
-        // TODO: Non-collectable initiatives should have participantCount as 0
-        for (InitiativeListInfo initiativeListInfo : list) {
-            initiativeListInfo.setParticipantCount(
-                    queryFactory.from(QParticipant.participant)
-                            .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeListInfo.getId()))
-                            .count());
-        }
-
         return list;
 
     }
@@ -316,6 +307,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     info.setMunicipality(new Municipality(row.get(QMunicipality.municipality.name), row.get(QMunicipality.municipality.id)));
                     info.setCollectable(row.get(municipalityInitiative.managementHash) != null);
                     info.setSentTime(maybeLocalDate(row.get(municipalityInitiative.sent)));
+                    info.setParticipantCount(row.get(municipalityInitiative.participantCount));
                     return info;
                 }
             };

@@ -160,10 +160,11 @@ public class JdbcInitiativeDaoTest {
 
     @Test
     public void counts_participants_to_listView() {
-        testHelper.createTestInitiative(testMunicipality.getId(), "Not collectable", false, false);
+        Long initiativeId = testHelper.createTestInitiative(testMunicipality.getId(), "Collectable", true, true);
+        testHelper.updateField(initiativeId, QMunicipalityInitiative.municipalityInitiative.participantCount, 17);
         List<InitiativeListInfo> all = initiativeDao.find(initiativeSearch());
         assertThat(all, hasSize(1));
-        assertThat(all.get(0).getParticipantCount(), is(1L));
+        assertThat(all.get(0).getParticipantCount(), is(17L));
     }
 
     @Test
