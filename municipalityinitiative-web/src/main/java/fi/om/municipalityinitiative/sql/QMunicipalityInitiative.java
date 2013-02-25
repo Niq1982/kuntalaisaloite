@@ -43,6 +43,8 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
 
     public final StringPath name = createString("name");
 
+    public final NumberPath<Integer> participantCount = createNumber("participant_count", Integer.class);
+
     public final StringPath proposal = createString("proposal");
 
     public final DateTimePath<org.joda.time.DateTime> sent = createDateTime("sent", org.joda.time.DateTime.class);

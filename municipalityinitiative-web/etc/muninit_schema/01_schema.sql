@@ -21,6 +21,7 @@ create table municipality_initiative (
     name varchar(512) constraint municipality_initiative_name_nn not null,
     proposal text,
     management_hash char(40),
+    participant_count integer default 0,
     sent timestamp,
     comment varchar(1024),
 
@@ -31,6 +32,7 @@ create table municipality_initiative (
 
 	constraint municipality_initiative_pk primary key (id),
 	constraint municipality_initiative_municipality_fk foreign key (municipality_id) references municipality(id)
+
 );
 
 create index municipality_initiative_id_index on municipality_initiative(id);
@@ -54,3 +56,5 @@ create table participant (
 create index participant_id_index on participant(id);
 
 alter table municipality_initiative add constraint municipality_initiative_author_fk foreign key(author_id) references participant(id) INITIALLY DEFERRED;
+alter table municipality_initiative add constraint collectable_dependencies
+    check ((management_hash is null and participant_count = 0 and sent is not null and comment is null) or (management_hash is not null));
