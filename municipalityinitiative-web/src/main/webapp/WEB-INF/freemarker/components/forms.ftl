@@ -178,7 +178,7 @@
  *        or CSS styles or size
  * @param preSelected the predefined value for the select
 -->
-<#macro municipalitySelect path options required="" cssClass="" attributes="" preSelected="" showLabel=true>
+<#macro municipalitySelect path options required="" cssClass="" attributes="" preSelected="" showLabel=true defaultOption="initiative.chooseMunicipality">
     <@spring.bind path />
     
     <#if showLabel>
@@ -197,8 +197,8 @@
         <#assign data = spring.status.value!"" />
     </#if>
 
-    <select name="${spring.status.expression}" id="${spring.status.expression}" ${attributes} class="chzn-select ${cssClass}" data-initiative-municipality="${data}" data-placeholder="<@u.message "initiative.chooseMunicipality" />">
-        <option value=""><@u.message "initiative.chooseMunicipality" /></option>
+    <select name="${spring.status.expression}" id="${spring.status.expression}" ${attributes} class="chzn-select ${cssClass}" data-initiative-municipality="${data}" data-placeholder="<@u.message defaultOption />">
+        <option value=""><@u.message defaultOption /></option>
         <#list options as option>
             <option value="${option.id}"<@checkSelected option.id preSelected />>${option.name}</option>
         </#list>

@@ -32,7 +32,7 @@
     <div class="search-parameters-container cf">
         <form action="${springMacroRequestContext.requestUri}" method="GET" id="search-form" class="search-form">
             <div class="column col-1of3">
-                <@f.municipalitySelect path="currentSearch.municipality" options=municipalities required="" cssClass="municipality-filter" showLabel=false />
+                <@f.municipalitySelect path="currentSearch.municipality" options=municipalities required="" cssClass="municipality-filter" showLabel=false defaultOption="currentSearch.municipality.all" />
             </div>
             
             <#-- Submit button for NOSCRIPT users -->
