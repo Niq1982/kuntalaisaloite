@@ -1,0 +1,1337 @@
+// TODO remove initiative web stuff
+
+// 1. Basic colors                          - Styleguide 1
+// 2. Mixings                               - Styleguide 2
+//   2.1. Rounded corners                   - Styleguide 2.1
+//   2.2. Transition                        - Styleguide 2.2
+// 3. Form elements                         - Styleguide 3
+//   3.1. Form block
+//   3.2. Text fields                       - Styleguide 3.2
+//   3.3. Radio buttons and checkboxes      - Styleguide 3.3
+//   3.4. Help and required                 - Styleguide 3.4
+// 4. Buttons                               - Styleguide 4
+//   4.1. Generic buttons                   - Styleguide 4.1
+//      4.1.1. Green button
+//      4.1.2. Red button
+//      4.1.3. Gray button
+//   4.2. Buttons with icons                - Styleguide 4.2
+// 5. jQueryTools                           - Styleguide 5
+//   5.1. Modal                             - Styleguide 5.1
+//   5.2. Tooltip                           - Styleguide 5.2
+//   5.3. DateInput
+// 6. Messages                              - Styleguide 6
+// 7. Typography                            - Styleguide 7
+// 8. Tables                                - Styleguide 8
+// 9. Search results
+// 10. Flow state indicator                 - Styleguide 10
+
+
+// Basic colors used on the service.
+//
+// Styleguide 1.
+
+@bodyBackground:        #f0f0f0;
+@mainColor:             #D94E9C;
+@secondaryColor:        #00B4AF;
+@tertiaryColor:         #6D6E71;
+@lightGray:             #b7b7b7;
+@bodyColor:             #444444;
+
+@gradientDark:          #0ece27;
+@borderGray:            #cccccc;
+@secondaryTextColor:    #686868;
+@black:                 #000000; 
+
+@greenGradient1:        #76b522;
+@greenGradient2:        #387d0e;
+@greenGradientActive1:  #68ac0d;
+@greenGradientActive2:  #1f5100;
+@greenGradientHover1:   #76bb19;
+@greenGradientHover2:   #2d7103;
+
+@redGradient1:          #e80a13;
+@redGradient2:          #b51105;
+@redGradientHover1:     #fe000a;
+@redGradientHover2:     #a60b00;
+@redGradientActive1:    #ec0009;
+@redGradientActive2:    #810900;
+
+@grayGradient1:         #ffffff;
+@grayGradient2:         #e2e2e2;
+@grayGradientActive1:   #ffffff;
+@grayGradientActive2:   #b2b2b2;
+@grayGradientHover1:    #ffffff;
+@grayGradientHover2:    #d7d7d7;
+
+@cornerRadius: 0.8em;
+@cornerRadiusSmall: 0.4em;
+@cornerRadiusXtraSmall: 0.2em;
+
+@dimmed: 0.6;
+
+// Mixing
+//
+// Rounded corners 
+//
+// Styleguide 2.1
+
+.rounded-corners (@cornerRadius: 0.8em) {
+    -webkit-border-radius: @cornerRadius;
+    -moz-border-radius: @cornerRadius;
+    border-radius: @cornerRadius;
+}
+.rounded-corners-top-left (@cornerRadius: 0.8em) {
+    -webkit-border-top-left-radius: @cornerRadius;
+    -moz-border-top-left-radius: @cornerRadius;
+    border-top-left-radius: @cornerRadius;
+}
+.rounded-corners-bottom-left (@cornerRadius: 0.8em) {
+    -webkit-border-bottom-left-radius: @cornerRadius;
+    -moz-border-bottom-left-radius: @cornerRadius;
+    border-bottom-left-radius: @cornerRadius;
+}
+.rounded-corners-top-right (@cornerRadius: 0.8em) {
+    -webkit-border-top-right-radius: @cornerRadius;
+    -moz-border-top-right-radius: @cornerRadius;
+    border-top-right-radius: @cornerRadius;
+}
+.rounded-corners-bottom-right (@cornerRadius: 0.8em) {
+    -webkit-border-bottom-right-radius: @cornerRadius;
+    -moz-border-bottom-right-radius: @cornerRadius;
+    border-bottom-right-radius: @cornerRadius;
+}
+
+// Mixing
+//
+// Transition 
+//
+// Styleguide 2.2
+.transition (@property, @delay, @easing) {
+    transition: @property @delay @easing;
+    -moz-transition: @property @delay @easing;
+    -webkit-transition: @property @delay @easing;
+    -o-transition: @property @delay @easing;
+}
+.gradient (@start, @stop){
+    background: @start;
+    background: -webkit-gradient(linear, left top, left bottom, from(@start), to(@stop));
+    background: -moz-linear-gradient(top,  @start, @stop);
+    background: -o-linear-gradient(top,  @start, @stop);
+}
+
+.grayGradient (){
+    background: @grayGradient2;
+    background: -webkit-gradient(linear, left top, left bottom, from(@grayGradient1), to(@grayGradient2));
+    background: -moz-linear-gradient(top,  @grayGradient1,  @grayGradient2);
+    background: -o-linear-gradient(top,  @grayGradient1,  @grayGradient2);
+}
+.grayGradientHover (){
+    background: @grayGradientHover2;
+    background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientHover1), to(@grayGradientHover2));
+    background: -moz-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
+    background: -o-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
+}
+.grayGradientActive (){
+    background: @grayGradientActive2;
+    background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientActive1), to(@grayGradientActive2));
+    background: -moz-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
+    background: -o-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
+}
+
+html {
+    height:100%;
+    font-size:13px; // Using absolute size as Opera gets default font-adjustment from users Computer 
+}
+body {
+    height:100%;
+    font-family: 'PT Sans', "Trebuchet MS", Helvetica, sans-serif;
+    color:@bodyColor;
+    background: #fff;
+}
+
+#content-wrapper {
+    position:absolute;
+    top:45px;
+    left:0;
+    right:0;
+    bottom:0;
+    overflow-y:auto;
+    padding-top:20px;
+    
+    border:1px solid @borderGray;
+    border-top:0;
+}
+
+.container {
+    padding:7px 10px;
+    clear: both;
+}
+
+#content {
+    padding-bottom:250px;
+}
+
+.two-column-content .content-column {
+    width: 640px;   
+    float: left;
+    margin-right: 20px;
+}
+
+
+
+#header {
+    position:relative;
+    z-index:1;
+    background:#f0f0f0;
+    
+    border: 1px solid @borderGray;
+
+    #header-content {
+        position: relative;
+        height: 130px;
+        margin: 0 auto;
+
+
+        #header-additional-content {
+            position: absolute;
+            right: 0px;
+            top: 20px;
+            text-align: right;
+        }
+
+    }
+
+    #logo {
+        float:right;
+        width: 144px;
+        height:30px;
+        background:url("../img/logo-kuntalaisaloite-small.png?version=${timestamp}") 0 0 no-repeat;
+    }
+    #logo span { display:none; }
+}
+
+// Exceptions for swedish page
+/*  TODO
+.sv {
+    #header #logo {
+        width: 406px;
+        background:url("../img/logo-sv.png?version=${timestamp}") 0 0 no-repeat;
+    }
+}*/
+
+
+.push { position:relative; left:1em; }
+.pull { position:relative; left:-1em; }
+.pushdown { position:relative; top:1em; }
+.pullup { position:relative; top:-1em; }
+
+
+// Hide unwanted elements
+.hide,
+.js .js-hide {
+    display:none;
+}
+html.no-js {
+    .hidden, .help, .close-msg {
+        display:none;
+    }
+}
+
+
+.clear {
+    clear:  both;
+}
+
+
+#header {
+    ul {
+
+        margin: 0px;
+        padding: 0px;
+        list-style: none;
+
+        li {
+            display: inline;
+
+        }
+    }
+}
+
+a {
+    text-decoration: none;
+    color: #0089f2;
+    cursor:pointer; // Link might not have href
+    outline:none;
+}
+
+a:hover {
+    color: #0070c5;
+    outline:none;
+}
+
+a:active {
+    //color: #005393; // can be quite confusing in some cases
+    outline:none;
+}
+
+a.external {
+    padding-right:15px;
+    background:url("../img/icon-external-link.png?version=${timestamp}") right center no-repeat;   
+}
+.ellipsis {
+    display:inline-block;
+    max-width: 90%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+a.block-link {
+    display:block;
+    height:38px;
+    line-height:38px;
+    margin-bottom:1em;
+    padding:0 2.5em 0 0.9em;
+    background:#017380 url("../img/icons-sprite.png?version=${timestamp}") right -149px no-repeat;
+    color:#fff;
+    font-weight:bold;
+    
+    .transition(background-color, 0.2s, ease-in);
+    
+    &:hover {
+        background-color:#015c66;
+    }
+}
+.sv.font-size-large a.block-link { font-size:16px; } // Quick fix for SV large-text-size
+.news-date {
+    display:block;
+    margin-bottom:1em;
+    font-weight:bold;
+    border-bottom:1px solid @borderGray; 
+}
+
+
+.initiative-content-header {
+    position:relative;
+}
+
+// Buttons - glyphish.com
+//
+// button.large-button - Generic class for large button, needs additional class(es) for layout
+// button.small-button - Generic class for small button, needs additional class(es) for layout
+// button.green - Green gradient button
+// button.red - Red gradient button
+// button.gray - Gray gradient button
+// button.disabled - Disabled button
+// span.large-icon - Generic class for large icons (sets padding)
+// span.small-icon - Generic class for small icons (sets padding)
+// .save-and-send - Icon for "save and send"
+// .save-as-draft - Icon for "save as draf"
+// .cancel - Icon for "cancel"
+// .edit - Icon for "edit"
+// .next - Icon for "next"
+// .delete - Icon for "delete"
+// .mail - Icon for "mail"
+// .document - Icon for "document"
+// .folder - Icon for "folder"
+// .upload - Icon for "upload"
+// .download - Icon for "download"
+// .previous - Icon for "previous"
+// .add - Icon for "add"
+// .stop - Icon for "canceled"
+//
+// Styleguide 2
+
+.large-button, .small-button {
+    //.rounded-corners;
+    display: inline-block;
+    zoom: 1; /* zoom and *display = ie7 hack for display:inline-block */
+    *display: inline;
+    vertical-align: baseline;
+    margin: 0 2px;
+    outline: none;
+    cursor: pointer;
+    text-align: left;
+    text-decoration: none;
+    padding: 14px 20px;
+    line-height: 1.2em;
+    padding: 14px 20px;
+    line-height: 1.2em;
+
+    color: @bodyColor;
+    border: solid 1px @borderGray;
+    .grayGradient();
+
+    &:hover, &.disabled:hover {
+        .grayGradientHover();
+        color: @black;
+        border-color: #b7b7b7;
+        text-decoration: none;
+    }
+    &:active, &.disabled:active, &:focus {
+        color: @black;
+        .grayGradientActive();
+    }
+    &.disabled {
+       opacity:@dimmed;
+       cursor:default;     
+    }
+    
+    strong {
+        display: block;
+    }
+    
+}
+
+.small-button {
+    height:36px;
+    line-height:36px;
+    padding:0 12px;
+    min-width:4em;
+    text-align:center;
+    //line-height: 1em;
+    //padding: 10px 12px;
+    
+}
+
+// Gray and disabled button
+//
+// :hover       - hover state
+// :active      - active state
+//
+// Styleguide 4.1.3.
+.gray, .disabled {
+    color: @secondaryTextColor;
+    border: solid 1px @borderGray;
+    background: @grayGradient2;
+    background: -webkit-gradient(linear, left top, left bottom, from(@grayGradient1), to(@grayGradient2));
+    background: -moz-linear-gradient(top,  @grayGradient1,  @grayGradient2);
+    background: -o-linear-gradient(top,  @grayGradient1,  @grayGradient2);
+}
+.gray:hover, .disabled:hover {
+    background: @grayGradientHover2;
+    background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientHover1), to(@grayGradientHover2));
+    background: -moz-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
+    background: -o-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
+    color: #4f4f4f;
+    border-color: #b7b7b7;
+}
+.gray:active, .disabled:active, .gray:focus {
+    color: black;
+    background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientActive1), to(@grayGradientActive2));
+    background: -moz-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
+    background: -o-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
+}
+
+
+.large-icon, .medium-icon, .small-icon {
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+}
+
+
+// Large icons for buttons
+//
+// Styleguide 4.2.1
+.large-icon {
+    padding-left: 40px;
+    
+    background: transparent url("../img/button-large-sprite.png?version=${timestamp}") no-repeat 0 0;
+
+    &.save-and-send {       background-position: 0 2px;      }
+    &.save-as-draft {       background-position: 0 -150px;   }
+    &.cancel {              background-position: 0 -301px;   }
+    &.edit {                background-position: 0 -450px;   }
+    &.next {                background-position: 0 -600px;   }
+    &.delete {              background-position: 0 -750px;   }
+    &.mail {                background-position: 0 -900px;   }
+    &.document {            background-position: 0 -1050px;  }
+    &.folder {              background-position: 0 -1200px;  }
+    &.upload {              background-position: 0 -1350px;  }
+    &.download {            background-position: 0 -1500px;  }
+    &.previous {            background-position: 0 -1650px;  }
+    &.add {                 background-position: 0 -1800px;  }
+    &.stop {                background-position: 0 -1950px;  }
+}
+
+// Small icons for buttons
+//
+// Styleguide 4.2.2
+.small-icon {
+    padding-left: 30px;
+    
+    background: transparent url("../img/button-small-sprite.png?version=${timestamp}") no-repeat 0 0;
+
+    &.save-and-send {       background-position: 0 12px;     }
+    &.save-as-draft {       background-position: 0 -140px;   }
+    &.cancel {              background-position: 0 -291px;   }
+    &.edit {                background-position: 0 -440px;   }
+    &.next {                background-position: 0 -590px;   }
+    &.delete {              background-position: 0 -740px;   }
+    &.mail {                background-position: 0 -890px;   }
+    &.document {            background-position: 0 -1040px;  }
+    &.folder {              background-position: 0 -1190px;  }
+    &.upload {              background-position: 0 -1340px;  }
+    &.download {            background-position: 0 -1490px;  }
+    &.previous {            background-position: 0 -1640px;  }
+    &.add {                 background-position: 0 -1790px;  }
+    &.logout {              background-position: 0 -2090px;  }
+    &.search {              background-position: 0 -2240px;  }
+}
+
+// Small icons standalone
+//
+// Styleguide 4.2.2
+.small-icon-plain {
+    display:inline-block;
+    width:16px;
+    height:16px;
+    
+    background: transparent url("../img/button-small-sprite.png?version=${timestamp}") no-repeat 0 0;
+
+    &.save-and-send {       background-position: 0 0;     }
+    &.save-as-draft {       background-position: 0 -150px;   }
+    &.cancel {              background-position: 0 -301px;   }
+    &.edit {                background-position: 0 -450px;   }
+    &.next {                background-position: 0 -601px;   }
+    &.delete {              background-position: 0 -750px;   }
+    &.mail {                background-position: 0 -900px;   }
+    &.document {            background-position: 0 -1050px;  }
+    &.folder {              background-position: 0 -1200px;  }
+    &.upload {              background-position: 0 -1351px;  }
+    &.download {            background-position: 0 -1501px;  }
+    &.previous {            background-position: 0 -1650px;  }
+    &.add {                 background-position: 0 -1800px;  }
+    &.logout {              background-position: 0 -2100px;  }
+    &.search {              background-position: 0 -2250px;  }
+}
+
+
+.file-icon {
+    display:inline-block;
+    width:32px;
+    height:32px;
+    margin:0 0.5em -0.5em 0;
+    
+    &.pdf {
+        background:url("../img/pdficon_large.png?version=${timestamp}") no-repeat 0 0; 
+    }
+}
+
+// Known positioning issue in IE7.
+.more {
+    float:right;
+    padding-bottom:1px;    
+    color:#444;
+
+    &:hover {
+        color:@black;
+    }
+}
+
+// Input fields
+//
+// Styleguide 3.2
+input[type="text"] {
+    
+    border: 1px solid @borderGray;
+    background: #fefefe;
+    font-size: 1em;
+    padding: 0.3em;
+    margin: 0.2em 0em 1em 0em;
+    
+    .transition(box-shadow, 0.2s, ease-in);
+    
+    &.large {
+        //width:581px;
+        width:98%;
+    }
+    &.medium {
+        //width:265px;
+        width:95%;
+    }
+    &.small {
+        width:60px;
+    }
+    &.search-field {
+        width:250px;
+        height:34px;
+        line-height:34px;
+        padding:0 0.3em;
+    }
+}
+
+textarea {
+    width: 98%;
+    margin-top:0.2em;
+    vertical-align:bottom; // for removing whitespace
+    padding:0.3em;
+    height: 6em;
+    border: 1px solid @borderGray;
+    resize:vertical;
+    
+    .transition(box-shadow, 0.2s, ease-in);
+    
+    &.noresize { resize:none; }
+    
+    &.textarea-tall {
+        min-height: 17em;
+    }
+    
+}
+textarea:focus, input[type="text"]:focus, .email-input.focus {
+    box-shadow:0 0 5px rgba(0,0,0,0.2);
+    border: 1px solid #bbb;
+
+}
+
+
+input:-moz-placeholder, textarea:-moz-placeholder { color:#999; }
+::-webkit-input-placeholder, ::-webkit-textarea-placeholder { color:#999; }
+input:-ms-input-placeholder, input:-ms-textarea-placeholder { color:#999;  }// for IE10 
+
+textarea, input[type="text"] {
+    font-family: 'PT Sans', "Trebuchet MS", Helvetica, sans-serif;
+
+    &.has-error {
+        border-color:#be3730 !important;  box-shadow:inset 2px 2px 2px rgba(0,0,0,0.1);
+    }
+}
+
+label  {
+    display: block;
+    //font-size: 0.9em;
+    input[type="radio"], input[type="checkbox"] {
+        margin: 2px 8px 0 0;
+        float: left;
+    }
+
+    .label {
+        display:block;
+        margin:0 0 0.5em 1.5em;
+        line-height:1.2em;
+    }
+    
+    &.inline { display:inline; }
+    
+    input[type="text"]{
+        display:block;
+    }
+}
+.disabled-input {
+    opacity:@dimmed;
+}
+
+.input-header {
+    position: relative
+    display: block;
+    margin-right:30px; // prevent overlapping with help-icon
+    margin-bottom: 0.2em;
+    font-size: 1em;
+}
+.initiative-contact-details {
+    .input-header {
+        margin:0;
+    }
+}
+
+
+// Icons
+// .required        - Form required field
+// .confirmed       - Confirmed author
+// .unconfirmed     - Unconfirmed author
+// 
+// Styleguide 3.4
+
+.icon-small {
+    display:inline-block;
+    width:12px;
+    height:12px;
+    background: transparent url("../img/icons-sprite.png?version=${timestamp}") 0 0 no-repeat;
+    
+    &.settings, &.logout {
+        position:absolute;
+        right:15px;
+        top:50%;
+        margin-top:-6px;
+    }
+    
+    &.settings {
+        background-position:-48px 0;
+    }
+    &.logout {
+        background-position:-80px 0;
+    }
+    
+    &.dropdown-icon {
+        margin-left:3px;
+        background-position:-96px 3px;
+    }
+    
+    &.required { background-position:0 0; }         // Required field
+    &.unconfirmed { background-position:-16px 0; }  // Unconfirmed author
+    &.confirmed { background-position:-32px 0; }    // Confirmed author
+    &.external {                                    // External link
+        background-position:-144px 1px;             // Used a.external instead
+        margin-left:4px;
+    }
+    &.more {
+        width:16px;
+        height:16px;
+        margin:1px 0 0 4px;
+        background-position:-112px 0;
+    
+        &.less { background-position:-128px 0; }
+    }
+    &.arrow-right {
+        background-position:-160px 1px;
+    }
+    &.arrow-right-2 {
+        background-position:-179px 1px;
+    }
+    &.arrow-right-3 {
+        background-position:-179px -15px;
+        
+        &.floated {                                 // For info system-messages
+            float:left;
+            margin:0.2em 0 0 -16px;
+        }
+    }
+    &.arrow-left {
+        background-position:-192px 1px;
+    }
+    &.arrow-left-2 {
+        background-position:-208px 1px;
+    }
+    &.arrow-left-3 {
+        background-position:-208px -15px;
+    }
+    
+    &.help {
+        width:27px;
+        height:21px;
+        background-position:0 -96px;
+    }
+}
+
+
+
+.column {
+    width: 32%;
+    margin-right: 2%;
+    float: left;
+
+    .role-input-area {
+        border: 1px solid @borderGray;
+        padding: 0.3em;
+        background: white;
+        height: 10em;
+        font-size: 0.8em;
+    }
+    
+    &.wide { width:66%; }
+    &.col-1of2 {
+        width:48%;
+        margin-right:4%;
+    }
+    &.col-1of4 {
+        width:24%;
+        margin-right:1%;
+    }
+    &.col-3of4 {
+        width:74%;
+        margin-right:1%;
+    }
+    &.auto-scale {
+        width:auto; min-width:32%;
+    }
+    &.last { margin:0; }
+    
+    textarea {
+        width:96%;
+    }
+}
+
+// Dynamic CSS3 columns
+.css-cols-3 {
+    -moz-column-count: 3;
+    -moz-column-gap: 20px;
+    -webkit-column-count: 3;
+    -webkit-column-gap: 20px;
+    column-count: 3;
+    column-gap: 20px;
+}
+
+.last-column {
+    margin-right: 0px;
+
+    .extra-column-content {
+        border: 0;
+    }
+
+}
+
+
+.additional-container-body {
+    margin-bottom: 3em;
+}
+
+.additional-container, .extra-column {
+
+    ul {
+        list-style: none;
+        margin-left: 0px;
+        
+        li {
+            margin-left: 0px;
+            padding-left: 0px;
+        }
+    }
+}
+
+.forum-additional-info {
+    font-size: 0.8em;
+    color: @secondaryColor;
+}
+
+
+
+/**
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *    contenteditable attribute is included anywhere else in the document.
+ *    Otherwise it causes space to appear at the top and bottom of elements
+ *    that are clearfixed.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *    `:before` to contain the top-margins of child elements.
+ */
+.cf:before,
+.cf:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.cf:after {
+    clear: both;
+}
+
+/**
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+.cf {
+    *zoom: 1;
+}
+
+
+
+.no-top-margin {
+    margin-top: 0;
+}
+
+.no-bottom-margin {
+    margin-bottom: 0;
+}
+
+.top-margin {
+    margin-top: 1em;
+}
+
+.column-separator {
+    //padding-bottom:0.5em;
+    background:url("../img/border.png?version=${timestamp}") 291px 0 repeat-y;
+}
+
+// Tooltip
+// 
+// Styleguide 5.2
+.tooltip {
+    z-index:998;
+    background:#087480;
+    font-size:0.9em;
+    padding:0.3em 1em;
+    color:#fff;
+    box-shadow:0px 3px 2px -3px rgba(0,0,0,0.5);
+    
+    // For modern browsers and IE 8+
+    &:before {
+        border:solid;
+        border-color:#087480 transparent;
+        border-width:6px 6px 0 6px;
+        content:"";
+        display:block;
+        left:50%;
+        margin-left:-6px;
+        position:absolute;
+        bottom:-5px;
+        z-index:999;
+    }
+}
+
+
+// Messages
+//
+// .msg-info        - Info, gray
+// .msg-warning     - Warning, yellow
+// .msg-error       - Error, red
+// .msg-success     - Success, green
+// 
+// Styleguide 6.
+
+.system-msg {
+    position:relative;
+    padding: 15px 25px 15px 60px;
+    //-webkit-border-radius: @cornerRadius;
+    //-moz-border-radius: @cornerRadius;
+    //border-radius: @cornerRadius;
+    box-shadow: none;
+    margin:1em 0;
+    border-width:1px; // separated for better overriding
+    border-style:solid;
+
+    font-size:0.9em;
+    text-align:left;
+    
+    &.msg-summary {
+        min-height:67px;
+        margin-bottom:30px;
+        border:0;
+        border-left:4px solid #c3cc13;
+        padding-left:126px;
+        background:#fff url("../img/icon-msg-summary.png?version=${timestamp}") no-repeat 32px 27px;
+        
+        // Using nested messages so that it'd be easier to use wether combined or singular system-messages
+        .msg-info {
+            background:#fff;
+            margin:0 0 0 5px;
+            padding:1em 0;
+            border:none;
+            font-size:1em;
+        }
+    }
+
+    &.msg-info {
+        border-color:@borderGray;
+        background: @grayGradient2 url("../img/icon-msg-info.png?version=${timestamp}") no-repeat 20px 15px;
+        
+        .close-msg {
+            background:@borderGray;
+        }
+    }
+
+    &.msg-warning {
+        border-color:#e9c000;
+        background: #f7e489 url("../img/icon-msg-warning.png?version=${timestamp}") no-repeat 18px 15px;
+
+        .close-msg {
+            background:#e9c000;
+        }
+    }
+
+    &.msg-error {
+        color:#fff;
+        border-color:@redGradient2;
+        background: #fa353d url("../img/icon-msg-error.png?version=${timestamp}") no-repeat 15px 15px;
+        
+        a {
+            color:#fff;
+        }
+        a:hover {
+            color:#fff;
+            text-decoration:underline;
+        }
+                
+        .close-msg {
+            background:@redGradient2;
+        }
+    }
+
+    &.msg-success {
+        border: 1px solid #7aa63f;
+        background: #b6eb7c url("../img/icon-msg-success.png?version=${timestamp}") no-repeat 15px 15px;
+        color:#254000;
+        
+        .close-msg {
+            background:#58831d;
+            color: #b6eb7c;
+        }
+    }
+    
+    // General message style for narrow columns
+    &.small {
+        background-image:none;
+        padding:5px;
+        margin:5px 5px 5px 0;
+    }
+    
+    .close-msg {
+        position:absolute;
+        right:15px;
+        top:18px;
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        line-height: 13px;
+        //border-radius:0.2em;
+        text-align: center;
+        font-size:0.85em;
+        
+        color:#fff;
+        opacity:0.5;
+        cursor:pointer;
+        
+        .transition(opacity, 0.3s, ease-in);
+    }
+    &:hover {
+        .close-msg {
+            opacity:1;
+        }
+    }    
+}
+
+// Typography
+//
+// h1                   - Heading 1
+// h2                   - Heading 2
+// h4                   - Heading 4
+// p                    - Paragraph
+// ul                   - Unordered list
+// ol                   - Ordered list
+// blockquote           - Blockquote
+// .municipality        - Municipality for the initiative
+// .user-count-total    - Vote count
+// .user-count          - Internal vote count
+// 
+// Styleguide 7.
+
+h1, h2, h3, h4, h5, h6, p {
+    margin-top:0;
+}
+
+h1 {
+    margin-top:1em;
+    font-size:1.5em;
+    line-height:1em;    
+    clear: both;
+    color: #111;
+    font-weight:normal;
+    //text-shadow: white 2px 1px 1px;
+    
+    &.inline-header { display:inline-block; }
+}
+.extra-info {
+    display:block;
+    margin:-0.7em 0 2em 0;   
+}
+
+h2 {
+    color: #111;
+    margin-bottom:0.5em;
+    font-weight:normal;
+}
+.view-block h2 {
+    color:#017380;
+}
+
+h3 {
+    color: #111;
+    margin-bottom:0.5em;
+    font-weight:normal;
+    
+    &.navi-title {
+        margin-right:1em;
+        border-bottom:1px solid @borderGray;
+    }
+}
+
+h4
+{
+    margin-bottom:0.5em;
+    
+    &.header { margin-bottom:0; }
+    &.subtle {
+        margin:0;
+        font-weight:normal;
+    }
+}
+
+p {
+    margin:0 0 1em 0;
+}
+
+ul, ol {
+    margin:0 0 1em 0;
+    padding:0 0 0 2em;
+
+    &.no-style {
+        margin:0; padding:0; list-style:none;
+    }
+    
+    &.alpha {
+        list-style-type:lower-alpha;
+    }
+    &.roman {
+        list-style-type:lower-roman;
+    }
+}
+
+.right { float:right; }
+.left { float:left; }
+.align-right { text-align:right; }
+.align-left { text-align:left; }
+.align-center { text-align:center; }
+
+blockquote {
+    margin-bottom:2em;
+    font-style:italic;
+}
+
+.municipality {
+    margin:0 0 0.5em 0;
+    font-size:3em;
+    text-align:center;
+    line-height:1em;
+}
+
+.user-count-total {
+    float:left;
+    margin:0 40px 0 0;
+    font-size:3em;
+    font-style:italic;
+    line-height:1em;
+}
+.user-count {
+    font-size:1.7em;
+    font-style:italic;
+}
+
+
+// Tables
+// Uses float for IE7.
+// 
+// Styleguide 8.
+.table {
+    display: table;
+    margin-bottom:1em;
+    
+    .row { display: table-row; }
+    .cell {
+        display: table-cell;
+        padding:0.3em 0;
+        width:250px;
+        
+        input[type="text"] {
+            margin:0;
+        }
+        
+        &.title {
+            font-weight:bold;
+        }
+    }
+    .cell:first-child {
+        width:150px;
+    }
+    
+    .cell-1of3 { width:33.3%; }
+    .cell-2of3 { width:66.6%; }
+    .cell-1of4 { width:25%; }
+    .cell-3of4 { width:75%; }
+    
+    &.full {
+        width:100%;
+    }
+    
+    &.valign-bottom {
+        .cell {
+            vertical-align:bottom;
+        }
+    }
+    &.valign-top {
+        .cell {
+            vertical-align:top;
+        }
+    }
+    &.no-pad {
+        .cell {
+            padding:0;
+        }
+    }
+}
+
+// Search results
+// 
+// Styleguide 9.
+
+.switch-view {
+    border-left: 1px solid @borderGray; 
+    margin-left: 1em;
+    padding-left: 1.3em;
+    font-size:0.725em;
+    font-weight:normal;
+}
+.search-options {
+    margin-bottom:2em;
+
+    .search-form {
+        button {
+            margin-left:32px;
+            vertical-align:bottom;
+        }
+        
+        select {
+            margin-top:0.5em;
+        }
+    }
+}
+.search-terms {
+    margin-bottom:2em;
+
+    .search-term {
+        font-style:italic;
+        font-weight:bold;
+    }
+}
+.search-results {
+    ul {
+        margin:0 0 1em 0;
+        padding:0;
+        list-style:none;
+        color:@secondaryTextColor;
+    }
+    
+    li {
+        overflow:hidden; // clearfix
+        position:relative;
+        display:block;
+        //padding:0.7em 0.3em;
+        padding:0 0 0.7em 0;
+        
+        //&:hover { background:#eaeaea; }
+    }
+    
+    .date {
+        float:left;
+    }
+    .title {
+        display:block;
+        margin:0 0 0 6em;
+    }
+    .info {
+        display:block;
+        font-size:0.9em;
+        margin-left:100px;
+    }
+    /*.state {
+        margin-left:1em;
+    }*/
+    .bull {
+        margin:0 0.5em;
+        font-size:0.8em;
+        color:@borderGray;
+    }
+    
+    .participants {
+        float:right;
+        width:13em;
+        text-align:right;
+        
+        .participant-count {
+            padding-right:42px;
+            font-size:1.45em;
+            font-style:italic;
+            color:@bodyColor;
+            text-shadow:0 1px 0 rgba(255,255,255,0.3);
+            
+            /*
+            background:url("../img/icons-search.png?version=${timestamp}") no-repeat right -125px;
+            
+            &.one {
+                background-position:right -189px;
+            }*/
+            
+            // 24px
+            background:url("../img/icons-search.png?version=${timestamp}") no-repeat right -119px;
+            
+            &.one {
+                background-position:right -183px;
+            }
+        }
+        
+        .no-participants {
+            font-style:italic;
+            font-size:0.9em;
+        }
+    }   
+}
+
+.mashup-buttons {
+    .description {
+        display:block;
+        margin:0.3em 0 0 0;
+    }
+}
+
+// Responsive styles for iFrame
+.mediumWidth(){
+    #content-wrapper {
+        top:75px;
+        padding-top:10px;
+    }
+
+    #header { 
+        #logo {
+            float:left;
+        }
+        h3 {
+            clear:both;
+            margin:0;
+            padding:0.5em 0 0 0;
+        }
+    }
+    
+    .container {
+        padding:7px;
+    }
+
+    .column {
+        &.col-1of2 {
+            float:none;
+            width:100%;
+            margin:0 0 1em 0;
+        }
+    }
+    
+    h1 { margin-top:0; }
+}
+
+.smallWidth(){
+    .search-results {
+        .title {
+            margin:0;
+        }
+        .date {
+            float:none;
+        }
+    }
+}
+
+// IE8- fallbacks for media query
+.ie6, .ie7, .ie8 {
+
+    body.medium, body.small {
+        .mediumWidth();
+    }
+    
+    body.small {
+        .smallWidth();
+    }
+}
+
+// Media querys for browsers that supports it
+@media (max-width: 480px) {
+    .mediumWidth();
+}
+
+@media (max-width: 300px) {
+    .smallWidth();
+}

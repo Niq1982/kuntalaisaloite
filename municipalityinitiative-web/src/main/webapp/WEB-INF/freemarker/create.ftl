@@ -27,6 +27,9 @@
 
     <#-- FORM. Use class 'sodirty' to enable dirtylisten. -->
     <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-initiative" class="sodirty dirtylisten <#if hasErrors>has-errors</#if>">
+        
+        <@f.securityFilters />
+        
         <#--<input type="hidden" name="CSRFToken" value="${CSRFToken}"/>-->
 
         <div class="form-block-container">

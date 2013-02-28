@@ -227,6 +227,21 @@
 </#macro>
 
 <#--
+ * securityFilters
+ *
+ *  CSRFToken
+ *  
+ *  email-honeyspot field is hided from users with CSS thus they will leave it empty. Spambots will most propably fill this.
+ *
+-->
+<#macro securityFilters>
+    <input type="hidden" name="CSRFToken" value="${CSRFToken!""}"/>
+    <input type="hidden" name="CSRFToken" value="${formTimer!""}"/>
+    <input type="text" name="email" id="email" tabindex="-1" />
+</#macro>
+
+
+<#--
  * helpText
  *
  * Help texts for the edit-form

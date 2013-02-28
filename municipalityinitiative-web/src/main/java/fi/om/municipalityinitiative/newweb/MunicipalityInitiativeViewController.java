@@ -192,6 +192,23 @@ public class MunicipalityInitiativeViewController extends BaseController {
         }
         
     }
+    
+    
+    @RequestMapping(value={IFRAME_FI, IFRAME_SV}, method=GET)
+    public String iframe(InitiativeSearch search, Model model, Locale locale, HttpServletRequest request) {
+        Urls urls = Urls.get(locale);
+        model.addAttribute(ALT_URI_ATTR, urls.alt().search());
+        
+        List<MunicipalityInfo> municipalities = municipalityService.findAllMunicipalities();
+
+        model.addAttribute("initiatives", initiativeService.findMunicipalityInitiatives(search));
+        model.addAttribute("municipalities", municipalities);
+        model.addAttribute("currentSearch", search);
+        model.addAttribute("searchParameters", new SearchParameterGenerator(search));
+        model.addAttribute("currentMunicipality", solveMunicipalityFromListById(municipalities, search.getMunicipality()));
+        model.addAttribute("initiativeCounts", initiativeService.getInitiativeCounts(Maybe.fromNullable(search.getMunicipality())));
+        return IFRAME_VIEW;
+    }
 
     private void addModelAttributesToCollectView(Model model, InitiativeViewInfo municipalityInitiative, List<MunicipalityInfo> allMunicipalities, ParticipantCount participantCount, Participants participants) {
         model.addAttribute("initiative", municipalityInitiative);

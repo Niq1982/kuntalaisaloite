@@ -2,43 +2,31 @@
 
 <#if locale == "fi">
 
-    <h3>Näin toimii kansalaisaloite</h3>
+    <#-- Väliaikainen sivu Kuntalaisaloitteen Leijukkeen demoamiselle -->
     
-    <p>1.3.2012 alkaen Suomessa on käytössä uusi valtiollisen tason vaikuttamiskeino, kansalaisaloite. Se antaa kansalaisille mahdollisuuden saada aloitteensa eduskunnan käsiteltäväksi. Uuden järjestelmän yleisenä tavoitteena on edistää ja tukea vapaata kansalaistoimintaa sekä siten vahvistaa kansalaisyhteiskuntaa, jossa eri väestöryhmät osallistuvat ja vaikuttavat aktiivisesti yhteiskunnan kehittämiseen.</p>
-    <p>Maaliskuun alusta voimaantulleen perustuslain uuden säännöksen mukaan vähintään 50 000 äänioikeutetulla Suomen kansalaisella on oikeus tehdä eduskunnalle aloite lain säätämiseksi.</p>
+    <h3>Pieni leijuke - 250x400 px</h3>
     
-    <h3>Lakialoite tai ehdotus lainvalmisteluun ryhtymisestä</h3>
+    <pre>
+        &lt;iframe id="kuntalaisaloite-leijuke" frameborder="0" scrolling="no" src="https://localhost:8443/fi/iframe?municipality=2&offset=0&limit=3&orderBy=latest" width="250px" height="400px"&gt;&lt;/iframe&gt;
+    </pre>
     
+    <div class="view-block">
     
-    <p>Kansalaisaloitelaki sisältää säännökset aloitteen tekemiseen liittyvästä menettelystä.</p>
-    <p><@u.link href="http://www.finlex.fi/fi/laki/alkup/2012/20120012" label="http://www.finlex.fi/fi/laki/alkup/2012/20120012" rel="external" /></p>
-    <p>Kansalaisaloitteen vireillepanijana voi olla yksi tai useampi äänioikeutettu Suomen kansalainen. Vireillepanijan on nimettävä vähintään yksi edustaja ja varaedustaja hoitamaan asiaan liittyviä käytännön toimia.</p>
-    <p>Kansalaisaloite voi sisältää joko lakiehdotuksen tai ehdotuksen lainvalmisteluun ryhtymisestä. Aloite voi koskea myös voimassa olevan lain muuttamista tai kumoamista. Jos aloite tehdään lakiehdotuksen muotoon, sen tulee sisältää säädösteksti. Aloitteen tulee kohdistua yhteen asiakokonaisuuteen ja siinä tulee aina olla mukana perustelut.</p>
+        <iframe id="kuntalaisaloite-leijuke" frameborder="0" scrolling="no" src="https://localhost:8443/fi/iframe?municipality=2&offset=0&limit=3&orderBy=latest&width=250&height=400" width="250px" height="400px"></iframe>
     
-    <h3>Kannatusilmoitukset kerättävä kuuden kuukauden kuluessa</h3>
+    </div>
     
-    <p>Kansalaisaloitetta tukevat allekirjoitukset eli kannatusilmoitukset on kerättävä kuuden kuukauden kuluessa. Ne kerätään paperilla tai sähköisesti tietoverkossa. Paperilla kerättävissä ilmoituksissa on käytettävä oikeusministeriön asetuksella (86/2012) vahvistamaa lomaketta.</p>
-    <p>Verkkokeräyksessä voidaan käyttää joko vireillepanijan itse järjestämää tietojärjestelmää tai oikeusministeriön ylläpitämää maksutonta verkkopalvelua, joka tulee käyttöön loppuvuodesta 2012. Vireillepanijan on hankittava mahdolliselle omalle verkkokeräysjärjestelmälleen Viestintäviraston hyväksyntä. Verkossa tehtävä aloite ja sen kannatusilmoitusten keräys edellyttävät aina niin sanottua vahvaa sähköistä tunnistamista, esimerkiksi pankkitunnusten tai teleoperaattoreiden mobiilitunnusten käyttöä.</p>
+    <br/><br/>
     
-    <p><span class="file-icon pdf"></span><a href="${urls.baseUrl}/files/Kannatusilmoitus.pdf?version=${resourcesVersion}" target="_blank" title="">Kannatusilmoitus</a> (PDF)</p>
-    <p><span class="file-icon pdf"></span><a href="${urls.baseUrl}/files/Kannatusilmoitus_W.pdf?version=${resourcesVersion}" target="_blank" title="">Kannatusilmoitus</a> (Muokattava PDF)</p>
-    <br/>
+    <h3>Iso leijuke - 600x600px</h3>
     
-    <h3>Aloitteen käsittely keräyksen päätyttyä</h3>
+    <pre>
+        &lt;iframe id="kuntalaisaloite-leijuke-2" frameborder="0" scrolling="no" src="https://localhost:8443/fi/iframe?municipality=2&offset=0&limit=10&orderBy=latest" width="100%" height="600px"&gt;&lt;/iframe&gt;
+    </pre>
     
-    <p>Keräyksen päätyttyä vireillepanija toimittaa kannatusilmoitukset Väestörekisterikeskukselle, joka tarkastaa niiden oikeellisuuden ja vahvistaa hyväksyttyjen kannatusilmoitusten määrän. Jos hyväksyttyjä kannatusilmoituksia on vähintään 50 000, vireillepanija voi toimittaa aloitteen eduskunnan käsiteltäväksi. Jos aloitetta ei ole toimitettu eduskunnalle kuuden kuukauden kuluessa, se raukeaa.</p>
-    <p>Eduskunnalla on velvoite ottaa kansalaisaloite käsiteltäväksi, mutta aloitteen hyväksyminen samoin kuin mahdolliset muutokset aloitteeseen jäävät eduskunnan harkittaviksi. Jos aloite tulee eduskunnassa hylätyksi, samasta asiasta voidaan tehdä uusi aloite. </p>
-    
-    <h3>Taloudellisen tuen ilmoittaminen ja henkilötietojen suoja</h3>
-    
-    <p>Kansalaisaloitteen tekemistä varten saatu taloudellinen tuki ja sen antaja on julkistettava, jos samalta tukijalta saadun tuen arvo on yhteensä vähintään 1 500 euroa.</p><p>Kannatusilmoitusten keräämisvaiheessa, kun asian vireilletulo eduskunnassa on vielä epävarmaa, aloitteen allekirjoittajien nimet ja muut henkilötiedot eivät saa olla yleisön tai muiden allekirjoittajien nähtävissä. Myös kerättäessä kannatusilmoituksia oikeusministeriön ylläpitämässä verkkopalvelussa aloitteen kannatusilmoitukset ovat salassa pidettäviä. Allekirjoittajien nimet tulevat julkisiksi vasta siinä vaiheessa, kun Väestörekisterikeskus on varmistanut, että kannatusilmoituksia on vaadittu vähimmäismäärä 50 000.</p>
-    <p>Lisätietoja:<br/>Sähköpostitse: <@u.scrambleEmail "kansalaisaloite.om@om.fi" /></p>
-    
-    <div>Lisäksi tarvittaessa:</div>
-    <ul>
-        <li>projektipäällikkö Teemu Ropponen, puh 050 520 9340, <@u.scrambleEmail "etunimi.sukunimi@om.fi" /></li>
-        <li>neuvotteleva virkamies Kaisa Tiusanen, puh. 02951 50454, <@u.scrambleEmail "etunimi.sukunimi@om.fi" /></li>
-    </ul>
+    <div class="view-block">
+        <iframe id="kuntalaisaloite-leijuke-2" frameborder="0" scrolling="no" src="https://localhost:8443/fi/iframe?municipality=2&offset=0&limit=10&orderBy=latest&width=xx&height=400" width="600px" height="600px"></iframe>
+    </div>
 
 <#else>
 

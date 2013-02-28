@@ -1,0 +1,128 @@
+<#import "/spring.ftl" as spring />
+<#import "components/layout.ftl" as l />
+<#import "components/utils.ftl" as u />
+<#import "components/pagination.ftl" as p />
+<#import "components/forms.ftl" as f />
+<#import "components/elements.ftl" as e />
+
+<#escape x as x?html>
+
+<#--
+ * Layout parameters for HTML-title and navigation.
+ * 
+ * @param page is "page.find"
+ * @param pageTitle can be assigned as custom HTML title
+-->
+<#assign page="page.find" />
+
+<!DOCTYPE HTML>
+<!--[if lt IE 7 ]> <html lang="${locale}" class="ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="${locale}" class="ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="${locale}" class="ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="${locale}" class="ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html lang="${locale}" class="no">
+<!--<![endif]-->
+
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title><@u.message page /> - <@u.message "siteName" /></title> 
+    
+    <link href="${urls.baseUrl}/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
+   
+    <link rel="stylesheet" type="text/css" href="${urls.baseUrl}/css/normalize.css" />
+    <#--<link rel="stylesheet" type="text/css" href="${urls.baseUrl}/css/kuntalaisaloite.css" />-->
+    
+    <#-- TODO: LESS build for production -->
+    <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-iframe.less" />
+    <!--[if IE ]>
+        <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-ie.less">
+    <![endif]-->
+    <script src="${urls.baseUrl}/js/less-1.3.0.min.js" type="text/javascript"></script>
+</head>
+
+    <#--
+     * IE 8 and below does not support media-queries. Added a fix for rensponsive layout for IE8 and less.
+     * If width-parameter is included within the url, we will add breakpoint classes in body.
+     *
+    -->
+    <#if RequestParameters['width']??>
+        <#-- If paramater is not a numerical value fallback with default width -->
+        <#attempt>
+          <#assign viewportWidth = RequestParameters['width']?number>
+        <#recover>
+          <#assign viewportWidth = 250 />
+        </#attempt>
+    
+        <#if (viewportWidth < 300)>
+            <#assign bodyWidthClass="small" />
+        <#elseif (viewportWidth < 480)>
+            <#assign bodyWidthClass="medium" />
+        <#else>
+            <#assign bodyWidthClass="large" />
+        </#if>
+    <#else>
+        <#assign bodyWidthClass="small" />
+    </#if>
+
+<body class="${bodyWidthClass!""}">
+
+<div id="wrapper">
+
+    <div id="header" class="container">
+        <a id="logo" href="${urls.baseUrl}/${locale}" target="_blank" rel="external" title="<@u.message "siteName" />">
+            <span><@u.message "siteName" /></span>
+        </a>
+    
+        <h3>Alajärvi Kuntalaisaloite.fi:ssä</h3>
+    </div>
+
+    <div id="content-wrapper" class="container">
+
+        <div class="mashup-buttons cf">
+            <div class="column col-1of2">
+                <a href="${urls.search()}" target="_blank" rel="external" class="small-button"><span class="small-icon next">Selaa&nbsp;kuntalaisaloitteita</span></a>
+                
+                <span class="description">Katso millaisia aloitteita on jo tehty ja voiko niihin osallistua</span>
+            </div>
+            <div class="column col-1of2 last">
+                <a href="${urls.createNew()}" target="_blank" rel="external" class="small-button"><span class="small-icon add">Tee&nbsp;kuntalaisaloite</span></a>
+            </div>
+        </div>
+        
+        <h1>Uusimmat aloitteet</h1>
+        
+        <div class="search-results">
+        <#if initiatives?? && (initiatives?size > 0)>
+            <#list initiatives as initiative>
+                <#if initiative_index == 0><ul></#if>
+                <li <#if initiative_index == 0>class="first"</#if>>
+                    <span class="date trigger-tooltip" title="<@u.message "searchResults.initiative.date" />" ><@u.localDate initiative.createTime!"" /></span>
+                    <span class="title"><a href="${urls.view(initiative.id)}" target="_blank" rel="external" class="name">${initiative.name!""}</a></span>
+                    
+                </li>
+                <#if !initiative_has_next></ul></#if>
+            </#list>
+            
+        <#-- Search results EMPTY -->
+        <#else>
+            <#assign emptySearchResultsHTML>
+                <@u.message "searchResults.noResults" />
+            </#assign>
+        
+            <div class="system-msg msg-summary">
+                <@u.systemMessageHTML html=emptySearchResultsHTML type="info" />
+            </div>
+            
+        </#if>
+        
+        </div>
+    </div>
+    
+</div>
+
+</body>
+</html>
+
+</#escape>

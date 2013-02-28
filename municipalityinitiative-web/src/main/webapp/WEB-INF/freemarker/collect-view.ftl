@@ -13,54 +13,55 @@
     <@u.errorsSummary path="participant.*" prefix="participant."/>
 
     <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-participate" class="sodirty <#if hasErrors>has-errors</#if>">
+        <@f.securityFilters />
 
-    <input type="hidden" name="municipality" value="${initiative.municipality.id!""}"/>
-    
-    <div class="input-block-content no-top-margin flexible">
-        <@u.systemMessage path="initiative.ownDetails.description" type="info" showClose=false />  
-    </div>
-    
-     <div class="input-block-content flexible">
-        <@f.textField path="participant.participantName" required="required" optional=false cssClass="large" maxLength="512" />
-        <@f.formCheckbox path="participant.showName" checked=true />
-    </div>
-    
-    <div class="input-block-content flexible">
-        <@f.municipalitySelect path="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipality.id />
-    </div>
-
-    <div id="franchise" class="input-block-content flexible">
-        <@f.radiobutton path="participant.franchise" required="required" options={"true":"initiative.franchise.true", "false":"initiative.franchise.false"} attributes="" />
-    </div>
-    
-    <div id="municipalMembership" class="js-hide hidden">
+        <input type="hidden" name="municipality" value="${initiative.municipality.id!""}"/>
+        
+        <div class="input-block-content no-top-margin flexible">
+            <@u.systemMessage path="initiative.ownDetails.description" type="info" showClose=false />  
+        </div>
+        
+         <div class="input-block-content flexible">
+            <@f.textField path="participant.participantName" required="required" optional=false cssClass="large" maxLength="512" />
+            <@f.formCheckbox path="participant.showName" checked=true />
+        </div>
+        
         <div class="input-block-content flexible">
-            <#assign href="#" />
-            <@u.systemMessage path="participant.municipalMembership.info" type="info" showClose=false args=[href] />
+            <@f.municipalitySelect path="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipality.id />
         </div>
+    
+        <div id="franchise" class="input-block-content flexible">
+            <@f.radiobutton path="participant.franchise" required="required" options={"true":"initiative.franchise.true", "false":"initiative.franchise.false"} attributes="" />
+        </div>
+        
+        <div id="municipalMembership" class="js-hide hidden">
+            <div class="input-block-content flexible">
+                <#assign href="#" />
+                <@u.systemMessage path="participant.municipalMembership.info" type="info" showClose=false args=[href] />
+            </div>
+            <div class="input-block-content flexible">
+                <@f.radiobutton path="participant.municipalMembership" required="" options={"true":"initiative.municipalMembership.true", "false":"initiative.municipalMembership.false"} attributes="" header=false />
+            </div>
+            <div class="input-block-content flexible js-hide is-not-member">
+                <@u.systemMessage path="warning.participate.notMember" type="warning" showClose=false />
+            </div>
+        </div>
+    
+        
+        <#-- Do not use NOSCRIPT here as it will be descendant of another NOSCRIPT. -->
+        <div class="input-block-content js-hide">
+            <#-- Hidden field for NOSCRIPT users. This element is removed with JS. -->
+            <input type="hidden" name="municipalMembership" value="true" class="js-remove" />
+            <label>
+                <#assign href="#" />
+                <input type="checkbox" name="placeholder" id="placeholder" checked="checked" disabled="disabled" /><span class="label"><@u.messageHTML key="initiative.checkMembership" args=[href] /></span>
+            </label>
+        </div>
+        
         <div class="input-block-content flexible">
-            <@f.radiobutton path="participant.municipalMembership" required="" options={"true":"initiative.municipalMembership.true", "false":"initiative.municipalMembership.false"} attributes="" header=false />
+            <button id="participate" type="submit" name="save" value="true" class="small-button"><span class="small-icon save-and-send"><@u.message "action.save" /></span></button>
+            <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
         </div>
-        <div class="input-block-content flexible js-hide is-not-member">
-            <@u.systemMessage path="warning.participate.notMember" type="warning" showClose=false />
-        </div>
-    </div>
-
-    
-    <#-- Do not use NOSCRIPT here as it will be descendant of another NOSCRIPT. -->
-    <div class="input-block-content js-hide">
-        <#-- Hidden field for NOSCRIPT users. This element is removed with JS. -->
-        <input type="hidden" name="municipalMembership" value="true" class="js-remove" />
-        <label>
-            <#assign href="#" />
-            <input type="checkbox" name="placeholder" id="placeholder" checked="checked" disabled="disabled" /><span class="label"><@u.messageHTML key="initiative.checkMembership" args=[href] /></span>
-        </label>
-    </div>
-    
-    <div class="input-block-content flexible">
-        <button id="participate" type="submit" name="save" value="true" class="small-button"><span class="small-icon save-and-send"><@u.message "action.save" /></span></button>
-        <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
-    </div>
     
     </form>
 
