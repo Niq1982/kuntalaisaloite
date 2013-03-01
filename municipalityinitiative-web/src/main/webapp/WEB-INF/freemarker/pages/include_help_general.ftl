@@ -1,31 +1,44 @@
 <#import "../components/utils.ftl" as u />
 
+<#escape x as x?html>
+
 <#if locale == "fi">
 
     <#-- Väliaikainen sivu Kuntalaisaloitteen Leijukkeen demoamiselle -->
     
-    <h3>Pieni leijuke - 250x400 px</h3>
+    <p>Leijukkeen avulla voidaan näyttää Kuntalaisaloite.fi-palvelun sisältöä toisen palvelun sivustolla. Leijuke näyttää uusimmat aloitteet Kuntalaisaloite.fi-palvelussa sekä toiminnot "Selaa kuntalaisaloitteista" sekä "Tee kuntalaisaloite". Toiminnot siirtyvät automaattisesti leijukkeessa määritetyn kunnan vastaaviin toimintoihin Kuntalaisaloite.fi-palveluun.</p>
+    <p>Leijukkeen kaikki linkit aukeavat selaimessa uuteen välilehteen ja käyttäjä ohjataan Kuntalaisaloite.fi-palvelun puolelle.</p>
+    <p>Leijukkeen sisältö päivittyy Kuntalaisaloite.fi-palvelun sisällön mukaan automaattisesti muutaman minuutin viiveellä.</p>
+
+    <h3>Leijukkeen määrittäminen</h3>
     
-    <pre>
-        &lt;iframe id="kuntalaisaloite-leijuke" frameborder="0" scrolling="no" src="https://localhost:8443/fi/iframe?municipality=2&offset=0&limit=3&orderBy=latest" width="250px" height="400px"&gt;&lt;/iframe&gt;
-    </pre>
-    
+    <p>Leijukketta voidaan säätää haluamaksi parametrien avulla. Parametreilla voi säätää</p>
+    <ul>
+        <li>minkä kunnan aloitteita leijukkeessa listataan</li>
+        <li>kuinka monta uusinta aloitetta listassa näytetään</li>
+        <li>leijukkeen leveyttä ja korkeutta</li>
+    </ul>
+
+    <h2>Esimerkkejä leijukkeista</h2>
+
     <div class="view-block">
     
-        <iframe id="kuntalaisaloite-leijuke" frameborder="0" scrolling="no" src="https://localhost:8443/fi/iframe?municipality=2&offset=0&limit=3&orderBy=latest&width=250&height=400" width="250px" height="400px"></iframe>
-    
+        <h2>Pieni leijuke - 250x400 px</h2> 
+        <@u.initiativeIframe id="kuntalaisaloite-leijuke" embed=true width="250" height="400" municipality="2" limit="3" />
+        <br/><br/>
+        <p>Alla on esimerkki-leijukkeen upotus-koodi. Kopioi alla oleva koodi kokonaisuudessaan leikepöydällesi ja muuta parametreja tarpeesi mukaan. Liitä sen jälkeen koodi sivustollesi.</p>
+        
+        <@u.initiativeIframe id="kuntalaisaloite-leijuke" embed=false width="250" height="400" municipality="2" limit="3" />
     </div>
     
-    <br/><br/>
-    
-    <h3>Iso leijuke - 600x600px</h3>
-    
-    <pre>
-        &lt;iframe id="kuntalaisaloite-leijuke-2" frameborder="0" scrolling="no" src="https://localhost:8443/fi/iframe?municipality=2&offset=0&limit=10&orderBy=latest" width="100%" height="600px"&gt;&lt;/iframe&gt;
-    </pre>
-    
     <div class="view-block">
-        <iframe id="kuntalaisaloite-leijuke-2" frameborder="0" scrolling="no" src="https://localhost:8443/fi/iframe?municipality=2&offset=0&limit=10&orderBy=latest&width=xx&height=400" width="600px" height="600px"></iframe>
+        <h2>Iso leijuke - 600x600px</h2>
+    
+        <@u.initiativeIframe id="kuntalaisaloite-leijuke-2" embed=true width="600" height="460" municipality="2" limit="10" />
+        <br/><br/>
+        <p>Alla on esimerkki-leijukkeen upotus-koodi. Kopioi alla oleva koodi kokonaisuudessaan leikepöydällesi ja muuta parametreja tarpeesi mukaan. Liitä sen jälkeen koodi sivustollesi.</p>
+        
+        <@u.initiativeIframe id="kuntalaisaloite-leijuke-2" embed=false width="600" height="460" municipality="2" limit="10" />
     </div>
 
 <#else>
@@ -67,3 +80,5 @@
     </ul>
     
 </#if>
+
+</#escape>

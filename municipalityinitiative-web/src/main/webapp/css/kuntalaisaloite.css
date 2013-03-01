@@ -167,6 +167,7 @@ input:-moz-placeholder,textarea:-moz-placeholder{color:#999;}
 ::-webkit-input-placeholder,::-webkit-textarea-placeholder{color:#999;}
 input:-ms-input-placeholder,input:-ms-textarea-placeholder{color:#999;}
 textarea,input[type="text"]{font-family:'PT Sans',"Trebuchet MS",Helvetica,sans-serif;}textarea.has-error,input[type="text"].has-error{border-color:#be3730 !important;box-shadow:inset 2px 2px 2px rgba(0, 0, 0, 0.1);}
+#email{display:none;}
 .has-error{color:#be3730;font-weight:bold;}
 input.datepicker{width:110px;margin:0;background:#ffffff url("../img/icons-sprite.png?version=${timestamp}") 97px -57px no-repeat;}
 label{display:block;}label input[type="radio"],label input[type="checkbox"]{margin:2px 8px 0 0;float:left;}
