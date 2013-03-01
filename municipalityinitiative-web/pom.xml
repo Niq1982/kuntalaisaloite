@@ -429,11 +429,6 @@
                                 <cssSourceFile>kuntalaisaloite.css</cssSourceFile>
                             </cssSourceFiles>
                             <cssFinalFile>style.css</cssFinalFile>
-                            <cssSourceFiles>
-                                <cssSourceFile>normalize.css</cssSourceFile>
-                                <cssSourceFile>kuntalaisaloite-iframe.css</cssSourceFile>
-                            </cssSourceFiles>
-                            <cssFinalFile>style-iframe.css</cssFinalFile>
                             <jsSourceDir>js</jsSourceDir>
                             <jsSourceFiles>
                                 <jsSourceFile>jquery-1.7.2.min.js</jsSourceFile>
@@ -449,6 +444,22 @@
                                 <jsSourceFile>kuntalaisaloite.js</jsSourceFile>
                             </jsSourceFiles>
                             <jsFinalFile>script.js</jsFinalFile>
+                        </configuration>
+                        <goals>
+                            <goal>minify</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>iframe-minify</id>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <webappTargetDir>${basedir}/src/main/webapp</webappTargetDir>
+                            <cssSourceDir>css</cssSourceDir>
+                            <cssSourceFiles>
+                                <cssSourceFile>normalize.css</cssSourceFile>
+                                <cssSourceFile>kuntalaisaloite-iframe.css</cssSourceFile>
+                            </cssSourceFiles>
+                            <cssFinalFile>style-iframe.css</cssFinalFile>
                         </configuration>
                         <goals>
                             <goal>minify</goal>

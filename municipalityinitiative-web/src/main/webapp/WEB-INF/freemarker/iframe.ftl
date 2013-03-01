@@ -40,7 +40,7 @@
     </#if>
 
     <#if municipalityParam??>
-        <#assign pageTitle>${currentMunicipality!""} Kuntalaisaloite.fi:ssä</#assign>
+        <#assign pageTitle>${currentMunicipality!""} <@u.message "iframe.inTheService" /></#assign>
     <#else>
         <#assign pageTitle><@u.message "page.iframe" /></#assign>
     </#if>
