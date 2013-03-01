@@ -429,6 +429,11 @@
                                 <cssSourceFile>kuntalaisaloite.css</cssSourceFile>
                             </cssSourceFiles>
                             <cssFinalFile>style.css</cssFinalFile>
+                            <cssSourceFiles>
+                                <cssSourceFile>normalize.css</cssSourceFile>
+                                <cssSourceFile>kuntalaisaloite-iframe.css</cssSourceFile>
+                            </cssSourceFiles>
+                            <cssFinalFile>style-iframe.css</cssFinalFile>
                             <jsSourceDir>js</jsSourceDir>
                             <jsSourceFiles>
                                 <jsSourceFile>jquery-1.7.2.min.js</jsSourceFile>

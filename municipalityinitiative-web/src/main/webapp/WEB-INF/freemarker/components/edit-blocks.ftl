@@ -43,7 +43,7 @@
  *
  * @param step is the number of current block
  -->
-<#macro municipalityBlock step>      
+<#macro municipalityBlock step municipality="">      
 
     <div id="step-${step}" class="input-block cf">
         <div class="input-block-extra">
@@ -59,10 +59,10 @@
         </div>
         
         <div class="input-block-content">       
-            <@f.municipalitySelect path="initiative.municipality" options=municipalities required="required" cssClass="municipality-select" />
+            <@f.municipalitySelect path="initiative.municipality" options=municipalities required="required" cssClass="municipality-select" preSelected=municipality />
         </div>
         <div class="input-block-content">
-            <@f.municipalitySelect path="initiative.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" />
+            <@f.municipalitySelect path="initiative.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=municipality />
         </div>
         <br class="clear" />
         

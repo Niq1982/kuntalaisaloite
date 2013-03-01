@@ -316,6 +316,7 @@ ul.roman,ol.roman{list-style-type:lower-roman;}
 .align-left{text-align:left;}
 .align-center{text-align:center;}
 blockquote{margin-bottom:2em;font-style:italic;}
+pre{border:1px solid #cccccc;background:#f0f0f0;padding:1em;font-size:0.8em;}
 .municipality{margin:0 0 0.5em 0;font-size:3em;text-align:center;line-height:1em;}
 .user-count-total{float:left;margin:0 40px 0 0;font-size:3em;font-style:italic;line-height:1em;}
 .user-count{font-size:1.7em;font-style:italic;}

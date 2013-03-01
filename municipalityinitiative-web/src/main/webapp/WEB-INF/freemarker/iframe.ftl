@@ -61,15 +61,25 @@
     
     <link href="${urls.baseUrl}/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
    
-    <link rel="stylesheet" type="text/css" href="${urls.baseUrl}/css/normalize.css" />
-    <#--<link rel="stylesheet" type="text/css" href="${urls.baseUrl}/css/kuntalaisaloite.css" />-->
-    
-    <#-- TODO: LESS build for production -->
-    <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-iframe.less" />
-    <!--[if IE ]>
-        <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-ie.less">
-    <![endif]-->
-    <script src="${urls.baseUrl}/js/less-1.3.0.min.js" type="text/javascript"></script>
+    <#if optimizeResources>
+        <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/style-iframe.min.css?version=${resourcesVersion}" />
+        <!--[if IE ]>
+        <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-ie.css?version=${resourcesVersion}" />
+        <![endif]-->
+    <#else>
+        <link rel="stylesheet" type="text/css" href="${urls.baseUrl}/css/normalize.css" />
+        <noscript>
+            <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-iframe.css" />
+            <!--[if IE ]>
+                <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-ie.css" />
+            <![endif]-->
+        </noscript>
+        <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-iframe.less" />
+        <!--[if IE ]>
+            <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-ie.less">
+        <![endif]-->
+        <script src="${urls.baseUrl}/js/less-1.3.0.min.js" type="text/javascript"></script>
+    </#if>
 </head>
 
 <body class="${bodyWidthClass!""}">

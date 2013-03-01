@@ -70,39 +70,6 @@
 @dimmed: 0.6;
 
 // Mixing
-//
-// Rounded corners 
-//
-// Styleguide 2.1
-
-.rounded-corners (@cornerRadius: 0.8em) {
-    -webkit-border-radius: @cornerRadius;
-    -moz-border-radius: @cornerRadius;
-    border-radius: @cornerRadius;
-}
-.rounded-corners-top-left (@cornerRadius: 0.8em) {
-    -webkit-border-top-left-radius: @cornerRadius;
-    -moz-border-top-left-radius: @cornerRadius;
-    border-top-left-radius: @cornerRadius;
-}
-.rounded-corners-bottom-left (@cornerRadius: 0.8em) {
-    -webkit-border-bottom-left-radius: @cornerRadius;
-    -moz-border-bottom-left-radius: @cornerRadius;
-    border-bottom-left-radius: @cornerRadius;
-}
-.rounded-corners-top-right (@cornerRadius: 0.8em) {
-    -webkit-border-top-right-radius: @cornerRadius;
-    -moz-border-top-right-radius: @cornerRadius;
-    border-top-right-radius: @cornerRadius;
-}
-.rounded-corners-bottom-right (@cornerRadius: 0.8em) {
-    -webkit-border-bottom-right-radius: @cornerRadius;
-    -moz-border-bottom-right-radius: @cornerRadius;
-    border-bottom-right-radius: @cornerRadius;
-}
-
-// Mixing
-//
 // Transition 
 //
 // Styleguide 2.2
@@ -348,7 +315,6 @@ a.block-link {
 // Styleguide 2
 
 .large-button, .small-button {
-    //.rounded-corners;
     display: inline-block;
     zoom: 1; /* zoom and *display = ie7 hack for display:inline-block */
     *display: inline;
@@ -485,243 +451,6 @@ a.block-link {
     &.search {              background-position: 0 -2240px;  }
 }
 
-// Small icons standalone
-//
-// Styleguide 4.2.2
-.small-icon-plain {
-    display:inline-block;
-    width:16px;
-    height:16px;
-    
-    background: transparent url("../img/button-small-sprite.png?version=${timestamp}") no-repeat 0 0;
-
-    &.save-and-send {       background-position: 0 0;     }
-    &.save-as-draft {       background-position: 0 -150px;   }
-    &.cancel {              background-position: 0 -301px;   }
-    &.edit {                background-position: 0 -450px;   }
-    &.next {                background-position: 0 -601px;   }
-    &.delete {              background-position: 0 -750px;   }
-    &.mail {                background-position: 0 -900px;   }
-    &.document {            background-position: 0 -1050px;  }
-    &.folder {              background-position: 0 -1200px;  }
-    &.upload {              background-position: 0 -1351px;  }
-    &.download {            background-position: 0 -1501px;  }
-    &.previous {            background-position: 0 -1650px;  }
-    &.add {                 background-position: 0 -1800px;  }
-    &.logout {              background-position: 0 -2100px;  }
-    &.search {              background-position: 0 -2250px;  }
-}
-
-
-.file-icon {
-    display:inline-block;
-    width:32px;
-    height:32px;
-    margin:0 0.5em -0.5em 0;
-    
-    &.pdf {
-        background:url("../img/pdficon_large.png?version=${timestamp}") no-repeat 0 0; 
-    }
-}
-
-// Known positioning issue in IE7.
-.more {
-    float:right;
-    padding-bottom:1px;    
-    color:#444;
-
-    &:hover {
-        color:@black;
-    }
-}
-
-// Input fields
-//
-// Styleguide 3.2
-input[type="text"] {
-    
-    border: 1px solid @borderGray;
-    background: #fefefe;
-    font-size: 1em;
-    padding: 0.3em;
-    margin: 0.2em 0em 1em 0em;
-    
-    .transition(box-shadow, 0.2s, ease-in);
-    
-    &.large {
-        //width:581px;
-        width:98%;
-    }
-    &.medium {
-        //width:265px;
-        width:95%;
-    }
-    &.small {
-        width:60px;
-    }
-    &.search-field {
-        width:250px;
-        height:34px;
-        line-height:34px;
-        padding:0 0.3em;
-    }
-}
-
-textarea {
-    width: 98%;
-    margin-top:0.2em;
-    vertical-align:bottom; // for removing whitespace
-    padding:0.3em;
-    height: 6em;
-    border: 1px solid @borderGray;
-    resize:vertical;
-    
-    .transition(box-shadow, 0.2s, ease-in);
-    
-    &.noresize { resize:none; }
-    
-    &.textarea-tall {
-        min-height: 17em;
-    }
-    
-}
-textarea:focus, input[type="text"]:focus, .email-input.focus {
-    box-shadow:0 0 5px rgba(0,0,0,0.2);
-    border: 1px solid #bbb;
-
-}
-
-
-input:-moz-placeholder, textarea:-moz-placeholder { color:#999; }
-::-webkit-input-placeholder, ::-webkit-textarea-placeholder { color:#999; }
-input:-ms-input-placeholder, input:-ms-textarea-placeholder { color:#999;  }// for IE10 
-
-textarea, input[type="text"] {
-    font-family: 'PT Sans', "Trebuchet MS", Helvetica, sans-serif;
-
-    &.has-error {
-        border-color:#be3730 !important;  box-shadow:inset 2px 2px 2px rgba(0,0,0,0.1);
-    }
-}
-
-label  {
-    display: block;
-    //font-size: 0.9em;
-    input[type="radio"], input[type="checkbox"] {
-        margin: 2px 8px 0 0;
-        float: left;
-    }
-
-    .label {
-        display:block;
-        margin:0 0 0.5em 1.5em;
-        line-height:1.2em;
-    }
-    
-    &.inline { display:inline; }
-    
-    input[type="text"]{
-        display:block;
-    }
-}
-.disabled-input {
-    opacity:@dimmed;
-}
-
-.input-header {
-    position: relative
-    display: block;
-    margin-right:30px; // prevent overlapping with help-icon
-    margin-bottom: 0.2em;
-    font-size: 1em;
-}
-.initiative-contact-details {
-    .input-header {
-        margin:0;
-    }
-}
-
-
-// Icons
-// .required        - Form required field
-// .confirmed       - Confirmed author
-// .unconfirmed     - Unconfirmed author
-// 
-// Styleguide 3.4
-
-.icon-small {
-    display:inline-block;
-    width:12px;
-    height:12px;
-    background: transparent url("../img/icons-sprite.png?version=${timestamp}") 0 0 no-repeat;
-    
-    &.settings, &.logout {
-        position:absolute;
-        right:15px;
-        top:50%;
-        margin-top:-6px;
-    }
-    
-    &.settings {
-        background-position:-48px 0;
-    }
-    &.logout {
-        background-position:-80px 0;
-    }
-    
-    &.dropdown-icon {
-        margin-left:3px;
-        background-position:-96px 3px;
-    }
-    
-    &.required { background-position:0 0; }         // Required field
-    &.unconfirmed { background-position:-16px 0; }  // Unconfirmed author
-    &.confirmed { background-position:-32px 0; }    // Confirmed author
-    &.external {                                    // External link
-        background-position:-144px 1px;             // Used a.external instead
-        margin-left:4px;
-    }
-    &.more {
-        width:16px;
-        height:16px;
-        margin:1px 0 0 4px;
-        background-position:-112px 0;
-    
-        &.less { background-position:-128px 0; }
-    }
-    &.arrow-right {
-        background-position:-160px 1px;
-    }
-    &.arrow-right-2 {
-        background-position:-179px 1px;
-    }
-    &.arrow-right-3 {
-        background-position:-179px -15px;
-        
-        &.floated {                                 // For info system-messages
-            float:left;
-            margin:0.2em 0 0 -16px;
-        }
-    }
-    &.arrow-left {
-        background-position:-192px 1px;
-    }
-    &.arrow-left-2 {
-        background-position:-208px 1px;
-    }
-    &.arrow-left-3 {
-        background-position:-208px -15px;
-    }
-    
-    &.help {
-        width:27px;
-        height:21px;
-        background-position:0 -96px;
-    }
-}
-
-
-
 .column {
     width: 32%;
     margin-right: 2%;
@@ -777,31 +506,6 @@ label  {
 
 }
 
-
-.additional-container-body {
-    margin-bottom: 3em;
-}
-
-.additional-container, .extra-column {
-
-    ul {
-        list-style: none;
-        margin-left: 0px;
-        
-        li {
-            margin-left: 0px;
-            padding-left: 0px;
-        }
-    }
-}
-
-.forum-additional-info {
-    font-size: 0.8em;
-    color: @secondaryColor;
-}
-
-
-
 /**
  * For modern browsers
  * 1. The space content is one way to avoid an Opera bug when the
@@ -848,152 +552,6 @@ label  {
     background:url("../img/border.png?version=${timestamp}") 291px 0 repeat-y;
 }
 
-// Tooltip
-// 
-// Styleguide 5.2
-.tooltip {
-    z-index:998;
-    background:#087480;
-    font-size:0.9em;
-    padding:0.3em 1em;
-    color:#fff;
-    box-shadow:0px 3px 2px -3px rgba(0,0,0,0.5);
-    
-    // For modern browsers and IE 8+
-    &:before {
-        border:solid;
-        border-color:#087480 transparent;
-        border-width:6px 6px 0 6px;
-        content:"";
-        display:block;
-        left:50%;
-        margin-left:-6px;
-        position:absolute;
-        bottom:-5px;
-        z-index:999;
-    }
-}
-
-
-// Messages
-//
-// .msg-info        - Info, gray
-// .msg-warning     - Warning, yellow
-// .msg-error       - Error, red
-// .msg-success     - Success, green
-// 
-// Styleguide 6.
-
-.system-msg {
-    position:relative;
-    padding: 15px 25px 15px 60px;
-    //-webkit-border-radius: @cornerRadius;
-    //-moz-border-radius: @cornerRadius;
-    //border-radius: @cornerRadius;
-    box-shadow: none;
-    margin:1em 0;
-    border-width:1px; // separated for better overriding
-    border-style:solid;
-
-    font-size:0.9em;
-    text-align:left;
-    
-    &.msg-summary {
-        min-height:67px;
-        margin-bottom:30px;
-        border:0;
-        border-left:4px solid #c3cc13;
-        padding-left:126px;
-        background:#fff url("../img/icon-msg-summary.png?version=${timestamp}") no-repeat 32px 27px;
-        
-        // Using nested messages so that it'd be easier to use wether combined or singular system-messages
-        .msg-info {
-            background:#fff;
-            margin:0 0 0 5px;
-            padding:1em 0;
-            border:none;
-            font-size:1em;
-        }
-    }
-
-    &.msg-info {
-        border-color:@borderGray;
-        background: @grayGradient2 url("../img/icon-msg-info.png?version=${timestamp}") no-repeat 20px 15px;
-        
-        .close-msg {
-            background:@borderGray;
-        }
-    }
-
-    &.msg-warning {
-        border-color:#e9c000;
-        background: #f7e489 url("../img/icon-msg-warning.png?version=${timestamp}") no-repeat 18px 15px;
-
-        .close-msg {
-            background:#e9c000;
-        }
-    }
-
-    &.msg-error {
-        color:#fff;
-        border-color:@redGradient2;
-        background: #fa353d url("../img/icon-msg-error.png?version=${timestamp}") no-repeat 15px 15px;
-        
-        a {
-            color:#fff;
-        }
-        a:hover {
-            color:#fff;
-            text-decoration:underline;
-        }
-                
-        .close-msg {
-            background:@redGradient2;
-        }
-    }
-
-    &.msg-success {
-        border: 1px solid #7aa63f;
-        background: #b6eb7c url("../img/icon-msg-success.png?version=${timestamp}") no-repeat 15px 15px;
-        color:#254000;
-        
-        .close-msg {
-            background:#58831d;
-            color: #b6eb7c;
-        }
-    }
-    
-    // General message style for narrow columns
-    &.small {
-        background-image:none;
-        padding:5px;
-        margin:5px 5px 5px 0;
-    }
-    
-    .close-msg {
-        position:absolute;
-        right:15px;
-        top:18px;
-        display: inline-block;
-        width: 16px;
-        height: 16px;
-        line-height: 13px;
-        //border-radius:0.2em;
-        text-align: center;
-        font-size:0.85em;
-        
-        color:#fff;
-        opacity:0.5;
-        cursor:pointer;
-        
-        .transition(opacity, 0.3s, ease-in);
-    }
-    &:hover {
-        .close-msg {
-            opacity:1;
-        }
-    }    
-}
 
 // Typography
 //
@@ -1087,83 +645,6 @@ ul, ol {
 .align-left { text-align:left; }
 .align-center { text-align:center; }
 
-blockquote {
-    margin-bottom:2em;
-    font-style:italic;
-}
-
-.municipality {
-    margin:0 0 0.5em 0;
-    font-size:3em;
-    text-align:center;
-    line-height:1em;
-}
-
-.user-count-total {
-    float:left;
-    margin:0 40px 0 0;
-    font-size:3em;
-    font-style:italic;
-    line-height:1em;
-}
-.user-count {
-    font-size:1.7em;
-    font-style:italic;
-}
-
-
-// Tables
-// Uses float for IE7.
-// 
-// Styleguide 8.
-.table {
-    display: table;
-    margin-bottom:1em;
-    
-    .row { display: table-row; }
-    .cell {
-        display: table-cell;
-        padding:0.3em 0;
-        width:250px;
-        
-        input[type="text"] {
-            margin:0;
-        }
-        
-        &.title {
-            font-weight:bold;
-        }
-    }
-    .cell:first-child {
-        width:150px;
-    }
-    
-    .cell-1of3 { width:33.3%; }
-    .cell-2of3 { width:66.6%; }
-    .cell-1of4 { width:25%; }
-    .cell-3of4 { width:75%; }
-    
-    &.full {
-        width:100%;
-    }
-    
-    &.valign-bottom {
-        .cell {
-            vertical-align:bottom;
-        }
-    }
-    &.valign-top {
-        .cell {
-            vertical-align:top;
-        }
-    }
-    &.no-pad {
-        .cell {
-            padding:0;
-        }
-    }
-}
-
 // Search results
 // 
 // Styleguide 9.
@@ -1209,10 +690,7 @@ blockquote {
         overflow:hidden; // clearfix
         position:relative;
         display:block;
-        //padding:0.7em 0.3em;
         padding:0 0 0.7em 0;
-        
-        //&:hover { background:#eaeaea; }
     }
     
     .date {
@@ -1227,47 +705,11 @@ blockquote {
         font-size:0.9em;
         margin-left:100px;
     }
-    /*.state {
-        margin-left:1em;
-    }*/
     .bull {
         margin:0 0.5em;
         font-size:0.8em;
         color:@borderGray;
     }
-    
-    .participants {
-        float:right;
-        width:13em;
-        text-align:right;
-        
-        .participant-count {
-            padding-right:42px;
-            font-size:1.45em;
-            font-style:italic;
-            color:@bodyColor;
-            text-shadow:0 1px 0 rgba(255,255,255,0.3);
-            
-            /*
-            background:url("../img/icons-search.png?version=${timestamp}") no-repeat right -125px;
-            
-            &.one {
-                background-position:right -189px;
-            }*/
-            
-            // 24px
-            background:url("../img/icons-search.png?version=${timestamp}") no-repeat right -119px;
-            
-            &.one {
-                background-position:right -183px;
-            }
-        }
-        
-        .no-participants {
-            font-style:italic;
-            font-size:0.9em;
-        }
-    }   
 }
 
 .mashup-buttons {

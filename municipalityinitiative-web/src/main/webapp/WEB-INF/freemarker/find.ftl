@@ -15,13 +15,12 @@
 -->
 <#assign page="page.find" />
 
-<@l.main "page.find" pageTitle!"">
-
-<h1><@u.message page /></h1>
-
 <#assign searchMunicipality = RequestParameters['municipality']!"" />
 <#assign searchTerm = RequestParameters['search']!"" />
 
+<@l.main "page.find" pageTitle!"">
+
+<h1><@u.message page /></h1>
 
 <div class="view-block search-options cf">
 

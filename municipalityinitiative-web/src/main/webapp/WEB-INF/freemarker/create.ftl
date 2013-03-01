@@ -15,6 +15,13 @@
 -->
 <#assign page="page.createNew" />
 
+<#--
+ * Get current municipality as request parameter.
+ * - Request parameter is for iFrame create-link
+ * - We could want to try to guess user's municipality later on with different methods like GEO location, user's history etc..
+-->
+<#assign currentMunicipality = RequestParameters['municipality']!"" />
+
 <@l.main page pageTitle!"">
 
     <h1><@u.message page /></h1>
@@ -34,7 +41,7 @@
 
         <div class="form-block-container">
             <@edit.blockHeader key="initiative.municipality.title" step=1 />
-            <@edit.municipalityBlock step=1 />
+            <@edit.municipalityBlock step=1 municipality=currentMunicipality />
         </div>
     
         <div class="form-block-container">
