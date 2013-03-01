@@ -384,7 +384,7 @@ ${email?split("@")?first}&#064;<span class="hide">null</span>${email?split("@")?
     <#assign iframeHTML><iframe id="${id}"
             frameborder="0"
             scrolling="no"
-            src="https://localhost:8443/fi/iframe?municipality=${municipality}&amp;limit=${limit}&amp;orderBy=latest&amp;width=${width}&amp;height=${height}"
+            src="${urls.baseUrl}/${locale}/iframe?municipality=${municipality}&amp;limit=${limit}&amp;orderBy=latest&amp;width=${width}&amp;height=${height}"
             width="${width}"
             height="${height}">
     </iframe></#assign>

@@ -2,7 +2,7 @@
 
 <#escape x as x?html>
 
-<#if locale == "fi">
+<#--<#if locale == "fi">-->
 
     <#-- Väliaikainen sivu Kuntalaisaloitteen Leijukkeen demoamiselle -->
     
@@ -41,6 +41,7 @@
         <@u.initiativeIframe id="kuntalaisaloite-leijuke-2" embed=false width="600" height="460" municipality="2" limit="10" />
     </div>
 
+<#--
 <#else>
 
     <p>Medborgarna kan från och med den 1 mars 2012 använda sig av ett nytt påverkningsmedel på statlig nivå, medborgarinitiativ. Medborgarinitiativet ger medborgarna möjlighet att få upp ärenden till behandling i riksdagen. Målet med det nya systemet är att främja fri medborgarverksamhet och därigenom stärka medborgarsamhället, där olika befolkningsgrupper aktivt deltar i och påverkar utvecklandet av samhället.</p>    
@@ -80,5 +81,6 @@
     </ul>
     
 </#if>
+-->
 
 </#escape>

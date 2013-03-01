@@ -57,7 +57,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>${pageTitle} - <@u.message "siteName" /></title> 
+    <title><#noescape>${pageTitle}</#noescape> - <@u.message "siteName" /></title> 
     
     <link href="${urls.baseUrl}/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
    
@@ -92,7 +92,7 @@
         </a>
 
         <#if currentMunicipalityId??>
-            <h3>${pageTitle!""}</h3>
+            <h3><#noescape>${pageTitle!""}</#noescape></h3>
         <#else>
             <h3>&nbsp;</h3>
         </#if>
