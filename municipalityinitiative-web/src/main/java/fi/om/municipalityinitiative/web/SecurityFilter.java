@@ -27,6 +27,7 @@ public class SecurityFilter implements Filter {
     private static final String CSRF_TOKEN_NAME = "CSRFToken";
     private static final int CSRF_TOKEN_LENGTH = 24;
     private static final String COOKIE_ERROR = "cookieError";
+    public static final String UNWANTED_HIDDEN_EMAIL_FIELD = "email";
     private UrlPathHelper urlPathHelper = new UrlPathHelper();
 
     @Resource
@@ -52,6 +53,7 @@ public class SecurityFilter implements Filter {
 
         try {
             verifyOrInitializeCsrfToken(request, response);
+            checkInvalidParameters(request);
             chain.doFilter(servletRequest, servletResponse);
         } catch (CSRFException e) {
             csrfException(e, request, response);
@@ -76,11 +78,21 @@ public class SecurityFilter implements Filter {
         }
     }
 
+    private void checkInvalidParameters(HttpServletRequest request) {
+        if (IS_POST(request) && !Strings.isNullOrEmpty(request.getParameter(UNWANTED_HIDDEN_EMAIL_FIELD))) {
+            throw new IllegalArgumentException("Unwanted information given.");
+        }
+    }
+
+    private boolean IS_POST(HttpServletRequest request) {
+        return request.getMethod().equals("POST");
+    }
+
     private void verifyOrInitializeCsrfToken(HttpServletRequest request, HttpServletResponse response) {
 
         String csrfToken;
 
-        if (request.getMethod().equals("GET")) {
+        if (IS_GET(request)) {
             try {
                 csrfToken = verifyAndGetCurrentCSRFToken(request);
             } catch (CSRFException e) {
@@ -88,7 +100,7 @@ public class SecurityFilter implements Filter {
                 csrfToken = initializeCSRFToken(request, response);
             }
         }
-        else if (request.getMethod().equals("POST")) {
+        else if (IS_POST(request)) {
             csrfToken = verifyAndGetCurrentCSRFToken(request);
         }
         else {
@@ -96,6 +108,10 @@ public class SecurityFilter implements Filter {
         }
 
         request.setAttribute(CSRF_TOKEN_NAME, csrfToken);
+    }
+
+    private boolean IS_GET(HttpServletRequest request) {
+        return request.getMethod().equals("GET");
     }
 
     private String initializeCSRFToken(HttpServletRequest request, HttpServletResponse response) {
@@ -123,7 +139,7 @@ public class SecurityFilter implements Filter {
         }
 
         // Double Submit Cookie
-        if (request.getMethod().equals("POST")) {
+        if (IS_POST(request)) {
             String requestToken = request.getParameter(CSRF_TOKEN_NAME);
             if (requestToken == null || !requestToken.equals(sessionToken)) {
                 throw new CSRFException("CSRFToken -request parameter missing or doesn't match session");
