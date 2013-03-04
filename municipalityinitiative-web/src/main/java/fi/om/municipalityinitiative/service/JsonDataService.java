@@ -50,4 +50,7 @@ public class JsonDataService {
         return municipalityJsons;
     }
 
+    public MunicipalityJson getMunicipality(Long id) {
+        return new MunicipalityJson(municipalityDao.getMunicipality(id));
+    }
 }

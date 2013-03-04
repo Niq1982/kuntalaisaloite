@@ -87,10 +87,10 @@ public class ApiController extends BaseController {
     }
 
     @RequestMapping(value=INITIATIVES, method=GET, produces=JSONP, params=JSONP_CALLBACK)
-    public @ResponseBody JsonpObject<List<InitiativeListJson>> initiativeList(@RequestParam(JSONP_CALLBACK) String callback,
-                                                                              @RequestParam(value = JSON_OFFSET, required = false) Integer offset,
-                                                                              @RequestParam(value = JSON_LIMIT, required = false) Integer limit,
-                                                                              @RequestParam(value = JSON_MUNICIPALITY, required = false) Long municipality) {
+    public @ResponseBody JsonpObject<List<InitiativeListJson>> initiativeListJsonp(@RequestParam(JSONP_CALLBACK) String callback,
+                                                                                   @RequestParam(value = JSON_OFFSET, required = false) Integer offset,
+                                                                                   @RequestParam(value = JSON_LIMIT, required = false) Integer limit,
+                                                                                   @RequestParam(value = JSON_MUNICIPALITY, required = false) Long municipality) {
         return new JsonpObject<List<InitiativeListJson>>(callback, initiativeList(offset, limit, municipality));
     }
 
@@ -99,7 +99,7 @@ public class ApiController extends BaseController {
         return jsonDataService.getInitiative(id);
     }
     @RequestMapping(value=INITIATIVE, method=GET, produces=JSONP, params=JSONP_CALLBACK)
-    public @ResponseBody JsonpObject<InitiativeJson> initiativeGet(
+    public @ResponseBody JsonpObject<InitiativeJson> initiativeGetJsonp(
             @PathVariable Long id,
             @RequestParam(JSONP_CALLBACK) String callback) {
         return new JsonpObject<InitiativeJson>(callback, initiativeGet(id));
@@ -112,12 +112,21 @@ public class ApiController extends BaseController {
     }
     @RequestMapping(value=MUNICIPALITIES, method=GET, produces=JSONP, params=JSONP_CALLBACK)
     public @ResponseBody
-    JsonpObject<List<MunicipalityJson>> municipalityList(
+    JsonpObject<List<MunicipalityJson>> municipalityListJsonp(
             @RequestParam(JSONP_CALLBACK) String callback) {
         return new JsonpObject<>(callback, municipalityList());
     }
 
+    @RequestMapping(value=MUNICIPALITY, method=GET, produces=JSON)
+    public @ResponseBody MunicipalityJson municipalityGet(@PathVariable Long id) {
+        return jsonDataService.getMunicipality(id);
+    }
 
+    @RequestMapping(value=MUNICIPALITY, method=GET, produces=JSONP, params=JSONP_CALLBACK)
+    public @ResponseBody JsonpObject<MunicipalityJson> municipalityGetJsonp(@PathVariable Long id,
+                                                                            @RequestParam(JSONP_CALLBACK) String callback) {
+        return new JsonpObject<MunicipalityJson>(callback, municipalityGet(id));
+    }
 
     private List<InitiativeListJson> createInitiativeListJsonObject() {
         InitiativeListInfo initiative = new InitiativeListInfo();

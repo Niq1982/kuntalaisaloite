@@ -9,4 +9,6 @@ public interface MunicipalityDao {
     List<Municipality> findMunicipalities(boolean orderByFinnishNames);
 
     public String getMunicipalityEmail(Long municipalityId);
+
+    Municipality getMunicipality(Long id);
 }
