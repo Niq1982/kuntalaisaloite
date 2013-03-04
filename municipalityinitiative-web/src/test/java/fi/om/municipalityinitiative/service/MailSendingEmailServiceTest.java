@@ -8,6 +8,7 @@ import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
+import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.util.JavaMailSenderFake;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -271,7 +272,7 @@ public class MailSendingEmailServiceTest {
         contactInfo.setName(CONTACT_NAME);
         contactInfo.setAddress(CONTACT_ADDRESS);
 
-        return InitiativeEmailInfo.parse(contactInfo, initiative, INITIATIVE_URL);
+        return InitiativeEmailInfo.parse(contactInfo, InitiativeViewInfo.parse(initiative, Locales.LOCALE_FI), INITIATIVE_URL);
     }
 
     private static CollectableInitiativeEmailInfo createCollectableEmailInfo() {

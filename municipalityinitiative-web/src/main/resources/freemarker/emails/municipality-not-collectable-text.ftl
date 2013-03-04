@@ -1,7 +1,7 @@
 <#import "../components/email-utils.ftl" as u />
 <#import "../components/email-blocks.ftl" as b />
 
-<@u.message "email.initiative" /> - ${emailInfo.municipality.finnishName!""}
+<@u.message "email.initiative" /> - ${emailInfo.municipality.name!""}
 
 <@b.initiativeDetails "text" />
 

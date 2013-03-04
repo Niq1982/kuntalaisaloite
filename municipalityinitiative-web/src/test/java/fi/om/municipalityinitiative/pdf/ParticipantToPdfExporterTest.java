@@ -7,6 +7,8 @@ import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
+import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
+import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.joda.time.LocalDate;
@@ -35,7 +37,7 @@ public class ParticipantToPdfExporterTest {
         initiative.setMunicipality(new Municipality(1, "Helsinki", "Helsingfors"));
 
         initiative.setName("Koira pois lähiöistä");
-        InitiativeEmailInfo emailInfo = InitiativeEmailInfo.parse(new ContactInfo(), initiative, "");
+        InitiativeEmailInfo emailInfo = InitiativeEmailInfo.parse(new ContactInfo(), InitiativeViewInfo.parse(initiative, Locales.LOCALE_FI), "");
 
         List<Participant> participants = Lists.newArrayList();
 

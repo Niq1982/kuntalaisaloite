@@ -68,7 +68,7 @@ public class InitiativeService {
 
     private void sendNotCollectableEmails(Long initiativeId, Locale locale) {
 
-        Initiative initiative = initiativeDao.getById(initiativeId);
+        InitiativeViewInfo initiative = InitiativeViewInfo.parse(initiativeDao.getById(initiativeId), locale);
         ContactInfo contactInfo = initiativeDao.getContactInfo(initiativeId);
         String url = Urls.get(Locales.LOCALE_FI).view(initiativeId);
 
@@ -106,7 +106,7 @@ public class InitiativeService {
     }
 
     private void sendCollectedInitiativeEmails(Long initiativeId, Locale locale, String comment) {
-        Initiative initiative = initiativeDao.getById(initiativeId);
+        InitiativeViewInfo initiative = InitiativeViewInfo.parse(initiativeDao.getById(initiativeId), locale);
         ContactInfo contactInfo = initiativeDao.getContactInfo(initiativeId);
         String url = Urls.get(Locales.LOCALE_FI).view(initiativeId);
 

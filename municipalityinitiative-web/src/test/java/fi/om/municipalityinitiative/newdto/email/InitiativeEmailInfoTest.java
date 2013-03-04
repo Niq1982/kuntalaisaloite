@@ -2,6 +2,8 @@ package fi.om.municipalityinitiative.newdto.email;
 
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
+import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
+import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.joda.time.LocalDate;
@@ -21,13 +23,14 @@ public class InitiativeEmailInfoTest {
         ContactInfo contactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
 
         String url = "https://url.to.initiative";
-        InitiativeEmailInfo emailInfo = InitiativeEmailInfo.parse(contactInfo, initiative, url);
+        InitiativeEmailInfo emailInfo = InitiativeEmailInfo.parse(contactInfo, InitiativeViewInfo.parse(initiative, Locales.LOCALE_FI), url);
         assertThat(emailInfo.getContactInfo().getName(), is(contactInfo.getName()));
         assertThat(emailInfo.getContactInfo().getPhone(), is(contactInfo.getPhone()));
         assertThat(emailInfo.getContactInfo().getAddress(), is(contactInfo.getAddress()));
         assertThat(emailInfo.getContactInfo().getEmail(), is(contactInfo.getEmail()));
         assertThat(emailInfo.getCreateTime(), is(initiative.getCreateTime()));
-        assertThat(emailInfo.getMunicipality(), is(initiative.getMunicipality()));
+        assertThat(emailInfo.getMunicipality().getName(), is(initiative.getMunicipality().getFinnishName()));
+        assertThat(emailInfo.getMunicipality().getId(), is(initiative.getMunicipality().getId()));
         assertThat(emailInfo.getId(), is(initiative.getId()));
         assertThat(emailInfo.getName(), is(initiative.getName()));
         assertThat(emailInfo.getProposal(), is(initiative.getProposal()));

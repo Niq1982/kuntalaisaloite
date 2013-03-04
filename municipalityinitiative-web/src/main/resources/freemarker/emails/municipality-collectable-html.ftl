@@ -6,7 +6,7 @@
 
 <#escape x as x?html>
 
-<#assign title><@u.message "email.initiative" /> - ${emailInfo.municipality.finnishName!""}</#assign>
+<#assign title><@u.message "email.initiative" /> - ${emailInfo.municipality.name!""}</#assign>
 
 <@l.emailHtml "municipality-collectable" title>
 
