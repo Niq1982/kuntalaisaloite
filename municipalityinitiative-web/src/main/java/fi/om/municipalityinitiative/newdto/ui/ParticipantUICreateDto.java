@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newdto.ui;
 
+import fi.om.municipalityinitiative.newdto.service.CreateDtoTimeValidation;
 import fi.om.municipalityinitiative.validation.ParticipantValidationInfo;
 import fi.om.municipalityinitiative.validation.ValidMunicipalMembership;
 import fi.om.municipalityinitiative.validation.ValidParticipateFranchise;
@@ -9,7 +10,9 @@ import javax.validation.constraints.NotNull;
 
 @ValidParticipateFranchise
 @ValidMunicipalMembership
-public class ParticipantUICreateDto implements ParticipantValidationInfo {
+public class ParticipantUICreateDto
+        extends CreateDtoTimeValidation
+        implements ParticipantValidationInfo {
 
     @NotEmpty
     private String participantName;

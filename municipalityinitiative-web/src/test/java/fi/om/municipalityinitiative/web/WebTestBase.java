@@ -6,6 +6,7 @@ import fi.om.municipalityinitiative.conf.WebTestConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.service.MailSendingEmailService;
 import fi.om.municipalityinitiative.util.Locales;
+import fi.om.municipalityinitiative.validation.NotTooFastSubmitValidator;
 import mockit.Mocked;
 import org.eclipse.jetty.server.Server;
 import org.junit.After;
@@ -102,6 +103,7 @@ public abstract class WebTestBase {
             Urls.initUrls("https://localhost:" + PORT);
             urls = Urls.FI;
         }
+        NotTooFastSubmitValidator.disable(); // Disable fast-submit validation at ui-tests
         testHelper.dbCleanup();
         
     }

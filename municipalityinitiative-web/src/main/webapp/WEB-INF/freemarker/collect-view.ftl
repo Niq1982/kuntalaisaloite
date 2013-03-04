@@ -14,7 +14,8 @@
 
     <@f.cookieWarning/>
     <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-participate" class="sodirty <#if hasErrors>has-errors</#if>">
-        <@f.securityFilters />
+        <@f.securityFilters/>
+        <@f.notTooFastField participant/>
 
         <input type="hidden" name="municipality" value="${initiative.municipality.id!""}"/>
         

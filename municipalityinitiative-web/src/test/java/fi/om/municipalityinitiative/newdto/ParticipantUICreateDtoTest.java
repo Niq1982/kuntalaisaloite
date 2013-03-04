@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.newdto;
 
 import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateDto;
+import org.joda.time.DateTime;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -109,12 +110,36 @@ public class ParticipantUICreateDtoTest {
         assertThat(violations, hasSize(0));
     }
 
-    private ConstraintViolation<ParticipantUICreateDto> getFirst(Set<ConstraintViolation<ParticipantUICreateDto>> violations) {
+    @Test
+    public void too_fast_submit_() {
+
+        ParticipantUICreateDto dto = validParticipant();
+        dto.setRandomNumber(DateTime.now().minusSeconds(5).getMillis());
+
+        Set<ConstraintViolation<ParticipantUICreateDto>> violations = validator.validate(dto);
+
+        assertThat(violations, hasSize(1));
+        assertThat(getFirst(violations).getPropertyPath().toString(), is("randomNumber"));
+        assertThat(getFirst(violations).getMessage(), is("{NotTooFastSubmit}"));
+
+    }
+
+    private ParticipantUICreateDto validParticipant() {
+        ParticipantUICreateDto dto = createParticipantWithName();
+
+        dto.setMunicipality(1L);
+        dto.setHomeMunicipality(2L);
+        dto.setMunicipalMembership(true);
+        return dto;
+    }
+
+    private static ConstraintViolation<ParticipantUICreateDto> getFirst(Set<ConstraintViolation<ParticipantUICreateDto>> violations) {
         return violations.iterator().next();
     }
 
     private ParticipantUICreateDto createParticipantWithName() {
         ParticipantUICreateDto dto = new ParticipantUICreateDto();
+        dto.setRandomNumber(DateTime.now().minusMinutes(1).getMillis());
         dto.setParticipantName("Some random name");
         return dto;
     }

@@ -239,6 +239,11 @@
     <input type="text" name="email" id="email" tabindex="-1" />
 </#macro>
 
+<#macro notTooFastField object>
+        <input type="hidden" name="randomNumber" value="${object.randomNumber}"/>
+</#macro>
+
+
 <#--
  * cookieWarning
  *

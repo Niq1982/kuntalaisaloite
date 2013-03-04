@@ -37,6 +37,7 @@
     <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-initiative" class="sodirty dirtylisten <#if hasErrors>has-errors</#if>">
         
         <@f.securityFilters />
+        <@f.notTooFastField initiative/>
 
         <div class="form-block-container">
             <@edit.blockHeader key="initiative.municipality.title" step=1 />

@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.newdto.ui;
 
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
+import fi.om.municipalityinitiative.newdto.service.CreateDtoTimeValidation;
 import fi.om.municipalityinitiative.validation.InitiativeCreateParticipantValidationInfo;
 import fi.om.municipalityinitiative.validation.ValidCreateFranchise;
 import fi.om.municipalityinitiative.validation.ValidMunicipalMembership;
@@ -12,7 +13,9 @@ import javax.validation.constraints.Size;
 
 @ValidMunicipalMembership
 @ValidCreateFranchise
-public class InitiativeUICreateDto implements InitiativeCreateParticipantValidationInfo {
+public class InitiativeUICreateDto
+        extends CreateDtoTimeValidation
+        implements InitiativeCreateParticipantValidationInfo {
 
     @NotEmpty
     @Size(max = InitiativeConstants.INITIATIVE_NAME_MAX)

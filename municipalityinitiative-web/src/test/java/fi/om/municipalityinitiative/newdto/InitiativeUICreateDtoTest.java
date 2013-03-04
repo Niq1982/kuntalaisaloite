@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.newdto;
 
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUICreateDto;
+import org.joda.time.DateTime;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -129,7 +130,6 @@ public class InitiativeUICreateDtoTest {
 
         assertThat(violations, hasSize(1));
         assertThat(getFirst(violations).getMessage(), is("size must be between 0 and 30"));
-
     }
 
     private InitiativeUICreateDto createInitiativeWithBasicDetails() {
@@ -139,6 +139,7 @@ public class InitiativeUICreateDtoTest {
         dto.setContactInfo(new ContactInfo());
         dto.getContactInfo().setEmail("some@example.com");
         dto.getContactInfo().setName("Some contact name");
+        dto.setRandomNumber(DateTime.now().minusMinutes(1).getMillis());
         return dto;
     }
 
