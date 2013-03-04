@@ -1,7 +1,10 @@
 package fi.om.municipalityinitiative.newdto.service;
 
 import fi.om.municipalityinitiative.json.JsonId;
+import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.Urls;
+
+import java.util.Locale;
 
 public class Municipality {
     private long id;
@@ -25,5 +28,11 @@ public class Municipality {
 
     public String getSwedishName() {
         return swedishName;
+    }
+
+    public String getLocalizedName(Locale locale) {
+        return Locales.LOCALE_FI.equals(locale)
+                ? getFinnishName()
+                : getSwedishName();
     }
 }

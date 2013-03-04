@@ -130,6 +130,8 @@ public class MunicipalityInitiativeViewController extends BaseController {
                 model.addAttribute("previousPageURI", urls.view(initiativeId));
             }
 
+            model.addAttribute("locale", locale);
+
             return PARTICIPANT_LIST;
         }
         else {
