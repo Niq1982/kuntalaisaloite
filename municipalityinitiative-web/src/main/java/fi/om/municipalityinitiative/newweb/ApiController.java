@@ -87,7 +87,6 @@ public class ApiController extends BaseController {
 
         ArrayList<Participant> publicParticipants = Lists.<Participant>newArrayList();
         publicParticipants.add(new Participant(new LocalDate(2010, 1, 1), "Teemu Teekkari", true, TAMPERE));
-//        publicParticipants.add(new Participant(new LocalDate(2010, 1, 1), "Taina Teekkari", false, new Municipality("Helsinki", 2L)));
 
         InitiativeViewInfo initiativeInfo = new InitiativeViewInfo();
         initiativeInfo.setId(1L);
@@ -109,7 +108,8 @@ public class ApiController extends BaseController {
     @RequestMapping(value=INITIATIVES, method=GET, produces=JSON)
     public @ResponseBody
     List<InitiativeListJson> jsonList(@RequestParam(value = JSON_OFFSET, required = false) Integer offset,
-                                      @RequestParam(value = JSON_LIMIT, required = false) Integer limit) {
+                                      @RequestParam(value = JSON_LIMIT, required = false) Integer limit,
+                                      @RequestParam(value = JSON_MUNICIPALITY, required = false) Long municipality) {
 
         if (limit == null) {
             limit = DEFAULT_INITIATIVE_JSON_RESULT_COUNT;
@@ -123,14 +123,16 @@ public class ApiController extends BaseController {
         if (offset != null) {
             search.setOffset(offset);
         }
+        search.setMunicipality(municipality);
         return jsonDataService.findJsonInitiatives(search);
     }
 
     @RequestMapping(value=INITIATIVES, method=GET, produces=JSONP, params=JSONP_CALLBACK)
     public @ResponseBody JsonpObject<List<InitiativeListJson>> jsonpList(@RequestParam(JSONP_CALLBACK) String callback,
                                                     @RequestParam(value = JSON_OFFSET, required = false) Integer offset,
-                                                    @RequestParam(value = JSON_LIMIT, required = false) Integer limit) {
-        return new JsonpObject<List<InitiativeListJson>>(callback, jsonList(offset, limit));
+                                                    @RequestParam(value = JSON_LIMIT, required = false) Integer limit,
+                                                    @RequestParam(value = JSON_MUNICIPALITY, required = false) Long municipality) {
+        return new JsonpObject<List<InitiativeListJson>>(callback, jsonList(offset, limit, municipality));
     }
 
     @RequestMapping(value=INITIATIVE, method=GET, produces=JSON)

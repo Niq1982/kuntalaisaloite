@@ -140,6 +140,8 @@ public final class Urls {
 
     public static final String JSON_LIMIT = "limit";
 
+    public static final String JSON_MUNICIPALITY = "municipality";
+
     public static final int MAX_INITIATIVE_JSON_RESULT_COUNT = 50;
 
     public static final int DEFAULT_INITIATIVE_JSON_RESULT_COUNT = 20;

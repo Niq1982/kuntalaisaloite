@@ -8,21 +8,23 @@
 one for details of an individual initiative. Both interfaces support <a href="http://www.json.org/">JSON</a> 
 and <a href="http://en.wikipedia.org/wiki/JSONP">JSONP</a> formats.</p>
 
-<h3>List of Public Initiatives</h3>
+<h3>List of Initiatives</h3>
 
 <p><a href="${urls.initiatives()}">${urls.initiatives()}</a></p>
 
-<p>Returns a <a href="${urls.search()}">list</a> of initiatives with <a href="#properties">Basic properties</a>.
+<p>Returns a <a href="${urls.search()}">list</a> of initiatives with <a href="#list">Basic properties</a>.
 Id of an initiative is an URI of initiative details in <a href="http://www.json.org/">JSON</a> format.</p>
 
-<p>Parameters <tt>${UrlConstants.JSON_OFFSET}</tt> and <tt>${UrlConstants.JSON_LIMIT}</tt> may be used to restrict results. ${UrlConstants.DEFAULT_INITIATIVE_JSON_RESULT_COUNT} initiatives will be returned by default. Maximum amount of initiatives to return is ${UrlConstants.MAX_INITIATIVE_JSON_RESULT_COUNT}.
+<p>Parameters <tt>${UrlConstants.JSON_OFFSET}</tt> and <tt>${UrlConstants.JSON_LIMIT}</tt> may be used to restrict the results. ${UrlConstants.DEFAULT_INITIATIVE_JSON_RESULT_COUNT} initiatives will be returned by default. Maximum amount of initiatives to return is ${UrlConstants.MAX_INITIATIVE_JSON_RESULT_COUNT}.
 
-<p><a href="${urls.initiatives()}?${UrlConstants.JSON_OFFSET}=20&${UrlConstants.JSON_LIMIT}=10">${urls.initiatives()}?${UrlConstants.JSON_OFFSET}=20&${UrlConstants.JSON_LIMIT}=10</a></p>
+<p>If <tt>${UrlConstants.JSON_MUNICIPALITY}</tt> parameter is given, only initiatives for given municipality id are returned. </p>
+
+<p><a href="${urls.initiatives()}?${UrlConstants.JSON_OFFSET}=20&${UrlConstants.JSON_LIMIT}=10&${UrlConstants.JSON_MUNICIPALITY}=35">${urls.initiatives()}?${UrlConstants.JSON_OFFSET}=20&${UrlConstants.JSON_LIMIT}=10&${UrlConstants.JSON_MUNICIPALITY}=35</a></p>
 
 <h3>Initiative Details</h3>
 <p>${urls.baseUrl}${UrlConstants.INITIATIVE}</p>
 
-<p><a href="#properties">Details</a> of the initiative in <a href="http://www.json.org/">JSON</a> format.</p>
+<p><a href="#details">Details</a> of the initiative in <a href="http://www.json.org/">JSON</a> format.</p>
 
 <h3>JSONP</h3>
 
@@ -30,7 +32,7 @@ Id of an initiative is an URI of initiative details in <a href="http://www.json.
 <a href="${urls.initiatives()}?${UrlConstants.JSONP_CALLBACK}=myCallback">${urls.initiatives()}?${UrlConstants.JSONP_CALLBACK}=myCallback</a>.</p>
 
 
-<h3 id="properties">Initiative properties</h3>
+<h3 id="details">Initiative Details</h3>
 
 <table class="data">
   <thead>
@@ -56,7 +58,7 @@ Id of an initiative is an URI of initiative details in <a href="http://www.json.
   </tbody>
 </table>
 
-<h3 id="properties">Initiative list</h3>
+<h3 id="list">Basic properties for initiative list</h3>
 
 <table class="data">
   <thead>
