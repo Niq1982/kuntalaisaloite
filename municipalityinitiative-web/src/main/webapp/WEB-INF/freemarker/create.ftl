@@ -33,11 +33,10 @@
     <@u.errorsSummary path="initiative.*" prefix="initiative."/>
 
     <#-- FORM. Use class 'sodirty' to enable dirtylisten. -->
+    <@f.cookieWarning/>
     <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-initiative" class="sodirty dirtylisten <#if hasErrors>has-errors</#if>">
         
         <@f.securityFilters />
-        
-        <#--<input type="hidden" name="CSRFToken" value="${CSRFToken}"/>-->
 
         <div class="form-block-container">
             <@edit.blockHeader key="initiative.municipality.title" step=1 />

@@ -236,8 +236,22 @@
 -->
 <#macro securityFilters>
     <input type="hidden" name="CSRFToken" value="${CSRFToken!""}"/>
-    <input type="hidden" name="CSRFToken" value="${formTimer!""}"/>
     <input type="text" name="email" id="email" tabindex="-1" />
+</#macro>
+
+<#--
+ * cookieWarning
+ *
+ * Shows warning if not sure if user accepts cookies
+ *
+-->
+<#macro cookieWarning>
+    <#if cookieError??>
+    <div class="system-msg msg-warning ">
+        <h2>Evästeiden salliminen</h2>
+        <p>Toiminto vaatii tietoturvan vuoksi selaimen evästeiden sallimisen. Ota evästeet käyttöön ja päivitä sivu.</p>
+    </div>
+    </#if>
 </#macro>
 
 

@@ -12,6 +12,7 @@
     <#-- Participate form errors summary -->    
     <@u.errorsSummary path="participant.*" prefix="participant."/>
 
+    <@f.cookieWarning/>
     <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-participate" class="sodirty <#if hasErrors>has-errors</#if>">
         <@f.securityFilters />
 
