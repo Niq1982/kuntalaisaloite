@@ -7,18 +7,18 @@ import org.joda.time.LocalDate;
 
 import java.util.Locale;
 
-public class InitiativeUIInfo {
+public class InitiativeViewInfo {
 
     private final Initiative initiative;
     private final Locale locale;
 
-    public InitiativeUIInfo(Initiative initiative, Locale locale) {
+    private InitiativeViewInfo(Initiative initiative, Locale locale) {
         this.initiative = initiative;
         this.locale = locale;
     }
 
-    public static InitiativeUIInfo parse(Initiative initiative, Locale locale) {
-        return new InitiativeUIInfo(initiative, locale);
+    public static InitiativeViewInfo parse(Initiative initiative, Locale locale) {
+        return new InitiativeViewInfo(initiative, locale);
     }
 
     public String getName() {

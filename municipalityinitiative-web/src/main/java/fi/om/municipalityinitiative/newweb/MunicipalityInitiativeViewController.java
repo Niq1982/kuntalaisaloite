@@ -70,7 +70,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().view(initiativeId));
         
-        InitiativeUIInfo initiativeInfo = initiativeService.getMunicipalityInitiative(initiativeId, locale);
+        InitiativeViewInfo initiativeInfo = initiativeService.getMunicipalityInitiative(initiativeId, locale);
 
         if (initiativeInfo.isCollectable()){// TODO: If not sent to municipality
 
@@ -115,7 +115,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().view(initiativeId));
         
-        InitiativeUIInfo initiativeInfo = initiativeService.getMunicipalityInitiative(initiativeId, locale);
+        InitiativeViewInfo initiativeInfo = initiativeService.getMunicipalityInitiative(initiativeId, locale);
 
         if (initiativeInfo.isCollectable()){
             model.addAttribute("initiative",  initiativeInfo);
@@ -146,7 +146,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().management(initiativeId, managementHash));
 
-        InitiativeUIInfo initiativeInfo = initiativeService.getMunicipalityInitiative(initiativeId, locale);
+        InitiativeViewInfo initiativeInfo = initiativeService.getMunicipalityInitiative(initiativeId, locale);
 
         if (!initiativeInfo.isCollectable() || initiativeInfo.isSent()) { // Practically initiative should always be sent if it's not collectable...
             return contextRelativeRedirect(urls.view(initiativeId));
@@ -210,7 +210,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
         return IFRAME_VIEW;
     }
 
-    private void addModelAttributesToCollectView(Model model, InitiativeUIInfo municipalityInitiative, List<MunicipalityInfo> allMunicipalities, ParticipantCount participantCount, Participants participants) {
+    private void addModelAttributesToCollectView(Model model, InitiativeViewInfo municipalityInitiative, List<MunicipalityInfo> allMunicipalities, ParticipantCount participantCount, Participants participants) {
         model.addAttribute("initiative", municipalityInitiative);
         model.addAttribute("municipalities", allMunicipalities);
         model.addAttribute("participantCount", participantCount);

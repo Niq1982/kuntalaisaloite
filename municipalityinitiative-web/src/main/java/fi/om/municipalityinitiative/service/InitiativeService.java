@@ -140,8 +140,8 @@ public class InitiativeService {
 
     }
 
-    public InitiativeUIInfo getMunicipalityInitiative(Long initiativeId, Locale locale) {
-        return InitiativeUIInfo.parse(initiativeDao.getById(initiativeId), locale);
+    public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId, Locale locale) {
+        return InitiativeViewInfo.parse(initiativeDao.getById(initiativeId), locale);
 //        return initiativeDao.getById(initiativeId);
     }
 
