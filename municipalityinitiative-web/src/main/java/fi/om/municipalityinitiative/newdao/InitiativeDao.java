@@ -2,10 +2,10 @@ package fi.om.municipalityinitiative.newdao;
 
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
+import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.InitiativeCreateDto;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.util.Maybe;
 
 import java.util.List;
@@ -16,7 +16,7 @@ public interface InitiativeDao {
 
     Long create(InitiativeCreateDto dto);
 
-    InitiativeViewInfo getById(Long id);
+    Initiative getById(Long id);
 
     void assignAuthor(Long municipalityInitiativeId, Long participantId);
 

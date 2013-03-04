@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.json.JsonId;
 import fi.om.municipalityinitiative.json.LocalDateJsonSerializer;
+import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.newdto.ui.Participants;
 import fi.om.municipalityinitiative.service.ParticipantService;
@@ -17,9 +17,9 @@ import java.util.List;
 
 public class InitiativeJson {
 
-    final InitiativeViewInfo initiative;
+    final Initiative initiative;
 
-    private InitiativeJson(InitiativeViewInfo initiative) {
+    private InitiativeJson(Initiative initiative) {
         this.initiative = initiative;
     }
 
@@ -58,7 +58,7 @@ public class InitiativeJson {
         return initiative.isSent() ? initiative.getSentTime().get() : null;
     }
 
-    public static InitiativeJson from(InitiativeViewInfo initiativeInfo, List<Participant> publicParticipants, ParticipantCount participantCount) {
+    public static InitiativeJson from(Initiative initiativeInfo, List<Participant> publicParticipants, ParticipantCount participantCount) {
         if (initiativeInfo.isCollectable()) {
             return new CollectableInitiativeJson(initiativeInfo, publicParticipants, participantCount);
         }
@@ -73,7 +73,7 @@ public class InitiativeJson {
         private List<Participant> participants;
         private ParticipantCount participantCount;
 
-        private CollectableInitiativeJson(InitiativeViewInfo initiative,
+        private CollectableInitiativeJson(Initiative initiative,
                                           List<Participant> participants,
                                           ParticipantCount participantCount) {
             super(initiative);

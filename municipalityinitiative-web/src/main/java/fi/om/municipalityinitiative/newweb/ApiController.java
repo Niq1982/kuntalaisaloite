@@ -5,10 +5,10 @@ import fi.om.municipalityinitiative.json.JsonJokuParseri;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.json.InitiativeJson;
 import fi.om.municipalityinitiative.newdto.json.InitiativeListJson;
+import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.ui.MunicipalityInfo;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.service.JsonDataService;
@@ -141,7 +141,7 @@ public class ApiController extends BaseController {
         ArrayList<Participant> publicParticipants = Lists.<Participant>newArrayList();
         publicParticipants.add(new Participant(new LocalDate(2010, 1, 1), "Teemu Teekkari", true, TAMPERE));
 
-        InitiativeViewInfo initiativeInfo = new InitiativeViewInfo();
+        Initiative initiativeInfo = new Initiative();
         initiativeInfo.setId(1L);
         initiativeInfo.setName("Koirat pois lähiöistä");
         initiativeInfo.setProposal("Kakkaa on joka paikassa");

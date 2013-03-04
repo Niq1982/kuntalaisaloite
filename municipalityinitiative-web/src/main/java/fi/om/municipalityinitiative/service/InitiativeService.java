@@ -8,6 +8,7 @@ import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.email.InitiativeEmailInfo;
+import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.InitiativeCreateDto;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.ui.*;
@@ -67,7 +68,7 @@ public class InitiativeService {
 
     private void sendNotCollectableEmails(Long initiativeId, Locale locale) {
 
-        InitiativeViewInfo initiative = initiativeDao.getById(initiativeId);
+        Initiative initiative = initiativeDao.getById(initiativeId);
         ContactInfo contactInfo = initiativeDao.getContactInfo(initiativeId);
         String url = Urls.get(Locales.LOCALE_FI).view(initiativeId);
 
@@ -80,7 +81,7 @@ public class InitiativeService {
     @Transactional(readOnly = false)
     public void sendToMunicipality(Long initiativeId, SendToMunicipalityDto sendToMunicipalityDto, String hashCode, Locale locale) {
 
-        InitiativeViewInfo initiativeInfo = initiativeDao.getById(initiativeId);
+        Initiative initiativeInfo = initiativeDao.getById(initiativeId);
 
         checkAllowedToSendToMunicipality(initiativeInfo);
         checkHashCode(hashCode, initiativeInfo);
@@ -89,23 +90,23 @@ public class InitiativeService {
         sendCollectedInitiativeEmails(initiativeId, locale, sendToMunicipalityDto.getComment());
     }
 
-    private void checkAllowedToSendToMunicipality(InitiativeViewInfo initiativeViewInfo) {
-        if (!initiativeViewInfo.isCollectable()) {
+    private void checkAllowedToSendToMunicipality(Initiative initiative) {
+        if (!initiative.isCollectable()) {
             throw new NotCollectableException("Initiative is not collectable");
         }
-        if (initiativeViewInfo.getSentTime().isPresent()) {
+        if (initiative.getSentTime().isPresent()) {
             throw new NotCollectableException("Initiative already sent");
         }
     }
 
-    private void checkHashCode(String hashCode, InitiativeViewInfo initiativeInfo) {
+    private void checkHashCode(String hashCode, Initiative initiativeInfo) {
         if (!hashCode.equals(initiativeInfo.getManagementHash().get())) {
             throw new AccessDeniedException("Invalid initiative verifier");
         }
     }
 
     private void sendCollectedInitiativeEmails(Long initiativeId, Locale locale, String comment) {
-        InitiativeViewInfo initiative = initiativeDao.getById(initiativeId);
+        Initiative initiative = initiativeDao.getById(initiativeId);
         ContactInfo contactInfo = initiativeDao.getContactInfo(initiativeId);
         String url = Urls.get(Locales.LOCALE_FI).view(initiativeId);
 
@@ -128,7 +129,7 @@ public class InitiativeService {
     }
 
     private void checkAllowedToParticipate(Long initiativeId) {
-        InitiativeViewInfo initiative = initiativeDao.getById(initiativeId);
+        Initiative initiative = initiativeDao.getById(initiativeId);
 
         if (!initiative.isCollectable()) {
             throw new ParticipatingUnallowedException("Initiative not collectable: " + initiativeId);
@@ -139,8 +140,9 @@ public class InitiativeService {
 
     }
 
-    public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId) {
-        return initiativeDao.getById(initiativeId);
+    public InitiativeUIInfo getMunicipalityInitiative(Long initiativeId, Locale locale) {
+        return InitiativeUIInfo.parse(initiativeDao.getById(initiativeId), locale);
+//        return initiativeDao.getById(initiativeId);
     }
 
     public SendToMunicipalityDto getSendToMunicipalityData(Long initiativeId) {

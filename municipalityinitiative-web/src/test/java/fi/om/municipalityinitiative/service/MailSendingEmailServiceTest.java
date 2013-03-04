@@ -4,10 +4,10 @@ import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
 import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.email.InitiativeEmailInfo;
+import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.util.JavaMailSenderFake;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -258,12 +258,12 @@ public class MailSendingEmailServiceTest {
     }
 
     private static InitiativeEmailInfo createEmailInfo() {
-        InitiativeViewInfo initiativeViewInfo = new InitiativeViewInfo();
-        initiativeViewInfo.setName(INITIATIVE_NAME);
-        initiativeViewInfo.setProposal(INITIATIVE_PROPOSAL);
-        initiativeViewInfo.setMunicipality(new Municipality(INITIATIVE_MUNICIPALITY_ID,INITIATIVE_MUNICIPALITY, INITIATIVE_MUNICIPALITY));
-        initiativeViewInfo.setCreateTime(new LocalDate(2013, 1, 1));
-        initiativeViewInfo.setSentTime(Maybe.of(new LocalDate(2013, 1, 1)));
+        Initiative initiative = new Initiative();
+        initiative.setName(INITIATIVE_NAME);
+        initiative.setProposal(INITIATIVE_PROPOSAL);
+        initiative.setMunicipality(new Municipality(INITIATIVE_MUNICIPALITY_ID,INITIATIVE_MUNICIPALITY, INITIATIVE_MUNICIPALITY));
+        initiative.setCreateTime(new LocalDate(2013, 1, 1));
+        initiative.setSentTime(Maybe.of(new LocalDate(2013, 1, 1)));
 
         ContactInfo contactInfo = new ContactInfo();
         contactInfo.setPhone(CONTACT_PHONE);
@@ -271,7 +271,7 @@ public class MailSendingEmailServiceTest {
         contactInfo.setName(CONTACT_NAME);
         contactInfo.setAddress(CONTACT_ADDRESS);
 
-        return InitiativeEmailInfo.parse(contactInfo, initiativeViewInfo, INITIATIVE_URL);
+        return InitiativeEmailInfo.parse(contactInfo, initiative, INITIATIVE_URL);
     }
 
     private static CollectableInitiativeEmailInfo createCollectableEmailInfo() {

@@ -19,11 +19,11 @@ import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.exceptions.NotCollectableException;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
+import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.InitiativeCreateDto;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.sql.QMunicipality;
 import fi.om.municipalityinitiative.sql.QParticipant;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -176,7 +176,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    public InitiativeViewInfo getById(Long id) {
+    public Initiative getById(Long id) {
 
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
@@ -184,11 +184,11 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .leftJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
                 .where(municipalityInitiative.id.eq(id));
 
-        InitiativeViewInfo initiativeViewInfo = query.uniqueResult(initiativeInfoMapping);
-        if (initiativeViewInfo == null) {
+        Initiative initiative = query.uniqueResult(initiativeInfoMapping);
+        if (initiative == null) {
             throw new NotFoundException("initiative", id);
         }
-        return initiativeViewInfo;
+        return initiative;
     }
 
     @Override
@@ -271,14 +271,14 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 }
             };
 
-    Expression<InitiativeViewInfo> initiativeInfoMapping =
-            new MappingProjection<InitiativeViewInfo>(InitiativeViewInfo.class,
+    Expression<Initiative> initiativeInfoMapping =
+            new MappingProjection<Initiative>(Initiative.class,
                     municipalityInitiative.all(),
                     QMunicipality.municipality.all(),
                     QParticipant.participant.all()) {
                 @Override
-                protected InitiativeViewInfo map(Tuple row) {
-                    InitiativeViewInfo info = new InitiativeViewInfo();
+                protected Initiative map(Tuple row) {
+                    Initiative info = new Initiative();
                     info.setId(row.get(municipalityInitiative.id));
                     info.setCreateTime(row.get(municipalityInitiative.modified).toLocalDate());
                     info.setName(row.get(municipalityInitiative.name));

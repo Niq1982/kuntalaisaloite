@@ -2,9 +2,9 @@ package fi.om.municipalityinitiative.json;
 
 import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.newdto.json.InitiativeJson;
+import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.apache.commons.lang3.StringUtils;
@@ -37,7 +37,7 @@ public class JsonJokuParseriTest {
         publicParticipants.add(new Participant(new LocalDate(2010, 1, 1), "Teemu Teekkari", true, TAMPERE));
         publicParticipants.add(new Participant(new LocalDate(2010, 1, 1), "Taina Teekkari", false, new Municipality(2L, "Tampere", "Tammerfors")));
 
-        InitiativeViewInfo initiativeInfo = new InitiativeViewInfo();
+        Initiative initiativeInfo = new Initiative();
         initiativeInfo.setId(1L);
         initiativeInfo.setName("Koirat pois lähiöistä");
         initiativeInfo.setProposal("Kakkaa on joka paikassa");

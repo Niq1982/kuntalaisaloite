@@ -1,8 +1,8 @@
 package fi.om.municipalityinitiative.newdto.email;
 
+import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import org.joda.time.LocalDate;
 
 public class InitiativeEmailInfo {
@@ -25,7 +25,7 @@ public class InitiativeEmailInfo {
 
     InitiativeEmailInfo() { }
 
-    public static InitiativeEmailInfo parse(ContactInfo contactInfo, InitiativeViewInfo initiative, String url) {
+    public static InitiativeEmailInfo parse(ContactInfo contactInfo, Initiative initiative, String url) {
 
         InitiativeEmailInfo initiativeEmailInfo = new InitiativeEmailInfo();
 

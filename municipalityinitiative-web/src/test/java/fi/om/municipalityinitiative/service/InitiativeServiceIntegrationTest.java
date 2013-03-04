@@ -6,6 +6,7 @@ import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.JavaMailSenderFake;
+import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.ParticipatingUnallowedException;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.joda.time.DateTime;
@@ -64,7 +65,7 @@ public class InitiativeServiceIntegrationTest {
     @Test
     public void all_fields_are_set_when_getting_municipalityInitiativeInfo() throws Exception {
         Long initiativeId = service.createMunicipalityInitiative(createDto(true), null);
-        InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
+        InitiativeUIInfo initiative = service.getMunicipalityInitiative(initiativeId, Locales.LOCALE_FI);
         ReflectionTestUtils.assertNoNullFields(initiative);
     }
 
@@ -72,15 +73,14 @@ public class InitiativeServiceIntegrationTest {
     public void create_and_get() {
         InitiativeUICreateDto createDto = createDto(false);
         Long initiativeId = service.createMunicipalityInitiative(createDto, null);
-        InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
+        InitiativeUIInfo initiative = service.getMunicipalityInitiative(initiativeId, Locales.LOCALE_FI);
 
         assertThat(initiative.getId(), is(initiativeId));
         assertThat(initiative.getAuthorName(), is(createDto.getContactInfo().getName()));
         assertThat(initiative.getName(), is(createDto.getName()));
         assertThat(initiative.getProposal(), is(createDto.getProposal()));
         assertThat(initiative.isShowName(), is(createDto.getShowName()));
-        assertThat(initiative.getMunicipality().getFinnishName(), is(testMunicipality.getName()));
-        assertThat(initiative.getMunicipality().getSwedishName(), is(testMunicipality.getName() + " sv"));
+        assertThat(initiative.getMunicipality().getName(), is(testMunicipality.getName()));
 
         assertThat(initiative.getCreateTime(), is(notNullValue()));
         assertThat(initiative.getManagementHash().isPresent(), is(false));
@@ -88,14 +88,13 @@ public class InitiativeServiceIntegrationTest {
         assertThat(initiative.getSentTime().isPresent(), is(true));
 
         ReflectionTestUtils.assertNoNullFields(initiative);
-
     }
 
     @Test
     public void creating_collectable_initiative_adds_hash() {
         InitiativeUICreateDto createDto = createDto(true);
         Long initiativeId = service.createMunicipalityInitiative(createDto, null);
-        InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
+        InitiativeUIInfo initiative = service.getMunicipalityInitiative(initiativeId, Locales.LOCALE_FI);
 
         assertThat(initiative.getManagementHash().get(), is("0000000000111111111122222222223333333333"));
         assertThat(initiative.isCollectable(), is(true));
@@ -105,7 +104,7 @@ public class InitiativeServiceIntegrationTest {
     public void creating_collectable_initiative_leaves_sent_time_null() {
         InitiativeUICreateDto createDto = createDto(true);
         Long initiativeId = service.createMunicipalityInitiative(createDto, null);
-        InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
+        InitiativeUIInfo initiative = service.getMunicipalityInitiative(initiativeId, Locales.LOCALE_FI);
 
         assertThat(initiative.getSentTime().isPresent(), is(false));
     }
@@ -114,7 +113,7 @@ public class InitiativeServiceIntegrationTest {
     public void creating_not_collectable_initiative_sets_sent_time() {
         InitiativeUICreateDto createDto = createDto(false);
         Long initiativeId = service.createMunicipalityInitiative(createDto, null);
-        InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
+        InitiativeUIInfo initiative = service.getMunicipalityInitiative(initiativeId, Locales.LOCALE_FI);
 
         assertThat(initiative.getSentTime().isPresent(), is(true));
     }
@@ -174,7 +173,7 @@ public class InitiativeServiceIntegrationTest {
         assertThat(newContactInfo.getAddress(), is("New Address"));
         assertThat(newContactInfo.getPhone(), is("555"));
         // TODO: DO not use getInitiative either, implement needed functionality to testHelper.
-        assertThat(service.getMunicipalityInitiative(initiativeId).getSentTime().isPresent(), is(true));
+        assertThat(service.getMunicipalityInitiative(initiativeId, Locales.LOCALE_FI).getSentTime().isPresent(), is(true));
 
     }
 

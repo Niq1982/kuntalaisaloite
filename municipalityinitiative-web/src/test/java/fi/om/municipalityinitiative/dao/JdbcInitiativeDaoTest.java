@@ -5,9 +5,9 @@ import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.exceptions.NotCollectableException;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
+import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.ui.MunicipalityInfo;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -268,7 +268,7 @@ public class JdbcInitiativeDaoTest {
     public void marks_as_sended_if_collectable_and_not_sended() {
         Long initiativeId = testHelper.createTestInitiative(testMunicipality.getId(), "Some initiative name", false, true);
 
-        InitiativeViewInfo initiative = initiativeDao.getById(initiativeId);
+        Initiative initiative = initiativeDao.getById(initiativeId);
         assertThat(initiative.getSentTime().isPresent(), is(false)); // Precondition
 
         initiativeDao.markAsSendedAndUpdateContactInfo(initiativeId, contactInfo());
@@ -280,7 +280,7 @@ public class JdbcInitiativeDaoTest {
     public void throws_exception_if_not_collectable_and_marking_as_sent() {
         Long initiativeId = testHelper.createTestInitiative(testMunicipality.getId(), "Some initiative name", false, false);
 
-        InitiativeViewInfo initiative = initiativeDao.getById(initiativeId);
+        Initiative initiative = initiativeDao.getById(initiativeId);
         assertThat(initiative.isCollectable(), is(false)); // Precondition
 
         initiativeDao.markAsSendedAndUpdateContactInfo(initiativeId, contactInfo());
@@ -290,7 +290,7 @@ public class JdbcInitiativeDaoTest {
     public void throws_exception_if_trying_double_send() {
         Long initiativeId = testHelper.createTestInitiative(testMunicipality.getId(), "Some initiative name", false, true);
 
-        InitiativeViewInfo initiative = initiativeDao.getById(initiativeId);
+        Initiative initiative = initiativeDao.getById(initiativeId);
         assertThat(initiative.isCollectable(), is(true)); // Precondition
         assertThat(initiative.getSentTime().isPresent(), is(false)); // Precondition
 

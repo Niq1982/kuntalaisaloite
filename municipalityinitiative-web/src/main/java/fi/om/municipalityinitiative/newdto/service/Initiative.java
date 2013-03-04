@@ -1,14 +1,13 @@
-package fi.om.municipalityinitiative.newdto.ui;
+package fi.om.municipalityinitiative.newdto.service;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import fi.om.municipalityinitiative.json.JsonId;
 import fi.om.municipalityinitiative.json.LocalDateJsonSerializer;
-import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.Urls;
 import org.joda.time.LocalDate;
 
-public class InitiativeViewInfo {
+public class Initiative {
 
     @JsonId(path= Urls.INITIATIVE)
     private Long id;
