@@ -113,10 +113,12 @@ public class JdbcParticipantDao implements ParticipantDao {
                             row.get(participant.name),
                             row.get(participant.franchise),
                             new Municipality(
+                                    row.get(QMunicipality.municipality.id),
                                     row.get(QMunicipality.municipality.name),
-                                    row.get(QMunicipality.municipality.id)
+                                    row.get(QMunicipality.municipality.nameSv)
                             )
                     );
+
                 }
             };
 

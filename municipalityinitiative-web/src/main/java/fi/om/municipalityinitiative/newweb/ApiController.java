@@ -119,7 +119,7 @@ public class ApiController extends BaseController {
 
     private List<InitiativeListJson> createInitiativeListJsonObject() {
         InitiativeListInfo initiative = new InitiativeListInfo();
-        initiative.setMunicipality(new Municipality("Tampere", 1));
+        initiative.setMunicipality(new Municipality(1, "Tampere", "Tammerfors"));
         initiative.setSentTime(Maybe.of(new LocalDate(2012, 12, 24)));
         initiative.setCollectable(true);
         initiative.setCreateTime(new LocalDate(2012, 12, 1));
@@ -130,7 +130,7 @@ public class ApiController extends BaseController {
     }
 
     private InitiativeJson createInitiativeJsonObject() {
-        final Municipality TAMPERE = new Municipality("Tampere", 1L);
+        final Municipality TAMPERE = new Municipality(1, "Tampere", "Tammerfors");
 
         ParticipantCount participantCount = new ParticipantCount();
         participantCount.getFranchise().setPrivateNames(10);

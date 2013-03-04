@@ -40,7 +40,7 @@ public class TestHelper {
     public Long createTestMunicipality(String name) {
         return queryFactory.insert(QMunicipality.municipality)
                     .set(QMunicipality.municipality.name, name)
-                    .set(QMunicipality.municipality.nameSv, name)
+                    .set(QMunicipality.municipality.nameSv, name + " sv")
                     .set(QMunicipality.municipality.email, name.replace(" ", "_")+"@example.com")
                 .executeWithKey(QMunicipality.municipality.id);
     }

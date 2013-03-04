@@ -46,7 +46,7 @@ public class ParticipantToPdfExporter {
     // Reader
     // under File -> Properties
     private static void addMetaData(Document document, CollectableInitiativeEmailInfo emailInfo) {
-        document.addTitle("Kuntalaisaloite " + emailInfo.getMunicipality().getName());
+        document.addTitle("Kuntalaisaloite " + emailInfo.getMunicipality().getFinnishName());
         document.addSubject(emailInfo.getName());
         document.addKeywords("Java, PDF, iText"); // TODO: Remove
         document.addAuthor("Lars Vogel");
@@ -59,7 +59,7 @@ public class ParticipantToPdfExporter {
         // We add one empty line
 //        addEmptyLine(preface, 1);
         // Lets write a big header
-        preface.add(new Paragraph("Kuntalaisaloite / Invanarinitiativ - " + emailInfo.getMunicipality().getName(), mainTitle));
+        preface.add(new Paragraph("Kuntalaisaloite / Invanarinitiativ - " + emailInfo.getMunicipality().getFinnishName() + " / " + emailInfo.getMunicipality().getSwedishName(), mainTitle));
         preface.add(new Paragraph("Aloite lähetetty kuntaan / Initiativet skickats till kommun " + new DateTime().toString(DATETIME_FORMAT), bodyText));
         addEmptyLine(preface, 1);
 
@@ -113,7 +113,7 @@ public class ParticipantToPdfExporter {
             table.addCell(createCell(String.valueOf(count), false));
             table.addCell(createCell(participant.getParticipateDate().toString(DATE_FORMAT), false));
             table.addCell(createCell(participant.getName(), false));
-            table.addCell(createCell(participant.getHomeMunicipality().getName() + " SV " + participant.getHomeMunicipality().getName(), false));
+            table.addCell(createCell(participant.getHomeMunicipality().getFinnishName() + " SV " + participant.getHomeMunicipality().getSwedishName(), false));
         }
 
         subCatPart.add(table);

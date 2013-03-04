@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.is;
 
 public class CollectableInitiativeEmailInfoTest {
 
-    private static final Municipality MUNICIPALITY = new Municipality("Municipality", 1L);
+    private static final Municipality MUNICIPALITY = new Municipality(1, "Municipality", "Kommun");
 
     @Test
     public void constructor_fills_all_fields() {

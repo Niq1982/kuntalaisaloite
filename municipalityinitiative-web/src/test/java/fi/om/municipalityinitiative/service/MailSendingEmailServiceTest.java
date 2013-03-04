@@ -261,7 +261,7 @@ public class MailSendingEmailServiceTest {
         InitiativeViewInfo initiativeViewInfo = new InitiativeViewInfo();
         initiativeViewInfo.setName(INITIATIVE_NAME);
         initiativeViewInfo.setProposal(INITIATIVE_PROPOSAL);
-        initiativeViewInfo.setMunicipality(new Municipality(INITIATIVE_MUNICIPALITY, INITIATIVE_MUNICIPALITY_ID));
+        initiativeViewInfo.setMunicipality(new Municipality(INITIATIVE_MUNICIPALITY_ID,INITIATIVE_MUNICIPALITY, INITIATIVE_MUNICIPALITY));
         initiativeViewInfo.setCreateTime(new LocalDate(2013, 1, 1));
         initiativeViewInfo.setSentTime(Maybe.of(new LocalDate(2013, 1, 1)));
 

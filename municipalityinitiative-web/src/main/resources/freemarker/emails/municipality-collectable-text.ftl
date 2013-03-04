@@ -5,7 +5,7 @@
     <@b.comment "text" emailInfo.comment />
 </#if>
 
-<@u.message "email.initiative" /> - ${emailInfo.municipality.name!""}
+<@u.message "email.initiative" /> - ${emailInfo.municipality.finnishName!""}
 
 <@b.initiativeDetails "text" />
 

@@ -102,7 +102,7 @@ public class ReflectionTestUtils {
             return modifyAllFields(new Participants());
         }
         if (type == Municipality.class) {
-            return modifyAllFields(new Municipality("", 0));
+            return modifyAllFields(new Municipality(0, "", ""));
         }
 
         if (type.equals(List.class)) {

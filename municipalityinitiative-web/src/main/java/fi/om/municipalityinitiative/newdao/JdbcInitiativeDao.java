@@ -281,9 +281,12 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     InitiativeViewInfo info = new InitiativeViewInfo();
                     info.setId(row.get(municipalityInitiative.id));
                     info.setCreateTime(row.get(municipalityInitiative.modified).toLocalDate());
-                    info.setMunicipality(new Municipality(row.get(QMunicipality.municipality.name), row.get(QMunicipality.municipality.id)));
                     info.setName(row.get(municipalityInitiative.name));
-                    info.setMunicipality(new Municipality(row.get(QMunicipality.municipality.name), row.get(QMunicipality.municipality.id)));
+                    info.setMunicipality(new Municipality(
+                            row.get(QMunicipality.municipality.id),
+                            row.get(QMunicipality.municipality.name),
+                            row.get(QMunicipality.municipality.nameSv))
+                    );
                     info.setProposal(row.get(municipalityInitiative.proposal));
                     info.setAuthorName(row.get(QParticipant.participant.name));
                     info.setShowName(row.get(QParticipant.participant.showName));
@@ -311,7 +314,11 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     info.setId(row.get(municipalityInitiative.id));
                     info.setCreateTime(row.get(municipalityInitiative.modified).toLocalDate());
                     info.setName(row.get(municipalityInitiative.name));
-                    info.setMunicipality(new Municipality(row.get(QMunicipality.municipality.name), row.get(QMunicipality.municipality.id)));
+                    info.setMunicipality(new Municipality(
+                            row.get(QMunicipality.municipality.id),
+                            row.get(QMunicipality.municipality.name),
+                            row.get(QMunicipality.municipality.nameSv))
+                    );
                     info.setCollectable(row.get(municipalityInitiative.managementHash) != null);
                     info.setSentTime(maybeLocalDate(row.get(municipalityInitiative.sent)));
                     info.setParticipantCount(row.get(municipalityInitiative.participantCount));

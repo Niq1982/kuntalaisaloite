@@ -20,7 +20,7 @@ public class ParticipantServiceTest {
 
     private static final Long ID = -5L;
     public static final LocalDate DATE = new LocalDate(2010, 1, 1);
-    private static final Municipality MUNICIPALITY = new Municipality("Municipality", 1L);
+    private static final Municipality MUNICIPALITY = new Municipality(1, "Municipality", "Kommun");
     private ParticipantDao participantDaoMock;
     private ParticipantService participantService;
 
