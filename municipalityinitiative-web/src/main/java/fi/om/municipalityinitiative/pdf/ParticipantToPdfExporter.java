@@ -113,7 +113,7 @@ public class ParticipantToPdfExporter {
             table.addCell(createCell(String.valueOf(count), false));
             table.addCell(createCell(participant.getParticipateDate().toString(DATE_FORMAT), false));
             table.addCell(createCell(participant.getName(), false));
-            table.addCell(createCell(participant.getHomeMunicipality().getFinnishName() + " SV " + participant.getHomeMunicipality().getSwedishName(), false));
+            table.addCell(createCell(participant.getHomeMunicipality().getFinnishName() + ", " + participant.getHomeMunicipality().getSwedishName(), false));
         }
 
         subCatPart.add(table);
