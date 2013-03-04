@@ -9,7 +9,6 @@ import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
-import fi.om.municipalityinitiative.newdto.ui.MunicipalityInfo;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.service.JsonDataService;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -107,12 +106,12 @@ public class ApiController extends BaseController {
 
     @RequestMapping(value=MUNICIPALITIES, method=GET, produces=JSON)
     public @ResponseBody
-    List<MunicipalityInfo> municipalityList() {
+    List<Municipality> municipalityList() {
         return jsonDataService.getMunicipalities();
     }
     @RequestMapping(value=MUNICIPALITIES, method=GET, produces=JSONP, params=JSONP_CALLBACK)
     public @ResponseBody
-    JsonpObject<List<MunicipalityInfo>> municipalityGet(
+    JsonpObject<List<Municipality>> municipalityGet(
             @RequestParam(JSONP_CALLBACK) String callback) {
         return new JsonpObject<>(callback, municipalityList());
     }

@@ -7,8 +7,8 @@ import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.json.InitiativeJson;
 import fi.om.municipalityinitiative.newdto.json.InitiativeListJson;
+import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
-import fi.om.municipalityinitiative.newdto.ui.MunicipalityInfo;
 
 import javax.annotation.Resource;
 
@@ -41,7 +41,7 @@ public class JsonDataService {
 
     }
 
-    public List<MunicipalityInfo> getMunicipalities() {
-        return municipalityDao.findMunicipalities();
+    public List<Municipality> getMunicipalities() {
+        return municipalityDao.findMunicipalities(true);
     }
 }

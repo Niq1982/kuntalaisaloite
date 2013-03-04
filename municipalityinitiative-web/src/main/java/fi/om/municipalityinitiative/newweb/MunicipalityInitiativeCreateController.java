@@ -23,9 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import java.util.Locale;
 
-import static fi.om.municipalityinitiative.web.Urls.ACTION_SAVE_AND_SEND;
-import static fi.om.municipalityinitiative.web.Urls.CREATE_FI;
-import static fi.om.municipalityinitiative.web.Urls.CREATE_SV;
+import static fi.om.municipalityinitiative.web.Urls.*;
 import static fi.om.municipalityinitiative.web.Views.CREATE_VIEW;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -55,7 +53,7 @@ public class MunicipalityInitiativeCreateController extends BaseController {
         
         InitiativeUICreateDto initiative = new InitiativeUICreateDto();
         model.addAttribute("initiative", initiative);
-        model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
+        model.addAttribute("municipalities", municipalityService.findAllMunicipalities(locale));
         return CREATE_VIEW;
     }
 
@@ -68,7 +66,7 @@ public class MunicipalityInitiativeCreateController extends BaseController {
 
         if (validionService.validationErrors(initiative, bindingResult, model)) {
             model.addAttribute("initiative", initiative);
-            model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
+            model.addAttribute("municipalities", municipalityService.findAllMunicipalities(locale));
             return CREATE_VIEW;
         }
 
@@ -87,7 +85,7 @@ public class MunicipalityInitiativeCreateController extends BaseController {
 
         if (validionService.validationErrors(initiative, bindingResult, model)) {
             model.addAttribute("initiative", initiative);
-            model.addAttribute("municipalities", municipalityService.findAllMunicipalities());
+            model.addAttribute("municipalities", municipalityService.findAllMunicipalities(locale));
             return CREATE_VIEW;
         }
 

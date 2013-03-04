@@ -6,7 +6,7 @@ import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
-import fi.om.municipalityinitiative.newdto.ui.MunicipalityInfo;
+import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.sql.QMunicipality;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,9 +22,11 @@ public class JdbcMunicipalityDao implements MunicipalityDao {
     PostgresQueryFactory queryFactory;
 
     @Override
-    public List<MunicipalityInfo> findMunicipalities() {
+    public List<Municipality> findMunicipalities(boolean orderByFinnishNames) {
         PostgresQuery query = queryFactory.from(QMunicipality.municipality)
-                .orderBy(QMunicipality.municipality.name.asc());
+                .orderBy(orderByFinnishNames
+                        ? QMunicipality.municipality.name.asc()
+                        : QMunicipality.municipality.nameSv.asc());
 
         return query.list(municipalityInfoMapper);
     }
@@ -36,14 +38,16 @@ public class JdbcMunicipalityDao implements MunicipalityDao {
                 .singleResult(QMunicipality.municipality.email);
     }
 
-    private static Expression<MunicipalityInfo> municipalityInfoMapper =
-            new MappingProjection<MunicipalityInfo>(MunicipalityInfo.class, QMunicipality.municipality.all()) {
+    private static Expression<Municipality> municipalityInfoMapper =
+            new MappingProjection<Municipality>(Municipality.class, QMunicipality.municipality.all()) {
 
                 @Override
-                protected MunicipalityInfo map(Tuple row) {
-                    MunicipalityInfo dto = new MunicipalityInfo();
-                    dto.setId(row.get(QMunicipality.municipality.id));
-                    dto.setName(row.get(QMunicipality.municipality.name));
+                protected Municipality map(Tuple row) {
+                    Municipality dto = new Municipality(
+                            row.get(QMunicipality.municipality.id),
+                            row.get(QMunicipality.municipality.name),
+                            row.get(QMunicipality.municipality.nameSv)
+                    );
                     return dto;
                 }
             };

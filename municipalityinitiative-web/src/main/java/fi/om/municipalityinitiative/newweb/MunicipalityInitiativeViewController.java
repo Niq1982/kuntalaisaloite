@@ -54,7 +54,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().search());
         
-        List<MunicipalityInfo> municipalities = municipalityService.findAllMunicipalities();
+        List<MunicipalityInfo> municipalities = municipalityService.findAllMunicipalities(locale);
 
         model.addAttribute("initiatives", initiativeService.findMunicipalityInitiatives(search));
         model.addAttribute("municipalities", municipalities);
@@ -76,7 +76,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
 
             addModelAttributesToCollectView(model,
                     initiativeInfo,
-                    municipalityService.findAllMunicipalities(),
+                    municipalityService.findAllMunicipalities(locale),
                     participantService.getParticipantCount(initiativeId),
                     participantService.findPublicParticipants(initiativeId));
             model.addAttribute("participant", new ParticipantUICreateDto());
@@ -102,7 +102,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
         else {
             addModelAttributesToCollectView(model,
                     initiativeService.getMunicipalityInitiative(initiativeId, locale),
-                    municipalityService.findAllMunicipalities(),
+                    municipalityService.findAllMunicipalities(locale),
                     participantService.getParticipantCount(initiativeId),
                     participantService.findPublicParticipants(initiativeId));
             model.addAttribute("participants", participantService.findPublicParticipants(initiativeId));
@@ -154,7 +154,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
 
         addModelAttributesToCollectView(model,
                 initiativeService.getMunicipalityInitiative(initiativeId, locale),
-                municipalityService.findAllMunicipalities(),
+                municipalityService.findAllMunicipalities(locale),
                 participantService.getParticipantCount(initiativeId),
                 participantService.findPublicParticipants(initiativeId));
 
@@ -183,7 +183,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
         else {
             addModelAttributesToCollectView(model,
                     initiativeService.getMunicipalityInitiative(initiativeId, locale),
-                    municipalityService.findAllMunicipalities(),
+                    municipalityService.findAllMunicipalities(locale),
                     participantService.getParticipantCount(initiativeId),
                     participantService.findPublicParticipants(initiativeId));
 
@@ -199,7 +199,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().search());
         
-        List<MunicipalityInfo> municipalities = municipalityService.findAllMunicipalities();
+        List<MunicipalityInfo> municipalities = municipalityService.findAllMunicipalities(locale);
 
         model.addAttribute("initiatives", initiativeService.findMunicipalityInitiatives(search));
         model.addAttribute("municipalities", municipalities);

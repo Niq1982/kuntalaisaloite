@@ -2,7 +2,7 @@ package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
-import fi.om.municipalityinitiative.newdto.ui.MunicipalityInfo;
+import fi.om.municipalityinitiative.newdto.service.Municipality;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,25 +34,26 @@ public class JdbcMunicipalityDaoTest {
     @Test
     public void find_all_municipalities() {
         testHelper.createTestMunicipality("some test municipality");
-        List<MunicipalityInfo> result = municipalityDao.findMunicipalities();
+        List<Municipality> result = municipalityDao.findMunicipalities(true);
         assertThat(result, is(not(empty())));
-        assertThat(result.get(0).getName(), is("some test municipality"));
+        assertThat(result.get(0).getFinnishName(), is("some test municipality"));
+        assertThat(result.get(0).getSwedishName(), is("some test municipality sv"));
     }
 
     @Test
     public void municipalities_are_ordered_by_name() {
-        List<MunicipalityInfo> result = municipalityDao.findMunicipalities();
+        List<Municipality> result = municipalityDao.findMunicipalities(true);
 
         String last = null;
-        for (MunicipalityInfo municipalityInfo : result) {
-            if (municipalityInfo.getName().toLowerCase().contains("å")) {
+        for (Municipality municipalityInfo : result) {
+            if (municipalityInfo.getFinnishName().toLowerCase().contains("å")) {
                 continue; // Posgtre seems to think that ä is before å at the alphabets
             }
 
             if (last != null) {
-                assertThat(municipalityInfo.getName(), is(greaterThan(last)));
+                assertThat(municipalityInfo.getFinnishName(), is(greaterThan(last)));
             }
-            last = municipalityInfo.getName();
+            last = municipalityInfo.getFinnishName();
         }
     }
 
