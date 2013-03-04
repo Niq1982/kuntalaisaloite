@@ -193,13 +193,14 @@ public class AppConfiguration {
     }
     
     @Bean
-    public BeansWrapper freemarkerObjectWrapper() {
-        freemarkerConfig().getConfiguration().setNumberFormat("#");
+    public BeansWrapper freemarkerObjectWrapper(FreeMarkerConfigurer configurer) {
+        configurer.getConfiguration().setNumberFormat("#");
+
         boolean testFreemarkerShowErrorsOnPage = env.getProperty(PropertyNames.testFreemarkerShowErrorsOnPage, Boolean.class, TEST_FREEMARKER_SHOW_ERRORS_ON_PAGE_DEFAULT);
         if (!testFreemarkerShowErrorsOnPage) {
-            freemarkerConfig().getConfiguration().setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+            configurer.getConfiguration().setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         } 
-        return (BeansWrapper) freemarkerConfig().getConfiguration().getObjectWrapper();
+        return (BeansWrapper) configurer.getConfiguration().getObjectWrapper();
     }
 
     @Bean

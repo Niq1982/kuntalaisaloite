@@ -1,5 +1,8 @@
 package fi.om.municipalityinitiative.newdto.service;
 
+import fi.om.municipalityinitiative.json.JsonId;
+import fi.om.municipalityinitiative.web.Urls;
+
 public class Municipality {
     private long id;
     private String finnishName;
@@ -11,6 +14,7 @@ public class Municipality {
         this.swedishName = swedishName;
     }
 
+    @JsonId(path= Urls.MUNICIPALITY)
     public long getId() {
         return id;
     }
