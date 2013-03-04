@@ -70,7 +70,10 @@
 
         <div id="send-to-municipality-form" class="send-to-municipality cf js-send-to-municipality-form <#if !hasErrors>js-hide</#if>">
 
-            <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-send" class="sodirty">        
+            <@f.cookieWarning/>
+
+            <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-send" class="sodirty">
+                <@f.securityFilters />
                 
                 <div class="input-block-content <#if !hasErrors>no-top-margin</#if>">
                     <@f.textarea path="sendToMunicipality.comment" required="" optional=false />
