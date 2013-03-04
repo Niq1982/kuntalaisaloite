@@ -71,7 +71,10 @@ public final class Urls {
 
     public static final String INITIATIVE =   INITIATIVES + "/" + ID_PARAMETER;
 
-    
+    public static final String MUNICIPALITIES = API + "/v1/municipalities";
+
+    public static final String MUNICIPALITY = MUNICIPALITIES + "/" + ID_PARAMETER;
+
     public static final String SERVICES = "/services";
     
     public static final String KEEPALIVE =  SERVICES + "/keepalive";
