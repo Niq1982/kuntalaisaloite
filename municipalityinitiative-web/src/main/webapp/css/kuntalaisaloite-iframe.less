@@ -79,8 +79,8 @@
     -webkit-transition: @property @delay @easing;
     -o-transition: @property @delay @easing;
 }
-.gradient (@start, @stop){
-    background: @start;
+.gradient (@start, @stop, @center){
+    background: @center;
     background: -webkit-gradient(linear, left top, left bottom, from(@start), to(@stop));
     background: -moz-linear-gradient(top,  @start, @stop);
     background: -o-linear-gradient(top,  @start, @stop);
@@ -150,7 +150,9 @@ body {
 #header {
     position:relative;
     z-index:1;
-    background:#f0f0f0;
+
+    .gradient(#f5f5f5, #e5e5e5, #f0f0f0);
+
     
     border: 1px solid @borderGray;
 
@@ -432,8 +434,14 @@ a.block-link {
 .small-icon {
     padding-left: 30px;
     
-    background: transparent url("../img/button-small-sprite.png?version=${timestamp}") no-repeat 0 0;
+    
+    background: transparent url("../img/button-iframe-sprite.png?version=${timestamp}") no-repeat 0 0;
 
+    &.next {                background-position: 0 10px;   }
+    &.add {                 background-position: 0 -140px;  }
+
+    /*
+    background: transparent url("../img/button-small-sprite.png?version=${timestamp}") no-repeat 0 0;
     &.save-and-send {       background-position: 0 12px;     }
     &.save-as-draft {       background-position: 0 -140px;   }
     &.cancel {              background-position: 0 -291px;   }
@@ -449,6 +457,7 @@ a.block-link {
     &.add {                 background-position: 0 -1790px;  }
     &.logout {              background-position: 0 -2090px;  }
     &.search {              background-position: 0 -2240px;  }
+    */
 }
 
 .column {
@@ -750,6 +759,15 @@ ul, ol {
         }
     }
     
+    .small-button {
+        width:95%;
+        max-width:250px;
+        box-sizing:border-box;
+        -moz-box-sizing:border-box;
+        -webkit-box-sizing:border-box;
+        text-align:left;
+    }
+    
     h1 { margin-top:0; }
 }
 
@@ -773,6 +791,13 @@ ul, ol {
     
     body.small {
         .smallWidth();
+    }
+}
+.ie6, .ie7 {
+    body.medium, body.small {
+        .small-button {
+            width:80%;
+        }
     }
 }
 
