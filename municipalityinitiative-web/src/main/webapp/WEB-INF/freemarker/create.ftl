@@ -32,12 +32,15 @@
     <#-- Create form errors summary -->
     <@u.errorsSummary path="initiative.*" prefix="initiative."/>
 
+    <noscript>
+        <@f.cookieWarning springMacroRequestContext.requestUri />
+    </noscript>
+    
     <#-- FORM. Use class 'sodirty' to enable dirtylisten. -->
-    <@f.cookieWarning/>
     <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-initiative" class="sodirty dirtylisten <#if hasErrors>has-errors</#if>">
         
         <@f.securityFilters />
-        <@f.notTooFastField initiative/>
+        <@f.notTooFastField initiative />
 
         <div class="form-block-container">
             <@edit.blockHeader key="initiative.municipality.title" step=1 />
@@ -65,15 +68,19 @@
 
     
 <#--
- * Create page modals
+ * Create page modals and jsMessage
  * 
  * Uses jsRender for templating.
  * Same content is generated for NOSCRIPT and for modals.
  *
  * Modals:
  *  Form modified notification (dirtyform)
+ *
+ * jsMessage:
+ *  Warning if cookies are disabled
 -->
 <@u.modalTemplate />
+<@u.jsMessageTemplate />
 
 <script type="text/javascript">
     var modalData = {};
@@ -85,8 +92,17 @@
             content:    '<@u.messageHTML "form.modified.notification" />'
         }]
     };
-</script>
+    
+    var messageData = {};
 
+    <#-- jsMessage: Warning if cookies are not enabled -->
+    messageData.warningCookiesDisabled = function() {
+        return [{
+            type:      'warning',
+            content:    '<h3><@u.message "warning.cookieError.title" /></h3><div><@u.messageHTML key="warning.cookieError.description" args=[springMacroRequestContext.requestUri] /></div>'
+        }]
+    };
+</script>
 
 
 </@l.main>

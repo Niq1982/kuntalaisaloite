@@ -1,5 +1,8 @@
 
-var localization, generateModal, loadChosen, validateForm, modalContent, modalType;
+var localization,
+	generateModal,
+	generateJsMessage,
+	jsMessages;
 
 /**
  * Localization
@@ -45,6 +48,50 @@ generateModal = function (modalContent, modalType) {
 	$(".modal").loadModal(modalType);
 	return false;
 };
+
+/**
+ * Generate jsMessage
+ * ==============
+ * - object contains:
+ *  - HTML content inside the message-container
+ *  - type of the message eg. info, success, warning, error
+ * - print the message before the defined elem eg. form
+ * 
+ * */
+generateJsMessage = function (elem, object) {
+	elem.before($("#jsMessage-template").render(object));
+	return false;
+};
+
+
+/**
+ * 
+ * jsMessage-loaders
+ * =================
+ * 
+ * System messages that are loaded for JS-users.
+ * 
+ * Load once on page. Loaded separately also for modals.
+ * 
+ * */
+jsMessages = (function(){
+	// Check if user has cookies enabled. Some mobile browsers do not support navigator.cookieEnabled
+	var cookieEnabled = navigator.cookieEnabled ||
+			("cookie" in document && (document.cookie.length > 0 ||
+    		(document.cookie = "cookieTest").indexOf.call(document.cookie, "cookieTest") > -1));
+	
+	var Load = function(){
+		if( !cookieEnabled && typeof messageData != 'undefined' && typeof messageData.warningCookiesDisabled != 'undefined' ){
+			generateJsMessage($('form'), messageData.warningCookiesDisabled());
+		}
+	}
+	
+	return {
+		Load:Load
+	};
+}());
+jsMessages.Load();
+
 
 /**
  * Load chosen
@@ -112,7 +159,8 @@ jQuery.support.placeholder = (function(){
 
 $(document).ready(function () {	
 	// Define general variables
-	var $body, speedFast, speedSlow, speedVeryFast, speedAutoHide, vpHeight, vpWidth, validateEmail, isIE7, isIE8, locale;
+	var $body, speedFast, speedSlow, speedVeryFast, speedAutoHide, vpHeight, vpWidth, validateEmail,
+		isIE7, isIE8, locale, cookiesEnabled;
 	$body = $('body');
 	speedFast = '200';					// General speeds for animations
 	speedVeryFast = '10';			 
@@ -768,6 +816,8 @@ $('.municipality-filter').change( function() {
 		    	// Initialize municipality selections
 		    	municipalitySelection.Init();
 		    	
+		    	jsMessages.Load();
+		    	
 		    	// TODO: Test this properly. We might want to use this.
 		    	setTimeout(function () {
 		    		jsRemove();
@@ -862,7 +912,7 @@ $('.municipality-filter').change( function() {
 		generateModal(modalData.participateFormInvalid(), 'full');
 	}
 
-	
+
 /**
  * 
  * Datepicker: jQuery tool - Dateinput

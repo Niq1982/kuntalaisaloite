@@ -67,8 +67,12 @@
      *
      * Modals:
      *  Request message (defined in macro u.requestMessage)
+     *
+     * jsMessage:
+     *  Warning if cookies are disabled
     -->
     <@u.modalTemplate />
+    <@u.jsMessageTemplate />
     
     <script type="text/javascript">
         var modalData = {};

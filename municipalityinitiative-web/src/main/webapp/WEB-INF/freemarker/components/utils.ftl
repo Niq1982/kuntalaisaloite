@@ -296,6 +296,22 @@
 </#macro>
 
 <#--
+ * jsMessageTemplate
+ * 
+ * General template for all JavaScript generated messages.
+ * #modal-container -div is moved to layout.ftl
+ * 
+ * Uses JsRender: https://github.com/BorisMoore/jsrender
+-->
+<#macro jsMessageTemplate>    
+    <script id="jsMessage-template" type="text/x-jsrender">
+        <div class="system-msg msg-{{:type}} js-message">
+            {{:content}}
+        </div>
+    </script>
+</#macro>
+
+<#--
  * errorsSummary
  *     
  * Errors summary prints the validation error list 

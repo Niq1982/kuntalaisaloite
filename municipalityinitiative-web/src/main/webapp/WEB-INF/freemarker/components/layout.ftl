@@ -125,13 +125,27 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        
+    <#--
+     * Disallow create-page indexing
+     *
+     * Precaution for spam bots. Disallowing create-form-page to be indexed
+     * in search engines should prevent some spam-bots to find the form.
+     * More powerful counter measures are found in forms.ftl within macros:
+     * "securityFilters" and "notTooFastField".
+     * Participate form can however be the major problem.
+    -->
+    <#assign disallowIndexing = (page == "page.createNew") />
+    <#if disallowIndexing>
+        <meta name="robots" content="noindex" />
+    </#if>
+    
     <title><#noescape>${currentPage}</#noescape> - <@u.message "siteName" /></title> 
     
     <#-- CSS class 'no-js' -> 'js'. This switch needs to be fast! -->
     <script>
         document.documentElement.className = document.documentElement.className.replace(/(\s|^)no-js(\s|$)/, '$1js$2');
     </script>
-    
     
     <link rel="canonical" href="${currentUri}" />
     

@@ -70,7 +70,9 @@
 
         <div id="send-to-municipality-form" class="send-to-municipality cf js-send-to-municipality-form <#if !hasErrors>js-hide</#if>">
 
-            <@f.cookieWarning/>
+            <noscript>
+                <@f.cookieWarning springMacroRequestContext.requestUri />
+            </noscript>
 
             <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-send" class="sodirty">
                 <@f.securityFilters />

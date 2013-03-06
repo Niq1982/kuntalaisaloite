@@ -12,7 +12,10 @@
     <#-- Participate form errors summary -->    
     <@u.errorsSummary path="participant.*" prefix="participant."/>
 
-    <@f.cookieWarning/>
+    <noscript>
+        <@f.cookieWarning springMacroRequestContext.requestUri />
+    </noscript>
+    
     <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-participate" class="sodirty <#if hasErrors>has-errors</#if>">
         <@f.securityFilters/>
         <@f.notTooFastField participant/>
@@ -155,6 +158,16 @@
             }]
         };
         </#if>
+        
+        var messageData = {};
+
+        <#-- jsMessage: Warning if cookies are not enabled -->
+        messageData.warningCookiesDisabled = function() {
+            return [{
+                type:      'warning',
+                content:    '<h3><@u.message "warning.cookieError.title" /></h3><div><@u.messageHTML key="warning.cookieError.description" args=[springMacroRequestContext.requestUri] /></div>'
+            }]
+        };
     </#if>
     
 </#assign>

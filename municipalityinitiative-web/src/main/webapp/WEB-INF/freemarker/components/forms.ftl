@@ -229,18 +229,26 @@
 <#--
  * securityFilters
  *
- *  CSRFToken
- *  
- *  email-honeyspot field is hided from users with CSS thus they will leave it empty. Spambots will most propably fill this.
- *
+ *  - CSRFToken
+ *  - email-honeyspot field is hided from users with CSS thus they will leave it empty.
+ *    Spambots will most propably fill the email field and humans should not.
 -->
 <#macro securityFilters>
     <input type="hidden" name="CSRFToken" value="${CSRFToken!""}"/>
     <input type="text" name="email" id="email" tabindex="-1" />
 </#macro>
 
+<#--
+ * notTooFastField
+ *
+ * Adds a timer for the form. If the form is submitted faster than 10 seconds
+ * from the page load we will assume that the form is then filled by a bot and
+ * a spam-filter validation error will occur. 
+ *
+ * @param object is initiative
+-->
 <#macro notTooFastField object>
-        <input type="hidden" name="randomNumber" value="${object.randomNumber}"/>
+    <input type="hidden" name="randomNumber" value="${object.randomNumber}"/>
 </#macro>
 
 
@@ -250,12 +258,14 @@
  * Shows warning if not sure if user accepts cookies
  *
 -->
-<#macro cookieWarning>
+<#macro cookieWarning currentPage>
     <#if cookieError??>
-    <div class="system-msg msg-warning ">
-        <h2>Evästeiden salliminen</h2>
-        <p>Toiminto vaatii tietoturvan vuoksi selaimen evästeiden sallimisen. Ota evästeet käyttöön ja päivitä sivu.</p>
-    </div>
+        <#assign cookieErrorHTML>
+            <h3><@u.message "warning.cookieError.title" /></h3>
+            <div><@u.messageHTML key="warning.cookieError.description" args=[currentPage] /></div>
+        </#assign>
+    
+        <@u.systemMessageHTML cookieErrorHTML "warning" />
     </#if>
 </#macro>
 
