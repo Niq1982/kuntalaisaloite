@@ -5,6 +5,8 @@
 
 <#escape x as x?html> 
 
+<#assign managementURL = urls.management(initiative.id, initiative.managementHash.value) />
+
 <#--
  * Top Info elements for the top section of the initiative's management-view page
 -->
@@ -45,7 +47,7 @@
     <#--
      * Show management block
     -->
-    <div class="view-block public">
+    <div id="send-to-municipality" class="view-block public">
         <h2><@u.message "sendToMunicipality.title" /></h2>
 
         <#-- Check is form has errors -->
@@ -71,7 +73,7 @@
         <div id="send-to-municipality-form" class="send-to-municipality cf js-send-to-municipality-form <#if !hasErrors>js-hide</#if>">
 
             <noscript>
-                <@f.cookieWarning springMacroRequestContext.requestUri />
+                <@f.cookieWarning managementURL />
             </noscript>
 
             <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-send" class="sodirty">
@@ -95,7 +97,7 @@
                         <a href="${springMacroRequestContext.requestUri}#participants" class="push close hidden"><@u.message "action.cancel" /></a>
                     <#else>
                         <#-- In case of errors cancel-link clears data by refreshing management page. -->
-                        <a href="${urls.management(initiative.id, initiative.managementHash.value)}" class="push hidden"><@u.message "action.cancel" /></a>
+                        <a href="${managementURL}" class="push hidden"><@u.message "action.cancel" /></a>
                     </#if>
                 </div>
                 <br/><br/>
@@ -103,6 +105,19 @@
         </div>
     </div>
 
+</#assign>
+
+
+<#assign modalData>
+    var messageData = {};
+
+    <#-- jsMessage: Warning if cookies are not enabled -->
+    messageData.warningCookiesDisabled = function() {
+        return [{
+            type:      'warning',
+            content:    '<h3><@u.message "warning.cookieError.title" /></h3><div><@u.messageHTML key="warning.cookieError.description" args=[managementURL] /></div>'
+        }]
+    };
 </#assign>
 
 <#include "initiative.ftl" />

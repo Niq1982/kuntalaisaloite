@@ -261,7 +261,7 @@
 <#macro cookieWarning currentPage>
     <#if cookieError??>
         <#assign cookieErrorHTML>
-            <h3><@u.message "warning.cookieError.title" /></h3>
+            <h4><@u.message "warning.cookieError.title" /></h4>
             <div><@u.messageHTML key="warning.cookieError.description" args=[currentPage] /></div>
         </#assign>
     

@@ -97,7 +97,6 @@
     
         <#-- MODAL DATA (from collect-view.ftl) -->
         <#if modalData??><#noescape>${modalData}</#noescape></#if>
-    
     </script>
 
 </@l.main>
