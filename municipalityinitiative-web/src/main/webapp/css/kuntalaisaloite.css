@@ -86,6 +86,7 @@ a.block-link{display:block;height:38px;line-height:38px;margin-bottom:1em;paddin
 .view-block{margin-bottom:3em;padding-top:35px;background:#fff;}.view-block.last{margin-bottom:2em;}
 .view-block.single{margin-bottom:1em;}
 .input-block{width:866px;}.input-block .input-block-action{width:585px;}
+.send-to-municipality{width:585px;}
 .pad{padding:10px 20px;background:#f1f1f1;border-radius:3px;}.pad.margin{margin:0.5em 0 1em 0;}
 .pad .table{margin:0;}
 .expose{position:relative;z-index:1000;}.expose .msg-summary,.expose .content-block-header{box-shadow:0px 0px 5px rgba(0, 0, 0, 0.2);}
