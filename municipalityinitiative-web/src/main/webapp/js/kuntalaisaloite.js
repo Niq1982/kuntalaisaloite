@@ -959,7 +959,7 @@ $('.municipality-filter').change( function() {
  * 
  * */
 	
-	$('.trigger-tooltip').tooltip({
+	$('.trigger-tooltip[title]').tooltip({
 		animation:	true,
 		effect:		'fade',
 		placement:	'top right', // FIXME: this doesn't seem to work correctly
