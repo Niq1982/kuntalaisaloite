@@ -80,12 +80,12 @@ public class InitiativeService {
     }
 
     @Transactional(readOnly = false)
-    public void sendToMunicipality(Long initiativeId, SendToMunicipalityDto sendToMunicipalityDto, String hashCode, Locale locale) {
+    public void sendToMunicipality(Long initiativeId, SendToMunicipalityDto sendToMunicipalityDto, Locale locale) {
 
         Initiative initiativeInfo = initiativeDao.getById(initiativeId);
 
         checkAllowedToSendToMunicipality(initiativeInfo);
-        checkHashCode(hashCode, initiativeInfo);
+        checkHashCode(sendToMunicipalityDto, initiativeInfo);
 
         initiativeDao.markAsSendedAndUpdateContactInfo(initiativeId, sendToMunicipalityDto.getContactInfo());
         sendCollectedInitiativeEmails(initiativeId, locale, sendToMunicipalityDto.getComment());
@@ -100,8 +100,8 @@ public class InitiativeService {
         }
     }
 
-    private void checkHashCode(String hashCode, Initiative initiativeInfo) {
-        if (!hashCode.equals(initiativeInfo.getManagementHash().get())) {
+    private void checkHashCode(SendToMunicipalityDto sendToMunicipalityDto, Initiative initiativeInfo) {
+        if (!sendToMunicipalityDto.getManagementHash().equals(initiativeInfo.getManagementHash().get())) {
             throw new AccessDeniedException("Invalid management hash");
         }
     }
@@ -143,13 +143,10 @@ public class InitiativeService {
 
     public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId, Locale locale) {
         return InitiativeViewInfo.parse(initiativeDao.getById(initiativeId), locale);
-//        return initiativeDao.getById(initiativeId);
     }
 
-    public SendToMunicipalityDto getSendToMunicipalityData(Long initiativeId) {
-        SendToMunicipalityDto sendToMunicipalityDto = new SendToMunicipalityDto();
-        sendToMunicipalityDto.setContactInfo(initiativeDao.getContactInfo(initiativeId));
-        return sendToMunicipalityDto;
+    public ContactInfo getContactInfo(Long initiativeId) {
+        return initiativeDao.getContactInfo(initiativeId);
     }
 
     public InitiativeCounts getInitiativeCounts(Maybe<Long> municipality) {

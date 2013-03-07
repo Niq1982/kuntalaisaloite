@@ -9,6 +9,8 @@ public class SendToMunicipalityDto {
     
     private String comment;
 
+    private String managementHash;
+
     public String getComment() {
         return comment;
     }
@@ -23,5 +25,13 @@ public class SendToMunicipalityDto {
 
     public void setContactInfo(ContactInfo contactInfo) {
         this.contactInfo = contactInfo;
+    }
+
+    public String getManagementHash() {
+        return managementHash;
+    }
+
+    public void setManagementHash(String managementHash) {
+        this.managementHash = managementHash;
     }
 }

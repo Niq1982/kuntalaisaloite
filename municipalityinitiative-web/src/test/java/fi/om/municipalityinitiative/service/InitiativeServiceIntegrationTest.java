@@ -161,11 +161,11 @@ public class InitiativeServiceIntegrationTest {
         sendToMunicipalityDto.getContactInfo().setName("New Name");
         sendToMunicipalityDto.getContactInfo().setEmail("new_email@example.com");
         sendToMunicipalityDto.getContactInfo().setPhone("555");
+        sendToMunicipalityDto.setManagementHash(TestHelper.TEST_MANAGEMENT_HASH);
 
-        service.sendToMunicipality(initiativeId,sendToMunicipalityDto, TestHelper.TEST_MANAGEMENT_HASH, null);
+        service.sendToMunicipality(initiativeId,sendToMunicipalityDto, null);
 
-        // TODO: Do not use getSendToMunicipalityData for receiving current contact information, it's misleading.
-        ContactInfo newContactInfo = service.getSendToMunicipalityData(initiativeId).getContactInfo();
+        ContactInfo newContactInfo = service.getContactInfo(initiativeId);
         assertThat(newContactInfo.getEmail(), is("new_email@example.com"));
         assertThat(newContactInfo.getName(), is("New Name"));
         assertThat(newContactInfo.getAddress(), is("New Address"));

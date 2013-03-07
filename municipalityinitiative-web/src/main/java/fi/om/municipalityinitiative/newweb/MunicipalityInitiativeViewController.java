@@ -162,7 +162,13 @@ public class MunicipalityInitiativeViewController extends BaseController {
 
         if (managementHash.equals(initiativeInfo.getManagementHash().get())){
             model.addAttribute("participants", participantService.findPublicParticipants(initiativeId));
-            model.addAttribute("sendToMunicipality", initiativeService.getSendToMunicipalityData(initiativeId));
+
+            SendToMunicipalityDto sendToMunicipalityDto = new SendToMunicipalityDto();
+            sendToMunicipalityDto.setManagementHash(managementHash);
+            sendToMunicipalityDto.setContactInfo(initiativeService.getContactInfo(initiativeId));
+
+//            SendToMunicipalityDto.parse(managementHash, initiativeService.getContactInfo(initiativeId));
+            model.addAttribute("sendToMunicipality", sendToMunicipalityDto);
             return MANAGEMENT_VIEW;
         }
         else {
@@ -178,7 +184,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
                                      BindingResult bindingResult, Model model, Locale locale, HttpServletRequest request) {
        
         if (validationService.validationSuccessful(sendToMunicipalityDto, bindingResult, model)) {
-            initiativeService.sendToMunicipality(initiativeId, sendToMunicipalityDto, "0000000000111111111122222222223333333333", locale); // TODO: Get hashcode from post request.
+            initiativeService.sendToMunicipality(initiativeId, sendToMunicipalityDto, locale); // TODO: Get hashcode from post request.
             Urls urls = Urls.get(locale);
             return redirectWithMessage(urls.view(initiativeId),RequestMessage.SEND, request);
         }
