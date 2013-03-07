@@ -15,6 +15,7 @@ import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.ParticipatingUnallowedException;
+import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,7 +48,7 @@ public class InitiativeService {
 
         Maybe<String> managementHash;
         if (createDto.isCollectable()) {
-            managementHash = Maybe.of("0000000000111111111122222222223333333333");
+            managementHash = Maybe.of(RandomHashGenerator.randomString(40));
         }
         else {
             managementHash = Maybe.absent();
@@ -101,7 +102,7 @@ public class InitiativeService {
 
     private void checkHashCode(String hashCode, Initiative initiativeInfo) {
         if (!hashCode.equals(initiativeInfo.getManagementHash().get())) {
-            throw new AccessDeniedException("Invalid initiative verifier");
+            throw new AccessDeniedException("Invalid management hash");
         }
     }
 

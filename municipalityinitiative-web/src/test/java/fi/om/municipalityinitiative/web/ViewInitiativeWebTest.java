@@ -1,6 +1,6 @@
 package fi.om.municipalityinitiative.web;
 
-import org.junit.Ignore;
+import fi.om.municipalityinitiative.dao.TestHelper;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -21,7 +21,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
         Long municipalityId = testHelper.createTestMunicipality("Tuusula");
         Long initiativeId = testHelper.createTestInitiative(municipalityId, "Testi aloite", true, true);
 
-        open(urls.management(initiativeId, "0000000000111111111122222222223333333333"));
+        open(urls.management(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
 
 //        assertTitle("Hallintasivu"); // There is no such title. 
         assertThat(driver.findElement(By.id("js-send-to-municipality")).getText(), is(getMessage(MSG_BTN_SEND)));

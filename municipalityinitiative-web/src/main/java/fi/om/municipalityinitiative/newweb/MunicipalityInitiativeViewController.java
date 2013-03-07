@@ -178,7 +178,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
                                      BindingResult bindingResult, Model model, Locale locale, HttpServletRequest request) {
        
         if (validationService.validationSuccessful(sendToMunicipalityDto, bindingResult, model)) {
-            initiativeService.sendToMunicipality(initiativeId, sendToMunicipalityDto, "0000000000111111111122222222223333333333", locale);
+            initiativeService.sendToMunicipality(initiativeId, sendToMunicipalityDto, "0000000000111111111122222222223333333333", locale); // TODO: Get hashcode from post request.
             Urls urls = Urls.get(locale);
             return redirectWithMessage(urls.view(initiativeId),RequestMessage.SEND, request);
         }

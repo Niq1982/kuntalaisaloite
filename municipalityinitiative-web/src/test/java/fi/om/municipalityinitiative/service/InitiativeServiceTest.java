@@ -83,7 +83,7 @@ public class InitiativeServiceTest {
             service.sendToMunicipality(0L, null, "another hash", null);
             fail("Should have thrown exception");
         } catch (AccessDeniedException e) {
-            assertThat(e.getMessage(), containsString("Invalid initiative verifier"));
+            assertThat(e.getMessage(), containsString("Invalid management hash"));
         }
     }
 

@@ -19,6 +19,8 @@ import static org.hamcrest.Matchers.is;
 
 public class TestHelper {
 
+    public static final String TEST_MANAGEMENT_HASH = "0000000000111111111122222222223333333333";
+
     @Resource
     PostgresQueryFactory queryFactory;
 
@@ -69,7 +71,7 @@ public class TestHelper {
         insert.set(municipalityInitiative.authorId, -1L);
         //insert.setNull(municipalityInitiative.authorId); // TODO
         if (collectable) {
-            insert.set(municipalityInitiative.managementHash,"0000000000111111111122222222223333333333");            
+            insert.set(municipalityInitiative.managementHash,TEST_MANAGEMENT_HASH);
         }
         else {
             insert.set(municipalityInitiative.sent, DateTimeExpression.currentTimestamp(DateTime.class));
