@@ -34,4 +34,11 @@ public class SendToMunicipalityDto {
     public void setManagementHash(String managementHash) {
         this.managementHash = managementHash;
     }
+
+    public static SendToMunicipalityDto parse(String managementHash, ContactInfo contactInfo) {
+        SendToMunicipalityDto sendToMunicipalityDto = new SendToMunicipalityDto();
+        sendToMunicipalityDto.setManagementHash(managementHash);
+        sendToMunicipalityDto.setContactInfo(contactInfo);
+        return sendToMunicipalityDto;
+    }
 }

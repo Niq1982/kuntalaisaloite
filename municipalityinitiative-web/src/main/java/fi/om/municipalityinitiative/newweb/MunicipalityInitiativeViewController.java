@@ -162,13 +162,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
 
         if (managementHash.equals(initiativeInfo.getManagementHash().get())){
             model.addAttribute("participants", participantService.findPublicParticipants(initiativeId));
-
-            SendToMunicipalityDto sendToMunicipalityDto = new SendToMunicipalityDto();
-            sendToMunicipalityDto.setManagementHash(managementHash);
-            sendToMunicipalityDto.setContactInfo(initiativeService.getContactInfo(initiativeId));
-
-//            SendToMunicipalityDto.parse(managementHash, initiativeService.getContactInfo(initiativeId));
-            model.addAttribute("sendToMunicipality", sendToMunicipalityDto);
+            model.addAttribute("sendToMunicipality", SendToMunicipalityDto.parse(managementHash, initiativeService.getContactInfo(initiativeId)));
             return MANAGEMENT_VIEW;
         }
         else {

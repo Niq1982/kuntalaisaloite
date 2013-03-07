@@ -78,6 +78,7 @@
 
             <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-send" class="sodirty">
                 <@f.securityFilters />
+                <input type="hidden" name="managementHash" value="${sendToMunicipality.managementHash}"/>
                 
                 <div class="input-block-content <#if !hasErrors>no-top-margin</#if>">
                     <@f.textarea path="sendToMunicipality.comment" required="" optional=false />
