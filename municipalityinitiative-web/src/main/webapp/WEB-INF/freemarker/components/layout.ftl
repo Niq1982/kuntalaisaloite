@@ -99,7 +99,6 @@
       {"naviName":"page.frontpage", "naviUrl":urls.frontpage()},
       {"naviName":"page.find", "naviUrl":urls.search()},
       {"naviName":"page.createNew", "naviUrl":urls.createNew()},
-      {"naviName":"page.browseOwn", "naviUrl":"#"},
       {"naviName":"page.help", "naviUrl":urls.helpIndex()}
     ] />
 
