@@ -5,10 +5,7 @@ import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
-import fi.om.municipalityinitiative.util.JavaMailSenderFake;
-import fi.om.municipalityinitiative.util.Locales;
-import fi.om.municipalityinitiative.util.ParticipatingUnallowedException;
-import fi.om.municipalityinitiative.util.ReflectionTestUtils;
+import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -96,7 +93,8 @@ public class InitiativeServiceIntegrationTest {
         Long initiativeId = service.createMunicipalityInitiative(createDto, null);
         InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId, Locales.LOCALE_FI);
 
-        assertThat(initiative.getManagementHash().get(), is("0000000000111111111122222222223333333333"));
+        assertThat(initiative.getManagementHash().get(), is(notNullValue()));
+        assertThat(initiative.getManagementHash().get(), is(RandomHashGenerator.getPrevious()));
         assertThat(initiative.isCollectable(), is(true));
     }
 
@@ -163,11 +161,11 @@ public class InitiativeServiceIntegrationTest {
         sendToMunicipalityDto.getContactInfo().setName("New Name");
         sendToMunicipalityDto.getContactInfo().setEmail("new_email@example.com");
         sendToMunicipalityDto.getContactInfo().setPhone("555");
+        sendToMunicipalityDto.setManagementHash(TestHelper.TEST_MANAGEMENT_HASH);
 
-        service.sendToMunicipality(initiativeId,sendToMunicipalityDto, "0000000000111111111122222222223333333333", null);
+        service.sendToMunicipality(initiativeId,sendToMunicipalityDto, null);
 
-        // TODO: Do not use getSendToMunicipalityData for receiving current contact information, it's misleading.
-        ContactInfo newContactInfo = service.getSendToMunicipalityData(initiativeId).getContactInfo();
+        ContactInfo newContactInfo = service.getContactInfo(initiativeId);
         assertThat(newContactInfo.getEmail(), is("new_email@example.com"));
         assertThat(newContactInfo.getName(), is("New Name"));
         assertThat(newContactInfo.getAddress(), is("New Address"));

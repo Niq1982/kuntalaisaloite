@@ -6,6 +6,7 @@ import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUICreateDto;
+import fi.om.municipalityinitiative.newdto.ui.SendToMunicipalityDto;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.Urls;
 import org.joda.time.LocalDate;
@@ -15,7 +16,6 @@ import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -49,7 +49,7 @@ public class InitiativeServiceTest {
         stub(initiativeDao.getById(any(Long.class))).toReturn(initiative);
 
         try {
-            service.sendToMunicipality(0L, null, "anyhashcode", null);
+            service.sendToMunicipality(0L, null, null);
             fail("Should have thrown exception");
         } catch (NotCollectableException e) {
             assertThat(e.getMessage(), containsString("Initiative is not collectable"));
@@ -65,7 +65,7 @@ public class InitiativeServiceTest {
         stub(initiativeDao.getById(any(Long.class))).toReturn(initiative);
 
         try {
-            service.sendToMunicipality(0L, null, "anyOtherHashCode", null);
+            service.sendToMunicipality(0L, null, null);
             fail("Should have thrown exception");
         } catch (NotCollectableException e) {
             assertThat(e.getMessage(), containsString("Initiative already sent"));
@@ -79,22 +79,15 @@ public class InitiativeServiceTest {
         initiative.setManagementHash(Maybe.of("some hash"));
         stub(initiativeDao.getById(any(Long.class))).toReturn(initiative);
 
+        SendToMunicipalityDto sendToMunicipalityDto = new SendToMunicipalityDto();
+        sendToMunicipalityDto.setManagementHash("some OTHER hash");
+
         try {
-            service.sendToMunicipality(0L, null, "another hash", null);
+            service.sendToMunicipality(0L, sendToMunicipalityDto, null);
             fail("Should have thrown exception");
         } catch (AccessDeniedException e) {
-            assertThat(e.getMessage(), containsString("Invalid initiative verifier"));
+            assertThat(e.getMessage(), containsString("Invalid management hash"));
         }
-    }
-
-    @Test
-    public void set_contact_info_to_SendToMunicipalityDto() {
-
-        ContactInfo contactInfo = new ContactInfo();
-        contactInfo.setPhone("phone");
-        stub(initiativeDao.getContactInfo(any(Long.class))).toReturn(contactInfo);
-
-        assertThat(service.getSendToMunicipalityData(0L).getContactInfo().getPhone(), is("phone"));
     }
 
     private InitiativeUICreateDto createDtoFillAllFields() {
