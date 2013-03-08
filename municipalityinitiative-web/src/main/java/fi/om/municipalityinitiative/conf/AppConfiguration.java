@@ -2,12 +2,15 @@ package fi.om.municipalityinitiative.conf;
 
 
 import com.google.common.collect.Maps;
+
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
+
 import fi.om.municipalityinitiative.conf.AppConfiguration.AppDevConfiguration;
 import fi.om.municipalityinitiative.conf.AppConfiguration.ProdPropertiesConfiguration;
 import fi.om.municipalityinitiative.conf.AppConfiguration.TestPropertiesConfigurer;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslatorAspect;
 import fi.om.municipalityinitiative.newdao.*;
+import fi.om.municipalityinitiative.newdto.service.TestDataService;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.util.TaskExecutorAspect;
 import fi.om.municipalityinitiative.validation.LocalValidatorFactoryBeanFix;
@@ -87,6 +90,10 @@ public class AppConfiguration {
     @Profile({"dev", "test"})
     public static class AppDevConfiguration {
 
+        @Bean
+        public TestDataService testDataService() {
+            return new TestDataService();
+        }
 
     }
     

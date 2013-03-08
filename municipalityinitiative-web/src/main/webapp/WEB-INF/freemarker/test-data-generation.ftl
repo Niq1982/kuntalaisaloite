@@ -41,7 +41,8 @@
     <div class="content-block-header view">
         <h2>Luo valmiiksi määritellyt aloitteet automaattisesti</h2>
     </div>
-    
+
+<#-- TODO: Test data generation
     <div class="view-block">        
         <div class="initiative-content-row">
             <h3>Virkamieskäyttäjät</h3>
@@ -95,11 +96,7 @@
                         <th>
                             <span class="title">Tila</span>
                         </th>
-                        <#--
-                        <th> 
-                            <span class="title">Tiedot</span>
-                        </th>
-                        -->
+
                     </tr>
                     
                     <#list testInitiatives as testInitiative>
@@ -113,12 +110,7 @@
                             <td>
                                 <span class="trigger-tooltip" title="<@u.enumDescription testInitiative.state />" >${testInitiative.state!""}</span>
                             </td>
-                        <#--
-                            <td>
-                                <span class="">Jotain muuta infoa tästä testitapauksesta...</span>
-                            </td>
-                        </tr>
-                        -->
+
                     </#list>
                     </table>
                 <#else>
@@ -129,7 +121,6 @@
         </div> 
         <br />
 
-            <#--<input type="submit" value="Luo testidata"/>-->
             <button class="small-button green" value="true" type="submit"><span class="small-icon save-and-send">Luo käyttäjät ja aloitteet</span></button>
         </form>        
     </div>
@@ -145,6 +136,7 @@
             </div>
         </div>
     </#if>
+-->
 
     <#-- TODO: The JavaScript below could be polished if appropriate. -->
     <script type="text/javascript">

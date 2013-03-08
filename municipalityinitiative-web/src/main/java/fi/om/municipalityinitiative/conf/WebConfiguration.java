@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.cfg.DatabindVersion;
 import com.google.common.base.Strings;
+
+import fi.om.municipalityinitiative.conf.PropertyNames;
+import fi.om.municipalityinitiative.newweb.DevController;
 import fi.om.municipalityinitiative.conf.WebConfiguration.WebDevConfiguration;
 import fi.om.municipalityinitiative.conf.WebConfiguration.WebProdConfiguration;
 import fi.om.municipalityinitiative.json.JsonIdAnnotationIntrospector;
@@ -52,6 +55,14 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
     public static class WebDevConfiguration {
 
         @Inject Environment env;
+        
+        @Bean
+        public DevController devController() {
+            return new DevController(
+                    optimizeResources(env),
+                    resourcesVersion(env)
+                    );
+        }
 
     }
 
