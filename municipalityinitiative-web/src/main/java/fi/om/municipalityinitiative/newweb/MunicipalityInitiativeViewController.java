@@ -150,7 +150,9 @@ public class MunicipalityInitiativeViewController extends BaseController {
 
         InitiativeViewInfo initiativeInfo = initiativeService.getMunicipalityInitiative(initiativeId, locale);
 
-        if (!initiativeInfo.isCollectable() || initiativeInfo.isSent()) { // Practically initiative should always be sent if it's not collectable...
+        if (initiativeInfo.isSent() && managementHash.equals(initiativeInfo.getManagementHash().get())) {
+            return redirectWithMessage(urls.view(initiativeId),RequestMessage.ALREADY_SENT, request);
+        } else if (!initiativeInfo.isCollectable() || initiativeInfo.isSent()) { // Practically initiative should always be sent if it's not collectable...
             return contextRelativeRedirect(urls.view(initiativeId));
         }
 

@@ -1,12 +1,17 @@
 package fi.om.municipalityinitiative.web;
 
 import static fi.om.municipalityinitiative.web.RequestMessageType.SUCCESS;
+import static fi.om.municipalityinitiative.web.RequestMessageType.WARNING;
+
 public enum RequestMessage {
     // Success messages
     SAVE_AND_SEND (SUCCESS),
     SAVE (SUCCESS, true),
     SEND (SUCCESS, true),
-    PARTICIPATE (SUCCESS);
+    PARTICIPATE (SUCCESS),
+    
+    // Warning messages
+    ALREADY_SENT (WARNING);
     
     private final boolean modal;
     
