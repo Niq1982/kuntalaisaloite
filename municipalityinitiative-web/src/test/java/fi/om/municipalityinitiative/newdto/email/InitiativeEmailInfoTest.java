@@ -29,7 +29,7 @@ public class InitiativeEmailInfoTest {
         assertThat(emailInfo.getContactInfo().getAddress(), is(contactInfo.getAddress()));
         assertThat(emailInfo.getContactInfo().getEmail(), is(contactInfo.getEmail()));
         assertThat(emailInfo.getCreateTime(), is(initiative.getCreateTime()));
-        assertThat(emailInfo.getMunicipality().getName(), is(initiative.getMunicipality().getFinnishName()));
+        assertThat(emailInfo.getMunicipality().getName(), is(initiative.getMunicipality().getNameFi()));
         assertThat(emailInfo.getMunicipality().getId(), is(initiative.getMunicipality().getId()));
         assertThat(emailInfo.getId(), is(initiative.getId()));
         assertThat(emailInfo.getName(), is(initiative.getName()));

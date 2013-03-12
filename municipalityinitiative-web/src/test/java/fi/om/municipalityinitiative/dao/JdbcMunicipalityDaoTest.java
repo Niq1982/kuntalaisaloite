@@ -36,8 +36,8 @@ public class JdbcMunicipalityDaoTest {
         testHelper.createTestMunicipality("some test municipality");
         List<Municipality> result = municipalityDao.findMunicipalities(true);
         assertThat(result, is(not(empty())));
-        assertThat(result.get(0).getFinnishName(), is("some test municipality"));
-        assertThat(result.get(0).getSwedishName(), is("some test municipality sv"));
+        assertThat(result.get(0).getNameFi(), is("some test municipality"));
+        assertThat(result.get(0).getNameSv(), is("some test municipality sv"));
     }
 
     @Test
@@ -46,14 +46,14 @@ public class JdbcMunicipalityDaoTest {
 
         String last = null;
         for (Municipality municipalityInfo : result) {
-            if (municipalityInfo.getFinnishName().toLowerCase().contains("å")) {
+            if (municipalityInfo.getNameFi().toLowerCase().contains("å")) {
                 continue; // Posgtre seems to think that ä is before å at the alphabets
             }
 
             if (last != null) {
-                assertThat(municipalityInfo.getFinnishName(), is(greaterThan(last)));
+                assertThat(municipalityInfo.getNameFi(), is(greaterThan(last)));
             }
-            last = municipalityInfo.getFinnishName();
+            last = municipalityInfo.getNameFi();
         }
     }
 
@@ -71,8 +71,8 @@ public class JdbcMunicipalityDaoTest {
 
         Municipality municipality = municipalityDao.getMunicipality(municipalityId);
 
-        assertThat(municipality.getFinnishName(), is("Tuusula"));
-        assertThat(municipality.getSwedishName(), is("Tuusula sv"));
+        assertThat(municipality.getNameFi(), is("Tuusula"));
+        assertThat(municipality.getNameSv(), is("Tuusula sv"));
         assertThat(municipality.getId(), is(municipalityId));
     }
 }

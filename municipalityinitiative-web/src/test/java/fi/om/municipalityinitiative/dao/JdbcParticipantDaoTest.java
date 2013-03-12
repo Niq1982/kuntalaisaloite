@@ -125,8 +125,8 @@ public class JdbcParticipantDaoTest {
         List<Participant> participants = participantDao.findAllParticipants(testInitiativeId);
 
         Participant participant = participants.get(0);
-        assertThat(participant.getHomeMunicipality().getFinnishName(), is("Some other Municipality"));
-        assertThat(participant.getHomeMunicipality().getSwedishName(), is("Some other Municipality sv"));
+        assertThat(participant.getHomeMunicipality().getNameFi(), is("Some other Municipality"));
+        assertThat(participant.getHomeMunicipality().getNameSv(), is("Some other Municipality sv"));
         assertThat(participant.isFranchise(), is(true));
     }
 
@@ -139,8 +139,8 @@ public class JdbcParticipantDaoTest {
         List<Participant> participants = participantDao.findPublicParticipants(testInitiativeId);
 
         Participant participant = participants.get(0);
-        assertThat(participant.getHomeMunicipality().getFinnishName(), is("Some other Municipality"));
-        assertThat(participant.getHomeMunicipality().getSwedishName(), is("Some other Municipality sv"));
+        assertThat(participant.getHomeMunicipality().getNameFi(), is("Some other Municipality"));
+        assertThat(participant.getHomeMunicipality().getNameSv(), is("Some other Municipality sv"));
         assertThat(participant.isFranchise(), is(true));
     }
 

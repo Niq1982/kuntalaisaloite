@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.newdto.json;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import fi.om.municipalityinitiative.json.JsonId;
 import fi.om.municipalityinitiative.json.LocalDateJsonSerializer;
+import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.web.Urls;
 import org.joda.time.LocalDate;
@@ -24,8 +25,8 @@ public class InitiativeListJson {
         return initiative.getName();
     }
 
-    public MunicipalityJson getMunicipality() {
-        return new MunicipalityJson(initiative.getMunicipality());
+    public Municipality getMunicipality() {
+        return initiative.getMunicipality();
     }
 
     @JsonSerialize(using=LocalDateJsonSerializer.class)

@@ -65,8 +65,8 @@ public class InitiativeViewInfo {
         MunicipalityInfo municipalityInfo = new MunicipalityInfo();
         municipalityInfo.setId(initiative.getMunicipality().getId());
         municipalityInfo.setName(locale == Locales.LOCALE_FI
-                ? initiative.getMunicipality().getFinnishName()
-                : initiative.getMunicipality().getSwedishName());
+                ? initiative.getMunicipality().getNameFi()
+                : initiative.getMunicipality().getNameSv());
         return municipalityInfo;
     }
 

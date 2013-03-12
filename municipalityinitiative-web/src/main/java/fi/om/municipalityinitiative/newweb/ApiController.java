@@ -1,22 +1,14 @@
 package fi.om.municipalityinitiative.newweb;
 
-import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.json.JsonJokuParseri;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.json.InitiativeJson;
 import fi.om.municipalityinitiative.newdto.json.InitiativeListJson;
-import fi.om.municipalityinitiative.newdto.json.MunicipalityJson;
-import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
-import fi.om.municipalityinitiative.newdto.service.Participant;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
-import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.service.JsonDataService;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.BaseController;
 import fi.om.municipalityinitiative.web.JsonpObject;
 import fi.om.municipalityinitiative.web.Views;
-import org.joda.time.LocalDate;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,7 +21,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -43,10 +34,11 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 public class ApiController extends BaseController {
 
     @Resource
-    JsonDataService jsonDataService;
+    private JsonDataService jsonDataService;
 
     @Resource
     MappingJackson2HttpMessageConverter jsonConverter;
+    public static final Municipality TAMPERE = new Municipality(1, "Tampere", "Tammerfors");
 
     public ApiController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
@@ -55,13 +47,18 @@ public class ApiController extends BaseController {
     @RequestMapping(API)
     public String api(Model model, Locale locale, HttpServletRequest request) throws IOException {
 
-        InitiativeJson initiativeJsonObject = createInitiativeJsonObject();
+        InitiativeJson initiativeJsonObject = jsonDataService.createInitiativeJsonObject();
         String json = jsonConverter.getObjectMapper().writeValueAsString(initiativeJsonObject);
-        model.addAttribute("publicInitiative", JsonJokuParseri.toParts(json));
+        model.addAttribute("initiative", JsonJokuParseri.toParts(json));
 
-        List<InitiativeListJson> initiativeListJson = createInitiativeListJsonObject();
+        List<InitiativeListJson> initiativeListJson = jsonDataService.createInitiativeListJsonObject();
         json = jsonConverter.getObjectMapper().writeValueAsString(initiativeListJson);
         model.addAttribute("initiativeList", JsonJokuParseri.toParts(json));
+
+        json = jsonConverter.getObjectMapper().writeValueAsString(Collections.singletonList(TAMPERE));
+        model.addAttribute("municipalities", JsonJokuParseri.toParts(json));
+
+
         return Views.API_VIEW;
     }
 
@@ -91,7 +88,7 @@ public class ApiController extends BaseController {
                                                                                    @RequestParam(value = JSON_OFFSET, required = false) Integer offset,
                                                                                    @RequestParam(value = JSON_LIMIT, required = false) Integer limit,
                                                                                    @RequestParam(value = JSON_MUNICIPALITY, required = false) Long municipality) {
-        return new JsonpObject<List<InitiativeListJson>>(callback, initiativeList(offset, limit, municipality));
+        return new JsonpObject<>(callback, initiativeList(offset, limit, municipality));
     }
 
     @RequestMapping(value=INITIATIVE, method=GET, produces=JSON)
@@ -107,65 +104,27 @@ public class ApiController extends BaseController {
 
     @RequestMapping(value=MUNICIPALITIES, method=GET, produces=JSON)
     public @ResponseBody
-    List<MunicipalityJson> municipalityList() {
+    List<Municipality> municipalityList() {
         return jsonDataService.getMunicipalities();
     }
     @RequestMapping(value=MUNICIPALITIES, method=GET, produces=JSONP, params=JSONP_CALLBACK)
     public @ResponseBody
-    JsonpObject<List<MunicipalityJson>> municipalityListJsonp(
+    JsonpObject<List<Municipality>> municipalityListJsonp(
             @RequestParam(JSONP_CALLBACK) String callback) {
         return new JsonpObject<>(callback, municipalityList());
     }
 
     @RequestMapping(value=MUNICIPALITY, method=GET, produces=JSON)
-    public @ResponseBody MunicipalityJson municipalityGet(@PathVariable Long id) {
+    public @ResponseBody
+    Municipality municipalityGet(@PathVariable Long id) {
         return jsonDataService.getMunicipality(id);
     }
 
     @RequestMapping(value=MUNICIPALITY, method=GET, produces=JSONP, params=JSONP_CALLBACK)
-    public @ResponseBody JsonpObject<MunicipalityJson> municipalityGetJsonp(@PathVariable Long id,
-                                                                            @RequestParam(JSONP_CALLBACK) String callback) {
-        return new JsonpObject<MunicipalityJson>(callback, municipalityGet(id));
+    public @ResponseBody
+    JsonpObject<Municipality> municipalityGetJsonp(@PathVariable Long id,
+                                                   @RequestParam(JSONP_CALLBACK) String callback) {
+        return new JsonpObject<Municipality>(callback, municipalityGet(id));
     }
 
-    private List<InitiativeListJson> createInitiativeListJsonObject() {
-        InitiativeListInfo initiative = new InitiativeListInfo();
-        initiative.setMunicipality(new Municipality(1, "Tampere", "Tammerfors"));
-        initiative.setSentTime(Maybe.of(new LocalDate(2012, 12, 24)));
-        initiative.setCollectable(true);
-        initiative.setCreateTime(new LocalDate(2012, 12, 1));
-        initiative.setId(1L);
-        initiative.setName("Koirat pois lähiöistä");
-        initiative.setParticipantCount(2);
-        return Collections.singletonList(new InitiativeListJson(initiative));
-    }
-
-    private InitiativeJson createInitiativeJsonObject() {
-        final Municipality TAMPERE = new Municipality(1, "Tampere", "Tammerfors");
-
-        ParticipantCount participantCount = new ParticipantCount();
-        participantCount.getFranchise().setPrivateNames(10);
-        participantCount.getFranchise().setPublicNames(1);
-        participantCount.getNoFranchise().setPrivateNames(12);
-        participantCount.getFranchise().setPublicNames(1);
-
-        ArrayList<Participant> publicParticipants = Lists.<Participant>newArrayList();
-        publicParticipants.add(new Participant(new LocalDate(2010, 1, 1), "Teemu Teekkari", true, TAMPERE));
-
-        Initiative initiativeInfo = new Initiative();
-        initiativeInfo.setId(1L);
-        initiativeInfo.setName("Koirat pois lähiöistä");
-        initiativeInfo.setProposal("Kakkaa on joka paikassa");
-        initiativeInfo.setMunicipality(TAMPERE);
-        initiativeInfo.setSentTime(Maybe.<LocalDate>fromNullable(null));
-        initiativeInfo.setCreateTime(new LocalDate(2010, 1, 1));
-        initiativeInfo.setAuthorName("Teemu Teekkari");
-        initiativeInfo.setShowName(true);
-        initiativeInfo.setManagementHash(Maybe.of("any"));
-
-        InitiativeJson initiativeJson = InitiativeJson.from(initiativeInfo, publicParticipants, participantCount);
-
-        return initiativeJson;
-
-    }
 }

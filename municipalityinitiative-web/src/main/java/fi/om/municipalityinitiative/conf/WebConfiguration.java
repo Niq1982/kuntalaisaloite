@@ -5,13 +5,11 @@ import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.cfg.DatabindVersion;
 import com.google.common.base.Strings;
-
-import fi.om.municipalityinitiative.conf.PropertyNames;
-import fi.om.municipalityinitiative.newweb.DevController;
 import fi.om.municipalityinitiative.conf.WebConfiguration.WebDevConfiguration;
 import fi.om.municipalityinitiative.conf.WebConfiguration.WebProdConfiguration;
 import fi.om.municipalityinitiative.json.JsonIdAnnotationIntrospector;
 import fi.om.municipalityinitiative.newweb.ApiController;
+import fi.om.municipalityinitiative.newweb.DevController;
 import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeCreateController;
 import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeViewController;
 import fi.om.municipalityinitiative.util.Maybe;

@@ -26,9 +26,12 @@ Id of an initiative is an URI of initiative details in <a href="http://www.json.
 
 <p><a href="#details">Details</a> of the initiative in <a href="http://www.json.org/">JSON</a> format.</p>
 
+<h3>Municipalities</h3>
+<p>All municipalities are listed at <a href="${urls.municipalities()}">${urls.initiatives()}</a>.
+
 <h3>JSONP</h3>
 
-<p>Both interfaces support also <a href="http://en.wikipedia.org/wiki/JSONP">JSONP</a> format. Callback is given with <tt>${UrlConstants.JSONP_CALLBACK}</tt> parameter. E.g.<br/>
+<p>All interfaces support also <a href="http://en.wikipedia.org/wiki/JSONP">JSONP</a> format. Callback is given with <tt>${UrlConstants.JSONP_CALLBACK}</tt> parameter. E.g.<br/>
 <a href="${urls.initiatives()}?${UrlConstants.JSONP_CALLBACK}=myCallback">${urls.initiatives()}?${UrlConstants.JSONP_CALLBACK}=myCallback</a>.</p>
 
 
@@ -46,7 +49,7 @@ Id of an initiative is an URI of initiative details in <a href="http://www.json.
     </tr>
   </thead>
   <tbody>
-    <#list publicInitiative as i>
+    <#list initiative as i>
     <tr>
         <td class="apiExample" style="padding-left:${i.indent}0px">
             ${i.value}
@@ -73,6 +76,32 @@ Id of an initiative is an URI of initiative details in <a href="http://www.json.
   </thead>
   <tbody>
     <#list initiativeList as i>
+    <tr>
+        <td class="apiExample" style="padding-left:${i.indent}0px">
+            ${i.value}
+        </td>
+        <td><@u.message i.localizationKey +".datatype" /></td>
+        <td><@u.message i.localizationKey /></td>
+        </tr>
+    </#list>
+  </tbody>
+</table>
+
+<h3 id="list">Municipalities</h3>
+
+<table class="data">
+  <thead>
+    <tr>
+        <th>Example
+        </th>
+        <th>Data Type
+        </th>
+        <th>Description
+        </th>
+    </tr>
+  </thead>
+  <tbody>
+    <#list municipalities as i>
     <tr>
         <td class="apiExample" style="padding-left:${i.indent}0px">
             ${i.value}

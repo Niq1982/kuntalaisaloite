@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.newdto.service;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import fi.om.municipalityinitiative.json.LocalDateJsonSerializer;
 import org.joda.time.LocalDate;
@@ -22,7 +21,6 @@ public class Participant {
         return name;
     }
 
-    @JsonIgnore
     public boolean isFranchise() {
         return franchise;
     }

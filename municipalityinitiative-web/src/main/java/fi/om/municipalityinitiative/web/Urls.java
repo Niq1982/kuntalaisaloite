@@ -258,6 +258,10 @@ public final class Urls {
     public String initiatives() {
         return baseUrl + INITIATIVES;
     }
+
+    public String municipalities() {
+        return baseUrl + MUNICIPALITIES;
+    }
     
     public String voteAction(Long initiativeId) {
         return view(initiativeId);

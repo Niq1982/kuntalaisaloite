@@ -1,11 +1,13 @@
 package fi.om.municipalityinitiative.newdto.service;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import fi.om.municipalityinitiative.json.JsonId;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.Urls;
 
 import java.util.Locale;
 
+@JsonPropertyOrder(alphabetic = true)
 public class Municipality {
     private long id;
     private String finnishName;
@@ -22,17 +24,17 @@ public class Municipality {
         return id;
     }
 
-    public String getFinnishName() {
+    public String getNameFi() {
         return finnishName;
     }
 
-    public String getSwedishName() {
+    public String getNameSv() {
         return swedishName;
     }
 
     public String getLocalizedName(Locale locale) {
         return Locales.LOCALE_FI.equals(locale)
-                ? getFinnishName()
-                : getSwedishName();
+                ? getNameFi()
+                : getNameSv();
     }
 }
