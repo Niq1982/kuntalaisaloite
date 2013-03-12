@@ -39,14 +39,9 @@ public class JsonTest {
 
     @Test
     public void initiative_details_have_not_changed() throws IOException {
-        List<JsonJokuParseri.IndentedString> initiatives = (List<JsonJokuParseri.IndentedString>) model.get("initiative");
-        String join = sortAndJoinAsString(initiatives);
-        System.out.println(join);
-        assertThat(join, is(initiativeDetailData()));
-    }
-
-    private String initiativeDetailData() {
-        return "\"authorName\":\"Teemu Teekkari\",\n" +
+        List<JsonJokuParseri.IndentedString> initiatives = getJsonDataListFromModel("initiative");
+        String join = joinAsString(initiatives);
+        assertThat(join, is("\"authorName\":\"Teemu Teekkari\",\n" +
                 "\"collectable\":true,\n" +
                 "\"createTime\":\"2010-01-01\",\n" +
                 "\"franchise\":true,\n" +
@@ -84,28 +79,29 @@ public class JsonTest {
                 "},\n" +
                 "},\n" +
                 "},\n" +
-                "}]";
+                "}]"));
     }
 
     @Test
     public void municipalities_have_not_changed() throws IOException {
-        List<JsonJokuParseri.IndentedString> municipalities = (List<JsonJokuParseri.IndentedString>) model.get("municipalities");
-        String join = sortAndJoinAsString(municipalities);
+        List<JsonJokuParseri.IndentedString> municipalities = getJsonDataListFromModel("municipalities");
+        String join = joinAsString(municipalities);
 
-        assertThat(join, is(municipalityListData()));
-    }
-
-    private String municipalityListData() {
-        return "\"id\":1,\n" +
+        assertThat(join, is("\"id\":1,\n" +
                 "\"nameFi\":\"Tampere\",\n" +
                 "\"nameSv\":\"Tammerfors\"\n" +
                 "[\n" +
                 "{\n" +
-                "}]";
+                "}]"));
     }
 
-    private String sortAndJoinAsString(List<JsonJokuParseri.IndentedString> initiatives) {
-        Collections.sort(initiatives, new IntendedStringComparator());
+    private List<JsonJokuParseri.IndentedString> getJsonDataListFromModel(String modelAttributeName) {
+        List<JsonJokuParseri.IndentedString> indentedStrings = (List<JsonJokuParseri.IndentedString>) model.get(modelAttributeName);
+        Collections.sort(indentedStrings, new IntendedStringComparator());
+        return indentedStrings;
+    }
+
+    private String joinAsString(List<JsonJokuParseri.IndentedString> initiatives) {
         return Joiner.on("\n").join(initiatives);
     }
 }
