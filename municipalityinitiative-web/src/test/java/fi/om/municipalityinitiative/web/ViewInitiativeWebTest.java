@@ -14,6 +14,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
      */
     private static final String MSG_BTN_SEND = "action.send";
     private static final String MSG_BTN_PARTICIPATE = "action.participate";
+    private static final String ERROR_404_TITLE = "error.404.title";
     
     @Test
     public void manage_view_shows_send_to_municipality_button() {
@@ -28,14 +29,13 @@ public class ViewInitiativeWebTest extends WebTestBase {
     }
 
     @Test
-    public void opens_default_view_if_management_hash_wrong() {
+    public void opens_error_404_if_management_hash_wrong() {
         Long municipalityId = testHelper.createTestMunicipality("Tuusula");
         Long initiativeId = testHelper.createTestInitiative(municipalityId, "Testi aloite", true, true);
 
         open(urls.management(initiativeId, "wrong_hash"));
 
-        // NOTE: ATM the check for public view is that Participate button exists. This might change in the future.
-        assertThat(driver.findElement(By.className("js-participate")).getText(), is(getMessage(MSG_BTN_PARTICIPATE)));
+        assertThat(driver.findElement(By.tagName("h1")).getText(), is(getMessage(ERROR_404_TITLE)));
 
     }
 

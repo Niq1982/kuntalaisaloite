@@ -169,9 +169,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
             return MANAGEMENT_VIEW;
         }
         else {
-            // Redirecting would be nicer but let's make it more difficult for the possible hackers to brute force the management-hash
-            model.addAttribute("participant", new ParticipantUICreateDto());
-            return COLLECT_VIEW;
+            return ERROR_404_VIEW;
         }
     }
     
