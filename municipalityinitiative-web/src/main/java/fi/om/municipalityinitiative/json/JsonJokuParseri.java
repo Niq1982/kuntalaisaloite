@@ -105,6 +105,11 @@ public class JsonJokuParseri {
         private static boolean hasProperty(String value) {
             return value.contains("\"");
         }
+
+        @Override
+        public String toString() {
+            return value;
+        }
     }
 
 }

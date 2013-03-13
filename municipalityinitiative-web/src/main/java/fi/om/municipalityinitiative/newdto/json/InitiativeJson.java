@@ -1,19 +1,20 @@
 package fi.om.municipalityinitiative.newdto.json;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.json.JsonId;
 import fi.om.municipalityinitiative.json.LocalDateJsonSerializer;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
+import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
-import fi.om.municipalityinitiative.newdto.ui.Participants;
-import fi.om.municipalityinitiative.service.ParticipantService;
 import fi.om.municipalityinitiative.web.Urls;
 import org.joda.time.LocalDate;
 
 import java.util.List;
 
+@JsonPropertyOrder(alphabetic = true)
 public class InitiativeJson {
 
     final Initiative initiative;
@@ -35,8 +36,8 @@ public class InitiativeJson {
         return initiative.getProposal();
     }
 
-    public MunicipalityJson getMunicipality() {
-        return new MunicipalityJson(initiative.getMunicipality());
+    public Municipality getMunicipality() {
+        return initiative.getMunicipality();
     }
 
     public String getAuthorName() {
@@ -84,8 +85,8 @@ public class InitiativeJson {
             return participantCount;
         }
 
-        public Participants getPublicParticipants() {
-            return ParticipantService.toParticipantNames(participants);
+        public List<Participant> getPublicParticipants() {
+            return participants;
         }
 
     }

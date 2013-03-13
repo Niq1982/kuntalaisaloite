@@ -21,7 +21,7 @@ public class MunicipalityService {
         boolean finnishLocale = Locales.LOCALE_FI.equals(locale);
         for (Municipality m : municipalityDao.findMunicipalities(finnishLocale)) {
             MunicipalityInfo municipalityInfo = new MunicipalityInfo();
-            municipalityInfo.setName(finnishLocale ? m.getFinnishName() : m.getSwedishName());
+            municipalityInfo.setName(finnishLocale ? m.getNameFi() : m.getNameSv());
             municipalityInfo.setId(m.getId());
             municipalities.add(municipalityInfo);
         }

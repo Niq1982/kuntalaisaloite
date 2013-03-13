@@ -1,17 +1,10 @@
 package fi.om.municipalityinitiative.conf;
 
-import com.fasterxml.jackson.core.Version;
-import com.fasterxml.jackson.databind.Module;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.cfg.DatabindVersion;
 import com.google.common.base.Strings;
-
-import fi.om.municipalityinitiative.conf.PropertyNames;
-import fi.om.municipalityinitiative.newweb.DevController;
 import fi.om.municipalityinitiative.conf.WebConfiguration.WebDevConfiguration;
 import fi.om.municipalityinitiative.conf.WebConfiguration.WebProdConfiguration;
-import fi.om.municipalityinitiative.json.JsonIdAnnotationIntrospector;
 import fi.om.municipalityinitiative.newweb.ApiController;
+import fi.om.municipalityinitiative.newweb.DevController;
 import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeCreateController;
 import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeViewController;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -159,32 +152,10 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
 
     @Bean
     public MappingJackson2HttpMessageConverter jsonConverter() {
-        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new Module() {
+        final String baseUrl = env.getRequiredProperty(PropertyNames.baseURL);
 
-            @Override
-            public String getModuleName() {
-                return "JsonIdHandler";
-            }
-
-            @Override
-            public Version version() {
-                return DatabindVersion.instance.version();
-            }
-
-            @Override
-            public void setupModule(SetupContext context) {
-                context.appendAnnotationIntrospector(
-                        new JsonIdAnnotationIntrospector(env.getRequiredProperty(PropertyNames.baseURL)));
-            }
-
-        });
-
-        converter.setObjectMapper(objectMapper);
-
-        return converter;
+        return JsonConverterFactory.JacksonHttpConverterWithModules(baseUrl);
     }
 
     @Bean
