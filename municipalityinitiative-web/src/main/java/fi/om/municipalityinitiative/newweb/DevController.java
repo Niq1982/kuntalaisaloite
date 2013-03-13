@@ -4,7 +4,10 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.web.BaseController;
 import fi.om.municipalityinitiative.web.Urls;
+import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.service.TestDataService;
+import fi.om.municipalityinitiative.newdto.ui.InitiativeUICreateDto;
+import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.util.TestDataTemplates;
 import org.joda.time.LocalDate;
 import org.springframework.context.annotation.Profile;
@@ -26,7 +29,7 @@ import java.util.Map;
 
 import static fi.om.municipalityinitiative.util.Locales.asLocalizedString;
 import static fi.om.municipalityinitiative.web.Urls.*;
-import static fi.om.municipalityinitiative.web.Views.TEST_DATA_GENERATION;
+import static fi.om.municipalityinitiative.web.Views.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -43,65 +46,50 @@ public class DevController extends BaseController {
     @RequestMapping(value={TEST_DATA_GENERATION_FI, TEST_DATA_GENERATION_SV}, method=GET)
     public String testDataGenerationGet(Model model, Locale locale, HttpServletRequest request) {
         Urls urls = Urls.get(locale);
-//        model.addAttribute(ALT_URI_ATTR, urls.alt().myAccount());
-//        
-//        User currentUser = userService.getUserInRole(Role.AUTHENTICATED);
-//        model.addAttribute("currentUser", currentUser);
-//
-//        
-//        String resultInfo = getResultInfo(request);
-//        
-//        if (resultInfo != null) {
-//            model.addAttribute("resultInfo", resultInfo);
-//        }
-//        model.addAttribute("testUsers", TestDataTemplates.getUserTemplates());
-//        model.addAttribute("testReserveAuthorUser", TestDataTemplates.RESERVE_AUTHOR_USER);
-//        model.addAttribute("testInitiatives", TestDataTemplates.getInitiativeTemplates());
         
+        model.addAttribute("testParticipants", TestDataTemplates.getParticipantTemplates());
+        model.addAttribute("testInitiatives", TestDataTemplates.getInitiativeTemplates());
         
         return TEST_DATA_GENERATION;
-        
     }
     
-//    @RequestMapping(value={TEST_DATA_GENERATION_FI, TEST_DATA_GENERATION_SV}, method=POST)
-//    public String testDataGenerationPost(Model model, Locale locale, HttpServletRequest request) {
-//        Urls urls = Urls.get(locale);
-//        User currentUser = userService.currentAsRegisteredUser();
-//
-//        testDataService.createTestUsersFromTemplates(TestDataTemplates.getUserTemplates());
-//
-//        List<InitiativeManagement> initiatives = TestDataTemplates.getInitiativeTemplates();
-//        List<InitiativeManagement> selectedInitiatives = Lists.newArrayList();
-//        
-//        for (int i = 0; i < initiatives.size(); i++) {
-//            if (request.getParameter("selections[" + i + "]") != null) {
-//                selectedInitiatives.add(initiatives.get(i));
-//                if (!Strings.isNullOrEmpty(request.getParameter("start_date")))
-//                    initiatives.get(i).setStartDate(new LocalDate(request.getParameter("start_date")));
-//                if (!Strings.isNullOrEmpty(request.getParameter("supportcount")))
-//                    initiatives.get(i).assignSupportCount(Integer.valueOf(request.getParameter("supportcount")));
-//                if (!Strings.isNullOrEmpty(request.getParameter("state"))) {
-//                    initiatives.get(i).assignState(InitiativeState.valueOf(request.getParameter("state")));
-//                }
-//            } 
-//        }
-//
-//        Integer amount = 1;
-//        if (!Strings.isNullOrEmpty(request.getParameter("amount"))) {
-//            amount = Integer.valueOf(request.getParameter("amount"));
-//        }
-//
-//
-//        String authorEmail0 = request.getParameter("emails[0]");
-//        String authorEmail1 = request.getParameter("emails[1]");
-//
-//        for (int i = 0; i < amount; ++i) {
-//            testDataService.createTestInitiativesFromTemplates(selectedInitiatives, currentUser, authorEmail0, authorEmail1);
-//        }
-//
-//        putResultInfo("Linkit aloitteisiin ...", request);
-//        return contextRelativeRedirect(urls.searchOwnOnly());
-//    }
+    @RequestMapping(value={TEST_DATA_GENERATION_FI, TEST_DATA_GENERATION_SV}, method=POST)
+    public String testDataGenerationPost(Model model, Locale locale, HttpServletRequest request) {
+        Urls urls = Urls.get(locale);
+
+        List<InitiativeUICreateDto> initiatives = TestDataTemplates.getInitiativeTemplates();
+        
+        Integer init = 0;
+        if (!Strings.isNullOrEmpty(request.getParameter("initiative"))) {
+            init = Integer.valueOf(request.getParameter("initiative"));
+        }
+        InitiativeUICreateDto selectedInitiative = initiatives.get(init);
+        
+        Integer amount = 1;
+        if (!Strings.isNullOrEmpty(request.getParameter("amount"))) {
+            amount = Integer.valueOf(request.getParameter("amount"));
+        }
+
+        List<ParticipantUICreateDto> participants = TestDataTemplates.getParticipantTemplates();
+
+        for (int i = 0; i < amount; ++i) {
+            Long initiativeId = testDataService.createTestMunicipalityInitiative(selectedInitiative);
+            
+            if (selectedInitiative.isCollectable()) {
+                for (int j = 0; j < participants.size(); j++) {
+                    Integer participantAmount = 1;
+                    if (!Strings.isNullOrEmpty(request.getParameter("participantAmount["+j+"]"))) {
+                        participantAmount = Integer.valueOf(request.getParameter("participantAmount["+j+"]"));
+                    }
+                    
+                    testDataService.createTestParticipant(initiativeId, participants.get(j), participantAmount);
+                }
+            }
+        }
+
+        putResultInfo("Linkit aloitteisiin ...", request);
+        return contextRelativeRedirect(urls.search());
+    }
 
     protected static final String RESULT_INFO_KEY = "resultInfo";
     

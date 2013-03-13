@@ -18,9 +18,13 @@
     
         .user-details, .initiative-details { margin:0.5em 0; }
         .user-details span { display:inline-block; }
-        .user-name { width:130px; }
-        .user-ssn { width:130px; }
-        .user-role { width:200px; }
+        .user-col { width:140px; }
+
+        input[type="text"] { margin-bottom:0.2em; }
+        input[type="text"].small { width:50px; }
+        input[type="text"].medium { width:100px; }
+
+        input.datepicker { width:100px; background-position:88px -57px; }
 
         /*.initiative { margin:0.2em 0; }
         .initiative-title { width:200px; margin-left:5px; }*/
@@ -31,24 +35,20 @@
 
     <h1>Testidatan luominen</h1>
 
-    <div class="system-msg msg-summary">Valitse haluamasi testialoitteet luotavaksi. Tarvittavat testikäyttäjät luodaan aina tarvittaessa.<br/>
-    Muista syöttää toimivat sähköpostiosoitteet aloitteiden vastuuhenkilöille (voi olla sama molemmille).<br/>
-    Jos yhtään aloitetta ei valita, luodaan vain virkamieskäyttäjät. (Virkamieskäyttäjät luodaan vain, jos niitä ei ole ennestään.)<br/>
-    Aloitteen tilan tarkemman kuvauksen saa näkyviin viemällä hiiren tilakoodin päälle.<br/>
-    <b>HUOM: Tämä sivu on käytössä vain testauksen aikana eikä tule olemaan osa lopullista sovellusta!</b><br/>
-    </div>
-    
-    <div class="content-block-header view">
-        <h2>Luo valmiiksi määritellyt aloitteet automaattisesti</h2>
+    <div class="system-msg msg-summary">
+        <p>Valitse haluamasi testialoitteet luotavaksi.</p>
+        <p><strong>HUOM: Tämä sivu on käytössä vain testauksen aikana eikä tule olemaan osa lopullista sovellusta!</strong></p>
     </div>
 
-<#-- TODO: Test data generation
-    <div class="view-block">        
+<#-- TODO: Test data generation -->
+    <div class="view-block">  
+        <h2>Luo valmiiksi määritellyt aloitteet automaattisesti</h2>
+        <#--      
         <div class="initiative-content-row">
             <h3>Virkamieskäyttäjät</h3>
             <div class="user-details">
                 <#if testUsers??>
-                    <span class="user-name title">Nimi</span><span class="user-ssn title">Hetu</span><span class="user-role title">Rooli</span>
+                    <span class="user-col title">Nimi</span><span class="user-ssn title">Hetu</span><span class="user-role title">Rooli</span>
 
                     <#list testUsers as testUser>   
                         <br class="clear" />
@@ -56,89 +56,133 @@
                             <#if testUser.om>OM</#if>
                             <#if testUser.vrk>VRK</#if>
                         </#assign>
-                        <span class="user-name">${testUser.firstNames!""} ${testUser.lastName!""}</span><span class="user-ssn">${testUser.ssn!""}</span><span class="user-role" >${role}</span>
+                        <span class="user-col">${testUser.firstNames!""} ${testUser.lastName!""}</span><span class="user-ssn">${testUser.ssn!""}</span><span class="user-role" >${role}</span>
+                        <span class="user-col">${testUser.firstNames!""} ${testUser.lastName!""}</span><span class="user-ssn">${testUser.ssn!""}</span><span class="user-role" >${role}</span>
                     </#list>
                 <#else>
                     Ei käyttäjiä
                 </#if>
             </div>
         </div>
+        -->
 
-        <form method="POST" action="${springMacroRequestContext.requestUri}">
-            <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-        <div class="initiative-content-row">
-            <h3>Vastuuhenkilöt</h3>
-            <div class="user-details">
-                    <span class="user-name title">Nimi</span><span class="user-ssn title">Hetu</span><span class="user-role title">Rooli</span><span class="author-email title">Sähköposti</span>
-
-                <#if currentUser??>
-                        <br class="clear" />
-                        <span class="user-name">${currentUser.firstNames!""} ${currentUser.lastName!""}</span><span class="user-ssn">${currentUser.ssn!""}</span><span class="user-role" >Vireillepanija, Edustaja</span><span><input name="emails[0]" type="text"></span><span style="margin-left:1em;">(sisäänkirjautuneena)</span>
-                </#if>
-                <#if testReserveAuthorUser??>
-                        <br class="clear" />
-                        <span class="user-name">${testReserveAuthorUser.firstNames!""} ${testReserveAuthorUser.lastName!""}</span><span class="user-ssn">${testReserveAuthorUser.ssn!""}</span><span class="user-role" >Varaedustaja</span><span><input name="emails[1]" type="text"></span>
-                </#if>
-            </div>
-        </div>
-        
-        <div class="initiative-content-row last">
-            <h3>Aloitteet</h3>
-            
-            <div class="initiative-details">
-                <#if testInitiatives??>
-                    <table>
-                    <tr>
-                        <th>
-                            <label><input type="checkbox" id="select-all" title="Valitse kaikki / Poista valinnat" class="trigger-tooltip" onClick="selectAll();" /></label>
-                            <span class="initiative-title title">Nimi</span>
-                        </th>
-                        <th>
-                            <span class="title">Tila</span>
-                        </th>
-
-                    </tr>
+    <form method="POST" action="${springMacroRequestContext.requestUri}">
+        <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+            <div class="initiative-content-row">
+                <h3>Aloitteen luoja</h3>
+                <div class="user-details cf">
+                    <span class="user-col title">Aloitteen luoja</span><span class="user-col title">Kunta</span>
+                    <span class="user-col title">Nimi saa näkyä</span>
                     
-                    <#list testInitiatives as testInitiative>
-                        <tr>
-                            <td>
-                            <label class="initiative">
-                                <input type="checkbox" id="selections[${testInitiative_index}]" name="selections[${testInitiative_index}]" class="select" />  
-                                <span class="initiative-title">${testInitiative.name.fi!""}</span>  
-                            </label>
-                            </td>
-                            <td>
-                                <span class="trigger-tooltip" title="<@u.enumDescription testInitiative.state />" >${testInitiative.state!""}</span>
-                            </td>
-
-                    </#list>
-                    </table>
-                <#else>
-                    Ei luotavia aloitteita
-                </#if>
+                    <br class="clear" />
+                    
+                    <span class="user-col">Teppo Testaaja</span><span class="user-col" >Tampere</span>
+                    <span class="user-col" >kyllä</span>
+                    
+                </div>
+                
+                <br class="clear" />
+                
+                <h3>Valitse osallistujien lukumäärä</h3>
+                <div class="user-details">
+                    <span class="user-col title">Osallistujat</span><span class="user-col title">Kunta</span>
+                    <span class="user-col title">Tyyppi</span><span class="user-col title">Nimi saa näkyä</span>
+                    <span class="user-col title">Lukumäärä</span>
+                    
+                    <br class="clear" />
+                    
+                    <#if testParticipants??>
+                        <#list testParticipants as participant>
+                            <span class="user-col">${participant.participantName}</span><span class="user-col" >${participant.homeMunicipality!""}</span>
+                            <span class="user-col">${(participant.franchise)?string("äänioikeutettu","jäsen")}</span><span class="user-col">${(participant.showName)?string("kyllä","ei")}</span>
+                            <span class="user-col"><input type="text" id="participantAmount[${participant_index}]" name="participantAmount[${participant_index}]" class="small" value="2" /></span>
+                            <br class="clear" />
+                        </#list>
+                    </#if>
+                    
+                    <#--
+                    <span class="user-col">Ossi Osallistuja</span><span class="user-col" >Tampere</span>
+                    <span class="user-col">äänioikeutettu</span><span class="user-col">kyllä</span>
+                    <span class="user-col"><input type="text" id="participantAmount[0]" name="participantAmount[0]" class="small" value="2" /></span>
+                
+                    <br class="clear" />
+                
+                    
+                    <span class="user-col">Ossi Osallistuja</span><span class="user-col" >Tampere</span>
+                    <span class="user-col">äänioikeutettu</span><span class="user-col">ei</span>
+                    <span class="user-col"><input type="text" id="participantAmount[0]" name="participantAmount[0]" class="small" value="2" /></span>
+                    
+                    <br class="clear" />
+                    
+                    
+                    <span class="user-col">Ossi Osallistuja</span><span class="user-col" >Helsinki</span>
+                    <span class="user-col">jäsen</span><span class="user-col">kyllä</span>
+                    <span class="user-col"><input type="text" id="participantAmount[0]" name="participantAmount[0]" class="small" value="2" /></span>
+                    
+                    <br class="clear" />
+                    
+                                        
+                    <span class="user-col">Ossi Osallistuja</span><span class="user-col" >Helsinki</span>
+                    <span class="user-col">jäsen</span><span class="user-col">ei</span>
+                    <span class="user-col"><input type="text" id="participantAmount[0]" name="participantAmount[0]" class="small" value="2" /></span>
+                    -->
+                </div>
             </div>
         
-        </div> 
-        <br />
+            <div class="initiative-content-row last">
+                <h3>Valitse aloite, aloitteen päivämäärä sekä lukumäärä</h3>
+                
+                <div class="initiative-details">
+                    <#if testInitiatives??>
+                        <table style="width:70%;">
+                        <tr>
+                            <th>
+                                <span class="initiative-title title">Nimi</span>
+                            </th>
+                            <th>
+                                <span class="title">Kerätään osallistujia</span>
+                            </th>
+    
+                        </tr>
+                        
+                        <#list testInitiatives as testInitiative>
+                            <tr>
+                                <td>
+                                <label class="initiative">
+                                    <#--<input type="checkbox" id="selections[${testInitiative_index}]" name="selections[${testInitiative_index}]" class="select" />-->
+                                    <input type="radio" id="selections[${testInitiative_index}]" name="initiative" value="${testInitiative_index}" class="select" />  
+                                    <span class="initiative-title">${testInitiative.name!""}</span>  
+                                </label>
+                                </td>
+                                <td>
+                                    ${(testInitiative.collectable)?string("kyllä","ei")}
+                                </td>
+    
+                        </#list>
+                        </table>
+                    <#else>
+                        Ei luotavia aloitteita
+                    </#if>
+                </div>
+            </div> 
 
+            <div class="user-details">
+                <span class="user-col title">Päivämäärä</span><span class="user-col title">Lukumäärä</span>
+                
+                <br />
+                
+                <span class="user-col "><input type="text" class="medium datepicker" value="13.3.2013" id="date" name="date"></span>
+                <span class="user-col "><input type="text" class="small" value="1" id="amount" name="amount"></span>
+            </div>
+            <br />
+            
             <button class="small-button green" value="true" type="submit"><span class="small-icon save-and-send">Luo käyttäjät ja aloitteet</span></button>
         </form>        
     </div>
 
-    <#if resultInfo??>
-        <div id="result" class="content-block-header">
-            <h2>Luodut aloitteet</h2>
-        </div>
-        
-        <div class="view-block">        
-            <div class="initiative-content-row last">
-                ${resultInfo}
-            </div>
-        </div>
-    </#if>
--->
 
     <#-- TODO: The JavaScript below could be polished if appropriate. -->
+    <#--
     <script type="text/javascript">
         var $select = null;
         
@@ -181,6 +225,7 @@
            });
        }
     </script>
+    -->
 
 </@l.main>
 

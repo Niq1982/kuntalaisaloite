@@ -12,9 +12,10 @@
     <#-- Participate form errors summary -->    
     <@u.errorsSummary path="participant.*" prefix="participant."/>
 
-    <noscript>
+    <#-- Do not use NOSCRIPT here as it will be descendant of another NOSCRIPT. -->
+    <div class="js-hide">
         <@f.cookieWarning springMacroRequestContext.requestUri />
-    </noscript>
+    </div>
     
     <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-participate" class="sodirty <#if hasErrors>has-errors</#if>">
         <@f.securityFilters/>

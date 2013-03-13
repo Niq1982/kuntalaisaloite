@@ -2,15 +2,18 @@ package fi.om.municipalityinitiative.newdto.service;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 import javax.annotation.Resource;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUICreateDto;
+import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.service.EmailService;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
@@ -28,45 +31,44 @@ public class TestDataService {
 
 
     @Transactional(readOnly = false)
-//    public Long createTestMunicipalityInitiative(InitiativeUICreateDto createDto, Locale locale) {
-    public void createTestMunicipalityInitiative(List<InitiativeUICreateDto> initiatives, Locale locale) {
-        if (initiatives.size() == 0) {
-              return; // nothing to create
+    public Long createTestMunicipalityInitiative(InitiativeUICreateDto createDto) {
+    
+        Maybe<String> managementHash;
+        if (createDto.isCollectable()) {
+            managementHash = Maybe.of(TestHelper.TEST_MANAGEMENT_HASH);
         }
-//
-//        Maybe<String> managementHash;
-//        if (createDto.isCollectable()) {
-//            managementHash = Maybe.of(RandomHashGenerator.randomString(40));
-//        }
-//        else {
-//            managementHash = Maybe.absent();
-//        }
-//
-//        InitiativeCreateDto initiativeCreateDto = InitiativeCreateDto.parse(createDto, managementHash);
-//
-//        Long initiativeId = initiativeDao.create(initiativeCreateDto);
-//        Long participantId = participantDao.create(ParticipantCreateDto.parse(createDto, initiativeId));
-//        initiativeDao.assignAuthor(initiativeId, participantId);
-        
-//        for (InitiativeUICreateDto initiative : initiatives) {
-//            createTestInitiativeFromTemplate(initiative);
-//        }
+        else {
+            managementHash = Maybe.absent();
+        }
 
-//        return initiativeId;
+        InitiativeCreateDto initiativeCreateDto = InitiativeCreateDto.parse(createDto, managementHash);
+
+        Long initiativeId = initiativeDao.create(initiativeCreateDto);
+        Long participantId = participantDao.create(ParticipantCreateDto.parse(createDto, initiativeId));
+        initiativeDao.assignAuthor(initiativeId, participantId);
+        return initiativeId;
+
     }
     
-//    private Long createTestInitiativeFromTemplate(InitiativeUICreateDto initiative) {
-//        initiative.assignEndDate(initiative.getStartDate(), initiativeSettings.getVotingDuration());
-//        Long id = initiativeDao.create(initiative);
-//
-//        InitiativeManagement createdInitiative = initiativeDao.get(id);
+    @Transactional(readOnly = false)
+//    public void createTestParticipant(Long initiativeId, String name, boolean franchise, boolean showName, int amount) {
+    public void createTestParticipant(Long initiativeId, ParticipantUICreateDto createDto, int amount) {
 
-//        queryFactory.update(QInitiative.initiative)
-//          .set(QInitiative.initiative.supportcount, initiative.getSupportCount())
-//          .where(QInitiative.initiative.id.eq(createdInitiative.getId()))
-//          .execute();
-
-//        return id;
-//    }
+//        List<Municipality> municipalities = municipalityDao.findMunicipalities(true);
+//        
+//        Municipality municipality = municipalities.get(municipalities.size() % new Random().nextInt()); 
+//        ParticipantUICreateDto createDto = new ParticipantUICreateDto();
+//        createDto.setParticipantName(name);
+//        createDto.setHomeMunicipality(municipality.getId());
+//        createDto.setFranchise(franchise);
+//        createDto.setShowName(showName);
+        
+//        ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
+        
+        for (int i = 0; i < amount; ++i) {
+            participantDao.create(ParticipantCreateDto.parse(createDto,  initiativeId));
+        }
+        
+    }
     
 }
