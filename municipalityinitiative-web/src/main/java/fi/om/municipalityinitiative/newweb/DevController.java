@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.web.BaseController;
 import fi.om.municipalityinitiative.web.Urls;
+import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.service.TestDataService;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUICreateDto;
@@ -39,6 +40,9 @@ public class DevController extends BaseController {
 
     @Resource TestDataService testDataService;
     
+    @Resource
+    MunicipalityDao municipalityDao;
+    
     public DevController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
     }
@@ -47,8 +51,9 @@ public class DevController extends BaseController {
     public String testDataGenerationGet(Model model, Locale locale, HttpServletRequest request) {
         Urls urls = Urls.get(locale);
         
-        model.addAttribute("testParticipants", TestDataTemplates.getParticipantTemplates());
-        model.addAttribute("testInitiatives", TestDataTemplates.getInitiativeTemplates());
+        model.addAttribute("testParticipants", TestDataTemplates.getParticipantTemplates(null,null));
+        model.addAttribute("testInitiatives", TestDataTemplates.getInitiativeTemplates(null));
+        model.addAttribute("municipalities", municipalityDao.findMunicipalities(true));
         
         return TEST_DATA_GENERATION;
     }
@@ -56,21 +61,25 @@ public class DevController extends BaseController {
     @RequestMapping(value={TEST_DATA_GENERATION_FI, TEST_DATA_GENERATION_SV}, method=POST)
     public String testDataGenerationPost(Model model, Locale locale, HttpServletRequest request) {
         Urls urls = Urls.get(locale);
-
-        List<InitiativeUICreateDto> initiatives = TestDataTemplates.getInitiativeTemplates();
         
-        Integer init = 0;
+        Long municipalityId = Long.valueOf(request.getParameter("municipalityId"));
+        Long homeMunicipalityId = municipalityId;
+
+        List<InitiativeUICreateDto> initiatives = TestDataTemplates.getInitiativeTemplates(municipalityId);
+        
+        Integer initiativeSelection = 0;
         if (!Strings.isNullOrEmpty(request.getParameter("initiative"))) {
-            init = Integer.valueOf(request.getParameter("initiative"));
+            initiativeSelection = Integer.valueOf(request.getParameter("initiative"));
         }
-        InitiativeUICreateDto selectedInitiative = initiatives.get(init);
+        InitiativeUICreateDto selectedInitiative = initiatives.get(initiativeSelection);
         
         Integer amount = 1;
         if (!Strings.isNullOrEmpty(request.getParameter("amount"))) {
             amount = Integer.valueOf(request.getParameter("amount"));
         }
 
-        List<ParticipantUICreateDto> participants = TestDataTemplates.getParticipantTemplates();
+        homeMunicipalityId = Long.valueOf(request.getParameter("homeMunicipalityId"));
+        List<ParticipantUICreateDto> participants = TestDataTemplates.getParticipantTemplates(municipalityId, homeMunicipalityId);
 
         for (int i = 0; i < amount; ++i) {
             Long initiativeId = testDataService.createTestMunicipalityInitiative(selectedInitiative);
@@ -81,7 +90,7 @@ public class DevController extends BaseController {
                     if (!Strings.isNullOrEmpty(request.getParameter("participantAmount["+j+"]"))) {
                         participantAmount = Integer.valueOf(request.getParameter("participantAmount["+j+"]"));
                     }
-                    
+
                     testDataService.createTestParticipant(initiativeId, participants.get(j), participantAmount);
                 }
             }

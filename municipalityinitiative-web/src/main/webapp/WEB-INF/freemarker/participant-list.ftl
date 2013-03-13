@@ -41,12 +41,12 @@
         <#if RequestParameters['show']?? && RequestParameters['show'] == "others">
             <h2><@u.message "participantList.noFranchise.title" /></h2>
             <h3><@u.messageHTML key="participantList.publicNamesCount" args=[participantCount.noFranchise.total!""] /></h3>
-            <br/>
+            
             <@participantList participants.noFranchise />
         <#else>
             <h2><@u.message "participantList.franchise.title" /></h2>
             <h3><@u.messageHTML key="participantList.publicNamesCount" args=[participantCount.franchise.total!""] /></h3>
-            <br/>
+            
             <@participantList participants.franchise />
         </#if>
 
@@ -123,7 +123,7 @@
 
         <#list participants as participant>
             <#if participant_index == 0><ul class="participant-list no-style"></#if>
-                <li><span class="date"><@u.localDate participant.participateDate!"" /></span> <span class="name-container"><span class="name">${participant.name!""}</span> <span class="home-municipality">- ${participant.homeMunicipality.name!""}</span></span></li>
+                <li><span class="date"><@u.localDate participant.participateDate!"" /></span> <span class="name-container"><span class="name">${participant.name!""}</span> <span class="home-municipality">- ${participant.homeMunicipality.getLocalizedName(locale)!""}</span></span></li>
                 
                 <#if columns == 2 && participant_index == cue>
                     </ul></div>

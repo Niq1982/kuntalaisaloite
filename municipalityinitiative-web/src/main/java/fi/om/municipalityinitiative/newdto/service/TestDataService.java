@@ -8,7 +8,6 @@ import javax.annotation.Resource;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
@@ -35,7 +34,7 @@ public class TestDataService {
     
         Maybe<String> managementHash;
         if (createDto.isCollectable()) {
-            managementHash = Maybe.of(TestHelper.TEST_MANAGEMENT_HASH);
+            managementHash = Maybe.of("0000000000111111111122222222223333333333");
         }
         else {
             managementHash = Maybe.absent();
@@ -51,24 +50,10 @@ public class TestDataService {
     }
     
     @Transactional(readOnly = false)
-//    public void createTestParticipant(Long initiativeId, String name, boolean franchise, boolean showName, int amount) {
     public void createTestParticipant(Long initiativeId, ParticipantUICreateDto createDto, int amount) {
-
-//        List<Municipality> municipalities = municipalityDao.findMunicipalities(true);
-//        
-//        Municipality municipality = municipalities.get(municipalities.size() % new Random().nextInt()); 
-//        ParticipantUICreateDto createDto = new ParticipantUICreateDto();
-//        createDto.setParticipantName(name);
-//        createDto.setHomeMunicipality(municipality.getId());
-//        createDto.setFranchise(franchise);
-//        createDto.setShowName(showName);
-        
-//        ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
-        
         for (int i = 0; i < amount; ++i) {
-            participantDao.create(ParticipantCreateDto.parse(createDto,  initiativeId));
+            participantDao.create(ParticipantCreateDto.parse(createDto, initiativeId));
         }
-        
     }
     
 }
