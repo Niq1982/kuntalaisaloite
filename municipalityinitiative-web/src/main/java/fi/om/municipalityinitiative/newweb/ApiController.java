@@ -49,7 +49,7 @@ public class ApiController extends BaseController {
 
         InitiativeJson initiativeJsonObject = jsonDataService.createInitiativeJsonObject();
         String json = jsonConverter.getObjectMapper().writeValueAsString(initiativeJsonObject);
-        model.addAttribute("initiative", JsonJokuParseri.toParts(json));
+        model.addAttribute("initiativeDetails", JsonJokuParseri.toParts(json));
 
         List<InitiativeListJson> initiativeListJson = jsonDataService.createInitiativeListJsonObject();
         json = jsonConverter.getObjectMapper().writeValueAsString(initiativeListJson);

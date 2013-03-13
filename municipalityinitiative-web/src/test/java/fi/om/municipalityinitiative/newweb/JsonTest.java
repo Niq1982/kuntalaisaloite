@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.newweb;
 
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.google.common.base.Joiner;
+import fi.om.municipalityinitiative.conf.JsonConverterFactory;
 import fi.om.municipalityinitiative.json.JsonJokuParseri;
 import fi.om.municipalityinitiative.util.Locales;
 import org.junit.Before;
@@ -24,14 +25,15 @@ import static org.mockito.Mockito.mock;
  */
 public class JsonTest {
 
-    private MappingJackson2HttpMessageConverter jsonConverter = new MappingJackson2HttpMessageConverter();
+    public static final String HTTP_BASE_URL = "http://baseUrl";
+
+    private MappingJackson2HttpMessageConverter jsonConverter = JsonConverterFactory.JacksonHttpConverterWithModules(HTTP_BASE_URL);
     private ApiController apiController = new ApiController(false, "");
     private ExtendedModelMap model;
 
     @Before
     public void setup() throws IOException {
         apiController.jsonConverter = jsonConverter;
-        jsonConverter.getObjectMapper().enable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY);
         model = new ExtendedModelMap();
         apiController.api(model, Locales.LOCALE_FI, mock(HttpServletRequest.class));
 
@@ -39,16 +41,15 @@ public class JsonTest {
 
     @Test
     public void initiative_details_have_not_changed() throws IOException {
-        List<JsonJokuParseri.IndentedString> initiatives = getJsonDataListFromModel("initiative");
+        List<JsonJokuParseri.IndentedString> initiatives = getJsonDataListFromModel("initiativeDetails");
         String join = joinAsString(initiatives);
-        System.out.println(join);
         assertThat(join, is("{\n" +
                 "\"authorName\":\"Teemu Teekkari\",\n" +
                 "\"collectable\":true,\n" +
                 "\"createTime\":\"2010-01-01\",\n" +
-                "\"id\":1,\n" +
+                "\"id\":\"http://baseUrl/api/v1/initiatives/1\",\n" +
                 "\"municipality\":{\n" +
-                "\"id\":1,\n" +
+                "\"id\":\"http://baseUrl/api/v1/municipalities/1\",\n" +
                 "\"nameFi\":\"Tampere\",\n" +
                 "\"nameSv\":\"Tammerfors\"\n" +
                 "},\n" +
@@ -71,7 +72,7 @@ public class JsonTest {
                 "{\n" +
                 "\"franchise\":true,\n" +
                 "\"homeMunicipality\":{\n" +
-                "\"id\":1,\n" +
+                "\"id\":\"http://baseUrl/api/v1/municipalities/1\",\n" +
                 "\"nameFi\":\"Tampere\",\n" +
                 "\"nameSv\":\"Tammerfors\"\n" +
                 "},\n" +
@@ -87,13 +88,14 @@ public class JsonTest {
     public void initiative_list_has_not_changed() throws IOException {
         List<JsonJokuParseri.IndentedString> initiatives = getJsonDataListFromModel("initiativeList");
         String join = joinAsString(initiatives);
+
         assertThat(join, is("[\n" +
                 "{\n" +
                 "\"collectable\":true,\n" +
                 "\"createTime\":\"2012-12-01\",\n" +
-                "\"id\":1,\n" +
+                "\"id\":\"http://baseUrl/api/v1/initiatives/1\",\n" +
                 "\"municipality\":{\n" +
-                "\"id\":1,\n" +
+                "\"id\":\"http://baseUrl/api/v1/municipalities/1\",\n" +
                 "\"nameFi\":\"Tampere\",\n" +
                 "\"nameSv\":\"Tammerfors\"\n" +
                 "},\n" +
@@ -108,9 +110,11 @@ public class JsonTest {
         List<JsonJokuParseri.IndentedString> municipalities = getJsonDataListFromModel("municipalities");
         String join = joinAsString(municipalities);
 
+        System.out.println(join);
+
         assertThat(join, is("[\n" +
                 "{\n" +
-                "\"id\":1,\n" +
+                "\"id\":\"http://baseUrl/api/v1/municipalities/1\",\n" +
                 "\"nameFi\":\"Tampere\",\n" +
                 "\"nameSv\":\"Tammerfors\"\n" +
                 "}]"));

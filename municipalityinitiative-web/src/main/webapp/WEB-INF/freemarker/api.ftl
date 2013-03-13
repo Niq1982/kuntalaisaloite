@@ -49,7 +49,7 @@ Id of an initiative is an URI of initiative details in <a href="http://www.json.
     </tr>
   </thead>
   <tbody>
-    <#list initiative as i>
+    <#list initiativeDetails as i>
     <tr>
         <td class="apiExample" style="padding-left:${i.indent}0px">
             ${i.value}
