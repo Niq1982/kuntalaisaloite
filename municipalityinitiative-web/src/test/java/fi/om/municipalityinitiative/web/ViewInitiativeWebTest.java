@@ -12,8 +12,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
     /**
      * Localization keys as constants.
      */
-    private static final String MSG_BTN_SEND = "action.send";
-    private static final String MSG_BTN_PARTICIPATE = "action.participate";
+    private static final String MANAGEMENT_WARNING_TITLE = "management.warning.title";
     private static final String ERROR_404_TITLE = "error.404.title";
     
     @Test
@@ -24,8 +23,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
 
         open(urls.management(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
 
-//        assertTitle("Hallintasivu"); // There is no such title. 
-        assertThat(driver.findElement(By.id("js-send-to-municipality")).getText(), is(getMessage(MSG_BTN_SEND)));
+        assertThat(driver.findElement(By.tagName("h2")).getText(), is(getMessage(MANAGEMENT_WARNING_TITLE)));
     }
 
     @Test

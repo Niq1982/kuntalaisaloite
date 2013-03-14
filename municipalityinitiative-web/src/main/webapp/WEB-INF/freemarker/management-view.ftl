@@ -14,7 +14,13 @@
     <#--
      * Warning message for the management page.
     -->
-    <@u.systemMessage path="management.warning" type="warning" args=[urls.view(initiative.id)] showClose=false />
+    <#assign managementWarningMessageHTML>
+        <h2><@u.message "management.warning.title" /></h2>
+        <p><@u.messageHTML "management.warning.description" /></p>
+        <a href="${urls.view(initiative.id)}"><@u.message "management.warning.link" /></a>
+    </#assign>
+    
+    <@u.systemMessageHTML html=managementWarningMessageHTML type="warning" />
 </#assign>
 
 <#--
