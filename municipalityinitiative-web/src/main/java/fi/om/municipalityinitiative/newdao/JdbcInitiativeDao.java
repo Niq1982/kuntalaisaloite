@@ -285,10 +285,10 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .set(QAuthor.author.managementHash, managementHash)
                 .executeWithKey(QAuthor.author.id);
 
-        Assert.isTrue(queryFactory.update(municipalityInitiative)
+        assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.newAuthorId, newAuthorId)
                 .where(municipalityInitiative.id.eq(initiativeId))
-                .execute() == 1, "Should have saved author to initiative");
+                .execute());
 
         return initiativeId;
     }
