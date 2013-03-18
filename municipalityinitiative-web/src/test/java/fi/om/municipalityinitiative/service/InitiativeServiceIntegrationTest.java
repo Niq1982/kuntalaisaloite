@@ -2,11 +2,14 @@ package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
+import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,6 +32,9 @@ public class InitiativeServiceIntegrationTest {
 
     @Resource
     private InitiativeService service;
+
+    @Resource
+    private ParticipantDao participantDao;
 
     @Resource
     private JavaMailSenderFake javaMailSenderFake;
@@ -220,6 +226,7 @@ public class InitiativeServiceIntegrationTest {
     }
 
     @Test
+    // XXX: In the future initiative should not have the hash, author should.
     public void preparing_initiative_creates_hash() {
         Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise(), Locales.LOCALE_FI);
         InitiativeViewInfo municipalityInitiative = service.getMunicipalityInitiative(initiativeId, RandomHashGenerator.getPrevious(), Locales.LOCALE_FI);
@@ -227,7 +234,18 @@ public class InitiativeServiceIntegrationTest {
         assertThat(municipalityInitiative.getManagementHash().get(), is(RandomHashGenerator.getPrevious()));
     }
 
+    @Test
+    public void preparing_initiative_sets_participant_information() {
+        Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise(), Locales.LOCALE_FI);
 
+        assertThat(service.findMunicipalityInitiatives(new InitiativeSearch()).get(0).getParticipantCount(), is(1L));
+
+        Participant participant = participantDao.findAllParticipants(initiativeId).get(0);
+        assertThat(participant.getHomeMunicipality().getId(), is(testMunicipality.getId()));
+        assertThat(participant.isFranchise(), is(true));
+        assertThat(participant.getParticipateDate(), is(LocalDate.now()));
+
+    }
 
     private static PrepareInitiativeDto initiativePrepareDtoWithFranchise() {
         PrepareInitiativeDto prepareInitiativeDto = new PrepareInitiativeDto();

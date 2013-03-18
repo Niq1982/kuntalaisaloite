@@ -61,6 +61,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .set(participant.franchise, franchise)
                 .set(participant.municipalityId, homeMunicipality)
                 .set(participant.municipalityInitiativeId, initiativeId)
+                .set(participant.showName, true) // Default is true
                 .executeWithKey(participant.id);
 
         // Increase denormalized participantCount if collectable initiative.
