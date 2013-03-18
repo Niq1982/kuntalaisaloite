@@ -245,7 +245,16 @@ public class InitiativeServiceIntegrationTest {
         assertThat(participant.getHomeMunicipality().getId(), is(testMunicipality.getId()));
         assertThat(participant.isFranchise(), is(true));
         assertThat(participant.getParticipateDate(), is(LocalDate.now()));
+    }
 
+    @Test
+    public void preparing_initiative_saves_email() {
+        PrepareInitiativeDto createDto = initiativePrepareDtoWithFranchise();
+        createDto.setEmail("any@example.com");
+        Long initiativeId = service.prepareInitiative(createDto, Locales.LOCALE_FI);
+
+        // TODO: Change to getContactInfo etc.
+        assertThat(service.getInitiativeForEdit(initiativeId, RandomHashGenerator.getPrevious()).getContactInfo().getEmail(), is(createDto.getEmail()));
     }
 
     @Test(expected = AccessDeniedException.class)

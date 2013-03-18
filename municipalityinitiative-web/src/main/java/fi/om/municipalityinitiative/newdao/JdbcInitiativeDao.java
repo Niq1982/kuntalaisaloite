@@ -272,7 +272,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     @Transactional(readOnly = false)
-    public Long prepareInitiative(Long municipalityId, String managementHash) {
+    public Long prepareInitiative(Long municipalityId, String email, String managementHash) {
         Long initiativeId = queryFactory.insert(municipalityInitiative)
                 .set(municipalityInitiative.managementHash, managementHash) // XXX: Remove when not needed
                 .set(municipalityInitiative.municipalityId, municipalityId)
@@ -283,6 +283,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
         Long newAuthorId = queryFactory.insert(QAuthor.author)
                 .set(QAuthor.author.initiativeId, initiativeId)
                 .set(QAuthor.author.managementHash, managementHash)
+                .set(QAuthor.author.email, email)
                 .executeWithKey(QAuthor.author.id);
 
         assertSingleAffection(queryFactory.update(municipalityInitiative)

@@ -1,9 +1,13 @@
 package fi.om.municipalityinitiative.newdto.ui;
 
+import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.newdto.service.CreateDtoTimeValidation;
 import fi.om.municipalityinitiative.validation.InitiativeCreateParticipantValidationInfo;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 public class PrepareInitiativeDto
         extends CreateDtoTimeValidation
@@ -18,6 +22,11 @@ public class PrepareInitiativeDto
     private Long homeMunicipality;
 
     private Boolean franchise;
+
+    @NotEmpty
+    @Pattern(regexp = ContactInfo.EMAIL_PATTERN)
+    @Size(max = InitiativeConstants.CONTACT_EMAIL_MAX)
+    private String email;
 
     @Override
     public boolean isCollectable() {
@@ -58,5 +67,13 @@ public class PrepareInitiativeDto
 
     public void setFranchise(Boolean franchise) {
         this.franchise = franchise;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
