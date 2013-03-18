@@ -43,6 +43,8 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
 
     public final StringPath name = createString("name");
 
+    public final NumberPath<Long> newAuthorId = createNumber("new_author_id", Long.class);
+
     public final NumberPath<Integer> participantCount = createNumber("participant_count", Integer.class);
 
     public final StringPath proposal = createString("proposal");
@@ -53,7 +55,11 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
 
     public final com.mysema.query.sql.ForeignKey<QParticipant> municipalityInitiativeAuthorFk = createForeignKey(authorId, "id");
 
+    public final com.mysema.query.sql.ForeignKey<QAuthor> initiativeAuthorFk = createForeignKey(newAuthorId, "id");
+
     public final com.mysema.query.sql.ForeignKey<QMunicipality> municipalityInitiativeMunicipalityFk = createForeignKey(municipalityId, "id");
+
+    public final com.mysema.query.sql.ForeignKey<QAuthor> _authorInitiativeFk = createInvForeignKey(id, "initiative_id");
 
     public final com.mysema.query.sql.ForeignKey<QParticipant> _participantMunicipalityInitiativeIdFk = createInvForeignKey(id, "municipality_initiative_id");
 
