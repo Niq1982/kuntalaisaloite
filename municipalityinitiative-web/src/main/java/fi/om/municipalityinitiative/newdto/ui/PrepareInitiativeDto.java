@@ -1,8 +1,11 @@
 package fi.om.municipalityinitiative.newdto.ui;
 
+import fi.om.municipalityinitiative.newdto.service.CreateDtoTimeValidation;
 import fi.om.municipalityinitiative.validation.InitiativeCreateParticipantValidationInfo;
 
-public class PrepareInitiativeDto implements InitiativeCreateParticipantValidationInfo {
+public class PrepareInitiativeDto
+        extends CreateDtoTimeValidation
+        implements InitiativeCreateParticipantValidationInfo {
 
     private boolean collectable;
     private Long municipality;

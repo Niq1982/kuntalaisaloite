@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.newweb;
 
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUICreateDto;
+import fi.om.municipalityinitiative.newdto.ui.PrepareInitiativeDto;
 import fi.om.municipalityinitiative.service.InitiativeService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.service.ValidationService;
@@ -25,6 +26,7 @@ import java.util.Locale;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
 import static fi.om.municipalityinitiative.web.Views.CREATE_VIEW;
+import static fi.om.municipalityinitiative.web.Views.PREPARE_VIEW;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -96,6 +98,16 @@ public class MunicipalityInitiativeCreateController extends BaseController {
         Long initiativeId = initiativeService.createMunicipalityInitiative(initiative, locale);
         return redirectWithMessage(urls.view(initiativeId), RequestMessage.SAVE, request);
         
+    }
+
+    @RequestMapping(value = { PREPARE_FI, PREPARE_SV }, method = GET)
+    public String prepareGet(Model model, Locale locale, HttpServletRequest request) {
+        Urls urls = Urls.get(locale);
+        model.addAttribute(ALT_URI_ATTR, urls.alt().createNew());
+
+        model.addAttribute("initiative", new PrepareInitiativeDto());
+        model.addAttribute("municipalities", municipalityService.findAllMunicipalities(locale));
+        return PREPARE_VIEW;
     }
     
     @InitBinder

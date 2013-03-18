@@ -162,6 +162,10 @@ public final class Urls {
 
     public static final String CREATE_SV =    "/sv/initiativ";
 
+    public static final String PREPARE_FI =    "/fi/aloite_prepare";
+
+    public static final String PREPARE_SV  =    "/sv/initiativ_prepare";
+
     public static final String VIEW_FI = CREATE_FI + "/" + ID_PARAMETER;
 
     public static final String VIEW_SV = CREATE_SV + "/" + ID_PARAMETER;
@@ -301,6 +305,10 @@ public final class Urls {
     
     public String createNew() {
         return getLocalizedPageUrl(CREATE_FI, CREATE_SV);
+    }
+
+    public String prepare() {
+        return getLocalizedPageUrl(PREPARE_FI, PREPARE_SV);
     }
     
     public String paramSendInvitations() {
