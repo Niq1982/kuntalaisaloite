@@ -109,6 +109,27 @@ public class MunicipalityInitiativeCreateController extends BaseController {
         model.addAttribute("municipalities", municipalityService.findAllMunicipalities(locale));
         return PREPARE_VIEW;
     }
+
+    @RequestMapping(value={ PREPARE_FI, PREPARE_SV }, method=POST)
+    public String preparePost(@ModelAttribute("initiative") PrepareInitiativeDto initiative,
+                             BindingResult bindingResult,
+                             Model model,
+                             Locale locale,
+                             HttpServletRequest request) {
+
+        if (validionService.validationErrors(initiative, bindingResult, model)) {
+            model.addAttribute("initiative", initiative);
+            model.addAttribute("municipalities", municipalityService.findAllMunicipalities(locale));
+            return PREPARE_VIEW;
+        }
+
+        Urls urls = Urls.get(locale);
+
+        initiative.setCollectable(true);
+
+        Long initiativeId = initiativeService.prepareInitiative(initiative, locale);
+        return redirectWithMessage(urls.view(initiativeId), RequestMessage.SAVE, request);
+    }
     
     @InitBinder
     public void initBinder(WebDataBinder binder, Locale locale) {

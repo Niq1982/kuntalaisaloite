@@ -3,13 +3,20 @@ package fi.om.municipalityinitiative.newdto.ui;
 import fi.om.municipalityinitiative.newdto.service.CreateDtoTimeValidation;
 import fi.om.municipalityinitiative.validation.InitiativeCreateParticipantValidationInfo;
 
+import javax.validation.constraints.NotNull;
+
 public class PrepareInitiativeDto
         extends CreateDtoTimeValidation
         implements InitiativeCreateParticipantValidationInfo {
 
     private boolean collectable;
+
+    @NotNull
     private Long municipality;
+
+    @NotNull
     private Long homeMunicipality;
+
     private Boolean franchise;
 
     @Override
