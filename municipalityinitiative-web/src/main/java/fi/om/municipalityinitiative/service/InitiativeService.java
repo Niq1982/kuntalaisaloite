@@ -10,6 +10,7 @@ import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.email.InitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.InitiativeCreateDto;
+import fi.om.municipalityinitiative.newdto.service.InitiativeEditDto;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.util.Locales;
@@ -166,5 +167,13 @@ public class InitiativeService {
     // TODO: This should be used for getting initiative for edit
     public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId, String givenManagementHash, Locale locale) {
         return InitiativeViewInfo.parse(initiativeDao.getById(initiativeId), locale);
+    }
+
+    public InitiativeEditDto getInitiativeForEdit(Long initiativeId, String managementHash) {
+        InitiativeEditDto initiativeForEdit = initiativeDao.getInitiativeForEdit(initiativeId);
+        if (!initiativeForEdit.getManagementHash().equals(managementHash)) {
+            throw new AccessDeniedException("Invalid management hash");
+        }
+        return initiativeForEdit;
     }
 }
