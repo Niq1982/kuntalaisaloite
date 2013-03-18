@@ -4,9 +4,9 @@ import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.InitiativeCreateDto;
-import fi.om.municipalityinitiative.newdto.service.InitiativeEditDto;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
+import fi.om.municipalityinitiative.newdto.ui.InitiativeUIEditDto;
 import fi.om.municipalityinitiative.util.Maybe;
 
 import java.util.List;
@@ -29,5 +29,7 @@ public interface InitiativeDao {
 
     Long prepareInitiative(Long municipalityId, String managementHash);
 
-    InitiativeEditDto getInitiativeForEdit(Long initiativeId);
+    InitiativeUIEditDto getInitiativeForEdit(Long initiativeId);
+
+    void updateInitiativeDraft(Long initiativeId, InitiativeUIEditDto editDto);
 }

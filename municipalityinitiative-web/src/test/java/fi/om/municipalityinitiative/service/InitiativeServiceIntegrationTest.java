@@ -4,7 +4,7 @@ import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
-import fi.om.municipalityinitiative.newdto.service.InitiativeEditDto;
+import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
@@ -254,14 +254,52 @@ public class InitiativeServiceIntegrationTest {
         service.getInitiativeForEdit(initiativeId, "some invalid management hash");
     }
 
+    @Test(expected = AccessDeniedException.class)
+    public void editing_initiative_throws_exception_if_wrong_management_hash() {
+        Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise(), Locales.LOCALE_FI);
+
+        InitiativeUIEditDto editDto = new InitiativeUIEditDto(new Municipality(testMunicipality.getId(), testMunicipality.getName(), testMunicipality.getName()));
+        editDto.setManagementHash("invalid management hash");
+
+        service.updateInitiativeDraft(initiativeId, editDto);
+    }
+
+    @Test
+    public void editing_initiative_updates_all_required_fields() {
+
+        Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise(), Locales.LOCALE_FI);
+
+        InitiativeUIEditDto editDto = new InitiativeUIEditDto(new Municipality(testMunicipality.getId(), testMunicipality.getName(), testMunicipality.getName()));
+        editDto.setManagementHash(RandomHashGenerator.getPrevious());
+
+        ContactInfo contactInfo = new ContactInfo();
+        contactInfo.setEmail("updated email");
+        contactInfo.setAddress("updated address");
+        contactInfo.setPhone("updated phone");
+        contactInfo.setName("updated author name");
+        editDto.setContactInfo(contactInfo);
+        editDto.setName("updated initiative name");
+        editDto.setProposal("updated proposal");
+        editDto.setShowName(false); // As far as default is true ...
+
+        service.updateInitiativeDraft(initiativeId, editDto);
+
+        InitiativeUIEditDto updated = service.getInitiativeForEdit(initiativeId, RandomHashGenerator.getPrevious());
+
+        ReflectionTestUtils.assertReflectionEquals(updated.getContactInfo(), contactInfo);
+        assertThat(updated.getName(), is(editDto.getName()));
+        assertThat(updated.getProposal(), is(editDto.getProposal()));
+        assertThat(updated.getShowName(), is(editDto.getShowName()));
+
+    }
+
     @Test
     public void get_initiative_for_edit_has_all_information() {
         Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise(), Locales.LOCALE_FI);
 
         String managementHash = RandomHashGenerator.getPrevious();
 
-        InitiativeEditDto initiativeForEdit = service.getInitiativeForEdit(initiativeId, managementHash);
-        assertThat(initiativeForEdit.getId(), is(initiativeId));
+        InitiativeUIEditDto initiativeForEdit = service.getInitiativeForEdit(initiativeId, managementHash);
         assertThat(initiativeForEdit.getManagementHash(), is(managementHash));
         assertThat(initiativeForEdit.getMunicipality().getId(), is(testMunicipality.getId()));
     }

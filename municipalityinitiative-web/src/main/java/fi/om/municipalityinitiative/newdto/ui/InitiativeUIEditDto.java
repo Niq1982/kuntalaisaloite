@@ -1,8 +1,9 @@
-package fi.om.municipalityinitiative.newdto.service;
+package fi.om.municipalityinitiative.newdto.ui;
 
-import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
+import fi.om.municipalityinitiative.newdto.service.CreateDtoTimeValidation;
+import fi.om.municipalityinitiative.newdto.service.Municipality;
 
-public class InitiativeEditDto extends CreateDtoTimeValidation {
+public class InitiativeUIEditDto extends CreateDtoTimeValidation {
 
     // Not editable after set
     private Long id;
@@ -17,17 +18,12 @@ public class InitiativeEditDto extends CreateDtoTimeValidation {
     private ContactInfo contactInfo;
     private Boolean showName;
 
-    private InitiativeEditDto() {
+    private InitiativeUIEditDto() {
         // For freemarker
     }
 
-    public InitiativeEditDto(Long initiativeId, Municipality municipality) {
+    public InitiativeUIEditDto(Municipality municipality) {
         this.municipality = municipality;
-        this.id = initiativeId;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getName() {

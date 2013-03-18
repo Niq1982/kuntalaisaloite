@@ -1,7 +1,7 @@
 package fi.om.municipalityinitiative.newweb;
 
-import fi.om.municipalityinitiative.newdto.service.InitiativeEditDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUICreateDto;
+import fi.om.municipalityinitiative.newdto.ui.InitiativeUIEditDto;
 import fi.om.municipalityinitiative.newdto.ui.PrepareInitiativeDto;
 import fi.om.municipalityinitiative.service.InitiativeService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
@@ -142,11 +142,12 @@ public class MunicipalityInitiativeCreateController extends BaseController {
 
     @RequestMapping(value={ EDIT_FI, EDIT_SV }, method=POST)
     public String editPost(@PathVariable("id") Long initiativeId,
-                           @ModelAttribute("initiative") InitiativeEditDto editDto,
+                           @ModelAttribute("initiative") InitiativeUIEditDto editDto,
                            Model model, Locale locale, HttpServletRequest request) {
 
         Urls urls = Urls.get(locale);
-        return INDEX_VIEW;
+        initiativeService.updateInitiativeDraft(initiativeId, editDto);
+        return contextRelativeRedirect(urls.view(initiativeId));
     }
     
     @InitBinder

@@ -10,7 +10,6 @@ import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.email.InitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.InitiativeCreateDto;
-import fi.om.municipalityinitiative.newdto.service.InitiativeEditDto;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.util.Locales;
@@ -169,11 +168,19 @@ public class InitiativeService {
         return InitiativeViewInfo.parse(initiativeDao.getById(initiativeId), locale);
     }
 
-    public InitiativeEditDto getInitiativeForEdit(Long initiativeId, String managementHash) {
-        InitiativeEditDto initiativeForEdit = initiativeDao.getInitiativeForEdit(initiativeId);
+    public InitiativeUIEditDto getInitiativeForEdit(Long initiativeId, String managementHash) {
+        InitiativeUIEditDto initiativeForEdit = initiativeDao.getInitiativeForEdit(initiativeId);
         if (!initiativeForEdit.getManagementHash().equals(managementHash)) {
             throw new AccessDeniedException("Invalid management hash");
         }
         return initiativeForEdit;
+    }
+
+    public void updateInitiativeDraft(Long initiativeId, InitiativeUIEditDto editDto) {
+        if (!initiativeDao.getInitiativeForEdit(initiativeId).getManagementHash().equals(editDto.getManagementHash())) {
+            throw new AccessDeniedException("Invalid management hash");
+        }
+
+        initiativeDao.updateInitiativeDraft(initiativeId, editDto);
     }
 }
