@@ -34,7 +34,8 @@ public class ParticipantCreateDto {
         return participantCreateDto;
     }
 
-    private static boolean solveFranchise(ParticipantValidationInfo participant) {
+    // TODO: Move somewhere else, needed in two places now.
+    public static boolean solveFranchise(ParticipantValidationInfo participant) {
         return participant.getHomeMunicipality().equals(participant.getMunicipality())
                 && Boolean.TRUE.equals(participant.getFranchise());
     }

@@ -145,7 +145,7 @@ public class InitiativeService {
     public Long prepareInitiative(PrepareInitiativeDto createDto, Locale locale) {
 
         Long initiativeId = initiativeDao.prepareInitiative(createDto.getMunicipality(), createDto.getAuthorEmail(), RandomHashGenerator.randomString(40));
-        Long participantId = participantDao.prepareParticipant(initiativeId, createDto.getHomeMunicipality(), createDto.getFranchise());
+        Long participantId = participantDao.prepareParticipant(initiativeId, createDto.getHomeMunicipality(), ParticipantCreateDto.solveFranchise(createDto));
         initiativeDao.assignAuthor(initiativeId, participantId);
 
         return initiativeId;
