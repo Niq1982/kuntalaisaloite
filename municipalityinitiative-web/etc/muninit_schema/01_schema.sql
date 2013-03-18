@@ -18,7 +18,7 @@ create table municipality_initiative (
 
     modified timestamp constraint municipality_initiative_modified_nn not null default now(),
 
-    name varchar(512) constraint municipality_initiative_name_nn not null,
+    name varchar(512),
     proposal text,
     management_hash char(40),
     participant_count integer default 0,
@@ -46,7 +46,7 @@ create table participant (
 	participate_time date default now(),
 
 	municipality_id bigserial,
-    show_name boolean constraint participant_public_name not null,
+    show_name boolean,
     franchise boolean,
 
     constraint participant_pk primary key (id),

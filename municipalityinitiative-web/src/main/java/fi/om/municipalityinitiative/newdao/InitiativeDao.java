@@ -25,4 +25,6 @@ public interface InitiativeDao {
     ContactInfo getContactInfo(Long initiativeId);
 
     InitiativeCounts getInitiativeCounts(Maybe<Long> municipality);
+
+    Long prepareInitiative(Long municipalityId, String managementHash);
 }

@@ -254,6 +254,17 @@ public class JdbcInitiativeDao implements InitiativeDao {
         return counts;
     }
 
+    @Override
+    @Transactional(readOnly = false)
+    public Long prepareInitiative(Long municipalityId, String managementHash) {
+        return queryFactory.insert(municipalityInitiative)
+                .set(municipalityInitiative.managementHash, managementHash)
+                .set(municipalityInitiative.municipalityId, municipalityId)
+                .set(municipalityInitiative.authorId, PREPARATION_ID)
+                .executeWithKey(municipalityInitiative.id);
+    }
+
+
     // Mappings:
 
     private Expression<ContactInfo> contactInfoMapping =

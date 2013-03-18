@@ -15,4 +15,6 @@ public interface ParticipantDao {
     List<Participant> findPublicParticipants(Long initiativeId);
 
     List<Participant> findAllParticipants(Long initiativeId);
+
+    Long prepareParticipant(Long initiativeId, Long homeMunicipality, Boolean franchise);
 }

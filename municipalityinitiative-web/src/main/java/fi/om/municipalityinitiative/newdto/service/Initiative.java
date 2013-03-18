@@ -16,7 +16,7 @@ public class Initiative {
     private Municipality municipality;
 
     private String authorName;
-    private boolean showName;
+    private Boolean showName;
     @JsonSerialize(using=LocalDateJsonSerializer.class)
     private LocalDate createTime;
 
@@ -48,11 +48,11 @@ public class Initiative {
         this.authorName = authorName;
     }
     
-    public boolean isShowName() {
+    public Boolean getShowName() {
         return showName;
     }
 
-    public void setShowName(boolean showName) {
+    public void setShowName(Boolean showName) {
         this.showName = showName;
     }
 

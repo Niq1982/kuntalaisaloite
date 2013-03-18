@@ -54,6 +54,27 @@ public class JdbcParticipantDao implements ParticipantDao {
         return participantId;
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Long prepareParticipant(Long initiativeId, Long homeMunicipality, Boolean franchise) {
+        Long participantId = queryFactory.insert(participant)
+                .set(participant.franchise, franchise)
+                .set(participant.municipalityId, homeMunicipality)
+                .set(participant.municipalityInitiativeId, initiativeId)
+                .executeWithKey(participant.id);
+
+        // Increase denormalized participantCount if collectable initiative.
+        // DB constraint will also fail if trying to increase count for non-collectable initiative
+        queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
+                .set(QMunicipalityInitiative.municipalityInitiative.participantCount,
+                        QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
+                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
+                .where(QMunicipalityInitiative.municipalityInitiative.managementHash.isNotNull())
+                .execute();
+
+        return participantId;
+    }
+
     // TODO: Fix magic strings to enum constants or something.
     @Override
     public ParticipantCount getParticipantCount(Long initiativeId) {

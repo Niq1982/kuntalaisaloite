@@ -6,6 +6,7 @@ import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.*;
+import fi.om.municipalityinitiative.validation.InitiativeCreateParticipantValidationInfo;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -210,6 +211,41 @@ public class InitiativeServiceIntegrationTest {
         precondition(initiatives, hasSize(1));
         assertThat(initiatives.get(0).getParticipantCount(), is(2L));
     }
+
+    @Test
+    public void preparing_initiative_creates_hash() {
+        Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise, Locales.LOCALE_FI);
+        InitiativeViewInfo municipalityInitiative = service.getMunicipalityInitiative(initiativeId, Locales.LOCALE_FI);
+
+        assertThat(municipalityInitiative.getManagementHash().get(), is(RandomHashGenerator.getPrevious()));
+    }
+
+    private InitiativeCreateParticipantValidationInfo initiativePrepareDtoWithFranchise = new InitiativeCreateParticipantValidationInfo() {
+        @Override
+        public boolean isCollectable() {
+            return true;
+        }
+
+        @Override
+        public Long getHomeMunicipality() {
+            return testMunicipality.getId();
+        }
+
+        @Override
+        public Long getMunicipality() {
+            return testMunicipality.getId();
+        }
+
+        @Override
+        public Boolean getFranchise() {
+            return true;
+        }
+
+        @Override
+        public Boolean getMunicipalMembership() {
+            return null; // Should only be used at validations
+        }
+    };
 
     private InitiativeUICreateDto createDto(boolean collectable) {
         InitiativeUICreateDto createDto = new InitiativeUICreateDto();
