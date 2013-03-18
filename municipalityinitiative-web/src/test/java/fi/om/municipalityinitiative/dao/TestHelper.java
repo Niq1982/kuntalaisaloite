@@ -5,6 +5,7 @@ import com.mysema.query.sql.dml.SQLInsertClause;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Path;
 import com.mysema.query.types.expr.DateTimeExpression;
+import fi.om.municipalityinitiative.sql.QAuthor;
 import fi.om.municipalityinitiative.sql.QMunicipality;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.sql.QParticipant;
@@ -34,6 +35,7 @@ public class TestHelper {
     @Transactional(readOnly=false)
     public void dbCleanup() {
         queryFactory.delete(QParticipant.participant).execute();
+        queryFactory.delete(QAuthor.author).execute();
         queryFactory.delete(QMunicipalityInitiative.municipalityInitiative).execute();
         queryFactory.delete(QMunicipality.municipality).execute();
     }
@@ -69,6 +71,7 @@ public class TestHelper {
         insert.set(municipalityInitiative.proposal, "proposal");
         insert.set(municipalityInitiative.municipalityId, municipalityId);
         insert.set(municipalityInitiative.authorId, -1L);
+        insert.set(municipalityInitiative.newAuthorId, -1L);
         //insert.setNull(municipalityInitiative.authorId); // TODO
         if (collectable) {
             insert.set(municipalityInitiative.managementHash,TEST_MANAGEMENT_HASH);
@@ -87,8 +90,13 @@ public class TestHelper {
                 .set(QParticipant.participant.franchise, true) // Changing these will affect on tests
                 .executeWithKey(QParticipant.participant.id);
 
+        Long authorId = queryFactory.insert(QAuthor.author)
+                .set(QAuthor.author.initiativeId, initiativeId)
+                .executeWithKey(QAuthor.author.id);
+
         queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.authorId, participantId)
+                .set(municipalityInitiative.newAuthorId, authorId)
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute();
 

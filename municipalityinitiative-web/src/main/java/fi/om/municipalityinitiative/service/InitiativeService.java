@@ -124,7 +124,7 @@ public class InitiativeService {
 
         checkAllowedToParticipate(initiativeId);
 
-        ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(participant,  initiativeId);
+        ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(participant, initiativeId);
         participantCreateDto.setMunicipalityInitiativeId(initiativeId);
         return participantDao.create(participantCreateDto);
     }
@@ -163,4 +163,8 @@ public class InitiativeService {
         return initiativeDao.getInitiativeCounts(municipality);
     }
 
+    // TODO: This should be used for getting initiative for edit
+    public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId, String givenManagementHash, Locale locale) {
+        return InitiativeViewInfo.parse(initiativeDao.getById(initiativeId), locale);
+    }
 }

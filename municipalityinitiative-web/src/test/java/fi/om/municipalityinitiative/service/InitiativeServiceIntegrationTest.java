@@ -212,12 +212,22 @@ public class InitiativeServiceIntegrationTest {
     }
 
     @Test
-    public void preparing_initiative_creates_hash() {
+    public void preparing_initiative_sets_municipality() {
         Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise(), Locales.LOCALE_FI);
         InitiativeViewInfo municipalityInitiative = service.getMunicipalityInitiative(initiativeId, Locales.LOCALE_FI);
 
+        assertThat(municipalityInitiative.getMunicipality().getId(), is(testMunicipality.getId()));
+    }
+
+    @Test
+    public void preparing_initiative_creates_hash() {
+        Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise(), Locales.LOCALE_FI);
+        InitiativeViewInfo municipalityInitiative = service.getMunicipalityInitiative(initiativeId, RandomHashGenerator.getPrevious(), Locales.LOCALE_FI);
+
         assertThat(municipalityInitiative.getManagementHash().get(), is(RandomHashGenerator.getPrevious()));
     }
+
+
 
     private static PrepareInitiativeDto initiativePrepareDtoWithFranchise() {
         PrepareInitiativeDto prepareInitiativeDto = new PrepareInitiativeDto();

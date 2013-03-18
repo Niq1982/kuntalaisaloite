@@ -24,6 +24,7 @@ import fi.om.municipalityinitiative.newdto.service.InitiativeCreateDto;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
+import fi.om.municipalityinitiative.sql.QAuthor;
 import fi.om.municipalityinitiative.sql.QMunicipality;
 import fi.om.municipalityinitiative.sql.QParticipant;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -146,12 +147,26 @@ public class JdbcInitiativeDao implements InitiativeDao {
     @Override
     @Transactional(readOnly = false)
     public Long create(InitiativeCreateDto dto) {
+
         SQLInsertClause insert = queryFactory.insert(municipalityInitiative);
 
         setInitiativeBasicInfo(dto, insert);
         setContactInfo(dto, insert);
 
-        return insert.executeWithKey(municipalityInitiative.id);
+        insert.set(municipalityInitiative.newAuthorId, PREPARATION_ID);
+
+        Long initiativeId = insert.executeWithKey(municipalityInitiative.id);
+
+        Long authorId = queryFactory.insert(QAuthor.author)
+                .set(QAuthor.author.initiativeId, initiativeId)
+                .executeWithKey(QAuthor.author.id);
+
+        queryFactory.update(municipalityInitiative)
+                .set(municipalityInitiative.newAuthorId, authorId)
+                .where(municipalityInitiative.id.eq(initiativeId))
+                .execute();
+
+        return initiativeId;
 
     }
 
@@ -257,11 +272,23 @@ public class JdbcInitiativeDao implements InitiativeDao {
     @Override
     @Transactional(readOnly = false)
     public Long prepareInitiative(Long municipalityId, String managementHash) {
-        return queryFactory.insert(municipalityInitiative)
+        Long initiativeId = queryFactory.insert(municipalityInitiative)
                 .set(municipalityInitiative.managementHash, managementHash)
                 .set(municipalityInitiative.municipalityId, municipalityId)
                 .set(municipalityInitiative.authorId, PREPARATION_ID)
+                .set(municipalityInitiative.newAuthorId, PREPARATION_ID)
                 .executeWithKey(municipalityInitiative.id);
+
+        Long newAuthorId = queryFactory.insert(QAuthor.author)
+                .set(QAuthor.author.initiativeId, initiativeId)
+                .executeWithKey(QAuthor.author.id);
+
+        Assert.isTrue(queryFactory.update(municipalityInitiative)
+                .set(municipalityInitiative.newAuthorId, newAuthorId)
+                .where(municipalityInitiative.id.eq(initiativeId))
+                .execute() == 1, "Should have saved author to initiative");
+
+        return initiativeId;
     }
 
 

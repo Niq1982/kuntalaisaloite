@@ -74,6 +74,6 @@ create table author (
 create index author_id_index on author(id);
 
 alter table municipality_initiative add constraint municipality_initiative_author_fk foreign key(author_id) references participant(id) INITIALLY DEFERRED;
-alter table municipality_initiative add constraint initiative_author_fk foreign key (new_author_id) references author(id);
+alter table municipality_initiative add constraint initiative_author_fk foreign key (new_author_id) references author(id) INITIALLY DEFERRED;
 alter table municipality_initiative add constraint collectable_dependencies
     check ((management_hash is null and participant_count = 0 and sent is not null and comment is null) or (management_hash is not null));
