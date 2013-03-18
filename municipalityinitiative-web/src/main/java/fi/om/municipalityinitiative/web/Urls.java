@@ -162,6 +162,10 @@ public final class Urls {
 
     public static final String CREATE_SV =    "/sv/initiativ";
 
+    public static final String CREATE_FI_NEW =    "/fi/aloite_new";
+
+    public static final String CREATE_SV_NEW =    "/sv/initiativ_new";
+    
     public static final String PREPARE_FI =    "/fi/aloite_prepare";
 
     public static final String PREPARE_SV  =    "/sv/initiativ_prepare";

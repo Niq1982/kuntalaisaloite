@@ -26,6 +26,7 @@ import java.util.Locale;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
 import static fi.om.municipalityinitiative.web.Views.CREATE_VIEW;
+import static fi.om.municipalityinitiative.web.Views.CREATE_VIEW_NEW;
 import static fi.om.municipalityinitiative.web.Views.PREPARE_VIEW;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -46,6 +47,17 @@ public class MunicipalityInitiativeCreateController extends BaseController {
 
     public MunicipalityInitiativeCreateController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
+    }
+    
+    @RequestMapping(value={ CREATE_FI_NEW, CREATE_SV_NEW }, method=GET)
+    public String createGetNew(Model model, Locale locale, HttpServletRequest request) {
+        Urls urls = Urls.get(locale);
+        model.addAttribute(ALT_URI_ATTR, urls.alt().createNew());
+        
+        InitiativeUICreateDto initiative = new InitiativeUICreateDto();
+        model.addAttribute("initiative", initiative);
+        model.addAttribute("municipalities", municipalityService.findAllMunicipalities(locale));
+        return CREATE_VIEW_NEW;
     }
 
     @RequestMapping(value={ CREATE_FI, CREATE_SV }, method=GET)
