@@ -144,7 +144,7 @@ public class InitiativeService {
     @Transactional(readOnly = false)
     public Long prepareInitiative(PrepareInitiativeDto createDto, Locale locale) {
 
-        Long initiativeId = initiativeDao.prepareInitiative(createDto.getMunicipality(), createDto.getEmail(), RandomHashGenerator.randomString(40));
+        Long initiativeId = initiativeDao.prepareInitiative(createDto.getMunicipality(), createDto.getAuthorEmail(), RandomHashGenerator.randomString(40));
         Long participantId = participantDao.prepareParticipant(initiativeId, createDto.getHomeMunicipality(), createDto.getFranchise());
         initiativeDao.assignAuthor(initiativeId, participantId);
 

@@ -26,7 +26,7 @@ public class PrepareInitiativeDto
     @NotEmpty
     @Pattern(regexp = ContactInfo.EMAIL_PATTERN)
     @Size(max = InitiativeConstants.CONTACT_EMAIL_MAX)
-    private String email;
+    private String authorEmail;
 
     @Override
     public boolean isCollectable() {
@@ -69,11 +69,11 @@ public class PrepareInitiativeDto
         this.franchise = franchise;
     }
 
-    public String getEmail() {
-        return email;
+    public String getAuthorEmail() {
+        return authorEmail;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setAuthorEmail(String authorEmail) {
+        this.authorEmail = authorEmail;
     }
 }

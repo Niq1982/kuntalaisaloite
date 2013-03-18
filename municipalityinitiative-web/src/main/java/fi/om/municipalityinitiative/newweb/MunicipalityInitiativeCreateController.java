@@ -143,9 +143,17 @@ public class MunicipalityInitiativeCreateController extends BaseController {
     @RequestMapping(value={ EDIT_FI, EDIT_SV }, method=POST)
     public String editPost(@PathVariable("id") Long initiativeId,
                            @ModelAttribute("initiative") InitiativeUIEditDto editDto,
+                           BindingResult bindingResult,
                            Model model, Locale locale, HttpServletRequest request) {
 
         Urls urls = Urls.get(locale);
+
+        if (validionService.validationErrors(editDto, bindingResult, model)) {
+            model.addAttribute(ALT_URI_ATTR, urls.alt().edit(initiativeId, editDto.getManagementHash()));
+            model.addAttribute("initiative", editDto);
+            return EDIT_VIEW;
+        }
+
         initiativeService.updateInitiativeDraft(initiativeId, editDto);
         return contextRelativeRedirect(urls.view(initiativeId));
     }

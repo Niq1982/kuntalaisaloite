@@ -1,7 +1,13 @@
 package fi.om.municipalityinitiative.newdto.ui;
 
+import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.newdto.service.CreateDtoTimeValidation;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 public class InitiativeUIEditDto extends CreateDtoTimeValidation {
 
@@ -13,9 +19,18 @@ public class InitiativeUIEditDto extends CreateDtoTimeValidation {
     private String managementHash;
 
     // Editable by author via ui
+    @NotEmpty
+    @Size(max = InitiativeConstants.INITIATIVE_NAME_MAX)
     private String name;
+
+    @NotEmpty
+    @Size(max = InitiativeConstants.INITIATIVE_PROPOSAL_MAX)
     private String proposal;
+
+    @Valid
     private ContactInfo contactInfo;
+
+    @NotNull
     private Boolean showName;
 
     private InitiativeUIEditDto() {
