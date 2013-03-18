@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newweb;
 
+import fi.om.municipalityinitiative.newdto.service.InitiativeEditDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUICreateDto;
 import fi.om.municipalityinitiative.newdto.ui.PrepareInitiativeDto;
 import fi.om.municipalityinitiative.service.InitiativeService;
@@ -15,9 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -25,8 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
-import static fi.om.municipalityinitiative.web.Views.CREATE_VIEW;
-import static fi.om.municipalityinitiative.web.Views.PREPARE_VIEW;
+import static fi.om.municipalityinitiative.web.Views.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -129,6 +127,26 @@ public class MunicipalityInitiativeCreateController extends BaseController {
 
         Long initiativeId = initiativeService.prepareInitiative(initiative, locale);
         return redirectWithMessage(urls.view(initiativeId), RequestMessage.SAVE, request);
+    }
+
+    @RequestMapping(value={ EDIT_FI, EDIT_SV }, method=GET)
+    public String editView(@PathVariable("id") Long initiativeId,
+                           @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
+                           Model model, Locale locale, HttpServletRequest request) {
+
+        Urls urls = Urls.get(locale);
+        model.addAttribute(ALT_URI_ATTR, urls.alt().edit(initiativeId, managementHash));
+        model.addAttribute("initiative", initiativeService.getInitiativeForEdit(initiativeId, managementHash));
+        return EDIT_VIEW;
+    }
+
+    @RequestMapping(value={ EDIT_FI, EDIT_SV }, method=POST)
+    public String editPost(@PathVariable("id") Long initiativeId,
+                           @ModelAttribute("initiative") InitiativeEditDto editDto,
+                           Model model, Locale locale, HttpServletRequest request) {
+
+        Urls urls = Urls.get(locale);
+        return INDEX_VIEW;
     }
     
     @InitBinder

@@ -177,6 +177,10 @@ public final class Urls {
     public static final String MANAGEMENT_FI = "/fi/hallinta" + "/" + ID_PARAMETER;
 
     public static final String MANAGEMENT_SV = "/sv/administration" + "/" + ID_PARAMETER;
+
+    public static final String EDIT_FI = "/fi/muokkaa" + "/" + ID_PARAMETER;
+
+    public static final String EDIT_SV = "/sv/bearbeta" + "/" + ID_PARAMETER;
     
     public static final String IFRAME_FI = "/fi/iframe";
 
@@ -241,6 +245,14 @@ public final class Urls {
     
     public String management(Long initiativeId, String managementHash) {
         return getManagement(initiativeId) + "?" + PARAM_MANAGEMENT_CODE + "=" + managementHash;
+    }
+
+    public String edit(Long initiativeId, String managementHash) {
+        return getEdit(initiativeId) + "?" + PARAM_MANAGEMENT_CODE + "=" + managementHash;
+    }
+
+    private String getEdit(Long initiativeId) {
+        return getLocalizedPageUrl(EDIT_FI, EDIT_SV).replace(ID_PARAMETER, initiativeId.toString());
     }
 
     public String vote(Long initiativeId) {

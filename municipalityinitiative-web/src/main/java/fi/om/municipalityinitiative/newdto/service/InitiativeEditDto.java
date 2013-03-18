@@ -2,25 +2,32 @@ package fi.om.municipalityinitiative.newdto.service;
 
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 
-public class InitiativeEditDto {
+public class InitiativeEditDto extends CreateDtoTimeValidation {
 
+    // Not editable after set
     private Long id;
-    private String name;
-    private String proposal;
     private Municipality municipality;
 
-    private ContactInfo contactInfo;
-    private Boolean showName;
+    // Hidden field which must match with database
     private String managementHash;
 
-    public InitiativeEditDto() { }
+    // Editable by author via ui
+    private String name;
+    private String proposal;
+    private ContactInfo contactInfo;
+    private Boolean showName;
+
+    private InitiativeEditDto() {
+        // For freemarker
+    }
+
+    public InitiativeEditDto(Long initiativeId, Municipality municipality) {
+        this.municipality = municipality;
+        this.id = initiativeId;
+    }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -41,10 +48,6 @@ public class InitiativeEditDto {
 
     public Municipality getMunicipality() {
         return municipality;
-    }
-
-    public void setMunicipality(Municipality municipality) {
-        this.municipality = municipality;
     }
 
     public ContactInfo getContactInfo() {

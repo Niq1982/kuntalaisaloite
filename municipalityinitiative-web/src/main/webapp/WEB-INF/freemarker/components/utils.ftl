@@ -220,7 +220,7 @@
                 <@compress single_line=true>
                     <#-- Save initiative -->
                     <#if requestMessage == RequestMessage.SAVE>
-                        <@messageHTML key=requestMessage args=[urls.management(initiative.id, initiative.managementHash.value)] />
+                        <@messageHTML key=requestMessage args=[urls.edit(initiative.id, initiative.managementHash.value)] />
                         <a class="small-button gray close hidden"><@message "modal.close" /></a>
                         
                     <#-- Send to municipality -->

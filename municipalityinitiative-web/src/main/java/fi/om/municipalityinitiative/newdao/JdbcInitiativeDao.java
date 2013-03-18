@@ -302,6 +302,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .leftJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
                 .leftJoin(municipalityInitiative.initiativeAuthorFk, QAuthor.author)
                 .where(municipalityInitiative.id.eq(initiativeId))
+
                 .uniqueResult(initiativeEditMapping);
     }
 
@@ -315,17 +316,17 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     QAuthor.author.all()) {
                 @Override
                 protected InitiativeEditDto map(Tuple row) {
-                    InitiativeEditDto info = new InitiativeEditDto();
-                    info.setId(row.get(municipalityInitiative.id));
-                    info.setName(row.get(municipalityInitiative.name));
-                    info.setMunicipality(new Municipality(
-                            row.get(QMunicipality.municipality.id),
-                            row.get(QMunicipality.municipality.name),
-                            row.get(QMunicipality.municipality.nameSv))
+                    InitiativeEditDto info = new InitiativeEditDto(
+                            row.get(municipalityInitiative.id),
+                            new Municipality(
+                                    row.get(QMunicipality.municipality.id),
+                                    row.get(QMunicipality.municipality.name),
+                                    row.get(QMunicipality.municipality.nameSv))
                     );
+                    info.setManagementHash(row.get(QAuthor.author.managementHash));
+                    info.setName(row.get(municipalityInitiative.name));
                     info.setProposal(row.get(municipalityInitiative.proposal));
                     info.setShowName(row.get(QParticipant.participant.showName));
-                    info.setManagementHash(row.get(QAuthor.author.managementHash));
                     info.setContactInfo(new ContactInfo());
                     return info;
                 }
