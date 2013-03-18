@@ -16,7 +16,6 @@ import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.ParticipatingUnallowedException;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
-import fi.om.municipalityinitiative.validation.InitiativeCreateParticipantValidationInfo;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -143,7 +142,7 @@ public class InitiativeService {
     }
 
     @Transactional(readOnly = false)
-    public Long prepareInitiative(InitiativeCreateParticipantValidationInfo createDto, Locale locale) {
+    public Long prepareInitiative(PrepareInitiativeDto createDto, Locale locale) {
 
         Long initiativeId = initiativeDao.prepareInitiative(createDto.getMunicipality(), RandomHashGenerator.randomString(40));
         Long participantId = participantDao.prepareParticipant(initiativeId, createDto.getHomeMunicipality(), createDto.getFranchise());
