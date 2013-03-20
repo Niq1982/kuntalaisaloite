@@ -33,8 +33,8 @@ public final class Views {
     public static final String CREATE_VIEW = "create";
     public static final String PREPARE_VIEW = "prepare";
     public static final String VIEW_VIEW = "initiative";
-    public static final String SINGLE_VIEW = "single-view";
-    public static final String COLLECT_VIEW = "collect-view";
+    public static final String PUBLIC_SINGLE_VIEW = "public-single-view";
+    public static final String PUBLIC_COLLECT_VIEW = "public-collect-view";
     public static final String MANAGEMENT_VIEW = "management-view";
     public static final String EDIT_VIEW = "edit-view";
     public static final String PARTICIPANT_LIST = "participant-list";

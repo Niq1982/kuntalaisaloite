@@ -82,11 +82,11 @@ public class MunicipalityInitiativeViewController extends BaseController {
                     participantService.findPublicParticipants(initiativeId));
             model.addAttribute("participant", new ParticipantUICreateDto());
 
-            return COLLECT_VIEW;
+            return PUBLIC_COLLECT_VIEW;
         }
         else {
             model.addAttribute("initiative", initiativeInfo);
-            return SINGLE_VIEW;
+            return PUBLIC_SINGLE_VIEW;
         }
     }
 
@@ -107,7 +107,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
                     participantService.getParticipantCount(initiativeId),
                     participantService.findPublicParticipants(initiativeId));
             model.addAttribute("participants", participantService.findPublicParticipants(initiativeId));
-            return COLLECT_VIEW;
+            return PUBLIC_COLLECT_VIEW;
         }
     }
     
@@ -137,7 +137,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
         }
         else {
             model.addAttribute("initiative", initiativeInfo);
-            return SINGLE_VIEW;
+            return PUBLIC_SINGLE_VIEW;
         }
     }
 

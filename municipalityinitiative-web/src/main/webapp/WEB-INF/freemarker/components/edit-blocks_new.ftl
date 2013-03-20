@@ -1,6 +1,6 @@
 <#import "/spring.ftl" as spring />
 <#import "utils.ftl" as u />
-<#import "forms.ftl" as f />
+<#import "forms_new.ftl" as f />
 
 <#escape x as x?html> 
 
@@ -178,7 +178,7 @@
     </div>
 
     <div class="input-block-content">
-        <@f.textField path="initiative.authorEmail" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_NAME_MAX />
+        <@f.textField path="initiative.authorEmail" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
     </div>
 </#macro>
 
@@ -196,6 +196,7 @@
             <div class="input-block-extra-content">
                 <@f.helpText "help.name" />
                 <@f.helpText "help.proposal" />
+                <@f.helpText "help.extraInfo" />
             </div>
         </div>
 
@@ -204,12 +205,7 @@
             <@u.systemMessage path="initiative.proposal.description" type="info" showClose=false args=[href] />  
         </div>
         
-        <div class="input-block-content">      
-            <div class="input-header hidden">
-                <@u.message "selectedMunicipality.title" />
-            </div>
-            <p id="selected-municipality" class="hidden">${initiative.municipality.name!""}</p>
-            
+        <div class="input-block-content">
             <@f.textField path="initiative.name" required="required" optional=true cssClass="large" maxLength=InitiativeConstants.INITIATIVE_NAME_MAX />
         </div>
 
@@ -227,10 +223,6 @@
                 Lisätiedot
             </label>
             <textarea class="textarea" name="extraInfo" id="extraInfo"></textarea>
-        </div>
-        
-        <div class="input-block-content hidden">
-            <@buttons type="next" nextStep=step+1 />
         </div>
     </div>
 </#macro>
@@ -261,9 +253,14 @@
         </div>
         
         <div class="input-block-content">
-            <@f.textField path="initiative.contactInfo.name" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_NAME_MAX />
-            
-            <@f.formCheckbox path="initiative.showName" checked=true />
+            <div class="column col-2of3">
+                <@f.textField path="initiative.contactInfo.name" required="required" optional=false cssClass="medium" maxLength=InitiativeConstants.CONTACT_NAME_MAX />
+                <@f.formCheckbox path="initiative.showName" checked=true />
+            </div>
+            <div class="column col-1of3 last">
+                <div class="input-header"><@u.message "initiative.contactInfo.homeMunicipality" /></div>
+                <#--${initiative.municipality.name!"TODO"}-->
+            </div>
         </div>
 
         <div class="input-block-content">
@@ -274,9 +271,12 @@
             <@f.contactInfo path="initiative.contactInfo" realPath=initiative.contactInfo mode="full" />
         </div>
         
-        <div class="input-block-content hidden">
-            <@buttons type="next" nextStep=step+1 />
+        <#--
+        <div class="input-block-content">
+            <button type="submit" name="${UrlConstants.ACTION_SAVE}" value="<@u.messageHTML 'action.saveAsDraft' />" class="small-button green"><span class="small-icon save-and-send"><@u.messageHTML 'action.save' /></span></button>
+            <a class="small-button red" href="${urls.baseUrl}/${locale}"><span class="small-icon cancel"><@u.messageHTML 'action.cancel' /></span></a>
         </div>
+        -->
     </div>
 </#macro>
       

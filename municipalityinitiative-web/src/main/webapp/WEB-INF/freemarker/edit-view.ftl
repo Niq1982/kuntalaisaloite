@@ -18,6 +18,12 @@
 <@l.main page pageTitle!"">
 
     <h1><@u.message page /></h1>
+    <#--
+    <span class="extra-info">
+        Tavallinen aloite<br/>
+        Kunnalle ${initiative.municipality.name!"TODO"}
+    </span>
+    -->
 
     <#-- TOP CONTRIBUTION -->
     <#noescape>${topContribution!""}</#noescape>
@@ -28,6 +34,15 @@
     <noscript>
         <@f.cookieWarning springMacroRequestContext.requestUri />
     </noscript>
+    
+    <div class="system-msg msg-summary">
+        <div class="system-msg msg-info">
+            <h3>Tavallinen aloite, Kunnalle <#--${initiative.municipality.name!"TODO"}--></h3>
+        </div>
+        <div class="system-msg msg-info">
+            Lomakkeen pakolliset tiedot on merkitty tähdellä <span class="icon-small required"></span>
+        </div>
+    </div>
 
     <#-- FORM. Use class 'sodirty' to enable dirtylisten. -->
     <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-initiative" class="sodirty dirtylisten <#if hasErrors>has-errors</#if>">
@@ -36,21 +51,32 @@
         <@f.notTooFastField initiative />
 
         <div class="form-block-container">
-            <@edit.blockHeader key="initiative.initiative.title" step=2 />
+            <@edit.blockHeader key="initiative.initiative.title" step=1 />
             <@edit.initiativeBlock step=2 />
         </div>
 
         <div class="form-block-container">
-            <@edit.blockHeader key="initiative.currentAuthor.title" step=3 />
+            <@edit.blockHeader key="initiative.currentAuthor.title" step=2 />
             <@edit.currentAuthorBlock step=3 />
         </div>
 
+        <#--
         <div class="form-block-container">
-            <@edit.blockHeader key="initiative.save.title" step=4 />
-            <#-- TODO: Save draft -->
-            <div id="step-4" class="input-block cf">
+            <@edit.blockHeader key="initiative.save.title" step=3 />
+            <div class="input-block cf">
                 <input type="hidden" name="managementHash" value="${initiative.managementHash}"/>
                 <input type="submit" value="Tallenna"/>
+            </div>
+        </div>
+        -->
+        
+        <div class="form-block-container">
+            <div class="input-block cf">
+                <div class="input-block-content">
+                    <input type="hidden" name="managementHash" value="${initiative.managementHash}"/>
+                    <button type="submit" name="${UrlConstants.ACTION_SAVE}" value="<@u.messageHTML 'action.saveAsDraft' />" class="large-button green"><span class="large-icon save-and-send"><@u.messageHTML 'action.save' /></span></button>
+                    <a class="large-button red" href="${urls.baseUrl}/${locale}"><span class="large-icon cancel"><@u.messageHTML 'action.cancel' /></span></a>
+                </div>
             </div>
         </div>
     </form>
