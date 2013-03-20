@@ -1,3 +1,4 @@
+<#import "/spring.ftl" as spring />
 <#import "utils.ftl" as u />
 <#import "forms.ftl" as f />
 
@@ -44,8 +45,7 @@
  *
  * @param step is the number of current block
  -->
-<#macro municipalityBlock step municipality="">      
-
+<#macro municipalityBlock municipality="">      
     
         <div class="input-block-extra">
             <div class="input-block-extra-content">
@@ -67,8 +67,8 @@
         </div>
         <br class="clear" />
         
-        <div id="municipalMembership" class="municipality-not-equal js-hide hidden">
-            <div class="input-block-content">
+        <div id="municipalMembership" class="municipality-not-equal js-hide">
+            <div class="input-block-content hidden">
                 <#assign href="#" />
                 <@u.systemMessage path="initiative.municipality.notEqual" type="info" showClose=false args=[href] />
             </div>
@@ -81,12 +81,12 @@
                 } attributes="" />
             </div>
             
-            <div class="input-block-content is-not-member js-hide">
+            <div class="input-block-content is-not-member js-hide hidden">
                 <@u.systemMessage path="warning.initiative.notMember" type="warning" showClose=false />
             </div>
         </div>
 
-        <#-- Different treat for NOSCRIPT-users. Dummy checkbox and hidden field for better UX. -->
+        <#-- Different treat for NOSCRIPT-users. Dummy checkbox and hidden field for better UX.
         <noscript>
         <div class="input-block-content">
             <label>
@@ -95,7 +95,7 @@
                 <input type="checkbox" name="placeholder" id="placeholder" checked="checked" disabled="disabled" /><span class="label"><@u.messageHTML key="initiative.checkMembership" args=[href] /></span>
             </label>
         </div>
-        </noscript>
+        </noscript> -->
 
         <#--<div class="input-block-content hidden">
             <@buttons type="next" nextStep=step+1 />
@@ -103,28 +103,55 @@
 
 </#macro>
 
-
+<#--
+ * chooseInitiativeType
+ *
+ * Choose the type of the initiative
+ * - Normal
+ * - 2% and 5% will be enabled later
+ *
+ * Prints help-texts and validation errors in this block
+ -->
 <#macro chooseInitiativeType>
-
+    <div class="input-block-extra">
+        <div class="input-block-extra-content">
+            <@f.helpText "help.initiativeType" />
+        </div>
+    </div>
+        
     <div class="input-block-content">
         <div class="input-header">
-            Aloitteen tyyppi <span class="icon-small required trigger-tooltip"></span>
+            <@u.message "initiative.type" /> <span class="icon-small required trigger-tooltip"></span>
         </div>
         
         <div class="initiative-types cf">
+            <#-- TODO: Initiative type
+            <@spring.bind "initiative.initiativeType" /> 
+            <@f.showError />
             <label class="initiative-type">
-                <span class="type"><input type="radio" id="initiativeType[0]" name="initiativeType" value="normal" /> Normaali aloite</span>
-                <span class="description">Voi halutessasi kerätä aloitteelle muitakin tekijöitä.</span>
+                <span class="type">
+                    <input type="radio" id="initiativeType[0]" name="${spring.status.expression}" value="normal"
+                        <#if spring.stringStatusValue == value>checked="checked"</#if>
+                    <@spring.closeTag/>
+                </span>
+                <span class="description"><@u.message "initiative.type.normal.description" /></span>
+            </label>-->
+            
+            
+            <label class="initiative-type">
+                <span class="type"><input type="radio" id="initiativeType[0]" name="initiativeType" value="normal" /> <@u.message "initiative.type.normal" /></span>
+                <span class="description"><@u.message "initiative.type.normal.description" /></span>
             </label>
             
-            <label class="initiative-type disabled trigger-tooltip" title="Tämä ei ole vielä valittavissa">
-                <span class="type"><input type="radio" id="initiativeType[0]" name="initiativeType" value="two-percent" disabled="disabled" /> 2%:n aloite</span>
-                <span class="description">Tässä on infoa aloitetyyppiin liittyen.<br/><br/></span>
+            
+            <label class="initiative-type disabled trigger-tooltip" title="<@u.message "initiative.type.disabled" />">
+                <span class="type"><input type="radio" id="initiativeType[1]" name="initiativeType" value="two-percent" disabled="disabled" /> <@u.message "initiative.type.two-percent" /></span>
+                <span class="description"><@u.message "initiative.type.two-percent.description" /><br/><br/></span>
             </label>
             
-            <label class="initiative-type disabled trigger-tooltip" title="Tämä ei ole vielä valittavissa">
-                <span class="type"><input type="radio" id="initiativeType[2]" name="initiativeType" value="five-percent" disabled="disabled" /> 5%:n aloite</span>
-                <span class="description">Tässä on infoa aloitetyyppiin liittyen.<br/><br/></span>
+            <label class="initiative-type disabled trigger-tooltip" title="<@u.message "initiative.type.disabled" />">
+                <span class="type"><input type="radio" id="initiativeType[2]" name="initiativeType" value="five-percent" disabled="disabled" /> <@u.message "initiative.type.five-percent" /></span>
+                <span class="description"><@u.message "initiative.type.five-percent.description" /><br/><br/></span>
             </label>
         </div>
 
@@ -132,6 +159,28 @@
 
 </#macro>
 
+
+<#--
+ * authorEmailBlock
+ *
+ * Add confirmation email for author
+ * Prints help-texts and validation errors in this block
+ -->
+<#macro authorEmailBlock>
+    <div class="input-block-extra">
+        <div class="input-block-extra-content">
+            <@f.helpText "help.authorEmail" />
+        </div>
+    </div>
+    
+    <div class="input-block-content">
+        <@u.systemMessage path="initiative.authorEmail.description" type="info" showClose=false />
+    </div>
+
+    <div class="input-block-content">
+        <@f.textField path="initiative.authorEmail" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_NAME_MAX />
+    </div>
+</#macro>
 
 <#--
  * initiativeBlock

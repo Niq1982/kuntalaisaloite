@@ -561,7 +561,8 @@ var municipalitySelection = (function() {
 		
 		var typeInput 			= $('.initiative-type input'),
 			authorEmail			= $('#authorEmail'),
-			toggleDisable		= $('.toggle-disable');
+			toggleDisable		= $('.toggle-disable'),
+			btnParticipate 		= $("button#participate");
 		
 		btnParticipate.disableButton(prevent);
 		
@@ -570,24 +571,9 @@ var municipalitySelection = (function() {
 		if (prevent) {
 			authorEmail.attr('disabled','disabled');
 			toggleDisable.addClass('disabled');
-			console.log("JATKO ESTETTY");
-			btnStep2.addClass('disabled');
-			formBlockHeaders.addClass('disabled');
-			
-			if (validationErrors){
-				formBlocks.hide();
-			}
-			
 		} else {
 			authorEmail.removeAttr('disabled');
 			toggleDisable.removeClass('disabled');
-			console.log("JATKO SALLITTU");
-			btnStep2.removeClass('disabled');
-			formBlockHeaders.removeClass('disabled');
-			
-			if (validationErrors){
-				formBlocks.show();
-			}
 		}
 	};
 	

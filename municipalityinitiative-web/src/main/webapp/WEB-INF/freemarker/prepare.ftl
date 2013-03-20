@@ -55,8 +55,7 @@
     
             <div class="form-block-container">
                 <div id="" class="input-block cf">
-                    <#--<@edit.blockHeader key="initiative.municipality.title" step=1 />-->
-                    <@edit.municipalityBlock step=1 municipality=currentMunicipality />
+                    <@edit.municipalityBlock municipality=currentMunicipality />
                 </div>
             </div>
             
@@ -69,19 +68,10 @@
             <div class="form-block-container toggle-disable">
                 <div id="" class="input-block cf">
                 
-                    <div class="input-block-content">
-                        <@u.systemMessage path="initiative.email.description" type="info" showClose=false />
-                    </div>
-                
-                    <div class="input-block-content">
-                        <label for="authorEmail" class="input-header">
-                            Sähköpostiosoitteesi <span class="icon-small required trigger-tooltip"></span>
-                        </label>
-                        <input type="text" maxlength="512" class="large" name="authorEmail" id="authorEmail">
-                    </div>
+                    <@edit.authorEmailBlock />
                     
                     <div class="input-block-content no-top-margin">
-                        <@edit.buttons type="save" /> <span class="fill-in-all push"><@u.message "initiative.fillInAllFields" /></span>
+                        <@edit.buttons type="save" /> <span class="fill-in-all push hidden"><@u.message "initiative.fillInAllFields" /></span>
                     </div>
                     
                 </div>
