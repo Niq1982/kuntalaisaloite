@@ -31,7 +31,7 @@
     <#elseif type == "save-and-send">
         <button type="submit" name="action-save-and-send" class="small-button"><span class="small-icon mail"><@u.message "action.saveAndSend" /></span></button>
     <#elseif type == "save">
-        <button type="submit" id="" name="action-save" class="small-button" value="true" ><span class="small-icon save-and-send">Tee kuntalaisaloite</span></button>
+        <button type="submit" id="action-send-confirm" name="action-send-confirm" class="small-button" value="true" ><span class="small-icon save-and-send">Lähetä</span></button>
         <#--<button type="submit" id="action-save" name="action-save" class="small-button" value="true" ><span class="small-icon save-and-send"><@u.message "action.saveAndCollect" /></span></button>-->
     </#if>
 </#macro>
@@ -46,7 +46,7 @@
  -->
 <#macro municipalityBlock step municipality="">      
 
-    <div id="step-${step}" class="input-block cf">
+    
         <div class="input-block-extra">
             <div class="input-block-extra-content">
                 <@f.helpText "help.municipality" />
@@ -73,7 +73,12 @@
                 <@u.systemMessage path="initiative.municipality.notEqual" type="info" showClose=false args=[href] />
             </div>
             <div class="input-block-content">
-                <@f.radiobutton path="initiative.municipalMembership" required="" options={"true":"initiative.municipalMembership.true", "false":"initiative.municipalMembership.false"} attributes="" header=false />
+                <@f.radiobutton path="initiative.municipalMembership" required="required" options={
+                    "community":"initiative.municipalMembership.community",
+                    "company":"initiative.municipalMembership.company",
+                    "property":"initiative.municipalMembership.property",
+                    "none":"initiative.municipalMembership.none"
+                } attributes="" />
             </div>
             
             <div class="input-block-content is-not-member js-hide">
@@ -95,29 +100,34 @@
         <#--<div class="input-block-content hidden">
             <@buttons type="next" nextStep=step+1 />
         </div>-->
-    </div>
+
 </#macro>
 
 
 <#macro chooseInitiativeType>
 
-    <div class="column col-1of3">
-        <label>
-            <span>Normaali aloite</span>
-            <input type="radio" id="initiativeType[0]" name="initiativeType" value="normal" />
-        </label>
-    </div>
-    <div class="column col-1of3">
-        <label>
-            <span>2%:n aloite</span>
-            <input type="radio" id="initiativeType[1]" name="initiativeType" value="two-percent" disabled="disabled" />
-        </label>
-    </div>
-    <div class="column col-1of3 last">
-        <label>
-            <span>5%:n aloite</span>
-            <input type="radio" id="initiativeType[2]" name="initiativeType" value="five-percent" disabled="disabled" />
-        </label>
+    <div class="input-block-content">
+        <div class="input-header">
+            Aloitteen tyyppi <span class="icon-small required trigger-tooltip"></span>
+        </div>
+        
+        <div class="initiative-types cf">
+            <label class="initiative-type">
+                <span class="type"><input type="radio" id="initiativeType[0]" name="initiativeType" value="normal" /> Normaali aloite</span>
+                <span class="description">Voi halutessasi kerätä aloitteelle muitakin tekijöitä.</span>
+            </label>
+            
+            <label class="initiative-type disabled trigger-tooltip" title="Tämä ei ole vielä valittavissa">
+                <span class="type"><input type="radio" id="initiativeType[0]" name="initiativeType" value="two-percent" disabled="disabled" /> 2%:n aloite</span>
+                <span class="description">Tässä on infoa aloitetyyppiin liittyen.<br/><br/></span>
+            </label>
+            
+            <label class="initiative-type disabled trigger-tooltip" title="Tämä ei ole vielä valittavissa">
+                <span class="type"><input type="radio" id="initiativeType[2]" name="initiativeType" value="five-percent" disabled="disabled" /> 5%:n aloite</span>
+                <span class="description">Tässä on infoa aloitetyyppiin liittyen.<br/><br/></span>
+            </label>
+        </div>
+
     </div>
 
 </#macro>
@@ -149,7 +159,7 @@
             <div class="input-header hidden">
                 <@u.message "selectedMunicipality.title" />
             </div>
-            <p id="selected-municipality" class="hidden"><i><@u.message "selectedMunicipality.notSelected" /></i></p>
+            <p id="selected-municipality" class="hidden">${initiative.municipality.name!""}</p>
             
             <@f.textField path="initiative.name" required="required" optional=true cssClass="large" maxLength=InitiativeConstants.INITIATIVE_NAME_MAX />
         </div>

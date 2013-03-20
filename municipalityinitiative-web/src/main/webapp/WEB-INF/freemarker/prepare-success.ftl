@@ -15,45 +15,19 @@
 -->
 <#assign page="page.createNew" />
 
+<#--
+ * Get current municipality as request parameter.
+ * - Request parameter is for iFrame create-link
+ * - We could want to try to guess user's municipality later on with different methods like GEO location, user's history etc..
+-->
+<#assign currentMunicipality = RequestParameters['municipality']!"" />
+
 <@l.main page pageTitle!"">
 
-    <h1><@u.message page /></h1>
+    <h1>Tiedot lähetetty</h1>
 
     <#-- TOP CONTRIBUTION -->
     <#noescape>${topContribution!""}</#noescape>
-
-    <#-- Create form errors summary -->
-    <@u.errorsSummary path="initiative.*" prefix="initiative."/>
-
-    <noscript>
-        <@f.cookieWarning springMacroRequestContext.requestUri />
-    </noscript>
-
-    <#-- FORM. Use class 'sodirty' to enable dirtylisten. -->
-    <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-initiative" class="sodirty dirtylisten <#if hasErrors>has-errors</#if>">
-
-        <@f.securityFilters />
-        <@f.notTooFastField initiative />
-
-        <div class="form-block-container">
-            <@edit.blockHeader key="initiative.initiative.title" step=2 />
-            <@edit.initiativeBlock step=2 />
-        </div>
-
-        <div class="form-block-container">
-            <@edit.blockHeader key="initiative.currentAuthor.title" step=3 />
-            <@edit.currentAuthorBlock step=3 />
-        </div>
-
-        <div class="form-block-container">
-            <@edit.blockHeader key="initiative.save.title" step=4 />
-            <#-- TODO: Save draft -->
-            <div id="step-4" class="input-block cf">
-                <input type="hidden" name="managementHash" value="${initiative.managementHash}"/>
-                <input type="submit" value="Tallenna"/>
-            </div>
-        </div>
-    </form>
 
     <#-- BOTTOM CONTRIBUTION -->
     <#noescape>${bottomContribution!""}</#noescape>

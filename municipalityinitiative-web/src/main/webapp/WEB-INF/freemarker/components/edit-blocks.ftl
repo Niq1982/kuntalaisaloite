@@ -13,7 +13,7 @@
  -->
 <#macro blockHeader key step=0>
     <div id="step-header-${step}" class="content-block-header edit ${(step == 1)?string('open','')}">
-        <h2>${step}. <@u.message key!"" /></h2><span class="arrow hidden"> </span>
+        <h2>${step}. <@u.message key!"" /></h2>
     </div>
 </#macro>
 
@@ -106,7 +106,7 @@
  * @param step is the number of current block
  -->
 <#macro initiativeBlock step>      
-    <div id="step-${step}" class="input-block cf js-hide">
+    <div id="step-${step}" class="input-block cf">
         <div class="input-block-extra">
             <div class="input-block-extra-content">
                 <@f.helpText "help.name" />
@@ -151,7 +151,7 @@
  * @param step is the number of current block
  -->
 <#macro currentAuthorBlock step>
-    <div id="step-${step}" class="input-block cf js-hide">
+    <div id="step-${step}" class="input-block cf">
         <div class="input-block-extra">
             <div class="input-block-extra-content">
                 <@f.helpText "help.contactInfo.name" />
@@ -193,7 +193,7 @@
  * @param step is the number of current block
  -->
 <#macro saveBlock step>      
-    <div id="step-${step}" class="input-block cf js-hide">
+    <div id="step-${step}" class="input-block cf">
         <div class="input-block-extra">
             <div class="input-block-extra-content">
                 <@f.helpText "help.send" />

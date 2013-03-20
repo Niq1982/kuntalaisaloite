@@ -1213,9 +1213,15 @@ textarea {
 textarea:focus, input[type="text"]:focus, .email-input.focus {
     box-shadow:0 0 5px rgba(0,0,0,0.2);
     border: 1px solid #bbb;
-
 }
-
+input[type="text"] {
+    &.invalid {
+        border:1px solid @redGradient1;
+    }
+    &.valid {
+        border:1px solid @greenGradient1;
+    }
+}
 
 input:-moz-placeholder, textarea:-moz-placeholder { color:#999; }
 ::-webkit-input-placeholder, ::-webkit-textarea-placeholder { color:#999; }
@@ -1605,29 +1611,6 @@ label  {
     position:relative;
     background: #017380;
     padding:0.5em 25px 0.5em 30px;
-    cursor:pointer;
-
-    .transition(background, 0.2s, ease-in);
-
-    &:hover {
-        background: #0c93a4;
-    }
-
-    .arrow {
-        position:absolute;
-        right:20px;
-        top:50%;
-        display:block;
-        width:17px;
-        height:17px;
-        margin-top:-8px;
-        background:url("../img/icon-expand.png?version=${timestamp}") no-repeat 0 0;    
-    }
-    &.open {
-        .arrow {
-            background-position:0 -70px;
-        }
-    }
 
     &.disabled {
         opacity:@dimmed;
@@ -1655,21 +1638,6 @@ label  {
         margin: 0;
         color: #fff;
         font-weight:normal;
-    }
-}
-
-// If create form has validation errors
-.has-errors {
-    .content-block-header {
-        cursor:default;
-        
-        &:hover {
-            background: #017380;
-        }
-        
-        .arrow {
-            display:none;
-        }
     }
 }
 
@@ -1741,6 +1709,49 @@ label  {
     top: 23px;
     right:35px;
 
+}
+
+// Initiative type selection
+.initiative-types {
+    margin:1em 0;
+
+    .initiative-type {
+        float:left;
+        width:33%;
+        padding:20px;
+        border:1px solid @borderGray;
+        .gradient (#fff, #f1f1f1);
+        
+        -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+        -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+        box-sizing: border-box;
+
+        &.disabled {
+            opacity:@dimmed;
+        }
+        
+        &:hover {
+            .grayGradient();
+        }
+        
+        &.selected {
+            position:relative;
+            padding:30px;
+            margin:-10px;
+            .grayGradient();
+        }
+        
+        .type {
+            font-size:1.17em;
+        }
+        
+        .description {
+            display:block;
+            margin-top:0.5em;
+            font-size:0.9em;
+            line-height:1.2em;
+        }
+    }
 }
 
 .no-top-margin {

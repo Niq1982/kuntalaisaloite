@@ -5,6 +5,7 @@ import static fi.om.municipalityinitiative.web.RequestMessageType.WARNING;
 
 public enum RequestMessage {
     // Success messages
+    PREPARE (SUCCESS),
     SAVE_AND_SEND (SUCCESS),
     SAVE (SUCCESS, true),
     SEND (SUCCESS, true),

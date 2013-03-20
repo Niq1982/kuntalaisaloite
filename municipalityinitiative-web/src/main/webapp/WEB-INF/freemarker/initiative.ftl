@@ -36,7 +36,7 @@
 
     <#-- VIEW BLOCKS -->
     <div class="view-block public">
-    
+        
         <#if initiative.proposal??>
             <div class="initiative-content-row <#if !initiative.showName>last</#if>">
                 <h2><@u.message "initiative.content.title" /></h2>

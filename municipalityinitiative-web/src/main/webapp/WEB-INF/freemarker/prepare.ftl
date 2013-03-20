@@ -22,53 +22,104 @@
 -->
 <#assign currentMunicipality = RequestParameters['municipality']!"" />
 
+<#assign confirmationSent = false />
+<#if RequestParameters['success']?? && RequestParameters['success'] == "true" >
+    <#assign confirmationSent = true />
+</#if>
+
+<#if RequestParameters['id']??>
+    <#assign initiativeId = RequestParameters['id'] />
+</#if>
+
 <@l.main page pageTitle!"">
 
-    <h1><@u.message page /></h1>
+    <#if confirmationSent == false>
 
-    <#-- TOP CONTRIBUTION -->
-    <#noescape>${topContribution!""}</#noescape>
-
-    <#-- Create form errors summary -->
-    <@u.errorsSummary path="initiative.*" prefix="initiative."/>
-
-    <noscript>
-        <@f.cookieWarning springMacroRequestContext.requestUri />
-    </noscript>
-
-    <#-- FORM. Use class 'sodirty' to enable dirtylisten. -->
-    <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-initiative" class="sodirty dirtylisten <#if hasErrors>has-errors</#if>">
-
-        <input placeholder="Sähköposti" type="text" name="authorEmail"/>
-
-        <@f.securityFilters />
-        <@f.notTooFastField initiative />
-
-        <div class="form-block-container">
-            <@edit.blockHeader key="initiative.municipality.title" step=1 />
-            <@edit.municipalityBlock step=1 municipality=currentMunicipality />
-        </div>
-
-        <div class="form-block-container">
-            <@edit.chooseInitiativeType />
-        </div>
+        <h1><@u.message page /></h1>
+    
+        <#-- TOP CONTRIBUTION -->
+        <#noescape>${topContribution!""}</#noescape>
+    
+        <#-- Create form errors summary -->
+        <@u.errorsSummary path="initiative.*" prefix="initiative."/>
+    
+        <noscript>
+            <@f.cookieWarning springMacroRequestContext.requestUri />
+        </noscript>
+    
+        <#-- FORM. Use class 'sodirty' to enable dirtylisten. -->
+        <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-preparation" class="sodirty dirtylisten <#if hasErrors>has-errors</#if>">
+    
+            <@f.securityFilters />
+            <@f.notTooFastField initiative />
+    
+            <div class="form-block-container">
+                <div id="" class="input-block cf">
+                    <#--<@edit.blockHeader key="initiative.municipality.title" step=1 />-->
+                    <@edit.municipalityBlock step=1 municipality=currentMunicipality />
+                </div>
+            </div>
+            
+            <div class="form-block-container">
+                <div id="" class="input-block cf">
+                    <@edit.chooseInitiativeType />
+                </div>
+            </div>
+    
+            <div class="form-block-container">
+                <div id="" class="input-block cf">
+                
+                    <div class="input-block-content">
+                        <@u.systemMessage path="initiative.email.description" type="info" showClose=false />
+                    </div>
+                
+                    <div class="input-block-content">
+                        <label for="authorEmail" class="input-header">
+                            Sähköpostiosoitteesi <span class="icon-small required trigger-tooltip"></span>
+                        </label>
+                        <input type="text" maxlength="512" class="large" name="authorEmail" id="authorEmail">
+                    </div>
+                    
+                    <div class="input-block-content no-top-margin">
+                        <@edit.buttons type="save" /> <span class="fill-in-all push"><@u.message "initiative.fillInAllFields" /></span>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <#--
+            <div class="form-block-container">
+                <@edit.blockHeader key="initiative.save.title" step=4 />
+                <@edit.saveBlock step=4 />
+            </div>
+            -->
+        </form>
+    
+        <#-- BOTTOM CONTRIBUTION -->
+        <#noescape>${bottomContribution!""}</#noescape>
+    
+    <#else>
+    
+        <h1>Linkki aloitteen tekemiseen on lähetetty sähköpostiisi</h1>
         
-        <br/><br/>
         
-        <div class="form-block-container">
-            <@edit.buttons type="save" />
-        </div>
+        <#assign confirmInfo>
+            <p>Linkki kuntalaisaloitteen tekemiseen on lähetetty antamaasi sähköpostiosoitteeseen<br/>
+            ritva.matikainen@yahoo.com</p>
+            
+            <p>Siirry lukemaan saamasi sähköposti ja klikkaa siellä olevaa linkkiä. Tämän jälkeen pääset täyttämään aloitteen sisällön.</p>
 
-        <#--
-        <div class="form-block-container">
-            <@edit.blockHeader key="initiative.save.title" step=4 />
-            <@edit.saveBlock step=4 />
-        </div>
-        -->
-    </form>
-
-    <#-- BOTTOM CONTRIBUTION -->
-    <#noescape>${bottomContribution!""}</#noescape>
+            <h3>Mitä tehdä, jos sähköpostia ei ole tullut</h3>
+            <ul>
+                <li>Tarkista yltä, että annoit oikean sähköpostiosoitteen. Jos osoitteessasi on virhe, siirry takaisin <a href="${urls.prepare()}">Tee kuntalaisaloite</a>-sivulle ja aloitea kuntalaisaloitteen tekeminen uudelleen</li>
+                <li>Tarkista sähköpostisi roskapostilaatikko, lähetetty posti on saattanut mennä sinne</li>
+                <li>Tarkista, ettei sähköpostilaatikkosi ole täynnä</li>
+            </ul>
+        </#assign>
+    
+        <@u.systemMessageHTML confirmInfo "summary" />
+    
+    </#if>
 
 
 <#--

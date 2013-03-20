@@ -116,19 +116,19 @@ jQuery.fn.loadChosen = function(){
 };
 
 /**
- * Detect support for HTML5 placeholder
+ * Disable or enable button
  * ====================================
  * 
- * returns true / false
- * 
- * TODO: Check if we need this and fix. 
- * 
  * */
-/*
-jQuery.support.placeholder = (function(){
-    var i = document.createElement('input');
-    return 'placeholder' in i;
-})();*/
+jQuery.fn.disableButton = function(disable){
+	var btn = $(this);
+	
+	if (disable) {
+		btn.attr('disabled','disabled').addClass('disabled');
+	} else {
+		btn.removeAttr('disabled').removeClass('disabled');
+	}	
+};
 
 /**
  * 
@@ -374,12 +374,18 @@ $(document).ready(function () {
  * Expand and minify form blocks
  * =============================
  * 
+ * TODO: REMOVE THIS BLOCK
+ * 
  * */
+	
 	var validationErrors, showFormBlock, $formHeader;
 	
 	// If form has validation errors: true / false
 	validationErrors = $('#form-initiative').hasClass('has-errors');
 	
+	$('#button-next-2, #button-next-3, #button-next-4').click(function (){ return false; });
+	
+	/*
 	// Show this block, hide others
  	showFormBlock = function(blockHeader, scrollId){
  		var thisHeader, thisBlock, otherHeaders, otherBlocks;
@@ -441,6 +447,7 @@ $(document).ready(function () {
  		
  		return false;
  	});
+ 	*/
 
 
 /**
@@ -552,9 +559,16 @@ var municipalitySelection = (function() {
 			btnStep2			= $("#button-next-2"),									// Continue button for second step
 			btnParticipate 		= $("button#participate");								// Participate button
 		
+		var typeInput 			= $('.initiative-type input'),
+			authorEmail			= $('#authorEmail');
+		
 		btnParticipate.disableButton(prevent);
 		
+		typeInput.disableButton(prevent);
+		
 		if (prevent) {
+			authorEmail.attr('disabled','disabled');
+			console.log("JATKO ESTETTY");
 			btnStep2.addClass('disabled');
 			formBlockHeaders.addClass('disabled');
 			
@@ -563,6 +577,8 @@ var municipalitySelection = (function() {
 			}
 			
 		} else {
+			authorEmail.removeAttr('disabled');
+			console.log("JATKO SALLITTU");
 			btnStep2.removeClass('disabled');
 			formBlockHeaders.removeClass('disabled');
 			
@@ -629,35 +645,24 @@ var municipalitySelection = (function() {
 
 	// Assure that is member of the chosen municipality
 	jQuery.fn.assureMembership = function(){
-		var cb, btn, cbVal;
+		var cb, btn, isNotMember;
 		
 		cb = $(this);
 		btn = $('#button-next-2, button#participate');
-		cbVal = function(){			
-			return ( $("input[name=municipalMembership]:checked").val() === "true" );
+		isNotMember = function(){			
+			return ( $("input[name=municipalMembership]:checked").val() === "none" );
 		};
 		
 		// Use live as this is fired also in the modal
 		cb.live('change',function(){
-			var isMember = cbVal();
+			var disable = isNotMember();
 			
-			btn.disableButton( !isMember );
-			preventContinuing( !isMember );
-			warningNotMember( !isMember );
+			btn.disableButton( disable );
+			preventContinuing( disable);
+			warningNotMember( disable );
 		});
 	};
 	municipalMembershipRadios.assureMembership();
-	
-	// Disable or enable button
-	jQuery.fn.disableButton = function(disable){
-		var btn = $(this);
-		
-		if (disable) {
-			btn.attr('disabled','disabled').addClass('disabled');
-		} else {
-			btn.removeAttr('disabled').removeClass('disabled');
-		}	
-	};
 	
 	// Listen municipality selects
 	$('.municipality-select').live('change', function() {
@@ -699,6 +704,104 @@ var municipalitySelection = (function() {
 	
 }());
 
+
+/**
+* Preparing phase of the initiative
+* =================================
+* 
+* Check that all fields are filled
+* - Selected both municipalities
+* - Membership selection if visible
+* - Selected initiative type
+* - Added valid email address
+* 
+*/
+(function() {
+	var form 				= $('#form-preparation'),
+		submit 				= form.find('#action-send-confirm'),
+		input 				= form.find('input,select'),
+		email				= form.find('#authorEmail'),
+		municipalitySelect	= form.find('#municipality'),
+		homeMunicipalitySelect	= form.find('#homeMunicipality'),
+		typeInput 			= form.find('.initiative-type input'),
+		membership			= form.find('#municipalMembership'),
+		membershipRadio		= membership.find('input[type=radio]'),
+		fillInAll			= form .find('.fill-in-all');
+	
+	submit.disableButton(true);
+	
+	input.change(function(){
+		if (allFieldsFilled()) {
+			submit.disableButton(false);
+			fillInAll.addClass('js-hide');
+		} else {
+			submit.disableButton(true);
+			fillInAll.removeClass('js-hide');
+		}
+	});
+	email.keyup(function(){
+		if (allFieldsFilled()) {
+			submit.disableButton(false);
+			fillInAll.addClass('js-hide');
+		} else {
+			submit.disableButton(true);
+			fillInAll.removeClass('js-hide');
+		}
+	});
+	
+	var allFieldsFilled = function(){
+		var selectOK = memberRadioOK = typeRadioOK = emailOK = true;
+		
+		// FIXME: Has issues when upper one is selected and lower one is emptied
+		municipalitySelect.each(function() {
+			if(municipalitySelect.val() === "") {
+				selectOK = false
+			} else {
+				selectOK = selectOK && true;
+			}
+		});
+		
+		// FIXME: IS visible is fired too late
+		if (membership.is(":visible")){
+			membershipRadio.each(function(){
+				if($(this).is(':checked')) {
+					memberRadioOK = true;
+					return false;
+				} else {
+					memberRadioOK = false;
+				}
+			});
+		}
+		
+		console.log("select: "+selectOK + ", memberradio: "+memberRadioOK);
+		
+		email.each(function() {
+			var emailField = $(this);
+			
+			if (validateEmail(emailField.val())) {
+				emailField.addClass('valid').removeClass('invalid');
+				emailOK = true;
+			} else {
+				if (emailField.val() !== ""){
+					emailField.addClass('invalid').removeClass('valid');
+				}
+				emailOK = false;
+			}
+		});
+		
+		typeInput.each(function(){
+			if($(this).is(':checked')) {
+				typeRadioOK = true;
+				return false;
+			} else {
+				typeRadioOK = false;
+			}
+		});
+
+		return selectOK && memberRadioOK && typeRadioOK && emailOK;
+	};
+	
+}());
 
 /**
 * Send to municipality

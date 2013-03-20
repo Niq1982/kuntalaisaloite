@@ -26,6 +26,8 @@
 
     <h1><@u.message page /></h1>
     
+    CREATE
+    
     <#-- TOP CONTRIBUTION -->
     <#noescape>${topContribution!""}</#noescape>
    
