@@ -17,7 +17,9 @@
     <#assign managementWarningMessageHTML>
         <h2><@u.message "management.warning.title" /></h2>
         <p><@u.messageHTML "management.warning.description" /></p>
-        <a href="${urls.view(initiative.id)}"><@u.message "management.warning.link" /></a>
+        <a class="small-button gray" href="${urls.edit(initiative.id, initiative.managementHash.value)}"><span class="small-icon edit"><@u.messageHTML 'action.editInitiative' /></span></a>
+        <a class="small-button gray push" href="${urls.view(initiative.id)}"><span class="small-icon document">Esikatsele aloitteen julkista näkymää</span></a>
+        <#--<a href="${urls.view(initiative.id)}"><@u.message "management.warning.link" /></a>-->
     </#assign>
     
     <@u.systemMessageHTML html=managementWarningMessageHTML type="warning" />
@@ -38,6 +40,7 @@
     <#--
      * Show participant counts
     -->
+    <#-- TODO
     <div id="participants" class="view-block public">
         <div class="initiative-content-row last">
 
@@ -49,11 +52,14 @@
             
         </div>     
     </div>
+    -->
     
     <#--
      * Show management block
     -->
     <div id="send-to-municipality" class="view-block public">
+        <@u.systemMessage path="management.proceed.info" type="info" showClose=false />
+    
         <h2><@u.message "sendToMunicipality.title" /></h2>
 
         <#-- Check is form has errors -->

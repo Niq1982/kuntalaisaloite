@@ -2,7 +2,9 @@ package fi.om.municipalityinitiative.newweb;
 
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUICreateDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUIEditDto;
+import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.ui.PrepareInitiativeDto;
+import fi.om.municipalityinitiative.newdto.ui.SendToMunicipalityDto;
 import fi.om.municipalityinitiative.service.InitiativeService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.service.ValidationService;
@@ -155,7 +157,7 @@ public class MunicipalityInitiativeCreateController extends BaseController {
         }
 
         initiativeService.updateInitiativeDraft(initiativeId, editDto);
-        return contextRelativeRedirect(urls.view(initiativeId));
+        return contextRelativeRedirect(urls.management(initiativeId,editDto.getManagementHash()));
     }
     
     @InitBinder

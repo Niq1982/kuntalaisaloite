@@ -167,8 +167,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
             model.addAttribute("participants", participantService.findPublicParticipants(initiativeId));
             model.addAttribute("sendToMunicipality", SendToMunicipalityDto.parse(managementHash, initiativeService.getContactInfo(initiativeId)));
             return MANAGEMENT_VIEW;
-        }
-        else {
+        } else {
             return ERROR_404_VIEW;
         }
     }
