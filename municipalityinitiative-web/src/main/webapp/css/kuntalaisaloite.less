@@ -783,6 +783,10 @@ a.block-link {
 
 .form-block-container {
     margin-bottom: 2em;
+    
+    &.disabled {
+        opacity:@dimmed;
+    }
 }
 
 .initiative-content-header {
@@ -1008,27 +1012,29 @@ a.block-link {
 // :active      - active state
 //
 // Styleguide 4.1.3.
-.gray, .disabled {
-    color: @secondaryTextColor;
-    border: solid 1px @borderGray;
-    background: @grayGradient2;
-    background: -webkit-gradient(linear, left top, left bottom, from(@grayGradient1), to(@grayGradient2));
-    background: -moz-linear-gradient(top,  @grayGradient1,  @grayGradient2);
-    background: -o-linear-gradient(top,  @grayGradient1,  @grayGradient2);
-}
-.gray:hover, .disabled:hover {
-    background: @grayGradientHover2;
-    background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientHover1), to(@grayGradientHover2));
-    background: -moz-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
-    background: -o-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
-    color: #4f4f4f;
-    border-color: #b7b7b7;
-}
-.gray:active, .disabled:active, .gray:focus {
-    color: black;
-    background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientActive1), to(@grayGradientActive2));
-    background: -moz-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
-    background: -o-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
+a, button {
+    .gray, .disabled {
+        color: @secondaryTextColor;
+        border: solid 1px @borderGray;
+        background: @grayGradient2;
+        background: -webkit-gradient(linear, left top, left bottom, from(@grayGradient1), to(@grayGradient2));
+        background: -moz-linear-gradient(top,  @grayGradient1,  @grayGradient2);
+        background: -o-linear-gradient(top,  @grayGradient1,  @grayGradient2);
+    }
+    .gray:hover, .disabled:hover {
+        background: @grayGradientHover2;
+        background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientHover1), to(@grayGradientHover2));
+        background: -moz-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
+        background: -o-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
+        color: #4f4f4f;
+        border-color: #b7b7b7;
+    }
+    .gray:active, .disabled:active, .gray:focus {
+        color: black;
+        background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientActive1), to(@grayGradientActive2));
+        background: -moz-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
+        background: -o-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
+    }
 }
 
 

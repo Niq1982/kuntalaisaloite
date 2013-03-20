@@ -60,13 +60,13 @@
                 </div>
             </div>
             
-            <div class="form-block-container">
+            <div class="form-block-container toggle-disable">
                 <div id="" class="input-block cf">
                     <@edit.chooseInitiativeType />
                 </div>
             </div>
     
-            <div class="form-block-container">
+            <div class="form-block-container toggle-disable">
                 <div id="" class="input-block cf">
                 
                     <div class="input-block-content">
