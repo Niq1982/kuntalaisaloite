@@ -42,39 +42,37 @@
 
     <div class="view-block public">
         <#if initiative.proposal??>
-            <div class="initiative-content-row <#if !initiative.showName>last</#if>">
+            <div class="initiative-content-row">
                 <h2><@u.message "initiative.content.title" /></h2>
                 
                 <@u.text initiative.proposal!"" />
             </div>
         </#if>
-        
-         <#if initiative.showName>
-             <div class="initiative-content-row last">
-                <h2><@u.message "initiative.author.title" /></h2>
-                <p>${initiative.authorName!""}</p>
-            </div>
-        </#if>
+
+        <div class="initiative-content-row last">
+            <h2><@u.message "initiative.contactinfo.title" /></h2>
+            <p>${initiative.authorName!""}<br />
+        </div>
     </div>
 
     <div class="view-block public">
-        <h2>Lähetä aloite julkaistavaksi</h2>
+        <h2><@u.message "management.sendToReview.title" /></h2>
     
-        <@u.systemMessage path="management.proceed.info" type="info" showClose=false />
+        <@u.systemMessage path="management.sendToReview.description" type="info" showClose=false />
 
         <br/>
         <div class="column col-1of2">
-            <p>Haluan lähettää aloitteen suoraan kunnalle. En halua kerätä aloitteelle osallistujia. Aloite lähetetään kunnalle samalla kun se julkaistaan</p>
+            <p><@u.message "management.sendToReview.doNotCollect" /></p>
         </div>
         <div class="column col-1of2 last">
-            <p>Haluan kerätä aloitteelle muita osallistujia tai lisätä vastuuhenkilöitä. Lähetän aloitteen myöhemmin kunnalle.</p>
+            <p><@u.message "management.sendToReview.collect" /></p>
         </div>
         <br class="clear" />
         <div class="column col-1of2">
-            <a class="small-button"><span class="small-icon mail">Lähetä aloite julkaistavaksi ja samalla kunnalle</span></a>
+            <a class="small-button"><span class="small-icon mail"><@u.message "action.sendToReview.doNotCollect" /></span></a>
         </div>
         <div class="column col-1of2 last">
-            <a class="small-button" value="true" ><span class="small-icon save-and-send">Lähetä aloite julkaistavaksi</span></a>
+            <a class="small-button" value="true" ><span class="small-icon save-and-send"><@u.message "action.sendToReview.collect" /></span></a>
         </div>
         <br class="clear" />
     </div>

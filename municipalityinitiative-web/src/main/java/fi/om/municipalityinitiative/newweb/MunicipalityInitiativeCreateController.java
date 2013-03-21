@@ -139,6 +139,15 @@ public class MunicipalityInitiativeCreateController extends BaseController {
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().edit(initiativeId, managementHash));
         model.addAttribute("initiative", initiativeService.getInitiativeForEdit(initiativeId, managementHash));
+        
+        String managementURI = urls.management(initiativeId, managementHash);
+        
+        if (request.getHeader("referer") != null && request.getHeader("referer").equals(managementURI)) {
+            model.addAttribute("previousPageURI", managementURI);
+        } else {
+            model.addAttribute("previousPageURI", urls.prepare());
+        }
+        
         return EDIT_VIEW;
     }
 

@@ -20,6 +20,10 @@ public class PrepareInitiativeDto
 
     @NotNull
     private Long homeMunicipality;
+    
+    // TODO: initiativeType. Now just dummy field for the form
+    @NotNull
+    private String initiativeType;
 
     private Boolean franchise;
 
@@ -42,6 +46,14 @@ public class PrepareInitiativeDto
     public Long getMunicipality() {
         return municipality;
     }
+    
+    public String getInitiativeType() {
+        return initiativeType;
+    }
+
+    public void setInitiativeType(String initiativeType) {
+        this.initiativeType = initiativeType;
+    }    
 
     @Override
     public Boolean getFranchise() {

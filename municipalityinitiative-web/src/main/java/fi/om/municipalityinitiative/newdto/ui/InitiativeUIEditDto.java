@@ -26,6 +26,9 @@ public class InitiativeUIEditDto extends CreateDtoTimeValidation {
     @NotEmpty
     @Size(max = InitiativeConstants.INITIATIVE_PROPOSAL_MAX)
     private String proposal;
+    
+    @Size(max = InitiativeConstants.INITIATIVE_PROPOSAL_MAX)
+    private String extraInfo;
 
     @Valid
     private ContactInfo contactInfo;
@@ -55,6 +58,14 @@ public class InitiativeUIEditDto extends CreateDtoTimeValidation {
 
     public void setProposal(String proposal) {
         this.proposal = proposal;
+    }
+
+    public String getExtraInfo() {
+        return extraInfo;
+    }
+
+    public void setExtraInfo(String extraInfo) {
+        this.extraInfo = extraInfo;
     }
 
     public Municipality getMunicipality() {

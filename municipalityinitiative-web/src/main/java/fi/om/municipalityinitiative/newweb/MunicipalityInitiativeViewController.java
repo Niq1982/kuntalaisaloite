@@ -158,7 +158,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
         }
 
         addModelAttributesToCollectView(model,
-                initiativeService.getMunicipalityInitiative(initiativeId, locale),
+                initiativeInfo,
                 municipalityService.findAllMunicipalities(locale),
                 participantService.getParticipantCount(initiativeId),
                 participantService.findPublicParticipants(initiativeId));

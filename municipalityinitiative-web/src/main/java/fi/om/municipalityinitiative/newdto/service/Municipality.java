@@ -37,4 +37,8 @@ public class Municipality {
                 ? getNameFi()
                 : getNameSv();
     }
+    
+    public String getName(String locale) {
+        return getLocalizedName(Locale.forLanguageTag(locale));
+    }
 }

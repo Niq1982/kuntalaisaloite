@@ -85,22 +85,6 @@
                 <@u.systemMessage path="warning.initiative.notMember" type="warning" showClose=false />
             </div>
         </div>
-
-        <#-- Different treat for NOSCRIPT-users. Dummy checkbox and hidden field for better UX.
-        <noscript>
-        <div class="input-block-content">
-            <label>
-                <input type="hidden" name="municipalMembership" value="true" />
-                <#assign href="#" />
-                <input type="checkbox" name="placeholder" id="placeholder" checked="checked" disabled="disabled" /><span class="label"><@u.messageHTML key="initiative.checkMembership" args=[href] /></span>
-            </label>
-        </div>
-        </noscript> -->
-
-        <#--<div class="input-block-content hidden">
-            <@buttons type="next" nextStep=step+1 />
-        </div>-->
-
 </#macro>
 
 <#--
@@ -125,24 +109,17 @@
         </div>
         
         <div class="initiative-types cf">
-            <#-- TODO: Initiative type
+            <#-- TODO: Create a macro when other options are selectable -->
             <@spring.bind "initiative.initiativeType" /> 
             <@f.showError />
             <label class="initiative-type">
                 <span class="type">
-                    <input type="radio" id="initiativeType[0]" name="${spring.status.expression}" value="normal"
-                        <#if spring.stringStatusValue == value>checked="checked"</#if>
-                    <@spring.closeTag/>
+                    <input type="radio" id="initiativeType" name="${spring.status.expression}" value="normal"
+                        <#if spring.stringStatusValue == "normal">checked="checked"</#if>
+                    <@spring.closeTag/> <@u.message "initiative.type.normal" />
                 </span>
                 <span class="description"><@u.message "initiative.type.normal.description" /></span>
-            </label>-->
-            
-            
-            <label class="initiative-type">
-                <span class="type"><input type="radio" id="initiativeType[0]" name="initiativeType" value="normal" /> <@u.message "initiative.type.normal" /></span>
-                <span class="description"><@u.message "initiative.type.normal.description" /></span>
             </label>
-            
             
             <label class="initiative-type disabled trigger-tooltip" title="<@u.message "initiative.type.disabled" />">
                 <span class="type"><input type="radio" id="initiativeType[1]" name="initiativeType" value="two-percent" disabled="disabled" /> <@u.message "initiative.type.two-percent" /></span>
@@ -213,17 +190,8 @@
             <@f.textarea path="initiative.proposal" required="required" optional=false cssClass="textarea-tall" />
         </div>
         
-        <#--
-        <div class="input-block-content no-top-margin">
-            <@f.textarea path="initiative.extraInfo" required="required" optional=false cssClass="textarea" />
-        </div>
-        -->
         <div class="input-block-content">
-            <label for="extraInfo" class="input-header">
-                Lisätiedot
-                <span class="instruction-text">Esimerkiksi aloitteen kotisivut, yhteystiedot ja tukijat</span>
-            </label>
-            <textarea class="textarea" name="extraInfo" id="extraInfo"></textarea>
+            <@f.textarea path="initiative.extraInfo" required="" optional=true cssClass="textarea" />
         </div>
     </div>
 </#macro>
@@ -256,13 +224,16 @@
         <div class="input-block-content">
             <div class="column col-2of3">
                 <@f.textField path="initiative.contactInfo.name" required="required" optional=false cssClass="medium" maxLength=InitiativeConstants.CONTACT_NAME_MAX />
-                <@f.formCheckbox path="initiative.showName" checked=true />
+                
             </div>
             <div class="column col-1of3 last">
                 <div class="input-header"><@u.message "initiative.contactInfo.homeMunicipality" /></div>
                 
-                <input type="text" maxlength="100" class="medium" value="Testikunta" disabled="disabled">
+                <div class="input-placeholder">Testikunta</div>
+                <#--<input type="text" maxlength="100" class="medium" value="Testikunta" disabled="disabled">-->
             </div>
+            <br class="clear" />
+            <@f.formCheckbox path="initiative.showName" checked=true />
         </div>
 
         <div class="input-block-content">
@@ -272,13 +243,6 @@
         <div class="input-block-content">
             <@f.contactInfo path="initiative.contactInfo" realPath=initiative.contactInfo mode="full" />
         </div>
-        
-        <#--
-        <div class="input-block-content">
-            <button type="submit" name="${UrlConstants.ACTION_SAVE}" value="<@u.messageHTML 'action.saveAsDraft' />" class="small-button green"><span class="small-icon save-and-send"><@u.messageHTML 'action.save' /></span></button>
-            <a class="small-button red" href="${urls.baseUrl}/${locale}"><span class="small-icon cancel"><@u.messageHTML 'action.cancel' /></span></a>
-        </div>
-        -->
     </div>
 </#macro>
       
