@@ -309,16 +309,9 @@
 
     <div class="initiative-contact-details">
         <div class="column col-1of2">
-            <#if initiative.contactInfo?? && initiative.contactInfo.email != "">
-                <input type="hidden" name="contactInfo.email" value="${initiative.contactInfo.email!""}" />
-                <div class="input-header"><@u.message path+".email" /></div>
-                <p>${initiative.contactInfo.email!""}</p>
-            <#else>
-                <@textField path=path+".email" required="required" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
-            </#if>
-    
+            <input type="hidden" name="contactInfo.email" value="${initiative.contactInfo.email!""}" />
+            <@textField path=path+".email" required="" optional=false cssClass="medium" attributes="disabled='disabled'" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
             <@textField path=path+".phone" required="" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_PHONE_MAX />
-            
         </div>
         
         <div class="column col-1of2 last">

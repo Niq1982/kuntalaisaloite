@@ -17,7 +17,7 @@
 
     <h1 class="name">${initiative.name!""}</h1>
     
-    <div class="extra-info">${initiative.municipality.name!""}</div>
+    <div class="municipality">${initiative.municipality.name!""}</div>
     
     <@e.stateDates initiative />
 
@@ -40,49 +40,10 @@
         </#if>
     </div>
 
-
     <#--
      * Social media buttons
     -->
     <@some.some pageTitle=initiative.name!"" />
-
-    <#--
-     * Public VIEW modals
-     * 
-     * Uses jsRender for templating.
-     * Same content is generated for NOSCRIPT and for modals.
-     *
-     * Modals:
-     *  Request message (defined in macro u.requestMessage)
-     *
-     * jsMessage:
-     *  Warning if cookies are disabled
-    -->
-    <#-- TODO: Check what is needed. 'Cause there is nothing user could do here. -->
-    <@u.modalTemplate />
-    <@u.jsMessageTemplate />
-    
-    <script type="text/javascript">
-        var modalData = {};
-        
-        <#-- Modal: Request messages. Check for components/utils.ftl -->
-        <#if requestMessageModalHTML??>    
-            modalData.requestMessage = function() {
-                return [{
-                    title:      '<@u.message requestMessageModalTitle+".title" />',
-                    content:    '<#noescape>${requestMessageModalHTML?replace("'","&#39;")}</#noescape>'
-                }]
-            };
-        </#if>
-    
-        <#-- Modal: Form modified notification. Uses dirtyforms jQuery-plugin. -->
-        modalData.formModifiedNotification = function() {
-            return [{
-                title:      '<@u.message "form.modified.notification.title" />',
-                content:    '<@u.messageHTML "form.modified.notification" />'
-            }]
-        };
-    </script>
 
 </@l.main>
 

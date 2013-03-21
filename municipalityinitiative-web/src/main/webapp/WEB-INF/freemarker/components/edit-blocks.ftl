@@ -221,6 +221,7 @@
         <div class="input-block-content">
             <label for="extraInfo" class="input-header">
                 Lisätiedot
+                <span class="instruction-text">Esimerkiksi aloitteen kotisivut, yhteystiedot ja tukijat</span>
             </label>
             <textarea class="textarea" name="extraInfo" id="extraInfo"></textarea>
         </div>
@@ -259,7 +260,8 @@
             </div>
             <div class="column col-1of3 last">
                 <div class="input-header"><@u.message "initiative.contactInfo.homeMunicipality" /></div>
-                <#--${initiative.municipality.name!"TODO"}-->
+                
+                <input type="text" maxlength="100" class="medium" value="Testikunta" disabled="disabled">
             </div>
         </div>
 

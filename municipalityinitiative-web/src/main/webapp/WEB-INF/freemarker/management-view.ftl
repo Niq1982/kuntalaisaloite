@@ -27,11 +27,18 @@
     
     <@u.systemMessageHTML html=managementWarningMessageHTML type="summary" />
 
-    <@e.stateDates initiative />
+    <span class="extra-info">
+    <#if initiative.createTime??>
+        <#assign createTime><@u.localDate initiative.createTime /></#assign>
+        <@u.message key="initiative.date.create" args=[createTime] />
+        <br />
+        Aloite odottaa julkaisua
+    </#if>
+    </span>
 
     <h1 class="name">${initiative.name!""}</h1>
     
-    <div class="extra-info">${initiative.municipality.name!""}</div>
+    <div class="municipality">${initiative.municipality.name!""}</div>
 
     <div class="view-block public">
         <#if initiative.proposal??>
