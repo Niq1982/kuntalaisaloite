@@ -157,7 +157,7 @@ public class MunicipalityInitiativeCreateController extends BaseController {
         }
 
         initiativeService.updateInitiativeDraft(initiativeId, editDto);
-        return contextRelativeRedirect(urls.management(initiativeId,editDto.getManagementHash()));
+        return redirectWithMessage(urls.management(initiativeId,editDto.getManagementHash()), RequestMessage.SAVE_DRAFT, request);
     }
     
     @InitBinder

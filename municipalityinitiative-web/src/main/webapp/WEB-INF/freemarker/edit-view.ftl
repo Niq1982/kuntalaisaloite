@@ -2,7 +2,7 @@
 <#import "components/forms.ftl" as f />
 <#import "components/layout.ftl" as l />
 <#import "components/utils.ftl" as u />
-<#import "components/edit-blocks_new.ftl" as edit />
+<#import "components/edit-blocks.ftl" as edit />
 <#import "components/some.ftl" as some />
 
 <#escape x as x?html>
@@ -37,9 +37,7 @@
     
     <div class="system-msg msg-summary">
         <div class="system-msg msg-info">
-            <h3>Tavallinen aloite, Kunnalle <#--${initiative.municipality.name!"TODO"}--></h3>
-        </div>
-        <div class="system-msg msg-info">
+            <h3>Tavallinen aloite, Kunnalle <i>TODO</i><#--${initiative.municipality.name!"TODO"}--></h3>
             Lomakkeen pakolliset tiedot on merkitty tähdellä <span class="icon-small required"></span>
         </div>
     </div>

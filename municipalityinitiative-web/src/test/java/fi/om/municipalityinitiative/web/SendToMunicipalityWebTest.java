@@ -1,6 +1,8 @@
 package fi.om.municipalityinitiative.web;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
+
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class SendToMunicipalityWebTest extends WebTestBase {
@@ -19,6 +21,7 @@ public class SendToMunicipalityWebTest extends WebTestBase {
     private static final String COMMENT = "Saate kunnalle";
     
     @Test
+    @Ignore
     public void send_to_municipality() {
         Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
         Long initiativeId = testHelper.createTestInitiative(municipality1Id, "Testi aloite", true, true);

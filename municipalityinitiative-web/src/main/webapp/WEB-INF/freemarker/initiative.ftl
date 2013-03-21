@@ -25,11 +25,11 @@
     <#-- TOP INFOS -->
     <#if topInfo??><#noescape>${topInfo}</#noescape></#if>
 
-    <div class="municipality">${initiative.municipality.name!""}</div>
+    <@e.stateDates initiative />
 
     <h1 class="name">${initiative.name!""}</h1>
     
-    <@e.stateDates initiative />
+    <div class="extra-info">${initiative.municipality.name!""}</div>
 
     <#-- TOP CONTRIBUTION -->
     <#if topContribution??><#noescape>${topContribution}</#noescape></#if>

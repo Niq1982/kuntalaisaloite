@@ -1,4 +1,5 @@
 <#import "/spring.ftl" as spring />
+<#import "components/layout.ftl" as l />
 <#import "components/utils.ftl" as u />
 <#import "components/forms.ftl" as f />
 <#import "components/elements.ftl" as e />
@@ -8,131 +9,117 @@
 <#assign managementURL = urls.management(initiative.id, initiative.managementHash.value) />
 
 <#--
- * Top Info elements for the top section of the initiative's management-view page
+ * Layout parameters for HTML-title and navigation.
+ * 
+ * page = "page.initiative.public" or "page.initiative.unnamed"
+ * pageTitle = initiative.name if exists, otherwise empty string
 -->
-<#assign topInfo>
-    <#--
-     * Warning message for the management page.
-    -->
+
+<@l.main "page.initiative.management" initiative.name!"">
+
     <#assign managementWarningMessageHTML>
         <h2><@u.message "management.warning.title" /></h2>
         <p><@u.messageHTML "management.warning.description" /></p>
-        <a class="small-button gray" href="${urls.edit(initiative.id, initiative.managementHash.value)}"><span class="small-icon edit"><@u.messageHTML 'action.editInitiative' /></span></a>
-        <a class="small-button gray push" href="${urls.view(initiative.id)}"><span class="small-icon document">Esikatsele aloitteen julkista näkymää</span></a>
+        <p><a class="small-button gray" href="${urls.edit(initiative.id, initiative.managementHash.value)}"><span class="small-icon edit"><@u.messageHTML 'action.editInitiative' /></span></a>
+        <a class="small-button gray push" href="${urls.view(initiative.id)}"><span class="small-icon document">Esikatsele aloitteen julkista näkymää</span></a></p>
         <#--<a href="${urls.view(initiative.id)}"><@u.message "management.warning.link" /></a>-->
     </#assign>
     
-    <@u.systemMessageHTML html=managementWarningMessageHTML type="warning" />
-</#assign>
+    <@u.systemMessageHTML html=managementWarningMessageHTML type="summary" />
 
-<#--
- * Elements for the top section of the initiative's management-view page
--->
-<#assign topContribution>
+    <@e.stateDates initiative />
 
-</#assign>
-
-<#--
- * Elements for the bottom section of the initiative's management-view page
--->
-<#assign bottomContribution>
-
-    <#--
-     * Show participant counts
-    -->
-    <#-- TODO
-    <div id="participants" class="view-block public">
-        <div class="initiative-content-row last">
-
-            <h2><@u.message "participants.title" /></h2>
-            <span class="user-count-total">${participantCount.total!""}</span>
-            <br class="clear" />
-
-            <@e.participantCounts />
-            
-        </div>     
-    </div>
-    -->
+    <h1 class="name">${initiative.name!""}</h1>
     
-    <#--
-     * Show management block
-    -->
-    <div id="send-to-municipality" class="view-block public">
-        <@u.systemMessage path="management.proceed.info" type="info" showClose=false />
-    
-        <h2><@u.message "sendToMunicipality.title" /></h2>
+    <div class="extra-info">${initiative.municipality.name!""}</div>
 
-        <#-- Check is form has errors -->
-        <@spring.bind "sendToMunicipality.*" />
-        <#assign hasErrors = false />
-        <#if spring.status.error>
-            <#assign hasErrors = true />
+    <div class="view-block public">
+        <#if initiative.proposal??>
+            <div class="initiative-content-row <#if !initiative.showName>last</#if>">
+                <h2><@u.message "initiative.content.title" /></h2>
+                
+                <@u.text initiative.proposal!"" />
+            </div>
         </#if>
         
-        <#-- Participate form errors summary -->
-        <#if hasErrors>
-            <div class="input-block-content no-top-margin">    
-                <@u.errorsSummary path="sendToMunicipality.*" prefix="sendToMunicipality."/>
-            </div>
-        <#else>
-            <div class="js-send-to-municipality hidden">
-                <#assign href="#" />
-                <p><@u.messageHTML key="sendToMunicipality.description" args=[href] /></p>
-                <a href="#" id="js-send-to-municipality" class="small-button"><span class="small-icon mail"><@u.message "action.send" /></span></a>
+         <#if initiative.showName>
+             <div class="initiative-content-row last">
+                <h2><@u.message "initiative.author.title" /></h2>
+                <p>${initiative.authorName!""}</p>
             </div>
         </#if>
-
-        <div id="send-to-municipality-form" class="send-to-municipality cf js-send-to-municipality-form <#if !hasErrors>js-hide</#if>">
-
-            <noscript>
-                <@f.cookieWarning managementURL />
-            </noscript>
-
-            <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-send" class="sodirty">
-                <@f.securityFilters />
-                <input type="hidden" name="managementHash" value="${sendToMunicipality.managementHash}"/>
-                
-                <div class="input-block-content <#if !hasErrors>no-top-margin</#if>">
-                    <@f.textarea path="sendToMunicipality.comment" required="" optional=false />
-                </div>
-                
-                <div class="input-block-content">
-                    <@u.systemMessage path="sendToMunicipality.contactInfo.description" type="info" showClose=false />  
-                </div>
-
-                <div class="input-block-content">
-                    <@f.contactInfo path="sendToMunicipality.contactInfo" mode="full" showName=true />
-                </div>
-                
-                <div class="input-block-content">
-                    <button type="submit" name="action-send" class="small-button"><span class="small-icon mail"><@u.message "action.send" /></span></button>
-                    <#if !hasErrors>
-                        <a href="${springMacroRequestContext.requestUri}#participants" class="push close hidden"><@u.message "action.cancel" /></a>
-                    <#else>
-                        <#-- In case of errors cancel-link clears data by refreshing management page. -->
-                        <a href="${managementURL}" class="push hidden"><@u.message "action.cancel" /></a>
-                    </#if>
-                </div>
-                <br/><br/>
-            </form>
-        </div>
     </div>
 
-</#assign>
+    <div class="view-block public">
+        <h2>Lähetä aloite julkaistavaksi</h2>
+    
+        <@u.systemMessage path="management.proceed.info" type="info" showClose=false />
+
+        <br/>
+        <div class="column col-1of2">
+            <p>Haluan lähettää aloitteen suoraan kunnalle. En halua kerätä aloitteelle osallistujia. Aloite lähetetään kunnalle samalla kun se julkaistaan</p>
+        </div>
+        <div class="column col-1of2 last">
+            <p>Haluan kerätä aloitteelle muita osallistujia tai lisätä vastuuhenkilöitä. Lähetän aloitteen myöhemmin kunnalle.</p>
+        </div>
+        <br class="clear" />
+        <div class="column col-1of2">
+            <a class="small-button"><span class="small-icon mail">Lähetä aloite julkaistavaksi ja samalla kunnalle</span></a>
+        </div>
+        <div class="column col-1of2 last">
+            <a class="small-button" value="true" ><span class="small-icon save-and-send">Lähetä aloite julkaistavaksi</span></a>
+        </div>
+        <br class="clear" />
+    </div>
 
 
-<#assign modalData>
-    var messageData = {};
+    <#--
+     * Public VIEW modals
+     * 
+     * Uses jsRender for templating.
+     * Same content is generated for NOSCRIPT and for modals.
+     *
+     * Modals:
+     *  Request message (defined in macro u.requestMessage)
+     *
+     * jsMessage:
+     *  Warning if cookies are disabled
+    -->
+    <@u.modalTemplate />
+    <@u.jsMessageTemplate />
+    
+    <script type="text/javascript">
+        var modalData = {};
+        
+        <#-- Modal: Request messages. Check for components/utils.ftl -->
+        <#if requestMessageModalHTML??>    
+            modalData.requestMessage = function() {
+                return [{
+                    title:      '<@u.message requestMessageModalTitle+".title" />',
+                    content:    '<#noescape>${requestMessageModalHTML?replace("'","&#39;")}</#noescape>'
+                }]
+            };
+        </#if>
+    
+        <#-- Modal: Form modified notification. Uses dirtyforms jQuery-plugin. -->
+        modalData.formModifiedNotification = function() {
+            return [{
+                title:      '<@u.message "form.modified.notification.title" />',
+                content:    '<@u.messageHTML "form.modified.notification" />'
+            }]
+        };
+    
+        var messageData = {};
 
-    <#-- jsMessage: Warning if cookies are not enabled -->
-    messageData.warningCookiesDisabled = function() {
-        return [{
-            type:      'warning',
-            content:    '<h3><@u.message "warning.cookieError.title" /></h3><div><@u.messageHTML key="warning.cookieError.description" args=[managementURL] /></div>'
-        }]
-    };
-</#assign>
+        <#-- jsMessage: Warning if cookies are not enabled -->
+        messageData.warningCookiesDisabled = function() {
+            return [{
+                type:      'warning',
+                content:    '<h3><@u.message "warning.cookieError.title" /></h3><div><@u.messageHTML key="warning.cookieError.description" args=[managementURL] /></div>'
+            }]
+        };
+    </script>
 
-<#include "initiative.ftl" />
+</@l.main>
 
 </#escape> 

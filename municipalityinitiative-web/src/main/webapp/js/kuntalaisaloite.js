@@ -104,13 +104,14 @@ jsMessages.Load();
  * 
  * */
 jQuery.fn.loadChosen = function(){
-	var self = $(this);
+	var self = $(this),
+		allowSingleDeselect = typeof self.attr('data-allow-single-deselect') !== 'undefined' && self.attr('data-allow-single-deselect') !== false;
 	
 	self.find('option:first').text('');
 	self.chosen(
 		{
 			no_results_text: localization.chosenNoResults(Init.getLocale()),
-			allow_single_deselect: true
+			allow_single_deselect: allowSingleDeselect
 		}
 	);
 };
@@ -559,7 +560,7 @@ var municipalitySelection = (function() {
 			btnStep2			= $("#button-next-2"),									// Continue button for second step
 			btnParticipate 		= $("button#participate");								// Participate button
 		
-		var typeInput 			= $('.initiative-type input'),
+		var typeInput 			= $('.initiative-type:first-child input'),
 			authorEmail			= $('#authorEmail'),
 			toggleDisable		= $('.toggle-disable'),
 			btnParticipate 		= $("button#participate");

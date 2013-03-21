@@ -98,7 +98,6 @@
 <#assign naviItems = [
       {"naviName":"page.frontpage", "naviUrl":urls.frontpage()},
       {"naviName":"page.find", "naviUrl":urls.search()},
-      {"naviName":"page.createNew", "naviUrl":urls.createNew()},
       {"naviName":"page.createNew", "naviUrl":urls.prepare()},
       {"naviName":"page.help", "naviUrl":urls.helpIndex()}
     ] />

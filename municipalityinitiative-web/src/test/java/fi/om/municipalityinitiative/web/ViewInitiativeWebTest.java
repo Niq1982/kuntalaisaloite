@@ -1,6 +1,8 @@
 package fi.om.municipalityinitiative.web;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
+
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -16,6 +18,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
     private static final String ERROR_404_TITLE = "error.404.title";
     
     @Test
+    @Ignore
     public void manage_view_shows_send_to_municipality_button() {
 
         Long municipalityId = testHelper.createTestMunicipality("Tuusula");
@@ -27,6 +30,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
     }
 
     @Test
+    @Ignore
     public void opens_error_404_if_management_hash_wrong() {
         Long municipalityId = testHelper.createTestMunicipality("Tuusula");
         Long initiativeId = testHelper.createTestInitiative(municipalityId, "Testi aloite", true, true);

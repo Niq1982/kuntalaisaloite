@@ -40,6 +40,16 @@
     }
 }
 
+.initiative-types {
+    .initiative-type {
+        background:#fff url("../img/ie/gradient-gray-light.png?version=${timestamp}") center bottom repeat-x;
+        
+        &:hover {
+            background:#fff url("../img/ie/gradient-gray.png?version=${timestamp}") center bottom repeat-x;
+        }
+    }
+}
+
 // IE 6 & 7 specific styles
 .ie6, .ie7  {
     #header { position:relative; }
@@ -94,5 +104,19 @@
     .content-block-header.disabled {
         background:#60a5ad;
         //filter: progid:DXImageTransform.Microsoft.Alpha(opacity = 60);
-    }  
+    }
+    
+    .initiative-types {
+        .initiative-type {
+            &.disabled {
+                filter: progid:DXImageTransform.Microsoft.Alpha(opacity = 60);
+            }
+        }
+    }
+    
+    .form-block-container {
+        &.disabled {
+            filter: progid:DXImageTransform.Microsoft.Alpha(opacity = 60);
+        }
+    }
 }

@@ -178,7 +178,7 @@
  *        or CSS styles or size
  * @param preSelected the predefined value for the select
 -->
-<#macro municipalitySelect path options required="" cssClass="" attributes="" preSelected="" showLabel=true defaultOption="initiative.chooseMunicipality">
+<#macro municipalitySelect path options required="" cssClass="" attributes="" preSelected="" showLabel=true defaultOption="initiative.chooseMunicipality" allowSingleDeselect=false>
     <@spring.bind path />
     
     <#if showLabel>
@@ -197,7 +197,7 @@
         <#assign data = spring.status.value!"" />
     </#if>
 
-    <select name="${spring.status.expression}" id="${spring.status.expression}" ${attributes} class="chzn-select ${cssClass}" data-initiative-municipality="${data}" data-placeholder="<@u.message defaultOption />">
+    <select name="${spring.status.expression}" id="${spring.status.expression}" ${attributes} class="chzn-select ${cssClass}" data-initiative-municipality="${data}" data-placeholder="<@u.message defaultOption />" <#if allowSingleDeselect>data-allow-single-deselect="allow"</#if>>
         <option value=""><@u.message defaultOption /></option>
         <#list options as option>
             <option value="${option.id}"<@checkSelected option.id preSelected />>${option.name}</option>
@@ -309,9 +309,16 @@
 
     <div class="initiative-contact-details">
         <div class="column col-1of2">
-            <@textField path=path+".email" required="required" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
-            
+            <#if initiative.contactInfo?? && initiative.contactInfo.email != "">
+                <input type="hidden" name="contactInfo.email" value="${initiative.contactInfo.email!""}" />
+                <div class="input-header"><@u.message path+".email" /></div>
+                <p>${initiative.contactInfo.email!""}</p>
+            <#else>
+                <@textField path=path+".email" required="required" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
+            </#if>
+    
             <@textField path=path+".phone" required="" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_PHONE_MAX />
+            
         </div>
         
         <div class="column col-1of2 last">

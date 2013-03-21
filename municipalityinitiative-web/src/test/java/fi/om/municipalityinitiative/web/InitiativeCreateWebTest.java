@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.web;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -38,12 +39,14 @@ public class InitiativeCreateWebTest extends WebTestBase {
     private static final String CONTACT_ADDRESS = "Osoitekatu 1 A, 00000 Helsinki";
 
     @Test
+    @Ignore
     public void page_opens() {
         openAndAssertCreatePage();
     }
     
     // Create an initiative that has only one author
     @Test
+    @Ignore
     public void create_and_send_initiative() {
         
         testHelper.createTestMunicipality(MUNICIPALITY_1);
@@ -58,6 +61,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     
     // Create an initiative and start collecting participants
     @Test
+    @Ignore
     public void create_and_start_collecting() {
         testHelper.createTestMunicipality(MUNICIPALITY_1);
         testHelper.createTestMunicipality(MUNICIPALITY_2);
