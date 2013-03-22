@@ -7,7 +7,8 @@ import javax.validation.ConstraintValidatorContext;
 
 public class NotTooFastSubmitValidator implements ConstraintValidator<NotTooFastSubmit, Long> {
 
-    public static final int MIN_SUBMIT_TIME_MILLIS = 10000;
+    // TODO: Think again where to use and how long the delay should be. Reduced from 10s to 3s // mikkole.
+    public static final int MIN_SUBMIT_TIME_MILLIS = 3000;
 
     private static boolean validationEnabled = true;
 

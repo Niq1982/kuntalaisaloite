@@ -3,6 +3,37 @@
 <#escape x as x?html> 
 
 <#-- 
+ * initiativeView
+ * 
+ * Generates initiative's public view block
+ *
+ * @param thisInitiative is initiative
+-->
+<#macro initiativeView thisInitiative>
+    <div class="initiative-content-row">
+        <h2><@u.message "initiative.content.title" /></h2>
+        
+        <@u.text thisInitiative.proposal!"" />
+    </div>
+</#macro>
+
+<#-- 
+ * initiativeAuthor
+ * 
+ * Generates initiative's public author name
+ *
+ * @param thisInitiative is initiative
+-->
+<#macro initiativeAuthor thisInitiative>
+     <#if thisInitiative.showName>
+         <div class="initiative-content-row last">
+            <h2><@u.message "initiative.author.title" /></h2>
+            <p>${thisInitiative.authorName!""}</p>
+        </div>
+    </#if>
+</#macro>
+
+<#-- 
  * stateDates
  * 
  * Generates initiative's state dates

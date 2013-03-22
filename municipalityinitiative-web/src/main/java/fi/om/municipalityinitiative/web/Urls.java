@@ -166,10 +166,14 @@ public final class Urls {
 
     public static final String CREATE_SV_NEW =    "/sv/initiativ_new";
     
-    public static final String PREPARE_FI =    "/fi/aloite_prepare";
+    public static final String PREPARE_FI =    "/fi/aloitteen-valmistelu";
 
-    public static final String PREPARE_SV  =    "/sv/initiativ_prepare";
+    public static final String PREPARE_SV =    "/sv/initiativ-prepare";
 
+    public static final String PENDING_CONFIRMATION_FI =    "/fi/odottaa-vahvistusta" + "/" + ID_PARAMETER;
+
+    public static final String PENDING_CONFIRMATION_SV  =    "/sv/odottaa-vahvistusta-sv" + "/" + ID_PARAMETER;
+    
     public static final String VIEW_FI = CREATE_FI + "/" + ID_PARAMETER;
 
     public static final String VIEW_SV = CREATE_SV + "/" + ID_PARAMETER;
@@ -326,6 +330,13 @@ public final class Urls {
     public String prepare() {
         return getLocalizedPageUrl(PREPARE_FI, PREPARE_SV);
     }
+
+    public String pendingConfirmation(Long initiativeId) {
+        return getLocalizedPageUrl(PENDING_CONFIRMATION_FI, PENDING_CONFIRMATION_SV).replace(ID_PARAMETER, initiativeId.toString());
+    }
+//    public String pendingConfirmation() {
+//        return getLocalizedPageUrl(PENDING_CONFIRMATION_FI, PENDING_CONFIRMATION_SV);
+//    }
     
     public String paramSendInvitations() {
         return ACTION_SEND_INVITATIONS;

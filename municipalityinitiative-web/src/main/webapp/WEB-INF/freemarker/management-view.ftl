@@ -15,7 +15,7 @@
  * pageTitle = initiative.name if exists, otherwise empty string
 -->
 
-<@l.main "page.initiative.management" initiative.name!"">
+<@l.main page="page.initiative.management" pageTitle=initiative.name!"">
 
     <#assign managementWarningMessageHTML>
         <h2><@u.message "management.warning.title" /></h2>
@@ -40,14 +40,8 @@
     
     <div class="municipality">${initiative.municipality.name!""}</div>
 
-    <div class="view-block public">
-        <#if initiative.proposal??>
-            <div class="initiative-content-row">
-                <h2><@u.message "initiative.content.title" /></h2>
-                
-                <@u.text initiative.proposal!"" />
-            </div>
-        </#if>
+    <div class="view-block public first">
+        <@e.initiativeView initiative />
 
         <div class="initiative-content-row last">
             <h2><@u.message "initiative.contactinfo.title" /></h2>

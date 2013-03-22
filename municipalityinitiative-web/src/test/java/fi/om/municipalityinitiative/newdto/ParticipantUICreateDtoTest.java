@@ -114,7 +114,7 @@ public class ParticipantUICreateDtoTest {
     public void too_fast_submit_() {
 
         ParticipantUICreateDto dto = validParticipant();
-        dto.setRandomNumber(DateTime.now().minusSeconds(5).getMillis());
+        dto.setRandomNumber(DateTime.now().minusSeconds(2).getMillis());
 
         Set<ConstraintViolation<ParticipantUICreateDto>> violations = validator.validate(dto);
 

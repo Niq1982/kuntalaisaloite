@@ -19,6 +19,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     private static final String MSG_SITE_NAME = "siteName";
     private static final String MSG_PAGE_CREATE_NEW = "page.createNew";
     private static final String MSG_SUCCESS_SAVE_AND_SEND = "success.save-and-send";
+    private static final String MSG_SUCCESS_PREPARE = "success.prepare";
     private static final String MSG_SUCCESS_SAVE_TITLE = "success.save.title";
     private static final String MSG_SUCCESS_SAVE_DRAFT = "success.save-draft";
     private static final String MSG_BTN_PREPARE_SEND = "action.prepare.send";
@@ -87,7 +88,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         inputText("authorEmail", CONTACT_EMAIL);
         getElemContaining(getMessage(MSG_BTN_PREPARE_SEND), "button").click();
         
-        assertMsgContainedByClass("modal-title", MSG_SUCCESS_SAVE_TITLE);
+        assertMsgContainedByClass("msg-success", MSG_SUCCESS_PREPARE);
         System.out.println("--- add_initiative_content OK");
     }
     

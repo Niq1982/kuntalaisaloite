@@ -128,7 +128,8 @@ public class MunicipalityInitiativeCreateController extends BaseController {
         initiative.setCollectable(true);
 
         Long initiativeId = initiativeService.prepareInitiative(initiative, locale);
-        return redirectWithMessage(urls.view(initiativeId), RequestMessage.SAVE, request);
+//        return redirectWithMessage(urls.view(initiativeId), RequestMessage.SAVE, request);
+        return redirectWithMessage(urls.pendingConfirmation(initiativeId), RequestMessage.PREPARE, request);
     }
 
     @RequestMapping(value={ EDIT_FI, EDIT_SV }, method=GET)

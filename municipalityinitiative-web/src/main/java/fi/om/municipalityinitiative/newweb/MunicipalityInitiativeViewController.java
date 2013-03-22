@@ -141,6 +141,21 @@ public class MunicipalityInitiativeViewController extends BaseController {
         }
     }
 
+    // TODO: Secure view with managementHash, author email-address, this view should exist only in initiative PREPARE-state.
+    @RequestMapping(value={ PENDING_CONFIRMATION_FI, PENDING_CONFIRMATION_SV }, method=GET)
+    public String pendingConfirmation(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
+        
+        Urls urls = Urls.get(locale);
+        
+        InitiativeViewInfo initiativeInfo = initiativeService.getMunicipalityInitiative(initiativeId, locale);
+
+        model.addAttribute("initiative", initiativeInfo);
+
+        // TODO: redirect to 404 if view is not accessible (wrong managementHash or wrong initiative state)
+        return PENDING_CONFIRMATION;
+
+    }
+    
     @RequestMapping(value={ MANAGEMENT_FI, MANAGEMENT_SV }, method=GET)
     public String managementView(@PathVariable("id") Long initiativeId,
                                  @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,

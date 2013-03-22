@@ -91,8 +91,9 @@
  * 
  * @param page for example 'page.management'
  * @param pageTitle for example initiative's title. Used in HTML title.
+ * @param requestMessagesON can be assigned to show request messages in main macro (default is true)
  -->
-<#macro main page pageTitle="">
+<#macro main page pageTitle="" requestMessagesON=true>
 
 <#-- Main navigation navigation items for HTML title, navigation and breadcrumb -->
 <#assign naviItems = [
@@ -276,7 +277,7 @@
     <div class="container">
         <div id="content">
 
-            <#if requestMessages?? >
+            <#if requestMessagesON && requestMessages?? >
                 <@u.requestMessage requestMessages />
             </#if>
             

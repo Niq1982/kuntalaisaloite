@@ -22,22 +22,9 @@
     <@e.stateDates initiative />
 
     <#-- VIEW BLOCKS -->
-    <div class="view-block public">
-        
-        <#if initiative.proposal??>
-            <div class="initiative-content-row <#if !initiative.showName>last</#if>">
-                <h2><@u.message "initiative.content.title" /></h2>
-                
-                <@u.text initiative.proposal!"" />
-            </div>
-        </#if>
-        
-         <#if initiative.showName>
-             <div class="initiative-content-row last">
-                <h2><@u.message "initiative.author.title" /></h2>
-                <p>${initiative.authorName!""}</p>
-            </div>
-        </#if>
+    <div class="view-block public first">
+        <@e.initiativeView initiative />
+        <@e.initiativeAuthor initiative />
     </div>
 
     <#--
