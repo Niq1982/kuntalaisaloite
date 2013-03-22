@@ -62,9 +62,11 @@
 
         <br/>
         <div class="column col-1of2">
+            <h3><@u.message "management.sendToReview.doNotCollect.title" /></h3>
             <p><@u.message "management.sendToReview.doNotCollect" /></p>
         </div>
         <div class="column col-1of2 last">
+            <h3><@u.message "management.sendToReview.collect.title" /></h3>
             <p><@u.message "management.sendToReview.collect" /></p>
         </div>
         <br class="clear" />
