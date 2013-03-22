@@ -186,6 +186,10 @@ public final class Urls {
 
     public static final String MANAGEMENT_SV = "/sv/administration" + "/" + ID_PARAMETER;
 
+    public static final String MODERATION_FI = "/fi/moderointi" + "/" + ID_PARAMETER;
+
+    public static final String MODERATION_SV = "/sv/moderation" + "/" + ID_PARAMETER;
+    
     public static final String EDIT_FI = "/fi/muokkaa" + "/" + ID_PARAMETER;
 
     public static final String EDIT_SV = "/sv/bearbeta" + "/" + ID_PARAMETER;
@@ -254,6 +258,10 @@ public final class Urls {
     public String management(Long initiativeId, String managementHash) {
         return getManagement(initiativeId) + "?" + PARAM_MANAGEMENT_CODE + "=" + managementHash;
     }
+    
+    public String moderation(Long initiativeId, String managementHash) {
+        return getModeration(initiativeId) + "?" + PARAM_MANAGEMENT_CODE + "=" + managementHash;
+    }
 
     public String edit(Long initiativeId, String managementHash) {
         return getEdit(initiativeId) + "?" + PARAM_MANAGEMENT_CODE + "=" + managementHash;
@@ -276,6 +284,10 @@ public final class Urls {
     }
 
     public String getManagement(Long id) {
+        return getLocalizedPageUrl(MANAGEMENT_FI, MANAGEMENT_SV).replace(ID_PARAMETER, id.toString());
+    }
+    
+    public String getModeration(Long id) {
         return getLocalizedPageUrl(MANAGEMENT_FI, MANAGEMENT_SV).replace(ID_PARAMETER, id.toString());
     }
 

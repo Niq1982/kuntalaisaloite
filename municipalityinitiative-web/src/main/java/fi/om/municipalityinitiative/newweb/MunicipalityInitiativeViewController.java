@@ -187,6 +187,38 @@ public class MunicipalityInitiativeViewController extends BaseController {
         }
     }
     
+    // TODO: Finalize. Now just a dummy for template development.
+    @RequestMapping(value={ MODERATION_FI, MODERATION_SV }, method=GET)
+    public String moderationView(@PathVariable("id") Long initiativeId,
+                                 @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
+                                 Model model, Locale locale, HttpServletRequest request) {
+        
+        Urls urls = Urls.get(locale);
+        model.addAttribute(ALT_URI_ATTR, urls.alt().management(initiativeId, managementHash));
+
+        InitiativeViewInfo initiativeInfo = initiativeService.getMunicipalityInitiative(initiativeId, locale);
+
+        if (initiativeInfo.isSent() && managementHash.equals(initiativeInfo.getManagementHash().get())) {
+            return redirectWithMessage(urls.view(initiativeId),RequestMessage.ALREADY_SENT, request);
+        } else if (!initiativeInfo.isCollectable() || initiativeInfo.isSent()) { // Practically initiative should always be sent if it's not collectable...
+            return contextRelativeRedirect(urls.view(initiativeId));
+        }
+
+        addModelAttributesToCollectView(model,
+                initiativeInfo,
+                municipalityService.findAllMunicipalities(locale),
+                participantService.getParticipantCount(initiativeId),
+                participantService.findPublicParticipants(initiativeId));
+
+        if (managementHash.equals(initiativeInfo.getManagementHash().get())){
+            model.addAttribute("participants", participantService.findPublicParticipants(initiativeId));
+            model.addAttribute("sendToMunicipality", SendToMunicipalityDto.parse(managementHash, initiativeService.getContactInfo(initiativeId)));
+            return MODERATION_VIEW;
+        } else {
+            return ERROR_404_VIEW;
+        }
+    }
+    
     @RequestMapping(value={ MANAGEMENT_FI, MANAGEMENT_SV }, method=POST)
     public String sendToMunicipality(@PathVariable("id") Long initiativeId,
                                      @ModelAttribute("sendToMunicipality") SendToMunicipalityDto sendToMunicipalityDto,

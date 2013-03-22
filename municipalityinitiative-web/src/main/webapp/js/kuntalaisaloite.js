@@ -794,33 +794,35 @@ var municipalitySelection = (function() {
 }());
 
 /**
-* Send to municipality
+* Toggle form
 * ===========
 * 
-* TODO: Clean up
+* FIXME: does not work
 */
 (function() {
-	var sendToMun 				= $('.js-send-to-municipality'),
-		sendToMunForm 			= $('.js-send-to-municipality-form'),
-		sendToMunBtn 			= $('#js-send-to-municipality'),
-		sendToMunCloseBtn 		= sendToMunForm.find('.close:first'),
-		contactAddressTArea		= $('#comment');
+	var btnHolder	= $('.js-open-block'),
+		btn			= $('.js-btn-open-block'),
+		block 		= $('.'+btn.data('open-block')),
+		btnClose 	= block.find('.js-btn-close-block'),
+		tArea		= block.find('textarea');
 	
-	sendToMunBtn.click(function(){
-		sendToMun.hide();
-		sendToMunForm.fadeIn(speedFast);
+	console.log(btn.data('open-block'));
+	
+	btn.click(function(){
+		btnHolder.hide();
+		block.fadeIn(speedFast);
 		
 		return false;
 	});
 	
-	sendToMunCloseBtn.click(function(){
-		sendToMunForm.hide();
-		sendToMun.fadeIn(speedFast);
+	btnClose.click(function(){
+		block.hide();
+		btnHolder.fadeIn(speedFast);
 		
 		return false;
 	});
 	
-	contactAddressTArea.focus(function(){
+	tArea.focus(function(){
 		$(this).addClass("expand");
 	});
 	

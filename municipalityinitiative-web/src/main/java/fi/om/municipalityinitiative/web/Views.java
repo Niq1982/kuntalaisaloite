@@ -37,6 +37,7 @@ public final class Views {
     public static final String PUBLIC_SINGLE_VIEW = "public-single-view";
     public static final String PUBLIC_COLLECT_VIEW = "public-collect-view";
     public static final String MANAGEMENT_VIEW = "management-view";
+    public static final String MODERATION_VIEW = "moderation-view";
     public static final String EDIT_VIEW = "edit-view";
     public static final String PARTICIPANT_LIST = "participant-list";
     public static final String IFRAME_VIEW = "iframe";
