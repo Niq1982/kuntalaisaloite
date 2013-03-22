@@ -76,13 +76,6 @@
                     
                 </div>
             </div>
-            
-            <#--
-            <div class="form-block-container">
-                <@edit.blockHeader key="initiative.save.title" step=4 />
-                <@edit.saveBlock step=4 />
-            </div>
-            -->
         </form>
     
         <#-- BOTTOM CONTRIBUTION -->

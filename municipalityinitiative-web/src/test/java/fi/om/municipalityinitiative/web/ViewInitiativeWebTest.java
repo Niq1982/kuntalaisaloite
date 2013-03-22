@@ -18,7 +18,6 @@ public class ViewInitiativeWebTest extends WebTestBase {
     private static final String ERROR_404_TITLE = "error.404.title";
     
     @Test
-    @Ignore
     public void manage_view_shows_send_to_municipality_button() {
 
         Long municipalityId = testHelper.createTestMunicipality("Tuusula");
@@ -30,7 +29,6 @@ public class ViewInitiativeWebTest extends WebTestBase {
     }
 
     @Test
-    @Ignore
     public void opens_error_404_if_management_hash_wrong() {
         Long municipalityId = testHelper.createTestMunicipality("Tuusula");
         Long initiativeId = testHelper.createTestInitiative(municipalityId, "Testi aloite", true, true);
@@ -38,7 +36,6 @@ public class ViewInitiativeWebTest extends WebTestBase {
         open(urls.management(initiativeId, "wrong_hash"));
 
         assertThat(driver.findElement(By.tagName("h1")).getText(), is(getMessage(ERROR_404_TITLE)));
-
     }
 
 
