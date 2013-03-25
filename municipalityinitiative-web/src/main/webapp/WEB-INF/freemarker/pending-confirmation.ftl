@@ -24,7 +24,7 @@
 
 <#if hasRequestMessages>
 
-    <h1>${pageTitle!""}</h1>
+    <h1><#noescape>${pageTitle!""}</#noescape></h1>
         
     <@u.requestMessage requestMessages />
     
