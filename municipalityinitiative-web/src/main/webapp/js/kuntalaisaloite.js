@@ -993,6 +993,7 @@ $('.municipality-filter').change( function() {
 		}
 	});
 
+	
 	// Send initiative to review
 	$('.js-send-to-review').click(function(){
 		try {
@@ -1007,6 +1008,16 @@ $('.municipality-filter').change( function() {
 	$('.js-send-to-review-collect').click(function(){
 		try {
 			generateModal(modalData.sendToReviewCollect(), 'minimal');
+			return false;
+		} catch(e) {
+			console.log(e);
+		}
+	});
+	
+	// Send initiative to review
+	$('.js-participate').click(function(){
+		try {
+			generateModal(modalData.participateForm(), 'minimal');
 			return false;
 		} catch(e) {
 			console.log(e);
