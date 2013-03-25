@@ -21,8 +21,9 @@
     <#--
      * Show management block
     -->
-    <div class="view-block public">
-        <h2><@u.message "sendToMunicipality.title" /></h2>
+    <div class="system-msg msg-summary">
+        <h2>Julkaise aloite tai palauta aloite korjattavaksi</h2>
+        <p>Aloite on lähetetty julkaistavaksi 21.3.2013<br />Aloite lähtee kuntaan julkaisun yhteydessä</p>
 
         <#-- Check is form has errors -->
         <@spring.bind "sendToMunicipality.*" />
@@ -38,9 +39,8 @@
             </div>
         <#else>
             <div class="js-open-block hidden">
-                <#assign href="#" />
-                <p><@u.messageHTML key="sendToMunicipality.description" args=[href] /></p>
-                <#--<a href="#" class="small-button js-btn-open-block"><span class="small-icon mail"><@u.message "action.send" /></span></a>-->
+                <#--<#assign href="#" />
+                <p><@u.messageHTML key="sendToMunicipality.description" args=[href] /></p>-->
                 
                 <a class="small-button gray js-btn-open-block" data-open-block="js-block-container" href="#"><span class="small-icon save-and-send">Julkaise</span></a>
                 <a class="small-button gray push js-btn-open-block" data-open-block="js-block-container-alt" href="#"><span class="small-icon cancel">Palauta korjattavaksi</span></a>
@@ -103,16 +103,6 @@
             </form>
         </div>
     </div>
-
-
-    <#assign managementWarningMessageHTML>
-        <p>Aloite on lähetetty julkaistavaksi 21.3.2013<br />Aloite lähtee kuntaan julkaisun yhteydessä</p>
-        <p><a class="small-button gray" href="${urls.edit(initiative.id, initiative.managementHash.value)}"><span class="small-icon save-and-send">Julkaise</span></a>
-        <a class="small-button gray push" href="${urls.view(initiative.id)}"><span class="small-icon cancel">Palauta korjattavaksi</span></a></p>
-        <#--<a href="${urls.view(initiative.id)}"><@u.message "management.warning.link" /></a>-->
-    </#assign>
-    
-    <@u.systemMessageHTML html=managementWarningMessageHTML type="summary" />
 
     <span class="extra-info">
     <#if initiative.createTime??>

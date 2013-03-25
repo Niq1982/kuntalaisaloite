@@ -307,8 +307,6 @@
         <@textField path=path+".name" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_NAME_MAX />
     </#if>
 
-    
-
     <div class="initiative-contact-details">
         <div class="column col-1of2">
             <input type="hidden" name="contactInfo.email" value="${initiative.contactInfo.email!""}" />

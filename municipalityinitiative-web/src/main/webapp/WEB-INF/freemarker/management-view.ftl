@@ -52,25 +52,78 @@
     <div class="view-block public">
         <h2><@u.message "management.sendToReview.title" /></h2>
     
-        <@u.systemMessage path="management.sendToReview.description" type="info" showClose=false />
+        <#if !(RequestParameters['send-to-review']?? && (RequestParameters['send-to-review'] == "confirm" || RequestParameters['send-to-review'] == "confirm-collect"))>
+            <@u.systemMessage path="management.sendToReview.description" type="info" showClose=false />
+    
+            <br/>
+            <div class="column col-1of2">
+                <h3><@u.message "management.sendToReview.doNotCollect.title" /></h3>
+                <p><@u.message "management.sendToReview.doNotCollect" /></p>
+            </div>
+            <div class="column col-1of2 last">
+                <h3><@u.message "management.sendToReview.collect.title" /></h3>
+                <p><@u.message "management.sendToReview.collect" /></p>
+            </div>
+            <br class="clear" />
+            <div class="column col-1of2">
+                <a href="${managementURL}&send-to-review=confirm#send-to-review" class="small-button js-send-to-review"><span class="small-icon mail"><@u.message "action.sendToReview.doNotCollect" /></span></a>
+            </div>
+            <div class="column col-1of2 last">
+                <a href="${managementURL}&send-to-review=confirm-collect#send-to-review" class="small-button js-send-to-review-collect"><span class="small-icon save-and-send"><@u.message "action.sendToReview.collect" /></span></a>
+            </div>
+            <br class="clear" />
+        </#if>
+        
+        <#assign sendToReviewDoNotCollect>
+            <@compress single_line=true>
+            
+                <p><@u.message "sendToReview.doNotCollect.confirm.description" /></p>
+                
+                <form action="${springMacroRequestContext.requestUri}" method="POST" >
+                    <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+                    <button type="submit" name="${UrlConstants.ACTION_SEND_TO_REVIEW}" id="modal-${UrlConstants.ACTION_SEND_TO_REVIEW}" value="<@u.message "action.sendToReview.doNotCollect" />" class="small-button green"><span class="small-icon mail"><@u.messageHTML "action.sendToReview.doNotCollect" /></button>
+                    <a href="${managementURL}" class="push close"><@u.message "action.cancel" /></a>
+                </form>
+            </@compress>
+        </#assign>
+    
+        <#-- Confirm send to VRK for NOSCRIPT-users -->
+        <#if RequestParameters['send-to-review']?? && RequestParameters['send-to-review'] == "confirm">
+        <noscript>
+            <div id="send-to-review" class="system-msg msg-info">
+                <#noescape>
+                    <h4><@u.message "sendToReview.doNotCollect.confirm.title" /></h4>
+                    ${sendToReviewDoNotCollect}
+                </#noescape>
+            </div>
+        </noscript>
+        </#if>
+        
+        <#assign sendToReviewCollect>
+            <@compress single_line=true>
+            
+                <p><@u.message "sendToReview.collect.confirm.description" /></p>
+                
+                <form action="${springMacroRequestContext.requestUri}" method="POST" >
+                    <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+                    <button type="submit" name="${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" id="modal-${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" value="<@u.message "action.sendToReview.cllect" />" class="small-button green"><span class="small-icon save-and-send"><@u.messageHTML "action.sendToReview.collect" /></button>
+                    <a href="${managementURL}" class="push close"><@u.message "action.cancel" /></a>
+                </form>
+            </@compress>
+        </#assign>
+    
+        <#-- Confirm send to VRK for NOSCRIPT-users -->
+        <#if RequestParameters['send-to-review']?? && RequestParameters['send-to-review'] == "confirm-collect">
+        <noscript>
+            <div id="send-to-review" class="system-msg msg-info">
+                <#noescape>
+                    <h4><@u.message "sendToReview.collect.confirm.title" /></h4>
+                    ${sendToReviewCollect}
+                </#noescape>
+            </div>
+        </noscript>
+        </#if>
 
-        <br/>
-        <div class="column col-1of2">
-            <h3><@u.message "management.sendToReview.doNotCollect.title" /></h3>
-            <p><@u.message "management.sendToReview.doNotCollect" /></p>
-        </div>
-        <div class="column col-1of2 last">
-            <h3><@u.message "management.sendToReview.collect.title" /></h3>
-            <p><@u.message "management.sendToReview.collect" /></p>
-        </div>
-        <br class="clear" />
-        <div class="column col-1of2">
-            <a class="small-button"><span class="small-icon mail"><@u.message "action.sendToReview.doNotCollect" /></span></a>
-        </div>
-        <div class="column col-1of2 last">
-            <a class="small-button" value="true" ><span class="small-icon save-and-send"><@u.message "action.sendToReview.collect" /></span></a>
-        </div>
-        <br class="clear" />
     </div>
 
 
@@ -101,14 +154,26 @@
                 }]
             };
         </#if>
-    
-        <#-- Modal: Form modified notification. Uses dirtyforms jQuery-plugin. -->
-        modalData.formModifiedNotification = function() {
-            return [{
-                title:      '<@u.message "form.modified.notification.title" />',
-                content:    '<@u.messageHTML "form.modified.notification" />'
-            }]
-        };
+        
+        <#-- Modal: Confirm send for publish and to municiaplity. Check for components/utils.ftl -->
+        <#if sendToReviewDoNotCollect??>    
+            modalData.sendToReviewDoNotCollect = function() {
+                return [{
+                    title:      '<@u.message "sendToReview.doNotCollect.confirm.title" />',
+                    content:    '<#noescape>${sendToReviewDoNotCollect?replace("'","&#39;")}</#noescape>'
+                }]
+            };
+        </#if>
+        
+        <#-- Modal: Confirm send for publish. Check for components/utils.ftl -->
+        <#if sendToReviewCollect??>    
+            modalData.sendToReviewCollect = function() {
+                return [{
+                    title:      '<@u.message "sendToReview.collect.confirm.title" />',
+                    content:    '<#noescape>${sendToReviewCollect?replace("'","&#39;")}</#noescape>'
+                }]
+            };
+        </#if>
     
         var messageData = {};
 

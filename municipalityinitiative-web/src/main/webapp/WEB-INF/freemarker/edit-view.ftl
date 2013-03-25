@@ -41,12 +41,13 @@
 
         <div class="form-block-container">
             <@edit.blockHeader key="initiative.initiative.title" step=1 />
-            <@edit.initiativeBlock step=2 />
+            <#-- use param locked=true to lock editing of the name and the proposal fields -->
+            <@edit.initiativeBlock />
         </div>
 
         <div class="form-block-container">
             <@edit.blockHeader key="initiative.currentAuthor.title" step=2 />
-            <@edit.currentAuthorBlock step=3 />
+            <@edit.currentAuthorBlock />
         </div>
 
         <div class="form-block-container">

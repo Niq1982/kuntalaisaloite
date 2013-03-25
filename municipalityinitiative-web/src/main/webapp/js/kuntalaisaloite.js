@@ -797,7 +797,7 @@ var municipalitySelection = (function() {
 * Toggle form
 * ===========
 * 
-* FIXME: does not work
+* FIXME: Alternative block does not work
 */
 (function() {
 	var btnHolder	= $('.js-open-block'),
@@ -993,10 +993,20 @@ $('.municipality-filter').change( function() {
 		}
 	});
 
-	// Show initiative's public user list
-	$('.js-participate').click(function(){
+	// Send initiative to review
+	$('.js-send-to-review').click(function(){
 		try {
-			generateModal(modalData.participateForm(), 'full');
+			generateModal(modalData.sendToReviewDoNotCollect(), 'minimal');
+			return false;
+		} catch(e) {
+			console.log(e);
+		}
+	});
+	
+	// Send initiative to review and collect participants
+	$('.js-send-to-review-collect').click(function(){
+		try {
+			generateModal(modalData.sendToReviewCollect(), 'minimal');
 			return false;
 		} catch(e) {
 			console.log(e);

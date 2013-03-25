@@ -165,10 +165,10 @@
  * Add initiative title and content
  * Prints help-texts and validation errors in this block
  *
- * @param step is the number of current block
+ * @param locked locks some field from editing
  -->
-<#macro initiativeBlock step>      
-    <div id="step-${step}" class="input-block cf">
+<#macro initiativeBlock locked=false>      
+    <div class="input-block cf">
         <div class="input-block-extra">
             <div class="input-block-extra-content">
                 <@f.helpText "help.name" />
@@ -179,18 +179,33 @@
 
         <div class="input-block-content">
             <#assign href="#" />
-            <@u.systemMessage path="initiative.proposal.description" type="info" showClose=false args=[href] />  
+            
+            <#if locked>
+                <@u.systemMessage path="initiative.proposal.locked" type="info" showClose=false args=[href] />
+            <#else>
+                <@u.systemMessage path="initiative.proposal.description" type="info" showClose=false args=[href] />
+            </#if>
         </div>
         
         <div class="input-block-content">
-            <@f.textField path="initiative.name" required="required" optional=true cssClass="large" maxLength=InitiativeConstants.INITIATIVE_NAME_MAX />
+            <#if locked>
+                <div class="input-header"><@u.message "initiative.name" /></div>
+                <div class="input-placeholder">${initiative.name!""}</div>
+            <#else>
+                <@f.textField path="initiative.name" required="required" optional=true cssClass="large" maxLength=InitiativeConstants.INITIATIVE_NAME_MAX />
+            </#if>
         </div>
-
+        
         <div class="input-block-content no-top-margin">
-            <@f.textarea path="initiative.proposal" required="required" optional=false cssClass="textarea-tall" />
+            <#if locked>
+                <div class="input-header"><@u.message "initiative.proposal" /></div>
+                <div class="input-placeholder">${initiative.proposal!""}</div>
+            <#else>
+                <@f.textarea path="initiative.proposal" required="required" optional=false cssClass="textarea-tall" />
+            </#if>
         </div>
         
-        <div class="input-block-content">
+        <div class="input-block-content ${locked?string('no-top-margin','')}">
             <@f.textarea path="initiative.extraInfo" required="" optional=true cssClass="textarea" />
         </div>
     </div>
@@ -208,8 +223,8 @@
  *
  * @param step is the number of current block
  -->
-<#macro currentAuthorBlock step>
-    <div id="step-${step}" class="input-block cf">
+<#macro currentAuthorBlock >
+    <div class="input-block cf">
         <div class="input-block-extra">
             <div class="input-block-extra-content">
                 <@f.helpText "help.contactInfo.name" />
@@ -255,8 +270,8 @@
  *
  * @param step is the number of current block
  -->
-<#macro saveBlock step>      
-    <div id="step-${step}" class="input-block cf">
+<#macro saveBlock>      
+    <div class="input-block cf">
         <div class="input-block-extra">
             <div class="input-block-extra-content">
                 <@f.helpText "help.send" />
