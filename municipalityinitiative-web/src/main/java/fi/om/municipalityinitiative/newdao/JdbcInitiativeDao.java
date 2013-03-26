@@ -214,14 +214,14 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    public Initiative getById(Long initiativeId, String cus) {
+    public Initiative getById(Long initiativeId, String managementHash) {
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
                 .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
                 .innerJoin(municipalityInitiative._participantMunicipalityInitiativeIdFk, QParticipant.participant)
                 .innerJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
                 .where(municipalityInitiative.id.eq(initiativeId))
-                .where(QAuthor.author.managementHash.eq(cus));
+                .where(QAuthor.author.managementHash.eq(managementHash));
 
         Initiative initiative = query.uniqueResult(initiativeInfoMapping);
         if (initiative == null) {
