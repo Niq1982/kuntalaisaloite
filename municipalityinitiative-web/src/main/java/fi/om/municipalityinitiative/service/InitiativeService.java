@@ -168,9 +168,9 @@ public class InitiativeService {
         return initiativeDao.getAuthorInformation(initiativeId, managementHash);
     }
 
-    public void sendReview(Long initiativeId, String managementHash, InitiativeType single) {
+    public void sendReview(Long initiativeId, String managementHash, InitiativeType type) {
         if (initiativeDao.getById(initiativeId).getManagementHash().get().equals(managementHash)) {
-            initiativeDao.setInitiativeAsReview(initiativeId, single);
+            initiativeDao.setInitiativeAsReview(initiativeId, type);
 
             // XXX: Quick fix for immediate OM-acceptance
             initiativeDao.acceptInitiativeByOm(initiativeId);

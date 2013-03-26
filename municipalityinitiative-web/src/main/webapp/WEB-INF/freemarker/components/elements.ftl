@@ -34,49 +34,23 @@
 </#macro>
 
 <#-- 
- * stateDates
+ * stateInfo
  * 
  * Generates initiative's state dates
  *
  * @param thisInitiative is initiative
 -->
-<#macro stateDates thisInitiative>
+<#macro stateInfo thisInitiative>
     
     <span class="extra-info">
-        <#if thisInitiative.collectable && thisInitiative.createTime??>
-            <#assign createTime><@u.localDate thisInitiative.createTime /></#assign>
-            <@u.message key="initiative.date.create" args=[createTime] />
-            <br />
-        </#if>
-
         <#if thisInitiative.sentTime.present>
             <#assign sentTime><@u.localDate thisInitiative.sentTime.value /></#assign>
             <@u.message key="initiative.date.sent" args=[sentTime] />
-        <#elseif thisInitiative.collectable>
-            <@u.message "initiative.state.collecting.long" />
-        </#if>
-    </span>
-
-</#macro>
-
-<#-- 
- * initiativeStateInfo
- * 
- * Generates initiative's state with dates
- *
- * @param thisInitiative is initiative
--->
-<#macro initiativeStateInfo thisInitiative>
-    
-    <span class="state">
-        <#if thisInitiative.sentTime.present>
-            <#assign sentTime><@u.localDate thisInitiative.sentTime.value /></#assign>
-            <@u.message key="initiative.date.sent" args=[sentTime] />
-        <#elseif thisInitiative.collectable>
-            <@u.message "initiative.state.collecting.long" />
         <#else>
             <#assign createTime><@u.localDate thisInitiative.createTime /></#assign>
             <@u.message key="initiative.date.create" args=[createTime] />
+            <br />
+            <@u.message "initiative.stateInfo."+initiative.state />
         </#if>
     </span>
 

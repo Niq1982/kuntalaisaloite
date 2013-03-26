@@ -22,19 +22,11 @@
         <p><@u.messageHTML "management.warning.description" /></p>
         <p><a class="small-button gray" href="${urls.edit(initiative.id, initiative.managementHash.value)}"><span class="small-icon edit"><@u.messageHTML 'action.editInitiative' /></span></a>
         <a class="small-button gray push" href="${urls.view(initiative.id)}"><span class="small-icon document">Esikatsele aloitteen julkista näkymää</span></a></p>
-        <#--<a href="${urls.view(initiative.id)}"><@u.message "management.warning.link" /></a>-->
     </#assign>
     
     <@u.systemMessageHTML html=managementWarningMessageHTML type="summary" />
 
-    <span class="extra-info">
-    <#if initiative.createTime??>
-        <#assign createTime><@u.localDate initiative.createTime /></#assign>
-        <@u.message key="initiative.date.create" args=[createTime] />
-        <br />
-        Aloite odottaa julkaisua
-    </#if>
-    </span>
+    <@e.stateInfo initiative />
 
     <h1 class="name">${initiative.name!""}</h1>
     
@@ -47,8 +39,8 @@
             <h2><@u.message "initiative.contactinfo.title" /></h2>
             <p>${author.contactInfo.name!""}<br />
             ${author.contactInfo.email!""}<br />
-            ${author.contactInfo.address!""}<br />
-            ${author.contactInfo.phone!""}<br />
+            <#if author.contactInfo.address?? && author.contactInfo.address != ""><#noescape>${author.contactInfo.address?replace('\n','<br/>')!""}</#noescape><br /></#if>
+            ${author.contactInfo.phone!""}</p>
         </div>
     </div>
 

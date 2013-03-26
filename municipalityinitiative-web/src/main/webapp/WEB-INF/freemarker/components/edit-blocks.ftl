@@ -67,6 +67,14 @@
         </div>
         <br class="clear" />
         
+        <noscript>
+            <div class="input-block-content">
+                <div class="system-msg msg-info">
+                    Jos kotikuntasi on eri kuin aloitteen kunta, sinun tulee olla aloitteen kunnan jäsen, jotta voit tehdä aloitteen. <a class="trigger-tooltip" rel="external" target="_blank" href="#">Mitä tämä tarkoittaa?</a>
+                </div>
+            </div>
+        </noscript>
+        
         <div id="municipalMembership" class="municipality-not-equal js-hide">
             <div class="input-block-content hidden">
                 <#assign href="#" />
@@ -81,7 +89,7 @@
                 } attributes="" />
             </div>
             
-            <div class="input-block-content is-not-member js-hide hidden">
+            <div class="input-block-content is-not-member no-top-margin js-hide hidden">
                 <@u.systemMessage path="warning.initiative.notMember" type="warning" showClose=false />
             </div>
         </div>
