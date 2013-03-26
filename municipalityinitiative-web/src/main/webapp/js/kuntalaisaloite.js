@@ -136,7 +136,7 @@ jQuery.fn.disableButton = function(disable){
  * HTML5 placeholder polyfill
  * ==========================
  * 
- * FIXME: does not work yet
+ * FIXME: does not work yet. Do we even need this?
  * 
  * */
 /*jQuery.fn.placeholder = (function(){
@@ -214,9 +214,6 @@ $(document).ready(function () {
 
 	/**
 	 *	Prevent double clicks
-	 *
-	 *	TODO:	Finalize after function approved. 
-	 *			What happens when JS validation is implemented?
 	 * 
 	 */
 	$("button").live('click', function () {
@@ -370,85 +367,6 @@ $(document).ready(function () {
 		return false;
 	});
 	
-/**
- * 
- * Expand and minify form blocks
- * =============================
- * 
- * TODO: REMOVE THIS BLOCK
- * 
- * */
-	
-	var validationErrors, showFormBlock, $formHeader;
-	
-	// If form has validation errors: true / false
-	validationErrors = $('#form-initiative').hasClass('has-errors');
-	
-	$('#button-next-2, #button-next-3, #button-next-4').click(function (){ return false; });
-	
-	/*
-	// Show this block, hide others
- 	showFormBlock = function(blockHeader, scrollId){
- 		var thisHeader, thisBlock, otherHeaders, otherBlocks;
-
-		thisHeader = blockHeader;
- 		thisBlock = thisHeader.next('.input-block');
- 		otherHeaders = thisHeader.parent().siblings().children('.content-block-header');
- 		otherBlocks = thisHeader.parent().siblings().children('.input-block');
- 		
- 		otherBlocks.stop(false,true).slideUp({
-			duration: speedFast, 
-			easing: 'easeOutExpo'
-		});
-		otherHeaders.removeClass('open');
- 		
- 		thisBlock.stop(false,true).slideToggle('fast', function() {
- 			$.scrollTo( "#"+scrollId , 800, {easing:'easeOutExpo'});
- 		  });
- 		
-		thisHeader.toggleClass('open');
- 	};
-
- 	$formHeader = $('.content-block-header');
-
- 	$formHeader.click(function(){
- 		var thisClicker = $(this);
- 		
- 		if ( !validationErrors && !thisClicker.hasClass('disabled')){
- 			showFormBlock(thisClicker, thisClicker.attr('id'));
- 		}
- 	});
-
- 	// Action for wizard's continue button
- 	$('.js-proceed-to-next').click(function(){
- 		var	thisBtn			= $(this),
- 			step			= thisBtn.data('next-step'),
- 			headerNextStep	= "#step-header-"+step;
- 		
- 		if (!thisBtn.hasClass('disabled')){
-	 		if ( !validationErrors ){
-		 		var blockHeader = $('#step-'+step).prev('.content-block-header');
-				showFormBlock(blockHeader, headerNextStep);
-	 		} else {
-	 			$.scrollTo( headerNextStep , 800, {easing:'easeOutExpo'});
-	 		}
- 		}
-
- 		return false;
- 	});
- 	
- 	// In case of validation error
- 	if ( validationErrors ){
- 		$('.input-block').show();
- 	}
- 	$('#errors-summary a').click(function(){
- 		var errorAnchor = $(this);
- 		
- 		$.scrollTo( errorAnchor.attr('href') , 800, {easing:'easeOutExpo'});
- 		
- 		return false;
- 	});
- 	*/
 
 
 /**
@@ -463,6 +381,7 @@ $(document).ready(function () {
 var municipalitySelection = (function() {
 	var chznSelect, municipalitySelect, homeMunicipalitySelect,
 		selectedMunicipality, municipalityNotEqual, municipalMembershipRadios,
+		validationErrors,
 		isHomeMunicipality, equalMunicipalitys, slideOptions;
 
 	chznSelect					= $(".chzn-select");
@@ -471,6 +390,9 @@ var municipalitySelection = (function() {
 	selectedMunicipalityElem	= $('#selected-municipality'); 			// Municipality text in the second step in the form
 	municipalityNotEqual		= $('.municipality-not-equal');			// Membership selections if municipalitys are not same
 	municipalMembershipRadios	= $("input[name=municipalMembership]"); // Membership radiobuttons for initiative's municipality
+	
+	// If form has validation errors: true / false
+	validationErrors = $('#form-initiative').hasClass('has-errors');
 	
 	// Checks which one of the selects we are using
 	isHomeMunicipality = function(select){
@@ -555,10 +477,7 @@ var municipalitySelection = (function() {
 	// Disable or enable the next button and clicking the other form block
 	function preventContinuing(prevent){
 		
-		var formBlockHeaders 	= $("#step-header-2, #step-header-3, #step-header-4"),	// Form step header blocks
-			formBlocks			= $("#step-2, #step-3, #step-4"),						// Form step input blocks
-			btnStep2			= $("#button-next-2"),									// Continue button for second step
-			btnParticipate 		= $("button#participate");								// Participate button
+		var btnParticipate 		= $("button#participate");								// Participate button
 		
 		var typeInput 			= $('.initiative-type:first-child input'),
 			authorEmail			= $('#authorEmail'),
@@ -742,7 +661,6 @@ var municipalitySelection = (function() {
 	var allFieldsFilled = function(){
 		var selectOK = memberRadioOK = typeRadioOK = emailOK = true;
 		
-		// FIXME: Has issues when upper one is selected and lower one is emptied
 		municipalitySelect.each(function() {
 			if(municipalitySelect.val() === "") {
 				selectOK = false
@@ -802,15 +720,15 @@ var municipalitySelection = (function() {
 (function() {
 	var btnHolder	= $('.js-open-block'),
 		btn			= $('.js-btn-open-block'),
-		block 		= $('.'+btn.data('open-block')),
+		block 		= $('.js-block-container, .js-block-container-alt'),
 		btnClose 	= block.find('.js-btn-close-block'),
 		tArea		= block.find('textarea');
-	
-	console.log(btn.data('open-block'));
-	
+
 	btn.click(function(){
+		var elemClass = $(this).data('open-block');
+		
 		btnHolder.hide();
-		block.fadeIn(speedFast);
+		$('.'+elemClass).fadeIn(speedFast);
 		
 		return false;
 	});
@@ -847,7 +765,6 @@ $('.municipality-filter').change( function() {
 	$('#search-form').submit();
 	
 });	
-
 	
 /**
  * 
