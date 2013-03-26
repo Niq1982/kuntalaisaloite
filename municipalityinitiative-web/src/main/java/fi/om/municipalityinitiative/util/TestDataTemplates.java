@@ -1,7 +1,6 @@
 package fi.om.municipalityinitiative.util;
 
 import com.google.common.collect.Lists;
-
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUICreateDto;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateDto;
@@ -78,7 +77,6 @@ public class TestDataTemplates {
         participant.setParticipantName(name);
         participant.setMunicipality(municipality);
         participant.setHomeMunicipality(municipality);
-        participant.setFranchise(franchise);
         participant.setShowName(showName);
         return participant;
     }

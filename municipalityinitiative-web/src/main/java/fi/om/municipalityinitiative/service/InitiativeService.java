@@ -5,17 +5,14 @@ import fi.om.municipalityinitiative.exceptions.NotCollectableException;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
+import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.email.InitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
-import fi.om.municipalityinitiative.newdto.service.InitiativeCreateDto;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.ui.*;
-import fi.om.municipalityinitiative.util.Locales;
-import fi.om.municipalityinitiative.util.Maybe;
-import fi.om.municipalityinitiative.util.ParticipatingUnallowedException;
-import fi.om.municipalityinitiative.util.RandomHashGenerator;
+import fi.om.municipalityinitiative.util.*;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,27 +41,9 @@ public class InitiativeService {
     }
 
     @Transactional(readOnly = false)
+    @Deprecated
     public Long createMunicipalityInitiative(InitiativeUICreateDto createDto, Locale locale) {
-
-        Maybe<String> managementHash;
-        if (createDto.isCollectable()) {
-            managementHash = Maybe.of(RandomHashGenerator.randomString(40));
-        }
-        else {
-            managementHash = Maybe.absent();
-        }
-
-        InitiativeCreateDto initiativeCreateDto = InitiativeCreateDto.parse(createDto, managementHash);
-
-        Long initiativeId = initiativeDao.create(initiativeCreateDto);
-        Long participantId = participantDao.create(ParticipantCreateDto.parse(createDto, initiativeId));
-        initiativeDao.assignAuthor(initiativeId, participantId);
-
-        if (!createDto.isCollectable()) {
-            sendNotCollectableEmails(initiativeId, locale);
-        }
-
-        return initiativeId;
+        throw new RuntimeException("Deprecated, functionality removed.");
     }
 
     private void sendNotCollectableEmails(Long initiativeId, Locale locale) {
@@ -92,9 +71,9 @@ public class InitiativeService {
     }
 
     private void checkAllowedToSendToMunicipality(Initiative initiative) {
-        if (!initiative.isCollectable()) {
-            throw new NotCollectableException("Initiative is not collectable");
-        }
+//        if (!initiative.isCollectable()) {
+//            throw new NotCollectableException("Initiative is not collectable");
+//        }
         if (initiative.getSentTime().isPresent()) {
             throw new NotCollectableException("Initiative already sent");
         }
@@ -132,10 +111,10 @@ public class InitiativeService {
     private void checkAllowedToParticipate(Long initiativeId) {
         Initiative initiative = initiativeDao.getById(initiativeId);
 
-        if (!initiative.isCollectable()) {
-            throw new ParticipatingUnallowedException("Initiative not collectable: " + initiativeId);
+        if (initiative.getState() != InitiativeState.ACCEPTED) {
+            throw new ParticipatingUnallowedException("Initiative not accepted by om: " + initiativeId);
         }
-        else if (initiative.getSentTime().isPresent()) {
+        if (initiative.getSentTime().isPresent()) {
             throw new ParticipatingUnallowedException("Initiative already sent: " + initiativeId);
         }
 
@@ -144,9 +123,10 @@ public class InitiativeService {
     @Transactional(readOnly = false)
     public Long prepareInitiative(PrepareInitiativeDto createDto, Locale locale) {
 
-        Long initiativeId = initiativeDao.prepareInitiative(createDto.getMunicipality(), createDto.getAuthorEmail(), RandomHashGenerator.randomString(40));
-        Long participantId = participantDao.prepareParticipant(initiativeId, createDto.getHomeMunicipality(), ParticipantCreateDto.solveFranchise(createDto));
-        initiativeDao.assignAuthor(initiativeId, participantId);
+        String managementHash = RandomHashGenerator.randomString(40);
+        Long initiativeId = initiativeDao.prepareInitiative(createDto.getMunicipality(), createDto.getAuthorEmail(), managementHash);
+        Long participantId = participantDao.prepareParticipant(initiativeId, createDto.getHomeMunicipality(), false); // XXX: Franchise?
+        initiativeDao.assignAuthor(initiativeId, participantId, createDto.getAuthorEmail(), managementHash);
 
         return initiativeId;
     }
@@ -165,7 +145,7 @@ public class InitiativeService {
 
     // TODO: This should be used for getting initiative for edit
     public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId, String givenManagementHash, Locale locale) {
-        return InitiativeViewInfo.parse(initiativeDao.getById(initiativeId), locale);
+        return InitiativeViewInfo.parse(initiativeDao.getById(initiativeId, givenManagementHash), locale);
     }
 
     public InitiativeUIEditDto getInitiativeForEdit(Long initiativeId, String managementHash) {
@@ -182,5 +162,21 @@ public class InitiativeService {
         }
 
         initiativeDao.updateInitiativeDraft(initiativeId, editDto);
+    }
+
+    public Author getAuthorInformation(Long initiativeId, String managementHash) {
+        return initiativeDao.getAuthorInformation(initiativeId, managementHash);
+    }
+
+    public void sendReview(Long initiativeId, String managementHash, InitiativeType single) {
+        if (initiativeDao.getById(initiativeId).getManagementHash().get().equals(managementHash)) {
+            initiativeDao.setInitiativeAsReview(initiativeId, single);
+
+            // XXX: Quick fix for immediate OM-acceptance
+            initiativeDao.acceptInitiativeByOm(initiativeId);
+        }
+        else {
+            throw new AccessDeniedException("Invalid management hash");
+        }
     }
 }

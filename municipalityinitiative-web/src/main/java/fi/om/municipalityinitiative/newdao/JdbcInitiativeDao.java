@@ -18,6 +18,7 @@ import fi.om.municipalityinitiative.dao.NotFoundException;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.exceptions.NotCollectableException;
+import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.InitiativeCreateDto;
@@ -28,6 +29,8 @@ import fi.om.municipalityinitiative.newdto.ui.InitiativeUIEditDto;
 import fi.om.municipalityinitiative.sql.QAuthor;
 import fi.om.municipalityinitiative.sql.QMunicipality;
 import fi.om.municipalityinitiative.sql.QParticipant;
+import fi.om.municipalityinitiative.util.InitiativeState;
+import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.MaybeHoldingHashMap;
 import org.joda.time.DateTime;
@@ -57,8 +60,11 @@ public class JdbcInitiativeDao implements InitiativeDao {
     public List<InitiativeListInfo> find(InitiativeSearch search) {
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
-                .leftJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
-                .leftJoin(municipalityInitiative.municipalityInitiativeAuthorFk, QParticipant.participant);
+                .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
+                .innerJoin(municipalityInitiative.initiativeAuthorFk, QAuthor.author)
+                .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
+                .where(municipalityInitiative.state.eq(InitiativeState.ACCEPTED))
+                ;
 
         filterByTitle(query, search.getSearch());
         filterByMunicipality(query, search.getMunicipality());
@@ -66,9 +72,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
         restrictResults(query, search);
         orderBy(query, search.getOrderBy());
 
-        List<InitiativeListInfo> list = query.list(initiativeListInfoMapping);
-
-        return list;
+        return query.list(initiativeListInfoMapping);
 
     }
 
@@ -118,8 +122,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 query.where(municipalityInitiative.sent.isNotNull());
                 break;
             case collecting:
-                query.where(municipalityInitiative.sent.isNull())
-                     .where(municipalityInitiative.managementHash.isNotNull());
+                query.where(municipalityInitiative.sent.isNull());
                 break;
             case all:
                 break;
@@ -147,6 +150,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     @Transactional(readOnly = false)
+    @Deprecated
     public Long create(InitiativeCreateDto dto) {
 
         SQLInsertClause insert = queryFactory.insert(municipalityInitiative);
@@ -159,7 +163,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
         Long initiativeId = insert.executeWithKey(municipalityInitiative.id);
 
         Long authorId = queryFactory.insert(QAuthor.author)
-                .set(QAuthor.author.initiativeId, initiativeId)
+//                .set(QAuthor.author.initiativeId, initiativeId)
                 .executeWithKey(QAuthor.author.id);
 
         queryFactory.update(municipalityInitiative)
@@ -171,6 +175,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     }
 
+    @Deprecated
     private void setContactInfo(InitiativeCreateDto dto, SQLInsertClause insert) {
         insert.set(municipalityInitiative.contactAddress, dto.contactAddress);
         insert.set(municipalityInitiative.contactEmail, dto.contactEmail);
@@ -178,8 +183,8 @@ public class JdbcInitiativeDao implements InitiativeDao {
         insert.set(municipalityInitiative.contactName, dto.contactName);
     }
 
+    @Deprecated
     private void setInitiativeBasicInfo(InitiativeCreateDto dto, SQLInsertClause insert) {
-        insert.set(municipalityInitiative.authorId, PREPARATION_ID);
         insert.set(municipalityInitiative.name, dto.name);
         insert.set(municipalityInitiative.proposal, dto.proposal);
         insert.set(municipalityInitiative.municipalityId, dto.municipalityId);
@@ -196,8 +201,9 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
-                .leftJoin(municipalityInitiative.municipalityInitiativeAuthorFk, QParticipant.participant)
-                .leftJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
+                .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
+                .innerJoin(municipalityInitiative.initiativeAuthorFk, QAuthor.author)
+                .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
                 .where(municipalityInitiative.id.eq(id));
 
         Initiative initiative = query.uniqueResult(initiativeInfoMapping);
@@ -208,7 +214,25 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
+    public Initiative getById(Long initiativeId, String cus) {
+        PostgresQuery query = queryFactory
+                .from(municipalityInitiative)
+                .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
+                .innerJoin(municipalityInitiative._participantMunicipalityInitiativeIdFk, QParticipant.participant)
+                .innerJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
+                .where(municipalityInitiative.id.eq(initiativeId))
+                .where(QAuthor.author.managementHash.eq(cus));
+
+        Initiative initiative = query.uniqueResult(initiativeInfoMapping);
+        if (initiative == null) {
+            throw new NotFoundException("initiative", "Invalid managementhash or initiative id");
+        }
+        return initiative;
+    }
+
+    @Override
     @Transactional(readOnly = false)
+    @Deprecated
     public void markAsSendedAndUpdateContactInfo(Long initiativeId, ContactInfo contactInfo) {
 
         long affectedRows = queryFactory.update(municipalityInitiative)
@@ -218,7 +242,10 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .set(municipalityInitiative.contactAddress, contactInfo.getAddress())
                 .set(municipalityInitiative.contactName, contactInfo.getName())
                 .where(municipalityInitiative.id.eq(initiativeId))
-                .where(municipalityInitiative.managementHash.isNotNull())
+                .where(municipalityInitiative.state.eq(InitiativeState.ACCEPTED))
+                .where(municipalityInitiative.type.in(InitiativeType.COLLABORATIVE,
+                                                      InitiativeType.COLLABORATIVE_CITIZEN,
+                                                      InitiativeType.COLLABORATIVE_COUNCIL))
                 .where(municipalityInitiative.sent.isNull())
                 .execute();
 
@@ -229,13 +256,20 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    public void assignAuthor(Long municipalityInitiativeId, Long participantId) {
-        long affectedRows = queryFactory.update(municipalityInitiative)
-                .set(municipalityInitiative.authorId, participantId)
-                .where(municipalityInitiative.authorId.eq(PREPARATION_ID))
+    @Transactional(readOnly = false)
+    public void assignAuthor(Long municipalityInitiativeId, Long participantId, String authorEmail, String managementHash) {
+
+        Long newAuthorId = queryFactory.insert(QAuthor.author)
+                .set(QAuthor.author.managementHash, managementHash)
+                .set(QAuthor.author.email, authorEmail)
+                .set(QAuthor.author.participantId, participantId)
+                .executeWithKey(QAuthor.author.id);
+
+        assertSingleAffection(queryFactory.update(municipalityInitiative)
+                .set(municipalityInitiative.newAuthorId, newAuthorId)
                 .where(municipalityInitiative.id.eq(municipalityInitiativeId))
-                .execute();
-        Assert.isTrue(affectedRows == 1, "About to update " + affectedRows + " instead of 1.");
+                .where(municipalityInitiative.newAuthorId.eq(PREPARATION_ID))
+                .execute());
     }
 
     @Override
@@ -248,13 +282,14 @@ public class JdbcInitiativeDao implements InitiativeDao {
     @Override
     public InitiativeCounts getInitiativeCounts(Maybe<Long> municipality) {
         Expression<String> caseBuilder = new CaseBuilder()
-                .when(municipalityInitiative.sent.isNull().and(municipalityInitiative.managementHash.isNotNull()))
+                .when(municipalityInitiative.sent.isNull())
                     .then(new ConstantImpl<String>(InitiativeSearch.Show.collecting.name()))
                 .otherwise(new ConstantImpl<String>(InitiativeSearch.Show.sent.name()));
 
         SimpleExpression<String> simpleExpression = Expressions.as(caseBuilder, "showCategory");
 
-        PostgresQuery from = queryFactory.from(municipalityInitiative);
+        PostgresQuery from = queryFactory.from(municipalityInitiative)
+                .where(municipalityInitiative.state.eq(InitiativeState.ACCEPTED));
 
         if (municipality.isPresent()) {
             from.where(municipalityInitiative.municipalityId.eq(municipality.get()));
@@ -273,25 +308,10 @@ public class JdbcInitiativeDao implements InitiativeDao {
     @Override
     @Transactional(readOnly = false)
     public Long prepareInitiative(Long municipalityId, String email, String managementHash) {
-        Long initiativeId = queryFactory.insert(municipalityInitiative)
-                .set(municipalityInitiative.managementHash, managementHash) // XXX: Remove when not needed
+        return queryFactory.insert(municipalityInitiative)
                 .set(municipalityInitiative.municipalityId, municipalityId)
-                .set(municipalityInitiative.authorId, PREPARATION_ID)
                 .set(municipalityInitiative.newAuthorId, PREPARATION_ID)
                 .executeWithKey(municipalityInitiative.id);
-
-        Long newAuthorId = queryFactory.insert(QAuthor.author)
-                .set(QAuthor.author.initiativeId, initiativeId)
-                .set(QAuthor.author.managementHash, managementHash)
-                .set(QAuthor.author.email, email)
-                .executeWithKey(QAuthor.author.id);
-
-        assertSingleAffection(queryFactory.update(municipalityInitiative)
-                .set(municipalityInitiative.newAuthorId, newAuthorId)
-                .where(municipalityInitiative.id.eq(initiativeId))
-                .execute());
-
-        return initiativeId;
     }
 
     @Override
@@ -299,9 +319,9 @@ public class JdbcInitiativeDao implements InitiativeDao {
     public InitiativeUIEditDto getInitiativeForEdit(Long initiativeId) {
         return queryFactory
                 .from(municipalityInitiative)
-                .leftJoin(municipalityInitiative.municipalityInitiativeAuthorFk, QParticipant.participant)
                 .leftJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
                 .leftJoin(municipalityInitiative.initiativeAuthorFk, QAuthor.author)
+                .leftJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
                 .where(municipalityInitiative.id.eq(initiativeId))
 
                 .uniqueResult(initiativeEditMapping);
@@ -314,6 +334,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
         assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.name, editDto.getName())
                 .set(municipalityInitiative.proposal, editDto.getProposal())
+                .set(municipalityInitiative.modified, CURRENT_TIME)
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute());
 
@@ -338,11 +359,68 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     }
 
+    @Override
+    public Author getAuthorInformation(Long id, String managementHash) {
+        return queryFactory.from(municipalityInitiative)
+                .innerJoin(municipalityInitiative._participantMunicipalityInitiativeIdFk, QParticipant.participant)
+                .innerJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
+                .innerJoin(QParticipant.participant.participantMunicipalityFk, QMunicipality.municipality)
+                .where(municipalityInitiative.id.eq(id))
+                .where(QAuthor.author.managementHash.eq(managementHash))
+                .uniqueResult(authorMapping);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void setInitiativeAsReview(Long initiativeId, InitiativeType type) {
+        assertSingleAffection(queryFactory.update(municipalityInitiative)
+                .set(municipalityInitiative.type, type)
+                .set(municipalityInitiative.state, InitiativeState.REVIEW)
+                .where(municipalityInitiative.id.eq(initiativeId))
+                .execute());
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void acceptInitiativeByOm(Long initiativeId) {
+        assertSingleAffection(queryFactory.update(municipalityInitiative)
+                .set(municipalityInitiative.state, InitiativeState.ACCEPTED)
+                .set(municipalityInitiative.sent, CURRENT_TIME)
+                .where(municipalityInitiative.id.eq(initiativeId))
+                .execute());
+    }
+
     private static void assertSingleAffection(long affectedRows) {
         Assert.isTrue(affectedRows == 1, "Should have affected only one row. Affected: " + affectedRows);
     }
 
     // Mappings:
+
+    private Expression<Author> authorMapping =
+            new MappingProjection<Author>(Author.class,
+                    municipalityInitiative.all(),
+                    QMunicipality.municipality.all(),
+                    QParticipant.participant.all(),
+                    QAuthor.author.all()) {
+                @Override
+                protected Author map(Tuple row) {
+
+                    ContactInfo contactInfo = new ContactInfo();
+                    contactInfo.setAddress(row.get(QAuthor.author.address));
+                    contactInfo.setPhone(row.get(QAuthor.author.phone));
+                    contactInfo.setEmail(row.get(QAuthor.author.email));
+                    contactInfo.setName(row.get(QParticipant.participant.name));
+
+                    Author author = new Author();
+                    author.setContactInfo(contactInfo);
+                    author.setMunicipality(parseMunicipality(row));
+
+                    return author;
+
+
+                }
+            };
+
 
     Expression<InitiativeUIEditDto> initiativeEditMapping =
             new MappingProjection<InitiativeUIEditDto>(InitiativeUIEditDto.class,
@@ -353,10 +431,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 @Override
                 protected InitiativeUIEditDto map(Tuple row) {
                     InitiativeUIEditDto info = new InitiativeUIEditDto(
-                            new Municipality(
-                                    row.get(QMunicipality.municipality.id),
-                                    row.get(QMunicipality.municipality.name),
-                                    row.get(QMunicipality.municipality.nameSv))
+                            parseMunicipality(row)
                     );
                     info.setManagementHash(row.get(QAuthor.author.managementHash));
                     info.setName(row.get(municipalityInitiative.name));
@@ -372,6 +447,13 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     return info;
                 }
             };
+
+    private static Municipality parseMunicipality(Tuple row) {
+        return new Municipality(
+                row.get(QMunicipality.municipality.id),
+                row.get(QMunicipality.municipality.name),
+                row.get(QMunicipality.municipality.nameSv));
+    }
 
     private Expression<ContactInfo> contactInfoMapping =
             new MappingProjection<ContactInfo>(ContactInfo.class,
@@ -392,23 +474,23 @@ public class JdbcInitiativeDao implements InitiativeDao {
             new MappingProjection<Initiative>(Initiative.class,
                     municipalityInitiative.all(),
                     QMunicipality.municipality.all(),
-                    QParticipant.participant.all()) {
+                    QParticipant.participant.all(),
+                    QAuthor.author.all()) {
                 @Override
                 protected Initiative map(Tuple row) {
                     Initiative info = new Initiative();
                     info.setId(row.get(municipalityInitiative.id));
                     info.setCreateTime(row.get(municipalityInitiative.modified).toLocalDate());
                     info.setName(row.get(municipalityInitiative.name));
-                    info.setMunicipality(new Municipality(
-                            row.get(QMunicipality.municipality.id),
-                            row.get(QMunicipality.municipality.name),
-                            row.get(QMunicipality.municipality.nameSv))
+                    info.setMunicipality(parseMunicipality(row)
                     );
+                    info.setType(Maybe.fromNullable(row.get(municipalityInitiative.type)));
                     info.setProposal(row.get(municipalityInitiative.proposal));
                     info.setAuthorName(row.get(QParticipant.participant.name));
                     info.setShowName(row.get(QParticipant.participant.showName));
-                    info.setManagementHash(Maybe.fromNullable(row.get(municipalityInitiative.managementHash)));
+                    info.setManagementHash(Maybe.of(row.get(QAuthor.author.managementHash)));
                     info.setSentTime(maybeLocalDate(row.get(municipalityInitiative.sent)));
+                    info.setState(row.get(municipalityInitiative.state));
                     return info;
                 }
             };
@@ -424,21 +506,19 @@ public class JdbcInitiativeDao implements InitiativeDao {
             new MappingProjection<InitiativeListInfo>(InitiativeListInfo.class,
                     municipalityInitiative.all(),
                     QMunicipality.municipality.all(),
-                    QParticipant.participant.all()) {
+                    QParticipant.participant.all(),
+                    QAuthor.author.all()) {
                 @Override
                 protected InitiativeListInfo map(Tuple row) {
                     InitiativeListInfo info = new InitiativeListInfo();
                     info.setId(row.get(municipalityInitiative.id));
                     info.setCreateTime(row.get(municipalityInitiative.modified).toLocalDate());
                     info.setName(row.get(municipalityInitiative.name));
-                    info.setMunicipality(new Municipality(
-                            row.get(QMunicipality.municipality.id),
-                            row.get(QMunicipality.municipality.name),
-                            row.get(QMunicipality.municipality.nameSv))
-                    );
-                    info.setCollectable(row.get(municipalityInitiative.managementHash) != null);
+                    info.setMunicipality(parseMunicipality(row));
+                    info.setCollectable(InitiativeType.isCollectable(row.get(municipalityInitiative.type)));
                     info.setSentTime(maybeLocalDate(row.get(municipalityInitiative.sent)));
                     info.setParticipantCount(row.get(municipalityInitiative.participantCount));
+                    info.setType(Maybe.fromNullable(row.get(municipalityInitiative.type)));
                     return info;
                 }
             };

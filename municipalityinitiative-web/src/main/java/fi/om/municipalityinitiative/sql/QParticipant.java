@@ -42,7 +42,7 @@ public class QParticipant extends com.mysema.query.sql.RelationalPathBase<QParti
 
     public final com.mysema.query.sql.ForeignKey<QMunicipalityInitiative> participantMunicipalityInitiativeIdFk = createForeignKey(municipalityInitiativeId, "id");
 
-    public final com.mysema.query.sql.ForeignKey<QMunicipalityInitiative> _municipalityInitiativeAuthorFk = createInvForeignKey(id, "author_id");
+    public final com.mysema.query.sql.ForeignKey<QAuthor> _authorParticipantFk = createInvForeignKey(id, "participant_id");
 
     public QParticipant(String variable) {
         super(QParticipant.class, forVariable(variable), "municipalityinitiative", "participant");

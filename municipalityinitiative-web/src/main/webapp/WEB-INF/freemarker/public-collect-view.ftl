@@ -58,7 +58,7 @@
             </div>
         
             <div id="franchise" class="input-block-content flexible">
-                <@f.radiobutton path="participant.franchise" required="required" options={"true":"initiative.franchise.true", "false":"initiative.franchise.false"} attributes="" />
+                <#--<@f.radiobutton path="participant.franchise" required="required" options={"true":"initiative.franchise.true", "false":"initiative.franchise.false"} attributes="" />-->
             </div>
             
             <div id="municipalMembership" class="js-hide hidden">

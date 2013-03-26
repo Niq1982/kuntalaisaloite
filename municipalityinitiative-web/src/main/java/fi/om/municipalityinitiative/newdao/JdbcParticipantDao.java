@@ -48,7 +48,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .set(QMunicipalityInitiative.municipalityInitiative.participantCount,
                         QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
                 .where(QMunicipalityInitiative.municipalityInitiative.id.eq(createDto.getMunicipalityInitiativeId()))
-                .where(QMunicipalityInitiative.municipalityInitiative.managementHash.isNotNull())
+//                .where(QMunicipalityInitiative.municipalityInitiative.managementHash.isNotNull()) // TODO: If collectable
                 .execute();
 
         return participantId;
@@ -56,6 +56,7 @@ public class JdbcParticipantDao implements ParticipantDao {
 
     @Override
     @Transactional(readOnly = true)
+    // Preparing because we do not know participants name
     public Long prepareParticipant(Long initiativeId, Long homeMunicipality, Boolean franchise) {
         Long participantId = queryFactory.insert(participant)
                 .set(participant.franchise, franchise)
@@ -70,7 +71,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .set(QMunicipalityInitiative.municipalityInitiative.participantCount,
                         QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
                 .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
-                .where(QMunicipalityInitiative.municipalityInitiative.managementHash.isNotNull())
+//                .where(QMunicipalityInitiative.municipalityInitiative.managementHash.isNotNull()) // TODO
                 .execute();
 
         return participantId;

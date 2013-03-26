@@ -1,21 +1,14 @@
 package fi.om.municipalityinitiative.newdto.service;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
-
-import javax.annotation.Resource;
-
-import org.springframework.transaction.annotation.Transactional;
-
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUICreateDto;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateDto;
-import fi.om.municipalityinitiative.service.EmailService;
 import fi.om.municipalityinitiative.util.Maybe;
-import fi.om.municipalityinitiative.util.RandomHashGenerator;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
 
 public class TestDataService {
     
@@ -44,7 +37,7 @@ public class TestDataService {
 
         Long initiativeId = initiativeDao.create(initiativeCreateDto);
         Long participantId = participantDao.create(ParticipantCreateDto.parse(createDto, initiativeId));
-        initiativeDao.assignAuthor(initiativeId, participantId);
+        initiativeDao.assignAuthor(initiativeId, participantId, createDto.getContactInfo().getEmail(), managementHash.get());
         return initiativeId;
 
     }

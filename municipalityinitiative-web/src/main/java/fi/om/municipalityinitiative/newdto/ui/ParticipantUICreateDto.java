@@ -1,18 +1,16 @@
 package fi.om.municipalityinitiative.newdto.ui;
 
 import fi.om.municipalityinitiative.newdto.service.CreateDtoTimeValidation;
-import fi.om.municipalityinitiative.validation.ParticipantValidationInfo;
 import fi.om.municipalityinitiative.validation.ValidMunicipalMembership;
-import fi.om.municipalityinitiative.validation.ValidParticipateFranchise;
+import fi.om.municipalityinitiative.validation.ValidMunicipalMembershipInfo;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 
-@ValidParticipateFranchise
 @ValidMunicipalMembership
 public class ParticipantUICreateDto
         extends CreateDtoTimeValidation
-        implements ParticipantValidationInfo {
+        implements ValidMunicipalMembershipInfo {
 
     @NotEmpty
     private String participantName;
@@ -21,8 +19,6 @@ public class ParticipantUICreateDto
     private Long homeMunicipality;
 
     private Boolean showName;
-
-    private Boolean franchise;
 
     private Boolean municipalMembership;
 
@@ -55,6 +51,10 @@ public class ParticipantUICreateDto
         this.homeMunicipality = homeMunicipality;
     }
 
+    public Boolean getMunicipalMembership() {
+        return municipalMembership;
+    }
+
     public Boolean getShowName() {
         return showName;
     }
@@ -64,17 +64,8 @@ public class ParticipantUICreateDto
     }
 
     @Override
-    public Boolean getFranchise() {
-        return franchise;
-    }
-
-    public void setFranchise(Boolean franchise) {
-        this.franchise = franchise;
-    }
-
-    @Override
-    public Boolean getMunicipalMembership() {
-        return municipalMembership;
+    public boolean hasMunicipalMembership() {
+        return municipalMembership != null && Boolean.TRUE.equals(municipalMembership);
     }
 
     public void setMunicipalMembership(Boolean municipalMembership) {

@@ -1,8 +1,6 @@
 package fi.om.municipalityinitiative.web;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
-
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -21,7 +19,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
     public void manage_view_shows_send_to_municipality_button() {
 
         Long municipalityId = testHelper.createTestMunicipality("Tuusula");
-        Long initiativeId = testHelper.createTestInitiative(municipalityId, "Testi aloite", true, true);
+        Long initiativeId = testHelper.createCollectableDraft(municipalityId);
 
         open(urls.management(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
 
@@ -31,12 +29,14 @@ public class ViewInitiativeWebTest extends WebTestBase {
     @Test
     public void opens_error_404_if_management_hash_wrong() {
         Long municipalityId = testHelper.createTestMunicipality("Tuusula");
-        Long initiativeId = testHelper.createTestInitiative(municipalityId, "Testi aloite", true, true);
+        Long initiativeId = testHelper.createCollectableDraft(municipalityId);
 
         open(urls.management(initiativeId, "wrong_hash"));
 
         assertThat(driver.findElement(By.tagName("h1")).getText(), is(getMessage(ERROR_404_TITLE)));
     }
+
+    // TODO: Redirect-tests if initiative at REVIEW, ACCEPTED, sent etc and trying to open edit/management-page
 
 
 }

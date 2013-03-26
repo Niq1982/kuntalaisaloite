@@ -5,8 +5,11 @@ import com.mysema.query.sql.PostgresTemplates;
 import com.mysema.query.sql.SQLTemplates;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.sql.types.DateTimeType;
+import com.mysema.query.sql.types.EnumAsObjectType;
 import com.mysema.query.sql.types.LocalDateType;
 import com.mysema.query.types.Ops;
+import fi.om.municipalityinitiative.util.InitiativeState;
+import fi.om.municipalityinitiative.util.InitiativeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -63,9 +66,11 @@ public class JdbcConfiguration {
         com.mysema.query.sql.Configuration configuration = new com.mysema.query.sql.Configuration(templates());
         configuration.register(new DateTimeType());
         configuration.register(new LocalDateType());
-        
+        configuration.register("municipality_initiative", "type", new EnumAsObjectType<>(InitiativeType.class));
+        configuration.register("municipality_initiative", "state", new EnumAsObjectType<>(InitiativeState.class));
         return configuration;
     }
+
     @Bean
     public PlatformTransactionManager transactionManager() {
         return new DataSourceTransactionManager(dataSource());

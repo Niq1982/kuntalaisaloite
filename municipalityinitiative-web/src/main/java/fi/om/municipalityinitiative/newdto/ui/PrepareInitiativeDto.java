@@ -2,18 +2,19 @@ package fi.om.municipalityinitiative.newdto.ui;
 
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.newdto.service.CreateDtoTimeValidation;
-import fi.om.municipalityinitiative.validation.InitiativeCreateParticipantValidationInfo;
+import fi.om.municipalityinitiative.util.InitiativeType;
+import fi.om.municipalityinitiative.validation.ValidMunicipalMembership;
+import fi.om.municipalityinitiative.validation.ValidMunicipalMembershipInfo;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+@ValidMunicipalMembership
 public class PrepareInitiativeDto
         extends CreateDtoTimeValidation
-        implements InitiativeCreateParticipantValidationInfo {
-
-    private boolean collectable;
+        implements ValidMunicipalMembershipInfo {
 
     @NotNull
     private Long municipality;
@@ -21,21 +22,16 @@ public class PrepareInitiativeDto
     @NotNull
     private Long homeMunicipality;
     
-    // TODO: initiativeType. Now just dummy field for the form
-    @NotNull
-    private String initiativeType;
+    // Is set as null if normal initiative because we do not know if creator wants to gather any other people
+    private InitiativeType initiativeType;
 
-    private Boolean franchise;
+    // Is validated at ValidMunicipalMembershipValidator because may ne null if municipalities don't differ
+    private Membership municipalMembership;
 
     @NotEmpty
     @Pattern(regexp = ContactInfo.EMAIL_PATTERN)
     @Size(max = InitiativeConstants.CONTACT_EMAIL_MAX)
     private String authorEmail;
-
-    @Override
-    public boolean isCollectable() {
-        return collectable;
-    }
 
     @Override
     public Long getHomeMunicipality() {
@@ -47,26 +43,17 @@ public class PrepareInitiativeDto
         return municipality;
     }
     
-    public String getInitiativeType() {
+    public InitiativeType getInitiativeType() {
         return initiativeType;
     }
 
-    public void setInitiativeType(String initiativeType) {
+    public void setInitiativeType(InitiativeType initiativeType) {
         this.initiativeType = initiativeType;
-    }    
-
-    @Override
-    public Boolean getFranchise() {
-        return franchise;
     }
 
     @Override
-    public Boolean getMunicipalMembership() {
-        return null;
-    }
-
-    public void setCollectable(boolean collectable) {
-        this.collectable = collectable;
+    public boolean hasMunicipalMembership() {
+        return municipalMembership != null && !municipalMembership.equals(Membership.none);
     }
 
     public void setMunicipality(Long municipality) {
@@ -77,15 +64,26 @@ public class PrepareInitiativeDto
         this.homeMunicipality = homeMunicipality;
     }
 
-    public void setFranchise(Boolean franchise) {
-        this.franchise = franchise;
-    }
-
     public String getAuthorEmail() {
         return authorEmail;
     }
 
     public void setAuthorEmail(String authorEmail) {
         this.authorEmail = authorEmail;
+    }
+
+    public Membership getMunicipalMembership() {
+        return municipalMembership;
+    }
+
+    public void setMunicipalMembership(Membership municipalMembership) {
+        this.municipalMembership = municipalMembership;
+    }
+
+    public enum Membership {
+        community,
+        company,
+        property,
+        none
     }
 }

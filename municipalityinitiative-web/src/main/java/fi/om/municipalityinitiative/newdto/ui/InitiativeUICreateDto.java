@@ -2,8 +2,7 @@ package fi.om.municipalityinitiative.newdto.ui;
 
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.newdto.service.CreateDtoTimeValidation;
-import fi.om.municipalityinitiative.validation.InitiativeCreateParticipantValidationInfo;
-import fi.om.municipalityinitiative.validation.ValidCreateFranchise;
+import fi.om.municipalityinitiative.validation.InitiativeCreateValidMunicipalMembershipInfo;
 import fi.om.municipalityinitiative.validation.ValidMunicipalMembership;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -12,10 +11,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @ValidMunicipalMembership
-@ValidCreateFranchise
 public class InitiativeUICreateDto
         extends CreateDtoTimeValidation
-        implements InitiativeCreateParticipantValidationInfo {
+        implements InitiativeCreateValidMunicipalMembershipInfo {
 
     @NotEmpty
     @Size(max = InitiativeConstants.INITIATIVE_NAME_MAX)
@@ -70,11 +68,6 @@ public class InitiativeUICreateDto
         this.municipalMembership = municipalMembership;
     }
 
-    @Override
-    public Boolean getFranchise() {
-        return franchise;
-    }
-
     public void setFranchise(Boolean franchise) {
         this.franchise = franchise;
     }
@@ -106,7 +99,7 @@ public class InitiativeUICreateDto
     }
 
     @Override
-    public Boolean getMunicipalMembership() {
+    public boolean hasMunicipalMembership() {
         return municipalMembership;
     }
 

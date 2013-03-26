@@ -114,7 +114,7 @@
             <@f.showError />
             <label class="initiative-type">
                 <span class="type">
-                    <input type="radio" id="initiativeType" name="${spring.status.expression}" value="normal"
+                    <input type="radio" id="initiativeType" name="${spring.status.expression}" value=""
                         <#if spring.stringStatusValue == "normal">checked="checked"</#if>
                     <@spring.closeTag/> <@u.message "initiative.type.normal" />
                 </span>
@@ -122,12 +122,12 @@
             </label>
             
             <label class="initiative-type disabled trigger-tooltip" title="<@u.message "initiative.type.disabled" />">
-                <span class="type"><input type="radio" id="initiativeType[1]" name="initiativeType" value="two-percent" disabled="disabled" /> <@u.message "initiative.type.two-percent" /></span>
+                <span class="type"><input type="radio" id="initiativeType[1]" name="initiativeType" value="COLLABORATIVE_COUNCIL" disabled="disabled" /> <@u.message "initiative.type.two-percent" /></span>
                 <span class="description"><@u.message "initiative.type.two-percent.description" /><br/><br/></span>
             </label>
             
             <label class="initiative-type disabled trigger-tooltip" title="<@u.message "initiative.type.disabled" />">
-                <span class="type"><input type="radio" id="initiativeType[2]" name="initiativeType" value="five-percent" disabled="disabled" /> <@u.message "initiative.type.five-percent" /></span>
+                <span class="type"><input type="radio" id="initiativeType[2]" name="initiativeType" value="COLLABORATIVE_CITIZEN" disabled="disabled" /> <@u.message "initiative.type.five-percent" /></span>
                 <span class="description"><@u.message "initiative.type.five-percent.description" /><br/><br/></span>
             </label>
         </div>
@@ -244,7 +244,7 @@
             <div class="column col-1of3 last">
                 <div class="input-header"><@u.message "initiative.contactInfo.homeMunicipality" /></div>
                 
-                <div class="input-placeholder">Testikunta</div>
+                <div class="input-placeholder">${author.municipality.getName(locale)}</div>
                 <#--<input type="text" maxlength="100" class="medium" value="Testikunta" disabled="disabled">-->
             </div>
             <br class="clear" />

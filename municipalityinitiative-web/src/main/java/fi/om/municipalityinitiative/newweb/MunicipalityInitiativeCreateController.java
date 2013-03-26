@@ -2,9 +2,7 @@ package fi.om.municipalityinitiative.newweb;
 
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUICreateDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUIEditDto;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.ui.PrepareInitiativeDto;
-import fi.om.municipalityinitiative.newdto.ui.SendToMunicipalityDto;
 import fi.om.municipalityinitiative.service.InitiativeService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.service.ValidationService;
@@ -125,11 +123,10 @@ public class MunicipalityInitiativeCreateController extends BaseController {
 
         Urls urls = Urls.get(locale);
 
-        initiative.setCollectable(true);
-
         Long initiativeId = initiativeService.prepareInitiative(initiative, locale);
 //        return redirectWithMessage(urls.view(initiativeId), RequestMessage.SAVE, request);
         return redirectWithMessage(urls.pendingConfirmation(initiativeId), RequestMessage.PREPARE, request);
+
     }
 
     @RequestMapping(value={ EDIT_FI, EDIT_SV }, method=GET)
@@ -140,6 +137,7 @@ public class MunicipalityInitiativeCreateController extends BaseController {
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().edit(initiativeId, managementHash));
         model.addAttribute("initiative", initiativeService.getInitiativeForEdit(initiativeId, managementHash));
+        model.addAttribute("author", initiativeService.getAuthorInformation(initiativeId, managementHash));
         
         String managementURI = urls.management(initiativeId, managementHash);
         

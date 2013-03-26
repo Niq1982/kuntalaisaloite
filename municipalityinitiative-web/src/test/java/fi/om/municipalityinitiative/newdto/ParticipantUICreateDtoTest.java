@@ -28,46 +28,6 @@ public class ParticipantUICreateDtoTest {
 
 
     @Test
-    public void franchise_is_needed_if_municipalities_are_same() {
-        ParticipantUICreateDto dto = createParticipantWithName();
-
-        dto.setMunicipality(1L);
-        dto.setHomeMunicipality(1L);
-        dto.setFranchise(null);
-
-        Set<ConstraintViolation<ParticipantUICreateDto>> violations = validator.validate(dto);
-
-        assertThat(violations, hasSize(1));
-        assertThat(getFirst(violations).getPropertyPath().toString(), is("franchise"));
-        assertThat(getFirst(violations).getMessage(), is("ValidParticipateFranchise"));
-    }
-
-    @Test
-    public void franchise_can_be_false_if_municipalities_are_same() {
-        ParticipantUICreateDto dto = createParticipantWithName();
-
-        dto.setMunicipality(1L);
-        dto.setHomeMunicipality(1L);
-        dto.setFranchise(false);
-
-        Set<ConstraintViolation<ParticipantUICreateDto>> violations = validator.validate(dto);
-
-        assertThat(violations, hasSize(0));
-    }
-
-    @Test
-    public void franchise_can_be_true_if_municipalities_are_same() {
-        ParticipantUICreateDto dto = createParticipantWithName();
-
-        dto.setMunicipality(1L);
-        dto.setHomeMunicipality(1L);
-        dto.setFranchise(true);
-
-        Set<ConstraintViolation<ParticipantUICreateDto>> violations = validator.validate(dto);
-        assertThat(violations, hasSize(0));
-    }
-
-    @Test
     public void municipalMembership_is_needed_if_municipalities_are_not_the_same() {
         ParticipantUICreateDto dto = createParticipantWithName();
 

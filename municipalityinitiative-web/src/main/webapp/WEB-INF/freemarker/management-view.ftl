@@ -45,7 +45,10 @@
 
         <div class="initiative-content-row last">
             <h2><@u.message "initiative.contactinfo.title" /></h2>
-            <p>${initiative.authorName!""}<br />
+            <p>${author.contactInfo.name!""}<br />
+            ${author.contactInfo.email!""}<br />
+            ${author.contactInfo.address!""}<br />
+            ${author.contactInfo.phone!""}<br />
         </div>
     </div>
 
@@ -81,6 +84,7 @@
                 
                 <form action="${springMacroRequestContext.requestUri}" method="POST" >
                     <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+                    <input type="hidden" name="${UrlConstants.PARAM_MANAGEMENT_CODE}" value="${initiative.managementHash.value}"/>
                     <button type="submit" name="${UrlConstants.ACTION_SEND_TO_REVIEW}" id="modal-${UrlConstants.ACTION_SEND_TO_REVIEW}" value="<@u.message "action.sendToReview.doNotCollect" />" class="small-button green"><span class="small-icon mail"><@u.messageHTML "action.sendToReview.doNotCollect" /></button>
                     <a href="${managementURL}" class="push close"><@u.message "action.cancel" /></a>
                 </form>
@@ -106,6 +110,7 @@
                 
                 <form action="${springMacroRequestContext.requestUri}" method="POST" >
                     <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+                    <input type="hidden" name="${UrlConstants.PARAM_MANAGEMENT_CODE}" value="${initiative.managementHash.value}"/>
                     <button type="submit" name="${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" id="modal-${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" value="<@u.message "action.sendToReview.cllect" />" class="small-button green"><span class="small-icon save-and-send"><@u.messageHTML "action.sendToReview.collect" /></button>
                     <a href="${managementURL}" class="push close"><@u.message "action.cancel" /></a>
                 </form>
