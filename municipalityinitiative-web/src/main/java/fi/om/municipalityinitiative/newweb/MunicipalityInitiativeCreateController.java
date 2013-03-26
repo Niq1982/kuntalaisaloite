@@ -161,6 +161,7 @@ public class MunicipalityInitiativeCreateController extends BaseController {
         if (validionService.validationErrors(editDto, bindingResult, model)) {
             model.addAttribute(ALT_URI_ATTR, urls.alt().edit(initiativeId, editDto.getManagementHash()));
             model.addAttribute("initiative", editDto);
+            model.addAttribute("author", initiativeService.getAuthorInformation(initiativeId, editDto.getManagementHash()));
             return EDIT_VIEW;
         }
 
