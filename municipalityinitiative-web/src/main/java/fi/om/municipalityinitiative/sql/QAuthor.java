@@ -29,17 +29,17 @@ public class QAuthor extends com.mysema.query.sql.RelationalPathBase<QAuthor> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final NumberPath<Long> initiativeId = createNumber("initiative_id", Long.class);
-
     public final StringPath managementHash = createString("management_hash");
 
     public final StringPath name = createString("name");
+
+    public final NumberPath<Long> participantId = createNumber("participant_id", Long.class);
 
     public final StringPath phone = createString("phone");
 
     public final com.mysema.query.sql.PrimaryKey<QAuthor> authorPk = createPrimaryKey(id);
 
-    public final com.mysema.query.sql.ForeignKey<QMunicipalityInitiative> authorInitiativeFk = createForeignKey(initiativeId, "id");
+    public final com.mysema.query.sql.ForeignKey<QParticipant> authorParticipantFk = createForeignKey(participantId, "id");
 
     public final com.mysema.query.sql.ForeignKey<QMunicipalityInitiative> _initiativeAuthorFk = createInvForeignKey(id, "new_author_id");
 

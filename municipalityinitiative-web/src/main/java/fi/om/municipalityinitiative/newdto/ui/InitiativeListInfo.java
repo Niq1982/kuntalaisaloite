@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.newdto.ui;
 
 import fi.om.municipalityinitiative.newdto.service.Municipality;
+import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.LocalDate;
 
@@ -14,6 +15,7 @@ public class InitiativeListInfo {
     private boolean collectable;
     private Maybe<LocalDate> sentTime;
     private long participantCount;
+    private Maybe<InitiativeType> type;
 
     public Long getId() {
         return id;
@@ -69,5 +71,13 @@ public class InitiativeListInfo {
 
     public void setMunicipality(Municipality municipality) {
         this.municipality = municipality;
+    }
+
+    public Maybe<InitiativeType> getType() {
+        return type;
+    }
+
+    public void setType(Maybe<InitiativeType> typeMaybe) {
+        this.type = typeMaybe;
     }
 }

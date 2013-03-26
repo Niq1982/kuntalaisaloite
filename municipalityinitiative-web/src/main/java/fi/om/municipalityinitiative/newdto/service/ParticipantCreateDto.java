@@ -2,7 +2,6 @@ package fi.om.municipalityinitiative.newdto.service;
 
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUICreateDto;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateDto;
-import fi.om.municipalityinitiative.validation.ParticipantValidationInfo;
 
 public class ParticipantCreateDto {
 
@@ -19,7 +18,6 @@ public class ParticipantCreateDto {
         participantCreateDto.setShowName(source.getShowName() == null ? false : source.getShowName());
         participantCreateDto.setParticipantName(source.getContactInfo().getName());
         participantCreateDto.setHomeMunicipality(source.getHomeMunicipality());
-        participantCreateDto.setFranchise(solveFranchise(source));
         return participantCreateDto;
     }
 
@@ -30,14 +28,7 @@ public class ParticipantCreateDto {
         participantCreateDto.setShowName(participant.getShowName() == null ? false : participant.getShowName());
         participantCreateDto.setParticipantName(participant.getParticipantName());
         participantCreateDto.setHomeMunicipality(participant.getHomeMunicipality());
-        participantCreateDto.setFranchise(solveFranchise(participant));
         return participantCreateDto;
-    }
-
-    // TODO: Move somewhere else, needed in two places now.
-    public static boolean solveFranchise(ParticipantValidationInfo participant) {
-        return participant.getHomeMunicipality().equals(participant.getMunicipality())
-                && Boolean.TRUE.equals(participant.getFranchise());
     }
 
     public Long getMunicipalityInitiativeId() {

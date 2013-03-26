@@ -13,6 +13,7 @@ import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.newweb.ApiController;
+import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.LocalDate;
 
@@ -89,7 +90,7 @@ public class JsonDataService {
         initiativeInfo.setCreateTime(new LocalDate(2010, 1, 1));
         initiativeInfo.setAuthorName("Teemu Teekkari");
         initiativeInfo.setShowName(true);
-        initiativeInfo.setManagementHash(Maybe.of("any"));
+        initiativeInfo.setType(Maybe.of(InitiativeType.COLLABORATIVE));
 
         InitiativeJson initiativeJson = InitiativeJson.from(initiativeInfo, publicParticipants, participantCount);
 

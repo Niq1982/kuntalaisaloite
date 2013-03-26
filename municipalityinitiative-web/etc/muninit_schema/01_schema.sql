@@ -1,3 +1,9 @@
+drop type if exists initiativeType;
+drop type if exists initiativeState;
+
+create type initiativeType as enum ('SINGLE','COLLABORATIVE','COLLABORATIVE_COUNCIL','COLLABORATIVE_CITIZEN');
+create type initiativeState as enum('DRAFT','REVIEW','ACCEPTED');
+
 create table municipality (
 	id bigserial,
 	name varchar(30) constraint municipality_name_nn not null,
@@ -13,7 +19,8 @@ create index municipality_id_index on municipality(id);
 create table municipality_initiative (
 	id bigserial,
 	municipality_id bigserial,
-	author_id bigserial,
+	type initiativeType,
+	state initiativeState constraint initiative_state_nn not null default 'DRAFT',
 
 	new_author_id bigserial,
 
@@ -59,7 +66,7 @@ create index participant_id_index on participant(id);
 
 create table author (
     id bigserial,
-    initiative_id bigserial,
+    participant_id bigserial,
     management_hash varchar(40),
 
     name varchar(100),
@@ -69,11 +76,8 @@ create table author (
     confirmed boolean,
 
     constraint author_pk primary key (id),
-    constraint author_initiative_fk foreign key (initiative_id) references municipality_initiative(id)
+    constraint author_participant_fk foreign key (participant_id) references participant(id)
 );
 create index author_id_index on author(id);
 
-alter table municipality_initiative add constraint municipality_initiative_author_fk foreign key(author_id) references participant(id) INITIALLY DEFERRED;
 alter table municipality_initiative add constraint initiative_author_fk foreign key (new_author_id) references author(id) INITIALLY DEFERRED;
-alter table municipality_initiative add constraint collectable_dependencies
-    check ((management_hash is null and participant_count = 0 and sent is not null and comment is null) or (management_hash is not null));

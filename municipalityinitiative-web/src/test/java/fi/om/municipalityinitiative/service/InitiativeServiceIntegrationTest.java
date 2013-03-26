@@ -55,77 +55,23 @@ public class InitiativeServiceIntegrationTest {
 
 
     @Test
-    public void createNotCollectable() {
-        service.createMunicipalityInitiative(createDto(false), null);
-        assertThat(testHelper.countAll(QMunicipalityInitiative.municipalityInitiative), is(1L));
-    }
-    
-    @Test
-    public void createCollectable() {
-        service.createMunicipalityInitiative(createDto(true), null);
-        assertThat(testHelper.countAll(QMunicipalityInitiative.municipalityInitiative), is(1L));
-    }    
-
-    @Test
     public void all_fields_are_set_when_getting_municipalityInitiativeInfo() throws Exception {
-        Long initiativeId = service.createMunicipalityInitiative(createDto(true), null);
+        Long initiativeId = testHelper.createTestInitiative(testMunicipality.getId(), "Initiative name");
         InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId, Locales.LOCALE_FI);
         ReflectionTestUtils.assertNoNullFields(initiative);
     }
 
     @Test
-    public void create_and_get() {
-        InitiativeUICreateDto createDto = createDto(false);
-        Long initiativeId = service.createMunicipalityInitiative(createDto, null);
+    public void get() {
+        Long initiativeId = testHelper.createTestInitiative(testMunicipality.getId(), "Some name");
         InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId, Locales.LOCALE_FI);
-
-        assertThat(initiative.getId(), is(initiativeId));
-        assertThat(initiative.getAuthorName(), is(createDto.getContactInfo().getName()));
-        assertThat(initiative.getName(), is(createDto.getName()));
-        assertThat(initiative.getProposal(), is(createDto.getProposal()));
-        assertThat(initiative.isShowName(), is(createDto.getShowName()));
-        assertThat(initiative.getMunicipality().getName(), is(testMunicipality.getName()));
-
-        assertThat(initiative.getCreateTime(), is(notNullValue()));
-        assertThat(initiative.getManagementHash().isPresent(), is(false));
-        assertThat(initiative.isCollectable(), is(false));
-        assertThat(initiative.getSentTime().isPresent(), is(true));
-
         ReflectionTestUtils.assertNoNullFields(initiative);
     }
 
     @Test
-    public void creating_collectable_initiative_adds_hash() {
-        InitiativeUICreateDto createDto = createDto(true);
-        Long initiativeId = service.createMunicipalityInitiative(createDto, null);
-        InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId, Locales.LOCALE_FI);
+    public void participating_to_not_accepted_initiative_is_forbidden() {
+        Long initiative = testHelper.createCollectableReview(testMunicipality.getId());
 
-        assertThat(initiative.getManagementHash().get(), is(notNullValue()));
-        assertThat(initiative.getManagementHash().get(), is(RandomHashGenerator.getPrevious()));
-        assertThat(initiative.isCollectable(), is(true));
-    }
-
-    @Test
-    public void creating_collectable_initiative_leaves_sent_time_null() {
-        InitiativeUICreateDto createDto = createDto(true);
-        Long initiativeId = service.createMunicipalityInitiative(createDto, null);
-        InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId, Locales.LOCALE_FI);
-
-        assertThat(initiative.getSentTime().isPresent(), is(false));
-    }
-
-    @Test
-    public void creating_not_collectable_initiative_sets_sent_time() {
-        InitiativeUICreateDto createDto = createDto(false);
-        Long initiativeId = service.createMunicipalityInitiative(createDto, null);
-        InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId, Locales.LOCALE_FI);
-
-        assertThat(initiative.getSentTime().isPresent(), is(true));
-    }
-
-    @Test
-    public void participating_to_non_collectable_initiative_is_forbidden() {
-        Long initiative = testHelper.createTestInitiative(testMunicipality.getId());
         ParticipantUICreateDto participant = new ParticipantUICreateDto();
         participant.setParticipantName("Some Name");
         participant.setShowName(true);
@@ -133,14 +79,14 @@ public class InitiativeServiceIntegrationTest {
         try {
             service.createParticipant(participant, initiative);
             fail("Expected ParticipatingUnallowedException");
-        } catch(ParticipatingUnallowedException e) {
-            assertThat(e.getMessage(), containsString("Initiative not collectable"));
+        } catch (ParticipatingUnallowedException e) {
+            assertThat(e.getMessage(), containsString("Initiative not accepted by om:"));
         }
     }
 
     @Test
     public void participating_to_sent_but_collectable_initiative_is_forbidden() {
-        Long initiativeId = testHelper.createTestInitiative(testMunicipality.getId(), "initiative title", false, true);
+        Long initiativeId = testHelper.createCollectableAccepted(testMunicipality.getId());
         ParticipantUICreateDto participant = new ParticipantUICreateDto();
         participant.setParticipantName("Some Name");
         participant.setShowName(true);
@@ -151,7 +97,7 @@ public class InitiativeServiceIntegrationTest {
         try {
             service.createParticipant(participant, initiativeId);
             fail("Expected ParticipatingUnallowedException");
-        } catch(ParticipatingUnallowedException e) {
+        } catch (ParticipatingUnallowedException e) {
             assertThat(e.getMessage(), containsString("Initiative already sent"));
         }
     }
@@ -159,7 +105,7 @@ public class InitiativeServiceIntegrationTest {
     @Test
     public void sending_collectable_initiative_to_municipality_saves_new_contact_information_to_initiative_and_marks_it_as_sended() {
 
-        Long initiativeId = testHelper.createTestInitiative(testMunicipality.getId(), "Initiative name", true, true);
+        Long initiativeId = testHelper.createCollectableAccepted(testMunicipality.getId());
 
         SendToMunicipalityDto sendToMunicipalityDto = new SendToMunicipalityDto();
         sendToMunicipalityDto.setContactInfo(new ContactInfo());
@@ -188,34 +134,27 @@ public class InitiativeServiceIntegrationTest {
 
     @Test
     public void sets_participant_count_to_one_when_adding_new_collectable_initiative() {
-        service.createMunicipalityInitiative(createDto(true), null);
+        Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
+        service.sendReview(initiativeId, RandomHashGenerator.getPrevious(), InitiativeType.COLLABORATIVE);
+
         List<InitiativeListInfo> initiatives = service.findMunicipalityInitiatives(new InitiativeSearch().setShow(InitiativeSearch.Show.all));
         precondition(initiatives, hasSize(1));
         assertThat(initiatives.get(0).getParticipantCount(), is(1L));
     }
 
     @Test
-    public void leaves_participant_count_to_zero_when_adding_new_non_collectable_initiative() {
-        service.createMunicipalityInitiative(createDto(false), null);
-        List<InitiativeListInfo> initiatives = service.findMunicipalityInitiatives(new InitiativeSearch().setShow(InitiativeSearch.Show.all));
-        precondition(initiatives, hasSize(1));
-        assertThat(initiatives.get(0).getParticipantCount(), is(0L));
-    }
-
-    @Test
     public void increases_participant_count_when_participating_to_collectable_initiative() {
-        Long municipalityInitiative = service.createMunicipalityInitiative(createDto(true), null);
+        Long municipalityInitiative = testHelper.createCollectableAccepted(testMunicipality.getId());
 
         ParticipantUICreateDto participant = new ParticipantUICreateDto();
         participant.setParticipantName("name");
         participant.setHomeMunicipality(testMunicipality.getId());
-        participant.setFranchise(true);
         participant.setShowName(true);
         service.createParticipant(participant, municipalityInitiative);
 
         List<InitiativeListInfo> initiatives = service.findMunicipalityInitiatives(new InitiativeSearch().setShow(InitiativeSearch.Show.all));
         precondition(initiatives, hasSize(1));
-        assertThat(initiatives.get(0).getParticipantCount(), is(2L));
+        assertThat(initiatives.get(0).getParticipantCount(), is(1L));
     }
 
     @Test
@@ -238,12 +177,13 @@ public class InitiativeServiceIntegrationTest {
     @Test
     public void preparing_initiative_sets_participant_information() {
         Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise(), Locales.LOCALE_FI);
+        service.sendReview(initiativeId, RandomHashGenerator.getPrevious(), InitiativeType.COLLABORATIVE);
 
-        assertThat(service.findMunicipalityInitiatives(new InitiativeSearch()).get(0).getParticipantCount(), is(1L));
+        InitiativeSearch all = new InitiativeSearch().setShow(InitiativeSearch.Show.all);
+        assertThat(service.findMunicipalityInitiatives(all).get(0).getParticipantCount(), is(1L));
 
         Participant participant = participantDao.findAllParticipants(initiativeId).get(0);
         assertThat(participant.getHomeMunicipality().getId(), is(testMunicipality.getId()));
-        assertThat(participant.isFranchise(), is(true));
         assertThat(participant.getParticipateDate(), is(LocalDate.now()));
     }
 
@@ -315,10 +255,16 @@ public class InitiativeServiceIntegrationTest {
 
     private static PrepareInitiativeDto initiativePrepareDtoWithFranchise() {
         PrepareInitiativeDto prepareInitiativeDto = new PrepareInitiativeDto();
-        prepareInitiativeDto.setCollectable(true);
-        prepareInitiativeDto.setFranchise(true);
         prepareInitiativeDto.setHomeMunicipality(testMunicipality.getId());
         prepareInitiativeDto.setMunicipality(testMunicipality.getId());
+        return prepareInitiativeDto;
+    }
+
+    private PrepareInitiativeDto prepareDto() {
+        PrepareInitiativeDto prepareInitiativeDto = new PrepareInitiativeDto();
+        prepareInitiativeDto.setMunicipality(testMunicipality.getId());
+        prepareInitiativeDto.setHomeMunicipality(testMunicipality.getId());
+        prepareInitiativeDto.setAuthorEmail("authorEmail@example.com");
         return prepareInitiativeDto;
     }
 

@@ -6,6 +6,8 @@ import fi.om.municipalityinitiative.service.InitiativeService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.service.ParticipantService;
 import fi.om.municipalityinitiative.service.ValidationService;
+import fi.om.municipalityinitiative.util.InitiativeState;
+import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.BaseController;
 import fi.om.municipalityinitiative.web.RequestMessage;
@@ -166,21 +168,21 @@ public class MunicipalityInitiativeViewController extends BaseController {
 
         InitiativeViewInfo initiativeInfo = initiativeService.getMunicipalityInitiative(initiativeId, locale);
 
-        if (initiativeInfo.isSent() && managementHash.equals(initiativeInfo.getManagementHash().get())) {
+        if (initiativeInfo.isSent()) {
             return redirectWithMessage(urls.view(initiativeId),RequestMessage.ALREADY_SENT, request);
-        } else if (!initiativeInfo.isCollectable() || initiativeInfo.isSent()) { // Practically initiative should always be sent if it's not collectable...
+        } else if (initiativeInfo.getState() != InitiativeState.DRAFT) { // Only draft may be modified. Use moderation-view after sent for review
             return contextRelativeRedirect(urls.view(initiativeId));
         }
 
-        addModelAttributesToCollectView(model,
-                initiativeInfo,
-                municipalityService.findAllMunicipalities(locale),
-                participantService.getParticipantCount(initiativeId),
-                participantService.findPublicParticipants(initiativeId));
-
         if (managementHash.equals(initiativeInfo.getManagementHash().get())){
+            addModelAttributesToCollectView(model,
+                    initiativeInfo,
+                    municipalityService.findAllMunicipalities(locale),
+                    participantService.getParticipantCount(initiativeId),
+                    participantService.findPublicParticipants(initiativeId));
+
             model.addAttribute("participants", participantService.findPublicParticipants(initiativeId));
-            model.addAttribute("sendToMunicipality", SendToMunicipalityDto.parse(managementHash, initiativeService.getContactInfo(initiativeId)));
+            model.addAttribute("author", initiativeService.getAuthorInformation(initiativeId, managementHash));
             return MANAGEMENT_VIEW;
         } else {
             return ERROR_404_VIEW;
@@ -241,6 +243,25 @@ public class MunicipalityInitiativeViewController extends BaseController {
         }
         
     }
+
+    @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_SEND_TO_REVIEW)
+    public String sendToReview(@PathVariable("id") Long initiativeId,
+                               @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
+                               Locale locale) {
+
+        initiativeService.sendReview(initiativeId, managementHash, InitiativeType.SINGLE);
+        return contextRelativeRedirect(Urls.get(locale).view(initiativeId));
+    }
+
+    @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_SEND_TO_REVIEW_COLLECT)
+    public String sendToReviewForCollecting(@PathVariable("id") Long initiativeId,
+                                            @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
+                                            Locale locale) {
+
+        initiativeService.sendReview(initiativeId, managementHash, InitiativeType.COLLABORATIVE);
+        return contextRelativeRedirect(Urls.get(locale).view(initiativeId));
+    }
+
     
     
     @RequestMapping(value={IFRAME_FI, IFRAME_SV}, method=GET)

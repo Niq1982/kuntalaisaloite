@@ -3,6 +3,8 @@ package fi.om.municipalityinitiative.newdto.service;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import fi.om.municipalityinitiative.json.JsonId;
 import fi.om.municipalityinitiative.json.LocalDateJsonSerializer;
+import fi.om.municipalityinitiative.util.InitiativeState;
+import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.Urls;
 import org.joda.time.LocalDate;
@@ -23,6 +25,8 @@ public class Initiative {
     private Maybe<String> managementHash = Maybe.absent();
 
     private Maybe<LocalDate> sentTime = Maybe.absent();
+    private Maybe<InitiativeType> type;
+    private InitiativeState state;
 
     public String getName() {
         return name;
@@ -81,7 +85,7 @@ public class Initiative {
     }
 
     public boolean isCollectable() {
-        return managementHash.isPresent();
+        return InitiativeType.isCollectable(type);
     }
 
     public boolean isSent() {
@@ -102,5 +106,21 @@ public class Initiative {
 
     public Municipality getMunicipality() {
         return municipality;
+    }
+
+    public Maybe<InitiativeType> getType() {
+        return type;
+    }
+
+    public void setType(Maybe<InitiativeType> type) {
+        this.type = type;
+    }
+
+    public InitiativeState getState() {
+        return state;
+    }
+
+    public void setState(InitiativeState state) {
+        this.state = state;
     }
 }

@@ -37,8 +37,6 @@
     <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-initiative" class="sodirty dirtylisten <#if hasErrors>has-errors</#if>">
 
         <@f.securityFilters />
-        <#--<@f.notTooFastField initiative />-->
-
         <div class="form-block-container">
             <@edit.blockHeader key="initiative.initiative.title" step=1 />
             <#-- use param locked=true to lock editing of the name and the proposal fields -->
@@ -57,7 +55,6 @@
                 <div class="input-block-content">
                     <input type="hidden" name="managementHash" value="${initiative.managementHash}"/>
                     <button type="submit" name="${UrlConstants.ACTION_SAVE}" value="<@u.messageHTML 'action.saveAsDraft' />" class="small-button green"><span class="small-icon save-and-send"><@u.messageHTML 'action.save' /></span></button>
-                    <#-- TODO: We could use better logic to determine which view link to provide. -->
                     <a class="small-button red" href="${previousPageURI!urls.baseUrl+"/"+locale}"><span class="small-icon cancel"><@u.messageHTML 'action.cancel' /></span></a>
                 </div>
             </div>
