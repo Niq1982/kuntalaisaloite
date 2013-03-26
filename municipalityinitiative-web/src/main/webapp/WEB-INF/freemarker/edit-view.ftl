@@ -50,18 +50,42 @@
             <@edit.currentAuthorBlock />
         </div>
 
+        <#--
         <div class="form-block-container">
             <@edit.blockHeader key="initiative.save.title" step=3 />
         
             <div class="input-block cf">
                 <div class="input-block-content">
+                    <div class="system-msg msg-info">
+                        Kun tallennat aloitteen, se tallentuu palveluun luonnoksena. Luonnos ei ole vielä julkinen vaan näkyy vain sinulle. Voit palata muokkaamaan aloitetta myöhemmin tai lähettää sen välittömästi julkaistavaksi ja kuntaan. Antamaasi sähköpostiosoitteeseen lähetetään aloitteen ylläpitolinkki.
+                    </div>
+                </div>
+            
+                <div class="input-block-content">
                     <input type="hidden" name="managementHash" value="${initiative.managementHash}"/>
                     <button type="submit" name="${UrlConstants.ACTION_SAVE}" value="<@u.messageHTML 'action.saveAsDraft' />" class="small-button green"><span class="small-icon save-and-send"><@u.messageHTML 'action.save' /></span></button>
-                    <#-- TODO: We could use better logic to determine which view link to provide. -->
+                    
                     <a class="small-button red" href="${previousPageURI!urls.baseUrl+"/"+locale}"><span class="small-icon cancel"><@u.messageHTML 'action.cancel' /></span></a>
                 </div>
             </div>
         </div>
+        -->
+        
+        
+        <div class="" id="form-action-panel">
+        
+            <div class="system-msg msg-summary">
+                <div class="system-msg msg-info">
+                    Kun tallennat aloitteen, se tallentuu palveluun luonnoksena. Luonnos ei ole vielä julkinen vaan näkyy vain sinulle. Voit palata muokkaamaan aloitetta myöhemmin tai lähettää sen välittömästi julkaistavaksi ja kuntaan. Antamaasi sähköpostiosoitteeseen lähetetään aloitteen ylläpitolinkki.
+                </div>
+            </div>
+        
+            <input type="hidden" name="managementHash" value="${initiative.managementHash}"/>
+            <button class="large-button" value="true" name="${UrlConstants.ACTION_SAVE}" type="submit"><span class="large-icon save-and-send"><strong>Tallenna luonnos</strong> ja&nbsp;siirry&nbsp;aloitteen&nbsp;ylläpitosivulle</span></button>
+            <a href="${previousPageURI!urls.baseUrl+"/"+locale}" class="large-button"><span class="large-icon cancel"><strong>Peruuta</strong> ja&nbsp;palaa&nbsp;tallentamatta&nbsp;etusivulle</span></a>
+        </div>
+        
+        
     </form>
 
 <#--
