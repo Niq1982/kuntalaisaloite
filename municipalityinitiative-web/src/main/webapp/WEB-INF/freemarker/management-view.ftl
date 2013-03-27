@@ -61,10 +61,10 @@
             </div>
             <br class="clear" />
             <div class="column col-1of2">
-                <a href="${managementURL}&send-to-review=confirm#send-to-review" class="small-button js-send-to-review"><span class="small-icon mail"><@u.message "action.sendToReview.doNotCollect" /></span></a>
+                <a href="${managementURL}&send-to-review=confirm#send-to-review" class="large-button js-send-to-review"><span class="large-icon mail"><@u.messageHTML "action.sendToReview.doNotCollect" /></span></a>
             </div>
             <div class="column col-1of2 last">
-                <a href="${managementURL}&send-to-review=confirm-collect#send-to-review" class="small-button js-send-to-review-collect"><span class="small-icon save-and-send"><@u.message "action.sendToReview.collect" /></span></a>
+                <a href="${managementURL}&send-to-review=confirm-collect#send-to-review" class="large-button js-send-to-review-collect"><span class="large-icon save-and-send"><@u.messageHTML "action.sendToReview.collect" /></span></a>
             </div>
             <br class="clear" />
         </#if>
@@ -77,7 +77,7 @@
                 <form action="${springMacroRequestContext.requestUri}" method="POST" >
                     <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
                     <input type="hidden" name="${UrlConstants.PARAM_MANAGEMENT_CODE}" value="${initiative.managementHash.value}"/>
-                    <button type="submit" name="${UrlConstants.ACTION_SEND_TO_REVIEW}" id="modal-${UrlConstants.ACTION_SEND_TO_REVIEW}" value="<@u.message "action.sendToReview.doNotCollect" />" class="small-button green"><span class="small-icon mail"><@u.messageHTML "action.sendToReview.doNotCollect" /></button>
+                    <button type="submit" name="${UrlConstants.ACTION_SEND_TO_REVIEW}" id="modal-${UrlConstants.ACTION_SEND_TO_REVIEW}" value="${UrlConstants.ACTION_SEND_TO_REVIEW}" class="large-button"><span class="large-icon mail"><@u.messageHTML "action.sendToReview.doNotCollect" /></button>
                     <a href="${managementURL}" class="push close"><@u.message "action.cancel" /></a>
                 </form>
             </@compress>
@@ -103,7 +103,7 @@
                 <form action="${springMacroRequestContext.requestUri}" method="POST" >
                     <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
                     <input type="hidden" name="${UrlConstants.PARAM_MANAGEMENT_CODE}" value="${initiative.managementHash.value}"/>
-                    <button type="submit" name="${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" id="modal-${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" value="<@u.message "action.sendToReview.cllect" />" class="small-button green"><span class="small-icon save-and-send"><@u.messageHTML "action.sendToReview.collect" /></button>
+                    <button type="submit" name="${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" id="modal-${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" value="${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" class="large-button"><span class="large-icon save-and-send"><@u.messageHTML "action.sendToReview.collect" /></button>
                     <a href="${managementURL}" class="push close"><@u.message "action.cancel" /></a>
                 </form>
             </@compress>
