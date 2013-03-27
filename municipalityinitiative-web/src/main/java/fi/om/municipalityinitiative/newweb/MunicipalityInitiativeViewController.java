@@ -69,26 +69,37 @@ public class MunicipalityInitiativeViewController extends BaseController {
     }
 
     @RequestMapping(value={ VIEW_FI, VIEW_SV }, method=GET)
-    public String view(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
+    public String view(@PathVariable("id") Long initiativeId,
+            @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
+            Model model, Locale locale, HttpServletRequest request) {
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().view(initiativeId));
         
         InitiativeViewInfo initiativeInfo = initiativeService.getMunicipalityInitiative(initiativeId, locale);
 
-        if (initiativeInfo.isCollectable()){// TODO: If not sent to municipality
-
-            addModelAttributesToCollectView(model,
-                    initiativeInfo,
-                    municipalityService.findAllMunicipalities(locale),
-                    participantService.getParticipantCount(initiativeId),
-                    participantService.findPublicParticipants(initiativeId));
-            model.addAttribute("participant", new ParticipantUICreateDto());
-
-            return PUBLIC_COLLECT_VIEW;
-        }
-        else {
+        // TODO: State PUBLISHED
+        if (initiativeInfo.getState() == InitiativeState.PUBLISHED) {
+            if (initiativeInfo.isCollectable()){// TODO: If not sent to municipality
+    
+                addModelAttributesToCollectView(model,
+                        initiativeInfo,
+                        municipalityService.findAllMunicipalities(locale),
+                        participantService.getParticipantCount(initiativeId),
+                        participantService.findPublicParticipants(initiativeId));
+                model.addAttribute("participant", new ParticipantUICreateDto());
+    
+                return PUBLIC_COLLECT_VIEW;
+            }
+            else {
+                model.addAttribute("initiative", initiativeInfo);
+                return PUBLIC_SINGLE_VIEW;
+            }
+        // Returns preview for authors
+        } else if (managementHash.equals(initiativeInfo.getManagementHash().get())){
             model.addAttribute("initiative", initiativeInfo);
             return PUBLIC_SINGLE_VIEW;
+        } else {
+            return ERROR_404_VIEW;
         }
     }
 

@@ -124,7 +124,7 @@ public final class Urls {
     // In Municipality initiative
     public static final String ACTION_ACCEPT_INITIATIVE = "action-accept-initiative";
     
- // In Municipality initiative
+    // In Municipality initiative
     public static final String ACTION_REJECT_INITIATIVE = "action-reject-initiative";
     
     public static final String ACTION_ACCEPT_INVITATION = "action-accept-invitation";
@@ -261,6 +261,10 @@ public final class Urls {
 
     public String view(Long initiativeId) {
         return getLocalizedPageUrl(VIEW_FI, VIEW_SV).replace(ID_PARAMETER, initiativeId.toString());
+    }
+    
+    public String preview(Long initiativeId, String managementHash) {
+        return getLocalizedPageUrl(VIEW_FI, VIEW_SV).replace(ID_PARAMETER, initiativeId.toString()) + "?" + PARAM_MANAGEMENT_CODE + "=" + managementHash;
     }
     
     public String participantList(Long initiativeId) {

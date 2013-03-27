@@ -21,7 +21,7 @@
         <h2><@u.message "management.warning.title" /></h2>
         <p><@u.messageHTML "management.warning.description" /></p>
         <p><a class="small-button gray" href="${urls.edit(initiative.id, initiative.managementHash.value)}"><span class="small-icon edit"><@u.messageHTML 'action.editInitiative' /></span></a>
-        <a class="small-button gray push" href="${urls.view(initiative.id)}"><span class="small-icon document">Esikatsele aloitteen julkista näkymää</span></a></p>
+        <a class="small-button gray push" href="${urls.preview(initiative.id, initiative.managementHash.value)}" target="_blank"><span class="small-icon document">Esikatsele aloitteen julkista näkymää</span></a></p>
     </#assign>
     
     <@u.systemMessageHTML html=managementWarningMessageHTML type="summary" />
