@@ -136,6 +136,8 @@ public class InitiativeServiceIntegrationTest {
     public void sets_participant_count_to_one_when_adding_new_collectable_initiative() {
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
         service.sendReview(initiativeId, RandomHashGenerator.getPrevious(), InitiativeType.COLLABORATIVE);
+     // TODO: remove this quick fix, if neccessary
+        service.accept(initiativeId, RandomHashGenerator.getPrevious());
 
         List<InitiativeListInfo> initiatives = service.findMunicipalityInitiatives(new InitiativeSearch().setShow(InitiativeSearch.Show.all));
         precondition(initiatives, hasSize(1));
@@ -178,6 +180,8 @@ public class InitiativeServiceIntegrationTest {
     public void preparing_initiative_sets_participant_information() {
         Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise(), Locales.LOCALE_FI);
         service.sendReview(initiativeId, RandomHashGenerator.getPrevious(), InitiativeType.COLLABORATIVE);
+        // TODO: remove this quick fix, if neccessary
+        service.accept(initiativeId, RandomHashGenerator.getPrevious());
 
         InitiativeSearch all = new InitiativeSearch().setShow(InitiativeSearch.Show.all);
         assertThat(service.findMunicipalityInitiatives(all).get(0).getParticipantCount(), is(1L));
