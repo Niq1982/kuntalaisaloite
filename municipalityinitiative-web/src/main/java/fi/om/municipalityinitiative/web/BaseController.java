@@ -23,13 +23,14 @@ import static fi.om.municipalityinitiative.web.Views.contextRelativeRedirect;
 public class BaseController {
 
     static final String REQUEST_MESSAGES_KEY = "requestMessages";
+
+    static final String REQUEST_ATTRIBUTE_KEY = "requestAttribute";
     
     public final String ALT_URI_ATTR = "altUri";
     public final String CURRENT_URI_ATTR = "currentUri";
 
     public final String OM_PICIW_ID = "omPiwicId";
 
-    
     @Resource BeansWrapper freemarkerObjectWrapper;
     
     private final boolean optimizeResources;
@@ -55,6 +56,11 @@ public class BaseController {
         if (model != null) {
             addListElement(model.asMap(), REQUEST_MESSAGES_KEY, requestMessage);
         }
+    }
+
+    protected void addRequestAttribute(String attributeValue, Model model, HttpServletRequest request) {
+        FlashMap flashMap = RequestContextUtils.getOutputFlashMap(request);
+        flashMap.put(REQUEST_ATTRIBUTE_KEY, attributeValue);
     }
     
     private static <T> void addListElement(Map<? super String, ? super List<T>> map, String key, T value) {
@@ -84,6 +90,16 @@ public class BaseController {
         }
     }
 
+    private String getRequestAttribute(HttpServletRequest request) {
+
+        if (RequestContextUtils.getInputFlashMap(request) == null) {
+            return null;
+        }
+
+        Object object = RequestContextUtils.getInputFlashMap(request).get(REQUEST_ATTRIBUTE_KEY);
+        return object == null ? null : object.toString();
+    }
+
     private <T extends Enum<?>> void addEnum(Class<T> enumType, Model model) {
         Map<String, T> values = Maps.newHashMap();
         for (T value : enumType.getEnumConstants()) {
@@ -107,6 +123,7 @@ public class BaseController {
         model.addAttribute("urls", urls);
         model.addAttribute("fieldLabelKey", FieldLabelKeyMethod.INSTANCE);
         model.addAttribute(REQUEST_MESSAGES_KEY, getRequestMessages(request));
+        model.addAttribute(REQUEST_ATTRIBUTE_KEY, getRequestAttribute(request));
         model.addAttribute("summaryMethod", SummaryMethod.INSTANCE);
         model.addAttribute("optimizeResources", optimizeResources);
         model.addAttribute("resourcesVersion", resourcesVersion);

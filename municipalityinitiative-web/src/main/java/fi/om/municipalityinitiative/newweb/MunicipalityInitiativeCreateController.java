@@ -125,6 +125,7 @@ public class MunicipalityInitiativeCreateController extends BaseController {
 
         Long initiativeId = initiativeService.prepareInitiative(initiative, locale);
 //        return redirectWithMessage(urls.view(initiativeId), RequestMessage.SAVE, request);
+        addRequestAttribute(initiative.getAuthorEmail(), model, request);
         return redirectWithMessage(urls.pendingConfirmation(initiativeId), RequestMessage.PREPARE, request);
 
     }

@@ -29,7 +29,7 @@
     <@u.requestMessage requestMessages />
     
     <p>Linkki kuntalaisaloitteen tekemiseen on lähetetty antamaasi sähköpostiosoitteeseen<br/>
-    <strong>[EMAIL_ADDRESS_TODO]</strong></p>
+    <strong>${requestAttribute!""}</strong></p>
     
     <p>Siirry lukemaan saamasi sähköposti ja klikkaa siellä olevaa linkkiä. Tämän jälkeen pääset täyttämään aloitteen sisällön.</p>
 

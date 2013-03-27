@@ -87,49 +87,55 @@ public class InitiativeCreateWebTest extends WebTestBase {
         getElemContaining(getMessage(MSG_INITIATIVE_TYPE_NORMAL), "span").click();
         inputText("authorEmail", CONTACT_EMAIL);
         getElemContaining(getMessage(MSG_BTN_PREPARE_SEND), "button").click();
-        
-        assertMsgContainedByClass("msg-success", MSG_SUCCESS_PREPARE);
+
+        String msgSuccessPrepare = MSG_SUCCESS_PREPARE;
+        assertSuccesPageWithMessage(msgSuccessPrepare);
+        assertTextByTag("strong", CONTACT_EMAIL);
         System.out.println("--- add_initiative_content OK");
     }
-    
+
     public void add_initiative_content() {
         inputText("name", NAME);
         inputText("proposal", PROPOSAL);
         inputText("contactInfo.name", CONTACT_NAME);
         inputText("contactInfo.phone", CONTACT_PHONE);
         inputText("contactInfo.address", CONTACT_ADDRESS);
-        
+
         assertTextContainedByXPath("//div[@id='contactInfo.email']", "contact_email@xxx.yyy");
 
         getElemContaining(getMessage(MSG_BTN_SAVE), "button").click();
-        
-        assertMsgContainedByClass("msg-success", MSG_SUCCESS_SAVE_DRAFT);
+
+        assertSuccesPageWithMessage(MSG_SUCCESS_SAVE_DRAFT);
 
         System.out.println("--- add_contact_info OK");
     }
-    
+
     public void save_initiative(boolean startCollecting) {
 
         if (startCollecting) {
             getElemContaining(getMessage(RADIO_FRANCHISE_TRUE), "label").click();
             getElemContaining(getMessage(MSG_BTN_SAVE_AND_COLLECT), "button").click();
-            
+
             assertMsgContainedByClass("modal-title", MSG_SUCCESS_SAVE_TITLE);
         } else {
             getElemContaining(getMessage(MSG_BTN_SAVE_AND_SEND), "button").click();
 
-            assertMsgContainedByClass("msg-success", MSG_SUCCESS_SAVE_AND_SEND);
+            assertSuccesPageWithMessage(MSG_SUCCESS_SAVE_AND_SEND);
             assertTextByTag("h1", NAME);
         }
-        
+
         System.out.println("--- save_initiative OK");
+    }
+
+    private void assertSuccesPageWithMessage(String msgSuccessPrepare) {
+        assertMsgContainedByClass("msg-success", msgSuccessPrepare);
     }
 
     private void openAndAssertCreatePage() {
         open(urls.prepare());
         assertTitle(getMessage(MSG_PAGE_CREATE_NEW) + " - " + getMessage(MSG_SITE_NAME));
     }
-    
+
     private WebElement getSelectByLabel(String labelText) {
         return driver.findElement(By.xpath("//label[contains(normalize-space(text()), '" + labelText + "')]/following-sibling::select"));
     }
