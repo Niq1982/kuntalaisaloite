@@ -77,8 +77,8 @@ public class MunicipalityInitiativeViewController extends BaseController {
         
         InitiativeViewInfo initiativeInfo = initiativeService.getMunicipalityInitiative(initiativeId, locale);
 
-        // TODO: State PUBLISHED
-        if (initiativeInfo.getState() == InitiativeState.PUBLISHED) {
+        // TODO: Use initiativeState PUBLISHED when user can publish initiative
+        if (initiativeInfo.getState() == InitiativeState.ACCEPTED) {
             if (initiativeInfo.isCollectable()){// TODO: If not sent to municipality
     
                 addModelAttributesToCollectView(model,
