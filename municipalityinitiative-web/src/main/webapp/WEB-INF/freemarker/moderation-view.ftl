@@ -6,7 +6,7 @@
 
 <#escape x as x?html> 
 
-<#assign managementURL = urls.management(initiative.id, initiative.managementHash.value) />
+<#assign moderationURL = urls.moderation(initiative.id, initiative.managementHash.value) />
 
 <#--
  * Layout parameters for HTML-title and navigation.
@@ -19,99 +19,68 @@
 
 
     <#--
-     * Show management block
+     * Show moderation block
     -->
-    <div class="system-msg msg-summary">
-        <h2>Julkaise aloite tai palauta aloite korjattavaksi</h2>
-        <p>Aloite on lähetetty julkaistavaksi 21.3.2013<br />Aloite lähtee kuntaan julkaisun yhteydessä</p>
 
-        <#-- Check is form has errors -->
-        <@spring.bind "sendToMunicipality.*" />
-        <#assign hasErrors = false />
-        <#if spring.status.error>
-            <#assign hasErrors = true />
-        </#if>
-        
-        <#-- Participate form errors summary -->
-        <#if hasErrors>
-            <div class="input-block-content no-top-margin">    
-                <@u.errorsSummary path="sendToMunicipality.*" prefix="sendToMunicipality."/>
-            </div>
-        <#else>
+    <#if initiative.state == InitiativeState.REVIEW>
+        <div class="system-msg msg-summary">
+            <h2><@u.message "moderation.title" /></h2>
+            <#-- TODO: Real date -->
+            <#assign sendToReviewDate>21.3.2013</#assign>
+            <p><@u.messageHTML key="moderation.description" args=[sendToReviewDate] /></p>
+            
             <div class="js-open-block hidden">
-                <#--<#assign href="#" />
-                <p><@u.messageHTML key="sendToMunicipality.description" args=[href] /></p>-->
-                
-                <a class="small-button gray js-btn-open-block" data-open-block="js-block-container" href="#"><span class="small-icon save-and-send">Julkaise</span></a>
-                <a class="small-button gray push js-btn-open-block" data-open-block="js-block-container-alt" href="#"><span class="small-icon cancel">Palauta korjattavaksi</span></a>
+                <a class="small-button gray js-btn-open-block" data-open-block="js-block-container" href="#"><span class="small-icon save-and-send"><@u.message "action.accept" /></span></a>
+                <a class="small-button gray push js-btn-open-block" data-open-block="js-block-container-alt" href="#"><span class="small-icon cancel"><@u.message "action.reject" /></span></a>
             </div>
-        </#if>
-
-        <div class="cf js-block-container <#if !hasErrors>js-hide</#if>">
-
-            <noscript>
-                <@f.cookieWarning managementURL />
-            </noscript>
-
-            <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-send" class="sodirty">
-                <@f.securityFilters />
-                <input type="hidden" name="managementHash" value="${sendToMunicipality.managementHash}"/>
-                
-                <div class="input-block-content <#if !hasErrors>no-top-margin</#if>">
-                    <@f.textarea path="sendToMunicipality.comment" required="" optional=false cssClass="collapse" />
-                </div>
-                
-                <div class="input-block-content">
-                    <#--<button type="submit" name="action-send" class="small-button"><span class="small-icon mail"><@u.message "action.send" /></span></button>-->
-                    <a class="small-button gray" href="${urls.edit(initiative.id, initiative.managementHash.value)}"><span class="small-icon save-and-send">Julkaise</span></a>
-                    <#if !hasErrors>
+    
+            <div class="cf js-block-container js-hide">
+                <noscript>
+                    <@f.cookieWarning moderationURL />
+                </noscript>
+    
+                <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-send" class="sodirty">
+                    <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+                    <input type="hidden" name="${UrlConstants.PARAM_MANAGEMENT_CODE}" value="${initiative.managementHash.value}"/>
+                    
+                    <div class="input-block-content no-top-margin">
+                        <#-- TODO: path for "acceptInitiative.comment"-->
+                        <@f.textarea path="sendToMunicipality.comment" required="" optional=false cssClass="collapse" />
+                    </div>
+                    
+                    <div class="input-block-content">
+                        <button type="submit" name="${UrlConstants.ACTION_ACCEPT_INITIATIVE}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.accept" /></span></button>
                         <a href="${springMacroRequestContext.requestUri}#participants" class="push js-btn-close-block hidden"><@u.message "action.cancel" /></a>
-                    <#else>
-                        <#-- In case of errors cancel-link clears data by refreshing management page. -->
-                        <a href="${managementURL}" class="push hidden"><@u.message "action.cancel" /></a>
-                    </#if>
-                </div>
-                <br/><br/>
-            </form>
-        </div>
-        
-        <div class="cf js-block-container-alt <#if !hasErrors>js-hide</#if>">
-
-            <noscript>
-                <@f.cookieWarning managementURL />
-            </noscript>
-
-            <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-send" class="sodirty">
-                <@f.securityFilters />
-                <input type="hidden" name="managementHash" value="${sendToMunicipality.managementHash}"/>
-                
-                <div class="input-block-content <#if !hasErrors>no-top-margin</#if>">
-                    <@f.textarea path="sendToMunicipality.comment" required="" optional=false cssClass="collapse" />
-                </div>
-                
-                <div class="input-block-content">
-                    <#--<button type="submit" name="action-send" class="small-button"><span class="small-icon mail"><@u.message "action.send" /></span></button>-->
-                    <a class="small-button gray" href="${urls.view(initiative.id)}"><span class="small-icon cancel">Palauta korjattavaksi</span></a>
-                    <#if !hasErrors>
+                    </div>
+                    <br/><br/>
+                </form>
+            </div>
+            
+            <div class="cf js-block-container-alt js-hide">
+                <noscript>
+                    <@f.cookieWarning moderationURL />
+                </noscript>
+    
+                <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-send" class="sodirty">
+                    <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+                    <input type="hidden" name="${UrlConstants.PARAM_MANAGEMENT_CODE}" value="${initiative.managementHash.value}"/>
+                    
+                    <div class="input-block-content no-top-margin">
+                        <#-- TODO: path for "acceptInitiative.comment"-->
+                        <@f.textarea path="sendToMunicipality.comment" required="" optional=false cssClass="collapse" />
+                    </div>
+                    
+                    <div class="input-block-content">
+                        <button type="submit" name="${UrlConstants.ACTION_REJECT_INITIATIVE}" class="small-button"><span class="small-icon cancel"><@u.message "action.reject" /></span></button>
                         <a href="${springMacroRequestContext.requestUri}#participants" class="push js-btn-close-block hidden"><@u.message "action.cancel" /></a>
-                    <#else>
-                        <#-- In case of errors cancel-link clears data by refreshing management page. -->
-                        <a href="${managementURL}" class="push hidden"><@u.message "action.cancel" /></a>
-                    </#if>
-                </div>
-                <br/><br/>
-            </form>
+                    </div>
+                    <br/><br/>
+                </form>
+            </div>
         </div>
-    </div>
-
-    <span class="extra-info">
-    <#if initiative.createTime??>
-        <#assign createTime><@u.localDate initiative.createTime /></#assign>
-        <@u.message key="initiative.date.create" args=[createTime] />
-        <br />
-        Aloite odottaa julkaisua
     </#if>
-    </span>
+
+    <@e.stateInfo initiative />
 
     <h1 class="name">${initiative.name!""}</h1>
     
@@ -127,13 +96,14 @@
     </div>
 
     <#--
-     * Public VIEW modals
+     * Moderaion VIEW modals
      * 
      * Uses jsRender for templating.
      * Same content is generated for NOSCRIPT and for modals.
      *
      * Modals:
      *  Request message (defined in macro u.requestMessage)
+     *  Form modified notification
      *
      * jsMessage:
      *  Warning if cookies are disabled
@@ -168,7 +138,7 @@
         messageData.warningCookiesDisabled = function() {
             return [{
                 type:      'warning',
-                content:    '<h3><@u.message "warning.cookieError.title" /></h3><div><@u.messageHTML key="warning.cookieError.description" args=[managementURL] /></div>'
+                content:    '<h3><@u.message "warning.cookieError.title" /></h3><div><@u.messageHTML key="warning.cookieError.description" args=[moderationURL] /></div>'
             }]
         };
     </script>

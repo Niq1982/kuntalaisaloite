@@ -42,4 +42,6 @@ public interface InitiativeDao {
     void setInitiativeAsReview(Long initiativeId, InitiativeType single);
 
     void acceptInitiativeByOm(Long initiativeId);
+    
+    void rejectInitiativeByOm(Long initiativeId);
 }

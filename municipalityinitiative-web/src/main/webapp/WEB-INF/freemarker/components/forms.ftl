@@ -233,9 +233,9 @@
  *  - email-honeyspot field is hided from users with CSS thus they will leave it empty.
  *    Spambots will most propably fill the email field and humans should not.
 -->
-<#macro securityFilters>
+<#macro securityFilters honeySpot=true>
     <input type="hidden" name="CSRFToken" value="${CSRFToken!""}"/>
-    <input type="text" name="email" id="email" tabindex="-1" />
+    <#if honeySpot><input type="text" name="email" id="email" tabindex="-1" /></#if>
 </#macro>
 
 <#--

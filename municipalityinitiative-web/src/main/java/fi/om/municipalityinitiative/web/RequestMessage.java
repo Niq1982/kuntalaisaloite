@@ -7,6 +7,8 @@ public enum RequestMessage {
     // Success messages
     PREPARE (SUCCESS),
     SAVE_DRAFT (SUCCESS),
+    ACCEPT_INITIATIVE (SUCCESS),
+    REJECT_INITIATIVE (SUCCESS),
     SAVE_AND_SEND (SUCCESS),
     SAVE (SUCCESS, true),
     SEND (SUCCESS, true),

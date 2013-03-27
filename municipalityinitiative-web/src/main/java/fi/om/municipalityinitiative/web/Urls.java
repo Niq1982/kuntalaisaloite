@@ -121,6 +121,12 @@ public final class Urls {
     // In Municipality initiative
     public static final String ACTION_SEND_TO_REVIEW_COLLECT = "action-send-to-review-collect";
 
+    // In Municipality initiative
+    public static final String ACTION_ACCEPT_INITIATIVE = "action-accept-initiative";
+    
+ // In Municipality initiative
+    public static final String ACTION_REJECT_INITIATIVE = "action-reject-initiative";
+    
     public static final String ACTION_ACCEPT_INVITATION = "action-accept-invitation";
 
     public static final String ACTION_DECLINE_INVITATION = "action-decline-invitation";
@@ -294,7 +300,7 @@ public final class Urls {
     }
     
     public String getModeration(Long id) {
-        return getLocalizedPageUrl(MANAGEMENT_FI, MANAGEMENT_SV).replace(ID_PARAMETER, id.toString());
+        return getLocalizedPageUrl(MODERATION_FI, MODERATION_SV).replace(ID_PARAMETER, id.toString());
     }
 
     public String initiatives() {

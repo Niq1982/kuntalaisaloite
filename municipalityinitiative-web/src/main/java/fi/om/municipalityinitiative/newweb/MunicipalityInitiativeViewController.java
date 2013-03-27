@@ -189,7 +189,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
         }
     }
     
-    // TODO: Finalize. Now just a dummy for template development.
+    // TODO: Finalize. This is now just a dummy for template development.
     @RequestMapping(value={ MODERATION_FI, MODERATION_SV }, method=GET)
     public String moderationView(@PathVariable("id") Long initiativeId,
                                  @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
@@ -200,11 +200,12 @@ public class MunicipalityInitiativeViewController extends BaseController {
 
         InitiativeViewInfo initiativeInfo = initiativeService.getMunicipalityInitiative(initiativeId, locale);
 
-        if (initiativeInfo.isSent() && managementHash.equals(initiativeInfo.getManagementHash().get())) {
+        // NOTE: Should moderation view be always accessible?
+        /*if (initiativeInfo.isSent() && managementHash.equals(initiativeInfo.getManagementHash().get())) {
             return redirectWithMessage(urls.view(initiativeId),RequestMessage.ALREADY_SENT, request);
         } else if (!initiativeInfo.isCollectable() || initiativeInfo.isSent()) { // Practically initiative should always be sent if it's not collectable...
             return contextRelativeRedirect(urls.view(initiativeId));
-        }
+        }*/
 
         addModelAttributesToCollectView(model,
                 initiativeInfo,
@@ -262,7 +263,27 @@ public class MunicipalityInitiativeViewController extends BaseController {
         return contextRelativeRedirect(Urls.get(locale).view(initiativeId));
     }
 
+    @RequestMapping(value = {MODERATION_FI, MODERATION_FI}, method = POST, params = ACTION_ACCEPT_INITIATIVE)
+    public String acceptInitiative(@PathVariable("id") Long initiativeId,
+                               @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
+                               Locale locale, HttpServletRequest request) {
+
+        // TODO: Saate / Comment
+        
+        initiativeService.accept(initiativeId, managementHash);
+        return redirectWithMessage(Urls.get(locale).moderation(initiativeId, managementHash), RequestMessage.ACCEPT_INITIATIVE, request);
+    }
     
+    @RequestMapping(value = {MODERATION_FI, MODERATION_FI}, method = POST, params = ACTION_REJECT_INITIATIVE)
+    public String rejectInitiative(@PathVariable("id") Long initiativeId,
+                               @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
+                               Locale locale, HttpServletRequest request) {
+
+        // TODO: Saate / Comment
+        
+        initiativeService.reject(initiativeId, managementHash);
+        return redirectWithMessage(Urls.get(locale).moderation(initiativeId, managementHash), RequestMessage.REJECT_INITIATIVE, request);
+    }
     
     @RequestMapping(value={IFRAME_FI, IFRAME_SV}, method=GET)
     public String iframe(InitiativeSearch search, Model model, Locale locale, HttpServletRequest request) {

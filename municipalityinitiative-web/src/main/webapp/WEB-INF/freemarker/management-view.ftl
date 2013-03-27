@@ -83,7 +83,7 @@
             </@compress>
         </#assign>
     
-        <#-- Confirm send to VRK for NOSCRIPT-users -->
+        <#-- Confirm send to REVIEW for NOSCRIPT-users -->
         <#if RequestParameters['send-to-review']?? && RequestParameters['send-to-review'] == "confirm">
         <noscript>
             <div id="send-to-review" class="system-msg msg-info">
@@ -109,7 +109,7 @@
             </@compress>
         </#assign>
     
-        <#-- Confirm send to VRK for NOSCRIPT-users -->
+        <#-- Confirm send to REVIEW for NOSCRIPT-users -->
         <#if RequestParameters['send-to-review']?? && RequestParameters['send-to-review'] == "confirm-collect">
         <noscript>
             <div id="send-to-review" class="system-msg msg-info">
@@ -125,13 +125,15 @@
 
 
     <#--
-     * Public VIEW modals
+     * Management VIEW modals
      * 
      * Uses jsRender for templating.
      * Same content is generated for NOSCRIPT and for modals.
      *
      * Modals:
      *  Request message (defined in macro u.requestMessage)
+     *  Confirm send for publish and to municiaplity
+     *  Confirm send for publish
      *
      * jsMessage:
      *  Warning if cookies are disabled
@@ -152,7 +154,7 @@
             };
         </#if>
         
-        <#-- Modal: Confirm send for publish and to municiaplity. Check for components/utils.ftl -->
+        <#-- Modal: Confirm send for publish and to municiaplity. -->
         <#if sendToReviewDoNotCollect??>    
             modalData.sendToReviewDoNotCollect = function() {
                 return [{
@@ -162,7 +164,7 @@
             };
         </#if>
         
-        <#-- Modal: Confirm send for publish. Check for components/utils.ftl -->
+        <#-- Modal: Confirm send for publish. -->
         <#if sendToReviewCollect??>    
             modalData.sendToReviewCollect = function() {
                 return [{

@@ -170,9 +170,26 @@ public class InitiativeService {
     public void sendReview(Long initiativeId, String managementHash, InitiativeType type) {
         if (initiativeDao.getById(initiativeId).getManagementHash().get().equals(managementHash)) {
             initiativeDao.setInitiativeAsReview(initiativeId, type);
-
-            // XXX: Quick fix for immediate OM-acceptance
+        }
+        else {
+            throw new AccessDeniedException("Invalid management hash");
+        }
+    }
+    
+    // TODO: User is logged in with moderation rights
+    public void accept(Long initiativeId, String managementHash) {
+        if (initiativeDao.getById(initiativeId).getManagementHash().get().equals(managementHash)) {
             initiativeDao.acceptInitiativeByOm(initiativeId);
+        }
+        else {
+            throw new AccessDeniedException("Invalid management hash");
+        }
+    }
+    
+ // TODO: User is logged in with moderation rights
+    public void reject(Long initiativeId, String managementHash) {
+        if (initiativeDao.getById(initiativeId).getManagementHash().get().equals(managementHash)) {
+            initiativeDao.rejectInitiativeByOm(initiativeId);
         }
         else {
             throw new AccessDeniedException("Invalid management hash");

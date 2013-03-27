@@ -385,7 +385,15 @@ public class JdbcInitiativeDao implements InitiativeDao {
     public void acceptInitiativeByOm(Long initiativeId) {
         assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.state, InitiativeState.ACCEPTED)
-                .set(municipalityInitiative.sent, CURRENT_TIME)
+                .where(municipalityInitiative.id.eq(initiativeId))
+                .execute());
+    }
+    
+    @Override
+    @Transactional(readOnly = false)
+    public void rejectInitiativeByOm(Long initiativeId) {
+        assertSingleAffection(queryFactory.update(municipalityInitiative)
+                .set(municipalityInitiative.state, InitiativeState.DRAFT)
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute());
     }
