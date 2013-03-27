@@ -2,7 +2,10 @@ package fi.om.municipalityinitiative.web;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
+import fi.om.municipalityinitiative.util.InitiativeState;
+import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.TemplateModelException;
@@ -141,6 +144,8 @@ public class BaseController {
         addEnum(RequestMessageType.class, model);
         addEnum(HelpPage.class, model);
         addEnum(InfoPage.class, model);
+        addEnum(InitiativeType.class, model);
+        addEnum(InitiativeState.class, model);
     }
 
 }

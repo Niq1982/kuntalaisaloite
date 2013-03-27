@@ -35,9 +35,9 @@
 
     <h3>Mitä tehdä, jos sähköpostia ei ole tullut</h3>
     <ul>
-        <li>Tarkista yltä, että annoit oikean sähköpostiosoitteen. Jos osoitteessasi on virhe, siirry takaisin <a href="${urls.prepare()}">Tee kuntalaisaloite</a>-sivulle ja aloitea kuntalaisaloitteen tekeminen uudelleen</li>
-        <li>Tarkista sähköpostisi roskapostilaatikko, lähetetty posti on saattanut mennä sinne</li>
-        <li>Tarkista, ettei sähköpostilaatikkosi ole täynnä</li>
+        <li>Tarkista yltä, että annoit oikean sähköpostiosoitteen. Jos osoitteessasi on virhe, siirry takaisin <a href="${urls.prepare()}">Tee kuntalaisaloite</a>-sivulle ja aloita kuntalaisaloitteen tekeminen uudelleen.</li>
+        <li>Tarkista sähköpostisi roskapostilaatikko, lähetetty posti on saattanut mennä sinne.</li>
+        <li>Tarkista, ettei sähköpostilaatikkosi ole täynnä.</li>
     </ul>
         
     <h2>Ylläpitolinkki testausta varten - poistuu kun sähköpostit lähtevät</h2>

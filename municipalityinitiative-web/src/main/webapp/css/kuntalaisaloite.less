@@ -1222,13 +1222,25 @@ textarea {
     
     &.textarea-tall {
         min-height: 17em;
-    }
-    
+    }    
 }
 textarea:focus, input[type="text"]:focus, .email-input.focus {
     box-shadow:0 0 5px rgba(0,0,0,0.2);
     border: 1px solid #bbb;
 }
+.js {
+    textarea {
+        &.collapse {
+            height: 1.5em;            
+            .transition(height, 0.15s, ease-in);
+        }
+        &.expand {
+            height:6em;
+        }
+    }
+}
+
+
 input[type="text"] {
     &.invalid {
         border:1px solid @redGradient1;
@@ -1832,50 +1844,6 @@ label  {
     
     .home-municipality {
         color:@secondaryTextColor;
-    }
-}
-
-
-.js-block-container {
-    clear:both;
-    //padding:15px 0;
-    //font-size:1.1em;
-    
-    /*.manage-block {
-        position:relative;
-        //padding-right:20px;
-        
-        .small-button {
-            float:right;
-        }
-        
-        &.collapse {
-            display:inline-block;
-        }
-        
-        .manage {
-            position:absolute;
-            right:0;
-            top:0; 
-            display:block;
-            width:16px;
-            height:16px;
-        }
-        
-    }*/
-}
-
-.js {
-    .js-block-container {
-        textarea {
-            height: 1.5em;
-            
-            .transition(height, 0.15s, ease-in);
-            
-            &.expand {
-                height:6em;
-            }
-        }
     }
 }
 

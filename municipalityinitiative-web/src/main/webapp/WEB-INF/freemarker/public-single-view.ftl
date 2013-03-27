@@ -19,7 +19,7 @@
     
     <div class="municipality">${initiative.municipality.name!""}</div>
     
-    <@e.stateDates initiative />
+    <@e.stateInfo initiative />
 
     <#-- VIEW BLOCKS -->
     <div class="view-block public first">

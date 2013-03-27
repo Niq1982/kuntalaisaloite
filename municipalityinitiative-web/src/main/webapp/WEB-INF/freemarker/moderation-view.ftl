@@ -58,7 +58,7 @@
                 <input type="hidden" name="managementHash" value="${sendToMunicipality.managementHash}"/>
                 
                 <div class="input-block-content <#if !hasErrors>no-top-margin</#if>">
-                    <@f.textarea path="sendToMunicipality.comment" required="" optional=false />
+                    <@f.textarea path="sendToMunicipality.comment" required="" optional=false cssClass="collapse" />
                 </div>
                 
                 <div class="input-block-content">
@@ -86,12 +86,12 @@
                 <input type="hidden" name="managementHash" value="${sendToMunicipality.managementHash}"/>
                 
                 <div class="input-block-content <#if !hasErrors>no-top-margin</#if>">
-                    <@f.textarea path="sendToMunicipality.comment" required="" optional=false />
+                    <@f.textarea path="sendToMunicipality.comment" required="" optional=false cssClass="collapse" />
                 </div>
                 
                 <div class="input-block-content">
                     <#--<button type="submit" name="action-send" class="small-button"><span class="small-icon mail"><@u.message "action.send" /></span></button>-->
-                    <a class="small-button gray push" href="${urls.view(initiative.id)}"><span class="small-icon cancel">Palauta korjattavaksi</span></a></p>
+                    <a class="small-button gray" href="${urls.view(initiative.id)}"><span class="small-icon cancel">Palauta korjattavaksi</span></a>
                     <#if !hasErrors>
                         <a href="${springMacroRequestContext.requestUri}#participants" class="push js-btn-close-block hidden"><@u.message "action.cancel" /></a>
                     <#else>
