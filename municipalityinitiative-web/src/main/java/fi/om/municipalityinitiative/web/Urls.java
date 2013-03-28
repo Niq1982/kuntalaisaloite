@@ -120,6 +120,9 @@ public final class Urls {
     
     // In Municipality initiative
     public static final String ACTION_SEND_TO_REVIEW_COLLECT = "action-send-to-review-collect";
+    
+    // In Municipality initiative
+    public static final String ACTION_UPDATE_INITIATIVE = "action-update-initiative";
 
     // In Municipality initiative
     public static final String ACTION_ACCEPT_INITIATIVE = "action-accept-initiative";

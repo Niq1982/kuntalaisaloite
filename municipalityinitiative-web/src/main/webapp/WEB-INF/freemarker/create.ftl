@@ -24,7 +24,7 @@
 
 <@l.main page pageTitle!"">
 
-    <h1><@u.message page /></h1>
+    <h1>EI KÄYTÖSSÄ - <@u.message page /></h1>
     
     <#-- TOP CONTRIBUTION -->
     <#noescape>${topContribution!""}</#noescape>

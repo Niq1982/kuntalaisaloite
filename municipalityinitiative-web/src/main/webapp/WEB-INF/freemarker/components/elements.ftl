@@ -7,13 +7,13 @@
  * 
  * Generates initiative's public view block
  *
- * @param thisInitiative is initiative
+ * @param initiative is initiative
 -->
-<#macro initiativeView thisInitiative>
+<#macro initiativeView initiative>
     <div class="initiative-content-row">
         <h2><@u.message "initiative.content.title" /></h2>
         
-        <@u.text thisInitiative.proposal!"" />
+        <@u.text initiative.proposal!"" />
     </div>
 </#macro>
 
@@ -22,15 +22,28 @@
  * 
  * Generates initiative's public author name
  *
- * @param thisInitiative is initiative
+ * @param initiative is initiative
 -->
-<#macro initiativeAuthor thisInitiative>
-     <#if thisInitiative.showName>
-         <div class="initiative-content-row last">
-            <h2><@u.message "initiative.author.title" /></h2>
-            <p>${thisInitiative.authorName!""}</p>
-        </div>
+<#macro initiativeAuthor initiative>
+     <#if initiative.showName>
+        <h2><@u.message "initiative.author.title" /></h2>
+        <p>${initiative.authorName!""}</p>
     </#if>
+</#macro>
+
+<#-- 
+ * initiativeAuthor
+ * 
+ * Generates initiative's contact info for private views
+ *
+ * @param contactInfo is author.contactInfo
+-->
+<#macro initiativeContactInfo contactInfo>
+    <h2 class="inline-style"><@u.message "initiative.contactinfo.title" /></h2><span class="push">Ei näy julkisessa näkymässä</span>
+    <p>${contactInfo.name!""}<br />
+    ${contactInfo.email!""}<br />
+    <#if contactInfo.address?? && contactInfo.address != ""><#noescape>${contactInfo.address?replace('\n','<br/>')!""}</#noescape><br /></#if>
+    ${contactInfo.phone!""}</p>
 </#macro>
 
 <#-- 
@@ -38,19 +51,18 @@
  * 
  * Generates initiative's state dates
  *
- * @param thisInitiative is initiative
+ * @param initiative is initiative
 -->
-<#macro stateInfo thisInitiative>
+<#macro stateInfo initiative>
     
     <span class="extra-info">
-        <#if thisInitiative.sentTime.present>
-            <#assign sentTime><@u.localDate thisInitiative.sentTime.value /></#assign>
+        <#if initiative.sentTime.present>
+            <#assign sentTime><@u.localDate initiative.sentTime.value /></#assign>
             <@u.message key="initiative.date.sent" args=[sentTime] />
         <#else>
-            <#assign createTime><@u.localDate thisInitiative.createTime /></#assign>
+            <#assign createTime><@u.localDate initiative.createTime /></#assign>
             <@u.message key="initiative.date.create" args=[createTime] />
-            <br />
-            <@u.message "initiative.stateInfo."+initiative.state />
+            <#if initiative.state??><br /><@u.message "initiative.stateInfo."+initiative.state /></#if>
         </#if>
     </span>
 

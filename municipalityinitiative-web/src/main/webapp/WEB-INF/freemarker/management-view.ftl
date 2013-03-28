@@ -33,95 +33,94 @@
     <div class="municipality">${initiative.municipality.name!""}</div>
 
     <div class="view-block public first">
-        <@e.initiativeView initiative />
+        <div class="initiative-content-row">
+            <@e.initiativeView initiative />
+        </div>
 
         <div class="initiative-content-row last">
-            <h2><@u.message "initiative.contactinfo.title" /></h2>
-            <p>${author.contactInfo.name!""}<br />
-            ${author.contactInfo.email!""}<br />
-            <#if author.contactInfo.address?? && author.contactInfo.address != ""><#noescape>${author.contactInfo.address?replace('\n','<br/>')!""}</#noescape><br /></#if>
-            ${author.contactInfo.phone!""}</p>
+            <@e.initiativeContactInfo author.contactInfo />
         </div>
     </div>
 
-    <div class="view-block public">
-        <h2><@u.message "management.sendToReview.title" /></h2>
-    
-        <#if !(RequestParameters['send-to-review']?? && (RequestParameters['send-to-review'] == "confirm" || RequestParameters['send-to-review'] == "confirm-collect"))>
-            <@u.systemMessage path="management.sendToReview.description" type="info" showClose=false />
-    
-            <br/>
-            <div class="column col-1of2">
-                <h3><@u.message "management.sendToReview.doNotCollect.title" /></h3>
-                <p><@u.message "management.sendToReview.doNotCollect" /></p>
-            </div>
-            <div class="column col-1of2 last">
-                <h3><@u.message "management.sendToReview.collect.title" /></h3>
-                <p><@u.message "management.sendToReview.collect" /></p>
-            </div>
-            <br class="clear" />
-            <div class="column col-1of2">
-                <a href="${managementURL}&send-to-review=confirm#send-to-review" class="large-button js-send-to-review"><span class="large-icon mail"><@u.messageHTML "action.sendToReview.doNotCollect" /></span></a>
-            </div>
-            <div class="column col-1of2 last">
-                <a href="${managementURL}&send-to-review=confirm-collect#send-to-review" class="large-button js-send-to-review-collect"><span class="large-icon save-and-send"><@u.messageHTML "action.sendToReview.collect" /></span></a>
-            </div>
-            <br class="clear" />
-        </#if>
+    <#if initiative.state == InitiativeState.DRAFT>
+        <div class="view-block public">
+            <h2><@u.message "management.sendToReview.title" /></h2>
         
-        <#assign sendToReviewDoNotCollect>
-            <@compress single_line=true>
-            
-                <p><@u.message "sendToReview.doNotCollect.confirm.description" /></p>
-                
-                <form action="${springMacroRequestContext.requestUri}" method="POST" >
-                    <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-                    <input type="hidden" name="${UrlConstants.PARAM_MANAGEMENT_CODE}" value="${initiative.managementHash.value}"/>
-                    <button type="submit" name="${UrlConstants.ACTION_SEND_TO_REVIEW}" id="modal-${UrlConstants.ACTION_SEND_TO_REVIEW}" value="${UrlConstants.ACTION_SEND_TO_REVIEW}" class="large-button"><span class="large-icon mail"><@u.messageHTML "action.sendToReview.doNotCollect" /></button>
-                    <a href="${managementURL}" class="push close"><@u.message "action.cancel" /></a>
-                </form>
-            </@compress>
-        </#assign>
-    
-        <#-- Confirm send to REVIEW for NOSCRIPT-users -->
-        <#if RequestParameters['send-to-review']?? && RequestParameters['send-to-review'] == "confirm">
-        <noscript>
-            <div id="send-to-review" class="system-msg msg-info">
-                <#noescape>
-                    <h4><@u.message "sendToReview.doNotCollect.confirm.title" /></h4>
-                    ${sendToReviewDoNotCollect}
-                </#noescape>
-            </div>
-        </noscript>
-        </#if>
+            <#if !(RequestParameters['send-to-review']?? && (RequestParameters['send-to-review'] == "confirm" || RequestParameters['send-to-review'] == "confirm-collect"))>
+                <@u.systemMessage path="management.sendToReview.description" type="info" showClose=false />
         
-        <#assign sendToReviewCollect>
-            <@compress single_line=true>
+                <br/>
+                <div class="column col-1of2">
+                    <h3><@u.message "management.sendToReview.doNotCollect.title" /></h3>
+                    <p><@u.message "management.sendToReview.doNotCollect" /></p>
+                </div>
+                <div class="column col-1of2 last">
+                    <h3><@u.message "management.sendToReview.collect.title" /></h3>
+                    <p><@u.message "management.sendToReview.collect" /></p>
+                </div>
+                <br class="clear" />
+                <div class="column col-1of2">
+                    <a href="${managementURL}&send-to-review=confirm#send-to-review" class="large-button js-send-to-review"><span class="large-icon mail"><@u.messageHTML "action.sendToReview.doNotCollect" /></span></a>
+                </div>
+                <div class="column col-1of2 last">
+                    <a href="${managementURL}&send-to-review=confirm-collect#send-to-review" class="large-button js-send-to-review-collect"><span class="large-icon save-and-send"><@u.messageHTML "action.sendToReview.collect" /></span></a>
+                </div>
+                <br class="clear" />
+            </#if>
             
-                <p><@u.message "sendToReview.collect.confirm.description" /></p>
+            <#assign sendToReviewDoNotCollect>
+                <@compress single_line=true>
                 
-                <form action="${springMacroRequestContext.requestUri}" method="POST" >
-                    <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-                    <input type="hidden" name="${UrlConstants.PARAM_MANAGEMENT_CODE}" value="${initiative.managementHash.value}"/>
-                    <button type="submit" name="${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" id="modal-${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" value="${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" class="large-button"><span class="large-icon save-and-send"><@u.messageHTML "action.sendToReview.collect" /></button>
-                    <a href="${managementURL}" class="push close"><@u.message "action.cancel" /></a>
-                </form>
-            </@compress>
-        </#assign>
-    
-        <#-- Confirm send to REVIEW for NOSCRIPT-users -->
-        <#if RequestParameters['send-to-review']?? && RequestParameters['send-to-review'] == "confirm-collect">
-        <noscript>
-            <div id="send-to-review" class="system-msg msg-info">
-                <#noescape>
-                    <h4><@u.message "sendToReview.collect.confirm.title" /></h4>
-                    ${sendToReviewCollect}
-                </#noescape>
-            </div>
-        </noscript>
-        </#if>
-
-    </div>
+                    <p><@u.message "sendToReview.doNotCollect.confirm.description" /></p>
+                    
+                    <form action="${springMacroRequestContext.requestUri}" method="POST" >
+                        <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+                        <input type="hidden" name="${UrlConstants.PARAM_MANAGEMENT_CODE}" value="${initiative.managementHash.value}"/>
+                        <button type="submit" name="${UrlConstants.ACTION_SEND_TO_REVIEW}" id="modal-${UrlConstants.ACTION_SEND_TO_REVIEW}" value="${UrlConstants.ACTION_SEND_TO_REVIEW}" class="large-button"><span class="large-icon mail"><@u.messageHTML "action.sendToReview.doNotCollect" /></button>
+                        <a href="${managementURL}" class="push close"><@u.message "action.cancel" /></a>
+                    </form>
+                </@compress>
+            </#assign>
+        
+            <#-- Confirm send to REVIEW for NOSCRIPT-users -->
+            <#if RequestParameters['send-to-review']?? && RequestParameters['send-to-review'] == "confirm">
+            <noscript>
+                <div id="send-to-review" class="system-msg msg-info">
+                    <#noescape>
+                        <h4><@u.message "sendToReview.doNotCollect.confirm.title" /></h4>
+                        ${sendToReviewDoNotCollect}
+                    </#noescape>
+                </div>
+            </noscript>
+            </#if>
+            
+            <#assign sendToReviewCollect>
+                <@compress single_line=true>
+                
+                    <p><@u.message "sendToReview.collect.confirm.description" /></p>
+                    
+                    <form action="${springMacroRequestContext.requestUri}" method="POST" >
+                        <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+                        <input type="hidden" name="${UrlConstants.PARAM_MANAGEMENT_CODE}" value="${initiative.managementHash.value}"/>
+                        <button type="submit" name="${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" id="modal-${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" value="${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" class="large-button"><span class="large-icon save-and-send"><@u.messageHTML "action.sendToReview.collect" /></button>
+                        <a href="${managementURL}" class="push close"><@u.message "action.cancel" /></a>
+                    </form>
+                </@compress>
+            </#assign>
+        
+            <#-- Confirm send to REVIEW for NOSCRIPT-users -->
+            <#if RequestParameters['send-to-review']?? && RequestParameters['send-to-review'] == "confirm-collect">
+            <noscript>
+                <div id="send-to-review" class="system-msg msg-info">
+                    <#noescape>
+                        <h4><@u.message "sendToReview.collect.confirm.title" /></h4>
+                        ${sendToReviewCollect}
+                    </#noescape>
+                </div>
+            </noscript>
+            </#if>
+        </div>
+    </#if>
 
 
     <#--

@@ -23,10 +23,14 @@
 
     <#-- VIEW BLOCKS -->
     <div class="view-block public first">
-        <@e.initiativeView initiative />
-        <@e.initiativeAuthor initiative />
+        <div class="initiative-content-row">
+            <@e.initiativeView initiative />
+        </div>
+        <div class="initiative-content-row last">
+            <@e.initiativeAuthor initiative />
+        </div>
     </div>
-
+    
     <#assign participateFormHTML>
     <@compress single_line=true>
     
@@ -144,7 +148,9 @@
     <#--
      * Social media buttons
     -->
-    <@some.some pageTitle=initiative.name!"" />
+    <#if initiative.state == InitiativeState.PUBLISHED>
+        <@some.some pageTitle=initiative.name!"" />
+    </#if>
 
 
     <#--

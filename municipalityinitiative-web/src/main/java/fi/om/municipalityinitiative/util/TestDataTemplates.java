@@ -64,19 +64,20 @@ public class TestDataTemplates {
         initiative.setProposal(proposal);
         initiative.setCollectable(collectable);
         initiative.setMunicipalMembership(true);
-        initiative.setFranchise(true);
+//        initiative.setFranchise(true);
         initiative.setShowName(true);
         initiative.setContactInfo(contactInfo);
 
         return initiative;
     }
     
-    private static ParticipantUICreateDto createParticipantTemplate(Long municipality, String name, boolean franchise, boolean showName) {
+    private static ParticipantUICreateDto createParticipantTemplate(Long municipality, String name, boolean municipalMembership, boolean showName) {
         ParticipantUICreateDto participant = new ParticipantUICreateDto();
 
         participant.setParticipantName(name);
         participant.setMunicipality(municipality);
         participant.setHomeMunicipality(municipality);
+        participant.setMunicipalMembership(municipalMembership);
         participant.setShowName(showName);
         return participant;
     }

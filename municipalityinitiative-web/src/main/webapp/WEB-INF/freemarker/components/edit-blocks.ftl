@@ -170,12 +170,12 @@
 <#--
  * initiativeBlock
  *
- * Add initiative title and content
+ * Add/edit initiative title, content and extra-info
  * Prints help-texts and validation errors in this block
  *
  * @param locked locks some field from editing
  -->
-<#macro initiativeBlock locked=false>      
+<#macro initiativeBlock>      
     <div class="input-block cf">
         <div class="input-block-extra">
             <div class="input-block-extra-content">
@@ -187,33 +187,58 @@
 
         <div class="input-block-content">
             <#assign href="#" />
-            
-            <#if locked>
-                <@u.systemMessage path="initiative.proposal.locked" type="info" showClose=false args=[href] />
-            <#else>
-                <@u.systemMessage path="initiative.proposal.description" type="info" showClose=false args=[href] />
-            </#if>
+            <@u.systemMessage path="initiative.proposal.description" type="info" showClose=false args=[href] />
         </div>
         
         <div class="input-block-content">
-            <#if locked>
-                <div class="input-header"><@u.message "initiative.name" /></div>
-                <div class="input-placeholder">${initiative.name!""}</div>
-            <#else>
-                <@f.textField path="initiative.name" required="required" optional=true cssClass="large" maxLength=InitiativeConstants.INITIATIVE_NAME_MAX />
-            </#if>
+            <@f.textField path="initiative.name" required="required" optional=true cssClass="large" maxLength=InitiativeConstants.INITIATIVE_NAME_MAX />
         </div>
         
         <div class="input-block-content no-top-margin">
-            <#if locked>
-                <div class="input-header"><@u.message "initiative.proposal" /></div>
-                <div class="input-placeholder">${initiative.proposal!""}</div>
-            <#else>
-                <@f.textarea path="initiative.proposal" required="required" optional=false cssClass="textarea-tall" />
-            </#if>
+            <@f.textarea path="initiative.proposal" required="required" optional=false cssClass="textarea-tall" />
         </div>
         
-        <div class="input-block-content ${locked?string('no-top-margin','')}">
+        <div class="input-block-content">
+            <@f.textarea path="initiative.extraInfo" required="" optional=true cssClass="textarea" />
+        </div>
+    </div>
+</#macro>
+
+<#--
+ * updateInitiativeBlock
+ *
+ * Title and content are NOT editable
+ * Update initiative extra-info details
+ *
+ * Prints help-texts and validation errors in this block
+ *
+ * @param locked locks some field from editing
+ -->
+<#macro updateInitiativeBlock>      
+    <div class="input-block cf">
+        <div class="input-block-extra">
+            <div class="input-block-extra-content">
+                <@f.helpText "help.extraInfo" />
+            </div>
+        </div>
+
+    <#--
+        <div class="input-block-content">
+            <#assign href="#" />
+            <@u.systemMessage path="initiative.proposal.locked" type="info" showClose=false args=[href] />
+        </div>
+        
+        <div class="input-block-content">
+                <h4><@u.message "initiative.name" /></h4>
+                <p>${initiative.name!""}</p>
+        </div>
+        
+        <div class="input-block-content no-top-margin">
+            <h4><@u.message "initiative.proposal" /></h4>
+                <p><@u.text initiative.proposal!"" /></p>
+        </div>-->
+        
+        <div class="input-block-content">
             <@f.textarea path="initiative.extraInfo" required="" optional=true cssClass="textarea" />
         </div>
     </div>
@@ -253,7 +278,6 @@
                 <div class="input-header"><@u.message "initiative.contactInfo.homeMunicipality" /></div>
                 
                 <div class="input-placeholder">${author.municipality.getName(locale)}</div>
-                <#--<input type="text" maxlength="100" class="medium" value="Testikunta" disabled="disabled">-->
             </div>
             <br class="clear" />
             <@f.formCheckbox path="initiative.showName" checked=true />

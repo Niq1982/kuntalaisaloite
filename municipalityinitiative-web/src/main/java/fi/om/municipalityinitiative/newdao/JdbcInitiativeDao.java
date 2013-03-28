@@ -439,7 +439,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 @Override
                 protected InitiativeUIEditDto map(Tuple row) {
                     InitiativeUIEditDto info = new InitiativeUIEditDto(
-                            parseMunicipality(row)
+                            parseMunicipality(row),row.get(municipalityInitiative.state)
                     );
                     info.setManagementHash(row.get(QAuthor.author.managementHash));
                     info.setName(row.get(municipalityInitiative.name));

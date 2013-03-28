@@ -82,7 +82,7 @@
                     
                     <#if testInitiatives??>
                         <span class="user-col">${testInitiatives[0].contactInfo.name!""}</span><span class="user-col" >Aloitteen kunta</span>
-                        <span class="user-col" >${(testInitiatives[0].franchise)?string("äänioikeutettu","jäsen")}</span>
+                        <#--<span class="user-col" >${(testInitiatives[0].franchise)?string("äänioikeutettu","jäsen")}</span>-->
                         <span class="user-col" >${(testInitiatives[0].showName)?string("kyllä","ei")}</span>
                     </#if>
                     
@@ -104,13 +104,13 @@
                         <#list testParticipants as participant>
                             <span class="user-col">${participant.participantName!""}</span>
                             <span class="user-col">
-                                <#if participant.franchise>
+                                <#--<#if participant.franchise>
                                     Aloitteen kunta
                                 <#else>
                                     Osallistujan kunta
-                                </#if>
+                                </#if>-->
                             </span>
-                            <span class="user-col">${(participant.franchise)?string("äänioikeutettu","jäsen")}</span><span class="user-col">${(participant.showName)?string("kyllä","ei")}</span>
+                            <span class="user-col">${(participant.municipalMembership)?string("äänioikeutettu","jäsen")}</span><span class="user-col">${(participant.showName)?string("kyllä","ei")}</span>
                             <span class="user-col"><input type="text" id="participantAmount[${participant_index}]" name="participantAmount[${participant_index}]" class="small" value="2" /></span>
                             <br class="clear" />
                         </#list>

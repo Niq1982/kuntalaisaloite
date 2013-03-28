@@ -9,6 +9,8 @@ import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.*;
+
+import org.eclipse.jdt.internal.compiler.lookup.InferenceContext;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -16,6 +18,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.sun.media.sound.InvalidFormatException;
 
 import javax.annotation.Resource;
 
@@ -211,7 +215,7 @@ public class InitiativeServiceIntegrationTest {
     public void editing_initiative_throws_exception_if_wrong_management_hash() {
         Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise(), Locales.LOCALE_FI);
 
-        InitiativeUIEditDto editDto = new InitiativeUIEditDto(new Municipality(testMunicipality.getId(), testMunicipality.getName(), testMunicipality.getName()));
+        InitiativeUIEditDto editDto = new InitiativeUIEditDto(new Municipality(testMunicipality.getId(), testMunicipality.getName(), testMunicipality.getName()), null);
         editDto.setManagementHash("invalid management hash");
 
         service.updateInitiativeDraft(initiativeId, editDto);
@@ -222,7 +226,7 @@ public class InitiativeServiceIntegrationTest {
 
         Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise(), Locales.LOCALE_FI);
 
-        InitiativeUIEditDto editDto = new InitiativeUIEditDto(new Municipality(testMunicipality.getId(), testMunicipality.getName(), testMunicipality.getName()));
+        InitiativeUIEditDto editDto = new InitiativeUIEditDto(new Municipality(testMunicipality.getId(), testMunicipality.getName(), testMunicipality.getName()), null);
         editDto.setManagementHash(RandomHashGenerator.getPrevious());
 
         ContactInfo contactInfo = new ContactInfo();
@@ -255,6 +259,10 @@ public class InitiativeServiceIntegrationTest {
         InitiativeUIEditDto initiativeForEdit = service.getInitiativeForEdit(initiativeId, managementHash);
         assertThat(initiativeForEdit.getManagementHash(), is(managementHash));
         assertThat(initiativeForEdit.getMunicipality().getId(), is(testMunicipality.getId()));
+        assertThat(initiativeForEdit.getState(), is(InitiativeState.DRAFT));
+        
+        
+        // Note that all fields are not set when preparing
     }
 
     private static PrepareInitiativeDto initiativePrepareDtoWithFranchise() {

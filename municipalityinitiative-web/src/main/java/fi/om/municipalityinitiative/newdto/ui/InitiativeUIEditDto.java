@@ -2,6 +2,8 @@ package fi.om.municipalityinitiative.newdto.ui;
 
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
+import fi.om.municipalityinitiative.util.InitiativeState;
+
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
@@ -11,8 +13,8 @@ import javax.validation.constraints.Size;
 public class InitiativeUIEditDto {
 
     // Not editable after set
-    private Long id;
     private Municipality municipality;
+    private InitiativeState state;
 
     // Hidden field which must match with database
     private String managementHash;
@@ -35,12 +37,13 @@ public class InitiativeUIEditDto {
     @NotNull
     private Boolean showName;
 
-    private InitiativeUIEditDto() {
-        // For freemarker
+    public InitiativeUIEditDto(Municipality municipality, InitiativeState initiativeState) {
+        this.municipality = municipality;
+        this.state = initiativeState;
     }
 
-    public InitiativeUIEditDto(Municipality municipality) {
-        this.municipality = municipality;
+    public InitiativeUIEditDto() {
+        // For freemarker
     }
 
     public String getName() {
@@ -93,5 +96,9 @@ public class InitiativeUIEditDto {
 
     public void setManagementHash(String managementHash) {
         this.managementHash = managementHash;
+    }
+    
+    public InitiativeState getState() {
+        return state;
     }
 }

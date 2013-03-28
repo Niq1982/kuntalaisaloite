@@ -3,7 +3,6 @@
 <#import "components/layout.ftl" as l />
 <#import "components/utils.ftl" as u />
 <#import "components/edit-blocks.ftl" as edit />
-<#import "components/some.ftl" as some />
 
 <#escape x as x?html>
 

@@ -6,6 +6,7 @@ import fi.om.municipalityinitiative.newdto.ui.PrepareInitiativeDto;
 import fi.om.municipalityinitiative.service.InitiativeService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.service.ValidationService;
+import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.web.BaseController;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
@@ -46,6 +47,7 @@ public class MunicipalityInitiativeCreateController extends BaseController {
         super(optimizeResources, resourcesVersion);
     }
 
+    // TODO: Remove. This is NOT USED anymore
     @RequestMapping(value={ CREATE_FI, CREATE_SV }, method=GET)
     public String createGet(Model model, Locale locale, HttpServletRequest request) {
         Urls urls = Urls.get(locale);
@@ -57,6 +59,7 @@ public class MunicipalityInitiativeCreateController extends BaseController {
         return CREATE_VIEW;
     }
 
+    // TODO: Remove. This is NOT USED anymore
     @RequestMapping(value={ CREATE_FI, CREATE_SV }, method=POST, params=ACTION_SAVE_AND_SEND)
     public String createAndSendPost(@ModelAttribute("initiative") InitiativeUICreateDto initiative,
                             BindingResult bindingResult,
@@ -76,6 +79,7 @@ public class MunicipalityInitiativeCreateController extends BaseController {
         return redirectWithMessage(urls.view(initiativeId), RequestMessage.SAVE_AND_SEND, request);
     }
     
+    // TODO: Remove. This is NOT USED anymore
     @RequestMapping(value={ CREATE_FI, CREATE_SV }, method=POST)
     public String createPost(@ModelAttribute("initiative") InitiativeUICreateDto initiative,
                             BindingResult bindingResult,
@@ -135,20 +139,22 @@ public class MunicipalityInitiativeCreateController extends BaseController {
                            @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                            Model model, Locale locale, HttpServletRequest request) {
 
+        InitiativeUIEditDto initiative = initiativeService.getInitiativeForEdit(initiativeId, managementHash);
+        
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().edit(initiativeId, managementHash));
-        model.addAttribute("initiative", initiativeService.getInitiativeForEdit(initiativeId, managementHash));
+        model.addAttribute("initiative", initiative);
         model.addAttribute("author", initiativeService.getAuthorInformation(initiativeId, managementHash));
         
-        String managementURI = urls.management(initiativeId, managementHash);
-        
-        if (request.getHeader("referer") != null && request.getHeader("referer").equals(managementURI)) {
-            model.addAttribute("previousPageURI", managementURI);
-        } else {
+        if (initiative.getState().equals(InitiativeState.DRAFT)) {
             model.addAttribute("previousPageURI", urls.prepare());
+            return EDIT_VIEW;
+        } else {
+            model.addAttribute("previousPageURI", urls.management(initiativeId, managementHash));
+            return UPDATE_VIEW;
         }
         
-        return EDIT_VIEW;
+        
     }
 
     @RequestMapping(value={ EDIT_FI, EDIT_SV }, method=POST)
@@ -168,6 +174,26 @@ public class MunicipalityInitiativeCreateController extends BaseController {
 
         initiativeService.updateInitiativeDraft(initiativeId, editDto);
         return redirectWithMessage(urls.management(initiativeId,editDto.getManagementHash()), RequestMessage.SAVE_DRAFT, request);
+    }
+    
+    @RequestMapping(value={ EDIT_FI, EDIT_SV }, method=POST, params = ACTION_UPDATE_INITIATIVE)
+    public String updatePost(@PathVariable("id") Long initiativeId,
+                           @ModelAttribute("initiative") InitiativeUIEditDto editDto,
+                           BindingResult bindingResult,
+                           Model model, Locale locale, HttpServletRequest request) {
+
+        Urls urls = Urls.get(locale);
+
+        if (validionService.validationErrors(editDto, bindingResult, model)) {
+            model.addAttribute(ALT_URI_ATTR, urls.alt().edit(initiativeId, editDto.getManagementHash()));
+            model.addAttribute("initiative", editDto);
+            model.addAttribute("author", initiativeService.getAuthorInformation(initiativeId, editDto.getManagementHash()));
+            return UPDATE_VIEW;
+        }
+
+        // TODO: Do not update initiative name and proposal
+        initiativeService.updateInitiativeDraft(initiativeId, editDto);
+        return redirectWithMessage(urls.management(initiativeId,editDto.getManagementHash()), RequestMessage.UPDATE_INITIATIVE, request);
     }
     
     @InitBinder

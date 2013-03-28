@@ -86,17 +86,18 @@
     
     <div class="municipality">${initiative.municipality.name!""}</div>
 
-    <div class="view-block public first">
-        <@e.initiativeView initiative />
-
+    <div class="view-block first">
+        <div class="initiative-content-row">
+            <@e.initiativeView initiative />
+        </div>
+        
         <div class="initiative-content-row last">
-            <h2><@u.message "initiative.contactinfo.title" /></h2>
-            <p>${initiative.authorName!""}<br />
+            <@e.initiativeAuthor initiative />
         </div>
     </div>
 
     <#--
-     * Moderaion VIEW modals
+     * Moderation VIEW modals
      * 
      * Uses jsRender for templating.
      * Same content is generated for NOSCRIPT and for modals.

@@ -181,9 +181,10 @@ public class MunicipalityInitiativeViewController extends BaseController {
 
         if (initiativeInfo.isSent()) {
             return redirectWithMessage(urls.view(initiativeId),RequestMessage.ALREADY_SENT, request);
-        } else if (initiativeInfo.getState() != InitiativeState.DRAFT) { // Only draft may be modified. Use moderation-view after sent for review
+        } /*else if (initiativeInfo.getState() != InitiativeState.DRAFT) { // Only draft may be modified. Use moderation-view after sent for review
             return contextRelativeRedirect(urls.view(initiativeId));
-        }
+            
+        }*/
 
         if (managementHash.equals(initiativeInfo.getManagementHash().get())){
             addModelAttributesToCollectView(model,
@@ -259,19 +260,19 @@ public class MunicipalityInitiativeViewController extends BaseController {
     @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_SEND_TO_REVIEW)
     public String sendToReview(@PathVariable("id") Long initiativeId,
                                @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
-                               Locale locale) {
+                               Locale locale, HttpServletRequest request) {
 
         initiativeService.sendReview(initiativeId, managementHash, InitiativeType.SINGLE);
-        return contextRelativeRedirect(Urls.get(locale).view(initiativeId));
+        return redirectWithMessage(Urls.get(locale).management(initiativeId, managementHash),RequestMessage.SEND_TO_REVIEW, request);
     }
 
     @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_SEND_TO_REVIEW_COLLECT)
     public String sendToReviewForCollecting(@PathVariable("id") Long initiativeId,
                                             @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
-                                            Locale locale) {
+                                            Locale locale, HttpServletRequest request) {
 
         initiativeService.sendReview(initiativeId, managementHash, InitiativeType.COLLABORATIVE);
-        return contextRelativeRedirect(Urls.get(locale).view(initiativeId));
+        return redirectWithMessage(Urls.get(locale).management(initiativeId, managementHash),RequestMessage.SEND_TO_REVIEW, request);
     }
 
     @RequestMapping(value = {MODERATION_FI, MODERATION_FI}, method = POST, params = ACTION_ACCEPT_INITIATIVE)
