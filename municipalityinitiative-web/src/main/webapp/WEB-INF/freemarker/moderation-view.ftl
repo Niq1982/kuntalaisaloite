@@ -90,9 +90,9 @@
         <div class="initiative-content-row">
             <@e.initiativeView initiative />
         </div>
-        
+
         <div class="initiative-content-row last">
-            <@e.initiativeAuthor initiative />
+            <@e.initiativeContactInfo author.contactInfo />
         </div>
     </div>
 

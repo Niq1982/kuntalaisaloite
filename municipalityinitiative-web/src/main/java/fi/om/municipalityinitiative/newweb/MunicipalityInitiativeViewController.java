@@ -227,6 +227,8 @@ public class MunicipalityInitiativeViewController extends BaseController {
 
         if (managementHash.equals(initiativeInfo.getManagementHash().get())){
             model.addAttribute("participants", participantService.findPublicParticipants(initiativeId));
+            model.addAttribute("author", initiativeService.getAuthorInformation(initiativeId, managementHash));
+            // TODO: Remove this when moderation supports commenting. Update also moderation-view.ftl (sendToMunicipality.comment)
             model.addAttribute("sendToMunicipality", SendToMunicipalityDto.parse(managementHash, initiativeService.getContactInfo(initiativeId)));
             return MODERATION_VIEW;
         } else {
