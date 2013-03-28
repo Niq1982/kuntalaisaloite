@@ -17,7 +17,8 @@ public enum RequestMessage {
     PARTICIPATE (SUCCESS),
     
     // Warning messages
-    ALREADY_SENT (WARNING);
+    ALREADY_SENT (WARNING),
+    PREPARE_CONFIRM_EXPIRED (WARNING);
     
     private final boolean modal;
     

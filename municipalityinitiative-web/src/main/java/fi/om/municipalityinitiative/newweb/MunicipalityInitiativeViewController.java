@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -154,7 +155,6 @@ public class MunicipalityInitiativeViewController extends BaseController {
         }
     }
 
-    // TODO: Secure view with managementHash, author email-address, this view should exist only in initiative PREPARE-state.
     @RequestMapping(value={ PENDING_CONFIRMATION_FI, PENDING_CONFIRMATION_SV }, method=GET)
     public String pendingConfirmation(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
         
@@ -164,9 +164,11 @@ public class MunicipalityInitiativeViewController extends BaseController {
 
         model.addAttribute("initiative", initiativeInfo);
 
-        // TODO: redirect to 404 if view is not accessible (wrong managementHash or wrong initiative state)
-        return PENDING_CONFIRMATION;
-
+        if (initiativeInfo.getState().equals(InitiativeState.DRAFT) && getRequestAttribute(request) != null) {
+            return PENDING_CONFIRMATION;
+        } else {
+            return redirectWithMessage(urls.prepare(), RequestMessage.PREPARE_CONFIRM_EXPIRED, request);
+        }
     }
     
     @RequestMapping(value={ MANAGEMENT_FI, MANAGEMENT_SV }, method=GET)
@@ -181,10 +183,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
 
         if (initiativeInfo.isSent()) {
             return redirectWithMessage(urls.view(initiativeId),RequestMessage.ALREADY_SENT, request);
-        } /*else if (initiativeInfo.getState() != InitiativeState.DRAFT) { // Only draft may be modified. Use moderation-view after sent for review
-            return contextRelativeRedirect(urls.view(initiativeId));
-            
-        }*/
+        }
 
         if (managementHash.equals(initiativeInfo.getManagementHash().get())){
             addModelAttributesToCollectView(model,
@@ -201,7 +200,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
         }
     }
     
-    // TODO: Finalize. This is now just a dummy for template development.
+    // TODO: Permission only for logged in users with moderation rights
     @RequestMapping(value={ MODERATION_FI, MODERATION_SV }, method=GET)
     public String moderationView(@PathVariable("id") Long initiativeId,
                                  @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
@@ -213,11 +212,9 @@ public class MunicipalityInitiativeViewController extends BaseController {
         InitiativeViewInfo initiativeInfo = initiativeService.getMunicipalityInitiative(initiativeId, locale);
 
         // NOTE: Should moderation view be always accessible?
-        /*if (initiativeInfo.isSent() && managementHash.equals(initiativeInfo.getManagementHash().get())) {
+        if (initiativeInfo.isSent() && managementHash.equals(initiativeInfo.getManagementHash().get())) {
             return redirectWithMessage(urls.view(initiativeId),RequestMessage.ALREADY_SENT, request);
-        } else if (!initiativeInfo.isCollectable() || initiativeInfo.isSent()) { // Practically initiative should always be sent if it's not collectable...
-            return contextRelativeRedirect(urls.view(initiativeId));
-        }*/
+        }
 
         addModelAttributesToCollectView(model,
                 initiativeInfo,

@@ -93,7 +93,7 @@ public class BaseController {
         }
     }
 
-    private String getRequestAttribute(HttpServletRequest request) {
+    protected String getRequestAttribute(HttpServletRequest request) {
 
         if (RequestContextUtils.getInputFlashMap(request) == null) {
             return null;

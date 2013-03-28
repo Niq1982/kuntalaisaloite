@@ -365,9 +365,6 @@ public final class Urls {
     public String pendingConfirmation(Long initiativeId) {
         return getLocalizedPageUrl(PENDING_CONFIRMATION_FI, PENDING_CONFIRMATION_SV).replace(ID_PARAMETER, initiativeId.toString());
     }
-//    public String pendingConfirmation() {
-//        return getLocalizedPageUrl(PENDING_CONFIRMATION_FI, PENDING_CONFIRMATION_SV);
-//    }
     
     public String paramSendInvitations() {
         return ACTION_SEND_INVITATIONS;
