@@ -6,8 +6,9 @@ import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.InitiativeCreateDto;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
+import fi.om.municipalityinitiative.newdto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeUIEditDto;
+import fi.om.municipalityinitiative.newdto.ui.InitiativeUIUpdateDto;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 
@@ -33,9 +34,9 @@ public interface InitiativeDao {
 
     Long prepareInitiative(Long municipalityId, String email, String managementHash);
 
-    InitiativeUIEditDto getInitiativeForEdit(Long initiativeId);
+    InitiativeDraftUIEditDto getInitiativeForEdit(Long initiativeId);
 
-    void updateInitiativeDraft(Long initiativeId, InitiativeUIEditDto editDto);
+    void updateInitiativeDraft(Long initiativeId, InitiativeDraftUIEditDto editDto);
 
     Author getAuthorInformation(Long id, String testManagementHash);
 
@@ -44,4 +45,6 @@ public interface InitiativeDao {
     void acceptInitiativeByOm(Long initiativeId);
     
     void rejectInitiativeByOm(Long initiativeId);
+
+    void updateInitiative(Long initiativeId, InitiativeUIUpdateDto updateDto);
 }

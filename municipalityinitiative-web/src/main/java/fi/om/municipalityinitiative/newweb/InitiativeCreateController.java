@@ -1,14 +1,11 @@
 package fi.om.municipalityinitiative.newweb;
 
 import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeUICreateDto;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeUIEditDto;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
+import fi.om.municipalityinitiative.newdto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.newdto.ui.PrepareInitiativeDto;
 import fi.om.municipalityinitiative.service.InitiativeService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.service.ValidationService;
-import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.web.BaseController;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
@@ -87,7 +84,7 @@ public class InitiativeCreateController extends BaseController {
 
         ManagementSettings managementSettings = initiativeService.managementSettings(initiativeId);
 
-        InitiativeUIEditDto initiative = initiativeService.getInitiativeForEdit(initiativeId, managementHash);
+        InitiativeDraftUIEditDto initiative = initiativeService.getInitiativeDraftForEdit(initiativeId, managementHash);
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().edit(initiativeId, managementHash));
         model.addAttribute("initiative", initiative);
@@ -109,7 +106,7 @@ public class InitiativeCreateController extends BaseController {
 
     @RequestMapping(value={ EDIT_FI, EDIT_SV }, method=POST)
     public String editPost(@PathVariable("id") Long initiativeId,
-                           @ModelAttribute("initiative") InitiativeUIEditDto editDto,
+                           @ModelAttribute("initiative") InitiativeDraftUIEditDto editDto,
                            BindingResult bindingResult,
                            Model model, Locale locale, HttpServletRequest request) {
 
@@ -122,13 +119,13 @@ public class InitiativeCreateController extends BaseController {
             return EDIT_VIEW;
         }
 
-        initiativeService.updateInitiativeDraft(initiativeId, editDto);
+        initiativeService.editInitiativeDraft(initiativeId, editDto);
         return redirectWithMessage(urls.management(initiativeId,editDto.getManagementHash()), RequestMessage.SAVE_DRAFT, request);
     }
     
     @RequestMapping(value={ EDIT_FI, EDIT_SV }, method=POST, params = ACTION_UPDATE_INITIATIVE)
     public String updatePost(@PathVariable("id") Long initiativeId,
-                           @ModelAttribute("initiative") InitiativeUIEditDto editDto,
+                           @ModelAttribute("initiative") InitiativeDraftUIEditDto editDto,
                            BindingResult bindingResult,
                            Model model, Locale locale, HttpServletRequest request) {
 
@@ -142,7 +139,7 @@ public class InitiativeCreateController extends BaseController {
         }
 
         // TODO: Do not update initiative name and proposal
-        initiativeService.updateInitiativeDraft(initiativeId, editDto);
+        initiativeService.editInitiativeDraft(initiativeId, editDto);
         return redirectWithMessage(urls.management(initiativeId,editDto.getManagementHash()), RequestMessage.UPDATE_INITIATIVE, request);
     }
     

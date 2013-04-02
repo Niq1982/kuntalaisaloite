@@ -1,20 +1,16 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
-import fi.om.municipalityinitiative.exceptions.NotCollectableException;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
-import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
-import fi.om.municipalityinitiative.newdto.email.InitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.util.*;
-import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -95,22 +91,41 @@ public class InitiativeService {
         return InitiativeViewInfo.parse(initiativeDao.getById(initiativeId, givenManagementHash), locale);
     }
 
-    public InitiativeUIEditDto getInitiativeForEdit(Long initiativeId, String managementHash) {
+    public InitiativeDraftUIEditDto getInitiativeDraftForEdit(Long initiativeId, String managementHash) {
         // TODO: IsAllowed
-        InitiativeUIEditDto initiativeForEdit = initiativeDao.getInitiativeForEdit(initiativeId);
+        InitiativeDraftUIEditDto initiativeForEdit = initiativeDao.getInitiativeForEdit(initiativeId);
         if (!initiativeForEdit.getManagementHash().equals(managementHash)) {
             throw new AccessDeniedException("Invalid management hash");
         }
         return initiativeForEdit;
     }
 
-    public void updateInitiativeDraft(Long initiativeId, InitiativeUIEditDto editDto) {
+    public void editInitiativeDraft(Long initiativeId, InitiativeDraftUIEditDto editDto) {
         // TODO: IsAllowed
         if (!initiativeDao.getInitiativeForEdit(initiativeId).getManagementHash().equals(editDto.getManagementHash())) {
             throw new AccessDeniedException("Invalid management hash");
         }
 
         initiativeDao.updateInitiativeDraft(initiativeId, editDto);
+    }
+
+    public InitiativeUIUpdateDto getInitiativeForUpdate(Long initiativeId, String managementHash) {
+
+        // TODO: IsAllowed
+        Initiative initiative = initiativeDao.getById(initiativeId, managementHash);
+        Author authorInformation = getAuthorInformation(initiativeId, managementHash);
+
+        InitiativeUIUpdateDto updateDto = new InitiativeUIUpdateDto();
+        updateDto.setContactInfo(authorInformation.getContactInfo());
+        updateDto.setShowName(initiative.getShowName());
+
+        return updateDto;
+    }
+
+    public void updateInitiative(Long initiativeId, InitiativeUIUpdateDto updateDto) {
+        // TODO: IsAllowed
+        // TODO: Check managementHash from updateDto
+        initiativeDao.updateInitiative(initiativeId, updateDto);
     }
 
     public Author getAuthorInformation(Long initiativeId, String managementHash) {

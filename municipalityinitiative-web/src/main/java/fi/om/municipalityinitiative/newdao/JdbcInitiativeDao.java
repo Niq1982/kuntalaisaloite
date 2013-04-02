@@ -24,8 +24,9 @@ import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.InitiativeCreateDto;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
+import fi.om.municipalityinitiative.newdto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeUIEditDto;
+import fi.om.municipalityinitiative.newdto.ui.InitiativeUIUpdateDto;
 import fi.om.municipalityinitiative.sql.QAuthor;
 import fi.om.municipalityinitiative.sql.QMunicipality;
 import fi.om.municipalityinitiative.sql.QParticipant;
@@ -316,7 +317,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     @Transactional(readOnly = false)
-    public InitiativeUIEditDto getInitiativeForEdit(Long initiativeId) {
+    public InitiativeDraftUIEditDto getInitiativeForEdit(Long initiativeId) {
         return queryFactory
                 .from(municipalityInitiative)
                 .leftJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
@@ -329,7 +330,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     @Transactional(readOnly = false)
-    public void updateInitiativeDraft(Long initiativeId, InitiativeUIEditDto editDto) {
+    public void updateInitiativeDraft(Long initiativeId, InitiativeDraftUIEditDto editDto) {
 
         assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.name, editDto.getName())
@@ -398,6 +399,36 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .execute());
     }
 
+    @Override
+    @Transactional(readOnly = false)
+    public void updateInitiative(Long initiativeId, InitiativeUIUpdateDto updateDto) {
+
+        Long participantId = queryFactory.from(QParticipant.participant)
+                .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
+                .leftJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
+                .where(QAuthor.author.managementHash.eq(updateDto.getManagementHash()))
+                .singleResult(QParticipant.participant.id);
+
+        assertSingleAffection(queryFactory.update(municipalityInitiative)
+                .set(municipalityInitiative.comment, updateDto.getExtraInfo())
+                .where(municipalityInitiative.id.eq(initiativeId))
+                .execute());
+
+        assertSingleAffection(queryFactory.update(QParticipant.participant)
+                .set(QParticipant.participant.showName, Boolean.TRUE.equals(updateDto.getShowName()))
+                .set(QParticipant.participant.name, updateDto.getContactInfo().getName())
+                .where(QParticipant.participant.id.eq(participantId))
+                .execute());
+
+        assertSingleAffection(queryFactory.update(QAuthor.author)
+                .set(QAuthor.author.address, updateDto.getContactInfo().getAddress())
+                .set(QAuthor.author.email, updateDto.getContactInfo().getEmail())
+                .set(QAuthor.author.name, updateDto.getContactInfo().getName())
+                .set(QAuthor.author.phone, updateDto.getContactInfo().getPhone())
+                .where(QAuthor.author.participantId.eq(participantId))
+                .execute());
+    }
+
     private static void assertSingleAffection(long affectedRows) {
         Assert.isTrue(affectedRows == 1, "Should have affected only one row. Affected: " + affectedRows);
     }
@@ -430,15 +461,15 @@ public class JdbcInitiativeDao implements InitiativeDao {
             };
 
 
-    Expression<InitiativeUIEditDto> initiativeEditMapping =
-            new MappingProjection<InitiativeUIEditDto>(InitiativeUIEditDto.class,
+    Expression<InitiativeDraftUIEditDto> initiativeEditMapping =
+            new MappingProjection<InitiativeDraftUIEditDto>(InitiativeDraftUIEditDto.class,
                     municipalityInitiative.all(),
                     QMunicipality.municipality.all(),
                     QParticipant.participant.all(),
                     QAuthor.author.all()) {
                 @Override
-                protected InitiativeUIEditDto map(Tuple row) {
-                    InitiativeUIEditDto info = new InitiativeUIEditDto(
+                protected InitiativeDraftUIEditDto map(Tuple row) {
+                    InitiativeDraftUIEditDto info = new InitiativeDraftUIEditDto(
                             parseMunicipality(row),row.get(municipalityInitiative.state)
                     );
                     info.setManagementHash(row.get(QAuthor.author.managementHash));

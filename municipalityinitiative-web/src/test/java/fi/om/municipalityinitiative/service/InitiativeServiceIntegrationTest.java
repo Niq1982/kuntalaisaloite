@@ -10,7 +10,6 @@ import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.*;
 
-import org.eclipse.jdt.internal.compiler.lookup.InferenceContext;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -18,8 +17,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import com.sun.media.sound.InvalidFormatException;
 
 import javax.annotation.Resource;
 
@@ -176,23 +173,23 @@ public class InitiativeServiceIntegrationTest {
         Long initiativeId = service.prepareInitiative(createDto, Locales.LOCALE_FI);
 
         // TODO: Change to getContactInfo etc.
-        assertThat(service.getInitiativeForEdit(initiativeId, RandomHashGenerator.getPrevious()).getContactInfo().getEmail(), is(createDto.getAuthorEmail()));
+        assertThat(service.getInitiativeDraftForEdit(initiativeId, RandomHashGenerator.getPrevious()).getContactInfo().getEmail(), is(createDto.getAuthorEmail()));
     }
 
     @Test(expected = AccessDeniedException.class)
     public void get_initiative_for_edit_throws_exception_if_wrong_management_hash() {
         Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise(), Locales.LOCALE_FI);
-        service.getInitiativeForEdit(initiativeId, "some invalid management hash");
+        service.getInitiativeDraftForEdit(initiativeId, "some invalid management hash");
     }
 
     @Test(expected = AccessDeniedException.class)
     public void editing_initiative_throws_exception_if_wrong_management_hash() {
         Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise(), Locales.LOCALE_FI);
 
-        InitiativeUIEditDto editDto = new InitiativeUIEditDto(new Municipality(testMunicipality.getId(), testMunicipality.getName(), testMunicipality.getName()), null);
+        InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto(new Municipality(testMunicipality.getId(), testMunicipality.getName(), testMunicipality.getName()), null);
         editDto.setManagementHash("invalid management hash");
 
-        service.updateInitiativeDraft(initiativeId, editDto);
+        service.editInitiativeDraft(initiativeId, editDto);
     }
 
     @Test
@@ -200,7 +197,7 @@ public class InitiativeServiceIntegrationTest {
 
         Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise(), Locales.LOCALE_FI);
 
-        InitiativeUIEditDto editDto = new InitiativeUIEditDto(new Municipality(testMunicipality.getId(), testMunicipality.getName(), testMunicipality.getName()), null);
+        InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto(new Municipality(testMunicipality.getId(), testMunicipality.getName(), testMunicipality.getName()), null);
         editDto.setManagementHash(RandomHashGenerator.getPrevious());
 
         ContactInfo contactInfo = new ContactInfo();
@@ -213,9 +210,9 @@ public class InitiativeServiceIntegrationTest {
         editDto.setProposal("updated proposal");
         editDto.setShowName(false); // As far as default is true ...
 
-        service.updateInitiativeDraft(initiativeId, editDto);
+        service.editInitiativeDraft(initiativeId, editDto);
 
-        InitiativeUIEditDto updated = service.getInitiativeForEdit(initiativeId, RandomHashGenerator.getPrevious());
+        InitiativeDraftUIEditDto updated = service.getInitiativeDraftForEdit(initiativeId, RandomHashGenerator.getPrevious());
 
         ReflectionTestUtils.assertReflectionEquals(updated.getContactInfo(), contactInfo);
         assertThat(updated.getName(), is(editDto.getName()));
@@ -230,7 +227,7 @@ public class InitiativeServiceIntegrationTest {
 
         String managementHash = RandomHashGenerator.getPrevious();
 
-        InitiativeUIEditDto initiativeForEdit = service.getInitiativeForEdit(initiativeId, managementHash);
+        InitiativeDraftUIEditDto initiativeForEdit = service.getInitiativeDraftForEdit(initiativeId, managementHash);
         assertThat(initiativeForEdit.getManagementHash(), is(managementHash));
         assertThat(initiativeForEdit.getMunicipality().getId(), is(testMunicipality.getId()));
         assertThat(initiativeForEdit.getState(), is(InitiativeState.DRAFT));

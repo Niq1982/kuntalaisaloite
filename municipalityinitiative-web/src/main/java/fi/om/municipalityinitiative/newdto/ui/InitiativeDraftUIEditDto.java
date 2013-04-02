@@ -10,10 +10,13 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class InitiativeUIEditDto {
+public class InitiativeDraftUIEditDto {
 
     // Not editable after set
     private Municipality municipality;
+
+    @Deprecated
+    // FIXME: Remove
     private InitiativeState state;
 
     // Hidden field which must match with database
@@ -37,12 +40,12 @@ public class InitiativeUIEditDto {
     @NotNull
     private Boolean showName;
 
-    public InitiativeUIEditDto(Municipality municipality, InitiativeState initiativeState) {
+    public InitiativeDraftUIEditDto(Municipality municipality, InitiativeState initiativeState) {
         this.municipality = municipality;
         this.state = initiativeState;
     }
 
-    public InitiativeUIEditDto() {
+    public InitiativeDraftUIEditDto() {
         // For freemarker
     }
 

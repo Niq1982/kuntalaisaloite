@@ -9,12 +9,10 @@ import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
+import fi.om.municipalityinitiative.newdto.ui.InitiativeUIUpdateDto;
 import fi.om.municipalityinitiative.newdto.ui.MunicipalityInfo;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
-import fi.om.municipalityinitiative.util.InitiativeState;
-import fi.om.municipalityinitiative.util.InitiativeType;
-import fi.om.municipalityinitiative.util.Maybe;
-import fi.om.municipalityinitiative.util.ReflectionTestUtils;
+import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -451,6 +449,35 @@ public class JdbcInitiativeDaoTest {
     @Test(expected = NotFoundException.class)
     public void throws_exception_if_initiative_is_not_found() {
         initiativeDao.getById(-1L);
+    }
+
+    @Test
+    public void update_initiative_updates_given_fields() {
+
+        Long initiativeId = testHelper.createCollectableAccepted(testMunicipality.getId());
+
+        InitiativeUIUpdateDto updateDto = new InitiativeUIUpdateDto();
+        ContactInfo contactInfo = new ContactInfo();
+        updateDto.setContactInfo(contactInfo);
+
+        updateDto.setManagementHash(TestHelper.TEST_MANAGEMENT_HASH);
+        updateDto.setExtraInfo("Modified extra info");
+        updateDto.setShowName(false);
+        contactInfo.setName("Modified Name");
+        contactInfo.setAddress("Modified Address");
+        contactInfo.setPhone("Modified Phone");
+        contactInfo.setEmail("Modified Email");
+        updateDto.setContactInfo(contactInfo);
+        initiativeDao.updateInitiative(initiativeId, updateDto);
+
+        Initiative updated = initiativeDao.getById(initiativeId, TestHelper.TEST_MANAGEMENT_HASH);
+        assertThat(updated.getShowName(), is(false));
+
+        Author author = initiativeDao.getAuthorInformation(initiativeId, TestHelper.TEST_MANAGEMENT_HASH);
+        ReflectionTestUtils.assertReflectionEquals(author.getContactInfo(), contactInfo);
+
+        // TODO: Assert extraInfo
+
     }
 
     private static ContactInfo contactInfo() {
