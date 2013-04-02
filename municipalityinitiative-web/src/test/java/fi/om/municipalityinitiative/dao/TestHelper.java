@@ -147,6 +147,18 @@ public class TestHelper {
                 .withState(InitiativeState.DRAFT)
                 .withType(InitiativeType.SINGLE));
     }
+    
+    @Transactional
+    public Long createEmptyDraft(Long municipalityId) {
+        return create(new InitiativeDraft(municipalityId)
+                .withState(InitiativeState.DRAFT)
+                .withType(InitiativeType.SINGLE)
+                .withName(null)
+                .withProposal(null)
+                .withAuthorName(null)
+                .withAuthorPhone(null)
+                .withAuthorAddress(null));
+    }
 
     @Transactional
     public Long create(InitiativeDraft initiativeDraft) {
