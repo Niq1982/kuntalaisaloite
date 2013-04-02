@@ -10,6 +10,7 @@ import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.email.InitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
+import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.util.*;
@@ -40,62 +41,9 @@ public class InitiativeService {
         return initiativeDao.find(search);
     }
 
-    @Transactional(readOnly = false)
-    @Deprecated
-    public Long createMunicipalityInitiative(InitiativeUICreateDto createDto, Locale locale) {
-        throw new RuntimeException("Deprecated, functionality removed.");
-    }
-
-    private void sendNotCollectableEmails(Long initiativeId, Locale locale) {
-
-        InitiativeViewInfo initiative = InitiativeViewInfo.parse(initiativeDao.getById(initiativeId), locale);
-        ContactInfo contactInfo = initiativeDao.getContactInfo(initiativeId);
-        String url = Urls.get(Locales.LOCALE_FI).view(initiativeId);
-
-        InitiativeEmailInfo emailInfo = InitiativeEmailInfo.parse(contactInfo, initiative, url);
-
-        emailService.sendNotCollectableToMunicipality(emailInfo, municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), locale);
-        emailService.sendNotCollectableToAuthor(emailInfo, locale);
-    }
-
-    @Transactional(readOnly = false)
-    public void sendToMunicipality(Long initiativeId, SendToMunicipalityDto sendToMunicipalityDto, Locale locale) {
-
-        Initiative initiativeInfo = initiativeDao.getById(initiativeId);
-
-        checkAllowedToSendToMunicipality(initiativeInfo);
-        checkHashCode(sendToMunicipalityDto, initiativeInfo);
-
-        initiativeDao.markAsSendedAndUpdateContactInfo(initiativeId, sendToMunicipalityDto.getContactInfo());
-        sendCollectedInitiativeEmails(initiativeId, locale, sendToMunicipalityDto.getComment());
-    }
-
-    private void checkAllowedToSendToMunicipality(Initiative initiative) {
-//        if (!initiative.isCollectable()) {
-//            throw new NotCollectableException("Initiative is not collectable");
-//        }
-        if (initiative.getSentTime().isPresent()) {
-            throw new NotCollectableException("Initiative already sent");
-        }
-    }
-
-    private void checkHashCode(SendToMunicipalityDto sendToMunicipalityDto, Initiative initiativeInfo) {
-        if (!sendToMunicipalityDto.getManagementHash().equals(initiativeInfo.getManagementHash().get())) {
-            throw new AccessDeniedException("Invalid management hash");
-        }
-    }
-
-    private void sendCollectedInitiativeEmails(Long initiativeId, Locale locale, String comment) {
-        InitiativeViewInfo initiative = InitiativeViewInfo.parse(initiativeDao.getById(initiativeId), locale);
-        ContactInfo contactInfo = initiativeDao.getContactInfo(initiativeId);
-        String url = Urls.get(Locales.LOCALE_FI).view(initiativeId);
-
-        InitiativeEmailInfo emailInfo = InitiativeEmailInfo.parse(contactInfo, initiative, url);
-        CollectableInitiativeEmailInfo collectableEmailInfo
-                = CollectableInitiativeEmailInfo.parse(emailInfo, comment, participantDao.findAllParticipants(initiativeId));
-
-        emailService.sendCollectableToMunicipality(collectableEmailInfo, municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), locale);
-        emailService.sendCollectableToAuthor(collectableEmailInfo, locale);
+    @Transactional(readOnly = true)
+    public ManagementSettings managementSettings(Long initiativeId) {
+        return new ManagementSettings(initiativeDao.getById(initiativeId));
     }
 
     @Transactional(readOnly = false)
@@ -148,6 +96,7 @@ public class InitiativeService {
     }
 
     public InitiativeUIEditDto getInitiativeForEdit(Long initiativeId, String managementHash) {
+        // TODO: IsAllowed
         InitiativeUIEditDto initiativeForEdit = initiativeDao.getInitiativeForEdit(initiativeId);
         if (!initiativeForEdit.getManagementHash().equals(managementHash)) {
             throw new AccessDeniedException("Invalid management hash");
@@ -156,6 +105,7 @@ public class InitiativeService {
     }
 
     public void updateInitiativeDraft(Long initiativeId, InitiativeUIEditDto editDto) {
+        // TODO: IsAllowed
         if (!initiativeDao.getInitiativeForEdit(initiativeId).getManagementHash().equals(editDto.getManagementHash())) {
             throw new AccessDeniedException("Invalid management hash");
         }
@@ -168,6 +118,7 @@ public class InitiativeService {
     }
 
     public void sendReview(Long initiativeId, String managementHash, InitiativeType type) {
+        // TODO: IsAllowed
         if (initiativeDao.getById(initiativeId).getManagementHash().get().equals(managementHash)) {
             initiativeDao.setInitiativeAsReview(initiativeId, type);
         }
@@ -177,6 +128,7 @@ public class InitiativeService {
     }
     
     // TODO: User is logged in with moderation rights
+    // TODO: IsAllowed
     public void accept(Long initiativeId, String managementHash) {
         if (initiativeDao.getById(initiativeId).getManagementHash().get().equals(managementHash)) {
             initiativeDao.acceptInitiativeByOm(initiativeId);
@@ -187,6 +139,7 @@ public class InitiativeService {
     }
     
  // TODO: User is logged in with moderation rights
+ // TODO: IsAllowed
     public void reject(Long initiativeId, String managementHash) {
         if (initiativeDao.getById(initiativeId).getManagementHash().get().equals(managementHash)) {
             initiativeDao.rejectInitiativeByOm(initiativeId);
