@@ -101,7 +101,6 @@
       {"naviName":"page.find", "naviUrl":urls.search()},
       {"naviName":"page.createNew", "naviUrl":urls.prepare()},
       {"naviName":"page.help", "naviUrl":urls.helpIndex()}
-      {"naviName":"page.login", "naviUrl":urls.login()}
     ] />
 
 <#assign currentPage>
@@ -239,9 +238,20 @@
                     <@u.message "otherServices.otaKantaa"/><span class="icon-small arrow-right"></span>
                 </a>
             </div>
-                       
+
+            <div class="logged-in-info">
+                <#if user.present>
+                    <a href="${urls.logout()}" id="logout" class="header-tool-link logout"><@u.message "common.logout"/><span class="icon-small logout"></span></a>
+                <#else>
+                    <a href="${urls.login(springMacroRequestContext.requestUri)}" title="<@u.message "common.login"/>" class="header-tool-link login"><@u.message "common.login"/></a>
+                </#if>
+            </div>
+
         </div>
+
     </div>
+
+
       
     <div id="header">
         <div id="header-content">

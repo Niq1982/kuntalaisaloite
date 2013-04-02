@@ -7,6 +7,7 @@
 <body>
     <form action="${urls.login()}" method="post">
         <b>Om-tunnuksilla kirjautuminen: admin + admin</b><br/>
+        <b>Muilla-tunnuksilla kirjautuminen: user + user</b><br/>
         <br/>
 
         <h4>Sisäänkirjautuminen</h4>

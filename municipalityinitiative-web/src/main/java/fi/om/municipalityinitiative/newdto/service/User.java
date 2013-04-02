@@ -15,4 +15,8 @@ public class User {
     public boolean isOmUser() {
         return omUser;
     }
+
+    public static User normalUser() {
+        return new User(false);
+    }
 }

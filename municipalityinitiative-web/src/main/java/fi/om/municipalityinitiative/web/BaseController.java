@@ -8,6 +8,7 @@ import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.ui.MunicipalityInfo;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.newdto.ui.Participants;
+import fi.om.municipalityinitiative.service.UserService;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -38,7 +39,11 @@ public class BaseController {
 
     public final String OM_PICIW_ID = "omPiwicId";
 
-    @Resource BeansWrapper freemarkerObjectWrapper;
+    @Resource
+    BeansWrapper freemarkerObjectWrapper;
+
+    @Resource
+    UserService userService;
     
     private final boolean optimizeResources;
     
@@ -139,6 +144,7 @@ public class BaseController {
     public void addModelDefaults(Locale locale, HttpServletRequest request, Model model) {
         Urls urls = Urls.get(locale);
         model.addAttribute("locale", urls.getLang());
+        model.addAttribute("user", userService.getOptionalUser());
         model.addAttribute("altLocale", urls.getAltLang());
         model.addAttribute("urls", urls);
         model.addAttribute("fieldLabelKey", FieldLabelKeyMethod.INSTANCE);

@@ -50,7 +50,7 @@ public class InitiativeModerationController extends BaseController{
                                  @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                                  Model model, Locale locale, HttpServletRequest request) {
 
-        userService.requireOmUser(request);
+        userService.requireOmUser();
 
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().management(initiativeId, managementHash));
@@ -87,7 +87,7 @@ public class InitiativeModerationController extends BaseController{
                                    @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                                    Locale locale, HttpServletRequest request) {
 
-        userService.requireOmUser(request);
+        userService.requireOmUser();
 
         // TODO: Saate / Comment
 
@@ -102,7 +102,7 @@ public class InitiativeModerationController extends BaseController{
                                    @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                                    Locale locale, HttpServletRequest request) {
 
-        userService.requireOmUser(request);
+        userService.requireOmUser();
 
         // TODO: Saate / Comment
 

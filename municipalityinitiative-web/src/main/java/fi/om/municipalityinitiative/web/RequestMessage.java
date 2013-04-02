@@ -15,6 +15,7 @@ public enum RequestMessage {
     SAVE (SUCCESS, true),
     SEND (SUCCESS, true),
     PARTICIPATE (SUCCESS),
+    LOGOUT (SUCCESS),
     
     // Warning messages
     ALREADY_SENT (WARNING),
