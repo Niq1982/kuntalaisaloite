@@ -84,7 +84,7 @@ public class DevController extends BaseController {
         for (int i = 0; i < amount; ++i) {
             Long initiativeId = testDataService.createTestMunicipalityInitiative(selectedInitiative);
             
-            if (selectedInitiative.isCollectable()) {
+            /*if (selectedInitiative.isCollectable()) {
                 for (int j = 0; j < participants.size(); j++) {
                     Integer participantAmount = 1;
                     if (!Strings.isNullOrEmpty(request.getParameter("participantAmount["+j+"]"))) {
@@ -93,7 +93,7 @@ public class DevController extends BaseController {
 
                     testDataService.createTestParticipant(initiativeId, participants.get(j), participantAmount);
                 }
-            }
+            }*/
         }
 
         putResultInfo("Linkit aloitteisiin ...", request);

@@ -162,7 +162,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
         insert.set(municipalityInitiative.newAuthorId, PREPARATION_ID);
 
         Long initiativeId = insert.executeWithKey(municipalityInitiative.id);
-
+        
         Long authorId = queryFactory.insert(QAuthor.author)
 //                .set(QAuthor.author.initiativeId, initiativeId)
                 .executeWithKey(QAuthor.author.id);

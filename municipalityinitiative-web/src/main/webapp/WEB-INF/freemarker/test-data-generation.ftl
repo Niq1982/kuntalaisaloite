@@ -47,7 +47,7 @@
 
     <h1>Testidatan luominen</h1>
 
-    <div class="system-msg msg-summary">
+    <div class="msg-block">
         <p>Valitse haluamasi testialoitteet luotavaksi.</p>
         <p>Aloitteen luoja ja kaksi ensimmäistä osallistujaa liitetään aloitteen kuntaan.<br/>Kaksi seuraavaa osallistujaa liitetään toiseen valittuun kuntaan.</p>
         <p><strong>HUOM: Tämä sivu on käytössä vain testauksen aikana eikä tule olemaan osa lopullista sovellusta!</strong></p>

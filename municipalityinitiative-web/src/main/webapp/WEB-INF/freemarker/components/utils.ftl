@@ -192,7 +192,6 @@
 <#noescape>
     ${(noscript="noscript")?string('<noscript>','')}
     <div class="system-msg msg-${type} ${cssClass}">
-        <#--<#if type == 'info' || type == 'summary'><span class="icon-small arrow-right-3 floated"></span></#if>-->
         <#if type == 'info'><span class="icon-small arrow-right-3 floated"></span></#if>
         ${html}
     </div>

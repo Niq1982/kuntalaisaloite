@@ -23,7 +23,7 @@
     -->
 
     <#if initiative.state == InitiativeState.REVIEW>
-        <div class="system-msg msg-summary">
+        <div class="msg-block">
             <h2><@u.message "moderation.title" /></h2>
             <#-- TODO: Real date -->
             <#assign sendToReviewDate>21.3.2013</#assign>
