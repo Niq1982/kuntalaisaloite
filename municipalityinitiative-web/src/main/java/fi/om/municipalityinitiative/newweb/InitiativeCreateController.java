@@ -30,9 +30,9 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
-public class MunicipalityInitiativeCreateController extends BaseController {
+public class InitiativeCreateController extends BaseController {
 
-    private final Logger log = LoggerFactory.getLogger(MunicipalityInitiativeCreateController.class);
+    private final Logger log = LoggerFactory.getLogger(InitiativeCreateController.class);
 
     @Resource
     private MunicipalityService municipalityService;
@@ -43,7 +43,7 @@ public class MunicipalityInitiativeCreateController extends BaseController {
     @Resource
     ValidationService validionService;
 
-    public MunicipalityInitiativeCreateController(boolean optimizeResources, String resourcesVersion) {
+    public InitiativeCreateController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
     }
 
