@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +33,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
-public class MunicipalityInitiativeViewController extends BaseController {
+public class InitiativeViewController extends BaseController {
 
     @Resource
     private MunicipalityService municipalityService;
@@ -48,7 +47,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
     @Resource
     private ParticipantService participantService;
 
-    public MunicipalityInitiativeViewController(boolean optimizeResources, String resourcesVersion) {
+    public InitiativeViewController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
     }
 
@@ -170,132 +169,7 @@ public class MunicipalityInitiativeViewController extends BaseController {
             return redirectWithMessage(urls.prepare(), RequestMessage.PREPARE_CONFIRM_EXPIRED, request);
         }
     }
-    
-    @RequestMapping(value={ MANAGEMENT_FI, MANAGEMENT_SV }, method=GET)
-    public String managementView(@PathVariable("id") Long initiativeId,
-                                 @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
-                                 Model model, Locale locale, HttpServletRequest request) {
-        
-        Urls urls = Urls.get(locale);
-        model.addAttribute(ALT_URI_ATTR, urls.alt().management(initiativeId, managementHash));
 
-        InitiativeViewInfo initiativeInfo = initiativeService.getMunicipalityInitiative(initiativeId, locale);
-
-        if (initiativeInfo.isSent()) {
-            return redirectWithMessage(urls.view(initiativeId),RequestMessage.ALREADY_SENT, request);
-        }
-
-        if (managementHash.equals(initiativeInfo.getManagementHash().get())){
-            addModelAttributesToCollectView(model,
-                    initiativeInfo,
-                    municipalityService.findAllMunicipalities(locale),
-                    participantService.getParticipantCount(initiativeId),
-                    participantService.findPublicParticipants(initiativeId));
-
-            model.addAttribute("participants", participantService.findPublicParticipants(initiativeId));
-            model.addAttribute("author", initiativeService.getAuthorInformation(initiativeId, managementHash));
-            return MANAGEMENT_VIEW;
-        } else {
-            return ERROR_404_VIEW;
-        }
-    }
-    
-    // TODO: Permission only for logged in users with moderation rights
-    @RequestMapping(value={ MODERATION_FI, MODERATION_SV }, method=GET)
-    public String moderationView(@PathVariable("id") Long initiativeId,
-                                 @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
-                                 Model model, Locale locale, HttpServletRequest request) {
-        
-        Urls urls = Urls.get(locale);
-        model.addAttribute(ALT_URI_ATTR, urls.alt().management(initiativeId, managementHash));
-
-        InitiativeViewInfo initiativeInfo = initiativeService.getMunicipalityInitiative(initiativeId, locale);
-
-        // NOTE: Should moderation view be always accessible?
-        if (initiativeInfo.isSent() && managementHash.equals(initiativeInfo.getManagementHash().get())) {
-            return redirectWithMessage(urls.view(initiativeId),RequestMessage.ALREADY_SENT, request);
-        }
-
-        addModelAttributesToCollectView(model,
-                initiativeInfo,
-                municipalityService.findAllMunicipalities(locale),
-                participantService.getParticipantCount(initiativeId),
-                participantService.findPublicParticipants(initiativeId));
-
-        if (managementHash.equals(initiativeInfo.getManagementHash().get())){
-            model.addAttribute("participants", participantService.findPublicParticipants(initiativeId));
-            model.addAttribute("author", initiativeService.getAuthorInformation(initiativeId, managementHash));
-            // TODO: Remove this when moderation supports commenting. Update also moderation-view.ftl (sendToMunicipality.comment)
-            model.addAttribute("sendToMunicipality", SendToMunicipalityDto.parse(managementHash, initiativeService.getContactInfo(initiativeId)));
-            return MODERATION_VIEW;
-        } else {
-            return ERROR_404_VIEW;
-        }
-    }
-    
-    @RequestMapping(value={ MANAGEMENT_FI, MANAGEMENT_SV }, method=POST)
-    public String sendToMunicipality(@PathVariable("id") Long initiativeId,
-                                     @ModelAttribute("sendToMunicipality") SendToMunicipalityDto sendToMunicipalityDto,
-                                     BindingResult bindingResult, Model model, Locale locale, HttpServletRequest request) {
-       
-        if (validationService.validationSuccessful(sendToMunicipalityDto, bindingResult, model)) {
-            initiativeService.sendToMunicipality(initiativeId, sendToMunicipalityDto, locale); // TODO: Get hashcode from post request.
-            Urls urls = Urls.get(locale);
-            return redirectWithMessage(urls.view(initiativeId),RequestMessage.SEND, request);
-        }
-        else {
-            addModelAttributesToCollectView(model,
-                    initiativeService.getMunicipalityInitiative(initiativeId, locale),
-                    municipalityService.findAllMunicipalities(locale),
-                    participantService.getParticipantCount(initiativeId),
-                    participantService.findPublicParticipants(initiativeId));
-
-            model.addAttribute("sendToMunicipality", sendToMunicipalityDto);
-            return MANAGEMENT_VIEW;
-        }
-        
-    }
-
-    @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_SEND_TO_REVIEW)
-    public String sendToReview(@PathVariable("id") Long initiativeId,
-                               @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
-                               Locale locale, HttpServletRequest request) {
-
-        initiativeService.sendReview(initiativeId, managementHash, InitiativeType.SINGLE);
-        return redirectWithMessage(Urls.get(locale).management(initiativeId, managementHash),RequestMessage.SEND_TO_REVIEW, request);
-    }
-
-    @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_SEND_TO_REVIEW_COLLECT)
-    public String sendToReviewForCollecting(@PathVariable("id") Long initiativeId,
-                                            @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
-                                            Locale locale, HttpServletRequest request) {
-
-        initiativeService.sendReview(initiativeId, managementHash, InitiativeType.COLLABORATIVE);
-        return redirectWithMessage(Urls.get(locale).management(initiativeId, managementHash),RequestMessage.SEND_TO_REVIEW, request);
-    }
-
-    @RequestMapping(value = {MODERATION_FI, MODERATION_FI}, method = POST, params = ACTION_ACCEPT_INITIATIVE)
-    public String acceptInitiative(@PathVariable("id") Long initiativeId,
-                               @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
-                               Locale locale, HttpServletRequest request) {
-
-        // TODO: Saate / Comment
-        
-        initiativeService.accept(initiativeId, managementHash);
-        return redirectWithMessage(Urls.get(locale).moderation(initiativeId, managementHash), RequestMessage.ACCEPT_INITIATIVE, request);
-    }
-    
-    @RequestMapping(value = {MODERATION_FI, MODERATION_FI}, method = POST, params = ACTION_REJECT_INITIATIVE)
-    public String rejectInitiative(@PathVariable("id") Long initiativeId,
-                               @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
-                               Locale locale, HttpServletRequest request) {
-
-        // TODO: Saate / Comment
-        
-        initiativeService.reject(initiativeId, managementHash);
-        return redirectWithMessage(Urls.get(locale).moderation(initiativeId, managementHash), RequestMessage.REJECT_INITIATIVE, request);
-    }
-    
     @RequestMapping(value={IFRAME_FI, IFRAME_SV}, method=GET)
     public String iframe(InitiativeSearch search, Model model, Locale locale, HttpServletRequest request) {
         Urls urls = Urls.get(locale);
@@ -310,13 +184,6 @@ public class MunicipalityInitiativeViewController extends BaseController {
         model.addAttribute("currentMunicipality", solveMunicipalityFromListById(municipalities, search.getMunicipality()));
         model.addAttribute("initiativeCounts", initiativeService.getInitiativeCounts(Maybe.fromNullable(search.getMunicipality())));
         return IFRAME_VIEW;
-    }
-
-    private void addModelAttributesToCollectView(Model model, InitiativeViewInfo municipalityInitiative, List<MunicipalityInfo> allMunicipalities, ParticipantCount participantCount, Participants participants) {
-        model.addAttribute("initiative", municipalityInitiative);
-        model.addAttribute("municipalities", allMunicipalities);
-        model.addAttribute("participantCount", participantCount);
-        model.addAttribute("participants", participants);
     }
 
     private static String solveMunicipalityFromListById(List<MunicipalityInfo> municipalities, Long municipalityId){

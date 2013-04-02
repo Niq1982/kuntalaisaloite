@@ -3,10 +3,7 @@ package fi.om.municipalityinitiative.conf;
 import com.google.common.base.Strings;
 import fi.om.municipalityinitiative.conf.WebConfiguration.WebDevConfiguration;
 import fi.om.municipalityinitiative.conf.WebConfiguration.WebProdConfiguration;
-import fi.om.municipalityinitiative.newweb.ApiController;
-import fi.om.municipalityinitiative.newweb.DevController;
-import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeCreateController;
-import fi.om.municipalityinitiative.newweb.MunicipalityInitiativeViewController;
+import fi.om.municipalityinitiative.newweb.*;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.*;
 import org.springframework.context.annotation.Bean;
@@ -165,13 +162,23 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
 
 
     @Bean
-    public MunicipalityInitiativeCreateController municipalityInitiativeCreateController() {
-        return new MunicipalityInitiativeCreateController(optimizeResources(env), resourcesVersion(env));
+    public InitiativeCreateController municipalityInitiativeCreateController() {
+        return new InitiativeCreateController(optimizeResources(env), resourcesVersion(env));
     }
 
     @Bean
-    public MunicipalityInitiativeViewController municipalityInitiativeViewController() {
-        return new MunicipalityInitiativeViewController(optimizeResources(env), resourcesVersion(env));
+    public InitiativeViewController municipalityInitiativeViewController() {
+        return new InitiativeViewController(optimizeResources(env), resourcesVersion(env));
+    }
+
+    @Bean
+    public InitiativeManagementController initiativeManagementController() {
+        return new InitiativeManagementController(optimizeResources(env), resourcesVersion(env));
+    }
+
+    @Bean
+    public InitiativeModerationController initiativeModerationController() {
+        return new InitiativeModerationController(optimizeResources(env), resourcesVersion(env));
     }
 
     @Bean
