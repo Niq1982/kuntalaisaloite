@@ -11,7 +11,7 @@
 -->
 <#macro initiativeView initiative>
     <div class="initiative-content-row">
-        <h2><@u.message "initiative.content.title" /></h2>
+        <h2><@u.message "initiative.proposal.title" /></h2>
         
         <@u.text initiative.proposal!"" />
     </div>

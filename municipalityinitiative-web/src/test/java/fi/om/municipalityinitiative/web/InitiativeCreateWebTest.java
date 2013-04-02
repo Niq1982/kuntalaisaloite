@@ -23,6 +23,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     private static final String MSG_SUCCESS_PREPARE = "success.prepare";
     private static final String MSG_SUCCESS_SAVE_TITLE = "success.save.title";
     private static final String MSG_SUCCESS_SAVE_DRAFT = "success.save-draft";
+    private static final String MSG_SUCCESS_UPDATE = "success.update-initiative";
     private static final String MSG_SUCCESS_SEND_TO_REVIEW = "success.send-to-review";
     private static final String MSG_SUCCESS_ACCEPT_INITIATIVE = "success.accept-initiative";
     private static final String MSG_SUCCESS_REJECT_INITIATIVE = "success.reject-initiative";
@@ -35,6 +36,8 @@ public class InitiativeCreateWebTest extends WebTestBase {
     private static final String MSG_INITIATIVE_TYPE_NORMAL= "initiative.type.normal";
     private static final String RADIO_FRANCHISE_TRUE = "initiative.franchise.true";
     private static final String MSG_SEND_TO_REVIEW_CONFIRM = "sendToReview.doNotCollect.confirm.title";
+    private static final String MSG_INITIATIVE_PROPOSAL = "initiative.proposal.title";
+    private static final String MSG_INITIATIVE_CONTACTINFO = "initiative.contactinfo.title";
     
     
     /**
@@ -73,10 +76,8 @@ public class InitiativeCreateWebTest extends WebTestBase {
     public void create_initiative() {
         Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
         Long initiativeId = testHelper.createTestInitiative(municipality1Id, "Testi aloite", true, false);
-        
-        open(urls.edit(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
 
-        add_initiative_content();
+        fill_in_initiative_content(initiativeId);
     }
     
     @Test
@@ -91,6 +92,9 @@ public class InitiativeCreateWebTest extends WebTestBase {
         
         clickByName(Urls.ACTION_SEND_TO_REVIEW);
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_SEND_TO_REVIEW);
+     
+        // Assert that initiative name and proposal cannot be edited in REVIEW-state
+        update_initiative(initiativeId);
     }
     
     @Test
@@ -106,6 +110,9 @@ public class InitiativeCreateWebTest extends WebTestBase {
         
         clickByName(Urls.ACTION_ACCEPT_INITIATIVE);
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_ACCEPT_INITIATIVE);
+        
+        // Assert that initiative name and proposal cannot be edited in ACCEPT-state
+        update_initiative(initiativeId);
     }
     
     @Test
@@ -143,7 +150,9 @@ public class InitiativeCreateWebTest extends WebTestBase {
         System.out.println("--- add_initiative_content OK");
     }
 
-    public void add_initiative_content() {
+    public void fill_in_initiative_content(Long initiativeId) {
+        open(urls.edit(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
+        
         inputText("name", NAME);
         inputText("proposal", PROPOSAL);
         
@@ -152,12 +161,29 @@ public class InitiativeCreateWebTest extends WebTestBase {
         inputText("contactInfo.name", CONTACT_NAME);
         inputText("contactInfo.phone", CONTACT_PHONE);
         inputText("contactInfo.address", CONTACT_ADDRESS);
-
+        
         clickByName(Urls.ACTION_SAVE);
 
         assertSuccesPageWithMessage(MSG_SUCCESS_SAVE_DRAFT);
+        
+        
 
         System.out.println("--- add_contact_info OK");
+    }
+    
+    public void update_initiative(Long initiativeId) {
+        open(urls.edit(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
+        
+        assertTextByTag("h2", getMessage(MSG_INITIATIVE_PROPOSAL));
+        assertTextByTag("h2", getMessage(MSG_INITIATIVE_CONTACTINFO));
+        
+        inputText("extraInfo", "extraInfo");
+        inputText("contactInfo.name", "Updated");
+        inputText("contactInfo.phone", "Updated");
+        inputText("contactInfo.address", "Updated");
+        
+        clickByName(Urls.ACTION_UPDATE_INITIATIVE);
+        assertMsgContainedByClass("msg-success", MSG_SUCCESS_UPDATE);
     }
 
     public void save_initiative(boolean startCollecting) {
