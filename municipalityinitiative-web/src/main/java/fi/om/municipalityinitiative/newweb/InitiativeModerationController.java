@@ -2,10 +2,7 @@ package fi.om.municipalityinitiative.newweb;
 
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.ui.SendToMunicipalityDto;
-import fi.om.municipalityinitiative.service.InitiativeService;
-import fi.om.municipalityinitiative.service.MunicipalityService;
-import fi.om.municipalityinitiative.service.ParticipantService;
-import fi.om.municipalityinitiative.service.ValidationService;
+import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.web.BaseController;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
@@ -39,6 +36,9 @@ public class InitiativeModerationController extends BaseController{
     @Resource
     private ParticipantService participantService;
 
+    @Resource
+    private UserService userService;
+
     public InitiativeModerationController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
     }
@@ -49,6 +49,8 @@ public class InitiativeModerationController extends BaseController{
     public String moderationView(@PathVariable("id") Long initiativeId,
                                  @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                                  Model model, Locale locale, HttpServletRequest request) {
+
+        userService.requireOmUser(request);
 
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().management(initiativeId, managementHash));
@@ -85,6 +87,8 @@ public class InitiativeModerationController extends BaseController{
                                    @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                                    Locale locale, HttpServletRequest request) {
 
+        userService.requireOmUser(request);
+
         // TODO: Saate / Comment
 
         initiativeService.accept(initiativeId, managementHash);
@@ -97,6 +101,8 @@ public class InitiativeModerationController extends BaseController{
     public String rejectInitiative(@PathVariable("id") Long initiativeId,
                                    @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                                    Locale locale, HttpServletRequest request) {
+
+        userService.requireOmUser(request);
 
         // TODO: Saate / Comment
 

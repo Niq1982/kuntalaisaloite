@@ -101,6 +101,7 @@
       {"naviName":"page.find", "naviUrl":urls.search()},
       {"naviName":"page.createNew", "naviUrl":urls.prepare()},
       {"naviName":"page.help", "naviUrl":urls.helpIndex()}
+      {"naviName":"page.login", "naviUrl":urls.login()}
     ] />
 
 <#assign currentPage>

@@ -204,6 +204,11 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
     }
 
     @Bean
+    public LoginController loginController() {
+        return new LoginController(optimizeResources(env), resourcesVersion(env));
+    }
+
+    @Bean
     public ErrorController errorController() {
         return new ErrorController();
     }
