@@ -10,6 +10,7 @@ import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.email.InitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
+import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.util.*;
@@ -38,6 +39,11 @@ public class InitiativeService {
 
     public List<InitiativeListInfo> findMunicipalityInitiatives(InitiativeSearch search) {
         return initiativeDao.find(search);
+    }
+
+    @Transactional(readOnly = true)
+    public ManagementSettings managementSettings(Long initiativeId) {
+        return new ManagementSettings(initiativeDao.getById(initiativeId));
     }
 
     @Transactional(readOnly = false)

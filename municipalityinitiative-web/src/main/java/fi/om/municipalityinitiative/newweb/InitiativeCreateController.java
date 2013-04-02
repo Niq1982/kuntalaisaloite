@@ -1,7 +1,9 @@
 package fi.om.municipalityinitiative.newweb;
 
+import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUICreateDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUIEditDto;
+import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.ui.PrepareInitiativeDto;
 import fi.om.municipalityinitiative.service.InitiativeService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
@@ -49,6 +51,7 @@ public class InitiativeCreateController extends BaseController {
 
     // TODO: Remove. This is NOT USED anymore
     @RequestMapping(value={ CREATE_FI, CREATE_SV }, method=GET)
+    @Deprecated
     public String createGet(Model model, Locale locale, HttpServletRequest request) {
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().createNew());
@@ -61,6 +64,7 @@ public class InitiativeCreateController extends BaseController {
 
     // TODO: Remove. This is NOT USED anymore
     @RequestMapping(value={ CREATE_FI, CREATE_SV }, method=POST, params=ACTION_SAVE_AND_SEND)
+    @Deprecated
     public String createAndSendPost(@ModelAttribute("initiative") InitiativeUICreateDto initiative,
                             BindingResult bindingResult,
                             Model model,
@@ -78,9 +82,10 @@ public class InitiativeCreateController extends BaseController {
         Long initiativeId = initiativeService.createMunicipalityInitiative(initiative, locale);
         return redirectWithMessage(urls.view(initiativeId), RequestMessage.SAVE_AND_SEND, request);
     }
-    
+
     // TODO: Remove. This is NOT USED anymore
     @RequestMapping(value={ CREATE_FI, CREATE_SV }, method=POST)
+    @Deprecated
     public String createPost(@ModelAttribute("initiative") InitiativeUICreateDto initiative,
                             BindingResult bindingResult,
                             Model model,
@@ -96,10 +101,10 @@ public class InitiativeCreateController extends BaseController {
         Urls urls = Urls.get(locale);
 
         initiative.setCollectable(true);
-        
+
         Long initiativeId = initiativeService.createMunicipalityInitiative(initiative, locale);
         return redirectWithMessage(urls.view(initiativeId), RequestMessage.SAVE, request);
-        
+
     }
 
     @RequestMapping(value = { PREPARE_FI, PREPARE_SV }, method = GET)
@@ -138,22 +143,26 @@ public class InitiativeCreateController extends BaseController {
                            @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                            Model model, Locale locale, HttpServletRequest request) {
 
+        ManagementSettings managementSettings = initiativeService.managementSettings(initiativeId);
+
         InitiativeUIEditDto initiative = initiativeService.getInitiativeForEdit(initiativeId, managementHash);
-        
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().edit(initiativeId, managementHash));
         model.addAttribute("initiative", initiative);
         model.addAttribute("author", initiativeService.getAuthorInformation(initiativeId, managementHash));
         
-        if (initiative.getState().equals(InitiativeState.DRAFT)) {
+        if (managementSettings.isAllowEdit()) {
             model.addAttribute("previousPageURI", urls.prepare());
             return EDIT_VIEW;
-        } else {
+        }
+        else if (managementSettings.isAllowUpdate()) {
             model.addAttribute("previousPageURI", urls.management(initiativeId, managementHash));
             return UPDATE_VIEW;
         }
-        
-        
+        else {
+            return ERROR_500; // TODO: Custom error page or some message that operation is not allowed
+        }
+
     }
 
     @RequestMapping(value={ EDIT_FI, EDIT_SV }, method=POST)
