@@ -79,30 +79,6 @@ public class InitiativeManagementController extends BaseController {
     }
 
 
-    @RequestMapping(value={ MANAGEMENT_FI, MANAGEMENT_SV }, method=POST)
-    @Deprecated
-    public String sendToMunicipality(@PathVariable("id") Long initiativeId,
-                                     @ModelAttribute("sendToMunicipality") SendToMunicipalityDto sendToMunicipalityDto,
-                                     BindingResult bindingResult, Model model, Locale locale, HttpServletRequest request) {
-
-        if (validationService.validationSuccessful(sendToMunicipalityDto, bindingResult, model)) {
-            initiativeService.sendToMunicipality(initiativeId, sendToMunicipalityDto, locale); // TODO: Get hashcode from post request.
-            Urls urls = Urls.get(locale);
-            return redirectWithMessage(urls.view(initiativeId),RequestMessage.SEND, request);
-        }
-        else {
-            addModelAttributesToCollectView(model,
-                    initiativeService.getMunicipalityInitiative(initiativeId, locale),
-                    municipalityService.findAllMunicipalities(locale),
-                    participantService.getParticipantCount(initiativeId),
-                    participantService.findPublicParticipants(initiativeId));
-
-            model.addAttribute("sendToMunicipality", sendToMunicipalityDto);
-            return MANAGEMENT_VIEW;
-        }
-
-    }
-
     @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_SEND_TO_REVIEW)
     public String sendToReview(@PathVariable("id") Long initiativeId,
                                @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,

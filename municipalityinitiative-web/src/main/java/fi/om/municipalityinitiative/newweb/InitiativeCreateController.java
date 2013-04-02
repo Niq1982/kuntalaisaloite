@@ -49,64 +49,6 @@ public class InitiativeCreateController extends BaseController {
         super(optimizeResources, resourcesVersion);
     }
 
-    // TODO: Remove. This is NOT USED anymore
-    @RequestMapping(value={ CREATE_FI, CREATE_SV }, method=GET)
-    @Deprecated
-    public String createGet(Model model, Locale locale, HttpServletRequest request) {
-        Urls urls = Urls.get(locale);
-        model.addAttribute(ALT_URI_ATTR, urls.alt().createNew());
-        
-        InitiativeUICreateDto initiative = new InitiativeUICreateDto();
-        model.addAttribute("initiative", initiative);
-        model.addAttribute("municipalities", municipalityService.findAllMunicipalities(locale));
-        return CREATE_VIEW;
-    }
-
-    // TODO: Remove. This is NOT USED anymore
-    @RequestMapping(value={ CREATE_FI, CREATE_SV }, method=POST, params=ACTION_SAVE_AND_SEND)
-    @Deprecated
-    public String createAndSendPost(@ModelAttribute("initiative") InitiativeUICreateDto initiative,
-                            BindingResult bindingResult,
-                            Model model,
-                            Locale locale,
-                            HttpServletRequest request) {
-
-        if (validionService.validationErrors(initiative, bindingResult, model)) {
-            model.addAttribute("initiative", initiative);
-            model.addAttribute("municipalities", municipalityService.findAllMunicipalities(locale));
-            return CREATE_VIEW;
-        }
-
-        Urls urls = Urls.get(locale);
-
-        Long initiativeId = initiativeService.createMunicipalityInitiative(initiative, locale);
-        return redirectWithMessage(urls.view(initiativeId), RequestMessage.SAVE_AND_SEND, request);
-    }
-
-    // TODO: Remove. This is NOT USED anymore
-    @RequestMapping(value={ CREATE_FI, CREATE_SV }, method=POST)
-    @Deprecated
-    public String createPost(@ModelAttribute("initiative") InitiativeUICreateDto initiative,
-                            BindingResult bindingResult,
-                            Model model,
-                            Locale locale,
-                            HttpServletRequest request) {
-
-        if (validionService.validationErrors(initiative, bindingResult, model)) {
-            model.addAttribute("initiative", initiative);
-            model.addAttribute("municipalities", municipalityService.findAllMunicipalities(locale));
-            return CREATE_VIEW;
-        }
-
-        Urls urls = Urls.get(locale);
-
-        initiative.setCollectable(true);
-
-        Long initiativeId = initiativeService.createMunicipalityInitiative(initiative, locale);
-        return redirectWithMessage(urls.view(initiativeId), RequestMessage.SAVE, request);
-
-    }
-
     @RequestMapping(value = { PREPARE_FI, PREPARE_SV }, method = GET)
     public String prepareGet(Model model, Locale locale, HttpServletRequest request) {
         Urls urls = Urls.get(locale);
