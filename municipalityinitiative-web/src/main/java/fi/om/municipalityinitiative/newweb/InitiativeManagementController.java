@@ -4,7 +4,6 @@ import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUIUpdateDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
-import fi.om.municipalityinitiative.newdto.ui.SendToMunicipalityDto;
 import fi.om.municipalityinitiative.service.InitiativeService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.service.ParticipantService;
@@ -27,10 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
-import static fi.om.municipalityinitiative.web.Urls.ACTION_SEND_TO_REVIEW_COLLECT;
-import static fi.om.municipalityinitiative.web.Views.ERROR_404_VIEW;
-import static fi.om.municipalityinitiative.web.Views.MANAGEMENT_VIEW;
-import static fi.om.municipalityinitiative.web.Views.UPDATE_VIEW;
+import static fi.om.municipalityinitiative.web.Views.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
