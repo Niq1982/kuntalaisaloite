@@ -82,21 +82,21 @@ public class InitiativeCreateController extends BaseController {
                            @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                            Model model, Locale locale, HttpServletRequest request) {
 
+        Urls urls = Urls.get(locale);
         ManagementSettings managementSettings = initiativeService.managementSettings(initiativeId);
 
-        InitiativeDraftUIEditDto initiative = initiativeService.getInitiativeDraftForEdit(initiativeId, managementHash);
-        Urls urls = Urls.get(locale);
-        model.addAttribute(ALT_URI_ATTR, urls.alt().edit(initiativeId, managementHash));
-        model.addAttribute("initiative", initiative);
-        model.addAttribute("author", initiativeService.getAuthorInformation(initiativeId, managementHash));
-        
         if (managementSettings.isAllowEdit()) {
+            InitiativeDraftUIEditDto initiative = initiativeService.getInitiativeDraftForEdit(initiativeId, managementHash);
+
+            model.addAttribute(ALT_URI_ATTR, urls.alt().edit(initiativeId, managementHash));
+            model.addAttribute("initiative", initiative);
+            model.addAttribute("author", initiativeService.getAuthorInformation(initiativeId, managementHash));
+
             model.addAttribute("previousPageURI", urls.prepare());
             return EDIT_VIEW;
         }
         else if (managementSettings.isAllowUpdate()) {
-            model.addAttribute("previousPageURI", urls.management(initiativeId, managementHash));
-            return UPDATE_VIEW;
+            return contextRelativeRedirect(urls.update(initiativeId, managementHash));
         }
         else {
             return ERROR_500; // TODO: Custom error page or some message that operation is not allowed
@@ -122,27 +122,7 @@ public class InitiativeCreateController extends BaseController {
         initiativeService.editInitiativeDraft(initiativeId, editDto);
         return redirectWithMessage(urls.management(initiativeId,editDto.getManagementHash()), RequestMessage.SAVE_DRAFT, request);
     }
-    
-    @RequestMapping(value={ EDIT_FI, EDIT_SV }, method=POST, params = ACTION_UPDATE_INITIATIVE)
-    public String updatePost(@PathVariable("id") Long initiativeId,
-                           @ModelAttribute("initiative") InitiativeDraftUIEditDto editDto,
-                           BindingResult bindingResult,
-                           Model model, Locale locale, HttpServletRequest request) {
 
-        Urls urls = Urls.get(locale);
-
-        if (validionService.validationErrors(editDto, bindingResult, model)) {
-            model.addAttribute(ALT_URI_ATTR, urls.alt().edit(initiativeId, editDto.getManagementHash()));
-            model.addAttribute("initiative", editDto);
-            model.addAttribute("author", initiativeService.getAuthorInformation(initiativeId, editDto.getManagementHash()));
-            return UPDATE_VIEW;
-        }
-
-        // TODO: Do not update initiative name and proposal
-        initiativeService.editInitiativeDraft(initiativeId, editDto);
-        return redirectWithMessage(urls.management(initiativeId,editDto.getManagementHash()), RequestMessage.UPDATE_INITIATIVE, request);
-    }
-    
     @InitBinder
     public void initBinder(WebDataBinder binder, Locale locale) {
         binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));

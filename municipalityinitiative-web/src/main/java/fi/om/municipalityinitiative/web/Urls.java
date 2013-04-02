@@ -204,11 +204,15 @@ public final class Urls {
     public static final String MODERATION_FI = "/fi/moderointi" + "/" + ID_PARAMETER;
 
     public static final String MODERATION_SV = "/sv/moderation" + "/" + ID_PARAMETER;
-    
+
     public static final String EDIT_FI = "/fi/muokkaa" + "/" + ID_PARAMETER;
 
     public static final String EDIT_SV = "/sv/bearbeta" + "/" + ID_PARAMETER;
-    
+
+    public static final String UPDATE_FI = "/fi/paivita" + "/" + ID_PARAMETER;
+
+    public static final String UPDATE_SV = "/sv/paivita" + "/" + ID_PARAMETER;
+
     public static final String IFRAME_FI = "/fi/iframe";
 
     public static final String IFRAME_SV = "/sv/iframe";
@@ -288,6 +292,15 @@ public final class Urls {
 
     private String getEdit(Long initiativeId) {
         return getLocalizedPageUrl(EDIT_FI, EDIT_SV).replace(ID_PARAMETER, initiativeId.toString());
+    }
+
+
+    public String update(Long initiativeId, String managementHash) {
+        return getUpdate(initiativeId) + "?" + PARAM_MANAGEMENT_CODE + "=" + managementHash;
+    }
+
+    private String getUpdate(Long initiativeId) {
+        return getLocalizedPageUrl(UPDATE_FI, UPDATE_SV).replace(ID_PARAMETER, initiativeId.toString());
     }
 
     public String vote(Long initiativeId) {
@@ -461,5 +474,6 @@ public final class Urls {
     public boolean isLoginPage(String target) {
         return target.startsWith(login());
     }
+
 
 }

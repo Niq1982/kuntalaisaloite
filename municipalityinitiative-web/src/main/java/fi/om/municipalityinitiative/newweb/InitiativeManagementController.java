@@ -1,5 +1,8 @@
 package fi.om.municipalityinitiative.newweb;
 
+import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
+import fi.om.municipalityinitiative.newdto.ui.InitiativeDraftUIEditDto;
+import fi.om.municipalityinitiative.newdto.ui.InitiativeUIUpdateDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.ui.SendToMunicipalityDto;
 import fi.om.municipalityinitiative.service.InitiativeService;
@@ -27,6 +30,7 @@ import static fi.om.municipalityinitiative.web.Urls.*;
 import static fi.om.municipalityinitiative.web.Urls.ACTION_SEND_TO_REVIEW_COLLECT;
 import static fi.om.municipalityinitiative.web.Views.ERROR_404_VIEW;
 import static fi.om.municipalityinitiative.web.Views.MANAGEMENT_VIEW;
+import static fi.om.municipalityinitiative.web.Views.UPDATE_VIEW;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -76,6 +80,56 @@ public class InitiativeManagementController extends BaseController {
         } else {
             return ERROR_404_VIEW;
         }
+    }
+
+    @RequestMapping(value={ UPDATE_FI, UPDATE_SV }, method=GET)
+    public String updateView(@PathVariable("id") Long initiativeId,
+                             @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
+                             Model model, Locale locale, HttpServletRequest request) {
+
+        Urls urls = Urls.get(locale);
+        ManagementSettings managementSettings = initiativeService.managementSettings(initiativeId);
+
+        if (managementSettings.isAllowUpdate()) {
+
+            model.addAttribute(ALT_URI_ATTR, urls.alt().edit(initiativeId, managementHash));
+            model.addAttribute("initiative", initiativeService.getInitiativeDraftForEdit(initiativeId, managementHash)); // TODO UpdateDto, not edit
+            model.addAttribute("author", initiativeService.getAuthorInformation(initiativeId, managementHash));
+
+            model.addAttribute("previousPageURI", urls.prepare());
+            return UPDATE_VIEW;
+
+        }
+        else {
+            return ERROR_500; // TODO: Custom error page or some message that operation is not allowed
+        }
+
+    }
+
+    @RequestMapping(value={ UPDATE_FI, UPDATE_SV }, method=POST)
+    public String updatePost(@PathVariable("id") Long initiativeId,
+                             @ModelAttribute("initiative") InitiativeDraftUIEditDto updateDto,
+                             BindingResult bindingResult,
+                             Model model, Locale locale, HttpServletRequest request) {
+
+        Urls urls = Urls.get(locale);
+
+        if (validationService.validationErrors(updateDto, bindingResult, model)) {
+            model.addAttribute(ALT_URI_ATTR, urls.alt().edit(initiativeId, updateDto.getManagementHash()));
+            model.addAttribute("initiative", initiativeService.getMunicipalityInitiative(initiativeId, updateDto.getManagementHash(), locale));
+            model.addAttribute("author", initiativeService.getAuthorInformation(initiativeId, updateDto.getManagementHash()));
+            return UPDATE_VIEW;
+        }
+
+        // TODO: Get update dto instead of edit-dto
+
+        InitiativeUIUpdateDto copiedUpdateDto = new InitiativeUIUpdateDto();
+        copiedUpdateDto.setContactInfo(updateDto.getContactInfo());
+        copiedUpdateDto.setManagementHash(updateDto.getManagementHash());
+        copiedUpdateDto.setShowName(updateDto.getShowName());
+        copiedUpdateDto.setExtraInfo(updateDto.getExtraInfo());
+        initiativeService.updateInitiative(initiativeId, copiedUpdateDto);
+        return redirectWithMessage(urls.management(initiativeId, updateDto.getManagementHash()), RequestMessage.UPDATE_INITIATIVE, request);
     }
 
 
