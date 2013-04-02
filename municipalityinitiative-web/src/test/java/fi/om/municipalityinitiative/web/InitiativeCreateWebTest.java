@@ -70,16 +70,18 @@ public class InitiativeCreateWebTest extends WebTestBase {
         fill_in_preparation_form();
     }
 
-    // Create an initiative
+    // Create an initiative and fill in initiative details
     @Test
-    @Ignore
     public void create_initiative() {
         Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
-        Long initiativeId = testHelper.createTestInitiative(municipality1Id, "Testi aloite", true, false);
+        Long initiativeId = testHelper.createEmptyDraft(municipality1Id);
 
+        open(urls.edit(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
+        
         fill_in_initiative_content(initiativeId);
     }
     
+    // Create initiative with state DRAFT and send it to REVIEW
     @Test
     public void send_to_review() {
         Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
@@ -97,6 +99,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         update_initiative(initiativeId);
     }
     
+    // Create initiative with state REVIEW and ACCEPT it 
     @Test
     public void accept_initiative(){
         Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
@@ -115,6 +118,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         update_initiative(initiativeId);
     }
     
+    // Create initiative with state REVIEW and REJECT it
     @Test
     public void reject_initiative(){
         Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
@@ -151,8 +155,6 @@ public class InitiativeCreateWebTest extends WebTestBase {
     }
 
     public void fill_in_initiative_content(Long initiativeId) {
-        open(urls.edit(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
-        
         inputText("name", NAME);
         inputText("proposal", PROPOSAL);
         
@@ -165,8 +167,6 @@ public class InitiativeCreateWebTest extends WebTestBase {
         clickByName(Urls.ACTION_SAVE);
 
         assertSuccesPageWithMessage(MSG_SUCCESS_SAVE_DRAFT);
-        
-        
 
         System.out.println("--- add_contact_info OK");
     }
