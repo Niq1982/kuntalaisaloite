@@ -5,9 +5,11 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import fi.om.municipalityinitiative.web.Urls;
 import fi.om.municipalityinitiative.dao.TestHelper;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 public class InitiativeCreateWebTest extends WebTestBase {
@@ -15,20 +17,24 @@ public class InitiativeCreateWebTest extends WebTestBase {
     /**
      * Localization keys as constants.
      */
-    
     private static final String MSG_SITE_NAME = "siteName";
     private static final String MSG_PAGE_CREATE_NEW = "page.createNew";
     private static final String MSG_SUCCESS_SAVE_AND_SEND = "success.save-and-send";
     private static final String MSG_SUCCESS_PREPARE = "success.prepare";
     private static final String MSG_SUCCESS_SAVE_TITLE = "success.save.title";
     private static final String MSG_SUCCESS_SAVE_DRAFT = "success.save-draft";
+    private static final String MSG_SUCCESS_SEND_TO_REVIEW = "success.send-to-review";
+    private static final String MSG_SUCCESS_ACCEPT_INITIATIVE = "success.accept-initiative";
+    private static final String MSG_SUCCESS_REJECT_INITIATIVE = "success.reject-initiative";
     private static final String MSG_BTN_PREPARE_SEND = "action.prepare.send";
-    private static final String MSG_BTN_SAVE = "action.save";
     private static final String MSG_BTN_SAVE_AND_SEND = "action.saveAndSend";
     private static final String MSG_BTN_SAVE_AND_COLLECT = "action.saveAndCollect";
+    private static final String MSG_BTN_ACCEPT_INITIATIVE = "action.accept";
+    private static final String MSG_BTN_REJECT_INITIATIVE = "action.reject";
     private static final String SELECT_MUNICIPALITY = "initiative.chooseMunicipality";
     private static final String MSG_INITIATIVE_TYPE_NORMAL= "initiative.type.normal";
     private static final String RADIO_FRANCHISE_TRUE = "initiative.franchise.true";
+    private static final String MSG_SEND_TO_REVIEW_CONFIRM = "sendToReview.doNotCollect.confirm.title";
     
     
     /**
@@ -63,15 +69,58 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
     // Create an initiative
     @Test
-    @Ignore("FIXME: Causes null pointer exception")
+    @Ignore
     public void create_initiative() {
         Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
-        Long initiativeId = testHelper.createTestInitiative(municipality1Id, "Testi aloite", true, true);
+        Long initiativeId = testHelper.createTestInitiative(municipality1Id, "Testi aloite", true, false);
         
-        // FIXME: Causes null pointer exception
         open(urls.edit(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
 
         add_initiative_content();
+    }
+    
+    @Test
+    public void send_to_review() {
+        Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
+        Long initiativeId = testHelper.createCollectableDraft(municipality1Id);
+        
+        open(urls.management(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
+        
+        clickById("js-send-to-review");
+        assertMsgContainedByClass("modal-title", MSG_SEND_TO_REVIEW_CONFIRM);
+        
+        clickByName(Urls.ACTION_SEND_TO_REVIEW);
+        assertMsgContainedByClass("msg-success", MSG_SUCCESS_SEND_TO_REVIEW);
+    }
+    
+    @Test
+    public void accept_initiative(){
+        Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
+        Long initiativeId = testHelper.createCollectableReview(municipality1Id);
+        
+        open(urls.moderation(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
+        
+        getElemContaining(getMessage(MSG_BTN_ACCEPT_INITIATIVE), "a").click();
+        
+        // TODO: Fill in the comment text.
+        
+        clickByName(Urls.ACTION_ACCEPT_INITIATIVE);
+        assertMsgContainedByClass("msg-success", MSG_SUCCESS_ACCEPT_INITIATIVE);
+    }
+    
+    @Test
+    public void reject_initiative(){
+        Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
+        Long initiativeId = testHelper.createCollectableReview(municipality1Id);
+        
+        open(urls.moderation(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
+        
+        getElemContaining(getMessage(MSG_BTN_REJECT_INITIATIVE), "a").click();
+        
+        // TODO: Fill in the comment text.
+        
+        clickByName(Urls.ACTION_REJECT_INITIATIVE);
+        assertMsgContainedByClass("msg-success", MSG_SUCCESS_REJECT_INITIATIVE);
     }
     
     public void select_municipality() {
@@ -97,13 +146,14 @@ public class InitiativeCreateWebTest extends WebTestBase {
     public void add_initiative_content() {
         inputText("name", NAME);
         inputText("proposal", PROPOSAL);
+        
+        assertEquals("author_email@example.com", driver.findElement(By.name("contactInfo.email")).getAttribute("value"));
+        
         inputText("contactInfo.name", CONTACT_NAME);
         inputText("contactInfo.phone", CONTACT_PHONE);
         inputText("contactInfo.address", CONTACT_ADDRESS);
 
-        assertTextContainedByXPath("//div[@id='contactInfo.email']", "contact_email@xxx.yyy");
-
-        getElemContaining(getMessage(MSG_BTN_SAVE), "button").click();
+        clickByName(Urls.ACTION_SAVE);
 
         assertSuccesPageWithMessage(MSG_SUCCESS_SAVE_DRAFT);
 

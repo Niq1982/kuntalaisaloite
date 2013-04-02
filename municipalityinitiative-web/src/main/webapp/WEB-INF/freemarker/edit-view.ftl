@@ -80,7 +80,7 @@
             </div>
         
             <input type="hidden" name="managementHash" value="${initiative.managementHash}"/>
-            <button class="large-button" value="true" name="${UrlConstants.ACTION_SAVE}" type="submit"><span class="large-icon save-and-send"><strong>Tallenna luonnos</strong> ja&nbsp;siirry&nbsp;aloitteen&nbsp;ylläpitosivulle</span></button>
+            <button class="large-button" value="true" name="${UrlConstants.ACTION_SAVE}" type="submit"><span class="large-icon save-and-send"><@u.messageHTML "action.saveDraft" /></span></button>
             <a href="${previousPageURI!urls.baseUrl+"/"+locale}" class="large-button"><span class="large-icon cancel"><strong>Peruuta</strong> ja&nbsp;palaa&nbsp;tallentamatta&nbsp;etusivulle</span></a>
         </div>
         
