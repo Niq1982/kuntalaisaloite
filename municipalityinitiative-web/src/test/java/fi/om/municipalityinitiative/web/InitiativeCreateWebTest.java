@@ -104,7 +104,9 @@ public class InitiativeCreateWebTest extends WebTestBase {
     public void accept_initiative(){
         Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
         Long initiativeId = testHelper.createCollectableReview(municipality1Id);
-        
+
+        loginAsOmUser();
+
         open(urls.moderation(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
         
         getElemContaining(getMessage(MSG_BTN_ACCEPT_INITIATIVE), "a").click();
@@ -117,23 +119,32 @@ public class InitiativeCreateWebTest extends WebTestBase {
         // Assert that initiative name and proposal cannot be edited in ACCEPT-state
         update_initiative(initiativeId);
     }
-    
+
     // Create initiative with state REVIEW and REJECT it
     @Test
     public void reject_initiative(){
         Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
         Long initiativeId = testHelper.createCollectableReview(municipality1Id);
-        
+
+        loginAsOmUser();
+
         open(urls.moderation(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
-        
+
         getElemContaining(getMessage(MSG_BTN_REJECT_INITIATIVE), "a").click();
-        
+
         // TODO: Fill in the comment text.
-        
+
         clickByName(Urls.ACTION_REJECT_INITIATIVE);
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_REJECT_INITIATIVE);
     }
-    
+
+    private void loginAsOmUser() {
+        open(urls.login(""));
+        inputText("u", "admin");
+        inputText("p", "admin");
+        clickByName("Login");
+    }
+
     public void select_municipality() {
         clickLinkContaining(getMessage(SELECT_MUNICIPALITY));
         getElemContaining(MUNICIPALITY_1, "li").click();

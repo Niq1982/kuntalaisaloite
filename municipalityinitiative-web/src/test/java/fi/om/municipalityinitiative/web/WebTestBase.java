@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.conf.PropertyNames;
 import fi.om.municipalityinitiative.conf.WebTestConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.service.MailSendingEmailService;
+import fi.om.municipalityinitiative.service.UserService;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.validation.NotTooFastSubmitValidator;
 import mockit.Mocked;
@@ -43,7 +44,7 @@ public abstract class WebTestBase {
 
     @Mocked
     MailSendingEmailService emailService;
-    
+
     @Resource
     protected TestHelper testHelper;
 
