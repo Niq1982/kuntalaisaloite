@@ -148,6 +148,7 @@ public class InitiativeService {
     }
 
     public InitiativeUIEditDto getInitiativeForEdit(Long initiativeId, String managementHash) {
+        // TODO: IsAllowed
         InitiativeUIEditDto initiativeForEdit = initiativeDao.getInitiativeForEdit(initiativeId);
         if (!initiativeForEdit.getManagementHash().equals(managementHash)) {
             throw new AccessDeniedException("Invalid management hash");
@@ -156,6 +157,7 @@ public class InitiativeService {
     }
 
     public void updateInitiativeDraft(Long initiativeId, InitiativeUIEditDto editDto) {
+        // TODO: IsAllowed
         if (!initiativeDao.getInitiativeForEdit(initiativeId).getManagementHash().equals(editDto.getManagementHash())) {
             throw new AccessDeniedException("Invalid management hash");
         }
@@ -168,6 +170,7 @@ public class InitiativeService {
     }
 
     public void sendReview(Long initiativeId, String managementHash, InitiativeType type) {
+        // TODO: IsAllowed
         if (initiativeDao.getById(initiativeId).getManagementHash().get().equals(managementHash)) {
             initiativeDao.setInitiativeAsReview(initiativeId, type);
         }
@@ -177,6 +180,7 @@ public class InitiativeService {
     }
     
     // TODO: User is logged in with moderation rights
+    // TODO: IsAllowed
     public void accept(Long initiativeId, String managementHash) {
         if (initiativeDao.getById(initiativeId).getManagementHash().get().equals(managementHash)) {
             initiativeDao.acceptInitiativeByOm(initiativeId);
@@ -187,6 +191,7 @@ public class InitiativeService {
     }
     
  // TODO: User is logged in with moderation rights
+ // TODO: IsAllowed
     public void reject(Long initiativeId, String managementHash) {
         if (initiativeDao.getById(initiativeId).getManagementHash().get().equals(managementHash)) {
             initiativeDao.rejectInitiativeByOm(initiativeId);
