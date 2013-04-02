@@ -25,7 +25,7 @@
         <@f.cookieWarning springMacroRequestContext.requestUri />
     </noscript>
     
-    <div class="system-msg msg-summary">
+    <div class="msg-block">
         <div class="system-msg msg-info">
             <h3>Tavallinen aloite, kunnalle <#if initiative.municipality??>${initiative.municipality.getName(locale)!""}</#if></h3>
             Lomakkeen pakolliset tiedot on merkitty tähdellä <span class="icon-small required"></span>
@@ -72,16 +72,13 @@
         
         
         <div class="" id="form-action-panel">
-        
-            <div class="system-msg msg-summary">
-                <div class="system-msg msg-info">
-                    Kun tallennat aloitteen, se tallentuu palveluun luonnoksena. Luonnos ei ole vielä julkinen vaan näkyy vain sinulle. Voit palata muokkaamaan aloitetta myöhemmin tai lähettää sen välittömästi julkaistavaksi ja kuntaan. Antamaasi sähköpostiosoitteeseen lähetetään aloitteen ylläpitolinkki.
-                </div>
+            <div class="msg-block">
+                <@u.systemMessage path="initiative.saveDraft.description" type="info" showClose=false />
             </div>
         
             <input type="hidden" name="managementHash" value="${initiative.managementHash}"/>
             <button class="large-button" value="true" name="${UrlConstants.ACTION_SAVE}" type="submit"><span class="large-icon save-and-send"><@u.messageHTML "action.saveDraft" /></span></button>
-            <a href="${previousPageURI!urls.baseUrl+"/"+locale}" class="large-button"><span class="large-icon cancel"><strong>Peruuta</strong> ja&nbsp;palaa&nbsp;tallentamatta&nbsp;etusivulle</span></a>
+            <a href="${previousPageURI!urls.baseUrl+"/"+locale}" class="large-button"><span class="large-icon cancel"><@u.messageHTML "action.cancelEditDraft" /></span></a>
         </div>
         
         

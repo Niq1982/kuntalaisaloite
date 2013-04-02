@@ -945,45 +945,6 @@ $('.municipality-filter').change( function() {
 		generateModal(modalData.participateFormInvalid(), 'full');
 	}
 
-
-/**
- * 
- * Datepicker: jQuery tool - Dateinput
- * ===================================
- * - Uses the global Init.getLocale() variable to determine the localization
- * 
- * */
-	$.tools.dateinput.localize("fi", {
-		  months: 'Tammikuu,Helmikuu,Maaliskuu,Huhtikuu, Toukokuu, Kesäkuu, Heinäkuu, Elokuu, Syyskuu, Lokakuu, Marraskuu, Joulukuu',
-		  shortMonths:  'Tammi, Helmi, Maalis, Huhti, Touko, Kesä, Heinä, Elo, Syys, Loka, Marras, Joulu',
-		  days:         'Sunnuntai, Maanantai, Tiistai, Keskiviikko, Torstai, Perjantai, Lauantai',
-		  shortDays:    'Su, Ma, Ti, Ke, To, Pe, La'
-	});
-	$.tools.dateinput.localize("sv", {
-		  months: 'Januari, Februari, Mars, April, Maj, Juni, Juli, Augusti, September, Oktober, November, December',
-		  shortMonths:  'Jan, Feb, Mar, Apr, Maj, Jun, Jul, Aug, Sep, Okt, Nov, Dec',
-		  days:         'Söndag, Måndag, Tisdag, Onsdag, Torsdag, Lördag',
-		  shortDays:    'Sö, Må, Ti, On, To, Fr, Lö'
-	});
-	
-	$.tools.dateinput.conf.lang = Init.getLocale();
-
-	$(".datepicker").dateinput({
-		format: 	Init.getDateFormat(),	// this is displayed to the user
-		firstDay:	1,						// First day is monday
-		offset:		[0, 0],
-	 
-		// a different format is sent to the server
-		change: function() {
-			var isoDate = this.getValue('yyyy-mm-dd');
-			$("#backendValue").val(isoDate);
-		}
-	})
-	.blur(function(){
-		// Trim spaces in copy pasted value
-		var trimmed = $.trim( $(this).val() );
-		$(this).val(trimmed);
-	});
 	
 /**
  * 

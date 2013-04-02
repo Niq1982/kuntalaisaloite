@@ -146,14 +146,9 @@
     
 <#-- Search results EMPTY -->
 <#else>
-    <#assign emptySearchResultsHTML>
-        <@u.message "searchResults.noResults" />
-    </#assign>
-
-    <div class="system-msg msg-summary">
-        <@u.systemMessageHTML html=emptySearchResultsHTML type="info" />
+    <div class="msg-block">
+        <@u.systemMessage path="searchResults.noResults" type="info" showClose=false />
     </div>
-    
 </#if>
 
 </div>
