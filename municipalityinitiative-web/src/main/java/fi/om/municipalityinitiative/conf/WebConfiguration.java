@@ -205,7 +205,10 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
 
     @Bean
     public LoginController loginController() {
-        return new LoginController(optimizeResources(env), resourcesVersion(env));
+        return new LoginController(
+                env.getRequiredProperty(PropertyNames.baseURL),
+                optimizeResources(env),
+                resourcesVersion(env));
     }
 
     @Bean

@@ -1,10 +1,7 @@
 package fi.om.municipalityinitiative.newweb;
 
 import fi.om.municipalityinitiative.service.UserService;
-import fi.om.municipalityinitiative.web.BaseController;
-import fi.om.municipalityinitiative.web.RequestMessage;
-import fi.om.municipalityinitiative.web.Urls;
-import fi.om.municipalityinitiative.web.Views;
+import fi.om.municipalityinitiative.web.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,13 +20,13 @@ import static fi.om.municipalityinitiative.web.Urls.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
-public class LoginController extends BaseController {
+public class LoginController extends BaseLoginController {
 
     @Resource
     UserService userService;
 
-    public LoginController(boolean optimizeResources, String resourcesVersion) {
-        super(optimizeResources, resourcesVersion);
+    public LoginController(String baseUrl, boolean optimizeResources, String resourcesVersion) {
+        super(baseUrl, optimizeResources, resourcesVersion);
     }
 
     @RequestMapping(value = {LOGIN_FI, LOGIN_SV}, method = RequestMethod.GET)
@@ -46,8 +43,7 @@ public class LoginController extends BaseController {
                               Model model, Locale locale, HttpServletRequest request) {
         userService.login(u, p, request);
 
-        return new RedirectView(target, false, true, false);
-
+        return new RedirectView(getValidLoginTarget(target, Urls.get(locale)), false, true, false);
     }
 
     @RequestMapping(value={LOGOUT_FI, LOGOUT_SV}, method=GET)
