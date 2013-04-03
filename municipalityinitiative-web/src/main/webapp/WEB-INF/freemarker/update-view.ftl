@@ -26,9 +26,9 @@
 
     <div class="msg-block">
         <div class="system-msg msg-info">
-            <h2>Muokkaa aloitteen tietoja</h2>
-            <p><@u.message "initiative.proposal.locked" /></p>
-            Lomakkeen pakolliset tiedot on merkitty tähdellä <span class="icon-small required"></span>
+            <h2><@u.message "initiative.update.title" /></h2>
+            <p><@u.message "initiative.update.description" /></p>
+            <@u.message "initiative.required" /> <span class="icon-small required"></span>
         </div>
     </div>
 
@@ -54,7 +54,6 @@
         <input type="hidden" name="proposal" value="${initiative.proposal!""}">
 
         <@f.securityFilters />
-        <#--<@f.notTooFastField initiative />-->
 
         <div class="form-block-container">
             <@edit.blockHeader key="initiative.updateInitiative.title" step=1 />
@@ -63,7 +62,7 @@
 
         <div class="form-block-container">
             <@edit.blockHeader key="initiative.updateCurrentAuthor.title" step=2 />
-            <@edit.currentAuthorBlock />
+            <@edit.currentAuthorBlock "initiative" />
         </div>
         
         <div class="" id="form-action-panel">

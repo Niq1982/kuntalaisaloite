@@ -222,22 +222,6 @@
             </div>
         </div>
 
-    <#--
-        <div class="input-block-content">
-            <#assign href="#" />
-            <@u.systemMessage path="initiative.proposal.locked" type="info" showClose=false args=[href] />
-        </div>
-        
-        <div class="input-block-content">
-                <h4><@u.message "initiative.name" /></h4>
-                <p>${initiative.name!""}</p>
-        </div>
-        
-        <div class="input-block-content no-top-margin">
-            <h4><@u.message "initiative.proposal" /></h4>
-                <p><@u.text initiative.proposal!"" /></p>
-        </div>-->
-        
         <div class="input-block-content">
             <@f.textarea path="initiative.extraInfo" required="" optional=true cssClass="textarea" />
         </div>
@@ -256,7 +240,7 @@
  *
  * @param step is the number of current block
  -->
-<#macro currentAuthorBlock >
+<#macro currentAuthorBlock path>
     <div class="input-block cf">
         <div class="input-block-extra">
             <div class="input-block-extra-content">
@@ -265,13 +249,13 @@
             </div>
         </div>
 
-         <div class="input-block-content">
+        <div class="input-block-content">
             <@u.systemMessage path="initiative.ownDetails.description" type="info" showClose=false />  
         </div>
         
         <div class="input-block-content">
             <div class="column col-2of3">
-                <@f.textField path="initiative.contactInfo.name" required="required" optional=false cssClass="medium" maxLength=InitiativeConstants.CONTACT_NAME_MAX />
+                <@f.textField path=path+".contactInfo.name" required="required" optional=false cssClass="medium" maxLength=InitiativeConstants.CONTACT_NAME_MAX />
                 
             </div>
             <div class="column col-1of3 last">
@@ -288,7 +272,7 @@
         </div>
 
         <div class="input-block-content">
-            <@f.contactInfo path="initiative.contactInfo" realPath=initiative.contactInfo mode="full" />
+            <@f.contactInfo path=path+".contactInfo" mode="full" />
         </div>
     </div>
 </#macro>

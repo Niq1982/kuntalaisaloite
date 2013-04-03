@@ -10,10 +10,10 @@
 <#--
  * Layout parameters for HTML-title and navigation.
  *
- * @param page is "page.createNew"
+ * @param page is "page.prepare"
  * @param pageTitle can be assigned as custom HTML title
 -->
-<#assign page="page.createNew" />
+<#assign page="page.prepare" />
 
 <#--
  * Get current municipality as request parameter.
