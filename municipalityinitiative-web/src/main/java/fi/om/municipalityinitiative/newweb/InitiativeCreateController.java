@@ -3,7 +3,7 @@ package fi.om.municipalityinitiative.newweb;
 import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.newdto.ui.PrepareInitiativeDto;
-import fi.om.municipalityinitiative.service.InitiativeService;
+import fi.om.municipalityinitiative.service.PublicInitiativeService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.service.ValidationService;
 import fi.om.municipalityinitiative.web.BaseController;
@@ -37,7 +37,7 @@ public class InitiativeCreateController extends BaseController {
     private MunicipalityService municipalityService;
 
     @Resource
-    private InitiativeService initiativeService;
+    private PublicInitiativeService publicInitiativeService;
 
     @Resource
     ValidationService validionService;
@@ -70,7 +70,7 @@ public class InitiativeCreateController extends BaseController {
         }
 
         Urls urls = Urls.get(locale);
-        Long initiativeId = initiativeService.prepareInitiative(initiative, locale);
+        Long initiativeId = publicInitiativeService.prepareInitiative(initiative, locale);
         
         addRequestAttribute(initiative.getAuthorEmail(), model, request);
         return redirectWithMessage(urls.pendingConfirmation(initiativeId), RequestMessage.PREPARE, request);
@@ -83,14 +83,14 @@ public class InitiativeCreateController extends BaseController {
                            Model model, Locale locale, HttpServletRequest request) {
 
         Urls urls = Urls.get(locale);
-        ManagementSettings managementSettings = initiativeService.managementSettings(initiativeId);
+        ManagementSettings managementSettings = publicInitiativeService.managementSettings(initiativeId);
 
         if (managementSettings.isAllowEdit()) {
-            InitiativeDraftUIEditDto initiative = initiativeService.getInitiativeDraftForEdit(initiativeId, managementHash);
+            InitiativeDraftUIEditDto initiative = publicInitiativeService.getInitiativeDraftForEdit(initiativeId, managementHash);
 
             model.addAttribute(ALT_URI_ATTR, urls.alt().edit(initiativeId, managementHash));
             model.addAttribute("initiative", initiative);
-            model.addAttribute("author", initiativeService.getAuthorInformation(initiativeId, managementHash));
+            model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, managementHash));
 
             model.addAttribute("previousPageURI", urls.prepare());
             return EDIT_VIEW;
@@ -115,11 +115,11 @@ public class InitiativeCreateController extends BaseController {
         if (validionService.validationErrors(editDto, bindingResult, model)) {
             model.addAttribute(ALT_URI_ATTR, urls.alt().edit(initiativeId, editDto.getManagementHash()));
             model.addAttribute("initiative", editDto);
-            model.addAttribute("author", initiativeService.getAuthorInformation(initiativeId, editDto.getManagementHash()));
+            model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, editDto.getManagementHash()));
             return EDIT_VIEW;
         }
 
-        initiativeService.editInitiativeDraft(initiativeId, editDto);
+        publicInitiativeService.editInitiativeDraft(initiativeId, editDto);
         return redirectWithMessage(urls.management(initiativeId,editDto.getManagementHash()), RequestMessage.SAVE_DRAFT, request);
     }
 

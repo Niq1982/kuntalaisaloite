@@ -4,7 +4,7 @@ import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUIUpdateDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
-import fi.om.municipalityinitiative.service.InitiativeService;
+import fi.om.municipalityinitiative.service.PublicInitiativeService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.service.ParticipantService;
 import fi.om.municipalityinitiative.service.ValidationService;
@@ -34,7 +34,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class InitiativeManagementController extends BaseController {
 
     @Resource
-    private InitiativeService initiativeService;
+    private PublicInitiativeService publicInitiativeService;
 
     @Resource
     private MunicipalityService municipalityService;
@@ -57,7 +57,7 @@ public class InitiativeManagementController extends BaseController {
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().management(initiativeId, managementHash));
 
-        InitiativeViewInfo initiativeInfo = initiativeService.getMunicipalityInitiative(initiativeId, locale);
+        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId, locale);
 
         if (initiativeInfo.isSent()) {
             return redirectWithMessage(urls.view(initiativeId), RequestMessage.ALREADY_SENT, request);
@@ -71,7 +71,7 @@ public class InitiativeManagementController extends BaseController {
                     participantService.findPublicParticipants(initiativeId));
 
             model.addAttribute("participants", participantService.findPublicParticipants(initiativeId));
-            model.addAttribute("author", initiativeService.getAuthorInformation(initiativeId, managementHash));
+            model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, managementHash));
             return MANAGEMENT_VIEW;
         } else {
             return ERROR_404_VIEW;
@@ -84,13 +84,13 @@ public class InitiativeManagementController extends BaseController {
                              Model model, Locale locale, HttpServletRequest request) {
 
         Urls urls = Urls.get(locale);
-        ManagementSettings managementSettings = initiativeService.managementSettings(initiativeId);
+        ManagementSettings managementSettings = publicInitiativeService.managementSettings(initiativeId);
 
         if (managementSettings.isAllowUpdate()) {
 
             model.addAttribute(ALT_URI_ATTR, urls.alt().edit(initiativeId, managementHash));
-            model.addAttribute("initiative", initiativeService.getInitiativeDraftForEdit(initiativeId, managementHash)); // TODO UpdateDto, not edit
-            model.addAttribute("author", initiativeService.getAuthorInformation(initiativeId, managementHash));
+            model.addAttribute("initiative", publicInitiativeService.getInitiativeDraftForEdit(initiativeId, managementHash)); // TODO UpdateDto, not edit
+            model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, managementHash));
 
             model.addAttribute("previousPageURI", urls.prepare());
             return UPDATE_VIEW;
@@ -112,8 +112,8 @@ public class InitiativeManagementController extends BaseController {
 
         if (validationService.validationErrors(updateDto, bindingResult, model)) {
             model.addAttribute(ALT_URI_ATTR, urls.alt().edit(initiativeId, updateDto.getManagementHash()));
-            model.addAttribute("initiative", initiativeService.getMunicipalityInitiative(initiativeId, updateDto.getManagementHash(), locale));
-            model.addAttribute("author", initiativeService.getAuthorInformation(initiativeId, updateDto.getManagementHash()));
+            model.addAttribute("initiative", publicInitiativeService.getMunicipalityInitiative(initiativeId, updateDto.getManagementHash(), locale));
+            model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, updateDto.getManagementHash()));
             return UPDATE_VIEW;
         }
 
@@ -124,7 +124,7 @@ public class InitiativeManagementController extends BaseController {
         copiedUpdateDto.setManagementHash(updateDto.getManagementHash());
         copiedUpdateDto.setShowName(updateDto.getShowName());
         copiedUpdateDto.setExtraInfo(updateDto.getExtraInfo());
-        initiativeService.updateInitiative(initiativeId, copiedUpdateDto);
+        publicInitiativeService.updateInitiative(initiativeId, copiedUpdateDto);
         return redirectWithMessage(urls.management(initiativeId, updateDto.getManagementHash()), RequestMessage.UPDATE_INITIATIVE, request);
     }
 
@@ -134,7 +134,7 @@ public class InitiativeManagementController extends BaseController {
                                @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                                Locale locale, HttpServletRequest request) {
 
-        initiativeService.sendReview(initiativeId, managementHash, InitiativeType.SINGLE);
+        publicInitiativeService.sendReview(initiativeId, managementHash, InitiativeType.SINGLE);
         return redirectWithMessage(Urls.get(locale).management(initiativeId, managementHash),RequestMessage.SEND_TO_REVIEW, request);
     }
 
@@ -143,7 +143,7 @@ public class InitiativeManagementController extends BaseController {
                                             @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                                             Locale locale, HttpServletRequest request) {
 
-        initiativeService.sendReview(initiativeId, managementHash, InitiativeType.COLLABORATIVE);
+        publicInitiativeService.sendReview(initiativeId, managementHash, InitiativeType.COLLABORATIVE);
         return redirectWithMessage(Urls.get(locale).management(initiativeId, managementHash),RequestMessage.SEND_TO_REVIEW, request);
     }
 }
