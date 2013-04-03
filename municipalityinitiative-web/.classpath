@@ -48,6 +48,7 @@
   <classpathentry kind="var" path="M2_REPO/org/aspectj/aspectjrt/1.6.12/aspectjrt-1.6.12.jar" sourcepath="M2_REPO/org/aspectj/aspectjrt/1.6.12/aspectjrt-1.6.12-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/aspectj/aspectjweaver/1.6.12/aspectjweaver-1.6.12.jar" sourcepath="M2_REPO/org/aspectj/aspectjweaver/1.6.12/aspectjweaver-1.6.12-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/itextpdf/itextpdf/5.3.4/itextpdf-5.3.4.jar" sourcepath="M2_REPO/com/itextpdf/itextpdf/5.3.4/itextpdf-5.3.4-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/bouncycastle/bcprov-jdk16/1.44/bcprov-jdk16-1.44.jar" sourcepath="M2_REPO/org/bouncycastle/bcprov-jdk16/1.44/bcprov-jdk16-1.44-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/jasypt/jasypt/1.9.0/jasypt-1.9.0.jar" sourcepath="M2_REPO/org/jasypt/jasypt/1.9.0/jasypt-1.9.0-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/jasypt/jasypt-spring31/1.9.0/jasypt-spring31-1.9.0.jar" sourcepath="M2_REPO/org/jasypt/jasypt-spring31/1.9.0/jasypt-spring31-1.9.0-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/mysema/querydsl/querydsl-apt/2.7.3/querydsl-apt-2.7.3.jar" sourcepath="M2_REPO/com/mysema/querydsl/querydsl-apt/2.7.3/querydsl-apt-2.7.3-sources.jar"/>
