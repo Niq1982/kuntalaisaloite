@@ -264,7 +264,7 @@
                 <div class="input-placeholder">${author.municipality.getName(locale)}</div>
             </div>
             <br class="clear" />
-            <@f.formCheckbox path="initiative.showName" checked=true />
+            <@f.formCheckbox path=path+".showName" checked=true />
         </div>
 
         <div class="input-block-content">

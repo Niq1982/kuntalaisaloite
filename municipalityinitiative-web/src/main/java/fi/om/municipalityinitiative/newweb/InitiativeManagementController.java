@@ -106,7 +106,7 @@ public class InitiativeManagementController extends BaseController {
 
     @RequestMapping(value={ UPDATE_FI, UPDATE_SV }, method=POST)
     public String updatePost(@PathVariable("id") Long initiativeId,
-                             @ModelAttribute("initiative") InitiativeUIUpdateDto updateDto,
+                             @ModelAttribute("updateData") InitiativeUIUpdateDto updateDto,
                              BindingResult bindingResult,
                              Model model, Locale locale, HttpServletRequest request) {
 
