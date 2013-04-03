@@ -24,8 +24,8 @@ public class PublicInitiativeService {
     @Resource
     InitiativeDao initiativeDao;
 
-//    @Resource
-    private ParticipantDao participantDao;
+    @Resource
+    ParticipantDao participantDao;
 
     @Resource
     EmailService emailService;
