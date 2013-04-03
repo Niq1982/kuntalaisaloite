@@ -1,11 +1,9 @@
 package fi.om.municipalityinitiative.web;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import fi.om.municipalityinitiative.web.Urls;
 import fi.om.municipalityinitiative.dao.TestHelper;
 
 import static org.hamcrest.Matchers.is;
@@ -107,7 +105,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
         loginAsOmUser();
 
-        open(urls.moderation(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
+        open(urls.moderation(initiativeId));
         
         getElemContaining(getMessage(MSG_BTN_ACCEPT_INITIATIVE), "a").click();
         
@@ -128,7 +126,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
         loginAsOmUser();
 
-        open(urls.moderation(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
+        open(urls.moderation(initiativeId));
 
         getElemContaining(getMessage(MSG_BTN_REJECT_INITIATIVE), "a").click();
 

@@ -33,6 +33,9 @@ public class InitiativeService {
     @Resource
     MunicipalityDao municipalityDao;
 
+    @Resource
+    UserService userService;
+
     public List<InitiativeListInfo> findMunicipalityInitiatives(InitiativeSearch search) {
         return initiativeDao.find(search);
     }
@@ -141,26 +144,16 @@ public class InitiativeService {
             throw new AccessDeniedException("Invalid management hash");
         }
     }
-    
-    // TODO: User is logged in with moderation rights
+
     // TODO: IsAllowed
-    public void accept(Long initiativeId, String managementHash) {
-        if (initiativeDao.getById(initiativeId).getManagementHash().get().equals(managementHash)) {
-            initiativeDao.acceptInitiativeByOm(initiativeId);
-        }
-        else {
-            throw new AccessDeniedException("Invalid management hash");
-        }
+    public void accept(Long initiativeId) {
+        userService.requireOmUser();
+        initiativeDao.updateInitiativeState(initiativeId, InitiativeState.ACCEPTED);
     }
-    
- // TODO: User is logged in with moderation rights
+
  // TODO: IsAllowed
-    public void reject(Long initiativeId, String managementHash) {
-        if (initiativeDao.getById(initiativeId).getManagementHash().get().equals(managementHash)) {
-            initiativeDao.rejectInitiativeByOm(initiativeId);
-        }
-        else {
-            throw new AccessDeniedException("Invalid management hash");
-        }
+    public void reject(Long initiativeId) {
+        userService.requireOmUser();
+        initiativeDao.updateInitiativeState(initiativeId, InitiativeState.DRAFT);
     }
 }

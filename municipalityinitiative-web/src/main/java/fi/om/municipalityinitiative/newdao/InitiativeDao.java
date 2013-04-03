@@ -9,6 +9,7 @@ import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUIUpdateDto;
+import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 
@@ -42,9 +43,7 @@ public interface InitiativeDao {
 
     void setInitiativeAsReview(Long initiativeId, InitiativeType single);
 
-    void acceptInitiativeByOm(Long initiativeId);
-    
-    void rejectInitiativeByOm(Long initiativeId);
+    void updateInitiativeState(Long initiativeId, InitiativeState state);
 
     void updateInitiative(Long initiativeId, InitiativeUIUpdateDto updateDto);
 }

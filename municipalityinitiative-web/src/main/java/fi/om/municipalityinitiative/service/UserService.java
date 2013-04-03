@@ -9,6 +9,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 public class UserService {
 
@@ -21,7 +22,7 @@ public class UserService {
     }
 
     public void requireOmUser() {
-        Maybe<User> maybeUser = getOptionalUser();
+        Maybe<User> maybeUser = getUser();
         if (!maybeUser.isPresent()) {
             throw new AuthenticationRequiredException();
         }
@@ -30,19 +31,29 @@ public class UserService {
         }
     }
 
-    public Maybe<User> getOptionalUser() {
-        Object user = getCurrentRequest().getSession().getAttribute(LOGIN_USER_PARAMETER);
-        return Maybe.fromNullable((User) user);
+    public Maybe<User> getUser() {
+        Maybe<HttpSession> session = getSession();
+        if (session.isPresent()) {
+            Object user = session.get().getAttribute(LOGIN_USER_PARAMETER);
+            return Maybe.fromNullable((User) user);
+        }
+        return Maybe.absent();
     }
-
-
-    // TODO: Session may ne null?
 
     public void logout(HttpServletRequest request, HttpServletResponse response) {
-        getCurrentRequest().getSession().invalidate();
+        Maybe<HttpSession> session = getSession();
+        if (session.isPresent()) {
+            session.get().invalidate();
+        }
     }
 
-    private static HttpServletRequest getCurrentRequest() {
-        return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+    private static Maybe<HttpSession> getSession() {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        if (request != null) {
+            return Maybe.fromNullable(request.getSession());
+        }
+        return Maybe.absent();
+
     }
+
 }
