@@ -172,14 +172,6 @@ public final class Urls {
     public static final String SEARCH_FI = "/fi/hae";
 
     public static final String SEARCH_SV = "/sv/sok";
-
-    public static final String CREATE_FI =    "/fi/aloite";
-
-    public static final String CREATE_SV =    "/sv/initiativ";
-
-    public static final String CREATE_FI_NEW =    "/fi/aloite_new";
-
-    public static final String CREATE_SV_NEW =    "/sv/initiativ_new";
     
     public static final String PREPARE_FI =    "/fi/aloitteen-valmistelu";
 
@@ -189,9 +181,9 @@ public final class Urls {
 
     public static final String PENDING_CONFIRMATION_SV  =    "/sv/odottaa-vahvistusta-sv" + "/" + ID_PARAMETER;
     
-    public static final String VIEW_FI = CREATE_FI + "/" + ID_PARAMETER;
+    public static final String VIEW_FI = "/fi/aloite" + "/" + ID_PARAMETER;
 
-    public static final String VIEW_SV = CREATE_SV + "/" + ID_PARAMETER;
+    public static final String VIEW_SV = "/sv/initiativ" + "/" + ID_PARAMETER;
     
     public static final String PARITICIPANT_LIST_FI = VIEW_FI + "/osallistujat";
 
@@ -365,10 +357,6 @@ public final class Urls {
     
     public String searchOwnOnly() {
         return search_old() + "?" + SEARCH_OWN_ONLY;
-    }
-    
-    public String createNew() {
-        return getLocalizedPageUrl(CREATE_FI, CREATE_SV);
     }
 
     public String prepare() {

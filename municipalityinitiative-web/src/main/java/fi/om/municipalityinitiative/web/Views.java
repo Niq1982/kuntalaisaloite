@@ -30,7 +30,6 @@ public final class Views {
     // New views
 
     public static final String SEARCH_VIEW = "find";
-    public static final String CREATE_VIEW = "create";
     public static final String PREPARE_VIEW = "prepare";
     public static final String PENDING_CONFIRMATION = "pending-confirmation";
     public static final String VIEW_VIEW = "initiative";

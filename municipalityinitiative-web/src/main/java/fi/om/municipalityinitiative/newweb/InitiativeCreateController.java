@@ -49,7 +49,7 @@ public class InitiativeCreateController extends BaseController {
     @RequestMapping(value = { PREPARE_FI, PREPARE_SV }, method = GET)
     public String prepareGet(Model model, Locale locale, HttpServletRequest request) {
         Urls urls = Urls.get(locale);
-        model.addAttribute(ALT_URI_ATTR, urls.alt().createNew());
+        model.addAttribute(ALT_URI_ATTR, urls.alt().prepare());
 
         model.addAttribute("initiative", new PrepareInitiativeDto());
         model.addAttribute("municipalities", municipalityService.findAllMunicipalities(locale));

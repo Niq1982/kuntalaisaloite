@@ -27,49 +27,25 @@
     
     <div class="msg-block">
         <div class="system-msg msg-info">
-            <h3>Tavallinen aloite, kunnalle <#if initiative.municipality??>${initiative.municipality.getName(locale)!""}</#if></h3>
-            Lomakkeen pakolliset tiedot on merkitty tähdellä <span class="icon-small required"></span>
+            <#assign municipality><#if initiative.municipality??>${initiative.municipality.getName(locale)!""}</#if></#assign>
+            <h3><@u.message key="initiative.info.title" args=[municipality] /></h3>
+            <@u.message "initiative.required" /> <span class="icon-small required"></span>
         </div>
     </div>
 
     <#-- FORM. Use class 'sodirty' to enable dirtylisten. -->
     <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-initiative" class="sodirty dirtylisten <#if hasErrors>has-errors</#if>">
-
         <@f.securityFilters />
-        <#--<@f.notTooFastField initiative />-->
 
         <div class="form-block-container">
             <@edit.blockHeader key="initiative.initiative.title" step=1 />
-            <#-- use param locked=true to lock editing of the name and the proposal fields -->
             <@edit.initiativeBlock />
         </div>
 
         <div class="form-block-container">
             <@edit.blockHeader key="initiative.currentAuthor.title" step=2 />
-            <@edit.currentAuthorBlock />
+            <@edit.currentAuthorBlock "initiative" />
         </div>
-
-        <#--
-        <div class="form-block-container">
-            <@edit.blockHeader key="initiative.save.title" step=3 />
-        
-            <div class="input-block cf">
-                <div class="input-block-content">
-                    <div class="system-msg msg-info">
-                        Kun tallennat aloitteen, se tallentuu palveluun luonnoksena. Luonnos ei ole vielä julkinen vaan näkyy vain sinulle. Voit palata muokkaamaan aloitetta myöhemmin tai lähettää sen välittömästi julkaistavaksi ja kuntaan. Antamaasi sähköpostiosoitteeseen lähetetään aloitteen ylläpitolinkki.
-                    </div>
-                </div>
-            
-                <div class="input-block-content">
-                    <input type="hidden" name="managementHash" value="${initiative.managementHash}"/>
-                    <button type="submit" name="${UrlConstants.ACTION_SAVE}" value="<@u.messageHTML 'action.saveAsDraft' />" class="small-button green"><span class="small-icon save-and-send"><@u.messageHTML 'action.save' /></span></button>
-                    
-                    <a class="small-button red" href="${previousPageURI!urls.baseUrl+"/"+locale}"><span class="small-icon cancel"><@u.messageHTML 'action.cancel' /></span></a>
-                </div>
-            </div>
-        </div>
-        -->
-        
         
         <div class="" id="form-action-panel">
             <div class="msg-block">
@@ -80,8 +56,6 @@
             <button class="large-button" value="true" name="${UrlConstants.ACTION_SAVE}" type="submit"><span class="large-icon save-and-send"><@u.messageHTML "action.saveDraft" /></span></button>
             <a href="${previousPageURI!urls.baseUrl+"/"+locale}" class="large-button"><span class="large-icon cancel"><@u.messageHTML "action.cancelEditDraft" /></span></a>
         </div>
-        
-        
     </form>
 
 <#--

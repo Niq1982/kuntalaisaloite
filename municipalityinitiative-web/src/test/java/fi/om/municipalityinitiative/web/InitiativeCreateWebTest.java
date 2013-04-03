@@ -16,7 +16,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
      * Localization keys as constants.
      */
     private static final String MSG_SITE_NAME = "siteName";
-    private static final String MSG_PAGE_CREATE_NEW = "page.createNew";
+    private static final String MSG_PAGE_CREATE_NEW = "page.prepare";
     private static final String MSG_SUCCESS_SAVE_AND_SEND = "success.save-and-send";
     private static final String MSG_SUCCESS_PREPARE = "success.prepare";
     private static final String MSG_SUCCESS_SAVE_TITLE = "success.save.title";
