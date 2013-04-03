@@ -19,22 +19,19 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class InitiativeService {
+public class PublicInitiativeService {
 
     @Resource
     InitiativeDao initiativeDao;
 
     @Resource
-    private ParticipantDao participantDao;
+    ParticipantDao participantDao;
 
     @Resource
     EmailService emailService;
 
     @Resource
     MunicipalityDao municipalityDao;
-
-    @Resource
-    UserService userService;
 
     public List<InitiativeListInfo> findMunicipalityInitiatives(InitiativeSearch search) {
         return initiativeDao.find(search);
@@ -121,6 +118,8 @@ public class InitiativeService {
         InitiativeUIUpdateDto updateDto = new InitiativeUIUpdateDto();
         updateDto.setContactInfo(authorInformation.getContactInfo());
         updateDto.setShowName(initiative.getShowName());
+        updateDto.setManagementHash(managementHash);
+        updateDto.setExtraInfo(initiative.getComment());
 
         return updateDto;
     }
@@ -145,15 +144,4 @@ public class InitiativeService {
         }
     }
 
-    // TODO: IsAllowed
-    public void accept(Long initiativeId) {
-        userService.requireOmUser();
-        initiativeDao.updateInitiativeState(initiativeId, InitiativeState.ACCEPTED);
-    }
-
- // TODO: IsAllowed
-    public void reject(Long initiativeId) {
-        userService.requireOmUser();
-        initiativeDao.updateInitiativeState(initiativeId, InitiativeState.DRAFT);
-    }
 }

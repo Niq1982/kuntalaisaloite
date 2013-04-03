@@ -8,17 +8,17 @@ import org.junit.Before;
 
 import static org.mockito.Mockito.mock;
 
-public class InitiativeServiceTest {
+public class PublicInitiativeServiceTest {
 
-    private InitiativeService service;
+    private PublicInitiativeService service;
     private InitiativeDao initiativeDao;
 
-    // Currently no unit tests for initiativeservice. @see fi.om.municipalityinitiative.service.InitiativeServiceIntegrationTest
+    // Currently no unit tests for initiativeservice. @see fi.om.municipalityinitiative.service.PublicInitiativeServiceIntegrationTest
 
     @Before
     public void setup() {
         initiativeDao = mock(InitiativeDao.class);
-        service = new InitiativeService();
+        service = new PublicInitiativeService();
         service.initiativeDao = initiativeDao;
         service.municipalityDao = mock(MunicipalityDao.class);
         service.emailService = mock(EmailService.class);

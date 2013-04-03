@@ -13,4 +13,8 @@ public enum InitiativeType {
     public static boolean isCollectable(InitiativeType type) {
         return type != null && !type.equals(InitiativeType.SINGLE);
     }
+
+    public boolean isCollectable() {
+        return isCollectable(this);
+    }
 }

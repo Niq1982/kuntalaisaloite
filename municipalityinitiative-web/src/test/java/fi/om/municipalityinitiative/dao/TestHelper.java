@@ -32,6 +32,7 @@ public class TestHelper {
     public static final String DEFAULT_AUTHOR_ADDRESS = "author address";
     public static final String DEFAULT_AUTHOR_PHONE = "author phone";
     public static final boolean DEFAULT_PUBLIC_NAME = true;
+    public static final String DEFAULT_COMMENT = "some default comment";
     private static final DateTime DEFAULT_SENT = null;
 
     @Resource
@@ -62,16 +63,19 @@ public class TestHelper {
     }
 
     @Transactional
+    @Deprecated
     public Long createTestInitiative(Long municipalityId) {
         return createTestInitiative(municipalityId, "name");
     }
 
     @Transactional
+    @Deprecated
     public Long createTestInitiative(Long municipalityId, String name) {
         return createTestInitiative(municipalityId, name, true, false);
     }
 
     @Transactional
+    @Deprecated
     public Long createTestInitiative(Long municipalityId, String name, boolean publicName, boolean collectable) {
         SQLInsertClause insert = queryFactory.insert(municipalityInitiative);
 
@@ -83,6 +87,7 @@ public class TestHelper {
         insert.set(municipalityInitiative.proposal, "proposal");
         insert.set(municipalityInitiative.municipalityId, municipalityId);
         insert.set(municipalityInitiative.newAuthorId, -1L);
+        insert.set(municipalityInitiative.comment, "comment");
         //insert.setNull(municipalityInitiative.authorId); // TODO
         if (collectable) {
 //            insert.set(municipalityInitiative.managementHash,TEST_MANAGEMENT_HASH);
@@ -173,6 +178,7 @@ public class TestHelper {
         insert.set(municipalityInitiative.municipalityId, initiativeDraft.municipalityId);
         insert.set(municipalityInitiative.newAuthorId, -1L);
         insert.set(municipalityInitiative.participantCount, initiativeDraft.participantCount);
+        insert.set(municipalityInitiative.comment, initiativeDraft.comment);
 
         insert.set(municipalityInitiative.state, initiativeDraft.state);
 
@@ -239,6 +245,7 @@ public class TestHelper {
         public boolean publicName = DEFAULT_PUBLIC_NAME;
         public DateTime sent = DEFAULT_SENT;
         public Integer participantCount = 0;
+        public String comment = DEFAULT_COMMENT;
 
         public InitiativeDraft(Long municipalityId) {
             this.municipalityId = municipalityId;

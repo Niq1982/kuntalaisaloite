@@ -14,6 +14,7 @@ import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -31,10 +32,10 @@ import static org.junit.Assert.fail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={IntegrationTestFakeEmailConfiguration.class})
-public class InitiativeServiceIntegrationTest {
+public class PublicInitiativeServiceIntegrationTest {
 
     @Resource
-    private InitiativeService service;
+    private PublicInitiativeService service;
 
     @Resource
     private ParticipantDao participantDao;
@@ -114,9 +115,7 @@ public class InitiativeServiceIntegrationTest {
     @Test
     public void sets_participant_count_to_one_when_adding_new_collectable_initiative() {
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
-        service.sendReview(initiativeId, RandomHashGenerator.getPrevious(), InitiativeType.COLLABORATIVE);
-        fakeUserService.setOmUser(true);
-        service.accept(initiativeId);
+        testHelper.updateField(initiativeId, QMunicipalityInitiative.municipalityInitiative.state, InitiativeState.ACCEPTED);
 
         List<InitiativeListInfo> initiatives = service.findMunicipalityInitiatives(new InitiativeSearch().setShow(InitiativeSearch.Show.all));
         precondition(initiatives, hasSize(1));
@@ -158,9 +157,7 @@ public class InitiativeServiceIntegrationTest {
     @Test
     public void preparing_initiative_sets_participant_information() {
         Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise(), Locales.LOCALE_FI);
-        service.sendReview(initiativeId, RandomHashGenerator.getPrevious(), InitiativeType.COLLABORATIVE);
-        // TODO: remove this quick fix, if neccessary
-        service.accept(initiativeId);
+        testHelper.updateField(initiativeId, QMunicipalityInitiative.municipalityInitiative.state, InitiativeState.ACCEPTED);
 
         InitiativeSearch all = new InitiativeSearch().setShow(InitiativeSearch.Show.all);
         assertThat(service.findMunicipalityInitiatives(all).get(0).getParticipantCount(), is(1L));
@@ -226,6 +223,13 @@ public class InitiativeServiceIntegrationTest {
     }
 
     @Test
+    public void get_initiative_for_update_sets_all_required_information() {
+        Long initiativeId = testHelper.createCollectableReview(testMunicipality.getId());
+        InitiativeUIUpdateDto initiativeForUpdate = service.getInitiativeForUpdate(initiativeId, TestHelper.TEST_MANAGEMENT_HASH);
+        ReflectionTestUtils.assertNoNullFields(initiativeForUpdate);
+    }
+
+    @Test
     public void get_initiative_for_edit_has_all_information() {
         Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise(), Locales.LOCALE_FI);
 
@@ -235,8 +239,8 @@ public class InitiativeServiceIntegrationTest {
         assertThat(initiativeForEdit.getManagementHash(), is(managementHash));
         assertThat(initiativeForEdit.getMunicipality().getId(), is(testMunicipality.getId()));
         assertThat(initiativeForEdit.getState(), is(InitiativeState.DRAFT));
-        
-        
+
+
         // Note that all fields are not set when preparing
     }
 
@@ -247,7 +251,7 @@ public class InitiativeServiceIntegrationTest {
         return prepareInitiativeDto;
     }
 
-    private PrepareInitiativeDto prepareDto() {
+    private static PrepareInitiativeDto prepareDto() {
         PrepareInitiativeDto prepareInitiativeDto = new PrepareInitiativeDto();
         prepareInitiativeDto.setMunicipality(testMunicipality.getId());
         prepareInitiativeDto.setHomeMunicipality(testMunicipality.getId());
@@ -255,7 +259,7 @@ public class InitiativeServiceIntegrationTest {
         return prepareInitiativeDto;
     }
 
-    private InitiativeUICreateDto createDto(boolean collectable) {
+    private static InitiativeUICreateDto createDto(boolean collectable) {
         InitiativeUICreateDto createDto = new InitiativeUICreateDto();
         createDto.setProposal("Proposal " + randomString());
         createDto.setName("Name " + randomString());
