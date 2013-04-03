@@ -18,7 +18,7 @@
 <@l.main page pageTitle!"">
 
     <#-- Create form errors summary -->
-    <@u.errorsSummary path="initiative.*" prefix="initiative."/>
+    <@u.errorsSummary path="updateData.*" prefix="updateData."/>
 
     <noscript>
         <@f.cookieWarning springMacroRequestContext.requestUri />
@@ -34,7 +34,7 @@
 
     <h1 class="name">${initiative.name!""}</h1>
     
-    <div class="municipality">${initiative.municipality.getName(locale)!""}</div>
+    <div class="municipality">${initiative.municipality.name!""}</div>
     
     <div class="view-block public first">
         <div class="initiative-content-row">
@@ -49,24 +49,20 @@
     <#-- FORM. Use class 'sodirty' to enable dirtylisten. -->
     <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-initiative" class="sodirty dirtylisten <#if hasErrors>has-errors</#if>">
 
-        <#-- TODO: Remove hidden name and proposal values when backend supports partial edit -->
-        <input type="hidden" name="name" value="${initiative.name!""}">
-        <input type="hidden" name="proposal" value="${initiative.proposal!""}">
-
         <@f.securityFilters />
 
         <div class="form-block-container">
             <@edit.blockHeader key="initiative.updateInitiative.title" step=1 />
-            <@edit.updateInitiativeBlock />
+            <@edit.updateInitiativeBlock "updateData"/>
         </div>
 
         <div class="form-block-container">
             <@edit.blockHeader key="initiative.updateCurrentAuthor.title" step=2 />
-            <@edit.currentAuthorBlock "initiative" />
+            <@edit.currentAuthorBlock "updateData" />
         </div>
         
         <div class="" id="form-action-panel">
-            <input type="hidden" name="managementHash" value="${initiative.managementHash}"/>
+            <input type="hidden" name="managementHash" value="${updateData.managementHash}"/>
             <button class="large-button" value="true" name="${UrlConstants.ACTION_UPDATE_INITIATIVE}" type="submit"><span class="large-icon save-and-send"><@u.messageHTML "action.updateInitiative" /></span></button>
             <a href="${previousPageURI!urls.baseUrl+"/"+locale}" class="large-button"><span class="large-icon cancel"><@u.messageHTML "action.cancelUpdateInitiative" /></span></a>
         </div>

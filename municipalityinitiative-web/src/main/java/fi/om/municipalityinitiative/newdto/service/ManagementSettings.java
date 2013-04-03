@@ -15,16 +15,11 @@ public class ManagementSettings {
         return initiative.getState() == InitiativeState.DRAFT;
     }
 
-    public void assertManagementHash(String expectedManagementHash) {
-        if (!initiative.getManagementHash().equals(expectedManagementHash)) {
-            throw new AccessDeniedException("Invalid managementHash");
-        }
-    }
-
     public boolean isAllowUpdate() {
         switch (initiative.getState()) {
             case REVIEW:
             case ACCEPTED:
+            case PUBLISHED:
                 return true;
             default:
                 return false;

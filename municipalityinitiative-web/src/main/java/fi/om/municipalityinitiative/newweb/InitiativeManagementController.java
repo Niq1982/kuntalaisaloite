@@ -89,7 +89,9 @@ public class InitiativeManagementController extends BaseController {
         if (managementSettings.isAllowUpdate()) {
 
             model.addAttribute(ALT_URI_ATTR, urls.alt().edit(initiativeId, managementHash));
-            model.addAttribute("initiative", publicInitiativeService.getInitiativeDraftForEdit(initiativeId, managementHash)); // TODO UpdateDto, not edit
+//            model.addAttribute("initiative", publicInitiativeService.getInitiativeDraftForEdit(initiativeId, managementHash)); // TODO UpdateDto, not edit
+            model.addAttribute("initiative", publicInitiativeService.getMunicipalityInitiative(initiativeId, managementHash, locale));
+            model.addAttribute("updateData", publicInitiativeService.getInitiativeForUpdate(initiativeId, managementHash));
             model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, managementHash));
 
             model.addAttribute("previousPageURI", urls.prepare());
@@ -104,7 +106,7 @@ public class InitiativeManagementController extends BaseController {
 
     @RequestMapping(value={ UPDATE_FI, UPDATE_SV }, method=POST)
     public String updatePost(@PathVariable("id") Long initiativeId,
-                             @ModelAttribute("initiative") InitiativeDraftUIEditDto updateDto,
+                             @ModelAttribute("initiative") InitiativeUIUpdateDto updateDto,
                              BindingResult bindingResult,
                              Model model, Locale locale, HttpServletRequest request) {
 
@@ -114,17 +116,11 @@ public class InitiativeManagementController extends BaseController {
             model.addAttribute(ALT_URI_ATTR, urls.alt().edit(initiativeId, updateDto.getManagementHash()));
             model.addAttribute("initiative", publicInitiativeService.getMunicipalityInitiative(initiativeId, updateDto.getManagementHash(), locale));
             model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, updateDto.getManagementHash()));
+            model.addAttribute("updateData", updateDto);
             return UPDATE_VIEW;
         }
 
-        // TODO: Get update dto instead of edit-dto
-
-        InitiativeUIUpdateDto copiedUpdateDto = new InitiativeUIUpdateDto();
-        copiedUpdateDto.setContactInfo(updateDto.getContactInfo());
-        copiedUpdateDto.setManagementHash(updateDto.getManagementHash());
-        copiedUpdateDto.setShowName(updateDto.getShowName());
-        copiedUpdateDto.setExtraInfo(updateDto.getExtraInfo());
-        publicInitiativeService.updateInitiative(initiativeId, copiedUpdateDto);
+        publicInitiativeService.updateInitiative(initiativeId, updateDto);
         return redirectWithMessage(urls.management(initiativeId, updateDto.getManagementHash()), RequestMessage.UPDATE_INITIATIVE, request);
     }
 

@@ -214,7 +214,7 @@
  *
  * @param locked locks some field from editing
  -->
-<#macro updateInitiativeBlock>      
+<#macro updateInitiativeBlock path>
     <div class="input-block cf">
         <div class="input-block-extra">
             <div class="input-block-extra-content">
@@ -223,7 +223,7 @@
         </div>
 
         <div class="input-block-content">
-            <@f.textarea path="initiative.extraInfo" required="" optional=true cssClass="textarea" />
+            <@f.textarea path=path+".extraInfo" required="" optional=true cssClass="textarea" />
         </div>
     </div>
 </#macro>

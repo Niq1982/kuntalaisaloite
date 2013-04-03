@@ -521,6 +521,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     info.setManagementHash(Maybe.of(row.get(QAuthor.author.managementHash)));
                     info.setSentTime(maybeLocalDate(row.get(municipalityInitiative.sent)));
                     info.setState(row.get(municipalityInitiative.state));
+                    info.setComment(row.get(municipalityInitiative.comment));
                     return info;
                 }
             };

@@ -27,6 +27,7 @@ public class Initiative {
     private Maybe<LocalDate> sentTime = Maybe.absent();
     private Maybe<InitiativeType> type;
     private InitiativeState state;
+    private String comment;
 
     public String getName() {
         return name;
@@ -122,5 +123,13 @@ public class Initiative {
 
     public void setState(InitiativeState state) {
         this.state = state;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

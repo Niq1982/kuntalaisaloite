@@ -14,6 +14,7 @@ import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -222,6 +223,13 @@ public class PublicInitiativeServiceIntegrationTest {
     }
 
     @Test
+    public void get_initiative_for_update_sets_all_required_information() {
+        Long initiativeId = testHelper.createCollectableReview(testMunicipality.getId());
+        InitiativeUIUpdateDto initiativeForUpdate = service.getInitiativeForUpdate(initiativeId, TestHelper.TEST_MANAGEMENT_HASH);
+        ReflectionTestUtils.assertNoNullFields(initiativeForUpdate);
+    }
+
+    @Test
     public void get_initiative_for_edit_has_all_information() {
         Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise(), Locales.LOCALE_FI);
 
@@ -231,8 +239,8 @@ public class PublicInitiativeServiceIntegrationTest {
         assertThat(initiativeForEdit.getManagementHash(), is(managementHash));
         assertThat(initiativeForEdit.getMunicipality().getId(), is(testMunicipality.getId()));
         assertThat(initiativeForEdit.getState(), is(InitiativeState.DRAFT));
-        
-        
+
+
         // Note that all fields are not set when preparing
     }
 
@@ -243,7 +251,7 @@ public class PublicInitiativeServiceIntegrationTest {
         return prepareInitiativeDto;
     }
 
-    private PrepareInitiativeDto prepareDto() {
+    private static PrepareInitiativeDto prepareDto() {
         PrepareInitiativeDto prepareInitiativeDto = new PrepareInitiativeDto();
         prepareInitiativeDto.setMunicipality(testMunicipality.getId());
         prepareInitiativeDto.setHomeMunicipality(testMunicipality.getId());
@@ -251,7 +259,7 @@ public class PublicInitiativeServiceIntegrationTest {
         return prepareInitiativeDto;
     }
 
-    private InitiativeUICreateDto createDto(boolean collectable) {
+    private static InitiativeUICreateDto createDto(boolean collectable) {
         InitiativeUICreateDto createDto = new InitiativeUICreateDto();
         createDto.setProposal("Proposal " + randomString());
         createDto.setName("Name " + randomString());
