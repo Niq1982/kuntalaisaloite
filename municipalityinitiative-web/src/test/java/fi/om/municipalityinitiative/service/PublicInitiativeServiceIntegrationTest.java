@@ -210,6 +210,7 @@ public class PublicInitiativeServiceIntegrationTest {
         editDto.setName("updated initiative name");
         editDto.setProposal("updated proposal");
         editDto.setShowName(false); // As far as default is true ...
+        editDto.setExtraInfo("updated extrainfo");
 
         service.editInitiativeDraft(initiativeId, editDto);
 
@@ -219,6 +220,8 @@ public class PublicInitiativeServiceIntegrationTest {
         assertThat(updated.getName(), is(editDto.getName()));
         assertThat(updated.getProposal(), is(editDto.getProposal()));
         assertThat(updated.getShowName(), is(editDto.getShowName()));
+        assertThat(updated.getExtraInfo(), is(editDto.getExtraInfo()));
+        ReflectionTestUtils.assertNoNullFields(updated);
 
     }
 
