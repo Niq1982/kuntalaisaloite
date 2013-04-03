@@ -146,24 +146,14 @@ public class InitiativeService {
     }
 
     // TODO: IsAllowed
-    public void accept(Long initiativeId, String managementHash) {
+    public void accept(Long initiativeId) {
         userService.requireOmUser();
-        if (initiativeDao.getById(initiativeId).getManagementHash().get().equals(managementHash)) {
-            initiativeDao.updateInitiativeState(initiativeId, InitiativeState.ACCEPTED);
-        }
-        else {
-            throw new AccessDeniedException("Invalid management hash");
-        }
+        initiativeDao.updateInitiativeState(initiativeId, InitiativeState.ACCEPTED);
     }
 
  // TODO: IsAllowed
-    public void reject(Long initiativeId, String managementHash) {
+    public void reject(Long initiativeId) {
         userService.requireOmUser();
-        if (initiativeDao.getById(initiativeId).getManagementHash().get().equals(managementHash)) {
-            initiativeDao.updateInitiativeState(initiativeId, InitiativeState.DRAFT);
-        }
-        else {
-            throw new AccessDeniedException("Invalid management hash");
-        }
+        initiativeDao.updateInitiativeState(initiativeId, InitiativeState.DRAFT);
     }
 }

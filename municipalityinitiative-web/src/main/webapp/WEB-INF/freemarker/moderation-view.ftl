@@ -6,7 +6,7 @@
 
 <#escape x as x?html> 
 
-<#assign moderationURL = urls.moderation(initiative.id, initiative.managementHash.value) />
+<#assign moderationURL = urls.moderation(initiative.id) />
 
 <#--
  * Layout parameters for HTML-title and navigation.
@@ -44,8 +44,7 @@
                     <input type="hidden" name="${UrlConstants.PARAM_MANAGEMENT_CODE}" value="${initiative.managementHash.value}"/>
                     
                     <div class="input-block-content no-top-margin">
-                        <#-- TODO: path for "acceptInitiative.comment"-->
-                        <@f.textarea path="sendToMunicipality.comment" required="" optional=false cssClass="collapse" />
+                        <textarea name="comment" class="collapse" ></textarea>
                     </div>
                     
                     <div class="input-block-content">
@@ -66,8 +65,7 @@
                     <input type="hidden" name="${UrlConstants.PARAM_MANAGEMENT_CODE}" value="${initiative.managementHash.value}"/>
                     
                     <div class="input-block-content no-top-margin">
-                        <#-- TODO: path for "acceptInitiative.comment"-->
-                        <@f.textarea path="sendToMunicipality.comment" required="" optional=false cssClass="collapse" />
+                        <textarea name="comment" class="collapse" ></textarea>
                     </div>
                     
                     <div class="input-block-content">

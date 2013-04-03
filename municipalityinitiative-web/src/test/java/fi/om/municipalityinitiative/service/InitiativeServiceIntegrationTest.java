@@ -116,7 +116,7 @@ public class InitiativeServiceIntegrationTest {
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
         service.sendReview(initiativeId, RandomHashGenerator.getPrevious(), InitiativeType.COLLABORATIVE);
         fakeUserService.setOmUser(true);
-        service.accept(initiativeId, RandomHashGenerator.getPrevious());
+        service.accept(initiativeId);
 
         List<InitiativeListInfo> initiatives = service.findMunicipalityInitiatives(new InitiativeSearch().setShow(InitiativeSearch.Show.all));
         precondition(initiatives, hasSize(1));
@@ -160,7 +160,7 @@ public class InitiativeServiceIntegrationTest {
         Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise(), Locales.LOCALE_FI);
         service.sendReview(initiativeId, RandomHashGenerator.getPrevious(), InitiativeType.COLLABORATIVE);
         // TODO: remove this quick fix, if neccessary
-        service.accept(initiativeId, RandomHashGenerator.getPrevious());
+        service.accept(initiativeId);
 
         InitiativeSearch all = new InitiativeSearch().setShow(InitiativeSearch.Show.all);
         assertThat(service.findMunicipalityInitiatives(all).get(0).getParticipantCount(), is(1L));
