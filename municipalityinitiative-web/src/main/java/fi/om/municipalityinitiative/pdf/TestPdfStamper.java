@@ -17,13 +17,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.Set;
+
+// TODO: Remove from KUA and implement to KAA
 
 public class TestPdfStamper {
 
     
     /** The original PDF file. */
     public static final String DATASHEET
-        = "/Users/mikkole/Documents/Kuntalaisaloite/Testi-PDF/Kannatusilmoitus_W.pdf";
+        = "/Users/mikkole/Documents/Kuntalaisaloite/Testi-PDF/datasheet.pdf";
+//        = "/Users/mikkole/Documents/Kuntalaisaloite/Testi-PDF/Kannatusilmoitus_W.pdf";
     /** The resulting PDF file. */
     public static final String RESULT
         = "/Users/mikkole/Documents/Kuntalaisaloite/Testi-PDF/output.pdf";
@@ -38,11 +42,11 @@ public class TestPdfStamper {
             
         PdfReader reader = new PdfReader(DATASHEET);
         PdfStamper stamper = new PdfStamper(reader, outputStream);
-//        stamper = new PdfStamper(reader, new FileOutputStream(String.format(RESULT, "test")));
         
-//        fill(stamper.getAcroFields());
+        fill(stamper.getAcroFields());
         
-        stamper.setFormFlattening(true);
+        // TODO: Flatten only title and date fields
+//        stamper.setFormFlattening(true);
         stamper.close();
         reader.close();
 
@@ -51,7 +55,17 @@ public class TestPdfStamper {
     
     public static void fill(AcroFields form)
             throws IOException, DocumentException {
-        form.setField("title", "Otsikko");
-        form.setField("date", "1");
+        
+        // Loop over the fields and get info about them
+        Set<String> fields = form.getFields().keySet();
+        for (String key : fields) {
+            System.out.println("Kenttä: " +key);
+            
+            form.setField("director", "Otsikko");
+            form.setField("year", "1");
+        }
+        
+//        form.setField("title", "Otsikko");
+//        form.setField("date", "1");
     }
 }
