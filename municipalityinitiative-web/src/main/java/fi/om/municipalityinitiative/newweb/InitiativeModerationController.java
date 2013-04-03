@@ -79,15 +79,11 @@ public class InitiativeModerationController extends BaseController{
         }
     }
 
-
-    // TODO: Permission only for logged in users with moderation rights
     // TODO: No need for management hash
     @RequestMapping(value = {MODERATION_FI, MODERATION_FI}, method = POST, params = ACTION_ACCEPT_INITIATIVE)
     public String acceptInitiative(@PathVariable("id") Long initiativeId,
                                    @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                                    Locale locale, HttpServletRequest request) {
-
-        userService.requireOmUser();
 
         // TODO: Saate / Comment
 
@@ -95,14 +91,11 @@ public class InitiativeModerationController extends BaseController{
         return redirectWithMessage(Urls.get(locale).moderation(initiativeId, managementHash), RequestMessage.ACCEPT_INITIATIVE, request);
     }
 
-    // TODO: Permission only for logged in users with moderation rights
     // TODO: No need for management hash
     @RequestMapping(value = {MODERATION_FI, MODERATION_FI}, method = POST, params = ACTION_REJECT_INITIATIVE)
     public String rejectInitiative(@PathVariable("id") Long initiativeId,
                                    @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                                    Locale locale, HttpServletRequest request) {
-
-        userService.requireOmUser();
 
         // TODO: Saate / Comment
 
