@@ -336,6 +336,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .set(municipalityInitiative.name, editDto.getName())
                 .set(municipalityInitiative.proposal, editDto.getProposal())
                 .set(municipalityInitiative.modified, CURRENT_TIME)
+                .set(municipalityInitiative.comment, editDto.getExtraInfo())
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute());
 
@@ -466,6 +467,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     info.setManagementHash(row.get(QAuthor.author.managementHash));
                     info.setName(row.get(municipalityInitiative.name));
                     info.setProposal(row.get(municipalityInitiative.proposal));
+                    info.setExtraInfo(row.get(municipalityInitiative.comment));
                     info.setShowName(row.get(QParticipant.participant.showName));
 
                     ContactInfo contactInfo = new ContactInfo();
