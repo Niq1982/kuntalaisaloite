@@ -251,11 +251,6 @@
             <artifactId>itextpdf</artifactId>
             <version>5.3.4</version>
         </dependency>
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk16</artifactId>
-            <version>1.44</version>
-        </dependency>
 
         <!-- Jasypt -->
         <dependency>
