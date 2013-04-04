@@ -126,7 +126,7 @@ public class PublicInitiativeService {
 
     public void updateInitiative(Long initiativeId, InitiativeUIUpdateDto updateDto) {
         // TODO: IsAllowed
-        // TODO: Check managementHash from updateDto
+        // TODO: Check managementHash from updateDto (is somehow checked when trying to update at dao layer)
         initiativeDao.updateInitiative(initiativeId, updateDto);
     }
 
@@ -134,12 +134,30 @@ public class PublicInitiativeService {
         return initiativeDao.getAuthorInformation(initiativeId, managementHash);
     }
 
-    public void sendReview(Long initiativeId, String managementHash, InitiativeType type) {
+    public void sendReview(Long initiativeId, String managementHash, boolean sendToMunicipalityRightAfterAcceptance) {
         // TODO: IsAllowed
-        if (initiativeDao.getById(initiativeId).getManagementHash().get().equals(managementHash)) {
-            initiativeDao.setInitiativeAsReview(initiativeId, type);
+        assertManagementHash(initiativeId, managementHash);
+
+        if (sendToMunicipalityRightAfterAcceptance) {
+            initiativeDao.setInitiativeAsReview(initiativeId, InitiativeType.SINGLE);
         }
         else {
+            initiativeDao.updateInitiativeState(initiativeId, InitiativeState.REVIEW);
+        }
+    }
+
+    public void publishInitiative(Long initiativeId, String managementHash) {
+        // TODO: IsAllowed
+
+        // FIXME: CONTINUE FROM HERE
+        // XXX: CONTINUE FROM HERE
+        // TODO: CONTINUE FROM HERE
+        // NOTE: Wippiduu Bazil
+
+    }
+
+    private void assertManagementHash(Long initiativeId, String managementHash) {
+        if (!initiativeDao.getById(initiativeId).getManagementHash().get().equals(managementHash)) {
             throw new AccessDeniedException("Invalid management hash");
         }
     }

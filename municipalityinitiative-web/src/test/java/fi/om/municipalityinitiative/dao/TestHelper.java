@@ -157,7 +157,7 @@ public class TestHelper {
     public Long createEmptyDraft(Long municipalityId) {
         return create(new InitiativeDraft(municipalityId)
                 .withState(InitiativeState.DRAFT)
-                .withType(InitiativeType.SINGLE)
+                .withType(null)
                 .withName(null)
                 .withProposal(null)
                 .withAuthorName(null)

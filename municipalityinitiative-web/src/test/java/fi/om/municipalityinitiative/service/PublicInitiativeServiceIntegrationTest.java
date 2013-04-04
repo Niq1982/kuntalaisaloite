@@ -3,8 +3,10 @@ package fi.om.municipalityinitiative.service;
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
+import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.ui.*;
@@ -38,7 +40,10 @@ public class PublicInitiativeServiceIntegrationTest {
     private PublicInitiativeService service;
 
     @Resource
-    private ParticipantDao participantDao;
+    private ParticipantDao participantDao; // Do not depend on this
+
+    @Resource
+    private InitiativeDao initiativeDao; // Do not depend on this
 
     @Resource
     private JavaMailSenderFake javaMailSenderFake;
@@ -51,12 +56,19 @@ public class PublicInitiativeServiceIntegrationTest {
 
     private static MunicipalityInfo testMunicipality;
 
+    private static MunicipalityInfo participantMunicipality;
+
     @Before
     public void setup() {
         testHelper.dbCleanup();
         testMunicipality = new MunicipalityInfo();
         testMunicipality.setName("Test municipality");
         testMunicipality.setId(testHelper.createTestMunicipality(testMunicipality.getName()));
+
+        participantMunicipality = new MunicipalityInfo();
+        participantMunicipality.setName("Participant municipality");
+        participantMunicipality.setId(testHelper.createTestMunicipality(participantMunicipality.getName()));
+
     }
 
 
@@ -159,11 +171,12 @@ public class PublicInitiativeServiceIntegrationTest {
         Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise(), Locales.LOCALE_FI);
         testHelper.updateField(initiativeId, QMunicipalityInitiative.municipalityInitiative.state, InitiativeState.ACCEPTED);
 
-        InitiativeSearch all = new InitiativeSearch().setShow(InitiativeSearch.Show.all);
-        assertThat(service.findMunicipalityInitiatives(all).get(0).getParticipantCount(), is(1L));
+        List<InitiativeListInfo> initiatives = service.findMunicipalityInitiatives(new InitiativeSearch().setShow(InitiativeSearch.Show.all));
+        precondition(initiatives, hasSize(1));
+        assertThat(initiatives.get(0).getParticipantCount(), is(1L));
 
         Participant participant = participantDao.findAllParticipants(initiativeId).get(0);
-        assertThat(participant.getHomeMunicipality().getId(), is(testMunicipality.getId()));
+        assertThat(participant.getHomeMunicipality().getId(), is(participantMunicipality.getId()));
         assertThat(participant.getParticipateDate(), is(LocalDate.now()));
     }
 
@@ -247,40 +260,45 @@ public class PublicInitiativeServiceIntegrationTest {
         // Note that all fields are not set when preparing
     }
 
+    @Test
+    public void send_initiative_as_review_sents_state_as_review_and_leaves_type_as_null_if_not_single() {
+        Long initiativeId = testHelper.createEmptyDraft(testMunicipality.getId());
+
+        service.sendReview(initiativeId, TestHelper.TEST_MANAGEMENT_HASH, false);
+
+        Initiative updated = initiativeDao.getById(initiativeId);
+
+        assertThat(updated.getState(), is(InitiativeState.REVIEW));
+        assertThat(updated.getType().isPresent(), is(false));
+    }
+
+    @Test
+    public void send_initiative_as_review_sents_state_as_review_and_type_as_single_if_single() {
+        Long initiativeId = testHelper.createEmptyDraft(testMunicipality.getId());
+        service.sendReview(initiativeId, TestHelper.TEST_MANAGEMENT_HASH, true);
+
+        Initiative updated = initiativeDao.getById(initiativeId);
+
+        assertThat(updated.getState(), is(InitiativeState.REVIEW));
+        assertThat(updated.getType().get(), is(InitiativeType.SINGLE));
+    }
+
+
+
+
     private static PrepareInitiativeDto initiativePrepareDtoWithFranchise() {
         PrepareInitiativeDto prepareInitiativeDto = new PrepareInitiativeDto();
-        prepareInitiativeDto.setHomeMunicipality(testMunicipality.getId());
         prepareInitiativeDto.setMunicipality(testMunicipality.getId());
+        prepareInitiativeDto.setHomeMunicipality(participantMunicipality.getId());
         return prepareInitiativeDto;
     }
 
     private static PrepareInitiativeDto prepareDto() {
         PrepareInitiativeDto prepareInitiativeDto = new PrepareInitiativeDto();
         prepareInitiativeDto.setMunicipality(testMunicipality.getId());
-        prepareInitiativeDto.setHomeMunicipality(testMunicipality.getId());
+        prepareInitiativeDto.setHomeMunicipality(participantMunicipality.getId());
         prepareInitiativeDto.setAuthorEmail("authorEmail@example.com");
         return prepareInitiativeDto;
-    }
-
-    private static InitiativeUICreateDto createDto(boolean collectable) {
-        InitiativeUICreateDto createDto = new InitiativeUICreateDto();
-        createDto.setProposal("Proposal " + randomString());
-        createDto.setName("Name " + randomString());
-        createDto.setFranchise(true);
-        createDto.setShowName(true);
-        createDto.setMunicipality(testMunicipality.getId());
-        createDto.setHomeMunicipality(testMunicipality.getId());
-        createDto.setMunicipalMembership(true);
-        createDto.setCollectable(collectable);
-
-        createDto.setContactInfo(new ContactInfo());
-        createDto.getContactInfo().setAddress("contact address " + randomString());
-        createDto.getContactInfo().setPhone("contact phone " + randomString());
-        createDto.getContactInfo().setName("contact name " + randomString());
-        createDto.getContactInfo().setEmail(randomString()+"@example.com");
-
-        ReflectionTestUtils.assertNoNullFields(createDto);
-        return createDto;
     }
 
 

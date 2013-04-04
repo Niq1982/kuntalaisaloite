@@ -130,7 +130,7 @@ public class InitiativeManagementController extends BaseController {
                                @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                                Locale locale, HttpServletRequest request) {
 
-        publicInitiativeService.sendReview(initiativeId, managementHash, InitiativeType.SINGLE);
+        publicInitiativeService.sendReview(initiativeId, managementHash, true);
         return redirectWithMessage(Urls.get(locale).management(initiativeId, managementHash),RequestMessage.SEND_TO_REVIEW, request);
     }
 
@@ -139,7 +139,7 @@ public class InitiativeManagementController extends BaseController {
                                             @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                                             Locale locale, HttpServletRequest request) {
 
-        publicInitiativeService.sendReview(initiativeId, managementHash, InitiativeType.COLLABORATIVE);
+        publicInitiativeService.sendReview(initiativeId, managementHash, false);
         return redirectWithMessage(Urls.get(locale).management(initiativeId, managementHash),RequestMessage.SEND_TO_REVIEW, request);
     }
 }
