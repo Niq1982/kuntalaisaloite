@@ -2,7 +2,7 @@ drop type if exists initiativeType;
 drop type if exists initiativeState;
 
 create type initiativeType as enum ('SINGLE','COLLABORATIVE','COLLABORATIVE_COUNCIL','COLLABORATIVE_CITIZEN');
-create type initiativeState as enum('DRAFT','REVIEW','ACCEPTED');
+create type initiativeState as enum('DRAFT','REVIEW','ACCEPTED', 'PUBLISHED');
 
 create table municipality (
 	id bigserial,

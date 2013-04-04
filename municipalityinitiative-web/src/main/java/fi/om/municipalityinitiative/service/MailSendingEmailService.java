@@ -1,16 +1,13 @@
 package fi.om.municipalityinitiative.service;
 
+import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.email.InitiativeEmailInfo;
 import fi.om.municipalityinitiative.util.Task;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 
 import javax.annotation.Resource;
-import javax.mail.internet.MimeMessage;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -30,63 +27,56 @@ public class MailSendingEmailService implements EmailService {
     @Resource
     private EmailMessageConstructor emailMessageConstructor;
 
-    private static final Logger log = LoggerFactory.getLogger(MailSendingEmailService.class);
-
     @Override
     public void sendNotCollectableToMunicipality(InitiativeEmailInfo emailInfo, String municipalityEmail, Locale locale) {
 
-        emailMessageConstructor.fromTemplate(NOT_COLLECTABLE_TEMPLATE)
+        emailMessageConstructor
+                .fromTemplate(NOT_COLLECTABLE_TEMPLATE)
                 .withSendTo(municipalityEmail)
                 .withSubject(messageSource.getMessage("email.not.collectable.municipality.subject", new String[]{emailInfo.getName()}, locale))
-                .withDataMap(setDataMap(emailInfo, locale))
+                .withDataMap(toDataMap(emailInfo, locale))
                 .send();
     }
 
     @Override
     public void sendNotCollectableToAuthor(InitiativeEmailInfo emailInfo, Locale locale) {
 
-        MimeMessageHelper mimeMessageHelper = emailMessageConstructor.parseBasicEmailData(
-                emailInfo.getContactInfo().getEmail(),
-                messageSource.getMessage("email.not.collectable.author.subject", new String[]{emailInfo.getName()}, locale),
-                NOT_COLLECTABLE_TEMPLATE,
-                setDataMap(emailInfo, locale));
-        send(mimeMessageHelper.getMimeMessage());
+        emailMessageConstructor
+                .fromTemplate(NOT_COLLECTABLE_TEMPLATE)
+                .withSendTo(emailInfo.getContactInfo().getEmail())
+                .withSubject(messageSource.getMessage("email.not.collectable.author.subject", new String[]{emailInfo.getName()}, locale))
+                .withDataMap(toDataMap(emailInfo, locale))
+                .send();
     }
 
     @Override
     public void sendCollectableToMunicipality(CollectableInitiativeEmailInfo emailInfo, String municipalityEmail, Locale locale) {
 
-        MimeMessageHelper mimeMessageHelper = emailMessageConstructor.parseBasicEmailData(emailInfo.getContactInfo().getEmail(), // XXX: Temporarily is set to same as authors email.
-                messageSource.getMessage("email.not.collectable.municipality.subject", new String[]{emailInfo.getName()}, locale),
-                COLLECTABLE_TEMPLATE,
-                setDataMap(emailInfo, locale));
-
-        EmailMessageConstructor.addAttachment(mimeMessageHelper, emailInfo);
-
-        send(mimeMessageHelper.getMimeMessage());
+        emailMessageConstructor
+                .fromTemplate(COLLECTABLE_TEMPLATE)
+                .withSendTo(emailInfo.getContactInfo().getEmail())
+                .withSubject(messageSource.getMessage("email.not.collectable.municipality.subject", new String[]{emailInfo.getName()}, locale))
+                .withDataMap(toDataMap(emailInfo, locale))
+                .withAttachment(emailInfo)
+                .send();
     }
 
     @Override
     public void sendCollectableToAuthor(CollectableInitiativeEmailInfo emailInfo, Locale locale) {
 
-        MimeMessageHelper mimeMessageHelper = emailMessageConstructor.parseBasicEmailData(
-                emailInfo.getContactInfo().getEmail(),
-                messageSource.getMessage("email.not.collectable.author.subject", new String[]{emailInfo.getName()}, locale),
-                COLLECTABLE_TEMPLATE,
-                setDataMap(emailInfo, locale));
-        send(mimeMessageHelper.getMimeMessage());
+        emailMessageConstructor
+                .fromTemplate(COLLECTABLE_TEMPLATE)
+                .withSendTo(emailInfo.getContactInfo().getEmail())
+                .withSubject(messageSource.getMessage("email.not.collectable.author.subject", new String[]{emailInfo.getName()}, locale))
+                .withDataMap(toDataMap(emailInfo, locale))
+                .send();
     }
 
-    private HashMap<String, Object> setDataMap(InitiativeEmailInfo emailInfo, Locale locale) {
-        HashMap<String, Object> dataMap = new HashMap<String, Object>();
+    private HashMap<String, Object> toDataMap(InitiativeEmailInfo emailInfo, Locale locale) {
+        HashMap<String, Object> dataMap = Maps.newHashMap();
         dataMap.put("emailInfo", emailInfo);
         dataMap.put("localizations", new EmailLocalizationProvider(messageSource, locale));
         return dataMap;
-    }
-
-    private void send(MimeMessage message) {
-        javaMailSender.send(message);
-        log.info("Email sent.");
     }
 
     public static class EmailLocalizationProvider {

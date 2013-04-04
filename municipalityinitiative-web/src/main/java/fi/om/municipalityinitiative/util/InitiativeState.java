@@ -4,5 +4,5 @@ public enum InitiativeState {
     DRAFT,
     REVIEW,
     ACCEPTED,
-    PUBLISHED
+    PUBLISHED,
 }
