@@ -47,29 +47,6 @@ public class EmailMessageConstructor {
 
     private static final Logger log = LoggerFactory.getLogger(EmailMessageConstructor.class);
 
-    private static String stripTextRows(String text, int maxEmptyRows) {
-        List<String> rows = Lists.newArrayList(Splitter.on('\n').trimResults().split(text));
-
-        int emptyRows = maxEmptyRows;
-        for (int i = rows.size()-1; i >= 0; i--) {
-            if (Strings.isNullOrEmpty(rows.get(i))) {
-                emptyRows++;
-            } else {
-                emptyRows = 0;
-            }
-            if (emptyRows > maxEmptyRows) {
-                rows.remove(i);
-            }
-        }
-
-        //remove remaining empty rows from the beginning
-        while (rows.size() > 0 && Strings.isNullOrEmpty(rows.get(0))) {
-            rows.remove(0);
-        }
-
-        return Joiner.on("\r\n").join(rows);
-    }
-
     static void addAttachment(MimeMessageHelper multipart, CollectableInitiativeEmailInfo emailInfo) {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -86,7 +63,7 @@ public class EmailMessageConstructor {
         }
     }
 
-    MimeMessageHelper parseBasicEmailData(String sendTo, String subject, String templateName, Map<String, Object> dataMap, MailSendingEmailService mailSendingEmailService) {
+    public MimeMessageHelper parseBasicEmailData(String sendTo, String subject, String templateName, Map<String, Object> dataMap) {
 
         String text = processTemplate(templateName + "-text", dataMap);
         String html = processTemplate(templateName + "-html", dataMap);
@@ -99,7 +76,7 @@ public class EmailMessageConstructor {
             sendTo = emailSettings.getTestSendTo().get();
         }
 
-        Assert.notNull(sendTo, "sendTo"); // TODO: Move to the beginning of the function?
+        Assert.notNull(sendTo, "sendTo");
 
         if (emailSettings.isTestConsoleOutput()) {
             System.out.println("----------------------------------------------------------");
@@ -126,6 +103,29 @@ public class EmailMessageConstructor {
             throw new RuntimeException(e);
         }
 
+    }
+
+    private static String stripTextRows(String text, int maxEmptyRows) {
+        List<String> rows = Lists.newArrayList(Splitter.on('\n').trimResults().split(text));
+
+        int emptyRows = maxEmptyRows;
+        for (int i = rows.size()-1; i >= 0; i--) {
+            if (Strings.isNullOrEmpty(rows.get(i))) {
+                emptyRows++;
+            } else {
+                emptyRows = 0;
+            }
+            if (emptyRows > maxEmptyRows) {
+                rows.remove(i);
+            }
+        }
+
+        //remove remaining empty rows from the beginning
+        while (rows.size() > 0 && Strings.isNullOrEmpty(rows.get(0))) {
+            rows.remove(0);
+        }
+
+        return Joiner.on("\r\n").join(rows);
     }
 
     private String processTemplate(String templateName, Map<String, Object> dataMap) {

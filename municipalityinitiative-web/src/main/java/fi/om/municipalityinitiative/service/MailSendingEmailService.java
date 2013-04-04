@@ -39,7 +39,7 @@ public class MailSendingEmailService implements EmailService {
                 municipalityEmail,
                 messageSource.getMessage("email.not.collectable.municipality.subject", new String[]{emailInfo.getName()}, locale),
                 NOT_COLLECTABLE_TEMPLATE,
-                setDataMap(emailInfo, locale), this);
+                setDataMap(emailInfo, locale));
         send(mimeMessageHelper.getMimeMessage());
     }
 
@@ -50,7 +50,7 @@ public class MailSendingEmailService implements EmailService {
                 emailInfo.getContactInfo().getEmail(),
                 messageSource.getMessage("email.not.collectable.author.subject", new String[]{emailInfo.getName()}, locale),
                 NOT_COLLECTABLE_TEMPLATE,
-                setDataMap(emailInfo, locale), this);
+                setDataMap(emailInfo, locale));
         send(mimeMessageHelper.getMimeMessage());
     }
 
@@ -60,7 +60,7 @@ public class MailSendingEmailService implements EmailService {
         MimeMessageHelper mimeMessageHelper = emailMessageConstructor.parseBasicEmailData(emailInfo.getContactInfo().getEmail(), // XXX: Temporarily is set to same as authors email.
                 messageSource.getMessage("email.not.collectable.municipality.subject", new String[]{emailInfo.getName()}, locale),
                 COLLECTABLE_TEMPLATE,
-                setDataMap(emailInfo, locale), this);
+                setDataMap(emailInfo, locale));
 
         EmailMessageConstructor.addAttachment(mimeMessageHelper, emailInfo);
 
@@ -74,7 +74,7 @@ public class MailSendingEmailService implements EmailService {
                 emailInfo.getContactInfo().getEmail(),
                 messageSource.getMessage("email.not.collectable.author.subject", new String[]{emailInfo.getName()}, locale),
                 COLLECTABLE_TEMPLATE,
-                setDataMap(emailInfo, locale), this);
+                setDataMap(emailInfo, locale));
         send(mimeMessageHelper.getMimeMessage());
     }
 
