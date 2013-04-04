@@ -8,6 +8,7 @@ import com.mysema.commons.lang.Assert;
 import fi.om.municipalityinitiative.conf.EmailSettings;
 import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
 import fi.om.municipalityinitiative.pdf.ParticipantToPdfExporter;
+import fi.om.municipalityinitiative.util.Maybe;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -140,6 +141,57 @@ public class EmailMessageConstructor {
             return out.toString();
         } catch (IOException | TemplateException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public EmailMessageDraft fromTemplate(String templateName) {
+        return new EmailMessageDraft(templateName);
+    }
+
+    public class EmailMessageDraft {
+        private String sendTo;
+        private String subject;
+        private String templateName;
+        private Map<String, Object> dataMap;
+        private Maybe<CollectableInitiativeEmailInfo> attachmentEmailInfo = Maybe.absent();
+
+        public EmailMessageDraft(String templateName) {
+            this.templateName = templateName;
+        }
+
+        public EmailMessageDraft withSubject(String subject) {
+            this.subject = subject;
+            return this;
+        }
+
+        public EmailMessageDraft withSendTo(String sendTo) {
+            this.sendTo = sendTo;
+            return this;
+        }
+
+        public EmailMessageDraft withDataMap(Map<String, Object> dataMap) {
+            this.dataMap = dataMap;
+            return this;
+        }
+
+        public EmailMessageDraft withAttachment(CollectableInitiativeEmailInfo attachmentEmailInfo) {
+            this.attachmentEmailInfo = Maybe.of(attachmentEmailInfo);
+            return this;
+        }
+
+        public void send() {
+
+            Assert.notNull(sendTo, "sendTo");
+            Assert.notNull(subject, "subject");
+            Assert.notNull(templateName, "templateName");
+            Assert.notNull(dataMap, "dataMap");
+
+            MimeMessageHelper mimeMessageHelper = parseBasicEmailData(sendTo, subject, templateName, dataMap);
+            if (attachmentEmailInfo.isPresent()) {
+                addAttachment(mimeMessageHelper, attachmentEmailInfo.get());
+            }
+
+            javaMailSender.send(mimeMessageHelper.getMimeMessage());
         }
     }
 }

@@ -35,12 +35,11 @@ public class MailSendingEmailService implements EmailService {
     @Override
     public void sendNotCollectableToMunicipality(InitiativeEmailInfo emailInfo, String municipalityEmail, Locale locale) {
 
-        MimeMessageHelper mimeMessageHelper = emailMessageConstructor.parseBasicEmailData(
-                municipalityEmail,
-                messageSource.getMessage("email.not.collectable.municipality.subject", new String[]{emailInfo.getName()}, locale),
-                NOT_COLLECTABLE_TEMPLATE,
-                setDataMap(emailInfo, locale));
-        send(mimeMessageHelper.getMimeMessage());
+        emailMessageConstructor.fromTemplate(NOT_COLLECTABLE_TEMPLATE)
+                .withSendTo(municipalityEmail)
+                .withSubject(messageSource.getMessage("email.not.collectable.municipality.subject", new String[]{emailInfo.getName()}, locale))
+                .withDataMap(setDataMap(emailInfo, locale))
+                .send();
     }
 
     @Override
