@@ -86,7 +86,7 @@ public class EmailMessageConstructor {
         }
     }
 
-    MimeMessageHelper parseBasicEmailData(MimeMessage mimeMessage, String sendTo, String subject, String templateName, Map<String, Object> dataMap, MailSendingEmailService mailSendingEmailService) {
+    MimeMessageHelper parseBasicEmailData(String sendTo, String subject, String templateName, Map<String, Object> dataMap, MailSendingEmailService mailSendingEmailService) {
 
         String text = processTemplate(templateName + "-text", dataMap);
         String html = processTemplate(templateName + "-html", dataMap);
@@ -113,7 +113,7 @@ public class EmailMessageConstructor {
         }
 
         try {
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+            MimeMessageHelper helper = new MimeMessageHelper(javaMailSender.createMimeMessage(), true, "UTF-8");
             helper.setTo(sendTo);
             helper.setFrom(emailSettings.getDefaultReplyTo());
             helper.setReplyTo(emailSettings.getDefaultReplyTo());

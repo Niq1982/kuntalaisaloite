@@ -34,49 +34,48 @@ public class MailSendingEmailService implements EmailService {
 
     @Override
     public void sendNotCollectableToMunicipality(InitiativeEmailInfo emailInfo, String municipalityEmail, Locale locale) {
-        MimeMessage message = javaMailSender.createMimeMessage();
-        emailMessageConstructor.parseBasicEmailData(message,
+
+        MimeMessageHelper mimeMessageHelper = emailMessageConstructor.parseBasicEmailData(
                 municipalityEmail,
                 messageSource.getMessage("email.not.collectable.municipality.subject", new String[]{emailInfo.getName()}, locale),
                 NOT_COLLECTABLE_TEMPLATE,
                 setDataMap(emailInfo, locale), this);
-        send(message);
+        send(mimeMessageHelper.getMimeMessage());
     }
 
     @Override
     public void sendNotCollectableToAuthor(InitiativeEmailInfo emailInfo, Locale locale) {
-        MimeMessage message = javaMailSender.createMimeMessage();
-        emailMessageConstructor.parseBasicEmailData(message,
+
+        MimeMessageHelper mimeMessageHelper = emailMessageConstructor.parseBasicEmailData(
                 emailInfo.getContactInfo().getEmail(),
                 messageSource.getMessage("email.not.collectable.author.subject", new String[]{emailInfo.getName()}, locale),
                 NOT_COLLECTABLE_TEMPLATE,
                 setDataMap(emailInfo, locale), this);
-        send(message);
+        send(mimeMessageHelper.getMimeMessage());
     }
 
     @Override
     public void sendCollectableToMunicipality(CollectableInitiativeEmailInfo emailInfo, String municipalityEmail, Locale locale) {
-        MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper mimeMessageHelper = emailMessageConstructor.parseBasicEmailData(message, emailInfo.getContactInfo().getEmail(), // XXX: Temporarily is set to same as authors email.
+
+        MimeMessageHelper mimeMessageHelper = emailMessageConstructor.parseBasicEmailData(emailInfo.getContactInfo().getEmail(), // XXX: Temporarily is set to same as authors email.
                 messageSource.getMessage("email.not.collectable.municipality.subject", new String[]{emailInfo.getName()}, locale),
                 COLLECTABLE_TEMPLATE,
                 setDataMap(emailInfo, locale), this);
 
         EmailMessageConstructor.addAttachment(mimeMessageHelper, emailInfo);
 
-        send(message);
+        send(mimeMessageHelper.getMimeMessage());
     }
 
     @Override
     public void sendCollectableToAuthor(CollectableInitiativeEmailInfo emailInfo, Locale locale) {
-        MimeMessage message = javaMailSender.createMimeMessage();
 
-        emailMessageConstructor.parseBasicEmailData(message,
+        MimeMessageHelper mimeMessageHelper = emailMessageConstructor.parseBasicEmailData(
                 emailInfo.getContactInfo().getEmail(),
                 messageSource.getMessage("email.not.collectable.author.subject", new String[]{emailInfo.getName()}, locale),
                 COLLECTABLE_TEMPLATE,
                 setDataMap(emailInfo, locale), this);
-        send(message);
+        send(mimeMessageHelper.getMimeMessage());
     }
 
     private HashMap<String, Object> setDataMap(InitiativeEmailInfo emailInfo, Locale locale) {
