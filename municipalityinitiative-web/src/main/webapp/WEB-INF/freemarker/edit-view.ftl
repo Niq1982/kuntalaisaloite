@@ -12,7 +12,7 @@
  * @param page is "page.createNew"
  * @param pageTitle can be assigned as custom HTML title
 -->
-<#assign page="page.createNew" />
+<#assign page="page.edit" />
 
 <@l.main page pageTitle!"">
 

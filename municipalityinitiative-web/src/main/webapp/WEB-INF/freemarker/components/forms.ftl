@@ -28,7 +28,7 @@
  * @param required generates an icon and can be used in JS-validation
  * @param optional additional information for label
 -->
-<#macro formLabel path required optional>
+<#macro formLabel path required optional key="">
     <#assign labelKey = fieldLabelKey(path) />
     <#assign forAttr = spring.status.expression />
             
@@ -55,15 +55,10 @@
  * @param fieldType text, date, email, ...
  * 
 -->
-<#macro textField path required optional cssClass="" attributes="" maxLength="" fieldType="text">
+<#macro textField path required optional cssClass="" attributes="" maxLength="" fieldType="text" key="">
     <@spring.bind path />  
     
-    <@formLabel path required optional>
-        <#--
-            TODO: add attribute required to attributes for jQueryTools validation
-            <#if required?has_content>required="required"</#if>
-        -->
-        
+    <@formLabel path required optional key>
         <@showError />
         <@spring.formInput path, 'class="'+cssClass+'" maxlength="'+maxLength+'" '+attributes fieldType />
     </@formLabel>
@@ -100,11 +95,6 @@
     <@spring.bind path />  
 
     <@formLabel path required optional>
-        <#--
-            TODO: add attribute required to attributes for jQueryTools validation
-            <#if required?has_content>required="required"</#if>
-        -->
-        
         <@showError />
         <@spring.formTextarea path, 'class="'+cssClass+'"' />
     
@@ -290,7 +280,6 @@
  * Prints the edit block for current author's roles and contact details
  *
  * @param path is a string "initiative.currentAuthor"
- * @param realPath is a variable initiative.currentAuthor
  * @param mode is either 'modal' or 'full'
  * @param prefix for custom messages
  * @param cssClass for styling. Multiple classes are separated with a space
@@ -309,11 +298,12 @@
 
     <div class="initiative-contact-details">
         <div class="column col-1of2">
-            <#-- TODO: remove email -->
-            <#--<input type="hidden" name="contactInfo.email" value="${initiative.contactInfo.email!""}" />-->
+            <@spring.bind path+".email" />
+            <input type="hidden" name="contactInfo.email" value="${spring.status.value}" />
+            <div class="input-header"><@u.message "contactInfo.email" /></div>
+            <input type="text" disabled="disabled" class="medium disabled" value="${spring.status.value}" />
 
-            <@textField path=path+".email" required="" optional=false cssClass="disabled" attributes="" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
-            <@textField path=path+".phone" required="" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_PHONE_MAX />
+            <@textField path=path+".phone" required="" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_PHONE_MAX key="contactInfo.phone" />
         </div>
         
         <div class="column col-1of2 last">
