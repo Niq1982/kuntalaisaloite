@@ -11,11 +11,11 @@
 <#--
  * Layout parameters for HTML-title and navigation.
  * 
- * page = "page.initiative.public" or "page.initiative.unnamed"
+ * page = "page.management"
  * pageTitle = initiative.name if exists, otherwise empty string
 -->
 
-<@l.main page="page.initiative.management" pageTitle=initiative.name!"">
+<@l.main page="page.management" pageTitle=initiative.name!"">
     
     <div class="msg-block">
         <h2><@u.message "management.warning.title" /></h2>
