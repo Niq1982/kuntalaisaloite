@@ -12,6 +12,7 @@ import fi.om.municipalityinitiative.dao.SQLExceptionTranslatorAspect;
 import fi.om.municipalityinitiative.newdao.*;
 import fi.om.municipalityinitiative.newdto.service.TestDataService;
 import fi.om.municipalityinitiative.service.*;
+import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.TaskExecutorAspect;
 import fi.om.municipalityinitiative.validation.LocalValidatorFactoryBeanFix;
 import fi.om.municipalityinitiative.web.CacheHeaderFilter;
@@ -239,14 +240,17 @@ public class AppConfiguration {
     }
 
     @Bean
-    public EmailService emailService(FreeMarkerConfigurer freeMarkerConfigurer,
-                                     MessageSource messageSource,
-                                     JavaMailSender javaMailSender) {
+    public EmailService emailService(EmailSettings emailSettings) {
+        return new MailSendingEmailService(emailSettings);
+    }
 
+    @Bean
+    public EmailSettings emailSettings() {
         String defaultReplyTo = env.getRequiredProperty(PropertyNames.emailDefaultReplyTo);
         String testSendTo = env.getProperty(PropertyNames.testEmailSendTo);
         boolean testConsoleOutput = env.getProperty(PropertyNames.testEmailConsoleOutput, Boolean.class, TEST_EMAIL_CONSOLE_OUTPUT_DEFAULT);
-        return new MailSendingEmailService(freeMarkerConfigurer, messageSource, javaMailSender, defaultReplyTo, testSendTo, testConsoleOutput);
+
+        return new EmailSettings(defaultReplyTo, Maybe.fromNullable(testSendTo), testConsoleOutput);
     }
 
     @Bean

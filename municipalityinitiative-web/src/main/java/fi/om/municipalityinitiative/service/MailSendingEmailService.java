@@ -5,6 +5,7 @@ import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.mysema.commons.lang.Assert;
+import fi.om.municipalityinitiative.conf.EmailSettings;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.email.InitiativeEmailInfo;
@@ -58,27 +59,10 @@ public class MailSendingEmailService implements EmailService {
 
     private static final Logger log = LoggerFactory.getLogger(MailSendingEmailService.class);
 
-    private final String defaultReplyTo;
-    private final String testSendTo;
-    private final boolean testConsoleOutput;
+    private EmailSettings emailSettings;
 
-    public MailSendingEmailService(FreeMarkerConfigurer freemarkerConfig,
-                                   MessageSource messageSource,
-                                   JavaMailSender javaMailSender,
-                                   String defaultReplyTo,
-                                   String testSendTo,
-                                   boolean testConsoleOutput) {
-        this.freemarkerConfig = freemarkerConfig;
-        this.messageSource = messageSource;
-        this.javaMailSender = javaMailSender;
-        this.defaultReplyTo = defaultReplyTo;
-        
-        if (Strings.isNullOrEmpty(testSendTo)) {
-            this.testSendTo = null;
-        } else {
-            this.testSendTo = testSendTo;
-        }
-        this.testConsoleOutput = testConsoleOutput;
+    public MailSendingEmailService(EmailSettings emailSettings) {
+        this.emailSettings = emailSettings;
     }
 
     @Override
@@ -86,7 +70,6 @@ public class MailSendingEmailService implements EmailService {
         MimeMessage message = javaMailSender.createMimeMessage();
         parseBasicEmailData(message,
                 municipalityEmail,
-                emailInfo.getContactInfo().getEmail(),
                 messageSource.getMessage("email.not.collectable.municipality.subject", new String[]{emailInfo.getName()}, locale),
                 NOT_COLLECTABLE_TEMPLATE,
                 setDataMap(emailInfo, locale));
@@ -98,7 +81,6 @@ public class MailSendingEmailService implements EmailService {
         MimeMessage message = javaMailSender.createMimeMessage();
         parseBasicEmailData(message,
                 emailInfo.getContactInfo().getEmail(),
-                defaultReplyTo,
                 messageSource.getMessage("email.not.collectable.author.subject", new String[]{emailInfo.getName()}, locale),
                 NOT_COLLECTABLE_TEMPLATE,
                 setDataMap(emailInfo, locale));
@@ -109,7 +91,6 @@ public class MailSendingEmailService implements EmailService {
     public void sendCollectableToMunicipality(CollectableInitiativeEmailInfo emailInfo, String municipalityEmail, Locale locale) {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = parseBasicEmailData(message, emailInfo.getContactInfo().getEmail(), // XXX: Temporarily is set to same as authors email.
-                emailInfo.getContactInfo().getEmail(),
                 messageSource.getMessage("email.not.collectable.municipality.subject", new String[]{emailInfo.getName()}, locale),
                 COLLECTABLE_TEMPLATE,
                 setDataMap(emailInfo, locale));
@@ -125,14 +106,13 @@ public class MailSendingEmailService implements EmailService {
 
         parseBasicEmailData(message,
                 emailInfo.getContactInfo().getEmail(),
-                defaultReplyTo,
                 messageSource.getMessage("email.not.collectable.author.subject", new String[]{emailInfo.getName()}, locale),
                 COLLECTABLE_TEMPLATE,
                 setDataMap(emailInfo, locale));
         send(message);
     }
 
-    private void addAttachment(MimeMessageHelper multipart, CollectableInitiativeEmailInfo emailInfo) {
+    private static void addAttachment(MimeMessageHelper multipart, CollectableInitiativeEmailInfo emailInfo) {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             ParticipantToPdfExporter.createPdf(emailInfo, outputStream);
@@ -156,38 +136,37 @@ public class MailSendingEmailService implements EmailService {
         return dataMap;
     }
 
-    private MimeMessageHelper parseBasicEmailData(MimeMessage mimeMessage, String sendTo, String replyTo, String subject, String templateName, Map<String, Object> dataMap) {
+    private MimeMessageHelper parseBasicEmailData(MimeMessage mimeMessage, String sendTo, String subject, String templateName, Map<String, Object> dataMap) {
 
-        String text = processTemplate(templateName + "-text", dataMap); 
-        String html = processTemplate(templateName + "-html", dataMap); 
-        
+        String text = processTemplate(templateName + "-text", dataMap);
+        String html = processTemplate(templateName + "-html", dataMap);
+
         text = stripTextRows(text, 2);
-        
-        if (testSendTo != null) {
+
+        if (emailSettings.getTestSendTo().isPresent()) {
             text = "TEST OPTION REPLACED THE EMAIL ADDRESS!\nThe original address was: " + sendTo + "\n\n\n-------------\n" + text;
             html = "TEST OPTION REPLACED THE EMAIL ADDRESS!\nThe original address was: " + sendTo + "<hr>" + html;
-            sendTo = testSendTo;
+            sendTo = emailSettings.getTestSendTo().get();
         }
 
         Assert.notNull(sendTo, "sendTo"); // TODO: Move to the beginning of the function?
-        
-        if (testConsoleOutput) {
+
+        if (emailSettings.isTestConsoleOutput()) {
             System.out.println("----------------------------------------------------------");
             System.out.println("To: " + sendTo);
-            System.out.println("Reply-to: " + defaultReplyTo);
+            System.out.println("Reply-to: " + emailSettings.getDefaultReplyTo());
             System.out.println("Subject: " + subject);
             System.out.println("---");
             System.out.println(text);
             System.out.println("----------------------------------------------------------");
-            return null;
+            return null; //FIXME: May cause nullpointer exception
         }
 
         try {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
             helper.setTo(sendTo);
-            helper.setFrom(defaultReplyTo);
-//            helper.setReplyTo(replyTo);
-            helper.setReplyTo(defaultReplyTo);
+            helper.setFrom(emailSettings.getDefaultReplyTo());
+            helper.setReplyTo(emailSettings.getDefaultReplyTo());
             helper.setSubject(subject);
             helper.setText(text, html);
             log.info("About to send email to " + sendTo + ": " + subject);
@@ -218,7 +197,7 @@ public class MailSendingEmailService implements EmailService {
             throw new RuntimeException(e);
         }
     }
-    private String stripTextRows(String text, int maxEmptyRows) {
+    private static String stripTextRows(String text, int maxEmptyRows) {
         List<String> rows = Lists.newArrayList(Splitter.on('\n').trimResults().split(text));
        
         int emptyRows = maxEmptyRows;
