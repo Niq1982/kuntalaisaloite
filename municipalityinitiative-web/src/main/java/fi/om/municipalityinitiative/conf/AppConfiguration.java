@@ -240,8 +240,8 @@ public class AppConfiguration {
     }
 
     @Bean
-    public EmailService emailService(EmailSettings emailSettings) {
-        return new MailSendingEmailService(emailSettings);
+    public EmailService emailService() {
+        return new MailSendingEmailService();
     }
 
     @Bean
@@ -251,6 +251,11 @@ public class AppConfiguration {
         boolean testConsoleOutput = env.getProperty(PropertyNames.testEmailConsoleOutput, Boolean.class, TEST_EMAIL_CONSOLE_OUTPUT_DEFAULT);
 
         return new EmailSettings(defaultReplyTo, Maybe.fromNullable(testSendTo), testConsoleOutput);
+    }
+
+    @Bean
+    public EmailMessageConstructor emailMessageConstructor() {
+        return new EmailMessageConstructor();
     }
 
     @Bean
