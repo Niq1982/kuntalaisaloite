@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 @Task
 public class MailSendingEmailService implements EmailService {

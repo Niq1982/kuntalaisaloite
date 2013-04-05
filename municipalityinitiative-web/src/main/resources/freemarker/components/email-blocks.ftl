@@ -192,15 +192,38 @@
  * - statusInfoComment
  *
  -->
-<#macro statusInfoComment type="">
+<#macro statusInfoComment type="" msg="">
     <#if type == "html">
         <h4 style="${h4!""}"><@u.message "email.commentFromOM" /></h4>
-        <p style="${pBottomMargin!""}">[SAATE]</p>
+        <p style="${pBottomMargin!""}">${msg}</p>
     <#else>
         <@u.message "email.commentFromOM" />:
-        [SAATE]
+        ${msg}
     </#if>
 </#macro>
 
+<#macro publicViewLink type="">
+    <#if type == "html">
+        <p style="${pBothMargins!""}">
+            Alla on linkki aloitteesi julkiselle sivulle Kuntalaisaloite.fi-palvelussa.<br />
+            [LINKKI TÄHÄN]
+        </p>
+    <#else>
+        Alla on linkki aloitteesi julkiselle sivulle Kuntalaisaloite.fi-palvelussa.
+        [LINKKI TÄHÄN]
+    </#if>
+</#macro>
+
+<#macro adminViewLink type="">
+    <#if type == "html">
+        <p style="${pBothMargins!""}">
+            Siirry kuntalaisaloitteen ylläpito-sivulle alla olevalla linkillä<br/>
+            [LAITETAANKO YLLÄPITO-LINKKI TÄHÄN?]
+        </p>
+    <#else>
+        Siirry kuntalaisaloitteen ylläpito-sivulle alla olevalla linkillä
+        [LAITETAANKO YLLÄPITO-LINKKI TÄHÄN?]
+    </#if>
+</#macro>
 
 </#escape>
