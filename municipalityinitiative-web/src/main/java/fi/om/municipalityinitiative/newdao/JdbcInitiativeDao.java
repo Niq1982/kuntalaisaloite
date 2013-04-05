@@ -221,8 +221,9 @@ public class JdbcInitiativeDao implements InitiativeDao {
     public Initiative getById(Long initiativeId, String managementHash) {
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
-                .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
+                .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, INITIATIVE_MUNICIPALITY)
                 .innerJoin(municipalityInitiative._participantMunicipalityInitiativeIdFk, QParticipant.participant)
+                .innerJoin(QParticipant.participant.participantMunicipalityFk, AUTHOR_MUNICIPALITY)
                 .innerJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .where(QAuthor.author.managementHash.eq(managementHash));

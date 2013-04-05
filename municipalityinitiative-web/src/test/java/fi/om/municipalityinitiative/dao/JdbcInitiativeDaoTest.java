@@ -387,6 +387,7 @@ public class JdbcInitiativeDaoTest {
 
         Initiative initiative = initiativeDao.getById(id, TestHelper.TEST_MANAGEMENT_HASH);
         assertThat(initiative.getId(), is(id));
+        ReflectionTestUtils.assertNoNullFields(initiative);
     }
 
     @Test
