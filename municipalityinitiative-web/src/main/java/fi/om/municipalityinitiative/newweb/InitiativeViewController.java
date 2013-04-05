@@ -75,42 +75,25 @@ public class InitiativeViewController extends BaseController {
 
         InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId, locale);
 
-        // TODO: Use initiativeState PUBLISHED when user can publish initiative
-        if (initiativeInfo.getState() == InitiativeState.ACCEPTED) {
-            if (initiativeInfo.isCollectable()){// TODO: If not sent to municipality
-
-                addModelAttributesToCollectView(model,
-                        initiativeInfo,
-                        municipalityService.findAllMunicipalities(locale),
-                        participantService.getParticipantCount(initiativeId),
-                        participantService.findPublicParticipants(initiativeId));
-                model.addAttribute("participant", new ParticipantUICreateDto());
-
-                return PUBLIC_COLLECT_VIEW;
-            }
-            else {
-                model.addAttribute("initiative", initiativeInfo);
-                return PUBLIC_SINGLE_VIEW;
-            }
-            // Returns preview for authors
-        } else {
-            return ERROR_404_VIEW;
+        if (initiativeInfo.getState() != InitiativeState.PUBLISHED) {
+            userService.assertManagementRightsForInitiative(initiativeId);
         }
-    }
 
-    @RequestMapping(value={ VIEW_FI, VIEW_SV }, method=GET, params = PARAM_MANAGEMENT_CODE)
-    public String viewPreview(@PathVariable("id") Long initiativeId,
-                              @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
-                              Model model, Locale locale, HttpServletRequest request) {
-        Urls urls = Urls.get(locale);
-        model.addAttribute(ALT_URI_ATTR, urls.alt().view(initiativeId));
+        // TODO: Use initiativeState PUBLISHED when user can publish initiative
+        if (initiativeInfo.isCollectable()){// TODO: If not sent to municipality
 
-        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId, locale);
-        if (managementHash.equals(initiativeInfo.getManagementHash().get())){
+            addModelAttributesToCollectView(model,
+                    initiativeInfo,
+                    municipalityService.findAllMunicipalities(locale),
+                    participantService.getParticipantCount(initiativeId),
+                    participantService.findPublicParticipants(initiativeId));
+            model.addAttribute("participant", new ParticipantUICreateDto());
+
+            return PUBLIC_COLLECT_VIEW;
+        }
+        else {
             model.addAttribute("initiative", initiativeInfo);
             return PUBLIC_SINGLE_VIEW;
-        } else {
-            return ERROR_404_VIEW;
         }
     }
 
