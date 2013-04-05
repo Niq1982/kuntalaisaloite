@@ -200,7 +200,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    public Initiative getById(Long id) {
+    public Initiative getByIdWithOriginalAuthor(Long id) {
 
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
@@ -218,7 +218,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    public Initiative getById(Long initiativeId, String managementHash) {
+    public Initiative getById(Long initiativeId, String authorsManagementHash) {
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
                 .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, INITIATIVE_MUNICIPALITY)
@@ -226,7 +226,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .innerJoin(QParticipant.participant.participantMunicipalityFk, AUTHOR_MUNICIPALITY)
                 .innerJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
                 .where(municipalityInitiative.id.eq(initiativeId))
-                .where(QAuthor.author.managementHash.eq(managementHash));
+                .where(QAuthor.author.managementHash.eq(authorsManagementHash));
 
         Initiative initiative = query.uniqueResult(initiativeInfoMapping);
         if (initiative == null) {

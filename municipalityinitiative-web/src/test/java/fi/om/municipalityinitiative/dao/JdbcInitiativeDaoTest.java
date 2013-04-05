@@ -78,7 +78,7 @@ public class JdbcInitiativeDaoTest {
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withSent(new DateTime(2010, 1, 1, 0, 0)));
 
-        Initiative initiative = initiativeDao.getById(initiativeId);
+        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
 
         assertThat(initiative.getMunicipality().getId(), is(testMunicipality.getId()));
         assertThat(initiative.getAuthorName(), is(TestHelper.DEFAULT_AUTHOR_NAME));
@@ -110,13 +110,13 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void update_initiative_state_when_set_as_review() {
         Long initiativeId = testHelper.createTestInitiative(testMunicipality.getId());
-        Initiative original = initiativeDao.getById(initiativeId);
+        Initiative original = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
         assertThat(original.getType().isPresent(), is(false));
         assertThat(original.getState(), is(InitiativeState.DRAFT));
 
         initiativeDao.setInitiativeAsReview(initiativeId, InitiativeType.COLLABORATIVE);
 
-        Initiative updated = initiativeDao.getById(initiativeId);
+        Initiative updated = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
         assertThat(updated.getType().get(), is(InitiativeType.COLLABORATIVE));
         assertThat(updated.getState(), is(InitiativeState.REVIEW));
     }
@@ -344,11 +344,11 @@ public class JdbcInitiativeDaoTest {
         Long initiativeId = testHelper.createCollectableAccepted(testMunicipality.getId());
 
 
-        Initiative initiative = initiativeDao.getById(initiativeId);
+        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
         assertThat(initiative.getSentTime().isPresent(), is(false)); // Precondition
 
         initiativeDao.markAsSendedAndUpdateContactInfo(initiativeId, contactInfo());
-        initiative = initiativeDao.getById(initiativeId);
+        initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
         assertThat(initiative.getSentTime().isPresent(), is(true));
     }
 
@@ -357,7 +357,7 @@ public class JdbcInitiativeDaoTest {
 
         Long initiativeId = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId()).withType(InitiativeType.SINGLE));
 
-        Initiative initiative = initiativeDao.getById(initiativeId);
+        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
         assertThat(initiative.isCollectable(), is(false)); // Precondition
 
         initiativeDao.markAsSendedAndUpdateContactInfo(initiativeId, contactInfo());
@@ -367,7 +367,7 @@ public class JdbcInitiativeDaoTest {
     public void throws_exception_if_trying_double_send() {
         Long initiativeId = testHelper.createCollectableAccepted(testMunicipality.getId());
 
-        Initiative initiative = initiativeDao.getById(initiativeId);
+        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
         assertThat(initiative.isCollectable(), is(true)); // Precondition
         assertThat(initiative.getSentTime().isPresent(), is(false)); // Precondition
 
@@ -462,7 +462,7 @@ public class JdbcInitiativeDaoTest {
 
     @Test(expected = NotFoundException.class)
     public void throws_exception_if_initiative_is_not_found() {
-        initiativeDao.getById(-1L);
+        initiativeDao.getByIdWithOriginalAuthor(-1L);
     }
 
     @Test

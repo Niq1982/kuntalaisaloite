@@ -39,7 +39,7 @@ public class PublicInitiativeService {
 
     @Transactional(readOnly = true)
     public ManagementSettings managementSettings(Long initiativeId) {
-        return new ManagementSettings(initiativeDao.getById(initiativeId));
+        return new ManagementSettings(initiativeDao.getByIdWithOriginalAuthor(initiativeId));
     }
 
     @Transactional(readOnly = false)
@@ -53,7 +53,7 @@ public class PublicInitiativeService {
     }
 
     private void checkAllowedToParticipate(Long initiativeId) {
-        Initiative initiative = initiativeDao.getById(initiativeId);
+        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
 
         if (initiative.getState() != InitiativeState.ACCEPTED) {
             throw new ParticipatingUnallowedException("Initiative not accepted by om: " + initiativeId);
@@ -76,7 +76,7 @@ public class PublicInitiativeService {
     }
 
     public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId, Locale locale) {
-        return InitiativeViewInfo.parse(initiativeDao.getById(initiativeId), locale);
+        return InitiativeViewInfo.parse(initiativeDao.getByIdWithOriginalAuthor(initiativeId), locale);
     }
 
     public ContactInfo getContactInfo(Long initiativeId) {
@@ -157,7 +157,7 @@ public class PublicInitiativeService {
     }
 
     private void assertManagementHash(Long initiativeId, String managementHash) {
-        if (!initiativeDao.getById(initiativeId).getManagementHash().get().equals(managementHash)) {
+        if (!initiativeDao.getByIdWithOriginalAuthor(initiativeId).getManagementHash().get().equals(managementHash)) {
             throw new AccessDeniedException("Invalid management hash");
         }
     }

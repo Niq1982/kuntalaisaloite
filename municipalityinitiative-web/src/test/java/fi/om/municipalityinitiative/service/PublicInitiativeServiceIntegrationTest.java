@@ -16,7 +16,6 @@ import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -266,7 +265,7 @@ public class PublicInitiativeServiceIntegrationTest {
 
         service.sendReview(initiativeId, TestHelper.TEST_MANAGEMENT_HASH, false);
 
-        Initiative updated = initiativeDao.getById(initiativeId);
+        Initiative updated = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
 
         assertThat(updated.getState(), is(InitiativeState.REVIEW));
         assertThat(updated.getType().isPresent(), is(false));
@@ -277,7 +276,7 @@ public class PublicInitiativeServiceIntegrationTest {
         Long initiativeId = testHelper.createEmptyDraft(testMunicipality.getId());
         service.sendReview(initiativeId, TestHelper.TEST_MANAGEMENT_HASH, true);
 
-        Initiative updated = initiativeDao.getById(initiativeId);
+        Initiative updated = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
 
         assertThat(updated.getState(), is(InitiativeState.REVIEW));
         assertThat(updated.getType().get(), is(InitiativeType.SINGLE));
