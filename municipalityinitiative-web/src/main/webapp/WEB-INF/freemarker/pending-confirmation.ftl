@@ -41,7 +41,7 @@
     </ul>
         
     <h2>Ylläpitolinkki testausta varten - poistuu kun sähköpostit lähtevät</h2>
-    <a href="${urls.edit(initiative.id, initiative.managementHash.value)}">${urls.edit(initiative.id, initiative.managementHash.value)}</a>
+    <a href="${urls.loginAuthor(initiative.id, initiative.managementHash.value)}">${urls.loginAuthor(initiative.id, initiative.managementHash.value)}</a>
 
 <#else>
 
