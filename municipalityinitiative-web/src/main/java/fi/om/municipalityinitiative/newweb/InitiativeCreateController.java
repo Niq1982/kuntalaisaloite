@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.newdto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.newdto.ui.PrepareInitiativeDto;
 import fi.om.municipalityinitiative.service.PublicInitiativeService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
+import fi.om.municipalityinitiative.service.UserService;
 import fi.om.municipalityinitiative.service.ValidationService;
 import fi.om.municipalityinitiative.web.BaseController;
 import fi.om.municipalityinitiative.web.RequestMessage;
@@ -41,6 +42,9 @@ public class InitiativeCreateController extends BaseController {
 
     @Resource
     ValidationService validionService;
+
+    @Resource
+    UserService userService;
 
     public InitiativeCreateController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);

@@ -5,8 +5,8 @@ import fi.om.municipalityinitiative.conf.PropertyNames;
 import fi.om.municipalityinitiative.conf.WebTestConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.service.MailSendingEmailService;
-import fi.om.municipalityinitiative.service.UserService;
 import fi.om.municipalityinitiative.util.Locales;
+import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.validation.NotTooFastSubmitValidator;
 import mockit.Mocked;
 import org.eclipse.jetty.server.Server;
@@ -33,6 +33,7 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
@@ -83,6 +84,11 @@ public abstract class WebTestBase {
 
         String driverType = env.getProperty("test.web-driver", "hu");
         System.out.println("*** driverType = " + driverType);
+
+        if (overrideDriverToHtmlUnit()) {
+            driverType = "default";
+        }
+
         switch (driverType) {
             case "ie":
                 driver = new InternetExplorerDriver();
@@ -92,6 +98,7 @@ public abstract class WebTestBase {
             case "ff":
                 driver = new FirefoxDriver();
                 break;
+            case "default":
             default:
                 driver = new HtmlUnitDriver(true);
                 break;
@@ -107,6 +114,10 @@ public abstract class WebTestBase {
         NotTooFastSubmitValidator.disable(); // Disable fast-submit validation at ui-tests
         testHelper.dbCleanup();
         
+    }
+
+    protected boolean overrideDriverToHtmlUnit() {
+        return false;
     }
 
     @After
@@ -253,6 +264,10 @@ public abstract class WebTestBase {
     protected void loginAsAuthor(Long initiativeId) {
         open(urls.loginAuthor(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
         clickByName("Login");
+    }
+
+    protected void assert404() {
+        assertThat(driver.findElement(By.tagName("h1")).getText(), is(getMessage("error.404.title")));
     }
 
 }
