@@ -71,17 +71,30 @@ public class JdbcInitiativeDaoTest {
 
     @Test
     public void get_returns_all_information() {
-        Long id = testHelper.createTestInitiative(testMunicipality.getId(), "Initiative name", true, true);
+        Long authorsMunicipalityId = testHelper.createTestMunicipality("Authors Municipality");
 
-        Initiative initiative = initiativeDao.getById(id);
+        Long initiativeId = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withAuthorMunicipality(authorsMunicipalityId)
+                .withType(InitiativeType.COLLABORATIVE_CITIZEN)
+                .withSent(new DateTime(2010, 1, 1, 0, 0)));
+
+        Initiative initiative = initiativeDao.getById(initiativeId);
 
         assertThat(initiative.getMunicipality().getId(), is(testMunicipality.getId()));
-        assertThat(initiative.getAuthorName(), is("Antti Author"));
+        assertThat(initiative.getAuthorName(), is(TestHelper.DEFAULT_AUTHOR_NAME));
         assertThat(initiative.getCreateTime(), is(notNullValue()));
-        assertThat(initiative.getName(), is("Initiative name"));
-        assertThat(initiative.getProposal(), is("proposal"));
-        assertThat(initiative.getSentTime().isPresent(), is(false));
+        assertThat(initiative.getName(), is(TestHelper.DEFAULT_INITIATIVE_NAME));
+        assertThat(initiative.getProposal(), is(TestHelper.DEFAULT_PROPOSAL));
+        assertThat(initiative.getSentTime().isPresent(), is(true));
+        assertThat(initiative.getState(), is(TestHelper.DEFAULT_STATE));
+        assertThat(initiative.getType().get(), is(InitiativeType.COLLABORATIVE_CITIZEN));
         assertThat(initiative.getShowName(), is(true));
+
+        assertThat(initiative.getAuthor().getContactInfo().getName(), is(TestHelper.DEFAULT_AUTHOR_NAME));
+        assertThat(initiative.getAuthor().getContactInfo().getAddress(), is(TestHelper.DEFAULT_AUTHOR_ADDRESS));
+        assertThat(initiative.getAuthor().getContactInfo().getEmail(), is(TestHelper.DEFAULT_AUTHOR_EMAIL));
+        assertThat(initiative.getAuthor().getContactInfo().getPhone(), is(TestHelper.DEFAULT_AUTHOR_PHONE));
+        assertThat(initiative.getAuthor().getMunicipality().getId(), is(authorsMunicipalityId));
 
         ReflectionTestUtils.assertNoNullFields(initiative);
     }
