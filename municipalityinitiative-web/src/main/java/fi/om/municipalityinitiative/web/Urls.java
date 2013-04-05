@@ -286,10 +286,9 @@ public final class Urls {
         return getEdit(initiativeId) + "?" + PARAM_MANAGEMENT_CODE + "=" + managementHash;
     }
 
-    private String getEdit(Long initiativeId) {
+    public String getEdit(Long initiativeId) {
         return getLocalizedPageUrl(EDIT_FI, EDIT_SV).replace(ID_PARAMETER, initiativeId.toString());
     }
-
 
     public String update(Long initiativeId, String managementHash) {
         return getUpdate(initiativeId) + "?" + PARAM_MANAGEMENT_CODE + "=" + managementHash;
@@ -474,6 +473,7 @@ public final class Urls {
     public boolean isLoginPage(String target) {
         return target.startsWith(login());
     }
+
 
 
 }

@@ -35,6 +35,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -264,6 +265,10 @@ public abstract class WebTestBase {
     protected void loginAsAuthor(Long initiativeId) {
         open(urls.loginAuthor(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
         clickByName("Login");
+    }
+
+    protected void logout() {
+        open(urls.logout());
     }
 
     protected void assert404() {

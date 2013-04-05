@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.web;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -51,6 +52,14 @@ public class InitiativeCreateWebTest extends WebTestBase {
     private static final String CONTACT_EMAIL = "test@test.com";
     private static final String CONTACT_PHONE = "012-3456789";
     private static final String CONTACT_ADDRESS = "Osoitekatu 1 A, 00000 Helsinki";
+    private Long testMunicipality1Id;
+    private Long testMunicipality2Id;
+
+    @Before
+    public void setup() {
+        testMunicipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
+        testMunicipality2Id = testHelper.createTestMunicipality(MUNICIPALITY_2);
+    }
 
     @Test
     public void page_opens() {
@@ -60,8 +69,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     // Fill in the preparation form
     @Test
     public void prepare_initiative() {
-        testHelper.createTestMunicipality(MUNICIPALITY_1);
-        testHelper.createTestMunicipality(MUNICIPALITY_2);
+
         
         openAndAssertCreatePage();
         select_municipality();
@@ -71,8 +79,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     // Create an initiative and fill in initiative details
     @Test
     public void create_initiative() {
-        Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
-        Long initiativeId = testHelper.createEmptyDraft(municipality1Id);
+        Long initiativeId = testHelper.createEmptyDraft(testMunicipality1Id);
 
         loginAsAuthor(initiativeId);
 
@@ -84,8 +91,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     // Create initiative with state DRAFT and send it to REVIEW
     @Test
     public void send_to_review() {
-        Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
-        Long initiativeId = testHelper.createCollectableDraft(municipality1Id);
+        Long initiativeId = testHelper.createCollectableDraft(testMunicipality1Id);
 
         loginAsAuthor(initiativeId);
         open(urls.management(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
@@ -103,8 +109,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     // Create initiative with state REVIEW and ACCEPT it 
     @Test
     public void accept_initiative(){
-        Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
-        Long initiativeId = testHelper.createCollectableReview(municipality1Id);
+        Long initiativeId = testHelper.createCollectableReview(testMunicipality1Id);
 
         loginAsOmUser();
 
@@ -125,8 +130,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     // Create initiative with state REVIEW and REJECT it
     @Test
     public void reject_initiative(){
-        Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
-        Long initiativeId = testHelper.createCollectableReview(municipality1Id);
+        Long initiativeId = testHelper.createCollectableReview(testMunicipality1Id);
 
         loginAsOmUser();
 
@@ -138,6 +142,29 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
         clickByName(Urls.ACTION_REJECT_INITIATIVE);
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_REJECT_INITIATIVE);
+    }
+
+    @Test
+    public void edit_page_fails_if_not_logged_in() {
+        Long initiative = testHelper.createCollectableDraft(testMunicipality1Id);
+        open(urls.getEdit(initiative));
+        assert404();
+    }
+
+    @Test
+    public void edit_page_fails_if_logged_in_as_om() {
+        Long initiative = testHelper.createCollectableDraft(testMunicipality1Id);
+        loginAsOmUser();
+        open(urls.getEdit(initiative));
+        assert404();
+    }
+
+    @Test
+    public void edit_page_fails_if_logged_in_as_another_author() {
+        Long initiative = testHelper.createCollectableDraft(testMunicipality1Id);
+        loginAsAuthor(testHelper.createSingleSent(testMunicipality1Id));
+        open(urls.getEdit(initiative));
+        assert404();
     }
 
     public void select_municipality() {
