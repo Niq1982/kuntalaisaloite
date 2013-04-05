@@ -4,8 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static fi.om.municipalityinitiative.web.MessageSourceKeys.*;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
 

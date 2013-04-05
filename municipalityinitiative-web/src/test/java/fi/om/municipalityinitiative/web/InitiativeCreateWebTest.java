@@ -56,13 +56,13 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
         open(urls.edit(initiativeId));
         
-        fill_in_initiative_content(initiativeId);
+        fill_in_initiative_content();
     }
     
     // Create initiative with state DRAFT and send it to REVIEW
     @Test
     public void send_to_review() {
-        Long initiativeId = testHelper.createCollectableDraft(testMunicipality1Id);
+        Long initiativeId = testHelper.createSingleDraft(testMunicipality1Id);
 
         loginAsAuthor(initiativeId);
         open(urls.management(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
@@ -79,7 +79,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
     @Test
     public void edit_page_opens_if_logged_in_as_author() {
-        Long initiative = testHelper.createCollectableDraft(testMunicipality1Id);
+        Long initiative = testHelper.createSingleDraft(testMunicipality1Id);
         loginAsAuthor(initiative);
         open(urls.getEdit(initiative));
 //        assertThat(driver.getTitle(), is("asdasd"));
@@ -88,14 +88,14 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
     @Test
     public void edit_page_fails_if_not_logged_in() {
-        Long initiative = testHelper.createCollectableDraft(testMunicipality1Id);
+        Long initiative = testHelper.createSingleDraft(testMunicipality1Id);
         open(urls.getEdit(initiative));
         assert404();
     }
 
     @Test
     public void edit_page_fails_if_logged_in_as_om() {
-        Long initiative = testHelper.createCollectableDraft(testMunicipality1Id);
+        Long initiative = testHelper.createSingleDraft(testMunicipality1Id);
         loginAsOmUser();
         open(urls.getEdit(initiative));
         assert404();
@@ -103,7 +103,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
     @Test
     public void edit_page_fails_if_logged_in_as_another_author() {
-        Long initiative = testHelper.createCollectableDraft(testMunicipality1Id);
+        Long initiative = testHelper.createSingleDraft(testMunicipality1Id);
         loginAsAuthor(testHelper.createSingleSent(testMunicipality1Id));
         open(urls.getEdit(initiative));
         assert404();
@@ -129,7 +129,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         System.out.println("--- add_initiative_content OK");
     }
 
-    public void fill_in_initiative_content(Long initiativeId) {
+    public void fill_in_initiative_content() {
         inputText("name", NAME);
         inputText("proposal", PROPOSAL);
         
