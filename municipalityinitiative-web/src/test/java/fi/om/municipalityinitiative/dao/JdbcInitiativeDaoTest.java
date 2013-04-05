@@ -322,7 +322,7 @@ public class JdbcInitiativeDaoTest {
 
     @Test
     public void finds_by_sent_does_not_find_collectable_if_not_sent() {
-        testHelper.createTestInitiative(testMunicipality.getId(), "Title", true, true);
+        testHelper.createCollectableAccepted(testMunicipality.getId());
         List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.sent));
         assertThat(result, hasSize(0));
     }
@@ -383,7 +383,7 @@ public class JdbcInitiativeDaoTest {
 
     @Test
     public void get_returns_initiative_if_given_managementHash_is_correct() {
-        Long id = testHelper.createTestInitiative(testMunicipality.getId(), "Some name", true, true);
+        Long id = testHelper.createSingleSent(testMunicipality.getId());
 
         Initiative initiative = initiativeDao.getById(id, TestHelper.TEST_MANAGEMENT_HASH);
         assertThat(initiative.getId(), is(id));
@@ -392,7 +392,7 @@ public class JdbcInitiativeDaoTest {
 
     @Test
     public void get_throws_exception_if_given_management_hash_is_invalid() {
-        Long id = testHelper.createTestInitiative(testMunicipality.getId(), "Some name");
+        Long id = testHelper.createSingleSent(testMunicipality.getId());
 
         try {
             initiativeDao.getById(id, "invalidManagementHash");
