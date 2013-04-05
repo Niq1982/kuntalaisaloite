@@ -73,15 +73,16 @@ public class PublicInitiativeServiceIntegrationTest {
 
     @Test
     public void all_fields_are_set_when_getting_municipalityInitiativeInfo() throws Exception {
-        Long initiativeId = testHelper.createTestInitiative(testMunicipality.getId(), "Initiative name");
+        Long initiativeId = testHelper.createCollectableAccepted(testMunicipality.getId());
         InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId, Locales.LOCALE_FI);
-        ReflectionTestUtils.assertNoNullFields(initiative);
-    }
-
-    @Test
-    public void get() {
-        Long initiativeId = testHelper.createTestInitiative(testMunicipality.getId(), "Some name");
-        InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId, Locales.LOCALE_FI);
+        assertThat(initiative.getState(), is(InitiativeState.ACCEPTED));
+        assertThat(initiative.getAuthorName(), is(TestHelper.DEFAULT_AUTHOR_NAME));
+        assertThat(initiative.getMunicipality().getId(), is(testMunicipality.getId()));
+        assertThat(initiative.getName(), is(TestHelper.DEFAULT_INITIATIVE_NAME));
+        assertThat(initiative.getId(), is(initiativeId));
+        assertThat(initiative.getProposal(), is(TestHelper.DEFAULT_PROPOSAL));
+        assertThat(initiative.isShowName(), is(true));
+        assertThat(initiative.isCollectable(), is(true));
         ReflectionTestUtils.assertNoNullFields(initiative);
     }
 
