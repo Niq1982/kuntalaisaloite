@@ -1,5 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
+import java.util.Locale;
+
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.util.InitiativeState;
 
@@ -12,16 +14,21 @@ public class OmInitiativeService {
 
     @Resource
     UserService userService;
+    
+    @Resource
+    EmailService emailService;
 
     // TODO: IsAllowed
-    public void accept(Long initiativeId) {
+    public void accept(Long initiativeId, Locale locale) {
         userService.requireOmUser();
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.ACCEPTED);
+        emailService.sendStatusEmail(initiativeDao.getById(initiativeId), "mikko.lehtinen@solita.fi", EmailMessageType.ACCEPTED_BY_OM, locale);
     }
 
     // TODO: IsAllowed
-    public void reject(Long initiativeId) {
+    public void reject(Long initiativeId, Locale locale) {
         userService.requireOmUser();
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.DRAFT);
+        emailService.sendStatusEmail(initiativeDao.getById(initiativeId), "mikko.lehtinen@solita.fi", EmailMessageType.REJECTED_BY_OM, locale);
     }
 }

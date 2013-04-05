@@ -172,17 +172,33 @@
  * @param type 'text' or 'html'
  * @param msg is the textual comment
  -->
-<#macro comment type="" msg="">
+<#macro comment type="" msg="" key="">
     <#if type == "html">
         
         <@contentBlock "html">
-            <h4 style="${h4!""}"><@u.message "email.commentToMunicipality" /></h4>
+            <h4 style="${h4!""}"><@u.message key /></h4>
             <p style="${pBottomMargin!""}">${msg}</p>
         </@contentBlock>
         
     <#else>
-        <@u.message "email.commentToMunicipality" />:
+        <@u.message key />:
         ${msg}
+    </#if>
+</#macro>
+
+<#--
+ * Common blocks for status-info emails
+ *
+ * - statusInfoComment
+ *
+ -->
+<#macro statusInfoComment type="">
+    <#if type == "html">
+        <h4 style="${h4!""}"><@u.message "email.commentFromOM" /></h4>
+        <p style="${pBottomMargin!""}">[SAATE]</p>
+    <#else>
+        <@u.message "email.commentFromOM" />:
+        [SAATE]
     </#if>
 </#macro>
 

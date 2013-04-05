@@ -7,7 +7,7 @@
 <#-- Use statusTitleHTMLFi and statusInfoHTMLFi for HTML message -->
 <#include "../includes/status-info.ftl" />
 
-<@el.emailHtml "status-info-to-author" statusTitleHTMLFi!"">
+<@l.emailHtml template="status-info-to-author" title=statusTitleHTMLFi!"" footerLink=false>
 
     <@b.mainContentBlock statusTitleHTMLFi>
         <#noescape>${statusInfoHTMLFi!""}</#noescape>
@@ -36,6 +36,6 @@
         <@eb.emailBottom "sv" "html" />
     </@eb.emailTemplate>-->
     
-</@el.emailHtml>
+</@l.emailHtml>
 
 </#escape> 

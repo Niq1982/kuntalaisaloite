@@ -1,5 +1,7 @@
 <#import "../components/email-blocks.ftl" as b />
 
+<#include "../includes/styles.ftl" />
+
 <#--
  * Includes common status infos for generic emails.
  *
@@ -16,88 +18,115 @@
  *
  *
  * TODO: Localize
+ * TODO: emailMessageType AND EmailMessageType.class
 -->
 
-<#if emailMessageType == EmailMessageType.ACCEPTED_BY_OM_AND_SENT>
+<#--<#if emailMessageType == EmailMessageType.ACCEPTED_BY_OM_AND_SENT>-->
+<#if true>
     <#-- TEXT -->
-    <#assign statusTitleFi>Aloite on julkaistu Kuntalaisaloite.fi-palvelussa ja lähetetty kuntaan</#assign>
-    <#assign statusTitleSv>Initiativet har granskats</#assign>
+    <#assign statusTitleFi>Kuntalaisaloite on julkaistu Kuntalaisaloite.fi-palvelussa ja lähetetty kuntaan</#assign>
+    <#assign statusTitleSv>SV Kuntalaisaloite on julkaistu Kuntalaisaloite.fi-palvelussa ja lähetetty kuntaan</#assign>
     <#assign statusInfoFi>
-        Oikeusministeriö on tarkastanut kuntalaisaloitteesi ja hyväksynyt ja julkaissut Kuntalaisaloite.fi -palvelussa. Julkaisupyynnön yhteydessä valitsit, että aloite lähetetään samalla kuntaan. Aloite on nyt lähetetty kuntaan [KUNTA].
-
+        Oikeusministeriö on tarkastanut kuntalaisaloitteesi ja hyväksynyt sekä samalla julkaissut sen Kuntalaisaloite.fi-palvelussa. Julkaisupyynnön yhteydessä valitsit, että aloite lähetetään samalla kuntaan. Aloite on nyt lähetetty kuntaan [KUNTA].
+        
+        <@b.statusInfoComment "text" />
+        
         Alla on linkki aloitteesi julkiselle sivulle Kuntalaisaloite.fi-palvelussa.
         [LINKKI TÄHÄN]
     </#assign>
     <#assign statusInfoSv>
-        TODO
+        SV TODO
     </#assign>
     
     <#-- HTML -->
     <#assign statusTitleHTMLFi>${statusTitleFi}</#assign>
     <#assign statusTitleHTMLSv>${statusTitleSv}</#assign>
     <#assign statusInfoHTMLFi>
-        <p>Oikeusministeriö on tarkastanut kansalaisaloitteen ja hyväksynyt sen julkaistavaksi kansalaisaloite.fi -palveluun. Aloitteen kannatusilmoitusten kerääminen alkaa yllä mainitusta päivämäärästä alkaen.</p>
+        <p style="${pBothMargins!""}">
+            Oikeusministeriö on tarkastanut kuntalaisaloitteesi ja hyväksynyt sekä samalla julkaissut sen Kuntalaisaloite.fi-palvelussa.
+        </p>
+        <p style="${pBothMargins!""}">
+            Julkaisupyynnön yhteydessä valitsit, että aloite lähetetään samalla kuntaan. Aloite on nyt lähetetty kuntaan [KUNTA].
+        </p>
+
+        <@b.statusInfoComment "html" />
+
+        <p style="${pBothMargins!""}">
+            Alla on linkki aloitteesi julkiselle sivulle Kuntalaisaloite.fi-palvelussa.<br />
+            [LINKKI TÄHÄN]
+        </p>
     </#assign>
     <#assign statusInfoHTMLSv>
-        TODO
+        SV TODO
     </#assign>
     
 <#elseif emailMessageType == EmailMessageType.ACCEPTED_BY_OM>
     <#-- TEXT -->
-    <#assign statusTitleFi>Aloite on tarkastettu</#assign>
-    <#assign statusTitleSv>Initiativet har granskats</#assign>
+    <#assign statusTitleFi>Kuntalaisaloite on hyväksytty</#assign>
+    <#assign statusTitleSv>SV Kuntalaisaloite on hyväksytty</#assign>
     <#assign statusInfoFi>
-        Oikeusministeriö on tarkastanut kansalaisaloitteen ja hyväksynyt sen julkaistavaksi kansalaisaloite.fi -palveluun. Aloitteen kannatusilmoitusten kerääminen alkaa yllä mainitusta päivämäärästä alkaen.
+        Oikeusministeriö on tarkastanut kuntalaisaloitteesi ja hyväksynyt sen Kuntalaisaloite.fi-palvelussa. Julkaisupyynnön yhteydessä valitsit, että haluat liittää aloitteeseen vastuuhenkilöitä ja kerätä osallistujia. Aloite ei ole julkinen palvelussa ennen kuin julkaiset sen. Voit nyt liittää aloitteeseen vastuuhenkilöitä. Aloitteeseen ei voi kerätä osallistujia ennen kuin se on julkaistu.
         
         Oikeusministeriön saate:
         ${stateComment!"Ei saatetta"}
+        
+        Siirry kuntalaisaloitteen ylläpito-sivulle alla olevalla linkillä
+        [LAITETAANKO YLLÄPITO-LINKKI TÄHÄN?]
     </#assign>
     <#assign statusInfoSv>
-        Justitieministeriet har granskat medborgarinitiativet och godkänt det för publicering på webbtjänsten medborgarinitiativ.fi. Insamlingen av stödförklaringar för initiativet börjar från och med det datum som nämns ovan.
-        
-        Justitieministeriets följebrev:
-        ${stateComment!"Ingen följebrev"}
+        SV TODO
     </#assign>
     
     <#-- HTML -->
     <#assign statusTitleHTMLFi>${statusTitleFi}</#assign>
     <#assign statusTitleHTMLSv>${statusTitleSv}</#assign>
     <#assign statusInfoHTMLFi>
-        <p>Oikeusministeriö on tarkastanut kansalaisaloitteen ja hyväksynyt sen julkaistavaksi kansalaisaloite.fi -palveluun. Aloitteen kannatusilmoitusten kerääminen alkaa yllä mainitusta päivämäärästä alkaen.</p>
-        <p><strong>Oikeusministeriön saate:</strong><br>${stateComment!"Ei saatetta"}</p>
+        Oikeusministeriö on tarkastanut kuntalaisaloitteesi ja hyväksynyt sen Kuntalaisaloite.fi-palvelussa. Julkaisupyynnön yhteydessä valitsit, että haluat liittää aloitteeseen vastuuhenkilöitä ja kerätä osallistujia. Aloite ei ole julkinen palvelussa ennen kuin julkaiset sen. Voit nyt liittää aloitteeseen vastuuhenkilöitä. Aloitteeseen ei voi kerätä osallistujia ennen kuin se on julkaistu.
+        <br /><br />
+        Oikeusministeriön saate:<br />
+        ${stateComment!"Ei saatetta"}
+        <br /><br />
+        Siirry kuntalaisaloitteen ylläpito-sivulle alla olevalla linkillä<br />
+        [LAITETAANKO YLLÄPITO-LINKKI TÄHÄN?]
+        <br /><br />
     </#assign>
     <#assign statusInfoHTMLSv>
-        <p>Justitieministeriet har granskat medborgarinitiativet och godkänt det för publicering på webbtjänsten medborgarinitiativ.fi. Insamlingen av stödförklaringar för initiativet börjar från och med det datum som nämns ovan.</p>
-        <p><strong>Justitieministeriets följebrev:</strong><br>${stateComment!"Ingen följebrev"}</p>
+        SV TODO
     </#assign>
     
 <#elseif emailMessageType == EmailMessageType.REJECTED_BY_OM>
     <#-- TEXT -->
-    <#assign statusTitleFi>Aloite on palautettu korjattavaksi</#assign>
-    <#assign statusTitleSv>Initiativet har skickats tillbaka för korrigering</#assign>
+    <#assign statusTitleFi>Kuntalaisaloite on palautettu korjattavaksi</#assign>
+    <#assign statusTitleSv>SV Kuntalaisaloite on palautettu korjattavaksi</#assign>
     <#assign statusInfoFi>
-        Oikeusministeriö on tarkastanut kansalaisaloitteen ja palauttanut sen täydennettäväksi.
+        Oikeusministeriö on tarkastanut kuntalaisaloitteesi ja palauttanut sen korjattavaksi. Voit jälleen muokata aloitteen otsikkoa sekä sisältöä. Korjauksen jälkeen voit lähettää aloitteen uudelleen oikeusministeriön tarkastettavaksi.
         
         Oikeusministeriön saate:
         ${stateComment!"Ei saatetta"}
+
+        Siirry kuntalaisaloitteen ylläpito-sivulle alla olevalla linkillä
+        [LAITETAANKO YLLÄPITO-LINKKI TÄHÄN?]
+        
     </#assign>
     <#assign statusInfoSv>
-        Justitieministeriet har granskat medborgarinitiativet  och skickat tillbaka det för komplettering.
-        
-        Justitieministeriets följebrev:
-         ${stateComment!"Ingen följebrev"}
+        SV TODO
     </#assign>
     
     <#-- HTML -->
     <#assign statusTitleHTMLFi>${statusTitleFi}</#assign>
     <#assign statusTitleHTMLSv>${statusTitleSv}</#assign>
     <#assign statusInfoHTMLFi>
-        <p>Oikeusministeriö on tarkastanut kansalaisaloitteen ja palauttanut sen täydennettäväksi.</p>
-        <p><strong>Oikeusministeriön saate:</strong><br>${stateComment!"Ei saatetta"}</p>
+        Oikeusministeriö on tarkastanut kuntalaisaloitteesi ja palauttanut sen korjattavaksi. Voit jälleen muokata aloitteen otsikkoa sekä sisältöä. Korjauksen jälkeen voit lähettää aloitteen uudelleen oikeusministeriön tarkastettavaksi.
+        <br /><br />
+        Oikeusministeriön saate:<br />
+        ${stateComment!"Ei saatetta"}
+        <br /><br />
+        Siirry kuntalaisaloitteen ylläpito-sivulle alla olevalla linkillä<br />
+        [LAITETAANKO YLLÄPITO-LINKKI TÄHÄN?]
+        <br />
     </#assign>
     <#assign statusInfoHTMLSv>
-        <p>Justitieministeriet har granskat medborgarinitiativet  och skickat tillbaka det för komplettering.</p>
-        <p><strong>Justitieministeriets följebrev:</strong><br> ${stateComment!"Ingen följebrev"}</p>
+        SV TODO
     </#assign>
     
 <#elseif emailMessageType == EmailMessageType.INVITATION_ACCEPTED>

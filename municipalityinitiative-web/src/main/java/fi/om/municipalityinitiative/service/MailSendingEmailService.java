@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.service;
 import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.email.InitiativeEmailInfo;
+import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.util.Task;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -17,6 +18,7 @@ public class MailSendingEmailService implements EmailService {
 
     private static final String NOT_COLLECTABLE_TEMPLATE = "municipality-not-collectable";
     private static final String COLLECTABLE_TEMPLATE = "municipality-collectable";
+    private static final String STATUS_INFO_TEMPLATE = "status-info-to-author";
 
     @Resource
     private MessageSource messageSource;
@@ -36,6 +38,21 @@ public class MailSendingEmailService implements EmailService {
                 .withSubject(messageSource.getMessage("email.not.collectable.municipality.subject", new String[]{emailInfo.getName()}, locale))
                 .withDataMap(toDataMap(emailInfo, locale))
                 .send();
+    }
+    
+    @Override
+    public void sendStatusEmail(Initiative initiative, String sendTo, EmailMessageType emailMessageType, Locale locale) {
+        
+        HashMap<String, Object> dataMap = toDataMap(initiative, locale);
+        dataMap.put("emailMessageType", emailMessageType);
+        
+        emailMessageConstructor
+            .fromTemplate(STATUS_INFO_TEMPLATE)
+            .withSendTo(sendTo)
+            .withSubject(messageSource.getMessage("email.status.info."+emailMessageType.name(), new String[]{}, locale))
+            .withDataMap(dataMap)
+            .send();
+        
     }
 
     @Override
@@ -72,7 +89,7 @@ public class MailSendingEmailService implements EmailService {
                 .send();
     }
 
-    private HashMap<String, Object> toDataMap(InitiativeEmailInfo emailInfo, Locale locale) {
+    private <T> HashMap<String, Object> toDataMap(T emailInfo, Locale locale) {
         HashMap<String, Object> dataMap = Maps.newHashMap();
         dataMap.put("emailInfo", emailInfo);
         dataMap.put("localizations", new EmailLocalizationProvider(messageSource, locale));

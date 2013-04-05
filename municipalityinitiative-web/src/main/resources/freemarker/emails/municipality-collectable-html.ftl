@@ -11,7 +11,7 @@
 <@l.emailHtml "municipality-collectable" title>
 
     <#if (emailInfo.comment)?has_content>
-        <@b.comment "html" emailInfo.comment />
+        <@b.comment "html" emailInfo.comment "email.commentToMunicipality" />
         <@u.spacer "15" />
     </#if>
 
