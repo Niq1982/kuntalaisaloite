@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 @Task
 public class MailSendingEmailService implements EmailService {
@@ -76,7 +77,16 @@ public class MailSendingEmailService implements EmailService {
         HashMap<String, Object> dataMap = Maps.newHashMap();
         dataMap.put("emailInfo", emailInfo);
         dataMap.put("localizations", new EmailLocalizationProvider(messageSource, locale));
+        addEnum(EmailMessageType.class, dataMap);
         return dataMap;
+    }
+
+    private static <T extends Enum<?>> void addEnum(Class<T> enumType, Map<String, Object> dataMap) {
+        Map<String, T> values = Maps.newHashMap();
+        for (T value : enumType.getEnumConstants()) {
+            values.put(value.name(), value);
+        }
+        dataMap.put(enumType.getSimpleName(), values);
     }
 
     public static class EmailLocalizationProvider {
