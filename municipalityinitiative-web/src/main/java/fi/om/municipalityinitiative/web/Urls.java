@@ -46,6 +46,10 @@ public final class Urls {
     public static final String LOGIN_FI =        "/fi/login";
 
     public static final String LOGIN_SV =        "/sv/login";
+
+    public static final String SINGLE_LOGIN_FI =        "/fi/login/"+ID_PARAMETER;
+
+    public static final String SINGLE_LOGIN_SV =        "/sv/login/"+ID_PARAMETER;
     
     public static final String LOGOUT_FI =       "/fi/logout";
     
@@ -313,6 +317,10 @@ public final class Urls {
     
     public String getModeration(Long id) {
         return getLocalizedPageUrl(MODERATION_FI, MODERATION_SV).replace(ID_PARAMETER, id.toString());
+    }
+
+    public String login(Long id) {
+        return getLocalizedPageUrl(SINGLE_LOGIN_FI, SINGLE_LOGIN_SV).replace(ID_PARAMETER, id.toString());
     }
 
     public String initiatives() {

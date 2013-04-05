@@ -43,7 +43,7 @@ public class BaseController {
     BeansWrapper freemarkerObjectWrapper;
 
     @Resource
-    UserService userService;
+    protected UserService userService;
     
     private final boolean optimizeResources;
     

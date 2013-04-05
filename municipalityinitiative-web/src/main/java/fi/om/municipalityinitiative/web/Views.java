@@ -6,6 +6,8 @@ public final class Views {
     private Views() {}
 
     public static final String DUMMY_LOGIN_VIEW = "dummy-login";
+
+    public static final String SINGLE_LOGIN_VIEW = "single-login";
     
     public static final String VETUMA_LOGIN_VIEW = "vetuma-login";
 
