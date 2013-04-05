@@ -82,7 +82,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
         loginAsAuthor(initiativeId);
 
-        open(urls.edit(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
+        open(urls.edit(initiativeId));
         
         fill_in_initiative_content(initiativeId);
     }
@@ -148,7 +148,8 @@ public class InitiativeCreateWebTest extends WebTestBase {
         Long initiative = testHelper.createCollectableDraft(testMunicipality1Id);
         loginAsAuthor(initiative);
         open(urls.getEdit(initiative));
-        assertThat(driver.getTitle(), is("asdasd"));
+//        assertThat(driver.getTitle(), is("asdasd"));
+        assertTitle(getMessage(MSG_PAGE_CREATE_NEW) + " - " + getMessage(MSG_SITE_NAME));
     }
 
     @Test
@@ -212,16 +213,16 @@ public class InitiativeCreateWebTest extends WebTestBase {
     }
     
     public void update_initiative(Long initiativeId) {
-        open(urls.edit(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
-        
+        open(urls.edit(initiativeId));
+
         assertTextByTag("h2", getMessage(MSG_INITIATIVE_PROPOSAL));
         assertTextByTag("h2", getMessage(MSG_INITIATIVE_CONTACTINFO));
-        
+
         inputText("extraInfo", "extraInfo");
         inputText("contactInfo.name", "Updated");
         inputText("contactInfo.phone", "Updated");
         inputText("contactInfo.address", "Updated");
-        
+
         clickByName(Urls.ACTION_UPDATE_INITIATIVE);
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_UPDATE);
     }

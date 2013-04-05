@@ -91,12 +91,8 @@ public class PublicInitiativeService {
         return InitiativeViewInfo.parse(initiativeDao.getById(initiativeId, givenManagementHash), locale);
     }
 
-    public InitiativeDraftUIEditDto getInitiativeDraftForEdit(Long initiativeId, String managementHash) {
-        // TODO: IsAllowed
-        InitiativeDraftUIEditDto initiativeForEdit = initiativeDao.getInitiativeForEdit(initiativeId);
-        if (!initiativeForEdit.getManagementHash().equals(managementHash)) {
-            throw new AccessDeniedException("Invalid management hash");
-        }
+    public InitiativeDraftUIEditDto getInitiativeDraftForEdit(Long initiativeId) {
+        InitiativeDraftUIEditDto initiativeForEdit = initiativeDao.getInitiativeForEdit(initiativeId); // TODO: Parse this with InitiativeDraftUiEditDto
         return initiativeForEdit;
     }
 
@@ -132,6 +128,10 @@ public class PublicInitiativeService {
 
     public Author getAuthorInformation(Long initiativeId, String managementHash) {
         return initiativeDao.getAuthorInformation(initiativeId, managementHash);
+    }
+
+    public Author getAuthorInformation(Long initiativeId) {
+        return initiativeDao.getByIdWithOriginalAuthor(initiativeId).getAuthor();
     }
 
     public void sendReview(Long initiativeId, String managementHash, boolean sendToMunicipalityRightAfterAcceptance) {

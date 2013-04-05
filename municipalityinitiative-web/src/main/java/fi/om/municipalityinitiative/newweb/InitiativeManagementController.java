@@ -93,7 +93,7 @@ public class InitiativeManagementController extends BaseController {
 
         if (managementSettings.isAllowUpdate()) {
 
-            model.addAttribute(ALT_URI_ATTR, urls.alt().edit(initiativeId, managementHash));
+            model.addAttribute(ALT_URI_ATTR, urls.alt().update(initiativeId, managementHash));
 //            model.addAttribute("initiative", publicInitiativeService.getInitiativeDraftForEdit(initiativeId, managementHash)); // TODO UpdateDto, not edit
             model.addAttribute("initiative", publicInitiativeService.getMunicipalityInitiative(initiativeId, managementHash, locale));
             model.addAttribute("updateData", publicInitiativeService.getInitiativeForUpdate(initiativeId, managementHash));
@@ -118,7 +118,7 @@ public class InitiativeManagementController extends BaseController {
         Urls urls = Urls.get(locale);
 
         if (validationService.validationErrors(updateDto, bindingResult, model)) {
-            model.addAttribute(ALT_URI_ATTR, urls.alt().edit(initiativeId, updateDto.getManagementHash()));
+            model.addAttribute(ALT_URI_ATTR, urls.alt().update(initiativeId, updateDto.getManagementHash()));
             model.addAttribute("initiative", publicInitiativeService.getMunicipalityInitiative(initiativeId, updateDto.getManagementHash(), locale));
             model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, updateDto.getManagementHash()));
             model.addAttribute("updateData", updateDto);

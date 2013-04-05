@@ -83,29 +83,31 @@ public class InitiativeCreateController extends BaseController {
 
     @RequestMapping(value={ EDIT_FI, EDIT_SV }, method=GET)
     public String editView(@PathVariable("id") Long initiativeId,
-                           @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                            Model model, Locale locale, HttpServletRequest request) {
 
+        userService.assertManagementRightsForInitiative(initiativeId);
+
         Urls urls = Urls.get(locale);
+
+        // XXX: Three transactions and all of them practically receives some data.
         ManagementSettings managementSettings = publicInitiativeService.managementSettings(initiativeId);
 
         if (managementSettings.isAllowEdit()) {
-            InitiativeDraftUIEditDto initiative = publicInitiativeService.getInitiativeDraftForEdit(initiativeId, managementHash);
+            InitiativeDraftUIEditDto initiative = publicInitiativeService.getInitiativeDraftForEdit(initiativeId);
 
-            model.addAttribute(ALT_URI_ATTR, urls.alt().edit(initiativeId, managementHash));
+            model.addAttribute(ALT_URI_ATTR, urls.alt().getEdit(initiativeId));
             model.addAttribute("initiative", initiative);
-            model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, managementHash));
+            model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId));
 
             model.addAttribute("previousPageURI", urls.prepare());
             return EDIT_VIEW;
         }
         else if (managementSettings.isAllowUpdate()) {
-            return contextRelativeRedirect(urls.update(initiativeId, managementHash));
+            return contextRelativeRedirect(urls.update(initiativeId, userService.getManagementHash())); // TODO: No managementhash
         }
         else {
             return ERROR_500; // TODO: Custom error page or some message that operation is not allowed
         }
-
     }
 
     @RequestMapping(value={ EDIT_FI, EDIT_SV }, method=POST)
@@ -117,7 +119,7 @@ public class InitiativeCreateController extends BaseController {
         Urls urls = Urls.get(locale);
 
         if (validionService.validationErrors(editDto, bindingResult, model)) {
-            model.addAttribute(ALT_URI_ATTR, urls.alt().edit(initiativeId, editDto.getManagementHash()));
+            model.addAttribute(ALT_URI_ATTR, urls.alt().edit(initiativeId));
             model.addAttribute("initiative", editDto);
             model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, editDto.getManagementHash()));
             return EDIT_VIEW;

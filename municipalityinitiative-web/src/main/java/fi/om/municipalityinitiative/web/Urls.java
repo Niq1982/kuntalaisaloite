@@ -282,8 +282,8 @@ public final class Urls {
         return getModeration(initiativeId);
     }
 
-    public String edit(Long initiativeId, String managementHash) {
-        return getEdit(initiativeId) + "?" + PARAM_MANAGEMENT_CODE + "=" + managementHash;
+    public String edit(Long initiativeId) {
+        return getEdit(initiativeId);
     }
 
     public String getEdit(Long initiativeId) {

@@ -114,7 +114,6 @@ public abstract class WebTestBase {
         }
         NotTooFastSubmitValidator.disable(); // Disable fast-submit validation at ui-tests
         testHelper.dbCleanup();
-        
     }
 
     protected boolean overrideDriverToHtmlUnit() {

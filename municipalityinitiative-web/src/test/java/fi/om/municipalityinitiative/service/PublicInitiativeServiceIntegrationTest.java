@@ -187,13 +187,7 @@ public class PublicInitiativeServiceIntegrationTest {
         Long initiativeId = service.prepareInitiative(createDto, Locales.LOCALE_FI);
 
         // TODO: Change to getContactInfo etc.
-        assertThat(service.getInitiativeDraftForEdit(initiativeId, RandomHashGenerator.getPrevious()).getContactInfo().getEmail(), is(createDto.getAuthorEmail()));
-    }
-
-    @Test(expected = AccessDeniedException.class)
-    public void get_initiative_for_edit_throws_exception_if_wrong_management_hash() {
-        Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise(), Locales.LOCALE_FI);
-        service.getInitiativeDraftForEdit(initiativeId, "some invalid management hash");
+        assertThat(service.getInitiativeDraftForEdit(initiativeId).getContactInfo().getEmail(), is(createDto.getAuthorEmail()));
     }
 
     @Test(expected = AccessDeniedException.class)
@@ -227,7 +221,7 @@ public class PublicInitiativeServiceIntegrationTest {
 
         service.editInitiativeDraft(initiativeId, editDto);
 
-        InitiativeDraftUIEditDto updated = service.getInitiativeDraftForEdit(initiativeId, RandomHashGenerator.getPrevious());
+        InitiativeDraftUIEditDto updated = service.getInitiativeDraftForEdit(initiativeId);
 
         ReflectionTestUtils.assertReflectionEquals(updated.getContactInfo(), contactInfo);
         assertThat(updated.getName(), is(editDto.getName()));
@@ -251,11 +245,9 @@ public class PublicInitiativeServiceIntegrationTest {
 
         String managementHash = RandomHashGenerator.getPrevious();
 
-        InitiativeDraftUIEditDto initiativeForEdit = service.getInitiativeDraftForEdit(initiativeId, managementHash);
-        assertThat(initiativeForEdit.getManagementHash(), is(managementHash));
+        InitiativeDraftUIEditDto initiativeForEdit = service.getInitiativeDraftForEdit(initiativeId);
         assertThat(initiativeForEdit.getMunicipality().getId(), is(testMunicipality.getId()));
         assertThat(initiativeForEdit.getState(), is(InitiativeState.DRAFT));
-
 
         // Note that all fields are not set when preparing
     }
