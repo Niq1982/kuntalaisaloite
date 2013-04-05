@@ -32,6 +32,7 @@ public class OmInitiativeServiceTest {
 
         omInitiativeService.initiativeDao = initiativeDaoMock;
         omInitiativeService.userService = fakeUserService;
+        omInitiativeService.emailService = mock(EmailService.class);
     }
 
     @Test
@@ -57,6 +58,7 @@ public class OmInitiativeServiceTest {
 
         omInitiativeService.accept(id, Locales.LOCALE_FI);
         verify(initiativeDaoMock).updateInitiativeState(id, InitiativeState.ACCEPTED);
+        verify(initiativeDaoMock).getByIdWithOriginalAuthor(id);
         verifyNoMoreInteractions(initiativeDaoMock);
 
     }
@@ -69,6 +71,7 @@ public class OmInitiativeServiceTest {
 
         omInitiativeService.reject(id, Locales.LOCALE_FI);
         verify(initiativeDaoMock).updateInitiativeState(id, InitiativeState.DRAFT);
+        verify(initiativeDaoMock).getByIdWithOriginalAuthor(id);
         verifyNoMoreInteractions(initiativeDaoMock);
 
     }
