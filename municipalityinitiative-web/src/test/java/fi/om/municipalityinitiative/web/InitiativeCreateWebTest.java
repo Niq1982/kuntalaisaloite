@@ -1,45 +1,17 @@
 package fi.om.municipalityinitiative.web;
 
+import fi.om.municipalityinitiative.dao.TestHelper;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import fi.om.municipalityinitiative.dao.TestHelper;
-
-import static org.hamcrest.Matchers.is;
+import static fi.om.municipalityinitiative.web.MessageSourceKeys.*;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 public class InitiativeCreateWebTest extends WebTestBase {
-    
-    /**
-     * Localization keys as constants.
-     */
-    private static final String MSG_SITE_NAME = "siteName";
-    private static final String MSG_PAGE_CREATE_NEW = "page.prepare";
-    private static final String MSG_SUCCESS_SAVE_AND_SEND = "success.save-and-send";
-    private static final String MSG_SUCCESS_PREPARE = "success.prepare";
-    private static final String MSG_SUCCESS_SAVE_TITLE = "success.save.title";
-    private static final String MSG_SUCCESS_SAVE_DRAFT = "success.save-draft";
-    private static final String MSG_SUCCESS_UPDATE = "success.update-initiative";
-    private static final String MSG_SUCCESS_SEND_TO_REVIEW = "success.send-to-review";
-    private static final String MSG_SUCCESS_ACCEPT_INITIATIVE = "success.accept-initiative";
-    private static final String MSG_SUCCESS_REJECT_INITIATIVE = "success.reject-initiative";
-    private static final String MSG_BTN_PREPARE_SEND = "action.prepare.send";
-    private static final String MSG_BTN_SAVE_AND_SEND = "action.saveAndSend";
-    private static final String MSG_BTN_SAVE_AND_COLLECT = "action.saveAndCollect";
-    private static final String MSG_BTN_ACCEPT_INITIATIVE = "action.accept";
-    private static final String MSG_BTN_REJECT_INITIATIVE = "action.reject";
-    private static final String SELECT_MUNICIPALITY = "initiative.chooseMunicipality";
-    private static final String MSG_INITIATIVE_TYPE_NORMAL= "initiative.type.normal";
-    private static final String RADIO_FRANCHISE_TRUE = "initiative.franchise.true";
-    private static final String MSG_SEND_TO_REVIEW_CONFIRM = "sendToReview.doNotCollect.confirm.title";
-    private static final String MSG_INITIATIVE_PROPOSAL = "initiative.proposal.title";
-    private static final String MSG_INITIATIVE_CONTACTINFO = "initiative.contactinfo.title";
-    
-    
-    /**
+
+/**
      * Form values as constants.
      */
     private static final String MUNICIPALITY_1 = "Vantaa";
@@ -103,44 +75,6 @@ public class InitiativeCreateWebTest extends WebTestBase {
      
         // Assert that initiative name and proposal cannot be edited in REVIEW-state
         update_initiative(initiativeId);
-    }
-    
-    // Create initiative with state REVIEW and ACCEPT it 
-    @Test
-    public void accept_initiative(){
-        Long initiativeId = testHelper.createCollectableReview(testMunicipality1Id);
-
-        loginAsOmUser();
-
-        open(urls.moderation(initiativeId));
-        
-        getElemContaining(getMessage(MSG_BTN_ACCEPT_INITIATIVE), "a").click();
-        
-        // TODO: Fill in the comment text.
-        
-        clickByName(Urls.ACTION_ACCEPT_INITIATIVE);
-        assertMsgContainedByClass("msg-success", MSG_SUCCESS_ACCEPT_INITIATIVE);
-        
-        // Assert that initiative name and proposal cannot be edited in ACCEPT-state
-        loginAsAuthor(initiativeId);
-        update_initiative(initiativeId);
-    }
-
-    // Create initiative with state REVIEW and REJECT it
-    @Test
-    public void reject_initiative(){
-        Long initiativeId = testHelper.createCollectableReview(testMunicipality1Id);
-
-        loginAsOmUser();
-
-        open(urls.moderation(initiativeId));
-
-        getElemContaining(getMessage(MSG_BTN_REJECT_INITIATIVE), "a").click();
-
-        // TODO: Fill in the comment text.
-
-        clickByName(Urls.ACTION_REJECT_INITIATIVE);
-        assertMsgContainedByClass("msg-success", MSG_SUCCESS_REJECT_INITIATIVE);
     }
 
     @Test

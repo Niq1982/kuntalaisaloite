@@ -1,5 +1,7 @@
 package fi.om.municipalityinitiative.web;
 
+import com.google.common.collect.Lists;
+import com.sun.deploy.util.ArrayUtil;
 import fi.om.municipalityinitiative.StartJetty;
 import fi.om.municipalityinitiative.conf.PropertyNames;
 import fi.om.municipalityinitiative.conf.WebTestConfiguration;
@@ -7,6 +9,7 @@ import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.service.MailSendingEmailService;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Maybe;
+import fi.om.municipalityinitiative.util.TestUtil;
 import fi.om.municipalityinitiative.validation.NotTooFastSubmitValidator;
 import mockit.Mocked;
 import org.eclipse.jetty.server.Server;
@@ -14,6 +17,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
+import org.mockito.internal.util.collections.ListUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -174,10 +178,12 @@ public abstract class WebTestBase {
     
     protected void assertTextContainedByClass(String className, String text) {
         System.out.println("--- assertTextContainedByClass --------------- " + className + ": " + text);
+        List<String> elementTexts = Lists.newArrayList();
         List<WebElement> elements = driver.findElements(By.className(className));
         for (WebElement element : elements) {
             assertNotNull(element); 
             String elementText = element.getText().trim();
+            elementTexts.add(elementText);
             if (elementText.contains(text)) {
                 return;
             }
@@ -186,14 +192,17 @@ public abstract class WebTestBase {
         for (WebElement element : elements) {
             System.out.println("*** '" + element.getText().trim() + "'");
         }
-        fail(className + " class with text " + text + " not found");
+        fail(className + " class with text " + text + " not found. Texts found: " + TestUtil.listValues(elementTexts));
     }
     
     protected void assertTextContainedByXPath(String xpathExpression, String text) {
+
+        List<String> elementTexts = Lists.newArrayList();
         List<WebElement> elements = driver.findElements(By.xpath(xpathExpression));
         for (WebElement element : elements) {
             assertNotNull(element); 
             String elementText = element.getText().trim();
+            elementTexts.add(elementText);
             if (elementText.contains(text)) {
                 return;
             }
@@ -202,7 +211,8 @@ public abstract class WebTestBase {
         for (WebElement element : elements) {
             System.out.println("*** '" + element.getText().trim() + "'");
         }
-        fail(xpathExpression + " xpath with text " + text + " not found");
+        fail(xpathExpression + " xpath with text " + text + " not found. Texts found: " + TestUtil.listValues(elementTexts));
+
     }
 
     protected String pageTitle() {
