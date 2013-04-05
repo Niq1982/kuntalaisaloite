@@ -223,7 +223,7 @@
         </div>
 
         <div class="input-block-content">
-            <@f.textarea path=path+".extraInfo" required="" optional=true cssClass="textarea" />
+            <@f.textarea path=path+".extraInfo" required="" optional=true cssClass="textarea" key="initiative.extraInfo" />
         </div>
     </div>
 </#macro>
@@ -250,25 +250,25 @@
         </div>
 
         <div class="input-block-content">
-            <@u.systemMessage path="initiative.ownDetails.description" type="info" showClose=false />  
+            <@u.systemMessage path="contactInfo.ownDetails.description" type="info" showClose=false />  
         </div>
         
         <div class="input-block-content">
             <div class="column col-2of3">
-                <@f.textField path=path+".contactInfo.name" required="required" optional=false cssClass="medium" maxLength=InitiativeConstants.CONTACT_NAME_MAX />
+                <@f.textField path=path+".contactInfo.name" required="required" optional=false cssClass="medium" maxLength=InitiativeConstants.CONTACT_NAME_MAX key="contactInfo.name" />
                 
             </div>
             <div class="column col-1of3 last">
-                <div class="input-header"><@u.message "initiative.contactInfo.homeMunicipality" /></div>
+                <div class="input-header"><@u.message "contactInfo.homeMunicipality" /></div>
                 
                 <div class="input-placeholder">${author.municipality.getName(locale)}</div>
             </div>
             <br class="clear" />
-            <@f.formCheckbox path=path+".showName" checked=true />
+            <@f.formCheckbox path=path+".showName" checked=true key="contactInfo.showName" />
         </div>
 
         <div class="input-block-content">
-            <@u.systemMessage path="initiative.contactInfo.description" type="info" showClose=false />
+            <@u.systemMessage path="contactInfo.description" type="info" showClose=false />
         </div>
 
         <div class="input-block-content">

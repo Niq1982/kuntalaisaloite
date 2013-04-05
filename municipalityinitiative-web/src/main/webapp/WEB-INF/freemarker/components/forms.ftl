@@ -27,9 +27,15 @@
  * @param path the name of the field to bind to
  * @param required generates an icon and can be used in JS-validation
  * @param optional additional information for label
+ * @param key optional key for label message
 -->
 <#macro formLabel path required optional key="">
-    <#assign labelKey = fieldLabelKey(path) />
+    <#if key == "">
+        <#assign labelKey = fieldLabelKey(path) />
+    <#else>
+        <#assign labelKey = key />
+    </#if>
+    
     <#assign forAttr = spring.status.expression />
             
     <label class="input-header" for="${forAttr!""}">
@@ -57,7 +63,7 @@
 -->
 <#macro textField path required optional cssClass="" attributes="" maxLength="" fieldType="text" key="">
     <@spring.bind path />  
-    
+
     <@formLabel path required optional key>
         <@showError />
         <@spring.formInput path, 'class="'+cssClass+'" maxlength="'+maxLength+'" '+attributes fieldType />
@@ -91,10 +97,10 @@
  * @param optional additional information for label
  * @param cssClass for custom styling. Multiple classes are separated with a space
 -->
-<#macro textarea path required optional cssClass="">
+<#macro textarea path required optional cssClass="" key="">
     <@spring.bind path />  
 
-    <@formLabel path required optional>
+    <@formLabel path required optional key>
         <@showError />
         <@spring.formTextarea path, 'class="'+cssClass+'"' />
     
@@ -108,7 +114,7 @@
  * @param attributes an additional string of arbitrary tags or text to be included within the HTML tag itself
  * @param prefix for custom messages
 -->
-<#macro formCheckbox path checked=false attributes="" prefix="">
+<#macro formCheckbox path checked=false attributes="" key="">
     <@spring.bind path />
     <#assign id="${spring.status.expression}">
     <#if spring.status.value??>
@@ -122,7 +128,7 @@
      
     <label class="inline">
         <input type="checkbox" id="${id}" name="${id}"<#if isSelected> checked="checked"</#if> ${attributes}/>
-        <@u.message (prefix!="")?string(prefix+".",'')+path /><br />
+        <@u.message (key!="")?string(key,path) /><br />
     </label>
 </#macro>
 
@@ -279,7 +285,7 @@
  *
  * Prints the edit block for current author's roles and contact details
  *
- * @param path is a string "initiative.currentAuthor"
+ * @param path is a string eg. "initiative"
  * @param mode is either 'modal' or 'full'
  * @param prefix for custom messages
  * @param cssClass for styling. Multiple classes are separated with a space
@@ -289,7 +295,7 @@
 <#macro contactInfo path mode="" prefix="" cssClass="" showName=false>
 
     <div class="input-header">
-        <@u.message path />
+        <@u.message "contactInfo.title" />
     </div>
     
     <#if showName>
@@ -308,7 +314,7 @@
         
         <div class="column col-1of2 last">
             <label>
-                <@u.message path+".address" />
+                <@u.message "contactInfo.address" />
                 <@spring.formTextarea path+".address", 'class="address-field noresize" maxlength="'+InitiativeConstants.CONTACT_ADDRESS_MAX+'"' />
             </label>
         </div>
