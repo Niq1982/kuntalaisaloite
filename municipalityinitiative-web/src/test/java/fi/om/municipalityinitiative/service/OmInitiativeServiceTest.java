@@ -3,6 +3,8 @@ package fi.om.municipalityinitiative.service;
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.util.InitiativeState;
+import fi.om.municipalityinitiative.util.Locales;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -53,7 +55,7 @@ public class OmInitiativeServiceTest {
         Long id = 3L;
         fakeUserService.setOmUser(true);
 
-        omInitiativeService.accept(id);
+        omInitiativeService.accept(id, Locales.LOCALE_FI);
         verify(initiativeDaoMock).updateInitiativeState(id, InitiativeState.ACCEPTED);
         verifyNoMoreInteractions(initiativeDaoMock);
 
@@ -65,7 +67,7 @@ public class OmInitiativeServiceTest {
         Long id = 3L;
         fakeUserService.setOmUser(true);
 
-        omInitiativeService.reject(id);
+        omInitiativeService.reject(id, Locales.LOCALE_FI);
         verify(initiativeDaoMock).updateInitiativeState(id, InitiativeState.DRAFT);
         verifyNoMoreInteractions(initiativeDaoMock);
 

@@ -172,19 +172,58 @@
  * @param type 'text' or 'html'
  * @param msg is the textual comment
  -->
-<#macro comment type="" msg="">
+<#macro comment type="" msg="" key="">
     <#if type == "html">
         
         <@contentBlock "html">
-            <h4 style="${h4!""}"><@u.message "email.commentToMunicipality" /></h4>
+            <h4 style="${h4!""}"><@u.message key /></h4>
             <p style="${pBottomMargin!""}">${msg}</p>
         </@contentBlock>
         
     <#else>
-        <@u.message "email.commentToMunicipality" />:
+        <@u.message key />:
         ${msg}
     </#if>
 </#macro>
 
+<#--
+ * Common blocks for status-info emails
+ *
+ * - statusInfoComment
+ *
+ -->
+<#macro statusInfoComment type="" msg="">
+    <#if type == "html">
+        <h4 style="${h4!""}"><@u.message "email.commentFromOM" /></h4>
+        <p style="${pBottomMargin!""}">${msg}</p>
+    <#else>
+        <@u.message "email.commentFromOM" />:
+        ${msg}
+    </#if>
+</#macro>
+
+<#macro publicViewLink type="">
+    <#if type == "html">
+        <p style="${pBothMargins!""}">
+            Alla on linkki aloitteesi julkiselle sivulle Kuntalaisaloite.fi-palvelussa.<br />
+            [LINKKI TÄHÄN]
+        </p>
+    <#else>
+        Alla on linkki aloitteesi julkiselle sivulle Kuntalaisaloite.fi-palvelussa.
+        [LINKKI TÄHÄN]
+    </#if>
+</#macro>
+
+<#macro adminViewLink type="">
+    <#if type == "html">
+        <p style="${pBothMargins!""}">
+            Siirry kuntalaisaloitteen ylläpito-sivulle alla olevalla linkillä<br/>
+            [LAITETAANKO YLLÄPITO-LINKKI TÄHÄN?]
+        </p>
+    <#else>
+        Siirry kuntalaisaloitteen ylläpito-sivulle alla olevalla linkillä
+        [LAITETAANKO YLLÄPITO-LINKKI TÄHÄN?]
+    </#if>
+</#macro>
 
 </#escape>

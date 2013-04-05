@@ -10,10 +10,11 @@
 
 <@l.emailHtml "municipality-collectable" title>
 
-    <#if (emailInfo.comment)?has_content>
-        <@b.comment "html" emailInfo.comment "email.commentToMunicipality" />
-        <@u.spacer "15" />
-    </#if>
+    <@b.contentBlock "html">
+        <p style="${pBottomMargin}">Kuntalaisaloite on luotu alla olevilla tiedoilla. Ylläpito-sivulta voit muokata aloitteen tietoja tai lähettää sen oikeusministeriön tarkastettavaksi.</p>
+    </@b.contentBlock>
+
+    <@u.spacer "15" />
 
     <@b.mainContentBlock title>
         <@b.initiativeDetails "html" />
@@ -28,7 +29,7 @@
     <@u.spacer "15" />
     
     <@b.contentBlock "html">
-        <@b.participants "html" />
+        <@b.adminViewLink "html" />
     </@b.contentBlock>
     
     <@u.spacer "15" />
