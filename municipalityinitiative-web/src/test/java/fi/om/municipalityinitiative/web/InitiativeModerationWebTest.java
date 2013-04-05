@@ -33,7 +33,6 @@ public class InitiativeModerationWebTest extends WebTestBase {
         assert404();
     }
 
-    // Create initiative with state REVIEW and ACCEPT it
     @Test
     public void accept_initiative(){
         Long initiativeId = testHelper.createCollectableReview(testMunicipality1Id);
@@ -49,13 +48,10 @@ public class InitiativeModerationWebTest extends WebTestBase {
         clickByName(Urls.ACTION_ACCEPT_INITIATIVE);
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_ACCEPT_INITIATIVE);
 
-        // Assert that initiative name and proposal cannot be edited in ACCEPT-state
-        //loginAsAuthor(initiativeId);
         assertTextContainedByClass("extra-info", "Aloite on hyväksytty");
 
     }
 
-    // Create initiative with state REVIEW and REJECT it
     @Test
     public void reject_initiative(){
         Long initiativeId = testHelper.createCollectableReview(testMunicipality1Id);
