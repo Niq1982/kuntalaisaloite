@@ -63,15 +63,14 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
     @Test
     public void page_opens() {
-        openAndAssertCreatePage();
+        openAndAssertPreparePage();
     }
     
     // Fill in the preparation form
     @Test
     public void prepare_initiative() {
-
         
-        openAndAssertCreatePage();
+        openAndAssertPreparePage();
         select_municipality();
         fill_in_preparation_form();
     }
@@ -142,6 +141,14 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
         clickByName(Urls.ACTION_REJECT_INITIATIVE);
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_REJECT_INITIATIVE);
+    }
+
+    @Test
+    public void edit_page_opens_if_logged_in_as_author() {
+        Long initiative = testHelper.createCollectableDraft(testMunicipality1Id);
+        loginAsAuthor(initiative);
+        open(urls.getEdit(initiative));
+        assertThat(driver.getTitle(), is("asdasd"));
     }
 
     @Test
@@ -240,7 +247,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         assertMsgContainedByClass("msg-success", msgSuccessPrepare);
     }
 
-    private void openAndAssertCreatePage() {
+    private void openAndAssertPreparePage() {
         open(urls.prepare());
         assertTitle(getMessage(MSG_PAGE_CREATE_NEW) + " - " + getMessage(MSG_SITE_NAME));
     }
