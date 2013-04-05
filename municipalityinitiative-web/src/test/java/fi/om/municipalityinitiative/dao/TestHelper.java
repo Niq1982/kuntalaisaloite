@@ -174,7 +174,7 @@ public class TestHelper {
         insert.set(municipalityInitiative.contactPhone, initiativeDraft.authorPhone);
         insert.set(municipalityInitiative.contactName, initiativeDraft.authorName);
         insert.set(municipalityInitiative.name, initiativeDraft.name);
-        insert.set(municipalityInitiative.proposal, "proposal");
+        insert.set(municipalityInitiative.proposal, initiativeDraft.proposal);
         insert.set(municipalityInitiative.municipalityId, initiativeDraft.municipalityId);
         insert.set(municipalityInitiative.newAuthorId, -1L);
         insert.set(municipalityInitiative.participantCount, initiativeDraft.participantCount);
@@ -191,7 +191,7 @@ public class TestHelper {
         Long initiativeId = insert.executeWithKey(municipalityInitiative.id);
 
         Long participantId = queryFactory.insert(QParticipant.participant)
-                .set(QParticipant.participant.municipalityId, initiativeDraft.municipalityId)
+                .set(QParticipant.participant.municipalityId, initiativeDraft.authorMunicipality)
                 .set(QParticipant.participant.municipalityInitiativeId, initiativeId)
                 .set(QParticipant.participant.name, initiativeDraft.authorName)
                 .set(QParticipant.participant.showName, initiativeDraft.publicName)
@@ -199,6 +199,7 @@ public class TestHelper {
                 .executeWithKey(QParticipant.participant.id);
 
         Long authorId = queryFactory.insert(QAuthor.author)
+                .set(QAuthor.author.name, initiativeDraft.authorName)
                 .set(QAuthor.author.address, initiativeDraft.authorAddress)
                 .set(QAuthor.author.email, initiativeDraft.authorEmail)
                 .set(QAuthor.author.phone, initiativeDraft.authorPhone)
@@ -247,8 +248,16 @@ public class TestHelper {
         public Integer participantCount = 0;
         public String comment = DEFAULT_COMMENT;
 
+        public Long authorMunicipality;
+
         public InitiativeDraft(Long municipalityId) {
             this.municipalityId = municipalityId;
+            this.authorMunicipality = municipalityId;
+        }
+
+        public InitiativeDraft withAuthorMunicipality(Long municipalityId) {
+            this.authorMunicipality = municipalityId;
+            return this;
         }
 
         public InitiativeDraft withName(String name) {

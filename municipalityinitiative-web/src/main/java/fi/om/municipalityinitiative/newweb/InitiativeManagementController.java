@@ -51,11 +51,16 @@ public class InitiativeManagementController extends BaseController {
 
     @RequestMapping(value={ MANAGEMENT_FI, MANAGEMENT_SV }, method=GET)
     public String managementView(@PathVariable("id") Long initiativeId,
-                                 @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
+                                 @RequestParam(value = PARAM_MANAGEMENT_CODE, required = false) String managementHash,
                                  Model model, Locale locale, HttpServletRequest request) {
 
+        userService.assertManagementRightsForInitiative(initiativeId);
+
+        if (managementHash == null)
+            managementHash = userService.getManagementHash();
+
         Urls urls = Urls.get(locale);
-        model.addAttribute(ALT_URI_ATTR, urls.alt().management(initiativeId, managementHash));
+        model.addAttribute(ALT_URI_ATTR, urls.alt().getManagement(initiativeId));
 
         InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId, locale);
 

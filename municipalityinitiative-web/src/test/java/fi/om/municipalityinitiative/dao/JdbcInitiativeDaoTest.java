@@ -71,17 +71,30 @@ public class JdbcInitiativeDaoTest {
 
     @Test
     public void get_returns_all_information() {
-        Long id = testHelper.createTestInitiative(testMunicipality.getId(), "Initiative name", true, true);
+        Long authorsMunicipalityId = testHelper.createTestMunicipality("Authors Municipality");
 
-        Initiative initiative = initiativeDao.getById(id);
+        Long initiativeId = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withAuthorMunicipality(authorsMunicipalityId)
+                .withType(InitiativeType.COLLABORATIVE_CITIZEN)
+                .withSent(new DateTime(2010, 1, 1, 0, 0)));
+
+        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
 
         assertThat(initiative.getMunicipality().getId(), is(testMunicipality.getId()));
-        assertThat(initiative.getAuthorName(), is("Antti Author"));
+        assertThat(initiative.getAuthorName(), is(TestHelper.DEFAULT_AUTHOR_NAME));
         assertThat(initiative.getCreateTime(), is(notNullValue()));
-        assertThat(initiative.getName(), is("Initiative name"));
-        assertThat(initiative.getProposal(), is("proposal"));
-        assertThat(initiative.getSentTime().isPresent(), is(false));
+        assertThat(initiative.getName(), is(TestHelper.DEFAULT_INITIATIVE_NAME));
+        assertThat(initiative.getProposal(), is(TestHelper.DEFAULT_PROPOSAL));
+        assertThat(initiative.getSentTime().isPresent(), is(true));
+        assertThat(initiative.getState(), is(TestHelper.DEFAULT_STATE));
+        assertThat(initiative.getType().get(), is(InitiativeType.COLLABORATIVE_CITIZEN));
         assertThat(initiative.getShowName(), is(true));
+
+        assertThat(initiative.getAuthor().getContactInfo().getName(), is(TestHelper.DEFAULT_AUTHOR_NAME));
+        assertThat(initiative.getAuthor().getContactInfo().getAddress(), is(TestHelper.DEFAULT_AUTHOR_ADDRESS));
+        assertThat(initiative.getAuthor().getContactInfo().getEmail(), is(TestHelper.DEFAULT_AUTHOR_EMAIL));
+        assertThat(initiative.getAuthor().getContactInfo().getPhone(), is(TestHelper.DEFAULT_AUTHOR_PHONE));
+        assertThat(initiative.getAuthor().getMunicipality().getId(), is(authorsMunicipalityId));
 
         ReflectionTestUtils.assertNoNullFields(initiative);
     }
@@ -97,13 +110,13 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void update_initiative_state_when_set_as_review() {
         Long initiativeId = testHelper.createTestInitiative(testMunicipality.getId());
-        Initiative original = initiativeDao.getById(initiativeId);
+        Initiative original = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
         assertThat(original.getType().isPresent(), is(false));
         assertThat(original.getState(), is(InitiativeState.DRAFT));
 
         initiativeDao.setInitiativeAsReview(initiativeId, InitiativeType.COLLABORATIVE);
 
-        Initiative updated = initiativeDao.getById(initiativeId);
+        Initiative updated = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
         assertThat(updated.getType().get(), is(InitiativeType.COLLABORATIVE));
         assertThat(updated.getState(), is(InitiativeState.REVIEW));
     }
@@ -309,7 +322,7 @@ public class JdbcInitiativeDaoTest {
 
     @Test
     public void finds_by_sent_does_not_find_collectable_if_not_sent() {
-        testHelper.createTestInitiative(testMunicipality.getId(), "Title", true, true);
+        testHelper.createCollectableAccepted(testMunicipality.getId());
         List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.sent));
         assertThat(result, hasSize(0));
     }
@@ -331,11 +344,11 @@ public class JdbcInitiativeDaoTest {
         Long initiativeId = testHelper.createCollectableAccepted(testMunicipality.getId());
 
 
-        Initiative initiative = initiativeDao.getById(initiativeId);
+        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
         assertThat(initiative.getSentTime().isPresent(), is(false)); // Precondition
 
         initiativeDao.markAsSendedAndUpdateContactInfo(initiativeId, contactInfo());
-        initiative = initiativeDao.getById(initiativeId);
+        initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
         assertThat(initiative.getSentTime().isPresent(), is(true));
     }
 
@@ -344,7 +357,7 @@ public class JdbcInitiativeDaoTest {
 
         Long initiativeId = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId()).withType(InitiativeType.SINGLE));
 
-        Initiative initiative = initiativeDao.getById(initiativeId);
+        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
         assertThat(initiative.isCollectable(), is(false)); // Precondition
 
         initiativeDao.markAsSendedAndUpdateContactInfo(initiativeId, contactInfo());
@@ -354,7 +367,7 @@ public class JdbcInitiativeDaoTest {
     public void throws_exception_if_trying_double_send() {
         Long initiativeId = testHelper.createCollectableAccepted(testMunicipality.getId());
 
-        Initiative initiative = initiativeDao.getById(initiativeId);
+        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
         assertThat(initiative.isCollectable(), is(true)); // Precondition
         assertThat(initiative.getSentTime().isPresent(), is(false)); // Precondition
 
@@ -370,15 +383,16 @@ public class JdbcInitiativeDaoTest {
 
     @Test
     public void get_returns_initiative_if_given_managementHash_is_correct() {
-        Long id = testHelper.createTestInitiative(testMunicipality.getId(), "Some name", true, true);
+        Long id = testHelper.createSingleSent(testMunicipality.getId());
 
         Initiative initiative = initiativeDao.getById(id, TestHelper.TEST_MANAGEMENT_HASH);
         assertThat(initiative.getId(), is(id));
+        ReflectionTestUtils.assertNoNullFields(initiative);
     }
 
     @Test
     public void get_throws_exception_if_given_management_hash_is_invalid() {
-        Long id = testHelper.createTestInitiative(testMunicipality.getId(), "Some name");
+        Long id = testHelper.createSingleSent(testMunicipality.getId());
 
         try {
             initiativeDao.getById(id, "invalidManagementHash");
@@ -448,7 +462,7 @@ public class JdbcInitiativeDaoTest {
 
     @Test(expected = NotFoundException.class)
     public void throws_exception_if_initiative_is_not_found() {
-        initiativeDao.getById(-1L);
+        initiativeDao.getByIdWithOriginalAuthor(-1L);
     }
 
     @Test

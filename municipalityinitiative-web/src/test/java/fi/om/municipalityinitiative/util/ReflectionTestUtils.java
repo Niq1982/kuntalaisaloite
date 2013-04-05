@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.util;
 
 import fi.om.municipalityinitiative.json.ObjectSerializer;
+import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.MunicipalityInfo;
@@ -42,7 +43,7 @@ public class ReflectionTestUtils {
             }
             clazz = clazz.getSuperclass();
         }
-        while (clazz != null && clazz != Object.class);
+        while (clazz != null && !clazz.equals(Object.class));
 
         try {
             assertNoNullFields(bean);
@@ -60,19 +61,19 @@ public class ReflectionTestUtils {
     private static Object randomValue(Class<?> type) throws IllegalAccessException {
 
         // standard Java types
-        if (type == String.class) {
+        if (type.equals(String.class)) {
             return randomString();
         }
-        if (type == int.class || type == Integer.class) {
+        if (type.equals(int.class) || type.equals(Integer.class)) {
             return randomInt();
         }
-        if (type == long.class || type == Long.class) {
+        if (type.equals(long.class) || type.equals(Long.class)) {
             return randomLong();
         }
-        if (type == boolean.class) {
+        if (type.equals(boolean.class)) {
             return true;
         }
-        if (type == Boolean.class) {
+        if (type.equals(Boolean.class)) {
             return true;
         }
         if (type.isEnum()) {
@@ -81,32 +82,35 @@ public class ReflectionTestUtils {
             if (i < 0) i*= -1;
             return constants[i];
         }
-        if (type == LocalDateTime.class) {
+        if (type.equals(LocalDateTime.class)) {
             return new LocalDateTime(randomLong());
         }
-        if (type == LocalDate.class){
+        if (type.equals(LocalDate.class)){
             return new LocalDate(randomLong());
         }
 
-        if (type == DateTime.class) {
+        if (type.equals(DateTime.class)) {
             return new DateTime(randomLong());
         }
-        if (type == Maybe.class) {
+        if (type.equals(Maybe.class)) {
             return Maybe.absent(); // TODO: find out the type of the optional object and recursively generate a random non-absent value
         }
 
-        if (type == ContactInfo.class) {
+        if (type.equals(ContactInfo.class)) {
             return modifyAllFields(new ContactInfo());
         }
 
-        if (type == Participants.class) {
+        if (type.equals(Participants.class)) {
             return modifyAllFields(new Participants());
         }
-        if (type == Municipality.class) {
+        if (type.equals(Municipality.class)) {
             return modifyAllFields(new Municipality(0, "", ""));
         }
         if (type.equals(MunicipalityInfo.class)) {
             return modifyAllFields(new MunicipalityInfo());
+        }
+        if (type.equals(Author.class)) {
+            return modifyAllFields(new Author());
         }
         if (type.equals(List.class)) {
             return new ArrayList<>();

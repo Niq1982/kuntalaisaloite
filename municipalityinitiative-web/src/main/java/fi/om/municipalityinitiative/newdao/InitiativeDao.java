@@ -21,9 +21,9 @@ public interface InitiativeDao {
 
     Long create(InitiativeCreateDto dto);
 
-    Initiative getById(Long id);
+    Initiative getByIdWithOriginalAuthor(Long id);
 
-    Initiative getById(Long initiativeId, String givenManagementHash);
+    Initiative getById(Long initiativeId, String authorsManagementHash);
 
     void assignAuthor(Long municipalityInitiativeId, Long participantId, String authorEmail, String managementHash);
 

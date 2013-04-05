@@ -74,6 +74,8 @@ public class InitiativeCreateWebTest extends WebTestBase {
         Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
         Long initiativeId = testHelper.createEmptyDraft(municipality1Id);
 
+        loginAsAuthor(initiativeId);
+
         open(urls.edit(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
         
         fill_in_initiative_content(initiativeId);
@@ -84,7 +86,8 @@ public class InitiativeCreateWebTest extends WebTestBase {
     public void send_to_review() {
         Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
         Long initiativeId = testHelper.createCollectableDraft(municipality1Id);
-        
+
+        loginAsAuthor(initiativeId);
         open(urls.management(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
         
         clickById("js-send-to-review");
@@ -115,6 +118,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_ACCEPT_INITIATIVE);
         
         // Assert that initiative name and proposal cannot be edited in ACCEPT-state
+        loginAsAuthor(initiativeId);
         update_initiative(initiativeId);
     }
 
@@ -134,13 +138,6 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
         clickByName(Urls.ACTION_REJECT_INITIATIVE);
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_REJECT_INITIATIVE);
-    }
-
-    private void loginAsOmUser() {
-        open(urls.login(""));
-        inputText("u", "admin");
-        inputText("p", "admin");
-        clickByName("Login");
     }
 
     public void select_municipality() {

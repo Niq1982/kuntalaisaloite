@@ -16,24 +16,38 @@ public class ViewInitiativeWebTest extends WebTestBase {
     private static final String ERROR_404_TITLE = "error.404.title";
     
     @Test
-    public void manage_view_shows_send_to_municipality_button() {
+    public void management_view_opens_if_logged_in_with_correct_management_hash() {
 
         Long municipalityId = testHelper.createTestMunicipality("Tuusula");
         Long initiativeId = testHelper.createCollectableDraft(municipalityId);
 
+        loginAsAuthor(initiativeId);
         open(urls.management(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
 
         assertThat(driver.findElement(By.tagName("h2")).getText(), is(getMessage(MANAGEMENT_WARNING_TITLE)));
     }
 
     @Test
-    public void opens_error_404_if_management_hash_wrong() {
+    public void management_view_shows_404_if_not_logged_in() {
         Long municipalityId = testHelper.createTestMunicipality("Tuusula");
         Long initiativeId = testHelper.createCollectableDraft(municipalityId);
 
-        open(urls.management(initiativeId, "wrong_hash"));
+        open(urls.getManagement(initiativeId));
 
         assertThat(driver.findElement(By.tagName("h1")).getText(), is(getMessage(ERROR_404_TITLE)));
+    }
+
+    @Test
+    public void management_view_shows_404_if_logged_in_with_wrong_management_hash() {
+
+        Long municipalityId = testHelper.createTestMunicipality("Tuusula");
+        Long myInitiative = testHelper.createCollectableDraft(municipalityId);
+        Long otherInitiative = testHelper.createCollectableDraft(municipalityId);
+
+        open(urls.getManagement(myInitiative));
+
+        assertThat(driver.findElement(By.tagName("h1")).getText(), is(getMessage(ERROR_404_TITLE)));
+
     }
 
     // TODO: Redirect-tests if initiative at REVIEW, ACCEPTED, sent etc and trying to open edit/management-page

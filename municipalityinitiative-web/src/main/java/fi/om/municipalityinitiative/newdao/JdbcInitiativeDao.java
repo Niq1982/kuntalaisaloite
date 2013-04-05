@@ -53,6 +53,8 @@ public class JdbcInitiativeDao implements InitiativeDao {
     private static final Long PREPARATION_ID = -1L;
 
     private static final Expression<DateTime> CURRENT_TIME = DateTimeExpression.currentTimestamp(DateTime.class);
+    public static final QMunicipality INITIATIVE_MUNICIPALITY = new QMunicipality("initiativeMunicipality");
+    public static final QMunicipality AUTHOR_MUNICIPALITY = new QMunicipality("authorMunicipality");
 
     @Resource
     PostgresQueryFactory queryFactory;
@@ -198,13 +200,14 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    public Initiative getById(Long id) {
+    public Initiative getByIdWithOriginalAuthor(Long id) {
 
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
-                .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
+                .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, INITIATIVE_MUNICIPALITY)
                 .innerJoin(municipalityInitiative.initiativeAuthorFk, QAuthor.author)
                 .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
+                .innerJoin(QParticipant.participant.participantMunicipalityFk, AUTHOR_MUNICIPALITY)
                 .where(municipalityInitiative.id.eq(id));
 
         Initiative initiative = query.uniqueResult(initiativeInfoMapping);
@@ -215,14 +218,15 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    public Initiative getById(Long initiativeId, String managementHash) {
+    public Initiative getById(Long initiativeId, String authorsManagementHash) {
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
-                .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
+                .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, INITIATIVE_MUNICIPALITY)
                 .innerJoin(municipalityInitiative._participantMunicipalityInitiativeIdFk, QParticipant.participant)
+                .innerJoin(QParticipant.participant.participantMunicipalityFk, AUTHOR_MUNICIPALITY)
                 .innerJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
                 .where(municipalityInitiative.id.eq(initiativeId))
-                .where(QAuthor.author.managementHash.eq(managementHash));
+                .where(QAuthor.author.managementHash.eq(authorsManagementHash));
 
         Initiative initiative = query.uniqueResult(initiativeInfoMapping);
         if (initiative == null) {
@@ -245,8 +249,8 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .where(municipalityInitiative.state.eq(InitiativeState.ACCEPTED))
                 .where(municipalityInitiative.type.in(InitiativeType.COLLABORATIVE,
-                                                      InitiativeType.COLLABORATIVE_CITIZEN,
-                                                      InitiativeType.COLLABORATIVE_COUNCIL))
+                        InitiativeType.COLLABORATIVE_CITIZEN,
+                        InitiativeType.COLLABORATIVE_COUNCIL))
                 .where(municipalityInitiative.sent.isNull())
                 .execute();
 
@@ -487,6 +491,13 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 row.get(QMunicipality.municipality.nameSv));
     }
 
+    private static Municipality parseMunicipality(Tuple row, QMunicipality municipality) {
+        return new Municipality(
+                row.get(municipality.id),
+                row.get(municipality.name),
+                row.get(municipality.nameSv));
+    }
+
     private Expression<ContactInfo> contactInfoMapping =
             new MappingProjection<ContactInfo>(ContactInfo.class,
                     municipalityInitiative.all()) {
@@ -505,7 +516,8 @@ public class JdbcInitiativeDao implements InitiativeDao {
     Expression<Initiative> initiativeInfoMapping =
             new MappingProjection<Initiative>(Initiative.class,
                     municipalityInitiative.all(),
-                    QMunicipality.municipality.all(),
+                    AUTHOR_MUNICIPALITY.all(),
+                    INITIATIVE_MUNICIPALITY.all(),
                     QParticipant.participant.all(),
                     QAuthor.author.all()) {
                 @Override
@@ -514,7 +526,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     info.setId(row.get(municipalityInitiative.id));
                     info.setCreateTime(row.get(municipalityInitiative.modified).toLocalDate());
                     info.setName(row.get(municipalityInitiative.name));
-                    info.setMunicipality(parseMunicipality(row)
+                    info.setMunicipality(parseMunicipality(row, INITIATIVE_MUNICIPALITY)
                     );
                     info.setType(Maybe.fromNullable(row.get(municipalityInitiative.type)));
                     info.setProposal(row.get(municipalityInitiative.proposal));
@@ -524,6 +536,18 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     info.setSentTime(maybeLocalDate(row.get(municipalityInitiative.sent)));
                     info.setState(row.get(municipalityInitiative.state));
                     info.setComment(row.get(municipalityInitiative.comment));
+
+                    Author author = new Author();
+                    ContactInfo contactInfo = new ContactInfo();
+                    contactInfo.setAddress(row.get(QAuthor.author.address));
+                    contactInfo.setPhone(row.get(QAuthor.author.phone));
+                    contactInfo.setName(row.get(QAuthor.author.name));
+                    contactInfo.setEmail(row.get(QAuthor.author.email));
+                    author.setContactInfo(contactInfo);
+                    author.setMunicipality(parseMunicipality(row, AUTHOR_MUNICIPALITY));
+
+                    info.setAuthor(author);
+
                     return info;
                 }
             };
