@@ -83,8 +83,9 @@ public class UserService {
     }
 
     public void assertManagementRightsForInitiative(Long initiativeId) {
+
         Maybe<Initiative> initiativeMaybe = getObject(LOGIN_INITIATIVE_PARAMETER);
-        if (!initiativeMaybe.get().getId().equals(initiativeId)) {
+        if (!initiativeMaybe.isPresent() || !initiativeMaybe.get().getId().equals(initiativeId)) {
             throw new AccessDeniedException("No access for initiative with id: " + initiativeId);
         }
 

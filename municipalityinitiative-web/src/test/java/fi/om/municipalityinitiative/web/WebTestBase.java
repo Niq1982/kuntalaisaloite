@@ -242,4 +242,17 @@ public abstract class WebTestBase {
         throw new NullPointerException("Label not found with text: " + linkText);
     }
 
+
+    protected void loginAsOmUser() {
+        open(urls.login(""));
+        inputText("u", "admin");
+        inputText("p", "admin");
+        clickByName("Login");
+    }
+
+    protected void loginAsAuthor(Long initiativeId) {
+        open(urls.loginAuthor(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
+        clickByName("Login");
+    }
+
 }

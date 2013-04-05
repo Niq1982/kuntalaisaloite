@@ -323,6 +323,10 @@ public final class Urls {
         return getLocalizedPageUrl(SINGLE_LOGIN_FI, SINGLE_LOGIN_SV).replace(ID_PARAMETER, id.toString());
     }
 
+    public String loginAuthor(Long id, String managementHash) {
+        return login(id) + "?" + PARAM_MANAGEMENT_CODE + "=" + managementHash;
+    }
+
     public String initiatives() {
         return baseUrl + INITIATIVES;
     }
