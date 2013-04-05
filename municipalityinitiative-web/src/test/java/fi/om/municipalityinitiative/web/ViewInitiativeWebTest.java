@@ -87,7 +87,14 @@ public class ViewInitiativeWebTest extends WebTestBase {
 
         open(urls.view(myInitiative));
         assertThat(driver.findElement(By.tagName("h2")).getText(), is(getMessage(INITIATIVE_VIEW_HEADER)));
+    }
 
+    @Test
+    public void even_drafts_may_be_viewed_if_logged_in_as_om_user() {
+        Long myInitiative = testHelper.createCollectableDraft(municipalityId);
+        loginAsOmUser();
+        open(urls.view(myInitiative));
+        assertThat(driver.findElement(By.tagName("h2")).getText(), is(getMessage(INITIATIVE_VIEW_HEADER)));
     }
 
     // TODO: Redirect-tests if initiative at REVIEW, ACCEPTED, sent etc and trying to open edit/management-page

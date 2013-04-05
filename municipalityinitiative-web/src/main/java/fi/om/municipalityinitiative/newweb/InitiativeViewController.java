@@ -68,16 +68,17 @@ public class InitiativeViewController extends BaseController {
     }
 
     @RequestMapping(value={ VIEW_FI, VIEW_SV }, method=GET)
-    public String viewPublic(@PathVariable("id") Long initiativeId,
-                             Model model, Locale locale, HttpServletRequest request) {
+    public String view(@PathVariable("id") Long initiativeId,
+                       Model model, Locale locale, HttpServletRequest request) {
         Urls urls = Urls.get(locale);
-        model.addAttribute(ALT_URI_ATTR, urls.alt().view(initiativeId));
 
         InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId, locale);
 
-        if (initiativeInfo.getState() != InitiativeState.PUBLISHED) {
+        if (initiativeInfo.getState() != InitiativeState.PUBLISHED && !userService.isOmUser()) {
             userService.assertManagementRightsForInitiative(initiativeId);
         }
+
+        model.addAttribute(ALT_URI_ATTR, urls.alt().view(initiativeId));
 
         // TODO: Use initiativeState PUBLISHED when user can publish initiative
         if (initiativeInfo.isCollectable()){// TODO: If not sent to municipality

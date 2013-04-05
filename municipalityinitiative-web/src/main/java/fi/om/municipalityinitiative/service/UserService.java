@@ -88,6 +88,10 @@ public class UserService {
         if (!initiativeMaybe.isPresent() || !initiativeMaybe.get().getId().equals(initiativeId)) {
             throw new AccessDeniedException("No access for initiative with id: " + initiativeId);
         }
+    }
 
+    public boolean isOmUser() {
+        Maybe<User> user = getUser();
+        return user.isPresent() && user.get().isOmUser();
     }
 }
