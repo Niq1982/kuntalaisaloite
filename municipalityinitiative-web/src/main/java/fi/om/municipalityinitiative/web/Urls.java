@@ -270,7 +270,6 @@ public final class Urls {
         return getLocalizedPageUrl(PARITICIPANT_LIST_FI, PARITICIPANT_LIST_SV).replace(ID_PARAMETER, initiativeId.toString());
     }
 
-    @Deprecated
     public String management(Long initiativeId) {
         return getManagement(initiativeId);
     }
