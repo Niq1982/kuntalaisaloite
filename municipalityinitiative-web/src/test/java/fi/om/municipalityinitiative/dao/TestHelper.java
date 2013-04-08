@@ -147,7 +147,7 @@ public class TestHelper {
     }
 
     @Transactional
-    public Long createCollectableDraft(Long municipalityId) {
+    public Long createSingleDraft(Long municipalityId) {
         return create(new InitiativeDraft(municipalityId)
                 .withState(InitiativeState.DRAFT)
                 .withType(InitiativeType.SINGLE));

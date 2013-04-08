@@ -100,7 +100,7 @@
  *      previousPageURI is the public view URI
 -->
 <#macro returnPrevious>
-    <#if previousPageURI == urls.management(initiative.id, initiative.managementHash.value)>
+    <#if previousPageURI == urls.getManagement(initiative.id)>
         <p><a href="${previousPageURI}">&laquo; <@u.message "participantList.return.management" /></a></p>
     <#else>
         <p><a href="${previousPageURI}">&laquo; <@u.message "participantList.return.view" /></a></p>

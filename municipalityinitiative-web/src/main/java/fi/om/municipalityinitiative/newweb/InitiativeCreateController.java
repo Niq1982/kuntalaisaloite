@@ -103,7 +103,7 @@ public class InitiativeCreateController extends BaseController {
             return EDIT_VIEW;
         }
         else if (managementSettings.isAllowUpdate()) {
-            return contextRelativeRedirect(urls.update(initiativeId, userService.getManagementHash())); // TODO: No managementhash
+            return contextRelativeRedirect(urls.update(initiativeId)); // TODO: No managementhash
         }
         else {
             return ERROR_500; // TODO: Custom error page or some message that operation is not allowed
@@ -126,7 +126,7 @@ public class InitiativeCreateController extends BaseController {
         }
 
         publicInitiativeService.editInitiativeDraft(initiativeId, editDto);
-        return redirectWithMessage(urls.management(initiativeId,editDto.getManagementHash()), RequestMessage.SAVE_DRAFT, request);
+        return redirectWithMessage(urls.management(initiativeId), RequestMessage.SAVE_DRAFT, request);
     }
 
     @InitBinder

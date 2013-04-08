@@ -6,7 +6,7 @@
 
 <#escape x as x?html> 
 
-<#assign managementURL = urls.management(initiative.id, initiative.managementHash.value) />
+<#assign managementURL = urls.getManagement(initiative.id) />
 
 <#--
  * Layout parameters for HTML-title and navigation.
@@ -21,7 +21,7 @@
         <h2><@u.message "management.warning.title" /></h2>
         <p><@u.messageHTML "management.warning.description" /></p>
         <p><a class="small-button gray" href="${urls.edit(initiative.id)}"><span class="small-icon edit"><@u.messageHTML 'action.editInitiative' /></span></a>
-        <a class="small-button gray push" href="${urls.preview(initiative.id, initiative.managementHash.value)}" target="_blank"><span class="small-icon document">Esikatsele aloitteen julkista näkymää</span></a></p>
+        <a class="small-button gray push" href="${urls.view(initiative.id)}" target="_blank"><span class="small-icon document">Esikatsele aloitteen julkista näkymää</span></a></p>
     </div>
 
     <@e.stateInfo initiative />
