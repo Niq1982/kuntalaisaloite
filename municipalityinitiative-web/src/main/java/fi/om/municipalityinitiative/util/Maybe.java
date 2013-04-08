@@ -36,6 +36,10 @@ public class Maybe<T> {
         return optional.isPresent();
     }
 
+    public boolean isNotPresent() {
+        return !isPresent();
+    }
+
     public static <T> Maybe<T> absent() {
         return new Maybe<T>(Optional.<T>absent());
     }

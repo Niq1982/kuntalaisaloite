@@ -17,4 +17,9 @@ public class ManagementSettings {
     public boolean isAllowUpdate() {
         return !isAllowEdit() && !initiative.getSentTime().isPresent();
     }
+
+    public boolean isAllowSendToMunicipality() {
+        return (initiative.getState().equals(InitiativeState.ACCEPTED) || initiative.getState().equals(InitiativeState.PUBLISHED))
+                && initiative.getSentTime().isNotPresent();
+    }
 }

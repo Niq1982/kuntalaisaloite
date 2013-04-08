@@ -56,6 +56,24 @@ public class ManagementSettingsTest {
 
     }
 
+    @Test
+    public void may_be_sent_to_municipality_only_if_at_least_accepted_and_not_sent() {
+
+        for (InitiativeState state : InitiativeState.values()) {
+
+            Initiative initiative = createInitiative();
+            initiative.setState(state);
+            if (state.equals(InitiativeState.ACCEPTED) || state.equals(InitiativeState.PUBLISHED)) {
+                assertThat(state.toString(), managementSettings(initiative).isAllowSendToMunicipality(), is(true));
+            } else {
+                assertThat(state.toString(), managementSettings(initiative).isAllowSendToMunicipality(), is(false));
+            }
+
+            initiative.setSentTime(Maybe.of(new LocalDate(2010, 1, 1)));
+            assertThat("Always false if sent", managementSettings(initiative).isAllowSendToMunicipality(), is(false));
+        }
+    }
+
     private static Initiative createInitiative() {
         Initiative initiative = new Initiative();
         return initiative;
