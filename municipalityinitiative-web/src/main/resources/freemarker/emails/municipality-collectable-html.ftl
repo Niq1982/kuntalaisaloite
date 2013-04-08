@@ -6,12 +6,12 @@
 
 <#escape x as x?html>
 
-<#assign title><@u.message "email.initiative" /> - ${emailInfo.municipality.name!""}</#assign>
+<#assign title><@u.message "email.initiative" /> - ${initiative.municipality.name!""}</#assign>
 
 <@l.emailHtml "municipality-collectable" title>
 
-    <#if (emailInfo.comment)?has_content>
-        <@b.comment "html" emailInfo.comment "email.commentToMunicipality" />
+    <#if (initiative.comment)?has_content>
+        <@b.comment "html" initiative.comment "email.commentToMunicipality" />
         <@u.spacer "15" />
     </#if>
 

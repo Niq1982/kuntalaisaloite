@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.email.InitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.util.Task;
+import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 
@@ -27,9 +28,6 @@ public class MailSendingEmailService implements EmailService {
     private MessageSource messageSource;
 
     @Resource
-    private JavaMailSender javaMailSender;
-
-    @Resource
     private EmailMessageConstructor emailMessageConstructor;
 
     @Override
@@ -42,12 +40,13 @@ public class MailSendingEmailService implements EmailService {
                 .withDataMap(toDataMap(emailInfo, locale))
                 .send();
     }
-    
+
     @Override
     public void sendStatusEmail(Initiative initiative, String sendTo, EmailMessageType emailMessageType, Locale locale) {
         
         HashMap<String, Object> dataMap = toDataMap(initiative, locale);
         dataMap.put("emailMessageType", emailMessageType);
+        dataMap.put("initiativeUrls", Urls.get(locale));
         
         emailMessageConstructor
             .fromTemplate(STATUS_INFO_TEMPLATE)
@@ -94,7 +93,7 @@ public class MailSendingEmailService implements EmailService {
 
     private <T> HashMap<String, Object> toDataMap(T emailInfo, Locale locale) {
         HashMap<String, Object> dataMap = Maps.newHashMap();
-        dataMap.put("emailInfo", emailInfo);
+        dataMap.put("initiative", emailInfo);
         dataMap.put("localizations", new EmailLocalizationProvider(messageSource, locale));
         addEnum(EmailMessageType.class, dataMap);
         return dataMap;

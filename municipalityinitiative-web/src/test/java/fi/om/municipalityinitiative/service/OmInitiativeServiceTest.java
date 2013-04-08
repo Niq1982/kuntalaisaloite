@@ -2,6 +2,9 @@ package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
+import fi.om.municipalityinitiative.newdto.Author;
+import fi.om.municipalityinitiative.newdto.service.Initiative;
+import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.Locales;
 
@@ -18,6 +21,9 @@ import static org.mockito.Mockito.*;
 
 public class OmInitiativeServiceTest {
 
+    private static final String AUTHOR_EMAIL = "some@example.com";
+    public static final long INITIATIVE_ID = 3L;
+
     private OmInitiativeService omInitiativeService;
 
     private InitiativeDao initiativeDaoMock;
@@ -25,7 +31,7 @@ public class OmInitiativeServiceTest {
     private IntegrationTestConfiguration.FakeUserService fakeUserService;
 
     @Before
-    public void beforeClass() throws Exception {
+    public void setup() throws Exception {
         initiativeDaoMock = mock(InitiativeDao.class);
         fakeUserService = new IntegrationTestConfiguration.FakeUserService();
         omInitiativeService = new OmInitiativeService();
@@ -53,26 +59,34 @@ public class OmInitiativeServiceTest {
     @Test
     public void accepting_initiative_sets_state_as_accepted() {
 
-        Long id = 3L;
         fakeUserService.setOmUser(true);
+        stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmail());
 
-        omInitiativeService.accept(id, Locales.LOCALE_FI);
-        verify(initiativeDaoMock).updateInitiativeState(id, InitiativeState.ACCEPTED);
-        verify(initiativeDaoMock).getByIdWithOriginalAuthor(id);
-        verifyNoMoreInteractions(initiativeDaoMock);
+        omInitiativeService.accept(INITIATIVE_ID, Locales.LOCALE_FI);
 
+        verify(initiativeDaoMock).updateInitiativeState(INITIATIVE_ID, InitiativeState.ACCEPTED);
+    }
+
+    private static Initiative initiativeWithAuthorEmail() {
+        Initiative initiative = new Initiative();
+        ContactInfo contactInfo = new ContactInfo();
+        Author author = new Author();
+
+        author.setContactInfo(contactInfo);
+        initiative.setAuthor(author);
+
+        contactInfo.setEmail(AUTHOR_EMAIL);
+        return initiative;
     }
 
     @Test
     public void rejecting_initiative_sets_state_as_draft() {
 
-        Long id = 3L;
         fakeUserService.setOmUser(true);
+        stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmail());
 
-        omInitiativeService.reject(id, Locales.LOCALE_FI);
-        verify(initiativeDaoMock).updateInitiativeState(id, InitiativeState.DRAFT);
-        verify(initiativeDaoMock).getByIdWithOriginalAuthor(id);
-        verifyNoMoreInteractions(initiativeDaoMock);
+        omInitiativeService.reject(INITIATIVE_ID, Locales.LOCALE_FI);
+        verify(initiativeDaoMock).updateInitiativeState(INITIATIVE_ID, InitiativeState.DRAFT);
 
     }
 

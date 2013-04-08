@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.service;
 import java.util.Locale;
 
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
+import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.util.InitiativeState;
 
 import javax.annotation.Resource;
@@ -23,8 +24,8 @@ public class OmInitiativeService {
         userService.requireOmUser();
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.ACCEPTED);
 
-        String email = initiativeDao.getContactInfo(initiativeId).getEmail();
-        emailService.sendStatusEmail(initiativeDao.getByIdWithOriginalAuthor(initiativeId), email, EmailMessageType.ACCEPTED_BY_OM_AND_SENT, locale);
+        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
+        emailService.sendStatusEmail(initiative, initiative.getAuthor().getContactInfo().getEmail(), EmailMessageType.ACCEPTED_BY_OM_AND_SENT, locale);
     }
 
     // TODO: IsAllowed
@@ -32,7 +33,7 @@ public class OmInitiativeService {
         userService.requireOmUser();
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.DRAFT);
 
-        String email = initiativeDao.getContactInfo(initiativeId).getEmail();
-        emailService.sendStatusEmail(initiativeDao.getByIdWithOriginalAuthor(initiativeId), email, EmailMessageType.REJECTED_BY_OM, locale);
+        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
+        emailService.sendStatusEmail(initiative, initiative.getAuthor().getContactInfo().getEmail(), EmailMessageType.REJECTED_BY_OM, locale);
     }
 }

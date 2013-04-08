@@ -1,18 +1,18 @@
 <#import "../components/email-utils.ftl" as u />
 <#import "../components/email-blocks.ftl" as b />
 
-<#if (emailInfo.comment)?has_content>
-    <@b.comment "text" emailInfo.comment />
+<#if (initiative.comment)?has_content>
+    <@b.comment "text" initiative.comment />
 </#if>
 
-<@u.message "email.initiative" /> - ${emailInfo.municipality.name!""}
+<@u.message "email.initiative" /> - ${initiative.municipality.name!""}
 
 TODO: Vahvistusviesti
 
 ----
 
 <@u.message "email.municipality.sendFrom" />:
-${emailInfo.url}
+${initiative.url}
 
 
 <@u.message "email.footer" />
