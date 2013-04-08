@@ -294,6 +294,10 @@ public final class Urls {
         return getUpdate(initiativeId) + "?" + PARAM_MANAGEMENT_CODE + "=" + managementHash;
     }
 
+    public String update(Long initiativeId) {
+        return getUpdate(initiativeId);
+    }
+
     private String getUpdate(Long initiativeId) {
         return getLocalizedPageUrl(UPDATE_FI, UPDATE_SV).replace(ID_PARAMETER, initiativeId.toString());
     }

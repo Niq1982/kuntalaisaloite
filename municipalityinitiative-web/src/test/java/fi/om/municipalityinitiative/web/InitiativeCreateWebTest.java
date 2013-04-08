@@ -38,18 +38,16 @@ public class InitiativeCreateWebTest extends WebTestBase {
         openAndAssertPreparePage();
     }
     
-    // Fill in the preparation form
     @Test
-    public void prepare_initiative() {
+    public void filling_prepare_page_and_submitting_shows_success_message() {
         
         openAndAssertPreparePage();
         select_municipality();
         fill_in_preparation_form();
     }
 
-    // Create an initiative and fill in initiative details
     @Test
-    public void create_initiative() {
+    public void editing_initiative_shows_success_message() {
         Long initiativeId = testHelper.createEmptyDraft(testMunicipality1Id);
 
         loginAsAuthor(initiativeId);
@@ -59,24 +57,6 @@ public class InitiativeCreateWebTest extends WebTestBase {
         fill_in_initiative_content();
     }
     
-    // Create initiative with state DRAFT and send it to REVIEW
-    @Test
-    public void send_to_review() {
-        Long initiativeId = testHelper.createSingleDraft(testMunicipality1Id);
-
-        loginAsAuthor(initiativeId);
-        open(urls.management(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
-        
-        clickById("js-send-to-review");
-        assertMsgContainedByClass("modal-title", MSG_SEND_TO_REVIEW_CONFIRM);
-        
-        clickByName(Urls.ACTION_SEND_TO_REVIEW);
-        assertMsgContainedByClass("msg-success", MSG_SUCCESS_SEND_TO_REVIEW);
-     
-        // Assert that initiative name and proposal cannot be edited in REVIEW-state
-        update_initiative(initiativeId);
-    }
-
     @Test
     public void edit_page_opens_if_logged_in_as_author() {
         Long initiative = testHelper.createSingleDraft(testMunicipality1Id);
@@ -109,15 +89,54 @@ public class InitiativeCreateWebTest extends WebTestBase {
         assert404();
     }
 
+    // Create initiative with state DRAFT and send it to REVIEW
+    @Test
+    public void send_to_review() {
+        Long initiativeId = testHelper.createSingleDraft(testMunicipality1Id);
+
+        loginAsAuthor(initiativeId);
+        open(urls.management(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
+
+        clickById("js-send-to-review");
+        assertMsgContainedByClass("modal-title", MSG_SEND_TO_REVIEW_CONFIRM);
+
+        clickByName(Urls.ACTION_SEND_TO_REVIEW);
+        assertMsgContainedByClass("msg-success", MSG_SUCCESS_SEND_TO_REVIEW);
+
+        // Assert that initiative name and proposal cannot be edited in REVIEW-state
+        update_initiative(initiativeId); // XXX: Why does send_to_review -test update initiative?
+    }
+
+    @Test
+    public void update_page_fails_if_not_logged_in() {
+        open(urls.update(testHelper.createSingleDraft(testMunicipality1Id)));
+        assert404();
+    }
+
+    @Test
+    public void update_fails_if_logged_in_as_om_user() {
+        loginAsOmUser();
+        open(urls.update(testHelper.createSingleDraft(testMunicipality1Id)));
+        assert404();
+    }
+
+    @Test
+    public void update_page_opens_if_logged_in_as_author() {
+        Long initiative = testHelper.createSingleDraft(testMunicipality1Id);
+        loginAsAuthor(initiative);
+        open(urls.update(initiative));
+        assertTitle("anything");
+    }
+
     public void select_municipality() {
         clickLinkContaining(getMessage(SELECT_MUNICIPALITY));
         getElemContaining(MUNICIPALITY_1, "li").click();
-        
+
         assertTextContainedByXPath("//div[@id='homeMunicipality_chzn']/a/span", MUNICIPALITY_1);
 
         System.out.println("--- select_municipality OK");
     }
-    
+
     public void fill_in_preparation_form() {
         getElemContaining(getMessage(MSG_INITIATIVE_TYPE_NORMAL), "span").click();
         inputText("authorEmail", CONTACT_EMAIL);
