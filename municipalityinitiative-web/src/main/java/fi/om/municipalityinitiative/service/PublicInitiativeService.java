@@ -72,6 +72,8 @@ public class PublicInitiativeService {
         Long participantId = participantDao.prepareParticipant(initiativeId, createDto.getHomeMunicipality(), false); // XXX: Franchise?
         initiativeDao.assignAuthor(initiativeId, participantId, createDto.getAuthorEmail(), managementHash);
 
+        emailService.sendPrepareCreatedEmail(initiativeDao.getByIdWithOriginalAuthor(initiativeId), createDto.getAuthorEmail(), locale);
+
         return initiativeId;
     }
 

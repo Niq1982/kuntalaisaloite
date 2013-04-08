@@ -7,7 +7,6 @@ import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.util.Task;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.context.MessageSource;
-import org.springframework.mail.javamail.JavaMailSender;
 
 import javax.annotation.Resource;
 
@@ -18,7 +17,7 @@ import java.util.Map;
 @Task
 public class MailSendingEmailService implements EmailService {
 
-    private static final String INITIATIVE_CREATE_VERIFICATION_TEMPLATE = "initiative-create-verification";
+    private static final String INITIATIVE_PREPARE_VERIFICATION_TEMPLATE = "initiative-create-verification";
     private static final String INITIATIVE_CREATED_TEMPLATE = "initiative-created";
     private static final String NOT_COLLECTABLE_TEMPLATE = "municipality-not-collectable";
     private static final String COLLECTABLE_TEMPLATE = "municipality-collectable";
@@ -36,7 +35,7 @@ public class MailSendingEmailService implements EmailService {
         emailMessageConstructor
                 .fromTemplate(NOT_COLLECTABLE_TEMPLATE)
                 .withSendTo(municipalityEmail)
-                .withSubject(messageSource.getMessage("email.not.collectable.municipality.subject", new String[]{emailInfo.getName()}, locale))
+                .withSubject(messageSource.getMessage("email.not.collectable.municipality.subject", toArray(emailInfo.getName()), locale))
                 .withDataMap(toDataMap(emailInfo, locale))
                 .send();
     }
@@ -46,26 +45,40 @@ public class MailSendingEmailService implements EmailService {
         
         HashMap<String, Object> dataMap = toDataMap(initiative, locale);
         dataMap.put("emailMessageType", emailMessageType);
-        dataMap.put("initiativeUrls", Urls.get(locale));
         
         emailMessageConstructor
             .fromTemplate(STATUS_INFO_TEMPLATE)
             .withSendTo(sendTo)
-            .withSubject(messageSource.getMessage("email.status.info."+emailMessageType.name(), new String[]{}, locale))
+            .withSubject(messageSource.getMessage("email.status.info."+emailMessageType.name(), toArray(), locale))
             .withDataMap(dataMap)
             .send();
         
     }
 
     @Override
+    public void sendPrepareCreatedEmail(Initiative initiative, String authorEmail, Locale locale) {
+        emailMessageConstructor
+                .fromTemplate(INITIATIVE_PREPARE_VERIFICATION_TEMPLATE)
+                .withSendTo(authorEmail)
+                .withSubject(messageSource.getMessage("email.prepare.create.subject", toArray(), locale))
+                .withDataMap(toDataMap(initiative, locale))
+                .send();
+    }
+
+    @Override
     public void sendNotCollectableToAuthor(InitiativeEmailInfo emailInfo, Locale locale) {
 
+        String name = emailInfo.getName();
         emailMessageConstructor
                 .fromTemplate(NOT_COLLECTABLE_TEMPLATE)
                 .withSendTo(emailInfo.getContactInfo().getEmail())
-                .withSubject(messageSource.getMessage("email.not.collectable.author.subject", new String[]{emailInfo.getName()}, locale))
+                .withSubject(messageSource.getMessage("email.not.collectable.author.subject", toArray(name), locale))
                 .withDataMap(toDataMap(emailInfo, locale))
                 .send();
+    }
+
+    private static String[] toArray(String... name) {
+        return name;
     }
 
     @Override
@@ -74,7 +87,7 @@ public class MailSendingEmailService implements EmailService {
         emailMessageConstructor
                 .fromTemplate(COLLECTABLE_TEMPLATE)
                 .withSendTo(emailInfo.getContactInfo().getEmail())
-                .withSubject(messageSource.getMessage("email.not.collectable.municipality.subject", new String[]{emailInfo.getName()}, locale))
+                .withSubject(messageSource.getMessage("email.not.collectable.municipality.subject", toArray(emailInfo.getName()), locale))
                 .withDataMap(toDataMap(emailInfo, locale))
                 .withAttachment(emailInfo)
                 .send();
@@ -86,7 +99,7 @@ public class MailSendingEmailService implements EmailService {
         emailMessageConstructor
                 .fromTemplate(COLLECTABLE_TEMPLATE)
                 .withSendTo(emailInfo.getContactInfo().getEmail())
-                .withSubject(messageSource.getMessage("email.not.collectable.author.subject", new String[]{emailInfo.getName()}, locale))
+                .withSubject(messageSource.getMessage("email.not.collectable.author.subject", toArray(emailInfo.getName()), locale))
                 .withDataMap(toDataMap(emailInfo, locale))
                 .send();
     }

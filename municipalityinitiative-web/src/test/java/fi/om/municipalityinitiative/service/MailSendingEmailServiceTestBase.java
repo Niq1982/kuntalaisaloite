@@ -25,7 +25,7 @@ import static org.hamcrest.Matchers.hasSize;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={IntegrationTestFakeEmailConfiguration.class})
-public class MailSendingEmailServiceTestBase {
+public abstract class MailSendingEmailServiceTestBase {
 
     public static final String INITIATIVE_NAME = "Some name whatever";
     public static final String INITIATIVE_PROPOSAL = "Some proposal whatever";

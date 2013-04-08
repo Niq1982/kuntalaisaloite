@@ -14,8 +14,8 @@
         <p style="${pBothMargins!""}">Tämä on vahvistusviesti kuntalaisaloitteelle, jonka tekemisen aloitit Kuntalaisaloite.fi-palvelussa.</p>
         
         <p style="${pBothMargins!""}">Sinun täytyy vielä vahvistaa aloitteen luominen palvelussa klikkaamalla alla olevaa linkkiä ja syöttämällä aloitteen tiedot.<br/>
-        [YLLÄPITO-LINKKI TÄHÄN]</p>
-        
+        <a href="${urls.loginAuthor(initiative.id, initiative.managementHash.value)}">${urls.loginAuthor(initiative.id, initiative.managementHash.value)}</a></p>
+
         <p style="${pBothMargins!""}">Ylläpito-linkki on henkilökohtainen ja sen avulla pääset myöhemmässä vaiheessa ylläpitämään aloitetta. Säilytä linkki äläkä jaa sitä muille.</p>
         
         <h4 style="${h4}">Ylläpito-sivulla voit</h4>
