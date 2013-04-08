@@ -65,6 +65,7 @@ public class InitiativeManagementController extends BaseController {
                 participantService.getParticipantCount(initiativeId),
                 participantService.findPublicParticipants(initiativeId));
 
+        model.addAttribute("managementSettings", publicInitiativeService.managementSettings(initiativeId));
         model.addAttribute("participants", participantService.findPublicParticipants(initiativeId));
         model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, userService.getManagementHash()));
         return MANAGEMENT_VIEW;
