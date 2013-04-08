@@ -281,6 +281,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
     public ContactInfo getContactInfo(Long initiativeId) {
         return queryFactory.from(municipalityInitiative)
                 .where(municipalityInitiative.id.eq(initiativeId))
+                .innerJoin(municipalityInitiative.initiativeAuthorFk, QAuthor.author)
                 .uniqueResult(contactInfoMapping);
     }
 
@@ -500,15 +501,15 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     private Expression<ContactInfo> contactInfoMapping =
             new MappingProjection<ContactInfo>(ContactInfo.class,
-                    municipalityInitiative.all()) {
+                    QAuthor.author.all()) {
 
                 @Override
                 protected ContactInfo map(Tuple row) {
                     ContactInfo contactInfo = new ContactInfo();
-                    contactInfo.setAddress(row.get(municipalityInitiative.contactAddress));
-                    contactInfo.setEmail(row.get(municipalityInitiative.contactEmail));
-                    contactInfo.setName(row.get(municipalityInitiative.contactName));
-                    contactInfo.setPhone(row.get(municipalityInitiative.contactPhone));
+                    contactInfo.setAddress(row.get(QAuthor.author.address));
+                    contactInfo.setEmail(row.get(QAuthor.author.email));
+                    contactInfo.setName(row.get(QAuthor.author.name));
+                    contactInfo.setPhone(row.get(QAuthor.author.phone));
                     return contactInfo;
                 }
             };

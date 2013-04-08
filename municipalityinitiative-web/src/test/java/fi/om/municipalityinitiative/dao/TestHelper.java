@@ -79,10 +79,6 @@ public class TestHelper {
     public Long createTestInitiative(Long municipalityId, String name, boolean publicName, boolean collectable) {
         SQLInsertClause insert = queryFactory.insert(municipalityInitiative);
 
-        insert.set(municipalityInitiative.contactAddress, "contact_address");
-        insert.set(municipalityInitiative.contactEmail, "contact_email@xxx.yyy");
-        insert.set(municipalityInitiative.contactPhone, "contact_phone");
-        insert.set(municipalityInitiative.contactName, "contact_name");
         insert.set(municipalityInitiative.name, name);
         insert.set(municipalityInitiative.proposal, "proposal");
         insert.set(municipalityInitiative.municipalityId, municipalityId);
@@ -169,10 +165,6 @@ public class TestHelper {
     public Long create(InitiativeDraft initiativeDraft) {
         SQLInsertClause insert = queryFactory.insert(municipalityInitiative);
 
-        insert.set(municipalityInitiative.contactAddress, initiativeDraft.authorAddress);
-        insert.set(municipalityInitiative.contactEmail, initiativeDraft.authorEmail);
-        insert.set(municipalityInitiative.contactPhone, initiativeDraft.authorPhone);
-        insert.set(municipalityInitiative.contactName, initiativeDraft.authorName);
         insert.set(municipalityInitiative.name, initiativeDraft.name);
         insert.set(municipalityInitiative.proposal, initiativeDraft.proposal);
         insert.set(municipalityInitiative.municipalityId, initiativeDraft.municipalityId);

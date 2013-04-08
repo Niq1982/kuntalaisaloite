@@ -17,4 +17,6 @@ public interface EmailService {
     void sendStatusEmail(Initiative initiative, String sendTo, EmailMessageType emailMessageType, Locale locale);
 
     void sendNotCollectableToMunicipality(InitiativeEmailInfo emailInfo, String municipalityEmail, Locale locale);
+
+    void sendPrepareCreatedEmail(Initiative byIdWithOriginalAuthor, String authorEmail, Locale locale);
 }

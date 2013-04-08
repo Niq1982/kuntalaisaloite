@@ -51,22 +51,6 @@ public final class PropertyNames {
     
     public static final String invitationExpirationDays = "invitation.expiration.days";
 
-    public static final String minSupportCountForSearch = "initiative.minSupportCountForSearch";
-
-    public static final String requiredVoteCount = "initiative.requiredVoteCount";
-    
-    public static final String requiredMinSupportCountDuration = "initiative.requiredMinSupportCountDuration";
-    
-    public static final String votingDuration = "initiative.votingDuration";
-    
-    public static final String sendToVrkDuration ="initiative.sendToVrkDuration";
-    
-    public static final String sendToParliamentDuration = "initiative.sendToParliamentDuration";
-    
-    public static final String votesRemovalDuration = "initiative.votesRemovalDuration";
-    
-    public static final String omSearchBeforeVotesRemovalDuration = "initiative.omSearchBeforeVotesRemovalDuration";
-    
     
     public static final String testEmailSendTo = "test.email.send-to";
     

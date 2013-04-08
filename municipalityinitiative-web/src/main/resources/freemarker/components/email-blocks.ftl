@@ -80,15 +80,15 @@
  -->
 <#macro initiativeDetails type="">
     <#if type == "html">
-        <h4 style="${h4!""}">${emailInfo.name!""}</h4>
-        <p style="${pBottomMargin!""}"><@u.message "email.date.create" /> <@u.localDate emailInfo.createTime />
-        <br/><@u.message "email.date.sent" /> <@u.localDate emailInfo.sentTime /></p>
-        <@u.text emailInfo.proposal />
+        <h4 style="${h4!""}">${initiative.name!""}</h4>
+        <p style="${pBottomMargin!""}"><@u.message "email.date.create" /> <@u.localDate initiative.createTime />
+        <br/><@u.message "email.date.sent" /> <@u.localDate initiative.sentTime /></p>
+        <@u.text initiative.proposal />
     <#else>
-        "${emailInfo.name!""}"
-        <@u.message "email.date.create" /> <@u.localDate emailInfo.createTime />
+        "${initiative.name!""}"
+        <@u.message "email.date.create" /> <@u.localDate initiative.createTime />
 
-        ${emailInfo.proposal}
+        ${initiative.proposal}
     </#if>
 </#macro>
 
@@ -102,17 +102,17 @@
 <#macro contactInfo type="">
     <#if type == "html">
         <h4 style="${h4!""}"><@u.message "email.contact.info" /></h4>
-        <p style="${pBottomMargin!""}">${emailInfo.contactInfo.name!""}<br/>
-        <#if emailInfo.contactInfo.email?? && emailInfo.contactInfo.email != "">${emailInfo.contactInfo.email!""}<br/></#if>
-        <#if emailInfo.contactInfo.phone?? && emailInfo.contactInfo.phone != "">${emailInfo.contactInfo.phone!""}<br/></#if>
-        <#if emailInfo.contactInfo.address?? && emailInfo.contactInfo.address != "">${emailInfo.contactInfo.address!""}</#if>
+        <p style="${pBottomMargin!""}">${initiative.contactInfo.name!""}<br/>
+        <#if initiative.contactInfo.email?? && initiative.contactInfo.email != "">${initiative.contactInfo.email!""}<br/></#if>
+        <#if initiative.contactInfo.phone?? && initiative.contactInfo.phone != "">${initiative.contactInfo.phone!""}<br/></#if>
+        <#if initiative.contactInfo.address?? && initiative.contactInfo.address != "">${initiative.contactInfo.address!""}</#if>
         </p>
     <#else>
         <@u.message "email.contact.info" />:
-        ${emailInfo.contactInfo.name!""}
-        ${emailInfo.contactInfo.email!""}
-        ${emailInfo.contactInfo.phone!""}
-        ${emailInfo.contactInfo.address!""}
+        ${initiative.contactInfo.name!""}
+        ${initiative.contactInfo.email!""}
+        ${initiative.contactInfo.phone!""}
+        ${initiative.contactInfo.address!""}
     </#if>
 </#macro>
 
@@ -125,40 +125,40 @@
  -->
 <#macro participants type="">
     <#if type == "html">
-        <h4 style="${h4!""}"><@u.messageHTML key="email.participantCount.total" /> ${emailInfo.participantCount!""}</h4>
+        <h4 style="${h4!""}"><@u.messageHTML key="email.participantCount.total" /> ${initiative.participantCount!""}</h4>
         <p style="${pBothMargins!""}">
-            <#if emailInfo.participantFranchiseCount?? && (emailInfo.participantFranchiseCount > 0)>
-                <@u.message "email.participantCount.franchise.total" /> <strong>${emailInfo.participantFranchiseCount!""}</strong> 
+            <#if initiative.participantFranchiseCount?? && (initiative.participantFranchiseCount > 0)>
+                <@u.message "email.participantCount.franchise.total" /> <strong>${initiative.participantFranchiseCount!""}</strong> 
             <#else>
                 <@u.message key="email.participantCount.franchise.total.empty" />
             </#if>
             <br />
-            <#if emailInfo.participantNoFranchiseCount?? && (emailInfo.participantNoFranchiseCount > 0)>
-                <@u.message key="email.participantCount.noFranchise.total" /> <strong>${emailInfo.participantNoFranchiseCount!""}</strong>
+            <#if initiative.participantNoFranchiseCount?? && (initiative.participantNoFranchiseCount > 0)>
+                <@u.message key="email.participantCount.noFranchise.total" /> <strong>${initiative.participantNoFranchiseCount!""}</strong>
             <#else>
                 <@u.message key="email.participantCount.noFranchise.total.empty" />
             </#if>
         </p>
-        <#if emailInfo.participantCount?? && (emailInfo.participantCount > 0)>
+        <#if initiative.participantCount?? && (initiative.participantCount > 0)>
             <p style="${pBothMargins!""}"><@u.message "email.participantCount.attachment" /></p>
         </#if>
     <#else>
-        <@u.message key="email.participantCount.total" /> ${emailInfo.participantCount!""}
+        <@u.message key="email.participantCount.total" /> ${initiative.participantCount!""}
         
-        <#if emailInfo.participantFranchiseCount?? && (emailInfo.participantFranchiseCount > 0)>
-            <@u.message key="email.participantCount.franchise.total" /> ${emailInfo.participantFranchiseCount!""}
+        <#if initiative.participantFranchiseCount?? && (initiative.participantFranchiseCount > 0)>
+            <@u.message key="email.participantCount.franchise.total" /> ${initiative.participantFranchiseCount!""}
         <#else>
             <@u.message key="email.participantCount.franchise.total.empty" />
         </#if>
         
-        <#if emailInfo.participantNoFranchiseCount?? && (emailInfo.participantNoFranchiseCount > 0)>
-            <@u.message key="email.participantCount.noFranchise.total" /> ${emailInfo.participantNoFranchiseCount!""}
+        <#if initiative.participantNoFranchiseCount?? && (initiative.participantNoFranchiseCount > 0)>
+            <@u.message key="email.participantCount.noFranchise.total" /> ${initiative.participantNoFranchiseCount!""}
         <#else>
             <@u.message key="email.participantCount.noFranchise.total.empty" />
         </#if>
         
         
-        <#if emailInfo.participantCount?? && (emailInfo.participantCount > 0)>
+        <#if initiative.participantCount?? && (initiative.participantCount > 0)>
             <@u.message "email.participantCount.attachment" />
         </#if>
     </#if>
@@ -206,23 +206,23 @@
     <#if type == "html">
         <p style="${pBothMargins!""}">
             Alla on linkki aloitteesi julkiselle sivulle Kuntalaisaloite.fi-palvelussa.<br />
-            [LINKKI TÄHÄN]
+            <a href="${urls.view(initiative.id)}">${urls.view(initiative.id)}</a>
         </p>
     <#else>
         Alla on linkki aloitteesi julkiselle sivulle Kuntalaisaloite.fi-palvelussa.
-        [LINKKI TÄHÄN]
+        <a href="${urls.view(initiative.id)}">${urls.view(initiative.id)}</a>
     </#if>
 </#macro>
 
 <#macro adminViewLink type="">
     <#if type == "html">
         <p style="${pBothMargins!""}">
-            Siirry kuntalaisaloitteen ylläpito-sivulle alla olevalla linkillä<br/>
-            [LAITETAANKO YLLÄPITO-LINKKI TÄHÄN?]
+            Kirjaudu kuntalaisaloitteen ylläpito-sivulle alla olevalla linkillä<br/>
+            <a href="${urls.loginAuthor(initiative.id, initiative.managementHash.value)}">${urls.loginAuthor(initiative.id, initiative.managementHash.value)}</a>
         </p>
     <#else>
         Siirry kuntalaisaloitteen ylläpito-sivulle alla olevalla linkillä
-        [LAITETAANKO YLLÄPITO-LINKKI TÄHÄN?]
+        <a href="${urls.loginAuthor(initiative.id, initiative.managementHash.value)}">${urls.loginAuthor(initiative.id, initiative.managementHash.value)}</a>
     </#if>
 </#macro>
 

@@ -1,7 +1,7 @@
 <#import "../components/email-utils.ftl" as u />
 <#import "../components/email-blocks.ftl" as b />
 
-<@u.message "email.initiative" /> - ${emailInfo.municipality.name!""}
+<@u.message "email.initiative" /> - ${initiative.municipality.name!""}
 
 <@b.initiativeDetails "text" />
 
@@ -10,6 +10,6 @@
 <@b.contactInfo "text" />
 
 <@u.message "email.municipality.sendFrom" />:
-${emailInfo.url}
+${initiative.url}
 
 <@u.message "email.footer" />

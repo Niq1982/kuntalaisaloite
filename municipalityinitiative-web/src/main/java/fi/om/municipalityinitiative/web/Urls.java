@@ -235,7 +235,7 @@ public final class Urls {
 
     private String getLocalizedPageUrl(String fiSuffix, String svSuffix) {
         StringBuilder stringBuilder = new StringBuilder(baseUrl);
-        if (this == FI) {
+        if (this.equals(FI)) {
             return stringBuilder.append(fiSuffix).toString();
         } else {
             return stringBuilder.append(svSuffix).toString();
@@ -270,7 +270,6 @@ public final class Urls {
         return getLocalizedPageUrl(PARITICIPANT_LIST_FI, PARITICIPANT_LIST_SV).replace(ID_PARAMETER, initiativeId.toString());
     }
 
-    @Deprecated
     public String management(Long initiativeId) {
         return getManagement(initiativeId);
     }
@@ -415,7 +414,7 @@ public final class Urls {
     }
     
     public Urls alt() {
-        if (this == FI) {
+        if (this.equals(FI)) {
             return SV;
         } else {
             return FI;

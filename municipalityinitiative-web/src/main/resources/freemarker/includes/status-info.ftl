@@ -27,7 +27,7 @@
     <#assign statusInfoFi>
         Oikeusministeriö on tarkastanut kuntalaisaloitteesi ja hyväksynyt sekä samalla julkaissut sen Kuntalaisaloite.fi-palvelussa. Julkaisupyynnön yhteydessä valitsit, että aloite lähetetään samalla kuntaan. Aloite on nyt lähetetty kuntaan [KUNTA].
         
-        <@b.statusInfoComment "text" emailInfo.comment!"" />
+        <@b.statusInfoComment "text" initiative.comment!"" />
         
         <@b.publicViewLink "text" />
     </#assign>
@@ -43,10 +43,10 @@
             Oikeusministeriö on tarkastanut kuntalaisaloitteesi ja hyväksynyt sekä samalla julkaissut sen Kuntalaisaloite.fi-palvelussa.
         </p>
         <p style="${pBothMargins!""}">
-            Julkaisupyynnön yhteydessä valitsit, että aloite lähetetään samalla kuntaan. Aloite on nyt lähetetty kuntaan [KUNTA].
+            Julkaisupyynnön yhteydessä valitsit, että aloite lähetetään samalla kuntaan. Aloite on nyt lähetetty kuntaan ${initiative.municipality.nameFi}.
         </p>
 
-        <@b.statusInfoComment "html" emailInfo.comment!"" />
+        <@b.statusInfoComment "html" initiative.comment!"" />
         <@b.publicViewLink "html" />
     </#assign>
     <#assign statusInfoHTMLSv>
@@ -60,7 +60,7 @@
     <#assign statusInfoFi>
         Oikeusministeriö on tarkastanut kuntalaisaloitteesi ja hyväksynyt sen Kuntalaisaloite.fi-palvelussa. Julkaisupyynnön yhteydessä valitsit, että haluat liittää aloitteeseen vastuuhenkilöitä ja kerätä osallistujia. Aloite ei ole julkinen palvelussa ennen kuin julkaiset sen. Voit nyt liittää aloitteeseen vastuuhenkilöitä. Aloitteeseen ei voi kerätä osallistujia ennen kuin se on julkaistu.
         
-        <@b.statusInfoComment "text" emailInfo.comment!"" />
+        <@b.statusInfoComment "text" initiative.comment!"" />
         
         <@b.adminViewLink "text" />
     </#assign>
@@ -76,7 +76,7 @@
             Oikeusministeriö on tarkastanut kuntalaisaloitteesi ja hyväksynyt sen Kuntalaisaloite.fi-palvelussa. Julkaisupyynnön yhteydessä valitsit, että haluat liittää aloitteeseen vastuuhenkilöitä ja kerätä osallistujia. Aloite ei ole julkinen palvelussa ennen kuin julkaiset sen. Voit nyt liittää aloitteeseen vastuuhenkilöitä. Aloitteeseen ei voi kerätä osallistujia ennen kuin se on julkaistu.
         </p>
         
-        <@b.statusInfoComment "html" emailInfo.comment!"" />
+        <@b.statusInfoComment "html" initiative.comment!"" />
         <@b.adminViewLink "html" />
     </#assign>
     <#assign statusInfoHTMLSv>
@@ -90,7 +90,7 @@
     <#assign statusInfoFi>
         Oikeusministeriö on tarkastanut kuntalaisaloitteesi ja palauttanut sen korjattavaksi. Voit jälleen muokata aloitteen otsikkoa sekä sisältöä. Korjauksen jälkeen voit lähettää aloitteen uudelleen oikeusministeriön tarkastettavaksi.
         
-        <@b.statusInfoComment "text" emailInfo.comment!"" />
+        <@b.statusInfoComment "text" initiative.comment!"" />
 
         <@b.adminViewLink "text" />
     </#assign>
@@ -106,7 +106,7 @@
             Oikeusministeriö on tarkastanut kuntalaisaloitteesi ja palauttanut sen korjattavaksi. Voit jälleen muokata aloitteen otsikkoa sekä sisältöä. Korjauksen jälkeen voit lähettää aloitteen uudelleen oikeusministeriön tarkastettavaksi.
         </p>
         
-        <@b.statusInfoComment "html" emailInfo.comment!"" />
+        <@b.statusInfoComment "html" initiative.comment!"" />
         
         <@b.adminViewLink "html" />
     </#assign>

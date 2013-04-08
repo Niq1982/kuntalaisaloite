@@ -37,7 +37,7 @@
             <#nested />
             
             <#if footerLink>
-                <p style="${footerFont!""}"><@u.message "email.municipality.sendFrom" /><br/><@u.link emailInfo.url!"" /></p>
+                <p style="${footerFont!""}"><@u.message "email.municipality.sendFrom" /><br/><@u.link initiative.url!"" /></p>
                 <br/>
             </#if>
             <p style="${footerFont!""}"><@u.message "email.footer" /></p>
