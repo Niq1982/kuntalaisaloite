@@ -63,7 +63,6 @@
         </div>
         
         <div class="" id="form-action-panel">
-            <input type="hidden" name="managementHash" value="${updateData.managementHash}"/>
             <button class="large-button" value="true" name="${UrlConstants.ACTION_UPDATE_INITIATIVE}" type="submit"><span class="large-icon save-and-send"><@u.messageHTML "action.updateInitiative" /></span></button>
             <a href="${previousPageURI!urls.baseUrl+"/"+locale}" class="large-button"><span class="large-icon cancel"><@u.messageHTML "action.cancelUpdateInitiative" /></span></a>
         </div>

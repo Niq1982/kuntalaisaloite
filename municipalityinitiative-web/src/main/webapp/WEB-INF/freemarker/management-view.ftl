@@ -6,7 +6,7 @@
 
 <#escape x as x?html> 
 
-<#assign managementURL = urls.management(initiative.id, initiative.managementHash.value) />
+<#assign managementURL = urls.getManagement(initiative.id) />
 
 <#--
  * Layout parameters for HTML-title and navigation.

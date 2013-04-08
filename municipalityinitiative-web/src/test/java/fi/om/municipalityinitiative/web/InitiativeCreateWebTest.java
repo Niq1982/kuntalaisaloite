@@ -122,10 +122,10 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
     @Test
     public void update_page_opens_if_logged_in_as_author() {
-        Long initiative = testHelper.createSingleDraft(testMunicipality1Id);
+        Long initiative = testHelper.createCollectableAccepted(testMunicipality1Id);
         loginAsAuthor(initiative);
         open(urls.update(initiative));
-        assertTitle("anything");
+        assertTitle("Muokkaa kuntalaisaloitetta - Kuntalaisaloitepalvelu");
     }
 
     public void select_municipality() {

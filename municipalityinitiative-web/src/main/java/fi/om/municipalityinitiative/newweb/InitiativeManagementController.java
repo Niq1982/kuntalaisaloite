@@ -4,10 +4,7 @@ import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUIUpdateDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
-import fi.om.municipalityinitiative.service.PublicInitiativeService;
-import fi.om.municipalityinitiative.service.MunicipalityService;
-import fi.om.municipalityinitiative.service.ParticipantService;
-import fi.om.municipalityinitiative.service.ValidationService;
+import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.web.BaseController;
 import fi.om.municipalityinitiative.web.RequestMessage;
@@ -51,13 +48,9 @@ public class InitiativeManagementController extends BaseController {
 
     @RequestMapping(value={ MANAGEMENT_FI, MANAGEMENT_SV }, method=GET)
     public String managementView(@PathVariable("id") Long initiativeId,
-                                 @RequestParam(value = PARAM_MANAGEMENT_CODE, required = false) String managementHash,
                                  Model model, Locale locale, HttpServletRequest request) {
 
         userService.assertManagementRightsForInitiative(initiativeId);
-
-        if (managementHash == null)
-            managementHash = userService.getManagementHash();
 
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().getManagement(initiativeId));
@@ -68,42 +61,39 @@ public class InitiativeManagementController extends BaseController {
             return redirectWithMessage(urls.view(initiativeId), RequestMessage.ALREADY_SENT, request);
         }
 
-        if (managementHash.equals(initiativeInfo.getManagementHash().get())){
-            addModelAttributesToCollectView(model,
-                    initiativeInfo,
-                    municipalityService.findAllMunicipalities(locale),
-                    participantService.getParticipantCount(initiativeId),
-                    participantService.findPublicParticipants(initiativeId));
+        addModelAttributesToCollectView(model,
+                initiativeInfo,
+                municipalityService.findAllMunicipalities(locale),
+                participantService.getParticipantCount(initiativeId),
+                participantService.findPublicParticipants(initiativeId));
 
-            model.addAttribute("participants", participantService.findPublicParticipants(initiativeId));
-            model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, managementHash));
-            return MANAGEMENT_VIEW;
-        } else {
-            return ERROR_404_VIEW;
-        }
+        model.addAttribute("participants", participantService.findPublicParticipants(initiativeId));
+        model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, userService.getManagementHash()));
+        return MANAGEMENT_VIEW;
     }
 
     @RequestMapping(value={ UPDATE_FI, UPDATE_SV }, method=GET)
     public String updateView(@PathVariable("id") Long initiativeId,
-                             @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                              Model model, Locale locale, HttpServletRequest request) {
+
+        userService.assertManagementRightsForInitiative(initiativeId);
 
         Urls urls = Urls.get(locale);
         ManagementSettings managementSettings = publicInitiativeService.managementSettings(initiativeId);
 
+        String managementHash = userService.getManagementHash();
+
         if (managementSettings.isAllowUpdate()) {
 
-            model.addAttribute(ALT_URI_ATTR, urls.alt().update(initiativeId, managementHash));
-//            model.addAttribute("initiative", publicInitiativeService.getInitiativeDraftForEdit(initiativeId, managementHash)); // TODO UpdateDto, not edit
+            model.addAttribute(ALT_URI_ATTR, urls.alt().update(initiativeId));
             model.addAttribute("initiative", publicInitiativeService.getMunicipalityInitiative(initiativeId, managementHash, locale));
             model.addAttribute("updateData", publicInitiativeService.getInitiativeForUpdate(initiativeId, managementHash));
             model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, managementHash));
 
-            model.addAttribute("previousPageURI", urls.prepare());
+            model.addAttribute("previousPageURI", urls.getManagement(initiativeId));
             return UPDATE_VIEW;
 
-        }
-        else {
+        } else {
             return ERROR_500; // TODO: Custom error page or some message that operation is not allowed
         }
 
@@ -124,6 +114,8 @@ public class InitiativeManagementController extends BaseController {
             model.addAttribute("updateData", updateDto);
             return UPDATE_VIEW;
         }
+
+        updateDto.setManagementHash(userService.getManagementHash());
 
         publicInitiativeService.updateInitiative(initiativeId, updateDto);
         return redirectWithMessage(urls.management(initiativeId, updateDto.getManagementHash()), RequestMessage.UPDATE_INITIATIVE, request);
