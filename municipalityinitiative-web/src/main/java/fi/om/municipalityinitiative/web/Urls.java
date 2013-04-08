@@ -235,7 +235,7 @@ public final class Urls {
 
     private String getLocalizedPageUrl(String fiSuffix, String svSuffix) {
         StringBuilder stringBuilder = new StringBuilder(baseUrl);
-        if (this == FI) {
+        if (this.equals(FI)) {
             return stringBuilder.append(fiSuffix).toString();
         } else {
             return stringBuilder.append(svSuffix).toString();
@@ -414,7 +414,7 @@ public final class Urls {
     }
     
     public Urls alt() {
-        if (this == FI) {
+        if (this.equals(FI)) {
             return SV;
         } else {
             return FI;
