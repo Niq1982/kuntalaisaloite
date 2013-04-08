@@ -91,10 +91,11 @@ public class MailSendingEmailService implements EmailService {
                 .send();
     }
 
-    private <T> HashMap<String, Object> toDataMap(T emailInfo, Locale locale) {
+    private <T> HashMap<String, Object> toDataMap(T emailModelObject, Locale locale) {
         HashMap<String, Object> dataMap = Maps.newHashMap();
-        dataMap.put("initiative", emailInfo);
+        dataMap.put("initiative", emailModelObject);
         dataMap.put("localizations", new EmailLocalizationProvider(messageSource, locale));
+        dataMap.put("urls", Urls.get(locale));
         addEnum(EmailMessageType.class, dataMap);
         return dataMap;
     }

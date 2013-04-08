@@ -43,7 +43,7 @@
             Oikeusministeriö on tarkastanut kuntalaisaloitteesi ja hyväksynyt sekä samalla julkaissut sen Kuntalaisaloite.fi-palvelussa.
         </p>
         <p style="${pBothMargins!""}">
-            Julkaisupyynnön yhteydessä valitsit, että aloite lähetetään samalla kuntaan. Aloite on nyt lähetetty kuntaan [KUNTA].
+            Julkaisupyynnön yhteydessä valitsit, että aloite lähetetään samalla kuntaan. Aloite on nyt lähetetty kuntaan ${initiative.municipality.nameFi}.
         </p>
 
         <@b.statusInfoComment "html" initiative.comment!"" />

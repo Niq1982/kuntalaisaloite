@@ -206,23 +206,23 @@
     <#if type == "html">
         <p style="${pBothMargins!""}">
             Alla on linkki aloitteesi julkiselle sivulle Kuntalaisaloite.fi-palvelussa.<br />
-            [LINKKI TÄHÄN]
+            <a href="${urls.view(initiative.id)}">${urls.view(initiative.id)}</a>
         </p>
     <#else>
         Alla on linkki aloitteesi julkiselle sivulle Kuntalaisaloite.fi-palvelussa.
-        [LINKKI TÄHÄN]
+        <a href="${urls.view(initiative.id)}">${urls.view(initiative.id)}</a>
     </#if>
 </#macro>
 
 <#macro adminViewLink type="">
     <#if type == "html">
         <p style="${pBothMargins!""}">
-            Siirry kuntalaisaloitteen ylläpito-sivulle alla olevalla linkillä<br/>
-            [LAITETAANKO YLLÄPITO-LINKKI TÄHÄN?]
+            Kirjaudu kuntalaisaloitteen ylläpito-sivulle alla olevalla linkillä<br/>
+            <a href="${urls.loginAuthor(initiative.id, initiative.managementHash.value)}">${urls.loginAuthor(initiative.id, initiative.managementHash.value)}</a>
         </p>
     <#else>
         Siirry kuntalaisaloitteen ylläpito-sivulle alla olevalla linkillä
-        [LAITETAANKO YLLÄPITO-LINKKI TÄHÄN?]
+        <a href="${urls.loginAuthor(initiative.id, initiative.managementHash.value)}">${urls.loginAuthor(initiative.id, initiative.managementHash.value)}</a>
     </#if>
 </#macro>
 
