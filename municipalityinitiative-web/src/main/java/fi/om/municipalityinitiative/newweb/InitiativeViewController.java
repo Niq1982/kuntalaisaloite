@@ -18,7 +18,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -131,7 +130,7 @@ public class InitiativeViewController extends BaseController {
             model.addAttribute("participantCount", participantService.getParticipantCount(initiativeId));
             model.addAttribute("participants", participantService.findPublicParticipants(initiativeId));
             
-            String managementURI = urls.management(initiativeId, initiativeInfo.getManagementHash().get());
+            String managementURI = urls.management(initiativeId);
             
             if (request.getHeader("referer") != null && request.getHeader("referer").equals(managementURI)) {
                 model.addAttribute("previousPageURI", managementURI);

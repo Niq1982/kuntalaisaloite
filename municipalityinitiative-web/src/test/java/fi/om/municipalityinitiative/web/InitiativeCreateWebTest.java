@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.web;
 
-import fi.om.municipalityinitiative.dao.TestHelper;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -95,7 +94,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         Long initiativeId = testHelper.createSingleDraft(testMunicipality1Id);
 
         loginAsAuthor(initiativeId);
-        open(urls.management(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
+        open(urls.management(initiativeId));
 
         clickById("js-send-to-review");
         assertMsgContainedByClass("modal-title", MSG_SEND_TO_REVIEW_CONFIRM);

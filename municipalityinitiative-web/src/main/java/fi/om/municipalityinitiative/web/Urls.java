@@ -266,16 +266,13 @@ public final class Urls {
         return getLocalizedPageUrl(VIEW_FI, VIEW_SV).replace(ID_PARAMETER, initiativeId.toString());
     }
     
-    public String preview(Long initiativeId, String managementHash) {
-        return getLocalizedPageUrl(VIEW_FI, VIEW_SV).replace(ID_PARAMETER, initiativeId.toString()) + "?" + PARAM_MANAGEMENT_CODE + "=" + managementHash;
-    }
-    
     public String participantList(Long initiativeId) {
         return getLocalizedPageUrl(PARITICIPANT_LIST_FI, PARITICIPANT_LIST_SV).replace(ID_PARAMETER, initiativeId.toString());
     }
-    
-    public String management(Long initiativeId, String managementHash) {
-        return getManagement(initiativeId) + "?" + PARAM_MANAGEMENT_CODE + "=" + managementHash;
+
+    @Deprecated
+    public String management(Long initiativeId) {
+        return getManagement(initiativeId);
     }
     
     public String moderation(Long initiativeId) {
@@ -288,10 +285,6 @@ public final class Urls {
 
     public String getEdit(Long initiativeId) {
         return getLocalizedPageUrl(EDIT_FI, EDIT_SV).replace(ID_PARAMETER, initiativeId.toString());
-    }
-
-    public String update(Long initiativeId, String managementHash) {
-        return getUpdate(initiativeId) + "?" + PARAM_MANAGEMENT_CODE + "=" + managementHash;
     }
 
     public String update(Long initiativeId) {

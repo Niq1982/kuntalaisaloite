@@ -1,7 +1,5 @@
 package fi.om.municipalityinitiative.web;
 
-import fi.om.municipalityinitiative.dao.TestHelper;
-
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -26,7 +24,7 @@ public class SendToMunicipalityWebTest extends WebTestBase {
         Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
         Long initiativeId = testHelper.createTestInitiative(municipality1Id, "Testi aloite", true, true);
         
-        open(urls.management(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
+        open(urls.management(initiativeId));
         clickLinkContaining(getMessage(MSG_BTN_SEND));
         inputText("comment", COMMENT);
         getElemContaining(getMessage(MSG_BTN_SEND), "button").click();

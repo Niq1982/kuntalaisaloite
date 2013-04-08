@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.web;
 
-import fi.om.municipalityinitiative.dao.TestHelper;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -32,7 +31,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
     @Test
     public void management_view_opens_if_logged_in_with_correct_management_hash() {
         loginAsAuthor(draftInitiativeId);
-        open(urls.management(draftInitiativeId, TestHelper.TEST_MANAGEMENT_HASH));
+        open(urls.management(draftInitiativeId));
         assertThat(driver.findElement(By.tagName("h2")).getText(), is(getMessage(MANAGEMENT_WARNING_TITLE)));
     }
 

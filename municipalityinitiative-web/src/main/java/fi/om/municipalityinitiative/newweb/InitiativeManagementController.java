@@ -1,11 +1,9 @@
 package fi.om.municipalityinitiative.newweb;
 
 import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUIUpdateDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.service.*;
-import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.web.BaseController;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
@@ -108,7 +106,7 @@ public class InitiativeManagementController extends BaseController {
         Urls urls = Urls.get(locale);
 
         if (validationService.validationErrors(updateDto, bindingResult, model)) {
-            model.addAttribute(ALT_URI_ATTR, urls.alt().update(initiativeId, updateDto.getManagementHash()));
+            model.addAttribute(ALT_URI_ATTR, urls.alt().update(initiativeId));
             model.addAttribute("initiative", publicInitiativeService.getMunicipalityInitiative(initiativeId, updateDto.getManagementHash(), locale));
             model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, updateDto.getManagementHash()));
             model.addAttribute("updateData", updateDto);
@@ -118,7 +116,7 @@ public class InitiativeManagementController extends BaseController {
         updateDto.setManagementHash(userService.getManagementHash());
 
         publicInitiativeService.updateInitiative(initiativeId, updateDto);
-        return redirectWithMessage(urls.management(initiativeId, updateDto.getManagementHash()), RequestMessage.UPDATE_INITIATIVE, request);
+        return redirectWithMessage(urls.management(initiativeId), RequestMessage.UPDATE_INITIATIVE, request);
     }
 
 
@@ -128,7 +126,7 @@ public class InitiativeManagementController extends BaseController {
                                Locale locale, HttpServletRequest request) {
 
         publicInitiativeService.sendReview(initiativeId, managementHash, true);
-        return redirectWithMessage(Urls.get(locale).management(initiativeId, managementHash),RequestMessage.SEND_TO_REVIEW, request);
+        return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.SEND_TO_REVIEW, request);
     }
 
     @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_SEND_TO_REVIEW_COLLECT)
@@ -137,6 +135,6 @@ public class InitiativeManagementController extends BaseController {
                                             Locale locale, HttpServletRequest request) {
 
         publicInitiativeService.sendReview(initiativeId, managementHash, false);
-        return redirectWithMessage(Urls.get(locale).management(initiativeId, managementHash),RequestMessage.SEND_TO_REVIEW, request);
+        return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.SEND_TO_REVIEW, request);
     }
 }
