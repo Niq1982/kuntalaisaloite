@@ -20,7 +20,7 @@ public class MailSendingEmailServiceTestNew extends MailSendingEmailServiceTestB
     }
 
     @Test
-    public void om_accept_initiative_sets_subject_and_contains_all_information() throws Exception {
+    public void prepare_initiative_sets_subject_and_login_url() throws Exception {
         emailService.sendPrepareCreatedEmail(createDefaultInitiative(), CONTACT_EMAIL, Locales.LOCALE_FI);
 
         assertThat(getSingleRecipient(), is(CONTACT_EMAIL));
