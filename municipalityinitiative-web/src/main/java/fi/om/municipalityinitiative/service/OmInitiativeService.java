@@ -22,13 +22,17 @@ public class OmInitiativeService {
     public void accept(Long initiativeId, Locale locale) {
         userService.requireOmUser();
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.ACCEPTED);
-        emailService.sendStatusEmail(initiativeDao.getByIdWithOriginalAuthor(initiativeId), "mikko.lehtinen@solita.fi", EmailMessageType.ACCEPTED_BY_OM_AND_SENT, locale);
+
+        String email = initiativeDao.getContactInfo(initiativeId).getEmail();
+        emailService.sendStatusEmail(initiativeDao.getByIdWithOriginalAuthor(initiativeId), email, EmailMessageType.ACCEPTED_BY_OM_AND_SENT, locale);
     }
 
     // TODO: IsAllowed
     public void reject(Long initiativeId, Locale locale) {
         userService.requireOmUser();
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.DRAFT);
-        emailService.sendStatusEmail(initiativeDao.getByIdWithOriginalAuthor(initiativeId), "mikko.lehtinen@solita.fi", EmailMessageType.REJECTED_BY_OM, locale);
+
+        String email = initiativeDao.getContactInfo(initiativeId).getEmail();
+        emailService.sendStatusEmail(initiativeDao.getByIdWithOriginalAuthor(initiativeId), email, EmailMessageType.REJECTED_BY_OM, locale);
     }
 }
