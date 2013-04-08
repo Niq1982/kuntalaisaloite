@@ -15,6 +15,7 @@ import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -400,26 +401,6 @@ public class JdbcInitiativeDaoTest {
         } catch (NotFoundException e) {
             assertThat(e.getMessage(), containsString("Invalid managementhash or initiative id"));
         }
-    }
-
-
-    @Test
-    public void marking_as_sent_updates_contact_information() {
-        Long initiativeId = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.ACCEPTED).withType(InitiativeType.COLLABORATIVE));
-
-        ContactInfo original = new ContactInfo();
-        original.setAddress("new address");
-        original.setPhone("new phone");
-        original.setEmail("email@example.com");
-        original.setName("new name");
-        initiativeDao.markAsSendedAndUpdateContactInfo(initiativeId, original);
-
-        ContactInfo updated = initiativeDao.getContactInfo(initiativeId);
-        assertThat(updated.getPhone(), is(original.getPhone()));
-        assertThat(updated.getName(), is(original.getName()));
-        assertThat(updated.getEmail(), is(original.getEmail()));
-        assertThat(updated.getAddress(), is(original.getAddress()));
-
     }
 
     @Test
