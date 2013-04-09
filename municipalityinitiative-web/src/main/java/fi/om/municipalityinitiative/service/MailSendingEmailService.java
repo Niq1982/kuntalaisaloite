@@ -109,6 +109,7 @@ public class MailSendingEmailService implements EmailService {
         dataMap.put("initiative", emailModelObject);
         dataMap.put("localizations", new EmailLocalizationProvider(messageSource, locale));
         dataMap.put("urls", Urls.get(locale));
+        dataMap.put("locale", locale);
         addEnum(EmailMessageType.class, dataMap);
         return dataMap;
     }
