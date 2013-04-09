@@ -24,13 +24,13 @@
         <a class="small-button gray push" href="${urls.view(initiative.id)}" target="_blank"><span class="small-icon document">Esikatsele aloitteen julkista näkymää</span></a></p>
     </div>
 
-    <@e.stateInfo initiative />
-
     <h1 class="name">${initiative.name!""}</h1>
     
     <div class="municipality">${initiative.municipality.name!""}</div>
+    
+    <@e.stateInfo initiative />
 
-    <div class="view-block public first">
+    <div class="view-block first">
         <div class="initiative-content-row">
             <@e.initiativeView initiative />
         </div>
@@ -41,10 +41,21 @@
     </div>
 
     <#if initiative.state == InitiativeState.DRAFT>
-        <div class="view-block public">
+        <#assign sendToReviewConfirm = false />
+        <#assign sendToReviewAndCollectConfirm = false />
+        
+        <#if RequestParameters['send-to-review']?? && RequestParameters['send-to-review'] == "confirm">
+            <#assign sendToReviewConfirm = true />
+        </#if>        
+        
+        <#if RequestParameters['send-to-municipality']?? && RequestParameters['send-to-municipality'] == "confirm-collect">
+            <#assign sendToReviewAndCollectConfirm = true />
+        </#if>
+    
+        <div class="view-block">
             <h2><@u.message "management.sendToReview.title" /></h2>
         
-            <#if !(RequestParameters['send-to-review']?? && (RequestParameters['send-to-review'] == "confirm" || RequestParameters['send-to-review'] == "confirm-collect"))>
+            <#if !sendToReviewConfirm && !sendToReviewAndCollectConfirm>
                 <@u.systemMessage path="management.sendToReview.description" type="info" showClose=false />
         
                 <br/>
@@ -58,10 +69,10 @@
                 </div>
                 <br class="clear" />
                 <div class="column col-1of2">
-                    <a href="${managementURL}&send-to-review=confirm#send-to-review" id="js-send-to-review" class="large-button js-send-to-review"><span class="large-icon mail"><@u.messageHTML "action.sendToReview.doNotCollect" /></span></a>
+                    <a href="${managementURL}?send-to-review=confirm#send-to-review" id="js-send-to-review" class="large-button js-send-to-review"><span class="large-icon mail"><@u.messageHTML "action.sendToReview.doNotCollect" /></span></a>
                 </div>
                 <div class="column col-1of2 last">
-                    <a href="${managementURL}&send-to-review=confirm-collect#send-to-review" id="js-send-to-review-collect" class="large-button js-send-to-review-collect"><span class="large-icon save-and-send"><@u.messageHTML "action.sendToReview.collect" /></span></a>
+                    <a href="${managementURL}?send-to-review=confirm-collect#send-to-review" id="js-send-to-review-collect" class="large-button js-send-to-review-collect"><span class="large-icon save-and-send"><@u.messageHTML "action.sendToReview.collect" /></span></a>
                 </div>
                 <br class="clear" />
             </#if>
@@ -81,7 +92,7 @@
             </#assign>
         
             <#-- Confirm send to REVIEW for NOSCRIPT-users -->
-            <#if RequestParameters['send-to-review']?? && RequestParameters['send-to-review'] == "confirm">
+            <#if sendToReviewConfirm>
             <noscript>
                 <div id="send-to-review" class="system-msg msg-info">
                     <#noescape>
@@ -107,7 +118,7 @@
             </#assign>
         
             <#-- Confirm send to REVIEW for NOSCRIPT-users -->
-            <#if RequestParameters['send-to-review']?? && RequestParameters['send-to-review'] == "confirm-collect">
+            <#if sendToReviewAndCollectConfirm>
             <noscript>
                 <div id="send-to-review" class="system-msg msg-info">
                     <#noescape>
@@ -119,7 +130,98 @@
             </#if>
         </div>
     </#if>
-
+    
+    <#assign startCollectingConfirm = false />
+    <#assign sendToMunicipalityConfirm = false />
+    
+    <#if RequestParameters['start-collecting']?? && RequestParameters['start-collecting'] == "confirm">
+        <#assign startCollectingConfirm = true />
+    </#if>        
+    
+    <#if RequestParameters['send-to-municipality']?? && RequestParameters['send-to-municipality'] == "confirm">
+        <#assign sendToMunicipalityConfirm = true />
+    </#if>
+    
+    <#-- TODO: Check for collectable -->
+    <#if initiative.state == InitiativeState.ACCEPTED>
+        <#if !sendToMunicipalityConfirm && !startCollectingConfirm>
+            <div class="msg-block">
+                <div class="system-msg msg-info">
+                    <h2 id="start-collecting"><@u.message "startCollecting.title" /></h2>
+                    <p><@u.message "startCollecting.description" /></p>
+    
+                    <a href="${managementURL}?start-collecting=confirm#start-collecting" id="js-start-collecting" class="small-button js-start-collecting"><span class="small-icon save-and-send"><@u.message "action.startCollecting" /></span></a>
+                </div>
+            
+                <#-- TODO: VIEW for author-management -->
+                <div class="system-msg msg-info">
+                    <@u.message "addAuthors.description" /> <@u.link href="#" labelKey="addAuthors.link" />
+                </div>
+               
+            
+                <div class="system-msg msg-info">
+                    <h2 id="send-to-municipality"><@u.message "sendToMunicipality.title" /></h2>
+                    <p><@u.message "sendToMunicipality.description" /></p>
+        
+                    <a href="${managementURL}?send-to-municipality=confirm#send-to-municipality" id="js-send-to-municipality" class="small-button js-send-to-municipality"><span class="small-icon mail"><@u.message "action.sendToMunicipality" /></span></a>
+                </div>
+            </div>
+        </#if>
+        
+        <#assign startCollecting>
+            <@compress single_line=true>
+            
+                <p><@u.message "startCollecting.confirm.description" /></p>
+                <p><@u.message "startCollecting.confirm.description.2" /></p>
+                
+                <form action="${springMacroRequestContext.requestUri}" method="POST" >
+                    <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+                    <input type="hidden" name="${UrlConstants.PARAM_MANAGEMENT_CODE}" value="${initiative.managementHash.value}"/>
+                    <button type="submit" name="${UrlConstants.ACTION_START_COLLECTING}" id="modal-${UrlConstants.ACTION_START_COLLECTING}" value="${UrlConstants.ACTION_START_COLLECTING}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.startCollecting.confirm" /></button>
+                    <a href="${managementURL}#start-collecting" class="push close"><@u.message "action.cancel" /></a>
+                </form>
+            </@compress>
+        </#assign>
+    
+        <#-- Confirm start collecting for NOSCRIPT-users -->
+        <#if startCollectingConfirm>
+        <noscript>
+            <div id="start-collecting" class="msg-block">
+                <#noescape>
+                    <h2><@u.message "startCollecting.confirm.title.nojs" /></h2>
+                    ${startCollecting}
+                </#noescape>
+            </div>
+        </noscript>
+        </#if>
+        
+        <#assign sendToMunicipality>
+            <@compress single_line=true>
+            
+                <p><@u.message "sendToMunicipality.confirm.description" /></p>
+                
+                <form action="${springMacroRequestContext.requestUri}" method="POST" >
+                    <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+                    <input type="hidden" name="${UrlConstants.PARAM_MANAGEMENT_CODE}" value="${initiative.managementHash.value}"/>
+                    <button type="submit" name="${UrlConstants.ACTION_SEND_TO_MUNICIPALITY}" id="modal-${UrlConstants.ACTION_SEND_TO_MUNICIPALITY}" value="${UrlConstants.ACTION_SEND_TO_MUNICIPALITY}" class="small-button"><span class="small-icon mail"><@u.message "action.sendToMunicipality.confirm" /></button>
+                    <a href="${managementURL}#send-to-municipality" class="push close"><@u.message "action.cancel" /></a>
+                </form>
+            </@compress>
+        </#assign>
+    
+        <#-- Confirm send to municipality for NOSCRIPT-users -->
+        <#if sendToMunicipalityConfirm>
+        <noscript>
+            <div id="send-to-municipality" class="msg-block">
+                <#noescape>
+                    <h2><@u.message "sendToMunicipality.confirm.title.nojs" /></h2>
+                    ${sendToMunicipality}
+                </#noescape>
+            </div>
+        </noscript>
+        </#if>
+        
+    </#if>
 
     <#--
      * Management VIEW modals
@@ -167,6 +269,26 @@
                 return [{
                     title:      '<@u.message "sendToReview.collect.confirm.title" />',
                     content:    '<#noescape>${sendToReviewCollect?replace("'","&#39;")}</#noescape>'
+                }]
+            };
+        </#if>
+        
+        <#-- Modal: Confirm start collecting. -->
+        <#if startCollecting??>    
+            modalData.startCollecting = function() {
+                return [{
+                    title:      '<@u.message "startCollecting.confirm.title" />',
+                    content:    '<#noescape>${startCollecting?replace("'","&#39;")}</#noescape>'
+                }]
+            };
+        </#if>
+        
+        <#-- Modal: Confirm send to municipality. -->
+        <#if sendToMunicipality??>    
+            modalData.sendToMunicipality = function() {
+                return [{
+                    title:      '<@u.message "sendToMunicipality.confirm.title" />',
+                    content:    '<#noescape>${sendToMunicipality?replace("'","&#39;")}</#noescape>'
                 }]
             };
         </#if>

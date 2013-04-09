@@ -292,6 +292,7 @@ $(document).ready(function () {
  *	Toggle dropdown menus
  *  =====================
  * */
+ (function(){
 	var $dToggle, $dMenu, clickedVisible;
 	$dToggle = $('.dropdown-toggle'); 
 	$dMenu = $('.dropdown-menu');
@@ -322,7 +323,8 @@ $(document).ready(function () {
 		$dMenu.hide();
 		$dToggle.removeClass('active');
 	};
-	
+}());
+
 /**
  * 
  * Change the font-size
@@ -332,6 +334,7 @@ $(document).ready(function () {
  * - Sets and gets fontSizeClass-cookie
  * 
  * */
+ (function() {
 	var $fontSizeToggler, fontSizeClass;
 	
 	$fontSizeToggler = $('.font-size-toggle a');
@@ -366,7 +369,7 @@ $(document).ready(function () {
 		
 		return false;
 	});
-	
+}());
 
 
 /**
@@ -681,8 +684,6 @@ var municipalitySelection = (function() {
 			});
 		}
 		
-		console.log("select: "+selectOK + ", memberradio: "+memberRadioOK);
-		
 		email.each(function() {
 			var emailField = $(this);
 			
@@ -925,6 +926,26 @@ $('.municipality-filter').change( function() {
 	$('.js-send-to-review-collect').click(function(){
 		try {
 			generateModal(modalData.sendToReviewCollect(), 'minimal');
+			return false;
+		} catch(e) {
+			console.log(e);
+		}
+	});
+
+	// Start collecting participants
+	$('.js-start-collecting').click(function(){
+		try {
+			generateModal(modalData.startCollecting(), 'minimal');
+			return false;
+		} catch(e) {
+			console.log(e);
+		}
+	});
+	
+	// Send initiative to municipality
+	$('.js-send-to-municipality').click(function(){
+		try {
+			generateModal(modalData.sendToMunicipality(), 'minimal');
 			return false;
 		} catch(e) {
 			console.log(e);

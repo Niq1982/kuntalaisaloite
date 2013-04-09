@@ -106,37 +106,35 @@ public final class Urls {
     
     public static final String SEARCH_OWN_ONLY = "includeOwn=true&includePublic=false";
     
-    public static final String ACTION_SAVE_AND_SEND_INVITATIONS = "action-save-and-send-invitations";
-    
-    public static final String ACTION_SEND_INVITATIONS = "action-send-invitations";
-    
-    // In Municipality initiative
+    // Municipality initiative STARTS
     public static final String PARAM_MANAGEMENT_CODE = "management";
     
-    // In Municipality initiative
     public static final String ACTION_SAVE = "action-save";
     
-    // In Municipality initiative
     public static final String ACTION_SAVE_AND_SEND = "action-save-and-send";
     
-    // In Municipality initiative
     public static final String ACTION_SEND_TO_REVIEW = "action-send-to-review";
     
-    // In Municipality initiative
     public static final String ACTION_SEND_TO_REVIEW_COLLECT = "action-send-to-review-collect";
     
-    // In Municipality initiative
     public static final String ACTION_UPDATE_INITIATIVE = "action-update-initiative";
 
-    // In Municipality initiative
     public static final String ACTION_ACCEPT_INITIATIVE = "action-accept-initiative";
     
-    // In Municipality initiative
     public static final String ACTION_REJECT_INITIATIVE = "action-reject-initiative";
     
     public static final String ACTION_ACCEPT_INVITATION = "action-accept-invitation";
 
     public static final String ACTION_DECLINE_INVITATION = "action-decline-invitation";
+    
+    public static final String ACTION_START_COLLECTING = "action-start-collecting";
+    
+    public static final String ACTION_SEND_TO_MUNICIPALITY = "action-send-to-muninicipality";
+    // Municipality initiative ENDS
+    
+    public static final String ACTION_SAVE_AND_SEND_INVITATIONS = "action-save-and-send-invitations";
+    
+    public static final String ACTION_SEND_INVITATIONS = "action-send-invitations";
     
     public static final String ACTION_UPDATE_VRK_RESOLUTION = "action-vrk-update-resolution";
     
