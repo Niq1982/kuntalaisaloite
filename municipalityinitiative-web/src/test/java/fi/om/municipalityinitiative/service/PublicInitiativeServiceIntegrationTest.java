@@ -279,7 +279,7 @@ public class PublicInitiativeServiceIntegrationTest {
 
     @Test
     public void send_initiative_as_review_sents_state_as_review_and_leaves_type_as_null_if_not_single() {
-        Long initiativeId = testHelper.createEmptyDraft(testMunicipality.getId());
+        Long initiativeId = testHelper.createDraft(testMunicipality.getId());
 
         service.sendReview(initiativeId, TestHelper.TEST_MANAGEMENT_HASH, false);
 
@@ -291,7 +291,7 @@ public class PublicInitiativeServiceIntegrationTest {
 
     @Test
     public void send_initiative_as_review_sents_state_as_review_and_type_as_single_if_single() {
-        Long initiativeId = testHelper.createEmptyDraft(testMunicipality.getId());
+        Long initiativeId = testHelper.createDraft(testMunicipality.getId());
         service.sendReview(initiativeId, TestHelper.TEST_MANAGEMENT_HASH, true);
 
         Initiative updated = initiativeDao.getByIdWithOriginalAuthor(initiativeId);

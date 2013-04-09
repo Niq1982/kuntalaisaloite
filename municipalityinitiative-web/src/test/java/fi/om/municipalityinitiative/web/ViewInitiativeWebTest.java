@@ -1,7 +1,5 @@
 package fi.om.municipalityinitiative.web;
 
-import fi.om.municipalityinitiative.dao.TestHelper;
-import fi.om.municipalityinitiative.util.InitiativeState;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -23,9 +21,9 @@ public class ViewInitiativeWebTest extends WebTestBase {
     public void setup() {
         municipalityId = testHelper.createTestMunicipality("Tuusula");
 
-        draftInitiativeId = testHelper.createSingleDraft(municipalityId);
+        draftInitiativeId = testHelper.createDraft(municipalityId);
 
-        draftInitiativeId = testHelper.createSingleDraft(municipalityId);
+        draftInitiativeId = testHelper.createDraft(municipalityId);
     }
 
     @Override
@@ -49,7 +47,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
     @Test
     public void management_view_shows_404_if_logged_in_with_wrong_management_hash() {
 
-        Long otherInitiative = testHelper.createSingleDraft(municipalityId);
+        Long otherInitiative = testHelper.createDraft(municipalityId);
         loginAsAuthor(otherInitiative);
 
         open(urls.getManagement(draftInitiativeId));
@@ -64,7 +62,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
 
     @Test
     public void not_published_initiative_cannot_be_viewed_if_wrong_author() {
-        Long otherInitiative = testHelper.createSingleDraft(municipalityId);
+        Long otherInitiative = testHelper.createDraft(municipalityId);
         loginAsAuthor(otherInitiative);
 
         open(urls.view(draftInitiativeId));
