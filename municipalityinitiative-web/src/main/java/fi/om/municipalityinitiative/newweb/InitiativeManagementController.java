@@ -127,19 +127,17 @@ public class InitiativeManagementController extends BaseController {
 
     @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_SEND_TO_REVIEW)
     public String sendToReview(@PathVariable("id") Long initiativeId,
-                               @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                                Locale locale, HttpServletRequest request) {
 
-        publicInitiativeService.sendReview(initiativeId, managementHash, true);
+        publicInitiativeService.sendReview(initiativeId, userService.getManagementHash(), true);
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.SEND_TO_REVIEW, request);
     }
 
     @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_SEND_TO_REVIEW_COLLECT)
     public String sendToReviewForCollecting(@PathVariable("id") Long initiativeId,
-                                            @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                                             Locale locale, HttpServletRequest request) {
 
-        publicInitiativeService.sendReview(initiativeId, managementHash, false);
+        publicInitiativeService.sendReview(initiativeId, userService.getManagementHash(), false);
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.SEND_TO_REVIEW, request);
     }
 }
