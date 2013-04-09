@@ -30,4 +30,8 @@ public class ManagementSettings {
         return (initiative.getState().equals(InitiativeState.ACCEPTED) || initiative.getState().equals(InitiativeState.PUBLISHED))
                 && initiative.getSentTime().isNotPresent();
     }
+
+    public boolean isAllowPublish() {
+        return initiative.getState().equals(InitiativeState.ACCEPTED);
+    }
 }

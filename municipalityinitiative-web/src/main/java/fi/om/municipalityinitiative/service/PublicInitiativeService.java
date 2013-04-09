@@ -154,6 +154,7 @@ public class PublicInitiativeService {
     }
 
     public void publishInitiative(Long initiativeId, boolean isCollobrative) {
+        assertAllowance("Publish initiative", managementSettings(initiativeId).isAllowPublish());
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
         initiativeDao.updateInitiativeType(initiativeId, isCollobrative ? InitiativeType.COLLABORATIVE : InitiativeType.SINGLE);
     }
