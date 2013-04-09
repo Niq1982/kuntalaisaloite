@@ -117,7 +117,7 @@
     
 <#elseif emailMessageType == EmailMessageType.SENT_TO_MUNICIPALITY>
     <#-- TEXT -->
-    <#assign statusInfo>
+    <#assign statusInfoHTML>
         <#-- TODO: Localize / create a macro-->
         <h4 style="${h4!""}">${initiative.name!""}</h4>
         Aloite luotu Kuntalaisaloite.fi-palveluun: <@u.localDate initiative.createTime />
@@ -130,7 +130,7 @@
     </#assign>
     
     <#-- HTML -->
-    <#assign statusInfoHTML>
+    <#assign statusInfo>
         Vähemmän koivuja Joutsan keskustaan
         Aloite luotu Kuntalaisaloite.fi-palveluun: 04.04.2013 
         Lähetetty kuntaan: 04.04.2013
