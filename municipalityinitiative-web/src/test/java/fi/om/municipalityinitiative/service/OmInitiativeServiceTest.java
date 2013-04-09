@@ -6,8 +6,10 @@ import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.util.InitiativeState;
+import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Locales;
 
+import fi.om.municipalityinitiative.util.Maybe;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -57,7 +59,7 @@ public class OmInitiativeServiceTest {
     }
 
     @Test
-    public void accepting_initiative_sets_state_as_accepted() {
+    public void accepting_initiative_sets_state_as_accepted_and_sends_correct_state_email_if_type_not_known() {
 
         fakeUserService.setOmUser(true);
         stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmail());
@@ -65,6 +67,22 @@ public class OmInitiativeServiceTest {
         omInitiativeService.accept(INITIATIVE_ID, Locales.LOCALE_FI);
 
         verify(initiativeDaoMock).updateInitiativeState(INITIATIVE_ID, InitiativeState.ACCEPTED);
+        verify(omInitiativeService.emailService).sendStatusEmail(any(Initiative.class), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM), eq(Locales.LOCALE_FI));
+    }
+
+    @Test
+    public void accepting_initiative_sets_state_as_published_and_sends_correct_state_email_if_type_single() {
+
+        fakeUserService.setOmUser(true);
+        Initiative initiative = initiativeWithAuthorEmail();
+        initiative.setType(Maybe.of(InitiativeType.SINGLE));
+        stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiative);
+
+        omInitiativeService.accept(INITIATIVE_ID, Locales.LOCALE_FI);
+
+        verify(initiativeDaoMock).updateInitiativeState(INITIATIVE_ID, InitiativeState.PUBLISHED);
+        verify(omInitiativeService.emailService).sendStatusEmail(any(Initiative.class), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM_AND_SENT), eq(Locales.LOCALE_FI));
+
     }
 
     private static Initiative initiativeWithAuthorEmail() {
@@ -74,6 +92,8 @@ public class OmInitiativeServiceTest {
 
         author.setContactInfo(contactInfo);
         initiative.setAuthor(author);
+        initiative.setState(InitiativeState.REVIEW);
+        initiative.setType(Maybe.<InitiativeType>absent());
 
         contactInfo.setEmail(AUTHOR_EMAIL);
         return initiative;

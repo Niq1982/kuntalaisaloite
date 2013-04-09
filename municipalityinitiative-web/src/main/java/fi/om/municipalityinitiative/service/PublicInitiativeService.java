@@ -165,7 +165,7 @@ public class PublicInitiativeService {
 
     private static void assertAllowance(String s, boolean allowed) {
         if (!allowed) {
-            throw new OperationNotAllowedException("Operation not allowed:" + s);
+            throw new OperationNotAllowedException("Operation not allowed: " + s);
         }
     }
 
