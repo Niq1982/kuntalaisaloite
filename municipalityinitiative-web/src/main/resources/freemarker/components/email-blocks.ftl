@@ -195,7 +195,7 @@
 <#macro statusInfoComment type="" msg="">
     <#if type == "html">
         <h4 style="${h4!""}"><@u.message "email.commentFromOM" /></h4>
-        <p style="${pBottomMargin!""}">${msg}</p>
+        <p style="${pBottomMargin!""} font-style:italic;">${msg}</p>
     <#else>
         <@u.message "email.commentFromOM" />:
         ${msg}
@@ -204,25 +204,23 @@
 
 <#macro publicViewLink type="">
     <#if type == "html">
-        <p style="${pBothMargins!""}">
-            Alla on linkki aloitteesi julkiselle sivulle Kuntalaisaloite.fi-palvelussa.<br />
-            <a href="${urls.view(initiative.id)}">${urls.view(initiative.id)}</a>
-        </p>
+        <p style="${pBothMargins!""}">Alla on linkki aloitteesi julkiselle sivulle Kuntalaisaloite.fi-palvelussa.</p>
+        <p style="${pBothMargins!""} ${smallFont!""}"><@u.link urls.view(initiative.id) urls.view(initiative.id) /></p>
     <#else>
         Alla on linkki aloitteesi julkiselle sivulle Kuntalaisaloite.fi-palvelussa.
-        <a href="${urls.view(initiative.id)}">${urls.view(initiative.id)}</a>
+        
+        ${urls.view(initiative.id)}
     </#if>
 </#macro>
 
 <#macro adminViewLink type="">
     <#if type == "html">
-        <p style="${pBothMargins!""}">
-            Kirjaudu kuntalaisaloitteen ylläpito-sivulle alla olevalla linkillä<br/>
-            <a href="${urls.loginAuthor(initiative.id, initiative.managementHash.value)}">${urls.loginAuthor(initiative.id, initiative.managementHash.value)}</a>
-        </p>
+        <p style="${pBothMargins!""}">Kirjaudu kuntalaisaloitteen ylläpito-sivulle alla olevalla linkillä</p>
+        <p style="${pBothMargins!""} ${smallFont!""}"><@u.link urls.loginAuthor(initiative.id, initiative.managementHash.value) urls.loginAuthor(initiative.id, initiative.managementHash.value) /></p>
     <#else>
-        Siirry kuntalaisaloitteen ylläpito-sivulle alla olevalla linkillä
-        <a href="${urls.loginAuthor(initiative.id, initiative.managementHash.value)}">${urls.loginAuthor(initiative.id, initiative.managementHash.value)}</a>
+        Kirjaudu kuntalaisaloitteen ylläpito-sivulle alla olevalla linkillä
+        
+        ${urls.loginAuthor(initiative.id, initiative.managementHash.value)}
     </#if>
 </#macro>
 

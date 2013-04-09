@@ -4,7 +4,7 @@
 
 <#escape x as x?html>
 
-<#macro emailHtml template title="" footerLink=true>
+<#macro emailHtml template title="" footerLink=false>
 <html>
 <head>
     <title>${title}</title>
@@ -37,7 +37,7 @@
             <#nested />
             
             <#if footerLink>
-                <p style="${footerFont!""}"><@u.message "email.municipality.sendFrom" /><br/><@u.link initiative.url!"" /></p>
+                <p style="${footerFont!""}"><@u.message "email.municipality.sendFrom" /><br/><@u.link urls.view(initiative.id) /></p>
                 <br/>
             </#if>
             <p style="${footerFont!""}"><@u.message "email.footer" /></p>

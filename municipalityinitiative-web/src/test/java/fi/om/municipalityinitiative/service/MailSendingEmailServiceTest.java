@@ -42,7 +42,7 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
         InitiativeEmailInfo initiative = createEmailInfo();
         emailService.sendNotCollectableToMunicipality(initiative, MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
 
-        assertEmailHasInitiativeDetailsAndContactInfo(false);
+        assertEmailHasInitiativeDetailsAndContactInfo();
     }
 
     @Test
@@ -83,7 +83,7 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
         InitiativeEmailInfo initiative = createEmailInfo();
         emailService.sendNotCollectableToAuthor(initiative, Locales.LOCALE_FI);
 
-        assertEmailHasInitiativeDetailsAndContactInfo(false);
+        assertEmailHasInitiativeDetailsAndContactInfo();
     }
 
     @Test
@@ -125,7 +125,7 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
         CollectableInitiativeEmailInfo initiative = createCollectableEmailInfo();
         emailService.sendCollectableToMunicipality(initiative, MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
 
-        assertEmailHasInitiativeDetailsAndContactInfo(true);
+        assertEmailHasInitiativeDetailsAndContactInfo();
     }
 
     @Test
@@ -166,7 +166,7 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
         CollectableInitiativeEmailInfo initiative = createCollectableEmailInfo();
         emailService.sendCollectableToAuthor(initiative, Locales.LOCALE_FI);
 
-        assertEmailHasInitiativeDetailsAndContactInfo(false);
+        assertEmailHasInitiativeDetailsAndContactInfo();
     }
 
     @Test
@@ -189,7 +189,7 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
         assertThat(messageContent.text, containsString(COMMENT));
     }
 
-    private void assertEmailHasInitiativeDetailsAndContactInfo(boolean isCollectable) throws Exception {
+    private void assertEmailHasInitiativeDetailsAndContactInfo() throws Exception {
         MessageContent messageContent = getMessageContent();
         assertThat(messageContent.html, containsString(INITIATIVE_NAME));
         assertThat(messageContent.html, containsString(INITIATIVE_NAME));
@@ -197,8 +197,6 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
         assertThat(messageContent.text, containsString(INITIATIVE_PROPOSAL));
         assertThat(messageContent.html, containsString(INITIATIVE_MUNICIPALITY));
         assertThat(messageContent.text, containsString(INITIATIVE_MUNICIPALITY));
-        assertThat(messageContent.html, containsString(INITIATIVE_URL));
-        assertThat(messageContent.text, containsString(INITIATIVE_URL));
 
         assertThat(messageContent.html, containsString(CONTACT_PHONE));
         assertThat(messageContent.text, containsString(CONTACT_PHONE));
