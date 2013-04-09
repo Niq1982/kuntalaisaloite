@@ -66,7 +66,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
                 .innerJoin(municipalityInitiative.initiativeAuthorFk, QAuthor.author)
                 .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
-                .where(municipalityInitiative.state.eq(InitiativeState.ACCEPTED))
+                .where(municipalityInitiative.state.eq(InitiativeState.PUBLISHED))
                 ;
 
         filterByTitle(query, search.getSearch());
@@ -295,7 +295,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
         SimpleExpression<String> simpleExpression = Expressions.as(caseBuilder, "showCategory");
 
         PostgresQuery from = queryFactory.from(municipalityInitiative)
-                .where(municipalityInitiative.state.eq(InitiativeState.ACCEPTED));
+                .where(municipalityInitiative.state.eq(InitiativeState.PUBLISHED));
 
         if (municipality.isPresent()) {
             from.where(municipalityInitiative.municipalityId.eq(municipality.get()));

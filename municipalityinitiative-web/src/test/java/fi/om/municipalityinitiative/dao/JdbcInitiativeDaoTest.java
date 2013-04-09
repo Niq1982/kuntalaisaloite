@@ -55,17 +55,19 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void find_returns_all() {
 
-        testHelper.createCollectableAccepted(testMunicipality.getId());
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_COUNCIL);
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.SINGLE);
         testHelper.createSingleSent(testMunicipality.getId());
 
         List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch());
-        assertThat(result.size(), is(2));
+        assertThat(result.size(), is(4));
     }
 
     @Test
-    public void find_does_not_find_if_not_accepted() {
+    public void find_does_not_find_if_not_published() {
         testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
-                .withState(InitiativeState.REVIEW));
+                .withState(InitiativeState.ACCEPTED));
 
         assertThat(initiativeDao.find(initiativeSearch()), hasSize(0));
     }
@@ -134,8 +136,8 @@ public class JdbcInitiativeDaoTest {
 
     @Test
     public void find_with_limit() {
-        testHelper.createCollectableAccepted(testMunicipality.getId());
-        testHelper.createCollectableAccepted(testMunicipality.getId());
+        testHelper.createSingleSent(testMunicipality.getId());
+        testHelper.createSingleSent(testMunicipality.getId());
 
         InitiativeSearch search = initiativeSearch().setShow(InitiativeSearch.Show.all);
 
@@ -146,8 +148,8 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void find_with_offset() {
 
-        testHelper.createCollectableAccepted(testMunicipality.getId());
-        testHelper.createCollectableAccepted(testMunicipality.getId());
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.SINGLE);
 
         InitiativeSearch search = initiativeSearch().setShow(InitiativeSearch.Show.all);
         precondition(initiativeDao.find(search), hasSize(2));
@@ -163,10 +165,10 @@ public class JdbcInitiativeDaoTest {
         DateTime latestSentTime = new DateTime(2020, 1, 1, 0, 0);
 
         Long oldestId = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
-                .withState(InitiativeState.ACCEPTED)
+                .withState(InitiativeState.PUBLISHED)
                 .withSent(oldestSentTime));
         Long latestId = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
-                .withState(InitiativeState.ACCEPTED)
+                .withState(InitiativeState.PUBLISHED)
                 .withSent(latestSentTime));
 
         InitiativeSearch initiativeSearch = initiativeSearch().setShow(InitiativeSearch.Show.all);
@@ -183,13 +185,18 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void find_orders_by_participants() {
 
-        Long mostParticipants = testHelper.createCollectableAccepted(testMunicipality.getId());
-        Long leastParticipants = testHelper.createCollectableAccepted(testMunicipality.getId());
-        Long someParticipants = testHelper.createCollectableAccepted(testMunicipality.getId());
-
-        testHelper.updateField(leastParticipants, QMunicipalityInitiative.municipalityInitiative.participantCount, 1);
-        testHelper.updateField(mostParticipants, QMunicipalityInitiative.municipalityInitiative.participantCount, 10);
-        testHelper.updateField(someParticipants, QMunicipalityInitiative.municipalityInitiative.participantCount, 5);
+        Long mostParticipants = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withState(InitiativeState.PUBLISHED)
+                .withType(InitiativeType.COLLABORATIVE)
+                .withParticipantCount(10));
+        Long leastParticipants = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withState(InitiativeState.PUBLISHED)
+                .withType(InitiativeType.COLLABORATIVE)
+                .withParticipantCount(1));
+        Long someParticipants = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withState(InitiativeState.PUBLISHED)
+                .withType(InitiativeType.COLLABORATIVE)
+                .withParticipantCount(5));
 
         InitiativeSearch initiativeSearch = initiativeSearch().setShow(InitiativeSearch.Show.all);
 
@@ -205,10 +212,10 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void find_orders_by_counts_non_collectables_as_zero() {
 
-        Long mostParticipants = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.ACCEPTED)
+        Long mostParticipants = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withParticipantCount(10));
-        Long leastParticipants = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.ACCEPTED)
+        Long leastParticipants = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withParticipantCount(1));
         Long notCollectable = testHelper.createSingleSent(testMunicipality.getId());
@@ -252,7 +259,7 @@ public class JdbcInitiativeDaoTest {
 
     @Test
     public void sets_type_to_listView_object() {
-        testHelper.createCollectableAccepted(testMunicipality.getId());
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
 
         List<InitiativeListInfo> all = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.all));
         assertThat(all, hasSize(1));
@@ -271,7 +278,7 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void counts_participants_to_listView() {
 
-        testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.ACCEPTED)
+        testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withParticipantCount(17));
 
@@ -293,7 +300,7 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void sets_sent_time_as_absent_to_listView_if_initiative_is_not_sent() {
 
-        testHelper.createCollectableAccepted(testMunicipality.getId());
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
 
         List<InitiativeListInfo> all = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.all));
         assertThat(all, hasSize(1));
@@ -305,10 +312,10 @@ public class JdbcInitiativeDaoTest {
 
         testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withName("name that sould not be found")
-                .withState(InitiativeState.ACCEPTED));
+                .withState(InitiativeState.PUBLISHED));
         Long shouldBeFound = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withName("name that should be found ääöö")
-                .withState(InitiativeState.ACCEPTED));
+                .withState(InitiativeState.PUBLISHED));
 
         InitiativeSearch search = initiativeSearch();
         search.setSearch("SHOULD be found ääöö");
@@ -320,10 +327,10 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
-    public void finds_by_sent_finds_collectable_if_sent() {
+    public void finds_by_sent_finds_published_if_sent() {
         Long collectableSent = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
-                .withState(InitiativeState.ACCEPTED)
+                .withState(InitiativeState.PUBLISHED)
                 .withSent(new DateTime(2010, 1, 1, 0, 0)));
 
         List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.sent));
@@ -332,14 +339,17 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
-    public void finds_by_sent_does_not_find_collectable_if_not_sent() {
-        testHelper.createCollectableAccepted(testMunicipality.getId());
+    public void finds_by_sent_does_not_find_published_if_not_sent() {
+        testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withType(InitiativeType.COLLABORATIVE_CITIZEN)
+                .withState(InitiativeState.PUBLISHED)
+                .withSent(null));
         List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.sent));
         assertThat(result, hasSize(0));
     }
 
     @Test
-    public void finds_by_sent_finds_not_collectable() {
+    public void finds_by_sent_finds_not_collectable_if_sent() {
         Long singleSent = testHelper.createSingleSent(testMunicipality.getId());
 
         List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.sent));
@@ -427,8 +437,8 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void counts_initiatives_by_state() {
 
-        testHelper.createCollectableAccepted(testMunicipality.getId());
-        testHelper.createCollectableAccepted(testMunicipality.getId());
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         testHelper.createSingleSent(testMunicipality.getId());
 
         InitiativeCounts initiativeCounts = initiativeDao.getInitiativeCounts(Maybe.<Long>absent());

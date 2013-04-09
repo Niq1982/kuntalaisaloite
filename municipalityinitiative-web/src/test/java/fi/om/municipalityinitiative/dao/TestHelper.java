@@ -135,9 +135,16 @@ public class TestHelper {
     }
 
     @Transactional
+    public Long create(Long municipalityId, InitiativeState state, InitiativeType type) {
+        return create(new InitiativeDraft(municipalityId)
+                .withState(state)
+                .withType(type));
+    }
+
+    @Transactional
     public Long createSingleSent(Long municipalityId) {
         return create(new InitiativeDraft(municipalityId)
-                .withState(InitiativeState.ACCEPTED)
+                .withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.SINGLE)
                 .withSent(new DateTime(2011, 1, 1, 0, 0)));
     }
