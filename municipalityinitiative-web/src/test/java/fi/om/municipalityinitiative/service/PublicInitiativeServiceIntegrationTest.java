@@ -309,14 +309,14 @@ public class PublicInitiativeServiceIntegrationTest {
     @Test(expected = OperationNotAllowedException.class)
     public void publish_initiative_fails_if_not_accepted() {
         Long review = testHelper.createCollectableReview(testMunicipality.getId());
-        service.publishInitiative(review, false);
+        service.publishInitiative(review, false, null);
     }
 
     @Test
     public void publish_initiative_and_start_collecting_sets_all_data() {
         Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, null);
 
-        service.publishInitiative(accepted, true);
+        service.publishInitiative(accepted, true, null);
 
         Initiative collecting = initiativeDao.getByIdWithOriginalAuthor(accepted);
         assertThat(collecting.getState(), is(InitiativeState.PUBLISHED));
@@ -329,7 +329,7 @@ public class PublicInitiativeServiceIntegrationTest {
     public void publish_initiative_and_send_to_municipality_sets_all_data() {
         Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, null);
 
-        service.publishInitiative(accepted, false);
+        service.publishInitiative(accepted, false, null);
 
         Initiative sent = initiativeDao.getByIdWithOriginalAuthor(accepted);
         assertThat(sent.getState(), is(InitiativeState.PUBLISHED));

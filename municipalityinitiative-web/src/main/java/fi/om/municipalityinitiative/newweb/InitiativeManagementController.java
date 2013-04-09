@@ -14,7 +14,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -151,7 +150,7 @@ public class InitiativeManagementController extends BaseController {
 
         userService.assertManagementRightsForInitiative(initiativeId);
 
-        publicInitiativeService.publishInitiative(initiativeId, true);
+        publicInitiativeService.publishInitiative(initiativeId, true, locale);
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.START_COLLECTING, request);
     }
 
@@ -161,7 +160,7 @@ public class InitiativeManagementController extends BaseController {
 
         userService.assertManagementRightsForInitiative(initiativeId);
 
-        publicInitiativeService.publishInitiative(initiativeId, false);
+        publicInitiativeService.publishInitiative(initiativeId, false, locale);
         return redirectWithMessage(Urls.get(locale).view(initiativeId),RequestMessage.SAVE_AND_SEND, request);
     }
 }

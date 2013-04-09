@@ -159,18 +159,20 @@ public class PublicInitiativeService {
     }
 
     @Transactional(readOnly = false)
-    public void publishInitiative(Long initiativeId, boolean isCollobrative) {
+    public void publishInitiative(Long initiativeId, boolean isCollobrative, Locale locale) {
         assertAllowance("Publish initiative", managementSettings(initiativeId).isAllowPublish());
 
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
         if (isCollobrative) {
             initiativeDao.updateInitiativeType(initiativeId, InitiativeType.COLLABORATIVE);
-            // TODO: Send status email
+            Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
+            emailService.sendStatusEmail(initiative,initiative.getAuthor().getContactInfo().getEmail(), EmailMessageType.PUBLISHED_COLLECTING, locale);
         }
         else {
             initiativeDao.updateInitiativeType(initiativeId, InitiativeType.SINGLE);
             initiativeDao.markInitiativeAsSent(initiativeId);
-            // TODO: Send status email
+            Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
+            emailService.sendStatusEmail(initiative,initiative.getAuthor().getContactInfo().getEmail(), EmailMessageType.SENT_TO_MUNICIPALITY, locale);
             // TODO: Send email to municipality
         }
     }
