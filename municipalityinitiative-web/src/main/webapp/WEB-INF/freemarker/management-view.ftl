@@ -143,7 +143,7 @@
     </#if>
     
     <#-- TODO: Check for collectable -->
-    <#if initiative.state == InitiativeState.ACCEPTED>
+    <#if managementSettings.isAllowSendToMunicipality>
         <#if !sendToMunicipalityConfirm && !startCollectingConfirm>
             <div class="msg-block">
                 <div class="system-msg msg-info">
