@@ -1,5 +1,7 @@
 package fi.om.municipalityinitiative.web;
 
+import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.util.InitiativeState;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -20,6 +22,9 @@ public class ViewInitiativeWebTest extends WebTestBase {
     @Before
     public void setup() {
         municipalityId = testHelper.createTestMunicipality("Tuusula");
+
+        draftInitiativeId = testHelper.createSingleDraft(municipalityId);
+
         draftInitiativeId = testHelper.createSingleDraft(municipalityId);
     }
 
@@ -78,6 +83,15 @@ public class ViewInitiativeWebTest extends WebTestBase {
         loginAsOmUser();
         open(urls.view(draftInitiativeId));
         assertThat(driver.findElement(By.tagName("h2")).getText(), is(getMessage(INITIATIVE_VIEW_HEADER)));
+    }
+
+    @Test
+    public void management_view_redirects_to_create_page_if_initiative_name_is_empty() {
+        Long emptyDraftId = testHelper.createEmptyDraft(municipalityId);
+        loginAsAuthor(emptyDraftId);
+        open(urls.management(emptyDraftId));
+
+        assertThat(driver.getCurrentUrl(), is(urls.edit(emptyDraftId)));
     }
 
     // TODO: Redirect-tests if initiative at REVIEW, ACCEPTED, sent etc and trying to open edit/management-page

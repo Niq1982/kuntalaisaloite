@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.newdto.service;
 
-import fi.om.municipalityinitiative.service.AccessDeniedException;
 import fi.om.municipalityinitiative.util.InitiativeState;
 
 public class ManagementSettings {
@@ -15,14 +14,20 @@ public class ManagementSettings {
         return initiative.getState() == InitiativeState.DRAFT;
     }
 
+    public boolean isAllowSendToReview() {
+        return initiative.getState() == InitiativeState.DRAFT;
+    }
+
+    public boolean isAllowOmAccept() {
+        return initiative.getState() == InitiativeState.REVIEW;
+    }
+
     public boolean isAllowUpdate() {
-        switch (initiative.getState()) {
-            case REVIEW:
-            case ACCEPTED:
-            case PUBLISHED:
-                return true;
-            default:
-                return false;
-        }
+        return !isAllowEdit() && !initiative.getSentTime().isPresent();
+    }
+
+    public boolean isAllowSendToMunicipality() {
+        return (initiative.getState().equals(InitiativeState.ACCEPTED) || initiative.getState().equals(InitiativeState.PUBLISHED))
+                && initiative.getSentTime().isNotPresent();
     }
 }

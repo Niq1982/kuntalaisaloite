@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newweb;
 
+import com.google.common.base.Strings;
 import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUIUpdateDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
@@ -59,12 +60,17 @@ public class InitiativeManagementController extends BaseController {
             return redirectWithMessage(urls.view(initiativeId), RequestMessage.ALREADY_SENT, request);
         }
 
+        if (Strings.isNullOrEmpty(initiativeInfo.getName())) {
+            return contextRelativeRedirect(urls.edit(initiativeId));
+        }
+
         addModelAttributesToCollectView(model,
                 initiativeInfo,
                 municipalityService.findAllMunicipalities(locale),
                 participantService.getParticipantCount(initiativeId),
                 participantService.findPublicParticipants(initiativeId));
 
+        model.addAttribute("managementSettings", publicInitiativeService.managementSettings(initiativeId));
         model.addAttribute("participants", participantService.findPublicParticipants(initiativeId));
         model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, userService.getManagementHash()));
         return MANAGEMENT_VIEW;

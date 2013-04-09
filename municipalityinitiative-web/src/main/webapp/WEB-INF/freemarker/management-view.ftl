@@ -40,7 +40,7 @@
         </div>
     </div>
 
-    <#if initiative.state == InitiativeState.DRAFT>
+    <#if managementSettings.allowSendToReview>
         <#assign sendToReviewConfirm = false />
         <#assign sendToReviewAndCollectConfirm = false />
         

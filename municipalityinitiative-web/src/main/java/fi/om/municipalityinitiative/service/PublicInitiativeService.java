@@ -148,14 +148,8 @@ public class PublicInitiativeService {
         }
     }
 
-    public void publishInitiative(Long initiativeId, String managementHash) {
-        // TODO: IsAllowed
-
-        // FIXME: CONTINUE FROM HERE
-        // XXX: CONTINUE FROM HERE
-        // TODO: CONTINUE FROM HERE
-        // NOTE: Wippiduu Bazil
-
+    public void publishInitiative(Long initiativeId) {
+        initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
     }
 
     private void assertManagementHash(Long initiativeId, String managementHash) {
