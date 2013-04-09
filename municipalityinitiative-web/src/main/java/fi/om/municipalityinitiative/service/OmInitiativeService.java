@@ -34,6 +34,7 @@ public class OmInitiativeService {
 
         if (initiative.getType().isPresent() && initiative.getType().get().equals(InitiativeType.SINGLE)) {
             initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
+            initiativeDao.markInitiativeAsSent(initiativeId);
             initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId); // NOTE: Necessary?
             emailService.sendStatusEmail(initiative, initiative.getAuthor().getContactInfo().getEmail(), EmailMessageType.ACCEPTED_BY_OM_AND_SENT, locale);
         }

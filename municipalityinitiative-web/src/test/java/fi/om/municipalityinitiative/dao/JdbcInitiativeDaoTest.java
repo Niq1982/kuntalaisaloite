@@ -132,6 +132,19 @@ public class JdbcInitiativeDaoTest {
         assertThat(initiativeDao.getByIdWithOriginalAuthor(someOther).getType().isPresent(), is(false));
     }
 
+    @Test
+    public void mark_initiative_as_sent_adds_timestamp() {
+        Long original = testHelper.createEmptyDraft(testMunicipality.getId()); // Even drafts may be marked as sent by dao
+        Long someOther = testHelper.createEmptyDraft(testMunicipality.getId()); // Even drafts may be marked as sent by dao
+
+        precondition(initiativeDao.getByIdWithOriginalAuthor(original).getSentTime().isPresent(), is(false));
+
+        initiativeDao.markInitiativeAsSent(original);
+
+        assertThat(initiativeDao.getByIdWithOriginalAuthor(original).getSentTime().isPresent(), is(true));
+        assertThat(initiativeDao.getByIdWithOriginalAuthor(someOther).getSentTime().isPresent(), is(false));
+    }
+
 
 
     @Test
@@ -452,7 +465,7 @@ public class JdbcInitiativeDaoTest {
     public void counts_initiatives_by_state_if_municipalityId_is_given() {
 
         testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
-                .withState(InitiativeState.ACCEPTED)
+                .withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE));
 
         InitiativeCounts initiativeCounts = initiativeDao.getInitiativeCounts(Maybe.of(testMunicipality.getId()));

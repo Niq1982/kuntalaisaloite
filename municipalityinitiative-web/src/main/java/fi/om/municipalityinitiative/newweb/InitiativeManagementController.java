@@ -125,7 +125,6 @@ public class InitiativeManagementController extends BaseController {
         return redirectWithMessage(urls.management(initiativeId), RequestMessage.UPDATE_INITIATIVE, request);
     }
 
-
     @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_SEND_TO_REVIEW)
     public String sendToReview(@PathVariable("id") Long initiativeId,
                                @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
