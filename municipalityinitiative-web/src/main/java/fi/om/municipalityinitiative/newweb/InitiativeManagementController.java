@@ -129,6 +129,8 @@ public class InitiativeManagementController extends BaseController {
     public String sendToReview(@PathVariable("id") Long initiativeId,
                                Locale locale, HttpServletRequest request) {
 
+        userService.assertManagementRightsForInitiative(initiativeId);
+
         publicInitiativeService.sendReview(initiativeId, userService.getManagementHash(), true);
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.SEND_TO_REVIEW, request);
     }
@@ -137,7 +139,29 @@ public class InitiativeManagementController extends BaseController {
     public String sendToReviewForCollecting(@PathVariable("id") Long initiativeId,
                                             Locale locale, HttpServletRequest request) {
 
+        userService.assertManagementRightsForInitiative(initiativeId);
+
         publicInitiativeService.sendReview(initiativeId, userService.getManagementHash(), false);
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.SEND_TO_REVIEW, request);
+    }
+
+    @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_START_COLLECTING)
+    public String publishAndStartCollecting(@PathVariable("id") Long initiativeId,
+                               Locale locale, HttpServletRequest request) {
+
+        userService.assertManagementRightsForInitiative(initiativeId);
+
+        publicInitiativeService.publishInitiative(initiativeId, true);
+        return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.START_COLLECTING, request);
+    }
+
+    @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_SEND_TO_MUNICIPALITY)
+    public String publishAndSendToMunicipality(@PathVariable("id") Long initiativeId,
+                                            Locale locale, HttpServletRequest request) {
+
+        userService.assertManagementRightsForInitiative(initiativeId);
+
+        publicInitiativeService.publishInitiative(initiativeId, false);
+        return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.SAVE_AND_SEND, request);
     }
 }

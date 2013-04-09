@@ -141,7 +141,7 @@
     </#if>
     
     <#-- TODO: Check for collectable -->
-    <#if managementSettings.allowSendToMunicipality>
+    <#if managementSettings.allowPublish>
         <#if !sendToMunicipalityConfirm && !startCollectingConfirm>
             <div class="msg-block">
                 <div class="system-msg msg-info">
