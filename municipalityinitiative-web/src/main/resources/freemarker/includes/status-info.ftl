@@ -73,7 +73,7 @@
     
     <#-- HTML -->
     <#assign statusInfoHTML>
-        <p style="${pBothMargins!""}"><@u.message "email.status.info.REJECTED_BY_OM.title" /></p>
+        <p style="${pBothMargins!""}"><@u.message "email.status.info.REJECTED_BY_OM.description" /></p>
         
         <@b.statusInfoComment "html" initiative.comment!"" />
         
