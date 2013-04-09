@@ -158,24 +158,32 @@
 
 <#elseif emailMessageType == EmailMessageType.COLLECTING>
     <#-- TEXT -->
-    <#assign statusTitleFi>TODO</#assign>
-    <#assign statusTitleSv>TODO</#assign>
+    <#assign statusTitleFi>Kuntalaisaloite on julkaistu ja siihen kerätään osallistujia</#assign>
+    <#assign statusTitleSv>SV Kuntalaisaloite on julkaistu ja siihen kerätään osallistujia</#assign>
     <#assign statusInfoFi>TODO</#assign>
     <#assign statusInfoSv>TODO</#assign>
     
     <#-- HTML -->
     <#assign statusTitleHTMLFi>${statusTitleFi}</#assign>
     <#assign statusTitleHTMLSv>${statusTitleSv}</#assign>
-    <#assign statusInfoHTMLFi>${statusInfoFi}</#assign>
-    <#assign statusInfoHTMLSv>${statusInfoSv}</#assign>
+    <#assign statusInfoHTMLFi>
+        <p style="${pBothMargins!""}">Kuntalaisaloite on nyt julkinen Kuntalaisaloite.fi-palvelussa. Kunnan asukkaat ja jäsenet voivat nyt osallistua siihen.</p>
+        
+        <h4 style="${h4!""}">${initiative.name!""}</h4>
+        Aloite luotu Kuntalaisaloite.fi-palveluun: <@u.localDate initiative.createTime />
+        Keräys aloitettu: 04.04.2013 [TODO]  
+        
+        <@b.publicViewLink "html" />
+    </#assign>
+    <#assign statusInfoHTMLSv>TODO</#assign>
     
 <#elseif emailMessageType == EmailMessageType.SENT_TO_MUNICIPALITY>
     <#-- TEXT -->
     <#assign statusTitleFi>Kuntalaisaloite on lähetetty kuntaan [KUNTA]</#assign>
     <#assign statusTitleSv>SV Kuntalaisaloite on lähetetty kuntaan [KUNTA]</#assign>
     <#assign statusInfoFi>
-        Vähemmän koivuja Joutsan keskustaan
-        Aloite luotu Kuntalaisaloite.fi-palveluun: 04.04.2013 
+        <h4 style="${h4!""}">${initiative.name!""}</h4>
+        Aloite luotu Kuntalaisaloite.fi-palveluun: <@u.localDate initiative.createTime />
         Lähetetty kuntaan: 04.04.2013
         
         [SISÄLTÖ]
