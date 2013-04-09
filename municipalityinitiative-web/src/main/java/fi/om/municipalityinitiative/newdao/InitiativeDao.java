@@ -46,4 +46,6 @@ public interface InitiativeDao {
     void updateInitiativeState(Long initiativeId, InitiativeState state);
 
     void updateInitiative(Long initiativeId, InitiativeUIUpdateDto updateDto);
+
+    void updateInitiativeType(Long initiativeId, InitiativeType initiativeType);
 }

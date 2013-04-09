@@ -123,6 +123,30 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
+    public void update_initiative_state() {
+        Long original = testHelper.createEmptyDraft(testMunicipality.getId());
+        Long someOther = testHelper.createEmptyDraft(testMunicipality.getId());
+
+        initiativeDao.updateInitiativeState(original, InitiativeState.PUBLISHED);
+
+        assertThat(initiativeDao.getByIdWithOriginalAuthor(original).getState(), is(InitiativeState.PUBLISHED));
+        assertThat(initiativeDao.getByIdWithOriginalAuthor(someOther).getState(), is(InitiativeState.DRAFT));
+    }
+
+    @Test
+    public void update_initiative_type() {
+        Long original = testHelper.createEmptyDraft(testMunicipality.getId());
+        Long someOther = testHelper.createEmptyDraft(testMunicipality.getId());
+
+        initiativeDao.updateInitiativeType(original, InitiativeType.COLLABORATIVE);
+
+        assertThat(initiativeDao.getByIdWithOriginalAuthor(original).getType().get(), is(InitiativeType.COLLABORATIVE));
+        assertThat(initiativeDao.getByIdWithOriginalAuthor(someOther).getType().isPresent(), is(false));
+    }
+
+
+
+    @Test
     public void find_with_limit() {
         testHelper.createCollectableAccepted(testMunicipality.getId());
         testHelper.createCollectableAccepted(testMunicipality.getId());

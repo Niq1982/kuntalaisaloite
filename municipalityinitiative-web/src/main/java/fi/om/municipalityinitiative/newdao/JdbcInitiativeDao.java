@@ -398,6 +398,15 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     @Transactional(readOnly = false)
+    public void updateInitiativeType(Long initiativeId, InitiativeType initiativeType) {
+        assertSingleAffection(queryFactory.update(municipalityInitiative)
+                .set(municipalityInitiative.type, initiativeType)
+                .where(municipalityInitiative.id.eq(initiativeId))
+                .execute());
+    }
+
+    @Override
+    @Transactional(readOnly = false)
     public void updateInitiative(Long initiativeId, InitiativeUIUpdateDto updateDto) {
 
         Long participantId = queryFactory.from(QParticipant.participant)
