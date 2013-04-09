@@ -13,7 +13,7 @@
  *  REJECTED_BY_OM,
  *  INVITATION_ACCEPTED,
  *  INVITATION_REJECTED,
- *  COLLECTING,
+ *  PUBLISHED_COLLECTING,
  *  SENT_TO_MUNICIPALITY
  *
  *
@@ -99,13 +99,13 @@
         TODO
     </#assign>
 
-<#elseif emailMessageType == EmailMessageType.COLLECTING>
+<#elseif emailMessageType == EmailMessageType.PUBLISHED_COLLECTING>
     <#-- TEXT -->
-    <#assign statusInfo><@u.message "email.status.info.COLLECTING.description" /></#assign>
+    <#assign statusInfo><@u.message "email.status.info.PUBLISHED_COLLECTING.description" /></#assign>
     
     <#-- HTML -->
     <#assign statusInfoHTML>
-        <p style="${pBothMargins!""}"><@u.message "email.status.info.COLLECTING.description" /></p>
+        <p style="${pBothMargins!""}"><@u.message "email.status.info.PUBLISHED_COLLECTING.description" /></p>
         
         <#-- TODO: Localize / create a macro-->
         <h4 style="${h4!""}">${initiative.name!""}</h4>

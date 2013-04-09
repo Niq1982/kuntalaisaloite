@@ -45,13 +45,13 @@ public class MailSendingEmailService implements EmailService {
         
         HashMap<String, Object> dataMap = toDataMap(initiative, locale);
         dataMap.put("emailMessageType", emailMessageType);
-        
+
         emailMessageConstructor
-            .fromTemplate(STATUS_INFO_TEMPLATE)
-            .withSendTo(sendTo)
-            .withSubject(messageSource.getMessage("email.status.info."+emailMessageType.name(), toArray(), locale))
-            .withDataMap(dataMap)
-            .send();
+                .fromTemplate(STATUS_INFO_TEMPLATE)
+                .withSendTo(sendTo)
+                .withSubject(messageSource.getMessage("email.status.info." + emailMessageType.name() + ".subject", toArray(), locale))
+                .withDataMap(dataMap)
+                .send();
         
     }
 
