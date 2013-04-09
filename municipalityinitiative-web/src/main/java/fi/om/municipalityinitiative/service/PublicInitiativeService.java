@@ -165,10 +165,13 @@ public class PublicInitiativeService {
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
         if (isCollobrative) {
             initiativeDao.updateInitiativeType(initiativeId, InitiativeType.COLLABORATIVE);
+            // TODO: Send status email
         }
         else {
             initiativeDao.updateInitiativeType(initiativeId, InitiativeType.SINGLE);
             initiativeDao.markInitiativeAsSent(initiativeId);
+            // TODO: Send status email
+            // TODO: Send email to municipality
         }
     }
 
