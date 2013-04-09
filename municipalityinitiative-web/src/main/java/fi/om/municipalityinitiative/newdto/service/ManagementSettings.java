@@ -14,6 +14,14 @@ public class ManagementSettings {
         return initiative.getState() == InitiativeState.DRAFT;
     }
 
+    public boolean isAllowSendToReview() {
+        return initiative.getState() == InitiativeState.DRAFT;
+    }
+
+    public boolean isAllowOmAccept() {
+        return initiative.getState() == InitiativeState.REVIEW;
+    }
+
     public boolean isAllowUpdate() {
         return !isAllowEdit() && !initiative.getSentTime().isPresent();
     }

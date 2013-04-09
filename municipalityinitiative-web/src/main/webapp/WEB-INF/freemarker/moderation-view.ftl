@@ -22,7 +22,7 @@
      * Show moderation block
     -->
 
-    <#if initiative.state == InitiativeState.REVIEW>
+    <#if managementSettings.allowOmAccept>
         <div class="msg-block">
             <h2><@u.message "moderation.title" /></h2>
             <#-- TODO: Real date -->

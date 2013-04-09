@@ -61,6 +61,7 @@ public class InitiativeModerationController extends BaseController{
                 participantService.findPublicParticipants(initiativeId));
 
         model.addAttribute("participants", participantService.findPublicParticipants(initiativeId));
+        model.addAttribute("managementSettings", publicInitiativeService.managementSettings(initiativeId));
         // TODO: Return all authors when possible
         model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, initiativeInfo.getManagementHash().get()));
         return MODERATION_VIEW;

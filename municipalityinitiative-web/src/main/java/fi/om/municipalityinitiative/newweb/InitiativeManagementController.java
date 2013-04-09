@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newweb;
 
+import com.google.common.base.Strings;
 import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUIUpdateDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
@@ -57,6 +58,10 @@ public class InitiativeManagementController extends BaseController {
 
         if (initiativeInfo.isSent()) {
             return redirectWithMessage(urls.view(initiativeId), RequestMessage.ALREADY_SENT, request);
+        }
+
+        if (Strings.isNullOrEmpty(initiativeInfo.getName())) {
+            return contextRelativeRedirect(urls.edit(initiativeId));
         }
 
         addModelAttributesToCollectView(model,

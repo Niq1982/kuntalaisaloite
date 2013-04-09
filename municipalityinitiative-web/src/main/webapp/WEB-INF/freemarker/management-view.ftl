@@ -40,7 +40,7 @@
         </div>
     </div>
 
-    <#if initiative.state == InitiativeState.DRAFT>
+    <#if managementSettings.allowSendToReview>
         <div class="view-block public">
             <h2><@u.message "management.sendToReview.title" /></h2>
         
