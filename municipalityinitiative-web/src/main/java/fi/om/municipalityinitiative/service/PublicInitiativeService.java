@@ -103,7 +103,6 @@ public class PublicInitiativeService {
     public void editInitiativeDraft(Long initiativeId, InitiativeDraftUIEditDto editDto) {
 
         assertAllowance("Edit initiative", managementSettings(initiativeId).isAllowEdit());
-
         if (!initiativeDao.getInitiativeForEdit(initiativeId).getManagementHash().equals(editDto.getManagementHash())) {
             throw new AccessDeniedException("Invalid management hash");
         }
@@ -145,11 +144,10 @@ public class PublicInitiativeService {
         assertAllowance("Send review", managementSettings(initiativeId).isAllowSendToReview());
         assertManagementHash(initiativeId, managementHash);
 
+        initiativeDao.updateInitiativeState(initiativeId, InitiativeState.REVIEW);
+
         if (sendToMunicipalityRightAfterAcceptance) {
-            initiativeDao.setInitiativeAsReview(initiativeId, InitiativeType.SINGLE);
-        }
-        else {
-            initiativeDao.updateInitiativeState(initiativeId, InitiativeState.REVIEW);
+            initiativeDao.updateInitiativeType(initiativeId, InitiativeType.SINGLE);
         }
     }
 

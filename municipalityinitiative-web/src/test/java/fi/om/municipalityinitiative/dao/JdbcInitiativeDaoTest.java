@@ -109,20 +109,6 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
-    public void update_initiative_state_when_set_as_review() {
-        Long initiativeId = testHelper.createTestInitiative(testMunicipality.getId());
-        Initiative original = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
-        assertThat(original.getType().isPresent(), is(false));
-        assertThat(original.getState(), is(InitiativeState.DRAFT));
-
-        initiativeDao.setInitiativeAsReview(initiativeId, InitiativeType.COLLABORATIVE);
-
-        Initiative updated = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
-        assertThat(updated.getType().get(), is(InitiativeType.COLLABORATIVE));
-        assertThat(updated.getState(), is(InitiativeState.REVIEW));
-    }
-
-    @Test
     public void update_initiative_state() {
         Long original = testHelper.createEmptyDraft(testMunicipality.getId());
         Long someOther = testHelper.createEmptyDraft(testMunicipality.getId());

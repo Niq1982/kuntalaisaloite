@@ -379,16 +379,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     @Transactional(readOnly = false)
-    public void setInitiativeAsReview(Long initiativeId, InitiativeType type) {
-        assertSingleAffection(queryFactory.update(municipalityInitiative)
-                .set(municipalityInitiative.type, type)
-                .set(municipalityInitiative.state, InitiativeState.REVIEW)
-                .where(municipalityInitiative.id.eq(initiativeId))
-                .execute());
-    }
-
-    @Override
-    @Transactional(readOnly = false)
     public void updateInitiativeState(Long initiativeId, InitiativeState state) {
         assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.state, state)
