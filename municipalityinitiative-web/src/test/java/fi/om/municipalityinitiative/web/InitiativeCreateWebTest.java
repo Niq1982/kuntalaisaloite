@@ -58,7 +58,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     
     @Test
     public void edit_page_opens_if_logged_in_as_author() {
-        Long initiative = testHelper.createSingleDraft(testMunicipality1Id);
+        Long initiative = testHelper.createDraft(testMunicipality1Id);
         loginAsAuthor(initiative);
         open(urls.getEdit(initiative));
 //        assertThat(driver.getTitle(), is("asdasd"));
@@ -67,14 +67,14 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
     @Test
     public void edit_page_fails_if_not_logged_in() {
-        Long initiative = testHelper.createSingleDraft(testMunicipality1Id);
+        Long initiative = testHelper.createDraft(testMunicipality1Id);
         open(urls.getEdit(initiative));
         assert404();
     }
 
     @Test
     public void edit_page_fails_if_logged_in_as_om() {
-        Long initiative = testHelper.createSingleDraft(testMunicipality1Id);
+        Long initiative = testHelper.createDraft(testMunicipality1Id);
         loginAsOmUser();
         open(urls.getEdit(initiative));
         assert404();
@@ -82,7 +82,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
     @Test
     public void edit_page_fails_if_logged_in_as_another_author() {
-        Long initiative = testHelper.createSingleDraft(testMunicipality1Id);
+        Long initiative = testHelper.createDraft(testMunicipality1Id);
         loginAsAuthor(testHelper.createSingleSent(testMunicipality1Id));
         open(urls.getEdit(initiative));
         assert404();
@@ -91,7 +91,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     // Create initiative with state DRAFT and send it to REVIEW
     @Test
     public void send_to_review() {
-        Long initiativeId = testHelper.createSingleDraft(testMunicipality1Id);
+        Long initiativeId = testHelper.createDraft(testMunicipality1Id);
 
         loginAsAuthor(initiativeId);
         open(urls.management(initiativeId));
@@ -108,14 +108,14 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
     @Test
     public void update_page_fails_if_not_logged_in() {
-        open(urls.update(testHelper.createSingleDraft(testMunicipality1Id)));
+        open(urls.update(testHelper.createDraft(testMunicipality1Id)));
         assert404();
     }
 
     @Test
     public void update_fails_if_logged_in_as_om_user() {
         loginAsOmUser();
-        open(urls.update(testHelper.createSingleDraft(testMunicipality1Id)));
+        open(urls.update(testHelper.createDraft(testMunicipality1Id)));
         assert404();
     }
 

@@ -66,7 +66,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
                 .innerJoin(municipalityInitiative.initiativeAuthorFk, QAuthor.author)
                 .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
-                .where(municipalityInitiative.state.eq(InitiativeState.ACCEPTED))
+                .where(municipalityInitiative.state.eq(InitiativeState.PUBLISHED))
                 ;
 
         filterByTitle(query, search.getSearch());
@@ -295,7 +295,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
         SimpleExpression<String> simpleExpression = Expressions.as(caseBuilder, "showCategory");
 
         PostgresQuery from = queryFactory.from(municipalityInitiative)
-                .where(municipalityInitiative.state.eq(InitiativeState.ACCEPTED));
+                .where(municipalityInitiative.state.eq(InitiativeState.PUBLISHED));
 
         if (municipality.isPresent()) {
             from.where(municipalityInitiative.municipalityId.eq(municipality.get()));
@@ -392,6 +392,16 @@ public class JdbcInitiativeDao implements InitiativeDao {
         assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.type, initiativeType)
                 .where(municipalityInitiative.id.eq(initiativeId))
+                .execute());
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void markInitiativeAsSent(Long initiativeId) {
+        assertSingleAffection(queryFactory.update(municipalityInitiative)
+                .set(municipalityInitiative.sent, CURRENT_TIME)
+                .where(municipalityInitiative.id.eq(initiativeId))
+                .where(municipalityInitiative.sent.isNull())
                 .execute());
     }
 

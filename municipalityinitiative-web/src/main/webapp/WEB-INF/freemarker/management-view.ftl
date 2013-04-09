@@ -84,7 +84,6 @@
                     
                     <form action="${springMacroRequestContext.requestUri}" method="POST" >
                         <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-                        <input type="hidden" name="${UrlConstants.PARAM_MANAGEMENT_CODE}" value="${initiative.managementHash.value}"/>
                         <button type="submit" name="${UrlConstants.ACTION_SEND_TO_REVIEW}" id="modal-${UrlConstants.ACTION_SEND_TO_REVIEW}" value="${UrlConstants.ACTION_SEND_TO_REVIEW}" class="large-button"><span class="large-icon mail"><@u.messageHTML "action.sendToReview.doNotCollect" /></button>
                         <a href="${managementURL}" class="push close"><@u.message "action.cancel" /></a>
                     </form>
@@ -110,7 +109,6 @@
                     
                     <form action="${springMacroRequestContext.requestUri}" method="POST" >
                         <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-                        <input type="hidden" name="${UrlConstants.PARAM_MANAGEMENT_CODE}" value="${initiative.managementHash.value}"/>
                         <button type="submit" name="${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" id="modal-${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" value="${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" class="large-button"><span class="large-icon save-and-send"><@u.messageHTML "action.sendToReview.collect" /></button>
                         <a href="${managementURL}" class="push close"><@u.message "action.cancel" /></a>
                     </form>
@@ -143,7 +141,7 @@
     </#if>
     
     <#-- TODO: Check for collectable -->
-    <#if managementSettings.allowSendToMunicipality>
+    <#if managementSettings.allowPublish>
         <#if !sendToMunicipalityConfirm && !startCollectingConfirm>
             <div class="msg-block">
                 <div class="system-msg msg-info">
@@ -176,7 +174,6 @@
                 
                 <form action="${springMacroRequestContext.requestUri}" method="POST" >
                     <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-                    <input type="hidden" name="${UrlConstants.PARAM_MANAGEMENT_CODE}" value="${initiative.managementHash.value}"/>
                     <button type="submit" name="${UrlConstants.ACTION_START_COLLECTING}" id="modal-${UrlConstants.ACTION_START_COLLECTING}" value="${UrlConstants.ACTION_START_COLLECTING}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.startCollecting.confirm" /></button>
                     <a href="${managementURL}#start-collecting" class="push close"><@u.message "action.cancel" /></a>
                 </form>
@@ -202,7 +199,6 @@
                 
                 <form action="${springMacroRequestContext.requestUri}" method="POST" >
                     <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-                    <input type="hidden" name="${UrlConstants.PARAM_MANAGEMENT_CODE}" value="${initiative.managementHash.value}"/>
                     <button type="submit" name="${UrlConstants.ACTION_SEND_TO_MUNICIPALITY}" id="modal-${UrlConstants.ACTION_SEND_TO_MUNICIPALITY}" value="${UrlConstants.ACTION_SEND_TO_MUNICIPALITY}" class="small-button"><span class="small-icon mail"><@u.message "action.sendToMunicipality.confirm" /></button>
                     <a href="${managementURL}#send-to-municipality" class="push close"><@u.message "action.cancel" /></a>
                 </form>

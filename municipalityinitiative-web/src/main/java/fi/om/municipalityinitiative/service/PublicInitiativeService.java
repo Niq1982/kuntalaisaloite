@@ -56,7 +56,7 @@ public class PublicInitiativeService {
     private void checkAllowedToParticipate(Long initiativeId) {
         Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
 
-        if (initiative.getState() != InitiativeState.ACCEPTED) {
+        if (initiative.getState() != InitiativeState.PUBLISHED) {
             throw new ParticipatingUnallowedException("Initiative not accepted by om: " + initiativeId);
         }
         if (initiative.getSentTime().isPresent()) {
@@ -94,12 +94,14 @@ public class PublicInitiativeService {
         return InitiativeViewInfo.parse(initiativeDao.getById(initiativeId, givenManagementHash), locale);
     }
 
+    @Transactional(readOnly = true)
     public InitiativeDraftUIEditDto getInitiativeDraftForEdit(Long initiativeId) {
         assertAllowance("Edit initiative", managementSettings(initiativeId).isAllowEdit());
         InitiativeDraftUIEditDto initiativeForEdit = initiativeDao.getInitiativeForEdit(initiativeId); // TODO: Parse this with InitiativeDraftUiEditDto
         return initiativeForEdit;
     }
 
+    @Transactional(readOnly = false)
     public void editInitiativeDraft(Long initiativeId, InitiativeDraftUIEditDto editDto) {
 
         assertAllowance("Edit initiative", managementSettings(initiativeId).isAllowEdit());
@@ -110,6 +112,7 @@ public class PublicInitiativeService {
         initiativeDao.updateInitiativeDraft(initiativeId, editDto);
     }
 
+    @Transactional(readOnly = true)
     public InitiativeUIUpdateDto getInitiativeForUpdate(Long initiativeId, String managementHash) {
 
         assertAllowance("Update initiative", managementSettings(initiativeId).isAllowUpdate());
@@ -126,20 +129,24 @@ public class PublicInitiativeService {
         return updateDto;
     }
 
+    @Transactional(readOnly = false)
     public void updateInitiative(Long initiativeId, InitiativeUIUpdateDto updateDto) {
         assertAllowance("Update initiative", managementSettings(initiativeId).isAllowUpdate());
         // TODO: Check managementHash from updateDto (is somehow checked when trying to update at dao layer)
         initiativeDao.updateInitiative(initiativeId, updateDto);
     }
 
+    @Transactional(readOnly = true)
     public Author getAuthorInformation(Long initiativeId, String managementHash) {
         return initiativeDao.getAuthorInformation(initiativeId, managementHash);
     }
 
+    @Transactional(readOnly = true)
     public Author getAuthorInformation(Long initiativeId) {
         return initiativeDao.getByIdWithOriginalAuthor(initiativeId).getAuthor();
     }
 
+    @Transactional(readOnly = false)
     public void sendReview(Long initiativeId, String managementHash, boolean sendToMunicipalityRightAfterAcceptance) {
         assertAllowance("Send review", managementSettings(initiativeId).isAllowSendToReview());
         assertManagementHash(initiativeId, managementHash);
@@ -151,10 +158,21 @@ public class PublicInitiativeService {
         }
     }
 
+    @Transactional(readOnly = false)
     public void publishInitiative(Long initiativeId, boolean isCollobrative) {
         assertAllowance("Publish initiative", managementSettings(initiativeId).isAllowPublish());
+
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
-        initiativeDao.updateInitiativeType(initiativeId, isCollobrative ? InitiativeType.COLLABORATIVE : InitiativeType.SINGLE);
+        if (isCollobrative) {
+            initiativeDao.updateInitiativeType(initiativeId, InitiativeType.COLLABORATIVE);
+            // TODO: Send status email
+        }
+        else {
+            initiativeDao.updateInitiativeType(initiativeId, InitiativeType.SINGLE);
+            initiativeDao.markInitiativeAsSent(initiativeId);
+            // TODO: Send status email
+            // TODO: Send email to municipality
+        }
     }
 
     private void assertManagementHash(Long initiativeId, String managementHash) {
@@ -165,7 +183,7 @@ public class PublicInitiativeService {
 
     private static void assertAllowance(String s, boolean allowed) {
         if (!allowed) {
-            throw new OperationNotAllowedException("Operation not allowed:" + s);
+            throw new OperationNotAllowedException("Operation not allowed: " + s);
         }
     }
 

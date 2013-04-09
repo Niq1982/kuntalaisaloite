@@ -105,7 +105,7 @@ public class PublicInitiativeServiceIntegrationTest {
 
     @Test
     public void participating_to_sent_but_collectable_initiative_is_forbidden() {
-        Long initiativeId = testHelper.createCollectableAccepted(testMunicipality.getId());
+        Long initiativeId = testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         ParticipantUICreateDto participant = new ParticipantUICreateDto();
         participant.setParticipantName("Some Name");
         participant.setShowName(true);
@@ -128,7 +128,7 @@ public class PublicInitiativeServiceIntegrationTest {
     @Test
     public void sets_participant_count_to_one_when_adding_new_collectable_initiative() {
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
-        testHelper.updateField(initiativeId, QMunicipalityInitiative.municipalityInitiative.state, InitiativeState.ACCEPTED);
+        testHelper.updateField(initiativeId, QMunicipalityInitiative.municipalityInitiative.state, InitiativeState.PUBLISHED);
 
         List<InitiativeListInfo> initiatives = service.findMunicipalityInitiatives(new InitiativeSearch().setShow(InitiativeSearch.Show.all));
         precondition(initiatives, hasSize(1));
@@ -137,7 +137,7 @@ public class PublicInitiativeServiceIntegrationTest {
 
     @Test
     public void increases_participant_count_when_participating_to_collectable_initiative() {
-        Long municipalityInitiative = testHelper.createCollectableAccepted(testMunicipality.getId());
+        Long municipalityInitiative = testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
 
         ParticipantUICreateDto participant = new ParticipantUICreateDto();
         participant.setParticipantName("name");
@@ -170,7 +170,7 @@ public class PublicInitiativeServiceIntegrationTest {
     @Test
     public void preparing_initiative_sets_participant_information() {
         Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise(), Locales.LOCALE_FI);
-        testHelper.updateField(initiativeId, QMunicipalityInitiative.municipalityInitiative.state, InitiativeState.ACCEPTED);
+        testHelper.updateField(initiativeId, QMunicipalityInitiative.municipalityInitiative.state, InitiativeState.PUBLISHED); // XXX: Hard coded state change
 
         List<InitiativeListInfo> initiatives = service.findMunicipalityInitiatives(new InitiativeSearch().setShow(InitiativeSearch.Show.all));
         precondition(initiatives, hasSize(1));
@@ -279,7 +279,7 @@ public class PublicInitiativeServiceIntegrationTest {
 
     @Test
     public void send_initiative_as_review_sents_state_as_review_and_leaves_type_as_null_if_not_single() {
-        Long initiativeId = testHelper.createEmptyDraft(testMunicipality.getId());
+        Long initiativeId = testHelper.createDraft(testMunicipality.getId());
 
         service.sendReview(initiativeId, TestHelper.TEST_MANAGEMENT_HASH, false);
 
@@ -291,7 +291,7 @@ public class PublicInitiativeServiceIntegrationTest {
 
     @Test
     public void send_initiative_as_review_sents_state_as_review_and_type_as_single_if_single() {
-        Long initiativeId = testHelper.createEmptyDraft(testMunicipality.getId());
+        Long initiativeId = testHelper.createDraft(testMunicipality.getId());
         service.sendReview(initiativeId, TestHelper.TEST_MANAGEMENT_HASH, true);
 
         Initiative updated = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
@@ -310,6 +310,32 @@ public class PublicInitiativeServiceIntegrationTest {
     public void publish_initiative_fails_if_not_accepted() {
         Long review = testHelper.createCollectableReview(testMunicipality.getId());
         service.publishInitiative(review, false);
+    }
+
+    @Test
+    public void publish_initiative_and_start_collecting_sets_all_data() {
+        Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, null);
+
+        service.publishInitiative(accepted, true);
+
+        Initiative collecting = initiativeDao.getByIdWithOriginalAuthor(accepted);
+        assertThat(collecting.getState(), is(InitiativeState.PUBLISHED));
+        assertThat(collecting.getType().isPresent(), is(true));
+        assertThat(collecting.getType().get(), is(InitiativeType.COLLABORATIVE));
+        assertThat(collecting.getSentTime().isPresent(), is(false));
+    }
+
+    @Test
+    public void publish_initiative_and_send_to_municipality_sets_all_data() {
+        Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, null);
+
+        service.publishInitiative(accepted, false);
+
+        Initiative sent = initiativeDao.getByIdWithOriginalAuthor(accepted);
+        assertThat(sent.getState(), is(InitiativeState.PUBLISHED));
+        assertThat(sent.getType().isPresent(), is(true));
+        assertThat(sent.getType().get(), is(InitiativeType.SINGLE));
+        assertThat(sent.getSentTime().isPresent(), is(true));
     }
 
     private static PrepareInitiativeDto initiativePrepareDtoWithFranchise() {

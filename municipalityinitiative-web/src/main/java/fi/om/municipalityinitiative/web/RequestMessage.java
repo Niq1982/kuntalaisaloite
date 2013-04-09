@@ -13,13 +13,14 @@ public enum RequestMessage {
     REJECT_INITIATIVE (SUCCESS),
     SAVE_AND_SEND (SUCCESS),
     SAVE (SUCCESS, true),
+    START_COLLECTING(SUCCESS),
     SEND (SUCCESS, true),
     PARTICIPATE (SUCCESS),
     LOGOUT (SUCCESS),
     
     // Warning messages
     ALREADY_SENT (WARNING),
-    PREPARE_CONFIRM_EXPIRED (WARNING);
+    PREPARE_CONFIRM_EXPIRED (WARNING),;
     
     private final boolean modal;
     
