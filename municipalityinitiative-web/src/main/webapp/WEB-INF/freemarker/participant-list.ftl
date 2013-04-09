@@ -16,7 +16,7 @@
     
     <div class="municipality">${initiative.municipality.name!""}</div>
     
-    <@e.stateDates initiative />
+    <@e.stateInfo initiative />
     
     <@returnPrevious />
 

@@ -45,6 +45,8 @@
     <#assign statusInfo>
         <@u.message "email.status.info.ACCEPTED_BY_OM.description" />
         
+        <@u.message "email.status.info.ACCEPTED_BY_OM.description.2" />
+        
         <@b.statusInfoComment "text" initiative.comment!"" />
         
         <@b.adminViewLink "text" />
@@ -53,6 +55,7 @@
     <#-- HTML -->
     <#assign statusInfoHTML>
         <p style="${pBothMargins!""}"><@u.message "email.status.info.ACCEPTED_BY_OM.description" /></p>
+        <p style="${pBothMargins!""}"><@u.message "email.status.info.ACCEPTED_BY_OM.description.2" /></p>
         
         <@b.statusInfoComment "html" initiative.comment!"" />
         <@b.adminViewLink "html" />
@@ -70,7 +73,7 @@
     
     <#-- HTML -->
     <#assign statusInfoHTML>
-        <p style="${pBothMargins!""}"><@u.message "email.status.info.REJECTED_BY_OM.title" /></p>
+        <p style="${pBothMargins!""}"><@u.message "email.status.info.REJECTED_BY_OM.description" /></p>
         
         <@b.statusInfoComment "html" initiative.comment!"" />
         

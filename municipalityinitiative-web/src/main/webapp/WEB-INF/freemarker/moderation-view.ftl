@@ -17,11 +17,9 @@
 
 <@l.main page="page.moderation" pageTitle=initiative.name!"">
 
-
     <#--
      * Show moderation block
     -->
-
     <#if managementSettings.allowOmAccept>
         <div class="msg-block">
             <h2><@u.message "moderation.title" /></h2>
@@ -78,11 +76,12 @@
         </div>
     </#if>
 
-    <@e.stateInfo initiative />
-
+        
     <h1 class="name">${initiative.name!""}</h1>
     
     <div class="municipality">${initiative.municipality.name!""}</div>
+    
+    <@e.stateInfo initiative />
 
     <div class="view-block first">
         <div class="initiative-content-row">
