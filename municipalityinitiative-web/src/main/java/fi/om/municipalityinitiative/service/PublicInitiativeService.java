@@ -129,7 +129,7 @@ public class PublicInitiativeService {
         return updateDto;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = false)
     public void updateInitiative(Long initiativeId, InitiativeUIUpdateDto updateDto) {
         assertAllowance("Update initiative", managementSettings(initiativeId).isAllowUpdate());
         // TODO: Check managementHash from updateDto (is somehow checked when trying to update at dao layer)
