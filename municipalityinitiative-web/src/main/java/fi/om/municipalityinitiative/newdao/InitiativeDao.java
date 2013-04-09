@@ -41,9 +41,9 @@ public interface InitiativeDao {
 
     Author getAuthorInformation(Long id, String testManagementHash);
 
-    void setInitiativeAsReview(Long initiativeId, InitiativeType single);
-
     void updateInitiativeState(Long initiativeId, InitiativeState state);
 
     void updateInitiative(Long initiativeId, InitiativeUIUpdateDto updateDto);
+
+    void updateInitiativeType(Long initiativeId, InitiativeType initiativeType);
 }

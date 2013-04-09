@@ -108,6 +108,18 @@ public class ManagementSettingsTest {
         }, false, InitiativeState.values());
     }
 
+    @Test
+    public void is_allow_publish_only_if_initiative_state_accepted() throws Exception {
+        final Initiative initiative = createInitiative();
+
+        assertExpectedOnlyWithGivenStates(initiative, new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return managementSettings(initiative).isAllowPublish();
+            }
+        }, true, InitiativeState.ACCEPTED);
+    }
+
     private static void assertExpectedOnlyWithGivenStates(Initiative initiative, Callable<Boolean> callable, boolean expected, InitiativeState... givenStates) throws Exception {
         for (InitiativeState initiativeState : InitiativeState.values()) {
             initiative.setState(initiativeState);

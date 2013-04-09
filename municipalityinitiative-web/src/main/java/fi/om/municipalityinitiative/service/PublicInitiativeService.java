@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
+import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
@@ -94,12 +95,14 @@ public class PublicInitiativeService {
     }
 
     public InitiativeDraftUIEditDto getInitiativeDraftForEdit(Long initiativeId) {
+        assertAllowance("Edit initiative", managementSettings(initiativeId).isAllowEdit());
         InitiativeDraftUIEditDto initiativeForEdit = initiativeDao.getInitiativeForEdit(initiativeId); // TODO: Parse this with InitiativeDraftUiEditDto
         return initiativeForEdit;
     }
 
     public void editInitiativeDraft(Long initiativeId, InitiativeDraftUIEditDto editDto) {
-        // TODO: IsAllowed
+
+        assertAllowance("Edit initiative", managementSettings(initiativeId).isAllowEdit());
         if (!initiativeDao.getInitiativeForEdit(initiativeId).getManagementHash().equals(editDto.getManagementHash())) {
             throw new AccessDeniedException("Invalid management hash");
         }
@@ -109,7 +112,8 @@ public class PublicInitiativeService {
 
     public InitiativeUIUpdateDto getInitiativeForUpdate(Long initiativeId, String managementHash) {
 
-        // TODO: IsAllowed
+        assertAllowance("Update initiative", managementSettings(initiativeId).isAllowUpdate());
+
         Initiative initiative = initiativeDao.getById(initiativeId, managementHash);
         Author authorInformation = getAuthorInformation(initiativeId, managementHash);
 
@@ -123,7 +127,7 @@ public class PublicInitiativeService {
     }
 
     public void updateInitiative(Long initiativeId, InitiativeUIUpdateDto updateDto) {
-        // TODO: IsAllowed
+        assertAllowance("Update initiative", managementSettings(initiativeId).isAllowUpdate());
         // TODO: Check managementHash from updateDto (is somehow checked when trying to update at dao layer)
         initiativeDao.updateInitiative(initiativeId, updateDto);
     }
@@ -137,24 +141,31 @@ public class PublicInitiativeService {
     }
 
     public void sendReview(Long initiativeId, String managementHash, boolean sendToMunicipalityRightAfterAcceptance) {
-        // TODO: IsAllowed
+        assertAllowance("Send review", managementSettings(initiativeId).isAllowSendToReview());
         assertManagementHash(initiativeId, managementHash);
 
+        initiativeDao.updateInitiativeState(initiativeId, InitiativeState.REVIEW);
+
         if (sendToMunicipalityRightAfterAcceptance) {
-            initiativeDao.setInitiativeAsReview(initiativeId, InitiativeType.SINGLE);
-        }
-        else {
-            initiativeDao.updateInitiativeState(initiativeId, InitiativeState.REVIEW);
+            initiativeDao.updateInitiativeType(initiativeId, InitiativeType.SINGLE);
         }
     }
 
-    public void publishInitiative(Long initiativeId) {
+    public void publishInitiative(Long initiativeId, boolean isCollobrative) {
+        assertAllowance("Publish initiative", managementSettings(initiativeId).isAllowPublish());
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
+        initiativeDao.updateInitiativeType(initiativeId, isCollobrative ? InitiativeType.COLLABORATIVE : InitiativeType.SINGLE);
     }
 
     private void assertManagementHash(Long initiativeId, String managementHash) {
         if (!initiativeDao.getByIdWithOriginalAuthor(initiativeId).getManagementHash().get().equals(managementHash)) {
             throw new AccessDeniedException("Invalid management hash");
+        }
+    }
+
+    private static void assertAllowance(String s, boolean allowed) {
+        if (!allowed) {
+            throw new OperationNotAllowedException("Operation not allowed:" + s);
         }
     }
 

@@ -109,18 +109,28 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
-    public void update_initiative_state_when_set_as_review() {
-        Long initiativeId = testHelper.createTestInitiative(testMunicipality.getId());
-        Initiative original = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
-        assertThat(original.getType().isPresent(), is(false));
-        assertThat(original.getState(), is(InitiativeState.DRAFT));
+    public void update_initiative_state() {
+        Long original = testHelper.createEmptyDraft(testMunicipality.getId());
+        Long someOther = testHelper.createEmptyDraft(testMunicipality.getId());
 
-        initiativeDao.setInitiativeAsReview(initiativeId, InitiativeType.COLLABORATIVE);
+        initiativeDao.updateInitiativeState(original, InitiativeState.PUBLISHED);
 
-        Initiative updated = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
-        assertThat(updated.getType().get(), is(InitiativeType.COLLABORATIVE));
-        assertThat(updated.getState(), is(InitiativeState.REVIEW));
+        assertThat(initiativeDao.getByIdWithOriginalAuthor(original).getState(), is(InitiativeState.PUBLISHED));
+        assertThat(initiativeDao.getByIdWithOriginalAuthor(someOther).getState(), is(InitiativeState.DRAFT));
     }
+
+    @Test
+    public void update_initiative_type() {
+        Long original = testHelper.createEmptyDraft(testMunicipality.getId());
+        Long someOther = testHelper.createEmptyDraft(testMunicipality.getId());
+
+        initiativeDao.updateInitiativeType(original, InitiativeType.COLLABORATIVE);
+
+        assertThat(initiativeDao.getByIdWithOriginalAuthor(original).getType().get(), is(InitiativeType.COLLABORATIVE));
+        assertThat(initiativeDao.getByIdWithOriginalAuthor(someOther).getType().isPresent(), is(false));
+    }
+
+
 
     @Test
     public void find_with_limit() {

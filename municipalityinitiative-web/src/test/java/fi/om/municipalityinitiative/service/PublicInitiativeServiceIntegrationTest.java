@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.service;
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
@@ -200,6 +201,12 @@ public class PublicInitiativeServiceIntegrationTest {
         service.editInitiativeDraft(initiativeId, editDto);
     }
 
+    @Test(expected = OperationNotAllowedException.class)
+    public void edit_initiative_fails_if_initiative_accepted() {
+        Long collectableAccepted = testHelper.createCollectableAccepted(testMunicipality.getId());
+        service.editInitiativeDraft(collectableAccepted, new InitiativeDraftUIEditDto());
+    }
+
     @Test
     public void editing_initiative_updates_all_required_fields() {
 
@@ -232,11 +239,23 @@ public class PublicInitiativeServiceIntegrationTest {
 
     }
 
+    @Test(expected = OperationNotAllowedException.class)
+    public void update_initiative_fails_if_initiative_sent() {
+        Long sent = testHelper.createSingleSent(testMunicipality.getId());
+        service.updateInitiative(sent, new InitiativeUIUpdateDto());
+    }
+
     @Test
     public void get_initiative_for_update_sets_all_required_information() {
         Long initiativeId = testHelper.createCollectableReview(testMunicipality.getId());
         InitiativeUIUpdateDto initiativeForUpdate = service.getInitiativeForUpdate(initiativeId, TestHelper.TEST_MANAGEMENT_HASH);
         ReflectionTestUtils.assertNoNullFields(initiativeForUpdate);
+    }
+
+    @Test(expected = OperationNotAllowedException.class)
+    public void get_initiative_for_update_fails_if_sent() {
+        Long sent = testHelper.createSingleSent(testMunicipality.getId());
+        service.getInitiativeForUpdate(sent, TestHelper.TEST_MANAGEMENT_HASH);
     }
 
     @Test
@@ -250,6 +269,12 @@ public class PublicInitiativeServiceIntegrationTest {
         assertThat(initiativeForEdit.getState(), is(InitiativeState.DRAFT));
 
         // Note that all fields are not set when preparing
+    }
+
+    @Test(expected = OperationNotAllowedException.class)
+    public void get_initiative_for_edit_fails_if_initiative_accepted() {
+        Long collectableAccepted = testHelper.createCollectableAccepted(testMunicipality.getId());
+        service.getInitiativeDraftForEdit(collectableAccepted);
     }
 
     @Test
@@ -275,8 +300,17 @@ public class PublicInitiativeServiceIntegrationTest {
         assertThat(updated.getType().get(), is(InitiativeType.SINGLE));
     }
 
+    @Test(expected = OperationNotAllowedException.class)
+    public void send_review_fails_if_initiative_accepted() {
+        Long accepted = testHelper.createCollectableAccepted(testMunicipality.getId());
+        service.sendReview(accepted, TestHelper.TEST_MANAGEMENT_HASH, true);
+    }
 
-
+    @Test(expected = OperationNotAllowedException.class)
+    public void publish_initiative_fails_if_not_accepted() {
+        Long review = testHelper.createCollectableReview(testMunicipality.getId());
+        service.publishInitiative(review, false);
+    }
 
     private static PrepareInitiativeDto initiativePrepareDtoWithFranchise() {
         PrepareInitiativeDto prepareInitiativeDto = new PrepareInitiativeDto();
