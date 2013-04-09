@@ -193,21 +193,23 @@
  *
  -->
 <#macro statusInfoComment type="" msg="">
-    <#if type == "html">
-        <h4 style="${h4!""}"><@u.message "email.commentFromOM" /></h4>
-        <p style="${pBottomMargin!""} font-style:italic;">${msg}</p>
-    <#else>
-        <@u.message "email.commentFromOM" />:
-        ${msg}
+    <#if msg != "">
+        <#if type == "html">
+            <h4 style="${h4!""}"><@u.message "email.commentFromOM" /></h4>
+            <p style="${pBottomMargin!""} font-style:italic;">${msg}</p>
+        <#else>
+            <@u.message "email.commentFromOM" />:
+            ${msg}
+        </#if>
     </#if>
 </#macro>
 
 <#macro publicViewLink type="">
     <#if type == "html">
-        <p style="${pBothMargins!""}">Alla on linkki aloitteesi julkiselle sivulle Kuntalaisaloite.fi-palvelussa.</p>
+        <p style="${pBothMargins!""}"><@u.message "email.publicViewLink" /></p>
         <p style="${pBothMargins!""} ${smallFont!""}"><@u.link urls.view(initiative.id) urls.view(initiative.id) /></p>
     <#else>
-        Alla on linkki aloitteesi julkiselle sivulle Kuntalaisaloite.fi-palvelussa.
+        <@u.message "email.publicViewLink" />
         
         ${urls.view(initiative.id)}
     </#if>
@@ -215,10 +217,10 @@
 
 <#macro adminViewLink type="">
     <#if type == "html">
-        <p style="${pBothMargins!""}">Kirjaudu kuntalaisaloitteen ylläpito-sivulle alla olevalla linkillä</p>
+        <p style="${pBothMargins!""}"><@u.message "email.adminViewLink" /></p>
         <p style="${pBothMargins!""} ${smallFont!""}"><@u.link urls.loginAuthor(initiative.id, initiative.managementHash.value) urls.loginAuthor(initiative.id, initiative.managementHash.value) /></p>
     <#else>
-        Kirjaudu kuntalaisaloitteen ylläpito-sivulle alla olevalla linkillä
+        <@u.message "email.adminViewLink" />
         
         ${urls.loginAuthor(initiative.id, initiative.managementHash.value)}
     </#if>

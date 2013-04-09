@@ -129,19 +129,20 @@
         </div>
     </#if>
     
-    <#assign startCollectingConfirm = false />
-    <#assign sendToMunicipalityConfirm = false />
-    
-    <#if RequestParameters['start-collecting']?? && RequestParameters['start-collecting'] == "confirm">
-        <#assign startCollectingConfirm = true />
-    </#if>        
-    
-    <#if RequestParameters['send-to-municipality']?? && RequestParameters['send-to-municipality'] == "confirm">
-        <#assign sendToMunicipalityConfirm = true />
-    </#if>
-    
-    <#-- TODO: Check for collectable -->
+    <#-- TODO: Disable start collecting after it is activated -->
+    <#--<#if managementSettings.allowSendToMunicipality>-->
     <#if managementSettings.allowPublish>
+        <#assign startCollectingConfirm = false />
+        <#assign sendToMunicipalityConfirm = false />
+        
+        <#if RequestParameters['start-collecting']?? && RequestParameters['start-collecting'] == "confirm">
+            <#assign startCollectingConfirm = true />
+        </#if>        
+        
+        <#if RequestParameters['send-to-municipality']?? && RequestParameters['send-to-municipality'] == "confirm">
+            <#assign sendToMunicipalityConfirm = true />
+        </#if>
+    
         <#if !sendToMunicipalityConfirm && !startCollectingConfirm>
             <div class="msg-block">
                 <div class="system-msg msg-info">
