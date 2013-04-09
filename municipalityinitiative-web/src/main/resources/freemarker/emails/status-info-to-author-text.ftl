@@ -2,20 +2,11 @@
 <#import "../components/email-utils.ftl" as u />
 <#import "../components/email-blocks.ftl" as b />
 
-<#-- Use statusTitleFi and statusInfoFi for TEXT message -->
+<#-- Use statusTitle and statusInfo for TEXT message -->
 <#include "../includes/status-info.ftl" />
 
-<#-- FINNISH -->
 <@b.initiativeDetails "text" />
 
-${statusInfoFi!""}
+<@u.message "email.status.info."+emailMessageType+".title" />
 
----------------------------------------
-
-<#-- SWEDISH -->
-${statusTitleSv!""}
-      
-<@b.initiativeDetails "text" />
-
-${statusInfoSv!""}
-
+${statusInfo!""}

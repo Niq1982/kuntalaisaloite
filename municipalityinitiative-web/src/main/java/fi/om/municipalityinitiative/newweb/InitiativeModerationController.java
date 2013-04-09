@@ -67,7 +67,7 @@ public class InitiativeModerationController extends BaseController{
         return MODERATION_VIEW;
     }
 
-    @RequestMapping(value = {MODERATION_FI, MODERATION_FI}, method = POST, params = ACTION_ACCEPT_INITIATIVE)
+    @RequestMapping(value = {MODERATION_FI, MODERATION_SV}, method = POST, params = ACTION_ACCEPT_INITIATIVE)
     public String acceptInitiative(@PathVariable("id") Long initiativeId,
                                    @RequestParam("comment") String comment,
                                    Locale locale, HttpServletRequest request) {
@@ -77,7 +77,7 @@ public class InitiativeModerationController extends BaseController{
         return redirectWithMessage(Urls.get(locale).moderation(initiativeId), RequestMessage.ACCEPT_INITIATIVE, request);
     }
 
-    @RequestMapping(value = {MODERATION_FI, MODERATION_FI}, method = POST, params = ACTION_REJECT_INITIATIVE)
+    @RequestMapping(value = {MODERATION_FI, MODERATION_SV}, method = POST, params = ACTION_REJECT_INITIATIVE)
     public String rejectInitiative(@PathVariable("id") Long initiativeId,
                                    @RequestParam("comment") String comment,
                                    Locale locale, HttpServletRequest request) {

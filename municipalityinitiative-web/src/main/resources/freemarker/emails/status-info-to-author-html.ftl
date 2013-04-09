@@ -4,13 +4,14 @@
 
 <#escape x as x?html>
 
-<#-- Use statusTitleHTMLFi and statusInfoHTMLFi for HTML message -->
+<#assign title><@u.message "email.status.info."+emailMessageType+".title" /></#assign>
+
 <#include "../includes/status-info.ftl" />
 
-<@l.emailHtml template="status-info-to-author" title=statusTitleHTMLFi!"">
+<@l.emailHtml template="status-info-to-author" title=title>
 
-    <@b.mainContentBlock statusTitleHTMLFi>
-        <#noescape>${statusInfoHTMLFi!""}</#noescape>
+    <@b.mainContentBlock title>
+        <#noescape>${statusInfoHTML!""}</#noescape>
     </@b.mainContentBlock>
     
     <@u.spacer "15" />
@@ -21,21 +22,6 @@
         <@u.spacer "15" />
     </#if>
 
-    <#-- FINNISH -->
-    <#--
-    <@eb.emailTemplate "fi" statusTitleHTMLFi!"">
-        <@eb.initiativeDetails "fi" "html" />
-        <#noescape>${statusInfoHTMLFi!""}</#noescape>
-        <@eb.emailBottom "fi" "html" />
-    </@eb.emailTemplate>-->
-    
-    <#-- SWEDISH -->      
-    <#--<@eb.emailTemplate "sv" statusTitleHTMLSv!"">
-        <@eb.initiativeDetails "sv" "html" />
-        <#noescape>${statusInfoHTMLSv!""}</#noescape>
-        <@eb.emailBottom "sv" "html" />
-    </@eb.emailTemplate>-->
-    
 </@l.emailHtml>
 
 </#escape> 

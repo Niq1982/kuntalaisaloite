@@ -13,7 +13,7 @@ public enum EmailMessageType {
     private final String messageKeySuffix;
     
     EmailMessageType() {
-        this.messageKeySuffix = name().replaceAll("_","-").toLowerCase();
+        this.messageKeySuffix = name();
     }
     
     public String toString() {
