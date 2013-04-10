@@ -281,7 +281,7 @@ public class PublicInitiativeServiceIntegrationTest {
     public void send_initiative_as_review_sents_state_as_review_and_leaves_type_as_null_if_not_single() {
         Long initiativeId = testHelper.createDraft(testMunicipality.getId());
 
-        service.sendReview(initiativeId, TestHelper.TEST_MANAGEMENT_HASH, false);
+        service.sendReview(initiativeId, TestHelper.TEST_MANAGEMENT_HASH, false, Locales.LOCALE_FI);
 
         Initiative updated = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
 
@@ -292,7 +292,7 @@ public class PublicInitiativeServiceIntegrationTest {
     @Test
     public void send_initiative_as_review_sents_state_as_review_and_type_as_single_if_single() {
         Long initiativeId = testHelper.createDraft(testMunicipality.getId());
-        service.sendReview(initiativeId, TestHelper.TEST_MANAGEMENT_HASH, true);
+        service.sendReview(initiativeId, TestHelper.TEST_MANAGEMENT_HASH, true, Locales.LOCALE_FI);
 
         Initiative updated = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
 
@@ -303,7 +303,7 @@ public class PublicInitiativeServiceIntegrationTest {
     @Test(expected = OperationNotAllowedException.class)
     public void send_review_fails_if_initiative_accepted() {
         Long accepted = testHelper.createCollectableAccepted(testMunicipality.getId());
-        service.sendReview(accepted, TestHelper.TEST_MANAGEMENT_HASH, true);
+        service.sendReview(accepted, TestHelper.TEST_MANAGEMENT_HASH, true, Locales.LOCALE_FI);
     }
 
     @Test(expected = OperationNotAllowedException.class)

@@ -147,11 +147,14 @@ public class PublicInitiativeService {
     }
 
     @Transactional(readOnly = false)
-    public void sendReview(Long initiativeId, String managementHash, boolean sendToMunicipalityRightAfterAcceptance) {
+    public void sendReview(Long initiativeId, String managementHash, boolean sendToMunicipalityRightAfterAcceptance, Locale locale) {
         assertAllowance("Send review", managementSettings(initiativeId).isAllowSendToReview());
         assertManagementHash(initiativeId, managementHash);
 
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.REVIEW);
+        
+        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
+        emailService.sendNotificationToModerator(initiative, locale);
 
         if (sendToMunicipalityRightAfterAcceptance) {
             initiativeDao.updateInitiativeType(initiativeId, InitiativeType.SINGLE);

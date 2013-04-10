@@ -108,7 +108,8 @@
 <#macro initiativeDetails type="" showProposal=true>
     <#if type == "html">
         <h4 style="${h4!""}">${initiative.name!""}</h4>
-        <p style="${pBottomMargin!""}"><@u.message "email.date.create" /> <@u.localDate initiative.createTime />
+        <#--<p style="${pBottomMargin!""}">${initiative.municipality.getLocalizedName(locale)!""}</p>-->
+        <p style="${pBothMargins!""}"><@u.message "email.date.create" /> <@u.localDate initiative.createTime />
         <#--<br/><@u.message "email.date.sent" /> <@u.localDate initiative.sentTime />--></p>
         <#if showProposal><@u.text initiative.proposal /></#if>
     <#else>

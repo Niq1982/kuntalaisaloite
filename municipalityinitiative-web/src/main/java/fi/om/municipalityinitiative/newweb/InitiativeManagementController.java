@@ -130,7 +130,7 @@ public class InitiativeManagementController extends BaseController {
 
         userService.assertManagementRightsForInitiative(initiativeId);
 
-        publicInitiativeService.sendReview(initiativeId, userService.getManagementHash(), true);
+        publicInitiativeService.sendReview(initiativeId, userService.getManagementHash(), true, locale);
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.SEND_TO_REVIEW, request);
     }
 
@@ -140,7 +140,7 @@ public class InitiativeManagementController extends BaseController {
 
         userService.assertManagementRightsForInitiative(initiativeId);
 
-        publicInitiativeService.sendReview(initiativeId, userService.getManagementHash(), false);
+        publicInitiativeService.sendReview(initiativeId, userService.getManagementHash(), false, locale);
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.SEND_TO_REVIEW, request);
     }
 
