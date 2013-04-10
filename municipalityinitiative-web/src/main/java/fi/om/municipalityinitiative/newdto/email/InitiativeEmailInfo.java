@@ -34,7 +34,10 @@ public class InitiativeEmailInfo {
         initiativeEmailInfo.setProposal(initiative.getProposal());
         initiativeEmailInfo.setCreateTime(initiative.getCreateTime());
         initiativeEmailInfo.setSentTime(initiative.getSentTime().get());
-        initiativeEmailInfo.setMunicipality(initiative.getMunicipality());
+        MunicipalityInfo municipalityInfo = new MunicipalityInfo();
+        municipalityInfo.setId(initiative.getMunicipality().getId());
+        municipalityInfo.setName(initiative.getMunicipality().getNameFi());
+        initiativeEmailInfo.setMunicipality(municipalityInfo);
         initiativeEmailInfo.setUrl(url);
         initiativeEmailInfo.setContactInfo(contactInfo);
 

@@ -23,7 +23,7 @@ public class InitiativeEmailInfoTest {
         ContactInfo contactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
 
         String url = "https://url.to.initiative";
-        InitiativeEmailInfo emailInfo = InitiativeEmailInfo.parse(contactInfo, InitiativeViewInfo.parse(initiative, Locales.LOCALE_FI), url);
+        InitiativeEmailInfo emailInfo = InitiativeEmailInfo.parse(contactInfo, InitiativeViewInfo.parse(initiative), url);
         assertThat(emailInfo.getContactInfo().getName(), is(contactInfo.getName()));
         assertThat(emailInfo.getContactInfo().getPhone(), is(contactInfo.getPhone()));
         assertThat(emailInfo.getContactInfo().getAddress(), is(contactInfo.getAddress()));

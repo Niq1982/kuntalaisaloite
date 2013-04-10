@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newdto.ui;
 
+@Deprecated
 public class MunicipalityInfo {
 
     private Long id;
