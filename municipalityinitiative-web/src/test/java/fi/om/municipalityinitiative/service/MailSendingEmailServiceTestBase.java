@@ -1,8 +1,10 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
+import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
+import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.util.JavaMailSenderFake;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.LocalDate;
@@ -63,6 +65,16 @@ public abstract class MailSendingEmailServiceTestBase {
         initiative.setCreateTime(new LocalDate(2010, 1, 1));
         initiative.setProposal(INITIATIVE_PROPOSAL);
         initiative.setName(INITIATIVE_NAME);
+        
+        Author author = new Author();
+        ContactInfo contactInfo = new ContactInfo();
+        contactInfo.setAddress(CONTACT_ADDRESS);
+        contactInfo.setName(CONTACT_NAME);
+        contactInfo.setEmail(CONTACT_EMAIL);
+        contactInfo.setPhone(CONTACT_PHONE);
+        author.setContactInfo(contactInfo);
+        
+        initiative.setAuthor(author);
 
         return initiative;
     }

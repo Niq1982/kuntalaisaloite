@@ -152,7 +152,7 @@ public class PublicInitiativeService {
         assertManagementHash(initiativeId, managementHash);
 
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.REVIEW);
-        
+         
         Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
         emailService.sendNotificationToModerator(initiative, locale);
 

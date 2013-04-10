@@ -17,10 +17,12 @@ public class IntegrationTestFakeEmailConfiguration {
     // TODO: Double check the need for emailSettings and that everything works correctly after we're sending emails again
 
     public static final String EMAIL_DEFAULT_REPLY_TO = "reply_to@example.com";
+    
+    public static final String EMAIL_DEFAULT_OM = "om@example.com";
 
     @Bean
     public EmailSettings emailSettings() {
-        return new EmailSettings(EMAIL_DEFAULT_REPLY_TO, Maybe.<String>absent(), false);
+        return new EmailSettings(EMAIL_DEFAULT_REPLY_TO, Maybe.<String>absent(), false, EMAIL_DEFAULT_OM);
     }
 
     @Bean

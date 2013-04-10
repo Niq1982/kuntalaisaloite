@@ -248,9 +248,10 @@ public class AppConfiguration {
     public EmailSettings emailSettings() {
         String defaultReplyTo = env.getRequiredProperty(PropertyNames.emailDefaultReplyTo);
         String testSendTo = env.getProperty(PropertyNames.testEmailSendTo);
+        String moderatorSendTo = env.getProperty(PropertyNames.emailSendToOM);
         boolean testConsoleOutput = env.getProperty(PropertyNames.testEmailConsoleOutput, Boolean.class, TEST_EMAIL_CONSOLE_OUTPUT_DEFAULT);
 
-        return new EmailSettings(defaultReplyTo, Maybe.fromNullable(testSendTo), testConsoleOutput);
+        return new EmailSettings(defaultReplyTo, Maybe.fromNullable(testSendTo), testConsoleOutput, moderatorSendTo);
     }
 
     @Bean
