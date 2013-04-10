@@ -1,8 +1,5 @@
 package fi.om.municipalityinitiative.service;
 
-import javax.mail.MessagingException;
-
-import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.Urls;
 import org.junit.Before;
@@ -32,7 +29,7 @@ public class MailSendingEmailServiceTestNew extends MailSendingEmailServiceTestB
     }
     
     @Test
-    public void collectable_notification_to_moderator() throws Exception {
+    public void review_notification_to_moderator_contains_all_information() throws Exception {
         emailService.sendNotificationToModerator(createDefaultInitiative(), Locales.LOCALE_FI);
           assertThat(getSingleRecipient(), is(CONTACT_EMAIL)); 
 //        assertThat(getSingleRecipient(), is(IntegrationTestFakeEmailConfiguration.EMAIL_DEFAULT_OM)); // XXX: Restore this when we want to send emails to om
@@ -47,5 +44,23 @@ public class MailSendingEmailServiceTestNew extends MailSendingEmailServiceTestB
         assertThat(getMessageContent().html, containsString(CONTACT_PHONE));
         assertThat(getMessageContent().html, containsString(urls.moderation(INITIATIVE_ID)));
         
+    }
+
+    @Test
+    public void single_to_municipality_contains_all_information() throws Exception {
+
+        emailService.sendNotCollectableToMunicipality(createDefaultInitiative(), MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
+
+        assertThat(getSingleSentMessage().getSubject(), is("Kuntalaisaloite: "+ INITIATIVE_MUNICIPALITY));
+        assertThat(getSingleRecipient(), is(CONTACT_EMAIL)); // XXX: MUNICIPALITY_EMAIL
+        assertThat(getMessageContent().html, containsString(INITIATIVE_NAME));
+        assertThat(getMessageContent().html, containsString(INITIATIVE_PROPOSAL));
+        assertThat(getMessageContent().html, containsString(INITIATIVE_MUNICIPALITY));
+        assertThat(getMessageContent().html, containsString(CONTACT_ADDRESS));
+        assertThat(getMessageContent().html, containsString(CONTACT_EMAIL));
+        assertThat(getMessageContent().html, containsString(CONTACT_NAME));
+        assertThat(getMessageContent().html, containsString(CONTACT_PHONE));
+        assertThat(getMessageContent().html, containsString(urls.view(INITIATIVE_ID)));
+
     }
 }

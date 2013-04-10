@@ -31,13 +31,13 @@ public class MailSendingEmailService implements EmailService {
     private EmailMessageConstructor emailMessageConstructor;
 
     @Override
-    public void sendNotCollectableToMunicipality(InitiativeEmailInfo emailInfo, String municipalityEmail, Locale locale) {
-
+    public void sendNotCollectableToMunicipality(Initiative initiative, String municipalityEmail, Locale locale) {
         emailMessageConstructor
                 .fromTemplate(NOT_COLLECTABLE_TEMPLATE)
-                .withSendTo(municipalityEmail)
-                .withSubject(messageSource.getMessage("email.not.collectable.municipality.subject", toArray(emailInfo.getName()), locale))
-                .withDataMap(toDataMap(emailInfo, locale))
+                //.withSendTo(municipalityEmail)
+                .withSendTo(initiative.getAuthor().getContactInfo().getEmail())
+                .withSubject(messageSource.getMessage("email.not.collectable.municipality.subject", toArray(initiative.getMunicipality().getLocalizedName(locale)), locale))
+                .withDataMap(toDataMap(initiative, locale))
                 .send();
     }
 
