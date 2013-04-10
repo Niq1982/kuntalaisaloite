@@ -1,8 +1,8 @@
 package fi.om.municipalityinitiative.newdto.email;
 
+import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
-import fi.om.municipalityinitiative.newdto.ui.MunicipalityInfo;
 import org.joda.time.LocalDate;
 
 public class InitiativeEmailInfo {
@@ -21,7 +21,7 @@ public class InitiativeEmailInfo {
 
     private ContactInfo contactInfo;
 
-    private MunicipalityInfo municipality;
+    private Municipality municipality;
 
     InitiativeEmailInfo() { }
 
@@ -34,10 +34,7 @@ public class InitiativeEmailInfo {
         initiativeEmailInfo.setProposal(initiative.getProposal());
         initiativeEmailInfo.setCreateTime(initiative.getCreateTime());
         initiativeEmailInfo.setSentTime(initiative.getSentTime().get());
-        MunicipalityInfo municipalityInfo = new MunicipalityInfo();
-        municipalityInfo.setId(initiative.getMunicipality().getId());
-        municipalityInfo.setName(initiative.getMunicipality().getNameFi());
-        initiativeEmailInfo.setMunicipality(municipalityInfo);
+        initiativeEmailInfo.setMunicipality(initiative.getMunicipality());
         initiativeEmailInfo.setUrl(url);
         initiativeEmailInfo.setContactInfo(contactInfo);
 
@@ -111,11 +108,11 @@ public class InitiativeEmailInfo {
         this.contactInfo = contactInfo;
     }
 
-    public void setMunicipality(MunicipalityInfo municipality) {
+    public void setMunicipality(Municipality municipality) {
         this.municipality = municipality;
     }
 
-    public MunicipalityInfo getMunicipality() {
+    public Municipality getMunicipality() {
         return municipality;
     }
 }
