@@ -80,7 +80,6 @@ public class InitiativeManagementController extends BaseController {
     public String updateView(@PathVariable("id") Long initiativeId,
                              Model model, Locale locale, HttpServletRequest request) {
 
-//        userService.assertManagementRightsForInitiative(initiativeId);
         userService.getRequiredLoginUserHolder(request).requireManagementRightsForInitiative(initiativeId);
 
         Urls urls = Urls.get(locale);

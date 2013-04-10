@@ -5,8 +5,6 @@ import fi.om.municipalityinitiative.newdto.service.User;
 import fi.om.municipalityinitiative.service.AccessDeniedException;
 import fi.om.municipalityinitiative.util.Maybe;
 
-import javax.validation.constraints.NotNull;
-
 public class LoginUserHolder {
 
     Maybe<Initiative> initiative;
