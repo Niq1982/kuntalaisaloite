@@ -9,7 +9,7 @@ import java.util.Locale;
 
 @JsonPropertyOrder(alphabetic = true)
 public class Municipality {
-    private long id;
+    private Long id;
     private String finnishName;
     private String swedishName;
 
@@ -20,7 +20,7 @@ public class Municipality {
     }
 
     @JsonId(path= Urls.MUNICIPALITY)
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

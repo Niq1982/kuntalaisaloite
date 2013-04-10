@@ -196,7 +196,7 @@
     <select name="${spring.status.expression}" id="${spring.status.expression}" ${attributes} class="chzn-select ${cssClass}" data-initiative-municipality="${data}" data-placeholder="<@u.message defaultOption />" <#if allowSingleDeselect>data-allow-single-deselect="allow"</#if>>
         <option value=""><@u.message defaultOption /></option>
         <#list options as option>
-            <option value="${option.id}"<@checkSelected option.id preSelected />>${option.name}</option>
+            <option value="${option.id}"<@checkSelected option.id preSelected />>${option.getName(locale)}</option>
         </#list>
     </select>
 </#macro>

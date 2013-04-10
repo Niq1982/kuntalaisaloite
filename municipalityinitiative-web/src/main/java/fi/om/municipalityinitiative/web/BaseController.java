@@ -2,10 +2,9 @@ package fi.om.municipalityinitiative.web;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
+import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
-import fi.om.municipalityinitiative.newdto.ui.MunicipalityInfo;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.newdto.ui.Participants;
 import fi.om.municipalityinitiative.service.UserService;
@@ -133,7 +132,7 @@ public class BaseController {
      *  XXX: Bad code.
      *  Not yet fully deprecated, but will be replaced with something nicer when new collect-view is implemented
      */
-    protected void addModelAttributesToCollectView(Model model, InitiativeViewInfo municipalityInitiative, List<MunicipalityInfo> allMunicipalities, ParticipantCount participantCount, Participants participants) {
+    protected void addModelAttributesToCollectView(Model model, InitiativeViewInfo municipalityInitiative, List<Municipality> allMunicipalities, ParticipantCount participantCount, Participants participants) {
         model.addAttribute("initiative", municipalityInitiative);
         model.addAttribute("municipalities", allMunicipalities);
         model.addAttribute("participantCount", participantCount);

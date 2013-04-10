@@ -15,7 +15,6 @@
 -->
 <#assign page="page.find" />
 
-<#assign searchMunicipality = RequestParameters['municipality']!"" />
 <#assign searchTerm = RequestParameters['search']!"" />
 
 <@l.main "page.find" pageTitle!"">
@@ -101,10 +100,10 @@
 </div>
 
 <div class="search-terms">
-    <#if searchMunicipality != "">
-        <h2><@u.message "searchResults.initiativesInMunicipality" />: ${currentMunicipality!""}</h2>
+    <#if currentMunicipality.present>
+        <h2><@u.message "searchResults.initiativesInMunicipality" />: ${currentMunicipality.value.getName(locale)}</h2>
     </#if>
-    
+
     <#--
     <#if searchTerm != "">
         <p>Haun tulokset hakusanalle: "<span class="search-term">${searchTerm}</span>"</p>

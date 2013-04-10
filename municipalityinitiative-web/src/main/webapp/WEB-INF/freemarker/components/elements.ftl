@@ -78,7 +78,7 @@
 
     <div class="top-margin cf">
         <div class="column col-1of2">
-            <p><@u.message key="participantCount.franchise.total" args=[initiative.municipality.name!""] /><br />
+            <p><@u.message key="participantCount.franchise.total" args=[initiative.municipality.name] /><br />
             <span class="user-count">${participantCount.franchise.total!""}</span><br />
             <#if (participantCount.franchise.total > 0)>
                 <#if (participantCount.franchise.publicNames > 0)><a class="trigger-tooltip" href="${urls.participantList(initiative.id)}" title="<@u.message key="participantCount.publicNames.show"/>"><@u.message key="participantCount.publicNames" args=[participantCount.franchise.publicNames!""] /></a><br /></#if>
@@ -86,7 +86,7 @@
             </#if>
         </div>
         <div class="column col-1of2 last">
-            <p><@u.message key="participantCount.noFranchise.total" args=[initiative.municipality.name!""] /><br />
+            <p><@u.message key="participantCount.noFranchise.total" args=[initiative.municipality.name] /><br />
             <span class="user-count">${participantCount.noFranchise.total!""}</span><br>
             <#if (participantCount.noFranchise.total > 0)>
                 <#if (participantCount.noFranchise.publicNames > 0)><a class="trigger-tooltip js-show-no-franchise-list" href="${urls.participantList(initiative.id)}?show=others" title="<@u.message key="participantCount.publicNames.show"/>"><@u.message key="participantCount.publicNames" args=[participantCount.noFranchise.publicNames!""] /></a><br></#if>

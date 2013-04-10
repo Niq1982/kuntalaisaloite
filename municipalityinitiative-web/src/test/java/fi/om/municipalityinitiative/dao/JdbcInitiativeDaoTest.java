@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
+import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUIUpdateDto;
@@ -40,14 +41,13 @@ public class JdbcInitiativeDaoTest {
     @Resource
     TestHelper testHelper;
 
-    private MunicipalityInfo testMunicipality;
+    private Municipality testMunicipality;
 
     @Before
     public void setup() {
         testHelper.dbCleanup();
-        testMunicipality = new MunicipalityInfo();
-        testMunicipality.setName("Test municipality");
-        testMunicipality.setId(testHelper.createTestMunicipality(testMunicipality.getName()));
+        String municipalityName = "Test municipality";
+        testMunicipality = new Municipality(testHelper.createTestMunicipality(municipalityName), municipalityName, municipalityName);
     }
 
     // Create and get are tested at MunicipalityInitiativeServiceIntegrationTests
