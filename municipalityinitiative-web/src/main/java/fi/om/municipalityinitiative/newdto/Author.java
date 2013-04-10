@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 
 public class Author {
 
+    private Long id;
     private Municipality municipality;
     private ContactInfo contactInfo;
 
@@ -22,5 +23,13 @@ public class Author {
 
     public void setContactInfo(ContactInfo contactInfo) {
         this.contactInfo = contactInfo;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
+import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
@@ -147,12 +148,12 @@ public class PublicInitiativeService {
     }
 
     @Transactional(readOnly = false)
-    public void sendReview(Long initiativeId, String managementHash, boolean sendToMunicipalityRightAfterAcceptance, Locale locale) {
+    public void sendReview(Long initiativeId, LoginUserHolder loginUserHolder, boolean sendToMunicipalityRightAfterAcceptance, Locale locale) {
+        loginUserHolder.requireManagementRightsForInitiative(initiativeId);
         assertAllowance("Send review", managementSettings(initiativeId).isAllowSendToReview());
-        assertManagementHash(initiativeId, managementHash);
 
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.REVIEW);
-         
+        
         Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
         emailService.sendNotificationToModerator(initiative, locale);
 

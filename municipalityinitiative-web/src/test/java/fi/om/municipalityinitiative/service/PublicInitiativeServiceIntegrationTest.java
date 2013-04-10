@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
+import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
@@ -31,6 +32,10 @@ import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.stub;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={IntegrationTestFakeEmailConfiguration.class})
@@ -57,6 +62,16 @@ public class PublicInitiativeServiceIntegrationTest {
     private static MunicipalityInfo testMunicipality;
 
     private static MunicipalityInfo participantMunicipality;
+
+    private static LoginUserHolder authorLoginUserHolder;
+
+    private static LoginUserHolder unknownLoginUserHolder;
+
+    static {
+        authorLoginUserHolder = mock(LoginUserHolder.class);
+        unknownLoginUserHolder = mock(LoginUserHolder.class);
+        doThrow(new AccessDeniedException("Access denied")).when(unknownLoginUserHolder).requireManagementRightsForInitiative(anyLong());
+    }
 
     @Before
     public void setup() {
@@ -281,7 +296,7 @@ public class PublicInitiativeServiceIntegrationTest {
     public void send_initiative_as_review_sents_state_as_review_and_leaves_type_as_null_if_not_single() {
         Long initiativeId = testHelper.createDraft(testMunicipality.getId());
 
-        service.sendReview(initiativeId, TestHelper.TEST_MANAGEMENT_HASH, false, Locales.LOCALE_FI);
+        service.sendReview(initiativeId, authorLoginUserHolder, false, Locales.LOCALE_FI);
 
         Initiative updated = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
 
@@ -292,7 +307,7 @@ public class PublicInitiativeServiceIntegrationTest {
     @Test
     public void send_initiative_as_review_sents_state_as_review_and_type_as_single_if_single() {
         Long initiativeId = testHelper.createDraft(testMunicipality.getId());
-        service.sendReview(initiativeId, TestHelper.TEST_MANAGEMENT_HASH, true, Locales.LOCALE_FI);
+        service.sendReview(initiativeId, authorLoginUserHolder, true, Locales.LOCALE_FI);
 
         Initiative updated = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
 
@@ -303,7 +318,14 @@ public class PublicInitiativeServiceIntegrationTest {
     @Test(expected = OperationNotAllowedException.class)
     public void send_review_fails_if_initiative_accepted() {
         Long accepted = testHelper.createCollectableAccepted(testMunicipality.getId());
-        service.sendReview(accepted, TestHelper.TEST_MANAGEMENT_HASH, true, Locales.LOCALE_FI);
+        service.sendReview(accepted, authorLoginUserHolder, true, Locales.LOCALE_FI);
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void send_review_fails_if_no_right_to_initiative() {
+        Long accepted = testHelper.createCollectableAccepted(testMunicipality.getId());
+        service.sendReview(accepted, unknownLoginUserHolder, true, Locales.LOCALE_FI);
+
     }
 
     @Test(expected = OperationNotAllowedException.class)

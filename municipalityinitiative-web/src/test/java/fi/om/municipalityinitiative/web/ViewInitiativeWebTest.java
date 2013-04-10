@@ -3,6 +3,8 @@ package fi.om.municipalityinitiative.web;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -35,7 +37,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
     public void management_view_opens_if_logged_in_with_correct_management_hash() {
         loginAsAuthor(draftInitiativeId);
         open(urls.management(draftInitiativeId));
-        assertThat(driver.findElement(By.tagName("h2")).getText(), is(getMessage(MANAGEMENT_WARNING_TITLE)));
+        assertThat(getElement(By.tagName("h2")).getText(), is(getMessage(MANAGEMENT_WARNING_TITLE)));
     }
 
     @Test
@@ -73,14 +75,14 @@ public class ViewInitiativeWebTest extends WebTestBase {
     public void not_published_initiative_can_be_viewed_if_logged_in_as_author() {
         loginAsAuthor(draftInitiativeId);
         open(urls.view(draftInitiativeId));
-        assertThat(driver.findElement(By.tagName("h2")).getText(), is(getMessage(INITIATIVE_VIEW_HEADER)));
+        assertThat(getElement(By.tagName("h2")).getText(), is(getMessage(INITIATIVE_VIEW_HEADER)));
     }
 
     @Test
     public void even_drafts_may_be_viewed_if_logged_in_as_om_user() {
         loginAsOmUser();
         open(urls.view(draftInitiativeId));
-        assertThat(driver.findElement(By.tagName("h2")).getText(), is(getMessage(INITIATIVE_VIEW_HEADER)));
+        assertThat(getElement(By.tagName("h2")).getText(), is(getMessage(INITIATIVE_VIEW_HEADER)));
     }
 
     @Test

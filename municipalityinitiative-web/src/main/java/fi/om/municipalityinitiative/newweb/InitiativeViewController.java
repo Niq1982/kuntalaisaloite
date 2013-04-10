@@ -74,7 +74,8 @@ public class InitiativeViewController extends BaseController {
         InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId, locale);
 
         if (initiativeInfo.getState() != InitiativeState.PUBLISHED && !userService.isOmUser()) {
-            userService.assertManagementRightsForInitiative(initiativeId);
+//            userService.assertManagementRightsForInitiative(initiativeId);
+            userService.getRequiredLoginUserHolder(request).requireManagementRightsForInitiative(initiativeId);
         }
 
         model.addAttribute(ALT_URI_ATTR, urls.alt().view(initiativeId));

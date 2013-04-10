@@ -16,6 +16,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -278,7 +279,14 @@ public abstract class WebTestBase {
     }
 
     protected void assert404() {
-        assertThat(driver.findElement(By.tagName("h1")).getText(), is(getMessage("error.404.title")));
+        assertThat(getElement(By.tagName("h1")).getText(), is(getMessage("error.404.title")));
     }
 
+    protected WebElement getElement(By by) {
+        try {
+            return driver.findElement(by);
+        } catch (NoSuchElementException e) {
+            throw new NoSuchElementException("\nPage " + driver.getCurrentUrl() + "\nTitle: " + driver.getTitle()+"\nCause: " +e.getMessage(), e);
+        }
+    }
 }

@@ -457,6 +457,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     contactInfo.setName(row.get(QParticipant.participant.name));
 
                     Author author = new Author();
+                    author.setId(row.get(QAuthor.author.id));
                     author.setContactInfo(contactInfo);
                     author.setMunicipality(parseMunicipality(row));
 
@@ -553,6 +554,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     contactInfo.setPhone(row.get(QAuthor.author.phone));
                     contactInfo.setName(row.get(QAuthor.author.name));
                     contactInfo.setEmail(row.get(QAuthor.author.email));
+                    author.setId(row.get(QAuthor.author.id));
                     author.setContactInfo(contactInfo);
                     author.setMunicipality(parseMunicipality(row, AUTHOR_MUNICIPALITY));
 

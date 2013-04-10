@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.service;
 import fi.om.municipalityinitiative.newdao.FakeUserDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.UserDao;
+import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.User;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -11,7 +12,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 public class UserService {
@@ -28,6 +28,51 @@ public class UserService {
         request.getSession().setAttribute(LOGIN_USER_PARAMETER, userDao.getUser(userName, password));
     }
 
+    public void login(Long initiativeId, String managementHash, HttpServletRequest request) {
+        request.getSession().setAttribute(LOGIN_INITIATIVE_PARAMETER, initiativeDao.getById(initiativeId, managementHash));
+        request.getSession().setAttribute(LOGIN_USER_PARAMETER, User.normalUser());
+    }
+
+    public LoginUserHolder getRequiredLoginUserHolder(HttpServletRequest request) {
+        Maybe<LoginUserHolder> loginUserHolder = parseLoginUser(request.getSession());
+
+        if (loginUserHolder.isNotPresent()) {
+            throw new AccessDeniedException("Not logged in as author");
+        }
+
+        return loginUserHolder.get();
+    }
+
+    public LoginUserHolder getRequiredOmLoginUserHolder(HttpServletRequest request) {
+
+        Maybe<LoginUserHolder> loginUserHolder = parseLoginUser(request.getSession());
+
+        if (loginUserHolder.isNotPresent()) {
+            throw new AuthenticationRequiredException();
+        }
+        if (!loginUserHolder.get().getUser().isOmUser()) {
+            throw new AccessDeniedException("No privileges");
+        }
+
+        return loginUserHolder.get();
+    }
+
+    private static Maybe<LoginUserHolder> parseLoginUser(HttpSession session) {
+
+        if (session == null)
+            return Maybe.absent();
+
+        User user = (User) session.getAttribute(LOGIN_USER_PARAMETER);
+
+        if (user == null)
+            return Maybe.absent();
+
+
+        return Maybe.of(new LoginUserHolder(
+                user,
+                Maybe.fromNullable((Initiative) session.getAttribute(LOGIN_INITIATIVE_PARAMETER))));
+    }
+
     public void requireOmUser() {
         Maybe<User> maybeUser = getUser();
         if (!maybeUser.isPresent()) {
@@ -40,7 +85,6 @@ public class UserService {
 
     public static Maybe<User> getUser() {
         String loginUserParameter = LOGIN_USER_PARAMETER;
-
         return getObject(loginUserParameter);
     }
 
@@ -72,22 +116,9 @@ public class UserService {
 
     }
 
-    public void login(Long initiativeId, String managementHash, HttpServletRequest request) {
-        request.getSession().setAttribute(LOGIN_INITIATIVE_PARAMETER, initiativeDao.getById(initiativeId, managementHash));
-        request.getSession().setAttribute(LOGIN_USER_PARAMETER, User.normalUser());
-    }
-
     @Deprecated
     public String getManagementHash() {
         return ((Initiative) getSession().get().getAttribute(LOGIN_INITIATIVE_PARAMETER)).getManagementHash().get();
-    }
-
-    public void assertManagementRightsForInitiative(Long initiativeId) {
-
-        Maybe<Initiative> initiativeMaybe = getObject(LOGIN_INITIATIVE_PARAMETER);
-        if (!initiativeMaybe.isPresent() || !initiativeMaybe.get().getId().equals(initiativeId)) {
-            throw new AccessDeniedException("No access for initiative with id: " + initiativeId);
-        }
     }
 
     public boolean isOmUser() {
