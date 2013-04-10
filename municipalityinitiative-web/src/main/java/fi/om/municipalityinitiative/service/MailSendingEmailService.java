@@ -110,7 +110,8 @@ public class MailSendingEmailService implements EmailService {
 
         emailMessageConstructor
                 .fromTemplate(NOTIFICATION_TO_MODERATOR)
-                .withSendTo("mikko.lehtinen@solita.fi")
+                //.withSendToModerator()
+                .withSendTo(initiative.getAuthor().getContactInfo().getEmail())
                 .withSubject(messageSource.getMessage("email.notification.to.moderator.subject", toArray(initiative.getName()), locale))
                 .withDataMap(toDataMap(initiative, locale))
                 .send();

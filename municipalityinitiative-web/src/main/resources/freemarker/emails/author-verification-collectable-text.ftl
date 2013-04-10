@@ -5,7 +5,7 @@
     <@b.comment "text" initiative.comment />
 </#if>
 
-<@u.message "email.initiative" /> - ${initiative.municipality.name!""}
+<@u.message "email.initiative" /> - ${initiative.municipality.getLocalizedName(locale)!""}
 
 TODO: Vahvistusviesti
 

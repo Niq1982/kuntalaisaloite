@@ -131,9 +131,7 @@
         <#-- TODO: sent date -->
         <@b.initiativeDetails "text" />
         
-        Yhteystiedot
-        
-        [TODO]    
+        <@b.contactInfo "text" />
     </#assign>
     
     <#-- HTML -->
@@ -141,8 +139,7 @@
         <#-- TODO: sent date -->
         <@b.initiativeDetails "html" />
         
-        <h4 style="${h4!""}">Yhteystiedot</h4>
-        <p style="${pBottomMargin!""}">[TODO]</p>
+        <@b.contactInfo "html" />
     </#assign>
     
 </#if>

@@ -168,6 +168,11 @@ public class EmailMessageConstructor {
             this.sendTo = sendTo;
             return this;
         }
+        
+        public EmailMessageDraft withSendToModerator() {
+            this.sendTo = emailSettings.getModeratorEmail();
+            return this;
+        }
 
         public EmailMessageDraft withDataMap(Map<String, Object> dataMap) {
             this.dataMap = dataMap;

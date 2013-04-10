@@ -6,10 +6,11 @@
 
 <#escape x as x?html> 
 
-<#assign title><@u.message "email.initiative" /> - ${initiative.municipality.name!""}</#assign>
+<#assign title><@u.message "email.initiative" /> - <#-- ${initiative.municipality.getLocalizedName(locale)!""} --></#assign>
 
 <@l.emailHtml "municipality-not-collectable" title>
 
+<#--
     <@b.mainContentBlock title>
         <@b.initiativeDetails "html" />
     </@b.mainContentBlock>
@@ -21,6 +22,7 @@
     </@b.contentBlock>
     
     <@u.spacer "15" />
+-->
 
 </@l.emailHtml>
 

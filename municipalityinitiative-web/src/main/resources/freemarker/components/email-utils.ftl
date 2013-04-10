@@ -120,7 +120,7 @@
  * Generates a link so that we could ensure that link styles wouldn't differ in various email-clients.
  * 
  * @param title is the label of the link
- * @param title is the URI of the link
+ * @param url is the URI of the link
  *
  * FIXME: Known issue: Gmail changes this anchor to a span and then wraps the span with it's own anchor
  -->

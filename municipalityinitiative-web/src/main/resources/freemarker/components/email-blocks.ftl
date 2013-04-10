@@ -108,12 +108,14 @@
 <#macro initiativeDetails type="" showProposal=true>
     <#if type == "html">
         <h4 style="${h4!""}">${initiative.name!""}</h4>
-        <#--<p style="${pBottomMargin!""}">${initiative.municipality.getLocalizedName(locale)!""}</p>-->
+        <p style="${pBottomMargin!""}">${initiative.municipality.getLocalizedName(locale)!""}</p>
         <p style="${pBothMargins!""}"><@u.message "email.date.create" /> <@u.localDate initiative.createTime />
         <#--<br/><@u.message "email.date.sent" /> <@u.localDate initiative.sentTime />--></p>
         <#if showProposal><@u.text initiative.proposal /></#if>
     <#else>
         "${initiative.name!""}"
+        ${initiative.municipality.getLocalizedName(locale)!""}
+        
         <@u.message "email.date.create" /> <@u.localDate initiative.createTime />
 
         <#if showProposal>${initiative.proposal}</#if>
@@ -128,19 +130,21 @@
  * @param type 'text' or 'html'
  -->
 <#macro contactInfo type="">
+    <#assign obj=initiative.author.contactInfo />
+
     <#if type == "html">
         <h4 style="${h4!""}"><@u.message "email.contact.info" /></h4>
-        <p style="${pBottomMargin!""}">${initiative.contactInfo.name!""}<br/>
-        <#if initiative.contactInfo.email?? && initiative.contactInfo.email != "">${initiative.contactInfo.email!""}<br/></#if>
-        <#if initiative.contactInfo.phone?? && initiative.contactInfo.phone != "">${initiative.contactInfo.phone!""}<br/></#if>
-        <#if initiative.contactInfo.address?? && initiative.contactInfo.address != "">${initiative.contactInfo.address!""}</#if>
+        <p style="${pBottomMargin!""}">${obj.name!""}<br/>
+        <#if obj.email?? && obj.email != ""><@u.link "mailto:"+obj.email obj.email /><br/></#if>
+        <#if obj.phone?? && obj.phone != "">${obj.phone!""}<br/></#if>
+        <#if obj.address?? && obj.address != ""><#noescape>${obj.address?replace('\n','<br/>')!""}</#noescape></#if>
         </p>
     <#else>
         <@u.message "email.contact.info" />:
-        ${initiative.contactInfo.name!""}
-        ${initiative.contactInfo.email!""}
-        ${initiative.contactInfo.phone!""}
-        ${initiative.contactInfo.address!""}
+        ${obj.name!""}
+        ${obj.email!""}
+        ${obj.phone!""}
+        ${obj.address!""}
     </#if>
 </#macro>
 
