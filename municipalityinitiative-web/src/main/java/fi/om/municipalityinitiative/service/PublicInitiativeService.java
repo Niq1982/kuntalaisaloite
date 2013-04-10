@@ -177,13 +177,7 @@ public class PublicInitiativeService {
             initiativeDao.markInitiativeAsSent(initiativeId);
             Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
             emailService.sendStatusEmail(initiative,initiative.getAuthor().getContactInfo().getEmail(), EmailMessageType.SENT_TO_MUNICIPALITY, locale);
-            // TODO: Send email to municipality
-        }
-    }
-
-    private void assertManagementHash(Long initiativeId, String managementHash) {
-        if (!initiativeDao.getByIdWithOriginalAuthor(initiativeId).getManagementHash().get().equals(managementHash)) {
-            throw new AccessDeniedException("Invalid management hash");
+            emailService.sendNotCollectableToMunicipality(initiative, municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), locale);
         }
     }
 

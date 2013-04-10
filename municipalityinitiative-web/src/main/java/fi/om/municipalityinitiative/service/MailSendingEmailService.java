@@ -1,8 +1,6 @@
 package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Maps;
-import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
-import fi.om.municipalityinitiative.newdto.email.InitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.util.Task;
 import fi.om.municipalityinitiative.web.Urls;
@@ -18,9 +16,7 @@ import java.util.Map;
 public class MailSendingEmailService implements EmailService {
 
     private static final String INITIATIVE_PREPARE_VERIFICATION_TEMPLATE = "initiative-create-verification";
-    private static final String INITIATIVE_CREATED_TEMPLATE = "initiative-created";
     private static final String NOT_COLLECTABLE_TEMPLATE = "municipality-not-collectable";
-    private static final String COLLECTABLE_TEMPLATE = "municipality-collectable";
     private static final String STATUS_INFO_TEMPLATE = "status-info-to-author";
     private static final String NOTIFICATION_TO_MODERATOR = "notification-to-moderator";
 
@@ -66,45 +62,10 @@ public class MailSendingEmailService implements EmailService {
                 .send();
     }
 
-    @Override
-    public void sendNotCollectableToAuthor(InitiativeEmailInfo emailInfo, Locale locale) {
-
-        String name = emailInfo.getName();
-        emailMessageConstructor
-                .fromTemplate(NOT_COLLECTABLE_TEMPLATE)
-                .withSendTo(emailInfo.getContactInfo().getEmail())
-                .withSubject(messageSource.getMessage("email.not.collectable.author.subject", toArray(name), locale))
-                .withDataMap(toDataMap(emailInfo, locale))
-                .send();
-    }
-
     private static String[] toArray(String... name) {
         return name;
     }
 
-    @Override
-    public void sendCollectableToMunicipality(CollectableInitiativeEmailInfo emailInfo, String municipalityEmail, Locale locale) {
-
-        emailMessageConstructor
-                .fromTemplate(COLLECTABLE_TEMPLATE)
-                .withSendTo(emailInfo.getContactInfo().getEmail())
-                .withSubject(messageSource.getMessage("email.not.collectable.municipality.subject", toArray(emailInfo.getName()), locale))
-                .withDataMap(toDataMap(emailInfo, locale))
-                .withAttachment(emailInfo)
-                .send();
-    }
-
-    @Override
-    public void sendCollectableToAuthor(CollectableInitiativeEmailInfo emailInfo, Locale locale) {
-
-        emailMessageConstructor
-                .fromTemplate(COLLECTABLE_TEMPLATE)
-                .withSendTo(emailInfo.getContactInfo().getEmail())
-                .withSubject(messageSource.getMessage("email.not.collectable.author.subject", toArray(emailInfo.getName()), locale))
-                .withDataMap(toDataMap(emailInfo, locale))
-                .send();
-    }
-    
     @Override
     public void sendNotificationToModerator(Initiative initiative, Locale locale) {
 
