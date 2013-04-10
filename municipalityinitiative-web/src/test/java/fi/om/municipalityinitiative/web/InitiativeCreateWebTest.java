@@ -151,7 +151,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         inputText("name", NAME);
         inputText("proposal", PROPOSAL);
         
-        assertEquals("author_email@example.com", driver.findElement(By.name("contactInfo.email")).getAttribute("value"));
+        assertEquals("author_email@example.com", getElement(By.name("contactInfo.email")).getAttribute("value"));
         
         inputText("contactInfo.name", CONTACT_NAME);
         inputText("contactInfo.phone", CONTACT_PHONE);
@@ -206,6 +206,6 @@ public class InitiativeCreateWebTest extends WebTestBase {
     }
 
     private WebElement getSelectByLabel(String labelText) {
-        return driver.findElement(By.xpath("//label[contains(normalize-space(text()), '" + labelText + "')]/following-sibling::select"));
+        return getElement(By.xpath("//label[contains(normalize-space(text()), '" + labelText + "')]/following-sibling::select"));
     }
 }

@@ -48,7 +48,8 @@ public class InitiativeManagementController extends BaseController {
     public String managementView(@PathVariable("id") Long initiativeId,
                                  Model model, Locale locale, HttpServletRequest request) {
 
-        userService.assertManagementRightsForInitiative(initiativeId);
+//        userService.assertManagementRightsForInitiative(initiativeId);
+        userService.getRequiredLoginUserHolder(request).requireManagementRightsForInitiative(initiativeId);
 
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().getManagement(initiativeId));
@@ -79,7 +80,8 @@ public class InitiativeManagementController extends BaseController {
     public String updateView(@PathVariable("id") Long initiativeId,
                              Model model, Locale locale, HttpServletRequest request) {
 
-        userService.assertManagementRightsForInitiative(initiativeId);
+//        userService.assertManagementRightsForInitiative(initiativeId);
+        userService.getRequiredLoginUserHolder(request).requireManagementRightsForInitiative(initiativeId);
 
         Urls urls = Urls.get(locale);
         ManagementSettings managementSettings = publicInitiativeService.managementSettings(initiativeId);
@@ -128,7 +130,8 @@ public class InitiativeManagementController extends BaseController {
     public String sendToReview(@PathVariable("id") Long initiativeId,
                                Locale locale, HttpServletRequest request) {
 
-        userService.assertManagementRightsForInitiative(initiativeId);
+//        userService.assertManagementRightsForInitiative(initiativeId);
+        userService.getRequiredLoginUserHolder(request).requireManagementRightsForInitiative(initiativeId);
 
         publicInitiativeService.sendReview(initiativeId, userService.getManagementHash(), true);
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.SEND_TO_REVIEW, request);
@@ -138,7 +141,8 @@ public class InitiativeManagementController extends BaseController {
     public String sendToReviewForCollecting(@PathVariable("id") Long initiativeId,
                                             Locale locale, HttpServletRequest request) {
 
-        userService.assertManagementRightsForInitiative(initiativeId);
+//        userService.assertManagementRightsForInitiative(initiativeId);
+        userService.getRequiredLoginUserHolder(request).requireManagementRightsForInitiative(initiativeId);
 
         publicInitiativeService.sendReview(initiativeId, userService.getManagementHash(), false);
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.SEND_TO_REVIEW, request);
@@ -148,7 +152,8 @@ public class InitiativeManagementController extends BaseController {
     public String publishAndStartCollecting(@PathVariable("id") Long initiativeId,
                                Locale locale, HttpServletRequest request) {
 
-        userService.assertManagementRightsForInitiative(initiativeId);
+//        userService.assertManagementRightsForInitiative(initiativeId);
+        userService.getRequiredLoginUserHolder(request).requireManagementRightsForInitiative(initiativeId);
 
         publicInitiativeService.publishInitiative(initiativeId, true, locale);
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.START_COLLECTING, request);
@@ -158,7 +163,8 @@ public class InitiativeManagementController extends BaseController {
     public String publishAndSendToMunicipality(@PathVariable("id") Long initiativeId,
                                             Locale locale, HttpServletRequest request) {
 
-        userService.assertManagementRightsForInitiative(initiativeId);
+//        userService.assertManagementRightsForInitiative(initiativeId);
+        userService.getRequiredLoginUserHolder(request).requireManagementRightsForInitiative(initiativeId);
 
         publicInitiativeService.publishInitiative(initiativeId, false, locale);
         return redirectWithMessage(Urls.get(locale).view(initiativeId),RequestMessage.SAVE_AND_SEND, request);

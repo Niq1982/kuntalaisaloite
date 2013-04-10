@@ -3,18 +3,19 @@ package fi.om.municipalityinitiative.newdto;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.User;
 import fi.om.municipalityinitiative.service.AccessDeniedException;
+import fi.om.municipalityinitiative.util.Maybe;
 
 public class LoginUserHolder {
 
-    Initiative initiative;
+    Maybe<Initiative> initiative;
     User user;
 
-    public LoginUserHolder(User user, Initiative initiative) {
+    public LoginUserHolder(User user, Maybe<Initiative> initiative) {
         this.user = user;
         this.initiative = initiative;
     }
 
-    public Initiative getInitiative() {
+    public Maybe<Initiative> getInitiative() {
         return initiative;
     }
 
@@ -23,7 +24,7 @@ public class LoginUserHolder {
     }
 
     public void requireManagementRightsForInitiative(Long initiativeId) {
-        if (initiative.getId().equals(initiativeId)) {
+        if (initiative.isNotPresent() || !initiative.get().getId().equals(initiativeId)) {
             throw new AccessDeniedException("No access for initiative with id: " + initiativeId);
         }
     }

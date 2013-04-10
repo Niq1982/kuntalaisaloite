@@ -34,20 +34,6 @@ public class UserService {
         request.getSession().setAttribute(LOGIN_USER_PARAMETER, User.normalUser());
     }
 
-    public LoginUserHolder getOmLoginUser(HttpServletRequest request) {
-
-        if (request.getSession() == null) {
-            throw new AuthenticationRequiredException();
-        }
-        LoginUserHolder loginUserHolder = parseLoginUser(request.getSession());
-
-        if (!loginUserHolder.getUser().isOmUser()) {
-            throw new AccessDeniedException("No permission");
-        }
-        return loginUserHolder;
-    }
-
-
     public LoginUserHolder getRequiredLoginUserHolder(HttpServletRequest request) {
         if (request.getSession() == null) {
             throw new AccessDeniedException("Not logged in as author");
@@ -58,11 +44,11 @@ public class UserService {
     private static LoginUserHolder parseLoginUser(HttpSession session) {
         return new LoginUserHolder(
                 (User) session.getAttribute(LOGIN_USER_PARAMETER),
-                (Initiative) session.getAttribute(LOGIN_INITIATIVE_PARAMETER)
-        );
+                Maybe.fromNullable((Initiative) session.getAttribute(LOGIN_INITIATIVE_PARAMETER)
+        ));
     }
 
-    public static void requireOmUser() {
+    public void requireOmUser() {
         Maybe<User> maybeUser = getUser();
         if (!maybeUser.isPresent()) {
             throw new AuthenticationRequiredException();
@@ -74,7 +60,6 @@ public class UserService {
 
     public static Maybe<User> getUser() {
         String loginUserParameter = LOGIN_USER_PARAMETER;
-
         return getObject(loginUserParameter);
     }
 
@@ -109,14 +94,6 @@ public class UserService {
     @Deprecated
     public String getManagementHash() {
         return ((Initiative) getSession().get().getAttribute(LOGIN_INITIATIVE_PARAMETER)).getManagementHash().get();
-    }
-
-    public void assertManagementRightsForInitiative(Long initiativeId) {
-
-        Maybe<Initiative> initiativeMaybe = getObject(LOGIN_INITIATIVE_PARAMETER);
-        if (!initiativeMaybe.isPresent() || !initiativeMaybe.get().getId().equals(initiativeId)) {
-            throw new AccessDeniedException("No access for initiative with id: " + initiativeId);
-        }
     }
 
     public boolean isOmUser() {

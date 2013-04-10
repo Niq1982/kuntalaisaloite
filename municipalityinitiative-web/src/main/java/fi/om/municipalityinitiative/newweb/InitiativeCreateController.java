@@ -85,7 +85,8 @@ public class InitiativeCreateController extends BaseController {
     public String editView(@PathVariable("id") Long initiativeId,
                            Model model, Locale locale, HttpServletRequest request) {
 
-        userService.assertManagementRightsForInitiative(initiativeId);
+//        userService.assertManagementRightsForInitiative(initiativeId);
+        userService.getRequiredLoginUserHolder(request).requireManagementRightsForInitiative(initiativeId);
 
         Urls urls = Urls.get(locale);
 
