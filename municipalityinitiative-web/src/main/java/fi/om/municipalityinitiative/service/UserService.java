@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.service;
 import fi.om.municipalityinitiative.newdao.FakeUserDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.UserDao;
+import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.User;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -28,7 +29,40 @@ public class UserService {
         request.getSession().setAttribute(LOGIN_USER_PARAMETER, userDao.getUser(userName, password));
     }
 
-    public void requireOmUser() {
+    public void login(Long initiativeId, String managementHash, HttpServletRequest request) {
+        request.getSession().setAttribute(LOGIN_INITIATIVE_PARAMETER, initiativeDao.getById(initiativeId, managementHash));
+        request.getSession().setAttribute(LOGIN_USER_PARAMETER, User.normalUser());
+    }
+
+    public LoginUserHolder getOmLoginUser(HttpServletRequest request) {
+
+        if (request.getSession() == null) {
+            throw new AuthenticationRequiredException();
+        }
+        LoginUserHolder loginUserHolder = parseLoginUser(request.getSession());
+
+        if (!loginUserHolder.getUser().isOmUser()) {
+            throw new AccessDeniedException("No permission");
+        }
+        return loginUserHolder;
+    }
+
+
+    public LoginUserHolder getRequiredLoginUserHolder(HttpServletRequest request) {
+        if (request.getSession() == null) {
+            throw new AccessDeniedException("Not logged in as author");
+        }
+        return parseLoginUser(request.getSession());
+    }
+
+    private static LoginUserHolder parseLoginUser(HttpSession session) {
+        return new LoginUserHolder(
+                (User) session.getAttribute(LOGIN_USER_PARAMETER),
+                (Initiative) session.getAttribute(LOGIN_INITIATIVE_PARAMETER)
+        );
+    }
+
+    public static void requireOmUser() {
         Maybe<User> maybeUser = getUser();
         if (!maybeUser.isPresent()) {
             throw new AuthenticationRequiredException();
@@ -70,11 +104,6 @@ public class UserService {
         }
         return Maybe.absent();
 
-    }
-
-    public void login(Long initiativeId, String managementHash, HttpServletRequest request) {
-        request.getSession().setAttribute(LOGIN_INITIATIVE_PARAMETER, initiativeDao.getById(initiativeId, managementHash));
-        request.getSession().setAttribute(LOGIN_USER_PARAMETER, User.normalUser());
     }
 
     @Deprecated
