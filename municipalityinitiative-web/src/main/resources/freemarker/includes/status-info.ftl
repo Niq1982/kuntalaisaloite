@@ -104,44 +104,45 @@
 
 <#elseif emailMessageType == EmailMessageType.PUBLISHED_COLLECTING>
     <#-- TEXT -->
-    <#assign statusInfo><@u.message "email.status.info.PUBLISHED_COLLECTING.description" /></#assign>
+    <#assign statusInfo>
+        <@u.message "email.status.info.PUBLISHED_COLLECTING.description" />
+        
+        <@b.initiativeDetails type="text" showProposal=false />  
+        
+        <@b.publicViewLink "text" />
+    </#assign>
     
     <#-- HTML -->
     <#assign statusInfoHTML>
         <p style="${pBothMargins!""}"><@u.message "email.status.info.PUBLISHED_COLLECTING.description" /></p>
         
-        <#-- TODO: Localize / create a macro-->
-        <h4 style="${h4!""}">${initiative.name!""}</h4>
-        Aloite luotu Kuntalaisaloite.fi-palveluun: <@u.localDate initiative.createTime />
-        Keräys aloitettu: 04.04.2013 [TODO]  
+        <#-- TODO: publish date -->
+        <@b.initiativeDetails type="html" showProposal=false />  
         
         <@b.publicViewLink "html" />
     </#assign>
     
 <#elseif emailMessageType == EmailMessageType.SENT_TO_MUNICIPALITY>
+    <#-- Optional title overrides default title -->
+    <#assign statusTitle><@u.message "email.status.info."+emailMessageType+".title" /> ${initiative.municipality.getLocalizedName(locale)!""}</#assign>
     <#-- TEXT -->
-    <#assign statusInfoHTML>
-        <#-- TODO: Localize / create a macro-->
-        <h4 style="${h4!""}">${initiative.name!""}</h4>
-        Aloite luotu Kuntalaisaloite.fi-palveluun: <@u.localDate initiative.createTime />
-        Lähetetty kuntaan: 04.04.2013
-        
-        [SISÄLTÖ]
+    <#assign statusInfo>
+    
+        <#-- TODO: sent date -->
+        <@b.initiativeDetails "text" />
         
         Yhteystiedot
-        [YHTEYSTIEDOT]
+        
+        [TODO]    
     </#assign>
     
     <#-- HTML -->
-    <#assign statusInfo>
-        Vähemmän koivuja Joutsan keskustaan
-        Aloite luotu Kuntalaisaloite.fi-palveluun: 04.04.2013 
-        Lähetetty kuntaan: 04.04.2013
+    <#assign statusInfoHTML>
+        <#-- TODO: sent date -->
+        <@b.initiativeDetails "html" />
         
-        [SISÄLTÖ]
-        
-        Yhteystiedot
-        [YHTEYSTIEDOT]    
+        <h4 style="${h4!""}">Yhteystiedot</h4>
+        <p style="${pBottomMargin!""}">[TODO]</p>
     </#assign>
     
 </#if>

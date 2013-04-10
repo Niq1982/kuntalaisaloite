@@ -129,9 +129,7 @@
         </div>
     </#if>
     
-    <#-- TODO: Disable start collecting after it is activated -->
-    <#--<#if managementSettings.allowSendToMunicipality>-->
-    <#if managementSettings.allowPublish>
+    <#if managementSettings.allowSendToMunicipality>
         <#assign startCollectingConfirm = false />
         <#assign sendToMunicipalityConfirm = false />
         
@@ -145,12 +143,19 @@
     
         <#if !sendToMunicipalityConfirm && !startCollectingConfirm>
             <div class="msg-block">
-                <div class="system-msg msg-info">
-                    <h2 id="start-collecting"><@u.message "startCollecting.title" /></h2>
-                    <p><@u.message "startCollecting.description" /></p>
-    
-                    <a href="${managementURL}?start-collecting=confirm#start-collecting" id="js-start-collecting" class="small-button js-start-collecting"><span class="small-icon save-and-send"><@u.message "action.startCollecting" /></span></a>
-                </div>
+                <#if managementSettings.allowPublish>
+                    <div class="system-msg msg-info">
+                        <h2 id="start-collecting"><@u.message "startCollecting.title" /></h2>
+                        <p><@u.message "startCollecting.description" /></p>
+        
+                        <a href="${managementURL}?start-collecting=confirm#start-collecting" id="js-start-collecting" class="small-button js-start-collecting"><span class="small-icon save-and-send"><@u.message "action.startCollecting" /></span></a>
+                    </div>
+                <#else>
+                    <div class="system-msg msg-info">
+                        <p><@u.message "collecting.info" /></p>
+                        <@u.messageHTML key="collecting.info.2" args=[urls.edit(initiative.id)] />
+                    </div>
+                </#if>
             
                 <#-- TODO: VIEW for author-management -->
                 <div class="system-msg msg-info">

@@ -10,3 +10,7 @@
 <@u.message "email.status.info."+emailMessageType+".title" />
 
 ${statusInfo!""}
+
+----
+
+<@b.emailFooter "text" />

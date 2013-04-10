@@ -161,6 +161,6 @@ public class InitiativeManagementController extends BaseController {
         userService.assertManagementRightsForInitiative(initiativeId);
 
         publicInitiativeService.publishInitiative(initiativeId, false, locale);
-        return redirectWithMessage(Urls.get(locale).view(initiativeId),RequestMessage.SAVE_AND_SEND, request);
+        return redirectWithMessage(Urls.get(locale).view(initiativeId),RequestMessage.PUBLISH_AND_SEND, request);
     }
 }
