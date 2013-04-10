@@ -238,8 +238,8 @@
 
 <#macro publicViewLink type="">
     <#if type == "html">
-        <p style="${pBothMargins!""}"><@u.message "email.publicViewLink" /></p>
-        <p style="${pBothMargins!""} ${smallFont!""}"><@u.link urls.view(initiative.id) urls.view(initiative.id) /></p>
+        <p style="${pBothMargins!""}"><@u.message "email.publicViewLink" /><br/>
+        <@u.link urls.view(initiative.id) urls.view(initiative.id) /></span>
     <#else>
         <@u.message "email.publicViewLink" />
         
