@@ -132,7 +132,7 @@ public class InitiativeManagementController extends BaseController {
 //        userService.assertManagementRightsForInitiative(initiativeId);
         userService.getRequiredLoginUserHolder(request).requireManagementRightsForInitiative(initiativeId);
 
-        publicInitiativeService.sendReview(initiativeId, userService.getManagementHash(), true, locale);
+        publicInitiativeService.sendReview(initiativeId, userService.getRequiredLoginUserHolder(request), true, locale);
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.SEND_TO_REVIEW, request);
     }
 
@@ -143,7 +143,7 @@ public class InitiativeManagementController extends BaseController {
 //        userService.assertManagementRightsForInitiative(initiativeId);
         userService.getRequiredLoginUserHolder(request).requireManagementRightsForInitiative(initiativeId);
 
-        publicInitiativeService.sendReview(initiativeId, userService.getManagementHash(), false, locale);
+        publicInitiativeService.sendReview(initiativeId, userService.getRequiredLoginUserHolder(request), false, locale);
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.SEND_TO_REVIEW, request);
     }
 
