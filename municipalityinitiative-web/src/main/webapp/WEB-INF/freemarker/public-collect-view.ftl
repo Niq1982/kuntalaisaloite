@@ -17,7 +17,7 @@
 
     <h1 class="name">${initiative.name!""}</h1>
     
-    <div class="municipality">${initiative.municipality.name!""}</div>
+    <div class="municipality">${initiative.municipality.getName(locale)}</div>
     
     <@e.stateInfo initiative />
 

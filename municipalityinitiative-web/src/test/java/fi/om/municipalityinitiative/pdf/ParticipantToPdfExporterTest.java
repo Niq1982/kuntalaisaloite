@@ -37,7 +37,7 @@ public class ParticipantToPdfExporterTest {
         initiative.setMunicipality(new Municipality(1, "Helsinki", "Helsingfors"));
 
         initiative.setName("Koira pois lähiöistä");
-        InitiativeEmailInfo emailInfo = InitiativeEmailInfo.parse(new ContactInfo(), InitiativeViewInfo.parse(initiative, Locales.LOCALE_FI), "");
+        InitiativeEmailInfo emailInfo = InitiativeEmailInfo.parse(new ContactInfo(), InitiativeViewInfo.parse(initiative), "");
 
         List<Participant> participants = Lists.newArrayList();
 

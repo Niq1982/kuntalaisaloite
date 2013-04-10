@@ -223,7 +223,7 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
         contactInfo.setName(CONTACT_NAME);
         contactInfo.setAddress(CONTACT_ADDRESS);
 
-        return InitiativeEmailInfo.parse(contactInfo, InitiativeViewInfo.parse(initiative, Locales.LOCALE_FI), INITIATIVE_URL);
+        return InitiativeEmailInfo.parse(contactInfo, InitiativeViewInfo.parse(initiative), INITIATIVE_URL);
     }
 
     private static CollectableInitiativeEmailInfo createCollectableEmailInfo() {

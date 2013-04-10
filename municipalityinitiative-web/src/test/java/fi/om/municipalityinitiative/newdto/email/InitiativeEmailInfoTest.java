@@ -23,13 +23,13 @@ public class InitiativeEmailInfoTest {
         ContactInfo contactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
 
         String url = "https://url.to.initiative";
-        InitiativeEmailInfo emailInfo = InitiativeEmailInfo.parse(contactInfo, InitiativeViewInfo.parse(initiative, Locales.LOCALE_FI), url);
+        InitiativeEmailInfo emailInfo = InitiativeEmailInfo.parse(contactInfo, InitiativeViewInfo.parse(initiative), url);
         assertThat(emailInfo.getContactInfo().getName(), is(contactInfo.getName()));
         assertThat(emailInfo.getContactInfo().getPhone(), is(contactInfo.getPhone()));
         assertThat(emailInfo.getContactInfo().getAddress(), is(contactInfo.getAddress()));
         assertThat(emailInfo.getContactInfo().getEmail(), is(contactInfo.getEmail()));
         assertThat(emailInfo.getCreateTime(), is(initiative.getCreateTime()));
-        assertThat(emailInfo.getMunicipality().getName(), is(initiative.getMunicipality().getNameFi()));
+        assertThat(emailInfo.getMunicipality().getNameFi(), is(initiative.getMunicipality().getNameFi()));
         assertThat(emailInfo.getMunicipality().getId(), is(initiative.getMunicipality().getId()));
         assertThat(emailInfo.getId(), is(initiative.getId()));
         assertThat(emailInfo.getName(), is(initiative.getName()));

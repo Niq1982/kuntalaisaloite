@@ -80,7 +80,7 @@ public class PublicInitiativeService {
     }
 
     public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId, Locale locale) {
-        return InitiativeViewInfo.parse(initiativeDao.getByIdWithOriginalAuthor(initiativeId), locale);
+        return InitiativeViewInfo.parse(initiativeDao.getByIdWithOriginalAuthor(initiativeId));
     }
 
     public ContactInfo getContactInfo(Long initiativeId) {
@@ -92,7 +92,7 @@ public class PublicInitiativeService {
     }
 
     public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId, String givenManagementHash, Locale locale) {
-        return InitiativeViewInfo.parse(initiativeDao.getById(initiativeId, givenManagementHash), locale);
+        return InitiativeViewInfo.parse(initiativeDao.getById(initiativeId, givenManagementHash));
     }
 
     @Transactional(readOnly = true)

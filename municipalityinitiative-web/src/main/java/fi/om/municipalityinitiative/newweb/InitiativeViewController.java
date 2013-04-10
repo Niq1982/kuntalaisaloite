@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.newweb;
 
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
+import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.service.PublicInitiativeService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
@@ -54,7 +55,7 @@ public class InitiativeViewController extends BaseController {
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().search());
         
-        List<MunicipalityInfo> municipalities = municipalityService.findAllMunicipalities(locale);
+        List<Municipality> municipalities = municipalityService.findAllMunicipalities(locale);
 
         model.addAttribute("initiatives", publicInitiativeService.findMunicipalityInitiatives(search));
         model.addAttribute("municipalities", municipalities);
@@ -170,7 +171,7 @@ public class InitiativeViewController extends BaseController {
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().search());
         
-        List<MunicipalityInfo> municipalities = municipalityService.findAllMunicipalities(locale);
+        List<Municipality> municipalities = municipalityService.findAllMunicipalities(locale);
 
         model.addAttribute("initiatives", publicInitiativeService.findMunicipalityInitiatives(search));
         model.addAttribute("municipalities", municipalities);
@@ -181,13 +182,11 @@ public class InitiativeViewController extends BaseController {
         return IFRAME_VIEW;
     }
 
-    private static String solveMunicipalityFromListById(List<MunicipalityInfo> municipalities, Long municipalityId){
-        if (municipalityId == null)
-            return null;
-        for (MunicipalityInfo municipality : municipalities) {
+    private static Maybe<Municipality> solveMunicipalityFromListById(List<Municipality> municipalities, Long municipalityId){
+        for (Municipality municipality : municipalities) {
             if (municipality.getId().equals(municipalityId))
-                return municipality.getName();
+                return Maybe.of(municipality);
         }
-        return null;
+        return Maybe.absent();
     }
 }

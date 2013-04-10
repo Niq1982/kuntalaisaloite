@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.newdto.ui;
 
 import fi.om.municipalityinitiative.newdto.service.Initiative;
+import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -11,15 +12,13 @@ import java.util.Locale;
 public class InitiativeViewInfo {
 
     private final Initiative initiative;
-    private final Locale locale;
 
-    private InitiativeViewInfo(Initiative initiative, Locale locale) {
+    private InitiativeViewInfo(Initiative initiative) {
         this.initiative = initiative;
-        this.locale = locale;
     }
 
-    public static InitiativeViewInfo parse(Initiative initiative, Locale locale) {
-        return new InitiativeViewInfo(initiative, locale);
+    public static InitiativeViewInfo parse(Initiative initiative) {
+        return new InitiativeViewInfo(initiative);
     }
 
     public String getName() {
@@ -66,13 +65,8 @@ public class InitiativeViewInfo {
         return initiative.getState();
     }
 
-    public MunicipalityInfo getMunicipality() {
-        MunicipalityInfo municipalityInfo = new MunicipalityInfo();
-        municipalityInfo.setId(initiative.getMunicipality().getId());
-        municipalityInfo.setName(locale == Locales.LOCALE_FI
-                ? initiative.getMunicipality().getNameFi()
-                : initiative.getMunicipality().getNameSv());
-        return municipalityInfo;
+    public Municipality getMunicipality() {
+        return initiative.getMunicipality();
     }
 
 }

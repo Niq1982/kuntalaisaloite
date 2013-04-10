@@ -59,9 +59,9 @@ public class PublicInitiativeServiceIntegrationTest {
     @Resource
     IntegrationTestConfiguration.FakeUserService fakeUserService;
 
-    private static MunicipalityInfo testMunicipality;
+    private static Municipality testMunicipality;
 
-    private static MunicipalityInfo participantMunicipality;
+    private static Municipality participantMunicipality;
 
     private static LoginUserHolder authorLoginUserHolder;
 
@@ -76,13 +76,12 @@ public class PublicInitiativeServiceIntegrationTest {
     @Before
     public void setup() {
         testHelper.dbCleanup();
-        testMunicipality = new MunicipalityInfo();
-        testMunicipality.setName("Test municipality");
-        testMunicipality.setId(testHelper.createTestMunicipality(testMunicipality.getName()));
 
-        participantMunicipality = new MunicipalityInfo();
-        participantMunicipality.setName("Participant municipality");
-        participantMunicipality.setId(testHelper.createTestMunicipality(participantMunicipality.getName()));
+        String municipalityName = "Test municipality";
+        testMunicipality = new Municipality(testHelper.createTestMunicipality(municipalityName), municipalityName, municipalityName);
+
+        municipalityName = "Participant municipality";
+        participantMunicipality = new Municipality(testHelper.createTestMunicipality(municipalityName), municipalityName, municipalityName);
 
     }
 
@@ -210,7 +209,7 @@ public class PublicInitiativeServiceIntegrationTest {
     public void editing_initiative_throws_exception_if_wrong_management_hash() {
         Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise(), Locales.LOCALE_FI);
 
-        InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto(new Municipality(testMunicipality.getId(), testMunicipality.getName(), testMunicipality.getName()), null);
+        InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto(testMunicipality, null);
         editDto.setManagementHash("invalid management hash");
 
         service.editInitiativeDraft(initiativeId, editDto);
@@ -227,7 +226,7 @@ public class PublicInitiativeServiceIntegrationTest {
 
         Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise(), Locales.LOCALE_FI);
 
-        InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto(new Municipality(testMunicipality.getId(), testMunicipality.getName(), testMunicipality.getName()), null);
+        InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto(testMunicipality, null);
         editDto.setManagementHash(RandomHashGenerator.getPrevious());
 
         ContactInfo contactInfo = new ContactInfo();

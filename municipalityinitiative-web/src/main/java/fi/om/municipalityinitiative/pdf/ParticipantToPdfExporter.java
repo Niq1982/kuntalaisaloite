@@ -7,7 +7,9 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
+import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
+import fi.om.municipalityinitiative.util.Locales;
 import org.joda.time.DateTime;
 
 import java.io.OutputStream;
@@ -18,7 +20,7 @@ public class ParticipantToPdfExporter {
     public static final String DATETIME_FORMAT = "dd.MM.yyyy HH:mm:ss";
     public static final String DATE_FORMAT = "dd.MM.yyyy";
     public static final FontFamily FONT_FAMILY = Font.FontFamily.HELVETICA;
-    
+
     private static Font mainTitle = new Font(FONT_FAMILY, 16, Font.BOLD);
     private static Font subTitle = new Font(FONT_FAMILY, 14, Font.BOLD);
     private static Font redFont = new Font(FONT_FAMILY, 12, Font.NORMAL, BaseColor.RED);
@@ -53,7 +55,7 @@ public class ParticipantToPdfExporter {
     // Reader
     // under File -> Properties
     private static void addMetaData(Document document, CollectableInitiativeEmailInfo emailInfo) {
-        document.addTitle("Kuntalaisaloite " + emailInfo.getMunicipality().getName());
+        document.addTitle("Kuntalaisaloite " + emailInfo.getMunicipality().getLocalizedName(Locales.LOCALE_FI));
         document.addSubject(emailInfo.getName());
         document.addKeywords("Java, PDF, iText"); // TODO: Remove
         document.addAuthor("Lars Vogel");
@@ -66,7 +68,8 @@ public class ParticipantToPdfExporter {
         // We add one empty line
 //        addEmptyLine(preface, 1);
         // Lets write a big header
-        preface.add(new Paragraph("Kuntalaisaloite / Invanarinitiativ - " + emailInfo.getMunicipality().getName(), mainTitle));
+        Municipality municipality = emailInfo.getMunicipality();
+        preface.add(new Paragraph("Kuntalaisaloite / Invanarinitiativ - " + municipality.getLocalizedName(Locales.LOCALE_FI) + " / " + municipality.getLocalizedName(Locales.LOCALE_SV), mainTitle));
         preface.add(new Paragraph("Aloite lähetetty kuntaan / Initiativet skickats till kommun " + new DateTime().toString(DATETIME_FORMAT), bodyText));
         addEmptyLine(preface, 1);
 
