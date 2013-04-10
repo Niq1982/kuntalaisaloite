@@ -47,7 +47,8 @@ public class InitiativeModerationController extends BaseController{
     public String moderationView(@PathVariable("id") Long initiativeId,
                                  Model model, Locale locale, HttpServletRequest request) {
 
-        userService.requireOmUser();
+//        userService.requireOmUser();
+        userService.getRequiredOmLoginUserHolder(request);
 
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().moderation(initiativeId));

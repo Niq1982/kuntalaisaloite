@@ -5,12 +5,16 @@ import fi.om.municipalityinitiative.newdto.service.User;
 import fi.om.municipalityinitiative.service.AccessDeniedException;
 import fi.om.municipalityinitiative.util.Maybe;
 
+import javax.validation.constraints.NotNull;
+
 public class LoginUserHolder {
 
     Maybe<Initiative> initiative;
     User user;
 
     public LoginUserHolder(User user, Maybe<Initiative> initiative) {
+        if (user == null)
+            throw new RuntimeException("User was null");
         this.user = user;
         this.initiative = initiative;
     }

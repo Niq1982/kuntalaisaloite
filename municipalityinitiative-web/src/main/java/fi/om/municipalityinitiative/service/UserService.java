@@ -35,17 +35,43 @@ public class UserService {
     }
 
     public LoginUserHolder getRequiredLoginUserHolder(HttpServletRequest request) {
-        if (request.getSession() == null) {
+        Maybe<LoginUserHolder> loginUserHolder = parseLoginUser(request.getSession());
+
+        if (loginUserHolder.isNotPresent()) {
             throw new AccessDeniedException("Not logged in as author");
         }
-        return parseLoginUser(request.getSession());
+
+        return loginUserHolder.get();
     }
 
-    private static LoginUserHolder parseLoginUser(HttpSession session) {
-        return new LoginUserHolder(
-                (User) session.getAttribute(LOGIN_USER_PARAMETER),
-                Maybe.fromNullable((Initiative) session.getAttribute(LOGIN_INITIATIVE_PARAMETER)
-        ));
+    public LoginUserHolder getRequiredOmLoginUserHolder(HttpServletRequest request) {
+
+        Maybe<LoginUserHolder> loginUserHolder = parseLoginUser(request.getSession());
+
+        if (loginUserHolder.isNotPresent()) {
+            throw new AuthenticationRequiredException();
+        }
+        if (!loginUserHolder.get().getUser().isOmUser()) {
+            throw new AccessDeniedException("No privileges");
+        }
+
+        return loginUserHolder.get();
+    }
+
+    private static Maybe<LoginUserHolder> parseLoginUser(HttpSession session) {
+
+        if (session == null)
+            return Maybe.absent();
+
+        User user = (User) session.getAttribute(LOGIN_USER_PARAMETER);
+
+        if (user == null)
+            return Maybe.absent();
+
+
+        return Maybe.of(new LoginUserHolder(
+                user,
+                Maybe.fromNullable((Initiative) session.getAttribute(LOGIN_INITIATIVE_PARAMETER))));
     }
 
     public void requireOmUser() {
