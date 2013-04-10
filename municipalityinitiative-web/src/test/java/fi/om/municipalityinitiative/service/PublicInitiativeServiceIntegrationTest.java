@@ -35,7 +35,6 @@ import static org.junit.Assert.fail;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={IntegrationTestFakeEmailConfiguration.class})
@@ -141,7 +140,11 @@ public class PublicInitiativeServiceIntegrationTest {
 
     @Test
     public void sets_participant_count_to_one_when_adding_new_collectable_initiative() {
-        Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
+        PrepareInitiativeDto prepareInitiativeDto = new PrepareInitiativeDto();
+        prepareInitiativeDto.setMunicipality(testMunicipality.getId());
+        prepareInitiativeDto.setHomeMunicipality(participantMunicipality.getId());
+        prepareInitiativeDto.setAuthorEmail("authorEmail@example.com");
+        Long initiativeId = service.prepareInitiative(prepareInitiativeDto, Locales.LOCALE_FI);
         testHelper.updateField(initiativeId, QMunicipalityInitiative.municipalityInitiative.state, InitiativeState.PUBLISHED);
 
         List<InitiativeListInfo> initiatives = service.findMunicipalityInitiatives(new InitiativeSearch().setShow(InitiativeSearch.Show.all));
@@ -166,7 +169,7 @@ public class PublicInitiativeServiceIntegrationTest {
 
     @Test
     public void preparing_initiative_sets_municipality() {
-        Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise(), Locales.LOCALE_FI);
+        Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
         InitiativeViewInfo municipalityInitiative = service.getMunicipalityInitiative(initiativeId, Locales.LOCALE_FI);
 
         assertThat(municipalityInitiative.getMunicipality().getId(), is(testMunicipality.getId()));
@@ -175,7 +178,7 @@ public class PublicInitiativeServiceIntegrationTest {
     @Test
     // XXX: In the future initiative should not have the hash, author should.
     public void preparing_initiative_creates_hash() {
-        Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise(), Locales.LOCALE_FI);
+        Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
         InitiativeViewInfo municipalityInitiative = service.getMunicipalityInitiative(initiativeId, RandomHashGenerator.getPrevious(), Locales.LOCALE_FI);
 
         assertThat(municipalityInitiative.getManagementHash().get(), is(RandomHashGenerator.getPrevious()));
@@ -183,7 +186,7 @@ public class PublicInitiativeServiceIntegrationTest {
 
     @Test
     public void preparing_initiative_sets_participant_information() {
-        Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise(), Locales.LOCALE_FI);
+        Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
         testHelper.updateField(initiativeId, QMunicipalityInitiative.municipalityInitiative.state, InitiativeState.PUBLISHED); // XXX: Hard coded state change
 
         List<InitiativeListInfo> initiatives = service.findMunicipalityInitiatives(new InitiativeSearch().setShow(InitiativeSearch.Show.all));
@@ -197,7 +200,7 @@ public class PublicInitiativeServiceIntegrationTest {
 
     @Test
     public void preparing_initiative_saves_email() {
-        PrepareInitiativeDto createDto = initiativePrepareDtoWithFranchise();
+        PrepareInitiativeDto createDto = prepareDto();
         createDto.setAuthorEmail("any@example.com");
         Long initiativeId = service.prepareInitiative(createDto, Locales.LOCALE_FI);
 
@@ -207,7 +210,7 @@ public class PublicInitiativeServiceIntegrationTest {
 
     @Test(expected = AccessDeniedException.class)
     public void editing_initiative_throws_exception_if_wrong_management_hash() {
-        Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise(), Locales.LOCALE_FI);
+        Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
 
         InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto(testMunicipality, null);
         editDto.setManagementHash("invalid management hash");
@@ -224,7 +227,7 @@ public class PublicInitiativeServiceIntegrationTest {
     @Test
     public void editing_initiative_updates_all_required_fields() {
 
-        Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise(), Locales.LOCALE_FI);
+        Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
 
         InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto(testMunicipality, null);
         editDto.setManagementHash(RandomHashGenerator.getPrevious());
@@ -274,7 +277,7 @@ public class PublicInitiativeServiceIntegrationTest {
 
     @Test
     public void get_initiative_for_edit_has_all_information() {
-        Long initiativeId = service.prepareInitiative(initiativePrepareDtoWithFranchise(), Locales.LOCALE_FI);
+        Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
 
         String managementHash = RandomHashGenerator.getPrevious();
 
@@ -357,13 +360,6 @@ public class PublicInitiativeServiceIntegrationTest {
         assertThat(sent.getType().isPresent(), is(true));
         assertThat(sent.getType().get(), is(InitiativeType.SINGLE));
         assertThat(sent.getSentTime().isPresent(), is(true));
-    }
-
-    private static PrepareInitiativeDto initiativePrepareDtoWithFranchise() {
-        PrepareInitiativeDto prepareInitiativeDto = new PrepareInitiativeDto();
-        prepareInitiativeDto.setMunicipality(testMunicipality.getId());
-        prepareInitiativeDto.setHomeMunicipality(participantMunicipality.getId());
-        return prepareInitiativeDto;
     }
 
     private static PrepareInitiativeDto prepareDto() {
