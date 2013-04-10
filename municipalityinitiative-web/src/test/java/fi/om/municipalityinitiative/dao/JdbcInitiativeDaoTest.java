@@ -98,6 +98,7 @@ public class JdbcInitiativeDaoTest {
         assertThat(initiative.getAuthor().getContactInfo().getEmail(), is(TestHelper.DEFAULT_AUTHOR_EMAIL));
         assertThat(initiative.getAuthor().getContactInfo().getPhone(), is(TestHelper.DEFAULT_AUTHOR_PHONE));
         assertThat(initiative.getAuthor().getMunicipality().getId(), is(authorsMunicipalityId));
+        assertThat(initiative.getAuthor().getId(), is(notNullValue()));
 
         ReflectionTestUtils.assertNoNullFields(initiative);
     }
