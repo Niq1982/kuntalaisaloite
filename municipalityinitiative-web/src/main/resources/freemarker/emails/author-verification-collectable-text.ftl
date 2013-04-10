@@ -11,8 +11,4 @@ TODO: Vahvistusviesti
 
 ----
 
-<@u.message "email.municipality.sendFrom" />:
-${initiative.url}
-
-
-<@u.message "email.footer" />
+<@b.emailFooter "text" />

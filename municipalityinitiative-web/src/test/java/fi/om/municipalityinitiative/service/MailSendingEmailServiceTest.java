@@ -180,6 +180,14 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
     }
 
     @Test
+    @Ignore ("TODO: test for sendNotificationToModerator")
+    public void collectable_notification_to_moderator() throws InterruptedException, MessagingException {
+        CollectableInitiativeEmailInfo initiative = createCollectableEmailInfo();
+//        emailService.sendNotificationToModerator(initiative, Locales.LOCALE_FI);
+        assertThat(getSingleRecipient(), is(CONTACT_EMAIL));
+    }
+    
+    @Test
     public void collectable_to_municipality_adds_comment_to_email() throws Exception {
         CollectableInitiativeEmailInfo collectableEmailInfo = createCollectableEmailInfo();
         emailService.sendCollectableToMunicipality(collectableEmailInfo, MUNICIPALITY_EMAIL, Locales.LOCALE_FI);

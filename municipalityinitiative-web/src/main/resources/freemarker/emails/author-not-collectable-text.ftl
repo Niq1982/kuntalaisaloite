@@ -9,5 +9,6 @@
 
 <@b.contactInfo "text" />
 
-<@u.message "email.author.linkToManagement" />
-${initiative.url}
+----
+
+<@b.emailFooter "text" />

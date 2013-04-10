@@ -22,6 +22,7 @@ public class MailSendingEmailService implements EmailService {
     private static final String NOT_COLLECTABLE_TEMPLATE = "municipality-not-collectable";
     private static final String COLLECTABLE_TEMPLATE = "municipality-collectable";
     private static final String STATUS_INFO_TEMPLATE = "status-info-to-author";
+    private static final String NOTIFICATION_TO_MODERATOR = "notification-to-moderator";
 
     @Resource
     private MessageSource messageSource;
@@ -101,6 +102,17 @@ public class MailSendingEmailService implements EmailService {
                 .withSendTo(emailInfo.getContactInfo().getEmail())
                 .withSubject(messageSource.getMessage("email.not.collectable.author.subject", toArray(emailInfo.getName()), locale))
                 .withDataMap(toDataMap(emailInfo, locale))
+                .send();
+    }
+    
+    @Override
+    public void sendNotificationToModerator(Initiative initiative, Locale locale) {
+
+        emailMessageConstructor
+                .fromTemplate(NOTIFICATION_TO_MODERATOR)
+                .withSendTo("mikko.lehtinen@solita.fi")
+                .withSubject(messageSource.getMessage("email.notification.to.moderator.subject", toArray(initiative.getName()), locale))
+                .withDataMap(toDataMap(initiative, locale))
                 .send();
     }
 

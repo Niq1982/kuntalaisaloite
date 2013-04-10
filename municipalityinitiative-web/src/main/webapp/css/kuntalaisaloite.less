@@ -2154,6 +2154,12 @@ label  {
         padding:1em 0;
         border:none;
         font-size:1em;
+        
+        border-top:1px solid #ddd;
+        
+        &:first-child {
+            border:0;
+        }
     }
 }
 
@@ -2250,6 +2256,11 @@ blockquote {
     font-style:italic;
 }
 
+.bull {
+    margin:0 0.5em;
+    font-size:0.8em;
+    color:@borderGray;
+}
 
 pre {
     border:1px solid @borderGray;

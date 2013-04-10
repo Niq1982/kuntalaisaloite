@@ -4,12 +4,16 @@
 
 <#escape x as x?html>
 
-<#assign title><@u.message "email.status.info."+emailMessageType+".title" /></#assign>
-
 <#include "../includes/status-info.ftl" />
 
-<@l.emailHtml template="status-info-to-author" title=title>
+<#-- Override default title if custom title is defined -->
+<#if statusTitle??>
+    <#assign title=statusTitle />
+<#else>
+    <#assign title><@u.message "email.status.info."+emailMessageType+".title" /></#assign>
+</#if>
 
+<@l.emailHtml template="status-info-to-author" title=title>
     <@b.mainContentBlock title>
         <#noescape>${statusInfoHTML!""}</#noescape>
     </@b.mainContentBlock>

@@ -70,6 +70,33 @@
     </#if>
 </#macro>
 
+<#--
+ * emailFooter
+ *
+ * Prints footer texts in email.
+ * Show view link if initiative is published
+ *
+ * @param type 'text' or 'html'
+ -->
+<#macro emailFooter type="">
+    <#if type=="html">
+        <p style="${footerFont!""}"><@u.message "email.footer.sendFrom" />
+        <#if initiative.state?? && initiative.state == "PUBLISHED">
+            <@u.message "email.footer.viewLink" /><br/><@u.link urls.view(initiative.id) />
+        </#if>
+        </p>
+        <br/>
+        <p style="${footerFont!""}"><@u.message "email.footer" /></p>
+    <#else>
+        <@u.message "email.footer.sendFrom" />
+        <#if initiative.state?? && initiative.state == "PUBLISHED">
+            <@u.message "email.footer.viewLink" />
+            <@u.link urls.view(initiative.id) />
+        </#if>
+        
+        <@u.message "email.footer" />
+    </#if>
+</#macro>
 
 <#--
  * initiativeDetails
@@ -78,17 +105,18 @@
  *
  * @param type 'text' or 'html'
  -->
-<#macro initiativeDetails type="">
+<#macro initiativeDetails type="" showProposal=true>
     <#if type == "html">
         <h4 style="${h4!""}">${initiative.name!""}</h4>
-        <p style="${pBottomMargin!""}"><@u.message "email.date.create" /> <@u.localDate initiative.createTime />
-        <br/><@u.message "email.date.sent" /> <@u.localDate initiative.sentTime /></p>
-        <@u.text initiative.proposal />
+        <#--<p style="${pBottomMargin!""}">${initiative.municipality.getLocalizedName(locale)!""}</p>-->
+        <p style="${pBothMargins!""}"><@u.message "email.date.create" /> <@u.localDate initiative.createTime />
+        <#--<br/><@u.message "email.date.sent" /> <@u.localDate initiative.sentTime />--></p>
+        <#if showProposal><@u.text initiative.proposal /></#if>
     <#else>
         "${initiative.name!""}"
         <@u.message "email.date.create" /> <@u.localDate initiative.createTime />
 
-        ${initiative.proposal}
+        <#if showProposal>${initiative.proposal}</#if>
     </#if>
 </#macro>
 

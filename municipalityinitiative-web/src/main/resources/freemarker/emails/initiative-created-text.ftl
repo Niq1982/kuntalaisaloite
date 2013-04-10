@@ -2,3 +2,7 @@
 <#import "../components/email-blocks.ftl" as b />
 
 TODO
+
+----
+
+<@b.emailFooter "text" />

@@ -1,10 +1,11 @@
 <#import "email-utils.ftl" as u />
+<#import "email-blocks.ftl" as b />
 
 <#include "../includes/styles.ftl" />
 
 <#escape x as x?html>
 
-<#macro emailHtml template title="" footerLink=false>
+<#macro emailHtml template title="">
 <html>
 <head>
     <title>${title}</title>
@@ -36,11 +37,7 @@
             <#-- Email content -->
             <#nested />
             
-            <#if footerLink>
-                <p style="${footerFont!""}"><@u.message "email.municipality.sendFrom" /><br/><@u.link urls.view(initiative.id) /></p>
-                <br/>
-            </#if>
-            <p style="${footerFont!""}"><@u.message "email.footer" /></p>
+            <@b.emailFooter "html" />
 
             <@u.spacer "15" />
         </td>
