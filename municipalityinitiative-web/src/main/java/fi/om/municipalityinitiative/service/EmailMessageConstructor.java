@@ -15,12 +15,15 @@ import freemarker.template.TemplateException;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import javax.activation.DataSource;
 import javax.annotation.Resource;
+import javax.mail.Address;
+import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
@@ -87,7 +90,7 @@ public class EmailMessageConstructor {
             System.out.println("---");
             System.out.println(text);
             System.out.println("----------------------------------------------------------");
-            return null; //FIXME: May cause nullpointer exception
+            return null;
         }
 
         try {
@@ -192,11 +195,31 @@ public class EmailMessageConstructor {
             Assert.notNull(dataMap, "dataMap");
 
             MimeMessageHelper mimeMessageHelper = parseBasicEmailData(sendTo, subject, templateName, dataMap);
+
+            if (mimeMessageHelper == null) { // If testConsoleOutput was true, email was printed instead of sending
+                System.out.println("No email to send");
+                return;
+            }
+
             if (attachmentEmailInfo.isPresent()) {
                 addAttachment(mimeMessageHelper, attachmentEmailInfo.get());
             }
 
-            javaMailSender.send(mimeMessageHelper.getMimeMessage());
+            try {
+                javaMailSender.send(mimeMessageHelper.getMimeMessage());
+                log.info("Email sent.");
+            } catch (MailSendException e) {
+                Address[] recipients;
+                String subject;
+                try {
+                    recipients = mimeMessageHelper.getMimeMessage().getRecipients(Message.RecipientType.TO);
+                    subject = mimeMessageHelper.getMimeMessage().getSubject();
+                } catch (MessagingException messagingException) {
+                    throw new RuntimeException(messagingException);
+                }
+                log.error("Failed to send email to "+recipients[0].toString() + ": "+subject, e);
+                // TODO: Retry?
+            }
         }
     }
 }
