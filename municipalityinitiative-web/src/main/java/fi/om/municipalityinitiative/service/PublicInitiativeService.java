@@ -114,9 +114,13 @@ public class PublicInitiativeService {
     }
 
     @Transactional(readOnly = true)
-    public InitiativeUIUpdateDto getInitiativeForUpdate(Long initiativeId, String managementHash) {
+    public InitiativeUIUpdateDto getInitiativeForUpdate(Long initiativeId, LoginUserHolder loginUserHolder) {
 
         assertAllowance("Update initiative", managementSettings(initiativeId).isAllowUpdate());
+        loginUserHolder.requireManagementRightsForInitiative(initiativeId);
+
+        // TODO: Maybe remove managementhash?
+        String managementHash = loginUserHolder.getInitiative().get().getManagementHash().get();
 
         Initiative initiative = initiativeDao.getById(initiativeId, managementHash);
         Author authorInformation = getAuthorInformation(initiativeId, managementHash);

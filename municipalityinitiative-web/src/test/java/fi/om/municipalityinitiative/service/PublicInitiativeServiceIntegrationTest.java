@@ -35,6 +35,7 @@ import static org.junit.Assert.fail;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.stub;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={IntegrationTestFakeEmailConfiguration.class})
@@ -265,14 +266,25 @@ public class PublicInitiativeServiceIntegrationTest {
     @Test
     public void get_initiative_for_update_sets_all_required_information() {
         Long initiativeId = testHelper.createCollectableReview(testMunicipality.getId());
-        InitiativeUIUpdateDto initiativeForUpdate = service.getInitiativeForUpdate(initiativeId, TestHelper.TEST_MANAGEMENT_HASH);
+        stubAuthorLoginUserHolderWith(initiativeId);
+        InitiativeUIUpdateDto initiativeForUpdate = service.getInitiativeForUpdate(initiativeId, authorLoginUserHolder);
         ReflectionTestUtils.assertNoNullFields(initiativeForUpdate);
+    }
+
+    private void stubAuthorLoginUserHolderWith(Long initiativeId) {
+        stub(authorLoginUserHolder.getInitiative()).toReturn(Maybe.of(initiativeDao.getByIdWithOriginalAuthor(initiativeId)));
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void get_initiative_for_update_fails_if_not_allowed() {
+        Long initiativeId = testHelper.createCollectableAccepted(testMunicipality.getId());
+        service.getInitiativeForUpdate(initiativeId, unknownLoginUserHolder);
     }
 
     @Test(expected = OperationNotAllowedException.class)
     public void get_initiative_for_update_fails_if_sent() {
         Long sent = testHelper.createSingleSent(testMunicipality.getId());
-        service.getInitiativeForUpdate(sent, TestHelper.TEST_MANAGEMENT_HASH);
+        service.getInitiativeForUpdate(sent, authorLoginUserHolder);
     }
 
     @Test

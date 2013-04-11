@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.newweb;
 
 import com.google.common.base.Strings;
+import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUIUpdateDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
@@ -80,7 +81,8 @@ public class InitiativeManagementController extends BaseController {
     public String updateView(@PathVariable("id") Long initiativeId,
                              Model model, Locale locale, HttpServletRequest request) {
 
-        userService.getRequiredLoginUserHolder(request).requireManagementRightsForInitiative(initiativeId);
+        LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
+        loginUserHolder.requireManagementRightsForInitiative(initiativeId);
 
         Urls urls = Urls.get(locale);
         ManagementSettings managementSettings = publicInitiativeService.managementSettings(initiativeId);
@@ -90,8 +92,8 @@ public class InitiativeManagementController extends BaseController {
         if (managementSettings.isAllowUpdate()) {
 
             model.addAttribute(ALT_URI_ATTR, urls.alt().update(initiativeId));
-            model.addAttribute("initiative", publicInitiativeService.getMunicipalityInitiative(initiativeId, managementHash, locale));
-            model.addAttribute("updateData", publicInitiativeService.getInitiativeForUpdate(initiativeId, managementHash));
+            model.addAttribute("initiative", publicInitiativeService.getMunicipalityInitiative(initiativeId));
+            model.addAttribute("updateData", publicInitiativeService.getInitiativeForUpdate(initiativeId, loginUserHolder));
             model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, managementHash));
 
             model.addAttribute("previousPageURI", urls.getManagement(initiativeId));
