@@ -38,9 +38,9 @@ public abstract class MailSendingEmailServiceTestBase {
     public static final String CONTACT_EMAIL = "sender.email@example.com";
     public static final String CONTACT_NAME = "Sender Name";
     public static final String CONTACT_ADDRESS = "Sender address";
-    public static final String INITIATIVE_URL = "http://www.some.example.url.to.initiative";
     public static final String MUNICIPALITY_EMAIL = "some_test_address@example.com";
     public static final String COMMENT = "Some state comment";
+    public static final String MODERATOR_COMMENT = "Some moderator comment";
     public static final String MANAGEMENT_HASH = "managementHash";
 
     @Resource
@@ -65,7 +65,9 @@ public abstract class MailSendingEmailServiceTestBase {
         initiative.setCreateTime(new LocalDate(2010, 1, 1));
         initiative.setProposal(INITIATIVE_PROPOSAL);
         initiative.setName(INITIATIVE_NAME);
-        
+        initiative.setComment(COMMENT);
+        initiative.setModeratorComment(MODERATOR_COMMENT);
+
         Author author = new Author();
         ContactInfo contactInfo = new ContactInfo();
         contactInfo.setAddress(CONTACT_ADDRESS);

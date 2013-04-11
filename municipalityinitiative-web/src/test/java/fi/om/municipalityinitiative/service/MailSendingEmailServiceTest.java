@@ -61,6 +61,7 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
         assertThat(getMessageContent().html, containsString(CONTACT_NAME));
         assertThat(getMessageContent().html, containsString(CONTACT_PHONE));
         assertThat(getMessageContent().html, containsString(urls.view(INITIATIVE_ID)));
+        assertThat(getMessageContent().html, containsString(COMMENT));
 
     }
 }

@@ -26,7 +26,7 @@
         
         <@u.message "email.status.info.ACCEPTED_BY_OM_AND_SENT.description.2" /> ${initiative.municipality.getLocalizedName(locale)!""}.
         
-        <@b.statusInfoComment "text" initiative.comment!"" />
+        <@b.statusInfoComment "text" initiative.moderatorComment!"" />
         
         <@b.publicViewLink "text" />
     </#assign>
@@ -36,7 +36,7 @@
         <p style="${pBothMargins!""}"><@u.message "email.status.info.ACCEPTED_BY_OM_AND_SENT.description" /></p>
         <p style="${pBothMargins!""}"><@u.message "email.status.info.ACCEPTED_BY_OM_AND_SENT.description.2" /> <strong>${initiative.municipality.getLocalizedName(locale)!""}</strong>.</p>
 
-        <@b.statusInfoComment "html" initiative.comment!"" />
+        <@b.statusInfoComment "html" initiative.moderatorComment!"" />
         <@b.publicViewLink "html" />
     </#assign>
     
@@ -47,7 +47,7 @@
         
         <@u.message "email.status.info.ACCEPTED_BY_OM.description.2" />
         
-        <@b.statusInfoComment "text" initiative.comment!"" />
+        <@b.statusInfoComment "text" initiative.moderatorComment!"" />
         
         <@b.adminViewLink "text" />
     </#assign>
@@ -57,7 +57,7 @@
         <p style="${pBothMargins!""}"><@u.message "email.status.info.ACCEPTED_BY_OM.description" /></p>
         <p style="${pBothMargins!""}"><@u.message "email.status.info.ACCEPTED_BY_OM.description.2" /></p>
         
-        <@b.statusInfoComment "html" initiative.comment!"" />
+        <@b.statusInfoComment "html" initiative.moderatorComment!"" />
         <@b.adminViewLink "html" />
     </#assign>
     
@@ -66,7 +66,7 @@
     <#assign statusInfo>
         <@u.message "email.status.info.REJECTED_BY_OM.title" />
         
-        <@b.statusInfoComment "text" initiative.comment!"" />
+        <@b.statusInfoComment "text" initiative.moderatorComment!"" />
 
         <@b.adminViewLink "text" />
     </#assign>
@@ -75,7 +75,7 @@
     <#assign statusInfoHTML>
         <p style="${pBothMargins!""}"><@u.message "email.status.info.REJECTED_BY_OM.description" /></p>
         
-        <@b.statusInfoComment "html" initiative.comment!"" />
+        <@b.statusInfoComment "html" initiative.moderatorComment!"" />
         
         <@b.adminViewLink "html" />
     </#assign>

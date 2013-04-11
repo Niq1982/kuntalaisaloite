@@ -26,6 +26,10 @@
             <@b.publicViewLink "html" />
         </@b.contentBlock>
 
+       <b>Lisätiedot:</b>
+       <p>${initiative.comment}</p>
+
+
 
 </@l.emailHtml>
 
