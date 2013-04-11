@@ -1,5 +1,8 @@
 package fi.om.municipalityinitiative.web;
 
+import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.util.InitiativeState;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -16,12 +19,13 @@ public class ViewInitiativeWebTest extends WebTestBase {
      */
     private static final String MANAGEMENT_WARNING_TITLE = "management.warning.title";
     private static final String INITIATIVE_VIEW_HEADER = "initiative.proposal.title";
+    public static final String MUNICIPALITY_NAME = "Tuusula";
     private Long municipalityId;
     private Long draftInitiativeId;
 
     @Before
     public void setup() {
-        municipalityId = testHelper.createTestMunicipality("Tuusula");
+        municipalityId = testHelper.createTestMunicipality(MUNICIPALITY_NAME);
 
         draftInitiativeId = testHelper.createDraft(municipalityId);
 
@@ -93,6 +97,44 @@ public class ViewInitiativeWebTest extends WebTestBase {
 
         assertThat(driver.getCurrentUrl(), is(urls.edit(emptyDraftId)));
     }
+
+    @Test
+    public void iframe_shows_initiative() {
+
+        DateTime modifyTime = new DateTime(2011, 1, 1, 0, 0);
+        String title = "Yeah rock rock";
+        testHelper.create(new TestHelper.InitiativeDraft(municipalityId)
+                .withState(InitiativeState.PUBLISHED)
+                .withModified(modifyTime)
+                .withName(title));
+
+        open(urls.iframe());
+
+        assertThat(driver.getTitle(), is("Leijuke - Kuntalaisaloitepalvelu"));
+        assertThat(getElement(By.tagName("li")).getText(), is(modifyTime.toString("dd.MM.yyyy")+ " "+title));
+    }
+
+    @Test
+    public void iframe_page_accepts_municipality_parameter_and_shows_initiative() {
+
+        DateTime modifyTime = new DateTime(2011, 1, 1, 0, 0);
+        String title = "Yeah rock rock";
+        testHelper.create(new TestHelper.InitiativeDraft(municipalityId)
+                .withState(InitiativeState.PUBLISHED)
+                .withModified(modifyTime)
+                .withName(title));
+
+        open(urls.iframe(municipalityId));
+        assertThat(getElement(By.tagName("li")).getText(), is(modifyTime.toString("dd.MM.yyyy")+ " "+title));
+    }
+
+    @Test
+    public void iframe_page_shows_empty_list_if_no_initiatives() {
+        open(urls.iframe(-1L));
+        assertThat(getElement(By.className("search-results")).getText(), is("Ei vielä yhtään aloitetta"));
+    }
+
+
 
     // TODO: Redirect-tests if initiative at REVIEW, ACCEPTED, sent etc and trying to open edit/management-page
 

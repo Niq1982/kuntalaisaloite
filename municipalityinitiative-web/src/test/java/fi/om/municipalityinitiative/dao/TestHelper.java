@@ -33,7 +33,9 @@ public class TestHelper {
     public static final String DEFAULT_AUTHOR_PHONE = "author phone";
     public static final boolean DEFAULT_PUBLIC_NAME = true;
     public static final String DEFAULT_COMMENT = "some default comment";
-    private static final DateTime DEFAULT_SENT = null;
+    public static final DateTime DEFAULT_SENT_TIME = null;
+    public static final DateTime SENT_TIME = new DateTime(2011, 1, 1, 0, 0);
+    public static final DateTime DEFAULT_CREATE_TIME = DateTime.now();
 
     @Resource
     PostgresQueryFactory queryFactory;
@@ -147,7 +149,7 @@ public class TestHelper {
         return create(new InitiativeDraft(municipalityId)
                 .withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.SINGLE)
-                .withSent(new DateTime(2011, 1, 1, 0, 0)));
+                .withSent(SENT_TIME));
     }
 
     @Transactional
@@ -184,6 +186,7 @@ public class TestHelper {
         insert.set(municipalityInitiative.type, initiativeDraft.type);
 
         insert.set(municipalityInitiative.sent, initiativeDraft.sent);
+        insert.set(municipalityInitiative.modified, initiativeDraft.modified);
 
         Long initiativeId = insert.executeWithKey(municipalityInitiative.id);
 
@@ -241,7 +244,8 @@ public class TestHelper {
         public String authorAddress = DEFAULT_AUTHOR_ADDRESS;
         public String authorPhone = DEFAULT_AUTHOR_PHONE;
         public boolean publicName = DEFAULT_PUBLIC_NAME;
-        public DateTime sent = DEFAULT_SENT;
+        public DateTime sent = DEFAULT_SENT_TIME;
+        public DateTime modified = DEFAULT_CREATE_TIME;
         public Integer participantCount = 0;
         public String comment = DEFAULT_COMMENT;
 
@@ -254,6 +258,11 @@ public class TestHelper {
 
         public InitiativeDraft withAuthorMunicipality(Long municipalityId) {
             this.authorMunicipality = municipalityId;
+            return this;
+        }
+
+        public InitiativeDraft withModified(DateTime created) {
+            this.modified = created;
             return this;
         }
 

@@ -173,6 +173,8 @@ public class InitiativeViewController extends BaseController {
         
         List<Municipality> municipalities = municipalityService.findAllMunicipalities(locale);
 
+        search.setShow(InitiativeSearch.Show.all);
+
         model.addAttribute("initiatives", publicInitiativeService.findMunicipalityInitiatives(search));
         model.addAttribute("municipalities", municipalities);
         model.addAttribute("currentSearch", search);

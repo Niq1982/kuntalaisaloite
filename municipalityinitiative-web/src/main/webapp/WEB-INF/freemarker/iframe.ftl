@@ -34,13 +34,8 @@
     <#--
      * Set current municipality
     -->
-    <#if RequestParameters['municipality']?? && RequestParameters['municipality'] != "">
-        <#assign currentMunicipalityId = RequestParameters['municipality']!"" />
-        <#assign municipalityParam = "?municipality="+currentMunicipalityId />
-    </#if>
-
-    <#if municipalityParam??>
-        <#assign pageTitle><@u.message "iframe.initiatives" /> ${currentMunicipality!""}</#assign>
+    <#if currentMunicipality.present>
+        <#assign pageTitle><@u.message "iframe.initiatives" /> ${currentMunicipality.value.getName(locale)}</#assign>
     <#else>
         <#assign pageTitle><@u.message "page.iframe" /></#assign>
     </#if>
@@ -107,7 +102,7 @@
                 <span class="description"><@u.message "iframe.browseInitiatives.description" /></span>
             </div>
             <div class="column col-1of2 last">
-                <a href="${urls.createNew()}${municipalityParam!""}" target="_blank" rel="external" class="small-button"><span class="small-icon add"><@u.message "iframe.createInitiative" /></span></a>
+                <a href="${urls.prepare()}${municipalityParam!""}" target="_blank" rel="external" class="small-button"><span class="small-icon add"><@u.message "iframe.createInitiative" /></span></a>
             </div>
         </div>
         

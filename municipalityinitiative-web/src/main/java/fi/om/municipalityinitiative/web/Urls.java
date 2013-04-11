@@ -101,6 +101,8 @@ public final class Urls {
     public static final String ENCODING = "UTF-8";
     
     public static final String PARAM_INVITATION_CODE = "invitation";
+
+    public static final String PARAM_MUNICIPALITY = "municipality";
     
     public static final String SEARCH_UNREMOVED_VOTES = "searchUnremovedVotes";
     
@@ -302,6 +304,14 @@ public final class Urls {
 
     public String getStatusPage() {
         return baseUrl + STATUS;
+    }
+
+    public String iframe() {
+        return getLocalizedPageUrl(IFRAME_FI, IFRAME_SV);
+    }
+
+    public String iframe(Long municipalityId) {
+        return iframe() + "?" + PARAM_MUNICIPALITY + "=" + municipalityId;
     }
 
     public String getManagement(Long id) {
