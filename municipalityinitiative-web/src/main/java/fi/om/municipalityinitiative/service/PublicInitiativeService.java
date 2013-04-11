@@ -167,7 +167,8 @@ public class PublicInitiativeService {
     }
 
     @Transactional(readOnly = false)
-    public void publishInitiative(Long initiativeId, boolean isCollobrative, Locale locale) {
+    public void publishInitiative(Long initiativeId, boolean isCollobrative, LoginUserHolder loginUserHolder, Locale locale) {
+        loginUserHolder.requireManagementRightsForInitiative(initiativeId);
         assertAllowance("Publish initiative", managementSettings(initiativeId).isAllowPublish());
 
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
