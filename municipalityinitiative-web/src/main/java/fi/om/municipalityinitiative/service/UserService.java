@@ -116,13 +116,14 @@ public class UserService {
 
     }
 
-    @Deprecated
-    public String getManagementHash() {
-        return ((Initiative) getSession().get().getAttribute(LOGIN_INITIATIVE_PARAMETER)).getManagementHash().get();
-    }
+    public boolean isOmUser(HttpServletRequest request) {
+        try {
+            LoginUserHolder requiredOmLoginUserHolder = getRequiredOmLoginUserHolder(request);
+            return requiredOmLoginUserHolder.getUser().isOmUser();
+        }
+        catch (AuthenticationRequiredException | AccessDeniedException e) {
+            return false;
+        }
 
-    public boolean isOmUser() {
-        Maybe<User> user = getUser();
-        return user.isPresent() && user.get().isOmUser();
     }
 }

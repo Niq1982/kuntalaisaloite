@@ -74,7 +74,7 @@ public class InitiativeViewController extends BaseController {
 
         InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
 
-        if (initiativeInfo.getState() != InitiativeState.PUBLISHED && !userService.isOmUser()) {
+        if (initiativeInfo.getState() != InitiativeState.PUBLISHED && !userService.isOmUser(request)) {
 //            userService.assertManagementRightsForInitiative(initiativeId);
             userService.getRequiredLoginUserHolder(request).requireManagementRightsForInitiative(initiativeId);
         }
