@@ -72,8 +72,7 @@ public class InitiativeModerationController extends BaseController{
                                    @RequestParam("comment") String comment,
                                    Locale locale, HttpServletRequest request) {
 
-        // TODO: Saate / Comment
-        omInitiativeService.accept(initiativeId, locale);
+        omInitiativeService.accept(initiativeId, comment, locale);
         return redirectWithMessage(Urls.get(locale).moderation(initiativeId), RequestMessage.ACCEPT_INITIATIVE, request);
     }
 
@@ -82,8 +81,7 @@ public class InitiativeModerationController extends BaseController{
                                    @RequestParam("comment") String comment,
                                    Locale locale, HttpServletRequest request) {
 
-        // TODO: Saate / Comment
-        omInitiativeService.reject(initiativeId, locale);
+        omInitiativeService.reject(initiativeId, comment, locale);
         return redirectWithMessage(Urls.get(locale).moderation(initiativeId), RequestMessage.REJECT_INITIATIVE, request);
     }
 }

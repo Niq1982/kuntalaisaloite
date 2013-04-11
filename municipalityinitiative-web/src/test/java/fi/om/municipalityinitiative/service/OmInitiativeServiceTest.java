@@ -2,14 +2,15 @@ package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
+import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
+import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Locales;
 
-import fi.om.municipalityinitiative.util.Maybe;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,6 +42,7 @@ public class OmInitiativeServiceTest {
         omInitiativeService.initiativeDao = initiativeDaoMock;
         omInitiativeService.userService = fakeUserService;
         omInitiativeService.emailService = mock(EmailService.class);
+        omInitiativeService.municipalityDao = mock(MunicipalityDao.class);
     }
 
     @Test
@@ -59,33 +61,115 @@ public class OmInitiativeServiceTest {
     }
 
     @Test
-    public void accepting_initiative_sets_state_as_accepted_and_sends_correct_state_email_if_type_not_known() {
+    public void accepting_initiative_sets_state_as_accepted_if_type_is_undefined() {
 
         fakeUserService.setOmUser(true);
-        stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmail());
+        stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
 
-        omInitiativeService.accept(INITIATIVE_ID, Locales.LOCALE_FI);
+        omInitiativeService.accept(INITIATIVE_ID, null, Locales.LOCALE_FI);
 
         verify(initiativeDaoMock).updateInitiativeState(INITIATIVE_ID, InitiativeState.ACCEPTED);
+    }
+
+    @Test
+    public void accepting_initiative_sends_correct_state_email_if_type_is_undefined() {
+
+        fakeUserService.setOmUser(true);
+        stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
+
+        omInitiativeService.accept(INITIATIVE_ID, null, Locales.LOCALE_FI);
+
         verify(omInitiativeService.emailService).sendStatusEmail(any(Initiative.class), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM), eq(Locales.LOCALE_FI));
     }
 
     @Test
-    public void accepting_initiative_sets_state_as_published_and_sends_correct_state_email_if_type_single() {
+    public void accepting_initiative_saves_comment_if_type_is_undefined() {
+        fakeUserService.setOmUser(true);
+        stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
+
+        String comment = "this is om-comment";
+        omInitiativeService.accept(INITIATIVE_ID, comment, Locales.LOCALE_FI);
+
+        verify(initiativeDaoMock).updateModeratorComment(INITIATIVE_ID, comment);
+    }
+
+    @Test
+    public void accepting_initiative_sets_state_as_published_if_type_single() {
 
         fakeUserService.setOmUser(true);
-        Initiative initiative = initiativeWithAuthorEmail();
+        Initiative initiative = initiativeWithAuthorEmailTypeUndefined();
         initiative.setType(InitiativeType.SINGLE);
         stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiative);
 
-        omInitiativeService.accept(INITIATIVE_ID, Locales.LOCALE_FI);
+        omInitiativeService.accept(INITIATIVE_ID, null, Locales.LOCALE_FI);
 
         verify(initiativeDaoMock).updateInitiativeState(INITIATIVE_ID, InitiativeState.PUBLISHED);
-        verify(omInitiativeService.emailService).sendStatusEmail(any(Initiative.class), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM_AND_SENT), eq(Locales.LOCALE_FI));
 
     }
 
-    private static Initiative initiativeWithAuthorEmail() {
+    @Test
+    public void accepting_initiative_sends_correct_state_email_if_type_single() {
+
+        fakeUserService.setOmUser(true);
+        Initiative initiative = initiativeWithAuthorEmailTypeUndefined();
+        initiative.setType(InitiativeType.SINGLE);
+        stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiative);
+
+        omInitiativeService.accept(INITIATIVE_ID, null, Locales.LOCALE_FI);
+
+        verify(omInitiativeService.emailService).sendStatusEmail(any(Initiative.class), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM_AND_SENT), eq(Locales.LOCALE_FI));
+        verify(omInitiativeService.emailService).sendNotCollectableToMunicipality(any(Initiative.class), anyString(), eq(Locales.LOCALE_FI));
+
+    }
+
+
+    @Test
+    public void accepting_initiative_saves_comment_if_type_is_single() {
+        fakeUserService.setOmUser(true);
+        Initiative initiative = initiativeWithAuthorEmailTypeUndefined();
+        initiative.setType(InitiativeType.SINGLE);
+        stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiative);
+
+        String comment = "this is om-comment";
+        omInitiativeService.accept(INITIATIVE_ID, comment, Locales.LOCALE_FI);
+
+        verify(initiativeDaoMock).updateModeratorComment(INITIATIVE_ID, comment);
+    }
+
+    @Test
+    public void rejecting_initiative_sets_state_as_draft() {
+
+        fakeUserService.setOmUser(true);
+        stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
+
+        omInitiativeService.reject(INITIATIVE_ID, null, Locales.LOCALE_FI);
+        verify(initiativeDaoMock).updateInitiativeState(INITIATIVE_ID, InitiativeState.DRAFT);
+    }
+
+    @Test
+    public void rejecting_initiative_sends_email() {
+
+        fakeUserService.setOmUser(true);
+        stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
+
+        omInitiativeService.reject(INITIATIVE_ID, null, Locales.LOCALE_FI);
+        verify(omInitiativeService.emailService).sendStatusEmail(any(Initiative.class), anyString(), eq(EmailMessageType.REJECTED_BY_OM), eq(Locales.LOCALE_FI));
+    }
+
+    @Test
+    public void rejecting_initiative_saves_comment() {
+
+        fakeUserService.setOmUser(true);
+        stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
+
+        String comment = "this is om-comment";
+        omInitiativeService.reject(INITIATIVE_ID, comment, Locales.LOCALE_FI);
+
+        verify(initiativeDaoMock).updateModeratorComment(INITIATIVE_ID, comment);
+
+    }
+
+    private static Initiative initiativeWithAuthorEmailTypeUndefined() {
         Initiative initiative = new Initiative();
         ContactInfo contactInfo = new ContactInfo();
         Author author = new Author();
@@ -95,19 +179,10 @@ public class OmInitiativeServiceTest {
         initiative.setState(InitiativeState.REVIEW);
         initiative.setType(InitiativeType.UNDEFINED);
 
+        initiative.setMunicipality(new Municipality(0, "", ""));
+
         contactInfo.setEmail(AUTHOR_EMAIL);
         return initiative;
-    }
-
-    @Test
-    public void rejecting_initiative_sets_state_as_draft() {
-
-        fakeUserService.setOmUser(true);
-        stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmail());
-
-        omInitiativeService.reject(INITIATIVE_ID, Locales.LOCALE_FI);
-        verify(initiativeDaoMock).updateInitiativeState(INITIATIVE_ID, InitiativeState.DRAFT);
-
     }
 
 }

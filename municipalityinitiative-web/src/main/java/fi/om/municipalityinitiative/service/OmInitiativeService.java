@@ -29,7 +29,7 @@ public class OmInitiativeService {
     MunicipalityDao municipalityDao;
 
     @Transactional(readOnly = false)
-    public void accept(Long initiativeId, Locale locale) {
+    public void accept(Long initiativeId, String comment, Locale locale) {
         userService.requireOmUser();
         Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
 
@@ -37,28 +37,30 @@ public class OmInitiativeService {
             throw new OperationNotAllowedException("Not allowed to reject initiative");
         }
 
+        initiativeDao.updateModeratorComment(initiativeId, comment);
         if (initiative.getType().equals(InitiativeType.SINGLE)) {
             initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
             initiativeDao.markInitiativeAsSent(initiativeId);
-            initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId); // NOTE: Necessary?
+            initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId); // Necessary because initiative is updated
             emailService.sendStatusEmail(initiative, initiative.getAuthor().getContactInfo().getEmail(), EmailMessageType.ACCEPTED_BY_OM_AND_SENT, locale);
             emailService.sendNotCollectableToMunicipality(initiative, municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), locale);
         }
         else {
             initiativeDao.updateInitiativeState(initiativeId, InitiativeState.ACCEPTED);
-            initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId); // NOTE: Necessary?
+            initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);  // Necessary because initiative is updated
             emailService.sendStatusEmail(initiative, initiative.getAuthor().getContactInfo().getEmail(), EmailMessageType.ACCEPTED_BY_OM, locale);
         }
 
     }
 
     @Transactional(readOnly = false)
-    public void reject(Long initiativeId, Locale locale) {
+    public void reject(Long initiativeId, String comment, Locale locale) {
         userService.requireOmUser();
         if (!new ManagementSettings(initiativeDao.getByIdWithOriginalAuthor(initiativeId)).isAllowOmAccept()) {
             throw new OperationNotAllowedException("Not allowed to reject initiative");
 
         }
+        initiativeDao.updateModeratorComment(initiativeId, comment);
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.DRAFT);
 
         Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
