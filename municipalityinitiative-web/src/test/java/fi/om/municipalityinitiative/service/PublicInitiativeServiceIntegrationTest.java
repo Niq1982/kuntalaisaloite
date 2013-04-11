@@ -314,7 +314,7 @@ public class PublicInitiativeServiceIntegrationTest {
         Initiative updated = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
 
         assertThat(updated.getState(), is(InitiativeState.REVIEW));
-        assertThat(updated.getType().isPresent(), is(false));
+        assertThat(updated.getType(), is(InitiativeType.UNDEFINED));
     }
 
     @Test
@@ -325,7 +325,7 @@ public class PublicInitiativeServiceIntegrationTest {
         Initiative updated = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
 
         assertThat(updated.getState(), is(InitiativeState.REVIEW));
-        assertThat(updated.getType().get(), is(InitiativeType.SINGLE));
+        assertThat(updated.getType(), is(InitiativeType.SINGLE));
     }
 
     @Test(expected = OperationNotAllowedException.class)
@@ -349,33 +349,31 @@ public class PublicInitiativeServiceIntegrationTest {
 
     @Test
     public void publish_initiative_and_start_collecting_sets_all_data() {
-        Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, null);
+        Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
 
         service.publishInitiative(accepted, true, authorLoginUserHolder, null);
 
         Initiative collecting = initiativeDao.getByIdWithOriginalAuthor(accepted);
         assertThat(collecting.getState(), is(InitiativeState.PUBLISHED));
-        assertThat(collecting.getType().isPresent(), is(true));
-        assertThat(collecting.getType().get(), is(InitiativeType.COLLABORATIVE));
+        assertThat(collecting.getType(), is(InitiativeType.COLLABORATIVE));
         assertThat(collecting.getSentTime().isPresent(), is(false));
     }
 
     @Test(expected = AccessDeniedException.class)
     public void publish_initiative_fails_if_not_author() {
-       Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, null);
+       Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
         service.publishInitiative(accepted, true, unknownLoginUserHolder, null);
     }
 
     @Test
     public void publish_initiative_and_send_to_municipality_sets_all_data() {
-        Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, null);
+        Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
 
         service.publishInitiative(accepted, false, authorLoginUserHolder, null);
 
         Initiative sent = initiativeDao.getByIdWithOriginalAuthor(accepted);
         assertThat(sent.getState(), is(InitiativeState.PUBLISHED));
-        assertThat(sent.getType().isPresent(), is(true));
-        assertThat(sent.getType().get(), is(InitiativeType.SINGLE));
+        assertThat(sent.getType(), is(InitiativeType.SINGLE));
         assertThat(sent.getSentTime().isPresent(), is(true));
     }
 

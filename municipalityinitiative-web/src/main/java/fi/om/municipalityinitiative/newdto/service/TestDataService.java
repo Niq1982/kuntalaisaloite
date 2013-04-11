@@ -24,21 +24,22 @@ public class TestDataService {
 
     @Transactional(readOnly = false)
     public Long createTestMunicipalityInitiative(InitiativeUICreateDto createDto) {
+        throw new RuntimeException("New implementation needs rewriting this function");
     
-        Maybe<String> managementHash;
-        if (createDto.isCollectable()) {
-            managementHash = Maybe.of("0000000000111111111122222222223333333333");
-        }
-        else {
-            managementHash = Maybe.absent();
-        }
-
-        InitiativeCreateDto initiativeCreateDto = InitiativeCreateDto.parse(createDto, managementHash);
-
-        Long initiativeId = initiativeDao.create(initiativeCreateDto);
-        Long participantId = participantDao.create(ParticipantCreateDto.parse(createDto, initiativeId));
-        initiativeDao.assignAuthor(initiativeId, participantId, createDto.getContactInfo().getEmail(), managementHash.get());
-        return initiativeId;
+//        Maybe<String> managementHash;
+//        if (createDto.isCollectable()) {
+//            managementHash = Maybe.of("0000000000111111111122222222223333333333");
+//        }
+//        else {
+//            managementHash = Maybe.absent();
+//        }
+//
+//        InitiativeCreateDto initiativeCreateDto = InitiativeCreateDto.parse(createDto, managementHash);
+//
+//        Long initiativeId = initiativeDao.create(initiativeCreateDto);
+//        Long participantId = participantDao.create(ParticipantCreateDto.parse(createDto, initiativeId));
+//        initiativeDao.assignAuthor(initiativeId, participantId, createDto.getContactInfo().getEmail(), managementHash.get());
+//        return initiativeId;
 
     }
     

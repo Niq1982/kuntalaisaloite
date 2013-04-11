@@ -15,7 +15,7 @@ public class InitiativeListInfo {
     private boolean collectable;
     private Maybe<LocalDate> sentTime;
     private long participantCount;
-    private Maybe<InitiativeType> type;
+    private InitiativeType type;
 
     public Long getId() {
         return id;
@@ -73,11 +73,11 @@ public class InitiativeListInfo {
         this.municipality = municipality;
     }
 
-    public Maybe<InitiativeType> getType() {
+    public InitiativeType getType() {
         return type;
     }
 
-    public void setType(Maybe<InitiativeType> typeMaybe) {
+    public void setType(InitiativeType typeMaybe) {
         this.type = typeMaybe;
     }
 }

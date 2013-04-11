@@ -90,7 +90,7 @@ public class JdbcInitiativeDaoTest {
         assertThat(initiative.getProposal(), is(TestHelper.DEFAULT_PROPOSAL));
         assertThat(initiative.getSentTime().isPresent(), is(true));
         assertThat(initiative.getState(), is(TestHelper.DEFAULT_STATE));
-        assertThat(initiative.getType().get(), is(InitiativeType.COLLABORATIVE_CITIZEN));
+        assertThat(initiative.getType(), is(InitiativeType.COLLABORATIVE_CITIZEN));
         assertThat(initiative.getShowName(), is(true));
 
         assertThat(initiative.getAuthor().getContactInfo().getName(), is(TestHelper.DEFAULT_AUTHOR_NAME));
@@ -129,8 +129,8 @@ public class JdbcInitiativeDaoTest {
 
         initiativeDao.updateInitiativeType(original, InitiativeType.COLLABORATIVE);
 
-        assertThat(initiativeDao.getByIdWithOriginalAuthor(original).getType().get(), is(InitiativeType.COLLABORATIVE));
-        assertThat(initiativeDao.getByIdWithOriginalAuthor(someOther).getType().isPresent(), is(false));
+        assertThat(initiativeDao.getByIdWithOriginalAuthor(original).getType(), is(InitiativeType.COLLABORATIVE));
+        assertThat(initiativeDao.getByIdWithOriginalAuthor(someOther).getType(), is(InitiativeType.UNDEFINED));
     }
 
     @Test
@@ -277,7 +277,7 @@ public class JdbcInitiativeDaoTest {
 
         List<InitiativeListInfo> all = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.all));
         assertThat(all, hasSize(1));
-        assertThat(all.get(0).getType().get(), is(InitiativeType.COLLABORATIVE));
+        assertThat(all.get(0).getType(), is(InitiativeType.COLLABORATIVE));
     }
 
     @Test

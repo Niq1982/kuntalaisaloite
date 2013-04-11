@@ -26,7 +26,7 @@ public class TestHelper {
     public static final String DEFAULT_INITIATIVE_NAME = "Initiative name";
     public static final String DEFAULT_PROPOSAL = "Proposal";
     public static final InitiativeState DEFAULT_STATE = InitiativeState.DRAFT;
-    public static final InitiativeType DEFAULT_TYPE = null;
+    public static final InitiativeType DEFAULT_TYPE = InitiativeType.UNDEFINED;
     public static final String DEFAULT_AUTHOR_NAME = "Antti Author";
     public static final String DEFAULT_AUTHOR_EMAIL = "author_email@example.com";
     public static final String DEFAULT_AUTHOR_ADDRESS = "author address";
@@ -84,6 +84,7 @@ public class TestHelper {
         insert.set(municipalityInitiative.municipalityId, municipalityId);
         insert.set(municipalityInitiative.authorId, -1L);
         insert.set(municipalityInitiative.comment, "comment");
+        insert.set(municipalityInitiative.type, InitiativeType.UNDEFINED);
         //insert.setNull(municipalityInitiative.authorId); // TODO
         if (collectable) {
 //            insert.set(municipalityInitiative.managementHash,TEST_MANAGEMENT_HASH);
@@ -159,7 +160,7 @@ public class TestHelper {
     public Long createEmptyDraft(Long municipalityId) {
         return create(new InitiativeDraft(municipalityId)
                 .withState(InitiativeState.DRAFT)
-                .withType(null)
+                .withType(InitiativeType.UNDEFINED)
                 .withName(null)
                 .withProposal(null)
                 .withAuthorName(null)
@@ -180,9 +181,7 @@ public class TestHelper {
 
         insert.set(municipalityInitiative.state, initiativeDraft.state);
 
-        if (initiativeDraft.type != null) {
-            insert.set(municipalityInitiative.type, initiativeDraft.type);
-        }
+        insert.set(municipalityInitiative.type, initiativeDraft.type);
 
         insert.set(municipalityInitiative.sent, initiativeDraft.sent);
 

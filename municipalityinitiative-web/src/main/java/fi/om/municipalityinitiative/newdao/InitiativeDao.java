@@ -19,8 +19,6 @@ public interface InitiativeDao {
 
     List<InitiativeListInfo> find(InitiativeSearch search);
 
-    Long create(InitiativeCreateDto dto);
-
     Initiative getByIdWithOriginalAuthor(Long id);
 
     Initiative getById(Long initiativeId, String authorsManagementHash);

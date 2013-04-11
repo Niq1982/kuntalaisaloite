@@ -75,7 +75,7 @@ public class OmInitiativeServiceTest {
 
         fakeUserService.setOmUser(true);
         Initiative initiative = initiativeWithAuthorEmail();
-        initiative.setType(Maybe.of(InitiativeType.SINGLE));
+        initiative.setType(InitiativeType.SINGLE);
         stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiative);
 
         omInitiativeService.accept(INITIATIVE_ID, Locales.LOCALE_FI);
@@ -93,7 +93,7 @@ public class OmInitiativeServiceTest {
         author.setContactInfo(contactInfo);
         initiative.setAuthor(author);
         initiative.setState(InitiativeState.REVIEW);
-        initiative.setType(Maybe.<InitiativeType>absent());
+        initiative.setType(InitiativeType.UNDEFINED);
 
         contactInfo.setEmail(AUTHOR_EMAIL);
         return initiative;

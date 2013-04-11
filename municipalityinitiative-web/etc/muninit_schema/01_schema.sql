@@ -19,7 +19,7 @@ create index municipality_id_index on municipality(id);
 create table municipality_initiative (
 	id bigserial,
 	municipality_id bigserial,
-	type initiativeType,
+	type initiativeType constraint initiative_type_nn not null,
 	state initiativeState constraint initiative_state_nn not null default 'DRAFT',
 	state_timestamp timestamp constraint initiative_state_timestamp_nn not null default now(),
 

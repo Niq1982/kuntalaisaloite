@@ -33,7 +33,7 @@ public class OmInitiativeService {
             throw new OperationNotAllowedException("Not allowed to reject initiative");
         }
 
-        if (initiative.getType().isPresent() && initiative.getType().get().equals(InitiativeType.SINGLE)) {
+        if (initiative.getType().equals(InitiativeType.SINGLE)) {
             initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
             initiativeDao.markInitiativeAsSent(initiativeId);
             initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId); // NOTE: Necessary?

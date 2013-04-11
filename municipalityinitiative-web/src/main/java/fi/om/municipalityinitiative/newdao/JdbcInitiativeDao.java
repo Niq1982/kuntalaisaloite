@@ -152,54 +152,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    @Transactional(readOnly = false)
-    @Deprecated
-    public Long create(InitiativeCreateDto dto) {
-
-        SQLInsertClause insert = queryFactory.insert(municipalityInitiative);
-
-        setInitiativeBasicInfo(dto, insert);
-        setContactInfo(dto, insert);
-
-        insert.set(municipalityInitiative.authorId, PREPARATION_ID);
-
-        Long initiativeId = insert.executeWithKey(municipalityInitiative.id);
-        
-        Long authorId = queryFactory.insert(QAuthor.author)
-//                .set(QAuthor.author.initiativeId, initiativeId)
-                .executeWithKey(QAuthor.author.id);
-
-        queryFactory.update(municipalityInitiative)
-                .set(municipalityInitiative.authorId, authorId)
-                .where(municipalityInitiative.id.eq(initiativeId))
-                .execute();
-
-        return initiativeId;
-
-    }
-
-    @Deprecated
-    private void setContactInfo(InitiativeCreateDto dto, SQLInsertClause insert) {
-        insert.set(municipalityInitiative.contactAddress, dto.contactAddress);
-        insert.set(municipalityInitiative.contactEmail, dto.contactEmail);
-        insert.set(municipalityInitiative.contactPhone, dto.contactPhone);
-        insert.set(municipalityInitiative.contactName, dto.contactName);
-    }
-
-    @Deprecated
-    private void setInitiativeBasicInfo(InitiativeCreateDto dto, SQLInsertClause insert) {
-        insert.set(municipalityInitiative.name, dto.name);
-        insert.set(municipalityInitiative.proposal, dto.proposal);
-        insert.set(municipalityInitiative.municipalityId, dto.municipalityId);
-        if (dto.managementHash.isPresent()) {
-            insert.set(municipalityInitiative.managementHash, dto.managementHash.get());
-        }
-        else {
-            insert.set(municipalityInitiative.sent, CURRENT_TIME);
-        }
-    }
-
-    @Override
     public Initiative getByIdWithOriginalAuthor(Long id) {
 
         PostgresQuery query = queryFactory
@@ -317,6 +269,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
         return queryFactory.insert(municipalityInitiative)
                 .set(municipalityInitiative.municipalityId, municipalityId)
                 .set(municipalityInitiative.authorId, PREPARATION_ID)
+                .set(municipalityInitiative.type, InitiativeType.UNDEFINED)
                 .executeWithKey(municipalityInitiative.id);
     }
 
@@ -538,7 +491,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     info.setName(row.get(municipalityInitiative.name));
                     info.setMunicipality(parseMunicipality(row, INITIATIVE_MUNICIPALITY)
                     );
-                    info.setType(Maybe.fromNullable(row.get(municipalityInitiative.type)));
+                    info.setType(row.get(municipalityInitiative.type));
                     info.setProposal(row.get(municipalityInitiative.proposal));
                     info.setAuthorName(row.get(QParticipant.participant.name));
                     info.setShowName(row.get(QParticipant.participant.showName));
@@ -586,7 +539,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     info.setCollectable(InitiativeType.isCollectable(row.get(municipalityInitiative.type)));
                     info.setSentTime(maybeLocalDate(row.get(municipalityInitiative.sent)));
                     info.setParticipantCount(row.get(municipalityInitiative.participantCount));
-                    info.setType(Maybe.fromNullable(row.get(municipalityInitiative.type)));
+                    info.setType(row.get(municipalityInitiative.type));
                     return info;
                 }
             };

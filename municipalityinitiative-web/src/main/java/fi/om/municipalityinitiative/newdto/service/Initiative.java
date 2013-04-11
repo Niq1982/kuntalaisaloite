@@ -26,7 +26,7 @@ public class Initiative {
     private Maybe<String> managementHash = Maybe.absent();
 
     private Maybe<LocalDate> sentTime = Maybe.absent();
-    private Maybe<InitiativeType> type;
+    private InitiativeType type;
     private InitiativeState state;
     private String comment;
     private Author author;
@@ -119,11 +119,11 @@ public class Initiative {
         return municipality;
     }
 
-    public Maybe<InitiativeType> getType() {
+    public InitiativeType getType() {
         return type;
     }
 
-    public void setType(Maybe<InitiativeType> type) {
+    public void setType(InitiativeType type) {
         this.type = type;
     }
 

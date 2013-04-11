@@ -90,7 +90,7 @@ public class JsonDataService {
         initiativeInfo.setCreateTime(new LocalDate(2010, 1, 1));
         initiativeInfo.setAuthorName("Teemu Teekkari");
         initiativeInfo.setShowName(true);
-        initiativeInfo.setType(Maybe.of(InitiativeType.COLLABORATIVE));
+        initiativeInfo.setType(InitiativeType.COLLABORATIVE);
 
         InitiativeJson initiativeJson = InitiativeJson.from(initiativeInfo, publicParticipants, participantCount);
 
