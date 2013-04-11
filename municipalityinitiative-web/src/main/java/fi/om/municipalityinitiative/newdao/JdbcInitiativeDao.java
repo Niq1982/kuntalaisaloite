@@ -335,6 +335,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
     public void updateInitiativeState(Long initiativeId, InitiativeState state) {
         assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.state, state)
+                .set(municipalityInitiative.stateTimestamp, CURRENT_TIME)
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute());
     }
@@ -498,6 +499,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     info.setManagementHash(Maybe.of(row.get(QAuthor.author.managementHash)));
                     info.setSentTime(maybeLocalDate(row.get(municipalityInitiative.sent)));
                     info.setState(row.get(municipalityInitiative.state));
+                    info.setStateTime(row.get(municipalityInitiative.stateTimestamp).toLocalDate());
                     info.setComment(row.get(municipalityInitiative.comment));
 
                     Author author = new Author();

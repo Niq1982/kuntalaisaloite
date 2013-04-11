@@ -11,6 +11,7 @@ import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUIUpdateDto;
+import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -120,6 +121,20 @@ public class JdbcInitiativeDaoTest {
 
         assertThat(initiativeDao.getByIdWithOriginalAuthor(original).getState(), is(InitiativeState.PUBLISHED));
         assertThat(initiativeDao.getByIdWithOriginalAuthor(someOther).getState(), is(InitiativeState.DRAFT));
+    }
+
+    @Test
+    public void update_initiative_state_sets_stateChange_time() {
+        Long original = testHelper.createEmptyDraft(testMunicipality.getId());
+        DateTime fixedDateTime = new DateTime(2010, 1, 1, 0, 0);
+        testHelper.updateField(original, QMunicipalityInitiative.municipalityInitiative.stateTimestamp, fixedDateTime);
+
+        precondition(initiativeDao.getByIdWithOriginalAuthor(original).getStateTime(), is(fixedDateTime.toLocalDate()));
+
+        initiativeDao.updateInitiativeState(original, InitiativeState.PUBLISHED);
+
+        assertThat(initiativeDao.getByIdWithOriginalAuthor(original).getStateTime(), is(not(fixedDateTime.toLocalDate())));
+
     }
 
     @Test

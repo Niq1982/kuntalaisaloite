@@ -8,6 +8,7 @@ import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.Urls;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 public class Initiative {
@@ -30,6 +31,7 @@ public class Initiative {
     private InitiativeState state;
     private String comment;
     private Author author;
+    private LocalDate stateTime;
 
     public Author getAuthor() {
         return author;
@@ -141,5 +143,13 @@ public class Initiative {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public LocalDate getStateTime() {
+        return stateTime;
+    }
+
+    public void setStateTime(LocalDate stateTime) {
+        this.stateTime = stateTime;
     }
 }
