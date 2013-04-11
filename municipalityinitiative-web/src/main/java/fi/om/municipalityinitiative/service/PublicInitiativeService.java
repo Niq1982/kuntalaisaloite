@@ -123,7 +123,7 @@ public class PublicInitiativeService {
         String managementHash = loginUserHolder.getInitiative().get().getManagementHash().get();
 
         Initiative initiative = initiativeDao.getById(initiativeId, managementHash);
-        Author authorInformation = getAuthorInformation(initiativeId, managementHash);
+        Author authorInformation = initiativeDao.getAuthorInformation(initiativeId, managementHash);
 
         InitiativeUIUpdateDto updateDto = new InitiativeUIUpdateDto();
         updateDto.setContactInfo(authorInformation.getContactInfo());
@@ -142,8 +142,9 @@ public class PublicInitiativeService {
     }
 
     @Transactional(readOnly = true)
-    public Author getAuthorInformation(Long initiativeId, String managementHash) {
-        return initiativeDao.getAuthorInformation(initiativeId, managementHash);
+    public Author getAuthorInformation(Long initiativeId, LoginUserHolder loginUserHolder) {
+        loginUserHolder.requireManagementRightsForInitiative(initiativeId);
+        return initiativeDao.getAuthorInformation(initiativeId, loginUserHolder.getInitiative().get().getManagementHash().get());
     }
 
     @Transactional(readOnly = true)

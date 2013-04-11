@@ -47,7 +47,6 @@ public class InitiativeModerationController extends BaseController{
     public String moderationView(@PathVariable("id") Long initiativeId,
                                  Model model, Locale locale, HttpServletRequest request) {
 
-//        userService.requireOmUser();
         userService.getRequiredOmLoginUserHolder(request);
 
         Urls urls = Urls.get(locale);
@@ -64,7 +63,7 @@ public class InitiativeModerationController extends BaseController{
         model.addAttribute("participants", participantService.findPublicParticipants(initiativeId));
         model.addAttribute("managementSettings", publicInitiativeService.managementSettings(initiativeId));
         // TODO: Return all authors when possible
-        model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, initiativeInfo.getManagementHash().get()));
+        model.addAttribute("author", omInitiativeService.getAuthorInformation(initiativeId));
         return MODERATION_VIEW;
     }
 

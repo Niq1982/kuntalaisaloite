@@ -49,8 +49,8 @@ public class InitiativeManagementController extends BaseController {
     public String managementView(@PathVariable("id") Long initiativeId,
                                  Model model, Locale locale, HttpServletRequest request) {
 
-//        userService.assertManagementRightsForInitiative(initiativeId);
-        userService.getRequiredLoginUserHolder(request).requireManagementRightsForInitiative(initiativeId);
+        LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
+        loginUserHolder.requireManagementRightsForInitiative(initiativeId);
 
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().getManagement(initiativeId));
@@ -73,7 +73,7 @@ public class InitiativeManagementController extends BaseController {
 
         model.addAttribute("managementSettings", publicInitiativeService.managementSettings(initiativeId));
         model.addAttribute("participants", participantService.findPublicParticipants(initiativeId));
-        model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, userService.getManagementHash()));
+        model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, loginUserHolder));
         return MANAGEMENT_VIEW;
     }
 
@@ -87,14 +87,12 @@ public class InitiativeManagementController extends BaseController {
         Urls urls = Urls.get(locale);
         ManagementSettings managementSettings = publicInitiativeService.managementSettings(initiativeId);
 
-        String managementHash = userService.getManagementHash();
-
         if (managementSettings.isAllowUpdate()) {
 
             model.addAttribute(ALT_URI_ATTR, urls.alt().update(initiativeId));
             model.addAttribute("initiative", publicInitiativeService.getMunicipalityInitiative(initiativeId));
             model.addAttribute("updateData", publicInitiativeService.getInitiativeForUpdate(initiativeId, loginUserHolder));
-            model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, managementHash));
+            model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, loginUserHolder));
 
             model.addAttribute("previousPageURI", urls.getManagement(initiativeId));
             return UPDATE_VIEW;
@@ -113,10 +111,13 @@ public class InitiativeManagementController extends BaseController {
 
         Urls urls = Urls.get(locale);
 
+        LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
+        loginUserHolder.requireManagementRightsForInitiative(initiativeId);
+
         if (validationService.validationErrors(updateDto, bindingResult, model)) {
             model.addAttribute(ALT_URI_ATTR, urls.alt().update(initiativeId));
             model.addAttribute("initiative", publicInitiativeService.getMunicipalityInitiative(initiativeId, updateDto.getManagementHash(), locale));
-            model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, updateDto.getManagementHash()));
+            model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, loginUserHolder));
             model.addAttribute("updateData", updateDto);
             return UPDATE_VIEW;
         }

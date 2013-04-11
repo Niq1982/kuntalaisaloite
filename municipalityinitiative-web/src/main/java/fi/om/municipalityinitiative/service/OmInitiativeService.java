@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
+import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
 import fi.om.municipalityinitiative.util.InitiativeState;
@@ -59,4 +60,9 @@ public class OmInitiativeService {
         emailService.sendStatusEmail(initiative, initiative.getAuthor().getContactInfo().getEmail(), EmailMessageType.REJECTED_BY_OM, locale);
     }
 
+    @Transactional(readOnly = true)
+    public Author getAuthorInformation(Long initiativeId) {
+        userService.requireOmUser();
+        return initiativeDao.getByIdWithOriginalAuthor(initiativeId).getAuthor();
+    }
 }

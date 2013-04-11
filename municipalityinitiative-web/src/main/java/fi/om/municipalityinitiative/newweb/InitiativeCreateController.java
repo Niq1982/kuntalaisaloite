@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newweb;
 
+import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.newdto.ui.PrepareInitiativeDto;
@@ -119,10 +120,13 @@ public class InitiativeCreateController extends BaseController {
 
         Urls urls = Urls.get(locale);
 
+        LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
+        loginUserHolder.requireManagementRightsForInitiative(initiativeId);
+
         if (validionService.validationErrors(editDto, bindingResult, model)) {
             model.addAttribute(ALT_URI_ATTR, urls.alt().edit(initiativeId));
             model.addAttribute("initiative", editDto);
-            model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, editDto.getManagementHash()));
+            model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, loginUserHolder));
             return EDIT_VIEW;
         }
 
