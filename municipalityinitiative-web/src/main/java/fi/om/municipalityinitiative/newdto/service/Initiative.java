@@ -32,6 +32,7 @@ public class Initiative {
     private String comment;
     private Author author;
     private LocalDate stateTime;
+    private String moderatorComment;
 
     public Author getAuthor() {
         return author;
@@ -151,5 +152,13 @@ public class Initiative {
 
     public void setStateTime(LocalDate stateTime) {
         this.stateTime = stateTime;
+    }
+
+    public String getModeratorComment() {
+        return moderatorComment;
+    }
+
+    public void setModeratorComment(String moderatorComment) {
+        this.moderatorComment = moderatorComment;
     }
 }

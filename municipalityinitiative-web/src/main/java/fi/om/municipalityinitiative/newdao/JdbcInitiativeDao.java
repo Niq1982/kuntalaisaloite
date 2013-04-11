@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newdao;
 
+import com.google.common.base.Strings;
 import com.mysema.commons.lang.Assert;
 import com.mysema.query.Tuple;
 import com.mysema.query.sql.postgres.PostgresQuery;
@@ -325,6 +326,15 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     @Transactional(readOnly = false)
+    public void updateModeratorComment(Long initiativeId, String moderatorComment) {
+        assertSingleAffection(queryFactory.update(municipalityInitiative)
+                .set(municipalityInitiative.moderatorComment, moderatorComment)
+                .where(municipalityInitiative.id.eq(initiativeId))
+                .execute());
+    }
+
+    @Override
+    @Transactional(readOnly = false)
     public void updateInitiative(Long initiativeId, String managementHash, InitiativeUIUpdateDto updateDto) {
 
         Long participantId = queryFactory.from(QParticipant.participant)
@@ -465,6 +475,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     info.setState(row.get(municipalityInitiative.state));
                     info.setStateTime(row.get(municipalityInitiative.stateTimestamp).toLocalDate());
                     info.setComment(row.get(municipalityInitiative.comment));
+                    info.setModeratorComment(Strings.nullToEmpty(row.get(municipalityInitiative.moderatorComment)));
 
                     Author author = new Author();
                     ContactInfo contactInfo = new ContactInfo();

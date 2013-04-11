@@ -161,7 +161,22 @@ public class JdbcInitiativeDaoTest {
         assertThat(initiativeDao.getByIdWithOriginalAuthor(someOther).getSentTime().isPresent(), is(false));
     }
 
+    @Test
+    public void update_moderator_comment() {
+        Long initiative = testHelper.createCollectableReview(testMunicipality.getId());
 
+        String comment = "some moderator comment";
+        initiativeDao.updateModeratorComment(initiative, comment);
+
+        assertThat(initiativeDao.getByIdWithOriginalAuthor(initiative).getModeratorComment(), is(comment));
+    }
+
+    @Test
+    public void moderator_comment_is_never_null_but_empty_string() {
+        Initiative singleSent = initiativeDao.getByIdWithOriginalAuthor(testHelper.createSingleSent(testMunicipality.getId()));
+        assertThat(singleSent.getModeratorComment(), is(notNullValue()));
+        assertThat(singleSent.getModeratorComment(), isEmptyString());
+    }
 
     @Test
     public void find_with_limit() {
