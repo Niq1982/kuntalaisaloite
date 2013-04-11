@@ -161,7 +161,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
         setInitiativeBasicInfo(dto, insert);
         setContactInfo(dto, insert);
 
-        insert.set(municipalityInitiative.newAuthorId, PREPARATION_ID);
+        insert.set(municipalityInitiative.authorId, PREPARATION_ID);
 
         Long initiativeId = insert.executeWithKey(municipalityInitiative.id);
         
@@ -170,7 +170,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .executeWithKey(QAuthor.author.id);
 
         queryFactory.update(municipalityInitiative)
-                .set(municipalityInitiative.newAuthorId, authorId)
+                .set(municipalityInitiative.authorId, authorId)
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute();
 
@@ -271,9 +271,9 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .executeWithKey(QAuthor.author.id);
 
         assertSingleAffection(queryFactory.update(municipalityInitiative)
-                .set(municipalityInitiative.newAuthorId, newAuthorId)
+                .set(municipalityInitiative.authorId, newAuthorId)
                 .where(municipalityInitiative.id.eq(municipalityInitiativeId))
-                .where(municipalityInitiative.newAuthorId.eq(PREPARATION_ID))
+                .where(municipalityInitiative.authorId.eq(PREPARATION_ID))
                 .execute());
     }
 
@@ -316,7 +316,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
     public Long prepareInitiative(Long municipalityId, String email) {
         return queryFactory.insert(municipalityInitiative)
                 .set(municipalityInitiative.municipalityId, municipalityId)
-                .set(municipalityInitiative.newAuthorId, PREPARATION_ID)
+                .set(municipalityInitiative.authorId, PREPARATION_ID)
                 .executeWithKey(municipalityInitiative.id);
     }
 
@@ -348,7 +348,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
         Long authorId = queryFactory
                 .from(municipalityInitiative)
                 .where(municipalityInitiative.id.eq(initiativeId))
-                .singleResult(municipalityInitiative.newAuthorId);
+                .singleResult(municipalityInitiative.authorId);
 
         assertSingleAffection(queryFactory.update(QAuthor.author)
                 .set(QAuthor.author.name, editDto.getContactInfo().getName())

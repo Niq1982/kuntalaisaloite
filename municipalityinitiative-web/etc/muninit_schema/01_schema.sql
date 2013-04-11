@@ -1,7 +1,7 @@
 drop type if exists initiativeType;
 drop type if exists initiativeState;
 
-create type initiativeType as enum ('SINGLE','COLLABORATIVE','COLLABORATIVE_COUNCIL','COLLABORATIVE_CITIZEN');
+create type initiativeType as enum ('UNDEFINED', 'SINGLE','COLLABORATIVE','COLLABORATIVE_COUNCIL','COLLABORATIVE_CITIZEN');
 create type initiativeState as enum('DRAFT','REVIEW','ACCEPTED', 'PUBLISHED');
 
 create table municipality (
@@ -21,10 +21,13 @@ create table municipality_initiative (
 	municipality_id bigserial,
 	type initiativeType,
 	state initiativeState constraint initiative_state_nn not null default 'DRAFT',
+	state_timestamp timestamp constraint initiative_state_timestamp_nn not null default now(),
 
-	new_author_id bigserial,
+	author_id bigserial,
 
     modified timestamp constraint municipality_initiative_modified_nn not null default now(),
+
+    moderator_comment varchar(1000),
 
     name varchar(512),
     proposal text,
@@ -57,6 +60,8 @@ create table participant (
     show_name boolean,
     franchise boolean,
 
+    confirmation_code varchar(20), -- Being set as null after confirmation
+
     constraint participant_pk primary key (id),
     constraint participant_municipality_initiative_id_fk foreign key (municipality_initiative_id) references municipality_initiative(id),
     constraint participant_municipality_fk foreign key (municipality_id) references municipality(id)
@@ -80,4 +85,4 @@ create table author (
 );
 create index author_id_index on author(id);
 
-alter table municipality_initiative add constraint initiative_author_fk foreign key (new_author_id) references author(id) INITIALLY DEFERRED;
+alter table municipality_initiative add constraint initiative_author_fk foreign key (author_id) references author(id) INITIALLY DEFERRED;

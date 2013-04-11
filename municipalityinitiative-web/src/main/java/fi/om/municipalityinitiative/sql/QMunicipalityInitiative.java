@@ -18,6 +18,8 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
 
     public static final QMunicipalityInitiative municipalityInitiative = new QMunicipalityInitiative("municipality_initiative");
 
+    public final NumberPath<Long> authorId = createNumber("author_id", Long.class);
+
     public final StringPath comment = createString("comment");
 
     public final StringPath contactAddress = createString("contact_address");
@@ -32,13 +34,13 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
 
     public final StringPath managementHash = createString("management_hash");
 
+    public final StringPath moderatorComment = createString("moderator_comment");
+
     public final DateTimePath<org.joda.time.DateTime> modified = createDateTime("modified", org.joda.time.DateTime.class);
 
     public final NumberPath<Long> municipalityId = createNumber("municipality_id", Long.class);
 
     public final StringPath name = createString("name");
-
-    public final NumberPath<Long> newAuthorId = createNumber("new_author_id", Long.class);
 
     public final NumberPath<Integer> participantCount = createNumber("participant_count", Integer.class);
 
@@ -48,11 +50,13 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
 
     public final EnumPath<fi.om.municipalityinitiative.util.InitiativeState> state = createEnum("state", fi.om.municipalityinitiative.util.InitiativeState.class);
 
+    public final DateTimePath<org.joda.time.DateTime> stateTimestamp = createDateTime("state_timestamp", org.joda.time.DateTime.class);
+
     public final EnumPath<fi.om.municipalityinitiative.util.InitiativeType> type = createEnum("type", fi.om.municipalityinitiative.util.InitiativeType.class);
 
     public final com.mysema.query.sql.PrimaryKey<QMunicipalityInitiative> municipalityInitiativePk = createPrimaryKey(id);
 
-    public final com.mysema.query.sql.ForeignKey<QAuthor> initiativeAuthorFk = createForeignKey(newAuthorId, "id");
+    public final com.mysema.query.sql.ForeignKey<QAuthor> initiativeAuthorFk = createForeignKey(authorId, "id");
 
     public final com.mysema.query.sql.ForeignKey<QMunicipality> municipalityInitiativeMunicipalityFk = createForeignKey(municipalityId, "id");
 

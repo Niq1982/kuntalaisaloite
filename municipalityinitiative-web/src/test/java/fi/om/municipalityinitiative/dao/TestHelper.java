@@ -82,7 +82,7 @@ public class TestHelper {
         insert.set(municipalityInitiative.name, name);
         insert.set(municipalityInitiative.proposal, "proposal");
         insert.set(municipalityInitiative.municipalityId, municipalityId);
-        insert.set(municipalityInitiative.newAuthorId, -1L);
+        insert.set(municipalityInitiative.authorId, -1L);
         insert.set(municipalityInitiative.comment, "comment");
         //insert.setNull(municipalityInitiative.authorId); // TODO
         if (collectable) {
@@ -111,7 +111,7 @@ public class TestHelper {
                 .executeWithKey(QAuthor.author.id);
 
         queryFactory.update(municipalityInitiative)
-                .set(municipalityInitiative.newAuthorId, authorId)
+                .set(municipalityInitiative.authorId, authorId)
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute();
 
@@ -174,7 +174,7 @@ public class TestHelper {
         insert.set(municipalityInitiative.name, initiativeDraft.name);
         insert.set(municipalityInitiative.proposal, initiativeDraft.proposal);
         insert.set(municipalityInitiative.municipalityId, initiativeDraft.municipalityId);
-        insert.set(municipalityInitiative.newAuthorId, -1L);
+        insert.set(municipalityInitiative.authorId, -1L);
         insert.set(municipalityInitiative.participantCount, initiativeDraft.participantCount);
         insert.set(municipalityInitiative.comment, initiativeDraft.comment);
 
@@ -206,7 +206,7 @@ public class TestHelper {
                 .executeWithKey(QAuthor.author.id);
 
         queryFactory.update(municipalityInitiative)
-                .set(municipalityInitiative.newAuthorId, authorId)
+                .set(municipalityInitiative.authorId, authorId)
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute();
 
