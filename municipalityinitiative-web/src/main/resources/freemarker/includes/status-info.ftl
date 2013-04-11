@@ -116,7 +116,7 @@
     <#assign statusInfoHTML>
         <p style="${pBothMargins!""}"><@u.message "email.status.info.PUBLISHED_COLLECTING.description" /></p>
         
-        <#-- TODO: publish date -->
+        <#-- TODO: publish date: initiative.stateTime-->
         <@b.initiativeDetails type="html" showProposal=false />  
         
         <@b.publicViewLink "html" />
@@ -128,7 +128,7 @@
     <#-- TEXT -->
     <#assign statusInfo>
     
-        <#-- TODO: sent date -->
+        <#-- TODO: sent date: initiative.sentTime.value -->
         <@b.initiativeDetails "text" />
         
         <@b.contactInfo "text" />
@@ -136,7 +136,7 @@
     
     <#-- HTML -->
     <#assign statusInfoHTML>
-        <#-- TODO: sent date -->
+        <#-- TODO: sent date initiative.sentTime.value -->
         <@b.initiativeDetails "html" />
         
         <@b.contactInfo "html" />

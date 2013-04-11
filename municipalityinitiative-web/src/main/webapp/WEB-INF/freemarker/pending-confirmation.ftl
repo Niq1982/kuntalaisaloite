@@ -34,7 +34,7 @@
     <li>Tarkista, ettei sähköpostilaatikkosi ole täynnä.</li>
 </ul>
     
-<h2>Ylläpitolinkki testausta varten - poistuu kun sähköpostit lähtevät</h2>
+<h2>Ylläpitolinkki testausta varten</h2>
 <a href="${urls.loginAuthor(initiative.id, initiative.managementHash.value)}">${urls.loginAuthor(initiative.id, initiative.managementHash.value)}</a>
 
 

@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
+import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
@@ -24,6 +25,9 @@ public class OmInitiativeService {
     @Resource
     EmailService emailService;
 
+    @Resource
+    MunicipalityDao municipalityDao;
+
     @Transactional(readOnly = false)
     public void accept(Long initiativeId, Locale locale) {
         userService.requireOmUser();
@@ -38,6 +42,7 @@ public class OmInitiativeService {
             initiativeDao.markInitiativeAsSent(initiativeId);
             initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId); // NOTE: Necessary?
             emailService.sendStatusEmail(initiative, initiative.getAuthor().getContactInfo().getEmail(), EmailMessageType.ACCEPTED_BY_OM_AND_SENT, locale);
+            emailService.sendNotCollectableToMunicipality(initiative, municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), locale);
         }
         else {
             initiativeDao.updateInitiativeState(initiativeId, InitiativeState.ACCEPTED);

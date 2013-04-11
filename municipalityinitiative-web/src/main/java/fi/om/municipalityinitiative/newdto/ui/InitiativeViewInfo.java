@@ -69,4 +69,8 @@ public class InitiativeViewInfo {
         return initiative.getMunicipality();
     }
 
+    public LocalDate getStateTime() {
+        return initiative.getStateTime();
+    }
+
 }

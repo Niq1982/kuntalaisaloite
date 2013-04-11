@@ -62,7 +62,8 @@
         <#else>
             <#assign createTime><@u.localDate initiative.createTime /></#assign>
             <@u.message key="initiative.date.create" args=[createTime] />
-            <#if initiative.state??><span class="bull">&bull;</span> <@u.message "initiative.stateInfo."+initiative.state /></#if>
+            <#assign stateTime><@u.localDate initiative.stateTime/></#assign>
+            <#if initiative.state??><span class="bull">&bull;</span> <@u.message key="initiative.stateInfo."+initiative.state args=[stateTime]/></#if>
         </#if>
     </span>
 

@@ -23,8 +23,7 @@
     <#if managementSettings.allowOmAccept>
         <div class="msg-block">
             <h2><@u.message "moderation.title" /></h2>
-            <#-- TODO: Real date -->
-            <#assign sendToReviewDate>21.3.2013</#assign>
+            <#assign sendToReviewDate><@u.localDate initiative.stateTime/></#assign>
             <p><@u.messageHTML key="moderation.description" args=[sendToReviewDate] /></p>
             
             <div class="js-open-block hidden">
