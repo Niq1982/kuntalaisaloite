@@ -54,7 +54,7 @@ public class InitiativeManagementController extends BaseController {
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().getManagement(initiativeId));
 
-        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId, locale);
+        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
 
         if (initiativeInfo.isSent()) {
             return redirectWithMessage(urls.view(initiativeId), RequestMessage.ALREADY_SENT, request);

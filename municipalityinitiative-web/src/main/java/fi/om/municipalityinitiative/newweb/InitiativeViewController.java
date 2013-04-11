@@ -72,7 +72,7 @@ public class InitiativeViewController extends BaseController {
                        Model model, Locale locale, HttpServletRequest request) {
         Urls urls = Urls.get(locale);
 
-        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId, locale);
+        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
 
         if (initiativeInfo.getState() != InitiativeState.PUBLISHED && !userService.isOmUser()) {
 //            userService.assertManagementRightsForInitiative(initiativeId);
@@ -111,7 +111,7 @@ public class InitiativeViewController extends BaseController {
         }
         else {
             addModelAttributesToCollectView(model,
-                    publicInitiativeService.getMunicipalityInitiative(initiativeId, locale),
+                    publicInitiativeService.getMunicipalityInitiative(initiativeId),
                     municipalityService.findAllMunicipalities(locale),
                     participantService.getParticipantCount(initiativeId),
                     participantService.findPublicParticipants(initiativeId));
@@ -125,7 +125,7 @@ public class InitiativeViewController extends BaseController {
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().view(initiativeId));
         
-        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId, locale);
+        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
 
         if (initiativeInfo.isCollectable()){
             model.addAttribute("initiative",  initiativeInfo);
@@ -155,7 +155,7 @@ public class InitiativeViewController extends BaseController {
         
         Urls urls = Urls.get(locale);
         
-        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId, locale);
+        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
 
         model.addAttribute("initiative", initiativeInfo);
 

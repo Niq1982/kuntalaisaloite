@@ -69,9 +69,9 @@ public class PublicInitiativeService {
     @Transactional(readOnly = false)
     public Long prepareInitiative(PrepareInitiativeDto createDto, Locale locale) {
 
-        String managementHash = RandomHashGenerator.randomString(40);
-        Long initiativeId = initiativeDao.prepareInitiative(createDto.getMunicipality(), createDto.getAuthorEmail(), managementHash);
+        Long initiativeId = initiativeDao.prepareInitiative(createDto.getMunicipality(), createDto.getAuthorEmail());
         Long participantId = participantDao.prepareParticipant(initiativeId, createDto.getHomeMunicipality(), false); // XXX: Franchise?
+        String managementHash = RandomHashGenerator.randomString(40);
         initiativeDao.assignAuthor(initiativeId, participantId, createDto.getAuthorEmail(), managementHash);
 
         emailService.sendPrepareCreatedEmail(initiativeDao.getByIdWithOriginalAuthor(initiativeId), createDto.getAuthorEmail(), locale);
@@ -79,7 +79,7 @@ public class PublicInitiativeService {
         return initiativeId;
     }
 
-    public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId, Locale locale) {
+    public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId) {
         return InitiativeViewInfo.parse(initiativeDao.getByIdWithOriginalAuthor(initiativeId));
     }
 

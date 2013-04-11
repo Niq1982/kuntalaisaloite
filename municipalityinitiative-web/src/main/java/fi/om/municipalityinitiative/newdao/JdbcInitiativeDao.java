@@ -313,7 +313,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     @Transactional(readOnly = false)
-    public Long prepareInitiative(Long municipalityId, String email, String managementHash) {
+    public Long prepareInitiative(Long municipalityId, String email) {
         return queryFactory.insert(municipalityInitiative)
                 .set(municipalityInitiative.municipalityId, municipalityId)
                 .set(municipalityInitiative.newAuthorId, PREPARATION_ID)

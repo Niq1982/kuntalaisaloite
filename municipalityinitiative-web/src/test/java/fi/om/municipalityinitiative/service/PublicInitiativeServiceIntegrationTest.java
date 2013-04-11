@@ -88,7 +88,7 @@ public class PublicInitiativeServiceIntegrationTest {
     @Test
     public void all_fields_are_set_when_getting_municipalityInitiativeInfo() throws Exception {
         Long initiativeId = testHelper.createCollectableAccepted(testMunicipality.getId());
-        InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId, Locales.LOCALE_FI);
+        InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
         assertThat(initiative.getState(), is(InitiativeState.ACCEPTED));
         assertThat(initiative.getAuthorName(), is(TestHelper.DEFAULT_AUTHOR_NAME));
         assertThat(initiative.getMunicipality().getId(), is(testMunicipality.getId()));
@@ -170,7 +170,7 @@ public class PublicInitiativeServiceIntegrationTest {
     @Test
     public void preparing_initiative_sets_municipality() {
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
-        InitiativeViewInfo municipalityInitiative = service.getMunicipalityInitiative(initiativeId, Locales.LOCALE_FI);
+        InitiativeViewInfo municipalityInitiative = service.getMunicipalityInitiative(initiativeId);
 
         assertThat(municipalityInitiative.getMunicipality().getId(), is(testMunicipality.getId()));
     }

@@ -33,7 +33,7 @@ public interface InitiativeDao {
 
     InitiativeCounts getInitiativeCounts(Maybe<Long> municipality);
 
-    Long prepareInitiative(Long municipalityId, String email, String managementHash);
+    Long prepareInitiative(Long municipalityId, String email);
 
     InitiativeDraftUIEditDto getInitiativeForEdit(Long initiativeId);
 

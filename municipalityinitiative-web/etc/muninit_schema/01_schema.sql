@@ -67,7 +67,7 @@ create index participant_id_index on participant(id);
 create table author (
     id bigserial,
     participant_id bigserial,
-    management_hash varchar(40),
+    management_hash varchar(40), -- TODO unique
 
     name varchar(100),
     email varchar(100),

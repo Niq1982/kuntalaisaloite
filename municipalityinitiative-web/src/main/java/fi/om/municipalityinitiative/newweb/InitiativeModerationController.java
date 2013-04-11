@@ -53,7 +53,7 @@ public class InitiativeModerationController extends BaseController{
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().moderation(initiativeId));
 
-        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId, locale);
+        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
 
         addModelAttributesToCollectView(model,
                 initiativeInfo,
