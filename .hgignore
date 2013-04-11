@@ -6,7 +6,7 @@ syntax: regexp
 ^municipalityinitiative-web/\.pom\.xml\.swp$
 ^municipalityinitiative-web/\.settings$
 ^municipalityinitiative-web/scrap\.jpage$
-^municipalityinitiative-web/src/test/resources/app\.properties$
+^municipalityinitiative-web/src/main/resources/app\.properties$
 ^municipalityinitiative-web/src/test/resources/bonecp-config\.xml$
 
 syntax: glob
@@ -22,10 +22,13 @@ syntax: glob
 municipalityinitiative-web/.idea/*
 
 syntax: regexp
-^municipalityinitiative-web/src/main/webapp/css/aloitepalvelu-ie\.css$
-^municipalityinitiative-web/src/main/webapp/css/aloitepalvelu\.css$
-^municipalityinitiative-web/src/main/webapp/css/aloitepalvelu-new\.css$
+^municipalityinitiative-web/src/main/webapp/css/kuntalaisaloite-ie\.css$
+^municipalityinitiative-web/src/main/webapp/css/kuntalaisaloite-iframe\.css$
+^municipalityinitiative-web/src/main/webapp/css/kuntalaisaloite\.css$
+^municipalityinitiative-web/src/main/webapp/css/style-iframe\.css$
+^municipalityinitiative-web/src/main/webapp/css/style-iframe\.min\.css$
 ^municipalityinitiative-web/src/main/webapp/css/style\.min\.css$
-^municipalityinitiative-web/src/main/webapp/js/script\.min\.js$
 ^municipalityinitiative-web/src/main/webapp/css/style\.css$
+^municipalityinitiative-web/src/main/webapp/css/print\.css$
+^municipalityinitiative-web/src/main/webapp/js/script\.min\.js$
 ^municipalityinitiative-web/src/main/webapp/js/script\.js$
