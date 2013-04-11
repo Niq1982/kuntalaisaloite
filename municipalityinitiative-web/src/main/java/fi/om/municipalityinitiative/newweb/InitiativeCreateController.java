@@ -91,7 +91,7 @@ public class InitiativeCreateController extends BaseController {
 
         Urls urls = Urls.get(locale);
 
-        // XXX: Three transactions and all of them practically receives some data.
+        // XXX: Three transactions and all of them practically receives the same data.
         ManagementSettings managementSettings = publicInitiativeService.managementSettings(initiativeId);
 
         if (managementSettings.isAllowEdit()) {
