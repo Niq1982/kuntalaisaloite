@@ -2,7 +2,6 @@ package fi.om.municipalityinitiative.newdao;
 
 import com.mysema.commons.lang.Assert;
 import com.mysema.query.Tuple;
-import com.mysema.query.sql.dml.SQLInsertClause;
 import com.mysema.query.sql.postgres.PostgresQuery;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.support.Expressions;
@@ -17,11 +16,9 @@ import com.mysema.query.types.path.StringPath;
 import fi.om.municipalityinitiative.dao.NotFoundException;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
-import fi.om.municipalityinitiative.exceptions.NotCollectableException;
 import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
-import fi.om.municipalityinitiative.newdto.service.InitiativeCreateDto;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeDraftUIEditDto;
@@ -189,31 +186,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     @Transactional(readOnly = false)
-    @Deprecated
-    public void markAsSendedAndUpdateContactInfo(Long initiativeId, ContactInfo contactInfo) {
-
-        long affectedRows = queryFactory.update(municipalityInitiative)
-                .set(municipalityInitiative.sent, new DateTime())
-                .set(municipalityInitiative.contactPhone, contactInfo.getPhone())
-                .set(municipalityInitiative.contactEmail, contactInfo.getEmail())
-                .set(municipalityInitiative.contactAddress, contactInfo.getAddress())
-                .set(municipalityInitiative.contactName, contactInfo.getName())
-                .where(municipalityInitiative.id.eq(initiativeId))
-                .where(municipalityInitiative.state.eq(InitiativeState.ACCEPTED))
-                .where(municipalityInitiative.type.in(InitiativeType.COLLABORATIVE,
-                        InitiativeType.COLLABORATIVE_CITIZEN,
-                        InitiativeType.COLLABORATIVE_COUNCIL))
-                .where(municipalityInitiative.sent.isNull())
-                .execute();
-
-        if (affectedRows != 1) {
-            throw new NotCollectableException("Initiative already sent or not collectable");
-        }
-
-    }
-
-    @Override
-    @Transactional(readOnly = false)
     public void assignAuthor(Long municipalityInitiativeId, Long participantId, String authorEmail, String managementHash) {
 
         Long newAuthorId = queryFactory.insert(QAuthor.author)
@@ -227,14 +199,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .where(municipalityInitiative.id.eq(municipalityInitiativeId))
                 .where(municipalityInitiative.authorId.eq(PREPARATION_ID))
                 .execute());
-    }
-
-    @Override
-    public ContactInfo getContactInfo(Long initiativeId) {
-        return queryFactory.from(municipalityInitiative)
-                .where(municipalityInitiative.id.eq(initiativeId))
-                .innerJoin(municipalityInitiative.initiativeAuthorFk, QAuthor.author)
-                .uniqueResult(contactInfoMapping);
     }
 
     @Override

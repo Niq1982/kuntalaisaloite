@@ -25,10 +25,6 @@ public interface InitiativeDao {
 
     void assignAuthor(Long municipalityInitiativeId, Long participantId, String authorEmail, String managementHash);
 
-    void markAsSendedAndUpdateContactInfo(Long initiativeId, ContactInfo contactInfo);
-
-    ContactInfo getContactInfo(Long initiativeId);
-
     InitiativeCounts getInitiativeCounts(Maybe<Long> municipality);
 
     Long prepareInitiative(Long municipalityId, String email);

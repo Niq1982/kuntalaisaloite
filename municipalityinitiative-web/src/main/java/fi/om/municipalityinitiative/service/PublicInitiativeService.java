@@ -83,10 +83,6 @@ public class PublicInitiativeService {
         return InitiativeViewInfo.parse(initiativeDao.getByIdWithOriginalAuthor(initiativeId));
     }
 
-    public ContactInfo getContactInfo(Long initiativeId) {
-        return initiativeDao.getContactInfo(initiativeId);
-    }
-
     public InitiativeCounts getInitiativeCounts(Maybe<Long> municipality) {
         return initiativeDao.getInitiativeCounts(municipality);
     }

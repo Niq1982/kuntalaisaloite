@@ -389,49 +389,6 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
-    public void marks_as_sended_if_collectable_and_not_sended() {
-
-        Long initiativeId = testHelper.createCollectableAccepted(testMunicipality.getId());
-
-
-        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
-        assertThat(initiative.getSentTime().isPresent(), is(false)); // Precondition
-
-        initiativeDao.markAsSendedAndUpdateContactInfo(initiativeId, contactInfo());
-        initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
-        assertThat(initiative.getSentTime().isPresent(), is(true));
-    }
-
-    @Test(expected = NotCollectableException.class)
-    public void throws_exception_if_not_collectable_and_marking_as_sent() {
-
-        Long initiativeId = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId()).withType(InitiativeType.SINGLE));
-
-        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
-        assertThat(initiative.isCollectable(), is(false)); // Precondition
-
-        initiativeDao.markAsSendedAndUpdateContactInfo(initiativeId, contactInfo());
-    }
-
-    @Test
-    public void throws_exception_if_trying_double_send() {
-        Long initiativeId = testHelper.createCollectableAccepted(testMunicipality.getId());
-
-        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
-        assertThat(initiative.isCollectable(), is(true)); // Precondition
-        assertThat(initiative.getSentTime().isPresent(), is(false)); // Precondition
-
-        initiativeDao.markAsSendedAndUpdateContactInfo(initiativeId, contactInfo());
-
-        try {
-            initiativeDao.markAsSendedAndUpdateContactInfo(initiativeId, contactInfo());
-            fail("Should have thrown exception");
-        } catch (NotCollectableException e) {
-
-        }
-    }
-
-    @Test
     public void get_returns_initiative_if_given_managementHash_is_correct() {
         Long id = testHelper.createSingleSent(testMunicipality.getId());
 
@@ -450,17 +407,6 @@ public class JdbcInitiativeDaoTest {
         } catch (NotFoundException e) {
             assertThat(e.getMessage(), containsString("Invalid managementhash or initiative id"));
         }
-    }
-
-    @Test
-    public void find_contact_info() {
-        Long initiativeId = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId()));
-
-        ContactInfo contactInfo = initiativeDao.getContactInfo(initiativeId);
-        assertThat(contactInfo.getName(), is(TestHelper.DEFAULT_AUTHOR_NAME));
-        assertThat(contactInfo.getAddress(), is(TestHelper.DEFAULT_AUTHOR_ADDRESS));
-        assertThat(contactInfo.getEmail(), is(TestHelper.DEFAULT_AUTHOR_EMAIL));
-        assertThat(contactInfo.getPhone(), is(TestHelper.DEFAULT_AUTHOR_PHONE));
     }
 
     @Test
