@@ -51,8 +51,7 @@
             <div class="msg-block">
                 <@u.systemMessage path="initiative.saveDraft.description" type="info" showClose=false />
             </div>
-        
-            <input type="hidden" name="managementHash" value="${initiative.managementHash}"/>
+
             <button class="large-button" value="true" name="${UrlConstants.ACTION_SAVE}" type="submit"><span class="large-icon save-and-send"><@u.messageHTML "action.saveDraft" /></span></button>
             <a href="${previousPageURI!urls.baseUrl+"/"+locale}" class="large-button"><span class="large-icon cancel"><@u.messageHTML "action.cancelEditDraft" /></span></a>
         </div>

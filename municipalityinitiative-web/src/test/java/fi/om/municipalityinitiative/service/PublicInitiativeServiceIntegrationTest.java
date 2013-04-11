@@ -211,19 +211,18 @@ public class PublicInitiativeServiceIntegrationTest {
     }
 
     @Test(expected = AccessDeniedException.class)
-    public void editing_initiative_throws_exception_if_wrong_management_hash() {
+    public void editing_initiative_throws_exception_if_wrong_author() {
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
 
         InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto(testMunicipality, null);
-        editDto.setManagementHash("invalid management hash");
 
-        service.editInitiativeDraft(initiativeId, editDto);
+        service.editInitiativeDraft(initiativeId, unknownLoginUserHolder, editDto);
     }
 
     @Test(expected = OperationNotAllowedException.class)
     public void edit_initiative_fails_if_initiative_accepted() {
         Long collectableAccepted = testHelper.createCollectableAccepted(testMunicipality.getId());
-        service.editInitiativeDraft(collectableAccepted, new InitiativeDraftUIEditDto());
+        service.editInitiativeDraft(collectableAccepted, authorLoginUserHolder, new InitiativeDraftUIEditDto());
     }
 
     @Test
@@ -232,7 +231,6 @@ public class PublicInitiativeServiceIntegrationTest {
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
 
         InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto(testMunicipality, null);
-        editDto.setManagementHash(RandomHashGenerator.getPrevious());
 
         ContactInfo contactInfo = new ContactInfo();
         contactInfo.setEmail("updated email");
@@ -245,7 +243,7 @@ public class PublicInitiativeServiceIntegrationTest {
         editDto.setShowName(false); // As far as default is true ...
         editDto.setExtraInfo("updated extrainfo");
 
-        service.editInitiativeDraft(initiativeId, editDto);
+        service.editInitiativeDraft(initiativeId, authorLoginUserHolder, editDto);
 
         InitiativeDraftUIEditDto updated = service.getInitiativeDraftForEdit(initiativeId);
 

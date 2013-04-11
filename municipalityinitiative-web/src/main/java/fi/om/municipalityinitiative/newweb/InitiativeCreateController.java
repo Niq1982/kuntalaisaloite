@@ -130,7 +130,7 @@ public class InitiativeCreateController extends BaseController {
             return EDIT_VIEW;
         }
 
-        publicInitiativeService.editInitiativeDraft(initiativeId, editDto);
+        publicInitiativeService.editInitiativeDraft(initiativeId, loginUserHolder, editDto);
         return redirectWithMessage(urls.management(initiativeId), RequestMessage.SAVE_DRAFT, request);
     }
 

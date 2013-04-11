@@ -479,7 +479,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     InitiativeDraftUIEditDto info = new InitiativeDraftUIEditDto(
                             parseMunicipality(row),row.get(municipalityInitiative.state)
                     );
-                    info.setManagementHash(row.get(QAuthor.author.managementHash));
                     info.setName(row.get(municipalityInitiative.name));
                     info.setProposal(row.get(municipalityInitiative.proposal));
                     info.setExtraInfo(row.get(municipalityInitiative.comment));

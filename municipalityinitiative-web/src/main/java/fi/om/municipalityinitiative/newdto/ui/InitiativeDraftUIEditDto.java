@@ -19,9 +19,6 @@ public class InitiativeDraftUIEditDto {
     // FIXME: Remove
     private InitiativeState state;
 
-    // Hidden field which must match with database
-    private String managementHash;
-
     // Editable by author via ui
     @NotEmpty
     @Size(max = InitiativeConstants.INITIATIVE_NAME_MAX)
@@ -93,14 +90,6 @@ public class InitiativeDraftUIEditDto {
         this.showName = showName;
     }
 
-    public String getManagementHash() {
-        return managementHash;
-    }
-
-    public void setManagementHash(String managementHash) {
-        this.managementHash = managementHash;
-    }
-    
     public InitiativeState getState() {
         return state;
     }

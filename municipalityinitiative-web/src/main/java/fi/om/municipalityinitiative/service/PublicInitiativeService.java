@@ -98,19 +98,16 @@ public class PublicInitiativeService {
 
     @Transactional(readOnly = true)
     public InitiativeDraftUIEditDto getInitiativeDraftForEdit(Long initiativeId) {
+        // TODO: Do we need to check if allowed?
         assertAllowance("Edit initiative", managementSettings(initiativeId).isAllowEdit());
         InitiativeDraftUIEditDto initiativeForEdit = initiativeDao.getInitiativeForEdit(initiativeId); // TODO: Parse this with InitiativeDraftUiEditDto
         return initiativeForEdit;
     }
 
     @Transactional(readOnly = false)
-    public void editInitiativeDraft(Long initiativeId, InitiativeDraftUIEditDto editDto) {
-
+    public void editInitiativeDraft(Long initiativeId, LoginUserHolder loginUserHolder, InitiativeDraftUIEditDto editDto) {
+        loginUserHolder.requireManagementRightsForInitiative(initiativeId);
         assertAllowance("Edit initiative", managementSettings(initiativeId).isAllowEdit());
-        if (!initiativeDao.getInitiativeForEdit(initiativeId).getManagementHash().equals(editDto.getManagementHash())) {
-            throw new AccessDeniedException("Invalid management hash");
-        }
-
         initiativeDao.updateInitiativeDraft(initiativeId, editDto);
     }
 
