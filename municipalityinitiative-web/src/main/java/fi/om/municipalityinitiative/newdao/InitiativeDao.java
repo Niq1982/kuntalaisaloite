@@ -39,11 +39,11 @@ public interface InitiativeDao {
 
     void updateInitiativeDraft(Long initiativeId, InitiativeDraftUIEditDto editDto);
 
-    Author getAuthorInformation(Long id, String testManagementHash);
+    Author getAuthorInformation(Long id, String managementHash);
 
     void updateInitiativeState(Long initiativeId, InitiativeState state);
 
-    void updateInitiative(Long initiativeId, InitiativeUIUpdateDto updateDto);
+    void updateInitiative(Long initiativeId, String managementHash, InitiativeUIUpdateDto updateDto);
 
     void updateInitiativeType(Long initiativeId, InitiativeType initiativeType);
 

@@ -8,8 +8,6 @@ import javax.validation.constraints.Size;
 
 public class InitiativeUIUpdateDto {
 
-    private String managementHash;
-
     @Size(max = InitiativeConstants.INITIATIVE_PROPOSAL_MAX)
     private String extraInfo;
 
@@ -18,14 +16,6 @@ public class InitiativeUIUpdateDto {
 
     @NotNull
     private Boolean showName;
-
-    public String getManagementHash() {
-        return managementHash;
-    }
-
-    public void setManagementHash(String managementHash) {
-        this.managementHash = managementHash;
-    }
 
     public String getExtraInfo() {
         return extraInfo;

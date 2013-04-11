@@ -489,7 +489,6 @@ public class JdbcInitiativeDaoTest {
         ContactInfo contactInfo = new ContactInfo();
         updateDto.setContactInfo(contactInfo);
 
-        updateDto.setManagementHash(TestHelper.TEST_MANAGEMENT_HASH);
         updateDto.setExtraInfo("Modified extra info");
         updateDto.setShowName(false);
         contactInfo.setName("Modified Name");
@@ -497,7 +496,7 @@ public class JdbcInitiativeDaoTest {
         contactInfo.setPhone("Modified Phone");
         contactInfo.setEmail("Modified Email");
         updateDto.setContactInfo(contactInfo);
-        initiativeDao.updateInitiative(initiativeId, updateDto);
+        initiativeDao.updateInitiative(initiativeId, TestHelper.TEST_MANAGEMENT_HASH, updateDto);
 
         Initiative updated = initiativeDao.getById(initiativeId, TestHelper.TEST_MANAGEMENT_HASH);
         assertThat(updated.getShowName(), is(false));

@@ -116,15 +116,13 @@ public class InitiativeManagementController extends BaseController {
 
         if (validationService.validationErrors(updateDto, bindingResult, model)) {
             model.addAttribute(ALT_URI_ATTR, urls.alt().update(initiativeId));
-            model.addAttribute("initiative", publicInitiativeService.getMunicipalityInitiative(initiativeId, updateDto.getManagementHash(), locale));
+            model.addAttribute("initiative", publicInitiativeService.getMunicipalityInitiative(initiativeId, loginUserHolder));
             model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, loginUserHolder));
             model.addAttribute("updateData", updateDto);
             return UPDATE_VIEW;
         }
 
-        updateDto.setManagementHash(userService.getManagementHash());
-
-        publicInitiativeService.updateInitiative(initiativeId, updateDto);
+        publicInitiativeService.updateInitiative(initiativeId, loginUserHolder, updateDto);
         return redirectWithMessage(urls.management(initiativeId), RequestMessage.UPDATE_INITIATIVE, request);
     }
 

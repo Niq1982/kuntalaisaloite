@@ -91,8 +91,9 @@ public class PublicInitiativeService {
         return initiativeDao.getInitiativeCounts(municipality);
     }
 
-    public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId, String givenManagementHash, Locale locale) {
-        return InitiativeViewInfo.parse(initiativeDao.getById(initiativeId, givenManagementHash));
+    public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId, LoginUserHolder loginUserHolder) {
+        loginUserHolder.requireManagementRightsForInitiative(initiativeId);
+        return InitiativeViewInfo.parse(initiativeDao.getById(initiativeId, loginUserHolder.getInitiative().get().getManagementHash().get()));
     }
 
     @Transactional(readOnly = true)
@@ -128,17 +129,15 @@ public class PublicInitiativeService {
         InitiativeUIUpdateDto updateDto = new InitiativeUIUpdateDto();
         updateDto.setContactInfo(authorInformation.getContactInfo());
         updateDto.setShowName(initiative.getShowName());
-        updateDto.setManagementHash(managementHash);
         updateDto.setExtraInfo(initiative.getComment());
 
         return updateDto;
     }
 
     @Transactional(readOnly = false)
-    public void updateInitiative(Long initiativeId, InitiativeUIUpdateDto updateDto) {
+    public void updateInitiative(Long initiativeId, LoginUserHolder loginUserHolder, InitiativeUIUpdateDto updateDto) {
         assertAllowance("Update initiative", managementSettings(initiativeId).isAllowUpdate());
-        // TODO: Check managementHash from updateDto (is somehow checked when trying to update at dao layer)
-        initiativeDao.updateInitiative(initiativeId, updateDto);
+        initiativeDao.updateInitiative(initiativeId, loginUserHolder.getInitiative().get().getManagementHash().get(), updateDto);
     }
 
     @Transactional(readOnly = true)

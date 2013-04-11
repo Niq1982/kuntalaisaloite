@@ -177,10 +177,11 @@ public class PublicInitiativeServiceIntegrationTest {
     }
 
     @Test
-    // XXX: In the future initiative should not have the hash, author should.
     public void preparing_initiative_creates_hash() {
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
-        InitiativeViewInfo municipalityInitiative = service.getMunicipalityInitiative(initiativeId, RandomHashGenerator.getPrevious(), Locales.LOCALE_FI);
+        stubAuthorLoginUserHolderWith(initiativeId);
+
+        InitiativeViewInfo municipalityInitiative = service.getMunicipalityInitiative(initiativeId, authorLoginUserHolder);
 
         assertThat(municipalityInitiative.getManagementHash().get(), is(RandomHashGenerator.getPrevious()));
     }
@@ -260,7 +261,7 @@ public class PublicInitiativeServiceIntegrationTest {
     @Test(expected = OperationNotAllowedException.class)
     public void update_initiative_fails_if_initiative_sent() {
         Long sent = testHelper.createSingleSent(testMunicipality.getId());
-        service.updateInitiative(sent, new InitiativeUIUpdateDto());
+        service.updateInitiative(sent, authorLoginUserHolder, new InitiativeUIUpdateDto());
     }
 
     @Test

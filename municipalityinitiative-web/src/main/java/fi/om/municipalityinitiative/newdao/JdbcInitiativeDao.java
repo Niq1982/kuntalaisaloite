@@ -407,12 +407,12 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     @Transactional(readOnly = false)
-    public void updateInitiative(Long initiativeId, InitiativeUIUpdateDto updateDto) {
+    public void updateInitiative(Long initiativeId, String managementHash, InitiativeUIUpdateDto updateDto) {
 
         Long participantId = queryFactory.from(QParticipant.participant)
                 .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
                 .leftJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
-                .where(QAuthor.author.managementHash.eq(updateDto.getManagementHash()))
+                .where(QAuthor.author.managementHash.eq(managementHash))
                 .singleResult(QParticipant.participant.id);
 
         assertSingleAffection(queryFactory.update(municipalityInitiative)
