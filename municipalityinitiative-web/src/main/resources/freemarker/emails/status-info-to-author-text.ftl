@@ -2,10 +2,12 @@
 <#import "../components/email-utils.ftl" as u />
 <#import "../components/email-blocks.ftl" as b />
 
+<#assign type="text" />
+
 <#-- Use statusTitle and statusInfo for TEXT message -->
 <#include "../includes/status-info.ftl" />
 
-<@b.initiativeDetails "text" />
+<@b.initiativeDetails type />
 
 <@u.message "email.status.info."+emailMessageType+".title" />
 
@@ -13,4 +15,4 @@ ${statusInfo!""}
 
 ----
 
-<@b.emailFooter "text" />
+<@b.emailFooter type />

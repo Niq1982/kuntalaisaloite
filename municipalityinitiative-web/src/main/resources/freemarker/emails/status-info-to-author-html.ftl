@@ -2,6 +2,8 @@
 <#import "../components/email-utils.ftl" as u />
 <#import "../components/email-blocks.ftl" as b />
 
+<#assign type="html" />
+
 <#escape x as x?html>
 
 <#include "../includes/status-info.ftl" />
@@ -19,12 +21,6 @@
     </@b.mainContentBlock>
     
     <@u.spacer "15" />
-
-    <#-- TODO: stateComment -->
-    <#if stateComment??>
-        <@b.comment "html" stateComment />
-        <@u.spacer "15" />
-    </#if>
 
 </@l.emailHtml>
 

@@ -1,23 +1,25 @@
 <#import "../components/email-utils.ftl" as u />
 <#import "../components/email-blocks.ftl" as b />
 
+<#assign type="text" />
+
 <#if (initiative.comment)?has_content>
-    <@b.comment "text" initiative.comment "email.commentToMunicipality" />
+    <@b.comment type initiative.comment "email.commentToMunicipality" />
 </#if>
 <#--
 <@u.message "email.initiative" /> - ${initiative.municipality.getLocalizedName(locale)!""}
 
-<@b.initiativeDetails "text" />
+<@b.initiativeDetails type />
 
 ----
 
-<@b.contactInfo "text" />
+<@b.contactInfo type />
 
 ----
 
-<@b.participants "text" />
+<@b.participants type />
 
 ----
 
-<@b.emailFooter "text" />
+<@b.emailFooter type />
 -->

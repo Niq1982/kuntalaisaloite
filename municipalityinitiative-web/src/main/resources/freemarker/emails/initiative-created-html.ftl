@@ -2,6 +2,8 @@
 <#import "../components/email-utils.ftl" as u />
 <#import "../components/email-blocks.ftl" as b />
 
+<#assign type="html" />
+
 <#include "../includes/styles.ftl" />
 
 <#escape x as x?html>
@@ -10,26 +12,26 @@
 
 <@l.emailHtml "municipality-collectable" title>
 
-    <@b.contentBlock "html">
+    <@b.contentBlock type>
         <p style="${pBottomMargin}">Kuntalaisaloite on luotu alla olevilla tiedoilla. Ylläpito-sivulta voit muokata aloitteen tietoja tai lähettää sen oikeusministeriön tarkastettavaksi.</p>
     </@b.contentBlock>
 
     <@u.spacer "15" />
 
     <@b.mainContentBlock title>
-        <@b.initiativeDetails "html" />
+        <@b.initiativeDetails type />
     </@b.mainContentBlock>
     
     <@u.spacer "15" />
     
-    <@b.contentBlock "html">
-        <@b.contactInfo "html" />
+    <@b.contentBlock type>
+        <@b.contactInfo type />
     </@b.contentBlock>
     
     <@u.spacer "15" />
     
-    <@b.contentBlock "html">
-        <@b.adminViewLink "html" />
+    <@b.contentBlock type>
+        <@b.adminViewLink type />
     </@b.contentBlock>
     
     <@u.spacer "15" />

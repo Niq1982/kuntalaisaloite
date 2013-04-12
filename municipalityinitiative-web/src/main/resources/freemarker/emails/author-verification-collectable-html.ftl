@@ -2,6 +2,8 @@
 <#import "../components/email-utils.ftl" as u />
 <#import "../components/email-blocks.ftl" as b />
 
+<#assign type="html" />
+
 <#include "../includes/styles.ftl" />
 
 <#escape x as x?html>

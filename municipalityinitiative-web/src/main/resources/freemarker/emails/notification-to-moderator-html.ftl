@@ -2,6 +2,8 @@
 <#import "../components/email-utils.ftl" as u />
 <#import "../components/email-blocks.ftl" as b />
 
+<#assign type="html" />
+
 <#include "../includes/styles.ftl" />
 
 <#escape x as x?html>
@@ -11,18 +13,18 @@
 <@l.emailHtml "notification-to-moderator" title>
 
     <@b.mainContentBlock title>
-        <@b.initiativeDetails "html" />
+        <@b.initiativeDetails type />
     </@b.mainContentBlock>
     
     <@u.spacer "15" />
     
-    <@b.contentBlock "html">
-        <@b.contactInfo "html" />
+    <@b.contentBlock type>
+        <@b.contactInfo type />
     </@b.contentBlock>
     
     <@u.spacer "15" />
     
-    <@b.contentBlock "html">
+    <@b.contentBlock type>
         <h4 style="${h4!""}"><@u.message "email.notification.to.moderator.moderateLink" /></h4>
         <p style="${pBottomMargin}"><@u.link urls.moderation(initiative.id) /></p>
     </@b.contentBlock>

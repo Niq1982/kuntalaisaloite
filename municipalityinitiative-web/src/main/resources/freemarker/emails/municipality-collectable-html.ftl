@@ -2,6 +2,8 @@
 <#import "../components/email-utils.ftl" as u />
 <#import "../components/email-blocks.ftl" as b />
 
+<#assign type="html" />
+
 <#include "../includes/styles.ftl" />
 
 <#escape x as x?html>
@@ -11,24 +13,24 @@
 <@l.emailHtml "municipality-collectable" title>
 
     <#if (initiative.comment)?has_content>
-        <@b.comment "html" initiative.comment "email.commentToMunicipality" />
+        <@b.comment type initiative.comment "email.commentToMunicipality" />
         <@u.spacer "15" />
     </#if>
 <#--
     <@b.mainContentBlock title>
-        <@b.initiativeDetails "html" />
+        <@b.initiativeDetails type />
     </@b.mainContentBlock>
     
     <@u.spacer "15" />
     
-    <@b.contentBlock "html">
-        <@b.contactInfo "html" />
+    <@b.contentBlock type>
+        <@b.contactInfo type />
     </@b.contentBlock>
     
     <@u.spacer "15" />
     
-    <@b.contentBlock "html">
-        <@b.participants "html" />
+    <@b.contentBlock type>
+        <@b.participants type />
     </@b.contentBlock>
     
     <@u.spacer "15" />
