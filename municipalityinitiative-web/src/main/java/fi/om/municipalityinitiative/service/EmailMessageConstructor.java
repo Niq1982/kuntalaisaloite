@@ -194,6 +194,8 @@ public class EmailMessageConstructor {
             Assert.notNull(templateName, "templateName");
             Assert.notNull(dataMap, "dataMap");
 
+            log.info("Sending email to '"+sendTo+"'");
+
             MimeMessageHelper mimeMessageHelper = parseBasicEmailData(sendTo, subject, templateName, dataMap);
 
             if (mimeMessageHelper == null) { // If testConsoleOutput was true, email was printed instead of sending
