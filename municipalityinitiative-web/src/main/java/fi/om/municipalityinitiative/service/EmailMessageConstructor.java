@@ -75,6 +75,7 @@ public class EmailMessageConstructor {
         text = stripTextRows(text, 2);
 
         if (emailSettings.getTestSendTo().isPresent()) {
+            System.out.println("Replaced sendTo email with: " + emailSettings.getTestSendTo().get());
             text = "TEST OPTION REPLACED THE EMAIL ADDRESS!\nThe original address was: " + sendTo + "\n\n\n-------------\n" + text;
             html = "TEST OPTION REPLACED THE EMAIL ADDRESS!\nThe original address was: " + sendTo + "<hr>" + html;
             sendTo = emailSettings.getTestSendTo().get();
