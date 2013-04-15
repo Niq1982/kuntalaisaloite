@@ -29,16 +29,21 @@ public class ParticipantToPdfExporter {
     private static Font smallBold = new Font(FONT_FAMILY, 10, Font.BOLD);
 
     public static void createPdf(CollectableInitiativeEmailInfo emailInfo, OutputStream outputStream) {
+        Document document = null;
         try {
-            Document document = new Document();
+            document = new Document();
             PdfWriter.getInstance(document, outputStream);
             document.open();
             addMetaData(document, emailInfo);
             addTitlePage(document, emailInfo);
 //            addContent(document);
-            document.close();
+
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            if (document != null) {
+                document.close();
+            }
         }
     }
     

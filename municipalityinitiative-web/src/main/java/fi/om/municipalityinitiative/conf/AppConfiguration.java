@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.conf;
 
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
@@ -251,7 +252,7 @@ public class AppConfiguration {
         String moderatorSendTo = env.getProperty(PropertyNames.emailSendToOM);
         boolean testConsoleOutput = env.getProperty(PropertyNames.testEmailConsoleOutput, Boolean.class, TEST_EMAIL_CONSOLE_OUTPUT_DEFAULT);
 
-        return new EmailSettings(defaultReplyTo, Maybe.fromNullable(testSendTo), testConsoleOutput, moderatorSendTo);
+        return new EmailSettings(defaultReplyTo, Maybe.fromNullable(Strings.emptyToNull(testSendTo)), testConsoleOutput, moderatorSendTo);
     }
 
     @Bean
