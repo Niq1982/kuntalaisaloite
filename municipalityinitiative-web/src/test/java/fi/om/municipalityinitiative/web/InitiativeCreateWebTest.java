@@ -138,7 +138,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
     public void fill_in_preparation_form() {
         getElemContaining(getMessage(MSG_INITIATIVE_TYPE_NORMAL), "span").click();
-        inputText("authorEmail", CONTACT_EMAIL);
+        inputText("participantEmail", CONTACT_EMAIL);
         getElemContaining(getMessage(MSG_BTN_PREPARE_SEND), "button").click();
 
         String msgSuccessPrepare = MSG_SUCCESS_PREPARE;

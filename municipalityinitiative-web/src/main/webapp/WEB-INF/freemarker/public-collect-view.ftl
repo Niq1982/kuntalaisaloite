@@ -60,10 +60,10 @@
             
             <#-- TODO: Participant email address -->
             <div class="input-block-content flexible">
-                <label for="authorEmail" class="input-header">
+                <label for="participantEmail" class="input-header">
                     Sähköpostiosoitteesi <span class="icon-small required trigger-tooltip"></span>
                 </label>
-                <input type="text" maxlength="100" class="large" value="" name="authorEmail" id="authorEmail">
+                <input type="text" maxlength="100" class="large" value="" name="participantEmail" id="participantEmail">
             </div>
             
             <div class="input-block-content flexible">

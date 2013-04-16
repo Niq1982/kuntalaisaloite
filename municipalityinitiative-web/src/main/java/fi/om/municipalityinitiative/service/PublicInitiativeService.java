@@ -67,14 +67,14 @@ public class PublicInitiativeService {
     }
 
     @Transactional(readOnly = false)
-    public Long prepareInitiative(PrepareInitiativeDto createDto, Locale locale) {
+    public Long prepareInitiative(PrepareInitiativeUICreateDto createDto, Locale locale) {
 
-        Long initiativeId = initiativeDao.prepareInitiative(createDto.getMunicipality(), createDto.getAuthorEmail());
-        Long participantId = participantDao.prepareParticipant(initiativeId, createDto.getHomeMunicipality(), createDto.getAuthorEmail(), false); // XXX: Franchise?
+        Long initiativeId = initiativeDao.prepareInitiative(createDto.getMunicipality(), createDto.getParticipantEmail());
+        Long participantId = participantDao.prepareParticipant(initiativeId, createDto.getHomeMunicipality(), createDto.getParticipantEmail(), false); // XXX: Franchise?
         String managementHash = RandomHashGenerator.randomString(40);
         initiativeDao.assignAuthor(initiativeId, participantId, managementHash);
 
-        emailService.sendPrepareCreatedEmail(initiativeDao.getByIdWithOriginalAuthor(initiativeId), createDto.getAuthorEmail(), locale);
+        emailService.sendPrepareCreatedEmail(initiativeDao.getByIdWithOriginalAuthor(initiativeId), createDto.getParticipantEmail(), locale);
 
         return initiativeId;
     }

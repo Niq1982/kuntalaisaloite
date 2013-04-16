@@ -141,11 +141,11 @@ public class PublicInitiativeServiceIntegrationTest {
 
     @Test
     public void sets_participant_count_to_one_when_adding_new_collectable_initiative() {
-        PrepareInitiativeDto prepareInitiativeDto = new PrepareInitiativeDto();
-        prepareInitiativeDto.setMunicipality(testMunicipality.getId());
-        prepareInitiativeDto.setHomeMunicipality(participantMunicipality.getId());
-        prepareInitiativeDto.setAuthorEmail("authorEmail@example.com");
-        Long initiativeId = service.prepareInitiative(prepareInitiativeDto, Locales.LOCALE_FI);
+        PrepareInitiativeUICreateDto prepareInitiativeUICreateDto = new PrepareInitiativeUICreateDto();
+        prepareInitiativeUICreateDto.setMunicipality(testMunicipality.getId());
+        prepareInitiativeUICreateDto.setHomeMunicipality(participantMunicipality.getId());
+        prepareInitiativeUICreateDto.setParticipantEmail("authorEmail@example.com");
+        Long initiativeId = service.prepareInitiative(prepareInitiativeUICreateDto, Locales.LOCALE_FI);
         testHelper.updateField(initiativeId, QMunicipalityInitiative.municipalityInitiative.state, InitiativeState.PUBLISHED);
 
         List<InitiativeListInfo> initiatives = service.findMunicipalityInitiatives(new InitiativeSearch().setShow(InitiativeSearch.Show.all));
@@ -202,12 +202,12 @@ public class PublicInitiativeServiceIntegrationTest {
 
     @Test
     public void preparing_initiative_saves_email() {
-        PrepareInitiativeDto createDto = prepareDto();
-        createDto.setAuthorEmail("any@example.com");
+        PrepareInitiativeUICreateDto createDto = prepareDto();
+        createDto.setParticipantEmail("any@example.com");
         Long initiativeId = service.prepareInitiative(createDto, Locales.LOCALE_FI);
 
         // TODO: Change to getContactInfo etc.
-        assertThat(service.getInitiativeDraftForEdit(initiativeId).getContactInfo().getEmail(), is(createDto.getAuthorEmail()));
+        assertThat(service.getInitiativeDraftForEdit(initiativeId).getContactInfo().getEmail(), is(createDto.getParticipantEmail()));
     }
 
     @Test(expected = AccessDeniedException.class)
@@ -377,12 +377,12 @@ public class PublicInitiativeServiceIntegrationTest {
         assertThat(sent.getSentTime().isPresent(), is(true));
     }
 
-    private static PrepareInitiativeDto prepareDto() {
-        PrepareInitiativeDto prepareInitiativeDto = new PrepareInitiativeDto();
-        prepareInitiativeDto.setMunicipality(testMunicipality.getId());
-        prepareInitiativeDto.setHomeMunicipality(participantMunicipality.getId());
-        prepareInitiativeDto.setAuthorEmail("authorEmail@example.com");
-        return prepareInitiativeDto;
+    private static PrepareInitiativeUICreateDto prepareDto() {
+        PrepareInitiativeUICreateDto prepareInitiativeUICreateDto = new PrepareInitiativeUICreateDto();
+        prepareInitiativeUICreateDto.setMunicipality(testMunicipality.getId());
+        prepareInitiativeUICreateDto.setHomeMunicipality(participantMunicipality.getId());
+        prepareInitiativeUICreateDto.setParticipantEmail("authorEmail@example.com");
+        return prepareInitiativeUICreateDto;
     }
 
 

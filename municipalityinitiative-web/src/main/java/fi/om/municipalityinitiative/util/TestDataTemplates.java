@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.util;
 import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUICreateDto;
+import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateBase;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateDto;
 
 import java.util.List;
@@ -77,7 +78,7 @@ public class TestDataTemplates {
         participant.setParticipantName(name);
         participant.setMunicipality(municipality);
         participant.setHomeMunicipality(municipality);
-        participant.setMunicipalMembership(municipalMembership);
+        participant.setMunicipalMembership(municipalMembership ? ParticipantUICreateBase.Membership.community : ParticipantUICreateBase.Membership.none);
         participant.setShowName(showName);
         return participant;
     }

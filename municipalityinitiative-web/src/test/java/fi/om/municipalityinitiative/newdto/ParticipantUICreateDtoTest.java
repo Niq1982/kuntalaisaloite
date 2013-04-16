@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newdto;
 
+import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateBase;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateDto;
 import org.joda.time.DateTime;
 import org.junit.BeforeClass;
@@ -29,7 +30,7 @@ public class ParticipantUICreateDtoTest {
 
     @Test
     public void municipalMembership_is_needed_if_municipalities_are_not_the_same() {
-        ParticipantUICreateDto dto = createParticipantWithName();
+        ParticipantUICreateDto dto = createParticipantWithNameAndEmail();
 
         dto.setMunicipality(1L);
         dto.setHomeMunicipality(2L);
@@ -44,11 +45,11 @@ public class ParticipantUICreateDtoTest {
 
     @Test
     public void municipalMembership_cannot_be_false_if_municipalities_are_not_the_same() {
-        ParticipantUICreateDto dto = createParticipantWithName();
+        ParticipantUICreateDto dto = createParticipantWithNameAndEmail();
 
         dto.setMunicipality(1L);
         dto.setHomeMunicipality(2L);
-        dto.setMunicipalMembership(false);
+        dto.setMunicipalMembership(ParticipantUICreateBase.Membership.none);
 
         Set<ConstraintViolation<ParticipantUICreateDto>> violations = validator.validate(dto);
 
@@ -59,11 +60,11 @@ public class ParticipantUICreateDtoTest {
 
     @Test
     public void municipalMembership_can_be_true_if_municipalities_are_not_the_same() {
-        ParticipantUICreateDto dto = createParticipantWithName();
+        ParticipantUICreateDto dto = createParticipantWithNameAndEmail();
 
         dto.setMunicipality(1L);
         dto.setHomeMunicipality(2L);
-        dto.setMunicipalMembership(true);
+        dto.setMunicipalMembership(ParticipantUICreateBase.Membership.community);
 
         Set<ConstraintViolation<ParticipantUICreateDto>> violations = validator.validate(dto);
 
@@ -85,11 +86,11 @@ public class ParticipantUICreateDtoTest {
     }
 
     private ParticipantUICreateDto validParticipant() {
-        ParticipantUICreateDto dto = createParticipantWithName();
+        ParticipantUICreateDto dto = createParticipantWithNameAndEmail();
 
         dto.setMunicipality(1L);
         dto.setHomeMunicipality(2L);
-        dto.setMunicipalMembership(true);
+        dto.setMunicipalMembership(ParticipantUICreateBase.Membership.community);
         return dto;
     }
 
@@ -97,10 +98,11 @@ public class ParticipantUICreateDtoTest {
         return violations.iterator().next();
     }
 
-    private ParticipantUICreateDto createParticipantWithName() {
+    private ParticipantUICreateDto createParticipantWithNameAndEmail() {
         ParticipantUICreateDto dto = new ParticipantUICreateDto();
         dto.setRandomNumber(DateTime.now().minusMinutes(1).getMillis());
         dto.setParticipantName("Some random name");
+        dto.setParticipantEmail("email@example.com");
         return dto;
     }
 }

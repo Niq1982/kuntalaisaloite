@@ -3,7 +3,7 @@ package fi.om.municipalityinitiative.newweb;
 import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeDraftUIEditDto;
-import fi.om.municipalityinitiative.newdto.ui.PrepareInitiativeDto;
+import fi.om.municipalityinitiative.newdto.ui.PrepareInitiativeUICreateDto;
 import fi.om.municipalityinitiative.service.PublicInitiativeService;
 import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.service.UserService;
@@ -56,13 +56,13 @@ public class InitiativeCreateController extends BaseController {
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().prepare());
 
-        model.addAttribute("initiative", new PrepareInitiativeDto());
+        model.addAttribute("initiative", new PrepareInitiativeUICreateDto());
         model.addAttribute("municipalities", municipalityService.findAllMunicipalities(locale));
         return PREPARE_VIEW;
     }
 
     @RequestMapping(value={ PREPARE_FI, PREPARE_SV }, method=POST)
-    public String preparePost(@ModelAttribute("initiative") PrepareInitiativeDto initiative,
+    public String preparePost(@ModelAttribute("initiative") PrepareInitiativeUICreateDto initiative,
                              BindingResult bindingResult,
                              Model model,
                              Locale locale,
@@ -77,7 +77,7 @@ public class InitiativeCreateController extends BaseController {
         Urls urls = Urls.get(locale);
         Long initiativeId = publicInitiativeService.prepareInitiative(initiative, locale);
         
-        addRequestAttribute(initiative.getAuthorEmail(), model, request);
+        addRequestAttribute(initiative.getParticipantEmail(), model, request);
         return redirectWithMessage(urls.pendingConfirmation(initiativeId), RequestMessage.PREPARE, request);
 
     }

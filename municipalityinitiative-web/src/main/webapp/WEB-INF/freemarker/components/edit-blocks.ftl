@@ -154,16 +154,16 @@
 <#macro authorEmailBlock>
     <div class="input-block-extra">
         <div class="input-block-extra-content">
-            <@f.helpText "help.authorEmail" />
+            <@f.helpText "help.participantEmail" />
         </div>
     </div>
     
     <div class="input-block-content">
-        <@u.systemMessage path="initiative.authorEmail.description" type="info" showClose=false />
+        <@u.systemMessage path="initiative.participantEmail.description" type="info" showClose=false />
     </div>
 
     <div class="input-block-content">
-        <@f.textField path="initiative.authorEmail" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
+        <@f.textField path="initiative.participantEmail" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
     </div>
 </#macro>
 
