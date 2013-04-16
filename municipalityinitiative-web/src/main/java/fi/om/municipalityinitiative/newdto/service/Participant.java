@@ -9,12 +9,14 @@ public class Participant {
     private final boolean franchise;
     private final LocalDate participateDate;
     private final Municipality homeMunicipality;
+    private final String email;
 
-    public Participant(LocalDate participateDate, String name, boolean franchise, Municipality homeMunicipality) {
+    public Participant(LocalDate participateDate, String name, boolean franchise, Municipality homeMunicipality, String email) {
         this.name = name;
         this.franchise = franchise;
         this.participateDate = participateDate;
         this.homeMunicipality = homeMunicipality;
+        this.email = email;
     }
 
     public String getName() {
@@ -32,5 +34,10 @@ public class Participant {
 
     public Municipality getHomeMunicipality() {
         return homeMunicipality;
+    }
+
+    // @JsonIgnore
+    public String getEmail() {
+        return email;
     }
 }

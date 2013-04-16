@@ -44,8 +44,8 @@ public class CollectableInitiativeEmailInfoTest {
         
         List<Participant> participants = Lists.newArrayList();
         
-        participants.add(new Participant(new LocalDate(2010, 1, 1), "FranchiseGuy Name", true, MUNICIPALITY));
-        participants.add(new Participant(new LocalDate(2010, 1, 1), "NoFranchiseGuy Name", false, MUNICIPALITY));
+        participants.add(new Participant(new LocalDate(2010, 1, 1), "FranchiseGuy Name", true, MUNICIPALITY, ""));
+        participants.add(new Participant(new LocalDate(2010, 1, 1), "NoFranchiseGuy Name", false, MUNICIPALITY, ""));
         
         CollectableInitiativeEmailInfo collectableInitiativeEmailInfo = CollectableInitiativeEmailInfo.parse(initiativeEmailInfo, "comment", participants);
 

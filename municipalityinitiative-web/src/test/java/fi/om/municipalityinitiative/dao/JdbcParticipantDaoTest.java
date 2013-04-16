@@ -6,6 +6,8 @@ import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.sql.QParticipant;
+import fi.om.municipalityinitiative.util.InitiativeState;
+import fi.om.municipalityinitiative.util.InitiativeType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,8 +16,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
 
+import java.util.Collection;
 import java.util.List;
 
+import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -23,6 +27,10 @@ import static org.hamcrest.Matchers.*;
 @ContextConfiguration(classes={IntegrationTestConfiguration.class})
 public class JdbcParticipantDaoTest {
 
+    public static final String PARTICIPANTS_NAME = "Participants Name";
+    public static final String PARTICIPANT_EMAIL = "participant@example.com";
+    public static final boolean PARTICIPANT_FRANCHISE = true;
+    public static final boolean PARTICIPANT_SHOW_NAME = true;
     @Resource
     ParticipantDao participantDao;
 
@@ -30,18 +38,38 @@ public class JdbcParticipantDaoTest {
     TestHelper testHelper;
     private Long testMunicipalityId;
     private Long testInitiativeId;
+    private Long otherMunicipalityId;
 
     @Before
     public void setup() {
         testHelper.dbCleanup();
         testMunicipalityId = testHelper.createTestMunicipality("Municipality");
-        testInitiativeId = testHelper.createTestInitiative(testMunicipalityId);
+        testInitiativeId = testHelper.create(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+
+        otherMunicipalityId = testHelper.createTestMunicipality("Other Municipality");
     }
 
     @Test
-    public void adds_new_composers() {
+    public void adds_new_participants() {
+        precondition(testHelper.countAll(QParticipant.participant), is(1L));
         participantDao.create(participantCreateDto());
-        assertThat(testHelper.countAll(QParticipant.participant), is(2L)); // Creator plus this
+        assertThat(testHelper.countAll(QParticipant.participant), is(2L));
+    }
+
+    @Test
+    public void participant_information_is_saved() {
+        precondition(participantDao.findPublicParticipants(testInitiativeId), hasSize(1));
+
+        participantDao.create(participantCreateDto());
+        List<Participant> allParticipants = participantDao.findPublicParticipants(testInitiativeId);
+        assertThat(allParticipants, hasSize(2));
+
+        Participant participant = allParticipants.get(0);
+        assertThat(participant.getName(), is(PARTICIPANTS_NAME));
+        assertThat(participant.isFranchise(), is(PARTICIPANT_FRANCHISE));
+        assertThat(participant.getHomeMunicipality().getId(), is(otherMunicipalityId));
+        assertThat(participant.getParticipateDate(), is(notNullValue()));
+        assertThat(participant.getEmail(), is(PARTICIPANT_EMAIL));
     }
 
     @Test
@@ -180,10 +208,11 @@ public class JdbcParticipantDaoTest {
     private ParticipantCreateDto participantCreateDto() {
         ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
         participantCreateDto.setMunicipalityInitiativeId(testInitiativeId);
-        participantCreateDto.setParticipantName("Participants Name");
-        participantCreateDto.setHomeMunicipality(testMunicipalityId);
-        participantCreateDto.setFranchise(true);
-        participantCreateDto.setShowName(true);
+        participantCreateDto.setParticipantName(PARTICIPANTS_NAME);
+        participantCreateDto.setHomeMunicipality(otherMunicipalityId);
+        participantCreateDto.setEmail(PARTICIPANT_EMAIL);
+        participantCreateDto.setFranchise(PARTICIPANT_FRANCHISE);
+        participantCreateDto.setShowName(PARTICIPANT_SHOW_NAME);
         return participantCreateDto;
     }
 

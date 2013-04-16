@@ -40,6 +40,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .set(participant.municipalityInitiativeId, createDto.getMunicipalityInitiativeId())
                 .set(participant.name, createDto.getParticipantName())
                 .set(participant.showName, createDto.isShowName())
+                .set(participant.email, createDto.getEmail())
                 .executeWithKey(participant.id);
 
         // Increase denormalized participantCount if collectable initiative.
@@ -140,7 +141,8 @@ public class JdbcParticipantDao implements ParticipantDao {
                                     row.get(QMunicipality.municipality.id),
                                     row.get(QMunicipality.municipality.name),
                                     row.get(QMunicipality.municipality.nameSv)
-                            )
+                            ),
+                            row.get(participant.email)
                     );
 
                 }

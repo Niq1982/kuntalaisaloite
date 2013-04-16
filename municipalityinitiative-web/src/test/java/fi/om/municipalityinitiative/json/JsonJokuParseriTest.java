@@ -34,8 +34,8 @@ public class JsonJokuParseriTest {
         participantCount.getFranchise().setPublicNames(1);
 
         ArrayList<Participant> publicParticipants = Lists.<Participant>newArrayList();
-        publicParticipants.add(new Participant(new LocalDate(2010, 1, 1), "Teemu Teekkari", true, TAMPERE));
-        publicParticipants.add(new Participant(new LocalDate(2010, 1, 1), "Taina Teekkari", false, new Municipality(2L, "Tampere", "Tammerfors")));
+        publicParticipants.add(new Participant(new LocalDate(2010, 1, 1), "Teemu Teekkari", true, TAMPERE, ""));
+        publicParticipants.add(new Participant(new LocalDate(2010, 1, 1), "Taina Teekkari", false, new Municipality(2L, "Tampere", "Tammerfors"), ""));
 
         Initiative initiativeInfo = new Initiative();
         initiativeInfo.setId(1L);
