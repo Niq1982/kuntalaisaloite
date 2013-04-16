@@ -234,6 +234,18 @@ public class JdbcParticipantDaoTest {
         assertThat(participant.getParticipateDate(), is(notNullValue()));
     }
 
+    @Test
+    public void confirming_participant_makes_participation_public() {
+
+        String participantConfirmationCode = "someConfirmationCode";
+        Long participantId = participantDao.create(participantCreateDto(), participantConfirmationCode);
+        participantDao.create(participantCreateDto(), CONFIRMATION_CODE); // Some other unconfirmed participant
+
+        long originalParticipants = participantDao.getParticipantCount(testInitiativeId).getTotal();
+        participantDao.confirmParticipation(participantId, participantConfirmationCode);
+        assertThat(participantDao.getParticipantCount(testInitiativeId).getTotal(), is(originalParticipants+1));
+    }
+
     private Long createConfirmedParticipant(Long initiativeId, Long homeMunicipality, boolean franchise, boolean publicName, String participantName) {
         ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
         participantCreateDto.setMunicipalityInitiativeId(initiativeId);

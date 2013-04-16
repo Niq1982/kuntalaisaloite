@@ -15,6 +15,7 @@ import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.sql.QMunicipality;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
+import fi.om.municipalityinitiative.sql.QParticipant;
 import fi.om.municipalityinitiative.util.MaybeHoldingHashMap;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ import javax.annotation.Resource;
 
 import java.util.List;
 
+import static fi.om.municipalityinitiative.newdao.JdbcInitiativeDao.assertSingleAffection;
 import static fi.om.municipalityinitiative.sql.QParticipant.participant;
 
 @Transactional(readOnly = true)
@@ -54,6 +56,16 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .execute();
 
         return participantId;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void confirmParticipation(Long participantId, String confirmationCode) {
+        assertSingleAffection(queryFactory.update(QParticipant.participant)
+                .setNull(QParticipant.participant.confirmationCode)
+                .where(QParticipant.participant.id.eq(participantId))
+                .where(QParticipant.participant.confirmationCode.eq(confirmationCode))
+                .execute());
     }
 
     @Override

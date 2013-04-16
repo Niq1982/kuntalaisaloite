@@ -362,7 +362,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .execute());
     }
 
-    private static void assertSingleAffection(long affectedRows) {
+    public static void assertSingleAffection(long affectedRows) {
         Assert.isTrue(affectedRows == 1, "Should have affected only one row. Affected: " + affectedRows);
     }
 

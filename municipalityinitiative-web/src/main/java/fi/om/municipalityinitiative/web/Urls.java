@@ -287,8 +287,8 @@ public final class Urls {
         return getEdit(initiativeId);
     }
 
-    public String confirmParticipant(Long initiativeId, String confirmCode) {
-        return getLocalizedPageUrl(CONFIRMATION_FI, CONFIRMATION_SV).replace(ID_PARAMETER, initiativeId.toString())
+    public String confirmParticipant(Long participantId, String confirmCode) {
+        return getLocalizedPageUrl(CONFIRMATION_FI, CONFIRMATION_SV).replace(ID_PARAMETER, participantId.toString())
                 + "?" + PARTICIPANT_CONFIRMATION_CODE + "=" + confirmCode;
     }
 
