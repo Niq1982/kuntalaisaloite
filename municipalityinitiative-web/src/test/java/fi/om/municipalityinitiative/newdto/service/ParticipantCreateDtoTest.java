@@ -11,21 +11,6 @@ import static org.hamcrest.Matchers.is;
 public class ParticipantCreateDtoTest {
 
     @Test
-    public void parse_from_InitiativeUiCreateDto() throws Exception {
-        InitiativeUICreateDto uiCreateDto = ReflectionTestUtils.modifyAllFields(new InitiativeUICreateDto());
-        uiCreateDto.setHomeMunicipality(uiCreateDto.getMunicipality()); // Set same municipality so franchise may be true
-
-        ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(uiCreateDto, 117L);
-
-        assertThat(participantCreateDto.getHomeMunicipality(), is(uiCreateDto.getHomeMunicipality()));
-        assertThat(participantCreateDto.getMunicipalityInitiativeId(), is(117L));
-        assertThat(participantCreateDto.isShowName(), is(uiCreateDto.getShowName()));
-        assertThat(participantCreateDto.getParticipantName(), is(uiCreateDto.getContactInfo().getName()));
-
-        ReflectionTestUtils.assertNoNullFields(participantCreateDto);
-    }
-
-    @Test
     public void parse_from_ParticipantUiCreateDto() throws Exception {
         ParticipantUICreateDto uiCreateDto = ReflectionTestUtils.modifyAllFields(new ParticipantUICreateDto());
         uiCreateDto.setHomeMunicipality(uiCreateDto.getMunicipality()); // Set same municipality so franchise may be true
@@ -36,6 +21,7 @@ public class ParticipantCreateDtoTest {
         assertThat(participantCreateDto.getMunicipalityInitiativeId(), is(117L));
         assertThat(participantCreateDto.isShowName(), is(uiCreateDto.getShowName()));
         assertThat(participantCreateDto.getParticipantName(), is(uiCreateDto.getParticipantName()));
+        assertThat(participantCreateDto.getEmail(), is(uiCreateDto.getParticipantEmail()));
 
         ReflectionTestUtils.assertNoNullFields(participantCreateDto);
     }

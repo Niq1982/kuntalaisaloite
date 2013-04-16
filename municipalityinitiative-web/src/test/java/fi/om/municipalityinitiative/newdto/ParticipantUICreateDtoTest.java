@@ -27,7 +27,6 @@ public class ParticipantUICreateDtoTest {
         validator = factory.getValidator();
     }
 
-
     @Test
     public void municipalMembership_is_needed_if_municipalities_are_not_the_same() {
         ParticipantUICreateDto dto = createParticipantWithNameAndEmail();

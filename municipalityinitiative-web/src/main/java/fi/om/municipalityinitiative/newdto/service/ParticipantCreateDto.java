@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.newdto.service;
 
-import fi.om.municipalityinitiative.newdto.ui.InitiativeUICreateDto;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateDto;
 
 public class ParticipantCreateDto {
@@ -10,16 +9,7 @@ public class ParticipantCreateDto {
     private boolean showName;
     private String participantName;
     private Long homeMunicipality;
-
-    public static ParticipantCreateDto parse(InitiativeUICreateDto source, Long initiativeId) {
-        ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
-
-        participantCreateDto.setMunicipalityInitiativeId(initiativeId);
-        participantCreateDto.setShowName(source.getShowName() == null ? false : source.getShowName());
-        participantCreateDto.setParticipantName(source.getContactInfo().getName());
-        participantCreateDto.setHomeMunicipality(source.getHomeMunicipality());
-        return participantCreateDto;
-    }
+    private String email;
 
     public static ParticipantCreateDto parse(ParticipantUICreateDto participant, Long initiativeId) {
         ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
@@ -28,6 +18,7 @@ public class ParticipantCreateDto {
         participantCreateDto.setShowName(participant.getShowName() == null ? false : participant.getShowName());
         participantCreateDto.setParticipantName(participant.getParticipantName());
         participantCreateDto.setHomeMunicipality(participant.getHomeMunicipality());
+        participantCreateDto.setEmail(participant.getParticipantEmail());
         return participantCreateDto;
     }
 
@@ -71,4 +62,11 @@ public class ParticipantCreateDto {
         return homeMunicipality;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }
