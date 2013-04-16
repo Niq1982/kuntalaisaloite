@@ -12,13 +12,13 @@
 
 <@l.emailHtml "municipality-collectable" title>
 
+    <#-- TODO: localize -->
     <@b.mainContentBlock title>
-        <p style="${pBothMargins!""}">Tämä on vahvistusviesti kuntalaisaloitteelle, jonka tekemisen aloitit Kuntalaisaloite.fi-palvelussa.</p>
+        <p style="${pBothMargins!""}">Tämä sähköposti sisältää linkin uuden kuntalaisaloitteen luomiseen Kuntalaisaloite.fi-palvelussa. Klikkaa alla olevaa linkkiä ja siirry täyttämään aloitteen sisältö.</p>
         
-        <p style="${pBothMargins!""}">Sinun täytyy vielä vahvistaa aloitteen luominen palvelussa klikkaamalla alla olevaa linkkiä ja syöttämällä aloitteen tiedot.</p>
         <p style="${smallFont!""}"><@u.link urls.loginAuthor(initiative.id, initiative.managementHash.value) urls.loginAuthor(initiative.id, initiative.managementHash.value) /></p>
 
-        <p style="${pBothMargins!""}">Ylläpito-linkki on henkilökohtainen ja sen avulla pääset myöhemmässä vaiheessa ylläpitämään aloitetta. Säilytä linkki äläkä jaa sitä muille.</p>
+        <p style="${pBothMargins!""}">Kun olet täyttänyt aloitteen sisällön ja tallentanut sen, pääset jatkossa tämän linkin avulla aloitteen ylläpitosivulle. Ylläpitolinkki on henkilökohtainen. Säilytä linkki äläkä jaa sitä muille.</p>
         
         <h4 style="${h4}">Ylläpito-sivulla voit</h4>
         <ol style="margin-top:0.5em;">
