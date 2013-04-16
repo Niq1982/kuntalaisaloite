@@ -63,6 +63,10 @@ public class PublicInitiativeService {
         if (initiative.getSentTime().isPresent()) {
             throw new ParticipatingUnallowedException("Initiative already sent: " + initiativeId);
         }
+        if (!initiative.isCollectable()) {
+            // Practically we should never get here - published should always be collaborative if not send
+            throw new ParticipatingUnallowedException("Initiative not collaborative: " + initiativeId);
+        }
 
     }
 

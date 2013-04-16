@@ -105,10 +105,7 @@ public class PublicInitiativeServiceIntegrationTest {
     public void participating_to_not_accepted_initiative_is_forbidden() {
         Long initiative = testHelper.createCollectableReview(testMunicipality.getId());
 
-        ParticipantUICreateDto participant = new ParticipantUICreateDto();
-        participant.setParticipantName("Some Name");
-        participant.setShowName(true);
-        participant.setHomeMunicipality(testMunicipality.getId());
+        ParticipantUICreateDto participant = participantUICreateDto();
         try {
             service.createParticipant(participant, initiative);
             fail("Expected ParticipatingUnallowedException");
@@ -118,12 +115,23 @@ public class PublicInitiativeServiceIntegrationTest {
     }
 
     @Test
+    public void participating_to_not_collaborative_initiative_is_forbidden() {
+        Long initiative = testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.SINGLE);
+        ParticipantUICreateDto participant = participantUICreateDto();
+
+        try {
+            service.createParticipant(participant, initiative);
+            fail("Expected ParticipatingUnallowedException");
+        } catch (ParticipatingUnallowedException e) {
+            assertThat(e.getMessage(), containsString("Initiative not collaborative:"));
+        }
+    }
+
+
+    @Test
     public void participating_to_sent_but_collectable_initiative_is_forbidden() {
         Long initiativeId = testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
-        ParticipantUICreateDto participant = new ParticipantUICreateDto();
-        participant.setParticipantName("Some Name");
-        participant.setShowName(true);
-        participant.setHomeMunicipality(testMunicipality.getId());
+        ParticipantUICreateDto participant = participantUICreateDto();
 
         testHelper.updateField(initiativeId, QMunicipalityInitiative.municipalityInitiative.sent, new DateTime());
 
@@ -157,10 +165,7 @@ public class PublicInitiativeServiceIntegrationTest {
     public void increases_participant_count_when_participating_to_collectable_initiative() {
         Long municipalityInitiative = testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
 
-        ParticipantUICreateDto participant = new ParticipantUICreateDto();
-        participant.setParticipantName("name");
-        participant.setHomeMunicipality(testMunicipality.getId());
-        participant.setShowName(true);
+        ParticipantUICreateDto participant = participantUICreateDto();
         service.createParticipant(participant, municipalityInitiative);
 
         List<InitiativeListInfo> initiatives = service.findMunicipalityInitiatives(new InitiativeSearch().setShow(InitiativeSearch.Show.all));
@@ -375,6 +380,14 @@ public class PublicInitiativeServiceIntegrationTest {
         assertThat(sent.getState(), is(InitiativeState.PUBLISHED));
         assertThat(sent.getType(), is(InitiativeType.SINGLE));
         assertThat(sent.getSentTime().isPresent(), is(true));
+    }
+
+    private static ParticipantUICreateDto participantUICreateDto() {
+        ParticipantUICreateDto participant = new ParticipantUICreateDto();
+        participant.setParticipantName("Some Name");
+        participant.setShowName(true);
+        participant.setHomeMunicipality(testMunicipality.getId());
+        return participant;
     }
 
     private static PrepareInitiativeUICreateDto prepareDto() {
