@@ -32,6 +32,7 @@ public class JdbcParticipantDaoTest {
     public static final boolean PARTICIPANT_SHOW_NAME = true;
     public static final String CONFIRMATION_CODE = "confirmationCode";
     public static final String ALREADY_CONFIRMED = null;
+
     @Resource
     ParticipantDao participantDao;
 

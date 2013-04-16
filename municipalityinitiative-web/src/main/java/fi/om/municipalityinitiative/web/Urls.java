@@ -92,7 +92,10 @@ public final class Urls {
     public static final String NEWS_FI = "/fi/uutiset";
     
     public static final String NEWS_SV = "/sv/nyheter";
-    
+
+    public static final String CONFIRMATION_FI = "/fi/varmistus/"+ID_PARAMETER;
+
+    public static final String CONFIRMATION_SV = "/sv/forsakra/"+ID_PARAMETER;
     
     public static Urls FI = null;
     
@@ -110,6 +113,8 @@ public final class Urls {
     
     // Municipality initiative STARTS
     public static final String PARAM_MANAGEMENT_CODE = "management";
+
+    public static final String PARTICIPANT_CONFIRMATION_CODE = "confirmation";
     
     public static final String ACTION_SAVE = "action-save";
     
@@ -280,6 +285,11 @@ public final class Urls {
 
     public String edit(Long initiativeId) {
         return getEdit(initiativeId);
+    }
+
+    public String confirmParticipant(Long initiativeId, String confirmCode) {
+        return getLocalizedPageUrl(CONFIRMATION_FI, CONFIRMATION_SV).replace(ID_PARAMETER, initiativeId.toString())
+                + "?" + PARTICIPANT_CONFIRMATION_CODE + "=" + confirmCode;
     }
 
     public String getEdit(Long initiativeId) {
