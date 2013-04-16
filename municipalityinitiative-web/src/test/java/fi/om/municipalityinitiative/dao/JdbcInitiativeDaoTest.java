@@ -262,7 +262,9 @@ public class JdbcInitiativeDaoTest {
         Long leastParticipants = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withParticipantCount(1));
-        Long notCollectable = testHelper.createSingleSent(testMunicipality.getId());
+        Long someParticipants = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
+                .withType(InitiativeType.COLLABORATIVE_CITIZEN)
+                .withParticipantCount(5));
 
         InitiativeSearch initiativeSearch = initiativeSearch().setShow(InitiativeSearch.Show.all);
 
@@ -272,7 +274,7 @@ public class JdbcInitiativeDaoTest {
 
         List<InitiativeListInfo> leastParticipantsFirst = initiativeDao.find(initiativeSearch.setOrderBy(InitiativeSearch.OrderBy.leastParticipants));
         precondition(leastParticipantsFirst, hasSize(3)); // Precondition
-        assertThat(leastParticipantsFirst.get(0).getId(), is(notCollectable));
+        assertThat(leastParticipantsFirst.get(0).getId(), is(leastParticipants));
     }
 
     @Test
