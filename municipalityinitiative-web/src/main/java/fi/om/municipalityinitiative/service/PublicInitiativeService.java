@@ -173,9 +173,13 @@ public class PublicInitiativeService {
         }
     }
 
-    @Transactional(readOnly = false) // No need to be transactional though
-    public void confirmParticipation(Long initiativeId, Long participantId, String confirmationCode) {
+    @Transactional(readOnly = false)
+    public synchronized Long confirmParticipation(Long participantId, String confirmationCode) {
+        Long initiativeId = participantDao.getInitiativeIdByParticipant(participantId);
         assertAllowance("Confirm participation", managementSettings(initiativeId).isAllowParticipate());
+
         participantDao.confirmParticipation(participantId, confirmationCode);
+
+        return initiativeId;
     }
 }

@@ -116,8 +116,6 @@ public final class Urls {
 
     public static final String PARAM_PARTICIPANT_CONFIRMATION_CODE = "confirmation";
 
-    public static final String PARAM_PARTICIPANT_ID = "participant";
-    
     public static final String ACTION_SAVE = "action-save";
     
     public static final String ACTION_SAVE_AND_SEND = "action-save-and-send";
@@ -289,10 +287,9 @@ public final class Urls {
         return getEdit(initiativeId);
     }
 
-    public String confirmParticipant(Long initiativeId, Long participantId, String confirmCode) {
-        return getLocalizedPageUrl(PARTICIPATING_CONFIRMATION_FI, PARTICIPATING_CONFIRMATION_SV).replace(ID_PARAMETER, initiativeId.toString())
-                + "?" + PARAM_PARTICIPANT_ID + "=" + participantId
-                + "&" + PARAM_PARTICIPANT_CONFIRMATION_CODE + "=" + confirmCode;
+    public String confirmParticipant(Long participantId, String confirmCode) {
+        return getLocalizedPageUrl(PARTICIPATING_CONFIRMATION_FI, PARTICIPATING_CONFIRMATION_SV).replace(ID_PARAMETER, participantId.toString())
+                + "?" + PARAM_PARTICIPANT_CONFIRMATION_CODE + "=" + confirmCode;
     }
 
     public String getEdit(Long initiativeId) {

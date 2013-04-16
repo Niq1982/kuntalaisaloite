@@ -46,15 +46,6 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .set(participant.confirmationCode, confirmationCode)
                 .executeWithKey(participant.id);
 
-        // Increase denormalized participantCount if collectable initiative.
-        // DB constraint will also fail if trying to increase count for non-collectable initiative
-        queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
-                .set(QMunicipalityInitiative.municipalityInitiative.participantCount,
-                        QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
-                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(createDto.getMunicipalityInitiativeId()))
-//                .where(QMunicipalityInitiative.municipalityInitiative.managementHash.isNotNull()) // TODO: If collectable
-                .execute();
-
         return participantId;
     }
 
@@ -65,6 +56,12 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .setNull(QParticipant.participant.confirmationCode)
                 .where(QParticipant.participant.id.eq(participantId))
                 .where(QParticipant.participant.confirmationCode.eq(confirmationCode))
+                .execute());
+
+        assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
+                .set(QMunicipalityInitiative.municipalityInitiative.participantCount,
+                        QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
+                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(getInitiativeIdByParticipant(participantId)))
                 .execute());
     }
 
@@ -86,7 +83,6 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .set(QMunicipalityInitiative.municipalityInitiative.participantCount,
                         QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
                 .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
-//                .where(QMunicipalityInitiative.municipalityInitiative.managementHash.isNotNull()) // TODO
                 .execute();
 
         return participantId;
@@ -142,6 +138,13 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .leftJoin(participant.participantMunicipalityFk, QMunicipality.municipality)
                 .orderBy(participant.id.desc())
                 .list(participantMapping);
+    }
+
+    @Override
+    public Long getInitiativeIdByParticipant(Long participantId) {
+        return queryFactory.from(QParticipant.participant)
+                .where(QParticipant.participant.id.eq(participantId))
+                .singleResult(QParticipant.participant.municipalityInitiativeId);
     }
 
     Expression<Participant> participantMapping =

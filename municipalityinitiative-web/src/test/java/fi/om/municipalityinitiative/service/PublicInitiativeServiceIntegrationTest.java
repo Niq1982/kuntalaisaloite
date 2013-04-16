@@ -110,13 +110,21 @@ public class PublicInitiativeServiceIntegrationTest {
     }
 
     @Test(expected = OperationNotAllowedException.class)
-    public void accepting_participation_allowanve_is_checked() {
-        Long singleSent = testHelper.createSingleSent(testMunicipality.getId());
-        service.confirmParticipation(singleSent, null, null);
+    public void accepting_participation_allowance_is_checked() {
+        testHelper.createSingleSent(testMunicipality.getId());
+        service.confirmParticipation(testHelper.getLastParticipantId(), null);
     }
 
-    public void succeeds_in_sending_to_municipality() {
-        // TODO: Implement some test that ensures that emailservice is really used. (verifying by mock is ok)
+    @Test
+    public void adding_participant_does_not_increase_denormalized_participantCount_but_accepting_does() {
+        Long initiativeId = testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        long originalParticipantCount = getSingleInitiativeInfo().getParticipantCount();
+
+        Long participantId = service.createParticipant(participantUICreateDto(), initiativeId);
+        assertThat(getSingleInitiativeInfo().getParticipantCount(), is(originalParticipantCount));
+
+        service.confirmParticipation(participantId, RandomHashGenerator.getPrevious());
+        assertThat(getSingleInitiativeInfo().getParticipantCount(), is(originalParticipantCount +1));
     }
 
     @Test
@@ -128,21 +136,24 @@ public class PublicInitiativeServiceIntegrationTest {
         Long initiativeId = service.prepareInitiative(prepareInitiativeUICreateDto, Locales.LOCALE_FI);
         testHelper.updateField(initiativeId, QMunicipalityInitiative.municipalityInitiative.state, InitiativeState.PUBLISHED);
 
+        assertThat(getSingleInitiativeInfo().getParticipantCount(), is(1L));
+    }
+
+    private InitiativeListInfo getSingleInitiativeInfo() {
         List<InitiativeListInfo> initiatives = service.findMunicipalityInitiatives(new InitiativeSearch().setShow(InitiativeSearch.Show.all));
         precondition(initiatives, hasSize(1));
-        assertThat(initiatives.get(0).getParticipantCount(), is(1L));
+        return initiatives.get(0);
     }
 
     @Test
-    public void increases_participant_count_when_participating_to_collectable_initiative() {
+    @Deprecated
+    public void denormalized_participant_count_is_not_increased_when_participating_without_confirmation() {
         Long municipalityInitiative = testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        precondition(getSingleInitiativeInfo().getParticipantCount(), is(1L));
 
-        ParticipantUICreateDto participant = participantUICreateDto();
-        service.createParticipant(participant, municipalityInitiative);
+        service.createParticipant(participantUICreateDto(), municipalityInitiative);
 
-        List<InitiativeListInfo> initiatives = service.findMunicipalityInitiatives(new InitiativeSearch().setShow(InitiativeSearch.Show.all));
-        precondition(initiatives, hasSize(1));
-        assertThat(initiatives.get(0).getParticipantCount(), is(1L));
+        assertThat(getSingleInitiativeInfo().getParticipantCount(), is(1L));
     }
 
     @Test
@@ -168,9 +179,7 @@ public class PublicInitiativeServiceIntegrationTest {
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
         testHelper.updateField(initiativeId, QMunicipalityInitiative.municipalityInitiative.state, InitiativeState.PUBLISHED); // XXX: Hard coded state change
 
-        List<InitiativeListInfo> initiatives = service.findMunicipalityInitiatives(new InitiativeSearch().setShow(InitiativeSearch.Show.all));
-        precondition(initiatives, hasSize(1));
-        assertThat(initiatives.get(0).getParticipantCount(), is(1L));
+        assertThat(getSingleInitiativeInfo().getParticipantCount(), is(1L));
 
         Participant participant = participantDao.findAllParticipants(initiativeId).get(0);
         assertThat(participant.getHomeMunicipality().getId(), is(participantMunicipality.getId()));

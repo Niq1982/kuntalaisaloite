@@ -19,4 +19,6 @@ public interface ParticipantDao {
     List<Participant> findPublicParticipants(Long initiativeId);
 
     List<Participant> findAllParticipants(Long initiativeId);
+
+    Long getInitiativeIdByParticipant(Long participantId);
 }

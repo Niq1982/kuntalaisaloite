@@ -40,6 +40,10 @@ public class TestHelper {
     @Resource
     PostgresQueryFactory queryFactory;
 
+    private Long lastInitiativeId;
+    private Long lastParticipantId;
+    private Long lastAuthorId;
+
     public TestHelper() {
     }
 
@@ -188,31 +192,32 @@ public class TestHelper {
         insert.set(municipalityInitiative.sent, initiativeDraft.sent);
         insert.set(municipalityInitiative.modified, initiativeDraft.modified);
 
-        Long initiativeId = insert.executeWithKey(municipalityInitiative.id);
+        lastInitiativeId = insert.executeWithKey(municipalityInitiative.id);
 
-        Long participantId = queryFactory.insert(QParticipant.participant)
+        lastParticipantId = queryFactory.insert(QParticipant.participant)
                 .set(QParticipant.participant.municipalityId, initiativeDraft.authorMunicipality)
-                .set(QParticipant.participant.municipalityInitiativeId, initiativeId)
+                .set(QParticipant.participant.municipalityInitiativeId, lastInitiativeId)
                 .set(QParticipant.participant.name, initiativeDraft.authorName)
                 .set(QParticipant.participant.showName, initiativeDraft.publicName)
                 .set(QParticipant.participant.email, initiativeDraft.authorEmail)
                 .set(QParticipant.participant.franchise, true) // Changing these will affect on tests
                 .executeWithKey(QParticipant.participant.id);
 
-        Long authorId = queryFactory.insert(QAuthor.author)
+        lastAuthorId = queryFactory.insert(QAuthor.author)
                 .set(QAuthor.author.name, initiativeDraft.authorName)
                 .set(QAuthor.author.address, initiativeDraft.authorAddress)
                 .set(QAuthor.author.phone, initiativeDraft.authorPhone)
-                .set(QAuthor.author.participantId, participantId)
+                .set(QAuthor.author.participantId, lastParticipantId)
                 .set(QAuthor.author.managementHash, TEST_MANAGEMENT_HASH)
                 .executeWithKey(QAuthor.author.id);
 
         queryFactory.update(municipalityInitiative)
-                .set(municipalityInitiative.authorId, authorId)
-                .where(municipalityInitiative.id.eq(initiativeId))
+                .set(municipalityInitiative.authorId, lastAuthorId)
+                .set(municipalityInitiative.participantCount, 1)
+                .where(municipalityInitiative.id.eq(lastInitiativeId))
                 .execute();
 
-        return initiativeId;
+        return lastInitiativeId;
 
     }
 
@@ -320,6 +325,18 @@ public class TestHelper {
             this.participantCount = participantCount;
             return this;
         }
+    }
+
+    public Long getLastInitiativeId() {
+        return lastInitiativeId;
+    }
+
+    public Long getLastParticipantId() {
+        return lastParticipantId;
+    }
+
+    public Long getLastAuthorId() {
+        return lastAuthorId;
     }
 }
 

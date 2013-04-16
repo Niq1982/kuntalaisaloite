@@ -152,13 +152,12 @@ public class InitiativeViewController extends BaseController {
     }
 
     @RequestMapping(value = {PARTICIPATING_CONFIRMATION_FI, PARTICIPATING_CONFIRMATION_SV}, method = GET)
-    public String confirmParticipationg(@PathVariable("id") Long initiativeId,
-                                        @RequestParam(PARAM_PARTICIPANT_ID) Long participantId,
+    public String confirmParticipationg(@PathVariable("id") Long participantId,
                                         @RequestParam(PARAM_PARTICIPANT_CONFIRMATION_CODE) String confirmationCode,
                                         Locale locale,
                                         HttpServletRequest request) {
         Urls urls = Urls.get(locale);
-        publicInitiativeService.confirmParticipation(initiativeId, participantId, confirmationCode);
+        Long initiativeId = publicInitiativeService.confirmParticipation(participantId, confirmationCode);
         return redirectWithMessage(urls.view(initiativeId), RequestMessage.CONFIRM_PARTICIPATION, request);
     }
 
