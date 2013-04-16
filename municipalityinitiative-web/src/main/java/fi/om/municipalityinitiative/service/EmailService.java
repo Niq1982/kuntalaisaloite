@@ -15,4 +15,6 @@ public interface EmailService {
     void sendPrepareCreatedEmail(Initiative byIdWithOriginalAuthor, String authorEmail, Locale locale);
 
     void sendNotificationToModerator(Initiative initiative, Locale locale);
+
+    void sendParticipationConfirmation(Initiative initiative, String participantEmail, Long participantId, String confirmationCode, Locale locale);
 }

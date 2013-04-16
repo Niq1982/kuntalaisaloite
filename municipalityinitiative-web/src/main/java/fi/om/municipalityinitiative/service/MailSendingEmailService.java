@@ -19,6 +19,7 @@ public class MailSendingEmailService implements EmailService {
     private static final String NOT_COLLECTABLE_TEMPLATE = "municipality-not-collectable";
     private static final String STATUS_INFO_TEMPLATE = "status-info-to-author";
     private static final String NOTIFICATION_TO_MODERATOR = "notification-to-moderator";
+    private static final String PARTICIPATION_CONFIRMATION = "participant-verification";
 
     @Resource
     private MessageSource messageSource;
@@ -62,10 +63,6 @@ public class MailSendingEmailService implements EmailService {
                 .send();
     }
 
-    private static String[] toArray(String... name) {
-        return name;
-    }
-
     @Override
     public void sendNotificationToModerator(Initiative initiative, Locale locale) {
 
@@ -76,6 +73,23 @@ public class MailSendingEmailService implements EmailService {
                 .withSubject(messageSource.getMessage("email.notification.to.moderator.subject", toArray(initiative.getName()), locale))
                 .withDataMap(toDataMap(initiative, locale))
                 .send();
+    }
+
+    @Override
+    public void sendParticipationConfirmation(Initiative initiative, String participantEmail, Long participantId, String confirmationCode, Locale locale) {
+        HashMap<String, Object> dataMap = toDataMap(initiative, locale);
+        dataMap.put("participantId", participantId);
+        dataMap.put("confirmationCode", confirmationCode);
+        emailMessageConstructor
+                .fromTemplate(PARTICIPATION_CONFIRMATION)
+                .withSendTo(participantEmail)
+                .withSubject(messageSource.getMessage("email.participation.confirmation.subject", toArray(), locale))
+                .withDataMap(dataMap)
+                .send();
+    }
+
+    private static String[] toArray(String... name) {
+        return name;
     }
 
     private <T> HashMap<String, Object> toDataMap(T emailModelObject, Locale locale) {

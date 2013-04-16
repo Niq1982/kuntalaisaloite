@@ -106,7 +106,7 @@ public class PublicInitiativeServiceIntegrationTest {
         Long initiative = testHelper.createCollectableReview(testMunicipality.getId());
 
         ParticipantUICreateDto participant = participantUICreateDto();
-        service.createParticipant(participant, initiative);
+        service.createParticipant(participant, initiative, null);
     }
 
     @Test(expected = OperationNotAllowedException.class)
@@ -120,7 +120,7 @@ public class PublicInitiativeServiceIntegrationTest {
         Long initiativeId = testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         long originalParticipantCount = getSingleInitiativeInfo().getParticipantCount();
 
-        Long participantId = service.createParticipant(participantUICreateDto(), initiativeId);
+        Long participantId = service.createParticipant(participantUICreateDto(), initiativeId, null);
         assertThat(getSingleInitiativeInfo().getParticipantCount(), is(originalParticipantCount));
 
         service.confirmParticipation(participantId, RandomHashGenerator.getPrevious());
@@ -151,7 +151,7 @@ public class PublicInitiativeServiceIntegrationTest {
         Long municipalityInitiative = testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         precondition(getSingleInitiativeInfo().getParticipantCount(), is(1L));
 
-        service.createParticipant(participantUICreateDto(), municipalityInitiative);
+        service.createParticipant(participantUICreateDto(), municipalityInitiative, null);
 
         assertThat(getSingleInitiativeInfo().getParticipantCount(), is(1L));
     }

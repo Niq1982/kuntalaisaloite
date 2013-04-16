@@ -45,13 +45,19 @@ public class PublicInitiativeService {
     }
 
     @Transactional(readOnly = false)
-    public Long createParticipant(ParticipantUICreateDto participant, Long initiativeId) {
+    public Long createParticipant(ParticipantUICreateDto participant, Long initiativeId, Locale locale) {
 
         assertAllowance("Allowed to participate", managementSettings(initiativeId).isAllowParticipate());
 
         ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(participant, initiativeId);
         participantCreateDto.setMunicipalityInitiativeId(initiativeId);
-        return participantDao.create(participantCreateDto, RandomHashGenerator.randomString(20));
+
+        String confirmationCode = RandomHashGenerator.randomString(20);
+        Long participantId = participantDao.create(participantCreateDto, confirmationCode);
+
+        emailService.sendParticipationConfirmation(initiativeDao.getByIdWithOriginalAuthor(initiativeId), participant.getParticipantEmail(), participantId, confirmationCode, locale);
+
+        return participantId;
     }
 
     @Transactional(readOnly = false)

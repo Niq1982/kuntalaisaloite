@@ -47,6 +47,20 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
     }
 
     @Test
+    public void participation_confirmation_email_contains_all_information() throws Exception {
+        String confirmationCode = "confirmationCode";
+        long participantId = 1L;
+        String participantEmail = "participant@example.com";
+
+        emailService.sendParticipationConfirmation(createDefaultInitiative(), participantEmail, participantId, confirmationCode, Locales.LOCALE_FI);
+        assertThat(getSingleRecipient(), is(participantEmail));
+        assertThat(getSingleSentMessage().getSubject(), is("Aloitteeseen osallistumisen vahvistaminen"));
+
+        assertThat(getMessageContent().html, containsString(INITIATIVE_NAME));
+        assertThat(getMessageContent().html, containsString(urls.confirmParticipant(participantId, confirmationCode)));
+    }
+
+    @Test
     public void single_to_municipality_contains_all_information() throws Exception {
 
         emailService.sendNotCollectableToMunicipality(createDefaultInitiative(), MUNICIPALITY_EMAIL, Locales.LOCALE_FI);

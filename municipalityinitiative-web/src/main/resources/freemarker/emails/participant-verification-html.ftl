@@ -18,7 +18,7 @@
         <p>Aloite:</p><p>${initiative.name}</p>
 
         <p style="${pBothMargins!""}">Sinun täytyy vielä vahvistaa osallistumisesi klikkaamalla alla olevaa linkkiä.</p>
-        <p style="${smallFont!""}"><@u.link urls.confirmParticipant(initiative.id, participantId, confirmationCode) urls.confirmParticipant(initiative.id, participantId, confirmationCode) /></p>
+        <p style="${smallFont!""}"><@u.link urls.confirmParticipant(participantId, confirmationCode) urls.confirmParticipant(participantId, confirmationCode) /></p>
     </@b.mainContentBlock>
 
     <@u.spacer "15" />

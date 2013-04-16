@@ -106,7 +106,7 @@ public class InitiativeViewController extends BaseController {
                               BindingResult bindingResult, Model model, Locale locale, HttpServletRequest request) {
 
         if (validationService.validationSuccessful(participant, bindingResult, model)) {
-            publicInitiativeService.createParticipant(participant, initiativeId);
+            publicInitiativeService.createParticipant(participant, initiativeId, locale);
             Urls urls = Urls.get(locale);
             return redirectWithMessage(urls.view(initiativeId), RequestMessage.PARTICIPATE, request);
         }
