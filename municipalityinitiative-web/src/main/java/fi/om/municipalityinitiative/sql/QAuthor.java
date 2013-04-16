@@ -22,8 +22,6 @@ public class QAuthor extends com.mysema.query.sql.RelationalPathBase<QAuthor> {
 
     public final BooleanPath confirmed = createBoolean("confirmed");
 
-    public final StringPath email = createString("email");
-
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath managementHash = createString("management_hash");

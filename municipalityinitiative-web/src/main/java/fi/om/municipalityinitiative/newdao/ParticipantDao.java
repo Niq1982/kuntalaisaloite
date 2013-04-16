@@ -16,5 +16,5 @@ public interface ParticipantDao {
 
     List<Participant> findAllParticipants(Long initiativeId);
 
-    Long prepareParticipant(Long initiativeId, Long homeMunicipality, Boolean franchise);
+    Long prepareParticipant(Long initiativeId, Long homeMunicipality, String email, Boolean franchise);
 }

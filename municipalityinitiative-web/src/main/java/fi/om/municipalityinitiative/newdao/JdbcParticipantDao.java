@@ -57,11 +57,12 @@ public class JdbcParticipantDao implements ParticipantDao {
     @Override
     @Transactional(readOnly = true)
     // Preparing because we do not know participants name
-    public Long prepareParticipant(Long initiativeId, Long homeMunicipality, Boolean franchise) {
+    public Long prepareParticipant(Long initiativeId, Long homeMunicipality, String email, Boolean franchise) {
         Long participantId = queryFactory.insert(participant)
                 .set(participant.franchise, franchise)
                 .set(participant.municipalityId, homeMunicipality)
                 .set(participant.municipalityInitiativeId, initiativeId)
+                .set(participant.email, email)
                 .set(participant.showName, true) // Default is true
                 .executeWithKey(participant.id);
 

@@ -101,13 +101,13 @@ public class TestHelper {
                 .set(QParticipant.participant.municipalityId, municipalityId)
                 .set(QParticipant.participant.municipalityInitiativeId, initiativeId)
                 .set(QParticipant.participant.name, "Antti Author")
+                .set(QParticipant.participant.email, "author_email@example.com")
                 .set(QParticipant.participant.showName, publicName)
                 .set(QParticipant.participant.franchise, true) // Changing these will affect on tests
                 .executeWithKey(QParticipant.participant.id);
 
         Long authorId = queryFactory.insert(QAuthor.author)
                 .set(QAuthor.author.address, "author address")
-                .set(QAuthor.author.email, "author_email@example.com")
                 .set(QAuthor.author.phone, "author phone")
                 .set(QAuthor.author.participantId, participantId)
                 .set(QAuthor.author.managementHash, TEST_MANAGEMENT_HASH)
@@ -195,13 +195,13 @@ public class TestHelper {
                 .set(QParticipant.participant.municipalityInitiativeId, initiativeId)
                 .set(QParticipant.participant.name, initiativeDraft.authorName)
                 .set(QParticipant.participant.showName, initiativeDraft.publicName)
+                .set(QParticipant.participant.email, initiativeDraft.authorEmail)
                 .set(QParticipant.participant.franchise, true) // Changing these will affect on tests
                 .executeWithKey(QParticipant.participant.id);
 
         Long authorId = queryFactory.insert(QAuthor.author)
                 .set(QAuthor.author.name, initiativeDraft.authorName)
                 .set(QAuthor.author.address, initiativeDraft.authorAddress)
-                .set(QAuthor.author.email, initiativeDraft.authorEmail)
                 .set(QAuthor.author.phone, initiativeDraft.authorPhone)
                 .set(QAuthor.author.participantId, participantId)
                 .set(QAuthor.author.managementHash, TEST_MANAGEMENT_HASH)

@@ -22,17 +22,7 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
 
     public final StringPath comment = createString("comment");
 
-    public final StringPath contactAddress = createString("contact_address");
-
-    public final StringPath contactEmail = createString("contact_email");
-
-    public final StringPath contactName = createString("contact_name");
-
-    public final StringPath contactPhone = createString("contact_phone");
-
     public final NumberPath<Long> id = createNumber("id", Long.class);
-
-    public final StringPath managementHash = createString("management_hash");
 
     public final StringPath moderatorComment = createString("moderator_comment");
 

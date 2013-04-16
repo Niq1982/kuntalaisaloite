@@ -23,7 +23,7 @@ public interface InitiativeDao {
 
     Initiative getById(Long initiativeId, String authorsManagementHash);
 
-    void assignAuthor(Long municipalityInitiativeId, Long participantId, String authorEmail, String managementHash);
+    void assignAuthor(Long municipalityInitiativeId, Long participantId, String managementHash);
 
     InitiativeCounts getInitiativeCounts(Maybe<Long> municipality);
 

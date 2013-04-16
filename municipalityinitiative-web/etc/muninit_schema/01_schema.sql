@@ -31,15 +31,9 @@ create table municipality_initiative (
 
     name varchar(512),
     proposal text,
-    management_hash char(40),
     participant_count integer default 0,
     sent timestamp,
     comment varchar(1024),
-
-    contact_name varchar(100),
-    contact_email varchar(100),
-    contact_phone varchar(30),
-    contact_address varchar(256),
 
 	constraint municipality_initiative_pk primary key (id),
 	constraint municipality_initiative_municipality_fk foreign key (municipality_id) references municipality(id)
@@ -60,6 +54,7 @@ create table participant (
     show_name boolean,
     franchise boolean,
 
+    email varchar(100),
     confirmation_code varchar(20), -- Being set as null after confirmation
 
     constraint participant_pk primary key (id),
@@ -75,7 +70,6 @@ create table author (
     management_hash varchar(40), -- TODO unique
 
     name varchar(100),
-    email varchar(100),
     phone varchar(30),
     address varchar(256),
     confirmed boolean,

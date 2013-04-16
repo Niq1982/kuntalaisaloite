@@ -70,9 +70,9 @@ public class PublicInitiativeService {
     public Long prepareInitiative(PrepareInitiativeDto createDto, Locale locale) {
 
         Long initiativeId = initiativeDao.prepareInitiative(createDto.getMunicipality(), createDto.getAuthorEmail());
-        Long participantId = participantDao.prepareParticipant(initiativeId, createDto.getHomeMunicipality(), false); // XXX: Franchise?
+        Long participantId = participantDao.prepareParticipant(initiativeId, createDto.getHomeMunicipality(), createDto.getAuthorEmail(), false); // XXX: Franchise?
         String managementHash = RandomHashGenerator.randomString(40);
-        initiativeDao.assignAuthor(initiativeId, participantId, createDto.getAuthorEmail(), managementHash);
+        initiativeDao.assignAuthor(initiativeId, participantId, managementHash);
 
         emailService.sendPrepareCreatedEmail(initiativeDao.getByIdWithOriginalAuthor(initiativeId), createDto.getAuthorEmail(), locale);
 

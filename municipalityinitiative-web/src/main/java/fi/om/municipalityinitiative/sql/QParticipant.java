@@ -20,6 +20,8 @@ public class QParticipant extends com.mysema.query.sql.RelationalPathBase<QParti
 
     public final StringPath confirmationCode = createString("confirmation_code");
 
+    public final StringPath email = createString("email");
+
     public final BooleanPath franchise = createBoolean("franchise");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);

@@ -187,11 +187,10 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     @Transactional(readOnly = false)
-    public void assignAuthor(Long municipalityInitiativeId, Long participantId, String authorEmail, String managementHash) {
+    public void assignAuthor(Long municipalityInitiativeId, Long participantId, String managementHash) {
 
         Long newAuthorId = queryFactory.insert(QAuthor.author)
                 .set(QAuthor.author.managementHash, managementHash)
-                .set(QAuthor.author.email, authorEmail)
                 .set(QAuthor.author.participantId, participantId)
                 .executeWithKey(QAuthor.author.id);
 
@@ -270,7 +269,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
         assertSingleAffection(queryFactory.update(QAuthor.author)
                 .set(QAuthor.author.name, editDto.getContactInfo().getName())
-                .set(QAuthor.author.email, editDto.getContactInfo().getEmail())
                 .set(QAuthor.author.address, editDto.getContactInfo().getAddress())
                 .set(QAuthor.author.phone, editDto.getContactInfo().getPhone())
                 .where(QAuthor.author.id.eq(authorId))
@@ -279,6 +277,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
         assertSingleAffection(queryFactory.update(QParticipant.participant)
                 .set(QParticipant.participant.showName, editDto.getShowName())
                 .set(QParticipant.participant.name, editDto.getContactInfo().getName())
+                .set(QParticipant.participant.email, editDto.getContactInfo().getEmail())
                 .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
                 .execute());
 
@@ -351,12 +350,12 @@ public class JdbcInitiativeDao implements InitiativeDao {
         assertSingleAffection(queryFactory.update(QParticipant.participant)
                 .set(QParticipant.participant.showName, Boolean.TRUE.equals(updateDto.getShowName()))
                 .set(QParticipant.participant.name, updateDto.getContactInfo().getName())
+                .set(QParticipant.participant.email, updateDto.getContactInfo().getEmail())
                 .where(QParticipant.participant.id.eq(participantId))
                 .execute());
 
         assertSingleAffection(queryFactory.update(QAuthor.author)
                 .set(QAuthor.author.address, updateDto.getContactInfo().getAddress())
-                .set(QAuthor.author.email, updateDto.getContactInfo().getEmail())
                 .set(QAuthor.author.name, updateDto.getContactInfo().getName())
                 .set(QAuthor.author.phone, updateDto.getContactInfo().getPhone())
                 .where(QAuthor.author.participantId.eq(participantId))
@@ -381,7 +380,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     ContactInfo contactInfo = new ContactInfo();
                     contactInfo.setAddress(row.get(QAuthor.author.address));
                     contactInfo.setPhone(row.get(QAuthor.author.phone));
-                    contactInfo.setEmail(row.get(QAuthor.author.email));
+                    contactInfo.setEmail(row.get(QParticipant.participant.email));
                     contactInfo.setName(row.get(QParticipant.participant.name));
 
                     Author author = new Author();
@@ -414,7 +413,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
                     ContactInfo contactInfo = new ContactInfo();
                     contactInfo.setAddress(row.get(QAuthor.author.address));
-                    contactInfo.setEmail(row.get(QAuthor.author.email));
+                    contactInfo.setEmail(row.get(QParticipant.participant.email));
                     contactInfo.setName(row.get(QAuthor.author.name));
                     contactInfo.setPhone(row.get(QAuthor.author.phone));
                     info.setContactInfo(contactInfo);
@@ -435,21 +434,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 row.get(municipality.name),
                 row.get(municipality.nameSv));
     }
-
-    private Expression<ContactInfo> contactInfoMapping =
-            new MappingProjection<ContactInfo>(ContactInfo.class,
-                    QAuthor.author.all()) {
-
-                @Override
-                protected ContactInfo map(Tuple row) {
-                    ContactInfo contactInfo = new ContactInfo();
-                    contactInfo.setAddress(row.get(QAuthor.author.address));
-                    contactInfo.setEmail(row.get(QAuthor.author.email));
-                    contactInfo.setName(row.get(QAuthor.author.name));
-                    contactInfo.setPhone(row.get(QAuthor.author.phone));
-                    return contactInfo;
-                }
-            };
 
     Expression<Initiative> initiativeInfoMapping =
             new MappingProjection<Initiative>(Initiative.class,
@@ -482,7 +466,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     contactInfo.setAddress(row.get(QAuthor.author.address));
                     contactInfo.setPhone(row.get(QAuthor.author.phone));
                     contactInfo.setName(row.get(QAuthor.author.name));
-                    contactInfo.setEmail(row.get(QAuthor.author.email));
+                    contactInfo.setEmail(row.get(QParticipant.participant.email));
                     author.setId(row.get(QAuthor.author.id));
                     author.setContactInfo(contactInfo);
                     author.setMunicipality(parseMunicipality(row, AUTHOR_MUNICIPALITY));
