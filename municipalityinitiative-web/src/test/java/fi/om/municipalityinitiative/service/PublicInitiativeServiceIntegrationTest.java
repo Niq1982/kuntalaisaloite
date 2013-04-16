@@ -101,46 +101,18 @@ public class PublicInitiativeServiceIntegrationTest {
         ReflectionTestUtils.assertNoNullFields(initiative);
     }
 
-    @Test
-    public void participating_to_not_accepted_initiative_is_forbidden() {
+    @Test(expected = OperationNotAllowedException.class)
+    public void participating_allowance_is_checked() {
         Long initiative = testHelper.createCollectableReview(testMunicipality.getId());
 
         ParticipantUICreateDto participant = participantUICreateDto();
-        try {
-            service.createParticipant(participant, initiative);
-            fail("Expected ParticipatingUnallowedException");
-        } catch (ParticipatingUnallowedException e) {
-            assertThat(e.getMessage(), containsString("Initiative not accepted by om:"));
-        }
+        service.createParticipant(participant, initiative);
     }
 
-    @Test
-    public void participating_to_not_collaborative_initiative_is_forbidden() {
-        Long initiative = testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.SINGLE);
-        ParticipantUICreateDto participant = participantUICreateDto();
-
-        try {
-            service.createParticipant(participant, initiative);
-            fail("Expected ParticipatingUnallowedException");
-        } catch (ParticipatingUnallowedException e) {
-            assertThat(e.getMessage(), containsString("Initiative not collaborative:"));
-        }
-    }
-
-
-    @Test
-    public void participating_to_sent_but_collectable_initiative_is_forbidden() {
-        Long initiativeId = testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
-        ParticipantUICreateDto participant = participantUICreateDto();
-
-        testHelper.updateField(initiativeId, QMunicipalityInitiative.municipalityInitiative.sent, new DateTime());
-
-        try {
-            service.createParticipant(participant, initiativeId);
-            fail("Expected ParticipatingUnallowedException");
-        } catch (ParticipatingUnallowedException e) {
-            assertThat(e.getMessage(), containsString("Initiative already sent"));
-        }
+    @Test(expected = OperationNotAllowedException.class)
+    public void accepting_participation_allowanve_is_checked() {
+        Long singleSent = testHelper.createSingleSent(testMunicipality.getId());
+        service.confirmParticipation(singleSent, null, null);
     }
 
     public void succeeds_in_sending_to_municipality() {

@@ -19,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -148,6 +149,17 @@ public class InitiativeViewController extends BaseController {
             model.addAttribute("initiative", initiativeInfo);
             return PUBLIC_SINGLE_VIEW;
         }
+    }
+
+    @RequestMapping(value = {PARTICIPATING_CONFIRMATION_FI, PARTICIPATING_CONFIRMATION_SV}, method = GET)
+    public String confirmParticipationg(@PathVariable("id") Long initiativeId,
+                                        @RequestParam(PARAM_PARTICIPANT_ID) Long participantId,
+                                        @RequestParam(PARAM_PARTICIPANT_CONFIRMATION_CODE) String confirmationCode,
+                                        Locale locale,
+                                        HttpServletRequest request) {
+        Urls urls = Urls.get(locale);
+        publicInitiativeService.confirmParticipation(initiativeId, participantId, confirmationCode);
+        return redirectWithMessage(urls.view(initiativeId), RequestMessage.CONFIRM_PARTICIPATION, request);
     }
 
     @RequestMapping(value={ PENDING_CONFIRMATION_FI, PENDING_CONFIRMATION_SV }, method=GET)

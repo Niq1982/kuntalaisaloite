@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.newdto.service;
 
 import fi.om.municipalityinitiative.util.InitiativeState;
+import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.LocalDate;
 import org.junit.Test;
@@ -118,6 +119,42 @@ public class ManagementSettingsTest {
                 return managementSettings(initiative).isAllowPublish();
             }
         }, true, InitiativeState.ACCEPTED);
+    }
+
+    @Test
+    public void is_allow_to_participate_only_if_initiative_state_is_published() throws Exception {
+        final Initiative initiative = createInitiative();
+        initiative.setSentTime(Maybe.<LocalDate>absent());
+        initiative.setType(InitiativeType.COLLABORATIVE);
+
+        assertExpectedOnlyWithGivenStates(initiative, new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return managementSettings(initiative).isAllowParticipate();
+            }
+        }, true, InitiativeState.PUBLISHED);
+    }
+
+    @Test
+    public void is_not_allowed_to_participate_if_initiative_sent() {
+        final Initiative initiative = createInitiative();
+        initiative.setType(InitiativeType.COLLABORATIVE);
+        initiative.setState(InitiativeState.PUBLISHED);
+
+        precondition(managementSettings(initiative).isAllowParticipate(), is(true));
+        initiative.setSentTime(Maybe.of(new LocalDate(2010, 1, 1)));
+        assertThat(managementSettings(initiative).isAllowParticipate(), is(false));
+    }
+
+    @Test
+    public void is_not_allowed_to_participate_if_initiative_not_collectable() {
+        final Initiative initiative = createInitiative();
+        initiative.setType(InitiativeType.COLLABORATIVE);
+        initiative.setState(InitiativeState.PUBLISHED);
+
+        precondition(managementSettings(initiative).isAllowParticipate(), is(true));
+        initiative.setType(InitiativeType.SINGLE);
+        assertThat(managementSettings(initiative).isAllowParticipate(), is(false));
     }
 
     private static void assertExpectedOnlyWithGivenStates(Initiative initiative, Callable<Boolean> callable, boolean expected, InitiativeState... givenStates) throws Exception {

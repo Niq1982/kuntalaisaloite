@@ -47,27 +47,11 @@ public class PublicInitiativeService {
     @Transactional(readOnly = false)
     public Long createParticipant(ParticipantUICreateDto participant, Long initiativeId) {
 
-        checkAllowedToParticipate(initiativeId);
+        assertAllowance("Allowed to participate", managementSettings(initiativeId).isAllowParticipate());
 
         ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(participant, initiativeId);
         participantCreateDto.setMunicipalityInitiativeId(initiativeId);
         return participantDao.create(participantCreateDto, RandomHashGenerator.randomString(20));
-    }
-
-    private void checkAllowedToParticipate(Long initiativeId) {
-        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
-
-        if (initiative.getState() != InitiativeState.PUBLISHED) {
-            throw new ParticipatingUnallowedException("Initiative not accepted by om: " + initiativeId);
-        }
-        if (initiative.getSentTime().isPresent()) {
-            throw new ParticipatingUnallowedException("Initiative already sent: " + initiativeId);
-        }
-        if (!initiative.isCollectable()) {
-            // Practically we should never get here - published should always be collaborative if not send
-            throw new ParticipatingUnallowedException("Initiative not collaborative: " + initiativeId);
-        }
-
     }
 
     @Transactional(readOnly = false)
@@ -189,4 +173,9 @@ public class PublicInitiativeService {
         }
     }
 
+    @Transactional(readOnly = false) // No need to be transactional though
+    public void confirmParticipation(Long initiativeId, Long participantId, String confirmationCode) {
+        assertAllowance("Confirm participation", managementSettings(initiativeId).isAllowParticipate());
+        participantDao.confirmParticipation(participantId, confirmationCode);
+    }
 }

@@ -93,9 +93,9 @@ public final class Urls {
     
     public static final String NEWS_SV = "/sv/nyheter";
 
-    public static final String CONFIRMATION_FI = "/fi/varmistus/"+ID_PARAMETER;
+    public static final String PARTICIPATING_CONFIRMATION_FI = "/fi/varmistus/"+ID_PARAMETER;
 
-    public static final String CONFIRMATION_SV = "/sv/forsakra/"+ID_PARAMETER;
+    public static final String PARTICIPATING_CONFIRMATION_SV = "/sv/forsakra/"+ID_PARAMETER;
     
     public static Urls FI = null;
     
@@ -114,7 +114,9 @@ public final class Urls {
     // Municipality initiative STARTS
     public static final String PARAM_MANAGEMENT_CODE = "management";
 
-    public static final String PARTICIPANT_CONFIRMATION_CODE = "confirmation";
+    public static final String PARAM_PARTICIPANT_CONFIRMATION_CODE = "confirmation";
+
+    public static final String PARAM_PARTICIPANT_ID = "participant";
     
     public static final String ACTION_SAVE = "action-save";
     
@@ -287,9 +289,10 @@ public final class Urls {
         return getEdit(initiativeId);
     }
 
-    public String confirmParticipant(Long participantId, String confirmCode) {
-        return getLocalizedPageUrl(CONFIRMATION_FI, CONFIRMATION_SV).replace(ID_PARAMETER, participantId.toString())
-                + "?" + PARTICIPANT_CONFIRMATION_CODE + "=" + confirmCode;
+    public String confirmParticipant(Long initiativeId, Long participantId, String confirmCode) {
+        return getLocalizedPageUrl(PARTICIPATING_CONFIRMATION_FI, PARTICIPATING_CONFIRMATION_SV).replace(ID_PARAMETER, initiativeId.toString())
+                + "?" + PARAM_PARTICIPANT_ID + "=" + participantId
+                + "&" + PARAM_PARTICIPANT_CONFIRMATION_CODE + "=" + confirmCode;
     }
 
     public String getEdit(Long initiativeId) {

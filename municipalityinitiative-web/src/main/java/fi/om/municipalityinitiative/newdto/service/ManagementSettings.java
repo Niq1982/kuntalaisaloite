@@ -34,4 +34,10 @@ public class ManagementSettings {
     public boolean isAllowPublish() {
         return initiative.getState().equals(InitiativeState.ACCEPTED);
     }
+
+    public boolean isAllowParticipate() {
+        return !(initiative.getState() != InitiativeState.PUBLISHED
+                || initiative.getSentTime().isPresent()
+                || !initiative.isCollectable());
+    }
 }
