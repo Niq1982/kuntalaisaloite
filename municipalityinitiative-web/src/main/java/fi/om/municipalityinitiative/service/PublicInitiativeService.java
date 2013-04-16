@@ -51,7 +51,7 @@ public class PublicInitiativeService {
 
         ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(participant, initiativeId);
         participantCreateDto.setMunicipalityInitiativeId(initiativeId);
-        return participantDao.create(participantCreateDto);
+        return participantDao.create(participantCreateDto, RandomHashGenerator.randomString(20));
     }
 
     private void checkAllowedToParticipate(Long initiativeId) {

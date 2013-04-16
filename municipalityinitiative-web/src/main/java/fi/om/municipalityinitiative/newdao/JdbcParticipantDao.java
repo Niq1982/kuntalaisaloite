@@ -33,7 +33,7 @@ public class JdbcParticipantDao implements ParticipantDao {
 
     @Override
     @Transactional(readOnly = false)
-    public Long create(ParticipantCreateDto createDto) {
+    public Long create(ParticipantCreateDto createDto, String confirmationCode) {
         Long participantId = queryFactory.insert(participant)
                 .set(participant.franchise, createDto.isFranchise())
                 .set(participant.municipalityId, createDto.getHomeMunicipality())
@@ -41,6 +41,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .set(participant.name, createDto.getParticipantName())
                 .set(participant.showName, createDto.isShowName())
                 .set(participant.email, createDto.getEmail())
+                .set(participant.confirmationCode, confirmationCode)
                 .executeWithKey(participant.id);
 
         // Increase denormalized participantCount if collectable initiative.
@@ -95,6 +96,7 @@ public class JdbcParticipantDao implements ParticipantDao {
         MaybeHoldingHashMap<String, Long> map = new MaybeHoldingHashMap<String, Long>(queryFactory
                 .from(participant)
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
+                .where(participant.confirmationCode.isNull())
                 .groupBy(simpleExpression)
                 .map(simpleExpression, participant.count()));
 
@@ -114,6 +116,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
                 .leftJoin(participant.participantMunicipalityFk, QMunicipality.municipality)
                 .where(participant.showName.eq(true))
+                .where(participant.confirmationCode.isNull())
                 .orderBy(participant.id.desc())
                 .list(participantMapping);
     }
@@ -123,6 +126,7 @@ public class JdbcParticipantDao implements ParticipantDao {
         return queryFactory.query()
                 .from(participant)
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
+                .where(participant.confirmationCode.isNull())
                 .leftJoin(participant.participantMunicipalityFk, QMunicipality.municipality)
                 .orderBy(participant.id.desc())
                 .list(participantMapping);

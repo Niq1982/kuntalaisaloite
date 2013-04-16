@@ -16,7 +16,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
 
-import java.util.Collection;
 import java.util.List;
 
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
@@ -31,6 +30,8 @@ public class JdbcParticipantDaoTest {
     public static final String PARTICIPANT_EMAIL = "participant@example.com";
     public static final boolean PARTICIPANT_FRANCHISE = true;
     public static final boolean PARTICIPANT_SHOW_NAME = true;
+    public static final String CONFIRMATION_CODE = "confirmationCode";
+    public static final String ALREADY_CONFIRMED = null;
     @Resource
     ParticipantDao participantDao;
 
@@ -52,7 +53,7 @@ public class JdbcParticipantDaoTest {
     @Test
     public void adds_new_participants() {
         precondition(testHelper.countAll(QParticipant.participant), is(1L));
-        participantDao.create(participantCreateDto());
+        participantDao.create(participantCreateDto(), ALREADY_CONFIRMED);
         assertThat(testHelper.countAll(QParticipant.participant), is(2L));
     }
 
@@ -60,7 +61,7 @@ public class JdbcParticipantDaoTest {
     public void participant_information_is_saved() {
         precondition(participantDao.findPublicParticipants(testInitiativeId), hasSize(1));
 
-        participantDao.create(participantCreateDto());
+        participantDao.create(participantCreateDto(), ALREADY_CONFIRMED);
         List<Participant> allParticipants = participantDao.findPublicParticipants(testInitiativeId);
         assertThat(allParticipants, hasSize(2));
 
@@ -79,17 +80,17 @@ public class JdbcParticipantDaoTest {
 
         //createParticipant(initiativeId, true, true); // This is the default author created by testHelper
 
-        createParticipant(initiativeId, true, false);
-        createParticipant(initiativeId, true, false);
+        createConfirmedParticipant(initiativeId, true, false);
+        createConfirmedParticipant(initiativeId, true, false);
 
-        createParticipant(initiativeId, false, true);
-        createParticipant(initiativeId, false, true);
-        createParticipant(initiativeId, false, true);
+        createConfirmedParticipant(initiativeId, false, true);
+        createConfirmedParticipant(initiativeId, false, true);
+        createConfirmedParticipant(initiativeId, false, true);
 
-        createParticipant(initiativeId, false, false);
-        createParticipant(initiativeId, false, false);
-        createParticipant(initiativeId, false, false);
-        createParticipant(initiativeId, false, false);
+        createConfirmedParticipant(initiativeId, false, false);
+        createConfirmedParticipant(initiativeId, false, false);
+        createConfirmedParticipant(initiativeId, false, false);
+        createConfirmedParticipant(initiativeId, false, false);
 
         ParticipantCount participantCount = participantDao.getParticipantCount(initiativeId);
         assertThat(participantCount.getFranchise().getPublicNames(), is(1L));
@@ -114,10 +115,10 @@ public class JdbcParticipantDaoTest {
         Long municipalityId = testHelper.createTestMunicipality("Other municipality");
         Long initiativeId = testHelper.createTestInitiative(municipalityId, "Any title", false, false);
 
-        createParticipant(initiativeId, false, false, "no right no public");
-        createParticipant(initiativeId, true, false, "yes right no public");
-        createParticipant(initiativeId, false, true, "no right yes public");
-        createParticipant(initiativeId, true, true, "yes right yes public");
+        createConfirmedParticipant(initiativeId, false, false, "no right no public");
+        createConfirmedParticipant(initiativeId, true, false, "yes right no public");
+        createConfirmedParticipant(initiativeId, false, true, "no right yes public");
+        createConfirmedParticipant(initiativeId, true, true, "yes right yes public");
 
         List<Participant> participants = participantDao.findPublicParticipants(initiativeId);
 
@@ -132,10 +133,10 @@ public class JdbcParticipantDaoTest {
         Long municipalityId = testHelper.createTestMunicipality("Other municipality");
         Long initiativeId = testHelper.createTestInitiative(municipalityId, "Any title", false, false);
 
-        createParticipant(initiativeId, false, false, "no right no public");
-        createParticipant(initiativeId, true, false, "yes right no public");
-        createParticipant(initiativeId, false, true, "no right yes public");
-        createParticipant(initiativeId, true, true, "yes right yes public");
+        createConfirmedParticipant(initiativeId, false, false, "no right no public");
+        createConfirmedParticipant(initiativeId, true, false, "yes right no public");
+        createConfirmedParticipant(initiativeId, false, true, "no right yes public");
+        createConfirmedParticipant(initiativeId, true, true, "yes right yes public");
 
         List<Participant> participants = participantDao.findAllParticipants(initiativeId);
 
@@ -143,12 +144,58 @@ public class JdbcParticipantDaoTest {
 
     }
 
+    @Test
+    public void getPublicParticipants_returns_only_confirmed_participants() {
+        precondition(participantDao.findPublicParticipants(testInitiativeId), hasSize(1));
+        ParticipantCreateDto newParticipant = participantCreateDto();
+
+        participantDao.create(newParticipant, CONFIRMATION_CODE);
+
+        String confirmedParticipantName = "Some Confirmed Participant";
+        newParticipant.setParticipantName(confirmedParticipantName);
+        participantDao.create(newParticipant, ALREADY_CONFIRMED);
+
+        List<Participant> publicParticipants = participantDao.findPublicParticipants(testInitiativeId);
+
+        assertThat(publicParticipants, hasSize(2));
+        assertThat(publicParticipants.get(0).getName(), is(confirmedParticipantName));
+
+    }
+
+    @Test
+    public void getAllParticipants_returns_only_confirmed_participants() {
+        precondition(participantDao.findAllParticipants(testInitiativeId), hasSize(1));
+        ParticipantCreateDto newParticipant = participantCreateDto();
+
+        participantDao.create(newParticipant, CONFIRMATION_CODE);
+
+        String confirmedParticipantName = "Some Confirmed Participant";
+        newParticipant.setParticipantName(confirmedParticipantName);
+        participantDao.create(newParticipant, ALREADY_CONFIRMED);
+
+        List<Participant> allParticipants = participantDao.findAllParticipants(testInitiativeId);
+
+        assertThat(allParticipants, hasSize(2));
+        assertThat(allParticipants.get(0).getName(), is(confirmedParticipantName));
+    }
+
+    @Test
+    public void getParticipantCount_counts_only_confirmed_participants() {
+
+        precondition(participantDao.getParticipantCount(testInitiativeId).getTotal(), is(1L));
+
+        participantDao.create(participantCreateDto(), CONFIRMATION_CODE);
+        participantDao.create(participantCreateDto(), ALREADY_CONFIRMED);
+
+        assertThat(participantDao.getParticipantCount(testInitiativeId).getTotal(), is(2L));
+    }
+
 
     @Test
     public void getAllParticipants_adds_municipality_name_and_franchise_to_participant_data() {
 
         Long otherMunicipality = testHelper.createTestMunicipality("Some other Municipality");
-        createParticipant(testInitiativeId, otherMunicipality, true, false, "Participant Name");
+        createConfirmedParticipant(testInitiativeId, otherMunicipality, true, false, "Participant Name");
 
         List<Participant> participants = participantDao.findAllParticipants(testInitiativeId);
 
@@ -162,7 +209,7 @@ public class JdbcParticipantDaoTest {
     public void getPublicParticipants_adds_municipality_name_and_franchise_to_participant_data() {
 
         Long otherMunicipality = testHelper.createTestMunicipality("Some other Municipality");
-        createParticipant(testInitiativeId, otherMunicipality, true, true, "Participant Name");
+        createConfirmedParticipant(testInitiativeId, otherMunicipality, true, true, "Participant Name");
 
         List<Participant> participants = participantDao.findPublicParticipants(testInitiativeId);
 
@@ -186,23 +233,23 @@ public class JdbcParticipantDaoTest {
         assertThat(participant.getParticipateDate(), is(notNullValue()));
     }
 
-    private Long createParticipant(Long initiativeId, Long homeMunicipality, boolean franchise, boolean publicName, String participantName) {
+    private Long createConfirmedParticipant(Long initiativeId, Long homeMunicipality, boolean franchise, boolean publicName, String participantName) {
         ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
         participantCreateDto.setMunicipalityInitiativeId(initiativeId);
         participantCreateDto.setParticipantName(participantName);
         participantCreateDto.setHomeMunicipality(homeMunicipality);
         participantCreateDto.setFranchise(franchise);
         participantCreateDto.setShowName(publicName);
-        return participantDao.create(participantCreateDto);
+        return participantDao.create(participantCreateDto, ALREADY_CONFIRMED);
     }
 
 
-    private Long createParticipant(long initiativeId, boolean franchise, boolean publicName) {
-        return createParticipant(initiativeId, franchise, publicName, "Composers name");
+    private Long createConfirmedParticipant(long initiativeId, boolean franchise, boolean publicName) {
+        return createConfirmedParticipant(initiativeId, franchise, publicName, "Composers name");
     }
 
-    private Long createParticipant(long initiativeId, boolean franchise, boolean publicName, String participantName) {
-        return createParticipant(initiativeId, testMunicipalityId, franchise, publicName, participantName);
+    private Long createConfirmedParticipant(long initiativeId, boolean franchise, boolean publicName, String participantName) {
+        return createConfirmedParticipant(initiativeId, testMunicipalityId, franchise, publicName, participantName);
     }
 
     private ParticipantCreateDto participantCreateDto() {

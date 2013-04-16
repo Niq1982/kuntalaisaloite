@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ParticipantDao {
 
-    Long create(ParticipantCreateDto createDto);
+    Long create(ParticipantCreateDto createDto, String confirmationCode);
 
     ParticipantCount getParticipantCount(Long initiativeId);
 

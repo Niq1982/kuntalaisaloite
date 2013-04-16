@@ -46,7 +46,7 @@ public class TestDataService {
     @Transactional(readOnly = false)
     public void createTestParticipant(Long initiativeId, ParticipantUICreateDto createDto, int amount) {
         for (int i = 0; i < amount; ++i) {
-            participantDao.create(ParticipantCreateDto.parse(createDto, initiativeId));
+            participantDao.create(ParticipantCreateDto.parse(createDto, initiativeId), null);
         }
     }
     
