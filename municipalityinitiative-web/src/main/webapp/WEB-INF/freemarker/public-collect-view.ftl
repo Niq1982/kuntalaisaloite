@@ -3,6 +3,7 @@
 <#import "components/utils.ftl" as u />
 <#import "components/elements.ftl" as e />
 <#import "components/forms.ftl" as f />
+<#import "components/edit-blocks.ftl" as edit />
 <#import "components/some.ftl" as some />
 
 <#escape x as x?html> 
@@ -47,9 +48,9 @@
             <@f.notTooFastField participant/>
     
             <input type="hidden" name="municipality" value="${initiative.municipality.id!""}"/>
-            
+
             <div class="input-block-content no-top-margin flexible">
-                <@u.systemMessage path="initiative.ownDetails.description" type="info" showClose=false />  
+                <@u.systemMessage path="participate.contactInfo.description" type="info" showClose=false />  
             </div>
             
              <div class="input-block-content flexible">
@@ -57,36 +58,35 @@
                 <@f.formCheckbox path="participant.showName" checked=true />
             </div>
             
+            <#-- TODO: Participant email address -->
+            <div class="input-block-content flexible">
+                <label for="authorEmail" class="input-header">
+                    Sähköpostiosoitteesi <span class="icon-small required trigger-tooltip"></span>
+                </label>
+                <input type="text" maxlength="100" class="large" value="" name="authorEmail" id="authorEmail">
+            </div>
+            
             <div class="input-block-content flexible">
                 <@f.municipalitySelect path="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipality.id />
             </div>
-        
-            <div id="franchise" class="input-block-content flexible">
-                <#--<@f.radiobutton path="participant.franchise" required="required" options={"true":"initiative.franchise.true", "false":"initiative.franchise.false"} attributes="" />-->
-            </div>
             
-            <div id="municipalMembership" class="js-hide hidden">
-                <div class="input-block-content flexible">
+            <div id="municipalMembership" class="js-hide">
+                <div class="input-block-content hidden flexible">
                     <#assign href="#" />
-                    <@u.systemMessage path="participant.municipalMembership.info" type="info" showClose=false args=[href] />
+                    <@u.systemMessage path="initiative.municipality.notEqual" type="info" showClose=false args=[href] />
                 </div>
                 <div class="input-block-content flexible">
-                    <@f.radiobutton path="participant.municipalMembership" required="" options={"true":"initiative.municipalMembership.true", "false":"initiative.municipalMembership.false"} attributes="" header=false />
+                    <@f.radiobutton path="participant.municipalMembership" required="required" options={
+                        "community":"initiative.municipalMembership.community",
+                        "company":"initiative.municipalMembership.company",
+                        "property":"initiative.municipalMembership.property",
+                        "none":"initiative.municipalMembership.none"
+                    } attributes="" />
                 </div>
-                <div class="input-block-content flexible js-hide is-not-member">
-                    <@u.systemMessage path="warning.participate.notMember" type="warning" showClose=false />
+                
+                <div class="input-block-content is-not-member no-top-margin flexible js-hide hidden">
+                    <@u.systemMessage path="warning.initiative.notMember" type="warning" showClose=false />
                 </div>
-            </div>
-        
-            
-            <#-- Do not use NOSCRIPT here as it will be descendant of another NOSCRIPT. -->
-            <div class="input-block-content js-hide">
-                <#-- Hidden field for NOSCRIPT users. This element is removed with JS. -->
-                <input type="hidden" name="municipalMembership" value="true" class="js-remove" />
-                <label>
-                    <#assign href="#" />
-                    <input type="checkbox" name="placeholder" id="placeholder" checked="checked" disabled="disabled" /><span class="label"><@u.messageHTML key="initiative.checkMembership" args=[href] /></span>
-                </label>
             </div>
             
             <div class="input-block-content flexible">

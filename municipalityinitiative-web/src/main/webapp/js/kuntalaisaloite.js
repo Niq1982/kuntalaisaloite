@@ -443,7 +443,7 @@ var municipalitySelection = (function() {
 			toggleMembershipRadios(homeMunicipalitySelect);
 		}
 		
-		if (!$("input[name=franchise], input[name=municipalMembership]").is(':checked')){
+		if (!$("input[name=municipalMembership]").is(':checked')){
 			disableSubmit(true);
 		} else {
 			disableSubmit(false);
@@ -507,8 +507,8 @@ var municipalitySelection = (function() {
 	
 	// Toggle the radiobutton selection for municipality membership
 	function toggleMembershipRadios(select){
-		var franchise			= $('#franchise'),
-			municipalMembership	= $('#municipalMembership'),
+		//var franchise			= $('#franchise');
+		var	municipalMembership	= $('#municipalMembership'),
 			btnCollectable		= $('button#action-save');
 		
 		if( equalMunicipalitys() ){
@@ -539,21 +539,21 @@ var municipalitySelection = (function() {
 	
 	// Toggle franchise and membership radiobuttons
 	function showFranchise(show){
-		var franchise			= $('#franchise'),
-			municipalMembership	= $('#municipalMembership');
+		//var franchise			= $('#franchise');
+		var	municipalMembership	= $('#municipalMembership');
 		
 		if (show){
-			franchise.removeClass('js-hide');
+			//franchise.removeClass('js-hide');
 			municipalMembership.addClass('js-hide');
 		} else {
-			franchise.addClass('js-hide');
+			//franchise.addClass('js-hide');
 			municipalMembership.removeClass('js-hide');
 		}		
 	}
 	
-	$('input[name=franchise]').live('click', function(){
+	/*$('input[name=franchise]').live('click', function(){
 		disableSubmit(false);
-	});
+	});*/
 
 	// Assure that is member of the chosen municipality
 	jQuery.fn.assureMembership = function(){
@@ -580,8 +580,8 @@ var municipalitySelection = (function() {
 	$('.municipality-select').live('change', function() {
 		var thisSelect			= $(this),
 			checkedMembership	= $("input[name=municipalMembership]:checked"),
-			radioMunicipalMembership = $("input[name=municipalMembership]"),
-			radioFranchise = $("input[name=franchise]");
+			radioMunicipalMembership = $("input[name=municipalMembership]");
+			//radioFranchise = $("input[name=franchise]");
 		
 		// Update home municipality automatically
 		if (!isHomeMunicipality(thisSelect)){
@@ -593,7 +593,7 @@ var municipalitySelection = (function() {
 		
 		// Clear radiobutton on change.
 		radioMunicipalMembership.removeAttr('checked');
-		radioFranchise.removeAttr('checked');
+		//radioFranchise.removeAttr('checked');
 		
 		toggleMembershipRadios(thisSelect);
 		warningNotMember(false);
@@ -782,6 +782,7 @@ $('.municipality-filter').change( function() {
  * - Form buttons are pushed to the bottom when scrollbars are visible. Add some space after the form.
  *  
  * */
+(function() {
 	jQuery.fn.loadModal = function(modalType){
 		var modal, topPos, modalFixed, maxTopPos, modalHeight, $modalContent, $scrollable;
 		modal = $(this);
@@ -875,6 +876,7 @@ $('.municipality-filter').change( function() {
 		}
 	};
 	
+}());
 	
 
 /**
@@ -952,10 +954,10 @@ $('.municipality-filter').change( function() {
 		}
 	});
 	
-	// Send initiative to review
+	// Participate initiative
 	$('.js-participate').click(function(){
 		try {
-			generateModal(modalData.participateForm(), 'minimal');
+			generateModal(modalData.participateForm(), 'full');
 			return false;
 		} catch(e) {
 			console.log(e);
