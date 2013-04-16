@@ -213,7 +213,6 @@ public class TestHelper {
 
         queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.authorId, lastAuthorId)
-                .set(municipalityInitiative.participantCount, 1)
                 .where(municipalityInitiative.id.eq(lastInitiativeId))
                 .execute();
 
@@ -251,7 +250,7 @@ public class TestHelper {
         public boolean publicName = DEFAULT_PUBLIC_NAME;
         public DateTime sent = DEFAULT_SENT_TIME;
         public DateTime modified = DEFAULT_CREATE_TIME;
-        public Integer participantCount = 0;
+        public Integer participantCount = 1;
         public String comment = DEFAULT_COMMENT;
 
         public Long authorMunicipality;
