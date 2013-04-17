@@ -54,24 +54,19 @@ public class InitiativeViewController extends BaseController {
 
     @RequestMapping(value={SEARCH_FI, SEARCH_SV}, method=GET)
     public String search(InitiativeSearch search, Model model, Locale locale, HttpServletRequest request) {
-        Urls urls = Urls.get(locale);
-        model.addAttribute(ALT_URI_ATTR, urls.alt().search());
-
         List<Municipality> municipalities = municipalityService.findAllMunicipalities(locale);
-
-        model.addAttribute("initiatives", publicInitiativeService.findMunicipalityInitiatives(search));
-        model.addAttribute("municipalities", municipalities);
-        model.addAttribute("currentSearch", search);
-        model.addAttribute("queryString", new SearchParameterQueryString(search));
-        model.addAttribute("currentMunicipality", solveMunicipalityFromListById(municipalities, search.getMunicipality()));
-        model.addAttribute("initiativeCounts", publicInitiativeService.getInitiativeCounts(Maybe.fromNullable(search.getMunicipality())));
-        return SEARCH_VIEW;
+        return ViewGenerator.searchView(publicInitiativeService.findMunicipalityInitiatives(search),
+                municipalities,
+                search,
+                new SearchParameterQueryString(search),
+                solveMunicipalityFromListById(municipalities, search.getMunicipality()),
+                publicInitiativeService.getInitiativeCounts(Maybe.fromNullable(search.getMunicipality())))
+                .view(model, Urls.get(locale).alt().search());
     }
 
     @RequestMapping(value={ VIEW_FI, VIEW_SV }, method=GET)
     public String view(@PathVariable("id") Long initiativeId,
                        Model model, Locale locale, HttpServletRequest request) {
-        Urls urls = Urls.get(locale);
 
         InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
 
@@ -82,18 +77,16 @@ public class InitiativeViewController extends BaseController {
             }
         }
 
-        model.addAttribute(ALT_URI_ATTR, urls.alt().view(initiativeId));
-
         if (initiativeInfo.isCollectable()) {
             return ViewGenerator.collaborativeView(initiativeInfo,
                     municipalityService.findAllMunicipalities(locale),
                     participantService.getParticipantCount(initiativeId),
                     participantService.findPublicParticipants(initiativeId),
                     new ParticipantUICreateDto())
-                    .view(model);
+                    .view(model, Urls.get(locale).alt().view(initiativeId));
         }
         else {
-            return ViewGenerator.singleView(initiativeInfo).view(model);
+            return ViewGenerator.singleView(initiativeInfo).view(model, Urls.get(locale).alt().view(initiativeId));
         }
     }
 
