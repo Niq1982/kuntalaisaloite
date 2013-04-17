@@ -8,7 +8,7 @@
 
 <#escape x as x?html>
 
-<#assign title><@u.message "email.initiative" /> - ${initiative.municipality.getLocalizedName(locale)!""}</#assign>
+<#assign title><@u.message "email.create.title" /></#assign>
 
 <@l.emailHtml "municipality-collectable" title>
 
