@@ -133,10 +133,10 @@
             <span class="title"><a href="${urls.view(initiative.id)}" class="name">${initiative.name!""}</a></span>
             <#--<#if initiative.collectable && !initiative.sentTime.present>-->
             <#if !initiative.sentTime.present>
-                <span class="info">${initiative.municipality.getLocalizedName(locale)!""}<span class="bull">&bull;</span><span class="state"><@u.message "initiative.state.collecting" /></span></span>
+                <span class="info">${initiative.municipality.getName(locale)!""}<span class="bull">&bull;</span><span class="state"><@u.message "initiative.state.collecting" /></span></span>
             <#else>
                 <#assign sentTime><@u.localDate initiative.sentTime.value!"" /></#assign>
-                <span class="info">${initiative.municipality.getLocalizedName(locale)!""}<span class="bull">&bull;</span><span class="state"><@u.message key="initiative.date.sent" args=[sentTime] /></span></span>
+                <span class="info">${initiative.municipality.getName(locale)!""}<span class="bull">&bull;</span><span class="state"><@u.message key="initiative.date.sent" args=[sentTime] /></span></span>
             </#if>
             
         </li>

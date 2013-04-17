@@ -82,7 +82,7 @@ public class PublicInitiativeService {
     }
 
     public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId, LoginUserHolder loginUserHolder) {
-        loginUserHolder.requireManagementRightsForInitiative(initiativeId);
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         return InitiativeViewInfo.parse(initiativeDao.getById(initiativeId, loginUserHolder.getInitiative().get().getManagementHash().get()));
     }
 
@@ -96,7 +96,7 @@ public class PublicInitiativeService {
 
     @Transactional(readOnly = false)
     public void editInitiativeDraft(Long initiativeId, LoginUserHolder loginUserHolder, InitiativeDraftUIEditDto editDto) {
-        loginUserHolder.requireManagementRightsForInitiative(initiativeId);
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         assertAllowance("Edit initiative", managementSettings(initiativeId).isAllowEdit());
         initiativeDao.updateInitiativeDraft(initiativeId, editDto);
     }
@@ -105,7 +105,7 @@ public class PublicInitiativeService {
     public InitiativeUIUpdateDto getInitiativeForUpdate(Long initiativeId, LoginUserHolder loginUserHolder) {
 
         assertAllowance("Update initiative", managementSettings(initiativeId).isAllowUpdate());
-        loginUserHolder.requireManagementRightsForInitiative(initiativeId);
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
         // TODO: Maybe remove managementhash?
         String managementHash = loginUserHolder.getInitiative().get().getManagementHash().get();
@@ -129,7 +129,7 @@ public class PublicInitiativeService {
 
     @Transactional(readOnly = true)
     public Author getAuthorInformation(Long initiativeId, LoginUserHolder loginUserHolder) {
-        loginUserHolder.requireManagementRightsForInitiative(initiativeId);
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         return initiativeDao.getAuthorInformation(initiativeId, loginUserHolder.getInitiative().get().getManagementHash().get());
     }
 
@@ -140,7 +140,7 @@ public class PublicInitiativeService {
 
     @Transactional(readOnly = false)
     public void sendReview(Long initiativeId, LoginUserHolder loginUserHolder, boolean sendToMunicipalityRightAfterAcceptance, Locale locale) {
-        loginUserHolder.requireManagementRightsForInitiative(initiativeId);
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         assertAllowance("Send review", managementSettings(initiativeId).isAllowSendToReview());
 
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.REVIEW);
@@ -155,7 +155,7 @@ public class PublicInitiativeService {
 
     @Transactional(readOnly = false)
     public void publishInitiative(Long initiativeId, boolean isCollobrative, LoginUserHolder loginUserHolder, Locale locale) {
-        loginUserHolder.requireManagementRightsForInitiative(initiativeId);
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         assertAllowance("Publish initiative", managementSettings(initiativeId).isAllowPublish());
 
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
@@ -180,7 +180,7 @@ public class PublicInitiativeService {
     }
 
     @Transactional(readOnly = false)
-    public synchronized Long confirmParticipation(Long participantId, String confirmationCode) {
+    public Long confirmParticipation(Long participantId, String confirmationCode) {
         Long initiativeId = participantDao.getInitiativeIdByParticipant(participantId);
         assertAllowance("Confirm participation", managementSettings(initiativeId).isAllowParticipate());
 

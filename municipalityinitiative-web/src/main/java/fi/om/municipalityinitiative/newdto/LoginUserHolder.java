@@ -25,7 +25,7 @@ public class LoginUserHolder {
         return user;
     }
 
-    public void requireManagementRightsForInitiative(Long initiativeId) {
+    public void assertManagementRightsForInitiative(Long initiativeId) {
         if (initiative.isNotPresent() || !initiative.get().getId().equals(initiativeId)) {
             throw new AccessDeniedException("No access for initiative with id: " + initiativeId);
         }

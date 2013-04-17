@@ -12,11 +12,15 @@ public class User {
         return new User(true);
     }
 
+    public static User normalUser() {
+        return new User(false);
+    }
+
     public boolean isOmUser() {
         return omUser;
     }
 
-    public static User normalUser() {
-        return new User(false);
+    public boolean isNotOmUser() {
+        return !isOmUser();
     }
 }

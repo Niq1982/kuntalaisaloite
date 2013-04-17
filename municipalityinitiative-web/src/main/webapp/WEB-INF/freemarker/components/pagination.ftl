@@ -43,7 +43,7 @@
         <#if currOffset == offset>
             <span>${page}</span>
         <#else>
-            <a href="${urls.search()}${searchParameters.withOffset(currOffset)}">${page}</a>
+            <a href="${urls.search()}${queryString.withOffset(currOffset)}">${page}</a>
         </#if>
         
         <#if !page_has_next></span></#if>
@@ -62,7 +62,7 @@
 <#macro previousPage limit offset>
     <#assign prev = offset - limit />
     <#if (prev >= 0)>
-        <a href="${urls.search()}${searchParameters.withOffset(prev)}" class="prev"><span class="icon-small arrow-left"></span> <@u.message "pagination.prev" /></a>
+        <a href="${urls.search()}${queryString.withOffset(prev)}" class="prev"><span class="icon-small arrow-left"></span> <@u.message "pagination.prev" /></a>
     <#else>
         <span class="prev"><span class="icon-small arrow-left"></span> <@u.message "pagination.prev" /></span>
     </#if>
@@ -83,7 +83,7 @@
     <#assign next = offset + limit />
     
     <#if (next < totalPages * limit)>
-        <a href="${urls.search()}${searchParameters.withOffset(offset + limit)}" class="next"><@u.message "pagination.next" /> <span class="icon-small arrow-right"></span></a>
+        <a href="${urls.search()}${queryString.withOffset(offset + limit)}" class="next"><@u.message "pagination.next" /> <span class="icon-small arrow-right"></span></a>
     <#else>
         <span class="next"><@u.message "pagination.next" /> <span class="icon-small arrow-right"></span></span>
     </#if>
@@ -105,7 +105,7 @@
         <@u.message "pagination.limiter" />
         <#list limits as l>
             <#if l != limit>
-                <a href="${urls.search()}${searchParameters.withLimit(l)}">${l}</a>
+                <a href="${urls.search()}${queryString.withLimit(l)}">${l}</a>
             <#else>
                 <span class="active">${l}</span>
             </#if>

@@ -87,7 +87,7 @@ public class InitiativeCreateController extends BaseController {
                            Model model, Locale locale, HttpServletRequest request) {
 
 //        userService.assertManagementRightsForInitiative(initiativeId);
-        userService.getRequiredLoginUserHolder(request).requireManagementRightsForInitiative(initiativeId);
+        userService.getRequiredLoginUserHolder(request).assertManagementRightsForInitiative(initiativeId);
 
         Urls urls = Urls.get(locale);
 
@@ -121,7 +121,7 @@ public class InitiativeCreateController extends BaseController {
         Urls urls = Urls.get(locale);
 
         LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
-        loginUserHolder.requireManagementRightsForInitiative(initiativeId);
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
         if (validionService.validationErrors(editDto, bindingResult, model)) {
             model.addAttribute(ALT_URI_ATTR, urls.alt().edit(initiativeId));

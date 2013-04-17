@@ -15,7 +15,6 @@ import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.*;
 
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -70,7 +69,7 @@ public class PublicInitiativeServiceIntegrationTest {
     static {
         authorLoginUserHolder = mock(LoginUserHolder.class);
         unknownLoginUserHolder = mock(LoginUserHolder.class);
-        doThrow(new AccessDeniedException("Access denied")).when(unknownLoginUserHolder).requireManagementRightsForInitiative(anyLong());
+        doThrow(new AccessDeniedException("Access denied")).when(unknownLoginUserHolder).assertManagementRightsForInitiative(anyLong());
     }
 
     @Before

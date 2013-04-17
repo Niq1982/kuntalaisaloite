@@ -359,7 +359,7 @@ ${email?split("@")?first}&#064;<span class="hide">null</span>${email?split("@")?
 -->
 <#macro searchLink parameter cssClass="" count=-1 tooltip=true>
 <@compress single_line=true>
-    <a href="${urls.search()}${searchParameters[parameter]}" class="${cssClass}<#if tooltip> trigger-tooltip</#if>" <#if tooltip>title="<@message "searchParameters."+parameter+".tooltip" />"</#if>><@message "searchParameters."+parameter /><#if (count > -1)><span class="count">${count}</span></#if></a>
+    <a href="${urls.search()}${queryString[parameter]}" class="${cssClass}<#if tooltip> trigger-tooltip</#if>" <#if tooltip>title="<@message "searchParameters."+parameter+".tooltip" />"</#if>><@message "searchParameters."+parameter /><#if (count > -1)><span class="count">${count}</span></#if></a>
 </@compress>
 </#macro>
 

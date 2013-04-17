@@ -50,7 +50,7 @@ public class InitiativeManagementController extends BaseController {
                                  Model model, Locale locale, HttpServletRequest request) {
 
         LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
-        loginUserHolder.requireManagementRightsForInitiative(initiativeId);
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().getManagement(initiativeId));
@@ -65,11 +65,13 @@ public class InitiativeManagementController extends BaseController {
             return contextRelativeRedirect(urls.edit(initiativeId));
         }
 
-        addModelAttributesToCollectView(model,
-                initiativeInfo,
-                municipalityService.findAllMunicipalities(locale),
-                participantService.getParticipantCount(initiativeId),
-                participantService.findPublicParticipants(initiativeId));
+//        addModelAttributesToCollectView(model,
+//                initiativeInfo,
+//                municipalityService.findAllMunicipalities(locale),
+//                participantService.getParticipantCount(initiativeId),
+//                participantService.findPublicParticipants(initiativeId));
+
+        model.addAttribute("initiative", initiativeInfo);
 
         model.addAttribute("managementSettings", publicInitiativeService.managementSettings(initiativeId));
         model.addAttribute("participants", participantService.findPublicParticipants(initiativeId));
@@ -82,7 +84,7 @@ public class InitiativeManagementController extends BaseController {
                              Model model, Locale locale, HttpServletRequest request) {
 
         LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
-        loginUserHolder.requireManagementRightsForInitiative(initiativeId);
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
         Urls urls = Urls.get(locale);
         ManagementSettings managementSettings = publicInitiativeService.managementSettings(initiativeId);
@@ -112,7 +114,7 @@ public class InitiativeManagementController extends BaseController {
         Urls urls = Urls.get(locale);
 
         LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
-        loginUserHolder.requireManagementRightsForInitiative(initiativeId);
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
         if (validationService.validationErrors(updateDto, bindingResult, model)) {
             model.addAttribute(ALT_URI_ATTR, urls.alt().update(initiativeId));

@@ -7,11 +7,11 @@ import java.lang.reflect.Field;
 /**
  * Freemarker uses this class for generating links with get-parameters at search page.
  */
-public class SearchParameterGenerator {
+public class SearchParameterQueryString {
 
     private final InitiativeSearch original;
 
-    public SearchParameterGenerator(InitiativeSearch search) {
+    public SearchParameterQueryString(InitiativeSearch search) {
         this.original = search;
     }
 
