@@ -49,22 +49,10 @@ public class InitiativeModerationController extends BaseController{
 
         userService.getRequiredOmLoginUserHolder(request);
 
-        Urls urls = Urls.get(locale);
-        model.addAttribute(ALT_URI_ATTR, urls.alt().moderation(initiativeId));
-
-        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
-
-        addModelAttributesToCollectView(model,
-                initiativeInfo,
-                municipalityService.findAllMunicipalities(locale),
-                participantService.getParticipantCount(initiativeId),
-                participantService.findPublicParticipants(initiativeId));
-
-        model.addAttribute("participants", participantService.findPublicParticipants(initiativeId));
-        model.addAttribute("managementSettings", publicInitiativeService.managementSettings(initiativeId));
-        // TODO: Return all authors when possible
-        model.addAttribute("author", omInitiativeService.getAuthorInformation(initiativeId));
-        return MODERATION_VIEW;
+        return ViewGenerator.moderationView(publicInitiativeService.getMunicipalityInitiative(initiativeId),
+                publicInitiativeService.managementSettings(initiativeId),
+                omInitiativeService.getAuthorInformation(initiativeId)
+        ).view(model, Urls.get(locale).alt().moderation(initiativeId));
     }
 
     @RequestMapping(value = {MODERATION_FI, MODERATION_SV}, method = POST, params = ACTION_ACCEPT_INITIATIVE)

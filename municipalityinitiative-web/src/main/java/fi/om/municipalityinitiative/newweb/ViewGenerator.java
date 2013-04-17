@@ -2,7 +2,9 @@ package fi.om.municipalityinitiative.newweb;
 
 import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
+import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
+import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -13,9 +15,7 @@ import org.springframework.ui.Model;
 import java.util.List;
 import java.util.Map;
 
-import static fi.om.municipalityinitiative.web.Views.IFRAME_VIEW;
-import static fi.om.municipalityinitiative.web.Views.PARTICIPANT_LIST;
-import static fi.om.municipalityinitiative.web.Views.SEARCH_VIEW;
+import static fi.om.municipalityinitiative.web.Views.*;
 
 public class ViewGenerator {
 
@@ -102,6 +102,15 @@ public class ViewGenerator {
 
     public static ViewGenerator singleView(InitiativeViewInfo initiativeInfo) {
         return new ViewGenerator(Views.PUBLIC_SINGLE_VIEW,new AttributeBuilder().add("initiative", initiativeInfo).build());
+    }
+
+    public static ViewGenerator moderationView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, Author authorInformation) {
+        return new ViewGenerator(MODERATION_VIEW,
+                new AttributeBuilder()
+                        .add("initiative", initiativeInfo)
+                        .add("managementSettings", managementSettings)
+                        .add("author", authorInformation).build()
+        );
     }
 
     private static class AttributeBuilder {

@@ -121,7 +121,7 @@ public class InitiativeViewController extends BaseController {
         }
         else {
 
-            // XXX: Tästä mää enny kyä ynmärrä.
+            // XXX: Tästä mää enny kyä ymmärrä.
             String previousPageURI = urls.management(initiativeId);
             if (request.getHeader("referer") == null || !request.getHeader("referer").equals(previousPageURI)) {
                 previousPageURI = urls.view(initiativeId);
