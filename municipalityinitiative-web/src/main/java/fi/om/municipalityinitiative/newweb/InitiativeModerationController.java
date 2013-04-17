@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.newweb;
 
-import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.web.BaseController;
 import fi.om.municipalityinitiative.web.RequestMessage;
@@ -17,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
-import static fi.om.municipalityinitiative.web.Views.MODERATION_VIEW;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -50,7 +48,7 @@ public class InitiativeModerationController extends BaseController{
         userService.getRequiredOmLoginUserHolder(request);
 
         return ViewGenerator.moderationView(publicInitiativeService.getMunicipalityInitiative(initiativeId),
-                publicInitiativeService.managementSettings(initiativeId),
+                publicInitiativeService.getManagementSettings(initiativeId),
                 omInitiativeService.getAuthorInformation(initiativeId)
         ).view(model, Urls.get(locale).alt().moderation(initiativeId));
     }

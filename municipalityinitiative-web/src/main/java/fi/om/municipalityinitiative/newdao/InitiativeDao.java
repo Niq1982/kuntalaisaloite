@@ -29,13 +29,13 @@ public interface InitiativeDao {
 
     Long prepareInitiative(Long municipalityId);
 
-    void updateInitiativeDraft(Long initiativeId, InitiativeDraftUIEditDto editDto);
+    void editInitiativeDraft(Long initiativeId, InitiativeDraftUIEditDto editDto);
 
     Author getAuthorInformation(Long id, String managementHash);
 
-    void updateInitiativeState(Long initiativeId, InitiativeState state);
+    void updateAcceptedInitiative(Long initiativeId, String managementHash, InitiativeUIUpdateDto updateDto);
 
-    void updateInitiative(Long initiativeId, String managementHash, InitiativeUIUpdateDto updateDto);
+    void updateInitiativeState(Long initiativeId, InitiativeState state);
 
     void updateInitiativeType(Long initiativeId, InitiativeType initiativeType);
 

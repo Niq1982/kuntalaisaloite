@@ -80,7 +80,7 @@ public class InitiativeCreateController extends BaseController {
         LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        ManagementSettings managementSettings = publicInitiativeService.managementSettings(initiativeId);
+        ManagementSettings managementSettings = publicInitiativeService.getManagementSettings(initiativeId);
 
         Urls urls = Urls.get(locale);
         if (managementSettings.isAllowEdit()) {

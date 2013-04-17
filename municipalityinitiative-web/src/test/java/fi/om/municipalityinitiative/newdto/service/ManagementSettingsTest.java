@@ -17,12 +17,12 @@ public class ManagementSettingsTest {
     @Test
     public void edit_is_allowed_only_if_initiative_draft() throws Exception {
 
-        final Initiative initiative = createInitiative();
+        final Initiative initiative = new Initiative();
 
         assertExpectedOnlyWithGivenStates(initiative, new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                return managementSettings(initiative).isAllowEdit();
+                return ManagementSettings.of(initiative).isAllowEdit();
             }
         }, true, InitiativeState.DRAFT);
 
@@ -31,12 +31,12 @@ public class ManagementSettingsTest {
     @Test
     public void send_to_review_is_allowed_only_if_initiative_draft() throws Exception {
 
-        final Initiative initiative = createInitiative();
+        final Initiative initiative = new Initiative();
 
         assertExpectedOnlyWithGivenStates(initiative, new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                return managementSettings(initiative).isAllowSendToReview();
+                return ManagementSettings.of(initiative).isAllowSendToReview();
             }
         }, true, InitiativeState.DRAFT);
     }
@@ -44,12 +44,12 @@ public class ManagementSettingsTest {
     @Test
     public void om_accept_is_allowed_only_if_initiative_review() throws Exception {
 
-        final Initiative initiative = createInitiative();
+        final Initiative initiative = new Initiative();
 
         assertExpectedOnlyWithGivenStates(initiative, new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                return managementSettings(initiative).isAllowOmAccept();
+                return ManagementSettings.of(initiative).isAllowOmAccept();
             }
         }, true, InitiativeState.REVIEW);
 
@@ -58,12 +58,12 @@ public class ManagementSettingsTest {
     @Test
     public void update_is_allowed_only_when_not_draft() throws Exception {
 
-        final Initiative initiative = createInitiative();
+        final Initiative initiative = new Initiative();
 
         assertExpectedOnlyWithGivenStates(initiative, new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                return managementSettings(initiative).isAllowUpdate();
+                return ManagementSettings.of(initiative).isAllowUpdate();
             }
         }, false, InitiativeState.DRAFT);
     }
@@ -71,14 +71,14 @@ public class ManagementSettingsTest {
     @Test
     public void never_able_to_update_if_sent_to_municipality() throws Exception {
 
-        final Initiative initiative = createInitiative();
+        final Initiative initiative = new Initiative();
 
         initiative.setSentTime(Maybe.of(new LocalDate(2010, 1, 1)));
 
         assertExpectedOnlyWithGivenStates(initiative, new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                return managementSettings(initiative).isAllowUpdate();
+                return ManagementSettings.of(initiative).isAllowUpdate();
             }
         }, false, InitiativeState.values());
 
@@ -87,74 +87,76 @@ public class ManagementSettingsTest {
     @Test
     public void may_be_sent_to_municipality_only_if_at_least_accepted_and_not_sent() throws Exception {
 
-        final Initiative initiative = createInitiative();
+        final Initiative initiative = new Initiative();
         assertExpectedOnlyWithGivenStates(initiative, new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                return managementSettings(initiative).isAllowSendToMunicipality();
+                return ManagementSettings.of(initiative).isAllowSendToMunicipality();
             }
         }, true, InitiativeState.ACCEPTED, InitiativeState.PUBLISHED);
     }
 
     @Test
     public void never_able_to_send_to_municipality_if_already_sent() throws Exception {
-        final Initiative initiative = createInitiative();
+        final Initiative initiative = new Initiative();
         initiative.setSentTime(Maybe.of(new LocalDate(2010, 1, 1)));
 
         assertExpectedOnlyWithGivenStates(initiative, new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                return managementSettings(initiative).isAllowSendToMunicipality();
+                return ManagementSettings.of(initiative).isAllowSendToMunicipality();
             }
         }, false, InitiativeState.values());
     }
 
     @Test
     public void is_allow_publish_only_if_initiative_state_accepted() throws Exception {
-        final Initiative initiative = createInitiative();
+        final Initiative initiative = new Initiative();
 
         assertExpectedOnlyWithGivenStates(initiative, new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                return managementSettings(initiative).isAllowPublish();
+                return ManagementSettings.of(initiative).isAllowPublish();
             }
         }, true, InitiativeState.ACCEPTED);
     }
 
     @Test
     public void is_allow_to_participate_only_if_initiative_state_is_published() throws Exception {
-        final Initiative initiative = createInitiative();
+        final Initiative initiative = new Initiative();
         initiative.setSentTime(Maybe.<LocalDate>absent());
         initiative.setType(InitiativeType.COLLABORATIVE);
 
         assertExpectedOnlyWithGivenStates(initiative, new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                return managementSettings(initiative).isAllowParticipate();
+                return ManagementSettings.of(initiative).isAllowParticipate();
             }
         }, true, InitiativeState.PUBLISHED);
     }
 
     @Test
     public void is_not_allowed_to_participate_if_initiative_sent() {
-        final Initiative initiative = createInitiative();
+        final Initiative initiative = new Initiative();
         initiative.setType(InitiativeType.COLLABORATIVE);
         initiative.setState(InitiativeState.PUBLISHED);
 
-        precondition(managementSettings(initiative).isAllowParticipate(), is(true));
+        precondition(ManagementSettings.of(initiative).isAllowParticipate(), is(true));
         initiative.setSentTime(Maybe.of(new LocalDate(2010, 1, 1)));
-        assertThat(managementSettings(initiative).isAllowParticipate(), is(false));
+
+        assertThat(ManagementSettings.of(initiative).isAllowParticipate(), is(false));
     }
 
     @Test
     public void is_not_allowed_to_participate_if_initiative_not_collectable() {
-        final Initiative initiative = createInitiative();
+        final Initiative initiative = new Initiative();
         initiative.setType(InitiativeType.COLLABORATIVE);
         initiative.setState(InitiativeState.PUBLISHED);
 
-        precondition(managementSettings(initiative).isAllowParticipate(), is(true));
+        precondition(ManagementSettings.of(initiative).isAllowParticipate(), is(true));
         initiative.setType(InitiativeType.SINGLE);
-        assertThat(managementSettings(initiative).isAllowParticipate(), is(false));
+
+        assertThat(ManagementSettings.of(initiative).isAllowParticipate(), is(false));
     }
 
     private static void assertExpectedOnlyWithGivenStates(Initiative initiative, Callable<Boolean> callable, boolean expected, InitiativeState... givenStates) throws Exception {
@@ -176,16 +178,6 @@ public class ManagementSettingsTest {
                 return true;
         }
         return false;
-    }
-
-    private static Initiative createInitiative() {
-        Initiative initiative = new Initiative();
-        return initiative;
-    }
-
-    private static ManagementSettings managementSettings(Initiative initiative) {
-        return new ManagementSettings(initiative);
-
     }
 
 

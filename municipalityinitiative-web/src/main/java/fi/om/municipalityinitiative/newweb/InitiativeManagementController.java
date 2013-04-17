@@ -63,7 +63,7 @@ public class InitiativeManagementController extends BaseController {
         }
 
         return ViewGenerator.managementView(initiativeInfo,
-                publicInitiativeService.managementSettings(initiativeId),
+                publicInitiativeService.getManagementSettings(initiativeId),
                 publicInitiativeService.getAuthorInformation(initiativeId, loginUserHolder)
         ).view(model, Urls.get(locale).alt().getManagement(initiativeId));
     }
@@ -80,7 +80,7 @@ public class InitiativeManagementController extends BaseController {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
         Urls urls = Urls.get(locale);
-        ManagementSettings managementSettings = publicInitiativeService.managementSettings(initiativeId);
+        ManagementSettings managementSettings = publicInitiativeService.getManagementSettings(initiativeId);
 
         if (managementSettings.isAllowUpdate()) {
 

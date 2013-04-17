@@ -205,7 +205,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
     public InitiativeCounts getInitiativeCounts(Maybe<Long> municipality) {
         Expression<String> caseBuilder = new CaseBuilder()
                 .when(municipalityInitiative.sent.isNull())
-                    .then(new ConstantImpl<String>(InitiativeSearch.Show.collecting.name()))
+                .then(new ConstantImpl<String>(InitiativeSearch.Show.collecting.name()))
                 .otherwise(new ConstantImpl<String>(InitiativeSearch.Show.sent.name()));
 
         SimpleExpression<String> simpleExpression = Expressions.as(caseBuilder, "showCategory");
@@ -239,7 +239,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     @Transactional(readOnly = false)
-    public void updateInitiativeDraft(Long initiativeId, InitiativeDraftUIEditDto editDto) {
+    public void editInitiativeDraft(Long initiativeId, InitiativeDraftUIEditDto editDto) {
 
         assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.name, editDto.getName())
@@ -321,11 +321,11 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     @Transactional(readOnly = false)
-    public void updateInitiative(Long initiativeId, String managementHash, InitiativeUIUpdateDto updateDto) {
+    public void updateAcceptedInitiative(Long initiativeId, String managementHash, InitiativeUIUpdateDto updateDto) {
 
         Long participantId = queryFactory.from(QParticipant.participant)
                 .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
-                .leftJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
+                .innerJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
                 .where(QAuthor.author.managementHash.eq(managementHash))
                 .singleResult(QParticipant.participant.id);
 

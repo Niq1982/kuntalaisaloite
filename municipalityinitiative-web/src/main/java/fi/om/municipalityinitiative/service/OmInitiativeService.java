@@ -33,8 +33,8 @@ public class OmInitiativeService {
         userService.requireOmUser();
         Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
 
-        if (!new ManagementSettings(initiative).isAllowOmAccept()) {
-            throw new OperationNotAllowedException("Not allowed to reject initiative");
+        if (!ManagementSettings.of(initiative).isAllowOmAccept()) {
+            throw new OperationNotAllowedException("Not allowed to accept initiative");
         }
 
         initiativeDao.updateModeratorComment(initiativeId, comment);
@@ -56,7 +56,7 @@ public class OmInitiativeService {
     @Transactional(readOnly = false)
     public void reject(Long initiativeId, String comment, Locale locale) {
         userService.requireOmUser();
-        if (!new ManagementSettings(initiativeDao.getByIdWithOriginalAuthor(initiativeId)).isAllowOmAccept()) {
+        if (!ManagementSettings.of(initiativeDao.getByIdWithOriginalAuthor(initiativeId)).isAllowOmAccept()) {
             throw new OperationNotAllowedException("Not allowed to reject initiative");
 
         }
