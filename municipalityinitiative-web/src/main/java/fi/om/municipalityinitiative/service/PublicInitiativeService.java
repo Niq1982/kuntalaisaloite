@@ -64,7 +64,7 @@ public class PublicInitiativeService {
     public Long prepareInitiative(PrepareInitiativeUICreateDto createDto, Locale locale) {
 
         Long initiativeId = initiativeDao.prepareInitiative(createDto.getMunicipality(), createDto.getParticipantEmail());
-        Long participantId = participantDao.prepareParticipant(initiativeId, createDto.getHomeMunicipality(), createDto.getParticipantEmail(), false); // XXX: Franchise?
+        Long participantId = participantDao.prepareParticipant(initiativeId, createDto.getHomeMunicipality(), createDto.getParticipantEmail(), false); // XXX: Remove franchise?
         String managementHash = RandomHashGenerator.randomString(40);
         initiativeDao.assignAuthor(initiativeId, participantId, managementHash);
 
@@ -88,7 +88,6 @@ public class PublicInitiativeService {
 
     @Transactional(readOnly = true)
     public InitiativeDraftUIEditDto getInitiativeDraftForEdit(Long initiativeId) {
-        // TODO: Do we need to check if allowed?
         assertAllowance("Edit initiative", managementSettings(initiativeId).isAllowEdit());
         InitiativeDraftUIEditDto initiativeForEdit = initiativeDao.getInitiativeForEdit(initiativeId); // TODO: Parse this with InitiativeDraftUiEditDto
         return initiativeForEdit;
@@ -111,10 +110,9 @@ public class PublicInitiativeService {
         String managementHash = loginUserHolder.getInitiative().get().getManagementHash().get();
 
         Initiative initiative = initiativeDao.getById(initiativeId, managementHash);
-        Author authorInformation = initiativeDao.getAuthorInformation(initiativeId, managementHash);
 
         InitiativeUIUpdateDto updateDto = new InitiativeUIUpdateDto();
-        updateDto.setContactInfo(authorInformation.getContactInfo());
+        updateDto.setContactInfo(initiative.getAuthor().getContactInfo());
         updateDto.setShowName(initiative.getShowName());
         updateDto.setExtraInfo(initiative.getComment());
 
@@ -123,6 +121,7 @@ public class PublicInitiativeService {
 
     @Transactional(readOnly = false)
     public void updateInitiative(Long initiativeId, LoginUserHolder loginUserHolder, InitiativeUIUpdateDto updateDto) {
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         assertAllowance("Update initiative", managementSettings(initiativeId).isAllowUpdate());
         initiativeDao.updateInitiative(initiativeId, loginUserHolder.getInitiative().get().getManagementHash().get(), updateDto);
     }
@@ -131,11 +130,6 @@ public class PublicInitiativeService {
     public Author getAuthorInformation(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         return initiativeDao.getAuthorInformation(initiativeId, loginUserHolder.getInitiative().get().getManagementHash().get());
-    }
-
-    @Transactional(readOnly = true)
-    public Author getAuthorInformation(Long initiativeId) {
-        return initiativeDao.getByIdWithOriginalAuthor(initiativeId).getAuthor();
     }
 
     @Transactional(readOnly = false)
@@ -173,12 +167,6 @@ public class PublicInitiativeService {
         }
     }
 
-    private static void assertAllowance(String s, boolean allowed) {
-        if (!allowed) {
-            throw new OperationNotAllowedException("Operation not allowed: " + s);
-        }
-    }
-
     @Transactional(readOnly = false)
     public Long confirmParticipation(Long participantId, String confirmationCode) {
         Long initiativeId = participantDao.getInitiativeIdByParticipant(participantId);
@@ -187,5 +175,11 @@ public class PublicInitiativeService {
         participantDao.confirmParticipation(participantId, confirmationCode);
 
         return initiativeId;
+    }
+
+    private static void assertAllowance(String s, boolean allowed) {
+        if (!allowed) {
+            throw new OperationNotAllowedException("Operation not allowed: " + s);
+        }
     }
 }

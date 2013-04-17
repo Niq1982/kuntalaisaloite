@@ -134,6 +134,23 @@ public class ViewGenerator {
         );
     }
 
+    public static ViewGenerator prepareView(PrepareInitiativeUICreateDto prepareInitiativeUICreateDto, List<Municipality> allMunicipalities) {
+        return new ViewGenerator(PREPARE_VIEW,
+                new AttributeBuilder()
+                        .add("initiative", prepareInitiativeUICreateDto)
+                        .add("municipalities", allMunicipalities).build()
+        );
+    }
+
+    public static ViewGenerator editView(InitiativeDraftUIEditDto initiative, Author authorInformation, String previousPageURI) {
+        return new ViewGenerator(EDIT_VIEW,
+                new AttributeBuilder()
+                        .add("initiative", initiative)
+                        .add("author", authorInformation)
+                        .add("previousPageURI", previousPageURI)
+                        .build());
+    }
+
     private static class AttributeBuilder {
         private Map<String, Object> attributes = Maps.newHashMap();
 
