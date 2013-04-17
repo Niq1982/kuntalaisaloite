@@ -55,7 +55,13 @@ public class PublicInitiativeService {
         String confirmationCode = RandomHashGenerator.randomString(20);
         Long participantId = participantDao.create(participantCreateDto, confirmationCode);
 
-        emailService.sendParticipationConfirmation(initiativeDao.getByIdWithOriginalAuthor(initiativeId), participant.getParticipantEmail(), participantId, confirmationCode, locale);
+        emailService.sendParticipationConfirmation(
+                initiativeDao.getByIdWithOriginalAuthor(initiativeId),
+                participant.getParticipantEmail(),
+                participantId,
+                confirmationCode,
+                locale
+        );
 
         return participantId;
     }
@@ -63,7 +69,7 @@ public class PublicInitiativeService {
     @Transactional(readOnly = false)
     public Long prepareInitiative(PrepareInitiativeUICreateDto createDto, Locale locale) {
 
-        Long initiativeId = initiativeDao.prepareInitiative(createDto.getMunicipality(), createDto.getParticipantEmail());
+        Long initiativeId = initiativeDao.prepareInitiative(createDto.getMunicipality());
         Long participantId = participantDao.prepareParticipant(initiativeId, createDto.getHomeMunicipality(), createDto.getParticipantEmail(), false); // XXX: Remove franchise?
         String managementHash = RandomHashGenerator.randomString(40);
         initiativeDao.assignAuthor(initiativeId, participantId, managementHash);
@@ -89,8 +95,7 @@ public class PublicInitiativeService {
     @Transactional(readOnly = true)
     public InitiativeDraftUIEditDto getInitiativeDraftForEdit(Long initiativeId) {
         assertAllowance("Edit initiative", managementSettings(initiativeId).isAllowEdit());
-        InitiativeDraftUIEditDto initiativeForEdit = initiativeDao.getInitiativeForEdit(initiativeId); // TODO: Parse this with InitiativeDraftUiEditDto
-        return initiativeForEdit;
+        return InitiativeDraftUIEditDto.parse(initiativeDao.getByIdWithOriginalAuthor(initiativeId));
     }
 
     @Transactional(readOnly = false)

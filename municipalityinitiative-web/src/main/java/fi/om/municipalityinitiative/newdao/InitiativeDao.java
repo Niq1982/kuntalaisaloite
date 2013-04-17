@@ -27,9 +27,7 @@ public interface InitiativeDao {
 
     InitiativeCounts getInitiativeCounts(Maybe<Long> municipality);
 
-    Long prepareInitiative(Long municipalityId, String email);
-
-    InitiativeDraftUIEditDto getInitiativeForEdit(Long initiativeId);
+    Long prepareInitiative(Long municipalityId);
 
     void updateInitiativeDraft(Long initiativeId, InitiativeDraftUIEditDto editDto);
 

@@ -229,25 +229,12 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     @Transactional(readOnly = false)
-    public Long prepareInitiative(Long municipalityId, String email) {
+    public Long prepareInitiative(Long municipalityId) {
         return queryFactory.insert(municipalityInitiative)
                 .set(municipalityInitiative.municipalityId, municipalityId)
                 .set(municipalityInitiative.authorId, PREPARATION_ID)
                 .set(municipalityInitiative.type, InitiativeType.UNDEFINED)
                 .executeWithKey(municipalityInitiative.id);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public InitiativeDraftUIEditDto getInitiativeForEdit(Long initiativeId) {
-        return queryFactory
-                .from(municipalityInitiative)
-                .leftJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
-                .leftJoin(municipalityInitiative.initiativeAuthorFk, QAuthor.author)
-                .leftJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
-                .where(municipalityInitiative.id.eq(initiativeId))
-
-                .uniqueResult(initiativeEditMapping);
     }
 
     @Override
@@ -403,21 +390,22 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     QAuthor.author.all()) {
                 @Override
                 protected InitiativeDraftUIEditDto map(Tuple row) {
-                    InitiativeDraftUIEditDto info = new InitiativeDraftUIEditDto(
-                            parseMunicipality(row),row.get(municipalityInitiative.state)
-                    );
-                    info.setName(row.get(municipalityInitiative.name));
-                    info.setProposal(row.get(municipalityInitiative.proposal));
-                    info.setExtraInfo(row.get(municipalityInitiative.comment));
-                    info.setShowName(row.get(QParticipant.participant.showName));
-
-                    ContactInfo contactInfo = new ContactInfo();
-                    contactInfo.setAddress(row.get(QAuthor.author.address));
-                    contactInfo.setEmail(row.get(QParticipant.participant.email));
-                    contactInfo.setName(row.get(QAuthor.author.name));
-                    contactInfo.setPhone(row.get(QAuthor.author.phone));
-                    info.setContactInfo(contactInfo);
-                    return info;
+                    throw new RuntimeException("moimoi");
+//                    InitiativeDraftUIEditDto info = new InitiativeDraftUIEditDto(
+//                            parseMunicipality(row),row.get(municipalityInitiative.state)
+//                    );
+//                    info.setName(row.get(municipalityInitiative.name));
+//                    info.setProposal(row.get(municipalityInitiative.proposal));
+//                    info.setExtraInfo(row.get(municipalityInitiative.comment));
+//                    info.setShowName(row.get(QParticipant.participant.showName));
+//
+//                    ContactInfo contactInfo = new ContactInfo();
+//                    contactInfo.setAddress(row.get(QAuthor.author.address));
+//                    contactInfo.setEmail(row.get(QParticipant.participant.email));
+//                    contactInfo.setName(row.get(QAuthor.author.name));
+//                    contactInfo.setPhone(row.get(QAuthor.author.phone));
+//                    info.setContactInfo(contactInfo);
+//                    return info;
                 }
             };
 

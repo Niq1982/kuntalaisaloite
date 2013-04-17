@@ -199,7 +199,7 @@ public class PublicInitiativeServiceIntegrationTest {
     public void editing_initiative_throws_exception_if_wrong_author() {
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
 
-        InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto(testMunicipality, null);
+        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(ReflectionTestUtils.modifyAllFields(new Initiative()));
 
         service.editInitiativeDraft(initiativeId, unknownLoginUserHolder, editDto);
     }
@@ -215,7 +215,8 @@ public class PublicInitiativeServiceIntegrationTest {
 
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
 
-        InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto(testMunicipality, null);
+//        InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto(testMunicipality, null);
+        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(ReflectionTestUtils.modifyAllFields(new Initiative()));
 
         ContactInfo contactInfo = new ContactInfo();
         contactInfo.setEmail("updated email");
@@ -272,14 +273,13 @@ public class PublicInitiativeServiceIntegrationTest {
     }
 
     @Test
-    public void get_initiative_for_edit_has_all_information() {
+    public void preparing_initiative_sets_email_and_municipality() {
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
 
-        String managementHash = RandomHashGenerator.getPrevious();
-
         InitiativeDraftUIEditDto initiativeForEdit = service.getInitiativeDraftForEdit(initiativeId);
-        assertThat(initiativeForEdit.getMunicipality().getId(), is(testMunicipality.getId()));
-        assertThat(initiativeForEdit.getState(), is(InitiativeState.DRAFT));
+        assertThat(initiativeForEdit.getMunicipality().getId(), is(testMunicipality.getId())); // XXX: Remove?
+        assertThat(initiativeForEdit.getState(), is(InitiativeState.DRAFT)); // XXX: Remove
+        assertThat(initiativeForEdit.getContactInfo().getEmail(), is("authorEmail@example.com"));
 
         // Note that all fields are not set when preparing
     }
