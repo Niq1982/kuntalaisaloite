@@ -52,31 +52,24 @@ public class InitiativeManagementController extends BaseController {
         LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        Urls urls = Urls.get(locale);
-        model.addAttribute(ALT_URI_ATTR, urls.alt().getManagement(initiativeId));
-
         InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
 
         if (initiativeInfo.isSent()) {
-            return redirectWithMessage(urls.view(initiativeId), RequestMessage.ALREADY_SENT, request);
+            return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.ALREADY_SENT, request);
         }
 
-        if (Strings.isNullOrEmpty(initiativeInfo.getName())) {
-            return contextRelativeRedirect(urls.edit(initiativeId));
+        if (hasNeverBeenSaved(initiativeInfo)) {
+            return contextRelativeRedirect(Urls.get(locale).edit(initiativeId));
         }
 
-//        addModelAttributesToCollectView(model,
-//                initiativeInfo,
-//                municipalityService.findAllMunicipalities(locale),
-//                participantService.getParticipantCount(initiativeId),
-//                participantService.findPublicParticipants(initiativeId));
+        return ViewGenerator.managementView(initiativeInfo,
+                publicInitiativeService.managementSettings(initiativeId),
+                publicInitiativeService.getAuthorInformation(initiativeId)
+        ).view(model, Urls.get(locale).alt().getManagement(initiativeId));
+    }
 
-        model.addAttribute("initiative", initiativeInfo);
-
-        model.addAttribute("managementSettings", publicInitiativeService.managementSettings(initiativeId));
-        model.addAttribute("participants", participantService.findPublicParticipants(initiativeId));
-        model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, loginUserHolder));
-        return MANAGEMENT_VIEW;
+    private static boolean hasNeverBeenSaved(InitiativeViewInfo initiativeInfo) {
+        return Strings.isNullOrEmpty(initiativeInfo.getName());
     }
 
     @RequestMapping(value={ UPDATE_FI, UPDATE_SV }, method=GET)
@@ -91,18 +84,15 @@ public class InitiativeManagementController extends BaseController {
 
         if (managementSettings.isAllowUpdate()) {
 
-            model.addAttribute(ALT_URI_ATTR, urls.alt().update(initiativeId));
-            model.addAttribute("initiative", publicInitiativeService.getMunicipalityInitiative(initiativeId));
-            model.addAttribute("updateData", publicInitiativeService.getInitiativeForUpdate(initiativeId, loginUserHolder));
-            model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, loginUserHolder));
-
-            model.addAttribute("previousPageURI", urls.getManagement(initiativeId));
-            return UPDATE_VIEW;
+            return ViewGenerator.updateView(publicInitiativeService.getMunicipalityInitiative(initiativeId),
+                    publicInitiativeService.getInitiativeForUpdate(initiativeId, loginUserHolder),
+                    publicInitiativeService.getAuthorInformation(initiativeId, loginUserHolder),
+                    urls.getManagement(initiativeId)
+            ).view(model, urls.alt().update(initiativeId));
 
         } else {
             return ERROR_500; // TODO: Custom error page or some message that operation is not allowed
         }
-
     }
 
     @RequestMapping(value={ UPDATE_FI, UPDATE_SV }, method=POST)
@@ -117,11 +107,12 @@ public class InitiativeManagementController extends BaseController {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
         if (validationService.validationErrors(updateDto, bindingResult, model)) {
-            model.addAttribute(ALT_URI_ATTR, urls.alt().update(initiativeId));
-            model.addAttribute("initiative", publicInitiativeService.getMunicipalityInitiative(initiativeId, loginUserHolder));
-            model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, loginUserHolder));
-            model.addAttribute("updateData", updateDto);
-            return UPDATE_VIEW;
+
+            return ViewGenerator.updateView(publicInitiativeService.getMunicipalityInitiative(initiativeId),
+                    updateDto,
+                    publicInitiativeService.getAuthorInformation(initiativeId, loginUserHolder),
+                    urls.getManagement(initiativeId)
+            ).view(model, urls.alt().update(initiativeId));
         }
 
         publicInitiativeService.updateInitiative(initiativeId, loginUserHolder, updateDto);

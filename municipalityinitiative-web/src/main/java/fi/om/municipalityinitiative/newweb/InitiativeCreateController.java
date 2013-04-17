@@ -58,6 +58,9 @@ public class InitiativeCreateController extends BaseController {
 
         model.addAttribute("initiative", new PrepareInitiativeUICreateDto());
         model.addAttribute("municipalities", municipalityService.findAllMunicipalities(locale));
+
+
+
         return PREPARE_VIEW;
     }
 

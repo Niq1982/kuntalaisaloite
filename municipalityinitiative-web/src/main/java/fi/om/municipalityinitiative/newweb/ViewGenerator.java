@@ -113,6 +113,27 @@ public class ViewGenerator {
         );
     }
 
+    public static ViewGenerator managementView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, Author authorInformation) {
+        return new ViewGenerator(MANAGEMENT_VIEW,
+                new AttributeBuilder()
+                        .add("initiative", initiativeInfo)
+                        .add("managementSettings", managementSettings)
+                        .add("author", authorInformation)
+                        .build()
+        );
+    }
+
+    public static ViewGenerator updateView(InitiativeViewInfo initiative, InitiativeUIUpdateDto initiativeForUpdate, Author authorInformation, String previousPageURI) {
+        return new ViewGenerator(UPDATE_VIEW,
+                new AttributeBuilder()
+                        .add("initiative", initiative)
+                        .add("updateData", initiativeForUpdate)
+                        .add("author", authorInformation)
+                        .add("previousPageURI", previousPageURI)
+                        .build()
+        );
+    }
+
     private static class AttributeBuilder {
         private Map<String, Object> attributes = Maps.newHashMap();
 
