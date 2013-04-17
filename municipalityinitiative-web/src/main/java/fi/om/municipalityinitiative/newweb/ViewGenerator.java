@@ -30,29 +30,15 @@ public class ViewGenerator {
     public static ViewGenerator collaborativeView(InitiativeViewInfo municipalityInitiative,
                                                   List<Municipality> allMunicipalities,
                                                   ParticipantCount participantCount,
-                                                  Participants participants,
                                                   ParticipantUICreateDto participantUICreateDto) {
         return new ViewGenerator(Views.PUBLIC_COLLECT_VIEW,
                 new AttributeBuilder()
                         .add("initiative", municipalityInitiative)
                         .add("municipalities", allMunicipalities)
                         .add("participantCount", participantCount)
-                        .add("participants", participants)
                         .add("participant", participantUICreateDto)
                         .build()
         );
-    }
-
-    public String view(Model model, String alternativeURL) {
-        for (Map.Entry<String, Object> stringObjectEntry : modelAttributes.entrySet()) {
-            model.addAttribute(stringObjectEntry.getKey(), stringObjectEntry.getValue());
-        }
-        model.addAttribute(ALT_URI_ATTR, alternativeURL);
-        return viewName;
-    }
-
-    public static ViewGenerator singleView(InitiativeViewInfo initiativeInfo) {
-        return new ViewGenerator(Views.PUBLIC_SINGLE_VIEW,new AttributeBuilder().add("initiative", initiativeInfo).build());
     }
 
     public static ViewGenerator searchView(List<InitiativeListInfo> initiatives,
@@ -71,6 +57,18 @@ public class ViewGenerator {
                         .add("initiativeCounts", initiativeCounts)
                         .build()
         );
+    }
+
+    public String view(Model model, String alternativeURL) {
+        for (Map.Entry<String, Object> stringObjectEntry : modelAttributes.entrySet()) {
+            model.addAttribute(stringObjectEntry.getKey(), stringObjectEntry.getValue());
+        }
+        model.addAttribute(ALT_URI_ATTR, alternativeURL);
+        return viewName;
+    }
+
+    public static ViewGenerator singleView(InitiativeViewInfo initiativeInfo) {
+        return new ViewGenerator(Views.PUBLIC_SINGLE_VIEW,new AttributeBuilder().add("initiative", initiativeInfo).build());
     }
 
     private static class AttributeBuilder {

@@ -81,7 +81,6 @@ public class InitiativeViewController extends BaseController {
             return ViewGenerator.collaborativeView(initiativeInfo,
                     municipalityService.findAllMunicipalities(locale),
                     participantService.getParticipantCount(initiativeId),
-                    participantService.findPublicParticipants(initiativeId),
                     new ParticipantUICreateDto())
                     .view(model, Urls.get(locale).alt().view(initiativeId));
         }
@@ -101,12 +100,13 @@ public class InitiativeViewController extends BaseController {
             return redirectWithMessage(urls.view(initiativeId), RequestMessage.PARTICIPATE, request);
         }
         else {
-            addModelAttributesToCollectView(model,
+            return ViewGenerator.collaborativeView(
                     publicInitiativeService.getMunicipalityInitiative(initiativeId),
                     municipalityService.findAllMunicipalities(locale),
                     participantService.getParticipantCount(initiativeId),
-                    participantService.findPublicParticipants(initiativeId));
-            return PUBLIC_COLLECT_VIEW;
+                    participant)
+                    .view(model, Urls.get(locale).alt().view(initiativeId)
+                    );
         }
     }
 
