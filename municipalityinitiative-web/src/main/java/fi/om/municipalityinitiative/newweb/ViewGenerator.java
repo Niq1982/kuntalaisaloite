@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.newweb;
 
-import com.apple.jobjc.appkit.NSMenuItem;
 import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
