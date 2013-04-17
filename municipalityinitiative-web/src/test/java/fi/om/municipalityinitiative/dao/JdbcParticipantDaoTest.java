@@ -76,8 +76,7 @@ public class JdbcParticipantDaoTest {
 
     @Test
     public void counts_all_supports_according_to_right_of_voting_and_publicity_of_names() {
-        Long municipalityId = testHelper.createTestMunicipality("Other municipality");
-        Long initiativeId = testHelper.createTestInitiative(municipalityId);
+        Long initiativeId = testHelper.create(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
 
         //createParticipant(initiativeId, true, true); // This is the default author created by testHelper
 
@@ -113,8 +112,7 @@ public class JdbcParticipantDaoTest {
     @Test
     public void getPublicParticipants_returns_public_names() {
 
-        Long municipalityId = testHelper.createTestMunicipality("Other municipality");
-        Long initiativeId = testHelper.createTestInitiative(municipalityId, "Any title", false, false);
+        Long initiativeId = testHelper.create(new TestHelper.InitiativeDraft(testMunicipalityId).withPublicName(false));
 
         createConfirmedParticipant(initiativeId, false, false, "no right no public");
         createConfirmedParticipant(initiativeId, true, false, "yes right no public");
@@ -130,9 +128,7 @@ public class JdbcParticipantDaoTest {
 
     @Test
     public void getAllParticipants_returns_public_and_private_names() {
-
-        Long municipalityId = testHelper.createTestMunicipality("Other municipality");
-        Long initiativeId = testHelper.createTestInitiative(municipalityId, "Any title", false, false);
+        Long initiativeId = testHelper.create(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
 
         createConfirmedParticipant(initiativeId, false, false, "no right no public");
         createConfirmedParticipant(initiativeId, true, false, "yes right no public");

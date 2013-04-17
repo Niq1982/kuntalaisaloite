@@ -127,7 +127,7 @@ public class PublicInitiativeServiceIntegrationTest {
     }
 
     @Test
-    public void sets_participant_count_to_one_when_adding_new_collectable_initiative() {
+    public void sets_participant_count_to_one_when_adding_new_collaborative_initiative() {
         PrepareInitiativeUICreateDto prepareInitiativeUICreateDto = new PrepareInitiativeUICreateDto();
         prepareInitiativeUICreateDto.setMunicipality(testMunicipality.getId());
         prepareInitiativeUICreateDto.setHomeMunicipality(participantMunicipality.getId());
@@ -142,17 +142,6 @@ public class PublicInitiativeServiceIntegrationTest {
         List<InitiativeListInfo> initiatives = service.findMunicipalityInitiatives(new InitiativeSearch().setShow(InitiativeSearch.Show.all));
         precondition(initiatives, hasSize(1));
         return initiatives.get(0);
-    }
-
-    @Test
-    @Deprecated
-    public void denormalized_participant_count_is_not_increased_when_participating_without_confirmation() {
-        Long municipalityInitiative = testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
-        precondition(getSingleInitiativeInfo().getParticipantCount(), is(1L));
-
-        service.createParticipant(participantUICreateDto(), municipalityInitiative, null);
-
-        assertThat(getSingleInitiativeInfo().getParticipantCount(), is(1L));
     }
 
     @Test
@@ -215,7 +204,6 @@ public class PublicInitiativeServiceIntegrationTest {
 
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
 
-//        InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto(testMunicipality, null);
         InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(ReflectionTestUtils.modifyAllFields(new Initiative()));
 
         ContactInfo contactInfo = new ContactInfo();
