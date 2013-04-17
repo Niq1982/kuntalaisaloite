@@ -81,8 +81,8 @@ public class InitiativeViewController extends BaseController {
             return ViewGenerator.collaborativeView(initiativeInfo,
                     municipalityService.findAllMunicipalities(locale),
                     participantService.getParticipantCount(initiativeId),
-                    new ParticipantUICreateDto())
-                    .view(model, Urls.get(locale).alt().view(initiativeId));
+                    new ParticipantUICreateDto()
+            ).view(model, Urls.get(locale).alt().view(initiativeId));
         }
         else {
             return ViewGenerator.singleView(initiativeInfo).view(model, Urls.get(locale).alt().view(initiativeId));
@@ -104,39 +104,34 @@ public class InitiativeViewController extends BaseController {
                     publicInitiativeService.getMunicipalityInitiative(initiativeId),
                     municipalityService.findAllMunicipalities(locale),
                     participantService.getParticipantCount(initiativeId),
-                    participant)
-                    .view(model, Urls.get(locale).alt().view(initiativeId)
-                    );
+                    participant
+            ).view(model, Urls.get(locale).alt().view(initiativeId));
         }
     }
 
     @RequestMapping(value={ PARITICIPANT_LIST_FI, PARITICIPANT_LIST_SV }, method=GET)
     public String participantList(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
         Urls urls = Urls.get(locale);
-        model.addAttribute(ALT_URI_ATTR, urls.alt().view(initiativeId));
+        String alternativeURL = urls.alt().view(initiativeId);
 
         InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
 
-        if (initiativeInfo.isCollectable()){
-            model.addAttribute("initiative",  initiativeInfo);
-            model.addAttribute("participantCount", participantService.getParticipantCount(initiativeId));
-            model.addAttribute("participants", participantService.findPublicParticipants(initiativeId));
-
-            String managementURI = urls.management(initiativeId);
-
-            if (request.getHeader("referer") != null && request.getHeader("referer").equals(managementURI)) {
-                model.addAttribute("previousPageURI", managementURI);
-            } else {
-                model.addAttribute("previousPageURI", urls.view(initiativeId));
-            }
-
-            model.addAttribute("locale", locale);
-
-            return PARTICIPANT_LIST;
+        if (!initiativeInfo.isCollectable()) {
+            return ViewGenerator.singleView(initiativeInfo).view(model, alternativeURL);
         }
         else {
-            model.addAttribute("initiative", initiativeInfo);
-            return PUBLIC_SINGLE_VIEW;
+
+            // XXX: Tästä mää enny kyä ynmärrä.
+            String previousPageURI = urls.management(initiativeId);
+            if (request.getHeader("referer") == null || !request.getHeader("referer").equals(previousPageURI)) {
+                previousPageURI = urls.view(initiativeId);
+            }
+
+            return ViewGenerator.participantList(initiativeInfo,
+                    participantService.getParticipantCount(initiativeId),
+                    participantService.findPublicParticipants(initiativeId),
+                    previousPageURI
+            ).view(model, alternativeURL);
         }
     }
 
@@ -157,7 +152,7 @@ public class InitiativeViewController extends BaseController {
 
         InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
 
-        model.addAttribute("initiative", initiativeInfo);
+        model.addAttribute("initiative", initiativeInfo); // TODO: Remove after login-link is removed from the page
 
         if (initiativeInfo.getState().equals(InitiativeState.DRAFT) && getRequestAttribute(request) != null) {
             return PENDING_CONFIRMATION;
@@ -175,13 +170,13 @@ public class InitiativeViewController extends BaseController {
 
         search.setShow(InitiativeSearch.Show.all);
 
-        model.addAttribute("initiatives", publicInitiativeService.findMunicipalityInitiatives(search));
-        model.addAttribute("municipalities", municipalities);
-        model.addAttribute("currentSearch", search);
-        model.addAttribute("queryString", new SearchParameterQueryString(search));
-        model.addAttribute("currentMunicipality", solveMunicipalityFromListById(municipalities, search.getMunicipality()));
-        model.addAttribute("initiativeCounts", publicInitiativeService.getInitiativeCounts(Maybe.fromNullable(search.getMunicipality())));
-        return IFRAME_VIEW;
+        return ViewGenerator.iframeSearch(publicInitiativeService.findMunicipalityInitiatives(search),
+                municipalities,
+                search,
+                new SearchParameterQueryString(search),
+                solveMunicipalityFromListById(municipalities, search.getMunicipality()),
+                publicInitiativeService.getInitiativeCounts(Maybe.fromNullable(search.getMunicipality()))
+        ).view(model, urls.alt().search());
     }
 
     private static Maybe<Municipality> solveMunicipalityFromListById(List<Municipality> municipalities, Long municipalityId){

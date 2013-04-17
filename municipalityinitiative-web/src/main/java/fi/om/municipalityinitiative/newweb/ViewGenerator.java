@@ -13,6 +13,8 @@ import org.springframework.ui.Model;
 import java.util.List;
 import java.util.Map;
 
+import static fi.om.municipalityinitiative.web.Views.IFRAME_VIEW;
+import static fi.om.municipalityinitiative.web.Views.PARTICIPANT_LIST;
 import static fi.om.municipalityinitiative.web.Views.SEARCH_VIEW;
 
 public class ViewGenerator {
@@ -48,6 +50,37 @@ public class ViewGenerator {
                                            Maybe<Municipality> currentMunicipality,
                                            InitiativeCounts initiativeCounts) {
         return new ViewGenerator(SEARCH_VIEW,
+                new AttributeBuilder()
+                        .add("initiatives", initiatives)
+                        .add("municipalities", municipalities)
+                        .add("currentSearch", currentSearch)
+                        .add("queryString", queryString)
+                        .add("currentMunicipality", currentMunicipality)
+                        .add("initiativeCounts", initiativeCounts)
+                        .build()
+        );
+    }
+
+    public static ViewGenerator participantList(InitiativeViewInfo initiativeInfo,
+                                                ParticipantCount participantCount,
+                                                Participants publicParticipants,
+                                                String previousPageURI) {
+        return new ViewGenerator(PARTICIPANT_LIST,
+                new AttributeBuilder()
+                        .add("initiative", initiativeInfo)
+                        .add("participants", publicParticipants)
+                        .add("participantCount", participantCount)
+                        .add("previousPageURI", previousPageURI)
+                        .build());
+    }
+
+    public static ViewGenerator iframeSearch(List<InitiativeListInfo> initiatives,
+                                           List<Municipality> municipalities,
+                                           InitiativeSearch currentSearch,
+                                           SearchParameterQueryString queryString,
+                                           Maybe<Municipality> currentMunicipality,
+                                           InitiativeCounts initiativeCounts) {
+        return new ViewGenerator(IFRAME_VIEW,
                 new AttributeBuilder()
                         .add("initiatives", initiatives)
                         .add("municipalities", municipalities)
