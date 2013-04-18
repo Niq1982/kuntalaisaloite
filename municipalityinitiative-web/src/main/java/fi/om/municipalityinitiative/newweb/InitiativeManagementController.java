@@ -33,12 +33,6 @@ public class InitiativeManagementController extends BaseController {
     private PublicInitiativeService publicInitiativeService;
 
     @Resource
-    private MunicipalityService municipalityService;
-
-    @Resource
-    private ParticipantService participantService;
-
-    @Resource
     private ValidationService validationService;
 
     public InitiativeManagementController(boolean optimizeResources, String resourcesVersion) {
