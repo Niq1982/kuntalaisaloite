@@ -29,12 +29,6 @@ public class InitiativeModerationController extends BaseController{
     private OmInitiativeService omInitiativeService;
 
     @Resource
-    private MunicipalityService municipalityService;
-
-    @Resource
-    private ParticipantService participantService;
-
-    @Resource
     private UserService userService;
 
     public InitiativeModerationController(boolean optimizeResources, String resourcesVersion) {
