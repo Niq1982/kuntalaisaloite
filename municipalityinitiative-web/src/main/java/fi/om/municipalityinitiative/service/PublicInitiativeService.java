@@ -168,7 +168,7 @@ public class PublicInitiativeService {
             initiativeDao.markInitiativeAsSent(initiativeId);
             Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
             emailService.sendStatusEmail(initiative,initiative.getAuthor().getContactInfo().getEmail(), EmailMessageType.SENT_TO_MUNICIPALITY, locale);
-            emailService.sendNotCollectableToMunicipality(initiative, municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), locale);
+            emailService.sendSingleToMunicipality(initiative, municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), locale);
         }
     }
 
