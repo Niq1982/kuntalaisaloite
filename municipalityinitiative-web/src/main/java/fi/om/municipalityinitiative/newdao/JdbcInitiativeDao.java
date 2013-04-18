@@ -150,7 +150,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    public Initiative getByIdWithOriginalAuthor(Long id) {
+    public Initiative getByIdWithOriginalAuthor(Long initiativeId) {
 
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
@@ -158,11 +158,11 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .innerJoin(municipalityInitiative.initiativeAuthorFk, QAuthor.author)
                 .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
                 .innerJoin(QParticipant.participant.participantMunicipalityFk, AUTHOR_MUNICIPALITY)
-                .where(municipalityInitiative.id.eq(id));
+                .where(municipalityInitiative.id.eq(initiativeId));
 
         Initiative initiative = query.uniqueResult(initiativeInfoMapping);
         if (initiative == null) {
-            throw new NotFoundException("initiative", id);
+            throw new NotFoundException("initiative", initiativeId);
         }
         return initiative;
     }
@@ -187,7 +187,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     @Transactional(readOnly = false)
-    public void assignAuthor(Long municipalityInitiativeId, Long participantId, String managementHash) {
+    public void assignAuthor(Long initiativeId, Long participantId, String managementHash) {
 
         Long newAuthorId = queryFactory.insert(QAuthor.author)
                 .set(QAuthor.author.managementHash, managementHash)
@@ -196,7 +196,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
         assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.authorId, newAuthorId)
-                .where(municipalityInitiative.id.eq(municipalityInitiativeId))
+                .where(municipalityInitiative.id.eq(initiativeId))
                 .where(municipalityInitiative.authorId.eq(PREPARATION_ID))
                 .execute());
     }
@@ -252,7 +252,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
         Long authorId = queryFactory
                 .from(municipalityInitiative)
                 .where(municipalityInitiative.id.eq(initiativeId))
-                .singleResult(municipalityInitiative.authorId);
+                .uniqueResult(municipalityInitiative.authorId);
 
         assertSingleAffection(queryFactory.update(QAuthor.author)
                 .set(QAuthor.author.name, editDto.getContactInfo().getName())
@@ -271,12 +271,12 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    public Author getAuthorInformation(Long id, String managementHash) {
+    public Author getAuthorInformation(Long initiativeId, String managementHash) {
         return queryFactory.from(municipalityInitiative)
                 .innerJoin(municipalityInitiative._participantMunicipalityInitiativeIdFk, QParticipant.participant)
                 .innerJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
                 .innerJoin(QParticipant.participant.participantMunicipalityFk, QMunicipality.municipality)
-                .where(municipalityInitiative.id.eq(id))
+                .where(municipalityInitiative.id.eq(initiativeId))
                 .where(QAuthor.author.managementHash.eq(managementHash))
                 .uniqueResult(authorMapping);
     }
@@ -381,33 +381,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 }
             };
 
-
-    Expression<InitiativeDraftUIEditDto> initiativeEditMapping =
-            new MappingProjection<InitiativeDraftUIEditDto>(InitiativeDraftUIEditDto.class,
-                    municipalityInitiative.all(),
-                    QMunicipality.municipality.all(),
-                    QParticipant.participant.all(),
-                    QAuthor.author.all()) {
-                @Override
-                protected InitiativeDraftUIEditDto map(Tuple row) {
-                    throw new RuntimeException("moimoi");
-//                    InitiativeDraftUIEditDto info = new InitiativeDraftUIEditDto(
-//                            parseMunicipality(row),row.get(municipalityInitiative.state)
-//                    );
-//                    info.setName(row.get(municipalityInitiative.name));
-//                    info.setProposal(row.get(municipalityInitiative.proposal));
-//                    info.setExtraInfo(row.get(municipalityInitiative.comment));
-//                    info.setShowName(row.get(QParticipant.participant.showName));
-//
-//                    ContactInfo contactInfo = new ContactInfo();
-//                    contactInfo.setAddress(row.get(QAuthor.author.address));
-//                    contactInfo.setEmail(row.get(QParticipant.participant.email));
-//                    contactInfo.setName(row.get(QAuthor.author.name));
-//                    contactInfo.setPhone(row.get(QAuthor.author.phone));
-//                    info.setContactInfo(contactInfo);
-//                    return info;
-                }
-            };
 
     private static Municipality parseMunicipality(Tuple row) {
         return new Municipality(
