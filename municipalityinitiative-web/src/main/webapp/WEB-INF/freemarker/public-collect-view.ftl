@@ -58,14 +58,6 @@
                 <@f.formCheckbox path="participant.showName" checked=true />
             </div>
             
-            <#-- TODO: Participant email address -->
-            <div class="input-block-content flexible">
-                <label for="participantEmail" class="input-header">
-                    Sähköpostiosoitteesi <span class="icon-small required trigger-tooltip"></span>
-                </label>
-                <input type="text" maxlength="100" class="large" value="" name="participantEmail" id="participantEmail">
-            </div>
-            
             <div class="input-block-content flexible">
                 <@f.municipalitySelect path="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipality.id />
             </div>
@@ -87,6 +79,14 @@
                 <div class="input-block-content is-not-member no-top-margin flexible js-hide hidden">
                     <@u.systemMessage path="warning.initiative.notMember" type="warning" showClose=false />
                 </div>
+            </div>
+            
+            <#-- TODO: Participant email address -->
+            <div class="input-block-content flexible">
+                <label for="participantEmail" class="input-header">
+                    Sähköpostiosoitteesi <span class="icon-small required trigger-tooltip"></span>
+                </label>
+                <input type="text" maxlength="100" class="large" value="" name="participantEmail" id="participantEmail">
             </div>
             
             <div class="input-block-content flexible">

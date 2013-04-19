@@ -1030,13 +1030,6 @@ $.DirtyForms.dialog = {
 	// Refire handles closing an existing dialog AND fires a new one
 	refire : function(content){
 		return false;
-		
-//	    var rebox = function(){
-//	    	generateModal(modalData.formModifiedNotification());
-//	        //$.facebox(content);
-//	        $(document).unbind('afterClose.facebox', rebox);
-//	    }
-//	    $(document).bind('afterClose.facebox', rebox);
 	},
 
 	// Stash returns the current contents of a dialog to be refired after the confirmation
@@ -1044,157 +1037,10 @@ $.DirtyForms.dialog = {
 	// This function can return false if you don't wish to stash anything.
 	stash : function(){
 		return false;
-		
-//	    var fb = $('#facebox .content');
-//	    return ($.trim(fb.html()) == '' || fb.css('display') != 'block') ?
-//	       false :
-//	       fb.clone(true);
-       
 	}
 };
 
 // Listen forms that have class 'sodirty'
 $('form.sodirty').dirtyForms();
-
-
-/**
- * 
- * Validation: jQuery tools - Form validation
- * ==========================================
- * TODO:
- * - Will be implemented much later
- * - Localizations should be loaded from message.properties
- * 
- * */
-
-$.tools.validator.localize("fi", {
-	'*'			: 'Virheellinen arvo',
-	':email'  	: 'Virheellinen s&auml;hk&ouml;postiosoite',
-	':number' 	: 'Arvon on oltava numeerinen',
-	':url' 		: 'Virheellinen URL',
-	'[max]'	 	: 'Arvon on oltava pienempi, kuin $1',
-	'[min]'		: 'Arvon on oltava suurempi, kuin $1',
-	'[required]'	: 'Kent&auml;n arvo on annettava'
-});
-$.tools.validator.localize("sv", {
-	'*'			: 'SV: Virheellinen arvo',
-	':email'  	: 'SV: Virheellinen s&auml;hk&ouml;postiosoite',
-	':number' 	: 'SV: Arvon on oltava numeerinen',
-	':url' 		: 'SV: Virheellinen URL',
-	'[max]'	 	: 'SV: Arvon on oltava pienempi, kuin $1',
-	'[min]'		: 'SV: Arvon on oltava suurempi, kuin $1',
-	'[required]'	: 'SV: Kent&auml;n arvo on annettava'
-});
-
-
-/**
- * TODO: Clean the validation code 
- *  - If the custom-effect 'inline' is used, remove unneeded options
- *  - Error-messages gets multiplied after each failed form send
- */
-/* NOTE: Disabled ATM (20.6.2012) to ease the testing of backend validation */ 
-// Add novalidate attribute for preventing Browser's default validation
-/*$("form.validate").attr("novalidate","novalidate")
-.validator({
-	effect: 'inline',
-	errorInputEvent: 'keyup',
-	lang: Init.getLocale(),
-	position: 'top left',
-	offset: [-12, 0],
-	message: '<div><em/></div>' // em element is the arrow
-		
-}).bind("onFail", function(e, errors)  {
-	
-	// we are only doing stuff when the form is submitted
-	if (e.originalEvent.type == 'submit') {
- 
-		// loop through Error objects and add highlight
-		$.each(errors, function()  {
-			var input = this.input;
-			input.addClass("has-error").focus(function()  {
-				input.removeClass("has-error");
-			});
-		});
-	
-		
-		// TODO: Smooth scroll to the first error or to top of the form. The code below causes errors in some cases
-		//var positionFirstError = $('form').position().top + $('.has-error:first').prev('label').position().top - 30;
-		//console.log(positionFirstError);
-		//$('html, body').animate({scrollTop: positionFirstError}, 800);
-
-	}
-	
-});*/
-
-
-// Custom effect for the validator
-/*
- * TODO: ADD keyup-event for validating inputs.
- */
-/*
-$.tools.validator.addEffect("inline", function(errors, event) {
- 
-	// add error before errorenous input
-	$.each(errors, function(index, error) {
-		error.input.before('<div class="system-msg msg-error">'+error.messages[0]+'</div>');
-	});
-	
-	// validate field on edit
-	$('input, textarea').keyup(function()  {
-		var inputError = $(this).prev();
-		
-		if (inputError.hasClass("msg-error")){
-			inputError.remove();
-		}
-	});
-	
-// the effect does nothing when all inputs are valid
-}, function(inputs)  {
- 
-});
-*/
-
-/**
-* Bind checkbox
-* =============
-* - Binds checkbox '.binder' with submit button '.bind'.
-* - Binds radiobuttons as well
-* - Button is enabled when checkbox/radio is checked otherwise disabled
-*/
-/* TODO: remove if not needed
-jQuery.fn.bindCheckbox = function(){
-	var cb, btn, cbVal;
-	
-	cb = $(this);
-	btn = cb.parents('form').find('.bind');
-	cbVal = function(){
-		if (cb.is(':checked')){
-			btn.removeAttr('disabled').removeClass('disabled');
-		} else {
-			btn.attr('disabled','disabled').addClass('disabled');
-		}
-	};
-
-	var updateSaveButtonText = function( thisCb ){
-		var btnSaveText = $('button[name="save"] span');
-
-		if(thisCb.val() == 'FALSE'){
-			btnSaveText.text(btnSaveText.data('textsend'));
-		} else {
-			btnSaveText.text(btnSaveText.data('textsave'));
-		}
-	}
-	
-	cbVal();
-	cb.change(function(){
-		cbVal();
-
-		if (btn.attr('name') == 'save'){
-			updateSaveButtonText( $(this) );
-		}
-	});
-};
-$('.binder').bindCheckbox();
-*/
 
 });
