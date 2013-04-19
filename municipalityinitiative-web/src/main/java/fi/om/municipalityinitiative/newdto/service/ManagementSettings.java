@@ -6,8 +6,12 @@ public class ManagementSettings {
 
     private Initiative initiative;
 
-    public ManagementSettings(Initiative initiative) {
+    private ManagementSettings(Initiative initiative) {
         this.initiative = initiative;
+    }
+
+    public static ManagementSettings of(Initiative initiative) {
+        return new ManagementSettings(initiative);
     }
 
     public boolean isAllowEdit() {

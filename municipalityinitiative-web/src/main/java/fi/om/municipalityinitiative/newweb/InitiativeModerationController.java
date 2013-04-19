@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.newweb;
 
-import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.web.BaseController;
 import fi.om.municipalityinitiative.web.RequestMessage;
@@ -17,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
-import static fi.om.municipalityinitiative.web.Views.MODERATION_VIEW;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -29,12 +27,6 @@ public class InitiativeModerationController extends BaseController{
 
     @Resource
     private OmInitiativeService omInitiativeService;
-
-    @Resource
-    private MunicipalityService municipalityService;
-
-    @Resource
-    private ParticipantService participantService;
 
     @Resource
     private UserService userService;
@@ -49,22 +41,10 @@ public class InitiativeModerationController extends BaseController{
 
         userService.getRequiredOmLoginUserHolder(request);
 
-        Urls urls = Urls.get(locale);
-        model.addAttribute(ALT_URI_ATTR, urls.alt().moderation(initiativeId));
-
-        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
-
-        addModelAttributesToCollectView(model,
-                initiativeInfo,
-                municipalityService.findAllMunicipalities(locale),
-                participantService.getParticipantCount(initiativeId),
-                participantService.findPublicParticipants(initiativeId));
-
-        model.addAttribute("participants", participantService.findPublicParticipants(initiativeId));
-        model.addAttribute("managementSettings", publicInitiativeService.managementSettings(initiativeId));
-        // TODO: Return all authors when possible
-        model.addAttribute("author", omInitiativeService.getAuthorInformation(initiativeId));
-        return MODERATION_VIEW;
+        return ViewGenerator.moderationView(publicInitiativeService.getMunicipalityInitiative(initiativeId),
+                publicInitiativeService.getManagementSettings(initiativeId),
+                omInitiativeService.getAuthorInformation(initiativeId)
+        ).view(model, Urls.get(locale).alt().moderation(initiativeId));
     }
 
     @RequestMapping(value = {MODERATION_FI, MODERATION_SV}, method = POST, params = ACTION_ACCEPT_INITIATIVE)

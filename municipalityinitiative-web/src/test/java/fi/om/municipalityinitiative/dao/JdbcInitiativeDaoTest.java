@@ -2,7 +2,6 @@ package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
-import fi.om.municipalityinitiative.exceptions.NotCollectableException;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
@@ -106,9 +105,15 @@ public class JdbcInitiativeDaoTest {
 
     @Test
     public void get_author_information() {
-        Long id = testHelper.createTestInitiative(testMunicipality.getId());
+        Long id = testHelper.createSingleSent(testMunicipality.getId());
 
         Author author = initiativeDao.getAuthorInformation(id, TestHelper.TEST_MANAGEMENT_HASH);
+        assertThat(author.getContactInfo().getAddress(), is(TestHelper.DEFAULT_AUTHOR_ADDRESS));
+        assertThat(author.getContactInfo().getName(), is(TestHelper.DEFAULT_AUTHOR_NAME));
+        assertThat(author.getContactInfo().getEmail(), is(TestHelper.DEFAULT_AUTHOR_EMAIL));
+        assertThat(author.getContactInfo().getPhone(), is(TestHelper.DEFAULT_AUTHOR_PHONE));
+        assertThat(author.getMunicipality().getId(), is(testMunicipality.getId()));
+
         ReflectionTestUtils.assertNoNullFields(author);
     }
 
@@ -474,7 +479,7 @@ public class JdbcInitiativeDaoTest {
         contactInfo.setPhone("Modified Phone");
         contactInfo.setEmail("Modified Email");
         updateDto.setContactInfo(contactInfo);
-        initiativeDao.updateInitiative(initiativeId, TestHelper.TEST_MANAGEMENT_HASH, updateDto);
+        initiativeDao.updateAcceptedInitiative(initiativeId, TestHelper.TEST_MANAGEMENT_HASH, updateDto);
 
         Initiative updated = initiativeDao.getById(initiativeId, TestHelper.TEST_MANAGEMENT_HASH);
         assertThat(updated.getShowName(), is(false));
@@ -484,10 +489,6 @@ public class JdbcInitiativeDaoTest {
 
         // TODO: Assert extraInfo
 
-    }
-
-    private static ContactInfo contactInfo() {
-        return new ContactInfo();
     }
 
     private static InitiativeSearch initiativeSearch() {

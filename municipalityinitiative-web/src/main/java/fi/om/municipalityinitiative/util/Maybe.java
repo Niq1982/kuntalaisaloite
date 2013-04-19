@@ -4,8 +4,8 @@ import com.google.common.base.Optional;
 
 /**
  * This class is a wrapper for com.google.common.base.Optional.
- * Made for freemarker so not only isPresent() can be called but also instead of get()
- * which freemarker is not able to call, it can use getValue().
+ * Made for freemarker so not only isPresent() can be called but also getValue() instead of get()
+ * which freemarker is not able to call
 
  */
 public class Maybe<T> {

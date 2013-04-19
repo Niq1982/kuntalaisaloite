@@ -68,64 +68,6 @@ public class TestHelper {
                 .executeWithKey(QMunicipality.municipality.id);
     }
 
-    @Transactional
-    @Deprecated
-    public Long createTestInitiative(Long municipalityId) {
-        return createTestInitiative(municipalityId, "name");
-    }
-
-    @Transactional
-    @Deprecated
-    public Long createTestInitiative(Long municipalityId, String name) {
-        return createTestInitiative(municipalityId, name, true, false);
-    }
-
-    @Transactional
-    @Deprecated
-    public Long createTestInitiative(Long municipalityId, String name, boolean publicName, boolean collectable) {
-        SQLInsertClause insert = queryFactory.insert(municipalityInitiative);
-
-        insert.set(municipalityInitiative.name, name);
-        insert.set(municipalityInitiative.proposal, "proposal");
-        insert.set(municipalityInitiative.municipalityId, municipalityId);
-        insert.set(municipalityInitiative.authorId, -1L);
-        insert.set(municipalityInitiative.comment, "comment");
-        insert.set(municipalityInitiative.type, InitiativeType.UNDEFINED);
-        //insert.setNull(municipalityInitiative.authorId); // TODO
-        if (collectable) {
-//            insert.set(municipalityInitiative.managementHash,TEST_MANAGEMENT_HASH);
-        }
-        else {
-            insert.set(municipalityInitiative.sent, DateTimeExpression.currentTimestamp(DateTime.class));
-        }
-
-        Long initiativeId = insert.executeWithKey(municipalityInitiative.id);
-
-        Long participantId = queryFactory.insert(QParticipant.participant)
-                .set(QParticipant.participant.municipalityId, municipalityId)
-                .set(QParticipant.participant.municipalityInitiativeId, initiativeId)
-                .set(QParticipant.participant.name, "Antti Author")
-                .set(QParticipant.participant.email, "author_email@example.com")
-                .set(QParticipant.participant.showName, publicName)
-                .set(QParticipant.participant.franchise, true) // Changing these will affect on tests
-                .executeWithKey(QParticipant.participant.id);
-
-        Long authorId = queryFactory.insert(QAuthor.author)
-                .set(QAuthor.author.address, "author address")
-                .set(QAuthor.author.phone, "author phone")
-                .set(QAuthor.author.participantId, participantId)
-                .set(QAuthor.author.managementHash, TEST_MANAGEMENT_HASH)
-                .executeWithKey(QAuthor.author.id);
-
-        queryFactory.update(municipalityInitiative)
-                .set(municipalityInitiative.authorId, authorId)
-                .where(municipalityInitiative.id.eq(initiativeId))
-                .execute();
-
-        return initiativeId;
-
-    }
-
 
     @Transactional
     public Long createCollectableReview(Long municipalityId) {

@@ -33,8 +33,8 @@ public class OmInitiativeService {
         userService.requireOmUser();
         Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
 
-        if (!new ManagementSettings(initiative).isAllowOmAccept()) {
-            throw new OperationNotAllowedException("Not allowed to reject initiative");
+        if (!ManagementSettings.of(initiative).isAllowOmAccept()) {
+            throw new OperationNotAllowedException("Not allowed to accept initiative");
         }
 
         initiativeDao.updateModeratorComment(initiativeId, comment);
@@ -43,7 +43,7 @@ public class OmInitiativeService {
             initiativeDao.markInitiativeAsSent(initiativeId);
             initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId); // Necessary because initiative is updated
             emailService.sendStatusEmail(initiative, initiative.getAuthor().getContactInfo().getEmail(), EmailMessageType.ACCEPTED_BY_OM_AND_SENT, locale);
-            emailService.sendNotCollectableToMunicipality(initiative, municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), locale);
+            emailService.sendSingleToMunicipality(initiative, municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), locale);
         }
         else {
             initiativeDao.updateInitiativeState(initiativeId, InitiativeState.ACCEPTED);
@@ -56,7 +56,7 @@ public class OmInitiativeService {
     @Transactional(readOnly = false)
     public void reject(Long initiativeId, String comment, Locale locale) {
         userService.requireOmUser();
-        if (!new ManagementSettings(initiativeDao.getByIdWithOriginalAuthor(initiativeId)).isAllowOmAccept()) {
+        if (!ManagementSettings.of(initiativeDao.getByIdWithOriginalAuthor(initiativeId)).isAllowOmAccept()) {
             throw new OperationNotAllowedException("Not allowed to reject initiative");
 
         }

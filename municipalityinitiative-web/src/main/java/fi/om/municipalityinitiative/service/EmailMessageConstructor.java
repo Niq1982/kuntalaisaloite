@@ -51,7 +51,7 @@ public class EmailMessageConstructor {
 
     private static final Logger log = LoggerFactory.getLogger(EmailMessageConstructor.class);
 
-    static void addAttachment(MimeMessageHelper multipart, CollectableInitiativeEmailInfo emailInfo) {
+    private static void addAttachment(MimeMessageHelper multipart, CollectableInitiativeEmailInfo emailInfo) {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             ParticipantToPdfExporter.createPdf(emailInfo, outputStream);

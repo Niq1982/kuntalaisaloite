@@ -40,14 +40,14 @@ public class PublicInitiativeService {
     }
 
     @Transactional(readOnly = true)
-    public ManagementSettings managementSettings(Long initiativeId) {
-        return new ManagementSettings(initiativeDao.getByIdWithOriginalAuthor(initiativeId));
+    public ManagementSettings getManagementSettings(Long initiativeId) {
+        return ManagementSettings.of(initiativeDao.getByIdWithOriginalAuthor(initiativeId));
     }
 
     @Transactional(readOnly = false)
     public Long createParticipant(ParticipantUICreateDto participant, Long initiativeId, Locale locale) {
 
-        assertAllowance("Allowed to participate", managementSettings(initiativeId).isAllowParticipate());
+        assertAllowance("Allowed to participate", getManagementSettings(initiativeId).isAllowParticipate());
 
         ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(participant, initiativeId);
         participantCreateDto.setMunicipalityInitiativeId(initiativeId);
@@ -55,7 +55,13 @@ public class PublicInitiativeService {
         String confirmationCode = RandomHashGenerator.randomString(20);
         Long participantId = participantDao.create(participantCreateDto, confirmationCode);
 
-        emailService.sendParticipationConfirmation(initiativeDao.getByIdWithOriginalAuthor(initiativeId), participant.getParticipantEmail(), participantId, confirmationCode, locale);
+        emailService.sendParticipationConfirmation(
+                initiativeDao.getByIdWithOriginalAuthor(initiativeId),
+                participant.getParticipantEmail(),
+                participantId,
+                confirmationCode,
+                locale
+        );
 
         return participantId;
     }
@@ -63,8 +69,8 @@ public class PublicInitiativeService {
     @Transactional(readOnly = false)
     public Long prepareInitiative(PrepareInitiativeUICreateDto createDto, Locale locale) {
 
-        Long initiativeId = initiativeDao.prepareInitiative(createDto.getMunicipality(), createDto.getParticipantEmail());
-        Long participantId = participantDao.prepareParticipant(initiativeId, createDto.getHomeMunicipality(), createDto.getParticipantEmail(), false); // XXX: Franchise?
+        Long initiativeId = initiativeDao.prepareInitiative(createDto.getMunicipality());
+        Long participantId = participantDao.prepareParticipant(initiativeId, createDto.getHomeMunicipality(), createDto.getParticipantEmail(), false); // XXX: Remove franchise?
         String managementHash = RandomHashGenerator.randomString(40);
         initiativeDao.assignAuthor(initiativeId, participantId, managementHash);
 
@@ -88,33 +94,30 @@ public class PublicInitiativeService {
 
     @Transactional(readOnly = true)
     public InitiativeDraftUIEditDto getInitiativeDraftForEdit(Long initiativeId) {
-        // TODO: Do we need to check if allowed?
-        assertAllowance("Edit initiative", managementSettings(initiativeId).isAllowEdit());
-        InitiativeDraftUIEditDto initiativeForEdit = initiativeDao.getInitiativeForEdit(initiativeId); // TODO: Parse this with InitiativeDraftUiEditDto
-        return initiativeForEdit;
+        assertAllowance("Edit initiative", getManagementSettings(initiativeId).isAllowEdit());
+        return InitiativeDraftUIEditDto.parse(initiativeDao.getByIdWithOriginalAuthor(initiativeId));
     }
 
     @Transactional(readOnly = false)
     public void editInitiativeDraft(Long initiativeId, LoginUserHolder loginUserHolder, InitiativeDraftUIEditDto editDto) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        assertAllowance("Edit initiative", managementSettings(initiativeId).isAllowEdit());
-        initiativeDao.updateInitiativeDraft(initiativeId, editDto);
+        assertAllowance("Edit initiative", getManagementSettings(initiativeId).isAllowEdit());
+        initiativeDao.editInitiativeDraft(initiativeId, editDto);
     }
 
     @Transactional(readOnly = true)
     public InitiativeUIUpdateDto getInitiativeForUpdate(Long initiativeId, LoginUserHolder loginUserHolder) {
 
-        assertAllowance("Update initiative", managementSettings(initiativeId).isAllowUpdate());
+        assertAllowance("Update initiative", getManagementSettings(initiativeId).isAllowUpdate());
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        // TODO: Maybe remove managementhash?
+        // TODO: Remove managementHash in the future
         String managementHash = loginUserHolder.getInitiative().get().getManagementHash().get();
 
         Initiative initiative = initiativeDao.getById(initiativeId, managementHash);
-        Author authorInformation = initiativeDao.getAuthorInformation(initiativeId, managementHash);
 
         InitiativeUIUpdateDto updateDto = new InitiativeUIUpdateDto();
-        updateDto.setContactInfo(authorInformation.getContactInfo());
+        updateDto.setContactInfo(initiative.getAuthor().getContactInfo());
         updateDto.setShowName(initiative.getShowName());
         updateDto.setExtraInfo(initiative.getComment());
 
@@ -123,8 +126,9 @@ public class PublicInitiativeService {
 
     @Transactional(readOnly = false)
     public void updateInitiative(Long initiativeId, LoginUserHolder loginUserHolder, InitiativeUIUpdateDto updateDto) {
-        assertAllowance("Update initiative", managementSettings(initiativeId).isAllowUpdate());
-        initiativeDao.updateInitiative(initiativeId, loginUserHolder.getInitiative().get().getManagementHash().get(), updateDto);
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
+        assertAllowance("Update initiative", getManagementSettings(initiativeId).isAllowUpdate());
+        initiativeDao.updateAcceptedInitiative(initiativeId, loginUserHolder.getInitiative().get().getManagementHash().get(), updateDto);
     }
 
     @Transactional(readOnly = true)
@@ -133,15 +137,10 @@ public class PublicInitiativeService {
         return initiativeDao.getAuthorInformation(initiativeId, loginUserHolder.getInitiative().get().getManagementHash().get());
     }
 
-    @Transactional(readOnly = true)
-    public Author getAuthorInformation(Long initiativeId) {
-        return initiativeDao.getByIdWithOriginalAuthor(initiativeId).getAuthor();
-    }
-
     @Transactional(readOnly = false)
     public void sendReview(Long initiativeId, LoginUserHolder loginUserHolder, boolean sendToMunicipalityRightAfterAcceptance, Locale locale) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        assertAllowance("Send review", managementSettings(initiativeId).isAllowSendToReview());
+        assertAllowance("Send review", getManagementSettings(initiativeId).isAllowSendToReview());
 
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.REVIEW);
         
@@ -156,7 +155,7 @@ public class PublicInitiativeService {
     @Transactional(readOnly = false)
     public void publishInitiative(Long initiativeId, boolean isCollobrative, LoginUserHolder loginUserHolder, Locale locale) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        assertAllowance("Publish initiative", managementSettings(initiativeId).isAllowPublish());
+        assertAllowance("Publish initiative", getManagementSettings(initiativeId).isAllowPublish());
 
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
         if (isCollobrative) {
@@ -169,23 +168,23 @@ public class PublicInitiativeService {
             initiativeDao.markInitiativeAsSent(initiativeId);
             Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
             emailService.sendStatusEmail(initiative,initiative.getAuthor().getContactInfo().getEmail(), EmailMessageType.SENT_TO_MUNICIPALITY, locale);
-            emailService.sendNotCollectableToMunicipality(initiative, municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), locale);
-        }
-    }
-
-    private static void assertAllowance(String s, boolean allowed) {
-        if (!allowed) {
-            throw new OperationNotAllowedException("Operation not allowed: " + s);
+            emailService.sendSingleToMunicipality(initiative, municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), locale);
         }
     }
 
     @Transactional(readOnly = false)
     public Long confirmParticipation(Long participantId, String confirmationCode) {
         Long initiativeId = participantDao.getInitiativeIdByParticipant(participantId);
-        assertAllowance("Confirm participation", managementSettings(initiativeId).isAllowParticipate());
+        assertAllowance("Confirm participation", getManagementSettings(initiativeId).isAllowParticipate());
 
         participantDao.confirmParticipation(participantId, confirmationCode);
 
         return initiativeId;
+    }
+
+    private static void assertAllowance(String s, boolean allowed) {
+        if (!allowed) {
+            throw new OperationNotAllowedException("Operation not allowed: " + s);
+        }
     }
 }

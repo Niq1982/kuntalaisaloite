@@ -3,11 +3,8 @@ package fi.om.municipalityinitiative.newdto.ui;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.util.InitiativeState;
-import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.LocalDate;
-
-import java.util.Locale;
 
 public class InitiativeViewInfo {
 

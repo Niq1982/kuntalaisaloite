@@ -1,19 +1,13 @@
 package fi.om.municipalityinitiative.newdto.service;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import fi.om.municipalityinitiative.json.JsonId;
-import fi.om.municipalityinitiative.json.LocalDateJsonSerializer;
 import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
-import fi.om.municipalityinitiative.web.Urls;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 public class Initiative {
 
-    @JsonId(path= Urls.INITIATIVE)
     private Long id;
     private String name;
     private String proposal;
@@ -21,7 +15,6 @@ public class Initiative {
 
     private String authorName;
     private Boolean showName;
-    @JsonSerialize(using=LocalDateJsonSerializer.class)
     private LocalDate createTime;
 
     private Maybe<String> managementHash = Maybe.absent();

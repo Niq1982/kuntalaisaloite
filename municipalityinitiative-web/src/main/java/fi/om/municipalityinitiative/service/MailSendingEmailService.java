@@ -28,7 +28,7 @@ public class MailSendingEmailService implements EmailService {
     private EmailMessageConstructor emailMessageConstructor;
 
     @Override
-    public void sendNotCollectableToMunicipality(Initiative initiative, String municipalityEmail, Locale locale) {
+    public void sendSingleToMunicipality(Initiative initiative, String municipalityEmail, Locale locale) {
         emailMessageConstructor
                 .fromTemplate(NOT_COLLECTABLE_TEMPLATE)
                 //.withSendTo(municipalityEmail)

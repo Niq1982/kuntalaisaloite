@@ -8,7 +8,7 @@ import java.util.Locale;
 
 public interface EmailService {
 
-    void sendNotCollectableToMunicipality(Initiative initiative, String municipalityEmail, Locale locale);
+    void sendSingleToMunicipality(Initiative initiative, String municipalityEmail, Locale locale);
 
     void sendStatusEmail(Initiative initiative, String sendTo, EmailMessageType emailMessageType, Locale locale);
 

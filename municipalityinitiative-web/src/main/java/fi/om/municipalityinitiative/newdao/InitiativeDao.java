@@ -19,25 +19,23 @@ public interface InitiativeDao {
 
     List<InitiativeListInfo> find(InitiativeSearch search);
 
-    Initiative getByIdWithOriginalAuthor(Long id);
+    Initiative getByIdWithOriginalAuthor(Long initiativeId);
 
     Initiative getById(Long initiativeId, String authorsManagementHash);
 
-    void assignAuthor(Long municipalityInitiativeId, Long participantId, String managementHash);
+    void assignAuthor(Long initiativeId, Long participantId, String managementHash);
 
     InitiativeCounts getInitiativeCounts(Maybe<Long> municipality);
 
-    Long prepareInitiative(Long municipalityId, String email);
+    Long prepareInitiative(Long municipalityId);
 
-    InitiativeDraftUIEditDto getInitiativeForEdit(Long initiativeId);
+    void editInitiativeDraft(Long initiativeId, InitiativeDraftUIEditDto editDto);
 
-    void updateInitiativeDraft(Long initiativeId, InitiativeDraftUIEditDto editDto);
+    Author getAuthorInformation(Long initiativeId, String managementHash);
 
-    Author getAuthorInformation(Long id, String managementHash);
+    void updateAcceptedInitiative(Long initiativeId, String managementHash, InitiativeUIUpdateDto updateDto);
 
     void updateInitiativeState(Long initiativeId, InitiativeState state);
-
-    void updateInitiative(Long initiativeId, String managementHash, InitiativeUIUpdateDto updateDto);
 
     void updateInitiativeType(Long initiativeId, InitiativeType initiativeType);
 

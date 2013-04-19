@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.newdto.ui;
 
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
+import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.util.InitiativeState;
 
@@ -27,7 +28,7 @@ public class InitiativeDraftUIEditDto {
     @NotEmpty
     @Size(max = InitiativeConstants.INITIATIVE_PROPOSAL_MAX)
     private String proposal;
-    
+
     @Size(max = InitiativeConstants.INITIATIVE_PROPOSAL_MAX)
     private String extraInfo;
 
@@ -37,13 +38,20 @@ public class InitiativeDraftUIEditDto {
     @NotNull
     private Boolean showName;
 
-    public InitiativeDraftUIEditDto(Municipality municipality, InitiativeState initiativeState) {
-        this.municipality = municipality;
-        this.state = initiativeState;
-    }
-
     public InitiativeDraftUIEditDto() {
         // For freemarker
+    }
+
+    public static InitiativeDraftUIEditDto parse(Initiative initiative) {
+        InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto();
+        editDto.setExtraInfo(initiative.getComment());
+        editDto.setContactInfo(new ContactInfo(initiative.getAuthor().getContactInfo()));
+        editDto.setName(initiative.getName());
+        editDto.setProposal(initiative.getProposal());
+        editDto.setShowName(initiative.getShowName());
+        editDto.municipality = initiative.getMunicipality();
+        editDto.state = initiative.getState();
+        return editDto;
     }
 
     public String getName() {

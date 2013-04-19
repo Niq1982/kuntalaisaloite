@@ -63,7 +63,7 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
     @Test
     public void single_to_municipality_contains_all_information() throws Exception {
 
-        emailService.sendNotCollectableToMunicipality(createDefaultInitiative(), MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
+        emailService.sendSingleToMunicipality(createDefaultInitiative(), MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
 
         assertThat(getSingleSentMessage().getSubject(), is("Kuntalaisaloite: "+ INITIATIVE_MUNICIPALITY));
         assertThat(getSingleRecipient(), is(CONTACT_EMAIL)); // XXX: MUNICIPALITY_EMAIL

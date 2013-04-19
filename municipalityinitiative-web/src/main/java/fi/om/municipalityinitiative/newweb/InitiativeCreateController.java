@@ -11,8 +11,6 @@ import fi.om.municipalityinitiative.service.ValidationService;
 import fi.om.municipalityinitiative.web.BaseController;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,8 +31,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @Controller
 public class InitiativeCreateController extends BaseController {
 
-    private final Logger log = LoggerFactory.getLogger(InitiativeCreateController.class);
-
     @Resource
     private MunicipalityService municipalityService;
 
@@ -53,12 +49,8 @@ public class InitiativeCreateController extends BaseController {
 
     @RequestMapping(value = { PREPARE_FI, PREPARE_SV }, method = GET)
     public String prepareGet(Model model, Locale locale, HttpServletRequest request) {
-        Urls urls = Urls.get(locale);
-        model.addAttribute(ALT_URI_ATTR, urls.alt().prepare());
-
-        model.addAttribute("initiative", new PrepareInitiativeUICreateDto());
-        model.addAttribute("municipalities", municipalityService.findAllMunicipalities(locale));
-        return PREPARE_VIEW;
+        return ViewGenerator.prepareView(new PrepareInitiativeUICreateDto(), municipalityService.findAllMunicipalities(locale))
+                .view(model, Urls.get(locale).alt().prepare());
     }
 
     @RequestMapping(value={ PREPARE_FI, PREPARE_SV }, method=POST)
@@ -67,45 +59,39 @@ public class InitiativeCreateController extends BaseController {
                              Model model,
                              Locale locale,
                              HttpServletRequest request) {
-
+        Urls urls = Urls.get(locale);
         if (validionService.validationErrors(initiative, bindingResult, model)) {
-            model.addAttribute("initiative", initiative);
-            model.addAttribute("municipalities", municipalityService.findAllMunicipalities(locale));
-            return PREPARE_VIEW;
+            return ViewGenerator.prepareView(initiative, municipalityService.findAllMunicipalities(locale))
+                    .view(model, urls.prepare());
         }
 
-        Urls urls = Urls.get(locale);
         Long initiativeId = publicInitiativeService.prepareInitiative(initiative, locale);
         
-        addRequestAttribute(initiative.getParticipantEmail(), model, request);
+        addRequestAttribute(initiative.getParticipantEmail(), model, request); // To be shown at confirmation page
         return redirectWithMessage(urls.pendingConfirmation(initiativeId), RequestMessage.PREPARE, request);
 
     }
 
+    // TODO: Combine update and edit views?
     @RequestMapping(value={ EDIT_FI, EDIT_SV }, method=GET)
     public String editView(@PathVariable("id") Long initiativeId,
                            Model model, Locale locale, HttpServletRequest request) {
 
-//        userService.assertManagementRightsForInitiative(initiativeId);
-        userService.getRequiredLoginUserHolder(request).assertManagementRightsForInitiative(initiativeId);
+        LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
+
+        ManagementSettings managementSettings = publicInitiativeService.getManagementSettings(initiativeId);
 
         Urls urls = Urls.get(locale);
-
-        // XXX: Three transactions and all of them practically receives the same data.
-        ManagementSettings managementSettings = publicInitiativeService.managementSettings(initiativeId);
-
         if (managementSettings.isAllowEdit()) {
-            InitiativeDraftUIEditDto initiative = publicInitiativeService.getInitiativeDraftForEdit(initiativeId);
-
-            model.addAttribute(ALT_URI_ATTR, urls.alt().getEdit(initiativeId));
-            model.addAttribute("initiative", initiative);
-            model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId));
-
-            model.addAttribute("previousPageURI", urls.prepare());
-            return EDIT_VIEW;
+            return ViewGenerator.editView(
+                    publicInitiativeService.getInitiativeDraftForEdit(initiativeId),
+                    publicInitiativeService.getAuthorInformation(initiativeId, loginUserHolder),
+                    urls.moderation(initiativeId)
+            ).view(model, urls.alt().edit(initiativeId));
         }
         else if (managementSettings.isAllowUpdate()) {
-            return contextRelativeRedirect(urls.update(initiativeId)); // TODO: No managementhash
+            return contextRelativeRedirect(urls.update(initiativeId));
         }
         else {
             return ERROR_500; // TODO: Custom error page or some message that operation is not allowed
@@ -124,10 +110,11 @@ public class InitiativeCreateController extends BaseController {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
         if (validionService.validationErrors(editDto, bindingResult, model)) {
-            model.addAttribute(ALT_URI_ATTR, urls.alt().edit(initiativeId));
-            model.addAttribute("initiative", editDto);
-            model.addAttribute("author", publicInitiativeService.getAuthorInformation(initiativeId, loginUserHolder));
-            return EDIT_VIEW;
+            return ViewGenerator.editView(
+                    editDto,
+                    publicInitiativeService.getAuthorInformation(initiativeId, loginUserHolder),
+                    urls.moderation(initiativeId)
+            ).view(model, urls.alt().edit(initiativeId));
         }
 
         publicInitiativeService.editInitiativeDraft(initiativeId, loginUserHolder, editDto);

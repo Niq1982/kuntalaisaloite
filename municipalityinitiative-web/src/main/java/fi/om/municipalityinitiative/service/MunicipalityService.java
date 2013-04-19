@@ -14,8 +14,8 @@ public class MunicipalityService {
     @Resource
     private MunicipalityDao municipalityDao;
 
-    public List<Municipality> findAllMunicipalities(Locale locale) {
-        return municipalityDao.findMunicipalities(Locales.LOCALE_FI.equals(locale));
+    public List<Municipality> findAllMunicipalities(Locale localeForOrdering) {
+        return municipalityDao.findMunicipalities(Locales.LOCALE_FI.equals(localeForOrdering));
     }
 
 }
