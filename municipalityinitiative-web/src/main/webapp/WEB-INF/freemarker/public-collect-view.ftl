@@ -49,25 +49,25 @@
     
             <input type="hidden" name="municipality" value="${initiative.municipality.id!""}"/>
 
-            <div class="input-block-content no-top-margin flexible">
+            <div class="input-block-content no-top-margin">
                 <@u.systemMessage path="participate.contactInfo.description" type="info" showClose=false />  
             </div>
             
-             <div class="input-block-content flexible">
+             <div class="input-block-content">
                 <@f.textField path="participant.participantName" required="required" optional=false cssClass="large" maxLength="512" />
-                <@f.formCheckbox path="participant.showName" checked=true />
+                
             </div>
             
-            <div class="input-block-content flexible">
+            <div class="input-block-content">
                 <@f.municipalitySelect path="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipality.id />
             </div>
             
             <div id="municipalMembership" class="js-hide">
-                <div class="input-block-content hidden flexible">
+                <div class="input-block-content hidden">
                     <#assign href="#" />
                     <@u.systemMessage path="initiative.municipality.notEqual" type="info" showClose=false args=[href] />
                 </div>
-                <div class="input-block-content flexible">
+                <div class="input-block-content">
                     <@f.radiobutton path="participant.municipalMembership" required="required" options={
                         "community":"initiative.municipalMembership.community",
                         "company":"initiative.municipalMembership.company",
@@ -76,20 +76,20 @@
                     } attributes="" />
                 </div>
                 
-                <div class="input-block-content is-not-member no-top-margin flexible js-hide hidden">
+                <div class="input-block-content is-not-member no-top-margin js-hide hidden">
                     <@u.systemMessage path="warning.initiative.notMember" type="warning" showClose=false />
                 </div>
             </div>
             
-            <#-- TODO: Participant email address -->
-            <div class="input-block-content flexible">
-                <label for="participantEmail" class="input-header">
-                    Sähköpostiosoitteesi <span class="icon-small required trigger-tooltip"></span>
-                </label>
-                <input type="text" maxlength="100" class="large" value="" name="participantEmail" id="participantEmail">
+            <div class="input-block-content">
+                <@f.formCheckbox path="participant.showName" checked=true />
             </div>
             
-            <div class="input-block-content flexible">
+            <div class="input-block-content">
+                <@f.textField path="participant.participantEmail" required="required" optional=true cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
+            </div>
+
+            <div class="input-block-content">
                 <button id="participate" type="submit" name="save" value="true" class="small-button"><span class="small-icon save-and-send"><@u.message "action.save" /></span></button>
                 <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
             </div>
