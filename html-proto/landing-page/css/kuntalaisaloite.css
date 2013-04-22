@@ -221,11 +221,15 @@ body {
 }
 #header #logo {
   display: block;
-  width: 355px;
-  height: 82px;
+  width: 383px;
+  height: 72px;
   margin-top: 18px;
-  background: url(../img/logo.png) 0 0 no-repeat;
+  background: url(../img/kuntalaisaloite-fi.png) 0 0 no-repeat;
 }
+.sv #header #logo {
+  background: url(../img/kuntalaisaloite-sv.png) 0 0 no-repeat;
+}
+
 #header #logo span {
   display: none;
 }
