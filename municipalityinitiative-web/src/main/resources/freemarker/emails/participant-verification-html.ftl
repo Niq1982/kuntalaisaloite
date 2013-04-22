@@ -8,17 +8,21 @@
 
 <#escape x as x?html>
 
-<#assign title><@u.message "email.initiative" /> - ${initiative.municipality.getLocalizedName(locale)!""}</#assign>
+<#assign title><@u.message "email.verifyParticipate.title" /></#assign>
 
-<@l.emailHtml "municipality-collectable" title>
+<@l.emailHtml "verify-participate" title>
 
     <@b.mainContentBlock title>
-        <p style="${pBothMargins!""}">Tämä on vahvistusviesti osallistumisestasi kuntalaisaloitteeseen.</p>
+        <@b.initiativeDetails type=type showProposal=false showDate=false />
 
-        <p>Aloite:</p><p>${initiative.name}</p>
-
-        <p style="${pBothMargins!""}">Sinun täytyy vielä vahvistaa osallistumisesi klikkaamalla alla olevaa linkkiä.</p>
-        <p style="${smallFont!""}"><@u.link urls.confirmParticipant(participantId, confirmationCode) urls.confirmParticipant(participantId, confirmationCode) /></p>
+        <p style="${pBothMargins!""}"><@u.message "email.verifyParticipate.description" /></p>
+        
+        <#assign label><@u.message "email.verifyParticipate.verify" /></#assign>
+        <@u.button label urls.confirmParticipant(participantId, confirmationCode) "green" />
+        
+        <h4 style="${h4!""}"><@u.message "email.verifyParticipate.why.title" /></h4>
+        <p style="${pBottomMargin!""}"><@u.message "email.verifyParticipate.why.description" /></p>
+        
     </@b.mainContentBlock>
 
     <@u.spacer "15" />
