@@ -128,7 +128,7 @@
      
     <label class="inline">
         <input type="checkbox" id="${id}" name="${id}"<#if isSelected> checked="checked"</#if> ${attributes}/>
-        <@u.message (key!="")?string(key,path) /><br />
+        <span class="label"><@u.message (key!="")?string(key,path) /></span>
     </label>
 </#macro>
 

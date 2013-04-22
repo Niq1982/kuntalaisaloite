@@ -443,7 +443,7 @@ var municipalitySelection = (function() {
 			toggleMembershipRadios(homeMunicipalitySelect);
 		}
 		
-		if (!$("input[name=municipalMembership]").is(':checked')){
+		if (!equalMunicipalitys() && !$("input[name=municipalMembership]").is(':checked')){
 			disableSubmit(true);
 		} else {
 			disableSubmit(false);
@@ -502,14 +502,13 @@ var municipalitySelection = (function() {
 	
 	// Disable or enable submitting "Save and collect"
 	function disableSubmit(disable){
-		$('button#action-save, button#participate').disableButton(disable);
+		$('button#action-send-confirm, button#participate').disableButton(disable);
 	}
 	
 	// Toggle the radiobutton selection for municipality membership
 	function toggleMembershipRadios(select){
 		//var franchise			= $('#franchise');
-		var	municipalMembership	= $('#municipalMembership'),
-			btnCollectable		= $('button#action-save');
+		var	municipalMembership	= $('#municipalMembership');
 		
 		if( equalMunicipalitys() ){
 			municipalityNotEqual.stop(false,true).slideUp(slideOptions);
