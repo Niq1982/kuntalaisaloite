@@ -26,7 +26,7 @@ import com.google.common.io.Files;
 
 public class EncryptablePropertiesConfigurer implements BeanFactoryPostProcessor, EnvironmentAware {
 
-    private static final Logger log = LoggerFactory.getLogger(EncryptablePropertiesConfigurer.class); 
+    private static final Logger log = LoggerFactory.getLogger(EncryptablePropertiesConfigurer.class);
 
     private static final int KEY_OBTENTION_ITERATIONS = 1000;
 
@@ -83,7 +83,7 @@ public class EncryptablePropertiesConfigurer implements BeanFactoryPostProcessor
     
     private static String getPassword() {
         try {
-            return Files.toString(new File(System.getProperty("user.home"), ".initpass"), Charset.forName("US-ASCII"));
+            return Files.toString(new File(System.getProperty("user.home"), ".initpass"), Charset.forName("US-ASCII")).trim();
         } catch (IOException e) {
             log.warn(MISSING_PASSWORD_MESSAGE);
             return null;
