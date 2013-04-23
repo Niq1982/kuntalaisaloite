@@ -78,23 +78,25 @@
  *
  * @param type 'text' or 'html'
  -->
-<#macro emailFooter type="">
+<#macro emailFooter type="" altLang="">
+    <#assign postFix=(altLang!="")?string("."+altLang,"") />
+    
     <#if type=="html">
-        <p style="${footerFont!""}"><@u.message "email.footer.sendFrom" />
+        <p style="${footerFont!""}"><@u.message "email.footer.sendFrom"+postFix />
         <#if initiative.state?? && initiative.state == "PUBLISHED">
-            <@u.message "email.footer.viewLink" /><br/><@u.link urls.view(initiative.id) />
+            <@u.message "email.footer.viewLink"+postFix /><br/><@u.link urls.view(initiative.id) />
         </#if>
         </p>
         <br/>
-        <p style="${footerFont!""}"><@u.message "email.footer" /></p>
+        <p style="${footerFont!""}"><@u.message "email.footer"+postFix /></p>
     <#else>
-        <@u.message "email.footer.sendFrom" />
+        <@u.message "email.footer.sendFrom"+postFix />
         <#if initiative.state?? && initiative.state == "PUBLISHED">
-            <@u.message "email.footer.viewLink" />
+            <@u.message "email.footer.viewLink"+postFix />
             <@u.link urls.view(initiative.id) />
         </#if>
         
-        <@u.message "email.footer" />
+        <@u.message "email.footer"+altLang />
     </#if>
 </#macro>
 

@@ -15,10 +15,24 @@
     <#assign title><@u.message "email.status.info."+emailMessageType+".title" /></#assign>
 </#if>
 
-<@l.emailHtml template="status-info-to-author" title=title>
+<@l.emailHtml template="status-info-to-author" title=title footer=false>
     <@b.mainContentBlock title>
         <#noescape>${statusInfoHTML!""}</#noescape>
     </@b.mainContentBlock>
+    
+    <@u.spacer "15" />
+    
+    <@b.emailFooter "html" />
+    
+    <@u.spacer "15" />
+    
+    <@b.mainContentBlock title>
+        <#noescape>${statusInfoHTML!""}</#noescape>
+    </@b.mainContentBlock>
+    
+    <@u.spacer "15" />
+    
+    <@b.emailFooter "html" "sv" />
     
     <@u.spacer "15" />
 

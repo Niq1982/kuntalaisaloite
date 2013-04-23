@@ -5,7 +5,7 @@
 
 <#escape x as x?html>
 
-<#macro emailHtml template title="">
+<#macro emailHtml template title="" footer=true>
 <html>
 <head>
     <title>${title}</title>
@@ -37,7 +37,7 @@
             <#-- Email content -->
             <#nested />
             
-            <@b.emailFooter "html" />
+            <#if footer><@b.emailFooter "html" /></#if>
 
             <@u.spacer "15" />
         </td>

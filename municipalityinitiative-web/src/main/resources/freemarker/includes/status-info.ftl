@@ -28,6 +28,8 @@
         
         <@b.statusInfoComment "text" initiative.moderatorComment!"" />
         
+        <@b.initiativeDetails type="text" showProposal=false />
+        
         <@b.publicViewLink "text" />
     </#assign>
     
@@ -37,6 +39,7 @@
         <p style="${pBothMargins!""}"><@u.message "email.status.info.ACCEPTED_BY_OM_AND_SENT.description.2" /> <strong>${initiative.municipality.getLocalizedName(locale)!""}</strong>.</p>
 
         <@b.statusInfoComment "html" initiative.moderatorComment!"" />
+        <@b.initiativeDetails type="html" showProposal=false />
         <@b.publicViewLink "html" />
     </#assign>
     
@@ -49,6 +52,8 @@
         
         <@b.statusInfoComment "text" initiative.moderatorComment!"" />
         
+        <@b.initiativeDetails type="text" showProposal=false />
+        
         <@b.adminViewLink "text" />
     </#assign>
     
@@ -58,6 +63,7 @@
         <p style="${pBothMargins!""}"><@u.message "email.status.info.ACCEPTED_BY_OM.description.2" /></p>
         
         <@b.statusInfoComment "html" initiative.moderatorComment!"" />
+        <@b.initiativeDetails type="html" showProposal=false />
         <@b.adminViewLink "html" />
     </#assign>
     
@@ -67,6 +73,8 @@
         <@u.message "email.status.info.REJECTED_BY_OM.title" />
         
         <@b.statusInfoComment "text" initiative.moderatorComment!"" />
+        
+        <@b.initiativeDetails type="text" showProposal=false />
 
         <@b.adminViewLink "text" />
     </#assign>
@@ -76,7 +84,7 @@
         <p style="${pBothMargins!""}"><@u.message "email.status.info.REJECTED_BY_OM.description" /></p>
         
         <@b.statusInfoComment "html" initiative.moderatorComment!"" />
-        
+        <@b.initiativeDetails type="html" showProposal=false />
         <@b.adminViewLink "html" />
     </#assign>
     
@@ -116,7 +124,6 @@
     <#assign statusInfoHTML>
         <p style="${pBothMargins!""}"><@u.message "email.status.info.PUBLISHED_COLLECTING.description" /></p>
         
-        <#-- TODO: publish date: initiative.stateTime-->
         <@b.initiativeDetails type="html" showProposal=false />  
         
         <@b.publicViewLink "html" />
