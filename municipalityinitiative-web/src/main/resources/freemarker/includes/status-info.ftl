@@ -19,72 +19,74 @@
  *
 -->
 
+<#assign messageKeyPrefix = "email.status.info."+emailMessageType />
+
 <#if emailMessageType == EmailMessageType.ACCEPTED_BY_OM_AND_SENT>
     <#-- TEXT -->
     <#assign statusInfo>
-        <@u.message "email.status.info.ACCEPTED_BY_OM_AND_SENT.description" />
+        <@u.message messageKeyPrefix+".description" />
         
-        <@u.message "email.status.info.ACCEPTED_BY_OM_AND_SENT.description.2" /> ${initiative.municipality.getLocalizedName(locale)!""}.
+        <@u.message messageKeyPrefix+".description.2" /> ${initiative.municipality.getLocalizedName(locale)!""}.
         
         <@b.statusInfoComment "text" initiative.moderatorComment!"" />
         
-        <@b.initiativeDetails type="text" showProposal=false />
+        <@b.initiativeDetails type="text" showProposal=false showDate=false />
         
         <@b.publicViewLink "text" />
     </#assign>
     
     <#-- HTML -->
     <#assign statusInfoHTML>
-        <p style="${pBothMargins!""}"><@u.message "email.status.info.ACCEPTED_BY_OM_AND_SENT.description" /></p>
-        <p style="${pBothMargins!""}"><@u.message "email.status.info.ACCEPTED_BY_OM_AND_SENT.description.2" /> <strong>${initiative.municipality.getLocalizedName(locale)!""}</strong>.</p>
+        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description" /></p>
+        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description.2" /> <strong>${initiative.municipality.getLocalizedName(locale)!""}</strong>.</p>
 
         <@b.statusInfoComment "html" initiative.moderatorComment!"" />
-        <@b.initiativeDetails type="html" showProposal=false />
+        <@b.initiativeDetails type="html" showProposal=false showDate=false />
         <@b.publicViewLink "html" />
     </#assign>
     
 <#elseif emailMessageType == EmailMessageType.ACCEPTED_BY_OM>
     <#-- TEXT -->
     <#assign statusInfo>
-        <@u.message "email.status.info.ACCEPTED_BY_OM.description" />
+        <@u.message messageKeyPrefix+".description" />
         
-        <@u.message "email.status.info.ACCEPTED_BY_OM.description.2" />
+        <@u.message messageKeyPrefix+".description.2" />
         
         <@b.statusInfoComment "text" initiative.moderatorComment!"" />
         
-        <@b.initiativeDetails type="text" showProposal=false />
+        <@b.initiativeDetails type="text" showProposal=false showDate=false />
         
         <@b.adminViewLink "text" />
     </#assign>
     
     <#-- HTML -->
     <#assign statusInfoHTML>
-        <p style="${pBothMargins!""}"><@u.message "email.status.info.ACCEPTED_BY_OM.description" /></p>
-        <p style="${pBothMargins!""}"><@u.message "email.status.info.ACCEPTED_BY_OM.description.2" /></p>
+        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description" /></p>
+        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description.2" /></p>
         
         <@b.statusInfoComment "html" initiative.moderatorComment!"" />
-        <@b.initiativeDetails type="html" showProposal=false />
+        <@b.initiativeDetails type="html" showProposal=false showDate=false />
         <@b.adminViewLink "html" />
     </#assign>
     
 <#elseif emailMessageType == EmailMessageType.REJECTED_BY_OM>
     <#-- TEXT -->
     <#assign statusInfo>
-        <@u.message "email.status.info.REJECTED_BY_OM.title" />
+        <@u.message messageKeyPrefix+".title" />
         
         <@b.statusInfoComment "text" initiative.moderatorComment!"" />
         
-        <@b.initiativeDetails type="text" showProposal=false />
+        <@b.initiativeDetails type="text" showProposal=false showDate=false />
 
         <@b.adminViewLink "text" />
     </#assign>
     
     <#-- HTML -->
     <#assign statusInfoHTML>
-        <p style="${pBothMargins!""}"><@u.message "email.status.info.REJECTED_BY_OM.description" /></p>
+        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description" /></p>
         
         <@b.statusInfoComment "html" initiative.moderatorComment!"" />
-        <@b.initiativeDetails type="html" showProposal=false />
+        <@b.initiativeDetails type="html" showProposal=false showDate=false />
         <@b.adminViewLink "html" />
     </#assign>
     
@@ -113,25 +115,25 @@
 <#elseif emailMessageType == EmailMessageType.PUBLISHED_COLLECTING>
     <#-- TEXT -->
     <#assign statusInfo>
-        <@u.message "email.status.info.PUBLISHED_COLLECTING.description" />
+        <@u.message messageKeyPrefix+".description" />
         
-        <@b.initiativeDetails type="text" showProposal=false />  
+        <@b.initiativeDetails type="text" showProposal=false showDate=false />  
         
         <@b.publicViewLink "text" />
     </#assign>
     
     <#-- HTML -->
     <#assign statusInfoHTML>
-        <p style="${pBothMargins!""}"><@u.message "email.status.info.PUBLISHED_COLLECTING.description" /></p>
+        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description" /></p>
         
-        <@b.initiativeDetails type="html" showProposal=false />  
+        <@b.initiativeDetails type="html" showProposal=false showDate=false />  
         
         <@b.publicViewLink "html" />
     </#assign>
     
 <#elseif emailMessageType == EmailMessageType.SENT_TO_MUNICIPALITY>
     <#-- Optional title overrides default title -->
-    <#assign statusTitle><@u.message "email.status.info."+emailMessageType+".title" /> ${initiative.municipality.getLocalizedName(locale)!""}</#assign>
+    <#assign statusTitle><@u.message messageKeyPrefix+".title" /> ${initiative.municipality.getLocalizedName(locale)!""}</#assign>
     <#-- TEXT -->
     <#assign statusInfo>
     

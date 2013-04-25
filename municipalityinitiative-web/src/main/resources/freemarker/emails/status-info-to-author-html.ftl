@@ -26,6 +26,8 @@
     
     <@u.spacer "15" />
     
+    <#-- TODO: Swap locale to SV -->
+    
     <@b.mainContentBlock title>
         <#noescape>${statusInfoHTML!""}</#noescape>
     </@b.mainContentBlock>
@@ -35,6 +37,8 @@
     <@b.emailFooter "html" "sv" />
     
     <@u.spacer "15" />
+    
+    <#-- TODO: Swap locale back to FI -->
 
 </@l.emailHtml>
 
