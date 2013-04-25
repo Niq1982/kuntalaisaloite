@@ -122,5 +122,9 @@ public class MailSendingEmailService implements EmailService {
         public String getMessage(String key, Object ... args) {
             return messageSource.getMessage(key, args, locale);
         }
+
+        public String getMessage(String key, Locale locale, Object ... args) {
+            return messageSource.getMessage(key, args, locale);
+        }
     }
 }
