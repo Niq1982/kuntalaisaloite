@@ -24,9 +24,9 @@
 <#if emailMessageType == EmailMessageType.ACCEPTED_BY_OM_AND_SENT>
     <#-- TEXT -->
     <#assign statusInfo>
-        <@u.message messageKeyPrefix+".description" />
+        <@u.message messageKeyPrefix+".description" locale />
         
-        <@u.message messageKeyPrefix+".description.2" /> ${initiative.municipality.getLocalizedName(locale)!""}.
+        <@u.message messageKeyPrefix+".description.2" locale /> ${initiative.municipality.getLocalizedName(locale)!""}.
         
         <@b.statusInfoComment "text" initiative.moderatorComment!"" />
         
@@ -37,8 +37,8 @@
     
     <#-- HTML -->
     <#assign statusInfoHTML>
-        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description" /></p>
-        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description.2" /> <strong>${initiative.municipality.getLocalizedName(locale)!""}</strong>.</p>
+        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description" locale/></p>
+        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description.2" locale /> <strong>${initiative.municipality.getLocalizedName(locale)!""}</strong>.</p>
 
         <@b.statusInfoComment "html" initiative.moderatorComment!"" />
         <@b.initiativeDetails type="html" showProposal=false showDate=false />
@@ -48,9 +48,9 @@
 <#elseif emailMessageType == EmailMessageType.ACCEPTED_BY_OM>
     <#-- TEXT -->
     <#assign statusInfo>
-        <@u.message messageKeyPrefix+".description" />
+        <@u.message messageKeyPrefix+".description" locale/>
         
-        <@u.message messageKeyPrefix+".description.2" />
+        <@u.message messageKeyPrefix+".description.2" locale />
         
         <@b.statusInfoComment "text" initiative.moderatorComment!"" />
         
@@ -61,8 +61,8 @@
     
     <#-- HTML -->
     <#assign statusInfoHTML>
-        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description" /></p>
-        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description.2" /></p>
+        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description" locale/></p>
+        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description.2" locale/></p>
         
         <@b.statusInfoComment "html" initiative.moderatorComment!"" />
         <@b.initiativeDetails type="html" showProposal=false showDate=false />
@@ -72,7 +72,7 @@
 <#elseif emailMessageType == EmailMessageType.REJECTED_BY_OM>
     <#-- TEXT -->
     <#assign statusInfo>
-        <@u.message messageKeyPrefix+".title" />
+        <@u.message messageKeyPrefix+".title" locale/>
         
         <@b.statusInfoComment "text" initiative.moderatorComment!"" />
         
@@ -83,7 +83,7 @@
     
     <#-- HTML -->
     <#assign statusInfoHTML>
-        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description" /></p>
+        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description" locale/></p>
         
         <@b.statusInfoComment "html" initiative.moderatorComment!"" />
         <@b.initiativeDetails type="html" showProposal=false showDate=false />
@@ -115,7 +115,7 @@
 <#elseif emailMessageType == EmailMessageType.PUBLISHED_COLLECTING>
     <#-- TEXT -->
     <#assign statusInfo>
-        <@u.message messageKeyPrefix+".description" />
+        <@u.message messageKeyPrefix+".description" locale/>
         
         <@b.initiativeDetails type="text" showProposal=false showDate=false />  
         
@@ -124,7 +124,7 @@
     
     <#-- HTML -->
     <#assign statusInfoHTML>
-        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description" /></p>
+        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description" locale/></p>
         
         <@b.initiativeDetails type="html" showProposal=false showDate=false />  
         
@@ -133,7 +133,7 @@
     
 <#elseif emailMessageType == EmailMessageType.SENT_TO_MUNICIPALITY>
     <#-- Optional title overrides default title -->
-    <#assign statusTitle><@u.message messageKeyPrefix+".title" /> ${initiative.municipality.getLocalizedName(locale)!""}</#assign>
+    <#assign statusTitle><@u.message messageKeyPrefix+".title" locale /> ${initiative.municipality.getLocalizedName(locale)!""}</#assign>
     <#-- TEXT -->
     <#assign statusInfo>
     

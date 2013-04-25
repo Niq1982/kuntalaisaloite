@@ -119,11 +119,13 @@ public class MailSendingEmailService implements EmailService {
             this.locale = locale;
         }
 
-        public String getMessage(String key, Object ... args) {
+        public String getMessage(String key, Locale locale, Object ... args) {
+            System.out.println("WithLocale: " + locale);
             return messageSource.getMessage(key, args, locale);
         }
 
-        public String getMessage(String key, Locale locale, Object ... args) {
+        public String getMessage(String key, Object ... args) {
+            System.out.println("Without locale");
             return messageSource.getMessage(key, args, locale);
         }
     }

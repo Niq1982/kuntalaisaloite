@@ -25,6 +25,7 @@
 -->
 
 <#macro messageHTML key args=[]><#noescape>${localizations.getMessage(key, args)}</#noescape></#macro>
+<#macro messageHTML key locale args=[]><#noescape>${localizations.getMessage(key, locale, args)}</#noescape></#macro>
 
 
 <#-- 

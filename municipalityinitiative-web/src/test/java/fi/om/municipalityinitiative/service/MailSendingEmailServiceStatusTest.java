@@ -36,6 +36,8 @@ public class MailSendingEmailServiceStatusTest extends MailSendingEmailServiceTe
         assertThat(getSingleSentMessage().getSubject(), is("Kuntalaisaloitteesi on hyväksytty ja lähetetty kuntaan"));
         assertThat(getMessageContent().html, containsString(INITIATIVE_MUNICIPALITY));
         assertThat(getMessageContent().html, containsString(urls.view(INITIATIVE_ID)));
+        assertThat(getMessageContent().html, containsString("Kuntalaisaloitteesi on julkaistu Kuntalaisaloite.fi-palvelussa ja lähetetty kuntaan"));
+        assertThat(getMessageContent().html, containsString("SV Kuntalaisaloitteesi on julkaistu Kuntalaisaloite.fi-palvelussa ja lähetetty kuntaan"));
     }
 
     @Test

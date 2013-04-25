@@ -16,6 +16,9 @@
 </#if>
 
 <@l.emailHtml template="status-info-to-author" title=title footer=false>
+
+    <#assign locale="fi" />
+
     <@b.mainContentBlock title>
         <#noescape>${statusInfoHTML!""}</#noescape>
     </@b.mainContentBlock>
@@ -26,7 +29,8 @@
     
     <@u.spacer "15" />
     
-    <#-- TODO: Swap locale to SV -->
+    <#assign localee="sv" />
+
     
     <@b.mainContentBlock title>
         <#noescape>${statusInfoHTML!""}</#noescape>
@@ -39,6 +43,7 @@
     <@u.spacer "15" />
     
     <#-- TODO: Swap locale back to FI -->
+    <#-- XXX: Why and are we sure it was FI? -->
 
 </@l.emailHtml>
 
