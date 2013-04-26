@@ -53,7 +53,7 @@ public class EmailMessageConstructor {
 
     private static void addAttachment(MimeMessageHelper multipart, Initiative initiative, List<Participant> participants) {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()){
-            new ParticipantToPdfExporter(initiative, participants);
+            new ParticipantToPdfExporter(initiative, participants).createPdf(outputStream);
 
             byte[] bytes = outputStream.toByteArray();
             DataSource dataSource = new ByteArrayDataSource(bytes, "application/pdf");

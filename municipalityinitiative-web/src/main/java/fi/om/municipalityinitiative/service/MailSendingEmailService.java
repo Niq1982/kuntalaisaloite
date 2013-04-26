@@ -22,7 +22,7 @@ public class MailSendingEmailService implements EmailService {
     private static final String STATUS_INFO_TEMPLATE = "status-info-to-author";
     private static final String NOTIFICATION_TO_MODERATOR = "notification-to-moderator";
     private static final String PARTICIPATION_CONFIRMATION = "participant-verification";
-    private static final String COLLABORATIVE_TO_MUNICIPALITY = "municipality-collectable-html";
+    private static final String COLLABORATIVE_TO_MUNICIPALITY = "municipality-collectable";
 
     @Resource
     private MessageSource messageSource;

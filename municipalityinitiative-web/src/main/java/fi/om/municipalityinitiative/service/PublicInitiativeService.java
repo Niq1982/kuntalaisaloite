@@ -10,6 +10,7 @@ import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
+import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.util.*;
@@ -79,14 +80,18 @@ public class PublicInitiativeService {
         return initiativeId;
     }
 
+
+    @Transactional(readOnly = true)
     public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId) {
         return InitiativeViewInfo.parse(initiativeDao.getByIdWithOriginalAuthor(initiativeId));
     }
 
+    @Transactional(readOnly = true)
     public InitiativeCounts getInitiativeCounts(Maybe<Long> municipality) {
         return initiativeDao.getInitiativeCounts(municipality);
     }
 
+    @Transactional(readOnly = true)
     public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         return InitiativeViewInfo.parse(initiativeDao.getById(initiativeId, loginUserHolder.getInitiative().get().getManagementHash().get()));
@@ -153,12 +158,12 @@ public class PublicInitiativeService {
     }
 
     @Transactional(readOnly = false)
-    public void publishInitiative(Long initiativeId, boolean isCollobrative, LoginUserHolder loginUserHolder, Locale locale) {
+    public void publishAcceptedInitiative(Long initiativeId, boolean wantsToGatherPeople, LoginUserHolder loginUserHolder, Locale locale) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         assertAllowance("Publish initiative", getManagementSettings(initiativeId).isAllowPublish());
 
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
-        if (isCollobrative) {
+        if (wantsToGatherPeople) {
             initiativeDao.updateInitiativeType(initiativeId, InitiativeType.COLLABORATIVE);
             Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
             emailService.sendStatusEmail(initiative,initiative.getAuthor().getContactInfo().getEmail(), EmailMessageType.PUBLISHED_COLLECTING, locale);
@@ -182,9 +187,34 @@ public class PublicInitiativeService {
         return initiativeId;
     }
 
+    @Transactional(readOnly = false)
+    public void sendCollaborativeToMunicipality(Long initiativeId, LoginUserHolder loginUserHolder, Locale locale) {
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
+        assertAllowance("Send collaborative to municipality", getManagementSettings(initiativeId).isAllowSendToMunicipality());
+
+        initiativeDao.markInitiativeAsSent(initiativeId);
+        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
+        List<Participant> participants = participantDao.findAllParticipants(initiativeId);
+        String municipalityEmail = municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId());
+        emailService.sendCollaborativeToMunicipality(initiative, participants, municipalityEmail, locale);
+        emailService.sendStatusEmail(initiative, initiative.getAuthor().getContactInfo().getEmail(), EmailMessageType.SENT_TO_MUNICIPALITY, locale);
+    }
+
     private static void assertAllowance(String s, boolean allowed) {
         if (!allowed) {
             throw new OperationNotAllowedException("Operation not allowed: " + s);
+        }
+    }
+
+    @Transactional(readOnly = false)
+    public void sendToMunicipality(Long initiativeId, LoginUserHolder requiredLoginUserHolder, Locale locale) {
+        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
+
+        if (initiative.getType().isCollectable()) {
+            sendCollaborativeToMunicipality(initiativeId, requiredLoginUserHolder, locale);
+        }
+        else {
+            publishAcceptedInitiative(initiativeId, false, requiredLoginUserHolder, locale);
         }
     }
 }

@@ -130,14 +130,15 @@ public class InitiativeManagementController extends BaseController {
     @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_START_COLLECTING)
     public String publishAndStartCollecting(@PathVariable("id") Long initiativeId,
                                Locale locale, HttpServletRequest request) {
-        publicInitiativeService.publishInitiative(initiativeId, true, userService.getRequiredLoginUserHolder(request), locale);
+        publicInitiativeService.publishAcceptedInitiative(initiativeId, true, userService.getRequiredLoginUserHolder(request), locale);
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.START_COLLECTING, request);
     }
 
     @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_SEND_TO_MUNICIPALITY)
     public String publishAndSendToMunicipality(@PathVariable("id") Long initiativeId,
                                             Locale locale, HttpServletRequest request) {
-        publicInitiativeService.publishInitiative(initiativeId, false, userService.getRequiredLoginUserHolder(request), locale);
-        return redirectWithMessage(Urls.get(locale).view(initiativeId),RequestMessage.PUBLISH_AND_SEND, request);
+        publicInitiativeService.sendToMunicipality(initiativeId, userService.getRequiredLoginUserHolder(request), locale);
+    //        publicInitiativeService.publishAcceptedInitiative(initiativeId, false, userService.getRequiredLoginUserHolder(request), locale);
+        return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.PUBLISH_AND_SEND, request);
     }
 }

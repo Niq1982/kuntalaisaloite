@@ -13,6 +13,7 @@ import fi.om.municipalityinitiative.util.Locales;
 import org.joda.time.DateTime;
 
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 public class ParticipantToPdfExporter {
@@ -39,7 +40,7 @@ public class ParticipantToPdfExporter {
         this.participants = participants;
     }
 
-    public void createPdf(FileOutputStream outputStream) {
+    public void createPdf(OutputStream outputStream) {
         if (document != null) {
             document.close();
         }
