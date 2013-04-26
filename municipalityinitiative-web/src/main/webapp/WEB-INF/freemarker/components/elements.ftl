@@ -63,7 +63,10 @@
             <#assign createTime><@u.localDate initiative.createTime /></#assign>
             <@u.message key="initiative.date.create" args=[createTime] />
             <#assign stateTime><@u.localDate initiative.stateTime/></#assign>
-            <#if initiative.state??><span class="bull">&bull;</span> <@u.message key="initiative.stateInfo."+initiative.state args=[stateTime]/></#if>
+            <#if initiative.state??>
+                <span class="bull">&bull;</span> <@u.message key="initiative.stateInfo."+initiative.state args=[stateTime]/>
+                <#if initiative.state == InitiativeState.PUBLISHED && initiative.collectable><@u.message key="initiative.stateInfo.collecting" /></#if>
+            </#if>
         </#if>
     </span>
 

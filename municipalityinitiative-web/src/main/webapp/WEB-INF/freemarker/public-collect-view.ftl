@@ -152,7 +152,6 @@
         <@some.some pageTitle=initiative.name!"" />
     </#if>
 
-
     <#--
      * Public VIEW modals
      * 
