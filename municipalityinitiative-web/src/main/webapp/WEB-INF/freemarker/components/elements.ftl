@@ -77,9 +77,9 @@
  * 
  * Generates participant count infos
  *
+ * NOTE: Do we need this block when VETUMA-initiatives are possible
 -->
 <#macro participantCounts>
-
     <div class="top-margin cf">
         <div class="column col-1of2">
             <p><@u.message "participantCount.franchise.total"/><br />

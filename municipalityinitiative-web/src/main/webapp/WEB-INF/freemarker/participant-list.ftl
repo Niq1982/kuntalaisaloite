@@ -22,20 +22,9 @@
 
     <#-- VIEW BLOCKS -->
     <div class="view-block single public">
-    
-        <#-- TODO: Using request parameters. Finalize when we are sure that we want 2 different views-->
-        <#if RequestParameters['show']?? && RequestParameters['show'] == "others">
-            <h2><@u.message "participantList.noFranchise.title" /></h2>
-            <h3><@u.messageHTML key="participantList.publicNamesCount" args=[participantCount.noFranchise.total!""] /></h3>
-            
-            <@participantList participants.noFranchise />
-        <#else>
-            <h2><@u.message "participantList.franchise.title" /></h2>
-            <h3><@u.messageHTML key="participantList.publicNamesCount" args=[participantCount.franchise.total!""] /></h3>
-            
-            <@participantList participants.franchise />
-        </#if>
-
+        <h2><@u.message key="participantList.title" args=[participantCount.noFranchise.publicNames!""] /></h2>
+        
+        <@participantList participants.noFranchise />
     </div>
     
     <@returnPrevious />

@@ -106,7 +106,18 @@
         <div class="initiative-content-row last">
 
             <h2><@u.message "participants.title" /></h2>
-            <span class="user-count-total">${participantCount.total!""}</span>
+            
+            <div class="participants-block">
+                <span class="user-count-total">${participantCount.total!""}</span>
+            </div>
+            <div class="participants-block separate">
+                <span class="user-count-sub-total">
+                    <#if (participantCount.noFranchise.total > 0)>
+                        <#if (participantCount.noFranchise.publicNames > 0)><a class="trigger-tooltip" href="${urls.participantList(initiative.id)}" title="<@u.message key="participantCount.publicNames.show"/>"><@u.message key="participantCount.publicNames" args=[participantCount.noFranchise.publicNames!""] /></a><br/></#if>
+                        <#if (participantCount.noFranchise.privateNames > 0)><@u.message key="participantCount.privateNames" args=[participantCount.noFranchise.privateNames!""] /></p></#if>
+                    </#if>
+                </span>
+            </div>
             
             <#--
              * Do NOT show participate button:
@@ -118,14 +129,18 @@
             <#assign showParticipateForm = (hasErrors?? && hasErrors) || (RequestParameters['participateForm']?? && RequestParameters['participateForm'] == "true") />
             
             <#if !initiative.sentTime.present && requestMessages?? && !(requestMessages?size > 0) && !showParticipateForm>
-                <div class="participate">
+                <div class="participants-block">
                     <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>
-                    <@u.link href="#" labelKey="action.participate.infoLink" cssClass="push" />
+                </div>
+                <div class="participants-block last">
+                    <a title="<@u.messageHTML "action.participate.infoLink.title" />" href="#"><@u.messageHTML "action.participate.infoLink" /></a>
                 </div>
             </#if>
             <#if initiative.sentTime.present>
-                <div class="participate not-allowed">
-                    <@u.systemMessage path="participate.sentToMunicipality" type="info" showClose=false />
+                <div class="participants-block last">
+                    <div class="participate not-allowed">
+                        <@u.systemMessage path="participate.sentToMunicipality" type="info" showClose=false />
+                    </div>
                 </div>
             </#if>
             <br class="clear" />
@@ -139,9 +154,6 @@
                     </div>
                 </noscript></#noescape>
             </#if>
-
-            <@e.participantCounts />
-            
         </div>     
     </div>
 
