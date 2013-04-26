@@ -7,6 +7,8 @@ import com.google.common.collect.Lists;
 import com.mysema.commons.lang.Assert;
 import fi.om.municipalityinitiative.conf.EmailSettings;
 import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
+import fi.om.municipalityinitiative.newdto.service.Initiative;
+import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.pdf.ParticipantToPdfExporter;
 import fi.om.municipalityinitiative.util.Maybe;
 import freemarker.template.Configuration;
@@ -25,7 +27,6 @@ import javax.annotation.Resource;
 import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
 
 import java.io.ByteArrayOutputStream;
@@ -51,14 +52,14 @@ public class EmailMessageConstructor {
 
     private static final Logger log = LoggerFactory.getLogger(EmailMessageConstructor.class);
 
-    private static void addAttachment(MimeMessageHelper multipart, CollectableInitiativeEmailInfo emailInfo) {
+    private static void addAttachment(MimeMessageHelper multipart, Initiative initiative, List<Participant> participants) {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()){
-            // FIXME ParticipantToPdfExporter.createPdf(emailInfo, outputStream);
+            new ParticipantToPdfExporter(initiative, participants);
 
             byte[] bytes = outputStream.toByteArray();
             DataSource dataSource = new ByteArrayDataSource(bytes, "application/pdf");
 
-            String fileName = MessageFormat.format(FILE_NAME, new LocalDate().toString("yyyy-MM-dd"), emailInfo.getId());
+            String fileName = MessageFormat.format(FILE_NAME, new LocalDate().toString("yyyy-MM-dd"), initiative.getId());
 
             multipart.addAttachment(fileName, dataSource);
         } catch (Exception e) {
@@ -156,7 +157,9 @@ public class EmailMessageConstructor {
         private String subject;
         private String templateName;
         private Map<String, Object> dataMap;
-        private Maybe<CollectableInitiativeEmailInfo> attachmentEmailInfo = Maybe.absent();
+
+        private Maybe<Initiative> attachmentInitiative = Maybe.absent();
+        private Maybe<List<Participant>> attachmentParticipants = Maybe.absent();
 
         public EmailMessageDraft(String templateName) {
             this.templateName = templateName;
@@ -182,8 +185,9 @@ public class EmailMessageConstructor {
             return this;
         }
 
-        public EmailMessageDraft withAttachment(CollectableInitiativeEmailInfo attachmentEmailInfo) {
-            this.attachmentEmailInfo = Maybe.of(attachmentEmailInfo);
+        public EmailMessageDraft withAttachment(Initiative initiative, List<Participant> participants) {
+            this.attachmentInitiative = Maybe.of(initiative);
+            this.attachmentParticipants = Maybe.of(participants);
             return this;
         }
 
@@ -203,8 +207,8 @@ public class EmailMessageConstructor {
                 return;
             }
 
-            if (attachmentEmailInfo.isPresent()) {
-                addAttachment(mimeMessageHelper, attachmentEmailInfo.get());
+            if (attachmentInitiative.isPresent()) {
+                addAttachment(mimeMessageHelper, attachmentInitiative.get(), attachmentParticipants.get());
             }
 
             try {

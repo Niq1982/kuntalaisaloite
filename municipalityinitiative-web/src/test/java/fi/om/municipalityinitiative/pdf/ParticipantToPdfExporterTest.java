@@ -21,14 +21,12 @@ import java.util.Random;
 
 public class ParticipantToPdfExporterTest {
 
-    //    private static String FILE = "/Users/paulika/Documents/test.pdf";
-    private static String FILE = "/Users/paulika/Documents/work/kua_hg/root/municipalityinitiative-web/test.pdf";
+    private static String FILE = System.getProperty("user.dir")+"/Osallistujat.pdf";
 
     public static void main(String[] moimoiii) throws FileNotFoundException {
+
         try (FileOutputStream outputStream = new FileOutputStream(FILE)) {
             new ParticipantToPdfExporter(createInitiative(), createParticipants()).createPdf(outputStream);
-            outputStream.close();
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

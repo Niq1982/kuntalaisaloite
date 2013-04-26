@@ -49,9 +49,8 @@ public class MailSendingEmailService implements EmailService {
                 .withSendTo(initiative.getAuthor().getContactInfo().getEmail())
                 .withSubject(messageSource.getMessage("email.not.collectable.municipality.subject", toArray(initiative.getName()), locale))
                 .withDataMap(toDataMap(initiative, locale))
-                .withAttachment(null)
+                .withAttachment(initiative, participants)
                 .send();
-
     }
 
     @Override
