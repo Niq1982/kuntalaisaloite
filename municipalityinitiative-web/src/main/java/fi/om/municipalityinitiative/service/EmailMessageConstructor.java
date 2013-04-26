@@ -6,7 +6,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.mysema.commons.lang.Assert;
 import fi.om.municipalityinitiative.conf.EmailSettings;
-import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.pdf.ParticipantToPdfExporter;

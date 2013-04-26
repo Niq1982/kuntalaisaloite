@@ -1,7 +1,5 @@
 package fi.om.municipalityinitiative.service;
 
-import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
-import fi.om.municipalityinitiative.newdto.email.InitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 

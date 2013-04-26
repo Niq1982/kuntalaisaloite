@@ -1,14 +1,9 @@
 package fi.om.municipalityinitiative.pdf;
 
 import com.google.common.collect.Lists;
-import fi.om.municipalityinitiative.newdto.email.CollectableInitiativeEmailInfo;
-import fi.om.municipalityinitiative.newdto.email.InitiativeEmailInfo;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
-import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
-import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.joda.time.LocalDate;
@@ -50,19 +45,4 @@ public class ParticipantToPdfExporterTest {
         return participants;
     }
 
-    private static CollectableInitiativeEmailInfo createEmailInfo() {
-
-        Initiative initiative = new Initiative();
-        initiative.setSentTime(Maybe.of(new LocalDate()));
-        initiative.setMunicipality(new Municipality(1, "Helsinki", "Helsingfors"));
-
-        initiative.setName("Koira pois lähiöistä");
-        InitiativeEmailInfo emailInfo = InitiativeEmailInfo.parse(new ContactInfo(), InitiativeViewInfo.parse(initiative), "");
-
-        List<Participant> participants = createParticipants();
-
-        return CollectableInitiativeEmailInfo.parse(emailInfo, "", participants);
-
-
-    }
 }
