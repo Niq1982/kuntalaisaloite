@@ -98,6 +98,7 @@ public class MailSendingEmailService implements EmailService {
         dataMap.put("localizations", new EmailLocalizationProvider(messageSource, locale));
         dataMap.put("urls", Urls.get(locale));
         dataMap.put("locale", locale);
+        dataMap.put("altLocale", new Locale ("sv"));
         addEnum(EmailMessageType.class, dataMap);
         return dataMap;
     }
