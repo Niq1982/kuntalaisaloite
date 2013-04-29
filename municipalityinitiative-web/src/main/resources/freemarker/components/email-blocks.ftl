@@ -78,9 +78,9 @@
  *
  * @param type 'text' or 'html'
  -->
-<#macro emailFooter type="">
+<#macro emailFooter type="" postFix="">
     <#if type=="html">
-        <p style="${footerFont!""}"><@u.message "email.footer.sendFrom" />
+        <p style="${footerFont!""}"><@u.message "email.footer.sendFrom"+postFix />
         <#if initiative.state?? && initiative.state == "PUBLISHED">
             <@u.message "email.footer.viewLink" /><br/><@u.link urls.get(switchLocale!locale).view(initiative.id) />
         </#if>
@@ -88,7 +88,7 @@
         <br/>
         <p style="${footerFont!""}"><@u.message "email.footer" /></p>
     <#else>
-        <@u.message "email.footer.sendFrom" />
+        <@u.message "email.footer.sendFrom"+postFix />
         <#if initiative.state?? && initiative.state == "PUBLISHED">
             <@u.message "email.footer.viewLink" />
             
@@ -157,14 +157,14 @@
  -->
 <#macro participants type="">
     <#if type == "html">
-        <h4 style="${h4!""}"><@u.messageHTML key="email.participantCount.total" /> ${participantCount.total!"0"}</h4>
-        <#if participantCount.total?? && (participantCount.total > 0)>
-            <p style="${pBothMargins!""}"><@u.message "email.participantCount.attachment" /></p>
+        <h4 style="${h4!""}"><@u.messageHTML key="email.participantCount.total" /> ${initiative.participantCount!"0"}</h4>
+        <#if initiative.participantCount?? && (initiative.participantCount > 0)>
+            <p style="${pBottomMargin!""}"><@u.message "email.participantCount.attachment" /></p>
         </#if>
     <#else>
-        <@u.message key="email.participantCount.total" /> ${participantCount.total!"0"}
+        <@u.message key="email.initiative.participantCount" /> ${initiative.participantCount!"0"}
 
-        <#if participantCount.total?? && (participantCount.total > 0)>
+        <#if initiative.participantCount?? && (initiative.participantCount > 0)>
             <@u.message "email.participantCount.attachment" />
         </#if>
     </#if>

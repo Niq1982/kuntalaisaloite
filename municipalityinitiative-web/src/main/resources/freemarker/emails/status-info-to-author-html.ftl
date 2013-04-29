@@ -25,7 +25,7 @@
     
     <@u.spacer "15" />
     
-    <@b.emailFooter "html" />
+    <@b.emailFooter type />
     
     <@u.spacer "15" />
     
@@ -45,10 +45,11 @@
     
     <@u.spacer "15" />
     
-    <@b.emailFooter "html" />
+    <@b.emailFooter type />
     
     <@u.spacer "15" />
     
+    <#-- Switch to default locale -->
     <#global switchLocale = locale />
 
 </@l.emailHtml>

@@ -10,7 +10,7 @@
 
 <#assign title><@u.message "email.initiative" /></#assign>
 
-<@l.emailHtml "municipality-collectable" title>
+<@l.emailHtml template="municipality-collectable" title=title footer=false>
 
     <#if (initiative.comment)?has_content>
         <@b.comment type initiative.comment "email.commentToMunicipality" />
@@ -35,6 +35,7 @@
     
     <@u.spacer "15" />
 
+    <@b.emailFooter type ".sentToMunicipality" />
 
 </@l.emailHtml>
 
