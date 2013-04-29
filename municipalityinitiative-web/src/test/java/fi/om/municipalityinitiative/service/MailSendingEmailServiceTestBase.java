@@ -65,7 +65,7 @@ public abstract class MailSendingEmailServiceTestBase {
         initiative.setCreateTime(new LocalDate(2010, 1, 1));
         initiative.setProposal(INITIATIVE_PROPOSAL);
         initiative.setName(INITIATIVE_NAME);
-        initiative.setComment(COMMENT);
+        initiative.setExtraInfo(COMMENT);
         initiative.setModeratorComment(MODERATOR_COMMENT);
 
         Author author = new Author();

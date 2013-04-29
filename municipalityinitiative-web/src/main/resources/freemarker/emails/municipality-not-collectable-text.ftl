@@ -5,8 +5,8 @@
 
 <@u.message "email.initiative" /> - ${initiative.municipality.getLocalizedName(locale)!""}
 
-<#if (initiative.comment)?has_content>
-    <@b.comment type initiative.comment "email.commentToMunicipality" />
+<#if (initiative.extraInfo)?has_content>
+    <@b.comment type initiative.extraInfo "email.commentToMunicipality" />
     ----
     
 </#if>

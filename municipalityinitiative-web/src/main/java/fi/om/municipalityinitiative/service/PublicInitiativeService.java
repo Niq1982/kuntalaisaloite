@@ -117,7 +117,7 @@ public class PublicInitiativeService {
         InitiativeUIUpdateDto updateDto = new InitiativeUIUpdateDto();
         updateDto.setContactInfo(initiative.getAuthor().getContactInfo());
         updateDto.setShowName(initiative.getShowName());
-        updateDto.setExtraInfo(initiative.getComment());
+        updateDto.setExtraInfo(initiative.getExtraInfo());
 
         return updateDto;
     }

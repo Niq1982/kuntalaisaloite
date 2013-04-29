@@ -29,7 +29,7 @@ public class OmInitiativeService {
     MunicipalityDao municipalityDao;
 
     @Transactional(readOnly = false)
-    public void accept(Long initiativeId, String comment, Locale locale) {
+    public void accept(Long initiativeId, String moderatorComment, Locale locale) {
         userService.requireOmUser();
         Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
 
@@ -37,7 +37,7 @@ public class OmInitiativeService {
             throw new OperationNotAllowedException("Not allowed to accept initiative");
         }
 
-        initiativeDao.updateModeratorComment(initiativeId, comment);
+        initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
         if (initiative.getType().equals(InitiativeType.SINGLE)) {
             initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
             initiativeDao.markInitiativeAsSent(initiativeId);
@@ -54,13 +54,13 @@ public class OmInitiativeService {
     }
 
     @Transactional(readOnly = false)
-    public void reject(Long initiativeId, String comment, Locale locale) {
+    public void reject(Long initiativeId, String moderatorComment, Locale locale) {
         userService.requireOmUser();
         if (!ManagementSettings.of(initiativeDao.getByIdWithOriginalAuthor(initiativeId)).isAllowOmAccept()) {
             throw new OperationNotAllowedException("Not allowed to reject initiative");
 
         }
-        initiativeDao.updateModeratorComment(initiativeId, comment);
+        initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.DRAFT);
 
         Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);

@@ -20,7 +20,7 @@ public class InitiativeDraftUIEditDtoTest {
         assertThat(dto.getContactInfo().getPhone(), is(original.getAuthor().getContactInfo().getPhone()));
         assertThat(dto.getContactInfo().getName(), is(original.getAuthor().getContactInfo().getName()));
         assertThat(dto.getContactInfo().getEmail(), is(original.getAuthor().getContactInfo().getEmail()));
-        assertThat(dto.getExtraInfo(), is(original.getComment()));
+        assertThat(dto.getExtraInfo(), is(original.getExtraInfo()));
         assertThat(dto.getName(), is(original.getName()));
         assertThat(dto.getProposal(), is(original.getProposal()));
         assertThat(dto.getState(), is(original.getState()));

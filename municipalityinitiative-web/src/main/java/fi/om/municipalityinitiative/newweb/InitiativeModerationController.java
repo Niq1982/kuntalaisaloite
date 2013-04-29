@@ -49,7 +49,7 @@ public class InitiativeModerationController extends BaseController{
 
     @RequestMapping(value = {MODERATION_FI, MODERATION_SV}, method = POST, params = ACTION_ACCEPT_INITIATIVE)
     public String acceptInitiative(@PathVariable("id") Long initiativeId,
-                                   @RequestParam("comment") String comment,
+                                   @RequestParam("moderatorComment") String comment,
                                    Locale locale, HttpServletRequest request) {
 
         omInitiativeService.accept(initiativeId, comment, locale);
@@ -58,7 +58,7 @@ public class InitiativeModerationController extends BaseController{
 
     @RequestMapping(value = {MODERATION_FI, MODERATION_SV}, method = POST, params = ACTION_REJECT_INITIATIVE)
     public String rejectInitiative(@PathVariable("id") Long initiativeId,
-                                   @RequestParam("comment") String comment,
+                                   @RequestParam("moderatorComment") String comment,
                                    Locale locale, HttpServletRequest request) {
 
         omInitiativeService.reject(initiativeId, comment, locale);

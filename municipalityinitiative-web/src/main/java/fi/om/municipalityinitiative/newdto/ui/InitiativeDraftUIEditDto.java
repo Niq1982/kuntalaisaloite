@@ -44,7 +44,7 @@ public class InitiativeDraftUIEditDto {
 
     public static InitiativeDraftUIEditDto parse(Initiative initiative) {
         InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto();
-        editDto.setExtraInfo(initiative.getComment());
+        editDto.setExtraInfo(initiative.getExtraInfo());
         editDto.setContactInfo(new ContactInfo(initiative.getAuthor().getContactInfo()));
         editDto.setName(initiative.getName());
         editDto.setProposal(initiative.getProposal());

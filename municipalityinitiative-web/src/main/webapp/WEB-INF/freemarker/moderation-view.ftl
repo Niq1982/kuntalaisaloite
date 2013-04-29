@@ -41,7 +41,7 @@
                     <input type="hidden" name="${UrlConstants.PARAM_MANAGEMENT_CODE}" value="${initiative.managementHash.value}"/>
                     
                     <div class="input-block-content no-top-margin">
-                        <textarea name="comment" class="collapse" ></textarea>
+                        <textarea name="moderatorComment" class="collapse" ></textarea>
                     </div>
                     
                     <div class="input-block-content">
@@ -62,7 +62,7 @@
                     <input type="hidden" name="${UrlConstants.PARAM_MANAGEMENT_CODE}" value="${initiative.managementHash.value}"/>
                     
                     <div class="input-block-content no-top-margin">
-                        <textarea name="comment" class="collapse" ></textarea>
+                        <textarea name="moderatorComment" class="collapse" ></textarea>
                     </div>
                     
                     <div class="input-block-content">

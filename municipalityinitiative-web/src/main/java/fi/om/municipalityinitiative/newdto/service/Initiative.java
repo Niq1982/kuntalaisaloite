@@ -22,7 +22,7 @@ public class Initiative {
     private Maybe<LocalDate> sentTime = Maybe.absent();
     private InitiativeType type;
     private InitiativeState state;
-    private String comment;
+    private String extraInfo;
     private Author author;
     private LocalDate stateTime;
     private String moderatorComment;
@@ -132,12 +132,12 @@ public class Initiative {
         this.state = state;
     }
 
-    public String getComment() {
-        return comment;
+    public String getExtraInfo() {
+        return extraInfo;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setExtraInfo(String extraInfo) {
+        this.extraInfo = extraInfo;
     }
 
     public LocalDate getStateTime() {
