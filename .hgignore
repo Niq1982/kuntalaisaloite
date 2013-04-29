@@ -21,6 +21,7 @@ syntax: glob
 municipalityinitiative-web/.idea/*
 
 syntax: regexp
+^(.)*\.DS_Store$
 ^municipalityinitiative-web/src/main/webapp/css/kuntalaisaloite-ie\.css$
 ^municipalityinitiative-web/src/main/webapp/css/kuntalaisaloite-iframe\.css$
 ^municipalityinitiative-web/src/main/webapp/css/kuntalaisaloite\.css$
