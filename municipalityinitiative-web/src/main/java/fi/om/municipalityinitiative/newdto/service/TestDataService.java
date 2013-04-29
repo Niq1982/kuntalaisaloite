@@ -23,7 +23,7 @@ public class TestDataService {
     public Long createTestMunicipalityInitiative(Initiative initiative) {
 
         Long initiativeId = initiativeDao.prepareInitiative(initiative.getMunicipality().getId());
-        Long participantId = participantDao.prepareParticipant(initiativeId, initiative.getMunicipality().getId(), null, false);
+        Long participantId = participantDao.prepareParticipant(initiativeId, initiative.getMunicipality().getId(), null, Membership.community, false);
         initiativeDao.assignAuthor(initiativeId, participantId, DEFAULT_MANAGEMENT_HASH);
 
         InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto();

@@ -10,6 +10,7 @@ import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.sql.QParticipant;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
+import fi.om.municipalityinitiative.util.Membership;
 import org.joda.time.DateTime;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -144,6 +145,7 @@ public class TestHelper {
                 .set(QParticipant.participant.showName, initiativeDraft.publicName)
                 .set(QParticipant.participant.email, initiativeDraft.authorEmail)
                 .set(QParticipant.participant.franchise, true) // Changing these will affect on tests
+                .set(QParticipant.participant.membershipType, initiativeDraft.municipalityMembership)
                 .executeWithKey(QParticipant.participant.id);
 
         lastAuthorId = queryFactory.insert(QAuthor.author)
@@ -198,10 +200,16 @@ public class TestHelper {
         public String sentComment = DEFAULT_SENT_COMMENT;
 
         public Long authorMunicipality;
+        public Membership municipalityMembership = Membership.none;
 
         public InitiativeDraft(Long municipalityId) {
             this.municipalityId = municipalityId;
             this.authorMunicipality = municipalityId;
+        }
+
+        public InitiativeDraft withMunicipalityMembership(Membership municipalityMembership) {
+            this.municipalityMembership = municipalityMembership;
+            return this;
         }
 
         public InitiativeDraft withAuthorMunicipality(Long municipalityId) {

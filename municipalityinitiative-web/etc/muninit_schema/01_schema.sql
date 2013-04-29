@@ -3,6 +3,7 @@ drop type if exists initiativeState;
 
 create type initiativeType as enum ('UNDEFINED', 'SINGLE','COLLABORATIVE','COLLABORATIVE_COUNCIL','COLLABORATIVE_CITIZEN');
 create type initiativeState as enum('DRAFT','REVIEW','ACCEPTED', 'PUBLISHED');
+create type membershipType as enum('community','company','property','none');
 
 create table municipality (
 	id bigserial,
@@ -57,6 +58,8 @@ create table participant (
 
     email varchar(100),
     confirmation_code varchar(20), -- Being set as null after confirmation
+
+    membership_type membershipType constraint participant_membership_type_nn not null default 'none',
 
     constraint participant_pk primary key (id),
     constraint participant_municipality_initiative_id_fk foreign key (municipality_initiative_id) references municipality_initiative(id),

@@ -79,7 +79,7 @@ public class JsonDataService {
         participantCount.getFranchise().setPublicNames(1);
 
         ArrayList<Participant> publicParticipants = Lists.<Participant>newArrayList();
-        publicParticipants.add(new Participant(new LocalDate(2010, 1, 1), "Teemu Teekkari", true, ApiController.TAMPERE, ""));
+        publicParticipants.add(new Participant(new LocalDate(2010, 1, 1), "Teemu Teekkari", true, ApiController.TAMPERE, "", null));
 
         Initiative initiativeInfo = new Initiative();
         initiativeInfo.setId(1L);

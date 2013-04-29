@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.ui.Participants;
+import fi.om.municipalityinitiative.util.Membership;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,9 +35,9 @@ public class ParticipantServiceTest {
     public void parses_participants_according_to_franchise() {
 
         List<Participant> participants = Lists.newArrayList();
-        participants.add(new Participant(DATE, "HasFranchise Foo", true, MUNICIPALITY, ""));
-        participants.add(new Participant(DATE, "HasFranchise Bar", true,MUNICIPALITY, ""));
-        participants.add(new Participant(DATE, "HasNoFranchise Winamp", false,MUNICIPALITY, ""));
+        participants.add(new Participant(DATE, "HasFranchise Foo", true, MUNICIPALITY, "", Membership.none));
+        participants.add(new Participant(DATE, "HasFranchise Bar", true,MUNICIPALITY, "", Membership.none));
+        participants.add(new Participant(DATE, "HasNoFranchise Winamp", false,MUNICIPALITY, "", Membership.none));
 
         stub(participantDaoMock.findPublicParticipants(ID)).toReturn(participants);
 

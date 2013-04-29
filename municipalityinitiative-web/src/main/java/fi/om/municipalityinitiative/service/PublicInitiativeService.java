@@ -71,7 +71,12 @@ public class PublicInitiativeService {
     public Long prepareInitiative(PrepareInitiativeUICreateDto createDto, Locale locale) {
 
         Long initiativeId = initiativeDao.prepareInitiative(createDto.getMunicipality());
-        Long participantId = participantDao.prepareParticipant(initiativeId, createDto.getHomeMunicipality(), createDto.getParticipantEmail(), false); // XXX: Remove franchise?
+        Long participantId = participantDao.prepareParticipant(initiativeId,
+                createDto.getHomeMunicipality(),
+                createDto.getParticipantEmail(),
+                createDto.hasMunicipalMembership() ? createDto.getMunicipalMembership() : Membership.none,
+                false); // XXX: Remove franchise?
+                        // XXX: Create dto?
         String managementHash = RandomHashGenerator.randomString(40);
         initiativeDao.assignAuthor(initiativeId, participantId, managementHash);
 

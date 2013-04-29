@@ -17,6 +17,7 @@ import fi.om.municipalityinitiative.sql.QMunicipality;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.sql.QParticipant;
 import fi.om.municipalityinitiative.util.MaybeHoldingHashMap;
+import fi.om.municipalityinitiative.util.Membership;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -44,6 +45,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .set(participant.showName, createDto.isShowName())
                 .set(participant.email, createDto.getEmail())
                 .set(participant.confirmationCode, confirmationCode)
+                .set(participant.membershipType, createDto.getMunicipalMembership())
                 .executeWithKey(participant.id);
 
         return participantId;
@@ -68,12 +70,13 @@ public class JdbcParticipantDao implements ParticipantDao {
     @Override
     @Transactional(readOnly = true)
     // Preparing because we do not know participants name
-    public Long prepareParticipant(Long initiativeId, Long homeMunicipality, String email, Boolean franchise) {
+    public Long prepareParticipant(Long initiativeId, Long homeMunicipality, String email, Membership membership, Boolean franchise) {
         Long participantId = queryFactory.insert(participant)
                 .set(participant.franchise, franchise)
                 .set(participant.municipalityId, homeMunicipality)
                 .set(participant.municipalityInitiativeId, initiativeId)
                 .set(participant.email, email)
+                .set(participant.membershipType, membership)
                 .set(participant.showName, true) // Default is true
                 .executeWithKey(participant.id);
 
@@ -161,7 +164,8 @@ public class JdbcParticipantDao implements ParticipantDao {
                                     row.get(QMunicipality.municipality.name),
                                     row.get(QMunicipality.municipality.nameSv)
                             ),
-                            row.get(participant.email)
+                            row.get(participant.email),
+                            row.get(participant.membershipType)
                     );
 
                 }

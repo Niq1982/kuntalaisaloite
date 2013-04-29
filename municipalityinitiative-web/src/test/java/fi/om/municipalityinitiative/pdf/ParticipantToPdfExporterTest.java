@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.util.Maybe;
+import fi.om.municipalityinitiative.util.Membership;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.joda.time.LocalDate;
 
@@ -39,7 +40,7 @@ public class ParticipantToPdfExporterTest {
         List<Participant> participants = Lists.newArrayList();
         for (int i = 0; i < 1000; ++i) {
             Municipality municipality = new Municipality(new Random().nextLong(), RandomStringUtils.randomAlphabetic(10), RandomStringUtils.randomAlphabetic(10));
-            Participant participant = new Participant(new LocalDate(), RandomStringUtils.randomAlphabetic(20), new Random().nextBoolean(), municipality, "");
+            Participant participant = new Participant(new LocalDate(), RandomStringUtils.randomAlphabetic(20), new Random().nextBoolean(), municipality, "", Membership.company);
             participants.add(participant);
         }
         return participants;

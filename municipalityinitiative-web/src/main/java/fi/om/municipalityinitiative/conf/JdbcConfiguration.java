@@ -10,6 +10,7 @@ import com.mysema.query.sql.types.LocalDateType;
 import com.mysema.query.types.Ops;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
+import fi.om.municipalityinitiative.util.Membership;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -68,6 +69,7 @@ public class JdbcConfiguration {
         configuration.register(new LocalDateType());
         configuration.register("municipality_initiative", "type", new EnumAsObjectType<>(InitiativeType.class));
         configuration.register("municipality_initiative", "state", new EnumAsObjectType<>(InitiativeState.class));
+        configuration.register("participant", "membership_type", new EnumAsObjectType<>(Membership.class));
         return configuration;
     }
 

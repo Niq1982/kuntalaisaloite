@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.util.Maybe;
+import fi.om.municipalityinitiative.util.Membership;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
 import org.junit.Ignore;
@@ -34,8 +35,8 @@ public class JsonJokuParseriTest {
         participantCount.getFranchise().setPublicNames(1);
 
         ArrayList<Participant> publicParticipants = Lists.<Participant>newArrayList();
-        publicParticipants.add(new Participant(new LocalDate(2010, 1, 1), "Teemu Teekkari", true, TAMPERE, ""));
-        publicParticipants.add(new Participant(new LocalDate(2010, 1, 1), "Taina Teekkari", false, new Municipality(2L, "Tampere", "Tammerfors"), ""));
+        publicParticipants.add(new Participant(new LocalDate(2010, 1, 1), "Teemu Teekkari", true, TAMPERE, "", Membership.community));
+        publicParticipants.add(new Participant(new LocalDate(2010, 1, 1), "Taina Teekkari", false, TAMPERE, "", Membership.company));
 
         Initiative initiativeInfo = new Initiative();
         initiativeInfo.setId(1L);

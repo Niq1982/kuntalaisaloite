@@ -424,6 +424,7 @@ public class PublicInitiativeServiceIntegrationTest {
         participant.setParticipantName("Some Name");
         participant.setShowName(true);
         participant.setHomeMunicipality(testMunicipality.getId());
+        participant.setMunicipality(testMunicipality.getId());
         return participant;
     }
 

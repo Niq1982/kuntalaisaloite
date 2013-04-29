@@ -8,6 +8,7 @@ import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.sql.QParticipant;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
+import fi.om.municipalityinitiative.util.Membership;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +33,7 @@ public class JdbcParticipantDaoTest {
     public static final boolean PARTICIPANT_SHOW_NAME = true;
     public static final String CONFIRMATION_CODE = "confirmationCode";
     public static final String ALREADY_CONFIRMED = null;
+    public static final Membership PARTICIPANT_MEMBERSHIP = Membership.property;
 
     @Resource
     ParticipantDao participantDao;
@@ -72,6 +74,7 @@ public class JdbcParticipantDaoTest {
         assertThat(participant.getHomeMunicipality().getId(), is(otherMunicipalityId));
         assertThat(participant.getParticipateDate(), is(notNullValue()));
         assertThat(participant.getEmail(), is(PARTICIPANT_EMAIL));
+        assertThat(participant.getMembership(), is(PARTICIPANT_MEMBERSHIP));
     }
 
     @Test
@@ -249,6 +252,7 @@ public class JdbcParticipantDaoTest {
         participantCreateDto.setHomeMunicipality(homeMunicipality);
         participantCreateDto.setFranchise(franchise);
         participantCreateDto.setShowName(publicName);
+        participantCreateDto.setMunicipalMembership(PARTICIPANT_MEMBERSHIP);
         return participantDao.create(participantCreateDto, ALREADY_CONFIRMED);
     }
 
@@ -269,6 +273,7 @@ public class JdbcParticipantDaoTest {
         participantCreateDto.setEmail(PARTICIPANT_EMAIL);
         participantCreateDto.setFranchise(PARTICIPANT_FRANCHISE);
         participantCreateDto.setShowName(PARTICIPANT_SHOW_NAME);
+        participantCreateDto.setMunicipalMembership(PARTICIPANT_MEMBERSHIP);
         return participantCreateDto;
     }
 
