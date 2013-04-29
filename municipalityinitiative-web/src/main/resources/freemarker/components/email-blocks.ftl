@@ -82,7 +82,7 @@
     <#if type=="html">
         <p style="${footerFont!""}"><@u.message "email.footer.sendFrom" />
         <#if initiative.state?? && initiative.state == "PUBLISHED">
-            <@u.message "email.footer.viewLink" /><br/><@u.link urls.view(initiative.id) />
+            <@u.message "email.footer.viewLink" /><br/><@u.link urls.get(switchLocale!locale).view(initiative.id) />
         </#if>
         </p>
         <br/>
@@ -91,7 +91,8 @@
         <@u.message "email.footer.sendFrom" />
         <#if initiative.state?? && initiative.state == "PUBLISHED">
             <@u.message "email.footer.viewLink" />
-            <@u.link urls.view(initiative.id) />
+            
+            ${urls.get(switchLocale!locale).view(initiative.id)}
         </#if>
         
         <@u.message "email.footer" />
@@ -237,24 +238,28 @@
 </#macro>
 
 <#macro publicViewLink type="">
+    <#assign viewURL = urls.get(switchLocale!locale).view(initiative.id) />
+
     <#if type == "html">
         <p style="${pBothMargins!""}"><@u.message "email.publicViewLink" /><br/>
-        <@u.link urls.view(initiative.id) urls.view(initiative.id) /></span>
+        <@u.link viewURL viewURL /></span>
     <#else>
         <@u.message "email.publicViewLink" />
         
-        ${urls.view(initiative.id)}
+        ${viewURL}
     </#if>
 </#macro>
 
 <#macro adminViewLink type="">
+    <#assign adminURL = urls.get(switchLocale!locale).loginAuthor(initiative.id, initiative.managementHash.value) />
+    
     <#if type == "html">
         <p style="${pBothMargins!""}"><@u.message "email.adminViewLink" /></p>
-        <p style="${pBothMargins!""} ${smallFont!""}"><@u.link urls.loginAuthor(initiative.id, initiative.managementHash.value) urls.loginAuthor(initiative.id, initiative.managementHash.value) /></p>
+        <p style="${pBothMargins!""} ${smallFont!""}"><@u.link adminURL adminURL /></p>
     <#else>
         <@u.message "email.adminViewLink" />
         
-        ${urls.loginAuthor(initiative.id, initiative.managementHash.value)}
+        ${adminURL}
     </#if>
 </#macro>
 

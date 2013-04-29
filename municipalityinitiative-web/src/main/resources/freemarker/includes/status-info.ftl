@@ -275,7 +275,7 @@
     
 <#elseif emailMessageType == EmailMessageType.SENT_TO_MUNICIPALITY>
     <#-- Optional title overrides default title -->
-    <#assign statusTitle><@u.message messageKeyPrefix+".title" /> ${initiative.municipality.getLocalizedName(switchLocale!locale)!""}</#assign>
+    <#assign statusTitleSv><@u.message messageKeyPrefix+".title" /> ${initiative.municipality.getLocalizedName(switchLocale!locale)!""}</#assign>
     <#-- TEXT -->
     <#assign statusInfoSv>
     

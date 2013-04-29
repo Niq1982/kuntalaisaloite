@@ -33,7 +33,9 @@
     
     <#global switchLocale = altLocale />
     
-    <#if !statusTitle??>
+    <#if statusTitleSv??>
+        <#assign title=statusTitleSv />
+    <#else>
         <#assign title><@u.message "email.status.info."+emailMessageType+".title" /></#assign>
     </#if>
     
