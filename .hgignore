@@ -15,13 +15,13 @@ municipalityinitiative-loadtests/*.log
 municipalityinitiative-loadtests/*.pyc
 
 syntax: glob
-**.DS_Store
 **.orig
 **.iml
 .idea/*
 municipalityinitiative-web/.idea/*
 
 syntax: regexp
+^(.)*\.DS_Store$
 ^municipalityinitiative-web/src/main/webapp/css/kuntalaisaloite-ie\.css$
 ^municipalityinitiative-web/src/main/webapp/css/kuntalaisaloite-iframe\.css$
 ^municipalityinitiative-web/src/main/webapp/css/kuntalaisaloite\.css$

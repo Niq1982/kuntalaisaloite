@@ -134,7 +134,7 @@ public class InitiativeManagementController extends BaseController {
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.START_COLLECTING, request);
     }
 
-    // Note that this server two functionalities:
+    // Note that this serves two functionalities:
     // 1. Initiative is accepted but published, and author wants to send it straight to the municipality
     // 2. Author has gathered enough people for the initiative and wants to send it to municipality
     @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_SEND_TO_MUNICIPALITY)
