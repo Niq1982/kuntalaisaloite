@@ -69,7 +69,7 @@ public class BaseController {
         }
     }
 
-    protected void addRequestAttribute(String attributeValue, Model model, HttpServletRequest request) {
+    protected static void addRequestAttribute(String attributeValue, HttpServletRequest request) {
         FlashMap flashMap = RequestContextUtils.getOutputFlashMap(request);
         flashMap.put(REQUEST_ATTRIBUTE_KEY, attributeValue);
     }
@@ -92,7 +92,7 @@ public class BaseController {
     
 
     @SuppressWarnings("unchecked")
-    private List<RequestMessage> getRequestMessages(HttpServletRequest request) {
+    private static List<RequestMessage> getRequestMessages(HttpServletRequest request) {
         Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request);
         if (flashMap != null) {
             return (List<RequestMessage>) flashMap.get(REQUEST_MESSAGES_KEY);
@@ -111,7 +111,7 @@ public class BaseController {
         return object == null ? null : object.toString();
     }
 
-    private <T extends Enum<?>> void addEnum(Class<T> enumType, Model model) {
+    private static <T extends Enum<?>> void addEnum(Class<T> enumType, Model model) {
         Map<String, T> values = Maps.newHashMap();
         for (T value : enumType.getEnumConstants()) {
             values.put(value.name(), value);

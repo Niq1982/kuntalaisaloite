@@ -45,6 +45,13 @@
         .initiative-info { width:580px; }
     </style>
 
+    <#if requestAttribute??>
+        <div class="system-msg msg-success">
+            <#--<#if type == 'info'><span class="icon-small arrow-right-3 floated"></span></#if>-->
+            Aloitteet luotu. Linkki viimeisimmän hallintasivulle: <a href="${requestAttribute}">${requestAttribute}</a>
+        </div>
+    </#if>
+
     <h1>Testidatan luominen</h1>
 
     <div class="msg-block">
@@ -75,27 +82,27 @@
                 <h3>Aloitteen luoja</h3>
                 <div class="user-details cf">
                     <span class="user-col title">Aloitteen luoja</span><span class="user-col title">Kunta</span>
-                    <span class="user-col title">Tyyppi</span>
                     <span class="user-col title">Nimi saa näkyä</span>
+                    <span class="user-col title">Sähköposti</span>
                     
                     <br class="clear" />
                     
                     <#if testInitiatives??>
-                        <span class="user-col">${testInitiatives[0].contactInfo.name!""}</span><span class="user-col" >Aloitteen kunta</span>
-                        <#--<span class="user-col" >${(testInitiatives[0].franchise)?string("äänioikeutettu","jäsen")}</span>-->
-                        <span class="user-col" >${(testInitiatives[0].showName)?string("kyllä","ei")}</span>
+                        <span class="user-col">${testInitiatives[0].author.contactInfo.name!""}</span><span class="user-col" >Aloitteen kunta</span>
+                        <span class="user-col" >${(true)?string("kyllä","ei")}</span>
+                        <span class="user-col"><input type="email" required="required" name="authorEmail"/></span>
                     </#if>
                     
                     
                     
                 </div>
-                
+
                 <br class="clear" />
                 
                 <h3>Valitse osallistujien lukumäärä</h3>
                 <div class="user-details">
-                    <span class="user-col title">Osallistujat</span><span class="user-col title">Kunta</span>
-                    <span class="user-col title">Tyyppi</span><span class="user-col title">Nimi saa näkyä</span>
+                    <span class="user-col title">Osallistujat</span>
+                    <span class="user-col title">Nimi saa näkyä</span>
                     <span class="user-col title">Lukumäärä</span>
                     
                     <br class="clear" />
@@ -104,13 +111,12 @@
                         <#list testParticipants as participant>
                             <span class="user-col">${participant.participantName!""}</span>
                             <span class="user-col">
-                                <#--<#if participant.franchise>
-                                    Aloitteen kunta
+                                <#if participant.showName>
+                                    Kyllä
                                 <#else>
-                                    Osallistujan kunta
-                                </#if>-->
+                                    Ei
+                                </#if>
                             </span>
-                            <span class="user-col">${(participant.municipalMembership)?string("äänioikeutettu","jäsen")}</span><span class="user-col">${(participant.showName)?string("kyllä","ei")}</span>
                             <span class="user-col"><input type="text" id="participantAmount[${participant_index}]" name="participantAmount[${participant_index}]" class="small" value="2" /></span>
                             <br class="clear" />
                         </#list>
@@ -156,18 +162,25 @@
                 </div>
                 
                  <div class="user-details">
-                    <#--<span class="user-col title">Päivämäärä</span>-->
                     <span class="user-col title">Lukumäärä</span>
-                    
+                    <span class="user-col title">Tila</span>
                     <br />
-                    
-                    <#--<span class="user-col "><input type="text" class="medium datepicker" value="13.3.2013" id="date" name="date"></span>-->
                     <span class="user-col "><input type="text" class="small" value="1" id="amount" name="amount"></span>
+                    <span class="user-col "><select class="small" name="state">
+
+                    <option value="DRAFT">DRAFT</option>
+                    <option value="REVIEW">REVIEW</option>
+                    <option value="ACCEPTED">ACCEPTED</option>
+                    <option selected="selected" value="PUBLISHED">PUBLISHED</option>
+
+                    </select>
+                    </span>
+
                 </div>
             </div> 
 
             <div class="initiative-content-row last">                
-                <button class="small-button green" value="true" type="submit"><span class="small-icon save-and-send">Luo käyttäjät ja aloitteet</span></button>
+                <button class="small-button green disable-dbl-click-check" value="true" type="submit"><span class="small-icon save-and-send">Luo käyttäjät ja aloitteet</span></button>
             </div>
         </form>        
     </div>
