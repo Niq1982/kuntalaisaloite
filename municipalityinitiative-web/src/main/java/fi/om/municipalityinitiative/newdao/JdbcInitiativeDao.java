@@ -245,7 +245,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .set(municipalityInitiative.name, editDto.getName())
                 .set(municipalityInitiative.proposal, editDto.getProposal())
                 .set(municipalityInitiative.modified, CURRENT_TIME)
-                .set(municipalityInitiative.comment, editDto.getExtraInfo())
+                .set(municipalityInitiative.extraInfo, editDto.getExtraInfo())
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute());
 
@@ -330,7 +330,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .singleResult(QParticipant.participant.id);
 
         assertSingleAffection(queryFactory.update(municipalityInitiative)
-                .set(municipalityInitiative.comment, updateDto.getExtraInfo())
+                .set(municipalityInitiative.extraInfo, updateDto.getExtraInfo())
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute());
 
@@ -419,7 +419,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     info.setSentTime(maybeLocalDate(row.get(municipalityInitiative.sent)));
                     info.setState(row.get(municipalityInitiative.state));
                     info.setStateTime(row.get(municipalityInitiative.stateTimestamp).toLocalDate());
-                    info.setExtraInfo(row.get(municipalityInitiative.comment));
+                    info.setExtraInfo(row.get(municipalityInitiative.extraInfo));
                     info.setModeratorComment(Strings.nullToEmpty(row.get(municipalityInitiative.moderatorComment)));
                     info.setParticipantCount(row.get(municipalityInitiative.participantCount));
 

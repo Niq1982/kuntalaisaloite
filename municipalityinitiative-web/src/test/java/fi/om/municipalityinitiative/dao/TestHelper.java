@@ -4,7 +4,6 @@ import com.mysema.query.sql.RelationalPathBase;
 import com.mysema.query.sql.dml.SQLInsertClause;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Path;
-import com.mysema.query.types.expr.DateTimeExpression;
 import fi.om.municipalityinitiative.sql.QAuthor;
 import fi.om.municipalityinitiative.sql.QMunicipality;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
@@ -32,7 +31,7 @@ public class TestHelper {
     public static final String DEFAULT_AUTHOR_ADDRESS = "author address";
     public static final String DEFAULT_AUTHOR_PHONE = "author phone";
     public static final boolean DEFAULT_PUBLIC_NAME = true;
-    public static final String DEFAULT_COMMENT = "some default comment";
+    public static final String DEFAULT_EXTRA_INFO = "some default extraInfo";
     public static final DateTime DEFAULT_SENT_TIME = null;
     public static final DateTime SENT_TIME = new DateTime(2011, 1, 1, 0, 0);
     public static final DateTime DEFAULT_CREATE_TIME = DateTime.now();
@@ -125,7 +124,7 @@ public class TestHelper {
         insert.set(municipalityInitiative.municipalityId, initiativeDraft.municipalityId);
         insert.set(municipalityInitiative.authorId, -1L);
         insert.set(municipalityInitiative.participantCount, initiativeDraft.participantCount);
-        insert.set(municipalityInitiative.comment, initiativeDraft.comment);
+        insert.set(municipalityInitiative.extraInfo, initiativeDraft.extraInfo);
 
         insert.set(municipalityInitiative.state, initiativeDraft.state);
 
@@ -193,7 +192,7 @@ public class TestHelper {
         public DateTime sent = DEFAULT_SENT_TIME;
         public DateTime modified = DEFAULT_CREATE_TIME;
         public Integer participantCount = 1;
-        public String comment = DEFAULT_COMMENT;
+        public String extraInfo = DEFAULT_EXTRA_INFO;
 
         public Long authorMunicipality;
 

@@ -20,7 +20,7 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
 
     public final NumberPath<Long> authorId = createNumber("author_id", Long.class);
 
-    public final StringPath comment = createString("comment");
+    public final StringPath extraInfo = createString("extra_info");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
@@ -37,6 +37,8 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
     public final StringPath proposal = createString("proposal");
 
     public final DateTimePath<org.joda.time.DateTime> sent = createDateTime("sent", org.joda.time.DateTime.class);
+
+    public final StringPath sentComment = createString("sent_comment");
 
     public final EnumPath<fi.om.municipalityinitiative.util.InitiativeState> state = createEnum("state", fi.om.municipalityinitiative.util.InitiativeState.class);
 

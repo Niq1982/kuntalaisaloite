@@ -11,18 +11,18 @@ public class Initiative {
     private Long id;
     private String name;
     private String proposal;
-    private Municipality municipality;
+    private String extraInfo;
 
+    private Municipality municipality;
     private String authorName;
     private Boolean showName;
+
     private LocalDate createTime;
 
     private Maybe<String> managementHash = Maybe.absent();
-
     private Maybe<LocalDate> sentTime = Maybe.absent();
     private InitiativeType type;
     private InitiativeState state;
-    private String extraInfo;
     private Author author;
     private LocalDate stateTime;
     private String moderatorComment;

@@ -22,18 +22,19 @@ create table municipality_initiative (
 	type initiativeType constraint initiative_type_nn not null,
 	state initiativeState constraint initiative_state_nn not null default 'DRAFT',
 	state_timestamp timestamp constraint initiative_state_timestamp_nn not null default now(),
-
 	author_id bigserial,
-
-    modified timestamp constraint municipality_initiative_modified_nn not null default now(),
-
-    moderator_comment varchar(1000),
 
     name varchar(512),
     proposal text,
+    extra_info varchar(1024),
+
+    modified timestamp constraint municipality_initiative_modified_nn not null default now(),
+
+    moderator_comment varchar(1024),
     participant_count integer default 0,
+
     sent timestamp,
-    comment varchar(1024),
+    sent_comment varchar(1024),
 
 	constraint municipality_initiative_pk primary key (id),
 	constraint municipality_initiative_municipality_fk foreign key (municipality_id) references municipality(id)

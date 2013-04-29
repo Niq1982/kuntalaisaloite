@@ -29,7 +29,7 @@ public class InitiativeDraftUIEditDto {
     @Size(max = InitiativeConstants.INITIATIVE_PROPOSAL_MAX)
     private String proposal;
 
-    @Size(max = InitiativeConstants.INITIATIVE_PROPOSAL_MAX)
+    @Size(max = InitiativeConstants.INITIATIVE_EXTRA_INFO_MAX)
     private String extraInfo;
 
     @Valid
