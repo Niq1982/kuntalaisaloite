@@ -78,25 +78,23 @@
  *
  * @param type 'text' or 'html'
  -->
-<#macro emailFooter type="" altLang="">
-    <#assign postFix=(altLang!="")?string("."+altLang,"") />
-    
+<#macro emailFooter type="">
     <#if type=="html">
-        <p style="${footerFont!""}"><@u.message "email.footer.sendFrom"+postFix />
+        <p style="${footerFont!""}"><@u.message "email.footer.sendFrom" />
         <#if initiative.state?? && initiative.state == "PUBLISHED">
-            <@u.message "email.footer.viewLink"+postFix /><br/><@u.link urls.view(initiative.id) />
+            <@u.message "email.footer.viewLink" /><br/><@u.link urls.view(initiative.id) />
         </#if>
         </p>
         <br/>
-        <p style="${footerFont!""}"><@u.message "email.footer"+postFix /></p>
+        <p style="${footerFont!""}"><@u.message "email.footer" /></p>
     <#else>
-        <@u.message "email.footer.sendFrom"+postFix />
+        <@u.message "email.footer.sendFrom" />
         <#if initiative.state?? && initiative.state == "PUBLISHED">
-            <@u.message "email.footer.viewLink"+postFix />
+            <@u.message "email.footer.viewLink" />
             <@u.link urls.view(initiative.id) />
         </#if>
         
-        <@u.message "email.footer"+altLang />
+        <@u.message "email.footer" />
     </#if>
 </#macro>
 
@@ -110,13 +108,13 @@
 <#macro initiativeDetails type="" showProposal=true showDate=true>
     <#if type == "html">
         <h4 style="${h4!""}">${initiative.name!""}</h4>
-        <p style="${pBottomMargin!""}">${initiative.municipality.getLocalizedName(locale)!""}</p>
+        <p style="${pBottomMargin!""}">${initiative.municipality.getLocalizedName(switchLocale!locale)!""}</p>
         <#if showDate><p style="${pBothMargins!""}"><@u.message "email.date.create" /> <@u.localDate initiative.createTime /></#if>
         <#--<br/><@u.message "email.date.sent" /> <@u.localDate initiative.sentTime />--></p>
         <#if showProposal><@u.text initiative.proposal /></#if>
     <#else>
         "${initiative.name!""}"
-        ${initiative.municipality.getLocalizedName(locale)!""}
+        ${initiative.municipality.getLocalizedName(switchLocale!locale)!""}
         
         <#if showDate><@u.message "email.date.create" /> <@u.localDate initiative.createTime /></#if>
 
