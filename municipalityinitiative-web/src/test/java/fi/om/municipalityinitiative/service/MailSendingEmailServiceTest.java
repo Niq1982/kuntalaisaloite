@@ -1,9 +1,13 @@
 package fi.om.municipalityinitiative.service;
 
+import com.google.common.collect.Lists;
+import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.Urls;
 import org.junit.Before;
 import org.junit.Test;
+
+import javax.mail.MessagingException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -65,7 +69,7 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
 
         emailService.sendSingleToMunicipality(createDefaultInitiative(), MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
 
-        assertThat(getSingleSentMessage().getSubject(), is("Kuntalaisaloite: "+ INITIATIVE_MUNICIPALITY));
+        assertThat(getSingleSentMessage().getSubject(), is("Kuntalaisaloite: "+ INITIATIVE_NAME));
         assertThat(getSingleRecipient(), is(CONTACT_EMAIL)); // XXX: MUNICIPALITY_EMAIL
         assertThat(getMessageContent().html, containsString(INITIATIVE_NAME));
         assertThat(getMessageContent().html, containsString(INITIATIVE_PROPOSAL));
@@ -76,6 +80,14 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
         assertThat(getMessageContent().html, containsString(CONTACT_PHONE));
         assertThat(getMessageContent().html, containsString(urls.view(INITIATIVE_ID)));
         assertThat(getMessageContent().html, containsString(COMMENT));
+    }
+
+    @Test
+    public void collaborative_to_municipality_contains_all_information() throws Exception {
+        emailService.sendCollaborativeToMunicipality(createDefaultInitiative(), Lists.<Participant>newArrayList(), MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
+
+        assertThat(getSingleSentMessage().getSubject(), is("Kuntalaisaloite: "+ INITIATIVE_NAME));
+        assertThat(getSingleRecipient(), is(CONTACT_EMAIL)); // XXX: MUNICIPALITY_EMAIL
 
     }
 }

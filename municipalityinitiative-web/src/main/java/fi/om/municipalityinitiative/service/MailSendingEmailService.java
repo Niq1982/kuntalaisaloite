@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
+import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.util.Task;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.context.MessageSource;
@@ -9,6 +10,7 @@ import org.springframework.context.MessageSource;
 import javax.annotation.Resource;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -20,6 +22,7 @@ public class MailSendingEmailService implements EmailService {
     private static final String STATUS_INFO_TEMPLATE = "status-info-to-author";
     private static final String NOTIFICATION_TO_MODERATOR = "notification-to-moderator";
     private static final String PARTICIPATION_CONFIRMATION = "participant-verification";
+    private static final String COLLABORATIVE_TO_MUNICIPALITY = "municipality-collectable";
 
     @Resource
     private MessageSource messageSource;
@@ -33,8 +36,20 @@ public class MailSendingEmailService implements EmailService {
                 .fromTemplate(NOT_COLLECTABLE_TEMPLATE)
                 //.withSendTo(municipalityEmail)
                 .withSendTo(initiative.getAuthor().getContactInfo().getEmail())
-                .withSubject(messageSource.getMessage("email.not.collectable.municipality.subject", toArray(initiative.getMunicipality().getLocalizedName(locale)), locale))
+                .withSubject(messageSource.getMessage("email.not.collectable.municipality.subject", toArray(initiative.getName()), locale))
                 .withDataMap(toDataMap(initiative, locale))
+                .send();
+    }
+
+    @Override
+    public void sendCollaborativeToMunicipality(Initiative initiative, List<Participant> participants, String municipalityEmail, Locale locale) {
+        emailMessageConstructor
+                .fromTemplate(COLLABORATIVE_TO_MUNICIPALITY)
+                // .withSendTo(municipalityEmail)
+                .withSendTo(initiative.getAuthor().getContactInfo().getEmail())
+                .withSubject(messageSource.getMessage("email.not.collectable.municipality.subject", toArray(initiative.getName()), locale))
+                .withDataMap(toDataMap(initiative, locale))
+                .withAttachment(initiative, participants)
                 .send();
     }
 

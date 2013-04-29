@@ -15,6 +15,7 @@ import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.*;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +26,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.annotation.Resource;
 
 import java.util.List;
-import java.util.Random;
 
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -157,9 +157,9 @@ public class PublicInitiativeServiceIntegrationTest {
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
         stubAuthorLoginUserHolderWith(initiativeId);
 
-        InitiativeViewInfo municipalityInitiative = service.getMunicipalityInitiative(initiativeId, authorLoginUserHolder);
+        InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
 
-        assertThat(municipalityInitiative.getManagementHash().get(), is(RandomHashGenerator.getPrevious()));
+        assertThat(initiative.getManagementHash().get(), is(RandomHashGenerator.getPrevious()));
     }
 
     @Test
@@ -317,14 +317,14 @@ public class PublicInitiativeServiceIntegrationTest {
     @Test(expected = OperationNotAllowedException.class)
     public void publish_initiative_fails_if_not_accepted() {
         Long review = testHelper.createCollectableReview(testMunicipality.getId());
-        service.publishInitiative(review, false, authorLoginUserHolder, null);
+        service.publishAcceptedInitiative(review, false, authorLoginUserHolder, null);
     }
 
     @Test
     public void publish_initiative_and_start_collecting_sets_all_data() {
         Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
 
-        service.publishInitiative(accepted, true, authorLoginUserHolder, null);
+        service.publishAcceptedInitiative(accepted, true, authorLoginUserHolder, null);
 
         Initiative collecting = initiativeDao.getByIdWithOriginalAuthor(accepted);
         assertThat(collecting.getState(), is(InitiativeState.PUBLISHED));
@@ -335,19 +335,47 @@ public class PublicInitiativeServiceIntegrationTest {
     @Test(expected = AccessDeniedException.class)
     public void publish_initiative_fails_if_not_author() {
        Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
-        service.publishInitiative(accepted, true, unknownLoginUserHolder, null);
+        service.publishAcceptedInitiative(accepted, true, unknownLoginUserHolder, null);
     }
 
     @Test
     public void publish_initiative_and_send_to_municipality_sets_all_data() {
         Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
 
-        service.publishInitiative(accepted, false, authorLoginUserHolder, null);
+        service.publishAcceptedInitiative(accepted, false, authorLoginUserHolder, null);
 
         Initiative sent = initiativeDao.getByIdWithOriginalAuthor(accepted);
         assertThat(sent.getState(), is(InitiativeState.PUBLISHED));
         assertThat(sent.getType(), is(InitiativeType.SINGLE));
         assertThat(sent.getSentTime().isPresent(), is(true));
+    }
+
+    @Test(expected = OperationNotAllowedException.class)
+    public void sending_collaborative_to_municipality_fails_if_already_sent() {
+        Long collaborativeSent = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withState(InitiativeState.PUBLISHED)
+                .withType(InitiativeType.COLLABORATIVE)
+                .withSent(DateTime.now()));
+
+        service.sendCollaborativeToMunicipality(collaborativeSent, authorLoginUserHolder, null);
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void sending_collaborative_to_municipality_fails_if_no_rights_to_initiative() {
+        Long collectableAccepted = testHelper.createCollectableAccepted(testMunicipality.getId());
+
+        service.sendCollaborativeToMunicipality(collectableAccepted, unknownLoginUserHolder, null);
+    }
+
+    @Test
+    public void sending_collobarative_to_municipality_sets_sent_time() {
+        Long collaborative = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withState(InitiativeState.PUBLISHED)
+                .withType(InitiativeType.COLLABORATIVE));
+
+        service.sendCollaborativeToMunicipality(collaborative, authorLoginUserHolder, null);
+
+        assertThat(initiativeDao.getByIdWithOriginalAuthor(collaborative).getSentTime().isPresent(), is(true));
     }
 
     private static ParticipantUICreateDto participantUICreateDto() {
@@ -367,8 +395,5 @@ public class PublicInitiativeServiceIntegrationTest {
     }
 
 
-    private static String randomString() {
-        return String.valueOf(new Random().nextInt());
-    }
-
 }
+
