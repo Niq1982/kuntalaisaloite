@@ -421,6 +421,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     info.setStateTime(row.get(municipalityInitiative.stateTimestamp).toLocalDate());
                     info.setComment(row.get(municipalityInitiative.comment));
                     info.setModeratorComment(Strings.nullToEmpty(row.get(municipalityInitiative.moderatorComment)));
+                    info.setParticipantCount(row.get(municipalityInitiative.participantCount));
 
                     Author author = new Author();
                     ContactInfo contactInfo = new ContactInfo();

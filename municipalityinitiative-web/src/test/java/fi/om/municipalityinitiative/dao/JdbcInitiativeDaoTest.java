@@ -92,6 +92,7 @@ public class JdbcInitiativeDaoTest {
         assertThat(initiative.getState(), is(TestHelper.DEFAULT_STATE));
         assertThat(initiative.getType(), is(InitiativeType.COLLABORATIVE_CITIZEN));
         assertThat(initiative.getShowName(), is(true));
+        assertThat(initiative.getParticipantCount(), is(1));
 
         assertThat(initiative.getAuthor().getContactInfo().getName(), is(TestHelper.DEFAULT_AUTHOR_NAME));
         assertThat(initiative.getAuthor().getContactInfo().getAddress(), is(TestHelper.DEFAULT_AUTHOR_ADDRESS));
