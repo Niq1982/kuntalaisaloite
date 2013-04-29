@@ -5,12 +5,11 @@
 
 <@u.message "email.notification.to.moderator.title" />
 
+
 <@b.initiativeDetails type />
     
 ----
-    
 <@b.contactInfo type />
-
 ----
     
 <@u.message "email.notification.to.moderator.moderateLink" />:

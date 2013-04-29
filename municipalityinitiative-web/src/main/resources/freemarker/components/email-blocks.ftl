@@ -78,20 +78,21 @@
  *
  * @param type 'text' or 'html'
  -->
-<#macro emailFooter type="">
+<#macro emailFooter type="" postFix="">
     <#if type=="html">
-        <p style="${footerFont!""}"><@u.message "email.footer.sendFrom" />
+        <p style="${footerFont!""}"><@u.message "email.footer.sendFrom"+postFix />
         <#if initiative.state?? && initiative.state == "PUBLISHED">
-            <@u.message "email.footer.viewLink" /><br/><@u.link urls.view(initiative.id) />
+            <@u.message "email.footer.viewLink" /><br/><@u.link urls.get(switchLocale!locale).view(initiative.id) />
         </#if>
         </p>
         <br/>
         <p style="${footerFont!""}"><@u.message "email.footer" /></p>
     <#else>
-        <@u.message "email.footer.sendFrom" />
+        <@u.message "email.footer.sendFrom"+postFix />
         <#if initiative.state?? && initiative.state == "PUBLISHED">
             <@u.message "email.footer.viewLink" />
-            <@u.link urls.view(initiative.id) />
+            
+            ${urls.get(switchLocale!locale).view(initiative.id)}
         </#if>
         
         <@u.message "email.footer" />
@@ -131,7 +132,6 @@
  -->
 <#macro contactInfo type="">
     <#assign obj=initiative.author.contactInfo />
-
     <#if type == "html">
         <h4 style="${h4!""}"><@u.message "email.contact.info" /></h4>
         <p style="${pBottomMargin!""}">${obj.name!""}<br/>
@@ -157,39 +157,13 @@
  -->
 <#macro participants type="">
     <#if type == "html">
-        <h4 style="${h4!""}"><@u.messageHTML key="email.participantCount.total" /> ${initiative.participantCount!""}</h4>
-        <p style="${pBothMargins!""}">
-            <#if initiative.participantFranchiseCount?? && (initiative.participantFranchiseCount > 0)>
-                <@u.message "email.participantCount.franchise.total" /> <strong>${initiative.participantFranchiseCount!""}</strong> 
-            <#else>
-                <@u.message key="email.participantCount.franchise.total.empty" />
-            </#if>
-            <br />
-            <#if initiative.participantNoFranchiseCount?? && (initiative.participantNoFranchiseCount > 0)>
-                <@u.message key="email.participantCount.noFranchise.total" /> <strong>${initiative.participantNoFranchiseCount!""}</strong>
-            <#else>
-                <@u.message key="email.participantCount.noFranchise.total.empty" />
-            </#if>
-        </p>
+        <h4 style="${h4!""}"><@u.messageHTML key="email.participantCount.total" /> ${initiative.participantCount!"0"}</h4>
         <#if initiative.participantCount?? && (initiative.participantCount > 0)>
-            <p style="${pBothMargins!""}"><@u.message "email.participantCount.attachment" /></p>
+            <p style="${pBottomMargin!""}"><@u.message "email.participantCount.attachment" /></p>
         </#if>
     <#else>
-        <@u.message key="email.participantCount.total" /> ${initiative.participantCount!""}
-        
-        <#if initiative.participantFranchiseCount?? && (initiative.participantFranchiseCount > 0)>
-            <@u.message key="email.participantCount.franchise.total" /> ${initiative.participantFranchiseCount!""}
-        <#else>
-            <@u.message key="email.participantCount.franchise.total.empty" />
-        </#if>
-        
-        <#if initiative.participantNoFranchiseCount?? && (initiative.participantNoFranchiseCount > 0)>
-            <@u.message key="email.participantCount.noFranchise.total" /> ${initiative.participantNoFranchiseCount!""}
-        <#else>
-            <@u.message key="email.participantCount.noFranchise.total.empty" />
-        </#if>
-        
-        
+        <@u.message key="email.initiative.participantCount" /> ${initiative.participantCount!"0"}
+
         <#if initiative.participantCount?? && (initiative.participantCount > 0)>
             <@u.message "email.participantCount.attachment" />
         </#if>
@@ -237,24 +211,28 @@
 </#macro>
 
 <#macro publicViewLink type="">
+    <#assign viewURL = urls.get(switchLocale!locale).view(initiative.id) />
+
     <#if type == "html">
         <p style="${pBothMargins!""}"><@u.message "email.publicViewLink" /><br/>
-        <@u.link urls.view(initiative.id) urls.view(initiative.id) /></span>
+        <@u.link viewURL viewURL /></span>
     <#else>
         <@u.message "email.publicViewLink" />
         
-        ${urls.view(initiative.id)}
+        ${viewURL}
     </#if>
 </#macro>
 
 <#macro adminViewLink type="">
+    <#assign adminURL = urls.get(switchLocale!locale).loginAuthor(initiative.id, initiative.managementHash.value) />
+    
     <#if type == "html">
         <p style="${pBothMargins!""}"><@u.message "email.adminViewLink" /></p>
-        <p style="${pBothMargins!""} ${smallFont!""}"><@u.link urls.loginAuthor(initiative.id, initiative.managementHash.value) urls.loginAuthor(initiative.id, initiative.managementHash.value) /></p>
+        <p style="${pBothMargins!""} ${smallFont!""}"><@u.link adminURL adminURL /></p>
     <#else>
         <@u.message "email.adminViewLink" />
         
-        ${urls.loginAuthor(initiative.id, initiative.managementHash.value)}
+        ${adminURL}
     </#if>
 </#macro>
 

@@ -14,17 +14,17 @@
 
     <#-- TODO: localize -->
     <@b.mainContentBlock title>
-        <p style="${pBothMargins!""}">Tämä sähköposti sisältää linkin uuden kuntalaisaloitteen luomiseen Kuntalaisaloite.fi-palvelussa. Klikkaa alla olevaa linkkiä ja siirry täyttämään aloitteen sisältö.</p>
+        <p style="${pBothMargins!""}"><@u.message "email.create.description" /></p>
         
         <p style="${smallFont!""}"><@u.link urls.loginAuthor(initiative.id, initiative.managementHash.value) urls.loginAuthor(initiative.id, initiative.managementHash.value) /></p>
 
-        <p style="${pBothMargins!""}">Kun olet täyttänyt aloitteen sisällön ja tallentanut sen, pääset jatkossa tämän linkin avulla aloitteen ylläpitosivulle. Ylläpitolinkki on henkilökohtainen. Säilytä linkki äläkä jaa sitä muille.</p>
+        <p style="${pBothMargins!""}"><@u.message "email.create.description.2" /></p>
         
-        <h4 style="${h4}">Ylläpito-sivulla voit</h4>
+        <h4 style="${h4}"><@u.message "email.create.instruction.title" /></h4>
         <ol style="margin-top:0.5em;">
-            <li style="margin-top:0.5em; margin-bottom:0.5em;">Voit muokata aloitteen tietoja</li>
-            <li style="margin-bottom:0.5em;">Voit lähettää aloitteen oikeusministeriön tarkastettavaksi</li>
-            <li style="margin-bottom:0.5em;">Voit lähettää aloitteen kuntaan tai liittää siihen vastuuhenkilöitä sekä kerätä osallistujia</li>
+            <li style="margin-top:0.5em; margin-bottom:0.5em;"><@u.message "email.create.instruction.bullet-1" /></li>
+            <li style="margin-bottom:0.5em;"><@u.message "email.create.instruction.bullet-2" /></li>
+            <li style="margin-bottom:0.5em;"><@u.message "email.create.instruction.bullet-3" /></li>
         </ol>
     </@b.mainContentBlock>
     

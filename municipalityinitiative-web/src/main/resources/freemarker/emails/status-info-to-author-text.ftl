@@ -7,7 +7,12 @@
 <#-- Use statusTitle and statusInfo for TEXT message -->
 <#include "../includes/status-info.ftl" />
 
-<@u.message "email.status.info."+emailMessageType+".title" />
+<#if statusTitle??>
+    ${statusTitle}
+<#else>
+    <@u.message "email.status.info."+emailMessageType+".title" />
+</#if>
+
 
 ${statusInfo!""}
 
@@ -20,7 +25,12 @@ ${statusInfo!""}
 
 --------
 
-<@u.message "email.status.info."+emailMessageType+".title" />
+<#if statusTitleSv??>
+    ${statusTitleSv}
+<#else>
+    <@u.message "email.status.info."+emailMessageType+".title" />
+</#if>
+
 
 ${statusInfoSv!""}
 

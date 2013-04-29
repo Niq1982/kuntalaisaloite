@@ -25,7 +25,7 @@
     
     <@u.spacer "15" />
     
-    <@b.emailFooter "html" />
+    <@b.emailFooter type />
     
     <@u.spacer "15" />
     
@@ -33,7 +33,9 @@
     
     <#global switchLocale = altLocale />
     
-    <#if !statusTitle??>
+    <#if statusTitleSv??>
+        <#assign title=statusTitleSv />
+    <#else>
         <#assign title><@u.message "email.status.info."+emailMessageType+".title" /></#assign>
     </#if>
     
@@ -43,10 +45,11 @@
     
     <@u.spacer "15" />
     
-    <@b.emailFooter "html" />
+    <@b.emailFooter type />
     
     <@u.spacer "15" />
     
+    <#-- Switch to default locale -->
     <#global switchLocale = locale />
 
 </@l.emailHtml>

@@ -3,7 +3,25 @@
 
 <#assign type="text" />
 
-TODO
+<@u.message "email.create.title" />
+
+
+<@u.message "email.create.description" />
+
+
+${urls.loginAuthor(initiative.id, initiative.managementHash.value)}
+
+----
+
+<@u.message "email.create.description.2" />
+
+
+<@u.message "email.create.instruction.title" />
+
+
+- <@u.message "email.create.instruction.bullet-1" />
+- <@u.message "email.create.instruction.bullet-2" />
+- <@u.message "email.create.instruction.bullet-3" />
 
 ----
 

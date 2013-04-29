@@ -3,7 +3,19 @@
 
 <#assign type="text" />
 
-TODO
+<@u.message "email.initiative" /> - ${initiative.municipality.getLocalizedName(locale)!""}
+
+<@u.message "email.created.description" />
+
+----
+
+<@b.initiativeDetails type />
+
+----
+<@b.contactInfo type />
+----
+
+<@b.adminViewLink type />
 
 ----
 
