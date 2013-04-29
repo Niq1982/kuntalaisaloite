@@ -7,8 +7,6 @@
 <#-- Use statusTitle and statusInfo for TEXT message -->
 <#include "../includes/status-info.ftl" />
 
-<@b.initiativeDetails type />
-
 <@u.message "email.status.info."+emailMessageType+".title" />
 
 ${statusInfo!""}
@@ -16,3 +14,18 @@ ${statusInfo!""}
 ----
 
 <@b.emailFooter type />
+
+<#-- Swedish part -->
+<#global switchLocale = altLocale />
+
+--------
+
+<@u.message "email.status.info."+emailMessageType+".title" />
+
+${statusInfoSv!""}
+
+----
+
+<@b.emailFooter type />
+
+<#global switchLocale = locale />
