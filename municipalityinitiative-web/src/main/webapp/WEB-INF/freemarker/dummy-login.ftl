@@ -1,10 +1,27 @@
-<#escape x as x?html> 
-<!DOCTYPE HTML>
-<html>
-<head>
+<#import "/spring.ftl" as spring />
+<#import "components/forms.ftl" as f />
+<#import "components/layout.ftl" as l />
+<#import "components/utils.ftl" as u />
+<#import "components/edit-blocks.ftl" as edit />
 
-</head>
-<body>
+<#escape x as x?html>
+
+<#--
+ * Layout parameters for HTML-title and navigation.
+ *
+ * @param page is "page.prepare"
+ * @param pageTitle can be assigned as custom HTML title
+-->
+<#assign page="page.prepare" />
+
+<#--
+ * Get current municipality as request parameter.
+ * - Request parameter is for iFrame create-link
+ * - We could want to try to guess user's municipality later on with different methods like GEO location, user's history etc..
+-->
+<#assign currentMunicipality = RequestParameters['municipality']!"" />
+
+<@l.main page pageTitle!"">
 
     <script type="text/javascript">
         function submitForm(user, pswd){
@@ -29,6 +46,6 @@
         <div>Salasana: <input type="password" name="p" id="p" /></div>
         <input type="submit" name="Login" value="Kirjaudu"/>
     </form>
-</body>
-</html>
-</#escape> 
+
+</@l.main>
+</#escape>

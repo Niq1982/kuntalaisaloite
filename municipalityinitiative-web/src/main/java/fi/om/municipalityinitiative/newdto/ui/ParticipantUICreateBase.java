@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.newdto.ui;
 
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.newdto.service.CreateDtoTimeValidation;
+import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.validation.ValidMunicipalMembershipInfo;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -51,11 +52,4 @@ public abstract class ParticipantUICreateBase extends CreateDtoTimeValidation
         this.participantEmail = participantEmail;
     }
 
-
-    public enum Membership {
-        community,
-        company,
-        property,
-        none
-    }
 }

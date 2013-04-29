@@ -4,7 +4,8 @@ import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
-import fi.om.municipalityinitiative.newdto.ui.*;
+import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
+import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateDto;
 
 import java.util.List;
 
@@ -72,7 +73,7 @@ public class TestDataTemplates {
         participant.setParticipantName(name);
         participant.setMunicipality(municipality);
         participant.setHomeMunicipality(municipality);
-        participant.setMunicipalMembership(ParticipantUICreateBase.Membership.property);
+        participant.setMunicipalMembership(Membership.property);
         participant.setShowName(showName);
         return participant;
     }

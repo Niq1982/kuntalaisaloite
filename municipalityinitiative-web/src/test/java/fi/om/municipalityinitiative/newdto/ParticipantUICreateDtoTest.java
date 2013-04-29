@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.newdto;
 
 import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateBase;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateDto;
+import fi.om.municipalityinitiative.util.Membership;
 import org.joda.time.DateTime;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -48,7 +49,7 @@ public class ParticipantUICreateDtoTest {
 
         dto.setMunicipality(1L);
         dto.setHomeMunicipality(2L);
-        dto.setMunicipalMembership(ParticipantUICreateBase.Membership.none);
+        dto.setMunicipalMembership(Membership.none);
 
         Set<ConstraintViolation<ParticipantUICreateDto>> violations = validator.validate(dto);
 
@@ -63,7 +64,7 @@ public class ParticipantUICreateDtoTest {
 
         dto.setMunicipality(1L);
         dto.setHomeMunicipality(2L);
-        dto.setMunicipalMembership(ParticipantUICreateBase.Membership.community);
+        dto.setMunicipalMembership(Membership.community);
 
         Set<ConstraintViolation<ParticipantUICreateDto>> violations = validator.validate(dto);
 
@@ -89,7 +90,7 @@ public class ParticipantUICreateDtoTest {
 
         dto.setMunicipality(1L);
         dto.setHomeMunicipality(2L);
-        dto.setMunicipalMembership(ParticipantUICreateBase.Membership.community);
+        dto.setMunicipalMembership(Membership.community);
         return dto;
     }
 
