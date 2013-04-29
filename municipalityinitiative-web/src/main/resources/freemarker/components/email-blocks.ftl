@@ -162,7 +162,7 @@
             <p style="${pBottomMargin!""}"><@u.message "email.participantCount.attachment" /></p>
         </#if>
     <#else>
-        <@u.message key="email.initiative.participantCount" /> ${initiative.participantCount!"0"}
+        <@u.message key="email.participantCount.total" /> ${initiative.participantCount!"0"}
 
         <#if initiative.participantCount?? && (initiative.participantCount > 0)>
             <@u.message "email.participantCount.attachment" />

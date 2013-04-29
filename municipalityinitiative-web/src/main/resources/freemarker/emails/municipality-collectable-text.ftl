@@ -6,8 +6,9 @@
 <#if (initiative.comment)?has_content>
     <@b.comment type initiative.comment "email.commentToMunicipality" />
 </#if>
-<#--
-<@u.message "email.initiative" /> - ${initiative.municipality.getLocalizedName(locale)!""}
+
+<@u.message "email.initiative" />
+
 
 <@b.initiativeDetails type />
 
@@ -21,5 +22,4 @@
 
 ----
 
-<@b.emailFooter type />
--->
+<@b.emailFooter type ".sentToMunicipality" />
