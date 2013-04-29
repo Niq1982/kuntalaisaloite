@@ -80,7 +80,6 @@ public class PublicInitiativeService {
         return initiativeId;
     }
 
-
     @Transactional(readOnly = true)
     public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId) {
         return InitiativeViewInfo.parse(initiativeDao.getByIdWithOriginalAuthor(initiativeId));
@@ -89,12 +88,6 @@ public class PublicInitiativeService {
     @Transactional(readOnly = true)
     public InitiativeCounts getInitiativeCounts(Maybe<Long> municipality) {
         return initiativeDao.getInitiativeCounts(municipality);
-    }
-
-    @Transactional(readOnly = true)
-    public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId, LoginUserHolder loginUserHolder) {
-        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        return InitiativeViewInfo.parse(initiativeDao.getById(initiativeId, loginUserHolder.getInitiative().get().getManagementHash().get()));
     }
 
     @Transactional(readOnly = true)
@@ -158,7 +151,7 @@ public class PublicInitiativeService {
     }
 
     @Transactional(readOnly = false)
-    public void publishAcceptedInitiative(Long initiativeId, boolean wantsToGatherPeople, LoginUserHolder loginUserHolder, Locale locale) {
+    void publishAcceptedInitiative(Long initiativeId, boolean wantsToGatherPeople, LoginUserHolder loginUserHolder, Locale locale) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         assertAllowance("Publish initiative", getManagementSettings(initiativeId).isAllowPublish());
 
@@ -216,5 +209,9 @@ public class PublicInitiativeService {
         else {
             publishAcceptedInitiative(initiativeId, false, requiredLoginUserHolder, locale);
         }
+    }
+
+    public void publishAndStartCollecting(Long initiativeId, LoginUserHolder requiredLoginUserHolder, Locale locale) {
+        publishAcceptedInitiative(initiativeId, true, requiredLoginUserHolder, locale);
     }
 }

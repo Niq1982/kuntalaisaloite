@@ -157,9 +157,9 @@ public class PublicInitiativeServiceIntegrationTest {
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
         stubAuthorLoginUserHolderWith(initiativeId);
 
-        InitiativeViewInfo municipalityInitiative = service.getMunicipalityInitiative(initiativeId, authorLoginUserHolder);
+        InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
 
-        assertThat(municipalityInitiative.getManagementHash().get(), is(RandomHashGenerator.getPrevious()));
+        assertThat(initiative.getManagementHash().get(), is(RandomHashGenerator.getPrevious()));
     }
 
     @Test
