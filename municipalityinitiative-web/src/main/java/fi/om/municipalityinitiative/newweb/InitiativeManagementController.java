@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -115,15 +116,17 @@ public class InitiativeManagementController extends BaseController {
 
     @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_SEND_TO_REVIEW)
     public String sendToReview(@PathVariable("id") Long initiativeId,
+                               @RequestParam("sentComment") String sentComment, // FIXME: Implement
                                Locale locale, HttpServletRequest request) {
-        publicInitiativeService.sendReview(initiativeId, userService.getRequiredLoginUserHolder(request), true, locale);
+//        publicInitiativeService.sendReview(initiativeId, userService.getRequiredLoginUserHolder(request), true, locale);
+        publicInitiativeService.sendReviewAndStraightToMunicipality(initiativeId, userService.getRequiredLoginUserHolder(request), sentComment, locale);
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.SEND_TO_REVIEW, request);
     }
 
     @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_SEND_TO_REVIEW_COLLECT)
     public String sendToReviewForCollecting(@PathVariable("id") Long initiativeId,
                                             Locale locale, HttpServletRequest request) {
-        publicInitiativeService.sendReview(initiativeId, userService.getRequiredLoginUserHolder(request), false, locale);
+        publicInitiativeService.sendReviewOnlyForAcceptance(initiativeId, userService.getRequiredLoginUserHolder(request), locale);
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.SEND_TO_REVIEW, request);
     }
 
@@ -134,14 +137,11 @@ public class InitiativeManagementController extends BaseController {
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.START_COLLECTING, request);
     }
 
-    // Note that this serves two functionalities:
-    // 1. Initiative is accepted but published, and author wants to send it straight to the municipality
-    // 2. Author has gathered enough people for the initiative and wants to send it to municipality
     @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_SEND_TO_MUNICIPALITY)
     public String sendToMunicipality(@PathVariable("id") Long initiativeId,
+                                     @RequestParam("sentComment") String sentComment, // FIXME: Implement
                                      Locale locale, HttpServletRequest request) {
-        publicInitiativeService.sendToMunicipality(initiativeId, userService.getRequiredLoginUserHolder(request), locale);
-    //        publicInitiativeService.publishAcceptedInitiative(initiativeId, false, userService.getRequiredLoginUserHolder(request), locale);
+        publicInitiativeService.sendToMunicipality(initiativeId, userService.getRequiredLoginUserHolder(request), sentComment, locale);
         return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.PUBLISH_AND_SEND, request);
     }
 }

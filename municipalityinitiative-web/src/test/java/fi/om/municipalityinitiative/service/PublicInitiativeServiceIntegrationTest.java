@@ -282,7 +282,8 @@ public class PublicInitiativeServiceIntegrationTest {
     public void send_initiative_as_review_sents_state_as_review_and_leaves_type_as_null_if_not_single() {
         Long initiativeId = testHelper.createDraft(testMunicipality.getId());
 
-        service.sendReview(initiativeId, authorLoginUserHolder, false, Locales.LOCALE_FI);
+//        service.sendReview(initiativeId, authorLoginUserHolder, false, Locales.LOCALE_FI);
+        service.sendReviewOnlyForAcceptance(initiativeId, authorLoginUserHolder, null);
 
         Initiative updated = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
 
@@ -291,9 +292,10 @@ public class PublicInitiativeServiceIntegrationTest {
     }
 
     @Test
-    public void send_initiative_as_review_sents_state_as_review_and_type_as_single_if_single() {
+    public void send_initiative_as_review_sets_state_as_review_and_type_as_single_if_single() {
         Long initiativeId = testHelper.createDraft(testMunicipality.getId());
-        service.sendReview(initiativeId, authorLoginUserHolder, true, Locales.LOCALE_FI);
+//        service.sendReview(initiativeId, authorLoginUserHolder, true, Locales.LOCALE_FI);
+        service.sendReviewAndStraightToMunicipality(initiativeId, authorLoginUserHolder, null, null);
 
         Initiative updated = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
 
@@ -302,29 +304,43 @@ public class PublicInitiativeServiceIntegrationTest {
     }
 
     @Test(expected = OperationNotAllowedException.class)
-    public void send_review_fails_if_initiative_accepted() {
+    public void send_review_and_to_municipality_fails_if_initiative_accepted() {
         Long accepted = testHelper.createCollectableAccepted(testMunicipality.getId());
-        service.sendReview(accepted, authorLoginUserHolder, true, Locales.LOCALE_FI);
+//        service.sendReview(accepted, authorLoginUserHolder, true, Locales.LOCALE_FI);
+        service.sendReviewAndStraightToMunicipality(accepted, authorLoginUserHolder, null, null);
+    }
+
+    @Test(expected = OperationNotAllowedException.class)
+    public void send_review_not_single_fails_if_initiative_accepted() {
+        Long accepted = testHelper.createCollectableAccepted(testMunicipality.getId());
+        service.sendReviewOnlyForAcceptance(accepted, authorLoginUserHolder, null);
     }
 
     @Test(expected = AccessDeniedException.class)
-    public void send_review_fails_if_no_right_to_initiative() {
+    public void send_single_to_review_fails_if_no_right_to_initiative() {
         Long accepted = testHelper.createCollectableAccepted(testMunicipality.getId());
-        service.sendReview(accepted, unknownLoginUserHolder, true, Locales.LOCALE_FI);
+        service.sendReviewAndStraightToMunicipality(accepted, unknownLoginUserHolder, null, null);
+    }
 
+    @Test(expected = AccessDeniedException.class)
+    public void send_to_review_fails_if_no_right_to_initiative() {
+        Long accepted = testHelper.createCollectableAccepted(testMunicipality.getId());
+        service.sendReviewOnlyForAcceptance(accepted, unknownLoginUserHolder, null);
     }
 
     @Test(expected = OperationNotAllowedException.class)
     public void publish_initiative_fails_if_not_accepted() {
         Long review = testHelper.createCollectableReview(testMunicipality.getId());
-        service.publishAcceptedInitiative(review, false, authorLoginUserHolder, null);
+//        service.publishAcceptedInitiative(review, false, authorLoginUserHolder, null);
+        service.publishAndStartCollecting(review, authorLoginUserHolder, null);
     }
 
     @Test
     public void publish_initiative_and_start_collecting_sets_all_data() {
         Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
 
-        service.publishAcceptedInitiative(accepted, true, authorLoginUserHolder, null);
+//        service.publishAcceptedInitiative(accepted, true, authorLoginUserHolder, null);
+        service.publishAndStartCollecting(accepted, authorLoginUserHolder, null);
 
         Initiative collecting = initiativeDao.getByIdWithOriginalAuthor(accepted);
         assertThat(collecting.getState(), is(InitiativeState.PUBLISHED));
@@ -333,21 +349,24 @@ public class PublicInitiativeServiceIntegrationTest {
     }
 
     @Test(expected = AccessDeniedException.class)
-    public void publish_initiative_fails_if_not_author() {
+    public void publish_inititive_and_send_to_municipality_fails_of_not_author() {
        Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
-        service.publishAcceptedInitiative(accepted, true, unknownLoginUserHolder, null);
+//        service.publishAcceptedInitiative(accepted, true, unknownLoginUserHolder, null);
+        service.publishAndSendToMunicipality(accepted, unknownLoginUserHolder, "", null);
     }
 
     @Test
     public void publish_initiative_and_send_to_municipality_sets_all_data() {
         Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
 
-        service.publishAcceptedInitiative(accepted, false, authorLoginUserHolder, null);
+//        service.publishAcceptedInitiative(accepted, false, authorLoginUserHolder, null);
+        service.publishAndSendToMunicipality(accepted, authorLoginUserHolder, "some sent comment", null);
 
         Initiative sent = initiativeDao.getByIdWithOriginalAuthor(accepted);
         assertThat(sent.getState(), is(InitiativeState.PUBLISHED));
         assertThat(sent.getType(), is(InitiativeType.SINGLE));
         assertThat(sent.getSentTime().isPresent(), is(true));
+        assertThat(sent.getSentComment(), is("some sent comment"));
     }
 
     @Test(expected = OperationNotAllowedException.class)
@@ -357,25 +376,47 @@ public class PublicInitiativeServiceIntegrationTest {
                 .withType(InitiativeType.COLLABORATIVE)
                 .withSent(DateTime.now()));
 
-        service.sendCollaborativeToMunicipality(collaborativeSent, authorLoginUserHolder, null);
+        service.sendCollaborativeToMunicipality(collaborativeSent, authorLoginUserHolder, "", null);
     }
 
     @Test(expected = AccessDeniedException.class)
     public void sending_collaborative_to_municipality_fails_if_no_rights_to_initiative() {
         Long collectableAccepted = testHelper.createCollectableAccepted(testMunicipality.getId());
 
-        service.sendCollaborativeToMunicipality(collectableAccepted, unknownLoginUserHolder, null);
+        service.sendCollaborativeToMunicipality(collectableAccepted, unknownLoginUserHolder, "", null);
     }
 
     @Test
-    public void sending_collobarative_to_municipality_sets_sent_time() {
+    public void sending_collobarative_to_municipality_sets_sent_time_and_sent_comment() {
         Long collaborative = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE));
 
-        service.sendCollaborativeToMunicipality(collaborative, authorLoginUserHolder, null);
+        service.sendCollaborativeToMunicipality(collaborative, authorLoginUserHolder, "my sent comment", null);
 
-        assertThat(initiativeDao.getByIdWithOriginalAuthor(collaborative).getSentTime().isPresent(), is(true));
+        Initiative sent = initiativeDao.getByIdWithOriginalAuthor(collaborative);
+        assertThat(sent.getSentTime().isPresent(), is(true));
+        assertThat(sent.getSentComment(), is("my sent comment"));
+    }
+
+    @Test
+    public void sendToMunicipality_marks_initiative_as_sigle_if_not_marked_as_collaboratibe() {
+        Long initiativeId = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
+        service.sendToMunicipality(initiativeId, authorLoginUserHolder, "comment for municipality", null);
+        Initiative sent = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
+        assertThat(sent.getType(), is(InitiativeType.SINGLE));
+        assertThat(sent.getSentTime().isPresent(), is(true));
+        assertThat(sent.getSentComment(), is("comment for municipality"));
+    }
+
+    @Test
+    public void sendToMunicipality_marks_initiative_as_sent_if_marked_as_collaborative() {
+        Long initiativeId = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.COLLABORATIVE);
+        service.sendToMunicipality(initiativeId, authorLoginUserHolder, "comment for municipality", null);
+        Initiative sent = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
+        assertThat(sent.getType(), is(InitiativeType.COLLABORATIVE));
+        assertThat(sent.getSentTime().isPresent(), is(true));
+        assertThat(sent.getSentComment(), is("comment for municipality"));
     }
 
     private static ParticipantUICreateDto participantUICreateDto() {

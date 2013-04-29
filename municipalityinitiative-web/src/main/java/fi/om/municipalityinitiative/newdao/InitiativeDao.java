@@ -42,4 +42,6 @@ public interface InitiativeDao {
     void markInitiativeAsSent(Long initiativeId);
 
     void updateModeratorComment(Long initiativeId, String moderatorComment);
+
+    void updateSentComment(Long initiativeId, String sentComment);
 }

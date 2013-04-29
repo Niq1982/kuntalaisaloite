@@ -321,6 +321,15 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     @Transactional(readOnly = false)
+    public void updateSentComment(Long initiativeId, String sentComment) {
+        assertSingleAffection(queryFactory.update(municipalityInitiative)
+                .set(municipalityInitiative.sentComment, sentComment)
+                .where(municipalityInitiative.id.eq(initiativeId))
+                .execute());
+    }
+
+    @Override
+    @Transactional(readOnly = false)
     public void updateAcceptedInitiative(Long initiativeId, String managementHash, InitiativeUIUpdateDto updateDto) {
 
         Long participantId = queryFactory.from(QParticipant.participant)
@@ -422,6 +431,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     info.setExtraInfo(row.get(municipalityInitiative.extraInfo));
                     info.setModeratorComment(Strings.nullToEmpty(row.get(municipalityInitiative.moderatorComment)));
                     info.setParticipantCount(row.get(municipalityInitiative.participantCount));
+                    info.setSentComment(row.get(municipalityInitiative.sentComment));
 
                     Author author = new Author();
                     ContactInfo contactInfo = new ContactInfo();

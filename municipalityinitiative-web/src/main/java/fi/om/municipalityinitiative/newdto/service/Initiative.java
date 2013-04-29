@@ -27,6 +27,7 @@ public class Initiative {
     private LocalDate stateTime;
     private String moderatorComment;
     private int participantCount;
+    private String sentComment;
 
     public Author getAuthor() {
         return author;
@@ -162,5 +163,13 @@ public class Initiative {
 
     public int getParticipantCount() {
         return participantCount;
+    }
+
+    public String getSentComment() {
+        return sentComment;
+    }
+
+    public void setSentComment(String sentComment) {
+        this.sentComment = sentComment;
     }
 }

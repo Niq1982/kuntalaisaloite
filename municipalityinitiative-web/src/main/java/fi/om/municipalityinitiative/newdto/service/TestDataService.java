@@ -1,10 +1,8 @@
 package fi.om.municipalityinitiative.newdto.service;
 
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
-import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeDraftUIEditDto;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeUICreateDto;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.util.*;
 import fi.om.municipalityinitiative.web.Urls;

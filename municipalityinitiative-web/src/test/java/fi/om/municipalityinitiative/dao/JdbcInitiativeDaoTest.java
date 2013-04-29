@@ -155,7 +155,7 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
-    public void mark_initiative_as_sent_adds_timestamp() {
+    public void mark_initiative_as_sent_adds_timestamp_and_sentComment() {
         Long original = testHelper.createEmptyDraft(testMunicipality.getId()); // Even drafts may be marked as sent by dao
         Long someOther = testHelper.createEmptyDraft(testMunicipality.getId()); // Even drafts may be marked as sent by dao
 
@@ -163,8 +163,11 @@ public class JdbcInitiativeDaoTest {
 
         initiativeDao.markInitiativeAsSent(original);
 
-        assertThat(initiativeDao.getByIdWithOriginalAuthor(original).getSentTime().isPresent(), is(true));
-        assertThat(initiativeDao.getByIdWithOriginalAuthor(someOther).getSentTime().isPresent(), is(false));
+        Initiative markedAsSent = initiativeDao.getByIdWithOriginalAuthor(original);
+        Initiative notMarkedAsSent = initiativeDao.getByIdWithOriginalAuthor(someOther);
+
+        assertThat(markedAsSent.getSentTime().isPresent(), is(true));
+        assertThat(notMarkedAsSent.getSentTime().isPresent(), is(false));
     }
 
     @Test

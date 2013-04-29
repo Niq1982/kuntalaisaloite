@@ -35,6 +35,7 @@ public class TestHelper {
     public static final DateTime DEFAULT_SENT_TIME = null;
     public static final DateTime SENT_TIME = new DateTime(2011, 1, 1, 0, 0);
     public static final DateTime DEFAULT_CREATE_TIME = DateTime.now();
+    public static final String DEFAULT_SENT_COMMENT = "some default sent comment";
 
     @Resource
     PostgresQueryFactory queryFactory;
@@ -132,6 +133,7 @@ public class TestHelper {
 
         insert.set(municipalityInitiative.sent, initiativeDraft.sent);
         insert.set(municipalityInitiative.modified, initiativeDraft.modified);
+        insert.set(municipalityInitiative.sentComment, initiativeDraft.sentComment);
 
         lastInitiativeId = insert.executeWithKey(municipalityInitiative.id);
 
@@ -193,6 +195,7 @@ public class TestHelper {
         public DateTime modified = DEFAULT_CREATE_TIME;
         public Integer participantCount = 1;
         public String extraInfo = DEFAULT_EXTRA_INFO;
+        public String sentComment = DEFAULT_SENT_COMMENT;
 
         public Long authorMunicipality;
 

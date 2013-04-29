@@ -136,38 +136,49 @@ public class PublicInitiativeService {
     }
 
     @Transactional(readOnly = false)
-    public void sendReview(Long initiativeId, LoginUserHolder loginUserHolder, boolean sendToMunicipalityRightAfterAcceptance, Locale locale) {
+    public void sendReviewAndStraightToMunicipality(Long initiativeId, LoginUserHolder loginUserHolder, String sentComment, Locale locale) {
+        markAsReviewAndSendEmail(initiativeId, loginUserHolder, locale);
+        initiativeDao.updateInitiativeType(initiativeId, InitiativeType.SINGLE);
+        initiativeDao.updateSentComment(initiativeId, sentComment);
+    }
+
+    @Transactional(readOnly = false)
+    public void sendReviewOnlyForAcceptance(Long initiativeId, LoginUserHolder loginUserHolder, Locale locale) {
+        markAsReviewAndSendEmail(initiativeId, loginUserHolder, locale);
+    }
+
+    private void markAsReviewAndSendEmail(Long initiativeId, LoginUserHolder loginUserHolder, Locale locale) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         assertAllowance("Send review", getManagementSettings(initiativeId).isAllowSendToReview());
 
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.REVIEW);
-        
         Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
         emailService.sendNotificationToModerator(initiative, locale);
-
-        if (sendToMunicipalityRightAfterAcceptance) {
-            initiativeDao.updateInitiativeType(initiativeId, InitiativeType.SINGLE);
-        }
     }
 
     @Transactional(readOnly = false)
-    void publishAcceptedInitiative(Long initiativeId, boolean wantsToGatherPeople, LoginUserHolder loginUserHolder, Locale locale) {
+    public void publishAndStartCollecting(Long initiativeId, LoginUserHolder loginUserHolder, Locale locale) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         assertAllowance("Publish initiative", getManagementSettings(initiativeId).isAllowPublish());
 
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
-        if (wantsToGatherPeople) {
-            initiativeDao.updateInitiativeType(initiativeId, InitiativeType.COLLABORATIVE);
-            Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
-            emailService.sendStatusEmail(initiative,initiative.getAuthor().getContactInfo().getEmail(), EmailMessageType.PUBLISHED_COLLECTING, locale);
-        }
-        else {
-            initiativeDao.updateInitiativeType(initiativeId, InitiativeType.SINGLE);
-            initiativeDao.markInitiativeAsSent(initiativeId);
-            Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
-            emailService.sendStatusEmail(initiative,initiative.getAuthor().getContactInfo().getEmail(), EmailMessageType.SENT_TO_MUNICIPALITY, locale);
-            emailService.sendSingleToMunicipality(initiative, municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), locale);
-        }
+        initiativeDao.updateInitiativeType(initiativeId, InitiativeType.COLLABORATIVE);
+        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
+        emailService.sendStatusEmail(initiative,initiative.getAuthor().getContactInfo().getEmail(), EmailMessageType.PUBLISHED_COLLECTING, locale);
+    }
+
+    @Transactional(readOnly = false)
+    void publishAndSendToMunicipality(Long initiativeId, LoginUserHolder loginUserHolder, String sentComment, Locale locale){
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
+        assertAllowance("Publish initiative", getManagementSettings(initiativeId).isAllowPublish());
+
+        initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
+        initiativeDao.updateInitiativeType(initiativeId, InitiativeType.SINGLE);
+        initiativeDao.markInitiativeAsSent(initiativeId);
+        initiativeDao.updateSentComment(initiativeId, sentComment);
+        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
+        emailService.sendStatusEmail(initiative,initiative.getAuthor().getContactInfo().getEmail(), EmailMessageType.SENT_TO_MUNICIPALITY, locale);
+        emailService.sendSingleToMunicipality(initiative, municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), locale);
     }
 
     @Transactional(readOnly = false)
@@ -181,11 +192,12 @@ public class PublicInitiativeService {
     }
 
     @Transactional(readOnly = false)
-    public void sendCollaborativeToMunicipality(Long initiativeId, LoginUserHolder loginUserHolder, Locale locale) {
+    void sendCollaborativeToMunicipality(Long initiativeId, LoginUserHolder loginUserHolder, String sentComment, Locale locale) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         assertAllowance("Send collaborative to municipality", getManagementSettings(initiativeId).isAllowSendToMunicipality());
 
         initiativeDao.markInitiativeAsSent(initiativeId);
+        initiativeDao.updateSentComment(initiativeId, sentComment);
         Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
         List<Participant> participants = participantDao.findAllParticipants(initiativeId);
         String municipalityEmail = municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId());
@@ -200,18 +212,15 @@ public class PublicInitiativeService {
     }
 
     @Transactional(readOnly = false)
-    public void sendToMunicipality(Long initiativeId, LoginUserHolder requiredLoginUserHolder, Locale locale) {
+    public void sendToMunicipality(Long initiativeId, LoginUserHolder requiredLoginUserHolder, String sentComment, Locale locale) {
         Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
 
         if (initiative.getType().isCollectable()) {
-            sendCollaborativeToMunicipality(initiativeId, requiredLoginUserHolder, locale);
+            sendCollaborativeToMunicipality(initiativeId, requiredLoginUserHolder, sentComment, locale);
         }
         else {
-            publishAcceptedInitiative(initiativeId, false, requiredLoginUserHolder, locale);
+            publishAndSendToMunicipality(initiativeId, requiredLoginUserHolder, sentComment, locale);
         }
     }
 
-    public void publishAndStartCollecting(Long initiativeId, LoginUserHolder requiredLoginUserHolder, Locale locale) {
-        publishAcceptedInitiative(initiativeId, true, requiredLoginUserHolder, locale);
-    }
 }
