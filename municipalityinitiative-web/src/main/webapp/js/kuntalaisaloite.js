@@ -292,7 +292,7 @@ $(document).ready(function () {
  *	Toggle dropdown menus
  *  =====================
  * */
- (function(){
+(function(){
 	var $dToggle, $dMenu, clickedVisible;
 	$dToggle = $('.dropdown-toggle'); 
 	$dMenu = $('.dropdown-menu');
@@ -334,7 +334,7 @@ $(document).ready(function () {
  * - Sets and gets fontSizeClass-cookie
  * 
  * */
- (function() {
+(function() {
 	var $fontSizeToggler, fontSizeClass;
 	
 	$fontSizeToggler = $('.font-size-toggle a');
@@ -631,7 +631,7 @@ var municipalitySelection = (function() {
 	var form 				= $('#form-preparation'),
 		submit 				= form.find('#action-send-confirm'),
 		input 				= form.find('input,select'),
-		email				= form.find('#authorEmail'),
+		email				= form.find('#participantEmail'),
 		municipalitySelect	= form.find('#municipality'),
 		homeMunicipalitySelect	= form.find('#homeMunicipality'),
 		typeInput 			= form.find('.initiative-type input'),
@@ -687,6 +687,7 @@ var municipalitySelection = (function() {
 			var emailField = $(this);
 			
 			if (validateEmail(emailField.val())) {
+				
 				emailField.addClass('valid').removeClass('invalid');
 				emailOK = true;
 			} else {
