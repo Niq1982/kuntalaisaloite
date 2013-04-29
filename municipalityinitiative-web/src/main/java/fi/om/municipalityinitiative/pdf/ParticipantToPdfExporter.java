@@ -10,6 +10,7 @@ import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.util.Locales;
+import fi.om.municipalityinitiative.util.Membership;
 import org.joda.time.DateTime;
 
 import java.io.FileOutputStream;
@@ -119,16 +120,17 @@ public class ParticipantToPdfExporter {
 
     private static void createTable(Paragraph subCatPart, List<Participant> participants)
             throws DocumentException {
-        PdfPTable table = new PdfPTable(4);
+        PdfPTable table = new PdfPTable(5);
 
         table.setWidthPercentage(100);
-        table.setWidths(new int[] {6, 10, 45, 18});
+        table.setWidths(new int[] {6, 10, 42, 18, 12});
         table.setHorizontalAlignment(Element.ALIGN_LEFT);
 
         table.addCell(createCell(" ", true));
         table.addCell(createCell("Päivämäärä\nDatum", true));
         table.addCell(createCell("Nimi\nNamn", true));
         table.addCell(createCell("Kotikunta\nHemkommun", true));
+        table.addCell(createCell("Jäsenyys", true));
 
         table.setHeaderRows(1);
 
@@ -140,6 +142,7 @@ public class ParticipantToPdfExporter {
             table.addCell(createCell(participant.getParticipateDate().toString(DATE_FORMAT), false));
             table.addCell(createCell(participant.getName(), false));
             table.addCell(createCell(participant.getHomeMunicipality().getNameFi() + ", " + participant.getHomeMunicipality().getNameSv(), false));
+            table.addCell(createCell(participant.getMembership() == Membership.none ? "" : participant.getMembership().name(), false));
         }
 
         subCatPart.add(table);

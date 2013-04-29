@@ -215,12 +215,7 @@
                 
                 <form action="${springMacroRequestContext.requestUri}" method="POST" >
                     <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-<<<<<<< local
-                    Saate:
-                    <textarea name="${UrlConstants.PARAM_SENT_COMMENT}"></textarea>
-                    <button type="submit" name="${UrlConstants.ACTION_SEND_TO_MUNICIPALITY}" id="modal-${UrlConstants.ACTION_SEND_TO_MUNICIPALITY}" value="${UrlConstants.ACTION_SEND_TO_MUNICIPALITY}" class="small-button"><span class="small-icon mail"><@u.message "action.sendToMunicipality.confirm" /></button>
-                    <a href="${managementURL}#send-to-municipality" class="push close"><@u.message "action.cancel" /></a>
-=======
+
                                         
                     <#-- TODO -->
                     <#--<@f.textarea path="comment" required="" optional=false />-->
@@ -228,14 +223,13 @@
                         <label for="comment" class="input-header">
                             Vapaaehtoinen saate kunnalle
                         </label>
-                        <textarea class="textarea" name="comment" id="comment"></textarea>
+                        <textarea name="${UrlConstants.PARAM_SENT_COMMENT}"></textarea>
                     </div>
                     
                     <div class="input-block-content">
                         <button type="submit" name="${UrlConstants.ACTION_SEND_TO_MUNICIPALITY}" id="modal-${UrlConstants.ACTION_SEND_TO_MUNICIPALITY}" value="${UrlConstants.ACTION_SEND_TO_MUNICIPALITY}" class="small-button"><span class="small-icon mail"><@u.message "action.sendToMunicipality.confirm" /></button>
                         <a href="${managementURL}#send-to-municipality" class="push close"><@u.message "action.cancel" /></a>
                     </div>
->>>>>>> other
                 </form>
             </@compress>
         </#assign>
