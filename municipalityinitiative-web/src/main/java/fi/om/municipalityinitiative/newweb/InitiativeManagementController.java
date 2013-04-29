@@ -116,7 +116,7 @@ public class InitiativeManagementController extends BaseController {
 
     @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_SEND_TO_REVIEW)
     public String sendToReview(@PathVariable("id") Long initiativeId,
-                               @RequestParam("sentComment") String sentComment, // FIXME: Implement
+                               @RequestParam(PARAM_SENT_COMMENT) String sentComment,
                                Locale locale, HttpServletRequest request) {
 //        publicInitiativeService.sendReview(initiativeId, userService.getRequiredLoginUserHolder(request), true, locale);
         publicInitiativeService.sendReviewAndStraightToMunicipality(initiativeId, userService.getRequiredLoginUserHolder(request), sentComment, locale);
@@ -139,7 +139,7 @@ public class InitiativeManagementController extends BaseController {
 
     @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_SEND_TO_MUNICIPALITY)
     public String sendToMunicipality(@PathVariable("id") Long initiativeId,
-                                     @RequestParam("sentComment") String sentComment, // FIXME: Implement
+                                     @RequestParam(PARAM_SENT_COMMENT) String sentComment,
                                      Locale locale, HttpServletRequest request) {
         publicInitiativeService.sendToMunicipality(initiativeId, userService.getRequiredLoginUserHolder(request), sentComment, locale);
         return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.PUBLISH_AND_SEND, request);

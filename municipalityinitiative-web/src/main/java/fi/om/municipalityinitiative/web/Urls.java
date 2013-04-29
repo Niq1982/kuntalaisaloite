@@ -106,6 +106,8 @@ public final class Urls {
     public static final String PARAM_INVITATION_CODE = "invitation";
 
     public static final String PARAM_MUNICIPALITY = "municipality";
+
+    public static final String PARAM_SENT_COMMENT = "sentComment";
     
     public static final String SEARCH_UNREMOVED_VOTES = "searchUnremovedVotes";
     
