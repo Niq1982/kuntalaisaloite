@@ -132,7 +132,6 @@
  -->
 <#macro contactInfo type="">
     <#assign obj=initiative.author.contactInfo />
-
     <#if type == "html">
         <h4 style="${h4!""}"><@u.message "email.contact.info" /></h4>
         <p style="${pBottomMargin!""}">${obj.name!""}<br/>

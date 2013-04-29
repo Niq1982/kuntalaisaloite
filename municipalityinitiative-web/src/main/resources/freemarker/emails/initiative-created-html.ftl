@@ -13,7 +13,7 @@
 <@l.emailHtml "municipality-collectable" title>
 
     <@b.contentBlock type>
-        <p style="${pBottomMargin}">Kuntalaisaloite on luotu alla olevilla tiedoilla. Ylläpito-sivulta voit muokata aloitteen tietoja tai lähettää sen oikeusministeriön tarkastettavaksi.</p>
+        <p style="${pBottomMargin}"><@u.message "email.created.description" /></p>
     </@b.contentBlock>
 
     <@u.spacer "15" />

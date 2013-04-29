@@ -29,6 +29,7 @@
         
         <@u.message messageKeyPrefix+".description.2" /> ${initiative.municipality.getLocalizedName(locale)!""}.
         
+        
         <@b.statusInfoComment "text" initiative.moderatorComment!"" />
         
         <@b.initiativeDetails type="text" showProposal=false showDate=false />
@@ -53,6 +54,7 @@
         
         <@u.message messageKeyPrefix+".description.2" />
         
+        
         <@b.statusInfoComment "text" initiative.moderatorComment!"" />
         
         <@b.initiativeDetails type="text" showProposal=false showDate=false />
@@ -73,8 +75,9 @@
 <#elseif emailMessageType == EmailMessageType.REJECTED_BY_OM>
     <#-- TEXT -->
     <#assign statusInfo>
-        <@u.message messageKeyPrefix+".title"/>
-        
+        <@u.message messageKeyPrefix+".description" />
+    
+    
         <@b.statusInfoComment "text" initiative.moderatorComment!"" />
         
         <@b.initiativeDetails type="text" showProposal=false showDate=false />
@@ -137,7 +140,6 @@
     <#assign statusTitle><@u.message messageKeyPrefix+".title" /> ${initiative.municipality.getLocalizedName(locale)!""}</#assign>
     <#-- TEXT -->
     <#assign statusInfo>
-    
         <#-- TODO: sent date: initiative.sentTime.value -->
         <@b.initiativeDetails "text" />
         
@@ -170,6 +172,7 @@
         
         <@u.message messageKeyPrefix+".description.2" /> ${initiative.municipality.getLocalizedName(switchLocale!locale)!""}.
         
+        
         <@b.statusInfoComment "text" initiative.moderatorComment!"" />
         
         <@b.initiativeDetails type="text" showProposal=false showDate=false />
@@ -194,6 +197,7 @@
         
         <@u.message messageKeyPrefix+".description.2" />
         
+        
         <@b.statusInfoComment "text" initiative.moderatorComment!"" />
         
         <@b.initiativeDetails type="text" showProposal=false showDate=false />
@@ -214,7 +218,8 @@
 <#elseif emailMessageType == EmailMessageType.REJECTED_BY_OM>
     <#-- TEXT -->
     <#assign statusInfoSv>
-        <@u.message messageKeyPrefix+".title"/>
+        <@u.message messageKeyPrefix+".description" />
+        
         
         <@b.statusInfoComment "text" initiative.moderatorComment!"" />
         

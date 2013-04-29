@@ -13,6 +13,7 @@
     <@u.message "email.status.info."+emailMessageType+".title" />
 </#if>
 
+
 ${statusInfo!""}
 
 ----
@@ -29,6 +30,7 @@ ${statusInfo!""}
 <#else>
     <@u.message "email.status.info."+emailMessageType+".title" />
 </#if>
+
 
 ${statusInfoSv!""}
 
