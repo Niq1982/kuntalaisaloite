@@ -79,7 +79,7 @@ public class OmInitiativeServiceTest {
 
         omInitiativeService.accept(INITIATIVE_ID, null, Locales.LOCALE_FI);
 
-        verify(omInitiativeService.emailService).sendStatusEmail(any(Initiative.class), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM), eq(Locales.LOCALE_FI));
+        verify(omInitiativeService.emailService).sendStatusEmail(any(Initiative.class), anyString(), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM), eq(Locales.LOCALE_FI));
     }
 
     @Test
@@ -117,7 +117,7 @@ public class OmInitiativeServiceTest {
 
         omInitiativeService.accept(INITIATIVE_ID, null, Locales.LOCALE_FI);
 
-        verify(omInitiativeService.emailService).sendStatusEmail(any(Initiative.class), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM_AND_SENT), eq(Locales.LOCALE_FI));
+        verify(omInitiativeService.emailService).sendStatusEmail(any(Initiative.class), anyString(), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM_AND_SENT), eq(Locales.LOCALE_FI));
         verify(omInitiativeService.emailService).sendSingleToMunicipality(any(Initiative.class), anyString(), eq(Locales.LOCALE_FI));
 
     }
@@ -153,7 +153,7 @@ public class OmInitiativeServiceTest {
         stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
 
         omInitiativeService.reject(INITIATIVE_ID, null, Locales.LOCALE_FI);
-        verify(omInitiativeService.emailService).sendStatusEmail(any(Initiative.class), anyString(), eq(EmailMessageType.REJECTED_BY_OM), eq(Locales.LOCALE_FI));
+        verify(omInitiativeService.emailService).sendStatusEmail(any(Initiative.class), anyString(), anyString(), eq(EmailMessageType.REJECTED_BY_OM), eq(Locales.LOCALE_FI));
     }
 
     @Test

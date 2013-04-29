@@ -33,7 +33,6 @@ ${statusInfo!""}
 
 
 ${statusInfoSv!""}
-
 ----
 
 <@b.emailFooter type />

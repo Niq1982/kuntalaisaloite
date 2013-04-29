@@ -54,10 +54,13 @@ public class MailSendingEmailService implements EmailService {
     }
 
     @Override
-    public void sendStatusEmail(Initiative initiative, String sendTo, EmailMessageType emailMessageType, Locale locale) {
+    public void sendStatusEmail(Initiative initiative, String sendTo, String municipalityEmail, EmailMessageType emailMessageType, Locale locale) {
         
         HashMap<String, Object> dataMap = toDataMap(initiative, locale);
         dataMap.put("emailMessageType", emailMessageType);
+        if (municipalityEmail != null) {
+            dataMap.put("municipalityEmail", municipalityEmail);
+        }
 
         emailMessageConstructor
                 .fromTemplate(STATUS_INFO_TEMPLATE)

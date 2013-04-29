@@ -37,18 +37,20 @@ public class OmInitiativeService {
             throw new OperationNotAllowedException("Not allowed to accept initiative");
         }
 
+        String municipalityEmail = municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId());
+        
         initiativeDao.updateModeratorComment(initiativeId, comment);
         if (initiative.getType().equals(InitiativeType.SINGLE)) {
             initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
             initiativeDao.markInitiativeAsSent(initiativeId);
             initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId); // Necessary because initiative is updated
-            emailService.sendStatusEmail(initiative, initiative.getAuthor().getContactInfo().getEmail(), EmailMessageType.ACCEPTED_BY_OM_AND_SENT, locale);
+            emailService.sendStatusEmail(initiative, initiative.getAuthor().getContactInfo().getEmail(), municipalityEmail, EmailMessageType.ACCEPTED_BY_OM_AND_SENT, locale);
             emailService.sendSingleToMunicipality(initiative, municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), locale);
         }
         else {
             initiativeDao.updateInitiativeState(initiativeId, InitiativeState.ACCEPTED);
             initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);  // Necessary because initiative is updated
-            emailService.sendStatusEmail(initiative, initiative.getAuthor().getContactInfo().getEmail(), EmailMessageType.ACCEPTED_BY_OM, locale);
+            emailService.sendStatusEmail(initiative, initiative.getAuthor().getContactInfo().getEmail(), municipalityEmail, EmailMessageType.ACCEPTED_BY_OM, locale);
         }
 
     }
@@ -64,7 +66,8 @@ public class OmInitiativeService {
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.DRAFT);
 
         Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
-        emailService.sendStatusEmail(initiative, initiative.getAuthor().getContactInfo().getEmail(), EmailMessageType.REJECTED_BY_OM, locale);
+        String municipalityEmail = municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId());
+        emailService.sendStatusEmail(initiative, initiative.getAuthor().getContactInfo().getEmail(), municipalityEmail, EmailMessageType.REJECTED_BY_OM, locale);
     }
 
     @Transactional(readOnly = true)
