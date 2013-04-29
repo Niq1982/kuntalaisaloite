@@ -15,7 +15,6 @@ municipalityinitiative-loadtests/*.log
 municipalityinitiative-loadtests/*.pyc
 
 syntax: glob
-**.DS_Store
 **.orig
 **.iml
 .idea/*
