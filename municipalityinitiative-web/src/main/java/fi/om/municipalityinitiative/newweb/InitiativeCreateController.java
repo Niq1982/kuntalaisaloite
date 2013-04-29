@@ -67,7 +67,7 @@ public class InitiativeCreateController extends BaseController {
 
         Long initiativeId = publicInitiativeService.prepareInitiative(initiative, locale);
         
-        addRequestAttribute(initiative.getParticipantEmail(), model, request); // To be shown at confirmation page
+        addRequestAttribute(initiative.getParticipantEmail(), request); // To be shown at confirmation page
         return redirectWithMessage(urls.pendingConfirmation(initiativeId), RequestMessage.PREPARE, request);
 
     }
