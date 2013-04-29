@@ -144,6 +144,10 @@
         <@b.initiativeDetails "text" />
         
         <@b.contactInfo "text" />
+        ----
+        
+        <@u.message "email.municipality.emailAddress" />
+        ${municipalityEmail!""}
     </#assign>
     
     <#-- HTML -->
@@ -152,6 +156,9 @@
         <@b.initiativeDetails "html" />
         
         <@b.contactInfo "html" />
+        
+        <h4 style="${h4!""}"><@u.message "email.municipality.emailAddress" /></h4>
+        <p style="${pBottomMargin!""}"><@u.link "mailto:"+municipalityEmail!"" municipalityEmail!"" /></p>
     </#assign>
     
 </#if>
@@ -288,6 +295,10 @@
         <@b.initiativeDetails "text" />
         
         <@b.contactInfo "text" />
+        ----
+        
+        <@u.message "email.municipality.emailAddress" />
+        ${municipalityEmail!""}
     </#assign>
     
     <#-- HTML -->
@@ -296,6 +307,9 @@
         <@b.initiativeDetails "html" />
         
         <@b.contactInfo "html" />
+        
+        <h4 style="${h4!""}"><@u.message "email.municipality.emailAddress" /></h4>
+        <p style="${pBottomMargin!""}"><@u.link "mailto:"+municipalityEmail!"" municipalityEmail!"" /></p>
     </#assign>
     
 </#if>

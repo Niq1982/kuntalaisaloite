@@ -164,7 +164,11 @@ public class PublicInitiativeService {
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
         initiativeDao.updateInitiativeType(initiativeId, InitiativeType.COLLABORATIVE);
         Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
-        emailService.sendStatusEmail(initiative,initiative.getAuthor().getContactInfo().getEmail(), EmailMessageType.PUBLISHED_COLLECTING, locale);
+        emailService.sendStatusEmail(initiative,initiative.getAuthor().getContactInfo().getEmail(), municipalityEmail(initiative), EmailMessageType.PUBLISHED_COLLECTING, locale);
+    }
+
+    private String municipalityEmail(Initiative initiative) {
+        return municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId());
     }
 
     @Transactional(readOnly = false)
@@ -177,7 +181,7 @@ public class PublicInitiativeService {
         initiativeDao.markInitiativeAsSent(initiativeId);
         initiativeDao.updateSentComment(initiativeId, sentComment);
         Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
-        emailService.sendStatusEmail(initiative,initiative.getAuthor().getContactInfo().getEmail(), EmailMessageType.SENT_TO_MUNICIPALITY, locale);
+        emailService.sendStatusEmail(initiative,initiative.getAuthor().getContactInfo().getEmail(), municipalityEmail(initiative), EmailMessageType.SENT_TO_MUNICIPALITY, locale);
         emailService.sendSingleToMunicipality(initiative, municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), locale);
     }
 
@@ -200,9 +204,9 @@ public class PublicInitiativeService {
         initiativeDao.updateSentComment(initiativeId, sentComment);
         Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
         List<Participant> participants = participantDao.findAllParticipants(initiativeId);
-        String municipalityEmail = municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId());
+        String municipalityEmail = municipalityEmail(initiative);
         emailService.sendCollaborativeToMunicipality(initiative, participants, municipalityEmail, locale);
-        emailService.sendStatusEmail(initiative, initiative.getAuthor().getContactInfo().getEmail(), EmailMessageType.SENT_TO_MUNICIPALITY, locale);
+        emailService.sendStatusEmail(initiative, initiative.getAuthor().getContactInfo().getEmail(), municipalityEmail, EmailMessageType.SENT_TO_MUNICIPALITY, locale);
     }
 
     private static void assertAllowance(String s, boolean allowed) {
