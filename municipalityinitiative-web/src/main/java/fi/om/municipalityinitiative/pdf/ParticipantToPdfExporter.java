@@ -105,7 +105,7 @@ public class ParticipantToPdfExporter {
 //        addEmptyLine(preface, 1);
         // Lets write a big header
         Municipality municipality = initiative.getMunicipality();
-        preface.add(new Paragraph("Kuntalaisaloite / Invanarinitiativ - " + municipality.getLocalizedName(Locales.LOCALE_FI) + " / " + municipality.getLocalizedName(Locales.LOCALE_SV), mainTitle));
+        preface.add(new Paragraph("Kuntalaisaloite - " + municipality.getLocalizedName(Locales.LOCALE_FI) + " / Invånarinitiativ - " + municipality.getLocalizedName(Locales.LOCALE_SV), mainTitle));
         preface.add(new Paragraph("Aloite lähetetty kuntaan / Initiativet skickats till kommun " + new DateTime().toString(DATETIME_FORMAT), bodyText));
         addEmptyLine(preface, 1);
 

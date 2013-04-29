@@ -157,40 +157,14 @@
  -->
 <#macro participants type="">
     <#if type == "html">
-        <h4 style="${h4!""}"><@u.messageHTML key="email.participantCount.total" /> ${initiative.participantCount!""}</h4>
-        <p style="${pBothMargins!""}">
-            <#if initiative.participantFranchiseCount?? && (initiative.participantFranchiseCount > 0)>
-                <@u.message "email.participantCount.franchise.total" /> <strong>${initiative.participantFranchiseCount!""}</strong> 
-            <#else>
-                <@u.message key="email.participantCount.franchise.total.empty" />
-            </#if>
-            <br />
-            <#if initiative.participantNoFranchiseCount?? && (initiative.participantNoFranchiseCount > 0)>
-                <@u.message key="email.participantCount.noFranchise.total" /> <strong>${initiative.participantNoFranchiseCount!""}</strong>
-            <#else>
-                <@u.message key="email.participantCount.noFranchise.total.empty" />
-            </#if>
-        </p>
-        <#if initiative.participantCount?? && (initiative.participantCount > 0)>
+        <h4 style="${h4!""}"><@u.messageHTML key="email.participantCount.total" /> ${participantCount.total!"0"}</h4>
+        <#if participantCount.total?? && (participantCount.total > 0)>
             <p style="${pBothMargins!""}"><@u.message "email.participantCount.attachment" /></p>
         </#if>
     <#else>
-        <@u.message key="email.participantCount.total" /> ${initiative.participantCount!""}
-        
-        <#if initiative.participantFranchiseCount?? && (initiative.participantFranchiseCount > 0)>
-            <@u.message key="email.participantCount.franchise.total" /> ${initiative.participantFranchiseCount!""}
-        <#else>
-            <@u.message key="email.participantCount.franchise.total.empty" />
-        </#if>
-        
-        <#if initiative.participantNoFranchiseCount?? && (initiative.participantNoFranchiseCount > 0)>
-            <@u.message key="email.participantCount.noFranchise.total" /> ${initiative.participantNoFranchiseCount!""}
-        <#else>
-            <@u.message key="email.participantCount.noFranchise.total.empty" />
-        </#if>
-        
-        
-        <#if initiative.participantCount?? && (initiative.participantCount > 0)>
+        <@u.message key="email.participantCount.total" /> ${participantCount.total!"0"}
+
+        <#if participantCount.total?? && (participantCount.total > 0)>
             <@u.message "email.participantCount.attachment" />
         </#if>
     </#if>

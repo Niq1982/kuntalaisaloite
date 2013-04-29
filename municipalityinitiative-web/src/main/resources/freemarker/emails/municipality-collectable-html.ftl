@@ -8,7 +8,7 @@
 
 <#escape x as x?html>
 
-<#assign title><@u.message "email.initiative" /> - <#-- ${initiative.municipality.getLocalizedName(locale)!""} --></#assign>
+<#assign title><@u.message "email.initiative" /></#assign>
 
 <@l.emailHtml "municipality-collectable" title>
 
@@ -16,7 +16,7 @@
         <@b.comment type initiative.comment "email.commentToMunicipality" />
         <@u.spacer "15" />
     </#if>
-<#--
+
     <@b.mainContentBlock title>
         <@b.initiativeDetails type />
     </@b.mainContentBlock>
@@ -34,7 +34,7 @@
     </@b.contentBlock>
     
     <@u.spacer "15" />
--->
+
 
 </@l.emailHtml>
 
