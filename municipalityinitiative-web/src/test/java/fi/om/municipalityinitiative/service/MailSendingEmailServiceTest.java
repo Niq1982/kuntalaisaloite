@@ -7,8 +7,6 @@ import fi.om.municipalityinitiative.web.Urls;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.mail.MessagingException;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
@@ -79,7 +77,8 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
         assertThat(getMessageContent().html, containsString(CONTACT_NAME));
         assertThat(getMessageContent().html, containsString(CONTACT_PHONE));
         assertThat(getMessageContent().html, containsString(urls.view(INITIATIVE_ID)));
-        assertThat(getMessageContent().html, containsString(COMMENT));
+        assertThat(getMessageContent().html, containsString(EXTRA_INFO));
+        assertThat(getMessageContent().html, containsString(SENT_COMMENT));
     }
 
     @Test
@@ -88,6 +87,7 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
 
         assertThat(getSingleSentMessage().getSubject(), is("Kuntalaisaloite: "+ INITIATIVE_NAME));
         assertThat(getSingleRecipient(), is(CONTACT_EMAIL)); // XXX: MUNICIPALITY_EMAIL
-
+        assertThat(getMessageContent().html, containsString(EXTRA_INFO));
+        assertThat(getMessageContent().html, containsString(SENT_COMMENT));
     }
 }

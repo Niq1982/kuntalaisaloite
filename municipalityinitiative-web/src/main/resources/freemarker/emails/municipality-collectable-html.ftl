@@ -12,8 +12,13 @@
 
 <@l.emailHtml template="municipality-collectable" title=title footer=false>
 
+    <#if (initiative.sentComment)?has_content>
+        <@b.comment type initiative.sentComment "email.sentComment" />
+        <@u.spacer "15" />
+    </#if>
+
     <#if (initiative.extraInfo)?has_content>
-        <@b.comment type initiative.extraInfo "email.commentToMunicipality" />
+        <@b.comment type initiative.extraInfo "email.extraInfo" />
         <@u.spacer "15" />
     </#if>
 

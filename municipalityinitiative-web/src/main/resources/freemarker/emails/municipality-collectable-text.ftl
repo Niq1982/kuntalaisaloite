@@ -3,8 +3,8 @@
 
 <#assign type="text" />
 
-<#if (initiative.extraInfo)?has_content>
-    <@b.comment type initiative.extraInfo "email.commentToMunicipality" />
+<#if (initiative.sentComment)?has_content>
+    <@b.comment type initiative.sentComment "email.sentComment" />
 </#if>
 <#--
 <@u.message "email.initiative" /> - ${initiative.municipality.getLocalizedName(locale)!""}
