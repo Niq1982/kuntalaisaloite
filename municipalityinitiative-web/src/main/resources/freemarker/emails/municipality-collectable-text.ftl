@@ -12,6 +12,12 @@
 
 <@b.initiativeDetails type />
 
+<#if (initiative.extraInfo)?has_content>
+    <@u.message "email.extraInfo" />
+    
+    ${initiative.extraInfo}
+</#if>
+
 ----
 
 <@b.contactInfo type />
