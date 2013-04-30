@@ -21,7 +21,7 @@
         <h2><@u.message "management.warning.title" /></h2>
         <p><@u.messageHTML "management.warning.description" /></p>
         <p><a class="small-button gray" href="${urls.edit(initiative.id)}"><span class="small-icon edit"><@u.messageHTML 'action.editInitiative' /></span></a>
-        <a class="small-button gray push" href="${urls.view(initiative.id)}" target="_blank"><span class="small-icon document">Esikatsele aloitteen julkista näkymää</span></a></p>
+        <a class="small-button gray push" href="${urls.view(initiative.id)}" target="_blank"><span class="small-icon document"><@u.messageHTML 'action.previewInitiative' /></span></a></p>
     </div>
 
     <h1 class="name">${initiative.name!""}</h1>

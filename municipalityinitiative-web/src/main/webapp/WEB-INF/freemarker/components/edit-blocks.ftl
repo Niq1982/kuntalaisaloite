@@ -70,7 +70,8 @@
         <noscript>
             <div class="input-block-content">
                 <div class="system-msg msg-info">
-                    Jos kotikuntasi on eri kuin aloitteen kunta, sinun tulee olla aloitteen kunnan jäsen, jotta voit tehdä aloitteen. <a class="trigger-tooltip" rel="external" target="_blank" href="#">Mitä tämä tarkoittaa?</a>
+                    <#assign href= "#" />
+                    <@u.messageHTML key="initiative.municipality.different" args=[href] />
                 </div>
             </div>
         </noscript>
