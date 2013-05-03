@@ -1,6 +1,7 @@
 <#import "components/layout.ftl" as l />
 <#import "components/utils.ftl" as u />
 <#import "components/elements.ftl" as e />
+<#import "components/forms.ftl" as f />
 
 <#escape x as x?html> 
 
@@ -20,54 +21,49 @@
     
     <@returnPrevious />
 
-    <#-- VIEW BLOCKS -->
+  <div class="view-block single public">
+            <h2>Nykyiset vastuuhenkilöt</h2>
+
+            <#list authors as a>
+
+              <div class="author cf">
+                  <div class="details">
+                      <h4 class="header">${a.contactInfo.name}</h4>
+                      <div class="email">${a.contactInfo.email}</div>
+                  </div>
+
+                  <div class="invitation">
+                      <div class="status">Hyväksytty vastuuhenkilöksi</div>
+                  </div>
+              </div>
+
+            </#list>
+    </div>
+
     <div class="view-block single public">
-        <h2>Hallinnoi vastuuhenkilöitä</h2>
-        
-        <div class="author cf">
-            <div class="details">
-                <h4 class="header">Ville Vastuunkantaja</h4>
-                <div class="email">ville.vastuunkantaja@solita.fi</div>
-            </div>
-            
-            <div class="invitation">
-                <div class="status"><span class="icon-small unconfirmed"></span> Odottaa hyväksyntää <a href="#" class="cancel-invitation">peru kutsu</a></div>
-                <div class="action push">Kutsu lähetetty 3.5.2013</div>
-            </div>
-        </div>
-        
-        <div class="author cf">
-            <div class="details">
-                <h4 class="header">Ville Vastuunkantaja</h4>
-                <div class="email">ville.vastuunkantaja@solita.fi</div>
-            </div>
-            
-            <div class="invitation">
-                <div class="status"><span class="icon-small confirmed"></span> Kutsu hyväksytty</div>
-            </div>
-        </div>
-        
-        <div class="author cf">
-            <div class="details">
-                <h4 class="header">Ville Vastuunkantaja</h4>
-                <div class="email">ville.vastuunkantaja@solita.fi</div>
-            </div>
-            
-            <div class="invitation">
-                <div class="status"><span class="icon-small unconfirmed"></span> Kutsu vanhentunut 3.5.2013 <a href="#" class="resend-invitation">lähetä kutsu uudelleen</a></div>
-            </div>
-        </div>
-        
-        <div class="author rejected cf">
-            <div class="details">
-                <h4 class="header">Ville Vastuunkantaja</h4>
-                <div class="email">ville.vastuunkantaja@solita.fi</div>
-            </div>
-            
-            <div class="invitation">
-                <div class="status"><span class="icon-small unconfirmed"></span> Kutsu hylätty</div>
-            </div>
-        </div>
+            <h2>Avoimet kutsut (vanhenevat minuutissa)</h2>
+
+            <#list invitations as i>
+
+              <div class="author cf">
+                  <div class="details">
+                      <h4 class="header">${i.name}</h4>
+                      <div class="email">${i.email}</div>
+                  </div>
+
+                  <div class="invitation">
+                  <#if i.expired>
+                      <div class="status"><span class="icon-small unconfirmed"></span> Kutsu vanhentunut <a href="#" class="resend-invitation">lähetä kutsu uudelleen</a></div>
+                  <#else>
+                      <div class="status"><span class="icon-small unconfirmed"></span> Odottaa hyväksyntää <a href="#" class="cancel-invitation">peru kutsu</a></div>
+                      <div class="action push">Kutsu lähetetty ${i.invitationTime}</div>
+                  </#if>
+
+                  </div>
+              </div>
+
+            </#list>
+
         
         <div class="js-open-block hidden">
             <a class="small-button gray js-btn-open-block" data-open-block="js-block-container" href="#"><span class="small-icon save-and-send"><@u.message "action.addAuthor" /></span></a>
@@ -78,23 +74,22 @@
                 <div class="system-msg msg-info">
                     Kutsu aloitteeseen vastuuhenkilö. Täytä vähintään sähköpostiosoite, sillä kutsu lähetetään antamaasi osoitteeseen.
                 </div>
+
+                <@u.errorsSummary path="newInvitation.*" prefix="newInvitation."/>
+
             </div>
         
+
+
 
             <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-send" class="sodirty">
                 <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
                 <input type="hidden" name="${UrlConstants.PARAM_MANAGEMENT_CODE}" value="${initiative.managementHash.value}"/>
                 
                 <div class="input-block-content">
-                    <label for="participantEmail" class="input-header">
-                        Etu- ja sukunimi
-                    </label>
-                    <input type="text" maxlength="100" class="large" value="" name="authorName" id="authorName">
+                    <@f.textField path="newInvitation.authorName" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_NAME_MAX key="contactInfo.name" />
+                    <@f.textField path="newInvitation.authorEmail" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX key="contactInfo.email" />
 
-                    <label for="participantEmail" class="input-header">
-                        Sähköpostiosoite <span class="icon-small required trigger-tooltip"></span>
-                    </label>
-                    <input type="text" maxlength="100" class="large" value="" name="authorEmail" id="authorEmail">
 
                 </div>
                 

@@ -3,10 +3,9 @@ package fi.om.municipalityinitiative.service;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
-import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
+import fi.om.municipalityinitiative.newweb.AuthorInvitationUICreateDto;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,7 +33,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     @Test(expected = AccessDeniedException.class)
     public void create_invitation_checks_management_rights_for_initiative() {
-        authorService.createAuthorInvitation(null, unknownLoginUserHolder, null, null);
+        authorService.createAuthorInvitation(null, unknownLoginUserHolder, null);
     }
 
     @Test(expected = OperationNotAllowedException.class)
@@ -42,14 +41,18 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
         Long initiativeId = testHelper.createSingleSent(testHelper.createTestMunicipality("name"));
 
-        authorService.createAuthorInvitation(initiativeId, authorLoginUserHolder, null, null);
+        authorService.createAuthorInvitation(initiativeId, authorLoginUserHolder, null);
     }
 
     @Test
     public void create_invitation_sets_required_information() {
         Long initiativeId = testHelper.createCollectableReview(testHelper.createTestMunicipality("name"));
 
-        authorService.createAuthorInvitation(initiativeId, authorLoginUserHolder, "email", "name");
+        AuthorInvitationUICreateDto authorInvitationUICreateDto = new AuthorInvitationUICreateDto();
+        authorInvitationUICreateDto.setAuthorName("name");
+        authorInvitationUICreateDto.setAuthorEmail("email");
+
+        authorService.createAuthorInvitation(initiativeId, authorLoginUserHolder, authorInvitationUICreateDto);
 
         AuthorInvitation createdInvitation = authorDao.getAuthorInvitation(initiativeId, RandomHashGenerator.getPrevious());
         assertThat(createdInvitation.getConfirmationCode(), is(RandomHashGenerator.getPrevious()));

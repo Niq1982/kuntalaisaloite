@@ -36,6 +36,9 @@ public class InitiativeManagementController extends BaseController {
     @Resource
     private ValidationService validationService;
 
+    @Resource
+    private AuthorService authorService;
+
     public InitiativeManagementController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
     }
@@ -160,7 +163,32 @@ public class InitiativeManagementController extends BaseController {
 
         return ViewGenerator.manageAuthorsView(initiativeInfo,
                 publicInitiativeService.getManagementSettings(initiativeId),
-                publicInitiativeService.getAuthorInformation(initiativeId, loginUserHolder)
+                authorService.findAuthors(initiativeId, loginUserHolder),
+                authorService.findAuthorInvitations(initiativeId, loginUserHolder),
+                new AuthorInvitationUICreateDto()
         ).view(model, Urls.get(locale).alt().getManagement(initiativeId));
+    }
+
+    @RequestMapping(value = {MANAGE_AUTHORS_FI, MANAGE_AUTHORS_SV}, method = POST)
+    public String inviteAuthor(@PathVariable("id") Long initiativeId,
+                               @ModelAttribute("newInvitation") AuthorInvitationUICreateDto authorInvitationUICreateDto,
+                               Model model,
+                               Locale locale,
+                               BindingResult bindingResult,
+                               HttpServletRequest request) {
+
+        LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
+
+        if (validationService.validationSuccessful(authorInvitationUICreateDto, bindingResult, model)) {
+            authorService.createAuthorInvitation(initiativeId, loginUserHolder, authorInvitationUICreateDto);
+            return contextRelativeRedirect(Urls.get(locale).manageAuthors(initiativeId));
+        }
+        else {
+            return ViewGenerator.manageAuthorsView(publicInitiativeService.getMunicipalityInitiative(initiativeId),
+                    publicInitiativeService.getManagementSettings(initiativeId),
+                    authorService.findAuthors(initiativeId, loginUserHolder),
+                    authorService.findAuthorInvitations(initiativeId, loginUserHolder),
+                    authorInvitationUICreateDto).view(model, Urls.get(locale).alt().getManagement(initiativeId));
+        }
     }
 }

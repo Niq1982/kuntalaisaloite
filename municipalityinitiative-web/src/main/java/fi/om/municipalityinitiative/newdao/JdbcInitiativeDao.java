@@ -1,14 +1,11 @@
 package fi.om.municipalityinitiative.newdao;
 
-import com.google.common.base.Strings;
 import com.mysema.commons.lang.Assert;
-import com.mysema.query.Tuple;
 import com.mysema.query.sql.postgres.PostgresQuery;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.support.Expressions;
 import com.mysema.query.types.ConstantImpl;
 import com.mysema.query.types.Expression;
-import com.mysema.query.types.MappingProjection;
 import com.mysema.query.types.Predicate;
 import com.mysema.query.types.expr.CaseBuilder;
 import com.mysema.query.types.expr.DateTimeExpression;
@@ -20,8 +17,6 @@ import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
-import fi.om.municipalityinitiative.newdto.service.Municipality;
-import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUIUpdateDto;
@@ -33,13 +28,13 @@ import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.MaybeHoldingHashMap;
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
 import java.util.List;
 
+import static fi.om.municipalityinitiative.newdao.Mappings.parseMunicipality;
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 
 @SQLExceptionTranslated
@@ -73,7 +68,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
         restrictResults(query, search);
         orderBy(query, search.getOrderBy());
 
-        return query.list(initiativeListInfoMapping);
+        return query.list(Mappings.initiativeListInfoMapping);
 
     }
 
@@ -160,7 +155,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .innerJoin(QParticipant.participant.participantMunicipalityFk, AUTHOR_MUNICIPALITY)
                 .where(municipalityInitiative.id.eq(initiativeId));
 
-        Initiative initiative = query.uniqueResult(initiativeInfoMapping);
+        Initiative initiative = query.uniqueResult(Mappings.initiativeInfoMapping);
         if (initiative == null) {
             throw new NotFoundException("initiative", initiativeId);
         }
@@ -178,7 +173,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .where(QAuthor.author.managementHash.eq(authorsManagementHash));
 
-        Initiative initiative = query.uniqueResult(initiativeInfoMapping);
+        Initiative initiative = query.uniqueResult(Mappings.initiativeInfoMapping);
         if (initiative == null) {
             throw new NotFoundException("initiative", "Invalid managementhash or initiative id");
         }
@@ -278,7 +273,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .innerJoin(QParticipant.participant.participantMunicipalityFk, QMunicipality.municipality)
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .where(QAuthor.author.managementHash.eq(managementHash))
-                .uniqueResult(authorMapping);
+                .uniqueResult(Mappings.authorMapping);
     }
 
     @Override
@@ -364,116 +359,5 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     // Mappings:
 
-    private Expression<Author> authorMapping =
-            new MappingProjection<Author>(Author.class,
-                    municipalityInitiative.all(),
-                    QMunicipality.municipality.all(),
-                    QParticipant.participant.all(),
-                    QAuthor.author.all()) {
-                @Override
-                protected Author map(Tuple row) {
 
-                    ContactInfo contactInfo = new ContactInfo();
-                    contactInfo.setAddress(row.get(QAuthor.author.address));
-                    contactInfo.setPhone(row.get(QAuthor.author.phone));
-                    contactInfo.setEmail(row.get(QParticipant.participant.email));
-                    contactInfo.setName(row.get(QParticipant.participant.name));
-
-                    Author author = new Author();
-                    author.setId(row.get(QAuthor.author.id));
-                    author.setContactInfo(contactInfo);
-                    author.setMunicipality(parseMunicipality(row));
-
-                    return author;
-
-
-                }
-            };
-
-
-    private static Municipality parseMunicipality(Tuple row) {
-        return new Municipality(
-                row.get(QMunicipality.municipality.id),
-                row.get(QMunicipality.municipality.name),
-                row.get(QMunicipality.municipality.nameSv));
-    }
-
-    private static Municipality parseMunicipality(Tuple row, QMunicipality municipality) {
-        return new Municipality(
-                row.get(municipality.id),
-                row.get(municipality.name),
-                row.get(municipality.nameSv));
-    }
-
-    Expression<Initiative> initiativeInfoMapping =
-            new MappingProjection<Initiative>(Initiative.class,
-                    municipalityInitiative.all(),
-                    AUTHOR_MUNICIPALITY.all(),
-                    INITIATIVE_MUNICIPALITY.all(),
-                    QParticipant.participant.all(),
-                    QAuthor.author.all()) {
-                @Override
-                protected Initiative map(Tuple row) {
-                    Initiative info = new Initiative();
-                    info.setId(row.get(municipalityInitiative.id));
-                    info.setCreateTime(row.get(municipalityInitiative.modified).toLocalDate());
-                    info.setName(row.get(municipalityInitiative.name));
-                    info.setMunicipality(parseMunicipality(row, INITIATIVE_MUNICIPALITY)
-                    );
-                    info.setType(row.get(municipalityInitiative.type));
-                    info.setProposal(row.get(municipalityInitiative.proposal));
-                    info.setAuthorName(row.get(QParticipant.participant.name));
-                    info.setShowName(row.get(QParticipant.participant.showName));
-                    info.setManagementHash(Maybe.of(row.get(QAuthor.author.managementHash)));
-                    info.setSentTime(maybeLocalDate(row.get(municipalityInitiative.sent)));
-                    info.setState(row.get(municipalityInitiative.state));
-                    info.setStateTime(row.get(municipalityInitiative.stateTimestamp).toLocalDate());
-                    info.setExtraInfo(row.get(municipalityInitiative.extraInfo));
-                    info.setModeratorComment(Strings.nullToEmpty(row.get(municipalityInitiative.moderatorComment)));
-                    info.setParticipantCount(row.get(municipalityInitiative.participantCount));
-                    info.setSentComment(row.get(municipalityInitiative.sentComment));
-
-                    Author author = new Author();
-                    ContactInfo contactInfo = new ContactInfo();
-                    contactInfo.setAddress(row.get(QAuthor.author.address));
-                    contactInfo.setPhone(row.get(QAuthor.author.phone));
-                    contactInfo.setName(row.get(QAuthor.author.name));
-                    contactInfo.setEmail(row.get(QParticipant.participant.email));
-                    author.setId(row.get(QAuthor.author.id));
-                    author.setContactInfo(contactInfo);
-                    author.setMunicipality(parseMunicipality(row, AUTHOR_MUNICIPALITY));
-
-                    info.setAuthor(author);
-
-                    return info;
-                }
-            };
-
-    private static Maybe<LocalDate> maybeLocalDate(DateTime sentTime) {
-        if (sentTime != null) {
-            return Maybe.of(sentTime.toLocalDate());
-        }
-        return Maybe.absent();
-    }
-
-    Expression<InitiativeListInfo> initiativeListInfoMapping =
-            new MappingProjection<InitiativeListInfo>(InitiativeListInfo.class,
-                    municipalityInitiative.all(),
-                    QMunicipality.municipality.all(),
-                    QParticipant.participant.all(),
-                    QAuthor.author.all()) {
-                @Override
-                protected InitiativeListInfo map(Tuple row) {
-                    InitiativeListInfo info = new InitiativeListInfo();
-                    info.setId(row.get(municipalityInitiative.id));
-                    info.setCreateTime(row.get(municipalityInitiative.modified).toLocalDate());
-                    info.setName(row.get(municipalityInitiative.name));
-                    info.setMunicipality(parseMunicipality(row));
-                    info.setCollectable(InitiativeType.isCollectable(row.get(municipalityInitiative.type)));
-                    info.setSentTime(maybeLocalDate(row.get(municipalityInitiative.sent)));
-                    info.setParticipantCount(row.get(municipalityInitiative.participantCount));
-                    info.setType(row.get(municipalityInitiative.type));
-                    return info;
-                }
-            };
 }

@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newdao;
 
+import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 
 import java.util.List;
@@ -13,4 +14,6 @@ public interface AuthorDao {
     AuthorInvitation getAuthorInvitation(Long initiativeId, String confirmationCode);
 
     List<AuthorInvitation> findInvitations(Long initiativeId);
+
+    List<Author> findAuthors(Long initiativeId);
 }

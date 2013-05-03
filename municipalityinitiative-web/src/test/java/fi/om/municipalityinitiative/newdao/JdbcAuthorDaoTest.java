@@ -13,6 +13,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
 
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -49,5 +51,11 @@ public class JdbcAuthorDaoTest {
             authorDao.getAuthorInvitation(original.getInitiativeId(), original.getConfirmationCode());
             fail("Should have failed due not found");
         } catch (NotFoundException e) { }
+    }
+
+    @Test
+    public void find_authors_returns_at_least_one() {
+        Long initiativeId = testHelper.createCollectableAccepted(testHelper.createTestMunicipality("what"));
+        assertThat(authorDao.findAuthors(initiativeId), hasSize(1));
     }
 }

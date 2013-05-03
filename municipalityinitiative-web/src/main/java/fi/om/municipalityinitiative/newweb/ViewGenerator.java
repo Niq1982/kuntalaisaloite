@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
+import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.*;
@@ -151,12 +152,17 @@ public class ViewGenerator {
                         .build());
     }
     
-    public static ViewGenerator manageAuthorsView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, Author authorInformation) {
+    public static ViewGenerator manageAuthorsView(InitiativeViewInfo initiativeInfo,
+                                                  ManagementSettings managementSettings,
+                                                  List<Author> authorInformation,
+                                                  List<AuthorInvitation> invitations, AuthorInvitationUICreateDto invitationUiCreate) {
         return new ViewGenerator(MANAGE_AUTHORS_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
                         .add("managementSettings", managementSettings)
-                        .add("author", authorInformation)
+                        .add("authors", authorInformation)
+                        .add("invitations", invitations)
+                        .add("newInvitation", invitationUiCreate)
                         .build()
         );
     }

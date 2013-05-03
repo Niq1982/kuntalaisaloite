@@ -49,4 +49,8 @@ public class AuthorInvitation {
     public DateTime getInvitationTime() {
         return invitationTime;
     }
+
+    public boolean isExpired() {
+        return invitationTime.isBefore(new DateTime().minusMinutes(1));
+    }
 }
