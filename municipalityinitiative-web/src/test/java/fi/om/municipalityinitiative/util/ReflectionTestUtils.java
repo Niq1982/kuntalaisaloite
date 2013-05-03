@@ -89,7 +89,7 @@ public class ReflectionTestUtils {
         }
 
         if (type.equals(DateTime.class)) {
-            return new DateTime(randomLong());
+            return new DateTime(randomInt());
         }
         if (type.equals(Maybe.class)) {
             return Maybe.absent(); // TODO: find out the type of the optional object and recursively generate a random non-absent value

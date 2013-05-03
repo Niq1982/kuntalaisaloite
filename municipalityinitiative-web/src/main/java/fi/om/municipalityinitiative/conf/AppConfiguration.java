@@ -119,8 +119,13 @@ public class AppConfiguration {
     }
 
     @Bean
-    public ParticipantDao composerDao() {
+    public ParticipantDao participantDao() {
         return new JdbcParticipantDao();
+    }
+
+    @Bean
+    public AuthorDao authorDao() {
+        return new JdbcAuthorDao();
     }
 
     @Bean

@@ -4,10 +4,7 @@ import com.mysema.query.sql.RelationalPathBase;
 import com.mysema.query.sql.dml.SQLInsertClause;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Path;
-import fi.om.municipalityinitiative.sql.QAuthor;
-import fi.om.municipalityinitiative.sql.QMunicipality;
-import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
-import fi.om.municipalityinitiative.sql.QParticipant;
+import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Membership;
@@ -54,6 +51,7 @@ public class TestHelper {
 
     @Transactional(readOnly=false)
     public void dbCleanup() {
+        queryFactory.delete(QAuthorInvitation.authorInvitation).execute();
         queryFactory.delete(QAuthor.author).execute();
         queryFactory.delete(QParticipant.participant).execute();
         queryFactory.delete(QMunicipalityInitiative.municipalityInitiative).execute();

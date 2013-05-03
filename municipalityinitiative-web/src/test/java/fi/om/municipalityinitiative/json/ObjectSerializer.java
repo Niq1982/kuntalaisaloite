@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import fi.om.municipalityinitiative.util.Maybe;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import java.io.IOException;
@@ -26,6 +27,7 @@ public class ObjectSerializer {
         public MaybeModule() {
             addSerializer(Maybe.class, new MaybeSerializer());
             addSerializer(LocalDate.class, new LocalDateJsonSerializer());
+            addSerializer(DateTime.class, new DateTimeJsonSerializer());
         }
     }
 }

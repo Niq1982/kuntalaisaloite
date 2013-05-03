@@ -76,11 +76,22 @@ create table author (
     name varchar(100),
     phone varchar(30),
     address varchar(256),
-    confirmed boolean,
 
     constraint author_pk primary key (id),
     constraint author_participant_fk foreign key (participant_id) references participant(id)
 );
 create index author_id_index on author(id);
+
+create table author_invitation (
+    id bigserial,
+    initiative_id bigserial,
+    confirmation_code varchar(20),
+    email varchar(100) constraint author_invitation_email_nn not null,
+    name varchar(100) constraint author_invitation_name_nn not null,
+    invitation_time timestamp constraint author_invitation_time_nn not null,
+
+    constraint author_invitation_pk primary key(id),
+    constraint author_invitation_initiative_id_fk foreign key (initiative_id) references municipality_initiative(id)
+);
 
 alter table municipality_initiative add constraint initiative_author_fk foreign key (author_id) references author(id) INITIALLY DEFERRED;
