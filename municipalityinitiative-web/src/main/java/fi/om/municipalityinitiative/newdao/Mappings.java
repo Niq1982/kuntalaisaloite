@@ -5,11 +5,13 @@ import com.mysema.query.Tuple;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
 import fi.om.municipalityinitiative.newdto.Author;
+import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.sql.QAuthor;
+import fi.om.municipalityinitiative.sql.QAuthorInvitation;
 import fi.om.municipalityinitiative.sql.QMunicipality;
 import fi.om.municipalityinitiative.sql.QParticipant;
 import fi.om.municipalityinitiative.util.InitiativeType;
@@ -106,6 +108,25 @@ public class Mappings {
                     info.setAuthor(author);
 
                     return info;
+                }
+            };
+    public static Expression<AuthorInvitation> authorInvitationMapping =
+            new MappingProjection<AuthorInvitation>(AuthorInvitation.class,
+                    QAuthorInvitation.authorInvitation.all()) {
+
+                @Override
+                protected AuthorInvitation map(Tuple row) {
+                    AuthorInvitation authorInvitation = new AuthorInvitation();
+
+                    authorInvitation.setConfirmationCode(row.get(QAuthorInvitation.authorInvitation.confirmationCode));
+                    authorInvitation.setInitiativeId(row.get(QAuthorInvitation.authorInvitation.initiativeId));
+                    authorInvitation.setEmail(row.get(QAuthorInvitation.authorInvitation.email));
+                    authorInvitation.setInvitationTime(row.get(QAuthorInvitation.authorInvitation.invitationTime));
+                    authorInvitation.setName(row.get(QAuthorInvitation.authorInvitation.name));
+                    authorInvitation.setRejectTime(Maybe.fromNullable(row.get(QAuthorInvitation.authorInvitation.rejectTime)));
+
+                    return authorInvitation;
+
                 }
             };
 

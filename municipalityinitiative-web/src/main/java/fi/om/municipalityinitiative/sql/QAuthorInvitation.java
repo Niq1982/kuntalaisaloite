@@ -30,6 +30,8 @@ public class QAuthorInvitation extends com.mysema.query.sql.RelationalPathBase<Q
 
     public final StringPath name = createString("name");
 
+    public final DateTimePath<org.joda.time.DateTime> rejectTime = createDateTime("reject_time", org.joda.time.DateTime.class);
+
     public final com.mysema.query.sql.PrimaryKey<QAuthorInvitation> authorInvitationPk = createPrimaryKey(id);
 
     public final com.mysema.query.sql.ForeignKey<QMunicipalityInitiative> authorInvitationInitiativeIdFk = createForeignKey(initiativeId, "id");

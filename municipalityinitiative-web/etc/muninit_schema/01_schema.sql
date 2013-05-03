@@ -89,6 +89,7 @@ create table author_invitation (
     email varchar(100) constraint author_invitation_email_nn not null,
     name varchar(100) constraint author_invitation_name_nn not null,
     invitation_time timestamp constraint author_invitation_time_nn not null,
+    reject_time timestamp,
 
     constraint author_invitation_pk primary key(id),
     constraint author_invitation_initiative_id_fk foreign key (initiative_id) references municipality_initiative(id)

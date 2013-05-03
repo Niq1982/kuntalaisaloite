@@ -13,6 +13,8 @@ public interface AuthorDao {
 
     AuthorInvitation getAuthorInvitation(Long initiativeId, String confirmationCode);
 
+    void rejectAuthorInvitation(Long initiativeId, String confirmationCode);
+
     List<AuthorInvitation> findInvitations(Long initiativeId);
 
     List<Author> findAuthors(Long initiativeId);

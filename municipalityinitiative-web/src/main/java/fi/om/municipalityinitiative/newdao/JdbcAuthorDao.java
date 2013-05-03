@@ -1,10 +1,8 @@
 package fi.om.municipalityinitiative.newdao;
 
 
-import com.mysema.query.Tuple;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
-import com.mysema.query.types.MappingProjection;
 import com.mysema.query.types.expr.DateTimeExpression;
 import fi.om.municipalityinitiative.dao.NotFoundException;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
@@ -21,6 +19,7 @@ import javax.annotation.Resource;
 
 import java.util.List;
 
+import static fi.om.municipalityinitiative.newdao.JdbcInitiativeDao.assertSingleAffection;
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 
 @SQLExceptionTranslated
@@ -50,18 +49,21 @@ public class JdbcAuthorDao implements AuthorDao {
         AuthorInvitation authorInvitation = queryFactory.from(QAuthorInvitation.authorInvitation)
                 .where(QAuthorInvitation.authorInvitation.initiativeId.eq(initiativeId))
                 .where(QAuthorInvitation.authorInvitation.confirmationCode.eq(confirmationCode))
-                .singleResult(authorInvitationMapping);
+                .singleResult(Mappings.authorInvitationMapping);
         if (authorInvitation == null) {
             throw new NotFoundException(QAuthorInvitation.authorInvitation.getTableName(), initiativeId + ":" + confirmationCode);
         }
         return authorInvitation;
     }
 
-    private static <T> T notNull(T value) {
-        if (value == null) {
-            throw new NullPointerException();
-        }
-        return value;
+    @Override
+    @Transactional(readOnly = false)
+    public void rejectAuthorInvitation(Long initiativeId, String confirmationCode) {
+        assertSingleAffection(queryFactory.update(QAuthorInvitation.authorInvitation)
+                .set(QAuthorInvitation.authorInvitation.rejectTime, CURRENT_TIME)
+                .where(QAuthorInvitation.authorInvitation.initiativeId.eq(initiativeId))
+                .where(QAuthorInvitation.authorInvitation.confirmationCode.eq(confirmationCode))
+                .execute());
     }
 
     @Override
@@ -81,7 +83,7 @@ public class JdbcAuthorDao implements AuthorDao {
     public List<AuthorInvitation> findInvitations(Long initiativeId) {
         return queryFactory.from(QAuthorInvitation.authorInvitation)
                 .where(QAuthorInvitation.authorInvitation.initiativeId.eq(initiativeId))
-                .list(authorInvitationMapping);
+                .list(Mappings.authorInvitationMapping);
     }
 
     @Override
@@ -94,24 +96,5 @@ public class JdbcAuthorDao implements AuthorDao {
                     .where(municipalityInitiative.id.eq(initiativeId))
                     .list(Mappings.authorMapping);
     }
-
-    Expression<AuthorInvitation> authorInvitationMapping =
-            new MappingProjection<AuthorInvitation>(AuthorInvitation.class,
-                    QAuthorInvitation.authorInvitation.all()) {
-
-                @Override
-                protected AuthorInvitation map(Tuple row) {
-                    AuthorInvitation authorInvitation = new AuthorInvitation();
-
-                    authorInvitation.setConfirmationCode(row.get(QAuthorInvitation.authorInvitation.confirmationCode));
-                    authorInvitation.setInitiativeId(row.get(QAuthorInvitation.authorInvitation.initiativeId));
-                    authorInvitation.setEmail(row.get(QAuthorInvitation.authorInvitation.email));
-                    authorInvitation.setInvitationTime(row.get(QAuthorInvitation.authorInvitation.invitationTime));
-                    authorInvitation.setName(row.get(QAuthorInvitation.authorInvitation.name));
-
-                    return authorInvitation;
-
-                }
-            };
 
 }

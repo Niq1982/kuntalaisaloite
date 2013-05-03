@@ -52,7 +52,10 @@
                   </div>
 
                   <div class="invitation">
-                  <#if i.expired>
+
+                  <#if i.rejected>
+                    <div class="status"><span class="icon-small unconfirmed"></span> Kutsu hylätty ${i.rejectTime.value} <a href="#" class="resend-invitation">lähetä kutsu uudelleen</a></div>
+                  <#elseif i.expired>
                       <div class="status"><span class="icon-small unconfirmed"></span> Kutsu vanhentunut <a href="#" class="resend-invitation">lähetä kutsu uudelleen</a></div>
                   <#else>
                       <div class="status"><span class="icon-small unconfirmed"></span> Odottaa hyväksyntää <a href="#" class="cancel-invitation">peru kutsu</a></div>

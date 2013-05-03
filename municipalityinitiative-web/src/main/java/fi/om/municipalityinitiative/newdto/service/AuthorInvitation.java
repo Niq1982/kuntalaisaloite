@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newdto.service;
 
+import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.DateTime;
 
 public class AuthorInvitation {
@@ -9,6 +10,7 @@ public class AuthorInvitation {
     private String name;
     private String email;
     private DateTime invitationTime;
+    private Maybe<DateTime> rejectTime;
 
     public Long getInitiativeId() {
         return initiativeId;
@@ -52,5 +54,17 @@ public class AuthorInvitation {
 
     public boolean isExpired() {
         return invitationTime.isBefore(new DateTime().minusMinutes(1));
+    }
+
+    public void setRejectTime(Maybe<DateTime> rejectTime) {
+        this.rejectTime = rejectTime;
+    }
+
+    public boolean isRejected() {
+        return rejectTime.isPresent();
+    }
+
+    public Maybe<DateTime> getRejectTime() {
+        return rejectTime;
     }
 }

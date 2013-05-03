@@ -48,9 +48,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     public void create_invitation_sets_required_information() {
         Long initiativeId = testHelper.createCollectableReview(testHelper.createTestMunicipality("name"));
 
-        AuthorInvitationUICreateDto authorInvitationUICreateDto = new AuthorInvitationUICreateDto();
-        authorInvitationUICreateDto.setAuthorName("name");
-        authorInvitationUICreateDto.setAuthorEmail("email");
+        AuthorInvitationUICreateDto authorInvitationUICreateDto = authorInvitation();
 
         authorService.createAuthorInvitation(initiativeId, authorLoginUserHolder, authorInvitationUICreateDto);
 
@@ -59,6 +57,26 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         assertThat(createdInvitation.getName(), is("name"));
         assertThat(createdInvitation.getInvitationTime(), is(notNullValue()));
         assertThat(createdInvitation.getEmail(), is("email"));
+    }
+
+    @Test
+    public void reject_author_invitation() {
+        Long initiativeId = testHelper.createCollectableReview(testHelper.createTestMunicipality("name"));
+
+        authorService.createAuthorInvitation(initiativeId, authorLoginUserHolder, authorInvitation());
+        assertThat(authorDao.getAuthorInvitation(initiativeId, RandomHashGenerator.getPrevious()).isRejected(), is(false));
+
+        authorDao.rejectAuthorInvitation(initiativeId, RandomHashGenerator.getPrevious());
+
+        assertThat(authorDao.getAuthorInvitation(initiativeId, RandomHashGenerator.getPrevious()).isRejected(), is(true));
+
+    }
+
+    private static AuthorInvitationUICreateDto authorInvitation() {
+        AuthorInvitationUICreateDto authorInvitationUICreateDto = new AuthorInvitationUICreateDto();
+        authorInvitationUICreateDto.setAuthorName("name");
+        authorInvitationUICreateDto.setAuthorEmail("email");
+        return authorInvitationUICreateDto;
     }
 
 }
