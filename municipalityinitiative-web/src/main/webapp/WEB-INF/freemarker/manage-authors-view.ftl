@@ -65,7 +65,7 @@
             </div>
             
             <div class="invitation">
-                <div class="status"><span class="icon-small unconfirmed"></span> Kutsu hylätty</div>
+                <div class="status push">Kutsu hylätty</div>
             </div>
         </div>
         
