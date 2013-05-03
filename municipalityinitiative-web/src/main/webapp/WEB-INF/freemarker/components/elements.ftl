@@ -39,7 +39,7 @@
  * @param contactInfo is author.contactInfo
 -->
 <#macro initiativeContactInfo contactInfo>
-    <h2 class="inline-style"><@u.message "initiative.contactinfo.title" /></h2><span class="push">Ei näy julkisessa näkymässä</span>
+    <h2 class="inline-style"><@u.message "initiative.contactinfo.title" /></h2><span class="push"><@u.message "initiative.contactinfo.notPublic" /></span>
     <p>${contactInfo.name!""}<br />
     ${contactInfo.email!""}<br />
     <#if contactInfo.address?? && contactInfo.address != ""><#noescape>${contactInfo.address?replace('\n','<br/>')!""}</#noescape><br /></#if>

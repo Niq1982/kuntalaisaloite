@@ -21,7 +21,7 @@
         <h2><@u.message "management.warning.title" /></h2>
         <p><@u.messageHTML "management.warning.description" /></p>
         <p><a class="small-button gray" href="${urls.edit(initiative.id)}"><span class="small-icon edit"><@u.messageHTML 'action.editInitiative' /></span></a>
-        <a class="small-button gray push" href="${urls.view(initiative.id)}" target="_blank"><span class="small-icon document">Esikatsele aloitteen julkista näkymää</span></a></p>
+        <a class="small-button gray push" href="${urls.view(initiative.id)}" target="_blank"><span class="small-icon document"><@u.messageHTML 'action.previewInitiative' /></span></a></p>
     </div>
 
     <h1 class="name">${initiative.name!""}</h1>
@@ -84,12 +84,12 @@
                     
                     <form action="${springMacroRequestContext.requestUri}" method="POST" >
                         <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-                        <#-- TODO -->
+
                         <div class="input-block-content">
-                            <label for="comment" class="input-header">
-                                Vapaaehtoinen saate kunnalle
+                            <label for="${UrlConstants.PARAM_SENT_COMMENT}" class="input-header">
+                                <@u.message "sendToMunicipality.sentComment" />
                             </label>
-                            <textarea name="${UrlConstants.PARAM_SENT_COMMENT}"></textarea>
+                            <textarea name="${UrlConstants.PARAM_SENT_COMMENT}" id="${UrlConstants.PARAM_SENT_COMMENT}"></textarea>
                         </div>
                         
                         <div class="input-block-content">
@@ -167,12 +167,10 @@
                     </div>
                 </#if>
             
-                <#-- TODO: VIEW for author-management -->
                 <div class="system-msg msg-info">
-                    <@u.message "addAuthors.description" /> <@u.link href="#" labelKey="addAuthors.link" />
+                    <@u.message "addAuthors.description" /> <@u.link href=urls.manageAuthors(initiative.id) labelKey="addAuthors.link" />
                 </div>
                
-            
                 <div class="system-msg msg-info">
                     <h2 id="send-to-municipality"><@u.message "sendToMunicipality.title" /></h2>
                     <p><@u.message "sendToMunicipality.description" /></p>
@@ -210,20 +208,14 @@
 
         <#assign sendToMunicipality>
             <@compress single_line=true>
-            
-                <p><@u.message "sendToMunicipality.confirm.description" /></p>
-                
                 <form action="${springMacroRequestContext.requestUri}" method="POST" >
                     <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
 
-                                        
-                    <#-- TODO -->
-                    <#--<@f.textarea path="comment" required="" optional=false />-->
                     <div class="input-block-content">
-                        <label for="comment" class="input-header">
-                            Vapaaehtoinen saate kunnalle
+                        <label for="${UrlConstants.PARAM_SENT_COMMENT}" class="input-header">
+                            <@u.message "sendToMunicipality.sentComment" />
                         </label>
-                        <textarea name="${UrlConstants.PARAM_SENT_COMMENT}"></textarea>
+                        <textarea name="${UrlConstants.PARAM_SENT_COMMENT}" id="${UrlConstants.PARAM_SENT_COMMENT}"></textarea>
                     </div>
                     
                     <div class="input-block-content">

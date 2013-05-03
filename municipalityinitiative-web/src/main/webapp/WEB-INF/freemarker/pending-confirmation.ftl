@@ -23,15 +23,16 @@
     <@u.requestMessage requestMessages />
 </#if>
 
-<p>Linkki kuntalaisaloitteen tekemiseen on lähetetty antamaasi sähköpostiosoitteeseen <strong>${requestAttribute!""}</strong>.</p>
+<p><@u.message "create.pendingConfirmation.linkSentTo" /> <strong>${requestAttribute!""}</strong>.</p>
 
-<p>Siirry lukemaan saamasi sähköposti ja klikkaa siellä olevaa linkkiä. Tämän jälkeen pääset täyttämään aloitteen sisällön.</p>
+<p><@u.message "create.pendingConfirmation.readEmail" /></p>
 
-<h3>Mitä tehdä, jos sähköpostia ei ole tullut</h3>
+<h3><@u.message "create.pendingConfirmation.emailFail.title" /></h3>
 <ul>
-    <li>Tarkista yltä, että annoit oikean sähköpostiosoitteen. Jos osoitteessasi on virhe, siirry takaisin <a href="${urls.prepare()}">Tee kuntalaisaloite</a>-sivulle ja aloita kuntalaisaloitteen tekeminen uudelleen.</li>
-    <li>Tarkista sähköpostisi roskapostilaatikko, lähetetty posti on saattanut mennä sinne.</li>
-    <li>Tarkista, ettei sähköpostilaatikkosi ole täynnä.</li>
+    <#assign href=urls.prepare() />
+    <li><@u.messageHTML key="create.pendingConfirmation.emailFail.bullet-1" args=[href] /></li>
+    <li><@u.message "create.pendingConfirmation.emailFail.bullet-2" /></li>
+    <li><@u.message "create.pendingConfirmation.emailFail.bullet-3" /></li>
 </ul>
     
 <h2>Ylläpitolinkki testausta varten</h2>

@@ -20,6 +20,7 @@ body {
 }
 #content {
   padding-bottom: 350px;
+  /*min-height: 300px;*/
 }
 .two-column-content .content-column {
   width: 640px;

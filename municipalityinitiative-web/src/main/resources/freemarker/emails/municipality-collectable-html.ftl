@@ -17,13 +17,14 @@
         <@u.spacer "15" />
     </#if>
 
-    <#if (initiative.extraInfo)?has_content>
-        <@b.comment type initiative.extraInfo "email.extraInfo" />
-        <@u.spacer "15" />
-    </#if>
-
     <@b.mainContentBlock title>
         <@b.initiativeDetails type />
+        
+        <#if (initiative.extraInfo)?has_content>
+            <h4 style="${h4!""}"><@u.message "email.extraInfo" /></h4>
+            <p style="${pBottomMargin!""}">${initiative.extraInfo}</p>
+        </#if>
+        
     </@b.mainContentBlock>
     
     <@u.spacer "15" />

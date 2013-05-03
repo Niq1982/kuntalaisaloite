@@ -150,6 +150,16 @@ public class ViewGenerator {
                         .add("previousPageURI", previousPageURI)
                         .build());
     }
+    
+    public static ViewGenerator manageAuthorsView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, Author authorInformation) {
+        return new ViewGenerator(MANAGE_AUTHORS_VIEW,
+                new AttributeBuilder()
+                        .add("initiative", initiativeInfo)
+                        .add("managementSettings", managementSettings)
+                        .add("author", authorInformation)
+                        .build()
+        );
+    }
 
     private static class AttributeBuilder {
         private Map<String, Object> attributes = Maps.newHashMap();

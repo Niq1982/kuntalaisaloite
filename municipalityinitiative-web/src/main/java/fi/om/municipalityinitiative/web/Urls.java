@@ -215,6 +215,10 @@ public final class Urls {
     public static final String UPDATE_FI = "/fi/paivita" + "/" + ID_PARAMETER;
 
     public static final String UPDATE_SV = "/sv/paivita" + "/" + ID_PARAMETER;
+    
+    public static final String MANAGE_AUTHORS_FI = "/fi/vastuuhenkilot" + "/" + ID_PARAMETER;
+
+    public static final String MANAGE_AUTHORS_SV = "/sv/ansvarpersoner" + "/" + ID_PARAMETER;
 
     public static final String IFRAME_FI = "/fi/iframe";
 
@@ -288,6 +292,10 @@ public final class Urls {
     public String edit(Long initiativeId) {
         return getEdit(initiativeId);
     }
+    
+    public String manageAuthors(Long initiativeId) {
+        return getManageAuthors(initiativeId);
+    }
 
     public String confirmParticipant(Long participantId, String confirmCode) {
         return getLocalizedPageUrl(PARTICIPATING_CONFIRMATION_FI, PARTICIPATING_CONFIRMATION_SV).replace(ID_PARAMETER, participantId.toString())
@@ -332,6 +340,10 @@ public final class Urls {
     
     public String getModeration(Long id) {
         return getLocalizedPageUrl(MODERATION_FI, MODERATION_SV).replace(ID_PARAMETER, id.toString());
+    }
+    
+    public String getManageAuthors(Long id) {
+        return getLocalizedPageUrl(MANAGE_AUTHORS_FI, MANAGE_AUTHORS_SV).replace(ID_PARAMETER, id.toString());
     }
 
     public String login(Long id) {
