@@ -36,9 +36,8 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.stub;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes={IntegrationTestFakeEmailConfiguration.class})
-public class PublicInitiativeServiceIntegrationTest {
+
+public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     @Resource
     private PublicInitiativeService service;
@@ -62,15 +61,7 @@ public class PublicInitiativeServiceIntegrationTest {
 
     private static Municipality participantMunicipality;
 
-    private static LoginUserHolder authorLoginUserHolder;
 
-    private static LoginUserHolder unknownLoginUserHolder;
-
-    static {
-        authorLoginUserHolder = mock(LoginUserHolder.class);
-        unknownLoginUserHolder = mock(LoginUserHolder.class);
-        doThrow(new AccessDeniedException("Access denied")).when(unknownLoginUserHolder).assertManagementRightsForInitiative(anyLong());
-    }
 
     @Before
     public void setup() {

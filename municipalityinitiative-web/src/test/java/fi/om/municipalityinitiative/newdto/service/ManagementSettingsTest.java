@@ -159,6 +159,20 @@ public class ManagementSettingsTest {
         assertThat(ManagementSettings.of(initiative).isAllowParticipate(), is(false));
     }
 
+    @Test
+    public void is_not_allowed_to_invite_authors_if_initiative_sent() {
+        final Initiative initiative = new Initiative();
+        initiative.setSentTime(Maybe.of(new LocalDate()));
+        assertThat(ManagementSettings.of(initiative).isAllowInviteAuthors(), is(false));
+    }
+
+    @Test
+    public void is_allowed_to_invite_authros_if_initiative_not_sent() {
+        final Initiative initiative = new Initiative();
+        initiative.setSentTime(Maybe.<LocalDate>absent());
+        assertThat(ManagementSettings.of(initiative).isAllowInviteAuthors(), is(true));
+    }
+
     private static void assertExpectedOnlyWithGivenStates(Initiative initiative, Callable<Boolean> callable, boolean expected, InitiativeState... givenStates) throws Exception {
         for (InitiativeState initiativeState : InitiativeState.values()) {
             initiative.setState(initiativeState);

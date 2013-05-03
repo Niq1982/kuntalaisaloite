@@ -1,7 +1,6 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
-import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
@@ -20,6 +19,8 @@ import javax.annotation.Resource;
 
 import java.util.List;
 import java.util.Locale;
+
+import static fi.om.municipalityinitiative.util.SecurityUtil.assertAllowance;
 
 
 public class PublicInitiativeService {
@@ -212,12 +213,6 @@ public class PublicInitiativeService {
         String municipalityEmail = municipalityEmail(initiative);
         emailService.sendCollaborativeToMunicipality(initiative, participants, municipalityEmail, locale);
         emailService.sendStatusEmail(initiative, initiative.getAuthor().getContactInfo().getEmail(), municipalityEmail, EmailMessageType.SENT_TO_MUNICIPALITY, locale);
-    }
-
-    private static void assertAllowance(String s, boolean allowed) {
-        if (!allowed) {
-            throw new OperationNotAllowedException("Operation not allowed: " + s);
-        }
     }
 
     @Transactional(readOnly = false)

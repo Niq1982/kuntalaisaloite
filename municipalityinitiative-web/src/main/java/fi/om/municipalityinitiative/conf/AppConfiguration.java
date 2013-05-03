@@ -129,6 +129,11 @@ public class AppConfiguration {
     }
 
     @Bean
+    public AuthorService authorService() {
+        return new AuthorService();
+    }
+
+    @Bean
     public PublicInitiativeService municipalityInitiativeService() {
         return new PublicInitiativeService();
     }

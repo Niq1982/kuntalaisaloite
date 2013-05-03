@@ -9,17 +9,11 @@ import com.mysema.query.types.expr.DateTimeExpression;
 import fi.om.municipalityinitiative.dao.NotFoundException;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
-import fi.om.municipalityinitiative.sql.QAuthor;
 import fi.om.municipalityinitiative.sql.QAuthorInvitation;
-import fi.om.municipalityinitiative.sql.QMunicipality;
-import fi.om.municipalityinitiative.sql.QParticipant;
 import org.joda.time.DateTime;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-
-import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 
 @SQLExceptionTranslated
 @Transactional(readOnly = true)
@@ -38,6 +32,7 @@ public class JdbcAuthorDao implements AuthorDao {
                 .set(QAuthorInvitation.authorInvitation.email, authorInvitation.getEmail())
                 .set(QAuthorInvitation.authorInvitation.name, authorInvitation.getName())
                 .set(QAuthorInvitation.authorInvitation.invitationTime, authorInvitation.getInvitationTime())
+                .set(QAuthorInvitation.authorInvitation.initiativeId, authorInvitation.getInitiativeId())
                 .executeWithKey(QAuthorInvitation.authorInvitation.id);
     }
 

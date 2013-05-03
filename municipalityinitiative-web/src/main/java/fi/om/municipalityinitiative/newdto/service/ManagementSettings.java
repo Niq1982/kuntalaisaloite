@@ -44,4 +44,8 @@ public class ManagementSettings {
                 || initiative.getSentTime().isPresent()
                 || !initiative.isCollectable());
     }
+
+    public boolean isAllowInviteAuthors() {
+        return initiative.getSentTime().isNotPresent();
+    }
 }
