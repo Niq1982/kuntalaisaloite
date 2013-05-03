@@ -167,9 +167,8 @@
                     </div>
                 </#if>
             
-                <#-- TODO: VIEW for author-management -->
                 <div class="system-msg msg-info">
-                    <@u.message "addAuthors.description" /> <@u.link href="#" labelKey="addAuthors.link" />
+                    <@u.message "addAuthors.description" /> <@u.link href=urls.manageAuthors(initiative.id) labelKey="addAuthors.link" />
                 </div>
                
                 <div class="system-msg msg-info">

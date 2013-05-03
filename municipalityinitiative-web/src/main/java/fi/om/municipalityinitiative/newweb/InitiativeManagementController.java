@@ -144,4 +144,23 @@ public class InitiativeManagementController extends BaseController {
         publicInitiativeService.sendToMunicipality(initiativeId, userService.getRequiredLoginUserHolder(request), sentComment, locale);
         return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.PUBLISH_AND_SEND, request);
     }
+    
+    @RequestMapping(value={ MANAGE_AUTHORS_FI, MANAGE_AUTHORS_SV }, method=GET)
+    public String manageAuthorsView(@PathVariable("id") Long initiativeId,
+                                 Model model, Locale locale, HttpServletRequest request) {
+
+        LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
+
+        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
+
+        if (initiativeInfo.isSent()) {
+            return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.ALREADY_SENT, request);
+        }
+
+        return ViewGenerator.manageAuthorsView(initiativeInfo,
+                publicInitiativeService.getManagementSettings(initiativeId),
+                publicInitiativeService.getAuthorInformation(initiativeId, loginUserHolder)
+        ).view(model, Urls.get(locale).alt().getManagement(initiativeId));
+    }
 }
