@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
+import java.util.List;
+
 public class AuthorService {
 
     @Resource
@@ -36,6 +38,24 @@ public class AuthorService {
 
         authorDao.addAuthorInvitation(authorInvitation);
 
+    }
+
+    @Transactional(readOnly = false)
+    public void confirmAuthorInvitation(Long initiativeId, String confirmationCode) {
+
+        ManagementSettings managementSettings = ManagementSettings.of(initiativeDao.getByIdWithOriginalAuthor(initiativeId));
+        SecurityUtil.assertAllowance("Accept invitation", managementSettings.isAllowInviteAuthors());
+
+        AuthorInvitation authorInvitation = authorDao.getAuthorInvitation(initiativeId, confirmationCode);
+
+        authorDao.deleteAuthorInvitation(initiativeId, confirmationCode);
+    }
+
+    @Transactional(readOnly = true)
+    public List<AuthorInvitation> findAuthorInvitations(Long initiativeId, LoginUserHolder loginUserHolder) {
+
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
+        return authorDao.findInvitations(initiativeId);
     }
 
 

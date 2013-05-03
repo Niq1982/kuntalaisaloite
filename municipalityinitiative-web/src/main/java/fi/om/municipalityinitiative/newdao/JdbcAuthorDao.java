@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
+import java.util.List;
+
 @SQLExceptionTranslated
 @Transactional(readOnly = true)
 public class JdbcAuthorDao implements AuthorDao {
@@ -66,6 +68,14 @@ public class JdbcAuthorDao implements AuthorDao {
         if (affectedRows != 1) {
             throw new NotFoundException(QAuthorInvitation.authorInvitation.getTableName(), initiativeId + ":" + confirmationCode);
         }
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public List<AuthorInvitation> findInvitations(Long initiativeId) {
+        return queryFactory.from(QAuthorInvitation.authorInvitation)
+                .where(QAuthorInvitation.authorInvitation.initiativeId.eq(initiativeId))
+                .list(authorInvitationMapping);
     }
 
     Expression<AuthorInvitation> authorInvitationMapping =
