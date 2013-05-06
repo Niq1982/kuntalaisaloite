@@ -91,6 +91,21 @@ public class AuthorService {
         throw new NotFoundException("Invitation with ", "initiative: " + initiativeId + ", invitation: " + confirmDto.getConfirmCode());
     }
 
+    public AuthorInvitationUIConfirmDto getPrefilledAuthorInvitationConfirmDto(Long initiativeId, String confirmCode) {
+        AuthorInvitation authorInvitation = authorDao.getAuthorInvitation(initiativeId, confirmCode);
+
+        assertNotRejectedOrExpired(authorInvitation);
+
+        AuthorInvitationUIConfirmDto confirmDto = new AuthorInvitationUIConfirmDto();
+        confirmDto.setInitiativeMunicipality(initiativeDao.getByIdWithOriginalAuthor(initiativeId).getMunicipality().getId());
+        confirmDto.setContactInfo(new ContactInfo());
+        confirmDto.getContactInfo().setName(authorInvitation.getName());
+        confirmDto.getContactInfo().setEmail(authorInvitation.getEmail());
+        confirmDto.setConfirmCode(authorInvitation.getConfirmationCode());
+        return confirmDto;
+    }
+
+
     private static void assertNotRejectedOrExpired(AuthorInvitation invitation) {
         if (invitation.isExpired()) {
             throw new InvitationNotValidException("Invitation is expired");
@@ -98,27 +113,5 @@ public class AuthorService {
         if (invitation.isRejected()) {
             throw new InvitationNotValidException("Invitation is rejected");
         }
-    }
-
-
-    public AuthorInvitationUIConfirmDto getPrefilledAuthorInvitationConfirmDto(Long initiativeId, String confirmCode) {
-        AuthorInvitation authorInvitation = authorDao.getAuthorInvitation(initiativeId, confirmCode);
-
-        // TOOD: Tests for this
-        if (authorInvitation.isRejected() || authorInvitation.isExpired()) {
-            throw new NotFoundException("Invitation with ", "initiative: " + initiativeId + ", invitation: " + confirmCode);
-
-        }
-
-
-
-        AuthorInvitationUIConfirmDto confirmDto = new AuthorInvitationUIConfirmDto();
-
-        confirmDto.setInitiativeMunicipality(initiativeDao.getByIdWithOriginalAuthor(initiativeId).getMunicipality().getId());
-        confirmDto.setContactInfo(new ContactInfo());
-        confirmDto.getContactInfo().setName(authorInvitation.getName());
-        confirmDto.getContactInfo().setEmail(authorInvitation.getEmail());
-        confirmDto.setConfirmCode(authorInvitation.getConfirmationCode());
-        return confirmDto;
     }
 }
