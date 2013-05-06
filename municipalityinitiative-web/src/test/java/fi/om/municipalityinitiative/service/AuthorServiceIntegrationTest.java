@@ -9,6 +9,7 @@ import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.newdto.ui.AuthorInvitationUIConfirmDto;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newweb.AuthorInvitationUICreateDto;
+import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,10 +37,12 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     @Resource
     InitiativeDao initiativeDao;
+    private Long testMunicipality;
 
     @Before
     public void setUp() throws Exception {
         testHelper.dbCleanup();
+        testMunicipality = testHelper.createTestMunicipality("municipality");
     }
 
     @Test(expected = AccessDeniedException.class)
@@ -50,14 +53,14 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     @Test(expected = OperationNotAllowedException.class)
     public void create_invitation_not_allowed_if_initiative_already_sent() {
 
-        Long initiativeId = testHelper.createSingleSent(testHelper.createTestMunicipality("name"));
+        Long initiativeId = testHelper.createSingleSent(testMunicipality);
 
         authorService.createAuthorInvitation(initiativeId, authorLoginUserHolder, null);
     }
 
     @Test
     public void create_invitation_sets_required_information() {
-        Long initiativeId = testHelper.createCollectableReview(testHelper.createTestMunicipality("name"));
+        Long initiativeId = testHelper.createCollectableReview(testMunicipality);
 
         AuthorInvitationUICreateDto authorInvitationUICreateDto = authorInvitation();
 
@@ -84,23 +87,23 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     }
 
     @Test
-    public void accept_author_invitation_adds_new_author_with_given_information() {
+    public void confirm_author_invitation_adds_new_author_with_given_information() {
 
-        Long municipalityId = testHelper.createTestMunicipality("name");
-        Long initiativeId = testHelper.createCollectableReview(municipalityId);
+        Long authorsMunicipality = testHelper.createTestMunicipality("name");
+        Long initiativeId = testHelper.createCollectableReview(authorsMunicipality);
         authorService.createAuthorInvitation(initiativeId, authorLoginUserHolder, authorInvitation());
 
         AuthorInvitationUIConfirmDto createDto = new AuthorInvitationUIConfirmDto();
         createDto.setContactInfo(new ContactInfo());
-        createDto.setInitiativeMunicipality(municipalityId);
+        createDto.setInitiativeMunicipality(testMunicipality);
         createDto.getContactInfo().setName("name");
         createDto.getContactInfo().setAddress("address");
         createDto.getContactInfo().setEmail("email");
         createDto.getContactInfo().setPhone("phone");
         createDto.getContactInfo().setShowName(true);
         createDto.setConfirmCode(RandomHashGenerator.getPrevious());
-        createDto.setHomeMunicipality(municipalityId);
-
+        createDto.setMunicipalMembership(Membership.community); //XXX: Not tested
+        createDto.setHomeMunicipality(authorsMunicipality);
 
         precondition(authorService.findAuthors(initiativeId, authorLoginUserHolder), hasSize(1));
         precondition(participantCountOfInitiative(initiativeId), is(1));
@@ -119,7 +122,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         assertThat(createdAuthor.getContactInfo().getAddress(), is(createDto.getContactInfo().getAddress()));
         assertThat(createdAuthor.getContactInfo().getPhone(), is(createDto.getContactInfo().getPhone()));
         assertThat(createdAuthor.getContactInfo().isShowName(), is(createDto.getContactInfo().isShowName()));
-        assertThat(createdAuthor.getMunicipality().getId(), is(municipalityId));
+        assertThat(createdAuthor.getMunicipality().getId(), is(authorsMunicipality));
 
         // TODO: Check that managementHash is created and ok
 
@@ -129,6 +132,16 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     private int participantCountOfInitiative(Long initiativeId) {
         return initiativeDao.getByIdWithOriginalAuthor(initiativeId).getParticipantCount();
     }
+
+    @Test(expected = OperationNotAllowedException.class)
+    public void confirm_author_invitation_not_allowed() {
+        Long initiativeId = testHelper.createSingleSent(testMunicipality);
+
+        authorService.confirmAuthorInvitation(initiativeId, new AuthorInvitationUIConfirmDto());
+    }
+
+
+
 
     // TODO: Not allowed
     // TODO: Expired
