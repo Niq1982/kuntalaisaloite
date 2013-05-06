@@ -139,7 +139,7 @@ public class PublicInitiativeService {
         assertAllowance("Update initiative", getManagementSettings(initiativeId).isAllowUpdate());
 
         Initiative initiative = initiativeDao.getById(initiativeId, loginUserHolder.getInitiative().get().getManagementHash().get());
-        initiativeDao.updateAcceptedInitiative(initiativeId, loginUserHolder.getInitiative().get().getManagementHash().get(), updateDto);
+        initiativeDao.updateExtraInfo(initiativeId, updateDto.getExtraInfo());
         authorDao.updateAuthorInformation(initiative.getAuthor().getId(), updateDto.getContactInfo());
     }
 

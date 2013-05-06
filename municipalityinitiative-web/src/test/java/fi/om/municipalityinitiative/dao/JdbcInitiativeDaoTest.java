@@ -4,11 +4,9 @@ import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
-import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
-import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUIUpdateDto;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
@@ -462,25 +460,10 @@ public class JdbcInitiativeDaoTest {
 
         Long initiativeId = testHelper.createCollectableAccepted(testMunicipality.getId());
 
-        InitiativeUIUpdateDto updateDto = new InitiativeUIUpdateDto();
-//        ContactInfo contactInfo = new ContactInfo();
-//        updateDto.setContactInfo(contactInfo);
-
-        updateDto.setExtraInfo("Modified extra info");
-//        contactInfo.setName("Modified Name");
-//        contactInfo.setAddress("Modified Address");
-//        contactInfo.setPhone("Modified Phone");
-//        contactInfo.setEmail("Modified Email");
-//        contactInfo.setShowName(false);
-//        updateDto.setContactInfo(contactInfo);
-        initiativeDao.updateAcceptedInitiative(initiativeId, TestHelper.TEST_MANAGEMENT_HASH, updateDto);
-
+        String extraInfo = "Modified extra info";
+        initiativeDao.updateExtraInfo(initiativeId, extraInfo);
         Initiative updated = initiativeDao.getById(initiativeId, TestHelper.TEST_MANAGEMENT_HASH);
-        assertThat(updated.getExtraInfo(), is(updateDto.getExtraInfo()));
-//        assertThat(updated.getAuthor().getContactInfo().isShowName(), is(false));
-
-//        Author author = authorDao.getAuthorInformation(initiativeId, TestHelper.TEST_MANAGEMENT_HASH);
-//        ReflectionTestUtils.assertReflectionEquals(author.getContactInfo(), contactInfo);
+        assertThat(updated.getExtraInfo(), is(extraInfo));
 
         // TODO: Assert extraInfo
 
