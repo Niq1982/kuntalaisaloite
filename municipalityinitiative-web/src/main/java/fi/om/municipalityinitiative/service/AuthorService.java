@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.service;
 
+import fi.om.municipalityinitiative.dao.InvitationNotValidException;
 import fi.om.municipalityinitiative.dao.NotFoundException;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
@@ -11,7 +12,6 @@ import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.ui.AuthorInvitationUIConfirmDto;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.newweb.AuthorInvitationUICreateDto;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.util.SecurityUtil;
@@ -72,11 +72,11 @@ public class AuthorService {
         SecurityUtil.assertAllowance("Accept invitation", managementSettings.isAllowInviteAuthors());
 
         for (AuthorInvitation invitation : authorDao.findInvitations(initiativeId)) {
-            if (invitation.isExpired() || invitation.isRejected()) {
-                continue;
-            }
 
             if (invitation.getConfirmationCode().equals(confirmDto.getConfirmCode())) {
+
+                assertNotRejectedOrExpired(invitation);
+
                 ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(confirmDto, initiativeId);
                 String someConfirmationCode = "-";
                 Long participantId = participantDao.create(participantCreateDto, someConfirmationCode);
@@ -91,6 +91,15 @@ public class AuthorService {
         throw new NotFoundException("Invitation with ", "initiative: " + initiativeId + ", invitation: " + confirmDto.getConfirmCode());
     }
 
+    private static void assertNotRejectedOrExpired(AuthorInvitation invitation) {
+        if (invitation.isExpired()) {
+            throw new InvitationNotValidException("Invitation is expired");
+        }
+        if (invitation.isRejected()) {
+            throw new InvitationNotValidException("Invitation is rejected");
+        }
+    }
+
 
     public AuthorInvitationUIConfirmDto getPrefilledAuthorInvitationConfirmDto(Long initiativeId, String confirmCode) {
         AuthorInvitation authorInvitation = authorDao.getAuthorInvitation(initiativeId, confirmCode);
@@ -100,6 +109,8 @@ public class AuthorService {
             throw new NotFoundException("Invitation with ", "initiative: " + initiativeId + ", invitation: " + confirmCode);
 
         }
+
+
 
         AuthorInvitationUIConfirmDto confirmDto = new AuthorInvitationUIConfirmDto();
 

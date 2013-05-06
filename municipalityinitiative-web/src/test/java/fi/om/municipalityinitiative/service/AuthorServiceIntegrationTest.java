@@ -1,5 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
+import fi.om.municipalityinitiative.dao.InvitationNotValidException;
+import fi.om.municipalityinitiative.dao.NotFoundException;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
@@ -11,8 +13,12 @@ import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newweb.AuthorInvitationUICreateDto;
 import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
+import fi.om.municipalityinitiative.util.ReflectionTestUtils;
+import org.joda.time.DateTime;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import javax.annotation.Resource;
 
@@ -20,9 +26,7 @@ import java.util.List;
 
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 
 public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
@@ -38,6 +42,9 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     @Resource
     InitiativeDao initiativeDao;
     private Long testMunicipality;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() throws Exception {
@@ -140,13 +147,80 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         authorService.confirmAuthorInvitation(initiativeId, new AuthorInvitationUIConfirmDto());
     }
 
+    @Test
+    public void confirm_author_with_expired_invitation_throws_exception() {
+        Long initiativeId = testHelper.createCollectableReview(testMunicipality);
+        AuthorInvitation authorInvitation = ReflectionTestUtils.modifyAllFields(new AuthorInvitation());
+        authorInvitation.setInitiativeId(initiativeId);
+        authorInvitation.setInvitationTime(expiredInvitationTime());
+        authorDao.addAuthorInvitation(authorInvitation);
+
+        AuthorInvitationUIConfirmDto confirmDto = new AuthorInvitationUIConfirmDto();
+        confirmDto.setConfirmCode(authorInvitation.getConfirmationCode());
+
+        thrown.expect(InvitationNotValidException.class);
+        thrown.expectMessage("Invitation is expired");
+        authorService.confirmAuthorInvitation(initiativeId, confirmDto);
+    }
+
+    @Test
+    public void confirm_author_with_rejected_invitation_throws_exception() {
+        Long initiativeId = testHelper.createCollectableReview(testMunicipality);
+        AuthorInvitation authorInvitation = ReflectionTestUtils.modifyAllFields(new AuthorInvitation());
+        authorInvitation.setInitiativeId(initiativeId);
+        authorInvitation.setInvitationTime(DateTime.now());
+        authorDao.addAuthorInvitation(authorInvitation);
+        authorDao.rejectAuthorInvitation(initiativeId, authorInvitation.getConfirmationCode());
+
+        AuthorInvitationUIConfirmDto confirmDto = new AuthorInvitationUIConfirmDto();
+        confirmDto.setConfirmCode(authorInvitation.getConfirmationCode());
+
+        thrown.expect(InvitationNotValidException.class);
+        thrown.expectMessage("Invitation is rejected");
+        authorService.confirmAuthorInvitation(initiativeId, confirmDto);
+    }
+
+    @Test
+    public void confirm_author_with_invalid_confirmCode_throws_exception() {
+        Long initiativeId = testHelper.createCollectableReview(testMunicipality);
+        AuthorInvitation authorInvitation = ReflectionTestUtils.modifyAllFields(new AuthorInvitation());
+        authorInvitation.setInitiativeId(initiativeId);
+        authorInvitation.setInvitationTime(DateTime.now());
+        authorDao.addAuthorInvitation(authorInvitation);
+
+        AuthorInvitationUIConfirmDto invitationUIConfirmDto = new AuthorInvitationUIConfirmDto();
+        invitationUIConfirmDto.setConfirmCode("bätmään!");
+
+        thrown.expect(NotFoundException.class);
+        thrown.expectMessage(containsString("bätmään"));
+        authorService.confirmAuthorInvitation(initiativeId, invitationUIConfirmDto);
+    }
+
+    @Test
+    public void invitation_is_removed_after_confirmation() {
+
+        Long initiativeId = testHelper.createCollectableReview(testMunicipality);
+        AuthorInvitation authorInvitation = ReflectionTestUtils.modifyAllFields(new AuthorInvitation());
+        authorInvitation.setInitiativeId(initiativeId);
+        authorInvitation.setInvitationTime(DateTime.now());
+        authorDao.addAuthorInvitation(authorInvitation);
+
+        AuthorInvitationUIConfirmDto confirmDto = ReflectionTestUtils.modifyAllFields(new AuthorInvitationUIConfirmDto());
+        confirmDto.setConfirmCode(authorInvitation.getConfirmationCode());
+        confirmDto.setInitiativeMunicipality(testMunicipality);
+        confirmDto.setHomeMunicipality(testMunicipality);
+
+        precondition(authorDao.findInvitations(initiativeId), hasSize(1));
+        authorService.confirmAuthorInvitation(initiativeId, confirmDto);
+        assertThat(authorDao.findInvitations(initiativeId), hasSize(0));
 
 
+    }
 
-    // TODO: Not allowed
-    // TODO: Expired
-    // TODO: Rejected
-    // TODO: Invalid confirmationCode
+    private static DateTime expiredInvitationTime() {
+        return DateTime.now().minusMonths(1);
+    }
+
     // TODO: Invitation is removed after acceptance
 
     @Test

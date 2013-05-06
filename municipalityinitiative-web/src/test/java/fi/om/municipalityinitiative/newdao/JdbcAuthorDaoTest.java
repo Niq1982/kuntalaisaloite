@@ -6,6 +6,7 @@ import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
