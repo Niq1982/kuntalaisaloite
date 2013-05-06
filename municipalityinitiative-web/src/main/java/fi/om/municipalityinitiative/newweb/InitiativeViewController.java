@@ -4,10 +4,7 @@ import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.*;
-import fi.om.municipalityinitiative.service.PublicInitiativeService;
-import fi.om.municipalityinitiative.service.MunicipalityService;
-import fi.om.municipalityinitiative.service.ParticipantService;
-import fi.om.municipalityinitiative.service.ValidationService;
+import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.BaseController;
@@ -47,6 +44,9 @@ public class InitiativeViewController extends BaseController {
 
     @Resource
     private ParticipantService participantService;
+
+    @Resource
+    private AuthorService authorService;
 
     public InitiativeViewController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
@@ -164,10 +164,8 @@ public class InitiativeViewController extends BaseController {
     // TODO
     @RequestMapping(value={ INVITATION_FI, INVITATION_SV }, method=GET)
     public String invitationView(@PathVariable("id") Long initiativeId,
+                                 @RequestParam(PARAM_INVITATION_CODE) String confirmCode,
                                  Model model, Locale locale, HttpServletRequest request) {
-
-//        LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
-//        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
         InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
 
@@ -175,11 +173,37 @@ public class InitiativeViewController extends BaseController {
             return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.ALREADY_SENT, request);
         }
 
+        // TODO: Check if confirm code is valid?
+
+
+        AuthorInvitationUIConfirmDto authorInvitationUIConfirmDto = authorService.getPrefilledAuthorInvitationConfirmDto(initiativeId, confirmCode);
+
         return ViewGenerator.invitationView(initiativeInfo,
                 municipalityService.findAllMunicipalities(locale),
                 participantService.getParticipantCount(initiativeId),
-                new AuthorInvitationUIConfirmDto()
+                authorInvitationUIConfirmDto
         ).view(model, Urls.get(locale).alt().getManagement(initiativeId));
+    }
+
+    @RequestMapping(value={ INVITATION_FI, INVITATION_SV }, method=POST)
+    public String invitationAccept(@PathVariable("id") Long initiativeId,
+                                   @ModelAttribute("authorInvitation") AuthorInvitationUIConfirmDto confirmDto,
+                                   Model model, BindingResult bindingResult, Locale locale, HttpServletRequest request) {
+
+        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
+        confirmDto.setInitiativeMunicipality(initiativeInfo.getMunicipality().getId());
+
+        if (validationService.validationSuccessful(confirmDto, bindingResult, model)) {
+            authorService.confirmAuthorInvitation(initiativeId, confirmDto);
+            return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.CONFIRM_PARTICIPATION, request);
+        }
+        else {
+            return ViewGenerator.invitationView(initiativeInfo,
+                    municipalityService.findAllMunicipalities(locale),
+                    participantService.getParticipantCount(initiativeId),
+                    confirmDto
+            ).view(model, Urls.get(locale).alt().getManagement(initiativeId));
+        }
     }
 
     @RequestMapping(value={IFRAME_FI, IFRAME_SV}, method=GET)

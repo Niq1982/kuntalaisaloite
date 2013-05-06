@@ -1,14 +1,10 @@
 package fi.om.municipalityinitiative.newdto.ui;
 
-import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.newdto.service.CreateDtoTimeValidation;
 import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.validation.ValidMunicipalMembershipInfo;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 public abstract class ParticipantUICreateBase extends CreateDtoTimeValidation
         implements ValidMunicipalMembershipInfo {

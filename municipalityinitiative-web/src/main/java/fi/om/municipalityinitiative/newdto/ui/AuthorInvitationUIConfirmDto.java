@@ -1,5 +1,8 @@
 package fi.om.municipalityinitiative.newdto.ui;
 
+import fi.om.municipalityinitiative.validation.ValidMunicipalMembership;
+
+@ValidMunicipalMembership
 public class AuthorInvitationUIConfirmDto extends ParticipantUICreateBase {
 
     private String confirmCode;
