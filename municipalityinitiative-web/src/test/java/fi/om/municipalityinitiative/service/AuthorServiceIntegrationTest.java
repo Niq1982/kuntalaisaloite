@@ -81,7 +81,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     }
 
     @Test
-    public void reject_author_invitation() {
+    public void reject_author_invitation() { // TODO: Implement service method, this uses dao layer.
         Long initiativeId = testHelper.createCollectableReview(testHelper.createTestMunicipality("name"));
 
         authorService.createAuthorInvitation(initiativeId, authorLoginUserHolder, authorInvitation());
@@ -98,7 +98,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
         Long authorsMunicipality = testHelper.createTestMunicipality("name");
         Long initiativeId = testHelper.createCollectableReview(authorsMunicipality);
-        authorService.createAuthorInvitation(initiativeId, authorLoginUserHolder, authorInvitation());
+        AuthorInvitation invitation = createInvitation(initiativeId);
 
         AuthorInvitationUIConfirmDto createDto = new AuthorInvitationUIConfirmDto();
         createDto.setContactInfo(new ContactInfo());
@@ -108,22 +108,20 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         createDto.getContactInfo().setEmail("email");
         createDto.getContactInfo().setPhone("phone");
         createDto.getContactInfo().setShowName(true);
-        createDto.setConfirmCode(RandomHashGenerator.getPrevious());
+        createDto.setConfirmCode(invitation.getConfirmationCode());
         createDto.setMunicipalMembership(Membership.community); //XXX: Not tested
         createDto.setHomeMunicipality(authorsMunicipality);
 
-        precondition(authorService.findAuthors(initiativeId, authorLoginUserHolder), hasSize(1));
+        precondition(currentAuthors(initiativeId), hasSize(1));
         precondition(participantCountOfInitiative(initiativeId), is(1));
 
         authorService.confirmAuthorInvitation(initiativeId, createDto);
 
-        List<Author> authors = authorService.findAuthors(initiativeId, authorLoginUserHolder);
-
         // Author count is increased
-        assertThat(authors, hasSize(2));
+        assertThat(currentAuthors(initiativeId), hasSize(2));
 
         // Check new author information
-        Author createdAuthor = authors.get(0);
+        Author createdAuthor = currentAuthors(initiativeId).get(0);
         assertThat(createdAuthor.getContactInfo().getName(), is(createDto.getContactInfo().getName()));
         assertThat(createdAuthor.getContactInfo().getEmail(), is(createDto.getContactInfo().getEmail()));
         assertThat(createdAuthor.getContactInfo().getAddress(), is(createDto.getContactInfo().getAddress()));
@@ -134,6 +132,10 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         // TODO: Check that managementHash is created and ok
 
         assertThat(participantCountOfInitiative(initiativeId), is(2));
+    }
+
+    private List<Author> currentAuthors(Long initiativeId) {
+        return authorDao.findAuthors(initiativeId);
     }
 
     private int participantCountOfInitiative(Long initiativeId) {
