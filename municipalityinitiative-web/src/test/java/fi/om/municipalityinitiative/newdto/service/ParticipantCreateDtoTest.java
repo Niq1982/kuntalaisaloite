@@ -53,7 +53,7 @@ public class ParticipantCreateDtoTest {
         ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(invitationUIConfirmDto, 121L);
 
         assertThat(participantCreateDto.getMunicipalMembership(), is(invitationUIConfirmDto.getMunicipalMembership()));
-        assertThat(participantCreateDto.getEmail(), is(invitationUIConfirmDto.getParticipantEmail()));
+        assertThat(participantCreateDto.getEmail(), is(invitationUIConfirmDto.getContactInfo().getEmail()));
         assertThat(participantCreateDto.getHomeMunicipality(), is(invitationUIConfirmDto.getHomeMunicipality()));
         assertThat(participantCreateDto.getMunicipalityInitiativeId(), is(121L));
         assertThat(participantCreateDto.getParticipantName(), is(invitationUIConfirmDto.getContactInfo().getName()));

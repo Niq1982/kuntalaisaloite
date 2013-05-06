@@ -17,10 +17,6 @@ public abstract class ParticipantUICreateBase extends CreateDtoTimeValidation
     private Long homeMunicipality;
 
     private Membership municipalMembership;
-    @NotEmpty
-    @Pattern(regexp = ContactInfo.EMAIL_PATTERN)
-    @Size(max = InitiativeConstants.CONTACT_EMAIL_MAX)
-    private String participantEmail;
 
     @Override
     public final Long getHomeMunicipality() {
@@ -42,14 +38,6 @@ public abstract class ParticipantUICreateBase extends CreateDtoTimeValidation
 
     public final void setMunicipalMembership(Membership municipalMembership) {
         this.municipalMembership = municipalMembership;
-    }
-
-    public final String getParticipantEmail() {
-        return participantEmail;
-    }
-
-    public final void setParticipantEmail(String participantEmail) {
-        this.participantEmail = participantEmail;
     }
 
 }

@@ -115,7 +115,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         // Check new author information
         Author createdAuthor = authors.get(0);
         assertThat(createdAuthor.getContactInfo().getName(), is(createDto.getContactInfo().getName()));
-        assertThat(createdAuthor.getContactInfo().getEmail(), is(createDto.getParticipantEmail()));
+        assertThat(createdAuthor.getContactInfo().getEmail(), is(createDto.getContactInfo().getEmail()));
 //        assertThat(createdAuthor.getContactInfo().getAddress(), is(createDto.getAddress()));
 //        assertThat(createdAuthor.getContactInfo().getPhone(), is(createDto.getPhone()));
         assertThat(createdAuthor.getMunicipality().getId(), is(municipalityId));

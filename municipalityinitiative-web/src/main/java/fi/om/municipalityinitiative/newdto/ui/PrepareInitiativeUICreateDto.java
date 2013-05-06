@@ -18,6 +18,19 @@ public class PrepareInitiativeUICreateDto extends ParticipantUICreateBase {
     @NotNull
     Long municipality;
 
+    @NotEmpty
+    @Pattern(regexp = ContactInfo.EMAIL_PATTERN)
+    @Size(max = InitiativeConstants.CONTACT_EMAIL_MAX)
+    private String participantEmail;
+
+    public String getParticipantEmail() {
+        return participantEmail;
+    }
+
+    public void setParticipantEmail(String participantEmail) {
+        this.participantEmail = participantEmail;
+    }
+
     public InitiativeType getInitiativeType() {
         return initiativeType;
     }

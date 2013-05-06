@@ -7,13 +7,11 @@ public class AuthorInvitationUIConfirmDto extends ParticipantUICreateBase {
     private ContactInfo contactInfo;
 
     public ContactInfo getContactInfo() {
-        contactInfo.setEmail(getParticipantEmail());
         return contactInfo;
     }
 
     public void setContactInfo(ContactInfo contactInfo) {
         this.contactInfo = contactInfo;
-        setParticipantEmail(contactInfo.getEmail());
     }
 
     public String getConfirmCode() {

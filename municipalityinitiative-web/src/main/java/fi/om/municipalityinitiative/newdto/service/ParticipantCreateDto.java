@@ -33,7 +33,7 @@ public class ParticipantCreateDto {
         participantCreateDto.setShowName(participant.getContactInfo().isShowName());
         participantCreateDto.setParticipantName(participant.getContactInfo().getName());
         participantCreateDto.setHomeMunicipality(participant.getHomeMunicipality());
-        participantCreateDto.setEmail(participant.getParticipantEmail());
+        participantCreateDto.setEmail(participant.getContactInfo().getEmail());
         participantCreateDto.setMunicipalMembership(solveMembership(participant));
         return participantCreateDto;
     }
