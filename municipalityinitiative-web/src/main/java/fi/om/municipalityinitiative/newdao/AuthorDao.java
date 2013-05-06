@@ -22,4 +22,6 @@ public interface AuthorDao {
     void assignAuthor(Long initiativeId, Long authorId);
 
     Long createAuthor(Long initiativeId, Long participantId, String managementHash);
+
+    Author getAuthorInformation(Long initiativeId, String managementHash);
 }

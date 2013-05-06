@@ -14,7 +14,6 @@ import com.mysema.query.types.path.StringPath;
 import fi.om.municipalityinitiative.dao.NotFoundException;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
-import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeDraftUIEditDto;
@@ -244,17 +243,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
                 .execute());
 
-    }
-
-    @Override
-    public Author getAuthorInformation(Long initiativeId, String managementHash) {
-        return queryFactory.from(municipalityInitiative)
-                .innerJoin(municipalityInitiative._participantMunicipalityInitiativeIdFk, QParticipant.participant)
-                .innerJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
-                .innerJoin(QParticipant.participant.participantMunicipalityFk, QMunicipality.municipality)
-                .where(municipalityInitiative.id.eq(initiativeId))
-                .where(QAuthor.author.managementHash.eq(managementHash))
-                .uniqueResult(Mappings.authorMapping);
     }
 
     @Override

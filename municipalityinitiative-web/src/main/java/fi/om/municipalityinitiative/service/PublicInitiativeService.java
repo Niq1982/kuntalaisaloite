@@ -142,7 +142,7 @@ public class PublicInitiativeService {
     @Transactional(readOnly = true)
     public Author getAuthorInformation(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        return initiativeDao.getAuthorInformation(initiativeId, loginUserHolder.getInitiative().get().getManagementHash().get());
+        return authorDao.getAuthorInformation(initiativeId, loginUserHolder.getInitiative().get().getManagementHash().get());
     }
 
     @Transactional(readOnly = false)

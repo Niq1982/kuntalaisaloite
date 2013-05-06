@@ -28,8 +28,6 @@ public interface InitiativeDao {
 
     void editInitiativeDraft(Long initiativeId, InitiativeDraftUIEditDto editDto);
 
-    Author getAuthorInformation(Long initiativeId, String managementHash);
-
     void updateAcceptedInitiative(Long initiativeId, String managementHash, InitiativeUIUpdateDto updateDto);
 
     void updateInitiativeState(Long initiativeId, InitiativeState state);
