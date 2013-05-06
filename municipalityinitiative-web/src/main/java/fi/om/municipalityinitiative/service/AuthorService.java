@@ -2,10 +2,14 @@ package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
+import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
+import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
+import fi.om.municipalityinitiative.newdto.ui.AuthorInvitationUIConfirmDto;
+import fi.om.municipalityinitiative.newdto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.newweb.AuthorInvitationUICreateDto;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.util.SecurityUtil;
@@ -23,6 +27,9 @@ public class AuthorService {
 
     @Resource
     InitiativeDao initiativeDao;
+
+    @Resource
+    ParticipantDao participantDao;
 
     @Transactional(readOnly = false)
     public void createAuthorInvitation(Long initiativeId, LoginUserHolder loginUserHolder, AuthorInvitationUICreateDto uiCreateDto) {
@@ -42,17 +49,6 @@ public class AuthorService {
 
     }
 
-    @Transactional(readOnly = false)
-    public void confirmAuthorInvitation(Long initiativeId, String confirmationCode) {
-
-        ManagementSettings managementSettings = ManagementSettings.of(initiativeDao.getByIdWithOriginalAuthor(initiativeId));
-        SecurityUtil.assertAllowance("Accept invitation", managementSettings.isAllowInviteAuthors());
-
-        AuthorInvitation authorInvitation = authorDao.getAuthorInvitation(initiativeId, confirmationCode);
-
-        authorDao.deleteAuthorInvitation(initiativeId, confirmationCode);
-    }
-
     @Transactional(readOnly = true)
     public List<AuthorInvitation> findAuthorInvitations(Long initiativeId, LoginUserHolder loginUserHolder) {
 
@@ -65,6 +61,28 @@ public class AuthorService {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
         return authorDao.findAuthors(initiativeId);
+    }
+
+    @Transactional(readOnly = false)
+    public void confirmAuthorInvitation(Long initiativeId, AuthorInvitationUIConfirmDto confirmDto) {
+
+        ManagementSettings managementSettings = ManagementSettings.of(initiativeDao.getByIdWithOriginalAuthor(initiativeId));
+        SecurityUtil.assertAllowance("Accept invitation", managementSettings.isAllowInviteAuthors());
+
+        List<AuthorInvitation> invitations = authorDao.findInvitations(initiativeId);
+        for (AuthorInvitation invitation : invitations) {
+            if (invitation.isExpired() || invitation.isRejected()) {
+                continue;
+            }
+
+            if (invitation.getConfirmationCode().equals(confirmDto.getConfirmCode())) {
+                ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(confirmDto, initiativeId);
+                Long participantId = participantDao.create(participantCreateDto, null);// Null to already accepted confirmation
+                initiativeDao.createAuthor(initiativeId, participantId, RandomHashGenerator.randomString(40));
+                authorDao.deleteAuthorInvitation(initiativeId, confirmDto.getConfirmCode());
+
+            }
+        }
     }
 
 

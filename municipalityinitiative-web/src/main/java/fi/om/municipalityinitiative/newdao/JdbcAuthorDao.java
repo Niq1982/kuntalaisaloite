@@ -94,6 +94,7 @@ public class JdbcAuthorDao implements AuthorDao {
                     .innerJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
                     .innerJoin(QParticipant.participant.participantMunicipalityFk, QMunicipality.municipality)
                     .where(municipalityInitiative.id.eq(initiativeId))
+                    .orderBy(QParticipant.participant.id.desc())
                     .list(Mappings.authorMapping);
     }
 

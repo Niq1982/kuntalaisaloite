@@ -1,5 +1,7 @@
 package fi.om.municipalityinitiative.newdto.service;
 
+import fi.om.municipalityinitiative.newdto.ui.AuthorInvitationUIConfirmDto;
+import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateBase;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.util.Membership;
 
@@ -25,7 +27,18 @@ public class ParticipantCreateDto {
         return participantCreateDto;
     }
 
-    private static Membership solveMembership(ParticipantUICreateDto participant) {
+    public static ParticipantCreateDto parse(AuthorInvitationUIConfirmDto participant, Long initiativeId) {
+        ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
+        participantCreateDto.setMunicipalityInitiativeId(initiativeId);
+        participantCreateDto.setShowName(participant.getShowName());
+        participantCreateDto.setParticipantName(participant.getName());
+        participantCreateDto.setHomeMunicipality(participant.getHomeMunicipality());
+        participantCreateDto.setEmail(participant.getParticipantEmail());
+        participantCreateDto.setMunicipalMembership(solveMembership(participant));
+        return participantCreateDto;
+    }
+
+    private static Membership solveMembership(ParticipantUICreateBase participant) {
         return participant.getMunicipality().equals(participant.getHomeMunicipality()) ?
                 Membership.none : participant.getMunicipalMembership();
     }

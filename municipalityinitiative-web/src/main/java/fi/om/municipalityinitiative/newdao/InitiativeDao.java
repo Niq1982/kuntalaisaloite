@@ -10,6 +10,7 @@ import fi.om.municipalityinitiative.newdto.ui.InitiativeUIUpdateDto;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ public interface InitiativeDao {
 
     Initiative getById(Long initiativeId, String authorsManagementHash);
 
-    void assignAuthor(Long initiativeId, Long participantId, String managementHash);
+    void assignAuthor(Long initiativeId, Long authorId);
 
     InitiativeCounts getInitiativeCounts(Maybe<Long> municipality);
 
@@ -42,4 +43,6 @@ public interface InitiativeDao {
     void updateModeratorComment(Long initiativeId, String moderatorComment);
 
     void updateSentComment(Long initiativeId, String sentComment);
+
+    Long createAuthor(Long initiativeId, Long participantId, String managementHash);
 }

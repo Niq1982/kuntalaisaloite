@@ -79,7 +79,8 @@ public class PublicInitiativeService {
                 false); // XXX: Remove franchise?
                         // XXX: Create dto?
         String managementHash = RandomHashGenerator.randomString(40);
-        initiativeDao.assignAuthor(initiativeId, participantId, managementHash);
+        Long authorId = initiativeDao.createAuthor(initiativeId, participantId, managementHash);
+        initiativeDao.assignAuthor(initiativeId, authorId);
 
         emailService.sendPrepareCreatedEmail(initiativeDao.getByIdWithOriginalAuthor(initiativeId), createDto.getParticipantEmail(), locale);
 
@@ -226,5 +227,6 @@ public class PublicInitiativeService {
             publishAndSendToMunicipality(initiativeId, requiredLoginUserHolder, sentComment, locale);
         }
     }
+
 
 }

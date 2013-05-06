@@ -3,7 +3,9 @@ package fi.om.municipalityinitiative.service;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
+import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
+import fi.om.municipalityinitiative.newdto.ui.AuthorInvitationUIConfirmDto;
 import fi.om.municipalityinitiative.newweb.AuthorInvitationUICreateDto;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import org.junit.Before;
@@ -11,7 +13,11 @@ import org.junit.Test;
 
 import javax.annotation.Resource;
 
+import java.util.List;
+
+import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
@@ -71,6 +77,49 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         assertThat(authorDao.getAuthorInvitation(initiativeId, RandomHashGenerator.getPrevious()).isRejected(), is(true));
 
     }
+
+    @Test
+    public void accept_author_invitation_adds_new_author_with_given_information() {
+
+        Long municipalityId = testHelper.createTestMunicipality("name");
+        Long initiativeId = testHelper.createCollectableReview(municipalityId);
+        authorService.createAuthorInvitation(initiativeId, authorLoginUserHolder, authorInvitation());
+
+        AuthorInvitationUIConfirmDto createDto = new AuthorInvitationUIConfirmDto();
+        createDto.setInitiativeMunicipality(municipalityId);
+        createDto.setName("name");
+        createDto.setAddress("address");
+        createDto.setParticipantEmail("email");
+        createDto.setPhone("phone");
+        createDto.setShowName(true);
+        createDto.setConfirmCode(RandomHashGenerator.getPrevious());
+        createDto.setHomeMunicipality(municipalityId);
+
+
+        precondition(authorService.findAuthors(initiativeId, authorLoginUserHolder), hasSize(1));
+
+        authorService.confirmAuthorInvitation(initiativeId, createDto);
+
+        // Author count is increased
+        assertThat(authorService.findAuthors(initiativeId, authorLoginUserHolder), hasSize(2));
+
+        // Check new author information
+        Author createdAuthor = authorService.findAuthors(initiativeId, authorLoginUserHolder).get(0);
+        assertThat(createdAuthor.getContactInfo().getName(), is(createDto.getName()));
+        assertThat(createdAuthor.getContactInfo().getEmail(), is(createDto.getParticipantEmail()));
+        assertThat(createdAuthor.getContactInfo().getAddress(), is(createDto.getAddress()));
+        assertThat(createdAuthor.getContactInfo().getPhone(), is(createDto.getPhone()));
+        assertThat(createdAuthor.getMunicipality().getId(), is(municipalityId));
+
+        // TODO: Check that managementHash is created and ok
+        // TODO: Check showName?
+    }
+
+    // TODO: Not allowed
+    // TODO: Expired
+    // TODO: Rejected
+    // TODO: Invalid confirmationCode
+    // TODO: Invitation is removed after acceptance
 
     private static AuthorInvitationUICreateDto authorInvitation() {
         AuthorInvitationUICreateDto authorInvitationUICreateDto = new AuthorInvitationUICreateDto();

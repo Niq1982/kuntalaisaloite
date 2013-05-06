@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newdto.service;
 
+import fi.om.municipalityinitiative.newdto.ui.AuthorInvitationUIConfirmDto;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
@@ -43,6 +44,22 @@ public class ParticipantCreateDtoTest {
         participantUICreateDto.setMunicipalMembership(Membership.company);
 
         assertThat(ParticipantCreateDto.parse(participantUICreateDto, null).getMunicipalMembership(), is(Membership.company));
+    }
+
+    @Test
+    public void parse_from_invitationConfirmDto() {
+        AuthorInvitationUIConfirmDto invitationUIConfirmDto = ReflectionTestUtils.modifyAllFields(new AuthorInvitationUIConfirmDto());
+
+        ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(invitationUIConfirmDto, 121L);
+
+        assertThat(participantCreateDto.getMunicipalMembership(), is(invitationUIConfirmDto.getMunicipalMembership()));
+        assertThat(participantCreateDto.getEmail(), is(invitationUIConfirmDto.getParticipantEmail()));
+        assertThat(participantCreateDto.getHomeMunicipality(), is(invitationUIConfirmDto.getHomeMunicipality()));
+        assertThat(participantCreateDto.getMunicipalityInitiativeId(), is(121L));
+        assertThat(participantCreateDto.getParticipantName(), is(invitationUIConfirmDto.getName()));
+
+        ReflectionTestUtils.assertNoNullFields(participantCreateDto);
+
     }
 
 }

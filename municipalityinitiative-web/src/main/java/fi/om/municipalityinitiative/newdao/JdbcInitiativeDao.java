@@ -182,18 +182,23 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     @Transactional(readOnly = false)
-    public void assignAuthor(Long initiativeId, Long participantId, String managementHash) {
-
-        Long newAuthorId = queryFactory.insert(QAuthor.author)
-                .set(QAuthor.author.managementHash, managementHash)
-                .set(QAuthor.author.participantId, participantId)
-                .executeWithKey(QAuthor.author.id);
+    public void assignAuthor(Long initiativeId, Long authorId) {
 
         assertSingleAffection(queryFactory.update(municipalityInitiative)
-                .set(municipalityInitiative.authorId, newAuthorId)
+                .set(municipalityInitiative.authorId, authorId)
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .where(municipalityInitiative.authorId.eq(PREPARATION_ID))
                 .execute());
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Long createAuthor(Long initiativeId, Long participantId, String managementHash) {
+
+        return queryFactory.insert(QAuthor.author)
+                .set(QAuthor.author.managementHash, managementHash)
+                .set(QAuthor.author.participantId, participantId)
+                .executeWithKey(QAuthor.author.id);
     }
 
     @Override

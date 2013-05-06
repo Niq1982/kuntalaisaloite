@@ -12,7 +12,7 @@ import static org.mockito.Mockito.mock;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={IntegrationTestFakeEmailConfiguration.class})
-public class ServiceIntegrationTestBase {
+public abstract class ServiceIntegrationTestBase {
 
     protected final static LoginUserHolder authorLoginUserHolder = mock(LoginUserHolder.class);
 
