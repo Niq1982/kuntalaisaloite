@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.service;
 
+import fi.om.municipalityinitiative.dao.NotFoundException;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
@@ -9,6 +10,7 @@ import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.ui.AuthorInvitationUIConfirmDto;
+import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.newweb.AuthorInvitationUICreateDto;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
@@ -69,8 +71,7 @@ public class AuthorService {
         ManagementSettings managementSettings = ManagementSettings.of(initiativeDao.getByIdWithOriginalAuthor(initiativeId));
         SecurityUtil.assertAllowance("Accept invitation", managementSettings.isAllowInviteAuthors());
 
-        List<AuthorInvitation> invitations = authorDao.findInvitations(initiativeId);
-        for (AuthorInvitation invitation : invitations) {
+        for (AuthorInvitation invitation : authorDao.findInvitations(initiativeId)) {
             if (invitation.isExpired() || invitation.isRejected()) {
                 continue;
             }
@@ -83,10 +84,30 @@ public class AuthorService {
                 Long authorId = authorDao.createAuthor(initiativeId, participantId, RandomHashGenerator.randomString(40));
                 authorDao.updateAuthorInformation(authorId, confirmDto.getContactInfo());
                 authorDao.deleteAuthorInvitation(initiativeId, confirmDto.getConfirmCode());
+                return;
 
             }
         }
+        throw new NotFoundException("Invitation with ", "initiative: " + initiativeId + ", invitation: " + confirmDto.getConfirmCode());
     }
 
 
+    public AuthorInvitationUIConfirmDto getPrefilledAuthorInvitationConfirmDto(Long initiativeId, String confirmCode) {
+        AuthorInvitation authorInvitation = authorDao.getAuthorInvitation(initiativeId, confirmCode);
+
+        // TOOD: Tests for this
+        if (authorInvitation.isRejected() || authorInvitation.isExpired()) {
+            throw new NotFoundException("Invitation with ", "initiative: " + initiativeId + ", invitation: " + confirmCode);
+
+        }
+
+        AuthorInvitationUIConfirmDto confirmDto = new AuthorInvitationUIConfirmDto();
+
+        confirmDto.setInitiativeMunicipality(initiativeDao.getByIdWithOriginalAuthor(initiativeId).getMunicipality().getId());
+        confirmDto.setContactInfo(new ContactInfo());
+        confirmDto.getContactInfo().setName(authorInvitation.getName());
+        confirmDto.getContactInfo().setEmail(authorInvitation.getEmail());
+        confirmDto.setConfirmCode(authorInvitation.getConfirmationCode());
+        return confirmDto;
+    }
 }

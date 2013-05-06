@@ -53,7 +53,7 @@ public class AuthorInvitation {
     }
 
     public boolean isExpired() {
-        return invitationTime.isBefore(new DateTime().minusMinutes(1));
+        return invitationTime.isBefore(new DateTime().minusMinutes(60));
     }
 
     public void setRejectTime(Maybe<DateTime> rejectTime) {

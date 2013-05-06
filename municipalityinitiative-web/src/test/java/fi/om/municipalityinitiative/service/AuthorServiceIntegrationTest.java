@@ -136,6 +136,19 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     // TODO: Invalid confirmationCode
     // TODO: Invitation is removed after acceptance
 
+    @Test
+    public void prefilled_author_confirmation_contains_all_information() {
+        Long municipalityId = testHelper.createTestMunicipality("name");
+        Long initiativeId = testHelper.createCollectableReview(municipalityId);
+        authorService.createAuthorInvitation(initiativeId, authorLoginUserHolder, authorInvitation());
+
+        AuthorInvitationUIConfirmDto confirmDto = authorService.getPrefilledAuthorInvitationConfirmDto(initiativeId, RandomHashGenerator.getPrevious());
+        assertThat(confirmDto.getMunicipality(), is(municipalityId));
+        assertThat(confirmDto.getContactInfo().getName(), is(authorInvitation().getAuthorName()));
+        assertThat(confirmDto.getContactInfo().getEmail(), is(authorInvitation().getAuthorEmail()));
+        assertThat(confirmDto.getConfirmCode(), is(RandomHashGenerator.getPrevious()));
+    }
+
     private static AuthorInvitationUICreateDto authorInvitation() {
         AuthorInvitationUICreateDto authorInvitationUICreateDto = new AuthorInvitationUICreateDto();
         authorInvitationUICreateDto.setAuthorName("name");

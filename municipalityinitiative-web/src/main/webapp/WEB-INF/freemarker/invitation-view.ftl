@@ -15,7 +15,9 @@
 -->
 <@l.main "page.initiative.public" initiative.name!"">
 
-    <#-- PAHASTI VAIHEESSA -->
+    <@u.errorsSummary path="authorInvitation.*" prefix="authorInvitation."/>
+
+    <#-- VÄHÄN VAIHEESSA -->
 
     <#--
      * invitationAcceptHtml
@@ -91,11 +93,12 @@
 
             <form action="${springMacroRequestContext.requestUri}" method="POST" >
                 <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-                <#--<input type="hidden" name="invitation" value="${invitation.invitationCode!""}"/>-->
+                <input type="hidden" name="confirmCode" value="${authorInvitation.confirmCode!""}"/>
                 <input type="hidden" name="action" value="confirm-accept-invitation"/>
+                <@f.notTooFastField authorInvitation/>
             
                     <div class="column col-1of2">
-                        <@f.textField path="authorInvitation.name" required="required" optional=false cssClass="medium" maxLength=InitiativeConstants.CONTACT_NAME_MAX  key="contactInfo.name" />
+                        <@f.textField path="authorInvitation.contactInfo.name" required="required" optional=false cssClass="medium" maxLength=InitiativeConstants.CONTACT_NAME_MAX  key="contactInfo.name" />
                     </div>
                     
                     <div class="column col-1of2 last">
@@ -104,7 +107,7 @@
                         <label for="municipality" class="input-header">
                             Valitse kotikuntasi <span class="icon-small required trigger-tooltip"></span>
                         </label>
-                        <select name="municipality" id="municipality"  class="chzn-select municipality-select" data-initiative-municipality="" data-placeholder="Valitse kunta" >
+                        <select name="homeMunicipality" id="municipality"  class="chzn-select municipality-select" data-initiative-municipality="" data-placeholder="Valitse kunta" >
                             <option value=""></option>
                                 <option value="1">Helsinki</option>
                                 <option value="4">Hämeenlinna</option>
@@ -119,14 +122,14 @@
                 
                     <div class="initiative-contact-details">
                         <div class="column col-1of2">
-                            <#--<@f.textField path="authorInvitation.email" required="required" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_EMAIL_MAX key="contactInfo.email" />-->
-                            <@f.textField path="authorInvitation.phone" required="" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_PHONE_MAX key="contactInfo.phone" />
+                            <@f.textField path="authorInvitation.contactInfo.email" required="required" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_EMAIL_MAX key="contactInfo.email" />
+                            <@f.textField path="authorInvitation.contactInfo.phone" required="" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_PHONE_MAX key="contactInfo.phone" />
                         </div>
                         
                         <div class="column col-1of2 last">
                             <label>
                                 <@u.message "contactInfo.address" />
-                                <@spring.formTextarea "authorInvitation.address", 'class="address-field noresize" maxlength="'+InitiativeConstants.CONTACT_ADDRESS_MAX+'"' />
+                                <@spring.formTextarea "authorInvitation.contactInfo.address", 'class="address-field noresize" maxlength="'+InitiativeConstants.CONTACT_ADDRESS_MAX+'"' />
                             </label>
                         </div>
                     
