@@ -14,7 +14,7 @@ public class Initiative {
     private String extraInfo;
 
     private Municipality municipality;
-    private String authorName;
+    private String authorName; // FIXME: What? Why?
 
     private LocalDate createTime;
 
