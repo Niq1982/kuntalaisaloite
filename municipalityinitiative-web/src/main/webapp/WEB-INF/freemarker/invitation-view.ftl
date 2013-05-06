@@ -16,10 +16,6 @@
 <@l.main "page.initiative.public" initiative.name!"">
 
 
-    <@u.errorsSummary path="authorInvitation.*" prefix="authorInvitation."/>
-
-    <#-- VÄHÄN VAIHEESSA -->
-
     <#--
      * invitationAcceptHtml
      * 
@@ -90,7 +86,7 @@
         
             <@u.systemMessage path="invitation.accept.description" type="info" showClose=false />
         
-            <#--<@u.errorsSummary path="currentAuthor.*" prefix="initiative.currentAuthor."/>-->
+            <@u.errorsSummary path="authorInvitation.*" prefix="authorInvitation."/>
 
             <form action="${springMacroRequestContext.requestUri}" method="POST" >
                 <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
