@@ -323,7 +323,7 @@
     <@spring.bind path />
     <#if spring.status.error>
         <#global hasErrors=true />
-        <div id="errors-summary" class="system-msg msg-error expose">
+        <div id="errors-summary" class="system-msg msg-error">
             <@message "formError.summary.title" />
             <ul>
                 <#list spring.status.errors.allErrors as error>

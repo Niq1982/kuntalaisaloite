@@ -17,7 +17,8 @@ public enum RequestMessage {
     SEND (SUCCESS, true),
     PARTICIPATE (SUCCESS),
     LOGOUT (SUCCESS),
-    CONFIRM_PARTICIPATION(SUCCESS),
+    CONFIRM_PARTICIPATION (SUCCESS),
+    INVITATION_SENT (SUCCESS),
 
     // Warning messages
     ALREADY_SENT (WARNING),

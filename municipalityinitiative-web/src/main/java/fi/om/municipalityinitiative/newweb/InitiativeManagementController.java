@@ -181,7 +181,7 @@ public class InitiativeManagementController extends BaseController {
 
         if (validationService.validationSuccessful(authorInvitationUICreateDto, bindingResult, model)) {
             authorService.createAuthorInvitation(initiativeId, loginUserHolder, authorInvitationUICreateDto);
-            return contextRelativeRedirect(Urls.get(locale).manageAuthors(initiativeId));
+            return redirectWithMessage(Urls.get(locale).manageAuthors(initiativeId), RequestMessage.INVITATION_SENT, request);
         }
         else {
             return ViewGenerator.manageAuthorsView(publicInitiativeService.getMunicipalityInitiative(initiativeId),
