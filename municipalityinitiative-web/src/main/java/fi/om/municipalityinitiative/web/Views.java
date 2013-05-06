@@ -42,6 +42,7 @@ public final class Views {
     public static final String EDIT_VIEW = "edit-view";
     public static final String UPDATE_VIEW = "update-view";
     public static final String MANAGE_AUTHORS_VIEW = "manage-authors-view";
+    public static final String INVITATION_VIEW = "invitation-view";
     public static final String PARTICIPANT_LIST = "participant-list";
     public static final String IFRAME_VIEW = "iframe";
     public static final String STATUS_VIEW = "status";

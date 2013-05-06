@@ -166,6 +166,20 @@ public class ViewGenerator {
                         .build()
         );
     }
+    
+    public static ViewGenerator invitationView(InitiativeViewInfo municipalityInitiative,
+            List<Municipality> allMunicipalities,
+            ParticipantCount participantCount,
+            AuthorInvitationUIConfirmDto authorInvitationUIConfirmDto) {
+        return new ViewGenerator(Views.INVITATION_VIEW,
+        new AttributeBuilder()
+        .add("initiative", municipalityInitiative)
+        .add("municipalities", allMunicipalities)
+        .add("participantCount", participantCount)
+        .add("authorInvitation", authorInvitationUIConfirmDto)
+        .build()
+        );
+    }
 
     private static class AttributeBuilder {
         private Map<String, Object> attributes = Maps.newHashMap();
