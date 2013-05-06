@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
+import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.json.InitiativeJson;
 import fi.om.municipalityinitiative.newdto.json.InitiativeListJson;
@@ -89,7 +90,11 @@ public class JsonDataService {
         initiativeInfo.setSentTime(Maybe.<LocalDate>fromNullable(null));
         initiativeInfo.setCreateTime(new LocalDate(2010, 1, 1));
         initiativeInfo.setAuthorName("Teemu Teekkari");
-        initiativeInfo.setShowName(true);
+
+        Author author = new Author();
+        author.setShowName(true);
+        initiativeInfo.setAuthor(author);
+
         initiativeInfo.setType(InitiativeType.COLLABORATIVE);
 
         InitiativeJson initiativeJson = InitiativeJson.from(initiativeInfo, publicParticipants, participantCount);

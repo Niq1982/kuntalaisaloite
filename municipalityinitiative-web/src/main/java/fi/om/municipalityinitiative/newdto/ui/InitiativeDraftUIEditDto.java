@@ -48,7 +48,7 @@ public class InitiativeDraftUIEditDto {
         editDto.setContactInfo(new ContactInfo(initiative.getAuthor().getContactInfo()));
         editDto.setName(initiative.getName());
         editDto.setProposal(initiative.getProposal());
-        editDto.setShowName(initiative.getShowName());
+        editDto.setShowName(initiative.getAuthor().isShowName());
         editDto.municipality = initiative.getMunicipality();
         editDto.state = initiative.getState();
         return editDto;

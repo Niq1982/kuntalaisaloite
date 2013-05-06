@@ -58,10 +58,10 @@ public class TestDataTemplates {
         initiative.setProposal(proposal);
         initiative.setType(collaborative ? InitiativeType.COLLABORATIVE : InitiativeType.SINGLE);
         initiative.setState(InitiativeState.PUBLISHED);
-        initiative.setShowName(true);
         Author author = new Author();
         author.setContactInfo(contactInfo());
         author.getContactInfo().setEmail(email);
+        author.setShowName(true);
         initiative.setAuthor(author);
 
         return initiative;

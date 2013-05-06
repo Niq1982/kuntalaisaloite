@@ -15,7 +15,6 @@ public class Initiative {
 
     private Municipality municipality;
     private String authorName;
-    private Boolean showName;
 
     private LocalDate createTime;
 
@@ -59,14 +58,6 @@ public class Initiative {
 
     public void setAuthorName(String authorName) {
         this.authorName = authorName;
-    }
-    
-    public Boolean getShowName() {
-        return showName;
-    }
-
-    public void setShowName(Boolean showName) {
-        this.showName = showName;
     }
 
     public LocalDate getCreateTime() {

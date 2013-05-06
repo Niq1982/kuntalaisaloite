@@ -41,6 +41,7 @@ public class Mappings {
                     author.setId(row.get(QAuthor.author.id));
                     author.setContactInfo(contactInfo);
                     author.setMunicipality(parseMunicipality(row));
+                    author.setShowName(Boolean.TRUE.equals(row.get(QParticipant.participant.showName)));
 
                     return author;
 
@@ -85,7 +86,6 @@ public class Mappings {
                     info.setType(row.get(municipalityInitiative.type));
                     info.setProposal(row.get(municipalityInitiative.proposal));
                     info.setAuthorName(row.get(QParticipant.participant.name));
-                    info.setShowName(row.get(QParticipant.participant.showName));
                     info.setManagementHash(Maybe.of(row.get(QAuthor.author.managementHash)));
                     info.setSentTime(maybeLocalDate(row.get(municipalityInitiative.sent)));
                     info.setState(row.get(municipalityInitiative.state));
@@ -102,6 +102,7 @@ public class Mappings {
                     contactInfo.setName(row.get(QAuthor.author.name));
                     contactInfo.setEmail(row.get(QParticipant.participant.email));
                     author.setId(row.get(QAuthor.author.id));
+                    author.setShowName(Boolean.TRUE.equals(row.get(QParticipant.participant.showName)));
                     author.setContactInfo(contactInfo);
                     author.setMunicipality(parseMunicipality(row, JdbcInitiativeDao.AUTHOR_MUNICIPALITY));
 

@@ -123,7 +123,7 @@ public class PublicInitiativeService {
 
         InitiativeUIUpdateDto updateDto = new InitiativeUIUpdateDto();
         updateDto.setContactInfo(initiative.getAuthor().getContactInfo());
-        updateDto.setShowName(initiative.getShowName());
+        updateDto.setShowName(initiative.getAuthor().isShowName());
         updateDto.setExtraInfo(initiative.getExtraInfo());
 
         return updateDto;

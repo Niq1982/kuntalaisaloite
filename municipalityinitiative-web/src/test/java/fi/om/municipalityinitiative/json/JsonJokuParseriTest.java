@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.json;
 
 import com.google.common.collect.Lists;
+import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.json.InitiativeJson;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
@@ -38,20 +39,22 @@ public class JsonJokuParseriTest {
         publicParticipants.add(new Participant(new LocalDate(2010, 1, 1), "Teemu Teekkari", true, TAMPERE, "", Membership.community));
         publicParticipants.add(new Participant(new LocalDate(2010, 1, 1), "Taina Teekkari", false, TAMPERE, "", Membership.company));
 
-        Initiative initiativeInfo = new Initiative();
-        initiativeInfo.setId(1L);
-        initiativeInfo.setName("Koirat pois lähiöistä");
-        initiativeInfo.setProposal("Kakkaa on joka paikassa");
-        initiativeInfo.setMunicipality(TAMPERE);
-        initiativeInfo.setSentTime(Maybe.of(new LocalDate(2010, 5, 5))); // Cannot be absent at this point, mapper tries to get it's value
-        initiativeInfo.setCreateTime(new LocalDate(2010, 1, 1));
-        initiativeInfo.setAuthorName("Teemu Teekkari");
-        initiativeInfo.setShowName(true);
-        initiativeInfo.setManagementHash(Maybe.of("any"));
+        Initiative initiative = new Initiative();
+        initiative.setId(1L);
+        initiative.setName("Koirat pois lähiöistä");
+        initiative.setProposal("Kakkaa on joka paikassa");
+        initiative.setMunicipality(TAMPERE);
+        initiative.setSentTime(Maybe.of(new LocalDate(2010, 5, 5))); // Cannot be absent at this point, mapper tries to get it's value
+        initiative.setCreateTime(new LocalDate(2010, 1, 1));
+        initiative.setAuthorName("Teemu Teekkari");
+        initiative.setManagementHash(Maybe.of("any"));
 
-        InitiativeJson initiativeJson = InitiativeJson.from(initiativeInfo, publicParticipants, participantCount);
+        Author author = new Author();
+        author.setShowName(true);
+        initiative.setAuthor(author);
+        InitiativeJson initiativeJson = InitiativeJson.from(initiative, publicParticipants, participantCount);
 
-        new MappingJackson2HttpMessageConverter().getObjectMapper().writeValueAsString(initiativeInfo);
+        new MappingJackson2HttpMessageConverter().getObjectMapper().writeValueAsString(initiative);
 
         String json = ObjectSerializer.objectToString(initiativeJson); // NOTE: Real api-controller uses MappingJackson2HttpMessageConverter initialized by WebConfiguration
 

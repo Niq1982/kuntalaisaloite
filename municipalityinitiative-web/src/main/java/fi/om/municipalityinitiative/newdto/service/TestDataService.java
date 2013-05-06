@@ -29,7 +29,7 @@ public class TestDataService {
         initiativeDao.assignAuthor(initiativeId, authorId);
 
         InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto();
-        editDto.setShowName(initiative.getShowName());
+        editDto.setShowName(initiative.getAuthor().isShowName());
         editDto.setName(initiative.getName());
         editDto.setContactInfo(initiative.getAuthor().getContactInfo());
         editDto.setProposal(initiative.getProposal()
