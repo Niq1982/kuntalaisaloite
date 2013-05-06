@@ -11,6 +11,7 @@ import fi.om.municipalityinitiative.newdto.json.InitiativeListJson;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
+import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.newweb.ApiController;
@@ -92,7 +93,8 @@ public class JsonDataService {
         initiativeInfo.setAuthorName("Teemu Teekkari");
 
         Author author = new Author();
-        author.setShowName(true);
+        author.setContactInfo(new ContactInfo());
+        author.getContactInfo().setShowName(true);
         initiativeInfo.setAuthor(author);
 
         initiativeInfo.setType(InitiativeType.COLLABORATIVE);

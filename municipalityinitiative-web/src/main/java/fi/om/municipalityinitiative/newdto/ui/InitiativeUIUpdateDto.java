@@ -14,9 +14,6 @@ public class InitiativeUIUpdateDto {
     @Valid
     private ContactInfo contactInfo;
 
-    @NotNull
-    private Boolean showName;
-
     public String getExtraInfo() {
         return extraInfo;
     }
@@ -31,14 +28,6 @@ public class InitiativeUIUpdateDto {
 
     public void setContactInfo(ContactInfo contactInfo) {
         this.contactInfo = contactInfo;
-    }
-
-    public Boolean getShowName() {
-        return showName;
-    }
-
-    public void setShowName(Boolean showName) {
-        this.showName = showName;
     }
 
 

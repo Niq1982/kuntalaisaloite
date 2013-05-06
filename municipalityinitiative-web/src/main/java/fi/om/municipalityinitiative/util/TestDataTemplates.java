@@ -24,6 +24,7 @@ public class TestDataTemplates {
         contactInfo.setName(CONTACT_NAME);
         contactInfo.setPhone("012 3456 789");
         contactInfo.setAddress("Osoitekatu 1 A 10 11111 Kaupunki");
+        contactInfo.setShowName(true);
         
         return contactInfo;
     }
@@ -61,7 +62,8 @@ public class TestDataTemplates {
         Author author = new Author();
         author.setContactInfo(contactInfo());
         author.getContactInfo().setEmail(email);
-        author.setShowName(true);
+        author.getContactInfo().setShowName(true);
+
         initiative.setAuthor(author);
 
         return initiative;

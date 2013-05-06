@@ -191,10 +191,10 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         contactInfo.setAddress("updated address");
         contactInfo.setPhone("updated phone");
         contactInfo.setName("updated author name");
+        contactInfo.setShowName(false); // As far as default is true ...
         editDto.setContactInfo(contactInfo);
         editDto.setName("updated initiative name");
         editDto.setProposal("updated proposal");
-        editDto.setShowName(false); // As far as default is true ...
         editDto.setExtraInfo("updated extrainfo");
 
         service.editInitiativeDraft(initiativeId, authorLoginUserHolder, editDto);
@@ -204,7 +204,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         ReflectionTestUtils.assertReflectionEquals(updated.getContactInfo(), contactInfo);
         assertThat(updated.getName(), is(editDto.getName()));
         assertThat(updated.getProposal(), is(editDto.getProposal()));
-        assertThat(updated.getShowName(), is(editDto.getShowName()));
+        assertThat(updated.getContactInfo().isShowName(), is(editDto.getContactInfo().isShowName()));
         assertThat(updated.getExtraInfo(), is(editDto.getExtraInfo()));
         ReflectionTestUtils.assertNoNullFields(updated);
 

@@ -35,9 +35,6 @@ public class InitiativeDraftUIEditDto {
     @Valid
     private ContactInfo contactInfo;
 
-    @NotNull
-    private Boolean showName;
-
     public InitiativeDraftUIEditDto() {
         // For freemarker
     }
@@ -48,7 +45,6 @@ public class InitiativeDraftUIEditDto {
         editDto.setContactInfo(new ContactInfo(initiative.getAuthor().getContactInfo()));
         editDto.setName(initiative.getName());
         editDto.setProposal(initiative.getProposal());
-        editDto.setShowName(initiative.getAuthor().isShowName());
         editDto.municipality = initiative.getMunicipality();
         editDto.state = initiative.getState();
         return editDto;
@@ -88,14 +84,6 @@ public class InitiativeDraftUIEditDto {
 
     public void setContactInfo(ContactInfo contactInfo) {
         this.contactInfo = contactInfo;
-    }
-
-    public Boolean getShowName() {
-        return showName;
-    }
-
-    public void setShowName(Boolean showName) {
-        this.showName = showName;
     }
 
     public InitiativeState getState() {

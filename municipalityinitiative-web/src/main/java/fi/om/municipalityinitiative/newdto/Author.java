@@ -8,7 +8,6 @@ public class Author {
     private Long id;
     private Municipality municipality;
     private ContactInfo contactInfo;
-    private boolean showName;
 
     public Municipality getMunicipality() {
         return municipality;
@@ -34,11 +33,4 @@ public class Author {
         this.id = id;
     }
 
-    public boolean isShowName() {
-        return showName;
-    }
-
-    public void setShowName(boolean showName) {
-        this.showName = showName;
-    }
 }

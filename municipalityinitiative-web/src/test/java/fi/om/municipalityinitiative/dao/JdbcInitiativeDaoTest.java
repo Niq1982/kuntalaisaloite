@@ -91,7 +91,7 @@ public class JdbcInitiativeDaoTest {
         assertThat(initiative.getSentTime().isPresent(), is(true));
         assertThat(initiative.getState(), is(TestHelper.DEFAULT_STATE));
         assertThat(initiative.getType(), is(InitiativeType.COLLABORATIVE_CITIZEN));
-        assertThat(initiative.getAuthor().isShowName(), is(true));
+        assertThat(initiative.getAuthor().getContactInfo().isShowName(), is(true));
         assertThat(initiative.getParticipantCount(), is(1));
 
         assertThat(initiative.getAuthor().getContactInfo().getName(), is(TestHelper.DEFAULT_AUTHOR_NAME));
@@ -477,16 +477,16 @@ public class JdbcInitiativeDaoTest {
         updateDto.setContactInfo(contactInfo);
 
         updateDto.setExtraInfo("Modified extra info");
-        updateDto.setShowName(false);
         contactInfo.setName("Modified Name");
         contactInfo.setAddress("Modified Address");
         contactInfo.setPhone("Modified Phone");
         contactInfo.setEmail("Modified Email");
+        contactInfo.setShowName(false);
         updateDto.setContactInfo(contactInfo);
         initiativeDao.updateAcceptedInitiative(initiativeId, TestHelper.TEST_MANAGEMENT_HASH, updateDto);
 
         Initiative updated = initiativeDao.getById(initiativeId, TestHelper.TEST_MANAGEMENT_HASH);
-        assertThat(updated.getAuthor().isShowName(), is(false));
+        assertThat(updated.getAuthor().getContactInfo().isShowName(), is(false));
 
         Author author = initiativeDao.getAuthorInformation(initiativeId, TestHelper.TEST_MANAGEMENT_HASH);
         ReflectionTestUtils.assertReflectionEquals(author.getContactInfo(), contactInfo);

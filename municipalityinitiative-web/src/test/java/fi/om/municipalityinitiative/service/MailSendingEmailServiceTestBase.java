@@ -76,6 +76,7 @@ public abstract class MailSendingEmailServiceTestBase {
         contactInfo.setName(CONTACT_NAME);
         contactInfo.setEmail(CONTACT_EMAIL);
         contactInfo.setPhone(CONTACT_PHONE);
+        contactInfo.setShowName(true);
         author.setContactInfo(contactInfo);
         
         initiative.setAuthor(author);

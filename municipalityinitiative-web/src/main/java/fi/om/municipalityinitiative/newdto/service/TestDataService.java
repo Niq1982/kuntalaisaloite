@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.newdto.service;
 
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
+import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.util.*;
@@ -29,7 +30,6 @@ public class TestDataService {
         initiativeDao.assignAuthor(initiativeId, authorId);
 
         InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto();
-        editDto.setShowName(initiative.getAuthor().isShowName());
         editDto.setName(initiative.getName());
         editDto.setContactInfo(initiative.getAuthor().getContactInfo());
         editDto.setProposal(initiative.getProposal()

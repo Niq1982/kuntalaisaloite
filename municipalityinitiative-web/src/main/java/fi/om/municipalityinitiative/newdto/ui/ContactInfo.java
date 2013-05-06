@@ -32,11 +32,14 @@ public class ContactInfo {
     @Size(max = InitiativeConstants.CONTACT_ADDRESS_MAX)
     private String address;
 
+    private boolean showName;
+
     public ContactInfo(ContactInfo original) {
         this.name = original.name;
         this.email = original.email;
         this.phone = original.phone;
         this.address = original.address;
+        this.showName = original.showName;
     }
 
     public ContactInfo() { }
@@ -74,5 +77,11 @@ public class ContactInfo {
         this.address = address;
     }
 
+    public boolean isShowName() {
+        return showName;
+    }
 
+    public void setShowName(boolean showName) {
+        this.showName = showName;
+    }
 }

@@ -262,7 +262,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .execute());
 
         assertSingleAffection(queryFactory.update(QParticipant.participant)
-                .set(QParticipant.participant.showName, editDto.getShowName())
+                .set(QParticipant.participant.showName, editDto.getContactInfo().isShowName())
                 .set(QParticipant.participant.name, editDto.getContactInfo().getName())
                 .set(QParticipant.participant.email, editDto.getContactInfo().getEmail())
                 .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
@@ -344,7 +344,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .execute());
 
         assertSingleAffection(queryFactory.update(QParticipant.participant)
-                .set(QParticipant.participant.showName, Boolean.TRUE.equals(updateDto.getShowName()))
+                .set(QParticipant.participant.showName, Boolean.TRUE.equals(updateDto.getContactInfo().isShowName()))
                 .set(QParticipant.participant.name, updateDto.getContactInfo().getName())
                 .set(QParticipant.participant.email, updateDto.getContactInfo().getEmail())
                 .where(QParticipant.participant.id.eq(participantId))

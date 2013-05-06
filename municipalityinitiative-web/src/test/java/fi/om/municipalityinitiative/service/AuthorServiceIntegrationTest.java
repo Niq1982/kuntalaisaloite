@@ -110,7 +110,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         assertThat(createdAuthor.getContactInfo().getAddress(), is(createDto.getAddress()));
         assertThat(createdAuthor.getContactInfo().getPhone(), is(createDto.getPhone()));
         assertThat(createdAuthor.getMunicipality().getId(), is(municipalityId));
-        assertThat(createdAuthor.isShowName(), is(true));
+        assertThat(createdAuthor.getContactInfo().isShowName(), is(true));
 
         // TODO: Check that managementHash is created and ok
     }

@@ -31,7 +31,7 @@ public class InitiativeViewInfo {
     }
 
     public boolean isShowName() {
-        return initiative.getAuthor().isShowName();
+        return initiative.getAuthor().getContactInfo().isShowName();
     }
 
     public LocalDate getCreateTime() {

@@ -36,12 +36,12 @@ public class Mappings {
                     contactInfo.setPhone(row.get(QAuthor.author.phone));
                     contactInfo.setEmail(row.get(QParticipant.participant.email));
                     contactInfo.setName(row.get(QParticipant.participant.name));
+                    contactInfo.setShowName(Boolean.TRUE.equals(row.get(QParticipant.participant.showName)));
 
                     Author author = new Author();
                     author.setId(row.get(QAuthor.author.id));
                     author.setContactInfo(contactInfo);
                     author.setMunicipality(parseMunicipality(row));
-                    author.setShowName(Boolean.TRUE.equals(row.get(QParticipant.participant.showName)));
 
                     return author;
 
@@ -101,8 +101,8 @@ public class Mappings {
                     contactInfo.setPhone(row.get(QAuthor.author.phone));
                     contactInfo.setName(row.get(QAuthor.author.name));
                     contactInfo.setEmail(row.get(QParticipant.participant.email));
+                    contactInfo.setShowName(Boolean.TRUE.equals(row.get(QParticipant.participant.showName)));
                     author.setId(row.get(QAuthor.author.id));
-                    author.setShowName(Boolean.TRUE.equals(row.get(QParticipant.participant.showName)));
                     author.setContactInfo(contactInfo);
                     author.setMunicipality(parseMunicipality(row, JdbcInitiativeDao.AUTHOR_MUNICIPALITY));
 

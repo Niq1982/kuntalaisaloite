@@ -6,6 +6,7 @@ import fi.om.municipalityinitiative.newdto.json.InitiativeJson;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
+import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
@@ -50,7 +51,9 @@ public class JsonJokuParseriTest {
         initiative.setManagementHash(Maybe.of("any"));
 
         Author author = new Author();
-        author.setShowName(true);
+        ContactInfo contactInfo = new ContactInfo();
+        contactInfo.setShowName(true);
+        author.setContactInfo(contactInfo);
         initiative.setAuthor(author);
         InitiativeJson initiativeJson = InitiativeJson.from(initiative, publicParticipants, participantCount);
 
