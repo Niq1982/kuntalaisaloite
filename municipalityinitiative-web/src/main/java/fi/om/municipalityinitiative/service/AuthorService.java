@@ -81,7 +81,7 @@ public class AuthorService {
                 Long participantId = participantDao.create(participantCreateDto, someConfirmationCode);
                 participantDao.confirmParticipation(participantId, someConfirmationCode);
                 Long authorId = authorDao.createAuthor(initiativeId, participantId, RandomHashGenerator.randomString(40));
-//                authorDao.updateAuthorInformation(authorId, confirmDto.);                  TODO
+                authorDao.updateAuthorInformation(authorId, confirmDto.getContactInfo());
                 authorDao.deleteAuthorInvitation(initiativeId, confirmDto.getConfirmCode());
 
             }
