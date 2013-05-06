@@ -295,37 +295,13 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     @Transactional(readOnly = false)
-    public void updateAcceptedInitiative(Long initiativeId, String managementHash, InitiativeUIUpdateDto updateDto) {
-
-//        Long participantId = queryFactory.from(QParticipant.participant)
-//                .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
-//                .innerJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
-//                .where(QAuthor.author.managementHash.eq(managementHash))
-//                .singleResult(QParticipant.participant.id);
+    public void updateExtraInfo(Long initiativeId, String extraInfo) {
 
         assertSingleAffection(queryFactory.update(municipalityInitiative)
-                .set(municipalityInitiative.extraInfo, updateDto.getExtraInfo())
+                .set(municipalityInitiative.extraInfo, extraInfo)
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute());
-
-//        ContactInfo contactInfo = updateDto.getContactInfo();
-//
-//        assertSingleAffection(queryFactory.update(QParticipant.participant)
-//                .set(QParticipant.participant.showName, Boolean.TRUE.equals(contactInfo.isShowName()))
-//                .set(QParticipant.participant.name, contactInfo.getName())
-//                .set(QParticipant.participant.email, contactInfo.getEmail())
-//                .where(QParticipant.participant.id.eq(participantId))
-//                .execute());
-//
-//        assertSingleAffection(queryFactory.update(QAuthor.author)
-//                .set(QAuthor.author.address, contactInfo.getAddress())
-//                .set(QAuthor.author.name, contactInfo.getName())
-//                .set(QAuthor.author.phone, contactInfo.getPhone())
-//                .where(QAuthor.author.participantId.eq(participantId))
-//                .execute());
     }
-
-
 
     public static void assertSingleAffection(long affectedRows) {
         Assert.isTrue(affectedRows == 1, "Should have affected only one row. Affected: " + affectedRows);

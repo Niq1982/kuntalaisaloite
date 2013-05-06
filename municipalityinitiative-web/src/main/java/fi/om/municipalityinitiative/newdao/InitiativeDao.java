@@ -28,7 +28,7 @@ public interface InitiativeDao {
 
     void editInitiativeDraft(Long initiativeId, InitiativeDraftUIEditDto editDto);
 
-    void updateAcceptedInitiative(Long initiativeId, String managementHash, InitiativeUIUpdateDto updateDto);
+    void updateExtraInfo(Long initiativeId, String extraInfo);
 
     void updateInitiativeState(Long initiativeId, InitiativeState state);
 
