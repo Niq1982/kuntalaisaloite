@@ -15,9 +15,6 @@
 -->
 <@l.main "page.initiative.public" initiative.name!"">
 
-    <@u.errorsSummary path="authorInvitation.*" prefix="authorInvitation."/>
-
-    <#-- VÄHÄN VAIHEESSA -->
 
     <#--
      * invitationAcceptHtml
@@ -89,7 +86,7 @@
         
             <@u.systemMessage path="invitation.accept.description" type="info" showClose=false />
         
-            <#--<@u.errorsSummary path="currentAuthor.*" prefix="initiative.currentAuthor."/>-->
+            <@u.errorsSummary path="authorInvitation.*" prefix="authorInvitation."/>
 
             <form action="${springMacroRequestContext.requestUri}" method="POST" >
                 <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
@@ -119,27 +116,22 @@
                         </select>
                     </div>
                     <br class="clear" />
-                
-                    <div class="initiative-contact-details">
-                        <div class="column col-1of2">
-                            <@f.textField path="authorInvitation.contactInfo.email" required="required" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_EMAIL_MAX key="contactInfo.email" />
-                            <@f.textField path="authorInvitation.contactInfo.phone" required="" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_PHONE_MAX key="contactInfo.phone" />
+                    
+                    <div class="input-block-content">
+                        <div class="input-header">
+                            <@u.message "contactInfo.title" />
                         </div>
                         
-                        <div class="column col-1of2 last">
-                            <label>
-                                <@u.message "contactInfo.address" />
-                                <@spring.formTextarea "authorInvitation.contactInfo.address", 'class="address-field noresize" maxlength="'+InitiativeConstants.CONTACT_ADDRESS_MAX+'"' />
-                            </label>
-                        </div>
-                    
+                        <@f.contactInfo path="authorInvitation.contactInfo" mode="full" />
                     </div>
                 
                 <#--<#assign href>${urls.help(HelpPage.ORGANIZERS.getUri(locale))}</#assign>
                 <p><@u.messageHTML key="userConfirmation.invitation" args=[href] /></p>-->
                 
-                <button type="submit" name="" value="<@u.message "invitation.accept.confirm" />" class="small-button green save-and-send"><span class="small-icon save-and-send"><@u.message "invitation.accept" /></span></button>
-                <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
+                    <div class="input-block-content">
+                        <button type="submit" name="" value="<@u.message "invitation.accept.confirm" />" class="small-button green save-and-send"><span class="small-icon save-and-send"><@u.message "invitation.accept" /></span></button>
+                        <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
+                    </div>
             </form>                    
         </@compress>
     </#assign>

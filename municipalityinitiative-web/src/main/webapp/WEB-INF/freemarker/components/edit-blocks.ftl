@@ -273,6 +273,10 @@
         </div>
 
         <div class="input-block-content">
+            <div class="input-header">
+                <@u.message "contactInfo.title" />
+            </div>
+            
             <@f.contactInfo path=path+".contactInfo" mode="full" />
         </div>
     </div>
