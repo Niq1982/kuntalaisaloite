@@ -37,6 +37,11 @@ public class JdbcParticipantDao implements ParticipantDao {
     @Override
     @Transactional(readOnly = false)
     public Long create(ParticipantCreateDto createDto, String confirmationCode) {
+
+        if (confirmationCode == null) {
+            throw new NullPointerException("confirmationCode may not be null: Participation would be accepted without participantCount increasing.");
+        }
+
         Long participantId = queryFactory.insert(participant)
                 .set(participant.franchise, createDto.isFranchise())
                 .set(participant.municipalityId, createDto.getHomeMunicipality())

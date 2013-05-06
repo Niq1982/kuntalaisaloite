@@ -22,6 +22,11 @@ import org.joda.time.LocalDate;
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 
 public class Mappings {
+
+    // This is for querydsl for not being able to create a row with DEFERRED not-null-check value being null..
+    // Querydsl always assigned some value to it and setting it to null was not an option.
+    public static final Long PREPARATION_ID = -1L;
+
     public static Expression<Author> authorMapping =
             new MappingProjection<Author>(Author.class,
                     municipalityInitiative.all(),

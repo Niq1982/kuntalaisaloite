@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newdto.service;
 
+import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
@@ -14,8 +15,12 @@ import javax.annotation.Resource;
 public class TestDataService {
 
     public static final String DEFAULT_MANAGEMENT_HASH = "managementHash";
+
     @Resource
     InitiativeDao initiativeDao;
+
+    @Resource
+    AuthorDao authorDao;
 
     @Resource
     private ParticipantDao participantDao;
@@ -25,9 +30,8 @@ public class TestDataService {
 
         Long initiativeId = initiativeDao.prepareInitiative(initiative.getMunicipality().getId());
         Long participantId = participantDao.prepareParticipant(initiativeId, initiative.getMunicipality().getId(), null, Membership.community, false);
-//        initiativeDao.assignAuthor(initiativeId, participantId, DEFAULT_MANAGEMENT_HASH);
-        Long authorId = initiativeDao.createAuthor(initiativeId, participantId, DEFAULT_MANAGEMENT_HASH);
-        initiativeDao.assignAuthor(initiativeId, authorId);
+        Long authorId = authorDao.createAuthor(initiativeId, participantId, DEFAULT_MANAGEMENT_HASH);
+        authorDao.assignAuthor(initiativeId, authorId);
 
         InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto();
         editDto.setName(initiative.getName());

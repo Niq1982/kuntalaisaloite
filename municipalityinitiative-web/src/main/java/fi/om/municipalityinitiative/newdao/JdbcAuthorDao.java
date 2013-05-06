@@ -8,6 +8,7 @@ import fi.om.municipalityinitiative.dao.NotFoundException;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
+import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.sql.QAuthor;
 import fi.om.municipalityinitiative.sql.QAuthorInvitation;
 import fi.om.municipalityinitiative.sql.QMunicipality;
@@ -20,6 +21,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 import static fi.om.municipalityinitiative.newdao.JdbcInitiativeDao.assertSingleAffection;
+import static fi.om.municipalityinitiative.newdao.Mappings.PREPARATION_ID;
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 
 @SQLExceptionTranslated
@@ -30,6 +32,62 @@ public class JdbcAuthorDao implements AuthorDao {
 
     @Resource
     PostgresQueryFactory queryFactory;
+
+    @Override
+    @Transactional(readOnly = false)
+    public void assignAuthor(Long initiativeId, Long authorId) {
+
+        assertSingleAffection(queryFactory.update(municipalityInitiative)
+                .set(municipalityInitiative.authorId, authorId)
+                .where(municipalityInitiative.id.eq(initiativeId))
+                .where(municipalityInitiative.authorId.eq(PREPARATION_ID))
+                .execute());
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Long createAuthor(Long initiativeId, Long participantId, String managementHash) {
+
+        return queryFactory.insert(QAuthor.author)
+                .set(QAuthor.author.managementHash, managementHash)
+                .set(QAuthor.author.participantId, participantId)
+                .executeWithKey(QAuthor.author.id);
+    }
+
+    @Override
+    public Author getAuthorInformation(Long initiativeId, String managementHash) {
+        return queryFactory.from(municipalityInitiative)
+                .innerJoin(municipalityInitiative._participantMunicipalityInitiativeIdFk, QParticipant.participant)
+                .innerJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
+                .innerJoin(QParticipant.participant.participantMunicipalityFk, QMunicipality.municipality)
+                .where(municipalityInitiative.id.eq(initiativeId))
+                .where(QAuthor.author.managementHash.eq(managementHash))
+                .uniqueResult(Mappings.authorMapping);
+    }
+
+    @Override
+    public void updateAuthorInformation(Long authorId, ContactInfo contactInfo) {
+
+        Long participantId = queryFactory.from(QParticipant.participant)
+//                .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
+                .innerJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
+                .where(QAuthor.author.id.eq(authorId))
+                .singleResult(QParticipant.participant.id);
+
+        assertSingleAffection(queryFactory.update(QParticipant.participant)
+                .set(QParticipant.participant.showName, Boolean.TRUE.equals(contactInfo.isShowName()))
+                .set(QParticipant.participant.name, contactInfo.getName())
+                .set(QParticipant.participant.email, contactInfo.getEmail())
+                .where(QParticipant.participant.id.eq(participantId))
+                .execute());
+
+        assertSingleAffection(queryFactory.update(QAuthor.author)
+                .set(QAuthor.author.address, contactInfo.getAddress())
+                .set(QAuthor.author.name, contactInfo.getName())
+                .set(QAuthor.author.phone, contactInfo.getPhone())
+                .where(QAuthor.author.participantId.eq(participantId))
+                .execute());
+    }
 
     @Override
     @Transactional(readOnly = false)

@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
+import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
@@ -14,6 +15,7 @@ import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -145,9 +147,8 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     @Test
     public void preparing_initiative_sets_participant_information() {
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
-        testHelper.updateField(initiativeId, QMunicipalityInitiative.municipalityInitiative.state, InitiativeState.PUBLISHED); // XXX: Hard coded state change
 
-        assertThat(getSingleInitiativeInfo().getParticipantCount(), is(1L));
+        assertThat(initiativeDao.getByIdWithOriginalAuthor(initiativeId).getParticipantCount(), is(1));
 
         Participant participant = participantDao.findAllParticipants(initiativeId).get(0);
         assertThat(participant.getHomeMunicipality().getId(), is(participantMunicipality.getId()));
@@ -397,6 +398,34 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         assertThat(sent.getType(), is(InitiativeType.COLLABORATIVE));
         assertThat(sent.getSentTime().isPresent(), is(true));
         assertThat(sent.getSentComment(), is("comment for municipality"));
+    }
+
+    @Test
+    public void update_initiative_updates_given_fields() {
+
+        Long initiativeId = testHelper.createCollectableAccepted(testMunicipality.getId());
+
+        InitiativeUIUpdateDto updateDto = new InitiativeUIUpdateDto();
+        ContactInfo contactInfo = new ContactInfo();
+        updateDto.setContactInfo(contactInfo);
+
+        updateDto.setExtraInfo("Modified extra info");
+        contactInfo.setName("Modified Name");
+        contactInfo.setAddress("Modified Address");
+        contactInfo.setPhone("Modified Phone");
+        contactInfo.setEmail("Modified Email");
+        contactInfo.setShowName(false);
+        updateDto.setContactInfo(contactInfo);
+        service.updateInitiative(initiativeId, authorLoginUserHolder, updateDto);
+
+        Initiative updated = initiativeDao.getById(initiativeId, TestHelper.TEST_MANAGEMENT_HASH);
+        Assert.assertThat(updated.getAuthor().getContactInfo().isShowName(), is(false));
+
+        Author author = service.getAuthorInformation(initiativeId, authorLoginUserHolder);
+        ReflectionTestUtils.assertReflectionEquals(author.getContactInfo(), contactInfo);
+
+        // TODO: Assert extraInfo
+
     }
 
     private static ParticipantUICreateDto participantUICreateDto() {

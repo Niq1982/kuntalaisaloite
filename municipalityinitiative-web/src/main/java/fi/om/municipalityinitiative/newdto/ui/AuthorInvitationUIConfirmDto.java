@@ -2,34 +2,16 @@ package fi.om.municipalityinitiative.newdto.ui;
 
 public class AuthorInvitationUIConfirmDto extends ParticipantUICreateBase {
 
-    String name;
-    String phone;
-    String address;
-    String confirmCode;
-    private boolean showName;
+    private String confirmCode;
 
-    public String getName() {
-        return name;
+    private ContactInfo contactInfo;
+
+    public ContactInfo getContactInfo() {
+        return contactInfo;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
+    public void setContactInfo(ContactInfo contactInfo) {
+        this.contactInfo = contactInfo;
     }
 
     public String getConfirmCode() {
@@ -51,11 +33,4 @@ public class AuthorInvitationUIConfirmDto extends ParticipantUICreateBase {
         this.initiativeMunicipality = initiativeMunicipality;
     }
 
-    public Boolean getShowName() {
-        return showName;
-    }
-
-    public void setShowName(boolean showName) {
-        this.showName = showName;
-    }
 }

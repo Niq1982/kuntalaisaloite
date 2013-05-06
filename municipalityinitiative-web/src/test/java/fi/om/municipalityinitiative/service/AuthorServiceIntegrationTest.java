@@ -3,9 +3,11 @@ package fi.om.municipalityinitiative.service;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
+import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.newdto.ui.AuthorInvitationUIConfirmDto;
+import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newweb.AuthorInvitationUICreateDto;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import org.junit.Before;
@@ -31,6 +33,9 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     @Resource
     TestHelper testHelper;
+
+    @Resource
+    InitiativeDao initiativeDao;
 
     @Before
     public void setUp() throws Exception {
@@ -86,17 +91,19 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         authorService.createAuthorInvitation(initiativeId, authorLoginUserHolder, authorInvitation());
 
         AuthorInvitationUIConfirmDto createDto = new AuthorInvitationUIConfirmDto();
+        createDto.setContactInfo(new ContactInfo());
         createDto.setInitiativeMunicipality(municipalityId);
-        createDto.setName("name");
-        createDto.setAddress("address");
-        createDto.setParticipantEmail("email");
-        createDto.setPhone("phone");
-        createDto.setShowName(true);
+        createDto.getContactInfo().setName("name");
+        createDto.getContactInfo().setAddress("address");
+        createDto.getContactInfo().setEmail("email");
+        createDto.getContactInfo().setPhone("phone");
+        createDto.getContactInfo().setShowName(true);
         createDto.setConfirmCode(RandomHashGenerator.getPrevious());
         createDto.setHomeMunicipality(municipalityId);
 
 
         precondition(authorService.findAuthors(initiativeId, authorLoginUserHolder), hasSize(1));
+        precondition(participantCountOfInitiative(initiativeId), is(1));
 
         authorService.confirmAuthorInvitation(initiativeId, createDto);
 
@@ -107,14 +114,20 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
         // Check new author information
         Author createdAuthor = authors.get(0);
-        assertThat(createdAuthor.getContactInfo().getName(), is(createDto.getName()));
-        assertThat(createdAuthor.getContactInfo().getEmail(), is(createDto.getParticipantEmail()));
+        assertThat(createdAuthor.getContactInfo().getName(), is(createDto.getContactInfo().getName()));
+        assertThat(createdAuthor.getContactInfo().getEmail(), is(createDto.getContactInfo().getEmail()));
 //        assertThat(createdAuthor.getContactInfo().getAddress(), is(createDto.getAddress()));
 //        assertThat(createdAuthor.getContactInfo().getPhone(), is(createDto.getPhone()));
         assertThat(createdAuthor.getMunicipality().getId(), is(municipalityId));
         assertThat(createdAuthor.getContactInfo().isShowName(), is(true));
 
         // TODO: Check that managementHash is created and ok
+
+        assertThat(participantCountOfInitiative(initiativeId), is(2));
+    }
+
+    private int participantCountOfInitiative(Long initiativeId) {
+        return initiativeDao.getByIdWithOriginalAuthor(initiativeId).getParticipantCount();
     }
 
     // TODO: Not allowed

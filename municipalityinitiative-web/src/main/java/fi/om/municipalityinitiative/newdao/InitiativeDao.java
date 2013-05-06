@@ -22,15 +22,11 @@ public interface InitiativeDao {
 
     Initiative getById(Long initiativeId, String authorsManagementHash);
 
-    void assignAuthor(Long initiativeId, Long authorId);
-
     InitiativeCounts getInitiativeCounts(Maybe<Long> municipality);
 
     Long prepareInitiative(Long municipalityId);
 
     void editInitiativeDraft(Long initiativeId, InitiativeDraftUIEditDto editDto);
-
-    Author getAuthorInformation(Long initiativeId, String managementHash);
 
     void updateAcceptedInitiative(Long initiativeId, String managementHash, InitiativeUIUpdateDto updateDto);
 
@@ -44,5 +40,4 @@ public interface InitiativeDao {
 
     void updateSentComment(Long initiativeId, String sentComment);
 
-    Long createAuthor(Long initiativeId, Long participantId, String managementHash);
 }
