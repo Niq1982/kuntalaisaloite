@@ -42,7 +42,7 @@
                     </div>
     
                     <div class="invitation">
-                        <div class="status"><span class="icon-small confirmed"></span> <@u.message "invitation.accepted" /></div>
+                        <span class="status"><span class="icon-small confirmed"></span> <@u.message "invitation.accepted" /></span>
                     </div>
                 </div>
             </#list>
@@ -62,12 +62,13 @@
 
                     <div class="invitation">
                         <#if i.rejected>
-                            <div class="status push"><@u.message "invitation.rejected" /> <@u.localDate i.rejectTime.value /></div>
+                            <span class="status push"><@u.message "invitation.rejected" /> <@u.localDate i.rejectTime.value /></span>
                         <#elseif i.expired>
-                            <div class="status"><span class="icon-small unconfirmed"></span> <@u.message "invitation.expired" /> <a href="#" class="resend-invitation"><@u.message "invitation.resend" /></a></div>
+                            <span class="status"><span class="icon-small unconfirmed"></span> <@u.message "invitation.expired" /></span>
+                            <span class="action push"><a href="#" class=""><@u.message "invitation.resend" /></a></span>
                         <#else>
-                            <div class="status"><span class="icon-small unconfirmed"></span> <@u.message "invitation.unconfirmed" /> <a href="#" class="cancel-invitation"><@u.message "invitation.cancel" /></a></div>
-                            <div class="action push"><@u.message "invitation.sent" /> <@u.localDate i.invitationTime /></div>
+                            <span class="status"><span class="icon-small unconfirmed"></span> <@u.message "invitation.unconfirmed" /> <span class="bull">&bull;</span> <a href="#" class="cancel-invitation"><@u.message "invitation.cancel" /></a></span>
+                            <span class="action push"><@u.message "invitation.sent" /> <@u.localDate i.invitationTime /></span>
                         </#if>
                     </div>
                 </div>
@@ -81,10 +82,12 @@
         
         <div class="initiative-content-row last">
             <div class="js-open-block hidden ${validationError?string("js-hide","")}">
-                <a class="small-button gray js-btn-open-block" data-open-block="js-block-container" href="#"><span class="small-icon save-and-send"><@u.message "action.addAuthor" /></span></a>
+                <a class="small-button gray js-btn-open-block" data-open-block="js-block-container" href="#"><span class="small-icon add"><@u.message "action.addAuthor" /></span></a>
             </div>
     
             <div class="cf js-block-container ${validationError?string("","js-hide")}">
+                <h2><@u.message "invitations.addAuthor.title" /></h2>
+                
                 <div class="input-block-content no-top-margin">
                     <@u.systemMessage path="invitation.description" type="info" showClose=false />
                 </div>
@@ -94,12 +97,12 @@
                     <input type="hidden" name="${UrlConstants.PARAM_MANAGEMENT_CODE}" value="${initiative.managementHash.value}"/>
                     
                     <div class="input-block-content no-top-margin">
-                        <@f.textField path="newInvitation.authorName" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_NAME_MAX key="contactInfo.name" />
-                        <@f.textField path="newInvitation.authorEmail" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX key="contactInfo.email" />
+                        <@f.textField path="newInvitation.authorName" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_NAME_MAX />
+                        <@f.textField path="newInvitation.authorEmail" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
                     </div>
 
                     <div class="input-block-content no-top-margin">
-                        <button type="submit" name="${UrlConstants.ACTION_ACCEPT_INITIATIVE}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.sendInvitation" /></span></button>
+                        <button type="submit" name="${UrlConstants.ACTION_ACCEPT_INITIATIVE}" class="small-button"><span class="small-icon add"><@u.message "action.sendInvitation" /></span></button>
                         <a href="${springMacroRequestContext.requestUri}" class="push ${validationError?string("","js-btn-close-block hidden")}"><@u.message "action.cancel" /></a>
                     </div>
                     <br/><br/>
