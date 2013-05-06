@@ -10,11 +10,9 @@
  * @param initiative is initiative
 -->
 <#macro initiativeView initiative>
-    <div class="initiative-content-row">
-        <h2><@u.message "initiative.proposal.title" /></h2>
-        
-        <@u.text initiative.proposal!"" />
-    </div>
+    <h2><@u.message "initiative.proposal.title" /></h2>
+    
+    <@u.text initiative.proposal!"" />
 </#macro>
 
 <#-- 
