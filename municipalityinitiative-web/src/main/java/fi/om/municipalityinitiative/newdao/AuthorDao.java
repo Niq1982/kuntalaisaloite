@@ -18,4 +18,8 @@ public interface AuthorDao {
     List<AuthorInvitation> findInvitations(Long initiativeId);
 
     List<Author> findAuthors(Long initiativeId);
+
+    void assignAuthor(Long initiativeId, Long authorId);
+
+    Long createAuthor(Long initiativeId, Long participantId, String managementHash);
 }

@@ -34,16 +34,13 @@ import javax.annotation.Resource;
 
 import java.util.List;
 
+import static fi.om.municipalityinitiative.newdao.Mappings.PREPARATION_ID;
 import static fi.om.municipalityinitiative.newdao.Mappings.parseMunicipality;
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 
 @SQLExceptionTranslated
 @Transactional(readOnly = true)
 public class JdbcInitiativeDao implements InitiativeDao {
-
-    // This is for querydsl for not being able to create a row with DEFERRED not-null-check value being null..
-    // Querydsl always assigned some value to it and setting it to null was not an option.
-    private static final Long PREPARATION_ID = -1L;
 
     private static final Expression<DateTime> CURRENT_TIME = DateTimeExpression.currentTimestamp(DateTime.class);
     public static final QMunicipality INITIATIVE_MUNICIPALITY = new QMunicipality("initiativeMunicipality");
@@ -178,27 +175,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
             throw new NotFoundException("initiative", "Invalid managementhash or initiative id");
         }
         return initiative;
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void assignAuthor(Long initiativeId, Long authorId) {
-
-        assertSingleAffection(queryFactory.update(municipalityInitiative)
-                .set(municipalityInitiative.authorId, authorId)
-                .where(municipalityInitiative.id.eq(initiativeId))
-                .where(municipalityInitiative.authorId.eq(PREPARATION_ID))
-                .execute());
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public Long createAuthor(Long initiativeId, Long participantId, String managementHash) {
-
-        return queryFactory.insert(QAuthor.author)
-                .set(QAuthor.author.managementHash, managementHash)
-                .set(QAuthor.author.participantId, participantId)
-                .executeWithKey(QAuthor.author.id);
     }
 
     @Override

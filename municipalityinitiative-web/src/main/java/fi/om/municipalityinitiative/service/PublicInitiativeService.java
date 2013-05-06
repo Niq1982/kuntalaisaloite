@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
+import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
@@ -27,6 +28,9 @@ public class PublicInitiativeService {
 
     @Resource
     InitiativeDao initiativeDao;
+
+    @Resource
+    AuthorDao authorDao;
 
     @Resource
     ParticipantDao participantDao;
@@ -79,8 +83,8 @@ public class PublicInitiativeService {
                 false); // XXX: Remove franchise?
                         // XXX: Create dto?
         String managementHash = RandomHashGenerator.randomString(40);
-        Long authorId = initiativeDao.createAuthor(initiativeId, participantId, managementHash);
-        initiativeDao.assignAuthor(initiativeId, authorId);
+        Long authorId = authorDao.createAuthor(initiativeId, participantId, managementHash);
+        authorDao.assignAuthor(initiativeId, authorId);
 
         emailService.sendPrepareCreatedEmail(initiativeDao.getByIdWithOriginalAuthor(initiativeId), createDto.getParticipantEmail(), locale);
 

@@ -22,8 +22,6 @@ public interface InitiativeDao {
 
     Initiative getById(Long initiativeId, String authorsManagementHash);
 
-    void assignAuthor(Long initiativeId, Long authorId);
-
     InitiativeCounts getInitiativeCounts(Maybe<Long> municipality);
 
     Long prepareInitiative(Long municipalityId);
@@ -44,5 +42,4 @@ public interface InitiativeDao {
 
     void updateSentComment(Long initiativeId, String sentComment);
 
-    Long createAuthor(Long initiativeId, Long participantId, String managementHash);
 }

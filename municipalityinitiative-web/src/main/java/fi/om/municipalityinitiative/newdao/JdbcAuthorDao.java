@@ -20,6 +20,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 import static fi.om.municipalityinitiative.newdao.JdbcInitiativeDao.assertSingleAffection;
+import static fi.om.municipalityinitiative.newdao.Mappings.PREPARATION_ID;
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 
 @SQLExceptionTranslated
@@ -30,6 +31,27 @@ public class JdbcAuthorDao implements AuthorDao {
 
     @Resource
     PostgresQueryFactory queryFactory;
+
+    @Override
+    @Transactional(readOnly = false)
+    public void assignAuthor(Long initiativeId, Long authorId) {
+
+        assertSingleAffection(queryFactory.update(municipalityInitiative)
+                .set(municipalityInitiative.authorId, authorId)
+                .where(municipalityInitiative.id.eq(initiativeId))
+                .where(municipalityInitiative.authorId.eq(PREPARATION_ID))
+                .execute());
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Long createAuthor(Long initiativeId, Long participantId, String managementHash) {
+
+        return queryFactory.insert(QAuthor.author)
+                .set(QAuthor.author.managementHash, managementHash)
+                .set(QAuthor.author.participantId, participantId)
+                .executeWithKey(QAuthor.author.id);
+    }
 
     @Override
     @Transactional(readOnly = false)
