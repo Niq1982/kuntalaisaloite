@@ -893,26 +893,6 @@ $('.municipality-filter').change( function() {
 	if( typeof modalData != 'undefined' && typeof modalData.requestMessage != 'undefined' ){
 		generateModal(modalData.requestMessage(), 'minimal');
 	}	
-
- 	// Show initiative's public user list
-	$('.js-show-franchise-list').click(function(){
-		try {
-			generateModal(modalData.participantListFranchise(), 'full');
-			return false;
-		} catch(e) {
-			console.log(e);
-		}
-	});
-	
-	$('.js-show-no-franchise-list').click(function(){
-		try {
-			generateModal(modalData.participantListNoFranchise(), 'full');
-			return false;
-		} catch(e) {
-			console.log(e);
-		}
-	});
-
 	
 	// Send initiative to review
 	$('.js-send-to-review').click(function(){
@@ -953,6 +933,31 @@ $('.municipality-filter').change( function() {
 			console.log(e);
 		}
 	});
+	
+	// Accept author invitation
+	$('.js-accept-invitation').click(function(){
+		try {
+			generateModal(modalData.acceptInvitation(), 'full');
+			return false;
+		} catch(e) {
+			console.log(e);
+		}
+	});
+	
+	if( typeof modalData != 'undefined' && typeof modalData.acceptInvitationInvalid != 'undefined' ){
+		generateModal(modalData.acceptInvitationInvalid(), 'full');
+	}
+	
+	// Accept author invitation
+	$('.js-decline-invitation').click(function(){
+		try {
+			generateModal(modalData.confirmDeclineInvitation(), 'minimal');
+			return false;
+		} catch(e) {
+			console.log(e);
+		}
+	});
+	
 	
 	// Participate initiative
 	$('.js-participate').click(function(){

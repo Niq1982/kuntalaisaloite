@@ -219,6 +219,10 @@ public final class Urls {
     public static final String MANAGE_AUTHORS_FI = "/fi/vastuuhenkilot" + "/" + ID_PARAMETER;
 
     public static final String MANAGE_AUTHORS_SV = "/sv/ansvarpersoner" + "/" + ID_PARAMETER;
+    
+    public static final String INVITATION_FI = "/fi/kutsu" + "/" + ID_PARAMETER;
+    
+    public static final String INVITATION_SV = "/fi/inbjudan" + "/" + ID_PARAMETER;
 
     public static final String IFRAME_FI = "/fi/iframe";
 

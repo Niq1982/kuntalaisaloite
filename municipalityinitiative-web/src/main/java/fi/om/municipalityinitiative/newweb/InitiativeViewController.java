@@ -160,6 +160,27 @@ public class InitiativeViewController extends BaseController {
             return redirectWithMessage(urls.prepare(), RequestMessage.PREPARE_CONFIRM_EXPIRED, request);
         }
     }
+    
+    // TODO
+    @RequestMapping(value={ INVITATION_FI, INVITATION_SV }, method=GET)
+    public String invitationView(@PathVariable("id") Long initiativeId,
+                                 Model model, Locale locale, HttpServletRequest request) {
+
+//        LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
+//        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
+
+        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
+
+        if (initiativeInfo.isSent()) {
+            return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.ALREADY_SENT, request);
+        }
+
+        return ViewGenerator.invitationView(initiativeInfo,
+                municipalityService.findAllMunicipalities(locale),
+                participantService.getParticipantCount(initiativeId),
+                new AuthorInvitationUIConfirmDto()
+        ).view(model, Urls.get(locale).alt().getManagement(initiativeId));
+    }
 
     @RequestMapping(value={IFRAME_FI, IFRAME_SV}, method=GET)
     public String iframe(InitiativeSearch search, Model model, Locale locale, HttpServletRequest request) {
