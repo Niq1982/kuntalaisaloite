@@ -32,7 +32,6 @@ public class JdbcParticipantDaoTest {
     public static final boolean PARTICIPANT_FRANCHISE = true;
     public static final boolean PARTICIPANT_SHOW_NAME = true;
     public static final String CONFIRMATION_CODE = "confirmationCode";
-    public static final String ALREADY_CONFIRMED = null;
     public static final Membership PARTICIPANT_MEMBERSHIP = Membership.property;
 
     @Resource
@@ -56,7 +55,7 @@ public class JdbcParticipantDaoTest {
     @Test
     public void adds_new_participants() {
         precondition(testHelper.countAll(QParticipant.participant), is(1L));
-        participantDao.create(participantCreateDto(), ALREADY_CONFIRMED);
+        participantDao.confirmParticipation(participantDao.create(participantCreateDto(), CONFIRMATION_CODE), CONFIRMATION_CODE);
         assertThat(testHelper.countAll(QParticipant.participant), is(2L));
     }
 
@@ -64,7 +63,7 @@ public class JdbcParticipantDaoTest {
     public void participant_information_is_saved() {
         precondition(participantDao.findPublicParticipants(testInitiativeId), hasSize(1));
 
-        participantDao.create(participantCreateDto(), ALREADY_CONFIRMED);
+        participantDao.confirmParticipation(participantDao.create(participantCreateDto(), CONFIRMATION_CODE), CONFIRMATION_CODE);
         List<Participant> allParticipants = participantDao.findPublicParticipants(testInitiativeId);
         assertThat(allParticipants, hasSize(2));
 
@@ -153,7 +152,7 @@ public class JdbcParticipantDaoTest {
 
         String confirmedParticipantName = "Some Confirmed Participant";
         newParticipant.setParticipantName(confirmedParticipantName);
-        participantDao.create(newParticipant, ALREADY_CONFIRMED);
+        participantDao.confirmParticipation(participantDao.create(newParticipant, CONFIRMATION_CODE), CONFIRMATION_CODE);
 
         List<Participant> publicParticipants = participantDao.findPublicParticipants(testInitiativeId);
 
@@ -171,7 +170,7 @@ public class JdbcParticipantDaoTest {
 
         String confirmedParticipantName = "Some Confirmed Participant";
         newParticipant.setParticipantName(confirmedParticipantName);
-        participantDao.create(newParticipant, ALREADY_CONFIRMED);
+        participantDao.confirmParticipation(participantDao.create(newParticipant, CONFIRMATION_CODE), CONFIRMATION_CODE);
 
         List<Participant> allParticipants = participantDao.findAllParticipants(testInitiativeId);
 
@@ -185,7 +184,7 @@ public class JdbcParticipantDaoTest {
         precondition(participantDao.getParticipantCount(testInitiativeId).getTotal(), is(1L));
 
         participantDao.create(participantCreateDto(), CONFIRMATION_CODE);
-        participantDao.create(participantCreateDto(), ALREADY_CONFIRMED);
+        participantDao.confirmParticipation(participantDao.create(participantCreateDto(), CONFIRMATION_CODE), CONFIRMATION_CODE);
 
         assertThat(participantDao.getParticipantCount(testInitiativeId).getTotal(), is(2L));
     }
@@ -253,7 +252,9 @@ public class JdbcParticipantDaoTest {
         participantCreateDto.setFranchise(franchise);
         participantCreateDto.setShowName(publicName);
         participantCreateDto.setMunicipalMembership(PARTICIPANT_MEMBERSHIP);
-        return participantDao.create(participantCreateDto, ALREADY_CONFIRMED);
+        Long participantId = participantDao.create(participantCreateDto, CONFIRMATION_CODE);
+        participantDao.confirmParticipation(participantId, CONFIRMATION_CODE);
+        return participantId;
     }
 
 
