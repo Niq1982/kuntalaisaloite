@@ -463,23 +463,24 @@ public class JdbcInitiativeDaoTest {
         Long initiativeId = testHelper.createCollectableAccepted(testMunicipality.getId());
 
         InitiativeUIUpdateDto updateDto = new InitiativeUIUpdateDto();
-        ContactInfo contactInfo = new ContactInfo();
-        updateDto.setContactInfo(contactInfo);
+//        ContactInfo contactInfo = new ContactInfo();
+//        updateDto.setContactInfo(contactInfo);
 
         updateDto.setExtraInfo("Modified extra info");
-        contactInfo.setName("Modified Name");
-        contactInfo.setAddress("Modified Address");
-        contactInfo.setPhone("Modified Phone");
-        contactInfo.setEmail("Modified Email");
-        contactInfo.setShowName(false);
-        updateDto.setContactInfo(contactInfo);
+//        contactInfo.setName("Modified Name");
+//        contactInfo.setAddress("Modified Address");
+//        contactInfo.setPhone("Modified Phone");
+//        contactInfo.setEmail("Modified Email");
+//        contactInfo.setShowName(false);
+//        updateDto.setContactInfo(contactInfo);
         initiativeDao.updateAcceptedInitiative(initiativeId, TestHelper.TEST_MANAGEMENT_HASH, updateDto);
 
         Initiative updated = initiativeDao.getById(initiativeId, TestHelper.TEST_MANAGEMENT_HASH);
-        assertThat(updated.getAuthor().getContactInfo().isShowName(), is(false));
+        assertThat(updated.getExtraInfo(), is(updateDto.getExtraInfo()));
+//        assertThat(updated.getAuthor().getContactInfo().isShowName(), is(false));
 
-        Author author = authorDao.getAuthorInformation(initiativeId, TestHelper.TEST_MANAGEMENT_HASH);
-        ReflectionTestUtils.assertReflectionEquals(author.getContactInfo(), contactInfo);
+//        Author author = authorDao.getAuthorInformation(initiativeId, TestHelper.TEST_MANAGEMENT_HASH);
+//        ReflectionTestUtils.assertReflectionEquals(author.getContactInfo(), contactInfo);
 
         // TODO: Assert extraInfo
 

@@ -16,6 +16,7 @@ import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
+import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUIUpdateDto;
@@ -296,31 +297,35 @@ public class JdbcInitiativeDao implements InitiativeDao {
     @Transactional(readOnly = false)
     public void updateAcceptedInitiative(Long initiativeId, String managementHash, InitiativeUIUpdateDto updateDto) {
 
-        Long participantId = queryFactory.from(QParticipant.participant)
-                .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
-                .innerJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
-                .where(QAuthor.author.managementHash.eq(managementHash))
-                .singleResult(QParticipant.participant.id);
+//        Long participantId = queryFactory.from(QParticipant.participant)
+//                .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
+//                .innerJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
+//                .where(QAuthor.author.managementHash.eq(managementHash))
+//                .singleResult(QParticipant.participant.id);
 
         assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.extraInfo, updateDto.getExtraInfo())
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute());
 
-        assertSingleAffection(queryFactory.update(QParticipant.participant)
-                .set(QParticipant.participant.showName, Boolean.TRUE.equals(updateDto.getContactInfo().isShowName()))
-                .set(QParticipant.participant.name, updateDto.getContactInfo().getName())
-                .set(QParticipant.participant.email, updateDto.getContactInfo().getEmail())
-                .where(QParticipant.participant.id.eq(participantId))
-                .execute());
-
-        assertSingleAffection(queryFactory.update(QAuthor.author)
-                .set(QAuthor.author.address, updateDto.getContactInfo().getAddress())
-                .set(QAuthor.author.name, updateDto.getContactInfo().getName())
-                .set(QAuthor.author.phone, updateDto.getContactInfo().getPhone())
-                .where(QAuthor.author.participantId.eq(participantId))
-                .execute());
+//        ContactInfo contactInfo = updateDto.getContactInfo();
+//
+//        assertSingleAffection(queryFactory.update(QParticipant.participant)
+//                .set(QParticipant.participant.showName, Boolean.TRUE.equals(contactInfo.isShowName()))
+//                .set(QParticipant.participant.name, contactInfo.getName())
+//                .set(QParticipant.participant.email, contactInfo.getEmail())
+//                .where(QParticipant.participant.id.eq(participantId))
+//                .execute());
+//
+//        assertSingleAffection(queryFactory.update(QAuthor.author)
+//                .set(QAuthor.author.address, contactInfo.getAddress())
+//                .set(QAuthor.author.name, contactInfo.getName())
+//                .set(QAuthor.author.phone, contactInfo.getPhone())
+//                .where(QAuthor.author.participantId.eq(participantId))
+//                .execute());
     }
+
+
 
     public static void assertSingleAffection(long affectedRows) {
         Assert.isTrue(affectedRows == 1, "Should have affected only one row. Affected: " + affectedRows);

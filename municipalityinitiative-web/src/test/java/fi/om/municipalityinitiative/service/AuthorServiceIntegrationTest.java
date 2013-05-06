@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.newdto.ui.AuthorInvitationUIConfirmDto;
+import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newweb.AuthorInvitationUICreateDto;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import org.junit.Before;
@@ -90,12 +91,13 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         authorService.createAuthorInvitation(initiativeId, authorLoginUserHolder, authorInvitation());
 
         AuthorInvitationUIConfirmDto createDto = new AuthorInvitationUIConfirmDto();
+        createDto.setContactInfo(new ContactInfo());
         createDto.setInitiativeMunicipality(municipalityId);
-        createDto.setName("name");
-        createDto.setAddress("address");
-        createDto.setParticipantEmail("email");
-        createDto.setPhone("phone");
-        createDto.setShowName(true);
+        createDto.getContactInfo().setName("name");
+        createDto.getContactInfo().setAddress("address");
+        createDto.getContactInfo().setEmail("email");
+        createDto.getContactInfo().setPhone("phone");
+        createDto.getContactInfo().setShowName(true);
         createDto.setConfirmCode(RandomHashGenerator.getPrevious());
         createDto.setHomeMunicipality(municipalityId);
 
@@ -112,7 +114,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
         // Check new author information
         Author createdAuthor = authors.get(0);
-        assertThat(createdAuthor.getContactInfo().getName(), is(createDto.getName()));
+        assertThat(createdAuthor.getContactInfo().getName(), is(createDto.getContactInfo().getName()));
         assertThat(createdAuthor.getContactInfo().getEmail(), is(createDto.getParticipantEmail()));
 //        assertThat(createdAuthor.getContactInfo().getAddress(), is(createDto.getAddress()));
 //        assertThat(createdAuthor.getContactInfo().getPhone(), is(createDto.getPhone()));

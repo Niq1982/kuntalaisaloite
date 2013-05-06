@@ -80,7 +80,8 @@ public class AuthorService {
                 String someConfirmationCode = "-";
                 Long participantId = participantDao.create(participantCreateDto, someConfirmationCode);
                 participantDao.confirmParticipation(participantId, someConfirmationCode);
-                authorDao.createAuthor(initiativeId, participantId, RandomHashGenerator.randomString(40));
+                Long authorId = authorDao.createAuthor(initiativeId, participantId, RandomHashGenerator.randomString(40));
+//                authorDao.updateAuthorInformation(authorId, confirmDto.);                  TODO
                 authorDao.deleteAuthorInvitation(initiativeId, confirmDto.getConfirmCode());
 
             }

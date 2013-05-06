@@ -110,6 +110,7 @@ public class PublicInitiativeService {
     @Transactional(readOnly = false)
     public void editInitiativeDraft(Long initiativeId, LoginUserHolder loginUserHolder, InitiativeDraftUIEditDto editDto) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
+
         assertAllowance("Edit initiative", getManagementSettings(initiativeId).isAllowEdit());
         initiativeDao.editInitiativeDraft(initiativeId, editDto);
     }
@@ -136,7 +137,10 @@ public class PublicInitiativeService {
     public void updateInitiative(Long initiativeId, LoginUserHolder loginUserHolder, InitiativeUIUpdateDto updateDto) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         assertAllowance("Update initiative", getManagementSettings(initiativeId).isAllowUpdate());
+
+        Initiative initiative = initiativeDao.getById(initiativeId, loginUserHolder.getInitiative().get().getManagementHash().get());
         initiativeDao.updateAcceptedInitiative(initiativeId, loginUserHolder.getInitiative().get().getManagementHash().get(), updateDto);
+        authorDao.updateAuthorInformation(initiative.getAuthor().getId(), updateDto.getContactInfo());
     }
 
     @Transactional(readOnly = true)

@@ -56,7 +56,7 @@ public class ParticipantCreateDtoTest {
         assertThat(participantCreateDto.getEmail(), is(invitationUIConfirmDto.getParticipantEmail()));
         assertThat(participantCreateDto.getHomeMunicipality(), is(invitationUIConfirmDto.getHomeMunicipality()));
         assertThat(participantCreateDto.getMunicipalityInitiativeId(), is(121L));
-        assertThat(participantCreateDto.getParticipantName(), is(invitationUIConfirmDto.getName()));
+        assertThat(participantCreateDto.getParticipantName(), is(invitationUIConfirmDto.getContactInfo().getName()));
 
         ReflectionTestUtils.assertNoNullFields(participantCreateDto);
 
