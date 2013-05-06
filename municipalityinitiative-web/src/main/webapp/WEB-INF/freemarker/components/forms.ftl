@@ -289,26 +289,19 @@
  * @param mode is either 'modal' or 'full'
  * @param prefix for custom messages
  * @param cssClass for styling. Multiple classes are separated with a space
- * @param showName true or false for showing name-field
 
 -->
-<#macro contactInfo path mode="" prefix="" cssClass="" showName=false>
-
-    <div class="input-header">
-        <@u.message "contactInfo.title" />
-    </div>
-    
-    <#if showName>
-        <@textField path=path+".name" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_NAME_MAX />
-    </#if>
+<#macro contactInfo path mode="" prefix="" cssClass="">
 
     <div class="initiative-contact-details">
         <div class="column col-1of2">
-            <@spring.bind path+".email" />
+            
+            <#--<@spring.bind path+".email" />
             <input type="hidden" name="contactInfo.email" value="${spring.status.value}" />
             <div class="input-header"><@u.message "contactInfo.email" /></div>
-            <input type="text" disabled="disabled" class="medium disabled" value="${spring.status.value}" />
+            <input type="text" disabled="disabled" class="medium disabled" value="${spring.status.value}" />-->
 
+            <@textField path=path+".email" required="required" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_PHONE_MAX key="contactInfo.email" />
             <@textField path=path+".phone" required="" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_PHONE_MAX key="contactInfo.phone" />
         </div>
         

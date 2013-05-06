@@ -14,9 +14,6 @@
  * pageTitle = initiative.name if exists, otherwise empty string
 -->
 <@l.main "page.initiative.public" initiative.name!"">
-
-    <#-- PAHASTI VAIHEESSA -->
-
     <#--
      * invitationAcceptHtml
      * 
@@ -95,7 +92,7 @@
                 <input type="hidden" name="action" value="confirm-accept-invitation"/>
             
                     <div class="column col-1of2">
-                        <@f.textField path="authorInvitation.name" required="required" optional=false cssClass="medium" maxLength=InitiativeConstants.CONTACT_NAME_MAX  key="contactInfo.name" />
+                        <@f.textField path="authorInvitation.contactInfo.name" required="required" optional=false cssClass="medium" maxLength=InitiativeConstants.CONTACT_NAME_MAX  key="contactInfo.name" />
                     </div>
                     
                     <div class="column col-1of2 last">
@@ -116,27 +113,22 @@
                         </select>
                     </div>
                     <br class="clear" />
-                
-                    <div class="initiative-contact-details">
-                        <div class="column col-1of2">
-                            <#--<@f.textField path="authorInvitation.email" required="required" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_EMAIL_MAX key="contactInfo.email" />-->
-                            <@f.textField path="authorInvitation.phone" required="" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_PHONE_MAX key="contactInfo.phone" />
+                    
+                    <div class="input-block-content">
+                        <div class="input-header">
+                            <@u.message "contactInfo.title" />
                         </div>
                         
-                        <div class="column col-1of2 last">
-                            <label>
-                                <@u.message "contactInfo.address" />
-                                <@spring.formTextarea "authorInvitation.address", 'class="address-field noresize" maxlength="'+InitiativeConstants.CONTACT_ADDRESS_MAX+'"' />
-                            </label>
-                        </div>
-                    
+                        <@f.contactInfo path="authorInvitation.contactInfo" mode="full" />
                     </div>
                 
                 <#--<#assign href>${urls.help(HelpPage.ORGANIZERS.getUri(locale))}</#assign>
                 <p><@u.messageHTML key="userConfirmation.invitation" args=[href] /></p>-->
                 
-                <button type="submit" name="" value="<@u.message "invitation.accept.confirm" />" class="small-button green save-and-send"><span class="small-icon save-and-send"><@u.message "invitation.accept" /></span></button>
-                <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
+                    <div class="input-block-content">
+                        <button type="submit" name="" value="<@u.message "invitation.accept.confirm" />" class="small-button green save-and-send"><span class="small-icon save-and-send"><@u.message "invitation.accept" /></span></button>
+                        <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
+                    </div>
             </form>                    
         </@compress>
     </#assign>
