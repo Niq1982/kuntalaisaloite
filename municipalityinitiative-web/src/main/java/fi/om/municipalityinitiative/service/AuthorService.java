@@ -77,7 +77,9 @@ public class AuthorService {
 
             if (invitation.getConfirmationCode().equals(confirmDto.getConfirmCode())) {
                 ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(confirmDto, initiativeId);
-                Long participantId = participantDao.create(participantCreateDto, null);// Null to already accepted confirmation
+                String someConfirmationCode = "-";
+                Long participantId = participantDao.create(participantCreateDto, someConfirmationCode);
+                participantDao.confirmParticipation(participantId, someConfirmationCode);
                 authorDao.createAuthor(initiativeId, participantId, RandomHashGenerator.randomString(40));
                 authorDao.deleteAuthorInvitation(initiativeId, confirmDto.getConfirmCode());
 

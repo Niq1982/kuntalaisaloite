@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.service;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
+import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.newdto.ui.AuthorInvitationUIConfirmDto;
@@ -31,6 +32,9 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     @Resource
     TestHelper testHelper;
+
+    @Resource
+    InitiativeDao initiativeDao;
 
     @Before
     public void setUp() throws Exception {
@@ -97,6 +101,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
 
         precondition(authorService.findAuthors(initiativeId, authorLoginUserHolder), hasSize(1));
+        precondition(participantCountOfInitiative(initiativeId), is(1));
 
         authorService.confirmAuthorInvitation(initiativeId, createDto);
 
@@ -115,6 +120,12 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         assertThat(createdAuthor.getContactInfo().isShowName(), is(true));
 
         // TODO: Check that managementHash is created and ok
+
+        assertThat(participantCountOfInitiative(initiativeId), is(2));
+    }
+
+    private int participantCountOfInitiative(Long initiativeId) {
+        return initiativeDao.getByIdWithOriginalAuthor(initiativeId).getParticipantCount();
     }
 
     // TODO: Not allowed

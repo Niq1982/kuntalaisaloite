@@ -145,9 +145,8 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     @Test
     public void preparing_initiative_sets_participant_information() {
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
-        testHelper.updateField(initiativeId, QMunicipalityInitiative.municipalityInitiative.state, InitiativeState.PUBLISHED); // XXX: Hard coded state change
 
-        assertThat(getSingleInitiativeInfo().getParticipantCount(), is(1L));
+        assertThat(initiativeDao.getByIdWithOriginalAuthor(initiativeId).getParticipantCount(), is(1));
 
         Participant participant = participantDao.findAllParticipants(initiativeId).get(0);
         assertThat(participant.getHomeMunicipality().getId(), is(participantMunicipality.getId()));
