@@ -38,9 +38,6 @@ public class AuthorService {
     @Resource
     EmailService emailService;
 
-    @Resource
-    UserService userService;
-
     @Transactional(readOnly = false)
     public void createAuthorInvitation(Long initiativeId, LoginUserHolder loginUserHolder, AuthorInvitationUICreateDto uiCreateDto) {
 
@@ -57,6 +54,17 @@ public class AuthorService {
 
         authorDao.addAuthorInvitation(authorInvitation);
         emailService.sendAuthorInvitation(initiative, authorInvitation);
+
+    }
+
+    @Transactional(readOnly = false)
+    public void resendInvitation(Long initiativeId, String confirmationCode) {
+        AuthorInvitation authorInvitation = authorDao.getAuthorInvitation(initiativeId, confirmationCode);
+        authorDao.deleteAuthorInvitation(initiativeId, confirmationCode);
+
+        authorInvitation.setInvitationTime(DateTime.now());
+        authorDao.addAuthorInvitation(authorInvitation);
+        emailService.sendAuthorInvitation(initiativeDao.getByIdWithOriginalAuthor(initiativeId), authorInvitation);
 
     }
 

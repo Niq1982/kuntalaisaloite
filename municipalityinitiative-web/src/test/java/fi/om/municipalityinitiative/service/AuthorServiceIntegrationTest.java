@@ -11,10 +11,12 @@ import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.newdto.ui.AuthorInvitationUIConfirmDto;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newweb.AuthorInvitationUICreateDto;
+import fi.om.municipalityinitiative.sql.QAuthorInvitation;
 import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -199,10 +201,9 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         confirmDto.setInitiativeMunicipality(testMunicipality);
         confirmDto.setHomeMunicipality(testMunicipality);
 
-        precondition(authorDao.findInvitations(initiativeId), hasSize(1));
+        precondition(allCurrentInvitations(), is(1L));
         authorService.confirmAuthorInvitation(initiativeId, confirmDto);
-        assertThat(authorDao.findInvitations(initiativeId), hasSize(0));
-
+        assertThat(allCurrentInvitations(), is(0L));
 
     }
 
@@ -242,16 +243,34 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         thrown.expect(InvitationNotValidException.class);
         thrown.expectMessage("Invitation is rejected");
         authorService.getPrefilledAuthorInvitationConfirmDto(initiativeId, rejectedInvitation.getConfirmationCode());
-
     }
 
     @Test
     public void prefilled_author_confirmation_throws_exception_if_invitation_not_found() {
         Long initiativeId = testHelper.createCollectableReview(testMunicipality);
-        AuthorInvitation invitation = createInvitation(initiativeId);
 
         thrown.expect(NotFoundException.class);
         authorService.getPrefilledAuthorInvitationConfirmDto(initiativeId, "töttöröö");
+    }
+
+    @Test
+    public void resend_invitation_updates_invitation_time_to_current_time() {
+        Long initiativeId = testHelper.createCollectableReview(testMunicipality);
+        DateTime invitationTime = new DateTime(2010, 1, 1, 0, 0);
+        AuthorInvitation invitation = createInvitation(initiativeId, invitationTime);
+
+        precondition(authorDao.getAuthorInvitation(initiativeId, invitation.getConfirmationCode()).getInvitationTime(), is(invitationTime));
+        precondition(allCurrentInvitations(), is(1L));
+
+        authorService.resendInvitation(initiativeId, invitation.getConfirmationCode());
+
+        assertThat(authorDao.getAuthorInvitation(initiativeId, invitation.getConfirmationCode()).getInvitationTime().toLocalDate(), is(new LocalDate()));
+        assertThat(allCurrentInvitations(), is(1L));
+
+    }
+
+    private Long allCurrentInvitations() {
+        return testHelper.countAll(QAuthorInvitation.authorInvitation);
     }
 
     private AuthorInvitation createExpiredInvitation(Long initiativeId) {
@@ -262,12 +281,15 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         return authorInvitation;
     }
 
-    private AuthorInvitation createInvitation(Long initiativeId) {
+    private AuthorInvitation createInvitation(Long initiativeId, DateTime invitationTime) {
         AuthorInvitation authorInvitation = ReflectionTestUtils.modifyAllFields(new AuthorInvitation());
         authorInvitation.setInitiativeId(initiativeId);
-        authorInvitation.setInvitationTime(DateTime.now());
+        authorInvitation.setInvitationTime(invitationTime);
         authorDao.addAuthorInvitation(authorInvitation);
         return authorInvitation;
+    }
+    private AuthorInvitation createInvitation(Long initiativeId) {
+        return createInvitation(initiativeId, DateTime.now());
     }
 
     private AuthorInvitation createRejectedInvitation(Long initiativeId) {

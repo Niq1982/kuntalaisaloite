@@ -38,7 +38,7 @@
         <p>Ei julkisia hahmoja</p>
     </#if>
 
-    <p>Lisäksi <b>${publicAuthors.publicNames} kpl</b> salaperäisiä hahmoja
+    <p>Lisäksi <b>${publicAuthors.privateNames} kpl</b> salaperäisiä hahmoja
 </#macro>
 
 <#-- 
