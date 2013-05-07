@@ -12,7 +12,7 @@ import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.ui.AuthorInvitationUIConfirmDto;
-import fi.om.municipalityinitiative.newdto.ui.Authors;
+import fi.om.municipalityinitiative.newdto.ui.PublicAuthors;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newweb.AuthorInvitationUICreateDto;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
@@ -86,20 +86,23 @@ public class AuthorService {
 
                 assertNotRejectedOrExpired(invitation);
 
-                ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(confirmDto, initiativeId);
-                String someConfirmationCode = "-";
-                Long participantId = participantDao.create(participantCreateDto, someConfirmationCode);
-                participantDao.confirmParticipation(participantId, someConfirmationCode);
-                String managementHash = RandomHashGenerator.randomString(40);
-                Long authorId = authorDao.createAuthor(initiativeId, participantId, managementHash);
-                authorDao.updateAuthorInformation(authorId, confirmDto.getContactInfo());
+                String managementHash = createAuthorAndParticipant(initiativeId, confirmDto);
                 authorDao.deleteAuthorInvitation(initiativeId, confirmDto.getConfirmCode());
-                emailService.sendAuthorConfirmedtInvitation(initiativeDao.getByIdWithOriginalAuthor(initiativeId), invitation.getEmail(), managementHash);
+                emailService.sendAuthorConfirmedInvitation(initiativeDao.getByIdWithOriginalAuthor(initiativeId), invitation.getEmail(), managementHash);
                 return managementHash;
 
             }
         }
         throw new NotFoundException("Invitation with ", "initiative: " + initiativeId + ", invitation: " + confirmDto.getConfirmCode());
+    }
+
+    private String createAuthorAndParticipant(Long initiativeId, AuthorInvitationUIConfirmDto confirmDto) {
+        ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(confirmDto, initiativeId);
+        String managementHash = RandomHashGenerator.randomString(40);
+        Long participantId = participantDao.prepareParticipant(initiativeId, confirmDto.getHomeMunicipality(), participantCreateDto.getEmail(), participantCreateDto.getMunicipalMembership(), true);
+        Long authorId = authorDao.createAuthor(initiativeId, participantId, managementHash);
+        authorDao.updateAuthorInformation(authorId, confirmDto.getContactInfo());
+        return managementHash;
     }
 
     @Transactional(readOnly = false)
@@ -118,8 +121,8 @@ public class AuthorService {
     }
 
     @Transactional(readOnly = true)
-    public Authors findAuthors(Long initiativeId) {
-        return new Authors(authorDao.findAuthors(initiativeId));
+    public PublicAuthors findPublicAuthors(Long initiativeId) {
+        return new PublicAuthors(authorDao.findAuthors(initiativeId));
     }
 
     private static void assertNotRejectedOrExpired(AuthorInvitation invitation) {

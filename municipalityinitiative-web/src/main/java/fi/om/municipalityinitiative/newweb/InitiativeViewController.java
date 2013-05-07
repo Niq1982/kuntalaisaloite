@@ -79,14 +79,14 @@ public class InitiativeViewController extends BaseController {
 
         if (initiativeInfo.isCollectable()) {
             return ViewGenerator.collaborativeView(initiativeInfo,
-                    authorService.findAuthors(initiativeId),
+                    authorService.findPublicAuthors(initiativeId),
                     municipalityService.findAllMunicipalities(locale),
                     participantService.getParticipantCount(initiativeId),
                     new ParticipantUICreateDto(),
                     userService.hasManagementRightForInitiative(initiativeId, request)).view(model, Urls.get(locale).alt().view(initiativeId));
         }
         else {
-            return ViewGenerator.singleView(initiativeInfo, authorService.findAuthors(initiativeId))
+            return ViewGenerator.singleView(initiativeInfo, authorService.findPublicAuthors(initiativeId))
                     .view(model, Urls.get(locale).alt().view(initiativeId));
         }
     }
@@ -104,7 +104,7 @@ public class InitiativeViewController extends BaseController {
         else {
             return ViewGenerator.collaborativeView(
                     publicInitiativeService.getMunicipalityInitiative(initiativeId),
-                    authorService.findAuthors(initiativeId), municipalityService.findAllMunicipalities(locale),
+                    authorService.findPublicAuthors(initiativeId), municipalityService.findAllMunicipalities(locale),
                     participantService.getParticipantCount(initiativeId),
                     participant,
                     userService.hasManagementRightForInitiative(initiativeId, request)
@@ -120,7 +120,7 @@ public class InitiativeViewController extends BaseController {
         InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
 
         if (!initiativeInfo.isCollectable()) {
-            return ViewGenerator.singleView(initiativeInfo, authorService.findAuthors(initiativeId)).view(model, alternativeURL);
+            return ViewGenerator.singleView(initiativeInfo, authorService.findPublicAuthors(initiativeId)).view(model, alternativeURL);
         }
         else {
 
@@ -180,7 +180,7 @@ public class InitiativeViewController extends BaseController {
 
         return ViewGenerator.invitationView(initiativeInfo,
                 municipalityService.findAllMunicipalities(locale),
-                authorService.findAuthors(initiativeId),
+                authorService.findPublicAuthors(initiativeId),
                 participantService.getParticipantCount(initiativeId),
                 authorInvitationUIConfirmDto
         ).view(model, Urls.get(locale).alt().getManagement(initiativeId));
@@ -202,7 +202,7 @@ public class InitiativeViewController extends BaseController {
         else {
             return ViewGenerator.invitationView(initiativeInfo,
                     municipalityService.findAllMunicipalities(locale),
-                    authorService.findAuthors(initiativeId),
+                    authorService.findPublicAuthors(initiativeId),
                     participantService.getParticipantCount(initiativeId),
                     confirmDto
             ).view(model, Urls.get(locale).alt().manageAuthors(initiativeId));

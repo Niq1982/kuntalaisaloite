@@ -110,7 +110,7 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
     @Test
     public void send_invitation_acceptanve() throws Exception {
 
-        emailService.sendAuthorConfirmedtInvitation(createDefaultInitiative(), CONTACT_EMAIL, "hash");
+        emailService.sendAuthorConfirmedInvitation(createDefaultInitiative(), CONTACT_EMAIL, "hash");
         assertThat(getMessageContent().html, containsString(Urls.get(Locales.LOCALE_FI).loginAuthor(INITIATIVE_ID, "hash")));
 
     }

@@ -39,7 +39,7 @@ public class ViewGenerator {
     }
 
     public static ViewGenerator collaborativeView(InitiativeViewInfo municipalityInitiative,
-                                                  Authors authors,
+                                                  PublicAuthors publicAuthors,
                                                   List<Municipality> allMunicipalities,
                                                   ParticipantCount participantCount,
                                                   ParticipantUICreateDto participantUICreateDto,
@@ -47,7 +47,7 @@ public class ViewGenerator {
         return new ViewGenerator(Views.PUBLIC_COLLECT_VIEW,
                 new AttributeBuilder()
                         .add("initiative", municipalityInitiative)
-                        .add("authors", authors)
+                        .add("authors", publicAuthors)
                         .add("municipalities", allMunicipalities)
                         .add("participantCount", participantCount)
                         .add("participant", participantUICreateDto)
@@ -105,11 +105,11 @@ public class ViewGenerator {
         );
     }
 
-    public static ViewGenerator singleView(InitiativeViewInfo initiativeInfo, Authors authors) {
+    public static ViewGenerator singleView(InitiativeViewInfo initiativeInfo, PublicAuthors publicAuthors) {
         return new ViewGenerator(Views.PUBLIC_SINGLE_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
-                        .add("authors", authors)
+                        .add("authors", publicAuthors)
                         .build());
     }
 
@@ -179,7 +179,7 @@ public class ViewGenerator {
 
     public static ViewGenerator invitationView(InitiativeViewInfo municipalityInitiative,
                                                List<Municipality> allMunicipalities,
-                                               Authors authors,
+                                               PublicAuthors publicAuthors,
                                                ParticipantCount participantCount,
                                                AuthorInvitationUIConfirmDto authorInvitationUIConfirmDto) {
         return new ViewGenerator(Views.INVITATION_VIEW,
@@ -187,7 +187,7 @@ public class ViewGenerator {
                         .add("initiative", municipalityInitiative)
                         .add("municipalities", allMunicipalities)
                         .add("participantCount", participantCount)
-                        .add("publicAuthors", authors)
+                        .add("publicAuthors", publicAuthors)
                         .add("authorInvitation", authorInvitationUIConfirmDto)
                         .build()
         );

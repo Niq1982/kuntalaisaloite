@@ -6,12 +6,12 @@ import fi.om.municipalityinitiative.newdto.Author;
 import java.util.Collections;
 import java.util.List;
 
-public class Authors {
+public class PublicAuthors {
 
     private List<AuthorInfo> publicAuthors = Lists.newArrayList();
     private int privateNames = 0;
 
-    public Authors(List<Author> allAuthors) {
+    public PublicAuthors(List<Author> allAuthors) {
         for (Author author : allAuthors) {
             if (author.getContactInfo().isShowName()) {
                 AuthorInfo authorInfo = new AuthorInfo();

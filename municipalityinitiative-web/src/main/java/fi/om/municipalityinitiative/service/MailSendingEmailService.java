@@ -35,7 +35,7 @@ public class MailSendingEmailService implements EmailService {
     private EmailMessageConstructor emailMessageConstructor;
 
     @Override
-    public void sendAuthorConfirmedtInvitation(Initiative initiative, String email, String managementHash) {
+    public void sendAuthorConfirmedInvitation(Initiative initiative, String email, String managementHash) {
 
         HashMap<String, Object> dataMap = toDataMap(initiative, Locales.LOCALE_FI);
         dataMap.put("managementHash", managementHash);

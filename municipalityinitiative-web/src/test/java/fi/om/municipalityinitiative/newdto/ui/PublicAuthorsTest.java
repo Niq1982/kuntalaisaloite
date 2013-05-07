@@ -11,7 +11,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
-public class AuthorsTest {
+public class PublicAuthorsTest {
 
     @Test
     public void strips_authors_according_to_showName() {
@@ -30,12 +30,12 @@ public class AuthorsTest {
         authorList.add(privateAuthor);
         authorList.add(privateAuthor);
 
-        Authors authors = new Authors(authorList);
-        assertThat(authors.getPrivateNames(), is(2));
-        assertThat(authors.getPublicNames(), is(1));
-        assertThat(authors.getPublicAuthors(), hasSize(1));
-        assertThat(authors.getPublicAuthors().get(0).getMunicipality().getId(), is(1L));
-        assertThat(authors.getPublicAuthors().get(0).getName(), is("Public Name"));
+        PublicAuthors publicAuthors = new PublicAuthors(authorList);
+        assertThat(publicAuthors.getPrivateNames(), is(2));
+        assertThat(publicAuthors.getPublicNames(), is(1));
+        assertThat(publicAuthors.getPublicAuthors(), hasSize(1));
+        assertThat(publicAuthors.getPublicAuthors().get(0).getMunicipality().getId(), is(1L));
+        assertThat(publicAuthors.getPublicAuthors().get(0).getName(), is("Public Name"));
     }
 
     private static ContactInfo privateContactInfo() {

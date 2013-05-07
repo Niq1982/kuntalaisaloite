@@ -9,7 +9,7 @@ import java.util.Locale;
 
 public interface EmailService {
 
-    void sendAuthorConfirmedtInvitation(Initiative initiative, String email, String managementHash);
+    void sendAuthorConfirmedInvitation(Initiative initiative, String email, String managementHash);
 
     void sendAuthorInvitation(Initiative initiative, AuthorInvitation authorInvitation);
 
