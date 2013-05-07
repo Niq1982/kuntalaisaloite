@@ -27,11 +27,18 @@
  *
  * @param initiative is initiative
 -->
-<#macro initiativeAuthor initiative>
-     <#if initiative.showName>
-        <h2><@u.message "initiative.author.title" /></h2>
-        <p>${initiative.authorName!""}</p>
+<#macro initiativeAuthor publicAuthors>
+    <h2><@u.message "initiative.author.title" /></h2>
+
+    <#if (publicAuthors.publicNames > 0)>
+        <#list publicAuthors.publicAuthors as publicAuthor>
+            <p>${publicAuthor.name} - ${publicAuthor.municipality.getName(locale)}</p>
+        </#list>
+    <#else>
+        <p>Ei julkisia hahmoja</p>
     </#if>
+
+    <p>Lisäksi <b>${publicAuthors.publicNames} kpl</b> salaperäisiä hahmoja
 </#macro>
 
 <#-- 

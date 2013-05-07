@@ -30,13 +30,23 @@ public class ViewGenerator {
         this.modelAttributes = modelAttributes;
     }
 
+    public String view(Model model, String alternativeURL) {
+        for (Map.Entry<String, Object> stringObjectEntry : modelAttributes.entrySet()) {
+            model.addAttribute(stringObjectEntry.getKey(), stringObjectEntry.getValue());
+        }
+        model.addAttribute(ALT_URI_ATTR, alternativeURL);
+        return viewName;
+    }
+
     public static ViewGenerator collaborativeView(InitiativeViewInfo municipalityInitiative,
+                                                  Authors authors,
                                                   List<Municipality> allMunicipalities,
                                                   ParticipantCount participantCount,
                                                   ParticipantUICreateDto participantUICreateDto) {
         return new ViewGenerator(Views.PUBLIC_COLLECT_VIEW,
                 new AttributeBuilder()
                         .add("initiative", municipalityInitiative)
+                        .add("authors", authors)
                         .add("municipalities", allMunicipalities)
                         .add("participantCount", participantCount)
                         .add("participant", participantUICreateDto)
@@ -76,11 +86,11 @@ public class ViewGenerator {
     }
 
     public static ViewGenerator iframeSearch(List<InitiativeListInfo> initiatives,
-                                           List<Municipality> municipalities,
-                                           InitiativeSearch currentSearch,
-                                           SearchParameterQueryString queryString,
-                                           Maybe<Municipality> currentMunicipality,
-                                           InitiativeCounts initiativeCounts) {
+                                             List<Municipality> municipalities,
+                                             InitiativeSearch currentSearch,
+                                             SearchParameterQueryString queryString,
+                                             Maybe<Municipality> currentMunicipality,
+                                             InitiativeCounts initiativeCounts) {
         return new ViewGenerator(IFRAME_VIEW,
                 new AttributeBuilder()
                         .add("initiatives", initiatives)
@@ -93,16 +103,12 @@ public class ViewGenerator {
         );
     }
 
-    public String view(Model model, String alternativeURL) {
-        for (Map.Entry<String, Object> stringObjectEntry : modelAttributes.entrySet()) {
-            model.addAttribute(stringObjectEntry.getKey(), stringObjectEntry.getValue());
-        }
-        model.addAttribute(ALT_URI_ATTR, alternativeURL);
-        return viewName;
-    }
-
-    public static ViewGenerator singleView(InitiativeViewInfo initiativeInfo) {
-        return new ViewGenerator(Views.PUBLIC_SINGLE_VIEW,new AttributeBuilder().add("initiative", initiativeInfo).build());
+    public static ViewGenerator singleView(InitiativeViewInfo initiativeInfo, Authors authors) {
+        return new ViewGenerator(Views.PUBLIC_SINGLE_VIEW,
+                new AttributeBuilder()
+                        .add("initiative", initiativeInfo)
+                        .add("authors", authors)
+                        .build());
     }
 
     public static ViewGenerator moderationView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, Author authorInformation) {
@@ -151,33 +157,33 @@ public class ViewGenerator {
                         .add("previousPageURI", previousPageURI)
                         .build());
     }
-    
+
     public static ViewGenerator manageAuthorsView(InitiativeViewInfo initiativeInfo,
                                                   ManagementSettings managementSettings,
-                                                  List<Author> authorInformation,
+                                                  List<Author> authors,
                                                   List<AuthorInvitation> invitations, AuthorInvitationUICreateDto invitationUiCreate) {
         return new ViewGenerator(MANAGE_AUTHORS_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
                         .add("managementSettings", managementSettings)
-                        .add("authors", authorInformation)
+                        .add("authors", authors)
                         .add("invitations", invitations)
                         .add("newInvitation", invitationUiCreate)
                         .build()
         );
     }
-    
+
     public static ViewGenerator invitationView(InitiativeViewInfo municipalityInitiative,
-            List<Municipality> allMunicipalities,
-            ParticipantCount participantCount,
-            AuthorInvitationUIConfirmDto authorInvitationUIConfirmDto) {
+                                               List<Municipality> allMunicipalities,
+                                               ParticipantCount participantCount,
+                                               AuthorInvitationUIConfirmDto authorInvitationUIConfirmDto) {
         return new ViewGenerator(Views.INVITATION_VIEW,
-        new AttributeBuilder()
-        .add("initiative", municipalityInitiative)
-        .add("municipalities", allMunicipalities)
-        .add("participantCount", participantCount)
-        .add("authorInvitation", authorInvitationUIConfirmDto)
-        .build()
+                new AttributeBuilder()
+                        .add("initiative", municipalityInitiative)
+                        .add("municipalities", allMunicipalities)
+                        .add("participantCount", participantCount)
+                        .add("authorInvitation", authorInvitationUIConfirmDto)
+                        .build()
         );
     }
 

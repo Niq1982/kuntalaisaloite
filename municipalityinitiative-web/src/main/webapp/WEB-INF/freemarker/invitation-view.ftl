@@ -157,7 +157,7 @@
         </div>
         <#-- TODO: Show contact info here -->
         <div class="initiative-content-row last">
-            <@e.initiativeAuthor initiative />
+            <@e.initiativeAuthor authors />
         </div>
     </div>
 
