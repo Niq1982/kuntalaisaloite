@@ -38,6 +38,9 @@ public class AuthorService {
     @Resource
     EmailService emailService;
 
+    @Resource
+    UserService userService;
+
     @Transactional(readOnly = false)
     public void createAuthorInvitation(Long initiativeId, LoginUserHolder loginUserHolder, AuthorInvitationUICreateDto uiCreateDto) {
 
@@ -72,7 +75,7 @@ public class AuthorService {
     }
 
     @Transactional(readOnly = false)
-    public void confirmAuthorInvitation(Long initiativeId, AuthorInvitationUIConfirmDto confirmDto) {
+    public String confirmAuthorInvitation(Long initiativeId, AuthorInvitationUIConfirmDto confirmDto) {
 
         ManagementSettings managementSettings = ManagementSettings.of(initiativeDao.getByIdWithOriginalAuthor(initiativeId));
         SecurityUtil.assertAllowance("Accept invitation", managementSettings.isAllowInviteAuthors());
@@ -92,7 +95,7 @@ public class AuthorService {
                 authorDao.updateAuthorInformation(authorId, confirmDto.getContactInfo());
                 authorDao.deleteAuthorInvitation(initiativeId, confirmDto.getConfirmCode());
                 emailService.sendAuthorConfirmedtInvitation(initiativeDao.getByIdWithOriginalAuthor(initiativeId), invitation.getEmail(), managementHash);
-                return;
+                return managementHash;
 
             }
         }

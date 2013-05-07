@@ -111,31 +111,33 @@ public class ViewGenerator {
                         .build());
     }
 
-    public static ViewGenerator moderationView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, Author authorInformation) {
+    public static ViewGenerator moderationView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<Author> authors) {
         return new ViewGenerator(MODERATION_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
                         .add("managementSettings", managementSettings)
-                        .add("author", authorInformation).build()
-        );
-    }
-
-    public static ViewGenerator managementView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, Author authorInformation) {
-        return new ViewGenerator(MANAGEMENT_VIEW,
-                new AttributeBuilder()
-                        .add("initiative", initiativeInfo)
-                        .add("managementSettings", managementSettings)
-                        .add("author", authorInformation)
+                        .add("authors", authors)
                         .build()
         );
     }
 
-    public static ViewGenerator updateView(InitiativeViewInfo initiative, InitiativeUIUpdateDto initiativeForUpdate, Author authorInformation, String previousPageURI) {
+    public static ViewGenerator managementView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<Author> authors) {
+        return new ViewGenerator(MANAGEMENT_VIEW,
+                new AttributeBuilder()
+                        .add("initiative", initiativeInfo)
+                        .add("managementSettings", managementSettings)
+                        .add("authors", authors)
+                        .build()
+        );
+    }
+
+    public static ViewGenerator updateView(InitiativeViewInfo initiative, InitiativeUIUpdateDto initiativeForUpdate, Author authorInformation, List<Author> authors, String previousPageURI) {
         return new ViewGenerator(UPDATE_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiative)
                         .add("updateData", initiativeForUpdate)
                         .add("author", authorInformation)
+                        .add("authors", authors)
                         .add("previousPageURI", previousPageURI)
                         .build()
         );
@@ -175,6 +177,7 @@ public class ViewGenerator {
 
     public static ViewGenerator invitationView(InitiativeViewInfo municipalityInitiative,
                                                List<Municipality> allMunicipalities,
+                                               Authors authors,
                                                ParticipantCount participantCount,
                                                AuthorInvitationUIConfirmDto authorInvitationUIConfirmDto) {
         return new ViewGenerator(Views.INVITATION_VIEW,
@@ -182,6 +185,7 @@ public class ViewGenerator {
                         .add("initiative", municipalityInitiative)
                         .add("municipalities", allMunicipalities)
                         .add("participantCount", participantCount)
+                        .add("publicAuthors", authors)
                         .add("authorInvitation", authorInvitationUIConfirmDto)
                         .build()
         );

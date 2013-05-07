@@ -43,7 +43,7 @@
         </div>
         
         <div class="initiative-content-row last">
-            <@e.initiativeContactInfo author.contactInfo />
+<@e.initiativeContactInfo authors />
         </div>
     </div>
 

@@ -5,7 +5,6 @@ import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUIUpdateDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
-import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.web.BaseController;
 import fi.om.municipalityinitiative.web.RequestMessage;
@@ -63,7 +62,7 @@ public class InitiativeManagementController extends BaseController {
 
         return ViewGenerator.managementView(initiativeInfo,
                 publicInitiativeService.getManagementSettings(initiativeId),
-                publicInitiativeService.getAuthorInformation(initiativeId, loginUserHolder)
+                authorService.findAuthors(initiativeId, loginUserHolder)
         ).view(model, Urls.get(locale).alt().getManagement(initiativeId));
     }
 
@@ -86,6 +85,7 @@ public class InitiativeManagementController extends BaseController {
             return ViewGenerator.updateView(publicInitiativeService.getMunicipalityInitiative(initiativeId),
                     publicInitiativeService.getInitiativeForUpdate(initiativeId, loginUserHolder),
                     publicInitiativeService.getAuthorInformation(initiativeId, loginUserHolder),
+                    authorService.findAuthors(initiativeId, loginUserHolder),
                     urls.getManagement(initiativeId)
             ).view(model, urls.alt().update(initiativeId));
 
@@ -110,6 +110,7 @@ public class InitiativeManagementController extends BaseController {
             return ViewGenerator.updateView(publicInitiativeService.getMunicipalityInitiative(initiativeId),
                     updateDto,
                     publicInitiativeService.getAuthorInformation(initiativeId, loginUserHolder),
+                    authorService.findAuthors(initiativeId, loginUserHolder),
                     urls.getManagement(initiativeId)
             ).view(model, urls.alt().update(initiativeId));
         }

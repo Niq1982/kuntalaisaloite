@@ -163,7 +163,6 @@ public class InitiativeViewController extends BaseController {
         }
     }
     
-    // TODO
     @RequestMapping(value={ INVITATION_FI, INVITATION_SV }, method=GET)
     public String invitationView(@PathVariable("id") Long initiativeId,
                                  @RequestParam(PARAM_INVITATION_CODE) String confirmCode,
@@ -175,13 +174,12 @@ public class InitiativeViewController extends BaseController {
             return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.ALREADY_SENT, request);
         }
 
-        // TODO: Check if confirm code is valid?
-
-
-        AuthorInvitationUIConfirmDto authorInvitationUIConfirmDto = authorService.getPrefilledAuthorInvitationConfirmDto(initiativeId, confirmCode);
+        AuthorInvitationUIConfirmDto authorInvitationUIConfirmDto =
+                authorService.getPrefilledAuthorInvitationConfirmDto(initiativeId, confirmCode);
 
         return ViewGenerator.invitationView(initiativeInfo,
                 municipalityService.findAllMunicipalities(locale),
+                authorService.findAuthors(initiativeId),
                 participantService.getParticipantCount(initiativeId),
                 authorInvitationUIConfirmDto
         ).view(model, Urls.get(locale).alt().getManagement(initiativeId));
@@ -196,12 +194,14 @@ public class InitiativeViewController extends BaseController {
         confirmDto.setInitiativeMunicipality(initiativeInfo.getMunicipality().getId());
 
         if (validationService.validationSuccessful(confirmDto, bindingResult, model)) {
-            authorService.confirmAuthorInvitation(initiativeId, confirmDto);
+            String generatedManagementHash = authorService.confirmAuthorInvitation(initiativeId, confirmDto);
+            userService.login(initiativeId, generatedManagementHash, request);
             return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.CONFIRM_INVITATION, request);
         }
         else {
             return ViewGenerator.invitationView(initiativeInfo,
                     municipalityService.findAllMunicipalities(locale),
+                    authorService.findAuthors(initiativeId),
                     participantService.getParticipantCount(initiativeId),
                     confirmDto
             ).view(model, Urls.get(locale).alt().manageAuthors(initiativeId));

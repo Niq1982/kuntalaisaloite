@@ -43,7 +43,7 @@ public class InitiativeModerationController extends BaseController{
 
         return ViewGenerator.moderationView(publicInitiativeService.getMunicipalityInitiative(initiativeId),
                 publicInitiativeService.getManagementSettings(initiativeId),
-                omInitiativeService.getAuthorInformation(initiativeId)
+                omInitiativeService.findAuthors(initiativeId)
         ).view(model, Urls.get(locale).alt().moderation(initiativeId));
     }
 

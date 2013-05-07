@@ -1,8 +1,10 @@
 package fi.om.municipalityinitiative.service;
 
+import java.util.List;
 import java.util.Locale;
 
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
+import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdto.Author;
@@ -21,12 +23,15 @@ public class OmInitiativeService {
 
     @Resource
     UserService userService;
-    
+
     @Resource
     EmailService emailService;
 
     @Resource
     MunicipalityDao municipalityDao;
+
+    @Resource
+    AuthorDao authorDao;
 
     @Transactional(readOnly = false)
     public void accept(Long initiativeId, String moderatorComment, Locale locale) {
@@ -42,10 +47,9 @@ public class OmInitiativeService {
             initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
             initiativeDao.markInitiativeAsSent(initiativeId);
             initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId); // Necessary because initiative is updated
-            emailService.sendStatusEmail(initiative, initiative.getAuthor().getContactInfo().getEmail(), municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()),EmailMessageType.ACCEPTED_BY_OM_AND_SENT);
+            emailService.sendStatusEmail(initiative, initiative.getAuthor().getContactInfo().getEmail(), municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), EmailMessageType.ACCEPTED_BY_OM_AND_SENT);
             emailService.sendSingleToMunicipality(initiative, municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), locale);
-        }
-        else {
+        } else {
             initiativeDao.updateInitiativeState(initiativeId, InitiativeState.ACCEPTED);
             initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);  // Necessary because initiative is updated
             emailService.sendStatusEmail(initiative, initiative.getAuthor().getContactInfo().getEmail(), municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), EmailMessageType.ACCEPTED_BY_OM);
@@ -71,5 +75,10 @@ public class OmInitiativeService {
     public Author getAuthorInformation(Long initiativeId) {
         userService.requireOmUser();
         return initiativeDao.getByIdWithOriginalAuthor(initiativeId).getAuthor();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Author> findAuthors(Long initiativeId) {
+        return authorDao.findAuthors(initiativeId);
     }
 }
