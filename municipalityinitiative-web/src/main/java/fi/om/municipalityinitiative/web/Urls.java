@@ -222,7 +222,7 @@ public final class Urls {
     
     public static final String INVITATION_FI = "/fi/kutsu" + "/" + ID_PARAMETER;
     
-    public static final String INVITATION_SV = "/fi/inbjudan" + "/" + ID_PARAMETER;
+    public static final String INVITATION_SV = "/sv/inbjudan" + "/" + ID_PARAMETER;
 
     public static final String IFRAME_FI = "/fi/iframe";
 

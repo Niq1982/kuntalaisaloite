@@ -102,7 +102,7 @@
                     </div>
 
                     <div class="input-block-content no-top-margin">
-                        <button type="submit" name="${UrlConstants.ACTION_ACCEPT_INITIATIVE}" class="small-button"><span class="small-icon add"><@u.message "action.sendInvitation" /></span></button>
+                        <button type="submit" name="${UrlConstants.ACTION_ACCEPT_INITIATIVE}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.sendInvitation" /></span></button>
                         <a href="${springMacroRequestContext.requestUri}" class="push ${validationError?string("","js-btn-close-block hidden")}"><@u.message "action.cancel" /></a>
                     </div>
                     <br/><br/>
