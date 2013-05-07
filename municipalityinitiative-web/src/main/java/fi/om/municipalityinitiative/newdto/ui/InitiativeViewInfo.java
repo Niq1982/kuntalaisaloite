@@ -70,4 +70,8 @@ public class InitiativeViewInfo {
         return initiative.getStateTime();
     }
 
+    public String getExtraInfo() {
+        return initiative.getExtraInfo();
+    }
+
 }

@@ -11,8 +11,13 @@
 -->
 <#macro initiativeView initiative>
     <h2><@u.message "initiative.proposal.title" /></h2>
-    
+
     <@u.text initiative.proposal!"" />
+
+    <#if (initiative.extraInfo)?has_content>
+        <h2><@u.message "initiative.extraInfo.title" /></h2>
+        <@u.text initiative.extraInfo!"" />
+    </#if>
 </#macro>
 
 <#-- 
