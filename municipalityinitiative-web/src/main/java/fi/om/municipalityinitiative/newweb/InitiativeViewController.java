@@ -195,14 +195,14 @@ public class InitiativeViewController extends BaseController {
 
         if (validationService.validationSuccessful(confirmDto, bindingResult, model)) {
             authorService.confirmAuthorInvitation(initiativeId, confirmDto);
-            return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.CONFIRM_PARTICIPATION, request);
+            return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.CONFIRM_INVITATION, request);
         }
         else {
             return ViewGenerator.invitationView(initiativeInfo,
                     municipalityService.findAllMunicipalities(locale),
                     participantService.getParticipantCount(initiativeId),
                     confirmDto
-            ).view(model, Urls.get(locale).alt().getManagement(initiativeId));
+            ).view(model, Urls.get(locale).alt().manageAuthors(initiativeId));
         }
     }
 

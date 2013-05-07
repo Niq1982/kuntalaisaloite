@@ -8,6 +8,7 @@ import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
+import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.ui.AuthorInvitationUIConfirmDto;
@@ -33,12 +34,15 @@ public class AuthorService {
     @Resource
     ParticipantDao participantDao;
 
+    @Resource
+    EmailService emailService;
+
     @Transactional(readOnly = false)
     public void createAuthorInvitation(Long initiativeId, LoginUserHolder loginUserHolder, AuthorInvitationUICreateDto uiCreateDto) {
 
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        ManagementSettings managementSettings = ManagementSettings.of(initiativeDao.getByIdWithOriginalAuthor(initiativeId));
-        SecurityUtil.assertAllowance("Invite authors", managementSettings.isAllowInviteAuthors());
+        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
+        SecurityUtil.assertAllowance("Invite authors", ManagementSettings.of(initiative).isAllowInviteAuthors());
 
         AuthorInvitation authorInvitation = new AuthorInvitation();
         authorInvitation.setInitiativeId(initiativeId);
@@ -48,6 +52,7 @@ public class AuthorService {
         authorInvitation.setInvitationTime(new DateTime());
 
         authorDao.addAuthorInvitation(authorInvitation);
+        emailService.sendAuthorInvitation(initiative, authorInvitation);
 
     }
 
