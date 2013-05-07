@@ -79,6 +79,7 @@ public class OmInitiativeService {
 
     @Transactional(readOnly = true)
     public List<Author> findAuthors(Long initiativeId) {
+        userService.requireOmUser();
         return authorDao.findAuthors(initiativeId);
     }
 }
