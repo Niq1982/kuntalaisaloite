@@ -257,7 +257,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     public void resend_invitation_throws_exception_if_no_management_rights() {
         Long initiativeId = testHelper.createCollectableReview(testMunicipality);
         thrown.expect(AccessDeniedException.class);
-        authorService.resendInvitation(initiativeId, null, null);
+        authorService.resendInvitation(initiativeId, unknownLoginUserHolder, null);
     }
 
     @Test
