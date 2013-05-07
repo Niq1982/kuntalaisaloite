@@ -86,9 +86,11 @@ public class AuthorService {
                 String someConfirmationCode = "-";
                 Long participantId = participantDao.create(participantCreateDto, someConfirmationCode);
                 participantDao.confirmParticipation(participantId, someConfirmationCode);
-                Long authorId = authorDao.createAuthor(initiativeId, participantId, RandomHashGenerator.randomString(40));
+                String managementHash = RandomHashGenerator.randomString(40);
+                Long authorId = authorDao.createAuthor(initiativeId, participantId, managementHash);
                 authorDao.updateAuthorInformation(authorId, confirmDto.getContactInfo());
                 authorDao.deleteAuthorInvitation(initiativeId, confirmDto.getConfirmCode());
+                emailService.sendAuthorConfirmedtInvitation(initiativeDao.getByIdWithOriginalAuthor(initiativeId), invitation.getEmail(), managementHash);
                 return;
 
             }

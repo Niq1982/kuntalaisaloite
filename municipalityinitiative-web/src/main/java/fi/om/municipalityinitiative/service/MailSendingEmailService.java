@@ -26,12 +26,28 @@ public class MailSendingEmailService implements EmailService {
     private static final String PARTICIPATION_CONFIRMATION = "participant-verification";
     private static final String COLLABORATIVE_TO_MUNICIPALITY = "municipality-collectable";
     private static final String AUTHOR_INVITATION = "author-invitation";
+    private static final String TEMP_INVITATION_ACCEPTANCE ="invitation-acceptance";
 
     @Resource
     private MessageSource messageSource;
 
     @Resource
     private EmailMessageConstructor emailMessageConstructor;
+
+    @Override
+    public void sendAuthorConfirmedtInvitation(Initiative initiative, String email, String managementHash) {
+
+        HashMap<String, Object> dataMap = toDataMap(initiative, Locales.LOCALE_FI);
+        dataMap.put("managementHash", managementHash);
+
+        emailMessageConstructor
+                .fromTemplate(TEMP_INVITATION_ACCEPTANCE)
+                .withSendTo(email)
+                .withSubject(messageSource.getMessage("email.status.info." + EmailMessageType.INVITATION_ACCEPTED.name() + ".subject", toArray(), Locales.LOCALE_FI))
+                .withDataMap(dataMap)
+                .send();
+
+    }
 
     @Override
     public void sendAuthorInvitation(Initiative initiative, AuthorInvitation authorInvitation) {

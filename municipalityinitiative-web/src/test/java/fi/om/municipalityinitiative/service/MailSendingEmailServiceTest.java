@@ -106,4 +106,12 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
         assertThat(getMessageContent().html, containsString(EXTRA_INFO));
         assertThat(getMessageContent().html, containsString(SENT_COMMENT));
     }
+
+    @Test
+    public void send_invitation_acceptanve() throws Exception {
+
+        emailService.sendAuthorConfirmedtInvitation(createDefaultInitiative(), CONTACT_EMAIL, "hash");
+        assertThat(getMessageContent().html, containsString(Urls.get(Locales.LOCALE_FI).loginAuthor(INITIATIVE_ID, "hash")));
+
+    }
 }
