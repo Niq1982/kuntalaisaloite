@@ -65,9 +65,16 @@
                             <span class="status push"><@u.message "invitation.rejected" /> <@u.localDate i.rejectTime.value /></span>
                         <#elseif i.expired>
                             <span class="status"><span class="icon-small unconfirmed"></span> <@u.message "invitation.expired" /></span>
-                            <span class="action push"><a href="#" class=""><@u.message "invitation.resend" /></a></span>
+                            <span class="action push">
+                            <form action="${springMacroRequestContext.requestUri}" method="POST" id="resend_${i.confirmationCode}">
+                                <@f.securityFilters/>
+                                <input type="hidden" name="${UrlConstants.PARAM_INVITATION_CODE}" value="${i.confirmationCode}"/>
+                                <input type="submit" value="<@u.message "invitation.resend"/>"/>
+                            </form>
+                            <#--<a href="#" class=""><@u.message "invitation.resend"/></a>-->
+                            </span>
                         <#else>
-                            <span class="status"><span class="icon-small unconfirmed"></span> <@u.message "invitation.unconfirmed" /> <span class="bull">&bull;</span> <a href="#" class="cancel-invitation"><@u.message "invitation.cancel" /></a></span>
+                            <span class="status"><span class="icon-small unconfirmed"></span> <@u.message "invitation.unconfirmed" /> <span class="bull">&bull;</span></span>
                             <span class="action push"><@u.message "invitation.sent" /> <@u.localDate i.invitationTime /></span>
                         </#if>
                     </div>

@@ -193,5 +193,15 @@ public class InitiativeManagementController extends BaseController {
                     authorInvitationUICreateDto).view(model, Urls.get(locale).alt().getManagement(initiativeId));
         }
     }
+
+    @RequestMapping(value = {MANAGE_AUTHORS_FI, MANAGE_AUTHORS_SV}, method = POST, params = PARAM_INVITATION_CODE)
+    public String resendInvitation(@PathVariable("id") Long initiativeId,
+                                   @RequestParam(PARAM_INVITATION_CODE) String confirmationCode,
+                                   Locale locale,
+                                   HttpServletRequest request) {
+            authorService.resendInvitation(initiativeId, userService.getRequiredLoginUserHolder(request), confirmationCode);
+            return redirectWithMessage(Urls.get(locale).manageAuthors(initiativeId), RequestMessage.INVITATION_SENT, request);
+    }
+
     
 }

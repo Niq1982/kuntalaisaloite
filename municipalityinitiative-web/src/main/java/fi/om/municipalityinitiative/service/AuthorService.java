@@ -58,7 +58,9 @@ public class AuthorService {
     }
 
     @Transactional(readOnly = false)
-    public void resendInvitation(Long initiativeId, String confirmationCode) {
+    public void resendInvitation(Long initiativeId, LoginUserHolder loginUserHolder, String confirmationCode) {
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
+
         AuthorInvitation authorInvitation = authorDao.getAuthorInvitation(initiativeId, confirmationCode);
         authorDao.deleteAuthorInvitation(initiativeId, confirmationCode);
 

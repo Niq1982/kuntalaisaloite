@@ -254,6 +254,13 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     }
 
     @Test
+    public void resend_invitation_throws_exception_if_no_management_rights() {
+        Long initiativeId = testHelper.createCollectableReview(testMunicipality);
+        thrown.expect(AccessDeniedException.class);
+        authorService.resendInvitation(initiativeId, null, null);
+    }
+
+    @Test
     public void resend_invitation_updates_invitation_time_to_current_time() {
         Long initiativeId = testHelper.createCollectableReview(testMunicipality);
         DateTime invitationTime = new DateTime(2010, 1, 1, 0, 0);
@@ -262,7 +269,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         precondition(authorDao.getAuthorInvitation(initiativeId, invitation.getConfirmationCode()).getInvitationTime(), is(invitationTime));
         precondition(allCurrentInvitations(), is(1L));
 
-        authorService.resendInvitation(initiativeId, invitation.getConfirmationCode());
+        authorService.resendInvitation(initiativeId, authorLoginUserHolder, invitation.getConfirmationCode());
 
         assertThat(authorDao.getAuthorInvitation(initiativeId, invitation.getConfirmationCode()).getInvitationTime().toLocalDate(), is(new LocalDate()));
         assertThat(allCurrentInvitations(), is(1L));
