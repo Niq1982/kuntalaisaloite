@@ -1,8 +1,10 @@
 package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Maps;
+import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Participant;
+import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Task;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.context.MessageSource;
@@ -23,12 +25,43 @@ public class MailSendingEmailService implements EmailService {
     private static final String NOTIFICATION_TO_MODERATOR = "notification-to-moderator";
     private static final String PARTICIPATION_CONFIRMATION = "participant-verification";
     private static final String COLLABORATIVE_TO_MUNICIPALITY = "municipality-collectable";
+    private static final String AUTHOR_INVITATION = "author-invitation";
+    private static final String TEMP_INVITATION_ACCEPTANCE ="invitation-acceptance";
 
     @Resource
     private MessageSource messageSource;
 
     @Resource
     private EmailMessageConstructor emailMessageConstructor;
+
+    @Override
+    public void sendAuthorConfirmedtInvitation(Initiative initiative, String email, String managementHash) {
+
+        HashMap<String, Object> dataMap = toDataMap(initiative, Locales.LOCALE_FI);
+        dataMap.put("managementHash", managementHash);
+
+        emailMessageConstructor
+                .fromTemplate(TEMP_INVITATION_ACCEPTANCE)
+                .withSendTo(email)
+                .withSubject(messageSource.getMessage("email.status.info." + EmailMessageType.INVITATION_ACCEPTED.name() + ".subject", toArray(), Locales.LOCALE_FI))
+                .withDataMap(dataMap)
+                .send();
+
+    }
+
+    @Override
+    public void sendAuthorInvitation(Initiative initiative, AuthorInvitation authorInvitation) {
+        Locale locale = Locales.LOCALE_FI;
+        HashMap<String, Object> dataMap = toDataMap(initiative, locale);
+        dataMap.put("authorInvitation", authorInvitation);
+
+        emailMessageConstructor
+                .fromTemplate(AUTHOR_INVITATION)
+                .withSendTo(authorInvitation.getEmail())
+                .withSubject(messageSource.getMessage("email.author.invitation.subject", toArray(initiative.getName()), locale))
+                .withDataMap(dataMap)
+                .send();
+    }
 
     @Override
     public void sendSingleToMunicipality(Initiative initiative, String municipalityEmail, Locale locale) {
@@ -54,11 +87,13 @@ public class MailSendingEmailService implements EmailService {
     }
 
     @Override
-    public void sendStatusEmail(Initiative initiative, String sendTo, String municipalityEmail, EmailMessageType emailMessageType, Locale locale) {
-        
+    public void sendStatusEmail(Initiative initiative, String sendTo, String municipalityEmail, EmailMessageType emailMessageType) {
+
+        Locale locale = Locales.LOCALE_FI;
+
         HashMap<String, Object> dataMap = toDataMap(initiative, locale);
         dataMap.put("emailMessageType", emailMessageType);
-        if (municipalityEmail != null) {
+        if (municipalityEmail != null) { // XXX: Hmm. Shiiit.
             dataMap.put("municipalityEmail", municipalityEmail);
         }
 
@@ -116,7 +151,7 @@ public class MailSendingEmailService implements EmailService {
         dataMap.put("localizations", new EmailLocalizationProvider(messageSource, locale));
         dataMap.put("urls", Urls.get(locale));
         dataMap.put("locale", locale);
-        dataMap.put("altLocale", new Locale ("sv"));
+        dataMap.put("altLocale", Locales.getAltLocale(locale));
         addEnum(EmailMessageType.class, dataMap);
         return dataMap;
     }

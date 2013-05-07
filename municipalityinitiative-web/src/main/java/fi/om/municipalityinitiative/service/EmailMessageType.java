@@ -7,7 +7,8 @@ public enum EmailMessageType {
     INVITATION_ACCEPTED,
     INVITATION_REJECTED,
     PUBLISHED_COLLECTING,
-    SENT_TO_MUNICIPALITY
+    SENT_TO_MUNICIPALITY,
+    AUTHOR_ACCEPTED
     ;
 
     private final String messageKeySuffix;

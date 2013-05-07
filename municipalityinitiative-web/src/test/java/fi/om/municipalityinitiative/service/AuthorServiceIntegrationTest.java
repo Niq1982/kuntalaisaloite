@@ -237,11 +237,11 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     @Test
     public void prefilled_author_confirmation_throws_exception_if_invitation_rejected() {
         Long initiativeId = testHelper.createCollectableReview(testMunicipality);
-        AuthorInvitation expiredInvitation = createRejectedInvitation(initiativeId);
+        AuthorInvitation rejectedInvitation = createRejectedInvitation(initiativeId);
 
         thrown.expect(InvitationNotValidException.class);
         thrown.expectMessage("Invitation is rejected");
-        authorService.getPrefilledAuthorInvitationConfirmDto(initiativeId, expiredInvitation.getConfirmationCode());
+        authorService.getPrefilledAuthorInvitationConfirmDto(initiativeId, rejectedInvitation.getConfirmationCode());
 
     }
 

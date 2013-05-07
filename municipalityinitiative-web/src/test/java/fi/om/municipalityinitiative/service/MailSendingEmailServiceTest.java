@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Lists;
+import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.Urls;
@@ -82,6 +83,21 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
     }
 
     @Test
+    public void author_invitation_contains_all_information() throws Exception {
+        AuthorInvitation authorInvitation = new AuthorInvitation();
+        authorInvitation.setEmail("email@example.com");
+        authorInvitation.setConfirmationCode("rockrock");
+        emailService.sendAuthorInvitation(createDefaultInitiative(), authorInvitation);
+
+        assertThat(getSingleSentMessage().getSubject(), containsString("Sinut on kutsuttu vastuuhenkilöksi kuntalaisaloitteesen"));
+        assertThat(getSingleRecipient(), is(authorInvitation.getEmail()));
+
+        assertThat(getMessageContent().html, containsString(urls.invitation(INITIATIVE_ID, authorInvitation.getConfirmationCode())));
+        assertThat(getMessageContent().html, containsString(urls.alt().invitation(INITIATIVE_ID, authorInvitation.getConfirmationCode())));
+
+    }
+
+    @Test
     public void collaborative_to_municipality_contains_all_information() throws Exception {
         emailService.sendCollaborativeToMunicipality(createDefaultInitiative(), Lists.<Participant>newArrayList(), MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
 
@@ -89,5 +105,13 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
         assertThat(getSingleRecipient(), is(CONTACT_EMAIL)); // XXX: MUNICIPALITY_EMAIL
         assertThat(getMessageContent().html, containsString(EXTRA_INFO));
         assertThat(getMessageContent().html, containsString(SENT_COMMENT));
+    }
+
+    @Test
+    public void send_invitation_acceptanve() throws Exception {
+
+        emailService.sendAuthorConfirmedtInvitation(createDefaultInitiative(), CONTACT_EMAIL, "hash");
+        assertThat(getMessageContent().html, containsString(Urls.get(Locales.LOCALE_FI).loginAuthor(INITIATIVE_ID, "hash")));
+
     }
 }
