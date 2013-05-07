@@ -42,7 +42,8 @@ public class ViewGenerator {
                                                   Authors authors,
                                                   List<Municipality> allMunicipalities,
                                                   ParticipantCount participantCount,
-                                                  ParticipantUICreateDto participantUICreateDto) {
+                                                  ParticipantUICreateDto participantUICreateDto,
+                                                  boolean hasManagementRightForInitiative) {
         return new ViewGenerator(Views.PUBLIC_COLLECT_VIEW,
                 new AttributeBuilder()
                         .add("initiative", municipalityInitiative)
@@ -50,6 +51,7 @@ public class ViewGenerator {
                         .add("municipalities", allMunicipalities)
                         .add("participantCount", participantCount)
                         .add("participant", participantUICreateDto)
+                        .add("hasManagementRightForInitiative", hasManagementRightForInitiative)
                         .build()
         );
     }

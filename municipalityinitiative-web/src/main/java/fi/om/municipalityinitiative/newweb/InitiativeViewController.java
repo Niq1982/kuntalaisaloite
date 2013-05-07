@@ -82,8 +82,8 @@ public class InitiativeViewController extends BaseController {
                     authorService.findAuthors(initiativeId),
                     municipalityService.findAllMunicipalities(locale),
                     participantService.getParticipantCount(initiativeId),
-                    new ParticipantUICreateDto()
-            ).view(model, Urls.get(locale).alt().view(initiativeId));
+                    new ParticipantUICreateDto(),
+                    userService.hasManagementRightForInitiative(initiativeId, request)).view(model, Urls.get(locale).alt().view(initiativeId));
         }
         else {
             return ViewGenerator.singleView(initiativeInfo, authorService.findAuthors(initiativeId))
@@ -106,7 +106,8 @@ public class InitiativeViewController extends BaseController {
                     publicInitiativeService.getMunicipalityInitiative(initiativeId),
                     authorService.findAuthors(initiativeId), municipalityService.findAllMunicipalities(locale),
                     participantService.getParticipantCount(initiativeId),
-                    participant
+                    participant,
+                    userService.hasManagementRightForInitiative(initiativeId, request)
             ).view(model, Urls.get(locale).alt().view(initiativeId));
         }
     }

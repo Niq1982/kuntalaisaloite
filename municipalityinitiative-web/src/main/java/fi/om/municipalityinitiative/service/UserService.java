@@ -57,6 +57,12 @@ public class UserService {
         return loginUserHolder.get();
     }
 
+    public boolean hasManagementRightForInitiative(Long initiativeId, HttpServletRequest request) {
+        Maybe<LoginUserHolder> loginUserHolderMaybe = parseLoginUser(request.getSession());
+        return loginUserHolderMaybe.isPresent()
+                && loginUserHolderMaybe.get().hasManagementRightsForInitiative(initiativeId);
+    }
+
     private static Maybe<LoginUserHolder> parseLoginUser(HttpSession session) {
 
         if (session == null)
