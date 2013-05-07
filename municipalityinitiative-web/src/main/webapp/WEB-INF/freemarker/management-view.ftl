@@ -36,7 +36,7 @@
         </div>
 
         <div class="initiative-content-row last">
-            <@e.initiativeContactInfo author.contactInfo />
+            <@e.initiativeContactInfo authors/>
         </div>
     </div>
 
@@ -168,6 +168,7 @@
                 </#if>
             
                 <div class="system-msg msg-info">
+                <#-- TODO: managementSettings.allowInviteAuthors -->
                     <@u.message "addAuthors.description" /> <@u.link href=urls.manageAuthors(initiative.id) labelKey="addAuthors.link" />
                 </div>
                

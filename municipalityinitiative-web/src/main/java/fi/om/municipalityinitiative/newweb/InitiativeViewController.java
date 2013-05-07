@@ -79,13 +79,15 @@ public class InitiativeViewController extends BaseController {
 
         if (initiativeInfo.isCollectable()) {
             return ViewGenerator.collaborativeView(initiativeInfo,
+                    authorService.findAuthors(initiativeId),
                     municipalityService.findAllMunicipalities(locale),
                     participantService.getParticipantCount(initiativeId),
-                    new ParticipantUICreateDto()
-            ).view(model, Urls.get(locale).alt().view(initiativeId));
+                    new ParticipantUICreateDto(),
+                    userService.hasManagementRightForInitiative(initiativeId, request)).view(model, Urls.get(locale).alt().view(initiativeId));
         }
         else {
-            return ViewGenerator.singleView(initiativeInfo).view(model, Urls.get(locale).alt().view(initiativeId));
+            return ViewGenerator.singleView(initiativeInfo, authorService.findAuthors(initiativeId))
+                    .view(model, Urls.get(locale).alt().view(initiativeId));
         }
     }
 
@@ -102,9 +104,10 @@ public class InitiativeViewController extends BaseController {
         else {
             return ViewGenerator.collaborativeView(
                     publicInitiativeService.getMunicipalityInitiative(initiativeId),
-                    municipalityService.findAllMunicipalities(locale),
+                    authorService.findAuthors(initiativeId), municipalityService.findAllMunicipalities(locale),
                     participantService.getParticipantCount(initiativeId),
-                    participant
+                    participant,
+                    userService.hasManagementRightForInitiative(initiativeId, request)
             ).view(model, Urls.get(locale).alt().view(initiativeId));
         }
     }
@@ -117,7 +120,7 @@ public class InitiativeViewController extends BaseController {
         InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
 
         if (!initiativeInfo.isCollectable()) {
-            return ViewGenerator.singleView(initiativeInfo).view(model, alternativeURL);
+            return ViewGenerator.singleView(initiativeInfo, authorService.findAuthors(initiativeId)).view(model, alternativeURL);
         }
         else {
 
@@ -161,7 +164,6 @@ public class InitiativeViewController extends BaseController {
         }
     }
     
-    // TODO
     @RequestMapping(value={ INVITATION_FI, INVITATION_SV }, method=GET)
     public String invitationView(@PathVariable("id") Long initiativeId,
                                  @RequestParam(PARAM_INVITATION_CODE) String confirmCode,
@@ -173,13 +175,12 @@ public class InitiativeViewController extends BaseController {
             return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.ALREADY_SENT, request);
         }
 
-        // TODO: Check if confirm code is valid?
-
-
-        AuthorInvitationUIConfirmDto authorInvitationUIConfirmDto = authorService.getPrefilledAuthorInvitationConfirmDto(initiativeId, confirmCode);
+        AuthorInvitationUIConfirmDto authorInvitationUIConfirmDto =
+                authorService.getPrefilledAuthorInvitationConfirmDto(initiativeId, confirmCode);
 
         return ViewGenerator.invitationView(initiativeInfo,
                 municipalityService.findAllMunicipalities(locale),
+                authorService.findAuthors(initiativeId),
                 participantService.getParticipantCount(initiativeId),
                 authorInvitationUIConfirmDto
         ).view(model, Urls.get(locale).alt().getManagement(initiativeId));
@@ -194,12 +195,14 @@ public class InitiativeViewController extends BaseController {
         confirmDto.setInitiativeMunicipality(initiativeInfo.getMunicipality().getId());
 
         if (validationService.validationSuccessful(confirmDto, bindingResult, model)) {
-            authorService.confirmAuthorInvitation(initiativeId, confirmDto);
-            return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.CONFIRM_INVITATION, request);
+            String generatedManagementHash = authorService.confirmAuthorInvitation(initiativeId, confirmDto);
+            userService.login(initiativeId, generatedManagementHash, request);
+            return redirectWithMessage(Urls.get(locale).moderation(initiativeId), RequestMessage.CONFIRM_INVITATION, request);
         }
         else {
             return ViewGenerator.invitationView(initiativeInfo,
                     municipalityService.findAllMunicipalities(locale),
+                    authorService.findAuthors(initiativeId),
                     participantService.getParticipantCount(initiativeId),
                     confirmDto
             ).view(model, Urls.get(locale).alt().manageAuthors(initiativeId));

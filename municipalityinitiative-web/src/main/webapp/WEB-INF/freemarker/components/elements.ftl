@@ -11,8 +11,13 @@
 -->
 <#macro initiativeView initiative>
     <h2><@u.message "initiative.proposal.title" /></h2>
-    
+
     <@u.text initiative.proposal!"" />
+
+    <#if (initiative.extraInfo)?has_content>
+        <h2><@u.message "initiative.extraInfo.title" /></h2>
+        <@u.text initiative.extraInfo!"" />
+    </#if>
 </#macro>
 
 <#-- 
@@ -22,11 +27,18 @@
  *
  * @param initiative is initiative
 -->
-<#macro initiativeAuthor initiative>
-     <#if initiative.showName>
-        <h2><@u.message "initiative.author.title" /></h2>
-        <p>${initiative.authorName!""}</p>
+<#macro initiativeAuthor publicAuthors>
+    <h2><@u.message "initiative.author.title" /></h2>
+
+    <#if (publicAuthors.publicNames > 0)>
+        <#list publicAuthors.publicAuthors as publicAuthor>
+            <p>${publicAuthor.name} - ${publicAuthor.municipality.getName(locale)}</p>
+        </#list>
+    <#else>
+        <p>Ei julkisia hahmoja</p>
     </#if>
+
+    <p>Lisäksi <b>${publicAuthors.publicNames} kpl</b> salaperäisiä hahmoja
 </#macro>
 
 <#-- 
@@ -36,12 +48,14 @@
  *
  * @param contactInfo is author.contactInfo
 -->
-<#macro initiativeContactInfo contactInfo>
+<#macro initiativeContactInfo authorList>
     <h2 class="inline-style"><@u.message "initiative.contactinfo.title" /></h2><span class="push"><@u.message "initiative.contactinfo.notPublic" /></span>
-    <p>${contactInfo.name!""}<br />
-    ${contactInfo.email!""}<br />
-    <#if contactInfo.address?? && contactInfo.address != ""><#noescape>${contactInfo.address?replace('\n','<br/>')!""}</#noescape><br /></#if>
-    ${contactInfo.phone!""}</p>
+    <#list authorList as a>
+        <p>${a.contactInfo.name!""}, ${a.municipality.getName(locale)}<br />
+        ${a.contactInfo.email!""}<br />
+        <#if a.contactInfo.address?? && a.contactInfo.address != ""><#noescape>${a.contactInfo.address?replace('\n','<br/>')!""}</#noescape><br /></#if>
+        ${a.contactInfo.phone!""}</p>
+    </#list>
 </#macro>
 
 <#-- 

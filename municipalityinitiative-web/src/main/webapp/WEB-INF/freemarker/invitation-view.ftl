@@ -167,9 +167,9 @@
         <div class="initiative-content-row">
             <@e.initiativeView initiative />
         </div>
-        <#-- TODO: Show contact info here -->
+        <#-- TODO: Maybe show contact info here ?-->
         <div class="initiative-content-row last">
-            <@e.initiativeAuthor initiative />
+            <@e.initiativeAuthor publicAuthors />
         </div>
     </div>
 

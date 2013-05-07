@@ -252,7 +252,6 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
         thrown.expect(NotFoundException.class);
         authorService.getPrefilledAuthorInvitationConfirmDto(initiativeId, "töttöröö");
-
     }
 
     private AuthorInvitation createExpiredInvitation(Long initiativeId) {

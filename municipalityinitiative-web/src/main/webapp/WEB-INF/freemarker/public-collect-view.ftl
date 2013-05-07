@@ -16,7 +16,14 @@
 -->
 <@l.main "page.initiative.public" initiative.name!"">
 
-    <h1 class="name">${initiative.name!""}</h1>
+    <h1 class="name">
+        ${initiative.name!""}
+        <#if hasManagementRightForInitiative>
+            <a href="${urls.management(initiative.id)}">Siirry hallintasivulle</a>
+        </#if>
+    </h1>
+
+
     
     <div class="municipality">${initiative.municipality.getName(locale)}</div>
     
@@ -28,7 +35,7 @@
             <@e.initiativeView initiative />
         </div>
         <div class="initiative-content-row last">
-            <@e.initiativeAuthor initiative />
+            <@e.initiativeAuthor authors />
         </div>
     </div>
     

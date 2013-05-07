@@ -465,8 +465,6 @@ public class JdbcInitiativeDaoTest {
         Initiative updated = initiativeDao.getById(initiativeId, TestHelper.TEST_MANAGEMENT_HASH);
         assertThat(updated.getExtraInfo(), is(extraInfo));
 
-        // TODO: Assert extraInfo
-
     }
 
     private static InitiativeSearch initiativeSearch() {

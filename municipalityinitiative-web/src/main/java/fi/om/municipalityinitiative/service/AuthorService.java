@@ -12,6 +12,7 @@ import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.ui.AuthorInvitationUIConfirmDto;
+import fi.om.municipalityinitiative.newdto.ui.Authors;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newweb.AuthorInvitationUICreateDto;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
@@ -36,6 +37,9 @@ public class AuthorService {
 
     @Resource
     EmailService emailService;
+
+    @Resource
+    UserService userService;
 
     @Transactional(readOnly = false)
     public void createAuthorInvitation(Long initiativeId, LoginUserHolder loginUserHolder, AuthorInvitationUICreateDto uiCreateDto) {
@@ -71,7 +75,7 @@ public class AuthorService {
     }
 
     @Transactional(readOnly = false)
-    public void confirmAuthorInvitation(Long initiativeId, AuthorInvitationUIConfirmDto confirmDto) {
+    public String confirmAuthorInvitation(Long initiativeId, AuthorInvitationUIConfirmDto confirmDto) {
 
         ManagementSettings managementSettings = ManagementSettings.of(initiativeDao.getByIdWithOriginalAuthor(initiativeId));
         SecurityUtil.assertAllowance("Accept invitation", managementSettings.isAllowInviteAuthors());
@@ -91,13 +95,14 @@ public class AuthorService {
                 authorDao.updateAuthorInformation(authorId, confirmDto.getContactInfo());
                 authorDao.deleteAuthorInvitation(initiativeId, confirmDto.getConfirmCode());
                 emailService.sendAuthorConfirmedtInvitation(initiativeDao.getByIdWithOriginalAuthor(initiativeId), invitation.getEmail(), managementHash);
-                return;
+                return managementHash;
 
             }
         }
         throw new NotFoundException("Invitation with ", "initiative: " + initiativeId + ", invitation: " + confirmDto.getConfirmCode());
     }
 
+    @Transactional(readOnly = false)
     public AuthorInvitationUIConfirmDto getPrefilledAuthorInvitationConfirmDto(Long initiativeId, String confirmCode) {
         AuthorInvitation authorInvitation = authorDao.getAuthorInvitation(initiativeId, confirmCode);
 
@@ -112,6 +117,10 @@ public class AuthorService {
         return confirmDto;
     }
 
+    @Transactional(readOnly = true)
+    public Authors findAuthors(Long initiativeId) {
+        return new Authors(authorDao.findAuthors(initiativeId));
+    }
 
     private static void assertNotRejectedOrExpired(AuthorInvitation invitation) {
         if (invitation.isExpired()) {
