@@ -12,6 +12,7 @@ import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.ui.AuthorInvitationUIConfirmDto;
+import fi.om.municipalityinitiative.newdto.ui.Authors;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newweb.AuthorInvitationUICreateDto;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
@@ -98,6 +99,7 @@ public class AuthorService {
         throw new NotFoundException("Invitation with ", "initiative: " + initiativeId + ", invitation: " + confirmDto.getConfirmCode());
     }
 
+    @Transactional(readOnly = false)
     public AuthorInvitationUIConfirmDto getPrefilledAuthorInvitationConfirmDto(Long initiativeId, String confirmCode) {
         AuthorInvitation authorInvitation = authorDao.getAuthorInvitation(initiativeId, confirmCode);
 
@@ -112,6 +114,10 @@ public class AuthorService {
         return confirmDto;
     }
 
+    @Transactional(readOnly = true)
+    public Authors findAuthors(Long initiativeId) {
+        return new Authors(authorDao.findAuthors(initiativeId));
+    }
 
     private static void assertNotRejectedOrExpired(AuthorInvitation invitation) {
         if (invitation.isExpired()) {
