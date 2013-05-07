@@ -6,20 +6,56 @@
 
 <#escape x as x?html>
 
+<#assign title><@u.message "email.author.invitation.title" /></#assign>
+<#assign url = urls.invitation(initiative.id, authorInvitation.confirmationCode) />
+<#assign urlSv = urls.alt().invitation(initiative.id, authorInvitation.confirmationCode) />
 
-<#assign title><@u.message "email.author.invitation.subject" /></#assign>
 <@l.emailHtml template="author-invitation" title=title footer=false>
 
+    <#-- Finnish part -->
+
+    <@b.mainContentBlock title> 
+        <@b.initiativeDetails type=type showProposal=false />
+    
+        <p style="${pBothMargins!""}"><@u.message "email.author.invitation.description" /></p>
+        
+        <#assign label><@u.message "email.invitationViewLink" /></#assign>
+        <@u.button label url "green" />
+        
+        <p style="${pBothMargins!""}"><@u.message "email.author.invitation.expiration" /></p>
+    </@b.mainContentBlock>
+    
     <@u.spacer "15" />
     
-    <@b.contentBlock type>
+    <@b.emailFooter type />
+    
+    <@u.spacer "15" />
+    
+    <#-- Swedish part -->
+    
+    <#global switchLocale = altLocale />
 
-        <#assign url = urls.invitation(initiative.id, authorInvitation.confirmationCode) />
-        <#assign urlSv = urls.alt().invitation(initiative.id, authorInvitation.confirmationCode) />
-        <p style="${pBothMargins!""}"><@u.message "email.invitationViewLink" /></p>
-        <p style="${pBothMargins!""} ${smallFont!""}"><@u.link url url /></p>
-        <p style="${pBothMargins!""} ${smallFont!""}"><@u.link urlSv urlSv /></p>
-    </@b.contentBlock>
+    <#assign title><@u.message "email.author.invitation.title" /></#assign>
+    
+    <@b.mainContentBlock title>
+        <@b.initiativeDetails type=type showProposal=false />
+    
+        <p style="${pBothMargins!""}"><@u.message "email.author.invitation.description" /></p>
+        
+        <#assign label><@u.message "email.invitationViewLink" /></#assign>
+        <@u.button label urlSv "green" />
+        
+        <p style="${pBothMargins!""}"><@u.message "email.author.invitation.expiration" /></p>
+    </@b.mainContentBlock>
+    
+    <@u.spacer "15" />
+    
+    <@b.emailFooter type />
+    
+    <@u.spacer "15" />
+    
+    <#-- Switch to default locale -->
+    <#global switchLocale = locale />
 
 </@l.emailHtml>
 

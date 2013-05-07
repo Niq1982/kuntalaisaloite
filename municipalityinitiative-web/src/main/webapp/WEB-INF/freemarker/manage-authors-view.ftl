@@ -51,7 +51,7 @@
 
     <div class="view-block last">
         <div class="initiative-content-row">
-            <h2><@u.message "invitations.title" /> (vanhenevat minuutissa)</h2>
+            <h2><@u.message "invitations.title" /> (vanhenevat tunnissa)</h2>
 
             <#list invitations as i>
                 <div class="author cf ${i.rejected?string("rejected","")} ${i_has_next?string("","last")}">
@@ -102,7 +102,7 @@
                     </div>
 
                     <div class="input-block-content no-top-margin">
-                        <button type="submit" name="${UrlConstants.ACTION_ACCEPT_INITIATIVE}" class="small-button"><span class="small-icon add"><@u.message "action.sendInvitation" /></span></button>
+                        <button type="submit" name="${UrlConstants.ACTION_ACCEPT_INITIATIVE}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.sendInvitation" /></span></button>
                         <a href="${springMacroRequestContext.requestUri}" class="push ${validationError?string("","js-btn-close-block hidden")}"><@u.message "action.cancel" /></a>
                     </div>
                     <br/><br/>
