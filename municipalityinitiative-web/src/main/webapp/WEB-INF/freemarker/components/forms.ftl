@@ -122,7 +122,7 @@
     <#else>
         <#assign isSelected = checked />
     </#if>
-    <input type="hidden" name="_${id}" value="on" />   
+    <input type="hidden" name="_${id}" value="on" />
     
     <@showError />
      
@@ -141,12 +141,18 @@
  * @param required generates an icon and can be used in JS-validation
  * @param attributes an additional string of arbitrary tags or text to be included within the HTML tag itself
 -->
-<#macro radiobutton path options required="" attributes="" header=true>
+<#macro radiobutton path options required="" attributes="" header=true  key="">
     <@spring.bind path />  
+    
+     <#if key == "">
+        <#assign labelKey = fieldLabelKey(path) />
+    <#else>
+        <#assign labelKey = key />
+    </#if>
  
     <#if header>
         <div class="input-header">
-            <@u.message path /><#if required != ""> <@u.icon type="required" size="small" /></#if>
+            <@u.message labelKey /><#if required != ""> <@u.icon type="required" size="small" /></#if>
         </div>
     </#if>
     
@@ -174,11 +180,11 @@
  *        or CSS styles or size
  * @param preSelected the predefined value for the select
 -->
-<#macro municipalitySelect path options required="" cssClass="" attributes="" preSelected="" showLabel=true defaultOption="initiative.chooseMunicipality" allowSingleDeselect=false>
+<#macro municipalitySelect path options required="" cssClass="" attributes="" preSelected="" showLabel=true defaultOption="initiative.chooseMunicipality" allowSingleDeselect=false key="">
     <@spring.bind path />
     
     <#if showLabel>
-        <@formLabel path required false />
+        <@formLabel path required false key />
     </#if>
     
     <@showError />

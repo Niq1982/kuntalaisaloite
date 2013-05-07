@@ -32,7 +32,7 @@ public class ContactInfo {
     @Size(max = InitiativeConstants.CONTACT_ADDRESS_MAX)
     private String address;
 
-    private boolean showName;
+    private boolean showName = true;
 
     public ContactInfo(ContactInfo original) {
         this.name = original.name;

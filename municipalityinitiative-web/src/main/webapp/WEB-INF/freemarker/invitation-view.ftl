@@ -14,7 +14,10 @@
  * pageTitle = initiative.name if exists, otherwise empty string
 -->
 <@l.main "page.initiative.public" initiative.name!"">
-
+        
+    <#-- Bind form for detecting validation errors -->
+    <@spring.bind "authorInvitation.*" />
+    <#assign validationError = spring.status.error />
 
     <#--
      * invitationAcceptHtml
@@ -25,17 +28,13 @@
      * NOSCRIPT-users gets confirmation form by request parameter 'invitation-decline'.
     -->
     <#if !RequestParameters['invitation-decline']?? && !RequestParameters['invitation-accept']??>
-        <div class="msg-block">
+        <div class="msg-block ${validationError?string("hidden","")}">
             <h2>Kutsu vastuuhenkilöksi</h2>
             
             <p>Ohjetta vastuuhenkilöistä Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut erat purus, mattis eget tempor vel, sodales et ipsum. Morbi enim orci, lobortis sagittis volutpat at, placerat in nisi.</p>
             
-            <form action="${springMacroRequestContext.requestUri}" method="POST" >
-                <input type="hidden" name="invitation" value="${invitationCode!""}"/>
-        
-                <a href="?invitation-accept=confirm" class="small-button green green save-and-send js-accept-invitation"><span class="small-icon save-and-send"><@u.message "invitation.accept" /></span></a>
-                <a href="?invitation-decline=confirm" title="<@u.message "invitation.decline" />" class="small-button gray push js-decline-invitation"><span class="small-icon cancel"><@u.message "invitation.decline" /></span></a>
-            </form>
+            <a href="?invitation=${authorInvitation.confirmCode!""}&invitation-accept=confirm" class="small-button green green save-and-send js-accept-invitation"><span class="small-icon save-and-send"><@u.message "invitation.accept" /></span></a>
+            <a href="?invitation=${authorInvitation.confirmCode!""}&invitation-decline=confirm" title="<@u.message "invitation.decline" />" class="small-button gray push js-decline-invitation"><span class="small-icon cancel"><@u.message "invitation.decline" /></span></a>
         </div>
     </#if>
     
@@ -54,9 +53,10 @@
             
             <form action="${springMacroRequestContext.requestUri}" method="POST" >
                 <input type="hidden" name="CSRFToken" value="${CSRFToken!}"/>
-                <input type="hidden" name="invitation" value="${invitationCode!""}"/>
+                <input type="hidden" name="invitation" value="${authorInvitation.confirmCode!""}"/>
+                <input type="hidden" name="action" value="confirm-decline-invitation"/>
                 <button type="submit" name="#" value="<@u.message "invitation.decline" />" class="small-button gray cancel"><span class="small-icon cancel"><@u.message "invitation.decline" /></span></button>
-                <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
+                <a href="?invitation=${authorInvitation.confirmCode!""}" class="push close"><@u.message "action.cancel" /></a>
             </form>
         
         </@compress>
@@ -86,7 +86,7 @@
         
             <@u.systemMessage path="invitation.accept.description" type="info" showClose=false />
         
-            <@u.errorsSummary path="authorInvitation.*" prefix="authorInvitation."/>
+            <@u.errorsSummary path="authorInvitation.*" prefix="initiative."/>
 
             <form action="${springMacroRequestContext.requestUri}" method="POST" >
                 <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
@@ -99,23 +99,32 @@
                     </div>
                     
                     <div class="column col-1of2 last">
-                        <#--<@f.municipalitySelect path="authorInvitation.initiativeMunicipality" options=municipalities required="required" cssClass="municipality-select" />-->
-                    
-                        <label for="municipality" class="input-header">
-                            Valitse kotikuntasi <span class="icon-small required trigger-tooltip"></span>
-                        </label>
-                        <select name="homeMunicipality" id="municipality"  class="chzn-select municipality-select" data-initiative-municipality="" data-placeholder="Valitse kunta" >
-                            <option value=""></option>
-                                <option value="1">Helsinki</option>
-                                <option value="4">Hämeenlinna</option>
-                                <option value="6">Kirkkonummi</option>
-                                <option value="2">Tampere</option>
-                                <option value="7">Turku</option>
-                                <option value="3">Tuusula</option>
-                                <option value="5">Vantaa</option>
-                        </select>
+                        <@f.municipalitySelect path="authorInvitation.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" key="initiative.homeMunicipality" />
                     </div>
                     <br class="clear" />
+                    
+                    <div id="municipalMembership" class="js-hide">
+                        <div class="input-block-content hidden">
+                            <#assign href="#" />
+                            <@u.systemMessage path="initiative.municipality.notEqual" type="info" showClose=false args=[href] />
+                        </div>
+                        <div class="input-block-content">
+                            <@f.radiobutton path="authorInvitation.municipalMembership" required="required" options={
+                                "community":"initiative.municipalMembership.community",
+                                "company":"initiative.municipalMembership.company",
+                                "property":"initiative.municipalMembership.property",
+                                "none":"initiative.municipalMembership.none"
+                            } attributes="" key="initiative.municipalMembership" />
+                        </div>
+                        
+                        <div class="input-block-content is-not-member no-top-margin js-hide hidden">
+                            <@u.systemMessage path="warning.initiative.notMember" type="warning" showClose=false />
+                        </div>
+                    </div>
+                    
+                    <div class="input-block-content">
+                        <@f.formCheckbox path="authorInvitation.contactInfo.showName" checked=true key="contactInfo.showName" />
+                    </div>
                     
                     <div class="input-block-content">
                         <div class="input-header">
@@ -130,17 +139,20 @@
                 
                     <div class="input-block-content">
                         <button type="submit" name="" value="<@u.message "invitation.accept.confirm" />" class="small-button green save-and-send"><span class="small-icon save-and-send"><@u.message "invitation.accept" /></span></button>
-                        <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
+                        <a href="?invitation=${authorInvitation.confirmCode!""}" class="push close"><@u.message "action.cancel" /></a>
                     </div>
             </form>                    
         </@compress>
     </#assign>
-    
-    <#if RequestParameters['invitation-accept']?? && RequestParameters['invitation-accept'] == "confirm">
-        <div class="msg-block">
-            <h2><@u.message "invitation.accept.confirm.title" /></h2>
-            <#noescape>${invitationAcceptHtml}</#noescape>
-        </div>
+
+    <#if validationError || RequestParameters['invitation-accept']?? && RequestParameters['invitation-accept'] == "confirm">
+        <noscript>
+            <div class="msg-block">
+                <h2><@u.message "invitation.accept.confirm.title" /></h2>
+                <#noescape>${invitationAcceptHtml}</#noescape>
+                <br class="clear" />
+            </div>
+        </noscript>
     </#if>
 
 
