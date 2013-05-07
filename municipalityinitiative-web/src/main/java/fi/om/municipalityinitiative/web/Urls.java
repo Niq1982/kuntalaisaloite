@@ -371,7 +371,7 @@ public final class Urls {
     }
 
     public String invitation(Long initiativeId, String invitationCode) {
-        return getLocalizedPageUrl(INVITATION_FI, INVITATION_SV) + "?" + PARAM_INVITATION_CODE + "=" + invitationCode;
+        return getLocalizedPageUrl(INVITATION_FI, INVITATION_SV).replace(ID_PARAMETER, initiativeId.toString()) + "?" + PARAM_INVITATION_CODE + "=" + invitationCode;
     }
 
     public String confirmAcceptInvitation(Long initiativeId) {
