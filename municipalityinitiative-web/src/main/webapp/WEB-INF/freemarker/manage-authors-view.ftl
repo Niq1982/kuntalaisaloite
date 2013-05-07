@@ -51,7 +51,7 @@
 
     <div class="view-block last">
         <div class="initiative-content-row">
-            <h2><@u.message "invitations.title" /> (vanhenevat minuutissa)</h2>
+            <h2><@u.message "invitations.title" /> (vanhenevat tunnissa)</h2>
 
             <#list invitations as i>
                 <div class="author cf ${i.rejected?string("rejected","")} ${i_has_next?string("","last")}">
