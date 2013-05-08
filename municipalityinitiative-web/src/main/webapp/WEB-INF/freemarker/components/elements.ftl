@@ -28,16 +28,20 @@
  * @param initiative is initiative
 -->
 <#macro initiativeAuthor publicAuthors>
-    <h2><@u.message "initiative.author.title" /></h2>
+    <h3><@u.message key="initiative.authors.title" args=[publicAuthors.publicNames+publicAuthors.privateNames] /></h3>
 
     <#if (publicAuthors.publicNames > 0)>
         <#list publicAuthors.publicAuthors as publicAuthor>
-            <p>${publicAuthor.name} - ${publicAuthor.municipality.getName(locale)}</p>
+            <div class="column ${((publicAuthor_index + 1) % 3 == 0)?string("last","")}">
+                <h4 class="header">${publicAuthor.name}</h4>
+                <p>${publicAuthor.municipality.getName(locale)}</p>
+            </div>
+            <#if ((publicAuthor_index + 1) % 3 == 0)><br class="clear" /></#if>
         </#list>
     <#else>
         <p>Ei julkisia hahmoja</p>
     </#if>
-
+    <br class="clear" />
     <p>Lisäksi <b>${publicAuthors.privateNames} kpl</b> salaperäisiä hahmoja
 </#macro>
 
@@ -51,12 +55,17 @@
 <#macro initiativeContactInfo authorList>
     <h2 class="inline-style"><@u.message "initiative.contactinfo.title" /></h2><span class="push"><@u.message "initiative.contactinfo.notPublic" /></span>
     <#list authorList as a>
-        <p>${a.contactInfo.name!""}, ${a.municipality.getName(locale)}<br />
-        ${a.contactInfo.email!""}<br />
-        <#if a.contactInfo.address?? && a.contactInfo.address != ""><#noescape>${a.contactInfo.address?replace('\n','<br/>')!""}</#noescape><br /></#if>
-        ${a.contactInfo.phone!""}</p>
+        <div class="column ${((a_index + 1) % 3 == 0)?string("last","")}">
+            <p>${a.contactInfo.name!""}, ${a.municipality.getName(locale)}<br />
+            ${a.contactInfo.email!""}<br />
+            <#if a.contactInfo.address?? && a.contactInfo.address != ""><#noescape>${a.contactInfo.address?replace('\n','<br/>')!""}</#noescape><br /></#if>
+            ${a.contactInfo.phone!""}</p>
+        </div>
+        <#if ((a_index + 1) % 3 == 0)><br class="clear" /></#if>
     </#list>
 </#macro>
+
+
 
 <#-- 
  * stateInfo
@@ -91,7 +100,10 @@
  *
  * NOTE: Do we need this block when VETUMA-initiatives are possible
 -->
+
 <#macro participantCounts>
+[EMPTY MACRO]
+<#--
     <div class="top-margin cf">
         <div class="column col-1of2">
             <p><@u.message "participantCount.franchise.total"/><br />
@@ -110,7 +122,7 @@
             </#if>
         </div>
     </div>
-    
+-->
 </#macro>
 
 </#escape> 

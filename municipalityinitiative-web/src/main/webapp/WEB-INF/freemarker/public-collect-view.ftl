@@ -22,8 +22,6 @@
             <a href="${urls.management(initiative.id)}">Siirry hallintasivulle</a>
         </#if>
     </h1>
-
-
     
     <div class="municipality">${initiative.municipality.getName(locale)}</div>
     
@@ -31,11 +29,8 @@
 
     <#-- VIEW BLOCKS -->
     <div class="view-block public first">
-        <div class="initiative-content-row">
-            <@e.initiativeView initiative />
-        </div>
         <div class="initiative-content-row last">
-            <@e.initiativeAuthor authors />
+            <@e.initiativeView initiative />
         </div>
     </div>
     
@@ -110,9 +105,15 @@
      * Show participant counts and participate form
     -->
     <div id="participants" class="view-block public last">
+        <h2><@u.message key="initiative.people.title" args=[authors.publicNames+authors.privateNames+participantCount.total] /></h2>
+    
+        <div class="initiative-content-row">
+            <@e.initiativeAuthor authors />
+        </div>
+    
         <div class="initiative-content-row last">
 
-            <h2><@u.message "participants.title" /></h2>
+            <h3><@u.message key="initiative.participants.title" args=[participantCount.total] /></h3>
             
             <div class="participants-block">
                 <span class="user-count-total">${participantCount.total!""}</span>

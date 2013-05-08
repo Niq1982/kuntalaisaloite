@@ -163,7 +163,6 @@
                 <#else>
                     <div class="system-msg msg-info">
                         <p><@u.message "collecting.info" /></p>
-                        <@u.messageHTML key="collecting.info.2" args=[urls.edit(initiative.id)] />
                     </div>
                 </#if>
             
