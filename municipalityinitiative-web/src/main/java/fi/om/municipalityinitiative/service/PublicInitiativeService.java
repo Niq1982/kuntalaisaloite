@@ -178,7 +178,7 @@ public class PublicInitiativeService {
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
         initiativeDao.updateInitiativeType(initiativeId, InitiativeType.COLLABORATIVE);
         Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
-        emailService.sendStatusEmail(initiative,initiative.getAuthor().getContactInfo().getEmail(), municipalityEmail(initiative), EmailMessageType.PUBLISHED_COLLECTING);
+        emailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityEmail(initiative), EmailMessageType.PUBLISHED_COLLECTING);
     }
 
     private String municipalityEmail(Initiative initiative) {
@@ -195,7 +195,7 @@ public class PublicInitiativeService {
         initiativeDao.markInitiativeAsSent(initiativeId);
         initiativeDao.updateSentComment(initiativeId, sentComment);
         Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
-        emailService.sendStatusEmail(initiative,initiative.getAuthor().getContactInfo().getEmail(), municipalityEmail(initiative), EmailMessageType.SENT_TO_MUNICIPALITY);
+        emailService.sendStatusEmail(initiative,authorDao.getAuthorEmails(initiativeId), municipalityEmail(initiative), EmailMessageType.SENT_TO_MUNICIPALITY);
         emailService.sendSingleToMunicipality(initiative, municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), locale);
     }
 
@@ -220,7 +220,7 @@ public class PublicInitiativeService {
         List<Participant> participants = participantDao.findAllParticipants(initiativeId);
         String municipalityEmail = municipalityEmail(initiative);
         emailService.sendCollaborativeToMunicipality(initiative, participants, municipalityEmail, locale);
-        emailService.sendStatusEmail(initiative, initiative.getAuthor().getContactInfo().getEmail(), municipalityEmail, EmailMessageType.SENT_TO_MUNICIPALITY);
+        emailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityEmail, EmailMessageType.SENT_TO_MUNICIPALITY);
     }
 
     @Transactional(readOnly = false)

@@ -42,7 +42,7 @@ public class MailSendingEmailService implements EmailService {
 
         emailMessageConstructor
                 .fromTemplate(TEMP_INVITATION_ACCEPTANCE)
-                .withSendTo(email)
+                .addRecipient(email)
                 .withSubject(messageSource.getMessage("email.status.info." + EmailMessageType.INVITATION_ACCEPTED.name() + ".subject", toArray(), Locales.LOCALE_FI))
                 .withDataMap(dataMap)
                 .send();
@@ -57,7 +57,7 @@ public class MailSendingEmailService implements EmailService {
 
         emailMessageConstructor
                 .fromTemplate(AUTHOR_INVITATION)
-                .withSendTo(authorInvitation.getEmail())
+                .addRecipient(authorInvitation.getEmail())
                 .withSubject(messageSource.getMessage("email.author.invitation.subject", toArray(initiative.getName()), locale))
                 .withDataMap(dataMap)
                 .send();
@@ -67,8 +67,8 @@ public class MailSendingEmailService implements EmailService {
     public void sendSingleToMunicipality(Initiative initiative, String municipalityEmail, Locale locale) {
         emailMessageConstructor
                 .fromTemplate(NOT_COLLECTABLE_TEMPLATE)
-                //.withSendTo(municipalityEmail)
-                .withSendTo(initiative.getAuthor().getContactInfo().getEmail())
+                //.addRecipient(municipalityEmail)
+                .addRecipient(initiative.getAuthor().getContactInfo().getEmail())
                 .withSubject(messageSource.getMessage("email.not.collectable.municipality.subject", toArray(initiative.getName()), locale))
                 .withDataMap(toDataMap(initiative, locale))
                 .send();
@@ -78,8 +78,8 @@ public class MailSendingEmailService implements EmailService {
     public void sendCollaborativeToMunicipality(Initiative initiative, List<Participant> participants, String municipalityEmail, Locale locale) {
         emailMessageConstructor
                 .fromTemplate(COLLABORATIVE_TO_MUNICIPALITY)
-                // .withSendTo(municipalityEmail)
-                .withSendTo(initiative.getAuthor().getContactInfo().getEmail())
+                // .addRecipient(municipalityEmail)
+                .addRecipient(initiative.getAuthor().getContactInfo().getEmail())
                 .withSubject(messageSource.getMessage("email.not.collectable.municipality.subject", toArray(initiative.getName()), locale))
                 .withDataMap(toDataMap(initiative, locale))
                 .withAttachment(initiative, participants)
@@ -87,7 +87,7 @@ public class MailSendingEmailService implements EmailService {
     }
 
     @Override
-    public void sendStatusEmail(Initiative initiative, String sendTo, String municipalityEmail, EmailMessageType emailMessageType) {
+    public void sendStatusEmail(Initiative initiative, List<String> sendTo, String municipalityEmail, EmailMessageType emailMessageType) {
 
         Locale locale = Locales.LOCALE_FI;
 
@@ -99,7 +99,7 @@ public class MailSendingEmailService implements EmailService {
 
         emailMessageConstructor
                 .fromTemplate(STATUS_INFO_TEMPLATE)
-                .withSendTo(sendTo)
+                .addRecipients(sendTo)
                 .withSubject(messageSource.getMessage("email.status.info." + emailMessageType.name() + ".subject", toArray(), locale))
                 .withDataMap(dataMap)
                 .send();
@@ -110,7 +110,7 @@ public class MailSendingEmailService implements EmailService {
     public void sendPrepareCreatedEmail(Initiative initiative, String authorEmail, Locale locale) {
         emailMessageConstructor
                 .fromTemplate(INITIATIVE_PREPARE_VERIFICATION_TEMPLATE)
-                .withSendTo(authorEmail)
+                .addRecipient(authorEmail)
                 .withSubject(messageSource.getMessage("email.prepare.create.subject", toArray(), locale))
                 .withDataMap(toDataMap(initiative, locale))
                 .send();
@@ -122,7 +122,7 @@ public class MailSendingEmailService implements EmailService {
         emailMessageConstructor
                 .fromTemplate(NOTIFICATION_TO_MODERATOR)
                 //.withSendToModerator()
-                .withSendTo(initiative.getAuthor().getContactInfo().getEmail())
+                .addRecipient(initiative.getAuthor().getContactInfo().getEmail())
                 .withSubject(messageSource.getMessage("email.notification.to.moderator.subject", toArray(initiative.getName()), locale))
                 .withDataMap(toDataMap(initiative, locale))
                 .send();
@@ -135,7 +135,7 @@ public class MailSendingEmailService implements EmailService {
         dataMap.put("confirmationCode", confirmationCode);
         emailMessageConstructor
                 .fromTemplate(PARTICIPATION_CONFIRMATION)
-                .withSendTo(participantEmail)
+                .addRecipient(participantEmail)
                 .withSubject(messageSource.getMessage("email.participation.confirmation.subject", toArray(), locale))
                 .withDataMap(dataMap)
                 .send();
