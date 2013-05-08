@@ -6,7 +6,6 @@ import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,7 +70,7 @@ public class JdbcAuthorDaoTest {
     public void login_as_author_returns_authors_initiative() {
         Long collectableAccepted = testHelper.createCollectableAccepted(testMunicipality);
 
-        Set<Long> ids = authorDao.loginAndGetAuthorsInitiatives(TestHelper.TEST_MANAGEMENT_HASH);
+        Set<Long> ids = authorDao.loginAndGetAuthorsInitiatives(TestHelper.PREVIOUS_TEST_MANAGEMENT_HASH);
 
         assertThat(ids, hasSize(1));
         assertThat(ids, contains(collectableAccepted));
@@ -81,7 +80,7 @@ public class JdbcAuthorDaoTest {
     public void get_author_information() {
         Long id = testHelper.createSingleSent(testMunicipality);
 
-        Author author = authorDao.getAuthorInformation(id, TestHelper.TEST_MANAGEMENT_HASH);
+        Author author = authorDao.getAuthorInformation(id, TestHelper.PREVIOUS_TEST_MANAGEMENT_HASH);
         assertThat(author.getContactInfo().getAddress(), is(TestHelper.DEFAULT_AUTHOR_ADDRESS));
         assertThat(author.getContactInfo().getName(), is(TestHelper.DEFAULT_AUTHOR_NAME));
         assertThat(author.getContactInfo().getEmail(), is(TestHelper.DEFAULT_AUTHOR_EMAIL));

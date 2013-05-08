@@ -5,13 +5,9 @@ import com.mysema.query.sql.dml.SQLInsertClause;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Path;
 import fi.om.municipalityinitiative.newdto.LoginUserHolder;
-import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.service.AccessDeniedException;
 import fi.om.municipalityinitiative.sql.*;
-import fi.om.municipalityinitiative.util.InitiativeState;
-import fi.om.municipalityinitiative.util.InitiativeType;
-import fi.om.municipalityinitiative.util.Maybe;
-import fi.om.municipalityinitiative.util.Membership;
+import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +23,7 @@ import static org.mockito.Mockito.stub;
 
 public class TestHelper {
 
-    public static final String TEST_MANAGEMENT_HASH = "0000000000111111111122222222223333333333";
+    public static String PREVIOUS_TEST_MANAGEMENT_HASH;
     public static final String DEFAULT_INITIATIVE_NAME = "Initiative name";
     public static final String DEFAULT_PROPOSAL = "Proposal";
     public static final InitiativeState DEFAULT_STATE = InitiativeState.DRAFT;
@@ -161,12 +157,13 @@ public class TestHelper {
                 .set(QParticipant.participant.membershipType, initiativeDraft.municipalityMembership)
                 .executeWithKey(QParticipant.participant.id);
 
+        PREVIOUS_TEST_MANAGEMENT_HASH = RandomHashGenerator.randomString(40);
         lastAuthorId = queryFactory.insert(QAuthor.author)
                 .set(QAuthor.author.name, initiativeDraft.authorName)
                 .set(QAuthor.author.address, initiativeDraft.authorAddress)
                 .set(QAuthor.author.phone, initiativeDraft.authorPhone)
                 .set(QAuthor.author.participantId, lastParticipantId)
-                .set(QAuthor.author.managementHash, TEST_MANAGEMENT_HASH)
+                .set(QAuthor.author.managementHash, PREVIOUS_TEST_MANAGEMENT_HASH)
                 .executeWithKey(QAuthor.author.id);
         stub(authorLoginUserHolder.getAuthorId()).toReturn(lastAuthorId);
 

@@ -8,7 +8,6 @@ import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeUIUpdateDto;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
@@ -405,7 +404,7 @@ public class JdbcInitiativeDaoTest {
     public void get_returns_initiative_if_given_managementHash_is_correct() {
         Long id = testHelper.createSingleSent(testMunicipality.getId());
 
-        Initiative initiative = initiativeDao.getById(id, TestHelper.TEST_MANAGEMENT_HASH);
+        Initiative initiative = initiativeDao.getById(id, TestHelper.PREVIOUS_TEST_MANAGEMENT_HASH);
         assertThat(initiative.getId(), is(id));
         ReflectionTestUtils.assertNoNullFields(initiative);
     }
@@ -461,7 +460,7 @@ public class JdbcInitiativeDaoTest {
 
         String extraInfo = "Modified extra info";
         initiativeDao.updateExtraInfo(initiativeId, extraInfo);
-        Initiative updated = initiativeDao.getById(initiativeId, TestHelper.TEST_MANAGEMENT_HASH);
+        Initiative updated = initiativeDao.getById(initiativeId, TestHelper.PREVIOUS_TEST_MANAGEMENT_HASH);
         assertThat(updated.getExtraInfo(), is(extraInfo));
 
     }
