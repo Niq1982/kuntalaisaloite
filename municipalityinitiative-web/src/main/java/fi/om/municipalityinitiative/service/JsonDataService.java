@@ -90,7 +90,6 @@ public class JsonDataService {
         initiativeInfo.setMunicipality(ApiController.TAMPERE);
         initiativeInfo.setSentTime(Maybe.<LocalDate>fromNullable(null));
         initiativeInfo.setCreateTime(new LocalDate(2010, 1, 1));
-        initiativeInfo.setAuthorName("Teemu Teekkari");
 
         Author author = new Author();
         author.setContactInfo(new ContactInfo());

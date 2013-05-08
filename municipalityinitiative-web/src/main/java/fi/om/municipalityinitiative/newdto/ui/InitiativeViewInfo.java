@@ -26,10 +26,6 @@ public class InitiativeViewInfo {
         return initiative.getProposal();
     }
 
-    public String getAuthorName() {
-        return initiative.getAuthorName();
-    }
-
     public LocalDate getCreateTime() {
         return initiative.getCreateTime();
     }

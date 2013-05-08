@@ -56,10 +56,6 @@ public class Initiative {
         this.proposal = proposal;
     }
 
-    public void setAuthorName(String authorName) {
-        this.authorName = authorName;
-    }
-
     public LocalDate getCreateTime() {
         return createTime;
     }

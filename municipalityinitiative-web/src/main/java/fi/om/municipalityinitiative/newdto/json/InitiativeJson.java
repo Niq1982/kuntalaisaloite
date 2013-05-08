@@ -41,7 +41,7 @@ public class InitiativeJson {
     }
 
     public String getAuthorName() {
-        return Boolean.TRUE.equals(initiative.getAuthor().getContactInfo().isShowName()) ? initiative.getAuthorName() : null;
+        return Boolean.TRUE.equals(initiative.getAuthor().getContactInfo().isShowName()) ? initiative.getAuthor().getContactInfo().getName() : null;
     }
 
     @JsonSerialize(using=LocalDateJsonSerializer.class)
