@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.service;
 
+import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.FakeUserDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.UserDao;
@@ -14,6 +15,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import java.util.Collections;
+
 public class UserService {
 
     static final String LOGIN_USER_PARAMETER = "loginUser";
@@ -24,13 +27,21 @@ public class UserService {
     @Resource
     InitiativeDao initiativeDao;
 
+    @Resource
+    AuthorDao authorDao;
+
+    public void authorLogin(Long authorId, String managementHash) {
+
+    }
+
     public void login(String userName, String password, HttpServletRequest request) {
         request.getSession().setAttribute(LOGIN_USER_PARAMETER, userDao.getUser(userName, password));
     }
 
     public void login(Long initiativeId, String managementHash, HttpServletRequest request) {
-        request.getSession().setAttribute(LOGIN_INITIATIVE_PARAMETER, initiativeDao.getById(initiativeId, managementHash));
-        request.getSession().setAttribute(LOGIN_USER_PARAMETER, User.normalUser());
+        Initiative initiative = initiativeDao.getById(initiativeId, managementHash);
+        request.getSession().setAttribute(LOGIN_INITIATIVE_PARAMETER, initiative);
+        request.getSession().setAttribute(LOGIN_USER_PARAMETER, User.normalUser(Collections.singleton(initiative.getId())));
     }
 
     public LoginUserHolder getRequiredLoginUserHolder(HttpServletRequest request) {

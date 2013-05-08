@@ -32,10 +32,10 @@ public class LoginUserHolder {
     }
 
     private boolean hasNoManagementRightsForInitiative(Long initiativeId) {
-        return initiative.isNotPresent() || !initiative.get().getId().equals(initiativeId);
+        return !hasManagementRightsForInitiative(initiativeId);
     }
 
     public boolean hasManagementRightsForInitiative(Long initiativeId) {
-        return !hasNoManagementRightsForInitiative(initiativeId);
+        return user.hasRightToInitiative(initiativeId);
     }
 }
