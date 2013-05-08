@@ -135,6 +135,11 @@ public class AuthorService {
     public PublicAuthors findPublicAuthors(Long initiativeId) {
         return new PublicAuthors(authorDao.findAuthors(initiativeId));
     }
+    
+    @Transactional(readOnly = false)
+    public void rejectInvitation(Long initiativeId, String confirmCode) {
+        authorDao.rejectAuthorInvitation(initiativeId, confirmCode);
+    }
 
     private static void assertNotRejectedOrExpired(AuthorInvitation invitation) {
         if (invitation.isExpired()) {

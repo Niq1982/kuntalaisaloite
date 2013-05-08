@@ -25,7 +25,6 @@ public class MailSendingEmailServiceStatusTest extends MailSendingEmailServiceTe
 
         assertThat(getSingleRecipient(), is(CONTACT_EMAIL));
         assertThat(getSingleSentMessage().getSubject(), is("Kuntalaisaloitteesi on hyväksytty"));
-        assertThat(getMessageContent().html, containsString(urls.loginAuthor(INITIATIVE_ID, MANAGEMENT_HASH)));
         assertThat(getMessageContent().html, containsString(MODERATOR_COMMENT));
     }
 
@@ -46,7 +45,6 @@ public class MailSendingEmailServiceStatusTest extends MailSendingEmailServiceTe
 
         assertThat(getSingleRecipient(), is(CONTACT_EMAIL));
         assertThat(getSingleSentMessage().getSubject(), is("Kuntalaisaloitteesi on palautettu korjattavaksi"));
-        assertThat(getMessageContent().html, containsString(urls.loginAuthor(INITIATIVE_ID, MANAGEMENT_HASH)));
         assertThat(getMessageContent().html, containsString(MODERATOR_COMMENT));
     }
 

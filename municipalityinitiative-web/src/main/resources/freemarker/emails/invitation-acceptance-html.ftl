@@ -7,8 +7,6 @@
 <#escape x as x?html>
 
 <#assign title><@u.message "email.author.invitation.accepted.title" /></#assign>
-<#assign url = urls.loginAuthor(initiative.id, managementHash) />
-<#assign urlSv = urls.alt().loginAuthor(initiative.id, managementHash) />
 
 <@l.emailHtml template="author-invitation-accepted" title=title footer=false>
 
