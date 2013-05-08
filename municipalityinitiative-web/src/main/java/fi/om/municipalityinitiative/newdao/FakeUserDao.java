@@ -7,11 +7,11 @@ import java.util.Collections;
 
 public class FakeUserDao implements UserDao {
 
-    private static String FAKE_ADMIN_USERNAME = "admin";
-    private static String FAKE_ADMIN_PASSWORD = "admin";
+    private static final String FAKE_ADMIN_USERNAME = "admin";
+    private static final String FAKE_ADMIN_PASSWORD = "admin";
 
-    private static String FAKE_USER_USERNAME = "user";
-    private static String FAKE_USER_PASSWORD = "user";
+    private static final String FAKE_USER_USERNAME = "user";
+    private static final String FAKE_USER_PASSWORD = "user";
 
     @Override
     public User getUser(String userName, String password) {

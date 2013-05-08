@@ -15,6 +15,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
 
+import java.util.Set;
+
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -62,6 +65,16 @@ public class JdbcAuthorDaoTest {
     public void find_authors_returns_at_least_one() {
         Long initiativeId = testHelper.createCollectableAccepted(testMunicipality);
         assertThat(authorDao.findAuthors(initiativeId), hasSize(1));
+    }
+
+    @Test
+    public void login_as_author_returns_authors_initiative() {
+        Long collectableAccepted = testHelper.createCollectableAccepted(testMunicipality);
+
+        Set<Long> ids = authorDao.loginAndGetAuthorsInitiatives(testHelper.getLastAuthorId(), TestHelper.TEST_MANAGEMENT_HASH);
+
+        assertThat(ids, hasSize(1));
+        assertThat(ids, contains(collectableAccepted));
     }
 
     @Test

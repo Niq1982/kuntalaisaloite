@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.newdao;
 
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.expr.DateTimeExpression;
@@ -11,16 +12,15 @@ import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.service.PublicInitiativeService;
-import fi.om.municipalityinitiative.sql.QAuthor;
-import fi.om.municipalityinitiative.sql.QAuthorInvitation;
-import fi.om.municipalityinitiative.sql.QMunicipality;
-import fi.om.municipalityinitiative.sql.QParticipant;
+import fi.om.municipalityinitiative.sql.*;
 import org.joda.time.DateTime;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static fi.om.municipalityinitiative.newdao.JdbcInitiativeDao.assertSingleAffection;
 import static fi.om.municipalityinitiative.newdao.Mappings.PREPARATION_ID;
@@ -156,6 +156,21 @@ public class JdbcAuthorDao implements AuthorDao {
                     .where(municipalityInitiative.id.eq(initiativeId))
                     .orderBy(QParticipant.participant.id.desc())
                     .list(Mappings.authorMapping);
+    }
+
+    @Override
+    public Set<Long> loginAndGetAuthorsInitiatives(Long authorId, String managementHash) {
+        List<Long> list = queryFactory.from(QAuthor.author)
+                .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
+                .innerJoin(QParticipant.participant.participantMunicipalityInitiativeIdFk, QMunicipalityInitiative.municipalityInitiative)
+                .where(QAuthor.author.managementHash.eq(managementHash))
+                .where(QAuthor.author.id.eq(authorId))
+                .list(QMunicipalityInitiative.municipalityInitiative.id);
+
+        TreeSet<Long> initiativeIds = Sets.newTreeSet();
+        initiativeIds.addAll(list);
+
+        return initiativeIds;
     }
 
     @Override

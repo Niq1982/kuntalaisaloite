@@ -6,6 +6,7 @@ import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.service.PublicInitiativeService;
 
 import java.util.List;
+import java.util.Set;
 
 public interface AuthorDao {
 
@@ -30,4 +31,6 @@ public interface AuthorDao {
     void updateAuthorInformation(Long authorId, ContactInfo contactInfo);
 
     List<String> getAuthorEmails(Long initiativeId);
+
+    Set<Long> loginAndGetAuthorsInitiatives(Long authorId, String managementHash);
 }
