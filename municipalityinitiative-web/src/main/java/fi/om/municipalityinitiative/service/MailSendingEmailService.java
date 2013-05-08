@@ -26,7 +26,7 @@ public class MailSendingEmailService implements EmailService {
     private static final String PARTICIPATION_CONFIRMATION = "participant-verification";
     private static final String COLLABORATIVE_TO_MUNICIPALITY = "municipality-collectable";
     private static final String AUTHOR_INVITATION = "author-invitation";
-    private static final String TEMP_INVITATION_ACCEPTANCE ="invitation-acceptance";
+    private static final String INVITATION_ACCEPTANCE ="invitation-acceptance";
 
     @Resource
     private MessageSource messageSource;
@@ -41,7 +41,7 @@ public class MailSendingEmailService implements EmailService {
         dataMap.put("managementHash", managementHash);
 
         emailMessageConstructor
-                .fromTemplate(TEMP_INVITATION_ACCEPTANCE)
+                .fromTemplate(INVITATION_ACCEPTANCE)
                 .addRecipient(authorsEmail)
                 .withSubject(messageSource.getMessage("email.author.invitation.accepted.subject", toArray(), locale))
                 .withDataMap(dataMap)
