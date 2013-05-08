@@ -211,13 +211,10 @@ public class InitiativeViewController extends BaseController {
     
     @RequestMapping(value={ INVITATION_FI, INVITATION_SV }, method=POST)
     public String invitationReject(@PathVariable("id") Long initiativeId,
-                                   @ModelAttribute("authorInvitation") AuthorInvitationUIConfirmDto confirmDto,
-                                   Model model, BindingResult bindingResult, Locale locale, HttpServletRequest request) {
+                                   @RequestParam(PARAM_INVITATION_CODE) String confirmCode,
+                                   Locale locale, HttpServletRequest request) {
 
-        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
-        confirmDto.setInitiativeMunicipality(initiativeInfo.getMunicipality().getId());
-
-        authorService.rejectInvitation(initiativeId, confirmDto.getConfirmCode());
+        authorService.rejectInvitation(initiativeId, confirmCode);
         return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.CONFIRM_INVITATION_REJECTED, request);
     }
 
