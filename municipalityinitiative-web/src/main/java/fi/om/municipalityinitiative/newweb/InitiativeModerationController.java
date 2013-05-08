@@ -61,7 +61,7 @@ public class InitiativeModerationController extends BaseController{
                                    @RequestParam("moderatorComment") String comment,
                                    Locale locale, HttpServletRequest request) {
 
-        omInitiativeService.reject(initiativeId, comment, locale);
+        omInitiativeService.reject(initiativeId, comment);
         return redirectWithMessage(Urls.get(locale).moderation(initiativeId), RequestMessage.REJECT_INITIATIVE, request);
     }
 }

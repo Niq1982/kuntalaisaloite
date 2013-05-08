@@ -58,7 +58,7 @@ public class OmInitiativeService {
     }
 
     @Transactional(readOnly = false)
-    public void reject(Long initiativeId, String moderatorComment, Locale locale) {
+    public void reject(Long initiativeId, String moderatorComment) {
         userService.requireOmUser();
         if (!ManagementSettings.of(initiativeDao.getByIdWithOriginalAuthor(initiativeId)).isAllowOmAccept()) {
             throw new OperationNotAllowedException("Not allowed to reject initiative");
@@ -69,12 +69,6 @@ public class OmInitiativeService {
 
         Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
         emailService.sendStatusEmail(initiative, initiative.getAuthor().getContactInfo().getEmail(), municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), EmailMessageType.REJECTED_BY_OM);
-    }
-
-    @Transactional(readOnly = true)
-    public Author getAuthorInformation(Long initiativeId) {
-        userService.requireOmUser();
-        return initiativeDao.getByIdWithOriginalAuthor(initiativeId).getAuthor();
     }
 
     @Transactional(readOnly = true)

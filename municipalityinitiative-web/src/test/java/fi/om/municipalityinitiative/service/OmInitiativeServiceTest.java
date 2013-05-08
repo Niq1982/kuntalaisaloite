@@ -142,7 +142,7 @@ public class OmInitiativeServiceTest {
         fakeUserService.setOmUser(true);
         stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
 
-        omInitiativeService.reject(INITIATIVE_ID, null, Locales.LOCALE_FI);
+        omInitiativeService.reject(INITIATIVE_ID, null);
         verify(initiativeDaoMock).updateInitiativeState(INITIATIVE_ID, InitiativeState.DRAFT);
     }
 
@@ -152,7 +152,7 @@ public class OmInitiativeServiceTest {
         fakeUserService.setOmUser(true);
         stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
 
-        omInitiativeService.reject(INITIATIVE_ID, null, Locales.LOCALE_FI);
+        omInitiativeService.reject(INITIATIVE_ID, null);
         verify(omInitiativeService.emailService).sendStatusEmail(any(Initiative.class), anyString(), anyString(), eq(EmailMessageType.REJECTED_BY_OM));
     }
 
@@ -163,7 +163,7 @@ public class OmInitiativeServiceTest {
         stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
 
         String comment = "this is om-comment";
-        omInitiativeService.reject(INITIATIVE_ID, comment, Locales.LOCALE_FI);
+        omInitiativeService.reject(INITIATIVE_ID, comment);
 
         verify(initiativeDaoMock).updateModeratorComment(INITIATIVE_ID, comment);
 
