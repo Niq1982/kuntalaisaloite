@@ -43,7 +43,7 @@ public class MailSendingEmailService implements EmailService {
         emailMessageConstructor
                 .fromTemplate(TEMP_INVITATION_ACCEPTANCE)
                 .addRecipient(email)
-                .withSubject(messageSource.getMessage("email.status.info." + EmailMessageType.INVITATION_ACCEPTED.name() + ".subject", toArray(), Locales.LOCALE_FI))
+                .withSubject(messageSource.getMessage("email.invitation.accepted.subject", toArray(), Locales.LOCALE_FI))
                 .withDataMap(dataMap)
                 .send();
 
