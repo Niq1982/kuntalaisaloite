@@ -167,7 +167,10 @@ public class PublicInitiativeService {
 
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.REVIEW);
         Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
-        emailService.sendNotificationToModerator(initiative, locale);
+
+        String TEMPORARILY_REPLACING_OM_EMAIL = authorDao.getAuthorEmails(initiativeId).get(0);
+
+        emailService.sendNotificationToModerator(initiative, locale, TEMPORARILY_REPLACING_OM_EMAIL);
     }
 
     @Transactional(readOnly = false)
