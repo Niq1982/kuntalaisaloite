@@ -94,6 +94,7 @@ public class JsonDataService {
         Author author = new Author();
         author.setContactInfo(new ContactInfo());
         author.getContactInfo().setShowName(true);
+        author.getContactInfo().setName("Teemu Teekkari");
         initiativeInfo.setAuthor(author);
 
         initiativeInfo.setType(InitiativeType.COLLABORATIVE);
