@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
 public class ViewInitiativeWebTest extends WebTestBase {
@@ -104,7 +105,8 @@ public class ViewInitiativeWebTest extends WebTestBase {
         open(urls.iframe());
 
         assertThat(driver.getTitle(), is("Leijuke - Kuntalaisaloitepalvelu"));
-        assertThat(getElement(By.tagName("li")).getText(), is(modifyTime.toString("dd.MM.yyyy")+ " "+title));
+        assertThat(getElement(By.tagName("li")).getText(), containsString(modifyTime.toString("dd.MM.yyyy")));
+        assertThat(getElement(By.tagName("li")).getText(), containsString(title));
     }
 
     @Test
@@ -118,7 +120,8 @@ public class ViewInitiativeWebTest extends WebTestBase {
                 .withName(title));
 
         open(urls.iframe(municipalityId));
-        assertThat(getElement(By.tagName("li")).getText(), is(modifyTime.toString("dd.MM.yyyy")+ " "+title));
+        assertThat(getElement(By.tagName("li")).getText(), containsString(modifyTime.toString("dd.MM.yyyy")));
+        assertThat(getElement(By.tagName("li")).getText(), containsString(title));
     }
 
     @Test
