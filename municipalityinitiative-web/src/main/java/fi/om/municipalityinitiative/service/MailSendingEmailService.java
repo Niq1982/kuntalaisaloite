@@ -67,8 +67,7 @@ public class MailSendingEmailService implements EmailService {
     public void sendSingleToMunicipality(Initiative initiative, String municipalityEmail, Locale locale) {
         emailMessageConstructor
                 .fromTemplate(NOT_COLLECTABLE_TEMPLATE)
-                //.addRecipient(municipalityEmail)
-                .addRecipient(initiative.getAuthor().getContactInfo().getEmail())
+                .addRecipient(municipalityEmail)
                 .withSubject(messageSource.getMessage("email.not.collectable.municipality.subject", toArray(initiative.getName()), locale))
                 .withDataMap(toDataMap(initiative, locale))
                 .send();

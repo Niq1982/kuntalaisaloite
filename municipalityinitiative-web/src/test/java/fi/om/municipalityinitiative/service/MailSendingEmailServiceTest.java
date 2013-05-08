@@ -69,7 +69,7 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
         emailService.sendSingleToMunicipality(createDefaultInitiative(), MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
 
         assertThat(getSingleSentMessage().getSubject(), is("Kuntalaisaloite: "+ INITIATIVE_NAME));
-        assertThat(getSingleRecipient(), is(CONTACT_EMAIL)); // XXX: MUNICIPALITY_EMAIL
+        assertThat(getSingleRecipient(), is(MUNICIPALITY_EMAIL));
         assertThat(getMessageContent().html, containsString(INITIATIVE_NAME));
         assertThat(getMessageContent().html, containsString(INITIATIVE_PROPOSAL));
         assertThat(getMessageContent().html, containsString(INITIATIVE_MUNICIPALITY));

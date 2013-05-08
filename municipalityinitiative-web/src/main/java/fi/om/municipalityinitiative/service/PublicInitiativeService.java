@@ -199,7 +199,9 @@ public class PublicInitiativeService {
         initiativeDao.updateSentComment(initiativeId, sentComment);
         Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
         emailService.sendStatusEmail(initiative,authorDao.getAuthorEmails(initiativeId), municipalityEmail(initiative), EmailMessageType.SENT_TO_MUNICIPALITY);
-        emailService.sendSingleToMunicipality(initiative, municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), locale);
+        // TODO: String municipalityEmail = municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId());
+        String municipalityEmail = authorDao.getAuthorEmails(initiativeId).get(0);
+        emailService.sendSingleToMunicipality(initiative, municipalityEmail, locale);
     }
 
     @Transactional(readOnly = false)
