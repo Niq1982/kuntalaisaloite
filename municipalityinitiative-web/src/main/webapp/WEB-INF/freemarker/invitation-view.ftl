@@ -138,7 +138,7 @@
                 <p><@u.messageHTML key="userConfirmation.invitation" args=[href] /></p>-->
                 
                     <div class="input-block-content">
-                        <button type="submit" name="" value="<@u.message "invitation.accept.confirm" />" class="small-button green save-and-send"><span class="small-icon save-and-send"><@u.message "invitation.accept" /></span></button>
+                        <button type="submit" name="${UrlConstants.ACTION_ACCEPT_INVITATION}"  id="modal-${UrlConstants.ACTION_ACCEPT_INVITATION}" value="<@u.message "invitation.accept.confirm" />" class="small-button green save-and-send"><span class="small-icon save-and-send"><@u.message "invitation.accept" /></span></button>
                         <a href="?invitation=${authorInvitation.confirmCode!""}" class="push close"><@u.message "action.cancel" /></a>
                     </div>
             </form>                    
