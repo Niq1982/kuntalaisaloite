@@ -224,7 +224,7 @@
 </#macro>
 
 <#macro adminViewLink type="">
-    <#assign adminURL = urls.get(switchLocale!locale).loginAuthor(initiative.id, managementHash) />
+    <#assign adminURL = urls.get(switchLocale!locale).loginAuthor(managementHash) />
     
     <#if type == "html">
         <p style="${pBothMargins!""}"><@u.message "email.adminViewLink" /></p>

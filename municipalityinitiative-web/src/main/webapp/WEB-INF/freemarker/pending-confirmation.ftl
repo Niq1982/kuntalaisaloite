@@ -36,7 +36,7 @@
 </ul>
     
 <h2>Ylläpitolinkki testausta varten</h2>
-<a href="${urls.loginAuthor(initiative.id, initiative.managementHash.value)}">${urls.loginAuthor(initiative.id, initiative.managementHash.value)}</a>
+<a href="${urls.loginAuthor(initiative.managementHash.value)}">${urls.loginAuthor(initiative.managementHash.value)}</a>
 
 
 </@l.main>

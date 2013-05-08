@@ -32,5 +32,7 @@ public interface AuthorDao {
 
     List<String> getAuthorEmails(Long initiativeId);
 
-    Set<Long> loginAndGetAuthorsInitiatives(Long authorId, String managementHash);
+    Set<Long> loginAndGetAuthorsInitiatives(String managementHash);
+
+    Long getAuthor(String managementHash);
 }

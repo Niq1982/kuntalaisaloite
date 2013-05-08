@@ -47,10 +47,6 @@ public final class Urls {
 
     public static final String LOGIN_SV =        "/sv/login";
 
-    public static final String SINGLE_LOGIN_FI =        "/fi/login/"+ID_PARAMETER;
-
-    public static final String SINGLE_LOGIN_SV =        "/sv/login/"+ID_PARAMETER;
-    
     public static final String LOGOUT_FI =       "/fi/logout";
     
     public static final String LOGOUT_SV =       "/sv/logout";
@@ -350,12 +346,12 @@ public final class Urls {
         return getLocalizedPageUrl(MANAGE_AUTHORS_FI, MANAGE_AUTHORS_SV).replace(ID_PARAMETER, id.toString());
     }
 
-    public String login(Long id) {
-        return getLocalizedPageUrl(SINGLE_LOGIN_FI, SINGLE_LOGIN_SV).replace(ID_PARAMETER, id.toString());
+    public String login() {
+        return getLocalizedPageUrl(LOGIN_FI, LOGIN_SV);
     }
 
-    public String loginAuthor(Long id, String managementHash) {
-        return login(id) + "?" + PARAM_MANAGEMENT_CODE + "=" + managementHash;
+    public String loginAuthor(String managementHash) {
+        return login() + "?" + PARAM_MANAGEMENT_CODE + "=" + managementHash;
     }
 
     public String initiatives() {
@@ -409,15 +405,11 @@ public final class Urls {
     public String pendingConfirmation(Long initiativeId) {
         return getLocalizedPageUrl(PENDING_CONFIRMATION_FI, PENDING_CONFIRMATION_SV).replace(ID_PARAMETER, initiativeId.toString());
     }
-    
+
     public String paramSendInvitations() {
         return ACTION_SEND_INVITATIONS;
     }
 
-    public String login() {
-        return getLocalizedPageUrl(LOGIN_FI, LOGIN_SV);
-    }
-    
     public String login(String target) {
         if (Strings.isNullOrEmpty(target)) {
             target = baseUrl;

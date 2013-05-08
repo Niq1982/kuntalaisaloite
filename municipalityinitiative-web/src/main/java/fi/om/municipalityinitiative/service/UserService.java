@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.FakeUserDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.UserDao;
+import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.User;
@@ -33,12 +34,12 @@ public class UserService {
         request.getSession().setAttribute(LOGIN_USER_PARAMETER, userDao.getUser(userName, password));
     }
 
-    public Long login(Long authorId, String managementHash, HttpServletRequest request) {
+    public Long login(String managementHash, HttpServletRequest request) {
 //        Initiative initiative = initiativeDao.getById(initiativeId, managementHash);
 //        request.getSession().setAttribute(LOGIN_INITIATIVE_PARAMETER, initiative);
 //        request.getSession().setAttribute(LOGIN_USER_PARAMETER, User.normalUser(Collections.singleton(initiative.getId())));
-
-        Set<Long> initiativeIds = authorDao.loginAndGetAuthorsInitiatives(authorId, managementHash);
+        Long authorId = authorDao.getAuthor(managementHash);
+        Set<Long> initiativeIds = authorDao.loginAndGetAuthorsInitiatives(managementHash);
         if (initiativeIds.size() == 0) {
             throw new NotLoggedInException("Invalid login credentials");
         }

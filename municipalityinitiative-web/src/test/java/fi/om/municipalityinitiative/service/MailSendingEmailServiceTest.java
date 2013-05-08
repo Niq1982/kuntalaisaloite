@@ -28,7 +28,7 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
 
         assertThat(getSingleRecipient(), is(CONTACT_EMAIL));
         assertThat(getSingleSentMessage().getSubject(), is("Olet saanut linkin kuntalaisaloitteen tekemiseen Kuntalaisaloite.fi-palvelussa"));
-        assertThat(getMessageContent().html, containsString(urls.loginAuthor(AUTHOR_ID, MANAGEMENT_HASH)));
+        assertThat(getMessageContent().html, containsString(urls.loginAuthor(MANAGEMENT_HASH)));
     }
     
     @Test
@@ -111,7 +111,7 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
     public void send_invitation_acceptanve() throws Exception {
 
         emailService.sendAuthorConfirmedInvitation(createDefaultInitiative(), CONTACT_EMAIL, "hash", Locales.LOCALE_FI);
-        assertThat(getMessageContent().html, containsString(Urls.get(Locales.LOCALE_FI).loginAuthor(INITIATIVE_ID, "hash")));
+        assertThat(getMessageContent().html, containsString(Urls.get(Locales.LOCALE_FI).loginAuthor("hash")));
 
     }
 }

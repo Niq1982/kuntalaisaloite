@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.newdao;
 
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
@@ -159,18 +160,24 @@ public class JdbcAuthorDao implements AuthorDao {
     }
 
     @Override
-    public Set<Long> loginAndGetAuthorsInitiatives(Long authorId, String managementHash) {
+    public Set<Long> loginAndGetAuthorsInitiatives(String managementHash) {
         List<Long> list = queryFactory.from(QAuthor.author)
                 .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
                 .innerJoin(QParticipant.participant.participantMunicipalityInitiativeIdFk, QMunicipalityInitiative.municipalityInitiative)
                 .where(QAuthor.author.managementHash.eq(managementHash))
-                .where(QAuthor.author.id.eq(authorId))
                 .list(QMunicipalityInitiative.municipalityInitiative.id);
 
         TreeSet<Long> initiativeIds = Sets.newTreeSet();
         initiativeIds.addAll(list);
 
         return initiativeIds;
+    }
+
+    @Override
+    public Long getAuthor(String managementHash) {
+        return Optional.of(queryFactory.from(QAuthor.author)
+                .where(QAuthor.author.managementHash.eq(managementHash))
+                .uniqueResult(QAuthor.author.id)).get();
     }
 
     @Override

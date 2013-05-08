@@ -270,7 +270,7 @@ public abstract class WebTestBase {
     }
 
     protected void loginAsAuthorForLastTestHelperCreatedInitiative() {
-        open(urls.loginAuthor(testHelper.getLastAuthorId(), TestHelper.TEST_MANAGEMENT_HASH));
+        open(urls.loginAuthor(TestHelper.TEST_MANAGEMENT_HASH));
         clickByName("Login");
     }
 

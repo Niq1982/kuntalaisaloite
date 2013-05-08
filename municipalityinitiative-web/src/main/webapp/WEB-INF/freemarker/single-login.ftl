@@ -23,7 +23,7 @@
 
 <@l.main page pageTitle!"">
 
-    <form action="${urls.login(id)}" method="post">
+    <form action="${urls.login()}" method="post">
         <h1>Olet kirjautumassa sisään yksittäisen aloitteen tekijäksi</h1>
         <input type="hidden" name="CSRFToken" value="${CSRFToken!""}"/>
         <input type="hidden" name="management" value="${managementHash}"/>

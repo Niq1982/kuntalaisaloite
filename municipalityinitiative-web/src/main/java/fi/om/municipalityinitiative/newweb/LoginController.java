@@ -46,22 +46,19 @@ public class LoginController extends BaseLoginController {
         return new RedirectView(getValidLoginTarget(target, Urls.get(locale)), false, true, false);
     }
 
-    @RequestMapping(value =  {SINGLE_LOGIN_FI, SINGLE_LOGIN_SV}, method = RequestMethod.GET)
-    public String singleLoginGet(@PathVariable Long id,
-                                 @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
+    @RequestMapping(value =  {LOGIN_FI, LOGIN_FI}, method = RequestMethod.GET, params = PARAM_MANAGEMENT_CODE)
+    public String singleLoginGet(@RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                                  Model model, Locale locale, HttpServletRequest request) {
-        model.addAttribute("initiativeId", id);
         model.addAttribute("managementHash", managementHash);
         model.addAttribute(Urls.get(locale));
         return Views.SINGLE_LOGIN_VIEW;
 
     }
 
-    @RequestMapping(value =  {SINGLE_LOGIN_FI, SINGLE_LOGIN_SV}, method = RequestMethod.POST)
-    public RedirectView singleLogin(@PathVariable("id") Long authorID,
-                                    @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
+    @RequestMapping(value =  {LOGIN_FI, LOGIN_FI}, method = RequestMethod.POST, params = PARAM_MANAGEMENT_CODE)
+    public RedirectView singleLogin(@RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                                        Model model, Locale locale, HttpServletRequest request) {
-        Long initiativeId = userService.login(authorID, managementHash, request);
+        Long initiativeId = userService.login(managementHash, request);
         return new RedirectView(Urls.get(locale).getManagement(initiativeId), false, true, false);
     }
 

@@ -71,7 +71,7 @@ public class JdbcAuthorDaoTest {
     public void login_as_author_returns_authors_initiative() {
         Long collectableAccepted = testHelper.createCollectableAccepted(testMunicipality);
 
-        Set<Long> ids = authorDao.loginAndGetAuthorsInitiatives(testHelper.getLastAuthorId(), TestHelper.TEST_MANAGEMENT_HASH);
+        Set<Long> ids = authorDao.loginAndGetAuthorsInitiatives(TestHelper.TEST_MANAGEMENT_HASH);
 
         assertThat(ids, hasSize(1));
         assertThat(ids, contains(collectableAccepted));
