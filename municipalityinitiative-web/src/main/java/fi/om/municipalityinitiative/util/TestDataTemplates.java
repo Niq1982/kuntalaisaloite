@@ -84,5 +84,13 @@ public class TestDataTemplates {
     public static class InitiativeTemplate {
         public Initiative initiative;
         public Author author;
+
+        public Initiative getInitiative() {
+            return initiative;
+        }
+
+        public Author getAuthor() {
+            return author;
+        }
     }
 }

@@ -13,8 +13,6 @@ import javax.annotation.Resource;
 
 public class TestDataService {
 
-    public static final String DEFAULT_MANAGEMENT_HASH = "managementHash";
-
     @Resource
     InitiativeDao initiativeDao;
 
@@ -27,9 +25,11 @@ public class TestDataService {
     @Transactional(readOnly = false)
     public Long createTestMunicipalityInitiative(TestDataTemplates.InitiativeTemplate template) {
 
+        String managementHash = RandomHashGenerator.randomString(10);
+
         Long initiativeId = initiativeDao.prepareInitiative(template.initiative.getMunicipality().getId());
         Long participantId = participantDao.prepareParticipant(initiativeId, template.initiative.getMunicipality().getId(), null, Membership.community, false);
-        Long authorId = authorDao.createAuthor(initiativeId, participantId, DEFAULT_MANAGEMENT_HASH);
+        Long authorId = authorDao.createAuthor(initiativeId, participantId, managementHash);
         authorDao.assignAuthor(initiativeId, authorId);
 
         InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto();
@@ -37,7 +37,7 @@ public class TestDataService {
         editDto.setContactInfo(template.author.getContactInfo());
         editDto.setProposal(template.initiative.getProposal()
                 + "\n\n"
-                + "Linkki hallintasivulle: " + Urls.get(Locales.LOCALE_FI).loginAuthor(DEFAULT_MANAGEMENT_HASH)
+                + "Linkki hallintasivulle: " + Urls.get(Locales.LOCALE_FI).loginAuthor(managementHash)
         );
         initiativeDao.editInitiativeDraft(initiativeId, editDto);
 

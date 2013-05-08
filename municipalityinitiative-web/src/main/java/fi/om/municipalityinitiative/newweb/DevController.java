@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.newweb;
 
 import com.google.common.base.Strings;
 import fi.om.municipalityinitiative.util.InitiativeState;
+import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.web.BaseController;
 import fi.om.municipalityinitiative.web.Urls;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
@@ -81,7 +82,7 @@ public class DevController extends BaseController {
             }
         }
 
-        addRequestAttribute(Urls.get(locale).loginAuthor(TestDataService.DEFAULT_MANAGEMENT_HASH), request);
+        addRequestAttribute(Urls.get(locale).loginAuthor(RandomHashGenerator.getPrevious()), request);
         // putResultInfo("Linkit aloitteisiin ...", request);
         return contextRelativeRedirect(urls.testDataGeneration());
     }
