@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.newdao;
 
 
+import com.google.common.collect.Lists;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.expr.DateTimeExpression;
@@ -9,6 +10,7 @@ import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
+import fi.om.municipalityinitiative.service.PublicInitiativeService;
 import fi.om.municipalityinitiative.sql.QAuthor;
 import fi.om.municipalityinitiative.sql.QAuthorInvitation;
 import fi.om.municipalityinitiative.sql.QMunicipality;
@@ -156,4 +158,12 @@ public class JdbcAuthorDao implements AuthorDao {
                     .list(Mappings.authorMapping);
     }
 
+    @Override
+    public List<String> getAuthorEmails(Long initiativeId) {
+        List<String> emails = Lists.newArrayList();
+        for (Author author : findAuthors(initiativeId)) {
+            emails.add(author.getContactInfo().getEmail());
+        }
+        return emails;
+    }
 }

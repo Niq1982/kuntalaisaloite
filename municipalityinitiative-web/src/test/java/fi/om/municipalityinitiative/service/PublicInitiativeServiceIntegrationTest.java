@@ -69,7 +69,6 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         Long initiativeId = testHelper.createCollectableAccepted(testMunicipality.getId());
         InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
         assertThat(initiative.getState(), is(InitiativeState.ACCEPTED));
-        assertThat(initiative.getAuthorName(), is(TestHelper.DEFAULT_AUTHOR_NAME));
         assertThat(initiative.getMunicipality().getId(), is(testMunicipality.getId()));
         assertThat(initiative.getName(), is(TestHelper.DEFAULT_INITIATIVE_NAME));
         assertThat(initiative.getId(), is(initiativeId));

@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -66,7 +67,7 @@ public class EmailMessageConstructor {
         }
     }
 
-    public MimeMessageHelper parseBasicEmailData(String sendTo, String subject, String templateName, Map<String, Object> dataMap) {
+    public MimeMessageHelper parseBasicEmailData(List<String> recipients, String subject, String templateName, Map<String, Object> dataMap) {
 
         String text = processTemplate(templateName + "-text", dataMap);
         String html = processTemplate(templateName + "-html", dataMap);
@@ -74,17 +75,25 @@ public class EmailMessageConstructor {
         text = stripTextRows(text, 2);
 
         if (emailSettings.getTestSendTo().isPresent()) {
-            System.out.println("Replaced sendTo email with: " + emailSettings.getTestSendTo().get());
-            text = "TEST OPTION REPLACED THE EMAIL ADDRESS!\nThe original address was: " + sendTo + "\n\n\n-------------\n" + text;
-            html = "TEST OPTION REPLACED THE EMAIL ADDRESS!\nThe original address was: " + sendTo + "<hr>" + html;
-            sendTo = emailSettings.getTestSendTo().get();
+            System.out.println("Replaced recipients email with: " + emailSettings.getTestSendTo().get());
+
+            StringBuilder recipientsString = new StringBuilder();
+            for (String s : recipients) {
+                if (recipientsString.length() > 0) recipientsString.append(", ");
+                recipientsString.append(s);
+            }
+
+            text = "TEST OPTION REPLACED THE EMAIL ADDRESS!\nThe original address was: " + recipientsString.toString() + "\n\n\n-------------\n" + text;
+            html = "TEST OPTION REPLACED THE EMAIL ADDRESS!\nThe original address was: " + recipientsString.toString() + "<hr>" + html;
+            recipients = Collections.singletonList(emailSettings.getTestSendTo().get());
         }
 
-        Assert.notNull(sendTo, "sendTo");
+        Assert.notNull(recipients, "recipients");
+        Assert.isTrue(recipients.size() != 0, "recipients has recipients");
 
         if (emailSettings.isTestConsoleOutput()) {
             System.out.println("----------------------------------------------------------");
-            System.out.println("To: " + sendTo);
+            System.out.println("To: " + recipients);
             System.out.println("Reply-to: " + emailSettings.getDefaultReplyTo());
             System.out.println("Subject: " + subject);
             System.out.println("---");
@@ -95,12 +104,14 @@ public class EmailMessageConstructor {
 
         try {
             MimeMessageHelper helper = new MimeMessageHelper(javaMailSender.createMimeMessage(), true, "UTF-8");
-            helper.setTo(sendTo);
+            for (String to : recipients) {
+                helper.addTo(to);
+            }
             helper.setFrom(emailSettings.getDefaultReplyTo());
             helper.setReplyTo(emailSettings.getDefaultReplyTo());
             helper.setSubject(subject);
             helper.setText(text, html);
-            log.info("About to send email to " + sendTo + ": " + subject);
+            log.info("About to send email to " + recipients + ": " + subject);
             return helper;
 
         } catch (MessagingException e) {
@@ -152,7 +163,7 @@ public class EmailMessageConstructor {
     }
 
     public class EmailMessageDraft {
-        private String sendTo;
+        private List<String> recipients = Lists.newArrayList();
         private String subject;
         private String templateName;
         private Map<String, Object> dataMap;
@@ -169,13 +180,17 @@ public class EmailMessageConstructor {
             return this;
         }
 
-        public EmailMessageDraft withSendTo(String sendTo) {
-            this.sendTo = sendTo;
+        public EmailMessageDraft addRecipients(List<String> givenRecipients) {
+            this.recipients.addAll(givenRecipients);
+            return this;
+        }
+        public EmailMessageDraft addRecipient(String sendTo) {
+            this.recipients.add(sendTo);
             return this;
         }
         
         public EmailMessageDraft withSendToModerator() {
-            this.sendTo = emailSettings.getModeratorEmail();
+            this.recipients = Collections.singletonList(emailSettings.getModeratorEmail());
             return this;
         }
 
@@ -192,14 +207,14 @@ public class EmailMessageConstructor {
 
         public void send() {
 
-            Assert.notNull(sendTo, "sendTo");
+            Assert.isTrue(recipients.size() > 0, "recipients");
             Assert.notNull(subject, "subject");
             Assert.notNull(templateName, "templateName");
             Assert.notNull(dataMap, "dataMap");
 
-            log.info("Sending email to '"+sendTo+"'");
+            log.info("Sending email to '"+ recipients +"'");
 
-            MimeMessageHelper mimeMessageHelper = parseBasicEmailData(sendTo, subject, templateName, dataMap);
+            MimeMessageHelper mimeMessageHelper = parseBasicEmailData(recipients, subject, templateName, dataMap);
 
             if (mimeMessageHelper == null) { // If testConsoleOutput was true, email was printed instead of sending
                 System.out.println("No email to send");

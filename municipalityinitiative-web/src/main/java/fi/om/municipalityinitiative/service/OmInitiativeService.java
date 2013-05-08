@@ -42,23 +42,27 @@ public class OmInitiativeService {
             throw new OperationNotAllowedException("Not allowed to accept initiative");
         }
 
+        // TODO: String municipalityEmail = municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId());
+        String municipalityEmail = authorDao.getAuthorEmails(initiativeId).get(0);
+
+
         initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
         if (initiative.getType().equals(InitiativeType.SINGLE)) {
             initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
             initiativeDao.markInitiativeAsSent(initiativeId);
             initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId); // Necessary because initiative is updated
-            emailService.sendStatusEmail(initiative, initiative.getAuthor().getContactInfo().getEmail(), municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), EmailMessageType.ACCEPTED_BY_OM_AND_SENT);
-            emailService.sendSingleToMunicipality(initiative, municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), locale);
+            emailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityEmail, EmailMessageType.ACCEPTED_BY_OM_AND_SENT);
+            emailService.sendSingleToMunicipality(initiative, municipalityEmail, locale);
         } else {
             initiativeDao.updateInitiativeState(initiativeId, InitiativeState.ACCEPTED);
             initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);  // Necessary because initiative is updated
-            emailService.sendStatusEmail(initiative, initiative.getAuthor().getContactInfo().getEmail(), municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), EmailMessageType.ACCEPTED_BY_OM);
+            emailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityEmail, EmailMessageType.ACCEPTED_BY_OM);
         }
 
     }
 
     @Transactional(readOnly = false)
-    public void reject(Long initiativeId, String moderatorComment, Locale locale) {
+    public void reject(Long initiativeId, String moderatorComment) {
         userService.requireOmUser();
         if (!ManagementSettings.of(initiativeDao.getByIdWithOriginalAuthor(initiativeId)).isAllowOmAccept()) {
             throw new OperationNotAllowedException("Not allowed to reject initiative");
@@ -68,13 +72,7 @@ public class OmInitiativeService {
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.DRAFT);
 
         Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
-        emailService.sendStatusEmail(initiative, initiative.getAuthor().getContactInfo().getEmail(), municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), EmailMessageType.REJECTED_BY_OM);
-    }
-
-    @Transactional(readOnly = true)
-    public Author getAuthorInformation(Long initiativeId) {
-        userService.requireOmUser();
-        return initiativeDao.getByIdWithOriginalAuthor(initiativeId).getAuthor();
+        emailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), EmailMessageType.REJECTED_BY_OM);
     }
 
     @Transactional(readOnly = true)

@@ -15,10 +15,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
+import javax.mail.Address;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -36,6 +38,7 @@ public abstract class MailSendingEmailServiceTestBase {
     public static final long INITIATIVE_MUNICIPALITY_ID = 2L;
     public static final String CONTACT_PHONE = "Phone number";
     public static final String CONTACT_EMAIL = "sender.email@example.com";
+    public static final List<String> AUTHOR_EMAILS = Collections.singletonList(CONTACT_EMAIL);
     public static final String CONTACT_NAME = "Sender Name";
     public static final String CONTACT_ADDRESS = "Sender address";
     public static final String MUNICIPALITY_EMAIL = "some_test_address@example.com";
@@ -123,7 +126,8 @@ public abstract class MailSendingEmailServiceTestBase {
 
 
     protected final String getSingleRecipient() throws MessagingException, InterruptedException {
-        assertThat(getSingleSentMessage().getAllRecipients(), arrayWithSize(1));
-        return getSingleSentMessage().getAllRecipients()[0].toString();
+        Address[] allRecipients = getSingleSentMessage().getAllRecipients();
+        assertThat(allRecipients, arrayWithSize(1));
+        return allRecipients[0].toString();
     }
 }

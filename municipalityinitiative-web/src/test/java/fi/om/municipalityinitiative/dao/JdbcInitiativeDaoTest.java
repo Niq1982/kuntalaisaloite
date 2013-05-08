@@ -86,7 +86,6 @@ public class JdbcInitiativeDaoTest {
         Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
 
         assertThat(initiative.getMunicipality().getId(), is(testMunicipality.getId()));
-        assertThat(initiative.getAuthorName(), is(TestHelper.DEFAULT_AUTHOR_NAME));
         assertThat(initiative.getCreateTime(), is(notNullValue()));
         assertThat(initiative.getName(), is(TestHelper.DEFAULT_INITIATIVE_NAME));
         assertThat(initiative.getProposal(), is(TestHelper.DEFAULT_PROPOSAL));

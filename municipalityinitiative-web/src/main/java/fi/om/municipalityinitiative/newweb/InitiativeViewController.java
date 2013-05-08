@@ -195,7 +195,7 @@ public class InitiativeViewController extends BaseController {
         confirmDto.setInitiativeMunicipality(initiativeInfo.getMunicipality().getId());
 
         if (validationService.validationSuccessful(confirmDto, bindingResult, model)) {
-            String generatedManagementHash = authorService.confirmAuthorInvitation(initiativeId, confirmDto);
+            String generatedManagementHash = authorService.confirmAuthorInvitation(initiativeId, confirmDto, locale);
             userService.login(initiativeId, generatedManagementHash, request);
             return redirectWithMessage(Urls.get(locale).management(initiativeId), RequestMessage.CONFIRM_INVITATION, request);
         }
