@@ -14,7 +14,6 @@ public class Initiative {
     private String extraInfo;
 
     private Municipality municipality;
-    private String authorName; // FIXME: What? Why?
 
     private LocalDate createTime;
 
@@ -42,10 +41,6 @@ public class Initiative {
 
     public String getProposal() {
         return proposal;
-    }
-
-    public String getAuthorName() {
-        return authorName;
     }
 
     public void setName(String name) {
