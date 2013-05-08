@@ -24,10 +24,11 @@
 <@l.main page pageTitle!"">
 
     <form action="${urls.login(id)}" method="post">
-        <b>Olet kirjautumassa sisään yksittäisen aloitteen tekijäksi<br/>
+        <h1>Olet kirjautumassa sisään yksittäisen aloitteen tekijäksi</h1>
         <input type="hidden" name="CSRFToken" value="${CSRFToken!""}"/>
         <input type="hidden" name="management" value="${managementHash}"/>
-        <input type="submit" name="Login" value="Kirjaudu"/>
+        
+        <button type="submit" name="Login" value="Kirjaudu" class="small-button">Kirjaudu</button>
     </form>
 
 </@l.main>

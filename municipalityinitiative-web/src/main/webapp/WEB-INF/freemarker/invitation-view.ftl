@@ -95,11 +95,11 @@
                 <@f.notTooFastField authorInvitation/>
             
                     <div class="column col-1of2">
-                        <@f.textField path="authorInvitation.contactInfo.name" required="required" optional=false cssClass="medium" maxLength=InitiativeConstants.CONTACT_NAME_MAX  key="contactInfo.name" />
+                        <@f.textField path="authorInvitation.contactInfo.name" required="required" optional=false cssClass="medium" maxLength=InitiativeConstants.CONTACT_NAME_MAX key="contactInfo.name" />
                     </div>
                     
                     <div class="column col-1of2 last">
-                        <@f.municipalitySelect path="authorInvitation.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" key="initiative.homeMunicipality" />
+                        <@f.municipalitySelect path="authorInvitation.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipality.id key="initiative.homeMunicipality" />
                     </div>
                     <br class="clear" />
                     

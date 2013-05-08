@@ -6,17 +6,50 @@
 
 <#escape x as x?html>
 
-    <#assign title><@u.message "email.author.invitation.accepted.subject" /></#assign>
-    <@l.emailHtml template="author-invitation" title=title footer=false>
+<#assign title><@u.message "email.author.invitation.accepted.title" /></#assign>
+<#assign url = urls.loginAuthor(initiative.id, managementHash) />
+<#assign urlSv = urls.alt().loginAuthor(initiative.id, managementHash) />
 
-  <@u.spacer "15" />
+<@l.emailHtml template="author-invitation-accepted" title=title footer=false>
 
-  <@b.contentBlock type>
+    <#-- Finnish part -->
 
-      <#assign url = urls.loginAuthor(initiative.id, managementHash) />
-      <p style="${pBothMargins!""} ${smallFont!""}"><@u.link url url /></p>
-  </@b.contentBlock>
+    <@b.mainContentBlock title> 
+        <@b.initiativeDetails type=type showProposal=false />
+    
+        <p style="${pBothMargins!""}"><@u.message "email.author.invitation.accepted.description" /></p>
 
+        <@b.adminViewLink type />
+    </@b.mainContentBlock>
+    
+    <@u.spacer "15" />
+    
+    <@b.emailFooter type />
+    
+    <@u.spacer "15" />
+    
+    <#-- Swedish part -->
+    
+    <#global switchLocale = altLocale />
+
+    <#assign title><@u.message "email.author.invitation.accepted.title" /></#assign>
+    
+    <@b.mainContentBlock title>
+        <@b.initiativeDetails type=type showProposal=false />
+    
+        <p style="${pBothMargins!""}"><@u.message "email.author.invitation.accepted.description" /></p>
+        
+        <@b.adminViewLink type />
+    </@b.mainContentBlock>
+    
+    <@u.spacer "15" />
+    
+    <@b.emailFooter type />
+    
+    <@u.spacer "15" />
+    
+    <#-- Switch to default locale -->
+    <#global switchLocale = locale />
 
 </@l.emailHtml>
 
