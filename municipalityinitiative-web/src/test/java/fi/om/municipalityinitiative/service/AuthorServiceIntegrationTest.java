@@ -117,7 +117,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         precondition(currentAuthors(initiativeId), hasSize(1));
         precondition(participantCountOfInitiative(initiativeId), is(1));
 
-        authorService.confirmAuthorInvitation(initiativeId, createDto);
+        authorService.confirmAuthorInvitation(initiativeId, createDto, null);
 
         // Author count is increased
         assertThat(currentAuthors(initiativeId), hasSize(2));
@@ -148,7 +148,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     public void confirm_author_invitation_not_allowed() {
         Long initiativeId = testHelper.createSingleSent(testMunicipality);
 
-        authorService.confirmAuthorInvitation(initiativeId, new AuthorInvitationUIConfirmDto());
+        authorService.confirmAuthorInvitation(initiativeId, new AuthorInvitationUIConfirmDto(), null);
     }
 
     @Test
@@ -161,7 +161,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
         thrown.expect(InvitationNotValidException.class);
         thrown.expectMessage("Invitation is expired");
-        authorService.confirmAuthorInvitation(initiativeId, confirmDto);
+        authorService.confirmAuthorInvitation(initiativeId, confirmDto, null);
     }
 
     @Test
@@ -174,7 +174,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
         thrown.expect(InvitationNotValidException.class);
         thrown.expectMessage("Invitation is rejected");
-        authorService.confirmAuthorInvitation(initiativeId, confirmDto);
+        authorService.confirmAuthorInvitation(initiativeId, confirmDto, null);
     }
 
     @Test
@@ -187,7 +187,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
         thrown.expect(NotFoundException.class);
         thrown.expectMessage(containsString("bätmään"));
-        authorService.confirmAuthorInvitation(initiativeId, invitationUIConfirmDto);
+        authorService.confirmAuthorInvitation(initiativeId, invitationUIConfirmDto, null);
     }
 
     @Test
@@ -202,7 +202,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         confirmDto.setHomeMunicipality(testMunicipality);
 
         precondition(allCurrentInvitations(), is(1L));
-        authorService.confirmAuthorInvitation(initiativeId, confirmDto);
+        authorService.confirmAuthorInvitation(initiativeId, confirmDto, null);
         assertThat(allCurrentInvitations(), is(0L));
 
     }

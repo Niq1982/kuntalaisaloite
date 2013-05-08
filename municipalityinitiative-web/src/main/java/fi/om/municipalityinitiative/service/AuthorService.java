@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 
 import java.util.List;
+import java.util.Locale;
 
 public class AuthorService {
 
@@ -85,7 +86,7 @@ public class AuthorService {
     }
 
     @Transactional(readOnly = false)
-    public String confirmAuthorInvitation(Long initiativeId, AuthorInvitationUIConfirmDto confirmDto) {
+    public String confirmAuthorInvitation(Long initiativeId, AuthorInvitationUIConfirmDto confirmDto, Locale locale) {
 
         ManagementSettings managementSettings = ManagementSettings.of(initiativeDao.getByIdWithOriginalAuthor(initiativeId));
         SecurityUtil.assertAllowance("Accept invitation", managementSettings.isAllowInviteAuthors());
@@ -98,7 +99,7 @@ public class AuthorService {
 
                 String managementHash = createAuthorAndParticipant(initiativeId, confirmDto);
                 authorDao.deleteAuthorInvitation(initiativeId, confirmDto.getConfirmCode());
-                emailService.sendAuthorConfirmedInvitation(initiativeDao.getByIdWithOriginalAuthor(initiativeId), invitation.getEmail(), managementHash);
+                emailService.sendAuthorConfirmedInvitation(initiativeDao.getByIdWithOriginalAuthor(initiativeId), invitation.getEmail(), managementHash, locale);
                 return managementHash;
 
             }

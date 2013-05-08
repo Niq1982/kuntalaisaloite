@@ -35,15 +35,15 @@ public class MailSendingEmailService implements EmailService {
     private EmailMessageConstructor emailMessageConstructor;
 
     @Override
-    public void sendAuthorConfirmedInvitation(Initiative initiative, String email, String managementHash) {
+    public void sendAuthorConfirmedInvitation(Initiative initiative, String email, String managementHash, Locale locale) {
 
-        HashMap<String, Object> dataMap = toDataMap(initiative, Locales.LOCALE_FI);
+        HashMap<String, Object> dataMap = toDataMap(initiative, locale);
         dataMap.put("managementHash", managementHash);
 
         emailMessageConstructor
                 .fromTemplate(TEMP_INVITATION_ACCEPTANCE)
                 .addRecipient(email)
-                .withSubject(messageSource.getMessage("email.invitation.accepted.subject", toArray(), Locales.LOCALE_FI))
+                .withSubject(messageSource.getMessage("email.invitation.accepted.subject", toArray(), locale))
                 .withDataMap(dataMap)
                 .send();
 
