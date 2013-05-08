@@ -25,7 +25,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
     @Test
     public void moderation_page_fails_if_logged_in_as_author() {
         Long initiativeId = testHelper.createCollectableAccepted(testMunicipality1Id);
-        loginAsAuthor(initiativeId);
+        loginAsAuthorForLastTestHelperCreatedInitiative();
 
         open(urls.moderation(initiativeId));
         assert404();

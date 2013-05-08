@@ -38,4 +38,8 @@ public class LoginUserHolder {
     public boolean hasManagementRightsForInitiative(Long initiativeId) {
         return user.hasRightToInitiative(initiativeId);
     }
+
+    public Long getAuthorId() {
+        return user.getAuthorId();
+    }
 }

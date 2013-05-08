@@ -76,6 +76,7 @@ public class ErrorFilter implements Filter {
     private void handleNotFound(HttpServletRequest request, HttpServletResponse response, Throwable e)
             throws IOException {
         log.info(getErrorMessage("NotFound - " + e.getMessage(), null, request));
+        log.info("Not found", e);
         response.sendError(HttpServletResponse.SC_NOT_FOUND);
     }
 

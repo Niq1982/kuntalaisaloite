@@ -16,7 +16,7 @@
     <@b.mainContentBlock title>
         <p style="${pBothMargins!""}"><@u.message "email.create.description" /></p>
         
-        <p style="${smallFont!""}"><@u.link urls.loginAuthor(initiative.id, initiative.managementHash.value) urls.loginAuthor(initiative.id, initiative.managementHash.value) /></p>
+        <p style="${smallFont!""}"><@u.link urls.loginAuthor(authorId, managementHash) urls.loginAuthor(authorId, managementHash) /></p>
 
         <p style="${pBothMargins!""}"><@u.message "email.create.description.2" /></p>
         

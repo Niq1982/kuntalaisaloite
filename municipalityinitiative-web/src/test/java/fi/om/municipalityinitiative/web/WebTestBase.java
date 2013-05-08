@@ -269,8 +269,8 @@ public abstract class WebTestBase {
         clickByName("Login");
     }
 
-    protected void loginAsAuthor(Long initiativeId) {
-        open(urls.loginAuthor(initiativeId, TestHelper.TEST_MANAGEMENT_HASH));
+    protected void loginAsAuthorForLastTestHelperCreatedInitiative() {
+        open(urls.loginAuthor(testHelper.getLastAuthorId(), TestHelper.TEST_MANAGEMENT_HASH));
         clickByName("Login");
     }
 

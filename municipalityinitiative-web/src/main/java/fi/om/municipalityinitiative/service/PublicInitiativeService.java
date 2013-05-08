@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.service;
 
+import fi.om.municipalityinitiative.dao.NotFoundException;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
@@ -86,7 +87,7 @@ public class PublicInitiativeService {
         Long authorId = authorDao.createAuthor(initiativeId, participantId, managementHash);
         authorDao.assignAuthor(initiativeId, authorId);
 
-        emailService.sendPrepareCreatedEmail(initiativeDao.getByIdWithOriginalAuthor(initiativeId), createDto.getParticipantEmail(), locale);
+        emailService.sendPrepareCreatedEmail(initiativeDao.getByIdWithOriginalAuthor(initiativeId), authorId, managementHash, createDto.getParticipantEmail(), locale);
 
         return initiativeId;
     }
@@ -121,13 +122,22 @@ public class PublicInitiativeService {
         assertAllowance("Update initiative", getManagementSettings(initiativeId).isAllowUpdate());
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        // TODO: Remove managementHash in the future
-        String managementHash = loginUserHolder.getInitiative().get().getManagementHash().get();
+        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
+        List<Author> authors = authorDao.findAuthors(initiativeId);
+        ContactInfo contactInfo = null;
+        for (Author author : authors) {
+            if (author.getId().equals(loginUserHolder.getAuthorId())) {
+                contactInfo = author.getContactInfo();
+                break;
+            }
+        }
 
-        Initiative initiative = initiativeDao.getById(initiativeId, managementHash);
+        if (contactInfo == null) {
+            throw new RuntimeException("FIX THIS to something nicer");
+        }
 
         InitiativeUIUpdateDto updateDto = new InitiativeUIUpdateDto();
-        updateDto.setContactInfo(initiative.getAuthor().getContactInfo());
+        updateDto.setContactInfo(contactInfo);
         updateDto.setExtraInfo(initiative.getExtraInfo());
 
         return updateDto;
@@ -138,15 +148,20 @@ public class PublicInitiativeService {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         assertAllowance("Update initiative", getManagementSettings(initiativeId).isAllowUpdate());
 
-        Initiative initiative = initiativeDao.getById(initiativeId, loginUserHolder.getInitiative().get().getManagementHash().get());
         initiativeDao.updateExtraInfo(initiativeId, updateDto.getExtraInfo());
-        authorDao.updateAuthorInformation(initiative.getAuthor().getId(), updateDto.getContactInfo());
+        authorDao.updateAuthorInformation(loginUserHolder.getAuthorId(), updateDto.getContactInfo());
     }
 
     @Transactional(readOnly = true)
     public Author getAuthorInformation(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        return authorDao.getAuthorInformation(initiativeId, loginUserHolder.getInitiative().get().getManagementHash().get());
+        for (Author author : authorDao.findAuthors(initiativeId)) {
+            if (author.getId().equals(loginUserHolder.getAuthorId())) {
+                return author;
+            }
+        }
+        // TODO: Hmm.. We still get the municipality information and stuff from participant table...
+        throw new NotFoundException("Author", initiativeId);
     }
 
     @Transactional(readOnly = false)

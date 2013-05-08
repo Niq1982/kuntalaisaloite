@@ -4,9 +4,13 @@ import com.mysema.query.sql.RelationalPathBase;
 import com.mysema.query.sql.dml.SQLInsertClause;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Path;
+import fi.om.municipalityinitiative.newdto.LoginUserHolder;
+import fi.om.municipalityinitiative.newdto.service.Initiative;
+import fi.om.municipalityinitiative.service.AccessDeniedException;
 import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
+import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 import org.joda.time.DateTime;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +20,10 @@ import javax.annotation.Resource;
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.stub;
 
 public class TestHelper {
 
@@ -34,6 +42,13 @@ public class TestHelper {
     public static final DateTime SENT_TIME = new DateTime(2011, 1, 1, 0, 0);
     public static final DateTime DEFAULT_CREATE_TIME = DateTime.now();
     public static final String DEFAULT_SENT_COMMENT = "some default sent comment";
+
+    public final static LoginUserHolder authorLoginUserHolder = mock(LoginUserHolder.class);
+    public final static LoginUserHolder unknownLoginUserHolder = mock(LoginUserHolder.class);
+
+    static {
+        doThrow(new AccessDeniedException("Access denied")).when(unknownLoginUserHolder).assertManagementRightsForInitiative(anyLong());
+    }
 
     @Resource
     PostgresQueryFactory queryFactory;
@@ -153,6 +168,7 @@ public class TestHelper {
                 .set(QAuthor.author.participantId, lastParticipantId)
                 .set(QAuthor.author.managementHash, TEST_MANAGEMENT_HASH)
                 .executeWithKey(QAuthor.author.id);
+        stub(authorLoginUserHolder.getAuthorId()).toReturn(lastAuthorId);
 
         queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.authorId, lastAuthorId)

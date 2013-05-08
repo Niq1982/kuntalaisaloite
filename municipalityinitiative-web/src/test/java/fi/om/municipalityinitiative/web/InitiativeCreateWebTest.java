@@ -50,7 +50,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     public void editing_initiative_shows_success_message() {
         Long initiativeId = testHelper.createEmptyDraft(testMunicipality1Id);
 
-        loginAsAuthor(initiativeId);
+        loginAsAuthorForLastTestHelperCreatedInitiative();
 
         open(urls.edit(initiativeId));
         
@@ -60,7 +60,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     @Test
     public void edit_page_opens_if_logged_in_as_author() {
         Long initiative = testHelper.createDraft(testMunicipality1Id);
-        loginAsAuthor(initiative);
+        loginAsAuthorForLastTestHelperCreatedInitiative();
         open(urls.getEdit(initiative));
 //        assertThat(driver.getTitle(), is("asdasd"));
         assertTitle(getMessage(MSG_PAGE_CREATE_NEW) + " - " + getMessage(MSG_SITE_NAME));
@@ -83,8 +83,10 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
     @Test
     public void edit_page_fails_if_logged_in_as_another_author() {
+        Long otherInitiative = testHelper.createDraft(testMunicipality1Id);
+        loginAsAuthorForLastTestHelperCreatedInitiative();
+
         Long initiative = testHelper.createDraft(testMunicipality1Id);
-        loginAsAuthor(testHelper.createSingleSent(testMunicipality1Id));
         open(urls.getEdit(initiative));
         assert404();
     }
@@ -94,7 +96,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     public void send_to_review() {
         Long initiativeId = testHelper.createDraft(testMunicipality1Id);
 
-        loginAsAuthor(initiativeId);
+        loginAsAuthorForLastTestHelperCreatedInitiative();
         open(urls.management(initiativeId));
 
         clickById("js-send-to-review");
@@ -123,7 +125,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     @Test
     public void update_page_opens_if_logged_in_as_author() {
         Long initiative = testHelper.createCollectableAccepted(testMunicipality1Id);
-        loginAsAuthor(initiative);
+        loginAsAuthorForLastTestHelperCreatedInitiative();
         open(urls.update(initiative));
         assertTitle("Muokkaa kuntalaisaloitetta - Kuntalaisaloitepalvelu");
     }

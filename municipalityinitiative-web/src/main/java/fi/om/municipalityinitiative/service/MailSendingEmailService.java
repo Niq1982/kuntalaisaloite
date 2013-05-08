@@ -105,12 +105,15 @@ public class MailSendingEmailService implements EmailService {
     }
 
     @Override
-    public void sendPrepareCreatedEmail(Initiative initiative, String authorEmail, Locale locale) {
+    public void sendPrepareCreatedEmail(Initiative initiative, Long authorId, String managementHash, String authorEmail, Locale locale) {
+        HashMap<String, Object> dataMap = toDataMap(initiative, locale);
+        dataMap.put("managementHash", managementHash);
+        dataMap.put("authorId", authorId);
         emailMessageConstructor
                 .fromTemplate(INITIATIVE_PREPARE_VERIFICATION_TEMPLATE)
                 .addRecipient(authorEmail)
                 .withSubject(messageSource.getMessage("email.prepare.create.subject", toArray(), locale))
-                .withDataMap(toDataMap(initiative, locale))
+                .withDataMap(dataMap)
                 .send();
     }
 

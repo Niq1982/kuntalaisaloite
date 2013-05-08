@@ -19,15 +19,5 @@ import static org.mockito.Mockito.stub;
 @ContextConfiguration(classes={IntegrationTestFakeEmailConfiguration.class})
 public abstract class ServiceIntegrationTestBase {
 
-    protected final static LoginUserHolder authorLoginUserHolder = mock(LoginUserHolder.class);
 
-    protected final static LoginUserHolder unknownLoginUserHolder = mock(LoginUserHolder.class);
-
-    static {
-        doThrow(new AccessDeniedException("Access denied")).when(unknownLoginUserHolder).assertManagementRightsForInitiative(anyLong());
-        Initiative initiative = new Initiative();
-        initiative.setAuthor(new Author());
-        initiative.setManagementHash(Maybe.of(TestHelper.TEST_MANAGEMENT_HASH));
-        stub(authorLoginUserHolder.getInitiative()).toReturn(Maybe.of(initiative));
-    }
 }

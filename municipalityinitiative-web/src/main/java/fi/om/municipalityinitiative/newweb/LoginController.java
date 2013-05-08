@@ -58,12 +58,11 @@ public class LoginController extends BaseLoginController {
     }
 
     @RequestMapping(value =  {SINGLE_LOGIN_FI, SINGLE_LOGIN_SV}, method = RequestMethod.POST)
-    public RedirectView singleLogin(@PathVariable Long id,
+    public RedirectView singleLogin(@PathVariable("id") Long authorID,
                                     @RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                                        Model model, Locale locale, HttpServletRequest request) {
-        userService.login(id, managementHash, request);
-        return new RedirectView(Urls.get(locale).getManagement(id), false, true, false);
-
+        Long initiativeId = userService.login(authorID, managementHash, request);
+        return new RedirectView(Urls.get(locale).getManagement(initiativeId), false, true, false);
     }
 
     @RequestMapping(value={LOGOUT_FI, LOGOUT_SV}, method=GET)

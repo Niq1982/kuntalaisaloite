@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.service;
 
+import fi.om.municipalityinitiative.exceptions.NotLoggedInException;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.FakeUserDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import java.util.Collections;
+import java.util.Set;
 
 public class UserService {
 
@@ -25,23 +27,24 @@ public class UserService {
     UserDao userDao = new FakeUserDao();
 
     @Resource
-    InitiativeDao initiativeDao;
-
-    @Resource
     AuthorDao authorDao;
-
-    public void authorLogin(Long authorId, String managementHash) {
-
-    }
 
     public void login(String userName, String password, HttpServletRequest request) {
         request.getSession().setAttribute(LOGIN_USER_PARAMETER, userDao.getUser(userName, password));
     }
 
-    public void login(Long initiativeId, String managementHash, HttpServletRequest request) {
-        Initiative initiative = initiativeDao.getById(initiativeId, managementHash);
-        request.getSession().setAttribute(LOGIN_INITIATIVE_PARAMETER, initiative);
-        request.getSession().setAttribute(LOGIN_USER_PARAMETER, User.normalUser(Collections.singleton(initiative.getId())));
+    public Long login(Long authorId, String managementHash, HttpServletRequest request) {
+//        Initiative initiative = initiativeDao.getById(initiativeId, managementHash);
+//        request.getSession().setAttribute(LOGIN_INITIATIVE_PARAMETER, initiative);
+//        request.getSession().setAttribute(LOGIN_USER_PARAMETER, User.normalUser(Collections.singleton(initiative.getId())));
+
+        Set<Long> initiativeIds = authorDao.loginAndGetAuthorsInitiatives(authorId, managementHash);
+        if (initiativeIds.size() == 0) {
+            throw new NotLoggedInException("Invalid login credentials");
+        }
+        request.getSession().setAttribute(LOGIN_USER_PARAMETER, User.normalUser(authorId, initiativeIds));
+
+        return initiativeIds.iterator().next();
     }
 
     public LoginUserHolder getRequiredLoginUserHolder(HttpServletRequest request) {

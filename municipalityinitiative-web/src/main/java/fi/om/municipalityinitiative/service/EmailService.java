@@ -19,9 +19,9 @@ public interface EmailService {
 
     void sendStatusEmail(Initiative initiative, List<String> sendTo, String municipalityEmail, EmailMessageType emailMessageType);
 
-    void sendPrepareCreatedEmail(Initiative byIdWithOriginalAuthor, String authorEmail, Locale locale);
-
     void sendNotificationToModerator(Initiative initiative, Locale locale, String TEMPORARILY_REPLACING_OM_EMAIL);
 
     void sendParticipationConfirmation(Initiative initiative, String participantEmail, Long participantId, String confirmationCode, Locale locale);
+
+    void sendPrepareCreatedEmail(Initiative initiative, Long authorId, String managementHash, String authorEmail, Locale locale);
 }

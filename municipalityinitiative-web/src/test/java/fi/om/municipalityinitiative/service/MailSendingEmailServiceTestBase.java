@@ -36,6 +36,7 @@ public abstract class MailSendingEmailServiceTestBase {
     public static final String INITIATIVE_MUNICIPALITY = "Some municipality";
     public static final Long INITIATIVE_ID = 1L;
     public static final long INITIATIVE_MUNICIPALITY_ID = 2L;
+    public static final long AUTHOR_ID = 3L;
     public static final String CONTACT_PHONE = "Phone number";
     public static final String CONTACT_EMAIL = "sender.email@example.com";
     public static final List<String> AUTHOR_EMAILS = Collections.singletonList(CONTACT_EMAIL);

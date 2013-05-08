@@ -56,7 +56,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     @Test(expected = AccessDeniedException.class)
     public void create_invitation_checks_management_rights_for_initiative() {
-        authorService.createAuthorInvitation(null, unknownLoginUserHolder, null);
+        authorService.createAuthorInvitation(null, TestHelper.unknownLoginUserHolder, null);
     }
 
     @Test(expected = OperationNotAllowedException.class)
@@ -64,7 +64,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
         Long initiativeId = testHelper.createSingleSent(testMunicipality);
 
-        authorService.createAuthorInvitation(initiativeId, authorLoginUserHolder, null);
+        authorService.createAuthorInvitation(initiativeId, TestHelper.authorLoginUserHolder, null);
     }
 
     @Test
@@ -73,7 +73,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
         AuthorInvitationUICreateDto authorInvitationUICreateDto = authorInvitation();
 
-        authorService.createAuthorInvitation(initiativeId, authorLoginUserHolder, authorInvitationUICreateDto);
+        authorService.createAuthorInvitation(initiativeId, TestHelper.authorLoginUserHolder, authorInvitationUICreateDto);
 
         AuthorInvitation createdInvitation = authorDao.getAuthorInvitation(initiativeId, RandomHashGenerator.getPrevious());
         assertThat(createdInvitation.getConfirmationCode(), is(RandomHashGenerator.getPrevious()));
@@ -86,7 +86,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     public void reject_author_invitation() { // TODO: Implement service method, this uses dao layer.
         Long initiativeId = testHelper.createCollectableReview(testHelper.createTestMunicipality("name"));
 
-        authorService.createAuthorInvitation(initiativeId, authorLoginUserHolder, authorInvitation());
+        authorService.createAuthorInvitation(initiativeId, TestHelper.authorLoginUserHolder, authorInvitation());
         assertThat(authorDao.getAuthorInvitation(initiativeId, RandomHashGenerator.getPrevious()).isRejected(), is(false));
 
         authorDao.rejectAuthorInvitation(initiativeId, RandomHashGenerator.getPrevious());
@@ -215,7 +215,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     public void prefilled_author_confirmation_contains_all_information() {
         Long municipalityId = testHelper.createTestMunicipality("name");
         Long initiativeId = testHelper.createCollectableReview(municipalityId);
-        authorService.createAuthorInvitation(initiativeId, authorLoginUserHolder, authorInvitation());
+        authorService.createAuthorInvitation(initiativeId, TestHelper.authorLoginUserHolder, authorInvitation());
 
         AuthorInvitationUIConfirmDto confirmDto = authorService.getPrefilledAuthorInvitationConfirmDto(initiativeId, RandomHashGenerator.getPrevious());
         assertThat(confirmDto.getMunicipality(), is(municipalityId));
@@ -257,7 +257,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     public void resend_invitation_throws_exception_if_no_management_rights() {
         Long initiativeId = testHelper.createCollectableReview(testMunicipality);
         thrown.expect(AccessDeniedException.class);
-        authorService.resendInvitation(initiativeId, unknownLoginUserHolder, null);
+        authorService.resendInvitation(initiativeId, TestHelper.unknownLoginUserHolder, null);
     }
 
     @Test
@@ -269,7 +269,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         precondition(authorDao.getAuthorInvitation(initiativeId, invitation.getConfirmationCode()).getInvitationTime(), is(invitationTime));
         precondition(allCurrentInvitations(), is(1L));
 
-        authorService.resendInvitation(initiativeId, authorLoginUserHolder, invitation.getConfirmationCode());
+        authorService.resendInvitation(initiativeId, TestHelper.authorLoginUserHolder, invitation.getConfirmationCode());
 
         assertThat(authorDao.getAuthorInvitation(initiativeId, invitation.getConfirmationCode()).getInvitationTime().toLocalDate(), is(new LocalDate()));
         assertThat(allCurrentInvitations(), is(1L));

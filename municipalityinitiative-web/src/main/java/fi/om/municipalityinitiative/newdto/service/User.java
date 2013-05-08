@@ -7,19 +7,20 @@ public class User {
 
     private final boolean omUser;
     private Set<Long> authorsInitiatives;
+    private Long authorId;
 
-    private User(boolean omUser, Set<Long> authorsInitiatives) {
+    private User(boolean omUser, Long authorId, Set<Long> authorsInitiatives) {
         this.omUser = omUser;
-
         this.authorsInitiatives = authorsInitiatives;
+        this.authorId = authorId;
     }
 
     public static User omUser() {
-        return new User(true, Collections.<Long>emptySet());
+        return new User(true, null, Collections.<Long>emptySet());
     }
 
-    public static User normalUser(Set<Long> authorsInitiatives) {
-        return new User(false, authorsInitiatives);
+    public static User normalUser(Long authorId, Set<Long> authorsInitiatives) {
+        return new User(false, authorId, authorsInitiatives);
     }
 
     public boolean isOmUser() {
@@ -32,5 +33,9 @@ public class User {
 
     public boolean hasRightToInitiative(Long initiativeId) {
         return authorsInitiatives.contains(initiativeId);
+    }
+
+    public Long getAuthorId() {
+        return authorId;
     }
 }

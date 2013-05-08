@@ -24,11 +24,11 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
 
     @Test
     public void prepare_initiative_sets_subject_and_login_url() throws Exception {
-        emailService.sendPrepareCreatedEmail(createDefaultInitiative(), CONTACT_EMAIL, Locales.LOCALE_FI);
+        emailService.sendPrepareCreatedEmail(createDefaultInitiative(), AUTHOR_ID, MANAGEMENT_HASH, CONTACT_EMAIL, Locales.LOCALE_FI);
 
         assertThat(getSingleRecipient(), is(CONTACT_EMAIL));
         assertThat(getSingleSentMessage().getSubject(), is("Olet saanut linkin kuntalaisaloitteen tekemiseen Kuntalaisaloite.fi-palvelussa"));
-        assertThat(getMessageContent().html, containsString(urls.loginAuthor(INITIATIVE_ID, MANAGEMENT_HASH)));
+        assertThat(getMessageContent().html, containsString(urls.loginAuthor(AUTHOR_ID, MANAGEMENT_HASH)));
     }
     
     @Test

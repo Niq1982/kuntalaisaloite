@@ -19,7 +19,7 @@ public class FakeUserDao implements UserDao {
             return User.omUser();
         }
         else if (userName.equals(FAKE_USER_USERNAME) && password.equals(FAKE_USER_PASSWORD)) {
-            return User.normalUser(Collections.<Long>emptySet());
+            return User.normalUser(-5L, Collections.<Long>emptySet());
         }
         throw new AccessDeniedException("Invalid login information");
     }
