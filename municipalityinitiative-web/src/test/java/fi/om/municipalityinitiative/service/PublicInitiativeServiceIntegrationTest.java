@@ -42,9 +42,6 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     private InitiativeDao initiativeDao; // Do not depend on this
 
     @Resource
-    private JavaMailSenderFake javaMailSenderFake;
-
-    @Resource
     TestHelper testHelper;
 
     @Resource
@@ -77,7 +74,6 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         assertThat(initiative.getName(), is(TestHelper.DEFAULT_INITIATIVE_NAME));
         assertThat(initiative.getId(), is(initiativeId));
         assertThat(initiative.getProposal(), is(TestHelper.DEFAULT_PROPOSAL));
-        assertThat(initiative.isShowName(), is(true));
         assertThat(initiative.isCollectable(), is(true));
         ReflectionTestUtils.assertNoNullFields(initiative);
     }

@@ -16,11 +16,6 @@ public class InitiativeModerationWebTest extends WebTestBase {
         testMunicipality1Id = testHelper.createTestMunicipality("Tuusula");
     }
 
-    @Override
-    protected boolean overrideDriverToHtmlUnit() {
-        return true;
-    }
-
     @Test
     public void moderation_redirects_to_loginpage_if_not_logged_in() {
         open(urls.moderation(testHelper.createCollectableAccepted(testMunicipality1Id)));

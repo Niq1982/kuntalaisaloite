@@ -6,8 +6,6 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -30,11 +28,6 @@ public class ViewInitiativeWebTest extends WebTestBase {
         draftInitiativeId = testHelper.createDraft(municipalityId);
 
         draftInitiativeId = testHelper.createDraft(municipalityId);
-    }
-
-    @Override
-    protected boolean overrideDriverToHtmlUnit() {
-        return true;
     }
 
     @Test

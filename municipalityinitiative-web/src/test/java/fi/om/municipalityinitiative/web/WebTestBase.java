@@ -85,13 +85,24 @@ public abstract class WebTestBase {
             urls = Urls.FI;
         }
 
-        String driverType = env.getProperty("test.web-driver", "hu");
+        String driverType = env.getProperty("test.web-driver", "default");
         System.out.println("*** driverType = " + driverType);
 
-        if (overrideDriverToHtmlUnit()) {
-            driverType = "default";
-        }
+        formatDriver(driverType);
 
+        if (urls == null) {
+            Urls.initUrls("https://localhost:" + PORT);
+            urls = Urls.FI;
+        }
+        NotTooFastSubmitValidator.disable(); // Disable fast-submit validation at ui-tests
+        testHelper.dbCleanup();
+    }
+
+    protected final void overrideDriverToFirefox(boolean firefox) {
+        formatDriver(firefox ? "ff" : "default");
+
+    }
+    private void formatDriver(String driverType) {
         switch (driverType) {
             case "ie":
                 driver = new InternetExplorerDriver();
@@ -109,17 +120,6 @@ public abstract class WebTestBase {
 
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS); // default is 0!!!
         driver.manage().timeouts().setScriptTimeout(10, TimeUnit.SECONDS); // default is 0!!!
-
-        if (urls == null) {
-            Urls.initUrls("https://localhost:" + PORT);
-            urls = Urls.FI;
-        }
-        NotTooFastSubmitValidator.disable(); // Disable fast-submit validation at ui-tests
-        testHelper.dbCleanup();
-    }
-
-    protected boolean overrideDriverToHtmlUnit() {
-        return false;
     }
 
     @After

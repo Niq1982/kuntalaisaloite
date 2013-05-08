@@ -20,7 +20,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     private static final String MUNICIPALITY_1 = "Vantaa";
     private static final String MUNICIPALITY_2 = "Helsinki";
     private static final String PARTICIPANT_NAME = "Ossi Osallistuja";
-    
+
     /*
      * TODO: Participate initiative Web test
      * 

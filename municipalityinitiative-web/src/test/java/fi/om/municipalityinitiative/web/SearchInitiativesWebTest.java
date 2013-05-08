@@ -18,6 +18,8 @@ public class SearchInitiativesWebTest extends WebTestBase {
 
     @Test
     public void municipalities_are_listed() {
+        overrideDriverToFirefox(true);
+
         testHelper.createTestMunicipality("Tuusula");
         open(urls.search());
 
