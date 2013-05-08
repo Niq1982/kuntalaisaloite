@@ -33,8 +33,8 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
     
     @Test
     public void review_notification_to_moderator_contains_all_information() throws Exception {
-        emailService.sendNotificationToModerator(createDefaultInitiative(), Locales.LOCALE_FI);
-          assertThat(getSingleRecipient(), is(CONTACT_EMAIL)); 
+        emailService.sendNotificationToModerator(createDefaultInitiative(), Locales.LOCALE_FI, "TEMP_EMAIL@example.com");
+          assertThat(getSingleRecipient(), is("TEMP_EMAIL@example.com"));
 //        assertThat(getSingleRecipient(), is(IntegrationTestFakeEmailConfiguration.EMAIL_DEFAULT_OM)); // XXX: Restore this when we want to send emails to om
         assertThat(getSingleSentMessage().getSubject(), is("Kuntalaisaloite tarkastettavaksi"));
         
@@ -69,7 +69,7 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
         emailService.sendSingleToMunicipality(createDefaultInitiative(), MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
 
         assertThat(getSingleSentMessage().getSubject(), is("Kuntalaisaloite: "+ INITIATIVE_NAME));
-        assertThat(getSingleRecipient(), is(CONTACT_EMAIL)); // XXX: MUNICIPALITY_EMAIL
+        assertThat(getSingleRecipient(), is(MUNICIPALITY_EMAIL));
         assertThat(getMessageContent().html, containsString(INITIATIVE_NAME));
         assertThat(getMessageContent().html, containsString(INITIATIVE_PROPOSAL));
         assertThat(getMessageContent().html, containsString(INITIATIVE_MUNICIPALITY));
@@ -102,7 +102,7 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
         emailService.sendCollaborativeToMunicipality(createDefaultInitiative(), Lists.<Participant>newArrayList(), MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
 
         assertThat(getSingleSentMessage().getSubject(), is("Kuntalaisaloite: "+ INITIATIVE_NAME));
-        assertThat(getSingleRecipient(), is(CONTACT_EMAIL)); // XXX: MUNICIPALITY_EMAIL
+        assertThat(getSingleRecipient(), is(MUNICIPALITY_EMAIL));
         assertThat(getMessageContent().html, containsString(EXTRA_INFO));
         assertThat(getMessageContent().html, containsString(SENT_COMMENT));
     }

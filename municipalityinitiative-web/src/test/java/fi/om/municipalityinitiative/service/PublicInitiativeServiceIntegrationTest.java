@@ -413,8 +413,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         updateDto.setContactInfo(contactInfo);
         service.updateInitiative(initiativeId, authorLoginUserHolder, updateDto);
 
-        Initiative updated = initiativeDao.getById(initiativeId, TestHelper.TEST_MANAGEMENT_HASH);
-        Assert.assertThat(updated.getAuthor().getContactInfo().isShowName(), is(false));
+        assertThat(initiativeDao.getByIdWithOriginalAuthor(initiativeId).getExtraInfo(), is(updateDto.getExtraInfo()));
 
         Author author = service.getAuthorInformation(initiativeId, authorLoginUserHolder);
         ReflectionTestUtils.assertReflectionEquals(author.getContactInfo(), contactInfo);

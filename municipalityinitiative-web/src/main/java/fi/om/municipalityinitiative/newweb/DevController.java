@@ -63,10 +63,10 @@ public class DevController extends BaseController {
             Model model, Locale locale, HttpServletRequest request) {
         Urls urls = Urls.get(locale);
 
-        List<Initiative> initiatives = TestDataTemplates.getInitiativeTemplates(municipalityId, authorEmail);
+        List<TestDataTemplates.InitiativeTemplate> initiatives = TestDataTemplates.getInitiativeTemplates(municipalityId, authorEmail);
 
-        Initiative selectedInitiative = initiatives.get(parseIntegerParameter(request, "initiative", 0));
-        selectedInitiative.setState(state);
+        TestDataTemplates.InitiativeTemplate selectedInitiative = initiatives.get(parseIntegerParameter(request, "initiative", 0));
+        selectedInitiative.initiative.setState(state);
 
         List<ParticipantUICreateDto> participants = TestDataTemplates.getParticipantTemplates(homeMunicipalityId);
 
@@ -74,7 +74,7 @@ public class DevController extends BaseController {
         for (int i = 0; i < amount; ++i) {
             initiativeId = testDataService.createTestMunicipalityInitiative(selectedInitiative);
             
-            if (selectedInitiative.isCollectable()) {
+            if (selectedInitiative.initiative.isCollectable()) {
                 for (int j = 0; j < participants.size(); j++) {
                     Integer participantAmount = parseIntegerParameter(request, "participantAmount[" + j + "]", 1);
                     testDataService.createTestParticipant(initiativeId, participants.get(j), participantAmount);

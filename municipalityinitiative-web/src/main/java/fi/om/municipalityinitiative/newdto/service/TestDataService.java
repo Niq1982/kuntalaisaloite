@@ -26,27 +26,27 @@ public class TestDataService {
     private ParticipantDao participantDao;
 
     @Transactional(readOnly = false)
-    public Long createTestMunicipalityInitiative(Initiative initiative) {
+    public Long createTestMunicipalityInitiative(TestDataTemplates.InitiativeTemplate template) {
 
-        Long initiativeId = initiativeDao.prepareInitiative(initiative.getMunicipality().getId());
-        Long participantId = participantDao.prepareParticipant(initiativeId, initiative.getMunicipality().getId(), null, Membership.community, false);
+        Long initiativeId = initiativeDao.prepareInitiative(template.initiative.getMunicipality().getId());
+        Long participantId = participantDao.prepareParticipant(initiativeId, template.initiative.getMunicipality().getId(), null, Membership.community, false);
         Long authorId = authorDao.createAuthor(initiativeId, participantId, DEFAULT_MANAGEMENT_HASH);
         authorDao.assignAuthor(initiativeId, authorId);
 
         InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto();
-        editDto.setName(initiative.getName());
-        editDto.setContactInfo(initiative.getAuthor().getContactInfo());
-        editDto.setProposal(initiative.getProposal()
+        editDto.setName(template.initiative.getName());
+        editDto.setContactInfo(template.author.getContactInfo());
+        editDto.setProposal(template.initiative.getProposal()
                 + "\n\n"
                 + "Linkki hallintasivulle: " + Urls.get(Locales.LOCALE_FI).loginAuthor(initiativeId, DEFAULT_MANAGEMENT_HASH)
         );
         initiativeDao.editInitiativeDraft(initiativeId, editDto);
 
-        initiativeDao.updateInitiativeType(initiativeId, initiative.getType());
-        if (initiative.getType() == InitiativeType.SINGLE) {
+        initiativeDao.updateInitiativeType(initiativeId, template.initiative.getType());
+        if (template.initiative.getType() == InitiativeType.SINGLE) {
             initiativeDao.markInitiativeAsSent(initiativeId);
         }
-        initiativeDao.updateInitiativeState(initiativeId, initiative.getState());
+        initiativeDao.updateInitiativeState(initiativeId, template.initiative.getState());
 
         return initiativeId;
     }

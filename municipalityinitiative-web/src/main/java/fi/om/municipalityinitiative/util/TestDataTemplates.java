@@ -29,7 +29,7 @@ public class TestDataTemplates {
         return contactInfo;
     }
     
-    public static List<Initiative> getInitiativeTemplates(Long municipality, String email) {
+    public static List<InitiativeTemplate> getInitiativeTemplates(Long municipality, String email) {
         return createInitiativeTemplateList(municipality, email);
     }
     
@@ -37,8 +37,8 @@ public class TestDataTemplates {
         return createParticipantTemplateList(homeMunicipality);
     }
    
-    private static List<Initiative> createInitiativeTemplateList(Long municipality, String email) {
-        List<Initiative> initiatives = Lists.newArrayList();
+    private static List<InitiativeTemplate> createInitiativeTemplateList(Long municipality, String email) {
+        List<InitiativeTemplate> initiatives = Lists.newArrayList();
         initiatives.add(createInitiativeTemplate(municipality, INITIATIVE_1_NAME, INITIATIVE_1_PROPOSAL, false, email));
         initiatives.add(createInitiativeTemplate(municipality, INITIATIVE_2_NAME, INITIATIVE_2_PROPOSAL, true, email));
         return initiatives;
@@ -51,22 +51,23 @@ public class TestDataTemplates {
         return participants;
     }
     
-    private static Initiative createInitiativeTemplate(Long municipality, String name, String proposal, boolean collaborative, String email) {
-        Initiative initiative = new Initiative();
+    private static InitiativeTemplate createInitiativeTemplate(Long municipality, String name, String proposal, boolean collaborative, String email) {
+        InitiativeTemplate initiativeTemplate = new InitiativeTemplate();
+        initiativeTemplate.initiative = new Initiative();
 
-        initiative.setMunicipality(new Municipality(municipality, "", ""));
-        initiative.setName(name);
-        initiative.setProposal(proposal);
-        initiative.setType(collaborative ? InitiativeType.COLLABORATIVE : InitiativeType.SINGLE);
-        initiative.setState(InitiativeState.PUBLISHED);
-        Author author = new Author();
-        author.setContactInfo(contactInfo());
-        author.getContactInfo().setEmail(email);
-        author.getContactInfo().setShowName(true);
+        initiativeTemplate.initiative.setMunicipality(new Municipality(municipality, "", ""));
+        initiativeTemplate.initiative.setName(name);
+        initiativeTemplate.initiative.setProposal(proposal);
+        initiativeTemplate.initiative.setType(collaborative ? InitiativeType.COLLABORATIVE : InitiativeType.SINGLE);
+        initiativeTemplate.initiative.setState(InitiativeState.PUBLISHED);
+        initiativeTemplate.author = new Author();
+        initiativeTemplate.author.setContactInfo(contactInfo());
+        initiativeTemplate.author.getContactInfo().setEmail(email);
+        initiativeTemplate.author.getContactInfo().setShowName(true);
 
-        initiative.setAuthor(author);
 
-        return initiative;
+
+        return initiativeTemplate;
     }
     
     private static ParticipantUICreateDto createParticipantTemplate(Long municipality, String name, boolean showName) {
@@ -78,5 +79,10 @@ public class TestDataTemplates {
         participant.setMunicipalMembership(Membership.property);
         participant.setShowName(showName);
         return participant;
+    }
+
+    public static class InitiativeTemplate {
+        public Initiative initiative;
+        public Author author;
     }
 }
