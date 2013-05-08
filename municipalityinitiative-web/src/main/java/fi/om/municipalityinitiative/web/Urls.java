@@ -130,7 +130,7 @@ public final class Urls {
     
     public static final String ACTION_ACCEPT_INVITATION = "action-accept-invitation";
 
-    public static final String ACTION_DECLINE_INVITATION = "action-decline-invitation";
+    public static final String ACTION_REJECT_INVITATION = "action-decline-invitation";
     
     public static final String ACTION_START_COLLECTING = "action-start-collecting";
     

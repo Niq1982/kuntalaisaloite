@@ -53,9 +53,8 @@
             
             <form action="${springMacroRequestContext.requestUri}" method="POST" >
                 <input type="hidden" name="CSRFToken" value="${CSRFToken!}"/>
-                <input type="hidden" name="invitation" value="${authorInvitation.confirmCode!""}"/>
-                <input type="hidden" name="action" value="confirm-decline-invitation"/>
-                <button type="submit" name="#" value="<@u.message "invitation.decline" />" class="small-button gray cancel"><span class="small-icon cancel"><@u.message "invitation.decline" /></span></button>
+                <input type="hidden" name="${UrlConstants.PARAM_INVITATION_CODE}" value="${authorInvitation.confirmCode!""}"/>
+                <button type="submit" name="${UrlConstants.ACTION_REJECT_INVITATION}" id="modal-${UrlConstants.ACTION_REJECT_INVITATION}"  value="<@u.message "invitation.decline" />" class="small-button gray cancel"><span class="small-icon cancel"><@u.message "invitation.decline" /></span></button>
                 <a href="?invitation=${authorInvitation.confirmCode!""}" class="push close"><@u.message "action.cancel" /></a>
             </form>
         
@@ -91,7 +90,6 @@
             <form action="${springMacroRequestContext.requestUri}" method="POST" >
                 <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
                 <input type="hidden" name="confirmCode" value="${authorInvitation.confirmCode!""}"/>
-                <input type="hidden" name="action" value="confirm-accept-invitation"/>
                 <@f.notTooFastField authorInvitation/>
             
                     <div class="column col-1of2">
@@ -138,7 +136,7 @@
                 <p><@u.messageHTML key="userConfirmation.invitation" args=[href] /></p>-->
                 
                     <div class="input-block-content">
-                        <button type="submit" name="${UrlConstants.ACTION_ACCEPT_INVITATION}"  id="modal-${UrlConstants.ACTION_ACCEPT_INVITATION}" value="<@u.message "invitation.accept.confirm" />" class="small-button green save-and-send"><span class="small-icon save-and-send"><@u.message "invitation.accept" /></span></button>
+                        <button type="submit" name="${UrlConstants.ACTION_ACCEPT_INVITATION}" id="modal-${UrlConstants.ACTION_ACCEPT_INVITATION}" value="<@u.message "invitation.accept.confirm" />" class="small-button green save-and-send"><span class="small-icon save-and-send"><@u.message "invitation.accept" /></span></button>
                         <a href="?invitation=${authorInvitation.confirmCode!""}" class="push close"><@u.message "action.cancel" /></a>
                     </div>
             </form>                    
