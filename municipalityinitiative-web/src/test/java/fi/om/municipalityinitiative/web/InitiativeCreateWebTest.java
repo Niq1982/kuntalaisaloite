@@ -39,7 +39,8 @@ public class InitiativeCreateWebTest extends WebTestBase {
     
     @Test
     public void filling_prepare_page_and_submitting_shows_success_message() {
-        
+        overrideDriverToFirefox(true);
+
         openAndAssertPreparePage();
         select_municipality();
         fill_in_preparation_form();
