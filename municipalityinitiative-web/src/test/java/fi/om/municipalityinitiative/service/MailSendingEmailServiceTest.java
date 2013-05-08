@@ -102,7 +102,7 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
         emailService.sendCollaborativeToMunicipality(createDefaultInitiative(), Lists.<Participant>newArrayList(), MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
 
         assertThat(getSingleSentMessage().getSubject(), is("Kuntalaisaloite: "+ INITIATIVE_NAME));
-        assertThat(getSingleRecipient(), is(CONTACT_EMAIL)); // XXX: MUNICIPALITY_EMAIL
+        assertThat(getSingleRecipient(), is(MUNICIPALITY_EMAIL));
         assertThat(getMessageContent().html, containsString(EXTRA_INFO));
         assertThat(getMessageContent().html, containsString(SENT_COMMENT));
     }

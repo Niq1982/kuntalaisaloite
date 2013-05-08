@@ -218,7 +218,8 @@ public class PublicInitiativeService {
         initiativeDao.updateSentComment(initiativeId, sentComment);
         Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
         List<Participant> participants = participantDao.findAllParticipants(initiativeId);
-        String municipalityEmail = municipalityEmail(initiative);
+        // TODO: String municipalityEmail = municipalityEmail(initiative);
+        String municipalityEmail = authorDao.getAuthorEmails(initiativeId).get(0);
         emailService.sendCollaborativeToMunicipality(initiative, participants, municipalityEmail, locale);
         emailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityEmail, EmailMessageType.SENT_TO_MUNICIPALITY);
     }

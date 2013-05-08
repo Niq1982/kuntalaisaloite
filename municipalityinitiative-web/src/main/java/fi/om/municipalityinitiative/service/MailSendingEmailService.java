@@ -35,14 +35,14 @@ public class MailSendingEmailService implements EmailService {
     private EmailMessageConstructor emailMessageConstructor;
 
     @Override
-    public void sendAuthorConfirmedInvitation(Initiative initiative, String email, String managementHash, Locale locale) {
+    public void sendAuthorConfirmedInvitation(Initiative initiative, String authorsEmail, String managementHash, Locale locale) {
 
         HashMap<String, Object> dataMap = toDataMap(initiative, locale);
         dataMap.put("managementHash", managementHash);
 
         emailMessageConstructor
                 .fromTemplate(TEMP_INVITATION_ACCEPTANCE)
-                .addRecipient(email)
+                .addRecipient(authorsEmail)
                 .withSubject(messageSource.getMessage("email.invitation.accepted.subject", toArray(), locale))
                 .withDataMap(dataMap)
                 .send();
@@ -78,8 +78,7 @@ public class MailSendingEmailService implements EmailService {
     public void sendCollaborativeToMunicipality(Initiative initiative, List<Participant> participants, String municipalityEmail, Locale locale) {
         emailMessageConstructor
                 .fromTemplate(COLLABORATIVE_TO_MUNICIPALITY)
-                // .addRecipient(municipalityEmail)
-                .addRecipient(initiative.getAuthor().getContactInfo().getEmail())
+                .addRecipient(municipalityEmail)
                 .withSubject(messageSource.getMessage("email.not.collectable.municipality.subject", toArray(initiative.getName()), locale))
                 .withDataMap(toDataMap(initiative, locale))
                 .withAttachment(initiative, participants)
