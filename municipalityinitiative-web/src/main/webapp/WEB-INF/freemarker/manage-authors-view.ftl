@@ -73,7 +73,7 @@
                                 </form>
                             </span>
                         <#else>
-                            <span class="status"><span class="icon-small unconfirmed"></span> <@u.message "invitation.unconfirmed" /> <span class="bull">&bull;</span> <a href="#"><span class="icon-small cancel"></span> peru kutsu</a></span>
+                            <span class="status"><span class="icon-small unconfirmed"></span> <@u.message "invitation.unconfirmed" /> <#-- TODO <span class="bull">&bull;</span> <a href="#"><span class="icon-small cancel"></span> peru kutsu</a></span>-->
                             <span class="action push"><@u.message "invitation.sent" /> <@u.localDate i.invitationTime /></span>
                         </#if>
                     </div>
