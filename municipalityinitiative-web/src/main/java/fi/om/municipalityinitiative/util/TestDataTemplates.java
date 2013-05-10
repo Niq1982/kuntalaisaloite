@@ -55,7 +55,7 @@ public class TestDataTemplates {
         InitiativeTemplate initiativeTemplate = new InitiativeTemplate();
         initiativeTemplate.initiative = new Initiative();
 
-        initiativeTemplate.initiative.setMunicipality(new Municipality(municipality, "", ""));
+        initiativeTemplate.initiative.setMunicipality(new Municipality(municipality, "", "", false));
         initiativeTemplate.initiative.setName(name);
         initiativeTemplate.initiative.setProposal(proposal);
         initiativeTemplate.initiative.setType(collaborative ? InitiativeType.COLLABORATIVE : InitiativeType.SINGLE);

@@ -183,7 +183,7 @@ public class OmInitiativeServiceTest {
         initiative.setState(InitiativeState.REVIEW);
         initiative.setType(InitiativeType.UNDEFINED);
 
-        initiative.setMunicipality(new Municipality(0, "", ""));
+        initiative.setMunicipality(new Municipality(0, "", "", false));
 
         contactInfo.setEmail(AUTHOR_EMAIL);
         return initiative;

@@ -40,7 +40,7 @@
 
         <div class="form-block-container">
             <div id="" class="input-block cf">
-                <@edit.municipalityBlock municipality=currentMunicipality />
+                <@edit.municipalityBlock municipality=currentMunicipality/>
             </div>
         </div>
         

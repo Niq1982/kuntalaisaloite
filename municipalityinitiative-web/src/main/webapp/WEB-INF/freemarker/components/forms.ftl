@@ -180,7 +180,7 @@
  *        or CSS styles or size
  * @param preSelected the predefined value for the select
 -->
-<#macro municipalitySelect path options required="" cssClass="" attributes="" preSelected="" showLabel=true defaultOption="initiative.chooseMunicipality" allowSingleDeselect=false key="">
+<#macro municipalitySelect path options required="" cssClass="" attributes="" preSelected="" showLabel=true defaultOption="initiative.chooseMunicipality" allowSingleDeselect=false key="" onlyActive=false>
     <@spring.bind path />
     
     <#if showLabel>
@@ -202,7 +202,9 @@
     <select name="${spring.status.expression}" id="${spring.status.expression}" ${attributes} class="chzn-select ${cssClass}" data-initiative-municipality="${data}" data-placeholder="<@u.message defaultOption />" <#if allowSingleDeselect>data-allow-single-deselect="allow"</#if>>
         <option value=""><@u.message defaultOption /></option>
         <#list options as option>
+        <#if !onlyActive || option.active>
             <option value="${option.id}"<@checkSelected option.id preSelected />>${option.getName(locale)}</option>
+        </#if>
         </#list>
     </select>
 </#macro>

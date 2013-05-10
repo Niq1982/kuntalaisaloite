@@ -55,10 +55,10 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         testHelper.dbCleanup();
 
         String municipalityName = "Test municipality";
-        testMunicipality = new Municipality(testHelper.createTestMunicipality(municipalityName), municipalityName, municipalityName);
+        testMunicipality = new Municipality(testHelper.createTestMunicipality(municipalityName), municipalityName, municipalityName, false);
 
         municipalityName = "Participant municipality";
-        participantMunicipality = new Municipality(testHelper.createTestMunicipality(municipalityName), municipalityName, municipalityName);
+        participantMunicipality = new Municipality(testHelper.createTestMunicipality(municipalityName), municipalityName, municipalityName, false);
 
     }
 

@@ -64,7 +64,7 @@ public abstract class MailSendingEmailServiceTestBase {
     protected static Initiative createDefaultInitiative() {
         Initiative initiative = new Initiative();
         initiative.setId(1L);
-        initiative.setMunicipality(new Municipality(INITIATIVE_MUNICIPALITY_ID, INITIATIVE_MUNICIPALITY, INITIATIVE_MUNICIPALITY));
+        initiative.setMunicipality(new Municipality(INITIATIVE_MUNICIPALITY_ID, INITIATIVE_MUNICIPALITY, INITIATIVE_MUNICIPALITY, false));
 
         initiative.setManagementHash(Maybe.of(MANAGEMENT_HASH));
         initiative.setCreateTime(new LocalDate(2010, 1, 1));

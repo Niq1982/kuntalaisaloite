@@ -1,3 +1,4 @@
+
 <#import "/spring.ftl" as spring />
 <#import "components/layout.ftl" as l />
 <#import "components/utils.ftl" as u />
@@ -30,7 +31,7 @@
     <div class="search-parameters-container cf">
         <form action="${springMacroRequestContext.requestUri}" method="GET" id="search-form" class="search-form">
             <div class="column col-1of3">
-                <@f.municipalitySelect path="currentSearch.municipality" options=municipalities required="" cssClass="municipality-filter" showLabel=false defaultOption="currentSearch.municipality.all" allowSingleDeselect=true />
+                <@f.municipalitySelect path="currentSearch.municipality" options=municipalities required="" cssClass="municipality-filter" showLabel=false defaultOption="currentSearch.municipality.all" allowSingleDeselect=true onlyActive=true />
             </div>
             
             <#-- Submit button for NOSCRIPT users -->

@@ -167,8 +167,8 @@ public class JdbcParticipantDao implements ParticipantDao {
                             new Municipality(
                                     row.get(QMunicipality.municipality.id),
                                     row.get(QMunicipality.municipality.name),
-                                    row.get(QMunicipality.municipality.nameSv)
-                            ),
+                                    row.get(QMunicipality.municipality.nameSv),
+                                    row.get(QMunicipality.municipality.active)),
                             row.get(participant.email),
                             row.get(participant.membershipType)
                     );

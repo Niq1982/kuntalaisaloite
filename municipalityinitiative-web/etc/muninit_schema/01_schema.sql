@@ -10,6 +10,7 @@ create table municipality (
 	name varchar(30) constraint municipality_name_nn not null,
 	name_sv varchar(30) constraint municipality_name_sv_nn not null,
 	email varchar(100),
+	active boolean default false,
 
 	constraint municipality_pk primary key(id),
 	constraint municipality_name_u unique(name),

@@ -139,14 +139,16 @@ public class Mappings {
         return new Municipality(
                 row.get(QMunicipality.municipality.id),
                 row.get(QMunicipality.municipality.name),
-                row.get(QMunicipality.municipality.nameSv));
+                row.get(QMunicipality.municipality.nameSv),
+                row.get(QMunicipality.municipality.active));
     }
 
     public static Municipality parseMunicipality(Tuple row, QMunicipality municipality) {
         return new Municipality(
                 row.get(municipality.id),
                 row.get(municipality.name),
-                row.get(municipality.nameSv));
+                row.get(municipality.nameSv),
+                row.get(municipality.active));
     }
 
     public static Maybe<LocalDate> maybeLocalDate(DateTime sentTime) {

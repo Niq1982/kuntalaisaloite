@@ -22,7 +22,7 @@ public class PublicAuthorsTest {
         publicAuthor.setContactInfo(new ContactInfo());
         publicAuthor.getContactInfo().setName("Public Name");
         publicAuthor.getContactInfo().setShowName(true);
-        publicAuthor.setMunicipality(new Municipality(1L, null, null));
+        publicAuthor.setMunicipality(new Municipality(1L, null, null, false));
         authorList.add(publicAuthor);
 
         Author privateAuthor = new Author();

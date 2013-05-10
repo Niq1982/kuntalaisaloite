@@ -18,6 +18,8 @@ public class QMunicipality extends com.mysema.query.sql.RelationalPathBase<QMuni
 
     public static final QMunicipality municipality = new QMunicipality("municipality");
 
+    public final BooleanPath active = createBoolean("active");
+
     public final StringPath email = createString("email");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);

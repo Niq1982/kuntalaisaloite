@@ -53,7 +53,8 @@ public class JdbcMunicipalityDao implements MunicipalityDao {
                     Municipality dto = new Municipality(
                             row.get(QMunicipality.municipality.id),
                             row.get(QMunicipality.municipality.name),
-                            row.get(QMunicipality.municipality.nameSv)
+                            row.get(QMunicipality.municipality.nameSv),
+                            row.get(QMunicipality.municipality.active)
                     );
                     return dto;
                 }

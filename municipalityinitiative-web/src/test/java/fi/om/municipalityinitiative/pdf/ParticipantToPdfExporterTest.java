@@ -31,7 +31,7 @@ public class ParticipantToPdfExporterTest {
     private static Initiative createInitiative() {
         Initiative initiative = new Initiative();
         initiative.setName("Koirat pois lähiöistä");
-        initiative.setMunicipality(new Municipality(1, "Helsinki", "Helsingfors"));
+        initiative.setMunicipality(new Municipality(1, "Helsinki", "Helsingfors", false));
         initiative.setSentTime(Maybe.of(new LocalDate()));
         return initiative;
     }
@@ -39,7 +39,7 @@ public class ParticipantToPdfExporterTest {
     private static List<Participant> createParticipants() {
         List<Participant> participants = Lists.newArrayList();
         for (int i = 0; i < 1000; ++i) {
-            Municipality municipality = new Municipality(new Random().nextLong(), RandomStringUtils.randomAlphabetic(10), RandomStringUtils.randomAlphabetic(10));
+            Municipality municipality = new Municipality(new Random().nextLong(), RandomStringUtils.randomAlphabetic(10), RandomStringUtils.randomAlphabetic(10), false);
             Participant participant = new Participant(new LocalDate(), RandomStringUtils.randomAlphabetic(20), new Random().nextBoolean(), municipality, "", Membership.company);
             participants.add(participant);
         }

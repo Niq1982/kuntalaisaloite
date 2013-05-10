@@ -48,7 +48,7 @@ public class JdbcInitiativeDaoTest {
     public void setup() {
         testHelper.dbCleanup();
         String municipalityName = "Test municipality";
-        testMunicipality = new Municipality(testHelper.createTestMunicipality(municipalityName), municipalityName, municipalityName);
+        testMunicipality = new Municipality(testHelper.createTestMunicipality(municipalityName), municipalityName, municipalityName, false);
     }
 
     // Create and get are tested at MunicipalityInitiativeServiceIntegrationTests

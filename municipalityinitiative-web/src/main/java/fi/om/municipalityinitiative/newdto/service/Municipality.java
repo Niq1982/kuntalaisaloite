@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newdto.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import fi.om.municipalityinitiative.json.JsonId;
 import fi.om.municipalityinitiative.util.Locales;
@@ -9,14 +10,16 @@ import java.util.Locale;
 
 @JsonPropertyOrder(alphabetic = true)
 public class Municipality {
-    private Long id;
-    private String finnishName;
-    private String swedishName;
+    private final Long id;
+    private final String finnishName;
+    private final String swedishName;
+    private final boolean active;
 
-    public Municipality(long id, String finnishName, String swedishName) {
+    public Municipality(long id, String finnishName, String swedishName, Boolean active) {
         this.id = id;
         this.finnishName = finnishName;
         this.swedishName = swedishName;
+        this.active = active;
     }
 
     @JsonId(path= Urls.MUNICIPALITY)
@@ -40,5 +43,10 @@ public class Municipality {
     
     public String getName(String locale) {
         return getLocalizedName(Locale.forLanguageTag(locale));
+    }
+
+    @JsonIgnore
+    public boolean isActive() {
+        return active;
     }
 }
