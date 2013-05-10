@@ -71,12 +71,17 @@ public class TestHelper {
 
     @Transactional
     public Long createTestMunicipality(String name) {
+        return createTestMunicipality(name, true);
+    }
+
+    @Transactional
+    public Long createTestMunicipality(String name, boolean isActive) {
         return queryFactory.insert(QMunicipality.municipality)
                 .set(QMunicipality.municipality.name, name)
                 .set(QMunicipality.municipality.nameSv, name + " sv")
                 .set(QMunicipality.municipality.email, name.replace(" ", "_") + "@example.com")
-                .set(QMunicipality.municipality.active, true)
-        .executeWithKey(QMunicipality.municipality.id);
+                .set(QMunicipality.municipality.active, isActive)
+                .executeWithKey(QMunicipality.municipality.id);
     }
 
 

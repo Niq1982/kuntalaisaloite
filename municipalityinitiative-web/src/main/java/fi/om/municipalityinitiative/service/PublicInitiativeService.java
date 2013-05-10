@@ -76,13 +76,15 @@ public class PublicInitiativeService {
     @Transactional(readOnly = false)
     public Long prepareInitiative(PrepareInitiativeUICreateDto createDto, Locale locale) {
 
+        assertMunicipalityIsActive(createDto.getMunicipality());
+
         Long initiativeId = initiativeDao.prepareInitiative(createDto.getMunicipality());
         Long participantId = participantDao.prepareParticipant(initiativeId,
                 createDto.getHomeMunicipality(),
                 createDto.getParticipantEmail(),
                 createDto.hasMunicipalMembership() ? createDto.getMunicipalMembership() : Membership.none,
                 false); // XXX: Remove franchise?
-                        // XXX: Create dto?
+        // XXX: Create dto?
         String managementHash = RandomHashGenerator.randomString(40);
         Long authorId = authorDao.createAuthor(initiativeId, participantId, managementHash);
         authorDao.assignAuthor(initiativeId, authorId);
@@ -90,6 +92,12 @@ public class PublicInitiativeService {
         emailService.sendPrepareCreatedEmail(initiativeDao.getByIdWithOriginalAuthor(initiativeId), authorId, managementHash, createDto.getParticipantEmail(), locale);
 
         return initiativeId;
+    }
+
+    private void assertMunicipalityIsActive(Long municipality) {
+        if (!municipalityDao.getMunicipality(municipality).isActive()) {
+            throw new AccessDeniedException("Municipality is not active for initiatives: " + municipality);
+        }
     }
 
     @Transactional(readOnly = true)

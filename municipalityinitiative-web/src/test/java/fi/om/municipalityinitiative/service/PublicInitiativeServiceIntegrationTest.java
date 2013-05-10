@@ -114,6 +114,16 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         assertThat(getSingleInitiativeInfo().getParticipantCount(), is(1L));
     }
 
+    @Test(expected = AccessDeniedException.class)
+    public void trying_to_prepare_initiative_to_non_active_municipality_is_forbidden() {
+        Long unactiveMunicipality = testHelper.createTestMunicipality("Some Unactive Municipality", false);
+
+        PrepareInitiativeUICreateDto createDto = new PrepareInitiativeUICreateDto();
+        createDto.setMunicipality(unactiveMunicipality);
+
+        service.prepareInitiative(createDto, null);
+    }
+
     private InitiativeListInfo getSingleInitiativeInfo() {
         List<InitiativeListInfo> initiatives = service.findMunicipalityInitiatives(new InitiativeSearch().setShow(InitiativeSearch.Show.all));
         precondition(initiatives, hasSize(1));
