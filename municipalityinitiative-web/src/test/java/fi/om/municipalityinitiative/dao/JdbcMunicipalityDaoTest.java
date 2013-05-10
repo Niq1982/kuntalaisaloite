@@ -75,4 +75,15 @@ public class JdbcMunicipalityDaoTest {
         assertThat(municipality.getNameSv(), is("Tuusula sv"));
         assertThat(municipality.getId(), is(municipalityId));
     }
+
+    @Test
+    public void update_municipality() {
+        Long municipality = testHelper.createTestMunicipality("Tuusula", false);
+
+        String updatedEmail = "updated_email@example.com";
+        municipalityDao.updateMunicipality(municipality, updatedEmail, true);
+
+        assertThat(municipalityDao.getMunicipality(municipality).isActive(), is(true));
+        assertThat(municipalityDao.getMunicipalityEmail(municipality), is(updatedEmail));
+    }
 }

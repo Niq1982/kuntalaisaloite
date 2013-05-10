@@ -14,6 +14,8 @@ import javax.annotation.Resource;
 
 import java.util.List;
 
+import static fi.om.municipalityinitiative.newdao.JdbcInitiativeDao.assertSingleAffection;
+
 @SQLExceptionTranslated
 @Transactional(readOnly = true)
 public class JdbcMunicipalityDao implements MunicipalityDao {
@@ -43,6 +45,17 @@ public class JdbcMunicipalityDao implements MunicipalityDao {
         return queryFactory.from(QMunicipality.municipality)
                 .where(QMunicipality.municipality.id.eq(id))
                 .singleResult(municipalityWrapper);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void updateMunicipality(Long municipalityId, String email, boolean active) {
+        assertSingleAffection(queryFactory.update(QMunicipality.municipality)
+                .set(QMunicipality.municipality.email, email)
+                .set(QMunicipality.municipality.active, active)
+                .where(QMunicipality.municipality.id.eq(municipalityId))
+                .execute());
+
     }
 
     private static Expression<Municipality> municipalityWrapper =
