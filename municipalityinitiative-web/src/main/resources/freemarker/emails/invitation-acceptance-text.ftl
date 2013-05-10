@@ -21,24 +21,3 @@
 ----
 
 <@b.emailFooter type />
-
-
---------------------------------------------------
-<#global switchLocale = altLocale />
-
-<@u.message "email.author.invitation.accepted.title" />
-
-
-<@b.initiativeDetails type=type showProposal=false />
-
-<@u.message "email.author.invitation.accepted.description" />
-
-
-<@b.adminViewLink type />
-
-
-----
-
-<@b.emailFooter type />
-
-<#global switchLocale = locale />

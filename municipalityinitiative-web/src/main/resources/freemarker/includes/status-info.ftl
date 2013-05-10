@@ -202,8 +202,6 @@
         <@b.statusInfoComment "text" initiative.moderatorComment!"" />
         
         <@b.initiativeDetails type="text" showProposal=false showDate=false />
-        
-        <@b.adminViewLink "text" />
     </#assign>
     
     <#-- HTML -->
@@ -213,7 +211,6 @@
         
         <@b.statusInfoComment "html" initiative.moderatorComment!"" />
         <@b.initiativeDetails type="html" showProposal=false showDate=false />
-        <@b.adminViewLink "html" />
     </#assign>
     
 <#elseif emailMessageType == EmailMessageType.REJECTED_BY_OM>
@@ -225,8 +222,6 @@
         <@b.statusInfoComment "text" initiative.moderatorComment!"" />
         
         <@b.initiativeDetails type="text" showProposal=false showDate=false />
-
-        <@b.adminViewLink "text" />
     </#assign>
     
     <#-- HTML -->
@@ -235,7 +230,6 @@
         
         <@b.statusInfoComment "html" initiative.moderatorComment!"" />
         <@b.initiativeDetails type="html" showProposal=false showDate=false />
-        <@b.adminViewLink "html" />
     </#assign>
     
 <#elseif emailMessageType == EmailMessageType.INVITATION_ACCEPTED>
