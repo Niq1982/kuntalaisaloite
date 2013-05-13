@@ -3,7 +3,7 @@ package fi.om.municipalityinitiative.newdto.ui;
 public class MunicipalityUIEditDto {
 
     private Long id;
-    private String email;
+    private String municipalityEmail;
     private Boolean active;
 
     public Long getId() {
@@ -14,12 +14,12 @@ public class MunicipalityUIEditDto {
         this.id = id;
     }
 
-    public String getEmail() {
-        return email;
+    public String getMunicipalityEmail() {
+        return municipalityEmail;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setMunicipalityEmail(String email) {
+        this.municipalityEmail = email;
     }
 
     public Boolean getActive() {

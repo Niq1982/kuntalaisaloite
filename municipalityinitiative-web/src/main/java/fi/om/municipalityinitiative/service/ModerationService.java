@@ -89,6 +89,6 @@ public class ModerationService {
 
     public void updateMunicipality(LoginUserHolder requiredOmLoginUserHolder, MunicipalityUIEditDto editDto) {
         requiredOmLoginUserHolder.assertOmUser();
-        municipalityDao.updateMunicipality(editDto.getId(), editDto.getEmail(), Boolean.TRUE.equals(editDto.getActive()));
+        municipalityDao.updateMunicipality(editDto.getId(), editDto.getMunicipalityEmail(), Boolean.TRUE.equals(editDto.getActive()));
     }
 }
