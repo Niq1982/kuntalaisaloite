@@ -82,7 +82,9 @@ public class OmInitiativeService {
         return authorDao.findAuthors(initiativeId);
     }
 
+    @Transactional(readOnly = true)
     public List<MunicipalityEditDto> findMunicipalitiesForEdit() {
+        userService.requireOmUser();
         return municipalityDao.findMunicipalitiesForEdit();
     }
 }
