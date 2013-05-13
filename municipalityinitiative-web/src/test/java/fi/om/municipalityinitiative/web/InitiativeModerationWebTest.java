@@ -39,8 +39,6 @@ public class InitiativeModerationWebTest extends WebTestBase {
 
     @Test
     public void accept_initiative(){
-        overrideDriverToFirefox(true);
-        
         Long initiativeId = testHelper.createCollectableReview(testMunicipality1Id);
 
         loginAsOmUser();
@@ -60,8 +58,6 @@ public class InitiativeModerationWebTest extends WebTestBase {
 
     @Test
     public void reject_initiative(){
-        overrideDriverToFirefox(true);
-        
         Long initiativeId = testHelper.createCollectableReview(testMunicipality1Id);
 
         loginAsOmUser();

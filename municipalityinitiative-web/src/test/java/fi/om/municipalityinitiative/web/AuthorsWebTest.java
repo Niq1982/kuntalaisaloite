@@ -17,6 +17,7 @@ public class AuthorsWebTest  extends WebTestBase {
     private static final String MSG_ADD_AUTHORS_LINK = "addAuthors.link";
     private static final String MSG_BTN_ADD_AUTHOR = "action.addAuthor";
     private static final String MSG_BTN_SEND = "action.sendInvitation";
+    private static final String MSG_INVITATION_UNCONFIRMED = "invitation.unconfirmed";
     
     
     /**
@@ -28,8 +29,6 @@ public class AuthorsWebTest  extends WebTestBase {
     
     @Test
     public void add_author() {
-//        overrideDriverToFirefox(true);
-        
         Long municipalityId = testHelper.createTestMunicipality(MUNICIPALITY_1);
         Long initiativeId = testHelper.create(municipalityId, InitiativeState.ACCEPTED, InitiativeType.COLLABORATIVE);
         
@@ -46,6 +45,7 @@ public class AuthorsWebTest  extends WebTestBase {
         getElemContaining(getMessage(MSG_BTN_SEND), "button").click();
         
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_INVITATION_SENT);
+        assertTextContainedByXPath("//div[@class='view-block last']//span[@class='status']", getMessage(MSG_INVITATION_UNCONFIRMED));
     }
     
     @Test
