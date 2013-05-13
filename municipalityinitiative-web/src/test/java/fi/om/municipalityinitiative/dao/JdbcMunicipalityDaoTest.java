@@ -93,7 +93,7 @@ public class JdbcMunicipalityDaoTest {
     }
 
     @Test
-    public void get_municipalities_for_edit() {
+    public void find_municipalities_for_edit() {
 
         Long municipality = testHelper.createTestMunicipality("testMunicipality", true);
 
