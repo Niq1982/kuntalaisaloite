@@ -42,4 +42,10 @@ public class LoginUserHolder {
     public Long getAuthorId() {
         return user.getAuthorId();
     }
+
+    public void assertOmUser() {
+        if (user.isNotOmUser()){
+            throw new AccessDeniedException("No privileges");
+        }
+    }
 }

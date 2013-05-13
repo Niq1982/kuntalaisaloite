@@ -45,7 +45,7 @@ public class ModerationController extends BaseController{
 
         return ViewGenerator.moderationView(publicInitiativeService.getMunicipalityInitiative(initiativeId),
                 publicInitiativeService.getManagementSettings(initiativeId),
-                omInitiativeService.findAuthors(initiativeId)
+                omInitiativeService.findAuthors(userService.getRequiredOmLoginUserHolder(request), initiativeId)
         ).view(model, Urls.get(locale).alt().moderation(initiativeId));
     }
 
@@ -54,7 +54,7 @@ public class ModerationController extends BaseController{
                                    @RequestParam("moderatorComment") String comment,
                                    Locale locale, HttpServletRequest request) {
 
-        omInitiativeService.accept(initiativeId, comment, locale);
+        omInitiativeService.accept(userService.getRequiredOmLoginUserHolder(request), initiativeId, comment, locale);
         return redirectWithMessage(Urls.get(locale).moderation(initiativeId), RequestMessage.ACCEPT_INITIATIVE, request);
     }
 
@@ -63,7 +63,7 @@ public class ModerationController extends BaseController{
                                    @RequestParam("moderatorComment") String comment,
                                    Locale locale, HttpServletRequest request) {
 
-        omInitiativeService.reject(initiativeId, comment);
+        omInitiativeService.reject(userService.getRequiredOmLoginUserHolder(request), initiativeId, comment);
         return redirectWithMessage(Urls.get(locale).moderation(initiativeId), RequestMessage.REJECT_INITIATIVE, request);
     }
 
@@ -72,7 +72,7 @@ public class ModerationController extends BaseController{
 
         // TODO: userService.getRequiredOmLoginUserHolder(request);
 
-        return ViewGenerator.municipalityModarationView(omInitiativeService.findMunicipalitiesForEdit(),
+        return ViewGenerator.municipalityModarationView(omInitiativeService.findMunicipalitiesForEdit(userService.getRequiredOmLoginUserHolder(request)),
                 new MunicipalityUIEditDto())
                 .view(model, Urls.get(Locales.LOCALE_FI).municipalityModeration());
 

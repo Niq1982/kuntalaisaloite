@@ -1,5 +1,7 @@
 package fi.om.municipalityinitiative.newdto.service;
 
+import fi.om.municipalityinitiative.service.AccessDeniedException;
+
 import java.util.Collections;
 import java.util.Set;
 
