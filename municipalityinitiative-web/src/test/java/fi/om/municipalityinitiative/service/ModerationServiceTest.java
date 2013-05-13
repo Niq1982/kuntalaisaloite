@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.service;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
+import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
@@ -123,8 +124,8 @@ public class ModerationServiceTest {
 
         moderationService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
 
-        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyList(), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM_AND_SENT));
-        verify(moderationService.emailService).sendSingleToMunicipality(any(Initiative.class), null, anyString(), eq(Locales.LOCALE_FI));
+        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM_AND_SENT));
+        verify(moderationService.emailService).sendSingleToMunicipality(any(Initiative.class), anyListOf(Author.class), anyString(), eq(Locales.LOCALE_FI));
 
     }
 

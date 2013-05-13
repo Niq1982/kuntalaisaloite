@@ -16,11 +16,8 @@ public class InitiativeDraftUIEditDto {
     // Not editable after set
     private Municipality municipality;
 
-    @Deprecated
-    // FIXME: Remove
-    private InitiativeState state;
-
     // Editable by author via ui
+
     @NotEmpty
     @Size(max = InitiativeConstants.INITIATIVE_NAME_MAX)
     private String name;
@@ -45,7 +42,6 @@ public class InitiativeDraftUIEditDto {
         editDto.setName(initiative.getName());
         editDto.setProposal(initiative.getProposal());
         editDto.municipality = initiative.getMunicipality();
-        editDto.state = initiative.getState();
         editDto.setContactInfo(new ContactInfo(contactInfo));
         return editDto;
     }
@@ -86,7 +82,4 @@ public class InitiativeDraftUIEditDto {
         this.contactInfo = contactInfo;
     }
 
-    public InitiativeState getState() {
-        return state;
-    }
 }
