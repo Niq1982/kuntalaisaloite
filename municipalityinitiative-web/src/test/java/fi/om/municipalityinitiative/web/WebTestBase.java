@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.conf.WebTestConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.service.MailSendingEmailService;
 import fi.om.municipalityinitiative.util.Locales;
+import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.TestUtil;
 import fi.om.municipalityinitiative.validation.NotTooFastSubmitValidator;
 import mockit.Mocked;
@@ -249,16 +250,30 @@ public abstract class WebTestBase {
         return wait.until(ExpectedConditions.elementToBeClickable(by));
     }
     
-    protected WebElement getElemContaining(String linkText, String tagName) {
-        List<WebElement> htmlElements = driver.findElements(By.tagName(tagName));
+    protected WebElement getElemContaining(String containing, String tagName) {
+
+        Maybe<WebElement> maybeElement = getOptionalElemContaining(containing, tagName);
+        
+        if (maybeElement.isNotPresent()) {
+            throw new NullPointerException("Tag not found with text: " + containing);
+        }
+        
+        return maybeElement.get();
+    }
+    
+    protected Maybe<WebElement> getOptionalElemContaining(String containing, String tagName) {
+        
+     List<WebElement> htmlElements = driver.findElements(By.tagName(tagName));
+            
         // wait.until(ExpectedConditions.elementToBeClickable(By.name(name)));
        
         for (WebElement e : htmlElements) {
-          if (e.getText().contains(linkText)) {
-            return e;
+          if (e.getText().contains(containing)) {
+            return Maybe.of(e);
           }
         }
-        throw new NullPointerException("Label not found with text: " + linkText);
+        
+        return Maybe.absent();
     }
 
 

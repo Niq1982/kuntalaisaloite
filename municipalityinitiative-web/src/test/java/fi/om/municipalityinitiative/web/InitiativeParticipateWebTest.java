@@ -1,7 +1,15 @@
 package fi.om.municipalityinitiative.web;
 
+import static org.junit.Assert.assertFalse;
+
 import org.junit.Ignore;
 import org.junit.Test;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+
+import fi.om.municipalityinitiative.util.InitiativeState;
+import fi.om.municipalityinitiative.util.InitiativeType;
 
 public class InitiativeParticipateWebTest extends WebTestBase {
     
@@ -20,6 +28,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     private static final String MUNICIPALITY_1 = "Vantaa";
     private static final String MUNICIPALITY_2 = "Helsinki";
     private static final String PARTICIPANT_NAME = "Ossi Osallistuja";
+    private static final String PARTICIPANT_EMAIL = "test@test.com";
 
     /*
      * TODO: Participate initiative Web test
@@ -34,12 +43,13 @@ public class InitiativeParticipateWebTest extends WebTestBase {
      */
     
     @Test
-    @Ignore("Does not work with new architecture and needs to be fixed when functionality re-implemented")
-    public void participate_initiative() {
+    public void participate_initiative_does_something_when_something() {
+        overrideDriverToFirefox(true);
+        
         Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
         Long municipality2Id = testHelper.createTestMunicipality(MUNICIPALITY_2);
         
-        Long initiativeId = testHelper.createCollectableAccepted(municipality1Id);
+        Long initiativeId = testHelper.create(municipality1Id, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         
         open(urls.view(initiativeId));
 
@@ -53,13 +63,16 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         getElemContaining(MUNICIPALITY_2, "li").click(); */
 
         
-        // TODO: Other options: franchise and municipality membership
-
-        getElemContaining(getMessage(RADIO_FRANCHISE_TRUE), "label").click();
+        inputText("participantEmail", PARTICIPANT_EMAIL);
         
         getElemContaining(getMessage(MSG_BTN_SAVE), "button").click();
         
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_PARTICIPATE);
+       
+        assertThat(getOptionalElemContaining(getMessage(MSG_BTN_PARTICIPATE), "a").isPresent(), is(false));
+        
+        
+        
     }
     
 }
