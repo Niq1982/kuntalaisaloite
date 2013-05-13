@@ -1048,4 +1048,17 @@ $.DirtyForms.dialog = {
 // Listen forms that have class 'sodirty'
 $('form.sodirty').dirtyForms();
 
+
+/**
+* Manage municipalities
+* =====================
+* 
+*/
+
+$('.municipality-filter').change( function() {
+	var thisSelect = $(this);
+	
+});	
+
+
 });
