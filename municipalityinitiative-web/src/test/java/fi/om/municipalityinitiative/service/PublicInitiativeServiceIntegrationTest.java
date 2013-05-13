@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.service;
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
+import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.Author;
@@ -26,6 +27,7 @@ import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.theInstance;
 import static org.mockito.Mockito.stub;
 
 
@@ -39,6 +41,9 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 
     @Resource
     private InitiativeDao initiativeDao; // Do not depend on this
+
+    @Resource
+    private AuthorDao authorDao; // Do not depend on this
 
     @Resource
     TestHelper testHelper;
@@ -146,23 +151,18 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         assertThat(participant.getParticipateDate(), is(LocalDate.now()));
     }
 
-    @Test
-    public void preparing_initiative_saves_email() {
-        PrepareInitiativeUICreateDto createDto = prepareDto();
-        createDto.setParticipantEmail("any@example.com");
-        Long initiativeId = service.prepareInitiative(createDto, Locales.LOCALE_FI);
-
-        // TODO: Change to getContactInfo etc.
-        assertThat(service.getInitiativeDraftForEdit(initiativeId).getContactInfo().getEmail(), is(createDto.getParticipantEmail()));
-    }
-
     @Test(expected = AccessDeniedException.class)
     public void editing_initiative_throws_exception_if_wrong_author() {
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
 
-        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(ReflectionTestUtils.modifyAllFields(new Initiative()));
+        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(ReflectionTestUtils.modifyAllFields(new Initiative()), new ContactInfo());
 
         service.editInitiativeDraft(initiativeId, TestHelper.unknownLoginUserHolder, editDto);
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void getting_initiativeDraft_for_edit_throws_exception_if_not_allowed() {
+        service.getInitiativeDraftForEdit(null, TestHelper.unknownLoginUserHolder);
     }
 
     @Test(expected = OperationNotAllowedException.class)
@@ -174,9 +174,12 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     @Test
     public void editing_initiative_updates_all_required_fields() {
 
-        Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
+        Long initiativeId = testHelper.createDraft(testMunicipality.getId());
 
-        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(ReflectionTestUtils.modifyAllFields(new Initiative()));
+        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(
+                ReflectionTestUtils.modifyAllFields(new Initiative()),
+                ReflectionTestUtils.modifyAllFields(new ContactInfo())
+        );
 
         ContactInfo contactInfo = new ContactInfo();
         contactInfo.setEmail("updated email");
@@ -191,7 +194,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 
         service.editInitiativeDraft(initiativeId, TestHelper.authorLoginUserHolder, editDto);
 
-        InitiativeDraftUIEditDto updated = service.getInitiativeDraftForEdit(initiativeId);
+        InitiativeDraftUIEditDto updated = service.getInitiativeDraftForEdit(initiativeId, TestHelper.authorLoginUserHolder);
 
         ReflectionTestUtils.assertReflectionEquals(updated.getContactInfo(), contactInfo);
         assertThat(updated.getName(), is(editDto.getName()));
@@ -233,13 +236,14 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     }
 
     @Test
-    public void preparing_initiative_sets_email_and_municipality() {
+    public void preparing_initiative_saved_email_and_municipality_and_membership() {
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
 
-        InitiativeDraftUIEditDto initiativeForEdit = service.getInitiativeDraftForEdit(initiativeId);
-        assertThat(initiativeForEdit.getMunicipality().getId(), is(testMunicipality.getId())); // XXX: Remove?
-        assertThat(initiativeForEdit.getState(), is(InitiativeState.DRAFT)); // XXX: Remove
-        assertThat(initiativeForEdit.getContactInfo().getEmail(), is("authorEmail@example.com"));
+        Participant initiativeForEdit = participantDao.findPublicParticipants(initiativeId).get(0);
+
+        assertThat(initiativeForEdit.getHomeMunicipality().getId(), is(prepareDto().getHomeMunicipality()));
+        assertThat(initiativeForEdit.getEmail(), is(prepareDto().getParticipantEmail()));
+        assertThat(initiativeForEdit.getMembership(), is(prepareDto().getMunicipalMembership()));
 
         // Note that all fields are not set when preparing
     }
@@ -247,7 +251,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     @Test(expected = OperationNotAllowedException.class)
     public void get_initiative_for_edit_fails_if_initiative_accepted() {
         Long collectableAccepted = testHelper.createCollectableAccepted(testMunicipality.getId());
-        service.getInitiativeDraftForEdit(collectableAccepted);
+        service.getInitiativeDraftForEdit(collectableAccepted, TestHelper.authorLoginUserHolder);
     }
 
     @Test
@@ -432,6 +436,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         prepareInitiativeUICreateDto.setMunicipality(testMunicipality.getId());
         prepareInitiativeUICreateDto.setHomeMunicipality(participantMunicipality.getId());
         prepareInitiativeUICreateDto.setParticipantEmail("authorEmail@example.com");
+        prepareInitiativeUICreateDto.setMunicipalMembership(Membership.property);
         return prepareInitiativeUICreateDto;
     }
 

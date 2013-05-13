@@ -111,9 +111,13 @@ public class PublicInitiativeService {
     }
 
     @Transactional(readOnly = true)
-    public InitiativeDraftUIEditDto getInitiativeDraftForEdit(Long initiativeId) {
+    public InitiativeDraftUIEditDto getInitiativeDraftForEdit(Long initiativeId, LoginUserHolder loginUserHolder) {
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         assertAllowance("Edit initiative", getManagementSettings(initiativeId).isAllowEdit());
-        return InitiativeDraftUIEditDto.parse(initiativeDao.getByIdWithOriginalAuthor(initiativeId));
+        return InitiativeDraftUIEditDto.parse(
+                initiativeDao.getByIdWithOriginalAuthor(initiativeId),
+                authorDao.getAuthor(loginUserHolder.getAuthorId()).getContactInfo()
+        );
     }
 
     @Transactional(readOnly = false)

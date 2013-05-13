@@ -39,14 +39,14 @@ public class InitiativeDraftUIEditDto {
         // For freemarker
     }
 
-    public static InitiativeDraftUIEditDto parse(Initiative initiative) {
+    public static InitiativeDraftUIEditDto parse(Initiative initiative, ContactInfo contactInfo) {
         InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto();
         editDto.setExtraInfo(initiative.getExtraInfo());
-        editDto.setContactInfo(new ContactInfo(initiative.getAuthor().getContactInfo()));
         editDto.setName(initiative.getName());
         editDto.setProposal(initiative.getProposal());
         editDto.municipality = initiative.getMunicipality();
         editDto.state = initiative.getState();
+        editDto.setContactInfo(new ContactInfo(contactInfo));
         return editDto;
     }
 

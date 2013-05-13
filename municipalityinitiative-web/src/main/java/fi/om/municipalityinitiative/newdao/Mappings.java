@@ -29,7 +29,6 @@ public class Mappings {
 
     public static Expression<Author> authorMapping =
             new MappingProjection<Author>(Author.class,
-                    municipalityInitiative.all(),
                     QMunicipality.municipality.all(),
                     QParticipant.participant.all(),
                     QAuthor.author.all()) {

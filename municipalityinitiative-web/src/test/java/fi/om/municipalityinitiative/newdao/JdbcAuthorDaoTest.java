@@ -77,10 +77,10 @@ public class JdbcAuthorDaoTest {
     }
 
     @Test
-    public void get_author_information() {
-        Long id = testHelper.createSingleSent(testMunicipality);
+    public void get_author_by_id_returns_all_information() {
+        testHelper.createSingleSent(testMunicipality);
 
-        Author author = authorDao.getAuthorInformation(id, TestHelper.PREVIOUS_TEST_MANAGEMENT_HASH);
+        Author author = authorDao.getAuthor(testHelper.getLastAuthorId());
         assertThat(author.getContactInfo().getAddress(), is(TestHelper.DEFAULT_AUTHOR_ADDRESS));
         assertThat(author.getContactInfo().getName(), is(TestHelper.DEFAULT_AUTHOR_NAME));
         assertThat(author.getContactInfo().getEmail(), is(TestHelper.DEFAULT_AUTHOR_EMAIL));
