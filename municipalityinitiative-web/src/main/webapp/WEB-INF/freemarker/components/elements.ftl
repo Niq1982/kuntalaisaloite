@@ -36,13 +36,14 @@
                 <h4 class="header">${publicAuthor.name}</h4>
                 <p>${publicAuthor.municipality.getName(locale)}</p>
             </div>
-            <#if ((publicAuthor_index + 1) % 3 == 0)><br class="clear" /></#if>
+            <#if ((publicAuthor_index + 1) % 3 == 0) || !publicAuthor_has_next><br class="clear" /></#if>
         </#list>
     <#else>
-        <p>Ei julkisia hahmoja</p>
+        <p><em><@u.message key="authors.noPublic" /></em></p>
     </#if>
-    <br class="clear" />
-    <p>Lisäksi <b>${publicAuthors.privateNames} kpl</b> salaperäisiä hahmoja
+    <#if (publicAuthors.privateNames > 0)>
+        <p><@u.messageHTML key="authors.privateAuthors" args=[publicAuthors.publicNames, publicAuthors.privateNames] /></p>
+    </#if>
 </#macro>
 
 <#-- 
@@ -54,14 +55,15 @@
 -->
 <#macro initiativeContactInfo authorList>
     <h2 class="inline-style"><@u.message "initiative.contactinfo.title" /></h2><span class="push"><@u.message "initiative.contactinfo.notPublic" /></span>
+    <br class="clear" />
     <#list authorList as a>
         <div class="column ${((a_index + 1) % 3 == 0)?string("last","")}">
-            <p>${a.contactInfo.name!""}, ${a.municipality.getName(locale)}<br />
+            <p><strong>${a.contactInfo.name!""}</strong>, ${a.municipality.getName(locale)}<br />
             ${a.contactInfo.email!""}<br />
             <#if a.contactInfo.address?? && a.contactInfo.address != ""><#noescape>${a.contactInfo.address?replace('\n','<br/>')!""}</#noescape><br /></#if>
             ${a.contactInfo.phone!""}</p>
         </div>
-        <#if ((a_index + 1) % 3 == 0)><br class="clear" /></#if>
+        <#if ((a_index + 1) % 3 == 0) || !a_has_next><br class="clear" /></#if>
     </#list>
 </#macro>
 
