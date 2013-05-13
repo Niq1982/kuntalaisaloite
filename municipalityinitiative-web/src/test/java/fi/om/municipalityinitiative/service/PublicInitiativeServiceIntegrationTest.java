@@ -136,16 +136,6 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     }
 
     @Test
-    public void preparing_initiative_creates_hash() {
-        Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
-        stubAuthorLoginUserHolderWith(initiativeId);
-
-        InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
-
-        assertThat(initiative.getManagementHash().get(), is(RandomHashGenerator.getPrevious()));
-    }
-
-    @Test
     public void preparing_initiative_sets_participant_information() {
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
 

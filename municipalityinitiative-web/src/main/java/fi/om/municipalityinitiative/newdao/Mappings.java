@@ -90,7 +90,6 @@ public class Mappings {
                     );
                     info.setType(row.get(municipalityInitiative.type));
                     info.setProposal(row.get(municipalityInitiative.proposal));
-                    info.setManagementHash(Maybe.of(row.get(QAuthor.author.managementHash)));
                     info.setSentTime(maybeLocalDate(row.get(municipalityInitiative.sent)));
                     info.setState(row.get(municipalityInitiative.state));
                     info.setStateTime(row.get(municipalityInitiative.stateTimestamp).toLocalDate());

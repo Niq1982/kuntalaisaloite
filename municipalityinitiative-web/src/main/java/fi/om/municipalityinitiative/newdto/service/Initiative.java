@@ -17,7 +17,6 @@ public class Initiative {
 
     private LocalDate createTime;
 
-    private Maybe<String> managementHash = Maybe.absent();
     private Maybe<LocalDate> sentTime = Maybe.absent();
     private InitiativeType type;
     private InitiativeState state;
@@ -65,14 +64,6 @@ public class Initiative {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public void setManagementHash(Maybe<String> managementHash) {
-        this.managementHash = managementHash;
-    }
-
-    public Maybe<String> getManagementHash() {
-        return managementHash;
     }
 
     public boolean isCollectable() {
