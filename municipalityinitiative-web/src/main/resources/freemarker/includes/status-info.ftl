@@ -137,7 +137,6 @@
         <#-- TODO: sent date: initiative.sentTime.value -->
         <@b.initiativeDetails "text" />
         
-        <@b.contactInfo "text" />
         ----
         
         <@u.message "email.municipality.emailAddress" />
@@ -149,8 +148,7 @@
         <#-- TODO: sent date initiative.sentTime.value -->
         <@b.initiativeDetails "html" />
         
-        <@b.contactInfo "html" />
-        
+
         <h4 style="${h4!""}"><@u.message "email.municipality.emailAddress" /></h4>
         <p style="${pBottomMargin!""}"><@u.link "mailto:"+municipalityEmail!"" municipalityEmail!"" /></p>
     </#assign>

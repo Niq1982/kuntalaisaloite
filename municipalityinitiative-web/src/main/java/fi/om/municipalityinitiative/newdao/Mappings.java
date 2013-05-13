@@ -97,19 +97,6 @@ public class Mappings {
                     info.setParticipantCount(row.get(municipalityInitiative.participantCount));
                     info.setSentComment(row.get(municipalityInitiative.sentComment));
 
-                    Author author = new Author();
-                    ContactInfo contactInfo = new ContactInfo();
-                    contactInfo.setAddress(row.get(QAuthor.author.address));
-                    contactInfo.setPhone(row.get(QAuthor.author.phone));
-                    contactInfo.setName(row.get(QAuthor.author.name));
-                    contactInfo.setEmail(row.get(QParticipant.participant.email));
-                    contactInfo.setShowName(Boolean.TRUE.equals(row.get(QParticipant.participant.showName)));
-                    author.setId(row.get(QAuthor.author.id));
-                    author.setContactInfo(contactInfo);
-                    author.setMunicipality(parseMunicipality(row, JdbcInitiativeDao.AUTHOR_MUNICIPALITY));
-
-                    info.setAuthor(author);
-
                     return info;
                 }
             };

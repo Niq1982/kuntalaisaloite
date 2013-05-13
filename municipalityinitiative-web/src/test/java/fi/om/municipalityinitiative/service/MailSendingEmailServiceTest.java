@@ -33,7 +33,7 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
     
     @Test
     public void review_notification_to_moderator_contains_all_information() throws Exception {
-        emailService.sendNotificationToModerator(createDefaultInitiative(), Locales.LOCALE_FI, "TEMP_EMAIL@example.com");
+        emailService.sendNotificationToModerator(createDefaultInitiative(),defaultAuthors(), Locales.LOCALE_FI, "TEMP_EMAIL@example.com");
           assertThat(getSingleRecipient(), is("TEMP_EMAIL@example.com"));
 //        assertThat(getSingleRecipient(), is(IntegrationTestFakeEmailConfiguration.EMAIL_DEFAULT_OM)); // XXX: Restore this when we want to send emails to om
         assertThat(getSingleSentMessage().getSubject(), is("Kuntalaisaloite tarkastettavaksi"));
@@ -66,7 +66,7 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
     @Test
     public void single_to_municipality_contains_all_information() throws Exception {
 
-        emailService.sendSingleToMunicipality(createDefaultInitiative(), MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
+        emailService.sendSingleToMunicipality(createDefaultInitiative(), defaultAuthors(), MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
 
         assertThat(getSingleSentMessage().getSubject(), is("Kuntalaisaloite: "+ INITIATIVE_NAME));
         assertThat(getSingleRecipient(), is(MUNICIPALITY_EMAIL));
@@ -99,7 +99,7 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
 
     @Test
     public void collaborative_to_municipality_contains_all_information() throws Exception {
-        emailService.sendCollaborativeToMunicipality(createDefaultInitiative(), Lists.<Participant>newArrayList(), MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
+        emailService.sendCollaborativeToMunicipality(createDefaultInitiative(), defaultAuthors(), Lists.<Participant>newArrayList(), MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
 
         assertThat(getSingleSentMessage().getSubject(), is("Kuntalaisaloite: "+ INITIATIVE_NAME));
         assertThat(getSingleRecipient(), is(MUNICIPALITY_EMAIL));

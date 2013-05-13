@@ -3,12 +3,10 @@ package fi.om.municipalityinitiative.service;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
-import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.service.LoginUser;
-import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Locales;
@@ -27,7 +25,6 @@ import static org.mockito.Mockito.*;
 
 public class ModerationServiceTest {
 
-    private static final String AUTHOR_EMAIL = "some@example.com";
     public static final long INITIATIVE_ID = 3L;
 
     private ModerationService moderationService;
@@ -127,7 +124,7 @@ public class ModerationServiceTest {
         moderationService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
 
         verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyList(), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM_AND_SENT));
-        verify(moderationService.emailService).sendSingleToMunicipality(any(Initiative.class), anyString(), eq(Locales.LOCALE_FI));
+        verify(moderationService.emailService).sendSingleToMunicipality(any(Initiative.class), null, anyString(), eq(Locales.LOCALE_FI));
 
     }
 
@@ -180,17 +177,12 @@ public class ModerationServiceTest {
 
     private static Initiative initiativeWithAuthorEmailTypeUndefined() {
         Initiative initiative = new Initiative();
-        ContactInfo contactInfo = new ContactInfo();
-        Author author = new Author();
 
-        author.setContactInfo(contactInfo);
-        initiative.setAuthor(author);
         initiative.setState(InitiativeState.REVIEW);
         initiative.setType(InitiativeType.UNDEFINED);
 
         initiative.setMunicipality(new Municipality(0, "", "", false));
 
-        contactInfo.setEmail(AUTHOR_EMAIL);
         return initiative;
     }
 

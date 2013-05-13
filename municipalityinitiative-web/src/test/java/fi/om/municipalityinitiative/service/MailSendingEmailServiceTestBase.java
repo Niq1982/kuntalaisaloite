@@ -73,18 +73,19 @@ public abstract class MailSendingEmailServiceTestBase {
         initiative.setModeratorComment(MODERATOR_COMMENT);
         initiative.setSentComment(SENT_COMMENT);
 
-        Author author = new Author();
+        return initiative;
+    }
+
+    protected static List<Author> defaultAuthors() {
         ContactInfo contactInfo = new ContactInfo();
         contactInfo.setAddress(CONTACT_ADDRESS);
         contactInfo.setName(CONTACT_NAME);
         contactInfo.setEmail(CONTACT_EMAIL);
         contactInfo.setPhone(CONTACT_PHONE);
-        contactInfo.setShowName(true);
+        Author author = new Author();
         author.setContactInfo(contactInfo);
-        
-        initiative.setAuthor(author);
-
-        return initiative;
+        author.setMunicipality(new Municipality(INITIATIVE_MUNICIPALITY_ID, INITIATIVE_MUNICIPALITY, INITIATIVE_MUNICIPALITY, true));
+        return Collections.singletonList(author);
     }
 
     @Before

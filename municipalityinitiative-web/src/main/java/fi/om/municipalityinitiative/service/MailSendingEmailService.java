@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Maps;
+import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Participant;
@@ -64,22 +65,22 @@ public class MailSendingEmailService implements EmailService {
     }
 
     @Override
-    public void sendSingleToMunicipality(Initiative initiative, String municipalityEmail, Locale locale) {
+    public void sendSingleToMunicipality(Initiative initiative, List<Author> authors, String municipalityEmail, Locale locale) {
         emailMessageConstructor
                 .fromTemplate(NOT_COLLECTABLE_TEMPLATE)
                 .addRecipient(municipalityEmail)
                 .withSubject(messageSource.getMessage("email.not.collectable.municipality.subject", toArray(initiative.getName()), locale))
-                .withDataMap(toDataMap(initiative, locale))
+                .withDataMap(toDataMap(initiative, authors, locale))
                 .send();
     }
 
     @Override
-    public void sendCollaborativeToMunicipality(Initiative initiative, List<Participant> participants, String municipalityEmail, Locale locale) {
+    public void sendCollaborativeToMunicipality(Initiative initiative, List<Author> authors, List<Participant> participants, String municipalityEmail, Locale locale) {
         emailMessageConstructor
                 .fromTemplate(COLLABORATIVE_TO_MUNICIPALITY)
                 .addRecipient(municipalityEmail)
                 .withSubject(messageSource.getMessage("email.not.collectable.municipality.subject", toArray(initiative.getName()), locale))
-                .withDataMap(toDataMap(initiative, locale))
+                .withDataMap(toDataMap(initiative, authors, locale))
                 .withAttachment(initiative, participants)
                 .send();
     }
@@ -101,7 +102,7 @@ public class MailSendingEmailService implements EmailService {
                 .withSubject(messageSource.getMessage("email.status.info." + emailMessageType.name() + ".subject", toArray(), locale))
                 .withDataMap(dataMap)
                 .send();
-        
+
     }
 
     @Override
@@ -118,14 +119,14 @@ public class MailSendingEmailService implements EmailService {
     }
 
     @Override
-    public void sendNotificationToModerator(Initiative initiative, Locale locale, String TEMPORARILY_REPLACING_OM_EMAIL) {
+    public void sendNotificationToModerator(Initiative initiative, List<Author> authors, Locale locale, String TEMPORARILY_REPLACING_OM_EMAIL) {
 
         emailMessageConstructor
                 .fromTemplate(NOTIFICATION_TO_MODERATOR)
                 //.withSendToModerator()
                 .addRecipient(TEMPORARILY_REPLACING_OM_EMAIL)
                 .withSubject(messageSource.getMessage("email.notification.to.moderator.subject", toArray(initiative.getName()), locale))
-                .withDataMap(toDataMap(initiative, locale))
+                .withDataMap(toDataMap(initiative, authors, locale))
                 .send();
     }
 
@@ -155,6 +156,12 @@ public class MailSendingEmailService implements EmailService {
         dataMap.put("altLocale", Locales.getAltLocale(locale));
         addEnum(EmailMessageType.class, dataMap);
         return dataMap;
+    }
+
+    private Map<String, Object> toDataMap(Initiative initiative, List<Author> authors, Locale locale) {
+        Map<String, Object> stringObjectMap = toDataMap(initiative, locale);
+        stringObjectMap.put("authors", authors);
+        return stringObjectMap;
     }
 
     private static <T extends Enum<?>> void addEnum(Class<T> enumType, Map<String, Object> dataMap) {

@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.newdto.service;
 
-import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -20,19 +19,10 @@ public class Initiative {
     private Maybe<LocalDate> sentTime = Maybe.absent();
     private InitiativeType type;
     private InitiativeState state;
-    private Author author;
     private LocalDate stateTime;
     private String moderatorComment;
     private int participantCount;
     private String sentComment;
-
-    public Author getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(Author author) {
-        this.author = author;
-    }
 
     public String getName() {
         return name;
