@@ -12,6 +12,7 @@ import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
 import fi.om.municipalityinitiative.newdto.ui.MunicipalityEditDto;
+import fi.om.municipalityinitiative.newdto.ui.MunicipalityUIEditDto;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import org.springframework.transaction.annotation.Transactional;
@@ -84,5 +85,10 @@ public class ModerationService {
     public List<MunicipalityEditDto> findMunicipalitiesForEdit(LoginUserHolder loginUserHolder) {
         loginUserHolder.assertOmUser();
         return municipalityDao.findMunicipalitiesForEdit();
+    }
+
+    public void updateMunicipality(LoginUserHolder requiredOmLoginUserHolder, MunicipalityUIEditDto editDto) {
+        requiredOmLoginUserHolder.assertOmUser();
+        municipalityDao.updateMunicipality(editDto.getId(), editDto.getEmail(), Boolean.TRUE.equals(editDto.getActive()));
     }
 }

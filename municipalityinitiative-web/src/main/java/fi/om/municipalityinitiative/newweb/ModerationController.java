@@ -8,6 +8,7 @@ import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -70,11 +71,17 @@ public class ModerationController extends BaseController{
     @RequestMapping(value = MUNICIPALITY_MODERATION, method = GET)
     public String moderateMunicipalities(Model model, HttpServletRequest request){
 
-        // TODO: userService.getRequiredOmLoginUserHolder(request);
-
         return ViewGenerator.municipalityModarationView(moderationService.findMunicipalitiesForEdit(userService.getRequiredOmLoginUserHolder(request)),
                 new MunicipalityUIEditDto())
                 .view(model, Urls.get(Locales.LOCALE_FI).municipalityModeration());
+
+    }
+
+    @RequestMapping(value= MUNICIPALITY_MODERATION, method = POST)
+    public String updateMunicipality(@ModelAttribute("updateData") MunicipalityUIEditDto editDto, HttpServletRequest request) {
+        // TODO: Validation
+        moderationService.updateMunicipality(userService.getRequiredOmLoginUserHolder(request), editDto);
+        return redirectWithMessage(Urls.get(Locales.LOCALE_FI).municipalityModeration(), RequestMessage.INFORMATION_SAVED, request);
 
     }
 
