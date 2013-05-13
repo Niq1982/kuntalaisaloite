@@ -10,6 +10,7 @@ import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
+import fi.om.municipalityinitiative.newdto.ui.MunicipalityEditDto;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,5 +80,9 @@ public class OmInitiativeService {
     public List<Author> findAuthors(Long initiativeId) {
         userService.requireOmUser();
         return authorDao.findAuthors(initiativeId);
+    }
+
+    public List<MunicipalityEditDto> findMunicipalitiesForEdit() {
+        return municipalityDao.findMunicipalitiesForEdit();
     }
 }

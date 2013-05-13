@@ -177,8 +177,8 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
     }
 
     @Bean
-    public InitiativeModerationController initiativeModerationController() {
-        return new InitiativeModerationController(optimizeResources(env), resourcesVersion(env));
+    public ModerationController initiativeModerationController() {
+        return new ModerationController(optimizeResources(env), resourcesVersion(env));
     }
 
     @Bean

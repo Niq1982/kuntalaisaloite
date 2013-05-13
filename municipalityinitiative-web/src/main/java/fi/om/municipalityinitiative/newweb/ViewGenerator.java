@@ -193,6 +193,15 @@ public class ViewGenerator {
         );
     }
 
+    public static ViewGenerator municipalityModarationView(List<MunicipalityEditDto> municipalitiesForEdit, MunicipalityUIEditDto municipalityUIEditDto) {
+        return new ViewGenerator(Views.MUNICIPALITY_MODERATION,
+                new AttributeBuilder()
+                        .add("municipalities", municipalitiesForEdit)
+                        .add("updateData", municipalityUIEditDto)
+                        .build()
+        );
+    }
+
     private static class AttributeBuilder {
         private Map<String, Object> attributes = Maps.newHashMap();
 

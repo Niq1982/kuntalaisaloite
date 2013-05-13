@@ -16,6 +16,5 @@ public interface MunicipalityDao {
 
     void updateMunicipality(Long municipalityId, String email, boolean active);
 
-    @Transactional(readOnly = true)
     List<MunicipalityEditDto> findMunicipalitiesForEdit();
 }

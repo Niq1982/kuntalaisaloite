@@ -1,6 +1,8 @@
 package fi.om.municipalityinitiative.newweb;
 
+import fi.om.municipalityinitiative.newdto.ui.MunicipalityUIEditDto;
 import fi.om.municipalityinitiative.service.*;
+import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.BaseController;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
@@ -20,7 +22,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
-public class InitiativeModerationController extends BaseController{
+public class ModerationController extends BaseController{
 
     @Resource
     private PublicInitiativeService publicInitiativeService;
@@ -31,7 +33,7 @@ public class InitiativeModerationController extends BaseController{
     @Resource
     private UserService userService;
 
-    public InitiativeModerationController(boolean optimizeResources, String resourcesVersion) {
+    public ModerationController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
     }
 
@@ -64,4 +66,19 @@ public class InitiativeModerationController extends BaseController{
         omInitiativeService.reject(initiativeId, comment);
         return redirectWithMessage(Urls.get(locale).moderation(initiativeId), RequestMessage.REJECT_INITIATIVE, request);
     }
+
+    @RequestMapping(value = MUNICIPALITY_MODERATION, method = GET)
+    public String moderateMunicipalities(Model model, HttpServletRequest request){
+
+        // TODO: userService.getRequiredOmLoginUserHolder(request);
+
+        return ViewGenerator.municipalityModarationView(omInitiativeService.findMunicipalitiesForEdit(),
+                new MunicipalityUIEditDto())
+                .view(model, Urls.get(Locales.LOCALE_FI).municipalityModeration());
+
+    }
+
+
+
+
 }

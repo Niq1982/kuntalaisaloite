@@ -204,6 +204,8 @@ public final class Urls {
 
     public static final String MODERATION_SV = "/sv/moderation" + "/" + ID_PARAMETER;
 
+    public static final String MUNICIPALITY_MODERATION = "/fi/kuntahallinta";
+
     public static final String EDIT_FI = "/fi/muokkaa" + "/" + ID_PARAMETER;
 
     public static final String EDIT_SV = "/sv/bearbeta" + "/" + ID_PARAMETER;
@@ -499,5 +501,8 @@ public final class Urls {
     }
 
 
+    public String municipalityModeration() {
+        return getLocalizedPageUrl(MUNICIPALITY_MODERATION, MUNICIPALITY_MODERATION);
 
+    }
 }

@@ -39,6 +39,7 @@ public final class Views {
     public static final String PUBLIC_COLLECT_VIEW = "public-collect-view";
     public static final String MANAGEMENT_VIEW = "management-view";
     public static final String MODERATION_VIEW = "moderation-view";
+    public static final String MUNICIPALITY_MODERATION = "municipality-moderation-view";
     public static final String EDIT_VIEW = "edit-view";
     public static final String UPDATE_VIEW = "update-view";
     public static final String MANAGE_AUTHORS_VIEW = "manage-authors-view";
@@ -46,7 +47,7 @@ public final class Views {
     public static final String PARTICIPANT_LIST = "participant-list";
     public static final String IFRAME_VIEW = "iframe";
     public static final String STATUS_VIEW = "status";
-    
+
     /**
      * Context relative redirect: context is prefixed to relative URLs.
      * 
