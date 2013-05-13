@@ -36,12 +36,12 @@
                     <@f.cookieWarning moderationURL />
                 </noscript>
     
-                <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-send" class="sodirty">
+                <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-accept" class="sodirty">
                     <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
                     <input type="hidden" name="${UrlConstants.PARAM_MANAGEMENT_CODE}" value="${initiative.managementHash.value}"/>
                     
                     <div class="input-block-content no-top-margin">
-                        <textarea name="moderatorComment" class="collapse" ></textarea>
+                        <textarea name="moderatorComment" id="commentAccept" class="collapse" ></textarea>
                     </div>
                     
                     <div class="input-block-content">
@@ -57,12 +57,12 @@
                     <@f.cookieWarning moderationURL />
                 </noscript>
     
-                <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-send" class="sodirty">
+                <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-reject" class="sodirty">
                     <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
                     <input type="hidden" name="${UrlConstants.PARAM_MANAGEMENT_CODE}" value="${initiative.managementHash.value}"/>
                     
                     <div class="input-block-content no-top-margin">
-                        <textarea name="moderatorComment" class="collapse" ></textarea>
+                        <textarea name="moderatorComment" id="commentReject" class="collapse" ></textarea>
                     </div>
                     
                     <div class="input-block-content">

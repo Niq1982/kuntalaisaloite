@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.web;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
 
 import static fi.om.municipalityinitiative.web.MessageSourceKeys.*;
 import static org.hamcrest.CoreMatchers.startsWith;
@@ -9,6 +10,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class InitiativeModerationWebTest extends WebTestBase {
 
+    /**
+     * Form values as constants.
+     */
+    private static final String COMMENT = "Moderoijan saate";
+    
     private Long testMunicipality1Id;
 
     @Before
@@ -33,6 +39,8 @@ public class InitiativeModerationWebTest extends WebTestBase {
 
     @Test
     public void accept_initiative(){
+        overrideDriverToFirefox(true);
+        
         Long initiativeId = testHelper.createCollectableReview(testMunicipality1Id);
 
         loginAsOmUser();
@@ -41,7 +49,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
 
         getElemContaining(getMessage(MSG_BTN_ACCEPT_INITIATIVE), "a").click();
 
-        // TODO: Fill in the comment text.
+        inputTextByCSS("#commentAccept",COMMENT);
 
         clickByName(Urls.ACTION_ACCEPT_INITIATIVE);
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_ACCEPT_INITIATIVE);
@@ -52,6 +60,8 @@ public class InitiativeModerationWebTest extends WebTestBase {
 
     @Test
     public void reject_initiative(){
+        overrideDriverToFirefox(true);
+        
         Long initiativeId = testHelper.createCollectableReview(testMunicipality1Id);
 
         loginAsOmUser();
@@ -60,7 +70,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
 
         getElemContaining(getMessage(MSG_BTN_REJECT_INITIATIVE), "a").click();
 
-        // TODO: Fill in the comment text.
+        inputTextByCSS("#commentReject",COMMENT);
 
         clickByName(Urls.ACTION_REJECT_INITIATIVE);
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_REJECT_INITIATIVE);
