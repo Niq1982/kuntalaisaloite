@@ -1048,4 +1048,34 @@ $.DirtyForms.dialog = {
 // Listen forms that have class 'sodirty'
 $('form.sodirty').dirtyForms();
 
+
+/**
+* Manage municipalities
+* =====================
+* 
+*/
+
+$('.manage-municipality-select').change( function() {
+	var thisSelect = $(this);
+	var form = $('#municipality-form');
+	var municipality = $('#municipalities').find('li[data-id='+thisSelect.val()+']');
+	var selMunicipality = $('#selected-municipality');
+	
+	if ( municipality.data('id') !== undefined ) {
+		selMunicipality.text(municipality.text());
+	} else {
+		selMunicipality.html(selMunicipality.data('empty'));
+	}
+	
+	form.find('#id').attr('value',municipality.data('id'));
+	if( municipality.data('active') === true ){
+		form.find('#active').attr('checked','checked');
+	} else {
+		form.find('#active').removeAttr('checked');
+	}
+	
+	form.find('#municipalityEmail').val(municipality.data('email'));
+});	
+
+
 });

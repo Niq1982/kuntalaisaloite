@@ -14,6 +14,7 @@ public class MessageSourceKeys {
     public static final String MSG_SUCCESS_SEND_TO_REVIEW = "success.send-to-review";
     public static final String MSG_SUCCESS_ACCEPT_INITIATIVE = "success.accept-initiative";
     public static final String MSG_SUCCESS_REJECT_INITIATIVE = "success.reject-initiative";
+    public static final String MSG_SUCCESS_INVITATION_SENT = "success.invitation-sent";
     public static final String MSG_BTN_PREPARE_SEND = "action.prepare.send";
     public static final String MSG_BTN_SAVE_AND_SEND = "action.saveAndSend";
     public static final String MSG_BTN_SAVE_AND_COLLECT = "action.saveAndCollect";

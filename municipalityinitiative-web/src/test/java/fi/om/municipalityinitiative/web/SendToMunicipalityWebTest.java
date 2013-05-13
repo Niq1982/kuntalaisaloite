@@ -11,8 +11,9 @@ public class SendToMunicipalityWebTest extends WebTestBase {
     /**
      * Localization keys as constants.
      */
-    private static final String MSG_SUCCESS_SEND = "success.send.title";
-    private static final String MSG_BTN_SEND = "action.send";
+    private static final String MSG_SUCCESS_SEND = "success.publish-and-send";
+    private static final String MSG_BTN_SEND = "action.sendToMunicipality";
+    private static final String MSG_BTN_SEND_CONFIRM = "action.sendToMunicipality.confirm";
     
     /**
      * Form values as constants.
@@ -21,16 +22,18 @@ public class SendToMunicipalityWebTest extends WebTestBase {
     private static final String COMMENT = "Saate kunnalle";
     
     @Test
-    @Ignore
     public void send_to_municipality() {
+        
         Long municipalityId = testHelper.createTestMunicipality(MUNICIPALITY_1);
         Long initiativeId = testHelper.create(municipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         
+        loginAsAuthorForLastTestHelperCreatedInitiative();
+        
         open(urls.management(initiativeId));
         clickLinkContaining(getMessage(MSG_BTN_SEND));
-        inputText("comment", COMMENT);
-        getElemContaining(getMessage(MSG_BTN_SEND), "button").click();
-        assertMsgContainedByClass("modal-title", MSG_SUCCESS_SEND);
+        inputText("sentComment", COMMENT);
+        getElemContaining(getMessage(MSG_BTN_SEND_CONFIRM), "button").click();
+        assertMsgContainedByClass("msg-success",  MSG_SUCCESS_SEND);
     }
     
 }
