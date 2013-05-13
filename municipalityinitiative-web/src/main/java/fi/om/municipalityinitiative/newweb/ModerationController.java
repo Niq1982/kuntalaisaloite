@@ -8,6 +8,7 @@ import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,7 +29,7 @@ public class ModerationController extends BaseController{
     private PublicInitiativeService publicInitiativeService;
 
     @Resource
-    private OmInitiativeService omInitiativeService;
+    private ModerationService moderationService;
 
     @Resource
     private UserService userService;
@@ -45,7 +46,7 @@ public class ModerationController extends BaseController{
 
         return ViewGenerator.moderationView(publicInitiativeService.getMunicipalityInitiative(initiativeId),
                 publicInitiativeService.getManagementSettings(initiativeId),
-                omInitiativeService.findAuthors(initiativeId)
+                moderationService.findAuthors(userService.getRequiredOmLoginUserHolder(request), initiativeId)
         ).view(model, Urls.get(locale).alt().moderation(initiativeId));
     }
 
@@ -54,7 +55,7 @@ public class ModerationController extends BaseController{
                                    @RequestParam("moderatorComment") String comment,
                                    Locale locale, HttpServletRequest request) {
 
-        omInitiativeService.accept(initiativeId, comment, locale);
+        moderationService.accept(userService.getRequiredOmLoginUserHolder(request), initiativeId, comment, locale);
         return redirectWithMessage(Urls.get(locale).moderation(initiativeId), RequestMessage.ACCEPT_INITIATIVE, request);
     }
 
@@ -63,18 +64,24 @@ public class ModerationController extends BaseController{
                                    @RequestParam("moderatorComment") String comment,
                                    Locale locale, HttpServletRequest request) {
 
-        omInitiativeService.reject(initiativeId, comment);
+        moderationService.reject(userService.getRequiredOmLoginUserHolder(request), initiativeId, comment);
         return redirectWithMessage(Urls.get(locale).moderation(initiativeId), RequestMessage.REJECT_INITIATIVE, request);
     }
 
     @RequestMapping(value = MUNICIPALITY_MODERATION, method = GET)
     public String moderateMunicipalities(Model model, HttpServletRequest request){
 
-        // TODO: userService.getRequiredOmLoginUserHolder(request);
-
-        return ViewGenerator.municipalityModarationView(omInitiativeService.findMunicipalitiesForEdit(),
+        return ViewGenerator.municipalityModarationView(moderationService.findMunicipalitiesForEdit(userService.getRequiredOmLoginUserHolder(request)),
                 new MunicipalityUIEditDto())
                 .view(model, Urls.get(Locales.LOCALE_FI).municipalityModeration());
+
+    }
+
+    @RequestMapping(value= MUNICIPALITY_MODERATION, method = POST)
+    public String updateMunicipality(@ModelAttribute("updateData") MunicipalityUIEditDto editDto, HttpServletRequest request) {
+        // TODO: Validation
+        moderationService.updateMunicipality(userService.getRequiredOmLoginUserHolder(request), editDto);
+        return redirectWithMessage(Urls.get(Locales.LOCALE_FI).municipalityModeration(), RequestMessage.INFORMATION_SAVED, request);
 
     }
 

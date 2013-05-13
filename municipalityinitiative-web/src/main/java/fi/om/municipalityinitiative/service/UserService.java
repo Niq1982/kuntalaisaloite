@@ -3,12 +3,10 @@ package fi.om.municipalityinitiative.service;
 import fi.om.municipalityinitiative.exceptions.NotLoggedInException;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.FakeUserDao;
-import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.UserDao;
-import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
-import fi.om.municipalityinitiative.newdto.service.User;
+import fi.om.municipalityinitiative.newdto.service.LoginUser;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -17,7 +15,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import java.util.Collections;
 import java.util.Set;
 
 public class UserService {
@@ -35,15 +32,12 @@ public class UserService {
     }
 
     public Long login(String managementHash, HttpServletRequest request) {
-//        Initiative initiative = initiativeDao.getById(initiativeId, managementHash);
-//        request.getSession().setAttribute(LOGIN_INITIATIVE_PARAMETER, initiative);
-//        request.getSession().setAttribute(LOGIN_USER_PARAMETER, User.normalUser(Collections.singleton(initiative.getId())));
         Long authorId = authorDao.getAuthor(managementHash);
         Set<Long> initiativeIds = authorDao.loginAndGetAuthorsInitiatives(managementHash);
         if (initiativeIds.size() == 0) {
             throw new NotLoggedInException("Invalid login credentials");
         }
-        request.getSession().setAttribute(LOGIN_USER_PARAMETER, User.normalUser(authorId, initiativeIds));
+        request.getSession().setAttribute(LOGIN_USER_PARAMETER, LoginUser.normalUser(authorId, initiativeIds));
 
         return initiativeIds.iterator().next();
     }
@@ -65,9 +59,7 @@ public class UserService {
         if (loginUserHolder.isNotPresent()) {
             throw new AuthenticationRequiredException();
         }
-        if (!loginUserHolder.get().getUser().isOmUser()) {
-            throw new AccessDeniedException("No privileges");
-        }
+        loginUserHolder.get().assertOmUser();
 
         return loginUserHolder.get();
     }
@@ -83,28 +75,18 @@ public class UserService {
         if (session == null)
             return Maybe.absent();
 
-        User user = (User) session.getAttribute(LOGIN_USER_PARAMETER);
+        LoginUser loginUser = (LoginUser) session.getAttribute(LOGIN_USER_PARAMETER);
 
-        if (user == null)
+        if (loginUser == null)
             return Maybe.absent();
 
 
         return Maybe.of(new LoginUserHolder(
-                user,
+                loginUser,
                 Maybe.fromNullable((Initiative) session.getAttribute(LOGIN_INITIATIVE_PARAMETER))));
     }
 
-    public void requireOmUser() {
-        Maybe<User> maybeUser = getUser();
-        if (!maybeUser.isPresent()) {
-            throw new AuthenticationRequiredException();
-        }
-        if (!maybeUser.get().isOmUser()) {
-            throw new AccessDeniedException("No privileges");
-        }
-    }
-
-    public static Maybe<User> getUser() {
+    public static Maybe<LoginUser> getUser() {
         String loginUserParameter = LOGIN_USER_PARAMETER;
         return getObject(loginUserParameter);
     }
@@ -140,7 +122,7 @@ public class UserService {
     public boolean isOmUser(HttpServletRequest request) {
         try {
             LoginUserHolder requiredOmLoginUserHolder = getRequiredOmLoginUserHolder(request);
-            return requiredOmLoginUserHolder.getUser().isOmUser();
+            return requiredOmLoginUserHolder.getLoginUser().isOmUser();
         }
         catch (AuthenticationRequiredException | AccessDeniedException e) {
             return false;

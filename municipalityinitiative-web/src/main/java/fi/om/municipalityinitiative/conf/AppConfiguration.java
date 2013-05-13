@@ -139,8 +139,8 @@ public class AppConfiguration {
     }
 
     @Bean
-    public OmInitiativeService omInitiativeService() {
-        return new OmInitiativeService();
+    public ModerationService omInitiativeService() {
+        return new ModerationService();
     }
 
     @Bean

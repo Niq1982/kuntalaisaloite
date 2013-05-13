@@ -1,19 +1,19 @@
 package fi.om.municipalityinitiative.newdto;
 
 import fi.om.municipalityinitiative.newdto.service.Initiative;
-import fi.om.municipalityinitiative.newdto.service.User;
+import fi.om.municipalityinitiative.newdto.service.LoginUser;
 import fi.om.municipalityinitiative.service.AccessDeniedException;
 import fi.om.municipalityinitiative.util.Maybe;
 
 public class LoginUserHolder {
 
     Maybe<Initiative> initiative;
-    User user;
+    LoginUser loginUser;
 
-    public LoginUserHolder(User user, Maybe<Initiative> initiative) {
-        if (user == null)
+    public LoginUserHolder(LoginUser loginUser, Maybe<Initiative> initiative) {
+        if (loginUser == null)
             throw new RuntimeException("User was null");
-        this.user = user;
+        this.loginUser = loginUser;
         this.initiative = initiative;
     }
 
@@ -21,8 +21,8 @@ public class LoginUserHolder {
         return initiative;
     }
 
-    public User getUser() {
-        return user;
+    public LoginUser getLoginUser() {
+        return loginUser;
     }
 
     public void assertManagementRightsForInitiative(Long initiativeId) {
@@ -36,10 +36,16 @@ public class LoginUserHolder {
     }
 
     public boolean hasManagementRightsForInitiative(Long initiativeId) {
-        return user.hasRightToInitiative(initiativeId);
+        return loginUser.hasRightToInitiative(initiativeId);
     }
 
     public Long getAuthorId() {
-        return user.getAuthorId();
+        return loginUser.getAuthorId();
+    }
+
+    public void assertOmUser() {
+        if (loginUser.isNotOmUser()){
+            throw new AccessDeniedException("No privileges");
+        }
     }
 }

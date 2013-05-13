@@ -43,9 +43,6 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     @Resource
     TestHelper testHelper;
 
-    @Resource
-    IntegrationTestConfiguration.FakeUserService fakeUserService;
-
     private static Municipality testMunicipality;
 
     private static Municipality participantMunicipality;

@@ -72,7 +72,7 @@ public class InitiativeViewController extends BaseController {
 
         if (initiativeInfo.getState() != InitiativeState.PUBLISHED) {
             LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
-            if (loginUserHolder.getUser().isNotOmUser()) {
+            if (loginUserHolder.getLoginUser().isNotOmUser()) {
                 loginUserHolder.assertManagementRightsForInitiative(initiativeId);
             }
         }

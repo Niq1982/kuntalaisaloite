@@ -8,22 +8,21 @@ import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdto.Author;
+import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
 import fi.om.municipalityinitiative.newdto.ui.MunicipalityEditDto;
+import fi.om.municipalityinitiative.newdto.ui.MunicipalityUIEditDto;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
-public class OmInitiativeService {
+public class ModerationService {
 
     @Resource
     InitiativeDao initiativeDao;
-
-    @Resource
-    UserService userService;
 
     @Resource
     EmailService emailService;
@@ -35,8 +34,8 @@ public class OmInitiativeService {
     AuthorDao authorDao;
 
     @Transactional(readOnly = false)
-    public void accept(Long initiativeId, String moderatorComment, Locale locale) {
-        userService.requireOmUser();
+    public void accept(LoginUserHolder loginUserHolder, Long initiativeId, String moderatorComment, Locale locale) {
+        loginUserHolder.assertOmUser();
         Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
 
         if (!ManagementSettings.of(initiative).isAllowOmAccept()) {
@@ -63,8 +62,8 @@ public class OmInitiativeService {
     }
 
     @Transactional(readOnly = false)
-    public void reject(Long initiativeId, String moderatorComment) {
-        userService.requireOmUser();
+    public void reject(LoginUserHolder loginUserHolder, Long initiativeId, String moderatorComment) {
+        loginUserHolder.assertOmUser();
         if (!ManagementSettings.of(initiativeDao.getByIdWithOriginalAuthor(initiativeId)).isAllowOmAccept()) {
             throw new OperationNotAllowedException("Not allowed to reject initiative");
 
@@ -77,14 +76,19 @@ public class OmInitiativeService {
     }
 
     @Transactional(readOnly = true)
-    public List<Author> findAuthors(Long initiativeId) {
-        userService.requireOmUser();
+    public List<Author> findAuthors(LoginUserHolder loginUserHolder, Long initiativeId) {
+        loginUserHolder.assertOmUser();
         return authorDao.findAuthors(initiativeId);
     }
 
     @Transactional(readOnly = true)
-    public List<MunicipalityEditDto> findMunicipalitiesForEdit() {
-        userService.requireOmUser();
+    public List<MunicipalityEditDto> findMunicipalitiesForEdit(LoginUserHolder loginUserHolder) {
+        loginUserHolder.assertOmUser();
         return municipalityDao.findMunicipalitiesForEdit();
+    }
+
+    public void updateMunicipality(LoginUserHolder requiredOmLoginUserHolder, MunicipalityUIEditDto editDto) {
+        requiredOmLoginUserHolder.assertOmUser();
+        municipalityDao.updateMunicipality(editDto.getId(), editDto.getEmail(), Boolean.TRUE.equals(editDto.getActive()));
     }
 }
