@@ -44,7 +44,6 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     
     @Test
     public void participate_initiative_does_something_when_something() {
-        overrideDriverToFirefox(true);
         
         Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
         Long municipality2Id = testHelper.createTestMunicipality(MUNICIPALITY_2);
