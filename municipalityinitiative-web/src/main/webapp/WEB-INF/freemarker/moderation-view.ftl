@@ -38,7 +38,6 @@
     
                 <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-send" class="sodirty">
                     <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-                    <input type="hidden" name="${UrlConstants.PARAM_MANAGEMENT_CODE}" value="${initiative.managementHash.value}"/>
                     
                     <div class="input-block-content no-top-margin">
                         <textarea name="moderatorComment" class="collapse" ></textarea>
@@ -59,7 +58,6 @@
     
                 <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-send" class="sodirty">
                     <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-                    <input type="hidden" name="${UrlConstants.PARAM_MANAGEMENT_CODE}" value="${initiative.managementHash.value}"/>
                     
                     <div class="input-block-content no-top-margin">
                         <textarea name="moderatorComment" class="collapse" ></textarea>
