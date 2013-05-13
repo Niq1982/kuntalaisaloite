@@ -8,9 +8,6 @@
 
 <#--
  * Layout parameters for HTML-title and navigation.
- *
- * page = "page.initiative.public" or "page.initiative.unnamed"
- * pageTitle = initiative.name if exists, otherwise empty string
 -->
 <@l.main "page.municipality.moderation" >
 
