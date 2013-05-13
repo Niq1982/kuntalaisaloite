@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.service;
 
-import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
@@ -8,7 +7,7 @@ import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
-import fi.om.municipalityinitiative.newdto.service.User;
+import fi.om.municipalityinitiative.newdto.service.LoginUser;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
@@ -26,12 +25,12 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
-public class OmInitiativeServiceTest {
+public class ModerationServiceTest {
 
     private static final String AUTHOR_EMAIL = "some@example.com";
     public static final long INITIATIVE_ID = 3L;
 
-    private OmInitiativeService omInitiativeService;
+    private ModerationService moderationService;
 
     private InitiativeDao initiativeDaoMock;
 
@@ -40,25 +39,25 @@ public class OmInitiativeServiceTest {
     @Before
     public void setup() throws Exception {
         initiativeDaoMock = mock(InitiativeDao.class);
-        omInitiativeService = new OmInitiativeService();
+        moderationService = new ModerationService();
 
-        omInitiativeService.initiativeDao = initiativeDaoMock;
-        omInitiativeService.emailService = mock(EmailService.class);
-        omInitiativeService.municipalityDao = mock(MunicipalityDao.class);
-        omInitiativeService.authorDao = mock(AuthorDao.class);
-        stub(omInitiativeService.authorDao.getAuthorEmails(anyLong())).toReturn(Collections.singletonList("")); // Avoid nullpointer temporarily
+        moderationService.initiativeDao = initiativeDaoMock;
+        moderationService.emailService = mock(EmailService.class);
+        moderationService.municipalityDao = mock(MunicipalityDao.class);
+        moderationService.authorDao = mock(AuthorDao.class);
+        stub(moderationService.authorDao.getAuthorEmails(anyLong())).toReturn(Collections.singletonList("")); // Avoid nullpointer temporarily
 
-        loginUserHolder = new LoginUserHolder(User.normalUser(null, Collections.<Long>emptySet()), Maybe.<Initiative>absent());
+        loginUserHolder = new LoginUserHolder(LoginUser.normalUser(null, Collections.<Long>emptySet()), Maybe.<Initiative>absent());
     }
 
     @Test
     public void all_functions_require_om_rights() throws InvocationTargetException, IllegalAccessException {
 
-        for (Method method : OmInitiativeService.class.getDeclaredMethods()) {
+        for (Method method : ModerationService.class.getDeclaredMethods()) {
             Object[] parameters = new Object[method.getParameterTypes().length];
             parameters[0] = loginUserHolder;
             try {
-                method.invoke(omInitiativeService, parameters);
+                method.invoke(moderationService, parameters);
                 fail("Should have checked om-rights for user: " + method.getName());
             } catch (InvocationTargetException e) {
                 assertThat(e.getCause(), instanceOf(AccessDeniedException.class));
@@ -67,7 +66,7 @@ public class OmInitiativeServiceTest {
     }
 
     private void setOmUser() {
-        loginUserHolder = new LoginUserHolder(User.omUser(), Maybe.<Initiative>absent());
+        loginUserHolder = new LoginUserHolder(LoginUser.omUser(), Maybe.<Initiative>absent());
     }
 
     @Test
@@ -76,7 +75,7 @@ public class OmInitiativeServiceTest {
         setOmUser();
         stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
 
-        omInitiativeService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
+        moderationService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
 
         verify(initiativeDaoMock).updateInitiativeState(INITIATIVE_ID, InitiativeState.ACCEPTED);
     }
@@ -87,9 +86,9 @@ public class OmInitiativeServiceTest {
         setOmUser();
         stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
 
-        omInitiativeService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
+        moderationService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
 
-        verify(omInitiativeService.emailService).sendStatusEmail(any(Initiative.class), anyList(), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM));
+        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyList(), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM));
     }
 
     @Test
@@ -98,7 +97,7 @@ public class OmInitiativeServiceTest {
         stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
 
         String comment = "this is om-comment";
-        omInitiativeService.accept(loginUserHolder, INITIATIVE_ID, comment, Locales.LOCALE_FI);
+        moderationService.accept(loginUserHolder, INITIATIVE_ID, comment, Locales.LOCALE_FI);
 
         verify(initiativeDaoMock).updateModeratorComment(INITIATIVE_ID, comment);
     }
@@ -111,7 +110,7 @@ public class OmInitiativeServiceTest {
         initiative.setType(InitiativeType.SINGLE);
         stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiative);
 
-        omInitiativeService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
+        moderationService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
 
         verify(initiativeDaoMock).updateInitiativeState(INITIATIVE_ID, InitiativeState.PUBLISHED);
 
@@ -125,10 +124,10 @@ public class OmInitiativeServiceTest {
         initiative.setType(InitiativeType.SINGLE);
         stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiative);
 
-        omInitiativeService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
+        moderationService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
 
-        verify(omInitiativeService.emailService).sendStatusEmail(any(Initiative.class), anyList(), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM_AND_SENT));
-        verify(omInitiativeService.emailService).sendSingleToMunicipality(any(Initiative.class), anyString(), eq(Locales.LOCALE_FI));
+        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyList(), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM_AND_SENT));
+        verify(moderationService.emailService).sendSingleToMunicipality(any(Initiative.class), anyString(), eq(Locales.LOCALE_FI));
 
     }
 
@@ -141,7 +140,7 @@ public class OmInitiativeServiceTest {
         stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiative);
 
         String comment = "this is om-comment";
-        omInitiativeService.accept(loginUserHolder, INITIATIVE_ID, comment, Locales.LOCALE_FI);
+        moderationService.accept(loginUserHolder, INITIATIVE_ID, comment, Locales.LOCALE_FI);
 
         verify(initiativeDaoMock).updateModeratorComment(INITIATIVE_ID, comment);
     }
@@ -152,7 +151,7 @@ public class OmInitiativeServiceTest {
         setOmUser();
         stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
 
-        omInitiativeService.reject(loginUserHolder, INITIATIVE_ID, null);
+        moderationService.reject(loginUserHolder, INITIATIVE_ID, null);
         verify(initiativeDaoMock).updateInitiativeState(INITIATIVE_ID, InitiativeState.DRAFT);
     }
 
@@ -162,8 +161,8 @@ public class OmInitiativeServiceTest {
         setOmUser();
         stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
 
-        omInitiativeService.reject(loginUserHolder, INITIATIVE_ID, null);
-        verify(omInitiativeService.emailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.REJECTED_BY_OM));
+        moderationService.reject(loginUserHolder, INITIATIVE_ID, null);
+        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.REJECTED_BY_OM));
     }
 
     @Test
@@ -173,7 +172,7 @@ public class OmInitiativeServiceTest {
         stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
 
         String comment = "this is om-comment";
-        omInitiativeService.reject(loginUserHolder, INITIATIVE_ID, comment);
+        moderationService.reject(loginUserHolder, INITIATIVE_ID, comment);
 
         verify(initiativeDaoMock).updateModeratorComment(INITIATIVE_ID, comment);
 

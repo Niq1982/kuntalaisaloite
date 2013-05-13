@@ -28,7 +28,7 @@ public class ModerationController extends BaseController{
     private PublicInitiativeService publicInitiativeService;
 
     @Resource
-    private OmInitiativeService omInitiativeService;
+    private ModerationService moderationService;
 
     @Resource
     private UserService userService;
@@ -45,7 +45,7 @@ public class ModerationController extends BaseController{
 
         return ViewGenerator.moderationView(publicInitiativeService.getMunicipalityInitiative(initiativeId),
                 publicInitiativeService.getManagementSettings(initiativeId),
-                omInitiativeService.findAuthors(userService.getRequiredOmLoginUserHolder(request), initiativeId)
+                moderationService.findAuthors(userService.getRequiredOmLoginUserHolder(request), initiativeId)
         ).view(model, Urls.get(locale).alt().moderation(initiativeId));
     }
 
@@ -54,7 +54,7 @@ public class ModerationController extends BaseController{
                                    @RequestParam("moderatorComment") String comment,
                                    Locale locale, HttpServletRequest request) {
 
-        omInitiativeService.accept(userService.getRequiredOmLoginUserHolder(request), initiativeId, comment, locale);
+        moderationService.accept(userService.getRequiredOmLoginUserHolder(request), initiativeId, comment, locale);
         return redirectWithMessage(Urls.get(locale).moderation(initiativeId), RequestMessage.ACCEPT_INITIATIVE, request);
     }
 
@@ -63,7 +63,7 @@ public class ModerationController extends BaseController{
                                    @RequestParam("moderatorComment") String comment,
                                    Locale locale, HttpServletRequest request) {
 
-        omInitiativeService.reject(userService.getRequiredOmLoginUserHolder(request), initiativeId, comment);
+        moderationService.reject(userService.getRequiredOmLoginUserHolder(request), initiativeId, comment);
         return redirectWithMessage(Urls.get(locale).moderation(initiativeId), RequestMessage.REJECT_INITIATIVE, request);
     }
 
@@ -72,7 +72,7 @@ public class ModerationController extends BaseController{
 
         // TODO: userService.getRequiredOmLoginUserHolder(request);
 
-        return ViewGenerator.municipalityModarationView(omInitiativeService.findMunicipalitiesForEdit(userService.getRequiredOmLoginUserHolder(request)),
+        return ViewGenerator.municipalityModarationView(moderationService.findMunicipalitiesForEdit(userService.getRequiredOmLoginUserHolder(request)),
                 new MunicipalityUIEditDto())
                 .view(model, Urls.get(Locales.LOCALE_FI).municipalityModeration());
 

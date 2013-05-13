@@ -23,33 +23,11 @@ public class IntegrationTestConfiguration {
     }
 
     @Bean
-    public FakeUserService userService() {
-        return new FakeUserService();
-    }
-
-    @Bean
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         File file = new File(System.getProperty("user.dir"), "src/main/webapp/WEB-INF/messages");
         messageSource.setBasenames(file.toURI().toString());
         return messageSource;
-    }
-
-    public static class FakeUserService extends UserService {
-
-
-        private boolean isOmUser;
-
-        public void setOmUser(boolean omUser) {
-            isOmUser = omUser;
-        }
-
-        @Override
-        public void requireOmUser() {
-            if (!isOmUser) {
-                throw new AccessDeniedException();
-            }
-        }
     }
 
 }

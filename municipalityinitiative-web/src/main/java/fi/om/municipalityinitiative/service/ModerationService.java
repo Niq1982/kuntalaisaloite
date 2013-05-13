@@ -18,13 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
-public class OmInitiativeService {
+public class ModerationService {
 
     @Resource
     InitiativeDao initiativeDao;
-
-    @Resource
-    UserService userService;
 
     @Resource
     EmailService emailService;
