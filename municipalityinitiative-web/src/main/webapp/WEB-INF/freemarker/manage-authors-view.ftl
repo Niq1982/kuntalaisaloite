@@ -100,7 +100,6 @@
     
                 <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-send" class="sodirty">
                     <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-                    <input type="hidden" name="${UrlConstants.PARAM_MANAGEMENT_CODE}" value="${initiative.managementHash.value}"/>
                     
                     <div class="input-block-content no-top-margin">
                         <@f.textField path="newInvitation.authorName" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_NAME_MAX />

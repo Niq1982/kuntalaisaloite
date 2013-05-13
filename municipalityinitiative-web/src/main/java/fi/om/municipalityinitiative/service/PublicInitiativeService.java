@@ -111,9 +111,13 @@ public class PublicInitiativeService {
     }
 
     @Transactional(readOnly = true)
-    public InitiativeDraftUIEditDto getInitiativeDraftForEdit(Long initiativeId) {
+    public InitiativeDraftUIEditDto getInitiativeDraftForEdit(Long initiativeId, LoginUserHolder loginUserHolder) {
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         assertAllowance("Edit initiative", getManagementSettings(initiativeId).isAllowEdit());
-        return InitiativeDraftUIEditDto.parse(initiativeDao.getByIdWithOriginalAuthor(initiativeId));
+        return InitiativeDraftUIEditDto.parse(
+                initiativeDao.getByIdWithOriginalAuthor(initiativeId),
+                authorDao.getAuthor(loginUserHolder.getAuthorId()).getContactInfo()
+        );
     }
 
     @Transactional(readOnly = false)
@@ -193,7 +197,7 @@ public class PublicInitiativeService {
 
         String TEMPORARILY_REPLACING_OM_EMAIL = authorDao.getAuthorEmails(initiativeId).get(0);
 
-        emailService.sendNotificationToModerator(initiative, locale, TEMPORARILY_REPLACING_OM_EMAIL);
+        emailService.sendNotificationToModerator(initiative, authorDao.findAuthors(initiativeId), locale, TEMPORARILY_REPLACING_OM_EMAIL);
     }
 
     @Transactional(readOnly = false)
@@ -224,7 +228,7 @@ public class PublicInitiativeService {
         emailService.sendStatusEmail(initiative,authorDao.getAuthorEmails(initiativeId), municipalityEmail(initiative), EmailMessageType.SENT_TO_MUNICIPALITY);
         // TODO: String municipalityEmail = municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId());
         String municipalityEmail = authorDao.getAuthorEmails(initiativeId).get(0);
-        emailService.sendSingleToMunicipality(initiative, municipalityEmail, locale);
+        emailService.sendSingleToMunicipality(initiative, authorDao.findAuthors(initiativeId), municipalityEmail, locale);
     }
 
     @Transactional(readOnly = false)
@@ -248,7 +252,7 @@ public class PublicInitiativeService {
         List<Participant> participants = participantDao.findAllParticipants(initiativeId);
         // TODO: String municipalityEmail = municipalityEmail(initiative);
         String municipalityEmail = authorDao.getAuthorEmails(initiativeId).get(0);
-        emailService.sendCollaborativeToMunicipality(initiative, participants, municipalityEmail, locale);
+        emailService.sendCollaborativeToMunicipality(initiative, authorDao.findAuthors(initiativeId), participants, municipalityEmail, locale);
         emailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityEmail, EmailMessageType.SENT_TO_MUNICIPALITY);
     }
 

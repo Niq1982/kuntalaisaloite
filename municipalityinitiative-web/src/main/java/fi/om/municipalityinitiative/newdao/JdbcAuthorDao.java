@@ -58,7 +58,7 @@ public class JdbcAuthorDao implements AuthorDao {
     }
 
     @Override
-    public Author getAuthorInformation(Long initiativeId, String managementHash) {
+    public Author getAuthor(Long initiativeId, String managementHash) {
         return queryFactory.from(municipalityInitiative)
                 .innerJoin(municipalityInitiative._participantMunicipalityInitiativeIdFk, QParticipant.participant)
                 .innerJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
@@ -174,10 +174,19 @@ public class JdbcAuthorDao implements AuthorDao {
     }
 
     @Override
-    public Long getAuthor(String managementHash) {
+    public Long getAuthorId(String managementHash) {
         return Optional.of(queryFactory.from(QAuthor.author)
                 .where(QAuthor.author.managementHash.eq(managementHash))
                 .uniqueResult(QAuthor.author.id)).get();
+    }
+
+    @Override
+    public Author getAuthor(Long authorId) {
+        return queryFactory.from(QAuthor.author)
+                .where(QAuthor.author.id.eq(authorId))
+                .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
+                .innerJoin(QParticipant.participant.participantMunicipalityFk, QMunicipality.municipality)
+                .uniqueResult(Mappings.authorMapping);
     }
 
     @Override

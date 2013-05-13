@@ -34,10 +34,6 @@ public class InitiativeViewInfo {
         return initiative.getId();
     }
 
-    public Maybe<String> getManagementHash() {
-        return initiative.getManagementHash();
-    }
-
     public boolean isCollectable() {
         return initiative.isCollectable();
     }

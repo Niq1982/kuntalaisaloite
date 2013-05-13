@@ -91,15 +91,7 @@ public class JdbcInitiativeDaoTest {
         assertThat(initiative.getSentTime().isPresent(), is(true));
         assertThat(initiative.getState(), is(TestHelper.DEFAULT_STATE));
         assertThat(initiative.getType(), is(InitiativeType.COLLABORATIVE_CITIZEN));
-        assertThat(initiative.getAuthor().getContactInfo().isShowName(), is(true));
         assertThat(initiative.getParticipantCount(), is(1));
-
-        assertThat(initiative.getAuthor().getContactInfo().getName(), is(TestHelper.DEFAULT_AUTHOR_NAME));
-        assertThat(initiative.getAuthor().getContactInfo().getAddress(), is(TestHelper.DEFAULT_AUTHOR_ADDRESS));
-        assertThat(initiative.getAuthor().getContactInfo().getEmail(), is(TestHelper.DEFAULT_AUTHOR_EMAIL));
-        assertThat(initiative.getAuthor().getContactInfo().getPhone(), is(TestHelper.DEFAULT_AUTHOR_PHONE));
-        assertThat(initiative.getAuthor().getMunicipality().getId(), is(authorsMunicipalityId));
-        assertThat(initiative.getAuthor().getId(), is(notNullValue()));
 
         ReflectionTestUtils.assertNoNullFields(initiative);
     }

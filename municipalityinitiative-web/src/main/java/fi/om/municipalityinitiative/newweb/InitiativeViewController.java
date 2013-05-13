@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.Maybe;
+import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.web.BaseController;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.SearchParameterQueryString;
@@ -153,9 +154,10 @@ public class InitiativeViewController extends BaseController {
 
         Urls urls = Urls.get(locale);
 
-        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
 
-        model.addAttribute("initiative", initiativeInfo); // TODO: Remove after login-link is removed from the page
+        model.addAttribute("managementHash", RandomHashGenerator.getPrevious()); // TODO: Remove after login-link is removed from the page
+
+        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
 
         if (initiativeInfo.getState().equals(InitiativeState.DRAFT) && getRequestAttribute(request) != null) {
             return PENDING_CONFIRMATION;

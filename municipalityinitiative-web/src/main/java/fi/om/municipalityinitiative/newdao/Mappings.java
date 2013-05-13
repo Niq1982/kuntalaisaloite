@@ -29,7 +29,6 @@ public class Mappings {
 
     public static Expression<Author> authorMapping =
             new MappingProjection<Author>(Author.class,
-                    municipalityInitiative.all(),
                     QMunicipality.municipality.all(),
                     QParticipant.participant.all(),
                     QAuthor.author.all()) {
@@ -90,7 +89,6 @@ public class Mappings {
                     );
                     info.setType(row.get(municipalityInitiative.type));
                     info.setProposal(row.get(municipalityInitiative.proposal));
-                    info.setManagementHash(Maybe.of(row.get(QAuthor.author.managementHash)));
                     info.setSentTime(maybeLocalDate(row.get(municipalityInitiative.sent)));
                     info.setState(row.get(municipalityInitiative.state));
                     info.setStateTime(row.get(municipalityInitiative.stateTimestamp).toLocalDate());
@@ -98,19 +96,6 @@ public class Mappings {
                     info.setModeratorComment(Strings.nullToEmpty(row.get(municipalityInitiative.moderatorComment)));
                     info.setParticipantCount(row.get(municipalityInitiative.participantCount));
                     info.setSentComment(row.get(municipalityInitiative.sentComment));
-
-                    Author author = new Author();
-                    ContactInfo contactInfo = new ContactInfo();
-                    contactInfo.setAddress(row.get(QAuthor.author.address));
-                    contactInfo.setPhone(row.get(QAuthor.author.phone));
-                    contactInfo.setName(row.get(QAuthor.author.name));
-                    contactInfo.setEmail(row.get(QParticipant.participant.email));
-                    contactInfo.setShowName(Boolean.TRUE.equals(row.get(QParticipant.participant.showName)));
-                    author.setId(row.get(QAuthor.author.id));
-                    author.setContactInfo(contactInfo);
-                    author.setMunicipality(parseMunicipality(row, JdbcInitiativeDao.AUTHOR_MUNICIPALITY));
-
-                    info.setAuthor(author);
 
                     return info;
                 }

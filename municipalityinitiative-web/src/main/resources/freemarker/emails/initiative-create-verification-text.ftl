@@ -9,7 +9,7 @@
 <@u.message "email.create.description" />
 
 
-${urls.loginAuthor(initiative.managementHash.value)}
+${urls.loginAuthor(managementHash)}
 
 ----
 

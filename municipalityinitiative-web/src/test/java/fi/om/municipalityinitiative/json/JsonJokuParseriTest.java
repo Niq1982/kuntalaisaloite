@@ -47,13 +47,7 @@ public class JsonJokuParseriTest {
         initiative.setMunicipality(TAMPERE);
         initiative.setSentTime(Maybe.of(new LocalDate(2010, 5, 5))); // Cannot be absent at this point, mapper tries to get it's value
         initiative.setCreateTime(new LocalDate(2010, 1, 1));
-        initiative.setManagementHash(Maybe.of("any"));
 
-        Author author = new Author();
-        ContactInfo contactInfo = new ContactInfo();
-        contactInfo.setShowName(true);
-        author.setContactInfo(contactInfo);
-        initiative.setAuthor(author);
         InitiativeJson initiativeJson = InitiativeJson.from(initiative, publicParticipants, participantCount);
 
         new MappingJackson2HttpMessageConverter().getObjectMapper().writeValueAsString(initiative);

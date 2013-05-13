@@ -85,7 +85,7 @@ public class InitiativeCreateController extends BaseController {
         Urls urls = Urls.get(locale);
         if (managementSettings.isAllowEdit()) {
             return ViewGenerator.editView(
-                    publicInitiativeService.getInitiativeDraftForEdit(initiativeId),
+                    publicInitiativeService.getInitiativeDraftForEdit(initiativeId, loginUserHolder),
                     publicInitiativeService.getAuthorInformation(initiativeId, loginUserHolder),
                     urls.moderation(initiativeId)
             ).view(model, urls.alt().edit(initiativeId));

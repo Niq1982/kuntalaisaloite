@@ -32,7 +32,7 @@ public class UserService {
     }
 
     public Long login(String managementHash, HttpServletRequest request) {
-        Long authorId = authorDao.getAuthor(managementHash);
+        Long authorId = authorDao.getAuthorId(managementHash);
         Set<Long> initiativeIds = authorDao.loginAndGetAuthorsInitiatives(managementHash);
         if (initiativeIds.size() == 0) {
             throw new NotLoggedInException("Invalid login credentials");

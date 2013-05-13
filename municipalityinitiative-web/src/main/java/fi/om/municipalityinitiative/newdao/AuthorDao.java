@@ -26,7 +26,7 @@ public interface AuthorDao {
 
     void assignAuthor(Long initiativeId, Long authorId);
 
-    Author getAuthorInformation(Long initiativeId, String managementHash);
+    Author getAuthor(Long initiativeId, String managementHash);
 
     void updateAuthorInformation(Long authorId, ContactInfo contactInfo);
 
@@ -34,5 +34,7 @@ public interface AuthorDao {
 
     Set<Long> loginAndGetAuthorsInitiatives(String managementHash);
 
-    Long getAuthor(String managementHash);
+    Long getAuthorId(String managementHash);
+
+    Author getAuthor(Long authorId);
 }

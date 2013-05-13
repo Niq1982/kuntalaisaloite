@@ -11,19 +11,20 @@ public class InitiativeDraftUIEditDtoTest {
 
     @Test
     public void parse_from_initiative() {
-        Initiative original = ReflectionTestUtils.modifyAllFields(new Initiative());
-        InitiativeDraftUIEditDto dto = InitiativeDraftUIEditDto.parse(original);
+        Initiative originalInitiative = ReflectionTestUtils.modifyAllFields(new Initiative());
+        ContactInfo originalContactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
+        InitiativeDraftUIEditDto dto = InitiativeDraftUIEditDto.parse(originalInitiative, originalContactInfo);
 
-        assertThat(dto.getMunicipality().getId(), is(original.getMunicipality().getId()));
-        assertThat(dto.getState(), is(original.getState()));
-        assertThat(dto.getContactInfo().getAddress(), is(original.getAuthor().getContactInfo().getAddress()));
-        assertThat(dto.getContactInfo().getPhone(), is(original.getAuthor().getContactInfo().getPhone()));
-        assertThat(dto.getContactInfo().getName(), is(original.getAuthor().getContactInfo().getName()));
-        assertThat(dto.getContactInfo().getEmail(), is(original.getAuthor().getContactInfo().getEmail()));
-        assertThat(dto.getExtraInfo(), is(original.getExtraInfo()));
-        assertThat(dto.getName(), is(original.getName()));
-        assertThat(dto.getProposal(), is(original.getProposal()));
-        assertThat(dto.getState(), is(original.getState()));
+        assertThat(dto.getMunicipality().getId(), is(originalInitiative.getMunicipality().getId()));
+//        assertThat(dto.getState(), is(originalInitiative.getState()));
+        assertThat(dto.getContactInfo().getAddress(), is(originalContactInfo.getAddress()));
+        assertThat(dto.getContactInfo().getPhone(), is(originalContactInfo.getPhone()));
+        assertThat(dto.getContactInfo().getName(), is(originalContactInfo.getName()));
+        assertThat(dto.getContactInfo().getEmail(), is(originalContactInfo.getEmail()));
+        assertThat(dto.getExtraInfo(), is(originalInitiative.getExtraInfo()));
+        assertThat(dto.getName(), is(originalInitiative.getName()));
+        assertThat(dto.getProposal(), is(originalInitiative.getProposal()));
+//        assertThat(dto.getState(), is(originalInitiative.getState()));
         ReflectionTestUtils.assertNoNullFields(dto);
 
     }

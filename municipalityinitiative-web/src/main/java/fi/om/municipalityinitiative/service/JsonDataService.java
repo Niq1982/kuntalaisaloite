@@ -91,12 +91,6 @@ public class JsonDataService {
         initiativeInfo.setSentTime(Maybe.<LocalDate>fromNullable(null));
         initiativeInfo.setCreateTime(new LocalDate(2010, 1, 1));
 
-        Author author = new Author();
-        author.setContactInfo(new ContactInfo());
-        author.getContactInfo().setShowName(true);
-        author.getContactInfo().setName("Teemu Teekkari");
-        initiativeInfo.setAuthor(author);
-
         initiativeInfo.setType(InitiativeType.COLLABORATIVE);
 
         InitiativeJson initiativeJson = InitiativeJson.from(initiativeInfo, publicParticipants, participantCount);
