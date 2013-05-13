@@ -3,6 +3,8 @@ package fi.om.municipalityinitiative.dao;
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
+import fi.om.municipalityinitiative.newdto.ui.MunicipalityEditDto;
+import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,11 +35,14 @@ public class JdbcMunicipalityDaoTest {
 
     @Test
     public void find_all_municipalities() {
-        testHelper.createTestMunicipality("some test municipality");
+        Long municipalityId = testHelper.createTestMunicipality("some test municipality", true);
         List<Municipality> result = municipalityDao.findMunicipalities(true);
-        assertThat(result, is(not(empty())));
+        assertThat(result, hasSize(1));
         assertThat(result.get(0).getNameFi(), is("some test municipality"));
         assertThat(result.get(0).getNameSv(), is("some test municipality sv"));
+        assertThat(result.get(0).isActive(), is(true));
+        assertThat(result.get(0).getId(), is(municipalityId));
+        ReflectionTestUtils.assertNoNullFields(result.get(0));
     }
 
     @Test
@@ -85,5 +90,24 @@ public class JdbcMunicipalityDaoTest {
 
         assertThat(municipalityDao.getMunicipality(municipality).isActive(), is(true));
         assertThat(municipalityDao.getMunicipalityEmail(municipality), is(updatedEmail));
+    }
+
+    @Test
+    public void get_municipalities_for_edit() {
+
+        Long municipality = testHelper.createTestMunicipality("testMunicipality", true);
+
+        municipalityDao.updateMunicipality(municipality, "updated@example.com", false);
+
+        List<MunicipalityEditDto> forEdit = municipalityDao.findMunicipalitiesForEdit();
+
+        assertThat(forEdit, hasSize(1));
+        assertThat(forEdit.get(0).getEmail(), is("updated@example.com"));
+        assertThat(forEdit.get(0).getNameFi(), is("testMunicipality"));
+        assertThat(forEdit.get(0).isActive(), is(false));
+        ReflectionTestUtils.assertNoNullFields(forEdit.get(0));
+
+
+
     }
 }

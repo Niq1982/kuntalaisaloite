@@ -7,6 +7,7 @@ import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
+import fi.om.municipalityinitiative.newdto.ui.MunicipalityEditDto;
 import fi.om.municipalityinitiative.sql.QMunicipality;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,6 +59,15 @@ public class JdbcMunicipalityDao implements MunicipalityDao {
 
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<MunicipalityEditDto> findMunicipalitiesForEdit() {
+        return queryFactory.from(QMunicipality.municipality)
+                .orderBy(QMunicipality.municipality.name.asc())
+                .list(municipalityEditWrapper);
+
+    }
+
     private static Expression<Municipality> municipalityWrapper =
             new MappingProjection<Municipality>(Municipality.class, QMunicipality.municipality.all()) {
 
@@ -68,6 +78,22 @@ public class JdbcMunicipalityDao implements MunicipalityDao {
                             row.get(QMunicipality.municipality.name),
                             row.get(QMunicipality.municipality.nameSv),
                             row.get(QMunicipality.municipality.active)
+                    );
+                    return dto;
+                }
+            };
+
+    private static Expression<MunicipalityEditDto> municipalityEditWrapper =
+            new MappingProjection<MunicipalityEditDto>(MunicipalityEditDto.class, QMunicipality.municipality.all()) {
+
+                @Override
+                protected MunicipalityEditDto map(Tuple row) {
+                    MunicipalityEditDto dto = new MunicipalityEditDto(
+                            row.get(QMunicipality.municipality.id),
+                            row.get(QMunicipality.municipality.name),
+                            row.get(QMunicipality.municipality.nameSv),
+                            row.get(QMunicipality.municipality.active),
+                            row.get(QMunicipality.municipality.email)
                     );
                     return dto;
                 }

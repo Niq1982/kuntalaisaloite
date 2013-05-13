@@ -1,6 +1,8 @@
 package fi.om.municipalityinitiative.newdao;
 
 import fi.om.municipalityinitiative.newdto.service.Municipality;
+import fi.om.municipalityinitiative.newdto.ui.MunicipalityEditDto;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,4 +15,7 @@ public interface MunicipalityDao {
     Municipality getMunicipality(Long id);
 
     void updateMunicipality(Long municipalityId, String email, boolean active);
+
+    @Transactional(readOnly = true)
+    List<MunicipalityEditDto> findMunicipalitiesForEdit();
 }
