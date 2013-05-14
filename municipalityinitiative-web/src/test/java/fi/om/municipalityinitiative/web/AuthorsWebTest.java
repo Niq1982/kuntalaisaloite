@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.web;
 
 import static fi.om.municipalityinitiative.web.MessageSourceKeys.MSG_SUCCESS_INVITATION_SENT;
+import static fi.om.municipalityinitiative.web.MessageSourceKeys.MSG_SUCCESS_REJECT_INITIATIVE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 
@@ -14,7 +15,7 @@ import org.openqa.selenium.Keys;
 
 public class AuthorsWebTest  extends WebTestBase {
 
-    
+
     /**
      * Localization keys as constants.
      */
@@ -31,6 +32,8 @@ public class AuthorsWebTest  extends WebTestBase {
     private static final String MUNICIPALITY_1 = "Vantaa";
     private static final String CONTACT_NAME = "Teppo Testaaja";
     private static final String CONTACT_EMAIL = "test@test.com";
+    public static final String CONTACT_ADDRESS = "Joku Katu jossain 89";
+    public static final String CONTACT_PHONE = "040111222";
     private Long municipalityId;
     private Long initiativeId;
 
@@ -66,15 +69,23 @@ public class AuthorsWebTest  extends WebTestBase {
         AuthorInvitation invitation = testHelper.createInvitation(initiativeId, CONTACT_NAME, CONTACT_EMAIL);
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
 
-        getElemContaining("Hyväksy kutsu", "span").click();
+        clickDialogButton("Hyväksy kutsu");
 
         assertThat(getElementByLabel("Nimi", "input").getAttribute("value"), containsString(CONTACT_NAME));
         assertThat(getElementByLabel("Sähköpostiosoite", "input").getAttribute("value"), containsString(CONTACT_EMAIL));
 
-        getElementByLabel("Puhelin", "input").sendKeys("040111222");
-        getElementByLabel("Osoite", "textarea").sendKeys("Joku Katu jossain 89");
+        getElementByLabel("Puhelin", "input").sendKeys(CONTACT_PHONE);
+        getElementByLabel("Osoite", "textarea").sendKeys(CONTACT_ADDRESS);
+        clickDialogButton("Tallenna");
 
-        Thread.sleep(5000);
+        assertTextContainedByClass("msg-success", "Liittymisesi vastuuhenkilöksi on nyt vahvistettu ja olet kirjautunut sisään palveluun.");
+
+        clickDialogButton("Muokkaa aloitetta");
+        assertThat(getElementByLabel("Nimi", "input").getAttribute("value"), containsString(CONTACT_NAME));
+        assertThat(getElementByLabel("Sähköpostiosoite", "input").getAttribute("value"), containsString(CONTACT_EMAIL));
+        assertThat(getElementByLabel("Puhelin", "input").getAttribute("value"), containsString(CONTACT_PHONE));
+        assertThat(getElementByLabel("Osoite", "textarea").getText(), containsString(CONTACT_ADDRESS));
+
     }
 
     @Test

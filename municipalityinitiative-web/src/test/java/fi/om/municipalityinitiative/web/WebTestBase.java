@@ -308,4 +308,8 @@ public abstract class WebTestBase {
     protected WebElement getElementByLabel(String labelText, String elementTag) {
         return getElement(By.xpath("//label[contains(normalize-space(text()), '" + labelText + "')]/following-sibling::"+elementTag));
     }
+
+    protected void clickDialogButton(String containing) {
+        getElemContaining(containing, "span").click();
+    }
 }
