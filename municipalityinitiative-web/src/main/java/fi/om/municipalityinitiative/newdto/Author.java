@@ -2,12 +2,14 @@ package fi.om.municipalityinitiative.newdto;
 
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
+import org.joda.time.LocalDate;
 
 public class Author {
 
     private Long id;
     private Municipality municipality;
     private ContactInfo contactInfo;
+    private LocalDate createTime;
 
     public Municipality getMunicipality() {
         return municipality;
@@ -33,4 +35,11 @@ public class Author {
         this.id = id;
     }
 
+    public LocalDate getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(LocalDate createTime) {
+        this.createTime = createTime;
+    }
 }

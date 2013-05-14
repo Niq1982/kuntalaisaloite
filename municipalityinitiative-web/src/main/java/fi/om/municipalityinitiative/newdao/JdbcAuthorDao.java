@@ -12,7 +12,6 @@ import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
-import fi.om.municipalityinitiative.service.PublicInitiativeService;
 import fi.om.municipalityinitiative.sql.*;
 import org.joda.time.DateTime;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,17 +54,6 @@ public class JdbcAuthorDao implements AuthorDao {
                 .set(QAuthor.author.managementHash, managementHash)
                 .set(QAuthor.author.participantId, participantId)
                 .executeWithKey(QAuthor.author.id);
-    }
-
-    @Override
-    public Author getAuthor(Long initiativeId, String managementHash) {
-        return queryFactory.from(municipalityInitiative)
-                .innerJoin(municipalityInitiative._participantMunicipalityInitiativeIdFk, QParticipant.participant)
-                .innerJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
-                .innerJoin(QParticipant.participant.participantMunicipalityFk, QMunicipality.municipality)
-                .where(municipalityInitiative.id.eq(initiativeId))
-                .where(QAuthor.author.managementHash.eq(managementHash))
-                .uniqueResult(Mappings.authorMapping);
     }
 
     @Override
