@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.newdao;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
+import fi.om.municipalityinitiative.dao.InvitationNotValidException;
 import fi.om.municipalityinitiative.dao.NotFoundException;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.newdto.Author;
@@ -58,7 +59,7 @@ public class JdbcAuthorDaoTest {
         try {
             authorDao.getAuthorInvitation(original.getInitiativeId(), original.getConfirmationCode());
             fail("Should have failed due not found");
-        } catch (NotFoundException e) { }
+        } catch (InvitationNotValidException e) { }
     }
 
     @Test

@@ -250,7 +250,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     public void prefilled_author_confirmation_throws_exception_if_invitation_not_found() {
         Long initiativeId = testHelper.createCollectableReview(testMunicipality);
 
-        thrown.expect(NotFoundException.class);
+        thrown.expect(InvitationNotValidException.class);
         authorService.getPrefilledAuthorInvitationConfirmDto(initiativeId, "töttöröö");
     }
 
