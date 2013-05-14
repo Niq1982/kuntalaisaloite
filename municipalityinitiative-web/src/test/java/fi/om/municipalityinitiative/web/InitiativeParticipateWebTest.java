@@ -19,8 +19,8 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     private static final String MSG_SUCCESS_PARTICIPATE = "success.participate";
     private static final String MSG_BTN_PARTICIPATE = "action.participate";
     private static final String MSG_BTN_SAVE = "action.save";
-    private static final String SELECT_MUNICIPALITY = "initiative.chooseMunicipality";
-    private static final String RADIO_FRANCHISE_TRUE = "initiative.franchise.true";
+    private static final String PARTICIPANT_SHOW_NAME = "participant.showName";
+    private static final String MEMBERSHIP_RADIO = "initiative.municipalMembership.community";
     
     /**
      * Form values as constants.
@@ -43,7 +43,32 @@ public class InitiativeParticipateWebTest extends WebTestBase {
      */
     
     @Test
-    public void participate_initiative_does_something_when_something() {
+    public void participate_initiative_with_public_name() {
+        Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
+        Long municipality2Id = testHelper.createTestMunicipality(MUNICIPALITY_2);
+        
+        Long initiativeId = testHelper.create(municipality1Id, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        
+        open(urls.view(initiativeId));
+
+        clickLinkContaining(getMessage(MSG_BTN_PARTICIPATE));
+
+        inputText("participantName", PARTICIPANT_NAME);
+        inputText("participantEmail", PARTICIPANT_EMAIL);
+        
+        getElemContaining(getMessage(MSG_BTN_SAVE), "button").click();
+        
+        assertMsgContainedByClass("msg-success", MSG_SUCCESS_PARTICIPATE);
+       
+        assertThat(getOptionalElemContaining(getMessage(MSG_BTN_PARTICIPATE), "a").isPresent(), is(false));
+        
+//        assertTextContainedByClass("public-names", "2");
+        // TODO: Assert that public names is 2
+    }
+    
+    @Test
+    public void participate_initiative_with_private_name_and_select_membership_type() {
+        overrideDriverToFirefox(true);
         
         Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
         Long municipality2Id = testHelper.createTestMunicipality(MUNICIPALITY_2);
@@ -55,12 +80,12 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         clickLinkContaining(getMessage(MSG_BTN_PARTICIPATE));
 
         inputText("participantName", PARTICIPANT_NAME);
-        clickByName("showName"); // TODO: Use text instead
+        getElemContaining(getMessage(PARTICIPANT_SHOW_NAME), "span").click();
         
-        /* TODO: Select another municipality
         clickLinkContaining(MUNICIPALITY_1);
-        getElemContaining(MUNICIPALITY_2, "li").click(); */
-
+        getElemContaining(MUNICIPALITY_2, "li").click();
+        
+        getElemContaining(getMessage(MEMBERSHIP_RADIO), "span").click();
         
         inputText("participantEmail", PARTICIPANT_EMAIL);
         
@@ -70,8 +95,8 @@ public class InitiativeParticipateWebTest extends WebTestBase {
        
         assertThat(getOptionalElemContaining(getMessage(MSG_BTN_PARTICIPATE), "a").isPresent(), is(false));
         
-        
-        
+     // TODO: Assert that private names is 2
+//        assertTextContainedByClass("private-names", "2");
     }
     
 }

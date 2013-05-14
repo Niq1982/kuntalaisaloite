@@ -123,8 +123,8 @@
             <div class="participants-block separate">
                 <span class="user-count-sub-total">
                     <#if (participantCount.noFranchise.total > 0)>
-                        <#if (participantCount.noFranchise.publicNames > 0)><a class="trigger-tooltip" href="${urls.participantList(initiative.id)}" title="<@u.message key="participantCount.publicNames.show"/>"><@u.message key="participantCount.publicNames" args=[participantCount.noFranchise.publicNames!""] /></a><br/></#if>
-                        <#if (participantCount.noFranchise.privateNames > 0)><@u.message key="participantCount.privateNames" args=[participantCount.noFranchise.privateNames!""] /></p></#if>
+                        <#if (participantCount.noFranchise.publicNames > 0)><span class="public-names"><a class="trigger-tooltip" href="${urls.participantList(initiative.id)}" title="<@u.message key="participantCount.publicNames.show"/>"><@u.message key="participantCount.publicNames" args=[participantCount.noFranchise.publicNames!""] /></a></span><br/></#if>
+                        <#if (participantCount.noFranchise.privateNames > 0)><span class="private-names"><@u.message key="participantCount.privateNames" args=[participantCount.noFranchise.privateNames!""] /></span></p></#if>
                     </#if>
                 </span>
             </div>
