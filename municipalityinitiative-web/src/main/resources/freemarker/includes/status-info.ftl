@@ -134,8 +134,7 @@
     <#assign statusTitle><@u.message messageKeyPrefix+".title" /> ${initiative.municipality.getLocalizedName(locale)!""}</#assign>
     <#-- TEXT -->
     <#assign statusInfo>
-        <#-- TODO: sent date: initiative.sentTime.value -->
-        <@b.initiativeDetails type="text" showProposal=true showDate=true />
+        <@b.initiativeDetails type="text" showProposal=true showDate=true showExtraInfo=true />
         
         ----
         
@@ -145,8 +144,7 @@
     
     <#-- HTML -->
     <#assign statusInfoHTML>
-        <#-- TODO: sent date initiative.sentTime.value -->
-        <@b.initiativeDetails type="html" showProposal=true showDate=true />
+        <@b.initiativeDetails type="html" showProposal=true showDate=true showExtraInfo=true />
         
 
         <h4 style="${h4!""}"><@u.message "email.municipality.emailAddress" /></h4>
@@ -277,8 +275,7 @@
     <#-- TEXT -->
     <#assign statusInfoSv>
     
-        <#-- TODO: sent date: initiative.sentTime.value -->
-        <@b.initiativeDetails type="text" showProposal=true showDate=true />
+        <@b.initiativeDetails type="text" showProposal=true showDate=true showExtraInfo=true />
         
         ----
         
@@ -288,8 +285,7 @@
     
     <#-- HTML -->
     <#assign statusInfoHTMLSv>
-        <#-- TODO: sent date initiative.sentTime.value -->
-        <@b.initiativeDetails type="html" showProposal=true showDate=true />
+        <@b.initiativeDetails type="html" showProposal=true showDate=true showExtraInfo=true />
 
         <h4 style="${h4!""}"><@u.message "email.municipality.emailAddress" /></h4>
         <p style="${pBottomMargin!""}"><@u.link "mailto:"+municipalityEmail!"" municipalityEmail!"" /></p>

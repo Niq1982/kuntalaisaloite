@@ -10,13 +10,7 @@
 <@u.message "email.initiative" />
 
 
-<@b.initiativeDetails type=type showProposal=true showDate=true />
-
-<#if (initiative.extraInfo)?has_content>
-    <@u.message "email.extraInfo" />
-    
-    ${initiative.extraInfo}
-</#if>
+<@b.initiativeDetails type=type showProposal=true showDate=true showExtraInfo=true />
 
 ----
 

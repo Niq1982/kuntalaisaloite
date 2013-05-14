@@ -11,11 +11,7 @@
     
 </#if>
 
-<@b.initiativeDetails type=type showProposal=true showDate=true />
-
-<#if (initiative.extraInfo)?has_content>
-    <@b.comment type initiative.extraInfo "email.extraInfo" />
-</#if>
+<@b.initiativeDetails type=type showProposal=true showDate=true showExtraInfo=true />
 
 ----
 

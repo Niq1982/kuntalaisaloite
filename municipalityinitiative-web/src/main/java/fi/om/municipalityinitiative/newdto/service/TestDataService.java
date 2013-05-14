@@ -39,6 +39,7 @@ public class TestDataService {
                 + "\n\n"
                 + "Linkki hallintasivulle: " + Urls.get(Locales.LOCALE_FI).loginAuthor(managementHash)
         );
+        editDto.setExtraInfo(template.initiative.getExtraInfo());
         initiativeDao.editInitiativeDraft(initiativeId, editDto);
 
         initiativeDao.updateInitiativeType(initiativeId, template.initiative.getType());
