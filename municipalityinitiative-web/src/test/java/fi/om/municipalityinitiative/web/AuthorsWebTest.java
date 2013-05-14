@@ -46,7 +46,6 @@ public class AuthorsWebTest  extends WebTestBase {
         testHelper.dbCleanup();
         municipalityId = testHelper.createTestMunicipality(MUNICIPALITY_1);
         initiativeId = testHelper.create(municipalityId, InitiativeState.ACCEPTED, InitiativeType.COLLABORATIVE);
-        overrideDriverToFirefox(true);
     }
 
     @Test
