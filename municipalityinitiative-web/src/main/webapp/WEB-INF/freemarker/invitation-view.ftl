@@ -49,12 +49,12 @@
     <#assign invitationDeclineConfirmHtml>
         <@compress single_line=true>
         
-            <p><@u.message "invitation.decline.confirm" /></p>
-            
+            <p><@u.message "invitation.decline.confirm.text" /></p>
+
             <form action="${springMacroRequestContext.requestUri}" method="POST" >
                 <input type="hidden" name="CSRFToken" value="${CSRFToken!}"/>
                 <input type="hidden" name="${UrlConstants.PARAM_INVITATION_CODE}" value="${authorInvitation.confirmCode!""}"/>
-                <button type="submit" name="${UrlConstants.ACTION_REJECT_INVITATION}" id="modal-${UrlConstants.ACTION_REJECT_INVITATION}"  value="<@u.message "invitation.decline" />" class="small-button gray cancel"><span class="small-icon cancel"><@u.message "invitation.decline" /></span></button>
+                <button type="submit" name="${UrlConstants.ACTION_REJECT_INVITATION}" id="modal-${UrlConstants.ACTION_REJECT_INVITATION}"  value="<@u.message "invitation.decline" />" class="small-button gray cancel"><span class="small-icon cancel"><@u.message "invitation.decline.confirm" /></span></button>
                 <a href="?invitation=${authorInvitation.confirmCode!""}" class="push close"><@u.message "action.cancel" /></a>
             </form>
         

@@ -309,6 +309,10 @@ public abstract class WebTestBase {
         return getElement(By.xpath("//label[contains(normalize-space(text()), '" + labelText + "')]/following-sibling::"+elementTag));
     }
 
+    protected void clickDialogButtonMsg(String localizationKey) {
+        clickDialogButton(getMessage(localizationKey));
+    }
+
     protected void clickDialogButton(String containing) {
         getElemContaining(containing, "span").click();
     }

@@ -7,6 +7,7 @@ import static org.hamcrest.Matchers.containsString;
 
 import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import fi.om.municipalityinitiative.util.InitiativeState;
@@ -34,6 +35,8 @@ public class AuthorsWebTest  extends WebTestBase {
     private static final String CONTACT_EMAIL = "test@test.com";
     public static final String CONTACT_ADDRESS = "Joku Katu jossain 89";
     public static final String CONTACT_PHONE = "040111222";
+    public static final String HYLKÄÄ_KUTSU = "invitation.decline";
+    public static final String HYVÄKSY_KUTSUN_HYLKÄÄMINEN = "invitation.decline.confirm";
     private Long municipalityId;
     private Long initiativeId;
 
@@ -89,7 +92,22 @@ public class AuthorsWebTest  extends WebTestBase {
     }
 
     @Test
-    public void reject_author_invitation() {
+    @Ignore("wtf")
+    public void reject_author_invitation() throws InterruptedException {
+
+        AuthorInvitation invitation = testHelper.createInvitation(initiativeId, CONTACT_NAME, CONTACT_EMAIL);
+        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
+
+        clickDialogButton("Hylkää kutsu");
+        clickDialogButton("Hyväksy kutsun hylkääminen");
+        //clickDialogButtonMsg(HYLKÄÄ_KUTSU);
+        //clickDialogButtonMsg(HYVÄKSY_KUTSUN_HYLKÄÄMINEN);
+
+        assertTextContainedByClass("msg-success", "Olet hylännyt kutsun vastuuhenkilöksi eikä tietojasi ole tallennettu tähän aloitteeseen.");
+
+        //open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
+        //assert404();
+        Thread.sleep(10000);
         
     }
     
