@@ -83,6 +83,8 @@ public final class Urls {
     public static final String ERROR_404 = "/404";
     
     public static final String ERROR_500 = "/500";
+
+    public static final String ERROR_410 = "/410";
     
     
     public static final String NEWS_FI = "/fi/uutiset";

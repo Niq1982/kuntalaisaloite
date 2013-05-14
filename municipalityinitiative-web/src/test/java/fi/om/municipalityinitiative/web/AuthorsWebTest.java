@@ -1,19 +1,17 @@
 package fi.om.municipalityinitiative.web;
 
 import static fi.om.municipalityinitiative.web.MessageSourceKeys.MSG_SUCCESS_INVITATION_SENT;
-import static fi.om.municipalityinitiative.web.MessageSourceKeys.MSG_SUCCESS_REJECT_INITIATIVE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
 
 import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.By;
 
 public class AuthorsWebTest  extends WebTestBase {
 
@@ -89,8 +87,7 @@ public class AuthorsWebTest  extends WebTestBase {
         assertThat(getElementByLabel("Puhelin", "input").getAttribute("value"), containsString(CONTACT_PHONE));
         assertThat(getElementByLabel("Osoite", "textarea").getText(), containsString(CONTACT_ADDRESS));
 
-        // TODO: open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
-        // TODO: Assert error page when we've created one
+        assertInvitationPageIsGone(invitation);
 
     }
 
@@ -105,10 +102,13 @@ public class AuthorsWebTest  extends WebTestBase {
 
         assertTextContainedByClass("msg-success", "Olet hylännyt kutsun vastuuhenkilöksi eikä tietojasi ole tallennettu tähän aloitteeseen.");
 
-        // TODO: open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
-        // TODO: Assert error page when we've created one
+        assertInvitationPageIsGone(invitation);
 
-        
     }
-    
+
+    private void assertInvitationPageIsGone(AuthorInvitation invitation) {
+        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
+        assertThat(getElement(By.tagName("h1")).getText(), is(getMessage("error.410.title")));
+    }
+
 }

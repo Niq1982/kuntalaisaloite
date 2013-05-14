@@ -7,6 +7,7 @@ import com.google.common.collect.Sets;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.expr.DateTimeExpression;
+import fi.om.municipalityinitiative.dao.InvitationNotValidException;
 import fi.om.municipalityinitiative.dao.NotFoundException;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.newdto.Author;
@@ -100,7 +101,7 @@ public class JdbcAuthorDao implements AuthorDao {
                 .where(QAuthorInvitation.authorInvitation.confirmationCode.eq(confirmationCode))
                 .singleResult(Mappings.authorInvitationMapping);
         if (authorInvitation == null) {
-            throw new NotFoundException(QAuthorInvitation.authorInvitation.getTableName(), initiativeId + ":" + confirmationCode);
+            throw new InvitationNotValidException("No invitation: " + initiativeId + ", " + confirmationCode);
         }
         return authorInvitation;
     }
