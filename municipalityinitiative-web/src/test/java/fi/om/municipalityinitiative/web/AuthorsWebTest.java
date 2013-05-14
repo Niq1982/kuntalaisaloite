@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
-import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 
 public class AuthorsWebTest  extends WebTestBase {
 
@@ -62,15 +62,21 @@ public class AuthorsWebTest  extends WebTestBase {
     }
     
     @Test
-    public void author_invitation_acceptance_dialog_shows_given_information_prefilled() throws InterruptedException {
+    public void author_invitation_acceptance_dialog_has_given_values_prefilled_and_submitting_logs_user_in_as_author_with_given_information() throws InterruptedException {
         AuthorInvitation invitation = testHelper.createInvitation(initiativeId, CONTACT_NAME, CONTACT_EMAIL);
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
 
         getElemContaining("Hyväksy kutsu", "span").click();
+
         assertThat(getElementByLabel("Nimi", "input").getAttribute("value"), containsString(CONTACT_NAME));
         assertThat(getElementByLabel("Sähköpostiosoite", "input").getAttribute("value"), containsString(CONTACT_EMAIL));
+
+        getElementByLabel("Puhelin", "input").sendKeys("040111222");
+        getElementByLabel("Osoite", "textarea").sendKeys("Joku Katu jossain 89");
+
+        Thread.sleep(5000);
     }
-    
+
     @Test
     public void reject_author_invitation() {
         
