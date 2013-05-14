@@ -144,6 +144,7 @@ public class JdbcAuthorDao implements AuthorDao {
     public List<AuthorInvitation> findInvitations(Long initiativeId) {
         return queryFactory.from(QAuthorInvitation.authorInvitation)
                 .where(QAuthorInvitation.authorInvitation.initiativeId.eq(initiativeId))
+                .orderBy(QAuthorInvitation.authorInvitation.id.asc())
                 .list(Mappings.authorInvitationMapping);
     }
 
@@ -155,7 +156,7 @@ public class JdbcAuthorDao implements AuthorDao {
                     .innerJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
                     .innerJoin(QParticipant.participant.participantMunicipalityFk, QMunicipality.municipality)
                     .where(municipalityInitiative.id.eq(initiativeId))
-                    .orderBy(QParticipant.participant.id.desc())
+                    .orderBy(QParticipant.participant.id.asc())
                     .list(Mappings.authorMapping);
     }
 
