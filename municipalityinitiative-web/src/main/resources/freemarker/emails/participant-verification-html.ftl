@@ -13,7 +13,7 @@
 <@l.emailHtml "verify-participate" title>
 
     <@b.mainContentBlock title>
-        <@b.initiativeDetails type=type showProposal=false showDate=false />
+        <@b.initiativeDetails type />
 
         <p style="${pBothMargins!""}"><@u.message "email.verifyParticipate.description" /></p>
         

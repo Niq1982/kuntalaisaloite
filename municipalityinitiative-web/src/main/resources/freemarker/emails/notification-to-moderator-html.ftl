@@ -13,7 +13,7 @@
 <@l.emailHtml "notification-to-moderator" title>
 
     <@b.mainContentBlock title>
-        <@b.initiativeDetails type />
+        <@b.initiativeDetails type=type showProposal=true showDate=true />
     </@b.mainContentBlock>
     
     <@u.spacer "15" />

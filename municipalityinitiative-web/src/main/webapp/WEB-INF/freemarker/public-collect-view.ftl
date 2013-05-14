@@ -16,16 +16,18 @@
 -->
 <@l.main "page.initiative.public" initiative.name!"">
 
-    <h1 class="name">
-        ${initiative.name!""}
-        <#if hasManagementRightForInitiative>
-            <a href="${urls.management(initiative.id)}">Siirry hallintasivulle</a>
-        </#if>
-    </h1>
+    <h1 class="name">${initiative.name!""}</h1>
     
     <div class="municipality">${initiative.municipality.getName(locale)}</div>
     
+    <#-- TODO: should not be visible if initiative is sent to municipality -->
+    <#if hasManagementRightForInitiative>
+        <a style="float:right;" href="${urls.management(initiative.id)}">Siirry hallintasivulle</a>
+    </#if>
+    
     <@e.stateInfo initiative />
+
+    
 
     <#-- VIEW BLOCKS -->
     <div class="view-block public first">

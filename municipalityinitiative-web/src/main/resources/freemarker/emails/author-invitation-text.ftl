@@ -10,7 +10,7 @@
 <@u.message "email.author.invitation.title" />
 
 
-<@b.initiativeDetails type=type showProposal=false />
+<@b.initiativeDetails type=type showDate=true />
 
 <@u.message "email.author.invitation.description" />
 
@@ -33,7 +33,7 @@ ${url}
 <@u.message "email.author.invitation.title" />
 
 
-<@b.initiativeDetails type=type showProposal=false />
+<@b.initiativeDetails type=type showDate=true />
 
 <@u.message "email.author.invitation.description" />
 

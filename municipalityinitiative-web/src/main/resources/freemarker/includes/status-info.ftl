@@ -32,7 +32,7 @@
         
         <@b.statusInfoComment "text" initiative.moderatorComment!"" />
         
-        <@b.initiativeDetails type="text" showProposal=false showDate=false />
+        <@b.initiativeDetails "text" />
         
         <@b.publicViewLink "text" />
     </#assign>
@@ -43,7 +43,7 @@
         <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description.2" /> <strong>${initiative.municipality.getLocalizedName(locale)!""}</strong>.</p>
 
         <@b.statusInfoComment "html" initiative.moderatorComment!"" />
-        <@b.initiativeDetails type="html" showProposal=false showDate=false />
+        <@b.initiativeDetails "html" />
         <@b.publicViewLink "html" />
     </#assign>
     
@@ -57,7 +57,7 @@
         
         <@b.statusInfoComment "text" initiative.moderatorComment!"" />
         
-        <@b.initiativeDetails type="text" showProposal=false showDate=false />
+        <@b.initiativeDetails "text" />
     </#assign>
     
     <#-- HTML -->
@@ -66,7 +66,7 @@
         <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description.2"/></p>
         
         <@b.statusInfoComment "html" initiative.moderatorComment!"" />
-        <@b.initiativeDetails type="html" showProposal=false showDate=false />
+        <@b.initiativeDetails "html" />
     </#assign>
     
 <#elseif emailMessageType == EmailMessageType.REJECTED_BY_OM>
@@ -77,7 +77,7 @@
     
         <@b.statusInfoComment "text" initiative.moderatorComment!"" />
         
-        <@b.initiativeDetails type="text" showProposal=false showDate=false />
+        <@b.initiativeDetails "text" />
     </#assign>
     
     <#-- HTML -->
@@ -85,7 +85,7 @@
         <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description" /></p>
         
         <@b.statusInfoComment "html" initiative.moderatorComment!"" />
-        <@b.initiativeDetails type="html" showProposal=false showDate=false />
+        <@b.initiativeDetails "html" />
     </#assign>
     
 <#elseif emailMessageType == EmailMessageType.INVITATION_ACCEPTED>
@@ -115,7 +115,7 @@
     <#assign statusInfo>
         <@u.message messageKeyPrefix+".description"/>
         
-        <@b.initiativeDetails type="text" showProposal=false showDate=false />  
+        <@b.initiativeDetails "text" />  
         
         <@b.publicViewLink "text" />
     </#assign>
@@ -124,7 +124,7 @@
     <#assign statusInfoHTML>
         <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description"/></p>
         
-        <@b.initiativeDetails type="html" showProposal=false showDate=false />  
+        <@b.initiativeDetails "html" />  
         
         <@b.publicViewLink "html" />
     </#assign>
@@ -135,7 +135,7 @@
     <#-- TEXT -->
     <#assign statusInfo>
         <#-- TODO: sent date: initiative.sentTime.value -->
-        <@b.initiativeDetails "text" />
+        <@b.initiativeDetails type="text" showProposal=true showDate=true />
         
         ----
         
@@ -146,7 +146,7 @@
     <#-- HTML -->
     <#assign statusInfoHTML>
         <#-- TODO: sent date initiative.sentTime.value -->
-        <@b.initiativeDetails "html" />
+        <@b.initiativeDetails type="html" showProposal=true showDate=true />
         
 
         <h4 style="${h4!""}"><@u.message "email.municipality.emailAddress" /></h4>
@@ -174,7 +174,7 @@
         
         <@b.statusInfoComment "text" initiative.moderatorComment!"" />
         
-        <@b.initiativeDetails type="text" showProposal=false showDate=false />
+        <@b.initiativeDetails "text" />
         
         <@b.publicViewLink "text" />
     </#assign>
@@ -185,7 +185,7 @@
         <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description.2" /> <strong>${initiative.municipality.getLocalizedName(switchLocale!locale)!""}</strong>.</p>
 
         <@b.statusInfoComment "html" initiative.moderatorComment!"" />
-        <@b.initiativeDetails type="html" showProposal=false showDate=false />
+        <@b.initiativeDetails "html" />
         <@b.publicViewLink "html" />
     </#assign>
     
@@ -199,7 +199,7 @@
         
         <@b.statusInfoComment "text" initiative.moderatorComment!"" />
         
-        <@b.initiativeDetails type="text" showProposal=false showDate=false />
+        <@b.initiativeDetails "text" />
     </#assign>
     
     <#-- HTML -->
@@ -208,7 +208,7 @@
         <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description.2"/></p>
         
         <@b.statusInfoComment "html" initiative.moderatorComment!"" />
-        <@b.initiativeDetails type="html" showProposal=false showDate=false />
+        <@b.initiativeDetails "html" />
     </#assign>
     
 <#elseif emailMessageType == EmailMessageType.REJECTED_BY_OM>
@@ -219,7 +219,7 @@
         
         <@b.statusInfoComment "text" initiative.moderatorComment!"" />
         
-        <@b.initiativeDetails type="text" showProposal=false showDate=false />
+        <@b.initiativeDetails "text" />
     </#assign>
     
     <#-- HTML -->
@@ -227,7 +227,7 @@
         <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description" /></p>
         
         <@b.statusInfoComment "html" initiative.moderatorComment!"" />
-        <@b.initiativeDetails type="html" showProposal=false showDate=false />
+        <@b.initiativeDetails "html" />
     </#assign>
     
 <#elseif emailMessageType == EmailMessageType.INVITATION_ACCEPTED>
@@ -257,7 +257,7 @@
     <#assign statusInfoSv>
         <@u.message messageKeyPrefix+".description"/>
         
-        <@b.initiativeDetails type="text" showProposal=false showDate=false />  
+        <@b.initiativeDetails "text" />  
         
         <@b.publicViewLink "text" />
     </#assign>
@@ -266,7 +266,7 @@
     <#assign statusInfoHTMLSv>
         <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description"/></p>
         
-        <@b.initiativeDetails type="html" showProposal=false showDate=false />  
+        <@b.initiativeDetails "html" />  
         
         <@b.publicViewLink "html" />
     </#assign>
@@ -278,7 +278,7 @@
     <#assign statusInfoSv>
     
         <#-- TODO: sent date: initiative.sentTime.value -->
-        <@b.initiativeDetails "text" />
+        <@b.initiativeDetails type="text" showProposal=true showDate=true />
         
         ----
         
@@ -289,7 +289,7 @@
     <#-- HTML -->
     <#assign statusInfoHTMLSv>
         <#-- TODO: sent date initiative.sentTime.value -->
-        <@b.initiativeDetails "html" />
+        <@b.initiativeDetails type="html" showProposal=true showDate=true />
 
         <h4 style="${h4!""}"><@u.message "email.municipality.emailAddress" /></h4>
         <p style="${pBottomMargin!""}"><@u.link "mailto:"+municipalityEmail!"" municipalityEmail!"" /></p>

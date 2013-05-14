@@ -8,7 +8,7 @@
 
 <@u.message "email.verifyParticipate.title" />
 
-<@b.initiativeDetails type=type showProposal=false showDate=false />
+<@b.initiativeDetails type />
 
 ----
 

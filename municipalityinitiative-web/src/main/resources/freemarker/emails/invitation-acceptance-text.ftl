@@ -10,7 +10,7 @@
 <@u.message "email.author.invitation.accepted.title" />
 
 
-<@b.initiativeDetails type=type showProposal=false />
+<@b.initiativeDetails type=type showDate=true />
 
 <@u.message "email.author.invitation.accepted.description" />
 

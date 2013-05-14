@@ -18,7 +18,7 @@
     </#if>
 
     <@b.mainContentBlock title>
-        <@b.initiativeDetails type />
+        <@b.initiativeDetails type=type showProposal=true showDate=true />
         
         <#if (initiative.extraInfo)?has_content>
             <h4 style="${h4!""}"><@u.message "email.extraInfo" /></h4>

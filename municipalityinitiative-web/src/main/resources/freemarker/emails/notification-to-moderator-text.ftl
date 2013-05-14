@@ -6,7 +6,7 @@
 <@u.message "email.notification.to.moderator.title" />
 
 
-<@b.initiativeDetails type />
+<@b.initiativeDetails type=type showProposal=true showDate=true />
     
 ----
 <@b.contactInfo type />

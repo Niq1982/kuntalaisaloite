@@ -17,13 +17,13 @@
         <@u.spacer "15" />
     </#if>
 
-    <#if (initiative.extraInfo)?has_content>
-        <@b.comment type initiative.extraInfo "email.extraInfo" />
-        <@u.spacer "15" />
-    </#if>
-
     <@b.mainContentBlock title>
-        <@b.initiativeDetails type />
+        <@b.initiativeDetails type=type showProposal=true showDate=true />
+        
+        <#if (initiative.extraInfo)?has_content>
+            <@b.comment type initiative.extraInfo "email.extraInfo" />
+            <@u.spacer "15" />
+        </#if>
     </@b.mainContentBlock>
     
     <@u.spacer "15" />

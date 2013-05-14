@@ -114,12 +114,11 @@
  *
  * @param type 'text' or 'html'
  -->
-<#macro initiativeDetails type="" showProposal=true showDate=true>
+<#macro initiativeDetails type="" showProposal=false showDate=false>
     <#if type == "html">
         <h4 style="${h4!""}">${initiative.name!""}</h4>
         <p style="${pBottomMargin!""}">${initiative.municipality.getLocalizedName(switchLocale!locale)!""}</p>
-        <#if showDate><p style="${pBothMargins!""}"><@u.message "email.date.create" /> <@u.localDate initiative.createTime /></#if>
-        <#--<br/><@u.message "email.date.sent" /> <@u.localDate initiative.sentTime />--></p>
+        <#if showDate><p style="${pBothMargins!""}"><@u.message "email.date.create" /> <@u.localDate initiative.createTime /></p></#if>
         <#if showProposal><@u.text initiative.proposal /></#if>
     <#else>
         "${initiative.name!""}"

@@ -11,7 +11,7 @@
 <@l.emailHtml template="author-invitation-accepted" title=title footer=false>
 
     <@b.mainContentBlock title> 
-        <@b.initiativeDetails type=type showProposal=false />
+        <@b.initiativeDetails type=type showDate=true />
     
         <p style="${pBothMargins!""}"><@u.message "email.author.invitation.accepted.description" /></p>
 
