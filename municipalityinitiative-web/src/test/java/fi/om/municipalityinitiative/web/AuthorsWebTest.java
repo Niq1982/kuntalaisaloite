@@ -1,11 +1,16 @@
 package fi.om.municipalityinitiative.web;
 
 import static fi.om.municipalityinitiative.web.MessageSourceKeys.MSG_SUCCESS_INVITATION_SENT;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 
+import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
+import org.junit.Before;
 import org.junit.Test;
 
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
+import org.openqa.selenium.By;
 
 public class AuthorsWebTest  extends WebTestBase {
 
@@ -26,12 +31,20 @@ public class AuthorsWebTest  extends WebTestBase {
     private static final String MUNICIPALITY_1 = "Vantaa";
     private static final String CONTACT_NAME = "Teppo Testaaja";
     private static final String CONTACT_EMAIL = "test@test.com";
-    
+    private Long municipalityId;
+    private Long initiativeId;
+
+    @Before
+    public void setup() {
+        testHelper.dbCleanup();
+        municipalityId = testHelper.createTestMunicipality(MUNICIPALITY_1);
+        initiativeId = testHelper.create(municipalityId, InitiativeState.ACCEPTED, InitiativeType.COLLABORATIVE);
+        overrideDriverToFirefox(true);
+    }
+
     @Test
     public void add_author() {
-        Long municipalityId = testHelper.createTestMunicipality(MUNICIPALITY_1);
-        Long initiativeId = testHelper.create(municipalityId, InitiativeState.ACCEPTED, InitiativeType.COLLABORATIVE);
-        
+
         loginAsAuthorForLastTestHelperCreatedInitiative();
         
         open(urls.management(initiativeId));
@@ -49,8 +62,13 @@ public class AuthorsWebTest  extends WebTestBase {
     }
     
     @Test
-    public void accept_author_invitation() {
-        
+    public void author_invitation_acceptance_dialog_shows_given_information_prefilled() throws InterruptedException {
+        AuthorInvitation invitation = testHelper.createInvitation(initiativeId, CONTACT_NAME, CONTACT_EMAIL);
+        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
+
+        getElemContaining("Hyväksy kutsu", "span").click();
+        assertThat(getElementByLabel("Nimi", "input").getAttribute("value"), containsString(CONTACT_NAME));
+        assertThat(getElementByLabel("Sähköpostiosoite", "input").getAttribute("value"), containsString(CONTACT_EMAIL));
     }
     
     @Test

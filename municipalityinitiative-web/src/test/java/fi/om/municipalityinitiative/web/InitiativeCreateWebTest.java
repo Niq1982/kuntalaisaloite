@@ -208,7 +208,4 @@ public class InitiativeCreateWebTest extends WebTestBase {
         assertTitle(getMessage(MSG_PAGE_CREATE_NEW) + " - " + getMessage(MSG_SITE_NAME));
     }
 
-    private WebElement getSelectByLabel(String labelText) {
-        return getElement(By.xpath("//label[contains(normalize-space(text()), '" + labelText + "')]/following-sibling::select"));
-    }
 }
