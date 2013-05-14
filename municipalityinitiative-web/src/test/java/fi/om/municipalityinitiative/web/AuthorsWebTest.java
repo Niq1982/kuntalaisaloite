@@ -13,6 +13,7 @@ import org.junit.Test;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
 
 public class AuthorsWebTest  extends WebTestBase {
 
@@ -89,25 +90,25 @@ public class AuthorsWebTest  extends WebTestBase {
         assertThat(getElementByLabel("Puhelin", "input").getAttribute("value"), containsString(CONTACT_PHONE));
         assertThat(getElementByLabel("Osoite", "textarea").getText(), containsString(CONTACT_ADDRESS));
 
+        // TODO: open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
+        // TODO: Assert error page when we've created one
+
     }
 
     @Test
-    @Ignore("wtf")
     public void reject_author_invitation() throws InterruptedException {
 
         AuthorInvitation invitation = testHelper.createInvitation(initiativeId, CONTACT_NAME, CONTACT_EMAIL);
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
 
-        clickDialogButton("Hylkää kutsu");
-        clickDialogButton("Hyväksy kutsun hylkääminen");
-        //clickDialogButtonMsg(HYLKÄÄ_KUTSU);
-        //clickDialogButtonMsg(HYVÄKSY_KUTSUN_HYLKÄÄMINEN);
+        clickDialogButtonMsg(HYLKÄÄ_KUTSU);
+        clickDialogButtonMsg(HYVÄKSY_KUTSUN_HYLKÄÄMINEN);
 
         assertTextContainedByClass("msg-success", "Olet hylännyt kutsun vastuuhenkilöksi eikä tietojasi ole tallennettu tähän aloitteeseen.");
 
-        //open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
-        //assert404();
-        Thread.sleep(10000);
+        // TODO: open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
+        // TODO: Assert error page when we've created one
+
         
     }
     

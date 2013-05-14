@@ -217,7 +217,7 @@ public class InitiativeViewController extends BaseController {
                                    Locale locale, HttpServletRequest request) {
 
         authorService.rejectInvitation(initiativeId, confirmCode);
-        return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.CONFIRM_INVITATION_REJECTED, request);
+        return redirectWithMessage(Urls.get(locale).frontpage(), RequestMessage.CONFIRM_INVITATION_REJECTED, request);
     }
 
     @RequestMapping(value={IFRAME_FI, IFRAME_SV}, method=GET)
