@@ -123,7 +123,8 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         assertThat(currentAuthors(initiativeId), hasSize(2));
 
         // Check new author information
-        Author createdAuthor = currentAuthors(initiativeId).get(0);
+        List<Author> currentAuthors = currentAuthors(initiativeId);
+        Author createdAuthor = currentAuthors.get(currentAuthors.size() -1);
         assertThat(createdAuthor.getContactInfo().getName(), is(createDto.getContactInfo().getName()));
         assertThat(createdAuthor.getContactInfo().getEmail(), is(createDto.getContactInfo().getEmail()));
         assertThat(createdAuthor.getContactInfo().getAddress(), is(createDto.getContactInfo().getAddress()));
