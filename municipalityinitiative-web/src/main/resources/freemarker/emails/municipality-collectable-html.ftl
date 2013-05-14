@@ -18,13 +18,7 @@
     </#if>
 
     <@b.mainContentBlock title>
-        <@b.initiativeDetails type=type showProposal=true showDate=true />
-        
-        <#if (initiative.extraInfo)?has_content>
-            <h4 style="${h4!""}"><@u.message "email.extraInfo" /></h4>
-            <p style="${pBottomMargin!""}">${initiative.extraInfo}</p>
-        </#if>
-        
+        <@b.initiativeDetails type=type showProposal=true showDate=true showExtraInfo=true />
     </@b.mainContentBlock>
     
     <@u.spacer "15" />

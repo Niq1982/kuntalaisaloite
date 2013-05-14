@@ -39,8 +39,8 @@ public class TestDataTemplates {
    
     private static List<InitiativeTemplate> createInitiativeTemplateList(Long municipality, String email) {
         List<InitiativeTemplate> initiatives = Lists.newArrayList();
-        initiatives.add(createInitiativeTemplate(municipality, INITIATIVE_1_NAME, INITIATIVE_1_PROPOSAL, false, email));
-        initiatives.add(createInitiativeTemplate(municipality, INITIATIVE_2_NAME, INITIATIVE_2_PROPOSAL, true, email));
+        initiatives.add(createInitiativeTemplate(municipality, INITIATIVE_1_NAME, INITIATIVE_1_PROPOSAL, INITIATIVE_1_EXTRAINFO, false, email));
+        initiatives.add(createInitiativeTemplate(municipality, INITIATIVE_2_NAME, INITIATIVE_2_PROPOSAL, INITIATIVE_2_EXTRAINFO, true, email));
         return initiatives;
     }
 
@@ -51,13 +51,14 @@ public class TestDataTemplates {
         return participants;
     }
     
-    private static InitiativeTemplate createInitiativeTemplate(Long municipality, String name, String proposal, boolean collaborative, String email) {
+    private static InitiativeTemplate createInitiativeTemplate(Long municipality, String name, String proposal, String extraInfo, boolean collaborative, String email) {
         InitiativeTemplate initiativeTemplate = new InitiativeTemplate();
         initiativeTemplate.initiative = new Initiative();
 
         initiativeTemplate.initiative.setMunicipality(new Municipality(municipality, "", "", false));
         initiativeTemplate.initiative.setName(name);
         initiativeTemplate.initiative.setProposal(proposal);
+        initiativeTemplate.initiative.setExtraInfo(extraInfo);
         initiativeTemplate.initiative.setType(collaborative ? InitiativeType.COLLABORATIVE : InitiativeType.SINGLE);
         initiativeTemplate.initiative.setState(InitiativeState.PUBLISHED);
         initiativeTemplate.author = new Author();

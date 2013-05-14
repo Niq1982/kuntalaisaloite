@@ -12,7 +12,6 @@
 
 <@l.emailHtml "municipality-collectable" title>
 
-    <#-- TODO: localize -->
     <@b.mainContentBlock title>
         <p style="${pBothMargins!""}"><@u.message "email.create.description" /></p>
         
