@@ -16,4 +16,4 @@
 <#assign pBottomMargin = "font-size:${defaultFontSize}; margin:0 0 1em 0;" />
 <#assign pBothMargins = "font-size:${defaultFontSize}; margin:1em 0;" />
 
-<#assign footerFont = "margin:0; color:#686868; font-size:12px;" />
+<#assign footerFont = "margin:0; color:#686868; font-size:12px; font-family:${defaultFontFamily};" />

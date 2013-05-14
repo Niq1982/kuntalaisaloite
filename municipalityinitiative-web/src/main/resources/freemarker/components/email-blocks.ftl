@@ -80,6 +80,10 @@
  -->
 <#macro emailFooter type="" postFix="">
     <#if type=="html">
+        <table border="0" cellspacing="0" cellpadding="0" width="640" style="border:0;">
+        <tr>
+            <td style="text-align:center; ${footerFont!""}">
+    
         <p style="${footerFont!""}"><@u.message "email.footer.sendFrom"+postFix />
         <#if initiative.state?? && initiative.state == "PUBLISHED">
             <@u.message "email.footer.viewLink" /><br/><@u.link urls.get(switchLocale!locale).view(initiative.id) />
@@ -87,6 +91,10 @@
         </p>
         <br/>
         <p style="${footerFont!""}"><@u.message "email.footer" /></p>
+        
+        </td>
+        </tr>
+        </table>
     <#else>
         <@u.message "email.footer.sendFrom"+postFix />
         <#if initiative.state?? && initiative.state == "PUBLISHED">
@@ -136,7 +144,7 @@
     <#list authors as author>
         <#assign obj=author.contactInfo />
         <#if type == "html">
-            <p style="${pBottomMargin!""}">${obj.name!""}, ${author.municipality.nameFi}/${author.municipality.nameSv}<br/>
+            <p style="${pBottomMargin!""}">${obj.name!""}, ${author.municipality.nameFi} / ${author.municipality.nameSv}<br/>
             <#if obj.email?? && obj.email != ""><@u.link "mailto:"+obj.email obj.email /><br/></#if>
             <#if obj.phone?? && obj.phone != "">${obj.phone!""}<br/></#if>
             <#if obj.address?? && obj.address != ""><#noescape>${obj.address?replace('\n','<br/>')!""}</#noescape><br/></#if>
@@ -144,7 +152,7 @@
             </p>
         <#else>
             <@u.message "email.contact.info" />:
-            ${obj.name!""}
+            ${obj.name!""}, ${author.municipality.nameFi} / ${author.municipality.nameSv}
             ${obj.email!""}
             ${obj.phone!""}
             ${obj.address!""}
