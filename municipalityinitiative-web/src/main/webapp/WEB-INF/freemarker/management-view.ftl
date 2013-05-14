@@ -162,7 +162,7 @@
                     </div>
                 <#else>
                     <div class="system-msg msg-info">
-                        <p><@u.message "collecting.info" /></p>
+                        <@u.message "collecting.info" />
                     </div>
                 </#if>
             

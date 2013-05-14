@@ -38,10 +38,11 @@
             </div>
             <#if ((publicAuthor_index + 1) % 3 == 0) || !publicAuthor_has_next><br class="clear" /></#if>
         </#list>
-    <#else>
-        <p><em><@u.message key="authors.noPublic" /></em></p>
+    
     </#if>
-    <#if (publicAuthors.privateNames > 0)>
+    <#if (publicAuthors.publicNames == 0) && (publicAuthors.privateNames == 1)>
+        <p><@u.message key="authors.onlyOnePrivate" /></p>
+    <#elseif (publicAuthors.privateNames > 0)>
         <p><@u.messageHTML key="authors.privateAuthors" args=[publicAuthors.publicNames, publicAuthors.privateNames] /></p>
     </#if>
 </#macro>

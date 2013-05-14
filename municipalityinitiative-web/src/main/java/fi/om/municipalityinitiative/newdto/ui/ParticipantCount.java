@@ -20,6 +20,14 @@ public class ParticipantCount {
     public long getTotal() {
         return franchise.getTotal() + noFranchise.getTotal();
     }
+    
+    public long getTotalPrivateNames() {
+        return franchise.getPrivateNames() + noFranchise.getPrivateNames();
+    }
+    
+    public long getTotalPublicNames() {
+        return franchise.getPublicNames() + noFranchise.getPublicNames();
+    }
 
     public class SupportNames {
 
