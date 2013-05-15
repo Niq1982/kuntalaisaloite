@@ -24,8 +24,6 @@ public interface AuthorDao {
 
     Long createAuthor(Long initiativeId, Long participantId, String managementHash);
 
-    void assignAuthor(Long initiativeId, Long authorId);
-
     void updateAuthorInformation(Long authorId, ContactInfo contactInfo);
 
     List<String> getAuthorEmails(Long initiativeId);

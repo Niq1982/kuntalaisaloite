@@ -24,7 +24,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static fi.om.municipalityinitiative.newdao.JdbcInitiativeDao.assertSingleAffection;
-import static fi.om.municipalityinitiative.newdao.Mappings.PREPARATION_ID;
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 
 @SQLExceptionTranslated
@@ -35,17 +34,6 @@ public class JdbcAuthorDao implements AuthorDao {
 
     @Resource
     PostgresQueryFactory queryFactory;
-
-    @Override
-    @Transactional(readOnly = false)
-    public void assignAuthor(Long initiativeId, Long authorId) {
-
-        assertSingleAffection(queryFactory.update(municipalityInitiative)
-                .set(municipalityInitiative.authorId, authorId)
-                .where(municipalityInitiative.id.eq(initiativeId))
-                .where(municipalityInitiative.authorId.eq(PREPARATION_ID))
-                .execute());
-    }
 
     @Override
     @Transactional(readOnly = false)
@@ -75,7 +63,6 @@ public class JdbcAuthorDao implements AuthorDao {
 
         assertSingleAffection(queryFactory.update(QAuthor.author)
                 .set(QAuthor.author.address, contactInfo.getAddress())
-                .set(QAuthor.author.name, contactInfo.getName())
                 .set(QAuthor.author.phone, contactInfo.getPhone())
                 .where(QAuthor.author.participantId.eq(participantId))
                 .execute());

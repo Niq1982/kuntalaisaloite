@@ -56,9 +56,7 @@ public class Mappings {
     public static Expression<InitiativeListInfo> initiativeListInfoMapping =
             new MappingProjection<InitiativeListInfo>(InitiativeListInfo.class,
                     municipalityInitiative.all(),
-                    QMunicipality.municipality.all(),
-                    QParticipant.participant.all(),
-                    QAuthor.author.all()) {
+                    QMunicipality.municipality.all()) {
                 @Override
                 protected InitiativeListInfo map(Tuple row) {
                     InitiativeListInfo info = new InitiativeListInfo();
@@ -76,17 +74,14 @@ public class Mappings {
     public static Expression<Initiative> initiativeInfoMapping =
             new MappingProjection<Initiative>(Initiative.class,
                     municipalityInitiative.all(),
-                    JdbcInitiativeDao.AUTHOR_MUNICIPALITY.all(),
-                    JdbcInitiativeDao.INITIATIVE_MUNICIPALITY.all(),
-                    QParticipant.participant.all(),
-                    QAuthor.author.all()) {
+                    QMunicipality.municipality.all()) {
                 @Override
                 protected Initiative map(Tuple row) {
                     Initiative info = new Initiative();
                     info.setId(row.get(municipalityInitiative.id));
                     info.setCreateTime(row.get(municipalityInitiative.modified).toLocalDate());
                     info.setName(row.get(municipalityInitiative.name));
-                    info.setMunicipality(parseMunicipality(row, JdbcInitiativeDao.INITIATIVE_MUNICIPALITY)
+                    info.setMunicipality(parseMunicipality(row, QMunicipality.municipality)
                     );
                     info.setType(row.get(municipalityInitiative.type));
                     info.setProposal(row.get(municipalityInitiative.proposal));

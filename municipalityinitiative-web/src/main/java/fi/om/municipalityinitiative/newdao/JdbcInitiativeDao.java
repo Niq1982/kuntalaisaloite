@@ -43,8 +43,6 @@ import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipal
 public class JdbcInitiativeDao implements InitiativeDao {
 
     private static final Expression<DateTime> CURRENT_TIME = DateTimeExpression.currentTimestamp(DateTime.class);
-    public static final QMunicipality INITIATIVE_MUNICIPALITY = new QMunicipality("initiativeMunicipality");
-    public static final QMunicipality AUTHOR_MUNICIPALITY = new QMunicipality("authorMunicipality");
 
     @Resource
     PostgresQueryFactory queryFactory;
@@ -54,8 +52,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
                 .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
-                .innerJoin(municipalityInitiative.initiativeAuthorFk, QAuthor.author)
-                .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
                 .where(municipalityInitiative.state.eq(InitiativeState.PUBLISHED))
                 ;
 
@@ -146,10 +142,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
-                .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, INITIATIVE_MUNICIPALITY)
-                .innerJoin(municipalityInitiative.initiativeAuthorFk, QAuthor.author)
-                .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
-                .innerJoin(QParticipant.participant.participantMunicipalityFk, AUTHOR_MUNICIPALITY)
+                .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
                 .where(municipalityInitiative.id.eq(initiativeId));
 
         Initiative initiative = query.uniqueResult(Mappings.initiativeInfoMapping);
@@ -163,10 +156,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
     public Initiative getById(Long initiativeId, String authorsManagementHash) {
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
-                .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, INITIATIVE_MUNICIPALITY)
-                .innerJoin(municipalityInitiative._participantMunicipalityInitiativeIdFk, QParticipant.participant)
-                .innerJoin(QParticipant.participant.participantMunicipalityFk, AUTHOR_MUNICIPALITY)
-                .innerJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
+                .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .where(QAuthor.author.managementHash.eq(authorsManagementHash));
 
@@ -208,7 +198,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
     public Long prepareInitiative(Long municipalityId) {
         return queryFactory.insert(municipalityInitiative)
                 .set(municipalityInitiative.municipalityId, municipalityId)
-                .set(municipalityInitiative.authorId, PREPARATION_ID)
                 .set(municipalityInitiative.type, InitiativeType.UNDEFINED)
                 .executeWithKey(municipalityInitiative.id);
     }
@@ -223,25 +212,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .set(municipalityInitiative.modified, CURRENT_TIME)
                 .set(municipalityInitiative.extraInfo, editDto.getExtraInfo())
                 .where(municipalityInitiative.id.eq(initiativeId))
-                .execute());
-
-        Long authorId = queryFactory
-                .from(municipalityInitiative)
-                .where(municipalityInitiative.id.eq(initiativeId))
-                .uniqueResult(municipalityInitiative.authorId);
-
-        assertSingleAffection(queryFactory.update(QAuthor.author)
-                .set(QAuthor.author.name, editDto.getContactInfo().getName())
-                .set(QAuthor.author.address, editDto.getContactInfo().getAddress())
-                .set(QAuthor.author.phone, editDto.getContactInfo().getPhone())
-                .where(QAuthor.author.id.eq(authorId))
-                .execute());
-
-        assertSingleAffection(queryFactory.update(QParticipant.participant)
-                .set(QParticipant.participant.showName, editDto.getContactInfo().isShowName())
-                .set(QParticipant.participant.name, editDto.getContactInfo().getName())
-                .set(QParticipant.participant.email, editDto.getContactInfo().getEmail())
-                .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
                 .execute());
 
     }

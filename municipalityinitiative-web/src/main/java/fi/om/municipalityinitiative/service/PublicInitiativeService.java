@@ -87,7 +87,6 @@ public class PublicInitiativeService {
         // XXX: Create dto?
         String managementHash = RandomHashGenerator.randomString(40);
         Long authorId = authorDao.createAuthor(initiativeId, participantId, managementHash);
-        authorDao.assignAuthor(initiativeId, authorId);
 
         emailService.sendPrepareCreatedEmail(initiativeDao.getByIdWithOriginalAuthor(initiativeId), authorId, managementHash, createDto.getParticipantEmail(), locale);
 
@@ -126,6 +125,7 @@ public class PublicInitiativeService {
 
         assertAllowance("Edit initiative", getManagementSettings(initiativeId).isAllowEdit());
         initiativeDao.editInitiativeDraft(initiativeId, editDto);
+        authorDao.updateAuthorInformation(loginUserHolder.getAuthorId(), editDto.getContactInfo());
     }
 
     @Transactional(readOnly = true)

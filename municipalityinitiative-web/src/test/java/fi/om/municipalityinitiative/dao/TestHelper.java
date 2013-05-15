@@ -139,7 +139,6 @@ public class TestHelper {
         insert.set(municipalityInitiative.name, initiativeDraft.name);
         insert.set(municipalityInitiative.proposal, initiativeDraft.proposal);
         insert.set(municipalityInitiative.municipalityId, initiativeDraft.municipalityId);
-        insert.set(municipalityInitiative.authorId, -1L);
         insert.set(municipalityInitiative.participantCount, initiativeDraft.participantCount);
         insert.set(municipalityInitiative.extraInfo, initiativeDraft.extraInfo);
 
@@ -164,18 +163,12 @@ public class TestHelper {
                 .executeWithKey(QParticipant.participant.id);
 
         lastAuthorId = queryFactory.insert(QAuthor.author)
-                .set(QAuthor.author.name, initiativeDraft.authorName)
                 .set(QAuthor.author.address, initiativeDraft.authorAddress)
                 .set(QAuthor.author.phone, initiativeDraft.authorPhone)
                 .set(QAuthor.author.participantId, lastParticipantId)
                 .set(QAuthor.author.managementHash, generateHash(40))
                 .executeWithKey(QAuthor.author.id);
         stub(authorLoginUserHolder.getAuthorId()).toReturn(lastAuthorId);
-
-        queryFactory.update(municipalityInitiative)
-                .set(municipalityInitiative.authorId, lastAuthorId)
-                .where(municipalityInitiative.id.eq(lastInitiativeId))
-                .execute();
 
         return lastInitiativeId;
 

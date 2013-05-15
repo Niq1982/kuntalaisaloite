@@ -30,7 +30,6 @@ public class TestDataService {
         Long initiativeId = initiativeDao.prepareInitiative(template.initiative.getMunicipality().getId());
         Long participantId = participantDao.prepareParticipant(initiativeId, template.initiative.getMunicipality().getId(), null, Membership.community, false);
         Long authorId = authorDao.createAuthor(initiativeId, participantId, managementHash);
-        authorDao.assignAuthor(initiativeId, authorId);
 
         InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto();
         editDto.setName(template.initiative.getName());
@@ -41,6 +40,7 @@ public class TestDataService {
         );
         editDto.setExtraInfo(template.initiative.getExtraInfo());
         initiativeDao.editInitiativeDraft(initiativeId, editDto);
+        authorDao.updateAuthorInformation(authorId, editDto.getContactInfo());
 
         initiativeDao.updateInitiativeType(initiativeId, template.initiative.getType());
         if (template.initiative.getType() == InitiativeType.SINGLE) {

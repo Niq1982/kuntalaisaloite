@@ -24,7 +24,6 @@ create table municipality_initiative (
 	type initiativeType constraint initiative_type_nn not null,
 	state initiativeState constraint initiative_state_nn not null default 'DRAFT',
 	state_timestamp timestamp constraint initiative_state_timestamp_nn not null default now(),
-	author_id bigserial,
 
     name varchar(512),
     proposal text,
@@ -74,14 +73,14 @@ create table author (
     participant_id bigserial,
     management_hash varchar(40), -- TODO unique
 
-    name varchar(100),
     phone varchar(30),
     address varchar(256),
 
     constraint author_pk primary key (id),
     constraint author_participant_fk foreign key (participant_id) references participant(id)
 );
-create index author_id_index on author(id);
+
+create index author_management_hash_index on author(management_hash);
 
 create table author_invitation (
     id bigserial,
@@ -96,4 +95,3 @@ create table author_invitation (
     constraint author_invitation_initiative_id_fk foreign key (initiative_id) references municipality_initiative(id)
 );
 
-alter table municipality_initiative add constraint initiative_author_fk foreign key (author_id) references author(id) INITIALLY DEFERRED;
