@@ -1,11 +1,13 @@
 package fi.om.municipalityinitiative.newdao;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
+import fi.om.municipalityinitiative.dao.InvitationNotValidException;
 import fi.om.municipalityinitiative.dao.NotFoundException;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,7 +59,7 @@ public class JdbcAuthorDaoTest {
         try {
             authorDao.getAuthorInvitation(original.getInitiativeId(), original.getConfirmationCode());
             fail("Should have failed due not found");
-        } catch (NotFoundException e) { }
+        } catch (InvitationNotValidException e) { }
     }
 
     @Test
@@ -86,6 +88,7 @@ public class JdbcAuthorDaoTest {
         assertThat(author.getContactInfo().getEmail(), is(TestHelper.DEFAULT_AUTHOR_EMAIL));
         assertThat(author.getContactInfo().getPhone(), is(TestHelper.DEFAULT_AUTHOR_PHONE));
         assertThat(author.getMunicipality().getId(), is(testMunicipality));
+        assertThat(author.getCreateTime(), is(new LocalDate()));
 
         ReflectionTestUtils.assertNoNullFields(author);
     }

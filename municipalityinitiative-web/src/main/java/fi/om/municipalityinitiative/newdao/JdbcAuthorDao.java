@@ -7,12 +7,12 @@ import com.google.common.collect.Sets;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.expr.DateTimeExpression;
+import fi.om.municipalityinitiative.dao.InvitationNotValidException;
 import fi.om.municipalityinitiative.dao.NotFoundException;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
-import fi.om.municipalityinitiative.service.PublicInitiativeService;
 import fi.om.municipalityinitiative.sql.*;
 import org.joda.time.DateTime;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,17 +55,6 @@ public class JdbcAuthorDao implements AuthorDao {
                 .set(QAuthor.author.managementHash, managementHash)
                 .set(QAuthor.author.participantId, participantId)
                 .executeWithKey(QAuthor.author.id);
-    }
-
-    @Override
-    public Author getAuthor(Long initiativeId, String managementHash) {
-        return queryFactory.from(municipalityInitiative)
-                .innerJoin(municipalityInitiative._participantMunicipalityInitiativeIdFk, QParticipant.participant)
-                .innerJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
-                .innerJoin(QParticipant.participant.participantMunicipalityFk, QMunicipality.municipality)
-                .where(municipalityInitiative.id.eq(initiativeId))
-                .where(QAuthor.author.managementHash.eq(managementHash))
-                .uniqueResult(Mappings.authorMapping);
     }
 
     @Override
@@ -112,7 +101,7 @@ public class JdbcAuthorDao implements AuthorDao {
                 .where(QAuthorInvitation.authorInvitation.confirmationCode.eq(confirmationCode))
                 .singleResult(Mappings.authorInvitationMapping);
         if (authorInvitation == null) {
-            throw new NotFoundException(QAuthorInvitation.authorInvitation.getTableName(), initiativeId + ":" + confirmationCode);
+            throw new InvitationNotValidException("No invitation: " + initiativeId + ", " + confirmationCode);
         }
         return authorInvitation;
     }
@@ -144,6 +133,7 @@ public class JdbcAuthorDao implements AuthorDao {
     public List<AuthorInvitation> findInvitations(Long initiativeId) {
         return queryFactory.from(QAuthorInvitation.authorInvitation)
                 .where(QAuthorInvitation.authorInvitation.initiativeId.eq(initiativeId))
+                .orderBy(QAuthorInvitation.authorInvitation.id.asc())
                 .list(Mappings.authorInvitationMapping);
     }
 
@@ -155,7 +145,7 @@ public class JdbcAuthorDao implements AuthorDao {
                     .innerJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
                     .innerJoin(QParticipant.participant.participantMunicipalityFk, QMunicipality.municipality)
                     .where(municipalityInitiative.id.eq(initiativeId))
-                    .orderBy(QParticipant.participant.id.desc())
+                    .orderBy(QParticipant.participant.id.asc())
                     .list(Mappings.authorMapping);
     }
 

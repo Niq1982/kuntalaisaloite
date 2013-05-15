@@ -44,6 +44,7 @@ public class Mappings {
 
                     Author author = new Author();
                     author.setId(row.get(QAuthor.author.id));
+                    author.setCreateTime(row.get(QParticipant.participant.participateTime));
                     author.setContactInfo(contactInfo);
                     author.setMunicipality(parseMunicipality(row));
 

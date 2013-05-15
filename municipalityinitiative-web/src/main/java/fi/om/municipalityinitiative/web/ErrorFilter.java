@@ -7,6 +7,7 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import fi.om.municipalityinitiative.dao.InvitationNotValidException;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,8 +49,10 @@ public class ErrorFilter implements Filter {
             } else {
                 nested = e;
             }
-            
-            if (nested instanceof NotFoundException) {
+
+            if (nested instanceof InvitationNotValidException) {
+                handeInvitationNotValid(request, response, e);
+            } else if (nested instanceof NotFoundException) {
                 handleNotFound(request, response, e);
             } else if (nested instanceof AccessDeniedException) {
                 handleAccessDenied(request, response, e);
@@ -59,6 +62,13 @@ public class ErrorFilter implements Filter {
                 handleUnexpectedError(request, response, e);
             }
         }
+    }
+
+    private void handeInvitationNotValid(HttpServletRequest request, HttpServletResponse response, Throwable e) throws IOException {
+        log.info(getErrorMessage("Invitation not valid: " + e.getMessage(), null, request));
+        log.info("Invitation not valid", e);
+        request.setAttribute("errorMessage", "error.410.invitation.not.valid.error.message");
+        response.sendError(HttpServletResponse.SC_GONE);
     }
 
     private void handleUnexpectedError(HttpServletRequest request, HttpServletResponse response, Throwable e) throws IOException {

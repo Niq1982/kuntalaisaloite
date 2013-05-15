@@ -42,7 +42,7 @@
                     </div>
     
                     <div class="invitation">
-                        <span class="status"><span class="icon-small confirmed"></span> <@u.message "invitation.accepted" /></span>
+                        <span class="status"><span class="icon-small confirmed"></span> <@u.message "invitation.accepted" /> <@u.localDate a.createTime/></span>
                     </div>
                 </div>
             </#list>

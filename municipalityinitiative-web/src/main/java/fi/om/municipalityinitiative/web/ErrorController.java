@@ -1,9 +1,11 @@
 package fi.om.municipalityinitiative.web;
 
 import static fi.om.municipalityinitiative.web.Urls.ERROR_404;
+import static fi.om.municipalityinitiative.web.Urls.ERROR_410;
 import static fi.om.municipalityinitiative.web.Urls.ERROR_500;
 import static fi.om.municipalityinitiative.web.Views.ERROR_404_VIEW;
 import static fi.om.municipalityinitiative.web.Views.ERROR_500_VIEW;
+import static fi.om.municipalityinitiative.web.Views.ERROR_410_VIEW;
 import static fi.om.municipalityinitiative.web.Views.contextRelativeRedirect;
 
 import java.util.Locale;
@@ -42,6 +44,16 @@ public class ErrorController {
             // not real error, no need to show error page
             return contextRelativeRedirect(Urls.FI.frontpage());
         }
+    }
+
+    @RequestMapping(ERROR_410)
+    public String resourceGone(Locale locale, HttpServletRequest request, HttpServletResponse response, Model model) {
+        response.setStatus(HttpStatus.GONE.value());
+        Urls urls = Urls.get(locale);
+        model.addAttribute("urls", urls);
+        model.addAttribute("locale", urls.getLang());
+        return ERROR_410_VIEW;
+
     }
 
 }

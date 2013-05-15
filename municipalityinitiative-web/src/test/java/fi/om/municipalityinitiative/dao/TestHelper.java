@@ -5,6 +5,7 @@ import com.mysema.query.sql.dml.SQLInsertClause;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Path;
 import fi.om.municipalityinitiative.newdto.LoginUserHolder;
+import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.service.AccessDeniedException;
 import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.*;
@@ -163,13 +164,12 @@ public class TestHelper {
                 .set(QParticipant.participant.membershipType, initiativeDraft.municipalityMembership)
                 .executeWithKey(QParticipant.participant.id);
 
-        PREVIOUS_TEST_MANAGEMENT_HASH = RandomHashGenerator.randomString(40);
         lastAuthorId = queryFactory.insert(QAuthor.author)
                 .set(QAuthor.author.name, initiativeDraft.authorName)
                 .set(QAuthor.author.address, initiativeDraft.authorAddress)
                 .set(QAuthor.author.phone, initiativeDraft.authorPhone)
                 .set(QAuthor.author.participantId, lastParticipantId)
-                .set(QAuthor.author.managementHash, PREVIOUS_TEST_MANAGEMENT_HASH)
+                .set(QAuthor.author.managementHash, generateHash(40))
                 .executeWithKey(QAuthor.author.id);
         stub(authorLoginUserHolder.getAuthorId()).toReturn(lastAuthorId);
 
@@ -180,6 +180,11 @@ public class TestHelper {
 
         return lastInitiativeId;
 
+    }
+
+    private String generateHash(int len) {
+        PREVIOUS_TEST_MANAGEMENT_HASH = RandomHashGenerator.randomString(len);
+        return PREVIOUS_TEST_MANAGEMENT_HASH;
     }
 
     @Transactional
@@ -195,6 +200,26 @@ public class TestHelper {
                 .execute();
 
         assertThat("Unable to update initiative", affectedRows, is(1L));
+    }
+
+    @Transactional(readOnly = false)
+    public AuthorInvitation createInvitation(Long initiativeId, String contactName, String contactEmail) {
+        AuthorInvitation authorInvitation = new AuthorInvitation();
+        authorInvitation.setInvitationTime(new DateTime());
+        authorInvitation.setEmail(contactEmail);
+        authorInvitation.setName(contactName);
+        authorInvitation.setConfirmationCode(generateHash(10));
+        authorInvitation.setInitiativeId(initiativeId);
+
+        queryFactory.insert(QAuthorInvitation.authorInvitation)
+                .set(QAuthorInvitation.authorInvitation.initiativeId, authorInvitation.getInitiativeId())
+                .set(QAuthorInvitation.authorInvitation.invitationTime, authorInvitation.getInvitationTime())
+                .set(QAuthorInvitation.authorInvitation.name, authorInvitation.getName())
+                .set(QAuthorInvitation.authorInvitation.email, authorInvitation.getEmail())
+                .set(QAuthorInvitation.authorInvitation.confirmationCode, authorInvitation.getConfirmationCode())
+                .executeWithKey(QAuthorInvitation.authorInvitation.id);
+
+        return authorInvitation;
     }
 
     public static class InitiativeDraft {

@@ -83,6 +83,8 @@ public final class Urls {
     public static final String ERROR_404 = "/404";
     
     public static final String ERROR_500 = "/500";
+
+    public static final String ERROR_410 = "/410";
     
     
     public static final String NEWS_FI = "/fi/uutiset";
@@ -368,8 +370,8 @@ public final class Urls {
         return view(initiativeId);
     }
 
-    public String invitation(Long initiativeId, String invitationCode) {
-        return getLocalizedPageUrl(INVITATION_FI, INVITATION_SV).replace(ID_PARAMETER, initiativeId.toString()) + "?" + PARAM_INVITATION_CODE + "=" + invitationCode;
+    public String invitation(Long initiativeId, String confirmationCode) {
+        return getLocalizedPageUrl(INVITATION_FI, INVITATION_SV).replace(ID_PARAMETER, initiativeId.toString()) + "?" + PARAM_INVITATION_CODE + "=" + confirmationCode;
     }
 
     public String confirmAcceptInvitation(Long initiativeId) {

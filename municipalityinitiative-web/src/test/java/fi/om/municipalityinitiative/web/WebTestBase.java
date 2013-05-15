@@ -304,4 +304,16 @@ public abstract class WebTestBase {
             throw new NoSuchElementException("\nPage " + driver.getCurrentUrl() + "\nTitle: " + driver.getTitle()+"\nCause: " +e.getMessage(), e);
         }
     }
+
+    protected WebElement getElementByLabel(String labelText, String elementTag) {
+        return getElement(By.xpath("//label[contains(normalize-space(text()), '" + labelText + "')]/following-sibling::"+elementTag));
+    }
+
+    protected void clickDialogButtonMsg(String localizationKey) {
+        clickDialogButton(getMessage(localizationKey));
+    }
+
+    protected void clickDialogButton(String containing) {
+        getElemContaining(containing, "span").click();
+    }
 }
