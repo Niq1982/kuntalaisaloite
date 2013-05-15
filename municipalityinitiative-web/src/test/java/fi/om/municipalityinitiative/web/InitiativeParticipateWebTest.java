@@ -31,22 +31,9 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     private static final String MUNICIPALITY_2 = "Helsinki";
     private static final String PARTICIPANT_NAME = "Ossi Osallistuja";
     private static final String PARTICIPANT_EMAIL = "test@test.com";
-
-    /*
-     * TODO: Participate initiative Web test
-     * 
-     * Open the modal
-     * Fill in the form (different options)
-     * Save
-     * Assert that success message is visible and correct
-     * Assert that participant was added to right column
-     * Assert that participant-button is NOT visible 
-     * 
-     */
     
     @Test
     public void participate_initiative_with_public_name() {
-        overrideDriverToFirefox(true);
         Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
         Long municipality2Id = testHelper.createTestMunicipality(MUNICIPALITY_2);
         
@@ -65,13 +52,14 @@ public class InitiativeParticipateWebTest extends WebTestBase {
        
         assertThat(getOptionalElemContaining(getMessage(MSG_BTN_PARTICIPATE), "a").isPresent(), is(false));
         
-        assertTextContainedByClass("public-names", "1");
-        // TODO: Assert that public names is 2
+        open(urls.confirmParticipant(testHelper.getLastParticipantId(), RandomHashGenerator.getPrevious()));
+        
+        assertTextContainedByClass("public-names", "2 julkista nimeä");
     }
     
     @Test
     public void participate_initiative_with_private_name_and_select_membership_type() {
-        overrideDriverToFirefox(true);
+        overrideDriverToFirefox(true); // Municipality select need firefox driver
         
         Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
         Long municipality2Id = testHelper.createTestMunicipality(MUNICIPALITY_2);
@@ -100,8 +88,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         
         open(urls.confirmParticipant(testHelper.getLastParticipantId(), RandomHashGenerator.getPrevious()));
         
-     // TODO: Assert that private names is 2
-        assertTextContainedByClass("private-names", "2");
+        assertTextContainedByClass("private-names", "1 ei-julkinen nimi");
     }
     
 }
