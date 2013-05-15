@@ -5,9 +5,9 @@
 <@l.error "error.410.title">
 
     <!-- Error: 410 - Gone -->
-    
+
     <h1><@u.message errorMessage+".title"/></h1>
-    
+
     <@u.messageHTML key=errorMessage/>
 
 </@l.error>
