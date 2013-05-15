@@ -20,8 +20,6 @@ public interface InitiativeDao {
 
     Initiative getByIdWithOriginalAuthor(Long initiativeId);
 
-    Initiative getById(Long initiativeId, String authorsManagementHash);
-
     InitiativeCounts getInitiativeCounts(Maybe<Long> municipality);
 
     Long prepareInitiative(Long municipalityId);

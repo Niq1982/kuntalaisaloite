@@ -393,27 +393,6 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
-    public void get_returns_initiative_if_given_managementHash_is_correct() {
-        Long id = testHelper.createSingleSent(testMunicipality.getId());
-
-        Initiative initiative = initiativeDao.getById(id, TestHelper.PREVIOUS_TEST_MANAGEMENT_HASH);
-        assertThat(initiative.getId(), is(id));
-        ReflectionTestUtils.assertNoNullFields(initiative);
-    }
-
-    @Test
-    public void get_throws_exception_if_given_management_hash_is_invalid() {
-        Long id = testHelper.createSingleSent(testMunicipality.getId());
-
-        try {
-            initiativeDao.getById(id, "invalidManagementHash");
-            fail("Should have thrown exception");
-        } catch (NotFoundException e) {
-            assertThat(e.getMessage(), containsString("Invalid managementhash or initiative id"));
-        }
-    }
-
-    @Test
     public void counts_initiatives_by_state() {
 
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
@@ -443,18 +422,6 @@ public class JdbcInitiativeDaoTest {
     @Test(expected = NotFoundException.class)
     public void throws_exception_if_initiative_is_not_found() {
         initiativeDao.getByIdWithOriginalAuthor(-1L);
-    }
-
-    @Test
-    public void update_initiative_updates_given_fields() {
-
-        Long initiativeId = testHelper.createCollectableAccepted(testMunicipality.getId());
-
-        String extraInfo = "Modified extra info";
-        initiativeDao.updateExtraInfo(initiativeId, extraInfo);
-        Initiative updated = initiativeDao.getById(initiativeId, TestHelper.PREVIOUS_TEST_MANAGEMENT_HASH);
-        assertThat(updated.getExtraInfo(), is(extraInfo));
-
     }
 
     private static InitiativeSearch initiativeSearch() {

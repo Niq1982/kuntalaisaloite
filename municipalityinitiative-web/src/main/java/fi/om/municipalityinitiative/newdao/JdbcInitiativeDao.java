@@ -16,13 +16,9 @@ import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
-import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeUIUpdateDto;
-import fi.om.municipalityinitiative.sql.QAuthor;
 import fi.om.municipalityinitiative.sql.QMunicipality;
-import fi.om.municipalityinitiative.sql.QParticipant;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -34,7 +30,6 @@ import javax.annotation.Resource;
 
 import java.util.List;
 
-import static fi.om.municipalityinitiative.newdao.Mappings.PREPARATION_ID;
 import static fi.om.municipalityinitiative.newdao.Mappings.parseMunicipality;
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 
@@ -148,21 +143,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
         Initiative initiative = query.uniqueResult(Mappings.initiativeInfoMapping);
         if (initiative == null) {
             throw new NotFoundException("initiative", initiativeId);
-        }
-        return initiative;
-    }
-
-    @Override
-    public Initiative getById(Long initiativeId, String authorsManagementHash) {
-        PostgresQuery query = queryFactory
-                .from(municipalityInitiative)
-                .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
-                .where(municipalityInitiative.id.eq(initiativeId))
-                .where(QAuthor.author.managementHash.eq(authorsManagementHash));
-
-        Initiative initiative = query.uniqueResult(Mappings.initiativeInfoMapping);
-        if (initiative == null) {
-            throw new NotFoundException("initiative", "Invalid managementhash or initiative id");
         }
         return initiative;
     }
