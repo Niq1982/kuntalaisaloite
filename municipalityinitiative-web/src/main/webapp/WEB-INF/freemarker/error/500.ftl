@@ -4,9 +4,10 @@
 <#escape x as x?html> 
 <@l.error "error.500.title">
 
+    <!-- Error: 500 - Internal Server Error -->
+
     <h1><@u.message "error.500.title"/></h1>
     
-    <!-- Error: 500 - Internal Server Error -->
     <#assign errorCaseIdNotNull>${errorCaseId!"no case id"}</#assign>
     <#assign emailSubject><@u.message "error.500.emailSubject"/></#assign>
     <#assign emailBody1><@u.message "error.500.emailBody1"/></#assign>
