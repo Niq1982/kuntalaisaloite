@@ -51,7 +51,6 @@ public class TestHelper {
     PostgresQueryFactory queryFactory;
 
     private Long lastInitiativeId;
-    private Long lastParticipantId;
     private Long lastAuthorId;
 
     public TestHelper() {
@@ -154,7 +153,7 @@ public class TestHelper {
 
         lastInitiativeId = insert.executeWithKey(municipalityInitiative.id);
 
-        lastParticipantId = queryFactory.insert(QParticipant.participant)
+        Long lastParticipantId = queryFactory.insert(QParticipant.participant)
                 .set(QParticipant.participant.municipalityId, initiativeDraft.authorMunicipality)
                 .set(QParticipant.participant.municipalityInitiativeId, lastInitiativeId)
                 .set(QParticipant.participant.name, initiativeDraft.authorName)
@@ -324,12 +323,14 @@ public class TestHelper {
         return lastInitiativeId;
     }
 
+    @Transactional
     public Long getLastParticipantId() {
-        return lastParticipantId;
+        return queryFactory.from(QParticipant.participant).orderBy(QParticipant.participant.id.desc()).list(QParticipant.participant.id).get(0);
     }
 
+    @Transactional
     public Long getLastAuthorId() {
-        return lastAuthorId;
+        return queryFactory.from(QAuthor.author).orderBy(QAuthor.author.id.desc()).list(QAuthor.author.id).get(0);
     }
 }
 
