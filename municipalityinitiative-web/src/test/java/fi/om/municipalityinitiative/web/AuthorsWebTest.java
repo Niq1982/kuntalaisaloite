@@ -72,7 +72,7 @@ public class AuthorsWebTest  extends WebTestBase {
 
         clickDialogButton("Hyväksy kutsu");
 
-        assertThat(getElementByLabel("Nimi", "input").getAttribute("value"), containsString(CONTACT_NAME));
+        assertThat(getElementByLabel("Etu- ja sukunimi", "input").getAttribute("value"), containsString(CONTACT_NAME));
         assertThat(getElementByLabel("Sähköpostiosoite", "input").getAttribute("value"), containsString(CONTACT_EMAIL));
 
         getElementByLabel("Puhelin", "input").sendKeys(CONTACT_PHONE);
@@ -82,7 +82,7 @@ public class AuthorsWebTest  extends WebTestBase {
         assertTextContainedByClass("msg-success", "Liittymisesi vastuuhenkilöksi on nyt vahvistettu ja olet kirjautunut sisään palveluun.");
 
         clickDialogButton("Muokkaa aloitetta");
-        assertThat(getElementByLabel("Nimi", "input").getAttribute("value"), containsString(CONTACT_NAME));
+        assertThat(getElementByLabel("Etu- ja sukunimi", "input").getAttribute("value"), containsString(CONTACT_NAME));
         assertThat(getElementByLabel("Sähköpostiosoite", "input").getAttribute("value"), containsString(CONTACT_EMAIL));
         assertThat(getElementByLabel("Puhelin", "input").getAttribute("value"), containsString(CONTACT_PHONE));
         assertThat(getElementByLabel("Osoite", "textarea").getText(), containsString(CONTACT_ADDRESS));
