@@ -64,7 +64,9 @@ public class JsonTest {
                 "\"publicNames\":0,\n" +
                 "\"total\":12\n" +
                 "},\n" +
-                "\"total\":23\n" +
+                "\"total\":23,\n" +
+                "\"totalPrivateNames\":22,\n" +
+                "\"totalPublicNames\":1\n" +
                 "},\n" +
                 "\"proposal\":\"Kakkaa on joka paikassa\",\n" +
                 "\"publicParticipants\":[\n" +
