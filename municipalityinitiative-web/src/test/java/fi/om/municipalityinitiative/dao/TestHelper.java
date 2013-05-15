@@ -158,7 +158,6 @@ public class TestHelper {
                 .set(QParticipant.participant.name, initiativeDraft.authorName)
                 .set(QParticipant.participant.showName, initiativeDraft.publicName)
                 .set(QParticipant.participant.email, initiativeDraft.authorEmail)
-                .set(QParticipant.participant.franchise, true) // Changing these will affect on tests
                 .set(QParticipant.participant.membershipType, initiativeDraft.municipalityMembership)
                 .executeWithKey(QParticipant.participant.id);
 

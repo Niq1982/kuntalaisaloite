@@ -109,19 +109,19 @@
 <#--
     <div class="top-margin cf">
         <div class="column col-1of2">
-            <p><@u.message "participantCount.franchise.total"/><br />
-            <span class="user-count">${participantCount.franchise.total!""}</span><br />
-            <#if (participantCount.franchise.total > 0)>
-                <#if (participantCount.franchise.publicNames > 0)><a class="trigger-tooltip" href="${urls.participantList(initiative.id)}" title="<@u.message key="participantCount.publicNames.show"/>"><@u.message key="participantCount.publicNames" args=[participantCount.franchise.publicNames!""] /></a><br /></#if>
-                <#if (participantCount.franchise.privateNames > 0)><@u.message key="participantCount.privateNames" args=[participantCount.franchise.privateNames!""] /></p></#if>
+            <p><@u.message "participantCount.total"/><br />
+            <span class="user-count">${participantCount.total!""}</span><br />
+            <#if (participantCount.total > 0)>
+                <#if (participantCount.publicNames > 0)><a class="trigger-tooltip" href="${urls.participantList(initiative.id)}" title="<@u.message key="participantCount.publicNames.show"/>"><@u.message key="participantCount.publicNames" args=[participantCount.publicNames!""] /></a><br /></#if>
+                <#if (participantCount.privateNames > 0)><@u.message key="participantCount.privateNames" args=[participantCount.privateNames!""] /></p></#if>
             </#if>
         </div>
         <div class="column col-1of2 last">
-            <p><@u.message "participantCount.noFranchise.total" /><br />
-            <span class="user-count">${participantCount.noFranchise.total!""}</span><br>
-            <#if (participantCount.noFranchise.total > 0)>
-                <#if (participantCount.noFranchise.publicNames > 0)><a class="trigger-tooltip js-show-no-franchise-list" href="${urls.participantList(initiative.id)}?show=others" title="<@u.message key="participantCount.publicNames.show"/>"><@u.message key="participantCount.publicNames" args=[participantCount.noFranchise.publicNames!""] /></a><br></#if>
-                <#if (participantCount.noFranchise.privateNames > 0)><@u.message key="participantCount.privateNames" args=[participantCount.noFranchise.privateNames!""] /></p></#if>
+            <p><@u.message "participantCount.total" /><br />
+            <span class="user-count">${participantCount.total!""}</span><br>
+            <#if (participantCount.total > 0)>
+                <#if (participantCount.publicNames > 0)><a class="trigger-tooltip js-show-no-franchise-list" href="${urls.participantList(initiative.id)}?show=others" title="<@u.message key="participantCount.publicNames.show"/>"><@u.message key="participantCount.publicNames" args=[participantCount.publicNames!""] /></a><br></#if>
+                <#if (participantCount.privateNames > 0)><@u.message key="participantCount.privateNames" args=[participantCount.privateNames!""] /></p></#if>
             </#if>
         </div>
     </div>

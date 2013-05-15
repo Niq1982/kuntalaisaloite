@@ -5,16 +5,7 @@ import fi.om.municipalityinitiative.newdto.service.Participant;
 
 import java.util.List;
 
+@Deprecated
 public class Participants {
 
-    private List<Participant> franchise = Lists.newArrayList();
-    private List<Participant> noFranchise = Lists.newArrayList();
-
-    public List<Participant> getFranchise() {
-        return franchise;
-    }
-
-    public List<Participant> getNoFranchise() {
-        return noFranchise;
-    }
 }

@@ -22,8 +22,6 @@ public class QParticipant extends com.mysema.query.sql.RelationalPathBase<QParti
 
     public final StringPath email = createString("email");
 
-    public final BooleanPath franchise = createBoolean("franchise");
-
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final EnumPath<fi.om.municipalityinitiative.util.Membership> membershipType = createEnum("membership_type", fi.om.municipalityinitiative.util.Membership.class);

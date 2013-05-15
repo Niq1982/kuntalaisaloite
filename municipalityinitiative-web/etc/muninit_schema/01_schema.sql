@@ -54,7 +54,6 @@ create table participant (
 
 	municipality_id bigserial,
     show_name boolean,
-    franchise boolean,
 
     email varchar(100),
     confirmation_code varchar(20), -- Being set as null after confirmation

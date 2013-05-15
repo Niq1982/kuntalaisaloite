@@ -43,7 +43,6 @@ public class JdbcParticipantDao implements ParticipantDao {
         }
 
         Long participantId = queryFactory.insert(participant)
-                .set(participant.franchise, createDto.isFranchise())
                 .set(participant.municipalityId, createDto.getHomeMunicipality())
                 .set(participant.municipalityInitiativeId, createDto.getMunicipalityInitiativeId())
                 .set(participant.name, createDto.getParticipantName())
@@ -75,9 +74,8 @@ public class JdbcParticipantDao implements ParticipantDao {
     @Override
     @Transactional(readOnly = true)
     // Preparing because we do not know participants name
-    public Long prepareParticipant(Long initiativeId, Long homeMunicipality, String email, Membership membership, Boolean franchise) {
+    public Long prepareParticipant(Long initiativeId, Long homeMunicipality, String email, Membership membership) {
         Long participantId = queryFactory.insert(participant)
-                .set(participant.franchise, franchise)
                 .set(participant.municipalityId, homeMunicipality)
                 .set(participant.municipalityInitiativeId, initiativeId)
                 .set(participant.email, email)
@@ -101,10 +99,8 @@ public class JdbcParticipantDao implements ParticipantDao {
     public ParticipantCount getParticipantCount(Long initiativeId) {
 
         Expression<String> caseBuilder = new CaseBuilder()
-                .when(participant.franchise.isTrue().and(participant.showName.isTrue())).then(new ConstantImpl<String>("11"))
-                .when(participant.franchise.isTrue().and(participant.showName.isFalse())).then(new ConstantImpl<String>("10"))
-                .when(participant.franchise.isFalse().and(participant.showName.isTrue())).then(new ConstantImpl<String>("01"))
-                .when(participant.franchise.isFalse().and(participant.showName.isFalse())).then(new ConstantImpl<String>("00"))
+                .when(participant.showName.isTrue()).then(new ConstantImpl<String>("11"))
+                .when(participant.showName.isFalse()).then(new ConstantImpl<String>("10"))
                 .otherwise(new ConstantImpl<String>("XX"));
 
 
@@ -117,10 +113,8 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .map(simpleExpression, participant.count()));
 
         ParticipantCount participantCount = new ParticipantCount();
-        participantCount.getFranchise().setPublicNames(map.get("11").or(0L));
-        participantCount.getFranchise().setPrivateNames(map.get("10").or(0L));
-        participantCount.getNoFranchise().setPublicNames(map.get("01").or(0L));
-        participantCount.getNoFranchise().setPrivateNames(map.get("00").or(0L));
+        participantCount.setPublicNames(map.get("11").or(0L));
+        participantCount.setPrivateNames(map.get("10").or(0L));
         return participantCount;
 
     }
@@ -163,7 +157,6 @@ public class JdbcParticipantDao implements ParticipantDao {
                     return new Participant(
                             row.get(participant.participateTime),
                             row.get(participant.name),
-                            row.get(participant.franchise),
                             new Municipality(
                                     row.get(QMunicipality.municipality.id),
                                     row.get(QMunicipality.municipality.name),

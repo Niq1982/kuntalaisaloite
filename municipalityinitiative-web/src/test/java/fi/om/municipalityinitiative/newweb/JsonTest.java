@@ -54,24 +54,13 @@ public class JsonTest {
                 "},\n" +
                 "\"name\":\"Koirat pois lähiöistä\",\n" +
                 "\"participantCount\":{\n" +
-                "\"franchise\":{\n" +
                 "\"privateNames\":10,\n" +
                 "\"publicNames\":1,\n" +
                 "\"total\":11\n" +
                 "},\n" +
-                "\"noFranchise\":{\n" +
-                "\"privateNames\":12,\n" +
-                "\"publicNames\":0,\n" +
-                "\"total\":12\n" +
-                "},\n" +
-                "\"total\":23,\n" +
-                "\"totalPrivateNames\":22,\n" +
-                "\"totalPublicNames\":1\n" +
-                "},\n" +
                 "\"proposal\":\"Kakkaa on joka paikassa\",\n" +
                 "\"publicParticipants\":[\n" +
                 "{\n" +
-                "\"franchise\":true,\n" +
                 "\"homeMunicipality\":{\n" +
                 "\"id\":\"http://baseUrl/api/v1/municipalities/1\",\n" +
                 "\"nameFi\":\"Tampere\",\n" +

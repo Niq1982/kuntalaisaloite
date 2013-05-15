@@ -8,15 +8,13 @@ import org.joda.time.LocalDate;
 
 public class Participant {
     private final String name;
-    private final boolean franchise;
     private final LocalDate participateDate;
     private final Municipality homeMunicipality;
     private final String email;
     private final Membership membership;
 
-    public Participant(LocalDate participateDate, String name, boolean franchise, Municipality homeMunicipality, String email, Membership membership) {
+    public Participant(LocalDate participateDate, String name, Municipality homeMunicipality, String email, Membership membership) {
         this.name = name;
-        this.franchise = franchise;
         this.participateDate = participateDate;
         this.homeMunicipality = homeMunicipality;
         this.email = email;
@@ -25,10 +23,6 @@ public class Participant {
 
     public String getName() {
         return name;
-    }
-
-    public boolean isFranchise() {
-        return franchise;
     }
 
     @JsonSerialize(using=LocalDateJsonSerializer.class)

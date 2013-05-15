@@ -40,7 +40,7 @@ public class ParticipantToPdfExporterTest {
         List<Participant> participants = Lists.newArrayList();
         for (int i = 0; i < 1000; ++i) {
             Municipality municipality = new Municipality(new Random().nextLong(), RandomStringUtils.randomAlphabetic(10), RandomStringUtils.randomAlphabetic(10), false);
-            Participant participant = new Participant(new LocalDate(), RandomStringUtils.randomAlphabetic(20), new Random().nextBoolean(), municipality, "", Membership.company);
+            Participant participant = new Participant(new LocalDate(), RandomStringUtils.randomAlphabetic(20), municipality, "", Membership.company);
             participants.add(participant);
         }
         return participants;

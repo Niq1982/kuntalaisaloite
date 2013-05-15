@@ -8,7 +8,6 @@ import fi.om.municipalityinitiative.util.Membership;
 public class ParticipantCreateDto {
 
     private Long municipalityInitiativeId;
-    private boolean franchise;
     private boolean showName;
     private String participantName;
     private Long homeMunicipality;
@@ -49,14 +48,6 @@ public class ParticipantCreateDto {
 
     public void setMunicipalityInitiativeId(Long municipalityInitiativeId) {
         this.municipalityInitiativeId = municipalityInitiativeId;
-    }
-
-    public void setFranchise(boolean franchise) {
-        this.franchise = franchise;
-    }
-
-    public boolean isFranchise() {
-        return franchise;
     }
 
     public void setShowName(boolean showName) {

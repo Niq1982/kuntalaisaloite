@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
+import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.SearchParameterQueryString;
@@ -76,7 +77,7 @@ public class ViewGenerator {
 
     public static ViewGenerator participantList(InitiativeViewInfo initiativeInfo,
                                                 ParticipantCount participantCount,
-                                                Participants publicParticipants,
+                                                List<Participant> publicParticipants,
                                                 String previousPageURI) {
         return new ViewGenerator(PARTICIPANT_LIST,
                 new AttributeBuilder()

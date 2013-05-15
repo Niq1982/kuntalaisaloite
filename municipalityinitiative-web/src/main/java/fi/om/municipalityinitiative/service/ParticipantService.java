@@ -25,22 +25,8 @@ public class ParticipantService {
         return participantDao.getParticipantCount(initiativeId);
     }
 
-    public Participants findPublicParticipants(Long initiativeId) {
-        return toParticipantNames(participantDao.findPublicParticipants(initiativeId));
+    public List<Participant> findPublicParticipants(Long initiativeId) {
+        return participantDao.findPublicParticipants(initiativeId);
     }
 
-    public static Participants toParticipantNames(List<Participant> publicPublicParticipants) {
-        Participants participants = new Participants();
-
-        for (Participant participant : publicPublicParticipants) {
-            if (participant.isFranchise()) {
-                participants.getFranchise().add(participant);
-            }
-            else {
-                participants.getNoFranchise().add(participant);
-            }
-        }
-
-        return participants;
-    }
 }

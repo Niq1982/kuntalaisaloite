@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ParticipantDao {
 
-    Long prepareParticipant(Long initiativeId, Long homeMunicipality, String email, Membership membership, Boolean franchise);
+    Long prepareParticipant(Long initiativeId, Long homeMunicipality, String email, Membership membership);
 
     Long create(ParticipantCreateDto createDto, String confirmationCode);
 

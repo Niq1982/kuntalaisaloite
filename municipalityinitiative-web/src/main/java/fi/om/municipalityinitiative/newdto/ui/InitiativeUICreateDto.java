@@ -25,8 +25,6 @@ public class InitiativeUICreateDto
 
     private Boolean municipalMembership;
 
-    private Boolean franchise;
-
     @NotNull
     private Long municipality;
 
@@ -66,10 +64,6 @@ public class InitiativeUICreateDto
 
     public void setMunicipalMembership(Boolean municipalMembership) {
         this.municipalMembership = municipalMembership;
-    }
-
-    public void setFranchise(Boolean franchise) {
-        this.franchise = franchise;
     }
 
     @Override

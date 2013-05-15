@@ -82,8 +82,8 @@ public class PublicInitiativeService {
         Long participantId = participantDao.prepareParticipant(initiativeId,
                 createDto.getHomeMunicipality(),
                 createDto.getParticipantEmail(),
-                createDto.hasMunicipalMembership() ? createDto.getMunicipalMembership() : Membership.none,
-                false); // XXX: Remove franchise?
+                createDto.hasMunicipalMembership() ? createDto.getMunicipalMembership() : Membership.none
+        ); // XXX: Remove franchise?
         // XXX: Create dto?
         String managementHash = RandomHashGenerator.randomString(40);
         Long authorId = authorDao.createAuthor(initiativeId, participantId, managementHash);

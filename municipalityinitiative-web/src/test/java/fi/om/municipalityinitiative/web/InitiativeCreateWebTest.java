@@ -182,23 +182,6 @@ public class InitiativeCreateWebTest extends WebTestBase {
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_UPDATE);
     }
 
-    public void save_initiative(boolean startCollecting) {
-
-        if (startCollecting) {
-            getElemContaining(getMessage(RADIO_FRANCHISE_TRUE), "label").click();
-            getElemContaining(getMessage(MSG_BTN_SAVE_AND_COLLECT), "button").click();
-
-            assertMsgContainedByClass("modal-title", MSG_SUCCESS_SAVE_TITLE);
-        } else {
-            getElemContaining(getMessage(MSG_BTN_SAVE_AND_SEND), "button").click();
-
-            assertSuccesPageWithMessage(MSG_SUCCESS_SAVE_AND_SEND);
-            assertTextByTag("h1", NAME);
-        }
-
-        System.out.println("--- save_initiative OK");
-    }
-
     private void assertSuccesPageWithMessage(String msgSuccessPrepare) {
         assertMsgContainedByClass("msg-success", msgSuccessPrepare);
     }

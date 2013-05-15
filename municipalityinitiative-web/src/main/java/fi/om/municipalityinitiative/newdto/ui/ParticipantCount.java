@@ -1,60 +1,28 @@
 package fi.om.municipalityinitiative.newdto.ui;
 
 public class ParticipantCount {
-    private final SupportNames franchise;
-    private final SupportNames noFranchise;
 
-    public ParticipantCount() {
-        franchise = new SupportNames();
-        noFranchise = new SupportNames();
+    private long publicNames = 0;
+    private long privateNames = 0;
+
+    public long getPublicNames() {
+        return publicNames;
     }
 
-    public SupportNames getFranchise() {
-        return franchise;
+    public long getPrivateNames() {
+        return privateNames;
     }
 
-    public SupportNames getNoFranchise() {
-        return noFranchise;
+    public void setPublicNames(long publicNames) {
+        this.publicNames = publicNames;
+    }
+
+    public void setPrivateNames(long privateNames) {
+        this.privateNames = privateNames;
     }
 
     public long getTotal() {
-        return franchise.getTotal() + noFranchise.getTotal();
-    }
-    
-    public long getTotalPrivateNames() {
-        return franchise.getPrivateNames() + noFranchise.getPrivateNames();
-    }
-    
-    public long getTotalPublicNames() {
-        return franchise.getPublicNames() + noFranchise.getPublicNames();
+        return publicNames+privateNames;
     }
 
-    public class SupportNames {
-
-        private long publicNames = 0;
-        private long privateNames = 0;
-
-        public SupportNames() {
-        }
-
-        public long getPublicNames() {
-            return publicNames;
-        }
-
-        public long getPrivateNames() {
-            return privateNames;
-        }
-
-        public void setPublicNames(long publicNames) {
-            this.publicNames = publicNames;
-        }
-
-        public void setPrivateNames(long privateNames) {
-            this.privateNames = privateNames;
-        }
-        
-        public long getTotal() {
-            return publicNames+privateNames;
-        }
-    }
 }
