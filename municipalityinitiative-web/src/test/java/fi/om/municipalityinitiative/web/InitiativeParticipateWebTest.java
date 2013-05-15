@@ -34,7 +34,6 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     
     @Test
     public void participate_initiative_with_public_name() {
-        overrideDriverToFirefox(true);
         Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
         Long municipality2Id = testHelper.createTestMunicipality(MUNICIPALITY_2);
         
@@ -60,7 +59,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     
     @Test
     public void participate_initiative_with_private_name_and_select_membership_type() {
-        overrideDriverToFirefox(true);
+        overrideDriverToFirefox(true); // Municipality select need firefox driver
         
         Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
         Long municipality2Id = testHelper.createTestMunicipality(MUNICIPALITY_2);
