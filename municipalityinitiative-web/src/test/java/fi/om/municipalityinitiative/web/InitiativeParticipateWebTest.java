@@ -8,8 +8,10 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
+import fi.om.municipalityinitiative.util.RandomHashGenerator;
 
 public class InitiativeParticipateWebTest extends WebTestBase {
     
@@ -44,6 +46,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     
     @Test
     public void participate_initiative_with_public_name() {
+        overrideDriverToFirefox(true);
         Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
         Long municipality2Id = testHelper.createTestMunicipality(MUNICIPALITY_2);
         
@@ -62,7 +65,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
        
         assertThat(getOptionalElemContaining(getMessage(MSG_BTN_PARTICIPATE), "a").isPresent(), is(false));
         
-//        assertTextContainedByClass("public-names", "2");
+        assertTextContainedByClass("public-names", "1");
         // TODO: Assert that public names is 2
     }
     
@@ -88,15 +91,17 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         getElemContaining(getMessage(MEMBERSHIP_RADIO), "span").click();
         
         inputText("participantEmail", PARTICIPANT_EMAIL);
-        
+       
         getElemContaining(getMessage(MSG_BTN_SAVE), "button").click();
         
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_PARTICIPATE);
        
         assertThat(getOptionalElemContaining(getMessage(MSG_BTN_PARTICIPATE), "a").isPresent(), is(false));
         
+        open(urls.confirmParticipant(testHelper.getLastParticipantId(), RandomHashGenerator.getPrevious()));
+        
      // TODO: Assert that private names is 2
-//        assertTextContainedByClass("private-names", "2");
+        assertTextContainedByClass("private-names", "2");
     }
     
 }

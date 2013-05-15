@@ -22,9 +22,11 @@
 
     <#-- VIEW BLOCKS -->
     <div class="view-block single public">
-        <h2><@u.message key="participantList.title" args=[participantCount.noFranchise.publicNames!""] /></h2>
+        <h2><@u.message key="participantList.title" args=[participantCount.totalPublicNames!""] /></h2>
         
         <@participantList participants.noFranchise />
+        
+        <@participantList participants.franchise />
     </div>
     
     <@returnPrevious />
