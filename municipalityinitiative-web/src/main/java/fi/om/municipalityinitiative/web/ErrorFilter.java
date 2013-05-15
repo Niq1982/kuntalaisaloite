@@ -67,7 +67,7 @@ public class ErrorFilter implements Filter {
     private void handeInvitationNotValid(HttpServletRequest request, HttpServletResponse response, Throwable e) throws IOException {
         log.info(getErrorMessage("Invitation not valid: " + e.getMessage(), null, request));
         log.info("Invitation not valid", e);
-        request.setAttribute("errorMessage", "error.410.invitation.not.valid.error.message");
+        request.setAttribute("errorMessage", "error.410.invitation.not.valid.error");
         response.sendError(HttpServletResponse.SC_GONE);
     }
 

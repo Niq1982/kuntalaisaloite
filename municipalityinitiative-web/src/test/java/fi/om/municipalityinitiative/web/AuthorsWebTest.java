@@ -108,7 +108,7 @@ public class AuthorsWebTest  extends WebTestBase {
 
     private void assertInvitationPageIsGone(AuthorInvitation invitation) {
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
-        assertThat(getElement(By.tagName("h1")).getText(), is(getMessage("error.410.invitation.not.valid.error.message.title")));
+        assertThat(getElement(By.tagName("h1")).getText(), is(getMessage("error.410.invitation.not.valid.error.title")));
     }
 
 }
