@@ -13,6 +13,7 @@ import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
 import fi.om.municipalityinitiative.newdto.ui.MunicipalityEditDto;
 import fi.om.municipalityinitiative.newdto.ui.MunicipalityUIEditDto;
+import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,9 +43,30 @@ public class ModerationService {
             throw new OperationNotAllowedException("Not allowed to accept initiative");
         }
 
+        if (initiative.getState() == InitiativeState.REVIEW) {
+            acceptDraftReview(moderatorComment, locale, initiative);
+        }
+        else if (initiative.getFixState() == FixState.REVIEW) {
+            acceptFixStateReview(initiativeId, moderatorComment, initiative);
+        }
+        else {
+            throw new IllegalStateException("Unable to accept initiative with state " + initiative.getState() + " and fixState " + initiative.getFixState());
+        }
+    }
+
+    private void acceptFixStateReview(Long initiativeId, String moderatorComment, Initiative initiative) {
+        initiativeDao.updateInitiativeFixState(initiativeId, FixState.OK);
+        initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
         // TODO: String municipalityEmail = municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId());
         String municipalityEmail = authorDao.getAuthorEmails(initiativeId).get(0);
+        emailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityEmail, EmailMessageType.ACCEPTED_BY_OM);
+    }
 
+    private void acceptDraftReview(String moderatorComment, Locale locale, Initiative initiative) {
+        Long initiativeId = initiative.getId();
+
+        // TODO: String municipalityEmail = municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId());
+        String municipalityEmail = authorDao.getAuthorEmails(initiativeId).get(0);
 
         initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
         if (initiative.getType().equals(InitiativeType.SINGLE)) {
@@ -58,7 +80,6 @@ public class ModerationService {
             initiative = initiativeDao.get(initiativeId);  // Necessary because initiative is updated
             emailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityEmail, EmailMessageType.ACCEPTED_BY_OM);
         }
-
     }
 
     @Transactional(readOnly = false)

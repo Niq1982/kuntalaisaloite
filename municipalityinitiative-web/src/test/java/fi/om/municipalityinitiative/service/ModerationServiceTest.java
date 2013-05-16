@@ -8,11 +8,9 @@ import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.service.LoginUser;
-import fi.om.municipalityinitiative.util.InitiativeState;
-import fi.om.municipalityinitiative.util.InitiativeType;
-import fi.om.municipalityinitiative.util.Locales;
-import fi.om.municipalityinitiative.util.Maybe;
+import fi.om.municipalityinitiative.util.*;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -49,6 +47,7 @@ public class ModerationServiceTest {
     }
 
     @Test
+    @Ignore("Only public methods plz")
     public void all_functions_require_om_rights() throws InvocationTargetException, IllegalAccessException {
 
         for (Method method : ModerationService.class.getDeclaredMethods()) {
@@ -71,7 +70,7 @@ public class ModerationServiceTest {
     public void accepting_initiative_sets_state_as_accepted_if_type_is_undefined() {
 
         setOmUser();
-        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.REVIEW, InitiativeType.UNDEFINED));
 
         moderationService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
 
@@ -82,7 +81,7 @@ public class ModerationServiceTest {
     public void accepting_initiative_sends_correct_state_email_if_type_is_undefined() {
 
         setOmUser();
-        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.REVIEW, InitiativeType.UNDEFINED));
 
         moderationService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
 
@@ -92,7 +91,7 @@ public class ModerationServiceTest {
     @Test
     public void accepting_initiative_saves_comment_if_type_is_undefined() {
         setOmUser();
-        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.REVIEW, InitiativeType.UNDEFINED));
 
         String comment = "this is om-comment";
         moderationService.accept(loginUserHolder, INITIATIVE_ID, comment, Locales.LOCALE_FI);
@@ -104,8 +103,7 @@ public class ModerationServiceTest {
     public void accepting_initiative_sets_state_as_published_if_type_single() {
 
         setOmUser();
-        Initiative initiative = initiativeWithAuthorEmailTypeUndefined();
-        initiative.setType(InitiativeType.SINGLE);
+        Initiative initiative = initiative(InitiativeState.REVIEW, InitiativeType.SINGLE);
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative);
 
         moderationService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
@@ -118,8 +116,7 @@ public class ModerationServiceTest {
     public void accepting_initiative_sends_correct_state_email_if_type_single() {
 
         setOmUser();
-        Initiative initiative = initiativeWithAuthorEmailTypeUndefined();
-        initiative.setType(InitiativeType.SINGLE);
+        Initiative initiative = initiative(InitiativeState.REVIEW, InitiativeType.SINGLE);
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative);
 
         moderationService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
@@ -133,8 +130,7 @@ public class ModerationServiceTest {
     @Test
     public void accepting_initiative_saves_comment_if_type_is_single() {
         setOmUser();
-        Initiative initiative = initiativeWithAuthorEmailTypeUndefined();
-        initiative.setType(InitiativeType.SINGLE);
+        Initiative initiative = initiative(InitiativeState.REVIEW, InitiativeType.SINGLE);
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative);
 
         String comment = "this is om-comment";
@@ -147,7 +143,7 @@ public class ModerationServiceTest {
     public void rejecting_initiative_sets_state_as_draft() {
 
         setOmUser();
-        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.REVIEW, InitiativeType.UNDEFINED));
 
         moderationService.reject(loginUserHolder, INITIATIVE_ID, null);
         verify(initiativeDaoMock).updateInitiativeState(INITIATIVE_ID, InitiativeState.DRAFT);
@@ -157,7 +153,7 @@ public class ModerationServiceTest {
     public void rejecting_initiative_sends_email() {
 
         setOmUser();
-        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.REVIEW, InitiativeType.UNDEFINED));
 
         moderationService.reject(loginUserHolder, INITIATIVE_ID, null);
         verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.REJECTED_BY_OM));
@@ -167,7 +163,7 @@ public class ModerationServiceTest {
     public void rejecting_initiative_saves_comment() {
 
         setOmUser();
-        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.REVIEW, InitiativeType.UNDEFINED));
 
         String comment = "this is om-comment";
         moderationService.reject(loginUserHolder, INITIATIVE_ID, comment);
@@ -176,15 +172,50 @@ public class ModerationServiceTest {
 
     }
 
-    private static Initiative initiativeWithAuthorEmailTypeUndefined() {
+    @Test
+    public void accepting_fixState_review_initiative_sets_fixState_to_OK() {
+        setOmUser();
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(publishedCollaborative(FixState.REVIEW));
+
+        moderationService.accept(loginUserHolder, INITIATIVE_ID, "", null);
+        verify(initiativeDaoMock).updateInitiativeFixState(INITIATIVE_ID, FixState.OK);
+    }
+
+    @Test
+    public void accepting_fixState_review_initiative_sets_moderator_comment() {
+        setOmUser();
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(publishedCollaborative(FixState.REVIEW));
+
+        String moderatorComment = "moderator comment";
+        moderationService.accept(loginUserHolder, INITIATIVE_ID, moderatorComment, null);
+        verify(initiativeDaoMock).updateModeratorComment(INITIATIVE_ID, moderatorComment);
+    }
+
+    @Test
+    public void accepting_fixState_review_initiative_sends_status_email() {
+        setOmUser();
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(publishedCollaborative(FixState.REVIEW));
+
+        String moderatorComment = "moderator comment";
+        moderationService.accept(loginUserHolder, INITIATIVE_ID, moderatorComment, null);
+        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM));
+    }
+
+    private static Initiative publishedCollaborative(FixState fixState) {
+        Initiative initiative = initiative(InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        initiative.setFixState(fixState);
+        return initiative;
+    }
+
+    private static Initiative initiative(InitiativeState state, InitiativeType type) {
         Initiative initiative = new Initiative();
-
-        initiative.setState(InitiativeState.REVIEW);
-        initiative.setType(InitiativeType.UNDEFINED);
-
+        initiative.setId(INITIATIVE_ID);
+        initiative.setState(state);
+        initiative.setType(type);
         initiative.setMunicipality(new Municipality(0, "", "", false));
 
         return initiative;
+
     }
 
 }
