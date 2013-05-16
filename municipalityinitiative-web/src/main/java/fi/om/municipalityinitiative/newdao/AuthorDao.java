@@ -33,4 +33,6 @@ public interface AuthorDao {
     Long getAuthorId(String managementHash);
 
     Author getAuthor(Long authorId);
+
+    void deleteAuthor(Long authorId);
 }

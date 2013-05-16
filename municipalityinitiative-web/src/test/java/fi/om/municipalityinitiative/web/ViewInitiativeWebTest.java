@@ -97,7 +97,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
 
         DateTime modifyTime = new DateTime(2011, 1, 1, 0, 0);
         String title = "Yeah rock rock";
-        testHelper.create(new TestHelper.InitiativeDraft(municipalityId)
+        testHelper.createOnlyInitiative(new TestHelper.InitiativeDraft(municipalityId)
                 .withState(InitiativeState.PUBLISHED)
                 .withModified(modifyTime)
                 .withName(title));
@@ -114,7 +114,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
 
         DateTime modifyTime = new DateTime(2011, 1, 1, 0, 0);
         String title = "Yeah rock rock";
-        testHelper.create(new TestHelper.InitiativeDraft(municipalityId)
+        testHelper.createOnlyInitiative(new TestHelper.InitiativeDraft(municipalityId)
                 .withState(InitiativeState.PUBLISHED)
                 .withModified(modifyTime)
                 .withName(title));

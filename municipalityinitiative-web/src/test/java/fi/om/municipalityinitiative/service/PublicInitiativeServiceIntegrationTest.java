@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.service;
 
-import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
@@ -27,7 +26,6 @@ import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.theInstance;
 import static org.mockito.Mockito.stub;
 
 
@@ -88,7 +86,8 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 
     @Test(expected = OperationNotAllowedException.class)
     public void accepting_participation_allowance_is_checked() {
-        testHelper.createSingleSent(testMunicipality.getId());
+        Long initiative = testHelper.createSingleSent(testMunicipality.getId());
+
         service.confirmParticipation(testHelper.getLastParticipantId(), null);
     }
 
@@ -347,7 +346,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 
     @Test(expected = OperationNotAllowedException.class)
     public void sending_collaborative_to_municipality_fails_if_already_sent() {
-        Long collaborativeSent = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long collaborativeSent = testHelper.createOnlyInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE)
                 .withSent(DateTime.now()));
@@ -364,9 +363,10 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 
     @Test
     public void sending_collobarative_to_municipality_sets_sent_time_and_sent_comment() {
-        Long collaborative = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long collaborative = testHelper.createOnlyInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
-                .withType(InitiativeType.COLLABORATIVE));
+                .withType(InitiativeType.COLLABORATIVE)
+                .applyParticipant().initiativeDraft());
 
         service.sendCollaborativeToMunicipality(collaborative, TestHelper.authorLoginUserHolder, "my sent comment", null);
 
