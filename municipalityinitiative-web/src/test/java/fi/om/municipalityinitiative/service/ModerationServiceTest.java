@@ -219,7 +219,30 @@ public class ModerationServiceTest {
     public void sendInitiativeBackForFixing_checks_that_initiative_may_be_sent_back() {
         setOmUser();
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.DRAFT, InitiativeType.UNDEFINED));
-        moderationService.sendInitiativeBackForFixing(loginUserHolder, INITIATIVE_ID);
+        moderationService.sendInitiativeBackForFixing(loginUserHolder, INITIATIVE_ID, "");
+    }
+
+    @Test
+    public void sendInitiativeBackForFixing_sets_initiative_fixState_and_adds_moderator_comment() {
+        setOmUser();
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE));
+
+        String moderatorComment = "some mod comment";
+        moderationService.sendInitiativeBackForFixing(loginUserHolder, INITIATIVE_ID, moderatorComment);
+
+        verify(initiativeDaoMock, times(2)).get(INITIATIVE_ID);
+        verify(initiativeDaoMock).updateInitiativeFixState(INITIATIVE_ID, FixState.FIX);
+        verify(initiativeDaoMock).updateModeratorComment(INITIATIVE_ID, moderatorComment);
+
+    }
+
+    @Test
+    public void sendInitiativeBackForFixing_sends_status_email() {
+        setOmUser();
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE));
+
+        moderationService.sendInitiativeBackForFixing(loginUserHolder, INITIATIVE_ID, "");
+        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.REJECTED_BY_OM));
     }
 
     private static Initiative publishedCollaborative(FixState fixState) {
@@ -233,6 +256,7 @@ public class ModerationServiceTest {
         initiative.setId(INITIATIVE_ID);
         initiative.setState(state);
         initiative.setType(type);
+        initiative.setFixState(FixState.OK);
         initiative.setMunicipality(new Municipality(0, "", "", false));
 
         return initiative;

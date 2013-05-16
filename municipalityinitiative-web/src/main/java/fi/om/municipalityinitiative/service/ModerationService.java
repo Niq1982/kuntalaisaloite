@@ -138,7 +138,7 @@ public class ModerationService {
     }
 
     @Transactional(readOnly = false)
-    public void sendInitiativeBackForFixing(LoginUserHolder requiredOmLoginUserHolder, Long initiativeId) {
+    public void sendInitiativeBackForFixing(LoginUserHolder requiredOmLoginUserHolder, Long initiativeId, String moderatorComment) {
 
         requiredOmLoginUserHolder.assertOmUser();
         Initiative initiative = initiativeDao.get(initiativeId);
@@ -146,5 +146,11 @@ public class ModerationService {
             throw new OperationNotAllowedException("Not allowed to send initiative back for fixing");
         }
 
+        initiativeDao.updateInitiativeFixState(initiativeId, FixState.FIX);
+        initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
+
+        initiative = initiativeDao.get(initiativeId);
+
+        emailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), EmailMessageType.REJECTED_BY_OM);
     }
 }
