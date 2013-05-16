@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.web;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -66,6 +67,16 @@ public class ViewInitiativeWebTest extends WebTestBase {
         loginAsAuthorForLastTestHelperCreatedInitiative();
 
         open(urls.view(draftInitiativeId));
+        assert404();
+    }
+
+    @Test
+    public void initiative_with_fixState_other_than_ok_can_not_be_viewed_if_not_logged_in_as_author() {
+        Long initiative = testHelper.createInitiative(new TestHelper.InitiativeDraft(municipalityId)
+                .withState(InitiativeState.PUBLISHED)
+                .withFixState(FixState.REVIEW));
+
+        open(urls.view(initiative));
         assert404();
     }
 

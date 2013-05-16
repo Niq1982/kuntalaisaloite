@@ -156,6 +156,7 @@ public class TestHelper {
         insert.set(municipalityInitiative.sent, initiativeDraft.sent);
         insert.set(municipalityInitiative.modified, initiativeDraft.modified);
         insert.set(municipalityInitiative.sentComment, initiativeDraft.sentComment);
+        insert.set(municipalityInitiative.fixState, initiativeDraft.fixState);
 
         lastInitiativeId = insert.executeWithKey(municipalityInitiative.id);
 
@@ -315,6 +316,7 @@ public class TestHelper {
         public Integer participantCount = 1;
 
         public Maybe<AuthorDraft> authorDraft = Maybe.absent();
+        public FixState fixState = FixState.OK;
 
         public AuthorDraft applyAuthor() {
             this.authorDraft = Maybe.of(new AuthorDraft(this, municipalityId));
@@ -342,6 +344,11 @@ public class TestHelper {
 
         public InitiativeDraft withState(InitiativeState state) {
             this.state = state;
+            return this;
+        }
+
+        public InitiativeDraft withFixState(FixState fixState) {
+            this.fixState = fixState;
             return this;
         }
 
