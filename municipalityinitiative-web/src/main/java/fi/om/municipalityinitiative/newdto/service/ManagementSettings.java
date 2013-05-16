@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newdto.service;
 
+import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 
 public class ManagementSettings {
@@ -23,7 +24,7 @@ public class ManagementSettings {
     }
 
     public boolean isAllowOmAccept() {
-        return initiative.getState() == InitiativeState.REVIEW;
+        return initiative.getState() == InitiativeState.REVIEW || initiative.getFixState() == FixState.REVIEW;
     }
 
     public boolean isAllowUpdate() {
@@ -47,5 +48,21 @@ public class ManagementSettings {
 
     public boolean isAllowInviteAuthors() {
         return initiative.getSentTime().isNotPresent();
+    }
+
+    public boolean isAllowOmSendBackForFixing() {
+        if ((initiative.getState() == InitiativeState.PUBLISHED || initiative.getState() == InitiativeState.ACCEPTED)
+                && initiative.getSentTime().isNotPresent()
+                && initiative.getFixState() == FixState.OK) {
+            return true;
+        }
+
+        return false;
+
+    }
+
+
+    public boolean isAllowSendFixToReview() {
+        return initiative.getFixState() == FixState.FIX;
     }
 }

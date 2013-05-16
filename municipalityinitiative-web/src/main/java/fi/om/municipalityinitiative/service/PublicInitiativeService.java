@@ -201,7 +201,14 @@ public class PublicInitiativeService {
     }
 
     @Transactional(readOnly = false)
-    public void publishAndStartCollecting(Long initiativeId, LoginUserHolder loginUserHolder, Locale locale) {
+    public void sendFixToReview(Long initiativeId, LoginUserHolder requiredLoginUserHolder) {
+        requiredLoginUserHolder.assertManagementRightsForInitiative(initiativeId);
+        assertAllowance("Send fix to review", getManagementSettings(initiativeId).isAllowSendFixToReview());
+        initiativeDao.updateInitiativeFixState(initiativeId, FixState.REVIEW);
+    }
+
+    @Transactional(readOnly = false)
+    public void publishAndStartCollecting(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         assertAllowance("Publish initiative", getManagementSettings(initiativeId).isAllowPublish());
 
@@ -256,6 +263,7 @@ public class PublicInitiativeService {
         emailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityEmail, EmailMessageType.SENT_TO_MUNICIPALITY);
     }
 
+
     @Transactional(readOnly = false)
     public void sendToMunicipality(Long initiativeId, LoginUserHolder requiredLoginUserHolder, String sentComment, Locale locale) {
         Initiative initiative = initiativeDao.get(initiativeId);
@@ -267,6 +275,4 @@ public class PublicInitiativeService {
             publishAndSendToMunicipality(initiativeId, requiredLoginUserHolder, sentComment, locale);
         }
     }
-
-
 }

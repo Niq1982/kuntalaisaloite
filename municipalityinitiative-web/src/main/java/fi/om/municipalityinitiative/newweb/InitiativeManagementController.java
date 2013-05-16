@@ -135,10 +135,18 @@ public class InitiativeManagementController extends BaseController {
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.SEND_TO_REVIEW, request);
     }
 
+    @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_SEND_FIX_TO_REVIEW)
+    public String sendFixToReview(@PathVariable("id") Long initiativeId,
+                                  Locale locale, HttpServletRequest request) {
+        LoginUserHolder requiredLoginUserHolder = userService.getRequiredLoginUserHolder(request);
+        publicInitiativeService.sendFixToReview(initiativeId, requiredLoginUserHolder);
+        return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.SEND_TO_REVIEW, request);
+    }
+
     @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_START_COLLECTING)
     public String publishAndStartCollecting(@PathVariable("id") Long initiativeId,
                                Locale locale, HttpServletRequest request) {
-        publicInitiativeService.publishAndStartCollecting(initiativeId, userService.getRequiredLoginUserHolder(request), locale);
+        publicInitiativeService.publishAndStartCollecting(initiativeId, userService.getRequiredLoginUserHolder(request));
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.START_COLLECTING, request);
     }
 

@@ -257,7 +257,6 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     public void send_initiative_as_review_sents_state_as_review_and_leaves_type_as_null_if_not_single() {
         Long initiativeId = testHelper.createDraft(testMunicipality.getId());
 
-//        service.sendReview(initiativeId, authorLoginUserHolder, false, Locales.LOCALE_FI);
         service.sendReviewOnlyForAcceptance(initiativeId, TestHelper.authorLoginUserHolder, null);
 
         Initiative updated = initiativeDao.get(initiativeId);
@@ -269,7 +268,6 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     @Test
     public void send_initiative_as_review_sets_state_as_review_and_type_as_single_if_single() {
         Long initiativeId = testHelper.createDraft(testMunicipality.getId());
-//        service.sendReview(initiativeId, authorLoginUserHolder, true, Locales.LOCALE_FI);
         service.sendReviewAndStraightToMunicipality(initiativeId, TestHelper.authorLoginUserHolder, null, null);
 
         Initiative updated = initiativeDao.get(initiativeId);
@@ -281,7 +279,6 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     @Test(expected = OperationNotAllowedException.class)
     public void send_review_and_to_municipality_fails_if_initiative_accepted() {
         Long accepted = testHelper.createCollectableAccepted(testMunicipality.getId());
-//        service.sendReview(accepted, authorLoginUserHolder, true, Locales.LOCALE_FI);
         service.sendReviewAndStraightToMunicipality(accepted, TestHelper.authorLoginUserHolder, null, null);
     }
 
@@ -303,11 +300,38 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         service.sendReviewOnlyForAcceptance(accepted, TestHelper.unknownLoginUserHolder, null);
     }
 
+    @Test(expected = AccessDeniedException.class)
+    public void send_fix_to_review_fails_if_no_right_to_initiative() {
+        Long accepted = testHelper.createCollectableAccepted(testMunicipality.getId());
+        service.sendFixToReview(accepted, TestHelper.unknownLoginUserHolder);
+    }
+
+    @Test(expected = OperationNotAllowedException.class)
+    public void send_fix_to_review_fails_if_initiative_sent() {
+        Long sent = testHelper.createSingleSent(testMunicipality.getId());
+        service.sendFixToReview(sent, TestHelper.authorLoginUserHolder);
+    }
+
+    @Test
+    public void send_fix_to_review_sets_fixState_as_review() {
+        Long accepted = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withState(InitiativeState.PUBLISHED)
+                .withFixState(FixState.FIX)
+                .applyAuthor()
+                .toInitiativeDraft());
+
+        precondition(initiativeDao.get(accepted).getFixState(), is(FixState.FIX));
+
+        service.sendFixToReview(accepted, TestHelper.authorLoginUserHolder);
+
+        assertThat(initiativeDao.get(accepted).getFixState(), is(FixState.REVIEW));
+    }
+
     @Test(expected = OperationNotAllowedException.class)
     public void publish_initiative_fails_if_not_accepted() {
         Long review = testHelper.createCollectableReview(testMunicipality.getId());
 //        service.publishAcceptedInitiative(review, false, authorLoginUserHolder, null);
-        service.publishAndStartCollecting(review, TestHelper.authorLoginUserHolder, null);
+        service.publishAndStartCollecting(review, TestHelper.authorLoginUserHolder);
     }
 
     @Test
@@ -315,7 +339,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
 
 //        service.publishAcceptedInitiative(accepted, true, authorLoginUserHolder, null);
-        service.publishAndStartCollecting(accepted, TestHelper.authorLoginUserHolder, null);
+        service.publishAndStartCollecting(accepted, TestHelper.authorLoginUserHolder);
 
         Initiative collecting = initiativeDao.get(accepted);
         assertThat(collecting.getState(), is(InitiativeState.PUBLISHED));
