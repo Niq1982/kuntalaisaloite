@@ -449,7 +449,7 @@ var municipalitySelection = (function() {
 			disableSubmit(false);
 		}
 		
-		showFranchise(equalMunicipalitys());
+		showMembership(equalMunicipalitys());
 	};
 	
 	// update text in the municipality data in the form step 2
@@ -477,14 +477,15 @@ var municipalitySelection = (function() {
 		}
 	};
 	
-	// Disable or enable the next button and clicking the other form block
+	// Disable form
 	function preventContinuing(prevent){
 		
 		var btnParticipate 		= $("button#participate");								// Participate button
 		
 		var typeInput 			= $('.initiative-type:first-child input'),
-			authorEmail			= $('#authorEmail'),
+			authorEmail			= $('#participantEmail'),
 			toggleDisable		= $('.toggle-disable'),
+			toggleDisableInput  = toggleDisable.find('input, select, textarea, button'),
 			btnParticipate 		= $("button#participate");
 		
 		btnParticipate.disableButton(prevent);
@@ -492,10 +493,10 @@ var municipalitySelection = (function() {
 		typeInput.disableButton(prevent);
 		
 		if (prevent) {
-			authorEmail.attr('disabled','disabled');
+			toggleDisableInput.attr('disabled','disabled');
 			toggleDisable.addClass('disabled');
 		} else {
-			authorEmail.removeAttr('disabled');
+			toggleDisableInput.removeAttr('disabled');
 			toggleDisable.removeClass('disabled');
 		}
 	};
@@ -507,21 +508,20 @@ var municipalitySelection = (function() {
 	
 	// Toggle the radiobutton selection for municipality membership
 	function toggleMembershipRadios(select){
-		//var franchise			= $('#franchise');
 		var	municipalMembership	= $('#municipalMembership');
 		
 		if( equalMunicipalitys() ){
 			municipalityNotEqual.stop(false,true).slideUp(slideOptions);
 			preventContinuing(false);
 			disableSubmit(true);
-			showFranchise(true);
+			showMembership(true);
 		} else {
 			municipalityNotEqual.stop(false,true).slideDown(slideOptions);
 			if (!validationErrors){
 				preventContinuing(true);
 			}
 			disableSubmit(false);
-			showFranchise(false);
+			showMembership(false);
 		}
 	};
 	
@@ -536,23 +536,16 @@ var municipalitySelection = (function() {
 		}
 	}
 	
-	// Toggle franchise and membership radiobuttons
-	function showFranchise(show){
-		//var franchise			= $('#franchise');
+	// Toggle membership radiobuttons
+	function showMembership(show){
 		var	municipalMembership	= $('#municipalMembership');
 		
 		if (show){
-			//franchise.removeClass('js-hide');
 			municipalMembership.addClass('js-hide');
 		} else {
-			//franchise.addClass('js-hide');
 			municipalMembership.removeClass('js-hide');
 		}		
 	}
-	
-	/*$('input[name=franchise]').live('click', function(){
-		disableSubmit(false);
-	});*/
 
 	// Assure that is member of the chosen municipality
 	jQuery.fn.assureMembership = function(){
@@ -580,7 +573,6 @@ var municipalitySelection = (function() {
 		var thisSelect			= $(this),
 			checkedMembership	= $("input[name=municipalMembership]:checked"),
 			radioMunicipalMembership = $("input[name=municipalMembership]");
-			//radioFranchise = $("input[name=franchise]");
 		
 		// Update home municipality automatically
 		if (!isHomeMunicipality(thisSelect)){
@@ -592,7 +584,6 @@ var municipalitySelection = (function() {
 		
 		// Clear radiobutton on change.
 		radioMunicipalMembership.removeAttr('checked');
-		//radioFranchise.removeAttr('checked');
 		
 		toggleMembershipRadios(thisSelect);
 		warningNotMember(false);
