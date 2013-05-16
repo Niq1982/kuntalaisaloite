@@ -45,13 +45,14 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .from(municipalityInitiative)
                 .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
                 .where(municipalityInitiative.state.eq(InitiativeState.PUBLISHED))
+                .where(municipalityInitiative.fixState.eq(FixState.OK))
                 ;
 
         filterByTitle(query, search.getSearch());
         filterByMunicipality(query, search.getMunicipality());
         filterByState(query, search);
-        restrictResults(query, search);
         orderBy(query, search.getOrderBy());
+        restrictResults(query, search);
 
         return query.list(Mappings.initiativeListInfoMapping);
 

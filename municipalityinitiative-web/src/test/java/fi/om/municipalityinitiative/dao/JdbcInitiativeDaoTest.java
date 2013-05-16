@@ -71,6 +71,18 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
+    public void find_does_not_find_if_fixState_not_OK() {
+        Long initiative = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withState(InitiativeState.PUBLISHED));
+        precondition(initiativeDao.find(initiativeSearch()), hasSize(1));
+
+        initiativeDao.updateInitiativeFixState(initiative, FixState.FIX);
+        assertThat(initiativeDao.find(initiativeSearch()), hasSize(0));
+        initiativeDao.updateInitiativeFixState(initiative, FixState.REVIEW);
+        assertThat(initiativeDao.find(initiativeSearch()), hasSize(0));
+    }
+
+    @Test
     public void get_returns_all_information() {
         Long authorsMunicipalityId = testHelper.createTestMunicipality("Authors Municipality");
 
