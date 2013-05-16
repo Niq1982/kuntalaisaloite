@@ -81,7 +81,7 @@ public class JdbcInitiativeDaoTest {
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withSent(new DateTime(2010, 1, 1, 0, 0))
                 .applyParticipant().withParticipantMunicipality(authorsMunicipalityId)
-                .initiativeDraft());
+                .toInitiativeDraft());
 
         Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
 

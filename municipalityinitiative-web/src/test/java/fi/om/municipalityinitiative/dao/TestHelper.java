@@ -90,7 +90,7 @@ public class TestHelper {
         return createOnlyInitiative(new InitiativeDraft(municipalityId)
                 .withState(InitiativeState.REVIEW)
                 .withType(InitiativeType.COLLABORATIVE)
-                .applyParticipant().initiativeDraft());
+                .applyParticipant().toInitiativeDraft());
     }
 
     @Transactional
@@ -98,7 +98,7 @@ public class TestHelper {
         return createOnlyInitiative(new InitiativeDraft(municipalityId)
                 .withState(InitiativeState.ACCEPTED)
                 .withType(InitiativeType.COLLABORATIVE)
-                .applyParticipant().initiativeDraft());
+                .applyParticipant().toInitiativeDraft());
     }
 
     @Transactional
@@ -106,7 +106,7 @@ public class TestHelper {
         return createOnlyInitiative(new InitiativeDraft(municipalityId)
                 .withState(state)
                 .withType(type)
-                .applyParticipant().initiativeDraft());
+                .applyParticipant().toInitiativeDraft());
     }
 
     @Transactional
@@ -115,14 +115,14 @@ public class TestHelper {
                 .withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.SINGLE)
                 .withSent(SENT_TIME)
-                .applyParticipant().initiativeDraft());
+                .applyParticipant().toInitiativeDraft());
     }
 
     @Transactional
     public Long createDraft(Long municipalityId) {
         return createOnlyInitiative(new InitiativeDraft(municipalityId)
                 .withState(InitiativeState.DRAFT)
-                .applyParticipant().initiativeDraft());
+                .applyParticipant().toInitiativeDraft());
     }
     
     @Transactional
@@ -132,11 +132,11 @@ public class TestHelper {
                 .withType(InitiativeType.UNDEFINED)
                 .withName(null)
                 .withProposal(null)
-                .withAuthorPhone(null)
-                .withAuthorAddress(null)
                 .applyParticipant()
                 .withParticipantName(null)
-                .initiativeDraft());
+                .withAuthorAddress(null)
+                .withAuthorPhone(null)
+                .toInitiativeDraft());
     }
 
     @Transactional
@@ -159,34 +159,34 @@ public class TestHelper {
 
         lastInitiativeId = insert.executeWithKey(municipalityInitiative.id);
 
-
-        if (initiativeDraft.participantDraft.isPresent()) {
-            initiativeDraft.participantDraft.get().withInitiativeId(lastInitiativeId);
-            ParticipantDraft participantDraft = initiativeDraft.participantDraft.get();
-            Long lastParticipantId = createParticipant(participantDraft);
-
-            lastAuthorId = queryFactory.insert(QAuthor.author)
-                    .set(QAuthor.author.address, initiativeDraft.authorAddress)
-                    .set(QAuthor.author.phone, initiativeDraft.authorPhone)
-                    .set(QAuthor.author.participantId, lastParticipantId)
-                    .set(QAuthor.author.managementHash, generateHash(40))
-                    .executeWithKey(QAuthor.author.id);
+        if (initiativeDraft.authorDraft.isPresent()) {
+            initiativeDraft.authorDraft.get().withInitiativeId(lastInitiativeId);
+            createAuthorAndParticipant(initiativeDraft.authorDraft.get());
             stub(authorLoginUserHolder.getAuthorId()).toReturn(lastAuthorId);
         }
-
         return lastInitiativeId;
 
     }
 
+    private void createAuthorAndParticipant(AuthorDraft authorDraft) {
+        Long lastParticipantId = createParticipant(authorDraft);
+        lastAuthorId = queryFactory.insert(QAuthor.author)
+                .set(QAuthor.author.address, authorDraft.authorAddress)
+                .set(QAuthor.author.phone, authorDraft.authorPhone)
+                .set(QAuthor.author.participantId, lastParticipantId)
+                .set(QAuthor.author.managementHash, generateHash(40))
+                .executeWithKey(QAuthor.author.id);
+    }
 
-    public Long createParticipant(ParticipantDraft participantDraft) {
+
+    public Long createParticipant(AuthorDraft authorDraft) {
         return queryFactory.insert(QParticipant.participant)
-                        .set(QParticipant.participant.municipalityId, participantDraft.participantMunicipality)
-                        .set(QParticipant.participant.municipalityInitiativeId, participantDraft.initiativeId)
-                        .set(QParticipant.participant.name, participantDraft.participantName)
-                        .set(QParticipant.participant.showName, participantDraft.publicName)
-                        .set(QParticipant.participant.email, participantDraft.participantEmail)
-                        .set(QParticipant.participant.membershipType, participantDraft.municipalityMembership)
+                        .set(QParticipant.participant.municipalityId, authorDraft.participantMunicipality)
+                        .set(QParticipant.participant.municipalityInitiativeId, authorDraft.initiativeId)
+                        .set(QParticipant.participant.name, authorDraft.participantName)
+                        .set(QParticipant.participant.showName, authorDraft.publicName)
+                        .set(QParticipant.participant.email, authorDraft.participantEmail)
+                        .set(QParticipant.participant.membershipType, authorDraft.municipalityMembership)
                         .executeWithKey(QParticipant.participant.id);
     }
 
@@ -230,7 +230,7 @@ public class TestHelper {
         return authorInvitation;
     }
 
-    public static class ParticipantDraft {
+    public static class AuthorDraft {
 
         public Long initiativeId;
         public final Maybe<InitiativeDraft> initiativeDraftMaybe;
@@ -239,48 +239,61 @@ public class TestHelper {
         public String participantName = DEFAULT_PARTICIPANT_NAME;
         public String participantEmail = DEFAULT_PARTICIPANT_EMAIL;
         public boolean publicName = DEFAULT_PUBLIC_NAME;
+        public String authorAddress = DEFAULT_AUTHOR_ADDRESS;
+        public String authorPhone = DEFAULT_AUTHOR_PHONE;
 
-        public ParticipantDraft(Long initiativeId, Long participantMunicipality) {
+        public AuthorDraft(Long initiativeId, Long participantMunicipality) {
             this.initiativeId = initiativeId;
             this.initiativeDraftMaybe = Maybe.absent();
             this.participantMunicipality = participantMunicipality;
         }
 
-        private ParticipantDraft(InitiativeDraft initiativeDraft, Long participantMunicipality) {
+        private AuthorDraft(InitiativeDraft initiativeDraft, Long participantMunicipality) {
             this.initiativeDraftMaybe = Maybe.of(initiativeDraft);
             this.participantMunicipality = participantMunicipality;
         }
 
-        public ParticipantDraft withMunicipalityMembership(Membership municipalityMembership) {
+        public AuthorDraft withMunicipalityMembership(Membership municipalityMembership) {
             this.municipalityMembership = municipalityMembership;
             return this;
         }
 
-        public ParticipantDraft withParticipantName(String participantName) {
+        public AuthorDraft withParticipantName(String participantName) {
             this.participantName = participantName;
             return this;
         }
 
-        public ParticipantDraft withParticipantEmail(String authorEmail) {
+        public AuthorDraft withParticipantEmail(String authorEmail) {
             this.participantEmail = authorEmail;
             return this;
         }
 
-        public ParticipantDraft withPublicName(boolean publicName) {
+
+        public AuthorDraft withAuthorAddress(String authorAddress) {
+            this.authorAddress = authorAddress;
+            return this;
+        }
+
+        public AuthorDraft withAuthorPhone(String authorPhone) {
+            this.authorPhone = authorPhone;
+            return this;
+        }
+
+        public AuthorDraft withPublicName(boolean publicName) {
             this.publicName = publicName;
             return this;
         }
 
-        public ParticipantDraft withParticipantMunicipality(Long municipalityId) {
+        public AuthorDraft withParticipantMunicipality(Long municipalityId) {
             this.participantMunicipality = municipalityId;
             return this;
         }
 
-        public InitiativeDraft initiativeDraft() {
+        public InitiativeDraft toInitiativeDraft() {
             return initiativeDraftMaybe.get();
         }
 
-        public ParticipantDraft withInitiativeId(Long lastInitiativeId) {
+        public AuthorDraft withInitiativeId(Long lastInitiativeId) {
             initiativeId = lastInitiativeId;
             return this;
         }
@@ -297,17 +310,15 @@ public class TestHelper {
         public InitiativeState state = DEFAULT_STATE;
         public InitiativeType type = DEFAULT_TYPE;
 
-        public String authorAddress = DEFAULT_AUTHOR_ADDRESS;
-        public String authorPhone = DEFAULT_AUTHOR_PHONE;
         public DateTime sent = DEFAULT_SENT_TIME;
         public DateTime modified = DEFAULT_CREATE_TIME;
         public Integer participantCount = 1;
 
-        public Maybe<ParticipantDraft> participantDraft = Maybe.absent();
+        public Maybe<AuthorDraft> authorDraft = Maybe.absent();
 
-        public ParticipantDraft applyParticipant() {
-            this.participantDraft = Maybe.of(new ParticipantDraft(this, municipalityId));
-            return this.participantDraft.get();
+        public AuthorDraft applyParticipant() {
+            this.authorDraft = Maybe.of(new AuthorDraft(this, municipalityId));
+            return this.authorDraft.get();
         }
 
         public InitiativeDraft(Long municipalityId) {
@@ -336,16 +347,6 @@ public class TestHelper {
 
         public InitiativeDraft withType(InitiativeType type) {
             this.type = type;
-            return this;
-        }
-
-        public InitiativeDraft withAuthorAddress(String authorAddress) {
-            this.authorAddress = authorAddress;
-            return this;
-        }
-
-        public InitiativeDraft withAuthorPhone(String authorPhone) {
-            this.authorPhone = authorPhone;
             return this;
         }
 

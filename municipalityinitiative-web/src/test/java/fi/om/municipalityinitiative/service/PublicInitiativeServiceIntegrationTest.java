@@ -366,7 +366,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         Long collaborative = testHelper.createOnlyInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE)
-                .applyParticipant().initiativeDraft());
+                .applyParticipant().toInitiativeDraft());
 
         service.sendCollaborativeToMunicipality(collaborative, TestHelper.authorLoginUserHolder, "my sent comment", null);
 
