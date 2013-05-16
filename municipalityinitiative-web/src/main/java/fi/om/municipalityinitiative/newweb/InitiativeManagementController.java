@@ -118,7 +118,7 @@ public class InitiativeManagementController extends BaseController {
             ).view(model, urls.alt().update(initiativeId));
         }
 
-        publicInitiativeService.updateInitiative(initiativeId, loginUserHolder, updateDto);
+        initiativeManagementService.updateInitiative(initiativeId, loginUserHolder, updateDto);
         return redirectWithMessage(urls.management(initiativeId), RequestMessage.UPDATE_INITIATIVE, request);
     }
 
@@ -127,14 +127,14 @@ public class InitiativeManagementController extends BaseController {
                                @RequestParam(PARAM_SENT_COMMENT) String sentComment,
                                Locale locale, HttpServletRequest request) {
 //        publicInitiativeService.sendReview(initiativeId, userService.getRequiredLoginUserHolder(request), true, locale);
-        publicInitiativeService.sendReviewAndStraightToMunicipality(initiativeId, userService.getRequiredLoginUserHolder(request), sentComment, locale);
+        initiativeManagementService.sendReviewAndStraightToMunicipality(initiativeId, userService.getRequiredLoginUserHolder(request), sentComment, locale);
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.SEND_TO_REVIEW, request);
     }
 
     @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_SEND_TO_REVIEW_COLLECT)
     public String sendToReviewForCollecting(@PathVariable("id") Long initiativeId,
                                             Locale locale, HttpServletRequest request) {
-        publicInitiativeService.sendReviewOnlyForAcceptance(initiativeId, userService.getRequiredLoginUserHolder(request), locale);
+        initiativeManagementService.sendReviewOnlyForAcceptance(initiativeId, userService.getRequiredLoginUserHolder(request), locale);
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.SEND_TO_REVIEW, request);
     }
 
@@ -142,14 +142,14 @@ public class InitiativeManagementController extends BaseController {
     public String sendFixToReview(@PathVariable("id") Long initiativeId,
                                   Locale locale, HttpServletRequest request) {
         LoginUserHolder requiredLoginUserHolder = userService.getRequiredLoginUserHolder(request);
-        publicInitiativeService.sendFixToReview(initiativeId, requiredLoginUserHolder);
+        initiativeManagementService.sendFixToReview(initiativeId, requiredLoginUserHolder);
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.SEND_TO_REVIEW, request);
     }
 
     @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_START_COLLECTING)
     public String publishAndStartCollecting(@PathVariable("id") Long initiativeId,
                                Locale locale, HttpServletRequest request) {
-        publicInitiativeService.publishAndStartCollecting(initiativeId, userService.getRequiredLoginUserHolder(request));
+        initiativeManagementService.publishAndStartCollecting(initiativeId, userService.getRequiredLoginUserHolder(request));
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.START_COLLECTING, request);
     }
 
@@ -157,7 +157,7 @@ public class InitiativeManagementController extends BaseController {
     public String sendToMunicipality(@PathVariable("id") Long initiativeId,
                                      @RequestParam(PARAM_SENT_COMMENT) String sentComment,
                                      Locale locale, HttpServletRequest request) {
-        publicInitiativeService.sendToMunicipality(initiativeId, userService.getRequiredLoginUserHolder(request), sentComment, locale);
+        initiativeManagementService.sendToMunicipality(initiativeId, userService.getRequiredLoginUserHolder(request), sentComment, locale);
         return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.PUBLISH_AND_SEND, request);
     }
     

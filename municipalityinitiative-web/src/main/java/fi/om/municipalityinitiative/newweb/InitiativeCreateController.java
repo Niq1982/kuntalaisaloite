@@ -38,7 +38,7 @@ public class InitiativeCreateController extends BaseController {
     InitiativeManagementService initiativeManagementService;
 
     @Resource
-    ValidationService validionService;
+    ValidationService validationService;
 
     @Resource
     UserService userService;
@@ -60,7 +60,7 @@ public class InitiativeCreateController extends BaseController {
                              Locale locale,
                              HttpServletRequest request) {
         Urls urls = Urls.get(locale);
-        if (validionService.validationErrors(initiative, bindingResult, model)) {
+        if (validationService.validationErrors(initiative, bindingResult, model)) {
             return ViewGenerator.prepareView(initiative, municipalityService.findAllMunicipalities(locale))
                     .view(model, urls.prepare());
         }
@@ -109,7 +109,7 @@ public class InitiativeCreateController extends BaseController {
         LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        if (validionService.validationErrors(editDto, bindingResult, model)) {
+        if (validationService.validationErrors(editDto, bindingResult, model)) {
             return ViewGenerator.editView(
                     editDto,
                     initiativeManagementService.getAuthorInformation(initiativeId, loginUserHolder),
