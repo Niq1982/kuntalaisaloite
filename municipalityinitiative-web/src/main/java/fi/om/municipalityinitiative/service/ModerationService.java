@@ -99,23 +99,26 @@ public class ModerationService {
             throw new OperationNotAllowedException("Not allowed to reject initiative");
         }
         if (isDraftReview(initiative)) {
-            rejectDraftReview(initiativeId, moderatorComment);
+            markStateAsDraftAndSendEmails(initiativeId, moderatorComment);
         }
         else if (isFixStateReview(initiative)) {
-
-            initiativeDao.updateInitiativeFixState(initiativeId, FixState.FIX);
-            initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
-            initiative = initiativeDao.get(initiativeId);
-            emailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), EmailMessageType.REJECTED_BY_OM);
+            markFixStateAsFixAndSendEmails(initiativeId, moderatorComment);
+        } else {
+            throw new IllegalStateException("Invalid state for rejecting, there's something wrong with the code");
         }
     }
 
-    private void rejectDraftReview(Long initiativeId, String moderatorComment) {
-        Initiative initiative;
+    private void markFixStateAsFixAndSendEmails(Long initiativeId, String moderatorComment) {
+        initiativeDao.updateInitiativeFixState(initiativeId, FixState.FIX);
+        initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
+        Initiative initiative = initiativeDao.get(initiativeId);
+        emailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), EmailMessageType.REJECTED_BY_OM);
+    }
+
+    private void markStateAsDraftAndSendEmails(Long initiativeId, String moderatorComment) {
         initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.DRAFT);
-
-        initiative = initiativeDao.get(initiativeId);
+        Initiative initiative = initiativeDao.get(initiativeId);
         emailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), EmailMessageType.REJECTED_BY_OM);
     }
 
@@ -145,12 +148,6 @@ public class ModerationService {
         if (!ManagementSettings.of(initiative).isAllowOmSendBackForFixing()) {
             throw new OperationNotAllowedException("Not allowed to send initiative back for fixing");
         }
-
-        initiativeDao.updateInitiativeFixState(initiativeId, FixState.FIX);
-        initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
-
-        initiative = initiativeDao.get(initiativeId);
-
-        emailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), EmailMessageType.REJECTED_BY_OM);
+        markFixStateAsFixAndSendEmails(initiativeId, moderatorComment);
     }
 }
