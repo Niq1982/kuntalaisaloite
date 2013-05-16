@@ -77,7 +77,7 @@ public class ModerationServiceTest {
         String comment = "this is om-comment";
         moderationService.accept(loginUserHolder, INITIATIVE_ID, comment, Locales.LOCALE_FI);
 
-        verify(initiativeDaoMock, atLeastOnce()).get(INITIATIVE_ID);
+        verify(initiativeDaoMock, times(2)).get(INITIATIVE_ID);
         verify(initiativeDaoMock).updateModeratorComment(INITIATIVE_ID, comment);
         verify(initiativeDaoMock).updateInitiativeState(INITIATIVE_ID, InitiativeState.ACCEPTED);
         verifyNoMoreInteractions(initiativeDaoMock);
@@ -105,24 +105,12 @@ public class ModerationServiceTest {
         String comment = "this is om-comment";
         moderationService.accept(loginUserHolder, INITIATIVE_ID, comment, Locales.LOCALE_FI);
 
-        verify(initiativeDaoMock, atLeastOnce()).get(INITIATIVE_ID);
+        verify(initiativeDaoMock, times(2)).get(INITIATIVE_ID);
         verify(initiativeDaoMock).updateModeratorComment(INITIATIVE_ID, comment);
         verify(initiativeDaoMock).updateInitiativeState(INITIATIVE_ID, InitiativeState.PUBLISHED);
         verify(initiativeDaoMock).markInitiativeAsSent(INITIATIVE_ID);
         verifyNoMoreInteractions(initiativeDaoMock);
 
-    }
-
-    @Test
-    public void accepting_initiative_saves_comment_if_type_is_single() {
-        setOmUser();
-        Initiative initiative = initiative(InitiativeState.REVIEW, InitiativeType.SINGLE);
-        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative);
-
-        String comment = "this is om-comment";
-        moderationService.accept(loginUserHolder, INITIATIVE_ID, comment, Locales.LOCALE_FI);
-
-        verify(initiativeDaoMock).updateModeratorComment(INITIATIVE_ID, comment);
     }
 
 
@@ -148,7 +136,7 @@ public class ModerationServiceTest {
 
         String comment = "this is om-comment";
         moderationService.reject(loginUserHolder, INITIATIVE_ID, comment);
-        verify(initiativeDaoMock, atLeastOnce()).get(INITIATIVE_ID);
+        verify(initiativeDaoMock, times(2)).get(INITIATIVE_ID);
         verify(initiativeDaoMock).updateInitiativeState(INITIATIVE_ID, InitiativeState.DRAFT);
         verify(initiativeDaoMock).updateModeratorComment(INITIATIVE_ID, comment);
         verifyNoMoreInteractions(initiativeDaoMock);
@@ -171,7 +159,7 @@ public class ModerationServiceTest {
 
         String moderatorComment = "moderator comment";
         moderationService.accept(loginUserHolder, INITIATIVE_ID, moderatorComment, null);
-        verify(initiativeDaoMock).get(INITIATIVE_ID);
+        verify(initiativeDaoMock, times(2)).get(INITIATIVE_ID);
         verify(initiativeDaoMock).updateModeratorComment(INITIATIVE_ID, moderatorComment);
         verify(initiativeDaoMock).updateInitiativeFixState(INITIATIVE_ID, FixState.OK);
         verifyNoMoreInteractions(initiativeDaoMock);
@@ -185,6 +173,30 @@ public class ModerationServiceTest {
         String moderatorComment = "moderator comment";
         moderationService.accept(loginUserHolder, INITIATIVE_ID, moderatorComment, null);
         verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM));
+        verifyNoMoreInteractions(moderationService.emailService);
+    }
+
+    @Test
+    public void rejecting_fixState_review_initiative_sets_moderator_comment_and_fixState() {
+        setOmUser();
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(publishedCollaborative(FixState.REVIEW));
+
+        String moderatorComment = "moderator comment";
+        moderationService.reject(loginUserHolder, INITIATIVE_ID, moderatorComment);
+        verify(initiativeDaoMock, times(2)).get(INITIATIVE_ID);
+        verify(initiativeDaoMock).updateModeratorComment(INITIATIVE_ID, moderatorComment);
+        verify(initiativeDaoMock).updateInitiativeFixState(INITIATIVE_ID, FixState.FIX);
+        verifyNoMoreInteractions(initiativeDaoMock);
+    }
+
+    @Test
+    public void rejecting_fixState_review_initiative_sends_status_email() {
+        setOmUser();
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(publishedCollaborative(FixState.REVIEW));
+
+        String moderatorComment = "moderator comment";
+        moderationService.reject(loginUserHolder, INITIATIVE_ID, moderatorComment);
+        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.REJECTED_BY_OM));
         verifyNoMoreInteractions(moderationService.emailService);
     }
 

@@ -67,6 +67,7 @@ public class ModerationService {
         initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
         // TODO: String municipalityEmail = municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId());
         String municipalityEmail = authorDao.getAuthorEmails(initiativeId).get(0);
+        initiative = initiativeDao.get(initiativeId);
         emailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityEmail, EmailMessageType.ACCEPTED_BY_OM);
     }
 
@@ -103,6 +104,10 @@ public class ModerationService {
         }
         else if (isFixStateReview(initiative)) {
 
+            initiativeDao.updateInitiativeFixState(initiativeId, FixState.FIX);
+            initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
+            initiative = initiativeDao.get(initiativeId);
+            emailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), EmailMessageType.REJECTED_BY_OM);
         }
     }
 
