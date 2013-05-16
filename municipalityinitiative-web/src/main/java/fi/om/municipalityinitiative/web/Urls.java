@@ -123,6 +123,8 @@ public final class Urls {
     public static final String ACTION_SEND_TO_REVIEW = "action-send-to-review";
     
     public static final String ACTION_SEND_TO_REVIEW_COLLECT = "action-send-to-review-collect";
+
+    public static final String ACTION_SEND_FIX_TO_REVIEW = "action-send-fix-to-review";
     
     public static final String ACTION_UPDATE_INITIATIVE = "action-update-initiative";
 

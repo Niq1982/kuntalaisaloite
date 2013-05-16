@@ -60,4 +60,9 @@ public class ManagementSettings {
         return false;
 
     }
+
+
+    public boolean isAllowSendFixToReview() {
+        return initiative.getFixState() == FixState.FIX;
+    }
 }

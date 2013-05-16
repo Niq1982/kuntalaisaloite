@@ -226,6 +226,19 @@ public class ManagementSettingsTest {
 
     }
 
+    @Test
+    public void allowed_to_send_fix_to_review_if_fixState_is_FIX() {
+
+        Initiative initiative = new Initiative();
+        initiative.setFixState(FixState.REVIEW);
+
+        precondition(ManagementSettings.of(initiative).isAllowSendFixToReview(), is(false));
+
+        initiative.setFixState(FixState.FIX);
+
+        assertThat(ManagementSettings.of(initiative).isAllowSendFixToReview(), is(true));
+    }
+
     private static void assertExpectedOnlyWithGivenStates(Initiative initiative, Callable<Boolean> callable, boolean expected, InitiativeState... givenStates) throws Exception {
         for (InitiativeState initiativeState : InitiativeState.values()) {
             initiative.setState(initiativeState);
