@@ -821,6 +821,8 @@ $('.municipality-filter').change( function() {
 		    	// Initialize municipality selections
 		    	municipalitySelection.Init();
 		    	
+		    	editMunicipality.getActive();
+		    	
 		    	jsMessages.Load();
 		    	
 		    	// TODO: Test this properly. We might want to use this.
@@ -963,6 +965,19 @@ $('.municipality-filter').change( function() {
 	if( typeof modalData != 'undefined' && typeof modalData.participateFormInvalid != 'undefined' ){
 		generateModal(modalData.participateFormInvalid(), 'full');
 	}
+	
+	// Participate initiative
+	$('.js-edit-municipality').click(function(){
+		$('.municipalities .active').removeClass('active');
+		$(this).addClass('active');
+		
+		try {
+			generateModal(modalData.editMunicipalityDetails(), 'full');
+			return false;
+		} catch(e) {
+			console.log(e);
+		}
+	});
 
 	
 /**
@@ -1044,29 +1059,61 @@ $('form.sodirty').dirtyForms();
 * Manage municipalities
 * =====================
 * 
+* TODO: We could use a callback function after modal has loaded
 */
-
-$('.manage-municipality-select').change( function() {
-	var thisSelect = $(this);
-	var form = $('#municipality-form');
-	var municipality = $('#municipalities').find('li[data-id='+thisSelect.val()+']');
-	var selMunicipality = $('#selected-municipality');
+var editMunicipality = (function() {
+	$('.manage-municipality-select').change( function() {
+		var thisSelect = $(this);
+		var form = $('#municipality-form');
+		var municipality = $('#municipalities').find('li[data-id='+thisSelect.val()+']');
+		var selMunicipality = $('#selected-municipality');
+		
+		if ( municipality.data('id') !== undefined ) {
+			selMunicipality.text(municipality.text());
+		} else {
+			selMunicipality.html(selMunicipality.data('empty'));
+		}
+		
+		form.find('#id').attr('value',municipality.data('id'));
+		if( municipality.data('active') === true ){
+			form.find('#active').attr('checked','checked');
+		} else {
+			form.find('#active').removeAttr('checked');
+		}
+		
+		form.find('#municipalityEmail').val(municipality.data('email'));
+	});	
 	
-	if ( municipality.data('id') !== undefined ) {
-		selMunicipality.text(municipality.text());
-	} else {
-		selMunicipality.html(selMunicipality.data('empty'));
+	$('.js-edit-municipality').click( function(){
+		$('.municipalities .active').removeClass('active');
+		$(this).addClass('active');
+	});
+	
+	function getActive(){
+		var municipality = $('.municipalities .active');
+		var form = $('#municipality-form');
+		var selMunicipality = $('#selected-municipality');
+		
+		if ( municipality.data('id') !== undefined ) {
+			selMunicipality.text(municipality.text());
+		} else {
+			selMunicipality.html(selMunicipality.data('empty'));
+		}
+		
+		form.find('#id').attr('value',municipality.data('id'));
+		if( municipality.data('active') === true ){
+			form.find('#active').attr('checked','checked');
+		} else {
+			form.find('#active').removeAttr('checked');
+		}
+		
+		form.find('#municipalityEmail').val(municipality.data('email'));
 	}
 	
-	form.find('#id').attr('value',municipality.data('id'));
-	if( municipality.data('active') === true ){
-		form.find('#active').attr('checked','checked');
-	} else {
-		form.find('#active').removeAttr('checked');
-	}
-	
-	form.find('#municipalityEmail').val(municipality.data('email'));
-});	
+	return {
+		getActive: getActive
+	};
 
+}());
 
 });
