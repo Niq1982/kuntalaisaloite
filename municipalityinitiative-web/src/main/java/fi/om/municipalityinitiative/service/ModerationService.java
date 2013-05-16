@@ -97,7 +97,6 @@ public class ModerationService {
         Initiative initiative = initiativeDao.get(initiativeId);
         if (!ManagementSettings.of(initiative).isAllowOmAccept()) {
             throw new OperationNotAllowedException("Not allowed to reject initiative");
-
         }
         if (isDraftReview(initiative)) {
             rejectDraftReview(initiativeId, moderatorComment);
@@ -132,8 +131,20 @@ public class ModerationService {
         return municipalityDao.findMunicipalitiesForEdit();
     }
 
+    @Transactional(readOnly = false)
     public void updateMunicipality(LoginUserHolder requiredOmLoginUserHolder, MunicipalityUIEditDto editDto) {
         requiredOmLoginUserHolder.assertOmUser();
         municipalityDao.updateMunicipality(editDto.getId(), editDto.getMunicipalityEmail(), Boolean.TRUE.equals(editDto.getActive()));
+    }
+
+    @Transactional(readOnly = false)
+    public void sendInitiativeBackForFixing(LoginUserHolder requiredOmLoginUserHolder, Long initiativeId) {
+
+        requiredOmLoginUserHolder.assertOmUser();
+        Initiative initiative = initiativeDao.get(initiativeId);
+        if (!ManagementSettings.of(initiative).isAllowOmSendBackForFixing()) {
+            throw new OperationNotAllowedException("Not allowed to send initiative back for fixing");
+        }
+
     }
 }

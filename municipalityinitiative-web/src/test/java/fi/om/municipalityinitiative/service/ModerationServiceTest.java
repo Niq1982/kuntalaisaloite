@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.service;
 
+import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
@@ -68,6 +69,13 @@ public class ModerationServiceTest {
         loginUserHolder = new LoginUserHolder(LoginUser.omUser(), Maybe.<Initiative>absent());
     }
 
+    @Test(expected = OperationNotAllowedException.class)
+    public void accepting_initiative_checks_that_it_can_be_accepted() {
+        setOmUser();
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.ACCEPTED, InitiativeType.UNDEFINED));
+        moderationService.accept(loginUserHolder, INITIATIVE_ID, "", null);
+    }
+
     @Test
     public void accepting_initiative_sets_state_as_accepted_and_saves_comment_if_type_is_undefined() {
 
@@ -126,6 +134,13 @@ public class ModerationServiceTest {
         verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM_AND_SENT));
         verify(moderationService.emailService).sendSingleToMunicipality(any(Initiative.class), anyListOf(Author.class), anyString(), eq(Locales.LOCALE_FI));
 
+    }
+
+    @Test(expected = OperationNotAllowedException.class)
+    public void rejecting_initiative_checks_that_it_can_be_accepted() {
+        setOmUser();
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.ACCEPTED, InitiativeType.UNDEFINED));
+        moderationService.reject(loginUserHolder, INITIATIVE_ID, "");
     }
 
     @Test
@@ -198,6 +213,13 @@ public class ModerationServiceTest {
         moderationService.reject(loginUserHolder, INITIATIVE_ID, moderatorComment);
         verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.REJECTED_BY_OM));
         verifyNoMoreInteractions(moderationService.emailService);
+    }
+
+    @Test(expected = OperationNotAllowedException.class)
+    public void sendInitiativeBackForFixing_checks_that_initiative_may_be_sent_back() {
+        setOmUser();
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.DRAFT, InitiativeType.UNDEFINED));
+        moderationService.sendInitiativeBackForFixing(loginUserHolder, INITIATIVE_ID);
     }
 
     private static Initiative publishedCollaborative(FixState fixState) {

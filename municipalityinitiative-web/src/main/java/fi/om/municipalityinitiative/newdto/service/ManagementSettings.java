@@ -49,4 +49,15 @@ public class ManagementSettings {
     public boolean isAllowInviteAuthors() {
         return initiative.getSentTime().isNotPresent();
     }
+
+    public boolean isAllowOmSendBackForFixing() {
+        if ((initiative.getState() == InitiativeState.PUBLISHED || initiative.getState() == InitiativeState.ACCEPTED)
+                && initiative.getSentTime().isNotPresent()
+                && initiative.getFixState() == FixState.OK) {
+            return true;
+        }
+
+        return false;
+
+    }
 }

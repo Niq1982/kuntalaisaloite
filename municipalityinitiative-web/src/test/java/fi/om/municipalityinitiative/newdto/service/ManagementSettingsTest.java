@@ -177,16 +177,53 @@ public class ManagementSettingsTest {
 
     @Test
     public void is_not_allowed_to_invite_authors_if_initiative_sent() {
-        final Initiative initiative = new Initiative();
-        initiative.setSentTime(Maybe.of(new LocalDate()));
-        assertThat(ManagementSettings.of(initiative).isAllowInviteAuthors(), is(false));
+        final Initiative sendInitiative = new Initiative();
+        sendInitiative.setSentTime(Maybe.of(new LocalDate()));
+        assertThat(ManagementSettings.of(sendInitiative).isAllowInviteAuthors(), is(false));
     }
 
     @Test
     public void is_allowed_to_invite_authros_if_initiative_not_sent() {
+        final Initiative notSentInitiative = new Initiative();
+        notSentInitiative.setSentTime(Maybe.<LocalDate>absent());
+        assertThat(ManagementSettings.of(notSentInitiative).isAllowInviteAuthors(), is(true));
+    }
+
+    @Test
+    public void is_allowed_to_send_initiative_back_for_fixing_only_when_accepted_or_published() throws Exception {
         final Initiative initiative = new Initiative();
-        initiative.setSentTime(Maybe.<LocalDate>absent());
-        assertThat(ManagementSettings.of(initiative).isAllowInviteAuthors(), is(true));
+        initiative.setFixState(FixState.OK);
+
+        assertExpectedOnlyWithGivenStates(initiative, new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return ManagementSettings.of(initiative).isAllowOmSendBackForFixing();
+            }
+        }, true, InitiativeState.PUBLISHED, InitiativeState.ACCEPTED);
+    }
+
+    @Test
+    public void not_allowed_to_send_initiative_back_for_fixing_if_initiative_sent() throws Exception {
+        final Initiative sentInitiative = new Initiative();
+        sentInitiative.setState(InitiativeState.PUBLISHED);
+        sentInitiative.setSentTime(Maybe.of(new LocalDate()));
+
+        assertThat(ManagementSettings.of(sentInitiative).isAllowOmSendBackForFixing(), is(false));
+    }
+
+    @Test
+    public void not_allowed_to_send_back_for_fixing_if_already_sent_back() {
+        final Initiative publishedInitiative = new Initiative();
+        publishedInitiative.setState(InitiativeState.PUBLISHED);
+        publishedInitiative.setFixState(FixState.OK);
+        precondition(ManagementSettings.of(publishedInitiative).isAllowOmSendBackForFixing(), is(true));
+
+        publishedInitiative.setFixState(FixState.REVIEW);
+        assertThat(ManagementSettings.of(publishedInitiative).isAllowOmSendBackForFixing(), is(false));
+
+        publishedInitiative.setFixState(FixState.FIX);
+        assertThat(ManagementSettings.of(publishedInitiative).isAllowOmSendBackForFixing(), is(false));
+
     }
 
     private static void assertExpectedOnlyWithGivenStates(Initiative initiative, Callable<Boolean> callable, boolean expected, InitiativeState... givenStates) throws Exception {
