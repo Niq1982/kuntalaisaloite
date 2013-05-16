@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.service.*;
+import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
@@ -71,7 +72,7 @@ public class InitiativeViewController extends BaseController {
 
         InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
 
-        if (initiativeInfo.getState() != InitiativeState.PUBLISHED) {
+        if (initiativeInfo.getState() != InitiativeState.PUBLISHED || initiativeInfo.getFixState() != FixState.OK) {  // XXX: Hmmm... Maybe move this to service layer and ManagementSettings ?
             LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
             if (loginUserHolder.getLoginUser().isNotOmUser()) {
                 loginUserHolder.assertManagementRightsForInitiative(initiativeId);

@@ -20,6 +20,8 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
 
     public final StringPath extraInfo = createString("extra_info");
 
+    public final EnumPath<fi.om.municipalityinitiative.util.FixState> fixState = createEnum("fix_state", fi.om.municipalityinitiative.util.FixState.class);
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath moderatorComment = createString("moderator_comment");

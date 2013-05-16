@@ -9,10 +9,7 @@ import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
-import fi.om.municipalityinitiative.util.InitiativeState;
-import fi.om.municipalityinitiative.util.InitiativeType;
-import fi.om.municipalityinitiative.util.Maybe;
-import fi.om.municipalityinitiative.util.ReflectionTestUtils;
+import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -67,9 +64,21 @@ public class JdbcInitiativeDaoTest {
 
     @Test
     public void find_does_not_find_if_not_published() {
-        testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.ACCEPTED));
 
+        assertThat(initiativeDao.find(initiativeSearch()), hasSize(0));
+    }
+
+    @Test
+    public void find_does_not_find_if_fixState_not_OK() {
+        Long initiative = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withState(InitiativeState.PUBLISHED));
+        precondition(initiativeDao.find(initiativeSearch()), hasSize(1));
+
+        initiativeDao.updateInitiativeFixState(initiative, FixState.FIX);
+        assertThat(initiativeDao.find(initiativeSearch()), hasSize(0));
+        initiativeDao.updateInitiativeFixState(initiative, FixState.REVIEW);
         assertThat(initiativeDao.find(initiativeSearch()), hasSize(0));
     }
 
@@ -77,12 +86,13 @@ public class JdbcInitiativeDaoTest {
     public void get_returns_all_information() {
         Long authorsMunicipalityId = testHelper.createTestMunicipality("Authors Municipality");
 
-        Long initiativeId = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
-                .withAuthorMunicipality(authorsMunicipalityId)
+        Long initiativeId = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
-                .withSent(new DateTime(2010, 1, 1, 0, 0)));
+                .withSent(new DateTime(2010, 1, 1, 0, 0))
+                .applyAuthor().withParticipantMunicipality(authorsMunicipalityId)
+                .toInitiativeDraft());
 
-        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
+        Initiative initiative = initiativeDao.get(initiativeId);
 
         assertThat(initiative.getMunicipality().getId(), is(testMunicipality.getId()));
         assertThat(initiative.getCreateTime(), is(notNullValue()));
@@ -92,6 +102,7 @@ public class JdbcInitiativeDaoTest {
         assertThat(initiative.getState(), is(TestHelper.DEFAULT_STATE));
         assertThat(initiative.getType(), is(InitiativeType.COLLABORATIVE_CITIZEN));
         assertThat(initiative.getParticipantCount(), is(1));
+        assertThat(initiative.getFixState(), is(FixState.OK));
 
         ReflectionTestUtils.assertNoNullFields(initiative);
     }
@@ -103,8 +114,8 @@ public class JdbcInitiativeDaoTest {
 
         initiativeDao.updateInitiativeState(original, InitiativeState.PUBLISHED);
 
-        assertThat(initiativeDao.getByIdWithOriginalAuthor(original).getState(), is(InitiativeState.PUBLISHED));
-        assertThat(initiativeDao.getByIdWithOriginalAuthor(someOther).getState(), is(InitiativeState.DRAFT));
+        assertThat(initiativeDao.get(original).getState(), is(InitiativeState.PUBLISHED));
+        assertThat(initiativeDao.get(someOther).getState(), is(InitiativeState.DRAFT));
     }
 
     @Test
@@ -113,12 +124,20 @@ public class JdbcInitiativeDaoTest {
         DateTime fixedDateTime = new DateTime(2010, 1, 1, 0, 0);
         testHelper.updateField(original, QMunicipalityInitiative.municipalityInitiative.stateTimestamp, fixedDateTime);
 
-        precondition(initiativeDao.getByIdWithOriginalAuthor(original).getStateTime(), is(fixedDateTime.toLocalDate()));
+        precondition(initiativeDao.get(original).getStateTime(), is(fixedDateTime.toLocalDate()));
 
         initiativeDao.updateInitiativeState(original, InitiativeState.PUBLISHED);
 
-        assertThat(initiativeDao.getByIdWithOriginalAuthor(original).getStateTime(), is(not(fixedDateTime.toLocalDate())));
+        assertThat(initiativeDao.get(original).getStateTime(), is(not(fixedDateTime.toLocalDate())));
 
+    }
+
+    @Test
+    public void update_initiative_fixState() {
+        Long original = testHelper.createEmptyDraft(testMunicipality.getId());
+        precondition(initiativeDao.get(original).getFixState(), is(FixState.OK));
+        initiativeDao.updateInitiativeFixState(original, FixState.FIX);
+        assertThat(initiativeDao.get(original).getFixState(), is(FixState.FIX));
     }
 
     @Test
@@ -128,8 +147,8 @@ public class JdbcInitiativeDaoTest {
 
         initiativeDao.updateInitiativeType(original, InitiativeType.COLLABORATIVE);
 
-        assertThat(initiativeDao.getByIdWithOriginalAuthor(original).getType(), is(InitiativeType.COLLABORATIVE));
-        assertThat(initiativeDao.getByIdWithOriginalAuthor(someOther).getType(), is(InitiativeType.UNDEFINED));
+        assertThat(initiativeDao.get(original).getType(), is(InitiativeType.COLLABORATIVE));
+        assertThat(initiativeDao.get(someOther).getType(), is(InitiativeType.UNDEFINED));
     }
 
     @Test
@@ -137,12 +156,12 @@ public class JdbcInitiativeDaoTest {
         Long original = testHelper.createEmptyDraft(testMunicipality.getId()); // Even drafts may be marked as sent by dao
         Long someOther = testHelper.createEmptyDraft(testMunicipality.getId()); // Even drafts may be marked as sent by dao
 
-        precondition(initiativeDao.getByIdWithOriginalAuthor(original).getSentTime().isPresent(), is(false));
+        precondition(initiativeDao.get(original).getSentTime().isPresent(), is(false));
 
         initiativeDao.markInitiativeAsSent(original);
 
-        Initiative markedAsSent = initiativeDao.getByIdWithOriginalAuthor(original);
-        Initiative notMarkedAsSent = initiativeDao.getByIdWithOriginalAuthor(someOther);
+        Initiative markedAsSent = initiativeDao.get(original);
+        Initiative notMarkedAsSent = initiativeDao.get(someOther);
 
         assertThat(markedAsSent.getSentTime().isPresent(), is(true));
         assertThat(notMarkedAsSent.getSentTime().isPresent(), is(false));
@@ -155,12 +174,12 @@ public class JdbcInitiativeDaoTest {
         String comment = "some moderator comment";
         initiativeDao.updateModeratorComment(initiative, comment);
 
-        assertThat(initiativeDao.getByIdWithOriginalAuthor(initiative).getModeratorComment(), is(comment));
+        assertThat(initiativeDao.get(initiative).getModeratorComment(), is(comment));
     }
 
     @Test
     public void moderator_comment_is_never_null_but_empty_string() {
-        Initiative singleSent = initiativeDao.getByIdWithOriginalAuthor(testHelper.createSingleSent(testMunicipality.getId()));
+        Initiative singleSent = initiativeDao.get(testHelper.createSingleSent(testMunicipality.getId()));
         assertThat(singleSent.getModeratorComment(), is(notNullValue()));
         assertThat(singleSent.getModeratorComment(), isEmptyString());
     }
@@ -195,10 +214,10 @@ public class JdbcInitiativeDaoTest {
         DateTime oldestSentTime = new DateTime(2010, 1, 1, 0, 0);
         DateTime latestSentTime = new DateTime(2020, 1, 1, 0, 0);
 
-        Long oldestId = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long oldestId = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
                 .withSent(oldestSentTime));
-        Long latestId = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long latestId = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
                 .withSent(latestSentTime));
 
@@ -216,15 +235,15 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void find_orders_by_participants() {
 
-        Long mostParticipants = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long mostParticipants = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE)
                 .withParticipantCount(10));
-        Long leastParticipants = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long leastParticipants = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE)
                 .withParticipantCount(1));
-        Long someParticipants = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long someParticipants = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE)
                 .withParticipantCount(5));
@@ -243,13 +262,13 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void find_orders_by_counts_non_collectables_as_zero() {
 
-        Long mostParticipants = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
+        Long mostParticipants = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withParticipantCount(10));
-        Long leastParticipants = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
+        Long leastParticipants = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withParticipantCount(1));
-        Long someParticipants = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
+        Long someParticipants = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withParticipantCount(5));
 
@@ -311,7 +330,7 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void counts_participants_to_listView() {
 
-        testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
+        testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withParticipantCount(17));
 
@@ -343,10 +362,10 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void finds_by_name() {
 
-        testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withName("name that sould not be found")
                 .withState(InitiativeState.PUBLISHED));
-        Long shouldBeFound = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long shouldBeFound = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withName("name that should be found ääöö")
                 .withState(InitiativeState.PUBLISHED));
 
@@ -361,7 +380,7 @@ public class JdbcInitiativeDaoTest {
 
     @Test
     public void finds_by_sent_finds_published_if_sent() {
-        Long collectableSent = testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long collectableSent = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withState(InitiativeState.PUBLISHED)
                 .withSent(new DateTime(2010, 1, 1, 0, 0)));
@@ -373,7 +392,7 @@ public class JdbcInitiativeDaoTest {
 
     @Test
     public void finds_by_sent_does_not_find_published_if_not_sent() {
-        testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withState(InitiativeState.PUBLISHED)
                 .withSent(null));
@@ -409,7 +428,7 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void counts_initiatives_by_state_if_municipalityId_is_given() {
 
-        testHelper.create(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE));
 
@@ -421,7 +440,7 @@ public class JdbcInitiativeDaoTest {
 
     @Test(expected = NotFoundException.class)
     public void throws_exception_if_initiative_is_not_found() {
-        initiativeDao.getByIdWithOriginalAuthor(-1L);
+        initiativeDao.get(-1L);
     }
 
     private static InitiativeSearch initiativeSearch() {

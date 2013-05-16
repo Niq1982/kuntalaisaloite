@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newdto.service;
 
+import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -23,6 +24,7 @@ public class Initiative {
     private String moderatorComment;
     private int participantCount;
     private String sentComment;
+    private FixState fixState;
 
     public String getName() {
         return name;
@@ -134,5 +136,13 @@ public class Initiative {
 
     public void setSentComment(String sentComment) {
         this.sentComment = sentComment;
+    }
+
+    public FixState getFixState() {
+        return fixState;
+    }
+
+    public void setFixState(FixState fixState) {
+        this.fixState = fixState;
     }
 }

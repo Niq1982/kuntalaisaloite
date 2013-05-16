@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.web;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -70,6 +71,16 @@ public class ViewInitiativeWebTest extends WebTestBase {
     }
 
     @Test
+    public void initiative_with_fixState_other_than_ok_can_not_be_viewed_if_not_logged_in_as_author() {
+        Long initiative = testHelper.createInitiative(new TestHelper.InitiativeDraft(municipalityId)
+                .withState(InitiativeState.PUBLISHED)
+                .withFixState(FixState.REVIEW));
+
+        open(urls.view(initiative));
+        assert404();
+    }
+
+    @Test
     public void not_published_initiative_can_be_viewed_if_logged_in_as_author() {
         loginAsAuthorForLastTestHelperCreatedInitiative();
         open(urls.view(draftInitiativeId));
@@ -97,7 +108,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
 
         DateTime modifyTime = new DateTime(2011, 1, 1, 0, 0);
         String title = "Yeah rock rock";
-        testHelper.create(new TestHelper.InitiativeDraft(municipalityId)
+        testHelper.createInitiative(new TestHelper.InitiativeDraft(municipalityId)
                 .withState(InitiativeState.PUBLISHED)
                 .withModified(modifyTime)
                 .withName(title));
@@ -114,7 +125,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
 
         DateTime modifyTime = new DateTime(2011, 1, 1, 0, 0);
         String title = "Yeah rock rock";
-        testHelper.create(new TestHelper.InitiativeDraft(municipalityId)
+        testHelper.createInitiative(new TestHelper.InitiativeDraft(municipalityId)
                 .withState(InitiativeState.PUBLISHED)
                 .withModified(modifyTime)
                 .withName(title));

@@ -167,6 +167,10 @@ public class JdbcAuthorDao implements AuthorDao {
     }
 
     @Override
+    public void deleteAuthor(Long authorId) {
+    }
+
+    @Override
     public List<String> getAuthorEmails(Long initiativeId) {
         List<String> emails = Lists.newArrayList();
         for (Author author : findAuthors(initiativeId)) {

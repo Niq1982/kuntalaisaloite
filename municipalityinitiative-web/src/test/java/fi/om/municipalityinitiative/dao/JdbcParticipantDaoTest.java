@@ -103,7 +103,7 @@ public class JdbcParticipantDaoTest {
     @Test
     public void getPublicParticipants_returns_public_names() {
 
-        Long initiativeId = testHelper.create(new TestHelper.InitiativeDraft(testMunicipalityId).withPublicName(false));
+        Long initiativeId = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipalityId).applyAuthor().withPublicName(false).toInitiativeDraft());
 
         createConfirmedParticipant(initiativeId, false, "no right no public");
         createConfirmedParticipant(initiativeId, false, "yes right no public");

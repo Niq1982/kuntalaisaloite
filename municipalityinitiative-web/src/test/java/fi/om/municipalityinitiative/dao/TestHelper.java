@@ -29,8 +29,8 @@ public class TestHelper {
     public static final String DEFAULT_PROPOSAL = "Proposal";
     public static final InitiativeState DEFAULT_STATE = InitiativeState.DRAFT;
     public static final InitiativeType DEFAULT_TYPE = InitiativeType.UNDEFINED;
-    public static final String DEFAULT_AUTHOR_NAME = "Antti Author";
-    public static final String DEFAULT_AUTHOR_EMAIL = "author_email@example.com";
+    public static final String DEFAULT_PARTICIPANT_NAME = "Antti Author";
+    public static final String DEFAULT_PARTICIPANT_EMAIL = "author_email@example.com";
     public static final String DEFAULT_AUTHOR_ADDRESS = "author address";
     public static final String DEFAULT_AUTHOR_PHONE = "author phone";
     public static final boolean DEFAULT_PUBLIC_NAME = true;
@@ -87,53 +87,60 @@ public class TestHelper {
 
     @Transactional
     public Long createCollectableReview(Long municipalityId) {
-        return create(new InitiativeDraft(municipalityId)
+        return createInitiative(new InitiativeDraft(municipalityId)
                 .withState(InitiativeState.REVIEW)
-                .withType(InitiativeType.COLLABORATIVE));
+                .withType(InitiativeType.COLLABORATIVE)
+                .applyAuthor().toInitiativeDraft());
     }
 
     @Transactional
     public Long createCollectableAccepted(Long municipalityId) {
-        return create(new InitiativeDraft(municipalityId)
+        return createInitiative(new InitiativeDraft(municipalityId)
                 .withState(InitiativeState.ACCEPTED)
-                .withType(InitiativeType.COLLABORATIVE));
+                .withType(InitiativeType.COLLABORATIVE)
+                .applyAuthor().toInitiativeDraft());
     }
 
     @Transactional
     public Long create(Long municipalityId, InitiativeState state, InitiativeType type) {
-        return create(new InitiativeDraft(municipalityId)
+        return createInitiative(new InitiativeDraft(municipalityId)
                 .withState(state)
-                .withType(type));
+                .withType(type)
+                .applyAuthor().toInitiativeDraft());
     }
 
     @Transactional
     public Long createSingleSent(Long municipalityId) {
-        return create(new InitiativeDraft(municipalityId)
+        return createInitiative(new InitiativeDraft(municipalityId)
                 .withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.SINGLE)
-                .withSent(SENT_TIME));
+                .withSent(SENT_TIME)
+                .applyAuthor().toInitiativeDraft());
     }
 
     @Transactional
     public Long createDraft(Long municipalityId) {
-        return create(new InitiativeDraft(municipalityId)
-                .withState(InitiativeState.DRAFT));
+        return createInitiative(new InitiativeDraft(municipalityId)
+                .withState(InitiativeState.DRAFT)
+                .applyAuthor().toInitiativeDraft());
     }
     
     @Transactional
     public Long createEmptyDraft(Long municipalityId) {
-        return create(new InitiativeDraft(municipalityId)
+        return createInitiative(new InitiativeDraft(municipalityId)
                 .withState(InitiativeState.DRAFT)
                 .withType(InitiativeType.UNDEFINED)
                 .withName(null)
                 .withProposal(null)
-                .withAuthorName(null)
+                .applyAuthor()
+                .withParticipantName(null)
+                .withAuthorAddress(null)
                 .withAuthorPhone(null)
-                .withAuthorAddress(null));
+                .toInitiativeDraft());
     }
 
     @Transactional
-    public Long create(InitiativeDraft initiativeDraft) {
+    public Long createInitiative(InitiativeDraft initiativeDraft) {
         SQLInsertClause insert = queryFactory.insert(municipalityInitiative);
 
         insert.set(municipalityInitiative.name, initiativeDraft.name);
@@ -149,28 +156,39 @@ public class TestHelper {
         insert.set(municipalityInitiative.sent, initiativeDraft.sent);
         insert.set(municipalityInitiative.modified, initiativeDraft.modified);
         insert.set(municipalityInitiative.sentComment, initiativeDraft.sentComment);
+        insert.set(municipalityInitiative.fixState, initiativeDraft.fixState);
 
         lastInitiativeId = insert.executeWithKey(municipalityInitiative.id);
 
-        Long lastParticipantId = queryFactory.insert(QParticipant.participant)
-                .set(QParticipant.participant.municipalityId, initiativeDraft.authorMunicipality)
-                .set(QParticipant.participant.municipalityInitiativeId, lastInitiativeId)
-                .set(QParticipant.participant.name, initiativeDraft.authorName)
-                .set(QParticipant.participant.showName, initiativeDraft.publicName)
-                .set(QParticipant.participant.email, initiativeDraft.authorEmail)
-                .set(QParticipant.participant.membershipType, initiativeDraft.municipalityMembership)
-                .executeWithKey(QParticipant.participant.id);
+        if (initiativeDraft.authorDraft.isPresent()) {
+            initiativeDraft.authorDraft.get().withInitiativeId(lastInitiativeId);
+            createAuthorAndParticipant(initiativeDraft.authorDraft.get());
+            stub(authorLoginUserHolder.getAuthorId()).toReturn(lastAuthorId);
+        }
+        return lastInitiativeId;
 
+    }
+
+    private void createAuthorAndParticipant(AuthorDraft authorDraft) {
+        Long lastParticipantId = createParticipant(authorDraft);
         lastAuthorId = queryFactory.insert(QAuthor.author)
-                .set(QAuthor.author.address, initiativeDraft.authorAddress)
-                .set(QAuthor.author.phone, initiativeDraft.authorPhone)
+                .set(QAuthor.author.address, authorDraft.authorAddress)
+                .set(QAuthor.author.phone, authorDraft.authorPhone)
                 .set(QAuthor.author.participantId, lastParticipantId)
                 .set(QAuthor.author.managementHash, generateHash(40))
                 .executeWithKey(QAuthor.author.id);
-        stub(authorLoginUserHolder.getAuthorId()).toReturn(lastAuthorId);
+    }
 
-        return lastInitiativeId;
 
+    public Long createParticipant(AuthorDraft authorDraft) {
+        return queryFactory.insert(QParticipant.participant)
+                        .set(QParticipant.participant.municipalityId, authorDraft.participantMunicipality)
+                        .set(QParticipant.participant.municipalityInitiativeId, authorDraft.initiativeId)
+                        .set(QParticipant.participant.name, authorDraft.participantName)
+                        .set(QParticipant.participant.showName, authorDraft.publicName)
+                        .set(QParticipant.participant.email, authorDraft.participantEmail)
+                        .set(QParticipant.participant.membershipType, authorDraft.municipalityMembership)
+                        .executeWithKey(QParticipant.participant.id);
     }
 
     private String generateHash(int len) {
@@ -213,41 +231,100 @@ public class TestHelper {
         return authorInvitation;
     }
 
+    public static class AuthorDraft {
+
+        public Long initiativeId;
+        public final Maybe<InitiativeDraft> initiativeDraftMaybe;
+        public Long participantMunicipality;
+        public Membership municipalityMembership = Membership.none;
+        public String participantName = DEFAULT_PARTICIPANT_NAME;
+        public String participantEmail = DEFAULT_PARTICIPANT_EMAIL;
+        public boolean publicName = DEFAULT_PUBLIC_NAME;
+        public String authorAddress = DEFAULT_AUTHOR_ADDRESS;
+        public String authorPhone = DEFAULT_AUTHOR_PHONE;
+
+        public AuthorDraft(Long initiativeId, Long participantMunicipality) {
+            this.initiativeId = initiativeId;
+            this.initiativeDraftMaybe = Maybe.absent();
+            this.participantMunicipality = participantMunicipality;
+        }
+
+        private AuthorDraft(InitiativeDraft initiativeDraft, Long participantMunicipality) {
+            this.initiativeDraftMaybe = Maybe.of(initiativeDraft);
+            this.participantMunicipality = participantMunicipality;
+        }
+
+        public AuthorDraft withMunicipalityMembership(Membership municipalityMembership) {
+            this.municipalityMembership = municipalityMembership;
+            return this;
+        }
+
+        public AuthorDraft withParticipantName(String participantName) {
+            this.participantName = participantName;
+            return this;
+        }
+
+        public AuthorDraft withParticipantEmail(String authorEmail) {
+            this.participantEmail = authorEmail;
+            return this;
+        }
+
+
+        public AuthorDraft withAuthorAddress(String authorAddress) {
+            this.authorAddress = authorAddress;
+            return this;
+        }
+
+        public AuthorDraft withAuthorPhone(String authorPhone) {
+            this.authorPhone = authorPhone;
+            return this;
+        }
+
+        public AuthorDraft withPublicName(boolean publicName) {
+            this.publicName = publicName;
+            return this;
+        }
+
+        public AuthorDraft withParticipantMunicipality(Long municipalityId) {
+            this.participantMunicipality = municipalityId;
+            return this;
+        }
+
+        public InitiativeDraft toInitiativeDraft() {
+            return initiativeDraftMaybe.get();
+        }
+
+        public AuthorDraft withInitiativeId(Long lastInitiativeId) {
+            initiativeId = lastInitiativeId;
+            return this;
+        }
+    }
+
     public static class InitiativeDraft {
 
         public final Long municipalityId;
 
         public String name = DEFAULT_INITIATIVE_NAME;
         public String proposal = DEFAULT_PROPOSAL;
+        public String extraInfo = DEFAULT_EXTRA_INFO;
+        public String sentComment = DEFAULT_SENT_COMMENT;
         public InitiativeState state = DEFAULT_STATE;
         public InitiativeType type = DEFAULT_TYPE;
-        public String authorName = DEFAULT_AUTHOR_NAME;
-        public String authorEmail = DEFAULT_AUTHOR_EMAIL;
-        public String authorAddress = DEFAULT_AUTHOR_ADDRESS;
-        public String authorPhone = DEFAULT_AUTHOR_PHONE;
-        public boolean publicName = DEFAULT_PUBLIC_NAME;
+
         public DateTime sent = DEFAULT_SENT_TIME;
         public DateTime modified = DEFAULT_CREATE_TIME;
         public Integer participantCount = 1;
-        public String extraInfo = DEFAULT_EXTRA_INFO;
-        public String sentComment = DEFAULT_SENT_COMMENT;
 
-        public Long authorMunicipality;
-        public Membership municipalityMembership = Membership.none;
+        public Maybe<AuthorDraft> authorDraft = Maybe.absent();
+        public FixState fixState = FixState.OK;
+
+        public AuthorDraft applyAuthor() {
+            this.authorDraft = Maybe.of(new AuthorDraft(this, municipalityId));
+            return this.authorDraft.get();
+        }
 
         public InitiativeDraft(Long municipalityId) {
             this.municipalityId = municipalityId;
-            this.authorMunicipality = municipalityId;
-        }
-
-        public InitiativeDraft withMunicipalityMembership(Membership municipalityMembership) {
-            this.municipalityMembership = municipalityMembership;
-            return this;
-        }
-
-        public InitiativeDraft withAuthorMunicipality(Long municipalityId) {
-            this.authorMunicipality = municipalityId;
-            return this;
         }
 
         public InitiativeDraft withModified(DateTime created) {
@@ -270,33 +347,13 @@ public class TestHelper {
             return this;
         }
 
+        public InitiativeDraft withFixState(FixState fixState) {
+            this.fixState = fixState;
+            return this;
+        }
+
         public InitiativeDraft withType(InitiativeType type) {
             this.type = type;
-            return this;
-        }
-
-        public InitiativeDraft withAuthorName(String authorName) {
-            this.authorName = authorName;
-            return this;
-        }
-
-        public InitiativeDraft withAuthorEmail(String authorEmail) {
-            this.authorEmail = authorEmail;
-            return this;
-        }
-
-        public InitiativeDraft withAuthorAddress(String authorAddress) {
-            this.authorAddress = authorAddress;
-            return this;
-        }
-
-        public InitiativeDraft withAuthorPhone(String authorPhone) {
-            this.authorPhone = authorPhone;
-            return this;
-        }
-
-        public InitiativeDraft withPublicName(boolean publicName) {
-            this.publicName = publicName;
             return this;
         }
 

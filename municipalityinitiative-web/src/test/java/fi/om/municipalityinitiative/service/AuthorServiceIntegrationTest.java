@@ -142,7 +142,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     }
 
     private int participantCountOfInitiative(Long initiativeId) {
-        return initiativeDao.getByIdWithOriginalAuthor(initiativeId).getParticipantCount();
+        return initiativeDao.get(initiativeId).getParticipantCount();
     }
 
     @Test(expected = OperationNotAllowedException.class)
