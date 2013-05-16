@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newdto.service;
 
+import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -42,9 +43,10 @@ public class ManagementSettingsTest {
     }
 
     @Test
-    public void om_accept_is_allowed_only_if_initiative_review() throws Exception {
+    public void om_accept_is_allowed_if_initiative_review() throws Exception {
 
         final Initiative initiative = new Initiative();
+        initiative.setFixState(FixState.OK);
 
         assertExpectedOnlyWithGivenStates(initiative, new Callable<Boolean>() {
             @Override
@@ -52,6 +54,20 @@ public class ManagementSettingsTest {
                 return ManagementSettings.of(initiative).isAllowOmAccept();
             }
         }, true, InitiativeState.REVIEW);
+
+    }
+
+    @Test
+    public void om_accept_is_allowed_if_initiative_fixState_is_review() throws Exception {
+        Initiative initiative = new Initiative();
+
+        initiative.setFixState(FixState.REVIEW);
+        assertThat(ManagementSettings.of(initiative).isAllowOmAccept(), is(true));
+
+        initiative.setFixState(FixState.OK);
+        assertThat(ManagementSettings.of(initiative).isAllowOmAccept(), is(false));
+        initiative.setFixState(FixState.FIX);
+        assertThat(ManagementSettings.of(initiative).isAllowOmAccept(), is(false));
 
     }
 

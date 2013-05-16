@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.newdto.service;
 
+import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 
 public class ManagementSettings {
@@ -23,7 +24,7 @@ public class ManagementSettings {
     }
 
     public boolean isAllowOmAccept() {
-        return initiative.getState() == InitiativeState.REVIEW;
+        return initiative.getState() == InitiativeState.REVIEW || initiative.getFixState() == FixState.REVIEW;
     }
 
     public boolean isAllowUpdate() {
