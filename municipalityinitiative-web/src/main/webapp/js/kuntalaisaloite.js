@@ -1101,12 +1101,7 @@ var editMunicipality = (function() {
 		}
 		
 		form.find('#id').attr('value',municipality.data('id'));
-		if( municipality.data('active') === true ){
-			form.find('#active').attr('checked','checked');
-		} else {
-			form.find('#active').removeAttr('checked');
-		}
-		
+		form.find('input[type=radio][name=active][value='+municipality.data('active')+']').attr('checked','checked');
 		form.find('#municipalityEmail').val(municipality.data('email'));
 	}
 	

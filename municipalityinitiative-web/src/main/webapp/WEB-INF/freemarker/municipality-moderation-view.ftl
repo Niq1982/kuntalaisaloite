@@ -91,7 +91,11 @@
         <h3 id="selected-municipality" data-empty="<i>Ei valittua kuntaa</i>"><i>Ei valittua kuntaa</i></h3>
         
         <div class="input-block-content">
-            <@f.formCheckbox path="updateData.active" />
+            <#--<@f.formCheckbox path="updateData.active" />-->
+            <@f.radiobutton path="updateData.active" required="" header=false options={
+                    "true":"municipalities.edit.active",
+                    "false":"municipalities.edit.notActive"
+                } attributes="" />
         </div>
     
         <div class="input-block-content">
