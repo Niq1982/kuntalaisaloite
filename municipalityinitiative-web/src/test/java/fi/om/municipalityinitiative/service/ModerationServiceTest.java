@@ -12,6 +12,8 @@ import fi.om.municipalityinitiative.util.*;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.internal.verification.AtLeast;
+import org.mockito.verification.VerificationMode;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -67,14 +69,19 @@ public class ModerationServiceTest {
     }
 
     @Test
-    public void accepting_initiative_sets_state_as_accepted_if_type_is_undefined() {
+    public void accepting_initiative_sets_state_as_accepted_and_saves_comment_if_type_is_undefined() {
 
         setOmUser();
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.REVIEW, InitiativeType.UNDEFINED));
 
-        moderationService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
+        String comment = "this is om-comment";
+        moderationService.accept(loginUserHolder, INITIATIVE_ID, comment, Locales.LOCALE_FI);
 
+        verify(initiativeDaoMock, atLeastOnce()).get(INITIATIVE_ID);
+        verify(initiativeDaoMock).updateModeratorComment(INITIATIVE_ID, comment);
         verify(initiativeDaoMock).updateInitiativeState(INITIATIVE_ID, InitiativeState.ACCEPTED);
+        verifyNoMoreInteractions(initiativeDaoMock);
+
     }
 
     @Test
@@ -89,9 +96,28 @@ public class ModerationServiceTest {
     }
 
     @Test
-    public void accepting_initiative_saves_comment_if_type_is_undefined() {
+    public void accepting_initiative_sets_state_as_published_and_saves_comment_and_sets_sent_time_if_type_single() {
+
         setOmUser();
-        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.REVIEW, InitiativeType.UNDEFINED));
+        Initiative initiative = initiative(InitiativeState.REVIEW, InitiativeType.SINGLE);
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative);
+
+        String comment = "this is om-comment";
+        moderationService.accept(loginUserHolder, INITIATIVE_ID, comment, Locales.LOCALE_FI);
+
+        verify(initiativeDaoMock, atLeastOnce()).get(INITIATIVE_ID);
+        verify(initiativeDaoMock).updateModeratorComment(INITIATIVE_ID, comment);
+        verify(initiativeDaoMock).updateInitiativeState(INITIATIVE_ID, InitiativeState.PUBLISHED);
+        verify(initiativeDaoMock).markInitiativeAsSent(INITIATIVE_ID);
+        verifyNoMoreInteractions(initiativeDaoMock);
+
+    }
+
+    @Test
+    public void accepting_initiative_saves_comment_if_type_is_single() {
+        setOmUser();
+        Initiative initiative = initiative(InitiativeState.REVIEW, InitiativeType.SINGLE);
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative);
 
         String comment = "this is om-comment";
         moderationService.accept(loginUserHolder, INITIATIVE_ID, comment, Locales.LOCALE_FI);
@@ -99,18 +125,6 @@ public class ModerationServiceTest {
         verify(initiativeDaoMock).updateModeratorComment(INITIATIVE_ID, comment);
     }
 
-    @Test
-    public void accepting_initiative_sets_state_as_published_if_type_single() {
-
-        setOmUser();
-        Initiative initiative = initiative(InitiativeState.REVIEW, InitiativeType.SINGLE);
-        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative);
-
-        moderationService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
-
-        verify(initiativeDaoMock).updateInitiativeState(INITIATIVE_ID, InitiativeState.PUBLISHED);
-
-    }
 
     @Test
     public void accepting_initiative_sends_correct_state_email_if_type_single() {
@@ -126,27 +140,18 @@ public class ModerationServiceTest {
 
     }
 
-
     @Test
-    public void accepting_initiative_saves_comment_if_type_is_single() {
-        setOmUser();
-        Initiative initiative = initiative(InitiativeState.REVIEW, InitiativeType.SINGLE);
-        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative);
-
-        String comment = "this is om-comment";
-        moderationService.accept(loginUserHolder, INITIATIVE_ID, comment, Locales.LOCALE_FI);
-
-        verify(initiativeDaoMock).updateModeratorComment(INITIATIVE_ID, comment);
-    }
-
-    @Test
-    public void rejecting_initiative_sets_state_as_draft() {
+    public void rejecting_initiative_sets_state_as_draft_and_saves_comment() {
 
         setOmUser();
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.REVIEW, InitiativeType.UNDEFINED));
 
-        moderationService.reject(loginUserHolder, INITIATIVE_ID, null);
+        String comment = "this is om-comment";
+        moderationService.reject(loginUserHolder, INITIATIVE_ID, comment);
+        verify(initiativeDaoMock, atLeastOnce()).get(INITIATIVE_ID);
         verify(initiativeDaoMock).updateInitiativeState(INITIATIVE_ID, InitiativeState.DRAFT);
+        verify(initiativeDaoMock).updateModeratorComment(INITIATIVE_ID, comment);
+        verifyNoMoreInteractions(initiativeDaoMock);
     }
 
     @Test
@@ -157,19 +162,6 @@ public class ModerationServiceTest {
 
         moderationService.reject(loginUserHolder, INITIATIVE_ID, null);
         verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.REJECTED_BY_OM));
-    }
-
-    @Test
-    public void rejecting_initiative_saves_comment() {
-
-        setOmUser();
-        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.REVIEW, InitiativeType.UNDEFINED));
-
-        String comment = "this is om-comment";
-        moderationService.reject(loginUserHolder, INITIATIVE_ID, comment);
-
-        verify(initiativeDaoMock).updateModeratorComment(INITIATIVE_ID, comment);
-
     }
 
     @Test
