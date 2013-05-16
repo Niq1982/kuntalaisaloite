@@ -184,12 +184,13 @@ public class InitiativeManagementService {
 
     @Transactional(readOnly = false)
     public void sendToMunicipality(Long initiativeId, LoginUserHolder requiredLoginUserHolder, String sentComment, Locale locale) {
+
+        requiredLoginUserHolder.assertManagementRightsForInitiative(initiativeId);
         Initiative initiative = initiativeDao.get(initiativeId);
 
         if (initiative.getType().isCollectable()) {
             sendCollaborativeToMunicipality(initiativeId, requiredLoginUserHolder, sentComment, locale);
-        }
-        else {
+        } else {
             publishAndSendToMunicipality(initiativeId, requiredLoginUserHolder, sentComment, locale);
         }
     }

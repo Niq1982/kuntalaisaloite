@@ -12,14 +12,20 @@ import fi.om.municipalityinitiative.newdto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeUIUpdateDto;
 import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.annotation.Resource;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.stub;
 
 public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrationTestBase {
@@ -45,6 +51,25 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         String municipalityName = "Test municipality";
         testMunicipality = new Municipality(testHelper.createTestMunicipality(municipalityName), municipalityName, municipalityName, false);
 
+    }
+
+    @Test
+    public void all_functions_require_om_rights() throws InvocationTargetException, IllegalAccessException {
+
+        for (Method method : InitiativeManagementService.class.getDeclaredMethods()) {
+            if (method.getModifiers() != 1) {
+                continue;
+            }
+            Object[] parameters = new Object[method.getParameterTypes().length];
+            parameters[1] = TestHelper.unknownLoginUserHolder;
+            try {
+                System.out.println("Checking that method requires om rights: " + method.getName());
+                method.invoke(service, parameters);
+                fail("Should have checked om-rights for user: " + method.getName());
+            } catch (InvocationTargetException e) {
+                Assert.assertThat(e.getCause(), instanceOf(AccessDeniedException.class));
+            }
+        }
     }
 
     @Test(expected = OperationNotAllowedException.class)
