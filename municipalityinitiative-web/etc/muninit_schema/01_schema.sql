@@ -4,6 +4,7 @@ drop type if exists initiativeState;
 create type initiativeType as enum ('UNDEFINED', 'SINGLE','COLLABORATIVE','COLLABORATIVE_COUNCIL','COLLABORATIVE_CITIZEN');
 create type initiativeState as enum('DRAFT','REVIEW','ACCEPTED', 'PUBLISHED');
 create type membershipType as enum('community','company','property','none');
+create type fixState as enum ('FIX', 'REVIEW', 'OK');
 
 create table municipality (
 	id bigserial,
@@ -23,6 +24,7 @@ create table municipality_initiative (
 	municipality_id bigserial,
 	type initiativeType constraint initiative_type_nn not null,
 	state initiativeState constraint initiative_state_nn not null default 'DRAFT',
+	fix_state fixState constraint initiative_fix_state_nn not null default 'OK',
 	state_timestamp timestamp constraint initiative_state_timestamp_nn not null default now(),
 
     name varchar(512),

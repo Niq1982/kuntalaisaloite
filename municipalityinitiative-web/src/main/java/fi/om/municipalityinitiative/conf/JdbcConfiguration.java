@@ -8,6 +8,7 @@ import com.mysema.query.sql.types.DateTimeType;
 import com.mysema.query.sql.types.EnumAsObjectType;
 import com.mysema.query.sql.types.LocalDateType;
 import com.mysema.query.types.Ops;
+import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Membership;
@@ -70,6 +71,7 @@ public class JdbcConfiguration {
         configuration.register("municipality_initiative", "type", new EnumAsObjectType<>(InitiativeType.class));
         configuration.register("municipality_initiative", "state", new EnumAsObjectType<>(InitiativeState.class));
         configuration.register("participant", "membership_type", new EnumAsObjectType<>(Membership.class));
+        configuration.register("municipality_initiative", "fix_state", new EnumAsObjectType<>(FixState.class));
         return configuration;
     }
 
