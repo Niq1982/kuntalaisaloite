@@ -19,10 +19,7 @@ import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.sql.QMunicipality;
-import fi.om.municipalityinitiative.util.InitiativeState;
-import fi.om.municipalityinitiative.util.InitiativeType;
-import fi.om.municipalityinitiative.util.Maybe;
-import fi.om.municipalityinitiative.util.MaybeHoldingHashMap;
+import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -202,6 +199,15 @@ public class JdbcInitiativeDao implements InitiativeDao {
         assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.state, state)
                 .set(municipalityInitiative.stateTimestamp, CURRENT_TIME)
+                .where(municipalityInitiative.id.eq(initiativeId))
+                .execute());
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void updateInitiativeFixState(Long initiativeId, FixState fixState) {
+        assertSingleAffection(queryFactory.update(municipalityInitiative)
+                .set(municipalityInitiative.fixState, fixState)
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute());
     }

@@ -92,6 +92,7 @@ public class Mappings {
                     info.setModeratorComment(Strings.nullToEmpty(row.get(municipalityInitiative.moderatorComment)));
                     info.setParticipantCount(row.get(municipalityInitiative.participantCount));
                     info.setSentComment(row.get(municipalityInitiative.sentComment));
+                    info.setFixState(row.get(municipalityInitiative.fixState));
 
                     return info;
                 }

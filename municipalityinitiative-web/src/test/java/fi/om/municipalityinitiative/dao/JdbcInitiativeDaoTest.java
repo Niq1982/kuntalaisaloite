@@ -9,10 +9,7 @@ import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
-import fi.om.municipalityinitiative.util.InitiativeState;
-import fi.om.municipalityinitiative.util.InitiativeType;
-import fi.om.municipalityinitiative.util.Maybe;
-import fi.om.municipalityinitiative.util.ReflectionTestUtils;
+import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -93,6 +90,7 @@ public class JdbcInitiativeDaoTest {
         assertThat(initiative.getState(), is(TestHelper.DEFAULT_STATE));
         assertThat(initiative.getType(), is(InitiativeType.COLLABORATIVE_CITIZEN));
         assertThat(initiative.getParticipantCount(), is(1));
+        assertThat(initiative.getFixState(), is(FixState.OK));
 
         ReflectionTestUtils.assertNoNullFields(initiative);
     }
@@ -120,6 +118,14 @@ public class JdbcInitiativeDaoTest {
 
         assertThat(initiativeDao.getByIdWithOriginalAuthor(original).getStateTime(), is(not(fixedDateTime.toLocalDate())));
 
+    }
+
+    @Test
+    public void update_initiative_fixState() {
+        Long original = testHelper.createEmptyDraft(testMunicipality.getId());
+        precondition(initiativeDao.getByIdWithOriginalAuthor(original).getFixState(), is(FixState.OK));
+        initiativeDao.updateInitiativeFixState(original, FixState.FIX);
+        assertThat(initiativeDao.getByIdWithOriginalAuthor(original).getFixState(), is(FixState.FIX));
     }
 
     @Test
