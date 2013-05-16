@@ -109,33 +109,6 @@ public class PublicInitiativeService {
         return initiativeDao.getInitiativeCounts(municipality);
     }
 
-    @Transactional(readOnly = true)
-    public InitiativeUIUpdateDto getInitiativeForUpdate(Long initiativeId, LoginUserHolder loginUserHolder) {
-
-        assertAllowance("Update initiative", getManagementSettings(initiativeId).isAllowUpdate());
-        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-
-        Initiative initiative = initiativeDao.get(initiativeId);
-        List<Author> authors = authorDao.findAuthors(initiativeId);
-        ContactInfo contactInfo = null;
-        for (Author author : authors) {
-            if (author.getId().equals(loginUserHolder.getAuthorId())) {
-                contactInfo = author.getContactInfo();
-                break;
-            }
-        }
-
-        if (contactInfo == null) {
-            throw new RuntimeException("FIX THIS to something nicer");
-        }
-
-        InitiativeUIUpdateDto updateDto = new InitiativeUIUpdateDto();
-        updateDto.setContactInfo(contactInfo);
-        updateDto.setExtraInfo(initiative.getExtraInfo());
-
-        return updateDto;
-    }
-
     @Transactional(readOnly = false)
     public void updateInitiative(Long initiativeId, LoginUserHolder loginUserHolder, InitiativeUIUpdateDto updateDto) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);

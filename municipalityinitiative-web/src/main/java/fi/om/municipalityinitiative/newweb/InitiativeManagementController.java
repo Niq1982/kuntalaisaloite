@@ -34,6 +34,9 @@ public class InitiativeManagementController extends BaseController {
     private PublicInitiativeService publicInitiativeService;
 
     @Resource
+    private InitiativeManagementService initiativeManagementService;
+
+    @Resource
     private ValidationService validationService;
 
     @Resource
@@ -83,7 +86,7 @@ public class InitiativeManagementController extends BaseController {
         if (managementSettings.isAllowUpdate()) {
 
             return ViewGenerator.updateView(publicInitiativeService.getMunicipalityInitiative(initiativeId),
-                    publicInitiativeService.getInitiativeForUpdate(initiativeId, loginUserHolder),
+                    initiativeManagementService.getInitiativeForUpdate(initiativeId, loginUserHolder),
                     publicInitiativeService.getAuthorInformation(initiativeId, loginUserHolder),
                     authorService.findAuthors(initiativeId, loginUserHolder),
                     urls.getManagement(initiativeId)

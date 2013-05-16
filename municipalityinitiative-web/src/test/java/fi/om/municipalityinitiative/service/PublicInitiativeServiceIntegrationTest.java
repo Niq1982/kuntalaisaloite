@@ -157,30 +157,6 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     }
 
     @Test
-    public void get_initiative_for_update_sets_all_required_information() {
-        Long initiativeId = testHelper.createCollectableReview(testMunicipality.getId());
-        stubAuthorLoginUserHolderWith(initiativeId);
-        InitiativeUIUpdateDto initiativeForUpdate = service.getInitiativeForUpdate(initiativeId, TestHelper.authorLoginUserHolder);
-        ReflectionTestUtils.assertNoNullFields(initiativeForUpdate);
-    }
-
-    private void stubAuthorLoginUserHolderWith(Long initiativeId) {
-        stub(TestHelper.authorLoginUserHolder.getInitiative()).toReturn(Maybe.of(initiativeDao.get(initiativeId)));
-    }
-
-    @Test(expected = AccessDeniedException.class)
-    public void get_initiative_for_update_fails_if_not_allowed() {
-        Long initiativeId = testHelper.createCollectableAccepted(testMunicipality.getId());
-        service.getInitiativeForUpdate(initiativeId, TestHelper.unknownLoginUserHolder);
-    }
-
-    @Test(expected = OperationNotAllowedException.class)
-    public void get_initiative_for_update_fails_if_sent() {
-        Long sent = testHelper.createSingleSent(testMunicipality.getId());
-        service.getInitiativeForUpdate(sent, TestHelper.authorLoginUserHolder);
-    }
-
-    @Test
     public void preparing_initiative_saved_email_and_municipality_and_membership() {
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
 
