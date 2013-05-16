@@ -38,17 +38,12 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     private static Municipality testMunicipality;
 
-    private static Municipality participantMunicipality;
-
     @Before
     public void setup() {
         testHelper.dbCleanup();
 
         String municipalityName = "Test municipality";
         testMunicipality = new Municipality(testHelper.createTestMunicipality(municipalityName), municipalityName, municipalityName, false);
-
-        municipalityName = "Participant municipality";
-        participantMunicipality = new Municipality(testHelper.createTestMunicipality(municipalityName), municipalityName, municipalityName, false);
 
     }
 

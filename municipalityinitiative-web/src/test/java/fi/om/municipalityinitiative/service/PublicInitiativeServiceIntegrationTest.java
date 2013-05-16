@@ -42,9 +42,6 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     private InitiativeDao initiativeDao; // Do not depend on this
 
     @Resource
-    private AuthorDao authorDao; // Do not depend on this
-
-    @Resource
     TestHelper testHelper;
 
     private static Municipality testMunicipality;
