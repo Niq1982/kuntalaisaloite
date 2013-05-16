@@ -68,6 +68,17 @@ public class ModerationController extends BaseController{
         return redirectWithMessage(Urls.get(locale).moderation(initiativeId), RequestMessage.REJECT_INITIATIVE, request);
     }
 
+    @RequestMapping(value = {MODERATION_FI, MODERATION_SV}, method = POST, params = ACTION_SEND_TO_FIX)
+    public String sendInitiativeForFix(@PathVariable("id") Long initiativeId,
+                                   @RequestParam("moderatorComment") String comment,
+                                   Locale locale, HttpServletRequest request) {
+
+        moderationService.sendInitiativeBackForFixing(userService.getRequiredOmLoginUserHolder(request), initiativeId, comment);
+        return redirectWithMessage(Urls.get(locale).moderation(initiativeId), RequestMessage.REJECT_INITIATIVE, request);
+    }
+
+
+
     @RequestMapping(value = MUNICIPALITY_MODERATION, method = GET)
     public String moderateMunicipalities(Model model, HttpServletRequest request){
 

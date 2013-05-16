@@ -131,6 +131,8 @@ public final class Urls {
     public static final String ACTION_ACCEPT_INITIATIVE = "action-accept-initiative";
     
     public static final String ACTION_REJECT_INITIATIVE = "action-reject-initiative";
+
+    public static final String ACTION_SEND_TO_FIX = "action-send-to-fix";
     
     public static final String ACTION_ACCEPT_INVITATION = "action-accept-invitation";
 
