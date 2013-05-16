@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.newdto.ui;
 
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
+import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.LocalDate;
@@ -60,6 +61,10 @@ public class InitiativeViewInfo {
 
     public String getExtraInfo() {
         return initiative.getExtraInfo();
+    }
+
+    public FixState getFixState() {
+        return initiative.getFixState();
     }
 
 }
