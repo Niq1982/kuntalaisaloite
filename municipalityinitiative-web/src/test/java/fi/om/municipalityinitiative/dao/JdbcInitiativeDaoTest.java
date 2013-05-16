@@ -80,7 +80,7 @@ public class JdbcInitiativeDaoTest {
                 .applyAuthor().withParticipantMunicipality(authorsMunicipalityId)
                 .toInitiativeDraft());
 
-        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
+        Initiative initiative = initiativeDao.get(initiativeId);
 
         assertThat(initiative.getMunicipality().getId(), is(testMunicipality.getId()));
         assertThat(initiative.getCreateTime(), is(notNullValue()));
@@ -102,8 +102,8 @@ public class JdbcInitiativeDaoTest {
 
         initiativeDao.updateInitiativeState(original, InitiativeState.PUBLISHED);
 
-        assertThat(initiativeDao.getByIdWithOriginalAuthor(original).getState(), is(InitiativeState.PUBLISHED));
-        assertThat(initiativeDao.getByIdWithOriginalAuthor(someOther).getState(), is(InitiativeState.DRAFT));
+        assertThat(initiativeDao.get(original).getState(), is(InitiativeState.PUBLISHED));
+        assertThat(initiativeDao.get(someOther).getState(), is(InitiativeState.DRAFT));
     }
 
     @Test
@@ -112,20 +112,20 @@ public class JdbcInitiativeDaoTest {
         DateTime fixedDateTime = new DateTime(2010, 1, 1, 0, 0);
         testHelper.updateField(original, QMunicipalityInitiative.municipalityInitiative.stateTimestamp, fixedDateTime);
 
-        precondition(initiativeDao.getByIdWithOriginalAuthor(original).getStateTime(), is(fixedDateTime.toLocalDate()));
+        precondition(initiativeDao.get(original).getStateTime(), is(fixedDateTime.toLocalDate()));
 
         initiativeDao.updateInitiativeState(original, InitiativeState.PUBLISHED);
 
-        assertThat(initiativeDao.getByIdWithOriginalAuthor(original).getStateTime(), is(not(fixedDateTime.toLocalDate())));
+        assertThat(initiativeDao.get(original).getStateTime(), is(not(fixedDateTime.toLocalDate())));
 
     }
 
     @Test
     public void update_initiative_fixState() {
         Long original = testHelper.createEmptyDraft(testMunicipality.getId());
-        precondition(initiativeDao.getByIdWithOriginalAuthor(original).getFixState(), is(FixState.OK));
+        precondition(initiativeDao.get(original).getFixState(), is(FixState.OK));
         initiativeDao.updateInitiativeFixState(original, FixState.FIX);
-        assertThat(initiativeDao.getByIdWithOriginalAuthor(original).getFixState(), is(FixState.FIX));
+        assertThat(initiativeDao.get(original).getFixState(), is(FixState.FIX));
     }
 
     @Test
@@ -135,8 +135,8 @@ public class JdbcInitiativeDaoTest {
 
         initiativeDao.updateInitiativeType(original, InitiativeType.COLLABORATIVE);
 
-        assertThat(initiativeDao.getByIdWithOriginalAuthor(original).getType(), is(InitiativeType.COLLABORATIVE));
-        assertThat(initiativeDao.getByIdWithOriginalAuthor(someOther).getType(), is(InitiativeType.UNDEFINED));
+        assertThat(initiativeDao.get(original).getType(), is(InitiativeType.COLLABORATIVE));
+        assertThat(initiativeDao.get(someOther).getType(), is(InitiativeType.UNDEFINED));
     }
 
     @Test
@@ -144,12 +144,12 @@ public class JdbcInitiativeDaoTest {
         Long original = testHelper.createEmptyDraft(testMunicipality.getId()); // Even drafts may be marked as sent by dao
         Long someOther = testHelper.createEmptyDraft(testMunicipality.getId()); // Even drafts may be marked as sent by dao
 
-        precondition(initiativeDao.getByIdWithOriginalAuthor(original).getSentTime().isPresent(), is(false));
+        precondition(initiativeDao.get(original).getSentTime().isPresent(), is(false));
 
         initiativeDao.markInitiativeAsSent(original);
 
-        Initiative markedAsSent = initiativeDao.getByIdWithOriginalAuthor(original);
-        Initiative notMarkedAsSent = initiativeDao.getByIdWithOriginalAuthor(someOther);
+        Initiative markedAsSent = initiativeDao.get(original);
+        Initiative notMarkedAsSent = initiativeDao.get(someOther);
 
         assertThat(markedAsSent.getSentTime().isPresent(), is(true));
         assertThat(notMarkedAsSent.getSentTime().isPresent(), is(false));
@@ -162,12 +162,12 @@ public class JdbcInitiativeDaoTest {
         String comment = "some moderator comment";
         initiativeDao.updateModeratorComment(initiative, comment);
 
-        assertThat(initiativeDao.getByIdWithOriginalAuthor(initiative).getModeratorComment(), is(comment));
+        assertThat(initiativeDao.get(initiative).getModeratorComment(), is(comment));
     }
 
     @Test
     public void moderator_comment_is_never_null_but_empty_string() {
-        Initiative singleSent = initiativeDao.getByIdWithOriginalAuthor(testHelper.createSingleSent(testMunicipality.getId()));
+        Initiative singleSent = initiativeDao.get(testHelper.createSingleSent(testMunicipality.getId()));
         assertThat(singleSent.getModeratorComment(), is(notNullValue()));
         assertThat(singleSent.getModeratorComment(), isEmptyString());
     }
@@ -428,7 +428,7 @@ public class JdbcInitiativeDaoTest {
 
     @Test(expected = NotFoundException.class)
     public void throws_exception_if_initiative_is_not_found() {
-        initiativeDao.getByIdWithOriginalAuthor(-1L);
+        initiativeDao.get(-1L);
     }
 
     private static InitiativeSearch initiativeSearch() {

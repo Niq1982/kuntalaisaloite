@@ -48,7 +48,7 @@ public class PublicInitiativeService {
 
     @Transactional(readOnly = true)
     public ManagementSettings getManagementSettings(Long initiativeId) {
-        return ManagementSettings.of(initiativeDao.getByIdWithOriginalAuthor(initiativeId));
+        return ManagementSettings.of(initiativeDao.get(initiativeId));
     }
 
     @Transactional(readOnly = false)
@@ -63,7 +63,7 @@ public class PublicInitiativeService {
         Long participantId = participantDao.create(participantCreateDto, confirmationCode);
 
         emailService.sendParticipationConfirmation(
-                initiativeDao.getByIdWithOriginalAuthor(initiativeId),
+                initiativeDao.get(initiativeId),
                 participant.getParticipantEmail(),
                 participantId,
                 confirmationCode,
@@ -88,7 +88,7 @@ public class PublicInitiativeService {
         String managementHash = RandomHashGenerator.randomString(40);
         Long authorId = authorDao.createAuthor(initiativeId, participantId, managementHash);
 
-        emailService.sendPrepareCreatedEmail(initiativeDao.getByIdWithOriginalAuthor(initiativeId), authorId, managementHash, createDto.getParticipantEmail(), locale);
+        emailService.sendPrepareCreatedEmail(initiativeDao.get(initiativeId), authorId, managementHash, createDto.getParticipantEmail(), locale);
 
         return initiativeId;
     }
@@ -101,7 +101,7 @@ public class PublicInitiativeService {
 
     @Transactional(readOnly = true)
     public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId) {
-        return InitiativeViewInfo.parse(initiativeDao.getByIdWithOriginalAuthor(initiativeId));
+        return InitiativeViewInfo.parse(initiativeDao.get(initiativeId));
     }
 
     @Transactional(readOnly = true)
@@ -114,7 +114,7 @@ public class PublicInitiativeService {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         assertAllowance("Edit initiative", getManagementSettings(initiativeId).isAllowEdit());
         return InitiativeDraftUIEditDto.parse(
-                initiativeDao.getByIdWithOriginalAuthor(initiativeId),
+                initiativeDao.get(initiativeId),
                 authorDao.getAuthor(loginUserHolder.getAuthorId()).getContactInfo()
         );
     }
@@ -134,7 +134,7 @@ public class PublicInitiativeService {
         assertAllowance("Update initiative", getManagementSettings(initiativeId).isAllowUpdate());
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
+        Initiative initiative = initiativeDao.get(initiativeId);
         List<Author> authors = authorDao.findAuthors(initiativeId);
         ContactInfo contactInfo = null;
         for (Author author : authors) {
@@ -193,7 +193,7 @@ public class PublicInitiativeService {
         assertAllowance("Send review", getManagementSettings(initiativeId).isAllowSendToReview());
 
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.REVIEW);
-        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
+        Initiative initiative = initiativeDao.get(initiativeId);
 
         String TEMPORARILY_REPLACING_OM_EMAIL = authorDao.getAuthorEmails(initiativeId).get(0);
 
@@ -207,7 +207,7 @@ public class PublicInitiativeService {
 
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
         initiativeDao.updateInitiativeType(initiativeId, InitiativeType.COLLABORATIVE);
-        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
+        Initiative initiative = initiativeDao.get(initiativeId);
         emailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityEmail(initiative), EmailMessageType.PUBLISHED_COLLECTING);
     }
 
@@ -224,7 +224,7 @@ public class PublicInitiativeService {
         initiativeDao.updateInitiativeType(initiativeId, InitiativeType.SINGLE);
         initiativeDao.markInitiativeAsSent(initiativeId);
         initiativeDao.updateSentComment(initiativeId, sentComment);
-        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
+        Initiative initiative = initiativeDao.get(initiativeId);
         emailService.sendStatusEmail(initiative,authorDao.getAuthorEmails(initiativeId), municipalityEmail(initiative), EmailMessageType.SENT_TO_MUNICIPALITY);
         // TODO: String municipalityEmail = municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId());
         String municipalityEmail = authorDao.getAuthorEmails(initiativeId).get(0);
@@ -248,7 +248,7 @@ public class PublicInitiativeService {
 
         initiativeDao.markInitiativeAsSent(initiativeId);
         initiativeDao.updateSentComment(initiativeId, sentComment);
-        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
+        Initiative initiative = initiativeDao.get(initiativeId);
         List<Participant> participants = participantDao.findAllParticipants(initiativeId);
         // TODO: String municipalityEmail = municipalityEmail(initiative);
         String municipalityEmail = authorDao.getAuthorEmails(initiativeId).get(0);
@@ -258,7 +258,7 @@ public class PublicInitiativeService {
 
     @Transactional(readOnly = false)
     public void sendToMunicipality(Long initiativeId, LoginUserHolder requiredLoginUserHolder, String sentComment, Locale locale) {
-        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
+        Initiative initiative = initiativeDao.get(initiativeId);
 
         if (initiative.getType().isCollectable()) {
             sendCollaborativeToMunicipality(initiativeId, requiredLoginUserHolder, sentComment, locale);

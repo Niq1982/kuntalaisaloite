@@ -43,7 +43,7 @@ public class AuthorService {
     public void createAuthorInvitation(Long initiativeId, LoginUserHolder loginUserHolder, AuthorInvitationUICreateDto uiCreateDto) {
 
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        Initiative initiative = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
+        Initiative initiative = initiativeDao.get(initiativeId);
         SecurityUtil.assertAllowance("Invite authors", ManagementSettings.of(initiative).isAllowInviteAuthors());
 
         AuthorInvitation authorInvitation = new AuthorInvitation();
@@ -67,7 +67,7 @@ public class AuthorService {
 
         authorInvitation.setInvitationTime(DateTime.now());
         authorDao.addAuthorInvitation(authorInvitation);
-        emailService.sendAuthorInvitation(initiativeDao.getByIdWithOriginalAuthor(initiativeId), authorInvitation);
+        emailService.sendAuthorInvitation(initiativeDao.get(initiativeId), authorInvitation);
 
     }
 
@@ -88,7 +88,7 @@ public class AuthorService {
     @Transactional(readOnly = false)
     public String confirmAuthorInvitation(Long initiativeId, AuthorInvitationUIConfirmDto confirmDto, Locale locale) {
 
-        ManagementSettings managementSettings = ManagementSettings.of(initiativeDao.getByIdWithOriginalAuthor(initiativeId));
+        ManagementSettings managementSettings = ManagementSettings.of(initiativeDao.get(initiativeId));
         SecurityUtil.assertAllowance("Accept invitation", managementSettings.isAllowInviteAuthors());
 
         for (AuthorInvitation invitation : authorDao.findInvitations(initiativeId)) {
@@ -99,7 +99,7 @@ public class AuthorService {
 
                 String managementHash = createAuthorAndParticipant(initiativeId, confirmDto);
                 authorDao.deleteAuthorInvitation(initiativeId, confirmDto.getConfirmCode());
-                emailService.sendAuthorConfirmedInvitation(initiativeDao.getByIdWithOriginalAuthor(initiativeId), invitation.getEmail(), managementHash, locale);
+                emailService.sendAuthorConfirmedInvitation(initiativeDao.get(initiativeId), invitation.getEmail(), managementHash, locale);
                 return managementHash;
 
             }
@@ -123,7 +123,7 @@ public class AuthorService {
         assertNotRejectedOrExpired(authorInvitation);
 
         AuthorInvitationUIConfirmDto confirmDto = new AuthorInvitationUIConfirmDto();
-        confirmDto.setInitiativeMunicipality(initiativeDao.getByIdWithOriginalAuthor(initiativeId).getMunicipality().getId());
+        confirmDto.setInitiativeMunicipality(initiativeDao.get(initiativeId).getMunicipality().getId());
         confirmDto.setContactInfo(new ContactInfo());
         confirmDto.getContactInfo().setName(authorInvitation.getName());
         confirmDto.getContactInfo().setEmail(authorInvitation.getEmail());

@@ -19,7 +19,7 @@ public interface InitiativeDao {
 
     List<InitiativeListInfo> find(InitiativeSearch search);
 
-    Initiative getByIdWithOriginalAuthor(Long initiativeId);
+    Initiative get(Long initiativeId);
 
     InitiativeCounts getInitiativeCounts(Maybe<Long> municipality);
 

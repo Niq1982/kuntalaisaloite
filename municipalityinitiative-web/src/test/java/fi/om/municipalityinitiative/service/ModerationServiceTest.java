@@ -71,7 +71,7 @@ public class ModerationServiceTest {
     public void accepting_initiative_sets_state_as_accepted_if_type_is_undefined() {
 
         setOmUser();
-        stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
 
         moderationService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
 
@@ -82,7 +82,7 @@ public class ModerationServiceTest {
     public void accepting_initiative_sends_correct_state_email_if_type_is_undefined() {
 
         setOmUser();
-        stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
 
         moderationService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
 
@@ -92,7 +92,7 @@ public class ModerationServiceTest {
     @Test
     public void accepting_initiative_saves_comment_if_type_is_undefined() {
         setOmUser();
-        stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
 
         String comment = "this is om-comment";
         moderationService.accept(loginUserHolder, INITIATIVE_ID, comment, Locales.LOCALE_FI);
@@ -106,7 +106,7 @@ public class ModerationServiceTest {
         setOmUser();
         Initiative initiative = initiativeWithAuthorEmailTypeUndefined();
         initiative.setType(InitiativeType.SINGLE);
-        stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiative);
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative);
 
         moderationService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
 
@@ -120,7 +120,7 @@ public class ModerationServiceTest {
         setOmUser();
         Initiative initiative = initiativeWithAuthorEmailTypeUndefined();
         initiative.setType(InitiativeType.SINGLE);
-        stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiative);
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative);
 
         moderationService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
 
@@ -135,7 +135,7 @@ public class ModerationServiceTest {
         setOmUser();
         Initiative initiative = initiativeWithAuthorEmailTypeUndefined();
         initiative.setType(InitiativeType.SINGLE);
-        stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiative);
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative);
 
         String comment = "this is om-comment";
         moderationService.accept(loginUserHolder, INITIATIVE_ID, comment, Locales.LOCALE_FI);
@@ -147,7 +147,7 @@ public class ModerationServiceTest {
     public void rejecting_initiative_sets_state_as_draft() {
 
         setOmUser();
-        stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
 
         moderationService.reject(loginUserHolder, INITIATIVE_ID, null);
         verify(initiativeDaoMock).updateInitiativeState(INITIATIVE_ID, InitiativeState.DRAFT);
@@ -157,7 +157,7 @@ public class ModerationServiceTest {
     public void rejecting_initiative_sends_email() {
 
         setOmUser();
-        stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
 
         moderationService.reject(loginUserHolder, INITIATIVE_ID, null);
         verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.REJECTED_BY_OM));
@@ -167,7 +167,7 @@ public class ModerationServiceTest {
     public void rejecting_initiative_saves_comment() {
 
         setOmUser();
-        stub(initiativeDaoMock.getByIdWithOriginalAuthor(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiativeWithAuthorEmailTypeUndefined());
 
         String comment = "this is om-comment";
         moderationService.reject(loginUserHolder, INITIATIVE_ID, comment);

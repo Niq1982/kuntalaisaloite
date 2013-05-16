@@ -143,7 +143,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     public void preparing_initiative_sets_participant_information() {
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
 
-        assertThat(initiativeDao.getByIdWithOriginalAuthor(initiativeId).getParticipantCount(), is(1));
+        assertThat(initiativeDao.get(initiativeId).getParticipantCount(), is(1));
 
         Participant participant = participantDao.findAllParticipants(initiativeId).get(0);
         assertThat(participant.getHomeMunicipality().getId(), is(participantMunicipality.getId()));
@@ -219,7 +219,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     }
 
     private void stubAuthorLoginUserHolderWith(Long initiativeId) {
-        stub(TestHelper.authorLoginUserHolder.getInitiative()).toReturn(Maybe.of(initiativeDao.getByIdWithOriginalAuthor(initiativeId)));
+        stub(TestHelper.authorLoginUserHolder.getInitiative()).toReturn(Maybe.of(initiativeDao.get(initiativeId)));
     }
 
     @Test(expected = AccessDeniedException.class)
@@ -260,7 +260,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 //        service.sendReview(initiativeId, authorLoginUserHolder, false, Locales.LOCALE_FI);
         service.sendReviewOnlyForAcceptance(initiativeId, TestHelper.authorLoginUserHolder, null);
 
-        Initiative updated = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
+        Initiative updated = initiativeDao.get(initiativeId);
 
         assertThat(updated.getState(), is(InitiativeState.REVIEW));
         assertThat(updated.getType(), is(InitiativeType.UNDEFINED));
@@ -272,7 +272,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 //        service.sendReview(initiativeId, authorLoginUserHolder, true, Locales.LOCALE_FI);
         service.sendReviewAndStraightToMunicipality(initiativeId, TestHelper.authorLoginUserHolder, null, null);
 
-        Initiative updated = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
+        Initiative updated = initiativeDao.get(initiativeId);
 
         assertThat(updated.getState(), is(InitiativeState.REVIEW));
         assertThat(updated.getType(), is(InitiativeType.SINGLE));
@@ -317,7 +317,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 //        service.publishAcceptedInitiative(accepted, true, authorLoginUserHolder, null);
         service.publishAndStartCollecting(accepted, TestHelper.authorLoginUserHolder, null);
 
-        Initiative collecting = initiativeDao.getByIdWithOriginalAuthor(accepted);
+        Initiative collecting = initiativeDao.get(accepted);
         assertThat(collecting.getState(), is(InitiativeState.PUBLISHED));
         assertThat(collecting.getType(), is(InitiativeType.COLLABORATIVE));
         assertThat(collecting.getSentTime().isPresent(), is(false));
@@ -337,7 +337,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 //        service.publishAcceptedInitiative(accepted, false, authorLoginUserHolder, null);
         service.publishAndSendToMunicipality(accepted, TestHelper.authorLoginUserHolder, "some sent comment", null);
 
-        Initiative sent = initiativeDao.getByIdWithOriginalAuthor(accepted);
+        Initiative sent = initiativeDao.get(accepted);
         assertThat(sent.getState(), is(InitiativeState.PUBLISHED));
         assertThat(sent.getType(), is(InitiativeType.SINGLE));
         assertThat(sent.getSentTime().isPresent(), is(true));
@@ -370,7 +370,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 
         service.sendCollaborativeToMunicipality(collaborative, TestHelper.authorLoginUserHolder, "my sent comment", null);
 
-        Initiative sent = initiativeDao.getByIdWithOriginalAuthor(collaborative);
+        Initiative sent = initiativeDao.get(collaborative);
         assertThat(sent.getSentTime().isPresent(), is(true));
         assertThat(sent.getSentComment(), is("my sent comment"));
     }
@@ -379,7 +379,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     public void sendToMunicipality_marks_initiative_as_sigle_if_not_marked_as_collaboratibe() {
         Long initiativeId = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
         service.sendToMunicipality(initiativeId, TestHelper.authorLoginUserHolder, "comment for municipality", null);
-        Initiative sent = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
+        Initiative sent = initiativeDao.get(initiativeId);
         assertThat(sent.getType(), is(InitiativeType.SINGLE));
         assertThat(sent.getSentTime().isPresent(), is(true));
         assertThat(sent.getSentComment(), is("comment for municipality"));
@@ -389,7 +389,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     public void sendToMunicipality_marks_initiative_as_sent_if_marked_as_collaborative() {
         Long initiativeId = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.COLLABORATIVE);
         service.sendToMunicipality(initiativeId, TestHelper.authorLoginUserHolder, "comment for municipality", null);
-        Initiative sent = initiativeDao.getByIdWithOriginalAuthor(initiativeId);
+        Initiative sent = initiativeDao.get(initiativeId);
         assertThat(sent.getType(), is(InitiativeType.COLLABORATIVE));
         assertThat(sent.getSentTime().isPresent(), is(true));
         assertThat(sent.getSentComment(), is("comment for municipality"));
@@ -413,7 +413,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         updateDto.setContactInfo(contactInfo);
         service.updateInitiative(initiativeId, TestHelper.authorLoginUserHolder, updateDto);
 
-        assertThat(initiativeDao.getByIdWithOriginalAuthor(initiativeId).getExtraInfo(), is(updateDto.getExtraInfo()));
+        assertThat(initiativeDao.get(initiativeId).getExtraInfo(), is(updateDto.getExtraInfo()));
 
         Author author = service.getAuthorInformation(initiativeId, TestHelper.authorLoginUserHolder);
         ReflectionTestUtils.assertReflectionEquals(author.getContactInfo(), contactInfo);

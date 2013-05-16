@@ -130,7 +130,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    public Initiative getByIdWithOriginalAuthor(Long initiativeId) {
+    public Initiative get(Long initiativeId) {
 
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
