@@ -68,22 +68,12 @@ public class InitiativeManagementService {
     @Transactional(readOnly = true)
     public InitiativeUIUpdateDto getInitiativeForUpdate(Long initiativeId, LoginUserHolder loginUserHolder) {
 
-        assertAllowance("Update initiative", getManagementSettings(initiativeId).isAllowUpdate());
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
+        assertAllowance("Update initiative", getManagementSettings(initiativeId).isAllowUpdate());
 
         Initiative initiative = initiativeDao.get(initiativeId);
-        List<Author> authors = authorDao.findAuthors(initiativeId);
-        ContactInfo contactInfo = null;
-        for (Author author : authors) {
-            if (author.getId().equals(loginUserHolder.getAuthorId())) {
-                contactInfo = author.getContactInfo();
-                break;
-            }
-        }
 
-        if (contactInfo == null) {
-            throw new RuntimeException("FIX THIS to something nicer");
-        }
+        ContactInfo contactInfo = authorDao.getAuthor(loginUserHolder.getAuthorId()).getContactInfo();
 
         InitiativeUIUpdateDto updateDto = new InitiativeUIUpdateDto();
         updateDto.setContactInfo(contactInfo);
