@@ -118,18 +118,6 @@ public class PublicInitiativeService {
         authorDao.updateAuthorInformation(loginUserHolder.getAuthorId(), updateDto.getContactInfo());
     }
 
-    @Transactional(readOnly = true)
-    public Author getAuthorInformation(Long initiativeId, LoginUserHolder loginUserHolder) {
-        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        for (Author author : authorDao.findAuthors(initiativeId)) {
-            if (author.getId().equals(loginUserHolder.getAuthorId())) {
-                return author;
-            }
-        }
-        // TODO: Hmm.. We still get the municipality information and stuff from participant table...
-        throw new NotFoundException("Author", initiativeId);
-    }
-
     @Transactional(readOnly = false)
     public void sendReviewAndStraightToMunicipality(Long initiativeId, LoginUserHolder loginUserHolder, String sentComment, Locale locale) {
         markAsReviewAndSendEmail(initiativeId, loginUserHolder, locale);

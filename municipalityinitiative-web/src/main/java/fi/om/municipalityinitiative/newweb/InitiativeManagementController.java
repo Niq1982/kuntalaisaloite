@@ -87,7 +87,7 @@ public class InitiativeManagementController extends BaseController {
 
             return ViewGenerator.updateView(publicInitiativeService.getMunicipalityInitiative(initiativeId),
                     initiativeManagementService.getInitiativeForUpdate(initiativeId, loginUserHolder),
-                    publicInitiativeService.getAuthorInformation(initiativeId, loginUserHolder),
+                    initiativeManagementService.getAuthorInformation(initiativeId, loginUserHolder),
                     authorService.findAuthors(initiativeId, loginUserHolder),
                     urls.getManagement(initiativeId)
             ).view(model, urls.alt().update(initiativeId));
@@ -112,7 +112,7 @@ public class InitiativeManagementController extends BaseController {
 
             return ViewGenerator.updateView(publicInitiativeService.getMunicipalityInitiative(initiativeId),
                     updateDto,
-                    publicInitiativeService.getAuthorInformation(initiativeId, loginUserHolder),
+                    initiativeManagementService.getAuthorInformation(initiativeId, loginUserHolder),
                     authorService.findAuthors(initiativeId, loginUserHolder),
                     urls.getManagement(initiativeId)
             ).view(model, urls.alt().update(initiativeId));

@@ -26,6 +26,7 @@ import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.theInstance;
 import static org.mockito.Mockito.stub;
 
 
@@ -355,7 +356,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 
         assertThat(initiativeDao.get(initiativeId).getExtraInfo(), is(updateDto.getExtraInfo()));
 
-        Author author = service.getAuthorInformation(initiativeId, TestHelper.authorLoginUserHolder);
+        Author author = authorDao.getAuthor(testHelper.getLastAuthorId());
         ReflectionTestUtils.assertReflectionEquals(author.getContactInfo(), contactInfo);
 
         // TODO: Assert extraInfo

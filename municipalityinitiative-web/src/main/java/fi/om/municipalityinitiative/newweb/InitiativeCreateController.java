@@ -86,7 +86,7 @@ public class InitiativeCreateController extends BaseController {
         if (managementSettings.isAllowEdit()) {
             return ViewGenerator.editView(
                     initiativeManagementService.getInitiativeDraftForEdit(initiativeId, loginUserHolder),
-                    publicInitiativeService.getAuthorInformation(initiativeId, loginUserHolder),
+                    initiativeManagementService.getAuthorInformation(initiativeId, loginUserHolder),
                     urls.moderation(initiativeId)
             ).view(model, urls.alt().edit(initiativeId));
         }
@@ -112,7 +112,7 @@ public class InitiativeCreateController extends BaseController {
         if (validionService.validationErrors(editDto, bindingResult, model)) {
             return ViewGenerator.editView(
                     editDto,
-                    publicInitiativeService.getAuthorInformation(initiativeId, loginUserHolder),
+                    initiativeManagementService.getAuthorInformation(initiativeId, loginUserHolder),
                     urls.moderation(initiativeId)
             ).view(model, urls.alt().edit(initiativeId));
         }

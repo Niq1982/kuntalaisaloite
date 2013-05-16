@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.service;
 
+import fi.om.municipalityinitiative.dao.NotFoundException;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
@@ -77,6 +78,19 @@ public class InitiativeManagementService {
         updateDto.setExtraInfo(initiative.getExtraInfo());
 
         return updateDto;
+    }
+
+    @Transactional(readOnly = true)
+    // TODO: Tests?
+    public Author getAuthorInformation(Long initiativeId, LoginUserHolder loginUserHolder) {
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
+        for (Author author : authorDao.findAuthors(initiativeId)) {
+            if (author.getId().equals(loginUserHolder.getAuthorId())) {
+                return author;
+            }
+        }
+        // TODO: Hmm.. We still get the municipality information and stuff from participant table...
+        throw new NotFoundException("Author", initiativeId);
     }
 
 
