@@ -87,52 +87,52 @@ public class TestHelper {
 
     @Transactional
     public Long createCollectableReview(Long municipalityId) {
-        return createOnlyInitiative(new InitiativeDraft(municipalityId)
+        return createInitiative(new InitiativeDraft(municipalityId)
                 .withState(InitiativeState.REVIEW)
                 .withType(InitiativeType.COLLABORATIVE)
-                .applyParticipant().toInitiativeDraft());
+                .applyAuthor().toInitiativeDraft());
     }
 
     @Transactional
     public Long createCollectableAccepted(Long municipalityId) {
-        return createOnlyInitiative(new InitiativeDraft(municipalityId)
+        return createInitiative(new InitiativeDraft(municipalityId)
                 .withState(InitiativeState.ACCEPTED)
                 .withType(InitiativeType.COLLABORATIVE)
-                .applyParticipant().toInitiativeDraft());
+                .applyAuthor().toInitiativeDraft());
     }
 
     @Transactional
     public Long create(Long municipalityId, InitiativeState state, InitiativeType type) {
-        return createOnlyInitiative(new InitiativeDraft(municipalityId)
+        return createInitiative(new InitiativeDraft(municipalityId)
                 .withState(state)
                 .withType(type)
-                .applyParticipant().toInitiativeDraft());
+                .applyAuthor().toInitiativeDraft());
     }
 
     @Transactional
     public Long createSingleSent(Long municipalityId) {
-        return createOnlyInitiative(new InitiativeDraft(municipalityId)
+        return createInitiative(new InitiativeDraft(municipalityId)
                 .withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.SINGLE)
                 .withSent(SENT_TIME)
-                .applyParticipant().toInitiativeDraft());
+                .applyAuthor().toInitiativeDraft());
     }
 
     @Transactional
     public Long createDraft(Long municipalityId) {
-        return createOnlyInitiative(new InitiativeDraft(municipalityId)
+        return createInitiative(new InitiativeDraft(municipalityId)
                 .withState(InitiativeState.DRAFT)
-                .applyParticipant().toInitiativeDraft());
+                .applyAuthor().toInitiativeDraft());
     }
     
     @Transactional
     public Long createEmptyDraft(Long municipalityId) {
-        return createOnlyInitiative(new InitiativeDraft(municipalityId)
+        return createInitiative(new InitiativeDraft(municipalityId)
                 .withState(InitiativeState.DRAFT)
                 .withType(InitiativeType.UNDEFINED)
                 .withName(null)
                 .withProposal(null)
-                .applyParticipant()
+                .applyAuthor()
                 .withParticipantName(null)
                 .withAuthorAddress(null)
                 .withAuthorPhone(null)
@@ -140,7 +140,7 @@ public class TestHelper {
     }
 
     @Transactional
-    public Long createOnlyInitiative(InitiativeDraft initiativeDraft) {
+    public Long createInitiative(InitiativeDraft initiativeDraft) {
         SQLInsertClause insert = queryFactory.insert(municipalityInitiative);
 
         insert.set(municipalityInitiative.name, initiativeDraft.name);
@@ -316,7 +316,7 @@ public class TestHelper {
 
         public Maybe<AuthorDraft> authorDraft = Maybe.absent();
 
-        public AuthorDraft applyParticipant() {
+        public AuthorDraft applyAuthor() {
             this.authorDraft = Maybe.of(new AuthorDraft(this, municipalityId));
             return this.authorDraft.get();
         }

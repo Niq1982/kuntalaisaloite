@@ -346,7 +346,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 
     @Test(expected = OperationNotAllowedException.class)
     public void sending_collaborative_to_municipality_fails_if_already_sent() {
-        Long collaborativeSent = testHelper.createOnlyInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long collaborativeSent = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE)
                 .withSent(DateTime.now()));
@@ -363,10 +363,10 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 
     @Test
     public void sending_collobarative_to_municipality_sets_sent_time_and_sent_comment() {
-        Long collaborative = testHelper.createOnlyInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long collaborative = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE)
-                .applyParticipant().toInitiativeDraft());
+                .applyAuthor().toInitiativeDraft());
 
         service.sendCollaborativeToMunicipality(collaborative, TestHelper.authorLoginUserHolder, "my sent comment", null);
 
