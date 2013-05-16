@@ -50,13 +50,16 @@ public class ModerationServiceTest {
     }
 
     @Test
-    @Ignore("Only public methods plz")
     public void all_functions_require_om_rights() throws InvocationTargetException, IllegalAccessException {
 
         for (Method method : ModerationService.class.getDeclaredMethods()) {
+            if (method.getModifiers() != 1) {
+                continue;
+            }
             Object[] parameters = new Object[method.getParameterTypes().length];
             parameters[0] = loginUserHolder;
             try {
+                System.out.println("Checking that method requires om rights: " + method.getName());
                 method.invoke(moderationService, parameters);
                 fail("Should have checked om-rights for user: " + method.getName());
             } catch (InvocationTargetException e) {
