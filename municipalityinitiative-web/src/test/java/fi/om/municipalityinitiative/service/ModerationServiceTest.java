@@ -173,22 +173,16 @@ public class ModerationServiceTest {
     }
 
     @Test
-    public void accepting_fixState_review_initiative_sets_fixState_to_OK() {
-        setOmUser();
-        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(publishedCollaborative(FixState.REVIEW));
-
-        moderationService.accept(loginUserHolder, INITIATIVE_ID, "", null);
-        verify(initiativeDaoMock).updateInitiativeFixState(INITIATIVE_ID, FixState.OK);
-    }
-
-    @Test
-    public void accepting_fixState_review_initiative_sets_moderator_comment() {
+    public void accepting_fixState_review_initiative_sets_moderator_comment_and_fixState() {
         setOmUser();
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(publishedCollaborative(FixState.REVIEW));
 
         String moderatorComment = "moderator comment";
         moderationService.accept(loginUserHolder, INITIATIVE_ID, moderatorComment, null);
+        verify(initiativeDaoMock).get(INITIATIVE_ID);
         verify(initiativeDaoMock).updateModeratorComment(INITIATIVE_ID, moderatorComment);
+        verify(initiativeDaoMock).updateInitiativeFixState(INITIATIVE_ID, FixState.OK);
+        verifyNoMoreInteractions(initiativeDaoMock);
     }
 
     @Test
@@ -199,6 +193,7 @@ public class ModerationServiceTest {
         String moderatorComment = "moderator comment";
         moderationService.accept(loginUserHolder, INITIATIVE_ID, moderatorComment, null);
         verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM));
+        verifyNoMoreInteractions(moderationService.emailService);
     }
 
     private static Initiative publishedCollaborative(FixState fixState) {

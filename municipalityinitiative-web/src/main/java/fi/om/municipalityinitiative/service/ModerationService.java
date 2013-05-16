@@ -43,15 +43,23 @@ public class ModerationService {
             throw new OperationNotAllowedException("Not allowed to accept initiative");
         }
 
-        if (initiative.getState() == InitiativeState.REVIEW) {
+        if (isDraftReview(initiative)) {
             acceptDraftReview(moderatorComment, locale, initiative);
         }
-        else if (initiative.getFixState() == FixState.REVIEW) {
+        else if (isFixStateReview(initiative)) {
             acceptFixStateReview(initiativeId, moderatorComment, initiative);
         }
         else {
             throw new IllegalStateException("Unable to accept initiative with state " + initiative.getState() + " and fixState " + initiative.getFixState());
         }
+    }
+
+    private static boolean isFixStateReview(Initiative initiative) {
+        return initiative.getFixState() == FixState.REVIEW;
+    }
+
+    private static boolean isDraftReview(Initiative initiative) {
+        return initiative.getState() == InitiativeState.REVIEW;
     }
 
     private void acceptFixStateReview(Long initiativeId, String moderatorComment, Initiative initiative) {
@@ -85,14 +93,25 @@ public class ModerationService {
     @Transactional(readOnly = false)
     public void reject(LoginUserHolder loginUserHolder, Long initiativeId, String moderatorComment) {
         loginUserHolder.assertOmUser();
-        if (!ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowOmAccept()) {
+        Initiative initiative = initiativeDao.get(initiativeId);
+        if (!ManagementSettings.of(initiative).isAllowOmAccept()) {
             throw new OperationNotAllowedException("Not allowed to reject initiative");
 
         }
+        if (isDraftReview(initiative)) {
+            rejectDraftReview(initiativeId, moderatorComment);
+        }
+        else if (isFixStateReview(initiative)) {
+
+        }
+    }
+
+    private void rejectDraftReview(Long initiativeId, String moderatorComment) {
+        Initiative initiative;
         initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.DRAFT);
 
-        Initiative initiative = initiativeDao.get(initiativeId);
+        initiative = initiativeDao.get(initiativeId);
         emailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), EmailMessageType.REJECTED_BY_OM);
     }
 
