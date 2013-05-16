@@ -110,9 +110,8 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         prepareInitiativeUICreateDto.setHomeMunicipality(participantMunicipality.getId());
         prepareInitiativeUICreateDto.setParticipantEmail("authorEmail@example.com");
         Long initiativeId = service.prepareInitiative(prepareInitiativeUICreateDto, Locales.LOCALE_FI);
-        testHelper.updateField(initiativeId, QMunicipalityInitiative.municipalityInitiative.state, InitiativeState.PUBLISHED);
 
-        assertThat(getSingleInitiativeInfo().getParticipantCount(), is(1L));
+        assertThat(initiativeDao.get(initiativeId).getParticipantCount(), is(1));
     }
 
     @Test(expected = AccessDeniedException.class)
@@ -150,59 +149,6 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         assertThat(participant.getParticipateDate(), is(LocalDate.now()));
     }
 
-    @Test(expected = AccessDeniedException.class)
-    public void editing_initiative_throws_exception_if_wrong_author() {
-        Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
-
-        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(ReflectionTestUtils.modifyAllFields(new Initiative()), new ContactInfo());
-
-        service.editInitiativeDraft(initiativeId, TestHelper.unknownLoginUserHolder, editDto);
-    }
-
-    @Test(expected = AccessDeniedException.class)
-    public void getting_initiativeDraft_for_edit_throws_exception_if_not_allowed() {
-        service.getInitiativeDraftForEdit(null, TestHelper.unknownLoginUserHolder);
-    }
-
-    @Test(expected = OperationNotAllowedException.class)
-    public void edit_initiative_fails_if_initiative_accepted() {
-        Long collectableAccepted = testHelper.createCollectableAccepted(testMunicipality.getId());
-        service.editInitiativeDraft(collectableAccepted, TestHelper.authorLoginUserHolder, new InitiativeDraftUIEditDto());
-    }
-
-    @Test
-    public void editing_initiative_updates_all_required_fields() {
-
-        Long initiativeId = testHelper.createDraft(testMunicipality.getId());
-
-        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(
-                ReflectionTestUtils.modifyAllFields(new Initiative()),
-                ReflectionTestUtils.modifyAllFields(new ContactInfo())
-        );
-
-        ContactInfo contactInfo = new ContactInfo();
-        contactInfo.setEmail("updated email");
-        contactInfo.setAddress("updated address");
-        contactInfo.setPhone("updated phone");
-        contactInfo.setName("updated author name");
-        contactInfo.setShowName(false); // As far as default is true ...
-        editDto.setContactInfo(contactInfo);
-        editDto.setName("updated initiative name");
-        editDto.setProposal("updated proposal");
-        editDto.setExtraInfo("updated extrainfo");
-
-        service.editInitiativeDraft(initiativeId, TestHelper.authorLoginUserHolder, editDto);
-
-        InitiativeDraftUIEditDto updated = service.getInitiativeDraftForEdit(initiativeId, TestHelper.authorLoginUserHolder);
-
-        ReflectionTestUtils.assertReflectionEquals(updated.getContactInfo(), contactInfo);
-        assertThat(updated.getName(), is(editDto.getName()));
-        assertThat(updated.getProposal(), is(editDto.getProposal()));
-        assertThat(updated.getContactInfo().isShowName(), is(editDto.getContactInfo().isShowName()));
-        assertThat(updated.getExtraInfo(), is(editDto.getExtraInfo()));
-        ReflectionTestUtils.assertNoNullFields(updated);
-
-    }
 
     @Test(expected = OperationNotAllowedException.class)
     public void update_initiative_fails_if_initiative_sent() {
@@ -245,12 +191,6 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         assertThat(initiativeForEdit.getMembership(), is(prepareDto().getMunicipalMembership()));
 
         // Note that all fields are not set when preparing
-    }
-
-    @Test(expected = OperationNotAllowedException.class)
-    public void get_initiative_for_edit_fails_if_initiative_accepted() {
-        Long collectableAccepted = testHelper.createCollectableAccepted(testMunicipality.getId());
-        service.getInitiativeDraftForEdit(collectableAccepted, TestHelper.authorLoginUserHolder);
     }
 
     @Test

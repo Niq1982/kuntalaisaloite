@@ -4,10 +4,7 @@ import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.newdto.ui.PrepareInitiativeUICreateDto;
-import fi.om.municipalityinitiative.service.PublicInitiativeService;
-import fi.om.municipalityinitiative.service.MunicipalityService;
-import fi.om.municipalityinitiative.service.UserService;
-import fi.om.municipalityinitiative.service.ValidationService;
+import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.web.BaseController;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
@@ -36,6 +33,9 @@ public class InitiativeCreateController extends BaseController {
 
     @Resource
     private PublicInitiativeService publicInitiativeService;
+
+    @Resource
+    InitiativeManagementService initiativeManagementService;
 
     @Resource
     ValidationService validionService;
@@ -85,7 +85,7 @@ public class InitiativeCreateController extends BaseController {
         Urls urls = Urls.get(locale);
         if (managementSettings.isAllowEdit()) {
             return ViewGenerator.editView(
-                    publicInitiativeService.getInitiativeDraftForEdit(initiativeId, loginUserHolder),
+                    initiativeManagementService.getInitiativeDraftForEdit(initiativeId, loginUserHolder),
                     publicInitiativeService.getAuthorInformation(initiativeId, loginUserHolder),
                     urls.moderation(initiativeId)
             ).view(model, urls.alt().edit(initiativeId));
@@ -117,7 +117,7 @@ public class InitiativeCreateController extends BaseController {
             ).view(model, urls.alt().edit(initiativeId));
         }
 
-        publicInitiativeService.editInitiativeDraft(initiativeId, loginUserHolder, editDto);
+        initiativeManagementService.editInitiativeDraft(initiativeId, loginUserHolder, editDto);
         return redirectWithMessage(urls.management(initiativeId), RequestMessage.SAVE_DRAFT, request);
     }
 

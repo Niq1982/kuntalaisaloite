@@ -110,25 +110,6 @@ public class PublicInitiativeService {
     }
 
     @Transactional(readOnly = true)
-    public InitiativeDraftUIEditDto getInitiativeDraftForEdit(Long initiativeId, LoginUserHolder loginUserHolder) {
-        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        assertAllowance("Edit initiative", getManagementSettings(initiativeId).isAllowEdit());
-        return InitiativeDraftUIEditDto.parse(
-                initiativeDao.get(initiativeId),
-                authorDao.getAuthor(loginUserHolder.getAuthorId()).getContactInfo()
-        );
-    }
-
-    @Transactional(readOnly = false)
-    public void editInitiativeDraft(Long initiativeId, LoginUserHolder loginUserHolder, InitiativeDraftUIEditDto editDto) {
-        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-
-        assertAllowance("Edit initiative", getManagementSettings(initiativeId).isAllowEdit());
-        initiativeDao.editInitiativeDraft(initiativeId, editDto);
-        authorDao.updateAuthorInformation(loginUserHolder.getAuthorId(), editDto.getContactInfo());
-    }
-
-    @Transactional(readOnly = true)
     public InitiativeUIUpdateDto getInitiativeForUpdate(Long initiativeId, LoginUserHolder loginUserHolder) {
 
         assertAllowance("Update initiative", getManagementSettings(initiativeId).isAllowUpdate());

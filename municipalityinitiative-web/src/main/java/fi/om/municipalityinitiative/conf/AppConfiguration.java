@@ -134,8 +134,13 @@ public class AppConfiguration {
     }
 
     @Bean
-    public PublicInitiativeService municipalityInitiativeService() {
+    public PublicInitiativeService publicInitiativeService() {
         return new PublicInitiativeService();
+    }
+
+    @Bean
+    public InitiativeManagementService initiativeManagementService() {
+        return new InitiativeManagementService();
     }
 
     @Bean
