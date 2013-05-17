@@ -234,6 +234,23 @@ public class JdbcParticipantDaoTest {
         assertThat(participantDao.getParticipantCount(testInitiativeId).getTotal(), is(originalParticipants+1));
     }
 
+    @Test
+    public void delete_participant() {
+        Long participantId = testHelper.createParticipant(new TestHelper.AuthorDraft(testInitiativeId, testMunicipalityId));
+        Long participantsBeforeDelete = testHelper.countAll(QParticipant.participant);
+        participantDao.deleteParticipant(testInitiativeId, participantId);
+
+        Long participantsAfterDelete = testHelper.countAll(QParticipant.participant);
+        assertThat(participantsAfterDelete, is(participantsBeforeDelete - 1));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void delete_participant_fails_if_initiative_id_and_participant_does_not_match() {
+        Long participantId = testHelper.createParticipant(new TestHelper.AuthorDraft(testInitiativeId, testMunicipalityId));
+        Long wrongInitiativeId = testHelper.createCollectableReview(testMunicipalityId);
+        participantDao.deleteParticipant(wrongInitiativeId, participantId);
+    }
+
     private Long createConfirmedParticipant(Long initiativeId, Long homeMunicipality, boolean publicName, String participantName) {
         ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
         participantCreateDto.setMunicipalityInitiativeId(initiativeId);

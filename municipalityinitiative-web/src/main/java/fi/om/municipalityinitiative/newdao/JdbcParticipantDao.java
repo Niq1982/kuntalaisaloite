@@ -146,4 +146,12 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .singleResult(QParticipant.participant.municipalityInitiativeId);
     }
 
+    @Override
+    @Transactional(readOnly = false)
+    public void deleteParticipant(Long initiativeId, Long participantId) {
+        assertSingleAffection(queryFactory.delete(participant)
+                .where(participant.id.eq(participantId))
+                .where(participant.municipalityInitiativeId.eq(initiativeId))
+                .execute());
+    }
 }

@@ -22,4 +22,6 @@ public interface ParticipantDao {
     List<Participant> findAllParticipants(Long initiativeId);
 
     Long getInitiativeIdByParticipant(Long participantId);
+
+    void deleteParticipant(Long initiativeId, Long participantId);
 }

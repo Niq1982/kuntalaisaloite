@@ -180,6 +180,7 @@ public class TestHelper {
     }
 
 
+    @Transactional(readOnly = false)
     public Long createParticipant(AuthorDraft authorDraft) {
         return queryFactory.insert(QParticipant.participant)
                         .set(QParticipant.participant.municipalityId, authorDraft.participantMunicipality)
