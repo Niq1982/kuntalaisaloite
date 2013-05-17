@@ -2,18 +2,18 @@ package fi.om.municipalityinitiative.newdto.user;
 
 import java.util.Set;
 
-public abstract class LoginUser {
+public abstract class User {
 
-    public static LoginUser omUser() {
+    public static User omUser() {
         return new OmLoginUser();
     }
 
-    public static LoginUser normalUser(Long authorId, Set<Long> authorsInitiatives) {
+    public static User normalUser(Long authorId, Set<Long> authorsInitiatives) {
         return new NormalLoginUser(authorId, authorsInitiatives);
     }
 
-    public static LoginUser anonym() {
-        return new AnonymLoginUser();
+    public static User anonym() {
+        return new AnonymUser();
     }
 
     public abstract boolean isOmUser();

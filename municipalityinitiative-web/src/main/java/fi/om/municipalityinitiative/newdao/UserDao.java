@@ -1,7 +1,7 @@
 package fi.om.municipalityinitiative.newdao;
 
-import fi.om.municipalityinitiative.newdto.user.LoginUser;
+import fi.om.municipalityinitiative.newdto.user.User;
 
 public interface UserDao {
-    public LoginUser getUser(String userName, String password);
+    public User getUser(String userName, String password);
 }

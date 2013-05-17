@@ -5,7 +5,7 @@ import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.FakeUserDao;
 import fi.om.municipalityinitiative.newdao.UserDao;
 import fi.om.municipalityinitiative.newdto.LoginUserHolder;
-import fi.om.municipalityinitiative.newdto.user.LoginUser;
+import fi.om.municipalityinitiative.newdto.user.User;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -36,7 +36,7 @@ public class UserService {
         if (initiativeIds.size() == 0) {
             throw new NotLoggedInException("Invalid login credentials");
         }
-        request.getSession().setAttribute(LOGIN_USER_PARAMETER, LoginUser.normalUser(authorId, initiativeIds));
+        request.getSession().setAttribute(LOGIN_USER_PARAMETER, User.normalUser(authorId, initiativeIds));
 
         return initiativeIds.iterator().next();
     }
@@ -74,18 +74,18 @@ public class UserService {
         if (session == null)
             return Maybe.absent();
 
-        LoginUser loginUser = (LoginUser) session.getAttribute(LOGIN_USER_PARAMETER);
+        User user = (User) session.getAttribute(LOGIN_USER_PARAMETER);
 
-        if (loginUser == null)
+        if (user == null)
             return Maybe.absent();
 
 
         return Maybe.of(new LoginUserHolder(
-                loginUser
+                user
         ));
     }
 
-    public static Maybe<LoginUser> getUser() {
+    public static Maybe<User> getUser() {
         String loginUserParameter = LOGIN_USER_PARAMETER;
         return getObject(loginUserParameter);
     }
@@ -121,7 +121,7 @@ public class UserService {
     public boolean isOmUser(HttpServletRequest request) {
         try {
             LoginUserHolder requiredOmLoginUserHolder = getRequiredOmLoginUserHolder(request);
-            return requiredOmLoginUserHolder.getLoginUser().isOmUser();
+            return requiredOmLoginUserHolder.getUser().isOmUser();
         }
         catch (AuthenticationRequiredException | AccessDeniedException e) {
             return false;

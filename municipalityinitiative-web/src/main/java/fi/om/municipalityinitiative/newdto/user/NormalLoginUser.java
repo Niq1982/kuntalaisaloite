@@ -2,7 +2,7 @@ package fi.om.municipalityinitiative.newdto.user;
 
 import java.util.Set;
 
-public class NormalLoginUser extends LoginUser {
+public class NormalLoginUser extends User {
 
     private Set<Long> authorsInitiatives;
 

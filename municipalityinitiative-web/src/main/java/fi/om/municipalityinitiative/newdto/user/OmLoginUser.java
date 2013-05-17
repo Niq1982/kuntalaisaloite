@@ -1,6 +1,6 @@
 package fi.om.municipalityinitiative.newdto.user;
 
-public class OmLoginUser extends LoginUser {
+public class OmLoginUser extends User {
 
     OmLoginUser() { }
 

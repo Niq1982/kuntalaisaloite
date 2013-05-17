@@ -75,7 +75,7 @@ public class InitiativeViewController extends BaseController {
 
         if (initiativeInfo.getState() != InitiativeState.PUBLISHED || initiativeInfo.getFixState() != FixState.OK) {  // XXX: Hmmm... Maybe move this to service layer and ManagementSettings ?
             LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
-            if (loginUserHolder.getLoginUser().isNotOmUser()) {
+            if (loginUserHolder.getUser().isNotOmUser()) {
                 loginUserHolder.assertManagementRightsForInitiative(initiativeId);
             }
         }

@@ -1,8 +1,8 @@
 package fi.om.municipalityinitiative.newdto.service;
 
-import fi.om.municipalityinitiative.newdto.user.LoginUser;
+import fi.om.municipalityinitiative.newdto.user.User;
 
-public class AnonymUser extends LoginUser {
+public class AnonymUser extends User {
     @Override
     public boolean isOmUser() {
         return false;
