@@ -44,13 +44,11 @@ public class JdbcInitiativeDao implements InitiativeDao {
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
                 .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
-                .where(municipalityInitiative.state.eq(InitiativeState.PUBLISHED))
-                .where(municipalityInitiative.fixState.eq(FixState.OK))
                 ;
 
+        filterByState(query, search);
         filterByTitle(query, search.getSearch());
         filterByMunicipality(query, search.getMunicipality());
-        filterByState(query, search);
         orderBy(query, search.getOrderBy());
         restrictResults(query, search);
 
