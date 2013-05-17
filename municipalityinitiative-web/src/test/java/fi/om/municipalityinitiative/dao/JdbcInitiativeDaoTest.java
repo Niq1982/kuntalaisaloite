@@ -450,6 +450,18 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
+    public void finds_by_om_all_returns_everything() {
+
+        for (InitiativeState initiativeState : InitiativeState.values()) {
+            testHelper.create(testMunicipality.getId(), initiativeState, InitiativeType.UNDEFINED);
+        }
+        Long singleSent = testHelper.createSingleSent(testMunicipality.getId());
+
+        assertThat(initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.omAll)), hasSize(InitiativeState.values().length + 1));
+
+    }
+
+    @Test
     public void counts_initiatives_by_state() {
 
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);

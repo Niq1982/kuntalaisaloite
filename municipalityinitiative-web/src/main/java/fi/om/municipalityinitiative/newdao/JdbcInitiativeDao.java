@@ -55,11 +55,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
         return query.list(Mappings.initiativeListInfoMapping);
     }
 
-    @Override
-    public List<InitiativeListInfo> findAll(InitiativeSearch search) {
-        return null;
-    }
-
     private static void orderBy(PostgresQuery query, InitiativeSearch.OrderBy orderBy) {
         switch (orderBy) {
             case latestSent:
@@ -128,6 +123,8 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 break;
             case accepted:
                 query.where(municipalityInitiative.state.eq(InitiativeState.ACCEPTED));
+                break;
+            case omAll:
                 break;
 
             // default:
