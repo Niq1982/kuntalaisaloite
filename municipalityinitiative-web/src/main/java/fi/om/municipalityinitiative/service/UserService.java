@@ -5,7 +5,7 @@ import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.FakeUserDao;
 import fi.om.municipalityinitiative.newdao.UserDao;
 import fi.om.municipalityinitiative.newdto.LoginUserHolder;
-import fi.om.municipalityinitiative.newdto.service.LoginUser;
+import fi.om.municipalityinitiative.newdto.user.LoginUser;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;

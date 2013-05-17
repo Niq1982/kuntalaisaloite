@@ -1,9 +1,7 @@
 package fi.om.municipalityinitiative.newdto;
 
-import fi.om.municipalityinitiative.newdto.service.Initiative;
-import fi.om.municipalityinitiative.newdto.service.LoginUser;
+import fi.om.municipalityinitiative.newdto.user.LoginUser;
 import fi.om.municipalityinitiative.service.AccessDeniedException;
-import fi.om.municipalityinitiative.util.Maybe;
 
 public class LoginUserHolder {
 

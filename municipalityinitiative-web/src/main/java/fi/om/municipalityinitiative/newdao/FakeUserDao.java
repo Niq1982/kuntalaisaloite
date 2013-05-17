@@ -1,6 +1,6 @@
 package fi.om.municipalityinitiative.newdao;
 
-import fi.om.municipalityinitiative.newdto.service.LoginUser;
+import fi.om.municipalityinitiative.newdto.user.LoginUser;
 import fi.om.municipalityinitiative.service.AccessDeniedException;
 
 import java.util.Collections;

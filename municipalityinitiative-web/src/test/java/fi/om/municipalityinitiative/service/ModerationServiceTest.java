@@ -8,7 +8,7 @@ import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
-import fi.om.municipalityinitiative.newdto.service.LoginUser;
+import fi.om.municipalityinitiative.newdto.user.LoginUser;
 import fi.om.municipalityinitiative.util.*;
 import org.junit.Before;
 import org.junit.Test;
