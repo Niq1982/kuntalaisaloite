@@ -1,14 +1,17 @@
 package fi.om.municipalityinitiative.util;
 
+import org.joda.time.DateTime;
+
+import java.util.Date;
 import java.util.Random;
 
 public class RandomHashGenerator {
 
     private static String previous;
 
-    private static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZqwertyuiopasdfghjklzxcvbnm";
 
-    private static Random rnd = new Random();
+    private static Random rnd = new Random(new Date().getTime());
 
     public synchronized static String randomString( int len )
     {

@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.newweb;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
+import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.util.FixState;
@@ -132,9 +133,14 @@ public class InitiativeViewController extends BaseController {
                 previousPageURI = urls.view(initiativeId);
             }
 
+            List<Participant> participants =
+                    userService.hasManagementRightForInitiative(initiativeId, request)
+                            ?  participantService.findAllParticipants(initiativeId, userService.getRequiredLoginUserHolder(request))
+                            : participantService.findPublicParticipants(initiativeId);
+
             return ViewGenerator.participantList(initiativeInfo,
                     participantService.getParticipantCount(initiativeId),
-                    participantService.findPublicParticipants(initiativeId),
+                    participants,
                     previousPageURI
             ).view(model, alternativeURL);
         }
