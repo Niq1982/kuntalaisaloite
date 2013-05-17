@@ -57,7 +57,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
 
     @Test
     public void accepted_but_not_published_initiative_cannot_be_viewed_if_not_logged_in() {
-        open(urls.view(testHelper.createCollectableAccepted(municipalityId)));
+        open(urls.view(testHelper.createCollaborativeAccepted(municipalityId)));
         assert404();
     }
 

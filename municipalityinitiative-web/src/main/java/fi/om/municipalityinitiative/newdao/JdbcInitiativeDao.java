@@ -44,18 +44,15 @@ public class JdbcInitiativeDao implements InitiativeDao {
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
                 .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
-                .where(municipalityInitiative.state.eq(InitiativeState.PUBLISHED))
-                .where(municipalityInitiative.fixState.eq(FixState.OK))
                 ;
 
+        filterByState(query, search);
         filterByTitle(query, search.getSearch());
         filterByMunicipality(query, search.getMunicipality());
-        filterByState(query, search);
         orderBy(query, search.getOrderBy());
         restrictResults(query, search);
 
         return query.list(Mappings.initiativeListInfoMapping);
-
     }
 
     private static void orderBy(PostgresQuery query, InitiativeSearch.OrderBy orderBy) {
@@ -99,13 +96,39 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     private static void filterByState(PostgresQuery query, InitiativeSearch search) {
+
+        if (!search.getShow().isOmOnly()) {
+            query.where(municipalityInitiative.state.eq(InitiativeState.PUBLISHED))
+                 .where(municipalityInitiative.fixState.eq(FixState.OK));
+        }
+
         switch (search.getShow()) {
+
+            // public
+
             case sent:
                 query.where(municipalityInitiative.sent.isNotNull());
                 break;
             case collecting:
                 query.where(municipalityInitiative.sent.isNull());
                 break;
+
+            // om
+
+            case draft:
+                query.where(municipalityInitiative.state.eq(InitiativeState.DRAFT));
+                break;
+            case review:
+                query.where(municipalityInitiative.state.eq(InitiativeState.REVIEW));
+                break;
+            case accepted:
+                query.where(municipalityInitiative.state.eq(InitiativeState.ACCEPTED));
+                break;
+            case omAll:
+                break;
+
+            // default:
+
             case all:
                 break;
             default:

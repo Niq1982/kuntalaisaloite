@@ -79,9 +79,25 @@ public class InitiativeSearch {
     }
 
     public enum Show {
-        collecting,
-        sent,
-        all
+        collecting(false),
+        sent(false),
+        all(false),
+
+        //om views:
+        draft(true),
+        review(true),
+        accepted(true),
+        omAll(true);
+
+        private boolean omOnly;
+
+        Show(boolean omOnly) {
+            this.omOnly = omOnly;
+        }
+
+        public boolean isOmOnly() {
+            return omOnly;
+        }
     }
 
     public enum OrderBy {

@@ -408,6 +408,56 @@ public class JdbcInitiativeDaoTest {
 
         assertThat(result, hasSize(1));
         assertThat(result.get(0).getId(), is(singleSent));
+    }
+
+    @Test
+    public void finds_by_draft() {
+        Long singleSent = testHelper.createSingleSent(testMunicipality.getId());
+        Long collaborative = testHelper.createCollaborativeAccepted(testMunicipality.getId());
+
+        Long draft = testHelper.createDraft(testMunicipality.getId());
+
+        List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.draft));
+
+        assertThat(result, hasSize(1));
+        assertThat(result.get(0).getId(), is(draft));
+    }
+
+    @Test
+    public void finds_by_review() {
+        Long singleSent = testHelper.createSingleSent(testMunicipality.getId());
+        Long collaborative = testHelper.createCollaborativeAccepted(testMunicipality.getId());
+
+        Long review = testHelper.createCollectableReview(testMunicipality.getId());
+
+        List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.review));
+
+        assertThat(result, hasSize(1));
+        assertThat(result.get(0).getId(), is(review));
+    }
+
+    @Test
+    public void finds_by_accepted() {
+        Long singleSent = testHelper.createSingleSent(testMunicipality.getId());
+        Long review = testHelper.createCollectableReview(testMunicipality.getId());
+
+        Long accepted = testHelper.createCollaborativeAccepted(testMunicipality.getId());
+
+        List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.accepted));
+
+        assertThat(result, hasSize(1));
+        assertThat(result.get(0).getId(), is(accepted));
+    }
+
+    @Test
+    public void finds_by_om_all_returns_everything() {
+
+        for (InitiativeState initiativeState : InitiativeState.values()) {
+            testHelper.create(testMunicipality.getId(), initiativeState, InitiativeType.UNDEFINED);
+        }
+        Long singleSent = testHelper.createSingleSent(testMunicipality.getId());
+
+        assertThat(initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.omAll)), hasSize(InitiativeState.values().length + 1));
 
     }
 

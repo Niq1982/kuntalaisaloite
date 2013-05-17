@@ -43,7 +43,7 @@ public class JdbcAuthorDaoTest {
     @Test
     public void create_and_get_and_delete() {
         AuthorInvitation original = ReflectionTestUtils.modifyAllFields(new AuthorInvitation());
-        original.setInitiativeId(testHelper.createCollectableAccepted(testMunicipality));
+        original.setInitiativeId(testHelper.createCollaborativeAccepted(testMunicipality));
 
         // Create
         authorDao.addAuthorInvitation(original);
@@ -63,13 +63,13 @@ public class JdbcAuthorDaoTest {
 
     @Test
     public void find_authors_returns_at_least_one() {
-        Long initiativeId = testHelper.createCollectableAccepted(testMunicipality);
+        Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality);
         assertThat(authorDao.findAuthors(initiativeId), hasSize(1));
     }
 
     @Test
     public void login_as_author_returns_authors_initiative() {
-        Long collectableAccepted = testHelper.createCollectableAccepted(testMunicipality);
+        Long collectableAccepted = testHelper.createCollaborativeAccepted(testMunicipality);
 
         Set<Long> ids = authorDao.loginAndGetAuthorsInitiatives(TestHelper.PREVIOUS_TEST_MANAGEMENT_HASH);
 

@@ -7,18 +7,12 @@ import fi.om.municipalityinitiative.util.Maybe;
 
 public class LoginUserHolder {
 
-    Maybe<Initiative> initiative;
     LoginUser loginUser;
 
-    public LoginUserHolder(LoginUser loginUser, Maybe<Initiative> initiative) {
+    public LoginUserHolder(LoginUser loginUser) {
         if (loginUser == null)
             throw new RuntimeException("User was null");
         this.loginUser = loginUser;
-        this.initiative = initiative;
-    }
-
-    public Maybe<Initiative> getInitiative() {
-        return initiative;
     }
 
     public LoginUser getLoginUser() {
