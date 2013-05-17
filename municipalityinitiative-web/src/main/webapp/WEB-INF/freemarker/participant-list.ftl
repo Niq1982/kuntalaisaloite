@@ -21,11 +21,30 @@
     <@returnPrevious />
 
     <#-- VIEW BLOCKS -->
-    <div class="view-block single public">
+    <div class="view-block single public cf">
         <h2><@u.message key="participantList.title" args=[participantCount.publicNames!""] /></h2>
         
         <@participantList participants />
 
+
+        <#assign deleteParticipant>
+            <@compress single_line=true>
+                <form action="${springMacroRequestContext.requestUri}" method="POST">
+                    <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+                    
+                    <input type="text" name="participantId" value=""/>
+                    
+                    <p><@u.message "sendFixToReview.confirm.description" /></p>
+                    
+                    <div class="input-block-content">
+                        <button type="submit" name="${UrlConstants.ACTION_DELETE_PARTICIPANT}" id="modal-${UrlConstants.ACTION_DELETE_PARTICIPANT}" value="${UrlConstants.ACTION_DELETE_PARTICIPANT}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.deleteParticipant.confirm" /></button>
+                        <a href="${urls.participantList(initiative.id)}#delete-participant" class="push close"><@u.message "action.cancel" /></a>
+                    </div>
+                </form>
+            </@compress>
+        </#assign>
+        
+        <#noescape>${deleteParticipant}</#noescape>
     </div>
     
     <@returnPrevious />
@@ -41,7 +60,7 @@
 <#macro participantList participants>
     <#list participants as participant>
         <#if participant_index == 0><ul class="participant-list no-style"></#if>
-            <li><span class="date"><@u.localDate participant.participateDate!"" /></span> <span class="name-container"><span class="name">${participant.name!""}</span> <span class="home-municipality">- ${participant.homeMunicipality.getName(locale)!""}</span></span></li>
+            <li><span class="date"><@u.localDate participant.participateDate!"" /></span> <span class="name-container"><span class="name">${participant.name!""} - ${participant.id}</span> <span class="home-municipality">- ${participant.homeMunicipality.getName(locale)!""}</span></span></li>
         <#if !participant_has_next></ul></#if>
     </#list>
 </#macro>
