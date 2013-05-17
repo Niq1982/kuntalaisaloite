@@ -74,7 +74,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     @Test(expected = OperationNotAllowedException.class)
     public void get_initiative_for_edit_fails_if_initiative_accepted() {
-        Long collectableAccepted = testHelper.createCollectableAccepted(testMunicipality.getId());
+        Long collectableAccepted = testHelper.createCollaborativeAccepted(testMunicipality.getId());
         service.getInitiativeDraftForEdit(collectableAccepted, TestHelper.authorLoginUserHolder);
     }
 
@@ -94,7 +94,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     @Test(expected = OperationNotAllowedException.class)
     public void edit_initiative_fails_if_initiative_accepted() {
-        Long collectableAccepted = testHelper.createCollectableAccepted(testMunicipality.getId());
+        Long collectableAccepted = testHelper.createCollaborativeAccepted(testMunicipality.getId());
         service.editInitiativeDraft(collectableAccepted, TestHelper.authorLoginUserHolder, new InitiativeDraftUIEditDto());
     }
 
@@ -112,7 +112,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     @Test(expected = AccessDeniedException.class)
     public void get_initiative_for_update_fails_if_not_allowed() {
-        Long initiativeId = testHelper.createCollectableAccepted(testMunicipality.getId());
+        Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality.getId());
         service.getInitiativeForUpdate(initiativeId, TestHelper.unknownLoginUserHolder);
     }
 
@@ -181,31 +181,31 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     @Test(expected = OperationNotAllowedException.class)
     public void send_review_and_to_municipality_fails_if_initiative_accepted() {
-        Long accepted = testHelper.createCollectableAccepted(testMunicipality.getId());
+        Long accepted = testHelper.createCollaborativeAccepted(testMunicipality.getId());
         service.sendReviewAndStraightToMunicipality(accepted, TestHelper.authorLoginUserHolder, null, null);
     }
 
     @Test(expected = OperationNotAllowedException.class)
     public void send_review_not_single_fails_if_initiative_accepted() {
-        Long accepted = testHelper.createCollectableAccepted(testMunicipality.getId());
+        Long accepted = testHelper.createCollaborativeAccepted(testMunicipality.getId());
         service.sendReviewOnlyForAcceptance(accepted, TestHelper.authorLoginUserHolder, null);
     }
 
     @Test(expected = AccessDeniedException.class)
     public void send_single_to_review_fails_if_no_right_to_initiative() {
-        Long accepted = testHelper.createCollectableAccepted(testMunicipality.getId());
+        Long accepted = testHelper.createCollaborativeAccepted(testMunicipality.getId());
         service.sendReviewAndStraightToMunicipality(accepted, TestHelper.unknownLoginUserHolder, null, null);
     }
 
     @Test(expected = AccessDeniedException.class)
     public void send_to_review_fails_if_no_right_to_initiative() {
-        Long accepted = testHelper.createCollectableAccepted(testMunicipality.getId());
+        Long accepted = testHelper.createCollaborativeAccepted(testMunicipality.getId());
         service.sendReviewOnlyForAcceptance(accepted, TestHelper.unknownLoginUserHolder, null);
     }
 
     @Test(expected = AccessDeniedException.class)
     public void send_fix_to_review_fails_if_no_right_to_initiative() {
-        Long accepted = testHelper.createCollectableAccepted(testMunicipality.getId());
+        Long accepted = testHelper.createCollaborativeAccepted(testMunicipality.getId());
         service.sendFixToReview(accepted, TestHelper.unknownLoginUserHolder);
     }
 
@@ -283,7 +283,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     @Test(expected = AccessDeniedException.class)
     public void sending_collaborative_to_municipality_fails_if_no_rights_to_initiative() {
-        Long collectableAccepted = testHelper.createCollectableAccepted(testMunicipality.getId());
+        Long collectableAccepted = testHelper.createCollaborativeAccepted(testMunicipality.getId());
 
         service.sendCollaborativeToMunicipality(collectableAccepted, TestHelper.unknownLoginUserHolder, "", null);
     }
@@ -325,7 +325,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     @Test
     public void update_initiative_updates_given_fields() {
 
-        Long initiativeId = testHelper.createCollectableAccepted(testMunicipality.getId());
+        Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality.getId());
 
         InitiativeUIUpdateDto updateDto = new InitiativeUIUpdateDto();
         ContactInfo contactInfo = new ContactInfo();

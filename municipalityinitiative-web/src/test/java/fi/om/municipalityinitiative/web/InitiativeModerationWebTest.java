@@ -2,7 +2,6 @@ package fi.om.municipalityinitiative.web;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.By;
 
 import static fi.om.municipalityinitiative.web.MessageSourceKeys.*;
 import static org.hamcrest.CoreMatchers.startsWith;
@@ -24,13 +23,13 @@ public class InitiativeModerationWebTest extends WebTestBase {
 
     @Test
     public void moderation_redirects_to_loginpage_if_not_logged_in() {
-        open(urls.moderation(testHelper.createCollectableAccepted(testMunicipality1Id)));
+        open(urls.moderation(testHelper.createCollaborativeAccepted(testMunicipality1Id)));
         assertThat(driver.getCurrentUrl(), startsWith(urls.login()));
     }
 
     @Test
     public void moderation_page_fails_if_logged_in_as_author() {
-        Long initiativeId = testHelper.createCollectableAccepted(testMunicipality1Id);
+        Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality1Id);
         loginAsAuthorForLastTestHelperCreatedInitiative();
 
         open(urls.moderation(initiativeId));

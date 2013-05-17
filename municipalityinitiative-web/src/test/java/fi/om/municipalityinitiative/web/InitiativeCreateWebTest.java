@@ -3,7 +3,6 @@ package fi.om.municipalityinitiative.web;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 import static fi.om.municipalityinitiative.web.MessageSourceKeys.*;
 import static org.junit.Assert.assertEquals;
@@ -124,7 +123,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
     @Test
     public void update_page_opens_if_logged_in_as_author() {
-        Long initiative = testHelper.createCollectableAccepted(testMunicipality1Id);
+        Long initiative = testHelper.createCollaborativeAccepted(testMunicipality1Id);
         loginAsAuthorForLastTestHelperCreatedInitiative();
         open(urls.update(initiative));
         assertTitle("Muokkaa kuntalaisaloitetta - Kuntalaisaloitepalvelu");

@@ -413,12 +413,27 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void finds_by_draft() {
         Long singleSent = testHelper.createSingleSent(testMunicipality.getId());
+        Long collaborative = testHelper.createCollaborativeAccepted(testMunicipality.getId());
+
         Long draft = testHelper.createDraft(testMunicipality.getId());
 
         List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.draft));
 
         assertThat(result, hasSize(1));
         assertThat(result.get(0).getId(), is(draft));
+    }
+
+    @Test
+    public void finds_by_review() {
+        Long singleSent = testHelper.createSingleSent(testMunicipality.getId());
+        Long collaborative = testHelper.createCollaborativeAccepted(testMunicipality.getId());
+
+        Long review = testHelper.createCollectableReview(testMunicipality.getId());
+
+        List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.review));
+
+        assertThat(result, hasSize(1));
+        assertThat(result.get(0).getId(), is(review));
     }
 
     @Test

@@ -94,7 +94,7 @@ public class TestHelper {
     }
 
     @Transactional
-    public Long createCollectableAccepted(Long municipalityId) {
+    public Long createCollaborativeAccepted(Long municipalityId) {
         return createInitiative(new InitiativeDraft(municipalityId)
                 .withState(InitiativeState.ACCEPTED)
                 .withType(InitiativeType.COLLABORATIVE)
