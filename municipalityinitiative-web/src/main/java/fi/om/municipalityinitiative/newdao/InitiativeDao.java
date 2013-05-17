@@ -19,6 +19,8 @@ public interface InitiativeDao {
 
     List<InitiativeListInfo> find(InitiativeSearch search);
 
+    List<InitiativeListInfo> findAll(InitiativeSearch search);
+
     Initiative get(Long initiativeId);
 
     InitiativeCounts getInitiativeCounts(Maybe<Long> municipality);

@@ -55,7 +55,11 @@ public class JdbcInitiativeDao implements InitiativeDao {
         restrictResults(query, search);
 
         return query.list(Mappings.initiativeListInfoMapping);
+    }
 
+    @Override
+    public List<InitiativeListInfo> findAll(InitiativeSearch search) {
+        return null;
     }
 
     private static void orderBy(PostgresQuery query, InitiativeSearch.OrderBy orderBy) {
@@ -99,6 +103,12 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     private static void filterByState(PostgresQuery query, InitiativeSearch search) {
+
+        if (!search.getShow().isOmOnly()) {
+            query.where(municipalityInitiative.state.eq(InitiativeState.PUBLISHED))
+                 .where(municipalityInitiative.fixState.eq(FixState.OK));
+        }
+
         switch (search.getShow()) {
             case sent:
                 query.where(municipalityInitiative.sent.isNotNull());
@@ -106,6 +116,9 @@ public class JdbcInitiativeDao implements InitiativeDao {
             case collecting:
                 query.where(municipalityInitiative.sent.isNull());
                 break;
+            case draft:
+                query.where(municipalityInitiative.state.eq(InitiativeState.REVIEW));
+
             case all:
                 break;
             default:

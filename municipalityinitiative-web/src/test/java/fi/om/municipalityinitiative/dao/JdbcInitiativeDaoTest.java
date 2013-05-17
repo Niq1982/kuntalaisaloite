@@ -408,7 +408,17 @@ public class JdbcInitiativeDaoTest {
 
         assertThat(result, hasSize(1));
         assertThat(result.get(0).getId(), is(singleSent));
+    }
 
+    @Test
+    public void finds_by_draft() {
+        Long singleSent = testHelper.createSingleSent(testMunicipality.getId());
+        Long draft = testHelper.createDraft(testMunicipality.getId());
+
+        List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.draft));
+
+        assertThat(result, hasSize(1));
+        assertThat(result.get(0).getId(), is(draft));
     }
 
     @Test
