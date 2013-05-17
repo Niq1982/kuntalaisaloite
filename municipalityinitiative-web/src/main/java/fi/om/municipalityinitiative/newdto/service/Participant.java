@@ -65,6 +65,7 @@ public class Participant {
         return id;
     }
 
+    @JsonIgnore
     public void setId(Long id) {
         this.id = id;
     }
