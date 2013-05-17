@@ -11,10 +11,7 @@ import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.service.LoginUser;
 import fi.om.municipalityinitiative.util.*;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.internal.verification.AtLeast;
-import org.mockito.verification.VerificationMode;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -46,7 +43,7 @@ public class ModerationServiceTest {
         moderationService.authorDao = mock(AuthorDao.class);
         stub(moderationService.authorDao.getAuthorEmails(anyLong())).toReturn(Collections.singletonList("")); // Avoid nullpointer temporarily
 
-        loginUserHolder = new LoginUserHolder(LoginUser.normalUser(null, Collections.<Long>emptySet()), Maybe.<Initiative>absent());
+        loginUserHolder = new LoginUserHolder(LoginUser.normalUser(null, Collections.<Long>emptySet()));
     }
 
     @Test
@@ -69,7 +66,7 @@ public class ModerationServiceTest {
     }
 
     private void setOmUser() {
-        loginUserHolder = new LoginUserHolder(LoginUser.omUser(), Maybe.<Initiative>absent());
+        loginUserHolder = new LoginUserHolder(LoginUser.omUser());
     }
 
     @Test(expected = OperationNotAllowedException.class)

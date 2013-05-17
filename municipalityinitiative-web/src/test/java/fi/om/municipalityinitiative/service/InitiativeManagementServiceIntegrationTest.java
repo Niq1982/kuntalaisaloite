@@ -101,13 +101,8 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     @Test
     public void get_initiative_for_update_sets_all_required_information() {
         Long initiativeId = testHelper.createCollectableReview(testMunicipality.getId());
-        stubAuthorLoginUserHolderWith(initiativeId);
         InitiativeUIUpdateDto initiativeForUpdate = service.getInitiativeForUpdate(initiativeId, TestHelper.authorLoginUserHolder);
         ReflectionTestUtils.assertNoNullFields(initiativeForUpdate);
-    }
-
-    private void stubAuthorLoginUserHolderWith(Long initiativeId) {
-        stub(TestHelper.authorLoginUserHolder.getInitiative()).toReturn(Maybe.of(initiativeDao.get(initiativeId)));
     }
 
     @Test(expected = AccessDeniedException.class)
