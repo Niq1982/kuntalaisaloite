@@ -115,7 +115,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 query.where(municipalityInitiative.sent.isNull());
                 break;
             case draft:
-                query.where(municipalityInitiative.state.eq(InitiativeState.REVIEW));
+                query.where(municipalityInitiative.state.eq(InitiativeState.DRAFT));
 
             case all:
                 break;
