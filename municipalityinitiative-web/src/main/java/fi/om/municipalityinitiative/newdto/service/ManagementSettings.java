@@ -33,7 +33,8 @@ public class ManagementSettings {
 
     public boolean isAllowSendToMunicipality() {
         return (initiative.getState().equals(InitiativeState.ACCEPTED) || initiative.getState().equals(InitiativeState.PUBLISHED))
-                && initiative.getSentTime().isNotPresent();
+                && initiative.getSentTime().isNotPresent()
+                && !isAllowSendFixToReview();
     }
 
     public boolean isAllowPublish() {
@@ -47,7 +48,7 @@ public class ManagementSettings {
     }
 
     public boolean isAllowInviteAuthors() {
-        return initiative.getSentTime().isNotPresent();
+        return initiative.getSentTime().isNotPresent() && !isAllowSendFixToReview();
     }
 
     public boolean isAllowOmSendBackForFixing() {

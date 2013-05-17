@@ -906,6 +906,16 @@ $('.municipality-filter').change( function() {
 			console.log(e);
 		}
 	});
+	
+	// Send fix to review
+	$('.js-send-fix-to-review').click(function(){
+		try {
+			generateModal(modalData.sendFixToReview(), 'minimal');
+			return false;
+		} catch(e) {
+			console.log(e);
+		}
+	});
 
 	// Start collecting participants
 	$('.js-start-collecting').click(function(){

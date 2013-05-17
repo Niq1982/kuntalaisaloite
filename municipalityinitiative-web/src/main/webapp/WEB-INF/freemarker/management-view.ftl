@@ -239,6 +239,48 @@
         </#if>
         
     </#if>
+    
+        
+    <#if managementSettings.allowSendFixToReview>
+        <#if !RequestParameters['send-fix-to-review']??>
+            <div class="msg-block">
+                <div class="system-msg msg-info">
+                    <h2 id="send-fix-to-review"><@u.message "sendFixToReview.title" /></h2>
+                    <p><@u.message "sendFixToReview.description" /></p>
+        
+                    <a href="${managementURL}?send-fix-to-review=confirm#send-fix-to-review" id="js-send-fix-to-review" class="small-button js-send-fix-to-review"><span class="small-icon save-and-send"><@u.message "action.sendFixToReview" /></span></a>
+                </div>
+            </div>
+        </#if>
+        
+        <#assign sendFixToReview>
+            <@compress single_line=true>
+                <form action="${springMacroRequestContext.requestUri}" method="POST" >
+                    <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+                    
+                    <p><@u.message "sendFixToReview.confirm.description" /></p>
+                    
+                    <div class="input-block-content">
+                        <button type="submit" name="${UrlConstants.ACTION_SEND_FIX_TO_REVIEW}" id="modal-${UrlConstants.ACTION_SEND_FIX_TO_REVIEW}" value="${UrlConstants.ACTION_SEND_FIX_TO_REVIEW}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.sendFixToReview.confirm" /></button>
+                        <a href="${managementURL}#send-fix-to-review" class="push close"><@u.message "action.cancel" /></a>
+                    </div>
+                </form>
+            </@compress>
+        </#assign>
+        
+        <#-- Confirm send fix to review for NOSCRIPT-users -->
+        <#if RequestParameters['send-fix-to-review']?? && RequestParameters['send-fix-to-review'] == "confirm">
+        <noscript>
+            <div id="send-fix-to-review" class="msg-block cf">
+                <#noescape>
+                    <h2><@u.message "sendFixToReview.confirm.title" /></h2>
+                    ${sendFixToReview}
+                </#noescape>
+            </div>
+        </noscript>
+        </#if>
+    </#if>
+    
 
     <#--
      * Management VIEW modals
@@ -281,6 +323,16 @@
         </#if>
         
         <#-- Modal: Confirm send for publish. -->
+        <#if sendFixToReview??>    
+            modalData.sendFixToReview = function() {
+                return [{
+                    title:      '<@u.message "sendFixToReview.confirm.title" />',
+                    content:    '<#noescape>${sendFixToReview?replace("'","&#39;")}</#noescape>'
+                }]
+            };
+        </#if>
+        
+        <#-- Modal: Send fix to review. -->
         <#if sendToReviewCollect??>    
             modalData.sendToReviewCollect = function() {
                 return [{
