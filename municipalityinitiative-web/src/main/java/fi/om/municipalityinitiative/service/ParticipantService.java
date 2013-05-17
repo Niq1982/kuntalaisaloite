@@ -39,7 +39,7 @@ public class ParticipantService {
         return participantDao.findAllParticipants(initiativeId);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = false)
     public void deleteParticipant(Long initiativeId, LoginUserHolder loginUserHolder, Long participantId) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         participantDao.deleteParticipant(initiativeId, participantId);

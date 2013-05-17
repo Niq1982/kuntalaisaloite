@@ -1113,7 +1113,37 @@ var editMunicipality = (function() {
 
 }());
 
+/**
+* Manage municipalities
+* =====================
+*/
+var deleteParticipant = (function() {
 
+	
+	$('.js-delete-participant').click( function(){
+		$('.municipalities .active').removeClass('active');
+		$(this).addClass('active');
+	});
+	
+	return {
+		getParticipant: function(){
+			var municipality = $('.municipalities .active');
+			var form = $('#municipality-form');
+			var selMunicipality = $('#selected-municipality');
+			
+			if ( municipality.data('id') !== undefined ) {
+				selMunicipality.text(municipality.text());
+			} else {
+				selMunicipality.html(selMunicipality.data('empty'));
+			}
+			
+			form.find('#id').attr('value',municipality.data('id'));
+			form.find('input[type=radio][name=active][value='+municipality.data('active')+']').attr('checked','checked');
+			form.find('#municipalityEmail').val(municipality.data('email'));
+		}
+	};
+
+}());
 
 
 

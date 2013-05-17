@@ -223,8 +223,7 @@ public class InitiativeManagementController extends BaseController {
         
         participantService.deleteParticipant(initiativeId, userService.getRequiredLoginUserHolder(request), participantId);
         
-//        initiativeManagementService.sendToMunicipality(initiativeId, userService.getRequiredLoginUserHolder(request), sentComment, locale);
-        return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.PUBLISH_AND_SEND, request);
+        return redirectWithMessage(Urls.get(locale).participantList(initiativeId), RequestMessage.PARTICIPANT_DELETED, request);
     }
 
     
