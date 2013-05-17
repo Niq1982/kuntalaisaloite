@@ -7,18 +7,14 @@ import fi.om.municipalityinitiative.util.Membership;
 import org.joda.time.LocalDate;
 
 public class Participant {
-    private final String name;
-    private final LocalDate participateDate;
-    private final Municipality homeMunicipality;
-    private final String email;
-    private final Membership membership;
+    private String name;
+    private LocalDate participateDate;
+    private Municipality homeMunicipality;
+    private String email;
+    private Membership membership;
 
-    public Participant(LocalDate participateDate, String name, Municipality homeMunicipality, String email, Membership membership) {
-        this.name = name;
-        this.participateDate = participateDate;
-        this.homeMunicipality = homeMunicipality;
-        this.email = email;
-        this.membership = membership;
+    public Participant() {
+
     }
 
     public String getName() {
@@ -42,5 +38,25 @@ public class Participant {
     @JsonIgnore
     public Membership getMembership() {
         return membership;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setParticipateDate(LocalDate participateDate) {
+        this.participateDate = participateDate;
+    }
+
+    public void setHomeMunicipality(Municipality homeMunicipality) {
+        this.homeMunicipality = homeMunicipality;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setMembership(Membership membership) {
+        this.membership = membership;
     }
 }

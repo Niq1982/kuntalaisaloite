@@ -32,8 +32,9 @@ public class JsonJokuParseriTest {
         participantCount.setPublicNames(1);
 
         ArrayList<Participant> publicParticipants = Lists.<Participant>newArrayList();
-        publicParticipants.add(new Participant(new LocalDate(2010, 1, 1), "Teemu Teekkari", TAMPERE, "", Membership.community));
-        publicParticipants.add(new Participant(new LocalDate(2010, 1, 1), "Taina Teekkari", TAMPERE, "", Membership.company));
+
+        publicParticipants.add(participant(TAMPERE, "Teemu Teekkari"));
+        publicParticipants.add(participant(TAMPERE, "Taina Teekkari"));
 
         Initiative initiative = new Initiative();
         initiative.setId(1L);
@@ -53,5 +54,14 @@ public class JsonJokuParseriTest {
             System.out.println(s.getIndent() + ": " + StringUtils.repeat(" ", 3 * s.getIndent()) + s.getValue() + s.getLocalizationKey());
         }
 
+    }
+
+    private static Participant participant(Municipality TAMPERE, String name) {
+        Participant participant = new Participant();
+        participant.setParticipateDate(new LocalDate(2010, 1, 1));
+        participant.setName(name);
+        participant.setHomeMunicipality(TAMPERE);
+        participant.setMembership(Membership.community);
+        return participant;
     }
 }

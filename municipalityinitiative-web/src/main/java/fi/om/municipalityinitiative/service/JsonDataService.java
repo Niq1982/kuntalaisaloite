@@ -15,6 +15,7 @@ import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.newweb.ApiController;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
+import fi.om.municipalityinitiative.util.Membership;
 import org.joda.time.LocalDate;
 
 import javax.annotation.Resource;
@@ -77,7 +78,13 @@ public class JsonDataService {
         participantCount.setPublicNames(1);
 
         ArrayList<Participant> publicParticipants = Lists.<Participant>newArrayList();
-        publicParticipants.add(new Participant(new LocalDate(2010, 1, 1), "Teemu Teekkari", ApiController.TAMPERE, "", null));
+
+        Participant participant = new Participant();
+        participant.setParticipateDate(new LocalDate(2010, 1, 1));
+        participant.setName("Teemu Teekkari");
+        participant.setHomeMunicipality(ApiController.TAMPERE);
+
+        publicParticipants.add(participant);
 
         Initiative initiativeInfo = new Initiative();
         initiativeInfo.setId(1L);

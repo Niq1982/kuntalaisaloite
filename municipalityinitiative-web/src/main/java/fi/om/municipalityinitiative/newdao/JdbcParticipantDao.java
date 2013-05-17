@@ -154,17 +154,13 @@ public class JdbcParticipantDao implements ParticipantDao {
                     participant.all(), QMunicipality.municipality.all()) {
                 @Override
                 protected Participant map(Tuple row) {
-                    return new Participant(
-                            row.get(participant.participateTime),
-                            row.get(participant.name),
-                            new Municipality(
-                                    row.get(QMunicipality.municipality.id),
-                                    row.get(QMunicipality.municipality.name),
-                                    row.get(QMunicipality.municipality.nameSv),
-                                    row.get(QMunicipality.municipality.active)),
-                            row.get(participant.email),
-                            row.get(participant.membershipType)
-                    );
+                    Participant par = new Participant();
+                    par.setParticipateDate(row.get(participant.participateTime));
+                    par.setName(row.get(participant.name));
+                    par.setEmail(row.get(participant.email));
+                    par.setMembership(row.get(participant.membershipType));
+                    par.setHomeMunicipality(Mappings.parseMunicipality(row));
+                    return par;
 
                 }
             };
