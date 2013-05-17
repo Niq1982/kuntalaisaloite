@@ -1,15 +1,12 @@
 package fi.om.municipalityinitiative.newdao;
 
-import com.mysema.query.Tuple;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.support.Expressions;
 import com.mysema.query.types.ConstantImpl;
 import com.mysema.query.types.Expression;
-import com.mysema.query.types.MappingProjection;
 import com.mysema.query.types.expr.CaseBuilder;
 import com.mysema.query.types.expr.SimpleExpression;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
-import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
@@ -128,7 +125,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .where(participant.showName.eq(true))
                 .where(participant.confirmationCode.isNull())
                 .orderBy(participant.id.desc())
-                .list(participantMapping);
+                .list(Mappings.participantMapping);
     }
 
     @Override
@@ -139,7 +136,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .where(participant.confirmationCode.isNull())
                 .leftJoin(participant.participantMunicipalityFk, QMunicipality.municipality)
                 .orderBy(participant.id.desc())
-                .list(participantMapping);
+                .list(Mappings.participantMapping);
     }
 
     @Override
@@ -148,21 +145,5 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .where(QParticipant.participant.id.eq(participantId))
                 .singleResult(QParticipant.participant.municipalityInitiativeId);
     }
-
-    Expression<Participant> participantMapping =
-            new MappingProjection<Participant>(Participant.class,
-                    participant.all(), QMunicipality.municipality.all()) {
-                @Override
-                protected Participant map(Tuple row) {
-                    Participant par = new Participant();
-                    par.setParticipateDate(row.get(participant.participateTime));
-                    par.setName(row.get(participant.name));
-                    par.setEmail(row.get(participant.email));
-                    par.setMembership(row.get(participant.membershipType));
-                    par.setHomeMunicipality(Mappings.parseMunicipality(row));
-                    return par;
-
-                }
-            };
 
 }

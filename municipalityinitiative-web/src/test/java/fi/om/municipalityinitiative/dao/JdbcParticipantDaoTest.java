@@ -9,6 +9,7 @@ import fi.om.municipalityinitiative.sql.QParticipant;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Membership;
+import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -72,6 +73,8 @@ public class JdbcParticipantDaoTest {
         assertThat(participant.getParticipateDate(), is(notNullValue()));
         assertThat(participant.getEmail(), is(PARTICIPANT_EMAIL));
         assertThat(participant.getMembership(), is(PARTICIPANT_MEMBERSHIP));
+        assertThat(participant.getId(), is(notNullValue()));
+        ReflectionTestUtils.assertNoNullFields(participant);
     }
 
     @Test

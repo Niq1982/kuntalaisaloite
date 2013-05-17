@@ -8,6 +8,7 @@ import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
+import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.sql.QAuthor;
@@ -20,6 +21,7 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
+import static fi.om.municipalityinitiative.sql.QParticipant.participant;
 
 public class Mappings {
 
@@ -113,6 +115,22 @@ public class Mappings {
                     authorInvitation.setRejectTime(Maybe.fromNullable(row.get(QAuthorInvitation.authorInvitation.rejectTime)));
 
                     return authorInvitation;
+
+                }
+            };
+    public static Expression<Participant> participantMapping =
+            new MappingProjection<Participant>(Participant.class,
+                    participant.all(), QMunicipality.municipality.all()) {
+                @Override
+                protected Participant map(Tuple row) {
+                    Participant par = new Participant();
+                    par.setParticipateDate(row.get(participant.participateTime));
+                    par.setName(row.get(participant.name));
+                    par.setEmail(row.get(participant.email));
+                    par.setMembership(row.get(participant.membershipType));
+                    par.setHomeMunicipality(parseMunicipality(row));
+                    par.setId(row.get(participant.id));
+                    return par;
 
                 }
             };

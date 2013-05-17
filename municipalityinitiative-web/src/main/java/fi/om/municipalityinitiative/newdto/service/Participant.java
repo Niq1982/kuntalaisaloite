@@ -12,6 +12,7 @@ public class Participant {
     private Municipality homeMunicipality;
     private String email;
     private Membership membership;
+    private Long id;
 
     public Participant() {
 
@@ -58,5 +59,13 @@ public class Participant {
 
     public void setMembership(Membership membership) {
         this.membership = membership;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
