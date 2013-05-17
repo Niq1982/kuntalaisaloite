@@ -108,6 +108,9 @@ public class JdbcInitiativeDao implements InitiativeDao {
         }
 
         switch (search.getShow()) {
+
+            // public
+
             case sent:
                 query.where(municipalityInitiative.sent.isNotNull());
                 break;
@@ -115,10 +118,19 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 query.where(municipalityInitiative.sent.isNull());
                 break;
 
+            // om
+
             case draft:
                 query.where(municipalityInitiative.state.eq(InitiativeState.DRAFT));
+                break;
             case review:
                 query.where(municipalityInitiative.state.eq(InitiativeState.REVIEW));
+                break;
+            case accepted:
+                query.where(municipalityInitiative.state.eq(InitiativeState.ACCEPTED));
+                break;
+
+            // default:
 
             case all:
                 break;

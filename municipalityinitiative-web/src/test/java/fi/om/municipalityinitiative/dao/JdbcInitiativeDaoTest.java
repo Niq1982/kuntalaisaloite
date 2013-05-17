@@ -437,6 +437,19 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
+    public void finds_by_accepted() {
+        Long singleSent = testHelper.createSingleSent(testMunicipality.getId());
+        Long review = testHelper.createCollectableReview(testMunicipality.getId());
+
+        Long accepted = testHelper.createCollaborativeAccepted(testMunicipality.getId());
+
+        List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.accepted));
+
+        assertThat(result, hasSize(1));
+        assertThat(result.get(0).getId(), is(accepted));
+    }
+
+    @Test
     public void counts_initiatives_by_state() {
 
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
