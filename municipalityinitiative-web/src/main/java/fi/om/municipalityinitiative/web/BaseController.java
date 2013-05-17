@@ -8,6 +8,7 @@ import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.newdto.ui.Participants;
 import fi.om.municipalityinitiative.service.UserService;
+import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -168,6 +169,7 @@ public class BaseController {
         addEnum(InfoPage.class, model);
         addEnum(InitiativeType.class, model);
         addEnum(InitiativeState.class, model);
+        addEnum(FixState.class, model);
     }
 
 }
