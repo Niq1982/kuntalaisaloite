@@ -971,13 +971,26 @@ $('.municipality-filter').change( function() {
 		generateModal(modalData.participateFormInvalid(), 'full');
 	}
 	
-	// Participate initiative
+	// Edit municipality
 	$('.js-edit-municipality').click(function(){
 		$('.municipalities .active').removeClass('active');
 		$(this).addClass('active');
 		
 		try {
 			generateModal(modalData.editMunicipalityDetails(), 'full', editMunicipality.getActive);
+			return false;
+		} catch(e) {
+			console.log(e);
+		}
+	});
+	
+	// Delete participant
+	$('.js-delete-participant').click(function(){
+		$('.js-delete-participant.active').removeClass('active');
+		$(this).addClass('active');
+		
+		try {
+			generateModal(modalData.deleteParticipant(), 'full', deleteParticipant.getParticipant);
 			return false;
 		} catch(e) {
 			console.log(e);
@@ -1063,6 +1076,9 @@ $('form.sodirty').dirtyForms();
 /**
 * Manage municipalities
 * =====================
+* 
+* TODO: Finalize
+* 
 */
 var editMunicipality = (function() {
 	// remove this if municipality dropdown select is not used
@@ -1114,32 +1130,22 @@ var editMunicipality = (function() {
 }());
 
 /**
-* Manage municipalities
+* Delete participant
 * =====================
+* 
+* TODO: Finalize
+* 
 */
 var deleteParticipant = (function() {
-
-	
-	$('.js-delete-participant').click( function(){
-		$('.municipalities .active').removeClass('active');
-		$(this).addClass('active');
-	});
-	
 	return {
 		getParticipant: function(){
+			var participant = $('.js-delete-participant.active');
 			var municipality = $('.municipalities .active');
-			var form = $('#municipality-form');
-			var selMunicipality = $('#selected-municipality');
+			var form = $('#delete-participant-form');
+			var selParticipant = $('#selected-participant');
+			var participantInput = $('#participantId');
 			
-			if ( municipality.data('id') !== undefined ) {
-				selMunicipality.text(municipality.text());
-			} else {
-				selMunicipality.html(selMunicipality.data('empty'));
-			}
-			
-			form.find('#id').attr('value',municipality.data('id'));
-			form.find('input[type=radio][name=active][value='+municipality.data('active')+']').attr('checked','checked');
-			form.find('#municipalityEmail').val(municipality.data('email'));
+			participantInput.val(participant.data("id"));
 		}
 	};
 
