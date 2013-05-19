@@ -1,17 +1,13 @@
 package fi.om.municipalityinitiative.service;
 
-import fi.om.municipalityinitiative.dao.NotFoundException;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
-import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.LoginUserHolder;
-import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
-import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.util.*;
@@ -42,7 +38,10 @@ public class PublicInitiativeService {
     @Resource
     MunicipalityDao municipalityDao;
 
-    public List<InitiativeListInfo> findMunicipalityInitiatives(InitiativeSearch search) {
+    public List<InitiativeListInfo> findMunicipalityInitiatives(InitiativeSearch search, LoginUserHolder loginUserHolder) {
+        if (search.getShow().isOmOnly()) {
+            loginUserHolder.assertOmUser();
+        }
         return initiativeDao.find(search);
     }
 
@@ -105,8 +104,11 @@ public class PublicInitiativeService {
     }
 
     @Transactional(readOnly = true)
-    public InitiativeCounts getInitiativeCounts(Maybe<Long> municipality) {
-        return initiativeDao.getInitiativeCounts(municipality);
+    public InitiativeCounts getInitiativeCounts(Maybe<Long> municipality, LoginUserHolder loginUserHolder) {
+        if (loginUserHolder.getUser().isNotOmUser()) {
+            return initiativeDao.getPublicInitiativeCounts(municipality);
+        }
+        else return initiativeDao.getAllInitiativeCounts(municipality);
     }
 
     @Transactional(readOnly = false)

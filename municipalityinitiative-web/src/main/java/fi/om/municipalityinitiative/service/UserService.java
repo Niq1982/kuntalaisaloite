@@ -42,7 +42,7 @@ public class UserService {
     }
 
     public LoginUserHolder getRequiredLoginUserHolder(HttpServletRequest request) {
-        Maybe<LoginUserHolder> loginUserHolder = parseLoginUser(request.getSession());
+        Maybe<LoginUserHolder> loginUserHolder = parseLoginUser(request);
 
         if (loginUserHolder.isNotPresent()) {
             throw new AccessDeniedException("Not logged in as author");
@@ -53,7 +53,7 @@ public class UserService {
 
     public LoginUserHolder getRequiredOmLoginUserHolder(HttpServletRequest request) {
 
-        Maybe<LoginUserHolder> loginUserHolder = parseLoginUser(request.getSession());
+        Maybe<LoginUserHolder> loginUserHolder = parseLoginUser(request);
 
         if (loginUserHolder.isNotPresent()) {
             throw new AuthenticationRequiredException();
@@ -64,25 +64,19 @@ public class UserService {
     }
 
     public boolean hasManagementRightForInitiative(Long initiativeId, HttpServletRequest request) {
-        Maybe<LoginUserHolder> loginUserHolderMaybe = parseLoginUser(request.getSession());
+        Maybe<LoginUserHolder> loginUserHolderMaybe = parseLoginUser(request);
         return loginUserHolderMaybe.isPresent()
                 && loginUserHolderMaybe.get().hasManagementRightsForInitiative(initiativeId);
     }
 
-    private static Maybe<LoginUserHolder> parseLoginUser(HttpSession session) {
+    private static Maybe<LoginUserHolder> parseLoginUser(HttpServletRequest request) {
 
-        if (session == null)
-            return Maybe.absent();
-
-        User user = (User) session.getAttribute(LOGIN_USER_PARAMETER);
+        Maybe<User> user = getOptionalLoginUser(request);
 
         if (user == null)
             return Maybe.absent();
 
-
-        return Maybe.of(new LoginUserHolder(
-                user
-        ));
+        return Maybe.of(new LoginUserHolder(user.get()));
     }
 
     public static Maybe<User> getUser() {
@@ -118,14 +112,25 @@ public class UserService {
 
     }
 
-    public boolean isOmUser(HttpServletRequest request) {
-        try {
-            LoginUserHolder requiredOmLoginUserHolder = getRequiredOmLoginUserHolder(request);
-            return requiredOmLoginUserHolder.getUser().isOmUser();
-        }
-        catch (AuthenticationRequiredException | AccessDeniedException e) {
-            return false;
-        }
 
+
+    public static Maybe<User> getOptionalLoginUser(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        if (session == null)
+            return Maybe.absent();
+
+        User user = (User) session.getAttribute(LOGIN_USER_PARAMETER);
+        if (user == null)
+            return Maybe.absent();
+
+        return Maybe.of(user);
+    }
+
+    public User getUser(HttpServletRequest request) {
+        Maybe<User> optionalLoginUser = getOptionalLoginUser(request);
+        if (optionalLoginUser.isPresent()) {
+            return optionalLoginUser.get();
+        }
+        return User.anonym();
     }
 }

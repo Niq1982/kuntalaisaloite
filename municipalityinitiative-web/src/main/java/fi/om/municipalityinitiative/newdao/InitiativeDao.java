@@ -21,7 +21,7 @@ public interface InitiativeDao {
 
     Initiative get(Long initiativeId);
 
-    InitiativeCounts getInitiativeCounts(Maybe<Long> municipality);
+    InitiativeCounts getPublicInitiativeCounts(Maybe<Long> municipality);
 
     Long prepareInitiative(Long municipalityId);
 
@@ -41,4 +41,5 @@ public interface InitiativeDao {
 
     void updateSentComment(Long initiativeId, String sentComment);
 
+    InitiativeCounts getAllInitiativeCounts(Maybe<Long> municipality);
 }

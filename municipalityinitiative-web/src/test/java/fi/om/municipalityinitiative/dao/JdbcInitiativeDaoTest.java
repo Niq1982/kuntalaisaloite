@@ -462,17 +462,51 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
-    public void counts_initiatives_by_state() {
+    public void counts_public_initiatives_by_state() {
 
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         testHelper.createSingleSent(testMunicipality.getId());
 
-        InitiativeCounts initiativeCounts = initiativeDao.getInitiativeCounts(Maybe.<Long>absent());
+        InitiativeCounts initiativeCounts = initiativeDao.getPublicInitiativeCounts(Maybe.<Long>absent());
 
         assertThat(initiativeCounts.getCollecting(), is(2L));
         assertThat(initiativeCounts.getSent(), is(1L));
         assertThat(initiativeCounts.getAll(), is(3L));
+    }
+
+    @Test
+    public void counts_all_initiatives_by_state() {
+
+        // 1
+        testHelper.create(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.UNDEFINED);
+        //2
+        testHelper.create(testMunicipality.getId(), InitiativeState.REVIEW, InitiativeType.UNDEFINED);
+        testHelper.create(testMunicipality.getId(), InitiativeState.REVIEW, InitiativeType.UNDEFINED);
+        //3
+        testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
+        testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
+        testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
+        //4
+        testHelper.createSingleSent(testMunicipality.getId());
+        testHelper.createSingleSent(testMunicipality.getId());
+        testHelper.createSingleSent(testMunicipality.getId());
+        testHelper.createSingleSent(testMunicipality.getId());
+        //5
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+
+
+        InitiativeCounts counts = initiativeDao.getAllInitiativeCounts(Maybe.<Long>absent());
+        assertThat(counts.draft, is(1L));
+        assertThat(counts.review, is(2L));
+        assertThat(counts.accepted, is(3L));
+        assertThat(counts.sent, is(4L));
+        assertThat(counts.collecting, is(5L));
+
     }
 
     @Test
@@ -482,7 +516,7 @@ public class JdbcInitiativeDaoTest {
                 .withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE));
 
-        InitiativeCounts initiativeCounts = initiativeDao.getInitiativeCounts(Maybe.of(testMunicipality.getId()));
+        InitiativeCounts initiativeCounts = initiativeDao.getPublicInitiativeCounts(Maybe.of(testMunicipality.getId()));
 
         assertThat(initiativeCounts.getCollecting(), is(1L));
 
