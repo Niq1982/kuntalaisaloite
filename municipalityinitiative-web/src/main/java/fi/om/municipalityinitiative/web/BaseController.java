@@ -143,7 +143,7 @@ public class BaseController {
     public void addModelDefaults(Locale locale, HttpServletRequest request, Model model) {
         Urls urls = Urls.get(locale);
         model.addAttribute("locale", urls.getLang());
-        model.addAttribute("user", userService.getUser());
+        model.addAttribute("user", userService.getUser(request));
         model.addAttribute("altLocale", urls.getAltLang());
         model.addAttribute("urls", urls);
         model.addAttribute("fieldLabelKey", FieldLabelKeyMethod.INSTANCE);

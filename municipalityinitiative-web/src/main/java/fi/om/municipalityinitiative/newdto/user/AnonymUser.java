@@ -19,4 +19,9 @@ public class AnonymUser extends User {
     public Long getAuthorId() {
         throw new IllegalStateException("Anonym user is no author");
     }
+
+    @Override
+    public boolean isLoggedIn() {
+        return false;
+    }
 }

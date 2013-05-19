@@ -24,6 +24,11 @@ public class NormalLoginUser extends User {
     }
 
     @Override
+    public boolean isLoggedIn() {
+        return true;
+    }
+
+    @Override
     public boolean isOmUser() {
         return false;
     }

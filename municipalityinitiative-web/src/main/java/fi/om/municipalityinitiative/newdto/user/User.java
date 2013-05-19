@@ -26,4 +26,6 @@ public abstract class User {
 
     public abstract Long getAuthorId();
 
+    public abstract boolean isLoggedIn();
+
 }

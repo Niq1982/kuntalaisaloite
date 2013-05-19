@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.ui.*;
+import fi.om.municipalityinitiative.newdto.user.User;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
@@ -238,12 +239,13 @@ public class InitiativeViewController extends BaseController {
 
         search.setShow(InitiativeSearch.Show.all);
 
-        return ViewGenerator.iframeSearch(publicInitiativeService.findMunicipalityInitiatives(search, new LoginUserHolder(userService.getUser(request))),
+        LoginUserHolder loginUserHolder = new LoginUserHolder(User.anonym());
+        return ViewGenerator.iframeSearch(publicInitiativeService.findMunicipalityInitiatives(search, loginUserHolder),
                 municipalities,
                 search,
                 new SearchParameterQueryString(search),
                 solveMunicipalityFromListById(municipalities, search.getMunicipality()),
-                publicInitiativeService.getInitiativeCounts(Maybe.fromNullable(search.getMunicipality()), new LoginUserHolder(userService.getUser(request)))
+                publicInitiativeService.getInitiativeCounts(Maybe.fromNullable(search.getMunicipality()), loginUserHolder)
         ).view(model, urls.alt().search());
     }
 

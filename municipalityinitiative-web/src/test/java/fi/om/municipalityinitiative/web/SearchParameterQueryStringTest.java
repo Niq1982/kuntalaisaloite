@@ -100,4 +100,24 @@ public class SearchParameterQueryStringTest {
         assertThat(parameters, is("?orderBy=latest&show=all&municipality=1"));
     }
 
+    @Test
+    public void get_with_show_only_draft() {
+        String parameters = new SearchParameterQueryString(initiativeSearch).getWithStateDraft();
+        assertThat(parameters, is("?orderBy=latest&show=draft&municipality=1"));
+    }
+
+    @Test
+    public void get_with_show_only_accepted() {
+        String parameters = new SearchParameterQueryString(initiativeSearch).getWithStateAccepted();
+        assertThat(parameters, is("?orderBy=latest&show=accepted&municipality=1"));
+    }
+
+    @Test
+    public void get_with_show_only_review() {
+        String parameters = new SearchParameterQueryString(initiativeSearch).getWithStateReview();
+        assertThat(parameters, is("?orderBy=latest&show=review&municipality=1"));
+    }
+
+
+
 }

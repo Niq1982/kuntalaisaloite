@@ -203,9 +203,11 @@ public class JdbcInitiativeDao implements InitiativeDao {
     public InitiativeCounts getAllInitiativeCounts(Maybe<Long> municipality) {
         String unknownStateFound = "unknownStateFound";
         Expression<String> caseBuilder = new CaseBuilder()
-                .when(municipalityInitiative.type.eq(InitiativeType.COLLABORATIVE).and(municipalityInitiative.sent.isNull()))
+                .when(municipalityInitiative.type.eq(InitiativeType.COLLABORATIVE)
+                        .and(municipalityInitiative.sent.isNull())
+                        .and(municipalityInitiative.state.eq(InitiativeState.PUBLISHED)))
                 .then(new ConstantImpl<String>(InitiativeSearch.Show.collecting.name()))
-               .when(municipalityInitiative.sent.isNotNull())
+                .when(municipalityInitiative.sent.isNotNull())
                 .then(new ConstantImpl<String>(InitiativeSearch.Show.sent.name()))
                 .when(municipalityInitiative.state.eq(InitiativeState.DRAFT))
                 .then(new ConstantImpl<String>(InitiativeState.DRAFT.name()))
