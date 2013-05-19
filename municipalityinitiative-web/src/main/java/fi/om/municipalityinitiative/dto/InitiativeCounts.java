@@ -18,4 +18,16 @@ public class InitiativeCounts {
     public long getAll() {
         return collecting+sent;
     }
+
+    public long getDraft() {
+        return draft;
+    }
+
+    public long getAccepted() {
+        return accepted;
+    }
+
+    public long getReview() {
+        return review;
+    }
 }
