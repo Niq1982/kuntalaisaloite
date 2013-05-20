@@ -23,6 +23,8 @@
     <#-- VIEW BLOCKS -->
     <div class="view-block single public cf">
         <h2>Kaikki osallistujat</h2>
+        
+        <a style="float:right;" href="${urls.participantList(initiative.id)}">Osallistujalista</a>
     
         <@participantListManage participants />
 
