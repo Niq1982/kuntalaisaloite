@@ -73,7 +73,7 @@ public class UserService {
 
         Maybe<User> user = getOptionalLoginUser(request);
 
-        if (user == null)
+        if (user.isNotPresent())
             return Maybe.absent();
 
         return Maybe.of(new LoginUserHolder(user.get()));

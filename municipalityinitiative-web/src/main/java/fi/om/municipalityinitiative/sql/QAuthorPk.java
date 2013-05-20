@@ -18,7 +18,7 @@ public class QAuthorPk extends com.mysema.query.sql.RelationalPathBase<QAuthorPk
 
     public static final QAuthorPk authorPk = new QAuthorPk("author_pk");
 
-    public final NumberPath<Long> id = createNumber("id", Long.class);
+    public final NumberPath<Long> participantId = createNumber("participant_id", Long.class);
 
     public QAuthorPk(String variable) {
         super(QAuthorPk.class, forVariable(variable), "municipalityinitiative", "author_pk");

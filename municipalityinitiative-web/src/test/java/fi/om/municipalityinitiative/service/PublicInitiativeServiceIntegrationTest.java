@@ -21,6 +21,7 @@ import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.theInstance;
 
 
 public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTestBase{
@@ -116,7 +117,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     }
 
     private InitiativeListInfo getSingleInitiativeInfo() {
-        List<InitiativeListInfo> initiatives = service.findMunicipalityInitiatives(new InitiativeSearch().setShow(InitiativeSearch.Show.all), null);
+        List<InitiativeListInfo> initiatives = service.findMunicipalityInitiatives(new InitiativeSearch().setShow(InitiativeSearch.Show.all), TestHelper.authorLoginUserHolder);
         precondition(initiatives, hasSize(1));
         return initiatives.get(0);
     }

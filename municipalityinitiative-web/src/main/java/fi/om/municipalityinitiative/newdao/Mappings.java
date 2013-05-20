@@ -45,7 +45,7 @@ public class Mappings {
                     contactInfo.setShowName(Boolean.TRUE.equals(row.get(QParticipant.participant.showName)));
 
                     Author author = new Author();
-                    author.setId(row.get(QAuthor.author.id));
+                    author.setId(row.get(QAuthor.author.participantId));
                     author.setCreateTime(row.get(QParticipant.participant.participateTime));
                     author.setContactInfo(contactInfo);
                     author.setMunicipality(parseMunicipality(row));

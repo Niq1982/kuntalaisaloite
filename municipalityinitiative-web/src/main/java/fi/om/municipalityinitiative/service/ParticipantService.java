@@ -44,4 +44,10 @@ public class ParticipantService {
         participantDao.deleteParticipant(initiativeId, participantId);
     }
 
+//    public static boolean isAuthor(Participant participant, List<Author> authors) {
+//        for (Author author : authors) {
+//            if (author.get)
+//        }
+//    }
+
 }

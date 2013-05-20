@@ -11,6 +11,7 @@ import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -150,6 +151,25 @@ public class JdbcParticipantDaoTest {
 
         assertThat(publicParticipants, hasSize(2));
         assertThat(publicParticipants.get(0).getName(), is(confirmedParticipantName));
+
+    }
+
+    @Test
+    @Ignore
+    public void findParticipants_sets_isAuthor_true_if_author() {
+        Long initiativeId = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipalityId).applyAuthor().toInitiativeDraft());
+
+        List<Participant> allParticipants = participantDao.findAllParticipants(initiativeId);
+        precondition(allParticipants, hasSize(1));
+        assertThat(allParticipants.get(0).isAuthor(), is(true));
+
+        testHelper.createParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId));
+
+        allParticipants = participantDao.findAllParticipants(initiativeId);
+        precondition(allParticipants, hasSize(2));
+        assertThat(allParticipants.get(1).isAuthor(), is(false));
+
+
 
     }
 
