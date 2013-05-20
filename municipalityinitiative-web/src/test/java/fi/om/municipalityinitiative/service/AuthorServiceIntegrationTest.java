@@ -1,6 +1,8 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dao.InvitationNotValidException;
+import fi.om.municipalityinitiative.newdto.LoginUserHolder;
+import fi.om.municipalityinitiative.newdto.user.User;
 import fi.om.municipalityinitiative.util.NotFoundException;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
@@ -24,6 +26,7 @@ import org.junit.rules.ExpectedException;
 
 import javax.annotation.Resource;
 
+import java.util.Collections;
 import java.util.List;
 
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
@@ -289,10 +292,11 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     @Test
     public void deleting_final_author_is_not_allowed() {
         Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality);
+        LoginUserHolder fakeLoginUserHolderWithManagementRights = new LoginUserHolder(User.normalUser(-5L, Collections.singleton(initiativeId)));
 
         thrown.expect(OperationNotAllowedException.class);
         thrown.expectMessage(containsString("Unable to delete author"));
-        authorService.deleteAuthor(initiativeId, TestHelper.authorLoginUserHolder, testHelper.getLastAuthorId());
+        authorService.deleteAuthor(initiativeId, fakeLoginUserHolderWithManagementRights, testHelper.getLastAuthorId());
     }
 
     @Test
@@ -307,6 +311,18 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         thrown.expectMessage(containsString("initiative"));
         thrown.expectMessage(containsString("author"));
         authorService.deleteAuthor(initiative2, TestHelper.authorLoginUserHolder, author1);
+
+    }
+
+    @Test
+    public void deleting_author_fails_if_trying_to_delete_myself() {
+        Long initiative = testHelper.createCollaborativeAccepted(testMunicipality);
+        Long anotherAuthor = testHelper.getLastAuthorId();
+        Long currentAuthor = testHelper.createAuthorAndParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality));
+
+        thrown.expect(OperationNotAllowedException.class);
+        thrown.expectMessage(containsString("Removing yourself from authors is not allowed"));
+        authorService.deleteAuthor(initiative, TestHelper.authorLoginUserHolder, currentAuthor);
 
     }
 

@@ -94,6 +94,9 @@ public class AuthorService {
         if (!hasAuthor(authorId, authors)) {
             throw new NotFoundException("Author", "initiative: " + initiativeId + ", author: " + authorId);
         }
+        else if (loginUserHolder.getAuthorId().equals(authorId)) {
+            throw new OperationNotAllowedException("Removing yourself from authors is not allowed");
+        }
         else if (authors.size() < 2) {
             throw new OperationNotAllowedException("Unable to delete author. Initiative has only " + authors.size() +" author(s)");
         }
