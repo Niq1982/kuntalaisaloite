@@ -4,7 +4,6 @@ import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
-import fi.om.municipalityinitiative.newdto.ui.Participants;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
