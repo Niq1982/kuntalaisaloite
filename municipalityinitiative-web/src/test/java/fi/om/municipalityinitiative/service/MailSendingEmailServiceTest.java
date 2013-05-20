@@ -33,7 +33,7 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
     
     @Test
     public void review_notification_to_moderator_contains_all_information() throws Exception {
-        emailService.sendNotificationToModerator(createDefaultInitiative(),defaultAuthors(), Locales.LOCALE_FI, "TEMP_EMAIL@example.com");
+        emailService.sendNotificationToModerator(createDefaultInitiative(),defaultAuthors(), "TEMP_EMAIL@example.com");
           assertThat(getSingleRecipient(), is("TEMP_EMAIL@example.com"));
 //        assertThat(getSingleRecipient(), is(IntegrationTestFakeEmailConfiguration.EMAIL_DEFAULT_OM)); // XXX: Restore this when we want to send emails to om
         assertThat(getSingleSentMessage().getSubject(), is("Kuntalaisaloite tarkastettavaksi"));

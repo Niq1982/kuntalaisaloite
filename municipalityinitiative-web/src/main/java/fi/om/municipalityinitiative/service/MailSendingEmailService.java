@@ -119,11 +119,13 @@ public class MailSendingEmailService implements EmailService {
     }
 
     @Override
-    public void sendNotificationToModerator(Initiative initiative, List<Author> authors, Locale locale, String TEMPORARILY_REPLACING_OM_EMAIL) {
+    public void sendNotificationToModerator(Initiative initiative, List<Author> authors, String TEMPORARILY_REPLACING_OM_EMAIL) {
+
+        Locale locale = Locales.LOCALE_FI;
 
         emailMessageConstructor
                 .fromTemplate(NOTIFICATION_TO_MODERATOR)
-                //.withSendToModerator()
+                        //.withSendToModerator()
                 .addRecipient(TEMPORARILY_REPLACING_OM_EMAIL)
                 .withSubject(messageSource.getMessage("email.notification.to.moderator.subject", toArray(initiative.getName()), locale))
                 .withDataMap(toDataMap(initiative, authors, locale))
