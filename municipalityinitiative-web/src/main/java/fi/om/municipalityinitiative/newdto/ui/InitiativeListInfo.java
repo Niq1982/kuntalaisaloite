@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.newdto.ui;
 
 import fi.om.municipalityinitiative.newdto.service.Municipality;
+import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.LocalDate;
@@ -16,6 +17,7 @@ public class InitiativeListInfo {
     private Maybe<LocalDate> sentTime;
     private long participantCount;
     private InitiativeType type;
+    private InitiativeState state;
 
     public Long getId() {
         return id;
@@ -79,5 +81,13 @@ public class InitiativeListInfo {
 
     public void setType(InitiativeType typeMaybe) {
         this.type = typeMaybe;
+    }
+
+    public void setState(InitiativeState state) {
+        this.state = state;
+    }
+
+    public boolean isPublic() {
+        return state == InitiativeState.PUBLISHED;
     }
 }

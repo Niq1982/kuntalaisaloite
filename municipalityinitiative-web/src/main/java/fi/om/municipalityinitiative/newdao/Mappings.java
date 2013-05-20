@@ -70,6 +70,7 @@ public class Mappings {
                     info.setSentTime(maybeLocalDate(row.get(municipalityInitiative.sent)));
                     info.setParticipantCount(row.get(municipalityInitiative.participantCount));
                     info.setType(row.get(municipalityInitiative.type));
+                    info.setState(row.get(municipalityInitiative.state));
                     return info;
                 }
             };

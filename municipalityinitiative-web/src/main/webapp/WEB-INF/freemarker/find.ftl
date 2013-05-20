@@ -127,7 +127,9 @@
             
             <span class="participants">
                 <span class="participants-container">
-                    <#if !initiative.collectable>
+                    <#if !initiative.public>
+                        <span class="no-participants"><@u.message "searchResults.notPublic" /></span>
+                    <#elseif !initiative.collectable>
                         <span class="no-participants"><@u.message "searchResults.notCollectable" /></span>
                     <#else>
                         <span class="participant-count trigger-tooltip" title="<@u.message "searchResults.sumOfParticipants" />">${initiative.participantCount!""}</span>
@@ -137,8 +139,9 @@
             
             <span class="date trigger-tooltip" title="<@u.message "searchResults.initiative.date" />" ><@u.localDate initiative.createTime!"" /></span>
             <span class="title"><a href="${urls.view(initiative.id)}" class="name">${initiative.name!""}</a></span>
-            <#--<#if initiative.collectable && !initiative.sentTime.present>-->
-            <#if !initiative.sentTime.present>
+            <#if !initiative.public>
+                <span class="info">${initiative.municipality.getName(locale)!""}<span class="bull">&bull;</span><span class="state"><@u.message "searchResults.notPublic" /></span></span>
+            <#elseif !initiative.sentTime.present>
                 <span class="info">${initiative.municipality.getName(locale)!""}<span class="bull">&bull;</span><span class="state"><@u.message "initiative.state.collecting" /></span></span>
             <#else>
                 <#assign sentTime><@u.localDate initiative.sentTime.value!"" /></#assign>

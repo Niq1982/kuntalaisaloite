@@ -16,7 +16,7 @@ public class InitiativeCounts {
     }
 
     public long getAll() {
-        return collecting+sent;
+        return collecting+sent+draft+accepted+review;
     }
 
     public long getDraft() {

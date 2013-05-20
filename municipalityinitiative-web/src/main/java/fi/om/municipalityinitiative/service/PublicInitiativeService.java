@@ -39,10 +39,19 @@ public class PublicInitiativeService {
     MunicipalityDao municipalityDao;
 
     public List<InitiativeListInfo> findMunicipalityInitiatives(InitiativeSearch search, LoginUserHolder loginUserHolder) {
+
+        if (loginUserHolder.getUser().isOmUser() && search.getShow() == InitiativeSearch.Show.all) {
+            search.setShow(InitiativeSearch.Show.omAll);
+        }
+
         if (search.getShow().isOmOnly()) {
             loginUserHolder.assertOmUser();
         }
-        return initiativeDao.find(search);
+
+        List<InitiativeListInfo> initiativeListInfos = initiativeDao.find(search);
+        if (search.getShow() == InitiativeSearch.Show.omAll)
+            search.setShow(InitiativeSearch.Show.all);
+        return initiativeListInfos;
     }
 
     @Transactional(readOnly = true)
