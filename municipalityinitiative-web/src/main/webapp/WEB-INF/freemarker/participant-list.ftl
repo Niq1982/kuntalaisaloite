@@ -20,12 +20,11 @@
     
     <@returnPrevious />
 
-    <#-- VIEW BLOCKS -->
     <div class="view-block single public cf">
-        <h2><@u.message key="participantList.title" args=[participantCount.publicNames!""] /></h2>
         <#if hasManagementRightForInitiative>
             <a style="float:right;" href="${urls.participantListManage(initiative.id)}">Osallistujahallinta</a>
         </#if>
+        <h2><@u.message key="participantList.title" args=[participantCount.publicNames!""] /></h2>
         
         <@participantList participants />
     </div>
@@ -46,41 +45,6 @@
             <li><span class="date"><@u.localDate participant.participateDate!"" /></span> <span class="name-container"><span class="name">${participant.name!""}</span> <span class="home-municipality"><span class="bull">&bull;</span> ${participant.homeMunicipality.getName(locale)!""}</span></span></li>
         <#if !participant_has_next></ul></#if>
     </#list>
-</#macro>
-
-<#-- 
- * participantListColumns
- *
- * Same as participantList but it has an option to create columns
- *
- * @param participants is participants object list
--->
-<#macro participantListColumns participants>
-    <#assign participantCount = participants?size />
-    <#assign cue = (participantCount/2)?ceiling />
-
-    <#assign columns=1 />    
-    <#if ( participantCount > 19)>
-        <#assign columns=2 />
-    </#if>
-
-    <div class="column col-1of2">
-
-        <#list participants as participant>
-            <#if participant_index == 0><ul class="participant-list no-style"></#if>
-                <li><span class="date"><@u.localDate participant.participateDate!"" /></span> <span class="name-container"><span class="name">${participant.name!""}</span> <span class="home-municipality">- ${participant.homeMunicipality.getLocalizedName(locale)!""}</span></span></li>
-                
-                <#if columns == 2 && participant_index == cue>
-                    </ul></div>
-                    <div class="column col-1of2 last"><ul class="participant-list no-style">
-                </#if>
-                
-            <#if !participant_has_next></ul></#if>
-        </#list>
-            
-    </div>
-    <br class="clear" />
-
 </#macro>
 
 <#-- 

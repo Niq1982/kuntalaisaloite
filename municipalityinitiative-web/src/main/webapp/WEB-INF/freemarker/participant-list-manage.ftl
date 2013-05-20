@@ -20,36 +20,57 @@
     
     <@returnPrevious />
 
-    <#-- VIEW BLOCKS -->
-    <div class="view-block single public cf">
-        <h2>Kaikki osallistujat</h2>
-        
-        <a style="float:right;" href="${urls.participantList(initiative.id)}">Osallistujalista</a>
-    
-        <@participantListManage participants />
+    <#if !RequestParameters['deleteParticipant']??>
+        <div class="view-block single public cf">
+            <a style="float:right;" href="${urls.participantList(initiative.id)}">Osallistujalista</a>
+            <h2>Kaikki osallistujat</h2>
 
-        <#assign deleteParticipant>
-            <@compress single_line=true>
-                <form action="${springMacroRequestContext.requestUri}" method="POST" id="delete-participant-form">
-                    <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-                    
-                    <input type="hidden" name="participantId" id="participantId" value=""/>
-                    
-                    <h3><@u.message "deleteParticipant.confirm.description" /></h3>
-                    <ul id="selected-participant" class="participant-list no-style"></ul>
-                    
-                    <br/>
-                    
-                    <div class="input-block-content">
-                        <button type="submit" name="${UrlConstants.ACTION_DELETE_PARTICIPANT}" id="modal-${UrlConstants.ACTION_DELETE_PARTICIPANT}" value="${UrlConstants.ACTION_DELETE_PARTICIPANT}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.deleteParticipant.confirm" /></button>
-                        <a href="${urls.participantList(initiative.id)}#delete-participant" class="push close"><@u.message "action.cancel" /></a>
-                    </div>
-                </form>
-            </@compress>
-        </#assign>
-    </div>
-    
+            <@participantListManage participants />
+        </div>
+    <#else>
+        <#-- Delete form for NOSCRIPT users -->
+        <div class="msg-block cf">
+            <h2><@u.message "deleteParticipant.confirm.title" /></h2>
+        
+            <form action="${springMacroRequestContext.requestUri}" method="POST" id="delete-participant-form">
+                <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+                
+                <input type="hidden" name="participantId" id="participantId" value="${RequestParameters['deleteParticipant']}"/>
+
+                <h3><@u.message "deleteParticipant.confirm.description" /></h3>
+                
+                <@participantDetailsById participants RequestParameters['deleteParticipant'] />
+                
+                <div class="input-block-content">
+                    <button type="submit" name="${UrlConstants.ACTION_DELETE_PARTICIPANT}" id="modal-${UrlConstants.ACTION_DELETE_PARTICIPANT}" value="${UrlConstants.ACTION_DELETE_PARTICIPANT}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.deleteParticipant.confirm" /></button>
+                    <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
+                </div>
+            </form>
+        </div>
+    </#if>
+
     <@returnPrevious />
+
+    <#-- HTML for confirm Modal -->
+    <#assign deleteParticipant>
+        <@compress single_line=true>
+            <form action="${springMacroRequestContext.requestUri}" method="POST" id="delete-participant-form">
+                <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+                
+                <input type="hidden" name="participantId" id="participantId" value=""/>
+                
+                <h3><@u.message "deleteParticipant.confirm.description" /></h3>
+                <ul id="selected-participant" class="participant-list no-style"></ul>
+                
+                <br/>
+                
+                <div class="input-block-content">
+                    <button type="submit" name="${UrlConstants.ACTION_DELETE_PARTICIPANT}" id="modal-${UrlConstants.ACTION_DELETE_PARTICIPANT}" value="${UrlConstants.ACTION_DELETE_PARTICIPANT}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.deleteParticipant.confirm" /></button>
+                    <a href="#" class="push close"><@u.message "action.cancel" /></a>
+                </div>
+            </form>
+        </@compress>
+    </#assign>
     
     <#--
      * Management VIEW modals
@@ -105,17 +126,35 @@
             <li><span class="date"><@u.localDate participant.participateDate!"" /></span> <span class="name-container"><span class="name">${participant.name!""}</span> <span class="home-municipality"><span class="bull">&bull;</span> ${participant.homeMunicipality.getName(locale)!""}</span>
             <#if !participant.isAuthor()>
                 <span class="bull">&bull;</span>
-                <a  href="#" class="js-delete-participant"
+                <a  href="?deleteParticipant=${participant.id!""}" class="js-delete-participant"
                     data-id="${participant.id!""}"
                     data-date="<@u.localDate participant.participateDate!"" />"
                     data-name="${participant.name!""}"
-                    data-municipality="${participant.homeMunicipality.getName(locale)!""}">Poista</a></span></li>
+                    data-municipality="${participant.homeMunicipality.getName(locale)!""}"><@u.message "deleteParticipant.delete" /></a></span></li>
 
             <#else>
-                <span class="bull">&bull;</span> Vastuuhenkilö
+                <span class="bull">&bull;</span> Vastuuhenkilöä ei voida poistaa
             </#if>
             
         <#if !participant_has_next></ul></#if>
+    </#list>
+</#macro>
+
+<#-- 
+ * participantDetailsById
+ *
+ * Prints participant's details by id
+ *
+ * @param participants is participants object list
+ * @param id is participant's id
+-->
+<#macro participantDetailsById participants id>
+    <#list participants as participant>
+        <#if participant.id?string == id>
+            <ul class="participant-list no-style">
+                <li><span class="date"><@u.localDate participant.participateDate!"" /></span> <span class="name-container"><span class="name">${participant.name!""}</span> <span class="home-municipality"><span class="bull">&bull;</span> ${participant.homeMunicipality.getName(locale)!""}</span></li>
+            </ul>
+        </#if>
     </#list>
 </#macro>
 
