@@ -19,7 +19,10 @@ import fi.om.municipalityinitiative.newweb.AuthorInvitationUICreateDto;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.util.SecurityUtil;
 import org.joda.time.DateTime;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
 
 import javax.annotation.Resource;
 
@@ -87,7 +90,8 @@ public class AuthorService {
     }
 
     @Transactional(readOnly = false)
-    public void deleteAuthor(Long initiativeId, LoginUserHolder loginUserHolder, Long authorId) {
+    // FIXME: do NOT use synchronized, add database constraint
+    public synchronized void deleteAuthor(Long initiativeId, LoginUserHolder loginUserHolder, Long authorId) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
         List<Author> authors = authorDao.findAuthors(initiativeId);
@@ -101,6 +105,11 @@ public class AuthorService {
             throw new OperationNotAllowedException("Unable to delete author. Initiative has only " + authors.size() +" author(s)");
         }
         else {
+            try {
+                Thread.sleep(1000); // Temp
+            } catch (InterruptedException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
             authorDao.deleteAuthor(authorId);
         }
 

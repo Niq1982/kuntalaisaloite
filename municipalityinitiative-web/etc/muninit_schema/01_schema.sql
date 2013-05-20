@@ -96,3 +96,10 @@ create table author_invitation (
     constraint author_invitation_initiative_id_fk foreign key (initiative_id) references municipality_initiative(id)
 );
 
+--CREATE OR REPLACE FUNCTION initiative_author_count(given_initiative_id bigint) RETURNS bigint AS $$
+--    SELECT count(participant_id) from author, participant where participant.id = author.participant_id and participant.municipality_initiative_id = $1;
+--$$ LANGUAGE 'sql';
+--
+--alter table municipality_initiative add constraint municipality_initiative_has_authors check (initiative_author_count(id) > 0);
+--set constraints municipality_initiative_has_authors deferred;
+
