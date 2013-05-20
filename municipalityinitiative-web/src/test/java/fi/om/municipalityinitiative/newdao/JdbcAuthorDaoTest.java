@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.newdao;
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dao.InvitationNotValidException;
 import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
@@ -29,6 +30,9 @@ public class JdbcAuthorDaoTest {
 
     @Resource
     AuthorDao authorDao;
+
+    @Resource
+    ParticipantDao participantDao;
 
     @Resource
     TestHelper testHelper;
@@ -90,6 +94,20 @@ public class JdbcAuthorDaoTest {
         assertThat(author.getCreateTime(), is(new LocalDate()));
 
         ReflectionTestUtils.assertNoNullFields(author);
+    }
+
+    @Test
+    public void delete_author_removes_author_and_its_participant() {
+        Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality);
+        Long authorId = testHelper.createAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality));
+
+        int originalAuthorCount = authorDao.findAuthors(initiativeId).size();
+        int originalParticipantCount = participantDao.findAllParticipants(initiativeId).size();
+
+        authorDao.deleteAuthor(authorId);
+
+        assertThat(authorDao.findAuthors(initiativeId), hasSize(originalAuthorCount - 1));
+        assertThat(participantDao.findAllParticipants(initiativeId), hasSize(originalParticipantCount - 1));
     }
 
 }

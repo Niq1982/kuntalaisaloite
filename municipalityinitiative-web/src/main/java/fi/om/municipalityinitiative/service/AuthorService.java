@@ -1,7 +1,8 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dao.InvitationNotValidException;
-import fi.om.municipalityinitiative.dao.NotFoundException;
+import fi.om.municipalityinitiative.util.NotFoundException;
+import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
@@ -86,6 +87,32 @@ public class AuthorService {
     }
 
     @Transactional(readOnly = false)
+    public void deleteAuthor(Long initiativeId, LoginUserHolder loginUserHolder, Long authorId) {
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
+
+        List<Author> authors = authorDao.findAuthors(initiativeId);
+        if (!hasAuthor(authorId, authors)) {
+            throw new NotFoundException("Author", "initiative: " + initiativeId + ", author: " + authorId);
+        }
+        else if (authors.size() < 2) {
+            throw new OperationNotAllowedException("Unable to delete author. Initiative has only " + authors.size() +" author(s)");
+        }
+        else {
+            authorDao.deleteAuthor(authorId);
+        }
+
+    }
+
+    private static boolean hasAuthor(Long authorId, List<Author> authors) {
+        for (Author author : authors) {
+            if (author.getId().equals(authorId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Transactional(readOnly = false)
     public String confirmAuthorInvitation(Long initiativeId, AuthorInvitationUIConfirmDto confirmDto, Locale locale) {
 
         ManagementSettings managementSettings = ManagementSettings.of(initiativeDao.get(initiativeId));
@@ -135,7 +162,7 @@ public class AuthorService {
     public PublicAuthors findPublicAuthors(Long initiativeId) {
         return new PublicAuthors(authorDao.findAuthors(initiativeId));
     }
-    
+
     @Transactional(readOnly = false)
     public void rejectInvitation(Long initiativeId, String confirmCode) {
         authorDao.rejectAuthorInvitation(initiativeId, confirmCode);

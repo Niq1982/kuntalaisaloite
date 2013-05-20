@@ -1,6 +1,6 @@
 package fi.om.municipalityinitiative.web;
 
-import fi.om.municipalityinitiative.dao.NotFoundException;
+import fi.om.municipalityinitiative.util.NotFoundException;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.springframework.context.MessageSource;

@@ -8,8 +8,9 @@ import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.expr.DateTimeExpression;
 import fi.om.municipalityinitiative.dao.InvitationNotValidException;
-import fi.om.municipalityinitiative.dao.NotFoundException;
+import fi.om.municipalityinitiative.util.NotFoundException;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
+import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
@@ -168,7 +169,37 @@ public class JdbcAuthorDao implements AuthorDao {
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void deleteAuthor(Long authorId) {
+
+        Long initiativeId = queryFactory.from(QAuthor.author)
+                .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
+                .where(QAuthor.author.participantId.eq(authorId))
+                .uniqueResult(QParticipant.participant.municipalityInitiativeId);
+
+        long authorCount = queryFactory.from(QAuthor.author)
+                .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
+                .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
+                .count();
+
+        if (authorCount == 1) {
+            throw new OperationNotAllowedException("Cannot remove last author");
+        }
+
+        assertSingleAffection(queryFactory.delete(QAuthor.author)
+                .where(QAuthor.author.participantId.eq(authorId)).execute());
+        assertSingleAffection(queryFactory.delete(QParticipant.participant)
+                .where(QParticipant.participant.id.eq(authorId)).execute());
+
+        authorCount = queryFactory.from(QAuthor.author)
+                .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
+                .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
+                .count();
+
+        if (authorCount == 0) {
+            throw new OperationNotAllowedException("Authorcount would have been zero after deletion");
+        }
+
     }
 
     @Override

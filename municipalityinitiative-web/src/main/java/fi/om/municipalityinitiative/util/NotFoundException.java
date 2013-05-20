@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.dao;
+package fi.om.municipalityinitiative.util;
 
 public class NotFoundException extends RuntimeException {
 
