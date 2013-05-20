@@ -57,6 +57,11 @@
     <span class="search-parameters-title filter"><@u.message "searchOptions.filter" /></span>
     <div class="search-parameters-container">
         <div class="search-parameters">
+        <#if user.isOmUser()>
+            <@u.searchLink parameter="withStateDraft" cssClass=(currentSearch.show == "draft")?string('active','') count=initiativeCounts.draft/>
+            <@u.searchLink parameter="withStateAccepted" cssClass=(currentSearch.show == "accepted")?string('active','') count=initiativeCounts.accepted />
+            <@u.searchLink parameter="withStateReview" cssClass=(currentSearch.show == "review")?string('active','') count=initiativeCounts.review />
+        </#if>
             <@u.searchLink parameter="withStateCollecting" cssClass=(currentSearch.show == "collecting")?string('active','') count=initiativeCounts.collecting />
             <@u.searchLink parameter="withStateSent" cssClass=(currentSearch.show == "sent")?string('active','') count=initiativeCounts.sent/>
             <@u.searchLink parameter="withStateAll" cssClass=(currentSearch.show == "all")?string('active','') count=initiativeCounts.all/>
@@ -122,7 +127,9 @@
             
             <span class="participants">
                 <span class="participants-container">
-                    <#if !initiative.collectable>
+                    <#if !initiative.public>
+                        <span class="no-participants"><@u.message "searchResults.notPublic" /></span>
+                    <#elseif !initiative.collectable>
                         <span class="no-participants"><@u.message "searchResults.notCollectable" /></span>
                     <#else>
                         <span class="participant-count trigger-tooltip" title="<@u.message "searchResults.sumOfParticipants" />">${initiative.participantCount!""}</span>
@@ -132,8 +139,9 @@
             
             <span class="date trigger-tooltip" title="<@u.message "searchResults.initiative.date" />" ><@u.localDate initiative.createTime!"" /></span>
             <span class="title"><a href="${urls.view(initiative.id)}" class="name">${initiative.name!""}</a></span>
-            <#--<#if initiative.collectable && !initiative.sentTime.present>-->
-            <#if !initiative.sentTime.present>
+            <#if !initiative.public>
+                <span class="info">${initiative.municipality.getName(locale)!""}<span class="bull">&bull;</span><span class="state"><@u.message "searchResults.notPublic" /></span></span>
+            <#elseif !initiative.sentTime.present>
                 <span class="info">${initiative.municipality.getName(locale)!""}<span class="bull">&bull;</span><span class="state"><@u.message "initiative.state.collecting" /></span></span>
             <#else>
                 <#assign sentTime><@u.localDate initiative.sentTime.value!"" /></#assign>

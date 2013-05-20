@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.ui.*;
+import fi.om.municipalityinitiative.newdto.user.User;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
@@ -57,13 +58,15 @@ public class InitiativeViewController extends BaseController {
 
     @RequestMapping(value={SEARCH_FI, SEARCH_SV}, method=GET)
     public String search(InitiativeSearch search, Model model, Locale locale, HttpServletRequest request) {
+
         List<Municipality> municipalities = municipalityService.findAllMunicipalities(locale);
-        return ViewGenerator.searchView(publicInitiativeService.findMunicipalityInitiatives(search),
+        LoginUserHolder loginUserHolder = new LoginUserHolder(userService.getUser(request));
+        return ViewGenerator.searchView(publicInitiativeService.findMunicipalityInitiatives(search, loginUserHolder),
                 municipalities,
                 search,
                 new SearchParameterQueryString(search),
                 solveMunicipalityFromListById(municipalities, search.getMunicipality()),
-                publicInitiativeService.getInitiativeCounts(Maybe.fromNullable(search.getMunicipality())))
+                publicInitiativeService.getInitiativeCounts(Maybe.fromNullable(search.getMunicipality()), loginUserHolder))
                 .view(model, Urls.get(locale).alt().search());
     }
 
@@ -75,7 +78,7 @@ public class InitiativeViewController extends BaseController {
 
         if (initiativeInfo.getState() != InitiativeState.PUBLISHED || initiativeInfo.getFixState() != FixState.OK) {  // XXX: Hmmm... Maybe move this to service layer and ManagementSettings ?
             LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
-            if (loginUserHolder.getLoginUser().isNotOmUser()) {
+            if (loginUserHolder.getUser().isNotOmUser()) {
                 loginUserHolder.assertManagementRightsForInitiative(initiativeId);
             }
         }
@@ -237,12 +240,13 @@ public class InitiativeViewController extends BaseController {
 
         search.setShow(InitiativeSearch.Show.all);
 
-        return ViewGenerator.iframeSearch(publicInitiativeService.findMunicipalityInitiatives(search),
+        LoginUserHolder loginUserHolder = new LoginUserHolder(User.anonym());
+        return ViewGenerator.iframeSearch(publicInitiativeService.findMunicipalityInitiatives(search, loginUserHolder),
                 municipalities,
                 search,
                 new SearchParameterQueryString(search),
                 solveMunicipalityFromListById(municipalities, search.getMunicipality()),
-                publicInitiativeService.getInitiativeCounts(Maybe.fromNullable(search.getMunicipality()))
+                publicInitiativeService.getInitiativeCounts(Maybe.fromNullable(search.getMunicipality()), loginUserHolder)
         ).view(model, urls.alt().search());
     }
 

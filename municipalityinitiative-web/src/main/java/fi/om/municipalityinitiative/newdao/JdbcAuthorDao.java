@@ -39,10 +39,11 @@ public class JdbcAuthorDao implements AuthorDao {
     @Transactional(readOnly = false)
     public Long createAuthor(Long initiativeId, Long participantId, String managementHash) {
 
-        return queryFactory.insert(QAuthor.author)
+        assertSingleAffection(queryFactory.insert(QAuthor.author)
                 .set(QAuthor.author.managementHash, managementHash)
                 .set(QAuthor.author.participantId, participantId)
-                .executeWithKey(QAuthor.author.id);
+                .execute());
+        return participantId;
     }
 
     @Override
@@ -51,7 +52,7 @@ public class JdbcAuthorDao implements AuthorDao {
         Long participantId = queryFactory.from(QParticipant.participant)
 //                .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
                 .innerJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
-                .where(QAuthor.author.id.eq(authorId))
+                .where(QAuthor.author.participantId.eq(authorId))
                 .singleResult(QParticipant.participant.id);
 
         assertSingleAffection(queryFactory.update(QParticipant.participant)
@@ -154,13 +155,13 @@ public class JdbcAuthorDao implements AuthorDao {
     public Long getAuthorId(String managementHash) {
         return Optional.of(queryFactory.from(QAuthor.author)
                 .where(QAuthor.author.managementHash.eq(managementHash))
-                .uniqueResult(QAuthor.author.id)).get();
+                .uniqueResult(QAuthor.author.participantId)).get();
     }
 
     @Override
     public Author getAuthor(Long authorId) {
         return queryFactory.from(QAuthor.author)
-                .where(QAuthor.author.id.eq(authorId))
+                .where(QAuthor.author.participantId.eq(authorId))
                 .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
                 .innerJoin(QParticipant.participant.participantMunicipalityFk, QMunicipality.municipality)
                 .uniqueResult(Mappings.authorMapping);

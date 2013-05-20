@@ -11,6 +11,7 @@ public class SearchParameterQueryString {
 
     private final InitiativeSearch original;
 
+
     public SearchParameterQueryString(InitiativeSearch search) {
         this.original = search;
     }
@@ -107,4 +108,24 @@ public class SearchParameterQueryString {
                 .setOrderBy(InitiativeSearch.OrderBy.latest));
     }
 
+    public String getWithStateDraft() {
+        return generateParameters(new InitiativeSearch()
+                .setShow(InitiativeSearch.Show.draft)
+                .setMunicipality(original.getMunicipality())
+                .setOrderBy(InitiativeSearch.OrderBy.latest));
+    }
+
+    public String getWithStateAccepted() {
+        return generateParameters(new InitiativeSearch()
+                .setShow(InitiativeSearch.Show.accepted)
+                .setMunicipality(original.getMunicipality())
+                .setOrderBy(InitiativeSearch.OrderBy.latest));
+    }
+
+    public String getWithStateReview() {
+        return generateParameters(new InitiativeSearch()
+                .setShow(InitiativeSearch.Show.review)
+                .setMunicipality(original.getMunicipality())
+                .setOrderBy(InitiativeSearch.OrderBy.latest));
+    }
 }

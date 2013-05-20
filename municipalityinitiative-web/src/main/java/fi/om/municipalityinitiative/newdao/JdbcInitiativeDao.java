@@ -21,6 +21,8 @@ import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.sql.QMunicipality;
 import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -33,6 +35,8 @@ import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipal
 @SQLExceptionTranslated
 @Transactional(readOnly = true)
 public class JdbcInitiativeDao implements InitiativeDao {
+
+    private final Logger log = LoggerFactory.getLogger(JdbcInitiativeDao.class);
 
     private static final Expression<DateTime> CURRENT_TIME = DateTimeExpression.currentTimestamp(DateTime.class);
 
@@ -169,7 +173,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    public InitiativeCounts getInitiativeCounts(Maybe<Long> municipality) {
+    public InitiativeCounts getPublicInitiativeCounts(Maybe<Long> municipality) {
         Expression<String> caseBuilder = new CaseBuilder()
                 .when(municipalityInitiative.sent.isNull())
                 .then(new ConstantImpl<String>(InitiativeSearch.Show.collecting.name()))
@@ -191,6 +195,50 @@ public class JdbcInitiativeDao implements InitiativeDao {
         InitiativeCounts counts = new InitiativeCounts();
         counts.sent = map.get(InitiativeSearch.Show.sent.name()).or(0L);
         counts.collecting = map.get(InitiativeSearch.Show.collecting.name()).or(0L);
+        return counts;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public InitiativeCounts getAllInitiativeCounts(Maybe<Long> municipality) {
+        String unknownStateFound = "unknownStateFound";
+        Expression<String> caseBuilder = new CaseBuilder()
+                .when(municipalityInitiative.type.eq(InitiativeType.COLLABORATIVE)
+                        .and(municipalityInitiative.sent.isNull())
+                        .and(municipalityInitiative.state.eq(InitiativeState.PUBLISHED)))
+                .then(new ConstantImpl<String>(InitiativeSearch.Show.collecting.name()))
+                .when(municipalityInitiative.sent.isNotNull())
+                .then(new ConstantImpl<String>(InitiativeSearch.Show.sent.name()))
+                .when(municipalityInitiative.state.eq(InitiativeState.DRAFT))
+                .then(new ConstantImpl<String>(InitiativeState.DRAFT.name()))
+                .when(municipalityInitiative.state.eq(InitiativeState.ACCEPTED))
+                .then(new ConstantImpl<String>(InitiativeState.ACCEPTED.name()))
+                .when(municipalityInitiative.state.eq(InitiativeState.REVIEW))
+                .then(new ConstantImpl<String>(InitiativeState.REVIEW.name()))
+                .otherwise(new ConstantImpl<String>(unknownStateFound));
+
+        SimpleExpression<String> simpleExpression = Expressions.as(caseBuilder, "showCategory");
+
+        PostgresQuery from = queryFactory.from(municipalityInitiative);
+
+        if (municipality.isPresent()) {
+            from.where(municipalityInitiative.municipalityId.eq(municipality.get()));
+        }
+
+        MaybeHoldingHashMap<String, Long> map = new MaybeHoldingHashMap<>(from
+                .groupBy(simpleExpression)
+                .map(simpleExpression, municipalityInitiative.count()));
+
+        InitiativeCounts counts = new InitiativeCounts();
+        counts.sent = map.get(InitiativeSearch.Show.sent.name()).or(0L);
+        counts.collecting = map.get(InitiativeSearch.Show.collecting.name()).or(0L);
+        counts.draft = map.get(InitiativeState.DRAFT.name()).or(0L);
+        counts.accepted = map.get(InitiativeState.ACCEPTED.name()).or(0L);
+        counts.review = map.get(InitiativeState.REVIEW.name()).or(0L);
+
+        if (map.get(unknownStateFound).isPresent()) {
+            log.error("Initiatives found with unknown state");
+        }
         return counts;
     }
 

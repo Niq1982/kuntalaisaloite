@@ -6,6 +6,7 @@ import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Path;
 import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
+import fi.om.municipalityinitiative.newdto.user.User;
 import fi.om.municipalityinitiative.service.AccessDeniedException;
 import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.*;
@@ -13,6 +14,8 @@ import org.joda.time.DateTime;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+
+import java.util.Collections;
 
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -40,12 +43,12 @@ public class TestHelper {
     public static final DateTime DEFAULT_CREATE_TIME = DateTime.now();
     public static final String DEFAULT_SENT_COMMENT = "some default sent comment";
 
-    public final static LoginUserHolder authorLoginUserHolder = mock(LoginUserHolder.class);
-    public final static LoginUserHolder unknownLoginUserHolder = mock(LoginUserHolder.class);
+    public static LoginUserHolder authorLoginUserHolder;
+    public static LoginUserHolder unknownLoginUserHolder = new LoginUserHolder(User.anonym());
 
-    static {
-        doThrow(new AccessDeniedException("Access denied")).when(unknownLoginUserHolder).assertManagementRightsForInitiative(anyLong());
-    }
+//    static {
+//        doThrow(new AccessDeniedException("Access denied")).when(unknownLoginUserHolder).assertManagementRightsForInitiative(anyLong());
+//    }
 
     @Resource
     PostgresQueryFactory queryFactory;
@@ -163,7 +166,8 @@ public class TestHelper {
         if (initiativeDraft.authorDraft.isPresent()) {
             initiativeDraft.authorDraft.get().withInitiativeId(lastInitiativeId);
             createAuthorAndParticipant(initiativeDraft.authorDraft.get());
-            stub(authorLoginUserHolder.getAuthorId()).toReturn(lastAuthorId);
+//            stub(authorLoginUserHolder.getAuthorId()).toReturn(lastAuthorId);
+//            stub(authorLoginUserHolder.getUser()).toReturn();
         }
         return lastInitiativeId;
 
@@ -171,12 +175,14 @@ public class TestHelper {
 
     private void createAuthorAndParticipant(AuthorDraft authorDraft) {
         Long lastParticipantId = createParticipant(authorDraft);
-        lastAuthorId = queryFactory.insert(QAuthor.author)
+        lastAuthorId = lastParticipantId;
+        queryFactory.insert(QAuthor.author)
                 .set(QAuthor.author.address, authorDraft.authorAddress)
                 .set(QAuthor.author.phone, authorDraft.authorPhone)
                 .set(QAuthor.author.participantId, lastParticipantId)
                 .set(QAuthor.author.managementHash, generateHash(40))
-                .executeWithKey(QAuthor.author.id);
+                .execute();
+        authorLoginUserHolder = new LoginUserHolder(User.normalUser(lastAuthorId, Collections.singleton(lastInitiativeId)));
     }
 
 
@@ -380,7 +386,7 @@ public class TestHelper {
 
     @Transactional
     public Long getLastAuthorId() {
-        return queryFactory.from(QAuthor.author).orderBy(QAuthor.author.id.desc()).list(QAuthor.author.id).get(0);
+        return queryFactory.from(QAuthor.author).orderBy(QAuthor.author.participantId.desc()).list(QAuthor.author.participantId).get(0);
     }
 }
 

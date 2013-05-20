@@ -271,7 +271,8 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         Long collaborativeSent = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE)
-                .withSent(DateTime.now()));
+                .withSent(DateTime.now())
+                .applyAuthor().toInitiativeDraft());
 
         service.sendCollaborativeToMunicipality(collaborativeSent, TestHelper.authorLoginUserHolder, "", null);
     }

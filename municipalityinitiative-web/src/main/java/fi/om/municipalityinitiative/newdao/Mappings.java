@@ -45,7 +45,7 @@ public class Mappings {
                     contactInfo.setShowName(Boolean.TRUE.equals(row.get(QParticipant.participant.showName)));
 
                     Author author = new Author();
-                    author.setId(row.get(QAuthor.author.id));
+                    author.setId(row.get(QAuthor.author.participantId));
                     author.setCreateTime(row.get(QParticipant.participant.participateTime));
                     author.setContactInfo(contactInfo);
                     author.setMunicipality(parseMunicipality(row));
@@ -70,6 +70,7 @@ public class Mappings {
                     info.setSentTime(maybeLocalDate(row.get(municipalityInitiative.sent)));
                     info.setParticipantCount(row.get(municipalityInitiative.participantCount));
                     info.setType(row.get(municipalityInitiative.type));
+                    info.setState(row.get(municipalityInitiative.state));
                     return info;
                 }
             };

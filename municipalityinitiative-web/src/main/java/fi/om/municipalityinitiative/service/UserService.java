@@ -5,7 +5,7 @@ import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.FakeUserDao;
 import fi.om.municipalityinitiative.newdao.UserDao;
 import fi.om.municipalityinitiative.newdto.LoginUserHolder;
-import fi.om.municipalityinitiative.newdto.service.LoginUser;
+import fi.om.municipalityinitiative.newdto.user.User;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -36,13 +36,13 @@ public class UserService {
         if (initiativeIds.size() == 0) {
             throw new NotLoggedInException("Invalid login credentials");
         }
-        request.getSession().setAttribute(LOGIN_USER_PARAMETER, LoginUser.normalUser(authorId, initiativeIds));
+        request.getSession().setAttribute(LOGIN_USER_PARAMETER, User.normalUser(authorId, initiativeIds));
 
         return initiativeIds.iterator().next();
     }
 
     public LoginUserHolder getRequiredLoginUserHolder(HttpServletRequest request) {
-        Maybe<LoginUserHolder> loginUserHolder = parseLoginUser(request.getSession());
+        Maybe<LoginUserHolder> loginUserHolder = parseLoginUser(request);
 
         if (loginUserHolder.isNotPresent()) {
             throw new AccessDeniedException("Not logged in as author");
@@ -53,7 +53,7 @@ public class UserService {
 
     public LoginUserHolder getRequiredOmLoginUserHolder(HttpServletRequest request) {
 
-        Maybe<LoginUserHolder> loginUserHolder = parseLoginUser(request.getSession());
+        Maybe<LoginUserHolder> loginUserHolder = parseLoginUser(request);
 
         if (loginUserHolder.isNotPresent()) {
             throw new AuthenticationRequiredException();
@@ -64,28 +64,22 @@ public class UserService {
     }
 
     public boolean hasManagementRightForInitiative(Long initiativeId, HttpServletRequest request) {
-        Maybe<LoginUserHolder> loginUserHolderMaybe = parseLoginUser(request.getSession());
+        Maybe<LoginUserHolder> loginUserHolderMaybe = parseLoginUser(request);
         return loginUserHolderMaybe.isPresent()
                 && loginUserHolderMaybe.get().hasManagementRightsForInitiative(initiativeId);
     }
 
-    private static Maybe<LoginUserHolder> parseLoginUser(HttpSession session) {
+    private static Maybe<LoginUserHolder> parseLoginUser(HttpServletRequest request) {
 
-        if (session == null)
+        Maybe<User> user = getOptionalLoginUser(request);
+
+        if (user.isNotPresent())
             return Maybe.absent();
 
-        LoginUser loginUser = (LoginUser) session.getAttribute(LOGIN_USER_PARAMETER);
-
-        if (loginUser == null)
-            return Maybe.absent();
-
-
-        return Maybe.of(new LoginUserHolder(
-                loginUser
-        ));
+        return Maybe.of(new LoginUserHolder(user.get()));
     }
 
-    public static Maybe<LoginUser> getUser() {
+    public static Maybe<User> getUser() {
         String loginUserParameter = LOGIN_USER_PARAMETER;
         return getObject(loginUserParameter);
     }
@@ -118,14 +112,25 @@ public class UserService {
 
     }
 
-    public boolean isOmUser(HttpServletRequest request) {
-        try {
-            LoginUserHolder requiredOmLoginUserHolder = getRequiredOmLoginUserHolder(request);
-            return requiredOmLoginUserHolder.getLoginUser().isOmUser();
-        }
-        catch (AuthenticationRequiredException | AccessDeniedException e) {
-            return false;
-        }
 
+
+    public static Maybe<User> getOptionalLoginUser(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        if (session == null)
+            return Maybe.absent();
+
+        User user = (User) session.getAttribute(LOGIN_USER_PARAMETER);
+        if (user == null)
+            return Maybe.absent();
+
+        return Maybe.of(user);
+    }
+
+    public User getUser(HttpServletRequest request) {
+        Maybe<User> optionalLoginUser = getOptionalLoginUser(request);
+        if (optionalLoginUser.isPresent()) {
+            return optionalLoginUser.get();
+        }
+        return User.anonym();
     }
 }

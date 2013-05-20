@@ -8,7 +8,7 @@ import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
-import fi.om.municipalityinitiative.newdto.service.LoginUser;
+import fi.om.municipalityinitiative.newdto.user.User;
 import fi.om.municipalityinitiative.util.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,7 +43,7 @@ public class ModerationServiceTest {
         moderationService.authorDao = mock(AuthorDao.class);
         stub(moderationService.authorDao.getAuthorEmails(anyLong())).toReturn(Collections.singletonList("")); // Avoid nullpointer temporarily
 
-        loginUserHolder = new LoginUserHolder(LoginUser.normalUser(null, Collections.<Long>emptySet()));
+        loginUserHolder = new LoginUserHolder(User.normalUser(null, Collections.<Long>emptySet()));
     }
 
     @Test
@@ -66,7 +66,7 @@ public class ModerationServiceTest {
     }
 
     private void setOmUser() {
-        loginUserHolder = new LoginUserHolder(LoginUser.omUser());
+        loginUserHolder = new LoginUserHolder(User.omUser());
     }
 
     @Test(expected = OperationNotAllowedException.class)

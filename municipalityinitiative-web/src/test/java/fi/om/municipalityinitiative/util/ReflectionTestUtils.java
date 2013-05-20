@@ -4,7 +4,6 @@ import fi.om.municipalityinitiative.json.ObjectSerializer;
 import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
 import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
-import fi.om.municipalityinitiative.newdto.ui.Participants;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -99,9 +98,6 @@ public class ReflectionTestUtils {
             return modifyAllFields(new ContactInfo());
         }
 
-        if (type.equals(Participants.class)) {
-            return modifyAllFields(new Participants());
-        }
         if (type.equals(Municipality.class)) {
             return modifyAllFields(new Municipality(0, "", "", false));
         }
