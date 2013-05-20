@@ -128,4 +128,8 @@ public class SearchParameterQueryString {
                 .setMunicipality(original.getMunicipality())
                 .setOrderBy(InitiativeSearch.OrderBy.latest));
     }
+    
+    public String getWithMunicipality(Long municipalityId) {
+        return generateParameters(new InitiativeSearch().setMunicipality(municipalityId));
+    }
 }

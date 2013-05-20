@@ -354,7 +354,7 @@ public final class Urls {
     public String iframe(Long municipalityId) {
         return iframe() + "?" + PARAM_MUNICIPALITY + "=" + municipalityId;
     }
-
+    
     public String getManagement(Long id) {
         return getLocalizedPageUrl(MANAGEMENT_FI, MANAGEMENT_SV).replace(ID_PARAMETER, id.toString());
     }
