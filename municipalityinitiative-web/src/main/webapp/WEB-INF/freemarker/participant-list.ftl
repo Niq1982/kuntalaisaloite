@@ -117,19 +117,17 @@
 -->
 <#macro participantListManage participants>
     <#list participants as participant>
-        <#-- TODO: Author cannot be removed from here
-        <#list authors as author>
-            <#assign isAuthor = (participant.id == author.id) />
-        </#list>
-        -->
-        
+
         <#if participant_index == 0><ul class="participant-list no-style"></#if>
-            <li><span class="date"><@u.localDate participant.participateDate!"" /></span> <span class="name-container"><span class="name">${participant.name!""}</span><span class="home-municipality"><span class="bull">&bull;</span>${participant.homeMunicipality.getName(locale)!""}</span><span class="bull">&bull;</span>
-            <a  href="#" class="js-delete-participant"
-                data-id="${participant.id!""}"
-                data-date="<@u.localDate participant.participateDate!"" />"
-                data-name="${participant.name!""}"
-                data-municipality="${participant.homeMunicipality.getName(locale)!""}">Poista</a></span></li>
+            <li><span class="date"><@u.localDate participant.participateDate!"" /></span> <span class="name-container"><span class="name">${participant.name!""}</span> <span class="home-municipality"><span class="bull">&bull;</span> ${participant.homeMunicipality.getName(locale)!""}</span><span class="bull">&bull;</span>
+            <#if !participant.isAuthor()>
+                <a  href="#" class="js-delete-participant"
+                    data-id="${participant.id!""}"
+                    data-date="<@u.localDate participant.participateDate!"" />"
+                    data-name="${participant.name!""}"
+                    data-municipality="${participant.homeMunicipality.getName(locale)!""}">Poista</a></span></li>
+
+            </#if>
         <#if !participant_has_next></ul></#if>
     </#list>
 </#macro>

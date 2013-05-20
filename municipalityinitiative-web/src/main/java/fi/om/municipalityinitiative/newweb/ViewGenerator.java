@@ -77,7 +77,7 @@ public class ViewGenerator {
 
     public static ViewGenerator participantList(InitiativeViewInfo initiativeInfo,
                                                 ParticipantCount participantCount,
-                                                List<Participant> publicParticipants,
+                                                List<ParticipantListInfo> publicParticipants,
                                                 String previousPageURI) {
         return new ViewGenerator(PARTICIPANT_LIST,
                 new AttributeBuilder()

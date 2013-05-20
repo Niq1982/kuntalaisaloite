@@ -7,9 +7,11 @@ import org.joda.time.LocalDate;
 public class ParticipantListInfo {
 
     private Participant participant;
+    private boolean author;
 
-    public ParticipantListInfo(Participant participant) {
+    public ParticipantListInfo(Participant participant, boolean isAuthor) {
         this.participant = participant;
+        author = isAuthor;
     }
 
     public String getName() {
@@ -25,6 +27,11 @@ public class ParticipantListInfo {
     }
 
     public boolean isAuthor() {
-        return participant.isAuthor();
+        return author;
     }
+
+    public Long getId() {
+        return participant.getId();
+    }
+
 }
