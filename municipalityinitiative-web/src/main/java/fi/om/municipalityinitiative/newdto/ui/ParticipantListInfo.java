@@ -30,4 +30,8 @@ public class ParticipantListInfo {
         return author;
     }
 
+    public Long getId() {
+        return participant.getId();
+    }
+
 }
