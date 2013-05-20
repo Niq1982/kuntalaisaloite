@@ -155,25 +155,6 @@ public class JdbcParticipantDaoTest {
     }
 
     @Test
-    @Ignore
-    public void findParticipants_sets_isAuthor_true_if_author() {
-        Long initiativeId = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipalityId).applyAuthor().toInitiativeDraft());
-
-        List<Participant> allParticipants = participantDao.findAllParticipants(initiativeId);
-        precondition(allParticipants, hasSize(1));
-        assertThat(allParticipants.get(0).isAuthor(), is(true));
-
-        testHelper.createParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId));
-
-        allParticipants = participantDao.findAllParticipants(initiativeId);
-        precondition(allParticipants, hasSize(2));
-        assertThat(allParticipants.get(1).isAuthor(), is(false));
-
-
-
-    }
-
-    @Test
     public void getAllParticipants_returns_only_confirmed_participants() {
         precondition(participantDao.findAllParticipants(testInitiativeId), hasSize(1));
         ParticipantCreateDto newParticipant = participantCreateDto();

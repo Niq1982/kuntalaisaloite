@@ -13,7 +13,6 @@ public class Participant {
     private String email;
     private Membership membership;
     private Long id;
-    private boolean isAuthor;
 
     public Participant() {
 
@@ -64,15 +63,6 @@ public class Participant {
 
     public Long getId() {
         return id;
-    }
-
-    @JsonIgnore
-    public boolean isAuthor() {
-        return isAuthor;
-    }
-
-    public void setAuthor(boolean author) {
-        isAuthor = author;
     }
 
     @JsonIgnore

@@ -137,7 +137,7 @@ public class InitiativeViewController extends BaseController {
                 previousPageURI = urls.view(initiativeId);
             }
 
-            List<Participant> participants =
+            List<ParticipantListInfo> participants =
                     userService.hasManagementRightForInitiative(initiativeId, request)
                             ?  participantService.findAllParticipants(initiativeId, userService.getRequiredLoginUserHolder(request))
                             : participantService.findPublicParticipants(initiativeId);
