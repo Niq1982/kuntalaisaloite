@@ -104,6 +104,7 @@ public class ManagementSettingsTest {
     public void may_be_sent_to_municipality_only_if_at_least_accepted_and_not_sent() throws Exception {
 
         final Initiative initiative = new Initiative();
+        initiative.setFixState(FixState.OK);
         assertExpectedOnlyWithGivenStates(initiative, new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
@@ -123,6 +124,21 @@ public class ManagementSettingsTest {
                 return ManagementSettings.of(initiative).isAllowSendToMunicipality();
             }
         }, false, InitiativeState.values());
+    }
+
+    @Test
+    public void not_able_to_send_to_municipality_if_fixState_not_ok() {
+        final Initiative initiative = new Initiative();
+        initiative.setState(InitiativeState.PUBLISHED);
+        initiative.setFixState(FixState.OK);
+        precondition(ManagementSettings.of(initiative).isAllowSendToMunicipality(), is(true));
+
+        initiative.setFixState(FixState.FIX);
+        precondition(ManagementSettings.of(initiative).isAllowSendToMunicipality(), is(false));
+
+        initiative.setFixState(FixState.REVIEW);
+        precondition(ManagementSettings.of(initiative).isAllowSendToMunicipality(), is(false));
+
     }
 
     @Test
@@ -183,10 +199,25 @@ public class ManagementSettingsTest {
     }
 
     @Test
-    public void is_allowed_to_invite_authros_if_initiative_not_sent() {
+    public void is_allowed_to_invite_authors_if_initiative_not_sent() {
         final Initiative notSentInitiative = new Initiative();
+        notSentInitiative.setFixState(FixState.OK);
         notSentInitiative.setSentTime(Maybe.<LocalDate>absent());
         assertThat(ManagementSettings.of(notSentInitiative).isAllowInviteAuthors(), is(true));
+    }
+
+    @Test
+    public void is_not_allowed_to_inivite_authors_if_fixState_not_OK() {
+        final Initiative publishedInitiative = new Initiative();
+        publishedInitiative.setState(InitiativeState.PUBLISHED);
+        publishedInitiative.setFixState(FixState.OK);
+        precondition(ManagementSettings.of(publishedInitiative).isAllowInviteAuthors(), is(true));
+
+        publishedInitiative.setFixState(FixState.REVIEW);
+        assertThat(ManagementSettings.of(publishedInitiative).isAllowInviteAuthors(), is(false));
+
+        publishedInitiative.setFixState(FixState.FIX);
+        assertThat(ManagementSettings.of(publishedInitiative).isAllowInviteAuthors(), is(false));
     }
 
     @Test

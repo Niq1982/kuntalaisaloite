@@ -7,6 +7,7 @@ import com.mysema.query.support.Expressions;
 import com.mysema.query.types.ConstantImpl;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.Predicate;
+import com.mysema.query.types.expr.BooleanExpression;
 import com.mysema.query.types.expr.CaseBuilder;
 import com.mysema.query.types.expr.DateTimeExpression;
 import com.mysema.query.types.expr.SimpleExpression;
@@ -35,6 +36,17 @@ import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipal
 @SQLExceptionTranslated
 @Transactional(readOnly = true)
 public class JdbcInitiativeDao implements InitiativeDao {
+
+    private static final BooleanExpression IS_PUBLIC = municipalityInitiative.state.eq(InitiativeState.PUBLISHED)
+            .and(municipalityInitiative.fixState.eq(FixState.OK));
+    private static final BooleanExpression STATE_IS_DRAFT = municipalityInitiative.state.eq(InitiativeState.DRAFT)
+            .or(municipalityInitiative.fixState.eq(FixState.FIX));
+    private static final BooleanExpression STATE_IS_REVIEW = municipalityInitiative.state.eq(InitiativeState.REVIEW)
+            .or(municipalityInitiative.fixState.eq(FixState.REVIEW));
+    private static final BooleanExpression STATE_IS_ACCEPTED = municipalityInitiative.state.eq(InitiativeState.ACCEPTED)
+            .and(municipalityInitiative.fixState.eq(FixState.OK));
+    private static final BooleanExpression STATE_IS_COLLECTING = municipalityInitiative.sent.isNull().and(IS_PUBLIC);
+    private static final BooleanExpression STATE_IS_SENT = municipalityInitiative.sent.isNotNull().and(IS_PUBLIC);
 
     private final Logger log = LoggerFactory.getLogger(JdbcInitiativeDao.class);
 
@@ -111,22 +123,22 @@ public class JdbcInitiativeDao implements InitiativeDao {
             // public
 
             case sent:
-                query.where(municipalityInitiative.sent.isNotNull());
+                query.where(STATE_IS_SENT);
                 break;
             case collecting:
-                query.where(municipalityInitiative.sent.isNull());
+                query.where(STATE_IS_COLLECTING);
                 break;
 
             // om
 
             case draft:
-                query.where(municipalityInitiative.state.eq(InitiativeState.DRAFT));
+                query.where(STATE_IS_DRAFT);
                 break;
             case review:
-                query.where(municipalityInitiative.state.eq(InitiativeState.REVIEW));
+                query.where(STATE_IS_REVIEW);
                 break;
             case accepted:
-                query.where(municipalityInitiative.state.eq(InitiativeState.ACCEPTED));
+                query.where(STATE_IS_ACCEPTED);
                 break;
             case omAll:
                 break;
@@ -182,7 +194,8 @@ public class JdbcInitiativeDao implements InitiativeDao {
         SimpleExpression<String> simpleExpression = Expressions.as(caseBuilder, "showCategory");
 
         PostgresQuery from = queryFactory.from(municipalityInitiative)
-                .where(municipalityInitiative.state.eq(InitiativeState.PUBLISHED));
+                .where(municipalityInitiative.state.eq(InitiativeState.PUBLISHED))
+                .where(municipalityInitiative.fixState.eq(FixState.OK));
 
         if (municipality.isPresent()) {
             from.where(municipalityInitiative.municipalityId.eq(municipality.get()));
@@ -203,17 +216,15 @@ public class JdbcInitiativeDao implements InitiativeDao {
     public InitiativeCounts getAllInitiativeCounts(Maybe<Long> municipality) {
         String unknownStateFound = "unknownStateFound";
         Expression<String> caseBuilder = new CaseBuilder()
-                .when(municipalityInitiative.type.eq(InitiativeType.COLLABORATIVE)
-                        .and(municipalityInitiative.sent.isNull())
-                        .and(municipalityInitiative.state.eq(InitiativeState.PUBLISHED)))
+                .when(STATE_IS_COLLECTING)
                 .then(new ConstantImpl<String>(InitiativeSearch.Show.collecting.name()))
-                .when(municipalityInitiative.sent.isNotNull())
+                .when(STATE_IS_SENT)
                 .then(new ConstantImpl<String>(InitiativeSearch.Show.sent.name()))
-                .when(municipalityInitiative.state.eq(InitiativeState.DRAFT))
+                .when(STATE_IS_DRAFT)
                 .then(new ConstantImpl<String>(InitiativeState.DRAFT.name()))
-                .when(municipalityInitiative.state.eq(InitiativeState.ACCEPTED))
+                .when(STATE_IS_ACCEPTED)
                 .then(new ConstantImpl<String>(InitiativeState.ACCEPTED.name()))
-                .when(municipalityInitiative.state.eq(InitiativeState.REVIEW))
+                .when(STATE_IS_REVIEW)
                 .then(new ConstantImpl<String>(InitiativeState.REVIEW.name()))
                 .otherwise(new ConstantImpl<String>(unknownStateFound));
 
@@ -237,7 +248,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
         counts.review = map.get(InitiativeState.REVIEW.name()).or(0L);
 
         if (map.get(unknownStateFound).isPresent()) {
-            log.error("Initiatives found with unknown state");
+            log.error("Initiatives found with unknown state: " + map.get(unknownStateFound).get());
         }
         return counts;
     }

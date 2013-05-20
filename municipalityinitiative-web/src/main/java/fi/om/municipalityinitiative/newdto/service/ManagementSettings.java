@@ -3,6 +3,8 @@ package fi.om.municipalityinitiative.newdto.service;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 
+import javax.xml.transform.OutputKeys;
+
 public class ManagementSettings {
 
     private Initiative initiative;
@@ -34,7 +36,7 @@ public class ManagementSettings {
     public boolean isAllowSendToMunicipality() {
         return (initiative.getState().equals(InitiativeState.ACCEPTED) || initiative.getState().equals(InitiativeState.PUBLISHED))
                 && initiative.getSentTime().isNotPresent()
-                && !isAllowSendFixToReview();
+                && initiative.getFixState() == FixState.OK;
     }
 
     public boolean isAllowPublish() {
@@ -48,7 +50,7 @@ public class ManagementSettings {
     }
 
     public boolean isAllowInviteAuthors() {
-        return initiative.getSentTime().isNotPresent() && !isAllowSendFixToReview();
+        return initiative.getSentTime().isNotPresent() && initiative.getFixState() == FixState.OK;
     }
 
     public boolean isAllowOmSendBackForFixing() {

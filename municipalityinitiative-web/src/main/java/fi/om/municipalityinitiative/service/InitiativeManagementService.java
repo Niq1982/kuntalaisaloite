@@ -125,7 +125,7 @@ public class InitiativeManagementService {
 
         String TEMPORARILY_REPLACING_OM_EMAIL = authorDao.getAuthorEmails(initiativeId).get(0);
 
-        emailService.sendNotificationToModerator(initiative, authorDao.findAuthors(initiativeId), locale, TEMPORARILY_REPLACING_OM_EMAIL);
+        emailService.sendNotificationToModerator(initiative, authorDao.findAuthors(initiativeId), TEMPORARILY_REPLACING_OM_EMAIL);
     }
 
     @Transactional(readOnly = false)
@@ -133,6 +133,10 @@ public class InitiativeManagementService {
         requiredLoginUserHolder.assertManagementRightsForInitiative(initiativeId);
         assertAllowance("Send fix to review", getManagementSettings(initiativeId).isAllowSendFixToReview());
         initiativeDao.updateInitiativeFixState(initiativeId, FixState.REVIEW);
+
+        String TEMPORARILY_REPLACING_OM_EMAIL = authorDao.getAuthorEmails(initiativeId).get(0);
+
+        emailService.sendNotificationToModerator(initiativeDao.get(initiativeId), authorDao.findAuthors(initiativeId), TEMPORARILY_REPLACING_OM_EMAIL);
     }
 
     @Transactional(readOnly = false)

@@ -20,7 +20,7 @@ public interface EmailService {
 
     void sendStatusEmail(Initiative initiative, List<String> sendTo, String municipalityEmail, EmailMessageType emailMessageType);
 
-    void sendNotificationToModerator(Initiative initiative, List<Author> authors, Locale locale, String TEMPORARILY_REPLACING_OM_EMAIL);
+    void sendNotificationToModerator(Initiative initiative, List<Author> authors, String TEMPORARILY_REPLACING_OM_EMAIL);
 
     void sendParticipationConfirmation(Initiative initiative, String participantEmail, Long participantId, String confirmationCode, Locale locale);
 
