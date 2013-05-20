@@ -71,11 +71,12 @@ create index participant_id_index on participant(id);
 
 create table author (
     participant_id bigserial,
-    management_hash varchar(40), -- TODO unique
+    management_hash varchar(40),
 
     phone varchar(30),
     address varchar(256),
 
+	constraint management_hash_u unique(management_hash),
     constraint author_pk primary key (participant_id),
     constraint author_participant_fk foreign key (participant_id) references participant(id)
 );
