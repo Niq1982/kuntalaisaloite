@@ -3,12 +3,15 @@ package fi.om.municipalityinitiative.newdao;
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dao.InvitationNotValidException;
 import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -17,9 +20,7 @@ import javax.annotation.Resource;
 
 import java.util.Set;
 
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
@@ -31,8 +32,14 @@ public class JdbcAuthorDaoTest {
     AuthorDao authorDao;
 
     @Resource
+    ParticipantDao participantDao;
+
+    @Resource
     TestHelper testHelper;
     private Long testMunicipality;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() throws Exception {
@@ -90,6 +97,29 @@ public class JdbcAuthorDaoTest {
         assertThat(author.getCreateTime(), is(new LocalDate()));
 
         ReflectionTestUtils.assertNoNullFields(author);
+    }
+
+    @Test
+    public void delete_author_removes_author_and_its_participant() {
+        Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality);
+        Long authorId = testHelper.createAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality));
+
+        int originalAuthorCount = authorDao.findAuthors(initiativeId).size();
+        int originalParticipantCount = participantDao.findAllParticipants(initiativeId).size();
+
+        authorDao.deleteAuthor(authorId);
+
+        assertThat(authorDao.findAuthors(initiativeId), hasSize(originalAuthorCount - 1));
+        assertThat(participantDao.findAllParticipants(initiativeId), hasSize(originalParticipantCount - 1));
+    }
+
+    @Test
+    public void deleting_final_author_is_not_allowed() {
+        testHelper.createCollaborativeAccepted(testMunicipality);
+
+        thrown.expect(OperationNotAllowedException.class);
+        thrown.expectMessage(containsString("Deleting last author is forbidden"));
+        authorDao.deleteAuthor(testHelper.getLastAuthorId());
     }
 
 }

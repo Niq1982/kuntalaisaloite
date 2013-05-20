@@ -173,7 +173,8 @@ public class TestHelper {
 
     }
 
-    private void createAuthorAndParticipant(AuthorDraft authorDraft) {
+    @Transactional(readOnly = false)
+    public Long createAuthorAndParticipant(AuthorDraft authorDraft) {
         Long lastParticipantId = createParticipant(authorDraft);
         lastAuthorId = lastParticipantId;
         queryFactory.insert(QAuthor.author)
@@ -183,6 +184,7 @@ public class TestHelper {
                 .set(QAuthor.author.managementHash, generateHash(40))
                 .execute();
         authorLoginUserHolder = new LoginUserHolder(User.normalUser(lastAuthorId, Collections.singleton(lastInitiativeId)));
+        return lastAuthorId;
     }
 
 

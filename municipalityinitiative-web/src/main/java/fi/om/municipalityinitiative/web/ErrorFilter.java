@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.util.NestedServletException;
 
-import fi.om.municipalityinitiative.dao.NotFoundException;
+import fi.om.municipalityinitiative.util.NotFoundException;
 import fi.om.municipalityinitiative.service.AccessDeniedException;
 import fi.om.municipalityinitiative.service.AuthenticationRequiredException;
 

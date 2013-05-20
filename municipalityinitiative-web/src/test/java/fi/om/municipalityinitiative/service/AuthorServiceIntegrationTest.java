@@ -1,7 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dao.InvitationNotValidException;
-import fi.om.municipalityinitiative.dao.NotFoundException;
+import fi.om.municipalityinitiative.util.NotFoundException;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
@@ -276,6 +276,40 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         assertThat(allCurrentInvitations(), is(1L));
 
     }
+
+    @Test
+    public void deleting_author_throws_exception_if_not_management_rights() {
+        Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality);
+
+        thrown.expect(AccessDeniedException.class);
+        authorService.deleteAuthor(initiativeId, TestHelper.unknownLoginUserHolder, testHelper.getLastAuthorId());
+
+    }
+
+    @Test
+    public void deleting_final_author_is_not_allowed() {
+        Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality);
+
+        thrown.expect(OperationNotAllowedException.class);
+        thrown.expectMessage(containsString("Unable to delete author"));
+        authorService.deleteAuthor(initiativeId, TestHelper.authorLoginUserHolder, testHelper.getLastAuthorId());
+    }
+
+    @Test
+    public void deleting_author_fails_if_initiativeId_and_authorId_mismatch() {
+        Long initiative1 = testHelper.createCollaborativeAccepted(testMunicipality);
+        Long author1 = testHelper.createAuthorAndParticipant(new TestHelper.AuthorDraft(initiative1, testMunicipality));
+
+        Long initiative2 = testHelper.createCollaborativeAccepted(testMunicipality);
+        Long author2 = testHelper.createAuthorAndParticipant(new TestHelper.AuthorDraft(initiative2, testMunicipality));
+
+        thrown.expect(NotFoundException.class);
+        thrown.expectMessage(containsString("initiative"));
+        thrown.expectMessage(containsString("author"));
+        authorService.deleteAuthor(initiative2, TestHelper.authorLoginUserHolder, author1);
+
+    }
+
 
     private Long allCurrentInvitations() {
         return testHelper.countAll(QAuthorInvitation.authorInvitation);

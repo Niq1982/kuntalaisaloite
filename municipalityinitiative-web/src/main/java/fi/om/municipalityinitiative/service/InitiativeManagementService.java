@@ -1,6 +1,6 @@
 package fi.om.municipalityinitiative.service;
 
-import fi.om.municipalityinitiative.dao.NotFoundException;
+import fi.om.municipalityinitiative.util.NotFoundException;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
