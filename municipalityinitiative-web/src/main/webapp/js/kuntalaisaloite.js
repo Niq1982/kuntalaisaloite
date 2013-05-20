@@ -1161,5 +1161,66 @@ var deleteParticipant = (function() {
 }());
 
 
+/**
+* Generate iFrame
+* ==================
+*/
+(function() {
+	var reset = 			$('.js-reset-iframe'),
+		refresh = 			$('.js-update-iframe'),
+		iframeContainer = 	$("#iframe-container"),
+		iframeSource =		$("#iframe-source"),
+		municipality = 		$('#municipality')
+		limit = 			$('#limit'),
+		width = 			$('#width'),
+		height = 			$('#height'),
+	
+	generateIframe = function (params) {
+		iframeContainer.html('<span class="loader" />');
+		iframeContainer.html($("#iframe-template").render(params));
+		return false;
+	},
+	
+	params = function() {
+		return [{
+	        municipality: 	municipality.val(),
+	        limit:			limit.val(),
+	        width:			width.val(),
+	        height:			height.val()
+		}]
+    };
+    
+    generateIframe(params());
+    
+    municipality.change(function(){
+    	generateIframe(params());
+    });
+    limit.add(width).add(height).blur(function(){
+    	generateIframe(params());
+    });
+    
+    console.log(window.defaultData);
+    
+    reset.click(function(e){
+    	e.preventDefault();
+    	
+    	if (window.defaultData) {
+    		generateIframe(window.defaultData);
+    	}
+    });
+	
+    refresh.click(function(e){
+		e.preventDefault();
+		
+		
+		
+		generateIframe(params());
+		
+
+		iframeSource.html('<pre>'+iframeContainer.html().text()+'</pre>').text();
+	});
+	
+	
+}());
 
 });

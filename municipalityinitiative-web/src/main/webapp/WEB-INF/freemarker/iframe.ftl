@@ -39,6 +39,18 @@
     <#else>
         <#assign pageTitle><@u.message "page.iframe" /></#assign>
     </#if>
+    
+    <#--<#if RequestParameters['municipality']?? && RequestParameters['municipality'] != "">
+        <#assign currentMunicipalityId = RequestParameters['municipality']!"" />
+        <#assign municipalityParam = "?municipality="+currentMunicipalityId />
+    </#if>
+
+    <#if municipalityParam??>
+        <#assign pageTitle><@u.message "iframe.initiatives" /> ${currentMunicipality!""}</#assign>
+    <#else>
+        <#assign pageTitle><@u.message "page.iframe" /></#assign>
+    </#if>-->
+    
 
 <!DOCTYPE HTML>
 <!--[if lt IE 7 ]> <html lang="${locale}" class="ie6"> <![endif]-->
@@ -86,7 +98,7 @@
             <span><@u.message "siteName" /></span>
         </a>
 
-        <#if currentMunicipalityId??>
+        <#if currentMunicipality.present>
             <h3><#noescape>${pageTitle!""}</#noescape></h3>
         <#else>
             <h3>&nbsp;</h3>
@@ -94,15 +106,14 @@
     </div>
 
     <div id="content-wrapper" class="container">
-
         <div class="mashup-buttons cf">
             <div class="column col-1of2">
-                <a href="${urls.search()}${municipalityParam!""}" target="_blank" rel="external" class="small-button"><span class="small-icon next"><@u.message "iframe.browseInitiatives" /></span></a>
+                <a href="${urls.search()}<#if currentMunicipality.present>${queryString.getWithMunicipality(currentMunicipality.value.id)}</#if>" target="_blank" rel="external" class="small-button"><span class="small-icon next"><@u.message "iframe.browseInitiatives" /></span></a>
                 
                 <span class="description"><@u.message "iframe.browseInitiatives.description" /></span>
             </div>
             <div class="column col-1of2 last">
-                <a href="${urls.prepare()}${municipalityParam!""}" target="_blank" rel="external" class="small-button"><span class="small-icon add"><@u.message "iframe.createInitiative" /></span></a>
+                <a href="${urls.prepare()}" target="_blank" rel="external" class="small-button"><span class="small-icon add"><@u.message "iframe.createInitiative" /></span></a>
             </div>
         </div>
         

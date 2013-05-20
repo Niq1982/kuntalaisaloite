@@ -383,32 +383,4 @@ ${email?split("@")?first}&#064;<span class="hide">null</span>${email?split("@")?
     </div>
 </#macro>
 
-<#--
- * initiativeIframe (Leijuke)
- *
- * Generates iframe source code for listing initiatives in defined municipality.
- *
- * @param embed desides whether HTML is escaped for embed code or not espaced for pre-code.
- * @param id unique id for iframe
- * @param width sets iframe width in pixels. Use plain number.
- * @param height sets iframe height in pixels. Use plain number.
- * @param municipality sets municipality for the iframe
- * @param limit sets the limit for showed initiatives
--->
-<#macro initiativeIframe id="kuntalaisaloite-leijuke" embed=true width="250" height="400" municipality="" limit="3"><@compress single_line=true>
-    <#assign iframeHTML><iframe id="${id}"
-            frameborder="0"
-            scrolling="no"
-            src="${urls.baseUrl}/${locale}/iframe?municipality=${municipality}&amp;limit=${limit}&amp;orderBy=latest&amp;width=${width}&amp;height=${height}"
-            width="${width}"
-            height="${height}">
-    </iframe></#assign>
-        
-    <#if embed>
-        <#noescape>${iframeHTML}</#noescape>
-    <#else>
-        <pre>${iframeHTML}</pre>
-    </#if>
-</@compress></#macro>
-
 </#escape>

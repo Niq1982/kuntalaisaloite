@@ -1,4 +1,5 @@
 <#import "../components/utils.ftl" as u />
+<#import "../components/iframe.ftl" as i />
 
 <#escape x as x?html>
 
@@ -18,27 +19,33 @@
         <li>kuinka monta uusinta aloitetta listassa näytetään</li>
         <li>leijukkeen leveyttä ja korkeutta</li>
     </ul>
+    
+    <h2>Leijukegeneraattori</h2>
+    
+    <div class="view-block">
+        <@i.initiativeIframeGenerator />
+    </div>
 
     <h2>Esimerkkejä leijukkeista</h2>
 
     <div class="view-block">
     
         <h2>Pieni leijuke - 250x400 px</h2> 
-        <@u.initiativeIframe id="kuntalaisaloite-leijuke" embed=true width="250" height="400" municipality="2" limit="3" />
+        <@i.initiativeIframe id="kuntalaisaloite-leijuke" embed=true width="250" height="400" municipality="2" limit="3" />
         <br/><br/>
         <p>Alla on esimerkki-leijukkeen upotus-koodi. Kopioi alla oleva koodi kokonaisuudessaan leikepöydällesi ja muuta parametreja tarpeesi mukaan. Liitä sen jälkeen koodi sivustollesi.</p>
         
-        <@u.initiativeIframe id="kuntalaisaloite-leijuke" embed=false width="250" height="400" municipality="2" limit="3" />
+        <@i.initiativeIframe id="kuntalaisaloite-leijuke" embed=false width="250" height="400" municipality="2" limit="3" />
     </div>
     
     <div class="view-block">
         <h2>Iso leijuke - 600x600px</h2>
     
-        <@u.initiativeIframe id="kuntalaisaloite-leijuke-2" embed=true width="600" height="460" municipality="2" limit="10" />
+        <@i.initiativeIframe id="kuntalaisaloite-leijuke-2" embed=true width="600" height="460" municipality="2" limit="10" />
         <br/><br/>
         <p>Alla on esimerkki-leijukkeen upotus-koodi. Kopioi alla oleva koodi kokonaisuudessaan leikepöydällesi ja muuta parametreja tarpeesi mukaan. Liitä sen jälkeen koodi sivustollesi.</p>
         
-        <@u.initiativeIframe id="kuntalaisaloite-leijuke-2" embed=false width="600" height="460" municipality="2" limit="10" />
+        <@i.initiativeIframe id="kuntalaisaloite-leijuke-2" embed=false width="600" height="460" municipality="2" limit="10" />
     </div>
 
 <#--
