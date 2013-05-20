@@ -11,7 +11,7 @@
 -->
 <@l.main "page.municipality.moderation" >
 
-<h1>Hallinnoi palvelun kuntia</h1>
+<h1><@u.message "municipalities.edit.title" /></h1>
 
 <#--
 <div class="view-block cf">
@@ -52,23 +52,28 @@
 </div>
 -->
 
+<div class="msg-block">
+    <p><@u.message "municipalities.edit.description" /></p>
+    <p><@u.message "municipalities.edit.instruction" /></p>
+</div>
+
 
 <table class="data municipalities">
     <thead>
         <tr>
-            <th> </th>
-            <th>Kunta suomeksi</th>
-            <th>Kunta ruotsiksi</th>
-            <th>Sähköpostiosoite</th>
+            <th><a href="#" class="js-toggle-active trigger-tooltip" title="<@u.message "municipalities.edit.toggle" />" ><span class="icon-small more less"></span></a></th>
+            <th><@u.message "municipality.nameFi" /></th>
+            <th><@u.message "municipality.nameSv" /></th>
+            <th><@u.message "municipality.email" /></th>
         </tr>
     </thead>
     <tbody>
         <#list municipalities as municipality>
-            <tr>
-                <td><#if municipality.active><span class="icon-small confirmed trigger-tooltip" title="Aktiivinen kunta"></span></#if></td>
+            <tr class="${municipality.active?string("active","not-active")}">
+                <td><#if municipality.active><span class="icon-small confirmed trigger-tooltip" title="<@u.message "municipalities.edit.active" />"></span></#if></td>
                 <td><a  href="#"
                         class="js-edit-municipality trigger-tooltip"
-                        title="Muokkaa kunnan tietoja"
+                        title="<@u.message "municipality.edit.title" />"
                         data-id="${municipality.id}"
                         data-email="${municipality.email!""}"
                         data-active="${municipality.active?string}"
@@ -88,13 +93,12 @@
         
         <input type="hidden" id="id" name="id" value="1"/>
 
-        <h3 id="selected-municipality" data-empty="<i>Ei valittua kuntaa</i>"><i>Ei valittua kuntaa</i></h3>
+        <h3 id="selected-municipality" data-empty="<i><@u.message "municipality.edit.noneSelected" /></i>"><i><@u.message "municipality.edit.noneSelected" /></i></h3>
         
         <div class="input-block-content">
-            <#--<@f.formCheckbox path="updateData.active" />-->
             <@f.radiobutton path="updateData.active" required="" header=false options={
-                    "true":"municipalities.edit.active",
-                    "false":"municipalities.edit.notActive"
+                    "true":"municipality.edit.active",
+                    "false":"municipality.edit.notActive"
                 } attributes="" />
         </div>
     
@@ -103,7 +107,7 @@
         </div>
         
         <div class="input-block-content">
-            <button type="submit" name="${UrlConstants.ACTION_ACCEPT_INITIATIVE}" class="small-button"><span class="small-icon save-and-send">Tallenna</span></button>
+            <button type="submit" name="${UrlConstants.ACTION_ACCEPT_INITIATIVE}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.save" /></span></button>
             <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
         </div>
     </form>
@@ -132,7 +136,7 @@
         <#-- Modal: Edit municipality details -->
         modalData.editMunicipalityDetails = function() {
             return [{
-                title:      'Muokkaa kunnan tietoja',
+                title:      '<@u.message "municipality.edit.title" />',
                 content:    '<#noescape>${editMunicipalityDetailsHTML!""}</#noescape>'
             }]
         };

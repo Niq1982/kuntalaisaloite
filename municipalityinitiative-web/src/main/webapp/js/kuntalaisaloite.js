@@ -1109,6 +1109,13 @@ var editMunicipality = (function() {
 		$(this).addClass('active');
 	});
 	
+	$('.js-toggle-active').click(function(e){
+		e.preventDefault();
+		
+		$(this).find('span:first').toggleClass('less');
+		$('.municipalities tbody tr.not-active').toggleClass('js-hide');
+	});
+	
 	return {
 		getActive: function(){
 			var municipality = $('.municipalities .active');
@@ -1131,10 +1138,7 @@ var editMunicipality = (function() {
 
 /**
 * Delete participant
-* =====================
-* 
-* TODO: Finalize
-* 
+* ==================
 */
 var deleteParticipant = (function() {
 	return {
