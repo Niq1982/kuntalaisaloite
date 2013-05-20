@@ -216,14 +216,14 @@ public class InitiativeManagementController extends BaseController {
             return redirectWithMessage(Urls.get(locale).manageAuthors(initiativeId), RequestMessage.INVITATION_SENT, request);
     }
     
-    @RequestMapping(value = {PARITICIPANT_LIST_FI, PARITICIPANT_LIST_SV}, method = POST)
+    @RequestMapping(value = {PARITICIPANT_LIST_MANAGE_FI, PARITICIPANT_LIST_MANAGE_SV}, method = POST)
     public String deleteParticipant(@PathVariable("id") Long initiativeId,
                                      @RequestParam(PARAM_PARTICIPANT_ID) Long participantId,
                                      Locale locale, HttpServletRequest request) {
         
         participantService.deleteParticipant(initiativeId, userService.getRequiredLoginUserHolder(request), participantId);
         
-        return redirectWithMessage(Urls.get(locale).participantList(initiativeId), RequestMessage.PARTICIPANT_DELETED, request);
+        return redirectWithMessage(Urls.get(locale).participantListManage(initiativeId), RequestMessage.PARTICIPANT_DELETED, request);
     }
 
     

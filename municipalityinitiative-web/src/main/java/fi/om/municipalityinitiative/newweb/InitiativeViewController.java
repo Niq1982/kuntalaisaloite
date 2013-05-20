@@ -137,12 +137,41 @@ public class InitiativeViewController extends BaseController {
                 previousPageURI = urls.view(initiativeId);
             }
 
-            List<ParticipantListInfo> participants =
-                    userService.hasManagementRightForInitiative(initiativeId, request)
-                            ?  participantService.findAllParticipants(initiativeId, userService.getRequiredLoginUserHolder(request))
-                            : participantService.findPublicParticipants(initiativeId);
+            // TODO: Public view returns only public participants.
+            List<ParticipantListInfo> participants = participantService.findPublicParticipants(initiativeId);
 
             return ViewGenerator.participantList(initiativeInfo,
+                    participantService.getParticipantCount(initiativeId),
+                    participants,
+                    previousPageURI,
+                    userService.hasManagementRightForInitiative(initiativeId, request)
+            ).view(model, alternativeURL);
+        }
+    }
+    
+    @RequestMapping(value={ PARITICIPANT_LIST_MANAGE_FI, PARITICIPANT_LIST_MANAGE_SV }, method=GET)
+    public String participantListManage(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
+        Urls urls = Urls.get(locale);
+        String alternativeURL = urls.alt().view(initiativeId);
+
+        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
+
+        if (!initiativeInfo.isCollectable()) {
+            return ViewGenerator.singleView(initiativeInfo, authorService.findPublicAuthors(initiativeId)).view(model, alternativeURL);
+        }
+        else {
+
+            // XXX: Tästä mää enny kyä ymmärrä.
+            // mikkole: päätellään, että tuleeko käyttäjä julkisesta näkymästä vai management-näkymästä. Olisiko ehdotuksia päättelyyn?
+            String previousPageURI = urls.management(initiativeId);
+            if (request.getHeader("referer") == null || !request.getHeader("referer").equals(previousPageURI)) {
+                previousPageURI = urls.view(initiativeId);
+            }
+
+            // TODO: Public view returns only public participants.
+            List<ParticipantListInfo> participants = participantService.findAllParticipants(initiativeId, userService.getRequiredLoginUserHolder(request));
+
+            return ViewGenerator.participantListManage(initiativeInfo,
                     participantService.getParticipantCount(initiativeId),
                     participants,
                     previousPageURI

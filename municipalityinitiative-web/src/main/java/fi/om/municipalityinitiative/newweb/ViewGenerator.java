@@ -78,14 +78,29 @@ public class ViewGenerator {
     public static ViewGenerator participantList(InitiativeViewInfo initiativeInfo,
                                                 ParticipantCount participantCount,
                                                 List<ParticipantListInfo> publicParticipants,
-                                                String previousPageURI) {
+                                                String previousPageURI,
+                                                boolean hasManagementRightForInitiative) {
         return new ViewGenerator(PARTICIPANT_LIST,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
                         .add("participants", publicParticipants)
                         .add("participantCount", participantCount)
                         .add("previousPageURI", previousPageURI)
+                        .add("hasManagementRightForInitiative", hasManagementRightForInitiative)
                         .build());
+    }
+    
+    public static ViewGenerator participantListManage(InitiativeViewInfo initiativeInfo,
+                                                      ParticipantCount participantCount,
+                                                      List<ParticipantListInfo> publicParticipants,
+                                                      String previousPageURI) {
+        return new ViewGenerator(PARTICIPANT_LIST_MANAGE,
+                new AttributeBuilder()
+                .add("initiative", initiativeInfo)
+                .add("participants", publicParticipants)
+                .add("participantCount", participantCount)
+                .add("previousPageURI", previousPageURI)
+                .build());
     }
 
     public static ViewGenerator iframeSearch(List<InitiativeListInfo> initiatives,
