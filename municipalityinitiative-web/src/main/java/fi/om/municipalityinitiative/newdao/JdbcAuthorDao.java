@@ -172,32 +172,25 @@ public class JdbcAuthorDao implements AuthorDao {
     @Transactional(readOnly = false)
     public void deleteAuthor(Long authorId) {
 
+        // XXX: Improve these checks with subquery or trigger
+
         Long initiativeId = queryFactory.from(QAuthor.author)
                 .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
                 .where(QAuthor.author.participantId.eq(authorId))
                 .uniqueResult(QParticipant.participant.municipalityInitiativeId);
-
-        long authorCount = queryFactory.from(QAuthor.author)
-                .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
-                .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
-                .count();
-
-        if (authorCount == 1) {
-            throw new OperationNotAllowedException("Cannot remove last author");
-        }
 
         assertSingleAffection(queryFactory.delete(QAuthor.author)
                 .where(QAuthor.author.participantId.eq(authorId)).execute());
         assertSingleAffection(queryFactory.delete(QParticipant.participant)
                 .where(QParticipant.participant.id.eq(authorId)).execute());
 
-        authorCount = queryFactory.from(QAuthor.author)
+        long authorCount = queryFactory.from(QAuthor.author)
                 .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
                 .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
                 .count();
 
         if (authorCount == 0) {
-            throw new OperationNotAllowedException("Authorcount would have been zero after deletion");
+            throw new OperationNotAllowedException("Deleting last author is forbidden");
         }
 
     }

@@ -9,7 +9,9 @@ import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -18,9 +20,7 @@ import javax.annotation.Resource;
 
 import java.util.Set;
 
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
@@ -37,6 +37,9 @@ public class JdbcAuthorDaoTest {
     @Resource
     TestHelper testHelper;
     private Long testMunicipality;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() throws Exception {
@@ -108,6 +111,15 @@ public class JdbcAuthorDaoTest {
 
         assertThat(authorDao.findAuthors(initiativeId), hasSize(originalAuthorCount - 1));
         assertThat(participantDao.findAllParticipants(initiativeId), hasSize(originalParticipantCount - 1));
+    }
+
+    @Test
+    public void deleting_final_author_is_not_allowed() {
+        testHelper.createCollaborativeAccepted(testMunicipality);
+
+        thrown.expect(OperationNotAllowedException.class);
+        thrown.expectMessage(containsString("Deleting last author is forbidden"));
+        authorDao.deleteAuthor(testHelper.getLastAuthorId());
     }
 
 }
