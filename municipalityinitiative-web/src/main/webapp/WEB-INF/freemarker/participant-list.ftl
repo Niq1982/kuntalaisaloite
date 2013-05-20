@@ -37,8 +37,10 @@
                     
                     <input type="hidden" name="participantId" id="participantId" value=""/>
                     
-                    <#-- TODO: add here selected participant -->
-                    <ul id="selected-participant" class="no-style"></ul>
+                    <h3><@u.message "deleteParticipant.confirm.description" /></h3>
+                    <ul id="selected-participant" class="participant-list no-style"></ul>
+                    
+                    <br/>
                     
                     <div class="input-block-content">
                         <button type="submit" name="${UrlConstants.ACTION_DELETE_PARTICIPANT}" id="modal-${UrlConstants.ACTION_DELETE_PARTICIPANT}" value="${UrlConstants.ACTION_DELETE_PARTICIPANT}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.deleteParticipant.confirm" /></button>
@@ -73,7 +75,7 @@
         <#if deleteParticipant??>    
             modalData.deleteParticipant = function() {
                 return [{
-                    title:      '<@u.message "deleteParticipant.title" />',
+                    title:      '<@u.message "deleteParticipant.confirm.title" />',
                     content:    '<#noescape>${deleteParticipant?replace("'","&#39;")}</#noescape>'
                 }]
             };
@@ -122,7 +124,7 @@
         -->
         
         <#if participant_index == 0><ul class="participant-list no-style"></#if>
-            <li><span class="date"><@u.localDate participant.participateDate!"" /></span> <span class="name-container"><span class="name">${participant.name!""}</span> <span class="home-municipality"><span class="bull">&bull;</span> ${participant.homeMunicipality.getName(locale)!""}</span><span class="bull">&bull;</span>
+            <li><span class="date"><@u.localDate participant.participateDate!"" /></span> <span class="name-container"><span class="name">${participant.name!""}</span><span class="home-municipality"><span class="bull">&bull;</span>${participant.homeMunicipality.getName(locale)!""}</span><span class="bull">&bull;</span>
             <a  href="#" class="js-delete-participant"
                 data-id="${participant.id!""}"
                 data-date="<@u.localDate participant.participateDate!"" />"

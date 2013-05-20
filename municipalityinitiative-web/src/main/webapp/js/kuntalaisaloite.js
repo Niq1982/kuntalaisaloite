@@ -1139,11 +1139,16 @@ var editMunicipality = (function() {
 var deleteParticipant = (function() {
 	return {
 		getParticipant: function(){
-			var participant = $('.js-delete-participant.active');
-			var municipality = $('.municipalities .active');
-			var form = $('#delete-participant-form');
-			var selParticipant = $('#selected-participant');
-			var participantInput = $('#participantId');
+			var participant = 			$('.js-delete-participant.active'),
+				municipality = 			$('.municipalities .active'),
+				form = 					$('#delete-participant-form'),
+				selParticipant = 		$('#selected-participant'),
+				participantInput = 		$('#participantId'),
+				participantDetails = 	'<li><span class="date">' + participant.data("date") + '</span>' +
+										'<span class="name-container"><span class="name">' + participant.data("name") + '</span>' +
+										'<span class="home-municipality"><span class="bull">&bull;</span>' + participant.data("municipality") + '</span></li>';
+
+			selParticipant.html(participantDetails);
 			
 			participantInput.val(participant.data("id"));
 		}
