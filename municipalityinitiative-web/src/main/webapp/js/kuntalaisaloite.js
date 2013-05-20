@@ -43,9 +43,9 @@ localization = {
  * - Shows modal template with the defined content
  * 
  * */
-generateModal = function (modalContent, modalType) {
+generateModal = function (modalContent, modalType, callback) {
 	$("#modal-container").html($("#modal-template").render(modalContent));
-	$(".modal").loadModal(modalType);
+	$(".modal").loadModal(modalType, callback);
 	return false;
 };
 
@@ -80,14 +80,12 @@ jsMessages = (function(){
 			("cookie" in document && (document.cookie.length > 0 ||
     		(document.cookie = "cookieTest").indexOf.call(document.cookie, "cookieTest") > -1));
 	
-	var Load = function(){
-		if( !cookieEnabled && typeof messageData != 'undefined' && typeof messageData.warningCookiesDisabled != 'undefined' ){
-			generateJsMessage($('form'), messageData.warningCookiesDisabled());
-		}
-	}
-	
 	return {
-		Load:Load
+		Load: function(){
+			if( !cookieEnabled && typeof messageData != 'undefined' && typeof messageData.warningCookiesDisabled != 'undefined' ){
+				generateJsMessage($('form'), messageData.warningCookiesDisabled());
+			}
+		}
 	};
 }());
 jsMessages.Load();
@@ -431,7 +429,7 @@ var municipalitySelection = (function() {
 	};
 	
 	// Initialize form state on page load
-	var Init = function(){
+	var init = function(){
 		// IE7 not supported
 		if(!isIE7){
 			$(".chzn-select").loadChosen();
@@ -597,11 +595,11 @@ var municipalitySelection = (function() {
 	});
 	
 	// Initialize form state on page load
-	Init();
+	init();
 	
 	return {
 		// Return Init-function for the modal
-		Init: Init
+		init: init
     };
 	
 }());
@@ -774,7 +772,7 @@ $('.municipality-filter').change( function() {
  *  
  * */
 (function() {
-	jQuery.fn.loadModal = function(modalType){
+	jQuery.fn.loadModal = function(modalType, callback){
 		var modal, topPos, modalFixed, maxTopPos, modalHeight, $modalContent, $scrollable;
 		modal = $(this);
 		
@@ -817,13 +815,10 @@ $('.municipality-filter').change( function() {
 		    	$('.binder').each(function(){
 		    		$(this).bindCheckbox();					// Bind checkbox with submit button (used in remove support votes for example)
 		    	});
-		    	
-		    	// Initialize municipality selections
-		    	municipalitySelection.Init();
-		    	
-		    	editMunicipality.getActive();
-		    	
+
 		    	jsMessages.Load();
+		    	
+		    	if (callback) callback();					// Callback for dynamically updated data
 		    	
 		    	// TODO: Test this properly. We might want to use this.
 		    	setTimeout(function () {
@@ -906,6 +901,16 @@ $('.municipality-filter').change( function() {
 			console.log(e);
 		}
 	});
+	
+	// Send fix to review
+	$('.js-send-fix-to-review').click(function(){
+		try {
+			generateModal(modalData.sendFixToReview(), 'minimal');
+			return false;
+		} catch(e) {
+			console.log(e);
+		}
+	});
 
 	// Start collecting participants
 	$('.js-start-collecting').click(function(){
@@ -918,7 +923,7 @@ $('.municipality-filter').change( function() {
 	});
 	
 	// Send initiative to municipality
-	$('.js-send-to-municipality').click(function(){
+	$('.js-send-to-municipality').click(function(){		
 		try {
 			generateModal(modalData.sendToMunicipality(), 'minimal');
 			return false;
@@ -930,7 +935,7 @@ $('.municipality-filter').change( function() {
 	// Accept author invitation
 	$('.js-accept-invitation').click(function(){
 		try {
-			generateModal(modalData.acceptInvitation(), 'full');
+			generateModal(modalData.acceptInvitation(), 'full', municipalitySelection.init);
 			return false;
 		} catch(e) {
 			console.log(e);
@@ -955,7 +960,7 @@ $('.municipality-filter').change( function() {
 	// Participate initiative
 	$('.js-participate').click(function(){
 		try {
-			generateModal(modalData.participateForm(), 'full');
+			generateModal(modalData.participateForm(), 'full', municipalitySelection.init);
 			return false;
 		} catch(e) {
 			console.log(e);
@@ -966,13 +971,26 @@ $('.municipality-filter').change( function() {
 		generateModal(modalData.participateFormInvalid(), 'full');
 	}
 	
-	// Participate initiative
+	// Edit municipality
 	$('.js-edit-municipality').click(function(){
 		$('.municipalities .active').removeClass('active');
 		$(this).addClass('active');
 		
 		try {
-			generateModal(modalData.editMunicipalityDetails(), 'full');
+			generateModal(modalData.editMunicipalityDetails(), 'full', editMunicipality.getActive);
+			return false;
+		} catch(e) {
+			console.log(e);
+		}
+	});
+	
+	// Delete participant
+	$('.js-delete-participant').click(function(){
+		$('.js-delete-participant.active').removeClass('active');
+		$(this).addClass('active');
+		
+		try {
+			generateModal(modalData.deleteParticipant(), 'full', deleteParticipant.getParticipant);
 			return false;
 		} catch(e) {
 			console.log(e);
@@ -1059,9 +1077,11 @@ $('form.sodirty').dirtyForms();
 * Manage municipalities
 * =====================
 * 
-* TODO: We could use a callback function after modal has loaded
+* TODO: Finalize
+* 
 */
 var editMunicipality = (function() {
+	// remove this if municipality dropdown select is not used
 	$('.manage-municipality-select').change( function() {
 		var thisSelect = $(this);
 		var form = $('#municipality-form');
@@ -1089,26 +1109,48 @@ var editMunicipality = (function() {
 		$(this).addClass('active');
 	});
 	
-	function getActive(){
-		var municipality = $('.municipalities .active');
-		var form = $('#municipality-form');
-		var selMunicipality = $('#selected-municipality');
-		
-		if ( municipality.data('id') !== undefined ) {
-			selMunicipality.text(municipality.text());
-		} else {
-			selMunicipality.html(selMunicipality.data('empty'));
-		}
-		
-		form.find('#id').attr('value',municipality.data('id'));
-		form.find('input[type=radio][name=active][value='+municipality.data('active')+']').attr('checked','checked');
-		form.find('#municipalityEmail').val(municipality.data('email'));
-	}
-	
 	return {
-		getActive: getActive
+		getActive: function(){
+			var municipality = $('.municipalities .active');
+			var form = $('#municipality-form');
+			var selMunicipality = $('#selected-municipality');
+			
+			if ( municipality.data('id') !== undefined ) {
+				selMunicipality.text(municipality.text());
+			} else {
+				selMunicipality.html(selMunicipality.data('empty'));
+			}
+			
+			form.find('#id').attr('value',municipality.data('id'));
+			form.find('input[type=radio][name=active][value='+municipality.data('active')+']').attr('checked','checked');
+			form.find('#municipalityEmail').val(municipality.data('email'));
+		}
 	};
 
 }());
+
+/**
+* Delete participant
+* =====================
+* 
+* TODO: Finalize
+* 
+*/
+var deleteParticipant = (function() {
+	return {
+		getParticipant: function(){
+			var participant = $('.js-delete-participant.active');
+			var municipality = $('.municipalities .active');
+			var form = $('#delete-participant-form');
+			var selParticipant = $('#selected-participant');
+			var participantInput = $('#participantId');
+			
+			participantInput.val(participant.data("id"));
+		}
+	};
+
+}());
+
+
 
 });

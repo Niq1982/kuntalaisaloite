@@ -115,6 +115,8 @@ public final class Urls {
     public static final String PARAM_MANAGEMENT_CODE = "management";
 
     public static final String PARAM_PARTICIPANT_CONFIRMATION_CODE = "confirmation";
+    
+    public static final String PARAM_PARTICIPANT_ID = "participantId";
 
     public static final String ACTION_SAVE = "action-save";
     
@@ -141,6 +143,9 @@ public final class Urls {
     public static final String ACTION_START_COLLECTING = "action-start-collecting";
     
     public static final String ACTION_SEND_TO_MUNICIPALITY = "action-send-to-muninicipality";
+    
+    public static final String ACTION_DELETE_PARTICIPANT = "action-delete-participant";
+    
     // Municipality initiative ENDS
     
     public static final String ACTION_SAVE_AND_SEND_INVITATIONS = "action-save-and-send-invitations";

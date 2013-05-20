@@ -41,6 +41,8 @@ public class InitiativeManagementController extends BaseController {
 
     @Resource
     private AuthorService authorService;
+    
+    @Resource ParticipantService participantService;
 
     public InitiativeManagementController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
@@ -212,6 +214,16 @@ public class InitiativeManagementController extends BaseController {
                                    HttpServletRequest request) {
             authorService.resendInvitation(initiativeId, userService.getRequiredLoginUserHolder(request), confirmationCode);
             return redirectWithMessage(Urls.get(locale).manageAuthors(initiativeId), RequestMessage.INVITATION_SENT, request);
+    }
+    
+    @RequestMapping(value = {PARITICIPANT_LIST_FI, PARITICIPANT_LIST_SV}, method = POST)
+    public String deleteParticipant(@PathVariable("id") Long initiativeId,
+                                     @RequestParam(PARAM_PARTICIPANT_ID) Long participantId,
+                                     Locale locale, HttpServletRequest request) {
+        
+        participantService.deleteParticipant(initiativeId, userService.getRequiredLoginUserHolder(request), participantId);
+        
+        return redirectWithMessage(Urls.get(locale).participantList(initiativeId), RequestMessage.PARTICIPANT_DELETED, request);
     }
 
     

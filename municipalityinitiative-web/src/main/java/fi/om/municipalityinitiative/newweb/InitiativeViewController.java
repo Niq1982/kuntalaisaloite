@@ -131,6 +131,7 @@ public class InitiativeViewController extends BaseController {
         else {
 
             // XXX: Tästä mää enny kyä ymmärrä.
+            // mikkole: päätellään, että tuleeko käyttäjä julkisesta näkymästä vai management-näkymästä. Olisiko ehdotuksia päättelyyn?
             String previousPageURI = urls.management(initiativeId);
             if (request.getHeader("referer") == null || !request.getHeader("referer").equals(previousPageURI)) {
                 previousPageURI = urls.view(initiativeId);
