@@ -424,6 +424,26 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
+    public void finds_by_draft_finds_also_if_fixState_is_FIX() {
+
+        testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withFixState(FixState.FIX)
+                .withState(InitiativeState.PUBLISHED));
+
+        assertThat(initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.draft)), hasSize(1));
+    }
+
+    @Test
+    public void finds_by_review_finds_also_if_fixState_is_REVIEW() {
+
+        testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withFixState(FixState.REVIEW)
+                .withState(InitiativeState.PUBLISHED));
+
+        assertThat(initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.review)), hasSize(1));
+    }
+
+    @Test
     public void finds_by_review() {
         Long singleSent = testHelper.createSingleSent(testMunicipality.getId());
         Long collaborative = testHelper.createCollaborativeAccepted(testMunicipality.getId());
@@ -437,9 +457,12 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
-    public void finds_by_accepted() {
+    public void finds_by_accepted_shows_accepted_initiatives_with_fixState_OK() {
         Long singleSent = testHelper.createSingleSent(testMunicipality.getId());
         Long review = testHelper.createCollectableReview(testMunicipality.getId());
+        Long acceptedButReturnedForFixing = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withFixState(FixState.FIX)
+                .withState(InitiativeState.ACCEPTED));
 
         Long accepted = testHelper.createCollaborativeAccepted(testMunicipality.getId());
 
