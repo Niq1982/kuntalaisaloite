@@ -182,7 +182,8 @@ public class JdbcInitiativeDao implements InitiativeDao {
         SimpleExpression<String> simpleExpression = Expressions.as(caseBuilder, "showCategory");
 
         PostgresQuery from = queryFactory.from(municipalityInitiative)
-                .where(municipalityInitiative.state.eq(InitiativeState.PUBLISHED));
+                .where(municipalityInitiative.state.eq(InitiativeState.PUBLISHED))
+                .where(municipalityInitiative.fixState.eq(FixState.OK));
 
         if (municipality.isPresent()) {
             from.where(municipalityInitiative.municipalityId.eq(municipality.get()));

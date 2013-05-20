@@ -476,6 +476,28 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
+    public void does_not_count_public_initiatives_if_fixState_not_ok() {
+        testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withState(InitiativeState.PUBLISHED)
+                .withFixState(FixState.OK));
+
+        InitiativeCounts publicInitiativeCounts = initiativeDao.getPublicInitiativeCounts(Maybe.<Long>absent());
+        precondition(publicInitiativeCounts.getAll(), is(1L));
+        precondition(publicInitiativeCounts.collecting, is(1L));
+
+        testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withState(InitiativeState.PUBLISHED)
+                .withFixState(FixState.FIX));
+        testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withState(InitiativeState.PUBLISHED)
+                .withFixState(FixState.REVIEW));
+
+        publicInitiativeCounts = initiativeDao.getPublicInitiativeCounts(Maybe.<Long>absent());
+        assertThat(publicInitiativeCounts.getAll(), is(1L));
+        assertThat(publicInitiativeCounts.collecting, is(1L));
+    }
+
+    @Test
     public void counts_all_initiatives_by_state() {
 
         // 1
