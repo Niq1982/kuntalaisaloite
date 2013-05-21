@@ -184,6 +184,30 @@ public class InitiativeManagementController extends BaseController {
         ).view(model, Urls.get(locale).alt().getManagement(initiativeId));
     }
 
+    @RequestMapping(value={ PARITICIPANT_LIST_MANAGE_FI, PARITICIPANT_LIST_MANAGE_SV }, method=GET)
+    public String participantListManage(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
+        Urls urls = Urls.get(locale);
+        String alternativeURL = urls.alt().view(initiativeId);
+
+        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
+
+        if (!initiativeInfo.isCollectable()) {
+            return ViewGenerator.singleView(initiativeInfo, authorService.findPublicAuthors(initiativeId)).view(model, alternativeURL);
+        }
+        else {
+
+            String previousPageURI = urls.management(initiativeId).equals(request.getHeader("referer"))
+                    ? urls.management(initiativeId)
+                    : urls.view(initiativeId);
+
+            return ViewGenerator.participantListManage(initiativeInfo,
+                    participantService.getParticipantCount(initiativeId),
+                    participantService.findAllParticipants(initiativeId, userService.getRequiredLoginUserHolder(request)),
+                    previousPageURI
+            ).view(model, alternativeURL);
+        }
+    }
+
     @RequestMapping(value = {MANAGE_AUTHORS_FI, MANAGE_AUTHORS_SV}, method = POST)
     public String inviteAuthor(@PathVariable("id") Long initiativeId,
                                @ModelAttribute("newInvitation") AuthorInvitationUICreateDto authorInvitationUICreateDto,
