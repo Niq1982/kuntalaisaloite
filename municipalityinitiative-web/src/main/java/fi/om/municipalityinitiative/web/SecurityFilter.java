@@ -84,7 +84,7 @@ public class SecurityFilter implements Filter {
         }
     }
 
-    private boolean IS_POST(HttpServletRequest request) {
+    private static boolean IS_POST(HttpServletRequest request) {
         return request.getMethod().equals("POST");
     }
 
@@ -110,7 +110,7 @@ public class SecurityFilter implements Filter {
         request.setAttribute(CSRF_TOKEN_NAME, csrfToken);
     }
 
-    private boolean IS_GET(HttpServletRequest request) {
+    private static boolean IS_GET(HttpServletRequest request) {
         return request.getMethod().equals("GET");
     }
 

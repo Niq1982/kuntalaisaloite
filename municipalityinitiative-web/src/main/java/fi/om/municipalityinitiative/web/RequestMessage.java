@@ -26,7 +26,12 @@ public enum RequestMessage {
 
     // Warning messages
     ALREADY_SENT (WARNING),
-    PREPARE_CONFIRM_EXPIRED (WARNING);
+    PREPARE_CONFIRM_EXPIRED (WARNING),
+
+    EDITOR_SAVE_DRAFT(SUCCESS),
+    EDITOR_PUBLISH_DRAFT(SUCCESS),
+    EDITOR_RESTORE_PUBLISHED(SUCCESS),
+    EDITOR_UPLOAD_IMAGE(SUCCESS);
 
     private final boolean modal;
     

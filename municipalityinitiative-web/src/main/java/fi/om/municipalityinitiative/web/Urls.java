@@ -28,12 +28,22 @@ public final class Urls {
     public static final String FRONT_SV =     "/sv";
 
     public static final String HELP_INDEX_FI =    "/fi/ohjeet";
-    
+
     public static final String HELP_INDEX_SV =    "/sv/anvisningar";
+
+    public static final String HELP_EDIT_INDEX_FI = "/fi/ohjemuokkaus";
+
+    public static final String HELP_EDIT_INDEX_SV = "/sv/ohjemuokkaus";
+
+    public static final String CONTENT_EDITOR_HELP = "/fi/sisallonsyoton-ohje";
 
     public static final String HELP_FI =    HELP_INDEX_FI + "/" + HELP_PAGE_PARAMETER;
     
     public static final String HELP_SV =    HELP_INDEX_SV + "/" + HELP_PAGE_PARAMETER;
+
+    public static final String HELP_EDIT_FI =    HELP_EDIT_INDEX_FI + "/" + HELP_PAGE_PARAMETER;
+
+    public static final String HELP_EDIT_SV =    HELP_EDIT_INDEX_SV + "/" + HELP_PAGE_PARAMETER;
 
     public static final String INFO_INDEX_FI =    "/fi/tietoa";
     
@@ -94,7 +104,11 @@ public final class Urls {
     public static final String PARTICIPATING_CONFIRMATION_FI = "/fi/varmistus/"+ID_PARAMETER;
 
     public static final String PARTICIPATING_CONFIRMATION_SV = "/sv/forsakra/"+ID_PARAMETER;
-    
+
+    public static final String IMAGE_JSON =    "/imageJson";
+
+    public static final String IMAGES = "/images";
+
     public static Urls FI = null;
     
     public static Urls SV = null;
@@ -427,6 +441,10 @@ public final class Urls {
         return getLocalizedPageUrl(PENDING_CONFIRMATION_FI, PENDING_CONFIRMATION_SV).replace(ID_PARAMETER, initiativeId.toString());
     }
 
+    public String contentEditorHelp() {
+        return baseUrl + CONTENT_EDITOR_HELP;
+    }
+
     public String paramSendInvitations() {
         return ACTION_SEND_INVITATIONS;
     }
@@ -523,5 +541,9 @@ public final class Urls {
     public String municipalityModeration() {
         return getLocalizedPageUrl(MUNICIPALITY_MODERATION, MUNICIPALITY_MODERATION);
 
+    }
+
+    public String helpEdit(String localizedPageName) {
+        return getLocalizedPageUrl(HELP_EDIT_FI, HELP_EDIT_SV).replace(HELP_PAGE_PARAMETER, localizedPageName);
     }
 }
