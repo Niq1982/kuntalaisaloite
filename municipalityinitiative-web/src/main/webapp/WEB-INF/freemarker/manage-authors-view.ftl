@@ -9,7 +9,7 @@
 <#--
  * Layout parameters for HTML-title and navigation.
  * 
- * page = "page.initiative.public" or "page.initiative.unnamed"
+ * page = "page.initiative.manageAuthors" or "page.initiative.unnamed"
  * pageTitle = initiative.name if exists, otherwise empty string
 -->
 <@l.main "page.initiative.manageAuthors" initiative.name!"">
@@ -37,8 +37,12 @@
             <#list authors as a>
                 <div class="author cf ${a_has_next?string("","last")}">
                     <div class="details">
-                        <h4 class="header">${a.contactInfo.name}</h4>
-                        <div class="email">${a.contactInfo.email}</div>
+                        <h4 class="header">${a.contactInfo.name}, ${a.municipality.getName(locale)}</h4>
+                        <div class="contact-info">
+                            ${a.contactInfo.email!""}<br />
+                            <#if a.contactInfo.address?? && a.contactInfo.address != ""><#noescape>${a.contactInfo.address?replace('\n','<br/>')!""}</#noescape><br /></#if>
+                            ${a.contactInfo.phone!""}
+                        </div>
                     </div>
     
                     <div class="invitation">
