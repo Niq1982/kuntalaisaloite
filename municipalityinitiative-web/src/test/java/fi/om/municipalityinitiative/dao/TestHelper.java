@@ -70,6 +70,7 @@ public class TestHelper {
         queryFactory.delete(QParticipant.participant).execute();
         queryFactory.delete(QMunicipalityInitiative.municipalityInitiative).execute();
         queryFactory.delete(QMunicipality.municipality).execute();
+        queryFactory.delete(QInfoText.infoText).execute();
     }
 
     @Transactional
@@ -238,6 +239,47 @@ public class TestHelper {
                 .executeWithKey(QAuthorInvitation.authorInvitation.id);
 
         return authorInvitation;
+    }
+
+    @Transactional(readOnly = false)
+    public Long createInfoText(LanguageCode languageCode,
+                               InfoTextCategory category,
+                               int orderPosition,
+                               String uri_fi,
+                               String subject_fi,
+                               String draft_subject_fi,
+                               String text_fi,
+                               String draft_fi,
+                               DateTime modified,
+                               String modifierName) {
+        return createInfoText(languageCode, category, orderPosition, uri_fi, subject_fi, draft_subject_fi, text_fi, draft_fi, modified, modifierName, false);
+    }
+
+    @Transactional(readOnly = false)
+    public Long createInfoText(LanguageCode languageCode,
+                               InfoTextCategory category,
+                               int orderPosition,
+                               String uri_fi,
+                               String subject_fi,
+                               String draft_subject_fi,
+                               String text_fi,
+                               String draft_fi,
+                               DateTime modified,
+                               String modifierName,
+                               boolean footerDisplay) {
+        return queryFactory.insert(QInfoText.infoText)
+                .set(QInfoText.infoText.languagecode, languageCode)
+                .set(QInfoText.infoText.category, category)
+                .set(QInfoText.infoText.draft, draft_fi)
+                .set(QInfoText.infoText.uri, uri_fi)
+                .set(QInfoText.infoText.publishedSubject, subject_fi)
+                .set(QInfoText.infoText.draftSubject, draft_subject_fi)
+                .set(QInfoText.infoText.published, text_fi)
+                .set(QInfoText.infoText.orderposition, orderPosition)
+                .set(QInfoText.infoText.modified, modified)
+                .set(QInfoText.infoText.modifier, modifierName)
+                .set(QInfoText.infoText.footerDisplay, footerDisplay)
+                .executeWithKey(QInfoText.infoText.id);
     }
 
     public static class AuthorDraft {

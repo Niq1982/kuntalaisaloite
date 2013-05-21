@@ -109,6 +109,11 @@ public class AppConfiguration {
     }
 
     @Bean
+    public InfoTextDao infoTextDao() {
+        return new JdbcInfoTextDao();
+    }
+
+    @Bean
     public InitiativeDao municipalityInitiativeDao() {
         return new JdbcInitiativeDao();
     }

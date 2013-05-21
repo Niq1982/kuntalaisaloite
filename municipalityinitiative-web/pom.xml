@@ -253,6 +253,13 @@
             <version>5.3.4</version>
         </dependency>
 
+        <!-- Owasp html sanitizer -->
+        <dependency>
+            <groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
+            <artifactId>owasp-java-html-sanitizer</artifactId>
+            <version>r156</version>
+        </dependency>
+
         <!-- Jasypt -->
         <dependency>
             <groupId>org.jasypt</groupId>
