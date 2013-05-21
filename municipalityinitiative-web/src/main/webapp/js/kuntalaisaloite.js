@@ -1218,6 +1218,13 @@ if (window.hasIFrame){
 	        width:			width.val(),
 	        height:			height.val()
 		}]
+    },
+    
+    refreshFields = function(data){
+		municipality.val(data.municipality).trigger("liszt:updated");
+		limit.val(data.limit);
+		width.val(data.width);
+		height.val(data.height);
     };
     
     generateIframe(params());
@@ -1243,13 +1250,8 @@ if (window.hasIFrame){
     	e.preventDefault();
     	
     	if (window.defaultData) {
-    		var defData = window.defaultData;
-    		
-    		municipality.val(defData.municipality).trigger("liszt:updated");
-    		limit.val(defData.limit);
-    		width.val(defData.width);
-    		height.val(defData.height);
-    		generateIframe(defData);
+    		refreshFields(window.defaultData);
+    		generateIframe(window.defaultData);
     	}
     });
 	

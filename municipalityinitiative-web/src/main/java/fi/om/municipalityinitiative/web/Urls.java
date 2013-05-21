@@ -237,6 +237,10 @@ public final class Urls {
     
     public static final String INVITATION_SV = "/sv/inbjudan" + "/" + ID_PARAMETER;
 
+    public static final String IFRAME_GENERATOR_FI = "/fi/leijuke";
+
+    public static final String IFRAME_GENERATOR_SV = "/sv/leijuke";
+    
     public static final String IFRAME_FI = "/fi/iframe";
 
     public static final String IFRAME_SV = "/sv/iframe";
@@ -353,6 +357,10 @@ public final class Urls {
 
     public String iframe(Long municipalityId) {
         return iframe() + "?" + PARAM_MUNICIPALITY + "=" + municipalityId;
+    }
+    
+    public String iframeGenerator() {
+        return getLocalizedPageUrl(IFRAME_GENERATOR_FI, IFRAME_GENERATOR_FI);
     }
     
     public String getManagement(Long id) {

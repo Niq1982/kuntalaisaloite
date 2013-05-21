@@ -1,4 +1,5 @@
 <#import "/spring.ftl" as spring />
+<#import "utils.ftl" as u />
 <#import "forms.ftl" as f />
 
 <#escape x as x?html> 
@@ -32,25 +33,25 @@
 </@compress></#macro>
 
 
-
-<#macro initiativeIframeGenerator>
+<#--
+ * initiativeIframeGenerator (Leijuke-generaattori)
+ *
+ * Interactive functionality for generating iFrames on the fly.
+ *
+ * @param options list of municipalities
+-->
+<#macro initiativeIframeGenerator options>
     <div class="hidden">
         <div class="input-block-content no-top-margin">       
+            
             <label for="municipality" class="input-header">
-                Valitse kunta, jolle teet aloitteen <span class="icon-small required trigger-tooltip"></span>
+                Kunta
             </label>
-    
-            <select name="municipality" id="municipality"  class="chzn-select municipality-select" data-initiative-municipality="" data-placeholder="Valitse kunta">
-                <option value=""></option>
-                    <option value="1" selected="selected">Akaa</option>
-                    <option value="5">Asikkala</option>
-                    <option value="35">Helsinki</option>
-                    <option value="45">Hämeenlinna</option>
-                    <option value="105">Kirkkonummi</option>
-                    <option value="289">Tampere</option>
-                    <option value="298">Turku</option>
-                    <option value="300">Tuusula</option>
-                    <option value="314">Vantaa</option>
+            <select name="municipality" id="municipality" class="chzn-select" data-placeholder="<@u.message "initiative.chooseMunicipality" />" data-allow-single-deselect="allow">
+                <option value=""><@u.message "initiative.chooseMunicipality" /></option>
+                <#list options as option>
+                    <#if option.active><option value="${option.id}">${option.getName(locale)}</option></#if>
+                </#list>
             </select>
         </div>
         
@@ -76,6 +77,7 @@
                 <input type="text" maxlength="4" class="small" value="400" name="height" id="height" pattern="${digit}"  />
             </div>
         </div>
+        <br class="clear" />
         
         <#--<a href="#" class="small-button js-update-iframe">Päivitä</a> <a href="#" class="small-button js-reset-iframe push">Käytä oletusta</a>-->
         <p><a href="#" class="js-reset-iframe">Palauta oletusarvot</a></p>
@@ -85,7 +87,7 @@
         <script type="text/javascript">
             window.hasIFrame = true;
             window.defaultData = {
-                municipality:   "1",
+                municipality:   "",
                 limit:          "3",
                 width:          "250",
                 height:         "400"

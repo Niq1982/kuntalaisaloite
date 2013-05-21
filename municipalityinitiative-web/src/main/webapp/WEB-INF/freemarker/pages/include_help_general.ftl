@@ -1,31 +1,12 @@
 <#import "../components/utils.ftl" as u />
-<#import "../components/iframe.ftl" as i />
 
 <#escape x as x?html>
 
 <#--<#if locale == "fi">-->
 
-    <#-- Väliaikainen sivu Kuntalaisaloitteen Leijukkeen demoamiselle -->
-    
-    <p>Leijukkeen avulla voidaan näyttää Kuntalaisaloite.fi-palvelun sisältöä toisen palvelun sivustolla. Leijuke näyttää uusimmat aloitteet Kuntalaisaloite.fi-palvelussa sekä toiminnot "Selaa kuntalaisaloitteista" sekä "Tee kuntalaisaloite". Toiminnot siirtyvät automaattisesti leijukkeessa määritetyn kunnan vastaaviin toimintoihin Kuntalaisaloite.fi-palveluun.</p>
-    <p>Leijukkeen kaikki linkit aukeavat selaimessa uuteen välilehteen ja käyttäjä ohjataan Kuntalaisaloite.fi-palvelun puolelle.</p>
-    <p>Leijukkeen sisältö päivittyy Kuntalaisaloite.fi-palvelun sisällön mukaan automaattisesti muutaman minuutin viiveellä.</p>
-
-    <h3>Leijukkeen määrittäminen</h3>
-    
-    <p>Leijukketta voidaan säätää haluamaksi parametrien avulla. Parametreilla voi säätää</p>
-    <ul>
-        <li>minkä kunnan aloitteita leijukkeessa listataan</li>
-        <li>kuinka monta uusinta aloitetta listassa näytetään</li>
-        <li>leijukkeen leveyttä (220-960 pikseliä)</li>
-        <li>leijukkeen korkeutta (300-2000 pikseliä)</li>
-    </ul>
-    
     <h2>Leijukegeneraattori</h2>
     
-    <div class="view-block">
-        <@i.initiativeIframeGenerator />
-    </div>
+    <@u.link urls.iframeGenerator() urls.iframeGenerator() />
 
     <#--
     <h2>Esimerkkejä leijukkeista</h2>

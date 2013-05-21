@@ -278,6 +278,16 @@ public class InitiativeViewController extends BaseController {
                 publicInitiativeService.getInitiativeCounts(Maybe.fromNullable(search.getMunicipality()), loginUserHolder)
         ).view(model, urls.alt().search());
     }
+    
+    @RequestMapping(value={IFRAME_GENERATOR_FI, IFRAME_GENERATOR_SV}, method=GET)
+    public String iframeGenerator(Model model, Locale locale, HttpServletRequest request) {
+        Urls urls = Urls.get(locale);
+        model.addAttribute(ALT_URI_ATTR, urls.alt().search());
+
+        List<Municipality> municipalities = municipalityService.findAllMunicipalities(locale);
+
+        return ViewGenerator.iframeGenerator(municipalities).view(model, urls.alt().iframeGenerator());
+    }
 
     private static Maybe<Municipality> solveMunicipalityFromListById(List<Municipality> municipalities, Long municipalityId){
         for (Municipality municipality : municipalities) {
