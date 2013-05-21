@@ -30,7 +30,6 @@ import javax.annotation.Resource;
 
 import java.util.List;
 
-import static fi.om.municipalityinitiative.newdao.Mappings.parseMunicipality;
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 
 @SQLExceptionTranslated

@@ -79,11 +79,6 @@ public class UserService {
         return Maybe.of(new LoginUserHolder(user.get()));
     }
 
-    public static Maybe<User> getUser() {
-        String loginUserParameter = LOGIN_USER_PARAMETER;
-        return getObject(loginUserParameter);
-    }
-
     @SuppressWarnings("unchecked")
     private static <T> Maybe<T> getObject(String sessionAttributeName) {
         Maybe<HttpSession> session = getSession();

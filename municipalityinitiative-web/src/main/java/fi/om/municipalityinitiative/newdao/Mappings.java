@@ -25,10 +25,6 @@ import static fi.om.municipalityinitiative.sql.QParticipant.participant;
 
 public class Mappings {
 
-    // This is for querydsl for not being able to create a row with DEFERRED not-null-check value being null..
-    // Querydsl always assigned some value to it and setting it to null was not an option.
-    public static final Long PREPARATION_ID = -1L;
-
     public static Expression<Author> authorMapping =
             new MappingProjection<Author>(Author.class,
                     QMunicipality.municipality.all(),
@@ -84,8 +80,7 @@ public class Mappings {
                     info.setId(row.get(municipalityInitiative.id));
                     info.setCreateTime(row.get(municipalityInitiative.modified).toLocalDate());
                     info.setName(row.get(municipalityInitiative.name));
-                    info.setMunicipality(parseMunicipality(row, QMunicipality.municipality)
-                    );
+                    info.setMunicipality(parseMunicipality(row));
                     info.setType(row.get(municipalityInitiative.type));
                     info.setProposal(row.get(municipalityInitiative.proposal));
                     info.setSentTime(maybeLocalDate(row.get(municipalityInitiative.sent)));
@@ -142,14 +137,6 @@ public class Mappings {
                 row.get(QMunicipality.municipality.name),
                 row.get(QMunicipality.municipality.nameSv),
                 row.get(QMunicipality.municipality.active));
-    }
-
-    public static Municipality parseMunicipality(Tuple row, QMunicipality municipality) {
-        return new Municipality(
-                row.get(municipality.id),
-                row.get(municipality.name),
-                row.get(municipality.nameSv),
-                row.get(municipality.active));
     }
 
     public static Maybe<LocalDate> maybeLocalDate(DateTime sentTime) {
