@@ -18,8 +18,9 @@
 <@l.main page="page.management" pageTitle=initiative.name!"">
     
     <div class="msg-block">
-        <h2><@u.message "management.warning.title" /></h2>
-        <p><@u.messageHTML "management.warning.description" /></p>
+        <h2><@u.message "management.title" /></h2>
+        <p><@u.messageHTML "management.description" /></p>
+        <p><@u.messageHTML "management.instruction" /></p>
         <p><a class="small-button gray" href="${urls.edit(initiative.id)}"><span class="small-icon edit"><@u.messageHTML 'action.editInitiative' /></span></a>
         <a class="small-button gray push" href="${urls.view(initiative.id)}" target="_blank"><span class="small-icon document"><@u.messageHTML 'action.previewInitiative' /></span></a></p>
     </div>

@@ -29,10 +29,10 @@
     -->
     <#if !RequestParameters['invitation-decline']?? && !RequestParameters['invitation-accept']??>
         <div class="msg-block ${validationError?string("hidden","")}">
-            <h2><@u.message "invitation.title" /></h2>
+            <h2><@u.message "invitation.view.title" /></h2>
             
-            <p><@u.message "invitation.description" /></p>
-            <p><@u.message "invitation.instruction" /></p>
+            <p><@u.message "invitation.view.description" /></p>
+            <p><@u.message "invitation.view.instruction" /></p>
             
             <a href="?invitation=${authorInvitation.confirmCode!""}&invitation-accept=confirm" class="small-button green green save-and-send js-accept-invitation"><span class="small-icon save-and-send"><@u.message "invitation.accept" /></span></a>
             <a href="?invitation=${authorInvitation.confirmCode!""}&invitation-decline=confirm" title="<@u.message "invitation.decline" />" class="small-button gray push js-decline-invitation"><span class="small-icon cancel"><@u.message "invitation.decline" /></span></a>

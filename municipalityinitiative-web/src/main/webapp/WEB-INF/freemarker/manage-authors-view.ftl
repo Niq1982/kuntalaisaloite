@@ -17,9 +17,9 @@
     <@u.errorsSummary path="newInvitation.*" prefix="newInvitation."/>
 
     <div class="msg-block">
-        <h2>Vastuuhenkilöt</h2>
-        <p>Aloitteeseen voidaan lisätä vastuuhenkilöitä. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam aliquam leo velit, non placerat arcu. Nunc sagittis convallis sagittis.</p>
-        <p>Morbi ut lectus a nulla euismod tincidunt. Mauris tincidunt augue a ligula faucibus rhoncus. Aenean posuere posuere feugiat</p>
+        <h2><@u.message "authors.title" /></h2>
+        <p><@u.message "authors.description" /></p>
+        <p><@u.message "authors.instruction" /></p>
     </div>
 
     <h1 class="name">${initiative.name!""}</h1>
@@ -42,7 +42,7 @@
                     </div>
     
                     <div class="invitation">
-                        <span class="status"><span class="icon-small confirmed"></span> <@u.message "invitation.accepted" /> <@u.localDate a.createTime/></span>
+                        <span class="status"><span class="icon-small confirmed"></span> <span class="trigger-tooltip" title="<@u.message "invitation.accepted" />"><@u.localDate a.createTime/></span></span>
                         <#if a.id != user.authorId>
                         <span class="action"><span class="icon-small cancel"></span> <a href="?deleteAuthor=${a.id!""}" class="js-delete-author"
                             data-id="${a.id!""}"
@@ -71,6 +71,7 @@
                             <span class="status"><span class="icon-small rejected"></span> <@u.message "invitation.rejected" /> <@u.localDate i.rejectTime.value /></span>
                         <#elseif i.expired>
                             <span class="status"><span class="icon-small expired"></span> <@u.message "invitation.expired" /></span>
+                            <span class="action push"><@u.message "invitation.sent" /> <@u.localDate i.invitationTime /></span>
                             <span class="action">
                                 <form action="${springMacroRequestContext.requestUri}" method="POST" id="resend_${i.confirmationCode}">
                                     <@f.securityFilters/>
