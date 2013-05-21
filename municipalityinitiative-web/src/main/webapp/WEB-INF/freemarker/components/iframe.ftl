@@ -83,6 +83,7 @@
         <div id="iframe-container"></div>
         
         <script type="text/javascript">
+            window.hasIFrame = true;
             window.defaultData = {
                 municipality:   "1",
                 limit:          "3",

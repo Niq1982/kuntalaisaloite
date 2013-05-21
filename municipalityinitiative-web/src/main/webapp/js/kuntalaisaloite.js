@@ -1151,6 +1151,8 @@ var deleteParticipant = (function() {
 * Generate iFrame
 * ==================
 */
+if (window.hasIFrame){
+	
 (function() {
 	var reset = 			$('.js-reset-iframe'),
 		refresh = 			$('.js-update-iframe'),
@@ -1258,5 +1260,6 @@ var deleteParticipant = (function() {
 	});
 	
 }());
+}
 
 });
