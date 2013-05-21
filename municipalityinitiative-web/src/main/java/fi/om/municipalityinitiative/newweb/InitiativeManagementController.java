@@ -128,7 +128,6 @@ public class InitiativeManagementController extends BaseController {
     public String sendToReview(@PathVariable("id") Long initiativeId,
                                @RequestParam(PARAM_SENT_COMMENT) String sentComment,
                                Locale locale, HttpServletRequest request) {
-//        publicInitiativeService.sendReview(initiativeId, userService.getRequiredLoginUserHolder(request), true, locale);
         initiativeManagementService.sendReviewAndStraightToMunicipality(initiativeId, userService.getRequiredLoginUserHolder(request), sentComment, locale);
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.SEND_TO_REVIEW, request);
     }
