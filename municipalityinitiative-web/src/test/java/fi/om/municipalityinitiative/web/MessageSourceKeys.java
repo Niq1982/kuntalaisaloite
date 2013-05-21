@@ -24,5 +24,5 @@ public class MessageSourceKeys {
     public static final String MSG_INITIATIVE_TYPE_NORMAL= "initiative.type.normal";
     public static final String MSG_SEND_TO_REVIEW_CONFIRM = "sendToReview.doNotCollect.confirm.title";
     public static final String MSG_INITIATIVE_PROPOSAL = "initiative.proposal.title";
-    public static final String MSG_INITIATIVE_CONTACTINFO = "initiative.contactinfo.title";
+    public static final String MSG_INITIATIVE_AUTHORS = "initiative.authors.title";
 }

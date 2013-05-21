@@ -89,7 +89,7 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
         authorInvitation.setConfirmationCode("rockrock");
         emailService.sendAuthorInvitation(createDefaultInitiative(), authorInvitation);
 
-        assertThat(getSingleSentMessage().getSubject(), containsString("Sinut on kutsuttu vastuuhenkilöksi kuntalaisaloitteesen"));
+        assertThat(getSingleSentMessage().getSubject(), containsString("Sinut on kutsuttu vastuuhenkilöksi kuntalaisaloitteeseen"));
         assertThat(getSingleRecipient(), is(authorInvitation.getEmail()));
 
         assertThat(getMessageContent().html, containsString(urls.invitation(INITIATIVE_ID, authorInvitation.getConfirmationCode())));
