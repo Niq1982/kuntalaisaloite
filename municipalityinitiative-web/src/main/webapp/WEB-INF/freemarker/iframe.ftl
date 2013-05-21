@@ -38,19 +38,7 @@
         <#assign pageTitle><@u.message "iframe.initiatives" /> ${currentMunicipality.value.getName(locale)}</#assign>
     <#else>
         <#assign pageTitle><@u.message "page.iframe" /></#assign>
-    </#if>
-    
-    <#--<#if RequestParameters['municipality']?? && RequestParameters['municipality'] != "">
-        <#assign currentMunicipalityId = RequestParameters['municipality']!"" />
-        <#assign municipalityParam = "?municipality="+currentMunicipalityId />
-    </#if>
-
-    <#if municipalityParam??>
-        <#assign pageTitle><@u.message "iframe.initiatives" /> ${currentMunicipality!""}</#assign>
-    <#else>
-        <#assign pageTitle><@u.message "page.iframe" /></#assign>
-    </#if>-->
-    
+    </#if>   
 
 <!DOCTYPE HTML>
 <!--[if lt IE 7 ]> <html lang="${locale}" class="ie6"> <![endif]-->

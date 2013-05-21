@@ -116,7 +116,7 @@ jQuery.fn.loadChosen = function(){
 
 /**
  * Disable or enable button
- * ====================================
+ * ========================
  * 
  * */
 jQuery.fn.disableButton = function(disable){
@@ -130,31 +130,17 @@ jQuery.fn.disableButton = function(disable){
 };
 
 /**
- * 
- * HTML5 placeholder polyfill
- * ==========================
- * 
- * FIXME: does not work yet. Do we even need this?
+ * Delay
+ * =====
  * 
  * */
-/*jQuery.fn.placeholder = (function(){
-    //if (!$.support.placeholder){
-    	var thisInput = $(this);
-    	
-    	thisInput.hide();
-    	
-    	thisInput.val('Test placeholder');
-    	thisInput.focus(function() {
-    		thisInput.val('');
-    	});
-    	thisInput.blur(function() {
-    		if (thisInput.val() === '' || thisInput.val() == 'Test placeholder'){
-    			thisInput.val('Test placeholder');
-    		}
-    	});
-    //}
-	
-})();*/
+var delay = (function(){
+	var timer = 0;
+	return function(callback, ms){
+		clearTimeout (timer);
+    	timer = setTimeout(callback, ms);
+  	};
+})();
 
 $(document).ready(function () {	
 	// Define general variables
@@ -1165,20 +1151,64 @@ var deleteParticipant = (function() {
 * Generate iFrame
 * ==================
 */
+if (window.hasIFrame){
+	
 (function() {
 	var reset = 			$('.js-reset-iframe'),
 		refresh = 			$('.js-update-iframe'),
 		iframeContainer = 	$("#iframe-container"),
-		iframeSource =		$("#iframe-source"),
-		municipality = 		$('#municipality')
+		municipality = 		$('#municipality'),
 		limit = 			$('#limit'),
 		width = 			$('#width'),
 		height = 			$('#height'),
 	
+	bounds = { 
+		min : {
+			limit:	1,
+			width:	220,
+			height:	300
+		},
+		max : {
+			limit:	100,
+			width:	960,
+			height:	2000
+		}
+	},
+		
 	generateIframe = function (params) {
-		iframeContainer.html('<span class="loader" />');
 		iframeContainer.html($("#iframe-template").render(params));
 		return false;
+	},
+	
+	checkBounds = function(elem){
+		var min, max, def;
+		
+		switch(elem.attr('id')) {
+			case limit.attr('id'):
+				min = bounds.min.limit;
+				max = bounds.max.limit;
+				break;
+			case width.attr('id'):
+				min = bounds.min.width;
+				max = bounds.max.width;
+			  	break;
+			case height.attr('id'):
+				min = bounds.min.height;
+				max = bounds.max.height;
+				break;
+			default:
+				// nop
+		}
+		
+		if (!/^\d+$/.test(elem.val())) {
+			elem.val(min); // set to min if not even a number
+		}
+		if (elem.val() < min) {
+			elem.val(min);
+		}
+		if (elem.val() > max) {
+			elem.val(max);
+		}
 	},
 	
 	params = function() {
@@ -1195,32 +1225,41 @@ var deleteParticipant = (function() {
     municipality.change(function(){
     	generateIframe(params());
     });
-    limit.add(width).add(height).blur(function(){
+    /*limit.add(width).add(height).blur(function(){
+    	checkBounds($(this));
     	generateIframe(params());
+    });*/
+    limit.add(width).add(height).keyup(function(){
+    	var thisObj = $(this);
+    	
+        delay(function(){
+        	checkBounds(thisObj);
+        	generateIframe(params());
+        }, 1000 );
     });
-    
-    console.log(window.defaultData);
+   
     
     reset.click(function(e){
     	e.preventDefault();
     	
     	if (window.defaultData) {
-    		generateIframe(window.defaultData);
+    		var defData = window.defaultData;
+    		
+    		municipality.val(defData.municipality).trigger("liszt:updated");
+    		limit.val(defData.limit);
+    		width.val(defData.width);
+    		height.val(defData.height);
+    		generateIframe(defData);
     	}
     });
 	
     refresh.click(function(e){
 		e.preventDefault();
-		
-		
-		
-		generateIframe(params());
-		
 
-		iframeSource.html('<pre>'+iframeContainer.html().text()+'</pre>').text();
+		generateIframe(params());
 	});
 	
-	
 }());
+}
 
 });

@@ -34,99 +34,111 @@
 
 
 <#macro initiativeIframeGenerator>
-    <#--<div class="input-block-content">       
-        <@f.municipalitySelect path="initiative.municipality" options=municipalities required="required" cssClass="municipality-select" preSelected=municipality onlyActive=true/>
-    </div>-->
+    <div class="hidden">
+        <div class="input-block-content no-top-margin">       
+            <label for="municipality" class="input-header">
+                Valitse kunta, jolle teet aloitteen <span class="icon-small required trigger-tooltip"></span>
+            </label>
     
-    <div class="input-block-content no-top-margin">       
-        <label for="municipality" class="input-header">
-            Valitse kunta, jolle teet aloitteen <span class="icon-small required trigger-tooltip"></span>
-        </label>
-
-        <select name="municipality" id="municipality"  class="chzn-select municipality-select" data-initiative-municipality="" data-placeholder="Valitse kunta">
-            <option value=""></option>
-                <option value="1" selected="selected">Akaa</option>
-                <option value="5">Asikkala</option>
-                <option value="35">Helsinki</option>
-                <option value="45">Hämeenlinna</option>
-                <option value="105">Kirkkonummi</option>
-                <option value="289">Tampere</option>
-                <option value="298">Turku</option>
-                <option value="300">Tuusula</option>
-                <option value="314">Vantaa</option>
-        </select>
+            <select name="municipality" id="municipality"  class="chzn-select municipality-select" data-initiative-municipality="" data-placeholder="Valitse kunta">
+                <option value=""></option>
+                    <option value="1" selected="selected">Akaa</option>
+                    <option value="5">Asikkala</option>
+                    <option value="35">Helsinki</option>
+                    <option value="45">Hämeenlinna</option>
+                    <option value="105">Kirkkonummi</option>
+                    <option value="289">Tampere</option>
+                    <option value="298">Turku</option>
+                    <option value="300">Tuusula</option>
+                    <option value="314">Vantaa</option>
+            </select>
+        </div>
+        
+        <#assign digit = "\\d+" />
+        
+        <div class="input-block-content">
+            <div class="column col-1of3">
+                <label for="municipality" class="input-header">
+                    Aloitteiden lukumäärä
+                </label>
+                <input type="text" maxlength="2" class="small" value="3" name="limit" id="limit" pattern="${digit}" />
+            </div>
+            <div class="column col-1of3">
+                <label for="municipality" class="input-header">
+                    Leijukkeen leveys
+                </label>
+                <input type="text" maxlength="4" class="small" value="250" name="width" id="width" pattern="${digit}"  />
+            </div>
+            <div class="column col-1of3 last">
+                <label for="municipality" class="input-header">
+                    Leijukkeen korkeus
+                </label>
+                <input type="text" maxlength="4" class="small" value="400" name="height" id="height" pattern="${digit}"  />
+            </div>
+        </div>
+        
+        <#--<a href="#" class="small-button js-update-iframe">Päivitä</a> <a href="#" class="small-button js-reset-iframe push">Käytä oletusta</a>-->
+        <p><a href="#" class="js-reset-iframe">Palauta oletusarvot</a></p>
+    
+        <div id="iframe-container"></div>
+        
+        <script type="text/javascript">
+            window.hasIFrame = true;
+            window.defaultData = {
+                municipality:   "1",
+                limit:          "3",
+                width:          "250",
+                height:         "400"
+            };
+            
+            function iFrameLoaded(id, loaderId){
+                document.getElementById(id).style.display="block";
+                document.getElementById(loaderId).style.display="none";
+            }
+        </script>
+    
+        <script id="iframe-template" type="text/x-jsrender">
+            <h3>Leijuke</h3>
+            
+            <div id="iframe-placeholder" style="width:{{:width}}px; height:{{:height}}px;"><span class="loader" /></div>
+            <iframe id="kuntalaisaloite-leijuke"
+                    frameborder="0"
+                    scrolling="no"
+                    src="${urls.baseUrl}/${locale}/iframe?municipality={{:municipality}}&amp;limit={{:limit}}&amp;orderBy=latest&amp;width={{:width}}&amp;height={{:height}}"
+                    width="{{:width}}"
+                    height="{{:height}}" onload="iFrameLoaded('kuntalaisaloite-leijuke', 'iframe-placeholder')">
+            </iframe>
+            
+            <#assign iFrameSrc>
+            <@compress single_line=true>
+                <iframe id="kuntalaisaloite-leijuke"
+                    frameborder="0"
+                    scrolling="no"
+                    src="${urls.baseUrl}/${locale}/iframe?municipality={{:municipality}}&amp;limit={{:limit}}&amp;orderBy=latest&amp;width={{:width}}&amp;height={{:height}}"
+                    width="{{:width}}"
+                    height="{{:height}}">
+                </iframe>
+            </@compress>
+            </#assign>
+            
+            <h3>Leijukkeen lähdekoodi</h3>
+            
+            <pre id="iframe-source">${iFrameSrc}</pre>
+        </script>
     </div>
     
-    <div class="input-block-content">
-        <div class="column col-1of3">
-            <label for="municipality" class="input-header">
-                Aloitteiden lukumäärä
-            </label>
-            <input type="text" maxlength="2" class="small" value="3" name="limit" id="limit" />
-        </div>
-        <div class="column col-1of3">
-            <label for="municipality" class="input-header">
-                Leijukkeen leveys
-            </label>
-            <input type="text" maxlength="4" class="small" value="250" name="width" id="width" />
-        </div>
-        <div class="column col-1of3 last">
-            <label for="municipality" class="input-header">
-                Leijukkeen korkeus
-            </label>
-            <input type="text" maxlength="4" class="small" value="400" name="height" id="height" />
-        </div>
-    </div>
-    
-    <#--
-    <div class="input-block-content">
-        <label for="municipality" class="input-header">
-            Aloitteiden lukumäärä
-        </label>
-        <input type="text" maxlength="2" class="medium" value="3" name="limit" id="limit" />
-    </div>
-    
-    <label for="municipality" class="input-header">
-        Leijukkeen leveys
-    </label>
-    <input type="text" maxlength="4" class="medium" value="250" name="width" id="width" />
-    
-    <label for="municipality" class="input-header">
-        Leijukkeen korkeus
-    </label>
-    <input type="text" maxlength="4" class="medium" value="400" name="height" id="height" />
-    -->
-    
-    <#--<a href="#" class="small-button js-update-iframe">Päivitä</a> <a href="#" class="small-button js-reset-iframe push">Käytä oletusta</a>-->
-    <a href="#" class="js-reset-iframe">Palauta oletusarvot</a>
-
-    <br />
-    <br />
-
-    <div id="iframe-container" style="position:relative;"></div>
-    
-    <br />
-    
-    <pre id="iframe-source"></pre>
-    
-    <script type="text/javascript">
-        window.defaultData = {
-            municipality:   "2",
-            limit:          "3",
-            width:          "250",
-            height:         "400"
-        };
-    </script>
-
-    <script id="iframe-template" type="text/x-jsrender">
-        <iframe id="kuntalaisaloite-leijuke"
-                frameborder="0"
-                scrolling="no"
-                src="${urls.baseUrl}/${locale}/iframe?municipality={{:municipality}}&amp;limit={{:limit}}&amp;orderBy=latest&amp;width={{:width}}&amp;height={{:height}}"
-                width="{{:width}}"
-                height="{{:height}}">
-        </iframe>
-    </script>
+    <noscript>
+        <h3>Leijukegeneraattori vaatii JavaScriptin sallimista selaimessa</h3>
+        
+        <p>Voit kuitenkin muokata alla olevaa esimerkki-leijuketta tarpeisiisi sopivaksi. Kopioi alla oleva upotuskoodi ja muuta siitä tarvitsemasi parametrit.</p>
+        
+        <@i.initiativeIframe id="kuntalaisaloite-leijuke" embed=true width="250" height="400" municipality="1" limit="3" />
+        
+        <br/><br/>
+        <p>Alla on esimerkki-leijukkeen upotuskoodi. Kopioi alla oleva koodi kokonaisuudessaan leikepöydällesi ja muuta parametreja tarpeesi mukaan. Liitä sen jälkeen koodi sivustollesi.</p>
+        
+        <@i.initiativeIframe id="kuntalaisaloite-leijuke" embed=false width="250" height="400" municipality="1" limit="3" />
+    </noscript>
 </#macro>
 
 
