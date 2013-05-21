@@ -17,7 +17,8 @@
     <ul>
         <li>minkä kunnan aloitteita leijukkeessa listataan</li>
         <li>kuinka monta uusinta aloitetta listassa näytetään</li>
-        <li>leijukkeen leveyttä ja korkeutta</li>
+        <li>leijukkeen leveyttä (220-960 pikseliä)</li>
+        <li>leijukkeen korkeutta (300-2000 pikseliä)</li>
     </ul>
     
     <h2>Leijukegeneraattori</h2>
@@ -26,6 +27,7 @@
         <@i.initiativeIframeGenerator />
     </div>
 
+    <#--
     <h2>Esimerkkejä leijukkeista</h2>
 
     <div class="view-block">
@@ -47,6 +49,7 @@
         
         <@i.initiativeIframe id="kuntalaisaloite-leijuke-2" embed=false width="600" height="460" municipality="2" limit="10" />
     </div>
+    -->
 
 <#--
 <#else>
