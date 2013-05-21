@@ -334,3 +334,4 @@ insert into municipality (id, name, name_sv, active) values (333, 'Ylöjärvi','
 insert into municipality (id, name, name_sv, active) values (334, 'Ypäjä','Ypäjä', false);
 insert into municipality (id, name, name_sv, active) values (335, 'Ähtäri','Ähtäri', false);
 insert into municipality (id, name, name_sv, active) values (336, 'Äänekoski','Äänekoski', false);
+insert into schema_version (script) values ('02_populate_municipalities.sql');
