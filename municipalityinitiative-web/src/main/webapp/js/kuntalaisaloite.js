@@ -982,6 +982,19 @@ $('.municipality-filter').change( function() {
 			console.log(e);
 		}
 	});
+	
+	// Delete author
+	$('.js-delete-author').click(function(){
+		$('.js-delete-author.active').removeClass('active');
+		$(this).addClass('active');
+		
+		try {
+			generateModal(modalData.deleteAuthor(), 'full', deleteAuthor.getAuthor);
+			return false;
+		} catch(e) {
+			console.log(e);
+		}
+	});
 
 	
 /**
@@ -1146,6 +1159,27 @@ var deleteParticipant = (function() {
 
 }());
 
+/**
+* Delete author
+* ==================
+*/
+var deleteAuthor = (function() {
+	return {
+		getAuthor: function(){
+			var author = 				$('.js-delete-author.active'),
+				form = 					$('#delete-author-form'),
+				selAuthor = 			$('#selected-author'),
+				authorInput =	 		$('#authorId'),
+				authorDetails = 		'<h4 class="header">'  + author.data("name") + '</h4><div class="email">' + author.data("email") + '</div>';
+
+			selAuthor.html(authorDetails);
+			
+			authorInput.val(author.data("id"));
+		}
+	};
+
+}());
+
 
 /**
 * Generate iFrame
@@ -1218,6 +1252,13 @@ if (window.hasIFrame){
 	        width:			width.val(),
 	        height:			height.val()
 		}]
+    },
+    
+    refreshFields = function(data){
+		municipality.val(data.municipality).trigger("liszt:updated");
+		limit.val(data.limit);
+		width.val(data.width);
+		height.val(data.height);
     };
     
     generateIframe(params());
@@ -1243,13 +1284,8 @@ if (window.hasIFrame){
     	e.preventDefault();
     	
     	if (window.defaultData) {
-    		var defData = window.defaultData;
-    		
-    		municipality.val(defData.municipality).trigger("liszt:updated");
-    		limit.val(defData.limit);
-    		width.val(defData.width);
-    		height.val(defData.height);
-    		generateIframe(defData);
+    		refreshFields(window.defaultData);
+    		generateIframe(window.defaultData);
     	}
     });
 	

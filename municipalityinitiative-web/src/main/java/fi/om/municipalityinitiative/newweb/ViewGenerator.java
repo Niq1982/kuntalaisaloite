@@ -120,6 +120,13 @@ public class ViewGenerator {
                         .build()
         );
     }
+    
+    public static ViewGenerator iframeGenerator(List<Municipality> municipalities) {
+        return new ViewGenerator(IFRAME_GENERATOR_VIEW,
+                new AttributeBuilder()
+                        .add("municipalities", municipalities)
+                        .build());
+    }
 
     public static ViewGenerator singleView(InitiativeViewInfo initiativeInfo, PublicAuthors publicAuthors) {
         return new ViewGenerator(Views.PUBLIC_SINGLE_VIEW,

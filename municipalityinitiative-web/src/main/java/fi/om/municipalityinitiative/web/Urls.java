@@ -127,6 +127,8 @@ public final class Urls {
     
     // Municipality initiative STARTS
     public static final String PARAM_MANAGEMENT_CODE = "management";
+    
+    public static final String PARAM_AUTHOR_ID = "authorId";
 
     public static final String PARAM_PARTICIPANT_CONFIRMATION_CODE = "confirmation";
     
@@ -157,6 +159,8 @@ public final class Urls {
     public static final String ACTION_START_COLLECTING = "action-start-collecting";
     
     public static final String ACTION_SEND_TO_MUNICIPALITY = "action-send-to-muninicipality";
+    
+    public static final String ACTION_DELETE_AUTHOR = "action-delete-author";
     
     public static final String ACTION_DELETE_PARTICIPANT = "action-delete-participant";
     
@@ -261,6 +265,10 @@ public final class Urls {
     
     public static final String INVITATION_SV = "/sv/inbjudan" + "/" + ID_PARAMETER;
 
+    public static final String IFRAME_GENERATOR_FI = "/fi/leijuke";
+
+    public static final String IFRAME_GENERATOR_SV = "/sv/leijuke";
+    
     public static final String IFRAME_FI = "/fi/iframe";
 
     public static final String IFRAME_SV = "/sv/iframe";
@@ -377,6 +385,10 @@ public final class Urls {
 
     public String iframe(Long municipalityId) {
         return iframe() + "?" + PARAM_MUNICIPALITY + "=" + municipalityId;
+    }
+    
+    public String iframeGenerator() {
+        return getLocalizedPageUrl(IFRAME_GENERATOR_FI, IFRAME_GENERATOR_FI);
     }
     
     public String getManagement(Long id) {

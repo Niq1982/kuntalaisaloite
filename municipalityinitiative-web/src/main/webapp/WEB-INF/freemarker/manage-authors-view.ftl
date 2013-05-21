@@ -33,7 +33,7 @@
     <div class="view-block ">
         <div class="initiative-content-row last">
             <h2><@u.message "authors.title" /></h2>
-    
+        
             <#list authors as a>
                 <div class="author cf ${a_has_next?string("","last")}">
                     <div class="details">
@@ -43,6 +43,12 @@
     
                     <div class="invitation">
                         <span class="status"><span class="icon-small confirmed"></span> <@u.message "invitation.accepted" /> <@u.localDate a.createTime/></span>
+                        <#if a.id != user.authorId>
+                        <span class="action"><span class="icon-small cancel"></span> <a href="?deleteAuthor=${a.id!""}" class="js-delete-author"
+                            data-id="${a.id!""}"
+                            data-name="${a.contactInfo.name!""}"
+                            data-email="${a.contactInfo.email!""}"><@u.message "deleteParticipant.delete" /></a></span>
+                        </#if>
                     </div>
                 </div>
             </#list>
@@ -118,6 +124,66 @@
     </div>
     
     <@returnPrevious />
+    
+    <#-- HTML for confirm Modal -->
+    <#assign deleteAuthor>
+        <@compress single_line=true>
+            <form action="${springMacroRequestContext.requestUri}" method="POST" id="delete-author-form">
+                <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+                
+                <input type="hidden" name="${UrlConstants.PARAM_AUTHOR_ID}" id="${UrlConstants.PARAM_AUTHOR_ID}" value=""/>
+                
+                <h3><@u.message "deleteAuthor.confirm.description" /></h3>
+                <div id="selected-author" class="details"></div>
+                
+                <br/>
+                
+                <div class="input-block-content">
+                    <button type="submit" name="${UrlConstants.ACTION_DELETE_AUTHOR}" id="modal-${UrlConstants.ACTION_DELETE_AUTHOR}" value="${UrlConstants.ACTION_DELETE_AUTHOR}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.deleteAuthor.confirm" /></button>
+                    <a href="#" class="push close"><@u.message "action.cancel" /></a>
+                </div>
+            </form>
+        </@compress>
+    </#assign>
+    
+    <#--
+     * Manage author modals
+     * 
+     * Uses jsRender for templating.
+     * Same content is generated for NOSCRIPT and for modals.
+     *
+     * Modals:
+     *  Delete author
+     *
+     * jsMessage:
+     *  Warning if cookies are disabled
+    -->
+    <@u.modalTemplate />
+    <@u.jsMessageTemplate />
+    
+    <script type="text/javascript">
+        var modalData = {};
+        
+        <#-- Modal: Request messages. Check for components/utils.ftl -->
+        <#if deleteAuthor??>    
+            modalData.deleteAuthor = function() {
+                return [{
+                    title:      '<@u.message "deleteAuthor.confirm.title" />',
+                    content:    '<#noescape>${deleteAuthor?replace("'","&#39;")}</#noescape>'
+                }]
+            };
+        </#if>
+
+        var messageData = {};
+
+        <#-- jsMessage: Warning if cookies are not enabled -->
+        messageData.warningCookiesDisabled = function() {
+            return [{
+                type:      'warning',
+                content:    '<h3><@u.message "warning.cookieError.title" /></h3><div><@u.messageHTML key="warning.cookieError.description" args=[urls.participantList(initiative.id)] /></div>'
+            }]
+        };
+    </script>
     
 </@l.main>
 

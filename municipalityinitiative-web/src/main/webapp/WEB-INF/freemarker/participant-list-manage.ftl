@@ -35,7 +35,7 @@
             <form action="${springMacroRequestContext.requestUri}" method="POST" id="delete-participant-form">
                 <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
                 
-                <input type="hidden" name="participantId" id="participantId" value="${RequestParameters['deleteParticipant']}"/>
+                <input type="hidden" name="${UrlConstants.PARAM_PARTICIPANT_ID}" id="${UrlConstants.PARAM_PARTICIPANT_ID}" value="${RequestParameters['deleteParticipant']}"/>
 
                 <h3><@u.message "deleteParticipant.confirm.description" /></h3>
                 
@@ -57,7 +57,7 @@
             <form action="${springMacroRequestContext.requestUri}" method="POST" id="delete-participant-form">
                 <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
                 
-                <input type="hidden" name="participantId" id="participantId" value=""/>
+                <input type="hidden" name="${UrlConstants.PARAM_PARTICIPANT_ID}" id="${UrlConstants.PARAM_PARTICIPANT_ID}" value=""/>
                 
                 <h3><@u.message "deleteParticipant.confirm.description" /></h3>
                 <ul id="selected-participant" class="participant-list no-style"></ul>
@@ -73,7 +73,7 @@
     </#assign>
     
     <#--
-     * Management VIEW modals
+     * Manage participant modals
      * 
      * Uses jsRender for templating.
      * Same content is generated for NOSCRIPT and for modals.
