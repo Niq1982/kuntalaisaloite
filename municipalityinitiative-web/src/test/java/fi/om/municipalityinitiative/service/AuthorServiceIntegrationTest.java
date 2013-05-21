@@ -1,6 +1,9 @@
 package fi.om.municipalityinitiative.service;
 
+import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dao.InvitationNotValidException;
+import fi.om.municipalityinitiative.newdto.LoginUserHolder;
+import fi.om.municipalityinitiative.newdto.user.User;
 import fi.om.municipalityinitiative.util.NotFoundException;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
@@ -21,10 +24,16 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -289,10 +298,11 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     @Test
     public void deleting_final_author_is_not_allowed() {
         Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality);
+        LoginUserHolder fakeLoginUserHolderWithManagementRights = new LoginUserHolder(User.normalUser(-5L, Collections.singleton(initiativeId)));
 
         thrown.expect(OperationNotAllowedException.class);
         thrown.expectMessage(containsString("Unable to delete author"));
-        authorService.deleteAuthor(initiativeId, TestHelper.authorLoginUserHolder, testHelper.getLastAuthorId());
+        authorService.deleteAuthor(initiativeId, fakeLoginUserHolderWithManagementRights, testHelper.getLastAuthorId());
     }
 
     @Test
@@ -310,6 +320,80 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     }
 
+    @Test
+    public void deleting_author_fails_if_trying_to_delete_myself() {
+        Long initiative = testHelper.createCollaborativeAccepted(testMunicipality);
+        Long anotherAuthor = testHelper.getLastAuthorId();
+        Long currentAuthor = testHelper.createAuthorAndParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality));
+
+        thrown.expect(OperationNotAllowedException.class);
+        thrown.expectMessage(containsString("Removing yourself from authors is not allowed"));
+        authorService.deleteAuthor(initiative, TestHelper.authorLoginUserHolder, currentAuthor);
+
+    }
+
+    @Test
+    public void deleting_author_succeeds() {
+
+        Long initiative = testHelper.createCollaborativeAccepted(testMunicipality);
+        Long anotherAuthor = testHelper.getLastAuthorId();
+        Long currentAuthor = testHelper.createAuthorAndParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality));
+
+        precondition(authorDao.findAuthors(initiative), hasSize(2));
+
+        authorService.deleteAuthor(initiative, TestHelper.authorLoginUserHolder, anotherAuthor);
+
+        assertThat(authorDao.findAuthors(initiative), hasSize(1));
+
+    }
+
+    @Test
+    public void two_concurrent_tries_to_remove_two_last_authors_will_fail() {
+
+        final Long initiative = testHelper.createCollaborativeAccepted(testMunicipality);
+
+        final Long author1 = testHelper.getLastAuthorId();
+        final Long author2 = testHelper.createAuthorAndParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality));
+
+        final LoginUserHolder loginUserHolder =  new LoginUserHolder(User.normalUser(-1L, Collections.singleton(initiative)));
+
+        List<Callable<Boolean>> callables = Lists.newArrayList();
+        callables.add(authorDeletorCallable(initiative, loginUserHolder, author1));
+        callables.add(authorDeletorCallable(initiative, loginUserHolder, author2));
+
+        executeCallablesSilently(callables);
+
+        assertThat(authorDao.findAuthors(initiative), hasSize(1));
+    }
+
+    private static void executeCallablesSilently(List<Callable<Boolean>> threads) {
+        ExecutorService executor = Executors.newCachedThreadPool();
+
+        try {
+            for (Future<Boolean> future : executor.invokeAll(threads)) {
+                future.get();
+            }
+        } catch (Exception e) {
+            //e.printStackTrace();
+
+        } finally {
+            executor.shutdownNow();
+        }
+    }
+
+    private Callable<Boolean> authorDeletorCallable(final Long initiative, final LoginUserHolder loginUserHolder, final Long givenAuthor) {
+        return new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                deleteAuthorAndSleepForSecond(initiative, loginUserHolder, givenAuthor);
+                return true;
+            }
+        };
+    }
+
+    private void deleteAuthorAndSleepForSecond(Long initiativeId, LoginUserHolder loginUserHolder, Long authorId) throws InterruptedException {
+        authorService.deleteAuthor(initiativeId, loginUserHolder, authorId);
+    }
 
     private Long allCurrentInvitations() {
         return testHelper.countAll(QAuthorInvitation.authorInvitation);
