@@ -77,7 +77,7 @@ public class AuthorsWebTest  extends WebTestBase {
 
         getElementByLabel("Puhelin", "input").sendKeys(CONTACT_PHONE);
         getElementByLabel("Osoite", "textarea").sendKeys(CONTACT_ADDRESS);
-        clickDialogButton("Tallenna");
+        clickDialogButton("Hyväksy ja tallenna tiedot");
 
         assertTextContainedByClass("msg-success", "Liittymisesi vastuuhenkilöksi on nyt vahvistettu ja olet kirjautunut sisään palveluun.");
 

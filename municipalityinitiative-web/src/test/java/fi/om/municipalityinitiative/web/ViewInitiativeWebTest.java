@@ -17,7 +17,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
     /**
      * Localization keys as constants.
      */
-    private static final String MANAGEMENT_WARNING_TITLE = "management.warning.title";
+    private static final String MANAGEMENT_WARNING_TITLE = "management.title";
     private static final String INITIATIVE_VIEW_HEADER = "initiative.proposal.title";
     public static final String MUNICIPALITY_NAME = "Tuusula";
     private Long municipalityId;
