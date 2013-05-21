@@ -982,6 +982,19 @@ $('.municipality-filter').change( function() {
 			console.log(e);
 		}
 	});
+	
+	// Delete author
+	$('.js-delete-author').click(function(){
+		$('.js-delete-author.active').removeClass('active');
+		$(this).addClass('active');
+		
+		try {
+			generateModal(modalData.deleteAuthor(), 'full', deleteAuthor.getAuthor);
+			return false;
+		} catch(e) {
+			console.log(e);
+		}
+	});
 
 	
 /**
@@ -1141,6 +1154,27 @@ var deleteParticipant = (function() {
 			selParticipant.html(participantDetails);
 			
 			participantInput.val(participant.data("id"));
+		}
+	};
+
+}());
+
+/**
+* Delete author
+* ==================
+*/
+var deleteAuthor = (function() {
+	return {
+		getAuthor: function(){
+			var author = 				$('.js-delete-author.active'),
+				form = 					$('#delete-author-form'),
+				selAuthor = 			$('#selected-author'),
+				authorInput =	 		$('#authorId'),
+				authorDetails = 		'<h4 class="header">'  + author.data("name") + '</h4><div class="email">' + author.data("email") + '</div>';
+
+			selAuthor.html(authorDetails);
+			
+			authorInput.val(author.data("id"));
 		}
 	};
 

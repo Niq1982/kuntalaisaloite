@@ -113,6 +113,8 @@ public final class Urls {
     
     // Municipality initiative STARTS
     public static final String PARAM_MANAGEMENT_CODE = "management";
+    
+    public static final String PARAM_AUTHOR_ID = "authorId";
 
     public static final String PARAM_PARTICIPANT_CONFIRMATION_CODE = "confirmation";
     
@@ -143,6 +145,8 @@ public final class Urls {
     public static final String ACTION_START_COLLECTING = "action-start-collecting";
     
     public static final String ACTION_SEND_TO_MUNICIPALITY = "action-send-to-muninicipality";
+    
+    public static final String ACTION_DELETE_AUTHOR = "action-delete-author";
     
     public static final String ACTION_DELETE_PARTICIPANT = "action-delete-participant";
     
