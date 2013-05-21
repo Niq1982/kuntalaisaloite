@@ -31,7 +31,7 @@
     <div id="header-tools">
         <div id="header-tools-content">
             <div id="aloite-links">
-                <a href="${urls.baseUrl}/${locale}">Kansalaisaloite.fi</a><span class="hide"> | </span><a class="active" href="${urls.infoIndex()}/<@u.message "InfoPage.MUNICIPALITY_INITIATIVE" />">Kuntalaisaloite.fi</a>
+                <a href="${urls.baseUrl}/${locale}">Kansalaisaloite.fi</a><span class="hide"> | </span><a class="active" href="${urls.infoIndex()}">Kuntalaisaloite.fi</a>
             </div>
         </div>
     </div>
@@ -56,21 +56,18 @@
             <div class="block oikeusministerio">
                 <p>
                     <@u.message "footer.ministerOfJustice"/><br/>
-                    <a href="${urls.infoIndex()}/<@u.message "InfoPage.OM" />"><@u.message "common.readMore" /> &rarr;</a>
+                 <#--   <a href="${urls.infoIndex()}/<@u.message "InfoPage.OM" />"><@u.message "common.readMore" /> &rarr;</a>-->
                 </p>
             </div>
             <div class="block viestintavirasto">
                 <p>
                     <@u.messageHTML "footer.ficora"/><br/>
-                    <a href="${urls.infoIndex()}/<@u.message "InfoPage.VIVI" />"><@u.message "common.readMore" /> &rarr;</a>
+                 <#--   <a href="${urls.infoIndex()}/<@u.message "InfoPage.VIVI" />"><@u.message "common.readMore" /> &rarr;</a> -->
                 </p>
             </div>
             <div class="footer-links">
                 <ul>
-                    <li><span class="icon-small arrow-right-2"></span> <a href="${urls.infoIndex()}/<@u.message "InfoPage.FEEDBACK" />"><@u.message "page.info.feedback.title" /></a></li>
-                    <li><span class="icon-small arrow-right-2"></span> <a href="${urls.infoIndex()}/<@u.message "InfoPage.PERSON_REGISTER" />"><@u.message "page.info.person-register.title" /></a></li>
-                    <li><span class="icon-small arrow-right-2"></span> <a href="${urls.infoIndex()}/<@u.message "InfoPage.DEVELOPERS" />"><@u.message "page.info.developers.title" /></a></li>
-                    <li><span class="icon-small arrow-right-2"></span> <a href="${urls.infoIndex()}/<@u.message "InfoPage.BRIEFLY_IN_ENGLISH" />"><@u.message "page.info.briefly-in-english.link" /></a></li>
+                    <-- TODO: Links -->
                 </ul>
             </div>
             <br class="clear"/>
@@ -100,7 +97,9 @@
       {"naviName":"page.frontpage", "naviUrl":urls.frontpage()},
       {"naviName":"page.find", "naviUrl":urls.search()},
       {"naviName":"page.prepare", "naviUrl":urls.prepare()},
-      {"naviName":"page.help", "naviUrl":urls.helpIndex()}
+      {"naviName":"page.help", "naviUrl":urls.helpIndex()},
+      {"naviName":"page.news", "naviUrl":urls.news()}
+
     ] />
 
 <#assign currentPage>
@@ -196,6 +195,13 @@
         
         <script src="${urls.baseUrl}/js/less-1.3.0.min.js" type="text/javascript"></script>
     </#if>
+
+    <#--
+     * Include wysiwyg editor resources: CSS styles
+     *
+     * - Styles are defined in the edit-view templates for static pages which are visible only for OM-users.
+    -->
+    <#noescape>${editorStyles!""}</#noescape>
 
     <link href='https://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic' rel='stylesheet' type='text/css' />    
 </head>
@@ -303,23 +309,19 @@
             <div class="block oikeusministerio">
                 <p>
                     <@u.message "footer.ministerOfJustice"/><br/>
-                    <a href="${urls.infoIndex()}/<@u.enumDescription InfoPage.OM />"><@u.message "common.readMore" /> <span class="icon-small arrow-right-2"></span></a>
+                    <#-- <a href="${urls.infoIndex()}/<@u.enumDescription InfoPage.OM />"><@u.message "common.readMore" /> <span class="icon-small arrow-right-2"></span></a>-->
                 </p>
             </div>
             <div class="block viestintavirasto">
                 <p>
                     <@u.messageHTML "footer.ficora"/><br/>
-                    <a href="${urls.infoIndex()}/<@u.enumDescription InfoPage.VIVI />"><@u.message "common.readMore" /> <span class="icon-small arrow-right-2"></span></a>
+            <#--        <a href="${urls.infoIndex()}/<@u.enumDescription InfoPage.VIVI />"><@u.message "common.readMore" /> <span class="icon-small arrow-right-2"></span></a> -->
                 </p>
             </div>
             <div class="footer-links">
                 <ul>
                     <li>Kuntalaisaloitteen linkit tähän</li>
-                    <#--<li><span class="icon-small arrow-right-2"></span> <a href="${urls.infoIndex()}/<@u.enumDescription InfoPage.FEEDBACK />"><@u.message "page.info.feedback.title" /></a></li>
-                    <li><span class="icon-small arrow-right-2"></span> <a href="${urls.infoIndex()}/<@u.enumDescription InfoPage.PERSON_REGISTER />"><@u.message "page.info.person-register.title" /></a></li>
-                    <li><span class="icon-small arrow-right-2"></span> <a href="${urls.infoIndex()}/<@u.enumDescription InfoPage.PRIVACY />"><@u.message "page.info.privacy.title" /></a></li>
-                    <li><span class="icon-small arrow-right-2"></span> <a href="${urls.infoIndex()}/<@u.enumDescription InfoPage.DEVELOPERS />"><@u.message "page.info.developers.title" /></a></li>
-                    <li><span class="icon-small arrow-right-2"></span> <a href="${urls.infoIndex()}/<@u.enumDescription InfoPage.BRIEFLY_IN_ENGLISH />"><@u.message "page.info.briefly-in-english.link" /></a></li>-->
+                    <#-- TOOD: Links -->
                 </ul>
             </div>
             <br class="clear"/>
@@ -350,6 +352,13 @@
       <script type="text/javascript" src="${urls.baseUrl}/js/jquery.scrollTo.min.js?version=${resourcesVersion}"></script>
       <script type="text/javascript" src="${urls.baseUrl}/js/kuntalaisaloite.js?version=${resourcesVersion}"></script>
     </#if>
+
+  <#--
+     * Include wysiwyg editor resources: JavaScripts
+     *
+     * - JavaScripts are defined in the edit-view templates for static pages which are visible only for OM-users.
+    -->
+    <#noescape>${editorScripts!""}</#noescape>
     
     <#-- Initialize variables for JavaScript -->
     <script type="text/javascript">

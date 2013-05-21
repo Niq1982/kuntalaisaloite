@@ -10,6 +10,7 @@ import fi.om.municipalityinitiative.service.UserService;
 import fi.om.municipalityinitiative.util.InfoTextCategory;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +35,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static fi.om.municipalityinitiative.web.WebConstants.JSON;
 
+@Controller
 public class InfoTextController extends BaseController {
 
     @Resource

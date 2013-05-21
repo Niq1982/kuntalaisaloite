@@ -13,7 +13,7 @@
     <#assign emailBody1><@u.message "error.500.emailBody1"/></#assign>
     <#assign emailBody2><@u.message "error.500.emailBody2"/></#assign>
     <#assign mailtoLink>mailto:${feedbackEmail!""}?subject=${urls.urlPercentEncode(emailSubject)}&amp;body=${urls.urlPercentEncode(emailBody1)}%0A%0A-----%20%0A%0A${urls.urlPercentEncode(emailBody2)}%20${errorCaseIdNotNull}</#assign>
-    <#assign feedbackLink>${urls.infoIndex()}/<@u.message "InfoPage.FEEDBACK" /></#assign>
+    <#assign feedbackLink>${urls.infoIndex()}/<@u.message "HelpPage.FEEDBACK" /></#assign>
     
     <p><@u.messageHTML key="error.500.report" args=[feedbackLink] /></p>
       

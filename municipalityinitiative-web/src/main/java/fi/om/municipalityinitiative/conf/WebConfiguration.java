@@ -185,6 +185,11 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
     public ApiController apiController() {
         return new ApiController(optimizeResources(env), resourcesVersion(env));
     }
+
+    @Bean
+    public InfoTextController infoTextController() {
+        return new InfoTextController(optimizeResources(env), resourcesVersion(env), omPiwicId(env));
+    }
     
     @Bean
     public StaticPageController staticPageController() {

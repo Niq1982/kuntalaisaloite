@@ -114,6 +114,11 @@ public class AppConfiguration {
     }
 
     @Bean
+    public InfoTextService infoTextService() {
+        return new InfoTextService(infoTextDao());
+    }
+
+    @Bean
     public InitiativeDao municipalityInitiativeDao() {
         return new JdbcInitiativeDao();
     }
@@ -171,6 +176,11 @@ public class AppConfiguration {
     @Bean
     public UserService userService() {
         return new UserService();
+    }
+
+    @Bean
+    public ImageFinder imageFinder() {
+        return new ImageFinder(env.getRequiredProperty(PropertyNames.omImageDirection), env.getRequiredProperty(PropertyNames.baseURL));
     }
 
 

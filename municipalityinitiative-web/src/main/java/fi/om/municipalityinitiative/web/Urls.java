@@ -184,6 +184,16 @@ public final class Urls {
 
     public static final String ACTION_REMOVE_SUPPORT_VOTES = "action-remove-support-votes";
 
+    // Actions for the content editor
+
+    public static final String ACTION_EDITOR_SAVE_DRAFT = "action-editor-save-draft";
+
+    public static final String ACTION_EDITOR_PUBLISH_DRAFT = "action-editor-publish-draft";
+
+    public static final String ACTION_EDITOR_RESTORE_PUBLISHED = "action-editor-restore-published";
+
+    public static final String ACTION_EDITOR_UPLOAD_IMAGE = "action-editor-upload-image";
+
     public static final String JSONP_CALLBACK = "jsonp";
 
     public static final String JSON_OFFSET = "offset";
@@ -545,5 +555,9 @@ public final class Urls {
 
     public String helpEdit(String localizedPageName) {
         return getLocalizedPageUrl(HELP_EDIT_FI, HELP_EDIT_SV).replace(HELP_PAGE_PARAMETER, localizedPageName);
+    }
+
+    public String images() {
+        return IMAGES;
     }
 }

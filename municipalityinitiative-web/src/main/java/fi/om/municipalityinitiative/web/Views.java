@@ -35,16 +35,6 @@ public final class Views {
 
     public static final String CONTENT_EDITOR_HELP_VIEW = "pages/content-editor-help";
 
-    // Actions for the content editor
-
-    public static final String ACTION_EDITOR_SAVE_DRAFT = "action-editor-save-draft";
-
-    public static final String ACTION_EDITOR_PUBLISH_DRAFT = "action-editor-publish-draft";
-
-    public static final String ACTION_EDITOR_RESTORE_PUBLISHED = "action-editor-restore-published";
-
-    public static final String ACTION_EDITOR_UPLOAD_IMAGE = "action-editor-upload-image";
-
     // New views
 
     public static final String SEARCH_VIEW = "find";
