@@ -150,7 +150,6 @@ public class BaseController {
         addEnum(RequestMessage.class, model);
         addEnum(RequestMessageType.class, model);
         addEnum(HelpPage.class, model);
-        addEnum(InfoPage.class, model);
         addEnum(InitiativeType.class, model);
         addEnum(InitiativeState.class, model);
         addEnum(FixState.class, model);

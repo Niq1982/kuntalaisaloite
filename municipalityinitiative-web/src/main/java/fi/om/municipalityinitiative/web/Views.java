@@ -31,6 +31,10 @@ public final class Views {
 
     public static final String INFO_VIEW = "pages/info";
 
+    public static final String HELP_EDIT_VIEW = "pages/edit_help";
+
+    public static final String CONTENT_EDITOR_HELP_VIEW = "pages/content-editor-help";
+
     // New views
 
     public static final String SEARCH_VIEW = "find";

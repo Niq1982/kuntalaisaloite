@@ -1,3 +1,10 @@
+create table schema_version (
+    script varchar(64) not null
+    , executed timestamp not null default now()
+
+    , constraint schema_version_script_pk primary key (script)
+);
+
 drop type if exists initiativeType;
 drop type if exists initiativeState;
 
@@ -144,3 +151,9 @@ CREATE CONSTRAINT TRIGGER initiative_has_authors_trigger_after_participant_delet
     AFTER DELETE ON participant
     DEFERRABLE INITIALLY DEFERRED
 FOR EACH ROW EXECUTE PROCEDURE initiative_author_count_after_participant_delete();
+
+
+
+
+
+insert into schema_version (script) values ('01_schema.sql');
