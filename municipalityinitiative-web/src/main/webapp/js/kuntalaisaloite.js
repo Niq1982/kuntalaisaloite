@@ -1179,7 +1179,7 @@ var deleteParticipant = (function() {
 	},
 	
 	checkBounds = function(elem){
-		var min, max;
+		var min, max, def;
 		
 		switch(elem.attr('id')) {
 			case limit.attr('id'):
@@ -1198,6 +1198,9 @@ var deleteParticipant = (function() {
 				// nop
 		}
 		
+		if (!/^\d+$/.test(elem.val())) {
+			elem.val(min); // set to min if not even a number
+		}
 		if (elem.val() < min) {
 			elem.val(min);
 		}

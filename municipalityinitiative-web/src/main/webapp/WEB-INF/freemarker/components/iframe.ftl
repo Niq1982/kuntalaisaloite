@@ -54,24 +54,26 @@
             </select>
         </div>
         
+        <#assign digit = "\\d+" />
+        
         <div class="input-block-content">
             <div class="column col-1of3">
                 <label for="municipality" class="input-header">
                     Aloitteiden lukumäärä
                 </label>
-                <input type="text" maxlength="2" class="small" value="3" name="limit" id="limit" />
+                <input type="text" maxlength="2" class="small" value="3" name="limit" id="limit" pattern="${digit}" />
             </div>
             <div class="column col-1of3">
                 <label for="municipality" class="input-header">
                     Leijukkeen leveys
                 </label>
-                <input type="text" maxlength="4" class="small" value="250" name="width" id="width" />
+                <input type="text" maxlength="4" class="small" value="250" name="width" id="width" pattern="${digit}"  />
             </div>
             <div class="column col-1of3 last">
                 <label for="municipality" class="input-header">
                     Leijukkeen korkeus
                 </label>
-                <input type="text" maxlength="4" class="small" value="400" name="height" id="height" />
+                <input type="text" maxlength="4" class="small" value="400" name="height" id="height" pattern="${digit}"  />
             </div>
         </div>
         
@@ -127,7 +129,7 @@
     <noscript>
         <h3>Leijukegeneraattori vaatii JavaScriptin sallimista selaimessa</h3>
         
-        <p>Voit kuitenkin muokata alla olevaa esimerkki-leijuketta tarpeisiisi sopivaksi. Kopioi alla oleva upotuskoodi ja muuta siitä tarvitsemasi parametrit</p>
+        <p>Voit kuitenkin muokata alla olevaa esimerkki-leijuketta tarpeisiisi sopivaksi. Kopioi alla oleva upotuskoodi ja muuta siitä tarvitsemasi parametrit.</p>
         
         <@i.initiativeIframe id="kuntalaisaloite-leijuke" embed=true width="250" height="400" municipality="1" limit="3" />
         
