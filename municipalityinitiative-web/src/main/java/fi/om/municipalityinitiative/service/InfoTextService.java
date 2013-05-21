@@ -6,6 +6,7 @@ import fi.om.municipalityinitiative.newdao.InfoTextDao;
 import fi.om.municipalityinitiative.newdto.InfoPageText;
 import fi.om.municipalityinitiative.newdto.InfoTextFooterLink;
 import fi.om.municipalityinitiative.newdto.InfoTextSubject;
+import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.util.InfoTextCategory;
 import fi.om.municipalityinitiative.util.LanguageCode;
 import fi.om.municipalityinitiative.util.Locales;
@@ -33,7 +34,8 @@ public class InfoTextService implements FooterLinkProvider {
         return infoTextDao.getFooterLinks(languageCode(locale));
     }
 
-    public InfoPageText getDraft(String uri) { // TODO: Check om rights
+    public InfoPageText getDraft(String uri, LoginUserHolder requiredOmLoginUserHolder) {
+        requiredOmLoginUserHolder.assertOmUser();
         return infoTextDao.getDraft(uri);
     }
 
@@ -41,13 +43,13 @@ public class InfoTextService implements FooterLinkProvider {
         return mapByCategory(infoTextDao.getNotEmptySubjects(languageCode(locale)));
     }
 
-    public Map<String, List<InfoTextSubject>> getOmSubjectList(Locale locale) {
-        // TODO: Check om rights
+    public Map<String, List<InfoTextSubject>> getOmSubjectList(Locale locale, LoginUserHolder requiredOmLoginUserHolder) {
+        requiredOmLoginUserHolder.assertOmUser();
         return mapByCategory(infoTextDao.getAllSubjects(languageCode(locale)));
     }
 
-    public void updateDraft(String localizedPageName, String content, String subject) {
-        // TODO: Check om rights
+    public void updateDraft(LoginUserHolder requiredOmLoginUserHolder, String localizedPageName, String content, String subject) {
+        requiredOmLoginUserHolder.assertOmUser();
 
         InfoPageText infoPageText = InfoPageText.builder(localizedPageName)
                 .withText(subject, content)
@@ -56,13 +58,13 @@ public class InfoTextService implements FooterLinkProvider {
         infoTextDao.saveDraft(infoPageText);
     }
 
-    public void publishDraft(String uri) {
-        // TODO: Check om rights
+    public void publishDraft(String uri, LoginUserHolder requiredOmLoginUserHolder) {
+        requiredOmLoginUserHolder.assertOmUser();
         infoTextDao.publishFromDraft(uri, "users name");
     }
 
-    public void restoreDraftFromPublished(String uri) {
-        // TODO: Check om rights
+    public void restoreDraftFromPublished(String uri, LoginUserHolder requiredOmLoginUserHolder) {
+        requiredOmLoginUserHolder.assertOmUser();
         infoTextDao.draftFromPublished(uri, "users name");
     }
 

@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Lists;
+import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.newdao.InfoTextDao;
 import fi.om.municipalityinitiative.newdto.InfoTextSubject;
 import fi.om.municipalityinitiative.util.InfoTextCategory;
@@ -39,7 +40,7 @@ public class InfoTextServiceTest {
 
         stub(infoTextDaoMock.getAllSubjects(LanguageCode.FI)).toReturn(list);
 
-        Map<String,List<InfoTextSubject>> map = infoTextService.getOmSubjectList(Locales.LOCALE_FI);
+        Map<String,List<InfoTextSubject>> map = infoTextService.getOmSubjectList(Locales.LOCALE_FI, TestHelper.omLoginUser);
 
         assertThat(map.get(InfoTextCategory.KUNTALAISALOITE.name()).size(), is(2));
         assertThat(map.get(InfoTextCategory.KUNTALAISALOITE_FI.name()).size(), is(1));
@@ -51,7 +52,7 @@ public class InfoTextServiceTest {
 
         stub(infoTextDaoMock.getAllSubjects(LanguageCode.FI)).toReturn(new ArrayList<InfoTextSubject>());
 
-        Map<String, List<InfoTextSubject>> map = infoTextService.getOmSubjectList(Locales.LOCALE_FI);
+        Map<String, List<InfoTextSubject>> map = infoTextService.getOmSubjectList(Locales.LOCALE_FI, TestHelper.omLoginUser);
 
         assertThat(map.size(), is(InfoTextCategory.values().length));
         for (List<InfoTextSubject> categorySubjects : map.values()) {

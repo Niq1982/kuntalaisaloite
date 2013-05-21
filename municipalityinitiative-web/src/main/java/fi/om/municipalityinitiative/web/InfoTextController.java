@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.web;
 
 import com.google.common.base.Optional;
 import fi.om.municipalityinitiative.newdto.InfoTextSubject;
+import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.user.User;
 import fi.om.municipalityinitiative.service.AccessDeniedException;
 import fi.om.municipalityinitiative.service.ImageFinder;
@@ -95,19 +96,21 @@ public class InfoTextController extends BaseController {
     }
 
     @RequestMapping(value = {HELP_EDIT_INDEX_FI, HELP_EDIT_INDEX_SV}, method = GET)
-    public String helpEdit(Model model, Locale locale) {
-        return helpEdit(getUriForFirstSubject(locale), model, locale);
+    public String helpEdit(Model model, Locale locale, HttpServletRequest request) {
+        return helpEdit(getUriForFirstSubject(locale), model, locale, request);
     }
 
     @RequestMapping(value={ HELP_EDIT_FI, HELP_EDIT_SV }, method=GET)
-    public String helpEdit(@PathVariable("helpPage") String localizedPageName, Model model, Locale locale) {
+    public String helpEdit(@PathVariable("helpPage") String localizedPageName, Model model, Locale locale, HttpServletRequest request) {
+
+        LoginUserHolder requiredOmLoginUserHolder = userService.getRequiredOmLoginUserHolder(request);
 
         Urls urls = Urls.get(locale);
 
         model.addAttribute(ALT_URI_ATTR, urls.alt().help(""));
         model.addAttribute("helpPage", localizedPageName);
-        model.addAttribute("categoryLinksMap", infoTextService.getOmSubjectList(locale));
-        model.addAttribute("content", infoTextService.getDraft(localizedPageName));
+        model.addAttribute("categoryLinksMap", infoTextService.getOmSubjectList(locale, requiredOmLoginUserHolder));
+        model.addAttribute("content", infoTextService.getDraft(localizedPageName, requiredOmLoginUserHolder));
         model.addAttribute("urls", urls);
 
         return HELP_EDIT_VIEW;
@@ -119,7 +122,7 @@ public class InfoTextController extends BaseController {
                            @RequestParam(value = "subject", required = true) String subject,
                            Model model, Locale locale, HttpServletRequest request) {
 
-        infoTextService.updateDraft(localizedPageName, content, subject);
+        infoTextService.updateDraft(userService.getRequiredOmLoginUserHolder(request), localizedPageName, content, subject);
 
         return redirectWithMessage(Urls.get(locale).helpEdit(localizedPageName), RequestMessage.EDITOR_SAVE_DRAFT, request);
     }
@@ -127,7 +130,7 @@ public class InfoTextController extends BaseController {
     @RequestMapping(value={ HELP_EDIT_FI, HELP_EDIT_SV }, method=POST, params=ACTION_EDITOR_PUBLISH_DRAFT)
     public String publishDraft(@PathVariable("helpPage") String localizedPageName, Locale locale, HttpServletRequest request) {
 
-        infoTextService.publishDraft(localizedPageName);
+        infoTextService.publishDraft(localizedPageName, userService.getRequiredOmLoginUserHolder(request));
 
         return redirectWithMessage(Urls.get(locale).helpEdit(localizedPageName), RequestMessage.EDITOR_PUBLISH_DRAFT, request);
     }
@@ -135,9 +138,7 @@ public class InfoTextController extends BaseController {
 
     @RequestMapping(value={ HELP_EDIT_FI, HELP_EDIT_SV }, method=POST, params=ACTION_EDITOR_RESTORE_PUBLISHED)
     public String restoreDraftFromPublished(@PathVariable("helpPage") String localizedPageName, Locale locale, HttpServletRequest request) {
-
-        infoTextService.restoreDraftFromPublished(localizedPageName);
-
+        infoTextService.restoreDraftFromPublished(localizedPageName, userService.getRequiredOmLoginUserHolder(request));
         return redirectWithMessage(Urls.get(locale).helpEdit(localizedPageName), RequestMessage.EDITOR_RESTORE_PUBLISHED, request);
     }
 
@@ -172,10 +173,11 @@ public class InfoTextController extends BaseController {
         // NOTE: Checking user rights and CSRF-Token needs to be done here because HttpUserService gains
         // NOTE org.eclipse.jetty.server.Request which is not able to handle parameters at multipartrequests
 
-        User currentUser = userService.getUser(request); // TODO: Hmm.. Kansalaisalotteen puolella tässä checkattiin csrf-tokeni?
-        if (currentUser.isNotOmUser()) {
-            throw new AccessDeniedException("Om rights required");
-        }
+        userService.getRequiredLoginUserHolder(request);
+//        User currentUser = userService.getUser(request); // TODO: Hmm.. Kansalaisalotteen puolella tässä checkattiin csrf-tokeni?
+//        if (currentUser.isNotOmUser()) {
+//            throw new AccessDeniedException("Om rights required");
+//        }
 
         // userService.verifyCSRFToken(request);
 
