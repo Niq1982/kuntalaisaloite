@@ -333,6 +333,21 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     }
 
     @Test
+    public void deleting_author_succeeds() {
+
+        Long initiative = testHelper.createCollaborativeAccepted(testMunicipality);
+        Long anotherAuthor = testHelper.getLastAuthorId();
+        Long currentAuthor = testHelper.createAuthorAndParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality));
+
+        precondition(authorDao.findAuthors(initiative), hasSize(2));
+
+        authorService.deleteAuthor(initiative, TestHelper.authorLoginUserHolder, anotherAuthor);
+
+        assertThat(authorDao.findAuthors(initiative), hasSize(1));
+
+    }
+
+    @Test
     public void two_concurrent_tries_to_remove_two_last_authors_will_fail() {
 
         final Long initiative = testHelper.createCollaborativeAccepted(testMunicipality);
