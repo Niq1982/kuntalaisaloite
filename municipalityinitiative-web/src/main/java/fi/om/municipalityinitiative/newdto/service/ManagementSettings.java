@@ -9,6 +9,8 @@ public class ManagementSettings {
 
     private Initiative initiative;
 
+    // TODO: FixState should block almost all allowances
+
     private ManagementSettings(Initiative initiative) {
         this.initiative = initiative;
     }
