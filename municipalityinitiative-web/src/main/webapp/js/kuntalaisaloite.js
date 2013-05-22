@@ -970,10 +970,6 @@ $('.municipality-filter').change( function() {
 		}
 	});
 	
-	if( typeof modalData != 'undefined' && typeof modalData.editMunicipalityDetailsInvalid != 'undefined' ){
-		generateModal(modalData.editMunicipalityDetailsInvalid(), 'full');
-	}
-	
 	// Delete participant
 	$('.js-delete-participant').click(function(){
 		$('.js-delete-participant.active').removeClass('active');
