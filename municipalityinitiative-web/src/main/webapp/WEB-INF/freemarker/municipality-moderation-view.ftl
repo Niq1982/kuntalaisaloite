@@ -75,8 +75,7 @@
             <tr class="${municipality.active?string("active","not-active")}">
                 <td><#if municipality.active><span class="icon-small confirmed trigger-tooltip" title="<@u.message "municipalities.edit.active" />"></span></#if></td>
                 <td><a  href="#"
-                        class="js-edit-municipality trigger-tooltip"
-                        title="<@u.message "municipality.edit.title" />"
+                        class="js-edit-municipality"
                         data-id="${municipality.id}"
                         data-email="${municipality.email!""}"
                         data-active="${municipality.active?string}"
