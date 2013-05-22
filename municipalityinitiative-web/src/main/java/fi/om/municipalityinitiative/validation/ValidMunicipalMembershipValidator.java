@@ -3,7 +3,7 @@ package fi.om.municipalityinitiative.validation;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class ValidMunicipalMembershipValidator  implements ConstraintValidator<ValidMunicipalMembership, ValidMunicipalMembershipInfo> {
+public class ValidMunicipalMembershipValidator implements ConstraintValidator<ValidMunicipalMembership, ValidMunicipalMembershipInfo> {
 
     @Override
     public void initialize(ValidMunicipalMembership constraintAnnotation) {

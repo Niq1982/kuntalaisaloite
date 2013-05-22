@@ -13,6 +13,9 @@
 
 <h1><@u.message "municipalities.edit.title" /></h1>
 
+<#-- Create form errors summary -->
+    <@u.errorsSummary path="updateData.*" prefix="updateData."/>
+
 <#--
 <div class="view-block cf">
 

@@ -8,6 +8,7 @@ import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +34,9 @@ public class ModerationController extends BaseController{
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private ValidationService validationService;
 
     public ModerationController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
@@ -89,10 +93,17 @@ public class ModerationController extends BaseController{
     }
 
     @RequestMapping(value= MUNICIPALITY_MODERATION, method = POST)
-    public String updateMunicipality(@ModelAttribute("updateData") MunicipalityUIEditDto editDto, HttpServletRequest request) {
-        // TODO: Validation
-        moderationService.updateMunicipality(userService.getRequiredOmLoginUserHolder(request), editDto);
-        return redirectWithMessage(Urls.get(Locales.LOCALE_FI).municipalityModeration(), RequestMessage.INFORMATION_SAVED, request);
+    public String updateMunicipality(@ModelAttribute("updateData") MunicipalityUIEditDto editDto, BindingResult bindingResult, Model model, HttpServletRequest request) {
+
+        if (validationService.validationSuccessful(editDto, bindingResult, model)) {
+            moderationService.updateMunicipality(userService.getRequiredOmLoginUserHolder(request), editDto);
+            return redirectWithMessage(Urls.get(Locales.LOCALE_FI).municipalityModeration(), RequestMessage.INFORMATION_SAVED, request);
+        }
+
+        return ViewGenerator.municipalityModarationView(
+                moderationService.findMunicipalitiesForEdit(userService.getRequiredOmLoginUserHolder(request)),
+                editDto
+        ).view(model, Urls.get(Locales.LOCALE_FI).municipalityModeration());
 
     }
 
