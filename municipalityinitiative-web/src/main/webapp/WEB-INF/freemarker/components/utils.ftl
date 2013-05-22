@@ -165,7 +165,6 @@
  * @param showClose show button for closing message
 -->
 <#macro systemMessage path type="" cssClass="" showClose=true args=[]>
-    <#-- FIXME: Fix the type -->
     <#if type!="">
         <div class="system-msg msg-${type} ${cssClass}">
             <@messageHTML path args /><#if showClose><span class="close-msg">x</span></#if>

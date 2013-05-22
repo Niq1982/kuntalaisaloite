@@ -221,7 +221,22 @@ public class InitiativeViewController extends BaseController {
                                    Locale locale, HttpServletRequest request) {
 
         authorService.rejectInvitation(initiativeId, confirmCode);
-        return redirectWithMessage(Urls.get(locale).frontpage(), RequestMessage.CONFIRM_INVITATION_REJECTED, request);
+        
+        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
+        
+        addRequestAttribute(initiativeInfo.getName(), request); // To be shown at invitation rejected page
+        return redirectWithMessage(Urls.get(locale).invitationRejected(initiativeId), RequestMessage.CONFIRM_INVITATION_REJECTED, request);
+    }
+    
+    
+    @RequestMapping(value={ INVITATION_REJECTED_FI, INVITATION_REJECTED_SV }, method=GET)
+    public String invitationRejected(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
+        
+        if (getRequestAttribute(request) != null) {
+            return INVITATION_REJECTED;
+        } else {
+            return contextRelativeRedirect(Urls.get(locale).frontpage());
+        }
     }
 
     @RequestMapping(value={IFRAME_FI, IFRAME_SV}, method=GET)

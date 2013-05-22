@@ -264,6 +264,10 @@ public final class Urls {
     public static final String INVITATION_FI = "/fi/kutsu" + "/" + ID_PARAMETER;
     
     public static final String INVITATION_SV = "/sv/inbjudan" + "/" + ID_PARAMETER;
+    
+    public static final String INVITATION_REJECTED_FI =    "/fi/kutsu-hylatty" + "/" + ID_PARAMETER;
+
+    public static final String INVITATION_REJECTED_SV  =    "/sv/inbjudan-avbojts" + "/" + ID_PARAMETER;
 
     public static final String IFRAME_GENERATOR_FI = "/fi/leijuke";
 
@@ -429,6 +433,10 @@ public final class Urls {
 
     public String confirmAcceptInvitation(Long initiativeId) {
         return view(initiativeId) + "?" + ACTION_ACCEPT_INVITATION;
+    }
+    
+    public String invitationRejected(Long initiativeId) {
+        return getLocalizedPageUrl(INVITATION_REJECTED_FI, INVITATION_REJECTED_SV).replace(ID_PARAMETER, initiativeId.toString());
     }
     
     public String search_old() {

@@ -933,9 +933,9 @@ $('.municipality-filter').change( function() {
 	}
 	
 	// Accept author invitation
-	$('.js-decline-invitation').click(function(){
+	$('.js-reject-invitation').click(function(){
 		try {
-			generateModal(modalData.confirmDeclineInvitation(), 'minimal');
+			generateModal(modalData.confirmRejectInvitation(), 'minimal');
 			return false;
 		} catch(e) {
 			console.log(e);
