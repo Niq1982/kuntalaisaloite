@@ -1,3 +1,6 @@
+#!/bin/bash
+set -e
+
 # Usage: sh ./create_db.sh <locale> <password for initiative>
 # NOTE: Set passwords in ~/.pgpass, e.g.
 # localhost:5432:*:postgres:postgres
@@ -63,6 +66,8 @@ ls muninit_schema/*.sql | sort -f |
   do
     echo "-- $file"
     psql -U postgres -d muninitdb --single-transaction -f "$file"
+    #psql -U postgres -d muninitdb -c "insert into municipalityinitiative.schema_version (script) values ('$file');" || exit
+    #psql -U postgres -d muninitdb -c "insert into municipalityinitiative.schema_version (script) values ('$file');" || exit
   done
 
 # Grant required rights
