@@ -230,7 +230,7 @@ public class InitiativeViewController extends BaseController {
     
     
     @RequestMapping(value={ INVITATION_REJECTED_FI, INVITATION_REJECTED_SV }, method=GET)
-    public String invitationRejected(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
+    public String invitationRejected(Model model, Locale locale, HttpServletRequest request) {
         
         if (getRequestAttribute(request) != null) {
             return INVITATION_REJECTED;
