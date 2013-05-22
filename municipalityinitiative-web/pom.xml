@@ -267,6 +267,13 @@
             <version>1.2.2</version>
         </dependency>
 
+        <!-- EhCache -->
+        <dependency>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache-core</artifactId>
+            <version>2.5.2</version>
+        </dependency>
+
         <!-- Jasypt -->
         <dependency>
             <groupId>org.jasypt</groupId>

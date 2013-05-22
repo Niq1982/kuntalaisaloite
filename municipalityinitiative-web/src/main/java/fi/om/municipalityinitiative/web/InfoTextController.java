@@ -1,10 +1,8 @@
 package fi.om.municipalityinitiative.web;
 
-import com.google.common.base.Optional;
 import fi.om.municipalityinitiative.newdto.InfoTextSubject;
 import fi.om.municipalityinitiative.newdto.LoginUserHolder;
-import fi.om.municipalityinitiative.newdto.user.User;
-import fi.om.municipalityinitiative.service.AccessDeniedException;
+import fi.om.municipalityinitiative.service.FileImageFinder;
 import fi.om.municipalityinitiative.service.ImageFinder;
 import fi.om.municipalityinitiative.service.InfoTextService;
 import fi.om.municipalityinitiative.service.UserService;
@@ -148,7 +146,7 @@ public class InfoTextController extends BaseController {
     }
 
     @RequestMapping(value = IMAGE_JSON, produces = JSON)
-    public @ResponseBody List<ImageFinder.FileJson> files() {
+    public @ResponseBody List<FileImageFinder.FileJson> files() {
         return imageFinder.getImages();
     }
 
@@ -158,7 +156,7 @@ public class InfoTextController extends BaseController {
                          @RequestParam(required = false) String version,
                          HttpServletResponse response) throws IOException {
 
-        ImageFinder.FileInfo file = imageFinder.getFile(fileName + "." + fileType, version);
+        FileImageFinder.FileInfo file = imageFinder.getFile(fileName + "." + fileType, version);
 
         response.setContentType(MediaType.parseMediaType("image/" + fileType).toString());
         response.setContentLength(file.bytes.length);

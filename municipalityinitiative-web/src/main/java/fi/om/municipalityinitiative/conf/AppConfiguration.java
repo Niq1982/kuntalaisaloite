@@ -26,6 +26,10 @@ import freemarker.template.utility.XmlEscape;
 import org.joda.time.Period;
 import org.joda.time.format.ISOPeriodFormat;
 import org.joda.time.format.PeriodFormatter;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.ehcache.EhCacheCacheManager;
+import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
@@ -51,6 +55,7 @@ import java.util.concurrent.Executors;
 @EnableTransactionManagement(proxyTargetClass=false)
 @EnableAspectJAutoProxy(proxyTargetClass=false)
 @Import({ProdPropertiesConfiguration.class, TestPropertiesConfigurer.class, JdbcConfiguration.class, AppDevConfiguration.class})
+@EnableCaching
 public class AppConfiguration {
 
     @Inject Environment env;
@@ -186,7 +191,7 @@ public class AppConfiguration {
 
     @Bean
     public ImageFinder imageFinder() {
-        return new ImageFinder(env.getRequiredProperty(PropertyNames.omImageDirection), env.getRequiredProperty(PropertyNames.baseURL));
+        return new FileImageFinder(env.getRequiredProperty(PropertyNames.omImageDirection), env.getRequiredProperty(PropertyNames.baseURL));
     }
 
 
@@ -215,6 +220,21 @@ public class AppConfiguration {
                 env.getRequiredProperty(PropertyNames.registeredUserSecret),
                 env.getProperty(PropertyNames.vetumaSharedSecret)
             );
+    }
+
+    @Bean
+    public EhCacheManagerFactoryBean ehcache() {
+        EhCacheManagerFactoryBean ehCacheManagerFactoryBean = new EhCacheManagerFactoryBean();
+        ehCacheManagerFactoryBean.setConfigLocation(new ClassPathResource("ehcache.xml"));
+        ehCacheManagerFactoryBean.setShared(true);
+        return ehCacheManagerFactoryBean;
+    }
+
+    @Bean
+    public CacheManager cacheManager(EhCacheManagerFactoryBean ehCacheManagerFactoryBean) {
+        EhCacheCacheManager ehCacheCacheManager = new EhCacheCacheManager();
+        ehCacheCacheManager.setCacheManager(ehCacheManagerFactoryBean.getObject());
+        return ehCacheCacheManager;
     }
     
     @Bean
