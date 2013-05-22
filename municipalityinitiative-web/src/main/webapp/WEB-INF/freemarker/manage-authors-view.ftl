@@ -51,7 +51,7 @@
             </div>
         </div>
     <#else>
-        <#-- Delete form for NOSCRIPT users -->
+        <#-- Confirm delete form for NOSCRIPT users -->
         <div class="msg-block cf">
             <h2><@u.message "deleteAuthor.confirm.title" /></h2>
         
@@ -61,7 +61,7 @@
     
     <@returnPrevious />
     
-    <#-- HTML for confirm Modal -->
+    <#-- HTML for confirm delete Modal -->
     <#assign deleteAuthor>
         <@compress single_line=true>
             <@deleteAuthorForm />

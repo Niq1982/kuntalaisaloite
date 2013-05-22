@@ -28,47 +28,20 @@
             <@participantListManage participants />
         </div>
     <#else>
-        <#-- Delete form for NOSCRIPT users -->
+        <#-- Confirm Delete form for NOSCRIPT users -->
         <div class="msg-block cf">
             <h2><@u.message "deleteParticipant.confirm.title" /></h2>
         
-            <form action="${springMacroRequestContext.requestUri}" method="POST" id="delete-participant-form">
-                <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-                
-                <input type="hidden" name="${UrlConstants.PARAM_PARTICIPANT_ID}" id="${UrlConstants.PARAM_PARTICIPANT_ID}" value="${RequestParameters['deleteParticipant']}"/>
-
-                <h3><@u.message "deleteParticipant.confirm.description" /></h3>
-                
-                <@participantDetailsById participants RequestParameters['deleteParticipant'] />
-                
-                <div class="input-block-content">
-                    <button type="submit" name="${UrlConstants.ACTION_DELETE_PARTICIPANT}" id="modal-${UrlConstants.ACTION_DELETE_PARTICIPANT}" value="${UrlConstants.ACTION_DELETE_PARTICIPANT}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.deleteParticipant.confirm" /></button>
-                    <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
-                </div>
-            </form>
+            <@deleteParticipantForm modal=false />
         </div>
     </#if>
 
     <@returnPrevious />
 
-    <#-- HTML for confirm Modal -->
+    <#-- HTML for confirm Delete Modal -->
     <#assign deleteParticipant>
         <@compress single_line=true>
-            <form action="${springMacroRequestContext.requestUri}" method="POST" id="delete-participant-form">
-                <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-                
-                <input type="hidden" name="${UrlConstants.PARAM_PARTICIPANT_ID}" id="${UrlConstants.PARAM_PARTICIPANT_ID}" value=""/>
-                
-                <h3><@u.message "deleteParticipant.confirm.description" /></h3>
-                <ul id="selected-participant" class="participant-list no-style"></ul>
-                
-                <br/>
-                
-                <div class="input-block-content">
-                    <button type="submit" name="${UrlConstants.ACTION_DELETE_PARTICIPANT}" id="modal-${UrlConstants.ACTION_DELETE_PARTICIPANT}" value="${UrlConstants.ACTION_DELETE_PARTICIPANT}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.deleteParticipant.confirm" /></button>
-                    <a href="#" class="push close"><@u.message "action.cancel" /></a>
-                </div>
-            </form>
+            <@deleteParticipantForm />
         </@compress>
     </#assign>
     
@@ -156,6 +129,35 @@
             </ul>
         </#if>
     </#list>
+</#macro>
+
+<#-- 
+ * deleteParticipantForm
+ *
+ * Generates a form for deleting participant
+ *
+ * @param modal is a boolean for selecting either JS- or NOSCRIPT-version
+-->
+<#macro deleteParticipantForm modal=true>
+    <form action="${springMacroRequestContext.requestUri}" method="POST" id="delete-participant-form">
+        <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+        
+        <input type="hidden" name="${UrlConstants.PARAM_PARTICIPANT_ID}" id="${UrlConstants.PARAM_PARTICIPANT_ID}" value="<#if !modal>${RequestParameters['deleteParticipant']}</#if>"/>
+        
+        <h3><@u.message "deleteParticipant.confirm.description" /></h3>
+        
+        <#if modal>
+            <ul id="selected-participant" class="participant-list no-style"></ul>
+            <br/>
+        <#else>
+            <@participantDetailsById participants RequestParameters['deleteParticipant'] />
+        </#if>
+        
+        <div class="input-block-content">
+            <button type="submit" name="${UrlConstants.ACTION_DELETE_PARTICIPANT}" id="modal-${UrlConstants.ACTION_DELETE_PARTICIPANT}" value="${UrlConstants.ACTION_DELETE_PARTICIPANT}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.deleteParticipant.confirm" /></button>
+            <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
+        </div>
+    </form>
 </#macro>
 
 <#-- 
