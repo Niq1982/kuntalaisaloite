@@ -130,8 +130,8 @@ jQuery.fn.disableButton = function(disable){
 };
 
 /**
- * Delay
- * =====
+ * Common delay
+ * ============
  * 
  * */
 var delay = (function(){
@@ -1170,7 +1170,10 @@ var deleteAuthor = (function() {
 				form = 					$('#delete-author-form'),
 				selAuthor = 			$('#selected-author'),
 				authorInput =	 		$('#authorId'),
-				authorDetails = 		'<h4 class="header">'  + author.data("name") + '</h4><div class="email">' + author.data("email") + '</div>';
+				authorDetails = 		'<h4 class="header">'  + author.data("name") + '</h4><div class="contact-info">' +
+										author.data("email") + '<br/>' +
+										author.data("address") + (author.data("address") != "" ? '<br/>' : '') +
+										author.data("phone") +'</div>';
 
 			selAuthor.html(authorDetails);
 			
