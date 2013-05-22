@@ -13,8 +13,6 @@
 
 <h1><@u.message "municipalities.edit.title" /></h1>
 
-<#-- Create form errors summary -->
-    <@u.errorsSummary path="updateData.*" prefix="updateData."/>
 
 <#--
 <div class="view-block cf">
@@ -91,6 +89,9 @@
 
 <#assign editMunicipalityDetailsHTML>
 <@compress single_line=true>
+    <#-- Create form errors summary -->
+    <@u.errorsSummary path="updateData.*" prefix="updateData."/>
+
     <form action="${springMacroRequestContext.requestUri}" id="municipality-form" method="POST">
         <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
         
@@ -143,6 +144,16 @@
                 content:    '<#noescape>${editMunicipalityDetailsHTML!""}</#noescape>'
             }]
         };
+        
+        <#-- Autoload modal if it has errors -->
+        <#if hasErrors?? && hasErrors>
+        modalData.editMunicipalityDetailsInvalid = function() {
+            return [{
+                title:      '<@u.message "municipality.edit.title" />',
+                content:    '<#noescape>${editMunicipalityDetailsHTML!""}</#noescape>'
+            }]
+        };
+        </#if>
             
         var messageData = {};
 
