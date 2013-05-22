@@ -1,9 +1,9 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.exceptions.NotLoggedInException;
+import fi.om.municipalityinitiative.newdao.AdminUserDao;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
-import fi.om.municipalityinitiative.newdao.FakeUserDao;
-import fi.om.municipalityinitiative.newdao.UserDao;
+import fi.om.municipalityinitiative.newdao.FakeAdminUserDao;
 import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.user.User;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -19,18 +19,28 @@ import java.util.Set;
 public class UserService {
 
     static final String LOGIN_USER_PARAMETER = "loginUser";
-    static final String LOGIN_INITIATIVE_PARAMETER = "loginInitiative";
 
-    UserDao userDao = new FakeUserDao();
+    @Resource
+    AdminUserDao adminUserDao;
 
     @Resource
     AuthorDao authorDao;
 
-    public void login(String userName, String password, HttpServletRequest request) {
-        request.getSession().setAttribute(LOGIN_USER_PARAMETER, userDao.getUser(userName, password));
+    String omUserSalt;
+
+    public UserService(String omUserSalt) {
+        this.omUserSalt = omUserSalt;
     }
 
-    public Long login(String managementHash, HttpServletRequest request) {
+    public void adminLogin(String userName, String password, HttpServletRequest request) {
+        request.getSession().setAttribute(LOGIN_USER_PARAMETER, adminUserDao.getUser(userName, saltAndEncryptPassword(password)));
+    }
+
+    private String saltAndEncryptPassword(String password) {
+        return EncryptionService.toSha1(omUserSalt + password);
+    }
+
+    public Long authorLogin(String managementHash, HttpServletRequest request) {
         Long authorId = authorDao.getAuthorId(managementHash);
         Set<Long> initiativeIds = authorDao.loginAndGetAuthorsInitiatives(managementHash);
         if (initiativeIds.size() == 0) {

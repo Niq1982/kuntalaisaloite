@@ -4,7 +4,6 @@ import fi.om.municipalityinitiative.service.UserService;
 import fi.om.municipalityinitiative.web.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,7 +40,7 @@ public class LoginController extends BaseLoginController {
                               @RequestParam String p,
                               @RequestParam String target,
                               Model model, Locale locale, HttpServletRequest request) {
-        userService.login(u, p, request);
+        userService.adminLogin(u, p, request);
 
         return new RedirectView(getValidLoginTarget(target, Urls.get(locale)), false, true, false);
     }
@@ -58,7 +57,7 @@ public class LoginController extends BaseLoginController {
     @RequestMapping(value =  {LOGIN_FI, LOGIN_FI}, method = RequestMethod.POST, params = PARAM_MANAGEMENT_CODE)
     public RedirectView singleLogin(@RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                                        Model model, Locale locale, HttpServletRequest request) {
-        Long initiativeId = userService.login(managementHash, request);
+        Long initiativeId = userService.authorLogin(managementHash, request);
         return new RedirectView(Urls.get(locale).getManagement(initiativeId), false, true, false);
     }
 

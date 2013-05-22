@@ -3,7 +3,6 @@ package fi.om.municipalityinitiative.newweb;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;
 import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
-import fi.om.municipalityinitiative.newdto.service.Participant;
 import fi.om.municipalityinitiative.newdto.ui.*;
 import fi.om.municipalityinitiative.newdto.user.User;
 import fi.om.municipalityinitiative.service.*;
@@ -202,7 +201,7 @@ public class InitiativeViewController extends BaseController {
 
         if (validationService.validationSuccessful(confirmDto, bindingResult, model)) {
             String generatedManagementHash = authorService.confirmAuthorInvitation(initiativeId, confirmDto, locale);
-            userService.login(generatedManagementHash, request);
+            userService.authorLogin(generatedManagementHash, request);
             return redirectWithMessage(Urls.get(locale).management(initiativeId), RequestMessage.CONFIRM_INVITATION_ACCEPTED, request);
         }
         else {

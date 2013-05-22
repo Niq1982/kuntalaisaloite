@@ -4,8 +4,8 @@ import java.util.Set;
 
 public abstract class User {
 
-    public static User omUser() {
-        return new OmLoginUser();
+    public static User omUser(String name) {
+        return new OmLoginUser(name);
     }
 
     public static User normalUser(Long authorId, Set<Long> authorsInitiatives) {

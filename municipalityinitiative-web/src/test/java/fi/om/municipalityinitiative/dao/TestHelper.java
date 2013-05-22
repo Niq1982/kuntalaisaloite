@@ -7,7 +7,7 @@ import com.mysema.query.types.Path;
 import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.newdto.user.User;
-import fi.om.municipalityinitiative.service.AccessDeniedException;
+import fi.om.municipalityinitiative.service.EncryptionService;
 import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
@@ -20,10 +20,8 @@ import java.util.Collections;
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
 
 public class TestHelper {
 
@@ -45,7 +43,7 @@ public class TestHelper {
 
     public static LoginUserHolder authorLoginUserHolder;
     public static LoginUserHolder unknownLoginUserHolder = new LoginUserHolder(User.anonym());
-    public static LoginUserHolder omLoginUser = new LoginUserHolder(User.omUser());
+    public static LoginUserHolder omLoginUser = new LoginUserHolder(User.omUser(""));
 
 //    static {
 //        doThrow(new AccessDeniedException("Access denied")).when(unknownLoginUserHolder).assertManagementRightsForInitiative(anyLong());
@@ -72,6 +70,7 @@ public class TestHelper {
         queryFactory.delete(QMunicipalityInitiative.municipalityInitiative).execute();
         queryFactory.delete(QMunicipality.municipality).execute();
         queryFactory.delete(QInfoText.infoText).execute();
+        queryFactory.delete(QAdminUser.adminUser).execute();
     }
 
     @Transactional
@@ -283,6 +282,15 @@ public class TestHelper {
                 .executeWithKey(QInfoText.infoText.id);
     }
 
+    @Transactional(readOnly = false)
+    public void createTestAdminUser(String userName, String password, String name, String salt) {
+        queryFactory.insert(QAdminUser.adminUser)
+                .set(QAdminUser.adminUser.username, userName)
+                .set(QAdminUser.adminUser.password, EncryptionService.toSha1(salt + password))
+                .set(QAdminUser.adminUser.name, name)
+                .execute();
+    }
+
     public static class AuthorDraft {
 
         public Long initiativeId;
@@ -433,5 +441,7 @@ public class TestHelper {
     public Long getLastAuthorId() {
         return queryFactory.from(QAuthor.author).orderBy(QAuthor.author.participantId.desc()).list(QAuthor.author.participantId).get(0);
     }
+
+
 }
 

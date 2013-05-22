@@ -2,10 +2,12 @@ package fi.om.municipalityinitiative.conf;
 
 public final class PropertyNames {
 
+    private PropertyNames() {}
+
     public static final String omImageDirection = "om.image.directory";
 
-    private PropertyNames() {}
-    
+    public static final String omUserSalt = "om.user.salt";
+
     public static final String baseURL = "app.baseURL"; 
     
     public static final String registeredUserSecret = "security.registeredUserSecret";

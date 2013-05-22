@@ -66,7 +66,7 @@ public class ModerationServiceTest {
     }
 
     private void setOmUser() {
-        loginUserHolder = new LoginUserHolder(User.omUser());
+        loginUserHolder = new LoginUserHolder(User.omUser(""));
     }
 
     @Test(expected = OperationNotAllowedException.class)
