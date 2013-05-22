@@ -154,9 +154,9 @@ public class JdbcAuthorDao implements AuthorDao {
 
     @Override
     public Long getAuthorId(String managementHash) {
-        return Optional.of(queryFactory.from(QAuthor.author)
+        return queryFactory.from(QAuthor.author)
                 .where(QAuthor.author.managementHash.eq(managementHash))
-                .uniqueResult(QAuthor.author.participantId)).get();
+                .uniqueResult(QAuthor.author.participantId);
     }
 
     @Override

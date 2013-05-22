@@ -44,7 +44,7 @@ public class JsonTest {
         List<JsonJokuParseri.IndentedString> initiatives = getJsonDataListFromModel("initiativeDetails");
         String join = joinAsString(initiatives);
         assertThat(join, is("{\n" +
-                "\"collectable\":true,\n" +
+                "\"collaborative\":true,\n" +
                 "\"createTime\":\"2010-01-01\",\n" +
                 "\"id\":\"http://baseUrl/api/v1/initiatives/1\",\n" +
                 "\"municipality\":{\n" +
@@ -81,7 +81,7 @@ public class JsonTest {
 
         assertThat(join, is("[\n" +
                 "{\n" +
-                "\"collectable\":true,\n" +
+                "\"collaborative\":true,\n" +
                 "\"createTime\":\"2012-12-01\",\n" +
                 "\"id\":\"http://baseUrl/api/v1/initiatives/1\",\n" +
                 "\"municipality\":{\n" +

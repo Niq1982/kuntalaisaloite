@@ -129,8 +129,8 @@
                 <span class="participants-container">
                     <#if !initiative.public>
                         <span class="no-participants"><@u.message "searchResults.notPublic" /></span>
-                    <#elseif !initiative.collectable>
-                        <span class="no-participants"><@u.message "searchResults.notCollectable" /></span>
+                    <#elseif !initiative.collaborative>
+                        <span class="no-participants"><@u.message "searchResults.notCollaborative" /></span>
                     <#else>
                         <span class="participant-count trigger-tooltip" title="<@u.message "searchResults.sumOfParticipants" />">${initiative.participantCount!""}</span>
                     </#if>

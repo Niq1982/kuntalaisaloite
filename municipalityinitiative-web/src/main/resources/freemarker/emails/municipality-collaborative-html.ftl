@@ -10,7 +10,7 @@
 
 <#assign title><@u.message "email.initiative" /></#assign>
 
-<@l.emailHtml template="municipality-collectable" title=title footer=false>
+<@l.emailHtml template="municipality-collaborative" title=title footer=false>
 
     <#if (initiative.sentComment)?has_content>
         <@b.comment type initiative.sentComment "email.sentComment" />

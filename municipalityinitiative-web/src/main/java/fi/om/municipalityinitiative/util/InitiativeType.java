@@ -7,7 +7,7 @@ public enum InitiativeType {
     COLLABORATIVE_COUNCIL,
     COLLABORATIVE_CITIZEN;
 
-    public static boolean isCollectable(InitiativeType type) {
+    public static boolean isCollaborative(InitiativeType type) {
         switch (type) {
             case COLLABORATIVE:
             case COLLABORATIVE_COUNCIL:
@@ -19,7 +19,7 @@ public enum InitiativeType {
 
     }
 
-    public boolean isCollectable() {
-        return isCollectable(this);
+    public boolean isCollaborative() {
+        return isCollaborative(this);
     }
 }

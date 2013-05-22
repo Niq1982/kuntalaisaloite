@@ -34,8 +34,8 @@ public class InitiativeListJson {
         return initiative.getCreateTime();
     }
 
-    public boolean isCollectable() {
-        return initiative.isCollectable();
+    public boolean isCollaborative() {
+        return initiative.isCollaborative();
     }
 
     @JsonSerialize(using=LocalDateJsonSerializer.class)

@@ -74,8 +74,8 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     @Test(expected = OperationNotAllowedException.class)
     public void get_initiative_for_edit_fails_if_initiative_accepted() {
-        Long collectableAccepted = testHelper.createCollaborativeAccepted(testMunicipality.getId());
-        service.getInitiativeDraftForEdit(collectableAccepted, TestHelper.authorLoginUserHolder);
+        Long collaborativeAccepted = testHelper.createCollaborativeAccepted(testMunicipality.getId());
+        service.getInitiativeDraftForEdit(collaborativeAccepted, TestHelper.authorLoginUserHolder);
     }
 
     @Test(expected = AccessDeniedException.class)
@@ -94,13 +94,13 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     @Test(expected = OperationNotAllowedException.class)
     public void edit_initiative_fails_if_initiative_accepted() {
-        Long collectableAccepted = testHelper.createCollaborativeAccepted(testMunicipality.getId());
-        service.editInitiativeDraft(collectableAccepted, TestHelper.authorLoginUserHolder, new InitiativeDraftUIEditDto());
+        Long collaborativeAccepted = testHelper.createCollaborativeAccepted(testMunicipality.getId());
+        service.editInitiativeDraft(collaborativeAccepted, TestHelper.authorLoginUserHolder, new InitiativeDraftUIEditDto());
     }
 
     @Test
     public void get_initiative_for_update_sets_all_required_information() {
-        Long initiativeId = testHelper.createCollectableReview(testMunicipality.getId());
+        Long initiativeId = testHelper.createCollaborativeReview(testMunicipality.getId());
         InitiativeUIUpdateDto initiativeForUpdate = service.getInitiativeForUpdate(initiativeId, TestHelper.authorLoginUserHolder);
         ReflectionTestUtils.assertNoNullFields(initiativeForUpdate);
     }
@@ -227,7 +227,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     @Test(expected = OperationNotAllowedException.class)
     public void publish_initiative_fails_if_not_accepted() {
-        Long review = testHelper.createCollectableReview(testMunicipality.getId());
+        Long review = testHelper.createCollaborativeReview(testMunicipality.getId());
 //        service.publishAcceptedInitiative(review, false, authorLoginUserHolder, null);
         service.publishAndStartCollecting(review, TestHelper.authorLoginUserHolder);
     }
@@ -279,9 +279,9 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     @Test(expected = AccessDeniedException.class)
     public void sending_collaborative_to_municipality_fails_if_no_rights_to_initiative() {
-        Long collectableAccepted = testHelper.createCollaborativeAccepted(testMunicipality.getId());
+        Long collaborativeAccepted = testHelper.createCollaborativeAccepted(testMunicipality.getId());
 
-        service.sendCollaborativeToMunicipality(collectableAccepted, TestHelper.unknownLoginUserHolder, "", null);
+        service.sendCollaborativeToMunicipality(collaborativeAccepted, TestHelper.unknownLoginUserHolder, "", null);
     }
 
     @Test

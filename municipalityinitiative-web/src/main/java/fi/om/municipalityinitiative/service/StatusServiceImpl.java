@@ -1,11 +1,16 @@
 package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Lists;
+import fi.om.municipalityinitiative.newdao.JdbcSchemaVersionDao;
+import fi.om.municipalityinitiative.newdto.SchemaVersion;
+import fi.om.municipalityinitiative.util.TaskExecutorAspect;
 import fi.om.municipalityinitiative.web.Urls;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
 
 import java.lang.management.ManagementFactory;
 import java.util.List;
@@ -25,7 +30,13 @@ public class StatusServiceImpl implements StatusService {
     private final String resourcesVersion;
     private final String appVersion;
 
-    public class KeyValueInfo {
+    @Resource
+    private JdbcSchemaVersionDao schemaVersionDao;
+
+    @Resource
+    private TaskExecutorAspect taskExecutorAspect;
+
+    public static class KeyValueInfo {
         private String key;
         private Object value;
 
@@ -64,7 +75,7 @@ public class StatusServiceImpl implements StatusService {
         list.add(new KeyValueInfo("appVersion", appVersion));
         list.add(new KeyValueInfo("appBuildTimeStamp", getFormattedBuildTimeStamp(resourcesVersion)));
 //        list.add(new KeyValueInfo("initiativeCount", initiativeDao.getInitiativeCount()));
-//        list.add(new KeyValueInfo("taskQueueLength", taskExecutorAspect.getQueueLength()));
+        list.add(new KeyValueInfo("taskQueueLength", taskExecutorAspect.getQueueLength()));
 
         return list;
     }
@@ -72,12 +83,12 @@ public class StatusServiceImpl implements StatusService {
     @Override
     @Transactional(readOnly=true)
     public List<KeyValueInfo> getSchemaVersionInfo() {
-        // List<SchemaVersion> schemaVersions = initiativeDao.getSchemaVersions();
+        List<SchemaVersion> schemaVersions = schemaVersionDao.findExecutedScripts();
         List<KeyValueInfo> list = Lists.newArrayList();
 
-//        for (SchemaVersion schemaVersion : schemaVersions) {
-//            list.add(new KeyValueInfo(schemaVersion.getScript(), schemaVersion.getExecuted().toString(DATETIME_FORMAT)));
-//        }
+        for (SchemaVersion schemaVersion : schemaVersions) {
+            list.add(new KeyValueInfo(schemaVersion.getScript(), schemaVersion.getExecuted().toString(DATETIME_FORMAT)));
+        }
 
         return list;
     }

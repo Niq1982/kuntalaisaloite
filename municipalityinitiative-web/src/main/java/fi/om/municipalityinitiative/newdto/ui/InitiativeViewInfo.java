@@ -35,8 +35,8 @@ public class InitiativeViewInfo {
         return initiative.getId();
     }
 
-    public boolean isCollectable() {
-        return initiative.isCollectable();
+    public boolean isCollaborative() {
+        return initiative.isCollaborative();
     }
 
     public boolean isSent() {

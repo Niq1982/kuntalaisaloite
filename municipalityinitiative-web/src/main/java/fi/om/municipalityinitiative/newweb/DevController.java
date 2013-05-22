@@ -74,7 +74,7 @@ public class DevController extends BaseController {
         for (int i = 0; i < amount; ++i) {
             initiativeId = testDataService.createTestMunicipalityInitiative(selectedInitiative);
             
-            if (selectedInitiative.initiative.isCollectable()) {
+            if (selectedInitiative.initiative.isCollaborative()) {
                 for (int j = 0; j < participants.size(); j++) {
                     Integer participantAmount = parseIntegerParameter(request, "participantAmount[" + j + "]", 1);
                     testDataService.createTestParticipant(initiativeId, participants.get(j), participantAmount);

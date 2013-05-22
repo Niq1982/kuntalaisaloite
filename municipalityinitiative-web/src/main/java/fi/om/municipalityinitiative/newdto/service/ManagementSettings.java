@@ -9,6 +9,8 @@ public class ManagementSettings {
 
     private Initiative initiative;
 
+    // TODO: FixState should block almost all allowances
+
     private ManagementSettings(Initiative initiative) {
         this.initiative = initiative;
     }
@@ -46,7 +48,7 @@ public class ManagementSettings {
     public boolean isAllowParticipate() {
         return !(initiative.getState() != InitiativeState.PUBLISHED
                 || initiative.getSentTime().isPresent()
-                || !initiative.isCollectable());
+                || !initiative.isCollaborative());
     }
 
     public boolean isAllowInviteAuthors() {

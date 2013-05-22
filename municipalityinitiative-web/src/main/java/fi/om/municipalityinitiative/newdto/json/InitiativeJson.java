@@ -45,8 +45,8 @@ public class InitiativeJson {
         return initiative.getCreateTime();
     }
 
-    public boolean isCollectable() {
-        return initiative.isCollectable();
+    public boolean isCollaborative() {
+        return initiative.isCollaborative();
     }
 
     @JsonSerialize(using=LocalDateJsonSerializer.class)
@@ -55,21 +55,21 @@ public class InitiativeJson {
     }
 
     public static InitiativeJson from(Initiative initiativeInfo, List<Participant> publicParticipants, ParticipantCount participantCount) {
-        if (initiativeInfo.isCollectable()) {
-            return new CollectableInitiativeJson(initiativeInfo, publicParticipants, participantCount);
+        if (initiativeInfo.isCollaborative()) {
+            return new CollaborativeInitiativeJson(initiativeInfo, publicParticipants, participantCount);
         }
         else {
 //            return new InitiativeJson(initiativeInfo);
-            // XXX: MMh... Whould it be better if non-collectable initiative would not return any participantinformation at all or not?
-            return new CollectableInitiativeJson(initiativeInfo, Lists.<Participant>newArrayList(), new ParticipantCount());
+            // XXX: MMh... Whould it be better if non-collaborative initiative would not return any participantinformation at all or not?
+            return new CollaborativeInitiativeJson(initiativeInfo, Lists.<Participant>newArrayList(), new ParticipantCount());
         }
     }
 
-    private static class CollectableInitiativeJson extends InitiativeJson {
+    private static class CollaborativeInitiativeJson extends InitiativeJson {
         private List<Participant> participants;
         private ParticipantCount participantCount;
 
-        private CollectableInitiativeJson(Initiative initiative,
+        private CollaborativeInitiativeJson(Initiative initiative,
                                           List<Participant> participants,
                                           ParticipantCount participantCount) {
             super(initiative);

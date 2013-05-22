@@ -58,8 +58,8 @@ public class Initiative {
         this.id = id;
     }
 
-    public boolean isCollectable() {
-        return InitiativeType.isCollectable(type);
+    public boolean isCollaborative() {
+        return InitiativeType.isCollaborative(type);
     }
 
     public boolean isSent() {

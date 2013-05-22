@@ -125,6 +125,11 @@ public class AppConfiguration {
     }
 
     @Bean
+    public AdminUserDao adminUserDao() {
+        return new JdbcAdminUserDao();
+    }
+
+    @Bean
     public InfoTextService infoTextService() {
         return new InfoTextService(infoTextDao());
     }
@@ -147,6 +152,11 @@ public class AppConfiguration {
     @Bean
     public AuthorDao authorDao() {
         return new JdbcAuthorDao();
+    }
+
+    @Bean
+    public JdbcSchemaVersionDao schemaVersionDao() {
+        return new JdbcSchemaVersionDao();
     }
 
     @Bean
@@ -186,7 +196,7 @@ public class AppConfiguration {
 
     @Bean
     public UserService userService() {
-        return new UserService();
+        return new UserService(env.getRequiredProperty(PropertyNames.omUserSalt));
     }
 
     @Bean

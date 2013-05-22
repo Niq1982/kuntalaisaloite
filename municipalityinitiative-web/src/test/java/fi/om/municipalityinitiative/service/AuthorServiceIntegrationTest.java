@@ -78,7 +78,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     @Test
     public void create_invitation_sets_required_information() {
-        Long initiativeId = testHelper.createCollectableReview(testMunicipality);
+        Long initiativeId = testHelper.createCollaborativeReview(testMunicipality);
 
         AuthorInvitationUICreateDto authorInvitationUICreateDto = authorInvitation();
 
@@ -93,7 +93,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     @Test
     public void reject_author_invitation() { // TODO: Implement service method, this uses dao layer.
-        Long initiativeId = testHelper.createCollectableReview(testHelper.createTestMunicipality("name"));
+        Long initiativeId = testHelper.createCollaborativeReview(testHelper.createTestMunicipality("name"));
 
         authorService.createAuthorInvitation(initiativeId, TestHelper.authorLoginUserHolder, authorInvitation());
         assertThat(authorDao.getAuthorInvitation(initiativeId, RandomHashGenerator.getPrevious()).isRejected(), is(false));
@@ -108,7 +108,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     public void confirm_author_invitation_adds_new_author_with_given_information() {
 
         Long authorsMunicipality = testHelper.createTestMunicipality("name");
-        Long initiativeId = testHelper.createCollectableReview(authorsMunicipality);
+        Long initiativeId = testHelper.createCollaborativeReview(authorsMunicipality);
         AuthorInvitation invitation = createInvitation(initiativeId);
 
         AuthorInvitationUIConfirmDto createDto = new AuthorInvitationUIConfirmDto();
@@ -163,7 +163,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     @Test
     public void confirm_author_with_expired_invitation_throws_exception() {
-        Long initiativeId = testHelper.createCollectableReview(testMunicipality);
+        Long initiativeId = testHelper.createCollaborativeReview(testMunicipality);
         AuthorInvitation expiredInvitation = createExpiredInvitation(initiativeId);
 
         AuthorInvitationUIConfirmDto confirmDto = new AuthorInvitationUIConfirmDto();
@@ -176,7 +176,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     @Test
     public void confirm_author_with_rejected_invitation_throws_exception() {
-        Long initiativeId = testHelper.createCollectableReview(testMunicipality);
+        Long initiativeId = testHelper.createCollaborativeReview(testMunicipality);
         AuthorInvitation rejectedInvitation = createRejectedInvitation(initiativeId);
 
         AuthorInvitationUIConfirmDto confirmDto = new AuthorInvitationUIConfirmDto();
@@ -189,7 +189,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     @Test
     public void confirm_author_with_invalid_confirmCode_throws_exception() {
-        Long initiativeId = testHelper.createCollectableReview(testMunicipality);
+        Long initiativeId = testHelper.createCollaborativeReview(testMunicipality);
         createInvitation(initiativeId);
 
         AuthorInvitationUIConfirmDto invitationUIConfirmDto = new AuthorInvitationUIConfirmDto();
@@ -203,7 +203,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     @Test
     public void invitation_is_removed_after_confirmation() {
 
-        Long initiativeId = testHelper.createCollectableReview(testMunicipality);
+        Long initiativeId = testHelper.createCollaborativeReview(testMunicipality);
         AuthorInvitation authorInvitation = createInvitation(initiativeId);
 
         AuthorInvitationUIConfirmDto confirmDto = ReflectionTestUtils.modifyAllFields(new AuthorInvitationUIConfirmDto());
@@ -224,7 +224,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     @Test
     public void prefilled_author_confirmation_contains_all_information() {
         Long municipalityId = testHelper.createTestMunicipality("name");
-        Long initiativeId = testHelper.createCollectableReview(municipalityId);
+        Long initiativeId = testHelper.createCollaborativeReview(municipalityId);
         authorService.createAuthorInvitation(initiativeId, TestHelper.authorLoginUserHolder, authorInvitation());
 
         AuthorInvitationUIConfirmDto confirmDto = authorService.getPrefilledAuthorInvitationConfirmDto(initiativeId, RandomHashGenerator.getPrevious());
@@ -236,7 +236,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     @Test
     public void prefilled_author_confirmation_throws_exception_if_invitation_expired() {
-        Long initiativeId = testHelper.createCollectableReview(testMunicipality);
+        Long initiativeId = testHelper.createCollaborativeReview(testMunicipality);
         AuthorInvitation expiredInvitation = createExpiredInvitation(initiativeId);
 
         thrown.expect(InvitationNotValidException.class);
@@ -247,7 +247,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     @Test
     public void prefilled_author_confirmation_throws_exception_if_invitation_rejected() {
-        Long initiativeId = testHelper.createCollectableReview(testMunicipality);
+        Long initiativeId = testHelper.createCollaborativeReview(testMunicipality);
         AuthorInvitation rejectedInvitation = createRejectedInvitation(initiativeId);
 
         thrown.expect(InvitationNotValidException.class);
@@ -257,7 +257,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     @Test
     public void prefilled_author_confirmation_throws_exception_if_invitation_not_found() {
-        Long initiativeId = testHelper.createCollectableReview(testMunicipality);
+        Long initiativeId = testHelper.createCollaborativeReview(testMunicipality);
 
         thrown.expect(InvitationNotValidException.class);
         authorService.getPrefilledAuthorInvitationConfirmDto(initiativeId, "töttöröö");
@@ -265,14 +265,14 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     @Test
     public void resend_invitation_throws_exception_if_no_management_rights() {
-        Long initiativeId = testHelper.createCollectableReview(testMunicipality);
+        Long initiativeId = testHelper.createCollaborativeReview(testMunicipality);
         thrown.expect(AccessDeniedException.class);
         authorService.resendInvitation(initiativeId, TestHelper.unknownLoginUserHolder, null);
     }
 
     @Test
     public void resend_invitation_updates_invitation_time_to_current_time() {
-        Long initiativeId = testHelper.createCollectableReview(testMunicipality);
+        Long initiativeId = testHelper.createCollaborativeReview(testMunicipality);
         DateTime invitationTime = new DateTime(2010, 1, 1, 0, 0);
         AuthorInvitation invitation = createInvitation(initiativeId, invitationTime);
 

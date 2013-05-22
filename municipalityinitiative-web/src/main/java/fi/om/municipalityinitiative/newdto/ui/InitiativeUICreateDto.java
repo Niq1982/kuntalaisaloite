@@ -36,14 +36,14 @@ public class InitiativeUICreateDto
 
     private Boolean showName;
 
-    private boolean collectable = false; // Will be false if true is not received from the view
+    private boolean collaborative = false; // Will be false if true is not received from the view
 
-    public boolean isCollectable() {
-        return collectable;
+    public boolean isCollaborative() {
+        return collaborative;
     }
 
-    public void setCollectable(boolean collectable) {
-        this.collectable = collectable;
+    public void setCollaborative(boolean collaborative) {
+        this.collaborative = collaborative;
     }
 
     public String getName() {

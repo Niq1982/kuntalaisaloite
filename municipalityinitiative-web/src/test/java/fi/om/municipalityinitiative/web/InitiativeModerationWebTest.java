@@ -38,7 +38,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
 
     @Test
     public void accept_initiative(){
-        Long initiativeId = testHelper.createCollectableReview(testMunicipality1Id);
+        Long initiativeId = testHelper.createCollaborativeReview(testMunicipality1Id);
 
         loginAsOmUser();
 
@@ -57,7 +57,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
 
     @Test
     public void reject_initiative(){
-        Long initiativeId = testHelper.createCollectableReview(testMunicipality1Id);
+        Long initiativeId = testHelper.createCollaborativeReview(testMunicipality1Id);
 
         loginAsOmUser();
 

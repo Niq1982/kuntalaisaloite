@@ -2,7 +2,11 @@ package fi.om.municipalityinitiative.newdto.user;
 
 public class OmLoginUser extends User {
 
-    OmLoginUser() { }
+    private final String name;
+
+    OmLoginUser(String name) {
+        this.name = name;
+    }
 
     @Override
     public boolean isOmUser() {
@@ -22,5 +26,9 @@ public class OmLoginUser extends User {
     @Override
     public boolean isLoggedIn() {
         return true;
+    }
+
+    public String getName() {
+        return name;
     }
 }

@@ -151,7 +151,7 @@
                                 </label>
                                 </td>
                                 <td>
-                                    ${(testInitiative.initiative.collectable)?string("kyllä","ei")}
+                                    ${(testInitiative.initiative.collaborative)?string("kyllä","ei")}
                                 </td>
     
                         </#list>
