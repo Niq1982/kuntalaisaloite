@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.service;
 
+import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
 import fi.om.municipalityinitiative.exceptions.NotLoggedInException;
 import fi.om.municipalityinitiative.newdao.AdminUserDao;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
@@ -40,11 +41,14 @@ public class UserService {
     }
 
     public Long authorLogin(String managementHash, HttpServletRequest request) {
+        // TODO: Merge these to one call
         Long authorId = authorDao.getAuthorId(managementHash);
         Set<Long> initiativeIds = authorDao.loginAndGetAuthorsInitiatives(managementHash);
-        if (initiativeIds.size() == 0) {
-            throw new NotLoggedInException("Invalid login credentials");
+
+        if (authorId == null || initiativeIds.size() == 0) {
+            throw new InvalidLoginException("Invalid login credentials");
         }
+
         request.getSession().setAttribute(LOGIN_USER_PARAMETER, User.normalUser(authorId, initiativeIds));
 
         return initiativeIds.iterator().next();
