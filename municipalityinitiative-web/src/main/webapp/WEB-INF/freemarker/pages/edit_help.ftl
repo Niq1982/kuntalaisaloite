@@ -2,7 +2,6 @@
 <#import "../components/utils.ftl" as u />
 <#import "../components/wysiwyg-editor.ftl" as editor />
 
-<#global editorOn = true />
 <#global editorStyles><@editor.styles /></#global>
 <#global editorScripts><@editor.scripts /></#global>
 
@@ -38,8 +37,9 @@
  *
  * @param page is for example "page.help.general.title"
  * @param pageTitle used in HTML title.
+ * @param requestMessagesON disable request messages in layout.ftl
 -->
-<@l.main "page.help" pageTitle!"">
+<@l.main page="page.help" pageTitle=pageTitle!"" requestMessagesON=false>
 
     <div class="columns cf">
         <div class="column col-1of4 navigation">

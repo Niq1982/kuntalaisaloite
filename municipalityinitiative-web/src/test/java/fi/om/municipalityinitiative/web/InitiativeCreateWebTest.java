@@ -170,7 +170,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         open(urls.edit(initiativeId));
 
         assertTextByTag("h2", getMessage(MSG_INITIATIVE_PROPOSAL));
-        assertTextByTag("h2", getMessage(MSG_INITIATIVE_CONTACTINFO));
+        assertTextByTag("h2", getMessage(MSG_INITIATIVE_AUTHORS, 1));
 
         inputText("extraInfo", "extraInfo");
         inputText("contactInfo.name", "Updated");

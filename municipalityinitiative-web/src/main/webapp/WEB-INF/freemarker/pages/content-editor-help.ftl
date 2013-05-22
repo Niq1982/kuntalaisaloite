@@ -27,7 +27,6 @@
  * @param pageTitle used in HTML title.
 -->
 <@l.main "page.help" pageTitle!"">
-
     <div class="columns cf">
         <#--<div class="column col-1of4 navigation">
             <p> </p>

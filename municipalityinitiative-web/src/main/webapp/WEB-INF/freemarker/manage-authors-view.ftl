@@ -9,7 +9,7 @@
 <#--
  * Layout parameters for HTML-title and navigation.
  * 
- * page = "page.initiative.public" or "page.initiative.unnamed"
+ * page = "page.initiative.manageAuthors" or "page.initiative.unnamed"
  * pageTitle = initiative.name if exists, otherwise empty string
 -->
 <@l.main "page.initiative.manageAuthors" initiative.name!"">
@@ -17,9 +17,9 @@
     <@u.errorsSummary path="newInvitation.*" prefix="newInvitation."/>
 
     <div class="msg-block">
-        <h2>Vastuuhenkilöt</h2>
-        <p>Aloitteeseen voidaan lisätä vastuuhenkilöitä. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam aliquam leo velit, non placerat arcu. Nunc sagittis convallis sagittis.</p>
-        <p>Morbi ut lectus a nulla euismod tincidunt. Mauris tincidunt augue a ligula faucibus rhoncus. Aenean posuere posuere feugiat</p>
+        <h2><@u.message "authors.title" /></h2>
+        <p><@u.message "authors.description" /></p>
+        <p><@u.message "authors.instruction" /></p>
     </div>
 
     <h1 class="name">${initiative.name!""}</h1>
@@ -37,12 +37,16 @@
             <#list authors as a>
                 <div class="author cf ${a_has_next?string("","last")}">
                     <div class="details">
-                        <h4 class="header">${a.contactInfo.name}</h4>
-                        <div class="email">${a.contactInfo.email}</div>
+                        <h4 class="header">${a.contactInfo.name}, ${a.municipality.getName(locale)}</h4>
+                        <div class="contact-info">
+                            ${a.contactInfo.email!""}<br />
+                            <#if a.contactInfo.address?? && a.contactInfo.address != ""><#noescape>${a.contactInfo.address?replace('\n','<br/>')!""}</#noescape><br /></#if>
+                            ${a.contactInfo.phone!""}
+                        </div>
                     </div>
     
                     <div class="invitation">
-                        <span class="status"><span class="icon-small confirmed"></span> <@u.message "invitation.accepted" /> <@u.localDate a.createTime/></span>
+                        <span class="status"><span class="icon-small confirmed"></span> <span class="trigger-tooltip" title="<@u.message "invitation.accepted" />"><@u.localDate a.createTime/></span></span>
                         <#if a.id != user.authorId>
                         <span class="action"><span class="icon-small cancel"></span> <a href="?deleteAuthor=${a.id!""}" class="js-delete-author"
                             data-id="${a.id!""}"
@@ -71,6 +75,7 @@
                             <span class="status"><span class="icon-small rejected"></span> <@u.message "invitation.rejected" /> <@u.localDate i.rejectTime.value /></span>
                         <#elseif i.expired>
                             <span class="status"><span class="icon-small expired"></span> <@u.message "invitation.expired" /></span>
+                            <span class="action push"><@u.message "invitation.sent" /> <@u.localDate i.invitationTime /></span>
                             <span class="action">
                                 <form action="${springMacroRequestContext.requestUri}" method="POST" id="resend_${i.confirmationCode}">
                                     <@f.securityFilters/>

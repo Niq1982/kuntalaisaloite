@@ -29,9 +29,10 @@
     -->
     <#if !RequestParameters['invitation-decline']?? && !RequestParameters['invitation-accept']??>
         <div class="msg-block ${validationError?string("hidden","")}">
-            <h2>Kutsu vastuuhenkilöksi</h2>
+            <h2><@u.message "invitation.view.title" /></h2>
             
-            <p>Ohjetta vastuuhenkilöistä Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut erat purus, mattis eget tempor vel, sodales et ipsum. Morbi enim orci, lobortis sagittis volutpat at, placerat in nisi.</p>
+            <p><@u.message "invitation.view.description" /></p>
+            <p><@u.message "invitation.view.instruction" /></p>
             
             <a href="?invitation=${authorInvitation.confirmCode!""}&invitation-accept=confirm" class="small-button green green save-and-send js-accept-invitation"><span class="small-icon save-and-send"><@u.message "invitation.accept" /></span></a>
             <a href="?invitation=${authorInvitation.confirmCode!""}&invitation-decline=confirm" title="<@u.message "invitation.decline" />" class="small-button gray push js-decline-invitation"><span class="small-icon cancel"><@u.message "invitation.decline" /></span></a>
@@ -49,7 +50,7 @@
     <#assign invitationDeclineConfirmHtml>
         <@compress single_line=true>
         
-            <p><@u.message "invitation.decline.confirm.text" /></p>
+            <p><@u.message "invitation.decline.confirm.description" /></p>
 
             <form action="${springMacroRequestContext.requestUri}" method="POST" >
                 <input type="hidden" name="CSRFToken" value="${CSRFToken!}"/>
@@ -83,7 +84,7 @@
     <#assign invitationAcceptHtml>
         <@compress single_line=true>        
         
-            <@u.systemMessage path="invitation.accept.description" type="info" showClose=false />
+            <@u.systemMessage path="invitation.accept.confirm.description" type="info" showClose=false />
         
             <@u.errorsSummary path="authorInvitation.*" prefix="initiative."/>
 
@@ -131,9 +132,6 @@
                         
                         <@f.contactInfo path="authorInvitation.contactInfo" mode="full" />
                     </div>
-                
-                <#--<#assign href>${urls.help(HelpPage.ORGANIZERS.getUri(locale))}</#assign>
-                <p><@u.messageHTML key="userConfirmation.invitation" args=[href] /></p>-->
                 
                     <div class="input-block-content">
                         <button type="submit" name="${UrlConstants.ACTION_ACCEPT_INVITATION}" id="modal-${UrlConstants.ACTION_ACCEPT_INVITATION}" value="<@u.message "invitation.accept.confirm" />" class="small-button green save-and-send"><span class="small-icon save-and-send"><@u.message "invitation.accept.confirm" /></span></button>

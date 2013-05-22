@@ -55,8 +55,11 @@
  * @param contactInfo is author.contactInfo
 -->
 <#macro initiativeContactInfo authorList>
-    <h2 class="inline-style"><@u.message "initiative.contactinfo.title" /></h2><span class="push"><@u.message "initiative.contactinfo.notPublic" /></span>
-    <br class="clear" />
+    <h2><@u.message key="initiative.authors.title" args=[authorList?size] /></h2>
+    
+    <@u.systemMessage path="initiative.authors.contactinfo.notPublic" type="info" showClose=false />
+    <br />
+    
     <#list authorList as a>
         <div class="column ${((a_index + 1) % 3 == 0)?string("last","")}">
             <p><strong>${a.contactInfo.name!""}</strong>, ${a.municipality.getName(locale)}<br />
