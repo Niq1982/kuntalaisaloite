@@ -3,7 +3,6 @@ package fi.om.municipalityinitiative.service;
 import fi.om.municipalityinitiative.exceptions.NotLoggedInException;
 import fi.om.municipalityinitiative.newdao.AdminUserDao;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
-import fi.om.municipalityinitiative.newdao.FakeAdminUserDao;
 import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.user.User;
 import fi.om.municipalityinitiative.util.Maybe;

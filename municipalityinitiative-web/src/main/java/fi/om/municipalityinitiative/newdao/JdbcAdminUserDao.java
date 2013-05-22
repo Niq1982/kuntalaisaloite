@@ -5,12 +5,14 @@ import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
+import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
 import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.user.User;
 import fi.om.municipalityinitiative.sql.QAdminUser;
 import fi.om.municipalityinitiative.sql.QAuthor;
 import fi.om.municipalityinitiative.sql.QMunicipality;
 import fi.om.municipalityinitiative.sql.QParticipant;
+import fi.om.municipalityinitiative.util.NotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -25,10 +27,14 @@ public class JdbcAdminUserDao implements AdminUserDao {
     @Transactional(readOnly = true)
     public User getUser(String userName, String password) {
 
-        return queryFactory.from(QAdminUser.adminUser)
+        User user = queryFactory.from(QAdminUser.adminUser)
                 .where(QAdminUser.adminUser.username.eq(userName))
                 .where(QAdminUser.adminUser.password.eq(password))
                 .uniqueResult(omUserMapper);
+        if (user == null) {
+            throw new InvalidLoginException("Invalid login credentials for user " + userName);
+        }
+        return user;
     }
 
 
