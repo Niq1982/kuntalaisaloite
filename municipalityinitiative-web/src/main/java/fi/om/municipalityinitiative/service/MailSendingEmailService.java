@@ -21,11 +21,11 @@ import java.util.Map;
 public class MailSendingEmailService implements EmailService {
 
     private static final String INITIATIVE_PREPARE_VERIFICATION_TEMPLATE = "initiative-create-verification";
-    private static final String NOT_COLLECTABLE_TEMPLATE = "municipality-not-collectable";
+    private static final String NOT_COLLECTABLE_TEMPLATE = "municipality-not-collaborative";
     private static final String STATUS_INFO_TEMPLATE = "status-info-to-author";
     private static final String NOTIFICATION_TO_MODERATOR = "notification-to-moderator";
     private static final String PARTICIPATION_CONFIRMATION = "participant-verification";
-    private static final String COLLABORATIVE_TO_MUNICIPALITY = "municipality-collectable";
+    private static final String COLLABORATIVE_TO_MUNICIPALITY = "municipality-collaborative";
     private static final String AUTHOR_INVITATION = "author-invitation";
     private static final String INVITATION_ACCEPTANCE ="invitation-acceptance";
 
@@ -69,7 +69,7 @@ public class MailSendingEmailService implements EmailService {
         emailMessageConstructor
                 .fromTemplate(NOT_COLLECTABLE_TEMPLATE)
                 .addRecipient(municipalityEmail)
-                .withSubject(messageSource.getMessage("email.not.collectable.municipality.subject", toArray(initiative.getName()), locale))
+                .withSubject(messageSource.getMessage("email.not.collaborative.municipality.subject", toArray(initiative.getName()), locale))
                 .withDataMap(toDataMap(initiative, authors, locale))
                 .send();
     }
@@ -79,7 +79,7 @@ public class MailSendingEmailService implements EmailService {
         emailMessageConstructor
                 .fromTemplate(COLLABORATIVE_TO_MUNICIPALITY)
                 .addRecipient(municipalityEmail)
-                .withSubject(messageSource.getMessage("email.not.collectable.municipality.subject", toArray(initiative.getName()), locale))
+                .withSubject(messageSource.getMessage("email.not.collaborative.municipality.subject", toArray(initiative.getName()), locale))
                 .withDataMap(toDataMap(initiative, authors, locale))
                 .withAttachment(initiative, participants)
                 .send();

@@ -248,7 +248,7 @@ public class JdbcParticipantDaoTest {
     @Test(expected = IllegalArgumentException.class)
     public void delete_participant_fails_if_initiative_id_and_participant_does_not_match() {
         Long participantId = testHelper.createParticipant(new TestHelper.AuthorDraft(testInitiativeId, testMunicipalityId));
-        Long wrongInitiativeId = testHelper.createCollectableReview(testMunicipalityId);
+        Long wrongInitiativeId = testHelper.createCollaborativeReview(testMunicipalityId);
         participantDao.deleteParticipant(wrongInitiativeId, participantId);
     }
 

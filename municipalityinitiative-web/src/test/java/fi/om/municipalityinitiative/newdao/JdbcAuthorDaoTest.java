@@ -76,12 +76,12 @@ public class JdbcAuthorDaoTest {
 
     @Test
     public void login_as_author_returns_authors_initiative() {
-        Long collectableAccepted = testHelper.createCollaborativeAccepted(testMunicipality);
+        Long collaborativeAccepted = testHelper.createCollaborativeAccepted(testMunicipality);
 
         Set<Long> ids = authorDao.loginAndGetAuthorsInitiatives(TestHelper.PREVIOUS_TEST_MANAGEMENT_HASH);
 
         assertThat(ids, hasSize(1));
-        assertThat(ids, contains(collectableAccepted));
+        assertThat(ids, contains(collaborativeAccepted));
     }
 
     @Test

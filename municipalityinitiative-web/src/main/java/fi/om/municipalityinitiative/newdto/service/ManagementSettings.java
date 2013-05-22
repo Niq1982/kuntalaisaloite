@@ -48,7 +48,7 @@ public class ManagementSettings {
     public boolean isAllowParticipate() {
         return !(initiative.getState() != InitiativeState.PUBLISHED
                 || initiative.getSentTime().isPresent()
-                || !initiative.isCollectable());
+                || !initiative.isCollaborative());
     }
 
     public boolean isAllowInviteAuthors() {

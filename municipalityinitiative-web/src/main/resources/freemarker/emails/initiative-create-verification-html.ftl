@@ -10,7 +10,7 @@
 
 <#assign title><@u.message "email.create.title" /></#assign>
 
-<@l.emailHtml "municipality-collectable" title>
+<@l.emailHtml "municipality-collaborative" title>
 
     <@b.mainContentBlock title>
         <p style="${pBothMargins!""}"><@u.message "email.create.description" /></p>

@@ -62,7 +62,7 @@ public class Mappings {
                     info.setCreateTime(row.get(municipalityInitiative.modified).toLocalDate());
                     info.setName(row.get(municipalityInitiative.name));
                     info.setMunicipality(parseMunicipality(row));
-                    info.setCollectable(InitiativeType.isCollectable(row.get(municipalityInitiative.type)));
+                    info.setCollaborative(InitiativeType.isCollaborative(row.get(municipalityInitiative.type)));
                     info.setSentTime(maybeLocalDate(row.get(municipalityInitiative.sent)));
                     info.setParticipantCount(row.get(municipalityInitiative.participantCount));
                     info.setType(row.get(municipalityInitiative.type));

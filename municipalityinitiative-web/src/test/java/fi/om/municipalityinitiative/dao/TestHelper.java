@@ -92,7 +92,7 @@ public class TestHelper {
 
 
     @Transactional
-    public Long createCollectableReview(Long municipalityId) {
+    public Long createCollaborativeReview(Long municipalityId) {
         return createInitiative(new InitiativeDraft(municipalityId)
                 .withState(InitiativeState.REVIEW)
                 .withType(InitiativeType.COLLABORATIVE)

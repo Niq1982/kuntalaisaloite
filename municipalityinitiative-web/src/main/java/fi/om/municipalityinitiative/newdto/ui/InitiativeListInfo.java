@@ -13,7 +13,7 @@ public class InitiativeListInfo {
     private Municipality municipality;
 
     private LocalDate createTime;
-    private boolean collectable;
+    private boolean collaborative;
     private Maybe<LocalDate> sentTime;
     private long participantCount;
     private InitiativeType type;
@@ -43,12 +43,12 @@ public class InitiativeListInfo {
         this.createTime = createTime;
     }
 
-    public boolean isCollectable() {
-        return collectable;
+    public boolean isCollaborative() {
+        return collaborative;
     }
 
-    public void setCollectable(boolean collectable) {
-        this.collectable = collectable;
+    public void setCollaborative(boolean collaborative) {
+        this.collaborative = collaborative;
     }
 
     public Maybe<LocalDate> getSentTime() {

@@ -192,7 +192,7 @@ public class InitiativeManagementService {
         requiredLoginUserHolder.assertManagementRightsForInitiative(initiativeId);
         Initiative initiative = initiativeDao.get(initiativeId);
 
-        if (initiative.getType().isCollectable()) {
+        if (initiative.getType().isCollaborative()) {
             sendCollaborativeToMunicipality(initiativeId, requiredLoginUserHolder, sentComment, locale);
         } else {
             publishAndSendToMunicipality(initiativeId, requiredLoginUserHolder, sentComment, locale);

@@ -64,13 +64,13 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         assertThat(initiative.getName(), is(TestHelper.DEFAULT_INITIATIVE_NAME));
         assertThat(initiative.getId(), is(initiativeId));
         assertThat(initiative.getProposal(), is(TestHelper.DEFAULT_PROPOSAL));
-        assertThat(initiative.isCollectable(), is(true));
+        assertThat(initiative.isCollaborative(), is(true));
         ReflectionTestUtils.assertNoNullFields(initiative);
     }
 
     @Test(expected = OperationNotAllowedException.class)
     public void participating_allowance_is_checked() {
-        Long initiative = testHelper.createCollectableReview(testMunicipality.getId());
+        Long initiative = testHelper.createCollaborativeReview(testMunicipality.getId());
 
         ParticipantUICreateDto participant = participantUICreateDto();
         service.createParticipant(participant, initiative, null);

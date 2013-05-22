@@ -95,7 +95,7 @@
                 <span class="bull">&bull;</span> <@u.message key="initiative.fixStateInfo."+initiative.fixState />
             <#elseif initiative.state??>
                 <span class="bull">&bull;</span> <@u.message key="initiative.stateInfo."+initiative.state args=[stateTime]/>
-                <#if initiative.state == InitiativeState.PUBLISHED && initiative.collectable><@u.message key="initiative.stateInfo.collecting" /></#if>
+                <#if initiative.state == InitiativeState.PUBLISHED && initiative.collaborative><@u.message key="initiative.stateInfo.collecting" /></#if>
             </#if>
         </#if>
     </span>

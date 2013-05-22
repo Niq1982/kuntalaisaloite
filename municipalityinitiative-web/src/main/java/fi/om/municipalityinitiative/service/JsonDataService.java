@@ -63,7 +63,7 @@ public class JsonDataService {
         InitiativeListInfo initiative = new InitiativeListInfo();
         initiative.setMunicipality(ApiController.TAMPERE);
         initiative.setSentTime(Maybe.of(new LocalDate(2012, 12, 24)));
-        initiative.setCollectable(true);
+        initiative.setCollaborative(true);
         initiative.setCreateTime(new LocalDate(2012, 12, 1));
         initiative.setId(1L);
         initiative.setName("Koirat pois lähiöistä");

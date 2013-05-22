@@ -80,8 +80,8 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .set(participant.showName, true) // Default is true
                 .executeWithKey(participant.id);
 
-        // Increase denormalized participantCount if collectable initiative.
-        // DB constraint will also fail if trying to increase count for non-collectable initiative
+        // Increase denormalized participantCount if collaborative initiative.
+        // DB constraint will also fail if trying to increase count for non-collaborative initiative
         queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
                 .set(QMunicipalityInitiative.municipalityInitiative.participantCount,
                         QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))

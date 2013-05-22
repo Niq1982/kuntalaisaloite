@@ -82,7 +82,7 @@ public class InitiativeViewController extends BaseController {
             }
         }
 
-        if (initiativeInfo.isCollectable()) {
+        if (initiativeInfo.isCollaborative()) {
             return ViewGenerator.collaborativeView(initiativeInfo,
                     authorService.findPublicAuthors(initiativeId),
                     municipalityService.findAllMunicipalities(locale),
@@ -124,7 +124,7 @@ public class InitiativeViewController extends BaseController {
 
         InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
 
-        if (!initiativeInfo.isCollectable()) {
+        if (!initiativeInfo.isCollaborative()) {
             return ViewGenerator.singleView(initiativeInfo, authorService.findPublicAuthors(initiativeId)).view(model, alternativeURL);
         }
         else {

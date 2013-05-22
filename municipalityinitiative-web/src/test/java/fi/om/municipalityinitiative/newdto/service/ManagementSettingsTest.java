@@ -180,7 +180,7 @@ public class ManagementSettingsTest {
     }
 
     @Test
-    public void is_not_allowed_to_participate_if_initiative_not_collectable() {
+    public void is_not_allowed_to_participate_if_initiative_not_collaborative() {
         final Initiative initiative = new Initiative();
         initiative.setType(InitiativeType.COLLABORATIVE);
         initiative.setState(InitiativeState.PUBLISHED);
