@@ -155,6 +155,11 @@ public class AppConfiguration {
     }
 
     @Bean
+    public JdbcSchemaVersionDao schemaVersionDao() {
+        return new JdbcSchemaVersionDao();
+    }
+
+    @Bean
     public AuthorService authorService() {
         return new AuthorService();
     }
