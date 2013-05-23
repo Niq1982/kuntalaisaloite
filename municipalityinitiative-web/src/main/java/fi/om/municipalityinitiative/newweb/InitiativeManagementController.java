@@ -1,10 +1,10 @@
 package fi.om.municipalityinitiative.newweb;
 
 import com.google.common.base.Strings;
-import fi.om.municipalityinitiative.newdto.LoginUserHolder;
-import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeUIUpdateDto;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeViewInfo;
+import fi.om.municipalityinitiative.dto.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.service.ManagementSettings;
+import fi.om.municipalityinitiative.dto.ui.InitiativeUIUpdateDto;
+import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.web.BaseController;
 import fi.om.municipalityinitiative.web.RequestMessage;

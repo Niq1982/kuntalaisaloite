@@ -1,10 +1,10 @@
 package fi.om.municipalityinitiative.newweb;
 
-import fi.om.municipalityinitiative.newdto.InitiativeSearch;
-import fi.om.municipalityinitiative.newdto.LoginUserHolder;
-import fi.om.municipalityinitiative.newdto.service.Municipality;
-import fi.om.municipalityinitiative.newdto.ui.*;
-import fi.om.municipalityinitiative.newdto.user.User;
+import fi.om.municipalityinitiative.dto.InitiativeSearch;
+import fi.om.municipalityinitiative.dto.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.ui.*;
+import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;

@@ -4,10 +4,10 @@ import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
-import fi.om.municipalityinitiative.newdto.InitiativeSearch;
-import fi.om.municipalityinitiative.newdto.service.Municipality;
-import fi.om.municipalityinitiative.newdto.service.Participant;
-import fi.om.municipalityinitiative.newdto.ui.*;
+import fi.om.municipalityinitiative.dto.InitiativeSearch;
+import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.service.Participant;
+import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.util.*;
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -21,7 +21,6 @@ import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.theInstance;
 
 
 public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTestBase{

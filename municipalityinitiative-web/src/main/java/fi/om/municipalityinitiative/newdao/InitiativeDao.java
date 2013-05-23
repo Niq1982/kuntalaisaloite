@@ -1,10 +1,10 @@
 package fi.om.municipalityinitiative.newdao;
 
-import fi.om.municipalityinitiative.newdto.InitiativeCounts;
-import fi.om.municipalityinitiative.newdto.InitiativeSearch;
-import fi.om.municipalityinitiative.newdto.service.Initiative;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeDraftUIEditDto;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeListInfo;
+import fi.om.municipalityinitiative.dto.InitiativeCounts;
+import fi.om.municipalityinitiative.dto.InitiativeSearch;
+import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
+import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;

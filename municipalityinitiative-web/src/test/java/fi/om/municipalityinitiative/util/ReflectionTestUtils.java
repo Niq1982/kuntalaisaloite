@@ -1,9 +1,9 @@
 package fi.om.municipalityinitiative.util;
 
 import fi.om.municipalityinitiative.json.ObjectSerializer;
-import fi.om.municipalityinitiative.newdto.Author;
-import fi.om.municipalityinitiative.newdto.service.Municipality;
-import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
+import fi.om.municipalityinitiative.dto.Author;
+import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

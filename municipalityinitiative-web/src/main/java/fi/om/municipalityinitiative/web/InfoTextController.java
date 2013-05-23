@@ -1,7 +1,7 @@
 package fi.om.municipalityinitiative.web;
 
-import fi.om.municipalityinitiative.newdto.InfoTextSubject;
-import fi.om.municipalityinitiative.newdto.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.InfoTextSubject;
+import fi.om.municipalityinitiative.dto.LoginUserHolder;
 import fi.om.municipalityinitiative.service.FileImageFinder;
 import fi.om.municipalityinitiative.service.ImageFinder;
 import fi.om.municipalityinitiative.service.InfoTextService;

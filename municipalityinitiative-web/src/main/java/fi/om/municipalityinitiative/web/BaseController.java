@@ -2,7 +2,7 @@ package fi.om.municipalityinitiative.web;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import fi.om.municipalityinitiative.newdto.InitiativeConstants;
+import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.service.UserService;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;

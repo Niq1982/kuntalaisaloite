@@ -3,7 +3,7 @@ package fi.om.municipalityinitiative.service;
 import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.newdao.InfoTextDao;
-import fi.om.municipalityinitiative.newdto.InfoTextSubject;
+import fi.om.municipalityinitiative.dto.InfoTextSubject;
 import fi.om.municipalityinitiative.util.InfoTextCategory;
 import fi.om.municipalityinitiative.util.LanguageCode;
 import fi.om.municipalityinitiative.util.Locales;

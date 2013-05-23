@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.newdto.ui;
+package fi.om.municipalityinitiative.dto.ui;
 
 import com.google.common.base.Strings;
 
@@ -9,7 +9,7 @@ public class MunicipalityUIEditDto {
 
     private Long id;
 
-    @Pattern(regexp = fi.om.municipalityinitiative.newdto.ui.ContactInfo.EMAIL_PATTERN)
+    @Pattern(regexp = fi.om.municipalityinitiative.dto.ui.ContactInfo.EMAIL_PATTERN)
     private String municipalityEmail;
 
     private Boolean active;

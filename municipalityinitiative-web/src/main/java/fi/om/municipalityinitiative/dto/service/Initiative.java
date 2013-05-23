@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.newdto.service;
+package fi.om.municipalityinitiative.dto.service;
 
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;

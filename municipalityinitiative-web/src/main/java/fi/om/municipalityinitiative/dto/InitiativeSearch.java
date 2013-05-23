@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.newdto;
+package fi.om.municipalityinitiative.dto;
 
 import fi.om.municipalityinitiative.web.Urls;
 

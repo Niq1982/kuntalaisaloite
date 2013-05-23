@@ -1,7 +1,7 @@
-package fi.om.municipalityinitiative.newdto.service;
+package fi.om.municipalityinitiative.dto.service;
 
-import fi.om.municipalityinitiative.newdto.ui.AuthorInvitationUIConfirmDto;
-import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateDto;
+import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUIConfirmDto;
+import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.junit.Test;

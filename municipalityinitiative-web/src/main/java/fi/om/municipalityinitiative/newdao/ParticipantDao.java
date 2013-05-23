@@ -1,8 +1,8 @@
 package fi.om.municipalityinitiative.newdao;
 
-import fi.om.municipalityinitiative.newdto.service.Participant;
-import fi.om.municipalityinitiative.newdto.service.ParticipantCreateDto;
-import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
+import fi.om.municipalityinitiative.dto.service.Participant;
+import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
+import fi.om.municipalityinitiative.dto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.util.Membership;
 
 import java.util.List;

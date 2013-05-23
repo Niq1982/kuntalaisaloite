@@ -1,7 +1,7 @@
 package fi.om.municipalityinitiative.newweb;
 
-import fi.om.municipalityinitiative.newdto.InitiativeConstants;
-import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
+import fi.om.municipalityinitiative.dto.InitiativeConstants;
+import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Pattern;

@@ -2,9 +2,9 @@ package fi.om.municipalityinitiative.newdao;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
-import fi.om.municipalityinitiative.newdto.InfoPageText;
-import fi.om.municipalityinitiative.newdto.InfoTextFooterLink;
-import fi.om.municipalityinitiative.newdto.InfoTextSubject;
+import fi.om.municipalityinitiative.dto.InfoPageText;
+import fi.om.municipalityinitiative.dto.InfoTextFooterLink;
+import fi.om.municipalityinitiative.dto.InfoTextSubject;
 import fi.om.municipalityinitiative.util.InfoTextCategory;
 import fi.om.municipalityinitiative.util.LanguageCode;
 import org.joda.time.DateTime;

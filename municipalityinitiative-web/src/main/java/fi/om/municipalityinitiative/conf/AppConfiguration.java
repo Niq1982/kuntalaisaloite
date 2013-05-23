@@ -11,7 +11,7 @@ import fi.om.municipalityinitiative.conf.AppConfiguration.ProdPropertiesConfigur
 import fi.om.municipalityinitiative.conf.AppConfiguration.TestPropertiesConfigurer;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslatorAspect;
 import fi.om.municipalityinitiative.newdao.*;
-import fi.om.municipalityinitiative.newdto.service.TestDataService;
+import fi.om.municipalityinitiative.dto.service.TestDataService;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.TaskExecutorAspect;

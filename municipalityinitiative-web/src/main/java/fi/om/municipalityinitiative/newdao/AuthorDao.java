@@ -1,9 +1,8 @@
 package fi.om.municipalityinitiative.newdao;
 
-import fi.om.municipalityinitiative.newdto.Author;
-import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
-import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
-import fi.om.municipalityinitiative.service.PublicInitiativeService;
+import fi.om.municipalityinitiative.dto.Author;
+import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
+import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 
 import java.util.List;
 import java.util.Set;

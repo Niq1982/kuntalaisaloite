@@ -6,14 +6,13 @@ import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import fi.om.municipalityinitiative.newdto.service.Initiative;
-import fi.om.municipalityinitiative.newdto.service.Municipality;
-import fi.om.municipalityinitiative.newdto.service.Participant;
+import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Membership;
 import org.joda.time.DateTime;
 
-import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.List;
 

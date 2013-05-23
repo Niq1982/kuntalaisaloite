@@ -1,6 +1,6 @@
-package fi.om.municipalityinitiative.newdto;
+package fi.om.municipalityinitiative.dto;
 
-import fi.om.municipalityinitiative.newdto.user.User;
+import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.service.AccessDeniedException;
 
 public class LoginUserHolder {

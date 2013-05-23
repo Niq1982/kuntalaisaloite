@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.newdto;
+package fi.om.municipalityinitiative.dto;
 
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.junit.Test;

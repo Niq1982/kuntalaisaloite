@@ -6,7 +6,7 @@ import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
-import fi.om.municipalityinitiative.newdto.user.User;
+import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.sql.QAdminUser;
 import org.springframework.transaction.annotation.Transactional;
 

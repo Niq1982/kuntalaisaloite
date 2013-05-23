@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.newdto.service;
+package fi.om.municipalityinitiative.dto.service;
 
 import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.DateTime;

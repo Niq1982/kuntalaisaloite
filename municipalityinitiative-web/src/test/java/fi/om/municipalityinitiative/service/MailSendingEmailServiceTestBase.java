@@ -1,12 +1,11 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
-import fi.om.municipalityinitiative.newdto.Author;
-import fi.om.municipalityinitiative.newdto.service.Initiative;
-import fi.om.municipalityinitiative.newdto.service.Municipality;
-import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
+import fi.om.municipalityinitiative.dto.Author;
+import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.util.JavaMailSenderFake;
-import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.BeforeClass;
