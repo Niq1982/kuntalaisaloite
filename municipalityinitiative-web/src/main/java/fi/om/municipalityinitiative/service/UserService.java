@@ -92,35 +92,12 @@ public class UserService {
         return Maybe.of(new LoginUserHolder(user.get()));
     }
 
-    @SuppressWarnings("unchecked")
-    private static <T> Maybe<T> getObject(String sessionAttributeName) {
-        Maybe<HttpSession> session = getSession();
-        if (session.isPresent()) {
-            Object sessionObject = session.get().getAttribute(sessionAttributeName);
-            return Maybe.fromNullable((T) sessionObject);
-        }
-        return Maybe.absent();
-    }
-
     public static void logout(HttpServletRequest request) {
         HttpSession session = request.getSession();
         if (session != null) {
             session.invalidate();
         }
     }
-
-    private static Maybe<HttpSession> getSession() {
-        // TODO: Throw exception if no session and catch it at errorfilter
-        // XXX: Actually remove whole static usage if possible
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        if (request != null) {
-            return Maybe.fromNullable(request.getSession());
-        }
-        return Maybe.absent();
-
-    }
-
-
 
     public static Maybe<User> getOptionalLoginUser(HttpServletRequest request) {
         HttpSession session = request.getSession();
