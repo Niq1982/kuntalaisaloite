@@ -172,12 +172,21 @@ public class JdbcAuthorDao implements AuthorDao {
     @Transactional(readOnly = false)
     public void deleteAuthor(Long authorId) {
 
-        // XXX: Improve these checks with subquery or trigger
-
         Long initiativeId = queryFactory.from(QAuthor.author)
                 .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
                 .where(QAuthor.author.participantId.eq(authorId))
                 .uniqueResult(QParticipant.participant.municipalityInitiativeId);
+
+        // Lock all authors of the initiative from another transactions
+        queryFactory.from(QAuthor.author)
+                .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
+                .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
+                .forUpdate().of(QAuthor.author).list(QAuthor.author.participantId);
+
+//        queryFactory.from(QMunicipalityInitiative.municipalityInitiative)
+//                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
+//                .forUpdate().of(QMunicipalityInitiative.municipalityInitiative)
+//                .uniqueResult(QMunicipalityInitiative.municipalityInitiative.id);
 
         assertSingleAffection(queryFactory.delete(QAuthor.author)
                 .where(QAuthor.author.participantId.eq(authorId)).execute());

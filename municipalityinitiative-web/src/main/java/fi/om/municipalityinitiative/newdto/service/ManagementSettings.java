@@ -42,13 +42,14 @@ public class ManagementSettings {
     }
 
     public boolean isAllowPublish() {
-        return initiative.getState().equals(InitiativeState.ACCEPTED);
+        return initiative.getState().equals(InitiativeState.ACCEPTED) && initiative.getFixState().equals(FixState.OK);
     }
 
     public boolean isAllowParticipate() {
         return !(initiative.getState() != InitiativeState.PUBLISHED
                 || initiative.getSentTime().isPresent()
-                || !initiative.isCollaborative());
+                || !initiative.isCollaborative()
+                || initiative.getFixState() != FixState.OK);
     }
 
     public boolean isAllowInviteAuthors() {

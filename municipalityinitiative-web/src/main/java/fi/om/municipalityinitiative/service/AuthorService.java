@@ -90,8 +90,7 @@ public class AuthorService {
     }
 
     @Transactional(readOnly = false)
-    // FIXME: do NOT use synchronized, add database constraint
-    public synchronized void deleteAuthor(Long initiativeId, LoginUserHolder loginUserHolder, Long authorId) {
+    public void deleteAuthor(Long initiativeId, LoginUserHolder loginUserHolder, Long authorId) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
         List<Author> authors = authorDao.findAuthors(initiativeId);
