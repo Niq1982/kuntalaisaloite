@@ -31,7 +31,7 @@
     <div id="header-tools">
         <div id="header-tools-content">
             <div id="aloite-links">
-                <a href="${urls.baseUrl}/${locale}">Kansalaisaloite.fi</a><span class="hide"> | </span><a class="active" href="${urls.infoIndex()}">Kuntalaisaloite.fi</a>
+                <a href="https://www.kansalaisaloite.fi">Kansalaisaloite.fi</a><span class="hide"> | </span><a class="active" href="${urls.baseUrl}/${locale}">Kuntalaisaloite.fi</a>
             </div>
         </div>
     </div>

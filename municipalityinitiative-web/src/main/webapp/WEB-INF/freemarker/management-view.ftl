@@ -117,6 +117,7 @@
                 <@compress single_line=true>
                 
                     <p><@u.message "sendToReview.collect.confirm.description" /></p>
+                    <p><@u.message "sendToReview.collect.confirm.instruction" /></p>
                     
                     <form action="${springMacroRequestContext.requestUri}" method="POST" >
                         <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>

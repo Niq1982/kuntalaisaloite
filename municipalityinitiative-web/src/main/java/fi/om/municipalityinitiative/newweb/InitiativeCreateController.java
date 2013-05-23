@@ -87,7 +87,7 @@ public class InitiativeCreateController extends BaseController {
             return ViewGenerator.editView(
                     initiativeManagementService.getInitiativeDraftForEdit(initiativeId, loginUserHolder),
                     initiativeManagementService.getAuthorInformation(initiativeId, loginUserHolder),
-                    urls.moderation(initiativeId)
+                    urls.frontpage()
             ).view(model, urls.alt().edit(initiativeId));
         }
         else if (managementSettings.isAllowUpdate()) {

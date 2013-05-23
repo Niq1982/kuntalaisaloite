@@ -22,12 +22,12 @@
     <#--
      * invitationAcceptHtml
      * 
-     * Accept or decline invitation.
+     * Accept or reject invitation.
      * Launches a modal-window for confirmation.
      *
-     * NOSCRIPT-users gets confirmation form by request parameter 'invitation-decline'.
+     * NOSCRIPT-users gets confirmation form by request parameter 'invitation-reject'.
     -->
-    <#if !RequestParameters['invitation-decline']?? && !RequestParameters['invitation-accept']??>
+    <#if !RequestParameters['invitation-reject']?? && !RequestParameters['invitation-accept']??>
         <div class="msg-block ${validationError?string("hidden","")}">
             <h2><@u.message "invitation.view.title" /></h2>
             
@@ -35,39 +35,39 @@
             <p><@u.message "invitation.view.instruction" /></p>
             
             <a href="?invitation=${authorInvitation.confirmCode!""}&invitation-accept=confirm" class="small-button green green save-and-send js-accept-invitation"><span class="small-icon save-and-send"><@u.message "invitation.accept" /></span></a>
-            <a href="?invitation=${authorInvitation.confirmCode!""}&invitation-decline=confirm" title="<@u.message "invitation.decline" />" class="small-button gray push js-decline-invitation"><span class="small-icon cancel"><@u.message "invitation.decline" /></span></a>
+            <a href="?invitation=${authorInvitation.confirmCode!""}&invitation-reject=confirm" title="<@u.message "invitation.reject" />" class="small-button gray push js-reject-invitation"><span class="small-icon cancel"><@u.message "invitation.reject" /></span></a>
         </div>
     </#if>
     
     
     <#--
-     * invitationDeclineConfirmHtml
+     * invitationRejectConfirmHtml
      * 
-     * Modal: Confirm decline invitation.
+     * Modal: Confirm reject invitation.
      *
-     * NOSCRIPT-users gets confirmation form by request parameter 'invitation-decline=confirm'.
+     * NOSCRIPT-users gets confirmation form by request parameter 'invitation-reject=confirm'.
     -->
-    <#assign invitationDeclineConfirmHtml>
+    <#assign invitationRejectConfirmHtml>
         <@compress single_line=true>
         
-            <p><@u.message "invitation.decline.confirm.description" /></p>
+            <p><@u.message "invitation.reject.confirm.description" /></p>
 
             <form action="${springMacroRequestContext.requestUri}" method="POST" >
                 <input type="hidden" name="CSRFToken" value="${CSRFToken!}"/>
                 <input type="hidden" name="${UrlConstants.PARAM_INVITATION_CODE}" value="${authorInvitation.confirmCode!""}"/>
-                <button type="submit" name="${UrlConstants.ACTION_REJECT_INVITATION}" id="modal-${UrlConstants.ACTION_REJECT_INVITATION}"  value="<@u.message "invitation.decline" />" class="small-button gray cancel"><span class="small-icon cancel"><@u.message "invitation.decline.confirm" /></span></button>
+                <button type="submit" name="${UrlConstants.ACTION_REJECT_INVITATION}" id="modal-${UrlConstants.ACTION_REJECT_INVITATION}"  value="<@u.message "invitation.reject" />" class="small-button gray cancel"><span class="small-icon cancel"><@u.message "invitation.reject.confirm" /></span></button>
                 <a href="?invitation=${authorInvitation.confirmCode!""}" class="push close"><@u.message "action.cancel" /></a>
             </form>
         
         </@compress>
     </#assign>
     
-    <#-- Confirm decline invitation for NOSCRIPT-users -->
-    <#if RequestParameters['invitation-decline']?? && RequestParameters['invitation-decline'] == "confirm">
+    <#-- Confirm reject invitation for NOSCRIPT-users -->
+    <#if RequestParameters['invitation-reject']?? && RequestParameters['invitation-reject'] == "confirm">
         <noscript>
             <div class="msg-block">
-                <h2><@u.message "invitation.decline.confirm.title" /></h2>
-               <#noescape>${invitationDeclineConfirmHtml}</#noescape>
+                <h2><@u.message "invitation.reject.confirm.title" /></h2>
+               <#noescape>${invitationRejectConfirmHtml}</#noescape>
             </div>
         </noscript>
     </#if> 
@@ -178,7 +178,7 @@
      *
      * Modals:
      *  Accept invitation
-     *  Confirm decline invitation
+     *  Confirm reject invitation
      *
      * jsMessage:
      *  Warning if cookies are disabled
@@ -211,11 +211,11 @@
         </#if>
         
         <#-- Modal: Accept invitation -->
-        <#if invitationDeclineConfirmHtml??>    
-            modalData.confirmDeclineInvitation = function() {
+        <#if invitationRejectConfirmHtml??>    
+            modalData.confirmRejectInvitation = function() {
                 return [{
-                    title:      '<@u.message "invitation.decline.confirm.title" />',
-                    content:    '<#noescape>${invitationDeclineConfirmHtml?replace("'","&#39;")}</#noescape>'
+                    title:      '<@u.message "invitation.reject.confirm.title" />',
+                    content:    '<#noescape>${invitationRejectConfirmHtml?replace("'","&#39;")}</#noescape>'
                 }]
             };
         </#if>

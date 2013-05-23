@@ -39,13 +39,16 @@
  * Interactive functionality for generating iFrames on the fly.
  *
  * @param options list of municipalities
+ * @param defaults is an array for default values [municipalityId, limit, width, height]
+ * @param bounds is an array for min and max values [min limit, max limit, min width, max width, min height, max height]
 -->
-<#macro initiativeIframeGenerator options>
+<#macro initiativeIframeGenerator options defaults bounds>
+    <h2><@u.message "iframeGenerator.settings.title" /></h2>
     <div class="hidden">
         <div class="input-block-content no-top-margin">       
             
             <label for="municipality" class="input-header">
-                Kunta
+                <@u.message "iframeGenerator.municipality" />
             </label>
             <select name="municipality" id="municipality" class="chzn-select" data-placeholder="<@u.message "initiative.chooseMunicipality" />" data-allow-single-deselect="allow">
                 <option value=""><@u.message "initiative.chooseMunicipality" /></option>
@@ -60,37 +63,49 @@
         <div class="input-block-content">
             <div class="column col-1of3">
                 <label for="municipality" class="input-header">
-                    Aloitteiden lukumäärä
+                    <@u.message "iframeGenerator.initiativeCount" />
                 </label>
                 <input type="text" maxlength="2" class="small" value="3" name="limit" id="limit" pattern="${digit}" />
             </div>
             <div class="column col-1of3">
                 <label for="municipality" class="input-header">
-                    Leijukkeen leveys
+                    <@u.message "iframeGenerator.width" />
                 </label>
                 <input type="text" maxlength="4" class="small" value="250" name="width" id="width" pattern="${digit}"  />
             </div>
             <div class="column col-1of3 last">
                 <label for="municipality" class="input-header">
-                    Leijukkeen korkeus
+                    <@u.message "iframeGenerator.height" />
                 </label>
                 <input type="text" maxlength="4" class="small" value="400" name="height" id="height" pattern="${digit}"  />
             </div>
         </div>
         <br class="clear" />
         
-        <#--<a href="#" class="small-button js-update-iframe">Päivitä</a> <a href="#" class="small-button js-reset-iframe push">Käytä oletusta</a>-->
-        <p><a href="#" class="js-reset-iframe">Palauta oletusarvot</a></p>
+        <p><a href="#" class="js-reset-iframe"><@u.message "iframeGenerator.reset" /></a></p>
     
         <div id="iframe-container"></div>
         
         <script type="text/javascript">
             window.hasIFrame = true;
             window.defaultData = {
-                municipality:   "",
-                limit:          "3",
-                width:          "250",
-                height:         "400"
+                municipality:   "${defaults[0]}",
+                limit:          "${defaults[1]}",
+                width:          "${defaults[2]}",
+                height:         "${defaults[3]}"
+            };
+            
+            window.bounds = { 
+                min : {
+                    limit:  ${bounds[0]},
+                    width:  ${bounds[2]},
+                    height: ${bounds[4]}
+                },
+                max : {
+                    limit:  ${bounds[1]},
+                    width:  ${bounds[3]},
+                    height: ${bounds[5]}
+                }
             };
             
             function iFrameLoaded(id, loaderId){
@@ -100,7 +115,7 @@
         </script>
     
         <script id="iframe-template" type="text/x-jsrender">
-            <h3>Leijuke</h3>
+            <h2><@u.message "iframeGenerator.preview.title" /></h2>
             
             <div id="iframe-placeholder" style="width:{{:width}}px; height:{{:height}}px;"><span class="loader" /></div>
             <iframe id="kuntalaisaloite-leijuke"
@@ -123,21 +138,22 @@
             </@compress>
             </#assign>
             
-            <h3>Leijukkeen lähdekoodi</h3>
+            <h2><@u.message "iframeGenerator.source.title" /></h2>
             
             <pre id="iframe-source">${iFrameSrc}</pre>
         </script>
     </div>
     
     <noscript>
-        <h3>Leijukegeneraattori vaatii JavaScriptin sallimista selaimessa</h3>
+        <h3><@u.message "iframeGenerator.nojs.title" /></h3>
         
-        <p>Voit kuitenkin muokata alla olevaa esimerkki-leijuketta tarpeisiisi sopivaksi. Kopioi alla oleva upotuskoodi ja muuta siitä tarvitsemasi parametrit.</p>
+        <p><@u.message "iframeGenerator.nojs.description" /></p>
         
         <@i.initiativeIframe id="kuntalaisaloite-leijuke" embed=true width="250" height="400" municipality="1" limit="3" />
         
         <br/><br/>
-        <p>Alla on esimerkki-leijukkeen upotuskoodi. Kopioi alla oleva koodi kokonaisuudessaan leikepöydällesi ja muuta parametreja tarpeesi mukaan. Liitä sen jälkeen koodi sivustollesi.</p>
+        <h2><@u.message "iframeGenerator.source.title" /></h2>
+        <p><@u.message "iframeGenerator.nojs.source" /></p>
         
         <@i.initiativeIframe id="kuntalaisaloite-leijuke" embed=false width="250" height="400" municipality="1" limit="3" />
     </noscript>

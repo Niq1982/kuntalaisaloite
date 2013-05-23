@@ -34,8 +34,8 @@ public class AuthorsWebTest  extends WebTestBase {
     private static final String CONTACT_EMAIL = "test@test.com";
     public static final String CONTACT_ADDRESS = "Joku Katu jossain 89";
     public static final String CONTACT_PHONE = "040111222";
-    public static final String HYLKÄÄ_KUTSU = "invitation.decline";
-    public static final String HYVÄKSY_KUTSUN_HYLKÄÄMINEN = "invitation.decline.confirm";
+    public static final String HYLKÄÄ_KUTSU = "invitation.reject";
+    public static final String HYVÄKSY_KUTSUN_HYLKÄÄMINEN = "invitation.reject.confirm";
     private Long municipalityId;
     private Long initiativeId;
 
@@ -93,14 +93,14 @@ public class AuthorsWebTest  extends WebTestBase {
 
     @Test
     public void reject_author_invitation() throws InterruptedException {
-
+        overrideDriverToFirefox(true);
         AuthorInvitation invitation = testHelper.createInvitation(initiativeId, CONTACT_NAME, CONTACT_EMAIL);
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
 
         clickDialogButtonMsg(HYLKÄÄ_KUTSU);
         clickDialogButtonMsg(HYVÄKSY_KUTSUN_HYLKÄÄMINEN);
 
-        assertTextContainedByClass("msg-success", "Olet hylännyt kutsun vastuuhenkilöksi eikä tietojasi ole tallennettu tähän aloitteeseen.");
+        assertTextContainedByClass("msg-success", "Olet hylännyt kutsun vastuuhenkilöksi eikä tietojasi ole tallennettu aloitteeseen");
 
         assertInvitationPageIsGone(invitation);
 

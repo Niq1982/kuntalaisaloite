@@ -24,7 +24,7 @@
         <div class="msg-block">
             <h2><@u.message "moderation.title" /></h2>
             <#assign sendToReviewDate><@u.localDate initiative.stateTime/></#assign>
-            <p><@u.messageHTML key="moderation.description" args=[sendToReviewDate] /></p>
+            <p><@u.message key="moderation.description" args=[sendToReviewDate] /></p>
             
             <div class="js-open-block hidden">
                 <a class="small-button gray js-btn-open-block" data-open-block="js-block-container" href="#"><span class="small-icon save-and-send"><@u.message "action.accept" /></span></a>
