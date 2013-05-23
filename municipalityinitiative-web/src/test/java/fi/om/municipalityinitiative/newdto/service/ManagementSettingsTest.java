@@ -145,12 +145,30 @@ public class ManagementSettingsTest {
     public void is_allow_publish_only_if_initiative_state_accepted() throws Exception {
         final Initiative initiative = new Initiative();
 
+        initiative.setFixState(FixState.OK);
+
         assertExpectedOnlyWithGivenStates(initiative, new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
                 return ManagementSettings.of(initiative).isAllowPublish();
             }
         }, true, InitiativeState.ACCEPTED);
+
+    }
+
+    @Test
+    public void is_not_allow_publish_is_fixState_not_ok() {
+        Initiative initiative = new Initiative();
+
+        initiative.setState(InitiativeState.ACCEPTED);
+        initiative.setFixState(FixState.OK);
+        precondition(ManagementSettings.of(initiative).isAllowPublish(), is(true));
+
+        initiative.setFixState(FixState.FIX);
+        assertThat(ManagementSettings.of(initiative).isAllowPublish(), is(false));
+        initiative.setFixState(FixState.REVIEW);
+        assertThat(ManagementSettings.of(initiative).isAllowPublish(), is(false));
+
     }
 
     @Test
@@ -158,6 +176,7 @@ public class ManagementSettingsTest {
         final Initiative initiative = new Initiative();
         initiative.setSentTime(Maybe.<LocalDate>absent());
         initiative.setType(InitiativeType.COLLABORATIVE);
+        initiative.setFixState(FixState.OK);
 
         assertExpectedOnlyWithGivenStates(initiative, new Callable<Boolean>() {
             @Override
@@ -172,6 +191,7 @@ public class ManagementSettingsTest {
         final Initiative initiative = new Initiative();
         initiative.setType(InitiativeType.COLLABORATIVE);
         initiative.setState(InitiativeState.PUBLISHED);
+        initiative.setFixState(FixState.OK);
 
         precondition(ManagementSettings.of(initiative).isAllowParticipate(), is(true));
         initiative.setSentTime(Maybe.of(new LocalDate(2010, 1, 1)));
@@ -184,11 +204,29 @@ public class ManagementSettingsTest {
         final Initiative initiative = new Initiative();
         initiative.setType(InitiativeType.COLLABORATIVE);
         initiative.setState(InitiativeState.PUBLISHED);
+        initiative.setFixState(FixState.OK);
 
         precondition(ManagementSettings.of(initiative).isAllowParticipate(), is(true));
         initiative.setType(InitiativeType.SINGLE);
 
         assertThat(ManagementSettings.of(initiative).isAllowParticipate(), is(false));
+    }
+
+    @Test
+    public void is_not_allowed_to_participate_if_fixState_not_ok() {
+
+        final Initiative initiative = new Initiative();
+        initiative.setType(InitiativeType.COLLABORATIVE);
+        initiative.setState(InitiativeState.PUBLISHED);
+        initiative.setFixState(FixState.OK);
+
+        precondition(ManagementSettings.of(initiative).isAllowParticipate(), is(true));
+
+        initiative.setFixState(FixState.FIX);
+        assertThat(ManagementSettings.of(initiative).isAllowParticipate(), is(false));
+        initiative.setFixState(FixState.REVIEW);
+        assertThat(ManagementSettings.of(initiative).isAllowParticipate(), is(false));
+
     }
 
     @Test
