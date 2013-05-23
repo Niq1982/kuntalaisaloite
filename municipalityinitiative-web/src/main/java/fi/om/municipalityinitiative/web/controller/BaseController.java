@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.web;
+package fi.om.municipalityinitiative.web.controller;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -8,6 +8,7 @@ import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
+import fi.om.municipalityinitiative.web.*;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.TemplateModelException;
 import org.springframework.ui.Model;

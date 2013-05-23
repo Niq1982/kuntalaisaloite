@@ -1,9 +1,8 @@
-package fi.om.municipalityinitiative.newweb;
+package fi.om.municipalityinitiative.web.controller;
 
 import fi.om.municipalityinitiative.dto.ui.MunicipalityUIEditDto;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.util.Locales;
-import fi.om.municipalityinitiative.web.BaseController;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.stereotype.Controller;

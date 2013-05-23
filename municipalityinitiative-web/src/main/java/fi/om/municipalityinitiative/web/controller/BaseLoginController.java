@@ -1,7 +1,9 @@
-package fi.om.municipalityinitiative.web;
+package fi.om.municipalityinitiative.web.controller;
 
 import java.util.regex.Pattern;
 
+import fi.om.municipalityinitiative.web.Urls;
+import fi.om.municipalityinitiative.web.controller.BaseController;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 

@@ -1,6 +1,8 @@
-package fi.om.municipalityinitiative.web;
+package fi.om.municipalityinitiative.web.controller;
 
 import fi.om.municipalityinitiative.util.Maybe;
+import fi.om.municipalityinitiative.web.Urls;
+import fi.om.municipalityinitiative.web.controller.BaseController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;

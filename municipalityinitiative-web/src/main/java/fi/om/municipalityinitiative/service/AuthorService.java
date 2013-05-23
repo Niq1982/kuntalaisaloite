@@ -15,7 +15,7 @@ import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUIConfirmDto;
 import fi.om.municipalityinitiative.dto.ui.PublicAuthors;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
-import fi.om.municipalityinitiative.newweb.AuthorInvitationUICreateDto;
+import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUICreateDto;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.util.SecurityUtil;
 import org.joda.time.DateTime;

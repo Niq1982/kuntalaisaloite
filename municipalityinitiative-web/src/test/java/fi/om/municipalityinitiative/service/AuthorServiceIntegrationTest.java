@@ -13,7 +13,7 @@ import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUIConfirmDto;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
-import fi.om.municipalityinitiative.newweb.AuthorInvitationUICreateDto;
+import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUICreateDto;
 import fi.om.municipalityinitiative.sql.QAuthorInvitation;
 import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;

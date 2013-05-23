@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.newweb;
+package fi.om.municipalityinitiative.web.controller;
 
 import fi.om.municipalityinitiative.service.UserService;
 import fi.om.municipalityinitiative.web.*;

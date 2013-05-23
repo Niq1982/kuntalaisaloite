@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.web;
+package fi.om.municipalityinitiative.web.controller;
 
 import fi.om.municipalityinitiative.dto.InfoTextSubject;
 import fi.om.municipalityinitiative.dto.LoginUserHolder;
@@ -8,6 +8,10 @@ import fi.om.municipalityinitiative.service.InfoTextService;
 import fi.om.municipalityinitiative.service.UserService;
 import fi.om.municipalityinitiative.util.InfoTextCategory;
 import fi.om.municipalityinitiative.util.Maybe;
+import fi.om.municipalityinitiative.web.HelpPage;
+import fi.om.municipalityinitiative.web.RequestMessage;
+import fi.om.municipalityinitiative.web.Urls;
+import fi.om.municipalityinitiative.web.controller.BaseController;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

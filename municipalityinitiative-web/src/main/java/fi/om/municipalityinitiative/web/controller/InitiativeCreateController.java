@@ -1,11 +1,10 @@
-package fi.om.municipalityinitiative.newweb;
+package fi.om.municipalityinitiative.web.controller;
 
 import fi.om.municipalityinitiative.dto.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.PrepareInitiativeUICreateDto;
 import fi.om.municipalityinitiative.service.*;
-import fi.om.municipalityinitiative.web.BaseController;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;

@@ -1,7 +1,9 @@
-package fi.om.municipalityinitiative.web;
+package fi.om.municipalityinitiative.web.controller;
 
 import fi.om.municipalityinitiative.service.StatusService;
 import fi.om.municipalityinitiative.util.Locales;
+import fi.om.municipalityinitiative.web.InfoRibbon;
+import fi.om.municipalityinitiative.web.controller.BaseController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.newweb;
+package fi.om.municipalityinitiative.web.controller;
 
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.LoginUserHolder;
@@ -10,7 +10,6 @@ import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
-import fi.om.municipalityinitiative.web.BaseController;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.SearchParameterQueryString;
 import fi.om.municipalityinitiative.web.Urls;

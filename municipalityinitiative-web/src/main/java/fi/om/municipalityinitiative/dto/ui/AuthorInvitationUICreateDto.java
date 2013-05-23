@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.newweb;
+package fi.om.municipalityinitiative.dto.ui;
 
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;

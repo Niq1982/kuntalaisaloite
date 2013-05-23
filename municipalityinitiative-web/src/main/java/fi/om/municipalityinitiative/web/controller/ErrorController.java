@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.web;
+package fi.om.municipalityinitiative.web.controller;
 
 import static fi.om.municipalityinitiative.web.Urls.ERROR_404;
 import static fi.om.municipalityinitiative.web.Urls.ERROR_410;
@@ -13,6 +13,8 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import fi.om.municipalityinitiative.web.ErrorFilter;
+import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

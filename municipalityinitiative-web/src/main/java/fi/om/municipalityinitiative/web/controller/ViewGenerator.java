@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.newweb;
+package fi.om.municipalityinitiative.web.controller;
 
 import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
