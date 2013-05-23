@@ -13,26 +13,42 @@
 -->
 <#assign page="page.find" />
 
+
+<#--
+ * Set default data for iFrmae
+ *
+ * [municipalityId, limit, width, height]
+-->
+<#assign iFrameDefaults = ["", 3, 250, 400]>
+
+<#--
+ * Set min and maximum values for the generated iFrame
+ *
+ * [min limit, max limit, min width, max width, min height, max height]
+-->
+<#assign iFrameBounds = [1, 50, 220, 960, 300, 2000]>
+
+
 <@l.main "page.iframeGenerator" pageTitle!"">
 
     <h1><@u.message "page.iframeGenerator" /></h1>
 
-    <p>Leijukkeen avulla voidaan näyttää Kuntalaisaloite.fi-palvelun sisältöä toisen palvelun sivustolla. Leijuke näyttää uusimmat aloitteet Kuntalaisaloite.fi-palvelussa sekä toiminnot "Selaa kuntalaisaloitteista" sekä "Tee kuntalaisaloite". Toiminnot siirtyvät automaattisesti leijukkeessa määritetyn kunnan vastaaviin toimintoihin Kuntalaisaloite.fi-palveluun.</p>
-    <p>Leijukkeen kaikki linkit aukeavat selaimessa uuteen välilehteen ja käyttäjä ohjataan Kuntalaisaloite.fi-palvelun puolelle.</p>
-    <p>Leijukkeen sisältö päivittyy Kuntalaisaloite.fi-palvelun sisällön mukaan automaattisesti muutaman minuutin viiveellä.</p>
+    <p><@u.message "iframeGenerator.instruction.description" /></p>
+    <p><@u.message "iframeGenerator.instruction.links" /></p>
+    <p><@u.message "iframeGenerator.instruction.update" /></p>
 
-    <h3>Leijukkeen määrittäminen</h3>
+    <h3><@u.message "iframeGenerator.instruction.setup.title" /></h3>
     
-    <p>Leijukketta voidaan säätää haluamaksi parametrien avulla. Parametreilla voi säätää</p>
+    <p><@u.message "iframeGenerator.instruction.setup.description" /></p>
     <ul>
-        <li>minkä kunnan aloitteita leijukkeessa listataan</li>
-        <li>kuinka monta uusinta aloitetta listassa näytetään</li>
-        <li>leijukkeen leveyttä (220-960 pikseliä)</li>
-        <li>leijukkeen korkeutta (300-2000 pikseliä)</li>
+        <li><@u.message "iframeGenerator.instruction.setup.municipality" /></li>
+        <li><@u.message key="iframeGenerator.instruction.setup.limit" args=[iFrameBounds[0], iFrameBounds[1]] /></li>
+        <li><@u.message key="iframeGenerator.instruction.setup.width" args=[iFrameBounds[2], iFrameBounds[3]] /></li>
+        <li><@u.message key="iframeGenerator.instruction.setup.height" args=[iFrameBounds[4], iFrameBounds[5]] /></li>
     </ul>
     
     <div class="view-block first">
-        <@i.initiativeIframeGenerator municipalities />
+        <@i.initiativeIframeGenerator municipalities iFrameDefaults iFrameBounds />
     </div>
 
 </@l.main>

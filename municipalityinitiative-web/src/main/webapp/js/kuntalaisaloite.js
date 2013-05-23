@@ -1198,19 +1198,7 @@ if (window.hasIFrame){
 		limit = 			$('#limit'),
 		width = 			$('#width'),
 		height = 			$('#height'),
-	
-	bounds = { 
-		min : {
-			limit:	1,
-			width:	220,
-			height:	300
-		},
-		max : {
-			limit:	100,
-			width:	960,
-			height:	2000
-		}
-	},
+		bounds = 			window.bounds,
 		
 	generateIframe = function (params) {
 		iframeContainer.html($("#iframe-template").render(params));
