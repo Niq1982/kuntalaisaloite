@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dao.InvitationNotValidException;
 import fi.om.municipalityinitiative.newdto.LoginUserHolder;
 import fi.om.municipalityinitiative.newdto.user.User;
-import fi.om.municipalityinitiative.util.NotFoundException;
+import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
@@ -24,7 +24,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 

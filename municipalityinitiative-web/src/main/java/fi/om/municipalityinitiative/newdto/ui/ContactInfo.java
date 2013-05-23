@@ -1,6 +1,6 @@
 package fi.om.municipalityinitiative.newdto.ui;
 
-import fi.om.municipalityinitiative.dto.InitiativeConstants;
+import fi.om.municipalityinitiative.newdto.InitiativeConstants;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Pattern;

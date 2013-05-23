@@ -1,14 +1,13 @@
 package fi.om.municipalityinitiative.newdao;
 
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.expr.DateTimeExpression;
 import fi.om.municipalityinitiative.dao.InvitationNotValidException;
-import fi.om.municipalityinitiative.util.NotFoundException;
+import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdto.Author;

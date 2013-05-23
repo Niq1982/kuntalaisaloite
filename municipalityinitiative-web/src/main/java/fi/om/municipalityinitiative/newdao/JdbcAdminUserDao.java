@@ -6,13 +6,8 @@ import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
-import fi.om.municipalityinitiative.newdto.Author;
 import fi.om.municipalityinitiative.newdto.user.User;
 import fi.om.municipalityinitiative.sql.QAdminUser;
-import fi.om.municipalityinitiative.sql.QAuthor;
-import fi.om.municipalityinitiative.sql.QMunicipality;
-import fi.om.municipalityinitiative.sql.QParticipant;
-import fi.om.municipalityinitiative.util.NotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;

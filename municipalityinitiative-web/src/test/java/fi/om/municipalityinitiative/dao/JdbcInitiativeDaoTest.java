@@ -1,7 +1,8 @@
 package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
-import fi.om.municipalityinitiative.dto.InitiativeCounts;
+import fi.om.municipalityinitiative.newdto.InitiativeCounts;
+import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdto.InitiativeSearch;

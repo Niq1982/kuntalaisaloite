@@ -1,9 +1,8 @@
 package fi.om.municipalityinitiative.newdto.ui;
 
-import fi.om.municipalityinitiative.dto.InitiativeConstants;
+import fi.om.municipalityinitiative.newdto.InitiativeConstants;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class InitiativeUIUpdateDto {

@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.dto;
+package fi.om.municipalityinitiative.newdto;
 
 public class InitiativeConstants {
     public static final int INITIATIVE_NAME_MAX = 512;

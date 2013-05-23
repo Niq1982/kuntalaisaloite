@@ -1,7 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dao.InvitationNotValidException;
-import fi.om.municipalityinitiative.util.NotFoundException;
+import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
@@ -19,10 +19,7 @@ import fi.om.municipalityinitiative.newweb.AuthorInvitationUICreateDto;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.util.SecurityUtil;
 import org.joda.time.DateTime;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronization;
 
 import javax.annotation.Resource;
 

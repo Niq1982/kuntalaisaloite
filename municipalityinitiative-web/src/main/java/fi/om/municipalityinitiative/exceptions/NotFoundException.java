@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.util;
+package fi.om.municipalityinitiative.exceptions;
 
 public class NotFoundException extends RuntimeException {
 

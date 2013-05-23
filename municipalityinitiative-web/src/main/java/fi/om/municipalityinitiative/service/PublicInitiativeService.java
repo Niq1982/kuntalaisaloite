@@ -1,6 +1,6 @@
 package fi.om.municipalityinitiative.service;
 
-import fi.om.municipalityinitiative.dto.InitiativeCounts;
+import fi.om.municipalityinitiative.newdto.InitiativeCounts;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;

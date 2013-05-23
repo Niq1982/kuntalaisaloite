@@ -1,7 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Lists;
-import fi.om.municipalityinitiative.util.NotFoundException;
+import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.web.Urls;
 import org.aspectj.util.FileUtil;
 import org.joda.time.DateTime;

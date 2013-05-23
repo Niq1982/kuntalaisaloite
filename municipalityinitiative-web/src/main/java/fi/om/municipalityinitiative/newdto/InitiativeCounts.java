@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.dto;
+package fi.om.municipalityinitiative.newdto;
 
 public class InitiativeCounts {
     public long collecting = 0;

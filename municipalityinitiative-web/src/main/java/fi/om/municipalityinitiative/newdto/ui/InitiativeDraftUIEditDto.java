@@ -1,14 +1,12 @@
 package fi.om.municipalityinitiative.newdto.ui;
 
-import fi.om.municipalityinitiative.dto.InitiativeConstants;
+import fi.om.municipalityinitiative.newdto.InitiativeConstants;
 import fi.om.municipalityinitiative.newdto.service.Initiative;
 import fi.om.municipalityinitiative.newdto.service.Municipality;
-import fi.om.municipalityinitiative.util.InitiativeState;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class InitiativeDraftUIEditDto {

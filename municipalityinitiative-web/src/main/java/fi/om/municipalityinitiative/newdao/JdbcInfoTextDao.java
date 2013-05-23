@@ -11,7 +11,7 @@ import fi.om.municipalityinitiative.newdto.InfoTextFooterLink;
 import fi.om.municipalityinitiative.newdto.InfoTextSubject;
 import fi.om.municipalityinitiative.sql.QInfoText;
 import fi.om.municipalityinitiative.util.LanguageCode;
-import fi.om.municipalityinitiative.util.NotFoundException;
+import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import org.joda.time.DateTime;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;

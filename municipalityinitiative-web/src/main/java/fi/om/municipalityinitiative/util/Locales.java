@@ -2,8 +2,6 @@ package fi.om.municipalityinitiative.util;
 
 import java.util.Locale;
 
-import fi.om.municipalityinitiative.dto.LocalizedString;
-
 public final class Locales {
 
     public static final String FI = "fi";
@@ -14,10 +12,6 @@ public final class Locales {
 
     public static final Locale LOCALE_SV = Locale.forLanguageTag(SV);
 
-    public static LocalizedString asLocalizedString(String inFinnish, String inSwedish) {
-        return new LocalizedString(inFinnish, inSwedish);
-    }
-    
     private Locales() {}
     
     public static Locale getAltLocale(Locale locale) {
