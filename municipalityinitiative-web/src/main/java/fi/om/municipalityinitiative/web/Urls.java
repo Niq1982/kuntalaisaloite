@@ -60,10 +60,6 @@ public final class Urls {
     public static final String LOGOUT_FI =       "/fi/logout";
     
     public static final String LOGOUT_SV =       "/sv/logout";
-
-    public static final String SEARCH_OLD_FI =    "/fi/haeOLD";
-    
-    public static final String SEARCH_OLD_SV =    "/sv/sokOLD";
     
     public static final String MY_ACCOUNT_FI =    "/fi/omat-tiedot";
     
@@ -84,11 +80,6 @@ public final class Urls {
     public static final String MUNICIPALITIES = API + "/v1/municipalities";
 
     public static final String MUNICIPALITY = MUNICIPALITIES + "/" + ID_PARAMETER;
-
-    public static final String SERVICES = "/services";
-    
-    public static final String KEEPALIVE =  SERVICES + "/keepalive";
-
     
     public static final String ERROR_404 = "/404";
     
@@ -121,8 +112,6 @@ public final class Urls {
 
     public static final String PARAM_SENT_COMMENT = "sentComment";
     
-    public static final String SEARCH_UNREMOVED_VOTES = "searchUnremovedVotes";
-    
     public static final String SEARCH_OWN_ONLY = "includeOwn=true&includePublic=false";
     
     // Municipality initiative STARTS
@@ -135,9 +124,7 @@ public final class Urls {
     public static final String PARAM_PARTICIPANT_ID = "participantId";
 
     public static final String ACTION_SAVE = "action-save";
-    
-    public static final String ACTION_SAVE_AND_SEND = "action-save-and-send";
-    
+
     public static final String ACTION_SEND_TO_REVIEW = "action-send-to-review";
     
     public static final String ACTION_SEND_TO_REVIEW_COLLECT = "action-send-to-review-collect";
@@ -165,28 +152,8 @@ public final class Urls {
     public static final String ACTION_DELETE_PARTICIPANT = "action-delete-participant";
     
     // Municipality initiative ENDS
-    
-    public static final String ACTION_SAVE_AND_SEND_INVITATIONS = "action-save-and-send-invitations";
-    
-    public static final String ACTION_SEND_INVITATIONS = "action-send-invitations";
-    
-    public static final String ACTION_UPDATE_VRK_RESOLUTION = "action-vrk-update-resolution";
-    
+
     public static final String ACTION_VOTE = "action-vote";
-    
-    public static final String ACTION_SEND_TO_OM = "action-send-to-om";
-    
-    public static final String ACTION_ACCEPT_BY_OM = "action-accept-by-om";
-    
-    public static final String ACTION_REJECT_BY_OM = "action-reject-by-om";
-    
-    public static final String ACTION_SEND_TO_VRK = "action-send-to-vrk"; 
-
-    public static final String ACTION_CONFIRM_CURRENT_AUTHOR = "action-confirm-current-author";
-
-    public static final String ACTION_DELETE_CURRENT_AUTHOR = "action-delete-current-author";
-
-    public static final String ACTION_REMOVE_SUPPORT_VOTES = "action-remove-support-votes";
 
     // Actions for the content editor
 
@@ -211,6 +178,7 @@ public final class Urls {
     public static final int DEFAULT_INITIATIVE_JSON_RESULT_COUNT = 20;
 
     public static final int DEFAULT_INITIATIVE_SEARCH_LIMIT = 20;
+
     public static final int MAX_INITIATIVE_SEARCH_LIMIT = 500;
 
     // New uris
@@ -422,25 +390,13 @@ public final class Urls {
     public String municipalities() {
         return baseUrl + MUNICIPALITIES;
     }
-    
-    public String voteAction(Long initiativeId) {
-        return view(initiativeId);
-    }
 
     public String invitation(Long initiativeId, String confirmationCode) {
         return getLocalizedPageUrl(INVITATION_FI, INVITATION_SV).replace(ID_PARAMETER, initiativeId.toString()) + "?" + PARAM_INVITATION_CODE + "=" + confirmationCode;
     }
 
-    public String confirmAcceptInvitation(Long initiativeId) {
-        return view(initiativeId) + "?" + ACTION_ACCEPT_INVITATION;
-    }
-    
     public String invitationRejected(Long initiativeId) {
         return getLocalizedPageUrl(INVITATION_REJECTED_FI, INVITATION_REJECTED_SV).replace(ID_PARAMETER, initiativeId.toString());
-    }
-    
-    public String search_old() {
-        return getLocalizedPageUrl(SEARCH_OLD_FI, SEARCH_OLD_SV);
     }
 
     public String search() {
@@ -449,18 +405,6 @@ public final class Urls {
     
     public String news() {
         return getLocalizedPageUrl(NEWS_FI, NEWS_SV);
-    }
-
-    public String searchUnremovedVotes() {
-        return searchUnremovedVotes(""); // default search_old
-    }
-    
-    public String searchUnremovedVotes(String periodBeforeDeadLine) {
-        return search_old() +  "?" + SEARCH_UNREMOVED_VOTES + "=" + periodBeforeDeadLine;
-    }
-    
-    public String searchOwnOnly() {
-        return search_old() + "?" + SEARCH_OWN_ONLY;
     }
 
     public String prepare() {
@@ -475,10 +419,6 @@ public final class Urls {
         return baseUrl + CONTENT_EDITOR_HELP;
     }
 
-    public String paramSendInvitations() {
-        return ACTION_SEND_INVITATIONS;
-    }
-
     public String login(String target) {
         if (Strings.isNullOrEmpty(target)) {
             target = baseUrl;
@@ -490,14 +430,7 @@ public final class Urls {
     public String testDataGeneration() {
         return getLocalizedPageUrl(TEST_DATA_GENERATION_FI, TEST_DATA_GENERATION_SV);
     }
-    
-    public String downloadVotes(Long batchId, String fileName) {
-        String url = DOWNLOAD_VOTES
-                .replace(ID_PARAMETER, batchId.toString())
-                .replace(FILE_NAME_PARAMETER, urlEncode(fileName));
-        return baseUrl + url;
-    }
-    
+
     public String logout() {
         return getLocalizedPageUrl(LOGOUT_FI, LOGOUT_SV);
     }

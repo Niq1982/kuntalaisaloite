@@ -8,12 +8,8 @@ public final class Views {
     public static final String DUMMY_LOGIN_VIEW = "dummy-login";
 
     public static final String SINGLE_LOGIN_VIEW = "single-login";
-    
-    public static final String VETUMA_LOGIN_VIEW = "vetuma-login";
 
     public static final String INDEX_VIEW = "index";
-
-    public static final String REGISTERED_USER = "registered-user";
 
     public static final String TEST_DATA_GENERATION = "test-data-generation";
     
@@ -29,8 +25,6 @@ public final class Views {
     
     public static final String HELP_VIEW = "pages/help";
 
-    public static final String INFO_VIEW = "pages/info";
-
     public static final String HELP_EDIT_VIEW = "pages/edit_help";
 
     public static final String CONTENT_EDITOR_HELP_VIEW = "pages/content-editor-help";
@@ -40,7 +34,6 @@ public final class Views {
     public static final String SEARCH_VIEW = "find";
     public static final String PREPARE_VIEW = "prepare";
     public static final String PENDING_CONFIRMATION = "pending-confirmation";
-    public static final String VIEW_VIEW = "initiative";
     public static final String PUBLIC_SINGLE_VIEW = "public-single-view";
     public static final String PUBLIC_COLLECT_VIEW = "public-collect-view";
     public static final String MANAGEMENT_VIEW = "management-view";
