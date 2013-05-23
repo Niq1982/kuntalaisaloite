@@ -146,7 +146,7 @@
                             <tr>
                                 <td>
                                 <label class="initiative">
-                                    <input type="radio" id="selections[${testInitiative_index}]" name="initiative" value="${testInitiative_index}" <#if testInitiative_index == 0>checked="checked"</#if> class="select" />  
+                                    <input type="radio" id="selections[${testInitiative_index}]" name="initiative" value="${testInitiative_index}" <#if testInitiative_index == 1>checked="checked"</#if> class="select" />  
                                     <span class="initiative-title">${testInitiative.initiative.name!""}</span>
                                 </label>
                                 </td>

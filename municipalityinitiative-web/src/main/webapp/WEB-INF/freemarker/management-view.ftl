@@ -252,7 +252,9 @@
             <div class="msg-block">
                 <div class="system-msg msg-info">
                     <h2 id="send-fix-to-review"><@u.message "sendFixToReview.title" /></h2>
+                    
                     <p><@u.message "sendFixToReview.description" /></p>
+                    <p><@u.message "sendFixToReview.instruction" /></p>
         
                     <a href="${managementURL}?send-fix-to-review=confirm#send-fix-to-review" id="js-send-fix-to-review" class="small-button js-send-fix-to-review"><span class="small-icon save-and-send"><@u.message "action.sendFixToReview" /></span></a>
                 </div>
