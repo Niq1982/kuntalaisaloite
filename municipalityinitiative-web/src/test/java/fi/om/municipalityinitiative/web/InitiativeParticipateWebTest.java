@@ -54,7 +54,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         
         open(urls.confirmParticipant(testHelper.getLastParticipantId(), RandomHashGenerator.getPrevious()));
         
-        assertTextContainedByClass("public-names", "2 julkista nimeä");
+        assertTextContainedByClass("public-names", "2 nimeä julkaistu palvelussa");
     }
     
     @Test
@@ -88,7 +88,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         
         open(urls.confirmParticipant(testHelper.getLastParticipantId(), RandomHashGenerator.getPrevious()));
         
-        assertTextContainedByClass("private-names", "1 ei-julkinen nimi");
+        assertTextContainedByClass("private-names", "1 nimi ei julkaistu palvelussa");
     }
     
 }
