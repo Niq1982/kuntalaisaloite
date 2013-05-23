@@ -18,12 +18,13 @@
     
     <@e.stateInfo initiative />
     
-    <@returnPrevious />
+    <@u.returnPrevious urls.management(initiative.id) "link.to.managementView" />
 
     <#if !RequestParameters['deleteParticipant']??>
         <div class="view-block single public cf">
-            <a style="float:right;" href="${urls.participantList(initiative.id)}">Osallistujalista</a>
-            <h2>Kaikki osallistujat</h2>
+            <h2><@u.message "manageParticipants.title" />
+                <span class="switch-view"><a href="${urls.participantList(initiative.id)}"><@u.message key="participantList.title" /> &bull; ${participantCount.publicNames!""}<@u.message key="participantList.title.count" /></a></span>
+            </h2>
 
             <@participantListManage participants />
         </div>
@@ -36,7 +37,7 @@
         </div>
     </#if>
 
-    <@returnPrevious />
+    <@u.returnPrevious urls.management(initiative.id) "link.to.managementView" />
 
     <#-- HTML for confirm Delete Modal -->
     <#assign deleteParticipant>
@@ -106,7 +107,7 @@
                     data-municipality="${participant.homeMunicipality.getName(locale)!""}"><@u.message "deleteParticipant.delete" /></a></span></li>
 
             <#else>
-                <span class="bull">&bull;</span> Vastuuhenkilöä ei voida poistaa
+                <span class="bull">&bull;</span> <@u.message "deleteParticipant.authorCannotBeDeleted" />
             </#if>
             
         <#if !participant_has_next></ul></#if>
@@ -153,27 +154,13 @@
             <@participantDetailsById participants RequestParameters['deleteParticipant'] />
         </#if>
         
+        <@u.systemMessage path="deleteParticipant.confirm.warning" type="warning" showClose=false />
+        
         <div class="input-block-content">
-            <button type="submit" name="${UrlConstants.ACTION_DELETE_PARTICIPANT}" id="modal-${UrlConstants.ACTION_DELETE_PARTICIPANT}" value="${UrlConstants.ACTION_DELETE_PARTICIPANT}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.deleteParticipant.confirm" /></button>
+            <button type="submit" name="${UrlConstants.ACTION_DELETE_PARTICIPANT}" id="modal-${UrlConstants.ACTION_DELETE_PARTICIPANT}" value="${UrlConstants.ACTION_DELETE_PARTICIPANT}" class="small-button"><span class="small-icon cancel"><@u.message "action.deleteParticipant.confirm" /></button>
             <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
         </div>
     </form>
-</#macro>
-
-<#-- 
- * returnPrevious
- *
- *  If request header referer equals management
- *      previousPageURI is the management URI
- *  Otherwise
- *      previousPageURI is the public view URI
--->
-<#macro returnPrevious>
-    <#if previousPageURI == urls.getManagement(initiative.id)>
-        <p><a href="${previousPageURI}">&laquo; <@u.message "participantList.return.management" /></a></p>
-    <#else>
-        <p><a href="${previousPageURI}">&laquo; <@u.message "participantList.return.view" /></a></p>
-    </#if>
 </#macro>
 
 </#escape> 

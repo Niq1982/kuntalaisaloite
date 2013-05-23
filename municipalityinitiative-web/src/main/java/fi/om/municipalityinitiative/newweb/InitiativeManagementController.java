@@ -67,7 +67,8 @@ public class InitiativeManagementController extends BaseController {
 
         return ViewGenerator.managementView(initiativeInfo,
                 publicInitiativeService.getManagementSettings(initiativeId),
-                authorService.findAuthors(initiativeId, loginUserHolder)
+                authorService.findAuthors(initiativeId, loginUserHolder),
+                participantService.getParticipantCount(initiativeId)
         ).view(model, Urls.get(locale).alt().getManagement(initiativeId));
     }
 

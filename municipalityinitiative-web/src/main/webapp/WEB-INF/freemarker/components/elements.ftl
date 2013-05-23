@@ -21,6 +21,35 @@
 </#macro>
 
 <#-- 
+ * stateInfo
+ * 
+ * Generates initiative's state dates
+ *
+ * @param initiative is initiative
+-->
+<#macro stateInfo initiative>
+    
+    <span class="extra-info">
+        <#if initiative.sentTime.present>
+            <#assign sentTime><@u.localDate initiative.sentTime.value /></#assign>
+            <@u.message key="initiative.date.sent" args=[sentTime] />
+        <#else>
+            <#assign createTime><@u.localDate initiative.createTime /></#assign>
+            <@u.message key="initiative.date.create" args=[createTime] />
+            <#assign stateTime><@u.localDate initiative.stateTime/></#assign>
+            
+            <#if initiative.fixState != FixState.OK>
+                <span class="bull">&bull;</span> <@u.message key="initiative.fixStateInfo."+initiative.fixState />
+            <#elseif initiative.state??>
+                <span class="bull">&bull;</span> <@u.message key="initiative.stateInfo."+initiative.state args=[stateTime]/>
+                <#if initiative.state == InitiativeState.PUBLISHED && initiative.collaborative><@u.message key="initiative.stateInfo.collecting" /></#if>
+            </#if>
+        </#if>
+    </span>
+
+</#macro>
+
+<#-- 
  * initiativeAuthor
  * 
  * Generates initiative's public author name
@@ -55,7 +84,7 @@
  * @param contactInfo is author.contactInfo
 -->
 <#macro initiativeContactInfo authorList>
-    <h2><@u.message key="initiative.authors.title" args=[authorList?size] /></h2>
+    <h3><@u.message key="initiative.authors.title" args=[authorList?size] /></h3>
     
     <@u.systemMessage path="initiative.authors.contactinfo.notPublic" type="info" showClose=false />
     <br />
@@ -72,34 +101,57 @@
 </#macro>
 
 
-
 <#-- 
- * stateInfo
+ * participants
  * 
- * Generates initiative's state dates
+ * Generates participants block with optional participate button and form
  *
- * @param initiative is initiative
+ * @param formHTML is the markup for the form for NOSCRIPT-users
+ * @param showForm is boolean for toggling form visibility 
+ * @param admin is boolean for toggling participate button and participant manage -link 
 -->
-<#macro stateInfo initiative>
+<#macro participants formHTML="" showForm=true admin=false>
+    <h3><@u.message key="initiative.participants.title" args=[participantCount.total] />
+    <#if admin><span class="switch-view"><a href="${urls.participantListManage(initiative.id)}"><@u.message "manageParticipants.title" /></a></span></#if></h3>
     
-    <span class="extra-info">
-        <#if initiative.sentTime.present>
-            <#assign sentTime><@u.localDate initiative.sentTime.value /></#assign>
-            <@u.message key="initiative.date.sent" args=[sentTime] />
-        <#else>
-            <#assign createTime><@u.localDate initiative.createTime /></#assign>
-            <@u.message key="initiative.date.create" args=[createTime] />
-            <#assign stateTime><@u.localDate initiative.stateTime/></#assign>
-            
-            <#if initiative.fixState != FixState.OK>
-                <span class="bull">&bull;</span> <@u.message key="initiative.fixStateInfo."+initiative.fixState />
-            <#elseif initiative.state??>
-                <span class="bull">&bull;</span> <@u.message key="initiative.stateInfo."+initiative.state args=[stateTime]/>
-                <#if initiative.state == InitiativeState.PUBLISHED && initiative.collaborative><@u.message key="initiative.stateInfo.collecting" /></#if>
-            </#if>
-        </#if>
-    </span>
+    <br/>
+    <div class="participants-block">
+        <span class="user-count-total">${participantCount.total!""}</span>
+    </div>
+    <div class="participants-block separate">
+        <span class="user-count-sub-total">
+            <#if (participantCount.publicNames > 0)><span class="public-names"><a class="trigger-tooltip" href="${urls.participantList(initiative.id)}" title="<@u.message key="participantCount.publicNames.show"/>"><@u.message key="participantCount.publicNames" args=[participantCount.publicNames] /></a></span><br/></#if>
+            <#if (participantCount.privateNames > 0)><span class="private-names"><@u.message key="participantCount.privateNames" args=[participantCount.privateNames] /></span></p></#if>
+        </span>
+    </div>
+    
+    <#if !admin && !initiative.sentTime.present && requestMessages?? && !(requestMessages?size > 0) && !showForm>
+        <div class="participants-block">
+            <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>
+        </div>
+        <div class="participants-block last">
+            <a title="<@u.messageHTML "action.participate.infoLink.title" />" href="#"><@u.messageHTML "action.participate.infoLink" /></a>
+        </div>
+    </#if>
+    <#if !admin && initiative.sentTime.present>
+        <div class="participants-block last">
+            <div class="participate not-allowed">
+                <@u.systemMessage path="participate.sentToMunicipality" type="info" showClose=false />
+            </div>
+        </div>
+    </#if>
+    <br class="clear" />
 
+    <#-- NOSCRIPT participate -->
+    <#if showForm>
+        <#noescape><noscript>
+            <div id="participate-form" class="participate-form cf top-margin">
+                <h3><@u.message "participate.title" /></h3>
+                ${formHTML!""}
+            </div>
+        </noscript></#noescape>
+    </#if>
 </#macro>
+
 
 </#escape> 

@@ -363,6 +363,16 @@ ${email?split("@")?first}&#064;<span class="hide">null</span>${email?split("@")?
 </#macro>
 
 <#--
+ * returnPrevious
+ *
+ * @param url 
+ * @param labelKey
+-->
+<#macro returnPrevious url labelKey>
+    <p><a href="${url}">&laquo; <@message labelKey /></a></p>
+</#macro>
+
+<#--
  * faqItem
  *  
  * Produces FAQ item.   

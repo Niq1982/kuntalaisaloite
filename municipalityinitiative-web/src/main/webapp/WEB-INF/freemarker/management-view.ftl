@@ -32,13 +32,17 @@
     <@e.stateInfo initiative />
 
     <div class="view-block first">
+        <@e.initiativeView initiative />
+    </div>
+    
+    <div class="view-block">
+        <h2><@u.message key="initiative.people.title" args=[authors?size+participantCount.total] /></h2>
+        
         <div class="initiative-content-row">
-            <@e.initiativeView initiative />
-        </div>
-
-        <div class="initiative-content-row last">
             <@e.initiativeContactInfo authors />
         </div>
+
+        <@e.participants showForm=false admin=true />
     </div>
 
     <#if managementSettings.allowSendToReview>
