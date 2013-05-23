@@ -154,6 +154,16 @@
 </#macro>
 
 <#--
+ * returnPrevious
+ *
+ * @param url 
+ * @param labelKey
+-->
+<#macro returnPrevious url labelKey>
+    <p><a href="${url}">&laquo; <@message labelKey /></a></p>
+</#macro>
+
+<#--
  * systemMessage
  *
  * System message for showing messages like info, success, ...
@@ -360,16 +370,6 @@ ${email?split("@")?first}&#064;<span class="hide">null</span>${email?split("@")?
 <@compress single_line=true>
     <a href="${urls.search()}${queryString[parameter]}" class="${cssClass}<#if tooltip> trigger-tooltip</#if>" <#if tooltip>title="<@message "searchParameters."+parameter+".tooltip" />"</#if>><@message "searchParameters."+parameter /><#if (count > -1)><span class="count">${count}</span></#if></a>
 </@compress>
-</#macro>
-
-<#--
- * returnPrevious
- *
- * @param url 
- * @param labelKey
--->
-<#macro returnPrevious url labelKey>
-    <p><a href="${url}">&laquo; <@message labelKey /></a></p>
 </#macro>
 
 <#--
