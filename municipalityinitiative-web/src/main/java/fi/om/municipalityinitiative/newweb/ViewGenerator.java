@@ -146,12 +146,13 @@ public class ViewGenerator {
         );
     }
 
-    public static ViewGenerator managementView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<Author> authors) {
+    public static ViewGenerator managementView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<Author> authors, ParticipantCount participantCount) {
         return new ViewGenerator(MANAGEMENT_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
                         .add("managementSettings", managementSettings)
                         .add("authors", authors)
+                        .add("participantCount", participantCount)
                         .build()
         );
     }

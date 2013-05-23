@@ -28,7 +28,7 @@
     
     <@e.stateInfo initiative />
     
-    <@returnPrevious />
+    <@u.returnPrevious urls.management(initiative.id) "participantList.return.management" />
 
     <#if !RequestParameters['deleteAuthor']??>
         <div class="view-block ">
@@ -59,7 +59,7 @@
         </div>
     </#if>
     
-    <@returnPrevious />
+    <@u.returnPrevious urls.management(initiative.id) "participantList.return.management" />
     
     <#-- HTML for confirm delete Modal -->
     <#assign deleteAuthor>
@@ -263,17 +263,6 @@
         </div>
     </form>
 </#macro>
-
-<#-- 
- * returnPrevious
- *
- * Return to management page
--->
-<#macro returnPrevious>
-    <p><a href="${urls.management(initiative.id)}">&laquo; <@u.message "participantList.return.management" /></a></p>
-</#macro>
-
-
 
 </#escape> 
 

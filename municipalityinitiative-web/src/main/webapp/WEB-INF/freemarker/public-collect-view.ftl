@@ -27,8 +27,6 @@
     
     <@e.stateInfo initiative />
 
-    
-
     <#-- VIEW BLOCKS -->
     <div class="view-block public first">
         <div class="initiative-content-row last">
@@ -102,17 +100,33 @@
     
     </@compress>
     </#assign>
-
-    <#--
-     * Show participant counts and participate form
-    -->
+    
     <div id="participants" class="view-block public last">
         <h2><@u.message key="initiative.people.title" args=[authors.publicNames+authors.privateNames+participantCount.total] /></h2>
     
         <div class="initiative-content-row">
             <@e.initiativeAuthor authors />
         </div>
+        
+        <#--
+         * Do NOT show participate button:
+         *  - when modal request message is showed
+         *  - when participate form is showed (RequestParameter for NOSCRIPT)
+         *  - when the form has validation errors
+         *  - when sent to municipality (initiative.sentTime.present)
+        -->
+        <#assign showParticipateForm = (hasErrors?? && hasErrors) || (RequestParameters['participateForm']?? && RequestParameters['participateForm'] == "true") />
+        
+        <#--
+         * Show participant counts and participate form
+        -->
+        <div class="initiative-content-row last">
+            <@e.participants formHTML=participateFormHTML showForm=showParticipateForm />
+        </div>
+        
+    </div>
     
+    <#--
         <div class="initiative-content-row last">
 
             <h3><@u.message key="initiative.participants.title" args=[participantCount.total] /></h3>
@@ -126,15 +140,6 @@
                     <#if (participantCount.privateNames > 0)><span class="private-names"><@u.message key="participantCount.privateNames" args=[participantCount.privateNames] /></span></p></#if>
                 </span>
             </div>
-            
-            <#--
-             * Do NOT show participate button:
-             *  - when modal request message is showed
-             *  - when participate form is showed (RequestParameter for NOSCRIPT)
-             *  - when the form has validation errors
-             *  - when sent to municipality (initiative.sentTime.present)
-            -->
-            <#assign showParticipateForm = (hasErrors?? && hasErrors) || (RequestParameters['participateForm']?? && RequestParameters['participateForm'] == "true") />
             
             <#if !initiative.sentTime.present && requestMessages?? && !(requestMessages?size > 0) && !showParticipateForm>
                 <div class="participants-block">
@@ -153,7 +158,6 @@
             </#if>
             <br class="clear" />
 
-            <#-- NOSCRIPT participate -->
             <#if showParticipateForm>
                 <#noescape><noscript>
                     <div id="participate-form" class="participate-form cf top-margin">
@@ -164,6 +168,7 @@
             </#if>
         </div>     
     </div>
+    -->
 
     <#--
      * Social media buttons

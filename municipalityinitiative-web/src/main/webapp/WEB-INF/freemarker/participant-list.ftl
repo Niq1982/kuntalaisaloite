@@ -21,10 +21,9 @@
     <@returnPrevious />
 
     <div class="view-block single public cf">
-        <#if hasManagementRightForInitiative>
-            <a style="float:right;" href="${urls.participantListManage(initiative.id)}">Osallistujahallinta</a>
-        </#if>
-        <h2><@u.message key="participantList.title" args=[participantCount.publicNames!""] /></h2>
+        <h2><@u.message key="participantList.title" /><span class="bull">&bull;</span>${participantCount.publicNames!""}<@u.message key="participantList.title.count" />
+            <#if hasManagementRightForInitiative><span class="switch-view"><a href="${urls.participantListManage(initiative.id)}"><@u.message "manageParticipants.title" /></a></span></#if>
+        </h2>
         
         <@participantList participants />
     </div>
