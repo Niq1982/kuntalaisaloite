@@ -4,12 +4,12 @@ import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
-import fi.om.municipalityinitiative.newdto.Author;
-import fi.om.municipalityinitiative.newdto.service.Initiative;
-import fi.om.municipalityinitiative.newdto.service.Municipality;
-import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeDraftUIEditDto;
-import fi.om.municipalityinitiative.newdto.ui.InitiativeUIUpdateDto;
+import fi.om.municipalityinitiative.dto.Author;
+import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.ui.ContactInfo;
+import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
+import fi.om.municipalityinitiative.dto.ui.InitiativeUIUpdateDto;
 import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
 import org.junit.Assert;
@@ -26,7 +26,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.stub;
 
 public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrationTestBase {
 
