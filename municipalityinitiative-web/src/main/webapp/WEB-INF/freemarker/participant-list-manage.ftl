@@ -18,7 +18,7 @@
     
     <@e.stateInfo initiative />
     
-    <@returnPrevious />
+    <@u.returnPrevious urls.management(initiative.id) "link.to.managementView" />
 
     <#if !RequestParameters['deleteParticipant']??>
         <div class="view-block single public cf">
@@ -37,7 +37,7 @@
         </div>
     </#if>
 
-    <@returnPrevious />
+    <@u.returnPrevious urls.management(initiative.id) "link.to.managementView" />
 
     <#-- HTML for confirm Delete Modal -->
     <#assign deleteParticipant>
@@ -161,14 +161,6 @@
             <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
         </div>
     </form>
-</#macro>
-
-<#-- 
- * returnPrevious
- *
--->
-<#macro returnPrevious url label>
-    <p><a href="${urls.getManagement(initiative.id)}">&laquo; <@u.message "link.to.managementView" /></a></p>
 </#macro>
 
 </#escape> 

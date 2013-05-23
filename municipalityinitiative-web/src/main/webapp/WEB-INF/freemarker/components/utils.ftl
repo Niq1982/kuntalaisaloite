@@ -369,7 +369,7 @@ ${email?split("@")?first}&#064;<span class="hide">null</span>${email?split("@")?
  * @param labelKey
 -->
 <#macro returnPrevious url labelKey>
-    <p><a href="${url}">&laquo; <@u.message labelKey /></a></p>
+    <p><a href="${url}">&laquo; <@message labelKey /></a></p>
 </#macro>
 
 <#--

@@ -18,8 +18,12 @@
     
     <@e.stateInfo initiative />
     
-    <@returnPrevious />
-
+    <#if hasManagementRightForInitiative>
+        <@u.returnPrevious urls.management(initiative.id) "link.to.managementView" />
+    <#else>
+        <@u.returnPrevious urls.view(initiative.id) "link.to.publicView" />
+    </#if>
+    
     <div class="view-block single public cf">
         <h2><@u.message key="participantList.title" /><span class="bull">&bull;</span>${participantCount.publicNames!""}<@u.message key="participantList.title.count" />
             <#if hasManagementRightForInitiative><span class="switch-view"><a href="${urls.participantListManage(initiative.id)}"><@u.message "manageParticipants.title" /></a></span></#if>
@@ -28,7 +32,11 @@
         <@participantList participants />
     </div>
     
-    <@returnPrevious />
+    <#if hasManagementRightForInitiative>
+        <@u.returnPrevious urls.management(initiative.id) "link.to.managementView" />
+    <#else>
+        <@u.returnPrevious urls.view(initiative.id) "link.to.publicView" />
+    </#if>
 </@l.main>
 
 <#-- 
@@ -45,23 +53,6 @@
         <#if !participant_has_next></ul></#if>
     </#list>
 </#macro>
-
-<#-- 
- * returnPrevious
- *
- *  If request header referer equals management
- *      previousPageURI is the management URI
- *  Otherwise
- *      previousPageURI is the public view URI
--->
-<#macro returnPrevious>
-    <#if previousPageURI == urls.getManagement(initiative.id)>
-        <p><a href="${previousPageURI}">&laquo; <@u.message "participantList.return.management" /></a></p>
-    <#else>
-        <p><a href="${previousPageURI}">&laquo; <@u.message "participantList.return.view" /></a></p>
-    </#if>
-</#macro>
-
 
 </#escape> 
 
