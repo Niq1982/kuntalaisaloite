@@ -1,8 +1,8 @@
-package fi.om.municipalityinitiative.newdto.ui;
+package fi.om.municipalityinitiative.dto.ui;
 
-import fi.om.municipalityinitiative.newdto.InitiativeConstants;
-import fi.om.municipalityinitiative.newdto.service.Initiative;
-import fi.om.municipalityinitiative.newdto.service.Municipality;
+import fi.om.municipalityinitiative.dto.InitiativeConstants;
+import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.Municipality;
 
 import org.hibernate.validator.constraints.NotEmpty;
 

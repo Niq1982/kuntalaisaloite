@@ -1,6 +1,6 @@
-package fi.om.municipalityinitiative.newdto.ui;
+package fi.om.municipalityinitiative.dto.ui;
 
-import fi.om.municipalityinitiative.newdto.service.CreateDtoTimeValidation;
+import fi.om.municipalityinitiative.dto.service.CreateDtoTimeValidation;
 import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.validation.ValidMunicipalMembershipInfo;
 

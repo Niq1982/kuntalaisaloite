@@ -1,13 +1,13 @@
 package fi.om.municipalityinitiative.newweb;
 
 import com.google.common.collect.Maps;
-import fi.om.municipalityinitiative.newdto.InitiativeCounts;
-import fi.om.municipalityinitiative.newdto.Author;
-import fi.om.municipalityinitiative.newdto.InitiativeSearch;
-import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
-import fi.om.municipalityinitiative.newdto.service.ManagementSettings;
-import fi.om.municipalityinitiative.newdto.service.Municipality;
-import fi.om.municipalityinitiative.newdto.ui.*;
+import fi.om.municipalityinitiative.dto.InitiativeCounts;
+import fi.om.municipalityinitiative.dto.Author;
+import fi.om.municipalityinitiative.dto.InitiativeSearch;
+import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
+import fi.om.municipalityinitiative.dto.service.ManagementSettings;
+import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.SearchParameterQueryString;
 import fi.om.municipalityinitiative.web.Views;

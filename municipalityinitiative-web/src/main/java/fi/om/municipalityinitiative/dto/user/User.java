@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.newdto.user;
+package fi.om.municipalityinitiative.dto.user;
 
 import java.util.Set;
 

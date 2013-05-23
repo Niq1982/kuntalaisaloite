@@ -1,6 +1,6 @@
-package fi.om.municipalityinitiative.newdto.ui;
+package fi.om.municipalityinitiative.dto.ui;
 
-import fi.om.municipalityinitiative.newdto.service.Municipality;
+import fi.om.municipalityinitiative.dto.service.Municipality;
 
 public class AuthorInfo {
     private String name;

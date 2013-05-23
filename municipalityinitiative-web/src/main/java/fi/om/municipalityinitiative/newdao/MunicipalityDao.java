@@ -1,8 +1,7 @@
 package fi.om.municipalityinitiative.newdao;
 
-import fi.om.municipalityinitiative.newdto.service.Municipality;
-import fi.om.municipalityinitiative.newdto.ui.MunicipalityEditDto;
-import org.springframework.transaction.annotation.Transactional;
+import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.ui.MunicipalityEditDto;
 
 import java.util.List;
 

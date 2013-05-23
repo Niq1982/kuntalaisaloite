@@ -1,7 +1,7 @@
-package fi.om.municipalityinitiative.newdto;
+package fi.om.municipalityinitiative.dto;
 
-import fi.om.municipalityinitiative.newdto.service.Municipality;
-import fi.om.municipalityinitiative.newdto.ui.ContactInfo;
+import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import org.joda.time.LocalDate;
 
 public class Author {

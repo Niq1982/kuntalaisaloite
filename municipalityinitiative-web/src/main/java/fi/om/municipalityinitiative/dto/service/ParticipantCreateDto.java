@@ -1,8 +1,8 @@
-package fi.om.municipalityinitiative.newdto.service;
+package fi.om.municipalityinitiative.dto.service;
 
-import fi.om.municipalityinitiative.newdto.ui.AuthorInvitationUIConfirmDto;
-import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateBase;
-import fi.om.municipalityinitiative.newdto.ui.ParticipantUICreateDto;
+import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUIConfirmDto;
+import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateBase;
+import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.util.Membership;
 
 public class ParticipantCreateDto {

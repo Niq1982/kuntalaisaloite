@@ -1,11 +1,11 @@
 package fi.om.municipalityinitiative.json;
 
 import com.google.common.collect.Lists;
-import fi.om.municipalityinitiative.newdto.json.InitiativeJson;
-import fi.om.municipalityinitiative.newdto.service.Initiative;
-import fi.om.municipalityinitiative.newdto.service.Municipality;
-import fi.om.municipalityinitiative.newdto.service.Participant;
-import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
+import fi.om.municipalityinitiative.dto.json.InitiativeJson;
+import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.service.Participant;
+import fi.om.municipalityinitiative.dto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 import org.apache.commons.lang3.StringUtils;

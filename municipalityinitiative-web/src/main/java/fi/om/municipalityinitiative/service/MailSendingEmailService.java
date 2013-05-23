@@ -1,10 +1,10 @@
 package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Maps;
-import fi.om.municipalityinitiative.newdto.Author;
-import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
-import fi.om.municipalityinitiative.newdto.service.Initiative;
-import fi.om.municipalityinitiative.newdto.service.Participant;
+import fi.om.municipalityinitiative.dto.Author;
+import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
+import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Task;
 import fi.om.municipalityinitiative.web.Urls;

@@ -1,8 +1,8 @@
 package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Lists;
-import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
-import fi.om.municipalityinitiative.newdto.service.Participant;
+import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
+import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.Urls;
 import org.junit.Before;

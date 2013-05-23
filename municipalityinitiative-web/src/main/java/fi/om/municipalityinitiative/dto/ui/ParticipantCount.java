@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.newdto.ui;
+package fi.om.municipalityinitiative.dto.ui;
 
 public class ParticipantCount {
 

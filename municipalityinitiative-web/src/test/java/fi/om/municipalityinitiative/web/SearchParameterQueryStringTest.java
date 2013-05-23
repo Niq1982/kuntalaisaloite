@@ -1,6 +1,6 @@
 package fi.om.municipalityinitiative.web;
 
-import fi.om.municipalityinitiative.newdto.InitiativeSearch;
+import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import org.junit.Before;
 import org.junit.Test;
 

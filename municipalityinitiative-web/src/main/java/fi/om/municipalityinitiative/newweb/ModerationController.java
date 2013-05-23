@@ -1,6 +1,6 @@
 package fi.om.municipalityinitiative.newweb;
 
-import fi.om.municipalityinitiative.newdto.ui.MunicipalityUIEditDto;
+import fi.om.municipalityinitiative.dto.ui.MunicipalityUIEditDto;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.BaseController;

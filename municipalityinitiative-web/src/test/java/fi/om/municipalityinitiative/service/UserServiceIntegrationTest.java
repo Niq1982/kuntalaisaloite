@@ -2,7 +2,7 @@ package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
-import fi.om.municipalityinitiative.newdto.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.LoginUserHolder;
 import fi.om.municipalityinitiative.util.FakeSession;
 import org.junit.Before;
 import org.junit.Test;

@@ -4,11 +4,11 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
-import fi.om.municipalityinitiative.newdto.Author;
-import fi.om.municipalityinitiative.newdto.LoginUserHolder;
-import fi.om.municipalityinitiative.newdto.service.Participant;
-import fi.om.municipalityinitiative.newdto.ui.ParticipantCount;
-import fi.om.municipalityinitiative.newdto.ui.ParticipantListInfo;
+import fi.om.municipalityinitiative.dto.Author;
+import fi.om.municipalityinitiative.dto.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.service.Participant;
+import fi.om.municipalityinitiative.dto.ui.ParticipantCount;
+import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;

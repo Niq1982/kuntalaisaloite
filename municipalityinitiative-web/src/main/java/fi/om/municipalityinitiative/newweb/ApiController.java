@@ -1,10 +1,10 @@
 package fi.om.municipalityinitiative.newweb;
 
 import fi.om.municipalityinitiative.json.JsonJokuParseri;
-import fi.om.municipalityinitiative.newdto.InitiativeSearch;
-import fi.om.municipalityinitiative.newdto.json.InitiativeJson;
-import fi.om.municipalityinitiative.newdto.json.InitiativeListJson;
-import fi.om.municipalityinitiative.newdto.service.Municipality;
+import fi.om.municipalityinitiative.dto.InitiativeSearch;
+import fi.om.municipalityinitiative.dto.json.InitiativeJson;
+import fi.om.municipalityinitiative.dto.json.InitiativeListJson;
+import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.service.JsonDataService;
 import fi.om.municipalityinitiative.web.BaseController;
 import fi.om.municipalityinitiative.web.JsonpObject;

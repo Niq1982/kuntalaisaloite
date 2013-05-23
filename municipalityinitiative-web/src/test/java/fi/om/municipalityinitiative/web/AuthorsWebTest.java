@@ -5,7 +5,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
-import fi.om.municipalityinitiative.newdto.service.AuthorInvitation;
+import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,6 +1,6 @@
 package fi.om.municipalityinitiative.service;
 
-import fi.om.municipalityinitiative.newdto.InfoTextFooterLink;
+import fi.om.municipalityinitiative.dto.InfoTextFooterLink;
 
 import java.util.List;
 import java.util.Locale;

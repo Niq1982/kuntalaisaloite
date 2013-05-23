@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.newdto.service;
+package fi.om.municipalityinitiative.dto.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
