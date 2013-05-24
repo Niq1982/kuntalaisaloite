@@ -257,8 +257,10 @@
             <@authorDetailsById authors RequestParameters['deleteAuthor'] />
         </#if>
         
+        <@u.systemMessage path="deleteAuthor.confirm.warning" type="warning" showClose=false />
+        
         <div class="input-block-content">
-            <button type="submit" name="${UrlConstants.ACTION_DELETE_AUTHOR}" id="modal-${UrlConstants.ACTION_DELETE_AUTHOR}" value="${UrlConstants.ACTION_DELETE_AUTHOR}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.deleteAuthor.confirm" /></button>
+            <button type="submit" name="${UrlConstants.ACTION_DELETE_AUTHOR}" id="modal-${UrlConstants.ACTION_DELETE_AUTHOR}" value="${UrlConstants.ACTION_DELETE_AUTHOR}" class="small-button"><span class="small-icon cancel"><@u.message "action.deleteAuthor.confirm" /></button>
             <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
         </div>
     </form>
