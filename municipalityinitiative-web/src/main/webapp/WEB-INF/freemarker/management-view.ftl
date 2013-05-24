@@ -21,8 +21,8 @@
         <h2><@u.message "management.title" /></h2>
         <p><@u.messageHTML "management.description" /></p>
         <p><@u.messageHTML "management.instruction" /></p>
-        <p><a class="small-button gray" href="${urls.edit(initiative.id)}"><span class="small-icon edit"><@u.messageHTML 'action.editInitiative' /></span></a>
-        <a class="small-button gray push" href="${urls.view(initiative.id)}" target="_blank"><span class="small-icon document"><@u.messageHTML 'action.previewInitiative' /></span></a></p>
+        <p><a class="small-button gray" href="${urls.edit(initiative.id)}"><span class="small-icon edit"><@u.messageHTML "action.editInitiative" /></span></a>
+        <a class="small-button gray push trigger-tooltip" href="${urls.view(initiative.id)}" target="_blank" title="<@u.message "action.previewInitiative.tooltip" />"><span class="small-icon document"><@u.messageHTML "action.previewInitiative" /></span></a></p>
     </div>
 
     <h1 class="name">${initiative.name!""}</h1>
