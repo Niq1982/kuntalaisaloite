@@ -1,6 +1,8 @@
 package fi.om.municipalityinitiative.service;
 
 public enum EmailMessageType {
+    SENT_TO_REVIEW,
+    SENT_FIX_TO_REVIEW,
     ACCEPTED_BY_OM_AND_SENT,
     ACCEPTED_BY_OM,
     REJECTED_BY_OM,

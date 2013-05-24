@@ -124,18 +124,21 @@ public class InitiativeManagementService {
         Initiative initiative = initiativeDao.get(initiativeId);
 
         String TEMPORARILY_REPLACING_OM_EMAIL = authorDao.getAuthorEmails(initiativeId).get(0);
-
+        
+        emailService.sendStatusEmail(initiative,authorDao.getAuthorEmails(initiativeId), municipalityEmail(initiative), EmailMessageType.SENT_TO_REVIEW);
         emailService.sendNotificationToModerator(initiative, authorDao.findAuthors(initiativeId), TEMPORARILY_REPLACING_OM_EMAIL);
     }
 
     @Transactional(readOnly = false)
-    public void sendFixToReview(Long initiativeId, LoginUserHolder requiredLoginUserHolder) {
+    public void sendFixToReview(Long initiativeId, LoginUserHolder requiredLoginUserHolder, Locale locale) {
         requiredLoginUserHolder.assertManagementRightsForInitiative(initiativeId);
         assertAllowance("Send fix to review", getManagementSettings(initiativeId).isAllowSendFixToReview());
         initiativeDao.updateInitiativeFixState(initiativeId, FixState.REVIEW);
 
         String TEMPORARILY_REPLACING_OM_EMAIL = authorDao.getAuthorEmails(initiativeId).get(0);
 
+        Initiative initiative = initiativeDao.get(initiativeId);
+        emailService.sendStatusEmail(initiative,authorDao.getAuthorEmails(initiativeId), municipalityEmail(initiative), EmailMessageType.SENT_FIX_TO_REVIEW);
         emailService.sendNotificationToModerator(initiativeDao.get(initiativeId), authorDao.findAuthors(initiativeId), TEMPORARILY_REPLACING_OM_EMAIL);
     }
 

@@ -85,7 +85,7 @@
             <td style="text-align:center; ${footerFont!""}">
     
         <p style="${footerFont!""}"><@u.message "email.footer.sendFrom"+postFix />
-        <#if initiative.state?? && initiative.state == "PUBLISHED">
+        <#if initiative.state?? && initiative.state == "PUBLISHED" && initiative.fixState == "OK">
             <@u.message "email.footer.viewLink" /><br/><@u.link urls.get(switchLocale!locale).view(initiative.id) />
         </#if>
         </p>
@@ -97,7 +97,7 @@
         </table>
     <#else>
         <@u.message "email.footer.sendFrom"+postFix />
-        <#if initiative.state?? && initiative.state == "PUBLISHED">
+        <#if initiative.state?? && initiative.state == "PUBLISHED" && initiative.fixState == "OK">
             <@u.message "email.footer.viewLink" />
             
             ${urls.get(switchLocale!locale).view(initiative.id)}
