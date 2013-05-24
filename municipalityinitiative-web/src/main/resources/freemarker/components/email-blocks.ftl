@@ -150,7 +150,7 @@
  -->
 <#macro contactInfo type="">
 
-    <h4 style="${h4!""}"><@u.message "email.contact.info" /></h4>
+    <h4 style="${h4!""}"><@u.message key="email.authors" args=[authors?size] /></h4>
     <#list authors as author>
         <#assign obj=author.contactInfo />
         <#if type == "html">
@@ -161,7 +161,7 @@
             <br/>
             </p>
         <#else>
-            <@u.message "email.contact.info" />:
+            <@u.message key="email.authors" args=[authors?size] />:
             ${obj.name!""}, ${author.municipality.nameFi} / ${author.municipality.nameSv}
             ${obj.email!""}
             ${obj.phone!""}
