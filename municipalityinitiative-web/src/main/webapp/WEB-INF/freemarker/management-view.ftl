@@ -53,14 +53,14 @@
             <#assign sendToReviewConfirm = true />
         </#if>        
         
-        <#if RequestParameters['send-to-municipality']?? && RequestParameters['send-to-municipality'] == "confirm-collect">
+        <#if RequestParameters['send-to-review']?? && RequestParameters['send-to-review'] == "confirm-collect">
             <#assign sendToReviewAndCollectConfirm = true />
         </#if>
     
-        <div class="view-block">
-            <h2><@u.message "management.sendToReview.title" /></h2>
-        
-            <#if !sendToReviewConfirm && !sendToReviewAndCollectConfirm>
+        <#if !sendToReviewConfirm && !sendToReviewAndCollectConfirm>
+            <div class="view-block">
+                <h2><@u.message "management.sendToReview.title" /></h2>
+                
                 <@u.systemMessage path="management.sendToReview.description" type="info" showClose=false />
         
                 <br/>
@@ -80,70 +80,67 @@
                     <a href="${managementURL}?send-to-review=confirm-collect#send-to-review" id="js-send-to-review-collect" class="large-button js-send-to-review-collect"><span class="large-icon save-and-send"><@u.messageHTML "action.sendToReview.collect" /></span></a>
                 </div>
                 <br class="clear" />
-            </#if>
+            </div>
+        </#if>
+        
             
-            <#assign sendToReviewDoNotCollect>
-                <@compress single_line=true>
+        <#assign sendToReviewDoNotCollect>
+            <@compress single_line=true>
+            
+                <p><@u.message "sendToReview.doNotCollect.confirm.description" /></p>
                 
-                    <p><@u.message "sendToReview.doNotCollect.confirm.description" /></p>
-                    
-                    <form action="${springMacroRequestContext.requestUri}" method="POST" >
-                        <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+                <form action="${springMacroRequestContext.requestUri}" method="POST" >
+                    <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
 
-                        <div class="input-block-content">
-                            <label for="${UrlConstants.PARAM_SENT_COMMENT}" class="input-header">
-                                <@u.message "sendToMunicipality.sentComment" />
-                            </label>
-                            <textarea name="${UrlConstants.PARAM_SENT_COMMENT}" id="${UrlConstants.PARAM_SENT_COMMENT}"></textarea>
-                        </div>
-                        
-                        <div class="input-block-content">
-                            <button type="submit" name="${UrlConstants.ACTION_SEND_TO_REVIEW}" id="modal-${UrlConstants.ACTION_SEND_TO_REVIEW}" value="${UrlConstants.ACTION_SEND_TO_REVIEW}" class="large-button"><span class="large-icon mail"><@u.messageHTML "action.sendToReview.doNotCollect" /></button>
-                            <a href="${managementURL}" class="push close"><@u.message "action.cancel" /></a>
-                        </div>
-                    </form>
-                </@compress>
-            </#assign>
-        
-            <#-- Confirm send to REVIEW for NOSCRIPT-users -->
-            <#if sendToReviewConfirm>
-            <noscript>
-                <div id="send-to-review" class="system-msg msg-info">
-                    <#noescape>
-                        <h4><@u.message "sendToReview.doNotCollect.confirm.title" /></h4>
-                        ${sendToReviewDoNotCollect}
-                    </#noescape>
-                </div>
-            </noscript>
-            </#if>
-            
-            <#assign sendToReviewCollect>
-                <@compress single_line=true>
-                
-                    <p><@u.message "sendToReview.collect.confirm.description" /></p>
-                    <p><@u.message "sendToReview.collect.confirm.instruction" /></p>
+                    <div class="input-block-content">
+                        <label for="${UrlConstants.PARAM_SENT_COMMENT}" class="input-header">
+                            <@u.message "sendToMunicipality.sentComment" />
+                        </label>
+                        <textarea name="${UrlConstants.PARAM_SENT_COMMENT}" id="${UrlConstants.PARAM_SENT_COMMENT}"></textarea>
+                    </div>
                     
-                    <form action="${springMacroRequestContext.requestUri}" method="POST" >
-                        <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-                        <button type="submit" name="${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" id="modal-${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" value="${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" class="large-button"><span class="large-icon save-and-send"><@u.messageHTML "action.sendToReview.collect" /></button>
+                    <div class="input-block-content">
+                        <button type="submit" name="${UrlConstants.ACTION_SEND_TO_REVIEW}" id="modal-${UrlConstants.ACTION_SEND_TO_REVIEW}" value="${UrlConstants.ACTION_SEND_TO_REVIEW}" class="large-button"><span class="large-icon mail"><@u.messageHTML "action.sendToReview.doNotCollect" /></button>
                         <a href="${managementURL}" class="push close"><@u.message "action.cancel" /></a>
-                    </form>
-                </@compress>
-            </#assign>
+                    </div>
+                </form>
+            </@compress>
+        </#assign>
+    
+        <#-- Confirm send to REVIEW for NOSCRIPT-users -->
+        <#if sendToReviewConfirm>
+        <noscript>
+            <div id="send-to-review" class="msg-block cf">
+                <h2><@u.message "sendToReview.doNotCollect.confirm.title.nojs" /></h2>
+                <#noescape>${sendToReviewDoNotCollect}</#noescape>
+            </div>
+        </noscript>
+        </#if>
         
-            <#-- Confirm send to REVIEW for NOSCRIPT-users -->
-            <#if sendToReviewAndCollectConfirm>
-            <noscript>
-                <div id="send-to-review" class="system-msg msg-info">
-                    <#noescape>
-                        <h4><@u.message "sendToReview.collect.confirm.title" /></h4>
-                        ${sendToReviewCollect}
-                    </#noescape>
-                </div>
-            </noscript>
-            </#if>
-        </div>
-    </#if>
+        <#assign sendToReviewCollect>
+            <@compress single_line=true>
+            
+                <p><@u.message "sendToReview.collect.confirm.description" /></p>
+                <p><@u.message "sendToReview.collect.confirm.instruction" /></p>
+                
+                <form action="${springMacroRequestContext.requestUri}" method="POST" >
+                    <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+                    <button type="submit" name="${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" id="modal-${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" value="${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" class="large-button"><span class="large-icon save-and-send"><@u.messageHTML "action.sendToReview.collect" /></button>
+                    <a href="${managementURL}" class="push close"><@u.message "action.cancel" /></a>
+                </form>
+            </@compress>
+        </#assign>
+    
+        <#-- Confirm send to REVIEW for NOSCRIPT-users -->
+        <#if sendToReviewAndCollectConfirm>
+        <noscript>
+            <div id="send-to-review" class="msg-block cf">
+                <h2><@u.message "sendToReview.collect.confirm.title.nojs" /></h2>
+                <#noescape>${sendToReviewCollect}</#noescape>
+            </div>
+        </noscript>
+        </#if>
+    </#if> <#-- /managementSettings.allowSendToReview -->
     
     <#if managementSettings.allowSendToMunicipality>
         <#assign startCollectingConfirm = false />
@@ -203,7 +200,7 @@
         <#-- Confirm start collecting for NOSCRIPT-users -->
         <#if startCollectingConfirm>
         <noscript>
-            <div id="start-collecting" class="msg-block">
+            <div id="start-collecting" class="msg-block cf">
                 <#noescape>
                     <h2><@u.message "startCollecting.confirm.title.nojs" /></h2>
                     ${startCollecting}
@@ -235,7 +232,7 @@
         <#-- Confirm send to municipality for NOSCRIPT-users -->
         <#if sendToMunicipalityConfirm>
         <noscript>
-            <div id="send-to-municipality" class="msg-block">
+            <div id="send-to-municipality" class="msg-block cf">
                 <#noescape>
                     <h2><@u.message "sendToMunicipality.confirm.title.nojs" /></h2>
                     ${sendToMunicipality}
@@ -244,7 +241,7 @@
         </noscript>
         </#if>
         
-    </#if>
+    </#if> <#-- /managementSettings.allowSendToMunicipality -->
     
         
     <#if managementSettings.allowSendFixToReview>
@@ -287,7 +284,7 @@
             </div>
         </noscript>
         </#if>
-    </#if>
+    </#if> <#-- /managementSettings.allowSendFixToReview -->
     
 
     <#--
