@@ -13,6 +13,7 @@
  *  SENT_FIX_TO_REVIEW
  *  ACCEPTED_BY_OM_AND_SENT
  *  ACCEPTED_BY_OM
+ *  ACCEPTED_BY_OM_FIX
  *  REJECTED_BY_OM
  *  INVITATION_ACCEPTED
  *  INVITATION_REJECTED
@@ -94,6 +95,28 @@
     </#assign>
     
 <#elseif emailMessageType == EmailMessageType.ACCEPTED_BY_OM>
+    <#-- TEXT -->
+    <#assign statusInfo>
+        <@u.message messageKeyPrefix+".description"/>
+        
+        <@u.message messageKeyPrefix+".description.2" />
+        
+        
+        <@b.statusInfoComment "text" initiative.moderatorComment!"" />
+        
+        <@b.initiativeDetails "text" />
+    </#assign>
+    
+    <#-- HTML -->
+    <#assign statusInfoHTML>
+        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description"/></p>
+        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description.2"/></p>
+        
+        <@b.statusInfoComment "html" initiative.moderatorComment!"" />
+        <@b.initiativeDetails "html" />
+    </#assign>
+
+<#elseif emailMessageType == EmailMessageType.ACCEPTED_BY_OM_FIX>
     <#-- TEXT -->
     <#assign statusInfo>
         <@u.message messageKeyPrefix+".description"/>
@@ -291,6 +314,28 @@
     
     <#-- HTML -->
     <#assign statusInfoHTMLSv>
+        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description"/></p>
+        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description.2"/></p>
+        
+        <@b.statusInfoComment "html" initiative.moderatorComment!"" />
+        <@b.initiativeDetails "html" />
+    </#assign>
+    
+<#elseif emailMessageType == EmailMessageType.ACCEPTED_BY_OM_FIX>
+    <#-- TEXT -->
+    <#assign statusInfo>
+        <@u.message messageKeyPrefix+".description"/>
+        
+        <@u.message messageKeyPrefix+".description.2" />
+        
+        
+        <@b.statusInfoComment "text" initiative.moderatorComment!"" />
+        
+        <@b.initiativeDetails "text" />
+    </#assign>
+    
+    <#-- HTML -->
+    <#assign statusInfoHTML>
         <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description"/></p>
         <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description.2"/></p>
         
