@@ -46,27 +46,33 @@
     <#--
      * Search filter and sort states
      * currentSearch.show:      running, sentToMunicipality, closed, all
+                                draft, review, accepted, fix (OM view)
      * currentSearch.orderBy:   id, mostTimeLeft, leastTimeLeft, mostSupports, leastSupports
      * currentSearch.limit:     20, 100, 500
      * currentSearch.offset
     -->
     
     <#--
-     * Search filters
+     * Search filters for OM and public view
     -->
     <span class="search-parameters-title filter"><@u.message "searchOptions.filter" /></span>
-    <div class="search-parameters-container">
-        <div class="search-parameters">
-        <#if user.isOmUser()>
-            <@u.searchLink parameter="withStateDraft" cssClass=(currentSearch.show == "draft")?string('active','') count=initiativeCounts.draft/>
-            <@u.searchLink parameter="withStateReview" cssClass=(currentSearch.show == "review")?string('active','') count=initiativeCounts.review />
-            <@u.searchLink parameter="withStateAccepted" cssClass=(currentSearch.show == "accepted")?string('active','') count=initiativeCounts.accepted />
-        </#if>
-            <@u.searchLink parameter="withStateCollecting" cssClass=(currentSearch.show == "collecting")?string('active','') count=initiativeCounts.collecting />
-            <@u.searchLink parameter="withStateSent" cssClass=(currentSearch.show == "sent")?string('active','') count=initiativeCounts.sent/>
-            <@u.searchLink parameter="withStateAll" cssClass=(currentSearch.show == "all")?string('active','') count=initiativeCounts.all/>
-        </div>
-        <br class="clear" />
+        <div class="search-parameters-container">
+            <div class="search-parameters">
+                <#if user.isOmUser()>
+                        <@u.searchLink parameter="withStateDraft" cssClass=(currentSearch.show == "draft")?string('active','') count=initiativeCounts.draft/>
+                        <@u.searchLink parameter="withStateReview" cssClass=(currentSearch.show == "review")?string('active','') count=initiativeCounts.review />
+                        <@u.searchLink parameter="withStateAccepted" cssClass=(currentSearch.show == "accepted")?string('active','') count=initiativeCounts.accepted />
+                        <@u.searchLink parameter="withStateFix" cssClass=(currentSearch.show == "fix")?string('active','') count=initiativeCounts.accepted />
+                    </div>
+                    <div class="search-parameters">
+                </#if>
+                
+                <@u.searchLink parameter="withStateCollecting" cssClass=(currentSearch.show == "collecting")?string('active','') count=initiativeCounts.collecting />
+                <@u.searchLink parameter="withStateSent" cssClass=(currentSearch.show == "sent")?string('active','') count=initiativeCounts.sent/>
+                <@u.searchLink parameter="withStateAll" cssClass=(currentSearch.show == "all")?string('active','') count=initiativeCounts.all/>
+                
+            </div>
+            <br class="clear" />
     </div>
     
     <#--
@@ -138,7 +144,7 @@
             </span>
             
             <span class="date trigger-tooltip" title="<@u.message "searchResults.initiative.date" />" ><@u.localDate initiative.createTime!"" /></span>
-            <span class="title"><a href="${urls.view(initiative.id)}" class="name">${initiative.name!""}</a></span>
+            <span class="title"><a href="${urls.view(initiative.id)}" class="name"><@u.limitStringLength initiative.name!"" 150 /></a></span>
             <#if !initiative.public>
                 <span class="info">${initiative.municipality.getName(locale)!""}<span class="bull">&bull;</span><span class="state"><@u.message "searchResults.notPublic" /></span></span>
             <#elseif !initiative.sentTime.present>
