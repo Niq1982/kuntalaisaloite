@@ -280,6 +280,25 @@
 </#macro>
 
 <#--
+ * limitStringLength
+ *
+ * Shorten string if the length exceeds defined length
+ *
+ * @param text is the input text
+ * @param length is the max length
+ * @param postFix customizable string, default is ellipsis
+ -->
+<#macro limitStringLength text length postFix="...">
+<@compress single_line=true>
+    <#if (text?length > length)>
+        ${text?substring(0,length)}${postFix}
+    <#else>
+        ${text}
+    </#if>
+</@compress>
+</#macro>
+
+<#--
  * modalTemplate
  * 
  * General template for all modals.
