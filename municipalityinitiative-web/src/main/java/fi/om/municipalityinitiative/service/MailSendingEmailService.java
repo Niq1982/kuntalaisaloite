@@ -30,6 +30,7 @@ public class MailSendingEmailService implements EmailService {
     private static final String AUTHOR_INVITATION = "author-invitation";
     private static final String INVITATION_ACCEPTANCE ="invitation-acceptance";
     private static final String AUTHOR_DELETED_TO_OTHER_AUTHORS = "author-deleted-to-other-authors";
+    private static final String AUTHOR_DELETED_TO_DELETED_AUTHOR = "author-deleted-to-deleted-author";
 
     @Resource
     private MessageSource messageSource;
@@ -87,6 +88,17 @@ public class MailSendingEmailService implements EmailService {
                 .addRecipients(sendTo)
                 .withSubject(messageSource.getMessage("email.author.deleted.to.other.authors.subject", toArray(), Locales.LOCALE_FI))
                 .withDataMap(dataMap)
+                .send();
+    }
+
+    @Override
+    public void sendAuthorDeletedEmailToDeletedAuthor(Initiative initiative, String authorEmail) {
+
+        emailMessageConstructor
+                .fromTemplate(AUTHOR_DELETED_TO_DELETED_AUTHOR)
+                .addRecipient(authorEmail)
+                .withSubject(messageSource.getMessage("email.author.deleted.to.deleted.author.subject", toArray(), Locales.LOCALE_FI))
+                .withDataMap(toDataMap(initiative, Locales.LOCALE_FI))
                 .send();
     }
 

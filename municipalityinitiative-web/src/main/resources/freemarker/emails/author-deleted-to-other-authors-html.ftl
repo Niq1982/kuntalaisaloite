@@ -2,11 +2,11 @@
 <#import "../components/email-utils.ftl" as u />
 <#import "../components/email-blocks.ftl" as b />
 
-<#assign title><@u.message "email.author.invitation.title" /></#assign>
+<#assign title><@u.message "email.author.deleted.to.other.authors.title" /></#assign>
 
 <#escape x as x?html>
 
-<@l.emailHtml template="author-invitation" title=title footer=false>
+<@l.emailHtml template="HAUSKA TIETO" title=title footer=false>
 
 <p>${initiative.name}</p>
 <p>${initiative.municipality.getName(locale)}</p>

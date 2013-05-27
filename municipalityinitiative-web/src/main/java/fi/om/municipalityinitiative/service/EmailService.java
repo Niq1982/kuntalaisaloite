@@ -23,6 +23,8 @@ public interface EmailService {
 
     void sendAuthorDeletedEmailToOtherAuthors(Initiative initiative, List<String> sendTo, ContactInfo removedAuthorsContactInfo);
 
+    void sendAuthorDeletedEmailToDeletedAuthor(Initiative initiative, String authorEmail);
+
     void sendNotificationToModerator(Initiative initiative, List<Author> authors, String TEMPORARILY_REPLACING_OM_EMAIL);
 
     void sendParticipationConfirmation(Initiative initiative, String participantEmail, Long participantId, String confirmationCode, Locale locale);

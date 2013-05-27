@@ -97,6 +97,18 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
     }
 
     @Test
+    public void author_has_been_deleted_email_to_author_contains_all_information() throws Exception {
+        emailService.sendAuthorDeletedEmailToDeletedAuthor(createDefaultInitiative(), CONTACT_EMAIL);
+
+        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Sinut on poistettu aloitteen vastuuhenkilöistä"));
+        assertThat(javaMailSenderFake.getSingleRecipient(), is(CONTACT_EMAIL));
+
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString("Et ole enää aloitteen vastuuhenkilö"));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_NAME));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_MUNICIPALITY));
+    }
+
+    @Test
     public void author_invitation_contains_all_information() throws Exception {
         AuthorInvitation authorInvitation = new AuthorInvitation();
         authorInvitation.setEmail("email@example.com");
