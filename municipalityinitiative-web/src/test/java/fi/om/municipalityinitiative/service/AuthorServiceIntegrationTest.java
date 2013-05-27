@@ -69,6 +69,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     public void setUp() throws Exception {
         testHelper.dbCleanup();
         testMunicipality = testHelper.createTestMunicipality("municipality");
+        javaMailSenderFake.clearSentMessages();
     }
 
     @Test(expected = AccessDeniedException.class)
@@ -353,7 +354,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
         assertThat(authorDao.findAuthors(initiative), hasSize(1));
 
-        List<MimeMessage> sentMessages = javaMailSenderFake.getSentMessages(1);
+        List<MimeMessage> sentMessages = javaMailSenderFake.getSentMessages(2);
         MimeMessage firstSentMessage = sentMessages.get(0);
 
         assertThat(firstSentMessage.getAllRecipients()[0].toString(), is("author_left@example.com"));
