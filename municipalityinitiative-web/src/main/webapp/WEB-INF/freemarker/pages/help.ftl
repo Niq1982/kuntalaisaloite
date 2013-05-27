@@ -37,8 +37,8 @@
 
         <div class="column col-1of4 navigation">
             <@navigation categoryLinksMap['MAIN'] "" />
-            <@navigation categoryLinksMap['KUNTALAISALOITE'] "help.general.title" />
             <@navigation categoryLinksMap['KUNTALAISALOITE_FI'] "help.service.title" />
+            <@navigation categoryLinksMap['KUNTALAISALOITE'] "help.general.title" />
         </div>
 
         <#if omUser>
