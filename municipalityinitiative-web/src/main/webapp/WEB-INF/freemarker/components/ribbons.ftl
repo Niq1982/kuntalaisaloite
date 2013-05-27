@@ -11,9 +11,9 @@
 
 
 <#macro assignSiteVars>
-    <#assign prodSite>https://www.kansalaisaloite.fi</#assign>
+    <#assign prodSite>https://www.kuntalaisaloite.fi</#assign>
     
-    <#assign prodTestSite>https://testi.kansalaisaloite.fiXXX</#assign>
+    <#assign prodTestSite>https://testi.kuntalaisaloite.fi</#assign>
     <#assign betaIpSite>https://80.69.172.30XX</#assign>
     <#assign testSite>https://80-69-172-30.fi-hel1.host.upcloud.comXX</#assign>
 
