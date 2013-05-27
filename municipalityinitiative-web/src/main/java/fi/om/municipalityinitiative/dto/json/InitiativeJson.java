@@ -73,7 +73,7 @@ public class InitiativeJson {
     }
 
     private static class CollaborativeInitiativeJson extends InitiativeJson {
-        private List<Participant> participants;
+        private List<ParticipantJson> participants = Lists.newArrayList();
         private ParticipantCount participantCount;
 
         private CollaborativeInitiativeJson(Initiative initiative,
@@ -81,7 +81,11 @@ public class InitiativeJson {
                                             ParticipantCount participantCount,
                                             PublicAuthors authors) {
             super(initiative, authors);
-            this.participants = participants;
+
+            for (Participant participant : participants) {
+                this.participants.add(new ParticipantJson(participant));
+
+            }
             this.participantCount = participantCount;
         }
 
@@ -89,7 +93,7 @@ public class InitiativeJson {
             return participantCount;
         }
 
-        public List<Participant> getPublicParticipants() {
+        public List<ParticipantJson> getPublicParticipants() {
             return participants;
         }
 

@@ -22,7 +22,6 @@ public class Participant {
         return name;
     }
 
-    @JsonSerialize(using=LocalDateJsonSerializer.class)
     public LocalDate getParticipateDate() {
         return participateDate;
     }
@@ -31,12 +30,10 @@ public class Participant {
         return homeMunicipality;
     }
 
-    @JsonIgnore
     public String getEmail() {
         return email;
     }
 
-    @JsonIgnore
     public Membership getMembership() {
         return membership;
     }
@@ -65,7 +62,6 @@ public class Participant {
         return id;
     }
 
-    @JsonIgnore
     public void setId(Long id) {
         this.id = id;
     }

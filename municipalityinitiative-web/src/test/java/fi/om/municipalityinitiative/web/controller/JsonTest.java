@@ -4,7 +4,6 @@ import com.google.common.base.Joiner;
 import fi.om.municipalityinitiative.conf.JsonConverterFactory;
 import fi.om.municipalityinitiative.json.JsonJokuParseri;
 import fi.om.municipalityinitiative.util.Locales;
-import fi.om.municipalityinitiative.web.controller.ApiController;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -75,7 +74,7 @@ public class JsonTest {
                 "\"proposal\":\"Kakkaa on joka paikassa\",\n" +
                 "\"publicParticipants\":[\n" +
                 "{\n" +
-                "\"homeMunicipality\":{\n" +
+                "\"municipality\":{\n" +
                 "\"id\":\"http://baseUrl/api/v0/municipalities/1\",\n" +
                 "\"nameFi\":\"Tampere\",\n" +
                 "\"nameSv\":\"Tammerfors\"\n" +
