@@ -1,6 +1,9 @@
 package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Lists;
+import fi.om.municipalityinitiative.dto.Author;
+import fi.om.municipalityinitiative.dto.ui.ContactInfo;
+import fi.om.municipalityinitiative.dto.ui.PublicAuthors;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
@@ -34,6 +37,9 @@ public class JsonDataService {
     @Resource
     MunicipalityDao municipalityDao;
 
+    @Resource
+    AuthorService authorService;
+
     public List<InitiativeListJson> findJsonInitiatives(InitiativeSearch search) {
         List<InitiativeListJson> result = Lists.newArrayList();
         for (InitiativeListInfo initiativeListInfo : initiativeDao.find(search)) {
@@ -46,7 +52,8 @@ public class JsonDataService {
         return InitiativeJson.from(
                 initiativeDao.get(id),
                 participantDao.findPublicParticipants(id),
-                participantDao.getParticipantCount(id));
+                participantDao.getParticipantCount(id),
+                authorService.findPublicAuthors(id));
 
     }
 
@@ -95,9 +102,32 @@ public class JsonDataService {
 
         initiativeInfo.setType(InitiativeType.COLLABORATIVE);
 
-        InitiativeJson initiativeJson = InitiativeJson.from(initiativeInfo, publicParticipants, participantCount);
+        PublicAuthors authors = new PublicAuthors(createAuthors());
+
+        InitiativeJson initiativeJson = InitiativeJson.from(initiativeInfo, publicParticipants, participantCount, authors);
 
         return initiativeJson;
 
+    }
+
+    private static List<Author> createAuthors() {
+        List<Author> authors = Lists.newArrayList();
+
+        Author author1 = new Author();
+        ContactInfo contactInfo1 = new ContactInfo();
+        contactInfo1.setName("Teemu Teekkari");
+        contactInfo1.setShowName(true);
+        author1.setContactInfo(contactInfo1);
+        author1.setMunicipality(ApiController.TAMPERE);
+        authors.add(author1);
+
+        Author author2 = new Author();
+        ContactInfo contactInfo2 = new ContactInfo();
+        contactInfo2.setShowName(false);
+        author2.setContactInfo(contactInfo2);
+        author2.setMunicipality(ApiController.TAMPERE);
+        authors.add(author2);
+
+        return authors;
     }
 }

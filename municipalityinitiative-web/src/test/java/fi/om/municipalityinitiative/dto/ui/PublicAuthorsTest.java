@@ -31,8 +31,8 @@ public class PublicAuthorsTest {
         authorList.add(privateAuthor);
 
         PublicAuthors publicAuthors = new PublicAuthors(authorList);
-        assertThat(publicAuthors.getPrivateNames(), is(2));
-        assertThat(publicAuthors.getPublicNames(), is(1));
+        assertThat(publicAuthors.getPrivateNameCount(), is(2));
+        assertThat(publicAuthors.getPublicNameCount(), is(1));
         assertThat(publicAuthors.getPublicAuthors(), hasSize(1));
         assertThat(publicAuthors.getPublicAuthors().get(0).getMunicipality().getId(), is(1L));
         assertThat(publicAuthors.getPublicAuthors().get(0).getName(), is("Public Name"));

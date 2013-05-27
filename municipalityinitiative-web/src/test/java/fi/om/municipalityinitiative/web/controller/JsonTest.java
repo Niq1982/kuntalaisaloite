@@ -44,11 +44,25 @@ public class JsonTest {
         List<JsonJokuParseri.IndentedString> initiatives = getJsonDataListFromModel("initiativeDetails");
         String join = joinAsString(initiatives);
         assertThat(join, is("{\n" +
+                "\"authors\":{\n" +
+                "\"privateNameCount\":1,\n" +
+                "\"publicAuthors\":[\n" +
+                "{\n" +
+                "\"municipality\":{\n" +
+                "\"id\":\"http://baseUrl/api/v0/municipalities/1\",\n" +
+                "\"nameFi\":\"Tampere\",\n" +
+                "\"nameSv\":\"Tammerfors\"\n" +
+                "},\n" +
+                "\"name\":\"Teemu Teekkari\"\n" +
+                "}]\n" +
+                ",\n" +
+                "\"publicNameCount\":1\n" +
+                "},\n" +
                 "\"collaborative\":true,\n" +
                 "\"createTime\":\"2010-01-01\",\n" +
-                "\"id\":\"http://baseUrl/api/v1/initiatives/1\",\n" +
+                "\"id\":\"http://baseUrl/api/v0/initiatives/1\",\n" +
                 "\"municipality\":{\n" +
-                "\"id\":\"http://baseUrl/api/v1/municipalities/1\",\n" +
+                "\"id\":\"http://baseUrl/api/v0/municipalities/1\",\n" +
                 "\"nameFi\":\"Tampere\",\n" +
                 "\"nameSv\":\"Tammerfors\"\n" +
                 "},\n" +
@@ -62,7 +76,7 @@ public class JsonTest {
                 "\"publicParticipants\":[\n" +
                 "{\n" +
                 "\"homeMunicipality\":{\n" +
-                "\"id\":\"http://baseUrl/api/v1/municipalities/1\",\n" +
+                "\"id\":\"http://baseUrl/api/v0/municipalities/1\",\n" +
                 "\"nameFi\":\"Tampere\",\n" +
                 "\"nameSv\":\"Tammerfors\"\n" +
                 "},\n" +
@@ -83,9 +97,9 @@ public class JsonTest {
                 "{\n" +
                 "\"collaborative\":true,\n" +
                 "\"createTime\":\"2012-12-01\",\n" +
-                "\"id\":\"http://baseUrl/api/v1/initiatives/1\",\n" +
+                "\"id\":\"http://baseUrl/api/v0/initiatives/1\",\n" +
                 "\"municipality\":{\n" +
-                "\"id\":\"http://baseUrl/api/v1/municipalities/1\",\n" +
+                "\"id\":\"http://baseUrl/api/v0/municipalities/1\",\n" +
                 "\"nameFi\":\"Tampere\",\n" +
                 "\"nameSv\":\"Tammerfors\"\n" +
                 "},\n" +
@@ -104,7 +118,7 @@ public class JsonTest {
 
         assertThat(join, is("[\n" +
                 "{\n" +
-                "\"id\":\"http://baseUrl/api/v1/municipalities/1\",\n" +
+                "\"id\":\"http://baseUrl/api/v0/municipalities/1\",\n" +
                 "\"nameFi\":\"Tampere\",\n" +
                 "\"nameSv\":\"Tammerfors\"\n" +
                 "}]"));

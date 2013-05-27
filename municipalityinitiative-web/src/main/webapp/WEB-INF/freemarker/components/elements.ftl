@@ -57,9 +57,9 @@
  * @param initiative is initiative
 -->
 <#macro initiativeAuthor publicAuthors>
-    <h3><@u.message key="initiative.authors.title" args=[publicAuthors.publicNames+publicAuthors.privateNames] /></h3>
+    <h3><@u.message key="initiative.authors.title" args=[publicAuthors.publicNameCount+publicAuthors.privateNameCount] /></h3>
 
-    <#if (publicAuthors.publicNames > 0)>
+    <#if (publicAuthors.publicNameCount > 0)>
         <#list publicAuthors.publicAuthors as publicAuthor>
             <div class="column ${((publicAuthor_index + 1) % 3 == 0)?string("last","")}">
                 <h4 class="header">${publicAuthor.name}</h4>
@@ -69,10 +69,10 @@
         </#list>
     
     </#if>
-    <#if (publicAuthors.publicNames == 0) && (publicAuthors.privateNames == 1)>
+    <#if (publicAuthors.publicNameCount == 0) && (publicAuthors.privateNameCount == 1)>
         <p><@u.message key="authors.onlyOnePrivate" /></p>
-    <#elseif (publicAuthors.privateNames > 0)>
-        <p><@u.messageHTML key="authors.privateAuthors" args=[publicAuthors.publicNames, publicAuthors.privateNames] /></p>
+    <#elseif (publicAuthors.privateNameCount > 0)>
+        <p><@u.messageHTML key="authors.privateAuthors" args=[publicAuthors.publicNameCount, publicAuthors.privateNameCount] /></p>
     </#if>
 </#macro>
 

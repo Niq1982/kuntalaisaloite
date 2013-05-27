@@ -102,7 +102,7 @@
     </#assign>
     
     <div id="participants" class="view-block public last">
-        <h2><@u.message key="initiative.people.title" args=[authors.publicNames+authors.privateNames+participantCount.total] /></h2>
+        <h2><@u.message key="initiative.people.title" args=[participantCount.total] /></h2>
     
         <div class="initiative-content-row">
             <@e.initiativeAuthor authors />

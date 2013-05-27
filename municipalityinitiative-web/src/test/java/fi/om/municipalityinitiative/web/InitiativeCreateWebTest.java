@@ -93,6 +93,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     // Create initiative with state DRAFT and send it to REVIEW
     @Test
     public void send_to_review() {
+        overrideDriverToFirefox(true);
         Long initiativeId = testHelper.createDraft(testMunicipality1Id);
 
         loginAsAuthorForLastTestHelperCreatedInitiative();
