@@ -57,6 +57,8 @@ public final class Urls {
 
     public static final String LOGIN_SV =        "/sv/login";
 
+    public static final String MODERATOR_LOGIN = "/om-login";
+
     public static final String LOGOUT_FI =       "/fi/logout";
     
     public static final String LOGOUT_SV =       "/sv/logout";
@@ -429,6 +431,10 @@ public final class Urls {
         }
         
         return login() + "?target=" + urlEncode(target);
+    }
+
+    public String moderatorLogin() {
+        return getLocalizedPageUrl(MODERATOR_LOGIN, MODERATOR_LOGIN);
     }
 
     public String testDataGeneration() {

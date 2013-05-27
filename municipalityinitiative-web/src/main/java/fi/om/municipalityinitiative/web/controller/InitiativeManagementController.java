@@ -129,14 +129,14 @@ public class InitiativeManagementController extends BaseController {
     public String sendToReview(@PathVariable("id") Long initiativeId,
                                @RequestParam(PARAM_SENT_COMMENT) String sentComment,
                                Locale locale, HttpServletRequest request) {
-        initiativeManagementService.sendReviewAndStraightToMunicipality(initiativeId, userService.getRequiredLoginUserHolder(request), sentComment, locale);
+        initiativeManagementService.sendReviewAndStraightToMunicipality(initiativeId, userService.getRequiredLoginUserHolder(request), sentComment);
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.SEND_TO_REVIEW, request);
     }
 
     @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_SEND_TO_REVIEW_COLLECT)
     public String sendToReviewForCollecting(@PathVariable("id") Long initiativeId,
                                             Locale locale, HttpServletRequest request) {
-        initiativeManagementService.sendReviewOnlyForAcceptance(initiativeId, userService.getRequiredLoginUserHolder(request), locale);
+        initiativeManagementService.sendReviewOnlyForAcceptance(initiativeId, userService.getRequiredLoginUserHolder(request));
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.SEND_TO_REVIEW, request);
     }
 
@@ -144,7 +144,7 @@ public class InitiativeManagementController extends BaseController {
     public String sendFixToReview(@PathVariable("id") Long initiativeId,
                                   Locale locale, HttpServletRequest request) {
         LoginUserHolder requiredLoginUserHolder = userService.getRequiredLoginUserHolder(request);
-        initiativeManagementService.sendFixToReview(initiativeId, requiredLoginUserHolder, locale);
+        initiativeManagementService.sendFixToReview(initiativeId, requiredLoginUserHolder);
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.SEND_TO_REVIEW, request);
     }
 

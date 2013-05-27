@@ -22,9 +22,10 @@ public class InitiativeModerationWebTest extends WebTestBase {
     }
 
     @Test
-    public void moderation_redirects_to_loginpage_if_not_logged_in() {
+    public void moderationpage_shows_404_if_not_logged_in() {
         open(urls.moderation(testHelper.createCollaborativeAccepted(testMunicipality1Id)));
-        assertThat(driver.getCurrentUrl(), startsWith(urls.login()));
+//        assertThat(driver.getCurrentUrl(), startsWith(urls.login()));
+        assert404();
     }
 
     @Test

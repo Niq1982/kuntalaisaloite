@@ -104,18 +104,18 @@ public class InitiativeManagementService {
     }
 
     @Transactional(readOnly = false)
-    public void sendReviewAndStraightToMunicipality(Long initiativeId, LoginUserHolder loginUserHolder, String sentComment, Locale locale) {
-        markAsReviewAndSendEmail(initiativeId, loginUserHolder, locale);
+    public void sendReviewAndStraightToMunicipality(Long initiativeId, LoginUserHolder loginUserHolder, String sentComment) {
+        markAsReviewAndSendEmail(initiativeId, loginUserHolder);
         initiativeDao.updateInitiativeType(initiativeId, InitiativeType.SINGLE);
         initiativeDao.updateSentComment(initiativeId, sentComment);
     }
 
     @Transactional(readOnly = false)
-    public void sendReviewOnlyForAcceptance(Long initiativeId, LoginUserHolder loginUserHolder, Locale locale) {
-        markAsReviewAndSendEmail(initiativeId, loginUserHolder, locale);
+    public void sendReviewOnlyForAcceptance(Long initiativeId, LoginUserHolder loginUserHolder) {
+        markAsReviewAndSendEmail(initiativeId, loginUserHolder);
     }
 
-    private void markAsReviewAndSendEmail(Long initiativeId, LoginUserHolder loginUserHolder, Locale locale) {
+    private void markAsReviewAndSendEmail(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         assertAllowance("Send review", getManagementSettings(initiativeId).isAllowSendToReview());
 
@@ -129,7 +129,7 @@ public class InitiativeManagementService {
     }
 
     @Transactional(readOnly = false)
-    public void sendFixToReview(Long initiativeId, LoginUserHolder requiredLoginUserHolder, Locale locale) {
+    public void sendFixToReview(Long initiativeId, LoginUserHolder requiredLoginUserHolder) {
         requiredLoginUserHolder.assertManagementRightsForInitiative(initiativeId);
         assertAllowance("Send fix to review", getManagementSettings(initiativeId).isAllowSendFixToReview());
         initiativeDao.updateInitiativeFixState(initiativeId, FixState.REVIEW);
