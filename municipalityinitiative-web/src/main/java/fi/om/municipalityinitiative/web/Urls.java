@@ -383,6 +383,10 @@ public final class Urls {
         return login() + "?" + PARAM_MANAGEMENT_CODE + "=" + managementHash;
     }
 
+    public String api() {
+        return baseUrl+API;
+    }
+
     public String initiatives() {
         return baseUrl + INITIATIVES;
     }

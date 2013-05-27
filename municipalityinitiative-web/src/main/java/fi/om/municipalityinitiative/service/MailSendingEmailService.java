@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Participant;
+import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Task;
 import fi.om.municipalityinitiative.web.Urls;
@@ -28,6 +29,8 @@ public class MailSendingEmailService implements EmailService {
     private static final String COLLABORATIVE_TO_MUNICIPALITY = "municipality-collaborative";
     private static final String AUTHOR_INVITATION = "author-invitation";
     private static final String INVITATION_ACCEPTANCE ="invitation-acceptance";
+    private static final String AUTHOR_DELETED_TO_OTHER_AUTHORS = "author-deleted-to-other-authors";
+    private static final String AUTHOR_DELETED_TO_DELETED_AUTHOR = "author-deleted-to-deleted-author";
 
     @Resource
     private MessageSource messageSource;
@@ -71,6 +74,31 @@ public class MailSendingEmailService implements EmailService {
                 .addRecipient(municipalityEmail)
                 .withSubject(messageSource.getMessage("email.not.collaborative.municipality.subject", toArray(initiative.getName()), locale))
                 .withDataMap(toDataMap(initiative, authors, locale))
+                .send();
+    }
+
+    @Override
+    public void sendAuthorDeletedEmailToOtherAuthors(Initiative initiative, List<String> sendTo, ContactInfo removedAuthorsContactInfo) {
+
+        HashMap<String, Object> dataMap = toDataMap(initiative, Locales.LOCALE_FI);
+        dataMap.put("contactInfo", removedAuthorsContactInfo);
+
+        emailMessageConstructor
+                .fromTemplate(AUTHOR_DELETED_TO_OTHER_AUTHORS)
+                .addRecipients(sendTo)
+                .withSubject(messageSource.getMessage("email.author.deleted.to.other.authors.subject", toArray(), Locales.LOCALE_FI))
+                .withDataMap(dataMap)
+                .send();
+    }
+
+    @Override
+    public void sendAuthorDeletedEmailToDeletedAuthor(Initiative initiative, String authorEmail) {
+
+        emailMessageConstructor
+                .fromTemplate(AUTHOR_DELETED_TO_DELETED_AUTHOR)
+                .addRecipient(authorEmail)
+                .withSubject(messageSource.getMessage("email.author.deleted.to.deleted.author.subject", toArray(), Locales.LOCALE_FI))
+                .withDataMap(toDataMap(initiative, Locales.LOCALE_FI))
                 .send();
     }
 

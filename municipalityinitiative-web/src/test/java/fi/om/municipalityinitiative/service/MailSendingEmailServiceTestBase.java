@@ -6,6 +6,7 @@ import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.util.JavaMailSenderFake;
+import fi.om.municipalityinitiative.util.SentMailHanderUtil;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -14,10 +15,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
-import javax.mail.Address;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 
 import java.util.Collections;
 import java.util.List;
@@ -55,6 +52,8 @@ public abstract class MailSendingEmailServiceTestBase {
     @Resource
     protected JavaMailSenderFake javaMailSenderFake;
 
+    protected SentMailHanderUtil sentMailHanderUtil = new SentMailHanderUtil();
+
     @BeforeClass
     public static void beforeClass() throws InterruptedException {
         Thread.sleep(1000); // This is here to make sure old email-sending-tasks have sent their emails.
@@ -76,15 +75,20 @@ public abstract class MailSendingEmailServiceTestBase {
     }
 
     protected static List<Author> defaultAuthors() {
+        ContactInfo contactInfo = contactInfo();
+        Author author = new Author();
+        author.setContactInfo(contactInfo);
+        author.setMunicipality(new Municipality(INITIATIVE_MUNICIPALITY_ID, INITIATIVE_MUNICIPALITY, INITIATIVE_MUNICIPALITY, true));
+        return Collections.singletonList(author);
+    }
+
+    public static ContactInfo contactInfo() {
         ContactInfo contactInfo = new ContactInfo();
         contactInfo.setAddress(CONTACT_ADDRESS);
         contactInfo.setName(CONTACT_NAME);
         contactInfo.setEmail(CONTACT_EMAIL);
         contactInfo.setPhone(CONTACT_PHONE);
-        Author author = new Author();
-        author.setContactInfo(contactInfo);
-        author.setMunicipality(new Municipality(INITIATIVE_MUNICIPALITY_ID, INITIATIVE_MUNICIPALITY, INITIATIVE_MUNICIPALITY, true));
-        return Collections.singletonList(author);
+        return contactInfo;
     }
 
     @Before
@@ -92,42 +96,4 @@ public abstract class MailSendingEmailServiceTestBase {
         javaMailSenderFake.clearSentMessages();
     }
 
-
-    // TODO: Examine this whole MimeMultipart - why is the data stored that deep in the MimeMultipart.
-    protected final MessageContent getMessageContent() throws Exception {
-        MimeMultipart singleSentMessage = (MimeMultipart) getSingleSentMessage().getContent();
-        while (!(singleSentMessage.getBodyPart(0).getContent() instanceof String)) {
-//            if (hasEmail) {
-//                assertThat(singleSentMessage.getCount(), is(2));
-//            }
-//            else {
-//                assertThat(singleSentMessage.getCount(), is(1));
-//            }
-            singleSentMessage = (MimeMultipart) singleSentMessage.getBodyPart(0).getContent();
-        }
-        return new MessageContent(singleSentMessage);
-    }
-
-    public final static class MessageContent {
-        public final String text;
-        public final String html;
-
-        private MessageContent(MimeMultipart mimeMultipart) throws Exception {
-            this.text = mimeMultipart.getBodyPart(0).getContent().toString();
-            this.html = mimeMultipart.getBodyPart(1).getContent().toString();
-        }
-    }
-
-    protected final MimeMessage getSingleSentMessage() throws InterruptedException {
-        List<MimeMessage> sentMessages = javaMailSenderFake.getSentMessages();
-        assertThat(sentMessages, hasSize(1));
-        return sentMessages.get(0);
-    }
-
-
-    protected final String getSingleRecipient() throws MessagingException, InterruptedException {
-        Address[] allRecipients = getSingleSentMessage().getAllRecipients();
-        assertThat(allRecipients, arrayWithSize(1));
-        return allRecipients[0].toString();
-    }
 }

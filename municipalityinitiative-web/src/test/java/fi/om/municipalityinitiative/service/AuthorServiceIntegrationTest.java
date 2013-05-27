@@ -15,6 +15,7 @@ import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUIConfirmDto;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUICreateDto;
 import fi.om.municipalityinitiative.sql.QAuthorInvitation;
+import fi.om.municipalityinitiative.util.JavaMailSenderFake;
 import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
@@ -24,9 +25,13 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.springframework.mail.javamail.JavaMailSender;
 
 import javax.annotation.Resource;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -51,6 +56,10 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     @Resource
     InitiativeDao initiativeDao;
+
+    @Resource
+    JavaMailSenderFake javaMailSenderFake;
+
     private Long testMunicipality;
 
     @Rule
@@ -60,6 +69,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     public void setUp() throws Exception {
         testHelper.dbCleanup();
         testMunicipality = testHelper.createTestMunicipality("municipality");
+        javaMailSenderFake.clearSentMessages();
     }
 
     @Test(expected = AccessDeniedException.class)
@@ -332,17 +342,28 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     }
 
     @Test
-    public void deleting_author_succeeds() {
+    public void deleting_author_succeeds_and_sends_emails() throws Exception {
 
         Long initiative = testHelper.createCollaborativeAccepted(testMunicipality);
         Long anotherAuthor = testHelper.getLastAuthorId();
-        Long currentAuthor = testHelper.createAuthorAndParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality));
+        Long currentAuthor = testHelper.createAuthorAndParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality).withParticipantEmail("author_left@example.com"));
 
         precondition(authorDao.findAuthors(initiative), hasSize(2));
 
         authorService.deleteAuthor(initiative, TestHelper.authorLoginUserHolder, anotherAuthor);
 
         assertThat(authorDao.findAuthors(initiative), hasSize(1));
+
+        List<MimeMessage> sentMessages = javaMailSenderFake.getSentMessages(2);
+
+        MimeMessage messageToOtherAuthors = sentMessages.get(0);
+        assertThat(messageToOtherAuthors.getAllRecipients()[0].toString(), is("author_left@example.com"));
+        assertThat(messageToOtherAuthors.getSubject(), containsString("Vastuuhenkilö on poistettu aloitteestasi"));
+        assertThat(JavaMailSenderFake.getMessageContent(messageToOtherAuthors).html, containsString(TestHelper.DEFAULT_PARTICIPANT_EMAIL));
+
+        MimeMessage messageToDeletedAuthor = sentMessages.get(1);
+        assertThat(JavaMailSenderFake.getSingleRecipient(messageToDeletedAuthor), is(TestHelper.DEFAULT_PARTICIPANT_EMAIL));
+        assertThat(messageToDeletedAuthor.getSubject(), containsString("Sinut on poistettu aloitteen vastuuhenkilöistä"));
 
     }
 
