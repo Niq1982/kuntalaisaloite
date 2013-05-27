@@ -60,22 +60,26 @@ public class SecurityFilter implements Filter {
         } catch (NestedServletException e) {
             Throwable t = e.getCause();
             if (t instanceof AuthenticationRequiredException) {
-                
-                StringBuilder target = new StringBuilder(128);
-                target.append(this.urlPathHelper.getOriginatingRequestUri(request));
-                
-                if (request.getQueryString() != null) {
-                    target.append("?");
-                    target.append(request.getQueryString());
-                }
-    
-                response.sendRedirect(Urls.FI.login(target.toString()));
+                authenticationRequired((AuthenticationRequiredException) t, request, response);
             } else if (t instanceof CSRFException) {
                 csrfException(e, request, response);
             } else {
                 propagateException(e);
             }
         }
+    }
+
+    private void authenticationRequired(AuthenticationRequiredException e, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+//        StringBuilder target = new StringBuilder(128);
+//        target.append(this.urlPathHelper.getOriginatingRequestUri(request));
+//
+//        if (request.getQueryString() != null) {
+//            target.append("?");
+//            target.append(request.getQueryString());
+//        }
+//
+//        response.sendRedirect(Urls.FI.login(target.toString()));
+        propagateException(e);
     }
 
     private void checkInvalidParameters(HttpServletRequest request) {
