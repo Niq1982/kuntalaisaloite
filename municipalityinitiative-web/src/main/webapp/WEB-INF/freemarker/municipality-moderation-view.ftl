@@ -14,52 +14,12 @@
 <h1><@u.message "municipalities.edit.title" /></h1>
 
     <#-- Create form errors summary -->
-    <@u.errorsSummary path="updateData.*" prefix="updateData."/>
-
-<#--
-<div class="view-block cf">
-
-    <div class="column col-1of2">
-        <h2>Valitse kunta</h2>
-        <@f.municipalitySelect path="updateData.id" options=municipalities required="" cssClass="manage-municipality-select" key="initiative.chooseMunicipality"  allowSingleDeselect=true />
-    
-        <#list municipalities as municipality>
-            <#if municipality_index == 0><ul id="municipalities" class="no-style" style="display:none;"></#if>
-                <li data-id="${municipality.id}" data-email="${municipality.email!""}" data-active="${municipality.active?string}">${municipality.nameFi} / ${municipality.nameSv}</li>
-            <#if !municipality_has_next></ul></#if>
-        </#list>
-    
-        <br/>
-        <div class="pad">
-            <form action="${springMacroRequestContext.requestUri}" id="municipality-form" method="POST">
-                <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-                
-                <input type="hidden" id="id" name="id" value="1"/>
-                
-                <br/>
-                
-                <h3 id="selected-municipality" data-empty="<i>Ei valittua kuntaa</i>"><i>Ei valittua kuntaa</i></h3>
-                
-                <@f.formCheckbox path="updateData.active" />
-    
-                <br/>
-                <@f.textField path="updateData.municipalityEmail" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
-    
-                <br/>
-                <button type="submit" name="${UrlConstants.ACTION_ACCEPT_INITIATIVE}" class="small-button"><span class="small-icon save-and-send">Tallenna</span></button>
-                <br/><br/>
-            </form>
-        </div>
-    </div>
-
-</div>
--->
+    <#--<@u.errorsSummary path="updateData.*" prefix="updateData."/>-->
 
 <div class="msg-block">
     <p><@u.message "municipalities.edit.description" /></p>
     <p><@u.message "municipalities.edit.instruction" /></p>
 </div>
-
 
 <table class="data municipalities">
     <thead>
@@ -90,12 +50,17 @@
 
 <#assign editMunicipalityDetailsHTML>
 <@compress single_line=true>
+    <#-- Create form errors summary -->
+    <@u.errorsSummary path="updateData.*" prefix="updateData."/>
+
     <form action="${springMacroRequestContext.requestUri}" id="municipality-form" method="POST">
         <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
         
-        <input type="hidden" id="id" name="id" value="1"/>
-
-        <h3 id="selected-municipality" data-empty="<i><@u.message "municipality.edit.noneSelected" /></i>"><i><@u.message "municipality.edit.noneSelected" /></i></h3>
+        <@spring.formHiddenInput "updateData.id" />
+        
+        <h3 id="selected-municipality" data-empty="<i><@u.message "municipality.edit.noneSelected" /></i>">
+            <#if spring.status.value??>${municipalities[spring.status.value?number-1].getName(locale)!""}</#if>
+        </h3>
         
         <div class="input-block-content">
             <@f.radiobutton path="updateData.active" required="" header=false options={
@@ -142,6 +107,16 @@
                 content:    '<#noescape>${editMunicipalityDetailsHTML!""}</#noescape>'
             }]
         };
+        
+        <#-- Modal: Edit municipality details invalid form data -->
+        <#if hasErrors?? && hasErrors>
+        modalData.editMunicipalityDetailsInvalid = function() {
+            return [{
+                title:      '<@u.message "municipality.edit.title" />',
+                content:    '<#noescape>${editMunicipalityDetailsHTML!""}</#noescape>'
+            }]
+        };
+        </#if>
             
         var messageData = {};
 
