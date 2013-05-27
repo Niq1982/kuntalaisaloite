@@ -102,7 +102,11 @@ public class JavaMailSenderFake implements JavaMailSender {
     }
 
     public final String getSingleRecipient() throws MessagingException, InterruptedException {
-        Address[] allRecipients = getSingleSentMessage().getAllRecipients();
+        return getSingleRecipient(getSingleSentMessage());
+    }
+
+    public static String getSingleRecipient(MimeMessage mimeMessage) throws MessagingException {
+        Address[] allRecipients = mimeMessage.getAllRecipients();
         assertThat(allRecipients, arrayWithSize(1));
         return allRecipients[0].toString();
     }

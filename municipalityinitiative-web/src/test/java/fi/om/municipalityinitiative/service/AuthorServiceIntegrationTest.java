@@ -355,11 +355,16 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         assertThat(authorDao.findAuthors(initiative), hasSize(1));
 
         List<MimeMessage> sentMessages = javaMailSenderFake.getSentMessages(2);
-        MimeMessage firstSentMessage = sentMessages.get(0);
 
-        assertThat(firstSentMessage.getAllRecipients()[0].toString(), is("author_left@example.com"));
-        assertThat(firstSentMessage.getSubject(), is("Vastuuhenkilö on poistettu aloitteestasi"));
-        assertThat(JavaMailSenderFake.getMessageContent(firstSentMessage).html, containsString(TestHelper.DEFAULT_PARTICIPANT_EMAIL));
+        MimeMessage messageToOtherAuthors = sentMessages.get(0);
+        assertThat(messageToOtherAuthors.getAllRecipients()[0].toString(), is("author_left@example.com"));
+        assertThat(messageToOtherAuthors.getSubject(), containsString("Vastuuhenkilö on poistettu aloitteestasi"));
+        assertThat(JavaMailSenderFake.getMessageContent(messageToOtherAuthors).html, containsString(TestHelper.DEFAULT_PARTICIPANT_EMAIL));
+
+        MimeMessage messageToDeletedAuthor = sentMessages.get(1);
+        assertThat(JavaMailSenderFake.getSingleRecipient(messageToDeletedAuthor), is(TestHelper.DEFAULT_PARTICIPANT_EMAIL));
+        assertThat(messageToDeletedAuthor.getSubject(), containsString("Sinut on poistettu aloitteen vastuuhenkilöistä"));
+
     }
 
     @Test
