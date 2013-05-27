@@ -91,7 +91,6 @@ public class InitiativeManagementService {
                 return author;
             }
         }
-        // TODO: Hmm.. We still get the municipality information and stuff from participant table...
         throw new NotFoundException("Author", initiativeId);
     }
 

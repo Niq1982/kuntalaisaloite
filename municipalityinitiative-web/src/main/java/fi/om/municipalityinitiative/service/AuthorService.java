@@ -106,7 +106,11 @@ public class AuthorService {
             } catch (InterruptedException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
+            ContactInfo deletedAuthorContactInfo = authorDao.getAuthor(authorId).getContactInfo();
             authorDao.deleteAuthor(authorId);
+            emailService.sendAuthorDeletedEmailToOtherAuthors(initiativeDao.get(initiativeId), authorDao.getAuthorEmails(initiativeId), deletedAuthorContactInfo);
+            // TODO: Email to author
+            // XXX: These might fail if two authors try to remove each others. Does it matter?
         }
 
     }
