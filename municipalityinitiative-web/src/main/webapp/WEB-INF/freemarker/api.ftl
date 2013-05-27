@@ -6,8 +6,8 @@
 
 <p>Api is still in beta state and most likely will change when kuntalaisaloite.fi 1.0 is published. Feel free to give feedback about api's interface to kuntalaisaloite@om.fi and we might change it for you before publishing.</p>
 
-<p>The Open Data API provides the same information about initiatives as the site's user interface does. This service contains two Open Data access points: one for listing public initiatives and
-one for details of an individual initiative. Both interfaces support <a href="http://www.json.org/">JSON</a> 
+<p>The Open Data API provides the same information about initiatives as the site's user interface does. This service contains three Open Data access points: one for listing public initiatives,
+one for details of an individual initiative and one for receiving municipalities. All interfaces support <a href="http://www.json.org/">JSON</a>
 and <a href="http://en.wikipedia.org/wiki/JSONP">JSONP</a> formats.</p>
 
 <h3>List of Initiatives</h3>
@@ -29,7 +29,7 @@ Id of an initiative is an URI of initiative details in <a href="http://www.json.
 <p><a href="#details">Details</a> of the initiative in <a href="http://www.json.org/">JSON</a> format.</p>
 
 <h3>Municipalities</h3>
-<p>All municipalities are listed at <a href="${urls.municipalities()}">${urls.initiatives()}</a>.
+<p>All municipalities are listed at <a href="${urls.municipalities()}">${urls.municipalities()}</a>.
 
 <h3>JSONP</h3>
 
