@@ -283,7 +283,7 @@ public abstract class WebTestBase {
     protected void loginAsOmUser() {
 
         testHelper.createTestAdminUser("admin", "admin", "Oili Oikkonen");
-        open(urls.login(""));
+        open(urls.moderatorLogin());
         inputText("u", "admin");
         inputText("p", "admin");
         clickByName("Login");

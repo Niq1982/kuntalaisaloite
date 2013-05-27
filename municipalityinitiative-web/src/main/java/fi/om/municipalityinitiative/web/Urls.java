@@ -433,6 +433,10 @@ public final class Urls {
         return login() + "?target=" + urlEncode(target);
     }
 
+    public String moderatorLogin() {
+        return getLocalizedPageUrl(MODERATOR_LOGIN, MODERATOR_LOGIN);
+    }
+
     public String testDataGeneration() {
         return getLocalizedPageUrl(TEST_DATA_GENERATION_FI, TEST_DATA_GENERATION_SV);
     }
