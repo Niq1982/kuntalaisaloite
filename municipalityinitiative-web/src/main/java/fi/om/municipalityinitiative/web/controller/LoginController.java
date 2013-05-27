@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.web.controller;
 
 import fi.om.municipalityinitiative.service.UserService;
+import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,21 +29,19 @@ public class LoginController extends BaseLoginController {
         super(baseUrl, optimizeResources, resourcesVersion);
     }
 
-    @RequestMapping(value = {LOGIN_FI, LOGIN_SV}, method = RequestMethod.GET)
+    @RequestMapping(value = MODERATOR_LOGIN, method = RequestMethod.GET)
     public String loginGet(@RequestParam(required=false) String target, Model model, Locale locale, HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=ISO-8859-1");
         model.addAttribute("target", target);
-        return Views.DUMMY_LOGIN_VIEW;
+        return Views.MODERATOR_LOGIN_VIEW;
     }
 
-    @RequestMapping(value = {LOGIN_FI, LOGIN_SV}, method = RequestMethod.POST)
+    @RequestMapping(value = LOGIN_FI, method = RequestMethod.POST)
     public RedirectView login(@RequestParam String u,
                               @RequestParam String p,
-                              @RequestParam String target,
                               Model model, Locale locale, HttpServletRequest request) {
         userService.adminLogin(u, p, request);
-
-        return new RedirectView(getValidLoginTarget(target, Urls.get(locale)), false, true, false);
+        return new RedirectView(Urls.get(Locales.LOCALE_FI).frontpage());
     }
 
     @RequestMapping(value =  {LOGIN_FI, LOGIN_FI}, method = RequestMethod.GET, params = PARAM_MANAGEMENT_CODE)

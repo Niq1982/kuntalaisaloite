@@ -40,7 +40,6 @@
 
         <h4>Sisäänkirjautuminen</h4>
 
-        <input type="hidden" name="target" value="${target}">
         <input type="hidden" name="CSRFToken" value="${CSRFToken!""}"/>
         <div>Tunnus: <input type="text" name="u" id="u" /></div>
         <div>Salasana: <input type="password" name="p" id="p" /></div>

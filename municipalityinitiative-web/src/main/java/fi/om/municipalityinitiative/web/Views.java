@@ -5,7 +5,7 @@ public final class Views {
 
     private Views() {}
 
-    public static final String DUMMY_LOGIN_VIEW = "dummy-login";
+    public static final String MODERATOR_LOGIN_VIEW = "dummy-login";
 
     public static final String SINGLE_LOGIN_VIEW = "single-login";
 
