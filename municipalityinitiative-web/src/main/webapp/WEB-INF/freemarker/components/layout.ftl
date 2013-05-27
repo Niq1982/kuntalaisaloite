@@ -249,12 +249,16 @@
             </div>
 
             <div class="logged-in-info">
+                <#if user.isOmUser()>
+                    <div class="header-dropdown">
+                        <a href="#" class="header-tool-link user-name dropdown-toggle"><@u.message "om.menu" /> <span class="icon-small settings"></span></a>
+                        <ul id="user-menu" class="dropdown-menu user-menu">
+                            <li><a href="${urls.municipalityModeration()}"><@u.message "om.municipality.moderation" /></a></li>
+                        </ul>
+                    </div>
+                </#if>
                 <#if user.isLoggedIn()>
                     <a href="${urls.logout()}" id="logout" class="header-tool-link logout"><@u.message "common.logout"/><span class="icon-small logout"></span></a>
-                <#--
-                <#else>
-                    <a href="${urls.login(springMacroRequestContext.requestUri)}" title="<@u.message "common.login"/>" class="header-tool-link login"><@u.message "common.login"/></a>
-                    -->
                 </#if>
             </div>
 
