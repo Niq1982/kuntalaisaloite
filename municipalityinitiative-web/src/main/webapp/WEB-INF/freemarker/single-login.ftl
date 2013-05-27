@@ -23,12 +23,15 @@
 
 <@l.main page pageTitle!"">
 
+    <h1><@u.message "login.title" /></h1>
+
+    <p><@u.message "login.description" /></p>
+
     <form action="${urls.login()}" method="post">
-        <h1>Olet kirjautumassa sisään yksittäisen aloitteen tekijäksi</h1>
         <input type="hidden" name="CSRFToken" value="${CSRFToken!""}"/>
         <input type="hidden" name="management" value="${managementHash}"/>
         
-        <button type="submit" name="Login" value="Kirjaudu" class="small-button">Kirjaudu</button>
+        <button type="submit" name="Login" value="<@u.message "login.continue" />" class="small-button"><span class="small-icon next"><@u.message "login.continue" /></span></button>
     </form>
 
 </@l.main>

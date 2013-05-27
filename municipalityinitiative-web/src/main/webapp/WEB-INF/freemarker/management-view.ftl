@@ -36,7 +36,7 @@
     </div>
     
     <div class="view-block">
-        <h2><@u.message key="initiative.people.title" args=[authors?size+participantCount.total] /></h2>
+        <h2><@u.message key="initiative.people.title" args=[participantCount.total] /></h2>
         
         <div class="initiative-content-row">
             <@e.initiativeContactInfo authors />

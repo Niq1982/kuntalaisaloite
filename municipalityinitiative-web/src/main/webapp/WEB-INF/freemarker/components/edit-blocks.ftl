@@ -106,13 +106,6 @@
  * Prints help-texts and validation errors in this block
  -->
 <#macro chooseInitiativeType>
-    <div class="input-block-extra">
-        <div class="input-block-extra-content">
-            <@f.helpText "help.initiativeType" />
-        </div>
-    </div>
-        
-    <div class="input-block-content">
         <div class="input-header">
             <@u.message "initiative.type" /> <span class="icon-small required trigger-tooltip"></span>
         </div>
@@ -140,8 +133,6 @@
                 <span class="description"><@u.message "initiative.type.five-percent.description" /><br/><br/></span>
             </label>
         </div>
-
-    </div>
 
 </#macro>
 

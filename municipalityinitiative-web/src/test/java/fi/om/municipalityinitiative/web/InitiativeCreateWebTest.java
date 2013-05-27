@@ -93,7 +93,6 @@ public class InitiativeCreateWebTest extends WebTestBase {
     // Create initiative with state DRAFT and send it to REVIEW
     @Test
     public void send_to_review() {
-        overrideDriverToFirefox(true);
         Long initiativeId = testHelper.createDraft(testMunicipality1Id);
 
         loginAsAuthorForLastTestHelperCreatedInitiative();
@@ -104,6 +103,9 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
         clickByName(Urls.ACTION_SEND_TO_REVIEW);
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_SEND_TO_REVIEW);
+        
+        // Assert that initiative name and proposal cannot be edited in REVIEW-state
+        update_initiative(initiativeId); // XXX: Why does send_to_review -test update initiative?
     }
 
     @Test
