@@ -2,7 +2,9 @@
 <#import "components/utils.ftl"as u /> 
 <#escape x as x?html> <@l.main "page.api">
 
-<h1>Open Data API</h1>
+<h1>Open Data API v0 - BETA</h1>
+
+<p>Api is still in beta state and most likely will change when kuntalaisaloite.fi 1.0 is published. Feel free to give feedback about api's interface to kuntalaisaloite@om.fi and we might change it for you before publishing.</p>
 
 <p>The Open Data API provides the same information about initiatives as the site's user interface does. This service contains two Open Data access points: one for listing public initiatives and
 one for details of an individual initiative. Both interfaces support <a href="http://www.json.org/">JSON</a> 

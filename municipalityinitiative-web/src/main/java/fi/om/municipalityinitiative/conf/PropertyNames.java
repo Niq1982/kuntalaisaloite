@@ -46,14 +46,8 @@ public final class PropertyNames {
     public static final String emailDefaultReplyTo = "email.default.reply-to";
     
     public static final String emailSendToOM = "email.send-to.om";
-
-    public static final String emailSendToVRK = "email.send-to.vrk";
-    
     
     public static final String errorFeedbackEmail = "error.feedbackEmail";
-    
-    
-    public static final String invitationExpirationDays = "invitation.expiration.days";
 
     
     public static final String testEmailSendTo = "test.email.send-to";

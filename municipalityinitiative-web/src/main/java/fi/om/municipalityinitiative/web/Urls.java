@@ -73,11 +73,11 @@ public final class Urls {
     
     public static final String API = "/api";
     
-    public static final String INITIATIVES =  API + "/v1/initiatives";
+    public static final String INITIATIVES =  API + "/v0/initiatives";
 
     public static final String INITIATIVE =   INITIATIVES + "/" + ID_PARAMETER;
 
-    public static final String MUNICIPALITIES = API + "/v1/municipalities";
+    public static final String MUNICIPALITIES = API + "/v0/municipalities";
 
     public static final String MUNICIPALITY = MUNICIPALITIES + "/" + ID_PARAMETER;
     
