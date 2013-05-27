@@ -154,7 +154,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     public void send_initiative_as_review_sents_state_as_review_and_leaves_type_as_null_if_not_single() {
         Long initiativeId = testHelper.createDraft(testMunicipality.getId());
 
-        service.sendReviewOnlyForAcceptance(initiativeId, TestHelper.authorLoginUserHolder, null);
+        service.sendReviewOnlyForAcceptance(initiativeId, TestHelper.authorLoginUserHolder);
 
         Initiative updated = initiativeDao.get(initiativeId);
 
@@ -165,7 +165,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     @Test
     public void send_initiative_as_review_sets_state_as_review_and_type_as_single_if_single() {
         Long initiativeId = testHelper.createDraft(testMunicipality.getId());
-        service.sendReviewAndStraightToMunicipality(initiativeId, TestHelper.authorLoginUserHolder, null, null);
+        service.sendReviewAndStraightToMunicipality(initiativeId, TestHelper.authorLoginUserHolder, null);
 
         Initiative updated = initiativeDao.get(initiativeId);
 
@@ -176,37 +176,37 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     @Test(expected = OperationNotAllowedException.class)
     public void send_review_and_to_municipality_fails_if_initiative_accepted() {
         Long accepted = testHelper.createCollaborativeAccepted(testMunicipality.getId());
-        service.sendReviewAndStraightToMunicipality(accepted, TestHelper.authorLoginUserHolder, null, null);
+        service.sendReviewAndStraightToMunicipality(accepted, TestHelper.authorLoginUserHolder, null);
     }
 
     @Test(expected = OperationNotAllowedException.class)
     public void send_review_not_single_fails_if_initiative_accepted() {
         Long accepted = testHelper.createCollaborativeAccepted(testMunicipality.getId());
-        service.sendReviewOnlyForAcceptance(accepted, TestHelper.authorLoginUserHolder, null);
+        service.sendReviewOnlyForAcceptance(accepted, TestHelper.authorLoginUserHolder);
     }
 
     @Test(expected = AccessDeniedException.class)
     public void send_single_to_review_fails_if_no_right_to_initiative() {
         Long accepted = testHelper.createCollaborativeAccepted(testMunicipality.getId());
-        service.sendReviewAndStraightToMunicipality(accepted, TestHelper.unknownLoginUserHolder, null, null);
+        service.sendReviewAndStraightToMunicipality(accepted, TestHelper.unknownLoginUserHolder, null);
     }
 
     @Test(expected = AccessDeniedException.class)
     public void send_to_review_fails_if_no_right_to_initiative() {
         Long accepted = testHelper.createCollaborativeAccepted(testMunicipality.getId());
-        service.sendReviewOnlyForAcceptance(accepted, TestHelper.unknownLoginUserHolder, null);
+        service.sendReviewOnlyForAcceptance(accepted, TestHelper.unknownLoginUserHolder);
     }
 
     @Test(expected = AccessDeniedException.class)
     public void send_fix_to_review_fails_if_no_right_to_initiative() {
         Long accepted = testHelper.createCollaborativeAccepted(testMunicipality.getId());
-        service.sendFixToReview(accepted, TestHelper.unknownLoginUserHolder, null);
+        service.sendFixToReview(accepted, TestHelper.unknownLoginUserHolder);
     }
 
     @Test(expected = OperationNotAllowedException.class)
     public void send_fix_to_review_fails_if_initiative_sent() {
         Long sent = testHelper.createSingleSent(testMunicipality.getId());
-        service.sendFixToReview(sent, TestHelper.authorLoginUserHolder, null);
+        service.sendFixToReview(sent, TestHelper.authorLoginUserHolder);
     }
 
     @Test
@@ -219,7 +219,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
         precondition(initiativeDao.get(accepted).getFixState(), is(FixState.FIX));
 
-        service.sendFixToReview(accepted, TestHelper.authorLoginUserHolder, null);
+        service.sendFixToReview(accepted, TestHelper.authorLoginUserHolder);
 
         assertThat(initiativeDao.get(accepted).getFixState(), is(FixState.REVIEW));
     }
