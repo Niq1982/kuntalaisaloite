@@ -1,11 +1,9 @@
 <#import "../components/email-layout-html.ftl" as l />
 <#import "../components/email-utils.ftl" as u />
 <#import "../components/email-blocks.ftl" as b />
+<#import "../components/status-info.ftl" as s />
 
 <#assign type="text" />
-
-<#-- Use statusTitle and statusInfo for TEXT message -->
-<#include "../includes/status-info.ftl" />
 
 <#if statusTitle??>
     ${statusTitle}
@@ -14,7 +12,7 @@
 </#if>
 
 
-${statusInfo!""}
+<@s.statusInfo emailMessageType type />
 
 ----
 
@@ -32,7 +30,7 @@ ${statusInfo!""}
 </#if>
 
 
-${statusInfoSv!""}
+<@s.statusInfo emailMessageType type />
 ----
 
 <@b.emailFooter type />

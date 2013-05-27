@@ -1,12 +1,11 @@
 <#import "../components/email-layout-html.ftl" as l />
 <#import "../components/email-utils.ftl" as u />
 <#import "../components/email-blocks.ftl" as b />
+<#import "../components/status-info.ftl" as s />
 
 <#assign type="html" />
 
 <#escape x as x?html>
-
-<#include "../includes/status-info.ftl" />
 
 <#-- Override default title if custom title is defined -->
 <#if statusTitle??>
@@ -20,7 +19,7 @@
     <#-- Finnish part -->
 
     <@b.mainContentBlock title>
-        <#noescape>${statusInfoHTML!""}</#noescape>
+        <@s.statusInfo emailMessageType type />
     </@b.mainContentBlock>
     
     <@u.spacer "15" />
@@ -40,7 +39,7 @@
     </#if>
     
     <@b.mainContentBlock title>
-        <#noescape>${statusInfoHTMLSv!""}</#noescape>
+        <@s.statusInfo emailMessageType type />
     </@b.mainContentBlock>
     
     <@u.spacer "15" />
@@ -53,5 +52,6 @@
     <#global switchLocale = locale />
 
 </@l.emailHtml>
+
 
 </#escape> 

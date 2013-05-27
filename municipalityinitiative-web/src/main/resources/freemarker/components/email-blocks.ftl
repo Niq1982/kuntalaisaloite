@@ -149,11 +149,10 @@
  * @param type 'text' or 'html'
  -->
 <#macro contactInfo type="">
-
-    <h4 style="${h4!""}"><@u.message key="email.authors" args=[authors?size] /></h4>
     <#list authors as author>
         <#assign obj=author.contactInfo />
         <#if type == "html">
+            <h4 style="${h4!""}"><@u.message key="email.authors" args=[authors?size] /></h4>
             <p style="${pBottomMargin!""}">${obj.name!""}, ${author.municipality.nameFi} / ${author.municipality.nameSv}<br/>
             <#if obj.email?? && obj.email != ""><@u.link "mailto:"+obj.email obj.email /><br/></#if>
             <#if obj.phone?? && obj.phone != "">${obj.phone!""}<br/></#if>
