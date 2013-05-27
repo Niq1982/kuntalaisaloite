@@ -154,6 +154,16 @@
 </#macro>
 
 <#--
+ * returnPrevious
+ *
+ * @param url 
+ * @param labelKey
+-->
+<#macro returnPrevious url labelKey>
+    <p><a href="${url}">&laquo; <@message labelKey /></a></p>
+</#macro>
+
+<#--
  * systemMessage
  *
  * System message for showing messages like info, success, ...
@@ -270,6 +280,25 @@
 </#macro>
 
 <#--
+ * limitStringLength
+ *
+ * Shorten string if the length exceeds defined length
+ *
+ * @param text is the input text
+ * @param length is the max length
+ * @param postFix customizable string, default is ellipsis
+ -->
+<#macro limitStringLength text length postFix="...">
+<@compress single_line=true>
+    <#if (text?length > length)>
+        ${text?substring(0,length)}${postFix}
+    <#else>
+        ${text}
+    </#if>
+</@compress>
+</#macro>
+
+<#--
  * modalTemplate
  * 
  * General template for all modals.
@@ -360,16 +389,6 @@ ${email?split("@")?first}&#064;<span class="hide">null</span>${email?split("@")?
 <@compress single_line=true>
     <a href="${urls.search()}${queryString[parameter]}" class="${cssClass}<#if tooltip> trigger-tooltip</#if>" <#if tooltip>title="<@message "searchParameters."+parameter+".tooltip" />"</#if>><@message "searchParameters."+parameter /><#if (count > -1)><span class="count">${count}</span></#if></a>
 </@compress>
-</#macro>
-
-<#--
- * returnPrevious
- *
- * @param url 
- * @param labelKey
--->
-<#macro returnPrevious url labelKey>
-    <p><a href="${url}">&laquo; <@message labelKey /></a></p>
 </#macro>
 
 <#--

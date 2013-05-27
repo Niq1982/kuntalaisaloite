@@ -187,7 +187,7 @@ public class ModerationServiceTest {
 
         String moderatorComment = "moderator comment";
         moderationService.accept(loginUserHolder, INITIATIVE_ID, moderatorComment, null);
-        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM));
+        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM_FIX));
         verifyNoMoreInteractions(moderationService.emailService);
     }
 

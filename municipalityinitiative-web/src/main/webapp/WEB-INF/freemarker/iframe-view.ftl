@@ -113,7 +113,7 @@
                 <#if initiative_index == 0><ul></#if>
                 <li <#if initiative_index == 0>class="first"</#if>>
                     <span class="date trigger-tooltip" title="<@u.message "searchResults.initiative.date" />" ><@u.localDate initiative.createTime!"" /></span>
-                    <span class="title"><a href="${urls.view(initiative.id)}" target="_blank" rel="external" class="name">${initiative.name!""}</a></span>
+                    <span class="title"><a href="${urls.view(initiative.id)}" target="_blank" rel="external" class="name"><@u.limitStringLength initiative.name!"" 150 /></a></span>
                     
                 </li>
                 <#if !initiative_has_next></ul></#if>

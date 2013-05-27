@@ -68,7 +68,7 @@ public class ModerationService {
         // TODO: String municipalityEmail = municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId());
         String municipalityEmail = authorDao.getAuthorEmails(initiativeId).get(0);
         initiative = initiativeDao.get(initiativeId);
-        emailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityEmail, EmailMessageType.ACCEPTED_BY_OM);
+        emailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityEmail, EmailMessageType.ACCEPTED_BY_OM_FIX);
     }
 
     private void acceptDraftReview(String moderatorComment, Locale locale, Initiative initiative) {

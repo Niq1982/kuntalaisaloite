@@ -22,7 +22,7 @@
     
     <#-- TODO: should not be visible if initiative is sent to municipality -->
     <#if hasManagementRightForInitiative>
-        <a style="float:right;" href="${urls.management(initiative.id)}">Siirry hallintasivulle</a>
+        <a style="float:right;" href="${urls.management(initiative.id)}"><@u.message "link.to.managementView" /></a>
     </#if>
     
     <@e.stateInfo initiative />

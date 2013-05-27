@@ -52,7 +52,7 @@ public class MailSendingEmailServiceStatusTest extends MailSendingEmailServiceTe
     public void author_publish_and_start_collecting_sets_subject_and_contains_all_information() throws Exception {
         emailService.sendStatusEmail(createDefaultInitiative(), AUTHOR_EMAILS, MUNICIPALITY_EMAIL, EmailMessageType.PUBLISHED_COLLECTING);
         assertThat(getSingleRecipient(), is(CONTACT_EMAIL));
-        assertThat(getSingleSentMessage().getSubject(), is("Aloitteesi on julkaistu Kuntalaisaloite.fi-palvelussa ja siihen voi osallistua"));
+        assertThat(getSingleSentMessage().getSubject(), is("Aloitteesi on julkaistu ja siihen kerätään osallistujia Kuntalaisaloite.fi-palvelussa"));
         assertThat(getMessageContent().html, containsString(INITIATIVE_NAME));
         assertThat(getMessageContent().html, containsString(urls.view(INITIATIVE_ID)));
     }

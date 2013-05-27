@@ -54,14 +54,14 @@
     <div id="footer">
         <div class="container">
             <div class="block oikeusministerio">
-                <p>
+                <p>TODO: Poista
                     <@u.message "footer.ministerOfJustice"/><br/>
                  <#--   <a href="${urls.infoIndex()}/<@u.message "InfoPage.OM" />"><@u.message "common.readMore" /> &rarr;</a>-->
                 </p>
             </div>
             <div class="block viestintavirasto">
                 <p>
-                    <@u.messageHTML "footer.ficora"/><br/>
+                    <#--<@u.messageHTML "footer.ficora"/><br/>-->
                  <#--   <a href="${urls.infoIndex()}/<@u.message "InfoPage.VIVI" />"><@u.message "common.readMore" /> &rarr;</a> -->
                 </p>
             </div>
@@ -313,8 +313,8 @@
                 </p>
             </div>
             <div class="block viestintavirasto">
-                <p>
-                    <@u.messageHTML "footer.ficora"/><br/>
+                <p>TODO: Poista
+                    <#--<@u.messageHTML "footer.ficora"/><br/>-->
             <#--        <a href="${urls.infoIndex()}/<@u.enumDescription InfoPage.VIVI />"><@u.message "common.readMore" /> <span class="icon-small arrow-right-2"></span></a> -->
                 </p>
             </div>

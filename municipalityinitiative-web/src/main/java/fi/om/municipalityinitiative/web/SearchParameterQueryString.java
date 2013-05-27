@@ -129,6 +129,14 @@ public class SearchParameterQueryString {
                 .setOrderBy(InitiativeSearch.OrderBy.latest));
     }
     
+    // TODO: Pauli korjaa tämä näyttämään "Palautettu korjattavaksi" OTTKA-215
+    public String getWithStateFix() {
+        return generateParameters(new InitiativeSearch()
+                .setShow(InitiativeSearch.Show.draft)
+                .setMunicipality(original.getMunicipality())
+                .setOrderBy(InitiativeSearch.OrderBy.latest));
+    }
+    
     public String getWithMunicipality(Long municipalityId) {
         return generateParameters(new InitiativeSearch().setMunicipality(municipalityId));
     }

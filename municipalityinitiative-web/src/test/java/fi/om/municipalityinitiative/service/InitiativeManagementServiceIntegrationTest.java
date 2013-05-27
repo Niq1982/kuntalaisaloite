@@ -200,13 +200,13 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     @Test(expected = AccessDeniedException.class)
     public void send_fix_to_review_fails_if_no_right_to_initiative() {
         Long accepted = testHelper.createCollaborativeAccepted(testMunicipality.getId());
-        service.sendFixToReview(accepted, TestHelper.unknownLoginUserHolder);
+        service.sendFixToReview(accepted, TestHelper.unknownLoginUserHolder, null);
     }
 
     @Test(expected = OperationNotAllowedException.class)
     public void send_fix_to_review_fails_if_initiative_sent() {
         Long sent = testHelper.createSingleSent(testMunicipality.getId());
-        service.sendFixToReview(sent, TestHelper.authorLoginUserHolder);
+        service.sendFixToReview(sent, TestHelper.authorLoginUserHolder, null);
     }
 
     @Test
@@ -219,7 +219,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
         precondition(initiativeDao.get(accepted).getFixState(), is(FixState.FIX));
 
-        service.sendFixToReview(accepted, TestHelper.authorLoginUserHolder);
+        service.sendFixToReview(accepted, TestHelper.authorLoginUserHolder, null);
 
         assertThat(initiativeDao.get(accepted).getFixState(), is(FixState.REVIEW));
     }

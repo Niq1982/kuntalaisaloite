@@ -144,7 +144,7 @@ public class InitiativeManagementController extends BaseController {
     public String sendFixToReview(@PathVariable("id") Long initiativeId,
                                   Locale locale, HttpServletRequest request) {
         LoginUserHolder requiredLoginUserHolder = userService.getRequiredLoginUserHolder(request);
-        initiativeManagementService.sendFixToReview(initiativeId, requiredLoginUserHolder);
+        initiativeManagementService.sendFixToReview(initiativeId, requiredLoginUserHolder, locale);
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.SEND_TO_REVIEW, request);
     }
 

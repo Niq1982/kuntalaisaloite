@@ -9,12 +9,15 @@
  * Includes both TEXT and HTML versions. TEXT version is used as a default value.
  *
  * Types:
- *  ACCEPTED_BY_OM_AND_SENT,
- *  ACCEPTED_BY_OM,
- *  REJECTED_BY_OM,
- *  INVITATION_ACCEPTED,
- *  INVITATION_REJECTED,
- *  PUBLISHED_COLLECTING,
+ *  SENT_TO_REVIEW
+ *  SENT_FIX_TO_REVIEW
+ *  ACCEPTED_BY_OM_AND_SENT
+ *  ACCEPTED_BY_OM
+ *  ACCEPTED_BY_OM_FIX
+ *  REJECTED_BY_OM
+ *  INVITATION_ACCEPTED
+ *  INVITATION_REJECTED
+ *  PUBLISHED_COLLECTING
  *  SENT_TO_MUNICIPALITY
  *
  *
@@ -22,7 +25,51 @@
 
 <#assign messageKeyPrefix = "email.status.info."+emailMessageType />
 
-<#if emailMessageType == EmailMessageType.ACCEPTED_BY_OM_AND_SENT>
+<#if emailMessageType == EmailMessageType.SENT_TO_REVIEW>
+    <#-- TEXT -->
+    <#assign statusInfo>
+        <@u.message messageKeyPrefix+".description"/>
+
+        <@u.message messageKeyPrefix+".description.2" />
+        
+        
+        <@b.statusInfoComment "text" initiative.moderatorComment!"" />
+        
+        <@b.initiativeDetails "text" />
+    </#assign>
+    
+    <#-- HTML -->
+    <#assign statusInfoHTML>
+        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description"/></p>
+        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description.2"/></p>
+
+        <@b.statusInfoComment "html" initiative.moderatorComment!"" />
+        <@b.initiativeDetails "html" />
+    </#assign>
+
+<#elseif emailMessageType == EmailMessageType.SENT_FIX_TO_REVIEW>
+    <#-- TEXT -->
+    <#assign statusInfo>
+        <@u.message messageKeyPrefix+".description"/>
+        
+        <@u.message messageKeyPrefix+".description.2" />
+        
+        
+        <@b.statusInfoComment "text" initiative.moderatorComment!"" />
+        
+        <@b.initiativeDetails "text" />
+    </#assign>
+    
+    <#-- HTML -->
+    <#assign statusInfoHTML>
+        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description"/></p>
+        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description.2"/></p>
+
+        <@b.statusInfoComment "html" initiative.moderatorComment!"" />
+        <@b.initiativeDetails "html" />
+    </#assign>
+          
+<#elseif emailMessageType == EmailMessageType.ACCEPTED_BY_OM_AND_SENT>
     <#-- TEXT -->
     <#assign statusInfo>
         <@u.message messageKeyPrefix+".description" />
@@ -48,6 +95,28 @@
     </#assign>
     
 <#elseif emailMessageType == EmailMessageType.ACCEPTED_BY_OM>
+    <#-- TEXT -->
+    <#assign statusInfo>
+        <@u.message messageKeyPrefix+".description"/>
+        
+        <@u.message messageKeyPrefix+".description.2" />
+        
+        
+        <@b.statusInfoComment "text" initiative.moderatorComment!"" />
+        
+        <@b.initiativeDetails "text" />
+    </#assign>
+    
+    <#-- HTML -->
+    <#assign statusInfoHTML>
+        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description"/></p>
+        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description.2"/></p>
+        
+        <@b.statusInfoComment "html" initiative.moderatorComment!"" />
+        <@b.initiativeDetails "html" />
+    </#assign>
+
+<#elseif emailMessageType == EmailMessageType.ACCEPTED_BY_OM_FIX>
     <#-- TEXT -->
     <#assign statusInfo>
         <@u.message messageKeyPrefix+".description"/>
@@ -162,7 +231,50 @@
 -->
 <#global switchLocale = altLocale />
 
-<#if emailMessageType == EmailMessageType.ACCEPTED_BY_OM_AND_SENT>
+<#if emailMessageType == EmailMessageType.SENT_TO_REVIEW>
+    <#-- TEXT -->
+    <#assign statusInfo>
+        <@u.message messageKeyPrefix+".description"/>
+        
+        <@u.message messageKeyPrefix+".description.2" />
+        
+        
+        <@b.statusInfoComment "text" initiative.moderatorComment!"" />
+        
+        <@b.initiativeDetails "text" />
+    </#assign>
+    
+    <#-- HTML -->
+    <#assign statusInfoHTML>
+        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description"/></p>
+        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description.2"/></p>
+
+        <@b.statusInfoComment "html" initiative.moderatorComment!"" />
+        <@b.initiativeDetails "html" />
+    </#assign>
+
+<#elseif emailMessageType == EmailMessageType.SENT_FIX_TO_REVIEW>
+    <#-- TEXT -->
+    <#assign statusInfo>
+        <@u.message messageKeyPrefix+".description"/>
+        
+        <@u.message messageKeyPrefix+".description.2" />
+        
+        <@b.statusInfoComment "text" initiative.moderatorComment!"" />
+        
+        <@b.initiativeDetails "text" />
+    </#assign>
+    
+    <#-- HTML -->
+    <#assign statusInfoHTML>
+        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description"/></p>
+        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description.2"/></p>
+        
+        <@b.statusInfoComment "html" initiative.moderatorComment!"" />
+        <@b.initiativeDetails "html" />
+    </#assign>
+          
+<#elseif emailMessageType == EmailMessageType.ACCEPTED_BY_OM_AND_SENT>
     <#-- TEXT -->
     <#assign statusInfoSv>
         <@u.message messageKeyPrefix+".description" />
@@ -202,6 +314,28 @@
     
     <#-- HTML -->
     <#assign statusInfoHTMLSv>
+        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description"/></p>
+        <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description.2"/></p>
+        
+        <@b.statusInfoComment "html" initiative.moderatorComment!"" />
+        <@b.initiativeDetails "html" />
+    </#assign>
+    
+<#elseif emailMessageType == EmailMessageType.ACCEPTED_BY_OM_FIX>
+    <#-- TEXT -->
+    <#assign statusInfo>
+        <@u.message messageKeyPrefix+".description"/>
+        
+        <@u.message messageKeyPrefix+".description.2" />
+        
+        
+        <@b.statusInfoComment "text" initiative.moderatorComment!"" />
+        
+        <@b.initiativeDetails "text" />
+    </#assign>
+    
+    <#-- HTML -->
+    <#assign statusInfoHTML>
         <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description"/></p>
         <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description.2"/></p>
         
