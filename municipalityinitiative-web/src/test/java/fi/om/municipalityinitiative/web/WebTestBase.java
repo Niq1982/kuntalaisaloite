@@ -16,10 +16,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
@@ -156,18 +153,20 @@ public abstract class WebTestBase {
     }
 
     protected void assertTextByTag(String tag, String text) {
+        List<String> elementTexts = Lists.newArrayList();
         List<WebElement> elements = driver.findElements(By.tagName(tag));
         for (WebElement element : elements) {
             assertNotNull(element);
             if (text.equals(element.getText().trim())) {
                 return;
             }
+            elementTexts.add(element.getText().trim());
         }
         System.out.println("--- assertTextByTag --------------- " + tag + ": " + text);
         for (WebElement element : elements) {
             System.out.println("*** '" + element.getText().trim() + "'");
         }
-        fail(tag + " tag with text " + text + " not found");
+        fail(tag + " tag with text " + text + " not found. Texts found: " + TestUtil.listValues(elementTexts));
     }
     
     protected void assertMsgContainedByClass(String className, String messageKey) {
@@ -247,7 +246,11 @@ public abstract class WebTestBase {
 
     protected WebElement findElementWhenClickable(By by) {
         WebDriverWait wait = new WebDriverWait(driver, 10);
-        return wait.until(ExpectedConditions.elementToBeClickable(by));
+        try {
+            return wait.until(ExpectedConditions.elementToBeClickable(by));
+        } catch (TimeoutException e) {
+            throw new TimeoutException(e.getMessage() + " on page with title: " + driver.getTitle(), e);
+        }
     }
     
     protected WebElement getElemContaining(String containing, String tagName) {

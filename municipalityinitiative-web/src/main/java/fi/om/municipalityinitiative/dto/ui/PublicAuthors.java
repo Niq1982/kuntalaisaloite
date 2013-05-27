@@ -9,7 +9,7 @@ import java.util.List;
 public class PublicAuthors {
 
     private List<AuthorInfo> publicAuthors = Lists.newArrayList();
-    private int privateNames = 0;
+    private int privateNameCount = 0;
 
     public PublicAuthors(List<Author> allAuthors) {
         for (Author author : allAuthors) {
@@ -19,7 +19,7 @@ public class PublicAuthors {
                 authorInfo.setMunicipality(author.getMunicipality());
                 publicAuthors.add(authorInfo);
             }
-            else ++privateNames;
+            else ++privateNameCount;
         }
     }
 
@@ -27,12 +27,12 @@ public class PublicAuthors {
         return Collections.unmodifiableList(publicAuthors);
     }
 
-    public int getPublicNames() {
+    public int getPublicNameCount() {
         return publicAuthors.size();
     }
 
-    public int getPrivateNames() {
-        return privateNames;
+    public int getPrivateNameCount() {
+        return privateNameCount;
     }
 
 }
