@@ -103,6 +103,9 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
         clickByName(Urls.ACTION_SEND_TO_REVIEW);
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_SEND_TO_REVIEW);
+        
+        // Assert that initiative name and proposal cannot be edited in REVIEW-state
+        update_initiative(initiativeId); // XXX: Why does send_to_review -test update initiative?
     }
 
     @Test

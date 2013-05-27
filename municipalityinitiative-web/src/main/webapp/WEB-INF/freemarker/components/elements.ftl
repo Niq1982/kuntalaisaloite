@@ -83,8 +83,8 @@
  *
  * @param contactInfo is author.contactInfo
 -->
-<#macro initiativeContactInfo authorList>
-    <h3><@u.message key="initiative.authors.title" args=[authorList?size] /></h3>
+<#macro initiativeContactInfo authorList showTitle=true>
+    <#if showTitle><h3><@u.message key="initiative.authors.title" args=[authorList?size] /></h3></#if>
     
     <@u.systemMessage path="initiative.authors.contactinfo.notPublic" type="info" showClose=false />
     <br />
