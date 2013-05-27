@@ -36,7 +36,7 @@ public class LoginController extends BaseLoginController {
         return Views.MODERATOR_LOGIN_VIEW;
     }
 
-    @RequestMapping(value = LOGIN_FI, method = RequestMethod.POST)
+    @RequestMapping(value = MODERATOR_LOGIN, method = RequestMethod.POST)
     public RedirectView login(@RequestParam String u,
                               @RequestParam String p,
                               Model model, Locale locale, HttpServletRequest request) {

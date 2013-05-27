@@ -89,6 +89,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
 
     @Test
     public void even_drafts_may_be_viewed_if_logged_in_as_om_user() {
+        overrideDriverToFirefox(true);
         loginAsOmUser();
         open(urls.view(draftInitiativeId));
         assertThat(getElement(By.tagName("h2")).getText(), is(getMessage(INITIATIVE_VIEW_HEADER)));
