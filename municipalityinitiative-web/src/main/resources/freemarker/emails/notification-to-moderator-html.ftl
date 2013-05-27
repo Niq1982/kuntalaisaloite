@@ -10,7 +10,7 @@
 
 <#assign title><@u.message "email.notification.to.moderator.title" /></#assign>
 
-<@l.emailHtml "notification-to-moderator" title>
+<@l.emailHtml title>
 
     <@b.mainContentBlock title>
         <@b.initiativeDetails type=type showProposal=true showDate=true showExtraInfo=true />
@@ -19,7 +19,7 @@
     <@u.spacer "15" />
     
     <@b.contentBlock type>
-        <@b.contactInfo type />
+        <@b.authorList type />
     </@b.contentBlock>
     
     <@u.spacer "15" />

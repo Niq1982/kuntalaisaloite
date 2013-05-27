@@ -5,7 +5,7 @@
 
 <#escape x as x?html>
 
-<#macro emailHtml template title="" footer=true>
+<#macro emailHtml title="" footer=true>
 <html>
 <head>
     <title>${title}</title>

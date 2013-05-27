@@ -10,7 +10,7 @@
 
 <#assign title><@u.message "email.verifyParticipate.title" /></#assign>
 
-<@l.emailHtml "verify-participate" title>
+<@l.emailHtml title>
 
     <@b.mainContentBlock title>
         <@b.initiativeDetails type />

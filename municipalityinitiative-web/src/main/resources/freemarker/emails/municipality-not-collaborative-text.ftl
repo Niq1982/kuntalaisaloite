@@ -15,7 +15,7 @@
 
 ----
 
-<@b.contactInfo type />
+<@b.authorList type />
 
 ----
 

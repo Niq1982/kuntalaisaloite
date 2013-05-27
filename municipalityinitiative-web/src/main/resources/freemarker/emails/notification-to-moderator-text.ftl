@@ -9,7 +9,7 @@
 <@b.initiativeDetails type=type showProposal=true showDate=true showExtraInfo=true />
     
 ----
-<@b.contactInfo type />
+<@b.authorList type />
 ----
     
 <@u.message "email.notification.to.moderator.moderateLink" />:

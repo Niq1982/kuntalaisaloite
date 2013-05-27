@@ -142,13 +142,13 @@
 </#macro>
 
 <#--
- * contactInfo
+ * authorList
  *
- * Contact's name, email, phone and address
+ * Contact details for all initiative authors
  *
  * @param type 'text' or 'html'
  -->
-<#macro contactInfo type="">
+<#macro authorList type="">
     <#list authors as author>
         <#assign obj=author.contactInfo />
         <#if type == "html">
@@ -167,6 +167,30 @@
             ${obj.address!""}
         </#if>
     </#list>
+</#macro>
+
+<#--
+ * contactInfo
+ *
+ * Contact's name, email, phone and address
+ *
+ * @info is the contactInfo object
+ * @param type 'text' or 'html'
+ -->
+<#macro contactInfo info type="">
+    <#if type == "html">
+        <p style="${pBottomMargin!""}">${info.name!""}<br/>
+        <#if info.email?? && info.email != ""><@u.link "mailto:"+info.email info.email /><br/></#if>
+        <#if info.phone?? && info.phone != "">${info.phone!""}<br/></#if>
+        <#if info.address?? && info.address != ""><#noescape>${info.address?replace('\n','<br/>')!""}</#noescape><br/></#if>
+        <br/>
+        </p>
+    <#else>
+        ${info.name!""}
+        ${info.email!""}
+        ${info.phone!""}
+        ${info.address!""}
+    </#if>
 </#macro>
 
 <#--

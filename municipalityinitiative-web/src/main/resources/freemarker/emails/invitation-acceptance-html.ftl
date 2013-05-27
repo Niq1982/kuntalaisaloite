@@ -8,7 +8,7 @@
 
 <#assign title><@u.message "email.author.invitation.accepted.title" /></#assign>
 
-<@l.emailHtml template="author-invitation-accepted" title=title footer=false>
+<@l.emailHtml title=title footer=false>
 
     <@b.mainContentBlock title> 
         <@b.initiativeDetails type=type showDate=true />

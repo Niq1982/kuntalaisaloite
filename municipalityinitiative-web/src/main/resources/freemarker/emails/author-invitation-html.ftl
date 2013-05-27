@@ -10,7 +10,7 @@
 <#assign url = urls.invitation(initiative.id, authorInvitation.confirmationCode) />
 <#assign urlSv = urls.alt().invitation(initiative.id, authorInvitation.confirmationCode) />
 
-<@l.emailHtml template="author-invitation" title=title footer=false>
+<@l.emailHtml title=title footer=false>
 
     <#-- Finnish part -->
 

@@ -2,21 +2,49 @@
 <#import "../components/email-utils.ftl" as u />
 <#import "../components/email-blocks.ftl" as b />
 
-<#assign title><@u.message "email.author.deleted.to.deleted.author.title" /></#assign>
+<#include "../includes/styles.ftl" />
+
+<#assign type = "html">
+<#assign messageKeyPrefix = "email.author.deleted.to.deleted.author" />
+<#assign title><@u.message messageKeyPrefix+".title" /></#assign>
 
 <#escape x as x?html>
 
-<@l.emailHtml template="HAUSKA_TIETO" title=title footer=false>
+<@l.emailHtml title=title footer=false>
 
-<p>${initiative.name}</p>
-<p>${initiative.municipality.getName(locale)}</p>
-
-<p>Aloite luotu Kuntalaisaloite.fi-palveluun ${initiative.createTime}</p>
-
-Yksi aloitteen vastuuhenkilöistä on poistanut sinulta aloitteen ylläpito-oikeudet. Et ole enää aloitteen vastuuhenkilö etkä tekijä. Nimesi ja yhteystietosi on poistettu aloitteen tiedoista. Ota tarvittaessa yhteyttä aloitteen vastuuhenkilöihin.
-<br/><br/>
-Et voi enää kirjautua aloitteen ylläpitosivulle aiemmin saamallasi linkillä.
+    <@content />
+    
+    <#-- Swedish part -->
+    
+    <#global switchLocale = altLocale />
+    
+    <#assign title><@u.message messageKeyPrefix+".title" /></#assign>
+    
+    <@content />
+    
+    <#-- Switch to default locale -->
+    <#global switchLocale = locale />
 
 </@l.emailHtml>
+
+<#--
+ * content
+ *
+ * Prints macro 2 times with different locales
+ -->
+<#macro content>
+    <@b.mainContentBlock title>
+    <@b.initiativeDetails type=type showDate=true />
+    
+    <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".description"/></p>
+    <p style="${pBothMargins!""}"><@u.message messageKeyPrefix+".noRightsToLogin"/></p>
+    </@b.mainContentBlock>
+    
+    <@u.spacer "15" />
+    
+    <@b.emailFooter type />
+    
+    <@u.spacer "15" />
+</#macro>
 
 </#escape>

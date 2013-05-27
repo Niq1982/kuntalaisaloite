@@ -10,7 +10,7 @@
 
 <#assign title><@u.message "email.initiative" /> - ${initiative.municipality.getLocalizedName(locale)!""}</#assign>
 
-<@l.emailHtml "municipality-collaborative" title>
+<@l.emailHtml title>
 
     <@b.mainContentBlock title>
         TODO: Vahvistusviesti

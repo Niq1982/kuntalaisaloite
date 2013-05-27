@@ -14,7 +14,7 @@
     <#assign title><@u.message "email.status.info."+emailMessageType+".title" /></#assign>
 </#if>
 
-<@l.emailHtml template="status-info-to-author" title=title footer=false>
+<@l.emailHtml title=title footer=false>
 
     <#-- Finnish part -->
 

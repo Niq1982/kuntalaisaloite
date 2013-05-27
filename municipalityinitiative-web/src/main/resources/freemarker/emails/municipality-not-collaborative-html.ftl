@@ -10,7 +10,7 @@
 
 <#assign title><@u.message "email.initiative" /> - ${initiative.municipality.getLocalizedName(locale)}</#assign>
 
-<@l.emailHtml "municipality-not-collaborative" title>
+<@l.emailHtml title>
 
     <#if (initiative.sentComment)?has_content>
         <@b.comment type initiative.sentComment "email.sentComment" />
@@ -24,7 +24,7 @@
     <@u.spacer "15" />
     
     <@b.contentBlock type>
-        <@b.contactInfo type />
+        <@b.authorList type />
     </@b.contentBlock>
     
     <@u.spacer "15" />
