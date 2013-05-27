@@ -45,7 +45,7 @@
         </div>
         
         <div class="form-block-container toggle-disable">
-            <div id="" class="input-block cf">
+            <div id="" class="view-block cf">
                 <@edit.chooseInitiativeType />
             </div>
         </div>
