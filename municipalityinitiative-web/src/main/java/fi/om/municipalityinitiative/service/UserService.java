@@ -81,14 +81,29 @@ public class UserService {
                 && loginUserHolderMaybe.get().hasManagementRightsForInitiative(initiativeId);
     }
 
-    private static Maybe<LoginUserHolder> parseLoginUser(HttpServletRequest request) {
+    private Maybe<LoginUserHolder> parseLoginUser(HttpServletRequest request) {
 
         Maybe<User> user = getOptionalLoginUser(request);
 
-        if (user.isNotPresent())
+        if (user.isNotPresent()) {
+            System.out.println("not author");
             return Maybe.absent();
+        }
+
+        if (user.get().isNotOmUser()) {
+            System.out.println("checking if still author");
+            assertStillAuthor(user.get().getAuthorId(), request);
+        }
+
 
         return Maybe.of(new LoginUserHolder(user.get()));
+    }
+
+    private void assertStillAuthor(Long authorId, HttpServletRequest request) {
+        if (authorDao.getAuthor(authorId) == null) {
+            request.getSession().invalidate();
+            throw new AccessDeniedException("Author privileges removed");
+        }
     }
 
     public static void logout(HttpServletRequest request) {
