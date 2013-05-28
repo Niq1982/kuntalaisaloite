@@ -425,6 +425,19 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
+    public void finds_by_draft_will_not_show_initiatives_with_empty_names() {
+
+        Long draft = testHelper.createDraft(testMunicipality.getId());
+        Long emptyDraft = testHelper.createEmptyDraft(testMunicipality.getId());
+
+        List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.draft));
+
+        assertThat(result, hasSize(1));
+        assertThat(result.get(0).getId(), is(draft));
+
+    }
+
+    @Test
     public void finds_by_fix_finds_if_fixState_is_FIX() {
 
         testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
