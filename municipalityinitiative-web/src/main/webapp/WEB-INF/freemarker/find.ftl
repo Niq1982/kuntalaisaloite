@@ -62,7 +62,7 @@
                         <@u.searchLink parameter="withStateDraft" cssClass=(currentSearch.show == "draft")?string('active','') count=initiativeCounts.draft/>
                         <@u.searchLink parameter="withStateReview" cssClass=(currentSearch.show == "review")?string('active','') count=initiativeCounts.review />
                         <@u.searchLink parameter="withStateAccepted" cssClass=(currentSearch.show == "accepted")?string('active','') count=initiativeCounts.accepted />
-                        <@u.searchLink parameter="withStateFix" cssClass=(currentSearch.show == "fix")?string('active','') count=initiativeCounts.accepted />
+                        <@u.searchLink parameter="withStateFix" cssClass=(currentSearch.show == "fix")?string('active','') count=initiativeCounts.fix />
                     </div>
                     <div class="search-parameters">
                 </#if>

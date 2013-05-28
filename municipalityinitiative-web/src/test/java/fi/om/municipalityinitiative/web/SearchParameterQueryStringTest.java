@@ -118,6 +118,12 @@ public class SearchParameterQueryStringTest {
         assertThat(parameters, is("?orderBy=latest&show=review&municipality=1"));
     }
 
+    @Test
+    public void get_with_show_only_fix() {
+        String parameters = new SearchParameterQueryString(initiativeSearch).getWithStateFix();
+        assertThat(parameters, is("?orderBy=latest&show=fix&municipality=1"));
+    }
+
 
 
 }

@@ -38,14 +38,14 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     private static final BooleanExpression IS_PUBLIC = municipalityInitiative.state.eq(InitiativeState.PUBLISHED)
             .and(municipalityInitiative.fixState.eq(FixState.OK));
-    private static final BooleanExpression STATE_IS_DRAFT = municipalityInitiative.state.eq(InitiativeState.DRAFT)
-            .or(municipalityInitiative.fixState.eq(FixState.FIX));
+    private static final BooleanExpression STATE_IS_DRAFT = municipalityInitiative.state.eq(InitiativeState.DRAFT);
     private static final BooleanExpression STATE_IS_REVIEW = municipalityInitiative.state.eq(InitiativeState.REVIEW)
             .or(municipalityInitiative.fixState.eq(FixState.REVIEW));
     private static final BooleanExpression STATE_IS_ACCEPTED = municipalityInitiative.state.eq(InitiativeState.ACCEPTED)
             .and(municipalityInitiative.fixState.eq(FixState.OK));
     private static final BooleanExpression STATE_IS_COLLECTING = municipalityInitiative.sent.isNull().and(IS_PUBLIC);
     private static final BooleanExpression STATE_IS_SENT = municipalityInitiative.sent.isNotNull().and(IS_PUBLIC);
+    private static final BooleanExpression STATE_IS_FIX = municipalityInitiative.fixState.eq(FixState.FIX);
 
     private final Logger log = LoggerFactory.getLogger(JdbcInitiativeDao.class);
 
@@ -132,6 +132,9 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
             case draft:
                 query.where(STATE_IS_DRAFT);
+                break;
+            case fix:
+                query.where(STATE_IS_FIX);
                 break;
             case review:
                 query.where(STATE_IS_REVIEW);
@@ -225,6 +228,8 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .then(new ConstantImpl<String>(InitiativeState.ACCEPTED.name()))
                 .when(STATE_IS_REVIEW)
                 .then(new ConstantImpl<String>(InitiativeState.REVIEW.name()))
+                .when(STATE_IS_FIX)
+                .then(new ConstantImpl<String>(FixState.FIX.name()))
                 .otherwise(new ConstantImpl<String>(unknownStateFound));
 
         SimpleExpression<String> simpleExpression = Expressions.as(caseBuilder, "showCategory");
@@ -245,6 +250,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
         counts.draft = map.get(InitiativeState.DRAFT.name()).or(0L);
         counts.accepted = map.get(InitiativeState.ACCEPTED.name()).or(0L);
         counts.review = map.get(InitiativeState.REVIEW.name()).or(0L);
+        counts.fix = map.get(FixState.FIX.name()).or(0L);
 
         if (map.get(unknownStateFound).isPresent()) {
             log.error("Initiatives found with unknown state: " + map.get(unknownStateFound).get());
