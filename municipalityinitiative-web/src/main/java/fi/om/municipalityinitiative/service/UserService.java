@@ -1,9 +1,11 @@
 package fi.om.municipalityinitiative.service;
 
+import fi.om.municipalityinitiative.dto.user.OmLoginUser;
+import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
 import fi.om.municipalityinitiative.newdao.AdminUserDao;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
-import fi.om.municipalityinitiative.dto.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.util.Maybe;
 
@@ -61,7 +63,7 @@ public class UserService {
         return loginUserHolder.get();
     }
 
-    public LoginUserHolder getRequiredOmLoginUserHolder(HttpServletRequest request) {
+    public OmLoginUserHolder getRequiredOmLoginUserHolder(HttpServletRequest request) {
 
         Maybe<LoginUserHolder> loginUserHolder = parseLoginUser(request);
 
@@ -70,7 +72,7 @@ public class UserService {
         }
         loginUserHolder.get().assertOmUser();
 
-        return loginUserHolder.get();
+        return new OmLoginUserHolder((OmLoginUser) loginUserHolder.get().getUser());
     }
 
     public boolean hasManagementRightForInitiative(Long initiativeId, HttpServletRequest request) {

@@ -2,7 +2,7 @@ package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
-import fi.om.municipalityinitiative.dto.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.util.FakeSession;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,6 +42,16 @@ public class UserServiceIntegrationTest extends ServiceIntegrationTestBase{
         userService.adminLogin("admin", "password", requestMock);
 
         assertThat(userService.getRequiredOmLoginUserHolder(requestMock).getUser().isOmUser(), is(true));
+    }
+
+    @Test
+    public void admin_user_has_full_name() {
+
+        testHelper.createTestAdminUser("admin", "password", "Some Admin Name");
+
+        userService.adminLogin("admin", "password", requestMock);
+
+        assertThat(userService.getRequiredOmLoginUserHolder(requestMock).getUser().getName(), is("Some Admin Name"));
     }
 
     @Test(expected = InvalidLoginException.class)

@@ -1,19 +1,18 @@
-package fi.om.municipalityinitiative.dto;
+package fi.om.municipalityinitiative.dto.user;
 
-import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.service.AccessDeniedException;
 
-public class LoginUserHolder {
+public class LoginUserHolder<E extends User> {
 
-    User user;
+    E user;
 
-    public LoginUserHolder(User user) {
+    public LoginUserHolder(E user) {
         if (user == null)
             throw new RuntimeException("User was null");
         this.user = user;
     }
 
-    public User getUser() {
+    public E getUser() {
         return user;
     }
 

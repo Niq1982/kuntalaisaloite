@@ -1,7 +1,7 @@
 package fi.om.municipalityinitiative.web.controller;
 
 import com.google.common.base.Strings;
-import fi.om.municipalityinitiative.dto.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUICreateDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeUIUpdateDto;

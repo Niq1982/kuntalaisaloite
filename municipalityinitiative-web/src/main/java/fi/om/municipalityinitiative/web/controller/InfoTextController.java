@@ -1,7 +1,8 @@
 package fi.om.municipalityinitiative.web.controller;
 
 import fi.om.municipalityinitiative.dto.InfoTextSubject;
-import fi.om.municipalityinitiative.dto.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.service.FileImageFinder;
 import fi.om.municipalityinitiative.service.ImageFinder;
 import fi.om.municipalityinitiative.service.InfoTextService;
@@ -11,7 +12,6 @@ import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.HelpPage;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
-import fi.om.municipalityinitiative.web.controller.BaseController;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -105,7 +105,7 @@ public class InfoTextController extends BaseController {
     @RequestMapping(value={ HELP_EDIT_FI, HELP_EDIT_SV }, method=GET)
     public String helpEdit(@PathVariable("helpPage") String localizedPageName, Model model, Locale locale, HttpServletRequest request) {
 
-        LoginUserHolder requiredOmLoginUserHolder = userService.getRequiredOmLoginUserHolder(request);
+        OmLoginUserHolder requiredOmLoginUserHolder = userService.getRequiredOmLoginUserHolder(request);
 
         Urls urls = Urls.get(locale);
 
