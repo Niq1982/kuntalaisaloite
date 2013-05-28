@@ -86,12 +86,10 @@ public class UserService {
         Maybe<User> user = getOptionalLoginUser(request);
 
         if (user.isNotPresent()) {
-            System.out.println("not author");
             return Maybe.absent();
         }
 
         if (user.get().isNotOmUser()) {
-            System.out.println("checking if still author");
             assertStillAuthor(user.get().getAuthorId(), request);
         }
 
