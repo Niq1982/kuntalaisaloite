@@ -501,6 +501,12 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
+    public void find_by_om_all_does_not_return_initiatives_at_prepare_state() {
+        testHelper.createEmptyDraft(testMunicipality.getId());
+        assertThat(initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.omAll)), hasSize(0));
+    }
+
+    @Test
     public void counts_public_initiatives_by_state() {
 
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);

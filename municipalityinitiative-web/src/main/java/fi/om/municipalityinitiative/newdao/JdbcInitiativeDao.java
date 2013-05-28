@@ -36,10 +36,11 @@ import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipal
 @Transactional(readOnly = true)
 public class JdbcInitiativeDao implements InitiativeDao {
 
+    private static final BooleanExpression STATE_NOT_PREPARE = municipalityInitiative.name.isNotEmpty();
     private static final BooleanExpression IS_PUBLIC = municipalityInitiative.state.eq(InitiativeState.PUBLISHED)
             .and(municipalityInitiative.fixState.eq(FixState.OK));
     private static final BooleanExpression STATE_IS_DRAFT = municipalityInitiative.state.eq(InitiativeState.DRAFT)
-            .and(municipalityInitiative.name.isNotEmpty());
+            .and(STATE_NOT_PREPARE);
     private static final BooleanExpression STATE_IS_REVIEW = municipalityInitiative.state.eq(InitiativeState.REVIEW)
             .or(municipalityInitiative.fixState.eq(FixState.REVIEW));
     private static final BooleanExpression STATE_IS_ACCEPTED = municipalityInitiative.state.eq(InitiativeState.ACCEPTED)
@@ -144,6 +145,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 query.where(STATE_IS_ACCEPTED);
                 break;
             case omAll:
+                query.where(STATE_NOT_PREPARE);
                 break;
 
             // default:
