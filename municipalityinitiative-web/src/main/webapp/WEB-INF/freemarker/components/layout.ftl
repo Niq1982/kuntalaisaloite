@@ -251,6 +251,9 @@
             <div class="logged-in-info">
                 <#if user.isLoggedIn()>
                     <a href="${urls.logout()}" id="logout" class="header-tool-link logout"><@u.message "common.logout"/><span class="icon-small logout"></span></a>
+                    <#if user.isOmUser()>
+                        <span class="header-tool-text">${user.name}</span>
+                    </#if>
                 <#--
                 <#else>
                     <a href="${urls.login(springMacroRequestContext.requestUri)}" title="<@u.message "common.login"/>" class="header-tool-link login"><@u.message "common.login"/></a>
