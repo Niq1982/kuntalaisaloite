@@ -48,9 +48,11 @@
         <div class="debug-ribbon top fixed ${ribbonColor}">
             <div class="container">
                 <#if urls.baseUrl?starts_with(testSite) || urls.baseUrl?starts_with(prodTestSite)>
-                    Tämä on oikeusministeriön kuntalaisaloiteverkkopalvelun testisivusto. <br/>
-                    Palveluun lisätyt aloitteet ja muut tiedot hävitetään säännöllisesti ilman erillistä ilmoitusta.<br/>
-                    Palvelu lähettää sähköposteja, joten käytäthän omaa sähköpostiosoitetta sitä kysyttäessä.<br/>
+
+                    Tämä on kuntalaisaloitepalvelun testiversio. Palvelu lähettää sinulle sähköposteja, joten annathan toimivan sähköpostiosoitteesi.
+                    Testipalvelussa tehdyt aloitteet ja muut tiedot poistetaan säännöllisesti ilman erillistä ilmoitusta, eivätkä aloitteet välity kunnalle. <br/>
+                    Anna palautetta testipalvelusta kuntalaisaloite.om@om.fi
+
                 <#elseif urls.baseUrl?starts_with(devSite) >
                     Tämä on oikeusministeriön kuntalaisaloiteverkkopalvelun kehitysversio.
                     <br/>Sovellus voi toimia arvaamattomasti ja sisältää päätöntä dataa.
