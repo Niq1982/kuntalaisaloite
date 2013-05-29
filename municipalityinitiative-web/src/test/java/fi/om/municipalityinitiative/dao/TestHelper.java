@@ -5,8 +5,9 @@ import com.mysema.query.sql.dml.SQLInsertClause;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Path;
 import fi.om.municipalityinitiative.conf.PropertyNames;
-import fi.om.municipalityinitiative.dto.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
+import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.service.EncryptionService;
 import fi.om.municipalityinitiative.sql.*;
@@ -46,7 +47,7 @@ public class TestHelper {
 
     public static LoginUserHolder authorLoginUserHolder;
     public static LoginUserHolder unknownLoginUserHolder = new LoginUserHolder(User.anonym());
-    public static LoginUserHolder omLoginUser = new LoginUserHolder(User.omUser(""));
+    public static OmLoginUserHolder omLoginUser = new OmLoginUserHolder(User.omUser(""));
 
     @Inject
     private Environment environment;

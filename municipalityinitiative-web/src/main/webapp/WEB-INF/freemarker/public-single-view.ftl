@@ -18,6 +18,10 @@
     <h1 class="name">${initiative.name!""}</h1>
     
     <div class="municipality">${initiative.municipality.getName(locale)}</div>
+
+    <#if user.isOmUser() && !initiative.sent>
+        <a style="float:right;" href="${urls.moderation(initiative.id)}"><@u.message "link.to.moderationView" /></a>
+    </#if>
     
     <@e.stateInfo initiative />
 

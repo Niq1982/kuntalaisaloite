@@ -4,7 +4,7 @@ import java.util.Set;
 
 public abstract class User {
 
-    public static User omUser(String name) {
+    public static OmLoginUser omUser(String name) {
         return new OmLoginUser(name);
     }
 

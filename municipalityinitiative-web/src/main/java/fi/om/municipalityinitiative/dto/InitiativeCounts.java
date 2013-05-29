@@ -6,6 +6,7 @@ public class InitiativeCounts {
     public long draft = 0;
     public long accepted = 0;
     public long review = 0;
+    public long fix = 0;
 
     public long getCollecting() {
         return collecting;
@@ -16,7 +17,7 @@ public class InitiativeCounts {
     }
 
     public long getAll() {
-        return collecting+sent+draft+accepted+review;
+        return collecting+sent+draft+accepted+review+fix;
     }
 
     public long getDraft() {
@@ -29,5 +30,9 @@ public class InitiativeCounts {
 
     public long getReview() {
         return review;
+    }
+
+    public long getFix() {
+        return fix;
     }
 }

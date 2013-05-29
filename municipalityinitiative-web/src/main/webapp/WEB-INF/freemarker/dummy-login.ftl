@@ -32,7 +32,7 @@
         }
     </script>
 
-    <form name="login" action="${urls.moderatorLogin()}" method="post">
+    <form name="login" accept-charset="UTF-8" action="${urls.moderatorLogin()}" method="post">
         <p>Om-tunnuksilla kirjautuminen: <b>admin</b> + <b>admin</b>, <a href="#" onClick="submitForm('admin', 'admin');">kirjaudu</a></p>
         <p>Muilla-tunnuksilla kirjautuminen: <b>user</b> + <b>user</b>, <a href="#" onClick="submitForm('user', 'user');">kirjaudu</a></p>
         

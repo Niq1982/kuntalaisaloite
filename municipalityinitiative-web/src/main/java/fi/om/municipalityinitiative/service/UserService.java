@@ -1,9 +1,11 @@
 package fi.om.municipalityinitiative.service;
 
+import fi.om.municipalityinitiative.dto.user.OmLoginUser;
+import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
 import fi.om.municipalityinitiative.newdao.AdminUserDao;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
-import fi.om.municipalityinitiative.dto.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.util.Maybe;
 
@@ -61,7 +63,7 @@ public class UserService {
         return loginUserHolder.get();
     }
 
-    public LoginUserHolder getRequiredOmLoginUserHolder(HttpServletRequest request) {
+    public OmLoginUserHolder getRequiredOmLoginUserHolder(HttpServletRequest request) {
 
         Maybe<LoginUserHolder> loginUserHolder = parseLoginUser(request);
 
@@ -70,7 +72,7 @@ public class UserService {
         }
         loginUserHolder.get().assertOmUser();
 
-        return loginUserHolder.get();
+        return new OmLoginUserHolder((OmLoginUser) loginUserHolder.get().getUser());
     }
 
     public boolean hasManagementRightForInitiative(Long initiativeId, HttpServletRequest request) {
@@ -79,14 +81,27 @@ public class UserService {
                 && loginUserHolderMaybe.get().hasManagementRightsForInitiative(initiativeId);
     }
 
-    private static Maybe<LoginUserHolder> parseLoginUser(HttpServletRequest request) {
+    private Maybe<LoginUserHolder> parseLoginUser(HttpServletRequest request) {
 
         Maybe<User> user = getOptionalLoginUser(request);
 
-        if (user.isNotPresent())
+        if (user.isNotPresent()) {
             return Maybe.absent();
+        }
+
+        if (user.get().isNotOmUser()) {
+            assertStillAuthor(user.get().getAuthorId(), request);
+        }
+
 
         return Maybe.of(new LoginUserHolder(user.get()));
+    }
+
+    private void assertStillAuthor(Long authorId, HttpServletRequest request) {
+        if (authorDao.getAuthor(authorId) == null) {
+            request.getSession().invalidate();
+            throw new AccessDeniedException("Author privileges removed");
+        }
     }
 
     public static void logout(HttpServletRequest request) {

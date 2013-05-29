@@ -257,6 +257,9 @@
                         </ul>
                     </div>
                 </#if>
+                <#if user.isOmUser()>
+                        <span class="header-tool-text">${user.name}</span>
+                    </#if>
                 <#if user.isLoggedIn()>
                     <a href="${urls.logout()}" id="logout" class="header-tool-link logout"><@u.message "common.logout"/><span class="icon-small logout"></span></a>
                 </#if>

@@ -5,7 +5,7 @@ import com.google.common.collect.Sets;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.dto.Author;
-import fi.om.municipalityinitiative.dto.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;

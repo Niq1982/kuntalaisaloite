@@ -86,6 +86,7 @@ public class InitiativeSearch {
         //om views:
         draft(true),
         review(true),
+        fix(true),
         accepted(true),
         omAll(true);
 

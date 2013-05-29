@@ -425,13 +425,28 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
-    public void finds_by_draft_finds_also_if_fixState_is_FIX() {
+    public void finds_by_draft_will_not_show_initiatives_with_empty_names() {
+
+        Long draft = testHelper.createDraft(testMunicipality.getId());
+        Long emptyDraft = testHelper.createEmptyDraft(testMunicipality.getId());
+
+        List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.draft));
+
+        assertThat(result, hasSize(1));
+        assertThat(result.get(0).getId(), is(draft));
+
+    }
+
+    @Test
+    public void finds_by_fix_finds_if_fixState_is_FIX() {
 
         testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withFixState(FixState.FIX)
                 .withState(InitiativeState.PUBLISHED));
 
-        assertThat(initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.draft)), hasSize(1));
+        assertThat(initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.draft)), hasSize(0)); // Previous implementation
+        assertThat(initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.fix)), hasSize(1)); // Previous implementation
+
     }
 
     @Test
@@ -486,6 +501,12 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
+    public void find_by_om_all_does_not_return_initiatives_at_prepare_state() {
+        testHelper.createEmptyDraft(testMunicipality.getId());
+        assertThat(initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.omAll)), hasSize(0));
+    }
+
+    @Test
     public void counts_public_initiatives_by_state() {
 
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
@@ -525,7 +546,10 @@ public class JdbcInitiativeDaoTest {
     public void counts_all_initiatives_by_state() {
 
         // 1
-        testHelper.create(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.UNDEFINED);
+        testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withFixState(FixState.FIX)
+                .withState(InitiativeState.PUBLISHED)
+                .withType(InitiativeType.COLLABORATIVE));
         //2
         testHelper.create(testMunicipality.getId(), InitiativeState.REVIEW, InitiativeType.UNDEFINED);
         testHelper.create(testMunicipality.getId(), InitiativeState.REVIEW, InitiativeType.UNDEFINED);
@@ -544,14 +568,22 @@ public class JdbcInitiativeDaoTest {
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        // 6
+        testHelper.create(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.UNDEFINED);
+        testHelper.create(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.UNDEFINED);
+        testHelper.create(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.UNDEFINED);
+        testHelper.create(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.UNDEFINED);
+        testHelper.create(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.UNDEFINED);
+        testHelper.create(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.UNDEFINED);
 
-
+        Long aLong = testHelper.countAll(QMunicipalityInitiative.municipalityInitiative);
         InitiativeCounts counts = initiativeDao.getAllInitiativeCounts(Maybe.<Long>absent());
-        assertThat(counts.draft, is(1L));
+        assertThat(counts.fix, is(1L));
         assertThat(counts.review, is(2L));
         assertThat(counts.accepted, is(3L));
         assertThat(counts.sent, is(4L));
         assertThat(counts.collecting, is(5L));
+        assertThat(counts.draft, is(6L));
 
     }
 
