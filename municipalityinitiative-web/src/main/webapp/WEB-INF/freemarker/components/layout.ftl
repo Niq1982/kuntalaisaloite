@@ -249,18 +249,15 @@
             </div>
 
             <div class="logged-in-info">
-                <#if user.isOmUser()>
-                    <div class="header-dropdown">
-                        <a href="#" class="header-tool-link user-name dropdown-toggle"><@u.message "om.menu" /> <span class="icon-small settings"></span></a>
-                        <ul id="user-menu" class="dropdown-menu user-menu">
-                            <li><a href="${urls.municipalityModeration()}"><@u.message "om.municipality.moderation" /></a></li>
-                        </ul>
-                    </div>
-                </#if>
-                <#if user.isOmUser()>
-                        <span class="header-tool-text">${user.name}</span>
-                    </#if>
                 <#if user.isLoggedIn()>
+                    <#if user.isOmUser()>
+                        <div class="header-dropdown">
+                            <a href="#" class="header-tool-link user-name dropdown-toggle">${user.name} <span class="icon-small settings"></span></a>
+                            <ul id="user-menu" class="dropdown-menu user-menu">
+                                <li><a href="${urls.municipalityModeration()}"><@u.message "om.municipality.moderation" /></a></li>
+                            </ul>
+                        </div>
+                    </#if>
                     <a href="${urls.logout()}" id="logout" class="header-tool-link logout"><@u.message "common.logout"/><span class="icon-small logout"></span></a>
                 </#if>
             </div>
