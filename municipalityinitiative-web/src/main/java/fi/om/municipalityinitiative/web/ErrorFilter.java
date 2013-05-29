@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import fi.om.municipalityinitiative.dao.InvitationNotValidException;
+import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,11 +55,12 @@ public class ErrorFilter implements Filter {
                 handeInvitationNotValid(request, response, e);
             } else if (nested instanceof NotFoundException) {
                 handleNotFound(request, response, e);
-            } else if (nested instanceof AccessDeniedException) {
+            } else if (nested instanceof AccessDeniedException
+                    || nested instanceof AuthenticationRequiredException
+                    || nested instanceof InvalidLoginException) {
                 handleAccessDenied(request, response, e);
-            } else if (nested instanceof AuthenticationRequiredException) {
-                handleAccessDenied(request, response, e);
-            } else {
+            }
+            else {
                 handleUnexpectedError(request, response, e);
             }
         }
