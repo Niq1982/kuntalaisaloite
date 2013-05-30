@@ -144,18 +144,17 @@ var delay = (function(){
 
 $(document).ready(function () {	
 	// Define general variables
-	var $body, speedFast, speedSlow, speedVeryFast, speedAutoHide, vpHeight, vpWidth, validateEmail,
-		isIE7, isIE8, locale, cookiesEnabled;
-	$body = $('body');
-	speedFast = '200';					// General speeds for animations
-	speedVeryFast = '10';			 
-	speedSlow = 'slow';		
-	speedAutoHide = '15000';			// Delay for hiding success-messages (if enabled)
-	vpHeight = $(window).height();		// Viewport height
-	vpWidth =  $(window).width();		// Viewport width
-	isIE7 = $('html').hasClass('ie7');	// Boolean for IE7. Used browser detection instead of jQuery.support().
-	isIE8 = $('html').hasClass('ie8');	// Boolean for IE8. Used browser detection instead of jQuery.support().
-	locale = Init.getLocale();			// Current locale: fi, sv
+	var $body = 		$('body'),
+		speedFast = 	'200',						// General speeds for animations
+		speedVeryFast = '10',			 
+		speedSlow = 	'slow',		
+		speedAutoHide = '15000',					// Delay for hiding success-messages (if enabled)
+		vpHeight = 		$(window).height(),			// Viewport height
+		vpWidth =  		$(window).width(),			// Viewport width
+		isIE7 = 		$('html').hasClass('ie7'),	// Boolean for IE7. Used browser detection instead of jQuery.support().
+		isIE8 =			$('html').hasClass('ie8'),	// Boolean for IE8. Used browser detection instead of jQuery.support().
+		locale = 		Init.getLocale(),			// Current locale: fi, sv
+		hideClass = 	'js-hide';					// Set general hidden class
 
 /**
  * Common helpers
@@ -169,7 +168,7 @@ $(document).ready(function () {
 	}
 
 	// Validate emails
-	validateEmail = function (email) {
+	var validateEmail = function (email) {
 	    var re;
 	    re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 	    return re.test(email);
@@ -525,9 +524,9 @@ var municipalitySelection = (function() {
 		var	municipalMembership	= $('#municipalMembership');
 		
 		if (show){
-			municipalMembership.addClass('js-hide');
+			municipalMembership.addClass(hideClass);
 		} else {
-			municipalMembership.removeClass('js-hide');
+			municipalMembership.removeClass(hideClass);
 		}		
 	}
 
@@ -619,19 +618,19 @@ var municipalitySelection = (function() {
 	input.change(function(){
 		if (allFieldsFilled()) {
 			submit.disableButton(false);
-			fillInAll.addClass('js-hide');
+			fillInAll.addClass(hideClass);
 		} else {
 			submit.disableButton(true);
-			fillInAll.removeClass('js-hide');
+			fillInAll.removeClass(hideClass);
 		}
 	});
 	email.keyup(function(){
 		if (allFieldsFilled()) {
 			submit.disableButton(false);
-			fillInAll.addClass('js-hide');
+			fillInAll.addClass(hideClass);
 		} else {
 			submit.disableButton(true);
-			fillInAll.removeClass('js-hide');
+			fillInAll.removeClass(hideClass);
 		}
 	});
 	
@@ -1117,7 +1116,7 @@ var editMunicipality = (function() {
 		e.preventDefault();
 		
 		$(this).find('span:first').toggleClass('less');
-		$('.municipalities tbody tr.not-active').toggleClass('js-hide');
+		$('.municipalities tbody tr.not-active').toggleClass(hideClass);
 	});
 	
 	return {
@@ -1200,9 +1199,11 @@ if (window.hasIFrame){
 		refresh = 			$('.js-update-iframe'),
 		iframeContainer = 	$("#iframe-container"),
 		municipality = 		$('#municipality'),
+		lang = 				$('.iframe-lang'),
 		limit = 			$('#limit'),
 		width = 			$('#width'),
 		height = 			$('#height'),
+		currentLang =		locale,
 		bounds = 			window.bounds,
 		
 	generateIframe = function (params) {
@@ -1244,6 +1245,7 @@ if (window.hasIFrame){
 	params = function() {
 		return [{
 	        municipality: 	municipality.val(),
+	        lang:			currentLang,
 	        limit:			limit.val(),
 	        width:			width.val(),
 	        height:			height.val()
@@ -1252,6 +1254,15 @@ if (window.hasIFrame){
     
     refreshFields = function(data){
 		municipality.val(data.municipality).trigger("liszt:updated");
+		lang.each(function(){
+			var thisObj = $(this);
+			
+			if (thisObj.data('lang') == locale) {
+				thisObj.addClass(hideClass);
+			} else {
+				thisObj.removeClass(hideClass);
+			}
+		});
 		limit.val(data.limit);
 		width.val(data.width);
 		height.val(data.height);
@@ -1262,10 +1273,20 @@ if (window.hasIFrame){
     municipality.change(function(){
     	generateIframe(params());
     });
-    /*limit.add(width).add(height).blur(function(){
-    	checkBounds($(this));
+
+    lang.click(function(e){
+    	e.preventDefault();
+    	
+    	var thisObj = $(this);
+    	
+    	lang.removeClass(hideClass);
+    	thisObj.addClass(hideClass);
+    	
+    	currentLang = thisObj.data('lang');
+    	
     	generateIframe(params());
-    });*/
+    });
+    
     limit.add(width).add(height).keyup(function(){
     	var thisObj = $(this);
     	

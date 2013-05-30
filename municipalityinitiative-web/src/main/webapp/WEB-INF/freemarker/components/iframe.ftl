@@ -46,7 +46,7 @@
     <h2><@u.message "iframeGenerator.settings.title" /></h2>
     <div class="hidden">
         <div class="input-block-content no-top-margin">       
-            
+            <div class="column col-1of2">
             <label for="municipality" class="input-header">
                 <@u.message "iframeGenerator.municipality" />
             </label>
@@ -58,15 +58,27 @@
             </select>
         </div>
         
+        </div>
+        
         <#assign digit = "\\d+" />
         
         <div class="input-block-content">
-            <div class="column col-1of3">
+        
+            <div class="column col-1of3 last">
                 <label for="municipality" class="input-header">
                     <@u.message "iframeGenerator.initiativeCount" />
                 </label>
                 <input type="text" maxlength="2" class="small" value="3" name="limit" id="limit" pattern="${digit}" />
             </div>
+            <div class="column col-1of3">
+                <label class="input-header">
+                    <@u.message "iframeGenerator.lang" />
+                </label>
+                
+                <a href="#" class="iframe-lang current js-hide" data-lang="${locale}"><@u.message "lang.current" /></a>
+                <a href="#" class="iframe-lang" data-lang="${altLocale}"><@u.message "lang.alternative" /></a>
+            </div>
+            <br class="clear" />
             <div class="column col-1of3">
                 <label for="municipality" class="input-header">
                     <@u.message "iframeGenerator.width" />
@@ -90,9 +102,10 @@
             window.hasIFrame = true;
             window.defaultData = {
                 municipality:   "${defaults[0]}",
-                limit:          "${defaults[1]}",
-                width:          "${defaults[2]}",
-                height:         "${defaults[3]}"
+                lang:           "${defaults[1]}",
+                limit:          "${defaults[2]}",
+                width:          "${defaults[3]}",
+                height:         "${defaults[4]}"
             };
             
             window.bounds = { 
@@ -121,7 +134,7 @@
             <iframe id="kuntalaisaloite-leijuke"
                     frameborder="0"
                     scrolling="no"
-                    src="${urls.baseUrl}/${locale}/iframe?municipality={{:municipality}}&amp;limit={{:limit}}&amp;orderBy=latest&amp;width={{:width}}&amp;height={{:height}}"
+                    src="${urls.baseUrl}/{{:lang}}/iframe?municipality={{:municipality}}&amp;limit={{:limit}}&amp;orderBy=latest&amp;width={{:width}}&amp;height={{:height}}"
                     width="{{:width}}"
                     height="{{:height}}" onload="iFrameLoaded('kuntalaisaloite-leijuke', 'iframe-placeholder')">
             </iframe>
@@ -131,7 +144,7 @@
                 <iframe id="kuntalaisaloite-leijuke"
                     frameborder="0"
                     scrolling="no"
-                    src="${urls.baseUrl}/${locale}/iframe?municipality={{:municipality}}&amp;limit={{:limit}}&amp;orderBy=latest&amp;width={{:width}}&amp;height={{:height}}"
+                    src="${urls.baseUrl}/{{:lang}}/iframe?municipality={{:municipality}}&amp;limit={{:limit}}&amp;orderBy=latest&amp;width={{:width}}&amp;height={{:height}}"
                     width="{{:width}}"
                     height="{{:height}}">
                 </iframe>
