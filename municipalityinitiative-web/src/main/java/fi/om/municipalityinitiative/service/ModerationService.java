@@ -154,7 +154,7 @@ public class ModerationService {
     }
 
     @Transactional(readOnly = false)
-    public void generateNewManagementHash(OmLoginUserHolder omLoginUserHolder, Long authorId) {
+    public void renewManagementHash(OmLoginUserHolder omLoginUserHolder, Long authorId) {
         omLoginUserHolder.assertOmUser();
 
         String newManagementHash = RandomHashGenerator.randomString(40);
@@ -164,6 +164,6 @@ public class ModerationService {
         // TODO: Multiple initiatives under one author is no more possible?
         Initiative initiative = initiativeDao.get(authorsInitiatives.iterator().next());
         String authorEmail = authorDao.getAuthor(authorId).getContactInfo().getEmail();
-        emailService.sendManagementHashGenerated(initiative, newManagementHash, authorEmail);
+        emailService.sendManagementHashRenewed(initiative, newManagementHash, authorEmail);
     }
 }

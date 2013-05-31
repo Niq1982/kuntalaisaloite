@@ -31,5 +31,5 @@ public interface EmailService {
 
     void sendPrepareCreatedEmail(Initiative initiative, Long authorId, String managementHash, String authorEmail, Locale locale);
 
-    void sendManagementHashGenerated(Initiative initiative, String managementHash, String authorEmail);
+    void sendManagementHashRenewed(Initiative initiative, String managementHash, String authorEmail);
 }

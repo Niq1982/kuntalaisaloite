@@ -8,12 +8,12 @@
 
 <#escape x as x?html>
 
-<#assign title><@u.message "email.new.managementhash.generated.title" /></#assign>
+<#assign title><@u.message "email.managementhash.renewed.title" /></#assign>
 
 <@l.emailHtml title>
 
     <@b.mainContentBlock title>
-        <p style="${pBothMargins!""}"><@u.message "email.new.managementhash.generated.description" /></p>
+        <p style="${pBothMargins!""}"><@u.message "email.managementhash.renewed.description" /></p>
         <p>${initiative.name}</p>
         <p style="${smallFont!""}"><@u.link urls.loginAuthor(managementHash) urls.loginAuthor(managementHash) /></p>
     </@b.mainContentBlock>

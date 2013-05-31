@@ -31,7 +31,7 @@ public class MailSendingEmailService implements EmailService {
     private static final String INVITATION_ACCEPTANCE ="invitation-acceptance";
     private static final String AUTHOR_DELETED_TO_OTHER_AUTHORS = "author-deleted-to-other-authors";
     private static final String AUTHOR_DELETED_TO_DELETED_AUTHOR = "author-deleted-to-deleted-author";
-    private static final String NEW_MANAGEMENT_HASH_GENERATED = "new-management-hash-generated";
+    private static final String MANAGEMENT_HASH_RENEWED = "new-management-hash-generated";
 
     @Resource
     private MessageSource messageSource;
@@ -147,14 +147,14 @@ public class MailSendingEmailService implements EmailService {
     }
 
     @Override
-    public void sendManagementHashGenerated(Initiative initiative, String managementHash, String authorEmail) {
+    public void sendManagementHashRenewed(Initiative initiative, String managementHash, String authorEmail) {
         HashMap<String, Object> dataMap = toDataMap(initiative, Locales.LOCALE_FI);
         dataMap.put("managementHash", managementHash);
 
         emailMessageConstructor
-                .fromTemplate(NEW_MANAGEMENT_HASH_GENERATED)
+                .fromTemplate(MANAGEMENT_HASH_RENEWED)
                 .addRecipient(authorEmail)
-                .withSubject(messageSource.getMessage("email.new.managementhash.generated.subject", toArray(), Locales.LOCALE_FI))
+                .withSubject(messageSource.getMessage("email.managementhash.renewed.subject", toArray(), Locales.LOCALE_FI))
                 .withDataMap(dataMap)
                 .send();
     }
