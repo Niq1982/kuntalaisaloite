@@ -44,7 +44,7 @@ public class MailSendingEmailServiceStatusTest extends MailSendingEmailServiceTe
         emailService.sendStatusEmail(createDefaultInitiative(), AUTHOR_EMAILS, MUNICIPALITY_EMAIL, EmailMessageType.REJECTED_BY_OM);
 
         assertThat(javaMailSenderFake.getSingleRecipient(), is(CONTACT_EMAIL));
-        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Kuntalaisaloitteesi on palautettu korjattavaksi"));
+        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Kuntalaisaloitteesi on palautettu"));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(MODERATOR_COMMENT));
     }
 
