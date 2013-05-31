@@ -6,5 +6,7 @@ public interface AuthorMessageDao {
 
     Long addAuthorMessage(AuthorMessage authorMessage);
 
-    AuthorMessage getAuthorMessage(String verificationCode);
+    AuthorMessage getAuthorMessage(String confirmationCode);
+
+    void deleteAuthorMessage(String confirmationCode);
 }

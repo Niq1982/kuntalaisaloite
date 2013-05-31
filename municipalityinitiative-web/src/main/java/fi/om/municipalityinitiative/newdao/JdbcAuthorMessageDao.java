@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
+import static fi.om.municipalityinitiative.newdao.JdbcInitiativeDao.assertSingleAffection;
+
 @SQLExceptionTranslated
 @Transactional(readOnly = true)
 public class JdbcAuthorMessageDao implements AuthorMessageDao {
@@ -50,5 +52,13 @@ public class JdbcAuthorMessageDao implements AuthorMessageDao {
         return queryFactory.from(QAuthorMessage.authorMessage)
                 .where(QAuthorMessage.authorMessage.confirmationCode.eq(confirmationCode))
                 .uniqueResult(authorMessageMapping);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void deleteAuthorMessage(String confirmationCode) {
+        assertSingleAffection(queryFactory.delete(QAuthorMessage.authorMessage)
+                .where(QAuthorMessage.authorMessage.confirmationCode.eq(confirmationCode))
+                .execute());
     }
 }

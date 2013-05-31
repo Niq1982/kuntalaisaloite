@@ -67,6 +67,7 @@ public class TestHelper {
 
     @Transactional(readOnly=false)
     public void dbCleanup() {
+        queryFactory.delete(QAuthorMessage.authorMessage).execute();
         queryFactory.delete(QAuthorInvitation.authorInvitation).execute();
         queryFactory.delete(QAuthor.author).execute();
         queryFactory.delete(QParticipant.participant).execute();
@@ -74,7 +75,6 @@ public class TestHelper {
         queryFactory.delete(QMunicipality.municipality).execute();
         queryFactory.delete(QInfoText.infoText).execute();
         queryFactory.delete(QAdminUser.adminUser).execute();
-        queryFactory.delete(QAuthorMessage.authorMessage).execute();
     }
 
     @Transactional

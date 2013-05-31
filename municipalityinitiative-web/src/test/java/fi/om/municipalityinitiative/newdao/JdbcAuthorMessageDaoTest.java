@@ -12,7 +12,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
 
+import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -35,22 +38,38 @@ public class JdbcAuthorMessageDaoTest {
     }
 
     @Test
-    public void authorMessage_add_and_get() {
+    public void add_and_get() {
 
         Long initiative = testHelper.createSingleSent(testHelper.createTestMunicipality("Municipality"));
+        AuthorMessage original = authorMessage(initiative);
 
+        authorMessageDao.addAuthorMessage(original);
+
+        AuthorMessage result = authorMessageDao.getAuthorMessage(CONFIRMATION_CODE);
+        ReflectionTestUtils.assertReflectionEquals(original, result);
+
+    }
+
+    @Test
+    public void add_and_delete() {
+        Long initiative = testHelper.createSingleSent(testHelper.createTestMunicipality("Municipality"));
+        AuthorMessage authorMessage = authorMessage(initiative);
+
+        authorMessageDao.addAuthorMessage(authorMessage);
+
+        precondition(authorMessageDao.getAuthorMessage(CONFIRMATION_CODE), is(notNullValue()));
+        authorMessageDao.deleteAuthorMessage(CONFIRMATION_CODE);
+        assertThat(authorMessageDao.getAuthorMessage(CONFIRMATION_CODE), is(nullValue()));
+
+    }
+
+    private static AuthorMessage authorMessage(Long initiative) {
         AuthorMessage original = new AuthorMessage();
         original.setConfirmationCode(CONFIRMATION_CODE);
         original.setContactEmail(CONTACT_EMAIL);
         original.setContactName(CONTACT_NAME);
         original.setMessage(MESSAGE);
         original.setInitiativeId(initiative);
-
-        authorMessageDao.addAuthorMessage(original);
-
-        AuthorMessage result = authorMessageDao.getAuthorMessage(CONFIRMATION_CODE);
-
-        ReflectionTestUtils.assertReflectionEquals(original, result);
-
+        return original;
     }
 }
