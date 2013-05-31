@@ -138,7 +138,7 @@ public class JdbcAuthorDao implements AuthorDao {
     }
 
     @Override
-    public Set<Long> loginAndGetAuthorsInitiatives(String managementHash) {
+    public Set<Long> getAuthorsInitiatives(String managementHash) {
         List<Long> list = queryFactory.from(QAuthor.author)
                 .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
                 .innerJoin(QParticipant.participant.participantMunicipalityInitiativeIdFk, QMunicipalityInitiative.municipalityInitiative)
@@ -210,5 +210,14 @@ public class JdbcAuthorDao implements AuthorDao {
             emails.add(author.getContactInfo().getEmail());
         }
         return emails;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void updateManagementHash(Long authorId, String newManagementHash) {
+        assertSingleAffection(queryFactory.update(QAuthor.author)
+                .set(QAuthor.author.managementHash, newManagementHash)
+                .where(QAuthor.author.participantId.eq(authorId))
+                .execute());
     }
 }

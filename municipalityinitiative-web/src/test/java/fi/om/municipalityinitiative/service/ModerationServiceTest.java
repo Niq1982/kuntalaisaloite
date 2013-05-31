@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.service;
 
+import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
@@ -30,7 +31,7 @@ public class ModerationServiceTest {
 
     private InitiativeDao initiativeDaoMock;
 
-    private LoginUserHolder loginUserHolder;
+    private OmLoginUserHolder loginUserHolder;
 
     @Before
     public void setup() throws Exception {
@@ -43,11 +44,13 @@ public class ModerationServiceTest {
         moderationService.authorDao = mock(AuthorDao.class);
         stub(moderationService.authorDao.getAuthorEmails(anyLong())).toReturn(Collections.singletonList("")); // Avoid nullpointer temporarily
 
-        loginUserHolder = new LoginUserHolder(User.normalUser(null, Collections.<Long>emptySet()));
+        loginUserHolder = mock(OmLoginUserHolder.class);
     }
 
     @Test
     public void all_functions_require_om_rights() throws InvocationTargetException, IllegalAccessException {
+
+        doThrow(new AccessDeniedException("")).when(loginUserHolder).assertOmUser();
 
         for (Method method : ModerationService.class.getDeclaredMethods()) {
             if (method.getModifiers() != 1) {
@@ -65,13 +68,8 @@ public class ModerationServiceTest {
         }
     }
 
-    private void setOmUser() {
-        loginUserHolder = new LoginUserHolder(User.omUser(""));
-    }
-
     @Test(expected = OperationNotAllowedException.class)
     public void accepting_initiative_checks_that_it_can_be_accepted() {
-        setOmUser();
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.ACCEPTED, InitiativeType.UNDEFINED));
         moderationService.accept(loginUserHolder, INITIATIVE_ID, "", null);
     }
@@ -79,7 +77,6 @@ public class ModerationServiceTest {
     @Test
     public void accepting_initiative_sets_state_as_accepted_and_saves_comment_if_type_is_undefined() {
 
-        setOmUser();
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.REVIEW, InitiativeType.UNDEFINED));
 
         String comment = "this is om-comment";
@@ -95,7 +92,6 @@ public class ModerationServiceTest {
     @Test
     public void accepting_initiative_sends_correct_state_email_if_type_is_undefined() {
 
-        setOmUser();
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.REVIEW, InitiativeType.UNDEFINED));
 
         moderationService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
@@ -106,7 +102,6 @@ public class ModerationServiceTest {
     @Test
     public void accepting_initiative_sets_state_as_published_and_saves_comment_and_sets_sent_time_if_type_single() {
 
-        setOmUser();
         Initiative initiative = initiative(InitiativeState.REVIEW, InitiativeType.SINGLE);
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative);
 
@@ -125,7 +120,6 @@ public class ModerationServiceTest {
     @Test
     public void accepting_initiative_sends_correct_state_email_if_type_single() {
 
-        setOmUser();
         Initiative initiative = initiative(InitiativeState.REVIEW, InitiativeType.SINGLE);
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative);
 
@@ -138,7 +132,6 @@ public class ModerationServiceTest {
 
     @Test(expected = OperationNotAllowedException.class)
     public void rejecting_initiative_checks_that_it_can_be_accepted() {
-        setOmUser();
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.ACCEPTED, InitiativeType.UNDEFINED));
         moderationService.reject(loginUserHolder, INITIATIVE_ID, "");
     }
@@ -146,7 +139,6 @@ public class ModerationServiceTest {
     @Test
     public void rejecting_initiative_sets_state_as_draft_and_saves_comment() {
 
-        setOmUser();
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.REVIEW, InitiativeType.UNDEFINED));
 
         String comment = "this is om-comment";
@@ -160,7 +152,6 @@ public class ModerationServiceTest {
     @Test
     public void rejecting_initiative_sends_email() {
 
-        setOmUser();
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.REVIEW, InitiativeType.UNDEFINED));
 
         moderationService.reject(loginUserHolder, INITIATIVE_ID, null);
@@ -169,7 +160,6 @@ public class ModerationServiceTest {
 
     @Test
     public void accepting_fixState_review_initiative_sets_moderator_comment_and_fixState() {
-        setOmUser();
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(publishedCollaborative(FixState.REVIEW));
 
         String moderatorComment = "moderator comment";
@@ -182,7 +172,6 @@ public class ModerationServiceTest {
 
     @Test
     public void accepting_fixState_review_initiative_sends_status_email() {
-        setOmUser();
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(publishedCollaborative(FixState.REVIEW));
 
         String moderatorComment = "moderator comment";
@@ -193,7 +182,6 @@ public class ModerationServiceTest {
 
     @Test
     public void rejecting_fixState_review_initiative_sets_moderator_comment_and_fixState() {
-        setOmUser();
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(publishedCollaborative(FixState.REVIEW));
 
         String moderatorComment = "moderator comment";
@@ -206,7 +194,6 @@ public class ModerationServiceTest {
 
     @Test
     public void rejecting_fixState_review_initiative_sends_status_email() {
-        setOmUser();
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(publishedCollaborative(FixState.REVIEW));
 
         String moderatorComment = "moderator comment";
@@ -217,14 +204,12 @@ public class ModerationServiceTest {
 
     @Test(expected = OperationNotAllowedException.class)
     public void sendInitiativeBackForFixing_checks_that_initiative_may_be_sent_back() {
-        setOmUser();
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.DRAFT, InitiativeType.UNDEFINED));
         moderationService.sendInitiativeBackForFixing(loginUserHolder, INITIATIVE_ID, "");
     }
 
     @Test
     public void sendInitiativeBackForFixing_sets_initiative_fixState_and_adds_moderator_comment() {
-        setOmUser();
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE));
 
         String moderatorComment = "some mod comment";
@@ -238,7 +223,6 @@ public class ModerationServiceTest {
 
     @Test
     public void sendInitiativeBackForFixing_sends_status_email() {
-        setOmUser();
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE));
 
         moderationService.sendInitiativeBackForFixing(loginUserHolder, INITIATIVE_ID, "");

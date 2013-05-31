@@ -27,11 +27,13 @@ public interface AuthorDao {
 
     List<String> getAuthorEmails(Long initiativeId);
 
-    Set<Long> loginAndGetAuthorsInitiatives(String managementHash);
+    Set<Long> getAuthorsInitiatives(String managementHash);
 
     Long getAuthorId(String managementHash);
 
     Author getAuthor(Long authorId);
 
     void deleteAuthor(Long authorId);
+
+    void updateManagementHash(Long authorId, String newManagementHash);
 }
