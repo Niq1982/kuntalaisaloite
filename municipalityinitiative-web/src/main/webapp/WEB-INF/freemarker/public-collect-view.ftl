@@ -22,8 +22,6 @@
 
     <#if hasManagementRightForInitiative && !initiative.sent>
         <a style="float:right;" href="${urls.management(initiative.id)}"><@u.message "link.to.managementView" /></a>
-    <#elseif user.isOmUser() && !initiative.sent>
-        <a style="float:right;" href="${urls.moderation(initiative.id)}"><@u.message "link.to.moderationView" /></a>
     </#if>
     
     <@e.stateInfo initiative />
