@@ -28,11 +28,6 @@
 -->
 <@l.main "page.help" pageTitle!"">
     <div class="columns cf">
-        <#--<div class="column col-1of4 navigation">
-            <p> </p>
-        </div>-->
-
-
         <div class="column col-3of4 last">
             <h1>${pageTitle}</h1>
 
@@ -158,13 +153,13 @@
 
             <h4>Linkin osoite tekstinä</h4>
 
-            <p>Linkin muoto on esimerkiksi: "https://www.kansalaisaloite.fi"</p>
+            <p>Linkin muoto on esimerkiksi: "https://www.untalaisaloite.fi"</p>
 
             <p>Vie hiiren kursori kohtaan, johon haluat luoda linkin. Klikkaa Lisää linkki -painiketta. Kirjoita linkin teksti sekä valitse haluatko sen aukeavan uuteen ikkunaan (ulkoinen linkki) vai et (sisäinen linkki). Jos valitset, että linkki aukeaa uuteen ikkunaan, linkin perään tulee pieni ikoni. Klikkaa sen jälkeen vielä Lisää linkki -painiketta.</p>
 
             <h4>Linkillä kuvaava teksti</h4>
 
-            <p>Linkin muoto on esimerkiksi: "Kansalaisaloite"</p>
+            <p>Linkin muoto on esimerkiksi: "Kuntalaisaloite"</p>
 
             <p>Valitse sisällöstä teksti, josta haluat tehdä linkin. Valinnan jälkeen toimi kuten edellä, eli klikkaa Lisää linkki -painiketta ja jatka edellä mainitun ohjeen mukaan.</p>
 

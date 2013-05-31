@@ -75,8 +75,8 @@
                     <@u.message "iframeGenerator.lang" />
                 </label>
                 
-                <a href="#" class="iframe-lang current js-hide" data-lang="${locale}"><@u.message "lang.current" /></a>
-                <a href="#" class="iframe-lang" data-lang="${altLocale}"><@u.message "lang.alternative" /></a>
+                <a href="#" class="iframe-lang input-placeholder current js-hide" data-lang="${locale}"><@u.message "lang.current" /></a>
+                <a href="#" class="iframe-lang input-placeholder" data-lang="${altLocale}"><@u.message "lang.alternative" /></a>
             </div>
             <br class="clear" />
             <div class="column col-1of3">
