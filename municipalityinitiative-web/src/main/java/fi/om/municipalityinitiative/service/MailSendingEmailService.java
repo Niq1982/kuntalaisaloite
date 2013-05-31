@@ -186,6 +186,11 @@ public class MailSendingEmailService implements EmailService {
                 .send();
     }
 
+    @Override
+    public void sendAuthorMessageConfirmationEmail(String contactEmail, String randomHash) {
+        throw new RuntimeException("Not implemented");
+    }
+
     private static String[] toArray(String... name) {
         return name;
     }
