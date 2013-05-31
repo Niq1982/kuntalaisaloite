@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.service;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
@@ -158,6 +159,11 @@ public class ModerationService {
 
         String newManagementHash = RandomHashGenerator.randomString(40);
         authorDao.updateManagementHash(authorId, newManagementHash);
-//        authorDao.getAuthorsInitiatives(authorId)
+
+        Set<Long> authorsInitiatives = authorDao.getAuthorsInitiatives(newManagementHash);
+        // TODO: Multiple initiatives under one author is no more possible?
+        Initiative initiative = initiativeDao.get(authorsInitiatives.iterator().next());
+        String authorEmail = authorDao.getAuthor(authorId).getContactInfo().getEmail();
+        emailService.sendManagementHashGenerated(initiative, newManagementHash, authorEmail);
     }
 }
