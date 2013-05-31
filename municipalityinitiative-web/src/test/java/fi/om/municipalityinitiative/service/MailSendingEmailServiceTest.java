@@ -8,6 +8,8 @@ import fi.om.municipalityinitiative.web.Urls;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.mail.MessagingException;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
@@ -29,6 +31,17 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
         assertThat(javaMailSenderFake.getSingleRecipient(), is(CONTACT_EMAIL));
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Olet saanut linkin kuntalaisaloitteen tekemiseen Kuntalaisaloite.fi-palvelussa"));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.loginAuthor(MANAGEMENT_HASH)));
+    }
+
+    @Test
+    public void sending_new_management_hash_contains_all_information() throws Exception {
+
+        emailService.sendManagementHashGenerated(createDefaultInitiative(), MANAGEMENT_HASH, CONTACT_EMAIL);
+
+        assertThat(javaMailSenderFake.getSingleRecipient(), is(CONTACT_EMAIL));
+        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Sinulle on luotu uusi aloitteen hallintalinkki Kuntalaisaloite.fi-palvelussa"));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.loginAuthor(MANAGEMENT_HASH)));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_NAME));
     }
     
     @Test
