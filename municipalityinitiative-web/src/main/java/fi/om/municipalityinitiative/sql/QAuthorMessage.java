@@ -18,6 +18,8 @@ public class QAuthorMessage extends com.mysema.query.sql.RelationalPathBase<QAut
 
     public static final QAuthorMessage authorMessage = new QAuthorMessage("author_message");
 
+    public final StringPath confirmationCode = createString("confirmation_code");
+
     public final StringPath contactor = createString("contactor");
 
     public final StringPath contactorEmail = createString("contactor_email");
@@ -27,8 +29,6 @@ public class QAuthorMessage extends com.mysema.query.sql.RelationalPathBase<QAut
     public final NumberPath<Long> initiativeId = createNumber("initiative_id", Long.class);
 
     public final StringPath message = createString("message");
-
-    public final StringPath verificationCode = createString("verification_code");
 
     public final com.mysema.query.sql.PrimaryKey<QAuthorMessage> authormessagePk = createPrimaryKey(id);
 
