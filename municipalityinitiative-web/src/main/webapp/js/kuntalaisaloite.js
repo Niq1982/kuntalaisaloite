@@ -956,6 +956,18 @@ $('.municipality-filter').change( function() {
 		generateModal(modalData.participateFormInvalid(), 'full');
 	}
 	
+	$('.js-renew-management-hash').click(function(){
+		$('.js-renew-management-hash.active').removeClass('active');
+		$(this).addClass('active');
+		
+		try {
+			generateModal(modalData.renewManagementHash(), 'full', renewManagementHash.getAuthor);
+			return false;
+		} catch(e) {
+			console.log(e);
+		}
+	});
+	
 	// Edit municipality
 	$('.js-edit-municipality').click(function(){
 		$('.municipalities .active').removeClass('active');
@@ -1165,7 +1177,7 @@ var deleteParticipant = (function() {
 
 /**
 * Delete author
-* ==================
+* =============
 */
 var deleteAuthor = (function() {
 	return {
@@ -1187,6 +1199,29 @@ var deleteAuthor = (function() {
 
 }());
 
+/**
+* Renew author management hash
+* ============================
+*/
+var renewManagementHash = (function() {
+	return {
+		getAuthor: function(){
+			var author = 				$('.js-renew-management-hash.active'),
+				form = 					$('#delete-author-form'),
+				selAuthor = 			$('#selected-author'),
+				authorInput =	 		$('#authorId'),
+				authorDetails = 		'<h4 class="header">'  + author.data("name") + '</h4><div class="contact-info">' +
+										author.data("email") + '<br/>' +
+										author.data("address") + (author.data("address") != "" ? '<br/>' : '') +
+										author.data("phone") +'</div>';
+
+			selAuthor.html(authorDetails);
+			
+			authorInput.val(author.data("id"));
+		}
+	};
+
+}());
 
 /**
 * Generate iFrame
@@ -1199,7 +1234,8 @@ if (window.hasIFrame){
 		refresh = 			$('.js-update-iframe'),
 		iframeContainer = 	$("#iframe-container"),
 		municipality = 		$('#municipality'),
-		lang = 				$('.iframe-lang'),
+		lang = 				$('input[name="language"]'),
+		defaultLang	=		$('input[name="language"][value="'+locale+'"]'),
 		limit = 			$('#limit'),
 		width = 			$('#width'),
 		height = 			$('#height'),
@@ -1245,7 +1281,7 @@ if (window.hasIFrame){
 	params = function() {
 		return [{
 	        municipality: 	municipality.val(),
-	        lang:			currentLang,
+	        lang:			$('input[name="language"]:checked').val(),
 	        limit:			limit.val(),
 	        width:			width.val(),
 	        height:			height.val()
@@ -1253,16 +1289,9 @@ if (window.hasIFrame){
     },
     
     refreshFields = function(data){
-		municipality.val(data.municipality).trigger("liszt:updated");
-		lang.each(function(){
-			var thisObj = $(this);
-			
-			if (thisObj.data('lang') == locale) {
-				thisObj.addClass(hideClass);
-			} else {
-				thisObj.removeClass(hideClass);
-			}
-		});
+		municipality.val(data.municipality).trigger('liszt:updated');
+		lang.removeAttr('checked');
+		defaultLang.attr('checked','checked');
 		limit.val(data.limit);
 		width.val(data.width);
 		height.val(data.height);
@@ -1271,19 +1300,6 @@ if (window.hasIFrame){
     generateIframe(params());
     
     municipality.change(function(){
-    	generateIframe(params());
-    });
-
-    lang.click(function(e){
-    	e.preventDefault();
-    	
-    	var thisObj = $(this);
-    	
-    	lang.removeClass(hideClass);
-    	thisObj.addClass(hideClass);
-    	
-    	currentLang = thisObj.data('lang');
-    	
     	generateIframe(params());
     });
     
@@ -1295,7 +1311,10 @@ if (window.hasIFrame){
         	generateIframe(params());
         }, 1000 );
     });
-   
+
+    lang.change(function(){    	
+    	generateIframe(params());
+    });   
     
     reset.click(function(e){
     	e.preventDefault();

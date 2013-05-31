@@ -95,17 +95,19 @@
     <br />
     
     <#list authorList as a>
-        <div class="column ${((a_index + 1) % 3 == 0)?string("last","")}">
-            <p><strong>${a.contactInfo.name!""}</strong>, ${a.municipality.getName(locale)}<br />
-            ${a.contactInfo.email!""}
+        <div class="column author ${((a_index + 1) % 3 == 0)?string("last","")}">
+            <p><strong>${a.contactInfo.name!""}</strong>, ${a.municipality.getName(locale)}
             <#if showRenewManagementHash>
-            <form action="" method="post">
-            <@f.securityFilters/>
-            <input type="hidden" name="authorId" value="${a.id}"/>
-            <input type="submit" value="Luo ja lähetä uusi hallintalinkki"/>
-            </form>
+                <a  href="#" class="js-renew-management-hash trigger-tooltip" title="<@u.message "moderator.renewManagementHash.tooltip" />"
+                    data-id="${a.id}"
+                    data-name="${a.contactInfo.name!""}"
+                    data-municipality="${a.municipality.getName(locale)}"
+                    data-address="${a.contactInfo.address!""}"
+                    data-email="${a.contactInfo.email!""}"
+                    data-phone="${a.contactInfo.phone!""}"><span class="icon-small resend"></span></a>
             </#if>
-
+            <br />
+            ${a.contactInfo.email!""}
             <br />
             <#if a.contactInfo.address?? && a.contactInfo.address != ""><#noescape>${a.contactInfo.address?replace('\n','<br/>')!""}</#noescape><br /></#if>
             ${a.contactInfo.phone!""}</p>

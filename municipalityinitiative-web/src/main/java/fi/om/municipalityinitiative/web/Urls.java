@@ -362,7 +362,7 @@ public final class Urls {
     }
     
     public String iframeGenerator() {
-        return getLocalizedPageUrl(IFRAME_GENERATOR_FI, IFRAME_GENERATOR_FI);
+        return getLocalizedPageUrl(IFRAME_GENERATOR_FI, IFRAME_GENERATOR_SV);
     }
     
     public String getManagement(Long id) {
