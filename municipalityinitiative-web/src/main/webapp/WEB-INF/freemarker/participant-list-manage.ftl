@@ -105,7 +105,6 @@
                     data-date="<@u.localDate participant.participateDate!"" />"
                     data-name="${participant.name!""}"
                     data-municipality="${participant.homeMunicipality.getName(locale)!""}"><@u.message "deleteParticipant.delete" /></a></span></li>
-
             <#else>
                 <span class="bull">&bull;</span> <@u.message "deleteParticipant.authorCannotBeDeleted" />
             </#if>

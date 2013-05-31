@@ -956,6 +956,18 @@ $('.municipality-filter').change( function() {
 		generateModal(modalData.participateFormInvalid(), 'full');
 	}
 	
+	$('.js-renew-management-hash').click(function(){
+		$('.js-renew-management-hash.active').removeClass('active');
+		$(this).addClass('active');
+		
+		try {
+			generateModal(modalData.renewManagementHash(), 'full', renewManagementHash.getAuthor);
+			return false;
+		} catch(e) {
+			console.log(e);
+		}
+	});
+	
 	// Edit municipality
 	$('.js-edit-municipality').click(function(){
 		$('.municipalities .active').removeClass('active');
@@ -1165,7 +1177,7 @@ var deleteParticipant = (function() {
 
 /**
 * Delete author
-* ==================
+* =============
 */
 var deleteAuthor = (function() {
 	return {
@@ -1187,6 +1199,29 @@ var deleteAuthor = (function() {
 
 }());
 
+/**
+* Renew author management hash
+* ============================
+*/
+var renewManagementHash = (function() {
+	return {
+		getAuthor: function(){
+			var author = 				$('.js-renew-management-hash.active'),
+				form = 					$('#delete-author-form'),
+				selAuthor = 			$('#selected-author'),
+				authorInput =	 		$('#authorId'),
+				authorDetails = 		'<h4 class="header">'  + author.data("name") + '</h4><div class="contact-info">' +
+										author.data("email") + '<br/>' +
+										author.data("address") + (author.data("address") != "" ? '<br/>' : '') +
+										author.data("phone") +'</div>';
+
+			selAuthor.html(authorDetails);
+			
+			authorInput.val(author.data("id"));
+		}
+	};
+
+}());
 
 /**
 * Generate iFrame
