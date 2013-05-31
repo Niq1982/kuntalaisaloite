@@ -122,7 +122,7 @@
         <div class="initiative-content-row last">
             <h2><@u.message key="initiative.people.title" args=[authors?size] /></h2>
             
-            <@e.initiativeContactInfo authors />
+            <@e.initiativeContactInfo authorList=authors showRenewManagementHash=true/>
         </div>
     </div>
     

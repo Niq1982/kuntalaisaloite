@@ -1,4 +1,5 @@
 <#import "utils.ftl" as u />
+<#import "forms.ftl" as f />
 
 <#escape x as x?html> 
 
@@ -87,7 +88,7 @@
  *
  * @param contactInfo is author.contactInfo
 -->
-<#macro initiativeContactInfo authorList showTitle=true>
+<#macro initiativeContactInfo authorList showTitle=true showRenewManagementHash=false>
     <#if showTitle><h3><@u.message key="initiative.authors.title" args=[authorList?size] /></h3></#if>
     
     <@u.systemMessage path="initiative.authors.contactinfo.notPublic" type="info" showClose=false />
@@ -96,7 +97,16 @@
     <#list authorList as a>
         <div class="column ${((a_index + 1) % 3 == 0)?string("last","")}">
             <p><strong>${a.contactInfo.name!""}</strong>, ${a.municipality.getName(locale)}<br />
-            ${a.contactInfo.email!""}<br />
+            ${a.contactInfo.email!""}
+            <#if showRenewManagementHash>
+            <form action="" method="post">
+            <@f.securityFilters/>
+            <input type="hidden" name="authorId" value="${a.id}"/>
+            <input type="submit" value="Luo ja lähetä uusi hallintalinkki"/>
+            </form>
+            </#if>
+
+            <br />
             <#if a.contactInfo.address?? && a.contactInfo.address != ""><#noescape>${a.contactInfo.address?replace('\n','<br/>')!""}</#noescape><br /></#if>
             ${a.contactInfo.phone!""}</p>
         </div>
