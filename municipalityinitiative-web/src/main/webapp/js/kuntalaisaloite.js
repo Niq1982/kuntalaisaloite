@@ -1199,7 +1199,8 @@ if (window.hasIFrame){
 		refresh = 			$('.js-update-iframe'),
 		iframeContainer = 	$("#iframe-container"),
 		municipality = 		$('#municipality'),
-		lang = 				$('.iframe-lang'),
+		lang = 				$('input[name="language"]'),
+		defaultLang	=		$('input[name="language"][value="'+locale+'"]'),
 		limit = 			$('#limit'),
 		width = 			$('#width'),
 		height = 			$('#height'),
@@ -1245,7 +1246,7 @@ if (window.hasIFrame){
 	params = function() {
 		return [{
 	        municipality: 	municipality.val(),
-	        lang:			currentLang,
+	        lang:			$('input[name="language"]:checked').val(),
 	        limit:			limit.val(),
 	        width:			width.val(),
 	        height:			height.val()
@@ -1253,16 +1254,9 @@ if (window.hasIFrame){
     },
     
     refreshFields = function(data){
-		municipality.val(data.municipality).trigger("liszt:updated");
-		lang.each(function(){
-			var thisObj = $(this);
-			
-			if (thisObj.data('lang') == locale) {
-				thisObj.addClass(hideClass);
-			} else {
-				thisObj.removeClass(hideClass);
-			}
-		});
+		municipality.val(data.municipality).trigger('liszt:updated');
+		lang.removeAttr('checked');
+		defaultLang.attr('checked','checked');
 		limit.val(data.limit);
 		width.val(data.width);
 		height.val(data.height);
@@ -1271,19 +1265,6 @@ if (window.hasIFrame){
     generateIframe(params());
     
     municipality.change(function(){
-    	generateIframe(params());
-    });
-
-    lang.click(function(e){
-    	e.preventDefault();
-    	
-    	var thisObj = $(this);
-    	
-    	lang.removeClass(hideClass);
-    	thisObj.addClass(hideClass);
-    	
-    	currentLang = thisObj.data('lang');
-    	
     	generateIframe(params());
     });
     
@@ -1295,7 +1276,10 @@ if (window.hasIFrame){
         	generateIframe(params());
         }, 1000 );
     });
-   
+
+    lang.change(function(){    	
+    	generateIframe(params());
+    });   
     
     reset.click(function(e){
     	e.preventDefault();

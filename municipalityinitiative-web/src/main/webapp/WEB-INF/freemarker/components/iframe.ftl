@@ -45,8 +45,7 @@
 <#macro initiativeIframeGenerator options defaults bounds>
     <h2><@u.message "iframeGenerator.settings.title" /></h2>
     <div class="hidden">
-        <div class="input-block-content no-top-margin">       
-            <div class="column col-1of2">
+        <div class="column col-1of3">
             <label for="municipality" class="input-header">
                 <@u.message "iframeGenerator.municipality" />
             </label>
@@ -58,40 +57,41 @@
             </select>
         </div>
         
-        </div>
-        
         <#assign digit = "\\d+" />
         
-        <div class="input-block-content">
-        
-            <div class="column col-1of3 last">
-                <label for="municipality" class="input-header">
-                    <@u.message "iframeGenerator.initiativeCount" />
-                </label>
-                <input type="text" maxlength="2" class="small" value="3" name="limit" id="limit" pattern="${digit}" />
+        <div class="column col-1of3" style="width:10%;">
+            <label for="municipality" class="input-header">
+                <@u.message "iframeGenerator.width" />
+            </label>
+            <input type="text" maxlength="4" class="small" value="250" name="width" id="width" pattern="${digit}" />
+        </div>
+        <div class="column col-1of3" style="width:10%;">
+            <label for="municipality" class="input-header">
+                <@u.message "iframeGenerator.height" />
+            </label>
+            <input type="text" maxlength="4" class="small" value="400" name="height" id="height" pattern="${digit}"  />
+        </div>
+        <div class="column col-1of3" style="width:10%;">
+            <label for="municipality" class="input-header">
+                <@u.message "iframeGenerator.initiativeCount" />
+            </label>
+            <input type="text" maxlength="2" class="small" value="3" name="limit" id="limit" pattern="${digit}" />
+        </div>
+        <div class="column col-1of3" style="width:20%;">
+            <div class="input-header">
+                <@u.message "iframeGenerator.lang" />
             </div>
-            <div class="column col-1of3">
-                <label class="input-header">
-                    <@u.message "iframeGenerator.lang" />
+            
+            <div class="input-placeholder">
+                <label class="inline">
+                    <input type="radio" name="language" value="${locale}" checked="checked" class="no-float" /><@u.message "iframeGenerator.lang.locale" />
                 </label>
-                
-                <a href="#" class="iframe-lang input-placeholder current js-hide" data-lang="${locale}"><@u.message "lang.current" /></a>
-                <a href="#" class="iframe-lang input-placeholder" data-lang="${altLocale}"><@u.message "lang.alternative" /></a>
-            </div>
-            <br class="clear" />
-            <div class="column col-1of3">
-                <label for="municipality" class="input-header">
-                    <@u.message "iframeGenerator.width" />
+                <label class="inline push">
+                    <input type="radio" name="language" value="${altLocale}" class="no-float" /><@u.message "iframeGenerator.lang.altLocale" />
                 </label>
-                <input type="text" maxlength="4" class="small" value="250" name="width" id="width" pattern="${digit}"  />
-            </div>
-            <div class="column col-1of3 last">
-                <label for="municipality" class="input-header">
-                    <@u.message "iframeGenerator.height" />
-                </label>
-                <input type="text" maxlength="4" class="small" value="400" name="height" id="height" pattern="${digit}"  />
             </div>
         </div>
+            
         <br class="clear" />
         
         <p><a href="#" class="js-reset-iframe"><@u.message "iframeGenerator.reset" /></a></p>
