@@ -1,10 +1,8 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
-import fi.om.municipalityinitiative.newdao.AuthorDao;
-import fi.om.municipalityinitiative.newdao.InitiativeDao;
-import fi.om.municipalityinitiative.newdao.MunicipalityDao;
-import fi.om.municipalityinitiative.newdao.ParticipantDao;
+import fi.om.municipalityinitiative.dto.service.AuthorMessage;
+import fi.om.municipalityinitiative.newdao.*;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
@@ -24,19 +22,22 @@ import static fi.om.municipalityinitiative.util.SecurityUtil.assertAllowance;
 public class PublicInitiativeService {
 
     @Resource
-    InitiativeDao initiativeDao;
+    private InitiativeDao initiativeDao;
 
     @Resource
-    AuthorDao authorDao;
+    private AuthorDao authorDao;
 
     @Resource
-    ParticipantDao participantDao;
+    private ParticipantDao participantDao;
 
     @Resource
-    EmailService emailService;
+    private EmailService emailService;
 
     @Resource
-    MunicipalityDao municipalityDao;
+    private MunicipalityDao municipalityDao;
+
+    @Resource
+    private JdbcAuthorMessageDao authorMessageDao;
 
     public List<InitiativeListInfo> findMunicipalityInitiatives(InitiativeSearch search, LoginUserHolder loginUserHolder) {
 
@@ -128,6 +129,17 @@ public class PublicInitiativeService {
         participantDao.confirmParticipation(participantId, confirmationCode);
 
         return initiativeId;
+    }
+
+
+    @Transactional(readOnly = false)
+    public void sendAuthorMessage(AuthorUIMessage authorUIMessage) {
+
+        String randomHash = RandomHashGenerator.randomString(20);
+        AuthorMessage authorMessage = new AuthorMessage(authorUIMessage, randomHash);
+        authorMessageDao.addAuthorMessage(authorMessage);
+        emailService.sendAuthorMessageConfirmationEmail(authorUIMessage.getContactEmail(), randomHash);
+
     }
 
 

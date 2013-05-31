@@ -32,4 +32,7 @@ public interface EmailService {
     void sendPrepareCreatedEmail(Initiative initiative, Long authorId, String managementHash, String authorEmail, Locale locale);
 
     void sendManagementHashRenewed(Initiative initiative, String managementHash, String authorEmail);
+
+    void sendAuthorMessageConfirmationEmail(String contactEmail, String randomHash);
+
 }

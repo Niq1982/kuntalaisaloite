@@ -35,9 +35,6 @@ public class AuthorService {
     @Resource
     EmailService emailService;
 
-    @Resource
-    AuthorMessageDao authorMessageDao;
-
     @Transactional(readOnly = false)
     public void createAuthorInvitation(Long initiativeId, LoginUserHolder loginUserHolder, AuthorInvitationUICreateDto uiCreateDto) {
 
@@ -177,13 +174,6 @@ public class AuthorService {
     @Transactional(readOnly = false)
     public void rejectInvitation(Long initiativeId, String confirmCode) {
         authorDao.rejectAuthorInvitation(initiativeId, confirmCode);
-    }
-
-    @Transactional(readOnly = false)
-    public void sendAuthorMessage(AuthorUIMessage authorUIMessage) {
-
-        String randomHash = RandomHashGenerator.randomString(20);
-        AuthorMessage authorMessage = new AuthorMessage(authorUIMessage, randomHash);
     }
 
     private static void assertNotRejectedOrExpired(AuthorInvitation invitation) {
