@@ -30,9 +30,7 @@
 
     <#-- VIEW BLOCKS -->
     <div class="view-block public first">
-        <div class="initiative-content-row last">
-            <@e.initiativeView initiative />
-        </div>
+        <@e.initiativeView initiative />
     </div>
     
     <#assign participateFormHTML>

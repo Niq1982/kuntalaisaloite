@@ -18,11 +18,13 @@
 <@l.main page="page.management" pageTitle=initiative.name!"">
     
     <div class="msg-block">
-        <h2><@u.message "management.title" /></h2>
-        <p><@u.messageHTML "management.description" /></p>
-        <p><@u.messageHTML "management.instruction" /></p>
-        <p><a class="small-button gray" href="${urls.edit(initiative.id)}"><span class="small-icon edit"><@u.messageHTML "action.editInitiative" /></span></a>
-        <a class="small-button gray push trigger-tooltip" href="${urls.view(initiative.id)}" target="_blank" title="<@u.message "action.previewInitiative.tooltip" />"><span class="small-icon document"><@u.messageHTML "action.previewInitiative" /></span></a></p>
+        <div class="system-msg msg-info">
+            <h2><@u.message "management.title" /></h2>
+            <p><@u.messageHTML "management.description" /></p>
+            <p><@u.messageHTML "management.instruction" /></p>
+            <p><a class="small-button gray" href="${urls.edit(initiative.id)}"><span class="small-icon edit"><@u.messageHTML "action.editInitiative" /></span></a>
+            <a class="small-button gray push trigger-tooltip" href="${urls.view(initiative.id)}" target="_blank" title="<@u.message "action.previewInitiative.tooltip" />"><span class="small-icon document"><@u.messageHTML "action.previewInitiative" /></span></a></p>
+        </div>
     </div>
 
     <h1 class="name">${initiative.name!""}</h1>
@@ -38,12 +40,24 @@
     <div class="view-block">
         <h2><@u.message key="initiative.people.title" args=[participantCount.total] /></h2>
         
-        <div class="initiative-content-row">
+        <div class="initiative-content-row ${(initiative.state == InitiativeState.PUBLISHED)?string("","last")}">
             <@e.initiativeContactInfo authors />
         </div>
 
-        <@e.participants showForm=false admin=true />
+        <#if initiative.state == InitiativeState.PUBLISHED>
+            <@e.participants showForm=false admin=true />
+        </#if>
     </div>
+
+    <#if initiative.state == InitiativeState.REVIEW>
+        <div class="msg-block">
+            <div class="system-msg msg-info">
+                <h2><@u.message "initiative.stateInfo.REVIEW" /></h2>
+                <p><@u.message "initiative.stateInfo.REVIEW.description" /></p>
+                <p><@u.message "initiative.stateInfo.REVIEW.description.2" /></p>
+            </div>
+        </div>
+    </#if>
 
     <#if managementSettings.allowSendToReview>
         <#assign sendToReviewConfirm = false />

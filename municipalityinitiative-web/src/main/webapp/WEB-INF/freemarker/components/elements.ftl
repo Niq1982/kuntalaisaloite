@@ -12,11 +12,15 @@
 <#macro initiativeView initiative>
     <h2><@u.message "initiative.proposal.title" /></h2>
 
-    <@u.text initiative.proposal!"" />
+    <div class="initiative-content-row ${((initiative.extraInfo)?has_content)?string("","last")}">
+        <@u.text initiative.proposal!"" />
+    </div>
 
     <#if (initiative.extraInfo)?has_content>
         <h2><@u.message "initiative.extraInfo.title" /></h2>
-        <@u.text initiative.extraInfo!"" />
+        <div class="initiative-content-row last">
+            <@u.text initiative.extraInfo!"" />
+        </div>
     </#if>
 </#macro>
 

@@ -115,15 +115,17 @@
     <@e.stateInfo initiative />
 
     <div class="view-block first">
-        <div class="initiative-content-row">
-            <@e.initiativeView initiative />
-        </div>
-
+        <@e.initiativeView initiative />        
+    </div>
+    
+    <div class="view-block">
         <div class="initiative-content-row last">
+            <h2><@u.message key="initiative.people.title" args=[authors?size] /></h2>
+            
             <@e.initiativeContactInfo authors />
         </div>
     </div>
-
+    
     <#--
      * Moderation VIEW modals
      * 

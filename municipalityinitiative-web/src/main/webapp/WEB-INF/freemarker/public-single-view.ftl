@@ -19,19 +19,17 @@
     
     <div class="municipality">${initiative.municipality.getName(locale)}</div>
 
-    <#if user.isOmUser() && !initiative.sent>
-        <a style="float:right;" href="${urls.moderation(initiative.id)}"><@u.message "link.to.moderationView" /></a>
-    </#if>
-    
     <@e.stateInfo initiative />
 
     <#-- VIEW BLOCKS -->
     <div class="view-block public first">
-        <div class="initiative-content-row">
-            <@e.initiativeView initiative />
-        </div>
+        <@e.initiativeView initiative />
+    </div>
+    
+    <div class="view-block public">
         <div class="initiative-content-row last">
-            <@e.initiativeAuthor authors/>
+            <h2><@u.message key="initiative.people.title" args=[1] /></h2>
+            <@e.initiativeAuthor authors />
         </div>
     </div>
 
