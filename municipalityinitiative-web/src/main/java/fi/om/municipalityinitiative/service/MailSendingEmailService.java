@@ -31,7 +31,7 @@ public class MailSendingEmailService implements EmailService {
     private static final String INVITATION_ACCEPTANCE ="invitation-acceptance";
     private static final String AUTHOR_DELETED_TO_OTHER_AUTHORS = "author-deleted-to-other-authors";
     private static final String AUTHOR_DELETED_TO_DELETED_AUTHOR = "author-deleted-to-deleted-author";
-    private static final String MANAGEMENT_HASH_RENEWED = "new-management-hash-generated";
+    private static final String MANAGEMENT_HASH_RENEWED = "managementhash-renewed";
 
     @Resource
     private MessageSource messageSource;
