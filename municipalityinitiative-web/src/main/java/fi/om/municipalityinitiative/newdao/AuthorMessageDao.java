@@ -4,9 +4,8 @@ import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 
 public interface AuthorMessageDao {
 
-    Long addAuthorMessage(AuthorMessage authorMessage);
+    Long put(AuthorMessage authorMessage);
 
-    AuthorMessage getAuthorMessage(String confirmationCode);
+    AuthorMessage pop(String confirmationCode);
 
-    void deleteAuthorMessage(String confirmationCode);
 }

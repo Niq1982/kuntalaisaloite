@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
+import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
@@ -35,4 +36,5 @@ public interface EmailService {
 
     void sendAuthorMessageConfirmationEmail(String contactEmail, String randomHash);
 
+    void sendAuthorMessages(AuthorMessage authorMessage, List<Author> authors);
 }

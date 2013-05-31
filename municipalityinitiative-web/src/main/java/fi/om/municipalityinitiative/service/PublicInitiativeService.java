@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.service;
 
+import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.newdao.*;
@@ -133,12 +134,24 @@ public class PublicInitiativeService {
 
 
     @Transactional(readOnly = false)
-    public void sendAuthorMessage(AuthorUIMessage authorUIMessage) {
+    public void addAuthorMessage(AuthorUIMessage authorUIMessage) {
 
-        String randomHash = RandomHashGenerator.randomString(20);
-        AuthorMessage authorMessage = new AuthorMessage(authorUIMessage, randomHash);
-        authorMessageDao.addAuthorMessage(authorMessage);
-        emailService.sendAuthorMessageConfirmationEmail(authorUIMessage.getContactEmail(), randomHash);
+        String confirmationCode = RandomHashGenerator.randomString(20);
+        AuthorMessage authorMessage = new AuthorMessage(authorUIMessage, confirmationCode);
+        authorMessageDao.put(authorMessage);
+
+        // TODO: Implement
+        emailService.sendAuthorMessageConfirmationEmail(authorUIMessage.getContactEmail(), confirmationCode);
+
+    }
+
+    @Transactional(readOnly = false)
+    public void confirmAndSendAuthorMessage(String confirmationCode) {
+        AuthorMessage authorMessage = authorMessageDao.pop(confirmationCode);
+        List<Author> authors = authorDao.findAuthors(authorMessage.getInitiativeId());
+
+        // TODO: Implement
+        emailService.sendAuthorMessages(authorMessage, authors);
 
     }
 
