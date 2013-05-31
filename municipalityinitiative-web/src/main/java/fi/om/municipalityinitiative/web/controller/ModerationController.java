@@ -80,7 +80,14 @@ public class ModerationController extends BaseController{
         return redirectWithMessage(Urls.get(locale).moderation(initiativeId), RequestMessage.REJECT_INITIATIVE, request);
     }
 
+    @RequestMapping(value = {MODERATION_FI, MODERATION_SV}, method = POST)
+    public String generateNewManagementHash(@PathVariable("id") Long initiativeId,
+                                            @RequestParam("authorId") Long authorId,
+                                            Locale locale, HttpServletRequest request) {
 
+        moderationService.renewManagementHash(userService.getRequiredOmLoginUserHolder(request), authorId);
+        return redirectWithMessage(Urls.get(locale).moderation(initiativeId), RequestMessage.MANAGEMENT_HASH_RENEWED, request);
+    }
 
     @RequestMapping(value = MUNICIPALITY_MODERATION, method = GET)
     public String moderateMunicipalities(Model model, HttpServletRequest request){

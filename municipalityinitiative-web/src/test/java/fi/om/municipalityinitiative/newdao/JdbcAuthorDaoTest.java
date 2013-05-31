@@ -78,7 +78,7 @@ public class JdbcAuthorDaoTest {
     public void login_as_author_returns_authors_initiative() {
         Long collaborativeAccepted = testHelper.createCollaborativeAccepted(testMunicipality);
 
-        Set<Long> ids = authorDao.loginAndGetAuthorsInitiatives(TestHelper.PREVIOUS_TEST_MANAGEMENT_HASH);
+        Set<Long> ids = authorDao.getAuthorsInitiatives(TestHelper.PREVIOUS_TEST_MANAGEMENT_HASH);
 
         assertThat(ids, hasSize(1));
         assertThat(ids, contains(collaborativeAccepted));
@@ -120,6 +120,17 @@ public class JdbcAuthorDaoTest {
         thrown.expect(OperationNotAllowedException.class);
         thrown.expectMessage(containsString("Deleting last author is forbidden"));
         authorDao.deleteAuthor(testHelper.getLastAuthorId());
+    }
+
+    @Test
+    public void updating_management_hash() {
+
+        testHelper.createCollaborativeReview(testMunicipality);
+
+        assertThat(authorDao.getAuthorsInitiatives(TestHelper.PREVIOUS_TEST_MANAGEMENT_HASH), hasSize(1));
+        authorDao.updateManagementHash(testHelper.getLastAuthorId(), "some other");
+        assertThat(authorDao.getAuthorsInitiatives(TestHelper.PREVIOUS_TEST_MANAGEMENT_HASH), hasSize(0));
+
     }
 
 }

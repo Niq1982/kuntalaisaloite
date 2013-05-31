@@ -42,7 +42,7 @@ public class UserService {
     public Long authorLogin(String managementHash, HttpServletRequest request) {
         // TODO: Merge these to one call
         Long authorId = authorDao.getAuthorId(managementHash);
-        Set<Long> initiativeIds = authorDao.loginAndGetAuthorsInitiatives(managementHash);
+        Set<Long> initiativeIds = authorDao.getAuthorsInitiatives(managementHash);
 
         if (authorId == null || initiativeIds.size() == 0) {
             throw new InvalidLoginException("Invalid login credentials");

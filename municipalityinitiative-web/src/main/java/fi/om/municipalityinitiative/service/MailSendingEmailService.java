@@ -31,6 +31,7 @@ public class MailSendingEmailService implements EmailService {
     private static final String INVITATION_ACCEPTANCE ="invitation-acceptance";
     private static final String AUTHOR_DELETED_TO_OTHER_AUTHORS = "author-deleted-to-other-authors";
     private static final String AUTHOR_DELETED_TO_DELETED_AUTHOR = "author-deleted-to-deleted-author";
+    private static final String MANAGEMENT_HASH_RENEWED = "managementhash-renewed";
 
     @Resource
     private MessageSource messageSource;
@@ -137,11 +138,23 @@ public class MailSendingEmailService implements EmailService {
     public void sendPrepareCreatedEmail(Initiative initiative, Long authorId, String managementHash, String authorEmail, Locale locale) {
         HashMap<String, Object> dataMap = toDataMap(initiative, locale);
         dataMap.put("managementHash", managementHash);
-        dataMap.put("authorId", authorId);
         emailMessageConstructor
                 .fromTemplate(INITIATIVE_PREPARE_VERIFICATION_TEMPLATE)
                 .addRecipient(authorEmail)
                 .withSubject(messageSource.getMessage("email.prepare.create.subject", toArray(), locale))
+                .withDataMap(dataMap)
+                .send();
+    }
+
+    @Override
+    public void sendManagementHashRenewed(Initiative initiative, String managementHash, String authorEmail) {
+        HashMap<String, Object> dataMap = toDataMap(initiative, Locales.LOCALE_FI);
+        dataMap.put("managementHash", managementHash);
+
+        emailMessageConstructor
+                .fromTemplate(MANAGEMENT_HASH_RENEWED)
+                .addRecipient(authorEmail)
+                .withSubject(messageSource.getMessage("email.managementhash.renewed.subject", toArray(), Locales.LOCALE_FI))
                 .withDataMap(dataMap)
                 .send();
     }

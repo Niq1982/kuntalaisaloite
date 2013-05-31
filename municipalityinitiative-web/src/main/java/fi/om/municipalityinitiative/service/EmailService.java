@@ -30,4 +30,6 @@ public interface EmailService {
     void sendParticipationConfirmation(Initiative initiative, String participantEmail, Long participantId, String confirmationCode, Locale locale);
 
     void sendPrepareCreatedEmail(Initiative initiative, Long authorId, String managementHash, String authorEmail, Locale locale);
+
+    void sendManagementHashRenewed(Initiative initiative, String managementHash, String authorEmail);
 }
