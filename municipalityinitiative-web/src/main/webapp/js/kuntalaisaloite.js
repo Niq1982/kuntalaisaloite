@@ -686,6 +686,34 @@ var municipalitySelection = (function() {
 	
 }());
 
+
+
+/**
+* Choose initiative type
+* ======================
+* 
+* 
+* 
+*/
+(function() {
+	var type =		$('.initiative-type'),
+		cbClass =	'.checkbox',
+		cb = 		type.find(cbClass);
+	
+	
+	type.click(function(){
+		var thisObj = $(this);
+		
+		type.removeClass('selected').addClass('unselected');
+		thisObj.removeClass('unselected').addClass('selected');
+		
+		cb.removeClass('checked');
+		thisObj.find(cbClass).addClass('checked');
+	});
+	
+
+}());
+
 /**
 * Toggle form
 * ===========

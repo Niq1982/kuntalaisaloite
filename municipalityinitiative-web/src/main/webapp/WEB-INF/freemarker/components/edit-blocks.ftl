@@ -114,28 +114,45 @@
             <#-- TODO: Create a macro when other options are selectable -->
             <@spring.bind "initiative.initiativeType" /> 
             <@f.showError />
-            <label class="initiative-type">
-                <span class="type">
-                    <input type="radio" id="initiativeType" name="${spring.status.expression}" value=""
-                        <#if spring.stringStatusValue == "normal">checked="checked"</#if>
-                    <@spring.closeTag/> <@u.message "initiative.type.normal" />
-                </span>
-                <span class="description"><@u.message "initiative.type.normal.description" /></span>
-            </label>
             
-            <label class="initiative-type disabled trigger-tooltip" title="<@u.message "initiative.type.disabled" />">
-                <span class="type"><input type="radio" id="initiativeType[1]" name="initiativeType" value="COLLABORATIVE_COUNCIL" disabled="disabled" /> <@u.message "initiative.type.two-percent" /></span>
-                <span class="description"><@u.message "initiative.type.two-percent.description" /><br/><br/></span>
-            </label>
-            
-            <label class="initiative-type disabled trigger-tooltip" title="<@u.message "initiative.type.disabled" />">
-                <span class="type"><input type="radio" id="initiativeType[2]" name="initiativeType" value="COLLABORATIVE_CITIZEN" disabled="disabled" /> <@u.message "initiative.type.five-percent" /></span>
-                <span class="description"><@u.message "initiative.type.five-percent.description" /><br/><br/></span>
-            </label>
+            <@initiativeTypeBlock "normal" true />
+            <@initiativeTypeBlock "two-percent" />
+            <@initiativeTypeBlock "five-percent" />
         </div>
-
 </#macro>
 
+<#--
+ * initiativeTypeBlock
+ *
+ * Generates a selection for initiative type
+ *
+ * @param type is the type of the initiative
+ * @param enabled enables/disables this selection
+ -->
+<#macro initiativeTypeBlock type enabled=false>
+
+    <#if enabled>
+        <label class="initiative-type enabled">
+    <#else>
+        <label class="initiative-type trigger-tooltip" title="<@u.message "initiative.type.disabled" />">
+    </#if>
+        <span class="inner">
+            <span class="type"><@u.message "initiative.type."+type /><#if type == "normal"><br/><br/></#if></span>
+            <span class="description"><@u.message "initiative.type."+type+".description" /></span>
+        </span>
+        <#if enabled>
+            <span class="action open"><span class="checkbox"></span>Valitse</span>
+            
+            <input type="radio" id="initiativeType" name="${spring.status.expression}" value="" class="js-hide"
+                <#if spring.stringStatusValue == type>checked="checked"</#if>
+                <@spring.closeTag/>
+            
+        <#else>
+            <span class="action blocked">Tämä ei ole vielä valittavissa</span>
+        </#if>
+    </label>
+
+</#macro>
 
 <#--
  * authorEmailBlock
