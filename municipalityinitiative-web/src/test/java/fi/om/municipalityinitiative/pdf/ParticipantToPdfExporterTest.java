@@ -44,7 +44,23 @@ public class ParticipantToPdfExporterTest {
             participant.setParticipateDate(new LocalDate());
             participant.setName(RandomStringUtils.randomAlphabetic(20));
             participant.setHomeMunicipality(municipality);
-            participant.setMembership(Membership.company);
+
+            Random rnd = new Random();
+            
+            switch(rnd.nextInt(4)) {
+                case 0:
+                    participant.setMembership(Membership.community);
+                    break;
+                case 1:
+                    participant.setMembership(Membership.company);
+                    break;
+                case 2:
+                    participant.setMembership(Membership.property);
+                    break;
+                case 3:
+                    participant.setMembership(Membership.none); // This should never end up in the list. Added here just for testing.
+                    break;
+            }
             participants.add(participant);
         }
         return participants;
