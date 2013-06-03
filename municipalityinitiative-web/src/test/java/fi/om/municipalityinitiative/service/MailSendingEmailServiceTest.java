@@ -2,11 +2,17 @@ package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
+import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.Urls;
 import org.junit.Before;
 import org.junit.Test;
+
+import javax.mail.MessagingException;
+
+import java.util.Collections;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -157,8 +163,32 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
         String confirmationCode = "conf-code";
         emailService.sendAuthorMessageConfirmationEmail(createDefaultInitiative(), CONTACT_EMAIL, confirmationCode, Locales.LOCALE_FI);
 
+        assertThat(javaMailSenderFake.getSingleRecipient(), is(CONTACT_EMAIL));
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Olet lähettämässä viestiä aloitteen vastuuhenkilöille"));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(Urls.get(Locales.LOCALE_FI).confirmAuthorMessage(confirmationCode)));
+
+    }
+
+    @Test
+    public void send_message_to_authors_contains_all_information() throws Exception {
+
+        List<String> authorEmails = Collections.singletonList("author@example.com");
+        String contactorEmail = "someContactor@example.com";
+        String contactName = "Contact Name";
+        String message = "This is the message";
+
+        AuthorMessage authorMessage = new AuthorMessage();
+        authorMessage.setContactEmail(contactorEmail);
+        authorMessage.setContactName(contactName);
+        authorMessage.setMessage(message);
+
+        emailService.sendAuthorMessages(createDefaultInitiative(), authorMessage, authorEmails);
+
+        assertThat(javaMailSenderFake.getSingleRecipient(), is(authorEmails.get(0)));
+        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Yhteydenotto aloitteeseesi liittyen / SV"));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(contactorEmail));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(contactName));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(message));
 
     }
 }

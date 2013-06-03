@@ -34,6 +34,7 @@ public class MailSendingEmailService implements EmailService {
     private static final String AUTHOR_DELETED_TO_DELETED_AUTHOR = "author-deleted-to-deleted-author";
     private static final String MANAGEMENT_HASH_RENEWED = "managementhash-renewed";
     private static final String AUTHOR_MESSAGE_CONFIRMATION = "author-message-confirmation";
+    private static final String AUTHOR_MESSAGE_TO_AUTHORS = "author-message-to-authors";
 
     @Resource
     private MessageSource messageSource;
@@ -203,8 +204,16 @@ public class MailSendingEmailService implements EmailService {
     }
 
     @Override
-    public void sendAuthorMessages(AuthorMessage authorMessage, List<Author> authors) {
-        throw new RuntimeException("Not implemented");
+    public void sendAuthorMessages(Initiative initiative, AuthorMessage authorMessage, List<String> authorEmails) {
+        Locale localeFi = Locales.LOCALE_FI;
+        HashMap<String, Object> dataMap = toDataMap(initiative, localeFi);
+        dataMap.put("authorMessage", authorMessage);
+        emailMessageConstructor
+                .fromTemplate(AUTHOR_MESSAGE_TO_AUTHORS)
+                .addRecipients(authorEmails)
+                .withSubject(messageSource.getMessage("email.author.message.to.authors.subject", toArray(), localeFi))
+                .withDataMap(dataMap)
+                .send();
     }
 
     private static String[] toArray(String... name) {
