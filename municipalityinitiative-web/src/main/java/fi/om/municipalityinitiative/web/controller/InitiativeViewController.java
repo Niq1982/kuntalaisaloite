@@ -243,6 +243,8 @@ public class InitiativeViewController extends BaseController {
             Model model, BindingResult bindingResult, Locale locale, HttpServletRequest request) {
 
         if (validationService.validationSuccessful(authorUIMessage, bindingResult, model)) {
+            authorUIMessage.setInitiativeId(initiativeId);
+            publicInitiativeService.addAuthorMessage(authorUIMessage);
             return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.AUTHOR_MESSAGE_ADDED, request);
         }
         else {
