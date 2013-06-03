@@ -91,7 +91,7 @@
                     <a href="${managementURL}?send-to-review=confirm#send-to-review" id="js-send-to-review" class="large-button js-send-to-review"><span class="large-icon mail"><@u.messageHTML "action.sendToReview.doNotCollect" /></span></a>
                 </div>
                 <div class="column col-1of2 last">
-                    <a href="${managementURL}?send-to-review=confirm-collect#send-to-review" id="js-send-to-review-collect" class="large-button js-send-to-review-collect"><span class="large-icon save-and-send"><@u.messageHTML "action.sendToReview.collect" /></span></a>
+                    <a href="${managementURL}?send-to-review=confirm-collect#send-to-review" id="js-send-to-review-collect" class="large-button js-send-to-review-collect"><span class="large-icon save-and-send"><@u.messageHTML "action.sendToReview.bigBtn" /></span></a>
                 </div>
                 <br class="clear" />
             </div>
@@ -139,7 +139,7 @@
                 
                 <form action="${springMacroRequestContext.requestUri}" method="POST" >
                     <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-                    <button type="submit" name="${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" id="modal-${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" value="${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" class="large-button"><span class="large-icon save-and-send"><@u.messageHTML "action.sendToReview.collect" /></button>
+                    <button type="submit" name="${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" id="modal-${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" value="${UrlConstants.ACTION_SEND_TO_REVIEW_COLLECT}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.sendToReview" /></button>
                     <a href="${managementURL}" class="push close"><@u.message "action.cancel" /></a>
                 </form>
             </@compress>
@@ -267,7 +267,7 @@
                     <p><@u.message "sendFixToReview.description" /></p>
                     <p><@u.message "sendFixToReview.instruction" /></p>
         
-                    <a href="${managementURL}?send-fix-to-review=confirm#send-fix-to-review" id="js-send-fix-to-review" class="small-button js-send-fix-to-review"><span class="small-icon save-and-send"><@u.message "action.sendFixToReview" /></span></a>
+                    <a href="${managementURL}?send-fix-to-review=confirm#send-fix-to-review" id="js-send-fix-to-review" class="small-button js-send-fix-to-review"><span class="small-icon save-and-send"><@u.message "action.sendToReview" /></span></a>
                 </div>
             </div>
         </#if>
@@ -277,10 +277,11 @@
                 <form action="${springMacroRequestContext.requestUri}" method="POST" >
                     <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
                     
-                    <p><@u.message "sendFixToReview.confirm.description" /></p>
+                    <p><@u.message "sendToReview.collect.confirm.description" /></p>
+                    <p><@u.message "sendToReview.collect.confirm.instruction" /></p>
                     
                     <div class="input-block-content">
-                        <button type="submit" name="${UrlConstants.ACTION_SEND_FIX_TO_REVIEW}" id="modal-${UrlConstants.ACTION_SEND_FIX_TO_REVIEW}" value="${UrlConstants.ACTION_SEND_FIX_TO_REVIEW}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.sendFixToReview.confirm" /></button>
+                        <button type="submit" name="${UrlConstants.ACTION_SEND_FIX_TO_REVIEW}" id="modal-${UrlConstants.ACTION_SEND_FIX_TO_REVIEW}" value="${UrlConstants.ACTION_SEND_FIX_TO_REVIEW}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.sendToReview" /></button>
                         <a href="${managementURL}#send-fix-to-review" class="push close"><@u.message "action.cancel" /></a>
                     </div>
                 </form>
