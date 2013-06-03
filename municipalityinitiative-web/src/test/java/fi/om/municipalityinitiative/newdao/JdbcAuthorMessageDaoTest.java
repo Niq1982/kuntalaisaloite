@@ -3,7 +3,6 @@ package fi.om.municipalityinitiative.newdao;
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
-import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +17,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.fail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={IntegrationTestConfiguration.class})
@@ -45,28 +43,23 @@ public class JdbcAuthorMessageDaoTest {
         Long initiative = testHelper.createSingleSent(testHelper.createTestMunicipality("Municipality"));
         AuthorMessage original = authorMessage(initiative);
 
-        authorMessageDao.put(original);
+        authorMessageDao.addAuthorMessage(original);
 
-        AuthorMessage result = authorMessageDao.pop(CONFIRMATION_CODE);
+        AuthorMessage result = authorMessageDao.getAuthorMessage(CONFIRMATION_CODE);
         ReflectionTestUtils.assertReflectionEquals(original, result);
 
     }
 
     @Test
-    public void get_deletes_the_authorMessage() {
+    public void add_and_delete() {
         Long initiative = testHelper.createSingleSent(testHelper.createTestMunicipality("Municipality"));
         AuthorMessage authorMessage = authorMessage(initiative);
 
-        authorMessageDao.put(authorMessage);
+        authorMessageDao.addAuthorMessage(authorMessage);
 
-        precondition(authorMessageDao.pop(CONFIRMATION_CODE), is(notNullValue()));
-//        authorMessageDao.deleteAuthorMessage(CONFIRMATION_CODE);
-        try {
-            assertThat(authorMessageDao.pop(CONFIRMATION_CODE), is(nullValue()));
-            fail("Should have thrown NotFoundException");
-        } catch (NotFoundException e) {
-
-        }
+        precondition(authorMessageDao.getAuthorMessage(CONFIRMATION_CODE), is(notNullValue()));
+        authorMessageDao.deleteAuthorMessage(CONFIRMATION_CODE);
+        assertThat(authorMessageDao.getAuthorMessage(CONFIRMATION_CODE), is(nullValue()));
 
     }
 

@@ -1,9 +1,10 @@
 package fi.om.municipalityinitiative.service;
 
-import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
-import fi.om.municipalityinitiative.dto.service.AuthorMessage;
-import fi.om.municipalityinitiative.newdao.*;
+import fi.om.municipalityinitiative.newdao.AuthorDao;
+import fi.om.municipalityinitiative.newdao.InitiativeDao;
+import fi.om.municipalityinitiative.newdao.MunicipalityDao;
+import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
@@ -23,22 +24,19 @@ import static fi.om.municipalityinitiative.util.SecurityUtil.assertAllowance;
 public class PublicInitiativeService {
 
     @Resource
-    private InitiativeDao initiativeDao;
+    InitiativeDao initiativeDao;
 
     @Resource
-    private AuthorDao authorDao;
+    AuthorDao authorDao;
 
     @Resource
-    private ParticipantDao participantDao;
+    ParticipantDao participantDao;
 
     @Resource
-    private EmailService emailService;
+    EmailService emailService;
 
     @Resource
-    private MunicipalityDao municipalityDao;
-
-    @Resource
-    private JdbcAuthorMessageDao authorMessageDao;
+    MunicipalityDao municipalityDao;
 
     public List<InitiativeListInfo> findMunicipalityInitiatives(InitiativeSearch search, LoginUserHolder loginUserHolder) {
 
@@ -130,29 +128,6 @@ public class PublicInitiativeService {
         participantDao.confirmParticipation(participantId, confirmationCode);
 
         return initiativeId;
-    }
-
-
-    @Transactional(readOnly = false)
-    public void addAuthorMessage(AuthorUIMessage authorUIMessage) {
-
-        String confirmationCode = RandomHashGenerator.randomString(20);
-        AuthorMessage authorMessage = new AuthorMessage(authorUIMessage, confirmationCode);
-        authorMessageDao.put(authorMessage);
-
-        // TODO: Implement
-        emailService.sendAuthorMessageConfirmationEmail(authorUIMessage.getContactEmail(), confirmationCode);
-
-    }
-
-    @Transactional(readOnly = false)
-    public void confirmAndSendAuthorMessage(String confirmationCode) {
-        AuthorMessage authorMessage = authorMessageDao.pop(confirmationCode);
-        List<Author> authors = authorDao.findAuthors(authorMessage.getInitiativeId());
-
-        // TODO: Implement
-        emailService.sendAuthorMessages(authorMessage, authors);
-
     }
 
 

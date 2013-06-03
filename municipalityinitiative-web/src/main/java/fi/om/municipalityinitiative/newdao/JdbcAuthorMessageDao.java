@@ -1,9 +1,11 @@
 package fi.om.municipalityinitiative.newdao;
 
+import com.mysema.query.Tuple;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
+import com.mysema.query.types.Expression;
+import com.mysema.query.types.MappingProjection;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
-import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.sql.QAuthorMessage;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,10 +19,24 @@ public class JdbcAuthorMessageDao implements AuthorMessageDao {
 
     @Resource
     PostgresQueryFactory queryFactory;
+    private Expression<AuthorMessage> authorMessageMapping = new MappingProjection<AuthorMessage>(AuthorMessage.class,
+            QAuthorMessage.authorMessage.all()) {
+        @Override
+        protected AuthorMessage map(Tuple row) {
+
+            AuthorMessage authorMessage = new AuthorMessage();
+            authorMessage.setInitiativeId(row.get(QAuthorMessage.authorMessage.initiativeId));
+            authorMessage.setContactName(row.get(QAuthorMessage.authorMessage.contactor));
+            authorMessage.setContactEmail(row.get(QAuthorMessage.authorMessage.contactorEmail));
+            authorMessage.setMessage(row.get(QAuthorMessage.authorMessage.message));
+            authorMessage.setConfirmationCode(row.get(QAuthorMessage.authorMessage.confirmationCode));
+            return authorMessage;
+        }
+    };
 
     @Override
     @Transactional(readOnly = false)
-    public Long put(AuthorMessage authorMessage) {
+    public Long addAuthorMessage(AuthorMessage authorMessage) {
         return queryFactory.insert(QAuthorMessage.authorMessage)
                 .set(QAuthorMessage.authorMessage.contactor, authorMessage.getContactName())
                 .set(QAuthorMessage.authorMessage.contactorEmail, authorMessage.getContactEmail())
@@ -32,21 +48,17 @@ public class JdbcAuthorMessageDao implements AuthorMessageDao {
     }
 
     @Override
-    @Transactional(readOnly = false)
-    public AuthorMessage pop(String confirmationCode) {
-        AuthorMessage authorMessage = queryFactory.from(QAuthorMessage.authorMessage)
+    public AuthorMessage getAuthorMessage(String confirmationCode) {
+        return queryFactory.from(QAuthorMessage.authorMessage)
                 .where(QAuthorMessage.authorMessage.confirmationCode.eq(confirmationCode))
-                .uniqueResult(Mappings.authorMessageMapping);
+                .uniqueResult(authorMessageMapping);
+    }
 
-        if (authorMessage == null) {
-            throw new NotFoundException("AuthorMessage", confirmationCode);
-        }
-
+    @Override
+    @Transactional(readOnly = false)
+    public void deleteAuthorMessage(String confirmationCode) {
         assertSingleAffection(queryFactory.delete(QAuthorMessage.authorMessage)
                 .where(QAuthorMessage.authorMessage.confirmationCode.eq(confirmationCode))
                 .execute());
-
-        return authorMessage;
     }
-
 }
