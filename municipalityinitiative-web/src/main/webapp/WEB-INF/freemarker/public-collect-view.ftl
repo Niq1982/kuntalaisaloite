@@ -104,7 +104,7 @@
         <div class="initiative-content-row">
             <@e.initiativeAuthor authors />
         
-            <p><a href="#" class="js-contact-author"><@u.message "contactAuthor.link" /></a></p>
+            <p><a href="#" class="js-contact-author"><@u.message key="contactAuthor.link" args=[authors.publicNameCount+authors.privateNameCount] /></a></p>
         </div>
         <#--
          * Do NOT show participate button:
@@ -142,7 +142,7 @@
             <input type="hidden" name="municipality" value="${initiative.municipality.id!""}"/>
 
             <div class="input-block-content no-top-margin">
-                <@u.systemMessage path="contactAuthor.description" type="info" showClose=false />  
+                <@u.systemMessage path="contactAuthor.description" args=[authors.publicNameCount+authors.privateNameCount] type="info" showClose=false />  
             </div>
             
             <div class="input-block-content">
@@ -295,7 +295,7 @@
         <#-- Modal: Participate initiative -->
         modalData.contactAuthor = function() {
             return [{
-                title:      '<@u.message "contactAuthor.title" />',
+                title:      '<@u.message key="contactAuthor.title" args=[authors.publicNameCount+authors.privateNameCount] />',
                 content:    '<#noescape>${contactAuthorForm?replace("'","&#39;")}</#noescape>'
             }]
         };
