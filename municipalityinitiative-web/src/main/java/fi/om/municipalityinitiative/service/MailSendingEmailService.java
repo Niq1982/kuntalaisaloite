@@ -33,6 +33,7 @@ public class MailSendingEmailService implements EmailService {
     private static final String AUTHOR_DELETED_TO_OTHER_AUTHORS = "author-deleted-to-other-authors";
     private static final String AUTHOR_DELETED_TO_DELETED_AUTHOR = "author-deleted-to-deleted-author";
     private static final String MANAGEMENT_HASH_RENEWED = "managementhash-renewed";
+    private static final String AUTHOR_MESSAGE_CONFIRMATION = "author-message-confirmation";
 
     @Resource
     private MessageSource messageSource;
@@ -188,8 +189,17 @@ public class MailSendingEmailService implements EmailService {
     }
 
     @Override
-    public void sendAuthorMessageConfirmationEmail(String contactEmail, String randomHash) {
-        throw new RuntimeException("Not implemented");
+    public void sendAuthorMessageConfirmationEmail(Initiative initiative, String contactEmail, String confirmationCode, Locale locale) {
+        HashMap<String, Object> dataMap = toDataMap(initiative, locale);
+        dataMap.put("contactEmail", contactEmail);
+        dataMap.put("confirmationCode", confirmationCode);
+        emailMessageConstructor
+                .fromTemplate(AUTHOR_MESSAGE_CONFIRMATION)
+                .addRecipient(contactEmail)
+                .withSubject(messageSource.getMessage("email.author.message.confirmation.subject", toArray(), locale))
+                .withDataMap(dataMap)
+                .send();
+
     }
 
     @Override

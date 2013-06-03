@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.service;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
+import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.newdao.*;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
@@ -140,8 +141,10 @@ public class PublicInitiativeService {
         AuthorMessage authorMessage = new AuthorMessage(authorUIMessage, confirmationCode);
         authorMessageDao.put(authorMessage);
 
+        Initiative initiative = initiativeDao.get(authorMessage.getInitiativeId());
+
         // TODO: Implement
-        emailService.sendAuthorMessageConfirmationEmail(authorUIMessage.getContactEmail(), confirmationCode);
+        emailService.sendAuthorMessageConfirmationEmail(initiative, authorUIMessage.getContactEmail(), confirmationCode, Locales.LOCALE_FI);
 
     }
 

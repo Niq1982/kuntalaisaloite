@@ -34,7 +34,7 @@ public interface EmailService {
 
     void sendManagementHashRenewed(Initiative initiative, String managementHash, String authorEmail);
 
-    void sendAuthorMessageConfirmationEmail(String contactEmail, String randomHash);
+    void sendAuthorMessageConfirmationEmail(Initiative initiative, String contactEmail, String randomHash, Locale localeFi);
 
     void sendAuthorMessages(AuthorMessage authorMessage, List<Author> authors);
 }
