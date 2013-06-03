@@ -13,9 +13,11 @@
 <@l.emailHtml title>
 
     <@b.mainContentBlock title>
+        <@b.initiativeDetails type=type showDate=true />
+    
         <p style="${pBothMargins!""}"><@u.message "email.managementhash.renewed.description" /></p>
-        <p>${initiative.name}</p>
-        <p style="${smallFont!""}"><@u.link urls.loginAuthor(managementHash) urls.loginAuthor(managementHash) /></p>
+
+        <@b.adminViewLink type />
     </@b.mainContentBlock>
 
     <@u.spacer "15" />

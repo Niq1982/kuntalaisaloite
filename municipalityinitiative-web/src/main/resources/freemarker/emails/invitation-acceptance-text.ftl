@@ -3,9 +3,6 @@
 <#import "../components/email-blocks.ftl" as b />
 
 <#assign type="text" />
-<#assign url = urls.loginAuthor(managementHash) />
-<#assign urlSv = urls.alt().loginAuthor(managementHash) />
-
 
 <@u.message "email.author.invitation.accepted.title" />
 
