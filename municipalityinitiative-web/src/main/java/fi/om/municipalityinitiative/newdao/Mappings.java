@@ -5,16 +5,10 @@ import com.mysema.query.Tuple;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
 import fi.om.municipalityinitiative.dto.Author;
-import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
-import fi.om.municipalityinitiative.dto.service.Initiative;
-import fi.om.municipalityinitiative.dto.service.Municipality;
-import fi.om.municipalityinitiative.dto.service.Participant;
+import fi.om.municipalityinitiative.dto.service.*;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
-import fi.om.municipalityinitiative.sql.QAuthor;
-import fi.om.municipalityinitiative.sql.QAuthorInvitation;
-import fi.om.municipalityinitiative.sql.QMunicipality;
-import fi.om.municipalityinitiative.sql.QParticipant;
+import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.DateTime;
@@ -130,6 +124,20 @@ public class Mappings {
 
                 }
             };
+    static public Expression<AuthorMessage> authorMessageMapping = new MappingProjection<AuthorMessage>(AuthorMessage.class,
+            QAuthorMessage.authorMessage.all()) {
+        @Override
+        protected AuthorMessage map(Tuple row) {
+
+            AuthorMessage authorMessage = new AuthorMessage();
+            authorMessage.setInitiativeId(row.get(QAuthorMessage.authorMessage.initiativeId));
+            authorMessage.setContactName(row.get(QAuthorMessage.authorMessage.contactor));
+            authorMessage.setContactEmail(row.get(QAuthorMessage.authorMessage.contactorEmail));
+            authorMessage.setMessage(row.get(QAuthorMessage.authorMessage.message));
+            authorMessage.setConfirmationCode(row.get(QAuthorMessage.authorMessage.confirmationCode));
+            return authorMessage;
+        }
+    };
 
     public static Municipality parseMunicipality(Tuple row) {
         return new Municipality(

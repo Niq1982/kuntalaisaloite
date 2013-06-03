@@ -1,25 +1,11 @@
-package fi.om.municipalityinitiative.dto.service;
+package fi.om.municipalityinitiative.dto.ui;
 
-import fi.om.municipalityinitiative.dto.ui.AuthorUIMessage;
-
-public class AuthorMessage {
+public class AuthorUIMessage {
 
     private Long initiativeId;
     private String contactEmail;
     private String contactName;
     private String message;
-    private String confirmationCode;
-
-    public AuthorMessage() {
-    }
-
-    public AuthorMessage(AuthorUIMessage authorUIMessage, String confirmationCode) {
-        this.initiativeId = authorUIMessage.getInitiativeId();
-        this.contactEmail = authorUIMessage.getContactEmail();
-        this.contactName = authorUIMessage.getContactName();
-        this.message = authorUIMessage.getMessage();
-        this.confirmationCode = confirmationCode;
-    }
 
     public Long getInitiativeId() {
         return initiativeId;
@@ -51,13 +37,5 @@ public class AuthorMessage {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public String getConfirmationCode() {
-        return confirmationCode;
-    }
-
-    public void setConfirmationCode(String confirmationCode) {
-        this.confirmationCode = confirmationCode;
     }
 }

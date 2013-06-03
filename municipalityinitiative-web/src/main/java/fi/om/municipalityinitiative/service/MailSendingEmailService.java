@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.service;
 import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
+import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
@@ -184,6 +185,16 @@ public class MailSendingEmailService implements EmailService {
                 .withSubject(messageSource.getMessage("email.participation.confirmation.subject", toArray(), locale))
                 .withDataMap(dataMap)
                 .send();
+    }
+
+    @Override
+    public void sendAuthorMessageConfirmationEmail(String contactEmail, String randomHash) {
+        throw new RuntimeException("Not implemented");
+    }
+
+    @Override
+    public void sendAuthorMessages(AuthorMessage authorMessage, List<Author> authors) {
+        throw new RuntimeException("Not implemented");
     }
 
     private static String[] toArray(String... name) {
