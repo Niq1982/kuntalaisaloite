@@ -125,7 +125,7 @@ public final class Urls {
     
     public static final String PARAM_AUTHOR_ID = "authorId";
 
-    public static final String PARAM_PARTICIPANT_CONFIRMATION_CODE = "confirmation";
+    public static final String PARAM_CONFIRMATION_CODE = "confirmation";
     
     public static final String PARAM_PARTICIPANT_ID = "participantId";
 
@@ -332,7 +332,7 @@ public final class Urls {
 
     public String confirmParticipant(Long participantId, String confirmCode) {
         return getLocalizedPageUrl(PARTICIPATING_CONFIRMATION_FI, PARTICIPATING_CONFIRMATION_SV).replace(ID_PARAMETER, participantId.toString())
-                + "?" + PARAM_PARTICIPANT_CONFIRMATION_CODE + "=" + confirmCode;
+                + "?" + PARAM_CONFIRMATION_CODE + "=" + confirmCode;
     }
 
     public String getEdit(Long initiativeId) {
@@ -531,6 +531,6 @@ public final class Urls {
     }
 
     public String confirmAuthorMessage(String confirmationCode) {
-        return getLocalizedPageUrl(AUTHOR_MESSAGE_FI, AUTHOR_MESSAGE_SV) + "?" + PARAM_PARTICIPANT_CONFIRMATION_CODE + "=" + confirmationCode;
+        return getLocalizedPageUrl(AUTHOR_MESSAGE_FI, AUTHOR_MESSAGE_SV) + "?" + PARAM_CONFIRMATION_CODE + "=" + confirmationCode;
     }
 }
