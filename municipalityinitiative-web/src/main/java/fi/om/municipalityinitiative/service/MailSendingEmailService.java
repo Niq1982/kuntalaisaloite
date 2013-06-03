@@ -190,13 +190,12 @@ public class MailSendingEmailService implements EmailService {
     }
 
     @Override
-    public void sendAuthorMessageConfirmationEmail(Initiative initiative, String contactEmail, String confirmationCode, Locale locale) {
+    public void sendAuthorMessageConfirmationEmail(Initiative initiative, AuthorMessage authorMessage, Locale locale) {
         HashMap<String, Object> dataMap = toDataMap(initiative, locale);
-        dataMap.put("contactEmail", contactEmail);
-        dataMap.put("confirmationCode", confirmationCode);
+        dataMap.put("authorMessage", authorMessage);
         emailMessageConstructor
                 .fromTemplate(AUTHOR_MESSAGE_CONFIRMATION)
-                .addRecipient(contactEmail)
+                .addRecipient(authorMessage.getContactEmail())
                 .withSubject(messageSource.getMessage("email.author.message.confirmation.subject", toArray(), locale))
                 .withDataMap(dataMap)
                 .send();

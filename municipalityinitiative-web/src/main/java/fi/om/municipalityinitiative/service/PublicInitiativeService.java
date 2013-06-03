@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.service;
 
-import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.dto.service.Initiative;
@@ -142,8 +141,7 @@ public class PublicInitiativeService {
         authorMessageDao.put(authorMessage);
 
         Initiative initiative = initiativeDao.get(authorMessage.getInitiativeId());
-
-        emailService.sendAuthorMessageConfirmationEmail(initiative, authorUIMessage.getContactEmail(), confirmationCode, Locales.LOCALE_FI);
+        emailService.sendAuthorMessageConfirmationEmail(initiative, authorMessage, Locales.LOCALE_FI);
 
     }
 
