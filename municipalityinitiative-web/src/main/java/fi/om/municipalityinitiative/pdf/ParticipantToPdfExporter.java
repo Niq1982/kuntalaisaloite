@@ -69,8 +69,30 @@ public class ParticipantToPdfExporter {
 
         Paragraph preface = new Paragraph();
 
-        addEmptyLine(preface, 2);
-        preface.add(new Paragraph("Osallistujat", subTitle));
+        addEmptyLine(preface, 1);
+        
+        preface.add(new Paragraph("Jäsenyysperuste, jos osallistuja ei ole kunnan asukas", subTitle));
+        
+        com.itextpdf.text.List list = new com.itextpdf.text.List(true, 20);
+        list.add(new ListItem("Nimenkirjoitusoikeus yhteisössä, laitoksessa tai säätiössä, jonka kotipaikka on aloitetta koskevassa kunnassa", bodyText));
+        list.add(new ListItem("Nimenkirjoitusoikeus yrityksessä, jonka kotipaikka on aloitetta koskevassa kunnassa", bodyText));
+        list.add(new ListItem("Hallinto-oikeus tai omistus kiinteään omaisuuteen aloitetta koskevassa kunnassa", bodyText));
+        
+        preface.add(list);
+        
+        addEmptyLine(preface, 1);
+        
+        preface.add(new Paragraph("SV Jäsenyysperuste, jos osallistuja ei ole kunnan asukas", subTitle));
+        
+        list = new com.itextpdf.text.List(true, 20);
+        list.add(new ListItem("SV Nimenkirjoitusoikeus yhteisössä, laitoksessa tai säätiössä, jonka kotipaikka on aloitetta koskevassa kunnassa", bodyText));
+        list.add(new ListItem("SV Nimenkirjoitusoikeus yrityksessä, jonka kotipaikka on aloitetta koskevassa kunnassa", bodyText));
+        list.add(new ListItem("SV Hallinto-oikeus tai omistus kiinteään omaisuuteen aloitetta koskevassa kunnassa", bodyText));
+        
+        preface.add(list);
+        
+        addEmptyLine(preface, 1);
+        preface.add(new Paragraph("Osallistujat / Deltagar", subTitle));
 
         addEmptyLine(preface, 1);
         createTable(preface, participants);
@@ -93,9 +115,9 @@ public class ParticipantToPdfExporter {
     private void addMetaData() {
         document.addTitle("Kuntalaisaloite " + initiative.getMunicipality().getLocalizedName(Locales.LOCALE_FI));
         document.addSubject(initiative.getName());
-        document.addKeywords("Java, PDF, iText"); // TODO: Remove
-        document.addAuthor("Lars Vogel");
-        document.addCreator("Lars Vogel");
+        document.addKeywords("Kuntalaisaloite"); // TODO: Remove
+        document.addAuthor("Kuntalaisaloite.fi");
+        document.addCreator("Kuntalaisaloite.fi");
     }
 
     private void addTitlePage()
@@ -126,10 +148,10 @@ public class ParticipantToPdfExporter {
         table.setHorizontalAlignment(Element.ALIGN_LEFT);
 
         table.addCell(createCell(" ", true));
-        table.addCell(createCell("Päivämäärä\nDatum", true));
+        table.addCell(createCell("Pvm\nDatum", true));
         table.addCell(createCell("Nimi\nNamn", true));
         table.addCell(createCell("Kotikunta\nHemkommun", true));
-        table.addCell(createCell("Jäsenyys", true));
+        table.addCell(createCell("Jäsenyys\nMedlemskap", true));
 
         table.setHeaderRows(1);
 
@@ -140,8 +162,21 @@ public class ParticipantToPdfExporter {
             table.addCell(createCell(String.valueOf(count), false));
             table.addCell(createCell(participant.getParticipateDate().toString(DATE_FORMAT), false));
             table.addCell(createCell(participant.getName(), false));
-            table.addCell(createCell(participant.getHomeMunicipality().getNameFi() + ", " + participant.getHomeMunicipality().getNameSv(), false));
-            table.addCell(createCell(participant.getMembership() == Membership.none ? "" : participant.getMembership().name(), false));
+            table.addCell(createCell(participant.getHomeMunicipality().getNameFi() + "\n" + participant.getHomeMunicipality().getNameSv(), false));
+            
+            String membershipType = "";
+            
+            if (participant.getMembership() == Membership.community) {
+                membershipType = "Yhteisö\nGemeskap";
+            } else if (participant.getMembership() == Membership.company) {
+                membershipType = "Yritys\nFöretag";
+            } else if (participant.getMembership() == Membership.property) {
+                membershipType = "Omaisuus\nEgendom";
+            } else {
+                membershipType = "";
+            }
+            
+            table.addCell(createCell(membershipType, false));
         }
 
         subCatPart.add(table);
@@ -156,7 +191,7 @@ public class ParticipantToPdfExporter {
 
         PdfPCell c1 = new PdfPCell(new Phrase(header, fontStyle));
         c1.setHorizontalAlignment(Element.ALIGN_LEFT);
-        c1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        c1.setVerticalAlignment(Element.ALIGN_TOP);
         c1.setPadding(4);
 
         return c1;
