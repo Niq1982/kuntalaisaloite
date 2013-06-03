@@ -88,7 +88,8 @@ public class InitiativeViewController extends BaseController {
                     municipalityService.findAllMunicipalities(locale),
                     participantService.getParticipantCount(initiativeId),
                     new ParticipantUICreateDto(),
-                    userService.hasManagementRightForInitiative(initiativeId, request)).view(model, Urls.get(locale).alt().view(initiativeId));
+                    userService.hasManagementRightForInitiative(initiativeId, request),
+                    new AuthorUIMessage()).view(model, Urls.get(locale).alt().view(initiativeId));
         }
         else {
             return ViewGenerator.singleView(initiativeInfo, authorService.findPublicAuthors(initiativeId))
@@ -112,8 +113,8 @@ public class InitiativeViewController extends BaseController {
                     authorService.findPublicAuthors(initiativeId), municipalityService.findAllMunicipalities(locale),
                     participantService.getParticipantCount(initiativeId),
                     participant,
-                    userService.hasManagementRightForInitiative(initiativeId, request)
-            ).view(model, Urls.get(locale).alt().view(initiativeId));
+                    userService.hasManagementRightForInitiative(initiativeId, request),
+                    new AuthorUIMessage()).view(model, Urls.get(locale).alt().view(initiativeId));
         }
     }
 
@@ -239,11 +240,11 @@ public class InitiativeViewController extends BaseController {
 
     @RequestMapping(value = {VIEW_FI, VIEW_SV}, method = POST, params = ACTION_CONTACT_AUTHOR)
     public String addAuthorMessage(@PathVariable("id") Long initiativeId,
-            AuthorUIMessage authorUIMessage,
+            @ModelAttribute("authorMessage") AuthorUIMessage authorUIMessage,
             Model model, BindingResult bindingResult, Locale locale, HttpServletRequest request) {
 
+        authorUIMessage.setInitiativeId(initiativeId);
         if (validationService.validationSuccessful(authorUIMessage, bindingResult, model)) {
-            authorUIMessage.setInitiativeId(initiativeId);
             publicInitiativeService.addAuthorMessage(authorUIMessage);
             return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.AUTHOR_MESSAGE_ADDED, request);
         }
