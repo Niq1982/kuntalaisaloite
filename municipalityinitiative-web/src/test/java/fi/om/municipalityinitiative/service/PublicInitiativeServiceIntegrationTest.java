@@ -8,6 +8,7 @@ import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.ui.*;
+import fi.om.municipalityinitiative.sql.QAuthorMessage;
 import fi.om.municipalityinitiative.util.*;
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -151,6 +152,23 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         assertThat(initiativeForEdit.getMembership(), is(prepareDto().getMunicipalMembership()));
 
         // Note that all fields are not set when preparing
+    }
+
+    @Test
+    public void addAuthorMessage_increases_amount_of_author_messages_and_confirming_deletes() {
+        AuthorUIMessage authorUIMessage = new AuthorUIMessage();
+        authorUIMessage.setInitiativeId(testHelper.createSingleSent(testMunicipality.getId()));
+        authorUIMessage.setContactEmail("contact@example.com");
+        authorUIMessage.setMessage("Message");
+        authorUIMessage.setContactName("Contact Name");
+
+        precondition(testHelper.countAll(QAuthorMessage.authorMessage), is(0L));
+
+        service.addAuthorMessage(authorUIMessage);
+        assertThat(testHelper.countAll(QAuthorMessage.authorMessage), is(1L));
+
+        service.confirmAndSendAuthorMessage(RandomHashGenerator.getPrevious());
+        assertThat(testHelper.countAll(QAuthorMessage.authorMessage), is(0L));
     }
 
     private static ParticipantUICreateDto participantUICreateDto() {

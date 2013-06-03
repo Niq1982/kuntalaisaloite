@@ -1,21 +1,16 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dao.InvitationNotValidException;
+import fi.om.municipalityinitiative.dto.service.*;
+import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
+import fi.om.municipalityinitiative.newdao.AuthorMessageDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
-import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
-import fi.om.municipalityinitiative.dto.service.Initiative;
-import fi.om.municipalityinitiative.dto.service.ManagementSettings;
-import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
-import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUIConfirmDto;
-import fi.om.municipalityinitiative.dto.ui.PublicAuthors;
-import fi.om.municipalityinitiative.dto.ui.ContactInfo;
-import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUICreateDto;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.util.SecurityUtil;
 import org.joda.time.DateTime;
@@ -51,7 +46,7 @@ public class AuthorService {
         authorInvitation.setInitiativeId(initiativeId);
         authorInvitation.setEmail(uiCreateDto.getAuthorEmail());
         authorInvitation.setName(uiCreateDto.getAuthorName());
-        authorInvitation.setConfirmationCode(RandomHashGenerator.randomString(20));
+        authorInvitation.setConfirmationCode(RandomHashGenerator.shortHash());
         authorInvitation.setInvitationTime(new DateTime());
 
         authorDao.addAuthorInvitation(authorInvitation);
@@ -149,7 +144,7 @@ public class AuthorService {
 
     private String createAuthorAndParticipant(Long initiativeId, AuthorInvitationUIConfirmDto confirmDto) {
         ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(confirmDto, initiativeId);
-        String managementHash = RandomHashGenerator.randomString(40);
+        String managementHash = RandomHashGenerator.longHash();
         Long participantId = participantDao.prepareParticipant(initiativeId, confirmDto.getHomeMunicipality(), participantCreateDto.getEmail(), participantCreateDto.getMunicipalMembership());
         Long authorId = authorDao.createAuthor(initiativeId, participantId, managementHash);
         authorDao.updateAuthorInformation(authorId, confirmDto.getContactInfo());

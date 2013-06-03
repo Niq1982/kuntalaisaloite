@@ -145,10 +145,20 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
     }
 
     @Test
-    public void send_invitation_acceptanve() throws Exception {
+    public void send_invitation_acceptance() throws Exception {
 
         emailService.sendAuthorConfirmedInvitation(createDefaultInitiative(), CONTACT_EMAIL, "hash", Locales.LOCALE_FI);
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(Urls.get(Locales.LOCALE_FI).loginAuthor("hash")));
+
+    }
+
+    @Test
+    public void send_author_message_confirmation_contains_all_information() throws Exception {
+        String confirmationCode = "conf-code";
+        emailService.sendAuthorMessageConfirmationEmail(createDefaultInitiative(), CONTACT_EMAIL, confirmationCode, Locales.LOCALE_FI);
+
+        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Olet lähettämässä viestiä aloitteen vastuuhenkilöille"));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(Urls.get(Locales.LOCALE_FI).confirmAuthorMessage(confirmationCode)));
 
     }
 }

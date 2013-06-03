@@ -120,6 +120,11 @@ public class AppConfiguration {
     }
 
     @Bean
+    public AuthorMessageDao authorMessageDao() {
+        return new JdbcAuthorMessageDao();
+    }
+
+    @Bean
     public InfoTextDao infoTextDao() {
         return new JdbcInfoTextDao();
     }

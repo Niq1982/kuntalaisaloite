@@ -67,6 +67,7 @@ public class TestHelper {
 
     @Transactional(readOnly=false)
     public void dbCleanup() {
+        queryFactory.delete(QAuthorMessage.authorMessage).execute();
         queryFactory.delete(QAuthorInvitation.authorInvitation).execute();
         queryFactory.delete(QAuthor.author).execute();
         queryFactory.delete(QParticipant.participant).execute();
