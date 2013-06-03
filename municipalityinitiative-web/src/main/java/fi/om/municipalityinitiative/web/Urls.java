@@ -102,9 +102,9 @@ public final class Urls {
 
     public static final String IMAGES = "/images";
 
-    public static final String CONFIRM_AUTHOR_MESSAGE_FI = "/fi/viesti";
+    public static final String AUTHOR_MESSAGE_FI = "/fi/viesti";
 
-    public static final String CONFIRM_AUTHOR_MESSAGE_SV = "/sv/meddelande";
+    public static final String AUTHOR_MESSAGE_SV = "/sv/meddelande";
 
     public static Urls FI = null;
     
@@ -529,6 +529,6 @@ public final class Urls {
     }
 
     public String confirmAuthorMessage(String confirmationCode) {
-        return getLocalizedPageUrl(CONFIRM_AUTHOR_MESSAGE_FI, CONFIRM_AUTHOR_MESSAGE_SV) + "?" + PARAM_PARTICIPANT_CONFIRMATION_CODE + "=" + confirmationCode;
+        return getLocalizedPageUrl(AUTHOR_MESSAGE_FI, AUTHOR_MESSAGE_SV) + "?" + PARAM_PARTICIPANT_CONFIRMATION_CODE + "=" + confirmationCode;
     }
 }

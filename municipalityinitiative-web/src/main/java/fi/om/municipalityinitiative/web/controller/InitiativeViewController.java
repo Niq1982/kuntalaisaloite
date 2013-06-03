@@ -237,6 +237,22 @@ public class InitiativeViewController extends BaseController {
         }
     }
 
+    @RequestMapping(value = {AUTHOR_MESSAGE_FI, AUTHOR_MESSAGE_SV}, method = POST)
+    public String addAuthorMessage(
+            AuthorUIMessage authorUIMessage,
+            Model model, BindingResult bindingResult, Locale locale, HttpServletRequest request) {
+
+        if (validationService.validationSuccessful(authorUIMessage, bindingResult, model)) {
+
+
+        }
+        else {
+
+        }
+        return "";
+
+    }
+
     @RequestMapping(value={IFRAME_FI, IFRAME_SV}, method=GET)
     public String iframe(InitiativeSearch search, Model model, Locale locale, HttpServletRequest request) {
         Urls urls = Urls.get(locale);

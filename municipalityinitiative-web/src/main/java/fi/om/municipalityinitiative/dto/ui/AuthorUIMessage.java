@@ -1,10 +1,24 @@
 package fi.om.municipalityinitiative.dto.ui;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
+// TODO: Validate max lengths
 public class AuthorUIMessage {
 
+    @NotNull
     private Long initiativeId;
+
+    @NotEmpty
+    @Pattern(regexp = ContactInfo.EMAIL_PATTERN)
     private String contactEmail;
+
+    @NotEmpty
     private String contactName;
+
+    @NotEmpty
     private String message;
 
     public Long getInitiativeId() {
