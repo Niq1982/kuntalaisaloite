@@ -157,7 +157,7 @@ public class ModerationService {
     public void renewManagementHash(OmLoginUserHolder omLoginUserHolder, Long authorId) {
         omLoginUserHolder.assertOmUser();
 
-        String newManagementHash = RandomHashGenerator.randomString(40);
+        String newManagementHash = RandomHashGenerator.longHash();
         authorDao.updateManagementHash(authorId, newManagementHash);
 
         Set<Long> authorsInitiatives = authorDao.getAuthorsInitiatives(newManagementHash);

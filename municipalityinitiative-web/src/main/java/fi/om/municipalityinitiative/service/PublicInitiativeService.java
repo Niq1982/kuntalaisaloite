@@ -70,7 +70,7 @@ public class PublicInitiativeService {
         ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(participant, initiativeId);
         participantCreateDto.setMunicipalityInitiativeId(initiativeId);
 
-        String confirmationCode = RandomHashGenerator.randomString(20);
+        String confirmationCode = RandomHashGenerator.shortHash();
         Long participantId = participantDao.create(participantCreateDto, confirmationCode);
 
         emailService.sendParticipationConfirmation(
@@ -96,7 +96,7 @@ public class PublicInitiativeService {
                 createDto.hasMunicipalMembership() ? createDto.getMunicipalMembership() : Membership.none
         ); // XXX: Remove franchise?
         // XXX: Create dto?
-        String managementHash = RandomHashGenerator.randomString(40);
+        String managementHash = RandomHashGenerator.longHash();
         Long authorId = authorDao.createAuthor(initiativeId, participantId, managementHash);
 
         emailService.sendPrepareCreatedEmail(initiativeDao.get(initiativeId), authorId, managementHash, createDto.getParticipantEmail(), locale);
@@ -137,13 +137,12 @@ public class PublicInitiativeService {
     @Transactional(readOnly = false)
     public void addAuthorMessage(AuthorUIMessage authorUIMessage) {
 
-        String confirmationCode = RandomHashGenerator.randomString(20);
+        String confirmationCode = RandomHashGenerator.shortHash();
         AuthorMessage authorMessage = new AuthorMessage(authorUIMessage, confirmationCode);
         authorMessageDao.put(authorMessage);
 
         Initiative initiative = initiativeDao.get(authorMessage.getInitiativeId());
 
-        // TODO: Implement
         emailService.sendAuthorMessageConfirmationEmail(initiative, authorUIMessage.getContactEmail(), confirmationCode, Locales.LOCALE_FI);
 
     }

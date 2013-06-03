@@ -26,4 +26,12 @@ public class RandomHashGenerator {
     public static String getPrevious() {
         return previous;
     }
+
+    public static String longHash() {
+        return RandomHashGenerator.randomString(40);
+    }
+
+    public static String shortHash() {
+        return RandomHashGenerator.randomString(20);
+    }
 }

@@ -46,7 +46,7 @@ public class AuthorService {
         authorInvitation.setInitiativeId(initiativeId);
         authorInvitation.setEmail(uiCreateDto.getAuthorEmail());
         authorInvitation.setName(uiCreateDto.getAuthorName());
-        authorInvitation.setConfirmationCode(RandomHashGenerator.randomString(20));
+        authorInvitation.setConfirmationCode(RandomHashGenerator.shortHash());
         authorInvitation.setInvitationTime(new DateTime());
 
         authorDao.addAuthorInvitation(authorInvitation);
@@ -144,7 +144,7 @@ public class AuthorService {
 
     private String createAuthorAndParticipant(Long initiativeId, AuthorInvitationUIConfirmDto confirmDto) {
         ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(confirmDto, initiativeId);
-        String managementHash = RandomHashGenerator.randomString(40);
+        String managementHash = RandomHashGenerator.longHash();
         Long participantId = participantDao.prepareParticipant(initiativeId, confirmDto.getHomeMunicipality(), participantCreateDto.getEmail(), participantCreateDto.getMunicipalMembership());
         Long authorId = authorDao.createAuthor(initiativeId, participantId, managementHash);
         authorDao.updateAuthorInformation(authorId, confirmDto.getContactInfo());
