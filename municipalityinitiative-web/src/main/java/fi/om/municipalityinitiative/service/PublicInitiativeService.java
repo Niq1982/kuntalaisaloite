@@ -150,10 +150,11 @@ public class PublicInitiativeService {
     @Transactional(readOnly = false)
     public void confirmAndSendAuthorMessage(String confirmationCode) {
         AuthorMessage authorMessage = authorMessageDao.pop(confirmationCode);
-        List<Author> authors = authorDao.findAuthors(authorMessage.getInitiativeId());
 
-        // TODO: Implement
-        emailService.sendAuthorMessages(authorMessage, authors);
+        Initiative initiative = initiativeDao.get(authorMessage.getInitiativeId());
+        List<String> authorEmails = authorDao.getAuthorEmails(authorMessage.getInitiativeId());
+
+        emailService.sendAuthorMessages(initiative, authorMessage, authorEmails);
 
     }
 

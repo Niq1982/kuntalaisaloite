@@ -36,5 +36,5 @@ public interface EmailService {
 
     void sendAuthorMessageConfirmationEmail(Initiative initiative, String contactEmail, String randomHash, Locale localeFi);
 
-    void sendAuthorMessages(AuthorMessage authorMessage, List<Author> authors);
+    void sendAuthorMessages(Initiative initiative, AuthorMessage authorMessage, List<String> authorEmails);
 }
