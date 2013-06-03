@@ -103,8 +103,9 @@
     
         <div class="initiative-content-row">
             <@e.initiativeAuthor authors />
-        </div>
         
+            <p><a href="#" class="js-contact-author"><@u.message "contactAuthor.link" /></a></p>
+        </div>
         <#--
          * Do NOT show participate button:
          *  - when modal request message is showed
@@ -122,6 +123,64 @@
         </div>
         
     </div>
+    
+    <#assign contactAuthorForm>
+    <@compress single_line=true>
+    
+        <#-- Participate form errors summary    
+        <@u.errorsSummary path="participant.*" prefix="participant."/> -->
+    
+        <#-- Do not use NOSCRIPT here as it will be descendant of another NOSCRIPT. -->
+        <div class="js-hide">
+            <@f.cookieWarning springMacroRequestContext.requestUri />
+        </div>
+        
+        <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-contact-author" class="sodirty <#if hasErrors>has-errors</#if>">
+            <@f.securityFilters/>
+            <@f.notTooFastField participant />
+    
+            <input type="hidden" name="municipality" value="${initiative.municipality.id!""}"/>
+
+            <div class="input-block-content no-top-margin">
+                <@u.systemMessage path="contactAuthor.description" type="info" showClose=false />  
+            </div>
+            
+            <div class="input-block-content">
+                <label class="input-header" for="contactInfo.name">
+                    Viesti <span class="icon-small required trigger-tooltip"></span>
+                </label>
+                <textarea></textarea>
+            </div>
+            
+             <div class="input-block-content">
+                <#--<@f.textField path="participant.participantName" required="required" optional=false cssClass="large" maxLength="512" />-->
+
+                <label class="input-header" for="contactInfo.name">
+                    Etu- ja sukunimi <span class="icon-small required trigger-tooltip"></span>
+                </label>
+            
+                <input id="contactInfo.name" name="contactInfo.name" class="large" maxlength="100" type="text">
+            </div>
+            
+            <div class="input-block-content">
+                <#--<@f.textField path="participant.participantEmail" required="required" optional=true cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />-->
+                
+                <label class="input-header" for="contactInfo.name">
+                    Sähköpostiosoite <span class="icon-small required trigger-tooltip"></span>
+                </label>
+            
+                <input id="contactInfo.email" name="contactInfo.email" class="large" maxlength="100" type="text">
+            </div>
+
+            <div class="input-block-content">
+                <button id="participate" type="submit" name="save" value="true" class="small-button"><span class="small-icon mail">Lähetä viesti</span></button>
+                <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
+            </div>
+        
+        </form>
+    
+    </@compress>
+    </#assign>
     
     <#--
         <div class="initiative-content-row last">
@@ -231,15 +290,27 @@
             </#if>
             
             var messageData = {};
-    
-            <#-- jsMessage: Warning if cookies are not enabled -->
-            messageData.warningCookiesDisabled = function() {
-                return [{
-                    type:      'warning',
-                    content:    '<h3><@u.message "warning.cookieError.title" /></h3><div><@u.messageHTML key="warning.cookieError.description" args=[springMacroRequestContext.requestUri] /></div>'
-                }]
-            };
         </#if>
+        
+        <#-- Modal: Participate initiative -->
+        modalData.contactAuthor = function() {
+            return [{
+                title:      '<@u.message "contactAuthor.title" />',
+                content:    '<#noescape>${contactAuthorForm?replace("'","&#39;")}</#noescape>'
+            }]
+        };
+        
+        
+        
+        
+        <#-- jsMessage: Warning if cookies are not enabled -->
+        messageData.warningCookiesDisabled = function() {
+            return [{
+                type:      'warning',
+                content:    '<h3><@u.message "warning.cookieError.title" /></h3><div><@u.messageHTML key="warning.cookieError.description" args=[springMacroRequestContext.requestUri] /></div>'
+            }]
+        };
+        
     </script>
 
 </@l.main>

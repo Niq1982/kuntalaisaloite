@@ -956,6 +956,16 @@ $('.municipality-filter').change( function() {
 		generateModal(modalData.participateFormInvalid(), 'full');
 	}
 	
+	// Contact author
+	$('.js-contact-author').click(function(){
+		try {
+			generateModal(modalData.contactAuthor(), 'full');
+			return false;
+		} catch(e) {
+			console.log(e);
+		}
+	});
+	
 	$('.js-renew-management-hash').click(function(){
 		$('.js-renew-management-hash.active').removeClass('active');
 		$(this).addClass('active');
