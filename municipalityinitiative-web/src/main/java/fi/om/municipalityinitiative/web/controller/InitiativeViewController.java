@@ -237,19 +237,17 @@ public class InitiativeViewController extends BaseController {
         }
     }
 
-    @RequestMapping(value = {AUTHOR_MESSAGE_FI, AUTHOR_MESSAGE_SV}, method = POST)
-    public String addAuthorMessage(
+    @RequestMapping(value = {VIEW_FI, VIEW_SV}, method = POST, params = ACTION_CONTACT_AUTHOR)
+    public String addAuthorMessage(@PathVariable("id") Long initiativeId,
             AuthorUIMessage authorUIMessage,
             Model model, BindingResult bindingResult, Locale locale, HttpServletRequest request) {
 
         if (validationService.validationSuccessful(authorUIMessage, bindingResult, model)) {
-
-
+            return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.AUTHOR_MESSAGE_ADDED, request);
         }
         else {
-
+            return view(initiativeId, model, locale, request);
         }
-        return "";
 
     }
 

@@ -156,6 +156,8 @@ public final class Urls {
     public static final String ACTION_DELETE_AUTHOR = "action-delete-author";
     
     public static final String ACTION_DELETE_PARTICIPANT = "action-delete-participant";
+
+    public static final String ACTION_CONTACT_AUTHOR = "action-contact-author";
     
     // Municipality initiative ENDS
 
