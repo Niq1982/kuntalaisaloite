@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
@@ -167,6 +168,15 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 
         service.confirmAndSendAuthorMessage(RandomHashGenerator.getPrevious());
         assertThat(testHelper.countAll(QAuthorMessage.authorMessage), is(0L));
+    }
+
+    @Test
+    public void confirmAuthorMessage_sends_email_to_authors() {
+        String confirmationCode = "conf-code";
+        testHelper.createAuthorMessage(new AuthorMessage(authorUIMessage(), confirmationCode));
+
+        service.confirmAndSendAuthorMessage(confirmationCode);
+        assertOneEmailSent(TestHelper.DEFAULT_PARTICIPANT_EMAIL, "Olet saanut yhteydenoton aloitteeseesi liittyen / Samma på svenska");
     }
 
     @Test

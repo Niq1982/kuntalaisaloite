@@ -151,7 +151,6 @@ public class PublicInitiativeService {
         AuthorMessage authorMessage = authorMessageDao.pop(confirmationCode);
 
         Initiative initiative = initiativeDao.get(authorMessage.getInitiativeId());
-        List<String> authorEmails = authorDao.getAuthorEmails(authorMessage.getInitiativeId());
 
         emailService.sendAuthorMessages(initiative, authorMessage);
 
