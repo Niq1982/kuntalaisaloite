@@ -127,7 +127,6 @@
     <#assign contactAuthorForm>
     <@compress single_line=true>
     
-        
         <@u.errorsSummary path="authorMessage.*" prefix="authorMessage."/>
     
         <#-- Do not use NOSCRIPT here as it will be descendant of another NOSCRIPT. -->
@@ -148,26 +147,14 @@
             
              <div class="input-block-content">
                 <@f.textField path="authorMessage.contactName" required="required" optional=false cssClass="large" maxLength="512" />
-
-                <#--<label class="input-header" for="contactInfo.name">
-                    Etu- ja sukunimi <span class="icon-small required trigger-tooltip"></span>
-                </label>-->
-
             </div>
             
             <div class="input-block-content">
                 <@f.textField path="authorMessage.contactEmail" required="required" optional=true cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
-                
-                <#--<label class="input-header" for="contactInfo.name">
-                    Sähköpostiosoite <span class="icon-small required trigger-tooltip"></span>
-                </label>
-            
-                <input id="contactInfo.email" name="contactInfo.email" class="large" maxlength="100" type="text">
-                -->
             </div>
 
             <div class="input-block-content">
-                <button id="participate" type="submit" name="${UrlConstants.ACTION_CONTACT_AUTHOR}" value="true" class="small-button"><span class="small-icon mail">Lähetä viesti</span></button>
+                <button id="participate" type="submit" name="${UrlConstants.ACTION_CONTACT_AUTHOR}" value="true" class="small-button"><span class="small-icon mail"><@u.message "action.sendMessage" /></span></button>
                 <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
             </div>
         

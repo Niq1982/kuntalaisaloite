@@ -18,11 +18,16 @@
         <p style="${pBothMargins!""}"><@u.message "email.author.message.confirmation.description" /></p>
         <p style="${pBothMargins!""}"><@u.message "email.author.message.confirmation.description.2" /></p>
 
-        <p>${authorMessage.contactName} (${authorMessage.contactEmail} )</p>
-        <p>${authorMessage.message}</p>
+        <h4 style="${h4!""}"><@u.message "email.author.message.to.authors.sender" /></h4>
+        <p style="${pBottomMargin!""}">${authorMessage.contactName}<br/>
+        <@u.link "mailto:"+authorMessage.contactEmail authorMessage.contactEmail /></p>
+        
+        <h4 style="${h4!""}"><@u.message "email.author.message.to.authors.message" /></h4>
+        <p style="${pBottomMargin!""}">${authorMessage.message}</p>
 
         <#assign label><@u.message "email.author.message.confirmation.verify" /></#assign>
         <@u.button label urls.confirmAuthorMessage(authorMessage.confirmationCode) "green" />
+        <br/><br/>
 
     </@b.mainContentBlock>
 
