@@ -42,6 +42,8 @@ public class PublicInitiativeService {
 
     public List<InitiativeListInfo> findMunicipalityInitiatives(InitiativeSearch search, LoginUserHolder loginUserHolder) {
 
+        // XXX: This switching from all to omAll is pretty nasty, because value must be set back to original after usage
+        // because UI is not prepared to omAll value, it's only for dao actually.
         if (loginUserHolder.getUser().isOmUser() && search.getShow() == InitiativeSearch.Show.all) {
             search.setShow(InitiativeSearch.Show.omAll);
         }
@@ -93,8 +95,7 @@ public class PublicInitiativeService {
                 createDto.getHomeMunicipality(),
                 createDto.getParticipantEmail(),
                 createDto.hasMunicipalMembership() ? createDto.getMunicipalMembership() : Membership.none
-        ); // XXX: Remove franchise?
-        // XXX: Create dto?
+        );
         String managementHash = RandomHashGenerator.longHash();
         Long authorId = authorDao.createAuthor(initiativeId, participantId, managementHash);
 
