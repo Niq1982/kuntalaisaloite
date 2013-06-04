@@ -160,12 +160,16 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
 
     @Test
     public void send_author_message_confirmation_contains_all_information() throws Exception {
-        String confirmationCode = "conf-code";
-        emailService.sendAuthorMessageConfirmationEmail(createDefaultInitiative(), CONTACT_EMAIL, confirmationCode, Locales.LOCALE_FI);
+        AuthorMessage authorMessage = authorMessage();
+        authorMessage.setConfirmationCode("conf-code");
+        emailService.sendAuthorMessageConfirmationEmail(createDefaultInitiative(), authorMessage, Locales.LOCALE_FI);
 
-        assertThat(javaMailSenderFake.getSingleRecipient(), is(CONTACT_EMAIL));
+        assertThat(javaMailSenderFake.getSingleRecipient(), is(authorMessage.getContactEmail()));
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Olet lähettämässä viestiä aloitteen vastuuhenkilöille"));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(Urls.get(Locales.LOCALE_FI).confirmAuthorMessage(confirmationCode)));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(authorMessage.getMessage()));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(authorMessage.getContactEmail()));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(authorMessage.getContactName()));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(Urls.get(Locales.LOCALE_FI).confirmAuthorMessage("conf-code")));
 
     }
 
@@ -173,6 +177,19 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
     public void send_message_to_authors_contains_all_information() throws Exception {
 
         List<String> authorEmails = Collections.singletonList("author@example.com");
+        AuthorMessage authorMessage = authorMessage();
+
+        emailService.sendAuthorMessages(createDefaultInitiative(), authorMessage, authorEmails);
+
+        assertThat(javaMailSenderFake.getSingleRecipient(), is(authorEmails.get(0)));
+        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Yhteydenotto aloitteeseesi liittyen / SV"));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(authorMessage.getContactEmail()));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(authorMessage.getContactName()));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(authorMessage.getMessage()));
+
+    }
+
+    private static AuthorMessage authorMessage() {
         String contactorEmail = "someContactor@example.com";
         String contactName = "Contact Name";
         String message = "This is the message";
@@ -181,14 +198,6 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
         authorMessage.setContactEmail(contactorEmail);
         authorMessage.setContactName(contactName);
         authorMessage.setMessage(message);
-
-        emailService.sendAuthorMessages(createDefaultInitiative(), authorMessage, authorEmails);
-
-        assertThat(javaMailSenderFake.getSingleRecipient(), is(authorEmails.get(0)));
-        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Yhteydenotto aloitteeseesi liittyen / SV"));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(contactorEmail));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(contactName));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(message));
-
+        return authorMessage;
     }
 }

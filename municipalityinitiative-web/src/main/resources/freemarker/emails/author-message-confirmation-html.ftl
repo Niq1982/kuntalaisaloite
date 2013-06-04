@@ -18,8 +18,11 @@
         <p style="${pBothMargins!""}"><@u.message "email.author.message.confirmation.description" /></p>
         <p style="${pBothMargins!""}"><@u.message "email.author.message.confirmation.description.2" /></p>
 
+        <p>${authorMessage.contactName} (${authorMessage.contactEmail} )</p>
+        <p>${authorMessage.message}</p>
+
         <#assign label><@u.message "email.author.message.confirmation.verify" /></#assign>
-        <@u.button label urls.confirmAuthorMessage(confirmationCode) "green" />
+        <@u.button label urls.confirmAuthorMessage(authorMessage.confirmationCode) "green" />
 
     </@b.mainContentBlock>
 
