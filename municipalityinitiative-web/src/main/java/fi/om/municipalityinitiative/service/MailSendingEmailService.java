@@ -89,21 +89,21 @@ public class MailSendingEmailService {
     public void sendSingleToMunicipality(Initiative initiative, List<Author> authors, String municipalityEmail, Locale locale) {
         emailMessageConstructor
                 .fromTemplate(NOT_COLLECTABLE_TEMPLATE)
-                .addRecipient(municipalityEmail)
+                .addRecipient(municipalityDao.getMunicipalityEmail(initiativeDao.get(initiative.getId()).getMunicipality().getId()))
                 .withSubject(messageSource.getMessage("email.not.collaborative.municipality.subject", toArray(initiative.getName()), locale))
-                .withDataMap(toDataMap(initiative, authors, locale))
+                .withDataMap(toDataMap(initiative, authorDao.findAuthors(initiative.getId()), locale))
                 .send();
     }
 
     
     public void sendAuthorDeletedEmailToOtherAuthors(Initiative initiative, List<String> sendTo, ContactInfo removedAuthorsContactInfo) {
 
-        HashMap<String, Object> dataMap = toDataMap(initiative, Locales.LOCALE_FI);
+        HashMap<String, Object> dataMap = toDataMap(initiativeDao.get(initiative.getId()), Locales.LOCALE_FI);
         dataMap.put("contactInfo", removedAuthorsContactInfo);
 
         emailMessageConstructor
                 .fromTemplate(AUTHOR_DELETED_TO_OTHER_AUTHORS)
-                .addRecipients(sendTo)
+                .addRecipients(authorDao.getAuthorEmails(initiative.getId()))
                 .withSubject(messageSource.getMessage("email.author.deleted.to.other.authors.subject", toArray(), Locales.LOCALE_FI))
                 .withDataMap(dataMap)
                 .send();
@@ -167,11 +167,13 @@ public class MailSendingEmailService {
 
     
     public void sendPrepareCreatedEmail(Initiative initiative, Long authorId, String managementHash, String authorEmail, Locale locale) {
-        HashMap<String, Object> dataMap = toDataMap(initiative, locale);
+        HashMap<String, Object> dataMap = toDataMap(initiativeDao.get(initiative.getId()), locale);
         dataMap.put("managementHash", managementHash);
+
+        String email = authorDao.getAuthor(authorId).getContactInfo().getEmail();
         emailMessageConstructor
                 .fromTemplate(INITIATIVE_PREPARE_VERIFICATION_TEMPLATE)
-                .addRecipient(authorEmail)
+                .addRecipient(email)
                 .withSubject(messageSource.getMessage("email.prepare.create.subject", toArray(), locale))
                 .withDataMap(dataMap)
                 .send();
@@ -233,11 +235,11 @@ public class MailSendingEmailService {
     
     public void sendAuthorMessages(Initiative initiative, AuthorMessage authorMessage, List<String> authorEmails) {
         Locale localeFi = Locales.LOCALE_FI;
-        HashMap<String, Object> dataMap = toDataMap(initiative, localeFi);
+        HashMap<String, Object> dataMap = toDataMap(initiativeDao.get(initiative.getId()), localeFi);
         dataMap.put("authorMessage", authorMessage);
         emailMessageConstructor
                 .fromTemplate(AUTHOR_MESSAGE_TO_AUTHORS)
-                .addRecipients(authorEmails)
+                .addRecipients(authorDao.getAuthorEmails(initiative.getId()))
                 .withSubject(messageSource.getMessage("email.author.message.to.authors.subject", toArray(), localeFi))
                 .withDataMap(dataMap)
                 .send();

@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
+import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
@@ -19,10 +20,6 @@ import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.arrayWithSize;
-import static org.hamcrest.Matchers.hasSize;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={IntegrationTestFakeEmailConfiguration.class})
 public abstract class MailSendingEmailServiceTestBase {
@@ -38,7 +35,7 @@ public abstract class MailSendingEmailServiceTestBase {
     public static final List<String> AUTHOR_EMAILS = Collections.singletonList(AUTHOR_EMAIL);
     public static final String AUTHOR_NAME = "Sender Name";
     public static final String AUTHOR_ADDRESS = "Sender address";
-    public static final String MUNICIPALITY_EMAIL = "some_test_address@example.com";
+    public static final String MUNICIPALITY_EMAIL = INITIATIVE_MUNICIPALITY.replace(" ","_")+"@example.com"; // @see TestHelper.createTestMunicipality
     public static final String EXTRA_INFO = "Some state comment";
     public static final String MODERATOR_COMMENT = "Some moderator comment";
     public static final String MANAGEMENT_HASH = "managementHash";
@@ -47,12 +44,17 @@ public abstract class MailSendingEmailServiceTestBase {
     @Resource
     protected MailSendingEmailService emailService;
 
+    @Resource
+    private TestHelper testHelper;
+
     // This replaces the JavaMailSender used by EmailService.
     // May be used for asserting "sent" emails.
     @Resource
     protected JavaMailSenderFake javaMailSenderFake;
 
     protected SentMailHanderUtil sentMailHanderUtil = new SentMailHanderUtil();
+
+    private Long testMunicipality;
 
     @BeforeClass
     public static void beforeClass() throws InterruptedException {
@@ -62,12 +64,26 @@ public abstract class MailSendingEmailServiceTestBase {
     @Before
     public void setup() {
         javaMailSenderFake.clearSentMessages();
+
+        testHelper.dbCleanup();
+        testMunicipality = testHelper.createTestMunicipality(INITIATIVE_MUNICIPALITY);
+        testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality)
+                .withName(INITIATIVE_NAME)
+                .withProposal(INITIATIVE_PROPOSAL)
+                .applyAuthor()
+                .withAuthorAddress(AUTHOR_ADDRESS)
+                .withAuthorPhone(AUTHOR_PHONE)
+                .withParticipantEmail(AUTHOR_EMAIL)
+                .withParticipantName(AUTHOR_NAME)
+                .toInitiativeDraft());
+
+
     }
 
-    protected static Initiative createDefaultInitiative() {
+    protected Initiative createDefaultInitiative() {
         Initiative initiative = new Initiative();
-        initiative.setId(1L);
-        initiative.setMunicipality(new Municipality(INITIATIVE_MUNICIPALITY_ID, INITIATIVE_MUNICIPALITY, INITIATIVE_MUNICIPALITY, false));
+        initiative.setId(testHelper.getLastInitiativeId());
+        initiative.setMunicipality(new Municipality(testMunicipality, INITIATIVE_MUNICIPALITY, INITIATIVE_MUNICIPALITY, true));
 
         initiative.setCreateTime(new LocalDate(2010, 1, 1));
         initiative.setProposal(INITIATIVE_PROPOSAL);
@@ -79,9 +95,10 @@ public abstract class MailSendingEmailServiceTestBase {
         return initiative;
     }
 
-    protected static List<Author> defaultAuthors() {
+    protected List<Author> defaultAuthors() {
         ContactInfo contactInfo = contactInfo();
         Author author = new Author();
+        author.setId(testHelper.getLastAuthorId());
         author.setContactInfo(contactInfo);
         author.setMunicipality(new Municipality(INITIATIVE_MUNICIPALITY_ID, INITIATIVE_MUNICIPALITY, INITIATIVE_MUNICIPALITY, true));
         return Collections.singletonList(author);
@@ -94,6 +111,11 @@ public abstract class MailSendingEmailServiceTestBase {
         contactInfo.setEmail(AUTHOR_EMAIL);
         contactInfo.setPhone(AUTHOR_PHONE);
         return contactInfo;
+    }
+
+
+    protected Long authorId() {
+        return testHelper.getLastAuthorId();
     }
 
 }
