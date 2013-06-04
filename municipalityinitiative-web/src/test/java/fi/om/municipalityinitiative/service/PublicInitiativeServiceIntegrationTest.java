@@ -45,6 +45,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     @Before
     public void setup() {
         testHelper.dbCleanup();
+        javaMailSenderFake.clearSentMessages();
 
         String municipalityName = "Test municipality";
         testMunicipality = new Municipality(testHelper.createTestMunicipality(municipalityName), municipalityName, municipalityName, false);
@@ -93,6 +94,8 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 
         service.confirmParticipation(participantId, RandomHashGenerator.getPrevious());
         assertThat(getSingleInitiativeInfo().getParticipantCount(), is(originalParticipantCount +1));
+
+        assertOneEmailSent();
     }
 
     @Test
@@ -174,6 +177,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     private static ParticipantUICreateDto participantUICreateDto() {
         ParticipantUICreateDto participant = new ParticipantUICreateDto();
         participant.setParticipantName("Some Name");
+        participant.setParticipantEmail("participant@example.com");
         participant.setShowName(true);
         participant.setHomeMunicipality(testMunicipality.getId());
         participant.setMunicipality(testMunicipality.getId());
@@ -188,6 +192,8 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         prepareInitiativeUICreateDto.setMunicipalMembership(Membership.property);
         return prepareInitiativeUICreateDto;
     }
+
+
 
 
 }

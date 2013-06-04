@@ -49,9 +49,6 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     AuthorDao authorDao;
 
     @Resource
-    TestHelper testHelper;
-
-    @Resource
     InitiativeDao initiativeDao;
 
     @Resource
@@ -64,7 +61,6 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     @Before
     public void setUp() throws Exception {
-        testHelper.dbCleanup();
         testMunicipality = testHelper.createTestMunicipality("municipality");
         javaMailSenderFake.clearSentMessages();
     }
