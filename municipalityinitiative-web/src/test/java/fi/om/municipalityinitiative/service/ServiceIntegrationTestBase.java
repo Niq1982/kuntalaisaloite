@@ -11,6 +11,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.isNotNull;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -34,9 +36,10 @@ public abstract class ServiceIntegrationTestBase {
 
     protected abstract void childSetup();
 
-    protected void assertOneEmailSent() {
+    protected void assertOneEmailSent(String expectedRecipient, String expectedSubject) {
         try {
-            javaMailSenderFake.getSingleSentMessage().getSubject();
+            assertThat(javaMailSenderFake.getSingleRecipient(), is(expectedRecipient));
+            assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is(expectedSubject));
         } catch (Exception e) {
             throw new RuntimeException("Error while checking sent email", e);
         }

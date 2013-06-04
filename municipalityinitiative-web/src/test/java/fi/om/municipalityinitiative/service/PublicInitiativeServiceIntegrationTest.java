@@ -11,7 +11,6 @@ import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.sql.QAuthorMessage;
 import fi.om.municipalityinitiative.util.*;
 import org.joda.time.LocalDate;
-import org.junit.Before;
 import org.junit.Test;
 
 import javax.annotation.Resource;
@@ -89,7 +88,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         service.confirmParticipation(participantId, RandomHashGenerator.getPrevious());
         assertThat(getSingleInitiativeInfo().getParticipantCount(), is(originalParticipantCount +1));
 
-        assertOneEmailSent();
+        assertOneEmailSent(participantUICreateDto().getParticipantEmail(), "Aloitteeseen osallistumisen vahvistaminen");
     }
 
     @Test
@@ -128,6 +127,12 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     }
 
     @Test
+    public void preparing_initiative_sends_email() {
+        service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
+        assertOneEmailSent(prepareDto().getParticipantEmail(), "Olet saanut linkin kuntalaisaloitteen tekemiseen Kuntalaisaloite.fi-palvelussa");
+    }
+
+    @Test
     public void preparing_initiative_sets_participant_information() {
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
 
@@ -153,11 +158,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 
     @Test
     public void addAuthorMessage_increases_amount_of_author_messages_and_confirming_deletes() {
-        AuthorUIMessage authorUIMessage = new AuthorUIMessage();
-        authorUIMessage.setInitiativeId(testHelper.createSingleSent(testMunicipality.getId()));
-        authorUIMessage.setContactEmail("contact@example.com");
-        authorUIMessage.setMessage("Message");
-        authorUIMessage.setContactName("Contact Name");
+        AuthorUIMessage authorUIMessage = authorUIMessage();
 
         precondition(testHelper.countAll(QAuthorMessage.authorMessage), is(0L));
 
@@ -166,6 +167,21 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 
         service.confirmAndSendAuthorMessage(RandomHashGenerator.getPrevious());
         assertThat(testHelper.countAll(QAuthorMessage.authorMessage), is(0L));
+    }
+
+    @Test
+    public void addAuthorMessage_sends_verification_email() {
+        service.addAuthorMessage(authorUIMessage());
+        assertOneEmailSent(authorUIMessage().getContactEmail(), "Olet lähettämässä viestiä aloitteen vastuuhenkilöille");
+    }
+
+    private AuthorUIMessage authorUIMessage() {
+        AuthorUIMessage authorUIMessage = new AuthorUIMessage();
+        authorUIMessage.setInitiativeId(testHelper.createSingleSent(testMunicipality.getId()));
+        authorUIMessage.setContactEmail("contact@example.com");
+        authorUIMessage.setMessage("Message");
+        authorUIMessage.setContactName("Contact Name");
+        return authorUIMessage;
     }
 
     private static ParticipantUICreateDto participantUICreateDto() {
