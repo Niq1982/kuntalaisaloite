@@ -5,7 +5,6 @@ import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.dto.service.Initiative;
-import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
@@ -22,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import static fi.om.municipalityinitiative.service.EmailSubjectPropertyKeys.*;
 
 @Task
 public class EmailService {
@@ -66,7 +67,7 @@ public class EmailService {
         emailMessageConstructor
                 .fromTemplate(INVITATION_ACCEPTANCE)
                 .addRecipient(authorsEmail)
-                .withSubject(messageSource.getMessage("email.author.invitation.accepted.subject", toArray(), locale))
+                .withSubject(messageSource.getMessage(EMAIL_AUTHOR_INVITATION_ACCEPTED_SUBJECT, toArray(), locale))
                 .withDataMap(dataMap)
                 .send();
 
@@ -80,7 +81,7 @@ public class EmailService {
         emailMessageConstructor
                 .fromTemplate(AUTHOR_INVITATION)
                 .addRecipient(authorInvitation.getEmail())
-                .withSubject(messageSource.getMessage("email.author.invitation.subject", toArray(initiative.getName()), locale))
+                .withSubject(messageSource.getMessage(EMAIL_AUTHOR_INVITATION_SUBJECT, toArray(initiative.getName()), locale))
                 .withDataMap(dataMap)
                 .send();
     }
@@ -90,7 +91,7 @@ public class EmailService {
         emailMessageConstructor
                 .fromTemplate(NOT_COLLECTABLE_TEMPLATE)
                 .addRecipient(municipalityDao.getMunicipalityEmail(initiativeDao.get(initiative.getId()).getMunicipality().getId()))
-                .withSubject(messageSource.getMessage("email.not.collaborative.municipality.subject", toArray(initiative.getName()), locale))
+                .withSubject(messageSource.getMessage(EMAIL_NOT_COLLABORATIVE_MUNICIPALITY_SUBJECT, toArray(initiative.getName()), locale))
                 .withDataMap(toDataMap(initiative, authorDao.findAuthors(initiative.getId()), locale))
                 .send();
     }
@@ -104,7 +105,7 @@ public class EmailService {
         emailMessageConstructor
                 .fromTemplate(AUTHOR_DELETED_TO_OTHER_AUTHORS)
                 .addRecipients(authorDao.getAuthorEmails(initiative.getId()))
-                .withSubject(messageSource.getMessage("email.author.deleted.to.other.authors.subject", toArray(), Locales.LOCALE_FI))
+                .withSubject(messageSource.getMessage(EMAIL_AUTHOR_DELETED_TO_OTHER_AUTHORS_SUBJECT, toArray(), Locales.LOCALE_FI))
                 .withDataMap(dataMap)
                 .send();
     }
@@ -115,7 +116,7 @@ public class EmailService {
         emailMessageConstructor
                 .fromTemplate(AUTHOR_DELETED_TO_DELETED_AUTHOR)
                 .addRecipient(deletedAuthorEmail)
-                .withSubject(messageSource.getMessage("email.author.deleted.to.deleted.author.subject", toArray(), Locales.LOCALE_FI))
+                .withSubject(messageSource.getMessage(EMAIL_AUTHOR_DELETED_TO_DELETED_AUTHOR_SUBJECT, toArray(), Locales.LOCALE_FI))
                 .withDataMap(toDataMap(initiative, Locales.LOCALE_FI))
                 .send();
     }
@@ -128,7 +129,7 @@ public class EmailService {
         emailMessageConstructor
                 .fromTemplate(COLLABORATIVE_TO_MUNICIPALITY)
                 .addRecipient(municipalityDao.getMunicipalityEmail(initiativeeee.getMunicipality().getId()))
-                .withSubject(messageSource.getMessage("email.collaborative.municipality.subject", toArray(initiative.getName()), locale))
+                .withSubject(messageSource.getMessage(EMAIL_COLLABORATIVE_MUNICIPALITY_SUBJECT, toArray(initiative.getName()), locale))
                 .withDataMap(toDataMap(initiativeeee, authorDao.findAuthors(initiative.getId()), locale))
                 .withAttachment(initiativeeee, participantDao.findAllParticipants(initiative.getId()))
                 .send();
@@ -142,7 +143,7 @@ public class EmailService {
 
         emailMessageConstructor.fromTemplate(COLLABORATIVE_TO_MUNICIPALITY)
                 .addRecipients(authorDao.getAuthorEmails(initiative.getId()))
-                .withSubject(messageSource.getMessage("email.collaborative.author.subject", toArray(), locale))
+                .withSubject(messageSource.getMessage(EMAIL_COLLABORATIVE_AUTHOR_SUBJECT, toArray(), locale))
                 .withDataMap(toDataMap(initiativeeee, authorDao.findAuthors(initiative.getId()), locale))
                 .withAttachment(initiativeeee, participantDao.findAllParticipants(initiative.getId()))
                 .send();
@@ -163,7 +164,7 @@ public class EmailService {
         emailMessageConstructor
                 .fromTemplate(STATUS_INFO_TEMPLATE)
                 .addRecipients(authorDao.getAuthorEmails(initiative.getId()))
-                .withSubject(messageSource.getMessage("email.status.info." + emailMessageType.name() + ".subject", toArray(), locale))
+                .withSubject(messageSource.getMessage(EMAIL_STATUS_INFO_PREFIX + emailMessageType.name() + ".subject", toArray(), locale))
                 .withDataMap(dataMap)
                 .send();
 
@@ -178,7 +179,7 @@ public class EmailService {
         emailMessageConstructor
                 .fromTemplate(INITIATIVE_PREPARE_VERIFICATION_TEMPLATE)
                 .addRecipient(email)
-                .withSubject(messageSource.getMessage("email.prepare.create.subject", toArray(), locale))
+                .withSubject(messageSource.getMessage(EMAIL_PREPARE_CREATE_SUBJECT, toArray(), locale))
                 .withDataMap(dataMap)
                 .send();
     }
@@ -191,7 +192,7 @@ public class EmailService {
         emailMessageConstructor
                 .fromTemplate(MANAGEMENT_HASH_RENEWED)
                 .addRecipient(authorDao.getAuthor(authorId).getContactInfo().getEmail())
-                .withSubject(messageSource.getMessage("email.managementhash.renewed.subject", toArray(), Locales.LOCALE_FI))
+                .withSubject(messageSource.getMessage(EMAIL_MANAGEMENTHASH_RENEWED_SUBJECT, toArray(), Locales.LOCALE_FI))
                 .withDataMap(dataMap)
                 .send();
     }
@@ -211,7 +212,7 @@ public class EmailService {
                 .fromTemplate(NOTIFICATION_TO_MODERATOR)
                         //.withSendToModerator()
                 .addRecipient(TEMP_MODERATOR_EMAIL_CHANGE)
-                .withSubject(messageSource.getMessage("email.notification.to.moderator.subject", toArray(initiativeeee.getName()), locale))
+                .withSubject(messageSource.getMessage(EMAIL_NOTIFICATION_TO_MODERATOR_SUBJECT, toArray(initiativeeee.getName()), locale))
                 .withDataMap(toDataMap(initiativeeee, authorsss, locale))
                 .send();
     }
@@ -224,7 +225,7 @@ public class EmailService {
         emailMessageConstructor
                 .fromTemplate(PARTICIPATION_CONFIRMATION)
                 .addRecipient(participantEmail)
-                .withSubject(messageSource.getMessage("email.participation.confirmation.subject", toArray(), locale))
+                .withSubject(messageSource.getMessage(EMAIL_PARTICIPATION_CONFIRMATION_SUBJECT, toArray(), locale))
                 .withDataMap(dataMap)
                 .send();
     }
@@ -236,7 +237,7 @@ public class EmailService {
         emailMessageConstructor
                 .fromTemplate(AUTHOR_MESSAGE_CONFIRMATION)
                 .addRecipient(authorMessage.getContactEmail())
-                .withSubject(messageSource.getMessage("email.author.message.confirmation.subject", toArray(), locale))
+                .withSubject(messageSource.getMessage(EMAIL_AUTHOR_MESSAGE_CONFIRMATION_SUBJECT, toArray(), locale))
                 .withDataMap(dataMap)
                 .send();
 
@@ -250,7 +251,7 @@ public class EmailService {
         emailMessageConstructor
                 .fromTemplate(AUTHOR_MESSAGE_TO_AUTHORS)
                 .addRecipients(authorDao.getAuthorEmails(initiative.getId()))
-                .withSubject(messageSource.getMessage("email.author.message.to.authors.subject", toArray(), localeFi))
+                .withSubject(messageSource.getMessage(EMAIL_AUTHOR_MESSAGE_TO_AUTHORS_SUBJECT, toArray(), localeFi))
                 .withDataMap(dataMap)
                 .send();
     }

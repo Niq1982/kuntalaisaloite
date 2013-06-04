@@ -89,7 +89,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         service.confirmParticipation(participantId, RandomHashGenerator.getPrevious());
         assertThat(getSingleInitiativeInfo().getParticipantCount(), is(originalParticipantCount +1));
 
-        assertOneEmailSent(participantUICreateDto().getParticipantEmail(), "Aloitteeseen osallistumisen vahvistaminen");
+        assertOneEmailSent(participantUICreateDto().getParticipantEmail(), EmailSubjectPropertyKeys.EMAIL_PARTICIPATION_CONFIRMATION_SUBJECT);
     }
 
     @Test
@@ -130,7 +130,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     @Test
     public void preparing_initiative_sends_email() {
         service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
-        assertOneEmailSent(prepareDto().getParticipantEmail(), "Olet saanut linkin kuntalaisaloitteen tekemiseen Kuntalaisaloite.fi-palvelussa");
+        assertOneEmailSent(prepareDto().getParticipantEmail(), EmailSubjectPropertyKeys.EMAIL_PREPARE_CREATE_SUBJECT);
     }
 
     @Test
@@ -176,13 +176,13 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         testHelper.createAuthorMessage(new AuthorMessage(authorUIMessage(), confirmationCode));
 
         service.confirmAndSendAuthorMessage(confirmationCode);
-        assertOneEmailSent(TestHelper.DEFAULT_PARTICIPANT_EMAIL, "Olet saanut yhteydenoton aloitteeseesi liittyen / Samma på svenska");
+        assertOneEmailSent(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_AUTHOR_MESSAGE_TO_AUTHORS_SUBJECT);
     }
 
     @Test
     public void addAuthorMessage_sends_verification_email() {
         service.addAuthorMessage(authorUIMessage());
-        assertOneEmailSent(authorUIMessage().getContactEmail(), "Olet lähettämässä viestiä aloitteen vastuuhenkilöille");
+        assertOneEmailSent(authorUIMessage().getContactEmail(), EmailSubjectPropertyKeys.EMAIL_AUTHOR_MESSAGE_CONFIRMATION_SUBJECT);
     }
 
     private AuthorUIMessage authorUIMessage() {
