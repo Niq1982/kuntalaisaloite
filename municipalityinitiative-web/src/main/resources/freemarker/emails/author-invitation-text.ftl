@@ -22,12 +22,12 @@ ${url}
 <@u.message "email.author.invitation.expiration" />
 
 
-----
+<@b.separator />
 
 <@b.emailFooter type />
 
 
---------------------------------------------------
+<@b.separator />
 <#global switchLocale = altLocale />
 
 <@u.message "email.author.invitation.title" />
@@ -45,7 +45,7 @@ ${urlSv}
 <@u.message "email.author.invitation.expiration" />
 
 
-----
+<@b.separator />
 
 <@b.emailFooter type />
 

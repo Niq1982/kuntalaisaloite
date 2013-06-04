@@ -11,6 +11,6 @@
 
 TODO: Vahvistusviesti
 
-----
+<@b.separator />
 
 <@b.emailFooter type />

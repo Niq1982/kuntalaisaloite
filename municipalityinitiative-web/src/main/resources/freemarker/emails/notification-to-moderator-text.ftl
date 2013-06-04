@@ -8,13 +8,13 @@
 
 <@b.initiativeDetails type=type showProposal=true showDate=true showExtraInfo=true />
     
-----
+<@b.separator />
 <@b.authorList type />
-----
+<@b.separator />
     
 <@u.message "email.notification.to.moderator.moderateLink" />:
 ${urls.moderation(initiative.id)}
 
-----
+<@b.separator />
 
 <@b.emailFooter type />

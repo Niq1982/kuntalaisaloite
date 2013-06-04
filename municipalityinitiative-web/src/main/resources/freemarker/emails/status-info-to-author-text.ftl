@@ -14,14 +14,14 @@
 
 <@s.statusInfo emailMessageType type />
 
-----
+<@b.separator />
 
 <@b.emailFooter type />
 
 <#-- Swedish part -->
 <#global switchLocale = altLocale />
 
---------
+<@b.separator />
 
 <#if statusTitleSv??>
     ${statusTitleSv}
@@ -31,7 +31,7 @@
 
 
 <@s.statusInfo emailMessageType type />
-----
+<@b.separator />
 
 <@b.emailFooter type />
 

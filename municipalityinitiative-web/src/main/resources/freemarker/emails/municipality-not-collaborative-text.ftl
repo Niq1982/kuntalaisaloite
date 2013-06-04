@@ -7,20 +7,20 @@
 
 <#if (initiative.sentComment)?has_content>
     <@b.comment type initiative.sentComment "email.sentComment" />
-    ----
+    <@b.separator />
     
 </#if>
 
 <@b.initiativeDetails type=type showProposal=true showDate=true showExtraInfo=true />
 
-----
+<@b.separator />
 
 <@b.authorList type />
 
-----
+<@b.separator />
 
 <@b.publicViewLink type />
 
-----
+<@b.separator />
 
 <@b.emailFooter type />

@@ -10,18 +10,18 @@
 
 <@b.initiativeDetails type />
 
-----
+<@b.separator />
 
 <@u.message "email.verifyParticipate.description" />
         
 ${urls.confirmParticipant(participantId, confirmationCode)}
 
-----
-        
+<@b.separator />
+
 <@u.message "email.verifyParticipate.why.title" />
 
 <@u.message "email.verifyParticipate.why.description" />
 
-----
+<@b.separator />
 
 <@b.emailFooter type />

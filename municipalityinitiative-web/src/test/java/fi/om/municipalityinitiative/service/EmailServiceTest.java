@@ -1,8 +1,10 @@
 package fi.om.municipalityinitiative.service;
 
+import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.Urls;
 import org.junit.Before;
@@ -40,7 +42,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         emailService.sendManagementHashRenewed(createDefaultInitiative(), MANAGEMENT_HASH, authorId());
 
         assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
-        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Sinulle on luotu uusi aloitteen hallintalinkki Kuntalaisaloite.fi-palvelussa"));
+        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Sinulle on luotu uusi aloitteen ylläpitolinkki Kuntalaisaloite.fi-palvelussa"));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.loginAuthor(MANAGEMENT_HASH)));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_NAME));
     }
@@ -202,7 +204,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         emailService.sendAuthorMessages(createDefaultInitiative(), authorMessage);
 
         assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
-        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Yhteydenotto aloitteeseesi liittyen / SV"));
+        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Olet saanut yhteydenoton aloitteeseesi liittyen / Samma på svenska"));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(authorMessage.getContactEmail()));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(authorMessage.getContactName()));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(authorMessage.getMessage()));

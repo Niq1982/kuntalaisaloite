@@ -11,7 +11,7 @@
 
 ${urls.loginAuthor(managementHash)}
 
-----
+<@b.separator />
 
 <@u.message "email.create.description.2" />
 
@@ -23,6 +23,6 @@ ${urls.loginAuthor(managementHash)}
 - <@u.message "email.create.instruction.bullet-2" />
 - <@u.message "email.create.instruction.bullet-3" />
 
-----
+<@b.separator />
 
 <@b.emailFooter type />

@@ -15,6 +15,6 @@
 <@b.adminViewLink type />
 
 
-----
+<@b.separator />
 
 <@b.emailFooter type />

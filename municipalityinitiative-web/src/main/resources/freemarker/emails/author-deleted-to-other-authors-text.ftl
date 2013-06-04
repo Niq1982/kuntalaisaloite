@@ -10,7 +10,7 @@
 <#-- Swedish part -->
 <#global switchLocale = altLocale />
 
---------
+<@b.separator />
 
 <@content />
 
@@ -30,7 +30,7 @@
     
     <@b.contactInfo contactInfo type />
     
-    ----
+    <@b.separator />
 
     <@b.emailFooter type />
 </#macro>

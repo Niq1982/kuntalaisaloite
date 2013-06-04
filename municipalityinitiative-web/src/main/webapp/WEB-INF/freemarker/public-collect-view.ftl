@@ -127,7 +127,6 @@
     <#assign contactAuthorForm>
     <@compress single_line=true>
     
-        
         <@u.errorsSummary path="authorMessage.*" prefix="authorMessage."/>
     
         <#-- Do not use NOSCRIPT here as it will be descendant of another NOSCRIPT. -->
@@ -148,26 +147,14 @@
             
              <div class="input-block-content">
                 <@f.textField path="authorMessage.contactName" required="required" optional=false cssClass="large" maxLength="512" />
-
-                <#--<label class="input-header" for="contactInfo.name">
-                    Etu- ja sukunimi <span class="icon-small required trigger-tooltip"></span>
-                </label>-->
-
             </div>
             
             <div class="input-block-content">
                 <@f.textField path="authorMessage.contactEmail" required="required" optional=true cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
-                
-                <#--<label class="input-header" for="contactInfo.name">
-                    Sähköpostiosoite <span class="icon-small required trigger-tooltip"></span>
-                </label>
-            
-                <input id="contactInfo.email" name="contactInfo.email" class="large" maxlength="100" type="text">
-                -->
             </div>
 
             <div class="input-block-content">
-                <button id="participate" type="submit" name="${UrlConstants.ACTION_CONTACT_AUTHOR}" value="true" class="small-button"><span class="small-icon mail">Lähetä viesti</span></button>
+                <button id="participate" type="submit" name="${UrlConstants.ACTION_CONTACT_AUTHOR}" value="true" class="small-button"><span class="small-icon mail"><@u.message "action.sendMessage" /></span></button>
                 <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
             </div>
         
@@ -175,50 +162,6 @@
     
     </@compress>
     </#assign>
-    
-    <#--
-        <div class="initiative-content-row last">
-
-            <h3><@u.message key="initiative.participants.title" args=[participantCount.total] /></h3>
-            
-            <div class="participants-block">
-                <span class="user-count-total">${participantCount.total!""}</span>
-            </div>
-            <div class="participants-block separate">
-                <span class="user-count-sub-total">
-                    <#if (participantCount.publicNames > 0)><span class="public-names"><a class="trigger-tooltip" href="${urls.participantList(initiative.id)}" title="<@u.message key="participantCount.publicNames.show"/>"><@u.message key="participantCount.publicNames" args=[participantCount.publicNames] /></a></span><br/></#if>
-                    <#if (participantCount.privateNames > 0)><span class="private-names"><@u.message key="participantCount.privateNames" args=[participantCount.privateNames] /></span></p></#if>
-                </span>
-            </div>
-            
-            <#if !initiative.sentTime.present && requestMessages?? && !(requestMessages?size > 0) && !showParticipateForm>
-                <div class="participants-block">
-                    <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>
-                </div>
-                <div class="participants-block last">
-                    <a title="<@u.messageHTML "action.participate.infoLink.title" />" href="#"><@u.messageHTML "action.participate.infoLink" /></a>
-                </div>
-            </#if>
-            <#if initiative.sentTime.present>
-                <div class="participants-block last">
-                    <div class="participate not-allowed">
-                        <@u.systemMessage path="participate.sentToMunicipality" type="info" showClose=false />
-                    </div>
-                </div>
-            </#if>
-            <br class="clear" />
-
-            <#if showParticipateForm>
-                <#noescape><noscript>
-                    <div id="participate-form" class="participate-form cf top-margin">
-                        <h3><@u.message "participate.title" /></h3>
-                        ${participateFormHTML!""}
-                    </div>
-                </noscript></#noescape>
-            </#if>
-        </div>     
-    </div>
-    -->
 
     <#--
      * Social media buttons
