@@ -435,6 +435,16 @@ public class TestHelper {
             this.participantCount = participantCount;
             return this;
         }
+
+        public InitiativeDraft withExtraInfo(String extraInfo) {
+            this.extraInfo = extraInfo;
+            return this;
+        }
+
+        public InitiativeDraft withSentComment(String sentComment) {
+            this.sentComment = sentComment;
+            return this;
+        }
     }
 
     public Long getLastInitiativeId() {

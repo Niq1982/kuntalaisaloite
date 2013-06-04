@@ -70,6 +70,8 @@ public abstract class MailSendingEmailServiceTestBase {
         testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality)
                 .withName(INITIATIVE_NAME)
                 .withProposal(INITIATIVE_PROPOSAL)
+                .withExtraInfo(EXTRA_INFO)
+                .withSentComment(SENT_COMMENT)
                 .applyAuthor()
                 .withAuthorAddress(AUTHOR_ADDRESS)
                 .withAuthorPhone(AUTHOR_PHONE)

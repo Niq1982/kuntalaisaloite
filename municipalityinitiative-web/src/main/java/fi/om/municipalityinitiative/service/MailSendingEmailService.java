@@ -122,12 +122,15 @@ public class MailSendingEmailService {
 
     
     public void sendCollaborativeToMunicipality(Initiative initiative, List<Author> authors, List<Participant> participants, String municipalityEmail, Locale locale) {
+
+        Initiative initiativeeee = initiativeDao.get(initiative.getId());
+
         emailMessageConstructor
                 .fromTemplate(COLLABORATIVE_TO_MUNICIPALITY)
-                .addRecipient(municipalityEmail)
+                .addRecipient(municipalityDao.getMunicipalityEmail(initiativeeee.getMunicipality().getId()))
                 .withSubject(messageSource.getMessage("email.collaborative.municipality.subject", toArray(initiative.getName()), locale))
-                .withDataMap(toDataMap(initiative, authors, locale))
-                .withAttachment(initiative, participants)
+                .withDataMap(toDataMap(initiativeeee, authors, locale))
+                .withAttachment(initiativeeee, participants)
                 .send();
     }
 
