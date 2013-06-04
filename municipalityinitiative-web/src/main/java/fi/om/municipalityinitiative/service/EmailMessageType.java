@@ -10,8 +10,9 @@ public enum EmailMessageType {
     INVITATION_REJECTED,
     INVITATION_ACCEPTED,
     PUBLISHED_COLLECTING,
-    SENT_TO_MUNICIPALITY,
-    AUTHOR_ACCEPTED,
+    SENT_TO_MUNICIPALITY, // This is only used when sending single to municipality.
+                        // When sending collaborative, the authors will receive the same email that municipality receives
+    AUTHOR_ACCEPTED
     ;
 
     private final String messageKeySuffix;

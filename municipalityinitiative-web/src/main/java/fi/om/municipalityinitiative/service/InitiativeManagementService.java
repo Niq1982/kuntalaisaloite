@@ -184,7 +184,8 @@ public class InitiativeManagementService {
         // TODO: String municipalityEmail = municipalityEmail(initiative);
         String municipalityEmail = authorDao.getAuthorEmails(initiativeId).get(0);
         emailService.sendCollaborativeToMunicipality(initiative, authorDao.findAuthors(initiativeId), participants, municipalityEmail, locale);
-        emailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityEmail, EmailMessageType.SENT_TO_MUNICIPALITY);
+        emailService.sendCollaborativeToAuthors(initiative, authorDao.findAuthors(initiativeId), participants, authorDao.getAuthorEmails(initiativeId));
+//        emailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityEmail, EmailMessageType.SENT_TO_MUNICIPALITY);
     }
 
 

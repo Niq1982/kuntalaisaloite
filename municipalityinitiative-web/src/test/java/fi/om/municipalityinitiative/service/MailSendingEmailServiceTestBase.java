@@ -33,11 +33,11 @@ public abstract class MailSendingEmailServiceTestBase {
     public static final Long INITIATIVE_ID = 1L;
     public static final long INITIATIVE_MUNICIPALITY_ID = 2L;
     public static final long AUTHOR_ID = 3L;
-    public static final String CONTACT_PHONE = "Phone number";
-    public static final String CONTACT_EMAIL = "sender.email@example.com";
-    public static final List<String> AUTHOR_EMAILS = Collections.singletonList(CONTACT_EMAIL);
-    public static final String CONTACT_NAME = "Sender Name";
-    public static final String CONTACT_ADDRESS = "Sender address";
+    public static final String AUTHOR_PHONE = "Phone number";
+    public static final String AUTHOR_EMAIL = "sender.email@example.com";
+    public static final List<String> AUTHOR_EMAILS = Collections.singletonList(AUTHOR_EMAIL);
+    public static final String AUTHOR_NAME = "Sender Name";
+    public static final String AUTHOR_ADDRESS = "Sender address";
     public static final String MUNICIPALITY_EMAIL = "some_test_address@example.com";
     public static final String EXTRA_INFO = "Some state comment";
     public static final String MODERATOR_COMMENT = "Some moderator comment";
@@ -84,10 +84,10 @@ public abstract class MailSendingEmailServiceTestBase {
 
     public static ContactInfo contactInfo() {
         ContactInfo contactInfo = new ContactInfo();
-        contactInfo.setAddress(CONTACT_ADDRESS);
-        contactInfo.setName(CONTACT_NAME);
-        contactInfo.setEmail(CONTACT_EMAIL);
-        contactInfo.setPhone(CONTACT_PHONE);
+        contactInfo.setAddress(AUTHOR_ADDRESS);
+        contactInfo.setName(AUTHOR_NAME);
+        contactInfo.setEmail(AUTHOR_EMAIL);
+        contactInfo.setPhone(AUTHOR_PHONE);
         return contactInfo;
     }
 
