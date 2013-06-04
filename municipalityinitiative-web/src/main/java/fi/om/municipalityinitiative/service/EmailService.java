@@ -21,6 +21,8 @@ public interface EmailService {
 
     void sendCollaborativeToMunicipality(Initiative initiative, List<Author> authors, List<Participant> participants, String municipalityEmail, Locale locale);
 
+    void sendCollaborativeToAuthors(Initiative initiative, List<Author> authors, List<Participant> participants, List<String> authorEmails);
+
     void sendStatusEmail(Initiative initiative, List<String> sendTo, String municipalityEmail, EmailMessageType emailMessageType);
 
     void sendAuthorDeletedEmailToOtherAuthors(Initiative initiative, List<String> sendTo, ContactInfo removedAuthorsContactInfo);

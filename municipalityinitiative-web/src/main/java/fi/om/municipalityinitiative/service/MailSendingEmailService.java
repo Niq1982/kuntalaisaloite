@@ -111,7 +111,21 @@ public class MailSendingEmailService implements EmailService {
         emailMessageConstructor
                 .fromTemplate(COLLABORATIVE_TO_MUNICIPALITY)
                 .addRecipient(municipalityEmail)
-                .withSubject(messageSource.getMessage("email.not.collaborative.municipality.subject", toArray(initiative.getName()), locale))
+                .withSubject(messageSource.getMessage("email.collaborative.municipality.subject", toArray(initiative.getName()), locale))
+                .withDataMap(toDataMap(initiative, authors, locale))
+                .withAttachment(initiative, participants)
+                .send();
+    }
+
+    @Override
+    public void sendCollaborativeToAuthors(Initiative initiative,
+                                           List<Author> authors,
+                                           List<Participant> participants,
+                                           List<String> authorEmails) {
+        Locale locale = Locales.LOCALE_FI;
+        emailMessageConstructor.fromTemplate(COLLABORATIVE_TO_MUNICIPALITY)
+                .addRecipients(authorEmails)
+                .withSubject(messageSource.getMessage("email.collaborative.author.subject", toArray(), locale))
                 .withDataMap(toDataMap(initiative, authors, locale))
                 .withAttachment(initiative, participants)
                 .send();
