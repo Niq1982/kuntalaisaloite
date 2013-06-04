@@ -13,6 +13,7 @@ import javax.validation.constraints.Size;
 public class PrepareInitiativeUICreateDto extends ParticipantUICreateBase {
 
     // Is set as null if normal initiative because we do not know if creator wants to gather any other people
+    @NotNull
     private InitiativeType initiativeType;
 
     @NotNull

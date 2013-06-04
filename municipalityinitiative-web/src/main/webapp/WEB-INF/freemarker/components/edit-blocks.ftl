@@ -47,53 +47,53 @@
  -->
 <#macro municipalityBlock municipality="">      
     
-        <div class="input-block-extra">
-            <div class="input-block-extra-content">
-                <@f.helpText "help.municipality" />
-                <@f.helpText "help.homeMunicipality" />
-            </div>
+    <div class="input-block-extra">
+        <div class="input-block-extra-content">
+            <@f.helpText "help.municipality" />
+            <@f.helpText "help.homeMunicipality" />
         </div>
+    </div>
 
+    <div class="input-block-content">
+        <#assign href="#" />
+        <@u.systemMessage path="initiative.municipality.description" type="info" showClose=false args=[href] />
+    </div>
+    
+    <div class="input-block-content">       
+        <@f.municipalitySelect path="initiative.municipality" options=municipalities required="required" cssClass="municipality-select" preSelected=municipality onlyActive=true/>
+    </div>
+    <div class="input-block-content">
+        <@f.municipalitySelect path="initiative.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=municipality />
+    </div>
+    <br class="clear" />
+    
+    <noscript>
         <div class="input-block-content">
+            <div class="system-msg msg-info">
+                <#assign href= "#" />
+                <@u.messageHTML key="initiative.municipality.different" args=[href] />
+            </div>
+        </div>
+    </noscript>
+    
+    <div id="municipalMembership" class="municipality-not-equal js-hide">
+        <div class="input-block-content hidden">
             <#assign href="#" />
-            <@u.systemMessage path="initiative.municipality.description" type="info" showClose=false args=[href] />
-        </div>
-        
-        <div class="input-block-content">       
-            <@f.municipalitySelect path="initiative.municipality" options=municipalities required="required" cssClass="municipality-select" preSelected=municipality onlyActive=true/>
+            <@u.systemMessage path="initiative.municipality.notEqual" type="info" showClose=false args=[href] />
         </div>
         <div class="input-block-content">
-            <@f.municipalitySelect path="initiative.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=municipality />
+            <@f.radiobutton path="initiative.municipalMembership" required="required" options={
+                "community":"initiative.municipalMembership.community",
+                "company":"initiative.municipalMembership.company",
+                "property":"initiative.municipalMembership.property",
+                "none":"initiative.municipalMembership.none"
+            } attributes="" />
         </div>
-        <br class="clear" />
         
-        <noscript>
-            <div class="input-block-content">
-                <div class="system-msg msg-info">
-                    <#assign href= "#" />
-                    <@u.messageHTML key="initiative.municipality.different" args=[href] />
-                </div>
-            </div>
-        </noscript>
-        
-        <div id="municipalMembership" class="municipality-not-equal js-hide">
-            <div class="input-block-content hidden">
-                <#assign href="#" />
-                <@u.systemMessage path="initiative.municipality.notEqual" type="info" showClose=false args=[href] />
-            </div>
-            <div class="input-block-content">
-                <@f.radiobutton path="initiative.municipalMembership" required="required" options={
-                    "community":"initiative.municipalMembership.community",
-                    "company":"initiative.municipalMembership.company",
-                    "property":"initiative.municipalMembership.property",
-                    "none":"initiative.municipalMembership.none"
-                } attributes="" />
-            </div>
-            
-            <div class="input-block-content is-not-member no-top-margin js-hide hidden">
-                <@u.systemMessage path="warning.initiative.notMember" type="warning" showClose=false />
-            </div>
+        <div class="input-block-content is-not-member no-top-margin js-hide hidden">
+            <@u.systemMessage path="warning.initiative.notMember" type="warning" showClose=false />
         </div>
+    </div>
 </#macro>
 
 <#--
@@ -106,19 +106,18 @@
  * Prints help-texts and validation errors in this block
  -->
 <#macro chooseInitiativeType>
-        <div class="input-header">
-            <@u.message "initiative.type" /> <span class="icon-small required trigger-tooltip"></span>
-        </div>
+    <div class="input-header">
+        <@u.message "initiative.initiativeType" /> <span class="icon-small required trigger-tooltip"></span>
+    </div>
+    
+    <div class="initiative-types cf">
+        <@spring.bind "initiative.initiativeType" /> 
+        <@f.showError />
         
-        <div class="initiative-types cf">
-            <#-- TODO: Create a macro when other options are selectable -->
-            <@spring.bind "initiative.initiativeType" /> 
-            <@f.showError />
-            
-            <@initiativeTypeBlock "normal" true />
-            <@initiativeTypeBlock "two-percent" />
-            <@initiativeTypeBlock "five-percent" />
-        </div>
+        <@initiativeTypeBlock "UNDEFINED" "normal" true />
+        <@initiativeTypeBlock "COLLABORATIVE_COUNCIL" "two-percent" />
+        <@initiativeTypeBlock "COLLABORATIVE_CITIZEN" "five-percent" />
+    </div>
 </#macro>
 
 <#--
@@ -126,29 +125,44 @@
  *
  * Generates a selection for initiative type
  *
+ * NOTE that initiative type UNDEFINED refers to types SINGLE and COLLABORATIVE.
+ * But since we cannot determine the type yet in this phase, we use type UNDEFINED. 
+ *
  * @param type is the type of the initiative
+ * @param labelKey is for localization
  * @param enabled enables/disables this selection
  -->
-<#macro initiativeTypeBlock type enabled=false>
+<#macro initiativeTypeBlock type labelKey enabled=false>
 
     <#if enabled>
         <label class="initiative-type enabled">
     <#else>
-        <label class="initiative-type trigger-tooltip" title="<@u.message "initiative.type.disabled" />">
+        <label class="initiative-type trigger-tooltip" title="<@u.message "initiative.initiativeType.disabled.tooltip" />">
     </#if>
         <span class="inner">
-            <span class="type"><@u.message "initiative.type."+type /><#if type == "normal"><br/><br/></#if></span>
-            <span class="description"><@u.message "initiative.type."+type+".description" /></span>
+            <span class="type"><@u.message "initiative.initiativeType."+labelKey /><#if type == "UNDEFINED"><br/><br/></#if></span>
+            <span class="description"><@u.message "initiative.initiativeType."+labelKey+".description" /></span>
         </span>
         <#if enabled>
-            <span class="action open"><span class="checkbox"></span>Valitse</span>
-            
-            <input type="radio" id="initiativeType" name="${spring.status.expression}" value="" class="js-hide"
+            <span class="action open">
+                <span class="checkbox hidden <#if spring.stringStatusValue == type>checked</#if>"></span>
+                <input type="radio" id="initiativeType" name="${spring.status.expression}" value="${type}" class="js-hide"
                 <#if spring.stringStatusValue == type>checked="checked"</#if>
                 <@spring.closeTag/>
+                <span class="push" data-choose="<@u.message "initiative.initiativeType.choose" />" data-chosen="<@u.message "initiative.initiativeType.chosen" />">
+                    <#if spring.stringStatusValue == type>
+                        <@u.message "initiative.initiativeType.chosen" />
+                    <#else>
+                        <@u.message "initiative.initiativeType.choose" />
+                    </#if>
+                </span>
+            </span>
             
         <#else>
-            <span class="action blocked">Tämä ei ole vielä valittavissa</span>
+            <span class="action blocked">
+                <span class="checkbox disabled"></span>
+                <span class="push"><@u.message "initiative.initiativeType.disabled" /></span>
+            </span>
         </#if>
     </label>
 
