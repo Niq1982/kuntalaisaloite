@@ -6,7 +6,6 @@ import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
-import fi.om.municipalityinitiative.newdao.AuthorMessageDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.dto.Author;
@@ -33,7 +32,7 @@ public class AuthorService {
     ParticipantDao participantDao;
 
     @Resource
-    MailSendingEmailService emailService;
+    EmailService emailService;
 
     @Transactional(readOnly = false)
     public void createAuthorInvitation(Long initiativeId, LoginUserHolder loginUserHolder, AuthorInvitationUICreateDto uiCreateDto) {

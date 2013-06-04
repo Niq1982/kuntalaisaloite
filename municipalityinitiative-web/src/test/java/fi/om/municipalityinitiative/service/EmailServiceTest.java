@@ -17,7 +17,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
-public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase {
+public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
     private Urls urls;
 

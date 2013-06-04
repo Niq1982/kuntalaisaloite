@@ -24,7 +24,7 @@ import java.util.Locale;
 import java.util.Map;
 
 @Task
-public class MailSendingEmailService {
+public class EmailService {
 
     private static final String INITIATIVE_PREPARE_VERIFICATION_TEMPLATE = "initiative-create-verification";
     private static final String NOT_COLLECTABLE_TEMPLATE = "municipality-not-collaborative";

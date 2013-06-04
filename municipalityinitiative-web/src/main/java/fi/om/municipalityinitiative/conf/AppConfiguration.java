@@ -312,8 +312,8 @@ public class AppConfiguration {
     }
 
     @Bean
-    public MailSendingEmailService emailService() {
-        return new MailSendingEmailService();
+    public EmailService emailService() {
+        return new EmailService();
     }
 
     @Bean

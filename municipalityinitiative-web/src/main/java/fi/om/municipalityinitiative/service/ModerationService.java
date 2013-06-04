@@ -28,7 +28,7 @@ public class ModerationService {
     InitiativeDao initiativeDao;
 
     @Resource
-    MailSendingEmailService mailSendingEmailService;
+    EmailService emailService;
 
     @Resource
     MunicipalityDao municipalityDao;
@@ -70,7 +70,7 @@ public class ModerationService {
         // TODO: String municipalityEmail = municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId());
         String municipalityEmail = authorDao.getAuthorEmails(initiativeId).get(0);
         Initiative initiative = initiativeDao.get(initiativeId);
-        mailSendingEmailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityEmail, EmailMessageType.ACCEPTED_BY_OM_FIX);
+        emailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityEmail, EmailMessageType.ACCEPTED_BY_OM_FIX);
     }
 
     private void acceptDraftReview(String moderatorComment, Locale locale, Initiative initiative) {
@@ -84,12 +84,12 @@ public class ModerationService {
             initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
             initiativeDao.markInitiativeAsSent(initiativeId);
             initiative = initiativeDao.get(initiativeId); // Necessary because initiative is updated
-            mailSendingEmailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityEmail, EmailMessageType.ACCEPTED_BY_OM_AND_SENT);
-            mailSendingEmailService.sendSingleToMunicipality(initiative, authorDao.findAuthors(initiativeId), municipalityEmail, locale);
+            emailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityEmail, EmailMessageType.ACCEPTED_BY_OM_AND_SENT);
+            emailService.sendSingleToMunicipality(initiative, authorDao.findAuthors(initiativeId), municipalityEmail, locale);
         } else {
             initiativeDao.updateInitiativeState(initiativeId, InitiativeState.ACCEPTED);
             initiative = initiativeDao.get(initiativeId);  // Necessary because initiative is updated
-            mailSendingEmailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityEmail, EmailMessageType.ACCEPTED_BY_OM);
+            emailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityEmail, EmailMessageType.ACCEPTED_BY_OM);
         }
     }
 
@@ -114,14 +114,14 @@ public class ModerationService {
         initiativeDao.updateInitiativeFixState(initiativeId, FixState.FIX);
         initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
         Initiative initiative = initiativeDao.get(initiativeId);
-        mailSendingEmailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), EmailMessageType.REJECTED_BY_OM);
+        emailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), EmailMessageType.REJECTED_BY_OM);
     }
 
     private void markStateAsDraftAndSendEmails(Long initiativeId, String moderatorComment) {
         initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.DRAFT);
         Initiative initiative = initiativeDao.get(initiativeId);
-        mailSendingEmailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), EmailMessageType.REJECTED_BY_OM);
+        emailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()), EmailMessageType.REJECTED_BY_OM);
     }
 
     @Transactional(readOnly = true)
@@ -164,6 +164,6 @@ public class ModerationService {
         // TODO: Multiple initiatives under one author is no more possible?
         Initiative initiative = initiativeDao.get(authorsInitiatives.iterator().next());
         String authorEmail = authorDao.getAuthor(authorId).getContactInfo().getEmail();
-        mailSendingEmailService.sendManagementHashRenewed(initiative, newManagementHash, authorId);
+        emailService.sendManagementHashRenewed(initiative, newManagementHash, authorId);
     }
 }

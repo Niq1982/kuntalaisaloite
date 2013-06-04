@@ -37,7 +37,7 @@ public class InitiativeManagementService {
     MunicipalityDao municipalityDao;
 
     @Resource
-    MailSendingEmailService emailService;
+    EmailService emailService;
 
     @Resource
     ParticipantDao participantDao;
@@ -185,7 +185,7 @@ public class InitiativeManagementService {
         String municipalityEmail = authorDao.getAuthorEmails(initiativeId).get(0);
         emailService.sendCollaborativeToMunicipality(initiative, authorDao.findAuthors(initiativeId), participants, municipalityEmail, locale);
         emailService.sendCollaborativeToAuthors(initiative, authorDao.findAuthors(initiativeId), participants, authorDao.getAuthorEmails(initiativeId));
-//        mailSendingEmailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityEmail, EmailMessageType.SENT_TO_MUNICIPALITY);
+//        emailService.sendStatusEmail(initiative, authorDao.getAuthorEmails(initiativeId), municipalityEmail, EmailMessageType.SENT_TO_MUNICIPALITY);
     }
 
 

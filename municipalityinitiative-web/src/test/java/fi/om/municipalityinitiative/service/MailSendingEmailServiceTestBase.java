@@ -42,7 +42,7 @@ public abstract class MailSendingEmailServiceTestBase {
     public static final String SENT_COMMENT = "Some sent comment";
 
     @Resource
-    protected MailSendingEmailService emailService;
+    protected EmailService emailService;
 
     @Resource
     private TestHelper testHelper;
