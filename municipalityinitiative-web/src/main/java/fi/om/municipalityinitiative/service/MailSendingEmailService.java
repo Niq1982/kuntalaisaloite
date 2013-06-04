@@ -110,11 +110,11 @@ public class MailSendingEmailService {
     }
 
     
-    public void sendAuthorDeletedEmailToDeletedAuthor(Initiative initiative, Long authorId) {
+    public void sendAuthorDeletedEmailToDeletedAuthor(Initiative initiative, String deletedAuthorEmail) {
 
         emailMessageConstructor
                 .fromTemplate(AUTHOR_DELETED_TO_DELETED_AUTHOR)
-                .addRecipient(authorDao.getAuthor(authorId).getContactInfo().getEmail())
+                .addRecipient(deletedAuthorEmail)
                 .withSubject(messageSource.getMessage("email.author.deleted.to.deleted.author.subject", toArray(), Locales.LOCALE_FI))
                 .withDataMap(toDataMap(initiative, Locales.LOCALE_FI))
                 .send();

@@ -165,6 +165,7 @@ public class TestHelper {
         insert.set(municipalityInitiative.modified, initiativeDraft.modified);
         insert.set(municipalityInitiative.sentComment, initiativeDraft.sentComment);
         insert.set(municipalityInitiative.fixState, initiativeDraft.fixState);
+        insert.set(municipalityInitiative.moderatorComment, initiativeDraft.moderatorComment);
 
         lastInitiativeId = insert.executeWithKey(municipalityInitiative.id);
 
@@ -386,6 +387,7 @@ public class TestHelper {
 
         public Maybe<AuthorDraft> authorDraft = Maybe.absent();
         public FixState fixState = FixState.OK;
+        public String moderatorComment;
 
         public AuthorDraft applyAuthor() {
             this.authorDraft = Maybe.of(new AuthorDraft(this, municipalityId));
@@ -443,6 +445,11 @@ public class TestHelper {
 
         public InitiativeDraft withSentComment(String sentComment) {
             this.sentComment = sentComment;
+            return this;
+        }
+
+        public InitiativeDraft withModeratorComment(String moderatorComment) {
+            this.moderatorComment = moderatorComment;
             return this;
         }
     }

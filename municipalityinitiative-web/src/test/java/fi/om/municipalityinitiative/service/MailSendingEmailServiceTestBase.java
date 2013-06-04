@@ -72,6 +72,7 @@ public abstract class MailSendingEmailServiceTestBase {
                 .withProposal(INITIATIVE_PROPOSAL)
                 .withExtraInfo(EXTRA_INFO)
                 .withSentComment(SENT_COMMENT)
+                .withModeratorComment(MODERATOR_COMMENT)
                 .applyAuthor()
                 .withAuthorAddress(AUTHOR_ADDRESS)
                 .withAuthorPhone(AUTHOR_PHONE)
