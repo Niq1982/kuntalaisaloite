@@ -1,22 +1,25 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
-import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
-import fi.om.municipalityinitiative.newdao.AuthorDao;
-import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeUIUpdateDto;
-import fi.om.municipalityinitiative.util.*;
+import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
+import fi.om.municipalityinitiative.newdao.AuthorDao;
+import fi.om.municipalityinitiative.newdao.InitiativeDao;
+import fi.om.municipalityinitiative.util.FixState;
+import fi.om.municipalityinitiative.util.InitiativeState;
+import fi.om.municipalityinitiative.util.InitiativeType;
+import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.joda.time.DateTime;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import javax.annotation.Resource;
+import javax.mail.MessagingException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -158,6 +161,20 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         assertThat(updated.getState(), is(InitiativeState.REVIEW));
         assertThat(updated.getType(), is(InitiativeType.UNDEFINED));
     }
+
+    @Test
+    public void send_initiative_as_review_sends_emails_to_author_and_moderator() throws MessagingException {
+        service.sendReviewOnlyForAcceptance(testHelper.createDraft(testMunicipality.getId()), TestHelper.authorLoginUserHolder);
+
+        assertFirstSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_STATUS_INFO_PREFIX + EmailMessageType.SENT_TO_REVIEW.name()+".subject");
+        assertSecondSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_NOTIFICATION_TO_MODERATOR_SUBJECT);
+
+//        assertTwoSentEmails(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_STATUS_INFO_PREFIX + EmailMessageType.SENT_TO_REVIEW.name(),
+//                TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_NOTIFICATION_TO_MODERATOR_SUBJECT); // Temporarily sendin om-emails to authors
+
+
+    }
+
 
     @Test
     public void send_initiative_as_review_sets_state_as_review_and_type_as_single_if_single() {

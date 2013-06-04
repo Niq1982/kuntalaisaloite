@@ -15,6 +15,7 @@ import org.joda.time.LocalDate;
 import org.junit.Test;
 
 import javax.annotation.Resource;
+import javax.mail.MessagingException;
 
 import java.util.List;
 
@@ -79,7 +80,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     }
 
     @Test
-    public void adding_participant_does_not_increase_denormalized_participantCount_but_accepting_does() {
+    public void adding_participant_does_not_increase_denormalized_participantCount_but_accepting_does() throws MessagingException, InterruptedException {
         Long initiativeId = testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         long originalParticipantCount = getSingleInitiativeInfo().getParticipantCount();
 
@@ -89,7 +90,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         service.confirmParticipation(participantId, RandomHashGenerator.getPrevious());
         assertThat(getSingleInitiativeInfo().getParticipantCount(), is(originalParticipantCount +1));
 
-        assertOneEmailSent(participantUICreateDto().getParticipantEmail(), EmailSubjectPropertyKeys.EMAIL_PARTICIPATION_CONFIRMATION_SUBJECT);
+        assertUniqueSentEmail(participantUICreateDto().getParticipantEmail(), EmailSubjectPropertyKeys.EMAIL_PARTICIPATION_CONFIRMATION_SUBJECT);
     }
 
     @Test
@@ -128,9 +129,9 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     }
 
     @Test
-    public void preparing_initiative_sends_email() {
+    public void preparing_initiative_sends_email() throws MessagingException, InterruptedException {
         service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
-        assertOneEmailSent(prepareDto().getParticipantEmail(), EmailSubjectPropertyKeys.EMAIL_PREPARE_CREATE_SUBJECT);
+        assertUniqueSentEmail(prepareDto().getParticipantEmail(), EmailSubjectPropertyKeys.EMAIL_PREPARE_CREATE_SUBJECT);
     }
 
     @Test
@@ -171,18 +172,18 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     }
 
     @Test
-    public void confirmAuthorMessage_sends_email_to_authors() {
+    public void confirmAuthorMessage_sends_email_to_authors() throws MessagingException, InterruptedException {
         String confirmationCode = "conf-code";
         testHelper.createAuthorMessage(new AuthorMessage(authorUIMessage(), confirmationCode));
 
         service.confirmAndSendAuthorMessage(confirmationCode);
-        assertOneEmailSent(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_AUTHOR_MESSAGE_TO_AUTHORS_SUBJECT);
+        assertUniqueSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_AUTHOR_MESSAGE_TO_AUTHORS_SUBJECT);
     }
 
     @Test
-    public void addAuthorMessage_sends_verification_email() {
+    public void addAuthorMessage_sends_verification_email() throws MessagingException, InterruptedException {
         service.addAuthorMessage(authorUIMessage());
-        assertOneEmailSent(authorUIMessage().getContactEmail(), EmailSubjectPropertyKeys.EMAIL_AUTHOR_MESSAGE_CONFIRMATION_SUBJECT);
+        assertUniqueSentEmail(authorUIMessage().getContactEmail(), EmailSubjectPropertyKeys.EMAIL_AUTHOR_MESSAGE_CONFIRMATION_SUBJECT);
     }
 
     private AuthorUIMessage authorUIMessage() {

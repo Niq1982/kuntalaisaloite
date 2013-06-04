@@ -12,6 +12,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -41,15 +44,32 @@ public abstract class ServiceIntegrationTestBase {
 
     protected abstract void childSetup();
 
-    protected void assertOneEmailSent(String expectedRecipient, String expectedSubjectPropertyKey, String ... argsInSubject) {
-        try {
+    protected void assertUniqueSentEmail(String expectedRecipient, String expectedSubjectPropertyKey, String... argsInSubject) throws InterruptedException, MessagingException {
+        MimeMessage singleSentMessage = javaMailSenderFake.getSingleSentMessage();
 
-            assertThat(javaMailSenderFake.getSingleRecipient(), is(expectedRecipient));
-            String expectedSubject = messageSource.getMessage(expectedSubjectPropertyKey, argsInSubject, Locales.LOCALE_FI);
-            assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is(expectedSubject));
-        } catch (Exception e) {
-            throw new RuntimeException("Error while checking sent email", e);
-        }
+        assertMessage(expectedRecipient, expectedSubjectPropertyKey, singleSentMessage, argsInSubject);
+    }
+
+    protected void assertFirstSentEmail(String expectedRecipient, String expectedSubjectPropertyKey) throws MessagingException {
+
+        List<MimeMessage> sentMessages = javaMailSenderFake.getSentMessages(2);
+        MimeMessage firstSentMessage = sentMessages.get(0);
+
+        assertMessage(expectedRecipient, expectedSubjectPropertyKey, firstSentMessage, null);
 
     }
+    protected void assertSecondSentEmail(String expectedRecipient, String expectedSubjectPropertyKey) throws MessagingException {
+
+        List<MimeMessage> sentMessages = javaMailSenderFake.getSentMessages(2);
+        MimeMessage secondSendMessage = sentMessages.get(1);
+
+        assertMessage(expectedRecipient, expectedSubjectPropertyKey, secondSendMessage, null);
+    }
+
+    private void assertMessage(String expectedRecipient, String expectedSubjectPropertyKey, MimeMessage secondSendMessage, String[] argsInSubject) throws MessagingException {
+        assertThat(JavaMailSenderFake.getSingleRecipient(secondSendMessage), is(expectedRecipient));
+        String expectedSubject = messageSource.getMessage(expectedSubjectPropertyKey, argsInSubject, Locales.LOCALE_FI);
+        assertThat(secondSendMessage.getSubject(), is(expectedSubject));
+    }
+
 }

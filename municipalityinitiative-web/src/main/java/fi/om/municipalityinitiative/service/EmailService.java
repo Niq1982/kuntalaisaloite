@@ -161,9 +161,10 @@ public class EmailService {
         dataMap.put("emailMessageType", emailMessageType);
         dataMap.put("municipalityEmail", municipalityDao.getMunicipalityEmail(initiativeeee.getMunicipality().getId()));
 
+        List<String> authorEmails = authorDao.getAuthorEmails(initiative.getId());
         emailMessageConstructor
                 .fromTemplate(STATUS_INFO_TEMPLATE)
-                .addRecipients(authorDao.getAuthorEmails(initiative.getId()))
+                .addRecipients(authorEmails)
                 .withSubject(messageSource.getMessage(EMAIL_STATUS_INFO_PREFIX + emailMessageType.name() + ".subject", toArray(), locale))
                 .withDataMap(dataMap)
                 .send();

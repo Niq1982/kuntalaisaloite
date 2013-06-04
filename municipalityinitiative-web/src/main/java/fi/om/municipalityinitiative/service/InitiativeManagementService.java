@@ -116,6 +116,7 @@ public class InitiativeManagementService {
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.REVIEW);
         Initiative initiative = initiativeDao.get(initiativeId);
 
+        // XXX: TEST
         emailService.sendStatusEmail(initiative, EmailMessageType.SENT_TO_REVIEW);
         emailService.sendNotificationToModerator(initiative);
     }
@@ -127,6 +128,7 @@ public class InitiativeManagementService {
         initiativeDao.updateInitiativeFixState(initiativeId, FixState.REVIEW);
 
         Initiative initiative = initiativeDao.get(initiativeId);
+        // XXX: TEST
         emailService.sendStatusEmail(initiative, EmailMessageType.SENT_FIX_TO_REVIEW);
         emailService.sendNotificationToModerator(initiativeDao.get(initiativeId));
     }
@@ -139,6 +141,7 @@ public class InitiativeManagementService {
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
         initiativeDao.updateInitiativeType(initiativeId, InitiativeType.COLLABORATIVE);
         Initiative initiative = initiativeDao.get(initiativeId);
+        // XXX: TEST
         emailService.sendStatusEmail(initiative, EmailMessageType.PUBLISHED_COLLECTING);
     }
 
@@ -152,6 +155,7 @@ public class InitiativeManagementService {
         initiativeDao.markInitiativeAsSent(initiativeId);
         initiativeDao.updateSentComment(initiativeId, sentComment);
         Initiative initiative = initiativeDao.get(initiativeId);
+        // XXX: TEST
         emailService.sendStatusEmail(initiative, EmailMessageType.SENT_TO_MUNICIPALITY);
         emailService.sendSingleToMunicipality(initiative, locale);
     }
@@ -164,6 +168,7 @@ public class InitiativeManagementService {
         initiativeDao.markInitiativeAsSent(initiativeId);
         initiativeDao.updateSentComment(initiativeId, sentComment);
         Initiative initiative = initiativeDao.get(initiativeId);
+        // XXX: TEST
         emailService.sendCollaborativeToMunicipality(initiative, locale);
         emailService.sendCollaborativeToAuthors(initiative);
     }
