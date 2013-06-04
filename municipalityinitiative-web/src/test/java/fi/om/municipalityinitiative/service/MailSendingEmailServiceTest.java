@@ -41,7 +41,7 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
         emailService.sendManagementHashRenewed(createDefaultInitiative(), MANAGEMENT_HASH, AUTHOR_EMAIL);
 
         assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
-        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Sinulle on luotu uusi aloitteen hallintalinkki Kuntalaisaloite.fi-palvelussa"));
+        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Sinulle on luotu uusi aloitteen ylläpitolinkki Kuntalaisaloite.fi-palvelussa"));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.loginAuthor(MANAGEMENT_HASH)));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_NAME));
     }
@@ -200,7 +200,7 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
         emailService.sendAuthorMessages(createDefaultInitiative(), authorMessage, authorEmails);
 
         assertThat(javaMailSenderFake.getSingleRecipient(), is(authorEmails.get(0)));
-        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Yhteydenotto aloitteeseesi liittyen / SV"));
+        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Olet saanut yhteydenoton aloitteeseesi liittyen / Samma på svenska"));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(authorMessage.getContactEmail()));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(authorMessage.getContactName()));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(authorMessage.getMessage()));
