@@ -249,7 +249,13 @@ public class InitiativeViewController extends BaseController {
             return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.AUTHOR_MESSAGE_ADDED, request);
         }
         else {
-            return view(initiativeId, model, locale, request);
+            return ViewGenerator.collaborativeView(publicInitiativeService.getMunicipalityInitiative(initiativeId),
+                    authorService.findPublicAuthors(initiativeId),
+                    municipalityService.findAllMunicipalities(locale),
+                    participantService.getParticipantCount(initiativeId),
+                    new ParticipantUICreateDto(),
+                    userService.hasManagementRightForInitiative(initiativeId, request),
+                    authorUIMessage).view(model, Urls.get(locale).alt().view(initiativeId));
         }
     }
 
