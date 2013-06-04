@@ -208,7 +208,7 @@ public class MailSendingEmailService {
         List<Author> authorsss = authorDao.findAuthors(initiative.getId());
         Initiative initiativeeee = initiativeDao.get(initiative.getId());
 
-        String TEMP_MODERATOR_EMAIL_CHANGE = authors.get(0).getContactInfo().getEmail();
+        String TEMP_MODERATOR_EMAIL_CHANGE = authorsss.get(0).getContactInfo().getEmail();
 
         emailMessageConstructor
                 .fromTemplate(NOTIFICATION_TO_MODERATOR)
