@@ -97,7 +97,7 @@ public class InitiativeManagementService {
         authorDao.updateAuthorInformation(loginUserHolder.getAuthorId(), updateDto.getContactInfo());
     }
 
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = false) // XXX: Test that emails are sent
     public void sendReviewAndStraightToMunicipality(Long initiativeId, LoginUserHolder loginUserHolder, String sentComment) {
         markAsReviewAndSendEmail(initiativeId, loginUserHolder);
         initiativeDao.updateInitiativeType(initiativeId, InitiativeType.SINGLE);
@@ -116,7 +116,6 @@ public class InitiativeManagementService {
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.REVIEW);
         Initiative initiative = initiativeDao.get(initiativeId);
 
-        // XXX: TEST
         emailService.sendStatusEmail(initiative, EmailMessageType.SENT_TO_REVIEW);
         emailService.sendNotificationToModerator(initiative);
     }

@@ -169,10 +169,6 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         assertFirstSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_STATUS_INFO_PREFIX + EmailMessageType.SENT_TO_REVIEW.name()+".subject");
         assertSecondSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_NOTIFICATION_TO_MODERATOR_SUBJECT);
 
-//        assertTwoSentEmails(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_STATUS_INFO_PREFIX + EmailMessageType.SENT_TO_REVIEW.name(),
-//                TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_NOTIFICATION_TO_MODERATOR_SUBJECT); // Temporarily sendin om-emails to authors
-
-
     }
 
 
@@ -185,6 +181,13 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
         assertThat(updated.getState(), is(InitiativeState.REVIEW));
         assertThat(updated.getType(), is(InitiativeType.SINGLE));
+    }
+
+    @Test
+    public void send_initiative_as_review_and_straight_to_municipality_sends_emails_to_author_and_moderator() throws MessagingException {
+        service.sendReviewAndStraightToMunicipality(testHelper.createDraft(testMunicipality.getId()), TestHelper.authorLoginUserHolder, null);
+        assertFirstSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_STATUS_INFO_PREFIX + EmailMessageType.SENT_TO_REVIEW.name()+".subject");
+        assertSecondSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_NOTIFICATION_TO_MODERATOR_SUBJECT);
     }
 
     @Test(expected = OperationNotAllowedException.class)
@@ -236,6 +239,21 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         service.sendFixToReview(accepted, TestHelper.authorLoginUserHolder);
 
         assertThat(initiativeDao.get(accepted).getFixState(), is(FixState.REVIEW));
+    }
+
+    @Test
+    public void send_fix_to_review_sends_emails_to_author_and_moderator() throws MessagingException {
+        Long accepted = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withState(InitiativeState.PUBLISHED)
+                .withFixState(FixState.FIX)
+                .applyAuthor()
+                .toInitiativeDraft());
+
+        service.sendFixToReview(accepted, TestHelper.authorLoginUserHolder);
+
+        assertFirstSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_STATUS_INFO_PREFIX + EmailMessageType.SENT_FIX_TO_REVIEW.name()+".subject");
+        assertSecondSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_NOTIFICATION_TO_MODERATOR_SUBJECT);
+
     }
 
     @Test(expected = OperationNotAllowedException.class)
