@@ -39,7 +39,7 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
     @Test
     public void sending_new_management_hash_contains_all_information() throws Exception {
 
-        emailService.sendManagementHashRenewed(createDefaultInitiative(), MANAGEMENT_HASH, AUTHOR_EMAIL);
+        emailService.sendManagementHashRenewed(createDefaultInitiative(), MANAGEMENT_HASH, authorId());
 
         assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Sinulle on luotu uusi aloitteen hallintalinkki Kuntalaisaloite.fi-palvelussa"));
@@ -117,7 +117,7 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
 
     @Test
     public void author_has_been_deleted_email_to_author_contains_all_information() throws Exception {
-        emailService.sendAuthorDeletedEmailToDeletedAuthor(createDefaultInitiative(), AUTHOR_EMAIL);
+        emailService.sendAuthorDeletedEmailToDeletedAuthor(createDefaultInitiative(), authorId());
 
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Sinut on poistettu aloitteen vastuuhenkilöistä"));
         assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));

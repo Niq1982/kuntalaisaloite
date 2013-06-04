@@ -164,6 +164,6 @@ public class ModerationService {
         // TODO: Multiple initiatives under one author is no more possible?
         Initiative initiative = initiativeDao.get(authorsInitiatives.iterator().next());
         String authorEmail = authorDao.getAuthor(authorId).getContactInfo().getEmail();
-        mailSendingEmailService.sendManagementHashRenewed(initiative, newManagementHash, authorEmail);
+        mailSendingEmailService.sendManagementHashRenewed(initiative, newManagementHash, authorId);
     }
 }

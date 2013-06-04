@@ -110,11 +110,11 @@ public class MailSendingEmailService {
     }
 
     
-    public void sendAuthorDeletedEmailToDeletedAuthor(Initiative initiative, String authorEmail) {
+    public void sendAuthorDeletedEmailToDeletedAuthor(Initiative initiative, Long authorId) {
 
         emailMessageConstructor
                 .fromTemplate(AUTHOR_DELETED_TO_DELETED_AUTHOR)
-                .addRecipient(authorEmail)
+                .addRecipient(authorDao.getAuthor(authorId).getContactInfo().getEmail())
                 .withSubject(messageSource.getMessage("email.author.deleted.to.deleted.author.subject", toArray(), Locales.LOCALE_FI))
                 .withDataMap(toDataMap(initiative, Locales.LOCALE_FI))
                 .send();
@@ -180,13 +180,13 @@ public class MailSendingEmailService {
     }
 
     
-    public void sendManagementHashRenewed(Initiative initiative, String managementHash, String authorEmail) {
-        HashMap<String, Object> dataMap = toDataMap(initiative, Locales.LOCALE_FI);
+    public void sendManagementHashRenewed(Initiative initiative, String managementHash, Long authorId) {
+        HashMap<String, Object> dataMap = toDataMap(initiativeDao.get(initiative.getId()), Locales.LOCALE_FI);
         dataMap.put("managementHash", managementHash);
 
         emailMessageConstructor
                 .fromTemplate(MANAGEMENT_HASH_RENEWED)
-                .addRecipient(authorEmail)
+                .addRecipient(authorDao.getAuthor(authorId).getContactInfo().getEmail())
                 .withSubject(messageSource.getMessage("email.managementhash.renewed.subject", toArray(), Locales.LOCALE_FI))
                 .withDataMap(dataMap)
                 .send();
