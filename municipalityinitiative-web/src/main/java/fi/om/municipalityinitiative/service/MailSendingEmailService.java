@@ -156,15 +156,16 @@ public class MailSendingEmailService {
 
         Locale locale = Locales.LOCALE_FI;
 
-        HashMap<String, Object> dataMap = toDataMap(initiative, locale);
+        Initiative initiativeeee = initiativeDao.get(initiative.getId());
+
+
+        HashMap<String, Object> dataMap = toDataMap(initiativeeee, locale);
         dataMap.put("emailMessageType", emailMessageType);
-        if (municipalityEmail != null) { // XXX: Hmm. Shiiit.
-            dataMap.put("municipalityEmail", municipalityEmail);
-        }
+        dataMap.put("municipalityEmail", municipalityDao.getMunicipalityEmail(initiativeeee.getMunicipality().getId()));
 
         emailMessageConstructor
                 .fromTemplate(STATUS_INFO_TEMPLATE)
-                .addRecipients(sendTo)
+                .addRecipients(authorDao.getAuthorEmails(initiative.getId()))
                 .withSubject(messageSource.getMessage("email.status.info." + emailMessageType.name() + ".subject", toArray(), locale))
                 .withDataMap(dataMap)
                 .send();
