@@ -86,7 +86,7 @@ public class EmailService {
     }
 
     
-    public void sendSingleToMunicipality(Initiative initiative, List<Author> authors, String municipalityEmail, Locale locale) {
+    public void sendSingleToMunicipality(Initiative initiative, Locale locale) {
         emailMessageConstructor
                 .fromTemplate(NOT_COLLECTABLE_TEMPLATE)
                 .addRecipient(municipalityDao.getMunicipalityEmail(initiativeDao.get(initiative.getId()).getMunicipality().getId()))
@@ -96,7 +96,7 @@ public class EmailService {
     }
 
     
-    public void sendAuthorDeletedEmailToOtherAuthors(Initiative initiative, List<String> sendTo, ContactInfo removedAuthorsContactInfo) {
+    public void sendAuthorDeletedEmailToOtherAuthors(Initiative initiative, ContactInfo removedAuthorsContactInfo) {
 
         HashMap<String, Object> dataMap = toDataMap(initiativeDao.get(initiative.getId()), Locales.LOCALE_FI);
         dataMap.put("contactInfo", removedAuthorsContactInfo);
@@ -121,7 +121,7 @@ public class EmailService {
     }
 
     
-    public void sendCollaborativeToMunicipality(Initiative initiative, List<Author> authors, List<Participant> participants, String municipalityEmail, Locale locale) {
+    public void sendCollaborativeToMunicipality(Initiative initiative, Locale locale) {
 
         Initiative initiativeeee = initiativeDao.get(initiative.getId());
 
@@ -135,10 +135,7 @@ public class EmailService {
     }
 
     
-    public void sendCollaborativeToAuthors(Initiative initiative,
-                                           List<Author> authors,
-                                           List<Participant> participants,
-                                           List<String> authorEmails) {
+    public void sendCollaborativeToAuthors(Initiative initiative) {
         Locale locale = Locales.LOCALE_FI;
 
         Initiative initiativeeee = initiativeDao.get(initiative.getId());
@@ -152,7 +149,7 @@ public class EmailService {
     }
 
     
-    public void sendStatusEmail(Initiative initiative, List<String> sendTo, String municipalityEmail, EmailMessageType emailMessageType) {
+    public void sendStatusEmail(Initiative initiative, EmailMessageType emailMessageType) {
 
         Locale locale = Locales.LOCALE_FI;
 
@@ -173,7 +170,7 @@ public class EmailService {
     }
 
     
-    public void sendPrepareCreatedEmail(Initiative initiative, Long authorId, String managementHash, String authorEmail, Locale locale) {
+    public void sendPrepareCreatedEmail(Initiative initiative, Long authorId, String managementHash, Locale locale) {
         HashMap<String, Object> dataMap = toDataMap(initiativeDao.get(initiative.getId()), locale);
         dataMap.put("managementHash", managementHash);
 
@@ -200,7 +197,7 @@ public class EmailService {
     }
 
     
-    public void sendNotificationToModerator(Initiative initiative, List<Author> authors, String TEMPORARILY_REPLACING_OM_EMAIL) {
+    public void sendNotificationToModerator(Initiative initiative) {
 
         Locale locale = Locales.LOCALE_FI;
 
@@ -246,7 +243,7 @@ public class EmailService {
     }
 
     
-    public void sendAuthorMessages(Initiative initiative, AuthorMessage authorMessage, List<String> authorEmails) {
+    public void sendAuthorMessages(Initiative initiative, AuthorMessage authorMessage) {
         Locale localeFi = Locales.LOCALE_FI;
         HashMap<String, Object> dataMap = toDataMap(initiativeDao.get(initiative.getId()), localeFi);
         dataMap.put("authorMessage", authorMessage);

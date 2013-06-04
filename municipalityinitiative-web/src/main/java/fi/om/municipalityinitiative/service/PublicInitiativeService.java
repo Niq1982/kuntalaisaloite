@@ -99,7 +99,7 @@ public class PublicInitiativeService {
         String managementHash = RandomHashGenerator.longHash();
         Long authorId = authorDao.createAuthor(initiativeId, participantId, managementHash);
 
-        emailService.sendPrepareCreatedEmail(initiativeDao.get(initiativeId), authorId, managementHash, createDto.getParticipantEmail(), locale);
+        emailService.sendPrepareCreatedEmail(initiativeDao.get(initiativeId), authorId, managementHash, locale);
 
         return initiativeId;
     }
@@ -153,7 +153,7 @@ public class PublicInitiativeService {
         Initiative initiative = initiativeDao.get(authorMessage.getInitiativeId());
         List<String> authorEmails = authorDao.getAuthorEmails(authorMessage.getInitiativeId());
 
-        emailService.sendAuthorMessages(initiative, authorMessage, authorEmails);
+        emailService.sendAuthorMessages(initiative, authorMessage);
 
         return initiative.getId();
 

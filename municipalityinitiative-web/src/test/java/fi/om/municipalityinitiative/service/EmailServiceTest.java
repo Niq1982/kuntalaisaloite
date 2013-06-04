@@ -1,10 +1,8 @@
 package fi.om.municipalityinitiative.service;
 
-import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.dto.service.Initiative;
-import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.Urls;
 import org.junit.Before;
@@ -29,7 +27,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
     @Test
     public void prepare_initiative_sets_subject_and_login_url() throws Exception {
-        emailService.sendPrepareCreatedEmail(createDefaultInitiative(), authorId(), MANAGEMENT_HASH, AUTHOR_EMAIL, Locales.LOCALE_FI);
+        emailService.sendPrepareCreatedEmail(createDefaultInitiative(), authorId(), MANAGEMENT_HASH, Locales.LOCALE_FI);
 
         assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Olet saanut linkin kuntalaisaloitteen tekemiseen Kuntalaisaloite.fi-palvelussa"));
@@ -51,7 +49,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
     public void review_notification_to_moderator_contains_all_information() throws Exception {
 
         Initiative initiative = createDefaultInitiative();
-        emailService.sendNotificationToModerator(initiative,defaultAuthors(), "anystring");
+        emailService.sendNotificationToModerator(initiative);
           assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
 //        assertThat(getSingleRecipient(), is(IntegrationTestFakeEmailConfiguration.EMAIL_DEFAULT_OM)); // XXX: Restore this when we want to send emails to om
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Kuntalaisaloite tarkastettavaksi"));
@@ -85,7 +83,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
     public void single_to_municipality_contains_all_information() throws Exception {
 
         Initiative initiative = createDefaultInitiative();
-        emailService.sendSingleToMunicipality(initiative, defaultAuthors(), MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
+        emailService.sendSingleToMunicipality(initiative, Locales.LOCALE_FI);
 
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Kuntalaisaloite: "+ INITIATIVE_NAME));
         assertThat(javaMailSenderFake.getSingleRecipient(), is(MUNICIPALITY_EMAIL));
@@ -103,7 +101,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
     @Test
     public void author_has_been_deleted_email_to_everyone_contains_all_information() throws Exception {
-        emailService.sendAuthorDeletedEmailToOtherAuthors(createDefaultInitiative(), AUTHOR_EMAILS, contactInfo());
+        emailService.sendAuthorDeletedEmailToOtherAuthors(createDefaultInitiative(), contactInfo());
 
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Vastuuhenkilö on poistettu aloitteestasi"));
         assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
@@ -144,7 +142,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
     @Test
     public void collaborative_to_municipality_contains_all_information() throws Exception {
-        emailService.sendCollaborativeToMunicipality(createDefaultInitiative(), defaultAuthors(), Lists.<Participant>newArrayList(), MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
+        emailService.sendCollaborativeToMunicipality(createDefaultInitiative(), Locales.LOCALE_FI);
 
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Kuntalaisaloite: "+ INITIATIVE_NAME));
         assertThat(javaMailSenderFake.getSingleRecipient(), is(MUNICIPALITY_EMAIL));
@@ -159,7 +157,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
     @Test
     public void collaborative_to_authors_contains_all_information() throws Exception {
-        emailService.sendCollaborativeToAuthors(createDefaultInitiative(), defaultAuthors(), Lists.<Participant>newArrayList(), AUTHOR_EMAILS);
+        emailService.sendCollaborativeToAuthors(createDefaultInitiative());
 
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Aloite on lähetetty kuntaan"));
         assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
@@ -201,7 +199,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         List<String> authorEmails = Collections.singletonList("author@example.com");
         AuthorMessage authorMessage = authorMessage();
 
-        emailService.sendAuthorMessages(createDefaultInitiative(), authorMessage, authorEmails);
+        emailService.sendAuthorMessages(createDefaultInitiative(), authorMessage);
 
         assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Yhteydenotto aloitteeseesi liittyen / SV"));
