@@ -140,11 +140,14 @@ public class MailSendingEmailService {
                                            List<Participant> participants,
                                            List<String> authorEmails) {
         Locale locale = Locales.LOCALE_FI;
+
+        Initiative initiativeeee = initiativeDao.get(initiative.getId());
+
         emailMessageConstructor.fromTemplate(COLLABORATIVE_TO_MUNICIPALITY)
                 .addRecipients(authorDao.getAuthorEmails(initiative.getId()))
                 .withSubject(messageSource.getMessage("email.collaborative.author.subject", toArray(), locale))
-                .withDataMap(toDataMap(initiative, authors, locale))
-                .withAttachment(initiative, participants)
+                .withDataMap(toDataMap(initiativeeee, authorDao.findAuthors(initiative.getId()), locale))
+                .withAttachment(initiativeeee, participantDao.findAllParticipants(initiative.getId()))
                 .send();
     }
 
