@@ -312,7 +312,7 @@ public class AppConfiguration {
     }
 
     @Bean
-    public EmailService emailService() {
+    public MailSendingEmailService emailService() {
         return new MailSendingEmailService();
     }
 

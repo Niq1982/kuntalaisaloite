@@ -33,7 +33,7 @@ public class AuthorService {
     ParticipantDao participantDao;
 
     @Resource
-    EmailService emailService;
+    MailSendingEmailService emailService;
 
     @Transactional(readOnly = false)
     public void createAuthorInvitation(Long initiativeId, LoginUserHolder loginUserHolder, AuthorInvitationUICreateDto uiCreateDto) {

@@ -6,10 +6,8 @@ import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.dto.Author;
-import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
-import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.util.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,7 +37,7 @@ public class ModerationServiceTest {
         moderationService = new ModerationService();
 
         moderationService.initiativeDao = initiativeDaoMock;
-        moderationService.emailService = mock(EmailService.class);
+        moderationService.mailSendingEmailService = mock(MailSendingEmailService.class);
         moderationService.municipalityDao = mock(MunicipalityDao.class);
         moderationService.authorDao = mock(AuthorDao.class);
         stub(moderationService.authorDao.getAuthorEmails(anyLong())).toReturn(Collections.singletonList("")); // Avoid nullpointer temporarily
@@ -96,7 +94,7 @@ public class ModerationServiceTest {
 
         moderationService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
 
-        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyList(), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM));
+        verify(moderationService.mailSendingEmailService).sendStatusEmail(any(Initiative.class), anyList(), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM));
     }
 
     @Test
@@ -125,8 +123,8 @@ public class ModerationServiceTest {
 
         moderationService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
 
-        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM_AND_SENT));
-        verify(moderationService.emailService).sendSingleToMunicipality(any(Initiative.class), anyListOf(Author.class), anyString(), eq(Locales.LOCALE_FI));
+        verify(moderationService.mailSendingEmailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM_AND_SENT));
+        verify(moderationService.mailSendingEmailService).sendSingleToMunicipality(any(Initiative.class), anyListOf(Author.class), anyString(), eq(Locales.LOCALE_FI));
 
     }
 
@@ -155,7 +153,7 @@ public class ModerationServiceTest {
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.REVIEW, InitiativeType.UNDEFINED));
 
         moderationService.reject(loginUserHolder, INITIATIVE_ID, null);
-        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.REJECTED_BY_OM));
+        verify(moderationService.mailSendingEmailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.REJECTED_BY_OM));
     }
 
     @Test
@@ -176,8 +174,8 @@ public class ModerationServiceTest {
 
         String moderatorComment = "moderator comment";
         moderationService.accept(loginUserHolder, INITIATIVE_ID, moderatorComment, null);
-        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM_FIX));
-        verifyNoMoreInteractions(moderationService.emailService);
+        verify(moderationService.mailSendingEmailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM_FIX));
+        verifyNoMoreInteractions(moderationService.mailSendingEmailService);
     }
 
     @Test
@@ -198,8 +196,8 @@ public class ModerationServiceTest {
 
         String moderatorComment = "moderator comment";
         moderationService.reject(loginUserHolder, INITIATIVE_ID, moderatorComment);
-        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.REJECTED_BY_OM));
-        verifyNoMoreInteractions(moderationService.emailService);
+        verify(moderationService.mailSendingEmailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.REJECTED_BY_OM));
+        verifyNoMoreInteractions(moderationService.mailSendingEmailService);
     }
 
     @Test(expected = OperationNotAllowedException.class)
@@ -226,7 +224,7 @@ public class ModerationServiceTest {
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE));
 
         moderationService.sendInitiativeBackForFixing(loginUserHolder, INITIATIVE_ID, "");
-        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.REJECTED_BY_OM));
+        verify(moderationService.mailSendingEmailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.REJECTED_BY_OM));
     }
 
     private static Initiative publishedCollaborative(FixState fixState) {

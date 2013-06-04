@@ -32,7 +32,7 @@ public class PublicInitiativeService {
     private ParticipantDao participantDao;
 
     @Resource
-    private EmailService emailService;
+    private MailSendingEmailService emailService;
 
     @Resource
     private MunicipalityDao municipalityDao;

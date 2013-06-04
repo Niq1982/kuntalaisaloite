@@ -7,6 +7,10 @@ import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
+import fi.om.municipalityinitiative.newdao.AuthorDao;
+import fi.om.municipalityinitiative.newdao.InitiativeDao;
+import fi.om.municipalityinitiative.newdao.MunicipalityDao;
+import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Task;
 import fi.om.municipalityinitiative.web.Urls;
@@ -20,7 +24,7 @@ import java.util.Locale;
 import java.util.Map;
 
 @Task
-public class MailSendingEmailService implements EmailService {
+public class MailSendingEmailService {
 
     private static final String INITIATIVE_PREPARE_VERIFICATION_TEMPLATE = "initiative-create-verification";
     private static final String NOT_COLLECTABLE_TEMPLATE = "municipality-not-collaborative";
@@ -37,12 +41,23 @@ public class MailSendingEmailService implements EmailService {
     private static final String AUTHOR_MESSAGE_TO_AUTHORS = "author-message-to-authors";
 
     @Resource
+    InitiativeDao initiativeDao;
+
+    @Resource
+    AuthorDao authorDao;
+
+    @Resource
+    ParticipantDao participantDao;
+
+    @Resource
+    MunicipalityDao municipalityDao;
+
+    @Resource
     private MessageSource messageSource;
 
     @Resource
     private EmailMessageConstructor emailMessageConstructor;
 
-    @Override
     public void sendAuthorConfirmedInvitation(Initiative initiative, String authorsEmail, String managementHash, Locale locale) {
 
         HashMap<String, Object> dataMap = toDataMap(initiative, locale);
@@ -57,7 +72,6 @@ public class MailSendingEmailService implements EmailService {
 
     }
 
-    @Override
     public void sendAuthorInvitation(Initiative initiative, AuthorInvitation authorInvitation) {
         Locale locale = Locales.LOCALE_FI;
         HashMap<String, Object> dataMap = toDataMap(initiative, locale);
@@ -71,7 +85,7 @@ public class MailSendingEmailService implements EmailService {
                 .send();
     }
 
-    @Override
+    
     public void sendSingleToMunicipality(Initiative initiative, List<Author> authors, String municipalityEmail, Locale locale) {
         emailMessageConstructor
                 .fromTemplate(NOT_COLLECTABLE_TEMPLATE)
@@ -81,7 +95,7 @@ public class MailSendingEmailService implements EmailService {
                 .send();
     }
 
-    @Override
+    
     public void sendAuthorDeletedEmailToOtherAuthors(Initiative initiative, List<String> sendTo, ContactInfo removedAuthorsContactInfo) {
 
         HashMap<String, Object> dataMap = toDataMap(initiative, Locales.LOCALE_FI);
@@ -95,7 +109,7 @@ public class MailSendingEmailService implements EmailService {
                 .send();
     }
 
-    @Override
+    
     public void sendAuthorDeletedEmailToDeletedAuthor(Initiative initiative, String authorEmail) {
 
         emailMessageConstructor
@@ -106,7 +120,7 @@ public class MailSendingEmailService implements EmailService {
                 .send();
     }
 
-    @Override
+    
     public void sendCollaborativeToMunicipality(Initiative initiative, List<Author> authors, List<Participant> participants, String municipalityEmail, Locale locale) {
         emailMessageConstructor
                 .fromTemplate(COLLABORATIVE_TO_MUNICIPALITY)
@@ -117,7 +131,7 @@ public class MailSendingEmailService implements EmailService {
                 .send();
     }
 
-    @Override
+    
     public void sendCollaborativeToAuthors(Initiative initiative,
                                            List<Author> authors,
                                            List<Participant> participants,
@@ -131,7 +145,7 @@ public class MailSendingEmailService implements EmailService {
                 .send();
     }
 
-    @Override
+    
     public void sendStatusEmail(Initiative initiative, List<String> sendTo, String municipalityEmail, EmailMessageType emailMessageType) {
 
         Locale locale = Locales.LOCALE_FI;
@@ -151,7 +165,7 @@ public class MailSendingEmailService implements EmailService {
 
     }
 
-    @Override
+    
     public void sendPrepareCreatedEmail(Initiative initiative, Long authorId, String managementHash, String authorEmail, Locale locale) {
         HashMap<String, Object> dataMap = toDataMap(initiative, locale);
         dataMap.put("managementHash", managementHash);
@@ -163,7 +177,7 @@ public class MailSendingEmailService implements EmailService {
                 .send();
     }
 
-    @Override
+    
     public void sendManagementHashRenewed(Initiative initiative, String managementHash, String authorEmail) {
         HashMap<String, Object> dataMap = toDataMap(initiative, Locales.LOCALE_FI);
         dataMap.put("managementHash", managementHash);
@@ -176,7 +190,7 @@ public class MailSendingEmailService implements EmailService {
                 .send();
     }
 
-    @Override
+    
     public void sendNotificationToModerator(Initiative initiative, List<Author> authors, String TEMPORARILY_REPLACING_OM_EMAIL) {
 
         Locale locale = Locales.LOCALE_FI;
@@ -190,7 +204,7 @@ public class MailSendingEmailService implements EmailService {
                 .send();
     }
 
-    @Override
+    
     public void sendParticipationConfirmation(Initiative initiative, String participantEmail, Long participantId, String confirmationCode, Locale locale) {
         HashMap<String, Object> dataMap = toDataMap(initiative, locale);
         dataMap.put("participantId", participantId);
@@ -203,7 +217,7 @@ public class MailSendingEmailService implements EmailService {
                 .send();
     }
 
-    @Override
+    
     public void sendAuthorMessageConfirmationEmail(Initiative initiative, AuthorMessage authorMessage, Locale locale) {
         HashMap<String, Object> dataMap = toDataMap(initiative, locale);
         dataMap.put("authorMessage", authorMessage);
@@ -216,7 +230,7 @@ public class MailSendingEmailService implements EmailService {
 
     }
 
-    @Override
+    
     public void sendAuthorMessages(Initiative initiative, AuthorMessage authorMessage, List<String> authorEmails) {
         Locale localeFi = Locales.LOCALE_FI;
         HashMap<String, Object> dataMap = toDataMap(initiative, localeFi);

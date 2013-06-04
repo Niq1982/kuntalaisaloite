@@ -45,7 +45,7 @@ public abstract class MailSendingEmailServiceTestBase {
     public static final String SENT_COMMENT = "Some sent comment";
 
     @Resource
-    protected EmailService emailService;
+    protected MailSendingEmailService emailService;
 
     // This replaces the JavaMailSender used by EmailService.
     // May be used for asserting "sent" emails.
@@ -57,6 +57,11 @@ public abstract class MailSendingEmailServiceTestBase {
     @BeforeClass
     public static void beforeClass() throws InterruptedException {
         Thread.sleep(1000); // This is here to make sure old email-sending-tasks have sent their emails.
+    }
+
+    @Before
+    public void setup() {
+        javaMailSenderFake.clearSentMessages();
     }
 
     protected static Initiative createDefaultInitiative() {
@@ -89,11 +94,6 @@ public abstract class MailSendingEmailServiceTestBase {
         contactInfo.setEmail(AUTHOR_EMAIL);
         contactInfo.setPhone(AUTHOR_PHONE);
         return contactInfo;
-    }
-
-    @Before
-    public void setup(){
-        javaMailSenderFake.clearSentMessages();
     }
 
 }
