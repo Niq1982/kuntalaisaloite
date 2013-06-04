@@ -197,12 +197,18 @@ public class MailSendingEmailService {
 
         Locale locale = Locales.LOCALE_FI;
 
+
+        List<Author> authorsss = authorDao.findAuthors(initiative.getId());
+        Initiative initiativeeee = initiativeDao.get(initiative.getId());
+
+        String TEMP_MODERATOR_EMAIL_CHANGE = authors.get(0).getContactInfo().getEmail();
+
         emailMessageConstructor
                 .fromTemplate(NOTIFICATION_TO_MODERATOR)
                         //.withSendToModerator()
-                .addRecipient(TEMPORARILY_REPLACING_OM_EMAIL)
-                .withSubject(messageSource.getMessage("email.notification.to.moderator.subject", toArray(initiative.getName()), locale))
-                .withDataMap(toDataMap(initiative, authors, locale))
+                .addRecipient(TEMP_MODERATOR_EMAIL_CHANGE)
+                .withSubject(messageSource.getMessage("email.notification.to.moderator.subject", toArray(initiativeeee.getName()), locale))
+                .withDataMap(toDataMap(initiativeeee, authorsss, locale))
                 .send();
     }
 

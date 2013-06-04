@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.service;
 import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
+import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.Urls;
@@ -48,8 +49,10 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
     
     @Test
     public void review_notification_to_moderator_contains_all_information() throws Exception {
-        emailService.sendNotificationToModerator(createDefaultInitiative(),defaultAuthors(), "TEMP_EMAIL@example.com");
-          assertThat(javaMailSenderFake.getSingleRecipient(), is("TEMP_EMAIL@example.com"));
+
+        Initiative initiative = createDefaultInitiative();
+        emailService.sendNotificationToModerator(initiative,defaultAuthors(), "anystring");
+          assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
 //        assertThat(getSingleRecipient(), is(IntegrationTestFakeEmailConfiguration.EMAIL_DEFAULT_OM)); // XXX: Restore this when we want to send emails to om
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Kuntalaisaloite tarkastettavaksi"));
         
@@ -60,7 +63,7 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_EMAIL));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_NAME));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_PHONE));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.moderation(INITIATIVE_ID)));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.moderation(initiative.getId())));
         
     }
 
@@ -81,7 +84,8 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
     @Test
     public void single_to_municipality_contains_all_information() throws Exception {
 
-        emailService.sendSingleToMunicipality(createDefaultInitiative(), defaultAuthors(), MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
+        Initiative initiative = createDefaultInitiative();
+        emailService.sendSingleToMunicipality(initiative, defaultAuthors(), MUNICIPALITY_EMAIL, Locales.LOCALE_FI);
 
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Kuntalaisaloite: "+ INITIATIVE_NAME));
         assertThat(javaMailSenderFake.getSingleRecipient(), is(MUNICIPALITY_EMAIL));
@@ -92,7 +96,7 @@ public class MailSendingEmailServiceTest extends MailSendingEmailServiceTestBase
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_EMAIL));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_NAME));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_PHONE));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.view(INITIATIVE_ID)));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.view(initiative.getId())));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(EXTRA_INFO));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(SENT_COMMENT));
     }
