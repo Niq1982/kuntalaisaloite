@@ -255,6 +255,10 @@
     </#if>
 </#macro>
 
+<#--
+ * publicViewLink
+ *
+ -->
 <#macro publicViewLink type="">
     <#assign viewURL = urls.get(switchLocale!locale).view(initiative.id) />
 
@@ -268,6 +272,10 @@
     </#if>
 </#macro>
 
+<#--
+ * adminViewLink
+ *
+ -->
 <#macro adminViewLink type="">
     <#assign adminURL = urls.get(switchLocale!locale).loginAuthor(managementHash) />
     
@@ -279,6 +287,15 @@
         
         ${adminURL}
     </#if>
+</#macro>
+
+<#--
+ * separator
+ *
+ * Plain text block separator
+ -->
+<#macro separator>
+----------------------------------------------------------
 </#macro>
 
 </#escape>

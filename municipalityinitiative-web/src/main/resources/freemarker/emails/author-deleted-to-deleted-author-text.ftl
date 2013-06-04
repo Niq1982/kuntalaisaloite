@@ -10,7 +10,7 @@
 <#-- Swedish part -->
 <#global switchLocale = altLocale />
 
---------
+<@b.separator />
 
 <@content />
 
@@ -29,7 +29,7 @@
      
     <@u.message messageKeyPrefix+".noRightsToLogin"/>
     
-    ----
+    <@b.separator />
 
     <@b.emailFooter type />
 </#macro>

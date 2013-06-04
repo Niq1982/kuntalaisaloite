@@ -12,14 +12,14 @@
 
 <@b.initiativeDetails type=type showProposal=true showDate=true showExtraInfo=true />
 
-----
+<@b.separator />
 
 <@b.authorList type />
 
-----
+<@b.separator />
 
 <@b.participants type />
 
-----
+<@b.separator />
 
 <@b.emailFooter type ".sentToMunicipality" />
