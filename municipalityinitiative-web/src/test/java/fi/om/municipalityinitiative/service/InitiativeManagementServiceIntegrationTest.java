@@ -267,7 +267,6 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     public void publish_initiative_and_start_collecting_sets_all_data() {
         Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
 
-//        service.publishAcceptedInitiative(accepted, true, authorLoginUserHolder, null);
         service.publishAndStartCollecting(accepted, TestHelper.authorLoginUserHolder);
 
         Initiative collecting = initiativeDao.get(accepted);
@@ -276,10 +275,17 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         assertThat(collecting.getSentTime().isPresent(), is(false));
     }
 
+    @Test
+    public void publish_initiative_and_start_collecting_sends_status_email_to_author() throws MessagingException, InterruptedException {
+        Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
+
+        service.publishAndStartCollecting(accepted, TestHelper.authorLoginUserHolder);
+        assertUniqueSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_STATUS_INFO_PREFIX+EmailMessageType.PUBLISHED_COLLECTING.name()+".subject");
+    }
+
     @Test(expected = AccessDeniedException.class)
     public void publish_inititive_and_send_to_municipality_fails_of_not_author() {
         Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
-//        service.publishAcceptedInitiative(accepted, true, unknownLoginUserHolder, null);
         service.publishAndSendToMunicipality(accepted, TestHelper.unknownLoginUserHolder, "", null);
     }
 

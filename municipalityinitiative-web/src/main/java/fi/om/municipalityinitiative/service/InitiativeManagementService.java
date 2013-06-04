@@ -127,7 +127,6 @@ public class InitiativeManagementService {
         initiativeDao.updateInitiativeFixState(initiativeId, FixState.REVIEW);
 
         Initiative initiative = initiativeDao.get(initiativeId);
-        // XXX: TEST
         emailService.sendStatusEmail(initiative, EmailMessageType.SENT_FIX_TO_REVIEW);
         emailService.sendNotificationToModerator(initiativeDao.get(initiativeId));
     }
