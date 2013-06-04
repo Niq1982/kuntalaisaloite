@@ -253,7 +253,7 @@ $(document).ready(function () {
 	});
 	
 	// Action for external links
-	$('a[rel=external]').click(function(){
+	$('a.external').click(function(){
 		window.open( $(this).attr('href') );
 		return false;
 	});
@@ -692,26 +692,27 @@ var municipalitySelection = (function() {
 * Choose initiative type
 * ======================
 * 
-* 
-* 
 */
 (function() {
-	var type =		$('.initiative-type'),
+	var type =		$('.initiative-type.enabled'),
 		cbClass =	'.checkbox',
-		cb = 		type.find(cbClass);
+		cb = 		type.find(cbClass),
+		choose = 	type.find('span[data-choose]');
 	
 	
 	type.click(function(){
-		var thisObj = $(this);
+		var thisObj =		$(this),
+			thisChoose =	thisObj.find('span[data-choose]');
 		
 		type.removeClass('selected').addClass('unselected');
 		thisObj.removeClass('unselected').addClass('selected');
 		
 		cb.removeClass('checked');
 		thisObj.find(cbClass).addClass('checked');
+		
+		choose.text(choose.data('choose'));
+		thisChoose.text(thisChoose.data('chosen'));
 	});
-	
-
 }());
 
 /**

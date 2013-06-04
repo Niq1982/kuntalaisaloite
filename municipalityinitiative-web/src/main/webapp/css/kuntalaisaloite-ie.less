@@ -44,7 +44,9 @@
     .initiative-type {
         background:#fff url("../img/ie/gradient-gray-light.png?version=${timestamp}") center bottom repeat-x;
         
-        &:hover {
+        
+        
+        .action.open {
             background:#fff url("../img/ie/gradient-gray.png?version=${timestamp}") center bottom repeat-x;
         }
     }
@@ -90,9 +92,11 @@
         display:inline;
         margin:0;
     }
+    
+    .checkbox { top:1px; }
 } 
 
-// IE 6 & 7 & specific styles
+// IE 6 & 7 & 8 specific styles
 .ie6, .ie7, .ie8  {
 
     .expose-mask {
@@ -113,7 +117,11 @@
     
     .initiative-types {
         .initiative-type {
-            &.disabled {
+            &:hover {
+                border:1px solid #aaa;
+            }
+            
+            &.unselected {
                 filter: progid:DXImageTransform.Microsoft.Alpha(opacity = 60);
             }
         }
