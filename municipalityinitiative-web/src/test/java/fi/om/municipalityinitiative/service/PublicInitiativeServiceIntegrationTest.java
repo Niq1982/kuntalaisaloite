@@ -35,17 +35,12 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     @Resource
     private InitiativeDao initiativeDao; // Do not depend on this
 
-    @Resource
-    TestHelper testHelper;
-
     private static Municipality testMunicipality;
 
     private static Municipality participantMunicipality;
 
-    @Before
-    public void setup() {
-        testHelper.dbCleanup();
-        javaMailSenderFake.clearSentMessages();
+    @Override
+    public void childSetup() {
 
         String municipalityName = "Test municipality";
         testMunicipality = new Municipality(testHelper.createTestMunicipality(municipalityName), municipalityName, municipalityName, false);
@@ -54,7 +49,6 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         participantMunicipality = new Municipality(testHelper.createTestMunicipality(municipalityName), municipalityName, municipalityName, false);
 
     }
-
 
     @Test
     public void all_fields_are_set_when_getting_municipalityInitiativeInfo() throws Exception {

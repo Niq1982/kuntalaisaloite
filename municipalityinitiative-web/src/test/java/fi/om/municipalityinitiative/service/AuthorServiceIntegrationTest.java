@@ -51,18 +51,14 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     @Resource
     InitiativeDao initiativeDao;
 
-    @Resource
-    JavaMailSenderFake javaMailSenderFake;
-
     private Long testMunicipality;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    @Before
-    public void setUp() throws Exception {
+    @Override
+    public void childSetup() {
         testMunicipality = testHelper.createTestMunicipality("municipality");
-        javaMailSenderFake.clearSentMessages();
     }
 
     @Test(expected = AccessDeniedException.class)

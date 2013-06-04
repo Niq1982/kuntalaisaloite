@@ -29,7 +29,10 @@ public abstract class ServiceIntegrationTestBase {
     public void setUp() throws Exception {
         javaMailSenderFake.clearSentMessages();
         testHelper.dbCleanup();
+        childSetup();
     }
+
+    protected abstract void childSetup();
 
     protected void assertOneEmailSent() {
         try {
