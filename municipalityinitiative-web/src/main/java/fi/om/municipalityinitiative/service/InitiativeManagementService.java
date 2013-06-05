@@ -116,7 +116,7 @@ public class InitiativeManagementService {
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.REVIEW);
         Initiative initiative = initiativeDao.get(initiativeId);
 
-        emailService.sendStatusEmail(initiative, EmailMessageType.SENT_TO_REVIEW);
+        emailService.sendStatusEmail(initiativeId, EmailMessageType.SENT_TO_REVIEW);
         emailService.sendNotificationToModerator(initiative);
     }
 
@@ -126,8 +126,7 @@ public class InitiativeManagementService {
         assertAllowance("Send fix to review", getManagementSettings(initiativeId).isAllowSendFixToReview());
         initiativeDao.updateInitiativeFixState(initiativeId, FixState.REVIEW);
 
-        Initiative initiative = initiativeDao.get(initiativeId);
-        emailService.sendStatusEmail(initiative, EmailMessageType.SENT_FIX_TO_REVIEW);
+        emailService.sendStatusEmail(initiativeId, EmailMessageType.SENT_FIX_TO_REVIEW);
         emailService.sendNotificationToModerator(initiativeDao.get(initiativeId));
     }
 
@@ -138,9 +137,8 @@ public class InitiativeManagementService {
 
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
         initiativeDao.updateInitiativeType(initiativeId, InitiativeType.COLLABORATIVE);
-        Initiative initiative = initiativeDao.get(initiativeId);
         // XXX: TEST
-        emailService.sendStatusEmail(initiative, EmailMessageType.PUBLISHED_COLLECTING);
+        emailService.sendStatusEmail(initiativeId, EmailMessageType.PUBLISHED_COLLECTING);
     }
 
     @Transactional(readOnly = false)
@@ -152,9 +150,8 @@ public class InitiativeManagementService {
         initiativeDao.updateInitiativeType(initiativeId, InitiativeType.SINGLE);
         initiativeDao.markInitiativeAsSent(initiativeId);
         initiativeDao.updateSentComment(initiativeId, sentComment);
-        Initiative initiative = initiativeDao.get(initiativeId);
         // XXX: TEST
-        emailService.sendStatusEmail(initiative, EmailMessageType.SENT_TO_MUNICIPALITY);
+        emailService.sendStatusEmail(initiativeId, EmailMessageType.SENT_TO_MUNICIPALITY);
         emailService.sendSingleToMunicipality(initiativeId, locale);
     }
 
@@ -168,7 +165,7 @@ public class InitiativeManagementService {
         Initiative initiative = initiativeDao.get(initiativeId);
         // XXX: TEST
         emailService.sendCollaborativeToMunicipality(initiativeId, locale);
-        emailService.sendCollaborativeToAuthors(initiative);
+        emailService.sendCollaborativeToAuthors(initiativeId);
     }
 
 

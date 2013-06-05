@@ -22,7 +22,7 @@ public class MailSendingEmailServiceStatusTest extends MailSendingEmailServiceTe
 
     @Test
     public void om_accept_initiative_sets_subject_and_contains_all_information() throws Exception {
-        emailService.sendStatusEmail(createDefaultInitiative(), EmailMessageType.ACCEPTED_BY_OM);
+        emailService.sendStatusEmail(initiativeId(), EmailMessageType.ACCEPTED_BY_OM);
 
         assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Kuntalaisaloitteesi on hyväksytty"));
@@ -31,19 +31,18 @@ public class MailSendingEmailServiceStatusTest extends MailSendingEmailServiceTe
 
     @Test
     public void om_accept_initiative_and_send_to_municipality_sets_subject_and_contains_all_information() throws Exception {
-        Initiative initiative = createDefaultInitiative();
-        emailService.sendStatusEmail(initiative, EmailMessageType.ACCEPTED_BY_OM_AND_SENT);
+        emailService.sendStatusEmail(initiativeId(), EmailMessageType.ACCEPTED_BY_OM_AND_SENT);
         assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Kuntalaisaloitteesi on hyväksytty ja lähetetty kuntaan"));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_MUNICIPALITY));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.view(initiative.getId())));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.view(initiativeId())));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString("Kuntalaisaloitteesi on julkaistu Kuntalaisaloite.fi-palvelussa ja lähetetty kuntaan"));
         // TODO: assertThat(getMessageContent().html, containsString("SV Kuntalaisaloitteesi on julkaistu Kuntalaisaloite.fi-palvelussa ja lähetetty kuntaan"));
     }
 
     @Test
     public void om_reject_initiative_sets_subject_and_contains_all_information() throws Exception {
-        emailService.sendStatusEmail(createDefaultInitiative(), EmailMessageType.REJECTED_BY_OM);
+        emailService.sendStatusEmail(initiativeId(), EmailMessageType.REJECTED_BY_OM);
 
         assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Kuntalaisaloitteesi on palautettu"));
@@ -52,17 +51,16 @@ public class MailSendingEmailServiceStatusTest extends MailSendingEmailServiceTe
 
     @Test
     public void author_publish_and_start_collecting_sets_subject_and_contains_all_information() throws Exception {
-        Initiative initiative = createDefaultInitiative();
-        emailService.sendStatusEmail(initiative, EmailMessageType.PUBLISHED_COLLECTING);
+        emailService.sendStatusEmail(initiativeId(), EmailMessageType.PUBLISHED_COLLECTING);
         assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Aloitteesi on julkaistu ja siihen kerätään osallistujia Kuntalaisaloite.fi-palvelussa"));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_NAME));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.view(initiative.getId())));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.view(initiativeId())));
     }
 
     @Test
     public void author_publish_and_send_to_municipality_sets_subject_and_contains_all_information() throws Exception {
-        emailService.sendStatusEmail(createDefaultInitiative(), EmailMessageType.SENT_TO_MUNICIPALITY);
+        emailService.sendStatusEmail(initiativeId(), EmailMessageType.SENT_TO_MUNICIPALITY);
         assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_NAME));
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Aloitteesi on lähetetty kuntaan"));

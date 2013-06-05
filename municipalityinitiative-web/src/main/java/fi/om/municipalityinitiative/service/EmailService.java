@@ -144,32 +144,32 @@ public class EmailService {
     }
 
     
-    public void sendCollaborativeToAuthors(Initiative initiative) {
+    public void sendCollaborativeToAuthors(Long initiativeId) {
         Locale locale = Locales.LOCALE_FI;
 
-        Initiative initiativeeee = initiativeDao.get(initiative.getId());
+        Initiative initiative = initiativeDao.get(initiativeId);
 
         emailMessageConstructor.fromTemplate(COLLABORATIVE_TO_MUNICIPALITY)
-                .addRecipients(authorDao.getAuthorEmails(initiative.getId()))
+                .addRecipients(authorDao.getAuthorEmails(initiativeId))
                 .withSubject(messageSource.getMessage(EMAIL_COLLABORATIVE_AUTHOR_SUBJECT, toArray(), locale))
-                .withDataMap(toDataMap(initiativeeee, authorDao.findAuthors(initiative.getId()), locale))
-                .withAttachment(initiativeeee, participantDao.findAllParticipants(initiative.getId()))
+                .withDataMap(toDataMap(initiative, authorDao.findAuthors(initiativeId), locale))
+                .withAttachment(initiative, participantDao.findAllParticipants(initiativeId))
                 .send();
     }
 
     
-    public void sendStatusEmail(Initiative initiative, EmailMessageType emailMessageType) {
+    public void sendStatusEmail(Long initiativeId, EmailMessageType emailMessageType) {
 
         Locale locale = Locales.LOCALE_FI;
 
-        Initiative initiativeeee = initiativeDao.get(initiative.getId());
+        Initiative initiative = initiativeDao.get(initiativeId);
 
 
-        HashMap<String, Object> dataMap = toDataMap(initiativeeee, locale);
+        HashMap<String, Object> dataMap = toDataMap(initiative, locale);
         dataMap.put("emailMessageType", emailMessageType);
-        dataMap.put("municipalityEmail", municipalityDao.getMunicipalityEmail(initiativeeee.getMunicipality().getId()));
+        dataMap.put("municipalityEmail", municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()));
 
-        List<String> authorEmails = authorDao.getAuthorEmails(initiative.getId());
+        List<String> authorEmails = authorDao.getAuthorEmails(initiativeId);
         emailMessageConstructor
                 .fromTemplate(STATUS_INFO_TEMPLATE)
                 .addRecipients(authorEmails)

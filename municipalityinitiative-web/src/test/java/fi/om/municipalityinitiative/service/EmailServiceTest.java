@@ -158,7 +158,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
     @Test
     public void collaborative_to_authors_contains_all_information() throws Exception {
-        emailService.sendCollaborativeToAuthors(createDefaultInitiative());
+        emailService.sendCollaborativeToAuthors(initiativeId());
 
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Aloite on lähetetty kuntaan"));
         assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));

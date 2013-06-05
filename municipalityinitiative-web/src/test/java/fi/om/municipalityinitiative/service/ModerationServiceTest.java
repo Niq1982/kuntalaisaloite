@@ -79,7 +79,7 @@ public class ModerationServiceTest {
         String comment = "this is om-comment";
         moderationService.accept(loginUserHolder, INITIATIVE_ID, comment, Locales.LOCALE_FI);
 
-        verify(initiativeDaoMock, times(2)).get(INITIATIVE_ID);
+        verify(initiativeDaoMock).get(INITIATIVE_ID);
         verify(initiativeDaoMock).updateModeratorComment(INITIATIVE_ID, comment);
         verify(initiativeDaoMock).updateInitiativeState(INITIATIVE_ID, InitiativeState.ACCEPTED);
         verifyNoMoreInteractions(initiativeDaoMock);
@@ -93,7 +93,7 @@ public class ModerationServiceTest {
 
         moderationService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
 
-        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), eq(EmailMessageType.ACCEPTED_BY_OM));
+        verify(moderationService.emailService).sendStatusEmail(anyLong(), eq(EmailMessageType.ACCEPTED_BY_OM));
     }
 
     @Test
@@ -105,7 +105,7 @@ public class ModerationServiceTest {
         String comment = "this is om-comment";
         moderationService.accept(loginUserHolder, INITIATIVE_ID, comment, Locales.LOCALE_FI);
 
-        verify(initiativeDaoMock, times(2)).get(INITIATIVE_ID);
+        verify(initiativeDaoMock).get(INITIATIVE_ID);
         verify(initiativeDaoMock).updateModeratorComment(INITIATIVE_ID, comment);
         verify(initiativeDaoMock).updateInitiativeState(INITIATIVE_ID, InitiativeState.PUBLISHED);
         verify(initiativeDaoMock).markInitiativeAsSent(INITIATIVE_ID);
@@ -122,7 +122,7 @@ public class ModerationServiceTest {
 
         moderationService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
 
-        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), eq(EmailMessageType.ACCEPTED_BY_OM_AND_SENT));
+        verify(moderationService.emailService).sendStatusEmail(anyLong(), eq(EmailMessageType.ACCEPTED_BY_OM_AND_SENT));
         verify(moderationService.emailService).sendSingleToMunicipality(anyLong(), eq(Locales.LOCALE_FI));
 
     }
@@ -140,7 +140,7 @@ public class ModerationServiceTest {
 
         String comment = "this is om-comment";
         moderationService.reject(loginUserHolder, INITIATIVE_ID, comment);
-        verify(initiativeDaoMock, times(2)).get(INITIATIVE_ID);
+        verify(initiativeDaoMock).get(INITIATIVE_ID);
         verify(initiativeDaoMock).updateInitiativeState(INITIATIVE_ID, InitiativeState.DRAFT);
         verify(initiativeDaoMock).updateModeratorComment(INITIATIVE_ID, comment);
         verifyNoMoreInteractions(initiativeDaoMock);
@@ -152,7 +152,7 @@ public class ModerationServiceTest {
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.REVIEW, InitiativeType.UNDEFINED));
 
         moderationService.reject(loginUserHolder, INITIATIVE_ID, null);
-        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), eq(EmailMessageType.REJECTED_BY_OM));
+        verify(moderationService.emailService).sendStatusEmail(anyLong(), eq(EmailMessageType.REJECTED_BY_OM));
     }
 
     @Test
@@ -161,7 +161,7 @@ public class ModerationServiceTest {
 
         String moderatorComment = "moderator comment";
         moderationService.accept(loginUserHolder, INITIATIVE_ID, moderatorComment, null);
-        verify(initiativeDaoMock, times(2)).get(INITIATIVE_ID);
+        verify(initiativeDaoMock).get(INITIATIVE_ID);
         verify(initiativeDaoMock).updateModeratorComment(INITIATIVE_ID, moderatorComment);
         verify(initiativeDaoMock).updateInitiativeFixState(INITIATIVE_ID, FixState.OK);
         verifyNoMoreInteractions(initiativeDaoMock);
@@ -173,7 +173,7 @@ public class ModerationServiceTest {
 
         String moderatorComment = "moderator comment";
         moderationService.accept(loginUserHolder, INITIATIVE_ID, moderatorComment, null);
-        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), eq(EmailMessageType.ACCEPTED_BY_OM_FIX));
+        verify(moderationService.emailService).sendStatusEmail(eq(INITIATIVE_ID), eq(EmailMessageType.ACCEPTED_BY_OM_FIX));
         verifyNoMoreInteractions(moderationService.emailService);
     }
 
@@ -183,7 +183,7 @@ public class ModerationServiceTest {
 
         String moderatorComment = "moderator comment";
         moderationService.reject(loginUserHolder, INITIATIVE_ID, moderatorComment);
-        verify(initiativeDaoMock, times(2)).get(INITIATIVE_ID);
+        verify(initiativeDaoMock).get(INITIATIVE_ID);
         verify(initiativeDaoMock).updateModeratorComment(INITIATIVE_ID, moderatorComment);
         verify(initiativeDaoMock).updateInitiativeFixState(INITIATIVE_ID, FixState.FIX);
         verifyNoMoreInteractions(initiativeDaoMock);
@@ -195,7 +195,7 @@ public class ModerationServiceTest {
 
         String moderatorComment = "moderator comment";
         moderationService.reject(loginUserHolder, INITIATIVE_ID, moderatorComment);
-        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), eq(EmailMessageType.REJECTED_BY_OM));
+        verify(moderationService.emailService).sendStatusEmail(eq(INITIATIVE_ID), eq(EmailMessageType.REJECTED_BY_OM));
         verifyNoMoreInteractions(moderationService.emailService);
     }
 
@@ -212,7 +212,7 @@ public class ModerationServiceTest {
         String moderatorComment = "some mod comment";
         moderationService.sendInitiativeBackForFixing(loginUserHolder, INITIATIVE_ID, moderatorComment);
 
-        verify(initiativeDaoMock, times(2)).get(INITIATIVE_ID);
+        verify(initiativeDaoMock).get(INITIATIVE_ID);
         verify(initiativeDaoMock).updateInitiativeFixState(INITIATIVE_ID, FixState.FIX);
         verify(initiativeDaoMock).updateModeratorComment(INITIATIVE_ID, moderatorComment);
 
@@ -223,7 +223,7 @@ public class ModerationServiceTest {
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE));
 
         moderationService.sendInitiativeBackForFixing(loginUserHolder, INITIATIVE_ID, "");
-        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), eq(EmailMessageType.REJECTED_BY_OM));
+        verify(moderationService.emailService).sendStatusEmail(eq(INITIATIVE_ID), eq(EmailMessageType.REJECTED_BY_OM));
     }
 
     private static Initiative publishedCollaborative(FixState fixState) {
