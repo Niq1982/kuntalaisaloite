@@ -268,7 +268,9 @@ public class EmailService {
 
     private String solveMunicipalityEmail(Initiative initiative) {
         if (emailSettings.isTestSendMunicipalityEmailsToAuthor()) {
-            return authorDao.findAuthors(initiative.getId()).get(0).getContactInfo().getEmail();
+            String alternativeEmail = authorDao.findAuthors(initiative.getId()).get(0).getContactInfo().getEmail();
+            System.out.println("Test option replaced MUNICIPALITY email with: " + alternativeEmail);
+            return alternativeEmail;
         }
         return municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId());
     }
@@ -276,6 +278,7 @@ public class EmailService {
 
     private String solveModeratorEmail(String alternativeEmail) {
         if (emailSettings.isTestSendModeratorEmailsToAuthor()) {
+            System.out.println("Test option replaced OM email with: " + alternativeEmail);
             return alternativeEmail;
         }
         return emailSettings.getModeratorEmail();
