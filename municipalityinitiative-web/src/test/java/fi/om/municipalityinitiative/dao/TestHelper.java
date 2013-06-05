@@ -326,13 +326,6 @@ public class TestHelper {
     }
 
     @Transactional(readOnly = true)
-    public Long countAllParticipants(Long initiativeId) {
-        return queryFactory.from(QParticipant.participant)
-                .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
-                .count();
-    }
-
-    @Transactional(readOnly = true)
     public Participant getUniqueParticipant(Long initiativeId) {
         return queryFactory.query()
                 .from(participant)
