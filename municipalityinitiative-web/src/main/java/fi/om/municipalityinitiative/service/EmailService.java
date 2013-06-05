@@ -180,8 +180,8 @@ public class EmailService {
     }
 
     
-    public void sendPrepareCreatedEmail(Initiative initiative, Long authorId, String managementHash, Locale locale) {
-        HashMap<String, Object> dataMap = toDataMap(initiativeDao.get(initiative.getId()), locale);
+    public void sendPrepareCreatedEmail(Long initiativeId, Long authorId, String managementHash, Locale locale) {
+        HashMap<String, Object> dataMap = toDataMap(initiativeDao.get(initiativeId), locale);
         dataMap.put("managementHash", managementHash);
 
         String email = authorDao.getAuthor(authorId).getContactInfo().getEmail();
