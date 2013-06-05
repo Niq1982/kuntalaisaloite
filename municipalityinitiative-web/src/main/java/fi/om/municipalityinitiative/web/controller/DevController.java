@@ -4,7 +4,7 @@ import com.google.common.base.Strings;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.web.Urls;
-import fi.om.municipalityinitiative.newdao.MunicipalityDao;
+import fi.om.municipalityinitiative.dao.MunicipalityDao;
 import fi.om.municipalityinitiative.dto.service.TestDataService;
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.util.TestDataTemplates;

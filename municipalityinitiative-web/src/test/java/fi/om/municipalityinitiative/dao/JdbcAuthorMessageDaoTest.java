@@ -1,6 +1,7 @@
-package fi.om.municipalityinitiative.newdao;
+package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
+import fi.om.municipalityinitiative.dao.AuthorMessageDao;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;

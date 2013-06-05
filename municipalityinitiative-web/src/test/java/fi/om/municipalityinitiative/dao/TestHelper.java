@@ -30,7 +30,7 @@ import static org.mockito.Mockito.mock;
 
 public class TestHelper {
 
-    public static String PREVIOUS_TEST_MANAGEMENT_HASH;
+
     public static final String DEFAULT_INITIATIVE_NAME = "Initiative name";
     public static final String DEFAULT_PROPOSAL = "Proposal";
     public static final InitiativeState DEFAULT_STATE = InitiativeState.DRAFT;
@@ -58,6 +58,7 @@ public class TestHelper {
 
     private Long lastInitiativeId;
     private Long lastAuthorId;
+    private String previousTestManagementHash;
 
     public TestHelper() {
     }
@@ -208,8 +209,8 @@ public class TestHelper {
     }
 
     private String generateHash(int len) {
-        PREVIOUS_TEST_MANAGEMENT_HASH = RandomHashGenerator.randomString(len);
-        return PREVIOUS_TEST_MANAGEMENT_HASH;
+        previousTestManagementHash = RandomHashGenerator.randomString(len);
+        return previousTestManagementHash;
     }
 
     @Transactional
@@ -482,6 +483,8 @@ public class TestHelper {
         return queryFactory.from(QAuthor.author).orderBy(QAuthor.author.participantId.desc()).list(QAuthor.author.participantId).get(0);
     }
 
-
+    public String getPreviousTestManagementHash() {
+        return previousTestManagementHash;
+    }
 }
 

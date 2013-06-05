@@ -2,7 +2,7 @@ package fi.om.municipalityinitiative.web.controller;
 
 import com.google.common.base.Joiner;
 import fi.om.municipalityinitiative.conf.JsonConverterFactory;
-import fi.om.municipalityinitiative.json.JsonJokuParseri;
+import fi.om.municipalityinitiative.json.JsonStringParser;
 import fi.om.municipalityinitiative.util.Locales;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,7 +40,7 @@ public class JsonTest {
 
     @Test
     public void initiative_details_have_not_changed() throws IOException {
-        List<JsonJokuParseri.IndentedString> initiatives = getJsonDataListFromModel("initiativeDetails");
+        List<JsonStringParser.IndentedString> initiatives = getJsonDataListFromModel("initiativeDetails");
         String join = joinAsString(initiatives);
         assertThat(join, is("{\n" +
                 "\"authors\":{\n" +
@@ -89,7 +89,7 @@ public class JsonTest {
 
     @Test
     public void initiative_list_has_not_changed() throws IOException {
-        List<JsonJokuParseri.IndentedString> initiatives = getJsonDataListFromModel("initiativeList");
+        List<JsonStringParser.IndentedString> initiatives = getJsonDataListFromModel("initiativeList");
         String join = joinAsString(initiatives);
 
         assertThat(join, is("[\n" +
@@ -110,7 +110,7 @@ public class JsonTest {
 
     @Test
     public void municipalities_have_not_changed() throws IOException {
-        List<JsonJokuParseri.IndentedString> municipalities = getJsonDataListFromModel("municipalities");
+        List<JsonStringParser.IndentedString> municipalities = getJsonDataListFromModel("municipalities");
         String join = joinAsString(municipalities);
 
         System.out.println(join);
@@ -123,11 +123,11 @@ public class JsonTest {
                 "}]"));
     }
 
-    private List<JsonJokuParseri.IndentedString> getJsonDataListFromModel(String modelAttributeName) {
-        return (List<JsonJokuParseri.IndentedString>) model.get(modelAttributeName);
+    private List<JsonStringParser.IndentedString> getJsonDataListFromModel(String modelAttributeName) {
+        return (List<JsonStringParser.IndentedString>) model.get(modelAttributeName);
     }
 
-    private String joinAsString(List<JsonJokuParseri.IndentedString> initiatives) {
+    private String joinAsString(List<JsonStringParser.IndentedString> initiatives) {
         return Joiner.on("\n").join(initiatives);
     }
 }

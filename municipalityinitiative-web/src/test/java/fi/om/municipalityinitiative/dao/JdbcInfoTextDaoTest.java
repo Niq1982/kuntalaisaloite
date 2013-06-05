@@ -1,6 +1,7 @@
-package fi.om.municipalityinitiative.newdao;
+package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
+import fi.om.municipalityinitiative.dao.InfoTextDao;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.InfoPageText;
 import fi.om.municipalityinitiative.dto.InfoTextFooterLink;
@@ -47,13 +48,10 @@ public class JdbcInfoTextDaoTest {
     @Resource
     InfoTextDao infoTextDao;
 
-    private Long testInfoText;
-    private Long otherInfoText;
-
     @Before
     public void setup() {
         testHelper.dbCleanup();
-        testInfoText = testHelper.createInfoText(
+        Long testInfoText = testHelper.createInfoText(
                 LanguageCode.FI,
                 INFO_TEXT_CATEGORY, 1,
                 URI_FI,
@@ -62,7 +60,7 @@ public class JdbcInfoTextDaoTest {
                 TEXT_FI,
                 DRAFT_FI,
                 MODIFIED, MODIFIER);
-        otherInfoText = testHelper.createInfoText(
+        Long otherInfoText = testHelper.createInfoText(
                 LanguageCode.SV,
                 InfoTextCategory.KUNTALAISALOITE, 1,
                 URI_SV,

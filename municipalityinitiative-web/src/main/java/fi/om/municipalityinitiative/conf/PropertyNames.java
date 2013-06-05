@@ -21,7 +21,9 @@ public final class PropertyNames {
     
     public static final String jdbcPassword = "jdbc.password";
     
-   
+
+    // XXX: Vetuma properties are not currently used
+
     public static final String vetumaURL = "vetuma.url";
     
     public static final String vetumaSharedSecret = "vetuma.sharedSecret";

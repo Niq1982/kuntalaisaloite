@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.newdao;
+package fi.om.municipalityinitiative.dao;
 
 
 import com.google.common.collect.Lists;
@@ -6,9 +6,7 @@ import com.google.common.collect.Sets;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.expr.DateTimeExpression;
-import fi.om.municipalityinitiative.dao.InvitationNotValidException;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
-import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
@@ -23,7 +21,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static fi.om.municipalityinitiative.newdao.JdbcInitiativeDao.assertSingleAffection;
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 
 @SQLExceptionTranslated
@@ -39,7 +36,7 @@ public class JdbcAuthorDao implements AuthorDao {
     @Transactional(readOnly = false)
     public Long createAuthor(Long initiativeId, Long participantId, String managementHash) {
 
-        assertSingleAffection(queryFactory.insert(QAuthor.author)
+        JdbcInitiativeDao.assertSingleAffection(queryFactory.insert(QAuthor.author)
                 .set(QAuthor.author.managementHash, managementHash)
                 .set(QAuthor.author.participantId, participantId)
                 .execute());
@@ -55,14 +52,14 @@ public class JdbcAuthorDao implements AuthorDao {
                 .where(QAuthor.author.participantId.eq(authorId))
                 .singleResult(QParticipant.participant.id);
 
-        assertSingleAffection(queryFactory.update(QParticipant.participant)
+        JdbcInitiativeDao.assertSingleAffection(queryFactory.update(QParticipant.participant)
                 .set(QParticipant.participant.showName, Boolean.TRUE.equals(contactInfo.isShowName()))
                 .set(QParticipant.participant.name, contactInfo.getName())
                 .set(QParticipant.participant.email, contactInfo.getEmail())
                 .where(QParticipant.participant.id.eq(participantId))
                 .execute());
 
-        assertSingleAffection(queryFactory.update(QAuthor.author)
+        JdbcInitiativeDao.assertSingleAffection(queryFactory.update(QAuthor.author)
                 .set(QAuthor.author.address, contactInfo.getAddress())
                 .set(QAuthor.author.phone, contactInfo.getPhone())
                 .where(QAuthor.author.participantId.eq(participantId))
@@ -97,7 +94,7 @@ public class JdbcAuthorDao implements AuthorDao {
     @Override
     @Transactional(readOnly = false)
     public void rejectAuthorInvitation(Long initiativeId, String confirmationCode) {
-        assertSingleAffection(queryFactory.update(QAuthorInvitation.authorInvitation)
+        JdbcInitiativeDao.assertSingleAffection(queryFactory.update(QAuthorInvitation.authorInvitation)
                 .set(QAuthorInvitation.authorInvitation.rejectTime, CURRENT_TIME)
                 .where(QAuthorInvitation.authorInvitation.initiativeId.eq(initiativeId))
                 .where(QAuthorInvitation.authorInvitation.confirmationCode.eq(confirmationCode))
@@ -187,9 +184,9 @@ public class JdbcAuthorDao implements AuthorDao {
 //                .forUpdate().of(QMunicipalityInitiative.municipalityInitiative)
 //                .uniqueResult(QMunicipalityInitiative.municipalityInitiative.id);
 
-        assertSingleAffection(queryFactory.delete(QAuthor.author)
+        JdbcInitiativeDao.assertSingleAffection(queryFactory.delete(QAuthor.author)
                 .where(QAuthor.author.participantId.eq(authorId)).execute());
-        assertSingleAffection(queryFactory.delete(QParticipant.participant)
+        JdbcInitiativeDao.assertSingleAffection(queryFactory.delete(QParticipant.participant)
                 .where(QParticipant.participant.id.eq(authorId)).execute());
 
         long authorCount = queryFactory.from(QAuthor.author)
@@ -215,7 +212,7 @@ public class JdbcAuthorDao implements AuthorDao {
     @Override
     @Transactional(readOnly = false)
     public void updateManagementHash(Long authorId, String newManagementHash) {
-        assertSingleAffection(queryFactory.update(QAuthor.author)
+        JdbcInitiativeDao.assertSingleAffection(queryFactory.update(QAuthor.author)
                 .set(QAuthor.author.managementHash, newManagementHash)
                 .where(QAuthor.author.participantId.eq(authorId))
                 .execute());

@@ -1,7 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Lists;
-import fi.om.municipalityinitiative.newdao.ParticipantDao;
+import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
@@ -19,17 +19,7 @@ import static org.mockito.Mockito.mock;
 
 public class ParticipantServiceTest {
 
-    private static final Long ID = -5L;
-    public static final LocalDate DATE = new LocalDate(2010, 1, 1);
-    private static final Municipality MUNICIPALITY = new Municipality(1, "Municipality", "Kommun", false);
-    private ParticipantDao participantDaoMock;
-    private ParticipantService participantService;
-
-    @Before
-    public void setup() {
-        participantDaoMock = mock(ParticipantDao.class);
-        participantService = new ParticipantService(participantDaoMock);
-    }
+    // There is no currently really functionality at ParticipantService....
 
     @Test
     public void toListInfo_sets_author_flag_to_true_if_author() {
@@ -47,7 +37,7 @@ public class ParticipantServiceTest {
         assertThat(participantListInfos.get(1).isAuthor(), is(false));
     }
 
-    private Participant participant(long id, String name) {
+    private static Participant participant(long id, String name) {
         Participant participant = new Participant();
         participant.setId(id);
         participant.setName(name);

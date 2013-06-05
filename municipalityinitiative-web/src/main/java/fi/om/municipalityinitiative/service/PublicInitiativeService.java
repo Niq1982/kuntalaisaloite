@@ -1,14 +1,14 @@
 package fi.om.municipalityinitiative.service;
 
+import fi.om.municipalityinitiative.dao.*;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
-import fi.om.municipalityinitiative.dto.service.Initiative;
-import fi.om.municipalityinitiative.newdao.*;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.dto.ui.*;
+import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.util.*;
 import org.springframework.transaction.annotation.Transactional;
 

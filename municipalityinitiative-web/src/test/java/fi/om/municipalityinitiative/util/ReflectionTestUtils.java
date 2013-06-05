@@ -20,12 +20,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.fail;
 
-/**
- * Sets random values to all fields and parents fields.
-
- */
 public class ReflectionTestUtils {
 
+    /**
+     * Sets random values to all fields recursively.
+     */
     public static <T> T modifyAllFields(T bean)  {
 
         Class clazz = bean.getClass();
@@ -113,6 +112,7 @@ public class ReflectionTestUtils {
 
     /**
      * Asserts if any fields are null.
+     * Uses json-serializer because it's simple, unfortunately failure messages are ugly.
      * @param o
      */
     public static void assertNoNullFields(Object o){

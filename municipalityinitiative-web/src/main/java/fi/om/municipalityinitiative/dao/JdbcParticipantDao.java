@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.newdao;
+package fi.om.municipalityinitiative.dao;
 
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.support.Expressions;
@@ -6,7 +6,6 @@ import com.mysema.query.types.ConstantImpl;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.expr.CaseBuilder;
 import com.mysema.query.types.expr.SimpleExpression;
-import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.dto.ui.ParticipantCount;
@@ -21,7 +20,7 @@ import javax.annotation.Resource;
 
 import java.util.List;
 
-import static fi.om.municipalityinitiative.newdao.JdbcInitiativeDao.assertSingleAffection;
+import static fi.om.municipalityinitiative.dao.JdbcInitiativeDao.assertSingleAffection;
 import static fi.om.municipalityinitiative.sql.QParticipant.participant;
 
 @Transactional(readOnly = true)

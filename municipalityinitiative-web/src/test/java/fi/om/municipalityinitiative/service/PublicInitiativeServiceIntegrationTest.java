@@ -2,9 +2,10 @@ package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
+import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
-import fi.om.municipalityinitiative.newdao.InitiativeDao;
-import fi.om.municipalityinitiative.newdao.ParticipantDao;
+import fi.om.municipalityinitiative.dao.InitiativeDao;
+import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.service.Participant;

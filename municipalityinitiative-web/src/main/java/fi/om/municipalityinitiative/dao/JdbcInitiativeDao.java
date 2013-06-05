@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.newdao;
+package fi.om.municipalityinitiative.dao;
 
 import com.mysema.commons.lang.Assert;
 import com.mysema.query.sql.postgres.PostgresQuery;
@@ -13,7 +13,6 @@ import com.mysema.query.types.expr.DateTimeExpression;
 import com.mysema.query.types.expr.SimpleExpression;
 import com.mysema.query.types.path.StringPath;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
-import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.Initiative;

@@ -1,11 +1,10 @@
-package fi.om.municipalityinitiative.newdao;
+package fi.om.municipalityinitiative.dao;
 
 import com.mysema.query.Tuple;
 import com.mysema.query.sql.postgres.PostgresQuery;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
-import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityEditDto;
 import fi.om.municipalityinitiative.sql.QMunicipality;
@@ -15,7 +14,7 @@ import javax.annotation.Resource;
 
 import java.util.List;
 
-import static fi.om.municipalityinitiative.newdao.JdbcInitiativeDao.assertSingleAffection;
+import static fi.om.municipalityinitiative.dao.JdbcInitiativeDao.assertSingleAffection;
 
 @SQLExceptionTranslated
 @Transactional(readOnly = true)

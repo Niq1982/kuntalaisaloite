@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.newdao;
+package fi.om.municipalityinitiative.dao;
 
 import com.google.common.base.Strings;
 import com.mysema.query.Tuple;

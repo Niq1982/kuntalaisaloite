@@ -7,7 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class JsonJokuParseri {
+/**
+ * Pretty messy class which practically takes Json-string and splits it to
+ * Lists of Attribute-parent-value-pairs. Used at api-page to show correct json data at the
+ * table instead of hard-coding it straight to html.
+ */
+public class JsonStringParser {
 
     public static List<IndentedString> toParts(String jsonData) {
         jsonData = addEndlines(jsonData, "{", "},", ",", "[", "]");

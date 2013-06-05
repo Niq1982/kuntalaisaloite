@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.newdao;
+package fi.om.municipalityinitiative.dao;
 
 import com.mysema.commons.lang.Assert;
 import com.mysema.query.Tuple;

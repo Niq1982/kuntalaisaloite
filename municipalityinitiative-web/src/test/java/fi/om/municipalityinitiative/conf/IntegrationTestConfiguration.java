@@ -1,9 +1,7 @@
 package fi.om.municipalityinitiative.conf;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
-import fi.om.municipalityinitiative.service.AccessDeniedException;
 import fi.om.municipalityinitiative.service.EmailService;
-import fi.om.municipalityinitiative.service.UserService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

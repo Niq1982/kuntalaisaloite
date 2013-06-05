@@ -15,8 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.util.NestedServletException;
 
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
-import fi.om.municipalityinitiative.service.AccessDeniedException;
-import fi.om.municipalityinitiative.service.AuthenticationRequiredException;
+import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
+import fi.om.municipalityinitiative.exceptions.AuthenticationRequiredException;
 
 public class ErrorFilter implements Filter {
     

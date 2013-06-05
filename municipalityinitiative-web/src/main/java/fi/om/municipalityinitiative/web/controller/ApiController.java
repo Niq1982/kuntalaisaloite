@@ -1,6 +1,6 @@
 package fi.om.municipalityinitiative.web.controller;
 
-import fi.om.municipalityinitiative.json.JsonJokuParseri;
+import fi.om.municipalityinitiative.json.JsonStringParser;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.json.InitiativeJson;
 import fi.om.municipalityinitiative.dto.json.InitiativeListJson;
@@ -48,14 +48,14 @@ public class ApiController extends BaseController {
 
         InitiativeJson initiativeJsonObject = jsonDataService.createInitiativeJsonObject();
         String json = jsonConverter.getObjectMapper().writeValueAsString(initiativeJsonObject);
-        model.addAttribute("initiativeDetails", JsonJokuParseri.toParts(json));
+        model.addAttribute("initiativeDetails", JsonStringParser.toParts(json));
 
         List<InitiativeListJson> initiativeListJson = jsonDataService.createInitiativeListJsonObject();
         json = jsonConverter.getObjectMapper().writeValueAsString(initiativeListJson);
-        model.addAttribute("initiativeList", JsonJokuParseri.toParts(json));
+        model.addAttribute("initiativeList", JsonStringParser.toParts(json));
 
         json = jsonConverter.getObjectMapper().writeValueAsString(Collections.singletonList(TAMPERE));
-        model.addAttribute("municipalities", JsonJokuParseri.toParts(json));
+        model.addAttribute("municipalities", JsonStringParser.toParts(json));
 
 
         return Views.API_VIEW;

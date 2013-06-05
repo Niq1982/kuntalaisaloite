@@ -21,7 +21,7 @@ public class ParticipantCreateDtoTest {
         assertThat(participantCreateDto.isShowName(), is(uiCreateDto.getShowName()));
         assertThat(participantCreateDto.getParticipantName(), is(uiCreateDto.getParticipantName()));
         assertThat(participantCreateDto.getEmail(), is(uiCreateDto.getParticipantEmail()));
-      //  assertThat(participantCreateDto.getMunicipalMembership(), is(uiCreateDto.getMunicipalMembership()));
+        assertThat(participantCreateDto.getMunicipalMembership(), is(uiCreateDto.getMunicipalMembership()));
 
         ReflectionTestUtils.assertNoNullFields(participantCreateDto);
     }

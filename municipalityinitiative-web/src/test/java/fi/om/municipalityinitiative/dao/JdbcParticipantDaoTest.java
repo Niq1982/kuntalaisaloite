@@ -1,7 +1,6 @@
 package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
-import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.dto.ui.ParticipantCount;
