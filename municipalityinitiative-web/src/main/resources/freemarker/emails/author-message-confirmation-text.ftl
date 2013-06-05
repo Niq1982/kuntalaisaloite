@@ -3,21 +3,27 @@
 <#import "../components/email-blocks.ftl" as b />
 
 <#assign type="text" />
+<#assign keyPrefix="email.author.message.confirmation" />
 
 
 
-<@u.message "email.author.message.confirmation.title" />
+<@u.message keyPrefix+".title" />
+
 
 <@b.initiativeDetails type />
 
-<@u.message "email.author.message.confirmation.description" />
-<@u.message "email.author.message.confirmation.description.2" />
+<@u.message keyPrefix+".description" />
 
-<@u.message "email.author.message.to.authors.sender" />
+<@u.message keyPrefix+".description.2" />
+
+
+<@u.message keyPrefix+".sender" />
+
 ${authorMessage.contactName}
 ${authorMessage.contactEmail}
 
-<@u.message "email.author.message.to.authors.message" />
+<@u.message keyPrefix+".message" />
+
 ${authorMessage.message}
 
 ${urls.confirmAuthorMessage(authorMessage.confirmationCode)}
@@ -26,27 +32,31 @@ ${urls.confirmAuthorMessage(authorMessage.confirmationCode)}
 
 <@b.emailFooter type />
 
+<#-- Switch language -->
+<#global switchLocale = altLocale />
 
 <@b.separator />
 
-<@u.message "email.author.message.confirmation.title" />
+<@u.message keyPrefix+".title" />
+
 
 <@b.initiativeDetails type />
 
-<@u.message "email.author.message.confirmation.description" />
-<@u.message "email.author.message.confirmation.description.2" />
+<@u.message keyPrefix+".description" />
 
-<@u.message "email.author.message.to.authors.sender" />
+<@u.message keyPrefix+".description.2" />
+
+
+<@u.message keyPrefix+".sender" />
+
 ${authorMessage.contactName}
 ${authorMessage.contactEmail}
 
-<@u.message "email.author.message.to.authors.message" />
+<@u.message keyPrefix+".message" />
+
 ${authorMessage.message}
 
 ${urls.confirmAuthorMessage(authorMessage.confirmationCode)}
-
-<@b.separator />
-
 
 <@b.separator />
 

@@ -35,11 +35,11 @@
  *
  * @param content is the content as string 
 -->
-<#macro text content>
+<#macro text content style="margin:1em 0 1em 0;">
 <@compress single_line=true>
     <#-- FIXME: Does not create paragraph breaks. -->
     <#assign escapedText>${content!""}</#assign>
-    <#noescape><p style="margin:1em 0 1em 0;">${escapedText?replace('\n\n','</p><p>')?replace('\n','<br/>')}</p></#noescape>
+    <#noescape><p style="${style}">${escapedText?replace('\n\n','</p><p>')?replace('\n','<br/>')}</p></#noescape>
 </@compress>
 </#macro>
 

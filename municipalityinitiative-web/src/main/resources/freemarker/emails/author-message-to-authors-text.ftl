@@ -3,44 +3,50 @@
 <#import "../components/email-blocks.ftl" as b />
 
 <#assign type="text" />
+<#assign keyPrefix="email.author.message.to.authors" />
 
+<@u.message keyPrefix+".title" />
 
-
-<@u.message "email.author.message.to.authors.title" />
 
 <@b.initiativeDetails type=type />
 
-<@u.message "email.author.message.to.authors.description" />
+<@u.message keyPrefix+".description" />
 
-<@u.message "email.author.message.to.authors.sender" />
+
+<@u.message keyPrefix+".sender" />
+
 ${authorMessage.contactName}
 ${authorMessage.contactEmail}
 
-<@u.message "email.author.message.to.authors.message" />
+<@u.message keyPrefix+".message" />
+
 ${authorMessage.message}
 
 <@b.separator />
 
 <@b.emailFooter type />
 
+<#-- Switch language -->
+<#global switchLocale = altLocale />
 
 <@b.separator />
 
-<@u.message "email.author.message.to.authors.title" />
+<@u.message keyPrefix+".title" />
+
 
 <@b.initiativeDetails type=type />
 
-<@u.message "email.author.message.to.authors.description" />
+<@u.message keyPrefix+".description" />
 
-<@u.message "email.author.message.to.authors.sender" />
+
+<@u.message keyPrefix+".sender" />
+
 ${authorMessage.contactName}
 ${authorMessage.contactEmail}
 
-<@u.message "email.author.message.to.authors.message" />
+<@u.message keyPrefix+".message" />
+
 ${authorMessage.message}
-
-<@b.separator />
-
 
 <@b.separator />
 
