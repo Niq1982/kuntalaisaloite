@@ -18,9 +18,7 @@ public final class Urls {
     public static final String HELP_PAGE_PARAMETER = "{helpPage}";
 
     public static final String INFO_PAGE_PARAMETER = "{infoPage}";
-    
-    public static final String FILE_NAME_PARAMETER = "{fileName}";
-    
+
     public static final String FRONT =        "/";
 
     public static final String FRONT_FI =     "/fi";
@@ -62,17 +60,11 @@ public final class Urls {
     public static final String LOGOUT_FI =       "/fi/logout";
     
     public static final String LOGOUT_SV =       "/sv/logout";
-    
-    public static final String MY_ACCOUNT_FI =    "/fi/omat-tiedot";
-    
-    public static final String MY_ACCOUNT_SV =    "/sv/egna-upgifter";
 
     public static final String TEST_DATA_GENERATION_FI =    "/fi/testdata";
     
     public static final String TEST_DATA_GENERATION_SV =    "/sv/testdata";
-    
-    public static final String DOWNLOAD_VOTES = "/support-votes/" + ID_PARAMETER + "/" + FILE_NAME_PARAMETER;
-    
+
     public static final String API = "/api";
     
     public static final String INITIATIVES =  API + "/v0/initiatives";
@@ -88,8 +80,7 @@ public final class Urls {
     public static final String ERROR_500 = "/500";
 
     public static final String ERROR_410 = "/410";
-    
-    
+
     public static final String NEWS_FI = "/fi/uutiset";
     
     public static final String NEWS_SV = "/sv/nyheter";
@@ -117,10 +108,7 @@ public final class Urls {
     public static final String PARAM_MUNICIPALITY = "municipality";
 
     public static final String PARAM_SENT_COMMENT = "sentComment";
-    
-    public static final String SEARCH_OWN_ONLY = "includeOwn=true&includePublic=false";
-    
-    // Municipality initiative STARTS
+
     public static final String PARAM_MANAGEMENT_CODE = "management";
     
     public static final String PARAM_AUTHOR_ID = "authorId";
@@ -158,8 +146,6 @@ public final class Urls {
     public static final String ACTION_DELETE_PARTICIPANT = "action-delete-participant";
 
     public static final String ACTION_CONTACT_AUTHOR = "action-contact-author";
-    
-    // Municipality initiative ENDS
 
     public static final String ACTION_VOTE = "action-vote";
 
@@ -466,11 +452,7 @@ public final class Urls {
             return FI;
         }
     }
-    
-    public String myAccount() {
-        return getLocalizedPageUrl(MY_ACCOUNT_FI, MY_ACCOUNT_SV);
-    }
-    
+
     public Locale getAltLocale() {
         return alt().getLocale();
     }
