@@ -104,7 +104,7 @@
         <div class="initiative-content-row">
             <@e.initiativeAuthor authors />
         
-            <p><a href="#" class="js-contact-author"><@u.message key="contactAuthor.link" args=[authors.publicNameCount+authors.privateNameCount] /></a></p>
+            <p><a href="#" class="js-contact-author"><span class="icon-small icon-16 envelope margin-right"></span> <@u.message key="contactAuthor.link" args=[authors.publicNameCount+authors.privateNameCount] /></a></p>
         </div>
         <#--
          * Do NOT show participate button:

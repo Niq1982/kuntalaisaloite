@@ -899,6 +899,7 @@ a.block-link {
     
         .status {}
         .action { display:block; }
+        .no-icon { margin-left:1.25em; }
     }
 }
 
@@ -1391,6 +1392,15 @@ label  {
     height:12px;
     background: transparent url("../img/icons-sprite.png?version=${timestamp}") 0 0 no-repeat;
     
+    &.margin-right { margin-right:0.2em; }
+    
+    &.icon-16 {
+        position:relative;
+        top:0.2em;
+        width:16px;
+        height:16px;
+    }
+    
     &.settings, &.logout {
         position:absolute;
         right:15px;
@@ -1417,6 +1427,7 @@ label  {
     &.rejected { background-position:-16px -16px; } // Author invitation blocked
     &.expired { background-position:-32px -16px; }  // Author invitation expired
     &.cancel { background-position:-48px -16px; }    // Cancel author invitation
+    &.envelope { background-position:0 -32px; }
     &.external {                                    // External link
         background-position:-144px 1px;             // Used a.external instead
         margin-left:4px;
