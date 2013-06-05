@@ -13,6 +13,8 @@ import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.Urls;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 
 import javax.annotation.Resource;
@@ -60,6 +62,8 @@ public class EmailService {
 
     @Resource
     private EmailSettings emailSettings;
+
+    private static final Logger log = LoggerFactory.getLogger(EmailService.class);
 
     public void sendAuthorConfirmedInvitation(Long initiativeId, String authorsEmail, String managementHash, Locale locale) {
 
@@ -269,7 +273,7 @@ public class EmailService {
     private String solveMunicipalityEmail(Initiative initiative) {
         if (emailSettings.isTestSendMunicipalityEmailsToAuthor()) {
             String alternativeEmail = authorDao.findAuthors(initiative.getId()).get(0).getContactInfo().getEmail();
-            System.out.println("Test option replaced MUNICIPALITY email with: " + alternativeEmail);
+            log.warn("Test option replaced MUNICIPALITY email with: " + alternativeEmail);
             return alternativeEmail;
         }
         return municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId());
@@ -278,7 +282,7 @@ public class EmailService {
 
     private String solveModeratorEmail(String alternativeEmail) {
         if (emailSettings.isTestSendModeratorEmailsToAuthor()) {
-            System.out.println("Test option replaced OM email with: " + alternativeEmail);
+            log.warn("Test option replaced OM email with: " + alternativeEmail);
             return alternativeEmail;
         }
         return emailSettings.getModeratorEmail();
