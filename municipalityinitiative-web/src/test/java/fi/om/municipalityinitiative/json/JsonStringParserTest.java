@@ -1,11 +1,13 @@
 package fi.om.municipalityinitiative.json;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
 import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dto.json.InitiativeJson;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.ui.ParticipantCount;
+import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 import org.apache.commons.lang3.StringUtils;
@@ -19,11 +21,8 @@ import java.util.ArrayList;
 
 public class JsonStringParserTest {
 
-
-    @Test
-    @Ignore("Not a test. Use for debugging the parsed json data")
-    public void jotain() throws IOException {
-
+    // Use for debugging generated json-data
+    public static void main(String[] args) throws IOException {
 
         final Municipality TAMPERE = new Municipality(1, "Tampere", "Tammerfors", false);
 
@@ -41,6 +40,7 @@ public class JsonStringParserTest {
         initiative.setName("Koirat pois lähiöistä");
         initiative.setProposal("Kakkaa on joka paikassa");
         initiative.setMunicipality(TAMPERE);
+        initiative.setType(InitiativeType.UNDEFINED);
         initiative.setSentTime(Maybe.of(new LocalDate(2010, 5, 5))); // Cannot be absent at this point, mapper tries to get it's value
         initiative.setCreateTime(new LocalDate(2010, 1, 1));
 

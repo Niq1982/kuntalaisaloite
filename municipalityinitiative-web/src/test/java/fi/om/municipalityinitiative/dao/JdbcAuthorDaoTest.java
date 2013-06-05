@@ -81,7 +81,7 @@ public class JdbcAuthorDaoTest {
     public void login_as_author_returns_authors_initiative() {
         Long collaborativeAccepted = testHelper.createCollaborativeAccepted(testMunicipality);
 
-        Set<Long> ids = authorDao.getAuthorsInitiatives(TestHelper.PREVIOUS_TEST_MANAGEMENT_HASH);
+        Set<Long> ids = authorDao.getAuthorsInitiatives(testHelper.getPreviousTestManagementHash());
 
         assertThat(ids, hasSize(1));
         assertThat(ids, contains(collaborativeAccepted));
@@ -130,9 +130,9 @@ public class JdbcAuthorDaoTest {
 
         testHelper.createCollaborativeReview(testMunicipality);
 
-        assertThat(authorDao.getAuthorsInitiatives(TestHelper.PREVIOUS_TEST_MANAGEMENT_HASH), hasSize(1));
+        assertThat(authorDao.getAuthorsInitiatives(testHelper.getPreviousTestManagementHash()), hasSize(1));
         authorDao.updateManagementHash(testHelper.getLastAuthorId(), "some other");
-        assertThat(authorDao.getAuthorsInitiatives(TestHelper.PREVIOUS_TEST_MANAGEMENT_HASH), hasSize(0));
+        assertThat(authorDao.getAuthorsInitiatives(testHelper.getPreviousTestManagementHash()), hasSize(0));
 
     }
 

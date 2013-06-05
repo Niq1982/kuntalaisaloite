@@ -34,7 +34,6 @@ public abstract class ServiceIntegrationTestBase {
 
     @Before
     public void setUp() throws Exception {
-//        Thread.sleep(100); // Hope this is enough to verify that emails about to be sent are sent
         javaMailSenderFake.clearSentMessages();
         testHelper.dbCleanup();
         childSetup();

@@ -64,7 +64,7 @@ public class UserServiceIntegrationTest extends ServiceIntegrationTestBase{
     public void author_login_with_management_hash_logs_user_in() {
         Long initiative = testHelper.createCollaborativeAccepted(testHelper.createTestMunicipality("moi"));
 
-        userService.authorLogin(TestHelper.PREVIOUS_TEST_MANAGEMENT_HASH, requestMock);
+        userService.authorLogin(testHelper.getPreviousTestManagementHash(), requestMock);
         LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(requestMock);
 
         assertThat(loginUserHolder.getAuthorId(), is(testHelper.getLastAuthorId()));
