@@ -135,14 +135,14 @@ public class PublicInitiativeService {
 
 
     @Transactional(readOnly = false)
-    public void addAuthorMessage(AuthorUIMessage authorUIMessage) {
+    public void addAuthorMessage(AuthorUIMessage authorUIMessage, Locale locale) {
 
         String confirmationCode = RandomHashGenerator.shortHash();
         AuthorMessage authorMessage = new AuthorMessage(authorUIMessage, confirmationCode);
         authorMessageDao.put(authorMessage);
 
         Initiative initiative = initiativeDao.get(authorMessage.getInitiativeId());
-        emailService.sendAuthorMessageConfirmationEmail(initiative, authorMessage, Locales.LOCALE_FI);
+        emailService.sendAuthorMessageConfirmationEmail(initiative, authorMessage, locale);
 
     }
 

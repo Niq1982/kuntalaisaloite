@@ -164,7 +164,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 
         precondition(testHelper.countAll(QAuthorMessage.authorMessage), is(0L));
 
-        service.addAuthorMessage(authorUIMessage);
+        service.addAuthorMessage(authorUIMessage, Locales.LOCALE_FI);
         assertThat(testHelper.countAll(QAuthorMessage.authorMessage), is(1L));
 
         service.confirmAndSendAuthorMessage(RandomHashGenerator.getPrevious());
@@ -182,7 +182,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 
     @Test
     public void addAuthorMessage_sends_verification_email() throws MessagingException, InterruptedException {
-        service.addAuthorMessage(authorUIMessage());
+        service.addAuthorMessage(authorUIMessage(), Locales.LOCALE_FI);
         assertUniqueSentEmail(authorUIMessage().getContactEmail(), EmailSubjectPropertyKeys.EMAIL_AUTHOR_MESSAGE_CONFIRMATION_SUBJECT);
     }
 
