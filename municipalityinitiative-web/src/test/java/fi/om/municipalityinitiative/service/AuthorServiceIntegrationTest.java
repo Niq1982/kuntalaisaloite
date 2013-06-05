@@ -1,20 +1,20 @@
 package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Lists;
+import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.InvitationNotValidException;
+import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.dto.Author;
+import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
+import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUIConfirmDto;
+import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUICreateDto;
+import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
-import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
-import fi.om.municipalityinitiative.dao.AuthorDao;
-import fi.om.municipalityinitiative.dao.InitiativeDao;
-import fi.om.municipalityinitiative.dto.Author;
-import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
-import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUIConfirmDto;
-import fi.om.municipalityinitiative.dto.ui.ContactInfo;
-import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUICreateDto;
+import fi.om.municipalityinitiative.sql.QAuthor;
 import fi.om.municipalityinitiative.sql.QAuthorInvitation;
 import fi.om.municipalityinitiative.util.JavaMailSenderFake;
 import fi.om.municipalityinitiative.util.Membership;
@@ -46,7 +46,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     AuthorService authorService;
 
     @Resource
-    AuthorDao authorDao;
+    AuthorDao authorDao; // FIXME: Do not depend on this
 
     private Long testMunicipality;
 
@@ -79,7 +79,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
         authorService.createAuthorInvitation(initiativeId, TestHelper.authorLoginUserHolder, authorInvitationUICreateDto);
 
-        AuthorInvitation createdInvitation = authorDao.getAuthorInvitation(initiativeId, RandomHashGenerator.getPrevious());
+        AuthorInvitation createdInvitation = testHelper.getAuthorInvitation(RandomHashGenerator.getPrevious());
         assertThat(createdInvitation.getConfirmationCode(), is(RandomHashGenerator.getPrevious()));
         assertThat(createdInvitation.getName(), is("name"));
         assertThat(createdInvitation.getInvitationTime(), is(notNullValue()));
@@ -118,13 +118,13 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         createDto.setMunicipalMembership(Membership.community); //XXX: Not tested
         createDto.setHomeMunicipality(authorsMunicipality);
 
-        precondition(currentAuthors(initiativeId), hasSize(1));
+        precondition(countAllAuthors(), is(1L)); // XXX: This does not care if the authors does not belong to this initiative
         precondition(participantCountOfInitiative(initiativeId), is(1));
 
         authorService.confirmAuthorInvitation(initiativeId, createDto, null);
 
         // Author count is increased
-        assertThat(currentAuthors(initiativeId), hasSize(2));
+        precondition(countAllAuthors(), is(2L));
 
         // Check new author information
         List<Author> currentAuthors = currentAuthors(initiativeId);
@@ -135,8 +135,6 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         assertThat(createdAuthor.getContactInfo().getPhone(), is(createDto.getContactInfo().getPhone()));
         assertThat(createdAuthor.getContactInfo().isShowName(), is(createDto.getContactInfo().isShowName()));
         assertThat(createdAuthor.getMunicipality().getId(), is(authorsMunicipality));
-
-        // TODO: Check that managementHash is created and ok
 
         assertThat(participantCountOfInitiative(initiativeId), is(2));
     }
@@ -271,12 +269,12 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         DateTime invitationTime = new DateTime(2010, 1, 1, 0, 0);
         AuthorInvitation invitation = createInvitation(initiativeId, invitationTime);
 
-        precondition(authorDao.getAuthorInvitation(initiativeId, invitation.getConfirmationCode()).getInvitationTime(), is(invitationTime));
+        precondition(testHelper.getAuthorInvitation(invitation.getConfirmationCode()).getInvitationTime(), is(invitationTime));
         precondition(allCurrentInvitations(), is(1L));
 
         authorService.resendInvitation(initiativeId, TestHelper.authorLoginUserHolder, invitation.getConfirmationCode());
 
-        assertThat(authorDao.getAuthorInvitation(initiativeId, invitation.getConfirmationCode()).getInvitationTime().toLocalDate(), is(new LocalDate()));
+        assertThat(testHelper.getAuthorInvitation(invitation.getConfirmationCode()).getInvitationTime().toLocalDate(), is(new LocalDate()));
         assertThat(allCurrentInvitations(), is(1L));
 
     }
@@ -334,11 +332,11 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         Long anotherAuthor = testHelper.getLastAuthorId();
         Long currentAuthor = testHelper.createAuthorAndParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality).withParticipantEmail("author_left@example.com"));
 
-        precondition(authorDao.findAuthors(initiative), hasSize(2));
+        precondition(countAllAuthors(), is(2L));
 
         authorService.deleteAuthor(initiative, TestHelper.authorLoginUserHolder, anotherAuthor);
 
-        assertThat(authorDao.findAuthors(initiative), hasSize(1));
+        assertThat(countAllAuthors(), is(1L));
 
         List<MimeMessage> sentMessages = javaMailSenderFake.getSentMessages(2);
 
@@ -369,7 +367,11 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
         executeCallablesSilently(callables);
 
-        assertThat(authorDao.findAuthors(initiative), hasSize(1));
+        assertThat(countAllAuthors(), is(1L));
+    }
+
+    private Long countAllAuthors() {
+        return testHelper.countAll(QAuthor.author);
     }
 
     private static void executeCallablesSilently(List<Callable<Boolean>> threads) {
