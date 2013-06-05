@@ -1,18 +1,13 @@
 package fi.om.municipalityinitiative.service;
 
-import com.google.common.collect.Lists;
+import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
-import fi.om.municipalityinitiative.dto.service.Initiative;
-import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.Urls;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Collections;
-import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -52,8 +47,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
     public void review_notification_to_moderator_contains_all_information() throws Exception {
 
         emailService.sendNotificationToModerator(initiativeId());
-          assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
-//        assertThat(getSingleRecipient(), is(IntegrationTestFakeEmailConfiguration.EMAIL_DEFAULT_OM)); // XXX: Restore this when we want to send emails to om
+        assertThat(javaMailSenderFake.getSingleRecipient(), is(IntegrationTestFakeEmailConfiguration.EMAIL_DEFAULT_OM));
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Kuntalaisaloite tarkastettavaksi"));
         
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_NAME));
@@ -87,7 +81,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         emailService.sendSingleToMunicipality(initiativeId(), Locales.LOCALE_FI);
 
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Kuntalaisaloite: "+ INITIATIVE_NAME));
-        assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
+        assertThat(javaMailSenderFake.getSingleRecipient(), is(MUNICIPALITY_EMAIL));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_NAME));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_PROPOSAL));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_MUNICIPALITY));

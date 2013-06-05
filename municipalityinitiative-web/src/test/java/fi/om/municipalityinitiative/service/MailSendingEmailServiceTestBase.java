@@ -53,11 +53,6 @@ public abstract class MailSendingEmailServiceTestBase {
 
     private Long testMunicipality;
 
-    @BeforeClass
-    public static void beforeClass() throws InterruptedException {
-        Thread.sleep(1000); // This is here to make sure old email-sending-tasks have sent their emails.
-    }
-
     @Before
     public void setup() {
         javaMailSenderFake.clearSentMessages();

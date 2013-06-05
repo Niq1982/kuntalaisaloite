@@ -141,7 +141,6 @@ public class PublicInitiativeService {
         AuthorMessage authorMessage = new AuthorMessage(authorUIMessage, confirmationCode);
         authorMessageDao.put(authorMessage);
 
-        emailService.sendAuthorMessageConfirmationEmail(authorMessage.getInitiativeId(), authorMessage, Locales.LOCALE_FI);
         emailService.sendAuthorMessageConfirmationEmail(authorMessage.getInitiativeId(), authorMessage, locale);
 
     }

@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.service;
 
+import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.Initiative;
@@ -167,7 +168,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         service.sendReviewOnlyForAcceptance(testHelper.createDraft(testMunicipality.getId()), TestHelper.authorLoginUserHolder);
 
         assertFirstSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_STATUS_INFO_PREFIX + EmailMessageType.SENT_TO_REVIEW.name()+".subject");
-        assertSecondSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_NOTIFICATION_TO_MODERATOR_SUBJECT);
+        assertSecondSentEmail(IntegrationTestFakeEmailConfiguration.EMAIL_DEFAULT_OM, EmailSubjectPropertyKeys.EMAIL_NOTIFICATION_TO_MODERATOR_SUBJECT);
 
     }
 
@@ -187,7 +188,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     public void send_initiative_as_review_and_straight_to_municipality_sends_emails_to_author_and_moderator() throws MessagingException {
         service.sendReviewAndStraightToMunicipality(testHelper.createDraft(testMunicipality.getId()), TestHelper.authorLoginUserHolder, null);
         assertFirstSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_STATUS_INFO_PREFIX + EmailMessageType.SENT_TO_REVIEW.name()+".subject");
-        assertSecondSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_NOTIFICATION_TO_MODERATOR_SUBJECT);
+        assertSecondSentEmail(IntegrationTestFakeEmailConfiguration.EMAIL_DEFAULT_OM, EmailSubjectPropertyKeys.EMAIL_NOTIFICATION_TO_MODERATOR_SUBJECT);
     }
 
     @Test(expected = OperationNotAllowedException.class)
@@ -252,7 +253,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         service.sendFixToReview(accepted, TestHelper.authorLoginUserHolder);
 
         assertFirstSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_STATUS_INFO_PREFIX + EmailMessageType.SENT_FIX_TO_REVIEW.name()+".subject");
-        assertSecondSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_NOTIFICATION_TO_MODERATOR_SUBJECT);
+        assertSecondSentEmail(IntegrationTestFakeEmailConfiguration.EMAIL_DEFAULT_OM, EmailSubjectPropertyKeys.EMAIL_NOTIFICATION_TO_MODERATOR_SUBJECT);
 
     }
 

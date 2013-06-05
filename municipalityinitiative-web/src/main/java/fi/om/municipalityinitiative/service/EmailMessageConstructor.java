@@ -111,7 +111,6 @@ public class EmailMessageConstructor {
             helper.setReplyTo(emailSettings.getDefaultReplyTo());
             helper.setSubject(subject);
             helper.setText(text, html);
-            log.info("About to send email to " + recipients + ": " + subject);
             return helper;
 
         } catch (MessagingException e) {
@@ -188,11 +187,6 @@ public class EmailMessageConstructor {
             this.recipients.add(sendTo);
             return this;
         }
-        
-        public EmailMessageDraft withSendToModerator() {
-            this.recipients = Collections.singletonList(emailSettings.getModeratorEmail());
-            return this;
-        }
 
         public EmailMessageDraft withDataMap(Map<String, Object> dataMap) {
             this.dataMap = dataMap;
@@ -212,7 +206,7 @@ public class EmailMessageConstructor {
             Assert.notNull(templateName, "templateName");
             Assert.notNull(dataMap, "dataMap");
 
-            log.info("Sending email to '"+ recipients +"'");
+            log.info("About to send email to " + recipients + ": " + subject);
 
             MimeMessageHelper mimeMessageHelper = parseBasicEmailData(recipients, subject, templateName, dataMap);
 

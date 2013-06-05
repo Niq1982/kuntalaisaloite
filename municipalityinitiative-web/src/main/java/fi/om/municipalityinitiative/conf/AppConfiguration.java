@@ -3,15 +3,12 @@ package fi.om.municipalityinitiative.conf;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
-
-import com.mysema.query.sql.postgres.PostgresQueryFactory;
-
 import fi.om.municipalityinitiative.conf.AppConfiguration.AppDevConfiguration;
 import fi.om.municipalityinitiative.conf.AppConfiguration.ProdPropertiesConfiguration;
 import fi.om.municipalityinitiative.conf.AppConfiguration.TestPropertiesConfigurer;
 import fi.om.municipalityinitiative.dao.SQLExceptionTranslatorAspect;
-import fi.om.municipalityinitiative.newdao.*;
 import fi.om.municipalityinitiative.dto.service.TestDataService;
+import fi.om.municipalityinitiative.newdao.*;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.TaskExecutorAspect;
@@ -23,9 +20,6 @@ import fi.om.municipalityinitiative.web.Urls;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.utility.XmlEscape;
-import org.joda.time.Period;
-import org.joda.time.format.ISOPeriodFormat;
-import org.joda.time.format.PeriodFormatter;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
@@ -66,9 +60,7 @@ public class AppConfiguration {
     private static final boolean TEST_EMAIL_CONSOLE_OUTPUT_DEFAULT = false;
     private static final int TEST_MESSAGE_SOURCE_CACHE_SECONDS_DEFAULT = -1;
     private static final boolean TEST_FREEMARKER_SHOW_ERRORS_ON_PAGE_DEFAULT = false;
-    
-    private PeriodFormatter periodFormatter = ISOPeriodFormat.standard();
-    
+
     /**
      * PRODUCTION PROPERTIES CONFIGURATION: encrypted app.properties
      */
@@ -109,10 +101,6 @@ public class AppConfiguration {
     /*
      * BEANS
      */
-    
-    private PostgresQueryFactory queryFactory() {
-        return jdbcConfiguration.queryFactory();
-    }
 
     @Bean
     public CommonsMultipartResolver multipartResolver() {
@@ -307,23 +295,29 @@ public class AppConfiguration {
         return sender;
     }
 
-    private Period getRequiredPeriod(String key) {
-        return periodFormatter.parsePeriod(env.getRequiredProperty(key));
-    }
-
     @Bean
-    public EmailService emailService() {
-        return new EmailService();
+    public TaskedEmailService emailService() {
+        return new TaskedEmailService();
     }
 
     @Bean
     public EmailSettings emailSettings() {
         String defaultReplyTo = env.getRequiredProperty(PropertyNames.emailDefaultReplyTo);
+        String moderatorSendTo = env.getRequiredProperty(PropertyNames.emailSendToOM);
         String testSendTo = env.getProperty(PropertyNames.testEmailSendTo);
-        String moderatorSendTo = env.getProperty(PropertyNames.emailSendToOM);
+
         boolean testConsoleOutput = env.getProperty(PropertyNames.testEmailConsoleOutput, Boolean.class, TEST_EMAIL_CONSOLE_OUTPUT_DEFAULT);
 
-        return new EmailSettings(defaultReplyTo, Maybe.fromNullable(Strings.emptyToNull(testSendTo)), testConsoleOutput, moderatorSendTo);
+        // Mandatory so we won't accidentally leave any test properties to any environments
+        boolean testSendMunicipalityEmailsToAuthor = env.getRequiredProperty(PropertyNames.testEmailMunicipalityEmailsToAuthor, Boolean.class);
+        boolean testSendModeratorEmailsToAuthor = env.getRequiredProperty(PropertyNames.testEmailSendModeratorEmailsToAuthor, Boolean.class);
+
+        return new EmailSettings(defaultReplyTo,
+                Maybe.fromNullable(Strings.emptyToNull(testSendTo)),
+                testConsoleOutput,
+                moderatorSendTo,
+                testSendMunicipalityEmailsToAuthor,
+                testSendModeratorEmailsToAuthor);
     }
 
     @Bean

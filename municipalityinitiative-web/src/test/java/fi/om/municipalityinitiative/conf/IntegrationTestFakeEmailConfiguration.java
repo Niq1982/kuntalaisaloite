@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Import;
 @Import(IntegrationTestConfiguration.class)
 public class IntegrationTestFakeEmailConfiguration {
 
-    // TODO: Double check the need for emailSettings and that everything works correctly after we're sending emails again
 
     public static final String EMAIL_DEFAULT_REPLY_TO = "reply_to@example.com";
     
@@ -18,7 +17,7 @@ public class IntegrationTestFakeEmailConfiguration {
 
     @Bean
     public EmailSettings emailSettings() {
-        return new EmailSettings(EMAIL_DEFAULT_REPLY_TO, Maybe.<String>absent(), false, EMAIL_DEFAULT_OM);
+        return new EmailSettings(EMAIL_DEFAULT_REPLY_TO, Maybe.<String>absent(), false, EMAIL_DEFAULT_OM, false, false);
     }
 
     @Bean
