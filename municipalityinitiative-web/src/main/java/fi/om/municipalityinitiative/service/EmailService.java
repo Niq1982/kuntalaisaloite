@@ -105,41 +105,41 @@ public class EmailService {
     }
 
     
-    public void sendAuthorDeletedEmailToOtherAuthors(Initiative initiative, ContactInfo removedAuthorsContactInfo) {
+    public void sendAuthorDeletedEmailToOtherAuthors(Long initiativeId, ContactInfo removedAuthorsContactInfo) {
 
-        HashMap<String, Object> dataMap = toDataMap(initiativeDao.get(initiative.getId()), Locales.LOCALE_FI);
+        HashMap<String, Object> dataMap = toDataMap(initiativeDao.get(initiativeId), Locales.LOCALE_FI);
         dataMap.put("contactInfo", removedAuthorsContactInfo);
 
         emailMessageConstructor
                 .fromTemplate(AUTHOR_DELETED_TO_OTHER_AUTHORS)
-                .addRecipients(authorDao.getAuthorEmails(initiative.getId()))
+                .addRecipients(authorDao.getAuthorEmails(initiativeId))
                 .withSubject(messageSource.getMessage(EMAIL_AUTHOR_DELETED_TO_OTHER_AUTHORS_SUBJECT, toArray(), Locales.LOCALE_FI))
                 .withDataMap(dataMap)
                 .send();
     }
 
     
-    public void sendAuthorDeletedEmailToDeletedAuthor(Initiative initiative, String deletedAuthorEmail) {
+    public void sendAuthorDeletedEmailToDeletedAuthor(Long initiativeId, String deletedAuthorEmail) {
 
         emailMessageConstructor
                 .fromTemplate(AUTHOR_DELETED_TO_DELETED_AUTHOR)
                 .addRecipient(deletedAuthorEmail)
                 .withSubject(messageSource.getMessage(EMAIL_AUTHOR_DELETED_TO_DELETED_AUTHOR_SUBJECT, toArray(), Locales.LOCALE_FI))
-                .withDataMap(toDataMap(initiative, Locales.LOCALE_FI))
+                .withDataMap(toDataMap(initiativeDao.get(initiativeId), Locales.LOCALE_FI))
                 .send();
     }
 
     
-    public void sendCollaborativeToMunicipality(Initiative initiative, Locale locale) {
+    public void sendCollaborativeToMunicipality(Long initiativeId, Locale locale) {
 
-        Initiative initiativeeee = initiativeDao.get(initiative.getId());
+        Initiative initiative = initiativeDao.get(initiativeId);
 
         emailMessageConstructor
                 .fromTemplate(COLLABORATIVE_TO_MUNICIPALITY)
-                .addRecipient(municipalityDao.getMunicipalityEmail(initiativeeee.getMunicipality().getId()))
+                .addRecipient(municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()))
                 .withSubject(messageSource.getMessage(EMAIL_COLLABORATIVE_MUNICIPALITY_SUBJECT, toArray(initiative.getName()), locale))
-                .withDataMap(toDataMap(initiativeeee, authorDao.findAuthors(initiative.getId()), locale))
-                .withAttachment(initiativeeee, participantDao.findAllParticipants(initiative.getId()))
+                .withDataMap(toDataMap(initiative, authorDao.findAuthors(initiativeId), locale))
+                .withAttachment(initiative, participantDao.findAllParticipants(initiativeId))
                 .send();
     }
 

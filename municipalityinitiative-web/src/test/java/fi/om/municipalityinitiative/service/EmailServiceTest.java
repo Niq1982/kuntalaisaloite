@@ -102,7 +102,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
     @Test
     public void author_has_been_deleted_email_to_everyone_contains_all_information() throws Exception {
-        emailService.sendAuthorDeletedEmailToOtherAuthors(createDefaultInitiative(), contactInfo());
+        emailService.sendAuthorDeletedEmailToOtherAuthors(initiativeId(), contactInfo());
 
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Vastuuhenkilö on poistettu aloitteestasi"));
         assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
@@ -116,7 +116,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
     @Test
     public void author_has_been_deleted_email_to_author_contains_all_information() throws Exception {
-        emailService.sendAuthorDeletedEmailToDeletedAuthor(createDefaultInitiative(), AUTHOR_EMAIL);
+        emailService.sendAuthorDeletedEmailToDeletedAuthor(initiativeId(), AUTHOR_EMAIL);
 
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Sinut on poistettu aloitteen vastuuhenkilöistä"));
         assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
@@ -143,7 +143,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
     @Test
     public void collaborative_to_municipality_contains_all_information() throws Exception {
-        emailService.sendCollaborativeToMunicipality(createDefaultInitiative(), Locales.LOCALE_FI);
+        emailService.sendCollaborativeToMunicipality(initiativeId(), Locales.LOCALE_FI);
 
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Kuntalaisaloite: "+ INITIATIVE_NAME));
         assertThat(javaMailSenderFake.getSingleRecipient(), is(MUNICIPALITY_EMAIL));

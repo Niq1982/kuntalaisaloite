@@ -102,8 +102,8 @@ public class AuthorService {
             }
             ContactInfo deletedAuthorContactInfo = authorDao.getAuthor(authorId).getContactInfo();
             authorDao.deleteAuthor(authorId);
-            emailService.sendAuthorDeletedEmailToOtherAuthors(initiativeDao.get(initiativeId), deletedAuthorContactInfo);
-            emailService.sendAuthorDeletedEmailToDeletedAuthor(initiativeDao.get(initiativeId), deletedAuthorContactInfo.getEmail());
+            emailService.sendAuthorDeletedEmailToOtherAuthors(initiativeId, deletedAuthorContactInfo);
+            emailService.sendAuthorDeletedEmailToDeletedAuthor(initiativeId, deletedAuthorContactInfo.getEmail());
             // XXX: These might fail if two authors try to remove each others. Does it matter?
         }
 

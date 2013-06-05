@@ -167,7 +167,7 @@ public class InitiativeManagementService {
         initiativeDao.updateSentComment(initiativeId, sentComment);
         Initiative initiative = initiativeDao.get(initiativeId);
         // XXX: TEST
-        emailService.sendCollaborativeToMunicipality(initiative, locale);
+        emailService.sendCollaborativeToMunicipality(initiativeId, locale);
         emailService.sendCollaborativeToAuthors(initiative);
     }
 
