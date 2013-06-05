@@ -73,9 +73,6 @@ public class ModerationService {
     private void acceptDraftReview(String moderatorComment, Locale locale, Initiative initiative) {
         Long initiativeId = initiative.getId();
 
-        // TODO: String municipalityEmail = municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId());
-        String municipalityEmail = authorDao.getAuthorEmails(initiativeId).get(0);
-
         initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
         if (initiative.getType().equals(InitiativeType.SINGLE)) {
             initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
