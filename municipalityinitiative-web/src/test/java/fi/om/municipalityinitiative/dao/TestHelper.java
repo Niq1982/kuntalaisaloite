@@ -7,6 +7,7 @@ import com.mysema.query.types.Path;
 import fi.om.municipalityinitiative.conf.PropertyNames;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
@@ -24,6 +25,7 @@ import javax.inject.Inject;
 import java.util.Collections;
 
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
+import static fi.om.municipalityinitiative.sql.QParticipant.participant;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.doThrow;
@@ -315,6 +317,23 @@ public class TestHelper {
                 .executeWithKey(QAuthorMessage.authorMessage.id);
 
 
+    }
+
+    @Transactional(readOnly = true)
+    public Long countAllParticipants(Long initiativeId) {
+        return queryFactory.from(QParticipant.participant)
+                .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
+                .count();
+    }
+
+    @Transactional(readOnly = true)
+    public Participant getUniqueParticipant(Long initiativeId) {
+        return queryFactory.query()
+                .from(participant)
+                .where(participant.municipalityInitiativeId.eq(initiativeId))
+                .leftJoin(participant.participantMunicipalityFk, QMunicipality.municipality)
+                .orderBy(participant.id.desc())
+                .uniqueResult(Mappings.participantMapping);
     }
 
     public static class AuthorDraft {

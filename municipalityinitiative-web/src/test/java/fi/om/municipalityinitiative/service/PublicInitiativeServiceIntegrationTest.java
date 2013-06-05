@@ -138,20 +138,20 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
 
-        Participant participant = participantDao.findAllParticipants(initiativeId).get(0);
-        assertThat(participant.getHomeMunicipality().getId(), is(participantMunicipality.getId()));
-        assertThat(participant.getParticipateDate(), is(LocalDate.now()));
+        Participant createdParticipant = testHelper.getUniqueParticipant(initiativeId);
+        assertThat(createdParticipant.getHomeMunicipality().getId(), is(participantMunicipality.getId()));
+        assertThat(createdParticipant.getParticipateDate(), is(LocalDate.now()));
     }
 
     @Test
     public void preparing_initiative_saved_email_and_municipality_and_membership() {
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
 
-        Participant initiativeForEdit = participantDao.findPublicParticipants(initiativeId).get(0);
+        Participant createdParticipant = testHelper.getUniqueParticipant(initiativeId);
 
-        assertThat(initiativeForEdit.getHomeMunicipality().getId(), is(prepareDto().getHomeMunicipality()));
-        assertThat(initiativeForEdit.getEmail(), is(prepareDto().getParticipantEmail()));
-        assertThat(initiativeForEdit.getMembership(), is(prepareDto().getMunicipalMembership()));
+        assertThat(createdParticipant.getHomeMunicipality().getId(), is(prepareDto().getHomeMunicipality()));
+        assertThat(createdParticipant.getEmail(), is(prepareDto().getParticipantEmail()));
+        assertThat(createdParticipant.getMembership(), is(prepareDto().getMunicipalMembership()));
 
         // Note that all fields are not set when preparing
     }

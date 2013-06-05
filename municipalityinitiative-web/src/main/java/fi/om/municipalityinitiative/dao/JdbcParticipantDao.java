@@ -23,7 +23,6 @@ import java.util.List;
 import static fi.om.municipalityinitiative.dao.JdbcInitiativeDao.assertSingleAffection;
 import static fi.om.municipalityinitiative.sql.QParticipant.participant;
 
-@Transactional(readOnly = true)
 @SQLExceptionTranslated
 public class JdbcParticipantDao implements ParticipantDao {
 
@@ -31,7 +30,6 @@ public class JdbcParticipantDao implements ParticipantDao {
     PostgresQueryFactory queryFactory;
 
     @Override
-    @Transactional(readOnly = false)
     public Long create(ParticipantCreateDto createDto, String confirmationCode) {
 
         if (confirmationCode == null) {
@@ -52,7 +50,6 @@ public class JdbcParticipantDao implements ParticipantDao {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public void confirmParticipation(Long participantId, String confirmationCode) {
         assertSingleAffection(queryFactory.update(QParticipant.participant)
                 .setNull(QParticipant.participant.confirmationCode)
@@ -68,7 +65,6 @@ public class JdbcParticipantDao implements ParticipantDao {
     }
 
     @Override
-    @Transactional(readOnly = true)
     // Preparing because we do not know participants name
     public Long prepareParticipant(Long initiativeId, Long homeMunicipality, String email, Membership membership) {
         Long participantId = queryFactory.insert(participant)
@@ -146,7 +142,6 @@ public class JdbcParticipantDao implements ParticipantDao {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public void deleteParticipant(Long initiativeId, Long participantId) {
         assertSingleAffection(queryFactory.delete(participant)
                 .where(participant.id.eq(participantId))

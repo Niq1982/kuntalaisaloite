@@ -34,9 +34,6 @@ public class JdbcAuthorDaoTest {
     AuthorDao authorDao;
 
     @Resource
-    ParticipantDao participantDao;
-
-    @Resource
     TestHelper testHelper;
 
     private Long testMunicipality;
@@ -108,12 +105,12 @@ public class JdbcAuthorDaoTest {
         Long authorId = testHelper.createAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality));
 
         int originalAuthorCount = authorDao.findAuthors(initiativeId).size();
-        int originalParticipantCount = participantDao.findAllParticipants(initiativeId).size();
+        long originalParticipantCount = testHelper.countAllParticipants(initiativeId);
 
         authorDao.deleteAuthor(authorId);
 
         assertThat(authorDao.findAuthors(initiativeId), hasSize(originalAuthorCount - 1));
-        assertThat(participantDao.findAllParticipants(initiativeId), hasSize(originalParticipantCount - 1));
+        assertThat(testHelper.countAllParticipants(initiativeId), is(originalParticipantCount - 1));
     }
 
     @Test
