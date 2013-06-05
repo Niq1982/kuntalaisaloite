@@ -19,6 +19,7 @@ import fi.om.municipalityinitiative.web.controller.ApiController;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.LocalDate;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -40,6 +41,7 @@ public class JsonDataService {
     @Resource
     AuthorService authorService;
 
+    @Transactional(readOnly = true)
     public List<InitiativeListJson> findJsonInitiatives(InitiativeSearch search) {
         List<InitiativeListJson> result = Lists.newArrayList();
         for (InitiativeListInfo initiativeListInfo : initiativeDao.find(search)) {
@@ -48,6 +50,7 @@ public class JsonDataService {
         return result;
     }
 
+    @Transactional(readOnly = true)
     public InitiativeJson getInitiative(Long id) {
         return InitiativeJson.from(
                 initiativeDao.get(id),
@@ -57,10 +60,12 @@ public class JsonDataService {
 
     }
 
+    @Transactional(readOnly = true)
     public List<Municipality> getMunicipalities() {
         return municipalityDao.findMunicipalities(true);
     }
 
+    @Transactional(readOnly = true)
     public Municipality getMunicipality(Long id) {
         return municipalityDao.getMunicipality(id);
     }

@@ -17,7 +17,6 @@ import java.util.List;
 import static fi.om.municipalityinitiative.dao.JdbcInitiativeDao.assertSingleAffection;
 
 @SQLExceptionTranslated
-@Transactional(readOnly = true)
 public class JdbcMunicipalityDao implements MunicipalityDao {
 
     @Resource
@@ -48,7 +47,6 @@ public class JdbcMunicipalityDao implements MunicipalityDao {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public void updateMunicipality(Long municipalityId, String email, boolean active) {
         assertSingleAffection(queryFactory.update(QMunicipality.municipality)
                 .set(QMunicipality.municipality.email, email)
@@ -59,7 +57,6 @@ public class JdbcMunicipalityDao implements MunicipalityDao {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<MunicipalityEditDto> findMunicipalitiesForEdit() {
         return queryFactory.from(QMunicipality.municipality)
                 .orderBy(QMunicipality.municipality.name.asc())

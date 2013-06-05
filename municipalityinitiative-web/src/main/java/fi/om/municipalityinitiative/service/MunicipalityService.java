@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.service;
 import fi.om.municipalityinitiative.dao.MunicipalityDao;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.util.Locales;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -14,6 +15,7 @@ public class MunicipalityService {
     @Resource
     private MunicipalityDao municipalityDao;
 
+    @Transactional(readOnly = true)
     public List<Municipality> findAllMunicipalities(Locale localeForOrdering) {
         return municipalityDao.findMunicipalities(Locales.LOCALE_FI.equals(localeForOrdering));
     }
