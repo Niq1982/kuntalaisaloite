@@ -141,11 +141,18 @@
         </span>
     </div>
     
-    <#if !admin && !initiative.sentTime.present && requestMessages?? && !(requestMessages?size > 0) && !showForm>
-        <div class="participants-block">
+    <#assign participateSuccess=false />
+    <#list requestMessages as requestMessage>
+        <#if requestMessage == RequestMessage.PARTICIPATE>
+            <#assign participateSuccess=true />
+        </#if>
+    </#list>
+    
+    <#if !admin && !initiative.sentTime.present && !participateSuccess>
+        <div class="participants-block ${showForm?string("hidden","")}">
             <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>
         </div>
-        <div class="participants-block last">
+        <div class="participants-block last ${showForm?string("hidden","")}">
             <a title="<@u.messageHTML "action.participate.infoLink.title" />" href="#"><@u.messageHTML "action.participate.infoLink" /></a>
         </div>
     </#if>
@@ -161,7 +168,7 @@
     <#-- NOSCRIPT participate -->
     <#if showForm>
         <#noescape><noscript>
-            <div id="participate-form" class="participate-form cf top-margin">
+            <div id="participate-form" class="form-container cf top-margin">
                 <h3><@u.message "participate.title" /></h3>
                 ${formHTML!""}
             </div>

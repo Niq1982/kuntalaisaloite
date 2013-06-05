@@ -33,7 +33,7 @@
     <tbody>
         <#list municipalities as municipality>
             <tr class="${municipality.active?string("active","not-active")}">
-                <td><#if municipality.active><span class="icon-small confirmed trigger-tooltip" title="<@u.message "municipalities.edit.active" />"></span></#if></td>
+                <td><#if municipality.active><span class="icon-small icon-16 confirmed trigger-tooltip" title="<@u.message "municipalities.edit.active" />"></span></#if></td>
                 <td><a  href="#"
                         class="js-edit-municipality"
                         data-id="${municipality.id}"
