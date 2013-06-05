@@ -6,7 +6,6 @@ import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
-import fi.om.municipalityinitiative.newdao.AuthorMessageDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.dto.Author;
@@ -103,9 +102,8 @@ public class AuthorService {
             }
             ContactInfo deletedAuthorContactInfo = authorDao.getAuthor(authorId).getContactInfo();
             authorDao.deleteAuthor(authorId);
-            emailService.sendAuthorDeletedEmailToOtherAuthors(initiativeDao.get(initiativeId), authorDao.getAuthorEmails(initiativeId), deletedAuthorContactInfo);
+            emailService.sendAuthorDeletedEmailToOtherAuthors(initiativeDao.get(initiativeId), deletedAuthorContactInfo);
             emailService.sendAuthorDeletedEmailToDeletedAuthor(initiativeDao.get(initiativeId), deletedAuthorContactInfo.getEmail());
-            // TODO: Email to author
             // XXX: These might fail if two authors try to remove each others. Does it matter?
         }
 

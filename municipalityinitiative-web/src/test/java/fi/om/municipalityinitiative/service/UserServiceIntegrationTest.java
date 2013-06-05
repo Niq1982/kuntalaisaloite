@@ -19,16 +19,12 @@ import static org.mockito.Mockito.stub;
 public class UserServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     @Resource
-    private TestHelper testHelper;
-
-    @Resource
     private UserService userService;
 
     private HttpServletRequest requestMock;
 
-    @Before
-    public void setup() {
-        testHelper.dbCleanup();
+    @Override
+    public void childSetup() {
 
         requestMock = mock(HttpServletRequest.class);
         HttpSession session = new FakeSession();

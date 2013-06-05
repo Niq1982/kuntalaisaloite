@@ -5,6 +5,7 @@ import com.mysema.query.sql.dml.SQLInsertClause;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Path;
 import fi.om.municipalityinitiative.conf.PropertyNames;
+import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
@@ -165,6 +166,7 @@ public class TestHelper {
         insert.set(municipalityInitiative.modified, initiativeDraft.modified);
         insert.set(municipalityInitiative.sentComment, initiativeDraft.sentComment);
         insert.set(municipalityInitiative.fixState, initiativeDraft.fixState);
+        insert.set(municipalityInitiative.moderatorComment, initiativeDraft.moderatorComment);
 
         lastInitiativeId = insert.executeWithKey(municipalityInitiative.id);
 
@@ -300,6 +302,19 @@ public class TestHelper {
                 .execute();
     }
 
+    @Transactional(readOnly = false)
+    public Long createAuthorMessage(AuthorMessage authorMessage) {
+        return queryFactory.insert(QAuthorMessage.authorMessage)
+                .set(QAuthorMessage.authorMessage.message, authorMessage.getMessage())
+                .set(QAuthorMessage.authorMessage.confirmationCode, authorMessage.getConfirmationCode())
+                .set(QAuthorMessage.authorMessage.contactor, authorMessage.getContactName())
+                .set(QAuthorMessage.authorMessage.contactorEmail, authorMessage.getContactEmail())
+                .set(QAuthorMessage.authorMessage.initiativeId, authorMessage.getInitiativeId())
+                .executeWithKey(QAuthorMessage.authorMessage.id);
+
+
+    }
+
     public static class AuthorDraft {
 
         public Long initiativeId;
@@ -386,6 +401,7 @@ public class TestHelper {
 
         public Maybe<AuthorDraft> authorDraft = Maybe.absent();
         public FixState fixState = FixState.OK;
+        public String moderatorComment;
 
         public AuthorDraft applyAuthor() {
             this.authorDraft = Maybe.of(new AuthorDraft(this, municipalityId));
@@ -433,6 +449,21 @@ public class TestHelper {
 
         public InitiativeDraft withParticipantCount(Integer participantCount) {
             this.participantCount = participantCount;
+            return this;
+        }
+
+        public InitiativeDraft withExtraInfo(String extraInfo) {
+            this.extraInfo = extraInfo;
+            return this;
+        }
+
+        public InitiativeDraft withSentComment(String sentComment) {
+            this.sentComment = sentComment;
+            return this;
+        }
+
+        public InitiativeDraft withModeratorComment(String moderatorComment) {
+            this.moderatorComment = moderatorComment;
             return this;
         }
     }

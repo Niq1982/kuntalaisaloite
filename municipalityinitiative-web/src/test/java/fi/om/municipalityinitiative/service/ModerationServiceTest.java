@@ -5,11 +5,8 @@ import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdao.AuthorDao;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
-import fi.om.municipalityinitiative.dto.Author;
-import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
-import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.util.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -96,7 +93,7 @@ public class ModerationServiceTest {
 
         moderationService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
 
-        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyList(), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM));
+        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), eq(EmailMessageType.ACCEPTED_BY_OM));
     }
 
     @Test
@@ -125,8 +122,8 @@ public class ModerationServiceTest {
 
         moderationService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
 
-        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM_AND_SENT));
-        verify(moderationService.emailService).sendSingleToMunicipality(any(Initiative.class), anyListOf(Author.class), anyString(), eq(Locales.LOCALE_FI));
+        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), eq(EmailMessageType.ACCEPTED_BY_OM_AND_SENT));
+        verify(moderationService.emailService).sendSingleToMunicipality(any(Initiative.class), eq(Locales.LOCALE_FI));
 
     }
 
@@ -155,7 +152,7 @@ public class ModerationServiceTest {
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.REVIEW, InitiativeType.UNDEFINED));
 
         moderationService.reject(loginUserHolder, INITIATIVE_ID, null);
-        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.REJECTED_BY_OM));
+        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), eq(EmailMessageType.REJECTED_BY_OM));
     }
 
     @Test
@@ -176,7 +173,7 @@ public class ModerationServiceTest {
 
         String moderatorComment = "moderator comment";
         moderationService.accept(loginUserHolder, INITIATIVE_ID, moderatorComment, null);
-        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.ACCEPTED_BY_OM_FIX));
+        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), eq(EmailMessageType.ACCEPTED_BY_OM_FIX));
         verifyNoMoreInteractions(moderationService.emailService);
     }
 
@@ -198,7 +195,7 @@ public class ModerationServiceTest {
 
         String moderatorComment = "moderator comment";
         moderationService.reject(loginUserHolder, INITIATIVE_ID, moderatorComment);
-        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.REJECTED_BY_OM));
+        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), eq(EmailMessageType.REJECTED_BY_OM));
         verifyNoMoreInteractions(moderationService.emailService);
     }
 
@@ -226,7 +223,7 @@ public class ModerationServiceTest {
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE));
 
         moderationService.sendInitiativeBackForFixing(loginUserHolder, INITIATIVE_ID, "");
-        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), anyListOf(String.class), anyString(), eq(EmailMessageType.REJECTED_BY_OM));
+        verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), eq(EmailMessageType.REJECTED_BY_OM));
     }
 
     private static Initiative publishedCollaborative(FixState fixState) {

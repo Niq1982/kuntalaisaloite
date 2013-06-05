@@ -313,7 +313,7 @@ public class AppConfiguration {
 
     @Bean
     public EmailService emailService() {
-        return new MailSendingEmailService();
+        return new EmailService();
     }
 
     @Bean

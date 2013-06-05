@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
@@ -11,10 +12,10 @@ import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.sql.QAuthorMessage;
 import fi.om.municipalityinitiative.util.*;
 import org.joda.time.LocalDate;
-import org.junit.Before;
 import org.junit.Test;
 
 import javax.annotation.Resource;
+import javax.mail.MessagingException;
 
 import java.util.List;
 
@@ -35,16 +36,12 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     @Resource
     private InitiativeDao initiativeDao; // Do not depend on this
 
-    @Resource
-    TestHelper testHelper;
-
     private static Municipality testMunicipality;
 
     private static Municipality participantMunicipality;
 
-    @Before
-    public void setup() {
-        testHelper.dbCleanup();
+    @Override
+    public void childSetup() {
 
         String municipalityName = "Test municipality";
         testMunicipality = new Municipality(testHelper.createTestMunicipality(municipalityName), municipalityName, municipalityName, false);
@@ -53,7 +50,6 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         participantMunicipality = new Municipality(testHelper.createTestMunicipality(municipalityName), municipalityName, municipalityName, false);
 
     }
-
 
     @Test
     public void all_fields_are_set_when_getting_municipalityInitiativeInfo() throws Exception {
@@ -84,7 +80,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     }
 
     @Test
-    public void adding_participant_does_not_increase_denormalized_participantCount_but_accepting_does() {
+    public void adding_participant_does_not_increase_denormalized_participantCount_but_accepting_does() throws MessagingException, InterruptedException {
         Long initiativeId = testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         long originalParticipantCount = getSingleInitiativeInfo().getParticipantCount();
 
@@ -93,6 +89,8 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 
         service.confirmParticipation(participantId, RandomHashGenerator.getPrevious());
         assertThat(getSingleInitiativeInfo().getParticipantCount(), is(originalParticipantCount +1));
+
+        assertUniqueSentEmail(participantUICreateDto().getParticipantEmail(), EmailSubjectPropertyKeys.EMAIL_PARTICIPATION_CONFIRMATION_SUBJECT);
     }
 
     @Test
@@ -131,6 +129,12 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     }
 
     @Test
+    public void preparing_initiative_sends_email() throws MessagingException, InterruptedException {
+        service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
+        assertUniqueSentEmail(prepareDto().getParticipantEmail(), EmailSubjectPropertyKeys.EMAIL_PREPARE_CREATE_SUBJECT);
+    }
+
+    @Test
     public void preparing_initiative_sets_participant_information() {
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
 
@@ -156,11 +160,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 
     @Test
     public void addAuthorMessage_increases_amount_of_author_messages_and_confirming_deletes() {
-        AuthorUIMessage authorUIMessage = new AuthorUIMessage();
-        authorUIMessage.setInitiativeId(testHelper.createSingleSent(testMunicipality.getId()));
-        authorUIMessage.setContactEmail("contact@example.com");
-        authorUIMessage.setMessage("Message");
-        authorUIMessage.setContactName("Contact Name");
+        AuthorUIMessage authorUIMessage = authorUIMessage();
 
         precondition(testHelper.countAll(QAuthorMessage.authorMessage), is(0L));
 
@@ -171,9 +171,34 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         assertThat(testHelper.countAll(QAuthorMessage.authorMessage), is(0L));
     }
 
+    @Test
+    public void confirmAuthorMessage_sends_email_to_authors() throws MessagingException, InterruptedException {
+        String confirmationCode = "conf-code";
+        testHelper.createAuthorMessage(new AuthorMessage(authorUIMessage(), confirmationCode));
+
+        service.confirmAndSendAuthorMessage(confirmationCode);
+        assertUniqueSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_AUTHOR_MESSAGE_TO_AUTHORS_SUBJECT);
+    }
+
+    @Test
+    public void addAuthorMessage_sends_verification_email() throws MessagingException, InterruptedException {
+        service.addAuthorMessage(authorUIMessage());
+        assertUniqueSentEmail(authorUIMessage().getContactEmail(), EmailSubjectPropertyKeys.EMAIL_AUTHOR_MESSAGE_CONFIRMATION_SUBJECT);
+    }
+
+    private AuthorUIMessage authorUIMessage() {
+        AuthorUIMessage authorUIMessage = new AuthorUIMessage();
+        authorUIMessage.setInitiativeId(testHelper.createSingleSent(testMunicipality.getId()));
+        authorUIMessage.setContactEmail("contact@example.com");
+        authorUIMessage.setMessage("Message");
+        authorUIMessage.setContactName("Contact Name");
+        return authorUIMessage;
+    }
+
     private static ParticipantUICreateDto participantUICreateDto() {
         ParticipantUICreateDto participant = new ParticipantUICreateDto();
         participant.setParticipantName("Some Name");
+        participant.setParticipantEmail("participant@example.com");
         participant.setShowName(true);
         participant.setHomeMunicipality(testMunicipality.getId());
         participant.setMunicipality(testMunicipality.getId());
@@ -188,6 +213,8 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         prepareInitiativeUICreateDto.setMunicipalMembership(Membership.property);
         return prepareInitiativeUICreateDto;
     }
+
+
 
 
 }
