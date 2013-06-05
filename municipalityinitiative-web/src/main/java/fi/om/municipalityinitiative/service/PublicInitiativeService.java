@@ -135,13 +135,14 @@ public class PublicInitiativeService {
 
 
     @Transactional(readOnly = false)
-    public void addAuthorMessage(AuthorUIMessage authorUIMessage) {
+    public void addAuthorMessage(AuthorUIMessage authorUIMessage, Locale locale) {
 
         String confirmationCode = RandomHashGenerator.shortHash();
         AuthorMessage authorMessage = new AuthorMessage(authorUIMessage, confirmationCode);
         authorMessageDao.put(authorMessage);
 
         emailService.sendAuthorMessageConfirmationEmail(authorMessage.getInitiativeId(), authorMessage, Locales.LOCALE_FI);
+        emailService.sendAuthorMessageConfirmationEmail(authorMessage.getInitiativeId(), authorMessage, locale);
 
     }
 

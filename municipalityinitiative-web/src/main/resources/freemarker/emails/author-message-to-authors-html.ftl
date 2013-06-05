@@ -6,27 +6,61 @@
 
 <#include "../includes/styles.ftl" />
 
+<#assign keyPrefix="email.author.message.to.authors" />
+
 <#escape x as x?html>
 
-<#assign title><@u.message "email.author.message.to.authors.title" /></#assign>
+<#assign title><@u.message keyPrefix+".title" /></#assign>
 
-<@l.emailHtml title>
+<@l.emailHtml title=title footer=false>
 
     <@b.mainContentBlock title>
         <@b.initiativeDetails type />
 
-        <p style="${pBothMargins!""}"><@u.message "email.author.message.to.authors.description" /></p>
+        <p style="${pBothMargins!""}"><@u.message keyPrefix+".description" /></p>
 
-        <h4 style="${h4!""}"><@u.message "email.author.message.to.authors.sender" /></h4>
+        <h4 style="${h4!""}"><@u.message keyPrefix+".sender" /></h4>
         <p style="${pBottomMargin!""}">${authorMessage.contactName}<br/>
         <@u.link "mailto:"+authorMessage.contactEmail authorMessage.contactEmail /></p>
         
-        <h4 style="${h4!""}"><@u.message "email.author.message.to.authors.message" /></h4>
-        <p style="${pBottomMargin!""}">${authorMessage.message}</p>
+        <h4 style="${h4!""}"><@u.message keyPrefix+".message" /></h4>
+        <@u.text authorMessage.message pBottomMargin!"" />
 
     </@b.mainContentBlock>
 
     <@u.spacer "15" />
+    
+    <@b.emailFooter type />
+    
+    <@u.spacer "15" />
+    
+    <#-- Swedish part -->
+    <#global switchLocale = altLocale />
+
+    <#assign title><@u.message keyPrefix+".title" /></#assign>
+    
+    <@b.mainContentBlock title>
+        <@b.initiativeDetails type />
+
+        <p style="${pBothMargins!""}"><@u.message keyPrefix+".description" /></p>
+
+        <h4 style="${h4!""}"><@u.message keyPrefix+".sender" /></h4>
+        <p style="${pBottomMargin!""}">${authorMessage.contactName}<br/>
+        <@u.link "mailto:"+authorMessage.contactEmail authorMessage.contactEmail /></p>
+        
+        <h4 style="${h4!""}"><@u.message keyPrefix+".message" /></h4>
+        <@u.text authorMessage.message pBottomMargin!"" />
+
+    </@b.mainContentBlock>
+
+    <@u.spacer "15" />
+    
+    <@b.emailFooter type />
+    
+    <@u.spacer "15" />
+    
+    <#-- Switch to default locale -->
+    <#global switchLocale = locale />
 
 </@l.emailHtml>
 
