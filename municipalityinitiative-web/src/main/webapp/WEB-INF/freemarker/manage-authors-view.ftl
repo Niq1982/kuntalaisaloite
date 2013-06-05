@@ -127,9 +127,9 @@
             </div>
     
             <div class="invitation">
-                <span class="status"><span class="icon-small confirmed"></span> <span class="trigger-tooltip" title="<@u.message "invitation.accepted" />"><@u.localDate a.createTime/></span></span>
+                <span class="status"><span class="icon-small icon-16 confirmed"></span> <span class="trigger-tooltip" title="<@u.message "invitation.accepted" />"><@u.localDate a.createTime/></span></span>
                 <#if a.id != user.authorId>
-                <span class="action"><span class="icon-small cancel"></span> <a href="?deleteAuthor=${a.id!""}" class="js-delete-author"
+                <span class="action"><span class="icon-small icon-16 cancel"></span> <a href="?deleteAuthor=${a.id!""}" class="js-delete-author"
                     data-id="${a.id!""}"
                     data-name="${a.contactInfo.name!""}"
                     data-email="${a.contactInfo.email!""}"
@@ -156,20 +156,20 @@
 
             <div class="invitation">
                 <#if i.rejected>
-                    <span class="status"><span class="icon-small rejected"></span> <@u.message "invitation.rejected" /> <@u.localDate i.rejectTime.value /></span>
+                    <span class="status"><span class="icon-small icon-16 rejected"></span> <@u.message "invitation.rejected" /> <@u.localDate i.rejectTime.value /></span>
                 <#elseif i.expired>
-                    <span class="status"><span class="icon-small expired"></span> <@u.message "invitation.expired" /></span>
-                    <span class="action push"><@u.message "invitation.sent" /> <@u.localDate i.invitationTime /></span>
+                    <span class="status"><span class="icon-small icon-16 expired"></span> <@u.message "invitation.expired" /></span>
+                    <span class="action no-icon"> <@u.message "invitation.sent" /> <@u.localDate i.invitationTime /></span>
                     <span class="action">
                         <form action="${springMacroRequestContext.requestUri}" method="POST" id="resend_${i.confirmationCode}">
                             <@f.securityFilters/>
                             <input type="hidden" name="${UrlConstants.PARAM_INVITATION_CODE}" value="${i.confirmationCode}"/>
-                            <button type="submit" value="<@u.message "invitation.resend"/>" class="btn-link"><span class="icon-small resend"></span> <@u.message "invitation.resend"/></button>
+                            <button type="submit" value="<@u.message "invitation.resend"/>" class="btn-link"><span class="icon-small icon-16 resend"></span> <@u.message "invitation.resend"/></button>
                         </form>
                     </span>
                 <#else>
-                    <span class="status"><span class="icon-small unconfirmed"></span> <@u.message "invitation.unconfirmed" /> <#-- TODO <span class="bull">&bull;</span> <a href="#"><span class="icon-small cancel"></span> peru kutsu</a></span>-->
-                    <span class="action push"><@u.message "invitation.sent" /> <@u.localDate i.invitationTime /></span>
+                    <span class="status"><span class="icon-small icon-16 unconfirmed"></span> <@u.message "invitation.unconfirmed" /> <#-- TODO <span class="bull">&bull;</span> <a href="#"><span class="icon-small cancel"></span> peru kutsu</a></span>-->
+                    <span class="action no-icon"><@u.message "invitation.sent" /> <@u.localDate i.invitationTime /></span>
                 </#if>
             </div>
         </div>

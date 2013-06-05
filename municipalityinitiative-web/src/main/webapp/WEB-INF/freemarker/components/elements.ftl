@@ -104,7 +104,7 @@
                     data-municipality="${a.municipality.getName(locale)}"
                     data-address="${a.contactInfo.address!""}"
                     data-email="${a.contactInfo.email!""}"
-                    data-phone="${a.contactInfo.phone!""}"><span class="icon-small resend"></span></a>
+                    data-phone="${a.contactInfo.phone!""}"><span class="icon-small icon-16 resend"></span></a>
             </#if>
             <br />
             ${a.contactInfo.email!""}
