@@ -87,13 +87,13 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     }
 
     @Test
-    public void reject_author_invitation() { // TODO: Implement service method, this uses dao layer.
+    public void reject_author_invitation() {
         Long initiativeId = testHelper.createCollaborativeReview(testHelper.createTestMunicipality("name"));
 
         authorService.createAuthorInvitation(initiativeId, TestHelper.authorLoginUserHolder, authorInvitation());
-        assertThat(testHelper.getAuthorInvitation(RandomHashGenerator.getPrevious()).isRejected(), is(false));
+        precondition(testHelper.getAuthorInvitation(RandomHashGenerator.getPrevious()).isRejected(), is(false));
 
-        authorDao.rejectAuthorInvitation(initiativeId, RandomHashGenerator.getPrevious());
+        authorService.rejectInvitation(initiativeId, RandomHashGenerator.getPrevious());
 
         assertThat(testHelper.getAuthorInvitation(RandomHashGenerator.getPrevious()).isRejected(), is(true));
 
