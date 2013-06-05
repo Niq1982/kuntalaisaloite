@@ -188,11 +188,6 @@ public class EmailMessageConstructor {
             this.recipients.add(sendTo);
             return this;
         }
-        
-        public EmailMessageDraft withSendToModerator() {
-            this.recipients = Collections.singletonList(emailSettings.getModeratorEmail());
-            return this;
-        }
 
         public EmailMessageDraft withDataMap(Map<String, Object> dataMap) {
             this.dataMap = dataMap;

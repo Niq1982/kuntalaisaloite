@@ -303,17 +303,21 @@ public class AppConfiguration {
     @Bean
     public EmailSettings emailSettings() {
         String defaultReplyTo = env.getRequiredProperty(PropertyNames.emailDefaultReplyTo);
+        String moderatorSendTo = env.getRequiredProperty(PropertyNames.emailSendToOM);
         String testSendTo = env.getProperty(PropertyNames.testEmailSendTo);
-        String moderatorSendTo = env.getProperty(PropertyNames.emailSendToOM);
 
         boolean testConsoleOutput = env.getProperty(PropertyNames.testEmailConsoleOutput, Boolean.class, TEST_EMAIL_CONSOLE_OUTPUT_DEFAULT);
-        boolean testSendMunicipalityEmailsToAuthor = env.getProperty(PropertyNames.testEmailMunicipalityEmailsToAuthor, Boolean.class, false);
+
+        // Mandatory so we won't accidentally leave any test properties to any environments
+        boolean testSendMunicipalityEmailsToAuthor = env.getRequiredProperty(PropertyNames.testEmailMunicipalityEmailsToAuthor, Boolean.class);
+        boolean testSendModeratorEmailsToAuthor = env.getRequiredProperty(PropertyNames.testEmailSendModeratorEmailsToAuthor, Boolean.class);
 
         return new EmailSettings(defaultReplyTo,
                 Maybe.fromNullable(Strings.emptyToNull(testSendTo)),
                 testConsoleOutput,
                 moderatorSendTo,
-                testSendMunicipalityEmailsToAuthor);
+                testSendMunicipalityEmailsToAuthor,
+                testSendModeratorEmailsToAuthor);
     }
 
     @Bean

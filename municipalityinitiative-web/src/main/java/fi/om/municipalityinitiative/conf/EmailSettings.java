@@ -8,14 +8,16 @@ public class EmailSettings {
     private final String defaultReplyTo;
     private final boolean testConsoleOutput;
     private final boolean testSendMunicipalityEmailsToAuthor;
-    private String moderatorEmail;
+    private final String moderatorEmail;
+    private final boolean testSendModeratorEmailsToAuthor;
 
-    public EmailSettings(String defaultReplyTo, Maybe<String> testSendTo, boolean testConsoleOutput, String moderatorEmail, boolean testSendMunicipalityEmailsToAuthor) {
+    public EmailSettings(String defaultReplyTo, Maybe<String> testSendTo, boolean testConsoleOutput, String moderatorEmail, boolean testSendMunicipalityEmailsToAuthor, boolean testSendModeratorEmailsToAuthor) {
         this.defaultReplyTo = defaultReplyTo;
         this.testSendTo = testSendTo;
         this.testConsoleOutput = testConsoleOutput;
         this.moderatorEmail = moderatorEmail;
         this.testSendMunicipalityEmailsToAuthor = testSendMunicipalityEmailsToAuthor;
+        this.testSendModeratorEmailsToAuthor = testSendModeratorEmailsToAuthor;
     }
 
     public String getDefaultReplyTo() {
@@ -36,5 +38,9 @@ public class EmailSettings {
 
     public boolean isTestSendMunicipalityEmailsToAuthor() {
         return testSendMunicipalityEmailsToAuthor;
+    }
+
+    public boolean isTestSendModeratorEmailsToAuthor() {
+        return testSendModeratorEmailsToAuthor;
     }
 }

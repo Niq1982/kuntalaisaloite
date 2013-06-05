@@ -17,7 +17,7 @@ public class IntegrationTestFakeEmailConfiguration {
 
     @Bean
     public EmailSettings emailSettings() {
-        return new EmailSettings(EMAIL_DEFAULT_REPLY_TO, Maybe.<String>absent(), false, EMAIL_DEFAULT_OM, true);
+        return new EmailSettings(EMAIL_DEFAULT_REPLY_TO, Maybe.<String>absent(), false, EMAIL_DEFAULT_OM, false, false);
     }
 
     @Bean

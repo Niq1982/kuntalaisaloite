@@ -220,13 +220,12 @@ public class EmailService {
 
         emailMessageConstructor
                 .fromTemplate(NOTIFICATION_TO_MODERATOR)
-                        //.withSendToModerator()
-                .addRecipient(TEMP_MODERATOR_EMAIL_CHANGE)
+//                .withSendToModerator()
+                .addRecipient(solveModeratorEmail(authors.get(0).getContactInfo().getEmail()))
                 .withSubject(messageSource.getMessage(EMAIL_NOTIFICATION_TO_MODERATOR_SUBJECT, toArray(initiative.getName()), locale))
                 .withDataMap(toDataMap(initiative, authors, locale))
                 .send();
     }
-
 
     public void sendParticipationConfirmation(Long initiativeId, String participantEmail, Long participantId, String confirmationCode, Locale locale) {
         HashMap<String, Object> dataMap = toDataMap(initiativeDao.get(initiativeId), locale);
@@ -271,7 +270,15 @@ public class EmailService {
         if (emailSettings.isTestSendMunicipalityEmailsToAuthor()) {
             return authorDao.findAuthors(initiative.getId()).get(0).getContactInfo().getEmail();
         }
-        return municipalityDao.getMunicipalityEmail(initiative.getId());
+        return municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId());
+    }
+
+
+    private String solveModeratorEmail(String alternativeEmail) {
+        if (emailSettings.isTestSendModeratorEmailsToAuthor()) {
+            return alternativeEmail;
+        }
+        return emailSettings.getModeratorEmail();
     }
 
     private static String[] toArray(String... name) {

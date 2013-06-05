@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.service;
 
+import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
@@ -46,8 +47,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
     public void review_notification_to_moderator_contains_all_information() throws Exception {
 
         emailService.sendNotificationToModerator(initiativeId());
-          assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
-//        assertThat(getSingleRecipient(), is(IntegrationTestFakeEmailConfiguration.EMAIL_DEFAULT_OM)); // XXX: Restore this when we want to send emails to om
+        assertThat(javaMailSenderFake.getSingleRecipient(), is(IntegrationTestFakeEmailConfiguration.EMAIL_DEFAULT_OM));
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Kuntalaisaloite tarkastettavaksi"));
         
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_NAME));
@@ -81,7 +81,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         emailService.sendSingleToMunicipality(initiativeId(), Locales.LOCALE_FI);
 
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Kuntalaisaloite: "+ INITIATIVE_NAME));
-        assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
+        assertThat(javaMailSenderFake.getSingleRecipient(), is(MUNICIPALITY_EMAIL));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_NAME));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_PROPOSAL));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_MUNICIPALITY));
@@ -145,7 +145,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         emailService.sendCollaborativeToMunicipality(initiativeId(), Locales.LOCALE_FI);
 
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Kuntalaisaloite: "+ INITIATIVE_NAME));
-        assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
+        assertThat(javaMailSenderFake.getSingleRecipient(), is(MUNICIPALITY_EMAIL));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(EXTRA_INFO));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(SENT_COMMENT));
 
