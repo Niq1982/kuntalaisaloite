@@ -114,10 +114,9 @@ public class InitiativeManagementService {
         assertAllowance("Send review", getManagementSettings(initiativeId).isAllowSendToReview());
 
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.REVIEW);
-        Initiative initiative = initiativeDao.get(initiativeId);
 
         emailService.sendStatusEmail(initiativeId, EmailMessageType.SENT_TO_REVIEW);
-        emailService.sendNotificationToModerator(initiative);
+        emailService.sendNotificationToModerator(initiativeId);
     }
 
     @Transactional(readOnly = false)
@@ -127,7 +126,7 @@ public class InitiativeManagementService {
         initiativeDao.updateInitiativeFixState(initiativeId, FixState.REVIEW);
 
         emailService.sendStatusEmail(initiativeId, EmailMessageType.SENT_FIX_TO_REVIEW);
-        emailService.sendNotificationToModerator(initiativeDao.get(initiativeId));
+        emailService.sendNotificationToModerator(initiativeId);
     }
 
     @Transactional(readOnly = false)

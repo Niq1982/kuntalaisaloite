@@ -194,8 +194,8 @@ public class EmailService {
     }
 
     
-    public void sendManagementHashRenewed(Initiative initiative, String managementHash, Long authorId) {
-        HashMap<String, Object> dataMap = toDataMap(initiativeDao.get(initiative.getId()), Locales.LOCALE_FI);
+    public void sendManagementHashRenewed(Long initiativeId, String managementHash, Long authorId) {
+        HashMap<String, Object> dataMap = toDataMap(initiativeDao.get(initiativeId), Locales.LOCALE_FI);
         dataMap.put("managementHash", managementHash);
 
         emailMessageConstructor
@@ -207,28 +207,28 @@ public class EmailService {
     }
 
     
-    public void sendNotificationToModerator(Initiative initiative) {
+    public void sendNotificationToModerator(Long initiativeId) {
 
         Locale locale = Locales.LOCALE_FI;
 
 
-        List<Author> authorsss = authorDao.findAuthors(initiative.getId());
-        Initiative initiativeeee = initiativeDao.get(initiative.getId());
+        List<Author> authors = authorDao.findAuthors(initiativeId);
+        Initiative initiative = initiativeDao.get(initiativeId);
 
-        String TEMP_MODERATOR_EMAIL_CHANGE = authorsss.get(0).getContactInfo().getEmail();
+        String TEMP_MODERATOR_EMAIL_CHANGE = authors.get(0).getContactInfo().getEmail();
 
         emailMessageConstructor
                 .fromTemplate(NOTIFICATION_TO_MODERATOR)
                         //.withSendToModerator()
                 .addRecipient(TEMP_MODERATOR_EMAIL_CHANGE)
-                .withSubject(messageSource.getMessage(EMAIL_NOTIFICATION_TO_MODERATOR_SUBJECT, toArray(initiativeeee.getName()), locale))
-                .withDataMap(toDataMap(initiativeeee, authorsss, locale))
+                .withSubject(messageSource.getMessage(EMAIL_NOTIFICATION_TO_MODERATOR_SUBJECT, toArray(initiative.getName()), locale))
+                .withDataMap(toDataMap(initiative, authors, locale))
                 .send();
     }
 
     
-    public void sendParticipationConfirmation(Initiative initiative, String participantEmail, Long participantId, String confirmationCode, Locale locale) {
-        HashMap<String, Object> dataMap = toDataMap(initiative, locale);
+    public void sendParticipationConfirmation(Long initiativeId, String participantEmail, Long participantId, String confirmationCode, Locale locale) {
+        HashMap<String, Object> dataMap = toDataMap(initiativeDao.get(initiativeId), locale);
         dataMap.put("participantId", participantId);
         dataMap.put("confirmationCode", confirmationCode);
         emailMessageConstructor
@@ -240,8 +240,8 @@ public class EmailService {
     }
 
     
-    public void sendAuthorMessageConfirmationEmail(Initiative initiative, AuthorMessage authorMessage, Locale locale) {
-        HashMap<String, Object> dataMap = toDataMap(initiative, locale);
+    public void sendAuthorMessageConfirmationEmail(Long initiativeId, AuthorMessage authorMessage, Locale locale) {
+        HashMap<String, Object> dataMap = toDataMap(initiativeDao.get(initiativeId), locale);
         dataMap.put("authorMessage", authorMessage);
         emailMessageConstructor
                 .fromTemplate(AUTHOR_MESSAGE_CONFIRMATION)
@@ -253,13 +253,13 @@ public class EmailService {
     }
 
     
-    public void sendAuthorMessages(Initiative initiative, AuthorMessage authorMessage) {
+    public void sendAuthorMessages(Long initiativeId, AuthorMessage authorMessage) {
         Locale localeFi = Locales.LOCALE_FI;
-        HashMap<String, Object> dataMap = toDataMap(initiativeDao.get(initiative.getId()), localeFi);
+        HashMap<String, Object> dataMap = toDataMap(initiativeDao.get(initiativeId), localeFi);
         dataMap.put("authorMessage", authorMessage);
         emailMessageConstructor
                 .fromTemplate(AUTHOR_MESSAGE_TO_AUTHORS)
-                .addRecipients(authorDao.getAuthorEmails(initiative.getId()))
+                .addRecipients(authorDao.getAuthorEmails(initiativeId))
                 .withSubject(messageSource.getMessage(EMAIL_AUTHOR_MESSAGE_TO_AUTHORS_SUBJECT, toArray(), localeFi))
                 .withDataMap(dataMap)
                 .send();

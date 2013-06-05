@@ -39,7 +39,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
     @Test
     public void sending_new_management_hash_contains_all_information() throws Exception {
 
-        emailService.sendManagementHashRenewed(createDefaultInitiative(), MANAGEMENT_HASH, authorId());
+        emailService.sendManagementHashRenewed(initiativeId(), MANAGEMENT_HASH, authorId());
 
         assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Sinulle on luotu uusi aloitteen ylläpitolinkki Kuntalaisaloite.fi-palvelussa"));
@@ -50,8 +50,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
     @Test
     public void review_notification_to_moderator_contains_all_information() throws Exception {
 
-        Initiative initiative = createDefaultInitiative();
-        emailService.sendNotificationToModerator(initiative);
+        emailService.sendNotificationToModerator(initiativeId());
           assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
 //        assertThat(getSingleRecipient(), is(IntegrationTestFakeEmailConfiguration.EMAIL_DEFAULT_OM)); // XXX: Restore this when we want to send emails to om
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Kuntalaisaloite tarkastettavaksi"));
@@ -63,7 +62,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_EMAIL));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_NAME));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_PHONE));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.moderation(initiative.getId())));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.moderation(initiativeId())));
         
     }
 
@@ -73,7 +72,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         long participantId = 1L;
         String participantEmail = "participant@example.com";
 
-        emailService.sendParticipationConfirmation(createDefaultInitiative(), participantEmail, participantId, confirmationCode, Locales.LOCALE_FI);
+        emailService.sendParticipationConfirmation(initiativeId(), participantEmail, participantId, confirmationCode, Locales.LOCALE_FI);
         assertThat(javaMailSenderFake.getSingleRecipient(), is(participantEmail));
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Aloitteeseen osallistumisen vahvistaminen"));
 
@@ -183,7 +182,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
     public void send_author_message_confirmation_contains_all_information() throws Exception {
         AuthorMessage authorMessage = authorMessage();
         authorMessage.setConfirmationCode("conf-code");
-        emailService.sendAuthorMessageConfirmationEmail(createDefaultInitiative(), authorMessage, Locales.LOCALE_FI);
+        emailService.sendAuthorMessageConfirmationEmail(initiativeId(), authorMessage, Locales.LOCALE_FI);
 
         assertThat(javaMailSenderFake.getSingleRecipient(), is(authorMessage.getContactEmail()));
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Olet lähettämässä viestiä aloitteen vastuuhenkilöille"));

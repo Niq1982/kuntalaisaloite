@@ -75,7 +75,7 @@ public class PublicInitiativeService {
         Long participantId = participantDao.create(participantCreateDto, confirmationCode);
 
         emailService.sendParticipationConfirmation(
-                initiativeDao.get(initiativeId),
+                initiativeId,
                 participant.getParticipantEmail(),
                 participantId,
                 confirmationCode,
@@ -141,8 +141,7 @@ public class PublicInitiativeService {
         AuthorMessage authorMessage = new AuthorMessage(authorUIMessage, confirmationCode);
         authorMessageDao.put(authorMessage);
 
-        Initiative initiative = initiativeDao.get(authorMessage.getInitiativeId());
-        emailService.sendAuthorMessageConfirmationEmail(initiative, authorMessage, Locales.LOCALE_FI);
+        emailService.sendAuthorMessageConfirmationEmail(authorMessage.getInitiativeId(), authorMessage, Locales.LOCALE_FI);
 
     }
 
@@ -150,11 +149,9 @@ public class PublicInitiativeService {
     public Long confirmAndSendAuthorMessage(String confirmationCode) {
         AuthorMessage authorMessage = authorMessageDao.pop(confirmationCode);
 
-        Initiative initiative = initiativeDao.get(authorMessage.getInitiativeId());
+        emailService.sendAuthorMessages(authorMessage.getInitiativeId(), authorMessage);
 
-        emailService.sendAuthorMessages(initiative, authorMessage);
-
-        return initiative.getId();
+        return authorMessage.getInitiativeId();
 
     }
 
