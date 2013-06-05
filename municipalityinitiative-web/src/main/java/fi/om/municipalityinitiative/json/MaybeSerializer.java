@@ -11,7 +11,7 @@ import java.io.IOException;
 public class MaybeSerializer extends JsonSerializer<Maybe> {
 
     @Override
-    public void serialize(Maybe value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonGenerationException {
+    public void serialize(Maybe value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
         if (value.isPresent()) {
             jgen.writeString(value.get().toString());
         }

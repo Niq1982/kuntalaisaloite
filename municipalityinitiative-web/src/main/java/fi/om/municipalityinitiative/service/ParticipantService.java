@@ -2,8 +2,8 @@ package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import fi.om.municipalityinitiative.newdao.AuthorDao;
-import fi.om.municipalityinitiative.newdao.ParticipantDao;
+import fi.om.municipalityinitiative.dao.AuthorDao;
+import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.service.Participant;

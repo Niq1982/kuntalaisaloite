@@ -1,6 +1,6 @@
 package fi.om.municipalityinitiative.dto.user;
 
-import fi.om.municipalityinitiative.service.AccessDeniedException;
+import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 
 public class LoginUserHolder<E extends User> {
 

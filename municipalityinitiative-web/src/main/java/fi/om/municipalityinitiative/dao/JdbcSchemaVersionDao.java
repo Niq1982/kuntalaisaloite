@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.newdao;
+package fi.om.municipalityinitiative.dao;
 
 import com.mysema.query.Tuple;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;

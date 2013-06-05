@@ -1,7 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Lists;
-import fi.om.municipalityinitiative.newdao.JdbcSchemaVersionDao;
+import fi.om.municipalityinitiative.dao.JdbcSchemaVersionDao;
 import fi.om.municipalityinitiative.dto.SchemaVersion;
 import fi.om.municipalityinitiative.util.TaskExecutorAspect;
 import fi.om.municipalityinitiative.web.Urls;

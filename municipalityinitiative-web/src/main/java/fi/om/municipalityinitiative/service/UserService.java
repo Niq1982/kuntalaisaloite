@@ -2,9 +2,11 @@ package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dto.user.OmLoginUser;
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
+import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
+import fi.om.municipalityinitiative.exceptions.AuthenticationRequiredException;
 import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
-import fi.om.municipalityinitiative.newdao.AdminUserDao;
-import fi.om.municipalityinitiative.newdao.AuthorDao;
+import fi.om.municipalityinitiative.dao.AdminUserDao;
+import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.util.Maybe;

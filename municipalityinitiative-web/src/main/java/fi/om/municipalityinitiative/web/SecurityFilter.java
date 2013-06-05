@@ -2,8 +2,8 @@ package fi.om.municipalityinitiative.web;
 
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
-import fi.om.municipalityinitiative.service.AuthenticationRequiredException;
-import fi.om.municipalityinitiative.service.CookiesRequiredException;
+import fi.om.municipalityinitiative.exceptions.AuthenticationRequiredException;
+import fi.om.municipalityinitiative.exceptions.CookiesRequiredException;
 import fi.om.municipalityinitiative.service.EncryptionService;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;

@@ -1,15 +1,12 @@
-package fi.om.municipalityinitiative.newdao;
+package fi.om.municipalityinitiative.dao;
 
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
-import fi.om.municipalityinitiative.dao.SQLExceptionTranslated;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.sql.QAuthorMessage;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-
-import static fi.om.municipalityinitiative.newdao.JdbcInitiativeDao.assertSingleAffection;
 
 @SQLExceptionTranslated
 @Transactional(readOnly = true)
@@ -42,7 +39,7 @@ public class JdbcAuthorMessageDao implements AuthorMessageDao {
             throw new NotFoundException("AuthorMessage", confirmationCode);
         }
 
-        assertSingleAffection(queryFactory.delete(QAuthorMessage.authorMessage)
+        JdbcInitiativeDao.assertSingleAffection(queryFactory.delete(QAuthorMessage.authorMessage)
                 .where(QAuthorMessage.authorMessage.confirmationCode.eq(confirmationCode))
                 .execute());
 

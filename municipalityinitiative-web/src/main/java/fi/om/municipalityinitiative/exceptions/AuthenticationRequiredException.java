@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.service;
+package fi.om.municipalityinitiative.exceptions;
 
 public class AuthenticationRequiredException extends RuntimeException {
 

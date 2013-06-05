@@ -1,6 +1,6 @@
 package fi.om.municipalityinitiative.web;
 
-import fi.om.municipalityinitiative.service.AccessDeniedException;
+import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 
 public class CSRFException extends AccessDeniedException {
 
