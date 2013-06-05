@@ -2,16 +2,12 @@ package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
-import fi.om.municipalityinitiative.dto.Author;
-import fi.om.municipalityinitiative.dto.service.Initiative;
-import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.util.JavaMailSenderFake;
-import fi.om.municipalityinitiative.util.SentMailHanderUtil;
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
+import org.springframework.context.MessageSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -52,7 +48,8 @@ public abstract class MailSendingEmailServiceTestBase {
     @Resource
     protected JavaMailSenderFake javaMailSenderFake;
 
-    protected SentMailHanderUtil sentMailHanderUtil = new SentMailHanderUtil();
+    @Resource
+    private MessageSource messageSource;
 
     private Long testMunicipality;
 
@@ -81,30 +78,6 @@ public abstract class MailSendingEmailServiceTestBase {
                 .toInitiativeDraft());
 
 
-    }
-
-    protected Initiative createDefaultInitiative() {
-        Initiative initiative = new Initiative();
-        initiative.setId(testHelper.getLastInitiativeId());
-        initiative.setMunicipality(new Municipality(testMunicipality, INITIATIVE_MUNICIPALITY, INITIATIVE_MUNICIPALITY, true));
-
-        initiative.setCreateTime(new LocalDate(2010, 1, 1));
-        initiative.setProposal(INITIATIVE_PROPOSAL);
-        initiative.setName(INITIATIVE_NAME);
-        initiative.setExtraInfo(EXTRA_INFO);
-        initiative.setModeratorComment(MODERATOR_COMMENT);
-        initiative.setSentComment(SENT_COMMENT);
-
-        return initiative;
-    }
-
-    protected List<Author> defaultAuthors() {
-        ContactInfo contactInfo = contactInfo();
-        Author author = new Author();
-        author.setId(testHelper.getLastAuthorId());
-        author.setContactInfo(contactInfo);
-        author.setMunicipality(new Municipality(INITIATIVE_MUNICIPALITY_ID, INITIATIVE_MUNICIPALITY, INITIATIVE_MUNICIPALITY, true));
-        return Collections.singletonList(author);
     }
 
     public static ContactInfo contactInfo() {

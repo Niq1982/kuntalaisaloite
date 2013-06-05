@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Participant;
+import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.Urls;
 import org.junit.Before;
@@ -101,16 +102,21 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
     @Test
     public void author_has_been_deleted_email_to_everyone_contains_all_information() throws Exception {
-        emailService.sendAuthorDeletedEmailToOtherAuthors(initiativeId(), contactInfo());
+        ContactInfo contactInfo = new ContactInfo();
+        contactInfo.setAddress("Vastuuhenkilön Osoite");
+        contactInfo.setEmail("sposti@example.com");
+        contactInfo.setName("Nimmii");
+        contactInfo.setPhone("Puhnummi");
+        emailService.sendAuthorDeletedEmailToOtherAuthors(initiativeId(), contactInfo);
 
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Vastuuhenkilö on poistettu aloitteestasi"));
         assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_NAME));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_MUNICIPALITY));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_ADDRESS));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_EMAIL));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_NAME));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_PHONE));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(contactInfo.getAddress()));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(contactInfo.getEmail()));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(contactInfo.getName()));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(contactInfo.getPhone()));
     }
 
     @Test
@@ -135,8 +141,8 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), containsString("Sinut on kutsuttu vastuuhenkilöksi kuntalaisaloitteeseen"));
         assertThat(javaMailSenderFake.getSingleRecipient(), is(authorInvitation.getEmail()));
 
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.invitation(createDefaultInitiative().getId(), authorInvitation.getConfirmationCode())));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.alt().invitation(createDefaultInitiative().getId(), authorInvitation.getConfirmationCode())));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.invitation(initiativeId(), authorInvitation.getConfirmationCode())));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.alt().invitation(initiativeId(), authorInvitation.getConfirmationCode())));
 
     }
 
@@ -196,10 +202,9 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
     @Test
     public void send_message_to_authors_contains_all_information() throws Exception {
 
-        List<String> authorEmails = Collections.singletonList("author@example.com");
         AuthorMessage authorMessage = authorMessage();
 
-        emailService.sendAuthorMessages(createDefaultInitiative(), authorMessage);
+        emailService.sendAuthorMessages(initiativeId(), authorMessage);
 
         assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Olet saanut yhteydenoton aloitteeseesi liittyen / Samma på svenska"));
