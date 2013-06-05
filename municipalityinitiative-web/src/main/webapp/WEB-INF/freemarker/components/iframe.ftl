@@ -59,25 +59,25 @@
         
         <#assign digit = "\\d+" />
         
-        <div class="column col-1of3" style="width:10%;">
+        <div class="column col-1of10 push-width">
             <label for="municipality" class="input-header">
                 <@u.message "iframeGenerator.width" />
             </label>
             <input type="text" maxlength="4" class="small" value="250" name="width" id="width" pattern="${digit}" />
         </div>
-        <div class="column col-1of3" style="width:10%;">
+        <div class="column col-1of10">
             <label for="municipality" class="input-header">
                 <@u.message "iframeGenerator.height" />
             </label>
             <input type="text" maxlength="4" class="small" value="400" name="height" id="height" pattern="${digit}"  />
         </div>
-        <div class="column col-1of3" style="width:10%;">
+        <div class="column col-1of10 push-amount">
             <label for="municipality" class="input-header">
                 <@u.message "iframeGenerator.initiativeCount" />
             </label>
             <input type="text" maxlength="2" class="small" value="3" name="limit" id="limit" pattern="${digit}" />
         </div>
-        <div class="column col-1of3" style="width:20%;">
+        <div class="column col-1of5">
             <div class="input-header">
                 <@u.message "iframeGenerator.lang" />
             </div>
