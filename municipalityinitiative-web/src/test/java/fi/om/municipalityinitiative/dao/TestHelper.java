@@ -4,6 +4,7 @@ import com.mysema.query.sql.RelationalPathBase;
 import com.mysema.query.sql.dml.SQLInsertClause;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Path;
+import com.mysema.query.types.Predicate;
 import fi.om.municipalityinitiative.conf.PropertyNames;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.dto.service.Initiative;
@@ -217,8 +218,13 @@ public class TestHelper {
     }
 
     @Transactional
-    public Long countAll(RelationalPathBase relationalPathBase) {
-        return queryFactory.from(relationalPathBase).count();
+    public Long countAll(RelationalPathBase from) {
+        return queryFactory.from(from).count();
+    }
+
+    @Transactional
+    public Long countAll(RelationalPathBase from, Predicate where) {
+        return queryFactory.from(from).where(where).count();
     }
 
     @Transactional(readOnly = false)

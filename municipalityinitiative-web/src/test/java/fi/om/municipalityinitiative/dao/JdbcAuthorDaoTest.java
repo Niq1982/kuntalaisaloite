@@ -8,6 +8,7 @@ import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
+import fi.om.municipalityinitiative.sql.QParticipant;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -105,12 +106,16 @@ public class JdbcAuthorDaoTest {
         Long authorId = testHelper.createAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality));
 
         int originalAuthorCount = authorDao.findAuthors(initiativeId).size();
-        long originalParticipantCount = testHelper.countAllParticipants(initiativeId);
+        long originalParticipantCount = participantCountOfInitiative(initiativeId);
 
         authorDao.deleteAuthor(authorId);
 
         assertThat(authorDao.findAuthors(initiativeId), hasSize(originalAuthorCount - 1));
-        assertThat(testHelper.countAllParticipants(initiativeId), is(originalParticipantCount - 1));
+        assertThat(participantCountOfInitiative(initiativeId), is(originalParticipantCount - 1));
+    }
+
+    private Long participantCountOfInitiative(Long initiativeId) {
+        return testHelper.countAll(QParticipant.participant, QParticipant.participant.municipalityInitiativeId.eq(initiativeId));
     }
 
     @Test
