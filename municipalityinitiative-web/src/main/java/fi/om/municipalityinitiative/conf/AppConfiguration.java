@@ -312,8 +312,8 @@ public class AppConfiguration {
     }
 
     @Bean
-    public EmailService emailService() {
-        return new EmailService();
+    public TaskedEmailService emailService() {
+        return new TaskedEmailService();
     }
 
     @Bean

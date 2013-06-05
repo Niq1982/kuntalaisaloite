@@ -11,7 +11,6 @@ import fi.om.municipalityinitiative.newdao.InitiativeDao;
 import fi.om.municipalityinitiative.newdao.MunicipalityDao;
 import fi.om.municipalityinitiative.newdao.ParticipantDao;
 import fi.om.municipalityinitiative.util.Locales;
-import fi.om.municipalityinitiative.util.Task;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.context.MessageSource;
 
@@ -24,7 +23,6 @@ import java.util.Map;
 
 import static fi.om.municipalityinitiative.service.EmailSubjectPropertyKeys.*;
 
-@Task
 public class EmailService {
 
     private static final String INITIATIVE_PREPARE_VERIFICATION_TEMPLATE = "initiative-create-verification";

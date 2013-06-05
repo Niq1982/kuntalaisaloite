@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.conf;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.service.AccessDeniedException;
+import fi.om.municipalityinitiative.service.EmailService;
 import fi.om.municipalityinitiative.service.UserService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +21,11 @@ public class IntegrationTestConfiguration {
     @Bean
     public TestHelper testHelper() {
         return new TestHelper();
+    }
+
+    @Bean
+    public EmailService emailService() {
+        return new EmailService();
     }
 
     @Bean
