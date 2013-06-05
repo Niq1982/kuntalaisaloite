@@ -91,11 +91,11 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         Long initiativeId = testHelper.createCollaborativeReview(testHelper.createTestMunicipality("name"));
 
         authorService.createAuthorInvitation(initiativeId, TestHelper.authorLoginUserHolder, authorInvitation());
-        assertThat(authorDao.getAuthorInvitation(initiativeId, RandomHashGenerator.getPrevious()).isRejected(), is(false));
+        assertThat(testHelper.getAuthorInvitation(RandomHashGenerator.getPrevious()).isRejected(), is(false));
 
         authorDao.rejectAuthorInvitation(initiativeId, RandomHashGenerator.getPrevious());
 
-        assertThat(authorDao.getAuthorInvitation(initiativeId, RandomHashGenerator.getPrevious()).isRejected(), is(true));
+        assertThat(testHelper.getAuthorInvitation(RandomHashGenerator.getPrevious()).isRejected(), is(true));
 
     }
 

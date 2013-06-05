@@ -335,6 +335,13 @@ public class TestHelper {
                 .uniqueResult(Mappings.participantMapping);
     }
 
+    @Transactional(readOnly = true)
+    public AuthorInvitation getAuthorInvitation(String confirmationCode) {
+        return queryFactory.from(QAuthorInvitation.authorInvitation)
+                .where(QAuthorInvitation.authorInvitation.confirmationCode.eq(confirmationCode))
+                .uniqueResult(Mappings.authorInvitationMapping);
+    }
+
     public static class AuthorDraft {
 
         public Long initiativeId;
