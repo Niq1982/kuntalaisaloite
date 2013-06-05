@@ -38,6 +38,7 @@ public class JdbcAuthorDaoTest {
 
     @Resource
     TestHelper testHelper;
+
     private Long testMunicipality;
 
     @Rule

@@ -48,13 +48,10 @@ public class JdbcInfoTextDaoTest {
     @Resource
     InfoTextDao infoTextDao;
 
-    private Long testInfoText;
-    private Long otherInfoText;
-
     @Before
     public void setup() {
         testHelper.dbCleanup();
-        testInfoText = testHelper.createInfoText(
+        Long testInfoText = testHelper.createInfoText(
                 LanguageCode.FI,
                 INFO_TEXT_CATEGORY, 1,
                 URI_FI,
@@ -63,7 +60,7 @@ public class JdbcInfoTextDaoTest {
                 TEXT_FI,
                 DRAFT_FI,
                 MODIFIED, MODIFIER);
-        otherInfoText = testHelper.createInfoText(
+        Long otherInfoText = testHelper.createInfoText(
                 LanguageCode.SV,
                 InfoTextCategory.KUNTALAISALOITE, 1,
                 URI_SV,

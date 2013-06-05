@@ -33,9 +33,6 @@ public class JdbcInitiativeDaoTest {
     InitiativeDao initiativeDao;
 
     @Resource
-    AuthorDao authorDao;
-
-    @Resource
     TestHelper testHelper;
 
     private Municipality testMunicipality;
