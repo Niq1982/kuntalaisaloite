@@ -6,6 +6,7 @@ import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Path;
 import fi.om.municipalityinitiative.conf.PropertyNames;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
+import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
@@ -481,6 +482,14 @@ public class TestHelper {
     @Transactional
     public Long getLastAuthorId() {
         return queryFactory.from(QAuthor.author).orderBy(QAuthor.author.participantId.desc()).list(QAuthor.author.participantId).get(0);
+    }
+
+    @Transactional
+    public Initiative getInitiative(Long id) {
+        return queryFactory.from(QMunicipalityInitiative.municipalityInitiative)
+                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(id))
+                .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
+                .uniqueResult(Mappings.initiativeInfoMapping);
     }
 
     public String getPreviousTestManagementHash() {

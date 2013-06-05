@@ -34,9 +34,6 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     @Resource
     private ParticipantDao participantDao; // Do not depend on this
 
-    @Resource
-    private InitiativeDao initiativeDao; // Do not depend on this
-
     private static Municipality testMunicipality;
 
     private static Municipality participantMunicipality;
@@ -102,7 +99,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         prepareInitiativeUICreateDto.setParticipantEmail("authorEmail@example.com");
         Long initiativeId = service.prepareInitiative(prepareInitiativeUICreateDto, Locales.LOCALE_FI);
 
-        assertThat(initiativeDao.get(initiativeId).getParticipantCount(), is(1));
+        assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
     }
 
     @Test(expected = AccessDeniedException.class)
@@ -139,7 +136,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     public void preparing_initiative_sets_participant_information() {
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
 
-        assertThat(initiativeDao.get(initiativeId).getParticipantCount(), is(1));
+        assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
 
         Participant participant = participantDao.findAllParticipants(initiativeId).get(0);
         assertThat(participant.getHomeMunicipality().getId(), is(participantMunicipality.getId()));

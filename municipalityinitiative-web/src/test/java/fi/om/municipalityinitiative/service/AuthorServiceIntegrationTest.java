@@ -48,9 +48,6 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     @Resource
     AuthorDao authorDao;
 
-    @Resource
-    InitiativeDao initiativeDao;
-
     private Long testMunicipality;
 
     @Rule
@@ -149,7 +146,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     }
 
     private int participantCountOfInitiative(Long initiativeId) {
-        return initiativeDao.get(initiativeId).getParticipantCount();
+        return testHelper.getInitiative(initiativeId).getParticipantCount();
     }
 
     @Test(expected = OperationNotAllowedException.class)

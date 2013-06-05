@@ -40,6 +40,7 @@ public class PublicInitiativeService {
     @Resource
     private AuthorMessageDao authorMessageDao;
 
+    @Transactional(readOnly = true)
     public List<InitiativeListInfo> findMunicipalityInitiatives(InitiativeSearch search, LoginUserHolder loginUserHolder) {
 
         // XXX: This switching from all to omAll is pretty nasty, because value must be set back to original after usage
@@ -133,16 +134,19 @@ public class PublicInitiativeService {
         return initiativeId;
     }
 
-
-    @Transactional(readOnly = false)
     public void addAuthorMessage(AuthorUIMessage authorUIMessage, Locale locale) {
 
+        AuthorMessage authorMessage = executeAddAuthorMessage(authorUIMessage);
+        emailService.sendAuthorMessageConfirmationEmail(authorMessage.getInitiativeId(), authorMessage, locale);
+
+    }
+
+    @Transactional(readOnly = false)
+    private AuthorMessage executeAddAuthorMessage(AuthorUIMessage authorUIMessage) {
         String confirmationCode = RandomHashGenerator.shortHash();
         AuthorMessage authorMessage = new AuthorMessage(authorUIMessage, confirmationCode);
         authorMessageDao.put(authorMessage);
-
-        emailService.sendAuthorMessageConfirmationEmail(authorMessage.getInitiativeId(), authorMessage, locale);
-
+        return authorMessage;
     }
 
     @Transactional(readOnly = false)

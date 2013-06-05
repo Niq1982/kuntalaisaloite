@@ -137,7 +137,19 @@ public class InitiativeManagementService {
     }
 
     @Transactional(readOnly = false)
-    void publishAndSendToMunicipality(Long initiativeId, LoginUserHolder loginUserHolder, String sentComment, Locale locale){
+    public void sendToMunicipality(Long initiativeId, LoginUserHolder requiredLoginUserHolder, String sentComment, Locale locale) {
+
+        requiredLoginUserHolder.assertManagementRightsForInitiative(initiativeId);
+        Initiative initiative = initiativeDao.get(initiativeId);
+
+        if (initiative.getType().isCollaborative()) {
+            sendCollaborativeToMunicipality(initiativeId, requiredLoginUserHolder, sentComment, locale);
+        } else {
+            publishAndSendToMunicipality(initiativeId, requiredLoginUserHolder, sentComment, locale);
+        }
+    }
+
+    private void publishAndSendToMunicipality(Long initiativeId, LoginUserHolder loginUserHolder, String sentComment, Locale locale){
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         assertAllowance("Publish initiative", getManagementSettings(initiativeId).isAllowPublish());
 
@@ -150,31 +162,16 @@ public class InitiativeManagementService {
         emailService.sendSingleToMunicipality(initiativeId, locale);
     }
 
-    @Transactional(readOnly = false)
-    void sendCollaborativeToMunicipality(Long initiativeId, LoginUserHolder loginUserHolder, String sentComment, Locale locale) {
+
+    private void sendCollaborativeToMunicipality(Long initiativeId, LoginUserHolder loginUserHolder, String sentComment, Locale locale) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         assertAllowance("Send collaborative to municipality", getManagementSettings(initiativeId).isAllowSendToMunicipality());
 
         initiativeDao.markInitiativeAsSent(initiativeId);
         initiativeDao.updateSentComment(initiativeId, sentComment);
-        Initiative initiative = initiativeDao.get(initiativeId);
         // XXX: TEST
         emailService.sendCollaborativeToMunicipality(initiativeId, locale);
         emailService.sendCollaborativeToAuthors(initiativeId);
-    }
-
-
-    @Transactional(readOnly = false)
-    public void sendToMunicipality(Long initiativeId, LoginUserHolder requiredLoginUserHolder, String sentComment, Locale locale) {
-
-        requiredLoginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        Initiative initiative = initiativeDao.get(initiativeId);
-
-        if (initiative.getType().isCollaborative()) {
-            sendCollaborativeToMunicipality(initiativeId, requiredLoginUserHolder, sentComment, locale);
-        } else {
-            publishAndSendToMunicipality(initiativeId, requiredLoginUserHolder, sentComment, locale);
-        }
     }
 
 }

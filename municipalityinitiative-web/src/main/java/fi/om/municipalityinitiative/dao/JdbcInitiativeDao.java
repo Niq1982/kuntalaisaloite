@@ -12,18 +12,17 @@ import com.mysema.query.types.expr.CaseBuilder;
 import com.mysema.query.types.expr.DateTimeExpression;
 import com.mysema.query.types.expr.SimpleExpression;
 import com.mysema.query.types.path.StringPath;
-import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
+import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.sql.QMunicipality;
 import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -32,7 +31,6 @@ import java.util.List;
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 
 @SQLExceptionTranslated
-@Transactional(readOnly = true)
 public class JdbcInitiativeDao implements InitiativeDao {
 
     private static final BooleanExpression STATE_NOT_PREPARE = municipalityInitiative.name.isNotEmpty();
@@ -216,7 +214,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public InitiativeCounts getAllInitiativeCounts(Maybe<Long> municipality) {
         String unknownStateFound = "unknownStateFound";
         Expression<String> caseBuilder = new CaseBuilder()
@@ -261,7 +258,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public Long prepareInitiative(Long municipalityId) {
         return queryFactory.insert(municipalityInitiative)
                 .set(municipalityInitiative.municipalityId, municipalityId)
@@ -270,7 +266,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public void editInitiativeDraft(Long initiativeId, InitiativeDraftUIEditDto editDto) {
 
         assertSingleAffection(queryFactory.update(municipalityInitiative)
@@ -284,7 +279,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public void updateInitiativeState(Long initiativeId, InitiativeState state) {
         assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.state, state)
@@ -294,7 +288,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public void updateInitiativeFixState(Long initiativeId, FixState fixState) {
         assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.fixState, fixState)
@@ -303,7 +296,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public void updateInitiativeType(Long initiativeId, InitiativeType initiativeType) {
         assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.type, initiativeType)
@@ -312,7 +304,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public void markInitiativeAsSent(Long initiativeId) {
         assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.sent, CURRENT_TIME)
@@ -322,7 +313,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public void updateModeratorComment(Long initiativeId, String moderatorComment) {
         assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.moderatorComment, moderatorComment)
@@ -331,7 +321,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public void updateSentComment(Long initiativeId, String sentComment) {
         assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.sentComment, sentComment)
@@ -340,7 +329,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public void updateExtraInfo(Long initiativeId, String extraInfo) {
 
         assertSingleAffection(queryFactory.update(municipalityInitiative)

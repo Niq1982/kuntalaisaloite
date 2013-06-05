@@ -16,6 +16,7 @@ import fi.om.municipalityinitiative.web.Urls;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -26,6 +27,7 @@ import java.util.Map;
 
 import static fi.om.municipalityinitiative.service.EmailSubjectPropertyKeys.*;
 
+@Transactional(readOnly = true)
 public class EmailService {
 
     private static final String INITIATIVE_PREPARE_VERIFICATION_TEMPLATE = "initiative-create-verification";
