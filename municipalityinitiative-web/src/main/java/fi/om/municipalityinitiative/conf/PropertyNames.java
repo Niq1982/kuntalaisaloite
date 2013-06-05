@@ -54,6 +54,8 @@ public final class PropertyNames {
     
     public static final String testEmailConsoleOutput = "test.email.consoleOutput";
 
+    public static final String testEmailMunicipalityEmailsToAuthor = "test.email.municipality.emails.to.author";
+
     public static final String testMessageSourceCacheSeconds = "test.messageSourceCacheSeconds";
 
     public static final String testFreemarkerShowErrorsOnPage = "test.freemarker.showErrorsOnPage";

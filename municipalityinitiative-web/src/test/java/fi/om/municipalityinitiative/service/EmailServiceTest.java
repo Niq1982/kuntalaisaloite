@@ -145,7 +145,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         emailService.sendCollaborativeToMunicipality(initiativeId(), Locales.LOCALE_FI);
 
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Kuntalaisaloite: "+ INITIATIVE_NAME));
-        assertThat(javaMailSenderFake.getSingleRecipient(), is(MUNICIPALITY_EMAIL));
+        assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(EXTRA_INFO));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(SENT_COMMENT));
 

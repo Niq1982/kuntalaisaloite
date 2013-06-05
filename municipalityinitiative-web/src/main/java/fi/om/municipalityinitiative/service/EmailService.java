@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Maps;
+import fi.om.municipalityinitiative.conf.EmailSettings;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
@@ -57,6 +58,9 @@ public class EmailService {
     @Resource
     private EmailMessageConstructor emailMessageConstructor;
 
+    @Resource
+    private EmailSettings emailSettings;
+
     public void sendAuthorConfirmedInvitation(Long initiativeId, String authorsEmail, String managementHash, Locale locale) {
 
         HashMap<String, Object> dataMap = toDataMap(initiativeDao.get(initiativeId), locale);
@@ -89,10 +93,8 @@ public class EmailService {
     public void sendSingleToMunicipality(Long initiativeId, Locale locale) {
 
         Initiative initiative = initiativeDao.get(initiativeId);
-
-        // XXX String municipalityEmail = municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId());
         List<Author> authors = authorDao.findAuthors(initiative.getId());
-        String municipalityEmail = authors.get(0).getContactInfo().getEmail();
+        String municipalityEmail = solveMunicipalityEmail(initiative);
 
         emailMessageConstructor
                 .fromTemplate(NOT_COLLECTABLE_TEMPLATE)
@@ -132,16 +134,17 @@ public class EmailService {
 
         Initiative initiative = initiativeDao.get(initiativeId);
 
+        String municipalityEmail = solveMunicipalityEmail(initiative);
+
         emailMessageConstructor
                 .fromTemplate(COLLABORATIVE_TO_MUNICIPALITY)
-                .addRecipient(municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId()))
+                .addRecipient(municipalityEmail)
                 .withSubject(messageSource.getMessage(EMAIL_COLLABORATIVE_MUNICIPALITY_SUBJECT, toArray(initiative.getName()), locale))
                 .withDataMap(toDataMap(initiative, authorDao.findAuthors(initiativeId), locale))
                 .withAttachment(initiative, participantDao.findAllParticipants(initiativeId))
                 .send();
     }
 
-    
     public void sendCollaborativeToAuthors(Long initiativeId) {
         Locale locale = Locales.LOCALE_FI;
 
@@ -155,7 +158,7 @@ public class EmailService {
                 .send();
     }
 
-    
+
     public void sendStatusEmail(Long initiativeId, EmailMessageType emailMessageType) {
 
         Locale locale = Locales.LOCALE_FI;
@@ -177,7 +180,7 @@ public class EmailService {
 
     }
 
-    
+
     public void sendPrepareCreatedEmail(Long initiativeId, Long authorId, String managementHash, Locale locale) {
         HashMap<String, Object> dataMap = toDataMap(initiativeDao.get(initiativeId), locale);
         dataMap.put("managementHash", managementHash);
@@ -191,7 +194,7 @@ public class EmailService {
                 .send();
     }
 
-    
+
     public void sendManagementHashRenewed(Long initiativeId, String managementHash, Long authorId) {
         HashMap<String, Object> dataMap = toDataMap(initiativeDao.get(initiativeId), Locales.LOCALE_FI);
         dataMap.put("managementHash", managementHash);
@@ -204,7 +207,7 @@ public class EmailService {
                 .send();
     }
 
-    
+
     public void sendNotificationToModerator(Long initiativeId) {
 
         Locale locale = Locales.LOCALE_FI;
@@ -224,7 +227,7 @@ public class EmailService {
                 .send();
     }
 
-    
+
     public void sendParticipationConfirmation(Long initiativeId, String participantEmail, Long participantId, String confirmationCode, Locale locale) {
         HashMap<String, Object> dataMap = toDataMap(initiativeDao.get(initiativeId), locale);
         dataMap.put("participantId", participantId);
@@ -237,7 +240,7 @@ public class EmailService {
                 .send();
     }
 
-    
+
     public void sendAuthorMessageConfirmationEmail(Long initiativeId, AuthorMessage authorMessage, Locale locale) {
         HashMap<String, Object> dataMap = toDataMap(initiativeDao.get(initiativeId), locale);
         dataMap.put("authorMessage", authorMessage);
@@ -250,7 +253,7 @@ public class EmailService {
 
     }
 
-    
+
     public void sendAuthorMessages(Long initiativeId, AuthorMessage authorMessage) {
         Locale localeFi = Locales.LOCALE_FI;
         HashMap<String, Object> dataMap = toDataMap(initiativeDao.get(initiativeId), localeFi);
@@ -261,6 +264,14 @@ public class EmailService {
                 .withSubject(messageSource.getMessage(EMAIL_AUTHOR_MESSAGE_TO_AUTHORS_SUBJECT, toArray(), localeFi))
                 .withDataMap(dataMap)
                 .send();
+    }
+
+
+    private String solveMunicipalityEmail(Initiative initiative) {
+        if (emailSettings.isTestSendMunicipalityEmailsToAuthor()) {
+            return authorDao.findAuthors(initiative.getId()).get(0).getContactInfo().getEmail();
+        }
+        return municipalityDao.getMunicipalityEmail(initiative.getId());
     }
 
     private static String[] toArray(String... name) {
