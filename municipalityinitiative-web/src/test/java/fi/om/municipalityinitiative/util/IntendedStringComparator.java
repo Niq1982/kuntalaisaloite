@@ -1,13 +1,13 @@
 package fi.om.municipalityinitiative.util;
 
-import fi.om.municipalityinitiative.json.JsonJokuParseri;
+import fi.om.municipalityinitiative.json.JsonStringParser;
 
 import java.util.Comparator;
 
-public class IntendedStringComparator implements Comparator<JsonJokuParseri.IndentedString> {
+public class IntendedStringComparator implements Comparator<JsonStringParser.IndentedString> {
 
     @Override
-    public int compare(JsonJokuParseri.IndentedString o1, JsonJokuParseri.IndentedString o2) {
+    public int compare(JsonStringParser.IndentedString o1, JsonStringParser.IndentedString o2) {
         return o1.getValue().compareTo(o2.getValue());
     }
 }

@@ -17,7 +17,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class JsonJokuParseriTest {
+public class JsonStringParserTest {
 
 
     @Test
@@ -50,7 +50,7 @@ public class JsonJokuParseriTest {
 
         String json = ObjectSerializer.objectToString(initiativeJson); // NOTE: Real api-controller uses MappingJackson2HttpMessageConverter initialized by WebConfiguration
 
-        for (JsonJokuParseri.IndentedString s : JsonJokuParseri.toParts(json)) {
+        for (JsonStringParser.IndentedString s : JsonStringParser.toParts(json)) {
             System.out.println(s.getIndent() + ": " + StringUtils.repeat(" ", 3 * s.getIndent()) + s.getValue() + s.getLocalizationKey());
         }
 

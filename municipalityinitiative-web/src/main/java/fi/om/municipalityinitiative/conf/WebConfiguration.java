@@ -30,9 +30,7 @@ import java.util.Locale;
 
 
 @Configuration
-//@EnableWebMvc -- replaced by "extends WebMvcConfigurationSupport"
 @Import({ WebProdConfiguration.class, WebDevConfiguration.class })
-//@ComponentScan(basePackageClasses=InitiativeController.class)
 public class WebConfiguration extends WebMvcConfigurationSupport {
 
     @Inject Environment env;
