@@ -84,7 +84,7 @@ public class ModerationService {
             initiativeDao.markInitiativeAsSent(initiativeId);
             initiative = initiativeDao.get(initiativeId); // Necessary because initiative is updated
             emailService.sendStatusEmail(initiative, EmailMessageType.ACCEPTED_BY_OM_AND_SENT);
-            emailService.sendSingleToMunicipality(initiative, locale);
+            emailService.sendSingleToMunicipality(initiativeId, locale);
         } else {
             initiativeDao.updateInitiativeState(initiativeId, InitiativeState.ACCEPTED);
             initiative = initiativeDao.get(initiativeId);  // Necessary because initiative is updated

@@ -155,7 +155,7 @@ public class InitiativeManagementService {
         Initiative initiative = initiativeDao.get(initiativeId);
         // XXX: TEST
         emailService.sendStatusEmail(initiative, EmailMessageType.SENT_TO_MUNICIPALITY);
-        emailService.sendSingleToMunicipality(initiative, locale);
+        emailService.sendSingleToMunicipality(initiativeId, locale);
     }
 
     @Transactional(readOnly = false)

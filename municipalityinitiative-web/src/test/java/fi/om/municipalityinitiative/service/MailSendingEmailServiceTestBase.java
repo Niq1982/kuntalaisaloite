@@ -121,4 +121,8 @@ public abstract class MailSendingEmailServiceTestBase {
         return testHelper.getLastAuthorId();
     }
 
+    protected Long initiativeId() {
+        return testHelper.getLastInitiativeId();
+    }
+
 }

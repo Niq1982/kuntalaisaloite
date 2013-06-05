@@ -49,7 +49,7 @@ public class AuthorService {
         authorInvitation.setInvitationTime(new DateTime());
 
         authorDao.addAuthorInvitation(authorInvitation);
-        emailService.sendAuthorInvitation(initiative, authorInvitation);
+        emailService.sendAuthorInvitation(initiativeId, authorInvitation);
 
     }
 
@@ -62,7 +62,7 @@ public class AuthorService {
 
         authorInvitation.setInvitationTime(DateTime.now());
         authorDao.addAuthorInvitation(authorInvitation);
-        emailService.sendAuthorInvitation(initiativeDao.get(initiativeId), authorInvitation);
+        emailService.sendAuthorInvitation(initiativeId, authorInvitation);
 
     }
 
@@ -132,7 +132,7 @@ public class AuthorService {
 
                 String managementHash = createAuthorAndParticipant(initiativeId, confirmDto);
                 authorDao.deleteAuthorInvitation(initiativeId, confirmDto.getConfirmCode());
-                emailService.sendAuthorConfirmedInvitation(initiativeDao.get(initiativeId), invitation.getEmail(), managementHash, locale);
+                emailService.sendAuthorConfirmedInvitation(initiativeId, invitation.getEmail(), managementHash, locale);
                 return managementHash;
 
             }

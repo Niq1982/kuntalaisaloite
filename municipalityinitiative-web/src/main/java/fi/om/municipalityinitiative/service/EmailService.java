@@ -59,9 +59,9 @@ public class EmailService {
     @Resource
     private EmailMessageConstructor emailMessageConstructor;
 
-    public void sendAuthorConfirmedInvitation(Initiative initiative, String authorsEmail, String managementHash, Locale locale) {
+    public void sendAuthorConfirmedInvitation(Long initiativeId, String authorsEmail, String managementHash, Locale locale) {
 
-        HashMap<String, Object> dataMap = toDataMap(initiative, locale);
+        HashMap<String, Object> dataMap = toDataMap(initiativeDao.get(initiativeId), locale);
         dataMap.put("managementHash", managementHash);
 
         emailMessageConstructor
@@ -73,8 +73,9 @@ public class EmailService {
 
     }
 
-    public void sendAuthorInvitation(Initiative initiative, AuthorInvitation authorInvitation) {
+    public void sendAuthorInvitation(Long initiativeId, AuthorInvitation authorInvitation) {
         Locale locale = Locales.LOCALE_FI;
+        Initiative initiative = initiativeDao.get(initiativeId);
         HashMap<String, Object> dataMap = toDataMap(initiative, locale);
         dataMap.put("authorInvitation", authorInvitation);
 
@@ -87,12 +88,19 @@ public class EmailService {
     }
 
     
-    public void sendSingleToMunicipality(Initiative initiative, Locale locale) {
+    public void sendSingleToMunicipality(Long initiativeId, Locale locale) {
+
+        Initiative initiative = initiativeDao.get(initiativeId);
+
+        // XXX String municipalityEmail = municipalityDao.getMunicipalityEmail(initiative.getMunicipality().getId());
+        List<Author> authors = authorDao.findAuthors(initiative.getId());
+        String municipalityEmail = authors.get(0).getContactInfo().getEmail();
+
         emailMessageConstructor
                 .fromTemplate(NOT_COLLECTABLE_TEMPLATE)
-                .addRecipient(municipalityDao.getMunicipalityEmail(initiativeDao.get(initiative.getId()).getMunicipality().getId()))
+                .addRecipient(municipalityEmail)
                 .withSubject(messageSource.getMessage(EMAIL_NOT_COLLABORATIVE_MUNICIPALITY_SUBJECT, toArray(initiative.getName()), locale))
-                .withDataMap(toDataMap(initiative, authorDao.findAuthors(initiative.getId()), locale))
+                .withDataMap(toDataMap(initiative, authors, locale))
                 .send();
     }
 

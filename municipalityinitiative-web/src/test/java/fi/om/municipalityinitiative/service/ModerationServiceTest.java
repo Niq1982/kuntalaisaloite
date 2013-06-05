@@ -123,7 +123,7 @@ public class ModerationServiceTest {
         moderationService.accept(loginUserHolder, INITIATIVE_ID, null, Locales.LOCALE_FI);
 
         verify(moderationService.emailService).sendStatusEmail(any(Initiative.class), eq(EmailMessageType.ACCEPTED_BY_OM_AND_SENT));
-        verify(moderationService.emailService).sendSingleToMunicipality(any(Initiative.class), eq(Locales.LOCALE_FI));
+        verify(moderationService.emailService).sendSingleToMunicipality(anyLong(), eq(Locales.LOCALE_FI));
 
     }
 
