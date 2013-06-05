@@ -31,6 +31,45 @@
         <@e.initiativeView initiative />
     </div>
     
+    <#assign contactAuthorForm>
+    <@compress single_line=true>
+    
+        <@u.errorsSummary path="authorMessage.*" prefix="authorMessage."/>
+    
+        <#-- Do not use NOSCRIPT here as it will be descendant of another NOSCRIPT. -->
+        <div class="js-hide">
+            <@f.cookieWarning springMacroRequestContext.requestUri />
+        </div>
+        
+        <form action="${springMacroRequestContext.requestUri}?formError=contactAuthor" method="POST" id="form-contact-author" class="sodirty <#if hasErrors>has-errors</#if>">
+            <@f.securityFilters/>
+
+            <div class="input-block-content no-top-margin">
+                <@u.systemMessage path="contactAuthor.description" args=[authors.publicNameCount+authors.privateNameCount] type="info" showClose=false />  
+            </div>
+            
+            <div class="input-block-content">
+                <@f.textarea path="authorMessage.message" required="required" optional=false cssClass="large" />
+            </div>
+            
+             <div class="input-block-content">
+                <@f.textField path="authorMessage.contactName" required="required" optional=false cssClass="large" maxLength="512" />
+            </div>
+            
+            <div class="input-block-content">
+                <@f.textField path="authorMessage.contactEmail" required="required" optional=true cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
+            </div>
+
+            <div class="input-block-content">
+                <button id="participate" type="submit" name="${UrlConstants.ACTION_CONTACT_AUTHOR}" value="true" class="small-button"><span class="small-icon mail"><@u.message "action.sendMessage" /></span></button>
+                <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
+            </div>
+        
+        </form>
+    
+    </@compress>
+    </#assign>
+    
     <#assign participateFormHTML>
     <@compress single_line=true>
     
@@ -42,7 +81,7 @@
             <@f.cookieWarning springMacroRequestContext.requestUri />
         </div>
         
-        <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-participate" class="sodirty <#if hasErrors>has-errors</#if>">
+        <form action="${springMacroRequestContext.requestUri}?formError=participate" method="POST" id="form-participate" class="sodirty <#if hasErrors>has-errors</#if>">
             <@f.securityFilters/>
             <@f.notTooFastField participant/>
     
@@ -104,7 +143,17 @@
         <div class="initiative-content-row">
             <@e.initiativeAuthor authors />
         
-            <p><a href="#" class="js-contact-author"><span class="icon-small icon-16 envelope margin-right"></span> <@u.message key="contactAuthor.link" args=[authors.publicNameCount+authors.privateNameCount] /></a></p>
+            <p><a href="?contactAuthorForm=true#form-contact-author" class="js-contact-author"><span class="icon-small icon-16 envelope margin-right"></span> <@u.message key="contactAuthor.link" args=[authors.publicNameCount+authors.privateNameCount] /></a></p>
+            
+            <#if (RequestParameters['formError']?? && RequestParameters['formError'] == "contactAuthor")
+                                    || (RequestParameters['contactAuthorForm']?? && RequestParameters['contactAuthorForm'] == "true")>
+                <noscript>
+                    <div id="form-contact-author" class="form-container cf top-margin">
+                        <h3><@u.message key="contactAuthor.title" args=[authors.publicNameCount+authors.privateNameCount] /></h3>
+                        <#noescape>${contactAuthorForm}</#noescape>
+                    </div>
+                </noscript>
+            </#if>
         </div>
         <#--
          * Do NOT show participate button:
@@ -113,7 +162,8 @@
          *  - when the form has validation errors
          *  - when sent to municipality (initiative.sentTime.present)
         -->
-        <#assign showParticipateForm = (hasErrors?? && hasErrors) || (RequestParameters['participateForm']?? && RequestParameters['participateForm'] == "true") />
+        <#assign showParticipateForm = (RequestParameters['formError']?? && RequestParameters['formError'] == "participate")
+                                    || (RequestParameters['participateForm']?? && RequestParameters['participateForm'] == "true") />
         
         <#--
          * Show participant counts and participate form
@@ -123,45 +173,6 @@
         </div>
         
     </div>
-    
-    <#assign contactAuthorForm>
-    <@compress single_line=true>
-    
-        <@u.errorsSummary path="authorMessage.*" prefix="authorMessage."/>
-    
-        <#-- Do not use NOSCRIPT here as it will be descendant of another NOSCRIPT. -->
-        <div class="js-hide">
-            <@f.cookieWarning springMacroRequestContext.requestUri />
-        </div>
-        
-        <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-contact-author" class="sodirty <#if hasErrors>has-errors</#if>">
-            <@f.securityFilters/>
-
-            <div class="input-block-content no-top-margin">
-                <@u.systemMessage path="contactAuthor.description" args=[authors.publicNameCount+authors.privateNameCount] type="info" showClose=false />  
-            </div>
-            
-            <div class="input-block-content">
-                <@f.textarea path="authorMessage.message" required="required" optional=false cssClass="large" />
-            </div>
-            
-             <div class="input-block-content">
-                <@f.textField path="authorMessage.contactName" required="required" optional=false cssClass="large" maxLength="512" />
-            </div>
-            
-            <div class="input-block-content">
-                <@f.textField path="authorMessage.contactEmail" required="required" optional=true cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
-            </div>
-
-            <div class="input-block-content">
-                <button id="participate" type="submit" name="${UrlConstants.ACTION_CONTACT_AUTHOR}" value="true" class="small-button"><span class="small-icon mail"><@u.message "action.sendMessage" /></span></button>
-                <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
-            </div>
-        
-        </form>
-    
-    </@compress>
-    </#assign>
 
     <#--
      * Social media buttons
@@ -217,7 +228,7 @@
             };
             
             <#-- Autoload modal if it has errors -->
-            <#if hasErrors>
+            <#if RequestParameters['formError']?? && RequestParameters['formError'] == "participate">
             modalData.participateFormInvalid = function() {
                 return [{
                     title:      '<@u.message "participate.title" />',
@@ -237,8 +248,15 @@
             }]
         };
         
-        
-        
+        <#-- Autoload modal if it has errors -->
+        <#if RequestParameters['formError']?? && RequestParameters['formError'] == "contactAuthor">
+        modalData.contactAuthorFormInvalid = function() {
+            return [{
+                title:      '<@u.message key="contactAuthor.title" args=[authors.publicNameCount+authors.privateNameCount] />',
+                content:    '<#noescape>${contactAuthorForm?replace("'","&#39;")}</#noescape>'
+            }]
+        };
+        </#if>
         
         <#-- jsMessage: Warning if cookies are not enabled -->
         messageData.warningCookiesDisabled = function() {

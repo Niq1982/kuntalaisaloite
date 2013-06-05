@@ -982,7 +982,7 @@ $('.municipality-filter').change( function() {
 	});
 	
 	if( typeof modalData != 'undefined' && typeof modalData.participateFormInvalid != 'undefined' ){
-		generateModal(modalData.participateFormInvalid(), 'full');
+		generateModal(modalData.participateFormInvalid(), 'full', municipalitySelection.init);
 	}
 	
 	// Contact author
@@ -994,6 +994,10 @@ $('.municipality-filter').change( function() {
 			console.log(e);
 		}
 	});
+	
+	if( typeof modalData != 'undefined' && typeof modalData.contactAuthorFormInvalid != 'undefined' ){
+		generateModal(modalData.contactAuthorFormInvalid(), 'full');
+	}
 	
 	$('.js-renew-management-hash').click(function(){
 		$('.js-renew-management-hash.active').removeClass('active');
