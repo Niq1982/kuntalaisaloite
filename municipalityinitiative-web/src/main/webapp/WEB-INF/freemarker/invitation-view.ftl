@@ -130,7 +130,7 @@
                             <@u.message "contactInfo.title" />
                         </div>
                         
-                        <@f.contactInfo path="authorInvitation.contactInfo" mode="full" />
+                        <@f.contactInfo path="authorInvitation.contactInfo" disableEmail=false mode="full" />
                     </div>
                 
                     <div class="input-block-content">

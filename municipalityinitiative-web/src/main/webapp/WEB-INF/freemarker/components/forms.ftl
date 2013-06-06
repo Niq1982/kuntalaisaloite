@@ -299,22 +299,26 @@
  * @param cssClass for styling. Multiple classes are separated with a space
 
 -->
-<#macro contactInfo path mode="" prefix="" cssClass="">
+<#macro contactInfo path disableEmail=true mode="" prefix="" cssClass="">
 
     <div class="initiative-contact-details">
         <div class="column col-1of2">
             
-            <#--<@spring.bind path+".email" />
-            <input type="hidden" name="contactInfo.email" value="${spring.status.value}" />
-            <div class="input-header"><@u.message "contactInfo.email" /></div>
-            <input type="text" disabled="disabled" class="medium disabled" value="${spring.status.value}" />-->
-
-            <@textField path=path+".email" required="required" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_PHONE_MAX key="contactInfo.email" />
+            <#-- Updating email is disabled -->
+            <#if disableEmail>
+                <@spring.bind path+".email" />
+                <input type="hidden" name="contactInfo.email" value="${spring.status.value}" />
+                <label class="input-header"><@u.message "contactInfo.email" /></label>
+                <input type="text" disabled="disabled" class="medium disabled" value="${spring.status.value}" />
+            <#else>
+                <@textField path=path+".email" required="required" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_PHONE_MAX key="contactInfo.email" />
+            </#if>
+            
             <@textField path=path+".phone" required="" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_PHONE_MAX key="contactInfo.phone" />
         </div>
         
         <div class="column col-1of2 last">
-            <label for="${path}.address">
+            <label for="contactInfo.address">
                 <@u.message "contactInfo.address" />
             </label>
             <@spring.formTextarea path+".address", 'class="address-field noresize" maxlength="'+InitiativeConstants.CONTACT_ADDRESS_MAX+'"' />
