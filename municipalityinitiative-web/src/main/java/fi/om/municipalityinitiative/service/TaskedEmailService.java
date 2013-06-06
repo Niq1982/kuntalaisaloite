@@ -4,6 +4,7 @@ import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.util.Task;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Locale;
 
