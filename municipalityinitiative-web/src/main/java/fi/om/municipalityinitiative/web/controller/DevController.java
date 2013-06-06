@@ -1,10 +1,10 @@
 package fi.om.municipalityinitiative.web.controller;
 
 import com.google.common.base.Strings;
+import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.web.Urls;
-import fi.om.municipalityinitiative.dao.MunicipalityDao;
 import fi.om.municipalityinitiative.dto.service.TestDataService;
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.util.TestDataTemplates;
@@ -32,10 +32,11 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @Profile("dev")
 public class DevController extends BaseController {
 
-    @Resource TestDataService testDataService;
+    @Resource
+    TestDataService testDataService;
     
     @Resource
-    MunicipalityDao municipalityDao;
+    MunicipalityService municipalityService;
     
     public DevController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
@@ -47,7 +48,7 @@ public class DevController extends BaseController {
         
         model.addAttribute("testParticipants", TestDataTemplates.getParticipantTemplates(-1L));
         model.addAttribute("testInitiatives", TestDataTemplates.getInitiativeTemplates(-1L, request.getParameter("email")));
-        model.addAttribute("municipalities", municipalityDao.findMunicipalities(true));
+        model.addAttribute("municipalities", municipalityService.findAllMunicipalities(locale));
         
         return TEST_DATA_GENERATION;
     }
