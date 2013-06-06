@@ -75,6 +75,38 @@ public class InitiativeModerationWebTest extends WebTestBase {
     }
     
     @Test
+    public void return_published_initiative_to_fix_and_send_it_to_review_and_accept_it(){
+        Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality1Id);
+
+        loginAsOmUser();
+        open(urls.moderation(initiativeId));
+        
+        clickLinkContaining("Palauta aloite");
+        inputTextByCSS("#commentReject",COMMENT);
+        getElemContaining("Palauta aloite", "button").click();
+        
+        assertTextContainedByClass("msg-success","Aloite palautettu korjattavaksi");
+        
+        loginAsAuthorForLastTestHelperCreatedInitiative();
+        
+        clickLinkContaining("Lähetä aloite tarkastettavaksi");
+        getElemContaining("Lähetä aloite tarkastettavaksi", "button").click();
+        
+        assertTextContainedByClass("msg-success","Aloite lähetetty tarkastettavaksi");
+        
+        logout();
+        loginAsOmUser();
+        open(urls.moderation(initiativeId));
+        
+        clickLinkContaining("Hyväksy aloite");
+        inputTextByCSS("#commentAccept",COMMENT);
+        getElemContaining("Hyväksy aloite", "button").click();
+        
+        assertTextContainedByClass("msg-success","Aloite on hyväksytty");
+    }
+    
+    
+    @Test
     public void resend_management_hash(){
         Long initiativeId = testHelper.createCollaborativeReview(testMunicipality1Id);
 
