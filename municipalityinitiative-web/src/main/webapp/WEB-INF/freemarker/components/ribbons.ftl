@@ -25,8 +25,7 @@
     <#-- For testing ribbons locally:
     <#assign prodTestSite>${localSite}</#assign>
     <#assign localSite>https://localhost:8443x</#assign>
-    -->
-
+     -->
     
     <#assign blueColor>ribbon-default</#assign> <#-- BLUE gradient -->
     <#assign redColor>ribbon-red</#assign> <#-- RED gradient -->
@@ -60,7 +59,9 @@
                 </#if>
             </div>
         </div>
-        <div class="container relative"><div class="test-padge <#if infoRibbon??>has-info-ribbon</#if>"> </div></div>
+        <#if urls.baseUrl?starts_with(testSite) || urls.baseUrl?starts_with(prodTestSite)>
+            <div class="container relative"><div class="test-padge <#if infoRibbon??>has-info-ribbon</#if>"> </div></div>
+        </#if>
     </#if>
     
     <#if infoRibbon??>
