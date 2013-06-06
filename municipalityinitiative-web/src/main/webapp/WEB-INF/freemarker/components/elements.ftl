@@ -107,7 +107,7 @@
                     data-phone="${a.contactInfo.phone!""}"><span class="icon-small icon-16 resend"></span></a>
             </#if>
             <br />
-            ${a.contactInfo.email!""}
+            <@u.scrambleEmail a.contactInfo.email!"" />
             <br />
             <#if a.contactInfo.address?? && a.contactInfo.address != ""><#noescape>${a.contactInfo.address?replace('\n','<br/>')!""}</#noescape><br /></#if>
             ${a.contactInfo.phone!""}</p>

@@ -41,7 +41,7 @@
                         data-active="${municipality.active?string}"
                     >${municipality.nameFi}</a></td>
                 <td>${municipality.nameSv}</td>
-                <td>${municipality.email!""}</td>
+                <td><@u.scrambleEmail municipality.email!"" /></td>
             </tr>
         </#list>
     </tbody>

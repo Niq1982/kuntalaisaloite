@@ -120,7 +120,7 @@
             <div class="details">
                 <h4 class="header">${a.contactInfo.name}, ${a.municipality.getName(locale)}</h4>
                 <div class="contact-info">
-                    ${a.contactInfo.email!""}<br />
+                    <@u.scrambleEmail a.contactInfo.email!"" /><br />
                     <#if a.contactInfo.address?? && a.contactInfo.address != ""><#noescape>${a.contactInfo.address?replace('\n','<br/>')!""}</#noescape><br /></#if>
                     ${a.contactInfo.phone!""}
                 </div>

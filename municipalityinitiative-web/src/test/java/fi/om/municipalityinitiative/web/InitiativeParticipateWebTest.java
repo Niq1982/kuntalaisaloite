@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.web;
 
 import static org.junit.Assert.assertFalse;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -31,14 +32,22 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     private static final String MUNICIPALITY_2 = "Helsinki";
     private static final String PARTICIPANT_NAME = "Ossi Osallistuja";
     private static final String PARTICIPANT_EMAIL = "test@test.com";
+    private static final String AUTHOR_MESSAGE = "Tässä on viesti";
+    
+    private Long municipality1Id;
+    private Long municipality2Id;
+    private Long initiativeId;
+    
+    @Before
+    public void setup() {
+        testHelper.dbCleanup();
+        municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
+        municipality2Id = testHelper.createTestMunicipality(MUNICIPALITY_2);
+        initiativeId = testHelper.create(municipality1Id, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+    }
     
     @Test
     public void participate_initiative_with_public_name() {
-        Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
-        Long municipality2Id = testHelper.createTestMunicipality(MUNICIPALITY_2);
-        
-        Long initiativeId = testHelper.create(municipality1Id, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
-        
         open(urls.view(initiativeId));
 
         clickLinkContaining(getMessage(MSG_BTN_PARTICIPATE));
@@ -60,11 +69,6 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     @Test
     public void participate_initiative_with_private_name_and_select_membership_type() {
         overrideDriverToFirefox(true); // Municipality select need firefox driver
-        
-        Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
-        Long municipality2Id = testHelper.createTestMunicipality(MUNICIPALITY_2);
-        
-        Long initiativeId = testHelper.create(municipality1Id, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         
         open(urls.view(initiativeId));
 
@@ -91,6 +95,25 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         assertTextContainedByClass("private-names", "1 nimi ei julkaistu palvelussa");
     }
     
+    @Test
+    public void public_user_contacts_authors(){
+        open(urls.view(initiativeId));
+        
+        clickLinkContaining("Ota yhteyttä aloitteen vastuuhenkilöön");
+        
+        inputText("message", AUTHOR_MESSAGE);
+        inputText("contactName", PARTICIPANT_NAME);
+        inputText("contactEmail", PARTICIPANT_EMAIL);
+        
+        getElemContaining("Lähetä viesti", "button").click();
+        
+        assertTextContainedByClass("msg-success", "Linkki yhteydenottopyynnön vahvistamiseen on lähetetty sähköpostiisi");
+        
+        open(urls.confirmAuthorMessage(RandomHashGenerator.getPrevious()));
+        
+        assertTextContainedByClass("msg-success", "Viesti on nyt lähetetty vastuuhenkilöille");
+        
+    }
 
     
 }

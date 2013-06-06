@@ -25,7 +25,7 @@
     <#-- For testing ribbons locally:
     <#assign prodTestSite>${localSite}</#assign>
     <#assign localSite>https://localhost:8443x</#assign>
-     -->
+    -->
     
     <#assign blueColor>ribbon-default</#assign> <#-- BLUE gradient -->
     <#assign redColor>ribbon-red</#assign> <#-- RED gradient -->
@@ -51,7 +51,7 @@
 
                     Tämä on kuntalaisaloitepalvelun testiversio. Palvelu lähettää sinulle sähköposteja, joten annathan toimivan sähköpostiosoitteesi.
                     Testipalvelussa tehdyt aloitteet ja muut tiedot poistetaan säännöllisesti ilman erillistä ilmoitusta, eivätkä aloitteet välity kunnalle. <br/>
-                    Anna palautetta testipalvelusta kuntalaisaloite.om@om.fi
+                    Anna palautetta testipalvelusta <a href="mailto:kuntalaisaloite.om@om.fi">kuntalaisaloite.om@om.fi</a>
 
                 <#elseif urls.baseUrl?starts_with(devSite) >
                     Tämä on oikeusministeriön kuntalaisaloiteverkkopalvelun kehitysversio.
