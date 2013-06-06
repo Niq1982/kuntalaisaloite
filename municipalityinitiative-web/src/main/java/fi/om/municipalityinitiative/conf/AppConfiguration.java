@@ -212,6 +212,11 @@ public class AppConfiguration {
     }
 
     @Bean
+    EmailServiceDataProvider emailServiceDataProvider() {
+        return new EmailServiceDataProvider();
+    }
+
+    @Bean
     public ValidationService validationService() {
         return new ValidationServiceImpl();
     }
