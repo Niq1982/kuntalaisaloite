@@ -1215,7 +1215,8 @@ a, button {
 // Input fields
 //
 // Styleguide 3.2
-input[type="text"] {
+input[type="text"],
+input[type="password"], {
     
     border: 1px solid @borderGray;
     background: #fefefe;
@@ -1232,6 +1233,9 @@ input[type="text"] {
     &.medium {
         //width:265px;
         width:95%;
+    }
+    &.medium-fixed {
+        width:220px;
     }
     &.small {
         width:60px;
