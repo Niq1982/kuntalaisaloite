@@ -91,4 +91,26 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         assertTextContainedByClass("private-names", "1 nimi ei julkaistu palvelussa");
     }
     
+    @Test
+    public void author_removes_participant(){
+        Long municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
+        Long initiativeId = testHelper.create(municipality1Id, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        
+        testHelper.createParticipant(new TestHelper.AuthorDraft(initiativeId, municipality1Id));
+        
+        loginAsAuthorForLastTestHelperCreatedInitiative();
+        open(urls.management(initiativeId));
+        
+        clickLinkContaining("Osallistujahallinta");
+        clickLinkContaining("Poista osallistuja");
+        
+        // NOTE: We could assert that modal has correct Participant details,
+        //       but as DOM is updated after the modal is loaded we would need a tiny delay for that
+        
+        getElemContaining("Poista", "button").click();
+        
+        assertTextContainedByClass("msg-success", "Osallistuja poistettu");
+        
+    }
+    
 }

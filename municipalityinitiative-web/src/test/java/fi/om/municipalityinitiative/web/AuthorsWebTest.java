@@ -5,6 +5,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
+import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import org.junit.Before;
 import org.junit.Test;
@@ -105,6 +106,9 @@ public class AuthorsWebTest  extends WebTestBase {
         assertInvitationPageIsGone(invitation);
 
     }
+    
+    // TODO: Remove author
+
 
     private void assertInvitationPageIsGone(AuthorInvitation invitation) {
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
