@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.web;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
 
 import static fi.om.municipalityinitiative.web.MessageSourceKeys.*;
 import static org.hamcrest.CoreMatchers.startsWith;
@@ -71,5 +72,20 @@ public class InitiativeModerationWebTest extends WebTestBase {
         clickByName(Urls.ACTION_REJECT_INITIATIVE);
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_REJECT_INITIATIVE);
         assertTextContainedByClass("extra-info", "Aloite odottaa julkaisuun lähetystä");
+    }
+    
+    @Test
+    public void resend_management_hash(){
+        Long initiativeId = testHelper.createCollaborativeReview(testMunicipality1Id);
+
+        loginAsOmUser();
+
+        open(urls.moderation(initiativeId));
+        findElementWhenClickable(By.className("resend")).click();
+
+        getElemContaining("Luo ja lähetä uusi ylläpitolinkki", "button").click();
+
+        assertTextContainedByClass("msg-success", "Uusi ylläpitolinkki lähetetty");
+
     }
 }
