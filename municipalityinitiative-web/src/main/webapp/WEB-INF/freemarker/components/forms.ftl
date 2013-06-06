@@ -304,12 +304,14 @@
     <div class="initiative-contact-details">
         <div class="column col-1of2">
             
-            <#--<@spring.bind path+".email" />
+            <#-- Updating email is disabled -->
+            <@spring.bind path+".email" />
             <input type="hidden" name="contactInfo.email" value="${spring.status.value}" />
             <div class="input-header"><@u.message "contactInfo.email" /></div>
-            <input type="text" disabled="disabled" class="medium disabled" value="${spring.status.value}" />-->
+            <input type="text" disabled="disabled" class="medium disabled" value="${spring.status.value}" />
 
-            <@textField path=path+".email" required="required" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_PHONE_MAX key="contactInfo.email" />
+            <#--<@textField path=path+".email" required="required" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_PHONE_MAX key="contactInfo.email" />-->
+            
             <@textField path=path+".phone" required="" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_PHONE_MAX key="contactInfo.phone" />
         </div>
         
