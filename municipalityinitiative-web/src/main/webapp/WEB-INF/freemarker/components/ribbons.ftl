@@ -23,9 +23,10 @@
     <#assign localSite>https://localhost:8443</#assign>
 
     <#-- For testing ribbons locally:
-    <#assign betaIpSite>${localSite}</#assign>
+    <#assign prodTestSite>${localSite}</#assign>
     <#assign localSite>https://localhost:8443x</#assign>
     -->
+
     
     <#assign blueColor>ribbon-default</#assign> <#-- BLUE gradient -->
     <#assign redColor>ribbon-red</#assign> <#-- RED gradient -->
