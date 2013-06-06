@@ -107,8 +107,44 @@ public class AuthorsWebTest  extends WebTestBase {
 
     }
     
-    // TODO: Remove author
-
+    @Test
+    public void author_removes_participant(){
+        Long publishedInitiativeId = testHelper.create(municipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        
+        testHelper.createParticipant(new TestHelper.AuthorDraft(publishedInitiativeId, municipalityId));
+        
+        loginAsAuthorForLastTestHelperCreatedInitiative();
+        open(urls.management(publishedInitiativeId));
+        
+        clickLinkContaining("Osallistujahallinta");
+        clickLinkContaining("Poista osallistuja");
+        
+        // NOTE: We could assert that modal has correct Participant details,
+        //       but as DOM is updated after the modal is loaded we would need a tiny delay for that
+        
+        getElemContaining("Poista", "button").click();
+        
+        assertTextContainedByClass("msg-success", "Osallistuja poistettu");
+        
+    }
+    
+    @Test
+    public void author_removes_author(){
+        testHelper.createAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, municipalityId));
+        
+        loginAsAuthorForLastTestHelperCreatedInitiative();
+        open(urls.management(initiativeId));
+        
+        clickLinkContaining("Lisää vastuuhenkilöitä");
+        clickLinkContaining("Poista vastuuhenkilö");
+        
+        // NOTE: We could assert that modal has correct Author details,
+        //       but as DOM is updated after the modal is loaded we would need a tiny delay for that
+        
+        getElemContaining("Poista vastuuhenkilö", "button").click();
+        
+        assertTextContainedByClass("msg-success", "Vastuuhenkilö poistettu");
+    }
 
     private void assertInvitationPageIsGone(AuthorInvitation invitation) {
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
