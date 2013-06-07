@@ -41,7 +41,7 @@
     
         <div class="view-block last">
             <div class="initiative-content-row">
-                <h2><@u.message "invitations.title" /> (vanhenevat tunnissa)</h2>
+                <h2><@u.message "invitations.title" /></h2>
     
                 <@listInvitations invitations />
             </div>
