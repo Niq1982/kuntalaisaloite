@@ -127,7 +127,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         contactInfo.setAddress("updated address");
         contactInfo.setPhone("updated phone");
         contactInfo.setName("updated author name");
-        contactInfo.setShowName(false); // As far as default is true ...
+        contactInfo.setShowName(!contactInfo.isShowName()); // As far as default is true ...
         editDto.setContactInfo(contactInfo);
         editDto.setName("updated initiative name");
         editDto.setProposal("updated proposal");
