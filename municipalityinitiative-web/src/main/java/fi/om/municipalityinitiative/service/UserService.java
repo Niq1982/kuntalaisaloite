@@ -10,6 +10,9 @@ import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.util.Maybe;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +32,9 @@ public class UserService {
 
     String omUserSalt;
 
+    public UserService() {  // This is for tests, spring needs this
+    }
+
     public UserService(String omUserSalt) {
         this.omUserSalt = omUserSalt;
     }
@@ -41,6 +47,7 @@ public class UserService {
         return EncryptionService.toSha1(omUserSalt + password);
     }
 
+    @Transactional(readOnly = true)
     public Long authorLogin(String managementHash, HttpServletRequest request) {
         // TODO: Merge these to one call
         Long authorId = authorDao.getAuthorId(managementHash);
@@ -92,9 +99,8 @@ public class UserService {
         }
 
         if (user.get().isNotOmUser()) {
-            assertStillAuthor(user.get().getAuthorId(), request);
+            // FIXME: assertStillAuthor(user.get().getAuthorId(), request);
         }
-
 
         return Maybe.of(new LoginUserHolder(user.get()));
     }
@@ -132,4 +138,5 @@ public class UserService {
         }
         return User.anonym();
     }
+
 }

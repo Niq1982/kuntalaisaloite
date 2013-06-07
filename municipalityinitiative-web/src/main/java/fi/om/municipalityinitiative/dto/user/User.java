@@ -8,7 +8,7 @@ public abstract class User {
         return new OmLoginUser(name);
     }
 
-    public static User normalUser(Long authorId, Set<Long> authorsInitiatives) {
+    public static NormalLoginUser normalUser(Long authorId, Set<Long> authorsInitiatives) {
         return new NormalLoginUser(authorId, authorsInitiatives);
     }
 

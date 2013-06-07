@@ -1,7 +1,6 @@
 package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Lists;
-import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.InvitationNotValidException;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.Author;
@@ -44,9 +43,6 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     @Resource
     AuthorService authorService;
-
-    @Resource
-    AuthorDao authorDao; // FIXME: Do not depend on this
 
     private Long testMunicipality;
 
@@ -140,7 +136,8 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     }
 
     private List<Author> currentAuthors(Long initiativeId) {
-        return authorDao.findAuthors(initiativeId);
+        return authorService.findAuthors(initiativeId, TestHelper.authorLoginUserHolder);
+       // return authorService.findAuthors(initiativeId, new LoginUserHolder<>(User.normalUser(-1L, Collections.singleton(initiativeId))));
     }
 
     private int participantCountOfInitiative(Long initiativeId) {
@@ -382,7 +379,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
                 future.get();
             }
         } catch (Exception e) {
-            //e.printStackTrace();
+            // e.printStackTrace();
 
         } finally {
             executor.shutdownNow();
@@ -411,7 +408,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         AuthorInvitation authorInvitation = ReflectionTestUtils.modifyAllFields(new AuthorInvitation());
         authorInvitation.setInitiativeId(initiativeId);
         authorInvitation.setInvitationTime(expiredInvitationTime());
-        authorDao.addAuthorInvitation(authorInvitation);
+        testHelper.addAuthorInvitation(authorInvitation, false);
         return authorInvitation;
     }
 
@@ -419,7 +416,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         AuthorInvitation authorInvitation = ReflectionTestUtils.modifyAllFields(new AuthorInvitation());
         authorInvitation.setInitiativeId(initiativeId);
         authorInvitation.setInvitationTime(invitationTime);
-        authorDao.addAuthorInvitation(authorInvitation);
+        testHelper.addAuthorInvitation(authorInvitation, false);
         return authorInvitation;
     }
     private AuthorInvitation createInvitation(Long initiativeId) {
@@ -430,8 +427,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         AuthorInvitation authorInvitation = ReflectionTestUtils.modifyAllFields(new AuthorInvitation());
         authorInvitation.setInitiativeId(initiativeId);
         authorInvitation.setInvitationTime(DateTime.now());
-        authorDao.addAuthorInvitation(authorInvitation);
-        authorDao.rejectAuthorInvitation(initiativeId, authorInvitation.getConfirmationCode());
+        testHelper.addAuthorInvitation(authorInvitation, true);
         return authorInvitation;
     }
 
