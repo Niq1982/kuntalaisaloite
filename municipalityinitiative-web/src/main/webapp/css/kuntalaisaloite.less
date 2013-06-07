@@ -453,6 +453,9 @@ body {
         width: 345px;
         height:72px;
         background:url("../img/logo-kuntalaisaloite.png?version=${timestamp}") 0 0 no-repeat;
+        
+        background-image: url("../img/logo-kuntalaisaloite.svg?version=${timestamp}"), none;
+        background-size: contain;
     }
     #logo span { display:none; }
 
@@ -786,7 +789,19 @@ a.block-link {
     margin-bottom: 2em;
     
     &.disabled {
-        opacity:@dimmed;
+        position:relative;
+        overflow:hidden;
+        
+        .mask {
+            z-index:100;
+            position:absolute;
+            top:0;
+            left:0;
+            width:1000px;
+            height:1000px;
+            background:#fff;
+            opacity:0.6;
+        }
     }
 }
 
@@ -796,16 +811,10 @@ a.block-link {
 
 .input-block, .view-block {
     position: relative;
-    //z-index: 3;
     background: #fff url("../img/input-block-extra-bg.png?version=${timestamp}") repeat-y top right;
     border-left: 4px solid #017380;
     
     padding:0 35px 30px 55px;
-    
-    &.vote {
-        padding-top:20px;
-        background:#fff;
-    }
     
     &.faq-item {
         margin-bottom:0;
@@ -815,9 +824,6 @@ a.block-link {
     .system-msg {
         margin:5px 0;
         border:0;
-        //-webkit-border-radius: 0;
-        //-moz-border-radius: 0;
-        //border-radius: 0;
     }
 }
 .view-block {
@@ -831,6 +837,10 @@ a.block-link {
 }
 .input-block {
     width: 866px; // Predefined width removes jumpyness bug in slideToggle. could be calculated with JS for dynamic widths.
+
+    &.no-sidebar {
+        background:#fff;
+    }
 
     .input-block-action {
         width:585px;
@@ -1836,6 +1846,7 @@ label  {
 // Initiative type selection
 .initiative-types {
     margin-top:1em;
+    width:100%; // IE7
 
     .initiative-type {
         position:relative;

@@ -49,11 +49,11 @@
             </div>
             
             <div class="input-block-content">
-                <@f.textarea path="authorMessage.message" required="required" optional=false cssClass="large" />
+                <@f.textarea path="authorMessage.message" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.AUTHOR_MESSAGE_MAX?string("#") />
             </div>
             
              <div class="input-block-content">
-                <@f.textField path="authorMessage.contactName" required="required" optional=false cssClass="large" maxLength="512" />
+                <@f.textField path="authorMessage.contactName" required="required" optional=false cssClass="large" maxLength="512" maxLength=InitiativeConstants.CONTACT_NAME_MAX />
             </div>
             
             <div class="input-block-content">

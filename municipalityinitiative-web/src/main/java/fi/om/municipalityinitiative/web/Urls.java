@@ -87,7 +87,7 @@ public final class Urls {
 
     public static final String PARTICIPATING_CONFIRMATION_FI = "/fi/varmistus/"+ID_PARAMETER;
 
-    public static final String PARTICIPATING_CONFIRMATION_SV = "/sv/forsakra/"+ID_PARAMETER;
+    public static final String PARTICIPATING_CONFIRMATION_SV = "/sv/bekraftelse/"+ID_PARAMETER;
 
     public static final String IMAGE_JSON =    "/imageJson";
 
@@ -183,11 +183,11 @@ public final class Urls {
     
     public static final String PREPARE_FI =    "/fi/aloitteen-valmistelu";
 
-    public static final String PREPARE_SV =    "/sv/initiativ-prepare";
+    public static final String PREPARE_SV =    "/sv/beredning-av-initiativ";
 
     public static final String PENDING_CONFIRMATION_FI =    "/fi/odottaa-vahvistusta" + "/" + ID_PARAMETER;
 
-    public static final String PENDING_CONFIRMATION_SV  =    "/sv/odottaa-vahvistusta-sv" + "/" + ID_PARAMETER;
+    public static final String PENDING_CONFIRMATION_SV  =    "/sv/vantar-pa-bekraftelse" + "/" + ID_PARAMETER;
     
     public static final String VIEW_FI = "/fi/aloite" + "/" + ID_PARAMETER;
 
@@ -195,7 +195,7 @@ public final class Urls {
     
     public static final String PARITICIPANT_LIST_FI = VIEW_FI + "/osallistujat";
 
-    public static final String PARITICIPANT_LIST_SV = VIEW_SV + "/deltagarna";
+    public static final String PARITICIPANT_LIST_SV = VIEW_SV + "/deltagare";
     
     public static final String PARITICIPANT_LIST_MANAGE_FI = VIEW_FI + "/osallistujahallinta";
 
@@ -217,7 +217,7 @@ public final class Urls {
 
     public static final String UPDATE_FI = "/fi/paivita" + "/" + ID_PARAMETER;
 
-    public static final String UPDATE_SV = "/sv/paivita" + "/" + ID_PARAMETER;
+    public static final String UPDATE_SV = "/sv/uppdatera" + "/" + ID_PARAMETER;
     
     public static final String MANAGE_AUTHORS_FI = "/fi/vastuuhenkilot" + "/" + ID_PARAMETER;
 
@@ -233,7 +233,7 @@ public final class Urls {
 
     public static final String IFRAME_GENERATOR_FI = "/fi/leijuke";
 
-    public static final String IFRAME_GENERATOR_SV = "/sv/leijuke";
+    public static final String IFRAME_GENERATOR_SV = "/sv/mashup";
     
     public static final String IFRAME_FI = "/fi/iframe";
 

@@ -106,8 +106,10 @@
  * Prints help-texts and validation errors in this block
  -->
 <#macro chooseInitiativeType>
-    <div class="input-header">
-        <@u.message "initiative.initiativeType" /> <span class="icon-small required trigger-tooltip"></span>
+    <div class="input-block-content">
+        <div class="input-header">
+            <@u.message "initiative.initiativeType" /> <span class="icon-small required trigger-tooltip"></span>
+        </div>
     </div>
     
     <div class="initiative-types cf">
@@ -218,11 +220,11 @@
         </div>
         
         <div class="input-block-content no-top-margin">
-            <@f.textarea path="initiative.proposal" required="required" optional=false cssClass="textarea-tall" />
+            <@f.textarea path="initiative.proposal" required="required" optional=false cssClass="textarea-tall" maxLength=InitiativeConstants.INITIATIVE_PROPOSAL_MAX?string("#") />
         </div>
         
         <div class="input-block-content">
-            <@f.textarea path="initiative.extraInfo" required="" optional=true cssClass="textarea" />
+            <@f.textarea path="initiative.extraInfo" required="" optional=true cssClass="textarea" maxLength=InitiativeConstants.INITIATIVE_EXTRA_INFO_MAX?string("#") />
         </div>
     </div>
 </#macro>
@@ -246,7 +248,7 @@
         </div>
 
         <div class="input-block-content">
-            <@f.textarea path=path+".extraInfo" required="" optional=true cssClass="textarea" key="initiative.extraInfo" />
+            <@f.textarea path=path+".extraInfo" required="" optional=true cssClass="textarea" key="initiative.extraInfo" maxLength=InitiativeConstants.INITIATIVE_EXTRA_INFO_MAX?string("#") />
         </div>
     </div>
 </#macro>

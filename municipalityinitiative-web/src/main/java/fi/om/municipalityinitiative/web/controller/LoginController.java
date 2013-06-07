@@ -31,7 +31,8 @@ public class LoginController extends BaseLoginController {
 
     @RequestMapping(value = MODERATOR_LOGIN, method = RequestMethod.GET)
     public String loginGet(@RequestParam(required=false) String target, Model model, Locale locale, HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=ISO-8859-1");
+//        // NOTE: Needed for VETUMA
+//        response.setContentType("text/html;charset=ISO-8859-1");
         model.addAttribute("target", target);
         return Views.MODERATOR_LOGIN_VIEW;
     }
@@ -44,7 +45,7 @@ public class LoginController extends BaseLoginController {
         return new RedirectView(Urls.get(Locales.LOCALE_FI).frontpage());
     }
 
-    @RequestMapping(value =  {LOGIN_FI, LOGIN_FI}, method = RequestMethod.GET, params = PARAM_MANAGEMENT_CODE)
+    @RequestMapping(value =  {LOGIN_FI, LOGIN_SV}, method = RequestMethod.GET, params = PARAM_MANAGEMENT_CODE)
     public String singleLoginGet(@RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                                  Model model, Locale locale, HttpServletRequest request) {
         model.addAttribute("managementHash", managementHash);
@@ -53,7 +54,7 @@ public class LoginController extends BaseLoginController {
 
     }
 
-    @RequestMapping(value =  {LOGIN_FI, LOGIN_FI}, method = RequestMethod.POST, params = PARAM_MANAGEMENT_CODE)
+    @RequestMapping(value =  {LOGIN_FI, LOGIN_SV}, method = RequestMethod.POST, params = PARAM_MANAGEMENT_CODE)
     public RedirectView singleLogin(@RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                                        Model model, Locale locale, HttpServletRequest request) {
         Long initiativeId = userService.authorLogin(managementHash, request);

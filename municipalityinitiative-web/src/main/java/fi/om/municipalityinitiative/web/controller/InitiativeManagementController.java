@@ -61,7 +61,7 @@ public class InitiativeManagementController extends BaseController {
             return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.ALREADY_SENT, request);
         }
 
-        if (hasNeverBeenSaved(initiativeInfo)) {
+        if (initiativeInfo.hasNeverBeenSaved()) {
             return contextRelativeRedirect(Urls.get(locale).edit(initiativeId));
         }
 
@@ -70,10 +70,6 @@ public class InitiativeManagementController extends BaseController {
                 authorService.findAuthors(initiativeId, loginUserHolder),
                 participantService.getParticipantCount(initiativeId)
         ).view(model, Urls.get(locale).alt().getManagement(initiativeId));
-    }
-
-    private static boolean hasNeverBeenSaved(InitiativeViewInfo initiativeInfo) {
-        return Strings.isNullOrEmpty(initiativeInfo.getName());
     }
 
     @RequestMapping(value={ UPDATE_FI, UPDATE_SV }, method=GET)

@@ -7,6 +7,8 @@ import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.LocalDate;
 
+import com.google.common.base.Strings;
+
 public class InitiativeViewInfo {
 
     private final Initiative initiative;
@@ -65,6 +67,10 @@ public class InitiativeViewInfo {
 
     public FixState getFixState() {
         return initiative.getFixState();
+    }
+
+    public boolean hasNeverBeenSaved() {
+        return Strings.isNullOrEmpty(initiative.getName());
     }
 
 }

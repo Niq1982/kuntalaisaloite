@@ -469,15 +469,19 @@ var municipalitySelection = (function() {
 			authorEmail			= $('#participantEmail'),
 			toggleDisable		= $('.toggle-disable'),
 			toggleDisableInput  = toggleDisable.find('input, select, textarea, button'),
+			mask				= $('.mask'),
 			btnParticipate 		= $("button#participate");
 		
 		btnParticipate.disableButton(prevent);
 		
 		typeInput.disableButton(prevent);
 		
+		mask.remove();
+		
 		if (prevent) {
 			toggleDisableInput.attr('disabled','disabled');
 			toggleDisable.addClass('disabled');
+			toggleDisable.prepend('<div class="mask" />');
 		} else {
 			toggleDisableInput.removeAttr('disabled');
 			toggleDisable.removeClass('disabled');
@@ -535,7 +539,7 @@ var municipalitySelection = (function() {
 		var cb, btn, isNotMember;
 		
 		cb = $(this);
-		btn = $('#button-next-2, button#participate');
+		btn = $('#action-send-confirm, button#participate');
 		isNotMember = function(){			
 			return ( $("input[name=municipalMembership]:checked").val() === "none" );
 		};
@@ -545,7 +549,7 @@ var municipalitySelection = (function() {
 			var disable = isNotMember();
 			
 			btn.disableButton( disable );
-			preventContinuing( disable);
+			preventContinuing( disable );
 			warningNotMember( disable );
 		});
 	};
