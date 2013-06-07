@@ -178,12 +178,13 @@ public class ViewGenerator {
         );
     }
 
-    public static ViewGenerator editView(InitiativeDraftUIEditDto initiative, Author authorInformation, String previousPageURI) {
+    public static ViewGenerator editView(boolean hasNeverBeenSaved, InitiativeDraftUIEditDto initiative, Author authorInformation, String previousPageURI) {
         return new ViewGenerator(EDIT_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiative)
                         .add("author", authorInformation)
                         .add("previousPageURI", previousPageURI)
+                        .add("hasNeverBeenSaved", hasNeverBeenSaved)
                         .build());
     }
 

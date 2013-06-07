@@ -14,6 +14,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import com.google.common.base.Strings;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -83,10 +85,12 @@ public class InitiativeCreateController extends BaseController {
 
         Urls urls = Urls.get(locale);
         if (managementSettings.isAllowEdit()) {
+            InitiativeDraftUIEditDto initiativeDraft = initiativeManagementService.getInitiativeDraftForEdit(initiativeId, loginUserHolder);
             return ViewGenerator.editView(
-                    initiativeManagementService.getInitiativeDraftForEdit(initiativeId, loginUserHolder),
+                    Strings.isNullOrEmpty(initiativeDraft.getName()),
+                    initiativeDraft,
                     initiativeManagementService.getAuthorInformation(initiativeId, loginUserHolder),
-                    urls.frontpage()
+                    urls.management(initiativeId)
             ).view(model, urls.alt().edit(initiativeId));
         }
         else if (managementSettings.isAllowUpdate()) {
@@ -110,9 +114,10 @@ public class InitiativeCreateController extends BaseController {
 
         if (validationService.validationErrors(editDto, bindingResult, model)) {
             return ViewGenerator.editView(
+                    Strings.isNullOrEmpty(initiativeManagementService.getInitiativeDraftForEdit(initiativeId, loginUserHolder).getName()),
                     editDto,
                     initiativeManagementService.getAuthorInformation(initiativeId, loginUserHolder),
-                    urls.moderation(initiativeId)
+                    urls.management(initiativeId)
             ).view(model, urls.alt().edit(initiativeId));
         }
 

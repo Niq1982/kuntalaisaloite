@@ -53,7 +53,11 @@
             </div>
 
             <button class="large-button" value="true" name="${UrlConstants.ACTION_SAVE}" type="submit"><span class="large-icon save-and-send"><@u.messageHTML "action.saveDraft" /></span></button>
-            <a href="${previousPageURI}" class="large-button"><span class="large-icon cancel"><@u.messageHTML "action.cancelEditDraft" /></span></a>
+            <#if hasNeverBeenSaved>
+                <a href="${urls.frontpage()}" class="large-button"><span class="large-icon cancel"><@u.messageHTML "action.cancelEditDraft" /></span></a>
+            <#else>
+                <a href="${previousPageURI}" class="large-button"><span class="large-icon cancel"><@u.messageHTML "action.cancelUpdateInitiative" /></span></a>
+            </#if>
         </div>
     </form>
 
