@@ -106,8 +106,10 @@
  * Prints help-texts and validation errors in this block
  -->
 <#macro chooseInitiativeType>
-    <div class="input-header">
-        <@u.message "initiative.initiativeType" /> <span class="icon-small required trigger-tooltip"></span>
+    <div class="input-block-content">
+        <div class="input-header">
+            <@u.message "initiative.initiativeType" /> <span class="icon-small required trigger-tooltip"></span>
+        </div>
     </div>
     
     <div class="initiative-types cf">
