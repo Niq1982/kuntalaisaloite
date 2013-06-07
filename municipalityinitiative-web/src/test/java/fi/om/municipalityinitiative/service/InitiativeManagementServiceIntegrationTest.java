@@ -370,11 +370,8 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         service.updateInitiative(initiativeId, TestHelper.authorLoginUserHolder, updateDto);
 
         assertThat(testHelper.getInitiative(initiativeId).getExtraInfo(), is(updateDto.getExtraInfo()));
-
         ContactInfo updatedContactInfo = service.getInitiativeForUpdate(initiativeId, TestHelper.authorLoginUserHolder).getContactInfo();
         ReflectionTestUtils.assertReflectionEquals(updatedContactInfo, contactInfo);
-
-        // TODO: Assert extraInfo
 
     }
 
