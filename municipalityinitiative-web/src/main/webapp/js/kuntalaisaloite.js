@@ -549,7 +549,7 @@ var municipalitySelection = (function() {
 			var disable = isNotMember();
 			
 			btn.disableButton( disable );
-			preventContinuing( disable);
+			preventContinuing( disable );
 			warningNotMember( disable );
 		});
 	};

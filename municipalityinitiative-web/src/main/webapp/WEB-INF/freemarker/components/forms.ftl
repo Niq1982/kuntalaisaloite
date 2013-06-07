@@ -92,17 +92,21 @@
 <#--
  * textarea
  *
+ * Note: The maxlength attribute of the <textarea> tag is not supported in Internet Explorer 9 and earlier versions, or in Opera.
+ *
  * @param path the name of the field to bind to
  * @param required generates an icon and can be used in JS-validation
  * @param optional additional information for label
  * @param cssClass for custom styling. Multiple classes are separated with a space
+ * @param key is optional custom key for label
+ * @param maxLength HTML5 attribute for max length
 -->
-<#macro textarea path required optional cssClass="" key="">
+<#macro textarea path required optional cssClass="" key="" maxLength="">
     <@spring.bind path />  
 
     <@formLabel path required optional key>
         <@showError />
-        <@spring.formTextarea path, 'class="'+cssClass+'"' />
+        <@spring.formTextarea path, 'class="'+cssClass+'" maxlength="'+maxLength+'" ' />
     
     </@formLabel>
 </#macro>
