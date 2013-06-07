@@ -40,9 +40,6 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     @Resource
     TestHelper testHelper;
 
-    @Resource
-    AuthorDao authorDao;
-
     private static Municipality testMunicipality;
 
     @Override
@@ -374,8 +371,8 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
         assertThat(testHelper.getInitiative(initiativeId).getExtraInfo(), is(updateDto.getExtraInfo()));
 
-        Author author = authorDao.getAuthor(testHelper.getLastAuthorId());
-        ReflectionTestUtils.assertReflectionEquals(author.getContactInfo(), contactInfo);
+        ContactInfo updatedContactInfo = service.getInitiativeForUpdate(initiativeId, TestHelper.authorLoginUserHolder).getContactInfo();
+        ReflectionTestUtils.assertReflectionEquals(updatedContactInfo, contactInfo);
 
         // TODO: Assert extraInfo
 
