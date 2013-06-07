@@ -87,7 +87,7 @@ public final class Urls {
 
     public static final String PARTICIPATING_CONFIRMATION_FI = "/fi/varmistus/"+ID_PARAMETER;
 
-    public static final String PARTICIPATING_CONFIRMATION_SV = "/sv/forsakra/"+ID_PARAMETER;
+    public static final String PARTICIPATING_CONFIRMATION_SV = "/sv/bekraftelse/"+ID_PARAMETER;
 
     public static final String IMAGE_JSON =    "/imageJson";
 
