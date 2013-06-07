@@ -31,9 +31,6 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     @Resource
     private PublicInitiativeService service;
 
-    @Resource
-    private ParticipantDao participantDao; // Do not depend on this
-
     private static Municipality testMunicipality;
 
     private static Municipality participantMunicipality;
