@@ -134,6 +134,7 @@ public class PublicInitiativeService {
         return initiativeId;
     }
 
+    @Transactional(readOnly = false)
     public void addAuthorMessage(AuthorUIMessage authorUIMessage, Locale locale) {
 
         AuthorMessage authorMessage = executeAddAuthorMessage(authorUIMessage);
@@ -141,7 +142,6 @@ public class PublicInitiativeService {
 
     }
 
-    @Transactional(readOnly = false)
     private AuthorMessage executeAddAuthorMessage(AuthorUIMessage authorUIMessage) {
         String confirmationCode = RandomHashGenerator.shortHash();
         AuthorMessage authorMessage = new AuthorMessage(authorUIMessage, confirmationCode);

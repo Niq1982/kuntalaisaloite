@@ -39,6 +39,7 @@ public class UserService {
         this.omUserSalt = omUserSalt;
     }
 
+    @Transactional(readOnly = true)
     public void adminLogin(String userName, String password, HttpServletRequest request) {
         request.getSession().setAttribute(LOGIN_USER_PARAMETER, adminUserDao.getUser(userName, saltAndEncryptPassword(password)));
     }
