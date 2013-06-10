@@ -255,7 +255,9 @@
                             <a href="#" class="header-tool-link user-name dropdown-toggle">${user.name} <span class="icon-small settings"></span></a>
                             <ul id="user-menu" class="dropdown-menu user-menu">
                                 <li><a href="${urls.municipalityModeration()}"><@u.message "om.municipality.moderation" /></a></li>
-                                <#if initiative.id??><li><a href="${urls.moderation(initiative.id)}"><@u.message "om.initiative.moderation" /></a></li></#if>
+                                <#if initiative??>
+                                    <#if initiative.id??><li><a href="${urls.moderation(initiative.id)}"><@u.message "om.initiative.moderation" /></a></li></#if>
+                                </#if>
                             </ul>
                         </div>
                     </#if>
