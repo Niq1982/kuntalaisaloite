@@ -27,7 +27,8 @@ public class InfoTextServiceTest {
 
     @Before
     public void setup() {
-        infoTextService = new InfoTextService(infoTextDaoMock);
+        infoTextService = new InfoTextService();
+        infoTextService.infoTextDao = infoTextDaoMock;
     }
 
     @Test

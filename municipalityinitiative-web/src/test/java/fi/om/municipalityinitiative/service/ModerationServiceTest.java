@@ -8,6 +8,8 @@ import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dao.MunicipalityDao;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.service.email.EmailMessageType;
+import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.util.*;
 import org.junit.Before;
 import org.junit.Test;

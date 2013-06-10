@@ -21,7 +21,6 @@ import javax.annotation.Resource;
 import java.util.List;
 
 
-@Transactional(readOnly = true)
 public class JdbcInfoTextDao implements InfoTextDao {
 
     private static final Expression<DateTime> CURRENT_TIME = DateTimeExpression.currentTimestamp(DateTime.class);
@@ -30,7 +29,6 @@ public class JdbcInfoTextDao implements InfoTextDao {
     PostgresQueryFactory queryFactory;
 
     @Override
-    @Transactional(readOnly = false)
     public void publishFromDraft(String uri, String modifier) {
         assertSingleAffection(
                 queryFactory.update(QInfoText.infoText)
@@ -44,7 +42,6 @@ public class JdbcInfoTextDao implements InfoTextDao {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public void saveDraft(InfoPageText infoPageText) {
         assertSingleAffection(
                 queryFactory.update(QInfoText.infoText)
@@ -58,7 +55,6 @@ public class JdbcInfoTextDao implements InfoTextDao {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public void draftFromPublished(String uri, String modifierName) {
         assertSingleAffection(
                 queryFactory.update(QInfoText.infoText)

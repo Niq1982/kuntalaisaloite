@@ -1,7 +1,6 @@
 package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Lists;
-import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.InvitationNotValidException;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.Author;
@@ -45,9 +44,6 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     @Resource
     AuthorService authorService;
 
-    @Resource
-    AuthorDao authorDao; // FIXME: Do not depend on this
-
     private Long testMunicipality;
 
     @Rule
@@ -73,7 +69,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     @Test
     public void create_invitation_sets_required_information() {
-        Long initiativeId = testHelper.createCollaborativeReview(testMunicipality);
+        Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality);
 
         AuthorInvitationUICreateDto authorInvitationUICreateDto = authorInvitation();
 
@@ -88,7 +84,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     @Test
     public void reject_author_invitation() {
-        Long initiativeId = testHelper.createCollaborativeReview(testHelper.createTestMunicipality("name"));
+        Long initiativeId = testHelper.createCollaborativeAccepted(testHelper.createTestMunicipality("name"));
 
         authorService.createAuthorInvitation(initiativeId, TestHelper.authorLoginUserHolder, authorInvitation());
         precondition(testHelper.getAuthorInvitation(RandomHashGenerator.getPrevious()).isRejected(), is(false));
@@ -103,7 +99,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     public void confirm_author_invitation_adds_new_author_with_given_information() {
 
         Long authorsMunicipality = testHelper.createTestMunicipality("name");
-        Long initiativeId = testHelper.createCollaborativeReview(authorsMunicipality);
+        Long initiativeId = testHelper.createCollaborativeAccepted(authorsMunicipality);
         AuthorInvitation invitation = createInvitation(initiativeId);
 
         AuthorInvitationUIConfirmDto createDto = new AuthorInvitationUIConfirmDto();
@@ -140,7 +136,8 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     }
 
     private List<Author> currentAuthors(Long initiativeId) {
-        return authorDao.findAuthors(initiativeId);
+        return authorService.findAuthors(initiativeId, TestHelper.authorLoginUserHolder);
+       // return authorService.findAuthors(initiativeId, new LoginUserHolder<>(User.normalUser(-1L, Collections.singleton(initiativeId))));
     }
 
     private int participantCountOfInitiative(Long initiativeId) {
@@ -156,7 +153,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     @Test
     public void confirm_author_with_expired_invitation_throws_exception() {
-        Long initiativeId = testHelper.createCollaborativeReview(testMunicipality);
+        Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality);
         AuthorInvitation expiredInvitation = createExpiredInvitation(initiativeId);
 
         AuthorInvitationUIConfirmDto confirmDto = new AuthorInvitationUIConfirmDto();
@@ -169,7 +166,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     @Test
     public void confirm_author_with_rejected_invitation_throws_exception() {
-        Long initiativeId = testHelper.createCollaborativeReview(testMunicipality);
+        Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality);
         AuthorInvitation rejectedInvitation = createRejectedInvitation(initiativeId);
 
         AuthorInvitationUIConfirmDto confirmDto = new AuthorInvitationUIConfirmDto();
@@ -182,7 +179,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     @Test
     public void confirm_author_with_invalid_confirmCode_throws_exception() {
-        Long initiativeId = testHelper.createCollaborativeReview(testMunicipality);
+        Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality);
         createInvitation(initiativeId);
 
         AuthorInvitationUIConfirmDto invitationUIConfirmDto = new AuthorInvitationUIConfirmDto();
@@ -196,7 +193,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     @Test
     public void invitation_is_removed_after_confirmation() {
 
-        Long initiativeId = testHelper.createCollaborativeReview(testMunicipality);
+        Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality);
         AuthorInvitation authorInvitation = createInvitation(initiativeId);
 
         AuthorInvitationUIConfirmDto confirmDto = ReflectionTestUtils.modifyAllFields(new AuthorInvitationUIConfirmDto());
@@ -217,7 +214,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
     @Test
     public void prefilled_author_confirmation_contains_all_information() {
         Long municipalityId = testHelper.createTestMunicipality("name");
-        Long initiativeId = testHelper.createCollaborativeReview(municipalityId);
+        Long initiativeId = testHelper.createCollaborativeAccepted(municipalityId);
         authorService.createAuthorInvitation(initiativeId, TestHelper.authorLoginUserHolder, authorInvitation());
 
         AuthorInvitationUIConfirmDto confirmDto = authorService.getPrefilledAuthorInvitationConfirmDto(initiativeId, RandomHashGenerator.getPrevious());
@@ -382,7 +379,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
                 future.get();
             }
         } catch (Exception e) {
-            //e.printStackTrace();
+            // e.printStackTrace();
 
         } finally {
             executor.shutdownNow();
@@ -411,7 +408,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         AuthorInvitation authorInvitation = ReflectionTestUtils.modifyAllFields(new AuthorInvitation());
         authorInvitation.setInitiativeId(initiativeId);
         authorInvitation.setInvitationTime(expiredInvitationTime());
-        authorDao.addAuthorInvitation(authorInvitation);
+        testHelper.addAuthorInvitation(authorInvitation, false);
         return authorInvitation;
     }
 
@@ -419,7 +416,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         AuthorInvitation authorInvitation = ReflectionTestUtils.modifyAllFields(new AuthorInvitation());
         authorInvitation.setInitiativeId(initiativeId);
         authorInvitation.setInvitationTime(invitationTime);
-        authorDao.addAuthorInvitation(authorInvitation);
+        testHelper.addAuthorInvitation(authorInvitation, false);
         return authorInvitation;
     }
     private AuthorInvitation createInvitation(Long initiativeId) {
@@ -430,8 +427,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
         AuthorInvitation authorInvitation = ReflectionTestUtils.modifyAllFields(new AuthorInvitation());
         authorInvitation.setInitiativeId(initiativeId);
         authorInvitation.setInvitationTime(DateTime.now());
-        authorDao.addAuthorInvitation(authorInvitation);
-        authorDao.rejectAuthorInvitation(initiativeId, authorInvitation.getConfirmationCode());
+        testHelper.addAuthorInvitation(authorInvitation, true);
         return authorInvitation;
     }
 

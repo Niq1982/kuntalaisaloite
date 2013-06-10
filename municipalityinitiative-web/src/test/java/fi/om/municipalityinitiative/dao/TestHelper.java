@@ -342,6 +342,18 @@ public class TestHelper {
                 .uniqueResult(Mappings.authorInvitationMapping);
     }
 
+    @Transactional(readOnly = false)
+    public Long addAuthorInvitation(AuthorInvitation authorInvitation, boolean rejected) {
+        return queryFactory.insert(QAuthorInvitation.authorInvitation)
+                .set(QAuthorInvitation.authorInvitation.confirmationCode, authorInvitation.getConfirmationCode())
+                .set(QAuthorInvitation.authorInvitation.email, authorInvitation.getEmail())
+                .set(QAuthorInvitation.authorInvitation.name, authorInvitation.getName())
+                .set(QAuthorInvitation.authorInvitation.invitationTime, authorInvitation.getInvitationTime())
+                .set(QAuthorInvitation.authorInvitation.initiativeId, authorInvitation.getInitiativeId())
+                .set(QAuthorInvitation.authorInvitation.rejectTime, rejected ? new DateTime() : null)
+                .executeWithKey(QAuthorInvitation.authorInvitation.id);
+    }
+
     public static class AuthorDraft {
 
         public Long initiativeId;

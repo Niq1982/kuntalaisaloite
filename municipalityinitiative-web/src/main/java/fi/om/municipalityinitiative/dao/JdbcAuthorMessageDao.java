@@ -9,14 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 
 @SQLExceptionTranslated
-@Transactional(readOnly = true)
 public class JdbcAuthorMessageDao implements AuthorMessageDao {
 
     @Resource
     PostgresQueryFactory queryFactory;
 
     @Override
-    @Transactional(readOnly = false)
     public Long put(AuthorMessage authorMessage) {
         return queryFactory.insert(QAuthorMessage.authorMessage)
                 .set(QAuthorMessage.authorMessage.contactor, authorMessage.getContactName())
@@ -29,7 +27,6 @@ public class JdbcAuthorMessageDao implements AuthorMessageDao {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public AuthorMessage pop(String confirmationCode) {
         AuthorMessage authorMessage = queryFactory.from(QAuthorMessage.authorMessage)
                 .where(QAuthorMessage.authorMessage.confirmationCode.eq(confirmationCode))

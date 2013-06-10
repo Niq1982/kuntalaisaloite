@@ -18,7 +18,6 @@ public class JdbcAdminUserDao implements AdminUserDao {
     PostgresQueryFactory queryFactory;
 
     @Override
-    @Transactional(readOnly = true)
     public User getUser(String userName, String password) {
 
         User user = queryFactory.from(QAdminUser.adminUser)

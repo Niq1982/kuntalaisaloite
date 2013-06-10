@@ -14,6 +14,8 @@ import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityEditDto;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityUIEditDto;
+import fi.om.municipalityinitiative.service.email.EmailMessageType;
+import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
