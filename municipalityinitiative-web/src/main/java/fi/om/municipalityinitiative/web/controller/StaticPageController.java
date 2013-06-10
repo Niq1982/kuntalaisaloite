@@ -46,7 +46,12 @@ public class StaticPageController extends BaseController {
         Urls urls = Urls.get(locale);
 
         model.addAttribute(ALT_URI_ATTR, urls.alt().frontpage());
-        model.addAttribute("initiatives", publicInitiativeService.findMunicipalityInitiatives(new InitiativeSearch().setLimit(3), new LoginUserHolder<User>(User.anonym())));
+        InitiativeSearch search = new InitiativeSearch();
+        search.setLimit(3);
+        search.setShow(InitiativeSearch.Show.all);
+        search.setOrderBy(InitiativeSearch.OrderBy.latest);
+
+        model.addAttribute("initiatives", publicInitiativeService.findMunicipalityInitiatives(search, new LoginUserHolder<>(User.anonym())));
         model.addAttribute("municipalities", municipalityService.findAllMunicipalities(locale));
         addPiwicIdIfNotAuthenticated(model);
 
