@@ -12,6 +12,7 @@ import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.service.email.EmailMessageConstructor;
 import fi.om.municipalityinitiative.service.email.EmailServiceDataProvider;
 import fi.om.municipalityinitiative.service.operations.InitiativeManagementServiceOperations;
+import fi.om.municipalityinitiative.service.operations.ModerationServiceOperations;
 import fi.om.municipalityinitiative.service.operations.PublicInitiativeServiceOperations;
 import fi.om.municipalityinitiative.service.ui.InitiativeManagementService;
 import fi.om.municipalityinitiative.service.ui.ModerationService;
@@ -186,6 +187,11 @@ public class AppConfiguration {
     @Bean
     public ModerationService omInitiativeService() {
         return new ModerationService();
+    }
+
+    @Bean
+    public ModerationServiceOperations moderationServiceOperations() {
+        return new ModerationServiceOperations();
     }
 
     @Bean
