@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.service;
+package fi.om.municipalityinitiative.service.ui;
 
 import java.util.List;
 import java.util.Locale;

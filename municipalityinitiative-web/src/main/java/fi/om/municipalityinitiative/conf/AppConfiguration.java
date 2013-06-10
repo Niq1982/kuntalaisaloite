@@ -14,6 +14,7 @@ import fi.om.municipalityinitiative.service.email.EmailServiceDataProvider;
 import fi.om.municipalityinitiative.service.operations.InitiativeManagementServiceOperations;
 import fi.om.municipalityinitiative.service.operations.PublicInitiativeServiceOperations;
 import fi.om.municipalityinitiative.service.ui.InitiativeManagementService;
+import fi.om.municipalityinitiative.service.ui.ModerationService;
 import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.TaskExecutorAspect;
