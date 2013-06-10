@@ -230,16 +230,38 @@ public class ManagementSettingsTest {
     }
 
     @Test
+    public void is_allowed_to_invite_authors_only_if_accepted_or_published() throws Exception {
+            final Initiative initiative = new Initiative();
+            initiative.setFixState(FixState.OK);
+
+        assertExpectedOnlyWithGivenStates(initiative, new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return ManagementSettings.of(initiative).isAllowInviteAuthors();
+            }
+        },true, InitiativeState.PUBLISHED, InitiativeState.ACCEPTED);
+
+    }
+
+    @Test
     public void is_not_allowed_to_invite_authors_if_initiative_sent() {
-        final Initiative sendInitiative = new Initiative();
-        sendInitiative.setSentTime(Maybe.of(new LocalDate()));
-        assertThat(ManagementSettings.of(sendInitiative).isAllowInviteAuthors(), is(false));
+        final Initiative sentInitiative = new Initiative();
+        sentInitiative.setState(InitiativeState.PUBLISHED);
+        sentInitiative.setFixState(FixState.OK);
+
+        precondition(ManagementSettings.of(sentInitiative).isAllowInviteAuthors(), is(true));
+        sentInitiative.setSentTime(Maybe.of(new LocalDate()));
+        assertThat(ManagementSettings.of(sentInitiative).isAllowInviteAuthors(), is(false));
     }
 
     @Test
     public void is_allowed_to_invite_authors_if_initiative_not_sent() {
         final Initiative notSentInitiative = new Initiative();
         notSentInitiative.setFixState(FixState.OK);
+        notSentInitiative.setState(InitiativeState.PUBLISHED);
+        notSentInitiative.setSentTime(Maybe.of(new LocalDate()));
+
+        assertThat(ManagementSettings.of(notSentInitiative).isAllowInviteAuthors(), is(false));
         notSentInitiative.setSentTime(Maybe.<LocalDate>absent());
         assertThat(ManagementSettings.of(notSentInitiative).isAllowInviteAuthors(), is(true));
     }
