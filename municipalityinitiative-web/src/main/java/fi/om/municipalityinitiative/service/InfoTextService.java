@@ -12,12 +12,15 @@ import fi.om.municipalityinitiative.util.Locales;
 import org.joda.time.DateTime;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
+
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 public class InfoTextService {
 
+    @Resource
     InfoTextDao infoTextDao;
 
     public InfoTextService() {
