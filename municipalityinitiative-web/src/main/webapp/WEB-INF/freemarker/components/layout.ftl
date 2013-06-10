@@ -301,18 +301,22 @@
         </div>
     </div>
     
-    <div class="container">
-        <div id="content">
-
-            <#if requestMessagesON && requestMessages?? >
-                <@u.requestMessage requestMessages />
-            </#if>
-            
-            <#-- Main content -->
-            <#nested />
-            
+    <#if page == "page.frontpage">
+        <#nested />
+    <#else>
+        <div class="container">
+            <div id="content">
+    
+                <#if requestMessagesON && requestMessages?? >
+                    <@u.requestMessage requestMessages />
+                </#if>
+                
+                <#-- Main content -->
+                <#nested />
+                
+            </div>
         </div>
-    </div>
+    </#if>
     
     <div id="footer">
         <div class="container">
