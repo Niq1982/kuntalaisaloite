@@ -1,6 +1,5 @@
-package fi.om.municipalityinitiative.service.ui;
+package fi.om.municipalityinitiative.service.uiaa;
 
-import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;

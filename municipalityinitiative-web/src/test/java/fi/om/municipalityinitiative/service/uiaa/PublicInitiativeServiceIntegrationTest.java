@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.service.ui;
+package fi.om.municipalityinitiative.service.uiaa;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;

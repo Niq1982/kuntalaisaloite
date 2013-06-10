@@ -2,8 +2,8 @@ package fi.om.municipalityinitiative.web.controller;
 
 import fi.om.municipalityinitiative.dto.ui.MunicipalityUIEditDto;
 import fi.om.municipalityinitiative.service.*;
-import fi.om.municipalityinitiative.service.ui.ModerationService;
-import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
+import fi.om.municipalityinitiative.service.uiaa.ModerationService;
+import fi.om.municipalityinitiative.service.uiaa.PublicInitiativeService;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
