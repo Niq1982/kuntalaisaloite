@@ -26,7 +26,7 @@
  
 <div class="container">
     <div class="big-link-holder">
-        <a class="big-link">Kuntalaisena voit tehdä kunnalle aloitteen <span class="arrow"></span></a>
+        <a class="big-link"><@u.message "front.bigLink" /> <span class="arrow"></span></a>
     </div>
 
     <div id="content">
@@ -39,13 +39,13 @@
                 <div class="col-1">
     
                     <div class="front-block block-1">
-                        <h1>Kuntalaisaloite.fi -verkkopalvelussa voit tehdä kuntalaisaloitteita sekä kannattaa ja seurata muiden tekemiä aloitteita</h1>
+                        <h1><@u.message "front.hero.title" /></h1>
             
-                        <p>Kuntalaki takaa kunnan asukkaille ja jäsenille oikeuden tehdä kunnalle aloite sen toimintaa koskevissa asioissa. Aloitteen tekijälle ilmoitetaan aloitteen johdosta suoritetut toimenpiteet.</p>
-                        <p>Kaksi prosenttia kunnan äänioikeutetuista asukkaista voi tehdä kunnanvaltuuston toimivaltaan kuuluvassa asiassa aloitteen, jonka valtuusto käsittelee. Lisäksi viisi prosenttia kunnan äänioikeutetuista asukkaista voi tehdä kunnalle aloitteen kunnallisen kansanäänestyksen järjestämisestä.</p>
+                        <p><@u.message "front.hero.description-1" /></p>
+                        <p><@u.message "front.hero.description-2" /></p>
                         
                         <div class="bottom">
-                            <a href="#" class="block-link">Lue lisää miten voit vaikuttaa</a>
+                            <a href="#" class="block-link"><@u.message "front.hero.readmore" /></a>
                         </div>
                     </div>
                 
@@ -53,31 +53,33 @@
                 <div class="col-2">
                 
                     <div class="front-block block-2">
-                        <h2>Selaa kuntalaisaloitteita</h2>
+                        <h2><@u.message "front.browse.title" /></h2>
             
-                        <p>Selaa kuntalaisaloitteita omalta paikkakunnaltasi</p>
+                        <p><@u.message "front.browse.description" /></p>
                         
                         <#-- TODO: Chosen -->
                         <a href="#" class="block-link" style="margin-top:2em;">Helsinki</a>
                     </div>
                     
                     <div class="front-block block-3">
-                        <h2>Viimeisimmät aloitteet</h2>
+                        <h2><@u.message "front.latest.title" /></h2>
                         
-                        <ul class="initiative-list no-style">
-                            <li>
-                                <span class="date">Helsinki <span class="push">06.06.2013</span></span>
-                                <a class="name" href="https://localhost:8443/fi/aloite/3">Siljonkatu ja Vanhatullinkatun vaaralliset risteykset</a>
-                            </li>
-                            <li>
-                                <span class="date">Helsinki <span class="push">06.06.2013</span></span>
-                                <a class="name" href="https://localhost:8443/fi/aloite/3">Siljonkatu ja Vanhatullinkatun vaaralliset risteykset</a>
-                            </li>
-                            <li>
-                                <span class="date">Helsinki <span class="push">06.06.2013</span></span>
-                                <a class="name" href="https://localhost:8443/fi/aloite/3">Siljonkatu ja Vanhatullinkatun vaaralliset risteykset</a>
-                            </li>
-                        </ul>
+                        <div class="search-results">
+                            <#if initiatives?? && (initiatives?size > 0)>
+                                <#list initiatives as initiative>
+                                    <#if initiative_index == 0><ul class="initiative-list no-style"></#if>
+                                    <li>
+                                        <span class="date">${initiative.municipality.getName(locale)!""} <span class="push"><@u.localDate initiative.createTime!"" /></span></span>
+                                        <a href="${urls.view(initiative.id)}" class="name"><@u.limitStringLength initiative.name!"" 150 /></a>
+                                    </li>
+                                    <#if !initiative_has_next></ul></#if>
+                                </#list>
+                                
+                            <#-- Search results EMPTY -->
+                            <#else>
+                                <@u.systemMessage path="front.listEmpty" type="info" showClose=false />
+                            </#if>
+                        </div>
                     </div>
                 
                 </div>
