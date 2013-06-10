@@ -1,15 +1,15 @@
 <#import "components/layout.ftl" as l />
 <#import "components/utils.ftl" as u />
+<#import "components/forms.ftl" as f />
 
 <#escape x as x?html> 
 <@l.main "page.frontpage">
  
-         <#if requestMessages??>
-            <div class="container"><@u.requestMessage requestMessages /></div>
-        </#if>
+ <#if requestMessages??>
+    <div class="container"><@u.requestMessage requestMessages /></div>
+</#if>
  
-<div class="image-container-new">
-</div>
+<div class="image-container-new"></div>
 
 <#--
 <div class="image-container">
@@ -31,8 +31,6 @@
 
     <div id="content">
         
-
-    
         <div class="front-container">
         
             <div class="faux-columns cf">
@@ -57,29 +55,38 @@
             
                         <p><@u.message "front.browse.description" /></p>
                         
-                        <#-- TODO: Chosen -->
+                        <#-- TODO: Chosen, tyylitä, nuoli alas JS/NOJS -->
                         <a href="#" class="block-link" style="margin-top:2em;">Helsinki</a>
+                        
+                        <#--
+                        <select name="" id="" class="chzn-select" data-initiative-municipality="" data-placeholder="currentSearch.municipality.all">
+                            <option value=""><@u.message "currentSearch.municipality.all" /></option>
+                            <#list municipalities as municipality>
+                            <#if municipality.active>
+                                <option value="${municipality.id}">${municipality.getName(locale)}</option>
+                            </#if>
+                            </#list>
+                        </select>
+                        -->
                     </div>
                     
                     <div class="front-block block-3">
                         <h2><@u.message "front.latest.title" /></h2>
-                        
-                        <div class="search-results">
-                            <#if initiatives?? && (initiatives?size > 0)>
-                                <#list initiatives as initiative>
-                                    <#if initiative_index == 0><ul class="initiative-list no-style"></#if>
-                                    <li>
-                                        <span class="date">${initiative.municipality.getName(locale)!""} <span class="push"><@u.localDate initiative.createTime!"" /></span></span>
-                                        <a href="${urls.view(initiative.id)}" class="name"><@u.limitStringLength initiative.name!"" 150 /></a>
-                                    </li>
-                                    <#if !initiative_has_next></ul></#if>
-                                </#list>
-                                
-                            <#-- Search results EMPTY -->
-                            <#else>
-                                <@u.systemMessage path="front.listEmpty" type="info" showClose=false />
-                            </#if>
-                        </div>
+                    
+                        <#if initiatives?? && (initiatives?size > 0)>
+                            <#list initiatives as initiative>
+                                <#if initiative_index == 0><ul class="initiative-list no-style"></#if>
+                                <li>
+                                    <span class="date">${initiative.municipality.getName(locale)!""} <span class="push"><@u.localDate initiative.createTime!"" /></span></span>
+                                    <a href="${urls.view(initiative.id)}" class="name"><@u.limitStringLength initiative.name!"" 150 /></a>
+                                </li>
+                                <#if !initiative_has_next></ul></#if>
+                            </#list>
+                            
+                        <#-- Search results EMPTY -->
+                        <#else>
+                            <@u.systemMessage path="front.listEmpty" type="info" showClose=false />
+                        </#if>
                     </div>
                 
                 </div>

@@ -1,5 +1,10 @@
 package fi.om.municipalityinitiative.web.controller;
 
+import fi.om.municipalityinitiative.dto.InitiativeSearch;
+import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.user.User;
+import fi.om.municipalityinitiative.service.MunicipalityService;
+import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.Urls;
 import fi.om.municipalityinitiative.web.controller.BaseController;
@@ -9,11 +14,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Locale;
 
+import javax.annotation.Resource;
+
 import static fi.om.municipalityinitiative.web.Urls.*;
 import static fi.om.municipalityinitiative.web.Views.*;
 
 @Controller
 public class StaticPageController extends BaseController {
+    
+    @Resource
+    private PublicInitiativeService publicInitiativeService;
+    
+    @Resource
+    private MunicipalityService municipalityService;
     
     public StaticPageController(boolean optimizeResources, String resourcesVersion, Maybe<Integer> omPiwicId) {
         super(optimizeResources, resourcesVersion, omPiwicId);
@@ -33,6 +46,8 @@ public class StaticPageController extends BaseController {
         Urls urls = Urls.get(locale);
 
         model.addAttribute(ALT_URI_ATTR, urls.alt().frontpage());
+        model.addAttribute("initiatives", publicInitiativeService.findMunicipalityInitiatives(new InitiativeSearch().setLimit(3), new LoginUserHolder<User>(User.anonym())));
+        model.addAttribute("municipalities", municipalityService.findAllMunicipalities(locale));
         addPiwicIdIfNotAuthenticated(model);
 
         return INDEX_VIEW;
