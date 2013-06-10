@@ -1,10 +1,12 @@
 package fi.om.municipalityinitiative.service.operations;
 
 import fi.om.municipalityinitiative.dao.*;
+import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.dto.ui.AuthorUIMessage;
+import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.dto.ui.PrepareInitiativeUICreateDto;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
@@ -13,6 +15,8 @@ import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+
+import java.util.List;
 
 import static fi.om.municipalityinitiative.util.SecurityUtil.assertAllowance;
 
@@ -96,6 +100,11 @@ public class PublicInitiativeServiceOperations {
 
     private ManagementSettings getManagementSettings(Long initiativeId) {
         return ManagementSettings.of(initiativeDao.get(initiativeId));
+    }
+
+    @Transactional(readOnly = true)
+    public List<InitiativeListInfo> findInitiatives(InitiativeSearch search) {
+        return initiativeDao.find(search);
     }
 
     public static class PreparedInitiativeData {

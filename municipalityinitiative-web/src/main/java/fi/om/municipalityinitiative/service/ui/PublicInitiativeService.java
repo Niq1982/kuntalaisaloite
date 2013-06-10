@@ -1,6 +1,8 @@
 package fi.om.municipalityinitiative.service.ui;
 
-import fi.om.municipalityinitiative.dao.*;
+import fi.om.municipalityinitiative.dao.AuthorDao;
+import fi.om.municipalityinitiative.dao.InitiativeDao;
+import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
@@ -17,9 +19,8 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Locale;
 
-import static fi.om.municipalityinitiative.service.operations.PublicInitiativeServiceOperations.PreparedInitiativeData;
 import static fi.om.municipalityinitiative.service.operations.PublicInitiativeServiceOperations.ParticipantCreatedData;
-import static fi.om.municipalityinitiative.util.SecurityUtil.assertAllowance;
+import static fi.om.municipalityinitiative.service.operations.PublicInitiativeServiceOperations.PreparedInitiativeData;
 
 
 public class PublicInitiativeService {
@@ -39,7 +40,6 @@ public class PublicInitiativeService {
     @Resource
     private EmailService emailService;
 
-    @Transactional(readOnly = true)
     public List<InitiativeListInfo> findMunicipalityInitiatives(InitiativeSearch search, LoginUserHolder loginUserHolder) {
 
         // XXX: This switching from all to omAll is pretty nasty, because value must be set back to original after usage
@@ -52,7 +52,7 @@ public class PublicInitiativeService {
             loginUserHolder.assertOmUser();
         }
 
-        List<InitiativeListInfo> initiativeListInfos = initiativeDao.find(search);
+        List<InitiativeListInfo> initiativeListInfos = operations.findInitiatives(search);
         if (search.getShow() == InitiativeSearch.Show.omAll)
             search.setShow(InitiativeSearch.Show.all);
         return initiativeListInfos;
