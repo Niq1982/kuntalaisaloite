@@ -47,20 +47,20 @@ public abstract class ServiceIntegrationTestBase {
         assertMessage(expectedRecipient, expectedSubjectPropertyKey, singleSentMessage, argsInSubject);
     }
 
-    protected void assertFirstSentEmail(String expectedRecipient, String expectedSubjectPropertyKey) throws MessagingException {
+    protected void assertFirstSentEmail(String expectedRecipient, String expectedSubjectPropertyKey, String... argsInSubject) throws MessagingException {
 
         List<MimeMessage> sentMessages = javaMailSenderFake.getSentMessages(2);
         MimeMessage firstSentMessage = sentMessages.get(0);
 
-        assertMessage(expectedRecipient, expectedSubjectPropertyKey, firstSentMessage, null);
+        assertMessage(expectedRecipient, expectedSubjectPropertyKey, firstSentMessage, argsInSubject);
 
     }
-    protected void assertSecondSentEmail(String expectedRecipient, String expectedSubjectPropertyKey) throws MessagingException {
+    protected void assertSecondSentEmail(String expectedRecipient, String expectedSubjectPropertyKey, String... argsInSubject) throws MessagingException {
 
         List<MimeMessage> sentMessages = javaMailSenderFake.getSentMessages(2);
         MimeMessage secondSendMessage = sentMessages.get(1);
 
-        assertMessage(expectedRecipient, expectedSubjectPropertyKey, secondSendMessage, null);
+        assertMessage(expectedRecipient, expectedSubjectPropertyKey, secondSendMessage, argsInSubject);
     }
 
     private void assertMessage(String expectedRecipient, String expectedSubjectPropertyKey, MimeMessage secondSendMessage, String[] argsInSubject) throws MessagingException {

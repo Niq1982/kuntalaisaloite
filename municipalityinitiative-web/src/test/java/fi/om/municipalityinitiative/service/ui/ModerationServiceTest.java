@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.service;
+package fi.om.municipalityinitiative.service.ui;
 
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
@@ -10,6 +10,7 @@ import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
 import fi.om.municipalityinitiative.service.email.EmailService;
+import fi.om.municipalityinitiative.service.operations.ModerationServiceOperations;
 import fi.om.municipalityinitiative.util.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,6 +43,9 @@ public class ModerationServiceTest {
         moderationService.emailService = mock(EmailService.class);
         moderationService.municipalityDao = mock(MunicipalityDao.class);
         moderationService.authorDao = mock(AuthorDao.class);
+
+        moderationService.moderationServiceOperations = new ModerationServiceOperations(initiativeDaoMock, moderationService.authorDao);
+
         stub(moderationService.authorDao.getAuthorEmails(anyLong())).toReturn(Collections.singletonList("")); // Avoid nullpointer temporarily
 
         loginUserHolder = mock(OmLoginUserHolder.class);

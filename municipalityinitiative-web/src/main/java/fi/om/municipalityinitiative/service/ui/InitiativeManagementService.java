@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.service;
+package fi.om.municipalityinitiative.service.ui;
 
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.dao.AuthorDao;
@@ -12,7 +12,7 @@ import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeUIUpdateDto;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
 import fi.om.municipalityinitiative.service.email.EmailService;
-import fi.om.municipalityinitiative.util.FixState;
+import fi.om.municipalityinitiative.service.operations.InitiativeManagementServiceOperations;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +33,9 @@ public class InitiativeManagementService {
 
     @Resource
     EmailService emailService;
+
+    @Resource
+    InitiativeManagementServiceOperations operations;
 
     @Transactional(readOnly = true)
     public InitiativeDraftUIEditDto getInitiativeDraftForEdit(Long initiativeId, LoginUserHolder loginUserHolder) {
@@ -95,85 +98,50 @@ public class InitiativeManagementService {
         authorDao.updateAuthorInformation(loginUserHolder.getAuthorId(), updateDto.getContactInfo());
     }
 
-    @Transactional(readOnly = false) // XXX: Test that emails are sent
     public void sendReviewAndStraightToMunicipality(Long initiativeId, LoginUserHolder loginUserHolder, String sentComment) {
-        markAsReviewAndSendEmail(initiativeId, loginUserHolder);
-        initiativeDao.updateInitiativeType(initiativeId, InitiativeType.SINGLE);
-        initiativeDao.updateSentComment(initiativeId, sentComment);
-    }
-
-    @Transactional(readOnly = false)
-    public void sendReviewOnlyForAcceptance(Long initiativeId, LoginUserHolder loginUserHolder) {
-        markAsReviewAndSendEmail(initiativeId, loginUserHolder);
-    }
-
-    private void markAsReviewAndSendEmail(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        assertAllowance("Send review", getManagementSettings(initiativeId).isAllowSendToReview());
-
-        initiativeDao.updateInitiativeState(initiativeId, InitiativeState.REVIEW);
+        operations.doSendReviewStraightToMunicipality(initiativeId, sentComment);
 
         emailService.sendStatusEmail(initiativeId, EmailMessageType.SENT_TO_REVIEW);
         emailService.sendNotificationToModerator(initiativeId);
     }
 
-    @Transactional(readOnly = false)
+    public void sendReviewOnlyForAcceptance(Long initiativeId, LoginUserHolder loginUserHolder) {
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
+
+        operations.doSendReviewOnlyForAcceptance(initiativeId);
+
+        emailService.sendStatusEmail(initiativeId, EmailMessageType.SENT_TO_REVIEW);
+        emailService.sendNotificationToModerator(initiativeId);
+    }
+
     public void sendFixToReview(Long initiativeId, LoginUserHolder requiredLoginUserHolder) {
         requiredLoginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        assertAllowance("Send fix to review", getManagementSettings(initiativeId).isAllowSendFixToReview());
-        initiativeDao.updateInitiativeFixState(initiativeId, FixState.REVIEW);
+        operations.toSendFixToReview(initiativeId);
 
         emailService.sendStatusEmail(initiativeId, EmailMessageType.SENT_FIX_TO_REVIEW);
         emailService.sendNotificationToModerator(initiativeId);
     }
 
-    @Transactional(readOnly = false)
     public void publishAndStartCollecting(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        assertAllowance("Publish initiative", getManagementSettings(initiativeId).isAllowPublish());
-
-        initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
-        initiativeDao.updateInitiativeType(initiativeId, InitiativeType.COLLABORATIVE);
-        // XXX: TEST
+        operations.doPublishAndStartCollecting(initiativeId);
         emailService.sendStatusEmail(initiativeId, EmailMessageType.PUBLISHED_COLLECTING);
     }
 
-    @Transactional(readOnly = false)
     public void sendToMunicipality(Long initiativeId, LoginUserHolder requiredLoginUserHolder, String sentComment, Locale locale) {
 
         requiredLoginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        Initiative initiative = initiativeDao.get(initiativeId);
 
-        if (initiative.getType().isCollaborative()) {
-            sendCollaborativeToMunicipality(initiativeId, requiredLoginUserHolder, sentComment, locale);
+        InitiativeType initiativeType = operations.doSendToMunicipality(initiativeId, sentComment);
+
+        if (initiativeType.isCollaborative()) {
+            emailService.sendCollaborativeToAuthors(initiativeId);
+            emailService.sendCollaborativeToMunicipality(initiativeId, locale);
         } else {
-            publishAndSendToMunicipality(initiativeId, requiredLoginUserHolder, sentComment, locale);
+            emailService.sendStatusEmail(initiativeId, EmailMessageType.SENT_TO_MUNICIPALITY);
+            emailService.sendSingleToMunicipality(initiativeId, locale);
         }
-    }
-
-    private void publishAndSendToMunicipality(Long initiativeId, LoginUserHolder loginUserHolder, String sentComment, Locale locale){
-        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        assertAllowance("Publish initiative", getManagementSettings(initiativeId).isAllowPublish());
-
-        initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
-        initiativeDao.updateInitiativeType(initiativeId, InitiativeType.SINGLE);
-        initiativeDao.markInitiativeAsSent(initiativeId);
-        initiativeDao.updateSentComment(initiativeId, sentComment);
-        // XXX: TEST
-        emailService.sendStatusEmail(initiativeId, EmailMessageType.SENT_TO_MUNICIPALITY);
-        emailService.sendSingleToMunicipality(initiativeId, locale);
-    }
-
-
-    private void sendCollaborativeToMunicipality(Long initiativeId, LoginUserHolder loginUserHolder, String sentComment, Locale locale) {
-        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        assertAllowance("Send collaborative to municipality", getManagementSettings(initiativeId).isAllowSendToMunicipality());
-
-        initiativeDao.markInitiativeAsSent(initiativeId);
-        initiativeDao.updateSentComment(initiativeId, sentComment);
-        // XXX: TEST
-        emailService.sendCollaborativeToMunicipality(initiativeId, locale);
-        emailService.sendCollaborativeToAuthors(initiativeId);
     }
 
 }
