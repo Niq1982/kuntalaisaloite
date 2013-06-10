@@ -121,11 +121,9 @@ public class InitiativeManagementService {
         emailService.sendNotificationToModerator(initiativeId);
     }
 
-    @Transactional(readOnly = false)
     public void sendFixToReview(Long initiativeId, LoginUserHolder requiredLoginUserHolder) {
         requiredLoginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        assertAllowance("Send fix to review", getManagementSettings(initiativeId).isAllowSendFixToReview());
-        initiativeDao.updateInitiativeFixState(initiativeId, FixState.REVIEW);
+        operations.toSendFixToReview(initiativeId);
 
         emailService.sendStatusEmail(initiativeId, EmailMessageType.SENT_FIX_TO_REVIEW);
         emailService.sendNotificationToModerator(initiativeId);

@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.service.operations;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
+import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,9 +47,19 @@ public class InitiativeManagementServiceOperations {
 
     @Transactional(readOnly = false)
     public void doPublishAndStartCollecting(Long initiativeId) {
-        assertAllowance("Publish initiative", ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowPublish());
+        assertAllowance("Publish initiative", getManagementSettings(initiativeId).isAllowPublish());
 
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
         initiativeDao.updateInitiativeType(initiativeId, InitiativeType.COLLABORATIVE);
+    }
+
+    @Transactional(readOnly = false)
+    public void toSendFixToReview(Long initiativeId) {
+        assertAllowance("Send fix to review", getManagementSettings(initiativeId).isAllowSendFixToReview());
+        initiativeDao.updateInitiativeFixState(initiativeId, FixState.REVIEW);
+    }
+
+    private ManagementSettings getManagementSettings(Long initiativeId) {
+        return ManagementSettings.of(initiativeDao.get(initiativeId));
     }
 }
