@@ -12,6 +12,7 @@ import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeUIUpdateDto;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
 import fi.om.municipalityinitiative.service.email.EmailService;
+import fi.om.municipalityinitiative.service.operations.InitiativeManagementServiceOperations;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
@@ -33,6 +34,9 @@ public class InitiativeManagementService {
 
     @Resource
     EmailService emailService;
+
+    @Resource
+    InitiativeManagementServiceOperations operations;
 
     @Transactional(readOnly = true)
     public InitiativeDraftUIEditDto getInitiativeDraftForEdit(Long initiativeId, LoginUserHolder loginUserHolder) {
@@ -127,53 +131,25 @@ public class InitiativeManagementService {
         emailService.sendNotificationToModerator(initiativeId);
     }
 
-    @Transactional(readOnly = false)
     public void publishAndStartCollecting(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        assertAllowance("Publish initiative", getManagementSettings(initiativeId).isAllowPublish());
-
-        initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
-        initiativeDao.updateInitiativeType(initiativeId, InitiativeType.COLLABORATIVE);
-        // XXX: TEST
+        operations.doPublishAndStartCollecting(initiativeId);
         emailService.sendStatusEmail(initiativeId, EmailMessageType.PUBLISHED_COLLECTING);
     }
 
-    @Transactional(readOnly = false)
     public void sendToMunicipality(Long initiativeId, LoginUserHolder requiredLoginUserHolder, String sentComment, Locale locale) {
 
         requiredLoginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        Initiative initiative = initiativeDao.get(initiativeId);
 
-        if (initiative.getType().isCollaborative()) {
-            sendCollaborativeToMunicipality(initiativeId, requiredLoginUserHolder, sentComment, locale);
+        InitiativeType initiativeType = operations.doSendToMunicipality(initiativeId, sentComment);
+
+        if (initiativeType.isCollaborative()) {
             emailService.sendCollaborativeToAuthors(initiativeId);
             emailService.sendCollaborativeToMunicipality(initiativeId, locale);
         } else {
-            publishAndMarkAsSent(initiativeId, requiredLoginUserHolder, sentComment, locale);
             emailService.sendStatusEmail(initiativeId, EmailMessageType.SENT_TO_MUNICIPALITY);
             emailService.sendSingleToMunicipality(initiativeId, locale);
         }
-    }
-
-    private void publishAndMarkAsSent(Long initiativeId, LoginUserHolder loginUserHolder, String sentComment, Locale locale){
-        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        assertAllowance("Publish initiative", getManagementSettings(initiativeId).isAllowPublish());
-
-        initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
-        initiativeDao.updateInitiativeType(initiativeId, InitiativeType.SINGLE);
-        initiativeDao.markInitiativeAsSent(initiativeId);
-        initiativeDao.updateSentComment(initiativeId, sentComment);
-        // XXX: TEST
-
-    }
-
-
-    private void sendCollaborativeToMunicipality(Long initiativeId, LoginUserHolder loginUserHolder, String sentComment, Locale locale) {
-        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        assertAllowance("Send collaborative to municipality", getManagementSettings(initiativeId).isAllowSendToMunicipality());
-
-        initiativeDao.markInitiativeAsSent(initiativeId);
-        initiativeDao.updateSentComment(initiativeId, sentComment);
     }
 
 }

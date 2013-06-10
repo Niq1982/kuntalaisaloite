@@ -11,6 +11,7 @@ import fi.om.municipalityinitiative.dto.service.TestDataService;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.service.email.EmailMessageConstructor;
 import fi.om.municipalityinitiative.service.email.EmailServiceDataProvider;
+import fi.om.municipalityinitiative.service.operations.InitiativeManagementServiceOperations;
 import fi.om.municipalityinitiative.service.operations.PublicInitiativeServiceOperations;
 import fi.om.municipalityinitiative.service.ui.InitiativeManagementService;
 import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
@@ -169,6 +170,11 @@ public class AppConfiguration {
     @Bean
     public PublicInitiativeServiceOperations publicInitiativeServiceOperations() {
         return new PublicInitiativeServiceOperations();
+    }
+
+    @Bean
+    public InitiativeManagementServiceOperations initiativeManagementServiceOperations() {
+        return new InitiativeManagementServiceOperations();
     }
 
     @Bean
