@@ -4,6 +4,10 @@
 <#escape x as x?html> 
 <@l.main "page.frontpage">
  
+         <#if requestMessages??>
+            <div class="container"><@u.requestMessage requestMessages /></div>
+        </#if>
+ 
 <div class="image-container-new">
 </div>
 
@@ -26,12 +30,8 @@
     </div>
 
     <div id="content">
-    
-        <#-- FIXME: requestMessagesON    
-        <#if requestMessagesON && requestMessages?? >
-            <@u.requestMessage requestMessages />
-        </#if>
-        -->
+        
+
     
         <div class="front-container">
         

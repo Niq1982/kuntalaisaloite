@@ -77,7 +77,7 @@
     </#if>
 </head>
 
-<body class="${bodyWidthClass!""}">
+<body class="${bodyWidthClass!""} ${locale}">
 
 <div id="wrapper">
 

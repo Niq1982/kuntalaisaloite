@@ -35,7 +35,7 @@
 @mainColorLight:        #adad2d;
 @mainColor:             #949426;
 @mainColorDark:         #7a7a20;
-@secondaryColor:        #00B4AF;
+@secondaryColor:        #e2791c;
 @tertiaryColor:         #6D6E71;
 @lightGray:             #b7b7b7;
 @bodyColor:             #444444;
@@ -455,12 +455,13 @@ body {
 
     #logo {
         display:block;
-        width: 345px;
+        width: 348px;
         height:72px;
         background:url("../img/logo-kuntalaisaloite.png?version=${timestamp}") 0 0 no-repeat;
         
+        /* NOTE: SVG could be used
         background-image: url("../img/logo-kuntalaisaloite.svg?version=${timestamp}"), none;
-        background-size: contain;
+        background-size: contain;*/
     }
     #logo span { display:none; }
 
@@ -484,7 +485,7 @@ body {
         }
 
         a:hover, .active a:hover {
-            color: @mainColor;
+            color: @secondaryColor;
         }
 
         .active a {
@@ -503,8 +504,8 @@ body {
     }
     
     #header #logo {
-        width: 406px;
-        background:url("../img/logo-sv.png?version=${timestamp}") 0 0 no-repeat;
+        width: 343px;
+        background:url("../img/logo-invanarinitiativ.png?version=${timestamp}") 0 0 no-repeat;
     }
 }
 
@@ -595,7 +596,7 @@ body {
     }
 
     .active {
-        color: #D94E9C;
+        color: @secondaryColor;
     }
 
     a {
@@ -1049,16 +1050,6 @@ a.block-link {
     }
 }
 
-.extra-column {
-    
-    font-size: 0.9em;
-    h2 {
-        color: @secondaryColor;
-        font-size: 1.2em;
-    }
-
-}
-
 .sidebar {
     float: left;
     width: 300px;
@@ -1107,12 +1098,6 @@ a.block-link {
         strong {
             font-size: 1.1em;
         }
-    }
-
-    .action-info {
-        font-size: 0.8em;
-        padding-top: 1em;
-        color: @secondaryColor;
     }
 
     .primary-action {
@@ -1795,48 +1780,6 @@ label  {
     }
 }
 
-#front-page-intro {
-
-    padding: 0px;
-    position: relative;
-
-    .step-indicator {
-        position: absolute;
-        bottom: 20px;
-        right: 55px;
-    }
-
-    .front-page-intro-text {
-        float: right;
-        color: white;
-        font-weight: bold;
-        text-align: center;
-        width: 240px;
-        font-size: 1.2em;
-        margin-right: 30px;
-        margin-top: 80px;
-        padding-top: 100px;
-    }
-
-    img {
-        margin: 0px;
-        display: block;
-    }
-
-    .step-1 {
-        background: @secondaryColor;
-
-        .front-page-intro-text {
-            background: transparent url("../img/front-page-intro-step-1.png?version=${timestamp}") no-repeat top center;
-        }
-    }
-}
-
-
-.forum-additional-info {
-    font-size: 0.8em;
-    color: @secondaryColor;
-}
 
 #footer {
     position:absolute;
@@ -2022,6 +1965,7 @@ label  {
 
 // Initiative type selection
 .initiative-types {
+    clear:both;
     margin-top:1em;
     width:100%; // IE7
 
@@ -2370,7 +2314,8 @@ label  {
 .tooltip {
     max-width:300px;
     z-index:998;
-    background:#087480;
+    //background:#087480;
+    background:@mainColorDark;
     font-size:0.9em;
     padding:0.3em 1em;
     color:#fff;
@@ -2379,7 +2324,8 @@ label  {
     // For modern browsers and IE 8+
     &:before {
         border:solid;
-        border-color:#087480 transparent;
+        //border-color:#087480 transparent;
+        border-color:@mainColorDark transparent;
         border-width:6px 6px 0 6px;
         content:"";
         display:block;
@@ -2496,7 +2442,9 @@ label  {
     margin:1em 0 30px 0;
     padding:15px 25px 15px 126px;
     font-size:0.9em;
-    border-left:4px solid #c3cc13;
+    //border-left:4px solid #c3cc13;
+    border-left:4px solid @secondaryColor;
+    
     background:#fff url("../img/icon-msg-summary.png?version=${timestamp}") no-repeat 32px 27px;
     
     .msg-info {
@@ -2896,7 +2844,8 @@ h3 {
         }
         
         &.active {
-            .gradient (#09a3b4, #067582);
+            //.gradient (#09a3b4, #067582);
+            .gradient (#adad2d, #7a7a20);
             color:#fff;
             text-shadow:0px 1px 1px rgba(0,0,0,0.3);
         }
@@ -2930,7 +2879,8 @@ h3 {
         }
         
         &.active {
-            .gradient (#09a3b4, #067582);
+            //.gradient (#09a3b4, #067582);
+            .gradient (#adad2d, #7a7a20);
             //.rounded-corners(@cornerRadiusXtraSmall);
             color:#fff;
             text-shadow:0px 1px 1px rgba(0,0,0,0.3);
