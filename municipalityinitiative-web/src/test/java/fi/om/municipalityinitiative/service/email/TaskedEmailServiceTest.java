@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.service;
+package fi.om.municipalityinitiative.service.email;
 
 import org.junit.Ignore;
 import org.junit.Test;

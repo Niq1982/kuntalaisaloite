@@ -1,7 +1,6 @@
 package fi.om.municipalityinitiative.util;
 
 import com.google.common.collect.Lists;
-import fi.om.municipalityinitiative.service.MailSendingEmailServiceTestBase;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -13,7 +12,6 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 

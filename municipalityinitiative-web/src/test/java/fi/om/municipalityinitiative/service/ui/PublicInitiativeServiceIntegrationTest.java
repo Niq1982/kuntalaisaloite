@@ -1,15 +1,16 @@
-package fi.om.municipalityinitiative.service;
+package fi.om.municipalityinitiative.service.ui;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
-import fi.om.municipalityinitiative.dao.InitiativeDao;
-import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.ui.*;
+import fi.om.municipalityinitiative.service.ServiceIntegrationTestBase;
+import fi.om.municipalityinitiative.service.email.EmailSubjectPropertyKeys;
+import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
 import fi.om.municipalityinitiative.sql.QAuthorMessage;
 import fi.om.municipalityinitiative.util.*;
 import org.joda.time.LocalDate;
@@ -26,7 +27,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
 
-public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTestBase{
+public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTestBase {
 
     @Resource
     private PublicInitiativeService service;

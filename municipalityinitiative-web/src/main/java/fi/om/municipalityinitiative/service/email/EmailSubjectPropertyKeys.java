@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.service;
+package fi.om.municipalityinitiative.service.email;
 
 public class EmailSubjectPropertyKeys {
     public static final String EMAIL_PARTICIPATION_CONFIRMATION_SUBJECT = "email.participation.confirmation.subject";

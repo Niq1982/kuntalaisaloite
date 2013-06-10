@@ -1,12 +1,12 @@
 package fi.om.municipalityinitiative.web.controller;
 
-import com.google.common.base.Strings;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUICreateDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeUIUpdateDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.service.*;
+import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.stereotype.Controller;

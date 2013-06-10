@@ -1,11 +1,11 @@
-package fi.om.municipalityinitiative.service;
+package fi.om.municipalityinitiative.service.email;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
+import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.util.JavaMailSenderFake;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.springframework.context.MessageSource;
 import org.springframework.test.context.ContextConfiguration;

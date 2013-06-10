@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.service;
+package fi.om.municipalityinitiative.service.email;
 
 public enum EmailMessageType {
     SENT_TO_REVIEW,

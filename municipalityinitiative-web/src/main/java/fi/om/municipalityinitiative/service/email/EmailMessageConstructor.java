@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.service;
+package fi.om.municipalityinitiative.service.email;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;

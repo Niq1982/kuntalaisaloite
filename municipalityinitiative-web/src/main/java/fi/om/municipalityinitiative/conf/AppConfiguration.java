@@ -9,6 +9,10 @@ import fi.om.municipalityinitiative.conf.AppConfiguration.TestPropertiesConfigur
 import fi.om.municipalityinitiative.dao.*;
 import fi.om.municipalityinitiative.dto.service.TestDataService;
 import fi.om.municipalityinitiative.service.*;
+import fi.om.municipalityinitiative.service.email.EmailMessageConstructor;
+import fi.om.municipalityinitiative.service.email.EmailServiceDataProvider;
+import fi.om.municipalityinitiative.service.operations.PublicInitiativeServiceOperations;
+import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.TaskExecutorAspect;
 import fi.om.municipalityinitiative.validation.LocalValidatorFactoryBeanFix;
@@ -159,6 +163,11 @@ public class AppConfiguration {
     @Bean
     public PublicInitiativeService publicInitiativeService() {
         return new PublicInitiativeService();
+    }
+
+    @Bean
+    public PublicInitiativeServiceOperations publicInitiativeServiceOperations() {
+        return new PublicInitiativeServiceOperations();
     }
 
     @Bean

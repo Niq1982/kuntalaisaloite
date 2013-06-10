@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.service;
+package fi.om.municipalityinitiative.service.email;
 
 import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;

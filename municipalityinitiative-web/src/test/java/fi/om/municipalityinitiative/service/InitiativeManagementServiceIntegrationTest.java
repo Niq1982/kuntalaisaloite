@@ -9,6 +9,8 @@ import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeUIUpdateDto;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
+import fi.om.municipalityinitiative.service.email.EmailMessageType;
+import fi.om.municipalityinitiative.service.email.EmailSubjectPropertyKeys;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;

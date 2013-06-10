@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.service;
+package fi.om.municipalityinitiative.service.ui;
 
 import fi.om.municipalityinitiative.dao.*;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
@@ -9,6 +9,8 @@ import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
+import fi.om.municipalityinitiative.service.email.EmailService;
+import fi.om.municipalityinitiative.service.operations.PublicInitiativeServiceOperations;
 import fi.om.municipalityinitiative.util.*;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,10 +19,14 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Locale;
 
+import static fi.om.municipalityinitiative.service.operations.PublicInitiativeServiceOperations.PreparedInitiativeData;
 import static fi.om.municipalityinitiative.util.SecurityUtil.assertAllowance;
 
 
 public class PublicInitiativeService {
+
+    @Resource
+    private PublicInitiativeServiceOperations operations;
 
     @Resource
     private InitiativeDao initiativeDao;
@@ -86,29 +92,13 @@ public class PublicInitiativeService {
         return participantId;
     }
 
-    @Transactional(readOnly = false)
     public Long prepareInitiative(PrepareInitiativeUICreateDto createDto, Locale locale) {
 
-        assertMunicipalityIsActive(createDto.getMunicipality());
+        PreparedInitiativeData preparedInitiativeData = operations.doPrepareInitiative(createDto);
 
-        Long initiativeId = initiativeDao.prepareInitiative(createDto.getMunicipality());
-        Long participantId = participantDao.prepareParticipant(initiativeId,
-                createDto.getHomeMunicipality(),
-                createDto.getParticipantEmail(),
-                createDto.hasMunicipalMembership() ? createDto.getMunicipalMembership() : Membership.none
-        );
-        String managementHash = RandomHashGenerator.longHash();
-        Long authorId = authorDao.createAuthor(initiativeId, participantId, managementHash);
+        emailService.sendPrepareCreatedEmail(preparedInitiativeData.initiativeId, preparedInitiativeData.authorId, preparedInitiativeData.managementHash, locale);
 
-        emailService.sendPrepareCreatedEmail(initiativeId, authorId, managementHash, locale);
-
-        return initiativeId;
-    }
-
-    private void assertMunicipalityIsActive(Long municipality) {
-        if (!municipalityDao.getMunicipality(municipality).isActive()) {
-            throw new AccessDeniedException("Municipality is not active for initiatives: " + municipality);
-        }
+        return preparedInitiativeData.initiativeId;
     }
 
     @Transactional(readOnly = true)
