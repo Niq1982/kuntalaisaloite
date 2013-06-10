@@ -372,7 +372,7 @@
  * @param email is the email address
 -->
 <#macro scrambleEmail email>
-${email?split("@")?first}&#064;<span class="hide">null</span>${email?split("@")?last}
+<#if email != "">${email?split("@")?first}&#064;<span class="hide">null</span>${email?split("@")?last}</#if>
 </#macro>
 
 <#--
