@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.service;
+package fi.om.municipalityinitiative.service.ui;
 
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.dao.AuthorDao;
@@ -146,12 +146,16 @@ public class InitiativeManagementService {
 
         if (initiative.getType().isCollaborative()) {
             sendCollaborativeToMunicipality(initiativeId, requiredLoginUserHolder, sentComment, locale);
+            emailService.sendCollaborativeToAuthors(initiativeId);
+            emailService.sendCollaborativeToMunicipality(initiativeId, locale);
         } else {
-            publishAndSendToMunicipality(initiativeId, requiredLoginUserHolder, sentComment, locale);
+            publishAndMarkAsSent(initiativeId, requiredLoginUserHolder, sentComment, locale);
+            emailService.sendStatusEmail(initiativeId, EmailMessageType.SENT_TO_MUNICIPALITY);
+            emailService.sendSingleToMunicipality(initiativeId, locale);
         }
     }
 
-    private void publishAndSendToMunicipality(Long initiativeId, LoginUserHolder loginUserHolder, String sentComment, Locale locale){
+    private void publishAndMarkAsSent(Long initiativeId, LoginUserHolder loginUserHolder, String sentComment, Locale locale){
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         assertAllowance("Publish initiative", getManagementSettings(initiativeId).isAllowPublish());
 
@@ -160,8 +164,7 @@ public class InitiativeManagementService {
         initiativeDao.markInitiativeAsSent(initiativeId);
         initiativeDao.updateSentComment(initiativeId, sentComment);
         // XXX: TEST
-        emailService.sendStatusEmail(initiativeId, EmailMessageType.SENT_TO_MUNICIPALITY);
-        emailService.sendSingleToMunicipality(initiativeId, locale);
+
     }
 
 
@@ -171,9 +174,6 @@ public class InitiativeManagementService {
 
         initiativeDao.markInitiativeAsSent(initiativeId);
         initiativeDao.updateSentComment(initiativeId, sentComment);
-        // XXX: TEST
-        emailService.sendCollaborativeToMunicipality(initiativeId, locale);
-        emailService.sendCollaborativeToAuthors(initiativeId);
     }
 
 }

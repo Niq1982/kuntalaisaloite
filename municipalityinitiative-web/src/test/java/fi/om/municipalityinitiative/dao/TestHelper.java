@@ -93,9 +93,13 @@ public class TestHelper {
         return queryFactory.insert(QMunicipality.municipality)
                 .set(QMunicipality.municipality.name, name)
                 .set(QMunicipality.municipality.nameSv, name + " sv")
-                .set(QMunicipality.municipality.email, name.replace(" ", "_") + "@example.com")
+                .set(QMunicipality.municipality.email, toEmail(name))
                 .set(QMunicipality.municipality.active, isActive)
                 .executeWithKey(QMunicipality.municipality.id);
+    }
+
+    public static String toEmail(String name) {
+        return name.replace(" ", "_") + "@example.com";
     }
 
 

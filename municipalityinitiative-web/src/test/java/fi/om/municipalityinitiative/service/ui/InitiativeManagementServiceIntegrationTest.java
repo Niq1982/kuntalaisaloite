@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.service;
+package fi.om.municipalityinitiative.service.ui;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
@@ -9,8 +9,10 @@ import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeUIUpdateDto;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
+import fi.om.municipalityinitiative.service.ServiceIntegrationTestBase;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
 import fi.om.municipalityinitiative.service.email.EmailSubjectPropertyKeys;
+import fi.om.municipalityinitiative.service.ui.InitiativeManagementService;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
@@ -40,11 +42,13 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     TestHelper testHelper;
 
     private static Municipality testMunicipality;
+    private String testMunicipalityEmail;
 
     @Override
     public void childSetup() {
         String municipalityName = "Test municipality";
         testMunicipality = new Municipality(testHelper.createTestMunicipality(municipalityName), municipalityName, municipalityName, false);
+        testMunicipalityEmail = TestHelper.toEmail(municipalityName);
     }
 
     @Test
@@ -296,6 +300,24 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         assertThat(sent.getType(), is(InitiativeType.SINGLE));
         assertThat(sent.getSentTime().isPresent(), is(true));
         assertThat(sent.getSentComment(), is("some sent comment"));
+    }
+
+    @Test
+    public void publish_initiative_and_send_to_municipality_sends_emails_to_municipality_and_author() throws MessagingException {
+        Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
+        service.sendToMunicipality(accepted, TestHelper.authorLoginUserHolder, "some sent comment", null);
+
+        assertFirstSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_STATUS_INFO_PREFIX+EmailMessageType.SENT_TO_MUNICIPALITY.name()+".subject");
+        assertSecondSentEmail(testMunicipalityEmail, EmailSubjectPropertyKeys.EMAIL_NOT_COLLABORATIVE_MUNICIPALITY_SUBJECT, TestHelper.DEFAULT_INITIATIVE_NAME);
+    }
+
+    @Test
+    public void send_published_collaborative_to_municipality_sends_emails_to_municipality_and_author() throws MessagingException {
+        Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        service.sendToMunicipality(accepted, TestHelper.authorLoginUserHolder, "some sent comment", null);
+
+        assertFirstSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_COLLABORATIVE_AUTHOR_SUBJECT);
+        assertSecondSentEmail(testMunicipalityEmail, EmailSubjectPropertyKeys.EMAIL_COLLABORATIVE_MUNICIPALITY_SUBJECT, TestHelper.DEFAULT_INITIATIVE_NAME);
     }
 
     @Test(expected = OperationNotAllowedException.class)
