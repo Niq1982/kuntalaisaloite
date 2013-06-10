@@ -264,7 +264,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
     @Test
     public void resend_invitation_updates_invitation_time_to_current_time() {
-        Long initiativeId = testHelper.createCollaborativeReview(testMunicipality);
+        Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality);
         DateTime invitationTime = new DateTime(2010, 1, 1, 0, 0);
         AuthorInvitation invitation = createInvitation(initiativeId, invitationTime);
 
@@ -309,7 +309,6 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         thrown.expectMessage(containsString("initiative"));
         thrown.expectMessage(containsString("author"));
         authorService.deleteAuthor(initiative2, TestHelper.authorLoginUserHolder, author1);
-
     }
 
     @Test
@@ -339,6 +338,8 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
         List<MimeMessage> sentMessages = javaMailSenderFake.getSentMessages(2);
 
+        assertThat("2 mails are sent", sentMessages, hasSize(2));
+
         MimeMessage messageToOtherAuthors = sentMessages.get(0);
         assertThat(messageToOtherAuthors.getAllRecipients()[0].toString(), is("author_left@example.com"));
         assertThat(messageToOtherAuthors.getSubject(), containsString("Vastuuhenkilö on poistettu aloitteestasi"));
@@ -347,6 +348,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         MimeMessage messageToDeletedAuthor = sentMessages.get(1);
         assertThat(JavaMailSenderFake.getSingleRecipient(messageToDeletedAuthor), is(TestHelper.DEFAULT_PARTICIPANT_EMAIL));
         assertThat(messageToDeletedAuthor.getSubject(), containsString("Sinut on poistettu aloitteen vastuuhenkilöistä"));
+
 
     }
 

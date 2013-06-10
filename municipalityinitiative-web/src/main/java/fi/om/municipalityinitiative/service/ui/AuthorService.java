@@ -1,20 +1,24 @@
 package fi.om.municipalityinitiative.service.ui;
 
-import fi.om.municipalityinitiative.dao.InvitationNotValidException;
-import fi.om.municipalityinitiative.dto.service.*;
-import fi.om.municipalityinitiative.dto.ui.*;
-import fi.om.municipalityinitiative.exceptions.NotFoundException;
-import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
+import fi.om.municipalityinitiative.dao.InvitationNotValidException;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dto.Author;
+import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
+import fi.om.municipalityinitiative.dto.service.ManagementSettings;
+import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
+import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUIConfirmDto;
+import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUICreateDto;
+import fi.om.municipalityinitiative.dto.ui.ContactInfo;
+import fi.om.municipalityinitiative.dto.ui.PublicAuthors;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
+import fi.om.municipalityinitiative.exceptions.NotFoundException;
+import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.operations.AuthorServiceOperations;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.util.SecurityUtil;
-import org.joda.time.DateTime;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -48,17 +52,11 @@ public class AuthorService {
 
     }
 
-    @Transactional(readOnly = false)
     public void resendInvitation(Long initiativeId, LoginUserHolder loginUserHolder, String confirmationCode) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        AuthorInvitation authorInvitation = authorDao.getAuthorInvitation(initiativeId, confirmationCode);
-        authorDao.deleteAuthorInvitation(initiativeId, confirmationCode);
-
-        authorInvitation.setInvitationTime(DateTime.now());
-        authorDao.addAuthorInvitation(authorInvitation);
+        AuthorInvitation authorInvitation = operations.doResendInvitation(initiativeId, confirmationCode);
         emailService.sendAuthorInvitation(initiativeId, authorInvitation);
-
     }
 
     @Transactional(readOnly = true)
@@ -75,32 +73,16 @@ public class AuthorService {
         return authorDao.findAuthors(initiativeId);
     }
 
-    @Transactional(readOnly = false)
     public void deleteAuthor(Long initiativeId, LoginUserHolder loginUserHolder, Long authorId) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        List<Author> authors = authorDao.findAuthors(initiativeId);
-        if (!hasAuthor(authorId, authors)) {
-            throw new NotFoundException("Author", "initiative: " + initiativeId + ", author: " + authorId);
-        }
-        else if (loginUserHolder.getAuthorId().equals(authorId)) {
+        if (loginUserHolder.getAuthorId().equals(authorId)) {
             throw new OperationNotAllowedException("Removing yourself from authors is not allowed");
         }
-        else if (authors.size() < 2) {
-            throw new OperationNotAllowedException("Unable to delete author. Initiative has only " + authors.size() +" author(s)");
-        }
-        else {
-            try {
-                Thread.sleep(1000); // Temp
-            } catch (InterruptedException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-            ContactInfo deletedAuthorContactInfo = authorDao.getAuthor(authorId).getContactInfo();
-            authorDao.deleteAuthor(authorId);
-            emailService.sendAuthorDeletedEmailToOtherAuthors(initiativeId, deletedAuthorContactInfo);
-            emailService.sendAuthorDeletedEmailToDeletedAuthor(initiativeId, deletedAuthorContactInfo.getEmail());
-            // XXX: These might fail if two authors try to remove each others. Does it matter?
-        }
+
+        ContactInfo deletedAuthorContactInfo = operations.doDeleteAuthor(initiativeId, authorId);
+        emailService.sendAuthorDeletedEmailToOtherAuthors(initiativeId, deletedAuthorContactInfo);
+        emailService.sendAuthorDeletedEmailToDeletedAuthor(initiativeId, deletedAuthorContactInfo.getEmail());
 
     }
 
