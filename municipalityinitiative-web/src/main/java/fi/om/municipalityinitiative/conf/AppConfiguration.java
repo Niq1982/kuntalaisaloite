@@ -123,7 +123,7 @@ public class AppConfiguration {
 
     @Bean
     public InfoTextService infoTextService() {
-        return new InfoTextService(infoTextDao());
+        return new InfoTextService();
     }
 
     @Bean
