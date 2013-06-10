@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.service;
+package fi.om.municipalityinitiative.service.ui;
 
 import fi.om.municipalityinitiative.dao.InvitationNotValidException;
 import fi.om.municipalityinitiative.dto.service.*;
@@ -11,6 +11,7 @@ import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.service.email.EmailService;
+import fi.om.municipalityinitiative.service.operations.AuthorServiceOperations;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.util.SecurityUtil;
 import org.joda.time.DateTime;
@@ -24,32 +25,25 @@ import java.util.Locale;
 public class AuthorService {
 
     @Resource
-    AuthorDao authorDao;
+    private AuthorDao authorDao;
 
     @Resource
-    InitiativeDao initiativeDao;
+    private InitiativeDao initiativeDao;
 
     @Resource
-    ParticipantDao participantDao;
+    private ParticipantDao participantDao;
 
     @Resource
-    EmailService emailService;
+    private EmailService emailService;
 
-    @Transactional(readOnly = false)
+    @Resource
+    private AuthorServiceOperations operations;
+
     public void createAuthorInvitation(Long initiativeId, LoginUserHolder loginUserHolder, AuthorInvitationUICreateDto uiCreateDto) {
 
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        Initiative initiative = initiativeDao.get(initiativeId);
-        SecurityUtil.assertAllowance("Invite authors", ManagementSettings.of(initiative).isAllowInviteAuthors());
 
-        AuthorInvitation authorInvitation = new AuthorInvitation();
-        authorInvitation.setInitiativeId(initiativeId);
-        authorInvitation.setEmail(uiCreateDto.getAuthorEmail());
-        authorInvitation.setName(uiCreateDto.getAuthorName());
-        authorInvitation.setConfirmationCode(RandomHashGenerator.shortHash());
-        authorInvitation.setInvitationTime(new DateTime());
-
-        authorDao.addAuthorInvitation(authorInvitation);
+        AuthorInvitation authorInvitation = operations.doCreateAuthorInvitation(initiativeId, uiCreateDto);
         emailService.sendAuthorInvitation(initiativeId, authorInvitation);
 
     }

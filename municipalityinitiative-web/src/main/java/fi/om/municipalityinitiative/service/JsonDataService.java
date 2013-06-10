@@ -15,6 +15,7 @@ import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.dto.ui.ParticipantCount;
+import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.web.controller.ApiController;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;

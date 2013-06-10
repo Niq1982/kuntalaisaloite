@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.service;
+package fi.om.municipalityinitiative.service.ui;
 
 import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dao.InvitationNotValidException;
@@ -13,6 +13,8 @@ import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
+import fi.om.municipalityinitiative.service.ServiceIntegrationTestBase;
+import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.sql.QAuthor;
 import fi.om.municipalityinitiative.sql.QAuthorInvitation;
 import fi.om.municipalityinitiative.util.JavaMailSenderFake;
@@ -39,7 +41,7 @@ import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase{
+public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
     @Resource
     AuthorService authorService;
