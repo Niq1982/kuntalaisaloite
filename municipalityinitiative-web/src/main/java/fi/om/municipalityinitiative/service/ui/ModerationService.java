@@ -1,28 +1,25 @@
 package fi.om.municipalityinitiative.service.ui;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
-import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
-import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dao.MunicipalityDao;
 import fi.om.municipalityinitiative.dto.Author;
-import fi.om.municipalityinitiative.dto.service.Initiative;
-import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityEditDto;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityUIEditDto;
+import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
 import fi.om.municipalityinitiative.service.email.EmailService;
-import fi.om.municipalityinitiative.util.FixState;
-import fi.om.municipalityinitiative.util.InitiativeState;
-import fi.om.municipalityinitiative.util.InitiativeType;
+import fi.om.municipalityinitiative.service.operations.ModerationServiceOperations;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
+import static fi.om.municipalityinitiative.service.operations.ModerationServiceOperations.ManagementHashRenewData;
 
 public class ModerationService {
 
@@ -38,81 +35,31 @@ public class ModerationService {
     @Resource
     AuthorDao authorDao;
 
-    @Transactional(readOnly = false)
+    @Resource
+    ModerationServiceOperations moderationServiceOperations;
+
     public void accept(OmLoginUserHolder loginUserHolder, Long initiativeId, String moderatorComment, Locale locale) {
         loginUserHolder.assertOmUser();
-        Initiative initiative = initiativeDao.get(initiativeId);
+        ModerationServiceOperations.AcceptResult acceptResult = moderationServiceOperations.doAccept(initiativeId, moderatorComment);
 
-        if (!ManagementSettings.of(initiative).isAllowOmAccept()) {
-            throw new OperationNotAllowedException("Not allowed to accept initiative");
-        }
-
-        if (isDraftReview(initiative)) {
-            acceptDraftReview(moderatorComment, locale, initiative);
-        }
-        else if (isFixStateReview(initiative)) {
-            acceptFixStateReview(initiativeId, moderatorComment);
-        }
-        else {
-            throw new IllegalStateException("Unable to accept initiative with state " + initiative.getState() + " and fixState " + initiative.getFixState());
-        }
-    }
-
-    private static boolean isFixStateReview(Initiative initiative) {
-        return initiative.getFixState() == FixState.REVIEW;
-    }
-
-    private static boolean isDraftReview(Initiative initiative) {
-        return initiative.getState() == InitiativeState.REVIEW;
-    }
-
-    private void acceptFixStateReview(Long initiativeId, String moderatorComment) {
-        initiativeDao.updateInitiativeFixState(initiativeId, FixState.OK);
-        initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
-        emailService.sendStatusEmail(initiativeId, EmailMessageType.ACCEPTED_BY_OM_FIX);
-    }
-
-    private void acceptDraftReview(String moderatorComment, Locale locale, Initiative initiative) {
-        Long initiativeId = initiative.getId();
-
-        initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
-        if (initiative.getType().equals(InitiativeType.SINGLE)) {
-            initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
-            initiativeDao.markInitiativeAsSent(initiativeId);
+        if (acceptResult == ModerationServiceOperations.AcceptResult.ACCEPTED_DRAFT_AND_SENT) {
             emailService.sendStatusEmail(initiativeId, EmailMessageType.ACCEPTED_BY_OM_AND_SENT);
             emailService.sendSingleToMunicipality(initiativeId, locale);
-        } else {
-            initiativeDao.updateInitiativeState(initiativeId, InitiativeState.ACCEPTED);
+        }
+        else if (acceptResult == ModerationServiceOperations.AcceptResult.ACCEPTED_DRAFT) {
             emailService.sendStatusEmail(initiativeId, EmailMessageType.ACCEPTED_BY_OM);
         }
+        else if (acceptResult == ModerationServiceOperations.AcceptResult.ACCEPTED_FIX) {
+            emailService.sendStatusEmail(initiativeId, EmailMessageType.ACCEPTED_BY_OM_FIX);
+        }
+        else {
+            throw new IllegalStateException("Unable to accept initiative with id:"+ initiativeId);
+        }
     }
 
-    @Transactional(readOnly = false)
     public void reject(OmLoginUserHolder loginUserHolder, Long initiativeId, String moderatorComment) {
         loginUserHolder.assertOmUser();
-        Initiative initiative = initiativeDao.get(initiativeId);
-        if (!ManagementSettings.of(initiative).isAllowOmAccept()) {
-            throw new OperationNotAllowedException("Not allowed to reject initiative");
-        }
-        if (isDraftReview(initiative)) {
-            markStateAsDraftAndSendEmails(initiativeId, moderatorComment);
-        }
-        else if (isFixStateReview(initiative)) {
-            markFixStateAsFixAndSendEmails(initiativeId, moderatorComment);
-        } else {
-            throw new IllegalStateException("Invalid state for rejecting, there's something wrong with the code");
-        }
-    }
-
-    private void markFixStateAsFixAndSendEmails(Long initiativeId, String moderatorComment) {
-        initiativeDao.updateInitiativeFixState(initiativeId, FixState.FIX);
-        initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
-        emailService.sendStatusEmail(initiativeId, EmailMessageType.REJECTED_BY_OM);
-    }
-
-    private void markStateAsDraftAndSendEmails(Long initiativeId, String moderatorComment) {
-        initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
-        initiativeDao.updateInitiativeState(initiativeId, InitiativeState.DRAFT);
+        moderationServiceOperations.doReject(initiativeId, moderatorComment);
         emailService.sendStatusEmail(initiativeId, EmailMessageType.REJECTED_BY_OM);
     }
 
@@ -134,26 +81,18 @@ public class ModerationService {
         municipalityDao.updateMunicipality(editDto.getId(), editDto.getMunicipalityEmail(), Boolean.TRUE.equals(editDto.getActive()));
     }
 
-    @Transactional(readOnly = false)
     public void sendInitiativeBackForFixing(OmLoginUserHolder omLoginUserHolder, Long initiativeId, String moderatorComment) {
 
         omLoginUserHolder.assertOmUser();
-        Initiative initiative = initiativeDao.get(initiativeId);
-        if (!ManagementSettings.of(initiative).isAllowOmSendBackForFixing()) {
-            throw new OperationNotAllowedException("Not allowed to send initiative back for fixing");
-        }
-        markFixStateAsFixAndSendEmails(initiativeId, moderatorComment);
+        moderationServiceOperations.doSendInitiativeBackForFixing(initiativeId, moderatorComment);
+        emailService.sendStatusEmail(initiativeId, EmailMessageType.REJECTED_BY_OM);
     }
 
-    @Transactional(readOnly = false)
     public void renewManagementHash(OmLoginUserHolder omLoginUserHolder, Long authorId) {
         omLoginUserHolder.assertOmUser();
 
-        String newManagementHash = RandomHashGenerator.longHash();
-        authorDao.updateManagementHash(authorId, newManagementHash);
-
-        Set<Long> authorsInitiatives = authorDao.getAuthorsInitiatives(newManagementHash);
-        // TODO: Multiple initiatives under one author is no more possible?
-        emailService.sendManagementHashRenewed(authorsInitiatives.iterator().next(), newManagementHash, authorId);
+        ManagementHashRenewData managementHashRenewData = moderationServiceOperations.doRenewManagementHash(authorId);
+        emailService.sendManagementHashRenewed(managementHashRenewData.initiativeId, managementHashRenewData.newManagementHash, authorId);
     }
+
 }
