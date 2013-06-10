@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.service.uiaa;
+package fi.om.municipalityinitiative.service.ui;
 
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;

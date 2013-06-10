@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.service.uiaa;
+package fi.om.municipalityinitiative.service.ui;
 
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.dao.AuthorDao;

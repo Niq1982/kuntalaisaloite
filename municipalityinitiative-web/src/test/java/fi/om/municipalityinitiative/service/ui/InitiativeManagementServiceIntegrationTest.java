@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.service.uiaa;
+package fi.om.municipalityinitiative.service.ui;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
