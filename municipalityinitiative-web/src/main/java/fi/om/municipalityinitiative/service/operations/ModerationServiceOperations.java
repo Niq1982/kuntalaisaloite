@@ -2,8 +2,12 @@ package fi.om.municipalityinitiative.service.operations;
 
 import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
+import fi.om.municipalityinitiative.dao.MunicipalityDao;
+import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
+import fi.om.municipalityinitiative.dto.ui.MunicipalityEditDto;
+import fi.om.municipalityinitiative.dto.ui.MunicipalityUIEditDto;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
@@ -13,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
-import java.util.Locale;
+import java.util.List;
 import java.util.Set;
 
 public class ModerationServiceOperations {
@@ -24,9 +28,13 @@ public class ModerationServiceOperations {
     @Resource
     private AuthorDao authorDao;
 
+    @Resource
+    private MunicipalityDao municipalityDao;
+
     public ModerationServiceOperations() {
     }
 
+    // This constructor is for unit-testing. Replace those tests with integration-tests later.
     public ModerationServiceOperations(InitiativeDao initiativeDao, AuthorDao authorDao) {
         this.initiativeDao = initiativeDao;
         this.authorDao = authorDao;
@@ -62,17 +70,19 @@ public class ModerationServiceOperations {
         initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
     }
 
+    @Transactional(readOnly = true)
+    public List<Author> findAuthors(Long initiativeId) {
+        return authorDao.findAuthors(initiativeId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<MunicipalityEditDto> findMunicipalitiesForEdit() {
+        return municipalityDao.findMunicipalitiesForEdit();
+    }
+
     @Transactional(readOnly = false)
-    public ManagementHashRenewData doRenewManagementHash(Long authorId) {
-        ManagementHashRenewData managementHashRenewData = new ManagementHashRenewData();
-
-        managementHashRenewData.newManagementHash = RandomHashGenerator.longHash();
-        authorDao.updateManagementHash(authorId, managementHashRenewData.newManagementHash);
-
-        Set<Long> authorsInitiatives = authorDao.getAuthorsInitiatives(managementHashRenewData.newManagementHash);
-        // TODO: Multiple initiatives under one author is no more possible?
-        managementHashRenewData.initiativeId = authorsInitiatives.iterator().next();
-        return managementHashRenewData;
+    public void doUpdateMunicipality(MunicipalityUIEditDto editDto) {
+        municipalityDao.updateMunicipality(editDto.getId(), editDto.getMunicipalityEmail(), Boolean.TRUE.equals(editDto.getActive()));
     }
 
     public enum AcceptResult {
@@ -120,8 +130,20 @@ public class ModerationServiceOperations {
         }
     }
 
-    public static class ManagementHashRenewData {
+    @Transactional(readOnly = false)
+    public ManagementHashRenewData doRenewManagementHash(Long authorId) {
+        ManagementHashRenewData managementHashRenewData = new ManagementHashRenewData();
 
+        managementHashRenewData.newManagementHash = RandomHashGenerator.longHash();
+        authorDao.updateManagementHash(authorId, managementHashRenewData.newManagementHash);
+
+        Set<Long> authorsInitiatives = authorDao.getAuthorsInitiatives(managementHashRenewData.newManagementHash);
+        // TODO: Multiple initiatives under one author is no more possible?
+        managementHashRenewData.initiativeId = authorsInitiatives.iterator().next();
+        return managementHashRenewData;
+    }
+
+    public static class ManagementHashRenewData {
         public String newManagementHash;
         public Long initiativeId;
     }
