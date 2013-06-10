@@ -48,12 +48,13 @@ public class ManagementSettingsTest {
         final Initiative initiative = new Initiative();
         initiative.setFixState(FixState.OK);
 
+        InitiativeState review = InitiativeState.REVIEW;
         assertExpectedOnlyWithGivenStates(initiative, new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
                 return ManagementSettings.of(initiative).isAllowOmAccept();
             }
-        }, true, InitiativeState.REVIEW);
+        }, true, review);
 
     }
 
@@ -239,7 +240,7 @@ public class ManagementSettingsTest {
             public Boolean call() throws Exception {
                 return ManagementSettings.of(initiative).isAllowInviteAuthors();
             }
-        },true, InitiativeState.PUBLISHED, InitiativeState.ACCEPTED);
+        }, true, InitiativeState.PUBLISHED, InitiativeState.ACCEPTED);
 
     }
 
