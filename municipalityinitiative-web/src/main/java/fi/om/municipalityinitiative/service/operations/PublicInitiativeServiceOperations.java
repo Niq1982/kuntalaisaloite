@@ -1,17 +1,20 @@
 package fi.om.municipalityinitiative.service.operations;
 
-import fi.om.municipalityinitiative.dao.AuthorDao;
-import fi.om.municipalityinitiative.dao.InitiativeDao;
-import fi.om.municipalityinitiative.dao.MunicipalityDao;
-import fi.om.municipalityinitiative.dao.ParticipantDao;
+import fi.om.municipalityinitiative.dao.*;
+import fi.om.municipalityinitiative.dto.service.AuthorMessage;
+import fi.om.municipalityinitiative.dto.service.ManagementSettings;
+import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
+import fi.om.municipalityinitiative.dto.ui.AuthorUIMessage;
+import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.dto.ui.PrepareInitiativeUICreateDto;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
-import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+
+import static fi.om.municipalityinitiative.util.SecurityUtil.assertAllowance;
 
 public class PublicInitiativeServiceOperations {
 
@@ -26,6 +29,9 @@ public class PublicInitiativeServiceOperations {
 
     @Resource
     private MunicipalityDao municipalityDao;
+
+    @Resource
+    private AuthorMessageDao authorMessageDao;
 
     @Transactional(readOnly = false)
     public PreparedInitiativeData doPrepareInitiative(PrepareInitiativeUICreateDto createDto) {
@@ -50,10 +56,58 @@ public class PublicInitiativeServiceOperations {
         }
     }
 
+    @Transactional(readOnly = false)
+    public ParticipantCreatedData doCreateParticipant(ParticipantUICreateDto participant, Long initiativeId) {
+
+        assertAllowance("Allowed to participate", getManagementSettings(initiativeId).isAllowParticipate());
+
+        ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(participant, initiativeId);
+        participantCreateDto.setMunicipalityInitiativeId(initiativeId);
+
+        ParticipantCreatedData participantCreatedData = new ParticipantCreatedData();
+
+        participantCreatedData.confirmationCode = RandomHashGenerator.shortHash();
+        participantCreatedData.participantId = participantDao.create(participantCreateDto, participantCreatedData.confirmationCode);
+        return participantCreatedData;
+    }
+
+    @Transactional(readOnly = false)
+    public AuthorMessage doAddAuthorMessage(AuthorUIMessage authorUIMessage) {
+            String confirmationCode = RandomHashGenerator.shortHash();
+            AuthorMessage authorMessage = new AuthorMessage(authorUIMessage, confirmationCode);
+            authorMessageDao.put(authorMessage);
+            return authorMessage;
+    }
+
+    @Transactional(readOnly = false)
+    public AuthorMessage doConfirmAuthorMessage(String confirmationCode) {
+        return authorMessageDao.pop(confirmationCode);
+    }
+
+    @Transactional(readOnly = false)
+    public Long doConfirmParticipation(Long participantId, String confirmationCode) {
+        Long initiativeId = participantDao.getInitiativeIdByParticipant(participantId);
+        assertAllowance("Confirm participation", getManagementSettings(initiativeId).isAllowParticipate());
+
+        participantDao.confirmParticipation(participantId, confirmationCode);
+
+        return initiativeId;
+    }
+
+    private ManagementSettings getManagementSettings(Long initiativeId) {
+        return ManagementSettings.of(initiativeDao.get(initiativeId));
+    }
+
     public static class PreparedInitiativeData {
 
         public Long initiativeId;
         public String managementHash;
         public Long authorId;
+    }
+
+    public static class ParticipantCreatedData {
+
+        public String confirmationCode;
+        public Long participantId;
     }
 }
