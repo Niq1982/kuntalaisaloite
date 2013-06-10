@@ -62,4 +62,18 @@ public class InitiativeManagementServiceOperations {
     private ManagementSettings getManagementSettings(Long initiativeId) {
         return ManagementSettings.of(initiativeDao.get(initiativeId));
     }
+
+    @Transactional(readOnly = false)
+    public void doSendReviewOnlyForAcceptance(Long initiativeId) {
+        assertAllowance("Send review", getManagementSettings(initiativeId).isAllowSendToReview());
+        initiativeDao.updateInitiativeState(initiativeId, InitiativeState.REVIEW);
+    }
+
+    @Transactional(readOnly = false)
+    public void doSendReviewStraightToMunicipality(Long initiativeId, String sentComment) {
+        assertAllowance("Send review", getManagementSettings(initiativeId).isAllowSendToReview());
+        initiativeDao.updateInitiativeState(initiativeId, InitiativeState.REVIEW);
+        initiativeDao.updateInitiativeType(initiativeId, InitiativeType.SINGLE);
+        initiativeDao.updateSentComment(initiativeId, sentComment);
+    }
 }

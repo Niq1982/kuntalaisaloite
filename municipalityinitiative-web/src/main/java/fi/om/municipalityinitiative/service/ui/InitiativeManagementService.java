@@ -13,7 +13,6 @@ import fi.om.municipalityinitiative.dto.ui.InitiativeUIUpdateDto;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.operations.InitiativeManagementServiceOperations;
-import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import org.springframework.transaction.annotation.Transactional;
@@ -99,23 +98,18 @@ public class InitiativeManagementService {
         authorDao.updateAuthorInformation(loginUserHolder.getAuthorId(), updateDto.getContactInfo());
     }
 
-    @Transactional(readOnly = false) // XXX: Test that emails are sent
     public void sendReviewAndStraightToMunicipality(Long initiativeId, LoginUserHolder loginUserHolder, String sentComment) {
-        markAsReviewAndSendEmail(initiativeId, loginUserHolder);
-        initiativeDao.updateInitiativeType(initiativeId, InitiativeType.SINGLE);
-        initiativeDao.updateSentComment(initiativeId, sentComment);
-    }
-
-    @Transactional(readOnly = false)
-    public void sendReviewOnlyForAcceptance(Long initiativeId, LoginUserHolder loginUserHolder) {
-        markAsReviewAndSendEmail(initiativeId, loginUserHolder);
-    }
-
-    private void markAsReviewAndSendEmail(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        assertAllowance("Send review", getManagementSettings(initiativeId).isAllowSendToReview());
+        operations.doSendReviewStraightToMunicipality(initiativeId, sentComment);
 
-        initiativeDao.updateInitiativeState(initiativeId, InitiativeState.REVIEW);
+        emailService.sendStatusEmail(initiativeId, EmailMessageType.SENT_TO_REVIEW);
+        emailService.sendNotificationToModerator(initiativeId);
+    }
+
+    public void sendReviewOnlyForAcceptance(Long initiativeId, LoginUserHolder loginUserHolder) {
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
+
+        operations.doSendReviewOnlyForAcceptance(initiativeId);
 
         emailService.sendStatusEmail(initiativeId, EmailMessageType.SENT_TO_REVIEW);
         emailService.sendNotificationToModerator(initiativeId);
