@@ -28,10 +28,6 @@ public class ParticipantService {
     public ParticipantService() {
     }
 
-    ParticipantService(ParticipantDao participantDao) {
-        this.participantDao = participantDao;
-    }
-
     @Transactional(readOnly = true)
     public ParticipantCount getParticipantCount(Long initiativeId) {
         return participantDao.getParticipantCount(initiativeId);

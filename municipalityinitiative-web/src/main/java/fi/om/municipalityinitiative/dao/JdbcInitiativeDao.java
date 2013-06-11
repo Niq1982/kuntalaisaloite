@@ -218,30 +218,30 @@ public class JdbcInitiativeDao implements InitiativeDao {
         String unknownStateFound = "unknownStateFound";
         Expression<String> caseBuilder = new CaseBuilder()
                 .when(STATE_IS_COLLECTING)
-                .then(new ConstantImpl<String>(InitiativeSearch.Show.collecting.name()))
+                .then(new ConstantImpl<>(InitiativeSearch.Show.collecting.name()))
                 .when(STATE_IS_SENT)
-                .then(new ConstantImpl<String>(InitiativeSearch.Show.sent.name()))
+                .then(new ConstantImpl<>(InitiativeSearch.Show.sent.name()))
                 .when(STATE_IS_DRAFT)
-                .then(new ConstantImpl<String>(InitiativeState.DRAFT.name()))
+                .then(new ConstantImpl<>(InitiativeState.DRAFT.name()))
                 .when(STATE_IS_ACCEPTED)
-                .then(new ConstantImpl<String>(InitiativeState.ACCEPTED.name()))
+                .then(new ConstantImpl<>(InitiativeState.ACCEPTED.name()))
                 .when(STATE_IS_REVIEW)
-                .then(new ConstantImpl<String>(InitiativeState.REVIEW.name()))
+                .then(new ConstantImpl<>(InitiativeState.REVIEW.name()))
                 .when(STATE_IS_FIX)
-                .then(new ConstantImpl<String>(FixState.FIX.name()))
-                .otherwise(new ConstantImpl<String>(unknownStateFound));
+                .then(new ConstantImpl<>(FixState.FIX.name()))
+                .otherwise(new ConstantImpl<>(unknownStateFound));
 
-        SimpleExpression<String> simpleExpression = Expressions.as(caseBuilder, "showCategory");
+        SimpleExpression<String> showCategory = Expressions.as(caseBuilder, "showCategory");
 
-        PostgresQuery from = queryFactory.from(municipalityInitiative);
+        PostgresQuery from = queryFactory.from(municipalityInitiative).where(STATE_NOT_PREPARE);
 
         if (municipality.isPresent()) {
             from.where(municipalityInitiative.municipalityId.eq(municipality.get()));
         }
 
         MaybeHoldingHashMap<String, Long> map = new MaybeHoldingHashMap<>(from
-                .groupBy(simpleExpression)
-                .map(simpleExpression, municipalityInitiative.count()));
+                .groupBy(showCategory)
+                .map(showCategory, municipalityInitiative.count()));
 
         InitiativeCounts counts = new InitiativeCounts();
         counts.sent = map.get(InitiativeSearch.Show.sent.name()).or(0L);
