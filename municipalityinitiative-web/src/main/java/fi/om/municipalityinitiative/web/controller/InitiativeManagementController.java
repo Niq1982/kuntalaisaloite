@@ -190,7 +190,7 @@ public class InitiativeManagementController extends BaseController {
         InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
 
         if (!initiativeInfo.isCollaborative()) {
-            return ViewGenerator.singleView(initiativeInfo, authorService.findPublicAuthors(initiativeId)).view(model, alternativeURL);
+            return ERROR_404_VIEW;
         }
         else {
 
