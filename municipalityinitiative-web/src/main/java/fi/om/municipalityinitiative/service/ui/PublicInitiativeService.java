@@ -1,8 +1,5 @@
 package fi.om.municipalityinitiative.service.ui;
 
-import fi.om.municipalityinitiative.dao.AuthorDao;
-import fi.om.municipalityinitiative.dao.InitiativeDao;
-import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
@@ -12,7 +9,6 @@ import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.operations.PublicInitiativeServiceOperations;
 import fi.om.municipalityinitiative.util.Maybe;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -27,15 +23,6 @@ public class PublicInitiativeService {
 
     @Resource
     private PublicInitiativeServiceOperations operations;
-
-    @Resource
-    private InitiativeDao initiativeDao;
-
-    @Resource
-    private AuthorDao authorDao;
-
-    @Resource
-    private ParticipantDao participantDao;
 
     @Resource
     private EmailService emailService;
@@ -58,9 +45,8 @@ public class PublicInitiativeService {
         return initiativeListInfos;
     }
 
-    @Transactional(readOnly = true)
     public ManagementSettings getManagementSettings(Long initiativeId) {
-        return ManagementSettings.of(initiativeDao.get(initiativeId));
+        return operations.getManagementSettings(initiativeId);
     }
 
     public Long createParticipant(ParticipantUICreateDto participant, Long initiativeId, Locale locale) {
@@ -87,17 +73,15 @@ public class PublicInitiativeService {
         return preparedInitiativeData.initiativeId;
     }
 
-    @Transactional(readOnly = true)
     public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId) {
-        return InitiativeViewInfo.parse(initiativeDao.get(initiativeId));
+        return InitiativeViewInfo.parse(operations.getInitiative(initiativeId));
     }
 
-    @Transactional(readOnly = true)
     public InitiativeCounts getInitiativeCounts(Maybe<Long> municipality, LoginUserHolder loginUserHolder) {
         if (loginUserHolder.getUser().isNotOmUser()) {
-            return initiativeDao.getPublicInitiativeCounts(municipality);
+            return operations.getInitiativeCounts(municipality);
         }
-        else return initiativeDao.getAllInitiativeCounts(municipality);
+        else return operations.getInitiativeCounts(municipality, true);
     }
 
     public Long confirmParticipation(Long participantId, String confirmationCode) {

@@ -1,8 +1,5 @@
 package fi.om.municipalityinitiative.service.ui;
 
-import fi.om.municipalityinitiative.dao.AuthorDao;
-import fi.om.municipalityinitiative.dao.InitiativeDao;
-import fi.om.municipalityinitiative.dao.MunicipalityDao;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityEditDto;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityUIEditDto;
@@ -10,30 +7,18 @@ import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.operations.ModerationServiceOperations;
-import fi.om.municipalityinitiative.util.RandomHashGenerator;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import static fi.om.municipalityinitiative.service.operations.ModerationServiceOperations.ManagementHashRenewData;
 
 public class ModerationService {
 
     @Resource
-    InitiativeDao initiativeDao;
-
-    @Resource
     EmailService emailService;
-
-    @Resource
-    MunicipalityDao municipalityDao;
-
-    @Resource
-    AuthorDao authorDao;
 
     @Resource
     ModerationServiceOperations moderationServiceOperations;
@@ -63,22 +48,19 @@ public class ModerationService {
         emailService.sendStatusEmail(initiativeId, EmailMessageType.REJECTED_BY_OM);
     }
 
-    @Transactional(readOnly = true)
     public List<Author> findAuthors(OmLoginUserHolder loginUserHolder, Long initiativeId) {
         loginUserHolder.assertOmUser();
-        return authorDao.findAuthors(initiativeId);
+        return moderationServiceOperations.findAuthors(initiativeId);
     }
 
-    @Transactional(readOnly = true)
     public List<MunicipalityEditDto> findMunicipalitiesForEdit(OmLoginUserHolder loginUserHolder) {
         loginUserHolder.assertOmUser();
-        return municipalityDao.findMunicipalitiesForEdit();
+        return moderationServiceOperations.findMunicipalitiesForEdit();
     }
 
-    @Transactional(readOnly = false)
     public void updateMunicipality(OmLoginUserHolder omLoginUserHolder, MunicipalityUIEditDto editDto) {
         omLoginUserHolder.assertOmUser();
-        municipalityDao.updateMunicipality(editDto.getId(), editDto.getMunicipalityEmail(), Boolean.TRUE.equals(editDto.getActive()));
+        moderationServiceOperations.doUpdateMunicipality(editDto);
     }
 
     public void sendInitiativeBackForFixing(OmLoginUserHolder omLoginUserHolder, Long initiativeId, String moderatorComment) {

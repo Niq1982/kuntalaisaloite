@@ -5,7 +5,6 @@ import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
-import fi.om.municipalityinitiative.dao.MunicipalityDao;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
@@ -39,14 +38,12 @@ public class ModerationServiceTest {
         initiativeDaoMock = mock(InitiativeDao.class);
         moderationService = new ModerationService();
 
-        moderationService.initiativeDao = initiativeDaoMock;
         moderationService.emailService = mock(EmailService.class);
-        moderationService.municipalityDao = mock(MunicipalityDao.class);
-        moderationService.authorDao = mock(AuthorDao.class);
 
-        moderationService.moderationServiceOperations = new ModerationServiceOperations(initiativeDaoMock, moderationService.authorDao);
+        AuthorDao authorDaoMock = mock(AuthorDao.class);
+        moderationService.moderationServiceOperations = new ModerationServiceOperations(initiativeDaoMock, authorDaoMock);
 
-        stub(moderationService.authorDao.getAuthorEmails(anyLong())).toReturn(Collections.singletonList("")); // Avoid nullpointer temporarily
+        stub(authorDaoMock.getAuthorEmails(anyLong())).toReturn(Collections.singletonList("")); // Avoid nullpointer temporarily
 
         loginUserHolder = mock(OmLoginUserHolder.class);
     }

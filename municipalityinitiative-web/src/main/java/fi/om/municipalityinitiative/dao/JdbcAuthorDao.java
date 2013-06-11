@@ -174,6 +174,10 @@ public class JdbcAuthorDao implements AuthorDao {
                 .where(QAuthor.author.participantId.eq(authorId)).execute());
         JdbcInitiativeDao.assertSingleAffection(queryFactory.delete(QParticipant.participant)
                 .where(QParticipant.participant.id.eq(authorId)).execute());
+        JdbcInitiativeDao.assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
+                .set(QMunicipalityInitiative.municipalityInitiative.participantCount, QMunicipalityInitiative.municipalityInitiative.participantCount.subtract(1))
+                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
+                .execute());
 
         long authorCount = queryFactory.from(QAuthor.author)
                 .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)

@@ -11,9 +11,11 @@ import fi.om.municipalityinitiative.dto.service.TestDataService;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.service.email.EmailMessageConstructor;
 import fi.om.municipalityinitiative.service.email.EmailServiceDataProvider;
+import fi.om.municipalityinitiative.service.operations.AuthorServiceOperations;
 import fi.om.municipalityinitiative.service.operations.InitiativeManagementServiceOperations;
 import fi.om.municipalityinitiative.service.operations.ModerationServiceOperations;
 import fi.om.municipalityinitiative.service.operations.PublicInitiativeServiceOperations;
+import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.service.ui.InitiativeManagementService;
 import fi.om.municipalityinitiative.service.ui.ModerationService;
 import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
@@ -162,6 +164,11 @@ public class AppConfiguration {
     @Bean
     public AuthorService authorService() {
         return new AuthorService();
+    }
+
+    @Bean
+    public AuthorServiceOperations authorServiceOperations() {
+        return new AuthorServiceOperations();
     }
 
     @Bean

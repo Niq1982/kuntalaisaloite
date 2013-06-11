@@ -1,8 +1,10 @@
 package fi.om.municipalityinitiative.service.operations;
 
 import fi.om.municipalityinitiative.dao.*;
+import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
+import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.dto.ui.AuthorUIMessage;
@@ -10,6 +12,7 @@ import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.dto.ui.PrepareInitiativeUICreateDto;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
+import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +39,7 @@ public class PublicInitiativeServiceOperations {
 
     @Resource
     private AuthorMessageDao authorMessageDao;
+    private InitiativeCounts initiativeCounts;
 
     @Transactional(readOnly = false)
     public PreparedInitiativeData doPrepareInitiative(PrepareInitiativeUICreateDto createDto) {
@@ -98,13 +102,34 @@ public class PublicInitiativeServiceOperations {
         return initiativeId;
     }
 
-    private ManagementSettings getManagementSettings(Long initiativeId) {
+    @Transactional(readOnly = true) // This may be used inside this class or outside
+    public ManagementSettings getManagementSettings(Long initiativeId) {
         return ManagementSettings.of(initiativeDao.get(initiativeId));
     }
 
     @Transactional(readOnly = true)
     public List<InitiativeListInfo> findInitiatives(InitiativeSearch search) {
         return initiativeDao.find(search);
+    }
+
+    @Transactional(readOnly = true)
+    public Initiative getInitiative(Long initiativeId) {
+        return initiativeDao.get(initiativeId);
+    }
+
+    @Transactional(readOnly = true)
+    public InitiativeCounts getInitiativeCounts(Maybe<Long> municipality) {
+        return getInitiativeCounts(municipality, false);
+    }
+
+    @Transactional(readOnly = true)
+    public InitiativeCounts getInitiativeCounts(Maybe<Long> municipality, boolean all) {
+        if (all) {
+            return initiativeDao.getAllInitiativeCounts(municipality);
+        }
+        else {
+            return initiativeDao.getPublicInitiativeCounts(municipality);
+        }
     }
 
     public static class PreparedInitiativeData {
