@@ -629,6 +629,8 @@ var municipalitySelection = (function() {
 		}
 	});
 	email.keyup(function(){
+		$(this).val( $(this).val().replace(/\s+$/, '') ); // trim last space
+
 		if (allFieldsFilled()) {
 			submit.disableButton(false);
 			fillInAll.addClass(hideClass);
