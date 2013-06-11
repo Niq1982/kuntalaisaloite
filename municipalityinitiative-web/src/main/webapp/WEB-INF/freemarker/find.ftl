@@ -161,7 +161,7 @@
 <#-- Search results EMPTY -->
 <#else>
     <div class="msg-block">
-        <@u.systemMessage path="searchResults.noResults" type="info" showClose=false />
+        <@u.systemMessage path="searchResults.noResults" type="info" cssClass="first" showClose=false />
     </div>
 </#if>
 

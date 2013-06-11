@@ -52,6 +52,11 @@
                                     </#if>
                                     </#list>
                                 </select>
+                                
+                                <#-- Submit button for NOSCRIPT users -->
+                                <noscript>
+                                    <button type="submit" class="small-button"><span class="small-icon search"><@u.message "btn.search" /></span></button>
+                                </noscript>
                             </form>
                         </div>
                     </div>
