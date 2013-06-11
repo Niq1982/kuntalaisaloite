@@ -35,10 +35,9 @@
     <li><@u.message "create.pendingConfirmation.emailFail.bullet-3" /></li>
 </ul>
 
-<#--
 <h2>Ylläpitolinkki testausta varten</h2>
 <a href="${urls.loginAuthor(managementHash)}">${urls.loginAuthor(managementHash)}</a>
--->
+
 
 
 </@l.main>
