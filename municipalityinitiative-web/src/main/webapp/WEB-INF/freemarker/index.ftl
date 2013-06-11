@@ -55,19 +55,18 @@
             
                         <p><@u.message "front.browse.description" /></p>
                         
-                        <#-- TODO: Chosen, tyylitä, nuoli alas JS/NOJS -->
-                        <a href="#" class="block-link" style="margin-top:2em;">Helsinki</a>
-                        
-                        <#--
-                        <select name="" id="" class="chzn-select" data-initiative-municipality="" data-placeholder="currentSearch.municipality.all">
-                            <option value=""><@u.message "currentSearch.municipality.all" /></option>
-                            <#list municipalities as municipality>
-                            <#if municipality.active>
-                                <option value="${municipality.id}">${municipality.getName(locale)}</option>
-                            </#if>
-                            </#list>
-                        </select>
-                        -->
+                        <div class="flat-style">
+                            <form action="${urls.search()}" method="GET" id="search-form" class="search-form">
+                                <select name="municipality" id="municipality" class="chzn-select municipality-filter" data-initiative-municipality="" data-placeholder="<@u.message "front.browse.choose" />">
+                                    <option value=""><@u.message "currentSearch.municipality.all" /></option>
+                                    <#list municipalities as municipality>
+                                    <#if municipality.active>
+                                        <option value="${municipality.id}">${municipality.getName(locale)}</option>
+                                    </#if>
+                                    </#list>
+                                </select>
+                            </form>
+                        </div>
                     </div>
                     
                     <div class="front-block block-3">
