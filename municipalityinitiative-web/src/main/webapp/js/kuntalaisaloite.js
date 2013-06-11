@@ -716,6 +716,11 @@ var municipalitySelection = (function() {
 		
 		choose.text(choose.data('choose'));
 		thisChoose.text(thisChoose.data('chosen'));
+
+		if (isIE7){
+			$('.initiative-type').find('input[type="radio"]').attr('checked','checked');
+			thisObj.find('input[type="radio"]').attr('checked','checked');
+		}
 	});
 }());
 
