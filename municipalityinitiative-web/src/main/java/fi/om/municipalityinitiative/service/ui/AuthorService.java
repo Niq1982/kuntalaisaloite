@@ -86,15 +86,6 @@ public class AuthorService {
 
     }
 
-    private static boolean hasAuthor(Long authorId, List<Author> authors) {
-        for (Author author : authors) {
-            if (author.getId().equals(authorId)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     @Transactional(readOnly = false)
     public String confirmAuthorInvitation(Long initiativeId, AuthorInvitationUIConfirmDto confirmDto, Locale locale) {
 
