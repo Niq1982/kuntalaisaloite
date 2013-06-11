@@ -50,9 +50,7 @@
         </#if>
     </div>
     
-    ${initiative.collaborative?string}
-    
-    <#if initiative.collaborative>
+    <#if !initiative.single>
         <#if initiative.state == InitiativeState.REVIEW>
             <div class="msg-block">
                 <div class="system-msg msg-info">

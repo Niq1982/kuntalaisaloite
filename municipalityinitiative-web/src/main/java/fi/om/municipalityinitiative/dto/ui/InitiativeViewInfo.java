@@ -4,6 +4,7 @@ import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
+import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.LocalDate;
 
@@ -40,7 +41,11 @@ public class InitiativeViewInfo {
     public boolean isCollaborative() {
         return initiative.isCollaborative();
     }
-
+    
+    public boolean isSingle(){
+        return initiative.getType() == InitiativeType.SINGLE;
+    }
+    
     public boolean isSent() {
         return initiative.isSent();
     }
