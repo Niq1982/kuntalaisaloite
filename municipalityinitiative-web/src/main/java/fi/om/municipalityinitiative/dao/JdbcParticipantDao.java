@@ -147,5 +147,9 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .where(participant.id.eq(participantId))
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
                 .execute());
+        assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
+                .set(QMunicipalityInitiative.municipalityInitiative.participantCount, QMunicipalityInitiative.municipalityInitiative.participantCount.subtract(1))
+                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
+                .execute());
     }
 }

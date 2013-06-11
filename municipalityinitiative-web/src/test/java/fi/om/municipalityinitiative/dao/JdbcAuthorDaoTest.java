@@ -116,6 +116,22 @@ public class JdbcAuthorDaoTest {
         assertThat(participantCountOfInitiative(initiativeId), is(originalParticipantCount - 1));
     }
 
+    @Test
+    public void delete_author_decreases_denormalized_participant_count() {
+
+        Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality);
+        Long authorId = testHelper.createAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality));
+
+        int originalAuthorCount = authorDao.findAuthors(initiativeId).size();
+        int originalParticipantCount = testHelper.getInitiative(initiativeId).getParticipantCount();
+
+        authorDao.deleteAuthor(authorId);
+
+        assertThat(authorDao.findAuthors(initiativeId), hasSize(originalAuthorCount - 1));
+        assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(originalParticipantCount - 1));
+
+    }
+
     private Long participantCountOfInitiative(Long initiativeId) {
         return testHelper.countAll(QParticipant.participant, QParticipant.participant.municipalityInitiativeId.eq(initiativeId));
     }
