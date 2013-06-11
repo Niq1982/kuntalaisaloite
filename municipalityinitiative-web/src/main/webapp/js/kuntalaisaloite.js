@@ -121,10 +121,12 @@ jQuery.fn.loadChosen = function(){
  * */
 jQuery.fn.disableButton = function(disable){
 	var btn = $(this);
-	
+
 	if (disable) {
+		console.log("disable: "+btn.attr('id'));
 		btn.attr('disabled','disabled').addClass('disabled');
 	} else {
+		console.log("enable: "+btn.attr('id'));
 		btn.removeAttr('disabled').removeClass('disabled');
 	}	
 };
@@ -394,14 +396,14 @@ var municipalitySelection = (function() {
 
 		// In the create form we have two selects
 		if (select.length > 0){
-			if ( selectHome.val() == select.val() ) {
+			if ( selectHome.val() === select.val() ) {
 				return true;
 			} else {
 				return false;
 			}
 		// If only one select
 		} else {
-			if ( selectHome.val() == selectHome.data('initiative-municipality') ) {
+			if ( selectHome.val() === selectHome.data('initiative-municipality') ) {
 				return true;
 			} else {
 				return false;
@@ -462,19 +464,13 @@ var municipalitySelection = (function() {
 	
 	// Disable form
 	function preventContinuing(prevent){
-		
-		var btnParticipate 		= $("button#participate");								// Participate button
-		
-		var typeInput 			= $('.initiative-type:first-child input'),
-			authorEmail			= $('#participantEmail'),
+		var authorEmail			= $('#participantEmail'),
 			toggleDisable		= $('.toggle-disable'),
 			toggleDisableInput  = toggleDisable.find('input, select, textarea, button'),
 			mask				= $('.mask'),
 			btnParticipate 		= $("button#participate");
 		
 		btnParticipate.disableButton(prevent);
-		
-		typeInput.disableButton(prevent);
 		
 		mask.remove();
 		
@@ -490,7 +486,8 @@ var municipalitySelection = (function() {
 	
 	// Disable or enable submitting "Save and collect"
 	function disableSubmit(disable){
-		$('button#action-send-confirm, button#participate').disableButton(disable);
+		//$('button#action-send-confirm, button#participate').disableButton(disable);
+		$('button#participate').disableButton(disable);
 	}
 	
 	// Toggle the radiobutton selection for municipality membership
@@ -539,7 +536,8 @@ var municipalitySelection = (function() {
 		var cb, btn, isNotMember;
 		
 		cb = $(this);
-		btn = $('#action-send-confirm, button#participate');
+		//btn = $('#action-send-confirm, button#participate');
+		btn = $('button#participate');
 		isNotMember = function(){			
 			return ( $("input[name=municipalMembership]:checked").val() === "none" );
 		};
@@ -588,7 +586,8 @@ var municipalitySelection = (function() {
 	
 	return {
 		// Return Init-function for the modal
-		init: init
+		init: init,
+		equalMunicipalitys: equalMunicipalitys
     };
 	
 }());
@@ -647,12 +646,13 @@ var municipalitySelection = (function() {
 			if(municipalitySelect.val() === "") {
 				selectOK = false
 			} else {
-				selectOK = selectOK && true;
+				selectOK = selectOK;
 			}
 		});
 		
 		// FIXME: IS visible is fired too late
-		if (membership.is(":visible")){
+		console.log("Samat: " + municipalitySelection.equalMunicipalitys());
+		if (municipalitySelection.equalMunicipalitys()){
 			membershipRadio.each(function(){
 				if($(this).is(':checked')) {
 					memberRadioOK = true;
@@ -661,6 +661,7 @@ var municipalitySelection = (function() {
 					memberRadioOK = false;
 				}
 			});
+			console.log("jsenyys: "+memberRadioOK);
 		}
 		
 		email.each(function() {
@@ -673,11 +674,13 @@ var municipalitySelection = (function() {
 			} else {
 				if (emailField.val() !== ""){
 					emailField.addClass('invalid').removeClass('valid');
+				} else {
+					emailField.removeClass('valid invalid');
 				}
 				emailOK = false;
 			}
 		});
-		
+
 		typeInput.each(function(){
 			if($(this).is(':checked')) {
 				typeRadioOK = true;
@@ -686,6 +689,8 @@ var municipalitySelection = (function() {
 				typeRadioOK = false;
 			}
 		});
+
+		console.log("ALL: "+ (selectOK && memberRadioOK && typeRadioOK && emailOK));
 
 		return selectOK && memberRadioOK && typeRadioOK && emailOK;
 	};
@@ -767,9 +772,11 @@ var municipalitySelection = (function() {
 * Search form
 * ===========
 * 
+* Submit form on select.
+* Used in frontpage and search-page
+*
 */
 
-//Listen search form select
 $('.municipality-filter').change( function() {
 	var thisSelect = $(this);
 	
