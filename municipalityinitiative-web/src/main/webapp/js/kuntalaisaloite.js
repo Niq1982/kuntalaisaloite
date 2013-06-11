@@ -968,7 +968,7 @@ $('.municipality-filter').change( function() {
 	});
 	
 	if( typeof modalData != 'undefined' && typeof modalData.acceptInvitationInvalid != 'undefined' ){
-		generateModal(modalData.acceptInvitationInvalid(), 'full');
+		generateModal(modalData.acceptInvitationInvalid(), 'full', municipalitySelection.init);
 	}
 	
 	// Accept author invitation

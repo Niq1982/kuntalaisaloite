@@ -191,7 +191,7 @@
     </div>
 
     <div class="cf js-block-container ${validationError?string("","js-hide")}">
-        <h2><@u.message "invitations.addAuthor.title" /></h2>
+        <h3><@u.message "invitations.addAuthor.title" /></h3>
         
         <div class="input-block-content no-top-margin">
             <@u.systemMessage path="invitation.description" type="info" showClose=false />
