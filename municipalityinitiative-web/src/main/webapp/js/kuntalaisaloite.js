@@ -701,14 +701,15 @@ var municipalitySelection = (function() {
 	var type =		$('.initiative-type.enabled'),
 		cbClass =	'.checkbox',
 		cb = 		type.find(cbClass),
-		choose = 	type.find('span[data-choose]');
+		choose = 	type.find('span[data-choose]'),
+		radio = 	type.find('input[type="radio"]');
 	
 	
 	type.click(function(){
 		var thisObj =		$(this),
 			thisChoose =	thisObj.find('span[data-choose]');
 		
-		type.removeClass('selected').addClass('unselected');
+		$('.initiative-type').removeClass('selected').addClass('unselected');
 		thisObj.removeClass('unselected').addClass('selected');
 		
 		cb.removeClass('checked');
@@ -717,10 +718,9 @@ var municipalitySelection = (function() {
 		choose.text(choose.data('choose'));
 		thisChoose.text(thisChoose.data('chosen'));
 
-		if (isIE7){
-			$('.initiative-type').find('input[type="radio"]').attr('checked','checked');
-			thisObj.find('input[type="radio"]').attr('checked','checked');
-		}
+		// CSS hid radiobutton does not get selected by clicking label on some browsers (IE)
+		radio.removeAttr('checked');
+		thisObj.find('input[type="radio"]').attr('checked','checked');
 	});
 }());
 
