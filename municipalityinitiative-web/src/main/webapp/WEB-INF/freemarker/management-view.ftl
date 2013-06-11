@@ -49,24 +49,28 @@
             <@e.participants showForm=false admin=true />
         </#if>
     </div>
-
-    <#if initiative.state == InitiativeState.REVIEW>
-        <div class="msg-block">
-            <div class="system-msg msg-info">
-                <h2><@u.message "initiative.stateInfo.REVIEW" /></h2>
-                <p><@u.message "initiative.stateInfo.REVIEW.description" /></p>
-                <p><@u.message "initiative.stateInfo.REVIEW.emailToAuthors" /></p>
+    
+    ${initiative.collaborative?string}
+    
+    <#if initiative.collaborative>
+        <#if initiative.state == InitiativeState.REVIEW>
+            <div class="msg-block">
+                <div class="system-msg msg-info">
+                    <h2><@u.message "initiative.stateInfo.REVIEW" /></h2>
+                    <p><@u.message "initiative.stateInfo.REVIEW.description" /></p>
+                    <p><@u.message "initiative.stateInfo.REVIEW.emailToAuthors" /></p>
+                </div>
             </div>
-        </div>
-    </#if>
-    <#if initiative.fixState == FixState.REVIEW>
-        <div class="msg-block">
-            <div class="system-msg msg-info">
-                <h2><@u.message "initiative.stateInfo.REVIEW" /></h2>
-                <p><@u.message "initiative.fixStateInfo.REVIEW.description" /></p>
-                <p><@u.message "initiative.fixStateInfo.REVIEW.emailToAuthors" /></p>
+        </#if>
+        <#if initiative.fixState == FixState.REVIEW>
+            <div class="msg-block">
+                <div class="system-msg msg-info">
+                    <h2><@u.message "initiative.stateInfo.REVIEW" /></h2>
+                    <p><@u.message "initiative.fixStateInfo.REVIEW.description" /></p>
+                    <p><@u.message "initiative.fixStateInfo.REVIEW.emailToAuthors" /></p>
+                </div>
             </div>
-        </div>
+        </#if>
     </#if>
 
     <#if managementSettings.allowSendToReview>

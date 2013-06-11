@@ -9,24 +9,11 @@
     <div class="container"><@u.requestMessage requestMessages /></div>
 </#if>
  
-<div class="image-container-new"></div>
+<div class="image-container"></div>
 
-<#--
-<div class="image-container">
-    <div class="inner">
-        <div class="image image-1"></div>
-        <div class="image image-2"></div>
-        <div class="image image-3"></div>
-        <div class="image image-4"></div>
-        <div class="image image-5"></div>
-        <div class="image image-6"></div>
-    </div>
-</div>
--->
- 
 <div class="container">
     <div class="big-link-holder">
-        <a class="big-link"><@u.message "front.bigLink" /> <span class="arrow"></span></a>
+        <a href="${urls.helpIndex()}" class="big-link"><@u.message "front.bigLink" /> <span class="arrow"></span></a>
     </div>
 
     <div id="content">
@@ -43,7 +30,7 @@
                         <p><@u.message "front.hero.description-2" /></p>
                         
                         <div class="bottom">
-                            <a href="#" class="block-link"><@u.message "front.hero.readmore" /></a>
+                            <a href="${urls.helpIndex()}" class="block-link"><@u.message "front.hero.readmore" /></a>
                         </div>
                     </div>
                 
