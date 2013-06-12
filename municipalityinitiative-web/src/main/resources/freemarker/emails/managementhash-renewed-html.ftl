@@ -10,7 +10,9 @@
 
 <#assign title><@u.message "email.managementhash.renewed.title" /></#assign>
 
-<@l.emailHtml title>
+<@l.emailHtml title=title footer=false>
+
+    <#-- Finnish part -->
 
     <@b.mainContentBlock title>
         <@b.initiativeDetails type=type showDate=true />
@@ -21,7 +23,33 @@
     </@b.mainContentBlock>
 
     <@u.spacer "15" />
+    
+    <@b.emailFooter type />
+    
+    <@u.spacer "15" />
 
-    </@l.emailHtml>
+    <#-- Swedish part -->
+    
+    <#global switchLocale = altLocale />
+    
+    <#if statusTitleSv??>
+        <#assign title><@u.message "email.managementhash.renewed.title" /></#assign>
+    </#if>
 
-    </#escape>
+    <@b.mainContentBlock title>
+        <@b.initiativeDetails type=type showDate=true />
+    
+        <p style="${pBothMargins!""}"><@u.message "email.managementhash.renewed.description" /></p>
+
+        <@b.adminViewLink type />
+    </@b.mainContentBlock>
+
+    <@u.spacer "15" />
+    
+    <@b.emailFooter type />
+    
+    <@u.spacer "15" />
+
+</@l.emailHtml>
+
+</#escape>

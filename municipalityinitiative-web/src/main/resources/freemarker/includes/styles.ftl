@@ -7,7 +7,7 @@
 
 <#assign defaultFont = "font-size:${defaultFontSize}; font-family:${defaultFontFamily};" />
 
-<#assign bigTitle = "font-size:20px; margin:0; color:#087480; font-weight:normal; font-family:${defaultFontFamily}" />
+<#assign bigTitle = "font-size:20px; margin:0; color:#7a7a20; font-weight:normal; font-family:${defaultFontFamily}" />
 <#assign h4 = "font-size:${defaultFontSize}; margin:1em 0 0 0;" />
 
 <#assign smallFont = "font-size:12px;" />
