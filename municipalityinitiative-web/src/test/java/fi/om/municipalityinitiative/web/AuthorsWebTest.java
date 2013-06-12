@@ -135,7 +135,7 @@ public class AuthorsWebTest  extends WebTestBase {
         loginAsAuthorForLastTestHelperCreatedInitiative();
         open(urls.management(initiativeId));
         
-        clickLinkContaining("Lisää vastuuhenkilöitä");
+        clickLinkContaining("Ylläpidä vastuuhenkilöitä");
         clickLinkContaining("Poista vastuuhenkilö");
         
         // NOTE: We could assert that modal has correct Author details,

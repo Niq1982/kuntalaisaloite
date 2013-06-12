@@ -393,7 +393,7 @@ var municipalitySelection = (function() {
 	equalMunicipalitys = function(){
 		var selectHome	= $('#homeMunicipality'),
 			select		= $('#municipality');
-
+ 
 		// In the create form we have two selects
 		if (select.length > 0){
 			if ( selectHome.val() === select.val() ) {
@@ -523,7 +523,6 @@ var municipalitySelection = (function() {
 	// Toggle membership radiobuttons
 	function showMembership(show){
 		var	municipalMembership	= $('#municipalMembership');
-		
 		if (show){
 			municipalMembership.addClass(hideClass);
 		} else {
@@ -651,7 +650,6 @@ var municipalitySelection = (function() {
 		});
 		
 		// FIXME: IS visible is fired too late
-		console.log("Samat: " + municipalitySelection.equalMunicipalitys());
 		//if (municipalitySelection.equalMunicipalitys()){
 		if (membershipRadio.is(':visible')){
 			membershipRadio.each(function(){
@@ -662,7 +660,6 @@ var municipalitySelection = (function() {
 					memberRadioOK = false;
 				}
 			});
-			console.log("jsenyys: "+memberRadioOK);
 		}
 		
 		email.each(function() {
