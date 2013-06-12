@@ -148,7 +148,7 @@
         <#if enabled>
             <span class="action open">
                 <span class="checkbox hidden <#if spring.stringStatusValue == type>checked</#if>"></span>
-                <input type="radio" id="initiativeType" name="${spring.status.expression}" value="${type}" class="js-hide"
+                <input type="radio" id="initiativeType" name="${spring.status.expression}" value="${type}" class="js-hide" required
                 <#if spring.stringStatusValue == type>checked="checked"</#if>
                 <@spring.closeTag/>
                 <span class="push" data-choose="<@u.message "initiative.initiativeType.choose" />" data-chosen="<@u.message "initiative.initiativeType.chosen" />">

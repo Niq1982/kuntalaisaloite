@@ -66,7 +66,7 @@
 
     <@formLabel path required optional key>
         <@showError />
-        <@spring.formInput path, 'class="'+cssClass+'" maxlength="'+maxLength+'" '+attributes fieldType />
+        <@spring.formInput path, 'class="'+cssClass+'" '+required+' maxlength="'+maxLength+'" '+attributes fieldType />
     </@formLabel>
 </#macro>
 
@@ -86,7 +86,7 @@
     
     <@showError cssClass=cssErrorClass />
     
-    <@spring.formInput path, 'class="'+cssClass+'" maxlength="'+maxLength+'" '+attributes />
+    <@spring.formInput path, 'class="'+cssClass+'" '+required+' maxlength="'+maxLength+'" '+attributes />
 </#macro>
 
 <#--
@@ -106,7 +106,7 @@
 
     <@formLabel path required optional key>
         <@showError />
-        <@spring.formTextarea path, 'class="'+cssClass+'" maxlength="'+maxLength+'" ' />
+        <@spring.formTextarea path, 'class="'+cssClass+'" '+required+' maxlength="'+maxLength+'" ' />
     
     </@formLabel>
 </#macro>
@@ -164,7 +164,7 @@
     
     <#list options?keys as value>
         <label>
-            <input type="radio" id="${options[value]}" name="${spring.status.expression}" value="${value}"
+            <input type="radio" id="${options[value]}" name="${spring.status.expression}" value="${value}" ${required}
                 <#if spring.stringStatusValue == value>checked="checked"</#if> ${attributes}
             <@spring.closeTag/>
             <span class="label"><@u.message "${options[value]}" /></span>

@@ -33,25 +33,25 @@
     </noscript>
 
     <#-- FORM. Use class 'sodirty' to enable dirtylisten. -->
-    <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-preparation" class="sodirty dirtylisten <#if hasErrors>has-errors</#if>">
+    <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-preparation" class="sodirty dirtylisten <#if hasErrors>has-errors</#if>" novalidate>
 
         <@f.securityFilters />
         <@f.notTooFastField initiative />
 
         <div class="form-block-container">
-            <div id="" class="input-block cf">
+            <div class="input-block cf">
                 <@edit.municipalityBlock municipality=currentMunicipality/>
             </div>
         </div>
         
         <div class="form-block-container toggle-disable">
-            <div id="" class="input-block no-sidebar cf">
+            <div class="input-block no-sidebar cf">
                 <@edit.chooseInitiativeType />
             </div>
         </div>
 
         <div class="form-block-container toggle-disable">
-            <div id="" class="input-block cf">
+            <div class="input-block cf">
             
                 <@edit.authorEmailBlock />
                 
