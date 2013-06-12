@@ -44,6 +44,7 @@
                         
                         <div class="flat-style">
                             <form action="${urls.search()}" method="GET" id="search-form" class="search-form">
+                            <input type="hidden" name="show" value="all"/>
                                 <select name="municipality" id="municipality" class="chzn-select municipality-filter" data-initiative-municipality="" data-placeholder="<@u.message "front.browse.choose" />">
                                     <option value=""><@u.message "currentSearch.municipality.all" /></option>
                                     <#list municipalities as municipality>
