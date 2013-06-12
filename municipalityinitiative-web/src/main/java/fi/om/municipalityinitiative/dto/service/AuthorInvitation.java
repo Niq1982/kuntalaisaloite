@@ -2,8 +2,11 @@ package fi.om.municipalityinitiative.dto.service;
 
 import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 
 public class AuthorInvitation {
+
+    private static final Days INVITATION_EXPIRE_TIME = Days.days(1); // TODO: Move to properties later
 
     private Long initiativeId;
     private String confirmationCode;
@@ -53,7 +56,7 @@ public class AuthorInvitation {
     }
 
     public boolean isExpired() {
-        return invitationTime.isBefore(new DateTime().minusMinutes(60));
+        return invitationTime.isBefore(new DateTime().minus(INVITATION_EXPIRE_TIME));
     }
 
     public void setRejectTime(Maybe<DateTime> rejectTime) {
