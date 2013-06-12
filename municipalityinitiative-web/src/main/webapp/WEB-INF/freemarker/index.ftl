@@ -13,7 +13,7 @@
 
 <div class="container">
     <div class="big-link-holder">
-        <a href="${urls.helpIndex()}" class="big-link"><@u.message "front.bigLink" /> <span class="arrow"></span></a>
+        <a href="${urls.help("ohjeet-vastuuhenkilolle ")}" class="big-link"><@u.message "front.bigLink" /> <span class="arrow"></span></a>
     </div>
 
     <div id="content">
@@ -28,10 +28,13 @@
             
                         <p><@u.message "front.hero.description-1" /></p>
                         <p><@u.message "front.hero.description-2" /></p>
+                        <p><@u.message "front.hero.description-3" /></p>
                         
+                        <#-- Add later if needed
                         <div class="bottom">
                             <a href="${urls.helpIndex()}" class="block-link"><@u.message "front.hero.readmore" /></a>
                         </div>
+                        -->
                     </div>
                 
                 </div>

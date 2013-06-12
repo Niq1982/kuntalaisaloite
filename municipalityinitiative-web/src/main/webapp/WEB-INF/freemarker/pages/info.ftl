@@ -63,7 +63,6 @@
             </#if>
 
         </div>
-        
         <div class="column col-3of4 last">        
             <h1><@u.message "page.info."+page+".title" /></h1>            
             

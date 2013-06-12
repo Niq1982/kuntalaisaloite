@@ -652,7 +652,8 @@ var municipalitySelection = (function() {
 		
 		// FIXME: IS visible is fired too late
 		console.log("Samat: " + municipalitySelection.equalMunicipalitys());
-		if (municipalitySelection.equalMunicipalitys()){
+		//if (municipalitySelection.equalMunicipalitys()){
+		if (membershipRadio.is(':visible')){
 			membershipRadio.each(function(){
 				if($(this).is(':checked')) {
 					memberRadioOK = true;
