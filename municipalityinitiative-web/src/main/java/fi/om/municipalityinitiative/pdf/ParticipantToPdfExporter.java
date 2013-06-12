@@ -29,12 +29,9 @@ public class ParticipantToPdfExporter {
     private static Font bodyTextItalic = new Font(FONT_FAMILY, 10, Font.ITALIC);
     private static Font smallBold = new Font(FONT_FAMILY, 10, Font.BOLD);
     
-    public static final String COMMUNITY_FI = "Yhteisö";
-    public static final String COMMUNITY_SV = "Gemeskap";
-    public static final String COMPANY_FI = "Yritys";
-    public static final String COMPANY_SV = "Företag";
-    public static final String PROPERTY_FI = "Omaisuus";
-    public static final String PROPERTY_SV = "Egendom";
+    public static final String COMMUNITY = "A";
+    public static final String COMPANY = "B";
+    public static final String PROPERTY = "C";
 
 
     private Document document;
@@ -75,36 +72,40 @@ public class ParticipantToPdfExporter {
         //To change body of created methods use File | Settings | File Templates.
 
         Paragraph preface = new Paragraph();
-
-        addEmptyLine(preface, 1);
-        
-        preface.add(new Paragraph("Jäsenyysperuste, jos osallistuja ei ole kunnan asukas", subTitle));
-        
-        com.itextpdf.text.List list = new com.itextpdf.text.List(true, 20);
-        list.add(new ListItem(COMMUNITY_FI + ": Nimenkirjoitusoikeus yhteisössä, laitoksessa tai säätiössä, jonka kotipaikka on aloitetta koskevassa kunnassa", bodyText));
-        list.add(new ListItem(COMPANY_FI + ": Nimenkirjoitusoikeus yrityksessä, jonka kotipaikka on aloitetta koskevassa kunnassa", bodyText));
-        list.add(new ListItem(PROPERTY_FI + ": Hallinto-oikeus tai omistus kiinteään omaisuuteen aloitetta koskevassa kunnassa", bodyText));
-        
-        preface.add(list);
-        
-        addEmptyLine(preface, 1);
-        
-        preface.add(new Paragraph("SV Jäsenyysperuste, jos osallistuja ei ole kunnan asukas", subTitle));
-        
-        list = new com.itextpdf.text.List(true, 20);
-        list.add(new ListItem(COMMUNITY_SV + ": SV Nimenkirjoitusoikeus yhteisössä, laitoksessa tai säätiössä, jonka kotipaikka on aloitetta koskevassa kunnassa", bodyText));
-        list.add(new ListItem(COMPANY_SV + ": SV Nimenkirjoitusoikeus yrityksessä, jonka kotipaikka on aloitetta koskevassa kunnassa", bodyText));
-        list.add(new ListItem(PROPERTY_SV + ": SV Hallinto-oikeus tai omistus kiinteään omaisuuteen aloitetta koskevassa kunnassa", bodyText));
-        
-        preface.add(list);
         
         addEmptyLine(preface, 1);
         preface.add(new Paragraph("Osallistujat / Deltagar", subTitle));
 
         addEmptyLine(preface, 1);
         createTable(preface, participants);
-
+        
         document.add(preface);
+        
+        document.newPage();
+        
+        Paragraph lastPage = new Paragraph();
+        
+        lastPage.add(new Paragraph("Jäsenyysperuste, jos osallistuja ei ole kunnan asukas", subTitle));
+        
+        com.itextpdf.text.List list = new com.itextpdf.text.List(true, 20);
+        list.add(new ListItem(COMMUNITY + ": Nimenkirjoitusoikeus yhteisössä, laitoksessa tai säätiössä, jonka kotipaikka on aloitetta koskevassa kunnassa", bodyText));
+        list.add(new ListItem(COMPANY + ": Nimenkirjoitusoikeus yrityksessä, jonka kotipaikka on aloitetta koskevassa kunnassa", bodyText));
+        list.add(new ListItem(PROPERTY + ": Hallinto-oikeus tai omistus kiinteään omaisuuteen aloitetta koskevassa kunnassa", bodyText));
+        
+        lastPage.add(list);
+        
+        addEmptyLine(lastPage, 1);
+        
+        lastPage.add(new Paragraph("SV Jäsenyysperuste, jos osallistuja ei ole kunnan asukas", subTitle));
+        
+        list = new com.itextpdf.text.List(true, 20);
+        list.add(new ListItem(COMMUNITY + ": SV Nimenkirjoitusoikeus yhteisössä, laitoksessa tai säätiössä, jonka kotipaikka on aloitetta koskevassa kunnassa", bodyText));
+        list.add(new ListItem(COMPANY + ": SV Nimenkirjoitusoikeus yrityksessä, jonka kotipaikka on aloitetta koskevassa kunnassa", bodyText));
+        list.add(new ListItem(PROPERTY + ": SV Hallinto-oikeus tai omistus kiinteään omaisuuteen aloitetta koskevassa kunnassa", bodyText));
+        
+        lastPage.add(list);
+        
+        document.add(lastPage);
     }
     /*
      * iText License:
@@ -171,11 +172,11 @@ public class ParticipantToPdfExporter {
             String membershipType = "";
             
             if (participant.getMembership() == Membership.community) {
-                membershipType = COMMUNITY_FI + "\n" + COMMUNITY_SV;
+                membershipType = COMMUNITY;
             } else if (participant.getMembership() == Membership.company) {
-                membershipType = COMPANY_FI + "\n" + COMPANY_SV;
+                membershipType = COMPANY;
             } else if (participant.getMembership() == Membership.property) {
-                membershipType = PROPERTY_FI + "\n" + PROPERTY_SV;
+                membershipType = PROPERTY;
             } else {
                 membershipType = "";
             }
