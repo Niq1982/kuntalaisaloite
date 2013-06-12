@@ -12,9 +12,31 @@
 <@u.message "email.managementhash.renewed.description" />
 
 
+<@b.separator />
 <@b.adminViewLink type />
-
 
 <@b.separator />
 
 <@b.emailFooter type />
+
+<#-- Swedish part -->
+<#global switchLocale = altLocale />
+
+<@b.separator />
+
+<@u.message "email.managementhash.renewed.title" />
+
+
+<@b.initiativeDetails type=type showDate=true />
+
+<@u.message "email.managementhash.renewed.description" />
+
+
+<@b.separator />
+<@b.adminViewLink type />
+
+<@b.separator />
+
+<@b.emailFooter type />
+
+<#global switchLocale = locale />
