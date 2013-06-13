@@ -203,7 +203,7 @@
         <#assign data = spring.status.value!"" />
     </#if>
 
-    <select name="${spring.status.expression}" id="${spring.status.expression}" ${attributes} class="chzn-select ${cssClass}" data-initiative-municipality="${data}" data-placeholder="<@u.message defaultOption />" <#if allowSingleDeselect>data-allow-single-deselect="allow"</#if>>
+    <select name="${spring.status.expression}" id="${spring.status.expression}" ${attributes} ${required} class="chzn-select ${cssClass}" data-initiative-municipality="${data}" data-placeholder="<@u.message defaultOption />" <#if allowSingleDeselect>data-allow-single-deselect="allow"</#if>>
         <option value=""><@u.message defaultOption /></option>
         <#list options as option>
         <#if !onlyActive || option.active>

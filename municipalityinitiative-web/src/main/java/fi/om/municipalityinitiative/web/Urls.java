@@ -201,7 +201,7 @@ public final class Urls {
 
     public static final String PARITICIPANT_LIST_MANAGE_SV = VIEW_SV + "/deltagaradministration";
 
-    public static final String MANAGEMENT_FI = "/fi/hallinta" + "/" + ID_PARAMETER;
+    public static final String MANAGEMENT_FI = "/fi/yllapito" + "/" + ID_PARAMETER;
 
     public static final String MANAGEMENT_SV = "/sv/administration" + "/" + ID_PARAMETER;
 

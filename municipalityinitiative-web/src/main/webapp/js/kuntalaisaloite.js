@@ -470,7 +470,7 @@ var municipalitySelection = (function() {
 			mask				= $('.mask'),
 			btnParticipate 		= $("button#participate");
 		
-		btnParticipate.disableButton(prevent);
+		//btnParticipate.disableButton(prevent); // use general form validation
 		
 		mask.remove();
 		
@@ -487,7 +487,7 @@ var municipalitySelection = (function() {
 	// Disable or enable submitting "Save and collect"
 	function disableSubmit(disable){
 		//$('button#action-send-confirm, button#participate').disableButton(disable);
-		$('button#participate').disableButton(disable);
+		//$('button#participate').disableButton(disable); // use general form validation
 	}
 	
 	// Toggle the radiobutton selection for municipality membership
@@ -522,11 +522,16 @@ var municipalitySelection = (function() {
 	
 	// Toggle membership radiobuttons
 	function showMembership(show){
-		var	municipalMembership	= $('#municipalMembership');
+		var	municipalMembership	= $('#municipalMembership'),
+			radios = municipalMembership.find('[type="radio"]');
+
+		// FIXME: does not show correctly
 		if (show){
 			municipalMembership.addClass(hideClass);
+			radios.removeAttr('required');
 		} else {
 			municipalMembership.removeClass(hideClass);
+			radios.attr('required','required');
 		}		
 	}
 
@@ -545,7 +550,7 @@ var municipalitySelection = (function() {
 		cb.live('change',function(){
 			var disable = isNotMember();
 			
-			btn.disableButton( disable );
+			//btn.disableButton( disable ); // use general form validation
 			preventContinuing( disable );
 			warningNotMember( disable );
 		});
@@ -593,111 +598,6 @@ var municipalitySelection = (function() {
 
 
 /**
-* Preparing phase of the initiative
-* =================================
-* 
-* Check that all fields are filled
-* - Selected both municipalities
-* - Membership selection if visible
-* - Selected initiative type
-* - Added valid email address
-* 
-*/
-(function() {
-	var form 				= $('#form-preparation'),
-		submit 				= form.find('#action-send-confirm'),
-		input 				= form.find('input,select'),
-		email				= form.find('#participantEmail'),
-		municipalitySelect	= form.find('#municipality'),
-		homeMunicipalitySelect	= form.find('#homeMunicipality'),
-		typeInput 			= form.find('.initiative-type input'),
-		membership			= form.find('#municipalMembership'),
-		membershipRadio		= membership.find('input[type=radio]'),
-		fillInAll			= form .find('.fill-in-all');
-	
-	submit.disableButton(true);
-	
-	input.change(function(){
-		if (allFieldsFilled()) {
-			submit.disableButton(false);
-			fillInAll.addClass(hideClass);
-		} else {
-			submit.disableButton(true);
-			fillInAll.removeClass(hideClass);
-		}
-	});
-	email.keyup(function(){
-		$(this).val( $(this).val().replace(/\s+$/, '') ); // trim last space
-
-		if (allFieldsFilled()) {
-			submit.disableButton(false);
-			fillInAll.addClass(hideClass);
-		} else {
-			submit.disableButton(true);
-			fillInAll.removeClass(hideClass);
-		}
-	});
-	
-	var allFieldsFilled = function(){
-		var selectOK = memberRadioOK = typeRadioOK = emailOK = true;
-		
-		municipalitySelect.each(function() {
-			if(municipalitySelect.val() === "") {
-				selectOK = false
-			} else {
-				selectOK = selectOK;
-			}
-		});
-		
-		// FIXME: IS visible is fired too late
-		//if (municipalitySelection.equalMunicipalitys()){
-		if (membershipRadio.is(':visible')){
-			membershipRadio.each(function(){
-				if($(this).is(':checked')) {
-					memberRadioOK = true;
-					return false;
-				} else {
-					memberRadioOK = false;
-				}
-			});
-		}
-		
-		email.each(function() {
-			var emailField = $(this);
-			
-			if (validateEmail(emailField.val())) {
-				
-				emailField.addClass('valid').removeClass('invalid');
-				emailOK = true;
-			} else {
-				if (emailField.val() !== ""){
-					emailField.addClass('invalid').removeClass('valid');
-				} else {
-					emailField.removeClass('valid invalid');
-				}
-				emailOK = false;
-			}
-		});
-
-		typeInput.each(function(){
-			if($(this).is(':checked')) {
-				typeRadioOK = true;
-				return false;
-			} else {
-				typeRadioOK = false;
-			}
-		});
-
-		console.log("ALL: "+ (selectOK && memberRadioOK && typeRadioOK && emailOK));
-
-		return selectOK && memberRadioOK && typeRadioOK && emailOK;
-	};
-	
-}());
-
-
-
-/**
 * Choose initiative type
 * ======================
 * 
@@ -728,6 +628,129 @@ var municipalitySelection = (function() {
 		thisObj.find('input[type="radio"]').attr('checked','checked');
 	});
 }());
+
+
+/**
+* Simple form validation
+* ======================
+* 
+* - Loops through fields that has attribute 'required' in given form
+* - If field is defined, validate it only
+* - If field is invalid, add class 'js-invalid'
+* - IF form has invalid fields, add class 'js-invalid'
+*
+*/
+(function() {
+	jQuery.fn.validateForm = function(field){
+		var form =			$(this),
+			required =		form.find('[required]'),
+			classInvalid = 	'js-invalid',
+			submitBtn = 	form.find('[type="submit"]'),
+		
+		updateField = function(elem, valid){
+			if (valid) {
+				elem.removeClass(classInvalid);
+			} else {
+				elem.addClass(classInvalid);
+			}
+		},
+
+		isFieldFilled = function(elem){
+			return elem.val().replace(/\s+$/, '') !== ''; // trim last space
+		}
+
+		isRadioChecked = function(elem){
+			return ($('[name="'+elem.attr('name')+'"]:checked').length > 0);
+		},
+
+		isOptionSelected = function(id){
+			return (document.getElementById(id).selectedIndex > 0);
+		},
+
+		validateField = function(elem){
+			if (elem[0].type === 'radio'){
+				// FIXME: check for all radios within same group
+				updateField(elem, isRadioChecked(elem));
+			} else if (elem[0].type === 'checkbox') {
+				updateField(elem, elem.is(':checked'));
+			} else if (elem[0].type === 'select-one') {
+				updateField(elem, isOptionSelected(elem.attr('id')));
+			} else {
+				updateField(elem, isFieldFilled(elem));
+			}
+		};
+
+		// Validate only field if defined otherwise loop through entire form
+		if (field !== null && field !== undefined) {
+			if (field.attr('required')) {
+				
+				validateField(field);
+				form = field.closest('.js-validate');
+				submitBtn = form.find('[type="submit"]');
+			}
+		} else {
+			required.each(function(){
+				validateField($(this));
+			});			
+		}
+
+		if (form.find('.'+classInvalid).length > 0){
+			submitBtn.disableButton(true);
+			updateField(form, false);
+		} else {
+			submitBtn.disableButton(false);
+			updateField(form, true);
+		}
+	}
+}());
+
+
+/**
+* Validate forms
+* ==============
+* 
+* Validate forms that have class 'js-validate'
+*
+*/
+/*var validateListener = (function() {
+	var form =		$('.js-validate'),
+
+	init = function(form){
+		text =		form.find('[type="text"], textarea'),
+		radio = 	form.find('[type="radio"]'),
+		checkbox = 	form.find('[type="checkbox"]'),
+		select = 	form.find('select');
+
+		form.validateForm();
+	};
+
+	init(form);
+
+	text.live('keyup', function(){
+		form.validateForm($(this));
+	});
+
+	form.find('[type="radio"]').live('change', function(){
+		form.validateForm($(this));
+	});
+
+	checkbox.live('change', function(){
+		form.validateForm($(this));
+	});
+
+	form.find('select').live('change', function(){
+		console.log("SELECT");
+		form.validateForm($(this));
+	});
+
+	return {
+		init: function(form){
+			init(form);
+		}
+	};
+	
+}());*/
+
 
 /**
 * Toggle form
@@ -848,12 +871,14 @@ $('.municipality-filter').change( function() {
 
 		    	jsMessages.Load();
 		    	
+		    	// TODO: enable
+				//validateListener.init($('.js-validate'));
+
 		    	if (callback) callback();					// Callback for dynamically updated data
 		    	
-		    	// TODO: Test this properly. We might want to use this.
 		    	setTimeout(function () {
 		    		jsRemove();
-		    		
+
 		    		if (!$('form').hasClass('has-errors')) {
 		    			modal.find('input[type="text"]:first, textarea:first').focus();
 		    		}

@@ -33,7 +33,7 @@
     </noscript>
 
     <#-- FORM. Use class 'sodirty' to enable dirtylisten. -->
-    <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-preparation" class="sodirty dirtylisten <#if hasErrors>has-errors</#if>" novalidate>
+    <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-preparation" class="sodirty dirtylisten js-validate <#if hasErrors>has-errors</#if>" novalidate>
 
         <@f.securityFilters />
         <@f.notTooFastField initiative />

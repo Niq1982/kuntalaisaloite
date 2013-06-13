@@ -41,7 +41,7 @@
             <@f.cookieWarning springMacroRequestContext.requestUri />
         </div>
         
-        <form action="${springMacroRequestContext.requestUri}?formError=contactAuthor" method="POST" id="form-contact-author" class="sodirty <#if hasErrors>has-errors</#if>">
+        <form action="${springMacroRequestContext.requestUri}?formError=contactAuthor" method="POST" id="form-contact-author" class="sodirty dirtylisten js-validate <#if hasErrors>has-errors</#if>" novalidate>
             <@f.securityFilters/>
 
             <div class="input-block-content no-top-margin">
@@ -81,7 +81,7 @@
             <@f.cookieWarning springMacroRequestContext.requestUri />
         </div>
         
-        <form action="${springMacroRequestContext.requestUri}?formError=participate" method="POST" id="form-participate" class="sodirty <#if hasErrors>has-errors</#if>">
+        <form action="${springMacroRequestContext.requestUri}?formError=participate" method="POST" id="form-participate" class="sodirty dirtylisten js-validate <#if hasErrors>has-errors</#if>" novalidate>
             <@f.securityFilters/>
             <@f.notTooFastField participant/>
     
