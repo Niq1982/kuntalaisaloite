@@ -18,7 +18,9 @@ public class QAuthorInvitationPk extends com.mysema.query.sql.RelationalPathBase
 
     public static final QAuthorInvitationPk authorInvitationPk = new QAuthorInvitationPk("author_invitation_pk");
 
-    public final NumberPath<Long> id = createNumber("id", Long.class);
+    public final StringPath confirmationCode = createString("confirmation_code");
+
+    public final NumberPath<Long> initiativeId = createNumber("initiative_id", Long.class);
 
     public QAuthorInvitationPk(String variable) {
         super(QAuthorInvitationPk.class, forVariable(variable), "municipalityinitiative", "author_invitation_pk");

@@ -256,7 +256,7 @@ public class TestHelper {
                 .set(QAuthorInvitation.authorInvitation.name, authorInvitation.getName())
                 .set(QAuthorInvitation.authorInvitation.email, authorInvitation.getEmail())
                 .set(QAuthorInvitation.authorInvitation.confirmationCode, authorInvitation.getConfirmationCode())
-                .executeWithKey(QAuthorInvitation.authorInvitation.id);
+                .execute();
 
         return authorInvitation;
     }
@@ -355,7 +355,7 @@ public class TestHelper {
                 .set(QAuthorInvitation.authorInvitation.invitationTime, authorInvitation.getInvitationTime())
                 .set(QAuthorInvitation.authorInvitation.initiativeId, authorInvitation.getInitiativeId())
                 .set(QAuthorInvitation.authorInvitation.rejectTime, rejected ? new DateTime() : null)
-                .executeWithKey(QAuthorInvitation.authorInvitation.id);
+                .execute();
     }
 
     public static class AuthorDraft {

@@ -72,7 +72,7 @@ public class JdbcAuthorDao implements AuthorDao {
                 .set(QAuthorInvitation.authorInvitation.name, authorInvitation.getName())
                 .set(QAuthorInvitation.authorInvitation.invitationTime, authorInvitation.getInvitationTime())
                 .set(QAuthorInvitation.authorInvitation.initiativeId, authorInvitation.getInitiativeId())
-                .executeWithKey(QAuthorInvitation.authorInvitation.id);
+                .execute();
     }
 
     @Override
@@ -111,7 +111,7 @@ public class JdbcAuthorDao implements AuthorDao {
     public List<AuthorInvitation> findInvitations(Long initiativeId) {
         return queryFactory.from(QAuthorInvitation.authorInvitation)
                 .where(QAuthorInvitation.authorInvitation.initiativeId.eq(initiativeId))
-                .orderBy(QAuthorInvitation.authorInvitation.id.asc())
+                .orderBy(QAuthorInvitation.authorInvitation.invitationTime.asc())
                 .list(Mappings.authorInvitationMapping);
     }
 
