@@ -183,7 +183,7 @@ public final class Urls {
     
     public static final String PREPARE_FI =    "/fi/aloitteen-valmistelu";
 
-    public static final String PREPARE_SV =    "/sv/beredning-av-initiativ";
+    public static final String PREPARE_SV =    "/sv/utforma-initiativ";
 
     public static final String PENDING_CONFIRMATION_FI =    "/fi/odottaa-vahvistusta" + "/" + ID_PARAMETER;
 
@@ -199,7 +199,7 @@ public final class Urls {
     
     public static final String PARITICIPANT_LIST_MANAGE_FI = VIEW_FI + "/osallistujahallinta";
 
-    public static final String PARITICIPANT_LIST_MANAGE_SV = VIEW_SV + "/deltagaradministration";
+    public static final String PARITICIPANT_LIST_MANAGE_SV = VIEW_SV + "/deltagarhantering";
 
     public static final String MANAGEMENT_FI = "/fi/yllapito" + "/" + ID_PARAMETER;
 
@@ -207,13 +207,13 @@ public final class Urls {
 
     public static final String MODERATION_FI = "/fi/moderointi" + "/" + ID_PARAMETER;
 
-    public static final String MODERATION_SV = "/sv/moderation" + "/" + ID_PARAMETER;
+    public static final String MODERATION_SV = "/sv/moderering" + "/" + ID_PARAMETER;
 
     public static final String MUNICIPALITY_MODERATION = "/fi/kuntahallinta";
 
     public static final String EDIT_FI = "/fi/muokkaa" + "/" + ID_PARAMETER;
 
-    public static final String EDIT_SV = "/sv/bearbeta" + "/" + ID_PARAMETER;
+    public static final String EDIT_SV = "/sv/redigera" + "/" + ID_PARAMETER;
 
     public static final String UPDATE_FI = "/fi/paivita" + "/" + ID_PARAMETER;
 
@@ -233,7 +233,7 @@ public final class Urls {
 
     public static final String IFRAME_GENERATOR_FI = "/fi/leijuke";
 
-    public static final String IFRAME_GENERATOR_SV = "/sv/mashup";
+    public static final String IFRAME_GENERATOR_SV = "/sv/widget";
     
     public static final String IFRAME_FI = "/fi/iframe";
 
