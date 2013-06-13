@@ -22,8 +22,6 @@ public class QAuthorInvitation extends com.mysema.query.sql.RelationalPathBase<Q
 
     public final StringPath email = createString("email");
 
-    public final NumberPath<Long> id = createNumber("id", Long.class);
-
     public final NumberPath<Long> initiativeId = createNumber("initiative_id", Long.class);
 
     public final DateTimePath<org.joda.time.DateTime> invitationTime = createDateTime("invitation_time", org.joda.time.DateTime.class);
@@ -32,7 +30,7 @@ public class QAuthorInvitation extends com.mysema.query.sql.RelationalPathBase<Q
 
     public final DateTimePath<org.joda.time.DateTime> rejectTime = createDateTime("reject_time", org.joda.time.DateTime.class);
 
-    public final com.mysema.query.sql.PrimaryKey<QAuthorInvitation> authorInvitationPk = createPrimaryKey(id);
+    public final com.mysema.query.sql.PrimaryKey<QAuthorInvitation> authorInvitationPk = createPrimaryKey(initiativeId, confirmationCode);
 
     public final com.mysema.query.sql.ForeignKey<QMunicipalityInitiative> authorInvitationInitiativeIdFk = createForeignKey(initiativeId, "id");
 

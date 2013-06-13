@@ -24,13 +24,11 @@ public class QAuthorMessage extends com.mysema.query.sql.RelationalPathBase<QAut
 
     public final StringPath contactorEmail = createString("contactor_email");
 
-    public final NumberPath<Long> id = createNumber("id", Long.class);
-
     public final NumberPath<Long> initiativeId = createNumber("initiative_id", Long.class);
 
     public final StringPath message = createString("message");
 
-    public final com.mysema.query.sql.PrimaryKey<QAuthorMessage> authormessagePk = createPrimaryKey(id);
+    public final com.mysema.query.sql.PrimaryKey<QAuthorMessage> authormessagePk = createPrimaryKey(confirmationCode);
 
     public final com.mysema.query.sql.ForeignKey<QMunicipalityInitiative> authormessageInitiativeidFk = createForeignKey(initiativeId, "id");
 

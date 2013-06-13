@@ -18,7 +18,7 @@ public class QAuthormessagePk extends com.mysema.query.sql.RelationalPathBase<QA
 
     public static final QAuthormessagePk authormessagePk = new QAuthormessagePk("authormessage_pk");
 
-    public final NumberPath<Long> id = createNumber("id", Long.class);
+    public final StringPath confirmationCode = createString("confirmation_code");
 
     public QAuthormessagePk(String variable) {
         super(QAuthormessagePk.class, forVariable(variable), "municipalityinitiative", "authormessage_pk");

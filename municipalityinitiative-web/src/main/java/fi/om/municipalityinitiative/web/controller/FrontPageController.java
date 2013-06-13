@@ -20,7 +20,7 @@ import static fi.om.municipalityinitiative.web.Urls.*;
 import static fi.om.municipalityinitiative.web.Views.*;
 
 @Controller
-public class StaticPageController extends BaseController {
+public class FrontPageController extends BaseController {
     
     @Resource
     private PublicInitiativeService publicInitiativeService;
@@ -28,7 +28,7 @@ public class StaticPageController extends BaseController {
     @Resource
     private MunicipalityService municipalityService;
     
-    public StaticPageController(boolean optimizeResources, String resourcesVersion, Maybe<Integer> omPiwicId) {
+    public FrontPageController(boolean optimizeResources, String resourcesVersion, Maybe<Integer> omPiwicId) {
         super(optimizeResources, resourcesVersion, omPiwicId);
     }
     
@@ -51,6 +51,7 @@ public class StaticPageController extends BaseController {
         search.setShow(InitiativeSearch.Show.all);
         search.setOrderBy(InitiativeSearch.OrderBy.latest);
 
+        // TODO: Cache
         model.addAttribute("initiatives", publicInitiativeService.findMunicipalityInitiatives(search, new LoginUserHolder<>(User.anonym())));
         model.addAttribute("municipalities", municipalityService.findAllMunicipalities(locale));
         addPiwicIdIfNotAuthenticated(model);

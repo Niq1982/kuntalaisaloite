@@ -190,8 +190,8 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
     }
     
     @Bean
-    public StaticPageController staticPageController() {
-        return new StaticPageController(
+    public FrontPageController staticPageController() {
+        return new FrontPageController(
                 optimizeResources(env),
                 resourcesVersion(env),
                 omPiwicId(env));
