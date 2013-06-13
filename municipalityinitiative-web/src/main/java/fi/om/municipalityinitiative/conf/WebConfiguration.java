@@ -160,13 +160,8 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
 
 
     @Bean
-    public InitiativeCreateController municipalityInitiativeCreateController() {
-        return new InitiativeCreateController(optimizeResources(env), resourcesVersion(env));
-    }
-
-    @Bean
-    public InitiativeViewController municipalityInitiativeViewController() {
-        return new InitiativeViewController(optimizeResources(env), resourcesVersion(env));
+    public InitiativePublicController initiativePublicController() {
+        return new InitiativePublicController(optimizeResources(env), resourcesVersion(env));
     }
 
     @Bean

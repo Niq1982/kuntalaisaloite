@@ -100,6 +100,8 @@ public class AuthorService {
 
                 String managementHash = createAuthorAndParticipant(initiativeId, confirmDto);
                 authorDao.deleteAuthorInvitation(initiativeId, confirmDto.getConfirmCode());
+
+                // TODO: get this out of transaction
                 emailService.sendAuthorConfirmedInvitation(initiativeId, invitation.getEmail(), managementHash, locale);
                 return managementHash;
 
