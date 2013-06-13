@@ -37,6 +37,7 @@ public class ApiController extends BaseController {
 
     @Resource
     MappingJackson2HttpMessageConverter jsonConverter;
+
     public static final Municipality TAMPERE = new Municipality(1, "Tampere", "Tammerfors", false);
 
     public ApiController(boolean optimizeResources, String resourcesVersion) {
