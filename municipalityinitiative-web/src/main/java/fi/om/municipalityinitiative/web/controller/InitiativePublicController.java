@@ -36,7 +36,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
-public class InitiativeViewController extends BaseController {
+public class InitiativePublicController extends BaseController {
 
     @Resource
     private MunicipalityService municipalityService;
@@ -53,7 +53,7 @@ public class InitiativeViewController extends BaseController {
     @Resource
     private AuthorService authorService;
 
-    public InitiativeViewController(boolean optimizeResources, String resourcesVersion) {
+    public InitiativePublicController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
     }
 
@@ -97,6 +97,31 @@ public class InitiativeViewController extends BaseController {
             return ViewGenerator.singleView(initiativeInfo, authorService.findPublicAuthors(initiativeId))
                     .view(model, Urls.get(locale).alt().view(initiativeId));
         }
+    }
+
+    @RequestMapping(value = { PREPARE_FI, PREPARE_SV }, method = GET)
+    public String prepareGet(Model model, Locale locale, HttpServletRequest request) {
+        return ViewGenerator.prepareView(new PrepareInitiativeUICreateDto(), municipalityService.findAllMunicipalities(locale))
+                .view(model, Urls.get(locale).alt().prepare());
+    }
+
+    @RequestMapping(value={ PREPARE_FI, PREPARE_SV }, method=POST)
+    public String preparePost(@ModelAttribute("initiative") PrepareInitiativeUICreateDto initiative,
+                              BindingResult bindingResult,
+                              Model model,
+                              Locale locale,
+                              HttpServletRequest request) {
+        Urls urls = Urls.get(locale);
+        if (validationService.validationErrors(initiative, bindingResult, model)) {
+            return ViewGenerator.prepareView(initiative, municipalityService.findAllMunicipalities(locale))
+                    .view(model, urls.prepare());
+        }
+
+        Long initiativeId = publicInitiativeService.prepareInitiative(initiative, locale);
+
+        addRequestAttribute(initiative.getParticipantEmail(), request); // To be shown at confirmation page
+        return redirectWithMessage(urls.pendingConfirmation(initiativeId), RequestMessage.PREPARE, request);
+
     }
 
     @RequestMapping(value={ VIEW_FI, VIEW_SV }, method=POST)

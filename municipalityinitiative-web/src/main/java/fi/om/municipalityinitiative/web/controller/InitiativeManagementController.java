@@ -1,5 +1,7 @@
 package fi.om.municipalityinitiative.web.controller;
 
+import com.google.common.base.Strings;
+import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUICreateDto;
@@ -96,6 +98,58 @@ public class InitiativeManagementController extends BaseController {
         } else {
             return ERROR_500; // TODO: Custom error page or some message that operation is not allowed
         }
+    }
+
+    // TODO: Combine update and edit views?
+    @RequestMapping(value={ EDIT_FI, EDIT_SV }, method=GET)
+    public String editView(@PathVariable("id") Long initiativeId,
+                           Model model, Locale locale, HttpServletRequest request) {
+
+        LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
+
+        ManagementSettings managementSettings = publicInitiativeService.getManagementSettings(initiativeId);
+
+        Urls urls = Urls.get(locale);
+        if (managementSettings.isAllowEdit()) {
+            InitiativeDraftUIEditDto initiativeDraft = initiativeManagementService.getInitiativeDraftForEdit(initiativeId, loginUserHolder);
+            return ViewGenerator.editView(
+                    Strings.isNullOrEmpty(initiativeDraft.getName()),
+                    initiativeDraft,
+                    initiativeManagementService.getAuthorInformation(initiativeId, loginUserHolder),
+                    urls.management(initiativeId)
+            ).view(model, urls.alt().edit(initiativeId));
+        }
+        else if (managementSettings.isAllowUpdate()) {
+            return contextRelativeRedirect(urls.update(initiativeId));
+        }
+        else {
+            return ERROR_500; // TODO: Custom error page or some message that operation is not allowed
+        }
+    }
+
+    @RequestMapping(value={ EDIT_FI, EDIT_SV }, method=POST)
+    public String editPost(@PathVariable("id") Long initiativeId,
+                           @ModelAttribute("initiative") InitiativeDraftUIEditDto editDto,
+                           BindingResult bindingResult,
+                           Model model, Locale locale, HttpServletRequest request) {
+
+        Urls urls = Urls.get(locale);
+
+        LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
+
+        if (validationService.validationErrors(editDto, bindingResult, model)) {
+            return ViewGenerator.editView(
+                    Strings.isNullOrEmpty(initiativeManagementService.getInitiativeDraftForEdit(initiativeId, loginUserHolder).getName()),
+                    editDto,
+                    initiativeManagementService.getAuthorInformation(initiativeId, loginUserHolder),
+                    urls.management(initiativeId)
+            ).view(model, urls.alt().edit(initiativeId));
+        }
+
+        initiativeManagementService.editInitiativeDraft(initiativeId, loginUserHolder, editDto);
+        return redirectWithMessage(urls.management(initiativeId), RequestMessage.SAVE_DRAFT, request);
     }
 
     @RequestMapping(value={ UPDATE_FI, UPDATE_SV }, method=POST)
