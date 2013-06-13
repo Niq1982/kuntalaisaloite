@@ -324,7 +324,7 @@ public class TestHelper {
                 .set(QAuthorMessage.authorMessage.contactor, authorMessage.getContactName())
                 .set(QAuthorMessage.authorMessage.contactorEmail, authorMessage.getContactEmail())
                 .set(QAuthorMessage.authorMessage.initiativeId, authorMessage.getInitiativeId())
-                .executeWithKey(QAuthorMessage.authorMessage.id);
+                .execute();
 
 
     }

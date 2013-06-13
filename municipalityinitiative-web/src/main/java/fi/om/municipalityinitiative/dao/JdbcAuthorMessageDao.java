@@ -22,7 +22,7 @@ public class JdbcAuthorMessageDao implements AuthorMessageDao {
                 .set(QAuthorMessage.authorMessage.initiativeId, authorMessage.getInitiativeId())
                 .set(QAuthorMessage.authorMessage.message, authorMessage.getMessage())
                 .set(QAuthorMessage.authorMessage.confirmationCode, authorMessage.getConfirmationCode())
-                .executeWithKey(QAuthorMessage.authorMessage.id);
+                .execute();
 
     }
 

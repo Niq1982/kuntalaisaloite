@@ -65,7 +65,9 @@ create table participant (
     show_name boolean,
 
     email varchar(100),
-    confirmation_code varchar(20), -- Being set as null after confirmation
+
+    -- Being set as null after confirmation:
+    confirmation_code varchar(20), -- TODO: CHAR
 
     membership_type membershipType constraint participant_membership_type_nn not null default 'none',
 
@@ -79,7 +81,7 @@ create index participant_initiative_index on participant(municipality_initiative
 
 create table author (
     participant_id bigserial,
-    management_hash varchar(40),
+    management_hash varchar(40),  -- TODO: CHAR
 
     phone varchar(30),
     address varchar(256),
