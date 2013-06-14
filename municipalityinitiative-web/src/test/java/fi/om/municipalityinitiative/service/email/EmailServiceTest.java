@@ -38,7 +38,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         emailService.sendManagementHashRenewed(initiativeId(), MANAGEMENT_HASH, authorId());
 
         assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
-        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Sinulle on luotu uusi aloitteen ylläpitolinkki Kuntalaisaloite.fi-palvelussa"));
+        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Sinulle on luotu uusi aloitteen ylläpitolinkki Kuntalaisaloite.fi-palvelussa / En ny hanteringslänk har skapats för dig i webbtjänsten Invånarinitiativ.fi"));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.loginAuthor(MANAGEMENT_HASH)));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_NAME));
     }
@@ -103,7 +103,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         contactInfo.setPhone("Puhnummi");
         emailService.sendAuthorDeletedEmailToOtherAuthors(initiativeId(), contactInfo);
 
-        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Vastuuhenkilö on poistettu aloitteestasi"));
+        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Vastuuhenkilö on poistettu aloitteestasi / Ansvarspersonen har tagits bort från ditt initiativ"));
         assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_NAME));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_MUNICIPALITY));
@@ -117,7 +117,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
     public void author_has_been_deleted_email_to_author_contains_all_information() throws Exception {
         emailService.sendAuthorDeletedEmailToDeletedAuthor(initiativeId(), AUTHOR_EMAIL);
 
-        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Sinut on poistettu aloitteen vastuuhenkilöistä"));
+        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Sinut on poistettu aloitteen vastuuhenkilöistä / Du har tagits bort som ansvarsperson för initiativet"));
         assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
 
         assertThat(javaMailSenderFake.getMessageContent().html, containsString("Et ole enää aloitteen vastuuhenkilö"));
@@ -201,7 +201,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         emailService.sendAuthorMessages(initiativeId(), authorMessage);
 
         assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
-        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Olet saanut yhteydenoton aloitteeseesi liittyen / Samma på svenska"));
+        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Olet saanut yhteydenoton aloitteeseesi liittyen / Du har kontaktats gällande ditt initiativ"));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(authorMessage.getContactEmail()));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(authorMessage.getContactName()));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(authorMessage.getMessage()));
