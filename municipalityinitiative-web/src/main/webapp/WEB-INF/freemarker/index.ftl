@@ -5,7 +5,7 @@
 <#escape x as x?html> 
 <@l.main "page.frontpage">
  
- <#if requestMessages??>
+ <#if requestMessages?? && (requestMessages?size > 0)>
     <div class="container"><@u.requestMessage requestMessages /></div>
 </#if>
  
