@@ -123,10 +123,8 @@ jQuery.fn.disableButton = function(disable){
 	var btn = $(this);
 
 	if (disable) {
-		console.log("disable: "+btn.attr('id'));
 		btn.attr('disabled','disabled').addClass('disabled');
 	} else {
-		console.log("enable: "+btn.attr('id'));
 		btn.removeAttr('disabled').removeClass('disabled');
 	}	
 };
@@ -367,20 +365,15 @@ $(document).ready(function () {
 * - Prevents or allows proceeding to next step in the form
 */	
 var municipalitySelection = (function() {
-	var chznSelect, municipalitySelect, homeMunicipalitySelect,
-		selectedMunicipality, municipalityNotEqual, municipalMembershipRadios,
-		validationErrors,
-		isHomeMunicipality, equalMunicipalitys, slideOptions;
-
-	chznSelect					= $(".chzn-select");
-	municipalitySelect			= $('#municipality');					// Targets select-element
-	homeMunicipalitySelect		= $('#homeMunicipality');				// Targets select-element
-	selectedMunicipalityElem	= $('#selected-municipality'); 			// Municipality text in the second step in the form
-	municipalityNotEqual		= $('.municipality-not-equal');			// Membership selections if municipalitys are not same
-	municipalMembershipRadios	= $("input[name=municipalMembership]"); // Membership radiobuttons for initiative's municipality
-	
-	// If form has validation errors: true / false
-	validationErrors = $('#form-initiative').hasClass('has-errors');
+	var chznSelect					= $(".chzn-select"),
+		municipalitySelect			= $('#municipality'),					// Targets select-element
+		homeMunicipalitySelect		= $('#homeMunicipality'),				// Targets select-element
+		selectedMunicipalityElem	= $('#selected-municipality'), 			// Municipality text in the second step in the form
+		municipalityNotEqual		= $('.municipality-not-equal'),			// Membership selections if municipalitys are not same
+		municipalMembershipRadios	= $("input[name=municipalMembership]"), // Membership radiobuttons for initiative's municipality
+		
+		// If form has validation errors: true / false
+		validationErrors = $('#form-initiative').hasClass('has-errors'),
 	
 	// Checks which one of the selects we are using
 	isHomeMunicipality = function(select){
@@ -389,27 +382,27 @@ var municipalitySelection = (function() {
 		} else {
 			return false;
 		}
-	};
+	},
 	equalMunicipalitys = function(){
 		var selectHome	= $('#homeMunicipality'),
 			select		= $('#municipality');
- 
+
 		// In the create form we have two selects
 		if (select.length > 0){
-			if ( selectHome.val() === select.val() ) {
+			if ( selectHome.val() == select.val() ) {
 				return true;
 			} else {
 				return false;
 			}
 		// If only one select
 		} else {
-			if ( selectHome.val() === selectHome.data('initiative-municipality') ) {
+			if ( selectHome.val() == selectHome.data('initiative-municipality') ) {
 				return true;
 			} else {
 				return false;
 			}
 		}
-	};
+	},
 	slideOptions = {
 		duration: speedFast, 
 		easing: 'easeOutExpo'
@@ -434,7 +427,7 @@ var municipalitySelection = (function() {
 			disableSubmit(false);
 		}
 		
-		showMembership(equalMunicipalitys());
+		showMembership(!equalMunicipalitys());
 	};
 	
 	// update text in the municipality data in the form step 2
@@ -498,14 +491,14 @@ var municipalitySelection = (function() {
 			municipalityNotEqual.stop(false,true).slideUp(slideOptions);
 			preventContinuing(false);
 			disableSubmit(true);
-			showMembership(true);
+			showMembership(false);
 		} else {
 			municipalityNotEqual.stop(false,true).slideDown(slideOptions);
 			if (!validationErrors){
 				preventContinuing(true);
 			}
 			disableSubmit(false);
-			showMembership(false);
+			showMembership(true);
 		}
 	};
 	
@@ -525,13 +518,12 @@ var municipalitySelection = (function() {
 		var	municipalMembership	= $('#municipalMembership'),
 			radios = municipalMembership.find('[type="radio"]');
 
-		// FIXME: does not show correctly
 		if (show){
-			municipalMembership.addClass(hideClass);
-			radios.removeAttr('required');
-		} else {
 			municipalMembership.removeClass(hideClass);
 			radios.attr('required','required');
+		} else {
+			municipalMembership.addClass(hideClass);
+			radios.removeAttr('required');
 		}		
 	}
 
@@ -711,6 +703,7 @@ var municipalitySelection = (function() {
 * 
 * Validate forms that have class 'js-validate'
 *
+* TODO: Does not work correctly with both inline and modal forms
 */
 /*var validateListener = (function() {
 	var form =		$('.js-validate'),

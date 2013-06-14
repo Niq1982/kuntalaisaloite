@@ -52,7 +52,7 @@
         
             <p><@u.message "invitation.reject.confirm.description" /></p>
 
-            <form action="${springMacroRequestContext.requestUri}" method="POST" >
+            <form action="${springMacroRequestContext.requestUri}" method="POST">
                 <input type="hidden" name="CSRFToken" value="${CSRFToken!}"/>
                 <input type="hidden" name="${UrlConstants.PARAM_INVITATION_CODE}" value="${authorInvitation.confirmCode!""}"/>
                 <button type="submit" name="${UrlConstants.ACTION_REJECT_INVITATION}" id="modal-${UrlConstants.ACTION_REJECT_INVITATION}"  value="<@u.message "invitation.reject" />" class="small-button gray cancel"><span class="small-icon cancel"><@u.message "invitation.reject.confirm" /></span></button>
@@ -88,7 +88,7 @@
         
             <@u.errorsSummary path="authorInvitation.*" prefix="initiative."/>
 
-            <form action="${springMacroRequestContext.requestUri}" method="POST" >
+            <form action="${springMacroRequestContext.requestUri}" method="POST" class="js-validate" novalidate>
                 <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
                 <input type="hidden" name="confirmCode" value="${authorInvitation.confirmCode!""}"/>
                 <@f.notTooFastField authorInvitation/>
