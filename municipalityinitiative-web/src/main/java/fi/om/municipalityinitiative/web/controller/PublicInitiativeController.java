@@ -35,7 +35,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
-public class InitiativePublicController extends BaseController {
+public class PublicInitiativeController extends BaseController {
 
     @Resource
     private MunicipalityService municipalityService;
@@ -52,7 +52,7 @@ public class InitiativePublicController extends BaseController {
     @Resource
     private AuthorService authorService;
 
-    public InitiativePublicController(boolean optimizeResources, String resourcesVersion) {
+    public PublicInitiativeController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
     }
 
@@ -75,13 +75,6 @@ public class InitiativePublicController extends BaseController {
                        Model model, Locale locale, HttpServletRequest request) {
 
         InitiativeViewInfo initiativeInfo = publicInitiativeService.getInitiative(initiativeId, userService.getLoginUserHolder(request));
-
-//        if (initiativeInfo.getState() != InitiativeState.PUBLISHED || initiativeInfo.getFixState() != FixState.OK) {  // XXX: Hmmm... Maybe move this to service layer and ManagementSettings ?
-//            LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
-//            if (loginUserHolder.getUser().isNotOmUser()) {
-//                loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-//            }
-//        }
 
         if (initiativeInfo.isCollaborative()) {
             return ViewGenerator.collaborativeView(initiativeInfo,
