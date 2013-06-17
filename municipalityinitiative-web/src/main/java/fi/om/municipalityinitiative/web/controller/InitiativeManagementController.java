@@ -1,13 +1,14 @@
 package fi.om.municipalityinitiative.web.controller;
 
 import com.google.common.base.Strings;
-import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
-import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUICreateDto;
+import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeUIUpdateDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
-import fi.om.municipalityinitiative.service.*;
+import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
+import fi.om.municipalityinitiative.service.ParticipantService;
+import fi.om.municipalityinitiative.service.ValidationService;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.service.ui.InitiativeManagementService;
 import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
@@ -27,7 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
-import static fi.om.municipalityinitiative.web.Views.*;
+import static fi.om.municipalityinitiative.web.Views.ERROR_404_VIEW;
+import static fi.om.municipalityinitiative.web.Views.contextRelativeRedirect;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -35,10 +37,10 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class InitiativeManagementController extends BaseController {
 
     @Resource
-    private PublicInitiativeService publicInitiativeService;
-
-    @Resource
     private InitiativeManagementService initiativeManagementService;
+    
+    @Resource
+    private PublicInitiativeService publicInitiativeService;
 
     @Resource
     private ValidationService validationService;
@@ -59,7 +61,7 @@ public class InitiativeManagementController extends BaseController {
         LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
+        InitiativeViewInfo initiativeInfo = initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder);
 
         if (initiativeInfo.isSent()) {
             return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.ALREADY_SENT, request);
@@ -88,7 +90,7 @@ public class InitiativeManagementController extends BaseController {
 
         if (managementSettings.isAllowUpdate()) {
 
-            return ViewGenerator.updateView(publicInitiativeService.getMunicipalityInitiative(initiativeId),
+            return ViewGenerator.updateView(initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder),
                     initiativeManagementService.getInitiativeForUpdate(initiativeId, loginUserHolder),
                     initiativeManagementService.getAuthorInformation(initiativeId, loginUserHolder),
                     authorService.findAuthors(initiativeId, loginUserHolder),
@@ -165,7 +167,7 @@ public class InitiativeManagementController extends BaseController {
 
         if (validationService.validationErrors(updateDto, bindingResult, model)) {
 
-            return ViewGenerator.updateView(publicInitiativeService.getMunicipalityInitiative(initiativeId),
+            return ViewGenerator.updateView(initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder),
                     updateDto,
                     initiativeManagementService.getAuthorInformation(initiativeId, loginUserHolder),
                     authorService.findAuthors(initiativeId, loginUserHolder),
@@ -222,7 +224,7 @@ public class InitiativeManagementController extends BaseController {
         LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
+        InitiativeViewInfo initiativeInfo = initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder);
 
         if (initiativeInfo.isSent()) {
             return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.ALREADY_SENT, request);
@@ -241,7 +243,9 @@ public class InitiativeManagementController extends BaseController {
         Urls urls = Urls.get(locale);
         String alternativeURL = urls.alt().view(initiativeId);
 
-        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
+        LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
+
+        InitiativeViewInfo initiativeInfo = initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder);
 
         if (!initiativeInfo.isCollaborative()) {
             return ERROR_404_VIEW;
@@ -254,7 +258,7 @@ public class InitiativeManagementController extends BaseController {
 
             return ViewGenerator.participantListManage(initiativeInfo,
                     participantService.getParticipantCount(initiativeId),
-                    participantService.findAllParticipants(initiativeId, userService.getRequiredLoginUserHolder(request)),
+                    participantService.findAllParticipants(initiativeId, loginUserHolder),
                     previousPageURI
             ).view(model, alternativeURL);
         }
@@ -275,7 +279,7 @@ public class InitiativeManagementController extends BaseController {
             return redirectWithMessage(Urls.get(locale).manageAuthors(initiativeId), RequestMessage.INVITATION_SENT, request);
         }
         else {
-            return ViewGenerator.manageAuthorsView(publicInitiativeService.getMunicipalityInitiative(initiativeId),
+            return ViewGenerator.manageAuthorsView(initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder),
                     publicInitiativeService.getManagementSettings(initiativeId),
                     authorService.findAuthors(initiativeId, loginUserHolder),
                     authorService.findAuthorInvitations(initiativeId, loginUserHolder),

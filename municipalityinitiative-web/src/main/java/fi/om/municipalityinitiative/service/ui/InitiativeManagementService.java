@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.service.ui;
 
+import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
@@ -143,4 +144,9 @@ public class InitiativeManagementService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId, LoginUserHolder loginUserHolder) {
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
+        return InitiativeViewInfo.parse(initiativeDao.get(initiativeId));
+    }
 }

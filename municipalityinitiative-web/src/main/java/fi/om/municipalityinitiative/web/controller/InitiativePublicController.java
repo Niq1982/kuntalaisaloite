@@ -9,7 +9,6 @@ import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
-import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
@@ -75,14 +74,14 @@ public class InitiativePublicController extends BaseController {
     public String view(@PathVariable("id") Long initiativeId,
                        Model model, Locale locale, HttpServletRequest request) {
 
-        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
+        InitiativeViewInfo initiativeInfo = publicInitiativeService.getInitiative(initiativeId, userService.getLoginUserHolder(request));
 
-        if (initiativeInfo.getState() != InitiativeState.PUBLISHED || initiativeInfo.getFixState() != FixState.OK) {  // XXX: Hmmm... Maybe move this to service layer and ManagementSettings ?
-            LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
-            if (loginUserHolder.getUser().isNotOmUser()) {
-                loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-            }
-        }
+//        if (initiativeInfo.getState() != InitiativeState.PUBLISHED || initiativeInfo.getFixState() != FixState.OK) {  // XXX: Hmmm... Maybe move this to service layer and ManagementSettings ?
+//            LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
+//            if (loginUserHolder.getUser().isNotOmUser()) {
+//                loginUserHolder.assertManagementRightsForInitiative(initiativeId);
+//            }
+//        }
 
         if (initiativeInfo.isCollaborative()) {
             return ViewGenerator.collaborativeView(initiativeInfo,
@@ -136,7 +135,7 @@ public class InitiativePublicController extends BaseController {
         }
         else {
             return ViewGenerator.collaborativeView(
-                    publicInitiativeService.getMunicipalityInitiative(initiativeId),
+                    publicInitiativeService.getPublicInitiative(initiativeId),
                     authorService.findPublicAuthors(initiativeId), municipalityService.findAllMunicipalities(locale),
                     participantService.getParticipantCount(initiativeId),
                     participant,
@@ -150,7 +149,7 @@ public class InitiativePublicController extends BaseController {
         Urls urls = Urls.get(locale);
         String alternativeURL = urls.alt().view(initiativeId);
 
-        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
+        InitiativeViewInfo initiativeInfo = publicInitiativeService.getPublicInitiative(initiativeId);
 
         if (!initiativeInfo.isCollaborative()) {
             throw new NotFoundException("Initiative is not collaborative",initiativeId);
@@ -187,9 +186,7 @@ public class InitiativePublicController extends BaseController {
 
         model.addAttribute("managementHash", RandomHashGenerator.getPrevious()); // TODO: Remove after login-link is removed from the page
 
-        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
-
-        if (initiativeInfo.getState().equals(InitiativeState.DRAFT) && getRequestAttribute(request) != null) {
+        if (getRequestAttribute(request) != null) {
             return PENDING_CONFIRMATION;
         } else {
             return redirectWithMessage(urls.prepare(), RequestMessage.PREPARE_CONFIRM_EXPIRED, request);
@@ -201,7 +198,7 @@ public class InitiativePublicController extends BaseController {
                                  @RequestParam(PARAM_INVITATION_CODE) String confirmCode,
                                  Model model, Locale locale, HttpServletRequest request) {
 
-        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
+        InitiativeViewInfo initiativeInfo = publicInitiativeService.getPublicInitiative(initiativeId);
 
         if (initiativeInfo.isSent()) {
             return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.ALREADY_SENT, request);
@@ -223,7 +220,7 @@ public class InitiativePublicController extends BaseController {
                                    @ModelAttribute("authorInvitation") AuthorInvitationUIConfirmDto confirmDto,
                                    Model model, BindingResult bindingResult, Locale locale, HttpServletRequest request) {
 
-        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
+        InitiativeViewInfo initiativeInfo = publicInitiativeService.getPublicInitiative(initiativeId);
         confirmDto.setInitiativeMunicipality(initiativeInfo.getMunicipality().getId());
 
         if (validationService.validationSuccessful(confirmDto, bindingResult, model)) {
@@ -248,7 +245,7 @@ public class InitiativePublicController extends BaseController {
 
         authorService.rejectInvitation(initiativeId, confirmCode);
         
-        InitiativeViewInfo initiativeInfo = publicInitiativeService.getMunicipalityInitiative(initiativeId);
+        InitiativeViewInfo initiativeInfo = publicInitiativeService.getPublicInitiative(initiativeId);
         
         addRequestAttribute(initiativeInfo.getName(), request); // To be shown at invitation rejected page
         return redirectWithMessage(Urls.get(locale).invitationRejected(initiativeId), RequestMessage.CONFIRM_INVITATION_REJECTED, request);
@@ -276,7 +273,7 @@ public class InitiativePublicController extends BaseController {
             return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.AUTHOR_MESSAGE_ADDED, request);
         }
         else {
-            return ViewGenerator.collaborativeView(publicInitiativeService.getMunicipalityInitiative(initiativeId),
+            return ViewGenerator.collaborativeView(publicInitiativeService.getPublicInitiative(initiativeId),
                     authorService.findPublicAuthors(initiativeId),
                     municipalityService.findAllMunicipalities(locale),
                     participantService.getParticipantCount(initiativeId),

@@ -3,11 +3,15 @@ package fi.om.municipalityinitiative.service.ui;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
+import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.operations.PublicInitiativeServiceOperations;
+import fi.om.municipalityinitiative.util.FixState;
+import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.Maybe;
 
 import javax.annotation.Resource;
@@ -73,8 +77,16 @@ public class PublicInitiativeService {
         return preparedInitiativeData.initiativeId;
     }
 
-    public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId) {
-        return InitiativeViewInfo.parse(operations.getInitiative(initiativeId));
+    public InitiativeViewInfo getPublicInitiative(Long initiativeId) {
+        return getInitiative(initiativeId, new LoginUserHolder<>(User.anonym()));
+    }
+
+    public InitiativeViewInfo getInitiative(Long initiativeId, LoginUserHolder loginUserHolder) {
+        Initiative initiative = operations.getInitiative(initiativeId);
+        if (initiative.getState() != InitiativeState.PUBLISHED || initiative.getFixState() != FixState.OK) {
+            loginUserHolder.assertViewRightsForInitiative(initiative.getId());
+        }
+        return InitiativeViewInfo.parse(initiative);
     }
 
     public InitiativeCounts getInitiativeCounts(Maybe<Long> municipality, LoginUserHolder loginUserHolder) {

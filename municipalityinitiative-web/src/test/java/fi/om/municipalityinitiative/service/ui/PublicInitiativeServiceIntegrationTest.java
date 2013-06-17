@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.service.ui;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
+import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.ui.*;
@@ -48,9 +49,9 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 
     @Test
     public void all_fields_are_set_when_getting_municipalityInitiativeInfo() throws Exception {
-        Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality.getId());
-        InitiativeViewInfo initiative = service.getMunicipalityInitiative(initiativeId);
-        assertThat(initiative.getState(), is(InitiativeState.ACCEPTED));
+        Long initiativeId = testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        InitiativeViewInfo initiative = service.getPublicInitiative(initiativeId);
+        assertThat(initiative.getState(), is(InitiativeState.PUBLISHED));
         assertThat(initiative.getMunicipality().getId(), is(testMunicipality.getId()));
         assertThat(initiative.getName(), is(TestHelper.DEFAULT_INITIATIVE_NAME));
         assertThat(initiative.getId(), is(initiativeId));
@@ -118,9 +119,9 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     @Test
     public void preparing_initiative_sets_municipality() {
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
-        InitiativeViewInfo municipalityInitiative = service.getMunicipalityInitiative(initiativeId);
+        Initiative initiative = testHelper.getInitiative(initiativeId);
 
-        assertThat(municipalityInitiative.getMunicipality().getId(), is(testMunicipality.getId()));
+        assertThat(initiative.getMunicipality().getId(), is(testMunicipality.getId()));
     }
 
     @Test

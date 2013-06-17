@@ -140,4 +140,7 @@ public class UserService {
         return User.anonym();
     }
 
+    public LoginUserHolder<User> getLoginUserHolder(HttpServletRequest request) {
+        return new LoginUserHolder<>(getUser(request));
+    }
 }

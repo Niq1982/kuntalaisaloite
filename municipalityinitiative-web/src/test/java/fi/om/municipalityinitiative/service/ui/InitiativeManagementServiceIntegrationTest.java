@@ -57,10 +57,10 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
             if (method.getModifiers() != 1) {
                 continue;
             }
+            System.out.println("Checking that method requires om rights: " + method.getName());
             Object[] parameters = new Object[method.getParameterTypes().length];
             parameters[1] = TestHelper.unknownLoginUserHolder;
             try {
-                System.out.println("Checking that method requires om rights: " + method.getName());
                 method.invoke(service, parameters);
                 fail("Should have checked om-rights for user: " + method.getName());
             } catch (InvocationTargetException e) {

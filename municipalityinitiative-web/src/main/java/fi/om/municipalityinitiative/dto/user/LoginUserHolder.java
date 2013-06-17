@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.dto.user;
 
+import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 
 public class LoginUserHolder<E extends User> {
@@ -18,8 +19,12 @@ public class LoginUserHolder<E extends User> {
 
     public void assertManagementRightsForInitiative(Long initiativeId) {
         if (hasNoManagementRightsForInitiative(initiativeId)) {
-            throw new AccessDeniedException("No access for initiative with id: " + initiativeId);
+            throwAccessDeniedException(initiativeId);
         }
+    }
+
+    private static void throwAccessDeniedException(Long initiativeId) {
+        throw new AccessDeniedException("No access for initiative with id: " + initiativeId);
     }
 
     private boolean hasNoManagementRightsForInitiative(Long initiativeId) {
@@ -37,6 +42,12 @@ public class LoginUserHolder<E extends User> {
     public void assertOmUser() {
         if (user.isNotOmUser()){
             throw new AccessDeniedException("No privileges");
+        }
+    }
+
+    public void assertViewRightsForInitiative(Long initiativeId) {
+        if (!hasManagementRightsForInitiative(initiativeId) && user.isNotOmUser()) {
+            throwAccessDeniedException(initiativeId);
         }
     }
 }

@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.web.controller;
 
 import fi.om.municipalityinitiative.dto.ui.MunicipalityUIEditDto;
+import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.service.ui.ModerationService;
 import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
@@ -47,11 +48,11 @@ public class ModerationController extends BaseController{
     public String moderationView(@PathVariable("id") Long initiativeId,
                                  Model model, Locale locale, HttpServletRequest request) {
 
-        userService.getRequiredOmLoginUserHolder(request);
+        OmLoginUserHolder loginUserHolder = userService.getRequiredOmLoginUserHolder(request);
 
-        return ViewGenerator.moderationView(publicInitiativeService.getMunicipalityInitiative(initiativeId),
+        return ViewGenerator.moderationView(publicInitiativeService.getInitiative(initiativeId, loginUserHolder),
                 publicInitiativeService.getManagementSettings(initiativeId),
-                moderationService.findAuthors(userService.getRequiredOmLoginUserHolder(request), initiativeId)
+                moderationService.findAuthors(loginUserHolder, initiativeId)
         ).view(model, Urls.get(locale).alt().moderation(initiativeId));
     }
 
