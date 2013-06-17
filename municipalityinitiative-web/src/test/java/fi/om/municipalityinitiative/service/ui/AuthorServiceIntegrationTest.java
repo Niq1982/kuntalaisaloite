@@ -8,13 +8,13 @@ import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUIConfirmDto;
 import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUICreateDto;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
+import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.ServiceIntegrationTestBase;
-import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.sql.QAuthor;
 import fi.om.municipalityinitiative.sql.QAuthorInvitation;
 import fi.om.municipalityinitiative.util.JavaMailSenderFake;
@@ -219,7 +219,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         Long initiativeId = testHelper.createCollaborativeAccepted(municipalityId);
         authorService.createAuthorInvitation(initiativeId, TestHelper.authorLoginUserHolder, authorInvitation());
 
-        AuthorInvitationUIConfirmDto confirmDto = authorService.getPrefilledAuthorInvitationConfirmDto(initiativeId, RandomHashGenerator.getPrevious());
+        AuthorInvitationUIConfirmDto confirmDto = authorService.getAuthorInvitationConfirmData(initiativeId, RandomHashGenerator.getPrevious()).authorInvitationUIConfirmDto;
         assertThat(confirmDto.getMunicipality(), is(municipalityId));
         assertThat(confirmDto.getContactInfo().getName(), is(authorInvitation().getAuthorName()));
         assertThat(confirmDto.getContactInfo().getEmail(), is(authorInvitation().getAuthorEmail()));
@@ -233,8 +233,18 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
         thrown.expect(InvitationNotValidException.class);
         thrown.expectMessage("Invitation is expired");
-        authorService.getPrefilledAuthorInvitationConfirmDto(initiativeId, expiredInvitation.getConfirmationCode());
+        authorService.getAuthorInvitationConfirmData(initiativeId, expiredInvitation.getConfirmationCode());
 
+    }
+
+    @Test
+    public void prefilled_author_confirmation_has_initiative_info() {
+        Long municipalityId = testHelper.createTestMunicipality("name");
+        Long initiativeId = testHelper.createCollaborativeAccepted(municipalityId);
+        authorService.createAuthorInvitation(initiativeId, TestHelper.authorLoginUserHolder, authorInvitation());
+
+        InitiativeViewInfo confirmDto = authorService.getAuthorInvitationConfirmData(initiativeId, RandomHashGenerator.getPrevious()).initiativeViewInfo;
+        assertThat(confirmDto.getId(), is(initiativeId));
     }
 
     @Test
@@ -244,7 +254,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
         thrown.expect(InvitationNotValidException.class);
         thrown.expectMessage("Invitation is rejected");
-        authorService.getPrefilledAuthorInvitationConfirmDto(initiativeId, rejectedInvitation.getConfirmationCode());
+        authorService.getAuthorInvitationConfirmData(initiativeId, rejectedInvitation.getConfirmationCode());
     }
 
     @Test
@@ -252,7 +262,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         Long initiativeId = testHelper.createCollaborativeReview(testMunicipality);
 
         thrown.expect(InvitationNotValidException.class);
-        authorService.getPrefilledAuthorInvitationConfirmDto(initiativeId, "töttöröö");
+        authorService.getAuthorInvitationConfirmData(initiativeId, "töttöröö");
     }
 
     @Test

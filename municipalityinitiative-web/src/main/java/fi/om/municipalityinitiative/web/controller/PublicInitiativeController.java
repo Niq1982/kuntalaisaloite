@@ -9,7 +9,6 @@ import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
-import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.web.RequestMessage;
@@ -191,14 +190,13 @@ public class PublicInitiativeController extends BaseController {
                                  @RequestParam(PARAM_INVITATION_CODE) String confirmCode,
                                  Model model, Locale locale, HttpServletRequest request) {
 
-        InitiativeViewInfo initiativeInfo = publicInitiativeService.getPublicInitiative(initiativeId);
+        AuthorService.AuthorInvitationConfirmViewData data = authorService.getAuthorInvitationConfirmData(initiativeId, confirmCode);
+        AuthorInvitationUIConfirmDto authorInvitationUIConfirmDto = data.authorInvitationUIConfirmDto;
+        InitiativeViewInfo initiativeInfo = data.initiativeViewInfo;
 
-        if (initiativeInfo.isSent()) {
-            return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.ALREADY_SENT, request);
-        }
-
-        AuthorInvitationUIConfirmDto authorInvitationUIConfirmDto =
-                authorService.getPrefilledAuthorInvitationConfirmDto(initiativeId, confirmCode);
+//        if (initiativeInfo.isSent()) { // Not needed anymore?
+//            return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.ALREADY_SENT, request);
+//        }
 
         return ViewGenerator.invitationView(initiativeInfo,
                 municipalityService.findAllMunicipalities(locale),
@@ -213,7 +211,7 @@ public class PublicInitiativeController extends BaseController {
                                    @ModelAttribute("authorInvitation") AuthorInvitationUIConfirmDto confirmDto,
                                    Model model, BindingResult bindingResult, Locale locale, HttpServletRequest request) {
 
-        InitiativeViewInfo initiativeInfo = publicInitiativeService.getPublicInitiative(initiativeId);
+        InitiativeViewInfo initiativeInfo = authorService.getAuthorInvitationConfirmData(initiativeId, confirmDto.getConfirmCode()).initiativeViewInfo;
         confirmDto.setInitiativeMunicipality(initiativeInfo.getMunicipality().getId());
 
         if (validationService.validationSuccessful(confirmDto, bindingResult, model)) {
@@ -236,11 +234,11 @@ public class PublicInitiativeController extends BaseController {
                                    @RequestParam(PARAM_INVITATION_CODE) String confirmCode,
                                    Locale locale, HttpServletRequest request) {
 
+        String initiativeName = authorService.getAuthorInvitationConfirmData(initiativeId, confirmCode).initiativeViewInfo.getName();
+
         authorService.rejectInvitation(initiativeId, confirmCode);
-        
-        InitiativeViewInfo initiativeInfo = publicInitiativeService.getPublicInitiative(initiativeId);
-        
-        addRequestAttribute(initiativeInfo.getName(), request); // To be shown at invitation rejected page
+
+        addRequestAttribute(initiativeName, request); // To be shown at invitation rejected page
         return redirectWithMessage(Urls.get(locale).invitationRejected(initiativeId), RequestMessage.CONFIRM_INVITATION_REJECTED, request);
     }
     

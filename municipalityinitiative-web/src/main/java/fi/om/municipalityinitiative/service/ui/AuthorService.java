@@ -8,10 +8,7 @@ import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
-import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUIConfirmDto;
-import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUICreateDto;
-import fi.om.municipalityinitiative.dto.ui.ContactInfo;
-import fi.om.municipalityinitiative.dto.ui.PublicAuthors;
+import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
@@ -120,7 +117,7 @@ public class AuthorService {
     }
 
     @Transactional(readOnly = false)
-    public AuthorInvitationUIConfirmDto getPrefilledAuthorInvitationConfirmDto(Long initiativeId, String confirmCode) {
+    public AuthorInvitationConfirmViewData getAuthorInvitationConfirmData(Long initiativeId, String confirmCode) {
         AuthorInvitation authorInvitation = authorDao.getAuthorInvitation(initiativeId, confirmCode);
 
         assertNotRejectedOrExpired(authorInvitation);
@@ -131,7 +128,16 @@ public class AuthorService {
         confirmDto.getContactInfo().setName(authorInvitation.getName());
         confirmDto.getContactInfo().setEmail(authorInvitation.getEmail());
         confirmDto.setConfirmCode(authorInvitation.getConfirmationCode());
-        return confirmDto;
+
+        AuthorInvitationConfirmViewData data = new AuthorInvitationConfirmViewData();
+        data.authorInvitationUIConfirmDto = confirmDto;
+        data.initiativeViewInfo = InitiativeViewInfo.parse(initiativeDao.get(initiativeId));
+        return data;
+    }
+
+    public static class AuthorInvitationConfirmViewData {
+        public AuthorInvitationUIConfirmDto authorInvitationUIConfirmDto;
+        public InitiativeViewInfo initiativeViewInfo;
     }
 
     @Transactional(readOnly = true)
