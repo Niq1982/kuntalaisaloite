@@ -87,7 +87,7 @@
             <td style="text-align:center; ${footerFont!""}">
     
         <p style="${footerFont!""}"><@u.message "email.footer.sendFrom"+postFix />
-        <#if managementHash?? && !initiative.sent>
+        <#if managementHash?has_content && !initiative.sent>
             <@u.message "email.footer.managementLink" /><br/><@u.link urls.get(switchLocale!locale).loginAuthor(managementHash) />
         <#elseif initiative.state?? && initiative.state == "PUBLISHED" && initiative.fixState == "OK">
             <@u.message "email.footer.viewLink" /><br/><@u.link urls.get(switchLocale!locale).view(initiative.id) />
