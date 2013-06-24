@@ -258,14 +258,25 @@ public class EmailService {
 
     public void sendAuthorMessages(Long initiativeId, AuthorMessage authorMessage) {
         Locale localeFi = Locales.LOCALE_FI;
-        HashMap<String, Object> dataMap = toDataMap(dataProvider.get(initiativeId), localeFi);
-        dataMap.put("authorMessage", authorMessage);
-        emailMessageConstructor
-                .fromTemplate(AUTHOR_MESSAGE_TO_AUTHORS)
-                .addRecipients(dataProvider.getAuthorEmails(initiativeId))
-                .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_AUTHOR_MESSAGE_TO_AUTHORS_SUBJECT, toArray(), localeFi))
-                .withDataMap(dataMap)
-                .send();
+
+        Map<String, String> managementLinksByAuthorEmails = dataProvider.getManagementLinksByAuthorEmails(initiativeId);
+        for (Map.Entry<String, String> managementHashByAuthorEmail : managementLinksByAuthorEmails.entrySet()) {
+            String authorEmail = managementHashByAuthorEmail.getKey();
+            String managementHash = managementHashByAuthorEmail.getValue();
+
+            HashMap<String, Object> dataMap = toDataMap(dataProvider.get(initiativeId), localeFi);
+            dataMap.put("authorMessage", authorMessage);
+            dataMap.put("managementHash", managementHash);
+
+            emailMessageConstructor
+                    .fromTemplate(AUTHOR_MESSAGE_TO_AUTHORS)
+                    .addRecipient(authorEmail)
+                    .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_AUTHOR_MESSAGE_TO_AUTHORS_SUBJECT, toArray(), localeFi))
+                    .withDataMap(dataMap)
+                    .send();
+        }
+
+
     }
 
 

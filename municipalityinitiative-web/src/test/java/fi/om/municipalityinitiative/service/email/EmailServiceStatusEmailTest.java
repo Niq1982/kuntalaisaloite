@@ -45,6 +45,7 @@ public class EmailServiceStatusEmailTest extends MailSendingEmailServiceTestBase
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.view(initiativeId())));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString("Kuntalaisaloitteesi on julkaistu Kuntalaisaloite.fi-palvelussa ja lähetetty kuntaan"));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.loginAuthor(managementHash())));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.alt().loginAuthor(managementHash())));
         // TODO: assertThat(getMessageContent().html, containsString("SV Kuntalaisaloitteesi on julkaistu Kuntalaisaloite.fi-palvelussa ja lähetetty kuntaan"));
     }
 
@@ -56,6 +57,7 @@ public class EmailServiceStatusEmailTest extends MailSendingEmailServiceTestBase
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Kuntalaisaloitteesi on palautettu / Ditt invånarinitiativ har returnerats"));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(MODERATOR_COMMENT));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.loginAuthor(managementHash())));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.alt().loginAuthor(managementHash())));
     }
 
     @Test
@@ -66,6 +68,7 @@ public class EmailServiceStatusEmailTest extends MailSendingEmailServiceTestBase
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_NAME));
         //assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.view(initiativeId())));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.loginAuthor(managementHash())));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.alt().loginAuthor(managementHash())));
     }
 
     @Test

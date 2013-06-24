@@ -45,6 +45,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Sinulle on luotu uusi aloitteen ylläpitolinkki Kuntalaisaloite.fi-palvelussa / En ny hanteringslänk har skapats för dig i webbtjänsten Invånarinitiativ.fi"));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.loginAuthor(MANAGEMENT_HASH)));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.alt().loginAuthor(MANAGEMENT_HASH)));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_NAME));
     }
     
@@ -117,6 +118,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(contactInfo.getName()));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(contactInfo.getPhone()));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.loginAuthor(managementHash())));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.alt().loginAuthor(managementHash())));
     }
 
     @Test
@@ -196,7 +198,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(authorMessage.getMessage()));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(authorMessage.getContactEmail()));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(authorMessage.getContactName()));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(Urls.get(Locales.LOCALE_FI).confirmAuthorMessage(confirmationCode)));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.confirmAuthorMessage(confirmationCode)));
 
     }
 
@@ -212,16 +214,9 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(authorMessage.getContactEmail()));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(authorMessage.getContactName()));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(authorMessage.getMessage()));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.loginAuthor(managementHash())));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.alt().loginAuthor(managementHash())));
 
-    }
-
-    @Test
-    public void email_contains_link_to_the_initiative_if_public() throws Exception {
-        Long initiativeId = testHelper.create(getMunicipalityId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
-        emailService.sendAuthorMessages(initiativeId, authorMessage());
-
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.view(initiativeId())));
-        assertThat(javaMailSenderFake.getMessageContent().html, not(containsString("?management")));
     }
 
     private static AuthorMessage authorMessage() {
