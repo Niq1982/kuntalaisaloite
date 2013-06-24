@@ -78,4 +78,8 @@ public class InitiativeViewInfo {
         return Strings.isNullOrEmpty(initiative.getName());
     }
 
+    public int getExternalParticipantCount() {
+        return initiative.getExternalParticipantCount();
+    }
+
 }

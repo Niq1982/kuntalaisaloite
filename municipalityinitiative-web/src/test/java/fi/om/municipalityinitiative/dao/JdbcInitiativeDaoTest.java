@@ -331,11 +331,12 @@ public class JdbcInitiativeDaoTest {
 
         testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
-                .withParticipantCount(17));
+                .withParticipantCount(17)
+                .withExternalParticipantCount(10));
 
         List<InitiativeListInfo> all = initiativeDao.find(initiativeSearch());
         assertThat(all, hasSize(1));
-        assertThat(all.get(0).getParticipantCount(), is(17L));
+        assertThat(all.get(0).getParticipantCount(), is(27L));
     }
 
     @Test

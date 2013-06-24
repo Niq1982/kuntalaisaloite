@@ -167,7 +167,7 @@ public class TestHelper {
         insert.set(municipalityInitiative.municipalityId, initiativeDraft.municipalityId);
         insert.set(municipalityInitiative.participantCount, initiativeDraft.participantCount);
         insert.set(municipalityInitiative.extraInfo, initiativeDraft.extraInfo);
-        insert.set(municipalityInitiative.externalparticipantcount, initiativeDraft.externalSupportCount);
+        insert.set(municipalityInitiative.externalparticipantcount, initiativeDraft.externalParticipantCount);
 
         insert.set(municipalityInitiative.state, initiativeDraft.state);
 
@@ -447,7 +447,7 @@ public class TestHelper {
         public Maybe<AuthorDraft> authorDraft = Maybe.absent();
         public FixState fixState = FixState.OK;
         public String moderatorComment;
-        public Integer externalSupportCount = DEFAULT_EXTERNAL_PARTICIPANT_COUNT;
+        public Integer externalParticipantCount = DEFAULT_EXTERNAL_PARTICIPANT_COUNT;
 
         public AuthorDraft applyAuthor() {
             this.authorDraft = Maybe.of(new AuthorDraft(this, municipalityId));
@@ -510,6 +510,11 @@ public class TestHelper {
 
         public InitiativeDraft withModeratorComment(String moderatorComment) {
             this.moderatorComment = moderatorComment;
+            return this;
+        }
+
+        public InitiativeDraft withExternalParticipantCount(int externalParticipantCount) {
+            this.externalParticipantCount = externalParticipantCount;
             return this;
         }
     }

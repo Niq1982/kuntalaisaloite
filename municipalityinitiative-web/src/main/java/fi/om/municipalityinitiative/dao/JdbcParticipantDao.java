@@ -90,23 +90,16 @@ public class JdbcParticipantDao implements ParticipantDao {
     @Override
     public ParticipantCount getParticipantCount(Long initiativeId) {
 
-        Expression<String> caseBuilder = new CaseBuilder()
-                .when(participant.showName.isTrue()).then(new ConstantImpl<String>("11"))
-                .when(participant.showName.isFalse()).then(new ConstantImpl<String>("10"))
-                .otherwise(new ConstantImpl<String>("XX"));
-
-
-        SimpleExpression<String> simpleExpression = Expressions.as(caseBuilder, "testi");
-        MaybeHoldingHashMap<String, Long> map = new MaybeHoldingHashMap<String, Long>(queryFactory
+        MaybeHoldingHashMap<Boolean, Long> map = new MaybeHoldingHashMap<>(queryFactory
                 .from(participant)
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
                 .where(participant.confirmationCode.isNull())
-                .groupBy(simpleExpression)
-                .map(simpleExpression, participant.count()));
+                .groupBy(participant.showName)
+                .map(participant.showName, participant.count()));
 
         ParticipantCount participantCount = new ParticipantCount();
-        participantCount.setPublicNames(map.get("11").or(0L));
-        participantCount.setPrivateNames(map.get("10").or(0L));
+        participantCount.setPublicNames(map.get(true).or(0L));
+        participantCount.setPrivateNames(map.get(false).or(0L));
         return participantCount;
 
     }
