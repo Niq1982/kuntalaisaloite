@@ -18,6 +18,8 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
 
     public static final QMunicipalityInitiative municipalityInitiative = new QMunicipalityInitiative("municipality_initiative");
 
+    public final NumberPath<Integer> externalparticipantcount = createNumber("externalparticipantcount", Integer.class);
+
     public final StringPath extraInfo = createString("extra_info");
 
     public final EnumPath<fi.om.municipalityinitiative.util.FixState> fixState = createEnum("fix_state", fi.om.municipalityinitiative.util.FixState.class);

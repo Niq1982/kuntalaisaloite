@@ -73,6 +73,7 @@ public class InitiativeManagementService {
         InitiativeUIUpdateDto updateDto = new InitiativeUIUpdateDto();
         updateDto.setContactInfo(contactInfo);
         updateDto.setExtraInfo(initiative.getExtraInfo());
+        updateDto.setExternalParticipantCount(initiative.getExternalParticipantCount());
 
         return updateDto;
     }
@@ -94,7 +95,7 @@ public class InitiativeManagementService {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         assertAllowance("Update initiative", getManagementSettings(initiativeId).isAllowUpdate());
 
-        initiativeDao.updateExtraInfo(initiativeId, updateDto.getExtraInfo());
+        initiativeDao.updateExtraInfo(initiativeId, updateDto.getExtraInfo(), updateDto.getExternalParticipantCount());
         authorDao.updateAuthorInformation(loginUserHolder.getAuthorId(), updateDto.getContactInfo());
     }
 

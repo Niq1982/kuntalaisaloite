@@ -101,6 +101,7 @@ public class JdbcInitiativeDaoTest {
         assertThat(initiative.getType(), is(InitiativeType.COLLABORATIVE_CITIZEN));
         assertThat(initiative.getParticipantCount(), is(1));
         assertThat(initiative.getFixState(), is(FixState.OK));
+        assertThat(initiative.getExternalParticipantCount(), is(TestHelper.DEFAULT_EXTERNAL_PARTICIPANT_COUNT));
 
         ReflectionTestUtils.assertNoNullFields(initiative);
     }

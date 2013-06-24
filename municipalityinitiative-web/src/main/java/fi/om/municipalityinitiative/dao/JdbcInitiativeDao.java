@@ -273,6 +273,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .set(municipalityInitiative.proposal, editDto.getProposal())
                 .set(municipalityInitiative.modified, CURRENT_TIME)
                 .set(municipalityInitiative.extraInfo, editDto.getExtraInfo())
+                .set(municipalityInitiative.externalparticipantcount, editDto.getExternalParticipantCount())
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute());
 
@@ -329,10 +330,11 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    public void updateExtraInfo(Long initiativeId, String extraInfo) {
+    public void updateExtraInfo(Long initiativeId, String extraInfo, Integer externalParticipantCount) {
 
         assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.extraInfo, extraInfo)
+                .set(municipalityInitiative.externalparticipantcount, externalParticipantCount)
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute());
     }

@@ -37,6 +37,7 @@ create table municipality_initiative (
     name varchar(512),
     proposal text,
     extra_info varchar(1024),
+    externalParticipantCount integer default 0,
 
     modified timestamp constraint municipality_initiative_modified_nn not null default now(),
 

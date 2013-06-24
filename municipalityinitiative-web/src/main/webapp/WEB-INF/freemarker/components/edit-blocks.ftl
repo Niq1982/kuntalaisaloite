@@ -244,12 +244,19 @@
         <div class="input-block-extra">
             <div class="input-block-extra-content">
                 <@f.helpText "help.extraInfo" />
+                <#if initiative.collaborative>
+                    <@f.helpText "help.externalParticipantCount" />
+                </#if>
             </div>
         </div>
 
         <div class="input-block-content">
             <@f.textarea path=path+".extraInfo" required="" optional=true cssClass="textarea" key="initiative.extraInfo" maxLength=InitiativeConstants.INITIATIVE_EXTRA_INFO_MAX?string("#") />
+            <#if initiative.collaborative>
+                <@f.textField path=path+".externalParticipantCount" required="" cssClass="small" optional=false  maxLength=7 />
+            </#if>
         </div>
+
     </div>
 </#macro>
 

@@ -49,6 +49,7 @@ public class TestHelper {
     public static final DateTime SENT_TIME = new DateTime(2011, 1, 1, 0, 0);
     public static final DateTime DEFAULT_CREATE_TIME = DateTime.now();
     public static final String DEFAULT_SENT_COMMENT = "some default sent comment";
+    public static final Integer DEFAULT_EXTERNAL_PARTICIPANT_COUNT = 10;
 
     public static LoginUserHolder authorLoginUserHolder;
     public static LoginUserHolder unknownLoginUserHolder = new LoginUserHolder(User.anonym());
@@ -166,6 +167,7 @@ public class TestHelper {
         insert.set(municipalityInitiative.municipalityId, initiativeDraft.municipalityId);
         insert.set(municipalityInitiative.participantCount, initiativeDraft.participantCount);
         insert.set(municipalityInitiative.extraInfo, initiativeDraft.extraInfo);
+        insert.set(municipalityInitiative.externalparticipantcount, initiativeDraft.externalSupportCount);
 
         insert.set(municipalityInitiative.state, initiativeDraft.state);
 
@@ -445,6 +447,7 @@ public class TestHelper {
         public Maybe<AuthorDraft> authorDraft = Maybe.absent();
         public FixState fixState = FixState.OK;
         public String moderatorComment;
+        public Integer externalSupportCount = DEFAULT_EXTERNAL_PARTICIPANT_COUNT;
 
         public AuthorDraft applyAuthor() {
             this.authorDraft = Maybe.of(new AuthorDraft(this, municipalityId));

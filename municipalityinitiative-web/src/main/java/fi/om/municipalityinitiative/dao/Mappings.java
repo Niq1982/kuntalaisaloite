@@ -85,10 +85,19 @@ public class Mappings {
                     info.setParticipantCount(row.get(municipalityInitiative.participantCount));
                     info.setSentComment(row.get(municipalityInitiative.sentComment));
                     info.setFixState(row.get(municipalityInitiative.fixState));
+                    info.setExternalParticipantCount(nullToZero(row.get(municipalityInitiative.externalparticipantcount)));
 
                     return info;
                 }
             };
+
+    private static Integer nullToZero(Integer integer) {
+        if (integer == null) {
+            return 0;
+        }
+        return integer;
+    }
+
     public static Expression<AuthorInvitation> authorInvitationMapping =
             new MappingProjection<AuthorInvitation>(AuthorInvitation.class,
                     QAuthorInvitation.authorInvitation.all()) {

@@ -12,6 +12,7 @@ public class Initiative {
     private String name;
     private String proposal;
     private String extraInfo;
+    private Integer externalParticipantCount;
 
     private Municipality municipality;
 
@@ -144,5 +145,13 @@ public class Initiative {
 
     public void setFixState(FixState fixState) {
         this.fixState = fixState;
+    }
+
+    public Integer getExternalParticipantCount() {
+        return externalParticipantCount;
+    }
+
+    public void setExternalParticipantCount(Integer externalParticipantCount) {
+        this.externalParticipantCount = externalParticipantCount;
     }
 }

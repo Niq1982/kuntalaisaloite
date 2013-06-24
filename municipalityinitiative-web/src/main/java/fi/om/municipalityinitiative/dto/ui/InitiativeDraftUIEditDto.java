@@ -29,6 +29,7 @@ public class InitiativeDraftUIEditDto {
 
     @Valid
     private ContactInfo contactInfo;
+    private Integer externalParticipantCount;
 
     public InitiativeDraftUIEditDto() {
         // For freemarker
@@ -41,6 +42,7 @@ public class InitiativeDraftUIEditDto {
         editDto.setProposal(initiative.getProposal());
         editDto.municipality = initiative.getMunicipality();
         editDto.setContactInfo(new ContactInfo(contactInfo));
+        editDto.setExternalParticipantCount(initiative.getExternalParticipantCount());
         return editDto;
     }
 
@@ -80,4 +82,11 @@ public class InitiativeDraftUIEditDto {
         this.contactInfo = contactInfo;
     }
 
+    public void setExternalParticipantCount(Integer externalParticipantCount) {
+        this.externalParticipantCount = externalParticipantCount;
+    }
+
+    public Integer getExternalParticipantCount() {
+        return externalParticipantCount;
+    }
 }

@@ -134,6 +134,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         editDto.setName("updated initiative name");
         editDto.setProposal("updated proposal");
         editDto.setExtraInfo("updated extrainfo");
+        editDto.setExternalParticipantCount(3);
 
         service.editInitiativeDraft(initiativeId, TestHelper.authorLoginUserHolder, editDto);
 
@@ -144,6 +145,8 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         assertThat(updated.getProposal(), is(editDto.getProposal()));
         assertThat(updated.getContactInfo().isShowName(), is(editDto.getContactInfo().isShowName()));
         assertThat(updated.getExtraInfo(), is(editDto.getExtraInfo()));
+        assertThat(updated.getExternalParticipantCount(), is(editDto.getExternalParticipantCount()));
+
         ReflectionTestUtils.assertNoNullFields(updated);
 
     }
@@ -379,8 +382,9 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         InitiativeUIUpdateDto updateDto = new InitiativeUIUpdateDto();
         ContactInfo contactInfo = new ContactInfo();
         updateDto.setContactInfo(contactInfo);
-
         updateDto.setExtraInfo("Modified extra info");
+        updateDto.setExternalParticipantCount(5);
+
         contactInfo.setName("Modified Name");
         contactInfo.setAddress("Modified Address");
         contactInfo.setPhone("Modified Phone");
@@ -390,6 +394,8 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         service.updateInitiative(initiativeId, TestHelper.authorLoginUserHolder, updateDto);
 
         assertThat(testHelper.getInitiative(initiativeId).getExtraInfo(), is(updateDto.getExtraInfo()));
+        assertThat(testHelper.getInitiative(initiativeId).getExternalParticipantCount(), is(updateDto.getExternalParticipantCount()));
+
         ContactInfo updatedContactInfo = service.getInitiativeForUpdate(initiativeId, TestHelper.authorLoginUserHolder).getContactInfo();
         ReflectionTestUtils.assertReflectionEquals(updatedContactInfo, contactInfo);
 

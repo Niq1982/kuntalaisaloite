@@ -24,6 +24,7 @@ public class InitiativeDraftUIEditDtoTest {
         assertThat(dto.getExtraInfo(), is(originalInitiative.getExtraInfo()));
         assertThat(dto.getName(), is(originalInitiative.getName()));
         assertThat(dto.getProposal(), is(originalInitiative.getProposal()));
+        assertThat(dto.getExternalParticipantCount(), is(originalInitiative.getExternalParticipantCount()));
 //        assertThat(dto.getState(), is(originalInitiative.getState()));
         ReflectionTestUtils.assertNoNullFields(dto);
 
