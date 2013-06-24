@@ -96,15 +96,23 @@ public class EmailService {
     
     public void sendAuthorDeletedEmailToOtherAuthors(Long initiativeId, ContactInfo removedAuthorsContactInfo) {
 
-        HashMap<String, Object> dataMap = toDataMap(dataProvider.get(initiativeId), Locales.LOCALE_FI);
-        dataMap.put("contactInfo", removedAuthorsContactInfo);
+        Map<String, String> managementLinksByAuthorEmails = dataProvider.getManagementLinksByAuthorEmails(initiativeId);
 
-        emailMessageConstructor
-                .fromTemplate(AUTHOR_DELETED_TO_OTHER_AUTHORS)
-                .addRecipients(dataProvider.getAuthorEmails(initiativeId))
-                .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_AUTHOR_DELETED_TO_OTHER_AUTHORS_SUBJECT, toArray(), Locales.LOCALE_FI))
-                .withDataMap(dataMap)
-                .send();
+        for (Map.Entry<String, String> managemenetLinkByAuthorEmail : managementLinksByAuthorEmails.entrySet()) {
+            String authorEmail = managemenetLinkByAuthorEmail.getKey();
+            String managementHash = managemenetLinkByAuthorEmail.getValue();
+
+            HashMap<String, Object> dataMap = toDataMap(dataProvider.get(initiativeId), Locales.LOCALE_FI);
+            dataMap.put("contactInfo", removedAuthorsContactInfo);
+            dataMap.put("managementHash", managementHash);
+
+            emailMessageConstructor
+                    .fromTemplate(AUTHOR_DELETED_TO_OTHER_AUTHORS)
+                    .addRecipient(authorEmail)
+                    .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_AUTHOR_DELETED_TO_OTHER_AUTHORS_SUBJECT, toArray(), Locales.LOCALE_FI))
+                    .withDataMap(dataMap)
+                    .send();
+        }
     }
 
     
@@ -210,11 +218,8 @@ public class EmailService {
 
         Locale locale = Locales.LOCALE_FI;
 
-
         List<Author> authors = dataProvider.findAuthors(initiativeId);
         Initiative initiative = dataProvider.get(initiativeId);
-
-        String TEMP_MODERATOR_EMAIL_CHANGE = authors.get(0).getContactInfo().getEmail();
 
         emailMessageConstructor
                 .fromTemplate(NOTIFICATION_TO_MODERATOR)

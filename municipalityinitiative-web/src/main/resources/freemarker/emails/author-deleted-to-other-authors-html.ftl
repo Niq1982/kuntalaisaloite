@@ -44,7 +44,7 @@
     
     <@u.spacer "15" />
     
-    <@b.emailFooter type />
+    <@b.emailFooter type=type managementHash=managementHash/>
     
     <@u.spacer "15" />
 </#macro>

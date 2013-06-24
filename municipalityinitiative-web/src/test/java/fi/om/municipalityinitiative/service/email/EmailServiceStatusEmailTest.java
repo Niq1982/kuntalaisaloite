@@ -105,6 +105,7 @@ public class EmailServiceStatusEmailTest extends MailSendingEmailServiceTestBase
         emailService.sendStatusEmail(initiativeId, EmailMessageType.REJECTED_BY_OM);
 
         List<MimeMessage> sentMessages = javaMailSenderFake.getSentMessages(2);
+        // FIXME: Order may differ
         assertThat(JavaMailSenderFake.getMessageContent(sentMessages.get(0)).html, containsString(urls.loginAuthor(firstManagementHash)));
         assertThat(JavaMailSenderFake.getMessageContent(sentMessages.get(1)).html, containsString(urls.loginAuthor(secondManagementHash)));
 
