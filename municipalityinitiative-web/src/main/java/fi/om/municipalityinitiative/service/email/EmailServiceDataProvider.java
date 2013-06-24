@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 
 import java.util.List;
+import java.util.Map;
 
 @Transactional(readOnly = true)
 public class EmailServiceDataProvider {
@@ -50,5 +51,9 @@ public class EmailServiceDataProvider {
 
     public Author getAuthor(Long authorId) {
         return authorDao.getAuthor(authorId);
+    }
+
+    public Map<String, String> getAuthorsEmailsAndManagementLinks(Long initiativeId) {
+        return authorDao.getManagementLinksByAuthorEmails(initiativeId);
     }
 }

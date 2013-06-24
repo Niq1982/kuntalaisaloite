@@ -154,6 +154,8 @@ public class EmailService {
 
         Initiative initiative = dataProvider.get(initiativeId);
 
+        // TODO: Send separated emails to all authors
+        Map<String, String> authorEmailsAndManagementLinks = dataProvider.getAuthorsEmailsAndManagementLinks(initiativeId);
 
         HashMap<String, Object> dataMap = toDataMap(initiative, locale);
         dataMap.put("emailMessageType", emailMessageType);

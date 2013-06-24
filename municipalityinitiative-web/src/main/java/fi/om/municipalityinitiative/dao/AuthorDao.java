@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface AuthorDao {
@@ -36,4 +37,6 @@ public interface AuthorDao {
     void deleteAuthor(Long authorId);
 
     void updateManagementHash(Long authorId, String newManagementHash);
+
+    Map<String,String> getManagementLinksByAuthorEmails(Long initiativeId);
 }

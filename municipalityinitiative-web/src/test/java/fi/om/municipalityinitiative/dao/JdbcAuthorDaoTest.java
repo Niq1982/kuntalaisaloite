@@ -9,6 +9,8 @@ import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.sql.QParticipant;
+import fi.om.municipalityinitiative.util.InitiativeState;
+import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -22,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
+import java.util.Map;
 import java.util.Set;
 
 import static org.hamcrest.Matchers.*;
@@ -154,6 +157,30 @@ public class JdbcAuthorDaoTest {
         authorDao.updateManagementHash(testHelper.getLastAuthorId(), "some other");
         assertThat(authorDao.getAuthorsInitiatives(testHelper.getPreviousTestManagementHash()), hasSize(0));
 
+    }
+
+    @Test
+    public void get_authors_management_hashes_and_emails() {
+        Long initiativeId = testHelper.create(testMunicipality, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        String firstAuthorManagementHash = testHelper.getPreviousTestManagementHash();
+        String firstEmail = TestHelper.DEFAULT_PARTICIPANT_EMAIL;
+
+        String secondEmail = "second@example.com";
+        testHelper.createAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality)
+                .withParticipantEmail(secondEmail));
+        String secondAuthorManagementHash = testHelper.getPreviousTestManagementHash();
+
+        String thirdEmail = "third@example.com";
+        testHelper.createAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality)
+                .withParticipantEmail(thirdEmail));
+        String thirdAuthorManagementHash = testHelper.getPreviousTestManagementHash();
+
+        Map<String,String> managementLinksByAuthorEmails = authorDao.getManagementLinksByAuthorEmails(initiativeId);
+
+        assertThat(managementLinksByAuthorEmails.size(), is(3));
+        assertThat(managementLinksByAuthorEmails.get(firstEmail), is(firstAuthorManagementHash));
+        assertThat(managementLinksByAuthorEmails.get(secondEmail), is(secondAuthorManagementHash));
+        assertThat(managementLinksByAuthorEmails.get(thirdEmail), is(thirdAuthorManagementHash));
     }
 
 }

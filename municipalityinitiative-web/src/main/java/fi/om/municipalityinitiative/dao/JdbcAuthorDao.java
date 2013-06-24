@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -205,5 +206,13 @@ public class JdbcAuthorDao implements AuthorDao {
                 .set(QAuthor.author.managementHash, newManagementHash)
                 .where(QAuthor.author.participantId.eq(authorId))
                 .execute());
+    }
+
+    @Override
+    public Map<String, String> getManagementLinksByAuthorEmails(Long initiativeId) {
+        return queryFactory.from(QAuthor.author)
+                .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
+                .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
+                .map(QParticipant.participant.email, QAuthor.author.managementHash);
     }
 }
