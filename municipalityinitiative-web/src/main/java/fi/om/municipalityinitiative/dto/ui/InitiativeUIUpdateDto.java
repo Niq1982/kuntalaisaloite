@@ -12,7 +12,7 @@ public class InitiativeUIUpdateDto {
     private String extraInfo;
 
     @Min(0)
-    private Integer externalParticipantCount;
+    private int externalParticipantCount;
 
     @Valid
     private ContactInfo contactInfo;
@@ -33,11 +33,11 @@ public class InitiativeUIUpdateDto {
         this.contactInfo = contactInfo;
     }
 
-    public void setExternalParticipantCount(Integer externalParticipantCount) {
+    public void setExternalParticipantCount(int externalParticipantCount) {
         this.externalParticipantCount = externalParticipantCount;
     }
 
-    public Integer getExternalParticipantCount() {
+    public int getExternalParticipantCount() {
         return externalParticipantCount;
     }
 }

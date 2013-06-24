@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.dto.service.Municipality;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 public class InitiativeDraftUIEditDto {
@@ -29,7 +30,9 @@ public class InitiativeDraftUIEditDto {
 
     @Valid
     private ContactInfo contactInfo;
-    private Integer externalParticipantCount;
+
+    @Min(0)
+    private int externalParticipantCount;
 
     public InitiativeDraftUIEditDto() {
         // For freemarker
@@ -82,11 +85,11 @@ public class InitiativeDraftUIEditDto {
         this.contactInfo = contactInfo;
     }
 
-    public void setExternalParticipantCount(Integer externalParticipantCount) {
+    public void setExternalParticipantCount(int externalParticipantCount) {
         this.externalParticipantCount = externalParticipantCount;
     }
 
-    public Integer getExternalParticipantCount() {
+    public int getExternalParticipantCount() {
         return externalParticipantCount;
     }
 }

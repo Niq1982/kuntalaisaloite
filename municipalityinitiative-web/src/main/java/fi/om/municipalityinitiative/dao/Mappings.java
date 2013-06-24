@@ -91,7 +91,7 @@ public class Mappings {
                 }
             };
 
-    private static Integer nullToZero(Integer integer) {
+    private static int nullToZero(Integer integer) {
         if (integer == null) {
             return 0;
         }
