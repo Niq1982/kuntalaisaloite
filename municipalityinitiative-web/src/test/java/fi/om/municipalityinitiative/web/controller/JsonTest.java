@@ -67,6 +67,7 @@ public class JsonTest {
                 "},\n" +
                 "\"name\":\"Koirat pois lähiöistä\",\n" +
                 "\"participantCount\":{\n" +
+                "\"externalNames\":0,\n" +
                 "\"privateNames\":10,\n" +
                 "\"publicNames\":1,\n" +
                 "\"total\":11\n" +

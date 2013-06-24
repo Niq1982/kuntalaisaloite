@@ -74,7 +74,7 @@ public class InitiativeJson {
 
     private static class CollaborativeInitiativeJson extends InitiativeJson {
         private List<ParticipantJson> participants = Lists.newArrayList();
-        private ParticipantCount participantCount;
+        private ParticipantCountJson participantCount;
 
         private CollaborativeInitiativeJson(Initiative initiative,
                                             List<Participant> participants,
@@ -86,10 +86,10 @@ public class InitiativeJson {
                 this.participants.add(new ParticipantJson(participant));
 
             }
-            this.participantCount = participantCount;
+            this.participantCount = new ParticipantCountJson(participantCount, initiative.getExternalParticipantCount());
         }
 
-        public ParticipantCount getParticipantCount() {
+        public ParticipantCountJson getParticipantCount() {
             return participantCount;
         }
 
