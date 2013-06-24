@@ -53,7 +53,7 @@ public class EmailServiceDataProvider {
         return authorDao.getAuthor(authorId);
     }
 
-    public Map<String, String> getAuthorsEmailsAndManagementLinks(Long initiativeId) {
+    public Map<String, String> getManagementLinksByAuthorEmails(Long initiativeId) {
         return authorDao.getManagementLinksByAuthorEmails(initiativeId);
     }
 }

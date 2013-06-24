@@ -23,25 +23,20 @@ public abstract class MailSendingEmailServiceTestBase {
     public static final String INITIATIVE_NAME = "Some name whatever";
     public static final String INITIATIVE_PROPOSAL = "Some proposal whatever";
     public static final String INITIATIVE_MUNICIPALITY = "Some municipality";
-    public static final Long INITIATIVE_ID = 1L;
-    public static final long INITIATIVE_MUNICIPALITY_ID = 2L;
-    public static final long AUTHOR_ID = 3L;
     public static final String AUTHOR_PHONE = "Phone number";
     public static final String AUTHOR_EMAIL = "sender.email@example.com";
-    public static final List<String> AUTHOR_EMAILS = Collections.singletonList(AUTHOR_EMAIL);
     public static final String AUTHOR_NAME = "Sender Name";
     public static final String AUTHOR_ADDRESS = "Sender address";
     public static final String MUNICIPALITY_EMAIL = INITIATIVE_MUNICIPALITY.replace(" ","_")+"@example.com"; // @see TestHelper.createTestMunicipality
     public static final String EXTRA_INFO = "Some state comment";
     public static final String MODERATOR_COMMENT = "Some moderator comment";
-    public static final String MANAGEMENT_HASH = "managementHash";
     public static final String SENT_COMMENT = "Some sent comment";
 
     @Resource
     protected EmailService emailService;
 
     @Resource
-    private TestHelper testHelper;
+    protected TestHelper testHelper;
 
     // This replaces the JavaMailSender used by EmailService.
     // May be used for asserting "sent" emails.
@@ -91,6 +86,14 @@ public abstract class MailSendingEmailServiceTestBase {
 
     protected Long initiativeId() {
         return testHelper.getLastInitiativeId();
+    }
+
+    protected Long getMunicipalityId() {
+        return testMunicipality;
+    }
+
+    protected String managementHash() {
+        return testHelper.getPreviousTestManagementHash();
     }
 
 }

@@ -24,7 +24,7 @@
     
     <@u.spacer "15" />
     
-    <@b.emailFooter type />
+    <@b.emailFooter type=type postFix="" managementHash=managementHash/>
     
     <@u.spacer "15" />
     
@@ -44,7 +44,7 @@
     
     <@u.spacer "15" />
     
-    <@b.emailFooter type />
+    <@b.emailFooter type=type postFix="" managementHash=managementHash/>
     
     <@u.spacer "15" />
     

@@ -153,21 +153,28 @@ public class EmailService {
         Locale locale = Locales.LOCALE_FI;
 
         Initiative initiative = dataProvider.get(initiativeId);
+        Map<String, String> managementLinksByAuthorEmails = dataProvider.getManagementLinksByAuthorEmails(initiativeId);
+        String municipalityEmail = dataProvider.getMunicipalityEmail(initiative.getMunicipality().getId());
 
-        // TODO: Send separated emails to all authors
-        Map<String, String> authorEmailsAndManagementLinks = dataProvider.getAuthorsEmailsAndManagementLinks(initiativeId);
+        for (Map.Entry<String, String> managementLinkByAuthorEmail : managementLinksByAuthorEmails.entrySet()) {
+            String managementHash = managementLinkByAuthorEmail.getValue();
+            String authorEmail = managementLinkByAuthorEmail.getKey();
 
-        HashMap<String, Object> dataMap = toDataMap(initiative, locale);
-        dataMap.put("emailMessageType", emailMessageType);
-        dataMap.put("municipalityEmail", dataProvider.getMunicipalityEmail(initiative.getMunicipality().getId()));
+            HashMap<String, Object> dataMap = toDataMap(initiative, locale);
+            dataMap.put("emailMessageType", emailMessageType);
+            dataMap.put("municipalityEmail", municipalityEmail);
+            dataMap.put("managementHash", managementHash);
 
-        List<String> authorEmails = dataProvider.getAuthorEmails(initiativeId);
-        emailMessageConstructor
-                .fromTemplate(STATUS_INFO_TEMPLATE)
-                .addRecipients(authorEmails)
-                .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_STATUS_INFO_PREFIX + emailMessageType.name() + ".subject", toArray(), locale))
-                .withDataMap(dataMap)
-                .send();
+            //List<String> authorEmails = dataProvider.getAuthorEmails(initiativeId);
+            emailMessageConstructor
+                    .fromTemplate(STATUS_INFO_TEMPLATE)
+                    .addRecipient(authorEmail)
+                    .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_STATUS_INFO_PREFIX + emailMessageType.name() + ".subject", toArray(), locale))
+                    .withDataMap(dataMap)
+                    .send();
+
+        }
+
 
     }
 

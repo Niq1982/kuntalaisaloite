@@ -15,6 +15,8 @@ import static org.hamcrest.Matchers.is;
 
 public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
+    private static final String MANAGEMENT_HASH = "managementHash";
+
     private Urls urls;
 
     @Before

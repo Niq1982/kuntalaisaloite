@@ -77,15 +77,19 @@
  * Show view link if initiative is published
  *
  * @param type 'text' or 'html'
+ * @param postFix
+ * @param managementHash if given, managementlink will be shown instead of regular public link
  -->
-<#macro emailFooter type="" postFix="">
+<#macro emailFooter type="" postFix="" managementHash="">
     <#if type=="html">
         <table border="0" cellspacing="0" cellpadding="0" width="640" style="border:0;">
         <tr>
             <td style="text-align:center; ${footerFont!""}">
     
         <p style="${footerFont!""}"><@u.message "email.footer.sendFrom"+postFix />
-        <#if initiative.state?? && initiative.state == "PUBLISHED" && initiative.fixState == "OK">
+        <#if managementHash?? && !initiative.sent>
+            <@u.message "email.footer.managementLink" /><br/><@u.link urls.get(switchLocale!locale).loginAuthor(managementHash) />
+        <#elseif initiative.state?? && initiative.state == "PUBLISHED" && initiative.fixState == "OK">
             <@u.message "email.footer.viewLink" /><br/><@u.link urls.get(switchLocale!locale).view(initiative.id) />
         </#if>
         </p>
