@@ -30,7 +30,7 @@
 
     <@u.spacer "15" />
     
-    <@b.emailFooter type=type managementHash=managementHash />
+    <@b.emailFooter type/>
     
     <@u.spacer "15" />
     
@@ -55,7 +55,7 @@
 
     <@u.spacer "15" />
     
-    <@b.emailFooter type=type managementHash=managementHash />
+    <@b.emailFooter type/>
     
     <@u.spacer "15" />
     
