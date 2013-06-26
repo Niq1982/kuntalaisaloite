@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.conf;
 import com.google.common.base.Strings;
 import fi.om.municipalityinitiative.conf.WebConfiguration.WebDevConfiguration;
 import fi.om.municipalityinitiative.conf.WebConfiguration.WebProdConfiguration;
+import fi.om.municipalityinitiative.dto.vetuma.VetumaLoginRequest;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.*;
 import fi.om.municipalityinitiative.web.controller.*;
@@ -28,7 +29,8 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Locale;
 
-
+import static fi.om.municipalityinitiative.dto.vetuma.VetumaRequest.Type.*;
+import static fi.om.municipalityinitiative.dto.vetuma.VetumaRequest.Action.*;
 @Configuration
 @Import({ WebProdConfiguration.class, WebDevConfiguration.class })
 public class WebConfiguration extends WebMvcConfigurationSupport {
@@ -50,6 +52,11 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
                     optimizeResources(env),
                     resourcesVersion(env)
                     );
+        }
+
+        @Bean
+        public VetumaMockController vetumaMockController() {
+            return new VetumaMockController(optimizeResources(env), resourcesVersion(env));
         }
 
     }
@@ -82,6 +89,7 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
     @Configuration
     @Profile("prod")
     public static class WebProdConfiguration {
+
     }
 
 
@@ -196,8 +204,7 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
     public StatusPageController statusPageController() {
         return new StatusPageController(
                 optimizeResources(env),
-                resourcesVersion(env
-                )
+                resourcesVersion(env)
         );
     }
 
@@ -206,7 +213,30 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
         return new LoginController(
                 env.getRequiredProperty(PropertyNames.baseURL),
                 optimizeResources(env),
-                resourcesVersion(env));
+                resourcesVersion(env),
+                env.getRequiredProperty(PropertyNames.vetumaURL));
+    }
+
+
+
+    @Bean
+    public VetumaLoginRequest loginRequestDefaults() {
+        VetumaLoginRequest request = new VetumaLoginRequest();
+
+        // Constants
+        request.setTYPE(LOGIN);
+        request.setAU(EXTAUTH);
+        request.setEXTRADATA("VTJTT=VTJ-VETUMA-Perus");
+
+        // Configured (encrypted)
+        request.setRCVID(env.getRequiredProperty(PropertyNames.vetumaRCVID));
+        request.setSO(env.getRequiredProperty(PropertyNames.vetumaSO));
+        request.setSOLIST(env.getRequiredProperty(PropertyNames.vetumaSOLIST));
+        request.setAP(env.getRequiredProperty(PropertyNames.vetumaAP));
+        request.setAPPNAME(env.getRequiredProperty(PropertyNames.vetumaAPPNAME));
+        request.setAPPID(env.getRequiredProperty(PropertyNames.vetumaAPPID));
+
+        return request;
     }
 
     @Bean

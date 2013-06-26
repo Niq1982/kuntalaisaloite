@@ -89,7 +89,7 @@ public class AppConfiguration {
      */
     @Configuration
     @Profile({"test"})
-    @PropertySource({"classpath:default.properties", "classpath:test.properties"}) 
+    @PropertySource({"classpath:default.properties", "classpath:test.properties"})
     // NOTE: default.properties has to be here, in AppConfiguration level default.properties would override test.properties
     public static class TestPropertiesConfigurer {
         
@@ -97,6 +97,7 @@ public class AppConfiguration {
     
     @Configuration
     @Profile({"dev", "test"})
+    @PropertySource({"classpath:dev.properties"})
     public static class AppDevConfiguration {
 
         @Bean

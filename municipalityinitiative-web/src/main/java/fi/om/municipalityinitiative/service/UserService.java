@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import java.util.Set;
@@ -142,5 +143,15 @@ public class UserService {
 
     public LoginUserHolder<User> getLoginUserHolder(HttpServletRequest request) {
         return new LoginUserHolder<>(getUser(request));
+    }
+
+    public void prepareForLogin(HttpServletRequest request) {
+        // Create new session
+        request.getSession(true);
+    }
+
+    public void login(String ssn, String firstNames, String lastName, String municipalityCode, HttpServletRequest request, HttpServletResponse response) {
+        // TODO: Implement something
+        System.out.println(firstNames+", "+lastName);
     }
 }
