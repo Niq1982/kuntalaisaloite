@@ -5,7 +5,8 @@ import fi.om.municipalityinitiative.util.Locales;
 public enum HelpPage {
     NEWS("tiedotteet", "aktuellt"),
     CONTACT("yhteystiedot", "kontaktuppgifter"),
-    ORGANIZERS("ohje-vastuuhenkilolle", "anvisningar-for-ansvarspersoner"),
+    ORGANIZERS("ohjeet-vastuuhenkilolle", "anvisningar-for-ansvarspersoner"),
+    PARTICIPANTS("ohje-osallistujalle", "ohje-osallistujalle_sv"),
     INITIATIVE_STEPS("aloitteen-vaiheet", "initiativets-skeden");
 
     private String uriFi;

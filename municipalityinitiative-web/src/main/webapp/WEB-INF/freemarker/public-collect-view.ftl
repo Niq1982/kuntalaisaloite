@@ -102,19 +102,16 @@
             
             <div id="municipalMembership" class="js-hide">
                 <div class="input-block-content hidden">
-                    <#assign href="#" />
-                    <@u.systemMessage path="initiative.municipality.notEqual" type="info" showClose=false args=[href] />
+                    <#assign href=urls.help(HelpPage.PARTICIPANTS.getUri(locale)) />
+                    <@u.systemMessage path="initiative.municipality.notEqual.participation" type="info" showClose=false args=[href] />
                 </div>
                 <div class="input-block-content">
                     <@f.radiobutton path="participant.municipalMembership" required="required" options={
                         "community":"initiative.municipalMembership.community",
                         "company":"initiative.municipalMembership.company",
-                        "property":"initiative.municipalMembership.property"
-                    } attributes="" />
-                    <br/>
-                    <@f.radiobutton path="participant.municipalMembership" required="required" options={
+                        "property":"initiative.municipalMembership.property",
                         "none":"initiative.municipalMembership.none"
-                    } attributes="" header=false/>
+                    } attributes="" />
                 </div>
                 
                 <div class="input-block-content is-not-member no-top-margin js-hide hidden">

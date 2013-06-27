@@ -55,7 +55,7 @@
     </div>
 
     <div class="input-block-content">
-        <#assign href="#" />
+        <#assign href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" />
         <@u.systemMessage path="initiative.municipality.description" type="info" showClose=false args=[href] />
     </div>
     
@@ -70,7 +70,7 @@
     <noscript>
         <div class="input-block-content">
             <div class="system-msg msg-info">
-                <#assign href= "#" />
+                <#assign href= "${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" />
                 <@u.messageHTML key="initiative.municipality.different" args=[href] />
             </div>
         </div>
@@ -78,7 +78,7 @@
     
     <div id="municipalMembership" class="municipality-not-equal js-hide">
         <div class="input-block-content hidden">
-            <#assign href="#" />
+            <#assign href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" />
             <@u.systemMessage path="initiative.municipality.notEqual" type="info" showClose=false args=[href] />
         </div>
         <div class="input-block-content">
@@ -216,7 +216,7 @@
         </div>
 
         <div class="input-block-content">
-            <#assign href="#" />
+            <#assign href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" />
             <@u.systemMessage path="initiative.proposal.description" type="info" showClose=false args=[href] />
         </div>
         

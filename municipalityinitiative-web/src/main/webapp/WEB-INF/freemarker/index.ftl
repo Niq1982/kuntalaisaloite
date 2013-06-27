@@ -13,7 +13,7 @@
 
 <div class="container">
     <div class="big-link-holder">
-        <a href="${urls.help("ohjeet-vastuuhenkilolle ")}" class="big-link"><@u.message "front.bigLink" /> <span class="arrow"></span></a>
+        <a href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" class="big-link"><@u.message "front.bigLink" /> <span class="arrow"></span></a>
     </div>
 
     <div id="content">
