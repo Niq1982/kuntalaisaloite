@@ -85,9 +85,14 @@
             <@f.radiobutton path="initiative.municipalMembership" required="required" options={
                 "community":"initiative.municipalMembership.community",
                 "company":"initiative.municipalMembership.company",
-                "property":"initiative.municipalMembership.property",
-                "none":"initiative.municipalMembership.none"
+                "property":"initiative.municipalMembership.property"
+
             } attributes="" />
+            <br/>
+            <@f.radiobutton path="initiative.municipalMembership" required="required" options={
+                "none":"initiative.municipalMembership.none"
+            } attributes="" header=false/>
+
         </div>
         
         <div class="input-block-content is-not-member no-top-margin js-hide hidden">
