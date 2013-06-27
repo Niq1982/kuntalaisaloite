@@ -128,8 +128,8 @@ public class AppConfiguration {
     }
 
     @Bean
-    public AdminUserDao adminUserDao() {
-        return new JdbcAdminUserDao();
+    public UserDao adminUserDao() {
+        return new JdbcUserDao();
     }
 
     @Bean

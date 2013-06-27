@@ -145,4 +145,8 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
                 .execute());
     }
+
+    @Override
+    public void addVerifiedParticipant(Long initiativeId, long userId) {
+    }
 }

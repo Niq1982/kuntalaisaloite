@@ -5,9 +5,11 @@ import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
+import fi.om.municipalityinitiative.dto.service.PrepareSafeInitiativeCreateDto;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
+import fi.om.municipalityinitiative.service.EncryptionService;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.operations.PublicInitiativeServiceOperations;
 import fi.om.municipalityinitiative.util.FixState;
@@ -30,6 +32,9 @@ public class PublicInitiativeService {
 
     @Resource
     private EmailService emailService;
+
+    @Resource
+    private EncryptionService encryptionService;
 
     public List<InitiativeListInfo> findMunicipalityInitiatives(InitiativeSearch search, LoginUserHolder loginUserHolder) {
 
@@ -114,4 +119,18 @@ public class PublicInitiativeService {
     }
 
 
+    public long prepareSafeInitiative(String ssn, PrepareSafeInitiativeUICreateDto uiCreateDto) {
+
+        // TODO: Implement
+
+        PrepareSafeInitiativeCreateDto createDto = new PrepareSafeInitiativeCreateDto();
+        createDto.setMunicipality(uiCreateDto.getMunicipality());
+        createDto.setHash(encryptionService.registeredUserHash(ssn));
+
+        // operations.doPrepareSafeInitiative(uiCreateDto, );
+
+        throw new RuntimeException("Not implemented");
+
+
+    }
 }

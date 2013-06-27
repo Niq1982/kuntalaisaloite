@@ -39,4 +39,6 @@ public interface AuthorDao {
     void updateManagementHash(Long authorId, String newManagementHash);
 
     Map<String,String> getManagementLinksByAuthorEmails(Long initiativeId);
+
+    void addVerifiedAuthor(Long initiativeId, long userId);
 }

@@ -215,4 +215,8 @@ public class JdbcAuthorDao implements AuthorDao {
                 .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
                 .map(QParticipant.participant.email, QAuthor.author.managementHash);
     }
+
+    @Override
+    public void addVerifiedAuthor(Long initiativeId, long userId) {
+    }
 }

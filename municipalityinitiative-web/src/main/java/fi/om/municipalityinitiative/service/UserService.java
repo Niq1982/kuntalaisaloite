@@ -1,17 +1,15 @@
 package fi.om.municipalityinitiative.service;
 
+import fi.om.municipalityinitiative.dao.UserDao;
 import fi.om.municipalityinitiative.dto.user.OmLoginUser;
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.AuthenticationRequiredException;
 import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
-import fi.om.municipalityinitiative.dao.AdminUserDao;
 import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.util.Maybe;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -26,7 +24,7 @@ public class UserService {
     static final String LOGIN_USER_PARAMETER = "loginUser";
 
     @Resource
-    AdminUserDao adminUserDao;
+    UserDao userDao;
 
     @Resource
     AuthorDao authorDao;
@@ -42,7 +40,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public void adminLogin(String userName, String password, HttpServletRequest request) {
-        request.getSession().setAttribute(LOGIN_USER_PARAMETER, adminUserDao.getUser(userName, saltAndEncryptPassword(password)));
+        request.getSession().setAttribute(LOGIN_USER_PARAMETER, userDao.getAdminUser(userName, saltAndEncryptPassword(password)));
     }
 
     private String saltAndEncryptPassword(String password) {
@@ -150,8 +148,9 @@ public class UserService {
         request.getSession(true);
     }
 
-    public void login(String ssn, String firstNames, String lastName, String municipalityCode, HttpServletRequest request, HttpServletResponse response) {
+    public void login(String ssn, String fullName, String address, String municipalityCode, HttpServletRequest request, HttpServletResponse response) {
+
         // TODO: Implement something
-        System.out.println(firstNames+", "+lastName);
+        System.out.println(fullName+", "+address);
     }
 }

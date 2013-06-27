@@ -14,7 +14,6 @@ import org.joda.time.DateTime;
 import org.joda.time.Seconds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -130,7 +129,7 @@ public class LoginController extends BaseLoginController {
     }
 
     @RequestMapping(value={LOGIN_FI, LOGIN_SV}, method=POST)
-    public View loginPost(
+    public View vetumaLoginPost(
             VetumaLoginResponse vetumaResponse,
             Locale locale,
             HttpSession session,
@@ -163,7 +162,11 @@ public class LoginController extends BaseLoginController {
 
             String ssn = vetumaResponse.getSsn();
 
-            userService.login(ssn, vtjData.getFirstNames(), vtjData.getLastName(), vtjData.getMunicipalityCode(),request, response);
+            userService.login(ssn,
+                    vtjData.getFullName(),
+                    vtjData.getAddress(),
+                    vtjData.getMunicipalityCode(),
+                    request, response);
 
             return redirectToTarget(session);
         } else {
@@ -196,5 +199,21 @@ public class LoginController extends BaseLoginController {
         Urls urls = Urls.get(locale);
         userService.logout(request);
         return redirectWithMessage(urls.frontpage(), RequestMessage.LOGOUT, request);
+    }
+
+    @RequestMapping(value = "/testimestarimiekkonen", method = RequestMethod.GET)
+    public String TESTIMESTARILOGIN(@RequestParam(required = false) String target, Model model, Locale locale, HttpServletRequest request, HttpServletResponse response) {
+//        // NOTE: Needed for VETUMA
+//        response.setContentType("text/html;charset=ISO-8859-1");
+        model.addAttribute("target", target);
+        return MODERATOR_LOGIN_VIEW;
+    }
+
+    @RequestMapping(value = "/testimestarimiekkonen", method = RequestMethod.POST)
+    public RedirectView TESTIMESTARILOGIN(@RequestParam String u,
+                                          @RequestParam String p,
+                                          Model model, Locale locale, HttpServletRequest request) {
+        userService.adminLogin(u, p, request);
+        return new RedirectView(Urls.get(Locales.LOCALE_FI).frontpage());
     }
 }

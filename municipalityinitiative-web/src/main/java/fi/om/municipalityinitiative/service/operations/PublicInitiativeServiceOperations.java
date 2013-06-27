@@ -3,15 +3,11 @@ package fi.om.municipalityinitiative.service.operations;
 import fi.om.municipalityinitiative.dao.*;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
-import fi.om.municipalityinitiative.dto.service.AuthorMessage;
-import fi.om.municipalityinitiative.dto.service.Initiative;
-import fi.om.municipalityinitiative.dto.service.ManagementSettings;
-import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
-import fi.om.municipalityinitiative.dto.ui.AuthorUIMessage;
-import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
-import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
-import fi.om.municipalityinitiative.dto.ui.PrepareInitiativeUICreateDto;
+import fi.om.municipalityinitiative.dto.service.*;
+import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
+import fi.om.municipalityinitiative.service.EncryptionService;
+import fi.om.municipalityinitiative.service.VerifiedUser;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
@@ -39,7 +35,10 @@ public class PublicInitiativeServiceOperations {
 
     @Resource
     private AuthorMessageDao authorMessageDao;
-    private InitiativeCounts initiativeCounts;
+
+    @Resource
+    private UserDao userDao;
+
 
     @Transactional(readOnly = false)
     public PreparedInitiativeData doPrepareInitiative(PrepareInitiativeUICreateDto createDto) {
@@ -56,6 +55,25 @@ public class PublicInitiativeServiceOperations {
         preparedInitiativeData.managementHash = RandomHashGenerator.longHash();
         preparedInitiativeData.authorId = authorDao.createAuthor(preparedInitiativeData.initiativeId, participantId, preparedInitiativeData.managementHash);
         return preparedInitiativeData;
+    }
+
+    @Transactional(readOnly = false)
+    public Long doPrepareSafeInitiative(PrepareSafeInitiativeCreateDto createDto) {
+        // TODO: In progress
+        assertMunicipalityIsActive(createDto.getMunicipality());
+
+        Long initiativeId = initiativeDao.prepareSafeInitiative(createDto.getMunicipality(), createDto.getInitiativeType());
+        VerifiedUser verifiedUser = userDao.getVerifiedUser(createDto.getHash());
+        if (verifiedUser == null) {
+            verifiedUser.setUserId(userDao.addVerifiedUser(createDto.getHash(), createDto.getContactInfo()));
+            verifiedUser.setContactInfo(createDto.getContactInfo());
+        }
+
+        participantDao.addVerifiedParticipant(initiativeId, verifiedUser.getUserId());
+        authorDao.addVerifiedAuthor(initiativeId, verifiedUser.getUserId());
+
+        return initiativeId;
+
     }
 
     private void assertMunicipalityIsActive(Long municipality) {

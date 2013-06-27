@@ -37,6 +37,10 @@ public class VTJData {
 
     private String returnCodeDescription;
 
+    private String streetAddress;
+
+    private String postalCode;
+
     public VTJData() {}
 
     public static VTJData parse(String xml) {
@@ -47,31 +51,28 @@ public class VTJData {
             while (parser.hasNext()) {
                 int event = parser.next();
                 switch (event) {
-                    case (START_ELEMENT) :
+                    case (START_ELEMENT):
                         String localName = parser.getLocalName();
                         if ("Paluukoodi".equals(localName)) {
                             vtjData.setReturnCodeDescription(parseText(parser));
-                        }
-                        else  if ("NykyinenSukunimi".equals(localName)) {
+                        } else if ("NykyinenSukunimi".equals(localName)) {
                             vtjData.setLastName(parseText(parser));
-                        }
-                        else if ("NykyisetEtunimet".equals(localName)) {
+                        } else if ("NykyisetEtunimet".equals(localName)) {
                             vtjData.setFirstNames(parseText(parser));
-                        }
-                        else if ("Kuntanumero".equals(localName)) {
+                        } else if ("Kuntanumero".equals(localName)) {
                             vtjData.setMunicipalityCode(parseText(parser));
-                        }
-                        else if ("KuntaS".equals(localName)) {
+                        } else if ("KuntaS".equals(localName)) {
                             vtjData.setMunicipalityNameFi(parseText(parser));
-                        }
-                        else if ("KuntaR".equals(localName)) {
+                        } else if ("KuntaR".equals(localName)) {
                             vtjData.setMunicipalityNameSv(parseText(parser));
-                        }
-                        else if ("Kuolinpvm".equals(localName)) {
+                        } else if ("Kuolinpvm".equals(localName)) {
                             vtjData.setDead(!Strings.isNullOrEmpty(parseText(parser)));
-                        }
-                        else if ("SuomenKansalaisuusTietokoodi".equals(localName)) {
+                        } else if ("SuomenKansalaisuusTietokoodi".equals(localName)) {
                             vtjData.setFinnishCitizen("1".equals(parseText(parser)));
+                        } else if ("VakinainenKotimainenLahiosoite".equals(localName)) {
+                            vtjData.setStreetAddress(parseText(parser));
+                        } else if ("Postinumero".equals(localName)) {
+                            vtjData.setPostalCode(parseText(parser));
                         }
                         break;
                 }
@@ -142,6 +143,10 @@ public class VTJData {
         return firstNames;
     }
 
+    public String getFullName() {
+        return firstNames + " " + lastName;
+    }
+
     public void setFirstNames(String firstNames) {
         this.firstNames = firstNames;
     }
@@ -186,4 +191,15 @@ public class VTJData {
         this.returnCodeDescription = returnCodeDescription;
     }
 
+    public void setStreetAddress(String streetAddress) {
+        this.streetAddress = streetAddress;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public String getAddress() {
+        return streetAddress + " " + postalCode + " " + municipalityNameFi;
+    }
 }

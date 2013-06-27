@@ -22,6 +22,8 @@ public interface InitiativeDao {
 
     Long prepareInitiative(Long municipalityId);
 
+    Long prepareSafeInitiative(Long municipalityId, InitiativeType initiativeType);
+
     void editInitiativeDraft(Long initiativeId, InitiativeDraftUIEditDto editDto);
 
     void updateExtraInfo(Long initiativeId, String extraInfo, Integer externalParticipantCount);

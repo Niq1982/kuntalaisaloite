@@ -339,6 +339,11 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .execute());
     }
 
+    @Override
+    public Long prepareSafeInitiative(Long municipalityId, InitiativeType initiativeType) {
+        return null;
+    }
+
     public static void assertSingleAffection(long affectedRows) {
         Assert.isTrue(affectedRows == 1, "Should have affected only one row. Affected: " + affectedRows);
     }

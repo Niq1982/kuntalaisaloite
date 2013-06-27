@@ -24,4 +24,6 @@ public interface ParticipantDao {
     Long getInitiativeIdByParticipant(Long participantId);
 
     void deleteParticipant(Long initiativeId, Long participantId);
+
+    void addVerifiedParticipant(Long initiativeId, long userId);
 }
