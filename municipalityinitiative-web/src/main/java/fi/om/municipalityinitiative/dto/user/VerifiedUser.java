@@ -7,13 +7,14 @@ import java.util.Set;
 public class VerifiedUser extends User{
 
     private final String ssn;
-    private final Long authorId;
     private final ContactInfo contactInfo;
     private final Set<Long> initiatives;
 
-    public VerifiedUser(String ssn, Long authorId, ContactInfo contactInfo, Set<Long> initiatives) {
+    VerifiedUser(String ssn, ContactInfo contactInfo, Set<Long> initiatives) {
         this.ssn = ssn;
-        this.authorId = authorId;
+
+        // This is needed after we've logged in and participating or creating an initiative.
+        // Data must be updated always when updating something at the UI
         this.contactInfo = contactInfo;
         this.initiatives = initiatives;
     }
@@ -26,11 +27,6 @@ public class VerifiedUser extends User{
     @Override
     public boolean hasRightToInitiative(Long initiativeId) {
         return initiatives.contains(initiativeId);
-    }
-
-    @Override
-    public Long getAuthorId() {
-        return authorId;
     }
 
     @Override

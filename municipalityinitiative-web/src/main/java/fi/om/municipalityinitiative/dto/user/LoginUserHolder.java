@@ -35,8 +35,9 @@ public class LoginUserHolder<E extends User> {
         return user.hasRightToInitiative(initiativeId);
     }
 
-    public Long getAuthorId() {
-        return user.getAuthorId();
+    public NormalLoginUser getNormalLoginUser() {
+        // TODO: Throw accessdenied or something
+        return (NormalLoginUser) user;
     }
 
     public void assertOmUser() {

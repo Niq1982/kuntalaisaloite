@@ -73,7 +73,7 @@ public class AuthorService {
     public void deleteAuthor(Long initiativeId, LoginUserHolder loginUserHolder, Long authorId) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        if (loginUserHolder.getAuthorId().equals(authorId)) {
+        if (loginUserHolder.getNormalLoginUser().getAuthorId().equals(authorId)) {
             throw new OperationNotAllowedException("Removing yourself from authors is not allowed");
         }
 

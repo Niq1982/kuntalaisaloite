@@ -29,6 +29,9 @@ public class UserService {
     @Resource
     AuthorDao authorDao;
 
+    @Resource
+    EncryptionService encryptionService;
+
     String omUserSalt;
 
     public UserService() {  // This is for tests, spring needs this
@@ -40,7 +43,12 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public void adminLogin(String userName, String password, HttpServletRequest request) {
-        request.getSession().setAttribute(LOGIN_USER_PARAMETER, userDao.getAdminUser(userName, saltAndEncryptPassword(password)));
+        User adminUser = userDao.getAdminUser(userName, saltAndEncryptPassword(password));
+        storeLoggedInUser(request, adminUser);
+    }
+
+    private static void storeLoggedInUser(HttpServletRequest request, User adminUser) {
+        request.getSession().setAttribute(LOGIN_USER_PARAMETER, adminUser);
     }
 
     private String saltAndEncryptPassword(String password) {
@@ -57,7 +65,7 @@ public class UserService {
             throw new InvalidLoginException("Invalid login credentials");
         }
 
-        request.getSession().setAttribute(LOGIN_USER_PARAMETER, User.normalUser(authorId, initiativeIds));
+        storeLoggedInUser(request, User.normalUser(authorId, initiativeIds));
 
         return initiativeIds.iterator().next();
     }
@@ -149,6 +157,12 @@ public class UserService {
     }
 
     public void login(String ssn, String fullName, String address, String municipalityCode, HttpServletRequest request, HttpServletResponse response) {
+
+        storeLoggedInUser(request, User.verifiedUser(ssn, null, null, null));
+
+
+
+
 
         // TODO: Implement something
         System.out.println(fullName+", "+address);

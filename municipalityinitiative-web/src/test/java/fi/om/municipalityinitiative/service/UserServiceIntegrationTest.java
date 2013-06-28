@@ -67,7 +67,7 @@ public class UserServiceIntegrationTest extends ServiceIntegrationTestBase{
         userService.authorLogin(testHelper.getPreviousTestManagementHash(), requestMock);
         LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(requestMock);
 
-        assertThat(loginUserHolder.getAuthorId(), is(testHelper.getLastAuthorId()));
+        assertThat(loginUserHolder.getNormalLoginUser().getAuthorId(), is(testHelper.getLastAuthorId()));
         assertThat(loginUserHolder.getUser().hasRightToInitiative(initiative), is(true));
         assertThat(loginUserHolder.getUser().hasRightToInitiative(-1L), is(false));
     }

@@ -1,5 +1,7 @@
 package fi.om.municipalityinitiative.dto.user;
 
+import fi.om.municipalityinitiative.dto.ui.ContactInfo;
+
 import java.util.Set;
 
 public abstract class User {
@@ -10,6 +12,10 @@ public abstract class User {
 
     public static NormalLoginUser normalUser(Long authorId, Set<Long> authorsInitiatives) {
         return new NormalLoginUser(authorId, authorsInitiatives);
+    }
+
+    public static VerifiedUser verifiedUser(String ssn, Long authorId, ContactInfo contactInfo, Set<Long> initiatives) {
+        return new VerifiedUser(ssn, contactInfo, initiatives);
     }
 
     public static User anonym() {
@@ -23,8 +29,6 @@ public abstract class User {
     }
 
     public abstract boolean hasRightToInitiative(Long initiativeId);
-
-    public abstract Long getAuthorId();
 
     public abstract boolean isLoggedIn();
 

@@ -43,7 +43,7 @@ public class InitiativeManagementService {
         assertAllowance("Edit initiative", getManagementSettings(initiativeId).isAllowEdit());
         return InitiativeDraftUIEditDto.parse(
                 initiativeDao.get(initiativeId),
-                authorDao.getAuthor(loginUserHolder.getAuthorId()).getContactInfo()
+                authorDao.getAuthor(loginUserHolder.getNormalLoginUser().getAuthorId()).getContactInfo()
         );
     }
 
@@ -57,7 +57,7 @@ public class InitiativeManagementService {
 
         assertAllowance("Edit initiative", getManagementSettings(initiativeId).isAllowEdit());
         initiativeDao.editInitiativeDraft(initiativeId, editDto);
-        authorDao.updateAuthorInformation(loginUserHolder.getAuthorId(), editDto.getContactInfo());
+        authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId(), editDto.getContactInfo());
     }
 
     @Transactional(readOnly = true)
@@ -68,7 +68,7 @@ public class InitiativeManagementService {
 
         Initiative initiative = initiativeDao.get(initiativeId);
 
-        ContactInfo contactInfo = authorDao.getAuthor(loginUserHolder.getAuthorId()).getContactInfo();
+        ContactInfo contactInfo = authorDao.getAuthor(loginUserHolder.getNormalLoginUser().getAuthorId()).getContactInfo();
 
         InitiativeUIUpdateDto updateDto = new InitiativeUIUpdateDto();
         updateDto.setContactInfo(contactInfo);
@@ -83,7 +83,7 @@ public class InitiativeManagementService {
     public Author getAuthorInformation(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         for (Author author : authorDao.findAuthors(initiativeId)) {
-            if (author.getId().equals(loginUserHolder.getAuthorId())) {
+            if (author.getId().equals(loginUserHolder.getNormalLoginUser().getAuthorId())) {
                 return author;
             }
         }
@@ -96,7 +96,7 @@ public class InitiativeManagementService {
         assertAllowance("Update initiative", getManagementSettings(initiativeId).isAllowUpdate());
 
         initiativeDao.updateExtraInfo(initiativeId, updateDto.getExtraInfo(), updateDto.getExternalParticipantCount());
-        authorDao.updateAuthorInformation(loginUserHolder.getAuthorId(), updateDto.getContactInfo());
+        authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId(), updateDto.getContactInfo());
     }
 
     public void sendReviewAndStraightToMunicipality(Long initiativeId, LoginUserHolder loginUserHolder, String sentComment) {

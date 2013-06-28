@@ -2,7 +2,6 @@ package fi.om.municipalityinitiative.dto.user;
 
 public class AnonymUser extends User {
 
-
     AnonymUser() { }
 
     @Override
@@ -13,11 +12,6 @@ public class AnonymUser extends User {
     @Override
     public boolean hasRightToInitiative(Long initiativeId) {
         return false;
-    }
-
-    @Override
-    public Long getAuthorId() {
-        throw new IllegalStateException("Anonym user is no author");
     }
 
     @Override

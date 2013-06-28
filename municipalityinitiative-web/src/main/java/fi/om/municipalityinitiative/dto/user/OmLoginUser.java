@@ -19,11 +19,6 @@ public class OmLoginUser extends User {
     }
 
     @Override
-    public Long getAuthorId() {
-        throw new IllegalStateException("Om user should have no need for author-id");
-    }
-
-    @Override
     public boolean isLoggedIn() {
         return true;
     }

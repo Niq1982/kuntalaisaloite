@@ -19,11 +19,6 @@ public class NormalLoginUser extends User {
     }
 
     @Override
-    public Long getAuthorId() {
-        return authorId;
-    }
-
-    @Override
     public boolean isLoggedIn() {
         return true;
     }
@@ -31,6 +26,10 @@ public class NormalLoginUser extends User {
     @Override
     public boolean isOmUser() {
         return false;
+    }
+
+    public Long getAuthorId() {
+        return authorId;
     }
 
 }
