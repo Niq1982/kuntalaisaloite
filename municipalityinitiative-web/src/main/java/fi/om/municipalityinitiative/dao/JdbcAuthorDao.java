@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import static fi.om.municipalityinitiative.dao.JdbcInitiativeDao.assertSingleAffection;
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 
 @SQLExceptionTranslated
@@ -218,5 +219,9 @@ public class JdbcAuthorDao implements AuthorDao {
 
     @Override
     public void addVerifiedAuthor(Long initiativeId, VerifiedUserId userId) {
+        assertSingleAffection(queryFactory.insert(QVerifiedAuthor.verifiedAuthor)
+                .set(QVerifiedAuthor.verifiedAuthor.initiativeId, initiativeId)
+                .set(QVerifiedAuthor.verifiedAuthor.verifiedUserId, userId.toLong())
+                .execute());
     }
 }

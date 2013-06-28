@@ -102,13 +102,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
     }
 
-    @Test
-    @Ignore
-    // TODO: Implement
-    public void sets_participant_count_to_one_when_adding_new_safe_initiative() {
-        long initiativeId = service.prepareSafeInitiative("", new PrepareSafeInitiativeUICreateDto());
-        assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
-    }
+
 
     @Test(expected = AccessDeniedException.class)
     public void trying_to_prepare_initiative_to_non_active_municipality_is_forbidden() {
@@ -118,16 +112,6 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         createDto.setMunicipality(unactiveMunicipality);
 
         service.prepareInitiative(createDto, null);
-    }
-
-    @Test(expected = AccessDeniedException.class)
-    @Ignore
-    // TODO: Implement
-    public void trying_to_prepare_safe_initiative_to_non_active_municipality_is_forbidden() {
-        Long unactiveMunicipality = testHelper.createTestMunicipality("Some Unactive Municipality", false);
-        PrepareSafeInitiativeUICreateDto createDto = new PrepareSafeInitiativeUICreateDto();
-        createDto.setMunicipality(unactiveMunicipality);
-        service.prepareSafeInitiative("", createDto);
     }
 
     private InitiativeListInfo getSingleInitiativeInfo() {
@@ -145,30 +129,9 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     }
 
     @Test
-    @Ignore
-    // TODO: Implement
-    public void preparing_initiative_sets_initiative_type_and_municipality() {
-        PrepareSafeInitiativeUICreateDto prepareSafeInitiativeUICreateDto = new PrepareSafeInitiativeUICreateDto();
-        prepareSafeInitiativeUICreateDto.setMunicipality(testMunicipality.getId());
-        prepareSafeInitiativeUICreateDto.setInitiativeType(InitiativeType.COLLABORATIVE_COUNCIL);
-        long initiativeId = service.prepareSafeInitiative("", prepareSafeInitiativeUICreateDto);
-
-        Initiative initiative = testHelper.getInitiative(initiativeId);
-
-        assertThat(initiative.getType(), is(InitiativeType.COLLABORATIVE_COUNCIL));
-        assertThat(initiative.getMunicipality().getId(), is(testMunicipality.getId()));
-    }
-
-    @Test
     public void preparing_initiative_sends_email() throws MessagingException, InterruptedException {
         service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
         assertUniqueSentEmail(prepareDto().getParticipantEmail(), EmailSubjectPropertyKeys.EMAIL_PREPARE_CREATE_SUBJECT);
-    }
-
-    @Test
-    @Ignore
-    public void preparing_safe_initiative_sends_email() {
-        // TODO: Implement
     }
 
     @Test
@@ -183,12 +146,6 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     }
 
     @Test
-    @Ignore
-    public void preparing_safe_initiative_sets_participant_information() {
-        // TODO: Implement
-    }
-
-    @Test
     public void preparing_initiative_saved_email_and_municipality_and_membership() {
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
 
@@ -199,12 +156,6 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         assertThat(createdParticipant.getMembership(), is(prepareDto().getMunicipalMembership()));
 
         // Note that all fields are not set when preparing
-    }
-
-    @Test
-    @Ignore
-    public void preparing_safe_initiative_saved_email_and_municipality_and_membership() {
-        // TODO: Implement
     }
 
     @Test

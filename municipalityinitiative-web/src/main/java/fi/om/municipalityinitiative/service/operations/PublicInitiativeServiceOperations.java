@@ -59,24 +59,6 @@ public class PublicInitiativeServiceOperations {
         return preparedInitiativeData;
     }
 
-    @Transactional(readOnly = false)
-    public Long doPrepareSafeInitiative(PrepareSafeInitiativeCreateDto createDto) {
-        // TODO: In progress
-        assertMunicipalityIsActive(createDto.getMunicipality());
-
-        Long initiativeId = initiativeDao.prepareSafeInitiative(createDto.getMunicipality(), createDto.getInitiativeType());
-        Maybe<VerifiedUserId> verifiedUserId = userDao.getVerifiedUserId(createDto.getHash());
-        if (verifiedUserId.isNotPresent()) {
-            verifiedUserId = Maybe.of(userDao.addVerifiedUser(createDto.getHash(), createDto.getContactInfo()));
-        }
-
-        participantDao.addVerifiedParticipant(initiativeId, verifiedUserId.get());
-        authorDao.addVerifiedAuthor(initiativeId, verifiedUserId.get());
-
-        return initiativeId;
-
-    }
-
     private void assertMunicipalityIsActive(Long municipality) {
         if (!municipalityDao.getMunicipality(municipality).isActive()) {
             throw new AccessDeniedException("Municipality is not active for initiatives: " + municipality);

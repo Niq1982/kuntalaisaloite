@@ -341,7 +341,10 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     public Long prepareSafeInitiative(Long municipalityId, InitiativeType initiativeType) {
-        return null;
+        return queryFactory.insert(municipalityInitiative)
+                .set(municipalityInitiative.municipalityId, municipalityId)
+                .set(municipalityInitiative.type, initiativeType)
+                .executeWithKey(municipalityInitiative.id);
     }
 
     public static void assertSingleAffection(long affectedRows) {

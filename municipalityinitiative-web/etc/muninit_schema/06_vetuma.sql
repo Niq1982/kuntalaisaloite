@@ -9,10 +9,11 @@ create table verified_user(
     email varchar(100),
     municipality_id bigserial,
 
-    constraint verified_user_municipality_fk foreign key (municipality_id) references municipality(id),
+    constraint verified_user_municipality_fk foreign key (municipality_id) references municipality(id) on update cascade on delete set null,
     constraint verified_user_pk primary key (id),
     constraint verified_user_hash_u unique (hash)
 );
+alter table verified_user alter column municipality_id drop not null;
 create index verified_user_id_index on verified_user(id);
 create index verified_user_hash_index on verified_user(hash);
 

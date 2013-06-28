@@ -118,19 +118,4 @@ public class PublicInitiativeService {
 
     }
 
-
-    public long prepareSafeInitiative(String ssn, PrepareSafeInitiativeUICreateDto uiCreateDto) {
-
-        // TODO: Implement
-
-        PrepareSafeInitiativeCreateDto createDto = new PrepareSafeInitiativeCreateDto();
-        createDto.setMunicipality(uiCreateDto.getMunicipality());
-        createDto.setHash(encryptionService.registeredUserHash(ssn));
-
-        // operations.doPrepareSafeInitiative(uiCreateDto, );
-
-        throw new RuntimeException("Not implemented");
-
-
-    }
 }

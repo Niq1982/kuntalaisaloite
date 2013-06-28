@@ -53,6 +53,7 @@ public class JdbcUserDao implements UserDao {
                 .set(verifiedUser.name, contactInfo.getName())
                 .set(verifiedUser.phone, contactInfo.getPhone())
                 .set(verifiedUser.email, contactInfo.getEmail())
+                .setNull(verifiedUser.municipalityId)
                 .executeWithKey(verifiedUser.id));
     }
 

@@ -8,6 +8,7 @@ import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.QMunicipality;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.sql.QParticipant;
+import fi.om.municipalityinitiative.sql.QVerifiedParticipant;
 import fi.om.municipalityinitiative.util.MaybeHoldingHashMap;
 import fi.om.municipalityinitiative.util.Membership;
 
@@ -143,5 +144,14 @@ public class JdbcParticipantDao implements ParticipantDao {
 
     @Override
     public void addVerifiedParticipant(Long initiativeId, VerifiedUserId userId) {
+        assertSingleAffection(queryFactory.insert(QVerifiedParticipant.verifiedParticipant)
+                .set(QVerifiedParticipant.verifiedParticipant.initiativeId, initiativeId)
+                .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, userId.toLong())
+                .set(QVerifiedParticipant.verifiedParticipant.showName, true) // Default is true
+                .execute());
+        assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
+                .set(QMunicipalityInitiative.municipalityInitiative.participantCount, QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
+                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
+                .execute());
     }
 }

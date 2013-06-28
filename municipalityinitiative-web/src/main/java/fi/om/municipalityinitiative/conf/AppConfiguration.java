@@ -11,14 +11,8 @@ import fi.om.municipalityinitiative.dto.service.TestDataService;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.service.email.EmailMessageConstructor;
 import fi.om.municipalityinitiative.service.email.EmailServiceDataProvider;
-import fi.om.municipalityinitiative.service.operations.AuthorServiceOperations;
-import fi.om.municipalityinitiative.service.operations.InitiativeManagementServiceOperations;
-import fi.om.municipalityinitiative.service.operations.ModerationServiceOperations;
-import fi.om.municipalityinitiative.service.operations.PublicInitiativeServiceOperations;
-import fi.om.municipalityinitiative.service.ui.AuthorService;
-import fi.om.municipalityinitiative.service.ui.InitiativeManagementService;
-import fi.om.municipalityinitiative.service.ui.ModerationService;
-import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
+import fi.om.municipalityinitiative.service.operations.*;
+import fi.om.municipalityinitiative.service.ui.*;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.TaskExecutorAspect;
 import fi.om.municipalityinitiative.validation.LocalValidatorFactoryBeanFix;
@@ -227,6 +221,15 @@ public class AppConfiguration {
         return new FileImageFinder(env.getRequiredProperty(PropertyNames.omImageDirection), env.getRequiredProperty(PropertyNames.baseURL));
     }
 
+    @Bean
+    public VerifiedInitiativeService verifiedInitiativeService() {
+        return new VerifiedInitiativeService();
+    }
+
+    @Bean
+    public VerifiedInitiativeServiceOperations verifiedInitiativeServiceOperations() {
+        return new VerifiedInitiativeServiceOperations();
+    }
 
     @Bean
     public StatusService statusService() {

@@ -9,10 +9,9 @@ import fi.om.municipalityinitiative.conf.PropertyNames;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Participant;
-import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.ui.ContactInfo;
+import fi.om.municipalityinitiative.dto.user.*;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
-import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
-import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.service.EncryptionService;
 import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.*;
@@ -51,7 +50,7 @@ public class TestHelper {
     public static final String DEFAULT_SENT_COMMENT = "some default sent comment";
     public static final Integer DEFAULT_EXTERNAL_PARTICIPANT_COUNT = 10;
 
-    public static LoginUserHolder authorLoginUserHolder;
+    public static LoginUserHolder<NormalLoginUser> authorLoginUserHolder;
     public static LoginUserHolder unknownLoginUserHolder = new LoginUserHolder(User.anonym());
     public static OmLoginUserHolder omLoginUser = new OmLoginUserHolder(User.omUser(""));
 
@@ -78,6 +77,9 @@ public class TestHelper {
         queryFactory.delete(QAuthorInvitation.authorInvitation).execute();
         queryFactory.delete(QAuthor.author).execute();
         queryFactory.delete(QParticipant.participant).execute();
+        queryFactory.delete(QVerifiedAuthor.verifiedAuthor).execute();
+        queryFactory.delete(QVerifiedParticipant.verifiedParticipant).execute();
+        queryFactory.delete(QVerifiedUser.verifiedUser).execute();
         queryFactory.delete(QMunicipalityInitiative.municipalityInitiative).execute();
         queryFactory.delete(QMunicipality.municipality).execute();
         queryFactory.delete(QInfoText.infoText).execute();
@@ -202,6 +204,13 @@ public class TestHelper {
                 .set(QAuthor.author.managementHash, generateHash(40))
                 .execute();
         authorLoginUserHolder = new LoginUserHolder(User.normalUser(lastAuthorId, Collections.singleton(lastInitiativeId)));
+
+        ContactInfo contactInfo = new ContactInfo();
+        contactInfo.setAddress(authorDraft.authorAddress);
+        contactInfo.setPhone(authorDraft.authorPhone);
+        contactInfo.setEmail(authorDraft.participantEmail);
+        contactInfo.setName(authorDraft.participantName);
+        contactInfo.setShowName(true);
         return lastAuthorId;
     }
 
