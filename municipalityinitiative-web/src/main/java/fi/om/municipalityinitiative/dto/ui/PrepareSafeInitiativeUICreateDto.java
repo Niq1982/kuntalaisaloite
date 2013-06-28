@@ -8,16 +8,6 @@ public class PrepareSafeInitiativeUICreateDto {
 
     private Long municipality;
 
-    private String participantEmail;
-
-    public String getParticipantEmail() {
-        return participantEmail;
-    }
-
-    public void setVerifiedAuthorEmail(String participantEmail) {
-        this.participantEmail = participantEmail;
-    }
-
     public InitiativeType getInitiativeType() {
         return initiativeType;
     }

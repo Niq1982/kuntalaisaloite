@@ -13,6 +13,7 @@ import fi.om.municipalityinitiative.sql.QVerifiedAuthor;
 import fi.om.municipalityinitiative.sql.QVerifiedParticipant;
 import fi.om.municipalityinitiative.sql.QVerifiedUser;
 import fi.om.municipalityinitiative.util.InitiativeType;
+import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -22,6 +23,7 @@ import java.util.Collections;
 
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
 public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegrationTestBase{
@@ -68,10 +70,23 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
     }
 
     @Test
-    public void preparing_creates_user_if_not_yet_created() {
-        precondition(testHelper.countAll(QVerifiedAuthor.verifiedAuthor), is(0L));
+    public void preparing_creates_user_with_given_information_if_not_yet_created() {
+        precondition(testHelper.countAll(QVerifiedUser.verifiedUser), is(0L));
+
         service.prepareSafeInitiative(verifiedLoginUserHolder, prepareUICreateDto());
-        assertThat(testHelper.countAll(QVerifiedAuthor.verifiedAuthor), is(1L));
+
+        assertThat(testHelper.countAll(QVerifiedUser.verifiedUser), is(1L));
+        VerifiedUser created = testHelper.getVerifiedUser(HASH);
+        assertThat(created.getContactInfo().getName(), is(VERIFIED_AUTHOR_NAME));
+        assertThat(created.getContactInfo().getAddress(), is(ADDRESS));
+        assertThat(created.getHash(), is(HASH));
+
+        // These are little disturbing, because we actually won't receive these from vetuma...
+        assertThat(created.getContactInfo().getPhone(), is(PHONE));
+        assertThat(created.getContactInfo().getEmail(), is(EMAIL));
+
+        assertThat(created.getInitiatives(), hasSize(0)); // TODO: Size = 1
+
     }
 
     @Test
@@ -100,29 +115,19 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
     }
 
     @Test
-    @Ignore
-    // TODO: Implement
     public void preparing_initiative_sets_initiative_type_and_municipality() {
-        PrepareSafeInitiativeUICreateDto prepareSafeInitiativeUICreateDto = new PrepareSafeInitiativeUICreateDto();
-        prepareSafeInitiativeUICreateDto.setMunicipality(testMunicipality.getId());
-        prepareSafeInitiativeUICreateDto.setInitiativeType(InitiativeType.COLLABORATIVE_COUNCIL);
-        long initiativeId = service.prepareSafeInitiative(verifiedLoginUserHolder, prepareSafeInitiativeUICreateDto);
+        PrepareSafeInitiativeUICreateDto createDto = prepareUICreateDto();
+        long initiativeId = service.prepareSafeInitiative(verifiedLoginUserHolder, createDto);
 
         Initiative initiative = testHelper.getInitiative(initiativeId);
 
-        assertThat(initiative.getType(), is(InitiativeType.COLLABORATIVE_COUNCIL));
-        assertThat(initiative.getMunicipality().getId(), is(testMunicipality.getId()));
+        assertThat(initiative.getType(), is(createDto.getInitiativeType()));
+        assertThat(initiative.getMunicipality().getId(), is(createDto.getMunicipality()));
     }
 
     @Test
     @Ignore
     public void preparing_safe_initiative_sends_email() {
-        // TODO: Implement
-    }
-
-    @Test
-    @Ignore
-    public void preparing_safe_initiative_sets_participant_information() {
         // TODO: Implement
     }
 
@@ -136,7 +141,6 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         PrepareSafeInitiativeUICreateDto createDto = new PrepareSafeInitiativeUICreateDto();
         createDto.setMunicipality(testMunicipality.getId());
         createDto.setInitiativeType(InitiativeType.COLLABORATIVE_CITIZEN);
-        createDto.setVerifiedAuthorEmail("email@example.com");
         return createDto;
     }
 }

@@ -8,14 +8,19 @@ import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.*;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
+import fi.om.municipalityinitiative.dto.user.User;
+import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
+import java.util.Collections;
+
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 import static fi.om.municipalityinitiative.sql.QParticipant.participant;
+import static fi.om.municipalityinitiative.sql.QVerifiedUser.verifiedUser;
 
 public class Mappings {
 
@@ -88,6 +93,23 @@ public class Mappings {
                     info.setExternalParticipantCount(nullToZero(row.get(municipalityInitiative.externalparticipantcount)));
 
                     return info;
+                }
+            };
+    static Expression<VerifiedUser> verifiedUserMapper
+                    = new MappingProjection<VerifiedUser>(VerifiedUser.class, verifiedUser.all()) {
+                @Override
+                protected VerifiedUser map(Tuple row) {
+                    ContactInfo contactInfo = new ContactInfo();
+                    contactInfo.setPhone(row.get(QVerifiedUser.verifiedUser.phone));
+                    contactInfo.setName(row.get(QVerifiedUser.verifiedUser.name));
+                    contactInfo.setAddress(row.get(QVerifiedUser.verifiedUser.address));
+                    contactInfo.setEmail(row.get(QVerifiedUser.verifiedUser.email));
+                    VerifiedUser verifiedUser = User.verifiedUser(
+                            row.get(QVerifiedUser.verifiedUser.hash),
+                            contactInfo,
+                            Collections.<Long>emptySet()
+                    );
+                    return verifiedUser;
                 }
             };
 

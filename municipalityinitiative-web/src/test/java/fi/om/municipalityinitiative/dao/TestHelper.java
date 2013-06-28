@@ -369,6 +369,12 @@ public class TestHelper {
                 .execute();
     }
 
+    @Transactional(readOnly = true)
+    public VerifiedUser getVerifiedUser(String hash) {
+        return queryFactory.from(QVerifiedUser.verifiedUser)
+                .where(QVerifiedUser.verifiedUser.hash.eq(hash))
+                .uniqueResult(Mappings.verifiedUserMapper);
+    }
 
 
     public static class AuthorDraft {
