@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.dao;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.dto.ui.ParticipantCount;
+import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.Membership;
 
 import java.util.List;
@@ -25,5 +26,5 @@ public interface ParticipantDao {
 
     void deleteParticipant(Long initiativeId, Long participantId);
 
-    void addVerifiedParticipant(Long initiativeId, long userId);
+    void addVerifiedParticipant(Long initiativeId, VerifiedUserId userId);
 }

@@ -11,9 +11,9 @@ import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
+import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
 import org.joda.time.DateTime;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -217,6 +217,6 @@ public class JdbcAuthorDao implements AuthorDao {
     }
 
     @Override
-    public void addVerifiedAuthor(Long initiativeId, long userId) {
+    public void addVerifiedAuthor(Long initiativeId, VerifiedUserId userId) {
     }
 }

@@ -8,6 +8,7 @@ import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.service.VerifiedUser;
+import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.QAdminUser;
 import fi.om.municipalityinitiative.sql.QVerifiedAuthor;
 import fi.om.municipalityinitiative.sql.QVerifiedUser;
@@ -43,14 +44,14 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
-    public Long addVerifiedUser(String hash, ContactInfo contactInfo) {
-        return queryFactory.insert(verifiedUser)
+    public VerifiedUserId addVerifiedUser(String hash, ContactInfo contactInfo) {
+        return new VerifiedUserId(queryFactory.insert(verifiedUser)
                 .set(verifiedUser.hash, hash)
                 .set(verifiedUser.address, contactInfo.getAddress())
                 .set(verifiedUser.name, contactInfo.getName())
                 .set(verifiedUser.phone, contactInfo.getPhone())
                         //.set(verifiedUser.email, contactInfo.getEmail())
-                .executeWithKey(verifiedUser.id);
+                .executeWithKey(verifiedUser.id));
     }
 
 
@@ -73,7 +74,7 @@ public class JdbcUserDao implements UserDao {
             contactInfo.setAddress(row.get(QVerifiedUser.verifiedUser.address));
             // contactInfo.setEmail(row.get(QVerifiedUser.verifiedUser.email));
             verifiedUser.setContactInfo(contactInfo);
-            verifiedUser.setUserId(row.get(QVerifiedUser.verifiedUser.id));
+            verifiedUser.setUserId(new VerifiedUserId(row.get(QVerifiedUser.verifiedUser.id)));
             return verifiedUser;
         }
     };

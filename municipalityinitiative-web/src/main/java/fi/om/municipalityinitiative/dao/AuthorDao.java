@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.dao;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
+import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 
 import java.util.List;
 import java.util.Map;
@@ -40,5 +41,5 @@ public interface AuthorDao {
 
     Map<String,String> getManagementLinksByAuthorEmails(Long initiativeId);
 
-    void addVerifiedAuthor(Long initiativeId, long userId);
+    void addVerifiedAuthor(Long initiativeId, VerifiedUserId userId);
 }

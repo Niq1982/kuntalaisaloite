@@ -1,16 +1,17 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
+import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 
 public class VerifiedUser {
-    private long userId;
+    private VerifiedUserId userId;
     private ContactInfo contactInfo;
 
-    public long getUserId() {
+    public VerifiedUserId getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(VerifiedUserId userId) {
         this.userId = userId;
     }
 

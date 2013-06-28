@@ -1,20 +1,15 @@
 package fi.om.municipalityinitiative.dao;
 
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
-import com.mysema.query.support.Expressions;
-import com.mysema.query.types.ConstantImpl;
-import com.mysema.query.types.Expression;
-import com.mysema.query.types.expr.CaseBuilder;
-import com.mysema.query.types.expr.SimpleExpression;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.dto.ui.ParticipantCount;
+import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.QMunicipality;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.sql.QParticipant;
 import fi.om.municipalityinitiative.util.MaybeHoldingHashMap;
 import fi.om.municipalityinitiative.util.Membership;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -147,6 +142,6 @@ public class JdbcParticipantDao implements ParticipantDao {
     }
 
     @Override
-    public void addVerifiedParticipant(Long initiativeId, long userId) {
+    public void addVerifiedParticipant(Long initiativeId, VerifiedUserId userId) {
     }
 }

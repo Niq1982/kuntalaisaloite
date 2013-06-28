@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.dao;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.service.VerifiedUser;
+import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 
 public interface UserDao {
 
@@ -10,6 +11,6 @@ public interface UserDao {
 
     VerifiedUser getVerifiedUser(String hash);
 
-    Long addVerifiedUser(String hash, ContactInfo contactInfo);
+    VerifiedUserId addVerifiedUser(String hash, ContactInfo contactInfo);
 
 }
