@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dao.UserDao;
+import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.user.OmLoginUser;
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
@@ -157,13 +158,7 @@ public class UserService {
     }
 
     public void login(String ssn, String fullName, String address, String municipalityCode, HttpServletRequest request, HttpServletResponse response) {
-
-        storeLoggedInUser(request, User.verifiedUser(ssn, null, null, null));
-
-
-
-
-
+        storeLoggedInUser(request, User.verifiedUser(encryptionService.registeredUserHash(ssn), new ContactInfo(), null));
         // TODO: Implement something
         System.out.println(fullName+", "+address);
     }

@@ -24,6 +24,10 @@ public class QVerifiedAuthor extends com.mysema.query.sql.RelationalPathBase<QVe
 
     public final com.mysema.query.sql.PrimaryKey<QVerifiedAuthor> verifiedAuthorPk = createPrimaryKey(initiativeId, verifiedUserId);
 
+    public final com.mysema.query.sql.ForeignKey<QVerifiedUser> verifiedAuthorVerifiedUserFk = createForeignKey(verifiedUserId, "id");
+
+    public final com.mysema.query.sql.ForeignKey<QMunicipalityInitiative> verifiedAuthorInitiativeFk = createForeignKey(initiativeId, "id");
+
     public QVerifiedAuthor(String variable) {
         super(QVerifiedAuthor.class, forVariable(variable), "municipalityinitiative", "verified_author");
     }

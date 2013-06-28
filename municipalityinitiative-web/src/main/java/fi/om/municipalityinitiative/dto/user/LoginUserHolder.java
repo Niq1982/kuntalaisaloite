@@ -40,6 +40,11 @@ public class LoginUserHolder<E extends User> {
         return (NormalLoginUser) user;
     }
 
+    public VerifiedUser getVerifiedUser() {
+        // TODO: Throw exception which directs the user to vetuma if not logged in
+        return (VerifiedUser) user;
+    }
+
     public void assertOmUser() {
         if (user.isNotOmUser()){
             throw new AccessDeniedException("No privileges");

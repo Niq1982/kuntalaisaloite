@@ -20,15 +20,25 @@ public class QVerifiedUser extends com.mysema.query.sql.RelationalPathBase<QVeri
 
     public final StringPath address = createString("address");
 
+    public final StringPath email = createString("email");
+
     public final StringPath hash = createString("hash");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    public final NumberPath<Long> municipalityId = createNumber("municipality_id", Long.class);
 
     public final StringPath name = createString("name");
 
     public final StringPath phone = createString("phone");
 
     public final com.mysema.query.sql.PrimaryKey<QVerifiedUser> verifiedUserPk = createPrimaryKey(id);
+
+    public final com.mysema.query.sql.ForeignKey<QMunicipality> verifiedUserMunicipalityFk = createForeignKey(municipalityId, "id");
+
+    public final com.mysema.query.sql.ForeignKey<QVerifiedParticipant> _verifiedParticipantVerifiedUserFk = createInvForeignKey(id, "verified_user_id");
+
+    public final com.mysema.query.sql.ForeignKey<QVerifiedAuthor> _verifiedAuthorVerifiedUserFk = createInvForeignKey(id, "verified_user_id");
 
     public QVerifiedUser(String variable) {
         super(QVerifiedUser.class, forVariable(variable), "municipalityinitiative", "verified_user");

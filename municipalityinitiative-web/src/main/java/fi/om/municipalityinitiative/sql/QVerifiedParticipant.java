@@ -28,6 +28,10 @@ public class QVerifiedParticipant extends com.mysema.query.sql.RelationalPathBas
 
     public final com.mysema.query.sql.PrimaryKey<QVerifiedParticipant> verifiedParticipantPk = createPrimaryKey(initiativeId, verifiedUserId);
 
+    public final com.mysema.query.sql.ForeignKey<QVerifiedUser> verifiedParticipantVerifiedUserFk = createForeignKey(verifiedUserId, "id");
+
+    public final com.mysema.query.sql.ForeignKey<QMunicipalityInitiative> verifiedParticipantInitiativeFk = createForeignKey(initiativeId, "id");
+
     public QVerifiedParticipant(String variable) {
         super(QVerifiedParticipant.class, forVariable(variable), "municipalityinitiative", "verified_participant");
     }

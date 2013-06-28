@@ -5,16 +5,18 @@ import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.*;
 import fi.om.municipalityinitiative.dto.ui.*;
+import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
-import fi.om.municipalityinitiative.service.EncryptionService;
-import fi.om.municipalityinitiative.service.VerifiedUser;
+import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
+import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
+import java.util.Collections;
 import java.util.List;
 
 import static fi.om.municipalityinitiative.util.SecurityUtil.assertAllowance;
@@ -63,14 +65,13 @@ public class PublicInitiativeServiceOperations {
         assertMunicipalityIsActive(createDto.getMunicipality());
 
         Long initiativeId = initiativeDao.prepareSafeInitiative(createDto.getMunicipality(), createDto.getInitiativeType());
-        VerifiedUser verifiedUser = userDao.getVerifiedUser(createDto.getHash());
-        if (verifiedUser == null) {
-            verifiedUser.setUserId(userDao.addVerifiedUser(createDto.getHash(), createDto.getContactInfo()));
-            verifiedUser.setContactInfo(createDto.getContactInfo());
+        Maybe<VerifiedUserId> verifiedUserId = userDao.getVerifiedUserId(createDto.getHash());
+        if (verifiedUserId.isNotPresent()) {
+            verifiedUserId = Maybe.of(userDao.addVerifiedUser(createDto.getHash(), createDto.getContactInfo()));
         }
 
-        participantDao.addVerifiedParticipant(initiativeId, verifiedUser.getUserId());
-        authorDao.addVerifiedAuthor(initiativeId, verifiedUser.getUserId());
+        participantDao.addVerifiedParticipant(initiativeId, verifiedUserId.get());
+        authorDao.addVerifiedAuthor(initiativeId, verifiedUserId.get());
 
         return initiativeId;
 

@@ -6,12 +6,12 @@ import java.util.Set;
 
 public class VerifiedUser extends User{
 
-    private final String ssn;
+    private final String hash;
     private final ContactInfo contactInfo;
     private final Set<Long> initiatives;
 
-    VerifiedUser(String ssn, ContactInfo contactInfo, Set<Long> initiatives) {
-        this.ssn = ssn;
+    VerifiedUser(String hash, ContactInfo contactInfo, Set<Long> initiatives) {
+        this.hash = hash;
 
         // This is needed after we've logged in and participating or creating an initiative.
         // Data must be updated always when updating something at the UI
@@ -34,8 +34,8 @@ public class VerifiedUser extends User{
         return true;
     }
 
-    public String getSsn() {
-        return ssn;
+    public String getHash() {
+        return hash;
     }
 
     public ContactInfo getContactInfo() {

@@ -5,17 +5,19 @@ import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
-import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
 import fi.om.municipalityinitiative.dto.user.User;
-import fi.om.municipalityinitiative.service.VerifiedUser;
+import fi.om.municipalityinitiative.dto.user.VerifiedUser;
+import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.QAdminUser;
-import fi.om.municipalityinitiative.sql.QVerifiedAuthor;
 import fi.om.municipalityinitiative.sql.QVerifiedUser;
+import fi.om.municipalityinitiative.util.Maybe;
 
 import javax.annotation.Resource;
 
-import static fi.om.municipalityinitiative.sql.QVerifiedUser.*;
+import java.util.Collections;
+
+import static fi.om.municipalityinitiative.sql.QVerifiedUser.verifiedUser;
 
 @SQLExceptionTranslated
 public class JdbcUserDao implements UserDao {
@@ -50,10 +52,22 @@ public class JdbcUserDao implements UserDao {
                 .set(verifiedUser.address, contactInfo.getAddress())
                 .set(verifiedUser.name, contactInfo.getName())
                 .set(verifiedUser.phone, contactInfo.getPhone())
-                        //.set(verifiedUser.email, contactInfo.getEmail())
+                .set(verifiedUser.email, contactInfo.getEmail())
                 .executeWithKey(verifiedUser.id));
     }
 
+    @Override
+    public Maybe<VerifiedUserId> getVerifiedUserId(String hash) {
+        Long maybeVerifiedUserId = queryFactory.from(verifiedUser)
+                .where(verifiedUser.hash.eq(hash))
+                .uniqueResult(verifiedUser.id);
+
+        if (maybeVerifiedUserId == null) {
+            return Maybe.absent();
+        }
+        return Maybe.of(new VerifiedUserId(maybeVerifiedUserId));
+
+    }
 
     private static Expression<User> omUserMapper = new MappingProjection<User>(User.class,
             QAdminUser.adminUser.name) {
@@ -63,18 +77,20 @@ public class JdbcUserDao implements UserDao {
         }
     };
 
-    private static Expression<VerifiedUser> verifiedUserMapper = new MappingProjection<VerifiedUser>(VerifiedUser.class,
-            verifiedUser.all()) {
+    private static Expression<VerifiedUser> verifiedUserMapper
+            = new MappingProjection<VerifiedUser>(VerifiedUser.class, verifiedUser.all()) {
         @Override
         protected VerifiedUser map(Tuple row) {
-            VerifiedUser verifiedUser = new VerifiedUser();
             ContactInfo contactInfo = new ContactInfo();
             contactInfo.setPhone(row.get(QVerifiedUser.verifiedUser.phone));
             contactInfo.setName(row.get(QVerifiedUser.verifiedUser.name));
             contactInfo.setAddress(row.get(QVerifiedUser.verifiedUser.address));
-            // contactInfo.setEmail(row.get(QVerifiedUser.verifiedUser.email));
-            verifiedUser.setContactInfo(contactInfo);
-            verifiedUser.setUserId(new VerifiedUserId(row.get(QVerifiedUser.verifiedUser.id)));
+            contactInfo.setEmail(row.get(QVerifiedUser.verifiedUser.email));
+            VerifiedUser verifiedUser = User.verifiedUser(
+                    row.get(QVerifiedUser.verifiedUser.hash),
+                    contactInfo,
+                    Collections.<Long>emptySet()
+            );
             return verifiedUser;
         }
     };

@@ -14,8 +14,8 @@ public abstract class User {
         return new NormalLoginUser(authorId, authorsInitiatives);
     }
 
-    public static VerifiedUser verifiedUser(String ssn, Long authorId, ContactInfo contactInfo, Set<Long> initiatives) {
-        return new VerifiedUser(ssn, contactInfo, initiatives);
+    public static VerifiedUser verifiedUser(String hash, ContactInfo contactInfo, Set<Long> initiatives) {
+        return new VerifiedUser(hash, contactInfo, initiatives);
     }
 
     public static User anonym() {
