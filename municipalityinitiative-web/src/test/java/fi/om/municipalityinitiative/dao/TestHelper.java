@@ -197,8 +197,6 @@ public class TestHelper {
             else {
                 createVerifiedAuthorAndParticipant(initiativeDraft.authorDraft.get());
             }
-//            stub(authorLoginUserHolder.getAuthorId()).toReturn(lastAuthorId);
-//            stub(authorLoginUserHolder.getUser()).toReturn();
         }
         return lastInitiativeId;
 
