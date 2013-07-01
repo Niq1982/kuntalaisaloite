@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.service.ui;
 
+import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dao.UserDao;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
@@ -13,7 +14,6 @@ import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeUIUpdateDto;
-import fi.om.municipalityinitiative.service.UserService;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.operations.InitiativeManagementServiceOperations;
@@ -43,6 +43,9 @@ public class InitiativeManagementService {
     @Resource
     UserDao userDao;
 
+    @Resource
+    ParticipantDao participantDao;
+
     @Transactional(readOnly = true)
     public InitiativeDraftUIEditDto getInitiativeDraftForEdit(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
@@ -54,7 +57,8 @@ public class InitiativeManagementService {
             contactInfo = authorDao.getAuthor(loginUserHolder.getNormalLoginUser().getAuthorId()).getContactInfo();
         }
         else {
-            contactInfo = userDao.getVerifiedUser(loginUserHolder.getVerifiedUser().getHash()).get().getContactInfo();
+            //contactInfo = userDao.getVerifiedUser(loginUserHolder.getVerifiedUser().getHash()).get().getContactInfo();
+            contactInfo = authorDao.getVerifiedAuthorContactInfo(initiativeId, loginUserHolder.getVerifiedUser().getHash());
         }
         return InitiativeDraftUIEditDto.parse(
                 initiative,
@@ -78,7 +82,9 @@ public class InitiativeManagementService {
             authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId(), editDto.getContactInfo());
         }
         else {
-            userDao.updateUserInformation(loginUserHolder.getVerifiedUser().getHash(), editDto.getContactInfo());
+            String hash = loginUserHolder.getVerifiedUser().getHash();
+            userDao.updateUserInformation(hash, editDto.getContactInfo());
+            participantDao.updateVerifiedParticipantShowName(initiativeId, hash, editDto.getContactInfo().isShowName());
         }
     }
 

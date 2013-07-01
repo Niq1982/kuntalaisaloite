@@ -1,11 +1,9 @@
 package fi.om.municipalityinitiative.service.email;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
-import fi.om.municipalityinitiative.util.JavaMailSenderFake;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.Urls;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.mail.internet.MimeMessage;
@@ -103,7 +101,7 @@ public class EmailServiceStatusEmailTest extends MailSendingEmailServiceTestBase
                 .toInitiativeDraft());
         String firstManagementHash = testHelper.getPreviousTestManagementHash();
 
-        testHelper.createAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, getMunicipalityId()).withParticipantEmail("bb@example.com"));
+        testHelper.createDefaultAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, getMunicipalityId()).withParticipantEmail("bb@example.com"));
         String secondManagementHash = testHelper.getPreviousTestManagementHash();
 
         emailService.sendStatusEmail(initiativeId, EmailMessageType.REJECTED_BY_OM);

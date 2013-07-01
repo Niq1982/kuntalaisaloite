@@ -310,10 +310,10 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
     @Test
     public void deleting_author_fails_if_initiativeId_and_authorId_mismatch() {
         Long initiative1 = testHelper.createCollaborativeAccepted(testMunicipality);
-        Long author1 = testHelper.createAuthorAndParticipant(new TestHelper.AuthorDraft(initiative1, testMunicipality));
+        Long author1 = testHelper.createDefaultAuthorAndParticipant(new TestHelper.AuthorDraft(initiative1, testMunicipality));
 
         Long initiative2 = testHelper.createCollaborativeAccepted(testMunicipality);
-        Long author2 = testHelper.createAuthorAndParticipant(new TestHelper.AuthorDraft(initiative2, testMunicipality));
+        Long author2 = testHelper.createDefaultAuthorAndParticipant(new TestHelper.AuthorDraft(initiative2, testMunicipality));
 
         thrown.expect(NotFoundException.class);
         thrown.expectMessage(containsString("initiative"));
@@ -325,7 +325,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
     public void deleting_author_fails_if_trying_to_delete_myself() {
         Long initiative = testHelper.createCollaborativeAccepted(testMunicipality);
         Long anotherAuthor = testHelper.getLastAuthorId();
-        Long currentAuthor = testHelper.createAuthorAndParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality));
+        Long currentAuthor = testHelper.createDefaultAuthorAndParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality));
 
         thrown.expect(OperationNotAllowedException.class);
         thrown.expectMessage(containsString("Removing yourself from authors is not allowed"));
@@ -338,7 +338,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
         Long initiative = testHelper.createCollaborativeAccepted(testMunicipality);
         Long anotherAuthor = testHelper.getLastAuthorId();
-        Long currentAuthor = testHelper.createAuthorAndParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality).withParticipantEmail("author_left@example.com"));
+        Long currentAuthor = testHelper.createDefaultAuthorAndParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality).withParticipantEmail("author_left@example.com"));
 
         precondition(countAllAuthors(), is(2L));
 
@@ -368,7 +368,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         final Long initiative = testHelper.createCollaborativeAccepted(testMunicipality);
 
         final Long author1 = testHelper.getLastAuthorId();
-        final Long author2 = testHelper.createAuthorAndParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality));
+        final Long author2 = testHelper.createDefaultAuthorAndParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality));
 
         final LoginUserHolder loginUserHolder =  new LoginUserHolder(User.normalUser(-1L, Collections.singleton(initiative)));
 

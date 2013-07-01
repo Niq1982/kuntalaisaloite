@@ -23,12 +23,9 @@ import javax.annotation.Resource;
 import javax.inject.Inject;
 
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
 
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 import static fi.om.municipalityinitiative.sql.QParticipant.participant;
-import static fi.om.municipalityinitiative.sql.QVerifiedUser.verifiedUser;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.doThrow;
@@ -66,6 +63,7 @@ public class TestHelper {
     private Long lastInitiativeId;
     private Long lastAuthorId;
     private String previousTestManagementHash;
+    private String previousUserSsnHash;
 
     public TestHelper() {
     }
@@ -165,6 +163,11 @@ public class TestHelper {
 
     @Transactional
     public Long createInitiative(InitiativeDraft initiativeDraft) {
+        return createInitiative(initiativeDraft, false);
+    }
+
+    @Transactional
+    public Long createInitiative(InitiativeDraft initiativeDraft, boolean isVerified) {
         SQLInsertClause insert = queryFactory.insert(municipalityInitiative);
 
         insert.set(municipalityInitiative.name, initiativeDraft.name);
@@ -188,7 +191,12 @@ public class TestHelper {
 
         if (initiativeDraft.authorDraft.isPresent()) {
             initiativeDraft.authorDraft.get().withInitiativeId(lastInitiativeId);
-            createAuthorAndParticipant(initiativeDraft.authorDraft.get());
+            if (!isVerified) {
+                createDefaultAuthorAndParticipant(initiativeDraft.authorDraft.get());
+            }
+            else {
+                createVerifiedAuthorAndParticipant(initiativeDraft.authorDraft.get());
+            }
 //            stub(authorLoginUserHolder.getAuthorId()).toReturn(lastAuthorId);
 //            stub(authorLoginUserHolder.getUser()).toReturn();
         }
@@ -197,8 +205,8 @@ public class TestHelper {
     }
 
     @Transactional(readOnly = false)
-    public Long createAuthorAndParticipant(AuthorDraft authorDraft) {
-        Long lastParticipantId = createParticipant(authorDraft);
+    public Long createDefaultAuthorAndParticipant(AuthorDraft authorDraft) {
+        Long lastParticipantId = createDefaultParticipant(authorDraft);
         lastAuthorId = lastParticipantId;
         queryFactory.insert(QAuthor.author)
                 .set(QAuthor.author.address, authorDraft.authorAddress)
@@ -217,9 +225,45 @@ public class TestHelper {
         return lastAuthorId;
     }
 
+    private void createVerifiedAuthorAndParticipant(AuthorDraft authorDraft) {
+        Long verifiedUserId = queryFactory.insert(QVerifiedUser.verifiedUser)
+                .set(QVerifiedUser.verifiedUser.hash, createUserSsnHash())
+                .set(QVerifiedUser.verifiedUser.address, authorDraft.authorAddress)
+                .set(QVerifiedUser.verifiedUser.phone, authorDraft.authorPhone)
+                .set(QVerifiedUser.verifiedUser.email, authorDraft.participantEmail)
+                .set(QVerifiedUser.verifiedUser.name, authorDraft.participantName)
+                .setNull(QVerifiedUser.verifiedUser.municipalityId) // TODO: Municipality
+                .executeWithKey(QVerifiedUser.verifiedUser.id);
+
+        queryFactory.insert(QVerifiedAuthor.verifiedAuthor)
+                .set(QVerifiedAuthor.verifiedAuthor.initiativeId, lastInitiativeId)
+                .set(QVerifiedAuthor.verifiedAuthor.verifiedUserId, verifiedUserId)
+                .execute();
+
+        queryFactory.insert(QVerifiedParticipant.verifiedParticipant)
+                .set(QVerifiedParticipant.verifiedParticipant.showName, authorDraft.publicName)
+                .set(QVerifiedParticipant.verifiedParticipant.initiativeId, lastInitiativeId)
+                .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, verifiedUserId)
+                .execute();
+
+        ContactInfo contactInfo = new ContactInfo();
+        contactInfo.setAddress(authorDraft.authorAddress);
+        contactInfo.setPhone(authorDraft.authorPhone);
+        contactInfo.setEmail(authorDraft.participantEmail);
+        contactInfo.setName(authorDraft.participantName);
+        contactInfo.setShowName(true);
+
+        authorLoginUserHolder = new LoginUserHolder(User.verifiedUser(previousUserSsnHash, contactInfo, Collections.singleton(lastInitiativeId)));;
+    }
+
+    private String createUserSsnHash() {
+        previousUserSsnHash = RandomHashGenerator.shortHash();
+        return previousUserSsnHash;
+    }
+
 
     @Transactional(readOnly = false)
-    public Long createParticipant(AuthorDraft authorDraft) {
+    public Long createDefaultParticipant(AuthorDraft authorDraft) {
         return queryFactory.insert(QParticipant.participant)
                         .set(QParticipant.participant.municipalityId, authorDraft.participantMunicipality)
                         .set(QParticipant.participant.municipalityInitiativeId, authorDraft.initiativeId)
@@ -555,6 +599,10 @@ public class TestHelper {
 
     public String getPreviousTestManagementHash() {
         return previousTestManagementHash;
+    }
+
+    public String getPreviousUserSsnHash() {
+        return previousUserSsnHash;
     }
 }
 

@@ -111,7 +111,7 @@ public class AuthorsWebTest  extends WebTestBase {
     public void author_removes_participant(){
         Long publishedInitiativeId = testHelper.create(municipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         
-        testHelper.createParticipant(new TestHelper.AuthorDraft(publishedInitiativeId, municipalityId));
+        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(publishedInitiativeId, municipalityId));
         
         loginAsAuthorForLastTestHelperCreatedInitiative();
         open(urls.management(publishedInitiativeId));
@@ -130,7 +130,7 @@ public class AuthorsWebTest  extends WebTestBase {
     
     @Test
     public void author_removes_author(){
-        testHelper.createAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, municipalityId));
+        testHelper.createDefaultAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, municipalityId));
         
         loginAsAuthorForLastTestHelperCreatedInitiative();
         open(urls.management(initiativeId));

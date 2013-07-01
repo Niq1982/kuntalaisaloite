@@ -5,12 +5,10 @@ import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.dto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
-import fi.om.municipalityinitiative.sql.QMunicipality;
-import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
-import fi.om.municipalityinitiative.sql.QParticipant;
-import fi.om.municipalityinitiative.sql.QVerifiedParticipant;
+import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.MaybeHoldingHashMap;
 import fi.om.municipalityinitiative.util.Membership;
+import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 
@@ -152,6 +150,19 @@ public class JdbcParticipantDao implements ParticipantDao {
         assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
                 .set(QMunicipalityInitiative.municipalityInitiative.participantCount, QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
                 .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
+                .execute());
+    }
+
+    @Override
+    public void updateVerifiedParticipantShowName(Long initiativeId, String hash, boolean showName) {
+        Long verifiedUserId = queryFactory.from(QVerifiedUser.verifiedUser)
+                .where(QVerifiedUser.verifiedUser.hash.eq(hash))
+                .uniqueResult(QVerifiedUser.verifiedUser.id);
+
+        assertSingleAffection(queryFactory.update(QVerifiedParticipant.verifiedParticipant)
+                .set(QVerifiedParticipant.verifiedParticipant.showName, showName)
+                .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
+                .where(QVerifiedParticipant.verifiedParticipant.verifiedUserId.eq(verifiedUserId))
                 .execute());
     }
 }

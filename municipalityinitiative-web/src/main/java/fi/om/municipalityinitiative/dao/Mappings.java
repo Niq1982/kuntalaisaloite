@@ -8,15 +8,11 @@ import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.*;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
-import fi.om.municipalityinitiative.dto.user.User;
-import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-
-import java.util.Collections;
 
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 import static fi.om.municipalityinitiative.sql.QParticipant.participant;
@@ -96,17 +92,36 @@ public class Mappings {
                 }
             };
     static Expression<ContactInfo> verifiedUserContactInfo
-                    = new MappingProjection<ContactInfo>(ContactInfo.class, verifiedUser.all()) {
-                @Override
-                protected ContactInfo map(Tuple row) {
-                    ContactInfo contactInfo = new ContactInfo();
-                    contactInfo.setPhone(row.get(QVerifiedUser.verifiedUser.phone));
-                    contactInfo.setName(row.get(QVerifiedUser.verifiedUser.name));
-                    contactInfo.setAddress(row.get(QVerifiedUser.verifiedUser.address));
-                    contactInfo.setEmail(row.get(QVerifiedUser.verifiedUser.email));
-                    return contactInfo;
-                }
-            };
+            = new MappingProjection<ContactInfo>(ContactInfo.class, verifiedUser.all()) {
+        @Override
+        protected ContactInfo map(Tuple row) {
+            ContactInfo contactInfo = new ContactInfo();
+            contactInfo.setPhone(row.get(QVerifiedUser.verifiedUser.phone));
+            contactInfo.setName(row.get(QVerifiedUser.verifiedUser.name));
+            contactInfo.setAddress(row.get(QVerifiedUser.verifiedUser.address));
+            contactInfo.setEmail(row.get(QVerifiedUser.verifiedUser.email));
+            return contactInfo;
+        }
+    };
+
+    static Expression<ContactInfo> verifiedAuthorContactInfoMapper
+            =  new MappingProjection<ContactInfo>(ContactInfo.class,
+            verifiedUser.phone,
+            verifiedUser.name,
+            verifiedUser.address,
+            verifiedUser.email,
+            QVerifiedParticipant.verifiedParticipant.showName) {
+        @Override
+        protected ContactInfo map(Tuple row) {
+            ContactInfo contactInfo = new ContactInfo();
+            contactInfo.setPhone(row.get(QVerifiedUser.verifiedUser.phone));
+            contactInfo.setName(row.get(QVerifiedUser.verifiedUser.name));
+            contactInfo.setAddress(row.get(QVerifiedUser.verifiedUser.address));
+            contactInfo.setEmail(row.get(QVerifiedUser.verifiedUser.email));
+            contactInfo.setShowName(row.get(QVerifiedParticipant.verifiedParticipant.showName)); // currently has not null constraint
+            return contactInfo;
+        }
+    };
 
     private static int nullToZero(Integer integer) {
         if (integer == null) {

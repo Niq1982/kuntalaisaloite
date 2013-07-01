@@ -1,10 +1,7 @@
 package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
-import fi.om.municipalityinitiative.dao.AuthorDao;
-import fi.om.municipalityinitiative.dao.InvitationNotValidException;
-import fi.om.municipalityinitiative.dao.ParticipantDao;
-import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
@@ -108,7 +105,7 @@ public class JdbcAuthorDaoTest {
     @Test
     public void delete_author_removes_author_and_its_participant() {
         Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality);
-        Long authorId = testHelper.createAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality));
+        Long authorId = testHelper.createDefaultAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality));
 
         int originalAuthorCount = authorDao.findAuthors(initiativeId).size();
         long originalParticipantCount = participantCountOfInitiative(initiativeId);
@@ -123,7 +120,7 @@ public class JdbcAuthorDaoTest {
     public void delete_author_decreases_denormalized_participant_count() {
 
         Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality);
-        Long authorId = testHelper.createAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality));
+        Long authorId = testHelper.createDefaultAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality));
 
         int originalAuthorCount = authorDao.findAuthors(initiativeId).size();
         int originalParticipantCount = testHelper.getInitiative(initiativeId).getParticipantCount();
@@ -160,18 +157,34 @@ public class JdbcAuthorDaoTest {
     }
 
     @Test
+    public void get_verified_author_contact_info() {
+        Long initiativeId = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality)
+                .applyAuthor()
+                .toInitiativeDraft(),
+                true);
+
+        ContactInfo verifiedAuthorContactInfo = authorDao.getVerifiedAuthorContactInfo(initiativeId, testHelper.getPreviousUserSsnHash());
+
+        assertThat(verifiedAuthorContactInfo.getEmail(), is(TestHelper.DEFAULT_PARTICIPANT_EMAIL));
+        assertThat(verifiedAuthorContactInfo.getAddress(), is(TestHelper.DEFAULT_AUTHOR_ADDRESS));
+        assertThat(verifiedAuthorContactInfo.getPhone(), is(TestHelper.DEFAULT_AUTHOR_PHONE));
+        assertThat(verifiedAuthorContactInfo.getName(), is(TestHelper.DEFAULT_PARTICIPANT_NAME));
+        assertThat(verifiedAuthorContactInfo.isShowName(), is(TestHelper.DEFAULT_PUBLIC_NAME));
+    }
+
+    @Test
     public void get_authors_management_hashes_and_emails() {
         Long initiativeId = testHelper.create(testMunicipality, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         String firstAuthorManagementHash = testHelper.getPreviousTestManagementHash();
         String firstEmail = TestHelper.DEFAULT_PARTICIPANT_EMAIL;
 
         String secondEmail = "second@example.com";
-        testHelper.createAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality)
+        testHelper.createDefaultAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality)
                 .withParticipantEmail(secondEmail));
         String secondAuthorManagementHash = testHelper.getPreviousTestManagementHash();
 
         String thirdEmail = "third@example.com";
-        testHelper.createAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality)
+        testHelper.createDefaultAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality)
                 .withParticipantEmail(thirdEmail));
         String thirdAuthorManagementHash = testHelper.getPreviousTestManagementHash();
 

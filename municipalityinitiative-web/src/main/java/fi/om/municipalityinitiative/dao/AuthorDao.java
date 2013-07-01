@@ -42,4 +42,6 @@ public interface AuthorDao {
     Map<String,String> getManagementLinksByAuthorEmails(Long initiativeId);
 
     void addVerifiedAuthor(Long initiativeId, VerifiedUserId userId);
+
+    ContactInfo getVerifiedAuthorContactInfo(Long initiativeId, String hash);
 }

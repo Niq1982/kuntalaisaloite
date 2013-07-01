@@ -159,6 +159,17 @@ public class JdbcAuthorDao implements AuthorDao {
     }
 
     @Override
+    public ContactInfo getVerifiedAuthorContactInfo(Long initiativeId, String hash) {
+
+        return queryFactory.from(QVerifiedUser.verifiedUser)
+                .innerJoin(QVerifiedUser.verifiedUser._verifiedParticipantVerifiedUserFk, QVerifiedParticipant.verifiedParticipant)
+                .innerJoin(QVerifiedParticipant.verifiedParticipant.verifiedParticipantInitiativeFk, QMunicipalityInitiative.municipalityInitiative)
+                .where(QVerifiedUser.verifiedUser.hash.eq(hash))
+                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
+                .uniqueResult(Mappings.verifiedAuthorContactInfoMapper);
+    }
+
+    @Override
     public void deleteAuthor(Long authorId) {
 
         Long initiativeId = queryFactory.from(QAuthor.author)

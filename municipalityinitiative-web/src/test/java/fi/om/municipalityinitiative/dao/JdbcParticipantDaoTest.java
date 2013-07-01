@@ -237,7 +237,7 @@ public class JdbcParticipantDaoTest {
 
     @Test
     public void delete_participant() {
-        Long participantId = testHelper.createParticipant(new TestHelper.AuthorDraft(testInitiativeId, testMunicipalityId));
+        Long participantId = testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(testInitiativeId, testMunicipalityId));
         Long participantsBeforeDelete = testHelper.countAll(QParticipant.participant);
         participantDao.deleteParticipant(testInitiativeId, participantId);
 
@@ -247,7 +247,7 @@ public class JdbcParticipantDaoTest {
 
     @Test
     public void delete_participant_decreases_denormalized_participantCount() {
-        Long participantId = testHelper.createParticipant(new TestHelper.AuthorDraft(testInitiativeId, testMunicipalityId));
+        Long participantId = testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(testInitiativeId, testMunicipalityId));
         int participantsBeforeDelete = testHelper.getInitiative(testInitiativeId).getParticipantCount();
         participantDao.deleteParticipant(testInitiativeId, participantId);
 
@@ -257,7 +257,7 @@ public class JdbcParticipantDaoTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void delete_participant_fails_if_initiative_id_and_participant_does_not_match() {
-        Long participantId = testHelper.createParticipant(new TestHelper.AuthorDraft(testInitiativeId, testMunicipalityId));
+        Long participantId = testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(testInitiativeId, testMunicipalityId));
         Long wrongInitiativeId = testHelper.createCollaborativeReview(testMunicipalityId);
         participantDao.deleteParticipant(wrongInitiativeId, participantId);
     }
