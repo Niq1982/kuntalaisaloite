@@ -4,6 +4,7 @@ import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
+import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,9 +44,15 @@ public class JdbcUserDaoTest {
     public void create_and_get_verified_user() {
         ContactInfo contactInfo = contactInfo();
         VerifiedUserId verifiedUserId = userDao.addVerifiedUser(HASH, contactInfo);
-        VerifiedUser verifiedUser = userDao.getVerifiedUser(HASH);
+        Maybe<VerifiedUser> verifiedUser = userDao.getVerifiedUser(HASH);
+        assertThat(verifiedUser.isPresent(), is(true));
         assertThat(verifiedUserId, is(notNullValue()));
-        ReflectionTestUtils.assertReflectionEquals(verifiedUser.getContactInfo(), contactInfo);
+        ReflectionTestUtils.assertReflectionEquals(verifiedUser.get().getContactInfo(), contactInfo);
+    }
+
+    @Test
+    public void get_returns_absent_if_not_found() {
+        assertThat(userDao.getVerifiedUser("unknown-user-hash").isPresent(), is(false));
     }
 
     private static ContactInfo contactInfo() {

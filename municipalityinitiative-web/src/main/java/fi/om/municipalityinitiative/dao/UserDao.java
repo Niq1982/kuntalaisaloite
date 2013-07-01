@@ -10,7 +10,7 @@ public interface UserDao {
 
     User getAdminUser(String userName, String password);
 
-    VerifiedUser getVerifiedUser(String hash);
+    Maybe<VerifiedUser> getVerifiedUser(String hash);
 
     VerifiedUserId addVerifiedUser(String hash, ContactInfo contactInfo);
 

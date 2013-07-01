@@ -36,10 +36,10 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
-    public VerifiedUser getVerifiedUser(String hash) {
-        return queryFactory.from(verifiedUser)
+    public Maybe<VerifiedUser> getVerifiedUser(String hash) {
+        return Maybe.fromNullable(queryFactory.from(verifiedUser)
                 .where(verifiedUser.hash.eq(hash))
-                .uniqueResult(Mappings.verifiedUserMapper);
+                .uniqueResult(Mappings.verifiedUserMapper));
     }
 
     @Override
