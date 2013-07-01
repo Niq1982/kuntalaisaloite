@@ -12,8 +12,8 @@ public class ValidationServiceImpl implements ValidationService{
     SmartValidator validator;
 
     @Override
-    public boolean validationSuccessful(Object object, BindingResult bindingResult, Model model) {
-        validator.validate(object, bindingResult);
+    public boolean validationSuccessful(Object object, BindingResult bindingResult, Model model, Object ... validationHints) {
+        validator.validate(object, bindingResult, validationHints);
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult);
             return false;
@@ -22,7 +22,7 @@ public class ValidationServiceImpl implements ValidationService{
     }
 
     @Override
-    public boolean validationErrors(Object o, BindingResult bindingResult, Model model) {
-        return !validationSuccessful(o, bindingResult, model);
+    public boolean validationErrors(Object o, BindingResult bindingResult, Model model, Object ... validationHints) {
+        return !validationSuccessful(o, bindingResult, model, validationHints);
     }
 }

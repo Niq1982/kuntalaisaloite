@@ -315,7 +315,7 @@
                 <label class="input-header"><@u.message "contactInfo.email" /></label>
                 <input type="text" disabled="disabled" class="medium disabled" value="${spring.status.value!""}" />
             <#else>
-                <@textField path=path+".email" required="required" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_PHONE_MAX key="contactInfo.email" />
+                <@textField path=path+".email" required="" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_PHONE_MAX key="contactInfo.email" />
             </#if>
             
             <@textField path=path+".phone" required="" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_PHONE_MAX key="contactInfo.phone" />

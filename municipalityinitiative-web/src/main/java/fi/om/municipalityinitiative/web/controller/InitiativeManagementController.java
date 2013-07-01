@@ -12,6 +12,8 @@ import fi.om.municipalityinitiative.service.ValidationService;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.service.ui.InitiativeManagementService;
 import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
+import fi.om.municipalityinitiative.validation.NormalInitiative;
+import fi.om.municipalityinitiative.validation.VerifiedInitiative;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.stereotype.Controller;
@@ -141,9 +143,13 @@ public class InitiativeManagementController extends BaseController {
         LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        if (validationService.validationErrors(editDto, bindingResult, model)) {
+        InitiativeViewInfo initiative = publicInitiativeService.getInitiative(initiativeId, loginUserHolder);
+
+        if (validationService.validationErrors(editDto, bindingResult, model, solveValidationGroup(initiative))) {
+
             return ViewGenerator.editView(
-                    publicInitiativeService.getInitiative(initiativeId, loginUserHolder), Strings.isNullOrEmpty(initiativeManagementService.getInitiativeDraftForEdit(initiativeId, loginUserHolder).getName()),
+                    initiative,
+                    Strings.isNullOrEmpty(initiativeManagementService.getInitiativeDraftForEdit(initiativeId, loginUserHolder).getName()),
                     editDto,
                     initiativeManagementService.getAuthorInformation(initiativeId, loginUserHolder),
                     urls.management(initiativeId)
@@ -152,6 +158,10 @@ public class InitiativeManagementController extends BaseController {
 
         initiativeManagementService.editInitiativeDraft(initiativeId, loginUserHolder, editDto);
         return redirectWithMessage(urls.management(initiativeId), RequestMessage.SAVE_DRAFT, request);
+    }
+
+    private static Object solveValidationGroup(InitiativeViewInfo initiative) {
+        return initiative.isVerifiable() ? VerifiedInitiative.class : NormalInitiative.class;
     }
 
     @RequestMapping(value={ UPDATE_FI, UPDATE_SV }, method=POST)

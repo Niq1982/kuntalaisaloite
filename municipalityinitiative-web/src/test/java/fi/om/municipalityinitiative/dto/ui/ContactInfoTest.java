@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.dto.ui;
 
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
+import fi.om.municipalityinitiative.validation.VerifiedInitiative;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -30,7 +31,7 @@ public class ContactInfoTest {
         contactInfo.setName("name");
         contactInfo.setEmail("");
 
-        Set<ConstraintViolation<ContactInfo>> validationErrors = validator.validate(contactInfo);
+        Set<ConstraintViolation<ContactInfo>> validationErrors = validate(contactInfo);
 
         assertThat(validationErrors, hasSize(1));
         assertThat(getFirst(validationErrors).getPropertyPath().toString(), is("email"));
@@ -43,11 +44,15 @@ public class ContactInfoTest {
         contactInfo.setName("name");
         contactInfo.setEmail("invalid_email");
 
-        Set<ConstraintViolation<ContactInfo>> validationErrors = validator.validate(contactInfo);
+        Set<ConstraintViolation<ContactInfo>> validationErrors = validate(contactInfo);
 
         assertThat(validationErrors, hasSize(1));
         assertThat(getFirst(validationErrors).getPropertyPath().toString(), is("email"));
         assertThat(getFirst(validationErrors).getMessage(), containsString("must match"));
+    }
+
+    private static Set<ConstraintViolation<ContactInfo>> validate(ContactInfo contactInfo) {
+        return validator.validate(contactInfo, VerifiedInitiative.class);
     }
 
     @Test
@@ -58,7 +63,7 @@ public class ContactInfoTest {
         ReflectionTestUtils.assertReflectionEquals(copy, original);
     }
 
-    private ConstraintViolation<ContactInfo> getFirst(Set<ConstraintViolation<ContactInfo>> violations) {
+    private static ConstraintViolation<ContactInfo> getFirst(Set<ConstraintViolation<ContactInfo>> violations) {
         return violations.iterator().next();
     }
 

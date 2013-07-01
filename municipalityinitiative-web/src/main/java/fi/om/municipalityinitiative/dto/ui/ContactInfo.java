@@ -21,18 +21,18 @@ public class ContactInfo {
     public static final String EMAIL_PATTERN = "^([_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-\\+]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})|)$";
 
     @NotEmpty(groups = NormalInitiative.class)
-    @Size(max = InitiativeConstants.CONTACT_NAME_MAX)
+    @Size(max = InitiativeConstants.CONTACT_NAME_MAX, groups = NormalInitiative.class)
     private String name;
 
-    @NotEmpty
-    @Pattern(regexp = EMAIL_PATTERN)
+    @NotEmpty(groups = {VerifiedInitiative.class, NormalInitiative.class})
+    @Pattern(regexp = EMAIL_PATTERN, groups = {VerifiedInitiative.class, NormalInitiative.class})
     @Size(max = InitiativeConstants.CONTACT_EMAIL_MAX)
     private String email;
 
-    @Size(max = InitiativeConstants.CONTACT_PHONE_MAX)
+    @Size(max = InitiativeConstants.CONTACT_PHONE_MAX, groups = {VerifiedInitiative.class, NormalInitiative.class})
     private String phone;
 
-    @Size(max = InitiativeConstants.CONTACT_ADDRESS_MAX)
+    @Size(max = InitiativeConstants.CONTACT_ADDRESS_MAX, groups = {VerifiedInitiative.class, NormalInitiative.class})
     private String address;
 
     private boolean showName = true;

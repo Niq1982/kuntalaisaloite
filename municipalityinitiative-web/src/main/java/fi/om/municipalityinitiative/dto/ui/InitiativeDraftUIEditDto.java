@@ -4,6 +4,8 @@ import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 
+import fi.om.municipalityinitiative.validation.NormalInitiative;
+import fi.om.municipalityinitiative.validation.VerifiedInitiative;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
@@ -17,21 +19,21 @@ public class InitiativeDraftUIEditDto {
 
     // Editable by author via ui
 
-    @NotEmpty
-    @Size(max = InitiativeConstants.INITIATIVE_NAME_MAX)
+    @NotEmpty(groups = {VerifiedInitiative.class, NormalInitiative.class})
+    @Size(max = InitiativeConstants.INITIATIVE_NAME_MAX, groups = {VerifiedInitiative.class, NormalInitiative.class})
     private String name;
 
-    @NotEmpty
-    @Size(max = InitiativeConstants.INITIATIVE_PROPOSAL_MAX)
+    @NotEmpty(groups = {VerifiedInitiative.class, NormalInitiative.class})
+    @Size(max = InitiativeConstants.INITIATIVE_PROPOSAL_MAX, groups = {VerifiedInitiative.class, NormalInitiative.class})
     private String proposal;
 
-    @Size(max = InitiativeConstants.INITIATIVE_EXTRA_INFO_MAX)
+    @Size(max = InitiativeConstants.INITIATIVE_EXTRA_INFO_MAX, groups = {VerifiedInitiative.class, NormalInitiative.class})
     private String extraInfo;
 
     @Valid
     private ContactInfo contactInfo;
 
-    @Min(0)
+    @Min(value = 0, groups = {VerifiedInitiative.class, NormalInitiative.class} )
     private int externalParticipantCount;
 
     public InitiativeDraftUIEditDto() {

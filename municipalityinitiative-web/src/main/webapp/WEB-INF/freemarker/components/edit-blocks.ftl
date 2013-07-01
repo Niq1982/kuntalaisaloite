@@ -60,10 +60,10 @@
     </div>
     
     <div class="input-block-content">       
-        <@f.municipalitySelect path="initiative.municipality" options=municipalities required="required" cssClass="municipality-select" preSelected=municipality onlyActive=true/>
+        <@f.municipalitySelect path="initiative.municipality" options=municipalities required="" cssClass="municipality-select" preSelected=municipality onlyActive=true/>
     </div>
     <div class="input-block-content">
-        <@f.municipalitySelect path="initiative.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=municipality />
+        <@f.municipalitySelect path="initiative.homeMunicipality" options=municipalities required="" cssClass="municipality-select" preSelected=municipality />
     </div>
     <br class="clear" />
     
@@ -193,7 +193,7 @@
     </div>
 
     <div class="input-block-content">
-        <@f.textField path="initiative.participantEmail" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
+        <@f.textField path="initiative.participantEmail" required="" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
     </div>
 </#macro>
 
@@ -221,11 +221,11 @@
         </div>
         
         <div class="input-block-content">
-            <@f.textField path=path+".name" required="required" optional=true cssClass="large" maxLength=InitiativeConstants.INITIATIVE_NAME_MAX />
+            <@f.textField path=path+".name" required="" optional=true cssClass="large" maxLength=InitiativeConstants.INITIATIVE_NAME_MAX />
         </div>
         
         <div class="input-block-content no-top-margin">
-            <@f.textarea path=path+".proposal" required="required" optional=false cssClass="textarea-tall" maxLength=InitiativeConstants.INITIATIVE_PROPOSAL_MAX?string("#") />
+            <@f.textarea path=path+".proposal" required="" optional=false cssClass="textarea-tall" maxLength=InitiativeConstants.INITIATIVE_PROPOSAL_MAX?string("#") />
         </div>
         
         <div class="input-block-content">
@@ -292,7 +292,7 @@
         
         <div class="input-block-content">
             <div class="column col-2of3">
-                <@f.textField path=path+".contactInfo.name" required="required" optional=false cssClass="medium" maxLength=InitiativeConstants.CONTACT_NAME_MAX key="contactInfo.name" />
+                <@f.textField path=path+".contactInfo.name" required="" optional=false cssClass="medium" maxLength=InitiativeConstants.CONTACT_NAME_MAX key="contactInfo.name" />
                 
             </div>
             <div class="column col-1of3 last">
