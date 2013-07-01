@@ -170,9 +170,10 @@ public class ViewGenerator {
         );
     }
 
-    public static ViewGenerator prepareView(PrepareInitiativeUICreateDto prepareInitiativeUICreateDto, List<Municipality> allMunicipalities) {
+    public static ViewGenerator prepareView(PrepareInitiativeUICreateDto prepareInitiativeUICreateDto, List<Municipality> allMunicipalities, boolean enableVerifiedInitiatives) {
         return new ViewGenerator(PREPARE_VIEW,
                 new AttributeBuilder()
+                        .add("enableVerifiedInitiatives", enableVerifiedInitiatives)
                         .add("initiative", prepareInitiativeUICreateDto)
                         .add("municipalities", allMunicipalities).build()
         );

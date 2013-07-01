@@ -20,9 +20,8 @@ public final class PropertyNames {
     public static final String jdbcUser = "jdbc.user";
     
     public static final String jdbcPassword = "jdbc.password";
-    
 
-    // XXX: Vetuma properties are not currently used
+    public static final String enableVerifiedInitiatives = "enable.verified.initiatives";
 
     public static final String vetumaURL = "vetuma.url";
     

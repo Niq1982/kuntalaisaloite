@@ -122,8 +122,8 @@
         <@f.showError />
         
         <@initiativeTypeBlock "UNDEFINED" "normal" true />
-        <@initiativeTypeBlock "COLLABORATIVE_COUNCIL" "two-percent" />
-        <@initiativeTypeBlock "COLLABORATIVE_CITIZEN" "five-percent" />
+        <@initiativeTypeBlock "COLLABORATIVE_COUNCIL" "two-percent" enableVerifiedInitiatives />
+        <@initiativeTypeBlock "COLLABORATIVE_CITIZEN" "five-percent" enableVerifiedInitiatives />
     </div>
 </#macro>
 

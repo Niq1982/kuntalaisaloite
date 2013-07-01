@@ -38,7 +38,6 @@ public class PublicInitiativeController extends BaseController {
 
     @Resource
     private MunicipalityService municipalityService;
-
     @Resource
     private PublicInitiativeService publicInitiativeService;
 
@@ -51,8 +50,11 @@ public class PublicInitiativeController extends BaseController {
     @Resource
     private AuthorService authorService;
 
-    public PublicInitiativeController(boolean optimizeResources, String resourcesVersion) {
+    private final boolean enableVerifiedInitiatives;
+
+    public PublicInitiativeController(boolean optimizeResources, String resourcesVersion, boolean enableVerifiedInitiatives) {
         super(optimizeResources, resourcesVersion);
+        this.enableVerifiedInitiatives = enableVerifiedInitiatives;
     }
 
     @RequestMapping(value={SEARCH_FI, SEARCH_SV}, method=GET)
@@ -92,7 +94,10 @@ public class PublicInitiativeController extends BaseController {
 
     @RequestMapping(value = { PREPARE_FI, PREPARE_SV }, method = GET)
     public String prepareGet(Model model, Locale locale, HttpServletRequest request) {
-        return ViewGenerator.prepareView(new PrepareInitiativeUICreateDto(), municipalityService.findAllMunicipalities(locale))
+        return ViewGenerator.prepareView(
+                new PrepareInitiativeUICreateDto(),
+                municipalityService.findAllMunicipalities(locale),
+                enableVerifiedInitiatives)
                 .view(model, Urls.get(locale).alt().prepare());
     }
 
@@ -104,7 +109,7 @@ public class PublicInitiativeController extends BaseController {
                               HttpServletRequest request) {
         Urls urls = Urls.get(locale);
         if (validationService.validationErrors(initiative, bindingResult, model)) {
-            return ViewGenerator.prepareView(initiative, municipalityService.findAllMunicipalities(locale))
+            return ViewGenerator.prepareView(initiative, municipalityService.findAllMunicipalities(locale), enableVerifiedInitiatives)
                     .view(model, urls.prepare());
         }
 
