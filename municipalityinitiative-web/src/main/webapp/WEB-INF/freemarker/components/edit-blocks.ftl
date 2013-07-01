@@ -221,15 +221,15 @@
         </div>
         
         <div class="input-block-content">
-            <@f.textField path=path+".name" required="" optional=true cssClass="large" maxLength=InitiativeConstants.INITIATIVE_NAME_MAX />
+            <@f.textField path=path+".name" key="initiative.name" required="" optional=true cssClass="large" maxLength=InitiativeConstants.INITIATIVE_NAME_MAX />
         </div>
         
         <div class="input-block-content no-top-margin">
-            <@f.textarea path=path+".proposal" required="" optional=false cssClass="textarea-tall" maxLength=InitiativeConstants.INITIATIVE_PROPOSAL_MAX?string("#") />
+            <@f.textarea path=path+".proposal" key="initiative.proposal" required="" optional=false cssClass="textarea-tall" maxLength=InitiativeConstants.INITIATIVE_PROPOSAL_MAX?string("#") />
         </div>
         
         <div class="input-block-content">
-            <@f.textarea path=path+".extraInfo" required="" optional=true cssClass="textarea" maxLength=InitiativeConstants.INITIATIVE_EXTRA_INFO_MAX?string("#") />
+            <@f.textarea path=path+".extraInfo" key="initiative.extraInfo" required="" optional=true cssClass="textarea" maxLength=InitiativeConstants.INITIATIVE_EXTRA_INFO_MAX?string("#") />
         </div>
     </div>
 </#macro>
