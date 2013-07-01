@@ -3,14 +3,11 @@ package fi.om.municipalityinitiative.service;
 import fi.om.municipalityinitiative.dao.UserDao;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.PrepareInitiativeUICreateDto;
-import fi.om.municipalityinitiative.dto.user.OmLoginUser;
-import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
+import fi.om.municipalityinitiative.dto.user.*;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.AuthenticationRequiredException;
 import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
 import fi.om.municipalityinitiative.dao.AuthorDao;
-import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
-import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -162,7 +159,16 @@ public class UserService {
     public void login(String ssn, String fullName, String address, String municipalityCode, HttpServletRequest request, HttpServletResponse response) {
         // TODO: Get contactInfo and initiatives from database if user exists
         String hash = encryptionService.registeredUserHash(ssn);
-        storeLoggedInUser(request, User.verifiedUser(hash, new ContactInfo(), null));
+
+        ContactInfo contactInfo;
+        Maybe<VerifiedUser> verifiedUser = userDao.getVerifiedUser(hash);
+        if (verifiedUser.isPresent()) {
+            contactInfo = verifiedUser.get().getContactInfo();
+        }
+        else {
+            contactInfo = new ContactInfo(); // User logged in but never registered to database (has not participated or created any initiatives)
+        }
+        storeLoggedInUser(request, User.verifiedUser(hash, contactInfo, null));
     }
 
     public void savePrepareDataForVetuma(PrepareInitiativeUICreateDto initiative, HttpServletRequest request) {
@@ -177,6 +183,11 @@ public class UserService {
     }
 
     public void refreshUserData(HttpServletRequest request) {
-        //To change body of created methods use File | Settings | File Templates.
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute(LOGIN_USER_PARAMETER);
+
+        if (user instanceof VerifiedUser) {
+            session.setAttribute(LOGIN_USER_PARAMETER, userDao.getVerifiedUser(((VerifiedUser) user).getHash()));
+        }
     }
 }

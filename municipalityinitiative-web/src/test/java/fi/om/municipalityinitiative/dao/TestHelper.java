@@ -23,9 +23,12 @@ import javax.annotation.Resource;
 import javax.inject.Inject;
 
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 import static fi.om.municipalityinitiative.sql.QParticipant.participant;
+import static fi.om.municipalityinitiative.sql.QVerifiedUser.verifiedUser;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.doThrow;
@@ -368,14 +371,6 @@ public class TestHelper {
                 .set(QAuthorInvitation.authorInvitation.rejectTime, rejected ? new DateTime() : null)
                 .execute();
     }
-
-    @Transactional(readOnly = true)
-    public VerifiedUser getVerifiedUser(String hash) {
-        return queryFactory.from(QVerifiedUser.verifiedUser)
-                .where(QVerifiedUser.verifiedUser.hash.eq(hash))
-                .uniqueResult(Mappings.verifiedUserMapper);
-    }
-
 
     public static class AuthorDraft {
 

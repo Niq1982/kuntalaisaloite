@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.service.ui;
 
+import fi.om.municipalityinitiative.dao.UserDao;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
@@ -16,6 +17,7 @@ import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -29,7 +31,11 @@ import static org.hamcrest.Matchers.is;
 public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     @Resource
-    VerifiedInitiativeService service;
+    private VerifiedInitiativeService service;
+
+    // Test also some functionality of userDao. Ugly, but lets leave it that for now.
+    @Resource
+    private UserDao userDao;
 
     private Municipality testMunicipality;
 
@@ -70,13 +76,14 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
     }
 
     @Test
+    @Transactional // Tests also userDao for receiving the information
     public void preparing_creates_user_with_given_information_if_not_yet_created() {
         precondition(testHelper.countAll(QVerifiedUser.verifiedUser), is(0L));
 
         service.prepareSafeInitiative(verifiedLoginUserHolder, prepareUICreateDto());
 
         assertThat(testHelper.countAll(QVerifiedUser.verifiedUser), is(1L));
-        VerifiedUser created = testHelper.getVerifiedUser(HASH);
+        VerifiedUser created = userDao.getVerifiedUser(HASH).get();
         assertThat(created.getContactInfo().getName(), is(VERIFIED_AUTHOR_NAME));
         assertThat(created.getContactInfo().getAddress(), is(ADDRESS));
         assertThat(created.getHash(), is(HASH));
@@ -85,7 +92,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         assertThat(created.getContactInfo().getPhone(), is(PHONE));
         assertThat(created.getContactInfo().getEmail(), is(EMAIL));
 
-        assertThat(created.getInitiatives(), hasSize(0)); // TODO: Size = 1
+        assertThat(created.getInitiatives(), hasSize(1));
 
     }
 

@@ -95,21 +95,16 @@ public class Mappings {
                     return info;
                 }
             };
-    static Expression<VerifiedUser> verifiedUserMapper
-                    = new MappingProjection<VerifiedUser>(VerifiedUser.class, verifiedUser.all()) {
+    static Expression<ContactInfo> verifiedUserContactInfo
+                    = new MappingProjection<ContactInfo>(ContactInfo.class, verifiedUser.all()) {
                 @Override
-                protected VerifiedUser map(Tuple row) {
+                protected ContactInfo map(Tuple row) {
                     ContactInfo contactInfo = new ContactInfo();
                     contactInfo.setPhone(row.get(QVerifiedUser.verifiedUser.phone));
                     contactInfo.setName(row.get(QVerifiedUser.verifiedUser.name));
                     contactInfo.setAddress(row.get(QVerifiedUser.verifiedUser.address));
                     contactInfo.setEmail(row.get(QVerifiedUser.verifiedUser.email));
-                    VerifiedUser verifiedUser = User.verifiedUser(
-                            row.get(QVerifiedUser.verifiedUser.hash),
-                            contactInfo,
-                            Collections.<Long>emptySet()
-                    );
-                    return verifiedUser;
+                    return contactInfo;
                 }
             };
 

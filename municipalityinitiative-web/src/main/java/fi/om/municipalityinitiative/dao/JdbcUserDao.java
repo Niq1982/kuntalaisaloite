@@ -10,9 +10,15 @@ import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.QAdminUser;
+import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
+import fi.om.municipalityinitiative.sql.QVerifiedAuthor;
+import fi.om.municipalityinitiative.sql.QVerifiedUser;
 import fi.om.municipalityinitiative.util.Maybe;
 
 import javax.annotation.Resource;
+
+import java.util.HashSet;
+import java.util.List;
 
 import static fi.om.municipalityinitiative.sql.QVerifiedUser.verifiedUser;
 
@@ -37,9 +43,22 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     public Maybe<VerifiedUser> getVerifiedUser(String hash) {
-        return Maybe.fromNullable(queryFactory.from(verifiedUser)
+        Maybe<ContactInfo> contactInfoMaybe = Maybe.fromNullable(queryFactory.from(verifiedUser)
                 .where(verifiedUser.hash.eq(hash))
-                .uniqueResult(Mappings.verifiedUserMapper));
+                .uniqueResult(Mappings.verifiedUserContactInfo));
+
+        if (contactInfoMaybe.isNotPresent()) {
+            return Maybe.absent();
+        }
+
+        // Get users initiatives
+        List<Long> initiatives = queryFactory.from(QMunicipalityInitiative.municipalityInitiative)
+                .innerJoin(QMunicipalityInitiative.municipalityInitiative._verifiedAuthorInitiativeFk, QVerifiedAuthor.verifiedAuthor)
+                .innerJoin(QVerifiedAuthor.verifiedAuthor.verifiedAuthorVerifiedUserFk, QVerifiedUser.verifiedUser)
+                .where(QVerifiedUser.verifiedUser.hash.eq(hash))
+                .list(QMunicipalityInitiative.municipalityInitiative.id);
+
+        return Maybe.of(User.verifiedUser(hash, contactInfoMaybe.get(), new HashSet<>(initiatives)));
     }
 
     @Override
