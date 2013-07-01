@@ -29,6 +29,7 @@ public class JdbcUserDaoTest {
     public static final String PHONE = "phone";
     public static final String ADDRESS = "address";
     public static final String HASH = "hash";
+
     @Resource
     private TestHelper testHelper;
 

@@ -93,6 +93,7 @@ public class JdbcUserDao implements UserDao {
                 .set(verifiedUser.address, contactInfo.getAddress())
                 .set(verifiedUser.email, contactInfo.getEmail())
                 .set(verifiedUser.phone, contactInfo.getPhone())
+                .where(verifiedUser.hash.eq(hash))
                 .execute());
     }
 

@@ -157,6 +157,7 @@ public class InitiativeManagementController extends BaseController {
         }
 
         initiativeManagementService.editInitiativeDraft(initiativeId, loginUserHolder, editDto);
+        userService.refreshUserData(request);
         return redirectWithMessage(urls.management(initiativeId), RequestMessage.SAVE_DRAFT, request);
     }
 
