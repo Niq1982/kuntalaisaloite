@@ -19,7 +19,7 @@
     <h1><@u.message page /></h1>
 
     <#-- Create form errors summary -->
-    <@u.errorsSummary path="initiative.*" prefix="initiative."/>
+    <@u.errorsSummary path="updateData.*" prefix="updateData."/>
 
     <noscript>
         <@f.cookieWarning springMacroRequestContext.requestUri />
@@ -27,7 +27,7 @@
     
     <div class="msg-block">
         <div class="system-msg msg-info">
-            <#assign municipality><#if initiative.municipality??>${initiative.municipality.getName(locale)!""}</#if></#assign>
+            <#assign municipality><#if updateData.municipality??>${initiative.municipality.getName(locale)!""}</#if></#assign>
             <h3><@u.message key="initiative.info.title" args=[municipality] /></h3>
             <@u.message "initiative.required" /> <span class="icon-small required"></span>
         </div>
@@ -39,15 +39,17 @@
 
         <div class="form-block-container">
             <@edit.blockHeader key="initiative.initiative.title" step=1 />
-            <@edit.initiativeBlock />
+            <@edit.initiativeBlock "updateData"/>
         </div>
 
         <div class="form-block-container">
             <@edit.blockHeader key="initiative.currentAuthor.title" step=2 />
-            <#--<#if initiative.verifiable>
-                <@edit.currentAuthorBlock "initiative" />
-            </#if> -->
-            <@edit.currentAuthorBlock "initiative" />
+            <#if initiative.isVerifiable()>
+                <@edit.currentVerifiedAuthorBlock "updateData" />
+            <#else>
+                <@edit.currentAuthorBlock "updateData" />
+            </#if>
+
         </div>
         
         <div class="" id="form-action-panel">

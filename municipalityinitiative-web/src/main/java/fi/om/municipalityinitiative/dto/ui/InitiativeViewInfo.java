@@ -82,4 +82,8 @@ public class InitiativeViewInfo {
         return initiative.getExternalParticipantCount();
     }
 
+    public boolean isVerifiable() {
+        return initiative.getType().isVerifiable();
+    }
+
 }

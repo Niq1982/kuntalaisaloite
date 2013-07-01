@@ -205,7 +205,7 @@
  *
  * @param locked locks some field from editing
  -->
-<#macro initiativeBlock>      
+<#macro initiativeBlock path>
     <div class="input-block cf">
         <div class="input-block-extra">
             <div class="input-block-extra-content">
@@ -221,15 +221,15 @@
         </div>
         
         <div class="input-block-content">
-            <@f.textField path="initiative.name" required="required" optional=true cssClass="large" maxLength=InitiativeConstants.INITIATIVE_NAME_MAX />
+            <@f.textField path=path+".name" required="required" optional=true cssClass="large" maxLength=InitiativeConstants.INITIATIVE_NAME_MAX />
         </div>
         
         <div class="input-block-content no-top-margin">
-            <@f.textarea path="initiative.proposal" required="required" optional=false cssClass="textarea-tall" maxLength=InitiativeConstants.INITIATIVE_PROPOSAL_MAX?string("#") />
+            <@f.textarea path=path+".proposal" required="required" optional=false cssClass="textarea-tall" maxLength=InitiativeConstants.INITIATIVE_PROPOSAL_MAX?string("#") />
         </div>
         
         <div class="input-block-content">
-            <@f.textarea path="initiative.extraInfo" required="" optional=true cssClass="textarea" maxLength=InitiativeConstants.INITIATIVE_EXTRA_INFO_MAX?string("#") />
+            <@f.textarea path=path+".extraInfo" required="" optional=true cssClass="textarea" maxLength=InitiativeConstants.INITIATIVE_EXTRA_INFO_MAX?string("#") />
         </div>
     </div>
 </#macro>
@@ -314,6 +314,57 @@
             </div>
             
             <@f.contactInfo path=path+".contactInfo" mode="full" />
+        </div>
+    </div>
+</#macro>
+
+<#--
+ * currentAuthorBlock
+ *
+ * Add author details
+ *  - Name, Home municipality, suffrage
+ *  - Email address, phone, street address
+ *
+ * Prints help-texts and validation errors in this block
+ *
+ * @param step is the number of current block
+ -->
+<#macro currentVerifiedAuthorBlock path>
+    <div class="input-block cf">
+        <div class="input-block-extra">
+            <div class="input-block-extra-content">
+                <@f.helpText "help.contactInfo.name" />
+                <@f.helpText "help.contactInfo.contactDetails" />
+            </div>
+        </div>
+
+        <div class="input-block-content">
+            <@u.systemMessage path="contactInfo.ownDetails.description" type="info" showClose=false />
+        </div>
+
+        <div class="input-block-content">
+            <div class="column col-2of3">
+                <p>${author.contactInfo.name}</p>
+            </div>
+            <div class="column col-1of3 last">
+                <div class="input-header"><@u.message "contactInfo.homeMunicipality" /></div>
+
+                <div class="input-placeholder">${author.municipality.getName(locale)}</div>
+            </div>
+            <br class="clear" />
+            <@f.formCheckbox path=path+".contactInfo.showName" checked=true key="contactInfo.showName" />
+        </div>
+
+        <div class="input-block-content">
+            <@u.systemMessage path="contactInfo.description" type="info" showClose=false />
+        </div>
+
+        <div class="input-block-content">
+            <div class="input-header">
+                <@u.message "contactInfo.title" />
+            </div>
+
+            <@f.verifiedContactInfo path=path+".contactInfo" />
         </div>
     </div>
 </#macro>

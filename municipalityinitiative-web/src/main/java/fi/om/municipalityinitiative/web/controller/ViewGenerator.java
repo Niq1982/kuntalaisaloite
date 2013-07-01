@@ -179,10 +179,11 @@ public class ViewGenerator {
         );
     }
 
-    public static ViewGenerator editView(boolean hasNeverBeenSaved, InitiativeDraftUIEditDto initiative, Author authorInformation, String previousPageURI) {
+    public static ViewGenerator editView(InitiativeViewInfo initiative, boolean hasNeverBeenSaved, InitiativeDraftUIEditDto editDto, Author authorInformation, String previousPageURI) {
         return new ViewGenerator(EDIT_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiative)
+                        .add("updateData", editDto)
                         .add("author", authorInformation)
                         .add("previousPageURI", previousPageURI)
                         .add("hasNeverBeenSaved", hasNeverBeenSaved)
@@ -204,14 +205,14 @@ public class ViewGenerator {
         );
     }
 
-    public static ViewGenerator invitationView(InitiativeViewInfo municipalityInitiative,
+    public static ViewGenerator invitationView(InitiativeViewInfo initiative,
                                                List<Municipality> allMunicipalities,
                                                PublicAuthors publicAuthors,
                                                ParticipantCount participantCount,
                                                AuthorInvitationUIConfirmDto authorInvitationUIConfirmDto) {
         return new ViewGenerator(Views.INVITATION_VIEW,
                 new AttributeBuilder()
-                        .add("initiative", municipalityInitiative)
+                        .add("initiative", initiative)
                         .add("municipalities", allMunicipalities)
                         .add("participantCount", participantCount)
                         .add("publicAuthors", publicAuthors)

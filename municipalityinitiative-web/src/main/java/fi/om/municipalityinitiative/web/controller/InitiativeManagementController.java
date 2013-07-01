@@ -115,6 +115,7 @@ public class InitiativeManagementController extends BaseController {
         if (managementSettings.isAllowEdit()) {
             InitiativeDraftUIEditDto initiativeDraft = initiativeManagementService.getInitiativeDraftForEdit(initiativeId, loginUserHolder);
             return ViewGenerator.editView(
+                    publicInitiativeService.getInitiative(initiativeId, loginUserHolder),
                     Strings.isNullOrEmpty(initiativeDraft.getName()),
                     initiativeDraft,
                     initiativeManagementService.getAuthorInformation(initiativeId, loginUserHolder),
@@ -131,7 +132,7 @@ public class InitiativeManagementController extends BaseController {
 
     @RequestMapping(value={ EDIT_FI, EDIT_SV }, method=POST)
     public String editPost(@PathVariable("id") Long initiativeId,
-                           @ModelAttribute("initiative") InitiativeDraftUIEditDto editDto,
+                           @ModelAttribute("updateData") InitiativeDraftUIEditDto editDto,
                            BindingResult bindingResult,
                            Model model, Locale locale, HttpServletRequest request) {
 
@@ -142,7 +143,7 @@ public class InitiativeManagementController extends BaseController {
 
         if (validationService.validationErrors(editDto, bindingResult, model)) {
             return ViewGenerator.editView(
-                    Strings.isNullOrEmpty(initiativeManagementService.getInitiativeDraftForEdit(initiativeId, loginUserHolder).getName()),
+                    publicInitiativeService.getInitiative(initiativeId, loginUserHolder), Strings.isNullOrEmpty(initiativeManagementService.getInitiativeDraftForEdit(initiativeId, loginUserHolder).getName()),
                     editDto,
                     initiativeManagementService.getAuthorInformation(initiativeId, loginUserHolder),
                     urls.management(initiativeId)

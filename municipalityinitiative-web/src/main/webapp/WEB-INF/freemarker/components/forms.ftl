@@ -332,4 +332,23 @@
         
 </#macro>
 
+<#macro verifiedContactInfo path prefix="" cssClass="">
+
+    <div class="initiative-contact-details">
+        <div class="column col-1of2">
+            <@textField path=path+".email" required="" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_PHONE_MAX key="contactInfo.email" />
+            <@textField path=path+".phone" required="" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_PHONE_MAX key="contactInfo.phone" />
+        </div>
+
+        <div class="column col-1of2 last">
+            <label for="contactInfo.address">
+                <@u.message "contactInfo.address" />
+            </label>
+            <@spring.formTextarea path+".address", 'class="address-field noresize" maxlength="'+InitiativeConstants.CONTACT_ADDRESS_MAX+'"' />
+        </div>
+
+    </div>
+
+</#macro>
+
 </#escape> 
