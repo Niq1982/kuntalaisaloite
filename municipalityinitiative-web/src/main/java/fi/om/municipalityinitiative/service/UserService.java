@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dao.UserDao;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
+import fi.om.municipalityinitiative.dto.ui.PrepareInitiativeUICreateDto;
 import fi.om.municipalityinitiative.dto.user.OmLoginUser;
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
@@ -23,6 +24,7 @@ import java.util.Set;
 public class UserService {
 
     static final String LOGIN_USER_PARAMETER = "loginUser";
+    static final String VETUMA_PREPARED_INITIATIVE = "vetumaPreparedInitiative";
 
     @Resource
     UserDao userDao;
@@ -158,8 +160,23 @@ public class UserService {
     }
 
     public void login(String ssn, String fullName, String address, String municipalityCode, HttpServletRequest request, HttpServletResponse response) {
-        storeLoggedInUser(request, User.verifiedUser(encryptionService.registeredUserHash(ssn), new ContactInfo(), null));
-        // TODO: Implement something
-        System.out.println(fullName+", "+address);
+        // TODO: Get contactInfo and initiatives from database if user exists
+        String hash = encryptionService.registeredUserHash(ssn);
+        storeLoggedInUser(request, User.verifiedUser(hash, new ContactInfo(), null));
+    }
+
+    public void savePrepareDataForVetuma(PrepareInitiativeUICreateDto initiative, HttpServletRequest request) {
+        request.getSession().setAttribute(VETUMA_PREPARED_INITIATIVE, initiative);
+    }
+
+    public PrepareInitiativeUICreateDto getPrepareDataForVetuma(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        PrepareInitiativeUICreateDto preparedInitiative = (PrepareInitiativeUICreateDto) session.getAttribute(VETUMA_PREPARED_INITIATIVE);
+        session.removeAttribute(VETUMA_PREPARED_INITIATIVE);
+        return preparedInitiative;
+    }
+
+    public void refreshUserData(HttpServletRequest request) {
+        //To change body of created methods use File | Settings | File Templates.
     }
 }

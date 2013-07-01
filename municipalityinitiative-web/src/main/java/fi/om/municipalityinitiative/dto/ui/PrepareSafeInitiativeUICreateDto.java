@@ -23,4 +23,11 @@ public class PrepareSafeInitiativeUICreateDto {
     public void setMunicipality(Long municipality) {
         this.municipality = municipality;
     }
+
+    public static PrepareSafeInitiativeUICreateDto parse(PrepareInitiativeUICreateDto prepareDataForVetuma) {
+        PrepareSafeInitiativeUICreateDto uiCreateDto = new PrepareSafeInitiativeUICreateDto();
+        uiCreateDto.setInitiativeType(prepareDataForVetuma.getInitiativeType());
+        uiCreateDto.setMunicipality(prepareDataForVetuma.getMunicipality());
+        return uiCreateDto;
+    }
 }

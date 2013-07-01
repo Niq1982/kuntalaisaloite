@@ -9,6 +9,7 @@ import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
+import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.web.RequestMessage;
@@ -108,6 +109,16 @@ public class PublicInitiativeController extends BaseController {
                               Locale locale,
                               HttpServletRequest request) {
         Urls urls = Urls.get(locale);
+
+        // TODO: Store initiativeDraft
+        // TODO: head to vetuma
+
+
+        if (initiative.getInitiativeType().isVerifiable()) {
+            userService.savePrepareDataForVetuma(initiative, request);
+            return contextRelativeRedirect(urls.login());
+        }
+
         if (validationService.validationErrors(initiative, bindingResult, model)) {
             return ViewGenerator.prepareView(initiative, municipalityService.findAllMunicipalities(locale), enableVerifiedInitiatives)
                     .view(model, urls.prepare());

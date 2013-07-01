@@ -1,11 +1,16 @@
 package fi.om.municipalityinitiative.web.controller;
 
+import fi.om.municipalityinitiative.dto.ui.PrepareInitiativeUICreateDto;
+import fi.om.municipalityinitiative.dto.ui.PrepareSafeInitiativeUICreateDto;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.dto.vetuma.VTJData;
 import fi.om.municipalityinitiative.dto.vetuma.VetumaLoginRequest;
 import fi.om.municipalityinitiative.dto.vetuma.VetumaLoginResponse;
 import fi.om.municipalityinitiative.dto.vetuma.VetumaResponse;
 import fi.om.municipalityinitiative.service.EncryptionService;
+import fi.om.municipalityinitiative.service.UserService;
+import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
+import fi.om.municipalityinitiative.service.ui.VerifiedInitiativeService;
 import fi.om.municipalityinitiative.web.Urls;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
@@ -41,10 +46,13 @@ public class VetumaLoginController extends DefaultLoginController {
     private final String vetumaURL;
 
     @Resource
-    EncryptionService encryptionService;
+    private EncryptionService encryptionService;
 
     @Resource
-    VetumaLoginRequest loginRequestDefaults;
+    private VetumaLoginRequest loginRequestDefaults;
+
+    @Resource
+    private VerifiedInitiativeService verifiedInitiativeService;
 
     public VetumaLoginController(String baseUrl, boolean optimizeResources, String resourcesVersion, String vetumaURL) {
         super(baseUrl, optimizeResources, resourcesVersion);
@@ -84,7 +92,7 @@ public class VetumaLoginController extends DefaultLoginController {
             model.addAttribute("vetumaRequest", vetumaRequest);
             model.addAttribute("vetumaURL", vetumaURL);
 
-            return new ModelAndView(VETUMA_LOGIN_VIEW) ;
+            return new ModelAndView(VETUMA_LOGIN_VIEW);
         }
     }
 
@@ -127,6 +135,14 @@ public class VetumaLoginController extends DefaultLoginController {
                     vtjData.getAddress(),
                     vtjData.getMunicipalityCode(),
                     request, response);
+
+
+            PrepareInitiativeUICreateDto prepareDataForVetuma = userService.getPrepareDataForVetuma(request);
+            if (prepareDataForVetuma != null) { // User has been redirected to vetuma after starting to create initiative
+                long initiativeId = verifiedInitiativeService.prepareSafeInitiative(userService.getRequiredLoginUserHolder(request), PrepareSafeInitiativeUICreateDto.parse(prepareDataForVetuma));
+                userService.refreshUserData(request);
+                return redirect(urls.management(initiativeId));
+            }
 
             return redirectToTarget(session);
         } else {
