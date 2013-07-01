@@ -157,7 +157,7 @@ public class JdbcAuthorDaoTest {
     }
 
     @Test
-    public void get_verified_author_contact_info() {
+    public void get_verified_author_contact_info_contains_all_information() {
         Long initiativeId = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality)
                 .applyAuthor()
                 .toInitiativeDraft(),
