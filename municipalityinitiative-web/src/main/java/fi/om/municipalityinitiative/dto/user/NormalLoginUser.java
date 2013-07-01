@@ -28,6 +28,11 @@ public class NormalLoginUser extends User {
         return false;
     }
 
+    @Override
+    public boolean isVerifiedUser() {
+        return false;
+    }
+
     public Long getAuthorId() {
         return authorId;
     }

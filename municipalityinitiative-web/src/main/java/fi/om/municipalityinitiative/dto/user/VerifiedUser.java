@@ -25,6 +25,11 @@ public class VerifiedUser extends User{
     }
 
     @Override
+    public boolean isVerifiedUser() {
+        return true;
+    }
+
+    @Override
     public boolean hasRightToInitiative(Long initiativeId) {
         return initiatives.contains(initiativeId);
     }

@@ -28,6 +28,14 @@ public enum InitiativeType {
         }
     }
 
+    public static boolean isNotVerifiable(InitiativeType type) {
+        return !isVerifiable(type);
+    }
+
+    public boolean isNotVerifiable() {
+        return !isVerifiable();
+    }
+
     public boolean isVerifiable() {
         return isVerifiable(this);
     }

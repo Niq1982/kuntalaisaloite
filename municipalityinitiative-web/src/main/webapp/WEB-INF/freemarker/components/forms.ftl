@@ -311,9 +311,9 @@
             <#-- Updating email is disabled -->
             <#if disableEmail>
                 <@spring.bind path+".email" />
-                <input type="hidden" name="contactInfo.email" value="${spring.status.value}" />
+                <input type="hidden" name="contactInfo.email" value="${spring.status.value!""}" />
                 <label class="input-header"><@u.message "contactInfo.email" /></label>
-                <input type="text" disabled="disabled" class="medium disabled" value="${spring.status.value}" />
+                <input type="text" disabled="disabled" class="medium disabled" value="${spring.status.value!""}" />
             <#else>
                 <@textField path=path+".email" required="required" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_PHONE_MAX key="contactInfo.email" />
             </#if>

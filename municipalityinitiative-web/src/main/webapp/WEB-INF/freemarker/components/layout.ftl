@@ -261,6 +261,11 @@
                             </ul>
                         </div>
                     </#if>
+                     <#if user.isVerifiedUser()>
+                        <div class="header-dropdown">
+                            <a href="#" class="header-tool-link user-name dropdown-toggle">${user.contactInfo.name} <span class="icon-small settings"></span></a>
+                        </div>
+                    </#if>
                     <a href="${urls.logout()}" id="logout" class="header-tool-link logout"><@u.message "common.logout"/><span class="icon-small logout"></span></a>
                 </#if>
             </div>

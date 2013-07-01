@@ -24,6 +24,8 @@ public abstract class User {
 
     public abstract boolean isOmUser();
 
+    public abstract boolean isVerifiedUser();
+
     public boolean isNotOmUser() {
         return !isOmUser();
     }

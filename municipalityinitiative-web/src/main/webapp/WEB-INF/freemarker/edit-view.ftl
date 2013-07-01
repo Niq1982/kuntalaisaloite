@@ -44,6 +44,9 @@
 
         <div class="form-block-container">
             <@edit.blockHeader key="initiative.currentAuthor.title" step=2 />
+            <#--<#if initiative.verifiable>
+                <@edit.currentAuthorBlock "initiative" />
+            </#if> -->
             <@edit.currentAuthorBlock "initiative" />
         </div>
         

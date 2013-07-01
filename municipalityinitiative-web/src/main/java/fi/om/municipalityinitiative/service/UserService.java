@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.service;
 
+import com.google.common.collect.Sets;
 import fi.om.municipalityinitiative.dao.UserDao;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.PrepareInitiativeUICreateDto;
@@ -156,19 +157,26 @@ public class UserService {
         request.getSession(true);
     }
 
+    @Transactional(readOnly = true)
     public void login(String ssn, String fullName, String address, String municipalityCode, HttpServletRequest request, HttpServletResponse response) {
         // TODO: Get contactInfo and initiatives from database if user exists
         String hash = encryptionService.registeredUserHash(ssn);
 
         ContactInfo contactInfo;
+        Set<Long> initiatives;
         Maybe<VerifiedUser> verifiedUser = userDao.getVerifiedUser(hash);
         if (verifiedUser.isPresent()) {
             contactInfo = verifiedUser.get().getContactInfo();
+            initiatives = verifiedUser.get().getInitiatives();
         }
         else {
             contactInfo = new ContactInfo(); // User logged in but never registered to database (has not participated or created any initiatives)
+            contactInfo.setName(fullName);
+            contactInfo.setAddress(address);
+            // TODO: Municipality
+            initiatives = Sets.newHashSet();
         }
-        storeLoggedInUser(request, User.verifiedUser(hash, contactInfo, null));
+        storeLoggedInUser(request, User.verifiedUser(hash, contactInfo, initiatives));
     }
 
     public void savePrepareDataForVetuma(PrepareInitiativeUICreateDto initiative, HttpServletRequest request) {
@@ -182,12 +190,16 @@ public class UserService {
         return preparedInitiative;
     }
 
+    @Transactional(readOnly = true)
     public void refreshUserData(HttpServletRequest request) {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute(LOGIN_USER_PARAMETER);
 
         if (user instanceof VerifiedUser) {
-            session.setAttribute(LOGIN_USER_PARAMETER, userDao.getVerifiedUser(((VerifiedUser) user).getHash()));
+            Maybe<VerifiedUser> verifiedUser = userDao.getVerifiedUser(((VerifiedUser) user).getHash());
+            if (verifiedUser.isPresent()) {
+                session.setAttribute(LOGIN_USER_PARAMETER, verifiedUser.get());
+            }
         }
     }
 }

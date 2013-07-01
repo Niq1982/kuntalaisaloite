@@ -41,8 +41,15 @@ public class LoginUserHolder<E extends User> {
     }
 
     public VerifiedUser getVerifiedUser() {
-        // TODO: Throw exception which directs the user to vetuma if not logged in
+        // TODO: Throw some exception which redirects to vetuma.
+        if (!isVerifiedUser()) {
+            throw new AccessDeniedException("Not logged in");
+        }
         return (VerifiedUser) user;
+    }
+
+    public boolean isVerifiedUser() {
+        return user instanceof VerifiedUser;
     }
 
     public void assertOmUser() {

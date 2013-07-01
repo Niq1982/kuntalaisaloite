@@ -9,6 +9,7 @@ import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
+import fi.om.municipalityinitiative.service.ui.VerifiedInitiativeService;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
@@ -50,6 +51,9 @@ public class PublicInitiativeController extends BaseController {
 
     @Resource
     private AuthorService authorService;
+
+    @Resource
+    private VerifiedInitiativeService verifiedInitiativeService;
 
     private final boolean enableVerifiedInitiatives;
 
@@ -113,10 +117,17 @@ public class PublicInitiativeController extends BaseController {
         // TODO: Store initiativeDraft
         // TODO: head to vetuma
 
-
         if (initiative.getInitiativeType().isVerifiable()) {
-            userService.savePrepareDataForVetuma(initiative, request);
-            return contextRelativeRedirect(urls.login());
+            LoginUserHolder<User> loginUserHolder = userService.getLoginUserHolder(request);
+            if (loginUserHolder.isVerifiedUser()) {
+                long initiativeId = verifiedInitiativeService.prepareSafeInitiative(loginUserHolder, PrepareSafeInitiativeUICreateDto.parse(initiative));
+                userService.refreshUserData(request);
+                return contextRelativeRedirect(urls.management(initiativeId));
+            }
+            else {
+                userService.savePrepareDataForVetuma(initiative, request);
+                return contextRelativeRedirect(urls.login());
+            }
         }
 
         if (validationService.validationErrors(initiative, bindingResult, model)) {
@@ -200,7 +211,7 @@ public class PublicInitiativeController extends BaseController {
             return redirectWithMessage(urls.prepare(), RequestMessage.PREPARE_CONFIRM_EXPIRED, request);
         }
     }
-    
+
     @RequestMapping(value={ INVITATION_FI, INVITATION_SV }, method=GET)
     public String invitationView(@PathVariable("id") Long initiativeId,
                                  @RequestParam(PARAM_INVITATION_CODE) String confirmCode,
@@ -244,7 +255,7 @@ public class PublicInitiativeController extends BaseController {
             ).view(model, Urls.get(locale).alt().manageAuthors(initiativeId));
         }
     }
-    
+
     @RequestMapping(value={ INVITATION_FI, INVITATION_SV }, method=POST)
     public String invitationReject(@PathVariable("id") Long initiativeId,
                                    @RequestParam(PARAM_INVITATION_CODE) String confirmCode,
@@ -257,11 +268,11 @@ public class PublicInitiativeController extends BaseController {
         addRequestAttribute(initiativeName, request); // To be shown at invitation rejected page
         return redirectWithMessage(Urls.get(locale).invitationRejected(initiativeId), RequestMessage.CONFIRM_INVITATION_REJECTED, request);
     }
-    
-    
+
+
     @RequestMapping(value={ INVITATION_REJECTED_FI, INVITATION_REJECTED_SV }, method=GET)
     public String invitationRejected(Model model, Locale locale, HttpServletRequest request) {
-        
+
         if (getRequestAttribute(request) != null) {
             return INVITATION_REJECTED;
         } else {
@@ -271,8 +282,8 @@ public class PublicInitiativeController extends BaseController {
 
     @RequestMapping(value = {VIEW_FI, VIEW_SV}, method = POST, params = ACTION_CONTACT_AUTHOR)
     public String addAuthorMessage(@PathVariable("id") Long initiativeId,
-            @ModelAttribute("authorMessage") AuthorUIMessage authorUIMessage,
-            Model model, BindingResult bindingResult, Locale locale, HttpServletRequest request) {
+                                   @ModelAttribute("authorMessage") AuthorUIMessage authorUIMessage,
+                                   Model model, BindingResult bindingResult, Locale locale, HttpServletRequest request) {
 
         authorUIMessage.setInitiativeId(initiativeId);
         if (validationService.validationSuccessful(authorUIMessage, bindingResult, model)) {
@@ -315,7 +326,7 @@ public class PublicInitiativeController extends BaseController {
                 publicInitiativeService.getInitiativeCounts(Maybe.fromNullable(search.getMunicipality()), loginUserHolder)
         ).view(model, urls.alt().search());
     }
-    
+
     @RequestMapping(value={IFRAME_GENERATOR_FI, IFRAME_GENERATOR_SV}, method=GET)
     public String iframeGenerator(Model model, Locale locale, HttpServletRequest request) {
         Urls urls = Urls.get(locale);

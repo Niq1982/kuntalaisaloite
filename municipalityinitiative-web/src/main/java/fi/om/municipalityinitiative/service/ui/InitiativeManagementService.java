@@ -1,5 +1,7 @@
 package fi.om.municipalityinitiative.service.ui;
 
+import fi.om.municipalityinitiative.dao.UserDao;
+import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.dao.AuthorDao;
@@ -11,6 +13,7 @@ import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeUIUpdateDto;
+import fi.om.municipalityinitiative.service.UserService;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.operations.InitiativeManagementServiceOperations;
@@ -37,13 +40,25 @@ public class InitiativeManagementService {
     @Resource
     InitiativeManagementServiceOperations operations;
 
+    @Resource
+    UserDao userDao;
+
     @Transactional(readOnly = true)
     public InitiativeDraftUIEditDto getInitiativeDraftForEdit(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        assertAllowance("Edit initiative", getManagementSettings(initiativeId).isAllowEdit());
+        Initiative initiative = initiativeDao.get(initiativeId);
+        assertAllowance("Edit initiative", ManagementSettings.of(initiative).isAllowEdit());
+        ContactInfo contactInfo;
+
+        if (initiative.getType().isNotVerifiable()) {
+            contactInfo = authorDao.getAuthor(loginUserHolder.getNormalLoginUser().getAuthorId()).getContactInfo();
+        }
+        else {
+            contactInfo = userDao.getVerifiedUser(loginUserHolder.getVerifiedUser().getHash()).get().getContactInfo();
+        }
         return InitiativeDraftUIEditDto.parse(
-                initiativeDao.get(initiativeId),
-                authorDao.getAuthor(loginUserHolder.getNormalLoginUser().getAuthorId()).getContactInfo()
+                initiative,
+                contactInfo
         );
     }
 
@@ -55,9 +70,16 @@ public class InitiativeManagementService {
     public void editInitiativeDraft(Long initiativeId, LoginUserHolder loginUserHolder, InitiativeDraftUIEditDto editDto) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        assertAllowance("Edit initiative", getManagementSettings(initiativeId).isAllowEdit());
+        Initiative initiative = initiativeDao.get(initiativeId);
+
+        assertAllowance("Edit initiative", ManagementSettings.of(initiative).isAllowEdit());
         initiativeDao.editInitiativeDraft(initiativeId, editDto);
-        authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId(), editDto.getContactInfo());
+        if (initiative.getType().isNotVerifiable()) {
+            authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId(), editDto.getContactInfo());
+        }
+        else {
+            // TODO: userDao.updateContactInfo
+        }
     }
 
     @Transactional(readOnly = true)
@@ -82,10 +104,19 @@ public class InitiativeManagementService {
     // TODO: Tests?
     public Author getAuthorInformation(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        for (Author author : authorDao.findAuthors(initiativeId)) {
-            if (author.getId().equals(loginUserHolder.getNormalLoginUser().getAuthorId())) {
-                return author;
+        Initiative initiative = initiativeDao.get(initiativeId);
+        if (initiative.getType().isNotVerifiable()) {
+            for (Author author : authorDao.findAuthors(initiativeId)) {
+                if (author.getId().equals(loginUserHolder.getNormalLoginUser().getAuthorId())) {
+                    return author;
+                }
             }
+        }
+        else {
+            Author author = new Author();
+            author.setContactInfo(userDao.getVerifiedUser(loginUserHolder.getVerifiedUser().getHash()).get().getContactInfo());
+            author.setMunicipality(new Municipality(-1L, "Kunta", "Municipality", false));
+            return author;
         }
         throw new NotFoundException("Author", initiativeId);
     }

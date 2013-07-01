@@ -102,7 +102,6 @@ public class InitiativeManagementController extends BaseController {
         }
     }
 
-    // TODO: Combine update and edit views?
     @RequestMapping(value={ EDIT_FI, EDIT_SV }, method=GET)
     public String editView(@PathVariable("id") Long initiativeId,
                            Model model, Locale locale, HttpServletRequest request) {

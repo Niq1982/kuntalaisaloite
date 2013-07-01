@@ -1,6 +1,9 @@
 package fi.om.municipalityinitiative.dto.ui;
 
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
+import fi.om.municipalityinitiative.util.InitiativeType;
+import fi.om.municipalityinitiative.validation.NormalInitiative;
+import fi.om.municipalityinitiative.validation.VerifiedInitiative;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Pattern;
@@ -17,7 +20,7 @@ public class ContactInfo {
      */
     public static final String EMAIL_PATTERN = "^([_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-\\+]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})|)$";
 
-    @NotEmpty
+    @NotEmpty(groups = NormalInitiative.class)
     @Size(max = InitiativeConstants.CONTACT_NAME_MAX)
     private String name;
 

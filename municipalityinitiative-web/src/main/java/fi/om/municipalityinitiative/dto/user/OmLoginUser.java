@@ -14,6 +14,11 @@ public class OmLoginUser extends User {
     }
 
     @Override
+    public boolean isVerifiedUser() {
+        return false;
+    }
+
+    @Override
     public boolean hasRightToInitiative(Long initiativeId) {
         return false;
     }
