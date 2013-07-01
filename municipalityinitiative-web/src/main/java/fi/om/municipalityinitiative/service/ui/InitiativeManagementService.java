@@ -78,7 +78,7 @@ public class InitiativeManagementService {
             authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId(), editDto.getContactInfo());
         }
         else {
-            // TODO: userDao.updateContactInfo
+            userDao.updateUserInformation(loginUserHolder.getVerifiedUser().getHash(), editDto.getContactInfo());
         }
     }
 

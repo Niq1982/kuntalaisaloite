@@ -15,4 +15,6 @@ public interface UserDao {
     VerifiedUserId addVerifiedUser(String hash, ContactInfo contactInfo);
 
     Maybe<VerifiedUserId> getVerifiedUserId(String hash);
+
+    void updateUserInformation(String hash, ContactInfo contactInfo);
 }

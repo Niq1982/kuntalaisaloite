@@ -20,6 +20,7 @@ import javax.annotation.Resource;
 import java.util.HashSet;
 import java.util.List;
 
+import static fi.om.municipalityinitiative.dao.JdbcInitiativeDao.assertSingleAffection;
 import static fi.om.municipalityinitiative.sql.QVerifiedUser.verifiedUser;
 
 @SQLExceptionTranslated
@@ -84,6 +85,15 @@ public class JdbcUserDao implements UserDao {
         }
         return Maybe.of(new VerifiedUserId(maybeVerifiedUserId));
 
+    }
+
+    @Override
+    public void updateUserInformation(String hash, ContactInfo contactInfo) {
+        assertSingleAffection(queryFactory.update(verifiedUser)
+                .set(verifiedUser.address, contactInfo.getAddress())
+                .set(verifiedUser.email, contactInfo.getEmail())
+                .set(verifiedUser.phone, contactInfo.getPhone())
+                .execute());
     }
 
     private static Expression<User> omUserMapper = new MappingProjection<User>(User.class,

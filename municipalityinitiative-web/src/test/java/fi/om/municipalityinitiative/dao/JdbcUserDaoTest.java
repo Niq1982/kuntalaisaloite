@@ -51,6 +51,19 @@ public class JdbcUserDaoTest {
     }
 
     @Test
+    public void update_user_information() {
+        userDao.addVerifiedUser(HASH, contactInfo());
+
+        ContactInfo updatedContactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
+        userDao.updateUserInformation(HASH, updatedContactInfo);
+
+        ContactInfo result = userDao.getVerifiedUser(HASH).get().getContactInfo();
+        assertThat(result.getPhone(), is(updatedContactInfo.getPhone()));
+        assertThat(result.getAddress(), is(updatedContactInfo.getAddress()));
+        assertThat(result.getEmail(), is(updatedContactInfo.getEmail()));
+    }
+
+    @Test
     public void get_returns_absent_if_not_found() {
         assertThat(userDao.getVerifiedUser("unknown-user-hash").isPresent(), is(false));
     }
