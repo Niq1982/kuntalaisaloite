@@ -128,12 +128,8 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         thrown.expect(AccessDeniedException.class);
         thrown.expectMessage(containsString("Municipality is not active"));
 
-        LoginUserHolder<VerifiedUser> verifiedLoginUserHolder = verifiedUserHolderWithMunicipalityId(unactiveMunicipality);
+        LoginUserHolder<VerifiedUser> verifiedLoginUserHolder = verifiedUserHolderWithMunicipalityId(Maybe.of(unactiveMunicipality));
         service.prepareSafeInitiative(verifiedLoginUserHolder, createDto);
-    }
-
-    private static LoginUserHolder<VerifiedUser> verifiedUserHolderWithMunicipalityId(Long unactiveMunicipality) {
-        return new LoginUserHolder<>(User.verifiedUser(HASH, new ContactInfo(), Collections.<Long>emptySet(), Maybe.of(new Municipality(unactiveMunicipality, "", "", false))));
     }
 
     @Test
@@ -148,7 +144,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
     }
 
     @Test
-    public void preparing_save_initiative_throws_exception_if_wrong_municipality_from_vetuma() {
+    public void preparing_safe_initiative_throws_exception_if_wrong_municipality_from_vetuma() {
         PrepareSafeInitiativeUICreateDto createDto = prepareUICreateDto();
 
         createDto.setMunicipality(testHelper.createTestMunicipality("Other municipality"));
@@ -157,6 +153,19 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         thrown.expectMessage(containsString("Invalid home municipality"));
 
         service.prepareSafeInitiative(verifiedLoginUserHolder, createDto);
+    }
+
+    @Test
+    public void preparing_safe_initiative_throws_exception_if_wrong_homeMunicipality_given_by_user_when_vetuma_gives_null_municipality() {
+        PrepareSafeInitiativeUICreateDto createDto = prepareUICreateDto();
+
+        createDto.setMunicipality(testHelper.createTestMunicipality("Other municipality"));
+        createDto.setUserGivenHomeMunicipality(testMunicipality.getId());
+
+        thrown.expect(OperationNotAllowedException.class);
+        thrown.expectMessage(containsString("Invalid home municipality"));
+
+        service.prepareSafeInitiative(verifiedUserHolderWithMunicipalityId(Maybe.<Long>absent()), createDto);
 
     }
 
@@ -170,6 +179,17 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
     @Ignore
     public void preparing_safe_initiative_saved_email_and_municipality_and_membership() {
         // TODO: Implement
+    }
+
+    private static LoginUserHolder<VerifiedUser> verifiedUserHolderWithMunicipalityId(Maybe<Long> maybeMunicipality) {
+        Maybe<Municipality> municipality;
+        if (maybeMunicipality.isPresent()) {
+            municipality = Maybe.of(new Municipality(maybeMunicipality.get(), "", "", false));
+        }
+        else {
+            municipality = Maybe.absent();
+        }
+        return new LoginUserHolder<>(User.verifiedUser(HASH, new ContactInfo(), Collections.<Long>emptySet(), municipality));
     }
 
     private PrepareSafeInitiativeUICreateDto prepareUICreateDto() {

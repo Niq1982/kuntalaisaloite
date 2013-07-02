@@ -19,12 +19,11 @@ public class VerifiedInitiativeService {
 
         VerifiedUser verifiedUser = loginUserHolder.getVerifiedUser();
 
-        if (verifiedUser.getHomeMunicipality().isPresent()
-                && !verifiedUser.getHomeMunicipality().get().getId().equals(uiCreateDto.getMunicipality())) {
+        if (municipalityMismatch(uiCreateDto, verifiedUser)) {
             throw new OperationNotAllowedException("Invalid home municipality");
         }
 
-        // TODO: Check municipality and age.
+        // TODO: Check user age.
 
         PrepareSafeInitiativeCreateDto createDto = new PrepareSafeInitiativeCreateDto();
         createDto.setMunicipality(uiCreateDto.getMunicipality());
@@ -38,6 +37,21 @@ public class VerifiedInitiativeService {
 
         return initiativeId;
 
+    }
+
+    private static boolean municipalityMismatch(PrepareSafeInitiativeUICreateDto uiCreateDto, VerifiedUser verifiedUser) {
+        return vetumaMunicipalityReceivedAndMismatches(uiCreateDto, verifiedUser)
+                || vetumaMunicipalityNotReceivedAndUserGivenMismatches(uiCreateDto, verifiedUser);
+    }
+
+    private static boolean vetumaMunicipalityNotReceivedAndUserGivenMismatches(PrepareSafeInitiativeUICreateDto uiCreateDto, VerifiedUser verifiedUser) {
+        return verifiedUser.getHomeMunicipality().isNotPresent()
+        && !uiCreateDto.getMunicipality().equals(uiCreateDto.getUserGivenHomeMunicipality());
+    }
+
+    private static boolean vetumaMunicipalityReceivedAndMismatches(PrepareSafeInitiativeUICreateDto uiCreateDto, VerifiedUser verifiedUser) {
+        return verifiedUser.getHomeMunicipality().isPresent()
+                && !verifiedUser.getHomeMunicipality().get().getId().equals(uiCreateDto.getMunicipality());
     }
 
 }
