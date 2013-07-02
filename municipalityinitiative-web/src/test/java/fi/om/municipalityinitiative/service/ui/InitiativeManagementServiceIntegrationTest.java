@@ -128,9 +128,42 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         InitiativeDraftUIEditDto updated = service.getInitiativeDraftForEdit(initiativeId, TestHelper.authorLoginUserHolder);
 
         ReflectionTestUtils.assertReflectionEquals(updated.getContactInfo(), randomlyFilledContactInfo);
+
         assertThat(updated.getName(), is(editDto.getName()));
         assertThat(updated.getProposal(), is(editDto.getProposal()));
-        assertThat(updated.getContactInfo().isShowName(), is(editDto.getContactInfo().isShowName()));
+        assertThat(updated.getExtraInfo(), is(editDto.getExtraInfo()));
+        assertThat(updated.getExternalParticipantCount(), is(editDto.getExternalParticipantCount()));
+
+        ReflectionTestUtils.assertNoNullFields(updated);
+
+    }
+
+    @Test
+    public void editing_verified_initiative_updates_all_required_fields() {
+
+        Long initiativeId = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withState(InitiativeState.DRAFT)
+                .withType(InitiativeType.COLLABORATIVE_COUNCIL)
+                .applyAuthor()
+                .toInitiativeDraft(),
+                true);
+
+        String originalName = TestHelper.DEFAULT_PARTICIPANT_NAME;
+
+        Initiative randomlyFilledInitiative = ReflectionTestUtils.modifyAllFields(new Initiative());
+        ContactInfo randomlyFilledContactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
+        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(randomlyFilledInitiative, randomlyFilledContactInfo);
+
+        service.editInitiativeDraft(initiativeId, TestHelper.authorLoginUserHolder, editDto);
+
+        InitiativeDraftUIEditDto updated = service.getInitiativeDraftForEdit(initiativeId, TestHelper.authorLoginUserHolder);
+
+        assertThat(updated.getContactInfo().getName(), is(originalName)); // Name is not updated, it's always updated from vetuma when logging in
+        assertThat(updated.getContactInfo().getAddress(), is(updated.getContactInfo().getAddress()));
+        assertThat(updated.getContactInfo().getPhone(), is(updated.getContactInfo().getPhone()));
+        assertThat(updated.getContactInfo().getEmail(), is(updated.getContactInfo().getEmail()));
+        assertThat(updated.getContactInfo().isShowName(), is(updated.getContactInfo().isShowName()));
+
         assertThat(updated.getExtraInfo(), is(editDto.getExtraInfo()));
         assertThat(updated.getExternalParticipantCount(), is(editDto.getExternalParticipantCount()));
 
@@ -395,6 +428,8 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
         Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality.getId());
 
+        // XXX         Messy
+        // TODO: Clean
         InitiativeUIUpdateDto updateDto = new InitiativeUIUpdateDto();
         ContactInfo contactInfo = new ContactInfo();
         updateDto.setContactInfo(contactInfo);
