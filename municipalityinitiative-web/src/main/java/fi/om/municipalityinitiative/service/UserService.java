@@ -163,16 +163,17 @@ public class UserService {
         request.getSession(true);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = false)
     public void login(String hash, String fullName, String address, Maybe<Municipality> vetumaMunicipality, HttpServletRequest request, HttpServletResponse response) {
 
         ContactInfo contactInfo;
         Set<Long> initiatives;
         Maybe<VerifiedUser> verifiedUser = userDao.getVerifiedUser(hash);
         if (verifiedUser.isPresent()) {
+            userDao.updateUserInformation(hash, fullName, vetumaMunicipality);
+            verifiedUser = userDao.getVerifiedUser(hash);
             contactInfo = verifiedUser.get().getContactInfo();
             initiatives = verifiedUser.get().getInitiatives();
-            userDao.updateUserInformation(hash, fullName, vetumaMunicipality);
         }
         else {
             contactInfo = new ContactInfo(); // User logged in but never registered to database (has not participated or created any initiatives)

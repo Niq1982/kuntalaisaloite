@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import static org.hamcrest.CoreMatchers.everyItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -156,6 +157,29 @@ public class UserServiceIntegrationTest extends ServiceIntegrationTestBase{
         VerifiedUser verifiedUser = userDao.getVerifiedUser(userSsnHash).get();
         assertThat(verifiedUser.getContactInfo().getName(), is(newName));
         assertThat(verifiedUser.getContactInfo().getAddress(), is(oldAddress));
+        assertThat(verifiedUser.getHomeMunicipality().isPresent(), is(false));
+    }
+
+    @Test
+    public void login_gets_and_saves_old_user_information_to_session_if_user_already_exists() {
+
+        Long originalMunicipalityId = testHelper.createTestMunicipality("Some municipality");
+
+        testHelper.createInitiative(new TestHelper.InitiativeDraft(originalMunicipalityId).applyAuthor().toInitiativeDraft(), true);
+        String oldAddress = TestHelper.DEFAULT_AUTHOR_ADDRESS;
+        String oldEmail = TestHelper.DEFAULT_PARTICIPANT_EMAIL;
+        String oldPhone = TestHelper.DEFAULT_AUTHOR_PHONE;
+
+        String userSsnHash = testHelper.getPreviousUserSsnHash();
+
+        String newName = "New Users Name";
+        userService.login(userSsnHash, newName, "New address which will not be saved", Maybe.<Municipality>absent(), requestMock, mock(HttpServletResponse.class));
+
+        VerifiedUser verifiedUser = (VerifiedUser) userService.getUser(requestMock);
+        assertThat(verifiedUser.getContactInfo().getName(), is(newName));
+        assertThat(verifiedUser.getContactInfo().getAddress(), is(oldAddress));
+        assertThat(verifiedUser.getContactInfo().getPhone(), is(oldPhone));
+        assertThat(verifiedUser.getContactInfo().getEmail(), is(oldEmail));
         assertThat(verifiedUser.getHomeMunicipality().isPresent(), is(false));
     }
 
