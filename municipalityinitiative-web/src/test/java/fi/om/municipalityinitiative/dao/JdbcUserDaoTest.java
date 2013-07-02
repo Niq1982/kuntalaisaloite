@@ -49,6 +49,7 @@ public class JdbcUserDaoTest {
         assertThat(verifiedUser.isPresent(), is(true));
         assertThat(verifiedUserId, is(notNullValue()));
         ReflectionTestUtils.assertReflectionEquals(verifiedUser.get().getContactInfo(), contactInfo);
+        // TODO: assertThat(verifiedUser.get().getHomeMunicipality());
     }
 
     @Test

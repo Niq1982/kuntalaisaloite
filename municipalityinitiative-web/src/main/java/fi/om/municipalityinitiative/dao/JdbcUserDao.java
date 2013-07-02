@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.dao;
 
 import com.mysema.query.Tuple;
+import com.mysema.query.sql.dml.SQLUpdateClause;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
@@ -10,12 +11,10 @@ import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
-import fi.om.municipalityinitiative.sql.QAdminUser;
-import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
-import fi.om.municipalityinitiative.sql.QVerifiedAuthor;
-import fi.om.municipalityinitiative.sql.QVerifiedUser;
+import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.Maybe;
 
+import javax.annotation.Nullable;
 import javax.annotation.Resource;
 
 import java.util.HashSet;
@@ -44,6 +43,7 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
+    // TODO: Argh. Improve usage of QueryDSL
     public Maybe<VerifiedUser> getVerifiedUser(String hash) {
         Maybe<ContactInfo> contactInfoMaybe = Maybe.fromNullable(queryFactory.from(verifiedUser)
                 .where(verifiedUser.hash.eq(hash))
@@ -53,6 +53,29 @@ public class JdbcUserDao implements UserDao {
             return Maybe.absent();
         }
 
+        // Get municipality
+        @Nullable Municipality maybeMunicipality = queryFactory.from(QVerifiedUser.verifiedUser)
+                .where(QVerifiedUser.verifiedUser.hash.eq(hash))
+                .leftJoin(QVerifiedUser.verifiedUser.verifiedUserMunicipalityFk, QMunicipality.municipality)
+                .uniqueResult(new MappingProjection<Municipality>(Municipality.class,
+                        QMunicipality.municipality.all()) {
+
+                    @Override
+                    protected Municipality map(Tuple row) {
+                        if (row.get(QMunicipality.municipality.id) == null) {
+                            return null;
+                        }
+
+                        return new Municipality(
+                                row.get(QMunicipality.municipality.id),
+                                row.get(QMunicipality.municipality.name),
+                                row.get(QMunicipality.municipality.nameSv),
+                                row.get(QMunicipality.municipality.active)
+                        );
+
+                    }
+                });
+
         // Get users initiatives
         List<Long> initiatives = queryFactory.from(QMunicipalityInitiative.municipalityInitiative)
                 .innerJoin(QMunicipalityInitiative.municipalityInitiative._verifiedAuthorInitiativeFk, QVerifiedAuthor.verifiedAuthor)
@@ -60,7 +83,7 @@ public class JdbcUserDao implements UserDao {
                 .where(QVerifiedUser.verifiedUser.hash.eq(hash))
                 .list(QMunicipalityInitiative.municipalityInitiative.id);
 
-        return Maybe.of(User.verifiedUser(hash, contactInfoMaybe.get(), new HashSet<>(initiatives), Maybe.<Municipality>absent())); // TODO: Municipality
+        return Maybe.of(User.verifiedUser(hash, contactInfoMaybe.get(), new HashSet<>(initiatives), Maybe.<Municipality>fromNullable(maybeMunicipality)));
     }
 
     @Override
@@ -96,6 +119,22 @@ public class JdbcUserDao implements UserDao {
                 .set(verifiedUser.phone, contactInfo.getPhone())
                 .where(verifiedUser.hash.eq(hash))
                 .execute());
+    }
+
+    @Override
+    public void updateUserInformation(String hash, String fullName, Maybe<Municipality> vetumaMunicipality) {
+        SQLUpdateClause updateClause = queryFactory.update(verifiedUser)
+                .set(verifiedUser.name, fullName)
+                .where(verifiedUser.hash.eq(hash));
+
+        if (vetumaMunicipality.isPresent()) {
+            updateClause.set(verifiedUser.municipalityId, vetumaMunicipality.get().getId()); // XXX: What if is not found? Should be checked at service-layer?
+        }
+        else {
+            updateClause.setNull(verifiedUser.municipalityId);
+        }
+
+        assertSingleAffection(updateClause.execute());
     }
 
     private static Expression<User> omUserMapper = new MappingProjection<User>(User.class,

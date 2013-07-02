@@ -1,8 +1,10 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.dao.UserDao;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.user.User;
+import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.util.FakeSession;
@@ -11,6 +13,7 @@ import org.apache.http.HttpResponse;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +34,9 @@ public class UserServiceIntegrationTest extends ServiceIntegrationTestBase{
     private UserService userService;
 
     private HttpServletRequest requestMock;
+
+    @Resource
+    private UserDao userDao; // Hmm... Ugly to depend on this, but is used on assertions
 
     @Override
     public void childSetup() {
@@ -90,7 +96,7 @@ public class UserServiceIntegrationTest extends ServiceIntegrationTestBase{
 
         String name = "Full Name";
         String address = "Address";
-        userService.login("112233-112233", name, address, Maybe.of(municipality), requestMock, mock(HttpServletResponse.class));
+        userService.login("anyHash", name, address, Maybe.of(municipality), requestMock, mock(HttpServletResponse.class));
 
         LoginUserHolder<User> loginUserHolder = userService.getLoginUserHolder(requestMock);
 
@@ -106,20 +112,51 @@ public class UserServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     @Test
     public void vetuma_login_sets_municipality_absent_if_not_found() {
-        userService.login("112233-112233", "Full Name", "Address", Maybe.<Municipality>absent(), requestMock, mock(HttpServletResponse.class));
+        userService.login("anyHash", "Full Name", "Address", Maybe.<Municipality>absent(), requestMock, mock(HttpServletResponse.class));
         LoginUserHolder<User> loginUserHolder = userService.getLoginUserHolder(requestMock);
         assertThat(loginUserHolder.getVerifiedUser().getHomeMunicipality().isPresent(), is(false));
 
     }
 
     @Test
-    public void login_updates_saved_users_municipality_if_changed() {
+    @Transactional // Uses userDao for asserting saved data
+    public void login_updates_saved_users_municipality_and_name_if_changed() {
+        Long originalMunicipalityId = testHelper.createTestMunicipality("Some municipality");
+
+        testHelper.createInitiative(new TestHelper.InitiativeDraft(originalMunicipalityId).applyAuthor().toInitiativeDraft(), true);
+        String oldAddress = TestHelper.DEFAULT_AUTHOR_ADDRESS;
+        String userSsnHash = testHelper.getPreviousUserSsnHash();
+
+        String newMunicipalityName = "New Municipality";
+        Long newMunicipalityId = testHelper.createTestMunicipality(newMunicipalityName);
+        Municipality newMunicipality = new Municipality(newMunicipalityId, "anyNameFromVetuma", "anyNameFromVetuma", true);
+
+        String newName = "New Users Name";
+        userService.login(userSsnHash, newName, "New address which will not be saved", Maybe.of(newMunicipality), requestMock, mock(HttpServletResponse.class));
+
+        VerifiedUser verifiedUser = userDao.getVerifiedUser(userSsnHash).get();
+        assertThat(verifiedUser.getContactInfo().getName(), is(newName));
+        assertThat(verifiedUser.getContactInfo().getAddress(), is(oldAddress));
+        assertThat(verifiedUser.getHomeMunicipality().get().getNameFi(), is(newMunicipalityName));
 
     }
 
     @Test
+    @Transactional
     public void login_updates_municipality_to_null_if_changed_to_null() {
+        Long originalMunicipalityId = testHelper.createTestMunicipality("Some municipality");
 
+        testHelper.createInitiative(new TestHelper.InitiativeDraft(originalMunicipalityId).applyAuthor().toInitiativeDraft(), true);
+        String oldAddress = TestHelper.DEFAULT_AUTHOR_ADDRESS;
+        String userSsnHash = testHelper.getPreviousUserSsnHash();
+
+        String newName = "New Users Name";
+        userService.login(userSsnHash, newName, "New address which will not be saved", Maybe.<Municipality>absent(), requestMock, mock(HttpServletResponse.class));
+
+        VerifiedUser verifiedUser = userDao.getVerifiedUser(userSsnHash).get();
+        assertThat(verifiedUser.getContactInfo().getName(), is(newName));
+        assertThat(verifiedUser.getContactInfo().getAddress(), is(oldAddress));
+        assertThat(verifiedUser.getHomeMunicipality().isPresent(), is(false));
     }
 
 

@@ -164,9 +164,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public void login(String ssn, String fullName, String address, Maybe<Municipality> vetumaMunicipality, HttpServletRequest request, HttpServletResponse response) {
-        // TODO: Get contactInfo and initiatives from database if user exists
-        String hash = encryptionService.registeredUserHash(ssn);
+    public void login(String hash, String fullName, String address, Maybe<Municipality> vetumaMunicipality, HttpServletRequest request, HttpServletResponse response) {
 
         ContactInfo contactInfo;
         Set<Long> initiatives;
@@ -174,6 +172,7 @@ public class UserService {
         if (verifiedUser.isPresent()) {
             contactInfo = verifiedUser.get().getContactInfo();
             initiatives = verifiedUser.get().getInitiatives();
+            userDao.updateUserInformation(hash, fullName, vetumaMunicipality);
         }
         else {
             contactInfo = new ContactInfo(); // User logged in but never registered to database (has not participated or created any initiatives)

@@ -129,7 +129,7 @@ public class VetumaLoginController extends DefaultLoginController {
 
             String ssn = vetumaResponse.getSsn();
 
-            userService.login(ssn,
+            userService.login(encryptionService.registeredUserHash(ssn),
                     vtjData.getFullName(),
                     vtjData.getAddress(),
                     vtjData.getMunicipality(),
