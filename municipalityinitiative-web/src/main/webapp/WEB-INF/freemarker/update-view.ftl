@@ -60,7 +60,12 @@
 
         <div class="form-block-container">
             <@edit.blockHeader key="initiative.updateCurrentAuthor.title" step=2 />
-            <@edit.currentAuthorBlock "updateData" />
+            <#--<@edit.currentAuthorBlock "updateData" />-->
+            <#if initiative.isVerifiable()>
+                <@edit.currentVerifiedAuthorBlock "updateData" />
+            <#else>
+                <@edit.currentAuthorBlock "updateData" />
+            </#if>
         </div>
         
         <div class="" id="form-action-panel">

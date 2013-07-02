@@ -119,28 +119,15 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
         Long initiativeId = testHelper.createDraft(testMunicipality.getId());
 
-        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(
-                ReflectionTestUtils.modifyAllFields(new Initiative()),
-                ReflectionTestUtils.modifyAllFields(new ContactInfo())
-        );
-
-        ContactInfo contactInfo = new ContactInfo();
-        contactInfo.setEmail("updated email");
-        contactInfo.setAddress("updated address");
-        contactInfo.setPhone("updated phone");
-        contactInfo.setName("updated author name");
-        contactInfo.setShowName(!contactInfo.isShowName()); // As far as default is true ...
-        editDto.setContactInfo(contactInfo);
-        editDto.setName("updated initiative name");
-        editDto.setProposal("updated proposal");
-        editDto.setExtraInfo("updated extrainfo");
-        editDto.setExternalParticipantCount(3);
+        Initiative randomlyFilledInitiative = ReflectionTestUtils.modifyAllFields(new Initiative());
+        ContactInfo randomlyFilledContactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
+        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(randomlyFilledInitiative,randomlyFilledContactInfo);
 
         service.editInitiativeDraft(initiativeId, TestHelper.authorLoginUserHolder, editDto);
 
         InitiativeDraftUIEditDto updated = service.getInitiativeDraftForEdit(initiativeId, TestHelper.authorLoginUserHolder);
 
-        ReflectionTestUtils.assertReflectionEquals(updated.getContactInfo(), contactInfo);
+        ReflectionTestUtils.assertReflectionEquals(updated.getContactInfo(), randomlyFilledContactInfo);
         assertThat(updated.getName(), is(editDto.getName()));
         assertThat(updated.getProposal(), is(editDto.getProposal()));
         assertThat(updated.getContactInfo().isShowName(), is(editDto.getContactInfo().isShowName()));

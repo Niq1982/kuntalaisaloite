@@ -47,7 +47,6 @@ public class InitiativeManagementService {
     ParticipantDao participantDao;
 
     @Transactional(readOnly = true)
-    // TODO: Tests for safe initiatives?
     public InitiativeDraftUIEditDto getInitiativeDraftForEdit(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         Initiative initiative = initiativeDao.get(initiativeId);
@@ -68,6 +67,7 @@ public class InitiativeManagementService {
     }
 
     @Transactional(readOnly = false)
+    // TODO Tests for safe initiatives
     public void editInitiativeDraft(Long initiativeId, LoginUserHolder loginUserHolder, InitiativeDraftUIEditDto editDto) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
