@@ -1,10 +1,12 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.util.FakeSession;
+import fi.om.municipalityinitiative.util.Maybe;
 import org.apache.http.HttpResponse;
 import org.hamcrest.Matcher;
 import org.junit.Before;
@@ -84,9 +86,11 @@ public class UserServiceIntegrationTest extends ServiceIntegrationTestBase{
 
         String municipalityName = "Some municipality";
         Long municipalityId = testHelper.createTestMunicipality(municipalityName);
+        Municipality municipality = new Municipality(municipalityId, municipalityName, "", false);
+
         String name = "Full Name";
         String address = "Address";
-        userService.login("112233-112233", name, address, municipalityId.toString(), requestMock, mock(HttpServletResponse.class));
+        userService.login("112233-112233", name, address, Maybe.of(municipality), requestMock, mock(HttpServletResponse.class));
 
         LoginUserHolder<User> loginUserHolder = userService.getLoginUserHolder(requestMock);
 
@@ -102,11 +106,8 @@ public class UserServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     @Test
     public void vetuma_login_sets_municipality_absent_if_not_found() {
-
-        Long municipalityId = testHelper.createTestMunicipality("Some municipality");
-        userService.login("112233-112233", "Full Name", "Address", Long.valueOf(municipalityId+1).toString(), requestMock, mock(HttpServletResponse.class));
+        userService.login("112233-112233", "Full Name", "Address", Maybe.<Municipality>absent(), requestMock, mock(HttpServletResponse.class));
         LoginUserHolder<User> loginUserHolder = userService.getLoginUserHolder(requestMock);
-
         assertThat(loginUserHolder.getVerifiedUser().getHomeMunicipality().isPresent(), is(false));
 
     }

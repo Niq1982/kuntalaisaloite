@@ -132,7 +132,7 @@ public class VetumaLoginController extends DefaultLoginController {
             userService.login(ssn,
                     vtjData.getFullName(),
                     vtjData.getAddress(),
-                    vtjData.getMunicipalityCode(),
+                    vtjData.getMunicipality(),
                     request, response);
 
 

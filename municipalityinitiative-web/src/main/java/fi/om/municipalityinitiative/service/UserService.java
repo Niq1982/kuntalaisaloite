@@ -164,7 +164,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public void login(String ssn, String fullName, String address, String municipalityCode, HttpServletRequest request, HttpServletResponse response) {
+    public void login(String ssn, String fullName, String address, Maybe<Municipality> vetumaMunicipality, HttpServletRequest request, HttpServletResponse response) {
         // TODO: Get contactInfo and initiatives from database if user exists
         String hash = encryptionService.registeredUserHash(ssn);
 
@@ -183,7 +183,13 @@ public class UserService {
             initiatives = Sets.newHashSet();
         }
 
-        Maybe<Municipality> municipality = Maybe.fromNullable(municipalityDao.getMunicipality(Long.valueOf(municipalityCode)));
+        Maybe<Municipality> municipality;
+        if (vetumaMunicipality.isPresent()) { // If got municipality from vetuma, replace with municipalitydata stored in our own database
+            municipality = Maybe.fromNullable(municipalityDao.getMunicipality(vetumaMunicipality.get().getId()));
+        }
+        else {
+            municipality = Maybe.absent();
+        }
 
         storeLoggedInUser(request, User.verifiedUser(hash, contactInfo, initiatives, municipality));
     }

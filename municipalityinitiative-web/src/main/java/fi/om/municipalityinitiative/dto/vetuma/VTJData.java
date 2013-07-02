@@ -1,6 +1,8 @@
 package fi.om.municipalityinitiative.dto.vetuma;
 
 import com.google.common.base.Strings;
+import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.util.Maybe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,17 +80,8 @@ public class VTJData {
                 }
             }
 
-            if (Strings.isNullOrEmpty(vtjData.getMunicipalityCode())
-                    || Strings.isNullOrEmpty(vtjData.getMunicipalityNameFi())
-                    || Strings.isNullOrEmpty(vtjData.getMunicipalityNameSv())) {
-                log.warn("Missing municipality code: " + vtjData.getMunicipalityCode() + ", " + vtjData.getMunicipalityNameFi() + ", " + vtjData.getMunicipalityNameSv() + ", " + vtjData.isFinnishCitizen() + ", " + vtjData.getReturnCodeDescription());
-            }
-
-            if (Strings.isNullOrEmpty(vtjData.getMunicipalityNameFi())) {
-                vtjData.setMunicipalityNameFi(MISSING_MUNICIPALITY_FI);
-            }
-            if (Strings.isNullOrEmpty(vtjData.getMunicipalityNameSv())) {
-                vtjData.setMunicipalityNameSv(MISSING_MUNICIPALITY_SV);
+            if (vtjData.getMunicipality().isNotPresent()) {
+                log.warn("Missing municipality code" + vtjData.isFinnishCitizen() + ", " + vtjData.getReturnCodeDescription());
             }
 
             parser.close();
@@ -159,24 +152,19 @@ public class VTJData {
         this.lastName = lastName;
     }
 
-    public String getMunicipalityCode() {
-        return municipalityCode;
+    public Maybe<Municipality> getMunicipality() {
+        if (Strings.isNullOrEmpty(municipalityCode)) {
+            return Maybe.absent();
+        }
+        return Maybe.of(new Municipality(Long.valueOf(municipalityCode), municipalityNameFi, municipalityNameSv, Boolean.FALSE));
     }
 
     public void setMunicipalityCode(String municipalityCode) {
         this.municipalityCode = municipalityCode;
     }
 
-    public String getMunicipalityNameFi() {
-        return municipalityNameFi;
-    }
-
     public void setMunicipalityNameFi(String municipalityNameFi) {
         this.municipalityNameFi = municipalityNameFi;
-    }
-
-    public String getMunicipalityNameSv() {
-        return municipalityNameSv;
     }
 
     public void setMunicipalityNameSv(String municipalityNameSv) {
