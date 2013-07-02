@@ -6,12 +6,9 @@ import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Path;
 import com.mysema.query.types.Predicate;
 import fi.om.municipalityinitiative.conf.PropertyNames;
-import fi.om.municipalityinitiative.dto.service.AuthorMessage;
-import fi.om.municipalityinitiative.dto.service.Initiative;
-import fi.om.municipalityinitiative.dto.service.Participant;
+import fi.om.municipalityinitiative.dto.service.*;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.user.*;
-import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.service.EncryptionService;
 import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.*;
@@ -251,7 +248,7 @@ public class TestHelper {
         contactInfo.setName(authorDraft.participantName);
         contactInfo.setShowName(true);
 
-        authorLoginUserHolder = new LoginUserHolder(User.verifiedUser(previousUserSsnHash, contactInfo, Collections.singleton(lastInitiativeId)));;
+        authorLoginUserHolder = new LoginUserHolder(User.verifiedUser(previousUserSsnHash, contactInfo, Collections.singleton(lastInitiativeId), Maybe.of(new Municipality(authorDraft.initiativeDraftMaybe.get().municipalityId, "name_fi", "name_sv", true))));
     }
 
     private String createUserSsnHash() {

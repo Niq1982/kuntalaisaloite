@@ -14,6 +14,7 @@ import fi.om.municipalityinitiative.sql.QVerifiedAuthor;
 import fi.om.municipalityinitiative.sql.QVerifiedParticipant;
 import fi.om.municipalityinitiative.sql.QVerifiedUser;
 import fi.om.municipalityinitiative.util.InitiativeType;
+import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -50,7 +51,11 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
     public static final String HASH = "hash";
 
-    static {
+    @Override
+    protected void childSetup() {
+        String municipalityName = "Test municipality";
+        testMunicipality = new Municipality(testHelper.createTestMunicipality(municipalityName), municipalityName, municipalityName, false);
+
         ContactInfo contactInfo = new ContactInfo();
         contactInfo.setEmail(EMAIL);
         contactInfo.setAddress(ADDRESS);
@@ -58,15 +63,9 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         contactInfo.setName(VERIFIED_AUTHOR_NAME);
 
         verifiedLoginUserHolder = new LoginUserHolder<>(
-                User.verifiedUser(HASH, contactInfo, Collections.<Long>emptySet())
+                User.verifiedUser(HASH, contactInfo, Collections.<Long>emptySet(), Maybe.<Municipality>of(testMunicipality))
         );
 
-    }
-
-    @Override
-    protected void childSetup() {
-        String municipalityName = "Test municipality";
-        testMunicipality = new Municipality(testHelper.createTestMunicipality(municipalityName), municipalityName, municipalityName, false);
     }
 
     @Test

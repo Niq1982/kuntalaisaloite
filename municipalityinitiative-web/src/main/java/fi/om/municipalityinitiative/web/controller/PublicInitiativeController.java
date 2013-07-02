@@ -10,7 +10,6 @@ import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
 import fi.om.municipalityinitiative.service.ui.VerifiedInitiativeService;
-import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.web.RequestMessage;
@@ -125,7 +124,7 @@ public class PublicInitiativeController extends BaseController {
                 return contextRelativeRedirect(urls.management(initiativeId));
             }
             else {
-                userService.savePrepareDataForVetuma(initiative, request);
+                userService.putPrepareDataForVetuma(initiative, request);
                 return contextRelativeRedirect(urls.login());
             }
         }

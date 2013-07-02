@@ -1,7 +1,9 @@
 package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Sets;
+import fi.om.municipalityinitiative.dao.MunicipalityDao;
 import fi.om.municipalityinitiative.dao.UserDao;
+import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.PrepareInitiativeUICreateDto;
 import fi.om.municipalityinitiative.dto.user.*;
@@ -12,6 +14,7 @@ import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nullable;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,6 +35,9 @@ public class UserService {
 
     @Resource
     EncryptionService encryptionService;
+
+    @Resource
+    MunicipalityDao municipalityDao;
 
     String omUserSalt;
 
@@ -176,20 +182,33 @@ public class UserService {
             // TODO: Municipality
             initiatives = Sets.newHashSet();
         }
-        storeLoggedInUser(request, User.verifiedUser(hash, contactInfo, initiatives));
+
+        Maybe<Municipality> municipality = Maybe.fromNullable(municipalityDao.getMunicipality(Long.valueOf(municipalityCode)));
+
+        storeLoggedInUser(request, User.verifiedUser(hash, contactInfo, initiatives, municipality));
     }
 
-    public void savePrepareDataForVetuma(PrepareInitiativeUICreateDto initiative, HttpServletRequest request) {
+    public void putPrepareDataForVetuma(PrepareInitiativeUICreateDto initiative, HttpServletRequest request) {
         request.getSession().setAttribute(VETUMA_PREPARED_INITIATIVE, initiative);
     }
 
-    public PrepareInitiativeUICreateDto getPrepareDataForVetuma(HttpServletRequest request) {
+    public Maybe<PrepareInitiativeUICreateDto> popPrepareDataForVetuma(HttpServletRequest request) {
         HttpSession session = request.getSession();
         PrepareInitiativeUICreateDto preparedInitiative = (PrepareInitiativeUICreateDto) session.getAttribute(VETUMA_PREPARED_INITIATIVE);
+        if (preparedInitiative == null) {
+            return Maybe.absent();
+        }
         session.removeAttribute(VETUMA_PREPARED_INITIATIVE);
-        return preparedInitiative;
+        return Maybe.of(preparedInitiative);
     }
 
+    /**
+     * After changes to verified users contact info has been made, this function should be called so
+     * contact information stored to session will be updated.
+     * Nothing bad will happen if it's not called, only some prefilled fields may be filled with old information. Ugly tho.
+     *
+     * @param request
+     */
     @Transactional(readOnly = true)
     public void refreshUserData(HttpServletRequest request) {
         HttpSession session = request.getSession();

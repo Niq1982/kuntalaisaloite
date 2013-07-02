@@ -8,9 +8,8 @@ import fi.om.municipalityinitiative.dto.vetuma.VetumaLoginRequest;
 import fi.om.municipalityinitiative.dto.vetuma.VetumaLoginResponse;
 import fi.om.municipalityinitiative.dto.vetuma.VetumaResponse;
 import fi.om.municipalityinitiative.service.EncryptionService;
-import fi.om.municipalityinitiative.service.UserService;
-import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
 import fi.om.municipalityinitiative.service.ui.VerifiedInitiativeService;
+import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.Urls;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
@@ -137,9 +136,9 @@ public class VetumaLoginController extends DefaultLoginController {
                     request, response);
 
 
-            PrepareInitiativeUICreateDto prepareDataForVetuma = userService.getPrepareDataForVetuma(request);
-            if (prepareDataForVetuma != null) { // User has been redirected to vetuma after starting to create initiative
-                long initiativeId = verifiedInitiativeService.prepareSafeInitiative(userService.getRequiredLoginUserHolder(request), PrepareSafeInitiativeUICreateDto.parse(prepareDataForVetuma));
+            Maybe<PrepareInitiativeUICreateDto> prepareDataForVetuma = userService.popPrepareDataForVetuma(request);
+            if (prepareDataForVetuma.isPresent()) { // User has been redirected to vetuma after starting to create initiative
+                long initiativeId = verifiedInitiativeService.prepareSafeInitiative(userService.getRequiredLoginUserHolder(request), PrepareSafeInitiativeUICreateDto.parse(prepareDataForVetuma.get()));
                 userService.refreshUserData(request);
                 return redirect(urls.management(initiativeId));
             }

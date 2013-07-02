@@ -4,6 +4,7 @@ import com.mysema.query.Tuple;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
+import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
@@ -59,7 +60,7 @@ public class JdbcUserDao implements UserDao {
                 .where(QVerifiedUser.verifiedUser.hash.eq(hash))
                 .list(QMunicipalityInitiative.municipalityInitiative.id);
 
-        return Maybe.of(User.verifiedUser(hash, contactInfoMaybe.get(), new HashSet<>(initiatives)));
+        return Maybe.of(User.verifiedUser(hash, contactInfoMaybe.get(), new HashSet<>(initiatives), Maybe.<Municipality>absent())); // TODO: Municipality
     }
 
     @Override

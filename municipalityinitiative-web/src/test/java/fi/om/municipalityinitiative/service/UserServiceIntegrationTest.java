@@ -1,18 +1,25 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.util.FakeSession;
+import org.apache.http.HttpResponse;
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.stub;
 
@@ -70,6 +77,48 @@ public class UserServiceIntegrationTest extends ServiceIntegrationTestBase{
         assertThat(loginUserHolder.getNormalLoginUser().getAuthorId(), is(testHelper.getLastAuthorId()));
         assertThat(loginUserHolder.getUser().hasRightToInitiative(initiative), is(true));
         assertThat(loginUserHolder.getUser().hasRightToInitiative(-1L), is(false));
+    }
+
+    @Test
+    public void vetuma_login_gets_municipality_and_saves_all_data_to_session() {
+
+        String municipalityName = "Some municipality";
+        Long municipalityId = testHelper.createTestMunicipality(municipalityName);
+        String name = "Full Name";
+        String address = "Address";
+        userService.login("112233-112233", name, address, municipalityId.toString(), requestMock, mock(HttpServletResponse.class));
+
+        LoginUserHolder<User> loginUserHolder = userService.getLoginUserHolder(requestMock);
+
+        assertThat(loginUserHolder.isVerifiedUser(), is(true));
+        assertThat(loginUserHolder.getVerifiedUser().getInitiatives(), hasSize(0));
+        assertThat(loginUserHolder.getVerifiedUser().getHash(), is(notNullValue()));
+        assertThat(loginUserHolder.getVerifiedUser().getContactInfo().getName(), is(name));
+        assertThat(loginUserHolder.getVerifiedUser().getContactInfo().getAddress(), is(address));
+        assertThat(loginUserHolder.getVerifiedUser().getHomeMunicipality().isPresent(), is(true));
+        assertThat(loginUserHolder.getVerifiedUser().getHomeMunicipality().get().getId(), is(municipalityId));
+        assertThat(loginUserHolder.getVerifiedUser().getHomeMunicipality().get().getNameFi(), is(municipalityName));
+    }
+
+    @Test
+    public void vetuma_login_sets_municipality_absent_if_not_found() {
+
+        Long municipalityId = testHelper.createTestMunicipality("Some municipality");
+        userService.login("112233-112233", "Full Name", "Address", Long.valueOf(municipalityId+1).toString(), requestMock, mock(HttpServletResponse.class));
+        LoginUserHolder<User> loginUserHolder = userService.getLoginUserHolder(requestMock);
+
+        assertThat(loginUserHolder.getVerifiedUser().getHomeMunicipality().isPresent(), is(false));
+
+    }
+
+    @Test
+    public void login_updates_saved_users_municipality_if_changed() {
+
+    }
+
+    @Test
+    public void login_updates_municipality_to_null_if_changed_to_null() {
+
     }
 
 

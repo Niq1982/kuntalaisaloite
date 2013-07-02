@@ -1,6 +1,8 @@
 package fi.om.municipalityinitiative.dto.user;
 
+import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
+import fi.om.municipalityinitiative.util.Maybe;
 
 import java.util.Set;
 
@@ -9,14 +11,16 @@ public class VerifiedUser extends User{
     private final String hash;
     private final ContactInfo contactInfo;
     private final Set<Long> initiatives;
+    private Maybe<Municipality> homeMunicipality;
 
-    VerifiedUser(String hash, ContactInfo contactInfo, Set<Long> initiatives) {
+    VerifiedUser(String hash, ContactInfo contactInfo, Set<Long> initiatives, Maybe<Municipality> homeMunicipality) {
         this.hash = hash;
 
         // This is needed after we've logged in and participating or creating an initiative.
         // Data must be updated always when updating something at the UI
         this.contactInfo = contactInfo;
         this.initiatives = initiatives;
+        this.homeMunicipality = homeMunicipality;
     }
 
     @Override
@@ -49,5 +53,9 @@ public class VerifiedUser extends User{
 
     public Set<Long> getInitiatives() {
         return initiatives;
+    }
+
+    public Maybe<Municipality> getHomeMunicipality() {
+        return homeMunicipality;
     }
 }

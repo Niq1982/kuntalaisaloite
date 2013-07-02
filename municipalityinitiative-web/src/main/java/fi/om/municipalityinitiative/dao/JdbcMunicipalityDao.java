@@ -36,14 +36,14 @@ public class JdbcMunicipalityDao implements MunicipalityDao {
     public String getMunicipalityEmail(Long municipalityId) {
         return queryFactory.from(QMunicipality.municipality)
                 .where(QMunicipality.municipality.id.eq(municipalityId))
-                .singleResult(QMunicipality.municipality.email);
+                .uniqueResult(QMunicipality.municipality.email);
     }
 
     @Override
     public Municipality getMunicipality(Long id) {
         return queryFactory.from(QMunicipality.municipality)
                 .where(QMunicipality.municipality.id.eq(id))
-                .singleResult(municipalityWrapper);
+                .uniqueResult(municipalityWrapper);
     }
 
     @Override
