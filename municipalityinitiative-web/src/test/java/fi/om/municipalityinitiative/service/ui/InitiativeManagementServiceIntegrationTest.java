@@ -440,6 +440,34 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     }
 
+    @Test
+    // TODO: Continue here
+    public void update_verified_initiative_updates_given_fields() {
+
+        Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality.getId());
+        String originalName = TestHelper.DEFAULT_PARTICIPANT_NAME;
+
+        InitiativeUIUpdateDto updateDto = ReflectionTestUtils.modifyAllFields(new InitiativeUIUpdateDto());
+
+        service.updateInitiative(initiativeId, TestHelper.authorLoginUserHolder, updateDto);
+
+        assertThat(testHelper.getInitiative(initiativeId).getExtraInfo(), is(updateDto.getExtraInfo()));
+        assertThat(testHelper.getInitiative(initiativeId).getExternalParticipantCount(), is(updateDto.getExternalParticipantCount()));
+
+        InitiativeUIUpdateDto updatedInitiative = service.getInitiativeForUpdate(initiativeId, TestHelper.authorLoginUserHolder);
+
+
+        assertThat(updatedInitiative.getContactInfo().getName(), is(originalName)); // Name is not updated, it's always updated from vetuma when logging in
+        assertThat(updatedInitiative.getContactInfo().getAddress(), is(updateDto.getContactInfo().getAddress()));
+        assertThat(updatedInitiative.getContactInfo().getPhone(), is(updateDto.getContactInfo().getPhone()));
+        assertThat(updatedInitiative.getContactInfo().getEmail(), is(updateDto.getContactInfo().getEmail()));
+        assertThat(updatedInitiative.getContactInfo().isShowName(), is(updateDto.getContactInfo().isShowName()));
+
+        assertThat(updatedInitiative.getExtraInfo(), is(updateDto.getExtraInfo()));
+        assertThat(updatedInitiative.getExternalParticipantCount(), is(updateDto.getExternalParticipantCount()));
+
+    }
+
     @Test(expected = OperationNotAllowedException.class)
     public void update_initiative_fails_if_initiative_sent() {
         Long sent = testHelper.createSingleSent(testMunicipality.getId());
