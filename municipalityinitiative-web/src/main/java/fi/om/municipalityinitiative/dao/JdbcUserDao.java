@@ -117,6 +117,7 @@ public class JdbcUserDao implements UserDao {
                 .set(verifiedUser.address, contactInfo.getAddress())
                 .set(verifiedUser.email, contactInfo.getEmail())
                 .set(verifiedUser.phone, contactInfo.getPhone())
+                // NOTE: Do not update name for verified users, it's updated during login according to vetuma
                 .where(verifiedUser.hash.eq(hash))
                 .execute());
     }

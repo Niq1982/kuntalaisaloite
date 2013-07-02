@@ -441,10 +441,13 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     }
 
     @Test
-    // TODO: Continue here
     public void update_verified_initiative_updates_given_fields() {
 
-        Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality.getId());
+        Long initiativeId = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withState(InitiativeState.PUBLISHED)
+                .withType(InitiativeType.COLLABORATIVE_COUNCIL)
+                .applyAuthor().toInitiativeDraft(),
+                true);
         String originalName = TestHelper.DEFAULT_PARTICIPANT_NAME;
 
         InitiativeUIUpdateDto updateDto = ReflectionTestUtils.modifyAllFields(new InitiativeUIUpdateDto());

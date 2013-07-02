@@ -133,10 +133,18 @@ public class InitiativeManagementService {
     // TODO Tests for safe initiatives
     public void updateInitiative(Long initiativeId, LoginUserHolder loginUserHolder, InitiativeUIUpdateDto updateDto) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        assertAllowance("Update initiative", getManagementSettings(initiativeId).isAllowUpdate());
+        Initiative initiative = initiativeDao.get(initiativeId);
+        assertAllowance("Update initiative", ManagementSettings.of(initiative).isAllowUpdate());
 
         initiativeDao.updateExtraInfo(initiativeId, updateDto.getExtraInfo(), updateDto.getExternalParticipantCount());
-        authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId(), updateDto.getContactInfo());
+        if (initiative.getType().isNotVerifiable()) {
+            authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId(), updateDto.getContactInfo());
+        }
+        else {
+            String hash = loginUserHolder.getVerifiedUser().getHash();
+            userDao.updateUserInformation(hash, updateDto.getContactInfo());
+            participantDao.updateVerifiedParticipantShowName(initiativeId, hash, updateDto.getContactInfo().isShowName());
+        }
     }
 
     public void sendReviewAndStraightToMunicipality(Long initiativeId, LoginUserHolder loginUserHolder, String sentComment) {
