@@ -21,8 +21,16 @@
 
     <input type="text" name="first_name" value="Matti Petteri"/><br>
     <input type="text" name="last_name" value="Meikalainen"/><br/>
-    <input type="text" name="municipality_fi" value="Helsinki"/>
-    <input type="text" name="municipality_sv" value="Helsingfors"/><br/>
+    <#--<input type="text" name="municipality_fi" value="Helsinki"/>
+    <input type="text" name="municipality_sv" value="Helsingfors"/><br/>-->
+    <select name="municipalityCode">
+    <option value="">Ei kuntaa</option>
+    <option value="-3">Palvelulle tuntematon kuntakoodi</option>
+    <#list municipalities as municipality>
+        <option value="${municipality.id}">${municipality.nameFi}</option>
+    </#list>
+    </select>
+    <br>
     <input id="hetu" type="text" name="EXTRADATA" value="HETU=010190-0000"/>
 
     <a href="#" onclick="document.getElementById('hetu').value = 'HETU=010101-0001';">om</a> /
