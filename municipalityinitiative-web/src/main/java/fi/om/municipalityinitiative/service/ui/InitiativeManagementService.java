@@ -67,7 +67,6 @@ public class InitiativeManagementService {
     }
 
     @Transactional(readOnly = false)
-    // TODO Tests for safe initiatives
     public void editInitiativeDraft(Long initiativeId, LoginUserHolder loginUserHolder, InitiativeDraftUIEditDto editDto) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
@@ -131,6 +130,7 @@ public class InitiativeManagementService {
     }
 
     @Transactional(readOnly = false)
+    // TODO Tests for safe initiatives
     public void updateInitiative(Long initiativeId, LoginUserHolder loginUserHolder, InitiativeUIUpdateDto updateDto) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         assertAllowance("Update initiative", getManagementSettings(initiativeId).isAllowUpdate());

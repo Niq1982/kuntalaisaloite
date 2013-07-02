@@ -428,27 +428,15 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
         Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality.getId());
 
-        // XXX         Messy
-        // TODO: Clean
-        InitiativeUIUpdateDto updateDto = new InitiativeUIUpdateDto();
-        ContactInfo contactInfo = new ContactInfo();
-        updateDto.setContactInfo(contactInfo);
-        updateDto.setExtraInfo("Modified extra info");
-        updateDto.setExternalParticipantCount(5);
+        InitiativeUIUpdateDto updateDto = ReflectionTestUtils.modifyAllFields(new InitiativeUIUpdateDto());
 
-        contactInfo.setName("Modified Name");
-        contactInfo.setAddress("Modified Address");
-        contactInfo.setPhone("Modified Phone");
-        contactInfo.setEmail("Modified Email");
-        contactInfo.setShowName(false);
-        updateDto.setContactInfo(contactInfo);
         service.updateInitiative(initiativeId, TestHelper.authorLoginUserHolder, updateDto);
 
         assertThat(testHelper.getInitiative(initiativeId).getExtraInfo(), is(updateDto.getExtraInfo()));
         assertThat(testHelper.getInitiative(initiativeId).getExternalParticipantCount(), is(updateDto.getExternalParticipantCount()));
 
         ContactInfo updatedContactInfo = service.getInitiativeForUpdate(initiativeId, TestHelper.authorLoginUserHolder).getContactInfo();
-        ReflectionTestUtils.assertReflectionEquals(updatedContactInfo, contactInfo);
+        ReflectionTestUtils.assertReflectionEquals(updatedContactInfo, updateDto.getContactInfo());
 
     }
 
