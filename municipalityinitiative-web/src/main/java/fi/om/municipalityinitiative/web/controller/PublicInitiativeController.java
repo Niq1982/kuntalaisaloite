@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.User;
+import fi.om.municipalityinitiative.exceptions.InvalidHomeMunicipalityException;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
@@ -39,6 +40,7 @@ public class PublicInitiativeController extends BaseController {
 
     @Resource
     private MunicipalityService municipalityService;
+
     @Resource
     private PublicInitiativeService publicInitiativeService;
 
@@ -106,6 +108,7 @@ public class PublicInitiativeController extends BaseController {
     }
 
     @RequestMapping(value={ PREPARE_FI, PREPARE_SV }, method=POST)
+    // XXX: Cyclomatic complexity too high.
     public String preparePost(@ModelAttribute("initiative") PrepareInitiativeUICreateDto initiative,
                               BindingResult bindingResult,
                               Model model,
@@ -113,13 +116,15 @@ public class PublicInitiativeController extends BaseController {
                               HttpServletRequest request) {
         Urls urls = Urls.get(locale);
 
-        // TODO: Store initiativeDraft
-        // TODO: head to vetuma
-
         if (initiative.getInitiativeType().isVerifiable()) {
             LoginUserHolder<User> loginUserHolder = userService.getLoginUserHolder(request);
             if (loginUserHolder.isVerifiedUser()) {
-                long initiativeId = verifiedInitiativeService.prepareSafeInitiative(loginUserHolder, PrepareSafeInitiativeUICreateDto.parse(initiative));
+                long initiativeId;
+                try {
+                    initiativeId = verifiedInitiativeService.prepareSafeInitiative(loginUserHolder, PrepareSafeInitiativeUICreateDto.parse(initiative));
+                } catch (InvalidHomeMunicipalityException e) {
+                    return redirectWithMessage(urls.prepare(), RequestMessage.INVALID_HOME_MUNICIPALITY, request);
+                }
                 userService.refreshUserData(request);
                 return contextRelativeRedirect(urls.management(initiativeId));
             }
@@ -128,16 +133,18 @@ public class PublicInitiativeController extends BaseController {
                 return contextRelativeRedirect(urls.login());
             }
         }
+        else {
 
-        if (validationService.validationErrors(initiative, bindingResult, model)) {
-            return ViewGenerator.prepareView(initiative, municipalityService.findAllMunicipalities(locale), enableVerifiedInitiatives)
-                    .view(model, urls.prepare());
+            if (validationService.validationErrors(initiative, bindingResult, model)) {
+                return ViewGenerator.prepareView(initiative, municipalityService.findAllMunicipalities(locale), enableVerifiedInitiatives)
+                        .view(model, urls.prepare());
+            }
+
+            Long initiativeId = publicInitiativeService.prepareInitiative(initiative, locale);
+
+            addRequestAttribute(initiative.getParticipantEmail(), request); // To be shown at confirmation page
+            return redirectWithMessage(urls.pendingConfirmation(initiativeId), RequestMessage.PREPARE, request);
         }
-
-        Long initiativeId = publicInitiativeService.prepareInitiative(initiative, locale);
-
-        addRequestAttribute(initiative.getParticipantEmail(), request); // To be shown at confirmation page
-        return redirectWithMessage(urls.pendingConfirmation(initiativeId), RequestMessage.PREPARE, request);
 
     }
 

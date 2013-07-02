@@ -9,6 +9,7 @@ import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
+import fi.om.municipalityinitiative.exceptions.InvalidHomeMunicipalityException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.ServiceIntegrationTestBase;
 import fi.om.municipalityinitiative.sql.QVerifiedAuthor;
@@ -149,8 +150,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
         createDto.setMunicipality(testHelper.createTestMunicipality("Other municipality"));
 
-        thrown.expect(OperationNotAllowedException.class);
-        thrown.expectMessage(containsString("Invalid home municipality"));
+        thrown.expect(InvalidHomeMunicipalityException.class);
 
         service.prepareSafeInitiative(verifiedLoginUserHolder, createDto);
     }
@@ -162,8 +162,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         createDto.setMunicipality(testHelper.createTestMunicipality("Other municipality"));
         createDto.setUserGivenHomeMunicipality(testMunicipality.getId());
 
-        thrown.expect(OperationNotAllowedException.class);
-        thrown.expectMessage(containsString("Invalid home municipality"));
+        thrown.expect(InvalidHomeMunicipalityException.class);
 
         service.prepareSafeInitiative(verifiedUserHolderWithMunicipalityId(Maybe.<Long>absent()), createDto);
 

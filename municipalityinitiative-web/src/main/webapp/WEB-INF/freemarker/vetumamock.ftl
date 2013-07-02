@@ -16,13 +16,10 @@
     <input type="hidden" name="RETURL" value="${vetumaRequest.RETURL}"/>
     <input type="hidden" name="CANURL" value="${vetumaRequest.CANURL}"/>
     <input type="hidden" name="ERRURL" value="${vetumaRequest.ERRURL}"/>
-    <!--<input type="hidden" name="EXTRADATA" value="${vetumaRequest.EXTRADATA}"/>-->
     <input type="hidden" name="TRID" value="${vetumaRequest.TRID!''}"/>
 
     <input type="text" name="first_name" value="Matti Petteri"/><br>
     <input type="text" name="last_name" value="Meikalainen"/><br/>
-    <#--<input type="text" name="municipality_fi" value="Helsinki"/>
-    <input type="text" name="municipality_sv" value="Helsingfors"/><br/>-->
     <select name="municipalityCode">
     <option value="">Ei kuntaa</option>
     <option value="-3">Palvelulle tuntematon kuntakoodi</option>

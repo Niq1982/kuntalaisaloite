@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.PrepareSafeInitiativeUICreateDto;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
+import fi.om.municipalityinitiative.exceptions.InvalidHomeMunicipalityException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.operations.VerifiedInitiativeServiceOperations;
 
@@ -20,7 +21,7 @@ public class VerifiedInitiativeService {
         VerifiedUser verifiedUser = loginUserHolder.getVerifiedUser();
 
         if (municipalityMismatch(uiCreateDto, verifiedUser)) {
-            throw new OperationNotAllowedException("Invalid home municipality");
+            throw new InvalidHomeMunicipalityException("Unable to create initiative for municipality with id " + uiCreateDto.getMunicipality());
         }
 
         // TODO: Check user age.

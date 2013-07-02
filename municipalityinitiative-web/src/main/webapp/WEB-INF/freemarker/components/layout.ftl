@@ -263,7 +263,8 @@
                     </#if>
                      <#if user.isVerifiedUser()>
                         <div class="header-dropdown">
-                            <a href="#" class="header-tool-link user-name dropdown-toggle">${user.contactInfo.name} <span class="icon-small settings"></span></a>
+                            <a href="#" class="header-tool-link user-name dropdown-toggle">${user.contactInfo.name}<#if user.homeMunicipality.present>, ${user.homeMunicipality.value.getName(locale)}</#if>
+                                <span class="icon-small settings"></span></a>
                         </div>
                     </#if>
                     <a href="${urls.logout()}" id="logout" class="header-tool-link logout"><@u.message "common.logout"/><span class="icon-small logout"></span></a>
