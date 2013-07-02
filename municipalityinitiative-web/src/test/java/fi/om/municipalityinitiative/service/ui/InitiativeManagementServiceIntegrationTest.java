@@ -162,11 +162,22 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         InitiativeDraftUIEditDto editDto = service.getInitiativeDraftForEdit(initiativeId, TestHelper.authorLoginUserHolder);
 
         precondition(TestHelper.authorLoginUserHolder.isVerifiedUser(), is(true));
-        assertThat(editDto.getContactInfo().getEmail(), is(TestHelper.DEFAULT_PARTICIPANT_EMAIL));
-        assertThat(editDto.getContactInfo().getPhone(), is(TestHelper.DEFAULT_AUTHOR_PHONE));
-        assertThat(editDto.getContactInfo().getAddress(), is(TestHelper.DEFAULT_AUTHOR_ADDRESS));
-        assertThat(editDto.getContactInfo().getName(), is(TestHelper.DEFAULT_PARTICIPANT_NAME));
-        assertThat(editDto.getContactInfo().isShowName(), is(TestHelper.DEFAULT_PUBLIC_NAME));
+        ReflectionTestUtils.assertReflectionEquals(editDto.getContactInfo(), TestHelper.defaultContactInfo());
+    }
+
+    @Test
+    public void get_initiative_draft_for_update_receives_correct_information_if_verified_initiative() {
+        Long initiativeId = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withType(InitiativeType.COLLABORATIVE_COUNCIL)
+                .withState(InitiativeState.PUBLISHED)
+                .applyAuthor()
+                .toInitiativeDraft(),
+                true);
+
+        InitiativeUIUpdateDto editDto = service.getInitiativeForUpdate(initiativeId, TestHelper.authorLoginUserHolder);
+
+        precondition(TestHelper.authorLoginUserHolder.isVerifiedUser(), is(true));
+        ReflectionTestUtils.assertReflectionEquals(editDto.getContactInfo(), TestHelper.defaultContactInfo());
     }
 
     @Test

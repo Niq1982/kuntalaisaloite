@@ -411,6 +411,17 @@ public class TestHelper {
                 .execute();
     }
 
+    public static ContactInfo defaultContactInfo() {
+        ContactInfo contactInfo = new ContactInfo();
+
+        contactInfo.setEmail(DEFAULT_PARTICIPANT_EMAIL);
+        contactInfo.setPhone(DEFAULT_AUTHOR_PHONE);
+        contactInfo.setName(DEFAULT_PARTICIPANT_NAME);
+        contactInfo.setAddress(DEFAULT_AUTHOR_ADDRESS);
+        contactInfo.setShowName(DEFAULT_PUBLIC_NAME);
+        return contactInfo;
+    }
+
     public static class AuthorDraft {
 
         public Long initiativeId;

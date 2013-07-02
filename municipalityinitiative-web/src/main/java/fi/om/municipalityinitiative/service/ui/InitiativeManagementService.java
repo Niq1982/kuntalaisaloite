@@ -93,7 +93,13 @@ public class InitiativeManagementService {
 
         Initiative initiative = initiativeDao.get(initiativeId);
 
-        ContactInfo contactInfo = authorDao.getAuthor(loginUserHolder.getNormalLoginUser().getAuthorId()).getContactInfo();
+        ContactInfo contactInfo;
+        if (initiative.getType().isNotVerifiable()) {
+            contactInfo = authorDao.getAuthor(loginUserHolder.getNormalLoginUser().getAuthorId()).getContactInfo();
+        }
+        else {
+            contactInfo = authorDao.getVerifiedAuthorContactInfo(initiativeId, loginUserHolder.getVerifiedUser().getHash());
+        }
 
         InitiativeUIUpdateDto updateDto = new InitiativeUIUpdateDto();
         updateDto.setContactInfo(contactInfo);
