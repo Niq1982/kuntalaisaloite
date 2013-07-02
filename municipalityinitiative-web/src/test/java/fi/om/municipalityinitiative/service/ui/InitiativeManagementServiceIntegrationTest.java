@@ -152,6 +152,24 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     }
 
     @Test
+    public void get_initiative_draft_for_edit_receives_correct_information_if_verified_initiative() {
+        Long initiativeId = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withType(InitiativeType.COLLABORATIVE_COUNCIL)
+                .applyAuthor()
+                .toInitiativeDraft(),
+                true);
+
+        InitiativeDraftUIEditDto editDto = service.getInitiativeDraftForEdit(initiativeId, TestHelper.authorLoginUserHolder);
+
+        precondition(TestHelper.authorLoginUserHolder.isVerifiedUser(), is(true));
+        assertThat(editDto.getContactInfo().getEmail(), is(TestHelper.DEFAULT_PARTICIPANT_EMAIL));
+        assertThat(editDto.getContactInfo().getPhone(), is(TestHelper.DEFAULT_AUTHOR_PHONE));
+        assertThat(editDto.getContactInfo().getAddress(), is(TestHelper.DEFAULT_AUTHOR_ADDRESS));
+        assertThat(editDto.getContactInfo().getName(), is(TestHelper.DEFAULT_PARTICIPANT_NAME));
+        assertThat(editDto.getContactInfo().isShowName(), is(TestHelper.DEFAULT_PUBLIC_NAME));
+    }
+
+    @Test
     public void send_initiative_as_review_sents_state_as_review_and_leaves_type_as_null_if_not_single() {
         Long initiativeId = testHelper.createDraft(testMunicipality.getId());
 

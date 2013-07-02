@@ -47,7 +47,7 @@ public class TestHelper {
     public static final String DEFAULT_SENT_COMMENT = "some default sent comment";
     public static final Integer DEFAULT_EXTERNAL_PARTICIPANT_COUNT = 10;
 
-    public static LoginUserHolder<NormalLoginUser> authorLoginUserHolder;
+    public static LoginUserHolder authorLoginUserHolder;
     public static LoginUserHolder unknownLoginUserHolder = new LoginUserHolder(User.anonym());
     public static OmLoginUserHolder omLoginUser = new OmLoginUserHolder(User.omUser(""));
 

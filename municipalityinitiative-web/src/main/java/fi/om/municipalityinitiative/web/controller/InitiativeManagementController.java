@@ -80,30 +80,6 @@ public class InitiativeManagementController extends BaseController {
         ).view(model, Urls.get(locale).alt().getManagement(initiativeId));
     }
 
-    @RequestMapping(value={ UPDATE_FI, UPDATE_SV }, method=GET)
-    public String updateView(@PathVariable("id") Long initiativeId,
-                             Model model, Locale locale, HttpServletRequest request) {
-
-        LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
-        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-
-        Urls urls = Urls.get(locale);
-        ManagementSettings managementSettings = publicInitiativeService.getManagementSettings(initiativeId);
-
-        if (managementSettings.isAllowUpdate()) {
-
-            return ViewGenerator.updateView(initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder),
-                    initiativeManagementService.getInitiativeForUpdate(initiativeId, loginUserHolder),
-                    initiativeManagementService.getAuthorInformation(initiativeId, loginUserHolder),
-                    authorService.findAuthors(initiativeId, loginUserHolder),
-                    urls.getManagement(initiativeId)
-            ).view(model, urls.alt().update(initiativeId));
-
-        } else {
-            return ERROR_500; // TODO: Custom error page or some message that operation is not allowed
-        }
-    }
-
     @RequestMapping(value={ EDIT_FI, EDIT_SV }, method=GET)
     public String editView(@PathVariable("id") Long initiativeId,
                            Model model, Locale locale, HttpServletRequest request) {
@@ -159,6 +135,31 @@ public class InitiativeManagementController extends BaseController {
         initiativeManagementService.editInitiativeDraft(initiativeId, loginUserHolder, editDto);
         userService.refreshUserData(request);
         return redirectWithMessage(urls.management(initiativeId), RequestMessage.SAVE_DRAFT, request);
+    }
+
+    @RequestMapping(value={ UPDATE_FI, UPDATE_SV }, method=GET)
+    public String updateView(@PathVariable("id") Long initiativeId,
+                             Model model, Locale locale, HttpServletRequest request) {
+
+        LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
+
+        Urls urls = Urls.get(locale);
+        ManagementSettings managementSettings = publicInitiativeService.getManagementSettings(initiativeId);
+
+        if (managementSettings.isAllowUpdate()) {
+
+            return ViewGenerator.updateView(
+                    initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder),
+                    initiativeManagementService.getInitiativeForUpdate(initiativeId, loginUserHolder),
+                    initiativeManagementService.getAuthorInformation(initiativeId, loginUserHolder),
+                    authorService.findAuthors(initiativeId, loginUserHolder),
+                    urls.getManagement(initiativeId)
+            ).view(model, urls.alt().update(initiativeId));
+
+        } else {
+            return ERROR_500; // TODO: Custom error page or some message that operation is not allowed
+        }
     }
 
     private static Object solveValidationGroup(InitiativeViewInfo initiative) {
