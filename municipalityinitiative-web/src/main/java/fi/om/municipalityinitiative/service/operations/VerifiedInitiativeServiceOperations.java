@@ -29,7 +29,6 @@ public class VerifiedInitiativeServiceOperations {
 
     @Transactional(readOnly = false)
     public Long doPrepareSafeInitiative(PrepareSafeInitiativeCreateDto createDto) {
-        // TODO: In progress
         assertMunicipalityIsActive(createDto.getMunicipality());
 
         Long initiativeId = initiativeDao.prepareSafeInitiative(createDto.getMunicipality(), createDto.getInitiativeType());

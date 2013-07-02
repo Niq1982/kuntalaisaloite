@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.PrepareSafeInitiativeUICreateDto;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
+import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.operations.VerifiedInitiativeServiceOperations;
 
 import javax.annotation.Resource;
@@ -17,6 +18,11 @@ public class VerifiedInitiativeService {
     public long prepareSafeInitiative(LoginUserHolder loginUserHolder, PrepareSafeInitiativeUICreateDto uiCreateDto) {
 
         VerifiedUser verifiedUser = loginUserHolder.getVerifiedUser();
+
+        if (verifiedUser.getHomeMunicipality().isPresent()
+                && !verifiedUser.getHomeMunicipality().get().getId().equals(uiCreateDto.getMunicipality())) {
+            throw new OperationNotAllowedException("Invalid home municipality");
+        }
 
         // TODO: Check municipality and age.
 
@@ -33,4 +39,5 @@ public class VerifiedInitiativeService {
         return initiativeId;
 
     }
+
 }

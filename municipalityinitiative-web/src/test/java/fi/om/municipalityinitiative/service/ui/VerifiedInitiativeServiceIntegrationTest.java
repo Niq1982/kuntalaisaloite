@@ -9,6 +9,7 @@ import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
+import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.ServiceIntegrationTestBase;
 import fi.om.municipalityinitiative.sql.QVerifiedAuthor;
 import fi.om.municipalityinitiative.sql.QVerifiedParticipant;
@@ -17,7 +18,9 @@ import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -26,6 +29,7 @@ import java.util.Collections;
 
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
@@ -50,6 +54,9 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
     public static final String VERIFIED_AUTHOR_NAME = "Verified Author Name";
 
     public static final String HASH = "hash";
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Override
     protected void childSetup() {
@@ -112,16 +119,25 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         assertThat(testHelper.countAll(QVerifiedParticipant.verifiedParticipant), is(1L));
     }
 
-    @Test(expected = AccessDeniedException.class)
+    @Test
     public void trying_to_prepare_safe_initiative_to_non_active_municipality_is_forbidden() {
         Long unactiveMunicipality = testHelper.createTestMunicipality("Some Unactive Municipality", false);
         PrepareSafeInitiativeUICreateDto createDto = new PrepareSafeInitiativeUICreateDto();
         createDto.setMunicipality(unactiveMunicipality);
+
+        thrown.expect(AccessDeniedException.class);
+        thrown.expectMessage(containsString("Municipality is not active"));
+
+        LoginUserHolder<VerifiedUser> verifiedLoginUserHolder = verifiedUserHolderWithMunicipalityId(unactiveMunicipality);
         service.prepareSafeInitiative(verifiedLoginUserHolder, createDto);
     }
 
+    private static LoginUserHolder<VerifiedUser> verifiedUserHolderWithMunicipalityId(Long unactiveMunicipality) {
+        return new LoginUserHolder<>(User.verifiedUser(HASH, new ContactInfo(), Collections.<Long>emptySet(), Maybe.of(new Municipality(unactiveMunicipality, "", "", false))));
+    }
+
     @Test
-    public void preparing_initiative_sets_initiative_type_and_municipality() {
+    public void preparing_safe_initiative_sets_initiative_type_and_municipality() {
         PrepareSafeInitiativeUICreateDto createDto = prepareUICreateDto();
         long initiativeId = service.prepareSafeInitiative(verifiedLoginUserHolder, createDto);
 
@@ -129,6 +145,19 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
         assertThat(initiative.getType(), is(createDto.getInitiativeType()));
         assertThat(initiative.getMunicipality().getId(), is(createDto.getMunicipality()));
+    }
+
+    @Test
+    public void preparing_save_initiative_throws_exception_if_wrong_municipality_from_vetuma() {
+        PrepareSafeInitiativeUICreateDto createDto = prepareUICreateDto();
+
+        createDto.setMunicipality(testHelper.createTestMunicipality("Other municipality"));
+
+        thrown.expect(OperationNotAllowedException.class);
+        thrown.expectMessage(containsString("Invalid home municipality"));
+
+        service.prepareSafeInitiative(verifiedLoginUserHolder, createDto);
+
     }
 
     @Test
