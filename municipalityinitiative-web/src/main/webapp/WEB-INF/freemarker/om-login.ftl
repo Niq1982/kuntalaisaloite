@@ -17,7 +17,7 @@
     <div class="msg-block cf">
         <h1><@u.message "login.om.title" /></h1>
 
-        <form name="login" accept-charset="UTF-8" action="${urls.moderatorLogin()}" method="post">
+        <form name="login" accept-charset="UTF-8" action="${springMacroRequestContext.requestUri}" method="post">
             <input type="hidden" name="CSRFToken" value="${CSRFToken!""}"/>
             
             <div class="input-block-content no-top-margin">
