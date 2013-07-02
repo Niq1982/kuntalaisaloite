@@ -8,6 +8,8 @@ public class PrepareSafeInitiativeUICreateDto {
 
     private Long municipality;
 
+    private Long userGivenHomeMunicipality;
+
     public InitiativeType getInitiativeType() {
         return initiativeType;
     }
@@ -24,10 +26,19 @@ public class PrepareSafeInitiativeUICreateDto {
         this.municipality = municipality;
     }
 
+    public void setUserGivenHomeMunicipality(Long userGivenHomeMunicipality) {
+        this.userGivenHomeMunicipality = userGivenHomeMunicipality;
+    }
+
+    public Long getUserGivenHomeMunicipality() {
+        return userGivenHomeMunicipality;
+    }
+
     public static PrepareSafeInitiativeUICreateDto parse(PrepareInitiativeUICreateDto prepareDataForVetuma) {
         PrepareSafeInitiativeUICreateDto uiCreateDto = new PrepareSafeInitiativeUICreateDto();
         uiCreateDto.setInitiativeType(prepareDataForVetuma.getInitiativeType());
         uiCreateDto.setMunicipality(prepareDataForVetuma.getMunicipality());
+        uiCreateDto.setUserGivenHomeMunicipality(prepareDataForVetuma.getHomeMunicipality());
         return uiCreateDto;
     }
 }

@@ -18,6 +18,8 @@ public class VerifiedInitiativeService {
 
         VerifiedUser verifiedUser = loginUserHolder.getVerifiedUser();
 
+        // TODO: Check municipality and age.
+
         PrepareSafeInitiativeCreateDto createDto = new PrepareSafeInitiativeCreateDto();
         createDto.setMunicipality(uiCreateDto.getMunicipality());
         createDto.setHash(verifiedUser.getHash());
