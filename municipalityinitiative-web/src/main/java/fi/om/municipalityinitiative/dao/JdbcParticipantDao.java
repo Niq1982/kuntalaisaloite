@@ -45,6 +45,10 @@ public class JdbcParticipantDao implements ParticipantDao {
 
     @Override
     public void confirmParticipation(Long participantId, String confirmationCode) {
+
+        // TODO: Handle errors if code or participant id invalid.
+        // TODO: Show some error message to user
+
         assertSingleAffection(queryFactory.update(QParticipant.participant)
                 .setNull(QParticipant.participant.confirmationCode)
                 .where(QParticipant.participant.id.eq(participantId))
@@ -80,7 +84,6 @@ public class JdbcParticipantDao implements ParticipantDao {
         return participantId;
     }
 
-    // TODO: Fix magic strings to enum constants or something.
     @Override
     public ParticipantCount getParticipantCount(Long initiativeId) {
 
@@ -154,6 +157,7 @@ public class JdbcParticipantDao implements ParticipantDao {
     }
 
     @Override
+    // TODO: Learn better usage of querydsl so this could be done in single query
     public void updateVerifiedParticipantShowName(Long initiativeId, String hash, boolean showName) {
         Long verifiedUserId = queryFactory.from(QVerifiedUser.verifiedUser)
                 .where(QVerifiedUser.verifiedUser.hash.eq(hash))
