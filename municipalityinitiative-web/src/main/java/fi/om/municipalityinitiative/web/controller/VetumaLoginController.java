@@ -7,9 +7,11 @@ import fi.om.municipalityinitiative.dto.vetuma.VTJData;
 import fi.om.municipalityinitiative.dto.vetuma.VetumaLoginRequest;
 import fi.om.municipalityinitiative.dto.vetuma.VetumaLoginResponse;
 import fi.om.municipalityinitiative.dto.vetuma.VetumaResponse;
+import fi.om.municipalityinitiative.exceptions.InvalidHomeMunicipalityException;
 import fi.om.municipalityinitiative.service.EncryptionService;
 import fi.om.municipalityinitiative.service.ui.VerifiedInitiativeService;
 import fi.om.municipalityinitiative.util.Maybe;
+import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
@@ -138,7 +140,12 @@ public class VetumaLoginController extends DefaultLoginController {
 
             Maybe<PrepareInitiativeUICreateDto> prepareDataForVetuma = userService.popPrepareDataForVetuma(request);
             if (prepareDataForVetuma.isPresent()) { // User has been redirected to vetuma after starting to create initiative
-                long initiativeId = verifiedInitiativeService.prepareSafeInitiative(userService.getRequiredLoginUserHolder(request), PrepareSafeInitiativeUICreateDto.parse(prepareDataForVetuma.get()));
+                long initiativeId;
+                try {
+                     initiativeId = verifiedInitiativeService.prepareSafeInitiative(userService.getRequiredLoginUserHolder(request), PrepareSafeInitiativeUICreateDto.parse(prepareDataForVetuma.get()));
+                } catch (InvalidHomeMunicipalityException e) {
+                    return redirectWithMessageToTarget(urls.prepare(), RequestMessage.INVALID_HOME_MUNICIPALITY, request);
+                }
                 userService.refreshUserData(request);
                 return redirect(urls.management(initiativeId));
             }
@@ -153,11 +160,17 @@ public class VetumaLoginController extends DefaultLoginController {
         }
     }
 
+    private View redirectWithMessageToTarget(String target, RequestMessage requestMessage, HttpServletRequest request) {
+        addRequestMessage(requestMessage, null, request);
+        return redirect(target);
+    }
+
     private View redirectToTarget(HttpSession session) {
         String target = (String) session.getAttribute(TARGET_SESSION_PARAM);
         session.removeAttribute(TARGET_SESSION_PARAM);
         return redirect(target);
     }
+
 
     private static int diffInSeconds(DateTime a, DateTime b) {
         Seconds diff;
