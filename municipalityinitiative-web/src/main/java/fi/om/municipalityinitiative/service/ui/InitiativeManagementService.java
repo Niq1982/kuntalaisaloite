@@ -18,6 +18,7 @@ import fi.om.municipalityinitiative.service.email.EmailMessageType;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.operations.InitiativeManagementServiceOperations;
 import fi.om.municipalityinitiative.util.InitiativeType;
+import fi.om.municipalityinitiative.util.Maybe;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -123,7 +124,7 @@ public class InitiativeManagementService {
         else {
             Author author = new Author();
             author.setContactInfo(userDao.getVerifiedUser(loginUserHolder.getVerifiedUser().getHash()).get().getContactInfo());
-            author.setMunicipality(new Municipality(-1L, "Kunta", "Municipality", false));
+            author.setMunicipality(Maybe.of(new Municipality(-1L, "Kunta", "Municipality", false)));
             return author;
         }
         throw new NotFoundException("Author", initiativeId);

@@ -171,4 +171,8 @@
     <@message key.class.simpleName + "." + key args />        
 </#macro>
 
+<#macro solveMunicipality municipality>
+    <#if municipality.present>${municipality.value.nameFi} / ${municipality.value.nameSv}<#else>Ei kuntaa / SV Ei kuntaa</#if>
+</#macro>
+
 </#escape> 

@@ -68,7 +68,7 @@
         <#list publicAuthors.publicAuthors as publicAuthor>
             <div class="column ${((publicAuthor_index + 1) % 3 == 0)?string("last","")}">
                 <h4 class="header">${publicAuthor.name}</h4>
-                <p>${publicAuthor.municipality.getName(locale)}</p>
+                <p><@u.solveMunicipality publicAuthor.municipality/></p>
             </div>
             <#if ((publicAuthor_index + 1) % 3 == 0) || !publicAuthor_has_next><br class="clear" /></#if>
         </#list>
@@ -96,12 +96,12 @@
     
     <#list authorList as a>
         <div class="column author ${((a_index + 1) % 3 == 0)?string("last","")}">
-            <p><strong>${a.contactInfo.name!""}</strong>, ${a.municipality.getName(locale)}
+            <p><strong>${a.contactInfo.name!""}</strong>, <@u.solveMunicipality a.municipality/>
             <#if showRenewManagementHash>
                 <a  href="#" class="js-renew-management-hash trigger-tooltip" title="<@u.message "moderator.renewManagementHash.tooltip" />"
                     data-id="${a.id}"
                     data-name="${a.contactInfo.name!""}"
-                    data-municipality="${a.municipality.getName(locale)}"
+                    data-municipality="<@u.solveMunicipality a.municipality/>"
                     data-address="${a.contactInfo.address!""}"
                     data-email="${a.contactInfo.email!""}"
                     data-phone="${a.contactInfo.phone!""}"><span class="icon-small icon-16 resend"></span></a>

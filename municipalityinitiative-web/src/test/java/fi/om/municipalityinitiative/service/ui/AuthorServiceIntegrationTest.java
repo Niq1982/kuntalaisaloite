@@ -132,7 +132,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         assertThat(createdAuthor.getContactInfo().getAddress(), is(createDto.getContactInfo().getAddress()));
         assertThat(createdAuthor.getContactInfo().getPhone(), is(createDto.getContactInfo().getPhone()));
         assertThat(createdAuthor.getContactInfo().isShowName(), is(createDto.getContactInfo().isShowName()));
-        assertThat(createdAuthor.getMunicipality().getId(), is(authorsMunicipality));
+        assertThat(createdAuthor.getMunicipality().get().getId(), is(authorsMunicipality));
 
         assertThat(participantCountOfInitiative(initiativeId), is(2));
     }

@@ -124,14 +124,14 @@ public class JsonDataService {
         contactInfo1.setName("Teemu Teekkari");
         contactInfo1.setShowName(true);
         author1.setContactInfo(contactInfo1);
-        author1.setMunicipality(ApiController.TAMPERE);
+        author1.setMunicipality(Maybe.of(ApiController.TAMPERE));
         authors.add(author1);
 
         Author author2 = new Author();
         ContactInfo contactInfo2 = new ContactInfo();
         contactInfo2.setShowName(false);
         author2.setContactInfo(contactInfo2);
-        author2.setMunicipality(ApiController.TAMPERE);
+        author2.setMunicipality(Maybe.of(ApiController.TAMPERE));
         authors.add(author2);
 
         return authors;

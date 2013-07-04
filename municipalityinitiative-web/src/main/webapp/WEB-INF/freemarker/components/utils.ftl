@@ -411,4 +411,11 @@
     </div>
 </#macro>
 
+<#macro solveMunicipality municipality>
+
+    <#if municipality.present>${municipality.value.getName(locale)}<#else>Ei kuntaa</#if>
+
+
+</#macro>
+
 </#escape>

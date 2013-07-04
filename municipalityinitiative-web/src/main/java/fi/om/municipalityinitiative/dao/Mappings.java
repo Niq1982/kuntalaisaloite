@@ -39,7 +39,7 @@ public class Mappings {
                     author.setId(row.get(QAuthor.author.participantId));
                     author.setCreateTime(row.get(QParticipant.participant.participateTime));
                     author.setContactInfo(contactInfo);
-                    author.setMunicipality(parseMunicipality(row));
+                    author.setMunicipality(Maybe.of(parseMunicipality(row)));
 
                     return author;
 

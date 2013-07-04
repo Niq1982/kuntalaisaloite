@@ -298,7 +298,7 @@
             <div class="column col-1of3 last">
                 <div class="input-header"><@u.message "contactInfo.homeMunicipality" /></div>
                 
-                <div class="input-placeholder">${author.municipality.getName(locale)}</div>
+                <div class="input-placeholder"><@u.solveMunicipality author.municipality/></div>
             </div>
             <br class="clear" />
             <@f.formCheckbox path=path+".contactInfo.showName" checked=true key="contactInfo.showName" />
@@ -349,7 +349,7 @@
             <div class="column col-1of3 last">
                 <div class="input-header"><@u.message "contactInfo.homeMunicipality" /></div>
 
-                <div class="input-placeholder">${author.municipality.getName(locale)}</div>
+                <div class="input-placeholder"><@u.solveMunicipality author.municipality/></div>
             </div>
             <br class="clear" />
             <@f.formCheckbox path=path+".contactInfo.showName" checked=true key="contactInfo.showName" />

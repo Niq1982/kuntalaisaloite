@@ -118,7 +118,7 @@
     <#list list as a>
         <div class="author cf ${a_has_next?string("","last")}">
             <div class="details">
-                <h4 class="header">${a.contactInfo.name}, ${a.municipality.getName(locale)}</h4>
+                <h4 class="header">${a.contactInfo.name}, <@u.solveMunicipality a.municipality/></h4>
                 <div class="contact-info">
                     <@u.scrambleEmail a.contactInfo.email!"" /><br />
                     <#if a.contactInfo.address?? && a.contactInfo.address != ""><#noescape>${a.contactInfo.address?replace('\n','<br/>')!""}</#noescape><br /></#if>
@@ -225,7 +225,7 @@
 <#macro authorDetailsById list id>
     <#list list as a>
         <#if a.id?string == id>
-            <h4 class="header">${a.contactInfo.name}, ${a.municipality.getName(locale)}</h4>
+            <h4 class="header">${a.contactInfo.name}, <@u.solveMunicipality a.municipality/></h4>
             <div class="contact-info">
                 ${a.contactInfo.email!""}<br />
                 <#if a.contactInfo.address?? && a.contactInfo.address != ""><#noescape>${a.contactInfo.address?replace('\n','<br/>')!""}</#noescape><br /></#if>

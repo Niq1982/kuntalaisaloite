@@ -96,7 +96,7 @@ public class JdbcAuthorDaoTest {
         assertThat(author.getContactInfo().getName(), is(TestHelper.DEFAULT_PARTICIPANT_NAME));
         assertThat(author.getContactInfo().getEmail(), is(TestHelper.DEFAULT_PARTICIPANT_EMAIL));
         assertThat(author.getContactInfo().getPhone(), is(TestHelper.DEFAULT_AUTHOR_PHONE));
-        assertThat(author.getMunicipality().getId(), is(testMunicipality));
+        assertThat(author.getMunicipality().get().getId(), is(testMunicipality));
         assertThat(author.getCreateTime(), is(new LocalDate()));
 
         ReflectionTestUtils.assertNoNullFields(author);
