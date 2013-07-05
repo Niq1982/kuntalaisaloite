@@ -391,10 +391,14 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
     @Test
     public void find_authors_for_verified_initiative_returns_authors() {
-        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality).applyAuthor().toInitiativeDraft());
 
-        assertThat(authorService.findPublicAuthors(initiativeId).getPublicAuthors(), hasSize(1));
-        assertThat(authorService.findAuthors(initiativeId, TestHelper.authorLoginUserHolder), hasSize(1));
+        Long someOtherInitiative = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality).applyAuthor().toInitiativeDraft());
+
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality).applyAuthor().toInitiativeDraft());
+        testHelper.createVerifiedAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality));
+
+        assertThat(authorService.findPublicAuthors(initiativeId).getPublicAuthors(), hasSize(2));
+        assertThat(authorService.findAuthors(initiativeId, TestHelper.authorLoginUserHolder), hasSize(2));
 
     }
 
