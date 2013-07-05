@@ -19,11 +19,11 @@ import java.util.List;
 public class InitiativeJson {
 
     private final Initiative initiative;
-    private final PublicAuthors authors;
+    private final PublicAuthorsJson authors;
 
     private InitiativeJson(Initiative initiative, PublicAuthors authors) {
         this.initiative = initiative;
-        this.authors = authors;
+        this.authors = new PublicAuthorsJson(authors);
     }
 
     @JsonId(path= Urls.INITIATIVE)
@@ -57,7 +57,7 @@ public class InitiativeJson {
         return initiative.isSent() ? initiative.getSentTime().get() : null;
     }
 
-    public PublicAuthors getAuthors() {
+    public PublicAuthorsJson getAuthors() {
         return authors;
     }
 
