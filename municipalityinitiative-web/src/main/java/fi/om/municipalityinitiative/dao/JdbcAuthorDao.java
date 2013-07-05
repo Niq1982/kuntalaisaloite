@@ -235,4 +235,14 @@ public class JdbcAuthorDao implements AuthorDao {
                 .set(QVerifiedAuthor.verifiedAuthor.verifiedUserId, userId.toLong())
                 .execute());
     }
+
+    @Override
+    public List<Author> findVerifiedAuthors(Long initiativeId) {
+        return queryFactory.from(QVerifiedAuthor.verifiedAuthor)
+                .innerJoin(QVerifiedAuthor.verifiedAuthor.verifiedAuthorVerifiedUserFk, QVerifiedUser.verifiedUser)
+                .innerJoin(QVerifiedUser.verifiedUser._verifiedParticipantVerifiedUserFk, QVerifiedParticipant.verifiedParticipant)
+                .where(QVerifiedAuthor.verifiedAuthor.initiativeId.eq(initiativeId))
+                .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
+                .list(Mappings.verifiedAuthorMapper);
+    }
 }

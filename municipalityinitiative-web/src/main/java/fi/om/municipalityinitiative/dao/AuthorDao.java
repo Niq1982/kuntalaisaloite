@@ -44,4 +44,6 @@ public interface AuthorDao {
     void addVerifiedAuthor(Long initiativeId, VerifiedUserId userId);
 
     ContactInfo getVerifiedAuthorContactInfo(Long initiativeId, String hash);
+
+    List<Author> findVerifiedAuthors(Long initiativeId);
 }

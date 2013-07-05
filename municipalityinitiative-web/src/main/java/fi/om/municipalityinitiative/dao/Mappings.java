@@ -122,6 +122,28 @@ public class Mappings {
             return contactInfo;
         }
     };
+    public static Expression<Author> verifiedAuthorMapper = new MappingProjection<Author>(Author.class,
+            QVerifiedAuthor.verifiedAuthor.all(),
+            QVerifiedParticipant.verifiedParticipant.all(),
+            QVerifiedUser.verifiedUser.all()) {
+        @Override
+        protected Author map(Tuple row) {
+            Author author = new Author();
+
+            ContactInfo contactInfo = new ContactInfo();
+            contactInfo.setPhone(row.get(QVerifiedUser.verifiedUser.phone));
+            contactInfo.setName(row.get(QVerifiedUser.verifiedUser.name));
+            contactInfo.setAddress(row.get(QVerifiedUser.verifiedUser.address));
+            contactInfo.setEmail(row.get(QVerifiedUser.verifiedUser.email));
+            contactInfo.setShowName(row.get(QVerifiedParticipant.verifiedParticipant.showName)); // currently has not null constraint
+
+            author.setContactInfo(contactInfo);
+            author.setCreateTime(row.get(QVerifiedParticipant.verifiedParticipant.participateTime));
+            author.setMunicipality(null);           // TODO:
+
+            return author;
+        }
+    };
 
     private static int nullToZero(Integer integer) {
         if (integer == null) {

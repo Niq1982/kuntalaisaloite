@@ -140,7 +140,7 @@ public class AuthorService {
             return authorDao.findNormalAuthors(initiativeId);
         }
         else {
-            throw new RuntimeException("Not implemented");
+            return authorDao.findVerifiedAuthors(initiativeId);
         }
     }
 
