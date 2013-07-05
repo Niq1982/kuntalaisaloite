@@ -34,7 +34,7 @@ public class EmailServiceDataProvider {
     }
 
     public List<Author> findAuthors(Long id) {
-        return authorDao.findAuthors(id);
+        return authorDao.findNormalAuthors(id);
     }
 
     public List<String> getAuthorEmails(Long initiativeId) {

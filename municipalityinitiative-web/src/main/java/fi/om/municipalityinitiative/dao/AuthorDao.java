@@ -21,7 +21,7 @@ public interface AuthorDao {
 
     List<AuthorInvitation> findInvitations(Long initiativeId);
 
-    List<Author> findAuthors(Long initiativeId);
+    List<Author> findNormalAuthors(Long initiativeId);
 
     Long createAuthor(Long initiativeId, Long participantId, String managementHash);
 

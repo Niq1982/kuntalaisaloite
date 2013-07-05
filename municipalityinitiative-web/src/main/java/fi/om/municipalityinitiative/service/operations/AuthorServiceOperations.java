@@ -60,7 +60,7 @@ public class AuthorServiceOperations {
 
     @Transactional(readOnly = false)
     public ContactInfo doDeleteAuthor(Long initiativeId, Long authorId) {
-        List<Author> authors = authorDao.findAuthors(initiativeId);
+        List<Author> authors = authorDao.findNormalAuthors(initiativeId);
         if (!hasAuthor(authorId, authors)) {
             throw new NotFoundException("Author", "initiative: " + initiativeId + ", author: " + authorId);
         }

@@ -74,7 +74,7 @@ public class JdbcAuthorDaoTest {
     @Test
     public void find_authors_returns_at_least_one() {
         Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality);
-        assertThat(authorDao.findAuthors(initiativeId), hasSize(1));
+        assertThat(authorDao.findNormalAuthors(initiativeId), hasSize(1));
     }
 
     @Test
@@ -107,12 +107,12 @@ public class JdbcAuthorDaoTest {
         Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality);
         Long authorId = testHelper.createDefaultAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality));
 
-        int originalAuthorCount = authorDao.findAuthors(initiativeId).size();
+        int originalAuthorCount = authorDao.findNormalAuthors(initiativeId).size();
         long originalParticipantCount = participantCountOfInitiative(initiativeId);
 
         authorDao.deleteAuthor(authorId);
 
-        assertThat(authorDao.findAuthors(initiativeId), hasSize(originalAuthorCount - 1));
+        assertThat(authorDao.findNormalAuthors(initiativeId), hasSize(originalAuthorCount - 1));
         assertThat(participantCountOfInitiative(initiativeId), is(originalParticipantCount - 1));
     }
 
@@ -122,12 +122,12 @@ public class JdbcAuthorDaoTest {
         Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality);
         Long authorId = testHelper.createDefaultAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality));
 
-        int originalAuthorCount = authorDao.findAuthors(initiativeId).size();
+        int originalAuthorCount = authorDao.findNormalAuthors(initiativeId).size();
         int originalParticipantCount = testHelper.getInitiative(initiativeId).getParticipantCount();
 
         authorDao.deleteAuthor(authorId);
 
-        assertThat(authorDao.findAuthors(initiativeId), hasSize(originalAuthorCount - 1));
+        assertThat(authorDao.findNormalAuthors(initiativeId), hasSize(originalAuthorCount - 1));
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(originalParticipantCount - 1));
 
     }

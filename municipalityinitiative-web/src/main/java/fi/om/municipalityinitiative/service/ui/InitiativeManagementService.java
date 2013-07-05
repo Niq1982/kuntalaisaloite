@@ -115,7 +115,7 @@ public class InitiativeManagementService {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         Initiative initiative = initiativeDao.get(initiativeId);
         if (initiative.getType().isNotVerifiable()) {
-            for (Author author : authorDao.findAuthors(initiativeId)) {
+            for (Author author : authorDao.findNormalAuthors(initiativeId)) {
                 if (author.getId().equals(loginUserHolder.getNormalLoginUser().getAuthorId())) {
                     return author;
                 }

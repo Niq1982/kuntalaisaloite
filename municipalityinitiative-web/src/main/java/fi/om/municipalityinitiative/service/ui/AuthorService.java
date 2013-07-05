@@ -136,7 +136,12 @@ public class AuthorService {
     }
 
     private List<Author> findAuthors(Long initiativeId) {
-        return authorDao.findAuthors(initiativeId);
+        if (initiativeDao.get(initiativeId).getType().isNotVerifiable()) {
+            return authorDao.findNormalAuthors(initiativeId);
+        }
+        else {
+            throw new RuntimeException("Not implemented");
+        }
     }
 
     public static class AuthorInvitationConfirmViewData {

@@ -72,7 +72,7 @@ public class ModerationServiceOperations {
 
     @Transactional(readOnly = true)
     public List<Author> findAuthors(Long initiativeId) {
-        return authorDao.findAuthors(initiativeId);
+        return authorDao.findNormalAuthors(initiativeId);
     }
 
     @Transactional(readOnly = true)

@@ -168,7 +168,7 @@ public class TestHelper {
         return createInitiative(initiativeDraft, true);
     }
 
-    private Long createInitiative(InitiativeDraft initiativeDraft, boolean isVerified) {
+    private Long createInitiative(InitiativeDraft initiativeDraft, boolean verified) {
         SQLInsertClause insert = queryFactory.insert(municipalityInitiative);
 
         insert.set(municipalityInitiative.name, initiativeDraft.name);
@@ -180,7 +180,12 @@ public class TestHelper {
 
         insert.set(municipalityInitiative.state, initiativeDraft.state);
 
-        insert.set(municipalityInitiative.type, initiativeDraft.type);
+        if (initiativeDraft.type.isNotVerifiable() && verified) {
+            insert.set(municipalityInitiative.type, InitiativeType.COLLABORATIVE_COUNCIL);
+        }
+        else {
+            insert.set(municipalityInitiative.type, initiativeDraft.type);
+        }
 
         insert.set(municipalityInitiative.sent, initiativeDraft.sent);
         insert.set(municipalityInitiative.modified, initiativeDraft.modified);
@@ -192,7 +197,7 @@ public class TestHelper {
 
         if (initiativeDraft.authorDraft.isPresent()) {
             initiativeDraft.authorDraft.get().withInitiativeId(lastInitiativeId);
-            if (!isVerified) {
+            if (!verified) {
                 createDefaultAuthorAndParticipant(initiativeDraft.authorDraft.get());
             }
             else {

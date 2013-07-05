@@ -118,7 +118,7 @@ public class JdbcAuthorDao implements AuthorDao {
     }
 
     @Override
-    public List<Author> findAuthors(Long initiativeId) {
+    public List<Author> findNormalAuthors(Long initiativeId) {
             return queryFactory.from(municipalityInitiative)
                     .innerJoin(municipalityInitiative._participantMunicipalityInitiativeIdFk, QParticipant.participant)
                     .innerJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
@@ -206,7 +206,7 @@ public class JdbcAuthorDao implements AuthorDao {
     @Override
     public List<String> getAuthorEmails(Long initiativeId) {
         List<String> emails = Lists.newArrayList();
-        for (Author author : findAuthors(initiativeId)) {
+        for (Author author : findNormalAuthors(initiativeId)) {
             emails.add(author.getContactInfo().getEmail());
         }
         return emails;

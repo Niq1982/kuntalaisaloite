@@ -143,7 +143,6 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
         Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.DRAFT)
-                .withType(InitiativeType.COLLABORATIVE_COUNCIL)
                 .applyAuthor()
                 .toInitiativeDraft());
 
@@ -173,7 +172,6 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     @Test
     public void get_initiative_draft_for_edit_receives_correct_information_if_verified_initiative() {
         Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
-                .withType(InitiativeType.COLLABORATIVE_COUNCIL)
                 .applyAuthor()
                 .toInitiativeDraft());
 
@@ -186,7 +184,6 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     @Test
     public void get_initiative_draft_for_update_receives_correct_information_if_verified_initiative() {
         Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
-                .withType(InitiativeType.COLLABORATIVE_COUNCIL)
                 .withState(InitiativeState.PUBLISHED)
                 .applyAuthor()
                 .toInitiativeDraft());
@@ -442,7 +439,6 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
         Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
-                .withType(InitiativeType.COLLABORATIVE_COUNCIL)
                 .applyAuthor().toInitiativeDraft());
         String originalName = TestHelper.DEFAULT_PARTICIPANT_NAME;
 

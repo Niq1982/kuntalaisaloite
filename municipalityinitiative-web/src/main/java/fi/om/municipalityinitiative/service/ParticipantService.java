@@ -46,7 +46,7 @@ public class ParticipantService {
 
     private Set<Long> getAuthorIds(Long initiativeId) {
         Set<Long> authorIds = Sets.newHashSet();
-        for (Author author : authorDao.findAuthors(initiativeId)) {
+        for (Author author : authorDao.findNormalAuthors(initiativeId)) {
             authorIds.add(author.getId());
         }
         return authorIds;
