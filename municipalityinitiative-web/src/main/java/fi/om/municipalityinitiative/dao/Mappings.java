@@ -139,7 +139,7 @@ public class Mappings {
 
             author.setContactInfo(contactInfo);
             author.setCreateTime(row.get(QVerifiedParticipant.verifiedParticipant.participateTime));
-            author.setMunicipality(null);           // TODO:
+            author.setMunicipality(Maybe.<Municipality>absent());           // TODO:
 
             return author;
         }

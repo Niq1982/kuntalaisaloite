@@ -68,7 +68,7 @@
         <#list publicAuthors.publicAuthors as publicAuthor>
             <div class="column ${((publicAuthor_index + 1) % 3 == 0)?string("last","")}">
                 <h4 class="header">${publicAuthor.name}</h4>
-                <p><@u.solveMunicipality publicAuthor.municipality/></p>
+                <p><@u.solveMunicipality municipality=publicAuthor.municipality/></p>
             </div>
             <#if ((publicAuthor_index + 1) % 3 == 0) || !publicAuthor_has_next><br class="clear" /></#if>
         </#list>
