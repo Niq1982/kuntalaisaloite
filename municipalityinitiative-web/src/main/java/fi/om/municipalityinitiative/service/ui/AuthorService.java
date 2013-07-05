@@ -67,7 +67,7 @@ public class AuthorService {
     public List<Author> findAuthors(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        return authorDao.findAuthors(initiativeId);
+        return findAuthors(initiativeId);
     }
 
     public void deleteAuthor(Long initiativeId, LoginUserHolder loginUserHolder, Long authorId) {
@@ -135,6 +135,10 @@ public class AuthorService {
         return data;
     }
 
+    private List<Author> findAuthors(Long initiativeId) {
+        return authorDao.findAuthors(initiativeId);
+    }
+
     public static class AuthorInvitationConfirmViewData {
         public AuthorInvitationUIConfirmDto authorInvitationUIConfirmDto;
         public InitiativeViewInfo initiativeViewInfo;
@@ -142,7 +146,7 @@ public class AuthorService {
 
     @Transactional(readOnly = true)
     public PublicAuthors findPublicAuthors(Long initiativeId) {
-        return new PublicAuthors(authorDao.findAuthors(initiativeId));
+        return new PublicAuthors(findAuthors(initiativeId));
     }
 
     @Transactional(readOnly = false)

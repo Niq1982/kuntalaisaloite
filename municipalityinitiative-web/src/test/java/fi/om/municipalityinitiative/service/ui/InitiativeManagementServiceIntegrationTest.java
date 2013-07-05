@@ -141,12 +141,11 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     @Test
     public void editing_verified_initiative_updates_all_required_fields() {
 
-        Long initiativeId = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.DRAFT)
                 .withType(InitiativeType.COLLABORATIVE_COUNCIL)
                 .applyAuthor()
-                .toInitiativeDraft(),
-                true);
+                .toInitiativeDraft());
 
         String originalName = TestHelper.DEFAULT_PARTICIPANT_NAME;
 
@@ -173,11 +172,10 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     @Test
     public void get_initiative_draft_for_edit_receives_correct_information_if_verified_initiative() {
-        Long initiativeId = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withType(InitiativeType.COLLABORATIVE_COUNCIL)
                 .applyAuthor()
-                .toInitiativeDraft(),
-                true);
+                .toInitiativeDraft());
 
         InitiativeDraftUIEditDto editDto = service.getInitiativeDraftForEdit(initiativeId, TestHelper.authorLoginUserHolder);
 
@@ -187,12 +185,11 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     @Test
     public void get_initiative_draft_for_update_receives_correct_information_if_verified_initiative() {
-        Long initiativeId = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withType(InitiativeType.COLLABORATIVE_COUNCIL)
                 .withState(InitiativeState.PUBLISHED)
                 .applyAuthor()
-                .toInitiativeDraft(),
-                true);
+                .toInitiativeDraft());
 
         InitiativeUIUpdateDto editDto = service.getInitiativeForUpdate(initiativeId, TestHelper.authorLoginUserHolder);
 
@@ -278,7 +275,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     @Test
     public void send_fix_to_review_sets_fixState_as_review() {
-        Long accepted = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long accepted = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
                 .withFixState(FixState.FIX)
                 .applyAuthor()
@@ -293,7 +290,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     @Test
     public void send_fix_to_review_sends_emails_to_author_and_moderator() throws MessagingException {
-        Long accepted = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long accepted = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
                 .withFixState(FixState.FIX)
                 .applyAuthor()
@@ -373,7 +370,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     @Test(expected = OperationNotAllowedException.class)
     public void sending_collaborative_to_municipality_fails_if_already_sent() {
-        Long collaborativeSent = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long collaborativeSent = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE)
                 .withSent(DateTime.now())
@@ -391,7 +388,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     @Test
     public void sending_collobarative_to_municipality_sets_sent_time_and_sent_comment() {
-        Long collaborative = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long collaborative = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE)
                 .applyAuthor().toInitiativeDraft());
@@ -443,11 +440,10 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     @Test
     public void update_verified_initiative_updates_given_fields() {
 
-        Long initiativeId = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE_COUNCIL)
-                .applyAuthor().toInitiativeDraft(),
-                true);
+                .applyAuthor().toInitiativeDraft());
         String originalName = TestHelper.DEFAULT_PARTICIPANT_NAME;
 
         InitiativeUIUpdateDto updateDto = ReflectionTestUtils.modifyAllFields(new InitiativeUIUpdateDto());

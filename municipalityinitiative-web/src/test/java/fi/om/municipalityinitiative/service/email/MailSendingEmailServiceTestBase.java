@@ -3,7 +3,6 @@ package fi.om.municipalityinitiative.service.email;
 import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
-import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.JavaMailSenderFake;
 import org.junit.Before;
@@ -13,9 +12,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
-
-import java.util.Collections;
-import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={IntegrationTestFakeEmailConfiguration.class})
@@ -55,7 +51,7 @@ public abstract class MailSendingEmailServiceTestBase {
 
         testHelper.dbCleanup();
         testMunicipality = testHelper.createTestMunicipality(INITIATIVE_MUNICIPALITY);
-        testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality)
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality)
                 .withName(INITIATIVE_NAME)
                 .withState(InitiativeState.PUBLISHED)
                 .withProposal(INITIATIVE_PROPOSAL)

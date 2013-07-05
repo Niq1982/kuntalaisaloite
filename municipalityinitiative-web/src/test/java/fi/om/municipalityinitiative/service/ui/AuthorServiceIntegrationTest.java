@@ -381,6 +381,23 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         assertThat(countAllAuthors(), is(1L));
     }
 
+    @Test
+    public void find_authors_for_default_initiative_returns_authors() {
+        Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality).applyAuthor().toInitiativeDraft());
+
+        assertThat(authorService.findPublicAuthors(initiativeId).getPublicAuthors(), hasSize(1));
+        assertThat(authorService.findAuthors(initiativeId, TestHelper.authorLoginUserHolder), hasSize(1));
+    }
+
+    @Test
+    public void find_authors_for_verified_initiative_returns_authors() {
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality).applyAuthor().toInitiativeDraft());
+
+        assertThat(authorService.findPublicAuthors(initiativeId).getPublicAuthors(), hasSize(1));
+        assertThat(authorService.findAuthors(initiativeId, TestHelper.authorLoginUserHolder), hasSize(1));
+
+    }
+
     private Long countAllAuthors() {
         return testHelper.countAll(QAuthor.author);
     }

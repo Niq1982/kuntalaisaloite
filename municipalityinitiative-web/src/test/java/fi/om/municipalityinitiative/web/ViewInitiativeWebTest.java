@@ -72,7 +72,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
 
     @Test
     public void initiative_with_fixState_other_than_ok_can_not_be_viewed_if_not_logged_in_as_author() {
-        Long initiative = testHelper.createInitiative(new TestHelper.InitiativeDraft(municipalityId)
+        Long initiative = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(municipalityId)
                 .withState(InitiativeState.PUBLISHED)
                 .withFixState(FixState.REVIEW));
 
@@ -108,7 +108,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
 
         DateTime modifyTime = new DateTime(2011, 1, 1, 0, 0);
         String title = "Yeah rock rock";
-        testHelper.createInitiative(new TestHelper.InitiativeDraft(municipalityId)
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(municipalityId)
                 .withState(InitiativeState.PUBLISHED)
                 .withModified(modifyTime)
                 .withName(title));
@@ -125,7 +125,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
 
         DateTime modifyTime = new DateTime(2011, 1, 1, 0, 0);
         String title = "Yeah rock rock";
-        testHelper.createInitiative(new TestHelper.InitiativeDraft(municipalityId)
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(municipalityId)
                 .withState(InitiativeState.PUBLISHED)
                 .withModified(modifyTime)
                 .withName(title));

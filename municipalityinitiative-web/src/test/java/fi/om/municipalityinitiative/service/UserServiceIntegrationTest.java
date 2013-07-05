@@ -124,7 +124,7 @@ public class UserServiceIntegrationTest extends ServiceIntegrationTestBase{
     public void login_updates_saved_users_municipality_and_name_if_changed() {
         Long originalMunicipalityId = testHelper.createTestMunicipality("Some municipality");
 
-        testHelper.createInitiative(new TestHelper.InitiativeDraft(originalMunicipalityId).applyAuthor().toInitiativeDraft(), true);
+        testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(originalMunicipalityId).applyAuthor().toInitiativeDraft());
         String oldAddress = TestHelper.DEFAULT_AUTHOR_ADDRESS;
         String userSsnHash = testHelper.getPreviousUserSsnHash();
 
@@ -147,7 +147,7 @@ public class UserServiceIntegrationTest extends ServiceIntegrationTestBase{
     public void login_updates_municipality_to_null_if_changed_to_null() {
         Long originalMunicipalityId = testHelper.createTestMunicipality("Some municipality");
 
-        testHelper.createInitiative(new TestHelper.InitiativeDraft(originalMunicipalityId).applyAuthor().toInitiativeDraft(), true);
+        testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(originalMunicipalityId).applyAuthor().toInitiativeDraft());
         String oldAddress = TestHelper.DEFAULT_AUTHOR_ADDRESS;
         String userSsnHash = testHelper.getPreviousUserSsnHash();
 
@@ -165,7 +165,7 @@ public class UserServiceIntegrationTest extends ServiceIntegrationTestBase{
 
         Long originalMunicipalityId = testHelper.createTestMunicipality("Some municipality");
 
-        testHelper.createInitiative(new TestHelper.InitiativeDraft(originalMunicipalityId).applyAuthor().toInitiativeDraft(), true);
+        testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(originalMunicipalityId).applyAuthor().toInitiativeDraft());
         String oldAddress = TestHelper.DEFAULT_AUTHOR_ADDRESS;
         String oldEmail = TestHelper.DEFAULT_PARTICIPANT_EMAIL;
         String oldPhone = TestHelper.DEFAULT_AUTHOR_PHONE;

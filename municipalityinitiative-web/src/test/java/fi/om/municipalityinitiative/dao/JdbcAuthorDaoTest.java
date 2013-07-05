@@ -158,10 +158,9 @@ public class JdbcAuthorDaoTest {
 
     @Test
     public void get_verified_author_contact_info_contains_all_information() {
-        Long initiativeId = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality)
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality)
                 .applyAuthor()
-                .toInitiativeDraft(),
-                true);
+                .toInitiativeDraft());
 
         ContactInfo verifiedAuthorContactInfo = authorDao.getVerifiedAuthorContactInfo(initiativeId, testHelper.getPreviousUserSsnHash());
 

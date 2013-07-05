@@ -62,7 +62,7 @@ public class JdbcInitiativeDaoTest {
 
     @Test
     public void find_does_not_find_if_not_published() {
-        testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.ACCEPTED));
 
         assertThat(initiativeDao.find(initiativeSearch()), hasSize(0));
@@ -70,7 +70,7 @@ public class JdbcInitiativeDaoTest {
 
     @Test
     public void find_does_not_find_if_fixState_not_OK() {
-        Long initiative = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long initiative = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED));
         precondition(initiativeDao.find(initiativeSearch()), hasSize(1));
 
@@ -84,7 +84,7 @@ public class JdbcInitiativeDaoTest {
     public void get_returns_all_information() {
         Long authorsMunicipalityId = testHelper.createTestMunicipality("Authors Municipality");
 
-        Long initiativeId = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withSent(new DateTime(2010, 1, 1, 0, 0))
                 .applyAuthor().withParticipantMunicipality(authorsMunicipalityId)
@@ -213,10 +213,10 @@ public class JdbcInitiativeDaoTest {
         DateTime oldestSentTime = new DateTime(2010, 1, 1, 0, 0);
         DateTime latestSentTime = new DateTime(2020, 1, 1, 0, 0);
 
-        Long oldestId = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long oldestId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
                 .withSent(oldestSentTime));
-        Long latestId = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long latestId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
                 .withSent(latestSentTime));
 
@@ -234,15 +234,15 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void find_orders_by_participants() {
 
-        Long mostParticipants = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long mostParticipants = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE)
                 .withParticipantCount(10));
-        Long leastParticipants = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long leastParticipants = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE)
                 .withParticipantCount(1));
-        Long someParticipants = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long someParticipants = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE)
                 .withParticipantCount(5));
@@ -261,13 +261,13 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void find_orders_by_counts_non_collaboratives_as_zero() {
 
-        Long mostParticipants = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
+        Long mostParticipants = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withParticipantCount(10));
-        Long leastParticipants = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
+        Long leastParticipants = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withParticipantCount(1));
-        Long someParticipants = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
+        Long someParticipants = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withParticipantCount(5));
 
@@ -329,7 +329,7 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void counts_participants_to_listView() {
 
-        testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withParticipantCount(17)
                 .withExternalParticipantCount(10));
@@ -362,10 +362,10 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void finds_by_name() {
 
-        testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withName("name that sould not be found")
                 .withState(InitiativeState.PUBLISHED));
-        Long shouldBeFound = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long shouldBeFound = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withName("name that should be found ääöö")
                 .withState(InitiativeState.PUBLISHED));
 
@@ -380,7 +380,7 @@ public class JdbcInitiativeDaoTest {
 
     @Test
     public void finds_by_sent_finds_published_if_sent() {
-        Long collaborativeSent = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long collaborativeSent = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withState(InitiativeState.PUBLISHED)
                 .withSent(new DateTime(2010, 1, 1, 0, 0)));
@@ -392,7 +392,7 @@ public class JdbcInitiativeDaoTest {
 
     @Test
     public void finds_by_sent_does_not_find_published_if_not_sent() {
-        testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withState(InitiativeState.PUBLISHED)
                 .withSent(null));
@@ -439,7 +439,7 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void finds_by_fix_finds_if_fixState_is_FIX() {
 
-        testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withFixState(FixState.FIX)
                 .withState(InitiativeState.PUBLISHED));
 
@@ -451,7 +451,7 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void finds_by_review_finds_also_if_fixState_is_REVIEW() {
 
-        testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withFixState(FixState.REVIEW)
                 .withState(InitiativeState.PUBLISHED));
 
@@ -475,7 +475,7 @@ public class JdbcInitiativeDaoTest {
     public void finds_by_accepted_shows_accepted_initiatives_with_fixState_OK() {
         Long singleSent = testHelper.createSingleSent(testMunicipality.getId());
         Long review = testHelper.createCollaborativeReview(testMunicipality.getId());
-        Long acceptedButReturnedForFixing = testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long acceptedButReturnedForFixing = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withFixState(FixState.FIX)
                 .withState(InitiativeState.ACCEPTED));
 
@@ -521,7 +521,7 @@ public class JdbcInitiativeDaoTest {
 
     @Test
     public void does_not_count_public_initiatives_if_fixState_not_ok() {
-        testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
                 .withFixState(FixState.OK));
 
@@ -529,10 +529,10 @@ public class JdbcInitiativeDaoTest {
         precondition(publicInitiativeCounts.getAll(), is(1L));
         precondition(publicInitiativeCounts.collecting, is(1L));
 
-        testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
                 .withFixState(FixState.FIX));
-        testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
                 .withFixState(FixState.REVIEW));
 
@@ -545,7 +545,7 @@ public class JdbcInitiativeDaoTest {
     public void counts_all_initiatives_by_state() {
 
         // 1
-        testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withFixState(FixState.FIX)
                 .withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE));
@@ -589,7 +589,7 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void counts_initiatives_by_state_if_municipalityId_is_given() {
 
-        testHelper.createInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE));
 

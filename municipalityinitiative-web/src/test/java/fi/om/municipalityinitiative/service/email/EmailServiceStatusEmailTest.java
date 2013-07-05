@@ -95,7 +95,7 @@ public class EmailServiceStatusEmailTest extends MailSendingEmailServiceTestBase
 
     @Test
     public void status_emails_sent_to_authors_contains_separate_management_links() throws Exception {
-        Long initiativeId = testHelper.createInitiative(new TestHelper.InitiativeDraft(getMunicipalityId())
+        Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(getMunicipalityId())
                 .applyAuthor()
                 .withParticipantEmail("aa@example.com")
                 .toInitiativeDraft());
