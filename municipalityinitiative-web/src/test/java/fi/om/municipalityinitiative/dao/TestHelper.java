@@ -82,6 +82,7 @@ public class TestHelper {
         queryFactory.delete(QMunicipality.municipality).execute();
         queryFactory.delete(QInfoText.infoText).execute();
         queryFactory.delete(QAdminUser.adminUser).execute();
+        authorLoginUserHolder = null;
     }
 
     @Transactional
