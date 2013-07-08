@@ -33,8 +33,12 @@
             
             <p><@u.message "invitation.view.description" /></p>
             <p><@u.message "invitation.view.instruction" /></p>
-            
-            <a href="?invitation=${authorInvitation.confirmCode!""}&invitation-accept=confirm" class="small-button green green save-and-send js-accept-invitation"><span class="small-icon save-and-send"><@u.message "invitation.accept" /></span></a>
+
+            <#if initiative.verifiable && user.homeMunicipality.present && user.homeMunicipality.value.id != initiative.municipality.id>
+                <@u.systemMessage path="warning.author.notMember" type="warning" showClose=false />
+            <#else>
+                <a href="?invitation=${authorInvitation.confirmCode!""}&invitation-accept=confirm" class="small-button green green save-and-send js-accept-invitation"><span class="small-icon save-and-send"><@u.message "invitation.accept" /></span></a>
+            </#if>
             <a href="?invitation=${authorInvitation.confirmCode!""}&invitation-reject=confirm" title="<@u.message "invitation.reject" />" class="small-button gray push js-reject-invitation"><span class="small-icon cancel"><@u.message "invitation.reject" /></span></a>
         </div>
     </#if>

@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import fi.om.municipalityinitiative.exceptions.AuthenticationRequiredException;
 import fi.om.municipalityinitiative.exceptions.CookiesRequiredException;
+import fi.om.municipalityinitiative.exceptions.VerifiedLoginRequiredException;
 import fi.om.municipalityinitiative.service.EncryptionService;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -61,12 +62,27 @@ public class SecurityFilter implements Filter {
             Throwable t = e.getCause();
             if (t instanceof AuthenticationRequiredException) {
                 authenticationRequired((AuthenticationRequiredException) t, request, response);
-            } else if (t instanceof CSRFException) {
+            } else if (t instanceof VerifiedLoginRequiredException) {
+                verifiedLoginRequired(request, response);
+            }
+            else if (t instanceof CSRFException) {
                 csrfException(e, request, response);
             } else {
                 propagateException(e);
             }
         }
+    }
+
+    private void verifiedLoginRequired(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        StringBuilder target = new StringBuilder(128);
+        target.append(this.urlPathHelper.getOriginatingRequestUri(request));
+
+        if (request.getQueryString() != null) {
+            target.append("?");
+            target.append(request.getQueryString());
+        }
+
+        response.sendRedirect(Urls.FI.login(target.toString()));
     }
 
     private void authenticationRequired(AuthenticationRequiredException e, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
