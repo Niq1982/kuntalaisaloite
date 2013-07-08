@@ -5,7 +5,6 @@ import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
-import fi.om.municipalityinitiative.dto.service.PrepareSafeInitiativeCreateDto;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
@@ -116,6 +115,10 @@ public class PublicInitiativeService {
         emailService.sendAuthorMessages(authorMessage.getInitiativeId(), authorMessage);
         return authorMessage.getInitiativeId();
 
+    }
+
+    public boolean isVerifiableInitiative(Long initiativeId) {
+        return operations.isVerifiableInitiative(initiativeId);
     }
 
 }

@@ -223,13 +223,15 @@ public class PublicInitiativeController extends BaseController {
                                  @RequestParam(PARAM_INVITATION_CODE) String confirmCode,
                                  Model model, Locale locale, HttpServletRequest request) {
 
-        AuthorService.AuthorInvitationConfirmViewData data = authorService.getAuthorInvitationConfirmData(initiativeId, confirmCode);
+        if (publicInitiativeService.isVerifiableInitiative(initiativeId)
+                && !userService.getLoginUserHolder(request).isVerifiedUser()) {
+            // TODO: Redirect to vetuma
+            // TODO: Save this url to session so we can redirect back to this url
+        }
+
+        AuthorService.AuthorInvitationConfirmViewData data = authorService.getAuthorInvitationConfirmData(initiativeId, confirmCode, userService.getLoginUserHolder(request));
         AuthorInvitationUIConfirmDto authorInvitationUIConfirmDto = data.authorInvitationUIConfirmDto;
         InitiativeViewInfo initiativeInfo = data.initiativeViewInfo;
-
-//        if (initiativeInfo.isSent()) { // Not needed anymore?
-//            return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.ALREADY_SENT, request);
-//        }
 
         return ViewGenerator.invitationView(initiativeInfo,
                 municipalityService.findAllMunicipalities(locale),
@@ -244,7 +246,7 @@ public class PublicInitiativeController extends BaseController {
                                    @ModelAttribute("authorInvitation") AuthorInvitationUIConfirmDto confirmDto,
                                    Model model, BindingResult bindingResult, Locale locale, HttpServletRequest request) {
 
-        InitiativeViewInfo initiativeInfo = authorService.getAuthorInvitationConfirmData(initiativeId, confirmDto.getConfirmCode()).initiativeViewInfo;
+        InitiativeViewInfo initiativeInfo = authorService.getAuthorInvitationConfirmData(initiativeId, confirmDto.getConfirmCode(), userService.getLoginUserHolder(request)).initiativeViewInfo;
         confirmDto.setInitiativeMunicipality(initiativeInfo.getMunicipality().getId());
 
         if (validationService.validationSuccessful(confirmDto, bindingResult, model)) {
@@ -267,7 +269,7 @@ public class PublicInitiativeController extends BaseController {
                                    @RequestParam(PARAM_INVITATION_CODE) String confirmCode,
                                    Locale locale, HttpServletRequest request) {
 
-        String initiativeName = authorService.getAuthorInvitationConfirmData(initiativeId, confirmCode).initiativeViewInfo.getName();
+        String initiativeName = authorService.getAuthorInvitationConfirmData(initiativeId, confirmCode, userService.getLoginUserHolder(request)).initiativeViewInfo.getName();
 
         authorService.rejectInvitation(initiativeId, confirmCode);
 

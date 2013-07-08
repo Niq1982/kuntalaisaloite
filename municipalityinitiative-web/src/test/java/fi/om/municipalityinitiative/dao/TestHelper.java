@@ -620,5 +620,6 @@ public class TestHelper {
     public String getPreviousUserSsnHash() {
         return previousUserSsnHash;
     }
+
 }
 

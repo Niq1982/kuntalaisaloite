@@ -117,7 +117,7 @@ public class AuthorService {
     }
 
     @Transactional(readOnly = false)
-    public AuthorInvitationConfirmViewData getAuthorInvitationConfirmData(Long initiativeId, String confirmCode) {
+    public AuthorInvitationConfirmViewData getAuthorInvitationConfirmData(Long initiativeId, String confirmCode, LoginUserHolder unknownLoginUserHolder) {
         AuthorInvitation authorInvitation = authorDao.getAuthorInvitation(initiativeId, confirmCode);
 
         assertNotRejectedOrExpired(authorInvitation);

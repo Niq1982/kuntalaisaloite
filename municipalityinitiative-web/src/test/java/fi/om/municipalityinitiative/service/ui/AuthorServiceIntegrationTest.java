@@ -5,22 +5,22 @@ import fi.om.municipalityinitiative.dao.InvitationNotValidException;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
+import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUIConfirmDto;
 import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUICreateDto;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
+import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
+import fi.om.municipalityinitiative.exceptions.VerifiedLoginRequiredException;
 import fi.om.municipalityinitiative.service.ServiceIntegrationTestBase;
 import fi.om.municipalityinitiative.sql.QAuthor;
 import fi.om.municipalityinitiative.sql.QAuthorInvitation;
-import fi.om.municipalityinitiative.util.JavaMailSenderFake;
-import fi.om.municipalityinitiative.util.Membership;
-import fi.om.municipalityinitiative.util.RandomHashGenerator;
-import fi.om.municipalityinitiative.util.ReflectionTestUtils;
+import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Rule;
@@ -37,6 +37,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import static fi.om.municipalityinitiative.service.ui.AuthorService.AuthorInvitationConfirmViewData;
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -214,16 +215,41 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
     }
 
     @Test
-    public void prefilled_author_confirmation_contains_all_information() {
+    public void prefilled_normal_author_confirmation_contains_authors_information() {
         Long municipalityId = testHelper.createTestMunicipality("name");
         Long initiativeId = testHelper.createCollaborativeAccepted(municipalityId);
         authorService.createAuthorInvitation(initiativeId, TestHelper.authorLoginUserHolder, authorInvitation());
 
-        AuthorInvitationUIConfirmDto confirmDto = authorService.getAuthorInvitationConfirmData(initiativeId, RandomHashGenerator.getPrevious()).authorInvitationUIConfirmDto;
+        AuthorInvitationUIConfirmDto confirmDto = authorService.getAuthorInvitationConfirmData(initiativeId, RandomHashGenerator.getPrevious(), TestHelper.unknownLoginUserHolder).authorInvitationUIConfirmDto;
         assertThat(confirmDto.getMunicipality(), is(municipalityId));
         assertThat(confirmDto.getContactInfo().getName(), is(authorInvitation().getAuthorName()));
         assertThat(confirmDto.getContactInfo().getEmail(), is(authorInvitation().getAuthorEmail()));
         assertThat(confirmDto.getConfirmCode(), is(RandomHashGenerator.getPrevious()));
+    }
+
+    @Test
+    public void getting_prefilled_author_confirmation_dialog_throws_VerifiedLoginRequiredException() {
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality));
+        thrown.expect(VerifiedLoginRequiredException.class);
+        authorService.getAuthorInvitationConfirmData(initiativeId, "", TestHelper.unknownLoginUserHolder);
+    }
+
+    @Test
+    public void prefilled_verified_author_confirmation_contains_authors_information() {
+
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality).applyAuthor().toInitiativeDraft()
+        .withState(InitiativeState.ACCEPTED));
+        authorService.createAuthorInvitation(initiativeId, TestHelper.authorLoginUserHolder, authorInvitation());
+
+        String confirmCode = RandomHashGenerator.getPrevious();
+        AuthorInvitationConfirmViewData authorInvitationConfirmData = authorService.getAuthorInvitationConfirmData(initiativeId, confirmCode, TestHelper.unknownLoginUserHolder);
+
+        assertThat(authorInvitationConfirmData.authorInvitationUIConfirmDto.getConfirmCode(), is(confirmCode));
+        assertThat(authorInvitationConfirmData.authorInvitationUIConfirmDto.getMunicipality(), is(testMunicipality));
+        assertThat(authorInvitationConfirmData.authorInvitationUIConfirmDto.getHomeMunicipality(), is(testMunicipality));
+        ReflectionTestUtils.assertReflectionEquals(authorInvitationConfirmData.authorInvitationUIConfirmDto.getContactInfo(),
+                getVerifiedLoginUserHolderFor(initiativeId).getVerifiedUser().getContactInfo());
+
     }
 
     @Test
@@ -233,18 +259,23 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
         thrown.expect(InvitationNotValidException.class);
         thrown.expectMessage("Invitation is expired");
-        authorService.getAuthorInvitationConfirmData(initiativeId, expiredInvitation.getConfirmationCode());
+        authorService.getAuthorInvitationConfirmData(initiativeId, expiredInvitation.getConfirmationCode(), TestHelper.unknownLoginUserHolder);
 
     }
 
     @Test
-    public void prefilled_author_confirmation_has_initiative_info() {
+    public void prefilled_normal_author_confirmation_has_initiative_info() {
         Long municipalityId = testHelper.createTestMunicipality("name");
         Long initiativeId = testHelper.createCollaborativeAccepted(municipalityId);
         authorService.createAuthorInvitation(initiativeId, TestHelper.authorLoginUserHolder, authorInvitation());
 
-        InitiativeViewInfo confirmDto = authorService.getAuthorInvitationConfirmData(initiativeId, RandomHashGenerator.getPrevious()).initiativeViewInfo;
+        InitiativeViewInfo confirmDto = authorService.getAuthorInvitationConfirmData(initiativeId, RandomHashGenerator.getPrevious(), TestHelper.unknownLoginUserHolder).initiativeViewInfo;
         assertThat(confirmDto.getId(), is(initiativeId));
+    }
+
+    @Test
+    public void prefilled_verified_author_confirmation_has_initiative_info() {
+        throw new RuntimeException("not implemented");
     }
 
     @Test
@@ -254,7 +285,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
         thrown.expect(InvitationNotValidException.class);
         thrown.expectMessage("Invitation is rejected");
-        authorService.getAuthorInvitationConfirmData(initiativeId, rejectedInvitation.getConfirmationCode());
+        authorService.getAuthorInvitationConfirmData(initiativeId, rejectedInvitation.getConfirmationCode(), TestHelper.unknownLoginUserHolder);
     }
 
     @Test
@@ -262,7 +293,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         Long initiativeId = testHelper.createCollaborativeReview(testMunicipality);
 
         thrown.expect(InvitationNotValidException.class);
-        authorService.getAuthorInvitationConfirmData(initiativeId, "töttöröö");
+        authorService.getAuthorInvitationConfirmData(initiativeId, "töttöröö", TestHelper.unknownLoginUserHolder);
     }
 
     @Test
@@ -488,6 +519,22 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         authorInvitationUICreateDto.setAuthorName("name");
         authorInvitationUICreateDto.setAuthorEmail("email");
         return authorInvitationUICreateDto;
+    }
+
+    public static final String EMAIL = "email";
+    public static final String PHONE = "phone";
+    public static final String ADDRESS = "address";
+    public static final String NAME = "name";
+    public static final boolean SHOW_NAME = true;
+    public LoginUserHolder<VerifiedUser> getVerifiedLoginUserHolderFor(Long initiativeId) {
+        ContactInfo contactInfo = new ContactInfo();
+        contactInfo.setEmail(EMAIL);
+        contactInfo.setPhone(PHONE);
+        contactInfo.setAddress(ADDRESS);
+        contactInfo.setName(NAME);
+        contactInfo.setShowName(SHOW_NAME);
+
+        return new LoginUserHolder(User.verifiedUser("hash", contactInfo, Collections.singleton(initiativeId), Maybe.of(new Municipality(testMunicipality, "nameFi", "nameSv", true))));
     }
 
 }

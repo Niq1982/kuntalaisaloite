@@ -133,6 +133,11 @@ public class PublicInitiativeServiceOperations {
         }
     }
 
+    @Transactional(readOnly = true)
+    public boolean isVerifiableInitiative(Long initiativeId) {
+        return initiativeDao.isVerifiableInitiative(initiativeId);
+    }
+
     public static class PreparedInitiativeData {
 
         public Long initiativeId;
