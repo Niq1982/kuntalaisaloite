@@ -98,12 +98,23 @@
                 <@f.notTooFastField authorInvitation/>
             
                     <div class="column col-1of2">
-                        <@f.textField path="authorInvitation.contactInfo.name" required="required" optional=false cssClass="medium" maxLength=InitiativeConstants.CONTACT_NAME_MAX key="contactInfo.name" />
+                        <#if initiative.verifiable>
+                            ${user.contactInfo.name}
+                        <#else>
+                            <div class="column col-1of2 last">
+                                <@f.textField path="authorInvitation.contactInfo.name" required="required" optional=false cssClass="medium" maxLength=InitiativeConstants.CONTACT_NAME_MAX key="contactInfo.name" />
+                            </div>
+                        </#if>
                     </div>
-                    
+
+                    <#if initiative.verifiable>
+                        <@u.solveMunicipality user.homeMunicipality/>
+                    <#else>
                     <div class="column col-1of2 last">
                         <@f.municipalitySelect path="authorInvitation.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipality.id key="initiative.homeMunicipality" />
                     </div>
+                    </#if>
+
                     <br class="clear" />
                     
                     <div id="municipalMembership" class="js-hide">
