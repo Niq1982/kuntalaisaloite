@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
+import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +28,7 @@ public class ParticipantServiceTest {
         participants.add(participant(3L, "Authori"));
         participants.add(participant(5L, "Ei Authori"));
 
-        List<ParticipantListInfo> participantListInfos = ParticipantService.toListInfo(participants, Collections.singleton(3L));
+        List<ParticipantListInfo> participantListInfos = ParticipantService.toListInfo(participants, Collections.singleton(new NormalAuthorId(3L)));
 
         assertThat(participantListInfos, hasSize(2));
         assertThat(participantListInfos.get(0).getName(), is("Authori"));

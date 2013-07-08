@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.dto.ui;
 
 import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dto.Author;
+import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.junit.Test;
@@ -19,14 +20,14 @@ public class PublicAuthorsTest {
 
         List<Author> authorList = Lists.newArrayList();
 
-        Author publicAuthor = new Author();
+        Author publicAuthor = new NormalAuthor();
         publicAuthor.setContactInfo(new ContactInfo());
         publicAuthor.getContactInfo().setName("Public Name");
         publicAuthor.getContactInfo().setShowName(true);
         publicAuthor.setMunicipality(Maybe.of(new Municipality(1L, null, null, false)));
         authorList.add(publicAuthor);
 
-        Author privateAuthor = new Author();
+        Author privateAuthor = new NormalAuthor();
         privateAuthor.setContactInfo(privateContactInfo());
         authorList.add(privateAuthor);
         authorList.add(privateAuthor);

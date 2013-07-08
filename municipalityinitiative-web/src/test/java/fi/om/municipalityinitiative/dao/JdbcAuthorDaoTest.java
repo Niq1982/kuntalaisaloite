@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
+import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.dto.Author;
@@ -96,7 +97,7 @@ public class JdbcAuthorDaoTest {
         assertThat(author.getContactInfo().getName(), is(TestHelper.DEFAULT_PARTICIPANT_NAME));
         assertThat(author.getContactInfo().getEmail(), is(TestHelper.DEFAULT_PARTICIPANT_EMAIL));
         assertThat(author.getContactInfo().getPhone(), is(TestHelper.DEFAULT_AUTHOR_PHONE));
-        assertThat(author.getMunicipality().get().getId(), is(testMunicipality));
+        assertThat(((Municipality) author.getMunicipality().get()).getId(), is(testMunicipality)); // XXX: Is IDEA bugging or something? That cast is needed for some reason
         assertThat(author.getCreateTime(), is(new LocalDate()));
 
         ReflectionTestUtils.assertNoNullFields(author);

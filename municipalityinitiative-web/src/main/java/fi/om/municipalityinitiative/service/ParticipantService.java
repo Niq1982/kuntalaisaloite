@@ -5,10 +5,13 @@ import com.google.common.collect.Sets;
 import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dto.Author;
+import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
+import fi.om.municipalityinitiative.service.id.Id;
+import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -44,18 +47,18 @@ public class ParticipantService {
         return toListInfo(participantDao.findAllParticipants(initiativeId), getAuthorIds(initiativeId));
     }
 
-    private Set<Long> getAuthorIds(Long initiativeId) {
-        Set<Long> authorIds = Sets.newHashSet();
-        for (Author author : authorDao.findNormalAuthors(initiativeId)) {
+    private Set<NormalAuthorId> getAuthorIds(Long initiativeId) {
+        Set<NormalAuthorId> authorIds = Sets.newHashSet();
+        for (NormalAuthor author : authorDao.findNormalAuthors(initiativeId)) {
             authorIds.add(author.getId());
         }
         return authorIds;
     }
 
-    static List<ParticipantListInfo> toListInfo(List<Participant> participants, Set<Long> authorIds) {
+    static List<ParticipantListInfo> toListInfo(List<Participant> participants, Set<NormalAuthorId> authorIds) {
         ArrayList<ParticipantListInfo> participantList = Lists.newArrayList();
         for (Participant participant : participants) {
-            participantList.add(new ParticipantListInfo(participant, authorIds.contains(participant.getId())));
+            participantList.add(new ParticipantListInfo(participant, authorIds.contains(new NormalAuthorId(participant.getId()))));
         }
         return participantList;
     }

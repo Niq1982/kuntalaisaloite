@@ -48,7 +48,7 @@ public class ModerationService {
         emailService.sendStatusEmail(initiativeId, EmailMessageType.REJECTED_BY_OM);
     }
 
-    public List<Author> findAuthors(OmLoginUserHolder loginUserHolder, Long initiativeId) {
+    public List<? extends Author> findAuthors(OmLoginUserHolder loginUserHolder, Long initiativeId) {
         loginUserHolder.assertOmUser();
         return moderationServiceOperations.findAuthors(initiativeId);
     }

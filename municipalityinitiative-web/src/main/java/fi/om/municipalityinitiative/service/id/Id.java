@@ -20,7 +20,7 @@ public abstract class Id implements Serializable {
             return false;
         }
         if (this.getClass() != obj.getClass()) {
-            return false;
+            throw new RuntimeException("Trying to compare classes: " + this.getClass() + " and " + obj.getClass());
         }
         Id that = (Id) obj;
         return this.id == that.id;
@@ -33,7 +33,7 @@ public abstract class Id implements Serializable {
 
     @Override
     public final String toString() {
-        return getClass().getSimpleName() + "(" + id + ")";
+        return String.valueOf(id);
     }
 }
 

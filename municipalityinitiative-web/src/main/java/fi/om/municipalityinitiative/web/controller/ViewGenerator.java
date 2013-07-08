@@ -137,7 +137,7 @@ public class ViewGenerator {
                         .build());
     }
 
-    public static ViewGenerator moderationView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<Author> authors) {
+    public static ViewGenerator moderationView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors) {
         return new ViewGenerator(MODERATION_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
@@ -147,7 +147,7 @@ public class ViewGenerator {
         );
     }
 
-    public static ViewGenerator managementView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<Author> authors, ParticipantCount participantCount) {
+    public static ViewGenerator managementView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, ParticipantCount participantCount) {
         return new ViewGenerator(MANAGEMENT_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
@@ -158,7 +158,7 @@ public class ViewGenerator {
         );
     }
 
-    public static ViewGenerator updateView(InitiativeViewInfo initiative, InitiativeUIUpdateDto initiativeForUpdate, Author authorInformation, List<Author> authors, String previousPageURI) {
+    public static ViewGenerator updateView(InitiativeViewInfo initiative, InitiativeUIUpdateDto initiativeForUpdate, Author authorInformation, List<? extends Author> authors, String previousPageURI) {
         return new ViewGenerator(UPDATE_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiative)
@@ -192,7 +192,7 @@ public class ViewGenerator {
 
     public static ViewGenerator manageAuthorsView(InitiativeViewInfo initiativeInfo,
                                                   ManagementSettings managementSettings,
-                                                  List<Author> authors,
+                                                  List<? extends Author> authors,
                                                   List<AuthorInvitation> invitations, AuthorInvitationUICreateDto invitationUiCreate) {
         return new ViewGenerator(MANAGE_AUTHORS_VIEW,
                 new AttributeBuilder()

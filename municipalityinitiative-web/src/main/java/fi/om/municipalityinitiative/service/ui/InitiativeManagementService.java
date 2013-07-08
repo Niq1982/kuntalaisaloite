@@ -2,8 +2,11 @@ package fi.om.municipalityinitiative.service.ui;
 
 import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dao.UserDao;
+import fi.om.municipalityinitiative.dto.NormalAuthor;
+import fi.om.municipalityinitiative.dto.VerifiedAuthor;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
+import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
@@ -55,7 +58,7 @@ public class InitiativeManagementService {
         ContactInfo contactInfo;
 
         if (initiative.getType().isNotVerifiable()) {
-            contactInfo = authorDao.getAuthor(loginUserHolder.getNormalLoginUser().getAuthorId()).getContactInfo();
+            contactInfo = authorDao.getAuthor(loginUserHolder.getNormalLoginUser().getAuthorId().toLong()).getContactInfo();
         }
         else {
             contactInfo = authorDao.getVerifiedAuthorContactInfo(initiativeId, loginUserHolder.getVerifiedUser().getHash());
@@ -76,7 +79,7 @@ public class InitiativeManagementService {
         assertAllowance("Edit initiative", ManagementSettings.of(initiative).isAllowEdit());
         initiativeDao.editInitiativeDraft(initiativeId, editDto);
         if (initiative.getType().isNotVerifiable()) {
-            authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId(), editDto.getContactInfo());
+            authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId().toLong(), editDto.getContactInfo());
         }
         else {
             String hash = loginUserHolder.getVerifiedUser().getHash();
@@ -95,7 +98,7 @@ public class InitiativeManagementService {
 
         ContactInfo contactInfo;
         if (initiative.getType().isNotVerifiable()) {
-            contactInfo = authorDao.getAuthor(loginUserHolder.getNormalLoginUser().getAuthorId()).getContactInfo();
+            contactInfo = authorDao.getAuthor(loginUserHolder.getNormalLoginUser().getAuthorId().toLong()).getContactInfo();
         }
         else {
             contactInfo = authorDao.getVerifiedAuthorContactInfo(initiativeId, loginUserHolder.getVerifiedUser().getHash());
@@ -115,16 +118,18 @@ public class InitiativeManagementService {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         Initiative initiative = initiativeDao.get(initiativeId);
         if (initiative.getType().isNotVerifiable()) {
-            for (Author author : authorDao.findNormalAuthors(initiativeId)) {
+            for (NormalAuthor author : authorDao.findNormalAuthors(initiativeId)) {
                 if (author.getId().equals(loginUserHolder.getNormalLoginUser().getAuthorId())) {
                     return author;
                 }
             }
         }
         else {
-            Author author = new Author();
-            author.setContactInfo(userDao.getVerifiedUser(loginUserHolder.getVerifiedUser().getHash()).get().getContactInfo());
+            VerifiedAuthor author = new VerifiedAuthor();
+            VerifiedUser dbVerifiedUser = userDao.getVerifiedUser(loginUserHolder.getVerifiedUser().getHash()).get();
+            author.setContactInfo(dbVerifiedUser.getContactInfo());
             author.setMunicipality(Maybe.of(new Municipality(-1L, "Kunta", "Municipality", false)));
+            author.setId(null); // FIXME: Omg
             return author;
         }
         throw new NotFoundException("Author", initiativeId);
@@ -139,7 +144,7 @@ public class InitiativeManagementService {
 
         initiativeDao.updateExtraInfo(initiativeId, updateDto.getExtraInfo(), updateDto.getExternalParticipantCount());
         if (initiative.getType().isNotVerifiable()) {
-            authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId(), updateDto.getContactInfo());
+            authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId().toLong(), updateDto.getContactInfo());
         }
         else {
             String hash = loginUserHolder.getVerifiedUser().getHash();

@@ -5,9 +5,13 @@ import com.mysema.query.Tuple;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
 import fi.om.municipalityinitiative.dto.Author;
+import fi.om.municipalityinitiative.dto.NormalAuthor;
+import fi.om.municipalityinitiative.dto.VerifiedAuthor;
 import fi.om.municipalityinitiative.dto.service.*;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
+import fi.om.municipalityinitiative.service.id.NormalAuthorId;
+import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -20,13 +24,13 @@ import static fi.om.municipalityinitiative.sql.QVerifiedUser.verifiedUser;
 
 public class Mappings {
 
-    public static Expression<Author> authorMapping =
-            new MappingProjection<Author>(Author.class,
+    public static Expression<NormalAuthor> normalAuthorMapping =
+            new MappingProjection<NormalAuthor>(NormalAuthor.class,
                     QMunicipality.municipality.all(),
                     QParticipant.participant.all(),
                     QAuthor.author.all()) {
                 @Override
-                protected Author map(Tuple row) {
+                protected NormalAuthor map(Tuple row) {
 
                     ContactInfo contactInfo = new ContactInfo();
                     contactInfo.setAddress(row.get(QAuthor.author.address));
@@ -35,14 +39,13 @@ public class Mappings {
                     contactInfo.setName(row.get(QParticipant.participant.name));
                     contactInfo.setShowName(Boolean.TRUE.equals(row.get(QParticipant.participant.showName)));
 
-                    Author author = new Author();
-                    author.setId(row.get(QAuthor.author.participantId));
+                    NormalAuthor author = new NormalAuthor();
+                    author.setId(new NormalAuthorId(row.get(QAuthor.author.participantId)));
                     author.setCreateTime(row.get(QParticipant.participant.participateTime));
                     author.setContactInfo(contactInfo);
                     author.setMunicipality(Maybe.of(parseMunicipality(row)));
 
                     return author;
-
 
                 }
             };
@@ -122,14 +125,14 @@ public class Mappings {
             return contactInfo;
         }
     };
-    public static Expression<Author> verifiedAuthorMapper = new MappingProjection<Author>(Author.class,
+    public static Expression<VerifiedAuthor> verifiedAuthorMapper = new MappingProjection<VerifiedAuthor>(VerifiedAuthor.class,
             QVerifiedAuthor.verifiedAuthor.all(),
             QVerifiedParticipant.verifiedParticipant.all(),
             QVerifiedUser.verifiedUser.all(),
             QMunicipality.municipality.all()) {
         @Override
-        protected Author map(Tuple row) {
-            Author author = new Author();
+        protected VerifiedAuthor map(Tuple row) {
+            VerifiedAuthor author = new VerifiedAuthor();
 
             ContactInfo contactInfo = new ContactInfo();
             contactInfo.setPhone(row.get(QVerifiedUser.verifiedUser.phone));
@@ -139,6 +142,7 @@ public class Mappings {
             contactInfo.setShowName(row.get(QVerifiedParticipant.verifiedParticipant.showName)); // currently has not null constraint
 
             author.setContactInfo(contactInfo);
+            author.setId(new VerifiedUserId(row.get(QVerifiedUser.verifiedUser.id)));
             author.setCreateTime(row.get(QVerifiedParticipant.verifiedParticipant.participateTime));
 
             if (row.get(QMunicipality.municipality.name) == null) {

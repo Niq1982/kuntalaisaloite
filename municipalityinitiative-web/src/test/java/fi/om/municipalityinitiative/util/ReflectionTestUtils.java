@@ -1,5 +1,7 @@
 package fi.om.municipalityinitiative.util;
 
+import fi.om.municipalityinitiative.dto.NormalAuthor;
+import fi.om.municipalityinitiative.dto.VerifiedAuthor;
 import fi.om.municipalityinitiative.json.ObjectSerializer;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.Municipality;
@@ -100,8 +102,11 @@ public class ReflectionTestUtils {
         if (type.equals(Municipality.class)) {
             return modifyAllFields(new Municipality(0, "", "", false));
         }
-        if (type.equals(Author.class)) {
-            return modifyAllFields(new Author());
+        if (type.equals(NormalAuthor.class)) {
+            return modifyAllFields(new NormalAuthor());
+        }
+        if (type.equals(VerifiedAuthor.class)) {
+            return modifyAllFields(new VerifiedAuthor());
         }
         if (type.equals(List.class)) {
             return new ArrayList<>();

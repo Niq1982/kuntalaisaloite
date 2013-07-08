@@ -11,7 +11,7 @@ public class PublicAuthors {
     private List<AuthorInfo> publicAuthors = Lists.newArrayList();
     private int privateNameCount = 0;
 
-    public PublicAuthors(List<Author> allAuthors) {
+    public PublicAuthors(List<? extends Author> allAuthors) {
         for (Author author : allAuthors) {
             if (author.getContactInfo().isShowName()) {
                 AuthorInfo authorInfo = new AuthorInfo();

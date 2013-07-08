@@ -6,6 +6,8 @@ import com.google.common.collect.Sets;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.expr.DateTimeExpression;
+import fi.om.municipalityinitiative.dto.NormalAuthor;
+import fi.om.municipalityinitiative.dto.VerifiedAuthor;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.dto.Author;
@@ -118,14 +120,14 @@ public class JdbcAuthorDao implements AuthorDao {
     }
 
     @Override
-    public List<Author> findNormalAuthors(Long initiativeId) {
+    public List<NormalAuthor> findNormalAuthors(Long initiativeId) {
             return queryFactory.from(municipalityInitiative)
                     .innerJoin(municipalityInitiative._participantMunicipalityInitiativeIdFk, QParticipant.participant)
                     .innerJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
                     .innerJoin(QParticipant.participant.participantMunicipalityFk, QMunicipality.municipality)
                     .where(municipalityInitiative.id.eq(initiativeId))
                     .orderBy(QParticipant.participant.id.asc())
-                    .list(Mappings.authorMapping);
+                    .list(Mappings.normalAuthorMapping);
     }
 
     @Override
@@ -155,7 +157,7 @@ public class JdbcAuthorDao implements AuthorDao {
                 .where(QAuthor.author.participantId.eq(authorId))
                 .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
                 .innerJoin(QParticipant.participant.participantMunicipalityFk, QMunicipality.municipality)
-                .uniqueResult(Mappings.authorMapping);
+                .uniqueResult(Mappings.normalAuthorMapping);
     }
 
     @Override
@@ -237,7 +239,7 @@ public class JdbcAuthorDao implements AuthorDao {
     }
 
     @Override
-    public List<Author> findVerifiedAuthors(Long initiativeId) {
+    public List<VerifiedAuthor> findVerifiedAuthors(Long initiativeId) {
         return queryFactory.from(QVerifiedAuthor.verifiedAuthor)
                 .innerJoin(QVerifiedAuthor.verifiedAuthor.verifiedAuthorVerifiedUserFk, QVerifiedUser.verifiedUser)
                 .innerJoin(QVerifiedUser.verifiedUser._verifiedParticipantVerifiedUserFk, QVerifiedParticipant.verifiedParticipant)

@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dao.InvitationNotValidException;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.Author;
+import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUIConfirmDto;
@@ -126,19 +127,20 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         precondition(countAllAuthors(), is(2L));
 
         // Check new author information
-        List<Author> currentAuthors = currentAuthors(initiativeId);
+        List<? extends Author> currentAuthors = currentAuthors(initiativeId);
+
         Author createdAuthor = currentAuthors.get(currentAuthors.size() -1);
         assertThat(createdAuthor.getContactInfo().getName(), is(createDto.getContactInfo().getName()));
         assertThat(createdAuthor.getContactInfo().getEmail(), is(createDto.getContactInfo().getEmail()));
         assertThat(createdAuthor.getContactInfo().getAddress(), is(createDto.getContactInfo().getAddress()));
         assertThat(createdAuthor.getContactInfo().getPhone(), is(createDto.getContactInfo().getPhone()));
         assertThat(createdAuthor.getContactInfo().isShowName(), is(createDto.getContactInfo().isShowName()));
-        assertThat(createdAuthor.getMunicipality().get().getId(), is(authorsMunicipality));
+        assertThat(((Municipality) createdAuthor.getMunicipality().get()).getId(), is(authorsMunicipality));
 
         assertThat(participantCountOfInitiative(initiativeId), is(2));
     }
 
-    private List<Author> currentAuthors(Long initiativeId) {
+    private List<? extends Author> currentAuthors(Long initiativeId) {
         return authorService.findAuthors(initiativeId, TestHelper.authorLoginUserHolder);
        // return authorService.findAuthors(initiativeId, new LoginUserHolder<>(User.normalUser(-1L, Collections.singleton(initiativeId))));
     }
@@ -454,7 +456,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         assertThat(author.getContactInfo().isShowName(), is(TestHelper.DEFAULT_PUBLIC_NAME));
         assertThat(author.getMunicipality().isPresent(), is(true));
         assertThat(author.getCreateTime(), is(notNullValue()));
-        assertThat(author.getId(), is(nullValue()));
+        assertThat(author.getId(), is(notNullValue()));
     }
 
     private Long countAllAuthors() {

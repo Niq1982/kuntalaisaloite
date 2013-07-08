@@ -33,7 +33,7 @@ public class EmailServiceDataProvider {
         return initiativeDao.get(initiativeId);
     }
 
-    public List<Author> findAuthors(Long id) {
+    public List<? extends Author> findAuthors(Long id) {
         return authorDao.findNormalAuthors(id);
     }
 

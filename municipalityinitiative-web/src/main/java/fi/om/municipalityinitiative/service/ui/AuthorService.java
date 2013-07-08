@@ -64,16 +64,15 @@ public class AuthorService {
     }
 
     @Transactional(readOnly = true)
-    public List<Author> findAuthors(Long initiativeId, LoginUserHolder loginUserHolder) {
+    public List<? extends Author> findAuthors(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-
         return findAuthors(initiativeId);
     }
 
     public void deleteAuthor(Long initiativeId, LoginUserHolder loginUserHolder, Long authorId) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        if (loginUserHolder.getNormalLoginUser().getAuthorId().equals(authorId)) {
+        if (loginUserHolder.getNormalLoginUser().getAuthorId().toLong() == authorId) {
             throw new OperationNotAllowedException("Removing yourself from authors is not allowed");
         }
 
@@ -147,7 +146,7 @@ public class AuthorService {
         return data;
     }
 
-    private List<Author> findAuthors(Long initiativeId) {
+    private List<? extends Author> findAuthors(Long initiativeId) {
         if (initiativeDao.isVerifiableInitiative(initiativeId)) {
             return authorDao.findVerifiedAuthors(initiativeId);
         }

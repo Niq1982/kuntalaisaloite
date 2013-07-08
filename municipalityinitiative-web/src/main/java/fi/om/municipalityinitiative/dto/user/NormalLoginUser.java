@@ -1,16 +1,18 @@
 package fi.om.municipalityinitiative.dto.user;
 
+import fi.om.municipalityinitiative.service.id.NormalAuthorId;
+
 import java.util.Set;
 
 public class NormalLoginUser extends User {
 
     private Set<Long> authorsInitiatives;
 
-    private Long authorId;
+    private NormalAuthorId authorId;
 
     NormalLoginUser(Long authorId, Set<Long> authorsInitiatives) {
         this.authorsInitiatives = authorsInitiatives;
-        this.authorId = authorId;
+        this.authorId = new NormalAuthorId(authorId);
     }
 
     @Override
@@ -33,7 +35,7 @@ public class NormalLoginUser extends User {
         return false;
     }
 
-    public Long getAuthorId() {
+    public NormalAuthorId getAuthorId() {
         return authorId;
     }
 

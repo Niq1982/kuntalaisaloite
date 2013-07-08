@@ -71,7 +71,7 @@ public class ModerationServiceOperations {
     }
 
     @Transactional(readOnly = true)
-    public List<Author> findAuthors(Long initiativeId) {
+    public List<? extends Author> findAuthors(Long initiativeId) {
         return authorDao.findNormalAuthors(initiativeId);
     }
 

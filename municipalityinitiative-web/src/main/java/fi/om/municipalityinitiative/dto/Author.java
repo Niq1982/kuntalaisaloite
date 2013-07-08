@@ -2,15 +2,17 @@ package fi.om.municipalityinitiative.dto;
 
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
+import fi.om.municipalityinitiative.service.id.Id;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.LocalDate;
 
-public class Author {
+public abstract class Author<E extends Id> {
 
-    private Long id;
     private Maybe<Municipality> municipality;
     private ContactInfo contactInfo;
     private LocalDate createTime;
+
+    public abstract E getId();
 
     public Maybe<Municipality> getMunicipality() {
         return municipality;
@@ -26,14 +28,6 @@ public class Author {
 
     public void setContactInfo(ContactInfo contactInfo) {
         this.contactInfo = contactInfo;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public LocalDate getCreateTime() {

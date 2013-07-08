@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.util;
 
 import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dto.Author;
+import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
@@ -61,7 +62,7 @@ public class TestDataTemplates {
         initiativeTemplate.initiative.setExtraInfo(extraInfo);
         initiativeTemplate.initiative.setType(collaborative ? InitiativeType.COLLABORATIVE : InitiativeType.SINGLE);
         initiativeTemplate.initiative.setState(InitiativeState.PUBLISHED);
-        initiativeTemplate.author = new Author();
+        initiativeTemplate.author = new NormalAuthor();
         initiativeTemplate.author.setContactInfo(contactInfo());
         initiativeTemplate.author.getContactInfo().setEmail(email);
         initiativeTemplate.author.getContactInfo().setShowName(true);

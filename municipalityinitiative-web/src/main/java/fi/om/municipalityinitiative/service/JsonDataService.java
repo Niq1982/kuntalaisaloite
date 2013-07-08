@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dto.Author;
+import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.PublicAuthors;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
@@ -119,7 +120,7 @@ public class JsonDataService {
     private static List<Author> createAuthors() {
         List<Author> authors = Lists.newArrayList();
 
-        Author author1 = new Author();
+        Author author1 = new NormalAuthor();
         ContactInfo contactInfo1 = new ContactInfo();
         contactInfo1.setName("Teemu Teekkari");
         contactInfo1.setShowName(true);
@@ -127,7 +128,7 @@ public class JsonDataService {
         author1.setMunicipality(Maybe.of(ApiController.TAMPERE));
         authors.add(author1);
 
-        Author author2 = new Author();
+        Author author2 = new NormalAuthor();
         ContactInfo contactInfo2 = new ContactInfo();
         contactInfo2.setShowName(false);
         author2.setContactInfo(contactInfo2);

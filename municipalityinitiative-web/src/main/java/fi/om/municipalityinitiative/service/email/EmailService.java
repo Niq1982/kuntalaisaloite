@@ -82,7 +82,7 @@ public class EmailService {
     public void sendSingleToMunicipality(Long initiativeId, Locale locale) {
 
         Initiative initiative = dataProvider.get(initiativeId);
-        List<Author> authors = dataProvider.findAuthors(initiative.getId());
+        List<? extends Author> authors = dataProvider.findAuthors(initiative.getId());
         String municipalityEmail = solveMunicipalityEmail(initiative);
 
         emailMessageConstructor
@@ -218,7 +218,7 @@ public class EmailService {
 
         Locale locale = Locales.LOCALE_FI;
 
-        List<Author> authors = dataProvider.findAuthors(initiativeId);
+        List<? extends Author> authors = dataProvider.findAuthors(initiativeId);
         Initiative initiative = dataProvider.get(initiativeId);
 
         emailMessageConstructor
@@ -306,7 +306,7 @@ public class EmailService {
         return dataMap;
     }
 
-    private Map<String, Object> toDataMap(Initiative initiative, List<Author> authors, Locale locale) {
+    private Map<String, Object> toDataMap(Initiative initiative, List<? extends Author> authors, Locale locale) {
         Map<String, Object> stringObjectMap = toDataMap(initiative, locale);
         stringObjectMap.put("authors", authors);
         return stringObjectMap;

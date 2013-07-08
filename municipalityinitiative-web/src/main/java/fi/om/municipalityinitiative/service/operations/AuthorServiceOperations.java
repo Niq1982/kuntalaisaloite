@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.service.operations;
 import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dto.Author;
+import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
@@ -60,7 +61,7 @@ public class AuthorServiceOperations {
 
     @Transactional(readOnly = false)
     public ContactInfo doDeleteAuthor(Long initiativeId, Long authorId) {
-        List<Author> authors = authorDao.findNormalAuthors(initiativeId);
+        List<NormalAuthor> authors = authorDao.findNormalAuthors(initiativeId);
         if (!hasAuthor(authorId, authors)) {
             throw new NotFoundException("Author", "initiative: " + initiativeId + ", author: " + authorId);
         }
@@ -74,9 +75,9 @@ public class AuthorServiceOperations {
         }
     }
 
-    private static boolean hasAuthor(Long authorId, List<Author> authors) {
+    private static boolean hasAuthor(Long authorId, List<NormalAuthor> authors) {
         for (Author author : authors) {
-            if (author.getId().equals(authorId)) {
+            if (author.getId().toLong() == authorId.longValue()) {
                 return true;
             }
         }
