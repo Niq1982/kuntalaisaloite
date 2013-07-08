@@ -118,16 +118,28 @@ public class AuthorService {
 
     @Transactional(readOnly = false)
     public AuthorInvitationConfirmViewData getAuthorInvitationConfirmData(Long initiativeId, String confirmCode, LoginUserHolder unknownLoginUserHolder) {
+
+        boolean isVerifiableInitiative = initiativeDao.isVerifiableInitiative(initiativeId);
+        if (isVerifiableInitiative) {
+            unknownLoginUserHolder.getVerifiedUser(); // Throws exception if not verified
+        }
+
         AuthorInvitation authorInvitation = authorDao.getAuthorInvitation(initiativeId, confirmCode);
 
         assertNotRejectedOrExpired(authorInvitation);
 
         AuthorInvitationUIConfirmDto confirmDto = new AuthorInvitationUIConfirmDto();
         confirmDto.setInitiativeMunicipality(initiativeDao.get(initiativeId).getMunicipality().getId());
-        confirmDto.setContactInfo(new ContactInfo());
-        confirmDto.getContactInfo().setName(authorInvitation.getName());
-        confirmDto.getContactInfo().setEmail(authorInvitation.getEmail());
         confirmDto.setConfirmCode(authorInvitation.getConfirmationCode());
+
+        if (!isVerifiableInitiative) {
+            confirmDto.setContactInfo(new ContactInfo());
+            confirmDto.getContactInfo().setName(authorInvitation.getName());
+            confirmDto.getContactInfo().setEmail(authorInvitation.getEmail());
+        }
+        else {
+            confirmDto.setContactInfo(unknownLoginUserHolder.getVerifiedUser().getContactInfo());
+        }
 
         AuthorInvitationConfirmViewData data = new AuthorInvitationConfirmViewData();
         data.authorInvitationUIConfirmDto = confirmDto;

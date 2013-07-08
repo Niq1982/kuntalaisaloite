@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.dto.user;
 
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
+import fi.om.municipalityinitiative.exceptions.VerifiedLoginRequiredException;
 
 public class LoginUserHolder<E extends User> {
 
@@ -43,7 +44,7 @@ public class LoginUserHolder<E extends User> {
     public VerifiedUser getVerifiedUser() {
         // TODO: Throw some exception which redirects to vetuma.
         if (!isVerifiedUser()) {
-            throw new AccessDeniedException("Not logged in");
+            throw new VerifiedLoginRequiredException();
         }
         return (VerifiedUser) user;
     }

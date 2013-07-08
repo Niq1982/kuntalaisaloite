@@ -242,13 +242,14 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         authorService.createAuthorInvitation(initiativeId, TestHelper.authorLoginUserHolder, authorInvitation());
 
         String confirmCode = RandomHashGenerator.getPrevious();
-        AuthorInvitationConfirmViewData authorInvitationConfirmData = authorService.getAuthorInvitationConfirmData(initiativeId, confirmCode, TestHelper.unknownLoginUserHolder);
+        LoginUserHolder<VerifiedUser> verifiedLoginUserHolderFor = getVerifiedLoginUserHolderFor(initiativeId);
+
+        AuthorInvitationConfirmViewData authorInvitationConfirmData = authorService.getAuthorInvitationConfirmData(initiativeId, confirmCode, verifiedLoginUserHolderFor);
 
         assertThat(authorInvitationConfirmData.authorInvitationUIConfirmDto.getConfirmCode(), is(confirmCode));
         assertThat(authorInvitationConfirmData.authorInvitationUIConfirmDto.getMunicipality(), is(testMunicipality));
-        assertThat(authorInvitationConfirmData.authorInvitationUIConfirmDto.getHomeMunicipality(), is(testMunicipality));
         ReflectionTestUtils.assertReflectionEquals(authorInvitationConfirmData.authorInvitationUIConfirmDto.getContactInfo(),
-                getVerifiedLoginUserHolderFor(initiativeId).getVerifiedUser().getContactInfo());
+                verifiedLoginUserHolderFor.getVerifiedUser().getContactInfo());
 
     }
 
@@ -275,7 +276,13 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
     @Test
     public void prefilled_verified_author_confirmation_has_initiative_info() {
-        throw new RuntimeException("not implemented");
+        Long municipalityId = testHelper.createTestMunicipality("name");
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality).applyAuthor().toInitiativeDraft()
+                .withState(InitiativeState.ACCEPTED));
+        authorService.createAuthorInvitation(initiativeId, TestHelper.authorLoginUserHolder, authorInvitation());
+
+        InitiativeViewInfo confirmDto = authorService.getAuthorInvitationConfirmData(initiativeId, RandomHashGenerator.getPrevious(), getVerifiedLoginUserHolderFor(municipalityId)).initiativeViewInfo;
+        assertThat(confirmDto.getId(), is(initiativeId));
     }
 
     @Test
