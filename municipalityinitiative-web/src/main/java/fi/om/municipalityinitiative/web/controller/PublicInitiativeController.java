@@ -11,6 +11,7 @@ import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
 import fi.om.municipalityinitiative.service.ui.VerifiedInitiativeService;
+import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.web.RequestMessage;
@@ -116,7 +117,7 @@ public class PublicInitiativeController extends BaseController {
                               HttpServletRequest request) {
         Urls urls = Urls.get(locale);
 
-        if (initiative.getInitiativeType().isVerifiable()) {
+        if (InitiativeType.isVerifiable(initiative.getInitiativeType())) {
             LoginUserHolder<User> loginUserHolder = userService.getLoginUserHolder(request);
             if (loginUserHolder.isVerifiedUser()) {
                 long initiativeId;
@@ -249,18 +250,29 @@ public class PublicInitiativeController extends BaseController {
         InitiativeViewInfo initiativeInfo = authorService.getAuthorInvitationConfirmData(initiativeId, confirmDto.getConfirmCode(), userService.getLoginUserHolder(request)).initiativeViewInfo;
         confirmDto.setInitiativeMunicipality(initiativeInfo.getMunicipality().getId());
 
-        if (validationService.validationSuccessful(confirmDto, bindingResult, model)) {
-            String generatedManagementHash = authorService.confirmAuthorInvitation(initiativeId, confirmDto, locale);
-            userService.authorLogin(generatedManagementHash, request);
-            return redirectWithMessage(Urls.get(locale).management(initiativeId), RequestMessage.CONFIRM_INVITATION_ACCEPTED, request);
+        if (initiativeInfo.isVerifiable()) {
+            try {
+                authorService.confirmAuthorInvitation(initiativeId, confirmDto, locale);
+                return redirectWithMessage(Urls.get(locale).management(initiativeId), RequestMessage.CONFIRM_INVITATION_ACCEPTED, request);
+            } catch (InvalidHomeMunicipalityException e) {
+                return redirectWithMessage(Urls.get(locale).invitation(initiativeId, confirmDto.getConfirmCode()), RequestMessage.INVALID_HOME_MUNICIPALITY, request);
+            }
         }
         else {
-            return ViewGenerator.invitationView(initiativeInfo,
-                    municipalityService.findAllMunicipalities(locale),
-                    authorService.findPublicAuthors(initiativeId),
-                    participantService.getParticipantCount(initiativeId),
-                    confirmDto
-            ).view(model, Urls.get(locale).alt().manageAuthors(initiativeId));
+
+            if (validationService.validationSuccessful(confirmDto, bindingResult, model)) {
+                String generatedManagementHash = authorService.confirmAuthorInvitation(initiativeId, confirmDto, locale);
+                userService.authorLogin(generatedManagementHash, request);
+                return redirectWithMessage(Urls.get(locale).management(initiativeId), RequestMessage.CONFIRM_INVITATION_ACCEPTED, request);
+            }
+            else {
+                return ViewGenerator.invitationView(initiativeInfo,
+                        municipalityService.findAllMunicipalities(locale),
+                        authorService.findPublicAuthors(initiativeId),
+                        participantService.getParticipantCount(initiativeId),
+                        confirmDto
+                ).view(model, Urls.get(locale).alt().manageAuthors(initiativeId));
+            }
         }
     }
 

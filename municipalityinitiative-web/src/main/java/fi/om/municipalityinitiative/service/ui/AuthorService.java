@@ -85,6 +85,10 @@ public class AuthorService {
     @Transactional(readOnly = false)
     public String confirmAuthorInvitation(Long initiativeId, AuthorInvitationUIConfirmDto confirmDto, Locale locale) {
 
+        // TODO: Verifiable initiative
+        // TODO: Invalid homeMunicipality
+        // TODO: Already participated/author
+
         ManagementSettings managementSettings = ManagementSettings.of(initiativeDao.get(initiativeId));
         SecurityUtil.assertAllowance("Accept invitation", managementSettings.isAllowInviteAuthors());
 
