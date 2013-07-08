@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
+import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -53,7 +55,7 @@ public class JdbcUserDaoTest {
     }
 
     @Test
-    public void update_user_information() {
+    public void update_contact_info() {
         userDao.addVerifiedUser(HASH, contactInfo());
 
         ContactInfo updatedContactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
@@ -63,6 +65,22 @@ public class JdbcUserDaoTest {
         assertThat(result.getPhone(), is(updatedContactInfo.getPhone()));
         assertThat(result.getAddress(), is(updatedContactInfo.getAddress()));
         assertThat(result.getEmail(), is(updatedContactInfo.getEmail()));
+        assertThat(result.getName(), is(not(updatedContactInfo.getName()))); // Name should not be changed
+    }
+
+    @Test
+    public void update_name_and_municipality() {
+
+        userDao.addVerifiedUser(HASH, contactInfo());
+
+        String newName = "New Name";
+        String newMunicipalityName = "name";
+        userDao.updateUserInformation(HASH, newName, Maybe.of(new Municipality(testHelper.createTestMunicipality(newMunicipalityName), newMunicipalityName, newMunicipalityName, true)));
+
+        VerifiedUser result = userDao.getVerifiedUser(HASH).get();
+        assertThat(result.getContactInfo().getName(), is(newName));
+        assertThat(result.getHomeMunicipality().isPresent(), is(true));
+        assertThat(result.getHomeMunicipality().get().getNameFi(), is(newMunicipalityName));
     }
 
     @Test

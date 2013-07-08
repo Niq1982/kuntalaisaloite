@@ -45,36 +45,53 @@ public class JdbcUserDao implements UserDao {
     @Override
     // TODO: Argh. Improve usage of QueryDSL
     public Maybe<VerifiedUser> getVerifiedUser(String hash) {
-        Maybe<ContactInfo> contactInfoMaybe = Maybe.fromNullable(queryFactory.from(verifiedUser)
-                .where(verifiedUser.hash.eq(hash))
-                .uniqueResult(Mappings.verifiedUserContactInfo));
 
-        if (contactInfoMaybe.isNotPresent()) {
+        class VerifiedUserDataWrapper {
+
+            ContactInfo contactInfo;
+            Maybe<Municipality> municipalityMaybe;
+            VerifiedUserId verifiedUserId;
+        }
+
+        Maybe<VerifiedUserDataWrapper> userDataMaybe = Maybe.fromNullable(
+                queryFactory.from(verifiedUser)
+                        .leftJoin(verifiedUser.verifiedUserMunicipalityFk, QMunicipality.municipality)
+                        .where(verifiedUser.hash.eq(hash))
+                        .uniqueResult(new MappingProjection<VerifiedUserDataWrapper>(VerifiedUserDataWrapper.class,
+                                QVerifiedUser.verifiedUser.all(),
+                                QMunicipality.municipality.all()
+                        ) {
+                            @Override
+                            protected VerifiedUserDataWrapper map(Tuple row) {
+                                VerifiedUserDataWrapper verifiedUserDataWrapper = new VerifiedUserDataWrapper();
+                                verifiedUserDataWrapper.contactInfo = new ContactInfo();
+                                verifiedUserDataWrapper.contactInfo.setEmail(row.get(QVerifiedUser.verifiedUser.email));
+                                verifiedUserDataWrapper.contactInfo.setShowName(true); // XXX: This is not needed, therefore ugly
+                                verifiedUserDataWrapper.contactInfo.setAddress(row.get(QVerifiedUser.verifiedUser.address));
+                                verifiedUserDataWrapper.contactInfo.setName(row.get(QVerifiedUser.verifiedUser.name));
+                                verifiedUserDataWrapper.contactInfo.setPhone(row.get(QVerifiedUser.verifiedUser.phone));
+                                verifiedUserDataWrapper.verifiedUserId = new VerifiedUserId(row.get(QVerifiedUser.verifiedUser.id));
+                                if (row.get(QVerifiedUser.verifiedUser.municipalityId) == null) {
+                                    verifiedUserDataWrapper.municipalityMaybe = Maybe.absent();
+                                }
+                                else {
+                                    verifiedUserDataWrapper.municipalityMaybe = Maybe.of(new Municipality(
+                                            row.get(QMunicipality.municipality.id),
+                                            row.get(QMunicipality.municipality.name),
+                                            row.get(QMunicipality.municipality.nameSv),
+                                            row.get(QMunicipality.municipality.active)
+                                    ));
+
+                                }
+
+                                return verifiedUserDataWrapper;
+                            }
+                        }));
+
+        if (userDataMaybe.isNotPresent()) {
             return Maybe.absent();
         }
 
-        // Get municipality
-        @Nullable Municipality maybeMunicipality = queryFactory.from(QVerifiedUser.verifiedUser)
-                .where(QVerifiedUser.verifiedUser.hash.eq(hash))
-                .leftJoin(QVerifiedUser.verifiedUser.verifiedUserMunicipalityFk, QMunicipality.municipality)
-                .uniqueResult(new MappingProjection<Municipality>(Municipality.class,
-                        QMunicipality.municipality.all()) {
-
-                    @Override
-                    protected Municipality map(Tuple row) {
-                        if (row.get(QMunicipality.municipality.id) == null) {
-                            return null;
-                        }
-
-                        return new Municipality(
-                                row.get(QMunicipality.municipality.id),
-                                row.get(QMunicipality.municipality.name),
-                                row.get(QMunicipality.municipality.nameSv),
-                                row.get(QMunicipality.municipality.active)
-                        );
-
-                    }
-                });
 
         // Get users initiatives
         List<Long> initiatives = queryFactory.from(QMunicipalityInitiative.municipalityInitiative)
@@ -83,7 +100,7 @@ public class JdbcUserDao implements UserDao {
                 .where(QVerifiedUser.verifiedUser.hash.eq(hash))
                 .list(QMunicipalityInitiative.municipalityInitiative.id);
 
-        return Maybe.of(User.verifiedUser(hash, contactInfoMaybe.get(), new HashSet<>(initiatives), Maybe.<Municipality>fromNullable(maybeMunicipality)));
+        return Maybe.of(User.verifiedUser(hash, userDataMaybe.get().contactInfo, new HashSet<>(initiatives), userDataMaybe.get().municipalityMaybe));
     }
 
     @Override
