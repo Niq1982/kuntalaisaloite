@@ -6,6 +6,7 @@ import fi.om.municipalityinitiative.dao.InvitationNotValidException;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
+import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.dto.ui.*;
@@ -14,6 +15,7 @@ import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.operations.AuthorServiceOperations;
+import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.util.SecurityUtil;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,13 +85,16 @@ public class AuthorService {
     }
 
     @Transactional(readOnly = false)
-    public String confirmAuthorInvitation(Long initiativeId, AuthorInvitationUIConfirmDto confirmDto, Locale locale) {
+    public String confirmAuthorInvitation(Long initiativeId, AuthorInvitationUIConfirmDto confirmDto, Locale locale, LoginUserHolder unknownLoginUserHolder) {
 
         // TODO: Verifiable initiative
         // TODO: Invalid homeMunicipality
         // TODO: Already participated/author
 
-        ManagementSettings managementSettings = ManagementSettings.of(initiativeDao.get(initiativeId));
+        Initiative initiative = initiativeDao.get(initiativeId);
+        boolean isVerifiable = InitiativeType.isVerifiable(initiative.getType());
+
+        ManagementSettings managementSettings = ManagementSettings.of(initiative);
         SecurityUtil.assertAllowance("Accept invitation", managementSettings.isAllowInviteAuthors());
 
         for (AuthorInvitation invitation : authorDao.findInvitations(initiativeId)) {
@@ -98,12 +103,17 @@ public class AuthorService {
 
                 assertNotRejectedOrExpired(invitation);
 
-                String managementHash = createAuthorAndParticipant(initiativeId, confirmDto);
-                authorDao.deleteAuthorInvitation(initiativeId, confirmDto.getConfirmCode());
+                // TODO: Get emails out of transaction?
 
-                // TODO: get this out of transaction
-                emailService.sendAuthorConfirmedInvitation(initiativeId, invitation.getEmail(), managementHash, locale);
-                return managementHash;
+                authorDao.deleteAuthorInvitation(initiativeId, confirmDto.getConfirmCode());
+                if (isVerifiable) {
+
+                }
+                else {
+                    String managementHash = createAuthorAndParticipant(initiativeId, confirmDto);
+                    emailService.sendAuthorConfirmedInvitation(initiativeId, invitation.getEmail(), managementHash, locale);
+                    return managementHash;
+                }
 
             }
         }

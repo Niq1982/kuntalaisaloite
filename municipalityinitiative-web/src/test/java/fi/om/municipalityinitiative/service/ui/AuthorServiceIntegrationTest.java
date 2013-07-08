@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dao.InvitationNotValidException;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.Author;
-import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUIConfirmDto;
@@ -101,7 +100,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
     }
 
     @Test
-    public void confirm_author_invitation_adds_new_author_with_given_information() {
+    public void confirm_normal_author_invitation_adds_new_author_with_given_information() {
 
         Long authorsMunicipality = testHelper.createTestMunicipality("name");
         Long initiativeId = testHelper.createCollaborativeAccepted(authorsMunicipality);
@@ -122,7 +121,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         precondition(countAllAuthors(), is(1L)); // XXX: This does not care if the authors does not belong to this initiative
         precondition(participantCountOfInitiative(initiativeId), is(1));
 
-        authorService.confirmAuthorInvitation(initiativeId, createDto, null);
+        authorService.confirmAuthorInvitation(initiativeId, createDto, null, TestHelper.unknownLoginUserHolder);
 
         // Author count is increased
         precondition(countAllAuthors(), is(2L));
@@ -141,6 +140,11 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         assertThat(participantCountOfInitiative(initiativeId), is(2));
     }
 
+    @Test
+    public void confirm_verified_author_invitation_adds_new_author_with_given_information() {
+        // TODO: Implement
+    }
+
     private List<? extends Author> currentAuthors(Long initiativeId) {
         return authorService.findAuthors(initiativeId, TestHelper.authorLoginUserHolder);
        // return authorService.findAuthors(initiativeId, new LoginUserHolder<>(User.normalUser(-1L, Collections.singleton(initiativeId))));
@@ -154,7 +158,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
     public void confirm_author_invitation_not_allowed() {
         Long initiativeId = testHelper.createSingleSent(testMunicipality);
 
-        authorService.confirmAuthorInvitation(initiativeId, new AuthorInvitationUIConfirmDto(), null);
+        authorService.confirmAuthorInvitation(initiativeId, new AuthorInvitationUIConfirmDto(), null, TestHelper.unknownLoginUserHolder);
     }
 
     @Test
@@ -167,7 +171,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
         thrown.expect(InvitationNotValidException.class);
         thrown.expectMessage("Invitation is expired");
-        authorService.confirmAuthorInvitation(initiativeId, confirmDto, null);
+        authorService.confirmAuthorInvitation(initiativeId, confirmDto, null, TestHelper.unknownLoginUserHolder);
     }
 
     @Test
@@ -180,7 +184,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
         thrown.expect(InvitationNotValidException.class);
         thrown.expectMessage("Invitation is rejected");
-        authorService.confirmAuthorInvitation(initiativeId, confirmDto, null);
+        authorService.confirmAuthorInvitation(initiativeId, confirmDto, null, TestHelper.unknownLoginUserHolder);
     }
 
     @Test
@@ -193,7 +197,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
         thrown.expect(NotFoundException.class);
         thrown.expectMessage(containsString("bätmään"));
-        authorService.confirmAuthorInvitation(initiativeId, invitationUIConfirmDto, null);
+        authorService.confirmAuthorInvitation(initiativeId, invitationUIConfirmDto, null, TestHelper.unknownLoginUserHolder);
     }
 
     @Test
@@ -208,7 +212,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         confirmDto.setHomeMunicipality(testMunicipality);
 
         precondition(allCurrentInvitations(), is(1L));
-        authorService.confirmAuthorInvitation(initiativeId, confirmDto, null);
+        authorService.confirmAuthorInvitation(initiativeId, confirmDto, null, TestHelper.unknownLoginUserHolder);
         assertThat(allCurrentInvitations(), is(0L));
 
     }

@@ -53,6 +53,10 @@ create table municipality_initiative (
 );
 
 create index municipality_initiative_id_index on municipality_initiative(id);
+create index municipality_initiative_participant_count_index on municipality_initiative(participant_count);
+create index municipality_initiative_modified_index on municipality_initiative(modified);
+create index municipality_initiative_sent_index on municipality_initiative(sent);
+
 
 create table participant (
 	id bigserial,
