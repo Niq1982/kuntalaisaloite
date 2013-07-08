@@ -347,11 +347,20 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .executeWithKey(municipalityInitiative.id);
     }
 
+    @Override
+    public boolean isVerifiableInitiative(Long initiativeId) {
+        InitiativeType initiativeType = queryFactory.from(municipalityInitiative)
+                .where(municipalityInitiative.id.eq(initiativeId))
+                .uniqueResult(municipalityInitiative.type);
+
+        return initiativeType != null && initiativeType.isVerifiable();
+    }
+
     public static void assertSingleAffection(long affectedRows) {
         Assert.isTrue(affectedRows == 1, "Should have affected only one row. Affected: " + affectedRows);
     }
 
-    // Mappings:
+
 
 
 }

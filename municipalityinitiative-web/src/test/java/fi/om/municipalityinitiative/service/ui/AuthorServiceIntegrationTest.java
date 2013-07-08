@@ -402,6 +402,23 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
     }
 
+    @Test
+    public void find_authors_for_verified_initiative_retrieves_all_data() {
+
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality).applyAuthor().toInitiativeDraft());
+
+        Author author = authorService.findAuthors(initiativeId, TestHelper.authorLoginUserHolder).get(0);
+
+        assertThat(author.getContactInfo().getName(), is(TestHelper.DEFAULT_PARTICIPANT_NAME));
+        assertThat(author.getContactInfo().getAddress(), is(TestHelper.DEFAULT_AUTHOR_ADDRESS));
+        assertThat(author.getContactInfo().getEmail(), is(TestHelper.DEFAULT_PARTICIPANT_EMAIL));
+        assertThat(author.getContactInfo().getPhone(), is(TestHelper.DEFAULT_AUTHOR_PHONE));
+        assertThat(author.getContactInfo().isShowName(), is(TestHelper.DEFAULT_PUBLIC_NAME));
+        assertThat(author.getMunicipality().isPresent(), is(true));
+        assertThat(author.getCreateTime(), is(notNullValue()));
+        assertThat(author.getId(), is(nullValue()));
+    }
+
     private Long countAllAuthors() {
         return testHelper.countAll(QAuthor.author);
     }

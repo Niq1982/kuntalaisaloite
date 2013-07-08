@@ -237,7 +237,7 @@ public class TestHelper {
                 .set(QVerifiedUser.verifiedUser.phone, authorDraft.authorPhone)
                 .set(QVerifiedUser.verifiedUser.email, authorDraft.participantEmail)
                 .set(QVerifiedUser.verifiedUser.name, authorDraft.participantName)
-                .setNull(QVerifiedUser.verifiedUser.municipalityId) // TODO: Municipality
+                .set(QVerifiedUser.verifiedUser.municipalityId, authorDraft.participantMunicipality)
                 .executeWithKey(QVerifiedUser.verifiedUser.id);
 
         queryFactory.insert(QVerifiedAuthor.verifiedAuthor)

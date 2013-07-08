@@ -136,11 +136,11 @@ public class AuthorService {
     }
 
     private List<Author> findAuthors(Long initiativeId) {
-        if (initiativeDao.get(initiativeId).getType().isNotVerifiable()) {
-            return authorDao.findNormalAuthors(initiativeId);
+        if (initiativeDao.isVerifiableInitiative(initiativeId)) {
+            return authorDao.findVerifiedAuthors(initiativeId);
         }
         else {
-            return authorDao.findVerifiedAuthors(initiativeId);
+            return authorDao.findNormalAuthors(initiativeId);
         }
     }
 

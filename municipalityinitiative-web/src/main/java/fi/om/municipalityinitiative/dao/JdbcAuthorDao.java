@@ -241,6 +241,7 @@ public class JdbcAuthorDao implements AuthorDao {
         return queryFactory.from(QVerifiedAuthor.verifiedAuthor)
                 .innerJoin(QVerifiedAuthor.verifiedAuthor.verifiedAuthorVerifiedUserFk, QVerifiedUser.verifiedUser)
                 .innerJoin(QVerifiedUser.verifiedUser._verifiedParticipantVerifiedUserFk, QVerifiedParticipant.verifiedParticipant)
+                .leftJoin(QVerifiedUser.verifiedUser.verifiedUserMunicipalityFk, QMunicipality.municipality)
                 .where(QVerifiedAuthor.verifiedAuthor.initiativeId.eq(initiativeId))
                 .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
                 .list(Mappings.verifiedAuthorMapper);

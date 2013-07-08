@@ -125,7 +125,8 @@ public class Mappings {
     public static Expression<Author> verifiedAuthorMapper = new MappingProjection<Author>(Author.class,
             QVerifiedAuthor.verifiedAuthor.all(),
             QVerifiedParticipant.verifiedParticipant.all(),
-            QVerifiedUser.verifiedUser.all()) {
+            QVerifiedUser.verifiedUser.all(),
+            QMunicipality.municipality.all()) {
         @Override
         protected Author map(Tuple row) {
             Author author = new Author();
@@ -139,7 +140,17 @@ public class Mappings {
 
             author.setContactInfo(contactInfo);
             author.setCreateTime(row.get(QVerifiedParticipant.verifiedParticipant.participateTime));
-            author.setMunicipality(Maybe.<Municipality>absent());           // TODO:
+
+            if (row.get(QMunicipality.municipality.name) == null) {
+                author.setMunicipality(Maybe.<Municipality>absent());
+            }
+            else {
+                author.setMunicipality(Maybe.of(parseMunicipality(row)));
+            }
+
+
+
+
 
             return author;
         }
