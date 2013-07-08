@@ -19,6 +19,7 @@ import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.exceptions.VerifiedLoginRequiredException;
 import fi.om.municipalityinitiative.service.ServiceIntegrationTestBase;
+import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.QAuthor;
 import fi.om.municipalityinitiative.sql.QAuthorInvitation;
 import fi.om.municipalityinitiative.util.*;
@@ -543,7 +544,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         contactInfo.setName(NAME);
         contactInfo.setShowName(SHOW_NAME);
 
-        return new LoginUserHolder(User.verifiedUser("hash", contactInfo, Collections.singleton(initiativeId), Maybe.of(new Municipality(testMunicipality, "nameFi", "nameSv", true))));
+        return new LoginUserHolder(User.verifiedUser(new VerifiedUserId(-1L), "hash", contactInfo, Collections.singleton(initiativeId), Maybe.of(new Municipality(testMunicipality, "nameFi", "nameSv", true))));
     }
 
 }

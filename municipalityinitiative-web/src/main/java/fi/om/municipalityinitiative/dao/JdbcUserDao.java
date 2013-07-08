@@ -100,7 +100,7 @@ public class JdbcUserDao implements UserDao {
                 .where(QVerifiedUser.verifiedUser.hash.eq(hash))
                 .list(QMunicipalityInitiative.municipalityInitiative.id);
 
-        return Maybe.of(User.verifiedUser(hash, userDataMaybe.get().contactInfo, new HashSet<>(initiatives), userDataMaybe.get().municipalityMaybe));
+        return Maybe.of(User.verifiedUser(userDataMaybe.get().verifiedUserId, hash, userDataMaybe.get().contactInfo, new HashSet<>(initiatives), userDataMaybe.get().municipalityMaybe));
     }
 
     @Override

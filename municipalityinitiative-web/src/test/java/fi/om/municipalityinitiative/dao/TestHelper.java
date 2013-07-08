@@ -10,6 +10,7 @@ import fi.om.municipalityinitiative.dto.service.*;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.user.*;
 import fi.om.municipalityinitiative.service.EncryptionService;
+import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
@@ -258,7 +259,7 @@ public class TestHelper {
         contactInfo.setName(authorDraft.participantName);
         contactInfo.setShowName(true);
 
-        authorLoginUserHolder = new LoginUserHolder(User.verifiedUser(previousUserSsnHash, contactInfo, Collections.singleton(authorDraft.initiativeId), Maybe.of(new Municipality(authorDraft.participantMunicipality, "name_fi", "name_sv", true))));
+        authorLoginUserHolder = new LoginUserHolder(User.verifiedUser(new VerifiedUserId(verifiedUserId),previousUserSsnHash, contactInfo, Collections.singleton(authorDraft.initiativeId), Maybe.of(new Municipality(authorDraft.participantMunicipality, "name_fi", "name_sv", true))));
     }
 
     private String createUserSsnHash() {

@@ -12,6 +12,7 @@ import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.InvalidHomeMunicipalityException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.ServiceIntegrationTestBase;
+import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.QVerifiedAuthor;
 import fi.om.municipalityinitiative.sql.QVerifiedParticipant;
 import fi.om.municipalityinitiative.sql.QVerifiedUser;
@@ -71,7 +72,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         contactInfo.setName(VERIFIED_AUTHOR_NAME);
 
         verifiedLoginUserHolder = new LoginUserHolder<>(
-                User.verifiedUser(HASH, contactInfo, Collections.<Long>emptySet(), Maybe.<Municipality>of(testMunicipality))
+                User.verifiedUser(new VerifiedUserId(-1L), HASH, contactInfo, Collections.<Long>emptySet(), Maybe.<Municipality>of(testMunicipality))
         );
 
     }
@@ -188,7 +189,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         else {
             municipality = Maybe.absent();
         }
-        return new LoginUserHolder<>(User.verifiedUser(HASH, new ContactInfo(), Collections.<Long>emptySet(), municipality));
+        return new LoginUserHolder<>(User.verifiedUser(new VerifiedUserId(-1L), HASH, new ContactInfo(), Collections.<Long>emptySet(), municipality));
     }
 
     private PrepareSafeInitiativeUICreateDto prepareUICreateDto() {

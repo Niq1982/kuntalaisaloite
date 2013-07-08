@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.dto.user;
 
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
+import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.Maybe;
 
 import java.util.Set;
@@ -16,8 +17,8 @@ public abstract class User {
         return new NormalLoginUser(authorId, authorsInitiatives);
     }
 
-    public static VerifiedUser verifiedUser(String hash, ContactInfo contactInfo, Set<Long> initiatives, Maybe<Municipality> homeMunicipality) {
-        return new VerifiedUser(hash, contactInfo, initiatives, homeMunicipality);
+    public static VerifiedUser verifiedUser(VerifiedUserId verifiedUserId, String hash, ContactInfo contactInfo, Set<Long> initiatives, Maybe<Municipality> homeMunicipality) {
+        return new VerifiedUser(verifiedUserId, hash, contactInfo, initiatives, homeMunicipality);
     }
 
     public static User anonym() {

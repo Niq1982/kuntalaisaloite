@@ -11,6 +11,7 @@ import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.AuthenticationRequiredException;
 import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
 import fi.om.municipalityinitiative.dao.AuthorDao;
+import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -168,19 +169,21 @@ public class UserService {
 
         ContactInfo contactInfo;
         Set<Long> initiatives;
+        VerifiedUserId verifiedUserId;
         Maybe<VerifiedUser> verifiedUser = userDao.getVerifiedUser(hash);
         if (verifiedUser.isPresent()) {
             userDao.updateUserInformation(hash, fullName, vetumaMunicipality);
             verifiedUser = userDao.getVerifiedUser(hash);
             contactInfo = verifiedUser.get().getContactInfo();
             initiatives = verifiedUser.get().getInitiatives();
+            verifiedUserId = verifiedUser.get().getAuthorId();
         }
         else {
             contactInfo = new ContactInfo(); // User logged in but never registered to database (has not participated or created any initiatives)
             contactInfo.setName(fullName);
             contactInfo.setAddress(address);
-            // TODO: Municipality
             initiatives = Sets.newHashSet();
+            verifiedUserId = null;
         }
 
         Maybe<Municipality> municipality;
@@ -191,7 +194,7 @@ public class UserService {
             municipality = Maybe.absent();
         }
 
-        storeLoggedInUser(request, User.verifiedUser(hash, contactInfo, initiatives, municipality));
+        storeLoggedInUser(request, User.verifiedUser(verifiedUserId, hash, contactInfo, initiatives, municipality));
     }
 
     public void putPrepareDataForVetuma(PrepareInitiativeUICreateDto initiative, HttpServletRequest request) {
