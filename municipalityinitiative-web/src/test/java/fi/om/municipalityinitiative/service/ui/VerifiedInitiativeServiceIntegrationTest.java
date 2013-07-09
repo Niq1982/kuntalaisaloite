@@ -1,9 +1,12 @@
 package fi.om.municipalityinitiative.service.ui;
 
+import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dao.UserDao;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUIConfirmDto;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
+import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.dto.ui.PrepareSafeInitiativeUICreateDto;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
@@ -17,6 +20,7 @@ import fi.om.municipalityinitiative.sql.QVerifiedAuthor;
 import fi.om.municipalityinitiative.sql.QVerifiedParticipant;
 import fi.om.municipalityinitiative.sql.QVerifiedUser;
 import fi.om.municipalityinitiative.util.InitiativeType;
+import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.junit.Ignore;
@@ -65,16 +69,21 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         String municipalityName = "Test municipality";
         testMunicipality = new Municipality(testHelper.createTestMunicipality(municipalityName), municipalityName, municipalityName, false);
 
-        ContactInfo contactInfo = new ContactInfo();
-        contactInfo.setEmail(EMAIL);
-        contactInfo.setAddress(ADDRESS);
-        contactInfo.setPhone(PHONE);
-        contactInfo.setName(VERIFIED_AUTHOR_NAME);
+        ContactInfo contactInfo = contactInfo();
 
         verifiedLoginUserHolder = new LoginUserHolder<>(
                 User.verifiedUser(new VerifiedUserId(-1L), HASH, contactInfo, Collections.<Long>emptySet(), Maybe.<Municipality>of(testMunicipality))
         );
 
+    }
+
+    private static ContactInfo contactInfo() {
+        ContactInfo contactInfo = new ContactInfo();
+        contactInfo.setEmail(EMAIL);
+        contactInfo.setAddress(ADDRESS);
+        contactInfo.setPhone(PHONE);
+        contactInfo.setName(VERIFIED_AUTHOR_NAME);
+        return contactInfo;
     }
 
     @Test
@@ -84,7 +93,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
     }
 
     @Test
-    @Transactional // Tests also userDao for receiving the information
+    @Transactional // Some tests use userDao for receiving the results for assertion
     public void preparing_creates_user_with_given_information_if_not_yet_created() {
         precondition(testHelper.countAll(QVerifiedUser.verifiedUser), is(0L));
 
@@ -96,7 +105,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         assertThat(created.getContactInfo().getAddress(), is(ADDRESS));
         assertThat(created.getHash(), is(HASH));
 
-        // These are little disturbing, because we actually won't receive these from vetuma...
+        // These are little disturbing, because we actually don't receive these from vetuma...
         assertThat(created.getContactInfo().getPhone(), is(PHONE));
         assertThat(created.getContactInfo().getEmail(), is(EMAIL));
 
@@ -169,15 +178,40 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
     }
 
+    private static AuthorInvitationUIConfirmDto authorInvitationConfirmDto() {
+        AuthorInvitationUIConfirmDto dto = new AuthorInvitationUIConfirmDto();
+        dto.setContactInfo(contactInfo());
+        return dto;
+
+    }
+
+    // TODO: Do not use initiative.municipality from uiCreateDto, that's ugly.
     @Test
-    @Ignore
-    public void preparing_safe_initiative_sends_email() {
-        // TODO: Implement
+    public void accepting_invitation_to_safe_initiative_throws_exception_if_wrong_municipality_from_vetuma() {
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).applyAuthor().toInitiativeDraft());
+
+        AuthorInvitationUIConfirmDto createDto = authorInvitationConfirmDto();
+        createDto.setInitiativeMunicipality(testHelper.createTestMunicipality("other municipality"));
+        thrown.expect(InvalidHomeMunicipalityException.class);
+
+        service.confirmVerifiedAuthorInvitation(verifiedLoginUserHolder, initiativeId, createDto, Locales.LOCALE_FI);
+    }
+
+    @Test
+    public void accepting_invitation_to_safe_initiative_throws_exception_if_wrong_homeMunicipality_given_by_user_when_vetuma_gives_null_municipality() {
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).applyAuthor().toInitiativeDraft());
+
+        AuthorInvitationUIConfirmDto createDto = authorInvitationConfirmDto();
+        createDto.setInitiativeMunicipality(testHelper.createTestMunicipality("other municipality"));
+        createDto.setHomeMunicipality(createDto.getMunicipality()+1);
+        thrown.expect(InvalidHomeMunicipalityException.class);
+
+        service.confirmVerifiedAuthorInvitation(verifiedUserHolderWithMunicipalityId(Maybe.<Long>absent()), initiativeId, createDto, Locales.LOCALE_FI);
     }
 
     @Test
     @Ignore
-    public void preparing_safe_initiative_saved_email_and_municipality_and_membership() {
+    public void preparing_safe_initiative_sends_email() {
         // TODO: Implement
     }
 

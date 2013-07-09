@@ -47,6 +47,7 @@ public class ParticipantUICreateDto
     }
 
     // FIXME: Municipality of the initiative should always be set via back, not front.
+    // FIXME: Replace setter with assign, check for usage?
     public void setMunicipality(Long municipality) {
         this.municipality = municipality;
     }

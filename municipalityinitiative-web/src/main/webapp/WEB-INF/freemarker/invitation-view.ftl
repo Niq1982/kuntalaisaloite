@@ -107,7 +107,7 @@
                         </#if>
                     </div>
 
-                    <#if initiative.verifiable>
+                    <#if initiative.verifiable && user.homeMunicipality.present>
                         <@u.solveMunicipality user.homeMunicipality/>
                     <#else>
                     <div class="column col-1of2 last">
