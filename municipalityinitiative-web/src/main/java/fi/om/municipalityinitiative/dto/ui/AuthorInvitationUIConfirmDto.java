@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.dto.ui;
 
 import fi.om.municipalityinitiative.validation.ValidMunicipalMembership;
+import org.springframework.util.Assert;
 
 @ValidMunicipalMembership
 public class AuthorInvitationUIConfirmDto extends ParticipantUICreateBase {
@@ -29,10 +30,11 @@ public class AuthorInvitationUIConfirmDto extends ParticipantUICreateBase {
 
     @Override
     public Long getMunicipality() {
+        Assert.notNull(initiativeMunicipality);
         return initiativeMunicipality;
     }
 
-    public void setInitiativeMunicipality(Long initiativeMunicipality) {
+    public void assignInitiativeMunicipality(Long initiativeMunicipality) {
         this.initiativeMunicipality = initiativeMunicipality;
     }
 

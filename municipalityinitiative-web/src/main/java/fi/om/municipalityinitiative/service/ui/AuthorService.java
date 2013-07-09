@@ -17,7 +17,6 @@ import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.operations.AuthorServiceOperations;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
-import fi.om.municipalityinitiative.util.SecurityUtil;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -133,7 +132,7 @@ public class AuthorService {
         assertNotRejectedOrExpired(authorInvitation);
 
         AuthorInvitationUIConfirmDto confirmDto = new AuthorInvitationUIConfirmDto();
-        confirmDto.setInitiativeMunicipality(initiativeDao.get(initiativeId).getMunicipality().getId());
+        confirmDto.assignInitiativeMunicipality(initiativeDao.get(initiativeId).getMunicipality().getId());
         confirmDto.setConfirmCode(authorInvitation.getConfirmationCode());
 
         if (!isVerifiableInitiative) {

@@ -6,14 +6,12 @@ import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUIConfirmDto;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
-import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.dto.ui.PrepareSafeInitiativeUICreateDto;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.InvalidHomeMunicipalityException;
-import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.ServiceIntegrationTestBase;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.QVerifiedAuthor;
@@ -22,7 +20,6 @@ import fi.om.municipalityinitiative.sql.QVerifiedUser;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Maybe;
-import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -191,7 +188,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).applyAuthor().toInitiativeDraft());
 
         AuthorInvitationUIConfirmDto createDto = authorInvitationConfirmDto();
-        createDto.setInitiativeMunicipality(testHelper.createTestMunicipality("other municipality"));
+        createDto.assignInitiativeMunicipality(testHelper.createTestMunicipality("other municipality"));
         thrown.expect(InvalidHomeMunicipalityException.class);
 
         service.confirmVerifiedAuthorInvitation(verifiedLoginUserHolder, initiativeId, createDto, Locales.LOCALE_FI);
@@ -202,7 +199,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).applyAuthor().toInitiativeDraft());
 
         AuthorInvitationUIConfirmDto createDto = authorInvitationConfirmDto();
-        createDto.setInitiativeMunicipality(testHelper.createTestMunicipality("other municipality"));
+        createDto.assignInitiativeMunicipality(testHelper.createTestMunicipality("other municipality"));
         createDto.setHomeMunicipality(createDto.getMunicipality()+1);
         thrown.expect(InvalidHomeMunicipalityException.class);
 

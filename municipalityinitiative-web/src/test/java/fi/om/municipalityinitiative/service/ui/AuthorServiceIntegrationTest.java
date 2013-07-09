@@ -108,7 +108,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
         AuthorInvitationUIConfirmDto createDto = new AuthorInvitationUIConfirmDto();
         createDto.setContactInfo(new ContactInfo());
-        createDto.setInitiativeMunicipality(testMunicipality);
+        createDto.assignInitiativeMunicipality(testMunicipality);
         createDto.getContactInfo().setName("name");
         createDto.getContactInfo().setAddress("address");
         createDto.getContactInfo().setEmail("email");
@@ -208,7 +208,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
         AuthorInvitationUIConfirmDto confirmDto = ReflectionTestUtils.modifyAllFields(new AuthorInvitationUIConfirmDto());
         confirmDto.setConfirmCode(authorInvitation.getConfirmationCode());
-        confirmDto.setInitiativeMunicipality(testMunicipality);
+        confirmDto.assignInitiativeMunicipality(testMunicipality);
         confirmDto.setHomeMunicipality(testMunicipality);
 
         precondition(allCurrentInvitations(), is(1L));

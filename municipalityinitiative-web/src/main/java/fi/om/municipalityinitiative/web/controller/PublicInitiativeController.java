@@ -248,7 +248,7 @@ public class PublicInitiativeController extends BaseController {
                                    Model model, BindingResult bindingResult, Locale locale, HttpServletRequest request) {
 
         InitiativeViewInfo initiativeInfo = authorService.getAuthorInvitationConfirmData(initiativeId, confirmDto.getConfirmCode(), userService.getLoginUserHolder(request)).initiativeViewInfo;
-        confirmDto.setInitiativeMunicipality(initiativeInfo.getMunicipality().getId());
+        confirmDto.assignInitiativeMunicipality(initiativeInfo.getMunicipality().getId());
 
         if (initiativeInfo.isVerifiable()) {
             try {
