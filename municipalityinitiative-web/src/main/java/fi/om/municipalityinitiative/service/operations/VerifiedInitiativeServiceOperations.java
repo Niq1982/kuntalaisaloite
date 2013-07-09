@@ -45,7 +45,8 @@ public class VerifiedInitiativeServiceOperations {
         Long initiativeId = initiativeDao.prepareSafeInitiative(createDto.getMunicipality(), createDto.getInitiativeType());
         VerifiedUserId verifiedUserId = getVerifiedUserIdAndCreateIfNecessary(verifiedUser.getHash(), verifiedUser.getContactInfo());
 
-        participantDao.addVerifiedParticipant(initiativeId, verifiedUserId);
+        boolean showName = true;
+        participantDao.addVerifiedParticipant(initiativeId, verifiedUserId, showName);
         authorDao.addVerifiedAuthor(initiativeId, verifiedUserId);
 
         return initiativeId;
@@ -67,7 +68,7 @@ public class VerifiedInitiativeServiceOperations {
                 VerifiedUserId verifiedUserId = getVerifiedUserIdAndCreateIfNecessary(verifiedUser.getHash(), verifiedUser.getContactInfo());
                 userDao.updateUserInformation(verifiedUser.getHash(), confirmDto.getContactInfo());
 
-                participantDao.addVerifiedParticipant(initiativeId, verifiedUserId);
+                participantDao.addVerifiedParticipant(initiativeId, verifiedUserId, confirmDto.getContactInfo().isShowName());
                 authorDao.addVerifiedAuthor(initiativeId, verifiedUserId);
 
                 authorDao.deleteAuthorInvitation(initiativeId, confirmDto.getConfirmCode());
