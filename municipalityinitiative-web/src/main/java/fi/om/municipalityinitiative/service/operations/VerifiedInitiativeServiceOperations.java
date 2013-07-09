@@ -2,6 +2,8 @@ package fi.om.municipalityinitiative.service.operations;
 
 import fi.om.municipalityinitiative.dao.*;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
+import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.service.PrepareSafeInitiativeCreateDto;
 import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUIConfirmDto;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
@@ -10,10 +12,13 @@ import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
+import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+
+import static fi.om.municipalityinitiative.util.SecurityUtil.assertAllowance;
 
 public class VerifiedInitiativeServiceOperations {
 
@@ -49,6 +54,10 @@ public class VerifiedInitiativeServiceOperations {
 
     @Transactional(readOnly = false)
     public VerifiedUser doConfirmInvitation(VerifiedUser verifiedUser, Long initiativeId, AuthorInvitationUIConfirmDto confirmDto) {
+
+        Initiative initiative = initiativeDao.get(initiativeId);
+        assertAllowance("Accept invitation", ManagementSettings.of(initiative).isAllowInviteAuthors());
+        assertAllowance("Accept verifiable invitation", InitiativeType.isVerifiable(initiative.getType()));
 
         for (AuthorInvitation invitation : authorDao.findInvitations(initiativeId)) {
 
