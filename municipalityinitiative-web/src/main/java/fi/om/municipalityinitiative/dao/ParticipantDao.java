@@ -18,9 +18,11 @@ public interface ParticipantDao {
 
     ParticipantCount getParticipantCount(Long initiativeId);
 
-    List<Participant> findPublicParticipants(Long initiativeId);
+    List<Participant> findNormalPublicParticipants(Long initiativeId);
 
     List<Participant> findAllParticipants(Long initiativeId);
+
+    List<Participant> findVerifiedPublicParticipants(Long initiativeId);
 
     Long getInitiativeIdByParticipant(Long participantId);
 

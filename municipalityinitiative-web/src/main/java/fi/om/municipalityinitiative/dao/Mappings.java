@@ -152,11 +152,30 @@ public class Mappings {
                 author.setMunicipality(Maybe.of(parseMunicipality(row)));
             }
 
-
-
-
-
             return author;
+        }
+    };
+    public static Expression<Participant> verifiedParticipantMapping = new MappingProjection<Participant>(
+            Participant.class,
+            QVerifiedParticipant.verifiedParticipant.participateTime,
+            QVerifiedUser.verifiedUser.name,
+            QVerifiedUser.verifiedUser.email,
+            QMunicipality.municipality.id,
+            QMunicipality.municipality.name,
+            QMunicipality.municipality.nameSv,
+            QMunicipality.municipality.active
+            ) {
+        @Override
+        protected Participant map(Tuple row) {
+            Participant participant = new Participant();
+
+            participant.setEmail(row.get(QVerifiedUser.verifiedUser.email));
+            participant.setHomeMunicipality(parseMunicipality(row));
+            participant.setParticipateDate(row.get(QVerifiedParticipant.verifiedParticipant.participateTime));
+            participant.setName(row.get(QVerifiedUser.verifiedUser.name));
+            participant.setId(null); // TODO: Id
+
+            return participant;
         }
     };
 

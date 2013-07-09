@@ -3,14 +3,13 @@ package fi.om.municipalityinitiative.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import fi.om.municipalityinitiative.dao.AuthorDao;
+import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
-import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
-import fi.om.municipalityinitiative.service.id.Id;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +27,9 @@ public class ParticipantService {
     @Resource
     private AuthorDao authorDao;
 
+    @Resource
+    private InitiativeDao initiativeDao;
+
     public ParticipantService() {
     }
 
@@ -38,7 +40,8 @@ public class ParticipantService {
 
     @Transactional(readOnly = true)
     public List<ParticipantListInfo> findPublicParticipants(Long initiativeId) {
-        return toListInfo(participantDao.findPublicParticipants(initiativeId), getAuthorIds(initiativeId));
+
+        return toListInfo(participantDao.findNormalPublicParticipants(initiativeId), getAuthorIds(initiativeId));
     }
 
     @Transactional(readOnly = true)

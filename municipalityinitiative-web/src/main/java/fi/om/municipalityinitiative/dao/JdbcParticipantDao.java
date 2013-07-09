@@ -102,7 +102,7 @@ public class JdbcParticipantDao implements ParticipantDao {
     }
 
     @Override
-    public List<Participant> findPublicParticipants(Long initiativeId) {
+    public List<Participant> findNormalPublicParticipants(Long initiativeId) {
         return queryFactory.query()
                 .from(participant)
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
@@ -122,6 +122,15 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .leftJoin(participant.participantMunicipalityFk, QMunicipality.municipality)
                 .orderBy(participant.id.desc())
                 .list(Mappings.participantMapping);
+    }
+
+    @Override
+    public List<Participant> findVerifiedPublicParticipants(Long initiativeId) {
+        return queryFactory.from(QVerifiedParticipant.verifiedParticipant)
+                .innerJoin(QVerifiedParticipant.verifiedParticipant.verifiedParticipantVerifiedUserFk, QVerifiedUser.verifiedUser)
+                .leftJoin(QVerifiedUser.verifiedUser.verifiedUserMunicipalityFk, QMunicipality.municipality)
+                .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
+                .list(Mappings.verifiedParticipantMapping);
     }
 
     @Override
