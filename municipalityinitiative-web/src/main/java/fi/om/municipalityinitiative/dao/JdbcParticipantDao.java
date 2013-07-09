@@ -145,6 +145,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .leftJoin(QVerifiedUser.verifiedUser.verifiedUserMunicipalityFk, QMunicipality.municipality)
                 .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
                 .where(QVerifiedParticipant.verifiedParticipant.showName.eq(true))
+                .orderBy(QVerifiedParticipant.verifiedParticipant.participateTime.desc(), QVerifiedUser.verifiedUser.id.desc())
                 .list(Mappings.verifiedParticipantMapping);
     }
 

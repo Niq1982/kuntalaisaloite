@@ -262,11 +262,30 @@ public class TestHelper {
         authorLoginUserHolder = new LoginUserHolder(User.verifiedUser(new VerifiedUserId(verifiedUserId),previousUserSsnHash, contactInfo, Collections.singleton(authorDraft.initiativeId), Maybe.of(new Municipality(authorDraft.participantMunicipality, "name_fi", "name_sv", true))));
     }
 
+    @Transactional(readOnly = false)
+    public void createVerifiedParticipant(AuthorDraft authorDraft) {
+
+        Long verifiedUserId = queryFactory.insert(QVerifiedUser.verifiedUser)
+                .set(QVerifiedUser.verifiedUser.hash, createUserSsnHash())
+                .set(QVerifiedUser.verifiedUser.address, authorDraft.authorAddress)
+                .set(QVerifiedUser.verifiedUser.phone, authorDraft.authorPhone)
+                .set(QVerifiedUser.verifiedUser.email, authorDraft.participantEmail)
+                .set(QVerifiedUser.verifiedUser.name, authorDraft.participantName)
+                .set(QVerifiedUser.verifiedUser.municipalityId, authorDraft.participantMunicipality)
+                .executeWithKey(QVerifiedUser.verifiedUser.id);
+
+        queryFactory.insert(QVerifiedParticipant.verifiedParticipant)
+                .set(QVerifiedParticipant.verifiedParticipant.showName, authorDraft.publicName)
+                .set(QVerifiedParticipant.verifiedParticipant.initiativeId, authorDraft.initiativeId)
+                .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, verifiedUserId)
+                .execute();
+    }
+
+
     private String createUserSsnHash() {
         previousUserSsnHash = RandomHashGenerator.shortHash();
         return previousUserSsnHash;
     }
-
 
     @Transactional(readOnly = false)
     public Long createDefaultParticipant(AuthorDraft authorDraft) {

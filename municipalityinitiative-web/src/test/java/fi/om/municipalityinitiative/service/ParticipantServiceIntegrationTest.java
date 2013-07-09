@@ -73,12 +73,25 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         assertThat(publicParticipants.get(1).isAuthor(), is(true));
     }
 
+    @Test
+    public void findPublicParticipants_for_verified_initiative_sets_author_flag_true_if_author() {
+        Long initiativeId = createVerifiedInitiativeWithAuthor();
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withPublicName(true));
+
+        List<ParticipantListInfo> publicParticipants = participantService.findPublicParticipants(initiativeId);
+        precondition(publicParticipants, hasSize(2));
+
+        assertThat(publicParticipants.get(0).isAuthor(), is(false));
+        assertThat(publicParticipants.get(1).isAuthor(), is(true));
+
+    }
+
     private Long createNormalInitiativeWithAuthor() {
         return testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipalityId).applyAuthor().toInitiativeDraft());
     }
 
     private Long createVerifiedInitiativeWithAuthor() {
-        return createNormalInitiativeWithAuthor();
+        return testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipalityId).applyAuthor().toInitiativeDraft());
     }
 
 
