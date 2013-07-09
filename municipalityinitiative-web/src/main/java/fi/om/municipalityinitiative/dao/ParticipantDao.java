@@ -20,9 +20,11 @@ public interface ParticipantDao {
 
     List<Participant> findNormalPublicParticipants(Long initiativeId);
 
-    List<Participant> findAllParticipants(Long initiativeId);
+    List<Participant> findNormalAllParticipants(Long initiativeId);
 
     List<Participant> findVerifiedPublicParticipants(Long initiativeId);
+
+    List<Participant> findVerifiedAllParticipants(Long initiativeId);
 
     Long getInitiativeIdByParticipant(Long participantId);
 

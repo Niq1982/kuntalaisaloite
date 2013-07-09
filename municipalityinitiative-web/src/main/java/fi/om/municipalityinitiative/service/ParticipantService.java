@@ -41,13 +41,19 @@ public class ParticipantService {
     @Transactional(readOnly = true)
     public List<ParticipantListInfo> findPublicParticipants(Long initiativeId) {
 
-        return toListInfo(participantDao.findNormalPublicParticipants(initiativeId), getAuthorIds(initiativeId));
+        List<Participant> participants = initiativeDao.isVerifiableInitiative(initiativeId)
+                ? participantDao.findVerifiedPublicParticipants(initiativeId)
+                : participantDao.findNormalPublicParticipants(initiativeId);
+        return toListInfo(participants, getAuthorIds(initiativeId));
     }
 
     @Transactional(readOnly = true)
     public List<ParticipantListInfo> findAllParticipants(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        return toListInfo(participantDao.findAllParticipants(initiativeId), getAuthorIds(initiativeId));
+        List<Participant> allParticipants = initiativeDao.isVerifiableInitiative(initiativeId)
+                ? participantDao.findVerifiedAllParticipants(initiativeId)
+                : participantDao.findNormalAllParticipants(initiativeId);
+        return toListInfo(allParticipants, getAuthorIds(initiativeId));
     }
 
     private Set<NormalAuthorId> getAuthorIds(Long initiativeId) {

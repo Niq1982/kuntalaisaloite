@@ -42,7 +42,7 @@ public class EmailServiceDataProvider {
     }
 
     public List<Participant> findAllParticipants(Long initiativeId) {
-        return participantDao.findAllParticipants(initiativeId);
+        return participantDao.findNormalAllParticipants(initiativeId);
     }
 
     public String getMunicipalityEmail(Long id) {
