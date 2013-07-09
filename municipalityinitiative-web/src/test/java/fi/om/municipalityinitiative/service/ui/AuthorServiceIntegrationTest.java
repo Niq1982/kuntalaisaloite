@@ -121,7 +121,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         precondition(countAllAuthors(), is(1L)); // XXX: This does not care if the authors does not belong to this initiative
         precondition(participantCountOfInitiative(initiativeId), is(1));
 
-        authorService.confirmAuthorInvitation(initiativeId, createDto, null, TestHelper.unknownLoginUserHolder);
+        authorService.confirmAuthorInvitation(initiativeId, createDto, null);
 
         // Author count is increased
         precondition(countAllAuthors(), is(2L));
@@ -158,7 +158,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
     public void confirm_author_invitation_not_allowed() {
         Long initiativeId = testHelper.createSingleSent(testMunicipality);
 
-        authorService.confirmAuthorInvitation(initiativeId, new AuthorInvitationUIConfirmDto(), null, TestHelper.unknownLoginUserHolder);
+        authorService.confirmAuthorInvitation(initiativeId, new AuthorInvitationUIConfirmDto(), null);
     }
 
     @Test
@@ -171,7 +171,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
         thrown.expect(InvitationNotValidException.class);
         thrown.expectMessage("Invitation is expired");
-        authorService.confirmAuthorInvitation(initiativeId, confirmDto, null, TestHelper.unknownLoginUserHolder);
+        authorService.confirmAuthorInvitation(initiativeId, confirmDto, null);
     }
 
     @Test
@@ -184,7 +184,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
         thrown.expect(InvitationNotValidException.class);
         thrown.expectMessage("Invitation is rejected");
-        authorService.confirmAuthorInvitation(initiativeId, confirmDto, null, TestHelper.unknownLoginUserHolder);
+        authorService.confirmAuthorInvitation(initiativeId, confirmDto, null);
     }
 
     @Test
@@ -197,7 +197,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
         thrown.expect(NotFoundException.class);
         thrown.expectMessage(containsString("bätmään"));
-        authorService.confirmAuthorInvitation(initiativeId, invitationUIConfirmDto, null, TestHelper.unknownLoginUserHolder);
+        authorService.confirmAuthorInvitation(initiativeId, invitationUIConfirmDto, null);
     }
 
     @Test
@@ -212,7 +212,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         confirmDto.setHomeMunicipality(testMunicipality);
 
         precondition(allCurrentInvitations(), is(1L));
-        authorService.confirmAuthorInvitation(initiativeId, confirmDto, null, TestHelper.unknownLoginUserHolder);
+        authorService.confirmAuthorInvitation(initiativeId, confirmDto, null);
         assertThat(allCurrentInvitations(), is(0L));
 
     }

@@ -25,6 +25,8 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Locale;
 
+import static fi.om.municipalityinitiative.util.SecurityUtil.assertAllowance;
+
 public class AuthorService {
 
     @Resource
@@ -85,17 +87,12 @@ public class AuthorService {
     }
 
     @Transactional(readOnly = false)
-    public String confirmAuthorInvitation(Long initiativeId, AuthorInvitationUIConfirmDto confirmDto, Locale locale, LoginUserHolder unknownLoginUserHolder) {
-
-        // TODO: Verifiable initiative
-        // TODO: Invalid homeMunicipality
-        // TODO: Already participated/author
+    public String confirmAuthorInvitation(Long initiativeId, AuthorInvitationUIConfirmDto confirmDto, Locale locale) {
 
         Initiative initiative = initiativeDao.get(initiativeId);
-        boolean isVerifiable = InitiativeType.isVerifiable(initiative.getType());
 
-        ManagementSettings managementSettings = ManagementSettings.of(initiative);
-        SecurityUtil.assertAllowance("Accept invitation", managementSettings.isAllowInviteAuthors());
+        assertAllowance("Accept invitation", ManagementSettings.of(initiative).isAllowInviteAuthors());
+        assertAllowance("Accept normal invitation", InitiativeType.isNotVerifiable(initiative.getType()));
 
         for (AuthorInvitation invitation : authorDao.findInvitations(initiativeId)) {
 
@@ -106,15 +103,9 @@ public class AuthorService {
                 // TODO: Get emails out of transaction?
 
                 authorDao.deleteAuthorInvitation(initiativeId, confirmDto.getConfirmCode());
-                if (isVerifiable) {
-
-                }
-                else {
-                    String managementHash = createAuthorAndParticipant(initiativeId, confirmDto);
-                    emailService.sendAuthorConfirmedInvitation(initiativeId, invitation.getEmail(), managementHash, locale);
-                    return managementHash;
-                }
-
+                String managementHash = createAuthorAndParticipant(initiativeId, confirmDto);
+                emailService.sendAuthorConfirmedInvitation(initiativeId, invitation.getEmail(), managementHash, locale);
+                return managementHash;
             }
         }
         throw new NotFoundException("Invitation with ", "initiative: " + initiativeId + ", invitation: " + confirmDto.getConfirmCode());

@@ -252,7 +252,7 @@ public class PublicInitiativeController extends BaseController {
 
         if (initiativeInfo.isVerifiable()) {
             try {
-                authorService.confirmAuthorInvitation(initiativeId, confirmDto, locale, userService.getLoginUserHolder(request));
+                verifiedInitiativeService.confirmVerifiedAuthorInvitation(userService.getLoginUserHolder(request), initiativeId, confirmDto, locale);
                 return redirectWithMessage(Urls.get(locale).management(initiativeId), RequestMessage.CONFIRM_INVITATION_ACCEPTED, request);
             } catch (InvalidHomeMunicipalityException e) {
                 return redirectWithMessage(Urls.get(locale).invitation(initiativeId, confirmDto.getConfirmCode()), RequestMessage.INVALID_HOME_MUNICIPALITY, request);
@@ -261,7 +261,7 @@ public class PublicInitiativeController extends BaseController {
         else {
 
             if (validationService.validationSuccessful(confirmDto, bindingResult, model)) {
-                String generatedManagementHash = authorService.confirmAuthorInvitation(initiativeId, confirmDto, locale, userService.getLoginUserHolder(request));
+                String generatedManagementHash = authorService.confirmAuthorInvitation(initiativeId, confirmDto, locale);
                 userService.authorLogin(generatedManagementHash, request);
                 return redirectWithMessage(Urls.get(locale).management(initiativeId), RequestMessage.CONFIRM_INVITATION_ACCEPTED, request);
             }
