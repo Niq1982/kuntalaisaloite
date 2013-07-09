@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.dto.service;
 
+import fi.om.municipalityinitiative.dao.InvitationNotValidException;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -69,5 +70,14 @@ public class AuthorInvitation {
 
     public Maybe<DateTime> getRejectTime() {
         return rejectTime;
+    }
+
+    public  void assertNotRejectedOrExpired() {
+        if (isExpired()) {
+            throw new InvitationNotValidException("Invitation is expired");
+        }
+        if (isRejected()) {
+            throw new InvitationNotValidException("Invitation is rejected");
+        }
     }
 }

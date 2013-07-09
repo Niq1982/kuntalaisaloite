@@ -97,7 +97,7 @@ public class AuthorService {
 
             if (invitation.getConfirmationCode().equals(confirmDto.getConfirmCode())) {
 
-                assertNotRejectedOrExpired(invitation);
+                invitation.assertNotRejectedOrExpired();
 
                 // TODO: Get emails out of transaction?
 
@@ -128,8 +128,7 @@ public class AuthorService {
         }
 
         AuthorInvitation authorInvitation = authorDao.getAuthorInvitation(initiativeId, confirmCode);
-
-        assertNotRejectedOrExpired(authorInvitation);
+        authorInvitation.assertNotRejectedOrExpired();
 
         AuthorInvitationUIConfirmDto confirmDto = new AuthorInvitationUIConfirmDto();
         confirmDto.assignInitiativeMunicipality(initiativeDao.get(initiativeId).getMunicipality().getId());
@@ -174,12 +173,4 @@ public class AuthorService {
         authorDao.rejectAuthorInvitation(initiativeId, confirmCode);
     }
 
-    private static void assertNotRejectedOrExpired(AuthorInvitation invitation) {
-        if (invitation.isExpired()) {
-            throw new InvitationNotValidException("Invitation is expired");
-        }
-        if (invitation.isRejected()) {
-            throw new InvitationNotValidException("Invitation is rejected");
-        }
-    }
 }

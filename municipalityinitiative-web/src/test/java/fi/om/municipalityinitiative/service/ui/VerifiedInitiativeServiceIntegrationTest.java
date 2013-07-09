@@ -13,8 +13,10 @@ import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.InvalidHomeMunicipalityException;
+import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.ServiceIntegrationTestBase;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
+import fi.om.municipalityinitiative.sql.QAuthorInvitation;
 import fi.om.municipalityinitiative.sql.QVerifiedAuthor;
 import fi.om.municipalityinitiative.sql.QVerifiedParticipant;
 import fi.om.municipalityinitiative.sql.QVerifiedUser;
@@ -240,21 +242,49 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
     @Test
     public void accepting_invitation_if_already_author_throws_exception() {
-        Long firstInitiative = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()));
-        testHelper.addAuthorInvitation(authorInvitation(firstInitiative), false);
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()));
 
         AuthorInvitationUIConfirmDto confirmDto = authorInvitationConfirmDto();
         confirmDto.setHomeMunicipality(testMunicipality.getId());
 
-        service.confirmVerifiedAuthorInvitation(verifiedUserHolderForInitiative(firstInitiative), firstInitiative, confirmDto, Locales.LOCALE_FI);
+        testHelper.addAuthorInvitation(authorInvitation(initiativeId), false);
+        service.confirmVerifiedAuthorInvitation(verifiedUserHolderForInitiative(initiativeId), initiativeId, confirmDto, Locales.LOCALE_FI);
 
         thrown.expect(DuplicateKeyException.class);
-        service.confirmVerifiedAuthorInvitation(verifiedUserHolderForInitiative(firstInitiative), firstInitiative, confirmDto, Locales.LOCALE_FI);
+
+        testHelper.addAuthorInvitation(authorInvitation(initiativeId), false);
+        service.confirmVerifiedAuthorInvitation(verifiedUserHolderForInitiative(initiativeId), initiativeId, confirmDto, Locales.LOCALE_FI);
     }
 
     @Test
     public void accepting_invitation_with_invalid_confirmation_code_throws_exception() {
 
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()));
+        testHelper.addAuthorInvitation(authorInvitation(initiativeId), false);
+
+        AuthorInvitationUIConfirmDto confirmDto = authorInvitationConfirmDto();
+        confirmDto.setHomeMunicipality(testMunicipality.getId());
+        confirmDto.setConfirmCode("wrong confirmation code");
+
+        thrown.expect(NotFoundException.class);
+        thrown.expectMessage(containsString(AuthorInvitation.class.getName()));
+
+        service.confirmVerifiedAuthorInvitation(verifiedUserHolderForInitiative(initiativeId), initiativeId, confirmDto, Locales.LOCALE_FI);
+    }
+
+    @Test
+    public void accepting_invitation_removes_invitation() {
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()));
+        testHelper.addAuthorInvitation(authorInvitation(initiativeId), false);
+
+        AuthorInvitationUIConfirmDto confirmDto = authorInvitationConfirmDto();
+        confirmDto.setHomeMunicipality(testMunicipality.getId());
+
+        precondition(testHelper.countAll(QAuthorInvitation.authorInvitation), is(1L));
+
+        service.confirmVerifiedAuthorInvitation(verifiedUserHolderForInitiative(initiativeId), initiativeId, confirmDto, Locales.LOCALE_FI);
+
+        assertThat(testHelper.countAll(QAuthorInvitation.authorInvitation), is(0L));
     }
 
     @Test

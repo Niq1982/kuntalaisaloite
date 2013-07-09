@@ -1,12 +1,14 @@
 package fi.om.municipalityinitiative.service.operations;
 
 import fi.om.municipalityinitiative.dao.*;
+import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.PrepareSafeInitiativeCreateDto;
 import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUIConfirmDto;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.PrepareSafeInitiativeUICreateDto;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
+import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,16 +48,27 @@ public class VerifiedInitiativeServiceOperations {
     }
 
     @Transactional(readOnly = false)
-    public void doConfirmInvitation(VerifiedUser verifiedUser, Long initiativeId, AuthorInvitationUIConfirmDto confirmDto) {
+    public VerifiedUser doConfirmInvitation(VerifiedUser verifiedUser, Long initiativeId, AuthorInvitationUIConfirmDto confirmDto) {
 
-        confirmDto.getConfirmCode(); // TODO: use this plz
+        for (AuthorInvitation invitation : authorDao.findInvitations(initiativeId)) {
 
-        VerifiedUserId verifiedUserId = getVerifiedUserIdAndCreateIfNecessary(verifiedUser.getHash(), verifiedUser.getContactInfo());
-        userDao.updateUserInformation(verifiedUser.getHash(), confirmDto.getContactInfo());
+            if (invitation.getConfirmationCode().equals(confirmDto.getConfirmCode())) {
+                invitation.assertNotRejectedOrExpired();
 
-        participantDao.addVerifiedParticipant(initiativeId, verifiedUserId);
-        authorDao.addVerifiedAuthor(initiativeId, verifiedUserId);
+                VerifiedUserId verifiedUserId = getVerifiedUserIdAndCreateIfNecessary(verifiedUser.getHash(), verifiedUser.getContactInfo());
+                userDao.updateUserInformation(verifiedUser.getHash(), confirmDto.getContactInfo());
 
+                participantDao.addVerifiedParticipant(initiativeId, verifiedUserId);
+                authorDao.addVerifiedAuthor(initiativeId, verifiedUserId);
+
+                authorDao.deleteAuthorInvitation(initiativeId, confirmDto.getConfirmCode());
+                return verifiedUser;
+
+            }
+
+        }
+
+        throw new NotFoundException(AuthorInvitation.class.getName(), "initiative: " + initiativeId + ", invitation: " + confirmDto.getConfirmCode());
     }
 
     private VerifiedUserId getVerifiedUserIdAndCreateIfNecessary(String hash, ContactInfo contactInfo) {
