@@ -60,6 +60,7 @@ public class TestHelper {
 
     private Long lastInitiativeId;
     private Long lastAuthorId;
+    private Long lastVerifiedUserId;
     private String previousTestManagementHash;
     private String previousUserSsnHash;
 
@@ -84,6 +85,11 @@ public class TestHelper {
         queryFactory.delete(QInfoText.infoText).execute();
         queryFactory.delete(QAdminUser.adminUser).execute();
         authorLoginUserHolder = null;
+        lastInitiativeId = null;
+        lastAuthorId = null;
+        lastVerifiedUserId = null;
+        previousUserSsnHash = null;
+        previousTestManagementHash = null;
     }
 
     @Transactional
@@ -259,6 +265,7 @@ public class TestHelper {
         contactInfo.setName(authorDraft.participantName);
         contactInfo.setShowName(true);
 
+        this.lastVerifiedUserId = verifiedUserId;
         authorLoginUserHolder = new LoginUserHolder(User.verifiedUser(new VerifiedUserId(verifiedUserId),previousUserSsnHash, contactInfo, Collections.singleton(authorDraft.initiativeId), Maybe.of(new Municipality(authorDraft.participantMunicipality, "name_fi", "name_sv", true))));
     }
 
@@ -641,5 +648,8 @@ public class TestHelper {
         return previousUserSsnHash;
     }
 
+    public Long getLastVerifiedUserId() {
+        return lastVerifiedUserId;
+    }
 }
 

@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
+import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
@@ -602,6 +603,17 @@ public class JdbcInitiativeDaoTest {
     @Test(expected = NotFoundException.class)
     public void throws_exception_if_initiative_is_not_found() {
         initiativeDao.get(-1L);
+    }
+
+    @Test
+    public void find_verified_initiatives_by_verifiedUserId() {
+        Long otherInitiative = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).applyAuthor().toInitiativeDraft());
+        Long initiativeToFind = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).applyAuthor().toInitiativeDraft());
+
+        List<InitiativeListInfo> initiatives = initiativeDao.findInitiatives(new VerifiedUserId(testHelper.getLastVerifiedUserId()));
+        assertThat(initiatives, hasSize(1));
+        assertThat(initiatives.get(0).getId(), is(initiativeToFind));
+
     }
 
     private static InitiativeSearch initiativeSearch() {

@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
+import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
@@ -43,4 +44,6 @@ public interface InitiativeDao {
     InitiativeCounts getAllInitiativeCounts(Maybe<Long> municipality);
 
     boolean isVerifiableInitiative(Long initiativeId);
+
+    List<InitiativeListInfo> findInitiatives(VerifiedUserId verifiedUserId);
 }

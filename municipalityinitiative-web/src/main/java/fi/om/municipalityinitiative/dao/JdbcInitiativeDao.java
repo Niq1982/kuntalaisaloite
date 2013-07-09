@@ -18,7 +18,11 @@ import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
+import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.QMunicipality;
+import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
+import fi.om.municipalityinitiative.sql.QVerifiedAuthor;
+import fi.om.municipalityinitiative.sql.QVerifiedUser;
 import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -67,6 +71,16 @@ public class JdbcInitiativeDao implements InitiativeDao {
         restrictResults(query, search);
 
         return query.list(Mappings.initiativeListInfoMapping);
+    }
+
+    @Override
+    public List<InitiativeListInfo> findInitiatives(VerifiedUserId verifiedUserId) {
+        return queryFactory.from(QVerifiedUser.verifiedUser)
+                .innerJoin(QVerifiedUser.verifiedUser._verifiedAuthorVerifiedUserFk, QVerifiedAuthor.verifiedAuthor)
+                .innerJoin(QVerifiedAuthor.verifiedAuthor.verifiedAuthorInitiativeFk, QMunicipalityInitiative.municipalityInitiative)
+                .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
+                .where(QVerifiedUser.verifiedUser.id.eq(verifiedUserId.toLong()))
+                .list(Mappings.initiativeListInfoMapping);
     }
 
     private static void orderBy(PostgresQuery query, InitiativeSearch.OrderBy orderBy) {
