@@ -47,10 +47,15 @@ public class InitiativeManagementServiceOperations {
 
     @Transactional(readOnly = false)
     public void doPublishAndStartCollecting(Long initiativeId) {
-        assertAllowance("Publish initiative", getManagementSettings(initiativeId).isAllowPublish());
+        Initiative initiative = initiativeDao.get(initiativeId);
+        assertAllowance("Publish initiative", ManagementSettings.of(initiative).isAllowPublish());
+
+        if (initiative.getType() == InitiativeType.UNDEFINED) {
+            initiativeDao.updateInitiativeType(initiativeId, InitiativeType.COLLABORATIVE);
+        }
 
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
-        initiativeDao.updateInitiativeType(initiativeId, InitiativeType.COLLABORATIVE);
+
     }
 
     @Transactional(readOnly = false)

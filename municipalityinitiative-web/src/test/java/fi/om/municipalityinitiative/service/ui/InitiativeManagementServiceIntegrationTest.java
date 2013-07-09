@@ -320,6 +320,18 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     }
 
     @Test
+    public void publish_initiative_and_start_collecting_does_not_change_initiativeType_if_not_undefined() {
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withState(InitiativeState.ACCEPTED)
+                .withType(InitiativeType.COLLABORATIVE_COUNCIL)
+                .applyAuthor().toInitiativeDraft());
+
+        service.publishAndStartCollecting(initiativeId, TestHelper.authorLoginUserHolder);
+
+        assertThat(testHelper.getInitiative(initiativeId).getType(), is(InitiativeType.COLLABORATIVE_COUNCIL));
+    }
+
+    @Test
     public void publish_initiative_and_start_collecting_sends_status_email_to_author() throws MessagingException, InterruptedException {
         Long accepted = testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
 
