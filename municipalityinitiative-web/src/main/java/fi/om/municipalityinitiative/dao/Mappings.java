@@ -94,18 +94,6 @@ public class Mappings {
                     return info;
                 }
             };
-    static Expression<ContactInfo> verifiedUserContactInfo
-            = new MappingProjection<ContactInfo>(ContactInfo.class, verifiedUser.all()) {
-        @Override
-        protected ContactInfo map(Tuple row) {
-            ContactInfo contactInfo = new ContactInfo();
-            contactInfo.setPhone(row.get(QVerifiedUser.verifiedUser.phone));
-            contactInfo.setName(row.get(QVerifiedUser.verifiedUser.name));
-            contactInfo.setAddress(row.get(QVerifiedUser.verifiedUser.address));
-            contactInfo.setEmail(row.get(QVerifiedUser.verifiedUser.email));
-            return contactInfo;
-        }
-    };
 
     static Expression<ContactInfo> verifiedAuthorContactInfoMapper
             =  new MappingProjection<ContactInfo>(ContactInfo.class,
