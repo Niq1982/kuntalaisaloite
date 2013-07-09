@@ -136,7 +136,11 @@ public class JdbcParticipantDao implements ParticipantDao {
 
     @Override
     public List<Participant> findVerifiedAllParticipants(Long initiativeId) {
-        return null;
+        return queryFactory.from(QVerifiedParticipant.verifiedParticipant)
+                .innerJoin(QVerifiedParticipant.verifiedParticipant.verifiedParticipantVerifiedUserFk, QVerifiedUser.verifiedUser)
+                .leftJoin(QVerifiedUser.verifiedUser.verifiedUserMunicipalityFk, QMunicipality.municipality)
+                .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
+                .list(Mappings.verifiedParticipantMapping);
     }
 
     @Override

@@ -172,6 +172,23 @@ public class JdbcParticipantDaoTest {
     }
 
     @Test
+    public void find_all_verified_participants_returns_all() {
+
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipalityId)
+                .applyAuthor()
+                .withParticipantName("Private Participant")
+                .withPublicName(false)
+                .toInitiativeDraft());
+
+        testHelper.createVerifiedAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId)
+                .withParticipantName("Public Participant")
+                .withPublicName(true));
+
+        List<Participant> participants = participantDao.findVerifiedAllParticipants(initiativeId);
+        assertThat(participants, hasSize(2));
+    }
+
+    @Test
     public void getPublicParticipants_returns_only_confirmed_participants() {
         precondition(participantDao.findNormalPublicParticipants(testInitiativeId), hasSize(1));
         ParticipantCreateDto newParticipant = participantCreateDto();
