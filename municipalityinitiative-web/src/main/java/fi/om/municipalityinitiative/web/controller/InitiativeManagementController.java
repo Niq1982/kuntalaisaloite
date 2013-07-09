@@ -2,11 +2,9 @@ package fi.om.municipalityinitiative.web.controller;
 
 import com.google.common.base.Strings;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
-import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUICreateDto;
-import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
-import fi.om.municipalityinitiative.dto.ui.InitiativeUIUpdateDto;
-import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
+import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.service.ParticipantService;
 import fi.om.municipalityinitiative.service.ValidationService;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
@@ -27,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.List;
 import java.util.Locale;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
@@ -54,6 +53,15 @@ public class InitiativeManagementController extends BaseController {
 
     public InitiativeManagementController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
+    }
+
+    @RequestMapping(value = {OWN_INITIATIVES_FI, OWN_INITIATIVES_SV}, method = GET)
+    public String ownInitiatives(Model model, Locale locale, HttpServletRequest request) {
+        LoginUserHolder loginUserHolder = userService.getLoginUserHolder(request);
+
+        List<InitiativeListInfo> initiatives = initiativeManagementService.findOwnInitiatives(loginUserHolder);
+
+        return ViewGenerator.ownInitiatives(initiatives).view(model,Urls.get(locale).alt().ownInitiatives());
     }
 
     @RequestMapping(value={ MANAGEMENT_FI, MANAGEMENT_SV }, method=GET)

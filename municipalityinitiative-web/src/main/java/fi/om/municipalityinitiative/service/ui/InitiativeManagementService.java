@@ -1,11 +1,12 @@
 package fi.om.municipalityinitiative.service.ui;
 
+import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dao.UserDao;
 import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.VerifiedAuthor;
 import fi.om.municipalityinitiative.dto.service.Municipality;
-import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
+import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.dao.AuthorDao;
@@ -14,11 +15,9 @@ import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
-import fi.om.municipalityinitiative.dto.ui.ContactInfo;
-import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
-import fi.om.municipalityinitiative.dto.ui.InitiativeUIUpdateDto;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
 import fi.om.municipalityinitiative.service.email.EmailService;
+import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.service.operations.InitiativeManagementServiceOperations;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -26,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
+import java.util.List;
 import java.util.Locale;
 
 import static fi.om.municipalityinitiative.util.SecurityUtil.assertAllowance;
@@ -203,5 +203,14 @@ public class InitiativeManagementService {
     public InitiativeViewInfo getMunicipalityInitiative(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         return InitiativeViewInfo.parse(initiativeDao.get(initiativeId));
+    }
+
+    @Transactional(readOnly = true)
+    public List<InitiativeListInfo> findOwnInitiatives(LoginUserHolder loginUserHolder) {
+        VerifiedUserId authorId = loginUserHolder.getVerifiedUser().getAuthorId();
+        if (authorId == null) { // FIXME:
+            return Lists.newArrayList();
+        }
+        return initiativeDao.findInitiatives(authorId);
     }
 }

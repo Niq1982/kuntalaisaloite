@@ -265,6 +265,9 @@
                         <div class="header-dropdown">
                             <a href="#" class="header-tool-link user-name dropdown-toggle">${user.contactInfo.name}<#if user.homeMunicipality.present>, ${user.homeMunicipality.value.getName(locale)}</#if>
                                 <span class="icon-small settings"></span></a>
+                            <ul id="user-menu" class="dropdown-menu user-menu">
+                                <li><a href="${urls.ownInitiatives()}"><@u.message "user.own.initiatives" /></a></li>
+                            </ul>
                         </div>
                     </#if>
                     <a href="${urls.logout()}" id="logout" class="header-tool-link logout"><@u.message "common.logout"/><span class="icon-small logout"></span></a>

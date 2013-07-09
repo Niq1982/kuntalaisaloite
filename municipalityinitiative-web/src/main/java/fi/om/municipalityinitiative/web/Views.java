@@ -51,15 +51,15 @@ public final class Views {
     public static final String IFRAME_GENERATOR_VIEW = "iframe-generator";
     public static final String IFRAME_VIEW = "iframe-view";
     public static final String STATUS_VIEW = "status";
+    public static final String OWN_INITIATIVES = "own-initiatives";
 
     /**
      * Context relative redirect: context is prefixed to relative URLs.
-     * 
+     *
      * @param targetUri
      * @return
      */
     public static String contextRelativeRedirect(String targetUri) {
         return "redirect:" + targetUri;
     }
-    
 }

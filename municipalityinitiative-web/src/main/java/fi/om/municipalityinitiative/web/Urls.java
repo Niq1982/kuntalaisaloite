@@ -243,6 +243,10 @@ public final class Urls {
 
     public static final String IFRAME_SV = "/sv/iframe";
 
+    public static final String OWN_INITIATIVES_FI = "/fi/omat";
+
+    public static final String OWN_INITIATIVES_SV = "/sv/egen";
+
     public static final String STATUS =  "/status";
 
     private final String baseUrl;
@@ -522,5 +526,9 @@ public final class Urls {
 
     public String vetumaError() {
         return getLocalizedPageUrl(VETUMA_ERROR_FI, VETUMA_ERROR_SV);
+    }
+
+    public String ownInitiatives() {
+        return getLocalizedPageUrl(OWN_INITIATIVES_FI, OWN_INITIATIVES_SV);
     }
 }

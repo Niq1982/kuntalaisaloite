@@ -230,6 +230,13 @@ public class ViewGenerator {
         );
     }
 
+    public static ViewGenerator ownInitiatives(List<InitiativeListInfo> initiatives) {
+        return new ViewGenerator(Views.OWN_INITIATIVES,
+                new AttributeBuilder()
+                        .add("initiatives", initiatives).build()
+        );
+    }
+
     private static class AttributeBuilder {
         private Map<String, Object> attributes = Maps.newHashMap();
 
