@@ -224,11 +224,6 @@ public class PublicInitiativeController extends BaseController {
                                  @RequestParam(PARAM_INVITATION_CODE) String confirmCode,
                                  Model model, Locale locale, HttpServletRequest request) {
 
-        if (publicInitiativeService.isVerifiableInitiative(initiativeId)
-                && !userService.getLoginUserHolder(request).isVerifiedUser()) {
-            // TODO: Redirect to vetuma
-            // TODO: Save this url to session so we can redirect back to this url
-        }
 
         AuthorService.AuthorInvitationConfirmViewData data = authorService.getAuthorInvitationConfirmData(initiativeId, confirmCode, userService.getLoginUserHolder(request));
         AuthorInvitationUIConfirmDto authorInvitationUIConfirmDto = data.authorInvitationUIConfirmDto;
