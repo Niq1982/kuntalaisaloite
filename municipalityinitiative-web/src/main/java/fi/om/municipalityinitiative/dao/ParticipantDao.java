@@ -16,7 +16,9 @@ public interface ParticipantDao {
 
     void confirmParticipation(Long participantId, String confirmationCode);
 
-    ParticipantCount getParticipantCount(Long initiativeId);
+    ParticipantCount getNormalParticipantCount(Long initiativeId);
+
+    ParticipantCount getVerifiedParticipantCount(Long initiativeId);
 
     List<Participant> findNormalPublicParticipants(Long initiativeId);
 

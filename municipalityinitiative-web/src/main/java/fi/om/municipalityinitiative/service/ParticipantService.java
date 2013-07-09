@@ -35,7 +35,9 @@ public class ParticipantService {
 
     @Transactional(readOnly = true)
     public ParticipantCount getParticipantCount(Long initiativeId) {
-        return participantDao.getParticipantCount(initiativeId);
+        return initiativeDao.isVerifiableInitiative(initiativeId)
+                ? participantDao.getVerifiedParticipantCount(initiativeId)
+                : participantDao.getNormalParticipantCount(initiativeId);
     }
 
     @Transactional(readOnly = true)

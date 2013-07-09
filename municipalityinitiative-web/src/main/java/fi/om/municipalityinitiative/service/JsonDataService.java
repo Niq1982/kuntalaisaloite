@@ -57,7 +57,7 @@ public class JsonDataService {
         return InitiativeJson.from(
                 initiativeDao.get(id),
                 participantDao.findNormalPublicParticipants(id),
-                participantDao.getParticipantCount(id),
+                participantDao.getNormalParticipantCount(id),
                 authorService.findPublicAuthors(id));
 
     }

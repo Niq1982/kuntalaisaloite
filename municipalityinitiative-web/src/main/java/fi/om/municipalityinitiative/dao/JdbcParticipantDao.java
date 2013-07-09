@@ -85,7 +85,7 @@ public class JdbcParticipantDao implements ParticipantDao {
     }
 
     @Override
-    public ParticipantCount getParticipantCount(Long initiativeId) {
+    public ParticipantCount getNormalParticipantCount(Long initiativeId) {
 
         MaybeHoldingHashMap<Boolean, Long> map = new MaybeHoldingHashMap<>(queryFactory
                 .from(participant)
@@ -99,6 +99,20 @@ public class JdbcParticipantDao implements ParticipantDao {
         participantCount.setPrivateNames(map.get(false).or(0L));
         return participantCount;
 
+    }
+
+    @Override
+    public ParticipantCount getVerifiedParticipantCount(Long initiativeId) {
+        MaybeHoldingHashMap<Boolean, Long> map = new MaybeHoldingHashMap<>(queryFactory
+                .from(QVerifiedParticipant.verifiedParticipant)
+                .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
+                .groupBy(QVerifiedParticipant.verifiedParticipant.showName)
+                .map(QVerifiedParticipant.verifiedParticipant.showName, QVerifiedParticipant.verifiedParticipant.count()));
+
+        ParticipantCount participantCount = new ParticipantCount();
+        participantCount.setPublicNames(map.get(true).or(0L));
+        participantCount.setPrivateNames(map.get(false).or(0L));
+        return participantCount;
     }
 
     @Override

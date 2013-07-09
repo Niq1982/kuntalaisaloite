@@ -92,7 +92,7 @@ public class JdbcParticipantDaoTest {
         createConfirmedParticipant(initiativeId, true);
         createConfirmedParticipant(initiativeId, true);
 
-        ParticipantCount participantCount = participantDao.getParticipantCount(initiativeId);
+        ParticipantCount participantCount = participantDao.getNormalParticipantCount(initiativeId);
         assertThat(participantCount.getPublicNames(), is(4L));
         assertThat(participantCount.getPrivateNames(), is(2L));
 
@@ -100,7 +100,7 @@ public class JdbcParticipantDaoTest {
 
     @Test
     public void wont_fail_if_counting_supports_when_no_supports() {
-        ParticipantCount participantCount = participantDao.getParticipantCount(testInitiativeId);
+        ParticipantCount participantCount = participantDao.getNormalParticipantCount(testInitiativeId);
         assertThat(participantCount.getPublicNames(), is(1L)); // This is the default author
         assertThat(participantCount.getPrivateNames(), is(0L));
     }
@@ -207,6 +207,28 @@ public class JdbcParticipantDaoTest {
     }
 
     @Test
+    public void getVerifiedParticipantCount_counts_participants() {
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipalityId)
+                .applyAuthor()
+                .withParticipantName("Private Participant")
+                .withPublicName(false)
+                .toInitiativeDraft());
+
+        testHelper.createVerifiedAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId)
+                .withParticipantName("Public Participant")
+                .withPublicName(true));
+        testHelper.createVerifiedAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId)
+                .withParticipantName("Public Participant")
+                .withPublicName(true));
+
+        ParticipantCount participantCount = participantDao.getVerifiedParticipantCount(initiativeId);
+
+        assertThat(participantCount.getPrivateNames(), is(1L));
+        assertThat(participantCount.getPublicNames(), is(2L));
+
+    }
+
+    @Test
     public void getAllParticipants_returns_only_confirmed_participants() {
         precondition(participantDao.findNormalAllParticipants(testInitiativeId), hasSize(1));
         ParticipantCreateDto newParticipant = participantCreateDto();
@@ -226,12 +248,12 @@ public class JdbcParticipantDaoTest {
     @Test
     public void getParticipantCount_counts_only_confirmed_participants() {
 
-        precondition(participantDao.getParticipantCount(testInitiativeId).getTotal(), is(1L));
+        precondition(participantDao.getNormalParticipantCount(testInitiativeId).getTotal(), is(1L));
 
         participantDao.create(participantCreateDto(), CONFIRMATION_CODE);
         participantDao.confirmParticipation(participantDao.create(participantCreateDto(), CONFIRMATION_CODE), CONFIRMATION_CODE);
 
-        assertThat(participantDao.getParticipantCount(testInitiativeId).getTotal(), is(2L));
+        assertThat(participantDao.getNormalParticipantCount(testInitiativeId).getTotal(), is(2L));
     }
 
 
@@ -282,9 +304,9 @@ public class JdbcParticipantDaoTest {
         Long participantId = participantDao.create(participantCreateDto(), participantConfirmationCode);
         participantDao.create(participantCreateDto(), CONFIRMATION_CODE); // Some other unconfirmed participant
 
-        long originalParticipants = participantDao.getParticipantCount(testInitiativeId).getTotal();
+        long originalParticipants = participantDao.getNormalParticipantCount(testInitiativeId).getTotal();
         participantDao.confirmParticipation(participantId, participantConfirmationCode);
-        assertThat(participantDao.getParticipantCount(testInitiativeId).getTotal(), is(originalParticipants+1));
+        assertThat(participantDao.getNormalParticipantCount(testInitiativeId).getTotal(), is(originalParticipants+1));
     }
 
     @Test
