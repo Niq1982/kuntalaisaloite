@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.service.ui;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dao.UserDao;
+import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUIConfirmDto;
@@ -20,10 +21,12 @@ import fi.om.municipalityinitiative.sql.QVerifiedUser;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Maybe;
+import org.joda.time.DateTime;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -35,9 +38,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.fail;
 
 public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegrationTestBase{
 
+    public static final String CONFIRMATION_CODE = "confirmationCode";
     @Resource
     private VerifiedInitiativeService service;
 
@@ -111,7 +116,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
     }
 
     @Test
-    public void does_not_create_user_if_already_created() {
+    public void prepare_does_not_create_user_if_already_created() {
         precondition(testHelper.countAll(QVerifiedUser.verifiedUser), is(0L));
         service.prepareSafeInitiative(verifiedLoginUserHolder, prepareUICreateDto());
         service.prepareSafeInitiative(verifiedLoginUserHolder, prepareUICreateDto());
@@ -175,14 +180,12 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
     }
 
-    private static AuthorInvitationUIConfirmDto authorInvitationConfirmDto() {
-        AuthorInvitationUIConfirmDto dto = new AuthorInvitationUIConfirmDto();
-        dto.setContactInfo(contactInfo());
-        return dto;
-
+    @Test
+    @Ignore
+    public void preparing_safe_initiative_sends_email() {
+        // TODO: Implement
     }
 
-    // TODO: Do not use initiative.municipality from uiCreateDto, that's ugly.
     @Test
     public void accepting_invitation_to_safe_initiative_throws_exception_if_wrong_municipality_from_vetuma() {
         Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).applyAuthor().toInitiativeDraft());
@@ -207,9 +210,80 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
     }
 
     @Test
-    @Ignore
-    public void preparing_safe_initiative_sends_email() {
-        // TODO: Implement
+    public void accepting_invitation_creates_user_only_if_not_already_created_and_creates_author_and_participant() {
+        Long firstInitiative = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()));
+        Long secondInitiative = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()));
+        testHelper.addAuthorInvitation(authorInvitation(firstInitiative), false);
+        testHelper.addAuthorInvitation(authorInvitation(secondInitiative), false);
+
+        precondition(testHelper.countAll(QVerifiedUser.verifiedUser), is(0L));
+        precondition(testHelper.countAll(QVerifiedParticipant.verifiedParticipant), is(0L));
+        precondition(testHelper.countAll(QVerifiedAuthor.verifiedAuthor), is(0L));
+
+        AuthorInvitationUIConfirmDto confirmDto = authorInvitationConfirmDto();
+        confirmDto.setHomeMunicipality(testMunicipality.getId());
+
+        service.confirmVerifiedAuthorInvitation(verifiedUserHolderForInitiative(firstInitiative), firstInitiative, confirmDto, Locales.LOCALE_FI);
+        service.confirmVerifiedAuthorInvitation(verifiedUserHolderForInitiative(secondInitiative), secondInitiative, confirmDto, Locales.LOCALE_FI);
+
+        assertThat(testHelper.countAll(QVerifiedUser.verifiedUser), is(1L));
+        assertThat(testHelper.countAll(QVerifiedParticipant.verifiedParticipant), is(2L));
+        assertThat(testHelper.countAll(QVerifiedAuthor.verifiedAuthor), is(2L));
+
+    }
+
+    @Test
+    @Ignore("Implement after participation")
+    public void accepting_invitation_if_already_participated_adds_only_author_and_combines_to_participation() {
+        // TODO: Implement after participation
+    }
+
+    @Test
+    public void accepting_invitation_if_already_author_throws_exception() {
+        Long firstInitiative = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()));
+        testHelper.addAuthorInvitation(authorInvitation(firstInitiative), false);
+
+        AuthorInvitationUIConfirmDto confirmDto = authorInvitationConfirmDto();
+        confirmDto.setHomeMunicipality(testMunicipality.getId());
+
+        service.confirmVerifiedAuthorInvitation(verifiedUserHolderForInitiative(firstInitiative), firstInitiative, confirmDto, Locales.LOCALE_FI);
+
+        thrown.expect(DuplicateKeyException.class);
+        service.confirmVerifiedAuthorInvitation(verifiedUserHolderForInitiative(firstInitiative), firstInitiative, confirmDto, Locales.LOCALE_FI);
+    }
+
+    @Test
+    public void accepting_invitation_with_invalid_confirmation_code_throws_exception() {
+
+    }
+
+    @Test
+    public void accepting_invitation_creates_user_with_given_information_if_user_does_not_exist() {
+
+    }
+
+    @Test
+    public void accepting_invitation_updates_user_with_given_information_if_user_already_exists() {
+
+    }
+
+    private AuthorInvitation authorInvitation(Long initiativeId) {
+        AuthorInvitation authorInvitation = new AuthorInvitation();
+        authorInvitation.setConfirmationCode(CONFIRMATION_CODE);
+        authorInvitation.setInitiativeId(initiativeId);
+        authorInvitation.setEmail("some@example.com");
+        authorInvitation.setName("any name");
+        authorInvitation.setInvitationTime(DateTime.now());
+        return authorInvitation;
+    }
+
+    private AuthorInvitationUIConfirmDto authorInvitationConfirmDto() {
+        AuthorInvitationUIConfirmDto dto = new AuthorInvitationUIConfirmDto();
+        dto.setContactInfo(contactInfo());
+        dto.setConfirmCode(CONFIRMATION_CODE);
+        dto.assignInitiativeMunicipality(testMunicipality.getId());
+        return dto;
+
     }
 
     private static LoginUserHolder<VerifiedUser> verifiedUserHolderWithMunicipalityId(Maybe<Long> maybeMunicipality) {
@@ -221,6 +295,10 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
             municipality = Maybe.absent();
         }
         return new LoginUserHolder<>(User.verifiedUser(new VerifiedUserId(-1L), HASH, new ContactInfo(), Collections.<Long>emptySet(), municipality));
+    }
+
+    private static LoginUserHolder<VerifiedUser> verifiedUserHolderForInitiative(Long initiativeId) {
+        return new LoginUserHolder<>(User.verifiedUser(new VerifiedUserId(-1L), HASH, new ContactInfo(), Collections.singleton(initiativeId), Maybe.<Municipality>absent()));
     }
 
     private PrepareSafeInitiativeUICreateDto prepareUICreateDto() {

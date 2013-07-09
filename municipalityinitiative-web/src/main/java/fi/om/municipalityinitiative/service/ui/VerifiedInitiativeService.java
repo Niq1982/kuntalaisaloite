@@ -31,13 +31,7 @@ public class VerifiedInitiativeService {
 
         // TODO: Check user age.
 
-        PrepareSafeInitiativeCreateDto createDto = new PrepareSafeInitiativeCreateDto();
-        createDto.setMunicipality(uiCreateDto.getMunicipality());
-        createDto.setHash(verifiedUser.getHash());
-        //createDto.setMunicipality(verifiedUser.getMunicipality);
-        createDto.setContactInfo(new ContactInfo(verifiedUser.getContactInfo()));
-        createDto.setInitiativeType(uiCreateDto.getInitiativeType());
-        Long initiativeId = operations.doPrepareSafeInitiative(createDto);
+        Long initiativeId = operations.doPrepareSafeInitiative(verifiedUser, uiCreateDto);
 
         // TODO: Email
 
@@ -49,10 +43,10 @@ public class VerifiedInitiativeService {
         VerifiedUser verifiedUser = loginUserHolder.getVerifiedUser();
         if (municipalityMismatch(confirmDto.getMunicipality(), confirmDto.getHomeMunicipality(), verifiedUser.getHomeMunicipality())) {
             throw new InvalidHomeMunicipalityException("Unable to create initiative for municipality with id " + confirmDto.getMunicipality());
-            // FIXME: Get the municipality from database instead of uiCreateDto
         }
-        // TODO: Add author and participant
-        // TODO: Invalid homeMunicipality
+
+        operations.doConfirmInvitation(verifiedUser, initiativeId, confirmDto);
+
         // TODO: Already participated/author
     }
 
