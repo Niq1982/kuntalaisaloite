@@ -134,12 +134,7 @@ public class Mappings {
             author.setId(new VerifiedUserId(row.get(QVerifiedUser.verifiedUser.id)));
             author.setCreateTime(row.get(QVerifiedParticipant.verifiedParticipant.participateTime));
 
-            if (row.get(QMunicipality.municipality.name) == null) {
-                author.setMunicipality(Maybe.<Municipality>absent());
-            }
-            else {
-                author.setMunicipality(Maybe.of(parseMunicipality(row)));
-            }
+            author.setMunicipality(parseMaybeMunicipality(row));
 
             return author;
         }
@@ -160,7 +155,7 @@ public class Mappings {
             VerifiedParticipant participant = new VerifiedParticipant();
 
             participant.setEmail(row.get(QVerifiedUser.verifiedUser.email));
-            participant.setHomeMunicipality(parseMunicipality(row));
+            participant.setHomeMunicipality(parseMaybeMunicipality(row));
             participant.setParticipateDate(row.get(QVerifiedParticipant.verifiedParticipant.participateTime));
             participant.setName(row.get(QVerifiedUser.verifiedUser.name));
             participant.setId(new VerifiedUserId(row.get(QVerifiedUser.verifiedUser.id)));
@@ -205,7 +200,12 @@ public class Mappings {
                     par.setName(row.get(participant.name));
                     par.setEmail(row.get(participant.email));
                     par.setMembership(row.get(participant.membershipType));
-                    par.setHomeMunicipality(parseMunicipality(row));
+                    if (row.get(QMunicipality.municipality.id) != null) {
+                        par.setHomeMunicipality(Maybe.of(parseMunicipality(row)));
+                    }
+                    else {
+                        par.setHomeMunicipality(Maybe.<Municipality>absent());
+                    }
                     par.setId(new NormalParticipantId(row.get(participant.id)));
                     return par;
 
@@ -225,6 +225,18 @@ public class Mappings {
             return authorMessage;
         }
     };
+
+    public static Maybe<Municipality> parseMaybeMunicipality(Tuple row) {
+        Long municipalityId = row.get(QMunicipality.municipality.id);
+        if (municipalityId == null) {
+            return Maybe.absent();
+        }
+        return Maybe.of(new Municipality(
+                municipalityId,
+                row.get(QMunicipality.municipality.name),
+                row.get(QMunicipality.municipality.nameSv),
+                row.get(QMunicipality.municipality.active)));
+    }
 
     public static Municipality parseMunicipality(Tuple row) {
         return new Municipality(

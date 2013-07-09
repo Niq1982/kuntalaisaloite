@@ -44,7 +44,7 @@ public class ParticipantToPdfExporterTest {
             Participant participant = new NormalParticipant();
             participant.setParticipateDate(new LocalDate());
             participant.setName(RandomStringUtils.randomAlphabetic(20));
-            participant.setHomeMunicipality(municipality);
+            participant.setHomeMunicipality(Maybe.of(municipality));
 
             Random rnd = new Random();
             

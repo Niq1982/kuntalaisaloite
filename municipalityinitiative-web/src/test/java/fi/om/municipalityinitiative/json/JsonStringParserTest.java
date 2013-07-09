@@ -61,7 +61,7 @@ public class JsonStringParserTest {
         Participant participant = new NormalParticipant();
         participant.setParticipateDate(new LocalDate(2010, 1, 1));
         participant.setName(name);
-        participant.setHomeMunicipality(TAMPERE);
+        participant.setHomeMunicipality(Maybe.of(TAMPERE));
         participant.setMembership(Membership.community);
         return participant;
     }

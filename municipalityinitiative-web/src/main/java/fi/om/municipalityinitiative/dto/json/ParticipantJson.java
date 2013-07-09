@@ -24,6 +24,6 @@ public class ParticipantJson {
     }
 
     public Municipality getMunicipality() {
-        return participant.getHomeMunicipality();
+        return participant.getHomeMunicipality().isPresent() ? (Municipality) participant.getHomeMunicipality().get() : null;
     }
 }

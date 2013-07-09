@@ -1,13 +1,14 @@
 package fi.om.municipalityinitiative.dto.service;
 
 import fi.om.municipalityinitiative.service.id.Id;
+import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 import org.joda.time.LocalDate;
 
 public abstract class Participant<E extends Id> {
     private String name;
     private LocalDate participateDate;
-    private Municipality homeMunicipality;
+    private Maybe<Municipality> homeMunicipality;
     private String email;
     private Membership membership;
     private E id;
@@ -24,7 +25,7 @@ public abstract class Participant<E extends Id> {
         return participateDate;
     }
 
-    public Municipality getHomeMunicipality() {
+    public Maybe<Municipality> getHomeMunicipality() {
         return homeMunicipality;
     }
 
@@ -44,7 +45,7 @@ public abstract class Participant<E extends Id> {
         this.participateDate = participateDate;
     }
 
-    public void setHomeMunicipality(Municipality homeMunicipality) {
+    public void setHomeMunicipality(Maybe<Municipality> homeMunicipality) {
         this.homeMunicipality = homeMunicipality;
     }
 

@@ -10,6 +10,7 @@ import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.util.Locales;
+import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 import org.joda.time.DateTime;
 
@@ -167,7 +168,8 @@ public class ParticipantToPdfExporter {
             table.addCell(createCell(String.valueOf(count), false));
             table.addCell(createCell(participant.getParticipateDate().toString(DATE_FORMAT), false));
             table.addCell(createCell(participant.getName(), false));
-            table.addCell(createCell(participant.getHomeMunicipality().getNameFi() + "\n" + participant.getHomeMunicipality().getNameSv(), false));
+            Municipality homeMunicipality = (Municipality) participant.getHomeMunicipality().get();
+            table.addCell(createCell(homeMunicipality.getNameFi() + "\n" + homeMunicipality.getNameSv(), false));
             
             String membershipType = "";
             

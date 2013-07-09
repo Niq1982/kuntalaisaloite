@@ -141,7 +141,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
 
         Participant createdParticipant = testHelper.getUniqueParticipant(initiativeId);
-        assertThat(createdParticipant.getHomeMunicipality().getId(), is(participantMunicipality.getId()));
+        assertThat(((Municipality) createdParticipant.getHomeMunicipality().get()).getId(), is(participantMunicipality.getId()));
         assertThat(createdParticipant.getParticipateDate(), is(LocalDate.now()));
     }
 
@@ -151,7 +151,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 
         Participant createdParticipant = testHelper.getUniqueParticipant(initiativeId);
 
-        assertThat(createdParticipant.getHomeMunicipality().getId(), is(prepareDto().getHomeMunicipality()));
+        assertThat(((Municipality) createdParticipant.getHomeMunicipality().get()).getId(), is(prepareDto().getHomeMunicipality()));
         assertThat(createdParticipant.getEmail(), is(prepareDto().getParticipantEmail()));
         assertThat(createdParticipant.getMembership(), is(prepareDto().getMunicipalMembership()));
 

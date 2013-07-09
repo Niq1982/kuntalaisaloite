@@ -96,7 +96,7 @@ public class JsonDataService {
         Participant participant = new NormalParticipant();
         participant.setParticipateDate(new LocalDate(2010, 1, 1));
         participant.setName("Teemu Teekkari");
-        participant.setHomeMunicipality(ApiController.TAMPERE);
+        participant.setHomeMunicipality(Maybe.of(ApiController.TAMPERE));
 
         publicParticipants.add(participant);
 

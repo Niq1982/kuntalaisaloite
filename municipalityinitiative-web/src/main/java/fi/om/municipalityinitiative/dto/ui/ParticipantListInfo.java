@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.dto.ui;
 
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.service.Participant;
+import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.LocalDate;
 
 public class ParticipantListInfo {
@@ -22,8 +23,8 @@ public class ParticipantListInfo {
         return participant.getParticipateDate();
     }
 
-    public Municipality getHomeMunicipality() {
-        return participant.getHomeMunicipality();
+    public Maybe<Municipality> getHomeMunicipality() {
+        return (Maybe<Municipality>) participant.getHomeMunicipality();
     }
 
     public boolean isAuthor() {
