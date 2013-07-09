@@ -51,7 +51,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     }
 
     @Test
-    public void all_functions_require_om_rights() throws InvocationTargetException, IllegalAccessException {
+    public void all_functions_require_management_rights() throws InvocationTargetException, IllegalAccessException {
 
         for (Method method : InitiativeManagementService.class.getDeclaredMethods()) {
             if (method.getModifiers() != 1) {
@@ -59,6 +59,11 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
             }
             System.out.println("Checking that method requires om rights: " + method.getName());
             Object[] parameters = new Object[method.getParameterTypes().length];
+
+            if (parameters.length < 2) {
+                continue;
+            }
+
             parameters[1] = TestHelper.unknownLoginUserHolder;
             try {
                 method.invoke(service, parameters);
