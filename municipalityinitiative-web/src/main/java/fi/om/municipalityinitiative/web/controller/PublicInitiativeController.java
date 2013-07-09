@@ -253,6 +253,7 @@ public class PublicInitiativeController extends BaseController {
         if (initiativeInfo.isVerifiable()) {
             try {
                 verifiedInitiativeService.confirmVerifiedAuthorInvitation(userService.getLoginUserHolder(request), initiativeId, confirmDto, locale);
+                userService.refreshUserData(request);
                 return redirectWithMessage(Urls.get(locale).management(initiativeId), RequestMessage.CONFIRM_INVITATION_ACCEPTED, request);
             } catch (InvalidHomeMunicipalityException e) {
                 return redirectWithMessage(Urls.get(locale).invitation(initiativeId, confirmDto.getConfirmCode()), RequestMessage.INVALID_HOME_MUNICIPALITY, request);
