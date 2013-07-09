@@ -11,6 +11,7 @@ import fi.om.municipalityinitiative.dto.service.*;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
+import fi.om.municipalityinitiative.service.id.NormalParticipantId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.InitiativeType;
@@ -143,25 +144,26 @@ public class Mappings {
             return author;
         }
     };
-    public static Expression<Participant> verifiedParticipantMapping = new MappingProjection<Participant>(
-            Participant.class,
+    public static Expression<VerifiedParticipant> verifiedParticipantMapping = new MappingProjection<VerifiedParticipant>(
+            VerifiedParticipant.class,
             QVerifiedParticipant.verifiedParticipant.participateTime,
             QVerifiedUser.verifiedUser.name,
             QVerifiedUser.verifiedUser.email,
+            QVerifiedUser.verifiedUser.id,
             QMunicipality.municipality.id,
             QMunicipality.municipality.name,
             QMunicipality.municipality.nameSv,
             QMunicipality.municipality.active
             ) {
         @Override
-        protected Participant map(Tuple row) {
-            Participant participant = new Participant();
+        protected VerifiedParticipant map(Tuple row) {
+            VerifiedParticipant participant = new VerifiedParticipant();
 
             participant.setEmail(row.get(QVerifiedUser.verifiedUser.email));
             participant.setHomeMunicipality(parseMunicipality(row));
             participant.setParticipateDate(row.get(QVerifiedParticipant.verifiedParticipant.participateTime));
             participant.setName(row.get(QVerifiedUser.verifiedUser.name));
-            participant.setId(null); // TODO: Id
+            participant.setId(new VerifiedUserId(row.get(QVerifiedUser.verifiedUser.id)));
 
             return participant;
         }
@@ -193,18 +195,18 @@ public class Mappings {
 
                 }
             };
-    public static Expression<Participant> participantMapping =
-            new MappingProjection<Participant>(Participant.class,
+    public static Expression<NormalParticipant> participantMapping =
+            new MappingProjection<NormalParticipant>(NormalParticipant.class,
                     participant.all(), QMunicipality.municipality.all()) {
                 @Override
-                protected Participant map(Tuple row) {
-                    Participant par = new Participant();
+                protected NormalParticipant map(Tuple row) {
+                    NormalParticipant par = new NormalParticipant();
                     par.setParticipateDate(row.get(participant.participateTime));
                     par.setName(row.get(participant.name));
                     par.setEmail(row.get(participant.email));
                     par.setMembership(row.get(participant.membershipType));
                     par.setHomeMunicipality(parseMunicipality(row));
-                    par.setId(row.get(participant.id));
+                    par.setId(new NormalParticipantId(row.get(participant.id)));
                     return par;
 
                 }

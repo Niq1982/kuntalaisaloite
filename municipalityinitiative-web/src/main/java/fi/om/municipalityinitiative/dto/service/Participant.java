@@ -1,18 +1,16 @@
 package fi.om.municipalityinitiative.dto.service;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import fi.om.municipalityinitiative.json.LocalDateJsonSerializer;
+import fi.om.municipalityinitiative.service.id.Id;
 import fi.om.municipalityinitiative.util.Membership;
 import org.joda.time.LocalDate;
 
-public class Participant {
+public abstract class Participant<E extends Id> {
     private String name;
     private LocalDate participateDate;
     private Municipality homeMunicipality;
     private String email;
     private Membership membership;
-    private Long id;
+    private E id;
 
     public Participant() {
 
@@ -58,11 +56,11 @@ public class Participant {
         this.membership = membership;
     }
 
-    public Long getId() {
+    public E getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(E id) {
         this.id = id;
     }
 }

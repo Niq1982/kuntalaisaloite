@@ -2,7 +2,7 @@ package fi.om.municipalityinitiative.dto;
 
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 
-public class VerifiedAuthor extends Author {
+public class VerifiedAuthor extends Author<VerifiedUserId> {
 
     private VerifiedUserId id;
 

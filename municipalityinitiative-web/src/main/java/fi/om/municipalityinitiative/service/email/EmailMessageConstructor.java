@@ -52,7 +52,7 @@ public class EmailMessageConstructor {
 
     private static final Logger log = LoggerFactory.getLogger(EmailMessageConstructor.class);
 
-    private static void addAttachment(MimeMessageHelper multipart, Initiative initiative, List<Participant> participants) {
+    private static void addAttachment(MimeMessageHelper multipart, Initiative initiative, List<? extends Participant> participants) {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()){
             new ParticipantToPdfExporter(initiative, participants).createPdf(outputStream);
 
@@ -168,7 +168,7 @@ public class EmailMessageConstructor {
         private Map<String, Object> dataMap;
 
         private Maybe<Initiative> attachmentInitiative = Maybe.absent();
-        private Maybe<List<Participant>> attachmentParticipants = Maybe.absent();
+        private Maybe<? extends List<? extends Participant>> attachmentParticipants = Maybe.absent();
 
         public EmailMessageDraft(String templateName) {
             this.templateName = templateName;
@@ -193,7 +193,7 @@ public class EmailMessageConstructor {
             return this;
         }
 
-        public EmailMessageDraft withAttachment(Initiative initiative, List<Participant> participants) {
+        public EmailMessageDraft withAttachment(Initiative initiative, List<? extends Participant> participants) {
             this.attachmentInitiative = Maybe.of(initiative);
             this.attachmentParticipants = Maybe.of(participants);
             return this;

@@ -6,11 +6,15 @@ import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dto.NormalAuthor;
+import fi.om.municipalityinitiative.dto.VerifiedAuthor;
+import fi.om.municipalityinitiative.dto.service.NormalParticipant;
+import fi.om.municipalityinitiative.dto.service.VerifiedParticipant;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
+import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -43,33 +47,51 @@ public class ParticipantService {
     @Transactional(readOnly = true)
     public List<ParticipantListInfo> findPublicParticipants(Long initiativeId) {
 
-        List<Participant> participants = initiativeDao.isVerifiableInitiative(initiativeId)
-                ? participantDao.findVerifiedPublicParticipants(initiativeId)
-                : participantDao.findNormalPublicParticipants(initiativeId);
-        return toListInfo(participants, getAuthorIds(initiativeId));
+        if (initiativeDao.isVerifiableInitiative(initiativeId)) {
+            return toVerifiedListInfo(participantDao.findVerifiedPublicParticipants(initiativeId), initiativeId);
+        }
+        else {
+            return toNormalListInfo(participantDao.findNormalPublicParticipants(initiativeId), initiativeId);
+        }
+
     }
 
     @Transactional(readOnly = true)
     public List<ParticipantListInfo> findAllParticipants(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        List<Participant> allParticipants = initiativeDao.isVerifiableInitiative(initiativeId)
-                ? participantDao.findVerifiedAllParticipants(initiativeId)
-                : participantDao.findNormalAllParticipants(initiativeId);
-        return toListInfo(allParticipants, getAuthorIds(initiativeId));
+
+        if (initiativeDao.isVerifiableInitiative(initiativeId)) {
+            return toVerifiedListInfo(participantDao.findVerifiedAllParticipants(initiativeId), initiativeId);
+        }
+        else {
+            return toNormalListInfo(participantDao.findNormalAllParticipants(initiativeId), initiativeId);
+        }
     }
 
-    private Set<NormalAuthorId> getAuthorIds(Long initiativeId) {
+    private List<ParticipantListInfo> toVerifiedListInfo(List<VerifiedParticipant> participants, Long initiativeId) {
+        Set<VerifiedUserId> authorIds = Sets.newHashSet();
+
+        for (VerifiedAuthor author : authorDao.findVerifiedAuthors(initiativeId)) {
+            authorIds.add(author.getId());
+        }
+
+        ArrayList<ParticipantListInfo> participantList = Lists.newArrayList();
+        for (VerifiedParticipant participant : participants) {
+            participantList.add(new ParticipantListInfo(participant, authorIds.contains(participant.getId())));
+        }
+        return participantList;
+    }
+
+    private List<ParticipantListInfo> toNormalListInfo(List<NormalParticipant> participants, Long initiativeId) {
         Set<NormalAuthorId> authorIds = Sets.newHashSet();
+
         for (NormalAuthor author : authorDao.findNormalAuthors(initiativeId)) {
             authorIds.add(author.getId());
         }
-        return authorIds;
-    }
 
-    static List<ParticipantListInfo> toListInfo(List<Participant> participants, Set<NormalAuthorId> authorIds) {
         ArrayList<ParticipantListInfo> participantList = Lists.newArrayList();
         for (Participant participant : participants) {
-            participantList.add(new ParticipantListInfo(participant, authorIds.contains(new NormalAuthorId(participant.getId()))));
+            participantList.add(new ParticipantListInfo(participant, authorIds.contains(new NormalAuthorId(participant.getId().toLong()))));
         }
         return participantList;
     }

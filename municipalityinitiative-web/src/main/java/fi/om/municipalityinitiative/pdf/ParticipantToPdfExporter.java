@@ -37,9 +37,9 @@ public class ParticipantToPdfExporter {
     private Document document;
 
     private final Initiative initiative;
-    private final List<Participant> participants;
+    private final List<? extends Participant> participants;
 
-    public ParticipantToPdfExporter(Initiative initiative, List<Participant> participants) {
+    public ParticipantToPdfExporter(Initiative initiative, List<? extends Participant> participants) {
         this.initiative = initiative;
         this.participants = participants;
     }
@@ -144,7 +144,7 @@ public class ParticipantToPdfExporter {
 
     }
 
-    private static void createTable(Paragraph subCatPart, List<Participant> participants)
+    private static void createTable(Paragraph subCatPart, List<? extends Participant> participants)
             throws DocumentException {
         PdfPTable table = new PdfPTable(5);
 

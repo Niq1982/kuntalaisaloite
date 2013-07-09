@@ -61,7 +61,7 @@ public class InitiativeJson {
         return authors;
     }
 
-    public static InitiativeJson from(Initiative initiativeInfo, List<Participant> publicParticipants, ParticipantCount participantCount, PublicAuthors publicAuthors) {
+    public static InitiativeJson from(Initiative initiativeInfo, List<? extends Participant> publicParticipants, ParticipantCount participantCount, PublicAuthors publicAuthors) {
         if (initiativeInfo.isCollaborative()) {
             return new CollaborativeInitiativeJson(initiativeInfo, publicParticipants, participantCount, publicAuthors);
         }
@@ -77,7 +77,7 @@ public class InitiativeJson {
         private ParticipantCountJson participantCount;
 
         private CollaborativeInitiativeJson(Initiative initiative,
-                                            List<Participant> participants,
+                                            List<? extends Participant> participants,
                                             ParticipantCount participantCount,
                                             PublicAuthors authors) {
             super(initiative, authors);

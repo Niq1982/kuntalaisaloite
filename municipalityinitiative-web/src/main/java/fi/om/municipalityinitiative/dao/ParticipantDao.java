@@ -1,7 +1,9 @@
 package fi.om.municipalityinitiative.dao;
 
+import fi.om.municipalityinitiative.dto.service.NormalParticipant;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
+import fi.om.municipalityinitiative.dto.service.VerifiedParticipant;
 import fi.om.municipalityinitiative.dto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.Membership;
@@ -20,13 +22,13 @@ public interface ParticipantDao {
 
     ParticipantCount getVerifiedParticipantCount(Long initiativeId);
 
-    List<Participant> findNormalPublicParticipants(Long initiativeId);
+    List<NormalParticipant> findNormalPublicParticipants(Long initiativeId);
 
-    List<Participant> findNormalAllParticipants(Long initiativeId);
+    List<NormalParticipant> findNormalAllParticipants(Long initiativeId);
 
-    List<Participant> findVerifiedPublicParticipants(Long initiativeId);
+    List<VerifiedParticipant> findVerifiedPublicParticipants(Long initiativeId);
 
-    List<Participant> findVerifiedAllParticipants(Long initiativeId);
+    List<VerifiedParticipant> findVerifiedAllParticipants(Long initiativeId);
 
     Long getInitiativeIdByParticipant(Long participantId);
 

@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dto.json.InitiativeJson;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.service.NormalParticipant;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.util.InitiativeType;
@@ -57,7 +58,7 @@ public class JsonStringParserTest {
     }
 
     private static Participant participant(Municipality TAMPERE, String name) {
-        Participant participant = new Participant();
+        Participant participant = new NormalParticipant();
         participant.setParticipateDate(new LocalDate(2010, 1, 1));
         participant.setName(name);
         participant.setHomeMunicipality(TAMPERE);

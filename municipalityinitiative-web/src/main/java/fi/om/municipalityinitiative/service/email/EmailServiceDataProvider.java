@@ -41,7 +41,7 @@ public class EmailServiceDataProvider {
         return authorDao.getAuthorEmails(initiativeId);
     }
 
-    public List<Participant> findAllParticipants(Long initiativeId) {
+    public List<? extends Participant> findAllParticipants(Long initiativeId) {
         return participantDao.findNormalAllParticipants(initiativeId);
     }
 

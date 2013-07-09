@@ -1,14 +1,14 @@
 package fi.om.municipalityinitiative.dao;
 
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
-import fi.om.municipalityinitiative.dto.service.Participant;
+import fi.om.municipalityinitiative.dto.service.NormalParticipant;
 import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
+import fi.om.municipalityinitiative.dto.service.VerifiedParticipant;
 import fi.om.municipalityinitiative.dto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.MaybeHoldingHashMap;
 import fi.om.municipalityinitiative.util.Membership;
-import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 
@@ -116,7 +116,7 @@ public class JdbcParticipantDao implements ParticipantDao {
     }
 
     @Override
-    public List<Participant> findNormalPublicParticipants(Long initiativeId) {
+    public List<NormalParticipant> findNormalPublicParticipants(Long initiativeId) {
         return queryFactory.query()
                 .from(participant)
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
@@ -128,7 +128,7 @@ public class JdbcParticipantDao implements ParticipantDao {
     }
 
     @Override
-    public List<Participant> findNormalAllParticipants(Long initiativeId) {
+    public List<NormalParticipant> findNormalAllParticipants(Long initiativeId) {
         return queryFactory.query()
                 .from(participant)
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
@@ -139,7 +139,7 @@ public class JdbcParticipantDao implements ParticipantDao {
     }
 
     @Override
-    public List<Participant> findVerifiedPublicParticipants(Long initiativeId) {
+    public List<VerifiedParticipant> findVerifiedPublicParticipants(Long initiativeId) {
         return queryFactory.from(QVerifiedParticipant.verifiedParticipant)
                 .innerJoin(QVerifiedParticipant.verifiedParticipant.verifiedParticipantVerifiedUserFk, QVerifiedUser.verifiedUser)
                 .leftJoin(QVerifiedUser.verifiedUser.verifiedUserMunicipalityFk, QMunicipality.municipality)
@@ -149,7 +149,7 @@ public class JdbcParticipantDao implements ParticipantDao {
     }
 
     @Override
-    public List<Participant> findVerifiedAllParticipants(Long initiativeId) {
+    public List<VerifiedParticipant> findVerifiedAllParticipants(Long initiativeId) {
         return queryFactory.from(QVerifiedParticipant.verifiedParticipant)
                 .innerJoin(QVerifiedParticipant.verifiedParticipant.verifiedParticipantVerifiedUserFk, QVerifiedUser.verifiedUser)
                 .leftJoin(QVerifiedUser.verifiedUser.verifiedUserMunicipalityFk, QMunicipality.municipality)

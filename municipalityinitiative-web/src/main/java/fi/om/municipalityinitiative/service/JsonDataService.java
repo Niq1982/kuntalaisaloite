@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.service;
 import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.NormalAuthor;
+import fi.om.municipalityinitiative.dto.service.NormalParticipant;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.PublicAuthors;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
@@ -92,7 +93,7 @@ public class JsonDataService {
 
         ArrayList<Participant> publicParticipants = Lists.<Participant>newArrayList();
 
-        Participant participant = new Participant();
+        Participant participant = new NormalParticipant();
         participant.setParticipateDate(new LocalDate(2010, 1, 1));
         participant.setName("Teemu Teekkari");
         participant.setHomeMunicipality(ApiController.TAMPERE);
