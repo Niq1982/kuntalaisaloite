@@ -419,15 +419,12 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
     }
 
     @Test
-    public void participating_updates_user_with_given_information_if_user_already_exists() {
-    }
-
-    @Test
-    public void participating_creates_user_with_given_information_if_user_does_not_exist()  {
-    }
-
-    @Test
     public void participating_if_already_participated_throws_exception() {
+        Long initiativeId = createVerifiedCollaborative();
+        service.createParticipant(verifiedLoginUserHolder, initiativeId, participantCreateDto());
+
+        thrown.expect(DuplicateKeyException.class);
+        service.createParticipant(verifiedLoginUserHolder, initiativeId, participantCreateDto());
     }
 
     private static AuthorInvitation authorInvitation(Long initiativeId) {
