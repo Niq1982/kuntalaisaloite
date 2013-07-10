@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUIConfirmDto;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
+import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.dto.ui.PrepareSafeInitiativeUICreateDto;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
@@ -358,6 +359,17 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
     @Test
     public void participating_creates_user_only_if_not_already_created_and_creates_author_and_participant() {
+        Long firstInitiative = createVerifiedCollaborative();
+        Long secondInitiative = createVerifiedCollaborative();
+
+        precondition(testHelper.countAll(QVerifiedUser.verifiedUser), is(0L));
+        precondition(testHelper.countAll(QVerifiedParticipant.verifiedParticipant), is(0L));
+
+        service.createParticipant(verifiedLoginUserHolder, firstInitiative, participantCreateDto());
+        service.createParticipant(verifiedLoginUserHolder, secondInitiative, participantCreateDto());
+
+        assertThat(testHelper.countAll(QVerifiedUser.verifiedUser), is(1L));
+        assertThat(testHelper.countAll(QVerifiedParticipant.verifiedParticipant), is(2L));
     }
 
     @Test
@@ -406,6 +418,15 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         dto.setHomeMunicipality(testMunicipality.getId());
         return dto;
 
+    }
+
+    private ParticipantUICreateDto participantCreateDto() {
+        ParticipantUICreateDto createDto = new ParticipantUICreateDto();
+
+        createDto.setHomeMunicipality(testMunicipality.getId());
+        createDto.assignMunicipality(testMunicipality.getId());
+        createDto.setShowName(true);
+        return createDto;
     }
 
     private static LoginUserHolder<VerifiedUser> verifiedUserHolderWithMunicipalityId(Maybe<Long> maybeMunicipality) {

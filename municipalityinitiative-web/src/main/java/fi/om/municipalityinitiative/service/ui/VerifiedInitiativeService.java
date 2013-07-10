@@ -51,11 +51,9 @@ public class VerifiedInitiativeService {
         // TODO: Already participated/author
     }
 
-    public void createParticipant(LoginUserHolder loginUserHolder, Long participant, ParticipantUICreateDto createDto) {
+    public void createParticipant(LoginUserHolder loginUserHolder, Long initiativeId, ParticipantUICreateDto createDto) {
         VerifiedUser verifiedUser = loginUserHolder.getVerifiedUser();
-
-        //To change body of created methods use File | Settings | File Templates.
-        throw new RuntimeException("Not implemented");
+        operations.doCreateParticipant(verifiedUser, initiativeId, createDto.getShowName());
     }
 
     private static boolean municipalityMismatch(Long initiativeMunicipality, Long userGivenHomeMunicipality, Maybe<Municipality> vetumaMunicipality) {
