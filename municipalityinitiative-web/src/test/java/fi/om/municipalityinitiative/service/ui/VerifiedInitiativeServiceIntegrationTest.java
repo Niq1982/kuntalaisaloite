@@ -164,6 +164,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         PrepareSafeInitiativeUICreateDto createDto = prepareUICreateDto();
 
         createDto.setMunicipality(testHelper.createTestMunicipality("Other municipality"));
+        // FIXME: What the heck? should'nt the municipality be received from verifiedLoginUserHolder?
 
         thrown.expect(InvalidHomeMunicipalityException.class);
 
@@ -374,6 +375,25 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
     @Test
     public void participating_to_safe_initiative_throws_exception_if_wrong_municipality_from_vetuma() {
+
+        Long initiativeId = createVerifiedCollaborative();
+
+        thrown.expect(InvalidHomeMunicipalityException.class);
+
+        LoginUserHolder<VerifiedUser> loginUserHolder = verifiedUserHolderWithMunicipalityId(Maybe.of(testHelper.createTestMunicipality("Other Municipality")));
+        service.createParticipant(loginUserHolder, initiativeId, participantCreateDto());
+    }
+
+    @Test
+    public void participating_to_safe_initiative_throws_exception_if_wrong_homeMunicipality_given_by_user_when_vetuma_gives_null_municipality() {
+        Long initiativeId = createVerifiedCollaborative();
+
+        thrown.expect(InvalidHomeMunicipalityException.class);
+
+        ParticipantUICreateDto createDto = participantCreateDto();
+        createDto.setHomeMunicipality(testHelper.createTestMunicipality("Some other municipality"));
+
+        service.createParticipant(verifiedUserHolderWithMunicipalityId(Maybe.<Long>absent()), initiativeId, createDto);
     }
 
     @Test
@@ -382,10 +402,6 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
     @Test
     public void participating_increases_participant_count() {
-    }
-
-    @Test
-    public void participating_to_safe_initiative_throws_exception_if_wrong_homeMunicipality_given_by_user_when_vetuma_gives_null_municipality() {
     }
 
     @Test

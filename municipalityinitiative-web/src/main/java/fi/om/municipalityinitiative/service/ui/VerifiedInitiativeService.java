@@ -27,7 +27,7 @@ public class VerifiedInitiativeService {
         VerifiedUser verifiedUser = loginUserHolder.getVerifiedUser();
 
         if (municipalityMismatch(uiCreateDto.getMunicipality(), uiCreateDto.getUserGivenHomeMunicipality(), verifiedUser.getHomeMunicipality())) {
-            throw new InvalidHomeMunicipalityException("Unable to create initiative for municipality with id " + uiCreateDto.getMunicipality());
+            return municipalityException(uiCreateDto.getMunicipality());
         }
 
         // TODO: Check user age.
@@ -40,10 +40,14 @@ public class VerifiedInitiativeService {
 
     }
 
+    private static long municipalityException(Long municipality) {
+        throw new InvalidHomeMunicipalityException("Unable to create initiative for municipality with id " + municipality);
+    }
+
     public void confirmVerifiedAuthorInvitation(LoginUserHolder loginUserHolder, Long initiativeId, AuthorInvitationUIConfirmDto confirmDto, Locale locale) {
         VerifiedUser verifiedUser = loginUserHolder.getVerifiedUser();
         if (municipalityMismatch(confirmDto.getMunicipality(), confirmDto.getHomeMunicipality(), verifiedUser.getHomeMunicipality())) {
-            throw new InvalidHomeMunicipalityException("Unable to create initiative for municipality with id " + confirmDto.getMunicipality());
+            municipalityException(confirmDto.getMunicipality());
         }
 
         operations.doConfirmInvitation(verifiedUser, initiativeId, confirmDto);
@@ -53,6 +57,10 @@ public class VerifiedInitiativeService {
 
     public void createParticipant(LoginUserHolder loginUserHolder, Long initiativeId, ParticipantUICreateDto createDto) {
         VerifiedUser verifiedUser = loginUserHolder.getVerifiedUser();
+
+        if (municipalityMismatch(createDto.getMunicipality(), createDto.getHomeMunicipality(), verifiedUser.getHomeMunicipality())) {
+            municipalityException(createDto.getMunicipality());
+        }
         operations.doCreateParticipant(verifiedUser, initiativeId, createDto.getShowName());
     }
 
