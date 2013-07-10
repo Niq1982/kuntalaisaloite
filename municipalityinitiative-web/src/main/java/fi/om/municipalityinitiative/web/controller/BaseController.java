@@ -5,10 +5,7 @@ import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.conf.EnvironmentSettings;
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.service.UserService;
-import fi.om.municipalityinitiative.util.FixState;
-import fi.om.municipalityinitiative.util.InitiativeState;
-import fi.om.municipalityinitiative.util.InitiativeType;
-import fi.om.municipalityinitiative.util.Maybe;
+import fi.om.municipalityinitiative.util.*;
 import fi.om.municipalityinitiative.web.*;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.TemplateModelException;
@@ -51,6 +48,8 @@ public class BaseController {
     private final String resourcesVersion;
 
     private final Maybe<Integer> omPiwicId;
+
+    private UrlHelper urlHelper = new UrlHelper();
     
     public BaseController(boolean optimizeResources, String resourcesVersion) {
         this(optimizeResources, resourcesVersion, Maybe.<Integer>absent());
@@ -145,6 +144,7 @@ public class BaseController {
         model.addAttribute("resourcesVersion", resourcesVersion);
         model.addAttribute(CURRENT_URI_ATTR, urls.getBaseUrl() + request.getRequestURI());
         model.addAttribute("infoRibbon", InfoRibbon.getInfoRibbonText(locale));
+        model.addAttribute("vetumaLoginToCurrentPage", urls.login(urlHelper.getOriginalRequestUriWithQueryString(request)));
 
         try {
             model.addAttribute("UrlConstants", freemarkerObjectWrapper.getStaticModels().get(Urls.class.getName()));

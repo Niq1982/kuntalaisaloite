@@ -6,10 +6,10 @@ import fi.om.municipalityinitiative.exceptions.AuthenticationRequiredException;
 import fi.om.municipalityinitiative.exceptions.CookiesRequiredException;
 import fi.om.municipalityinitiative.exceptions.VerifiedLoginRequiredException;
 import fi.om.municipalityinitiative.service.EncryptionService;
+import fi.om.municipalityinitiative.util.UrlHelper;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.NestedServletException;
-import org.springframework.web.util.UrlPathHelper;
 import org.springframework.web.util.WebUtils;
 
 import javax.annotation.Nullable;
@@ -29,7 +29,7 @@ public class SecurityFilter implements Filter {
     private static final int CSRF_TOKEN_LENGTH = 24;
     private static final String COOKIE_ERROR = "cookieError";
     public static final String UNWANTED_HIDDEN_EMAIL_FIELD = "email";
-    private UrlPathHelper urlPathHelper = new UrlPathHelper();
+    private UrlHelper urlPathHelper = new UrlHelper();
 
     @Resource
     private EncryptionService encryptionService;
@@ -74,15 +74,7 @@ public class SecurityFilter implements Filter {
     }
 
     private void verifiedLoginRequired(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        StringBuilder target = new StringBuilder(128);
-        target.append(this.urlPathHelper.getOriginatingRequestUri(request));
-
-        if (request.getQueryString() != null) {
-            target.append("?");
-            target.append(request.getQueryString());
-        }
-
-        response.sendRedirect(Urls.FI.login(target.toString()));
+        response.sendRedirect(Urls.FI.login(urlPathHelper.getOriginalRequestUriWithQueryString(request)));
     }
 
     private void authenticationRequired(AuthenticationRequiredException e, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

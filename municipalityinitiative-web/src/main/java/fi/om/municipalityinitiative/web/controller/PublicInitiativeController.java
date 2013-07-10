@@ -151,20 +151,29 @@ public class PublicInitiativeController extends BaseController {
                               @ModelAttribute("participant") ParticipantUICreateDto participant,
                               BindingResult bindingResult, Model model, Locale locale, HttpServletRequest request) {
 
-        participant.assignMunicipality(publicInitiativeService.getInitiative(initiativeId, userService.getLoginUserHolder(request)).getMunicipality().getId());
+        InitiativeViewInfo initiative = publicInitiativeService.getInitiative(initiativeId, userService.getLoginUserHolder(request));
+        participant.assignMunicipality(initiative.getMunicipality().getId());
 
-        if (validationService.validationSuccessful(participant, bindingResult, model)) {
-            publicInitiativeService.createParticipant(participant, initiativeId, locale);
-            Urls urls = Urls.get(locale);
-            return redirectWithMessage(urls.view(initiativeId), RequestMessage.PARTICIPATE, request);
-        } else {
-            return ViewGenerator.collaborativeView(
-                    publicInitiativeService.getPublicInitiative(initiativeId),
-                    authorService.findPublicAuthors(initiativeId), municipalityService.findAllMunicipalities(locale),
-                    participantService.getParticipantCount(initiativeId),
-                    participant,
-                    userService.hasManagementRightForInitiative(initiativeId, request),
-                    new AuthorUIMessage()).view(model, Urls.get(locale).alt().view(initiativeId));
+        if (initiative.isVerifiable()) {
+            // TODO:
+
+            throw new RuntimeException("Not implemented");
+        }
+        else {
+
+            if (validationService.validationSuccessful(participant, bindingResult, model)) {
+                publicInitiativeService.createParticipant(participant, initiativeId, locale);
+                Urls urls = Urls.get(locale);
+                return redirectWithMessage(urls.view(initiativeId), RequestMessage.PARTICIPATE, request);
+            } else {
+                return ViewGenerator.collaborativeView(
+                        publicInitiativeService.getPublicInitiative(initiativeId),
+                        authorService.findPublicAuthors(initiativeId), municipalityService.findAllMunicipalities(locale),
+                        participantService.getParticipantCount(initiativeId),
+                        participant,
+                        userService.hasManagementRightForInitiative(initiativeId, request),
+                        new AuthorUIMessage()).view(model, Urls.get(locale).alt().view(initiativeId));
+            }
         }
     }
 
