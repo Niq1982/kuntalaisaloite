@@ -85,6 +85,8 @@ public class VerifiedInitiativeServiceOperations {
     @Transactional(readOnly = false)
     public void doCreateParticipant(VerifiedUser verifiedUser, Long initiativeId, Boolean showName) {
 
+        assertAllowance("Participate to initiative", ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowParticipate());
+
         VerifiedUserId verifiedUserId = getVerifiedUserIdAndCreateIfNecessary(verifiedUser.getHash(), verifiedUser.getContactInfo());
         participantDao.addVerifiedParticipant(initiativeId, verifiedUserId, showName);
     }

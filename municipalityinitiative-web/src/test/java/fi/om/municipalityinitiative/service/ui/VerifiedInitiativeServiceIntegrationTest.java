@@ -239,7 +239,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
     private Long createVerifiedCollaborative() {
         return testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withType(InitiativeType.COLLABORATIVE)
-                .withState(InitiativeState.ACCEPTED));
+                .withState(InitiativeState.PUBLISHED));
     }
 
     @Test
@@ -398,6 +398,13 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
     @Test
     public void participating_not_allowed_if_initiative_in_incorrect_state() {
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withState(InitiativeState.DRAFT)
+                .applyAuthor()
+                .toInitiativeDraft());
+
+        thrown.expect(OperationNotAllowedException.class);
+        service.createParticipant(verifiedLoginUserHolder, initiativeId, participantCreateDto());
     }
 
     @Test
