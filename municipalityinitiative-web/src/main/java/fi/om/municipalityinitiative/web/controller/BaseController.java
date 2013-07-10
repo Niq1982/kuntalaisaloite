@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.web.controller;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import fi.om.municipalityinitiative.conf.EnvironmentSettings;
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.service.UserService;
 import fi.om.municipalityinitiative.util.FixState;
@@ -35,6 +36,9 @@ public class BaseController {
     public final String CURRENT_URI_ATTR = "currentUri";
 
     public final String OM_PICIW_ID = "omPiwicId";
+
+    @Resource
+    private EnvironmentSettings environmentSettings;
 
     @Resource
     BeansWrapper freemarkerObjectWrapper;
@@ -129,6 +133,7 @@ public class BaseController {
     public void addModelDefaults(Locale locale, HttpServletRequest request, Model model) {
         Urls urls = Urls.get(locale);
         model.addAttribute("locale", urls.getLang());
+        model.addAttribute("enableVerifiedInitiatives", environmentSettings.isEnableVerifiedInitiatives());
         model.addAttribute("user", userService.getUser(request));
         model.addAttribute("altLocale", urls.getAltLang());
         model.addAttribute("urls", urls);

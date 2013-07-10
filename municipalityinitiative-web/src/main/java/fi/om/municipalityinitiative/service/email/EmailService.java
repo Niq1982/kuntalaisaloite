@@ -1,7 +1,7 @@
 package fi.om.municipalityinitiative.service.email;
 
 import com.google.common.collect.Maps;
-import fi.om.municipalityinitiative.conf.EmailSettings;
+import fi.om.municipalityinitiative.conf.EnvironmentSettings;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
@@ -46,7 +46,7 @@ public class EmailService {
     private EmailMessageConstructor emailMessageConstructor;
 
     @Resource
-    private EmailSettings emailSettings;
+    private EnvironmentSettings environmentSettings;
 
     private static final Logger log = LoggerFactory.getLogger(EmailService.class);
 
@@ -274,7 +274,7 @@ public class EmailService {
 
 
     private String solveMunicipalityEmail(Initiative initiative) {
-        if (emailSettings.isTestSendMunicipalityEmailsToAuthor()) {
+        if (environmentSettings.isTestSendMunicipalityEmailsToAuthor()) {
             String alternativeEmail = dataProvider.findAuthors(initiative.getId()).get(0).getContactInfo().getEmail();
             log.warn("Test option replaced MUNICIPALITY email with: " + alternativeEmail);
             return alternativeEmail;
@@ -284,11 +284,11 @@ public class EmailService {
 
 
     private String solveModeratorEmail(String alternativeEmail) {
-        if (emailSettings.isTestSendModeratorEmailsToAuthor()) {
+        if (environmentSettings.isTestSendModeratorEmailsToAuthor()) {
             log.warn("Test option replaced OM email with: " + alternativeEmail);
             return alternativeEmail;
         }
-        return emailSettings.getModeratorEmail();
+        return environmentSettings.getModeratorEmail();
     }
 
     private static String[] toArray(String... name) {

@@ -272,7 +272,7 @@
                     </#if>
                     <a href="${urls.logout()}" id="logout" class="header-tool-link logout"><@u.message "common.logout"/><span class="icon-small logout"></span></a>
 
-                <#else>
+                <#elseif enableVerifiedInitiatives>
                     <a href="${urls.login(springMacroRequestContext.requestUri)}" title="<@u.message "common.login"/>" class="header-tool-link login"><@u.message "common.login"/></a>
                 </#if>
             </div>

@@ -5,7 +5,7 @@ import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.mysema.commons.lang.Assert;
-import fi.om.municipalityinitiative.conf.EmailSettings;
+import fi.om.municipalityinitiative.conf.EnvironmentSettings;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.pdf.ParticipantToPdfExporter;
@@ -45,7 +45,7 @@ public class EmailMessageConstructor {
     private JavaMailSender javaMailSender;
 
     @Resource
-    private EmailSettings emailSettings;
+    private EnvironmentSettings environmentSettings;
 
     @Resource
     private FreeMarkerConfigurer freemarkerConfig;
@@ -74,8 +74,8 @@ public class EmailMessageConstructor {
 
         text = stripTextRows(text, 2);
 
-        if (emailSettings.getTestSendTo().isPresent()) {
-            System.out.println("Replaced recipients email with: " + emailSettings.getTestSendTo().get());
+        if (environmentSettings.getTestSendTo().isPresent()) {
+            System.out.println("Replaced recipients email with: " + environmentSettings.getTestSendTo().get());
 
             StringBuilder recipientsString = new StringBuilder();
             for (String s : recipients) {
@@ -85,16 +85,16 @@ public class EmailMessageConstructor {
 
             text = "TEST OPTION REPLACED THE EMAIL ADDRESS!\nThe original address was: " + recipientsString.toString() + "\n\n\n-------------\n" + text;
             html = "TEST OPTION REPLACED THE EMAIL ADDRESS!\nThe original address was: " + recipientsString.toString() + "<hr>" + html;
-            recipients = Collections.singletonList(emailSettings.getTestSendTo().get());
+            recipients = Collections.singletonList(environmentSettings.getTestSendTo().get());
         }
 
         Assert.notNull(recipients, "recipients");
         Assert.isTrue(recipients.size() != 0, "recipients has recipients");
 
-        if (emailSettings.isTestConsoleOutput()) {
+        if (environmentSettings.isTestConsoleOutput()) {
             System.out.println("----------------------------------------------------------");
             System.out.println("To: " + recipients);
-            System.out.println("Reply-to: " + emailSettings.getDefaultReplyTo());
+            System.out.println("Reply-to: " + environmentSettings.getDefaultReplyTo());
             System.out.println("Subject: " + subject);
             System.out.println("---");
             System.out.println(text);
@@ -107,8 +107,8 @@ public class EmailMessageConstructor {
             for (String to : recipients) {
                 helper.addTo(to);
             }
-            helper.setFrom(emailSettings.getDefaultReplyTo());
-            helper.setReplyTo(emailSettings.getDefaultReplyTo());
+            helper.setFrom(environmentSettings.getDefaultReplyTo());
+            helper.setReplyTo(environmentSettings.getDefaultReplyTo());
             helper.setSubject(subject);
             helper.setText(text, html);
             return helper;

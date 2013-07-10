@@ -2,7 +2,7 @@ package fi.om.municipalityinitiative.conf;
 
 import fi.om.municipalityinitiative.util.Maybe;
 
-public class EmailSettings {
+public class EnvironmentSettings {
 
     private final Maybe<String> testSendTo;
     private final String defaultReplyTo;
@@ -10,14 +10,22 @@ public class EmailSettings {
     private final boolean testSendMunicipalityEmailsToAuthor;
     private final String moderatorEmail;
     private final boolean testSendModeratorEmailsToAuthor;
+    private final boolean enableVerifiedInitiatives;
 
-    public EmailSettings(String defaultReplyTo, Maybe<String> testSendTo, boolean testConsoleOutput, String moderatorEmail, boolean testSendMunicipalityEmailsToAuthor, boolean testSendModeratorEmailsToAuthor) {
+    public EnvironmentSettings(String defaultReplyTo,
+                               Maybe<String> testSendTo,
+                               boolean testConsoleOutput,
+                               String moderatorEmail,
+                               boolean testSendMunicipalityEmailsToAuthor,
+                               boolean testSendModeratorEmailsToAuthor,
+                               boolean enableVerifiedInitiatives) {
         this.defaultReplyTo = defaultReplyTo;
         this.testSendTo = testSendTo;
         this.testConsoleOutput = testConsoleOutput;
         this.moderatorEmail = moderatorEmail;
         this.testSendMunicipalityEmailsToAuthor = testSendMunicipalityEmailsToAuthor;
         this.testSendModeratorEmailsToAuthor = testSendModeratorEmailsToAuthor;
+        this.enableVerifiedInitiatives = enableVerifiedInitiatives;
     }
 
     public String getDefaultReplyTo() {
@@ -42,5 +50,9 @@ public class EmailSettings {
 
     public boolean isTestSendModeratorEmailsToAuthor() {
         return testSendModeratorEmailsToAuthor;
+    }
+
+    public boolean isEnableVerifiedInitiatives() {
+        return enableVerifiedInitiatives;
     }
 }

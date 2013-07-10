@@ -57,11 +57,8 @@ public class PublicInitiativeController extends BaseController {
     @Resource
     private VerifiedInitiativeService verifiedInitiativeService;
 
-    private final boolean enableVerifiedInitiatives;
-
-    public PublicInitiativeController(boolean optimizeResources, String resourcesVersion, boolean enableVerifiedInitiatives) {
+    public PublicInitiativeController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
-        this.enableVerifiedInitiatives = enableVerifiedInitiatives;
     }
 
     @RequestMapping(value={SEARCH_FI, SEARCH_SV}, method=GET)
@@ -103,8 +100,8 @@ public class PublicInitiativeController extends BaseController {
     public String prepareGet(Model model, Locale locale, HttpServletRequest request) {
         return ViewGenerator.prepareView(
                 new PrepareInitiativeUICreateDto(),
-                municipalityService.findAllMunicipalities(locale),
-                enableVerifiedInitiatives)
+                municipalityService.findAllMunicipalities(locale)
+        )
                 .view(model, Urls.get(locale).alt().prepare());
     }
 
@@ -137,7 +134,7 @@ public class PublicInitiativeController extends BaseController {
         else {
 
             if (validationService.validationErrors(initiative, bindingResult, model)) {
-                return ViewGenerator.prepareView(initiative, municipalityService.findAllMunicipalities(locale), enableVerifiedInitiatives)
+                return ViewGenerator.prepareView(initiative, municipalityService.findAllMunicipalities(locale))
                         .view(model, urls.prepare());
             }
 

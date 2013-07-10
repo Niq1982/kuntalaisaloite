@@ -210,7 +210,7 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
 
     @Bean
     public PublicInitiativeController initiativePublicController() {
-        return new PublicInitiativeController(optimizeResources(env), resourcesVersion(env), Boolean.valueOf(env.getRequiredProperty(PropertyNames.enableVerifiedInitiatives)));
+        return new PublicInitiativeController(optimizeResources(env), resourcesVersion(env));
     }
 
     @Bean

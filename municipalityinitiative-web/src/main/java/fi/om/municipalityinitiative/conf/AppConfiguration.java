@@ -339,7 +339,7 @@ public class AppConfiguration {
     }
 
     @Bean
-    public EmailSettings emailSettings() {
+    public EnvironmentSettings environmentSettings() {
         String defaultReplyTo = env.getRequiredProperty(PropertyNames.emailDefaultReplyTo);
         String moderatorSendTo = env.getRequiredProperty(PropertyNames.emailSendToOM);
         String testSendTo = env.getProperty(PropertyNames.testEmailSendTo);
@@ -350,12 +350,13 @@ public class AppConfiguration {
         boolean testSendMunicipalityEmailsToAuthor = env.getRequiredProperty(PropertyNames.testEmailMunicipalityEmailsToAuthor, Boolean.class);
         boolean testSendModeratorEmailsToAuthor = env.getRequiredProperty(PropertyNames.testEmailSendModeratorEmailsToAuthor, Boolean.class);
 
-        return new EmailSettings(defaultReplyTo,
+        return new EnvironmentSettings(defaultReplyTo,
                 Maybe.fromNullable(Strings.emptyToNull(testSendTo)),
                 testConsoleOutput,
                 moderatorSendTo,
                 testSendMunicipalityEmailsToAuthor,
-                testSendModeratorEmailsToAuthor);
+                testSendModeratorEmailsToAuthor,
+                Boolean.valueOf(env.getRequiredProperty(PropertyNames.enableVerifiedInitiatives)));
     }
 
     @Bean

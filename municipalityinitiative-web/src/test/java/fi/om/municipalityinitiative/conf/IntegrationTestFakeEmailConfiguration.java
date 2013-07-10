@@ -16,8 +16,14 @@ public class IntegrationTestFakeEmailConfiguration {
     public static final String EMAIL_DEFAULT_OM = "om@example.com";
 
     @Bean
-    public EmailSettings emailSettings() {
-        return new EmailSettings(EMAIL_DEFAULT_REPLY_TO, Maybe.<String>absent(), false, EMAIL_DEFAULT_OM, false, false);
+    public EnvironmentSettings environmentSettings() {
+        return new EnvironmentSettings(EMAIL_DEFAULT_REPLY_TO,
+                Maybe.<String>absent(),
+                false,
+                EMAIL_DEFAULT_OM,
+                false,
+                false,
+                true);
     }
 
     @Bean
