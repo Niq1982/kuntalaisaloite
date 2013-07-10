@@ -291,6 +291,18 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
     }
 
     @Test
+    public void accepting_author_invitation_increases_denormalized_participantCount() {
+        Long initiativeId = createVerifiedCollaborative();
+        testHelper.addAuthorInvitation(authorInvitation(initiativeId), false);
+
+        precondition(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
+
+        service.confirmVerifiedAuthorInvitation(verifiedUserHolderForInitiative(initiativeId), initiativeId, authorInvitationConfirmDto(), Locales.LOCALE_FI);
+
+        assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(2));
+    }
+
+    @Test
     @Transactional
     public void accepting_invitation_creates_user_with_given_information_if_user_does_not_exist() {
         Long initiativeId = createVerifiedCollaborative();
@@ -341,7 +353,39 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
         thrown.expect(OperationNotAllowedException.class);
         service.confirmVerifiedAuthorInvitation(verifiedUserHolderForInitiative(initiativeId), initiativeId, authorInvitationConfirmDto(), Locales.LOCALE_FI);
+    }
 
+
+    @Test
+    public void participating_creates_user_only_if_not_already_created_and_creates_author_and_participant() {
+    }
+
+    @Test
+    public void participating_to_safe_initiative_throws_exception_if_wrong_municipality_from_vetuma() {
+    }
+
+    @Test
+    public void participating_not_allowed_if_initiative_in_incorrect_state() {
+    }
+
+    @Test
+    public void participating_increases_participant_count() {
+    }
+
+    @Test
+    public void participating_to_safe_initiative_throws_exception_if_wrong_homeMunicipality_given_by_user_when_vetuma_gives_null_municipality() {
+    }
+
+    @Test
+    public void participating_updates_user_with_given_information_if_user_already_exists() {
+    }
+
+    @Test
+    public void participating_creates_user_with_given_information_if_user_does_not_exist()  {
+    }
+
+    @Test
+    public void participating_if_already_participated_throws_exception() {
     }
 
     private static AuthorInvitation authorInvitation(Long initiativeId) {

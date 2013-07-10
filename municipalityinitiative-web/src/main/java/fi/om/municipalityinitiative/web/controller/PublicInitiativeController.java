@@ -157,6 +157,7 @@ public class PublicInitiativeController extends BaseController {
 
         if (initiative.isVerifiable()) {
             verifiedInitiativeService.createParticipant(loginUserHolder, initiativeId, participant);
+            userService.refreshUserData(request);
             return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.PARTICIPATE, request);
         }
         else {
