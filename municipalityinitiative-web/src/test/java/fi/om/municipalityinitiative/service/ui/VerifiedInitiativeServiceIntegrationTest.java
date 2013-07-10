@@ -409,6 +409,13 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
     @Test
     public void participating_increases_participant_count() {
+
+        Long initiativeId = createVerifiedCollaborative();
+        precondition(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
+
+        service.createParticipant(verifiedLoginUserHolder, initiativeId, participantCreateDto());
+
+        assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(2));
     }
 
     @Test
