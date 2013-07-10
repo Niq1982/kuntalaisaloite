@@ -90,12 +90,20 @@
             </div>
             
              <div class="input-block-content">
-                <@f.textField path="participant.participantName" required="required" optional=false cssClass="large" maxLength="512" />
+                 <#if initiative.verifiable && user.isVerifiedUser()>
+                     ${user.contactInfo.name}
+                 <#else>
+                    <@f.textField path="participant.participantName" required="required" optional=false cssClass="large" maxLength="512" />
+                 </#if>
                 
             </div>
             
             <div class="input-block-content">
-                <@f.municipalitySelect path="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipality.id />
+                <#if initiative.verifiable && user.isVerifiedUser() && user.homeMunicipality.present>
+                    <@u.solveMunicipality user.homeMunicipality/>
+                <#else>
+                    <@f.municipalitySelect path="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipality.id />
+                </#if>
             </div>
             
             <div id="municipalMembership" class="js-hide">
@@ -120,10 +128,15 @@
             <div class="input-block-content">
                 <@f.formCheckbox path="participant.showName" checked=true />
             </div>
-            
-            <div class="input-block-content">
-                <@f.textField path="participant.participantEmail" required="required" optional=true cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
-            </div>
+
+            <#if initiative.verifiable && user.isVerifiedUser()>
+
+            <#else>
+                <div class="input-block-content">
+                    <@f.textField path="participant.participantEmail" required="required" optional=true cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
+                </div>
+
+            </#if>
 
             <div class="input-block-content">
                 <button id="participate" type="submit" name="save" value="true" class="small-button"><span class="small-icon save-and-send"><@u.message "action.save" /></span></button>

@@ -151,13 +151,13 @@ public class PublicInitiativeController extends BaseController {
                               @ModelAttribute("participant") ParticipantUICreateDto participant,
                               BindingResult bindingResult, Model model, Locale locale, HttpServletRequest request) {
 
-        InitiativeViewInfo initiative = publicInitiativeService.getInitiative(initiativeId, userService.getLoginUserHolder(request));
+        LoginUserHolder loginUserHolder = userService.getLoginUserHolder(request);
+        InitiativeViewInfo initiative = publicInitiativeService.getInitiative(initiativeId, loginUserHolder);
         participant.assignMunicipality(initiative.getMunicipality().getId());
 
         if (initiative.isVerifiable()) {
-            // TODO:
-
-            throw new RuntimeException("Not implemented");
+            verifiedInitiativeService.createParticipant(loginUserHolder, initiativeId, participant);
+            return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.PARTICIPATE, request);
         }
         else {
 

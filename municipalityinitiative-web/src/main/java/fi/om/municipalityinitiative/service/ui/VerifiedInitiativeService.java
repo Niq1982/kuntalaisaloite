@@ -4,6 +4,7 @@ import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.service.PrepareSafeInitiativeCreateDto;
 import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUIConfirmDto;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
+import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.dto.ui.PrepareSafeInitiativeUICreateDto;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
@@ -50,16 +51,21 @@ public class VerifiedInitiativeService {
         // TODO: Already participated/author
     }
 
+    public void createParticipant(LoginUserHolder initiativeId, Long participant, ParticipantUICreateDto loginUserHolder) {
+        //To change body of created methods use File | Settings | File Templates.
+        throw new RuntimeException("Not implemented");
+    }
+
     private static boolean municipalityMismatch(Long initiativeMunicipality, Long userGivenHomeMunicipality, Maybe<Municipality> vetumaMunicipality) {
         return vetumaMunicipalityReceivedAndMismatches(vetumaMunicipality, initiativeMunicipality)
                 || vetumaMunicipalityNotReceivedAndUserGivenMismatches(vetumaMunicipality, initiativeMunicipality, userGivenHomeMunicipality);
     }
 
+
     private static boolean vetumaMunicipalityNotReceivedAndUserGivenMismatches(Maybe<Municipality> vetumaMunicipality, Long initiativeMunicipality, Long userGivenHomeMunicipality) {
         return vetumaMunicipality.isNotPresent()
                 && !initiativeMunicipality.equals(userGivenHomeMunicipality);
     }
-
 
     private static boolean vetumaMunicipalityReceivedAndMismatches(Maybe<Municipality> vetumaMunicipality, Long initiativeMunicipality) {
         return vetumaMunicipality.isPresent()
