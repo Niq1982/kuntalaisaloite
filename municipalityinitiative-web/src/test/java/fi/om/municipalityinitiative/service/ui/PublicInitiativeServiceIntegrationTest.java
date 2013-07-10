@@ -14,7 +14,6 @@ import fi.om.municipalityinitiative.service.email.EmailSubjectPropertyKeys;
 import fi.om.municipalityinitiative.sql.QAuthorMessage;
 import fi.om.municipalityinitiative.util.*;
 import org.joda.time.LocalDate;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.annotation.Resource;
@@ -201,7 +200,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         participant.setParticipantEmail("participant@example.com");
         participant.setShowName(true);
         participant.setHomeMunicipality(testMunicipality.getId());
-        participant.setMunicipality(testMunicipality.getId());
+        participant.assignMunicipality(testMunicipality.getId());
         return participant;
     }
 

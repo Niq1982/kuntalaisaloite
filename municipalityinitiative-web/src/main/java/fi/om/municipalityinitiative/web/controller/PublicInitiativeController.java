@@ -151,12 +151,13 @@ public class PublicInitiativeController extends BaseController {
                               @ModelAttribute("participant") ParticipantUICreateDto participant,
                               BindingResult bindingResult, Model model, Locale locale, HttpServletRequest request) {
 
+        participant.assignMunicipality(publicInitiativeService.getInitiative(initiativeId, userService.getLoginUserHolder(request)).getMunicipality().getId());
+
         if (validationService.validationSuccessful(participant, bindingResult, model)) {
             publicInitiativeService.createParticipant(participant, initiativeId, locale);
             Urls urls = Urls.get(locale);
             return redirectWithMessage(urls.view(initiativeId), RequestMessage.PARTICIPATE, request);
-        }
-        else {
+        } else {
             return ViewGenerator.collaborativeView(
                     publicInitiativeService.getPublicInitiative(initiativeId),
                     authorService.findPublicAuthors(initiativeId), municipalityService.findAllMunicipalities(locale),

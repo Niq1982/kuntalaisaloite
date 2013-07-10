@@ -84,8 +84,6 @@
         <form action="${springMacroRequestContext.requestUri}?formError=participate" method="POST" id="form-participate" class="sodirty dirtylisten js-validate <#if hasErrors>has-errors</#if>" novalidate>
             <@f.securityFilters/>
             <@f.notTooFastField participant/>
-    
-            <input type="hidden" name="municipality" value="${initiative.municipality.id!""}"/>
 
             <div class="input-block-content no-top-margin">
                 <@u.systemMessage path="participate.contactInfo.description" type="info" showClose=false />  
