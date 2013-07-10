@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.dto.ui;
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.validation.ValidMunicipalMembership;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.util.Assert;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -43,11 +44,10 @@ public class ParticipantUICreateDto
 
     @Override
     public Long getMunicipality() {
+        Assert.notNull(municipality);
         return municipality;
     }
 
-    // FIXME: Municipality of the initiative should always be set via back, not front.
-    // FIXME: Replace setter with assign, check for usage?
     public void assignMunicipality(Long municipality) {
         this.municipality = municipality;
     }

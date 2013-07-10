@@ -164,7 +164,6 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         PrepareSafeInitiativeUICreateDto createDto = prepareUICreateDto();
 
         createDto.setMunicipality(testHelper.createTestMunicipality("Other municipality"));
-        // FIXME: What the heck? should'nt the municipality be received from verifiedLoginUserHolder?
 
         thrown.expect(InvalidHomeMunicipalityException.class);
 
