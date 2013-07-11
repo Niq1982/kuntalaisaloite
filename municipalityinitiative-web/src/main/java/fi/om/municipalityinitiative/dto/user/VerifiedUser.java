@@ -49,6 +49,11 @@ public class VerifiedUser extends User{
     }
 
     @Override
+    public boolean hasParticipatedToInitiative(Long initiativeId) {
+        return initiativesWithParticipation.contains(initiativeId);
+    }
+
+    @Override
     public boolean isLoggedIn() {
         return true;
     }

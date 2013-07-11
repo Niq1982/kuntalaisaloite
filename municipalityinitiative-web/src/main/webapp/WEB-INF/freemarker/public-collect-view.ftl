@@ -180,10 +180,14 @@
          * Show participant counts and participate form
         -->
         <div class="initiative-content-row last">
-            <#if initiative.verifiable && user.isVerifiedUser() && user.homeMunicipality.present && user.homeMunicipality.value.id != initiative.municipality.id>
-                <@u.systemMessage path="warning.participant.notMember" type="warning" showClose=false />
-            <#else>
-                <@e.participants formHTML=participateFormHTML showForm=showParticipateForm />
+            <#if !user.hasRightToInitiative(initiative.id)>
+                <#if initiative.verifiable && user.hasParticipatedToInitiative(initiative.id)>
+                    <@u.systemMessage path="warning.already.participated" type="warning" showClose=false />
+                <#elseif initiative.verifiable && user.isVerifiedUser() && user.homeMunicipality.present && user.homeMunicipality.value.id != initiative.municipality.id>
+                    <@u.systemMessage path="warning.participant.notMember" type="warning" showClose=false />
+                <#else>
+                    <@e.participants formHTML=participateFormHTML showForm=showParticipateForm />
+                </#if>
             </#if>
         </div>
         

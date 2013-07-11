@@ -21,6 +21,11 @@ public class NormalLoginUser extends User {
     }
 
     @Override
+    public boolean hasParticipatedToInitiative(Long initiativeId) {
+        return false;
+    }
+
+    @Override
     public boolean isLoggedIn() {
         return true;
     }

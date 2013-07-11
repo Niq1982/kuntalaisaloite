@@ -121,7 +121,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
     @Test
     @Transactional
-    public void get_verified_author_gets_its_initiatives() {
+    public void get_verified_user_gets_its_initiatives() {
 
         Long initiative = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).applyAuthor().toInitiativeDraft());
         VerifiedUser verifiedUser = userDao.getVerifiedUser(testHelper.getPreviousUserSsnHash()).get();
@@ -135,7 +135,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
     @Test
     @Transactional
-    public void get_verified_author_gets_its_participations() {
+    public void get_verified_user_gets_its_participations() {
         Long initiative = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).applyAuthor().toInitiativeDraft());
         testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality.getId()));
 

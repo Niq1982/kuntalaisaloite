@@ -36,6 +36,8 @@ public abstract class User {
 
     public abstract boolean hasRightToInitiative(Long initiativeId);
 
+    public abstract boolean hasParticipatedToInitiative(Long initiativeId);
+
     public abstract boolean isLoggedIn();
 
 }
