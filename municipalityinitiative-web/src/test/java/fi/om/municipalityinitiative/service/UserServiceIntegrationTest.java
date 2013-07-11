@@ -9,9 +9,6 @@ import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.util.FakeSession;
 import fi.om.municipalityinitiative.util.Maybe;
-import org.apache.http.HttpResponse;
-import org.hamcrest.Matcher;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import static org.hamcrest.CoreMatchers.everyItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -83,7 +79,7 @@ public class UserServiceIntegrationTest extends ServiceIntegrationTestBase{
         userService.authorLogin(testHelper.getPreviousTestManagementHash(), requestMock);
         LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(requestMock);
 
-        assertThat(loginUserHolder.getNormalLoginUser().getAuthorId().toLong(), is(testHelper.getLastAuthorId()));
+        assertThat(loginUserHolder.getNormalLoginUser().getAuthorId().toLong(), is(testHelper.getLastNormalAuthorId()));
         assertThat(loginUserHolder.getUser().hasRightToInitiative(initiative), is(true));
         assertThat(loginUserHolder.getUser().hasRightToInitiative(-1L), is(false));
     }

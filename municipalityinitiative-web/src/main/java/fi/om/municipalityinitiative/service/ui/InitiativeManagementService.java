@@ -58,10 +58,10 @@ public class InitiativeManagementService {
         ContactInfo contactInfo;
 
         if (initiative.getType().isNotVerifiable()) {
-            contactInfo = authorDao.getAuthor(loginUserHolder.getNormalLoginUser().getAuthorId().toLong()).getContactInfo();
+            contactInfo = authorDao.getNormalAuthor(loginUserHolder.getNormalLoginUser().getAuthorId().toLong()).getContactInfo();
         }
         else {
-            contactInfo = authorDao.getVerifiedAuthorContactInfo(initiativeId, loginUserHolder.getVerifiedUser().getHash());
+            contactInfo = authorDao.getVerifiedAuthor(initiativeId, loginUserHolder.getVerifiedUser().getAuthorId()).getContactInfo();
         }
         return InitiativeDraftUIEditDto.parse(initiative,contactInfo);
     }
@@ -98,10 +98,10 @@ public class InitiativeManagementService {
 
         ContactInfo contactInfo;
         if (initiative.getType().isNotVerifiable()) {
-            contactInfo = authorDao.getAuthor(loginUserHolder.getNormalLoginUser().getAuthorId().toLong()).getContactInfo();
+            contactInfo = authorDao.getNormalAuthor(loginUserHolder.getNormalLoginUser().getAuthorId().toLong()).getContactInfo();
         }
         else {
-            contactInfo = authorDao.getVerifiedAuthorContactInfo(initiativeId, loginUserHolder.getVerifiedUser().getHash());
+            contactInfo = authorDao.getVerifiedAuthor(initiativeId, loginUserHolder.getVerifiedUser().getAuthorId()).getContactInfo();
         }
 
         InitiativeUIUpdateDto updateDto = new InitiativeUIUpdateDto();

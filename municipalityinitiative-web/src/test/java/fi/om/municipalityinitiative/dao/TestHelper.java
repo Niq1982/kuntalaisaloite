@@ -629,7 +629,7 @@ public class TestHelper {
     }
 
     @Transactional
-    public Long getLastAuthorId() {
+    public Long getLastNormalAuthorId() {
         return queryFactory.from(QAuthor.author).orderBy(QAuthor.author.participantId.desc()).list(QAuthor.author.participantId).get(0);
     }
 

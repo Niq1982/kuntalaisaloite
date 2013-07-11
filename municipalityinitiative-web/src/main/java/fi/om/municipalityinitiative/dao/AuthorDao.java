@@ -37,7 +37,9 @@ public interface AuthorDao {
 
     Maybe<NormalAuthorId> getAuthorId(String managementHash);
 
-    Author getAuthor(Long authorId);
+    NormalAuthor getNormalAuthor(Long authorId);
+
+    VerifiedAuthor getVerifiedAuthor(Long initiativeId, VerifiedUserId userId);
 
     void deleteAuthor(Long authorId);
 
@@ -46,8 +48,6 @@ public interface AuthorDao {
     Map<String,String> getManagementLinksByAuthorEmails(Long initiativeId);
 
     void addVerifiedAuthor(Long initiativeId, VerifiedUserId userId);
-
-    ContactInfo getVerifiedAuthorContactInfo(Long initiativeId, String hash);
 
     List<VerifiedAuthor> findVerifiedAuthors(Long initiativeId);
 

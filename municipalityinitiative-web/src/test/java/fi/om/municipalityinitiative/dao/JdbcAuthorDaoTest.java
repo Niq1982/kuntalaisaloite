@@ -1,11 +1,12 @@
 package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
+import fi.om.municipalityinitiative.dto.VerifiedAuthor;
 import fi.om.municipalityinitiative.dto.service.Municipality;
-import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
+import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.QParticipant;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
@@ -92,7 +93,7 @@ public class JdbcAuthorDaoTest {
     public void get_author_by_id_returns_all_information() {
         testHelper.createSingleSent(testMunicipality);
 
-        Author author = authorDao.getAuthor(testHelper.getLastAuthorId());
+        Author author = authorDao.getNormalAuthor(testHelper.getLastNormalAuthorId());
         assertThat(author.getContactInfo().getAddress(), is(TestHelper.DEFAULT_AUTHOR_ADDRESS));
         assertThat(author.getContactInfo().getName(), is(TestHelper.DEFAULT_PARTICIPANT_NAME));
         assertThat(author.getContactInfo().getEmail(), is(TestHelper.DEFAULT_PARTICIPANT_EMAIL));
@@ -143,7 +144,7 @@ public class JdbcAuthorDaoTest {
 
         thrown.expect(OperationNotAllowedException.class);
         thrown.expectMessage(containsString("Deleting last author is forbidden"));
-        authorDao.deleteAuthor(testHelper.getLastAuthorId());
+        authorDao.deleteAuthor(testHelper.getLastNormalAuthorId());
     }
 
     @Test
@@ -152,24 +153,28 @@ public class JdbcAuthorDaoTest {
         testHelper.createCollaborativeReview(testMunicipality);
 
         assertThat(authorDao.getAuthorsInitiatives(testHelper.getPreviousTestManagementHash()), hasSize(1));
-        authorDao.updateManagementHash(testHelper.getLastAuthorId(), "some other");
+        authorDao.updateManagementHash(testHelper.getLastNormalAuthorId(), "some other");
         assertThat(authorDao.getAuthorsInitiatives(testHelper.getPreviousTestManagementHash()), hasSize(0));
 
     }
 
     @Test
-    public void get_verified_author_contact_info_contains_all_information() {
+    public void get_verified_author_contains_all_information() {
         Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality)
                 .applyAuthor()
                 .toInitiativeDraft());
 
-        ContactInfo verifiedAuthorContactInfo = authorDao.getVerifiedAuthorContactInfo(initiativeId, testHelper.getPreviousUserSsnHash());
+        VerifiedAuthor verifiedAuthor = authorDao.getVerifiedAuthor(initiativeId, new VerifiedUserId(testHelper.getLastVerifiedUserId()));
 
-        assertThat(verifiedAuthorContactInfo.getEmail(), is(TestHelper.DEFAULT_PARTICIPANT_EMAIL));
-        assertThat(verifiedAuthorContactInfo.getAddress(), is(TestHelper.DEFAULT_AUTHOR_ADDRESS));
-        assertThat(verifiedAuthorContactInfo.getPhone(), is(TestHelper.DEFAULT_AUTHOR_PHONE));
-        assertThat(verifiedAuthorContactInfo.getName(), is(TestHelper.DEFAULT_PARTICIPANT_NAME));
-        assertThat(verifiedAuthorContactInfo.isShowName(), is(TestHelper.DEFAULT_PUBLIC_NAME));
+        assertThat(verifiedAuthor.getContactInfo().getEmail(), is(TestHelper.DEFAULT_PARTICIPANT_EMAIL));
+        assertThat(verifiedAuthor.getContactInfo().getAddress(), is(TestHelper.DEFAULT_AUTHOR_ADDRESS));
+        assertThat(verifiedAuthor.getContactInfo().getPhone(), is(TestHelper.DEFAULT_AUTHOR_PHONE));
+        assertThat(verifiedAuthor.getContactInfo().getName(), is(TestHelper.DEFAULT_PARTICIPANT_NAME));
+        assertThat(verifiedAuthor.getContactInfo().isShowName(), is(TestHelper.DEFAULT_PUBLIC_NAME));
+        assertThat(verifiedAuthor.getMunicipality().isPresent(), is(true));
+        assertThat(verifiedAuthor.getMunicipality().get().getId(), is(testMunicipality));
+        assertThat(verifiedAuthor.getCreateTime(), is(new LocalDate()));
+        assertThat(verifiedAuthor.getId(), is(new VerifiedUserId(testHelper.getLastVerifiedUserId())));
     }
 
     @Test

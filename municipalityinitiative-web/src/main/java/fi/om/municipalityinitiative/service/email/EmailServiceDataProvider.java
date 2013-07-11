@@ -56,7 +56,7 @@ public class EmailServiceDataProvider {
     }
 
     public Author getAuthor(Long authorId) {
-        return authorDao.getAuthor(authorId);
+        return authorDao.getNormalAuthor(authorId);
     }
 
     public Map<String, String> getManagementLinksByAuthorEmails(Long initiativeId) {

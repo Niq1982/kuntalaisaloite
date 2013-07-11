@@ -158,7 +158,7 @@ public class JdbcAuthorDao implements AuthorDao {
     }
 
     @Override
-    public Author getAuthor(Long authorId) {
+    public NormalAuthor getNormalAuthor(Long authorId) {
         return queryFactory.from(QAuthor.author)
                 .where(QAuthor.author.participantId.eq(authorId))
                 .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
@@ -167,14 +167,15 @@ public class JdbcAuthorDao implements AuthorDao {
     }
 
     @Override
-    public ContactInfo getVerifiedAuthorContactInfo(Long initiativeId, String hash) {
-
+    public VerifiedAuthor getVerifiedAuthor(Long initiativeId, VerifiedUserId userId) {
         return queryFactory.from(QVerifiedUser.verifiedUser)
                 .innerJoin(QVerifiedUser.verifiedUser._verifiedParticipantVerifiedUserFk, QVerifiedParticipant.verifiedParticipant)
+                .innerJoin(QVerifiedUser.verifiedUser._verifiedAuthorVerifiedUserFk, QVerifiedAuthor.verifiedAuthor)
                 .innerJoin(QVerifiedParticipant.verifiedParticipant.verifiedParticipantInitiativeFk, QMunicipalityInitiative.municipalityInitiative)
-                .where(QVerifiedUser.verifiedUser.hash.eq(hash))
+                .innerJoin(QVerifiedUser.verifiedUser.verifiedUserMunicipalityFk, QMunicipality.municipality)
+                .where(QVerifiedUser.verifiedUser.id.eq(userId.toLong()))
                 .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
-                .uniqueResult(Mappings.verifiedAuthorContactInfoMapper);
+                .uniqueResult(Mappings.verifiedAuthorMapper);
     }
 
     @Override

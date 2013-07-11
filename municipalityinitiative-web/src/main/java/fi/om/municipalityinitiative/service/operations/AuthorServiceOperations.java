@@ -69,7 +69,7 @@ public class AuthorServiceOperations {
             throw new OperationNotAllowedException("Unable to delete author. Initiative has only " + authors.size() +" author(s)");
         }
         else {
-            ContactInfo deletedAuthorContactInfo = authorDao.getAuthor(authorId).getContactInfo();
+            ContactInfo deletedAuthorContactInfo = authorDao.getNormalAuthor(authorId).getContactInfo();
             authorDao.deleteAuthor(authorId);
             return deletedAuthorContactInfo;
         }
