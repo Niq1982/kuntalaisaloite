@@ -1,13 +1,15 @@
 package fi.om.municipalityinitiative.web.controller;
 
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
-import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.*;
+import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.InvalidHomeMunicipalityException;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
-import fi.om.municipalityinitiative.service.*;
+import fi.om.municipalityinitiative.service.MunicipalityService;
+import fi.om.municipalityinitiative.service.ParticipantService;
+import fi.om.municipalityinitiative.service.ValidationService;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
 import fi.om.municipalityinitiative.service.ui.VerifiedInitiativeService;
@@ -156,8 +158,13 @@ public class PublicInitiativeController extends BaseController {
         participant.assignMunicipality(initiative.getMunicipality().getId());
 
         if (initiative.isVerifiable()) {
-            verifiedInitiativeService.createParticipant(loginUserHolder, initiativeId, participant);
-            userService.refreshUserData(request);
+            try {
+                verifiedInitiativeService.createParticipant(loginUserHolder, initiativeId, participant);
+                userService.refreshUserData(request);
+            } catch (InvalidHomeMunicipalityException e) {
+                return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.INVALID_HOME_MUNICIPALITY, request);
+            }
+
             return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.PARTICIPATE, request);
         }
         else {
