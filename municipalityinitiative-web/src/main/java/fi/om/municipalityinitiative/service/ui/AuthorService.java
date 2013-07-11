@@ -14,6 +14,7 @@ import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.email.EmailService;
+import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.operations.AuthorServiceOperations;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
@@ -114,8 +115,8 @@ public class AuthorService {
         ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(confirmDto, initiativeId);
         String managementHash = RandomHashGenerator.longHash();
         Long participantId = participantDao.prepareParticipant(initiativeId, confirmDto.getHomeMunicipality(), participantCreateDto.getEmail(), participantCreateDto.getMunicipalMembership());
-        Long authorId = authorDao.createAuthor(initiativeId, participantId, managementHash);
-        authorDao.updateAuthorInformation(authorId, confirmDto.getContactInfo());
+        NormalAuthorId authorId = authorDao.createAuthor(initiativeId, participantId, managementHash);
+        authorDao.updateAuthorInformation(authorId.toLong(), confirmDto.getContactInfo());
         return managementHash;
     }
 

@@ -58,7 +58,7 @@ public class InitiativeManagementService {
         ContactInfo contactInfo;
 
         if (initiative.getType().isNotVerifiable()) {
-            contactInfo = authorDao.getNormalAuthor(loginUserHolder.getNormalLoginUser().getAuthorId().toLong()).getContactInfo();
+            contactInfo = authorDao.getNormalAuthor(loginUserHolder.getNormalLoginUser().getAuthorId()).getContactInfo();
         }
         else {
             contactInfo = authorDao.getVerifiedAuthor(initiativeId, loginUserHolder.getVerifiedUser().getAuthorId()).getContactInfo();
@@ -98,7 +98,7 @@ public class InitiativeManagementService {
 
         ContactInfo contactInfo;
         if (initiative.getType().isNotVerifiable()) {
-            contactInfo = authorDao.getNormalAuthor(loginUserHolder.getNormalLoginUser().getAuthorId().toLong()).getContactInfo();
+            contactInfo = authorDao.getNormalAuthor(loginUserHolder.getNormalLoginUser().getAuthorId()).getContactInfo();
         }
         else {
             contactInfo = authorDao.getVerifiedAuthor(initiativeId, loginUserHolder.getVerifiedUser().getAuthorId()).getContactInfo();

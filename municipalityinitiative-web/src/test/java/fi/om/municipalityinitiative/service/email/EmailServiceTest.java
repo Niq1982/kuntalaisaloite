@@ -4,6 +4,7 @@ import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
+import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Locales;
@@ -30,7 +31,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
     @Test
     public void prepare_initiative_sets_subject_and_login_url() throws Exception {
-        emailService.sendPrepareCreatedEmail(initiativeId(), authorId(), MANAGEMENT_HASH, Locales.LOCALE_FI);
+        emailService.sendPrepareCreatedEmail(initiativeId(), new NormalAuthorId(authorId()), MANAGEMENT_HASH, Locales.LOCALE_FI);
 
         assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
         assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Olet saanut linkin kuntalaisaloitteen tekemiseen Kuntalaisaloite.fi-palvelussa"));

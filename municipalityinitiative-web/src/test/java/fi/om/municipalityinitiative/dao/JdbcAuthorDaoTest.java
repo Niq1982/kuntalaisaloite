@@ -144,7 +144,7 @@ public class JdbcAuthorDaoTest {
 
         thrown.expect(OperationNotAllowedException.class);
         thrown.expectMessage(containsString("Deleting last author is forbidden"));
-        authorDao.deleteAuthor(testHelper.getLastNormalAuthorId());
+        authorDao.deleteAuthor(testHelper.getLastNormalAuthorId().toLong());
     }
 
     @Test

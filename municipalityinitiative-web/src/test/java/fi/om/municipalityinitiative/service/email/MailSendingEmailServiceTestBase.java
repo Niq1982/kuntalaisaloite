@@ -79,7 +79,7 @@ public abstract class MailSendingEmailServiceTestBase {
 
 
     protected Long authorId() {
-        return testHelper.getLastNormalAuthorId();
+        return testHelper.getLastNormalAuthorId().toLong();
     }
 
     protected Long initiativeId() {

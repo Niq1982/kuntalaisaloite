@@ -27,7 +27,7 @@ public interface AuthorDao {
 
     List<NormalAuthor> findNormalAuthors(Long initiativeId);
 
-    Long createAuthor(Long initiativeId, Long participantId, String managementHash);
+    NormalAuthorId createAuthor(Long initiativeId, Long participantId, String managementHash);
 
     void updateAuthorInformation(Long authorId, ContactInfo contactInfo);
 
@@ -37,13 +37,13 @@ public interface AuthorDao {
 
     Maybe<NormalAuthorId> getAuthorId(String managementHash);
 
-    NormalAuthor getNormalAuthor(Long authorId);
+    NormalAuthor getNormalAuthor(NormalAuthorId authorId);
 
     VerifiedAuthor getVerifiedAuthor(Long initiativeId, VerifiedUserId userId);
 
     void deleteAuthor(Long authorId);
 
-    void updateManagementHash(Long authorId, String newManagementHash);
+    void updateManagementHash(NormalAuthorId authorId, String newManagementHash);
 
     Map<String,String> getManagementLinksByAuthorEmails(Long initiativeId);
 

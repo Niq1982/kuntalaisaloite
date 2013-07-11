@@ -11,6 +11,7 @@ import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUICreateDto;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
+import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.util.SecurityUtil;
 import org.joda.time.DateTime;
@@ -69,7 +70,8 @@ public class AuthorServiceOperations {
             throw new OperationNotAllowedException("Unable to delete author. Initiative has only " + authors.size() +" author(s)");
         }
         else {
-            ContactInfo deletedAuthorContactInfo = authorDao.getNormalAuthor(authorId).getContactInfo();
+            // TODO: Verified Author
+            ContactInfo deletedAuthorContactInfo = authorDao.getNormalAuthor(new NormalAuthorId(authorId)).getContactInfo();
             authorDao.deleteAuthor(authorId);
             return deletedAuthorContactInfo;
         }

@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
+import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.util.*;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +30,7 @@ public class TestDataService {
 
         Long initiativeId = initiativeDao.prepareInitiative(template.initiative.getMunicipality().getId());
         Long participantId = participantDao.prepareParticipant(initiativeId, template.initiative.getMunicipality().getId(), null, Membership.community);
-        Long authorId = authorDao.createAuthor(initiativeId, participantId, managementHash);
+        NormalAuthorId authorId = authorDao.createAuthor(initiativeId, participantId, managementHash);
 
         InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto();
         editDto.setName(template.initiative.getName());
@@ -40,7 +41,7 @@ public class TestDataService {
         );
         editDto.setExtraInfo(template.initiative.getExtraInfo());
         initiativeDao.editInitiativeDraft(initiativeId, editDto);
-        authorDao.updateAuthorInformation(authorId, editDto.getContactInfo());
+        authorDao.updateAuthorInformation(authorId.toLong(), editDto.getContactInfo());
 
         initiativeDao.updateInitiativeType(initiativeId, template.initiative.getType());
         if (template.initiative.getType() == InitiativeType.SINGLE) {

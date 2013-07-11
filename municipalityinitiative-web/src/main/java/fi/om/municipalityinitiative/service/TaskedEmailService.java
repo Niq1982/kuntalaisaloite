@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
 import fi.om.municipalityinitiative.service.email.EmailService;
+import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.util.Task;
 
 import java.util.Locale;
@@ -41,7 +42,7 @@ public class TaskedEmailService extends EmailService {
     }
 
     @Override
-    public void sendPrepareCreatedEmail(Long initiativeId, Long authorId, String managementHash, Locale locale) {
+    public void sendPrepareCreatedEmail(Long initiativeId, NormalAuthorId authorId, String managementHash, Locale locale) {
         super.sendPrepareCreatedEmail(initiativeId, authorId, managementHash, locale);    //To change body of overridden methods use File | Settings | File Templates.
     }
 

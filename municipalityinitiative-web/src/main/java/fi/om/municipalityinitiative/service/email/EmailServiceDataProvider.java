@@ -5,8 +5,10 @@ import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dao.MunicipalityDao;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dto.Author;
+import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Participant;
+import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -55,7 +57,7 @@ public class EmailServiceDataProvider {
         return municipalityDao.getMunicipalityEmail(id);
     }
 
-    public Author getAuthor(Long authorId) {
+    public Author getAuthor(NormalAuthorId authorId) {
         return authorDao.getNormalAuthor(authorId);
     }
 

@@ -38,13 +38,13 @@ public class JdbcAuthorDao implements AuthorDao {
     PostgresQueryFactory queryFactory;
 
     @Override
-    public Long createAuthor(Long initiativeId, Long participantId, String managementHash) {
+    public NormalAuthorId createAuthor(Long initiativeId, Long participantId, String managementHash) {
 
         JdbcInitiativeDao.assertSingleAffection(queryFactory.insert(QAuthor.author)
                 .set(QAuthor.author.managementHash, managementHash)
                 .set(QAuthor.author.participantId, participantId)
                 .execute());
-        return participantId;
+        return new NormalAuthorId(participantId);
     }
 
     @Override
@@ -158,9 +158,9 @@ public class JdbcAuthorDao implements AuthorDao {
     }
 
     @Override
-    public NormalAuthor getNormalAuthor(Long authorId) {
+    public NormalAuthor getNormalAuthor(NormalAuthorId authorId) {
         return queryFactory.from(QAuthor.author)
-                .where(QAuthor.author.participantId.eq(authorId))
+                .where(QAuthor.author.participantId.eq(authorId.toLong()))
                 .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
                 .innerJoin(QParticipant.participant.participantMunicipalityFk, QMunicipality.municipality)
                 .uniqueResult(Mappings.normalAuthorMapping);
@@ -232,10 +232,10 @@ public class JdbcAuthorDao implements AuthorDao {
     }
 
     @Override
-    public void updateManagementHash(Long authorId, String newManagementHash) {
+    public void updateManagementHash(NormalAuthorId authorId, String newManagementHash) {
         JdbcInitiativeDao.assertSingleAffection(queryFactory.update(QAuthor.author)
                 .set(QAuthor.author.managementHash, newManagementHash)
-                .where(QAuthor.author.participantId.eq(authorId))
+                .where(QAuthor.author.participantId.eq(authorId.toLong()))
                 .execute());
     }
 

@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.dto.service.*;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
+import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
@@ -142,7 +143,7 @@ public class PublicInitiativeServiceOperations {
 
         public Long initiativeId;
         public String managementHash;
-        public Long authorId;
+        public NormalAuthorId authorId;
     }
 
     public static class ParticipantCreatedData {

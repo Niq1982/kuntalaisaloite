@@ -9,6 +9,7 @@ import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityEditDto;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityUIEditDto;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
+import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
@@ -135,7 +136,7 @@ public class ModerationServiceOperations {
         ManagementHashRenewData managementHashRenewData = new ManagementHashRenewData();
 
         managementHashRenewData.newManagementHash = RandomHashGenerator.longHash();
-        authorDao.updateManagementHash(authorId, managementHashRenewData.newManagementHash);
+        authorDao.updateManagementHash(new NormalAuthorId(authorId), managementHashRenewData.newManagementHash);
 
         Set<Long> authorsInitiatives = authorDao.getAuthorsInitiatives(managementHashRenewData.newManagementHash);
         // TODO: Multiple initiatives under one author is no more possible?

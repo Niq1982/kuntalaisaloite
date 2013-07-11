@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
+import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.Urls;
 import org.slf4j.Logger;
@@ -187,7 +188,7 @@ public class EmailService {
     }
 
 
-    public void sendPrepareCreatedEmail(Long initiativeId, Long authorId, String managementHash, Locale locale) {
+    public void sendPrepareCreatedEmail(Long initiativeId, NormalAuthorId authorId, String managementHash, Locale locale) {
         HashMap<String, Object> dataMap = toDataMap(dataProvider.get(initiativeId), locale);
         dataMap.put("managementHash", managementHash);
 
@@ -207,7 +208,7 @@ public class EmailService {
 
         emailMessageConstructor
                 .fromTemplate(MANAGEMENT_HASH_RENEWED)
-                .addRecipient(dataProvider.getAuthor(authorId).getContactInfo().getEmail())
+                .addRecipient(dataProvider.getAuthor(new NormalAuthorId(authorId)).getContactInfo().getEmail())
                 .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_MANAGEMENTHASH_RENEWED_SUBJECT, toArray(), Locales.LOCALE_FI))
                 .withDataMap(dataMap)
                 .send();

@@ -629,8 +629,8 @@ public class TestHelper {
     }
 
     @Transactional
-    public Long getLastNormalAuthorId() {
-        return queryFactory.from(QAuthor.author).orderBy(QAuthor.author.participantId.desc()).list(QAuthor.author.participantId).get(0);
+    public NormalAuthorId getLastNormalAuthorId() {
+        return new NormalAuthorId(queryFactory.from(QAuthor.author).orderBy(QAuthor.author.participantId.desc()).list(QAuthor.author.participantId).get(0));
     }
 
     @Transactional
