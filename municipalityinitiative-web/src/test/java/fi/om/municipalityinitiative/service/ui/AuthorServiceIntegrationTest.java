@@ -250,7 +250,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
     public void prefilled_verified_author_confirmation_contains_authors_information() {
 
         Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality).applyAuthor().toInitiativeDraft()
-        .withState(InitiativeState.ACCEPTED));
+                .withState(InitiativeState.ACCEPTED));
         authorService.createAuthorInvitation(initiativeId, TestHelper.authorLoginUserHolder, authorInvitation());
 
         String confirmCode = RandomHashGenerator.getPrevious();
@@ -412,7 +412,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
     }
 
     @Test
-    public void deleting_verified_author_succeeds_and_sends_emails() {
+    public void deleting_verified_author_deletes_author_and_participant() throws Exception {
 
         Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality).applyAuthor().toInitiativeDraft());
         Long originalAuthor = testHelper.getLastVerifiedUserId();

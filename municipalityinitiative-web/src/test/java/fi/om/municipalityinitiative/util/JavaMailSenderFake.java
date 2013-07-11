@@ -49,7 +49,7 @@ public class JavaMailSenderFake implements JavaMailSender {
             else
                 return sentMessages;
         }
-        throw new RuntimeException("Email(s) was not sent in time");
+        throw new RuntimeException("Email(s) was not sent in time. Sent emails: " + sentMessages.size() + "/"+amountOfEmailsThatShouldHaveBeenSent);
     }
 
     // Not used:
