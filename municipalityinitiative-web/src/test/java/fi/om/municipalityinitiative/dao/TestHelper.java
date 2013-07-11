@@ -238,7 +238,7 @@ public class TestHelper {
     }
 
     @Transactional(readOnly = false)
-    public void createVerifiedAuthorAndParticipant(AuthorDraft authorDraft) {
+    public Long createVerifiedAuthorAndParticipant(AuthorDraft authorDraft) {
         Long verifiedUserId = queryFactory.insert(QVerifiedUser.verifiedUser)
                 .set(QVerifiedUser.verifiedUser.hash, createUserSsnHash())
                 .set(QVerifiedUser.verifiedUser.address, authorDraft.authorAddress)
@@ -259,6 +259,8 @@ public class TestHelper {
                 .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, verifiedUserId)
                 .execute();
 
+        increaseParticipantCount(authorDraft.initiativeId);
+
         ContactInfo contactInfo = new ContactInfo();
         contactInfo.setAddress(authorDraft.authorAddress);
         contactInfo.setPhone(authorDraft.authorPhone);
@@ -271,6 +273,15 @@ public class TestHelper {
                 Collections.singleton(authorDraft.initiativeId),
                 Collections.singleton(authorDraft.initiativeId),
                 Maybe.of(new Municipality(authorDraft.participantMunicipality, "name_fi", "name_sv", true))));
+
+        return lastVerifiedUserId;
+    }
+
+    private void increaseParticipantCount(Long initiativeId) {
+        queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
+                .set(QMunicipalityInitiative.municipalityInitiative.participantCount, QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
+                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
+                .execute();
     }
 
     @Transactional(readOnly = false)
@@ -290,6 +301,8 @@ public class TestHelper {
                 .set(QVerifiedParticipant.verifiedParticipant.initiativeId, authorDraft.initiativeId)
                 .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, verifiedUserId)
                 .execute();
+
+        increaseParticipantCount(authorDraft.initiativeId);
     }
 
 
@@ -300,14 +313,17 @@ public class TestHelper {
 
     @Transactional(readOnly = false)
     public Long createDefaultParticipant(AuthorDraft authorDraft) {
+
+        increaseParticipantCount(authorDraft.initiativeId);
+
         return queryFactory.insert(QParticipant.participant)
-                        .set(QParticipant.participant.municipalityId, authorDraft.participantMunicipality)
-                        .set(QParticipant.participant.municipalityInitiativeId, authorDraft.initiativeId)
-                        .set(QParticipant.participant.name, authorDraft.participantName)
-                        .set(QParticipant.participant.showName, authorDraft.publicName)
-                        .set(QParticipant.participant.email, authorDraft.participantEmail)
-                        .set(QParticipant.participant.membershipType, authorDraft.municipalityMembership)
-                        .executeWithKey(QParticipant.participant.id);
+                .set(QParticipant.participant.municipalityId, authorDraft.participantMunicipality)
+                .set(QParticipant.participant.municipalityInitiativeId, authorDraft.initiativeId)
+                .set(QParticipant.participant.name, authorDraft.participantName)
+                .set(QParticipant.participant.showName, authorDraft.publicName)
+                .set(QParticipant.participant.email, authorDraft.participantEmail)
+                .set(QParticipant.participant.membershipType, authorDraft.municipalityMembership)
+                .executeWithKey(QParticipant.participant.id);
     }
 
     private String generateHash(int len) {
@@ -545,7 +561,7 @@ public class TestHelper {
 
         public DateTime sent = DEFAULT_SENT_TIME;
         public DateTime modified = DEFAULT_CREATE_TIME;
-        public Integer participantCount = 1;
+        public Integer participantCount = 0;
 
         public Maybe<AuthorDraft> authorDraft = Maybe.absent();
         public FixState fixState = FixState.OK;

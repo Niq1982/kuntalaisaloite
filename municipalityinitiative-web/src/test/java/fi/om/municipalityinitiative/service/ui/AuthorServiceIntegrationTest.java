@@ -372,7 +372,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
     }
 
     @Test
-    public void deleting_author_fails_if_trying_to_delete_myself() {
+    public void deleting_normal_author_fails_if_trying_to_delete_myself() {
         Long initiative = testHelper.createCollaborativeAccepted(testMunicipality);
         Long anotherAuthor = testHelper.getLastNormalAuthorId().toLong();
         Long currentAuthor = testHelper.createDefaultAuthorAndParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality));
@@ -412,7 +412,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
     }
 
     @Test
-    public void deleting_verified_author_deletes_author_and_participant() throws Exception {
+    public void deleting_verified_author_deletes_author_and_participant_and_decreases_participantCount() throws Exception {
 
         Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality).applyAuthor().toInitiativeDraft());
         Long originalAuthor = testHelper.getLastVerifiedUserId();
@@ -421,9 +421,22 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
         precondition(countAllVerifiedAuthors(), is(2));
         precondition(countAllVerifiedParticipants(), is(2));
+        precondition(testHelper.getInitiative(initiativeId).getParticipantCount(), is(2));
         authorService.deleteAuthor(initiativeId, TestHelper.authorLoginUserHolder, originalAuthor);
         assertThat(countAllVerifiedAuthors(), is(1));
         assertThat(countAllVerifiedParticipants(), is(1));
+        assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
+    }
+
+    @Test
+    public void deleting_verified_author_fails_if_trying_to_delete_myself() {
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality).applyAuthor().toInitiativeDraft());
+        Long authorId = testHelper.getLastVerifiedUserId();
+
+        thrown.expect(OperationNotAllowedException.class);
+        thrown.expectMessage(containsString("Removing yourself from authors is not allowed"));
+        authorService.deleteAuthor(initiativeId, TestHelper.authorLoginUserHolder, authorId);
+
     }
 
     private int countAllVerifiedParticipants() {
@@ -432,7 +445,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
 
     @Test
-    public void two_concurrent_tries_to_remove_two_last_authors_will_fail() {
+    public void two_concurrent_tries_to_delete_two_last_normal_authors_will_fail() {
 
         final Long initiative = testHelper.createCollaborativeAccepted(testMunicipality);
 
@@ -448,6 +461,25 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         executeCallablesSilently(callables);
 
         assertThat(countAllNormalAuthors(), is(1L));
+    }
+
+    @Test
+    public void two_concurrent_tries_to_delete_two_last_verified_authors_will_fail() {
+
+        final Long initiative = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality).applyAuthor().toInitiativeDraft());
+
+        final Long author1 = testHelper.getLastVerifiedUserId();
+        final Long author2 = testHelper.createVerifiedAuthorAndParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality));
+
+        final LoginUserHolder loginUserHolder = getVerifiedLoginUserHolderFor(initiative);
+
+        List<Callable<Boolean>> callables = Lists.newArrayList();
+        callables.add(authorDeletorCallable(initiative, loginUserHolder, author1));
+        callables.add(authorDeletorCallable(initiative, loginUserHolder, author2));
+
+        executeCallablesSilently(callables);
+
+        assertThat(countAllVerifiedAuthors(), is(1));
     }
 
     @Test
@@ -515,14 +547,10 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         return new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                deleteAuthorAndSleepForSecond(initiative, loginUserHolder, givenAuthor);
+                authorService.deleteAuthor(initiative, loginUserHolder, givenAuthor);
                 return true;
             }
         };
-    }
-
-    private void deleteAuthorAndSleepForSecond(Long initiativeId, LoginUserHolder loginUserHolder, Long authorId) throws InterruptedException {
-        authorService.deleteAuthor(initiativeId, loginUserHolder, authorId);
     }
 
     private Long allCurrentInvitations() {

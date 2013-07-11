@@ -189,11 +189,11 @@ public class JdbcAuthorDao implements AuthorDao {
                 .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
                 .forUpdate().of(QAuthor.author).list(QAuthor.author.participantId);
 
-        JdbcInitiativeDao.assertSingleAffection(queryFactory.delete(QAuthor.author)
+        assertSingleAffection(queryFactory.delete(QAuthor.author)
                 .where(QAuthor.author.participantId.eq(authorId.toLong())).execute());
-        JdbcInitiativeDao.assertSingleAffection(queryFactory.delete(QParticipant.participant)
+        assertSingleAffection(queryFactory.delete(QParticipant.participant)
                 .where(QParticipant.participant.id.eq(authorId.toLong())).execute());
-        JdbcInitiativeDao.assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
+        assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
                 .set(QMunicipalityInitiative.municipalityInitiative.participantCount, QMunicipalityInitiative.municipalityInitiative.participantCount.subtract(1))
                 .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
                 .execute());
@@ -203,16 +203,19 @@ public class JdbcAuthorDao implements AuthorDao {
                 .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
                 .count();
 
-        if (authorCount == 0) {
-            throw new OperationNotAllowedException("Deleting last author is forbidden");
-        }
+        assertNotZero(authorCount, "Deleting last author is forbidden");
 
     }
 
     @Override
     public void deleteAuthor(Long initiativeId, VerifiedUserId authorToDelete) {
 
-        // TODO: Handle concurrent transactions?
+
+        // Lock all authors of the initiative from another transactions
+
+        queryFactory.from(QVerifiedAuthor.verifiedAuthor)
+                .where(QVerifiedAuthor.verifiedAuthor.initiativeId.eq(initiativeId))
+                .forUpdate().of(QVerifiedAuthor.verifiedAuthor).list(QVerifiedAuthor.verifiedAuthor.initiativeId);
 
         assertSingleAffection(queryFactory.delete(QVerifiedAuthor.verifiedAuthor)
                 .where(QVerifiedAuthor.verifiedAuthor.initiativeId.eq(initiativeId))
@@ -223,6 +226,25 @@ public class JdbcAuthorDao implements AuthorDao {
                 .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
                 .where(QVerifiedParticipant.verifiedParticipant.verifiedUserId.eq(authorToDelete.toLong()))
                 .execute());
+
+        assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
+                .set(QMunicipalityInitiative.municipalityInitiative.participantCount, QMunicipalityInitiative.municipalityInitiative.participantCount.subtract(1))
+                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
+                .execute());
+
+        long authorCount = queryFactory.from(QVerifiedAuthor.verifiedAuthor)
+                .where(QVerifiedAuthor.verifiedAuthor.initiativeId.eq(initiativeId))
+                .count();
+
+        assertNotZero(authorCount, "Deleting last verified author is forbidden");
+
+
+    }
+
+    private static void assertNotZero(long authorCount, String messag) {
+        if (authorCount == 0) {
+            throw new OperationNotAllowedException(messag);
+        }
     }
 
     @Override
