@@ -8,6 +8,9 @@ public enum InitiativeType {
     COLLABORATIVE_CITIZEN;
 
     public static boolean isCollaborative(InitiativeType type) {
+        if (type == null) {
+            return false;
+        }
         switch (type) {
             case COLLABORATIVE:
             case COLLABORATIVE_COUNCIL:
@@ -19,6 +22,9 @@ public enum InitiativeType {
     }
 
     public static boolean isVerifiable(InitiativeType type) {
+        if (type == null) {
+            return false;
+        }
         switch (type) {
             case COLLABORATIVE_COUNCIL:
             case COLLABORATIVE_CITIZEN:
