@@ -152,9 +152,11 @@
     <#if !admin && !initiative.sentTime.present && !participateSuccess>
         <div class="participants-block ${showForm?string("hidden","")}">
         <#if initiative.verifiable && !user.isVerifiedUser()>
-            <a class="small-button" href="${vetumaLoginToCurrentPage}">Siirry vetumakirjautumiseen</a>
+                <a class="small-button" href="${vetumaLoginToCurrentPage}">Siirry vetumakirjautumiseen</a>
         <#else>
-            <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>
+            <#if !user.hasParticipatedToInitiative(initiative.id)>
+                <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>
+            </#if>
         </#if>
         </div>
         <div class="participants-block last ${showForm?string("hidden","")}">

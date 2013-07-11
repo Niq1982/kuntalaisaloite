@@ -70,7 +70,7 @@ public class VetumaLoginController extends DefaultLoginController {
         target = getValidLoginTarget(target, urls);
 
         User user = userService.getUser(request);
-        if (user.isLoggedIn()) {
+        if (user.isLoggedIn() && user.isVerifiedUser()) {
             return new ModelAndView(redirect(target));
         } else {
             userService.prepareForLogin(request);
