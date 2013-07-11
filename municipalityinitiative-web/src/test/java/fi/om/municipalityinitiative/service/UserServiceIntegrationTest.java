@@ -3,10 +3,10 @@ package fi.om.municipalityinitiative.service;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dao.UserDao;
 import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
-import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.util.FakeSession;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.junit.Test;
@@ -21,7 +21,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.stub;
 
@@ -98,7 +97,8 @@ public class UserServiceIntegrationTest extends ServiceIntegrationTestBase{
         LoginUserHolder<User> loginUserHolder = userService.getLoginUserHolder(requestMock);
 
         assertThat(loginUserHolder.isVerifiedUser(), is(true));
-        assertThat(loginUserHolder.getVerifiedUser().getInitiatives(), hasSize(0));
+        assertThat(loginUserHolder.getVerifiedUser().getInitiativesWithManagementRight(), hasSize(0));
+        assertThat(loginUserHolder.getVerifiedUser().getInitiativesWithParticipation(), hasSize(0));
         assertThat(loginUserHolder.getVerifiedUser().getHash(), is(notNullValue()));
         assertThat(loginUserHolder.getVerifiedUser().getContactInfo().getName(), is(name));
         assertThat(loginUserHolder.getVerifiedUser().getContactInfo().getAddress(), is(address));

@@ -14,11 +14,10 @@ import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.Maybe;
 
-import javax.annotation.Nullable;
 import javax.annotation.Resource;
 
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 
 import static fi.om.municipalityinitiative.dao.JdbcInitiativeDao.assertSingleAffection;
 import static fi.om.municipalityinitiative.sql.QVerifiedUser.verifiedUser;
@@ -94,13 +93,20 @@ public class JdbcUserDao implements UserDao {
 
 
         // Get users initiatives
-        List<Long> initiatives = queryFactory.from(QMunicipalityInitiative.municipalityInitiative)
-                .innerJoin(QMunicipalityInitiative.municipalityInitiative._verifiedAuthorInitiativeFk, QVerifiedAuthor.verifiedAuthor)
-                .innerJoin(QVerifiedAuthor.verifiedAuthor.verifiedAuthorVerifiedUserFk, QVerifiedUser.verifiedUser)
+        Collection<Long> initiatives = queryFactory.from(QVerifiedUser.verifiedUser)
+                .innerJoin(QVerifiedUser.verifiedUser._verifiedAuthorVerifiedUserFk, QVerifiedAuthor.verifiedAuthor)
+                .innerJoin(QVerifiedAuthor.verifiedAuthor.verifiedAuthorInitiativeFk, QMunicipalityInitiative.municipalityInitiative)
                 .where(QVerifiedUser.verifiedUser.hash.eq(hash))
                 .list(QMunicipalityInitiative.municipalityInitiative.id);
 
-        return Maybe.of(User.verifiedUser(userDataMaybe.get().verifiedUserId, hash, userDataMaybe.get().contactInfo, new HashSet<>(initiatives), userDataMaybe.get().municipalityMaybe));
+        // Get users participations
+        Collection<Long> initiativesWithParticipation = queryFactory.from(QVerifiedUser.verifiedUser)
+                .innerJoin(QVerifiedUser.verifiedUser._verifiedParticipantVerifiedUserFk, QVerifiedParticipant.verifiedParticipant)
+                .innerJoin(QVerifiedParticipant.verifiedParticipant.verifiedParticipantInitiativeFk, QMunicipalityInitiative.municipalityInitiative)
+                .where(QVerifiedUser.verifiedUser.hash.eq(hash))
+                .list(QMunicipalityInitiative.municipalityInitiative.id);
+
+        return Maybe.of(User.verifiedUser(userDataMaybe.get().verifiedUserId, hash, userDataMaybe.get().contactInfo, new HashSet<>(initiatives), new HashSet<>(initiativesWithParticipation), userDataMaybe.get().municipalityMaybe));
     }
 
     @Override

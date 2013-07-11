@@ -12,18 +12,25 @@ public class VerifiedUser extends User{
 
     private final String hash;
     private final ContactInfo contactInfo;
-    private final Set<Long> initiatives;
-    private Maybe<Municipality> homeMunicipality;
-    private VerifiedUserId authorId;
+    private final Set<Long> initiativesWithManagementRight;
+    private final Set<Long> initiativesWithParticipation;
+    private final Maybe<Municipality> homeMunicipality;
+    private final VerifiedUserId authorId;
 
-    VerifiedUser(VerifiedUserId verifiedUserId, String hash, ContactInfo contactInfo, Set<Long> initiatives, Maybe<Municipality> homeMunicipality) {
+    VerifiedUser(VerifiedUserId verifiedUserId,
+                 String hash,
+                 ContactInfo contactInfo,
+                 Set<Long> initiativesWithManagementRight,
+                 Set<Long> initiativesWithParticipation,
+                 Maybe<Municipality> homeMunicipality) {
         this.hash = hash;
         this.authorId = verifiedUserId;
         // This is needed after we've logged in and participating or creating an initiative.
         // Data must be updated always when updating something at the UI
         this.contactInfo = contactInfo;
-        this.initiatives = initiatives;
+        this.initiativesWithManagementRight = initiativesWithManagementRight;
         this.homeMunicipality = homeMunicipality;
+        this.initiativesWithParticipation = initiativesWithParticipation;
     }
 
     @Override
@@ -38,7 +45,7 @@ public class VerifiedUser extends User{
 
     @Override
     public boolean hasRightToInitiative(Long initiativeId) {
-        return initiatives.contains(initiativeId);
+        return initiativesWithManagementRight.contains(initiativeId);
     }
 
     @Override
@@ -54,8 +61,8 @@ public class VerifiedUser extends User{
         return contactInfo;
     }
 
-    public Set<Long> getInitiatives() {
-        return initiatives;
+    public Set<Long> getInitiativesWithManagementRight() {
+        return initiativesWithManagementRight;
     }
 
     public Maybe<Municipality> getHomeMunicipality() {
@@ -65,5 +72,9 @@ public class VerifiedUser extends User{
     public VerifiedUserId getAuthorId() {
         Assert.notNull(authorId);
         return authorId;
+    }
+
+    public Set<Long> getInitiativesWithParticipation() {
+        return initiativesWithParticipation;
     }
 }

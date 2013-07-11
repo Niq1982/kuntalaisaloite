@@ -551,7 +551,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         contactInfo.setName(NAME);
         contactInfo.setShowName(SHOW_NAME);
 
-        return new LoginUserHolder(User.verifiedUser(new VerifiedUserId(-1L), "hash", contactInfo, Collections.singleton(initiativeId), Maybe.of(new Municipality(testMunicipality, "nameFi", "nameSv", true))));
+        return new LoginUserHolder(User.verifiedUser(new VerifiedUserId(-1L), "hash", contactInfo, Collections.singleton(initiativeId), Collections.singleton(initiativeId), Maybe.of(new Municipality(testMunicipality, "nameFi", "nameSv", true))));
     }
 
 }

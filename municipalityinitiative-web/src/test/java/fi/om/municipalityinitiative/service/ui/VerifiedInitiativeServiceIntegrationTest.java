@@ -22,7 +22,10 @@ import fi.om.municipalityinitiative.sql.QAuthorInvitation;
 import fi.om.municipalityinitiative.sql.QVerifiedAuthor;
 import fi.om.municipalityinitiative.sql.QVerifiedParticipant;
 import fi.om.municipalityinitiative.sql.QVerifiedUser;
-import fi.om.municipalityinitiative.util.*;
+import fi.om.municipalityinitiative.util.InitiativeState;
+import fi.om.municipalityinitiative.util.InitiativeType;
+import fi.om.municipalityinitiative.util.Locales;
+import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.DateTime;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -38,10 +41,7 @@ import java.util.Collections;
 import static fi.om.municipalityinitiative.util.ReflectionTestUtils.assertReflectionEquals;
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.fail;
+import static org.hamcrest.Matchers.*;
 
 public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegrationTestBase{
 
@@ -77,7 +77,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         ContactInfo contactInfo = contactInfo();
 
         verifiedLoginUserHolder = new LoginUserHolder<>(
-                User.verifiedUser(new VerifiedUserId(-1L), HASH, contactInfo, Collections.<Long>emptySet(), Maybe.<Municipality>of(testMunicipality))
+                User.verifiedUser(new VerifiedUserId(-1L), HASH, contactInfo, Collections.<Long>emptySet(), Collections.<Long>emptySet(), Maybe.<Municipality>of(testMunicipality))
         );
 
     }
@@ -114,7 +114,37 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         assertThat(created.getContactInfo().getPhone(), is(PHONE));
         assertThat(created.getContactInfo().getEmail(), is(EMAIL));
 
-        assertThat(created.getInitiatives(), hasSize(1));
+        assertThat(created.getInitiativesWithManagementRight(), hasSize(1));
+        assertThat(created.getInitiativesWithParticipation(), hasSize(1));
+
+    }
+
+    @Test
+    @Transactional
+    public void get_verified_author_gets_its_initiatives() {
+
+        Long initiative = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).applyAuthor().toInitiativeDraft());
+        VerifiedUser verifiedUser = userDao.getVerifiedUser(testHelper.getPreviousUserSsnHash()).get();
+
+        assertThat(verifiedUser.getInitiativesWithParticipation(), hasSize(1));
+
+        assertThat(verifiedUser.getInitiativesWithManagementRight(), hasSize(1));
+        assertThat(verifiedUser.getInitiativesWithManagementRight(), is(Collections.singleton(initiative)));
+
+    }
+
+    @Test
+    @Transactional
+    public void get_verified_author_gets_its_participations() {
+        Long initiative = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).applyAuthor().toInitiativeDraft());
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality.getId()));
+
+        VerifiedUser verifiedUser = userDao.getVerifiedUser(testHelper.getPreviousUserSsnHash()).get();
+
+        assertThat(verifiedUser.getInitiativesWithManagementRight(), hasSize(0));
+
+        assertThat(verifiedUser.getInitiativesWithParticipation(), hasSize(1));
+        assertThat(verifiedUser.getInitiativesWithParticipation(), is(Collections.singleton(initiative)));
 
     }
 
@@ -463,11 +493,11 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         else {
             municipality = Maybe.absent();
         }
-        return new LoginUserHolder<>(User.verifiedUser(new VerifiedUserId(-1L), HASH, contactInfo(), Collections.<Long>emptySet(), municipality));
+        return new LoginUserHolder<>(User.verifiedUser(new VerifiedUserId(-1L), HASH, contactInfo(), Collections.<Long>emptySet(), Collections.<Long>emptySet(), municipality));
     }
 
     private static LoginUserHolder<VerifiedUser> verifiedUserHolderForInitiative(Long initiativeId) {
-        return new LoginUserHolder<>(User.verifiedUser(new VerifiedUserId(-1L), HASH, contactInfo(), Collections.singleton(initiativeId), Maybe.<Municipality>absent()));
+        return new LoginUserHolder<>(User.verifiedUser(new VerifiedUserId(-1L), HASH, contactInfo(), Collections.singleton(initiativeId), Collections.singleton(initiativeId), Maybe.<Municipality>absent()));
     }
 
     private PrepareSafeInitiativeUICreateDto prepareUICreateDto() {

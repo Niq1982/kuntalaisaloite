@@ -8,7 +8,9 @@ import com.mysema.query.types.Predicate;
 import fi.om.municipalityinitiative.conf.PropertyNames;
 import fi.om.municipalityinitiative.dto.service.*;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
-import fi.om.municipalityinitiative.dto.user.*;
+import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
+import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.service.EncryptionService;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
@@ -27,8 +29,6 @@ import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipal
 import static fi.om.municipalityinitiative.sql.QParticipant.participant;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 
 public class TestHelper {
 
@@ -267,7 +267,10 @@ public class TestHelper {
         contactInfo.setShowName(true);
 
         this.lastVerifiedUserId = verifiedUserId;
-        authorLoginUserHolder = new LoginUserHolder(User.verifiedUser(new VerifiedUserId(verifiedUserId),previousUserSsnHash, contactInfo, Collections.singleton(authorDraft.initiativeId), Maybe.of(new Municipality(authorDraft.participantMunicipality, "name_fi", "name_sv", true))));
+        authorLoginUserHolder = new LoginUserHolder(User.verifiedUser(new VerifiedUserId(verifiedUserId),previousUserSsnHash, contactInfo,
+                Collections.singleton(authorDraft.initiativeId),
+                Collections.singleton(authorDraft.initiativeId),
+                Maybe.of(new Municipality(authorDraft.participantMunicipality, "name_fi", "name_sv", true))));
     }
 
     @Transactional(readOnly = false)

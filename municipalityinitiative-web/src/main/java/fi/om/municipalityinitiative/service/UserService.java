@@ -165,21 +165,24 @@ public class UserService {
     public void login(String hash, String fullName, String address, Maybe<Municipality> vetumaMunicipality, HttpServletRequest request, HttpServletResponse response) {
 
         ContactInfo contactInfo;
-        Set<Long> initiatives;
+        Set<Long> initiativesWithManagementRight;
+        Set<Long> initiativesWithParticipation;
         VerifiedUserId verifiedUserId;
         Maybe<VerifiedUser> verifiedUser = userDao.getVerifiedUser(hash);
         if (verifiedUser.isPresent()) {
             userDao.updateUserInformation(hash, fullName, vetumaMunicipality);
             verifiedUser = userDao.getVerifiedUser(hash);
             contactInfo = verifiedUser.get().getContactInfo();
-            initiatives = verifiedUser.get().getInitiatives();
+            initiativesWithManagementRight = verifiedUser.get().getInitiativesWithManagementRight();
             verifiedUserId = verifiedUser.get().getAuthorId();
+            initiativesWithParticipation = verifiedUser.get().getInitiativesWithParticipation();
         }
         else {
             contactInfo = new ContactInfo(); // User logged in but never registered to database (has not participated or created any initiatives)
             contactInfo.setName(fullName);
             contactInfo.setAddress(address);
-            initiatives = Sets.newHashSet();
+            initiativesWithManagementRight = Sets.newHashSet();
+            initiativesWithParticipation = Sets.newHashSet();
             verifiedUserId = null; // FIXME: This is bad.
         }
 
@@ -198,7 +201,7 @@ public class UserService {
             municipality = Maybe.absent();
         }
 
-        storeLoggedInUser(request, User.verifiedUser(verifiedUserId, hash, contactInfo, initiatives, municipality));
+        storeLoggedInUser(request, User.verifiedUser(verifiedUserId, hash, contactInfo, initiativesWithManagementRight, initiativesWithParticipation, municipality));
     }
 
     public void putPrepareDataForVetuma(PrepareInitiativeUICreateDto initiative, HttpServletRequest request) {
