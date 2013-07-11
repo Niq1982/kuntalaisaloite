@@ -326,11 +326,11 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         Long initiativeId = createVerifiedCollaborative();
         testHelper.addAuthorInvitation(authorInvitation(initiativeId), false);
 
-        precondition(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
+        precondition(testHelper.getInitiative(initiativeId).getParticipantCount(), is(0));
 
         service.confirmVerifiedAuthorInvitation(verifiedUserHolderForInitiative(initiativeId), initiativeId, authorInvitationConfirmDto(), Locales.LOCALE_FI);
 
-        assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(2));
+        assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
     }
 
     @Test
@@ -440,11 +440,11 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
     public void participating_increases_participant_count() {
 
         Long initiativeId = createVerifiedCollaborative();
-        precondition(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
+        precondition(testHelper.getInitiative(initiativeId).getParticipantCount(), is(0));
 
         service.createParticipant(verifiedLoginUserHolder, initiativeId, participantCreateDto());
 
-        assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(2));
+        assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
     }
 
     @Test
