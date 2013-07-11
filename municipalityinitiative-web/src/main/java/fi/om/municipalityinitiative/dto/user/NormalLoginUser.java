@@ -10,9 +10,9 @@ public class NormalLoginUser extends User {
 
     private NormalAuthorId authorId;
 
-    NormalLoginUser(Long authorId, Set<Long> authorsInitiatives) {
+    NormalLoginUser(NormalAuthorId authorId, Set<Long> authorsInitiatives) {
         this.authorsInitiatives = authorsInitiatives;
-        this.authorId = new NormalAuthorId(authorId);
+        this.authorId = authorId;
     }
 
     @Override

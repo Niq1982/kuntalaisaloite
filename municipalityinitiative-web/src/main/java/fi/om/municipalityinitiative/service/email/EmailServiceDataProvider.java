@@ -38,10 +38,16 @@ public class EmailServiceDataProvider {
     }
 
     public List<String> getAuthorEmails(Long initiativeId) {
-        return authorDao.getAuthorEmails(initiativeId);
+        if (initiativeDao.isVerifiableInitiative(initiativeId)) {
+            return authorDao.findVerifiedAuthorEmails(initiativeId);
+        }
+        return authorDao.findNormalAuthorEmails(initiativeId);
     }
 
     public List<? extends Participant> findAllParticipants(Long initiativeId) {
+        if (initiativeDao.isVerifiableInitiative(initiativeId)) {
+            return participantDao.findVerifiedAllParticipants(initiativeId);
+        }
         return participantDao.findNormalAllParticipants(initiativeId);
     }
 

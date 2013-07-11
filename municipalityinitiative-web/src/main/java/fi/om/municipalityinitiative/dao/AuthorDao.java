@@ -5,7 +5,9 @@ import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.VerifiedAuthor;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
+import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
+import fi.om.municipalityinitiative.util.Maybe;
 
 import java.util.List;
 import java.util.Map;
@@ -29,11 +31,11 @@ public interface AuthorDao {
 
     void updateAuthorInformation(Long authorId, ContactInfo contactInfo);
 
-    List<String> getAuthorEmails(Long initiativeId);
+    List<String> findNormalAuthorEmails(Long initiativeId);
 
     Set<Long> getAuthorsInitiatives(String managementHash);
 
-    Long getAuthorId(String managementHash);
+    Maybe<NormalAuthorId> getAuthorId(String managementHash);
 
     Author getAuthor(Long authorId);
 
@@ -48,4 +50,6 @@ public interface AuthorDao {
     ContactInfo getVerifiedAuthorContactInfo(Long initiativeId, String hash);
 
     List<VerifiedAuthor> findVerifiedAuthors(Long initiativeId);
+
+    List<String> findVerifiedAuthorEmails(Long initiativeId);
 }

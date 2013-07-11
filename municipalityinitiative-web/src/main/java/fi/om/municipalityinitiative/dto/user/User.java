@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.dto.user;
 
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
+import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.Maybe;
 
@@ -13,7 +14,7 @@ public abstract class User {
         return new OmLoginUser(name);
     }
 
-    public static NormalLoginUser normalUser(Long authorId, Set<Long> authorsInitiatives) {
+    public static NormalLoginUser normalUser(NormalAuthorId authorId, Set<Long> authorsInitiatives) {
         return new NormalLoginUser(authorId, authorsInitiatives);
     }
 

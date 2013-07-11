@@ -13,8 +13,10 @@ import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
+import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
+import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.DateTime;
 
 import javax.annotation.Resource;
@@ -145,10 +147,14 @@ public class JdbcAuthorDao implements AuthorDao {
     }
 
     @Override
-    public Long getAuthorId(String managementHash) {
-        return queryFactory.from(QAuthor.author)
+    public Maybe<NormalAuthorId> getAuthorId(String managementHash) {
+        Long id = queryFactory.from(QAuthor.author)
                 .where(QAuthor.author.managementHash.eq(managementHash))
                 .uniqueResult(QAuthor.author.participantId);
+        if (id == null) {
+            return Maybe.absent();
+        }
+        return Maybe.of(new NormalAuthorId(id));
     }
 
     @Override
@@ -206,9 +212,19 @@ public class JdbcAuthorDao implements AuthorDao {
     }
 
     @Override
-    public List<String> getAuthorEmails(Long initiativeId) {
+    public List<String> findNormalAuthorEmails(Long initiativeId) {
+        return authorEmails(findNormalAuthors(initiativeId));
+    }
+
+
+    @Override
+    public List<String> findVerifiedAuthorEmails(Long initiativeId) {
+        return authorEmails(findVerifiedAuthors(initiativeId));
+    }
+
+    private static List<String> authorEmails(List<? extends Author> normalAuthors) {
         List<String> emails = Lists.newArrayList();
-        for (Author author : findNormalAuthors(initiativeId)) {
+        for (Author author : normalAuthors) {
             emails.add(author.getContactInfo().getEmail());
         }
         return emails;

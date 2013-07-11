@@ -10,6 +10,7 @@ import fi.om.municipalityinitiative.dto.service.*;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.user.*;
 import fi.om.municipalityinitiative.service.EncryptionService;
+import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.*;
@@ -225,7 +226,7 @@ public class TestHelper {
                 .set(QAuthor.author.participantId, lastParticipantId)
                 .set(QAuthor.author.managementHash, generateHash(40))
                 .execute();
-        authorLoginUserHolder = new LoginUserHolder(User.normalUser(lastAuthorId, Collections.singleton(lastInitiativeId)));
+        authorLoginUserHolder = new LoginUserHolder(User.normalUser(new NormalAuthorId(lastAuthorId), Collections.singleton(lastInitiativeId)));
 
         ContactInfo contactInfo = new ContactInfo();
         contactInfo.setAddress(authorDraft.authorAddress);

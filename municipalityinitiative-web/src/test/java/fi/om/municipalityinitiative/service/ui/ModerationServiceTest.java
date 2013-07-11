@@ -43,7 +43,7 @@ public class ModerationServiceTest {
         AuthorDao authorDaoMock = mock(AuthorDao.class);
         moderationService.moderationServiceOperations = new ModerationServiceOperations(initiativeDaoMock, authorDaoMock);
 
-        stub(authorDaoMock.getAuthorEmails(anyLong())).toReturn(Collections.singletonList("")); // Avoid nullpointer temporarily
+        stub(authorDaoMock.findNormalAuthorEmails(anyLong())).toReturn(Collections.singletonList("")); // Avoid nullpointer temporarily
 
         loginUserHolder = mock(OmLoginUserHolder.class);
     }

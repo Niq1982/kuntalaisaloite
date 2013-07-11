@@ -11,6 +11,7 @@ import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.AuthenticationRequiredException;
 import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
 import fi.om.municipalityinitiative.dao.AuthorDao;
+import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,14 +67,14 @@ public class UserService {
     @Transactional(readOnly = true)
     public Long authorLogin(String managementHash, HttpServletRequest request) {
         // TODO: Merge these to one call
-        Long authorId = authorDao.getAuthorId(managementHash);
+        Maybe<NormalAuthorId> authorId = authorDao.getAuthorId(managementHash);
         Set<Long> initiativeIds = authorDao.getAuthorsInitiatives(managementHash);
 
-        if (authorId == null || initiativeIds.size() == 0) {
+        if (authorId.isNotPresent() || initiativeIds.size() == 0) {
             throw new InvalidLoginException("Invalid login credentials");
         }
 
-        storeLoggedInUser(request, User.normalUser(authorId, initiativeIds));
+        storeLoggedInUser(request, User.normalUser(authorId.get(), initiativeIds));
 
         return initiativeIds.iterator().next();
     }
@@ -119,13 +120,6 @@ public class UserService {
         }
 
         return Maybe.of(new LoginUserHolder(user.get()));
-    }
-
-    private void assertStillAuthor(Long authorId, HttpServletRequest request) {
-        if (authorDao.getAuthor(authorId) == null) {
-            request.getSession().invalidate();
-            throw new AccessDeniedException("Author privileges removed");
-        }
     }
 
     public static void logout(HttpServletRequest request) {

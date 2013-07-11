@@ -18,6 +18,7 @@ import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.exceptions.VerifiedLoginRequiredException;
 import fi.om.municipalityinitiative.service.ServiceIntegrationTestBase;
+import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.QAuthor;
 import fi.om.municipalityinitiative.sql.QAuthorInvitation;
@@ -52,6 +53,8 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+
+    private final NormalAuthorId someAuthorId = new NormalAuthorId(-5);;
 
     @Override
     public void childSetup() {
@@ -345,7 +348,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
     @Test
     public void deleting_final_author_is_not_allowed() {
         Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality);
-        LoginUserHolder fakeLoginUserHolderWithManagementRights = new LoginUserHolder(User.normalUser(-5L, Collections.singleton(initiativeId)));
+        LoginUserHolder fakeLoginUserHolderWithManagementRights = new LoginUserHolder(User.normalUser(someAuthorId, Collections.singleton(initiativeId)));
 
         thrown.expect(OperationNotAllowedException.class);
         thrown.expectMessage(containsString("Unable to delete author"));
@@ -415,7 +418,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         final Long author1 = testHelper.getLastAuthorId();
         final Long author2 = testHelper.createDefaultAuthorAndParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality));
 
-        final LoginUserHolder loginUserHolder =  new LoginUserHolder(User.normalUser(-1L, Collections.singleton(initiative)));
+        final LoginUserHolder loginUserHolder =  new LoginUserHolder(User.normalUser(someAuthorId, Collections.singleton(initiative)));
 
         List<Callable<Boolean>> callables = Lists.newArrayList();
         callables.add(authorDeletorCallable(initiative, loginUserHolder, author1));
