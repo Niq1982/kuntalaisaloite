@@ -4,6 +4,7 @@ import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.Maybe;
+import org.springframework.util.Assert;
 
 import java.util.Set;
 
@@ -62,6 +63,7 @@ public class VerifiedUser extends User{
     }
 
     public VerifiedUserId getAuthorId() {
+        Assert.notNull(authorId);
         return authorId;
     }
 }
