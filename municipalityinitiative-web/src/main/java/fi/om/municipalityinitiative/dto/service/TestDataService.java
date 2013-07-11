@@ -41,7 +41,7 @@ public class TestDataService {
         );
         editDto.setExtraInfo(template.initiative.getExtraInfo());
         initiativeDao.editInitiativeDraft(initiativeId, editDto);
-        authorDao.updateAuthorInformation(authorId.toLong(), editDto.getContactInfo());
+        authorDao.updateAuthorInformation(authorId, editDto.getContactInfo());
 
         initiativeDao.updateInitiativeType(initiativeId, template.initiative.getType());
         if (template.initiative.getType() == InitiativeType.SINGLE) {

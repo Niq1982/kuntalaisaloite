@@ -1,20 +1,20 @@
 package fi.om.municipalityinitiative.service.ui;
 
 import com.google.common.collect.Lists;
-import fi.om.municipalityinitiative.dao.ParticipantDao;
-import fi.om.municipalityinitiative.dao.UserDao;
-import fi.om.municipalityinitiative.dto.NormalAuthor;
-import fi.om.municipalityinitiative.dto.VerifiedAuthor;
-import fi.om.municipalityinitiative.dto.service.Municipality;
-import fi.om.municipalityinitiative.dto.ui.*;
-import fi.om.municipalityinitiative.dto.user.VerifiedUser;
-import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
+import fi.om.municipalityinitiative.dao.ParticipantDao;
+import fi.om.municipalityinitiative.dao.UserDao;
 import fi.om.municipalityinitiative.dto.Author;
-import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.NormalAuthor;
+import fi.om.municipalityinitiative.dto.VerifiedAuthor;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
+import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.ui.*;
+import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.user.VerifiedUser;
+import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
@@ -79,7 +79,7 @@ public class InitiativeManagementService {
         assertAllowance("Edit initiative", ManagementSettings.of(initiative).isAllowEdit());
         initiativeDao.editInitiativeDraft(initiativeId, editDto);
         if (initiative.getType().isNotVerifiable()) {
-            authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId().toLong(), editDto.getContactInfo());
+            authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId(), editDto.getContactInfo());
         }
         else {
             String hash = loginUserHolder.getVerifiedUser().getHash();
@@ -144,7 +144,7 @@ public class InitiativeManagementService {
 
         initiativeDao.updateExtraInfo(initiativeId, updateDto.getExtraInfo(), updateDto.getExternalParticipantCount());
         if (initiative.getType().isNotVerifiable()) {
-            authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId().toLong(), updateDto.getContactInfo());
+            authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId(), updateDto.getContactInfo());
         }
         else {
             String hash = loginUserHolder.getVerifiedUser().getHash();

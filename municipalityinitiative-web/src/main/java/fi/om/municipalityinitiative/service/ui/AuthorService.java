@@ -2,7 +2,6 @@ package fi.om.municipalityinitiative.service.ui;
 
 import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
-import fi.om.municipalityinitiative.dao.InvitationNotValidException;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
@@ -116,7 +115,7 @@ public class AuthorService {
         String managementHash = RandomHashGenerator.longHash();
         Long participantId = participantDao.prepareParticipant(initiativeId, confirmDto.getHomeMunicipality(), participantCreateDto.getEmail(), participantCreateDto.getMunicipalMembership());
         NormalAuthorId authorId = authorDao.createAuthor(initiativeId, participantId, managementHash);
-        authorDao.updateAuthorInformation(authorId.toLong(), confirmDto.getContactInfo());
+        authorDao.updateAuthorInformation(authorId, confirmDto.getContactInfo());
         return managementHash;
     }
 

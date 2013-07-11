@@ -6,13 +6,13 @@ import com.google.common.collect.Sets;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.expr.DateTimeExpression;
+import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.VerifiedAuthor;
-import fi.om.municipalityinitiative.exceptions.NotFoundException;
-import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
-import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
+import fi.om.municipalityinitiative.exceptions.NotFoundException;
+import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
@@ -48,25 +48,19 @@ public class JdbcAuthorDao implements AuthorDao {
     }
 
     @Override
-    public void updateAuthorInformation(Long authorId, ContactInfo contactInfo) {
-
-        Long participantId = queryFactory.from(QParticipant.participant)
-//                .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
-                .innerJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
-                .where(QAuthor.author.participantId.eq(authorId))
-                .singleResult(QParticipant.participant.id);
+    public void updateAuthorInformation(NormalAuthorId authorId, ContactInfo contactInfo) {
 
         JdbcInitiativeDao.assertSingleAffection(queryFactory.update(QParticipant.participant)
                 .set(QParticipant.participant.showName, Boolean.TRUE.equals(contactInfo.isShowName()))
                 .set(QParticipant.participant.name, contactInfo.getName())
                 .set(QParticipant.participant.email, contactInfo.getEmail())
-                .where(QParticipant.participant.id.eq(participantId))
+                .where(QParticipant.participant.id.eq(authorId.toLong()))
                 .execute());
 
         JdbcInitiativeDao.assertSingleAffection(queryFactory.update(QAuthor.author)
                 .set(QAuthor.author.address, contactInfo.getAddress())
                 .set(QAuthor.author.phone, contactInfo.getPhone())
-                .where(QAuthor.author.participantId.eq(participantId))
+                .where(QAuthor.author.participantId.eq(authorId.toLong()))
                 .execute());
     }
 
