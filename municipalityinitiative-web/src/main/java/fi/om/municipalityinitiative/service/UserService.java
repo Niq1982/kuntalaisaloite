@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Sets;
+import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.MunicipalityDao;
 import fi.om.municipalityinitiative.dao.UserDao;
 import fi.om.municipalityinitiative.dto.service.Municipality;
@@ -10,13 +11,13 @@ import fi.om.municipalityinitiative.dto.user.*;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.AuthenticationRequiredException;
 import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
-import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.Maybe;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Nullable;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,6 +43,8 @@ public class UserService {
     MunicipalityDao municipalityDao;
 
     String omUserSalt;
+
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     public UserService() {  // This is for tests, spring needs this
     }
@@ -177,12 +180,19 @@ public class UserService {
             contactInfo.setName(fullName);
             contactInfo.setAddress(address);
             initiatives = Sets.newHashSet();
-            verifiedUserId = null;
+            verifiedUserId = null; // FIXME: This is bad.
         }
 
         Maybe<Municipality> municipality;
         if (vetumaMunicipality.isPresent()) { // If got municipality from vetuma, replace with municipalitydata stored in our own database
             municipality = Maybe.fromNullable(municipalityDao.getMunicipality(vetumaMunicipality.get().getId()));
+
+            if (municipality.isNotPresent()) {
+                log.error("Got municipality from vetuma that was not found from own database: "
+                        + vetumaMunicipality.get().getId() + ", "
+                        + vetumaMunicipality.get().getNameFi() + ", "
+                        + vetumaMunicipality.get().getNameSv());
+            }
         }
         else {
             municipality = Maybe.absent();

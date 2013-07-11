@@ -117,7 +117,7 @@ public class PublicInitiativeController extends BaseController {
         Urls urls = Urls.get(locale);
 
         if (InitiativeType.isVerifiable(initiative.getInitiativeType())) {
-            LoginUserHolder<User> loginUserHolder = userService.getLoginUserHolder(request);
+            LoginUserHolder loginUserHolder = userService.getLoginUserHolder(request);
             if (loginUserHolder.isVerifiedUser()) {
                 long initiativeId;
                 try {
