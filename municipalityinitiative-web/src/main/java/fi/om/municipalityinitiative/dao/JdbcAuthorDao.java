@@ -176,11 +176,11 @@ public class JdbcAuthorDao implements AuthorDao {
     }
 
     @Override
-    public void deleteAuthor(Long authorId) {
+    public void deleteAuthor(NormalAuthorId authorId) {
 
         Long initiativeId = queryFactory.from(QAuthor.author)
                 .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
-                .where(QAuthor.author.participantId.eq(authorId))
+                .where(QAuthor.author.participantId.eq(authorId.toLong()))
                 .uniqueResult(QParticipant.participant.municipalityInitiativeId);
 
         // Lock all authors of the initiative from another transactions
@@ -190,9 +190,9 @@ public class JdbcAuthorDao implements AuthorDao {
                 .forUpdate().of(QAuthor.author).list(QAuthor.author.participantId);
 
         JdbcInitiativeDao.assertSingleAffection(queryFactory.delete(QAuthor.author)
-                .where(QAuthor.author.participantId.eq(authorId)).execute());
+                .where(QAuthor.author.participantId.eq(authorId.toLong())).execute());
         JdbcInitiativeDao.assertSingleAffection(queryFactory.delete(QParticipant.participant)
-                .where(QParticipant.participant.id.eq(authorId)).execute());
+                .where(QParticipant.participant.id.eq(authorId.toLong())).execute());
         JdbcInitiativeDao.assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
                 .set(QMunicipalityInitiative.municipalityInitiative.participantCount, QMunicipalityInitiative.municipalityInitiative.participantCount.subtract(1))
                 .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
@@ -207,6 +207,22 @@ public class JdbcAuthorDao implements AuthorDao {
             throw new OperationNotAllowedException("Deleting last author is forbidden");
         }
 
+    }
+
+    @Override
+    public void deleteAuthor(Long initiativeId, VerifiedUserId authorToDelete) {
+
+        // TODO: Handle concurrent transactions?
+
+        assertSingleAffection(queryFactory.delete(QVerifiedAuthor.verifiedAuthor)
+                .where(QVerifiedAuthor.verifiedAuthor.initiativeId.eq(initiativeId))
+                .where(QVerifiedAuthor.verifiedAuthor.verifiedUserId.eq(authorToDelete.toLong()))
+                .execute());
+
+        assertSingleAffection(queryFactory.delete(QVerifiedParticipant.verifiedParticipant)
+                .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
+                .where(QVerifiedParticipant.verifiedParticipant.verifiedUserId.eq(authorToDelete.toLong()))
+                .execute());
     }
 
     @Override

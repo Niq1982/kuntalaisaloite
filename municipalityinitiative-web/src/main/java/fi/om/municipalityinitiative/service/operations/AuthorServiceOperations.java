@@ -2,16 +2,19 @@ package fi.om.municipalityinitiative.service.operations;
 
 import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
-import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUICreateDto;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
+import fi.om.municipalityinitiative.dto.user.NormalLoginUser;
+import fi.om.municipalityinitiative.dto.user.User;
+import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
+import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.util.SecurityUtil;
 import org.joda.time.DateTime;
@@ -61,25 +64,62 @@ public class AuthorServiceOperations {
     }
 
     @Transactional(readOnly = false)
-    public ContactInfo doDeleteAuthor(Long initiativeId, Long authorId) {
+    public ContactInfo doDeleteAuthor(Long initiativeId, Long authorId, User user) {
+
+        if (initiativeDao.isVerifiableInitiative(initiativeId)) {
+            VerifiedUser currentUser = (VerifiedUser) user;
+            VerifiedUserId authorToDelete = new VerifiedUserId(authorId);
+
+            if (currentUser.getAuthorId().toLong() == authorId) {
+                throw new OperationNotAllowedException("Removing yourself from authors is not allowed");
+            }
+
+            return deleteVerifiedAuthor(initiativeId, authorToDelete);
+
+        }
+
+        else {
+            NormalLoginUser currentUser = (NormalLoginUser) user;
+            NormalAuthorId authorToDelete = new NormalAuthorId(authorId);
+
+            if (currentUser.getAuthorId().toLong() == authorId) {
+                throw new OperationNotAllowedException("Removing yourself from authors is not allowed");
+            }
+
+            return deleteNormalAuthor(initiativeId, authorToDelete);
+        }
+    }
+
+    private ContactInfo deleteVerifiedAuthor(Long initiativeId, VerifiedUserId authorToDelete) {
+
+        // TODO: Check if author is found?
+        // TODO: Check that not final author?
+
+        ContactInfo contactInfo = authorDao.getVerifiedAuthor(initiativeId, authorToDelete).getContactInfo();
+        authorDao.deleteAuthor(initiativeId, authorToDelete);
+        return contactInfo;
+    }
+
+    private ContactInfo deleteNormalAuthor(Long initiativeId, NormalAuthorId authorToDelete) {
+
         List<NormalAuthor> authors = authorDao.findNormalAuthors(initiativeId);
-        if (!hasAuthor(authorId, authors)) {
-            throw new NotFoundException("Author", "initiative: " + initiativeId + ", author: " + authorId);
+
+        if (!hasAuthor(authorToDelete, authors)) {
+            throw new NotFoundException("Author", "initiative: " + initiativeId + ", author: " + authorToDelete);
         }
         else if (authors.size() < 2) {
             throw new OperationNotAllowedException("Unable to delete author. Initiative has only " + authors.size() +" author(s)");
         }
         else {
-            // TODO: Verified Author
-            ContactInfo deletedAuthorContactInfo = authorDao.getNormalAuthor(new NormalAuthorId(authorId)).getContactInfo();
-            authorDao.deleteAuthor(authorId);
+            ContactInfo deletedAuthorContactInfo = authorDao.getNormalAuthor(authorToDelete).getContactInfo();
+            authorDao.deleteAuthor(authorToDelete);
             return deletedAuthorContactInfo;
         }
     }
 
-    private static boolean hasAuthor(Long authorId, List<NormalAuthor> authors) {
-        for (Author author : authors) {
-            if (author.getId().toLong() == authorId.longValue()) {
+    private static boolean hasAuthor(NormalAuthorId authorId, List<NormalAuthor> authors) {
+        for (NormalAuthor author : authors) {
+            if (author.getId().equals(authorId)) {
                 return true;
             }
         }

@@ -22,6 +22,8 @@ import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.QAuthor;
 import fi.om.municipalityinitiative.sql.QAuthorInvitation;
+import fi.om.municipalityinitiative.sql.QVerifiedAuthor;
+import fi.om.municipalityinitiative.sql.QVerifiedParticipant;
 import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -121,13 +123,13 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         createDto.setMunicipalMembership(Membership.community); //XXX: Not tested
         createDto.setHomeMunicipality(authorsMunicipality);
 
-        precondition(countAllAuthors(), is(1L)); // XXX: This does not care if the authors does not belong to this initiative
+        precondition(countAllNormalAuthors(), is(1L)); // XXX: This does not care if the authors does not belong to this initiative
         precondition(participantCountOfInitiative(initiativeId), is(1));
 
         authorService.confirmAuthorInvitation(initiativeId, createDto, null);
 
         // Author count is increased
-        precondition(countAllAuthors(), is(2L));
+        precondition(countAllNormalAuthors(), is(2L));
 
         // Check new author information
         List<? extends Author> currentAuthors = currentAuthors(initiativeId);
@@ -382,17 +384,17 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
     }
 
     @Test
-    public void deleting_author_succeeds_and_sends_emails() throws Exception {
+    public void deleting_normal_author_succeeds_and_sends_emails() throws Exception {
 
         Long initiative = testHelper.createCollaborativeAccepted(testMunicipality);
         Long anotherAuthor = testHelper.getLastNormalAuthorId().toLong();
         Long currentAuthor = testHelper.createDefaultAuthorAndParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality).withParticipantEmail("author_left@example.com"));
 
-        precondition(countAllAuthors(), is(2L));
+        precondition(countAllNormalAuthors(), is(2L));
 
         authorService.deleteAuthor(initiative, TestHelper.authorLoginUserHolder, anotherAuthor);
 
-        assertThat(countAllAuthors(), is(1L));
+        assertThat(countAllNormalAuthors(), is(1L));
 
         List<MimeMessage> sentMessages = javaMailSenderFake.getSentMessages(2);
 
@@ -407,8 +409,27 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         assertThat(JavaMailSenderFake.getSingleRecipient(messageToDeletedAuthor), is(TestHelper.DEFAULT_PARTICIPANT_EMAIL));
         assertThat(messageToDeletedAuthor.getSubject(), containsString("Sinut on poistettu aloitteen vastuuhenkilöistä"));
 
-
     }
+
+    @Test
+    public void deleting_verified_author_succeeds_and_sends_emails() {
+
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality).applyAuthor().toInitiativeDraft());
+        Long originalAuthor = testHelper.getLastVerifiedUserId();
+
+        testHelper.createVerifiedAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality));
+
+        precondition(countAllVerifiedAuthors(), is(2));
+        precondition(countAllVerifiedParticipants(), is(2));
+        authorService.deleteAuthor(initiativeId, TestHelper.authorLoginUserHolder, originalAuthor);
+        assertThat(countAllVerifiedAuthors(), is(1));
+        assertThat(countAllVerifiedParticipants(), is(1));
+    }
+
+    private int countAllVerifiedParticipants() {
+        return testHelper.countAll(QVerifiedParticipant.verifiedParticipant).intValue();
+    }
+
 
     @Test
     public void two_concurrent_tries_to_remove_two_last_authors_will_fail() {
@@ -426,7 +447,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
         executeCallablesSilently(callables);
 
-        assertThat(countAllAuthors(), is(1L));
+        assertThat(countAllNormalAuthors(), is(1L));
     }
 
     @Test
@@ -467,8 +488,12 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         assertThat(author.getId(), is(notNullValue()));
     }
 
-    private Long countAllAuthors() {
+    private Long countAllNormalAuthors() {
         return testHelper.countAll(QAuthor.author);
+    }
+
+    private int countAllVerifiedAuthors() {
+        return testHelper.countAll(QVerifiedAuthor.verifiedAuthor).intValue();
     }
 
     private static void executeCallablesSilently(List<Callable<Boolean>> threads) {

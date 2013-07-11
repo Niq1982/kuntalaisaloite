@@ -11,7 +11,6 @@ import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
-import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.operations.AuthorServiceOperations;
@@ -75,11 +74,8 @@ public class AuthorService {
     public void deleteAuthor(Long initiativeId, LoginUserHolder loginUserHolder, Long authorId) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        if (loginUserHolder.getNormalLoginUser().getAuthorId().toLong() == authorId) {
-            throw new OperationNotAllowedException("Removing yourself from authors is not allowed");
-        }
+        ContactInfo deletedAuthorContactInfo = operations.doDeleteAuthor(initiativeId, authorId, loginUserHolder.getUser());
 
-        ContactInfo deletedAuthorContactInfo = operations.doDeleteAuthor(initiativeId, authorId);
         emailService.sendAuthorDeletedEmailToOtherAuthors(initiativeId, deletedAuthorContactInfo);
         emailService.sendAuthorDeletedEmailToDeletedAuthor(initiativeId, deletedAuthorContactInfo.getEmail());
 
