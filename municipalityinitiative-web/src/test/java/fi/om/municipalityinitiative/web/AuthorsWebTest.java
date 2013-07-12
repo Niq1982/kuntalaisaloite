@@ -106,7 +106,6 @@ public class AuthorsWebTest  extends WebTestBase {
     @Test
     public void author_invitation_to_normal_initiative_shows_validation_messages() {
 
-        overrideDriverToFirefox(true);
         AuthorInvitation invitation = testHelper.createInvitation(normalInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
 
@@ -130,7 +129,6 @@ public class AuthorsWebTest  extends WebTestBase {
 
     @Test
     public void author_invitation_to_verified_initiative_shows_validation_messages() {
-        overrideDriverToFirefox(true);
         AuthorInvitation invitation = testHelper.createInvitation(verifiedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
         vetumaLogin("111111-1111", MUNICIPALITY_1);
 
