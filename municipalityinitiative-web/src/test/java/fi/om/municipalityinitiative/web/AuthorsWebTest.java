@@ -120,7 +120,12 @@ public class AuthorsWebTest  extends WebTestBase {
 
     @Test
     public void accepting_verified_initiative_redirects_to_vetuma_and_back_to_initiative_page_if_not_logged_in_via_vetuma() {
-        // TODO: Implement
+        AuthorInvitation invitation = testHelper.createInvitation(verifiedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
+        open(urls.invitation(verifiedInitiativeId, invitation.getConfirmationCode()));
+        enterVetumaLoginInformationAndSubmit("111111-1111", MUNICIPALITY_1);
+
+        assertTitle(TestHelper.DEFAULT_INITIATIVE_NAME + " - Kuntalaisaloitepalvelu");
+        assertThat(acceptInvitationButton().isPresent(), is(true));
     }
 
     @Test
