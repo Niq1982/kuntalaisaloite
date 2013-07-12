@@ -6,6 +6,7 @@ import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -32,7 +33,8 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     private static final String PARTICIPANT_NAME = "Ossi Osallistuja";
     private static final String PARTICIPANT_EMAIL = "test@test.com";
     private static final String AUTHOR_MESSAGE = "Tässä on viesti";
-    public static final String USER_SSN = "000000-0000";
+    public static final String VERIFIED_INITIATIVE_AURHOR_SSN = "000000-0000";
+    public static final String OTHER_USER_SSN = "111111-1111";
 
     private Long municipality1Id;
     private Long municipality2Id;
@@ -47,7 +49,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         normalInitiativeId = testHelper.create(municipality1Id, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         verifiedInitiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(municipality1Id)
                 .withState(InitiativeState.PUBLISHED)
-                .applyAuthor(USER_SSN)
+                .applyAuthor(VERIFIED_INITIATIVE_AURHOR_SSN)
                 .toInitiativeDraft()
         );
     }
@@ -114,6 +116,23 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         assertThat(participateToInitiativeButton().isPresent(), is(false));
 
 
+    }
+
+    @Test
+    public void participating_to_verified_initiative_is_not_allowed_if_wrong_homeMunicipality() {
+        vetumaLogin(OTHER_USER_SSN, MUNICIPALITY_2);
+        open(urls.view(verifiedInitiativeId));
+
+        assertTextContainedByClass("msg-warning", "Et ole aloitteen kunnan jäsen, joten et voi osallistua aloitteeseen.");
+        assertThat(participateToInitiativeButton().isPresent(), is(false));
+    }
+
+    @Test
+    @Ignore("Implement")
+    public void participating_to_verified_initiative_when_private_home_municipality_from_vetuma() {
+        vetumaLogin(OTHER_USER_SSN, "Ei kuntaa");
+
+        // Implement
     }
 
     private Maybe<WebElement> participateToInitiativeButton() {
