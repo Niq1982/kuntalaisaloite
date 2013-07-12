@@ -1,18 +1,13 @@
 package fi.om.municipalityinitiative.web;
 
-import static org.junit.Assert.assertFalse;
-
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-
-import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class InitiativeParticipateWebTest extends WebTestBase {
     
@@ -45,7 +40,16 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         municipality2Id = testHelper.createTestMunicipality(MUNICIPALITY_2);
         initiativeId = testHelper.create(municipality1Id, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
     }
-    
+
+    @Test
+    public void participate_normal_initiative_shows_validation_errors() {
+        open(urls.view(initiativeId));
+
+        clickLinkContaining(getMessage(MSG_BTN_PARTICIPATE));
+        getElemContaining(getMessage(MSG_BTN_SAVE), "button").click();
+        assertPageHasValidationErrors();
+    }
+
     @Test
     public void participate_initiative_with_public_name() {
         open(urls.view(initiativeId));
