@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.dto;
 
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.util.Membership;
+import fi.om.municipalityinitiative.validation.NormalInitiative;
 import org.joda.time.DateTime;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -35,7 +36,7 @@ public class ParticipantUICreateDtoTest {
         dto.setHomeMunicipality(2L);
         dto.setMunicipalMembership(null);
 
-        Set<ConstraintViolation<ParticipantUICreateDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<ParticipantUICreateDto>> violations = validate(dto);
 
         assertThat(violations, hasSize(1));
         assertThat(getFirst(violations).getPropertyPath().toString(), is("municipalMembership"));
@@ -50,7 +51,7 @@ public class ParticipantUICreateDtoTest {
         dto.setHomeMunicipality(2L);
         dto.setMunicipalMembership(Membership.none);
 
-        Set<ConstraintViolation<ParticipantUICreateDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<ParticipantUICreateDto>> violations = validate(dto);
 
         assertThat(violations, hasSize(1));
         assertThat(getFirst(violations).getPropertyPath().toString(), is("municipalMembership"));
@@ -65,23 +66,27 @@ public class ParticipantUICreateDtoTest {
         dto.setHomeMunicipality(2L);
         dto.setMunicipalMembership(Membership.community);
 
-        Set<ConstraintViolation<ParticipantUICreateDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<ParticipantUICreateDto>> violations = validate(dto);
 
         assertThat(violations, hasSize(0));
     }
 
     @Test
-    public void too_fast_submit_() {
+    public void too_fast_submit() {
 
         ParticipantUICreateDto dto = validParticipant();
         dto.setRandomNumber(DateTime.now().minusSeconds(2).getMillis());
 
-        Set<ConstraintViolation<ParticipantUICreateDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<ParticipantUICreateDto>> violations = validate(dto);
 
         assertThat(violations, hasSize(1));
         assertThat(getFirst(violations).getPropertyPath().toString(), is("randomNumber"));
         assertThat(getFirst(violations).getMessage(), is("{NotTooFastSubmit}"));
 
+    }
+
+    private static Set<ConstraintViolation<ParticipantUICreateDto>> validate(ParticipantUICreateDto dto) {
+        return validator.validate(dto, NormalInitiative.class);
     }
 
     private ParticipantUICreateDto validParticipant() {
