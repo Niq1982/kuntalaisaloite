@@ -167,7 +167,7 @@ public class JdbcAuthorDao implements AuthorDao {
                 .innerJoin(QVerifiedUser.verifiedUser._verifiedAuthorVerifiedUserFk, QVerifiedAuthor.verifiedAuthor)
                         //.innerJoin(QVerifiedParticipant.verifiedParticipant.verifiedParticipantInitiativeFk, QMunicipalityInitiative.municipalityInitiative)
                 .innerJoin(QVerifiedAuthor.verifiedAuthor.verifiedAuthorInitiativeFk, QMunicipalityInitiative.municipalityInitiative)
-                .innerJoin(QVerifiedUser.verifiedUser.verifiedUserMunicipalityFk, QMunicipality.municipality)
+                .leftJoin(QVerifiedUser.verifiedUser.verifiedUserMunicipalityFk, QMunicipality.municipality)
                 .where(QVerifiedUser.verifiedUser.id.eq(userId.toLong()))
                 .where(QVerifiedAuthor.verifiedAuthor.initiativeId.eq(initiativeId))
                 .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))

@@ -179,6 +179,19 @@ public class JdbcAuthorDaoTest {
     }
 
     @Test
+    public void get_verified_author_with_absent_municipality() {
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality)
+                .applyAuthor()
+                .withParticipantMunicipality(null)
+                .toInitiativeDraft());
+
+        VerifiedAuthor verifiedAuthor = authorDao.getVerifiedAuthor(initiativeId, new VerifiedUserId(testHelper.getLastVerifiedUserId()));
+
+        assertThat(verifiedAuthor.getMunicipality().isPresent(), is(false));
+
+    }
+
+    @Test
     public void get_authors_management_hashes_and_emails() {
         Long initiativeId = testHelper.create(testMunicipality, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         String firstAuthorManagementHash = testHelper.getPreviousTestManagementHash();

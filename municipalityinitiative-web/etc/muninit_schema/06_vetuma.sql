@@ -25,6 +25,7 @@ create table verified_author (
     constraint verified_author_verified_user_fk foreign key (verified_user_id) references verified_user(id)
 );
 create index verified_author_initiative_id_index on verified_author(initiative_id);
+create index verified_author_user_id_index on verified_author(verified_user_id);
 
 create table verified_participant (
     initiative_id bigserial,
@@ -38,4 +39,5 @@ create table verified_participant (
     constraint verified_participant_verified_user_fk foreign key (verified_user_id) references verified_user(id)
 );
 create index verified_participant_initiative_id_index on verified_participant(initiative_id);
+create index verified_participant_user_id_index on verified_participant(verified_user_id);
 

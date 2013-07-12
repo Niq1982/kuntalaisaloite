@@ -61,7 +61,9 @@ public class InitiativeManagementService {
             contactInfo = authorDao.getNormalAuthor(loginUserHolder.getNormalLoginUser().getAuthorId()).getContactInfo();
         }
         else {
-            contactInfo = authorDao.getVerifiedAuthor(initiativeId, loginUserHolder.getVerifiedUser().getAuthorId()).getContactInfo();
+            VerifiedUser verifiedUser = loginUserHolder.getVerifiedUser();
+            VerifiedAuthor verifiedAuthor = authorDao.getVerifiedAuthor(initiativeId, verifiedUser.getAuthorId());
+            contactInfo = verifiedAuthor.getContactInfo();
         }
         return InitiativeDraftUIEditDto.parse(initiative,contactInfo);
     }

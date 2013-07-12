@@ -239,14 +239,21 @@ public class TestHelper {
 
     @Transactional(readOnly = false)
     public Long createVerifiedAuthorAndParticipant(AuthorDraft authorDraft) {
-        Long verifiedUserId = queryFactory.insert(QVerifiedUser.verifiedUser)
+        SQLInsertClause insertVerifiedUser = queryFactory.insert(QVerifiedUser.verifiedUser)
                 .set(QVerifiedUser.verifiedUser.hash, createUserSsnHash())
                 .set(QVerifiedUser.verifiedUser.address, authorDraft.authorAddress)
                 .set(QVerifiedUser.verifiedUser.phone, authorDraft.authorPhone)
                 .set(QVerifiedUser.verifiedUser.email, authorDraft.participantEmail)
-                .set(QVerifiedUser.verifiedUser.name, authorDraft.participantName)
-                .set(QVerifiedUser.verifiedUser.municipalityId, authorDraft.participantMunicipality)
-                .executeWithKey(QVerifiedUser.verifiedUser.id);
+                .set(QVerifiedUser.verifiedUser.name, authorDraft.participantName);
+
+        if (authorDraft.participantMunicipality == null) {
+            insertVerifiedUser.setNull(QVerifiedUser.verifiedUser.municipalityId);
+        }
+        else {
+            insertVerifiedUser.set(QVerifiedUser.verifiedUser.municipalityId, authorDraft.participantMunicipality);
+        }
+
+        Long verifiedUserId = insertVerifiedUser.executeWithKey(QVerifiedUser.verifiedUser.id);
 
         queryFactory.insert(QVerifiedAuthor.verifiedAuthor)
                 .set(QVerifiedAuthor.verifiedAuthor.initiativeId, authorDraft.initiativeId)
@@ -269,10 +276,17 @@ public class TestHelper {
         contactInfo.setShowName(true);
 
         this.lastVerifiedUserId = verifiedUserId;
+        Maybe<Municipality> participantMunicipality;
+        if (authorDraft.participantMunicipality == null) {
+            participantMunicipality = Maybe.absent();
+        }
+        else {
+            participantMunicipality = Maybe.of(new Municipality(authorDraft.participantMunicipality, "name_fi", "name_sv", true));
+        }
         authorLoginUserHolder = new LoginUserHolder(User.verifiedUser(new VerifiedUserId(verifiedUserId),previousUserSsnHash, contactInfo,
                 Collections.singleton(authorDraft.initiativeId),
                 Collections.singleton(authorDraft.initiativeId),
-                Maybe.of(new Municipality(authorDraft.participantMunicipality, "name_fi", "name_sv", true))));
+                participantMunicipality));
 
         return lastVerifiedUserId;
     }
