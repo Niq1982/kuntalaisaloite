@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
+import static fi.om.municipalityinitiative.dao.TestHelper.InitiativeDraft;
 import static fi.om.municipalityinitiative.web.MessageSourceKeys.*;
 import static org.junit.Assert.assertEquals;
 
@@ -22,6 +23,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     private static final String CONTACT_EMAIL = "test@test.com";
     private static final String CONTACT_PHONE = "012-3456789";
     private static final String CONTACT_ADDRESS = "Osoitekatu 1 A, 00000 Helsinki";
+    private static final String USER_SSN = "000000-0000";
     private Long testMunicipality1Id;
     private Long testMunicipality2Id;
 
@@ -46,20 +48,50 @@ public class InitiativeCreateWebTest extends WebTestBase {
     }
 
     @Test
-    public void editing_initiative_shows_success_message() {
+    public void filling_prepare_page_with_verified_initiative_redirects_to_vetuma_and_edit_page() {
+        overrideDriverToFirefox(true);
+        openAndAssertPreparePage();
+        select_municipality();
+        getElemContaining("Valtuustokäsittelyyn tähtäävä aloite", "span").click();
+        getElemContaining("Lähetä", "button").click();
+        // Get redirected to vetuma
+        enterVetumaLoginInformationAndSubmit(USER_SSN, MUNICIPALITY_1);
+        assertTitle("Tee kuntalaisaloite - Kuntalaisaloitepalvelu");
+    }
+
+    @Test
+    public void editing_normal_initiative_shows_success_message() {
         Long initiativeId = testHelper.createEmptyDraft(testMunicipality1Id);
 
-        loginAsAuthorForLastTestHelperCreatedInitiative();
+        loginAsAuthorForLastTestHelperCreatedNormalInitiative();
 
         open(urls.edit(initiativeId));
         
         fill_in_initiative_content();
     }
-    
+
+    @Test
+    public void editing_verified_initiative_shows_success_message() {
+        Long initiativeId = testHelper.createVerifiedInitiative(new InitiativeDraft(testMunicipality1Id).applyAuthor(USER_SSN).toInitiativeDraft());
+        vetumaLogin(USER_SSN, MUNICIPALITY_1);
+        open(urls.edit(initiativeId));
+
+        inputText("name", NAME);
+        inputText("proposal", PROPOSAL);
+
+        inputText("contactInfo.phone", CONTACT_PHONE);
+        inputText("contactInfo.address", CONTACT_ADDRESS);
+        inputText("contactInfo.email", CONTACT_EMAIL);
+
+        clickByName(Urls.ACTION_SAVE);
+
+        assertSuccesPageWithMessage(MSG_SUCCESS_SAVE_DRAFT);
+    }
+
     @Test
     public void edit_page_opens_if_logged_in_as_author() {
         Long initiative = testHelper.createDraft(testMunicipality1Id);
-        loginAsAuthorForLastTestHelperCreatedInitiative();
+        loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         open(urls.getEdit(initiative));
 //        assertThat(driver.getTitle(), is("asdasd"));
         assertTitle(getMessage(MSG_PAGE_CREATE_NEW) + " - " + getMessage(MSG_SITE_NAME));
@@ -83,7 +115,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     @Test
     public void edit_page_fails_if_logged_in_as_another_author() {
         Long otherInitiative = testHelper.createDraft(testMunicipality1Id);
-        loginAsAuthorForLastTestHelperCreatedInitiative();
+        loginAsAuthorForLastTestHelperCreatedNormalInitiative();
 
         Long initiative = testHelper.createDraft(testMunicipality1Id);
         open(urls.getEdit(initiative));
@@ -95,7 +127,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     public void send_to_review() {
         Long initiativeId = testHelper.createDraft(testMunicipality1Id);
 
-        loginAsAuthorForLastTestHelperCreatedInitiative();
+        loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         open(urls.management(initiativeId));
 
         clickById("js-send-to-review");
@@ -124,7 +156,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     @Test
     public void update_page_opens_if_logged_in_as_author() {
         Long initiative = testHelper.createCollaborativeAccepted(testMunicipality1Id);
-        loginAsAuthorForLastTestHelperCreatedInitiative();
+        loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         open(urls.update(initiative));
         assertTitle("Muokkaa kuntalaisaloitetta - Kuntalaisaloitepalvelu");
     }

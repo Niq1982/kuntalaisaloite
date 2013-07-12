@@ -34,7 +34,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
 
     @Test
     public void management_view_opens_if_logged_in_with_correct_management_hash() {
-        loginAsAuthorForLastTestHelperCreatedInitiative();
+        loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         open(urls.management(draftInitiativeId));
         assertThat(getElement(By.tagName("h2")).getText(), is(getMessage(MANAGEMENT_WARNING_TITLE)));
     }
@@ -49,7 +49,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
     public void management_view_shows_404_if_logged_in_with_wrong_management_hash() {
 
         Long otherInitiative = testHelper.createDraft(municipalityId);
-        loginAsAuthorForLastTestHelperCreatedInitiative();
+        loginAsAuthorForLastTestHelperCreatedNormalInitiative();
 
         open(urls.getManagement(draftInitiativeId));
         assert404();
@@ -64,7 +64,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
     @Test
     public void not_published_initiative_cannot_be_viewed_if_wrong_author() {
         Long otherInitiative = testHelper.createDraft(municipalityId);
-        loginAsAuthorForLastTestHelperCreatedInitiative();
+        loginAsAuthorForLastTestHelperCreatedNormalInitiative();
 
         open(urls.view(draftInitiativeId));
         assert404();
@@ -82,7 +82,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
 
     @Test
     public void not_published_initiative_can_be_viewed_if_logged_in_as_author() {
-        loginAsAuthorForLastTestHelperCreatedInitiative();
+        loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         open(urls.view(draftInitiativeId));
         assertThat(getElement(By.tagName("h2")).getText(), is(getMessage(INITIATIVE_VIEW_HEADER)));
     }
@@ -97,7 +97,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
     @Test
     public void management_view_redirects_to_create_page_if_initiative_name_is_empty() {
         Long emptyDraftId = testHelper.createEmptyDraft(municipalityId);
-        loginAsAuthorForLastTestHelperCreatedInitiative();
+        loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         open(urls.management(emptyDraftId));
 
         assertThat(driver.getCurrentUrl(), is(urls.edit(emptyDraftId)));

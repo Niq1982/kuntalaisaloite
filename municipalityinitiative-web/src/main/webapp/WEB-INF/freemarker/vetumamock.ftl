@@ -44,7 +44,7 @@
         <option value="FAILURE">FAILURE</option>
     </select>
     <br/>
-    <input type="submit" value="Leiki vetumaa"/>
+    <input id="formsubmit" type="submit" value="Leiki vetumaa"/>
 
 </form>
 

@@ -5,7 +5,8 @@ import fi.om.municipalityinitiative.conf.WebConfiguration.WebDevConfiguration;
 import fi.om.municipalityinitiative.conf.WebConfiguration.WebProdConfiguration;
 import fi.om.municipalityinitiative.dto.vetuma.VetumaLoginRequest;
 import fi.om.municipalityinitiative.util.Maybe;
-import fi.om.municipalityinitiative.web.*;
+import fi.om.municipalityinitiative.web.JsonpMessageConverter;
+import fi.om.municipalityinitiative.web.URILocaleResolver;
 import fi.om.municipalityinitiative.web.controller.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,8 +30,8 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Locale;
 
-import static fi.om.municipalityinitiative.dto.vetuma.VetumaRequest.Type.*;
-import static fi.om.municipalityinitiative.dto.vetuma.VetumaRequest.Action.*;
+import static fi.om.municipalityinitiative.dto.vetuma.VetumaRequest.Action.EXTAUTH;
+import static fi.om.municipalityinitiative.dto.vetuma.VetumaRequest.Type.LOGIN;
 @Configuration
 @Import({ WebProdConfiguration.class, WebDevConfiguration.class })
 public class WebConfiguration extends WebMvcConfigurationSupport {
@@ -57,8 +58,8 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
         }
 
         @Bean
-        public DevController devController() {
-            return new DevController(
+        public TestDataController devController() {
+            return new TestDataController(
                     optimizeResources(env),
                     resourcesVersion(env)
                     );

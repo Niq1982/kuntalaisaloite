@@ -1,13 +1,13 @@
 package fi.om.municipalityinitiative.web.controller;
 
 import com.google.common.base.Strings;
+import fi.om.municipalityinitiative.dto.service.TestDataService;
+import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
-import fi.om.municipalityinitiative.web.Urls;
-import fi.om.municipalityinitiative.dto.service.TestDataService;
-import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.util.TestDataTemplates;
+import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,14 +23,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static fi.om.municipalityinitiative.web.Urls.*;
-import static fi.om.municipalityinitiative.web.Views.*;
+import static fi.om.municipalityinitiative.web.Urls.TEST_DATA_GENERATION_FI;
+import static fi.om.municipalityinitiative.web.Urls.TEST_DATA_GENERATION_SV;
+import static fi.om.municipalityinitiative.web.Views.TEST_DATA_GENERATION;
+import static fi.om.municipalityinitiative.web.Views.contextRelativeRedirect;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 @Profile("dev")
-public class DevController extends BaseController {
+public class TestDataController extends BaseController {
 
     @Resource
     TestDataService testDataService;
@@ -38,7 +40,7 @@ public class DevController extends BaseController {
     @Resource
     MunicipalityService municipalityService;
     
-    public DevController(boolean optimizeResources, String resourcesVersion) {
+    public TestDataController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
     }
 

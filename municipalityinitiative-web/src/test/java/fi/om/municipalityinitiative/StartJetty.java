@@ -1,12 +1,11 @@
 package fi.om.municipalityinitiative;
 
+import fi.om.municipalityinitiative.conf.PropertyNames;
 import org.eclipse.jetty.http.ssl.SslContextFactory;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ssl.SslSelectChannelConnector;
 import org.eclipse.jetty.webapp.WebAppContext;
-
-import fi.om.municipalityinitiative.conf.PropertyNames;
 
 public class StartJetty {
     
@@ -15,7 +14,7 @@ public class StartJetty {
     public static void main(String[] args) {
         try {
             System.setProperty(PropertyNames.optimizeResources, "false");
-            startService(PORT, null).join();
+            startService(PORT, "dev").join();
         } catch (Exception e) {
             e.printStackTrace();
         }

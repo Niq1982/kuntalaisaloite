@@ -20,7 +20,7 @@
         <input type="hidden" name="MAC" value="${vetumaRequestMAC}"/>
         <input type="hidden" name="VTJDATA" value="${vetumaRequest.VTJDATA}"/>
         <input type="hidden" name="CSRFToken" value="${CSRFToken!}"/>
-        <input type="submit" value="Palaa palveluun"/>
+        <input id="returnsubmit" type="submit" value="Palaa palveluun"/>
 
 </form>
 

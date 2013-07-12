@@ -1,18 +1,17 @@
 package fi.om.municipalityinitiative.web;
 
+import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
+import fi.om.municipalityinitiative.util.InitiativeState;
+import fi.om.municipalityinitiative.util.InitiativeType;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.By;
+
 import static fi.om.municipalityinitiative.web.MessageSourceKeys.MSG_SUCCESS_INVITATION_SENT;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
-
-import fi.om.municipalityinitiative.dao.TestHelper;
-import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
-import org.junit.Before;
-import org.junit.Test;
-
-import fi.om.municipalityinitiative.util.InitiativeState;
-import fi.om.municipalityinitiative.util.InitiativeType;
-import org.openqa.selenium.By;
 
 public class AuthorsWebTest  extends WebTestBase {
 
@@ -50,7 +49,7 @@ public class AuthorsWebTest  extends WebTestBase {
     @Test
     public void add_author() {
 
-        loginAsAuthorForLastTestHelperCreatedInitiative();
+        loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         
         open(urls.management(initiativeId));
         clickLinkContaining(getMessage(MSG_ADD_AUTHORS_LINK));
@@ -113,7 +112,7 @@ public class AuthorsWebTest  extends WebTestBase {
         
         testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(publishedInitiativeId, municipalityId));
         
-        loginAsAuthorForLastTestHelperCreatedInitiative();
+        loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         open(urls.management(publishedInitiativeId));
         
         clickLinkContaining("Osallistujahallinta");
@@ -132,7 +131,7 @@ public class AuthorsWebTest  extends WebTestBase {
     public void author_removes_author(){
         testHelper.createDefaultAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, municipalityId));
         
-        loginAsAuthorForLastTestHelperCreatedInitiative();
+        loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         open(urls.management(initiativeId));
         
         clickLinkContaining("Ylläpidä vastuuhenkilöitä");

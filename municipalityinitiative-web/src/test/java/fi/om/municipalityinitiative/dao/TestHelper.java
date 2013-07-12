@@ -59,6 +59,9 @@ public class TestHelper {
     @Resource
     PostgresQueryFactory queryFactory;
 
+    @Resource
+    EncryptionService encryptionService;
+
     private Long lastInitiativeId;
     private Long lastAuthorId;
     private Long lastVerifiedUserId;
@@ -240,7 +243,7 @@ public class TestHelper {
     @Transactional(readOnly = false)
     public Long createVerifiedAuthorAndParticipant(AuthorDraft authorDraft) {
         SQLInsertClause insertVerifiedUser = queryFactory.insert(QVerifiedUser.verifiedUser)
-                .set(QVerifiedUser.verifiedUser.hash, createUserSsnHash())
+                .set(QVerifiedUser.verifiedUser.hash, authorDraft.userSsn.isNotPresent() ? createUserSsnHash() : encryptionService.registeredUserHash(authorDraft.userSsn.get()))
                 .set(QVerifiedUser.verifiedUser.address, authorDraft.authorAddress)
                 .set(QVerifiedUser.verifiedUser.phone, authorDraft.authorPhone)
                 .set(QVerifiedUser.verifiedUser.email, authorDraft.participantEmail)
@@ -248,8 +251,7 @@ public class TestHelper {
 
         if (authorDraft.participantMunicipality == null) {
             insertVerifiedUser.setNull(QVerifiedUser.verifiedUser.municipalityId);
-        }
-        else {
+        } else {
             insertVerifiedUser.set(QVerifiedUser.verifiedUser.municipalityId, authorDraft.participantMunicipality);
         }
 
@@ -279,11 +281,10 @@ public class TestHelper {
         Maybe<Municipality> participantMunicipality;
         if (authorDraft.participantMunicipality == null) {
             participantMunicipality = Maybe.absent();
-        }
-        else {
+        } else {
             participantMunicipality = Maybe.of(new Municipality(authorDraft.participantMunicipality, "name_fi", "name_sv", true));
         }
-        authorLoginUserHolder = new LoginUserHolder(User.verifiedUser(new VerifiedUserId(verifiedUserId),previousUserSsnHash, contactInfo,
+        authorLoginUserHolder = new LoginUserHolder(User.verifiedUser(new VerifiedUserId(verifiedUserId), previousUserSsnHash, contactInfo,
                 Collections.singleton(authorDraft.initiativeId),
                 Collections.singleton(authorDraft.initiativeId),
                 participantMunicipality));
@@ -504,6 +505,7 @@ public class TestHelper {
         public boolean publicName = DEFAULT_PUBLIC_NAME;
         public String authorAddress = DEFAULT_AUTHOR_ADDRESS;
         public String authorPhone = DEFAULT_AUTHOR_PHONE;
+        public Maybe<String> userSsn = Maybe.absent();
 
         public AuthorDraft(Long initiativeId, Long participantMunicipality) {
             this.initiativeId = initiativeId;
@@ -584,6 +586,13 @@ public class TestHelper {
 
         public AuthorDraft applyAuthor() {
             this.authorDraft = Maybe.of(new AuthorDraft(this, municipalityId));
+            return this.authorDraft.get();
+        }
+
+        public AuthorDraft applyAuthor(String userSsn) {
+            this.authorDraft = Maybe.of(new AuthorDraft(this, municipalityId));
+            this.authorDraft.get().userSsn = Maybe.of(userSsn);
+
             return this.authorDraft.get();
         }
 

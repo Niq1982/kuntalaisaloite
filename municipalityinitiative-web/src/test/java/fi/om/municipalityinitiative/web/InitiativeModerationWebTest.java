@@ -5,8 +5,6 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 
 import static fi.om.municipalityinitiative.web.MessageSourceKeys.*;
-import static org.hamcrest.CoreMatchers.startsWith;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 public class InitiativeModerationWebTest extends WebTestBase {
 
@@ -32,7 +30,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
     @Test
     public void moderation_page_fails_if_logged_in_as_author() {
         Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality1Id);
-        loginAsAuthorForLastTestHelperCreatedInitiative();
+        loginAsAuthorForLastTestHelperCreatedNormalInitiative();
 
         open(urls.moderation(initiativeId));
         assert404();
@@ -87,7 +85,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
         
         assertTextContainedByClass("msg-success","Aloite palautettu korjattavaksi");
         
-        loginAsAuthorForLastTestHelperCreatedInitiative();
+        loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         
         clickLinkContaining("Lähetä aloite tarkastettavaksi");
         getElemContaining("Lähetä aloite tarkastettavaksi", "button").click();

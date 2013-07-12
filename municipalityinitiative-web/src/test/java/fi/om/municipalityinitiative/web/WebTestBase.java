@@ -21,6 +21,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
@@ -80,6 +81,8 @@ public abstract class WebTestBase {
     public void init() {
         if (urls == null) {
             Urls.initUrls(env.getRequiredProperty(PropertyNames.baseURL));
+            String[] defaultProfiles = env.getDefaultProfiles();
+
             urls = Urls.FI;
         }
 
@@ -225,7 +228,9 @@ public abstract class WebTestBase {
     }
 
     protected void inputText(String fieldName, String text) {
-        findElementWhenClickable(By.name(fieldName)).sendKeys(text);
+        WebElement elementWhenClickable = findElementWhenClickable(By.name(fieldName));
+        elementWhenClickable.clear();
+        elementWhenClickable.sendKeys(text);
     }
 
     protected void inputTextByCSS(String css, String text) {
@@ -289,7 +294,7 @@ public abstract class WebTestBase {
         clickByName("Login");
     }
 
-    protected void loginAsAuthorForLastTestHelperCreatedInitiative() {
+    protected void loginAsAuthorForLastTestHelperCreatedNormalInitiative() {
         open(urls.loginAuthor(testHelper.getPreviousTestManagementHash()));
         clickByName("Login");
     }
@@ -320,5 +325,17 @@ public abstract class WebTestBase {
 
     protected void clickDialogButton(String containing) {
         getElemContaining(containing, "span").click();
+    }
+
+    protected void vetumaLogin(String userSsn, String municipality) {
+        open(urls.login());
+        enterVetumaLoginInformationAndSubmit(userSsn, municipality);
+    }
+
+    protected void enterVetumaLoginInformationAndSubmit(String userSsn, String municipalityName) {
+        inputText("EXTRADATA", "HETU=" + userSsn);
+        new Select(findElementWhenClickable(By.name("municipalityCode"))).selectByVisibleText(municipalityName);
+        getElement(By.id("formsubmit")).click();
+        getElement(By.id("returnsubmit")).click();
     }
 }
