@@ -16,6 +16,7 @@ import fi.om.municipalityinitiative.service.ui.VerifiedInitiativeService;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
+import fi.om.municipalityinitiative.validation.NormalInitiative;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.SearchParameterQueryString;
 import fi.om.municipalityinitiative.web.Urls;
@@ -116,6 +117,11 @@ public class PublicInitiativeController extends BaseController {
                               HttpServletRequest request) {
         Urls urls = Urls.get(locale);
 
+        if (validationService.validationErrors(initiative, bindingResult, model, solveValidationGroup(initiative.getInitiativeType()))) {
+            return ViewGenerator.prepareView(initiative, municipalityService.findAllMunicipalities(locale))
+                    .view(model, urls.prepare());
+        }
+
         if (InitiativeType.isVerifiable(initiative.getInitiativeType())) {
             LoginUserHolder loginUserHolder = userService.getLoginUserHolder(request);
             if (loginUserHolder.isVerifiedUser()) {
@@ -134,11 +140,6 @@ public class PublicInitiativeController extends BaseController {
             }
         }
         else {
-
-            if (validationService.validationErrors(initiative, bindingResult, model)) {
-                return ViewGenerator.prepareView(initiative, municipalityService.findAllMunicipalities(locale))
-                        .view(model, urls.prepare());
-            }
 
             Long initiativeId = publicInitiativeService.prepareInitiative(initiative, locale);
 
@@ -169,7 +170,7 @@ public class PublicInitiativeController extends BaseController {
         }
         else {
 
-            if (validationService.validationSuccessful(participant, bindingResult, model)) {
+            if (validationService.validationSuccessful(participant, bindingResult, model, NormalInitiative.class)) {
                 publicInitiativeService.createParticipant(participant, initiativeId, locale);
                 Urls urls = Urls.get(locale);
                 return redirectWithMessage(urls.view(initiativeId), RequestMessage.PARTICIPATE, request);

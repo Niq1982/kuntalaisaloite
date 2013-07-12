@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.dto.ui;
 
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
+import fi.om.municipalityinitiative.validation.NormalInitiative;
 import fi.om.municipalityinitiative.validation.ValidMunicipalMembership;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.util.Assert;
@@ -9,21 +10,21 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-@ValidMunicipalMembership
+@ValidMunicipalMembership(groups = NormalInitiative.class)
 public class ParticipantUICreateDto
         extends ParticipantUICreateBase {
 
-    @NotEmpty
+    @NotEmpty(groups = NormalInitiative.class)
     private String participantName;
 
     private Boolean showName;
 
-    @NotEmpty
-    @Pattern(regexp = ContactInfo.EMAIL_PATTERN)
-    @Size(max = InitiativeConstants.CONTACT_EMAIL_MAX)
+    @NotEmpty(groups = NormalInitiative.class)
+    @Pattern(regexp = ContactInfo.EMAIL_PATTERN, groups = NormalInitiative.class)
+    @Size(max = InitiativeConstants.CONTACT_EMAIL_MAX, groups = NormalInitiative.class)
     private String participantEmail;
 
-    @NotNull
+    @NotNull(groups = NormalInitiative.class)
     private Long municipality;
 
     public String getParticipantName() {

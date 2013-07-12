@@ -4,8 +4,11 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.conf.EnvironmentSettings;
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
+import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.service.UserService;
 import fi.om.municipalityinitiative.util.*;
+import fi.om.municipalityinitiative.validation.NormalInitiative;
+import fi.om.municipalityinitiative.validation.VerifiedInitiative;
 import fi.om.municipalityinitiative.web.*;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.TemplateModelException;
@@ -85,12 +88,20 @@ public class BaseController {
         list.add(value);
     }
 
+    protected static Object solveValidationGroup(InitiativeType initiativeType) {
+        return InitiativeType.isVerifiable(initiativeType) ? VerifiedInitiative.class : NormalInitiative.class;
+    }
+
+    protected static Object solveValidationGroup(InitiativeViewInfo initiative) {
+        return initiative.isVerifiable() ? VerifiedInitiative.class : NormalInitiative.class;
+    }
+
+
+
     protected String redirectWithMessage(String targetUri, RequestMessage requestMessage, HttpServletRequest request) {
         addRequestMessage(requestMessage, null, request);
         return contextRelativeRedirect(targetUri);
     }
-    
-    
 
     @SuppressWarnings("unchecked")
     private static List<RequestMessage> getRequestMessages(HttpServletRequest request) {
@@ -120,13 +131,13 @@ public class BaseController {
         model.addAttribute(enumType.getSimpleName(), values);
     }
 
+
     protected void addPiwicIdIfNotAuthenticated(Model model) {
 //        boolean isAuthenticated = userService.getCurrentUser(false).isAuthenticated();
 //        if (!isAuthenticated) {
 //            model.addAttribute(OM_PICIW_ID, omPiwicId.orNull());
 //        }
     }
-
 
     @ModelAttribute
     public void addModelDefaults(Locale locale, HttpServletRequest request, Model model) {
@@ -160,5 +171,4 @@ public class BaseController {
         addEnum(InitiativeState.class, model);
         addEnum(FixState.class, model);
     }
-
 }

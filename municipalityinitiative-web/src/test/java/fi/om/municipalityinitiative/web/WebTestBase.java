@@ -338,4 +338,8 @@ public abstract class WebTestBase {
         getElement(By.id("formsubmit")).click();
         getElement(By.id("returnsubmit")).click();
     }
+
+    protected void assertPageHasValidationErrors() {
+        assertMsgContainedByClass("msg-error", "formError.summary.title");
+    }
 }

@@ -2,7 +2,9 @@ package fi.om.municipalityinitiative.dto.ui;
 
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.util.InitiativeType;
+import fi.om.municipalityinitiative.validation.NormalInitiative;
 import fi.om.municipalityinitiative.validation.ValidMunicipalMembership;
+import fi.om.municipalityinitiative.validation.VerifiedInitiative;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
@@ -13,15 +15,15 @@ import javax.validation.constraints.Size;
 public class PrepareInitiativeUICreateDto extends ParticipantUICreateBase {
 
     // Is set as null if normal initiative because we do not know if creator wants to gather any other people
-    @NotNull
+    @NotNull(groups = {NormalInitiative.class, VerifiedInitiative.class})
     private InitiativeType initiativeType;
 
-    @NotNull
+    @NotNull(groups = {NormalInitiative.class, VerifiedInitiative.class})
     Long municipality;
 
-    @NotEmpty
-    @Pattern(regexp = ContactInfo.EMAIL_PATTERN)
-    @Size(max = InitiativeConstants.CONTACT_EMAIL_MAX)
+    @NotEmpty(groups = NormalInitiative.class)
+    @Pattern(regexp = ContactInfo.EMAIL_PATTERN, groups = NormalInitiative.class)
+    @Size(max = InitiativeConstants.CONTACT_EMAIL_MAX, groups = NormalInitiative.class)
     private String participantEmail;
 
     public String getParticipantEmail() {

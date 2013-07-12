@@ -4,14 +4,11 @@ import com.google.common.base.Strings;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
-import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.service.ParticipantService;
 import fi.om.municipalityinitiative.service.ValidationService;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.service.ui.InitiativeManagementService;
 import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
-import fi.om.municipalityinitiative.validation.NormalInitiative;
-import fi.om.municipalityinitiative.validation.VerifiedInitiative;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.stereotype.Controller;
@@ -168,10 +165,6 @@ public class InitiativeManagementController extends BaseController {
         } else {
             return ERROR_500; // TODO: Custom error page or some message that operation is not allowed
         }
-    }
-
-    private static Object solveValidationGroup(InitiativeViewInfo initiative) {
-        return initiative.isVerifiable() ? VerifiedInitiative.class : NormalInitiative.class;
     }
 
     @RequestMapping(value={ UPDATE_FI, UPDATE_SV }, method=POST)

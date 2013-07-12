@@ -48,6 +48,24 @@ public class InitiativeCreateWebTest extends WebTestBase {
     }
 
     @Test
+    public void prepare_page_shows_validation_errors_no_matter_what_initiativeType_is_selected() {
+        overrideDriverToFirefox(true);
+        openAndAssertPreparePage();
+
+        getElemContaining("Lähetä", "span").click();
+        assertPageHasValidationErrors();
+
+        getElemContaining("Kuntalaisaloite", "span").click();
+        getElemContaining("Lähetä", "span").click();
+        assertPageHasValidationErrors();
+
+        getElemContaining("Valtuustokäsittelyyn tähtäävä aloite", "span").click();
+        getElemContaining("Lähetä", "span").click();
+        assertPageHasValidationErrors();
+
+    }
+
+    @Test
     public void filling_prepare_page_with_verified_initiative_redirects_to_vetuma_and_edit_page() {
         overrideDriverToFirefox(true);
         openAndAssertPreparePage();
@@ -86,6 +104,23 @@ public class InitiativeCreateWebTest extends WebTestBase {
         clickByName(Urls.ACTION_SAVE);
 
         assertSuccesPageWithMessage(MSG_SUCCESS_SAVE_DRAFT);
+    }
+
+    @Test
+    public void editing_verified_initiative_shows_validation_errors() {
+
+        Long initiativeId = testHelper.createVerifiedInitiative(new InitiativeDraft(testMunicipality1Id)
+                        .withName("")
+                        .applyAuthor(USER_SSN)
+                        .toInitiativeDraft()
+        );
+
+        vetumaLogin(USER_SSN, MUNICIPALITY_1);
+        open(urls.edit(initiativeId));
+
+        clickByName(Urls.ACTION_SAVE);
+
+        assertPageHasValidationErrors();
     }
 
     @Test

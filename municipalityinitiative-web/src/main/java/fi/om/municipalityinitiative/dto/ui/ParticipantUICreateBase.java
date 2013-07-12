@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.dto.ui;
 
 import fi.om.municipalityinitiative.dto.service.CreateDtoTimeValidation;
 import fi.om.municipalityinitiative.util.Membership;
+import fi.om.municipalityinitiative.validation.NormalInitiative;
 import fi.om.municipalityinitiative.validation.ValidMunicipalMembershipInfo;
 
 import javax.validation.constraints.NotNull;
@@ -9,7 +10,7 @@ import javax.validation.constraints.NotNull;
 public abstract class ParticipantUICreateBase extends CreateDtoTimeValidation
         implements ValidMunicipalMembershipInfo {
 
-    @NotNull
+    @NotNull(groups = NormalInitiative.class)
     private Long homeMunicipality;
 
     private Membership municipalMembership;
