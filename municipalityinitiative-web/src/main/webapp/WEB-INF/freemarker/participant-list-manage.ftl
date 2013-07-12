@@ -98,15 +98,18 @@
 
         <#if participant_index == 0><ul class="participant-list no-style"></#if>
             <li><span class="date"><@u.localDate participant.participateDate!"" /></span> <span class="name-container"><span class="name">${participant.name!""}</span> <span class="home-municipality"><span class="bull">&bull;</span> <@u.solveMunicipality participant.homeMunicipality/></span>
-            <#if !participant.isAuthor()>
-                <span class="bull">&bull;</span>
-                <a  href="?deleteParticipant=${participant.id!""}" class="js-delete-participant"
-                    data-id="${participant.id!""}"
-                    data-date="<@u.localDate participant.participateDate!"" />"
-                    data-name="${participant.name!""}"
-                    data-municipality="<@u.solveMunicipality participant.homeMunicipality />"><@u.message "deleteParticipant.delete" /></a></span></li>
-            <#else>
-                <span class="bull">&bull;</span> <@u.message "deleteParticipant.authorCannotBeDeleted" />
+
+            <#if !initiative.verifiable>
+                <#if !participant.isAuthor()>
+                    <span class="bull">&bull;</span>
+                    <a  href="?deleteParticipant=${participant.id!""}" class="js-delete-participant"
+                        data-id="${participant.id!""}"
+                        data-date="<@u.localDate participant.participateDate!"" />"
+                        data-name="${participant.name!""}"
+                        data-municipality="<@u.solveMunicipality participant.homeMunicipality />"><@u.message "deleteParticipant.delete" /></a></span></li>
+                <#else>
+                    <span class="bull">&bull;</span> <@u.message "deleteParticipant.authorCannotBeDeleted" />
+                </#if>
             </#if>
             
         <#if !participant_has_next></ul></#if>
