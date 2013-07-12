@@ -3,9 +3,12 @@ package fi.om.municipalityinitiative.web;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
+import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -85,13 +88,36 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         clickLinkContaining("Siirry vetumakirjautumiseen");
         enterVetumaLoginInformationAndSubmit("111111-1111", MUNICIPALITY_1);
         assertTitle(TestHelper.DEFAULT_INITIATIVE_NAME + " - Kuntalaisaloitepalvelu");
-        assertThat(getOptionalElemContaining("Osallistu aloitteeseen", "span").isPresent(), is(true));
+        assertThat(participateToInitiativeButton().isPresent(), is(true));
 
     }
 
     @Test
     public void participate_to_verified_initiative_shows_success_message_and_increases_participant_count_on_page() {
+        vetumaLogin("111111-1111", MUNICIPALITY_1);
+        open(urls.view(verifiedInitiativeId));
 
+        Integer originalParticipantCountOnPage = Integer.valueOf(getElement(By.className("user-count-total")).getText());
+
+        assertThat(participateToInitiativeButton().isPresent(), is(true));
+        participateToInitiativeButton().get().click();
+
+        // Vetuma participant has no information to fill
+        getElemContaining(getMessage(MSG_BTN_SAVE), "button").click();
+
+        assertMsgContainedByClass("msg-success", MSG_SUCCESS_PARTICIPATE);
+        Integer newParticipantCountOnPage = Integer.valueOf(getElement(By.className("user-count-total")).getText());
+
+        assertThat(newParticipantCountOnPage, is(originalParticipantCountOnPage + 1));
+
+        assertTextContainedByClass("msg-warning", "Olet jo osallistunut tähän aloitteeseen");
+        assertThat(participateToInitiativeButton().isPresent(), is(false));
+
+
+    }
+
+    private Maybe<WebElement> participateToInitiativeButton() {
+        return getOptionalElemContaining("Osallistu aloitteeseen", "span");
     }
 
     @Test
