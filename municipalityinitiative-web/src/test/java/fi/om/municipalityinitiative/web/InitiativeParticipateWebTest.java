@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.web;
 
+import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
@@ -10,7 +11,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class InitiativeParticipateWebTest extends WebTestBase {
-    
+
     /**
      * Localization keys as constants.
      */
@@ -28,22 +29,29 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     private static final String PARTICIPANT_NAME = "Ossi Osallistuja";
     private static final String PARTICIPANT_EMAIL = "test@test.com";
     private static final String AUTHOR_MESSAGE = "Tässä on viesti";
-    
+    public static final String USER_SSN = "000000-0000";
+
     private Long municipality1Id;
     private Long municipality2Id;
-    private Long initiativeId;
-    
+    private Long normalInitiativeId;
+    private Long verifiedInitiativeId;
+
     @Before
     public void setup() {
         testHelper.dbCleanup();
         municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
         municipality2Id = testHelper.createTestMunicipality(MUNICIPALITY_2);
-        initiativeId = testHelper.create(municipality1Id, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        normalInitiativeId = testHelper.create(municipality1Id, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        verifiedInitiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(municipality1Id)
+                .withState(InitiativeState.PUBLISHED)
+                .applyAuthor(USER_SSN)
+                .toInitiativeDraft()
+        );
     }
 
     @Test
     public void participate_normal_initiative_shows_validation_errors() {
-        open(urls.view(initiativeId));
+        open(urls.view(normalInitiativeId));
 
         clickLinkContaining(getMessage(MSG_BTN_PARTICIPATE));
         getElemContaining(getMessage(MSG_BTN_SAVE), "button").click();
@@ -51,8 +59,8 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     }
 
     @Test
-    public void participate_initiative_with_public_name() {
-        open(urls.view(initiativeId));
+    public void participate_to_normal_initiative_with_public_name() {
+        open(urls.view(normalInitiativeId));
 
         clickLinkContaining(getMessage(MSG_BTN_PARTICIPATE));
 
@@ -69,39 +77,55 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         
         assertTextContainedByClass("public-names", "2 nimeä julkaistu palvelussa");
     }
-    
+
     @Test
-    public void participate_initiative_with_private_name_and_select_membership_type() {
+    public void participating_to_initiative_when_not_logged_in_redirects_to_vetuma_and_back_to_participation_page() {
+        open(urls.view(verifiedInitiativeId));
+
+        clickLinkContaining("Siirry vetumakirjautumiseen");
+        enterVetumaLoginInformationAndSubmit("111111-1111", MUNICIPALITY_1);
+        assertTitle(TestHelper.DEFAULT_INITIATIVE_NAME + " - Kuntalaisaloitepalvelu");
+        assertThat(getOptionalElemContaining("Osallistu aloitteeseen", "span").isPresent(), is(true));
+
+    }
+
+    @Test
+    public void participate_to_verified_initiative_shows_success_message_and_increases_participant_count_on_page() {
+
+    }
+
+    @Test
+    public void participate_to_normal_initiative_with_private_name_and_select_membership_type() {
         overrideDriverToFirefox(true); // Municipality select need firefox driver
-        
-        open(urls.view(initiativeId));
+
+        open(urls.view(normalInitiativeId));
 
         clickLinkContaining(getMessage(MSG_BTN_PARTICIPATE));
 
         inputText("participantName", PARTICIPANT_NAME);
         getElemContaining(getMessage(PARTICIPANT_SHOW_NAME), "span").click();
-        
+
         clickLinkContaining(MUNICIPALITY_1);
         getElemContaining(MUNICIPALITY_2, "li").click();
-        
+
         getElemContaining(getMessage(MEMBERSHIP_RADIO), "span").click();
-        
+
         inputText("participantEmail", PARTICIPANT_EMAIL);
-       
+
         getElemContaining(getMessage(MSG_BTN_SAVE), "button").click();
-        
+
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_PARTICIPATE);
-       
+
         assertThat(getOptionalElemContaining(getMessage(MSG_BTN_PARTICIPATE), "a").isPresent(), is(false));
-        
+
         open(urls.confirmParticipant(testHelper.getLastParticipantId(), RandomHashGenerator.getPrevious()));
-        
+
         assertTextContainedByClass("private-names", "1 nimi ei julkaistu palvelussa");
     }
-    
+
     @Test
-    public void public_user_contacts_authors(){
-        open(urls.view(initiativeId));
+    public void public_user_contacts_authors_shows_success_message(){
+        open(urls.view(normalInitiativeId));
         
         clickLinkContaining("Ota yhteyttä aloitteen vastuuhenkilöön");
         
