@@ -261,6 +261,16 @@ public class PublicInitiativeController extends BaseController {
         InitiativeViewInfo initiativeInfo = authorService.getAuthorInvitationConfirmData(initiativeId, confirmDto.getConfirmCode(), userService.getLoginUserHolder(request)).initiativeViewInfo;
         confirmDto.assignInitiativeMunicipality(initiativeInfo.getMunicipality().getId());
 
+        if (validationService.validationErrors(confirmDto, bindingResult, model, solveValidationGroup(initiativeInfo))) {
+            return ViewGenerator.invitationView(initiativeInfo,
+                    municipalityService.findAllMunicipalities(locale),
+                    authorService.findPublicAuthors(initiativeId),
+                    participantService.getParticipantCount(initiativeId),
+                    confirmDto
+            ).view(model, Urls.get(locale).alt().manageAuthors(initiativeId));
+
+        }
+
         if (initiativeInfo.isVerifiable()) {
             try {
                 verifiedInitiativeService.confirmVerifiedAuthorInvitation(userService.getLoginUserHolder(request), initiativeId, confirmDto, locale);
@@ -271,20 +281,9 @@ public class PublicInitiativeController extends BaseController {
             }
         }
         else {
-
-            if (validationService.validationSuccessful(confirmDto, bindingResult, model)) {
-                String generatedManagementHash = authorService.confirmAuthorInvitation(initiativeId, confirmDto, locale);
-                userService.authorLogin(generatedManagementHash, request);
-                return redirectWithMessage(Urls.get(locale).management(initiativeId), RequestMessage.CONFIRM_INVITATION_ACCEPTED, request);
-            }
-            else {
-                return ViewGenerator.invitationView(initiativeInfo,
-                        municipalityService.findAllMunicipalities(locale),
-                        authorService.findPublicAuthors(initiativeId),
-                        participantService.getParticipantCount(initiativeId),
-                        confirmDto
-                ).view(model, Urls.get(locale).alt().manageAuthors(initiativeId));
-            }
+            String generatedManagementHash = authorService.confirmAuthorInvitation(initiativeId, confirmDto, locale);
+            userService.authorLogin(generatedManagementHash, request);
+            return redirectWithMessage(Urls.get(locale).management(initiativeId), RequestMessage.CONFIRM_INVITATION_ACCEPTED, request);
         }
     }
 

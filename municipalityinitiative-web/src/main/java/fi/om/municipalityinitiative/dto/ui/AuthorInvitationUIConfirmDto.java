@@ -1,13 +1,17 @@
 package fi.om.municipalityinitiative.dto.ui;
 
+import fi.om.municipalityinitiative.validation.NormalInitiative;
 import fi.om.municipalityinitiative.validation.ValidMunicipalMembership;
 import org.springframework.util.Assert;
 
-@ValidMunicipalMembership
+import javax.validation.Valid;
+
+@ValidMunicipalMembership(groups = NormalInitiative.class)
 public class AuthorInvitationUIConfirmDto extends ParticipantUICreateBase {
 
     private String confirmCode;
 
+    @Valid
     private ContactInfo contactInfo;
 
     public ContactInfo getContactInfo() {

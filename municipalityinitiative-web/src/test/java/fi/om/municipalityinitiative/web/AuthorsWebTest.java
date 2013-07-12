@@ -76,7 +76,7 @@ public class AuthorsWebTest  extends WebTestBase {
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_INVITATION_SENT);
         assertTextContainedByXPath("//div[@class='view-block last']//span[@class='status']", getMessage(MSG_INVITATION_UNCONFIRMED));
     }
-    
+
     @Test
     public void author_invitation_acceptance_dialog_has_given_values_prefilled_and_submitting_logs_user_in_as_author_with_given_information() throws InterruptedException {
         AuthorInvitation invitation = testHelper.createInvitation(normalInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
@@ -101,6 +101,43 @@ public class AuthorsWebTest  extends WebTestBase {
 
         assertInvitationPageIsGone(invitation);
 
+    }
+
+    @Test
+    public void author_invitation_to_normal_initiative_shows_validation_messages() {
+
+        overrideDriverToFirefox(true);
+        AuthorInvitation invitation = testHelper.createInvitation(normalInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
+        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
+
+        acceptInvitationButton().get().click();
+
+        getElementByLabel("Etu- ja sukunimi", "input").clear();
+        clickDialogButton("Hyväksy ja tallenna tiedot");
+
+        assertPageHasValidationErrors();
+    }
+
+    @Test
+    public void accepting_verified_initiative_redirects_to_vetuma_and_back_to_initiative_page_if_not_logged_in_via_vetuma() {
+        // TODO: Implement
+    }
+
+    @Test
+    public void author_invitation_to_verified_initiative_shows_validation_messages() {
+        overrideDriverToFirefox(true);
+        AuthorInvitation invitation = testHelper.createInvitation(verifiedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
+        vetumaLogin("111111-1111", MUNICIPALITY_1);
+
+        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
+        acceptInvitationButton().get().click();
+
+        // NOTE: Only validation message now is generated from email-field.
+        // In this case the email field is empty by default, because user is new and has never entered his email.
+        // Should the email be filled from the created invitation instead?
+        // If yes, it will practically replace the original users email (if exists) everywhere.
+        clickDialogButton("Hyväksy ja tallenna tiedot");
+        assertPageHasValidationErrors();
     }
 
     @Test

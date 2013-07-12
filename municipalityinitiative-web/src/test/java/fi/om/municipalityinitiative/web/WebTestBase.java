@@ -169,7 +169,7 @@ public abstract class WebTestBase {
         for (WebElement element : elements) {
             System.out.println("*** '" + element.getText().trim() + "'");
         }
-        fail(tag + " tag with text " + text + " not found. Texts found: " + TestUtil.listValues(elementTexts));
+        fail(tag + " tag with text " + text + " not found. Texts found: " + TestUtil.listValues(elementTexts) + " (Page title: "+driver.getTitle()+")");
     }
     
     protected void assertMsgContainedByClass(String className, String messageKey) {
@@ -193,7 +193,7 @@ public abstract class WebTestBase {
         for (WebElement element : elements) {
             System.out.println("*** '" + element.getText().trim() + "'");
         }
-        fail(className + " class with text " + text + " not found. Texts found: " + TestUtil.listValues(elementTexts));
+        fail(className + " class with text " + text + " not found. Texts found: " + TestUtil.listValues(elementTexts) + " (Page title: "+driver.getTitle()+")");
     }
     
     protected void assertTextContainedByXPath(String xpathExpression, String text) {
@@ -212,7 +212,7 @@ public abstract class WebTestBase {
         for (WebElement element : elements) {
             System.out.println("*** '" + element.getText().trim() + "'");
         }
-        fail(xpathExpression + " xpath with text " + text + " not found. Texts found: " + TestUtil.listValues(elementTexts));
+        fail(xpathExpression + " xpath with text " + text + " not found. Texts found: " + TestUtil.listValues(elementTexts) + " (Page title: "+driver.getTitle()+")");
 
     }
 

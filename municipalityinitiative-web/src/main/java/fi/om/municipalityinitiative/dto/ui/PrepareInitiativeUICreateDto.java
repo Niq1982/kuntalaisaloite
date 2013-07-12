@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-@ValidMunicipalMembership
+@ValidMunicipalMembership(groups = NormalInitiative.class)
 public class PrepareInitiativeUICreateDto extends ParticipantUICreateBase {
 
     // Is set as null if normal initiative because we do not know if creator wants to gather any other people
