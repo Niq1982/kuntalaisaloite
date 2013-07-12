@@ -78,6 +78,50 @@ public class InitiativeCreateWebTest extends WebTestBase {
     }
 
     @Test
+    public void filling_prepare_page_with_verified_initiative_redirects_to_vetuma_but_back_to_prepare_page_with_error_if_wrong_homeMunicipality_from_vetuma() {
+        overrideDriverToFirefox(true);
+        openAndAssertPreparePage();
+        select_municipality();
+        getElemContaining("Valtuustokäsittelyyn tähtäävä aloite", "span").click();
+        getElemContaining("Lähetä", "button").click();
+        // Get redirected to vetuma
+        enterVetumaLoginInformationAndSubmit(USER_SSN, MUNICIPALITY_2);
+
+        assertPreparePageWithInvalidMunicipalityWarning();
+    }
+
+    @Test
+    public void first_logging_in_before_creating_verified_initiative_creates_draft_straigtly() {
+        overrideDriverToFirefox(true);
+        vetumaLogin(USER_SSN, MUNICIPALITY_1);
+
+        openAndAssertPreparePage();
+        select_municipality();
+        getElemContaining("Valtuustokäsittelyyn tähtäävä aloite", "span").click();
+        getElemContaining("Lähetä", "button").click();
+        assertTitle("Tee kuntalaisaloite - Kuntalaisaloitepalvelu");
+    }
+
+    // This test probably is not needed for very long, because we should prevent the submit with etc. javascript.
+    // Although it would be nice to keep this for non-javascript-versions if needed...
+    @Test
+    public void first_logging_in_before_creating_verified_initiative_shows_error_if_wrong_municipality_after_submitting() {
+        overrideDriverToFirefox(true);
+        vetumaLogin(USER_SSN, MUNICIPALITY_2);
+
+        openAndAssertPreparePage();
+        select_municipality();
+        getElemContaining("Valtuustokäsittelyyn tähtäävä aloite", "span").click();
+        getElemContaining("Lähetä", "button").click();
+        assertPreparePageWithInvalidMunicipalityWarning();
+    }
+
+    private void assertPreparePageWithInvalidMunicipalityWarning() {
+        assertPreparePageTitle();
+        assertTextContainedByClass("msg-warning", "Kotikuntasi ei väestötietojärjestelmän mukaan ole aloitteen kunta. Et voi tehdä aloitetta valitsemaasi kuntaan");
+    }
+
+    @Test
     public void editing_normal_initiative_shows_success_message() {
         Long initiativeId = testHelper.createEmptyDraft(testMunicipality1Id);
 
@@ -129,7 +173,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         open(urls.getEdit(initiative));
 //        assertThat(driver.getTitle(), is("asdasd"));
-        assertTitle(getMessage(MSG_PAGE_CREATE_NEW) + " - " + getMessage(MSG_SITE_NAME));
+        assertPreparePageTitle();
     }
 
     @Test
@@ -254,6 +298,10 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
     private void openAndAssertPreparePage() {
         open(urls.prepare());
+        assertPreparePageTitle();
+    }
+
+    private void assertPreparePageTitle() {
         assertTitle(getMessage(MSG_PAGE_CREATE_NEW) + " - " + getMessage(MSG_SITE_NAME));
     }
 
