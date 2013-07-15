@@ -90,4 +90,8 @@ public class InitiativeListInfo {
     public boolean isPublic() {
         return state == InitiativeState.PUBLISHED;
     }
+
+    public boolean isVerifiable() {
+        return InitiativeType.isVerifiable(type);
+    }
 }
