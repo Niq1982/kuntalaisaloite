@@ -50,7 +50,7 @@
             </div>
         </div>
 
-        <div class="form-block-container toggle-disable">
+        <div id="prepare-form-email" class="form-block-container toggle-disable <#if !hasErrors>js-hide</#if>">
             <div class="input-block cf">
             
                 <@edit.authorEmailBlock />
@@ -60,6 +60,25 @@
                 </div>
                 
             </div>
+        </div>
+        
+        <div id="prepare-form-vetuma" class="form-block-container toggle-disable js-hide">
+            
+            <div class="input-block cf">
+    
+                <div class="input-block-content">
+                    <div class="system-msg msg-info ">
+                        Jotta voit luoda 2%/5% aloitteen, sinun tulee olla aloitteen kunnan äänioikeutettu asukas. Henkilöllisyytesi ja kotikuntasi tarkastetaan vahvan tunnistautumisen avulla väestötietojärjestelmästä. <a href="#">Lue lisää tunnistautumisesta</a>
+                    </div>
+                </div>
+
+                <div class="input-block-content">
+                    <button value="true" class="small-button" name="action-send-confirm" id="action-send-confirm" type="submit"><span class="small-icon save-and-send">Siirry&nbsp;tunnistautumaan</span></button>
+                </div>
+                
+            </div>
+            
+            
         </div>
     </form>
 

@@ -551,9 +551,10 @@ var municipalitySelection = (function() {
 	
 	// Listen municipality selects
 	$('.municipality-select').live('change', function() {
-		var thisSelect			= $(this),
-			checkedMembership	= $("input[name=municipalMembership]:checked"),
-			radioMunicipalMembership = $("input[name=municipalMembership]");
+		var thisSelect					= $(this),
+			checkedMembership			= $("input[name=municipalMembership]:checked"),
+			radioMunicipalMembership 	= $("input[name=municipalMembership]"),
+			equalMun 					= true;
 		
 		// Update home municipality automatically
 		if (!isHomeMunicipality(thisSelect)){
@@ -562,7 +563,11 @@ var municipalitySelection = (function() {
 		} else {
 			homeMunicipalitySelect.addClass("updated");
 		}
+
+		equalMun = equalMunicipalitys();
 		
+		initiativeType.disableVerifiable(!equalMun);
+ 
 		// Clear radiobutton on change.
 		radioMunicipalMembership.removeAttr('checked');
 		
@@ -571,7 +576,7 @@ var municipalitySelection = (function() {
 		
 		// Disable / enable proceeding to the next form steps
 		if ( checkedMembership.length === 0){
-			preventContinuing(!equalMunicipalitys());
+			preventContinuing(!equalMun);
 		} else {
 			municipalMembershipRadios.removeAttr('checked');
 		}
@@ -593,15 +598,38 @@ var municipalitySelection = (function() {
 * Choose initiative type
 * ======================
 * 
+* TODO: Clean up!!
 */
-(function() {
+var initiativeType = (function() {
 	var type =		$('.initiative-type.enabled'),
 		cbClass =	'.checkbox',
 		cb = 		type.find(cbClass),
 		choose = 	type.find('span[data-choose]'),
-		radio = 	type.find('input[type="radio"]');
+		radio = 	type.find('input[type="radio"]'),
+		mask = 		$('<div class="disable-mask" />'),
 	
-	
+	disableVerifiable = function(disable){
+		if (disable) {
+			$('.initiative-types').append(mask);
+			$('label[data-verifiable="true"] .action').addClass('js-hide');
+			$('label[data-verifiable="true"] input[type="radio"]').removeAttr('checked');
+			$('#prepare-form-vetuma').hide();
+
+			resetTypes();
+		} else {
+			$('label[data-verifiable="true"] .action').removeClass('js-hide');
+			mask.remove();
+		}
+	},
+
+	resetTypes = function(){
+		// TODO: Reset type selections
+		$('.initiative-type').removeClass('selected').removeClass('unselected');
+		cb.removeClass('checked');
+		choose.text(choose.data('choose'));
+		radio.removeAttr('checked');
+	};
+
 	type.click(function(){
 		var thisObj =		$(this),
 			thisChoose =	thisObj.find('span[data-choose]');
@@ -618,7 +646,19 @@ var municipalitySelection = (function() {
 		// CSS hid radiobutton does not get selected by clicking label on some browsers (IE)
 		radio.removeAttr('checked');
 		thisObj.find('input[type="radio"]').attr('checked','checked');
+
+		if( $('input[value="UNDEFINED"]').is(':checked') ) {
+			$('#prepare-form-email').fadeIn();
+			$('#prepare-form-vetuma').hide();
+		} else {
+			$('#prepare-form-email').hide();
+			$('#prepare-form-vetuma').fadeIn();
+		}
 	});
+
+	return {
+		disableVerifiable: disableVerifiable
+	};
 }());
 
 
@@ -788,12 +828,12 @@ var municipalitySelection = (function() {
 * Replace empty val with 0
 *
 */ 
-	$('#externalParticipantCount').blur(function(){
-		var input = $(this);
-		if (input.val() == ""){
-			input.val(0);
-		}
-	});
+$('#externalParticipantCount').blur(function(){
+	var input = $(this);
+	if (input.val() == ""){
+		input.val(0);
+	}
+});
 	
 	
 /**

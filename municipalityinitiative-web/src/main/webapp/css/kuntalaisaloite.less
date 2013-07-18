@@ -1867,9 +1867,19 @@ label  {
 
 // Initiative type selection
 .initiative-types {
+    position:relative;
     clear:both;
     margin-top:1em;
     width:100%; // IE7
+    
+    .disable-mask {
+        position:absolute;
+        top:0;
+        right:0;
+        bottom:0;
+        left:33%;
+        z-index:9999;
+    }
 
     .initiative-type {
         position:relative;
