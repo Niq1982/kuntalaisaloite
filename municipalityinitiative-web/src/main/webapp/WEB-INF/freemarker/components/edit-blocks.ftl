@@ -106,7 +106,7 @@
  *
  * Choose the type of the initiative
  * - Normal
- * - 2% and 5% will be enabled later
+ * - 2% and 5% with VETUMA
  *
  * Prints help-texts and validation errors in this block
  -->
@@ -249,7 +249,7 @@
         <div class="input-block-extra">
             <div class="input-block-extra-content">
                 <@f.helpText "help.extraInfo" />
-                <#if initiative.collaborative>
+                <#if initiative.collaborative && initiative.state != InitiativeState.REVIEW>
                     <@f.helpText "help.externalParticipantCount" />
                 </#if>
             </div>
@@ -257,11 +257,13 @@
 
         <div class="input-block-content">
             <@f.textarea path=path+".extraInfo" required="" optional=true cssClass="textarea" key="initiative.extraInfo" maxLength=InitiativeConstants.INITIATIVE_EXTRA_INFO_MAX?string("#") />
-            <#if initiative.collaborative>
-                <@f.textField path=path+".externalParticipantCount" required="" cssClass="small" optional=false  maxLength=7 />
-            </#if>
         </div>
-
+        
+        <#if initiative.collaborative && initiative.state != InitiativeState.REVIEW>
+            <div class="input-block-content">
+                <@f.textField path=path+".externalParticipantCount" required="" cssClass="small" optional=false  maxLength=7 />
+            </div>
+        </#if>
     </div>
 </#macro>
 

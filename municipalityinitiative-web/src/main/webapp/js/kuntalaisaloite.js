@@ -780,6 +780,20 @@ var municipalitySelection = (function() {
 	
 }());
 	
+
+/**
+* External participant count
+* ==========================
+* 
+* Replace empty val with 0
+*
+*/ 
+	$('#externalParticipantCount').blur(function(){
+		var input = $(this);
+		if (input.val() == ""){
+			input.val(0);
+		}
+	});
 	
 	
 /**
