@@ -71,7 +71,8 @@ public class VTJData {
                             vtjData.setDead(!Strings.isNullOrEmpty(parseText(parser)));
                         } else if ("SuomenKansalaisuusTietokoodi".equals(localName)) {
                             vtjData.setFinnishCitizen("1".equals(parseText(parser)));
-                        } else if ("VakinainenKotimainenLahiosoite".equals(localName)) {
+                        // TODO: Parse both FI and SV addresses
+                        } else if ("LahiosoiteS".equals(localName)) {
                             vtjData.setStreetAddress(parseText(parser));
                         } else if ("Postinumero".equals(localName)) {
                             vtjData.setPostalCode(parseText(parser));
@@ -188,6 +189,6 @@ public class VTJData {
     }
 
     public String getAddress() {
-        return streetAddress + " " + postalCode + " " + municipalityNameFi;
+        return streetAddress + "\n" + postalCode + " " + municipalityNameFi;
     }
 }

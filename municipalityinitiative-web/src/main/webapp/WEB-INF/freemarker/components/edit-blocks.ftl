@@ -225,11 +225,11 @@
         </div>
         
         <div class="input-block-content">
-            <@f.textField path=path+".name" key="initiative.name" required="" optional=true cssClass="large" maxLength=InitiativeConstants.INITIATIVE_NAME_MAX />
+            <@f.textField path=path+".name" key="initiative.name" required="required" optional=true cssClass="large" maxLength=InitiativeConstants.INITIATIVE_NAME_MAX />
         </div>
         
         <div class="input-block-content no-top-margin">
-            <@f.textarea path=path+".proposal" key="initiative.proposal" required="" optional=false cssClass="textarea-tall" maxLength=InitiativeConstants.INITIATIVE_PROPOSAL_MAX?string("#") />
+            <@f.textarea path=path+".proposal" key="initiative.proposal" required="required" optional=false cssClass="textarea-tall" maxLength=InitiativeConstants.INITIATIVE_PROPOSAL_MAX?string("#") />
         </div>
         
         <div class="input-block-content">
@@ -275,6 +275,8 @@
 <#--
  * currentAuthorBlock
  *
+ * Used in normal initiatives
+ *
  * Add author details
  *  - Name, Home municipality, suffrage
  *  - Email address, phone, street address
@@ -298,7 +300,7 @@
         
         <div class="input-block-content">
             <div class="column col-2of3">
-                <@f.textField path=path+".contactInfo.name" required="" optional=false cssClass="medium" maxLength=InitiativeConstants.CONTACT_NAME_MAX key="contactInfo.name" />
+                <@f.textField path=path+".contactInfo.name" required="required" optional=false cssClass="medium" maxLength=InitiativeConstants.CONTACT_NAME_MAX key="contactInfo.name" />
                 
             </div>
             <div class="column col-1of3 last">
@@ -325,7 +327,9 @@
 </#macro>
 
 <#--
- * currentAuthorBlock
+ * currentVerifiedAuthorBlock
+ *
+ * Used in VETUMA initiatives
  *
  * Add author details
  *  - Name, Home municipality, suffrage
@@ -350,7 +354,8 @@
 
         <div class="input-block-content">
             <div class="column col-2of3">
-                <p>${author.contactInfo.name}</p>
+                <label class="input-header"><@u.message "contactInfo.verified.name" /></label>
+                <div class="input-placeholder">${author.contactInfo.name}</div>
             </div>
             <div class="column col-1of3 last">
                 <div class="input-header"><@u.message "contactInfo.homeMunicipality" /></div>

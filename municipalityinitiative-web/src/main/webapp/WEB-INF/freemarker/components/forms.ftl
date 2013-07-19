@@ -336,7 +336,7 @@
 
     <div class="initiative-contact-details">
         <div class="column col-1of2">
-            <@textField path=path+".email" required="" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_PHONE_MAX key="contactInfo.email" />
+            <@textField path=path+".email" required="required" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_PHONE_MAX key="contactInfo.email" />
             <@textField path=path+".phone" required="" optional=false cssClass="medium"  maxLength=InitiativeConstants.CONTACT_PHONE_MAX key="contactInfo.phone" />
         </div>
 

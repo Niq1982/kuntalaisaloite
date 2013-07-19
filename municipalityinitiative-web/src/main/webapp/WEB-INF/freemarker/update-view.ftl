@@ -49,7 +49,7 @@
     </div>
 
     <#-- FORM. Use class 'sodirty' to enable dirtylisten. -->
-    <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-initiative" class="sodirty dirtylisten <#if hasErrors>has-errors</#if>">
+    <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-initiative" class="sodirty dirtylisten <#if hasErrors>has-errors</#if>" novalidate>
 
         <@f.securityFilters />
 
