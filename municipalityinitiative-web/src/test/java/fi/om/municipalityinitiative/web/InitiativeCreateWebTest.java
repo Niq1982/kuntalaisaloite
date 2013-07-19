@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.web;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -52,15 +53,12 @@ public class InitiativeCreateWebTest extends WebTestBase {
         overrideDriverToFirefox(true);
         openAndAssertPreparePage();
 
-        getElemContaining("Lähetä", "span").click();
-        assertPageHasValidationErrors();
-
         getElemContaining("Kuntalaisaloite", "span").click();
         getElemContaining("Lähetä", "span").click();
         assertPageHasValidationErrors();
 
         getElemContaining("Valtuustokäsittelyyn tähtäävä aloite", "span").click();
-        getElemContaining("Lähetä", "span").click();
+        getElemContaining("Siirry tunnistautumaan", "span").click();
         assertPageHasValidationErrors();
 
     }
@@ -71,7 +69,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         openAndAssertPreparePage();
         select_municipality();
         getElemContaining("Valtuustokäsittelyyn tähtäävä aloite", "span").click();
-        getElemContaining("Lähetä", "button").click();
+        getElemContaining("Siirry tunnistautumaan", "button").click();
         // Get redirected to vetuma
         enterVetumaLoginInformationAndSubmit(USER_SSN, MUNICIPALITY_1);
         assertTitle("Tee kuntalaisaloite - Kuntalaisaloitepalvelu");
@@ -83,7 +81,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         openAndAssertPreparePage();
         select_municipality();
         getElemContaining("Valtuustokäsittelyyn tähtäävä aloite", "span").click();
-        getElemContaining("Lähetä", "button").click();
+        getElemContaining("Siirry tunnistautumaan", "button").click();
         // Get redirected to vetuma
         enterVetumaLoginInformationAndSubmit(USER_SSN, MUNICIPALITY_2);
 
@@ -98,12 +96,13 @@ public class InitiativeCreateWebTest extends WebTestBase {
         openAndAssertPreparePage();
         select_municipality();
         getElemContaining("Valtuustokäsittelyyn tähtäävä aloite", "span").click();
-        getElemContaining("Lähetä", "button").click();
+        getElemContaining("Siirry tunnistautumaan", "button").click();
         assertTitle("Tee kuntalaisaloite - Kuntalaisaloitepalvelu");
     }
 
     // This test probably is not needed for very long, because we should prevent the submit with etc. javascript.
     // Although it would be nice to keep this for non-javascript-versions if needed...
+    @Ignore ("It is not possible to select wrong municipality in JS version")
     @Test
     public void first_logging_in_before_creating_verified_initiative_shows_error_if_wrong_municipality_after_submitting() {
         overrideDriverToFirefox(true);
@@ -112,7 +111,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         openAndAssertPreparePage();
         select_municipality();
         getElemContaining("Valtuustokäsittelyyn tähtäävä aloite", "span").click();
-        getElemContaining("Lähetä", "button").click();
+        getElemContaining("Siirry tunnistautumaan", "button").click();
         assertPreparePageWithInvalidMunicipalityWarning();
     }
 

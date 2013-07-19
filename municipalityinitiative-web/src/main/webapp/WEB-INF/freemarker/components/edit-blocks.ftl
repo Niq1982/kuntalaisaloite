@@ -60,10 +60,10 @@
     </div>
     
     <div class="input-block-content">       
-        <@f.municipalitySelect path="initiative.municipality" options=municipalities required="" cssClass="municipality-select" preSelected=municipality onlyActive=true/>
+        <@f.municipalitySelect path="initiative.municipality" options=municipalities required="required" cssClass="municipality-select" preSelected=municipality onlyActive=true/>
     </div>
     <div class="input-block-content">
-        <@f.municipalitySelect path="initiative.homeMunicipality" options=municipalities required="" cssClass="municipality-select" preSelected=municipality />
+        <@f.municipalitySelect path="initiative.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=municipality />
     </div>
     <br class="clear" />
     
@@ -197,7 +197,7 @@
     </div>
 
     <div class="input-block-content">
-        <@f.textField path="initiative.participantEmail" required="" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
+        <@f.textField path="initiative.participantEmail" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
     </div>
 </#macro>
 
