@@ -356,6 +356,84 @@ $(document).ready(function () {
 
 
 /**
+* Choose initiative type
+* ======================
+* 
+* Prepare initiative form functions 
+*
+*/
+var initiativeType = (function() {
+	var type =			$('.initiative-type.enabled'),
+		cbClass =		'.checkbox',
+		cb = 			type.find(cbClass),
+		choose = 		type.find('span[data-choose]'),
+		radio = 		type.find('input[type="radio"]'),
+		verifiable =	$('label[data-verifiable="true"]'),
+		emailBlock = 	$('#prepare-form-email');
+		vetumaBlock = 	$('#prepare-form-vetuma');
+		mask = 			$('<div class="disable-mask" />'),
+	
+	typeNormalSelected = function(){
+		return $('input[value="UNDEFINED"]').is(':checked');
+	},
+
+	disableVerifiable = function(disable){
+		if (disable) {
+			$('.initiative-types').append(mask);
+			verifiable.find('.action').addClass('js-hide');
+			verifiable.find('input[type="radio"]').removeAttr('checked');
+			vetumaBlock.hide();
+
+			resetTypes(false);
+		} else {
+			verifiable.find('.action').removeClass('js-hide');
+			mask.remove();
+		}
+	},
+
+	resetTypes = function(resetAll){
+		if( resetAll || !typeNormalSelected() ) {
+			type.removeClass('selected').addClass('unselected');
+			cb.removeClass('checked');
+			choose.text(choose.data('choose'));
+			radio.removeAttr('checked');
+		}
+		if (!resetAll) type.removeClass('unselected');
+	},
+
+	toggleSubmitBlock = function(){
+		if( typeNormalSelected() ) {
+			emailBlock.fadeIn();
+			vetumaBlock.hide();
+		} else {
+			emailBlock.hide();
+			vetumaBlock.fadeIn();
+			// Reset error messages when user selectes verifiable initiative
+			$('.msg-error').remove();
+		}
+	};
+
+	type.click(function(){
+		var thisObj =		$(this),
+			thisChoose =	thisObj.find('span[data-choose]');
+		
+		resetTypes(true);
+
+		thisObj.removeClass('unselected').addClass('selected');
+		thisObj.find(cbClass).addClass('checked');
+		thisChoose.text(thisChoose.data('chosen'));
+		// CSS hidden radiobutton does not get selected by clicking label on some browsers (IE)
+		thisObj.find('input[type="radio"]').attr('checked','checked');
+
+		toggleSubmitBlock();		
+	});
+
+	return {
+		disableVerifiable: disableVerifiable
+	};
+}());
+
+/**
 * Municipality selection
 * ======================
 * 
@@ -366,8 +444,8 @@ $(document).ready(function () {
 */	
 var municipalitySelection = (function() {
 	var chznSelect					= $(".chzn-select"),
-		municipalitySelect			= $('#municipality'),					// Targets select-element
-		homeMunicipalitySelect		= $('#homeMunicipality'),				// Targets select-element
+		municipalitySelect			= $('#municipality'),					// Matches select-element
+		homeMunicipalitySelect		= $('#homeMunicipality'),				// Matches select-element
 		selectedMunicipalityElem	= $('#selected-municipality'), 			// Municipality text in the second step in the form
 		municipalityNotEqual		= $('.municipality-not-equal'),			// Membership selections if municipalitys are not same
 		municipalMembershipRadios	= $("input[name=municipalMembership]"), // Membership radiobuttons for initiative's municipality
@@ -406,10 +484,10 @@ var municipalitySelection = (function() {
 	slideOptions = {
 		duration: speedFast, 
 		easing: 'easeOutExpo'
-	};
+	},
 	
 	// Initialize form state on page load
-	var init = function(){
+	init = function(){
 		// IE7 not supported
 		if(!isIE7){
 			$(".chzn-select").loadChosen();
@@ -428,6 +506,9 @@ var municipalitySelection = (function() {
 		}
 		
 		showMembership(!equalMunicipalitys());
+
+		// In case of validation errors
+		initiativeType.disableVerifiable(!equalMunicipalitys());
 	};
 	
 	// update text in the municipality data in the form step 2
@@ -591,74 +672,6 @@ var municipalitySelection = (function() {
 		equalMunicipalitys: equalMunicipalitys
     };
 	
-}());
-
-
-/**
-* Choose initiative type
-* ======================
-* 
-* TODO: Clean up!!
-*/
-var initiativeType = (function() {
-	var type =		$('.initiative-type.enabled'),
-		cbClass =	'.checkbox',
-		cb = 		type.find(cbClass),
-		choose = 	type.find('span[data-choose]'),
-		radio = 	type.find('input[type="radio"]'),
-		mask = 		$('<div class="disable-mask" />'),
-	
-	disableVerifiable = function(disable){
-		if (disable) {
-			$('.initiative-types').append(mask);
-			$('label[data-verifiable="true"] .action').addClass('js-hide');
-			$('label[data-verifiable="true"] input[type="radio"]').removeAttr('checked');
-			$('#prepare-form-vetuma').hide();
-
-			resetTypes();
-		} else {
-			$('label[data-verifiable="true"] .action').removeClass('js-hide');
-			mask.remove();
-		}
-	},
-
-	resetTypes = function(){
-		// TODO: Reset type selections
-		$('.initiative-type').removeClass('selected').removeClass('unselected');
-		cb.removeClass('checked');
-		choose.text(choose.data('choose'));
-		radio.removeAttr('checked');
-	};
-
-	type.click(function(){
-		var thisObj =		$(this),
-			thisChoose =	thisObj.find('span[data-choose]');
-		
-		$('.initiative-type').removeClass('selected').addClass('unselected');
-		thisObj.removeClass('unselected').addClass('selected');
-		
-		cb.removeClass('checked');
-		thisObj.find(cbClass).addClass('checked');
-		
-		choose.text(choose.data('choose'));
-		thisChoose.text(thisChoose.data('chosen'));
-
-		// CSS hid radiobutton does not get selected by clicking label on some browsers (IE)
-		radio.removeAttr('checked');
-		thisObj.find('input[type="radio"]').attr('checked','checked');
-
-		if( $('input[value="UNDEFINED"]').is(':checked') ) {
-			$('#prepare-form-email').fadeIn();
-			$('#prepare-form-vetuma').hide();
-		} else {
-			$('#prepare-form-email').hide();
-			$('#prepare-form-vetuma').fadeIn();
-		}
-	});
-
-	return {
-		disableVerifiable: disableVerifiable
-	};
 }());
 
 
