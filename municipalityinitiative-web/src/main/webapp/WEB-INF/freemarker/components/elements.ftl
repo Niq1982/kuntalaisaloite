@@ -128,7 +128,7 @@
 -->
 <#macro participants formHTML="" showForm=true admin=false>
     <h3><@u.message key="initiative.participants.title" args=[participantCount.total+initiative.externalParticipantCount] />
-    <#if admin><span class="switch-view"><a href="${urls.participantListManage(initiative.id)}" class="trigger-tooltip" title="<@u.message "manageParticipants.tooltip" />"><@u.message "manageParticipants.title" /></a></span></#if></h3>
+    <#if admin && !initiative.isVerifiable()><span class="switch-view"><a href="${urls.participantListManage(initiative.id)}" class="trigger-tooltip" title="<@u.message "manageParticipants.tooltip" />"><@u.message "manageParticipants.title" /></a></span></#if></h3>
     
     <br/>
     <div class="participants-block">

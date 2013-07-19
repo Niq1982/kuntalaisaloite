@@ -97,9 +97,12 @@
     <#list participants as participant>
 
         <#if participant_index == 0><ul class="participant-list no-style"></#if>
-            <li><span class="date"><@u.localDate participant.participateDate!"" /></span> <span class="name-container"><span class="name">${participant.name!""}</span> <span class="home-municipality"><span class="bull">&bull;</span> <@u.solveMunicipality participant.homeMunicipality/></span>
-
+            <li><span class="date"><@u.localDate participant.participateDate!"" /></span> <span class="name-container"><span class="name">${participant.name!""}</span>
+                
+            <#-- IF initiative IS verifiable user should NOT end up here - like never -->
             <#if !initiative.verifiable>
+                <span class="home-municipality"><span class="bull">&bull;</span> <@u.solveMunicipality participant.homeMunicipality/></span>
+                
                 <#if !participant.isAuthor()>
                     <span class="bull">&bull;</span>
                     <a  href="?deleteParticipant=${participant.id!""}" class="js-delete-participant"
