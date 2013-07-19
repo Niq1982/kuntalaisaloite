@@ -305,7 +305,6 @@
             </div>
             <div class="column col-1of3 last">
                 <div class="input-header"><@u.message "contactInfo.homeMunicipality" /></div>
-                
                 <div class="input-placeholder"><@u.solveMunicipality author.municipality/></div>
             </div>
             <br class="clear" />

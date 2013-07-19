@@ -28,23 +28,29 @@
      * NOSCRIPT-users gets confirmation form by request parameter 'invitation-reject'.
     -->
     <#if !RequestParameters['invitation-reject']?? && !RequestParameters['invitation-accept']??>
-        <div class="msg-block ${validationError?string("hidden","")}">
-            <#if user.hasRightToInitiative(initiative.id)>
-                <@u.systemMessage path="warning.author.alreadyAuthor" type="warning" showClose=false />
-            <#else>
-                <h2><@u.message "invitation.view.title" /></h2>
-
-                <p><@u.message "invitation.view.description" /></p>
-                <p><@u.message "invitation.view.instruction" /></p>
-
-                <#if initiative.verifiable && user.homeMunicipality.present && user.homeMunicipality.value.id != initiative.municipality.id>
-                    <@u.systemMessage path="warning.author.notMember" type="warning" showClose=false />
-                <#else>
-                    <a href="?invitation=${authorInvitation.confirmCode!""}&invitation-accept=confirm" class="small-button green green save-and-send js-accept-invitation"><span class="small-icon save-and-send"><@u.message "invitation.accept" /></span></a>
-                </#if>
-                <a href="?invitation=${authorInvitation.confirmCode!""}&invitation-reject=confirm" title="<@u.message "invitation.reject" />" class="small-button gray push js-reject-invitation"><span class="small-icon cancel"><@u.message "invitation.reject" /></span></a>
-            </#if>
-        </div>
+        <#if user.hasRightToInitiative(initiative.id)>
+            <@u.systemMessage path="warning.author.alreadyAuthor" type="warning" showClose=false />
+        <#else>
+            <div class="msg-block ${validationError?string("hidden","")}">
+                <div class="system-msg msg-info">
+                    <h2><@u.message "invitation.view.title" /></h2>
+                    
+                    <#if initiative.isVerifiable()><p><strong><@u.message "invitation.view.verifiable" /></strong></p></#if>
+                    
+                    <p><@u.message "invitation.view.description" /></p>
+                    <p><@u.message "invitation.view.instruction" /></p>
+    
+                    <#if initiative.verifiable && user.homeMunicipality.present && user.homeMunicipality.value.id != initiative.municipality.id>
+                        <@u.systemMessage path="warning.author.notMember" type="warning" showClose=false />
+                        <a href="?invitation=${authorInvitation.confirmCode!""}&invitation-reject=confirm" title="<@u.message "invitation.reject" />" class="small-button gray js-reject-invitation"><span class="small-icon cancel"><@u.message "invitation.reject" /></span></a>
+                    <#else>
+                        <a href="?invitation=${authorInvitation.confirmCode!""}&invitation-accept=confirm" class="small-button green green save-and-send js-accept-invitation"><span class="small-icon save-and-send"><@u.message "invitation.accept" /></span></a>
+                        <a href="?invitation=${authorInvitation.confirmCode!""}&invitation-reject=confirm" title="<@u.message "invitation.reject" />" class="small-button gray push js-reject-invitation"><span class="small-icon cancel"><@u.message "invitation.reject" /></span></a>
+                    </#if>
+                    
+                </div>
+            </div>
+        </#if>
     </#if>
     
     
@@ -101,64 +107,62 @@
                 <input type="hidden" name="confirmCode" value="${authorInvitation.confirmCode!""}"/>
                 <@f.notTooFastField authorInvitation/>
 
-                    <div class="column col-1of2">
-                        <#if initiative.verifiable>
-                            ${user.contactInfo.name}
-                        <#else>
-                            <div class="column col-1of2 last">
-                                <@f.textField path="authorInvitation.contactInfo.name" required="required" optional=false cssClass="medium" maxLength=InitiativeConstants.CONTACT_NAME_MAX key="contactInfo.name" />
-                            </div>
-                        </#if>
-                    </div>
-
-                    <#if initiative.verifiable && user.homeMunicipality.present>
-                        <@u.solveMunicipality user.homeMunicipality/>
+                <div class="column col-1of2">
+                    <#if initiative.verifiable>
+                        <div class="input-header"><@u.message "contactInfo.verified.name" /></div>
+                        <div <#if !user.homeMunicipality.present>class="input-placeholder"</#if>>${user.contactInfo.name}</div>
                     <#else>
-                    <div class="column col-1of2 last">
-                        <@f.municipalitySelect path="authorInvitation.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipality.id key="initiative.homeMunicipality" />
-                    </div>
+                        <@f.textField path="authorInvitation.contactInfo.name" required="required" optional=false cssClass="medium" maxLength=InitiativeConstants.CONTACT_NAME_MAX key="contactInfo.name" />
                     </#if>
+                </div>
+                <div class="column col-1of2 last">
+                    <#if initiative.verifiable && user.homeMunicipality.present>
+                        <div class="input-header"><@u.message "contactInfo.homeMunicipality" /></div>
+                        <div><@u.solveMunicipality user.homeMunicipality/></div>
+                    <#else>
+                        <@f.municipalitySelect path="authorInvitation.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipality.id key="initiative.homeMunicipality" />
+                    </#if>
+                </div>
+                <br class="clear" />
 
-                    <br class="clear" />
-
-                    <div id="municipalMembership" class="js-hide">
-                        <div class="input-block-content hidden">
-                            <#assign href="#" />
-                            <@u.systemMessage path="initiative.municipality.notEqual" type="info" showClose=false args=[href] />
-                        </div>
-                        <div class="input-block-content">
-                            <@f.radiobutton path="authorInvitation.municipalMembership" required="required" options={
-                                "community":"initiative.municipalMembership.community",
-                                "company":"initiative.municipalMembership.company",
-                                "property":"initiative.municipalMembership.property"
-                            } attributes="" key="initiative.municipalMembership" />
-                            <br/>
-                            <@f.radiobutton path="authorInvitation.municipalMembership" required="required" options={
-                                "none":"initiative.municipalMembership.none"
-                            } attributes="" key="initiative.municipalMembership" header=false/>
-                        </div>
-
-                        <div class="input-block-content is-not-member no-top-margin js-hide hidden">
-                            <@u.systemMessage path="warning.initiative.notMember" type="warning" showClose=false />
-                        </div>
+                <div id="municipalMembership" class="js-hide">
+                    <div class="input-block-content hidden">
+                        <#assign href="#" />
+                        <@u.systemMessage path="initiative.municipality.notEqual" type="info" showClose=false args=[href] />
                     </div>
-
                     <div class="input-block-content">
-                        <@f.formCheckbox path="authorInvitation.contactInfo.showName" checked=true key="contactInfo.showName" />
+                        <@f.radiobutton path="authorInvitation.municipalMembership" required="required" options={
+                            "community":"initiative.municipalMembership.community",
+                            "company":"initiative.municipalMembership.company",
+                            "property":"initiative.municipalMembership.property"
+                        } attributes="" key="initiative.municipalMembership" />
+                        <br/>
+                        <@f.radiobutton path="authorInvitation.municipalMembership" required="required" options={
+                            "none":"initiative.municipalMembership.none"
+                        } attributes="" key="initiative.municipalMembership" header=false/>
                     </div>
 
-                    <div class="input-block-content">
-                        <div class="input-header">
-                            <@u.message "contactInfo.title" />
-                        </div>
+                    <div class="input-block-content is-not-member no-top-margin js-hide hidden">
+                        <@u.systemMessage path="warning.initiative.notMember" type="warning" showClose=false />
+                    </div>
+                </div>
 
-                        <@f.contactInfo path="authorInvitation.contactInfo" disableEmail=false mode="full" />
+                <div class="input-block-content">
+                    <@f.formCheckbox path="authorInvitation.contactInfo.showName" checked=true key="contactInfo.showName" />
+                </div>
+
+                <div class="input-block-content">
+                    <div class="input-header">
+                        <@u.message "contactInfo.title" />
                     </div>
 
-                    <div class="input-block-content">
-                        <button type="submit" name="${UrlConstants.ACTION_ACCEPT_INVITATION}" id="modal-${UrlConstants.ACTION_ACCEPT_INVITATION}" value="<@u.message "invitation.accept.confirm" />" class="small-button green save-and-send"><span class="small-icon save-and-send"><@u.message "invitation.accept.confirm" /></span></button>
-                        <a href="?invitation=${authorInvitation.confirmCode!""}" class="push close"><@u.message "action.cancel" /></a>
-                    </div>
+                    <@f.contactInfo path="authorInvitation.contactInfo" disableEmail=false mode="full" />
+                </div>
+
+                <div class="input-block-content">
+                    <button type="submit" name="${UrlConstants.ACTION_ACCEPT_INVITATION}" id="modal-${UrlConstants.ACTION_ACCEPT_INVITATION}" value="<@u.message "invitation.accept.confirm" />" class="small-button green save-and-send"><span class="small-icon save-and-send"><@u.message "invitation.accept.confirm" /></span></button>
+                    <a href="?invitation=${authorInvitation.confirmCode!""}" class="push close"><@u.message "action.cancel" /></a>
+                </div>
             </form>
         </@compress>
     </#assign>

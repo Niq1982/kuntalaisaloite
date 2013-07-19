@@ -21,7 +21,7 @@
     <div class="municipality">${initiative.municipality.getName(locale)}</div>
 
     <#if hasManagementRightForInitiative && !initiative.sent>
-        <a style="float:right;" href="${urls.management(initiative.id)}"><@u.message "link.to.managementView" /></a>
+        <a class="small-button right" href="${urls.management(initiative.id)}"><span class="small-icon management"><@u.message "link.to.managementView" /></span></a>
     </#if>
     
     <@e.stateInfo initiative />
