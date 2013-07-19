@@ -84,29 +84,46 @@
         </#if>
     
         <#if !sendToReviewConfirm && !sendToReviewAndCollectConfirm>
-            <div class="view-block">
-                <h2><@u.message "management.sendToReview.title" /></h2>
-                
-                <@u.systemMessage path="management.sendToReview.description" type="info" showClose=false />
-        
-                <br/>
-                <div class="column col-1of2">
-                    <h3><@u.message "management.sendToReview.doNotCollect.title" /><br /><br /></h3>
-                    <p><@u.message "management.sendToReview.doNotCollect" /></p>
+            <#if initiative.isVerifiable()>
+            
+                <div class="msg-block">
+                    <div class="system-msg msg-info">
+                        <h2><@u.message "management.sendToReview.collect.title" /></h2>
+                        
+                        <p><@u.message "management.sendToReview.description.verifiable" /></p>
+            
+                        <a href="${managementURL}?send-to-review=confirm-collect#send-to-review" id="js-send-to-review-collect" class="small-button js-send-to-review-collect"><span class="small-icon save-and-send"><@u.messageHTML "action.sendToReview" /></span></a>
+                    </div>
                 </div>
-                <div class="column col-1of2 last">
-                    <h3><@u.message "management.sendToReview.collect.title" /></h3>
-                    <p><@u.message "management.sendToReview.collect" /></p>
+            
+            <#else>
+            
+                <div class="view-block">
+                    <h2><@u.message "management.sendToReview.title" /></h2>
+                    
+                    <@u.systemMessage path="management.sendToReview.description" type="info" showClose=false />
+            
+                    <br/>
+                    <div class="column col-1of2">
+                        <h3><@u.message "management.sendToReview.doNotCollect.title" /><br /><br /></h3>
+                        <p><@u.message "management.sendToReview.doNotCollect" /></p>
+                    </div>
+                    <div class="column col-1of2 last">
+                        <h3><@u.message "management.sendToReview.collect.title" /></h3>
+                        <p><@u.message "management.sendToReview.collect" /></p>
+                    </div>
+                    <br class="clear" />
+                    <div class="column col-1of2">
+                        <a href="${managementURL}?send-to-review=confirm#send-to-review" id="js-send-to-review" class="large-button js-send-to-review"><span class="large-icon mail"><@u.messageHTML "action.sendToReview.doNotCollect" /></span></a>
+                    </div>
+                    <div class="column col-1of2 last">
+                        <a href="${managementURL}?send-to-review=confirm-collect#send-to-review" id="js-send-to-review-collect" class="large-button js-send-to-review-collect"><span class="large-icon save-and-send"><@u.messageHTML "action.sendToReview.bigBtn" /></span></a>
+                    </div>
+                    <br class="clear" />
                 </div>
-                <br class="clear" />
-                <div class="column col-1of2">
-                    <a href="${managementURL}?send-to-review=confirm#send-to-review" id="js-send-to-review" class="large-button js-send-to-review"><span class="large-icon mail"><@u.messageHTML "action.sendToReview.doNotCollect" /></span></a>
-                </div>
-                <div class="column col-1of2 last">
-                    <a href="${managementURL}?send-to-review=confirm-collect#send-to-review" id="js-send-to-review-collect" class="large-button js-send-to-review-collect"><span class="large-icon save-and-send"><@u.messageHTML "action.sendToReview.bigBtn" /></span></a>
-                </div>
-                <br class="clear" />
-            </div>
+            
+            </#if>
+            
         </#if>
         
             
@@ -267,8 +284,8 @@
         </noscript>
         </#if>
         
-    </#if> <#-- /managementSettings.allowSendToMunicipality -->
     
+    </#if> <#-- /managementSettings.allowSendToMunicipality -->
         
     <#if managementSettings.allowSendFixToReview>
         <#if !RequestParameters['send-fix-to-review']??>
