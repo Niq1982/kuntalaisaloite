@@ -20,6 +20,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
      * Localization keys as constants.
      */
     private static final String MSG_SUCCESS_PARTICIPATE = "success.participate";
+    private static final String MSG_SUCCESS_PARTICIPATE_VERIFIABLE = "success.participate-verifiable.title";
     private static final String MSG_BTN_PARTICIPATE = "action.participate";
     private static final String MSG_BTN_SAVE = "action.save";
     private static final String PARTICIPANT_SHOW_NAME = "participant.showName";
@@ -87,7 +88,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     public void participating_to_initiative_when_not_logged_in_redirects_to_vetuma_and_back_to_participation_page() {
         open(urls.view(verifiedInitiativeId));
 
-        clickLinkContaining("Siirry vetumakirjautumiseen");
+        clickLinkContaining("Tunnistaudu ja osallistu");
         enterVetumaLoginInformationAndSubmit("111111-1111", MUNICIPALITY_1);
         assertTitle(TestHelper.DEFAULT_INITIATIVE_NAME + " - Kuntalaisaloitepalvelu");
         assertThat(participateToInitiativeButton().isPresent(), is(true));
@@ -107,7 +108,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         // Vetuma participant has no information to fill
         getElemContaining(getMessage(MSG_BTN_SAVE), "button").click();
 
-        assertMsgContainedByClass("msg-success", MSG_SUCCESS_PARTICIPATE);
+        assertMsgContainedByClass("modal-title", MSG_SUCCESS_PARTICIPATE_VERIFIABLE);
         Integer newParticipantCountOnPage = Integer.valueOf(getElement(By.className("user-count-total")).getText());
 
         assertThat(newParticipantCountOnPage, is(originalParticipantCountOnPage + 1));
