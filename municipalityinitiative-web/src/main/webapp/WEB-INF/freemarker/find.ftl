@@ -22,7 +22,9 @@
 
     <h1>
         <@u.message page />
-        <span class="switch-view"><a href="${urls.ownInitiatives()}"><@u.message "page.ownInitiatives"/></a></span>
+        <#if user.isVerifiedUser()>
+            <span class="switch-view"><a href="${urls.ownInitiatives()}"><@u.message "page.ownInitiatives"/></a></span>
+        </#if>
     </h1>
 
 <div class="view-block search-options cf">
@@ -46,6 +48,26 @@
         </form>
     </div>
     
+    <#--
+     * Initiative type - DUMMY 
+    -->
+    <span class="search-parameters-title filter"><label for="municipality">Tyyppi</label></span>
+    <div class="search-parameters-container cf">
+        <select data-allow-single-deselect="allow" data-placeholder="Kaikki" data-initiative-municipality="" class="chzn-select municipality-filter" id="" name="">
+            <option value="">Kaikki</option>
+            <option value="">Kuntalaisaloite - lähetetty suoraan kuntaan</option>
+            <option value="">Tavallinen Kuntalaisaloite</option>
+            <option value="">Valtuustokäsittelyyn tähtäävä aloite</option>
+            <option value="">Aloite kunnallisesta kansanäänestyksestä</option>
+        </select>
+        
+        <#--<div class="search-sort-links">
+            <a class="" href="#">Kaikki</a>
+            <a class="active" href="#">Tavalliset aloitteet</a>
+            <a class="" href="#">2% aloitteet</a>
+            <a class="" href="#">5% aloitteet</a>
+        </div>-->
+    </div>
     <#--
      * Search filter and sort states
      * currentSearch.show:      running, sentToMunicipality, closed, all
