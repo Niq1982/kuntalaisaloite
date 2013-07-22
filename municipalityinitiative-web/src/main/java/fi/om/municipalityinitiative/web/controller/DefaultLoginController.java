@@ -20,6 +20,7 @@ import java.util.Locale;
 import static fi.om.municipalityinitiative.web.Urls.*;
 import static fi.om.municipalityinitiative.web.Views.MODERATOR_LOGIN_VIEW;
 import static fi.om.municipalityinitiative.web.Views.SINGLE_LOGIN_VIEW;
+import static fi.om.municipalityinitiative.web.Views.AUTHENTICATE_VIEW;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
@@ -32,6 +33,12 @@ public class DefaultLoginController extends BaseLoginController {
 
     public DefaultLoginController(String baseUrl, boolean optimizeResources, String resourcesVersion) {
         super(baseUrl, optimizeResources, resourcesVersion);
+    }
+    
+    @RequestMapping(value =  {AUTHENTICATE_FI, AUTHENTICATE_SV}, method = RequestMethod.GET)
+    public String authenticateGet(Model model, Locale locale, HttpServletRequest request) {
+        model.addAttribute(Urls.get(locale));
+        return AUTHENTICATE_VIEW;
     }
 
     @RequestMapping(value = MODERATOR_LOGIN, method = RequestMethod.GET)

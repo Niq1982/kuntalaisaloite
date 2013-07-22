@@ -20,7 +20,10 @@
 
 <@l.main "page.find" pageTitle!"">
 
-<h1><@u.message page /></h1>
+    <h1>
+        <@u.message page />
+        <span class="switch-view"><a href="${urls.ownInitiatives()}"><@u.message "page.ownInitiatives"/></a></span>
+    </h1>
 
 <div class="view-block search-options cf">
 

@@ -266,14 +266,14 @@
                             <a href="#" class="header-tool-link user-name dropdown-toggle">${user.contactInfo.name}<#if user.homeMunicipality.present>, ${user.homeMunicipality.value.getName(locale)}</#if>
                                 <span class="icon-small settings"></span></a>
                             <ul id="user-menu" class="dropdown-menu user-menu">
-                                <li><a href="${urls.ownInitiatives()}"><@u.message "user.own.initiatives" /></a></li>
+                                <li><a href="${urls.ownInitiatives()}"><@u.message "page.ownInitiatives" /></a></li>
                             </ul>
                         </div>
                     </#if>
                     <a href="${urls.logout()}" id="logout" class="header-tool-link logout"><@u.message "common.logout"/><span class="icon-small logout"></span></a>
 
                 <#elseif enableVerifiedInitiatives>
-                    <a href="${urls.login(springMacroRequestContext.requestUri)}" title="<@u.message "common.login"/>" class="header-tool-link login"><@u.message "common.login"/></a>
+                    <a href="${vetumaLoginToOwnInitiatives}" title="<@u.message "authenticate.title"/>" class="header-tool-link login"><@u.message "authenticate.title"/></a>
                 </#if>
             </div>
 

@@ -35,6 +35,7 @@ public final class Views {
 
     public static final String SEARCH_VIEW = "find";
     public static final String PREPARE_VIEW = "prepare";
+    public static final String AUTHENTICATE_VIEW = "authenticate";
     public static final String PENDING_CONFIRMATION = "pending-confirmation";
     public static final String PUBLIC_SINGLE_VIEW = "public-single-view";
     public static final String PUBLIC_COLLECT_VIEW = "public-collect-view";

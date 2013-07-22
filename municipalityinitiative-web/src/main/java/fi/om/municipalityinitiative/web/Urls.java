@@ -188,6 +188,10 @@ public final class Urls {
     public static final String PREPARE_FI =    "/fi/aloitteen-valmistelu";
 
     public static final String PREPARE_SV =    "/sv/utforma-initiativ";
+    
+    public static final String AUTHENTICATE_FI = "/fi/tunnistaudu";
+    
+    public static final String AUTHENTICATE_SV = "/sv/autentisera";
 
     public static final String PENDING_CONFIRMATION_FI =    "/fi/odottaa-vahvistusta" + "/" + ID_PARAMETER;
 
@@ -415,6 +419,10 @@ public final class Urls {
 
     public String prepare() {
         return getLocalizedPageUrl(PREPARE_FI, PREPARE_SV);
+    }
+    
+    public String authenticate() {
+        return getLocalizedPageUrl(AUTHENTICATE_FI, AUTHENTICATE_SV);
     }
 
     public String pendingConfirmation(Long initiativeId) {

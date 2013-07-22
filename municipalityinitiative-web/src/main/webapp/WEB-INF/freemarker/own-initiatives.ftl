@@ -14,13 +14,21 @@
  * @param page is "page.find"
  * @param pageTitle can be assigned as custom HTML title
 -->
-<#assign page="page.find" />
+<#assign page="page.ownInitiatives" />
 
 <#assign searchTerm = RequestParameters['search']!"" />
 
-<@l.main "page.find" pageTitle!"">
+<@l.main "page.ownInitiatives" pageTitle!"">
 
-<h1><@u.message page /></h1>
+    <h1>
+        <@u.message page />
+        <span class="switch-view"><a href="${urls.search()}"><@u.message "page.find"/></a></span>
+    </h1>
+
+    <div class="msg-block">
+        <div class="system-msg msg-info">Tällä sivulla listan niistä luomistasi aloitteista, jotka tähtäävät 2 tai 5 prosenttiin kunnan äänioikeutetuista asukkaista.</div>
+    </div>
+    
 
 <div class="search-results">
 <#if initiatives?? && (initiatives?size > 0)>
@@ -41,7 +49,7 @@
             </span>
 
             <span class="date trigger-tooltip" title="<@u.message "searchResults.initiative.date" />" ><@u.localDate initiative.createTime!"" /></span>
-            <span class="title"><a href="${urls.view(initiative.id)}" class="name"><@u.limitStringLength initiative.name!"" 150 /></a></span>
+            <span class="title"><a href="${urls.management(initiative.id)}" class="name"><@u.limitStringLength initiative.name!"" 150 /></a></span>
             <#if !initiative.public>
                 <span class="info">${initiative.municipality.getName(locale)!""}<span class="bull">&bull;</span><span class="state"><@u.message "searchResults.notPublic" /></span></span>
             <#elseif !initiative.sentTime.present>
