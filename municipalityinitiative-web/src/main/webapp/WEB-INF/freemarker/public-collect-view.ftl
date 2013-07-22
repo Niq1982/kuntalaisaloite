@@ -249,8 +249,11 @@
                 }]
             };
             
-            <#-- Autoload modal if it has errors -->
-            <#if RequestParameters['participate']?? || RequestParameters['formError']?? && RequestParameters['formError'] == "participate">
+            
+            <#-- Autoload modal if it has errors or returned from VETUMA -->
+            <#if !user.hasParticipatedToInitiative(initiative.id) &&
+                 initiative.verifiable && user.isVerifiedUser() && RequestParameters['participate']?? ||
+                 RequestParameters['formError']?? && RequestParameters['formError'] == "participate">
             modalData.participateFormAutoLoad = function() {
                 return [{
                     title:      '<@u.message "participate.title" />',
@@ -289,7 +292,7 @@
         };
         
     </script>
-
+    
 </@l.main>
 
 </#escape> 

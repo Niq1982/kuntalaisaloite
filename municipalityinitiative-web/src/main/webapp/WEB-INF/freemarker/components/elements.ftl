@@ -169,9 +169,11 @@
             </#if>
         </#if>
         </div>
-        <div class="participants-block last ${showForm?string("hidden","")}">
-            <a title="<@u.messageHTML "action.participate.infoLink.title" />" href="${urls.help(HelpPage.PARTICIPANTS.getUri(locale))}"><@u.messageHTML "action.participate.infoLink" /></a>
-        </div>
+        <#if !user.hasParticipatedToInitiative(initiative.id)>
+            <div class="participants-block last ${showForm?string("hidden","")}">
+                <a title="<@u.messageHTML "action.participate.infoLink.title" />" href="${urls.help(HelpPage.PARTICIPANTS.getUri(locale))}"><@u.messageHTML "action.participate.infoLink" /></a>
+            </div>
+        </#if>
     </#if>
     <#if !admin && initiative.sentTime.present>
         <div class="participants-block last">

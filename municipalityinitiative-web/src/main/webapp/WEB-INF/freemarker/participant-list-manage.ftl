@@ -23,7 +23,7 @@
     <#if !RequestParameters['deleteParticipant']??>
         <div class="view-block single public cf">
             <h2><@u.message "manageParticipants.title" />
-                <span class="switch-view"><a href="${urls.participantList(initiative.id)}"><@u.message key="participantList.title" /> &bull; ${participantCount.publicNames!""}<@u.message key="participantList.title.count" /></a></span>
+                <span class="switch-view"><a href="${urls.participantList(initiative.id)}"><@u.message key="participantList.title" /> &bull; ${participantCount.publicNames!""} <@u.message key="participantList.title.count" /></a></span>
             </h2>
 
             <@participantListManage participants />
