@@ -85,27 +85,37 @@
             <@f.securityFilters/>
             <@f.notTooFastField participant/>
 
+            <#if initiative.verifiable && user.isVerifiedUser() && user.homeMunicipality.present>
+                <#assign infoKeyPostfix = ".verified" />
+            <#elseif initiative.verifiable && user.isVerifiedUser() && !user.homeMunicipality.present>
+                <#assign infoKeyPostfix = ".noMunicipality" />
+            <#else>
+                <#assign infoKeyPostfix = "" />
+            </#if>
+
             <div class="input-block-content no-top-margin">
-                <@u.systemMessage path="participate.contactInfo.description" type="info" showClose=false />  
+                <@u.systemMessage path="participate.contactInfo.description"+infoKeyPostfix type="info" showClose=false />  
             </div>
             
              <div class="input-block-content">
-                 <#if initiative.verifiable && user.isVerifiedUser()>
-                     ${user.contactInfo.name}
-                 <#else>
-                    <@f.textField path="participant.participantName" required="required" optional=false cssClass="large" maxLength="512" />
-                 </#if>
-                
+                <div class="column col-1of2">
+                    <#if initiative.verifiable && user.isVerifiedUser()>
+                         <div class="input-header"><@u.message "contactInfo.verified.name" /></div>
+                         <div class="input-placeholder">${user.contactInfo.name}</div>
+                     <#else>
+                        <@f.textField path="participant.participantName" required="required" optional=false cssClass="large" maxLength="512" />
+                     </#if>
+                </div>
+                <div class="column col-1of2 last">
+                    <#if initiative.verifiable && user.isVerifiedUser() && user.homeMunicipality.present>
+                        <div class="input-header"><@u.message "contactInfo.homeMunicipality" /></div>
+                        <div class="input-placeholder"><@u.solveMunicipality user.homeMunicipality/></div>
+                    <#else>
+                        <@f.municipalitySelect path="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipality.id />
+                    </#if>
+                </div>
             </div>
-            
-            <div class="input-block-content">
-                <#if initiative.verifiable && user.isVerifiedUser() && user.homeMunicipality.present>
-                    <@u.solveMunicipality user.homeMunicipality/>
-                <#else>
-                    <@f.municipalitySelect path="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipality.id />
-                </#if>
-            </div>
-            
+
             <div id="municipalMembership" class="js-hide">
                 <div class="input-block-content hidden">
                     <#assign href=urls.help(HelpPage.PARTICIPANTS.getUri(locale)) />
@@ -180,13 +190,7 @@
          * Show participant counts and participate form
         -->
         <div class="initiative-content-row last">
-            <#if !user.hasRightToInitiative(initiative.id)>
-                <#if initiative.verifiable && user.hasParticipatedToInitiative(initiative.id)>
-                    <@u.systemMessage path="warning.already.participated" type="warning" showClose=false />
-                <#elseif initiative.verifiable && user.isVerifiedUser() && user.homeMunicipality.present && user.homeMunicipality.value.id != initiative.municipality.id>
-                    <@u.systemMessage path="warning.participant.notMember" type="warning" showClose=false />
-                </#if>
-            </#if>
+            
             <@e.participants formHTML=participateFormHTML showForm=showParticipateForm />
         </div>
         
@@ -246,8 +250,8 @@
             };
             
             <#-- Autoload modal if it has errors -->
-            <#if RequestParameters['formError']?? && RequestParameters['formError'] == "participate">
-            modalData.participateFormInvalid = function() {
+            <#if RequestParameters['participate']?? || RequestParameters['formError']?? && RequestParameters['formError'] == "participate">
+            modalData.participateFormAutoLoad = function() {
                 return [{
                     title:      '<@u.message "participate.title" />',
                     content:    '<#noescape>${participateFormHTML?replace("'","&#39;")}</#noescape>'

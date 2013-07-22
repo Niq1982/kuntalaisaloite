@@ -1082,8 +1082,8 @@ $('.municipality-filter').change( function() {
 		}
 	});
 	
-	if( typeof modalData != 'undefined' && typeof modalData.participateFormInvalid != 'undefined' ){
-		generateModal(modalData.participateFormInvalid(), 'full', municipalitySelection.init);
+	if( typeof modalData != 'undefined' && typeof modalData.participateFormAutoLoad != 'undefined' ){
+		generateModal(modalData.participateFormAutoLoad(), 'full', municipalitySelection.init);
 	}
 	
 	// Contact author

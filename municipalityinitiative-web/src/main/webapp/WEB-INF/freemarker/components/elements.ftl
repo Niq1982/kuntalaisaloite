@@ -130,6 +130,16 @@
     <h3><@u.message key="initiative.participants.title" args=[participantCount.total+initiative.externalParticipantCount] />
     <#if admin && !initiative.isVerifiable()><span class="switch-view"><a href="${urls.participantListManage(initiative.id)}" class="trigger-tooltip" title="<@u.message "manageParticipants.tooltip" />"><@u.message "manageParticipants.title" /></a></span></#if></h3>
     
+    <#if !user.hasRightToInitiative(initiative.id)>
+        <#if initiative.verifiable && user.hasParticipatedToInitiative(initiative.id)>
+            <@u.systemMessage path="warning.already.participated" type="warning" showClose=false />
+        <#elseif initiative.verifiable && user.isVerifiedUser() && user.homeMunicipality.present && user.homeMunicipality.value.id != initiative.municipality.id>
+            <@u.systemMessage path="warning.participant.notMember" type="warning" showClose=false />
+        <#elseif initiative.verifiable && ((user.isVerifiedUser() && !user.homeMunicipality.present) || !user.isVerifiedUser()) >
+            <@u.systemMessage path="participate.verifiable.info" type="info" showClose=false />
+        </#if>
+    </#if>
+    
     <br/>
     <div class="participants-block">
         <span class="user-count-total">${participantCount.total+initiative.externalParticipantCount}</span>
@@ -152,7 +162,7 @@
     <#if !admin && !initiative.sentTime.present && !participateSuccess>
         <div class="participants-block ${showForm?string("hidden","")}">
         <#if initiative.verifiable && !user.isVerifiedUser()>
-                <a class="small-button" href="${vetumaLoginToCurrentPage}">Siirry vetumakirjautumiseen</a>
+                <a class="small-button" href="${vetumaLoginToCurrentPage}?participate"><span class="small-icon save-and-send"><@u.message "action.authenticate" /></span></a>
         <#else>
             <#if !user.hasParticipatedToInitiative(initiative.id) && (!initiative.verifiable || user.homeMunicipality.notPresent || (user.homeMunicipality.value.id == initiative.municipality.id))>
                 <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>

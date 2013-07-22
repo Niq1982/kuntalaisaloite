@@ -166,7 +166,7 @@ public class PublicInitiativeController extends BaseController {
                 return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.INVALID_HOME_MUNICIPALITY, request);
             }
 
-            return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.PARTICIPATE, request);
+            return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.PARTICIPATE_VERIFIABLE, request);
         }
         else {
 

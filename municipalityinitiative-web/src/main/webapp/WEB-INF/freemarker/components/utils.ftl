@@ -226,15 +226,15 @@
             <#-- NOTE: successMessageModalHTML needs to be global for modals. -->
             <#global requestMessageModalHTML>
                 <@compress single_line=true>
-                    <#-- Save initiative -->
-                    <#if requestMessage == RequestMessage.SAVE>
-                        <@messageHTML key=requestMessage args=[urls.edit(initiative.id)] />
-                        <a class="small-button gray close hidden"><@message "modal.close" /></a>
-                        
                     <#-- Send to municipality -->
-                    <#elseif requestMessage == RequestMessage.SEND>
+                    <#if requestMessage == RequestMessage.SEND>
                         <@messageHTML requestMessage />
                         <a class="small-button gray close hidden"><@message "modal.close" /></a>
+                        
+                    <#-- Participate to verifiable initiative -->
+                    <#elseif requestMessage == RequestMessage.PARTICIPATE_VERIFIABLE>
+                        <@messageHTML requestMessage />
+                        <a href="${urls.logout()}" class="small-button gray"><span class="small-icon logout"><@message "common.logout" /></span></a><a href="${urls.baseUrl}/${locale}" class="small-button gray push close"><@message "modal.continueBrowsing" /></a>
                         
                     <#else>
                         <@messageHTML requestMessage />
@@ -242,7 +242,12 @@
                     
                 </@compress>
             </#global>
-            <@systemMessageHTML requestMessageModalHTML "summary" "noscript" />
+            <#-- Normal dialog for NOJS users instead of a modal -->
+            <noscript>
+                <div class="msg-block">
+                    <#noescape>${requestMessageModalHTML!""}</#noescape>
+                </div>
+            </noscript>
             
         <#else>
             <#if requestMessage.type == RequestMessageType.SUCCESS>
