@@ -9,6 +9,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.service.Participant;
+import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
@@ -76,6 +77,10 @@ public class ParticipantToPdfExporter {
         
         addEmptyLine(preface, 1);
         preface.add(new Paragraph("Osallistujat / Deltagar", subTitle));
+        
+        // TODO: If % initiative
+//        preface.add(new Paragraph("* Osallistujalla on turvakielto eikä kunta-tietoa saada väestötietojärjestelmästä", bodyText));
+//        preface.add(new Paragraph("* SV Osallistujalla on turvakielto eikä kunta-tietoa saada väestötietojärjestelmästä", bodyText));
 
         addEmptyLine(preface, 1);
         createTable(preface, participants);
@@ -100,12 +105,12 @@ public class ParticipantToPdfExporter {
         lastPage.add(new Paragraph("SV Jäsenyysperuste, jos osallistuja ei ole kunnan asukas", subTitle));
         
         list = new com.itextpdf.text.List(true, 20);
-        list.add(new ListItem(COMMUNITY + ": SV Nimenkirjoitusoikeus yhteisössä, laitoksessa tai säätiössä, jonka kotipaikka on aloitetta koskevassa kunnassa", bodyText));
-        list.add(new ListItem(COMPANY + ": SV Nimenkirjoitusoikeus yrityksessä, jonka kotipaikka on aloitetta koskevassa kunnassa", bodyText));
-        list.add(new ListItem(PROPERTY + ": SV Hallinto-oikeus tai omistus kiinteään omaisuuteen aloitetta koskevassa kunnassa", bodyText));
+        list.add(new ListItem(COMMUNITY + ": Har namnteckningsrätt i ett samfund, en institution eller stiftelse vars hemort finns i den kommun som initiativet gäller", bodyText));
+        list.add(new ListItem(COMPANY + ": Har namnteckningsrätt i ett företag vars hemort finns i den kommun som initiativet gäller", bodyText));
+        list.add(new ListItem(PROPERTY + ": Äger eller besitter egendom i den kommun som initiativet gäller", bodyText));
         
         lastPage.add(list);
-        
+
         document.add(lastPage);
     }
     /*
@@ -169,7 +174,10 @@ public class ParticipantToPdfExporter {
             table.addCell(createCell(participant.getParticipateDate().toString(DATE_FORMAT), false));
             table.addCell(createCell(participant.getName(), false));
             Municipality homeMunicipality = (Municipality) participant.getHomeMunicipality().get();
-            table.addCell(createCell(homeMunicipality.getNameFi() + "\n" + homeMunicipality.getNameSv(), false));
+            table.addCell(createCell(homeMunicipality.getNameFi() + "\n" + homeMunicipality.getNameSv() + "\n", false));
+            // TODO: If % initiative and participant has turvakielto
+//            table.addCell(createCell(homeMunicipality.getNameFi() + " *\n" + homeMunicipality.getNameSv() + "\n", false));
+
             
             String membershipType = "";
             
