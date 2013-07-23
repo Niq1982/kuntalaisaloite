@@ -51,7 +51,8 @@
         <#if participant_index == 0><ul class="participant-list no-style"></#if>
             <li><span class="date"><@u.localDate participant.participateDate!"" /></span>
                 <span class="name-container"><span class="name">${participant.name!""}</span>
-                <#if !initiative.isVerifiable()><span class="home-municipality"><span class="bull">&bull;</span> <@u.solveMunicipality participant.homeMunicipality/></span></span></#if>
+                <#if !initiative.isVerifiable()><span class="home-municipality"><span class="bull">&bull;</span> <@u.solveMunicipality participant.homeMunicipality/></span></#if>
+                </span>
             </li>
         <#if !participant_has_next></ul></#if>
     </#list>

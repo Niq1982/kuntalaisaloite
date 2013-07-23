@@ -965,6 +965,7 @@ a.block-link {
 
     .details {
         float:left;
+        width: 32%;
     }
     
     .invitation {
@@ -2371,7 +2372,10 @@ label  {
         
         border-top:1px solid #ddd;
         
-        &:first-of-type, &.first {
+        /*&.first, &:first-of-type {
+            border:0;
+        }*/
+        &:first-child {
             border:0;
         }
     }

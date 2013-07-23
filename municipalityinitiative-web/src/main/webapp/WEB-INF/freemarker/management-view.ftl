@@ -23,8 +23,8 @@
             <p><@u.messageHTML "management.description" /></p>
             <p><@u.messageHTML "management.instruction" /></p>
             
-            <a class="small-button gray" href="${urls.edit(initiative.id)}"><span class="small-icon edit"><@u.messageHTML "action.editInitiative" /></span></a>
-            <a class="small-button gray push" href="${urls.view(initiative.id)}"><span class="small-icon document"><@u.messageHTML "action.previewInitiative" /></span></a>
+            <a class="small-button " href="${urls.edit(initiative.id)}"><span class="small-icon edit"><@u.messageHTML "action.editInitiative" /></span></a>
+            <a class="small-button push" href="${urls.view(initiative.id)}"><span class="small-icon document"><@u.messageHTML "action.previewInitiative" /></span></a>
         </div>
     </div>
 
@@ -38,7 +38,7 @@
         <@e.initiativeView initiative />
     </div>
     
-    <div class="view-block">
+    <div class="view-block cf">
         <h2><@u.message key="initiative.people.title" args=[participantCount.total] /></h2>
         
         <div class="initiative-content-row ${(initiative.state == InitiativeState.PUBLISHED)?string("","last")}">

@@ -229,12 +229,12 @@
                     <#-- Send to municipality -->
                     <#if requestMessage == RequestMessage.SEND>
                         <@messageHTML requestMessage />
-                        <a class="small-button gray close hidden"><@message "modal.close" /></a>
+                        <a class="small-button close hidden"><@message "modal.close" /></a>
                         
                     <#-- Participate to verifiable initiative -->
                     <#elseif requestMessage == RequestMessage.PARTICIPATE_VERIFIABLE>
                         <@messageHTML requestMessage />
-                        <a href="${urls.logout()}" class="small-button gray"><span class="small-icon logout"><@message "common.logout" /></span></a><a href="${urls.baseUrl}/${locale}" class="small-button gray push close"><@message "modal.continueBrowsing" /></a>
+                        <a href="${urls.logout()}" class="small-button"><span class="small-icon logout"><@message "common.logout" /></span></a><a href="${urls.baseUrl}/${locale}" class="small-button push close"><@message "modal.continueBrowsing" /></a>
                         
                     <#else>
                         <@messageHTML requestMessage />

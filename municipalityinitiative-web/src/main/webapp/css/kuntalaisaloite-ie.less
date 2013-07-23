@@ -4,11 +4,14 @@
     filter: progid:DXImageTransform.Microsoft.Alpha(opacity = @opacity);
 }*/
 
-.large-button, .small-button, .gray, a.disabled, button.disabled {
-    background:#fff url("../img/ie/gradient-gray.png?version=${timestamp}") left bottom repeat-x;
-    
-    &:hover { background:#fff url("../img/ie/gradient-gray-hover.png?version=${timestamp}") left bottom repeat-x; }
-    &:active { background:#fff url("../img/ie/gradient-gray-active.png?version=${timestamp}") left bottom repeat-x; }
+a, button {
+    &.large-button, &.small-button,
+    &.gray, &.disabled {
+        background:#fff url("../img/ie/gradient-gray.png?version=${timestamp}") left bottom repeat-x;
+        
+        &:hover { background:#fff url("../img/ie/gradient-gray-hover.png?version=${timestamp}") left bottom repeat-x; }
+        &:active { background:#fff url("../img/ie/gradient-gray-active.png?version=${timestamp}") left bottom repeat-x; }
+    }
 }
 
 .search-parameters {
@@ -21,6 +24,10 @@
 }
 .search-sort-links {
     a {
+        &:hover {
+            background:#fff url("../img/ie/gradient-gray-light.png?version=${timestamp}") left bottom repeat-x;
+        }
+    
         &.active {
             background:#09a3b4 url("../img/ie/gradient-main.png?version=${timestamp}") center bottom repeat-x;
         }
