@@ -1,5 +1,7 @@
 package fi.om.municipalityinitiative.dto.user;
 
+import fi.om.municipalityinitiative.dto.service.Municipality;
+
 public class OmLoginUser extends User {
 
     private final String name;
@@ -25,6 +27,11 @@ public class OmLoginUser extends User {
 
     @Override
     public boolean hasParticipatedToInitiative(Long initiativeId) {
+        return false;
+    }
+    
+    @Override
+    public boolean allowedToParticipate(Long initiativeId, Municipality municipality){
         return false;
     }
 

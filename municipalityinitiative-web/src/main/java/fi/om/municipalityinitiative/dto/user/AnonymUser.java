@@ -1,5 +1,7 @@
 package fi.om.municipalityinitiative.dto.user;
 
+import fi.om.municipalityinitiative.dto.service.Municipality;
+
 public class AnonymUser extends User {
 
     AnonymUser() { }
@@ -24,6 +26,11 @@ public class AnonymUser extends User {
         return false;
     }
 
+    @Override
+    public boolean allowedToParticipate(Long initiativeId, Municipality municipality){
+        return false;
+    }
+    
     @Override
     public boolean isLoggedIn() {
         return false;

@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.dto.user;
 
+import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 
 import java.util.Set;
@@ -22,6 +23,11 @@ public class NormalLoginUser extends User {
 
     @Override
     public boolean hasParticipatedToInitiative(Long initiativeId) {
+        return false;
+    }
+    
+    @Override
+    public boolean allowedToParticipate(Long initiativeId, Municipality municipality){
         return false;
     }
 

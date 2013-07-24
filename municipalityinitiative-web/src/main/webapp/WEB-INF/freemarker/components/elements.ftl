@@ -133,10 +133,10 @@
     <#if !user.hasRightToInitiative(initiative.id)>
         <#if initiative.verifiable && user.hasParticipatedToInitiative(initiative.id)>
             <@u.systemMessage path="warning.already.participated" type="warning" showClose=false />
-        <#elseif initiative.verifiable && user.isVerifiedUser() && user.homeMunicipality.present && user.homeMunicipality.value.id != initiative.municipality.id>
+        <#elseif initiative.verifiable && user.isVerifiedUser() && !user.allowedToParticipate(initiative.id, initiative.municipality)>
             <@u.systemMessage path="warning.participant.notMember" type="warning" showClose=false />
         <#elseif initiative.verifiable && ((user.isVerifiedUser() && !user.homeMunicipality.present) || !user.isVerifiedUser()) >
-            <@u.systemMessage path="participate.verifiable.info" type="info" showClose=false />
+            <@u.systemMessage path="participate.verifiable.info"+user.isVerifiedUser()?string(".verifiedUser","") type="info" showClose=false />
         </#if>
     </#if>
     
