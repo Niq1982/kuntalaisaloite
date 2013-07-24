@@ -127,9 +127,9 @@
         <@spring.bind "initiative.initiativeType" /> 
         <@f.showError />
         
-        <@initiativeTypeBlock "UNDEFINED" "normal" true />
-        <@initiativeTypeBlock "COLLABORATIVE_COUNCIL" "two-percent" enableVerifiedInitiatives />
-        <@initiativeTypeBlock "COLLABORATIVE_CITIZEN" "five-percent" enableVerifiedInitiatives />
+        <@initiativeTypeBlock InitiativeType.UNDEFINED "normal" true />
+        <@initiativeTypeBlock InitiativeType.COLLABORATIVE_COUNCIL "two-percent" enableVerifiedInitiatives />
+        <@initiativeTypeBlock InitiativeType.COLLABORATIVE_CITIZEN "five-percent" enableVerifiedInitiatives />
     </div>
 </#macro>
 
@@ -147,12 +147,12 @@
  -->
 <#macro initiativeTypeBlock type labelKey enabled=false>
     <#assign verifiable=false />
-    <#if type == "COLLABORATIVE_COUNCIL" || type == "COLLABORATIVE_CITIZEN">
+    <#if type == InitiativeType.COLLABORATIVE_COUNCIL || type == InitiativeType.COLLABORATIVE_CITIZEN>
         <#assign verifiable=true />
     </#if>
 
     <#if enabled>
-        <label class="initiative-type enabled" data-verifiable="${verifiable?string}">
+        <label class="initiative-type enabled ${(spring.stringStatusValue == type)?string("selected","")}" data-verifiable="${verifiable?string}">
     <#else>
         <label class="initiative-type trigger-tooltip" title="<@u.message "initiative.initiativeType.disabled.tooltip" />">
     </#if>

@@ -50,7 +50,7 @@
             </div>
         </div>
 
-        <div id="prepare-form-email" class="form-block-container toggle-disable <#if !hasErrors>js-hide</#if>">
+        <div id="prepare-form-email" class="form-block-container toggle-disable js-hide">
             <div class="input-block cf">
             
                 <@edit.authorEmailBlock />

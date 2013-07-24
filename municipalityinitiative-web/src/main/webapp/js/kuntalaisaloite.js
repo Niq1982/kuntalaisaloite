@@ -377,16 +377,27 @@ var initiativeType = (function() {
 		return $('input[value="UNDEFINED"]').is(':checked');
 	},
 
+	// This could be general function for all validation errors
+	checkErrors = function(){
+		var hasErrors = ($('#errors-summary').length > 0);
+
+		return {
+			hasErrors: hasErrors,
+			normal: hasErrors && typeNormalSelected(),
+			verifiable: hasErrors && !typeNormalSelected()
+		}
+	},
+
 	disableVerifiable = function(disable){
 		if (disable) {
 			$('.initiative-types').append(mask);
-			verifiable.find('.action').addClass('js-hide');
+			verifiable.find('.action').addClass(hideClass);
 			verifiable.find('input[type="radio"]').removeAttr('checked');
 			vetumaBlock.hide();
 
 			resetTypes(false);
 		} else {
-			verifiable.find('.action').removeClass('js-hide');
+			verifiable.find('.action').removeClass(hideClass);
 			mask.remove();
 		}
 	},
@@ -401,6 +412,16 @@ var initiativeType = (function() {
 		if (!resetAll) type.removeClass('unselected');
 	},
 
+	setSelected = function(obj) {
+		var choose = obj.find('span[data-choose]');
+
+		obj.removeClass('unselected').addClass('selected');
+		obj.find(cbClass).addClass('checked');
+		choose.text(choose.data('chosen'));
+		// CSS hidden radiobutton does not get selected by clicking label on some browsers (IE)
+		obj.find('input[type="radio"]').attr('checked','checked');
+	},
+
 	toggleSubmitBlock = function(){
 		if( typeNormalSelected() ) {
 			emailBlock.fadeIn();
@@ -413,19 +434,21 @@ var initiativeType = (function() {
 		}
 	};
 
+	if(checkErrors().normal){
+		emailBlock.show();
+	}
+	if(checkErrors().verifiable){
+		vetumaBlock.show();
+	}
+
 	type.click(function(){
-		var thisObj =		$(this),
-			thisChoose =	thisObj.find('span[data-choose]');
-		
-		resetTypes(true);
+		var thisObj = $(this);
 
-		thisObj.removeClass('unselected').addClass('selected');
-		thisObj.find(cbClass).addClass('checked');
-		thisChoose.text(thisChoose.data('chosen'));
-		// CSS hidden radiobutton does not get selected by clicking label on some browsers (IE)
-		thisObj.find('input[type="radio"]').attr('checked','checked');
-
-		toggleSubmitBlock();		
+		if(!thisObj.hasClass('selected')) {
+			resetTypes(true);
+			setSelected(thisObj);
+			toggleSubmitBlock();	
+		}	
 	});
 
 	return {
