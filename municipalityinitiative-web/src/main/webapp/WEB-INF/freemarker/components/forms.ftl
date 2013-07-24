@@ -322,7 +322,7 @@
         </div>
         
         <div class="column col-1of2 last">
-            <label for="contactInfo.address">
+            <label class="input-header" for="contactInfo.address">
                 <@u.message "contactInfo.address" />
             </label>
             <@spring.formTextarea path+".address", 'class="address-field noresize" maxlength="'+InitiativeConstants.CONTACT_ADDRESS_MAX+'"' />
@@ -341,7 +341,7 @@
         </div>
 
         <div class="column col-1of2 last">
-            <label for="contactInfo.address">
+            <label class="input-header" for="contactInfo.address">
                 <@u.message "contactInfo.address" />
             </label>
             <@spring.formTextarea path+".address", 'class="address-field noresize" maxlength="'+InitiativeConstants.CONTACT_ADDRESS_MAX+'"' />

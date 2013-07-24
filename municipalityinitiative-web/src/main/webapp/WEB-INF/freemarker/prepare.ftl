@@ -67,13 +67,11 @@
             <div class="input-block cf">
     
                 <div class="input-block-content">
-                    <div class="system-msg msg-info ">
-                        Jotta voit luoda 2%/5% aloitteen, sinun tulee olla aloitteen kunnan äänioikeutettu asukas. Henkilöllisyytesi ja kotikuntasi tarkastetaan vahvan tunnistautumisen avulla väestötietojärjestelmästä. <a href="#">Lue lisää tunnistautumisesta</a>
-                    </div>
+                    <@u.systemMessage path="initiative.prepare.verifiable.info" type="info" showClose=false args=["#"] />
                 </div>
 
                 <div class="input-block-content">
-                    <button value="true" class="small-button" name="action-send-confirm" id="action-send-confirm" type="submit"><span class="small-icon save-and-send">Siirry&nbsp;tunnistautumaan</span></button>
+                    <button value="true" class="small-button" name="action-send-confirm" id="action-send-confirm" type="submit"><span class="small-icon save-and-send"><@u.message "action.prepare."+user.isVerifiedUser()?string("create","authenticate") /></span></button>
                 </div>
                 
             </div>

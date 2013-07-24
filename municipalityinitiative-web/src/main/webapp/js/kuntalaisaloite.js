@@ -462,11 +462,19 @@ var municipalitySelection = (function() {
 		}
 	},
 	equalMunicipalitys = function(){
-		var selectHome	= $('#homeMunicipality'),
-			select		= $('#municipality');
+		var selectHome		= $('#homeMunicipality'),
+			select			= $('#municipality'),
+			verifiedHome 	= $('#verifiedHomeMunicipality');
 
+		// If user's home municipality is verified by VTJ
+		if (verifiedHome.length > 0){
+			if ( select.val() == "" || select.val() == verifiedHome.data('initiative-municipality') ) {
+				return true;
+			} else {
+				return false;
+			}
 		// In the create form we have two selects
-		if (select.length > 0){
+		} else if (select.length > 0){
 			if ( selectHome.val() == select.val() ) {
 				return true;
 			} else {
