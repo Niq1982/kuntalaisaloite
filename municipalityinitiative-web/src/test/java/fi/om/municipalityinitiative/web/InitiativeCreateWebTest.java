@@ -44,7 +44,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         overrideDriverToFirefox(true);
 
         openAndAssertPreparePage();
-        select_municipality();
+        select_municipality(false);
         fill_in_preparation_form();
     }
 
@@ -67,7 +67,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     public void filling_prepare_page_with_verified_initiative_redirects_to_vetuma_and_edit_page() {
         overrideDriverToFirefox(true);
         openAndAssertPreparePage();
-        select_municipality();
+        select_municipality(false);
         getElemContaining("Valtuustokäsittelyyn tähtäävä aloite", "span").click();
         getElemContaining("Siirry tunnistautumaan", "button").click();
         // Get redirected to vetuma
@@ -79,7 +79,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     public void filling_prepare_page_with_verified_initiative_redirects_to_vetuma_but_back_to_prepare_page_with_error_if_wrong_homeMunicipality_from_vetuma() {
         overrideDriverToFirefox(true);
         openAndAssertPreparePage();
-        select_municipality();
+        select_municipality(false);
         getElemContaining("Valtuustokäsittelyyn tähtäävä aloite", "span").click();
         getElemContaining("Siirry tunnistautumaan", "button").click();
         // Get redirected to vetuma
@@ -94,9 +94,9 @@ public class InitiativeCreateWebTest extends WebTestBase {
         vetumaLogin(USER_SSN, MUNICIPALITY_1);
 
         openAndAssertPreparePage();
-        select_municipality();
+        select_municipality(true);
         getElemContaining("Valtuustokäsittelyyn tähtäävä aloite", "span").click();
-        getElemContaining("Siirry tunnistautumaan", "button").click();
+        getElemContaining("Aloita aloitteen tekeminen", "button").click();
         assertTitle("Tee kuntalaisaloite - Kuntalaisaloitepalvelu");
     }
 
@@ -109,7 +109,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         vetumaLogin(USER_SSN, MUNICIPALITY_2);
 
         openAndAssertPreparePage();
-        select_municipality();
+        select_municipality(false);
         getElemContaining("Valtuustokäsittelyyn tähtäävä aloite", "span").click();
         getElemContaining("Siirry tunnistautumaan", "button").click();
         assertPreparePageWithInvalidMunicipalityWarning();
@@ -239,11 +239,13 @@ public class InitiativeCreateWebTest extends WebTestBase {
         assertTitle("Muokkaa kuntalaisaloitetta - Kuntalaisaloitepalvelu");
     }
 
-    public void select_municipality() {
+    public void select_municipality(boolean homeMunicipalityVerified) {
         clickLinkContaining(getMessage(SELECT_MUNICIPALITY));
         getElemContaining(MUNICIPALITY_1, "li").click();
 
-        assertTextContainedByXPath("//div[@id='homeMunicipality_chzn']/a/span", MUNICIPALITY_1);
+        if (!homeMunicipalityVerified) {
+            assertTextContainedByXPath("//div[@id='homeMunicipality_chzn']/a/span", MUNICIPALITY_1);
+        }
 
         System.out.println("--- select_municipality OK");
     }
