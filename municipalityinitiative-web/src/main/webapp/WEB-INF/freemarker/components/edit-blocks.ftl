@@ -241,6 +241,7 @@
         <div class="input-block-content">
             <@f.textarea path=path+".extraInfo" key="initiative.extraInfo" required="" optional=true cssClass="textarea" maxLength=InitiativeConstants.INITIATIVE_EXTRA_INFO_MAX?string("#") />
         </div>
+        
     </div>
 </#macro>
 

@@ -161,6 +161,8 @@
 -->
 <#macro returnPrevious url labelKey>
     <p><a href="${url}">&laquo; <@message labelKey /></a></p>
+    
+    <#--<a href="${url}" class="small-button margin"><span class="small-icon previous"><@message labelKey /></span></a>-->
 </#macro>
 
 <#--

@@ -429,9 +429,10 @@ var initiativeType = (function() {
 		} else {
 			emailBlock.hide();
 			vetumaBlock.fadeIn();
-			// Reset error messages when user selectes verifiable initiative
-			$('.msg-error').remove();
 		}
+
+		// Reset error messages when user switches initiative type
+		$('.msg-error').remove();
 	};
 
 	if(checkErrors().normal){

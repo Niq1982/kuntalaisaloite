@@ -49,7 +49,15 @@
             </span>
 
             <span class="date trigger-tooltip" title="<@u.message "searchResults.initiative.date" />" ><@u.localDate initiative.createTime!"" /></span>
-            <span class="title"><a href="${urls.management(initiative.id)}" class="name"><@u.limitStringLength initiative.name!"" 150 /></a></span>
+            <span class="title">
+                <a href="${urls.management(initiative.id)}" class="name">
+                    <#if initiative.name??>
+                        <@u.limitStringLength initiative.name!"" 150 />
+                    <#else>
+                        Luonnos
+                    </#if>
+                </a>
+            </span>
             <#if !initiative.public>
                 <span class="info">${initiative.municipality.getName(locale)!""}<span class="bull">&bull;</span><span class="state"><@u.message "searchResults.notPublic" /></span></span>
             <#elseif !initiative.sentTime.present>
