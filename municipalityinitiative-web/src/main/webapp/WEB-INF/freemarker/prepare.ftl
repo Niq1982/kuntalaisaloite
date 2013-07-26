@@ -56,7 +56,7 @@
                 <@edit.authorEmailBlock />
                 
                 <div class="input-block-content no-top-margin">
-                    <@edit.buttons type="save" /> <span class="fill-in-all push hidden"><@u.message "initiative.fillInAllFields" /></span>
+                    <@edit.buttons type="save" /><#-- <span class="fill-in-all push hidden"><@u.message "initiative.fillInAllFields" /></span>-->
                 </div>
                 
             </div>
