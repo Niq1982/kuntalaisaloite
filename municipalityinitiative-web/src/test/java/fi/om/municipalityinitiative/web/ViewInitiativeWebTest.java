@@ -115,7 +115,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
 
         open(urls.iframe());
 
-        assertThat(driver.getTitle(), is("Leijuke - Kuntalaisaloitepalvelu"));
+        assertThat(driver.getTitle(), is("Sisältöä näyttävä widget eli leijuke - Kuntalaisaloitepalvelu"));
         assertThat(getElement(By.tagName("li")).getText(), containsString(modifyTime.toString("dd.MM.yyyy")));
         assertThat(getElement(By.tagName("li")).getText(), containsString(title));
     }
