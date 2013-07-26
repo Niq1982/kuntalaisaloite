@@ -918,27 +918,22 @@ $('.municipality-filter').change( function() {
  * */
 (function() {
 	jQuery.fn.loadModal = function(modalType, callback){
-		var modal, topPos, modalFixed, maxTopPos, modalHeight, $modalContent, $scrollable;
-		modal = $(this);
-		
-		$modalContent = modal.children('.modal-content');
-		$scrollable = $modalContent.children('.scrollable'); // Used when content can be very long. For examples in namelists.
-		
-		modalHeight = function(){
-			return modal.height();
-		};
+		var maxTopPos,
+			modal 			= $(this),
+			$modalContent 	= modal.children('.modal-content'),
+			$scrollable 	= $modalContent.children('.scrollable'), // Used when content can be very long. For examples in namelists.
 		
 		topPos = function(){
-			if ((modalType == "full" || modalType == "fixed") && (modalHeight() < vpHeight) ) {
-				return Math.floor((vpHeight-modalHeight())/2);
-			} else if (modalType == "minimal") {
+			if ((modalType === "full" || modalType === "fixed") && (modal.height() < vpHeight) ) {
+				return Math.floor((vpHeight-modal.height())/2);
+			} else if (modalType === "minimal") {
 				// 10% of viewport's size seems to be fine
 				return Math.floor(0.1 * vpHeight);
 			} else {
 				return 10; // 10 px
 			}
 			
-		};
+		},
 		modalFixed = function(){
 			if(modalType == "full") {
 				return false;
@@ -963,7 +958,7 @@ $('.municipality-filter').change( function() {
 
 		    	jsMessages.Load();
 		    	
-		    	// TODO: enable
+		    	// TODO: 
 				//validateListener.init($('.js-validate'));
 
 		    	if (callback) callback();					// Callback for dynamically updated data
@@ -981,7 +976,7 @@ $('.municipality-filter').change( function() {
 		}).addClass(modalType);
 		
 		// Adjust modal after load
-		adjustModal(modal, modalType, $modalContent, $scrollable);
+		adjustModal(modal, modalType, $scrollable);
 
 		// Adjust modal when user resizes viewport
 		$(window).bind('resize', function(){
@@ -989,15 +984,19 @@ $('.municipality-filter').change( function() {
 			vpWidth = $(this).width();
 			modal.css('top',topPos()+'px');
 			
-			adjustModal(modal, modalType, $modalContent, $scrollable);
+			adjustModal(modal, modalType, $scrollable);
 		});
 	};
 	
 	// Adjust modal's position and height
-	var adjustModal = function(modal, modalType, $modalContent,$scrollable){
+	var adjustModal = function(modal, modalType, $scrollable){
 		var modalPosX;
 		modalPosX = (vpWidth - modal.width())/2;
-		modal.css('left',modalPosX);
+		if (modal.width() > vpWidth) {
+			modal.css('left','1%');	// quick fix for mobile devices
+		} else { 
+			modal.css('left',modalPosX);
+		}
 		
 		$scrollable.css('max-height', 0.75*vpHeight); // Adjust value if needed
 
@@ -1042,7 +1041,7 @@ $('.municipality-filter').change( function() {
 	// Send initiative to review and collect participants
 	$('.js-send-to-review-collect').click(function(){
 		try {
-			generateModal(modalData.sendToReviewCollect(), 'minimal');
+			generateModal(modalData.sendToReviewCollect(), 'full');
 			return false;
 		} catch(e) {
 			console.log(e);

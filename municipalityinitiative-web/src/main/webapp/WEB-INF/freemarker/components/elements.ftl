@@ -130,12 +130,12 @@
     <h3><@u.message key="initiative.participants.title" args=[participantCount.total+initiative.externalParticipantCount] />
     <#if admin && !initiative.isVerifiable()><span class="switch-view"><a href="${urls.participantListManage(initiative.id)}" class="trigger-tooltip" title="<@u.message "manageParticipants.tooltip" />"><@u.message "manageParticipants.title" /></a></span></#if></h3>
     
-    <#if !user.hasRightToInitiative(initiative.id)>
-        <#if initiative.verifiable && user.hasParticipatedToInitiative(initiative.id)>
+    <#if initiative.verifiable && !initiative.sentTime.present && !user.hasRightToInitiative(initiative.id)>
+        <#if user.hasParticipatedToInitiative(initiative.id)>
             <@u.systemMessage path="warning.already.participated" type="warning" showClose=false />
-        <#elseif initiative.verifiable && user.isVerifiedUser() && !user.allowedToParticipate(initiative.id, initiative.municipality)>
+        <#elseif user.isVerifiedUser() && !user.allowedToParticipate(initiative.id, initiative.municipality)>
             <@u.systemMessage path="warning.participant.notMember" type="warning" showClose=false />
-        <#elseif initiative.verifiable && ((user.isVerifiedUser() && !user.homeMunicipality.present) || !user.isVerifiedUser()) >
+        <#elseif ((user.isVerifiedUser() && !user.homeMunicipality.present) || !user.isVerifiedUser()) >
             <@u.systemMessage path="participate.verifiable.info"+user.isVerifiedUser()?string(".verifiedUser","") type="info" showClose=false />
         </#if>
     </#if>
