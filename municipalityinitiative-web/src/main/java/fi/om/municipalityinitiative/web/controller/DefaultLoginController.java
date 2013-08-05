@@ -18,9 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Locale;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
-import static fi.om.municipalityinitiative.web.Views.MODERATOR_LOGIN_VIEW;
-import static fi.om.municipalityinitiative.web.Views.SINGLE_LOGIN_VIEW;
-import static fi.om.municipalityinitiative.web.Views.AUTHENTICATE_VIEW;
+import static fi.om.municipalityinitiative.web.Views.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
@@ -61,7 +59,7 @@ public class DefaultLoginController extends BaseLoginController {
     public String authorLoginGet(@RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                                  Model model, Locale locale, HttpServletRequest request) {
         model.addAttribute("managementHash", managementHash);
-        model.addAttribute(Urls.get(locale));
+        model.addAttribute(ALT_URI_ATTR, Urls.get(locale).alt().loginAuthor(managementHash));
         return SINGLE_LOGIN_VIEW;
 
     }
