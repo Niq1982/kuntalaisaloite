@@ -259,10 +259,10 @@ $(document).ready(function () {
 	});
 	
 	// TOP ribbon
-	var $topRibbon = $('.debug-ribbon.top.fixed');
+	/*var $topRibbon = $('.debug-ribbon.top.fixed');
 	$topRibbon
 	.after('<div style="height:'+$topRibbon.outerHeight()+'px" />')
-	.css('position','fixed');
+	.css('position','fixed');*/
 
 	// Remove elements from DOM
 	function jsRemove(){
