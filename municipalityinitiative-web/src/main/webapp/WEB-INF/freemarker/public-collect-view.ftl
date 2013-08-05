@@ -131,7 +131,7 @@
                 </div>
                 
                 <div class="input-block-content is-not-member no-top-margin js-hide hidden">
-                    <@u.systemMessage path="warning.initiative.notMember" type="warning" showClose=false />
+                    <@u.systemMessage path="warning.participate.notMember" type="warning" showClose=false />
                 </div>
             </div>
             

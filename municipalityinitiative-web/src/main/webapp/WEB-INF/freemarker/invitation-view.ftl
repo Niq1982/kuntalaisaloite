@@ -41,7 +41,7 @@
                     <p><@u.message "invitation.view.instruction" /></p>
     
                     <#if initiative.verifiable && user.homeMunicipality.present && user.homeMunicipality.value.id != initiative.municipality.id>
-                        <@u.systemMessage path="warning.author.notMember" type="warning" showClose=false />
+                        <@u.systemMessage path="warning.verifiedAuthor.notMember" type="warning" showClose=false />
                         <a href="?invitation=${authorInvitation.confirmCode!""}&invitation-reject=confirm" title="<@u.message "invitation.reject" />" class="small-button gray js-reject-invitation"><span class="small-icon cancel"><@u.message "invitation.reject" /></span></a>
                     <#else>
                         <a href="?invitation=${authorInvitation.confirmCode!""}&invitation-accept=confirm" class="small-button green green save-and-send js-accept-invitation"><span class="small-icon save-and-send"><@u.message "invitation.accept" /></span></a>
@@ -143,7 +143,7 @@
                     </div>
 
                     <div class="input-block-content is-not-member no-top-margin js-hide hidden">
-                        <@u.systemMessage path="warning.initiative.notMember" type="warning" showClose=false />
+                        <@u.systemMessage path="warning.normalAuthor.notMember" type="warning" showClose=false />
                     </div>
                 </div>
 
