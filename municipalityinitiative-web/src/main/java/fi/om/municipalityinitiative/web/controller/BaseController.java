@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.conf.EnvironmentSettings;
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
+import fi.om.municipalityinitiative.service.StatusService;
 import fi.om.municipalityinitiative.service.UserService;
 import fi.om.municipalityinitiative.util.*;
 import fi.om.municipalityinitiative.validation.NormalInitiative;
@@ -42,6 +43,9 @@ public class BaseController {
 
     @Resource
     BeansWrapper freemarkerObjectWrapper;
+
+    @Resource // TODO: Remove when at production
+    private StatusService statusService;
 
     @Resource
     protected UserService userService;
@@ -157,6 +161,7 @@ public class BaseController {
         model.addAttribute("infoRibbon", InfoRibbon.getInfoRibbonText(locale));
         model.addAttribute("vetumaLoginToCurrentPage", urls.login(urlHelper.getOriginalRequestUriWithQueryString(request)));
         model.addAttribute("vetumaLoginToOwnInitiatives", urls.login(urls.ownInitiatives()));
+        model.addAttribute("appVersion", statusService.getAppVersion());
 
         try {
             model.addAttribute("UrlConstants", freemarkerObjectWrapper.getStaticModels().get(Urls.class.getName()));
