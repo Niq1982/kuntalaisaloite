@@ -160,7 +160,6 @@ public class BaseController {
         model.addAttribute(CURRENT_URI_ATTR, urls.getBaseUrl() + request.getRequestURI());
         model.addAttribute("infoRibbon", InfoRibbon.getInfoRibbonText(locale));
         model.addAttribute("vetumaLoginToCurrentPage", urls.login(urlHelper.getOriginalRequestUriWithQueryString(request)));
-        model.addAttribute("vetumaLoginToOwnInitiatives", urls.login(urls.ownInitiatives()));
         model.addAttribute("appVersion", statusService.getAppVersion());
 
         try {

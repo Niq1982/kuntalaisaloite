@@ -20,7 +20,7 @@
         <p>Voit tunnistautua ja ylläpitää niitä luomiasia aloitteita, jotka tähtäävät 2 tai 5 prosenttiin kunnan äänioikeutetuista asukkaista.</p>
         <p>Tavallisia Kuntalaisaloitteita voi ylläpitää ainoastaan sähköpostiin lähetetyllä ylläpitolinkillä.</p>
             
-        <p><a href="${vetumaLoginToOwnInitiatives}" class="small-button"><span class="small-icon next"><@u.message "common.continueToAuthenticate" /></span></a></p>
+        <p><a href="${urls.login(urls.ownInitiatives())}" class="small-button"><span class="small-icon next"><@u.message "common.continueToAuthenticate" /></span></a></p>
     </div>
 
 </@l.main>
