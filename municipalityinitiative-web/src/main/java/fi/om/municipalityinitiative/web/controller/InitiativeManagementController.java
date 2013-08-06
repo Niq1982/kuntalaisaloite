@@ -248,13 +248,13 @@ public class InitiativeManagementController extends BaseController {
                 authorService.findAuthors(initiativeId, loginUserHolder),
                 authorService.findAuthorInvitations(initiativeId, loginUserHolder),
                 new AuthorInvitationUICreateDto()
-        ).view(model, Urls.get(locale).alt().getManagement(initiativeId));
+        ).view(model, Urls.get(locale).alt().manageAuthors(initiativeId));
     }
 
     @RequestMapping(value={ PARITICIPANT_LIST_MANAGE_FI, PARITICIPANT_LIST_MANAGE_SV }, method=GET)
     public String participantListManage(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
         Urls urls = Urls.get(locale);
-        String alternativeURL = urls.alt().view(initiativeId);
+        String alternativeURL = urls.alt().participantListManage(initiativeId);
 
         LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
 
@@ -296,7 +296,7 @@ public class InitiativeManagementController extends BaseController {
                     publicInitiativeService.getManagementSettings(initiativeId),
                     authorService.findAuthors(initiativeId, loginUserHolder),
                     authorService.findAuthorInvitations(initiativeId, loginUserHolder),
-                    authorInvitationUICreateDto).view(model, Urls.get(locale).alt().getManagement(initiativeId));
+                    authorInvitationUICreateDto).view(model, Urls.get(locale).alt().manageAuthors(initiativeId));
         }
     }
 

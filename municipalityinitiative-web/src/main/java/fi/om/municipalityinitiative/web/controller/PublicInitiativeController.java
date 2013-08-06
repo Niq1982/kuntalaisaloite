@@ -189,7 +189,7 @@ public class PublicInitiativeController extends BaseController {
     @RequestMapping(value={ PARITICIPANT_LIST_FI, PARITICIPANT_LIST_SV }, method=GET)
     public String participantList(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
         Urls urls = Urls.get(locale);
-        String alternativeURL = urls.alt().view(initiativeId);
+        String alternativeURL = urls.alt().participantList(initiativeId);
 
         InitiativeViewInfo initiativeInfo = publicInitiativeService.getPublicInitiative(initiativeId);
 
@@ -250,7 +250,7 @@ public class PublicInitiativeController extends BaseController {
                 authorService.findPublicAuthors(initiativeId),
                 participantService.getParticipantCount(initiativeId),
                 authorInvitationUIConfirmDto
-        ).view(model, Urls.get(locale).alt().getManagement(initiativeId));
+        ).view(model, Urls.get(locale).alt().invitation(initiativeId, confirmCode));
     }
 
     @RequestMapping(value={ INVITATION_FI, INVITATION_SV }, method=POST, params = ACTION_ACCEPT_INVITATION)
@@ -355,7 +355,7 @@ public class PublicInitiativeController extends BaseController {
                 new SearchParameterQueryString(search),
                 solveMunicipalityFromListById(municipalities, search.getMunicipality()),
                 publicInitiativeService.getInitiativeCounts(Maybe.fromNullable(search.getMunicipality()), loginUserHolder)
-        ).view(model, urls.alt().search());
+        ).view(model, urls.alt().iframe());
     }
 
     @RequestMapping(value={IFRAME_GENERATOR_FI, IFRAME_GENERATOR_SV}, method=GET)
