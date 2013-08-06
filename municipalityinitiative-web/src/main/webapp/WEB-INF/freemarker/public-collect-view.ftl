@@ -251,8 +251,8 @@
             
             
             <#-- Autoload modal if it has errors or returned from VETUMA and user is allowed to participate -->
-            <#if user.allowedToParticipate(initiative.id, initiative.municipality) &&
-                 initiative.verifiable && user.isVerifiedUser() && RequestParameters['participate']?? ||
+            <#if user.allowVerifiedParticipation(initiative.id, initiative.municipality) &&
+                 initiative.verifiable && RequestParameters['participate']?? ||
                  RequestParameters['formError']?? && RequestParameters['formError'] == "participate">
             modalData.participateFormAutoLoad = function() {
                 return [{

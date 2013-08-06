@@ -31,7 +31,7 @@ public class OmLoginUser extends User {
     }
     
     @Override
-    public boolean allowedToParticipate(Long initiativeId, Municipality municipality){
+    public boolean allowVerifiedParticipation(Long initiativeId, Municipality municipality){
         return false;
     }
 
