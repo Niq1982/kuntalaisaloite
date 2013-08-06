@@ -193,9 +193,9 @@ public class InitiativeManagementController extends BaseController {
     }
 
     @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_SEND_TO_REVIEW)
-    public String sendToReview(@PathVariable("id") Long initiativeId,
-                               @RequestParam(PARAM_SENT_COMMENT) String sentComment,
-                               Locale locale, HttpServletRequest request) {
+    public String sendToReviewAndMunicipality(@PathVariable("id") Long initiativeId,
+                                              @RequestParam(PARAM_SENT_COMMENT) String sentComment,
+                                              Locale locale, HttpServletRequest request) {
         initiativeManagementService.sendReviewAndStraightToMunicipality(initiativeId, userService.getRequiredLoginUserHolder(request), sentComment);
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.SEND_TO_REVIEW, request);
     }
@@ -203,7 +203,7 @@ public class InitiativeManagementController extends BaseController {
     @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_SEND_TO_REVIEW_COLLECT)
     public String sendToReviewForCollecting(@PathVariable("id") Long initiativeId,
                                             Locale locale, HttpServletRequest request) {
-        initiativeManagementService.sendReviewOnlyForAcceptance(initiativeId, userService.getRequiredLoginUserHolder(request));
+        initiativeManagementService.sendReviewWithUndefinedType(initiativeId, userService.getRequiredLoginUserHolder(request));
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.SEND_TO_REVIEW, request);
     }
 
