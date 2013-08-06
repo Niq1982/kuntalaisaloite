@@ -53,6 +53,10 @@ public class SearchParameterQueryString {
                 .append(fieldValue.toString());
     }
 
+    public String get() {
+        return generateParameters(original.copy());
+    }
+
     public String getWithLimit(int limit) {
         return generateParameters(original.copy().setOffset(0).setLimit(limit));
     }

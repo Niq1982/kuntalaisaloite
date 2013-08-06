@@ -69,13 +69,14 @@ public class PublicInitiativeController extends BaseController {
 
         List<Municipality> municipalities = municipalityService.findAllMunicipalities(locale);
         LoginUserHolder loginUserHolder = new LoginUserHolder(userService.getUser(request));
+        SearchParameterQueryString queryString = new SearchParameterQueryString(search);
         return ViewGenerator.searchView(publicInitiativeService.findMunicipalityInitiatives(search, loginUserHolder),
                 municipalities,
                 search,
-                new SearchParameterQueryString(search),
+                queryString,
                 solveMunicipalityFromListById(municipalities, search.getMunicipality()),
                 publicInitiativeService.getInitiativeCounts(Maybe.fromNullable(search.getMunicipality()), loginUserHolder))
-                .view(model, Urls.get(locale).alt().search());
+                .view(model, Urls.get(locale).alt().search()+queryString.get());
     }
 
     @RequestMapping(value={ VIEW_FI, VIEW_SV }, method=GET)
