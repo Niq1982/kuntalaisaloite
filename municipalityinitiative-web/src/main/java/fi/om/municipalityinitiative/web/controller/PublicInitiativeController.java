@@ -15,7 +15,6 @@ import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
 import fi.om.municipalityinitiative.service.ui.VerifiedInitiativeService;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
-import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.validation.NormalInitiative;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.SearchParameterQueryString;
@@ -227,9 +226,8 @@ public class PublicInitiativeController extends BaseController {
 
         Urls urls = Urls.get(locale);
 
-        model.addAttribute("managementHash", RandomHashGenerator.getPrevious()); // TODO: Remove after login-link is removed from the page
-
         if (getRequestAttribute(request) != null) {
+            model.addAttribute(ALT_URI_ATTR, urls.alt().pendingConfirmation(initiativeId));
             return PENDING_CONFIRMATION;
         } else {
             return redirectWithMessage(urls.prepare(), RequestMessage.PREPARE_CONFIRM_EXPIRED, request);
