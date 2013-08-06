@@ -10,6 +10,7 @@ import fi.om.municipalityinitiative.dto.vetuma.VetumaResponse;
 import fi.om.municipalityinitiative.exceptions.InvalidHomeMunicipalityException;
 import fi.om.municipalityinitiative.service.EncryptionService;
 import fi.om.municipalityinitiative.service.ui.VerifiedInitiativeService;
+import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
@@ -133,7 +134,7 @@ public class VetumaLoginController extends DefaultLoginController {
 
             userService.login(encryptionService.registeredUserHash(ssn),
                     vtjData.getFullName(),
-                    vtjData.getAddress(),
+                    locale.equals(Locales.LOCALE_FI) ? vtjData.getAddressFi() : vtjData.getAddressSv(),
                     vtjData.getMunicipality(),
                     request, response);
 
