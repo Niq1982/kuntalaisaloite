@@ -119,7 +119,7 @@ public class PublicInitiativeController extends BaseController {
 
         if (validationService.validationErrors(initiative, bindingResult, model, solveValidationGroup(initiative.getInitiativeType()))) {
             return ViewGenerator.prepareView(initiative, municipalityService.findAllMunicipalities(locale))
-                    .view(model, urls.prepare());
+                    .view(model, urls.alt().prepare());
         }
 
         if (InitiativeType.isVerifiable(initiative.getInitiativeType())) {
@@ -267,7 +267,7 @@ public class PublicInitiativeController extends BaseController {
                     authorService.findPublicAuthors(initiativeId),
                     participantService.getParticipantCount(initiativeId),
                     confirmDto
-            ).view(model, Urls.get(locale).alt().manageAuthors(initiativeId));
+            ).view(model, Urls.get(locale).alt().invitation(initiativeId, confirmDto.getConfirmCode()));
 
         }
 
