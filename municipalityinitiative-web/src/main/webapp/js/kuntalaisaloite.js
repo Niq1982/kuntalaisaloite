@@ -965,13 +965,14 @@ $('.municipality-filter').change( function() {
 		    	
 		    	setTimeout(function () {
 		    		jsRemove();
-		    		
-		    		
 
 		    		if (!$('form').hasClass('has-errors')) {
 		    			modal.find('input[type="text"]:first, textarea:first').focus();
 		    		}
 	    		}, 50);
+		    },
+		    onLoad: function(){
+		    	tooltip.load();
 		    },
 		    closeOnClick: false,	// disable this for modal dialog-type of overlays
 		    load: true				// load it immediately after the construction
@@ -1108,10 +1109,7 @@ $('.municipality-filter').change( function() {
 	// Participate initiative
 	$('.js-participate').click(function(){
 		try {
-			generateModal(modalData.participateForm(), 'full', function(){
-				municipalitySelection.init;
-				//loadTooltip;
-			});
+			generateModal(modalData.participateForm(), 'full', municipalitySelection.init);
 			return false;
 		} catch(e) {
 			console.log(e);
@@ -1198,20 +1196,26 @@ $('.municipality-filter').change( function() {
  * ===============================
  * 
  * */
-var loadTooltip = (function() {console.log("1");
-	$('.trigger-tooltip[title]').tooltip({
-		animation:	true,
-		effect:		'fade',
-		placement:	'top right', // FIXME: this doesn't seem to work correctly
-		offset:		[-5, 0],
-		trigger:	'hover'
-	}).dynamic({
-		left: { direction: 'right' },
-		right: { direction: 'left' },
-		top: { direction: 'bottom' }
+var tooltip = (function() {
+	return {
+		load : function(){
+			$('.trigger-tooltip[title]').tooltip({
+				animation:	true,
+				effect:		'fade',
+				placement:	'top right', // FIXME: this doesn't seem to work correctly
+				offset:		[-5, 0],
+				trigger:	'hover'
+			}).dynamic({
+				left: { direction: 'right' },
+				right: { direction: 'left' },
+				top: { direction: 'bottom' }
 
-	});
-}());
+			});
+		}
+	}
+})();
+
+tooltip.load();
 	
 
 /**

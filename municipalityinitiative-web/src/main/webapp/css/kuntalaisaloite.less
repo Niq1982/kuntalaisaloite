@@ -2110,7 +2110,8 @@ label  {
 // Styleguide 5.1
 .modal {
     display:none;
-    z-index:9999;
+    // had to add important rule here. other solution would be reset CSS on modal load
+    z-index:9998 !important;
     width:600px;
     //max-width:95%;
     background:#fff;
@@ -2211,6 +2212,8 @@ label  {
         }
     }
 }
+// had to add important rule here. other solution would be reset CSS on modal load
+#exposeMask { z-index:9997 !important; }
 
 
 .scrollable {
