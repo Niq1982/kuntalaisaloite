@@ -129,17 +129,16 @@
             
         <#assign sendToReviewDoNotCollect>
             <@compress single_line=true>
-            
+
+            <@u.errorsSummary path="comment.*" prefix="comment."/>
+
                 <p><@u.message "sendToReview.doNotCollect.confirm.description" /></p>
                 
                 <form action="${springMacroRequestContext.requestUri}" method="POST" >
                     <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
 
                     <div class="input-block-content">
-                        <label for="${UrlConstants.PARAM_SENT_COMMENT}" class="input-header">
-                            <@u.message "sendToMunicipality.sentComment" />
-                        </label>
-                        <textarea name="${UrlConstants.PARAM_SENT_COMMENT}" id="${UrlConstants.PARAM_SENT_COMMENT}"></textarea>
+                        <@f.textarea path="comment.comment" required="" optional=false cssClass="medium" maxLength=InitiativeConstants.INITIATIVE_COMMENT_MAX key="sendToMunicipality.sentComment" />
                     </div>
                     
                     <div class="input-block-content">
@@ -256,14 +255,14 @@
 
         <#assign sendToMunicipality>
             <@compress single_line=true>
+
+                <@u.errorsSummary path="comment.*" prefix="comment."/>
+
                 <form action="${springMacroRequestContext.requestUri}" method="POST" >
                     <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
 
                     <div class="input-block-content">
-                        <label for="${UrlConstants.PARAM_SENT_COMMENT}" class="input-header">
-                            <@u.message "sendToMunicipality.sentComment" />
-                        </label>
-                        <textarea name="${UrlConstants.PARAM_SENT_COMMENT}" id="${UrlConstants.PARAM_SENT_COMMENT}"></textarea>
+                        <@f.textarea path="comment.comment" required="" optional=false cssClass="medium" maxLength=InitiativeConstants.INITIATIVE_COMMENT_MAX key="sendToMunicipality.sentComment" />
                     </div>
                     
                     <div class="input-block-content">
