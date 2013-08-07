@@ -81,6 +81,8 @@
 }
 .gradient (@start, @stop, @center){
     background: @center;
+    background: linear-gradient(top,  @start, @stop);
+    background: -ms-linear-gradient(top,  @start, @stop);
     background: -webkit-gradient(linear, left top, left bottom, from(@start), to(@stop));
     background: -moz-linear-gradient(top,  @start, @stop);
     background: -o-linear-gradient(top,  @start, @stop);
@@ -88,22 +90,29 @@
 
 .grayGradient (){
     background: @grayGradient2;
+    background: linear-gradient(top, @grayGradient1, @grayGradient2);
+    background: -ms-linear-gradient(top,  @grayGradient1,  @grayGradient2);
     background: -webkit-gradient(linear, left top, left bottom, from(@grayGradient1), to(@grayGradient2));
     background: -moz-linear-gradient(top,  @grayGradient1,  @grayGradient2);
     background: -o-linear-gradient(top,  @grayGradient1,  @grayGradient2);
 }
 .grayGradientHover (){
     background: @grayGradientHover2;
+    background: linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
+    background: -ms-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
     background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientHover1), to(@grayGradientHover2));
     background: -moz-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
     background: -o-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
 }
 .grayGradientActive (){
     background: @grayGradientActive2;
+    background: linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
+    background: -ms-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
     background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientActive1), to(@grayGradientActive2));
     background: -moz-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
     background: -o-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
 }
+
 
 html {
     height:100%;
@@ -375,12 +384,16 @@ a.block-link {
     color: @secondaryTextColor;
     border: solid 1px @borderGray;
     background: @grayGradient2;
+    background: linear-gradient(top,  @grayGradient1,  @grayGradient2);
+    background: -ms-linear-gradient(top,  @grayGradient1,  @grayGradient2);
     background: -webkit-gradient(linear, left top, left bottom, from(@grayGradient1), to(@grayGradient2));
     background: -moz-linear-gradient(top,  @grayGradient1,  @grayGradient2);
     background: -o-linear-gradient(top,  @grayGradient1,  @grayGradient2);
 }
 .gray:hover, .disabled:hover {
     background: @grayGradientHover2;
+    background: linear-gradient(top,  @grayGradient1,  @grayGradient2);
+    background: -ms-linear-gradient(top,  @grayGradient1,  @grayGradient2);
     background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientHover1), to(@grayGradientHover2));
     background: -moz-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
     background: -o-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
@@ -389,6 +402,8 @@ a.block-link {
 }
 .gray:active, .disabled:active, .gray:focus {
     color: black;
+    background: linear-gradient(top,  @grayGradient1,  @grayGradient2);
+    background: -ms-linear-gradient(top,  @grayGradient1,  @grayGradient2);
     background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientActive1), to(@grayGradientActive2));
     background: -moz-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
     background: -o-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
