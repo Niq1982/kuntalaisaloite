@@ -28,7 +28,7 @@
      * NOSCRIPT-users gets confirmation form by request parameter 'invitation-reject'.
     -->
     <#if !RequestParameters['invitation-reject']?? && !RequestParameters['invitation-accept']??>
-        <#if user.hasRightToInitiative(initiative.id)>
+        <#if user.hasRightToInitiative(initiative.id) && initiative.isVerifiable()> <#-- Only disallow double-invitation-acceptance for verified initiatives -->
             <@u.systemMessage path="warning.author.alreadyAuthor" type="warning" showClose=false />
         <#else>
             <div class="msg-block ${validationError?string("hidden","")}">
