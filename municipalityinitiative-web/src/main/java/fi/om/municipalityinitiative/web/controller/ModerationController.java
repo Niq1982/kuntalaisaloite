@@ -2,7 +2,8 @@ package fi.om.municipalityinitiative.web.controller;
 
 import fi.om.municipalityinitiative.dto.ui.MunicipalityUIEditDto;
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
-import fi.om.municipalityinitiative.service.*;
+import fi.om.municipalityinitiative.service.UserService;
+import fi.om.municipalityinitiative.service.ValidationService;
 import fi.om.municipalityinitiative.service.ui.ModerationService;
 import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
 import fi.om.municipalityinitiative.util.Locales;
@@ -58,7 +59,7 @@ public class ModerationController extends BaseController{
 
     @RequestMapping(value = {MODERATION_FI, MODERATION_SV}, method = POST, params = ACTION_ACCEPT_INITIATIVE)
     public String acceptInitiative(@PathVariable("id") Long initiativeId,
-                                   @RequestParam("moderatorComment") String comment,
+                                   @RequestParam(PARAM_SENT_COMMENT) String comment,
                                    Locale locale, HttpServletRequest request) {
 
         moderationService.accept(userService.getRequiredOmLoginUserHolder(request), initiativeId, comment, locale);
@@ -67,7 +68,7 @@ public class ModerationController extends BaseController{
 
     @RequestMapping(value = {MODERATION_FI, MODERATION_SV}, method = POST, params = ACTION_REJECT_INITIATIVE)
     public String rejectInitiative(@PathVariable("id") Long initiativeId,
-                                   @RequestParam("moderatorComment") String comment,
+                                   @RequestParam(PARAM_SENT_COMMENT) String comment,
                                    Locale locale, HttpServletRequest request) {
 
         moderationService.reject(userService.getRequiredOmLoginUserHolder(request), initiativeId, comment);
@@ -76,7 +77,7 @@ public class ModerationController extends BaseController{
 
     @RequestMapping(value = {MODERATION_FI, MODERATION_SV}, method = POST, params = ACTION_SEND_TO_FIX)
     public String sendInitiativeForFix(@PathVariable("id") Long initiativeId,
-                                   @RequestParam("moderatorComment") String comment,
+                                   @RequestParam(PARAM_SENT_COMMENT) String comment,
                                    Locale locale, HttpServletRequest request) {
 
         moderationService.sendInitiativeBackForFixing(userService.getRequiredOmLoginUserHolder(request), initiativeId, comment);

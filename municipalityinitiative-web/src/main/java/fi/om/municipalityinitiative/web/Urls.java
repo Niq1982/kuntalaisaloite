@@ -111,7 +111,7 @@ public final class Urls {
 
     public static final String PARAM_MUNICIPALITY = "municipality";
 
-    public static final String PARAM_SENT_COMMENT = "sentComment";
+    public static final String PARAM_SENT_COMMENT = "comment";
 
     public static final String PARAM_MANAGEMENT_CODE = "management";
     

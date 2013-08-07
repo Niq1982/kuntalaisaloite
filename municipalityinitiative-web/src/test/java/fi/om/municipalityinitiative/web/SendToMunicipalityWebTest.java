@@ -30,7 +30,7 @@ public class SendToMunicipalityWebTest extends WebTestBase {
         
         open(urls.management(initiativeId));
         clickLinkContaining(getMessage(MSG_BTN_SEND));
-        inputText("sentComment", COMMENT);
+        inputText("comment", COMMENT);
         getElemContaining(getMessage(MSG_BTN_SEND_CONFIRM), "button").click();
         assertMsgContainedByClass("msg-success",  MSG_SUCCESS_SEND);
     }
