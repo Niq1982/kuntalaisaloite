@@ -3008,8 +3008,11 @@ h3 {
         margin-bottom:2em;
     }
 }
-.push-width { margin-left:12px; }
-.push-amount { margin-left:26px; }
+// Column exceptions
+.column {
+    &.push-width { margin-left:12px; }
+    &.push-amount { margin-left:26px; width:12%; }
+}
 
 // Open Data API and Status
 
