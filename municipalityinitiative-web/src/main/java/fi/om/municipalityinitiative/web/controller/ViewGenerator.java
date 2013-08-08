@@ -1,8 +1,8 @@
 package fi.om.municipalityinitiative.web.controller;
 
 import com.google.common.collect.Maps;
-import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.dto.Author;
+import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
@@ -147,13 +147,14 @@ public class ViewGenerator {
         );
     }
 
-    public static ViewGenerator managementView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, ParticipantCount participantCount) {
+    public static ViewGenerator managementView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, ParticipantCount participantCount, CommentUIDto commentUIDto) {
         return new ViewGenerator(MANAGEMENT_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
                         .add("managementSettings", managementSettings)
                         .add("authors", authors)
                         .add("participantCount", participantCount)
+                        .add("comment", commentUIDto)
                         .build()
         );
     }

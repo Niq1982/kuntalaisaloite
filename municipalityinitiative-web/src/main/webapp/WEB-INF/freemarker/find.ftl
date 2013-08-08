@@ -51,6 +51,7 @@
     <#--
      * Initiative type - DUMMY 
     -->
+    <#if enableVerifiedInitiatives>
     <span class="search-parameters-title filter"><label for="municipality">Tyyppi</label></span>
     <div class="search-parameters-container cf">
         <select data-allow-single-deselect="allow" data-placeholder="Kaikki" data-initiative-municipality="" class="chzn-select municipality-filter" id="" name="">
@@ -68,6 +69,7 @@
             <a class="" href="#">5% aloitteet</a>
         </div>-->
     </div>
+    </#if>
     <#--
      * Search filter and sort states
      * currentSearch.show:      running, sentToMunicipality, closed, all

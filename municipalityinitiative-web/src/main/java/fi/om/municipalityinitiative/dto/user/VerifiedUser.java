@@ -54,10 +54,10 @@ public class VerifiedUser extends User{
     }
     
     @Override
-    public boolean allowedToParticipate(Long initiativeId, Municipality municipality){
+    public boolean allowVerifiedParticipation(Long initiativeId, Municipality municipality){
         return !hasParticipatedToInitiative(initiativeId)
                 && (homeMunicipality.isPresent() && homeMunicipality.getValue().getId().equals(municipality.getId())
-                || !homeMunicipality.isPresent());
+                || homeMunicipality.isNotPresent());
     }
 
     @Override

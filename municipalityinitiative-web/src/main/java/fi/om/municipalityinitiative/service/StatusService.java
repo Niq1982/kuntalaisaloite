@@ -16,4 +16,5 @@ public interface StatusService {
 
     List<KeyValueInfo> getConfigurationTestInfo();
 
+    String getAppVersion();
 }

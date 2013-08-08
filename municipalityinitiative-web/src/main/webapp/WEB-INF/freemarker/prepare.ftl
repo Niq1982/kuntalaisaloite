@@ -61,7 +61,8 @@
                 
             </div>
         </div>
-        
+
+        <#if enableVerifiedInitiatives>
         <div id="prepare-form-vetuma" class="form-block-container toggle-disable js-hide hidden">
             
             <div class="input-block cf">
@@ -78,6 +79,7 @@
             
             
         </div>
+        </#if>
         
         <noscript>
             <div class="form-block-container toggle-disable">

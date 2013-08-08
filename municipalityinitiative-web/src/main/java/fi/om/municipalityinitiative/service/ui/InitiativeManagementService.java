@@ -163,10 +163,10 @@ public class InitiativeManagementService {
         emailService.sendNotificationToModerator(initiativeId);
     }
 
-    public void sendReviewOnlyForAcceptance(Long initiativeId, LoginUserHolder loginUserHolder) {
+    public void sendReviewWithUndefinedType(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        operations.doSendReviewOnlyForAcceptance(initiativeId);
+        operations.doSendReviewWithUndefinedType(initiativeId);
 
         emailService.sendStatusEmail(initiativeId, EmailMessageType.SENT_TO_REVIEW);
         emailService.sendNotificationToModerator(initiativeId);

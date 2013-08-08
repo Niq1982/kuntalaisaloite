@@ -38,7 +38,7 @@ public abstract class User {
 
     public abstract boolean hasParticipatedToInitiative(Long initiativeId);
     
-    public abstract boolean allowedToParticipate(Long initiativeId, Municipality municipality);
+    public abstract boolean allowVerifiedParticipation(Long initiativeId, Municipality municipality);
 
     public abstract boolean isLoggedIn();
 

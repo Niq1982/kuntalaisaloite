@@ -31,7 +31,7 @@
     <div id="header-tools">
         <div id="header-tools-content">
             <div id="aloite-links">
-                <a href="https://www.kansalaisaloite.fi">Kansalaisaloite.fi</a><span class="hide"> | </span><a class="active" href="${urls.baseUrl}/${locale}">Kuntalaisaloite.fi</a>
+                <a href="https://www.kansalaisaloite.fi/${locale}""><@u.message "otherServices.initiative"/></a><span class="hide"> | </span><a class="active" href="${urls.baseUrl}/${locale}"><@u.message "otherServices.municipalityinitiative"/></a>
             </div>
         </div>
     </div>
@@ -116,7 +116,7 @@
 </#assign>
 
 <!DOCTYPE HTML>
-
+<!-- version ${appVersion} -->
 <!--[if lt IE 7 ]> <html lang="${locale}" class="no-js ie6"> <![endif]-->
 <!--[if IE 7 ]>    <html lang="${locale}" class="no-js ie7"> <![endif]-->
 <!--[if IE 8 ]>    <html lang="${locale}" class="no-js ie8"> <![endif]-->
@@ -240,7 +240,7 @@
     <div id="header-tools">
         <div id="header-tools-content">
             <div id="aloite-links">
-                <a href="https://www.kansalaisaloite.fi">Kansalaisaloite.fi</a><span class="hide"> | </span><a class="active" href="${urls.baseUrl}/${locale}">Kuntalaisaloite.fi</a>
+                <a href="https://www.kansalaisaloite.fi/${locale}""><@u.message "otherServices.initiative"/></a><span class="hide"> | </span><a class="active" href="${urls.baseUrl}/${locale}"><@u.message "otherServices.municipalityinitiative"/></a>
             </div>
             <div class="other-services-container">
                 <a class="other-services-select" href="http://www.otakantaa.fi/${locale}-FI" target="_blank"> <#-- Add class "dropdown-toggle" for dropdown -->
@@ -273,7 +273,7 @@
                     <a href="${urls.logout()}" id="logout" class="header-tool-link logout"><@u.message "common.logout"/><span class="icon-small logout"></span></a>
 
                 <#elseif enableVerifiedInitiatives>
-                    <a href="${vetumaLoginToOwnInitiatives}" title="<@u.message "authenticate.title"/>" class="header-tool-link login"><@u.message "authenticate.title"/></a>
+                    <a href="${urls.authenticate()}" title="<@u.message "authenticate.title"/>" class="header-tool-link login"><@u.message "authenticate.title"/></a>
                 </#if>
             </div>
 

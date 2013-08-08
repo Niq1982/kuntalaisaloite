@@ -200,10 +200,15 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     }
 
     @Test
-    public void send_initiative_as_review_sents_state_as_review_and_leaves_type_as_null_if_not_single() {
-        Long initiativeId = testHelper.createDraft(testMunicipality.getId());
+    public void send_initiative_as_review_sents_state_as_review_and_sets_type_as_undefined() {
+//        Long initiativeId = testHelper.createDraft(testMunicipality.getId());
+        Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withType(InitiativeType.SINGLE)
+                .withState(InitiativeState.DRAFT)
+                .applyAuthor().toInitiativeDraft()
+        );
 
-        service.sendReviewOnlyForAcceptance(initiativeId, TestHelper.authorLoginUserHolder);
+        service.sendReviewWithUndefinedType(initiativeId, TestHelper.authorLoginUserHolder);
 
         Initiative updated = testHelper.getInitiative(initiativeId);
 
@@ -213,7 +218,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     @Test
     public void send_initiative_as_review_sends_emails_to_author_and_moderator() throws MessagingException {
-        service.sendReviewOnlyForAcceptance(testHelper.createDraft(testMunicipality.getId()), TestHelper.authorLoginUserHolder);
+        service.sendReviewWithUndefinedType(testHelper.createDraft(testMunicipality.getId()), TestHelper.authorLoginUserHolder);
 
         assertFirstSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_STATUS_INFO_PREFIX + EmailMessageType.SENT_TO_REVIEW.name()+".subject");
         assertSecondSentEmail(IntegrationTestFakeEmailConfiguration.EMAIL_DEFAULT_OM, EmailSubjectPropertyKeys.EMAIL_NOTIFICATION_TO_MODERATOR_SUBJECT);
@@ -248,7 +253,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     @Test(expected = OperationNotAllowedException.class)
     public void send_review_not_single_fails_if_initiative_accepted() {
         Long accepted = testHelper.createCollaborativeAccepted(testMunicipality.getId());
-        service.sendReviewOnlyForAcceptance(accepted, TestHelper.authorLoginUserHolder);
+        service.sendReviewWithUndefinedType(accepted, TestHelper.authorLoginUserHolder);
     }
 
     @Test(expected = AccessDeniedException.class)
@@ -260,7 +265,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     @Test(expected = AccessDeniedException.class)
     public void send_to_review_fails_if_no_right_to_initiative() {
         Long accepted = testHelper.createCollaborativeAccepted(testMunicipality.getId());
-        service.sendReviewOnlyForAcceptance(accepted, TestHelper.unknownLoginUserHolder);
+        service.sendReviewWithUndefinedType(accepted, TestHelper.unknownLoginUserHolder);
     }
 
     @Test(expected = AccessDeniedException.class)

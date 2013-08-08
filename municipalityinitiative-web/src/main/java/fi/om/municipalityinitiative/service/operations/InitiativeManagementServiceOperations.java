@@ -69,9 +69,10 @@ public class InitiativeManagementServiceOperations {
     }
 
     @Transactional(readOnly = false)
-    public void doSendReviewOnlyForAcceptance(Long initiativeId) {
+    public void doSendReviewWithUndefinedType(Long initiativeId) {
         assertAllowance("Send review", getManagementSettings(initiativeId).isAllowSendToReview());
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.REVIEW);
+        initiativeDao.updateInitiativeType(initiativeId, InitiativeType.UNDEFINED);
     }
 
     @Transactional(readOnly = false)

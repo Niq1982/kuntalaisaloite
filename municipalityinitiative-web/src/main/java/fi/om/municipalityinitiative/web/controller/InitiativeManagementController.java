@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.service.ParticipantService;
 import fi.om.municipalityinitiative.service.ValidationService;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
@@ -81,7 +82,8 @@ public class InitiativeManagementController extends BaseController {
         return ViewGenerator.managementView(initiativeInfo,
                 publicInitiativeService.getManagementSettings(initiativeId),
                 authorService.findAuthors(initiativeId, loginUserHolder),
-                participantService.getParticipantCount(initiativeId)
+                participantService.getParticipantCount(initiativeId),
+                new CommentUIDto()
         ).view(model, Urls.get(locale).alt().getManagement(initiativeId));
     }
 
@@ -193,17 +195,28 @@ public class InitiativeManagementController extends BaseController {
     }
 
     @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_SEND_TO_REVIEW)
-    public String sendToReview(@PathVariable("id") Long initiativeId,
-                               @RequestParam(PARAM_SENT_COMMENT) String sentComment,
-                               Locale locale, HttpServletRequest request) {
-        initiativeManagementService.sendReviewAndStraightToMunicipality(initiativeId, userService.getRequiredLoginUserHolder(request), sentComment);
+    public String sendToReviewAndMunicipality(@PathVariable("id") Long initiativeId,
+                                              @ModelAttribute("comment") CommentUIDto commentUIDto,
+                                              BindingResult bindingResult,
+                                              Model model,
+                                              Locale locale, HttpServletRequest request) {
+        if (validationService.validationErrors(commentUIDto, bindingResult, model)) {
+            LoginUserHolder<User> loginUserHolder = userService.getLoginUserHolder(request);
+            return ViewGenerator.managementView(initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder),
+                    publicInitiativeService.getManagementSettings(initiativeId),
+                    authorService.findAuthors(initiativeId, loginUserHolder),
+                    participantService.getParticipantCount(initiativeId),
+                    commentUIDto)
+                    .view(model, Urls.get(locale).alt().moderation(initiativeId));
+        }
+        initiativeManagementService.sendReviewAndStraightToMunicipality(initiativeId, userService.getRequiredLoginUserHolder(request), commentUIDto.getComment());
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.SEND_TO_REVIEW, request);
     }
 
     @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_SEND_TO_REVIEW_COLLECT)
     public String sendToReviewForCollecting(@PathVariable("id") Long initiativeId,
                                             Locale locale, HttpServletRequest request) {
-        initiativeManagementService.sendReviewOnlyForAcceptance(initiativeId, userService.getRequiredLoginUserHolder(request));
+        initiativeManagementService.sendReviewWithUndefinedType(initiativeId, userService.getRequiredLoginUserHolder(request));
         return redirectWithMessage(Urls.get(locale).management(initiativeId),RequestMessage.SEND_TO_REVIEW, request);
     }
 
@@ -224,9 +237,21 @@ public class InitiativeManagementController extends BaseController {
 
     @RequestMapping(value = {MANAGEMENT_FI, MANAGEMENT_SV}, method = POST, params = ACTION_SEND_TO_MUNICIPALITY)
     public String sendToMunicipality(@PathVariable("id") Long initiativeId,
-                                     @RequestParam(PARAM_SENT_COMMENT) String sentComment,
+                                     @ModelAttribute("comment") CommentUIDto commentUIDto,
+                                     BindingResult bindingResult,
+                                     Model model,
                                      Locale locale, HttpServletRequest request) {
-        initiativeManagementService.sendToMunicipality(initiativeId, userService.getRequiredLoginUserHolder(request), sentComment, locale);
+        if (validationService.validationErrors(commentUIDto, bindingResult, model)) {
+            LoginUserHolder<User> loginUserHolder = userService.getLoginUserHolder(request);
+            return ViewGenerator.managementView(initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder),
+                    publicInitiativeService.getManagementSettings(initiativeId),
+                    authorService.findAuthors(initiativeId, loginUserHolder),
+                    participantService.getParticipantCount(initiativeId),
+                    commentUIDto)
+                    .view(model, Urls.get(locale).alt().moderation(initiativeId));
+        }
+
+        initiativeManagementService.sendToMunicipality(initiativeId, userService.getRequiredLoginUserHolder(request), commentUIDto.getComment(), locale);
         return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.PUBLISH_AND_SEND, request);
     }
     
@@ -248,13 +273,13 @@ public class InitiativeManagementController extends BaseController {
                 authorService.findAuthors(initiativeId, loginUserHolder),
                 authorService.findAuthorInvitations(initiativeId, loginUserHolder),
                 new AuthorInvitationUICreateDto()
-        ).view(model, Urls.get(locale).alt().getManagement(initiativeId));
+        ).view(model, Urls.get(locale).alt().manageAuthors(initiativeId));
     }
 
     @RequestMapping(value={ PARITICIPANT_LIST_MANAGE_FI, PARITICIPANT_LIST_MANAGE_SV }, method=GET)
     public String participantListManage(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
         Urls urls = Urls.get(locale);
-        String alternativeURL = urls.alt().view(initiativeId);
+        String alternativeURL = urls.alt().participantListManage(initiativeId);
 
         LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
 
@@ -296,7 +321,7 @@ public class InitiativeManagementController extends BaseController {
                     publicInitiativeService.getManagementSettings(initiativeId),
                     authorService.findAuthors(initiativeId, loginUserHolder),
                     authorService.findAuthorInvitations(initiativeId, loginUserHolder),
-                    authorInvitationUICreateDto).view(model, Urls.get(locale).alt().getManagement(initiativeId));
+                    authorInvitationUICreateDto).view(model, Urls.get(locale).alt().manageAuthors(initiativeId));
         }
     }
 

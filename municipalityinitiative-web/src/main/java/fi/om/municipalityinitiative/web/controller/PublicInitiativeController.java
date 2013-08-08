@@ -15,7 +15,6 @@ import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
 import fi.om.municipalityinitiative.service.ui.VerifiedInitiativeService;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
-import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.validation.NormalInitiative;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.SearchParameterQueryString;
@@ -69,13 +68,14 @@ public class PublicInitiativeController extends BaseController {
 
         List<Municipality> municipalities = municipalityService.findAllMunicipalities(locale);
         LoginUserHolder loginUserHolder = new LoginUserHolder(userService.getUser(request));
+        SearchParameterQueryString queryString = new SearchParameterQueryString(search);
         return ViewGenerator.searchView(publicInitiativeService.findMunicipalityInitiatives(search, loginUserHolder),
                 municipalities,
                 search,
-                new SearchParameterQueryString(search),
+                queryString,
                 solveMunicipalityFromListById(municipalities, search.getMunicipality()),
                 publicInitiativeService.getInitiativeCounts(Maybe.fromNullable(search.getMunicipality()), loginUserHolder))
-                .view(model, Urls.get(locale).alt().search());
+                .view(model, Urls.get(locale).alt().search()+queryString.get());
     }
 
     @RequestMapping(value={ VIEW_FI, VIEW_SV }, method=GET)
@@ -119,7 +119,7 @@ public class PublicInitiativeController extends BaseController {
 
         if (validationService.validationErrors(initiative, bindingResult, model, solveValidationGroup(initiative.getInitiativeType()))) {
             return ViewGenerator.prepareView(initiative, municipalityService.findAllMunicipalities(locale))
-                    .view(model, urls.prepare());
+                    .view(model, urls.alt().prepare());
         }
 
         if (InitiativeType.isVerifiable(initiative.getInitiativeType())) {
@@ -189,7 +189,7 @@ public class PublicInitiativeController extends BaseController {
     @RequestMapping(value={ PARITICIPANT_LIST_FI, PARITICIPANT_LIST_SV }, method=GET)
     public String participantList(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
         Urls urls = Urls.get(locale);
-        String alternativeURL = urls.alt().view(initiativeId);
+        String alternativeURL = urls.alt().participantList(initiativeId);
 
         InitiativeViewInfo initiativeInfo = publicInitiativeService.getPublicInitiative(initiativeId);
 
@@ -226,9 +226,8 @@ public class PublicInitiativeController extends BaseController {
 
         Urls urls = Urls.get(locale);
 
-        model.addAttribute("managementHash", RandomHashGenerator.getPrevious()); // TODO: Remove after login-link is removed from the page
-
         if (getRequestAttribute(request) != null) {
+            model.addAttribute(ALT_URI_ATTR, urls.alt().pendingConfirmation(initiativeId));
             return PENDING_CONFIRMATION;
         } else {
             return redirectWithMessage(urls.prepare(), RequestMessage.PREPARE_CONFIRM_EXPIRED, request);
@@ -250,7 +249,7 @@ public class PublicInitiativeController extends BaseController {
                 authorService.findPublicAuthors(initiativeId),
                 participantService.getParticipantCount(initiativeId),
                 authorInvitationUIConfirmDto
-        ).view(model, Urls.get(locale).alt().getManagement(initiativeId));
+        ).view(model, Urls.get(locale).alt().invitation(initiativeId, confirmCode));
     }
 
     @RequestMapping(value={ INVITATION_FI, INVITATION_SV }, method=POST, params = ACTION_ACCEPT_INVITATION)
@@ -267,7 +266,7 @@ public class PublicInitiativeController extends BaseController {
                     authorService.findPublicAuthors(initiativeId),
                     participantService.getParticipantCount(initiativeId),
                     confirmDto
-            ).view(model, Urls.get(locale).alt().manageAuthors(initiativeId));
+            ).view(model, Urls.get(locale).alt().invitation(initiativeId, confirmDto.getConfirmCode()));
 
         }
 
@@ -355,7 +354,7 @@ public class PublicInitiativeController extends BaseController {
                 new SearchParameterQueryString(search),
                 solveMunicipalityFromListById(municipalities, search.getMunicipality()),
                 publicInitiativeService.getInitiativeCounts(Maybe.fromNullable(search.getMunicipality()), loginUserHolder)
-        ).view(model, urls.alt().search());
+        ).view(model, urls.alt().iframe());
     }
 
     @RequestMapping(value={IFRAME_GENERATOR_FI, IFRAME_GENERATOR_SV}, method=GET)

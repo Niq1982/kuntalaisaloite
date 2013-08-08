@@ -18,11 +18,6 @@ public class VTJData {
 
     private static final Logger log = LoggerFactory.getLogger(VTJData.class);
 
-    // Default text for missing municipality from VTJData, this will be used both in statements of support and also in initiative author info:
-    // Maximum 30 characters, longer values will cause DB error
-    protected static final String MISSING_MUNICIPALITY_FI = "Kotikunta ei tiedossa";
-    protected static final String MISSING_MUNICIPALITY_SV = "Hemkommun saknas";
-
     private String firstNames;
 
     private String lastName;
@@ -39,9 +34,10 @@ public class VTJData {
 
     private String returnCodeDescription;
 
-    private String streetAddress;
+    private String streetAddressFi;
 
     private String postalCode;
+    private String streetAddressSv;
 
     public VTJData() {}
 
@@ -71,9 +67,10 @@ public class VTJData {
                             vtjData.setDead(!Strings.isNullOrEmpty(parseText(parser)));
                         } else if ("SuomenKansalaisuusTietokoodi".equals(localName)) {
                             vtjData.setFinnishCitizen("1".equals(parseText(parser)));
-                        // TODO: Parse both FI and SV addresses
                         } else if ("LahiosoiteS".equals(localName)) {
-                            vtjData.setStreetAddress(parseText(parser));
+                            vtjData.setStreetAddressFi(parseText(parser));
+                        } else if ("LahiosoiteR".equals(localName)) {
+                            vtjData.setStreetAddressSv(parseText(parser));
                         } else if ("Postinumero".equals(localName)) {
                             vtjData.setPostalCode(parseText(parser));
                         }
@@ -180,15 +177,24 @@ public class VTJData {
         this.returnCodeDescription = returnCodeDescription;
     }
 
-    public void setStreetAddress(String streetAddress) {
-        this.streetAddress = streetAddress;
+    public void setStreetAddressFi(String streetAddressFi) {
+        this.streetAddressFi = streetAddressFi;
     }
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
     }
 
-    public String getAddress() {
-        return streetAddress + "\n" + postalCode + " " + municipalityNameFi;
+    public String getAddressFi() {
+        return streetAddressFi + "\n" + postalCode + " " + municipalityNameFi;
     }
+
+    public String getAddressSv() {
+        return streetAddressSv + "\n" + postalCode + " " + municipalityNameSv;
+    }
+
+    public void setStreetAddressSv(String streetAddressSv) {
+        this.streetAddressSv = streetAddressSv;
+    }
+
 }

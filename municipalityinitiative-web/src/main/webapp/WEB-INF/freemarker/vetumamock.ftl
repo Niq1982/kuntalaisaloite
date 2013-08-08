@@ -21,7 +21,7 @@
     <input type="text" name="first_name" value="Matti Petteri"/><br>
     <input type="text" name="last_name" value="Meikalainen"/><br/>
     <select name="municipalityCode">
-    <option value="">Ei kuntaa</option>
+    <option value="">Ei kuntaa (Turvakielto)</option>
     <option value="-3">Palvelulle tuntematon kuntakoodi</option>
     <#list municipalities as municipality>
         <option value="${municipality.id}">${municipality.nameFi}</option>
@@ -29,9 +29,6 @@
     </select>
     <br>
     <input id="hetu" type="text" name="EXTRADATA" value="HETU=010190-0000"/>
-
-    <a href="#" onclick="document.getElementById('hetu').value = 'HETU=010101-0001';">om</a> /
-    <a href="#" onclick="document.getElementById('hetu').value = 'HETU=020202-0002';">vrk</a>
 
     <br/><label><input type="checkbox" checked="checked" name="fi" value="1"/> Suomen kansalainen</label><br>
     <br/>

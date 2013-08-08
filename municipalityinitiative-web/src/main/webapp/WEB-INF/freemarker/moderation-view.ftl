@@ -40,7 +40,7 @@
                     <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
                     
                     <div class="input-block-content no-top-margin">
-                        <textarea name="moderatorComment" id="commentAccept" class="collapse" maxlength="${InitiativeConstants.INITIATIVE_MODERATOR_COMMENT_MAX}"></textarea>
+                        <textarea name="${UrlConstants.PARAM_SENT_COMMENT}" id="commentAccept" class="collapse" maxlength="${InitiativeConstants.INITIATIVE_COMMENT_MAX}"></textarea>
                     </div>
                     
                     <div class="input-block-content">
@@ -60,7 +60,7 @@
                     <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
                     
                     <div class="input-block-content no-top-margin">
-                        <textarea name="moderatorComment" id="commentReject" class="collapse" maxlength="${InitiativeConstants.INITIATIVE_MODERATOR_COMMENT_MAX}"></textarea>
+                        <textarea name="${UrlConstants.PARAM_SENT_COMMENT}" id="commentReject" class="collapse" maxlength="${InitiativeConstants.INITIATIVE_COMMENT_MAX}"></textarea>
                     </div>
                     
                     <div class="input-block-content">
@@ -94,7 +94,7 @@
                     <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
                     
                     <div class="input-block-content no-top-margin">
-                        <textarea name="moderatorComment" id="commentReject" class="collapse" maxlength="${InitiativeConstants.INITIATIVE_MODERATOR_COMMENT_MAX}" ></textarea>
+                        <textarea name="${UrlConstants.PARAM_SENT_COMMENT}" id="commentReject" class="collapse" maxlength="${InitiativeConstants.INITIATIVE_COMMENT_MAX}" ></textarea>
                     </div>
                     
                     <div class="input-block-content">

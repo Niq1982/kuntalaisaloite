@@ -139,6 +139,11 @@ public class StatusServiceImpl implements StatusService {
         return list;
     }
 
+    @Override
+    public String getAppVersion() {
+        return appVersion;
+    }
+
     protected static String getFormattedBuildTimeStamp(String resourcesVersion) {
         DateTime buildTimeStamp = getBuildTimeStamp(resourcesVersion);
         if (buildTimeStamp != null) {

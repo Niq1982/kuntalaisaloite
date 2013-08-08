@@ -131,7 +131,7 @@
                 </div>
                 
                 <div class="input-block-content is-not-member no-top-margin js-hide hidden">
-                    <@u.systemMessage path="warning.initiative.notMember" type="warning" showClose=false />
+                    <@u.systemMessage path="warning.participate.notMember" type="warning" showClose=false />
                 </div>
             </div>
             
@@ -251,8 +251,8 @@
             
             
             <#-- Autoload modal if it has errors or returned from VETUMA and user is allowed to participate -->
-            <#if user.allowedToParticipate(initiative.id, initiative.municipality) &&
-                 initiative.verifiable && user.isVerifiedUser() && RequestParameters['participate']?? ||
+            <#if user.allowVerifiedParticipation(initiative.id, initiative.municipality) &&
+                 initiative.verifiable && RequestParameters['participate']?? ||
                  RequestParameters['formError']?? && RequestParameters['formError'] == "participate">
             modalData.participateFormAutoLoad = function() {
                 return [{

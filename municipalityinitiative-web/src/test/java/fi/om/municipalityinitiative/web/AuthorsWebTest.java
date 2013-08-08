@@ -144,6 +144,17 @@ public class AuthorsWebTest  extends WebTestBase {
     }
 
     @Test
+    public void accepting_normal_author_invitation_lets_user_to_accept_invitation_even_if_logged_in_as_author() {
+        Long publishedInitiativeId = testHelper.create(municipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        loginAsAuthorForLastTestHelperCreatedNormalInitiative();
+
+        AuthorInvitation invitation = testHelper.createInvitation(publishedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
+        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
+        assertThat(acceptInvitationButton().isPresent(), is(true));
+        assertThat(rejectInvitationButton().isPresent(), is(true));
+    }
+
+    @Test
     public void accepting_verified_author_invitation_shows_warning_and_hides_buttons_if_already_author() {
 
         AuthorInvitation invitation = testHelper.createInvitation(verifiedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);

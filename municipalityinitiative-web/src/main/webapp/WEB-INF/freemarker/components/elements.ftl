@@ -133,8 +133,8 @@
     <#if initiative.verifiable && !initiative.sentTime.present && !user.hasRightToInitiative(initiative.id)>
         <#if user.hasParticipatedToInitiative(initiative.id)>
             <@u.systemMessage path="warning.already.participated" type="warning" showClose=false />
-        <#elseif user.isVerifiedUser() && !user.allowedToParticipate(initiative.id, initiative.municipality)>
-            <@u.systemMessage path="warning.participant.notMember" type="warning" showClose=false />
+        <#elseif user.isVerifiedUser() && !user.allowVerifiedParticipation(initiative.id, initiative.municipality)>
+            <@u.systemMessage path="warning.participate.notMember" type="warning" showClose=false />
         <#elseif ((user.isVerifiedUser() && !user.homeMunicipality.present) || !user.isVerifiedUser()) >
             <@u.systemMessage path="participate.verifiable.info"+user.isVerifiedUser()?string(".verifiedUser","") type="info" showClose=false />
         </#if>
