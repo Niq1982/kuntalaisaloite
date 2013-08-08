@@ -50,7 +50,7 @@
             </div>
         </div>
 
-        <div id="prepare-form-email" class="form-block-container toggle-disable js-hide">
+        <div id="prepare-form-email" class="form-block-container toggle-disable js-hide hidden">
             <div class="input-block cf">
             
                 <@edit.authorEmailBlock />
@@ -62,22 +62,37 @@
             </div>
         </div>
         
-        <div id="prepare-form-vetuma" class="form-block-container toggle-disable js-hide">
+        <div id="prepare-form-vetuma" class="form-block-container toggle-disable js-hide hidden">
             
             <div class="input-block cf">
     
                 <div class="input-block-content">
-                    <@u.systemMessage path="initiative.prepare.verifiable.info" type="info" showClose=false args=["#"] />
+                    <@u.systemMessage path="initiative.prepare.verifiable.info"+user.isVerifiedUser()?string(".verifiedUser","") type="info" showClose=false args=["#"] />
                 </div>
 
                 <div class="input-block-content">
-                    <button value="true" class="small-button" name="action-send-confirm" id="action-send-confirm" type="submit"><span class="small-icon save-and-send"><@u.message "action.prepare."+user.isVerifiedUser()?string("create","authenticate") /></span></button>
+                    <@edit.buttons type="verify" />
                 </div>
                 
             </div>
             
             
         </div>
+        
+        <noscript>
+            <div class="form-block-container toggle-disable">
+                <div class="input-block cf">
+                
+                    <@edit.authorEmailBlock noscript=true />
+                    
+                    <div class="input-block-content no-top-margin">
+                        <@edit.buttons type="next" />
+                    </div>
+                    
+                </div>
+            </div>
+        </noscript>
+        
     </form>
 
 <#--
