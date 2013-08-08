@@ -130,7 +130,7 @@ public class InitiativeManagementService {
             VerifiedAuthor author = new VerifiedAuthor();
             VerifiedUser dbVerifiedUser = userDao.getVerifiedUser(loginUserHolder.getVerifiedUser().getHash()).get();
             author.setContactInfo(dbVerifiedUser.getContactInfo());
-            author.setMunicipality(Maybe.of(new Municipality(-1L, "Kunta", "Municipality", false)));
+            author.setMunicipality(Maybe.of(initiative.getMunicipality()));
             author.setId(null); // FIXME: Omg
             return author;
         }
