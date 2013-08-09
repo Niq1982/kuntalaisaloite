@@ -28,12 +28,11 @@
  -->
 <#macro buttons type="" nextStep="0">
     <#if type == "next">
-        <a href="#step-header-${nextStep}" id="button-next-${nextStep}" class="small-button disable-dbl-click-check ignoredirty js-proceed-to-next" data-next-step="${nextStep}"><span class="small-icon next"><@u.message "action.continue" /></span></a>
-    <#elseif type == "save-and-send">
-        <button type="submit" name="action-save-and-send" class="small-button"><span class="small-icon mail"><@u.message "action.saveAndSend" /></span></button>
+        <button type="submit" id="action-send-confirm" name="action-send-confirm" class="small-button" value="true" ><span class="small-icon next"><@u.message "action.prepare.next" /></span></button>
+    <#elseif type == "verify">
+        <button value="true" class="small-button" name="action-send-confirm" id="action-send-confirm" type="submit"><span class="small-icon ${user.isVerifiedUser()?string("save-and-send","next")}"><@u.message "action.prepare."+user.isVerifiedUser()?string("create","authenticate") /></span></button>
     <#elseif type == "save">
         <button type="submit" id="action-send-confirm" name="action-send-confirm" class="small-button" value="true" ><span class="small-icon save-and-send"><@u.message "action.prepare.send" /></span></button>
-        <#--<button type="submit" id="action-save" name="action-save" class="small-button" value="true" ><span class="small-icon save-and-send"><@u.message "action.saveAndCollect" /></span></button>-->
     </#if>
 </#macro>
 
@@ -190,8 +189,10 @@
  *
  * Add confirmation email for author
  * Prints help-texts and validation errors in this block
+ *
+ * Noscript user gets two different versions weather he/she is authenticated or not.
  -->
-<#macro authorEmailBlock>
+<#macro authorEmailBlock noscript=false>
     <div class="input-block-extra">
         <div class="input-block-extra-content">
             <@f.helpText "help.participantEmail" />
@@ -199,13 +200,18 @@
     </div>
     
     <div class="input-block-content">
-        <@u.systemMessage path="initiative.participantEmail.description" type="info" showClose=false />
+        <#if noscript>
+            <@u.systemMessage path="initiative.participantEmail.description.noscript"+user.isVerifiedUser()?string(".verifiedUser","") type="info" showClose=false />
+        <#else>
+            <@u.systemMessage path="initiative.participantEmail.description" type="info" showClose=false />
+        </#if>
     </div>
 
     <div class="input-block-content">
         <@f.textField path="initiative.participantEmail" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
     </div>
 </#macro>
+
 
 <#--
  * initiativeBlock
@@ -260,7 +266,7 @@
         <div class="input-block-extra">
             <div class="input-block-extra-content">
                 <@f.helpText "help.extraInfo" />
-                <#if initiative.collaborative && initiative.state != InitiativeState.REVIEW>
+                <#if initiative.collaborative && initiative.state == InitiativeState.PUBLISHED>
                     <@f.helpText "help.externalParticipantCount" />
                 </#if>
             </div>
@@ -270,7 +276,7 @@
             <@f.textarea path=path+".extraInfo" required="" optional=true cssClass="textarea" key="initiative.extraInfo" maxLength=InitiativeConstants.INITIATIVE_EXTRA_INFO_MAX?string("#") />
         </div>
         
-        <#if initiative.collaborative && initiative.state != InitiativeState.REVIEW>
+        <#if initiative.collaborative && initiative.state == InitiativeState.PUBLISHED>
             <div class="input-block-content">
                 <@f.textField path=path+".externalParticipantCount" required="" cssClass="small" optional=false  maxLength=7 />
             </div>

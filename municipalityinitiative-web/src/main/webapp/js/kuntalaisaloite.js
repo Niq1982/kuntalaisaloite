@@ -971,6 +971,9 @@ $('.municipality-filter').change( function() {
 		    		}
 	    		}, 50);
 		    },
+		    onLoad: function(){
+		    	tooltip.load();
+		    },
 		    closeOnClick: false,	// disable this for modal dialog-type of overlays
 		    load: true				// load it immediately after the construction
 		}).addClass(modalType);
@@ -1193,14 +1196,26 @@ $('.municipality-filter').change( function() {
  * ===============================
  * 
  * */
-	
-	$('.trigger-tooltip[title]').tooltip({
-		animation:	true,
-		effect:		'fade',
-		placement:	'top right', // FIXME: this doesn't seem to work correctly
-		offset:		[-5, 0],
-		trigger:	'hover'
-	});
+var tooltip = (function() {
+	return {
+		load : function(){
+			$('.trigger-tooltip[title]').tooltip({
+				animation:	true,
+				effect:		'fade',
+				placement:	'top right', // FIXME: this doesn't seem to work correctly
+				offset:		[-5, 0],
+				trigger:	'hover'
+			}).dynamic({
+				left: { direction: 'right' },
+				right: { direction: 'left' },
+				top: { direction: 'bottom' }
+
+			});
+		}
+	}
+})();
+
+tooltip.load();
 	
 
 /**

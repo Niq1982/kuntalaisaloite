@@ -121,6 +121,8 @@
 }
 .gradient (@start, @stop){
     background: @start;
+    background: linear-gradient(top,  @start, @stop);
+    background: -ms-linear-gradient(top,  @start, @stop);
     background: -webkit-gradient(linear, left top, left bottom, from(@start), to(@stop));
     background: -moz-linear-gradient(top,  @start, @stop);
     background: -o-linear-gradient(top,  @start, @stop);
@@ -128,18 +130,24 @@
 
 .grayGradient (){
     background: @grayGradient2;
+    background: linear-gradient(top, @grayGradient1, @grayGradient2);
+    background: -ms-linear-gradient(top,  @grayGradient1,  @grayGradient2);
     background: -webkit-gradient(linear, left top, left bottom, from(@grayGradient1), to(@grayGradient2));
     background: -moz-linear-gradient(top,  @grayGradient1,  @grayGradient2);
     background: -o-linear-gradient(top,  @grayGradient1,  @grayGradient2);
 }
 .grayGradientHover (){
     background: @grayGradientHover2;
+    background: linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
+    background: -ms-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
     background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientHover1), to(@grayGradientHover2));
     background: -moz-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
     background: -o-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
 }
 .grayGradientActive (){
     background: @grayGradientActive2;
+    background: linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
+    background: -ms-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
     background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientActive1), to(@grayGradientActive2));
     background: -moz-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
     background: -o-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
@@ -189,6 +197,8 @@ body {
     width:100%;
     padding: 0.7em 0;
     background: #64aad0;
+    background: linear-gradient(top,  #8dc8e8,  #64aad0);
+    background: -ms-linear-gradient(top,  #8dc8e8,  #64aad0);
     background: -webkit-gradient(linear, left top, left bottom, from(#8dc8e8), to(#64aad0));
     background: -moz-linear-gradient(top,  #8dc8e8, #64aad0);
     background: -o-linear-gradient(top,  #8dc8e8, #64aad0);
@@ -203,6 +213,8 @@ body {
     
     &.ribbon-red {
         background: @redGradient1;
+        background: linear-gradient(top,  @redGradient1,  @redGradient2);
+        background: -ms-linear-gradient(top,  @redGradient1,  @redGradient2);
         background: -webkit-gradient(linear, left top, left bottom, from(@redGradient1), to(@redGradient2));
         background: -moz-linear-gradient(top,  @redGradient1, @redGradient2);
         background: -o-linear-gradient(top,  @redGradient1, @redGradient2);
@@ -214,6 +226,8 @@ body {
     
     &.ribbon-turquoise {
         background: #017380;
+        background: linear-gradient(top,  #018999,  #017380);
+        background: -ms-linear-gradient(top,  #018999, #017380);
         background: -webkit-gradient(linear, left top, left bottom, from(#018999), to(#017380));
         background: -moz-linear-gradient(top,  #018999, #017380);
         background: -o-linear-gradient(top, #018999, #017380);
@@ -1122,12 +1136,16 @@ a, button {
         color: @secondaryTextColor;
         border: solid 1px @borderGray;
         background: @grayGradient2;
+        background: linear-gradient(top,  @grayGradient1,  @grayGradient2);
+        background: -ms-linear-gradient(top,  @grayGradient1, @grayGradient2);
         background: -webkit-gradient(linear, left top, left bottom, from(@grayGradient1), to(@grayGradient2));
         background: -moz-linear-gradient(top,  @grayGradient1,  @grayGradient2);
         background: -o-linear-gradient(top,  @grayGradient1,  @grayGradient2);
     }
     &.gray:hover, &.disabled:hover {
         background: @grayGradientHover2;
+        background: linear-gradient(top,  @grayGradientHover1,  @grayGradientHover2);
+        background: -ms-linear-gradient(top,  @grayGradientHover1, @grayGradientHover2);
         background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientHover1), to(@grayGradientHover2));
         background: -moz-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
         background: -o-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
@@ -1136,6 +1154,8 @@ a, button {
     }
     &.gray:active, &.disabled:active, &.gray:focus {
         color: black;
+        background: linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
+        background: -ms-linear-gradient(top,  @grayGradientActive1, @grayGradientActive2);
         background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientActive1), to(@grayGradientActive2));
         background: -moz-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
         background: -o-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
@@ -2090,7 +2110,8 @@ label  {
 // Styleguide 5.1
 .modal {
     display:none;
-    z-index:9999;
+    // had to add important rule here. other solution would be reset CSS on modal load
+    z-index:9998 !important;
     width:600px;
     //max-width:95%;
     background:#fff;
@@ -2127,6 +2148,8 @@ label  {
         -webkit-border-top-right-radius:@cornerRadiusSmall;
         
         background: @grayGradient2;
+        background: linear-gradient(top,  @grayGradient1,  @grayGradient2);
+        background: -ms-linear-gradient(top,  @grayGradient1, @grayGradient2);
         background: -webkit-gradient(linear, left top, left bottom, from(@grayGradient1), to(@grayGradient2));
         background: -moz-linear-gradient(top,  @grayGradient1,  @grayGradient2);
         background: -o-linear-gradient(top,  @grayGradient1,  @grayGradient2);
@@ -2149,6 +2172,8 @@ label  {
                 -webkit-border-top-right-radius:@cornerRadiusSmall;
             
                 background: @grayGradientHover2;
+                background: linear-gradient(top,  @grayGradientHover1,  @grayGradientHover2);
+                background: -ms-linear-gradient(top,  @grayGradientHover1, @grayGradientHover2);
                 background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientHover1), to(@grayGradientHover2));
                 background: -moz-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
                 background: -o-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
@@ -2187,6 +2212,8 @@ label  {
         }
     }
 }
+// had to add important rule here. other solution would be reset CSS on modal load
+#exposeMask { z-index:9997 !important; }
 
 
 .scrollable {
@@ -2232,7 +2259,7 @@ label  {
 // Styleguide 5.2
 .tooltip {
     max-width:300px;
-    z-index:998;
+    z-index:9998;
     //background:#087480;
     background:@mainColorDark;
     font-size:0.9em;
@@ -2242,6 +2269,7 @@ label  {
     
     // For modern browsers and IE 8+
     &:before {
+        width:0; height:0;
         border:solid;
         //border-color:#087480 transparent;
         border-color:@mainColorDark transparent;
@@ -2252,7 +2280,48 @@ label  {
         margin-left:-6px;
         position:absolute;
         bottom:-5px;
-        z-index:999;
+        z-index:9999;
+    }
+
+    // Dynamic tooltips 
+    &.right {
+        margin:30px 0 0 10px;
+
+        &:before {
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent; 
+            border-right: 6px solid @mainColorDark; 
+            left:-5px;
+            margin-bottom:-6px;
+            bottom:50%;
+        }
+    }
+    &.left {
+        margin:30px 0 0 -10px;
+
+        &:before {
+            border-top: 6px solid transparent;
+            border-right: none; 
+            border-bottom: 6px solid transparent; 
+            border-left: 6px solid @mainColorDark;
+            left:auto;
+            right:-5px;
+            margin-bottom:-6px;
+            bottom:50%;
+        }
+    }
+    &.bottom {
+        margin-top:2px;
+
+        &:before {
+            border-top: none;
+            border-right:6px solid transparent; 
+            border-bottom: 6px solid @mainColorDark; 
+            border-left: 6px solid transparent;
+            left:50%;
+            margin-bottom:-6px;
+            top:-5px;
+        }
     }
 }
 
@@ -2966,8 +3035,11 @@ h3 {
         margin-bottom:2em;
     }
 }
-.push-width { margin-left:12px; }
-.push-amount { margin-left:26px; }
+// Column exceptions
+.column {
+    &.push-width { margin-left:12px; }
+    &.push-amount { margin-left:26px; width:12%; }
+}
 
 // Open Data API and Status
 
