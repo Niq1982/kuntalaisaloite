@@ -1,26 +1,76 @@
 package fi.om.municipalityinitiative.web;
 
-import com.google.common.base.Optional;
-import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
-import org.aspectj.util.FileUtil;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * - Reads all localization files.
+ * - First file is concerned as master-file.
+ * - All localizations that are missing from any other files but found from master files are reported.
+ * - All localizations that are found from other files but not from master file are removed.
+ * - All localizations, comments and empty lines are ordered according to master file.
+ */
 public class LocalizationsModifier {
 
     private final static String resourcesDir = System.getProperty("user.dir") + "/src/main/webapp/WEB-INF/";
+
+    // All localization files. First file is "master" file, all localization keys found in that file are
+    // supposed to be found from other files. Comments, empty lines and localizations in other files will be ordered according to the master file.
     private final static String[] resourceFiles = {"messages.properties", "messages_sv.properties"};
+
+    // Localization-missing text will not be printed if localization key begins with any of these strings
     private final static String[] exludePrefix = {"api.", "editor.", "success.editor"};
 
-    private static List<ResourceFile> resources = Lists.newArrayList();
+    private static List<ResourceFile> localizationFiles = new ArrayList<>();
 
-    public static void main(String[] moimoiii) throws IOException {
+    public static void main(String[] s) throws IOException {
 
+        readResourceFiles();
+
+        ResourceFile masterFile = getMasterResourceFile();
+
+        for (int i = 1; i < localizationFiles.size(); ++i) {
+            System.out.println("Handling localization file: " + resourceFiles[i]);
+            StringBuilder linesToWriteToOrderedLocalizationFile = new StringBuilder();
+
+            ResourceFile currentLocalizationFile = localizationFiles.get(i);
+            for (ResourceFileLine masterFileLine : masterFile.lines) {
+
+                if (masterFileLine.type != LineType.LOCALIZATION) {
+                    linesToWriteToOrderedLocalizationFile
+                            .append(masterFileLine.toString())
+                            .append("\n");
+                }
+
+                else {
+                    ResourceFileLine otherLocalization = currentLocalizationFile.getPossibleLocalizationLine(masterFileLine.key);
+                    if (otherLocalization != null) {
+                        linesToWriteToOrderedLocalizationFile
+                                .append(otherLocalization.toString())
+                                .append("\n");
+                    } else {
+                        if (isNotExcludeKey(masterFileLine.key)) {
+                            System.out.println("Localization missing: " + masterFileLine.key + " = " + masterFileLine.localization);
+                        }
+                    }
+                }
+
+            }
+
+            FileWriter fileWriter = new FileWriter(new File(resourcesDir + resourceFiles[i]), false);
+            fileWriter.write(linesToWriteToOrderedLocalizationFile.toString());
+            fileWriter.close();
+        }
+
+
+    }
+
+    private static ResourceFile getMasterResourceFile() {
+        return localizationFiles.get(0);
+    }
+
+    private static void readResourceFiles() throws IOException {
         for (String resourceFile : resourceFiles) {
             ResourceFile file = new ResourceFile();
 
@@ -31,45 +81,8 @@ public class LocalizationsModifier {
             }
             br.close();
 
-            resources.add(file);
+            localizationFiles.add(file);
         }
-
-
-        ResourceFile masterFile = resources.get(0);
-        for (int i = 1; i < resources.size(); ++i) {
-            System.out.println("Handling localization file: " + resourceFiles[i]);
-            StringBuilder linesToWriteToOrderedPropertyFile = new StringBuilder();
-
-            ResourceFile otherFile = resources.get(i);
-            for (ResourceFileLine masterFileLine : masterFile.lines) {
-
-                if (masterFileLine.type == LineType.LOCALIZATION) {
-                    Optional<ResourceFileLine> otherLocalization = otherFile.findLocalizationLine(masterFileLine.key);
-                    if (!otherLocalization.isPresent()) {
-                        if (isNotExcludeKey(masterFileLine.key)) {
-                            System.out.println("Localization missing: " + masterFileLine.key + " = " + masterFileLine.localization);
-                        }
-                    }
-                    else {
-                        linesToWriteToOrderedPropertyFile
-                                .append(masterFileLine.key)
-                                .append(" = ")
-                                .append(otherLocalization.get().localization)
-                                .append("\n");
-                    }
-                }
-                else {
-                    linesToWriteToOrderedPropertyFile
-                            .append(masterFileLine.toString())
-                            .append("\n");
-                }
-
-            }
-
-            FileUtil.writeAsString(new File(resourcesDir + resourceFiles[i]), linesToWriteToOrderedPropertyFile.toString());
-        }
-
-
     }
 
     private static boolean isNotExcludeKey(String key) {
@@ -82,19 +95,19 @@ public class LocalizationsModifier {
     }
 
     private static class ResourceFile {
-        private List<ResourceFileLine> lines = Lists.newArrayList();
+        private List<ResourceFileLine> lines = new ArrayList<>();
 
         public void addResourceLine(String line) {
             lines.add(new ResourceFileLine(line));
         }
 
-        public Optional<ResourceFileLine> findLocalizationLine(String key) {
+        public ResourceFileLine getPossibleLocalizationLine(String key) {
             for (ResourceFileLine line : lines) {
                 if (line.type == LineType.LOCALIZATION && line.key.equals(key)) {
-                    return Optional.of(line);
+                    return line;
                 }
             }
-            return Optional.absent();
+            return null;
         }
     }
 
@@ -106,7 +119,7 @@ public class LocalizationsModifier {
 
         public ResourceFileLine(String line) {
             line = line.trim();
-            if (Strings.isNullOrEmpty(line)) {
+            if (line.length() == 0) {
                 this.type = LineType.EMPTY;
                 key = null;
                 localization = null;
@@ -146,7 +159,7 @@ public class LocalizationsModifier {
         }
     }
 
-    public enum LineType {
+    private enum LineType {
         EMPTY,
         COMMENT,
         LOCALIZATION
