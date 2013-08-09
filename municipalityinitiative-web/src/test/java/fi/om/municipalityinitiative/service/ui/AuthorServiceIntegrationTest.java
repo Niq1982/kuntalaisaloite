@@ -16,7 +16,6 @@ import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
-import fi.om.municipalityinitiative.exceptions.VerifiedLoginRequiredException;
 import fi.om.municipalityinitiative.service.ServiceIntegrationTestBase;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
@@ -240,10 +239,11 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
     }
 
     @Test
-    public void getting_prefilled_author_confirmation_dialog_throws_VerifiedLoginRequiredException() {
+    public void getting_prefilled_author_confirmation_returns_empty_userData_if_verified_initiative_and_user_not_vetumaVerified() {
         Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality));
-        thrown.expect(VerifiedLoginRequiredException.class);
-        authorService.getAuthorInvitationConfirmData(initiativeId, "", TestHelper.unknownLoginUserHolder);
+        String invitationConfirmationCode = testHelper.createInvitation(initiativeId, "AnyName", "AnyEmail").getConfirmationCode();
+        AuthorInvitationConfirmViewData authorInvitationConfirmData = authorService.getAuthorInvitationConfirmData(initiativeId, invitationConfirmationCode, TestHelper.unknownLoginUserHolder);
+        ReflectionTestUtils.assertReflectionEquals(authorInvitationConfirmData.authorInvitationUIConfirmDto.getContactInfo(), new ContactInfo());
     }
 
     @Test
