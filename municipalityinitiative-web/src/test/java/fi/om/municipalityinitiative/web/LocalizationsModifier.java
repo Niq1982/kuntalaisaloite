@@ -22,13 +22,11 @@ public class LocalizationsModifier {
     // Localization-missing text will not be printed if localization key begins with any of these strings
     private final static String[] exludePrefix = {"api.", "editor.", "success.editor"};
 
-    private static List<ResourceFile> localizationFiles = new ArrayList<>();
-
     public static void main(String[] s) throws IOException {
 
-        readResourceFiles();
+        List<ResourceFile> localizationFiles = readResourceFiles();
 
-        ResourceFile masterFile = getMasterResourceFile();
+        ResourceFile masterFile = localizationFiles.get(0);
 
         for (int i = 1; i < localizationFiles.size(); ++i) {
             System.out.println("Handling localization file: " + resourceFiles[i]);
@@ -66,11 +64,8 @@ public class LocalizationsModifier {
 
     }
 
-    private static ResourceFile getMasterResourceFile() {
-        return localizationFiles.get(0);
-    }
-
-    private static void readResourceFiles() throws IOException {
+    private static List<ResourceFile> readResourceFiles() throws IOException {
+        List<ResourceFile> localizationFiles = new ArrayList<>();
         for (String resourceFile : resourceFiles) {
             ResourceFile file = new ResourceFile();
 
@@ -83,6 +78,7 @@ public class LocalizationsModifier {
 
             localizationFiles.add(file);
         }
+        return localizationFiles;
     }
 
     private static boolean isNotExcludeKey(String key) {
