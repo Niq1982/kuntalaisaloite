@@ -30,38 +30,41 @@ public class LocalizationsModifier {
 
         for (int i = 1; i < localizationFiles.size(); ++i) {
             System.out.println("Handling localization file: " + resourceFiles[i]);
-            StringBuilder linesToWriteToOrderedLocalizationFile = new StringBuilder();
 
             ResourceFile currentLocalizationFile = localizationFiles.get(i);
-            for (ResourceFileLine masterFileLine : masterFile.lines) {
 
-                if (masterFileLine.type != LineType.LOCALIZATION) {
-                    linesToWriteToOrderedLocalizationFile
-                            .append(masterFileLine.toString())
-                            .append("\n");
-                }
-
-                else {
-                    ResourceFileLine otherLocalization = currentLocalizationFile.getPossibleLocalizationLine(masterFileLine.key);
-                    if (otherLocalization != null) {
-                        linesToWriteToOrderedLocalizationFile
-                                .append(otherLocalization.toString())
-                                .append("\n");
-                    } else {
-                        if (isNotExcludeKey(masterFileLine.key)) {
-                            System.out.println("Localization missing: " + masterFileLine.key + " = " + masterFileLine.localization);
-                        }
-                    }
-                }
-
-            }
+            String modifiedLocalizationFileContents = getModifiedFileContent(masterFile, currentLocalizationFile);
 
             FileWriter fileWriter = new FileWriter(new File(resourcesDir + resourceFiles[i]), false);
-            fileWriter.write(linesToWriteToOrderedLocalizationFile.toString());
+            fileWriter.write(modifiedLocalizationFileContents);
             fileWriter.close();
         }
 
 
+    }
+
+    private static String getModifiedFileContent(ResourceFile masterFile, ResourceFile fileToModify) {
+        StringBuilder modifiedFileContent = new StringBuilder();
+        for (ResourceFileLine masterFileLine : masterFile.lines) {
+
+            if (masterFileLine.type != LineType.LOCALIZATION) {
+                modifiedFileContent
+                        .append(masterFileLine.toString())
+                        .append("\n");
+            } else {
+                ResourceFileLine otherLocalization = fileToModify.getPossibleLocalizationLine(masterFileLine.key);
+                if (otherLocalization != null) {
+                    modifiedFileContent
+                            .append(otherLocalization.toString())
+                            .append("\n");
+                } else if (isNotExcludeKey(masterFileLine.key)) {
+                    System.err.println("Localization missing: " + masterFileLine.key + " = " + masterFileLine.localization);
+                }
+
+            }
+        }
+
+        return modifiedFileContent.toString();
     }
 
     private static List<ResourceFile> readResourceFiles() throws IOException {
