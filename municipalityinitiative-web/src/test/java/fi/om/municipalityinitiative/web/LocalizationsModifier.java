@@ -6,9 +6,9 @@ import java.util.List;
 
 /**
  * - Reads all localization files.
- * - First file is concerned as master-file.
+ * - First file is considered as master-file.
  * - All localizations that are missing from any other files but found from master files are reported.
- * - All localizations that are found from other files but not from master file are removed.
+ * - All localizations that are found from any other files but not from master file are removed.
  * - All localizations, comments and empty lines are ordered according to master file.
  */
 public class LocalizationsModifier {
