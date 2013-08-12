@@ -71,6 +71,7 @@ public class EmailServiceDataProvider {
             for (String email : authorDao.findVerifiedAuthorEmails(initiativeId)) {
                 authorEmails.put(email, null);
             }
+            return authorEmails;
         }
         return authorDao.getManagementLinksByAuthorEmails(initiativeId);
     }
