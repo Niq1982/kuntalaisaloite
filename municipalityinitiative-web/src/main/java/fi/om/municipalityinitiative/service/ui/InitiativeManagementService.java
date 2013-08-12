@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.service.ui;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
@@ -10,7 +11,6 @@ import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.VerifiedAuthor;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
-import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
@@ -73,7 +73,7 @@ public class InitiativeManagementService {
     }
 
     @Transactional(readOnly = false)
-    public void editInitiativeDraft(Long initiativeId, LoginUserHolder loginUserHolder, InitiativeDraftUIEditDto editDto) {
+    public void editInitiativeDraft(Long initiativeId, LoginUserHolder loginUserHolder, InitiativeDraftUIEditDto editDto, Locale locale) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
         Initiative initiative = initiativeDao.get(initiativeId);
@@ -87,7 +87,13 @@ public class InitiativeManagementService {
             String hash = loginUserHolder.getVerifiedUser().getHash();
             userDao.updateUserInformation(hash, editDto.getContactInfo());
             participantDao.updateVerifiedParticipantShowName(initiativeId, hash, editDto.getContactInfo().isShowName());
+
+            if (Strings.isNullOrEmpty(initiative.getName())) {
+                emailService.sendVeritiedInitiativeManagementLink(initiativeId, locale);
+            }
+
         }
+
     }
 
     @Transactional(readOnly = true)
@@ -209,10 +215,14 @@ public class InitiativeManagementService {
 
     @Transactional(readOnly = true)
     public List<InitiativeListInfo> findOwnInitiatives(LoginUserHolder loginUserHolder) {
-        VerifiedUserId authorId = loginUserHolder.getVerifiedUser().getAuthorId();
-        if (authorId == null) { // FIXME:
+        VerifiedUserId authorId;
+        try {
+            authorId = loginUserHolder.getVerifiedUser().getAuthorId();
+        } catch (IllegalArgumentException e) {
             return Lists.newArrayList();
+            // FIXME: getVerifiedUser().getAuthorId() should not throw exceptions, fix architecture
         }
+
         return initiativeDao.findInitiatives(authorId);
     }
 }

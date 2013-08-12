@@ -1,11 +1,11 @@
 package fi.om.municipalityinitiative.service.email;
 
+import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dao.MunicipalityDao;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dto.Author;
-import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +37,9 @@ public class EmailServiceDataProvider {
     }
 
     public List<? extends Author> findAuthors(Long id) {
+        if (initiativeDao.isVerifiableInitiative(id)) {
+            return authorDao.findVerifiedAuthors(id);
+        }
         return authorDao.findNormalAuthors(id);
     }
 
@@ -62,6 +66,13 @@ public class EmailServiceDataProvider {
     }
 
     public Map<String, String> getManagementLinksByAuthorEmails(Long initiativeId) {
+        if (initiativeDao.isVerifiableInitiative(initiativeId)) {
+            HashMap<String, String> authorEmails = Maps.newHashMap();
+            for (String email : authorDao.findVerifiedAuthorEmails(initiativeId)) {
+                authorEmails.put(email, null);
+            }
+            return authorEmails;
+        }
         return authorDao.getManagementLinksByAuthorEmails(initiativeId);
     }
 }

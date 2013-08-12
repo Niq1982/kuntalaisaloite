@@ -86,7 +86,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
         InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(ReflectionTestUtils.modifyAllFields(new Initiative()), new ContactInfo());
 
-        service.editInitiativeDraft(initiativeId, TestHelper.unknownLoginUserHolder, editDto);
+        service.editInitiativeDraft(initiativeId, TestHelper.unknownLoginUserHolder, editDto, fi.om.municipalityinitiative.util.Locales.LOCALE_FI);
     }
 
     @Test(expected = AccessDeniedException.class)
@@ -97,7 +97,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     @Test(expected = OperationNotAllowedException.class)
     public void edit_initiative_fails_if_initiative_accepted() {
         Long collaborativeAccepted = testHelper.createCollaborativeAccepted(testMunicipality.getId());
-        service.editInitiativeDraft(collaborativeAccepted, TestHelper.authorLoginUserHolder, new InitiativeDraftUIEditDto());
+        service.editInitiativeDraft(collaborativeAccepted, TestHelper.authorLoginUserHolder, new InitiativeDraftUIEditDto(), fi.om.municipalityinitiative.util.Locales.LOCALE_FI);
     }
 
     @Test
@@ -128,7 +128,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         ContactInfo randomlyFilledContactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
         InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(randomlyFilledInitiative,randomlyFilledContactInfo);
 
-        service.editInitiativeDraft(initiativeId, TestHelper.authorLoginUserHolder, editDto);
+        service.editInitiativeDraft(initiativeId, TestHelper.authorLoginUserHolder, editDto, fi.om.municipalityinitiative.util.Locales.LOCALE_FI);
 
         InitiativeDraftUIEditDto updated = service.getInitiativeDraftForEdit(initiativeId, TestHelper.authorLoginUserHolder);
 
@@ -157,7 +157,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         ContactInfo randomlyFilledContactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
         InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(randomlyFilledInitiative, randomlyFilledContactInfo);
 
-        service.editInitiativeDraft(initiativeId, TestHelper.authorLoginUserHolder, editDto);
+        service.editInitiativeDraft(initiativeId, TestHelper.authorLoginUserHolder, editDto, fi.om.municipalityinitiative.util.Locales.LOCALE_FI);
 
         InitiativeDraftUIEditDto updated = service.getInitiativeDraftForEdit(initiativeId, TestHelper.authorLoginUserHolder);
 
@@ -214,6 +214,21 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
         assertThat(updated.getState(), is(InitiativeState.REVIEW));
         assertThat(updated.getType(), is(InitiativeType.UNDEFINED));
+    }
+
+    @Test
+    public void send_initiative_as_review_does_not_change_state_if_verified_initiative() {
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withState(InitiativeState.DRAFT)
+                .applyAuthor()
+                .toInitiativeDraft());
+
+        service.sendReviewWithUndefinedType(initiativeId, TestHelper.authorLoginUserHolder);
+
+        Initiative updated = testHelper.getInitiative(initiativeId);
+
+        assertThat(updated.getState(), is(InitiativeState.REVIEW));
+        assertThat(updated.getType().isVerifiable(), is(true));
     }
 
     @Test

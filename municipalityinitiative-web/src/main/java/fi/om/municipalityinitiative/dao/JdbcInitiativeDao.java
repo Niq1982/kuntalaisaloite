@@ -80,6 +80,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .innerJoin(QVerifiedAuthor.verifiedAuthor.verifiedAuthorInitiativeFk, QMunicipalityInitiative.municipalityInitiative)
                 .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
                 .where(QVerifiedUser.verifiedUser.id.eq(verifiedUserId.toLong()))
+                .where(QMunicipalityInitiative.municipalityInitiative.name.isNotEmpty())
                 .orderBy(QMunicipalityInitiative.municipalityInitiative.id.desc())
                 .list(Mappings.initiativeListInfoMapping);
     }
