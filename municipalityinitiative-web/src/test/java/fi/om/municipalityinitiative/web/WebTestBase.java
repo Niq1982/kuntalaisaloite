@@ -349,6 +349,15 @@ public abstract class WebTestBase {
     }
 
     protected void enterVetumaLoginInformationAndSubmit(String userSsn, String municipalityName) {
+        for (int i = 0; i < 50; ++i) {
+            if (driver.getCurrentUrl().contains("vetumamock"))
+                break;
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
         inputText("EXTRADATA", "HETU=" + userSsn);
         new Select(findElementWhenClickable(By.name("municipalityCode"))).selectByVisibleText(municipalityName);
         getElement(By.id("formsubmit")).click();
