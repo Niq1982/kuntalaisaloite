@@ -188,12 +188,15 @@
         
         <#--
          * Show participant counts and participate form
+         *
+         * - Hide when not published. OM sees this view in REVIEW state. 
         -->
-        <div class="initiative-content-row last">
-            
-            <@e.participants formHTML=participateFormHTML showForm=showParticipateForm />
-        </div>
-        
+        <#if initiative.state == InitiativeState.PUBLISHED>
+            <div class="initiative-content-row last">
+                
+                <@e.participants formHTML=participateFormHTML showForm=showParticipateForm />
+            </div>
+        </#if>
     </div>
 
     <#--
