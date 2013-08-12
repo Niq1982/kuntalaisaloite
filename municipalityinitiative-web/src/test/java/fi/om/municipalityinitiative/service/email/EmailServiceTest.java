@@ -5,8 +5,6 @@ import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
-import fi.om.municipalityinitiative.util.InitiativeState;
-import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.Urls;
 import org.junit.Before;
@@ -15,7 +13,6 @@ import org.junit.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
 
 public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
@@ -217,6 +214,16 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(authorMessage.getMessage()));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.view(initiativeId())));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.alt().view(initiativeId())));
+
+    }
+
+    @Test
+    public void verified_initiative_created_contains_all_information() throws Exception {
+        emailService.sendVeritiedInitiativeManagementLink(initiativeId(), Locales.LOCALE_FI);
+
+        assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
+        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Olet tallentanut luonnoksen kuntalaisaloitteesta kuntalaisaloitepalveluun"));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(Urls.get(Locales.LOCALE_FI).loginToManagement(initiativeId())));
 
     }
 

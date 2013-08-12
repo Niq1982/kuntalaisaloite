@@ -539,4 +539,9 @@ public final class Urls {
     public String ownInitiatives() {
         return getLocalizedPageUrl(OWN_INITIATIVES_FI, OWN_INITIATIVES_SV);
     }
+
+    public String loginToManagement(Long initiativeId) {
+        return login((this.equals(FI) ? MANAGEMENT_FI : MANAGEMENT_SV).replace(ID_PARAMETER, initiativeId.toString()));
+    }
+
 }

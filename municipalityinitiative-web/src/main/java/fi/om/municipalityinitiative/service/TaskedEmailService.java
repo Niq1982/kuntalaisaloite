@@ -85,4 +85,9 @@ public class TaskedEmailService extends EmailService {
     public void sendAuthorConfirmedInvitation(Long initiativeId, String authorsEmail, String managementHash, Locale locale) {
         super.sendAuthorConfirmedInvitation(initiativeId, authorsEmail, managementHash, locale);    //To change body of overridden methods use File | Settings | File Templates.
     }
+
+    @Override
+    public void sendVeritiedInitiativeManagementLink(Long initiativeId, Locale locale) {
+        super.sendVeritiedInitiativeManagementLink(initiativeId, locale);    //To change body of overridden methods use File | Settings | File Templates.
+    }
 }

@@ -70,9 +70,12 @@ public class InitiativeManagementServiceOperations {
 
     @Transactional(readOnly = false)
     public void doSendReviewWithUndefinedType(Long initiativeId) {
-        assertAllowance("Send review", getManagementSettings(initiativeId).isAllowSendToReview());
+        Initiative initiative = initiativeDao.get(initiativeId);
+        assertAllowance("Send review", ManagementSettings.of(initiative).isAllowSendToReview());
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.REVIEW);
-        initiativeDao.updateInitiativeType(initiativeId, InitiativeType.UNDEFINED);
+        if (initiative.getType().isNotVerifiable()) {
+            initiativeDao.updateInitiativeType(initiativeId, InitiativeType.UNDEFINED);
+        }
     }
 
     @Transactional(readOnly = false)

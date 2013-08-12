@@ -139,7 +139,7 @@ public class InitiativeManagementController extends BaseController {
             ).view(model, urls.alt().edit(initiativeId));
         }
 
-        initiativeManagementService.editInitiativeDraft(initiativeId, loginUserHolder, editDto);
+        initiativeManagementService.editInitiativeDraft(initiativeId, loginUserHolder, editDto, locale);
         userService.refreshUserData(request);
         return redirectWithMessage(urls.management(initiativeId), RequestMessage.SAVE_DRAFT, request);
     }

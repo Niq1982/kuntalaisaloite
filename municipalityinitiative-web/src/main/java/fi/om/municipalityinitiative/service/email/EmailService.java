@@ -36,6 +36,7 @@ public class EmailService {
     private static final String MANAGEMENT_HASH_RENEWED = "managementhash-renewed";
     private static final String AUTHOR_MESSAGE_CONFIRMATION = "author-message-confirmation";
     private static final String AUTHOR_MESSAGE_TO_AUTHORS = "author-message-to-authors";
+    private static final String VERIFIED_INITIATIVE_CREATED = "verified-initiative-created";
 
     @Resource
     EmailServiceDataProvider dataProvider;
@@ -274,6 +275,15 @@ public class EmailService {
     }
 
 
+    public void sendVeritiedInitiativeManagementLink(Long initiativeId, Locale locale) {
+        emailMessageConstructor.fromTemplate(VERIFIED_INITIATIVE_CREATED)
+                .addRecipients(dataProvider.getAuthorEmails(initiativeId))
+                .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_VERIFIED_INITIATIVE_CREATED_SUBJECT, toArray(), locale))
+                .withDataMap(toDataMap(dataProvider.get(initiativeId), locale))
+                .send();
+    }
+
+
     private String solveMunicipalityEmail(Initiative initiative) {
         if (environmentSettings.isTestSendMunicipalityEmailsToAuthor()) {
             String alternativeEmail = dataProvider.findAuthors(initiative.getId()).get(0).getContactInfo().getEmail();
@@ -282,7 +292,6 @@ public class EmailService {
         }
         return dataProvider.getMunicipalityEmail(initiative.getMunicipality().getId());
     }
-
 
     private String solveModeratorEmail(String alternativeEmail) {
         if (environmentSettings.isTestSendModeratorEmailsToAuthor()) {

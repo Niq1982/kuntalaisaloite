@@ -15,4 +15,6 @@ public class EmailSubjectPropertyKeys {
     public static final String EMAIL_AUTHOR_INVITATION_SUBJECT = "email.author.invitation.subject";
     public static final String EMAIL_AUTHOR_INVITATION_ACCEPTED_SUBJECT = "email.author.invitation.accepted.subject";
     public static final String EMAIL_AUTHOR_MESSAGE_TO_AUTHORS_SUBJECT = "email.author.message.to.authors.subject";
+
+    public static final String EMAIL_VERIFIED_INITIATIVE_CREATED_SUBJECT = "email.verified.initiative.created.subject";
 }
