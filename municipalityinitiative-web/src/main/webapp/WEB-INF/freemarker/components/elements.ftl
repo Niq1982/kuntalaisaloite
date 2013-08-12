@@ -162,7 +162,7 @@
     <#if !admin && !initiative.sentTime.present && !participateSuccess>
         <div class="participants-block ${showForm?string("hidden","")}">
         <#if initiative.verifiable && !user.isVerifiedUser()>
-                <a class="small-button" href="${vetumaLoginToCurrentPage}?participate"><span class="small-icon save-and-send"><@u.message "action.authenticate" /></span></a>
+                <a class="small-button" href="${vetumaLoginToCurrentPage}?show-participate"><span class="small-icon save-and-send"><@u.message "action.authenticate" /></span></a>
         <#else>
             <#if !user.hasParticipatedToInitiative(initiative.id) && (!initiative.verifiable || user.homeMunicipality.notPresent || (user.homeMunicipality.value.id == initiative.municipality.id))>
                 <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>

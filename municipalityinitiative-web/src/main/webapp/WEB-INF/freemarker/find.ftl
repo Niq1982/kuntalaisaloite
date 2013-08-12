@@ -54,20 +54,13 @@
     <#if enableVerifiedInitiatives>
     <span class="search-parameters-title filter"><label for="municipality">Tyyppi</label></span>
     <div class="search-parameters-container cf">
-        <select data-allow-single-deselect="allow" data-placeholder="Kaikki" data-initiative-municipality="" class="chzn-select municipality-filter" id="" name="">
-            <option value="">Kaikki</option>
-            <option value="">Kuntalaisaloite - lähetetty suoraan kuntaan</option>
-            <option value="">Tavallinen Kuntalaisaloite</option>
-            <option value="">Valtuustokäsittelyyn tähtäävä aloite</option>
-            <option value="">Aloite kunnallisesta kansanäänestyksestä</option>
-        </select>
-        
-        <#--<div class="search-sort-links">
-            <a class="" href="#">Kaikki</a>
-            <a class="active" href="#">Tavalliset aloitteet</a>
-            <a class="" href="#">2% aloitteet</a>
-            <a class="" href="#">5% aloitteet</a>
-        </div>-->
+        <div class="search-parameters">
+            <a class="active" href="#">Kaikki<br/>&nbsp;
+            </a><a class="" href="#">Kuntalaisaloite<br/>&nbsp;
+            </a><a class="" href="#"> Valtuustokäsittelyyn<br/>tähtäävä aloite
+            </a><a class="" href="#">Aloite kunnallisesta<br/>kansanäänestyksestä</a>
+            
+        </div>
     </div>
     </#if>
     <#--

@@ -213,6 +213,7 @@
             
                 <div class="system-msg msg-info">
                 <#-- TODO: managementSettings.allowInviteAuthors -->
+                    <h2><@u.message "addAuthors.title" /></h2>
                     <p><@u.message "addAuthors.description" /></p> <#--<@u.link href=urls.manageAuthors(initiative.id) labelKey="addAuthors.link" />-->
                     
                     <a href="${urls.manageAuthors(initiative.id)}" class="small-button"><span class="small-icon user"><@u.message "addAuthors.link" /></span></a>

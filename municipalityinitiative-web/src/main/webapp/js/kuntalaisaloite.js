@@ -1091,8 +1091,8 @@ $('.municipality-filter').change( function() {
 		}
 	});
 	
-	if( typeof modalData != 'undefined' && typeof modalData.acceptInvitationInvalid != 'undefined' ){
-		generateModal(modalData.acceptInvitationInvalid(), 'full', municipalitySelection.init);
+	if( typeof modalData != 'undefined' && typeof modalData.acceptInvitationAutoLoad != 'undefined' ){
+		generateModal(modalData.acceptInvitationAutoLoad(), 'full', municipalitySelection.init);
 	}
 	
 	// Accept author invitation
@@ -1130,8 +1130,8 @@ $('.municipality-filter').change( function() {
 		}
 	});
 	
-	if( typeof modalData != 'undefined' && typeof modalData.contactAuthorFormInvalid != 'undefined' ){
-		generateModal(modalData.contactAuthorFormInvalid(), 'full');
+	if( typeof modalData != 'undefined' && typeof modalData.contactAuthorFormAutoLoad != 'undefined' ){
+		generateModal(modalData.contactAuthorFormAutoLoad(), 'full');
 	}
 	
 	$('.js-renew-management-hash').click(function(){

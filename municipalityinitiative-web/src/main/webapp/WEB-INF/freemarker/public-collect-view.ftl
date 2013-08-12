@@ -188,12 +188,15 @@
         
         <#--
          * Show participant counts and participate form
+         *
+         * - Hide when not published. OM sees this view in REVIEW state. 
         -->
-        <div class="initiative-content-row last">
-            
-            <@e.participants formHTML=participateFormHTML showForm=showParticipateForm />
-        </div>
-        
+        <#if initiative.state == InitiativeState.PUBLISHED>
+            <div class="initiative-content-row last">
+                
+                <@e.participants formHTML=participateFormHTML showForm=showParticipateForm />
+            </div>
+        </#if>
     </div>
 
     <#--
@@ -252,7 +255,7 @@
             
             <#-- Autoload modal if it has errors or returned from VETUMA and user is allowed to participate -->
             <#if user.allowVerifiedParticipation(initiative.id, initiative.municipality) &&
-                 initiative.verifiable && RequestParameters['participate']?? ||
+                 initiative.verifiable && RequestParameters['show-participate']?? ||
                  RequestParameters['formError']?? && RequestParameters['formError'] == "participate">
             modalData.participateFormAutoLoad = function() {
                 return [{
@@ -275,7 +278,7 @@
         
         <#-- Autoload modal if it has errors -->
         <#if RequestParameters['formError']?? && RequestParameters['formError'] == "contactAuthor">
-        modalData.contactAuthorFormInvalid = function() {
+        modalData.contactAuthorFormAutoLoad = function() {
             return [{
                 title:      '<@u.message key="contactAuthor.title" args=[authors.publicNameCount+authors.privateNameCount] />',
                 content:    '<#noescape>${contactAuthorForm?replace("'","&#39;")}</#noescape>'
