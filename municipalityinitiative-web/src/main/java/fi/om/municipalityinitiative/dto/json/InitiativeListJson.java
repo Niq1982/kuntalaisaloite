@@ -1,10 +1,10 @@
 package fi.om.municipalityinitiative.dto.json;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import fi.om.municipalityinitiative.json.JsonId;
-import fi.om.municipalityinitiative.json.LocalDateJsonSerializer;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
+import fi.om.municipalityinitiative.json.JsonId;
+import fi.om.municipalityinitiative.json.LocalDateJsonSerializer;
 import fi.om.municipalityinitiative.web.Urls;
 import org.joda.time.LocalDate;
 
@@ -30,8 +30,8 @@ public class InitiativeListJson {
     }
 
     @JsonSerialize(using=LocalDateJsonSerializer.class)
-    public LocalDate getCreateTime() {
-        return initiative.getCreateTime();
+    public LocalDate getPublishDate() {
+        return initiative.getStateTime();
     }
 
     public boolean isCollaborative() {

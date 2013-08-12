@@ -4,7 +4,6 @@ import com.google.common.base.Strings;
 import com.mysema.query.Tuple;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
-import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.VerifiedAuthor;
 import fi.om.municipalityinitiative.dto.service.*;
@@ -58,7 +57,6 @@ public class Mappings {
                 protected InitiativeListInfo map(Tuple row) {
                     InitiativeListInfo info = new InitiativeListInfo();
                     info.setId(row.get(municipalityInitiative.id));
-                    info.setCreateTime(row.get(municipalityInitiative.modified).toLocalDate());
                     info.setName(row.get(municipalityInitiative.name));
                     info.setMunicipality(parseMunicipality(row));
                     info.setCollaborative(InitiativeType.isCollaborative(row.get(municipalityInitiative.type)));
@@ -66,6 +64,7 @@ public class Mappings {
                     info.setParticipantCount(nullToZero(row.get(municipalityInitiative.participantCount)) + nullToZero(row.get(municipalityInitiative.externalparticipantcount)));
                     info.setType(row.get(municipalityInitiative.type));
                     info.setState(row.get(municipalityInitiative.state));
+                    info.setStateTime(row.get(municipalityInitiative.stateTimestamp).toLocalDate());
                     return info;
                 }
             };

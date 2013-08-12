@@ -58,7 +58,6 @@ public class JsonTest {
                 "\"publicNameCount\":1\n" +
                 "},\n" +
                 "\"collaborative\":true,\n" +
-                "\"createTime\":\"2010-01-01\",\n" +
                 "\"id\":\"http://baseUrl/api/v0/initiatives/1\",\n" +
                 "\"municipality\":{\n" +
                 "\"id\":\"http://baseUrl/api/v0/municipalities/1\",\n" +
@@ -84,6 +83,7 @@ public class JsonTest {
                 "\"participateDate\":\"2010-01-01\"\n" +
                 "}]\n" +
                 ",\n" +
+                "\"publishDate\":\"2010-01-01\",\n" +
                 "\"sentTime\":null\n" +
                 "}"));
     }
@@ -96,7 +96,6 @@ public class JsonTest {
         assertThat(join, is("[\n" +
                 "{\n" +
                 "\"collaborative\":true,\n" +
-                "\"createTime\":\"2012-12-01\",\n" +
                 "\"id\":\"http://baseUrl/api/v0/initiatives/1\",\n" +
                 "\"municipality\":{\n" +
                 "\"id\":\"http://baseUrl/api/v0/municipalities/1\",\n" +
@@ -105,6 +104,7 @@ public class JsonTest {
                 "},\n" +
                 "\"name\":\"Koirat pois lähiöistä\",\n" +
                 "\"participantCount\":2,\n" +
+                "\"publishDate\":\"2012-12-01\",\n" +
                 "\"sentTime\":\"2012-12-24\"\n" +
                 "}]"));
     }
