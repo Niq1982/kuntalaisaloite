@@ -46,6 +46,7 @@ public class TestHelper {
     public static final DateTime DEFAULT_SENT_TIME = null;
     public static final DateTime SENT_TIME = new DateTime(2011, 1, 1, 0, 0);
     public static final DateTime DEFAULT_CREATE_TIME = DateTime.now();
+    public static final DateTime DEFAULT_STATE_TIME = DEFAULT_CREATE_TIME;
     public static final String DEFAULT_SENT_COMMENT = "some default sent comment";
     public static final Integer DEFAULT_EXTERNAL_PARTICIPANT_COUNT = 10;
 
@@ -204,6 +205,7 @@ public class TestHelper {
         insert.set(municipalityInitiative.sentComment, initiativeDraft.sentComment);
         insert.set(municipalityInitiative.fixState, initiativeDraft.fixState);
         insert.set(municipalityInitiative.moderatorComment, initiativeDraft.moderatorComment);
+        insert.set(municipalityInitiative.stateTimestamp, initiativeDraft.stateTime);
 
         lastInitiativeId = insert.executeWithKey(municipalityInitiative.id);
 
@@ -577,8 +579,9 @@ public class TestHelper {
 
         public DateTime sent = DEFAULT_SENT_TIME;
         public DateTime modified = DEFAULT_CREATE_TIME;
-        public Integer participantCount = 0;
+        public DateTime stateTime = DEFAULT_STATE_TIME;
 
+        public Integer participantCount = 0;
         public Maybe<AuthorDraft> authorDraft = Maybe.absent();
         public FixState fixState = FixState.OK;
         public String moderatorComment;
@@ -657,6 +660,11 @@ public class TestHelper {
 
         public InitiativeDraft withExternalParticipantCount(int externalParticipantCount) {
             this.externalParticipantCount = externalParticipantCount;
+            return this;
+        }
+
+        public InitiativeDraft withStateTime(DateTime stateTime) {
+            this.stateTime = stateTime;
             return this;
         }
     }

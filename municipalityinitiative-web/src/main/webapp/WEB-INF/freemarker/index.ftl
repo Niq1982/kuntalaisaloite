@@ -72,7 +72,7 @@
                             <#list initiatives as initiative>
                                 <#if initiative_index == 0><ul class="initiative-list no-style"></#if>
                                 <li>
-                                    <span class="date">${initiative.municipality.getName(locale)!""} <span class="push"><@u.localDate initiative.createTime!"" /></span></span>
+                                    <span class="date">${initiative.municipality.getName(locale)!""} <span class="push"><@u.localDate initiative.stateTime!"" /></span></span>
                                     <a href="${urls.view(initiative.id)}" class="name"><@u.limitStringLength initiative.name!"" 150 /></a>
                                 </li>
                                 <#if !initiative_has_next></ul></#if>

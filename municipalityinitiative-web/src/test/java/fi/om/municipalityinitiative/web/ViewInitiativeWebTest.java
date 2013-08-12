@@ -106,32 +106,32 @@ public class ViewInitiativeWebTest extends WebTestBase {
     @Test
     public void iframe_shows_initiative() {
 
-        DateTime modifyTime = new DateTime(2011, 1, 1, 0, 0);
+        DateTime stateTime = new DateTime(2011, 1, 1, 0, 0);
         String title = "Yeah rock rock";
         testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(municipalityId)
                 .withState(InitiativeState.PUBLISHED)
-                .withModified(modifyTime)
+                .withStateTime(stateTime)
                 .withName(title));
 
         open(urls.iframe());
 
         assertThat(driver.getTitle(), is("Sisältöä näyttävä widget eli leijuke - Kuntalaisaloitepalvelu"));
-        assertThat(getElement(By.tagName("li")).getText(), containsString(modifyTime.toString("dd.MM.yyyy")));
+        assertThat(getElement(By.tagName("li")).getText(), containsString(stateTime.toString("dd.MM.yyyy")));
         assertThat(getElement(By.tagName("li")).getText(), containsString(title));
     }
 
     @Test
     public void iframe_page_accepts_municipality_parameter_and_shows_initiative() {
 
-        DateTime modifyTime = new DateTime(2011, 1, 1, 0, 0);
+        DateTime stateTime = new DateTime(2011, 1, 1, 0, 0);
         String title = "Yeah rock rock";
         testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(municipalityId)
                 .withState(InitiativeState.PUBLISHED)
-                .withModified(modifyTime)
+                .withStateTime(stateTime)
                 .withName(title));
 
         open(urls.iframe(municipalityId));
-        assertThat(getElement(By.tagName("li")).getText(), containsString(modifyTime.toString("dd.MM.yyyy")));
+        assertThat(getElement(By.tagName("li")).getText(), containsString(stateTime.toString("dd.MM.yyyy")));
         assertThat(getElement(By.tagName("li")).getText(), containsString(title));
     }
 

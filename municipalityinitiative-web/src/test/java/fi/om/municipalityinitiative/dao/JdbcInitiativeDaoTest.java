@@ -2,11 +2,11 @@ package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
-import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
+import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.*;
@@ -25,7 +25,6 @@ import java.util.List;
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={IntegrationTestConfiguration.class})
@@ -94,7 +93,7 @@ public class JdbcInitiativeDaoTest {
         Initiative initiative = initiativeDao.get(initiativeId);
 
         assertThat(initiative.getMunicipality().getId(), is(testMunicipality.getId()));
-        assertThat(initiative.getCreateTime(), is(notNullValue()));
+        assertThat(initiative.getStateTime(), is(notNullValue()));
         assertThat(initiative.getName(), is(TestHelper.DEFAULT_INITIATIVE_NAME));
         assertThat(initiative.getProposal(), is(TestHelper.DEFAULT_PROPOSAL));
         assertThat(initiative.getSentTime().isPresent(), is(true));

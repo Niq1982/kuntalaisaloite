@@ -12,12 +12,12 @@ public class InitiativeListInfo {
 
     private Municipality municipality;
 
-    private LocalDate createTime;
     private boolean collaborative;
     private Maybe<LocalDate> sentTime;
     private long participantCount;
     private InitiativeType type;
     private InitiativeState state;
+    private LocalDate stateTime;
 
     public Long getId() {
         return id;
@@ -33,14 +33,6 @@ public class InitiativeListInfo {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public LocalDate getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDate createTime) {
-        this.createTime = createTime;
     }
 
     public boolean isCollaborative() {
@@ -93,5 +85,13 @@ public class InitiativeListInfo {
 
     public boolean isVerifiable() {
         return InitiativeType.isVerifiable(type);
+    }
+
+    public void setStateTime(LocalDate stateTime) {
+        this.stateTime = stateTime;
+    }
+
+    public LocalDate getStateTime() {
+        return stateTime;
     }
 }

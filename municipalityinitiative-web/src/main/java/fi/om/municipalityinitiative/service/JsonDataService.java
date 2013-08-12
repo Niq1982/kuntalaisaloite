@@ -1,26 +1,26 @@
 package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Lists;
-import fi.om.municipalityinitiative.dto.Author;
-import fi.om.municipalityinitiative.dto.NormalAuthor;
-import fi.om.municipalityinitiative.dto.service.NormalParticipant;
-import fi.om.municipalityinitiative.dto.ui.ContactInfo;
-import fi.om.municipalityinitiative.dto.ui.PublicAuthors;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dao.MunicipalityDao;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
+import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
+import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.json.InitiativeJson;
 import fi.om.municipalityinitiative.dto.json.InitiativeListJson;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.service.NormalParticipant;
 import fi.om.municipalityinitiative.dto.service.Participant;
+import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.dto.ui.ParticipantCount;
+import fi.om.municipalityinitiative.dto.ui.PublicAuthors;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
-import fi.om.municipalityinitiative.web.controller.ApiController;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
+import fi.om.municipalityinitiative.web.controller.ApiController;
 import org.joda.time.LocalDate;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -78,7 +78,7 @@ public class JsonDataService {
         initiative.setMunicipality(ApiController.TAMPERE);
         initiative.setSentTime(Maybe.of(new LocalDate(2012, 12, 24)));
         initiative.setCollaborative(true);
-        initiative.setCreateTime(new LocalDate(2012, 12, 1));
+        initiative.setStateTime(new LocalDate(2012, 12, 1));
         initiative.setId(1L);
         initiative.setName("Koirat pois lähiöistä");
         initiative.setParticipantCount(2);
@@ -106,7 +106,7 @@ public class JsonDataService {
         initiativeInfo.setProposal("Kakkaa on joka paikassa");
         initiativeInfo.setMunicipality(ApiController.TAMPERE);
         initiativeInfo.setSentTime(Maybe.<LocalDate>fromNullable(null));
-        initiativeInfo.setCreateTime(new LocalDate(2010, 1, 1));
+        initiativeInfo.setStateTime(new LocalDate(2010, 1, 1));
 
         initiativeInfo.setType(InitiativeType.COLLABORATIVE);
 
