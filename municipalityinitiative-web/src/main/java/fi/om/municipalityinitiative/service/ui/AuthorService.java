@@ -119,9 +119,9 @@ public class AuthorService {
     public AuthorInvitationConfirmViewData getAuthorInvitationConfirmData(Long initiativeId, String confirmCode, LoginUserHolder unknownLoginUserHolder) {
 
         boolean isVerifiableInitiative = initiativeDao.isVerifiableInitiative(initiativeId);
-        if (isVerifiableInitiative) {
-            unknownLoginUserHolder.getVerifiedUser(); // Throws exception if not verified
-        }
+//        if (isVerifiableInitiative) {
+//            unknownLoginUserHolder.getVerifiedUser(); // Throws exception if not verified
+//        }
 
         AuthorInvitation authorInvitation = authorDao.getAuthorInvitation(initiativeId, confirmCode);
         authorInvitation.assertNotRejectedOrExpired();
@@ -134,9 +134,15 @@ public class AuthorService {
             confirmDto.setContactInfo(new ContactInfo());
             confirmDto.getContactInfo().setName(authorInvitation.getName());
             confirmDto.getContactInfo().setEmail(authorInvitation.getEmail());
+
         }
         else {
-            confirmDto.setContactInfo(unknownLoginUserHolder.getVerifiedUser().getContactInfo());
+            if (unknownLoginUserHolder.isVerifiedUser()) {
+                confirmDto.setContactInfo(unknownLoginUserHolder.getVerifiedUser().getContactInfo());
+            }
+            else { // If user is not verified, acceptance dialog is hidden at UI and we do not need any user info
+                confirmDto.setContactInfo(new ContactInfo());
+            }
         }
 
         AuthorInvitationConfirmViewData data = new AuthorInvitationConfirmViewData();
