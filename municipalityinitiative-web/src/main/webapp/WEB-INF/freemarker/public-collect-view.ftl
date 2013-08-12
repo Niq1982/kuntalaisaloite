@@ -252,7 +252,7 @@
             
             <#-- Autoload modal if it has errors or returned from VETUMA and user is allowed to participate -->
             <#if user.allowVerifiedParticipation(initiative.id, initiative.municipality) &&
-                 initiative.verifiable && RequestParameters['participate']?? ||
+                 initiative.verifiable && RequestParameters['show-participate']?? ||
                  RequestParameters['formError']?? && RequestParameters['formError'] == "participate">
             modalData.participateFormAutoLoad = function() {
                 return [{
@@ -275,7 +275,7 @@
         
         <#-- Autoload modal if it has errors -->
         <#if RequestParameters['formError']?? && RequestParameters['formError'] == "contactAuthor">
-        modalData.contactAuthorFormInvalid = function() {
+        modalData.contactAuthorFormAutoLoad = function() {
             return [{
                 title:      '<@u.message key="contactAuthor.title" args=[authors.publicNameCount+authors.privateNameCount] />',
                 content:    '<#noescape>${contactAuthorForm?replace("'","&#39;")}</#noescape>'

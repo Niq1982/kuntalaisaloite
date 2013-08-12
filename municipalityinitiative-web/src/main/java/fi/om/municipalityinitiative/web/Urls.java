@@ -488,6 +488,7 @@ public final class Urls {
     public static String urlPercentEncode(String s) {
         String ret = s;
         ret = ret.replaceAll("%", "%25");
+        ret = ret.replaceAll("&", "%26");
         ret = ret.replaceAll(" ", "%20");
         ret = ret.replaceAll(":", "%3A");
         ret = ret.replaceAll("ä|\u00E4|&auml;",  "%C3%A4");

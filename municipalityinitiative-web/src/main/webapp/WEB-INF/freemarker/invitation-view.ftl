@@ -43,7 +43,7 @@
                         <#if user.isVerifiedUser()>
                             <@u.systemMessage path="warning.verifiedAuthor.notMember" type="warning" showClose=false />
                         <#else>
-                            <a class="small-button" href="${vetumaLoginToCurrentPage}"><span class="small-icon save-and-send"><@u.message "action.invitation.authenticate" /></span></a>
+                            <a class="small-button" href="${vetumaLoginToCurrentPage}${urls.urlPercentEncode("&show-invitation")}"><span class="small-icon save-and-send"><@u.message "action.invitation.authenticate" /></span></a>
                         </#if>
                         <a href="?invitation=${authorInvitation.confirmCode!""}&invitation-reject=confirm" title="<@u.message "invitation.reject" />" class="small-button gray js-reject-invitation"><span class="small-icon cancel"><@u.message "invitation.reject" /></span></a>
                     <#else>
@@ -103,11 +103,7 @@
         <@compress single_line=true>
 
             <#if initiative.verifiable && !user.isVerifiedUser()>
-            <#-- Hide the whole acceptance dialog if initiative is verified and vetumalogin is needed -->
-
-
-
-
+                <#-- Hide the whole acceptance dialog if initiative is verified and vetumalogin is needed -->
             <#else>
 
                 <@u.systemMessage path="invitation.accept.confirm.description" type="info" showClose=false />
@@ -238,9 +234,10 @@
                 }]
             };
             
-            <#-- Autoload modal if it has errors -->
-            <#if hasErrors?? && hasErrors>
-            modalData.acceptInvitationInvalid = function() {
+            <#-- Autoload modal if it has errors or user returns from VETUMA -->
+            <#if hasErrors?? && hasErrors ||
+                 (initiative.verifiable && user.isVerifiedUser() && RequestParameters['show-invitation']??)>
+            modalData.acceptInvitationAutoLoad = function() {
                 return [{
                     title:      '<@u.message "invitation.accept.confirm.title" />',
                     content:    '<#noescape>${invitationAcceptHtml?replace("'","&#39;")}</#noescape>'
