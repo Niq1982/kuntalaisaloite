@@ -13,6 +13,7 @@ import fi.om.municipalityinitiative.validation.NotTooFastSubmitValidator;
 import mockit.Mocked;
 import org.eclipse.jetty.server.Server;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -56,7 +57,7 @@ public abstract class WebTestBase {
 
     protected Urls urls;
 
-    protected WebDriver driver;
+    protected static WebDriver driver;
 
     @Inject
     protected Environment env;
@@ -103,7 +104,15 @@ public abstract class WebTestBase {
         formatDriver(firefox ? "ff" : "default");
 
     }
+
+    private static String lastDriver;
     private void formatDriver(String driverType) {
+        if (driverType.equals(lastDriver)) {
+            return;
+        }
+
+        lastDriver = driverType;
+
         switch (driverType) {
             case "ie":
                 driver = new InternetExplorerDriver();
@@ -125,10 +134,17 @@ public abstract class WebTestBase {
 
     @After
     public void teardown() {
-        driver.quit();
+        //driver.quit();
+        driver.manage().deleteAllCookies();
     }
-    
-    
+
+    @AfterClass
+    public static void destrouDriver() {
+        driver.quit();
+        lastDriver = null;
+    }
+
+
     //@AfterClass
     public static void destroy() {
         try {
