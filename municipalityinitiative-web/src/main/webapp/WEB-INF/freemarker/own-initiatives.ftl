@@ -48,7 +48,7 @@
                 </span>
             </span>
 
-            <span class="date trigger-tooltip" title="<@u.message "searchResults.initiative.createDate" />" ><@u.localDate initiative.createTime!"" /></span>
+            <span class="date trigger-tooltip" title="<@u.message "searchResults.initiative.date."+initiative.state />" ><@u.localDate initiative.stateTime /></span>
             <span class="title">
                 <a href="${urls.management(initiative.id)}" class="name">
                     <#if initiative.name??>

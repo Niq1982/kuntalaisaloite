@@ -94,4 +94,8 @@ public class InitiativeListInfo {
     public LocalDate getStateTime() {
         return stateTime;
     }
+
+    public InitiativeState getState() {
+        return state;
+    }
 }
