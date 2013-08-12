@@ -183,7 +183,6 @@ public class SecurityFilter implements Filter {
     }
 
     private void setCookie(String name, String value, HttpServletRequest request, HttpServletResponse response) {
-        // httpOnly would be ideal, but it requires either writing raw cookie header or using WAS specific Cookies
         Cookie cookie = new Cookie(name, value);
 
         String contextPath = request.getContextPath();
@@ -192,7 +191,8 @@ public class SecurityFilter implements Filter {
         }
         cookie.setPath(contextPath);
         cookie.setSecure(true);
-        response.addCookie(cookie);
+        // For enabling httpOnly we need to write the raw cookie data instead of response.addCookie(cookie)
+        response.setHeader("SET-COOKIE", name+"="+value+"; Path="+contextPath+"; Secure; HttpOnly");
     }
     
     private void propagateException(Exception e) throws IOException, ServletException {
