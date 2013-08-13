@@ -1,0 +1,128 @@
+// Messages
+//
+// .msg-info        - Info, gray
+// .msg-warning     - Warning, yellow
+// .msg-error       - Error, red
+// .msg-success     - Success, green
+// .msg-block       - Optional container for messages
+// 
+// Styleguide 6.
+
+.system-msg {
+    position:relative;
+    padding: 15px 25px 15px 60px;
+    margin:1em 0;
+    border-width:1px; // separated for better overriding
+    border-style:solid;
+
+    font-size:0.9em;
+    text-align:left;
+
+    &.msg-info {
+        border-color:@borderGray;
+        background: @grayGradient2 url("../../img/icon-msg-info.png?version=${timestamp}") no-repeat 20px 15px;
+        
+        .close-msg {
+            background:@borderGray;
+        }
+    }
+
+    &.msg-warning {
+        border-color:#e9c000;
+        background: #f7e489 url("../../img/icon-msg-warning.png?version=${timestamp}") no-repeat 18px 15px;
+
+        .close-msg {
+            background:#e9c000;
+        }
+    }
+
+    &.msg-error {
+        color:#fff;
+        border-color:@redGradient2;
+        background: #fa353d url("../../img/icon-msg-error.png?version=${timestamp}") no-repeat 15px 15px;
+        
+        a {
+            color:#fff;
+        }
+        a:hover {
+            color:#fff;
+            text-decoration:underline;
+        }
+        
+        ul { margin:0; }
+                
+        .close-msg {
+            background:@redGradient2;
+        }
+    }
+
+    &.msg-success {
+        border: 1px solid #7aa63f;
+        background: #b6eb7c url("../../img/icon-msg-success.png?version=${timestamp}") no-repeat 15px 15px;
+        color:#254000;
+        
+        .close-msg {
+            background:#58831d;
+            color: #b6eb7c;
+        }
+    }
+    
+    // General message style for narrow columns
+    &.small {
+        background-image:none;
+        padding:5px;
+        margin:5px 5px 5px 0;
+    }
+    
+    .close-msg {
+        position:absolute;
+        right:15px;
+        top:18px;
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        line-height: 13px;
+        //border-radius:0.2em;
+        text-align: center;
+        font-size:0.85em;
+        
+        color:#fff;
+        opacity:0.5;
+        cursor:pointer;
+        
+        .transition(opacity, 0.3s, ease-in);
+    }
+    &:hover {
+        .close-msg {
+            opacity:1;
+        }
+    }    
+}
+
+.msg-block {
+    min-height:67px;
+    margin:1em 0 30px 0;
+    padding:15px 25px 15px 126px;
+    font-size:0.9em;
+    //border-left:4px solid #c3cc13;
+    border-left:4px solid @secondaryColor;
+    
+    background:#fff url("../../img/icon-msg-summary.png?version=${timestamp}") no-repeat 32px 27px;
+    
+    .msg-info {
+        background:#fff;
+        margin:0 0 0 5px;
+        padding:1em 0;
+        border:none;
+        font-size:1em;
+        
+        border-top:1px solid #ddd;
+        
+        /*&.first, &:first-of-type {
+            border:0;
+        }*/
+        &:first-child {
+            border:0;
+        }
+    }
+}

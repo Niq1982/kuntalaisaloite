@@ -1,0 +1,181 @@
+
+// Modal
+// 
+// Styleguide 5.1
+.modal {
+    display:none;
+    // had to add important rule here. other solution would be reset CSS on modal load
+    z-index:9998 !important;
+    width:600px;
+    //max-width:95%;
+    background:#fff;
+    .rounded-corners(2px);
+    
+    box-shadow:3px 3px 3px rgba(0,0,0,0.1);
+    -moz-box-shadow:3px 3px 3px rgba(0,0,0,0.1);
+    -webkit-box-shadow:3px 3px 3px rgba(0,0,0,0.1);
+    
+    &.full {
+        width:700px;
+    }
+    
+    &.fixed {
+        position:fixed !important;
+        top:20px;
+        bottom:20px;
+        
+        .modal-content {
+            //max-height:500px;
+            overflow:auto;
+        }
+    }
+    
+    .modal-header {
+        position:relative;
+        padding:10px 20px;
+        
+        border-top-left-radius:@cornerRadiusSmall;
+        -moz-border-top-left-radius:@cornerRadiusSmall;
+        -webkit-border-top-left-radius:@cornerRadiusSmall;
+        border-top-right-radius:@cornerRadiusSmall;
+        -moz-border-top-right-radius:@cornerRadiusSmall;
+        -webkit-border-top-right-radius:@cornerRadiusSmall;
+        
+        background: @grayGradient2;
+        background: linear-gradient(top,  @grayGradient1,  @grayGradient2);
+        background: -ms-linear-gradient(top,  @grayGradient1, @grayGradient2);
+        background: -webkit-gradient(linear, left top, left bottom, from(@grayGradient1), to(@grayGradient2));
+        background: -moz-linear-gradient(top,  @grayGradient1,  @grayGradient2);
+        background: -o-linear-gradient(top,  @grayGradient1,  @grayGradient2);
+        
+        text-shadow:1px 1px 0 @grayGradient1;
+        
+        .close {
+            position:absolute;
+            right:0;
+            top:0;
+            padding:10px 20px;
+            border-left:1px solid #f1f1f1;
+            color: @bodyColor;
+            font-weight:bold;
+            
+            &:hover {
+                color:@black;
+                border-top-right-radius:@cornerRadiusSmall;
+                -moz-border-top-right-radius:@cornerRadiusSmall;
+                -webkit-border-top-right-radius:@cornerRadiusSmall;
+            
+                background: @grayGradientHover2;
+                background: linear-gradient(top,  @grayGradientHover1,  @grayGradientHover2);
+                background: -ms-linear-gradient(top,  @grayGradientHover1, @grayGradientHover2);
+                background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientHover1), to(@grayGradientHover2));
+                background: -moz-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
+                background: -o-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
+            }
+        }
+    }
+    
+    .modal-title {
+        font-weight:bold;
+    }
+ 
+    .modal-content {
+        //overflow:auto;
+        padding:20px 30px 30px 30px;
+        background-color:#fff;
+        border-bottom-left-radius:@cornerRadiusSmall;
+        -moz-border-bottom-left-radius:@cornerRadiusSmall;
+        -webkit-border-bottom-left-radius:@cornerRadiusSmall;
+        border-bottom-right-radius:@cornerRadiusSmall;
+        -moz-border-bottom-right-radius:@cornerRadiusSmall;
+        -webkit-border-bottom-right-radius:@cornerRadiusSmall;
+    }
+    
+    input[type="text"], textarea {
+        margin:0.2em 0 0.5em 0;
+    }
+    .address-field { height:5.3em; }
+    
+    .system-msg { margin-top:0; }
+    form {
+        .system-msg {
+            margin:5px 0;
+            -webkit-border-radius: 0;
+            -moz-border-radius: 0;
+            border-radius: 0;
+        }
+    }
+}
+// had to add important rule here. other solution would be reset CSS on modal load
+#exposeMask { z-index:9997 !important; }
+
+// Tooltip
+// 
+// Styleguide 5.2
+.tooltip {
+    max-width:300px;
+    z-index:9998;
+    //background:#087480;
+    background:@mainColorDark;
+    font-size:0.9em;
+    padding:0.3em 1em;
+    color:#fff;
+    box-shadow:0px 3px 2px -3px rgba(0,0,0,0.5);
+    
+    // For modern browsers and IE 8+
+    &:before {
+        width:0; height:0;
+        border:solid;
+        //border-color:#087480 transparent;
+        border-color:@mainColorDark transparent;
+        border-width:6px 6px 0 6px;
+        content:"";
+        display:block;
+        left:50%;
+        margin-left:-6px;
+        position:absolute;
+        bottom:-5px;
+        z-index:9999;
+    }
+
+    // Dynamic tooltips 
+    &.right {
+        margin:30px 0 0 10px;
+
+        &:before {
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent; 
+            border-right: 6px solid @mainColorDark; 
+            left:-5px;
+            margin-bottom:-6px;
+            bottom:50%;
+        }
+    }
+    &.left {
+        margin:30px 0 0 -10px;
+
+        &:before {
+            border-top: 6px solid transparent;
+            border-right: none; 
+            border-bottom: 6px solid transparent; 
+            border-left: 6px solid @mainColorDark;
+            left:auto;
+            right:-5px;
+            margin-bottom:-6px;
+            bottom:50%;
+        }
+    }
+    &.bottom {
+        margin-top:2px;
+
+        &:before {
+            border-top: none;
+            border-right:6px solid transparent; 
+            border-bottom: 6px solid @mainColorDark; 
+            border-left: 6px solid transparent;
+            left:50%;
+            margin-bottom:-6px;
+            top:-5px;
+        }
+    }
+}

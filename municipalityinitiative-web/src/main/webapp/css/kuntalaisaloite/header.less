@@ -1,0 +1,279 @@
+#header-tools {
+    height: 40px;
+    width: 100%;
+    background: #f1f1f1 url("../../img/other-services-bg.png?version=${timestamp}") repeat-x bottom left;
+    position: relative;
+    z-index:2;
+    
+    .logged-in-info {
+        font-size: 0.9em;
+        border-left: 1px solid black;
+        border-right: 1px solid #5a5a5a;
+        float: right;
+
+        .header-tool-link, .header-tool-text {
+            position:relative;
+            color: @lightGray;
+            padding:0 38px 0 15px; 
+            line-height:40px;
+            float: left;
+            display: block;
+            border-left: 1px solid #5a5a5a;
+            border-right: 1px solid black;
+            margin: 0px;
+
+            &.login {
+                padding:0 15px 0 15px;
+            }
+        }
+
+        .header-tool-link:hover {
+            color: white;
+        }
+        
+        .header-tool-text {
+            padding:0 15px; 
+        }
+    }
+
+    #header-tools-content {
+        text-align: right;
+        width: 960px;
+        margin: 0 auto;
+        position: relative;
+        
+        #aloite-links {
+            float: left;
+            overflow: hidden;
+            height: 40px;
+
+            a {
+                display: inline-block;
+                padding: 7px 20px 30px 20px;
+                background: @lightGray; 
+                margin: 8px 10px 0px 0px;
+                color: #393939;
+                z-index: 999;       
+                font-size: 0.9em;
+
+                .rounded-corners;
+            }
+
+            a.active {
+                background: white;
+                border: none;
+                color: black;
+            }
+
+            a:hover {
+                color: black;
+            }
+        }
+
+        img {
+            margin-top: 5px;
+        }
+
+        .other-services-container {
+            position: relative;
+            float: left;
+        }
+
+        .other-services-select {
+            float: left;
+            color: @lightGray;
+            font-size: 0.9em;
+            margin: 9px 0px 0px 6px;
+            padding: 5px 3px 10px 10px;
+            z-index: 998;
+            
+            &:hover {
+                color:#fff;
+            }
+            
+            .icon-small {
+                margin:0 0 -2px 3px;
+            }
+        }
+
+        .other-services-select.active {
+            border: 1px solid silver;
+            border-bottom: 0;
+            z-index: 999;
+            color: #444;
+            background: #fff;
+
+            .icon-small.dropdown-icon { background-position:-96px -13px; }
+        }        
+    }
+}
+
+.header-dropdown {
+    position:relative;
+    float:left;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 36px;
+    left: 6px;
+    text-align: left;
+    background: white;
+    border: 1px solid silver;
+    border-top: 0px;
+    padding: 8px;
+    list-style: none;
+    z-index: 998;
+    font-size: 80%;
+    width: 13em;
+    box-shadow: 2px 2px 2px rgba(0,0,0,0.1);
+    
+    &.user-menu {
+        left:auto;
+        right:0;
+        top:40px;
+        //width:100px;
+    }
+
+    a {
+        display: block;
+        color: #444;
+        border-top: 1px solid #f1f1f1;
+        padding: 5px;
+        margin: 0px;
+    }
+    li:first-child a {
+        border-top:none;
+    }
+
+    a:hover {
+        color: black;
+        background: #f1f1f1;
+    }
+}
+
+// Dropdown CSS for NOSCRIPT users
+// TODO: Improve this path. Due LESS's nesting, this path has to be this deep. Is there better way?
+.no-js #header-tools #header-tools-content .other-services-container:hover,
+.no-js #header-tools #header-tools-content .logged-in-info:hover {
+    .other-services-select {
+        border: 1px solid silver;
+        border-bottom:0;
+        z-index: 999;
+        color: #444;
+        background: #fff;
+        .icon-small.dropdown-icon {
+            background: #fff url("../../img/icons-sprite.png?version=${timestamp}") no-repeat -96px -13px;
+        }
+    }
+
+    .dropdown-menu {
+        display:block;
+    }
+}
+
+#header {
+    width: 100%;
+    padding-top:18px;
+    margin-bottom:2.3em;
+    background:#fff;
+    
+    border-bottom: 1px solid @borderGray;
+
+    #header-content {
+        position: relative;
+        height: 130px;
+        width: 960px;
+        margin: 0 auto;
+
+
+        #header-additional-content {
+            position: absolute;
+            right: 0px;
+            top: 20px;
+            text-align: right;
+        }
+
+    }
+
+    #logo {
+        display:block;
+        width: 354px;
+        height:72px;
+        background:url("../../img/logo-kuntalaisaloite.png?version=${timestamp}") 0 0 no-repeat;
+        
+        /* NOTE: SVG could be used
+        background-image: url("../../img/logo-kuntalaisaloite.svg?version=${timestamp}"), none;
+        background-size: contain;*/
+    }
+    #logo span { display:none; }
+
+    #main-navigation {
+        margin: 0;
+        padding: 0;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        border-left:1px solid #ccc;
+
+        a {
+            display:inline-block;
+            text-decoration: none;
+            color: #111;
+            font-size: 1.1em;
+            padding:0.2em 0.9em 0.5em 0.9em;
+            border-right:1px solid @borderGray;
+            
+            .transition(color, 0.2s, ease-in);
+        }
+
+        a:hover, .active a:hover {
+            color: @secondaryColorDark;
+        }
+
+        .active a {
+            color: black;
+            font-weight:bold;
+            //border-bottom: 3px solid #cecece;
+        }
+    }
+}
+.front #header { margin-bottom:0; }
+
+// Exceptions for swedish page 
+.sv {
+    &.font-size-large #header #main-navigation a {
+        padding:0.2em 0.5em 0.5em 0.5em;
+    }
+    
+    #header #logo {
+        width: 349px;
+        background:url("../../img/logo-invanarinitiativ.png?version=${timestamp}") 0 0 no-repeat;
+    }
+}
+
+
+.navi {
+    margin:0.3em 1em 0 0;
+    padding:0;
+
+    &.block-style {
+    
+        li {
+            display:block;
+            
+            &.separator {
+                
+            }
+            
+            a {
+                display:block;
+                margin-bottom:1em;
+            }
+            .active {
+                font-weight:bold;
+            }
+        }
+    }
+}

@@ -1,0 +1,905 @@
+// TODO remove initiative web stuff
+
+// 1. Basic colors                          - Styleguide 1
+// 2. Mixings                               - Styleguide 2
+//   2.1. Rounded corners                   - Styleguide 2.1
+//   2.2. Transition                        - Styleguide 2.2
+// 3. Form elements                         - Styleguide 3
+//   3.1. Form block
+//   3.2. Text fields                       - Styleguide 3.2
+//   3.3. Radio buttons and checkboxes      - Styleguide 3.3
+//   3.4. Help and required                 - Styleguide 3.4
+// 4. Buttons                               - Styleguide 4
+//   4.1. Generic buttons                   - Styleguide 4.1
+//      4.1.1. Green button
+//      4.1.2. Red button
+//      4.1.3. Gray button
+//      4.1.4. Button link
+//   4.2. Buttons with icons                - Styleguide 4.2
+// 5. jQueryTools                           - Styleguide 5
+//   5.1. Modal                             - Styleguide 5.1
+//   5.2. Tooltip                           - Styleguide 5.2
+//   5.3. DateInput
+// 6. Messages                              - Styleguide 6
+// 7. Typography                            - Styleguide 7
+// 8. Tables                                - Styleguide 8
+// 9. Search results
+// 10. Flow state indicator                 - Styleguide 10
+
+
+// Basic colors used on the service.
+//
+// Styleguide 1.
+
+@bodyBackground:        #f0f0f0;
+@mainColorLight:        #adad2d;
+@mainColor:             #949426;
+@mainColorDark:         #7a7a20;
+@secondaryColor:        #e2a31c;
+@secondaryColorDark:    #e2791c;
+@tertiaryColor:         #6D6E71;
+@lightGray:             #b7b7b7;
+@bodyColor:             #444444;
+
+@link:                  #0089f2;
+@linkHover:             #0070c5;
+
+@gradientDark:          #0ece27;
+@borderGray:            #cccccc;
+@secondaryTextColor:    #686868;
+@black:                 #000000; 
+
+@greenGradient1:        #76b522;
+@greenGradient2:        #387d0e;
+@greenGradientActive1:  #68ac0d;
+@greenGradientActive2:  #1f5100;
+@greenGradientHover1:   #76bb19;
+@greenGradientHover2:   #2d7103;
+
+@redGradient1:          #e80a13;
+@redGradient2:          #b51105;
+@redGradientHover1:     #fe000a;
+@redGradientHover2:     #a60b00;
+@redGradientActive1:    #ec0009;
+@redGradientActive2:    #810900;
+
+@grayGradient1:         #ffffff;
+@grayGradient2:         #e2e2e2;
+@grayGradientActive1:   #ffffff;
+@grayGradientActive2:   #b2b2b2;
+@grayGradientHover1:    #ffffff;
+@grayGradientHover2:    #d7d7d7;
+
+@cornerRadius: 0.8em;
+@cornerRadiusSmall: 0.4em;
+@cornerRadiusXtraSmall: 0.2em;
+
+@dimmed: 0.6;
+
+// Mixing
+//
+// Rounded corners 
+//
+// Styleguide 2.1
+
+.rounded-corners (@cornerRadius: 0.8em) {
+    -webkit-border-radius: @cornerRadius;
+    -moz-border-radius: @cornerRadius;
+    border-radius: @cornerRadius;
+}
+.rounded-corners-top-left (@cornerRadius: 0.8em) {
+    -webkit-border-top-left-radius: @cornerRadius;
+    -moz-border-top-left-radius: @cornerRadius;
+    border-top-left-radius: @cornerRadius;
+}
+.rounded-corners-bottom-left (@cornerRadius: 0.8em) {
+    -webkit-border-bottom-left-radius: @cornerRadius;
+    -moz-border-bottom-left-radius: @cornerRadius;
+    border-bottom-left-radius: @cornerRadius;
+}
+.rounded-corners-top-right (@cornerRadius: 0.8em) {
+    -webkit-border-top-right-radius: @cornerRadius;
+    -moz-border-top-right-radius: @cornerRadius;
+    border-top-right-radius: @cornerRadius;
+}
+.rounded-corners-bottom-right (@cornerRadius: 0.8em) {
+    -webkit-border-bottom-right-radius: @cornerRadius;
+    -moz-border-bottom-right-radius: @cornerRadius;
+    border-bottom-right-radius: @cornerRadius;
+}
+
+// Mixing
+//
+// Transition 
+//
+// Styleguide 2.2
+.transition (@property, @delay, @easing) {
+    transition: @property @delay @easing;
+    -moz-transition: @property @delay @easing;
+    -webkit-transition: @property @delay @easing;
+    -o-transition: @property @delay @easing;
+}
+.gradient (@start, @stop){
+    background: @start;
+    background: linear-gradient(top,  @start, @stop);
+    background: -ms-linear-gradient(top,  @start, @stop);
+    background: -webkit-gradient(linear, left top, left bottom, from(@start), to(@stop));
+    background: -moz-linear-gradient(top,  @start, @stop);
+    background: -o-linear-gradient(top,  @start, @stop);
+}
+
+.grayGradient (){
+    background: @grayGradient2;
+    background: linear-gradient(top, @grayGradient1, @grayGradient2);
+    background: -ms-linear-gradient(top,  @grayGradient1,  @grayGradient2);
+    background: -webkit-gradient(linear, left top, left bottom, from(@grayGradient1), to(@grayGradient2));
+    background: -moz-linear-gradient(top,  @grayGradient1,  @grayGradient2);
+    background: -o-linear-gradient(top,  @grayGradient1,  @grayGradient2);
+}
+.grayGradientHover (){
+    background: @grayGradientHover2;
+    background: linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
+    background: -ms-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
+    background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientHover1), to(@grayGradientHover2));
+    background: -moz-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
+    background: -o-linear-gradient(top, @grayGradientHover1, @grayGradientHover2);
+}
+.grayGradientActive (){
+    background: @grayGradientActive2;
+    background: linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
+    background: -ms-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
+    background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientActive1), to(@grayGradientActive2));
+    background: -moz-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
+    background: -o-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
+}
+
+html {
+    height:100%;
+    font-size:16px; // Using absolute size as Opera gets default font-adjustment from users Computer 
+}
+body {
+    height:100%;
+    font-family: 'PT Sans', "Trebuchet MS", Helvetica, sans-serif;
+    color:@bodyColor;
+    background: @bodyBackground;
+}
+
+body.font-size-small, span.font-size-small {
+    font-size: 80%;
+}
+
+body.font-size-medium, span.font-size-medium {
+    font-size: 100%;
+}
+
+body.font-size-large, span.font-size-large {
+    font-size: 110%;
+}
+
+// Import kuntalaisaloite styles
+@import 'ribbon';
+@import 'header';
+@import 'common';
+@import 'frontpage';
+@import 'columns';
+@import 'buttons';
+@import 'icons';
+@import 'forms';
+@import 'jquery-tools';
+@import 'messages';
+@import 'typography';
+@import 'search';
+
+
+
+
+.additional-container-body {
+    margin-bottom: 3em;
+}
+
+.additional-container, .extra-column {
+
+    ul {
+        list-style: none;
+        margin-left: 0px;
+        
+        li {
+            margin-left: 0px;
+            padding-left: 0px;
+        }
+    }
+}
+
+
+#footer {
+    position:absolute;
+    left:0; bottom:0; 
+    width:100%;
+    background:#fff;
+    border-top:1px solid #ccc;
+    color: #434343;
+    padding: 50px 0px;
+    font-size: 0.9em;
+
+    .block, .footer-links {
+        float: left;
+    }
+
+    .block {
+        width: 190px;
+        margin-right: 95px;
+        padding-left: 50px;
+        height: 120px;
+        background: transparent url("../../img/footer-logos.png?version=${timestamp}") no-repeat top left;
+    }
+
+    .oikeusministerio {
+        width:525px;
+        
+        p { margin-top:0.3em; }
+    }
+
+    .viestintavirasto {
+        background-position:0 -400px;   
+    }
+
+    ul {
+        width: 280px;
+        text-align: left;
+        list-style: none;
+        margin: 0px;
+        padding: 0px;
+
+        li {
+            line-height: 1.4em;
+        }
+    }
+}
+
+
+/**
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *    contenteditable attribute is included anywhere else in the document.
+ *    Otherwise it causes space to appear at the top and bottom of elements
+ *    that are clearfixed.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *    `:before` to contain the top-margins of child elements.
+ */
+.cf:before,
+.cf:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.cf:after {
+    clear: both;
+}
+
+/**
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+.cf {
+    *zoom: 1;
+}
+
+// Form block header
+
+.content-block-header {
+    position:relative;
+    background: @mainColor;
+    padding:0.5em 25px 0.5em 30px;
+
+    &.disabled {
+        opacity:@dimmed;
+        cursor:default;
+        
+        .arrow {
+            display:none;
+        }
+    }
+    
+    &.view {
+        z-index:3;
+        background:#fff;
+    }
+    
+    &.faq {
+        margin-top:3em;
+        
+        h2 {
+            padding-bottom:35px;
+        }
+    }
+
+    h2 {
+        margin: 0;
+        color: #fff;
+        font-weight:normal;
+    }
+}
+
+
+.input-block-content, .input-block-extra, .input-block-action {
+    float: left;
+}
+
+.input-block-content {
+    width: 585px;
+    position:relative;
+    margin-top:2em;
+}
+
+.modal {
+    .input-block-content {
+        width:100%;
+        margin-top:1em;
+    }
+}
+
+.initiative-finance-url-area, .initiative-external-support-count {
+    position:relative;
+    margin-top:1em;
+}
+
+.input-block-extra {
+    float:right;
+    width:220px;
+    margin:20px -15px 0 0;
+    //background: transparent url("../../img/input-block-extra-indicator.png?version=${timestamp}") no-repeat 9px 6px;
+    font-size: 90%;
+    color: #787878;
+
+    .input-block-extra-content {
+        position: relative;
+
+        p {
+            margin: 0px 0px 1em 0px;
+        }
+    }
+}
+
+.input-block-action {
+    clear:both;
+    margin-top:25px;
+}
+
+.required-info {
+    float:right;
+    margin-bottom:0.67em;
+}
+
+
+.initiative-content-row {
+    margin-bottom:2em;
+    
+    .header {
+        display: block;
+        font-weight: bold;
+    }
+    
+    &.last{
+        margin:0;
+        padding:0;
+        border:0;
+    }
+}
+
+.initiative-content-tools {
+    position: absolute;
+    top: 23px;
+    right:35px;
+
+}
+
+// Initiative type selection
+.initiative-types {
+    position:relative;
+    clear:both;
+    margin-top:1em;
+    width:100%; // IE7
+    
+    .disable-mask {
+        position:absolute;
+        top:0;
+        right:0;
+        bottom:0;
+        left:33%;
+        z-index:9999;
+    }
+
+    .initiative-type {
+        position:relative;
+        float:left;
+        width:32.5%;
+        margin-right:0.5%;
+        
+        border:1px solid @borderGray;
+        .gradient (#fff, #f1f1f1);
+        
+        -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+        -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+        box-sizing: border-box;
+
+        .transition(opacity, 0.1s, ease-in);
+
+        &.enabled {
+            cursor:pointer;
+            
+            .transition(box-shadow, 0.1s, ease-in);
+        
+            &:hover {
+                box-shadow: 3px 3px 3px rgba(0,0,0,0.1);
+            }
+        }
+        
+        &.selected {
+            
+        }
+        
+        &.unselected {
+            opacity:@dimmed;
+        }
+        
+        .inner {
+            display:block;
+            height:8em;
+            padding:20px 20px 60px 20px;
+        }
+        
+        .type {
+            font-size:1.17em;
+        }
+        
+        .description {
+            display:block;
+            margin-top:0.5em;
+            font-size:0.9em;
+            line-height:1.2em;
+        }
+        
+        .action {
+            position:absolute;
+            z-index:2;
+            bottom:0;
+            left:0;
+            right:0;
+            height:35px;
+            line-height:35px;
+            zoom:1;
+            
+            &.open {
+                padding-left:20px;
+                border-top:1px solid @borderGray;
+                .grayGradient();
+            }
+         
+            &.blocked {
+                padding-left:20px;
+                background:@grayGradient2;
+                font-size:0.9em;
+            }
+            
+            input[type="radio"]{
+                position:relative;
+                top:8px;
+            }
+        }
+        
+        
+    }
+}
+
+.checkbox {
+    position: relative;
+    top: 7px;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+
+    background: url("../../img/icons-sprite.png?version=${timestamp}") no-repeat -64px -64px;
+    
+    &.disabled {
+        top: 4px;
+        width: 16px;
+        height: 17px;
+        background-position: -32px -64px;
+    }
+    
+    &.checked {
+        background-position: -96px -64px;
+    }
+}
+
+.no-top-margin {
+    margin-top: 0;
+}
+
+.no-bottom-margin {
+    margin-bottom: 0;
+}
+
+.top-margin {
+    margin-top: 1em;
+}
+
+
+.participants-block {
+    float:left;
+    margin-right:20px;
+    
+    &.separate {
+        margin-right:40px;
+    }
+    &.last {
+        margin-right:0;
+    }
+    
+    .small-button {
+        margin-top:0.15em;
+    }
+}
+
+// Participate
+.participate {
+    padding-top:0.4em;
+    
+    &.not-allowed {
+        float:left;
+        padding:0;
+        margin-bottom:1em;
+        
+        .system-msg {
+            margin:0;
+        }
+    }
+}
+// Form container for NOSCRIPT
+.form-container {
+    margin: 2em 0;
+    padding: 2em;
+    background:#f5f5f5;
+    border: 1px solid @borderGray;
+    
+}
+
+.participant-list {
+    .date {
+        float:left;
+        width:5em;
+        color:@secondaryTextColor;
+    }
+    
+    .name-container {
+        display:block;
+        margin-left:6em;
+    }
+    
+    .name {
+        color:@black;
+    }
+    
+    .home-municipality {
+        color:@secondaryTextColor;
+    }
+}
+
+// Create form submit section
+.highlight-box {
+    margin-bottom:0.7em;
+    
+    .title {
+        
+        padding:0.2em 0.7em;
+        background:@mainColor;
+        font-size:20px;
+        color:#fff;
+    }
+    .content {
+        padding:0.7em;
+    }
+
+}
+.column-separator {
+    //padding-bottom:0.5em;
+    background:url("../../img/border.png?version=${timestamp}") 291px 0 repeat-y;
+}
+
+
+
+
+
+// Tables
+// Uses float for IE7.
+// 
+// Styleguide 8.
+.table {
+    display: table;
+    margin-bottom:1em;
+    
+    .row { display: table-row; }
+    .cell {
+        display: table-cell;
+        padding:0.3em 0;
+        width:250px;
+        
+        input[type="text"] {
+            margin:0;
+        }
+        
+        &.title {
+            font-weight:bold;
+        }
+    }
+    .cell:first-child {
+        width:150px;
+    }
+    
+    .cell-1of3 { width:33.3%; }
+    .cell-2of3 { width:66.6%; }
+    .cell-1of4 { width:25%; }
+    .cell-3of4 { width:75%; }
+    
+    &.full {
+        width:100%;
+    }
+    
+    &.valign-bottom {
+        .cell {
+            vertical-align:bottom;
+        }
+    }
+    &.valign-top {
+        .cell {
+            vertical-align:top;
+        }
+    }
+    &.no-pad {
+        .cell {
+            padding:0;
+        }
+    }
+}
+
+
+
+// SOME buttons
+//
+// .facebook    - Facebook
+// .google      - Google
+// .twitter     - Twitter
+// 
+// Styleguide 11.
+.some-links { 
+    text-align:center;
+
+    .some-title {
+        float:left;
+        height:32px;
+        line-height:32px;
+        margin-right:1em;
+    }
+    
+    .icon-some {
+        display:inline-block;
+        height:48px;
+        width:48px;
+        margin-right:1em;
+        opacity:0.9;
+        .transition(opacity, 0.1s, ease-in);
+        
+        background:url("../../img/icons-sprite.png?version=${timestamp}") no-repeat 0 -196px;
+        
+        &.facebook  { background-position:0 -196px; }
+        &.google    { background-position:-64px -196px; }
+        &.twitter   { background-position:-128px -196px; }
+        
+        &:hover { opacity:1; }
+    }
+}
+
+// iFrame - Leijuke 
+#iframe-placeholder {
+    position:relative;
+    background:@bodyBackground;
+    border:1px solid @borderGray;
+}
+#iframe-container {
+    overflow:auto;
+
+    iframe {
+        display:none; // showed with JS
+        margin-bottom:2em;
+    }
+}
+// Column exceptions
+.column {
+    &.push-width { margin-left:12px; }
+    &.push-amount { margin-left:26px; width:12%; }
+}
+
+// Open Data API and Status
+
+table.data {
+  background:#fff;
+  margin-bottom:2em;
+
+  th {
+    white-space: nowrap;
+    text-align: left;
+    padding:0.3em;
+    background:#e2e2e2;
+  }
+  tr:hover {
+    background:#f1f1f1;
+  }
+  td {
+    border-top: 1px solid #eee;
+    padding:0.3em;
+  }
+  td.apiExample {
+    white-space: pre nowrap;
+    font-family: monospace;
+    font-size:0.9em;
+  }
+}
+.status {
+    min-width:600px; 
+    
+    td:first-child { width:300px; }
+}
+
+// Table for municipalities management
+table.municipalities {
+    width:100%;
+    
+    th, td {
+        padding:0.3em 0;
+    }
+    
+    th:nth-child(1),
+    td:nth-child(1) { width:5%; text-align:center; }
+    td:nth-child(2) { width:20%; }
+    td:nth-child(3) { width:20%; }
+    td:nth-child(4) { width:55%; }
+}
+
+
+// Chosen overrides
+.chzn-select {
+    width:250px;
+}
+.chzn-container {
+    display:block;
+    font-size:1em;
+
+    .chzn-single {
+        height:34px;
+        line-height:34px;
+        margin: 0.3em 0 0 0;
+        padding:0 0.3em;
+        border: 1px solid @borderGray;
+        background: #fff;
+        filter:none; // remove default chosen IE styles
+        font-size: 1em;
+        
+        border-radius:0;
+        box-shadow:none;
+        
+        .transition(box-shadow, 0.2s, ease-in);
+
+        div {
+            width:33px;
+            border-left:1px solid @borderGray;
+            .grayGradient();
+             filter:none; // remove default chosen IE styles
+
+            &:hover {
+                .grayGradientHover();
+            }
+
+            b { 
+                background:url("../../img/chosen-sprite.png?version=${timestamp}") no-repeat 11px 13px;
+            }
+        }
+        
+        // Clear selection button
+        abbr {
+            top:50%;
+            right:39px;
+            height:10px;
+            width:10px;
+            margin-top:-5px;
+            background:url("../../img/chosen-sprite.png?version=${timestamp}") no-repeat -64px 0;
+            
+            &:hover {
+                background-position:-96px 0;
+            }
+        }
+        
+        // Dropdown active
+        &.chzn-single-with-drop {
+            div {
+                b {
+                    background-position:-21px 13px;
+                }
+            }
+        }
+        
+    }
+
+    input[type="text"]:focus {
+        box-shadow:none;
+    }
+
+    .chzn-results {
+        padding:0 4px;
+
+        .highlighted {
+            .gradient(@mainColor, @mainColorDark);
+            filter:none; // remove default chosen IE styles
+            color: #fff;
+            border:0;
+        }
+    }
+
+    &.chzn-container-single .chzn-drop {
+        border-radius:0;
+    }
+}
+
+// Frontpage Browse initiatives
+.flat-style {
+    #municipality {
+        &.chzn-select {
+            width:100%;
+            // For NOJS users
+            margin-bottom:1em;
+        }
+    }
+    .chzn-container {
+        .chzn-single {
+            height:36px;
+            line-height:36px;
+            padding:0 0.3em 0 0.9em;
+            border: 1px solid @mainColorDark;
+            background: @mainColorDark;
+            color: #fff;
+            font-weight: bold;
+            
+            .transition(background-color, 0.2s, ease-in);
+
+            &:hover {
+                border: 1px solid @mainColor;
+                background: @mainColor;
+            }
+
+            div {
+                border-left:0px solid @mainColorDark;
+                background-color: transparent;
+                background-image: none;
+
+                b { 
+                    background:url("../../img/chosen-sprite.png?version=${timestamp}") no-repeat 6px -41px;
+                }
+            }
+            
+            // Dropdown active
+            &.chzn-single-with-drop {
+                div {
+                    b {
+                        background-position:-26px -41px;
+                    }
+                }
+            }
+            
+        }
+        .chzn-results {
+            .highlighted {
+                background: @mainColorDark;
+            }
+        }
+    }
+
+}

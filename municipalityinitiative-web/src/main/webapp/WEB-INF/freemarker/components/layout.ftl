@@ -190,6 +190,7 @@
         </noscript>
         <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/chosen.css" />
         <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite.less" />
+        <#--<link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite/kuntalaisaloite.less" />-->
         <!--[if IE ]>
             <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-ie.less">
         <![endif]-->

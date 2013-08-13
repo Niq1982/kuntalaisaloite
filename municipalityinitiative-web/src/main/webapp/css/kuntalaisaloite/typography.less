@@ -1,0 +1,131 @@
+// Typography
+//
+// h1                   - Heading 1
+// h2                   - Heading 2
+// h4                   - Heading 4
+// p                    - Paragraph
+// ul                   - Unordered list
+// ol                   - Ordered list
+// blockquote           - Blockquote
+// .municipality        - Municipality for the initiative
+// .user-count-total    - Vote count
+// .user-count          - Internal vote count
+// 
+// Styleguide 7.
+
+h1, h2, h3, h4, h5, h6, p {
+    margin-top:0;
+}
+
+h1 {
+    margin-top:1em;
+    font-size:1.5em;
+    line-height:1em;    
+    clear: both;
+    color: #111;
+    font-weight:normal;
+    //text-shadow: white 2px 1px 1px;
+    
+}
+
+h2 {
+    color: #111;
+    font-size:1.7em;
+    margin-bottom:1em;
+    //margin-bottom:0.5em;
+    font-weight:normal;
+}
+.view-block h2 {
+    color:@mainColorDark;
+}
+
+h3 {
+    color: #111;
+    margin-bottom:0.5em;
+    font-weight:normal;
+    
+    &.navi-title {
+        margin-right:1em;
+        border-bottom:1px solid @borderGray;
+    }
+}
+
+h4
+{
+    margin-bottom:0.5em;
+    
+    &.header { margin-bottom:0; }
+    &.subtle {
+        margin:0;
+        font-weight:normal;
+    }
+}
+.inline-style { display:inline-block; }
+
+p {
+    margin:0 0 1em 0;
+    line-height: 1.5em;
+}
+
+ul, ol {
+    margin:0 0 1em 0;
+    padding:0 0 0 2em;
+
+    &.no-style {
+        margin:0; padding:0; list-style:none;
+    }
+    
+    &.alpha {
+        list-style-type:lower-alpha;
+    }
+    &.roman {
+        list-style-type:lower-roman;
+    }
+}
+
+.right { float:right; }
+.left { float:left; }
+.align-right { text-align:right; }
+.align-left { text-align:left; }
+.align-center { text-align:center; }
+
+blockquote {
+    margin-bottom:2em;
+    font-style:italic;
+}
+
+.bull {
+    margin:0 0.5em;
+    font-size:0.8em;
+    color:@borderGray;
+}
+
+pre {
+    border:1px solid @borderGray;
+    background:@bodyBackground;
+    padding:1em;
+    font-size:0.8em;
+
+}
+
+.extra-info {
+    display:block;
+    margin:1em 0;   
+}
+.municipality {
+    display:block;
+    margin:-0.7em 0 1em 0;
+    font-size:1.17em;
+}
+
+.user-count-total {
+    float:left;
+    //margin:0 20px 0 0;
+    font-size:3em;
+    font-style:italic;
+    line-height:0.9em;
+}
+.user-count {
+    font-size:1.7em;
+    font-style:italic;
+}

@@ -1,0 +1,293 @@
+#wrapper {
+    position:relative;
+    min-height:100%;
+}
+
+.container {
+    width: 960px;
+    margin: 0 auto;
+    clear: both;
+}
+
+#content {
+    padding-bottom:250px;
+}
+
+.two-column-content .content-column {
+    width: 640px;   
+    float: left;
+    margin-right: 20px;
+}
+
+.form-block-container {
+    margin-bottom: 2em;
+    
+    &.disabled {
+        position:relative;
+        overflow:hidden;
+        
+        .mask {
+            z-index:100;
+            position:absolute;
+            top:0;
+            left:0;
+            width:1000px;
+            height:1000px;
+            background:#fff;
+            opacity:0.6;
+        }
+    }
+}
+
+.initiative-content-header {
+    position:relative;
+}
+
+.input-block, .view-block {
+    position: relative;
+    background: #fff url("../../img/input-block-extra-bg.png?version=${timestamp}") repeat-y top right;
+    border-left: 4px solid @mainColorLight;
+    
+    padding:0 35px 30px 55px;
+    
+    &.faq-item {
+        margin-bottom:0;
+        padding-top:0;
+    }
+    
+    .system-msg {
+        margin:5px 0;
+        border:0;
+    }
+}
+.view-block {
+    margin-bottom:3em;
+    padding-top:35px;
+    background:#fff;
+    
+    &.first { margin-top:2em; }
+    &.last { margin-bottom:2em; }
+    &.single  { margin-bottom:1em; }
+}
+.input-block {
+    width: 866px; // Predefined width removes jumpyness bug in slideToggle. could be calculated with JS for dynamic widths.
+
+    &.no-sidebar {
+        background:#fff;
+    }
+
+    .input-block-action {
+        width:585px;
+    }
+}
+.send-to-municipality {
+    width:585px;
+}
+
+.pad {
+    padding:10px 20px;
+    background:#f1f1f1;
+    border-radius:3px;
+    
+    &.margin { margin:0.5em 0 1em 0; }
+    
+    .table { margin:0; }
+}
+
+.expose {
+    position:relative; 
+    z-index:1000;
+    
+    .content-block-header{    
+        box-shadow:0px 0px 5px rgba(0,0,0,0.2);
+    }
+    .input-block {
+        box-shadow:0px 5px 5px rgba(0,0,0,0.2);
+    }
+}
+
+.sidebar {
+    float: left;
+    width: 300px;
+}
+
+
+#form-action-panel {
+    text-align: center;
+    clear: both;
+    display: block;
+    width: 100%;
+    border-top: 6px dotted @borderGray;
+    padding: 20px 0px;
+    margin-bottom: 100px;
+
+    .button {
+        font-size: 0.9em;
+        text-align: left;
+
+        strong {
+            font-size: 1.1em;
+        }
+    }
+
+    .primary-action {
+        margin: 0px 20px 0px 20px;
+    }
+
+    .primary-action, .secondary-action {
+        float: right;
+    }
+
+    .primary-action .button {
+
+        text-align: left;
+        padding: 1.9em 7em 1.9em 2em;
+        strong {
+            text-transform: uppercase;
+            display: block; 
+            margin-bottom: 0.3em;
+        }
+    }
+
+    .secondary-action .button {
+        width: 18em;
+        margin-bottom: 0.4em;
+
+    }
+
+}
+
+
+// Author management
+
+.author {
+    margin-bottom:30px;
+    
+    &.last { margin-bottom:0; }
+    &.rejected { opacity:@dimmed; }
+
+    .details {
+        float:left;
+        width: 32%;
+    }
+    
+    .invitation {
+        margin-left:33.3333%;
+    
+        /*a {
+            margin-left:1em;
+        }*/
+    
+        .status {}
+        .action { display:block; }
+        .no-icon { margin-left:1.25em; }
+    }
+}
+
+.column {
+    width: 32%;
+    margin-right: 2%;
+    float: left;
+
+    .role-input-area {
+        border: 1px solid @borderGray;
+        padding: 0.3em;
+        background: white;
+        height: 10em;
+        font-size: 0.8em;
+    }
+    
+    &.wide { width:66%; }
+    &.col-1of2 {
+        width:48%;
+        margin-right:4%;
+    }
+    &.col-1of3 {
+        width:32.333333%;
+        margin-right:1%;
+    }
+    &.col-2of3 {
+        width:65.666666%;
+        margin-right:1%;
+    }
+    &.col-1of4 {
+        width:24%;
+        margin-right:1%;
+    }
+    &.col-3of4 {
+        width:74%;
+        margin-right:1%;
+    }
+    &.col-1of5 {
+        width:20%;
+        margin-right:1%;
+    }
+    &.col-1of10 {
+        width:10%;
+        margin-right:1%;
+    }
+    &.auto-scale {
+        width:auto; min-width:32%;
+    }
+    &.last { margin:0; }
+    
+    textarea {
+        width:96%;
+    }
+}
+
+// Dynamic CSS3 columns
+.css-cols-3 {
+    -moz-column-count: 3;
+    -moz-column-gap: 20px;
+    -webkit-column-count: 3;
+    -webkit-column-gap: 20px;
+    column-count: 3;
+    column-gap: 20px;
+}
+
+// Help and required
+// 
+// .help        - For help button
+
+.help {
+    //float: right;
+    position:absolute;
+    right:0;
+    top:0;
+    z-index:100;
+}
+
+
+.front-page-extras {
+    margin-top: 2em;
+    display: block;
+    padding: 20px 0px;
+
+    .tag {
+        display: inline-block;
+        color: white;
+        font-size: 0.9em;
+        margin: 0px 2px 2px 0px;
+    }
+}
+
+.extra-column {
+    width: 300px;
+    margin-right: 30px;
+    float: left;
+
+    .extra-column-content {
+        border-right: 4px dotted #d0d0d0;
+        padding-right: 20px;
+    }
+}
+
+.last-column {
+    margin-right: 0px;
+
+    .extra-column-content {
+        border: 0;
+    }
+
+}

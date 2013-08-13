@@ -1,0 +1,106 @@
+// Frontpage
+.image-container {
+    position:relative;
+    width:100%;
+    height:371px;
+    padding-bottom:10px;
+    background:#fff url("../../img/front-images/frontpage-images.jpg?version=${timestamp}") center top repeat-x;
+}
+
+.front .container { position: relative; }
+.big-link-holder {
+    position: absolute;
+    top: -381px;
+    left: 0;
+    width: 470px;
+    height:371px;
+
+    .big-link {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        display: block;
+        padding:42px 50px 45px 100px;
+
+        font-size: 40px;
+        color: #fff;
+        background: @mainColorLight;
+
+        .transition(background-color, 0.2s, ease-in);
+        
+        &:hover {
+            background-color:@mainColor;
+        }
+
+        .arrow {
+            position: relative;
+            top: 0.1em;
+            left: 0.45em;
+            display: inline-block;
+            width: 29px;
+            height: 29px;
+            background: url("../../img/icons-sprite.png?version=${timestamp}") -192px -96px no-repeat;
+        }
+    }
+}
+
+.front-container {
+    min-height:441px;
+    margin:0 -60px 0px -66px;
+    padding:0 0 0 66px;
+    //background:url("../../img/bg-front.jpg?version=${timestamp}") -2px 0 no-repeat;
+    
+    .faux-columns {
+        width:960px;
+        margin-bottom:50px;
+        background:url("../../img/faux-columns.png?version=${timestamp}") 0 0 repeat-y;
+        
+        .col-1 {
+            width:470px;
+            float:left;
+        }
+        .col-2 {
+            width:470px;
+            float:right;
+        }    
+    }
+    
+    .front-block {
+        padding:0 50px 45px 100px;
+        margin-top: 37px;
+        
+        background:url("../../img/block-icons.png?version=${timestamp}") 30px 0 no-repeat;
+        
+        &.block-2 {
+            padding-bottom:50px;
+            background-position:-970px 0;
+            border-bottom:20px solid @bodyBackground;
+        }
+        &.block-3 {
+            background-position:-1970px 0;
+        }
+
+        .bottom {
+            padding-top:1.8em;
+        }
+    }
+
+    h1 {
+        font-size: 1.3em;
+        margin:0 0 1.5em 0;
+        line-height: 1.25em;
+        color:#7a7a20;    
+    }
+
+    .initiative-list {
+        li {
+            margin-bottom: 1em;
+
+            .date {
+                display: block;
+                color:#555;
+                font-size: 0.85em;
+            }
+        }
+    }
+}
