@@ -4,6 +4,29 @@
 <head></head>
 <body>
 
+<#function rand min max>
+  <#local now = .now?long?c />
+  <#local randomNum = _rand +
+    ("0." + now?substring(now?length-1) + now?substring(now?length-2))?number />
+  <#if (randomNum > 1)>
+    <#assign _rand = randomNum % 1 />
+  <#else>
+    <#assign _rand = randomNum />
+  </#if>
+  <#return (min + ((max - min) * _rand))?round />
+</#function>
+<#assign _rand = 0.36 />
+<#assign randomSSN = rand(1000, 9999)?c />
+
+<script>
+
+function randomSSN() {
+    document.getElementById('hetu').value='HETU=${rand(10,28)}${rand(10,12)}${rand(10,90)}-${randomSSN}';
+    return false;
+}
+
+</script>
+
 <p>Tämä sivu korvaa vetuman. Muu järjestelmä luulee oikeasti keskustelevansa vetuman kanssa.</p>
 
 <form action="/vetumamockreturn" method="post">
@@ -28,7 +51,7 @@
     </#list>
     </select>
     <br>
-    <input id="hetu" type="text" name="EXTRADATA" value="HETU=010190-0000"/>
+    <input id="hetu" type="text" name="EXTRADATA" value="HETU=010190-0000"/><a href="#" onclick="return randomSSN();">random</a>
 
     <br/><label><input type="checkbox" checked="checked" name="fi" value="1"/> Suomen kansalainen</label><br>
     <br/>
