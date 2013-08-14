@@ -291,3 +291,40 @@
     }
 
 }
+
+.additional-container-body {
+    margin-bottom: 3em;
+}
+
+.additional-container, .extra-column {
+
+    ul {
+        list-style: none;
+        margin-left: 0px;
+        
+        li {
+            margin-left: 0px;
+            padding-left: 0px;
+        }
+    }
+}
+
+// iFrame - Leijuke 
+#iframe-placeholder {
+    position:relative;
+    background:@bodyBackground;
+    border:1px solid @borderGray;
+}
+#iframe-container {
+    overflow:auto;
+
+    iframe {
+        display:none; // showed with JS
+        margin-bottom:2em;
+    }
+}
+// Column exceptions
+.column {
+    &.push-width { margin-left:12px; }
+    &.push-amount { margin-left:26px; width:12%; }
+}

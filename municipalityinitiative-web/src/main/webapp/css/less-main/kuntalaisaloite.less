@@ -1,0 +1,71 @@
+// 1. Basic colors                          - Styleguide 1
+// 2. Mixings                               - Styleguide 2
+//   2.1. Rounded corners                   - Styleguide 2.1
+//   2.2. Transition                        - Styleguide 2.2
+// 3. Form elements                         - Styleguide 3
+//   3.1. Form block
+//   3.2. Text fields                       - Styleguide 3.2
+//   3.3. Radio buttons and checkboxes      - Styleguide 3.3
+//   3.4. Help and required                 - Styleguide 3.4
+// 4. Buttons                               - Styleguide 4
+//   4.1. Generic buttons                   - Styleguide 4.1
+//      4.1.1. Green button
+//      4.1.2. Red button
+//      4.1.3. Gray button
+//      4.1.4. Button link
+//   4.2. Buttons with icons                - Styleguide 4.2
+// 5. jQueryTools                           - Styleguide 5
+//   5.1. Modal                             - Styleguide 5.1
+//   5.2. Tooltip                           - Styleguide 5.2
+//   5.3. DateInput
+// 6. Messages                              - Styleguide 6
+// 7. Typography                            - Styleguide 7
+// 8. Tables                                - Styleguide 8
+// 9. Search results
+// 10. Flow state indicator                 - Styleguide 10
+
+// Import variables and mixings
+@import '../less-imports/vars';
+@import '../less-imports/mixings';
+
+
+html {
+    height:100%;
+    font-size:16px; // Using absolute size as Opera gets default font-adjustment from users Computer 
+}
+body {
+    height:100%;
+    font-family: "PT Sans", "Trebuchet MS", Helvetica, sans-serif;
+    color:@bodyColor;
+    background: @bodyBackground;
+}
+
+body.font-size-small, span.font-size-small {
+    font-size: 80%;
+}
+
+body.font-size-medium, span.font-size-medium {
+    font-size: 100%;
+}
+
+body.font-size-large, span.font-size-large {
+    font-size: 110%;
+}
+
+// Import kuntalaisaloite styles
+@import '../less-imports/ribbon';           // Dev and test service ribbons
+@import '../less-imports/header-footer';
+@import '../less-imports/common';           // Helper classes, images, links, clearfix
+@import '../less-imports/frontpage';
+@import '../less-imports/columns';          // Wireframe
+@import '../less-imports/blocks';
+@import '../less-imports/buttons';
+@import '../less-imports/icons';
+@import '../less-imports/forms';
+@import '../less-imports/jquery-tools';
+@import '../less-imports/messages';
+@import '../less-imports/typography';
+@import '../less-imports/tables';           // CSS tables, status-page, API, municipality management
+@import '../less-imports/search';
+@import '../less-imports/chosen';
+@import '../less-imports/some';

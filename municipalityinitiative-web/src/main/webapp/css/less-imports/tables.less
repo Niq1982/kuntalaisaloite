@@ -1,0 +1,97 @@
+// CSS Tables
+// Uses float for IE7.
+// 
+// Styleguide 8.
+.table {
+    display: table;
+    margin-bottom:1em;
+    
+    .row { display: table-row; }
+    .cell {
+        display: table-cell;
+        padding:0.3em 0;
+        width:250px;
+        
+        input[type="text"] {
+            margin:0;
+        }
+        
+        &.title {
+            font-weight:bold;
+        }
+    }
+    .cell:first-child {
+        width:150px;
+    }
+    
+    .cell-1of3 { width:33.3%; }
+    .cell-2of3 { width:66.6%; }
+    .cell-1of4 { width:25%; }
+    .cell-3of4 { width:75%; }
+    
+    &.full {
+        width:100%;
+    }
+    
+    &.valign-bottom {
+        .cell {
+            vertical-align:bottom;
+        }
+    }
+    &.valign-top {
+        .cell {
+            vertical-align:top;
+        }
+    }
+    &.no-pad {
+        .cell {
+            padding:0;
+        }
+    }
+}
+
+// Open Data API and Status
+
+table.data {
+  background:#fff;
+  margin-bottom:2em;
+
+  th {
+    white-space: nowrap;
+    text-align: left;
+    padding:0.3em;
+    background:#e2e2e2;
+  }
+  tr:hover {
+    background:#f1f1f1;
+  }
+  td {
+    border-top: 1px solid #eee;
+    padding:0.3em;
+  }
+  td.apiExample {
+    white-space: pre nowrap;
+    font-family: monospace;
+    font-size:0.9em;
+  }
+}
+.status {
+    min-width:600px; 
+    
+    td:first-child { width:300px; }
+}
+
+// Table for municipalities management
+table.municipalities {
+    width:100%;
+    
+    th, td {
+        padding:0.3em 0;
+    }
+    
+    th:nth-child(1),
+    td:nth-child(1) { width:5%; text-align:center; }
+    td:nth-child(2) { width:20%; }
+    td:nth-child(3) { width:20%; }
+    td:nth-child(4) { width:55%; }
+}

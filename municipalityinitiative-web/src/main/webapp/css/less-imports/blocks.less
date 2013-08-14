@@ -1,0 +1,321 @@
+// Form block header
+
+.content-block-header {
+    position:relative;
+    background: @mainColor;
+    padding:0.5em 25px 0.5em 30px;
+
+    &.disabled {
+        opacity:@dimmed;
+        cursor:default;
+        
+        .arrow {
+            display:none;
+        }
+    }
+    
+    &.view {
+        z-index:3;
+        background:#fff;
+    }
+    
+    &.faq {
+        margin-top:3em;
+        
+        h2 {
+            padding-bottom:35px;
+        }
+    }
+
+    h2 {
+        margin: 0;
+        color: #fff;
+        font-weight:normal;
+    }
+}
+
+
+.input-block-content, .input-block-extra, .input-block-action {
+    float: left;
+}
+
+.input-block-content {
+    width: 585px;
+    position:relative;
+    margin-top:2em;
+}
+
+.modal {
+    .input-block-content {
+        width:100%;
+        margin-top:1em;
+    }
+}
+
+.initiative-finance-url-area, .initiative-external-support-count {
+    position:relative;
+    margin-top:1em;
+}
+
+.input-block-extra {
+    float:right;
+    width:220px;
+    margin:20px -15px 0 0;
+    //background: transparent url("../../img/input-block-extra-indicator.png?version=${timestamp}") no-repeat 9px 6px;
+    font-size: 90%;
+    color: #787878;
+
+    .input-block-extra-content {
+        position: relative;
+
+        p {
+            margin: 0px 0px 1em 0px;
+        }
+    }
+}
+
+.input-block-action {
+    clear:both;
+    margin-top:25px;
+}
+
+.required-info {
+    float:right;
+    margin-bottom:0.67em;
+}
+
+
+.initiative-content-row {
+    margin-bottom:2em;
+    
+    .header {
+        display: block;
+        font-weight: bold;
+    }
+    
+    &.last{
+        margin:0;
+        padding:0;
+        border:0;
+    }
+}
+
+.initiative-content-tools {
+    position: absolute;
+    top: 23px;
+    right:35px;
+
+}
+
+// Initiative type selection
+.initiative-types {
+    position:relative;
+    clear:both;
+    margin-top:1em;
+    width:100%; // IE7
+    
+    .disable-mask {
+        position:absolute;
+        top:0;
+        right:0;
+        bottom:0;
+        left:33%;
+        z-index:9999;
+    }
+
+    .initiative-type {
+        position:relative;
+        float:left;
+        width:32.5%;
+        margin-right:0.5%;
+        
+        border:1px solid @borderGray;
+        .gradient (#fff, #f1f1f1);
+        
+        -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+        -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+        box-sizing: border-box;
+
+        .transition(opacity, 0.1s, ease-in);
+
+        &.enabled {
+            cursor:pointer;
+            
+            .transition(box-shadow, 0.1s, ease-in);
+        
+            &:hover {
+                box-shadow: 3px 3px 3px rgba(0,0,0,0.1);
+            }
+        }
+        
+        &.selected {
+            
+        }
+        
+        &.unselected {
+            opacity:@dimmed;
+        }
+        
+        .inner {
+            display:block;
+            height:8em;
+            padding:20px 20px 60px 20px;
+        }
+        
+        .type {
+            font-size:1.17em;
+        }
+        
+        .description {
+            display:block;
+            margin-top:0.5em;
+            font-size:0.9em;
+            line-height:1.2em;
+        }
+        
+        .action {
+            position:absolute;
+            z-index:2;
+            bottom:0;
+            left:0;
+            right:0;
+            height:35px;
+            line-height:35px;
+            zoom:1;
+            
+            &.open {
+                padding-left:20px;
+                border-top:1px solid @borderGray;
+                .grayGradient();
+            }
+         
+            &.blocked {
+                padding-left:20px;
+                background:@grayGradient2;
+                font-size:0.9em;
+            }
+            
+            input[type="radio"]{
+                position:relative;
+                top:8px;
+            }
+        }
+        
+        
+    }
+}
+
+.checkbox {
+    position: relative;
+    top: 7px;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+
+    background: url("../../img/icons-sprite.png?version=${timestamp}") no-repeat -64px -64px;
+    
+    &.disabled {
+        top: 4px;
+        width: 16px;
+        height: 17px;
+        background-position: -32px -64px;
+    }
+    
+    &.checked {
+        background-position: -96px -64px;
+    }
+}
+
+.no-top-margin {
+    margin-top: 0;
+}
+
+.no-bottom-margin {
+    margin-bottom: 0;
+}
+
+.top-margin {
+    margin-top: 1em;
+}
+
+
+.participants-block {
+    float:left;
+    margin-right:20px;
+    
+    &.separate {
+        margin-right:40px;
+    }
+    &.last {
+        margin-right:0;
+    }
+    
+    .small-button {
+        margin-top:0.15em;
+    }
+}
+
+// Participate
+.participate {
+    padding-top:0.4em;
+    
+    &.not-allowed {
+        float:left;
+        padding:0;
+        margin-bottom:1em;
+        
+        .system-msg {
+            margin:0;
+        }
+    }
+}
+// Form container for NOSCRIPT
+.form-container {
+    margin: 2em 0;
+    padding: 2em;
+    background:#f5f5f5;
+    border: 1px solid @borderGray;
+    
+}
+
+.participant-list {
+    .date {
+        float:left;
+        width:5em;
+        color:@secondaryTextColor;
+    }
+    
+    .name-container {
+        display:block;
+        margin-left:6em;
+    }
+    
+    .name {
+        color:@black;
+    }
+    
+    .home-municipality {
+        color:@secondaryTextColor;
+    }
+}
+
+// Create form submit section
+.highlight-box {
+    margin-bottom:0.7em;
+    
+    .title {
+        
+        padding:0.2em 0.7em;
+        background:@mainColor;
+        font-size:20px;
+        color:#fff;
+    }
+    .content {
+        padding:0.7em;
+    }
+
+}
+.column-separator {
+    //padding-bottom:0.5em;
+    background:url("../../img/border.png?version=${timestamp}") 291px 0 repeat-y;
+}

@@ -187,15 +187,15 @@
             <!--[if IE ]>
                 <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-ie.css" />
             <![endif]-->
+            <link rel="stylesheet" type="text/css" media="print" href="${urls.baseUrl}/css/print.css?version=${resourcesVersion}" />
         </noscript>
         <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/chosen.css" />
-        <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite.less" />
-        <#--<link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite/kuntalaisaloite.less" />-->
+        <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/less-main/kuntalaisaloite.less" />
         <!--[if IE ]>
-            <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-ie.less">
+            <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/less-main/kuntalaisaloite-ie.less">
         <![endif]-->
         
-        <link rel="stylesheet/less" type="text/css" media="print" href="${urls.baseUrl}/css/print.less" />
+        <link rel="stylesheet/less" type="text/css" media="print" href="${urls.baseUrl}/css/less-main/print.less" />
         
         <script src="${urls.baseUrl}/js/less-1.3.0.min.js" type="text/javascript"></script>
     </#if>
