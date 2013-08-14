@@ -1,30 +1,33 @@
 package fi.om.municipalityinitiative.web.controller;
 
-import static fi.om.municipalityinitiative.web.Urls.ERROR_404;
-import static fi.om.municipalityinitiative.web.Urls.ERROR_410;
-import static fi.om.municipalityinitiative.web.Urls.ERROR_500;
-import static fi.om.municipalityinitiative.web.Views.ERROR_404_VIEW;
-import static fi.om.municipalityinitiative.web.Views.ERROR_500_VIEW;
-import static fi.om.municipalityinitiative.web.Views.ERROR_410_VIEW;
-import static fi.om.municipalityinitiative.web.Views.contextRelativeRedirect;
-
-import java.util.Locale;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.web.ErrorFilter;
 import fi.om.municipalityinitiative.web.HelpPage;
 import fi.om.municipalityinitiative.web.Urls;
+import fi.om.municipalityinitiative.web.Views;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import java.util.Locale;
+import java.util.Map;
+
+import static fi.om.municipalityinitiative.web.Urls.*;
+import static fi.om.municipalityinitiative.web.Views.*;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
 @Controller
 public class ErrorController {
+
+    @RequestMapping(value = {VETUMA_ERROR_FI, VETUMA_ERROR_SV}, method = GET)
+    public String vetumaLoginError(HttpServletRequest request, Locale locale, Model model) {
+        addModelDefaults(model, Urls.get(locale));
+        return Views.ERROR_VETUMA_VIEW;
+    }
 
     @RequestMapping(ERROR_404)
     public String notFound(Locale locale, HttpServletRequest request, HttpServletResponse response, Model model) {

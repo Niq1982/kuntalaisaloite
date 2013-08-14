@@ -5,6 +5,8 @@ public final class Views {
 
     private Views() {}
 
+    public static final String ERROR_VETUMA_VIEW ="error/vetuma";
+
     public static final String MODERATOR_LOGIN_VIEW = "om-login";
 
     public static final String SINGLE_LOGIN_VIEW = "single-login";
