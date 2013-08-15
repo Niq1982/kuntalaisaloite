@@ -13,7 +13,7 @@ public interface UserDao {
 
     Maybe<VerifiedUser> getVerifiedUser(String hash);
 
-    VerifiedUserId addVerifiedUser(String hash, ContactInfo contactInfo);
+    VerifiedUserId addVerifiedUser(String hash, ContactInfo contactInfo, Maybe<Municipality> homeMunicipality);
 
     Maybe<VerifiedUserId> getVerifiedUserId(String hash);
 

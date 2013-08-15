@@ -4,11 +4,10 @@ import fi.om.municipalityinitiative.dao.*;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
-import fi.om.municipalityinitiative.dto.service.PrepareSafeInitiativeCreateDto;
+import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUIConfirmDto;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.PrepareSafeInitiativeUICreateDto;
-import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
@@ -44,10 +43,10 @@ public class VerifiedInitiativeServiceOperations {
         assertMunicipalityIsActive(createDto.getMunicipality());
 
         Long initiativeId = initiativeDao.prepareSafeInitiative(createDto.getMunicipality(), createDto.getInitiativeType());
-        VerifiedUserId verifiedUserId = getVerifiedUserIdAndCreateIfNecessary(verifiedUser.getHash(), verifiedUser.getContactInfo());
+        VerifiedUserId verifiedUserId = getVerifiedUserIdAndCreateIfNecessary(verifiedUser.getHash(), verifiedUser.getContactInfo(), verifiedUser.getHomeMunicipality());
 
         boolean showName = true;
-        participantDao.addVerifiedParticipant(initiativeId, verifiedUserId, showName);
+        participantDao.addVerifiedParticipant(initiativeId, verifiedUserId, showName, verifiedUser.getHomeMunicipality().isPresent());
         authorDao.addVerifiedAuthor(initiativeId, verifiedUserId);
 
         return initiativeId;
@@ -66,10 +65,10 @@ public class VerifiedInitiativeServiceOperations {
             if (invitation.getConfirmationCode().equals(confirmDto.getConfirmCode())) {
                 invitation.assertNotRejectedOrExpired();
 
-                VerifiedUserId verifiedUserId = getVerifiedUserIdAndCreateIfNecessary(verifiedUser.getHash(), verifiedUser.getContactInfo());
+                VerifiedUserId verifiedUserId = getVerifiedUserIdAndCreateIfNecessary(verifiedUser.getHash(), verifiedUser.getContactInfo(), verifiedUser.getHomeMunicipality());
                 userDao.updateUserInformation(verifiedUser.getHash(), confirmDto.getContactInfo());
 
-                participantDao.addVerifiedParticipant(initiativeId, verifiedUserId, confirmDto.getContactInfo().isShowName());
+                participantDao.addVerifiedParticipant(initiativeId, verifiedUserId, confirmDto.getContactInfo().isShowName(), verifiedUser.getHomeMunicipality().isPresent());
                 authorDao.addVerifiedAuthor(initiativeId, verifiedUserId);
 
                 authorDao.deleteAuthorInvitation(initiativeId, confirmDto.getConfirmCode());
@@ -87,15 +86,15 @@ public class VerifiedInitiativeServiceOperations {
 
         assertAllowance("Participate to initiative", ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowParticipate());
 
-        VerifiedUserId verifiedUserId = getVerifiedUserIdAndCreateIfNecessary(verifiedUser.getHash(), verifiedUser.getContactInfo());
-        participantDao.addVerifiedParticipant(initiativeId, verifiedUserId, showName);
+        VerifiedUserId verifiedUserId = getVerifiedUserIdAndCreateIfNecessary(verifiedUser.getHash(), verifiedUser.getContactInfo(), verifiedUser.getHomeMunicipality());
+        participantDao.addVerifiedParticipant(initiativeId, verifiedUserId, showName, verifiedUser.getHomeMunicipality().isPresent());
     }
 
-    private VerifiedUserId getVerifiedUserIdAndCreateIfNecessary(String hash, ContactInfo contactInfo) {
+    private VerifiedUserId getVerifiedUserIdAndCreateIfNecessary(String hash, ContactInfo contactInfo, Maybe<Municipality> homeMunicipality) {
 
         Maybe<VerifiedUserId> verifiedUserId = userDao.getVerifiedUserId(hash);
         if (verifiedUserId.isNotPresent()) {
-            verifiedUserId = Maybe.of(userDao.addVerifiedUser(hash, contactInfo));
+            verifiedUserId = Maybe.of(userDao.addVerifiedUser(hash, contactInfo, homeMunicipality));
         }
         return verifiedUserId.get();
     }

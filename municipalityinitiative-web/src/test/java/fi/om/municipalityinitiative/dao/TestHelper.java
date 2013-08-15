@@ -268,6 +268,7 @@ public class TestHelper {
                 .set(QVerifiedParticipant.verifiedParticipant.showName, authorDraft.publicName)
                 .set(QVerifiedParticipant.verifiedParticipant.initiativeId, authorDraft.initiativeId)
                 .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, verifiedUserId)
+                .set(QVerifiedParticipant.verifiedParticipant.verified, authorDraft.participantMunicipality != null)
                 .execute();
 
         increaseParticipantCount(authorDraft.initiativeId);
@@ -317,6 +318,7 @@ public class TestHelper {
                 .set(QVerifiedParticipant.verifiedParticipant.showName, authorDraft.publicName)
                 .set(QVerifiedParticipant.verifiedParticipant.initiativeId, authorDraft.initiativeId)
                 .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, verifiedUserId)
+                .set(QVerifiedParticipant.verifiedParticipant.verified, authorDraft.participantMunicipality != null)
                 .execute();
 
         increaseParticipantCount(authorDraft.initiativeId);
@@ -457,13 +459,13 @@ public class TestHelper {
     }
 
     @Transactional(readOnly = true)
-    public Participant getUniqueParticipant(Long initiativeId) {
+    public NormalParticipant getUniqueNormalParticipant(Long initiativeId) {
         return queryFactory.query()
                 .from(participant)
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
                 .leftJoin(participant.participantMunicipalityFk, QMunicipality.municipality)
                 .orderBy(participant.id.desc())
-                .uniqueResult(Mappings.participantMapping);
+                .uniqueResult(Mappings.normalParticipantMapping);
     }
 
     @Transactional(readOnly = true)

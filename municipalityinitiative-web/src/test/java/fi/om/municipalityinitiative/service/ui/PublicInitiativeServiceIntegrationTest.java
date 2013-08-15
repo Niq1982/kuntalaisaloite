@@ -5,7 +5,7 @@ import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
-import fi.om.municipalityinitiative.dto.service.Participant;
+import fi.om.municipalityinitiative.dto.service.NormalParticipant;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
@@ -25,7 +25,6 @@ import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.fail;
 
 
 public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTestBase {
@@ -139,8 +138,8 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
 
-        Participant createdParticipant = testHelper.getUniqueParticipant(initiativeId);
-        assertThat(((Municipality) createdParticipant.getHomeMunicipality().get()).getId(), is(participantMunicipality.getId()));
+        NormalParticipant createdParticipant = testHelper.getUniqueNormalParticipant(initiativeId);
+        assertThat(createdParticipant.getHomeMunicipality().get().getId(), is(participantMunicipality.getId()));
         assertThat(createdParticipant.getParticipateDate(), is(LocalDate.now()));
     }
 
@@ -148,9 +147,9 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     public void preparing_initiative_saved_email_and_municipality_and_membership() {
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
 
-        Participant createdParticipant = testHelper.getUniqueParticipant(initiativeId);
+        NormalParticipant createdParticipant = testHelper.getUniqueNormalParticipant(initiativeId);
 
-        assertThat(((Municipality) createdParticipant.getHomeMunicipality().get()).getId(), is(prepareDto().getHomeMunicipality()));
+        assertThat(createdParticipant.getHomeMunicipality().get().getId(), is(prepareDto().getHomeMunicipality()));
         assertThat(createdParticipant.getEmail(), is(prepareDto().getParticipantEmail()));
         assertThat(createdParticipant.getMembership(), is(prepareDto().getMunicipalMembership()));
 

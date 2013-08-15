@@ -6,12 +6,8 @@ import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import fi.om.municipalityinitiative.dto.service.Initiative;
-import fi.om.municipalityinitiative.dto.service.Municipality;
-import fi.om.municipalityinitiative.dto.service.Participant;
-import fi.om.municipalityinitiative.util.InitiativeType;
+import fi.om.municipalityinitiative.dto.service.*;
 import fi.om.municipalityinitiative.util.Locales;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 import org.joda.time.DateTime;
 
@@ -86,32 +82,35 @@ public class ParticipantToPdfExporter {
         createTable(preface, participants);
         
         document.add(preface);
-        
-        document.newPage();
-        
-        Paragraph lastPage = new Paragraph();
-        
-        lastPage.add(new Paragraph("Jäsenyysperuste, jos osallistuja ei ole kunnan asukas", subTitle));
-        
-        com.itextpdf.text.List list = new com.itextpdf.text.List(true, 20);
-        list.add(new ListItem(COMMUNITY + ": Nimenkirjoitusoikeus yhteisössä, laitoksessa tai säätiössä, jonka kotipaikka on aloitetta koskevassa kunnassa", bodyText));
-        list.add(new ListItem(COMPANY + ": Nimenkirjoitusoikeus yrityksessä, jonka kotipaikka on aloitetta koskevassa kunnassa", bodyText));
-        list.add(new ListItem(PROPERTY + ": Hallinto-oikeus tai omistus kiinteään omaisuuteen aloitetta koskevassa kunnassa", bodyText));
-        
-        lastPage.add(list);
-        
-        addEmptyLine(lastPage, 1);
-        
-        lastPage.add(new Paragraph("SV Jäsenyysperuste, jos osallistuja ei ole kunnan asukas", subTitle));
-        
-        list = new com.itextpdf.text.List(true, 20);
-        list.add(new ListItem(COMMUNITY + ": Har namnteckningsrätt i ett samfund, en institution eller stiftelse vars hemort finns i den kommun som initiativet gäller", bodyText));
-        list.add(new ListItem(COMPANY + ": Har namnteckningsrätt i ett företag vars hemort finns i den kommun som initiativet gäller", bodyText));
-        list.add(new ListItem(PROPERTY + ": Äger eller besitter egendom i den kommun som initiativet gäller", bodyText));
-        
-        lastPage.add(list);
 
-        document.add(lastPage);
+        if (initiative.getType().isNotVerifiable()) {
+
+            document.newPage();
+
+            Paragraph lastPage = new Paragraph();
+
+            lastPage.add(new Paragraph("Jäsenyysperuste, jos osallistuja ei ole kunnan asukas", subTitle));
+
+            com.itextpdf.text.List list = new com.itextpdf.text.List(true, 20);
+            list.add(new ListItem(COMMUNITY + ": Nimenkirjoitusoikeus yhteisössä, laitoksessa tai säätiössä, jonka kotipaikka on aloitetta koskevassa kunnassa", bodyText));
+            list.add(new ListItem(COMPANY + ": Nimenkirjoitusoikeus yrityksessä, jonka kotipaikka on aloitetta koskevassa kunnassa", bodyText));
+            list.add(new ListItem(PROPERTY + ": Hallinto-oikeus tai omistus kiinteään omaisuuteen aloitetta koskevassa kunnassa", bodyText));
+
+            lastPage.add(list);
+
+            addEmptyLine(lastPage, 1);
+
+            lastPage.add(new Paragraph("SV Jäsenyysperuste, jos osallistuja ei ole kunnan asukas", subTitle));
+
+            list = new com.itextpdf.text.List(true, 20);
+            list.add(new ListItem(COMMUNITY + ": Har namnteckningsrätt i ett samfund, en institution eller stiftelse vars hemort finns i den kommun som initiativet gäller", bodyText));
+            list.add(new ListItem(COMPANY + ": Har namnteckningsrätt i ett företag vars hemort finns i den kommun som initiativet gäller", bodyText));
+            list.add(new ListItem(PROPERTY + ": Äger eller besitter egendom i den kommun som initiativet gäller", bodyText));
+
+            lastPage.add(list);
+
+            document.add(lastPage);
+        }
     }
     /*
      * iText License:
@@ -150,48 +149,65 @@ public class ParticipantToPdfExporter {
 
     }
 
-    private static void createTable(Paragraph subCatPart, List<? extends Participant> participants)
+    private void createTable(Paragraph subCatPart, List<? extends Participant> participants)
             throws DocumentException {
-        PdfPTable table = new PdfPTable(5);
+        PdfPTable table = new PdfPTable(initiative.getType().isNotVerifiable() ? 5 : 4);
 
         table.setWidthPercentage(100);
-        table.setWidths(new int[] {6, 10, 42, 18, 12});
         table.setHorizontalAlignment(Element.ALIGN_LEFT);
 
         table.addCell(createCell(" ", true));
         table.addCell(createCell("Pvm\nDatum", true));
         table.addCell(createCell("Nimi\nNamn", true));
-        table.addCell(createCell("Kotikunta\nHemkommun", true));
-        table.addCell(createCell("Jäsenyys\nMedlemskap", true));
+        if (initiative.getType().isNotVerifiable()) {
+            table.setWidths(new int[] {6, 10, 42, 18, 12});
+            table.addCell(createCell("Kotikunta\nHemkommun", true));
+            table.addCell(createCell("Jäsenyys\nMedlemskap", true));
+        }
+        else {
+            table.setWidths(new int[] {6, 10, 42, 18});
+            table.addCell(createCell("Turvakielto\nSpärrmarkering", true));
+        }
 
         table.setHeaderRows(1);
 
         int count = 0;
         participants = Lists.reverse(participants);
-        for (Participant participant : participants) {
-            ++count;
-            table.addCell(createCell(String.valueOf(count), false));
-            table.addCell(createCell(participant.getParticipateDate().toString(DATE_FORMAT), false));
-            table.addCell(createCell(participant.getName(), false));
-            Municipality homeMunicipality = (Municipality) participant.getHomeMunicipality().get();
-            table.addCell(createCell(homeMunicipality.getNameFi() + "\n" + homeMunicipality.getNameSv() + "\n", false));
-            // TODO: If % initiative and participant has turvakielto
-//            table.addCell(createCell(homeMunicipality.getNameFi() + " *\n" + homeMunicipality.getNameSv() + "\n", false));
+        for (Participant participanta : participants) {
+            if (initiative.getType().isNotVerifiable()) {
+                NormalParticipant participant = (NormalParticipant) participanta;
+                ++count;
+                table.addCell(createCell(String.valueOf(count), false));
+                table.addCell(createCell(participant.getParticipateDate().toString(DATE_FORMAT), false));
+                table.addCell(createCell(participant.getName(), false));
+                Municipality homeMunicipality = participant.getHomeMunicipality().get();
+                table.addCell(createCell(homeMunicipality.getNameFi() + "\n" + homeMunicipality.getNameSv() + "\n", false));
+                // TODO: If % initiative and participant has turvakielto
+    //            table.addCell(createCell(homeMunicipality.getNameFi() + " *\n" + homeMunicipality.getNameSv() + "\n", false));
 
+
+                String membershipType = "";
+
+                if (participant.getMembership() == Membership.community) {
+                    membershipType = COMMUNITY;
+                } else if (participant.getMembership() == Membership.company) {
+                    membershipType = COMPANY;
+                } else if (participant.getMembership() == Membership.property) {
+                    membershipType = PROPERTY;
+                } else {
+                    membershipType = "";
+                }
             
-            String membershipType = "";
-            
-            if (participant.getMembership() == Membership.community) {
-                membershipType = COMMUNITY;
-            } else if (participant.getMembership() == Membership.company) {
-                membershipType = COMPANY;
-            } else if (participant.getMembership() == Membership.property) {
-                membershipType = PROPERTY;
-            } else {
-                membershipType = "";
+                table.addCell(createCell(membershipType, false));
             }
-            
-            table.addCell(createCell(membershipType, false));
+            else {
+                VerifiedParticipant participant = (VerifiedParticipant) participanta;
+                ++count;
+                table.addCell(createCell(String.valueOf(count), false));
+                table.addCell(createCell(participant.getParticipateDate().toString(DATE_FORMAT), false));
+                table.addCell(createCell(participant.getName(), false));
+                table.addCell(createCell(participant.isVerified() ? "" : "X", false));
+            }
         }
 
         subCatPart.add(table);

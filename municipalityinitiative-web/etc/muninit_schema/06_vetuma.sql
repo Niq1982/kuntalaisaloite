@@ -33,6 +33,7 @@ create table verified_participant (
 
 	participate_time date default now(),
     show_name boolean constraint verified_participant_show_name_nn not null,
+    verified boolean constraint verified_participant_secret_nn not null,
 
     constraint verified_participant_pk primary key (initiative_id, verified_user_id),
     constraint verified_participant_initiative_fk foreign key (initiative_id) references municipality_initiative(id),

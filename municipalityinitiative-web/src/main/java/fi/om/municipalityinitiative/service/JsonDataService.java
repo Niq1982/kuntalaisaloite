@@ -93,7 +93,7 @@ public class JsonDataService {
 
         ArrayList<Participant> publicParticipants = Lists.<Participant>newArrayList();
 
-        Participant participant = new NormalParticipant();
+        NormalParticipant participant = new NormalParticipant();
         participant.setParticipateDate(new LocalDate(2010, 1, 1));
         participant.setName("Teemu Teekkari");
         participant.setHomeMunicipality(Maybe.of(ApiController.TAMPERE));

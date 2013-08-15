@@ -1,11 +1,14 @@
 package fi.om.municipalityinitiative.sql;
 
-import static com.mysema.query.types.PathMetadataFactory.*;
-
-import com.mysema.query.types.*;
-import com.mysema.query.types.path.*;
+import com.mysema.query.types.Path;
+import com.mysema.query.types.PathMetadata;
+import com.mysema.query.types.path.BooleanPath;
+import com.mysema.query.types.path.DatePath;
+import com.mysema.query.types.path.NumberPath;
 
 import javax.annotation.Generated;
+
+import static com.mysema.query.types.PathMetadataFactory.forVariable;
 
 
 /**
@@ -23,6 +26,8 @@ public class QVerifiedParticipant extends com.mysema.query.sql.RelationalPathBas
     public final DatePath<org.joda.time.LocalDate> participateTime = createDate("participate_time", org.joda.time.LocalDate.class);
 
     public final BooleanPath showName = createBoolean("show_name");
+
+    public final BooleanPath verified = createBoolean("verified");
 
     public final NumberPath<Long> verifiedUserId = createNumber("verified_user_id", Long.class);
 

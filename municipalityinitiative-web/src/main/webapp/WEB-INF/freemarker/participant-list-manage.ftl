@@ -27,6 +27,20 @@
             </h2>
 
             <@participantListManage participants />
+
+            <#if initiative.verifiable>
+                <br/>
+                <#assign secureCount = 0/>
+                <#list participants as participant>
+                    <#if !participant.participant.verified>
+                        <#assign secureCount = secureCount+1/>
+                    </#if>
+
+                </#list>
+
+                Turvakieltoja ${secureCount} kpl.
+            </#if>
+
         </div>
     <#else>
         <#-- Confirm Delete form for NOSCRIPT users -->
@@ -97,19 +111,19 @@
     <#list participants as participant>
 
         <#if participant_index == 0><ul class="participant-list no-style"></#if>
-            <li><span class="date"><@u.localDate participant.participateDate!"" /></span> <span class="name-container"><span class="name">${participant.name!""}</span>
+            <li><span class="date"><@u.localDate participant.participant.participateDate!"" /></span> <span class="name-container"><span class="name">${participant.participant.name!""}</span>
                 
             <#-- IF initiative IS verifiable user should NOT end up here - like never -->
             <#if !initiative.verifiable>
-                <span class="home-municipality"><span class="bull">&bull;</span> <@u.solveMunicipality participant.homeMunicipality/></span>
+                <span class="home-municipality"><span class="bull">&bull;</span> <@u.solveMunicipality participant.participant.homeMunicipality/></span>
                 
                 <#if !participant.isAuthor()>
                     <span class="bull">&bull;</span>
-                    <a  href="?deleteParticipant=${participant.id!""}" class="js-delete-participant"
-                        data-id="${participant.id!""}"
-                        data-date="<@u.localDate participant.participateDate!"" />"
-                        data-name="${participant.name!""}"
-                        data-municipality="<@u.solveMunicipality participant.homeMunicipality />"><@u.message "deleteParticipant.delete" /></a></span></li>
+                    <a  href="?deleteParticipant=${participant.participant.id!""}" class="js-delete-participant"
+                        data-id="${participant.participant.id!""}"
+                        data-date="<@u.localDate participant.participant.participateDate!"" />"
+                        data-name="${participant.participant.name!""}"
+                        data-municipality="<@u.solveMunicipality participant.participant.homeMunicipality />"><@u.message "deleteParticipant.delete" /></a></span></li>
                 <#else>
                     <span class="bull">&bull;</span> <@u.message "deleteParticipant.authorCannotBeDeleted" />
                 </#if>
