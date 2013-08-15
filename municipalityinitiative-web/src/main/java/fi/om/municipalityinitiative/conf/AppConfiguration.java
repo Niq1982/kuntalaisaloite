@@ -222,6 +222,11 @@ public class AppConfiguration {
     }
 
     @Bean
+    public CachedInitiativeFinder cachedInitiativeFinder() {
+        return new CachedInitiativeFinder();
+    }
+
+    @Bean
     public VerifiedInitiativeService verifiedInitiativeService() {
         return new VerifiedInitiativeService();
     }

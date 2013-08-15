@@ -1,29 +1,26 @@
 package fi.om.municipalityinitiative.web.controller;
 
-import fi.om.municipalityinitiative.dto.InitiativeSearch;
-import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
-import fi.om.municipalityinitiative.dto.user.User;
+import fi.om.municipalityinitiative.service.CachedInitiativeFinder;
 import fi.om.municipalityinitiative.service.MunicipalityService;
-import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.Urls;
-import fi.om.municipalityinitiative.web.controller.BaseController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Locale;
-
 import javax.annotation.Resource;
 
+import java.util.Locale;
+
 import static fi.om.municipalityinitiative.web.Urls.*;
-import static fi.om.municipalityinitiative.web.Views.*;
+import static fi.om.municipalityinitiative.web.Views.INDEX_VIEW;
+import static fi.om.municipalityinitiative.web.Views.contextRelativeRedirect;
 
 @Controller
 public class FrontPageController extends BaseController {
     
     @Resource
-    private PublicInitiativeService publicInitiativeService;
+    private CachedInitiativeFinder initiativeFinder;
     
     @Resource
     private MunicipalityService municipalityService;
@@ -46,13 +43,7 @@ public class FrontPageController extends BaseController {
         Urls urls = Urls.get(locale);
 
         model.addAttribute(ALT_URI_ATTR, urls.alt().frontpage());
-        InitiativeSearch search = new InitiativeSearch();
-        search.setLimit(3);
-        search.setShow(InitiativeSearch.Show.all);
-        search.setOrderBy(InitiativeSearch.OrderBy.latest);
-
-        // TODO: Cache
-        model.addAttribute("initiatives", publicInitiativeService.findMunicipalityInitiatives(search, new LoginUserHolder<>(User.anonym())));
+        model.addAttribute("initiatives", initiativeFinder.frontPageInitiatives());
         model.addAttribute("municipalities", municipalityService.findAllMunicipalities(locale));
         addPiwicIdIfNotAuthenticated(model);
 
