@@ -41,7 +41,7 @@ public class ParticipantToPdfExporterTest {
         List<Participant> participants = Lists.newArrayList();
         for (int i = 0; i < 1000; ++i) {
             Municipality municipality = new Municipality(new Random().nextLong(), RandomStringUtils.randomAlphabetic(10), RandomStringUtils.randomAlphabetic(10), false);
-            Participant participant = new NormalParticipant();
+            NormalParticipant participant = new NormalParticipant();
             participant.setParticipateDate(new LocalDate());
             participant.setName(RandomStringUtils.randomAlphabetic(20));
             participant.setHomeMunicipality(Maybe.of(municipality));

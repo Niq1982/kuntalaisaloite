@@ -459,7 +459,7 @@ public class TestHelper {
     }
 
     @Transactional(readOnly = true)
-    public Participant getUniqueNormalParticipant(Long initiativeId) {
+    public NormalParticipant getUniqueNormalParticipant(Long initiativeId) {
         return queryFactory.query()
                 .from(participant)
                 .where(participant.municipalityInitiativeId.eq(initiativeId))

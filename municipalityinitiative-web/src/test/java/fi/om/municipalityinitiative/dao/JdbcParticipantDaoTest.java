@@ -68,9 +68,9 @@ public class JdbcParticipantDaoTest {
         List<NormalParticipant> allParticipants = participantDao.findNormalPublicParticipants(testInitiativeId);
         assertThat(allParticipants, hasSize(2));
 
-        Participant participant = allParticipants.get(0);
+        NormalParticipant participant = allParticipants.get(0);
         assertThat(participant.getName(), is(PARTICIPANTS_NAME));
-        assertThat(((Municipality) participant.getHomeMunicipality().get()).getId(), is(otherMunicipalityId));
+        assertThat(participant.getHomeMunicipality().get().getId(), is(otherMunicipalityId));
         assertThat(participant.getParticipateDate(), is(notNullValue()));
         assertThat(participant.getEmail(), is(PARTICIPANT_EMAIL));
         assertThat(participant.getMembership(), is(PARTICIPANT_MEMBERSHIP));

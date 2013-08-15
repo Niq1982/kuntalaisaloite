@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.json;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
 import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dto.json.InitiativeJson;
 import fi.om.municipalityinitiative.dto.service.Initiative;
@@ -13,8 +12,6 @@ import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
-import org.junit.Ignore;
-import org.junit.Test;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 import java.io.IOException;
@@ -58,7 +55,7 @@ public class JsonStringParserTest {
     }
 
     private static Participant participant(Municipality TAMPERE, String name) {
-        Participant participant = new NormalParticipant();
+        NormalParticipant participant = new NormalParticipant();
         participant.setParticipateDate(new LocalDate(2010, 1, 1));
         participant.setName(name);
         participant.setHomeMunicipality(Maybe.of(TAMPERE));

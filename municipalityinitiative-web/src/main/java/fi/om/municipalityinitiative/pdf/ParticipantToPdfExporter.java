@@ -8,10 +8,9 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.service.NormalParticipant;
 import fi.om.municipalityinitiative.dto.service.Participant;
-import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Locales;
-import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 import org.joda.time.DateTime;
 
@@ -168,7 +167,8 @@ public class ParticipantToPdfExporter {
 
         int count = 0;
         participants = Lists.reverse(participants);
-        for (Participant participant : participants) {
+        for (Participant participanta : participants) {
+            NormalParticipant participant = (NormalParticipant) participanta;
             ++count;
             table.addCell(createCell(String.valueOf(count), false));
             table.addCell(createCell(participant.getParticipateDate().toString(DATE_FORMAT), false));
