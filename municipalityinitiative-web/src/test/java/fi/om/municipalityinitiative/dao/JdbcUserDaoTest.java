@@ -16,9 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -37,26 +35,28 @@ public class JdbcUserDaoTest {
 
     @Resource
     private UserDao userDao;
+    private Maybe<Municipality> testMunicipality;
 
     @Before
     public void setup() throws Exception {
         testHelper.dbCleanup();
+        testMunicipality = Maybe.of(new Municipality(testHelper.createTestMunicipality("Municipality"), "Municipality", "Municipality", true));
     }
 
     @Test
     public void create_and_get_verified_user() {
         ContactInfo contactInfo = contactInfo();
-        VerifiedUserId verifiedUserId = userDao.addVerifiedUser(HASH, contactInfo);
+        VerifiedUserId verifiedUserId = userDao.addVerifiedUser(HASH, contactInfo, testMunicipality);
         Maybe<VerifiedUser> verifiedUser = userDao.getVerifiedUser(HASH);
         assertThat(verifiedUser.isPresent(), is(true));
         assertThat(verifiedUserId, is(notNullValue()));
         ReflectionTestUtils.assertReflectionEquals(verifiedUser.get().getContactInfo(), contactInfo);
-        // TODO: assertThat(verifiedUser.get().getHomeMunicipality());
+        assertThat(verifiedUser.get().getHomeMunicipality().get().getId(), is(testMunicipality.get().getId()));
     }
 
     @Test
     public void update_contact_info() {
-        userDao.addVerifiedUser(HASH, contactInfo());
+        userDao.addVerifiedUser(HASH, contactInfo(), testMunicipality);
 
         ContactInfo updatedContactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
         userDao.updateUserInformation(HASH, updatedContactInfo);
@@ -65,13 +65,13 @@ public class JdbcUserDaoTest {
         assertThat(result.getPhone(), is(updatedContactInfo.getPhone()));
         assertThat(result.getAddress(), is(updatedContactInfo.getAddress()));
         assertThat(result.getEmail(), is(updatedContactInfo.getEmail()));
-        assertThat(result.getName(), is(not(updatedContactInfo.getName()))); // Name should not be changed
+        assertThat(result.getName(), is(not(updatedContactInfo.getName()))); // Name should not be changed);
     }
 
     @Test
     public void update_name_and_municipality() {
 
-        userDao.addVerifiedUser(HASH, contactInfo());
+        userDao.addVerifiedUser(HASH, contactInfo(), testMunicipality);
 
         String newName = "New Name";
         String newMunicipalityName = "name";

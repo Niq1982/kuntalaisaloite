@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.dao;
 
 import com.mysema.query.Tuple;
+import com.mysema.query.sql.dml.SQLInsertClause;
 import com.mysema.query.sql.dml.SQLUpdateClause;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
@@ -110,15 +111,22 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
-    public VerifiedUserId addVerifiedUser(String hash, ContactInfo contactInfo) {
-        return new VerifiedUserId(queryFactory.insert(verifiedUser)
+    public VerifiedUserId addVerifiedUser(String hash, ContactInfo contactInfo, Maybe<Municipality> homeMunicipality) {
+        SQLInsertClause insert = queryFactory.insert(verifiedUser)
                 .set(verifiedUser.hash, hash)
                 .set(verifiedUser.address, contactInfo.getAddress())
                 .set(verifiedUser.name, contactInfo.getName())
                 .set(verifiedUser.phone, contactInfo.getPhone())
-                .set(verifiedUser.email, contactInfo.getEmail())
-                .setNull(verifiedUser.municipalityId)
-                .executeWithKey(verifiedUser.id));
+                .set(verifiedUser.email, contactInfo.getEmail());
+
+        if (homeMunicipality.isPresent()) {
+            insert.set(verifiedUser.municipalityId, homeMunicipality.get().getId());
+        }
+        else {
+            insert.setNull(verifiedUser.municipalityId);
+        }
+
+        return new VerifiedUserId(insert.executeWithKey(verifiedUser.id));
     }
 
     @Override

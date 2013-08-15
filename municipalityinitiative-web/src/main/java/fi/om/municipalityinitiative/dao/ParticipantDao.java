@@ -33,8 +33,6 @@ public interface ParticipantDao {
 
     void deleteParticipant(Long initiativeId, Long participantId);
 
-    void addVerifiedParticipant(Long initiativeId, VerifiedUserId userId, boolean showName);
-
     void updateVerifiedParticipantShowName(Long initiativeId, String hash, boolean showName);
 
     void addVerifiedParticipant(Long initiativeId, VerifiedUserId userId, boolean showName, boolean verifiedMunicipality);

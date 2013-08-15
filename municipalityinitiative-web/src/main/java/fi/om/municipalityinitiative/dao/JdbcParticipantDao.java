@@ -194,11 +194,6 @@ public class JdbcParticipantDao implements ParticipantDao {
     }
 
     @Override
-    public void addVerifiedParticipant(Long initiativeId, VerifiedUserId userId, boolean showName) {
-        addVerifiedParticipant(initiativeId, userId, showName, false);
-    }
-
-    @Override
     // TODO: Learn better usage of querydsl so this could be done in single query
     public void updateVerifiedParticipantShowName(Long initiativeId, String hash, boolean showName) {
         Long verifiedUserId = queryFactory.from(QVerifiedUser.verifiedUser)
