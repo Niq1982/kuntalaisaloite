@@ -1,11 +1,15 @@
 package fi.om.municipalityinitiative.sql;
 
-import static com.mysema.query.types.PathMetadataFactory.*;
-
-import com.mysema.query.types.*;
-import com.mysema.query.types.path.*;
+import com.mysema.query.types.Path;
+import com.mysema.query.types.PathMetadata;
+import com.mysema.query.types.path.DateTimePath;
+import com.mysema.query.types.path.EnumPath;
+import com.mysema.query.types.path.NumberPath;
+import com.mysema.query.types.path.StringPath;
 
 import javax.annotation.Generated;
+
+import static com.mysema.query.types.PathMetadataFactory.forVariable;
 
 
 /**
@@ -35,6 +39,8 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
     public final StringPath name = createString("name");
 
     public final NumberPath<Integer> participantCount = createNumber("participant_count", Integer.class);
+
+    public final NumberPath<Integer> participantCountPublic = createNumber("participant_count_public", Integer.class);
 
     public final StringPath proposal = createString("proposal");
 

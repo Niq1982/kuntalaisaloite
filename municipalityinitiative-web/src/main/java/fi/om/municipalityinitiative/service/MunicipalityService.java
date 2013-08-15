@@ -16,6 +16,7 @@ public class MunicipalityService {
     private MunicipalityDao municipalityDao;
 
     @Transactional(readOnly = true)
+    //@Cacheable("allMunicipalities")
     public List<Municipality> findAllMunicipalities(Locale localeForOrdering) {
         return municipalityDao.findMunicipalities(Locales.LOCALE_FI.equals(localeForOrdering));
     }

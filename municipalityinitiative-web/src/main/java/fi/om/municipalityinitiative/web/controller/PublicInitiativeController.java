@@ -88,8 +88,8 @@ public class PublicInitiativeController extends BaseController {
             return ViewGenerator.collaborativeView(initiativeInfo,
                     authorService.findPublicAuthors(initiativeId),
                     municipalityService.findAllMunicipalities(locale),
-                    participantService.getParticipantCount(initiativeId),
-                    new ParticipantUICreateDto(),
+                    initiativeInfo.getParticipantCount(),
+            new ParticipantUICreateDto(),
                     userService.hasManagementRightForInitiative(initiativeId, request),
                     new AuthorUIMessage()).view(model, Urls.get(locale).alt().view(initiativeId));
         }

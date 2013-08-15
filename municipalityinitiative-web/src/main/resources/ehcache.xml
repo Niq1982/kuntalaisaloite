@@ -19,6 +19,16 @@
            diskPersistent="false"
            diskExpiryThreadIntervalSeconds="120"
            memoryStoreEvictionPolicy="LRU"/>
+    <cache name="allMunicipalities"
+           maxElementsInMemory="2"
+           eternal="false"
+           timeToIdleSeconds="60"
+           timeToLiveSeconds="60"
+           overflowToDisk="false"
+           maxElementsOnDisk="100"
+           diskPersistent="false"
+           diskExpiryThreadIntervalSeconds="120"
+           memoryStoreEvictionPolicy="LRU"/>
     <cache name="infoTextImages"
            maxElementsInMemory="50"
            eternal="false"

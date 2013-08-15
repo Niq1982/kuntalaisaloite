@@ -43,6 +43,7 @@ create table municipality_initiative (
 
     moderator_comment varchar(1024),
     participant_count integer default 0,
+    participant_count_public integer default 0,
 
     sent timestamp,
     sent_comment varchar(1024),
@@ -54,7 +55,7 @@ create table municipality_initiative (
 
 create index municipality_initiative_id_index on municipality_initiative(id);
 create index municipality_initiative_participant_count_index on municipality_initiative(participant_count);
-create index municipality_initiative_modified_index on municipality_initiative(modified);
+create index municipality_initiative_state_timestamp_index on municipality_initiative(state_timestamp);
 create index municipality_initiative_sent_index on municipality_initiative(sent);
 
 
