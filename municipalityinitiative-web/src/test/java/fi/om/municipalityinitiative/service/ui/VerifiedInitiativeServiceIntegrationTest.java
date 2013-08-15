@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.service.ui;
 
+import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dao.UserDao;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
@@ -49,9 +50,12 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
     @Resource
     private VerifiedInitiativeService service;
 
-    // Test also some functionality of userDao. Ugly, but lets leave it that for now.
+    // Test also some functionality of userDao and participantDao. Ugly, but lets leave it that for now.
     @Resource
     private UserDao userDao;
+    @Resource
+    private ParticipantDao participantDao;
+
 
     private Municipality testMunicipality;
 
@@ -176,6 +180,31 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
         LoginUserHolder<VerifiedUser> verifiedLoginUserHolder = verifiedUserHolderWithMunicipalityId(Maybe.of(unactiveMunicipality));
         service.prepareSafeInitiative(verifiedLoginUserHolder, createDto);
+    }
+
+    @Test
+    @Transactional
+    public void preparing_initiative_with_secure_identity_leaves_participants_municipality_null() {
+
+        // Creating initiative to municipality, homeMunicipality not verified from vetuma
+        Long municipalityId = testHelper.createTestMunicipality("Municipality", true);
+        PrepareSafeInitiativeUICreateDto createDto = prepareUICreateDto();
+        createDto.setMunicipality(municipalityId);
+        createDto.setUserGivenHomeMunicipality(municipalityId);
+
+        LoginUserHolder<VerifiedUser> verifiedUserLoginUserHolder = verifiedUserHolderWithMunicipalityId(Maybe.<Long>absent());
+        long initiativeId = service.prepareSafeInitiative(verifiedUserLoginUserHolder, createDto);
+
+        // Update users information with municipality
+        userDao.updateUserInformation(
+                verifiedUserLoginUserHolder.getVerifiedUser().getHash(),
+                "New Name from vetuma",
+                Maybe.of(new Municipality(municipalityId, "a", "b", true))
+        );
+
+        // Assert that participants municipality is still absent
+        assertThat(participantDao.findVerifiedAllParticipants(initiativeId).get(0).getHomeMunicipality().isPresent(), is(false));
+
     }
 
     @Test

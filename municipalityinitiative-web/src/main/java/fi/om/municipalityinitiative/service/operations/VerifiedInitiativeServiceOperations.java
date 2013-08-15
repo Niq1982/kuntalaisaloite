@@ -4,11 +4,9 @@ import fi.om.municipalityinitiative.dao.*;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
-import fi.om.municipalityinitiative.dto.service.PrepareSafeInitiativeCreateDto;
 import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUIConfirmDto;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.PrepareSafeInitiativeUICreateDto;
-import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
@@ -69,7 +67,7 @@ public class VerifiedInitiativeServiceOperations {
                 VerifiedUserId verifiedUserId = getVerifiedUserIdAndCreateIfNecessary(verifiedUser.getHash(), verifiedUser.getContactInfo());
                 userDao.updateUserInformation(verifiedUser.getHash(), confirmDto.getContactInfo());
 
-                participantDao.addVerifiedParticipant(initiativeId, verifiedUserId, confirmDto.getContactInfo().isShowName());
+                participantDao.addVerifiedParticipant(initiativeId, verifiedUserId, confirmDto.getContactInfo().isShowName(), verifiedUser.getHomeMunicipality().isPresent());
                 authorDao.addVerifiedAuthor(initiativeId, verifiedUserId);
 
                 authorDao.deleteAuthorInvitation(initiativeId, confirmDto.getConfirmCode());

@@ -142,20 +142,21 @@ public class JdbcParticipantDao implements ParticipantDao {
     public List<VerifiedParticipant> findVerifiedPublicParticipants(Long initiativeId) {
         return queryFactory.from(QVerifiedParticipant.verifiedParticipant)
                 .innerJoin(QVerifiedParticipant.verifiedParticipant.verifiedParticipantVerifiedUserFk, QVerifiedUser.verifiedUser)
-                .leftJoin(QVerifiedUser.verifiedUser.verifiedUserMunicipalityFk, QMunicipality.municipality)
+                //.leftJoin(QVerifiedUser.verifiedUser.verifiedUserMunicipalityFk, QMunicipality.municipality)
                 .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
                 .where(QVerifiedParticipant.verifiedParticipant.showName.eq(true))
                 .orderBy(QVerifiedParticipant.verifiedParticipant.participateTime.desc(), QVerifiedUser.verifiedUser.id.desc())
-                .list(Mappings.verifiedParticipantMapping);
+                .list(Mappings.getVerifiedParticipantMappingWithoutMunicipality);
     }
 
     @Override
     public List<VerifiedParticipant> findVerifiedAllParticipants(Long initiativeId) {
         return queryFactory.from(QVerifiedParticipant.verifiedParticipant)
                 .innerJoin(QVerifiedParticipant.verifiedParticipant.verifiedParticipantVerifiedUserFk, QVerifiedUser.verifiedUser)
-                .leftJoin(QVerifiedUser.verifiedUser.verifiedUserMunicipalityFk, QMunicipality.municipality)
+                .innerJoin(QVerifiedParticipant.verifiedParticipant.verifiedParticipantInitiativeFk, QMunicipalityInitiative.municipalityInitiative)
+                .leftJoin(QMunicipalityInitiative.municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
                 .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
-                .list(Mappings.verifiedParticipantMapping);
+                .list(Mappings.verifiedParticipantMappingWithMunicipality);
     }
 
     @Override
@@ -178,16 +179,23 @@ public class JdbcParticipantDao implements ParticipantDao {
     }
 
     @Override
-    public void addVerifiedParticipant(Long initiativeId, VerifiedUserId userId, boolean showName) {
+    public void addVerifiedParticipant(Long initiativeId, VerifiedUserId userId, boolean showName, boolean verifiedMunicipality) {
         assertSingleAffection(queryFactory.insert(QVerifiedParticipant.verifiedParticipant)
                 .set(QVerifiedParticipant.verifiedParticipant.initiativeId, initiativeId)
                 .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, userId.toLong())
                 .set(QVerifiedParticipant.verifiedParticipant.showName, showName)
+                .set(QVerifiedParticipant.verifiedParticipant.verified, verifiedMunicipality)
                 .execute());
         assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
                 .set(QMunicipalityInitiative.municipalityInitiative.participantCount, QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
                 .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
                 .execute());
+
+    }
+
+    @Override
+    public void addVerifiedParticipant(Long initiativeId, VerifiedUserId userId, boolean showName) {
+        addVerifiedParticipant(initiativeId, userId, showName, false);
     }
 
     @Override

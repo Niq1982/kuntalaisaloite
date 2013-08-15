@@ -4,7 +4,10 @@ import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dto.service.*;
 import fi.om.municipalityinitiative.dto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.sql.QParticipant;
-import fi.om.municipalityinitiative.util.*;
+import fi.om.municipalityinitiative.util.InitiativeState;
+import fi.om.municipalityinitiative.util.InitiativeType;
+import fi.om.municipalityinitiative.util.Membership;
+import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -138,6 +141,24 @@ public class JdbcParticipantDaoTest {
         Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipalityId).applyAuthor().toInitiativeDraft());
 
         List<VerifiedParticipant> participants = participantDao.findVerifiedPublicParticipants(initiativeId);
+        assertThat(participants, hasSize(1));
+        Participant participant = participants.get(0);
+
+        assertThat(participant.getEmail(), is(TestHelper.DEFAULT_PARTICIPANT_EMAIL));
+        assertThat(participant.getName(), is(TestHelper.DEFAULT_PARTICIPANT_NAME));
+        assertThat(participant.getHomeMunicipality().isPresent(), is(false)); // Do not reveal participants original municipalityinformation for public
+        assertThat(participant.getParticipateDate(), is(LocalDate.now()));
+
+    }
+
+    @Test
+    public void find_verified_all_participants_sets_all_data() {
+
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipalityId)
+                .applyAuthor().withParticipantMunicipality(testHelper.createTestMunicipality("SomeOtherMunicipality"))
+                .toInitiativeDraft());
+
+        List<VerifiedParticipant> participants = participantDao.findVerifiedAllParticipants(initiativeId);
         assertThat(participants, hasSize(1));
         Participant participant = participants.get(0);
 

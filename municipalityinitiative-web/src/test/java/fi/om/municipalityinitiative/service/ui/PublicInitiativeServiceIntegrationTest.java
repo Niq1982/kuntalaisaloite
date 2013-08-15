@@ -25,7 +25,6 @@ import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.fail;
 
 
 public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTestBase {
@@ -139,7 +138,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
 
-        Participant createdParticipant = testHelper.getUniqueParticipant(initiativeId);
+        Participant createdParticipant = testHelper.getUniqueNormalParticipant(initiativeId);
         assertThat(((Municipality) createdParticipant.getHomeMunicipality().get()).getId(), is(participantMunicipality.getId()));
         assertThat(createdParticipant.getParticipateDate(), is(LocalDate.now()));
     }
@@ -148,7 +147,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     public void preparing_initiative_saved_email_and_municipality_and_membership() {
         Long initiativeId = service.prepareInitiative(prepareDto(), Locales.LOCALE_FI);
 
-        Participant createdParticipant = testHelper.getUniqueParticipant(initiativeId);
+        Participant createdParticipant = testHelper.getUniqueNormalParticipant(initiativeId);
 
         assertThat(((Municipality) createdParticipant.getHomeMunicipality().get()).getId(), is(prepareDto().getHomeMunicipality()));
         assertThat(createdParticipant.getEmail(), is(prepareDto().getParticipantEmail()));
