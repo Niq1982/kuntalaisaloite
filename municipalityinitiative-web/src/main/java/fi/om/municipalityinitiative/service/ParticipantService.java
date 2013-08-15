@@ -76,7 +76,7 @@ public class ParticipantService {
 
         ArrayList<ParticipantListInfo> participantList = Lists.newArrayList();
         for (VerifiedParticipant participant : participants) {
-            participantList.add(new ParticipantListInfo(participant, authorIds.contains(participant.getId())));
+            participantList.add(new ParticipantListInfo<>(participant, authorIds.contains(participant.getId())));
         }
         return participantList;
     }
@@ -90,7 +90,7 @@ public class ParticipantService {
 
         ArrayList<ParticipantListInfo> participantList = Lists.newArrayList();
         for (NormalParticipant participant : participants) {
-            participantList.add(new ParticipantListInfo(participant, authorIds.contains(new NormalAuthorId(participant.getId().toLong()))));
+            participantList.add(new ParticipantListInfo<>(participant, authorIds.contains(new NormalAuthorId(participant.getId().toLong()))));
         }
         return participantList;
     }
