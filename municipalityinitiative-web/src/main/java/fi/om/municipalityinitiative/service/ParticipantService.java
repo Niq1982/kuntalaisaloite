@@ -9,10 +9,9 @@ import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.VerifiedAuthor;
 import fi.om.municipalityinitiative.dto.service.NormalParticipant;
 import fi.om.municipalityinitiative.dto.service.VerifiedParticipant;
-import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
-import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
+import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import org.springframework.transaction.annotation.Transactional;
@@ -90,7 +89,7 @@ public class ParticipantService {
         }
 
         ArrayList<ParticipantListInfo> participantList = Lists.newArrayList();
-        for (Participant participant : participants) {
+        for (NormalParticipant participant : participants) {
             participantList.add(new ParticipantListInfo(participant, authorIds.contains(new NormalAuthorId(participant.getId().toLong()))));
         }
         return participantList;
