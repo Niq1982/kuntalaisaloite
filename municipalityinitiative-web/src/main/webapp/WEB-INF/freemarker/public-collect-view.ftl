@@ -117,22 +117,25 @@
             </div>
 
             <div id="municipalMembership" class="js-hide">
-                <div class="input-block-content hidden">
-                    <#assign href=urls.help(HelpPage.PARTICIPANTS.getUri(locale)) />
-                    <@u.systemMessage path="initiative.municipality.notEqual.participation" type="info" showClose=false args=[href] />
-                </div>
-                <div class="input-block-content">
-                    <@f.radiobutton path="participant.municipalMembership" required="required" options={
-                        "community":"initiative.municipalMembership.community",
-                        "company":"initiative.municipalMembership.company",
-                        "property":"initiative.municipalMembership.property",
-                        "none":"initiative.municipalMembership.none"
-                    } attributes="" />
-                </div>
+                <#if !initiative.verifiable>
+                    <div class="input-block-content hidden">
+                        <#assign href=urls.help(HelpPage.PARTICIPANTS.getUri(locale)) />
+                        <@u.systemMessage path="initiative.municipality.notEqual.participation" type="info" showClose=false args=[href] />
+                    </div>
+                    <div class="input-block-content">
+                        <@f.radiobutton path="participant.municipalMembership" required="required" options={
+                            "community":"initiative.municipalMembership.community",
+                            "company":"initiative.municipalMembership.company",
+                            "property":"initiative.municipalMembership.property",
+                            "none":"initiative.municipalMembership.none"
+                        } attributes="" />
+                    </div>
+                </#if>
                 
-                <div class="input-block-content is-not-member no-top-margin js-hide hidden">
+                <div class="input-block-content <#if !initiative.verifiable>is-not-member no-top-margin js-hide hidden</#if>">
                     <@u.systemMessage path="warning.participate.notMember" type="warning" showClose=false />
                 </div>
+                
             </div>
             
             <div class="input-block-content">
@@ -145,7 +148,6 @@
                 <div class="input-block-content">
                     <@f.textField path="participant.participantEmail" required="required" optional=true cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
                 </div>
-
             </#if>
 
             <div class="input-block-content">
