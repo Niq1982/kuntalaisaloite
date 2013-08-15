@@ -27,6 +27,20 @@
             </h2>
 
             <@participantListManage participants />
+
+            <#if initiative.verifiable>
+                <br/>
+                <#assign secureCount = 0/>
+                <#list participants as participant>
+                    <#if participant.homeMunicipality.notPresent>
+                        <#assign secureCount = secureCount+1/>
+                    </#if>
+
+                </#list>
+
+                Turvakieltoja ${secureCount} kpl.
+            </#if>
+
         </div>
     <#else>
         <#-- Confirm Delete form for NOSCRIPT users -->
