@@ -138,33 +138,7 @@ public class Mappings {
             return author;
         }
     };
-    public static Expression<VerifiedParticipant> verifiedParticipantMappingWithMunicipality = new MappingProjection<VerifiedParticipant>(
-            VerifiedParticipant.class,
-            QVerifiedParticipant.verifiedParticipant.participateTime,
-            QVerifiedParticipant.verifiedParticipant.verified,
-            QVerifiedUser.verifiedUser.name,
-            QVerifiedUser.verifiedUser.email,
-            QVerifiedUser.verifiedUser.id,
-            QMunicipality.municipality.id,
-            QMunicipality.municipality.name,
-            QMunicipality.municipality.nameSv,
-            QMunicipality.municipality.active
-    ) {
-        @Override
-        protected VerifiedParticipant map(Tuple row) {
-            VerifiedParticipant participant = new VerifiedParticipant();
-
-            participant.setEmail(row.get(QVerifiedUser.verifiedUser.email));
-            participant.setHomeMunicipality(row.get(QVerifiedParticipant.verifiedParticipant.verified) ? parseMaybeMunicipality(row) : Maybe.<Municipality>absent());
-            participant.setParticipateDate(row.get(QVerifiedParticipant.verifiedParticipant.participateTime));
-            participant.setName(row.get(QVerifiedUser.verifiedUser.name));
-            participant.setId(new VerifiedUserId(row.get(QVerifiedUser.verifiedUser.id)));
-
-            return participant;
-        }
-    };
-
-    public static Expression<VerifiedParticipant> getVerifiedParticipantMappingWithoutMunicipality = new MappingProjection<VerifiedParticipant>(
+    public static Expression<VerifiedParticipant> verifiedParticipantMapping = new MappingProjection<VerifiedParticipant>(
             VerifiedParticipant.class,
             QVerifiedParticipant.verifiedParticipant.participateTime,
             QVerifiedParticipant.verifiedParticipant.verified,
@@ -177,7 +151,28 @@ public class Mappings {
             VerifiedParticipant participant = new VerifiedParticipant();
 
             participant.setEmail(row.get(QVerifiedUser.verifiedUser.email));
-            participant.setHomeMunicipality(Maybe.<Municipality>absent());
+            participant.setVerified(row.get(QVerifiedParticipant.verifiedParticipant.verified));
+            participant.setParticipateDate(row.get(QVerifiedParticipant.verifiedParticipant.participateTime));
+            participant.setName(row.get(QVerifiedUser.verifiedUser.name));
+            participant.setId(new VerifiedUserId(row.get(QVerifiedUser.verifiedUser.id)));
+
+            return participant;
+        }
+    };
+
+    public static Expression<VerifiedParticipant> getVerifiedParticipantMapping = new MappingProjection<VerifiedParticipant>(
+            VerifiedParticipant.class,
+            QVerifiedParticipant.verifiedParticipant.participateTime,
+            QVerifiedParticipant.verifiedParticipant.verified,
+            QVerifiedUser.verifiedUser.name,
+            QVerifiedUser.verifiedUser.email,
+            QVerifiedUser.verifiedUser.id
+    ) {
+        @Override
+        protected VerifiedParticipant map(Tuple row) {
+            VerifiedParticipant participant = new VerifiedParticipant();
+
+            participant.setEmail(row.get(QVerifiedUser.verifiedUser.email));
             participant.setParticipateDate(row.get(QVerifiedParticipant.verifiedParticipant.participateTime));
             participant.setName(row.get(QVerifiedUser.verifiedUser.name));
             participant.setId(new VerifiedUserId(row.get(QVerifiedUser.verifiedUser.id)));
@@ -212,7 +207,7 @@ public class Mappings {
 
                 }
             };
-    public static Expression<NormalParticipant> participantMapping =
+    public static Expression<NormalParticipant> normalParticipantMapping =
             new MappingProjection<NormalParticipant>(NormalParticipant.class,
                     participant.all(), QMunicipality.municipality.all()) {
                 @Override

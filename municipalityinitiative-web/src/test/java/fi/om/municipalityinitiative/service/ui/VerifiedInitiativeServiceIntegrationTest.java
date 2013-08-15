@@ -203,7 +203,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         );
 
         // Assert that participants municipality is still absent
-        assertThat(participantDao.findVerifiedAllParticipants(initiativeId).get(0).getHomeMunicipality().isPresent(), is(false));
+        assertThat(participantDao.findVerifiedAllParticipants(initiativeId).get(0).isVerified(), is(false));
 
     }
 

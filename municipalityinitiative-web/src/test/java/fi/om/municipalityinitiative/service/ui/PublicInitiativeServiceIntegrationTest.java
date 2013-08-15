@@ -2,7 +2,10 @@ package fi.om.municipalityinitiative.service.ui;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
-import fi.om.municipalityinitiative.dto.service.*;
+import fi.om.municipalityinitiative.dto.service.AuthorMessage;
+import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.service.NormalParticipant;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
@@ -135,8 +138,8 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
 
-        Participant createdParticipant = testHelper.getUniqueNormalParticipant(initiativeId);
-        assertThat(((Municipality) createdParticipant.getHomeMunicipality().get()).getId(), is(participantMunicipality.getId()));
+        NormalParticipant createdParticipant = testHelper.getUniqueNormalParticipant(initiativeId);
+        assertThat(createdParticipant.getHomeMunicipality().get().getId(), is(participantMunicipality.getId()));
         assertThat(createdParticipant.getParticipateDate(), is(LocalDate.now()));
     }
 
@@ -146,7 +149,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 
         NormalParticipant createdParticipant = testHelper.getUniqueNormalParticipant(initiativeId);
 
-        assertThat(((Municipality) createdParticipant.getHomeMunicipality().get()).getId(), is(prepareDto().getHomeMunicipality()));
+        assertThat(createdParticipant.getHomeMunicipality().get().getId(), is(prepareDto().getHomeMunicipality()));
         assertThat(createdParticipant.getEmail(), is(prepareDto().getParticipantEmail()));
         assertThat(createdParticipant.getMembership(), is(prepareDto().getMunicipalMembership()));
 

@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.dto.ui;
 
 import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.service.NormalParticipant;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.LocalDate;
@@ -24,7 +25,7 @@ public class ParticipantListInfo {
     }
 
     public Maybe<Municipality> getHomeMunicipality() {
-        return (Maybe<Municipality>) participant.getHomeMunicipality();
+        return ((NormalParticipant) participant).getHomeMunicipality();
     }
 
     public boolean isAuthor() {

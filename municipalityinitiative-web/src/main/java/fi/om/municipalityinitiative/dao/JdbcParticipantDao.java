@@ -124,7 +124,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .where(participant.showName.eq(true))
                 .where(participant.confirmationCode.isNull())
                 .orderBy(participant.id.desc())
-                .list(Mappings.participantMapping);
+                .list(Mappings.normalParticipantMapping);
     }
 
     @Override
@@ -135,18 +135,17 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .where(participant.confirmationCode.isNull())
                 .leftJoin(participant.participantMunicipalityFk, QMunicipality.municipality)
                 .orderBy(participant.id.desc())
-                .list(Mappings.participantMapping);
+                .list(Mappings.normalParticipantMapping);
     }
 
     @Override
     public List<VerifiedParticipant> findVerifiedPublicParticipants(Long initiativeId) {
         return queryFactory.from(QVerifiedParticipant.verifiedParticipant)
                 .innerJoin(QVerifiedParticipant.verifiedParticipant.verifiedParticipantVerifiedUserFk, QVerifiedUser.verifiedUser)
-                //.leftJoin(QVerifiedUser.verifiedUser.verifiedUserMunicipalityFk, QMunicipality.municipality)
                 .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
                 .where(QVerifiedParticipant.verifiedParticipant.showName.eq(true))
                 .orderBy(QVerifiedParticipant.verifiedParticipant.participateTime.desc(), QVerifiedUser.verifiedUser.id.desc())
-                .list(Mappings.getVerifiedParticipantMappingWithoutMunicipality);
+                .list(Mappings.verifiedParticipantMapping);
     }
 
     @Override
@@ -156,7 +155,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .innerJoin(QVerifiedParticipant.verifiedParticipant.verifiedParticipantInitiativeFk, QMunicipalityInitiative.municipalityInitiative)
                 .leftJoin(QMunicipalityInitiative.municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
                 .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
-                .list(Mappings.verifiedParticipantMappingWithMunicipality);
+                .list(Mappings.verifiedParticipantMapping);
     }
 
     @Override

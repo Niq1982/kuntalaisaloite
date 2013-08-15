@@ -465,7 +465,7 @@ public class TestHelper {
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
                 .leftJoin(participant.participantMunicipalityFk, QMunicipality.municipality)
                 .orderBy(participant.id.desc())
-                .uniqueResult(Mappings.participantMapping);
+                .uniqueResult(Mappings.normalParticipantMapping);
     }
 
     @Transactional(readOnly = true)
