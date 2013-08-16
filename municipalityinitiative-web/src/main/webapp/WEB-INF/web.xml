@@ -32,7 +32,7 @@
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>fi.om.municipalityinitiative.conf.AppConfiguration</param-value>
+        <param-value>fi.om.municipalityinitiative.conf.CacheAppConfiguration</param-value>
     </context-param>
     
     <context-param>

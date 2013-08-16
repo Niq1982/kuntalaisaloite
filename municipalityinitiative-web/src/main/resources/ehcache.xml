@@ -49,4 +49,24 @@
            diskPersistent="false"
            diskExpiryThreadIntervalSeconds="120"
            memoryStoreEvictionPolicy="LRU"/>
+    <cache name="initiativeList"
+           maxElementsInMemory="10"
+           eternal="false"
+           timeToIdleSeconds="60"
+           timeToLiveSeconds="60"
+           overflowToDisk="false"
+           maxElementsOnDisk="50"
+           diskPersistent="false"
+           diskExpiryThreadIntervalSeconds="120"
+           memoryStoreEvictionPolicy="LRU"/>
+    <cache name="initiativeCount"
+           maxElementsInMemory="10"
+           eternal="false"
+           timeToIdleSeconds="60"
+           timeToLiveSeconds="60"
+           overflowToDisk="false"
+           maxElementsOnDisk="50"
+           diskPersistent="false"
+           diskExpiryThreadIntervalSeconds="120"
+           memoryStoreEvictionPolicy="LRU"/>
 </ehcache>

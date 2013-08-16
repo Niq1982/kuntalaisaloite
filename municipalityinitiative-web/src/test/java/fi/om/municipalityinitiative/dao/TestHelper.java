@@ -76,10 +76,14 @@ public class TestHelper {
         this.queryFactory = queryFactory;
     }
 
+//    @Resource
+//    private org.springframework.cache.ehcache.EhCacheCacheManager cacheManager;
+
     @Transactional(readOnly=false)
     public void dbCleanup() {
         dbCleanupAllButMunicipalities();
         queryFactory.delete(QMunicipality.municipality).execute();
+//        cacheManager.getCacheManager().clearAll();
     }
 
     @Transactional(readOnly = false)
@@ -501,6 +505,23 @@ public class TestHelper {
         contactInfo.setAddress(DEFAULT_AUTHOR_ADDRESS);
         contactInfo.setShowName(DEFAULT_PUBLIC_NAME);
         return contactInfo;
+    }
+
+    @Transactional
+    public void simpleCreate(Long municipality, InitiativeState published, InitiativeType type, DateTime now) {
+        SQLInsertClause insert = queryFactory.insert(municipalityInitiative);
+
+        insert.set(municipalityInitiative.name, "name");
+        insert.set(municipalityInitiative.proposal, "proposal");
+        insert.set(municipalityInitiative.municipalityId, municipality);
+        insert.set(municipalityInitiative.participantCount, 0);
+        insert.set(municipalityInitiative.extraInfo, "");
+        insert.set(municipalityInitiative.externalparticipantcount, 0);
+        insert.set(municipalityInitiative.state, published);
+        insert.set(municipalityInitiative.type, type);
+        insert.set(municipalityInitiative.fixState, FixState.OK);
+        insert.set(municipalityInitiative.stateTimestamp, now);
+        insert.execute();
     }
 
     public static class AuthorDraft {

@@ -24,7 +24,6 @@ import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.utility.XmlEscape;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.context.MessageSource;
@@ -52,7 +51,6 @@ import java.util.concurrent.Executors;
 @EnableTransactionManagement(proxyTargetClass=false)
 @EnableAspectJAutoProxy(proxyTargetClass=false)
 @Import({ProdPropertiesConfiguration.class, TestPropertiesConfigurer.class, JdbcConfiguration.class, AppDevConfiguration.class})
-@EnableCaching
 public class AppConfiguration {
 
     @Inject Environment env;
