@@ -17,7 +17,6 @@ public class SendToMunicipalityWebTest extends WebTestBase {
     /**
      * Form values as constants.
      */
-    private static final String MUNICIPALITY_1 = "Vantaa";
     private static final String COMMENT = "Saate kunnalle";
 
     @Override
@@ -27,9 +26,8 @@ public class SendToMunicipalityWebTest extends WebTestBase {
     
     @Test
     public void send_to_municipality() {
-        
-        Long municipalityId = testHelper.createTestMunicipality(MUNICIPALITY_1);
-        Long initiativeId = testHelper.create(municipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+
+        Long initiativeId = testHelper.create(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         
