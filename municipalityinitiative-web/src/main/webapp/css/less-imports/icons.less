@@ -1,4 +1,4 @@
-.large-icon, .medium-icon, .small-icon {
+.large-icon, .medium-icon, .small-icon, .icon-32 {
     display: inline-block;
     *display: inline;
     zoom: 1;
@@ -185,4 +185,22 @@
         height:21px;
         background-position:0 -96px;
     }
+}
+
+.icon-32 {
+    width:32px;
+    height:32px;
+    line-height:30px;
+    
+    text-align:center;
+    font-size:1.3em;
+    font-weight:bold;
+    color:#fff;
+    
+    .rounded-corners(1em);
+
+    &.secondary {
+        background: @secondaryColor;
+    }
+
 }

@@ -148,6 +148,13 @@
     <#if type == InitiativeType.COLLABORATIVE_COUNCIL || type == InitiativeType.COLLABORATIVE_CITIZEN>
         <#assign verifiable=true />
     </#if>
+    <#if type == InitiativeType.COLLABORATIVE_COUNCIL>
+        <#assign typeNumber = 2 />
+    <#elseif type == InitiativeType.COLLABORATIVE_CITIZEN>
+        <#assign typeNumber = 3 />
+    <#else>
+        <#assign typeNumber = 1 />
+    </#if>
 
     <#if enabled>
         <label class="initiative-type enabled ${(spring.stringStatusValue == type)?string("selected","")}" data-verifiable="${verifiable?string}">
@@ -155,7 +162,8 @@
         <label class="initiative-type trigger-tooltip" title="<@u.message "initiative.initiativeType.disabled.tooltip" />">
     </#if>
         <span class="inner">
-            <span class="type"><@u.message "initiative.initiativeType."+type /><#if type == "UNDEFINED"><br/><br/></#if></span>
+            <#-- TODO: Finalize type icon -->
+            <span class="icon-32 secondary">${typeNumber}</span><span class="type"><@u.message "initiative.initiativeType."+type /><#if type == "UNDEFINED"><br/><br/></#if></span>
             <span class="description"><@u.message "initiative.initiativeType."+type+".description" /></span>
         </span>
         <#if enabled>
