@@ -82,7 +82,7 @@ public class InitiativeManagementController extends BaseController {
         return ViewGenerator.managementView(initiativeInfo,
                 publicInitiativeService.getManagementSettings(initiativeId),
                 authorService.findAuthors(initiativeId, loginUserHolder),
-                participantService.getParticipantCount(initiativeId),
+                initiativeInfo.getParticipantCount(),
                 new CommentUIDto()
         ).view(model, Urls.get(locale).alt().getManagement(initiativeId));
     }
@@ -202,10 +202,11 @@ public class InitiativeManagementController extends BaseController {
                                               Locale locale, HttpServletRequest request) {
         if (validationService.validationErrors(commentUIDto, bindingResult, model)) {
             LoginUserHolder<User> loginUserHolder = userService.getLoginUserHolder(request);
-            return ViewGenerator.managementView(initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder),
+            InitiativeViewInfo municipalityInitiative = initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder);
+            return ViewGenerator.managementView(municipalityInitiative,
                     publicInitiativeService.getManagementSettings(initiativeId),
                     authorService.findAuthors(initiativeId, loginUserHolder),
-                    participantService.getParticipantCount(initiativeId),
+                    municipalityInitiative.getParticipantCount(),
                     commentUIDto)
                     .view(model, Urls.get(locale).alt().moderation(initiativeId));
         }
@@ -243,10 +244,11 @@ public class InitiativeManagementController extends BaseController {
                                      Locale locale, HttpServletRequest request) {
         if (validationService.validationErrors(commentUIDto, bindingResult, model)) {
             LoginUserHolder<User> loginUserHolder = userService.getLoginUserHolder(request);
-            return ViewGenerator.managementView(initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder),
+            InitiativeViewInfo municipalityInitiative = initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder);
+            return ViewGenerator.managementView(municipalityInitiative,
                     publicInitiativeService.getManagementSettings(initiativeId),
                     authorService.findAuthors(initiativeId, loginUserHolder),
-                    participantService.getParticipantCount(initiativeId),
+                    municipalityInitiative.getParticipantCount(),
                     commentUIDto)
                     .view(model, Urls.get(locale).alt().moderation(initiativeId));
         }
@@ -295,7 +297,7 @@ public class InitiativeManagementController extends BaseController {
                     : urls.view(initiativeId);
 
             return ViewGenerator.participantListManage(initiativeInfo,
-                    participantService.getParticipantCount(initiativeId),
+                    initiativeInfo.getParticipantCount(),
                     participantService.findAllParticipants(initiativeId, loginUserHolder),
                     previousPageURI
             ).view(model, alternativeURL);

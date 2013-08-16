@@ -17,8 +17,10 @@ public interface ParticipantDao {
 
     void confirmParticipation(Long participantId, String confirmationCode);
 
+    // FIXME: Remove
     ParticipantCount getNormalParticipantCount(Long initiativeId);
 
+    // FIXME: Remove
     ParticipantCount getVerifiedParticipantCount(Long initiativeId);
 
     List<NormalParticipant> findNormalPublicParticipants(Long initiativeId);

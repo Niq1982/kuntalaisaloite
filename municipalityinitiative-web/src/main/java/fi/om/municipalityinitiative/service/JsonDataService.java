@@ -54,6 +54,7 @@ public class JsonDataService {
     }
 
     @Transactional(readOnly = true)
+    // FIXME: Remove getNormalParticipantCount and make usable with verified initiatives
     public InitiativeJson getInitiative(Long id) {
         return InitiativeJson.from(
                 initiativeDao.get(id),

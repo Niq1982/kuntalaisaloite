@@ -26,18 +26,6 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
     }
 
     @Test
-    public void getParticipantCount_for_verified_initiative() {
-        Long initiativeId = createVerifiedInitiativeWithAuthor();
-        assertThat(participantService.getParticipantCount(initiativeId).getTotal(), is(1L));
-    }
-
-    @Test
-    public void getParticipantCount_for_normal_initiative() {
-        Long initiativeId = createNormalInitiativeWithAuthor();
-        assertThat(participantService.getParticipantCount(initiativeId).getTotal(), is(1L));
-    }
-
-    @Test
     public void findPublicParticipants_for_verified_initiative() {
         Long initiativeId = createVerifiedInitiativeWithAuthor();
         assertThat(participantService.findPublicParticipants(initiativeId), hasSize(1));
