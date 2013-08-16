@@ -90,7 +90,7 @@ public class Mappings {
                     info.setSentComment(row.get(municipalityInitiative.sentComment));
                     info.setFixState(row.get(municipalityInitiative.fixState));
                     info.setExternalParticipantCount(nullToZero(row.get(municipalityInitiative.externalparticipantcount)));
-
+                    info.setParticipantCountPublic(nullToZero(row.get(municipalityInitiative.participantCountPublic)));
                     return info;
                 }
             };

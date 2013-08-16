@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.dao;
 
+import com.mysema.query.sql.dml.SQLUpdateClause;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import fi.om.municipalityinitiative.dto.service.NormalParticipant;
 import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
@@ -49,16 +50,30 @@ public class JdbcParticipantDao implements ParticipantDao {
         // TODO: Handle errors if code or participant id invalid.
         // TODO: Show some error message to user
 
+        boolean showName = queryFactory.from(QParticipant.participant)
+                .where(QParticipant.participant.id.eq(participantId))
+                .where(QParticipant.participant.confirmationCode.eq(confirmationCode))
+                .singleResult(QParticipant.participant.showName);
+
         assertSingleAffection(queryFactory.update(QParticipant.participant)
                 .setNull(QParticipant.participant.confirmationCode)
                 .where(QParticipant.participant.id.eq(participantId))
                 .where(QParticipant.participant.confirmationCode.eq(confirmationCode))
                 .execute());
 
+        Long initiativeIdByParticipant = getInitiativeIdByParticipant(participantId);
+        if (showName) {
+            assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
+                    .set(QMunicipalityInitiative.municipalityInitiative.participantCountPublic,
+                            QMunicipalityInitiative.municipalityInitiative.participantCountPublic.add(1))
+                    .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeIdByParticipant))
+                    .execute());
+        }
+
         assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
                 .set(QMunicipalityInitiative.municipalityInitiative.participantCount,
                         QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
-                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(getInitiativeIdByParticipant(participantId)))
+                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeIdByParticipant))
                 .execute());
     }
 
@@ -185,10 +200,14 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .set(QVerifiedParticipant.verifiedParticipant.showName, showName)
                 .set(QVerifiedParticipant.verifiedParticipant.verified, verifiedMunicipality)
                 .execute());
-        assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
+
+        SQLUpdateClause update = queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
                 .set(QMunicipalityInitiative.municipalityInitiative.participantCount, QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
-                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
-                .execute());
+                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId));
+        if (showName) {
+            update.set(QMunicipalityInitiative.municipalityInitiative.participantCountPublic, QMunicipalityInitiative.municipalityInitiative.participantCountPublic.add(1));
+        }
+        assertSingleAffection(update.execute());
 
     }
 

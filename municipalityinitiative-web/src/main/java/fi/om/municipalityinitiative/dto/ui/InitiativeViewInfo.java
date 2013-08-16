@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.dto.ui;
 
+import com.google.common.base.Strings;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.util.FixState;
@@ -7,8 +8,6 @@ import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.LocalDate;
-
-import com.google.common.base.Strings;
 
 public class InitiativeViewInfo {
 
@@ -86,4 +85,10 @@ public class InitiativeViewInfo {
         return initiative.getType().isVerifiable();
     }
 
+    public ParticipantCount getParticipantCount() {
+        ParticipantCount participantCount = new ParticipantCount();
+        participantCount.setPrivateNames(initiative.getParticipantCount() - initiative.getParticipantCountPublic());
+        participantCount.setPublicNames(initiative.getParticipantCountPublic());
+        return participantCount;
+    }
 }

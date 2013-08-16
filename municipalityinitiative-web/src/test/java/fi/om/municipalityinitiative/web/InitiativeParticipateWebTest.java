@@ -47,9 +47,16 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         testHelper.dbCleanup();
         municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
         municipality2Id = testHelper.createTestMunicipality(MUNICIPALITY_2);
-        normalInitiativeId = testHelper.create(municipality1Id, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        //normalInitiativeId = testHelper.create(municipality1Id, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        normalInitiativeId = testHelper.createDefaultInitiative(
+                new TestHelper.InitiativeDraft(municipality1Id)
+                        .withState(InitiativeState.PUBLISHED)
+                        .withType(InitiativeType.COLLABORATIVE)
+                        .withParticipantCount(0)
+        );
         verifiedInitiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(municipality1Id)
                 .withState(InitiativeState.PUBLISHED)
+                .withParticipantCount(0)
                 .applyAuthor(VERIFIED_INITIATIVE_AURHOR_SSN)
                 .toInitiativeDraft()
         );
@@ -81,7 +88,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         
         open(urls.confirmParticipant(testHelper.getLastParticipantId(), RandomHashGenerator.getPrevious()));
         
-        assertTextContainedByClass("public-names", "2 nimeä julkaistu palvelussa");
+        assertTextContainedByClass("public-names", "1 nimi julkaistu palvelussa");
     }
 
     @Test

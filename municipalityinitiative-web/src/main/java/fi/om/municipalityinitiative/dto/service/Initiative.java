@@ -24,6 +24,7 @@ public class Initiative {
     private LocalDate stateTime;
     private String moderatorComment;
     private int participantCount;
+    private int participantCountPublic;
     private String sentComment;
     private FixState fixState;
 
@@ -153,5 +154,13 @@ public class Initiative {
 
     public void setExternalParticipantCount(int externalParticipantCount) {
         this.externalParticipantCount = externalParticipantCount;
+    }
+
+    public int getParticipantCountPublic() {
+        return participantCountPublic;
+    }
+
+    public void setParticipantCountPublic(int participantCountPublic) {
+        this.participantCountPublic = participantCountPublic;
     }
 }
