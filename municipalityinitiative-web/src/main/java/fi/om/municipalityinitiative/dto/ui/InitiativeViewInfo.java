@@ -84,6 +84,10 @@ public class InitiativeViewInfo {
     public boolean isVerifiable() {
         return initiative.getType().isVerifiable();
     }
+    
+    public InitiativeType getType() {
+        return initiative.getType();
+    }
 
     public ParticipantCount getParticipantCount() {
         ParticipantCount participantCount = new ParticipantCount();

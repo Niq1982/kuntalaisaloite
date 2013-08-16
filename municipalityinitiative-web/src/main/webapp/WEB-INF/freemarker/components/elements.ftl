@@ -26,6 +26,19 @@
 </#macro>
 
 <#-- 
+ * initiativeTitle
+ * 
+ * Generates initiative's title, municipality and initiative type
+ *
+ * @param initiative is initiative
+-->
+<#macro initiativeTitle initiative>
+    <h1 class="name">${initiative.name!""}</h1>
+    
+    <div class="municipality">${initiative.municipality.getName(locale)} <span class="bull">&bull;</span> <@u.message "initiative.initiativeType."+initiative.type /></div>
+</#macro>
+
+<#-- 
  * stateInfo
  * 
  * Generates initiative's state dates

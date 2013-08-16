@@ -38,9 +38,7 @@
         </noscript>
     </#if>
 
-    <h1 class="name">${initiative.name!""}</h1>
-    
-    <div class="municipality">${initiative.municipality.getName(locale)}</div>
+    <@e.initiativeTitle initiative />
 
     <#if hasManagementRightForInitiative && !initiative.sent>
         <a class="small-button right" href="${urls.management(initiative.id)}"><span class="small-icon management"><@u.message "link.to.managementView" /></span></a>

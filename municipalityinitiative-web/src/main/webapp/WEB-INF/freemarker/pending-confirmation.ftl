@@ -23,23 +23,19 @@
     <@u.requestMessage requestMessages />
 </#if>
 
-<p><@u.message "create.pendingConfirmation.linkSentTo" /> <strong>${requestAttribute!""}</strong>.</p>
-
-<p><@u.message "create.pendingConfirmation.readEmail" /></p>
-
-<h3><@u.message "create.pendingConfirmation.emailFail.title" /></h3>
-<ul>
-    <#assign href=urls.prepare() />
-    <li><@u.messageHTML key="create.pendingConfirmation.emailFail.bullet-1" args=[href] /></li>
-    <li><@u.message "create.pendingConfirmation.emailFail.bullet-2" /></li>
-    <li><@u.message "create.pendingConfirmation.emailFail.bullet-3" /></li>
-</ul>
-
-<#--
-<h2>Ylläpitolinkki testausta varten</h2>
-<a href="${urls.loginAuthor(managementHash)}">${urls.loginAuthor(managementHash)}</a>
-
--->
+<div class="msg-block">
+    <p><@u.message "create.pendingConfirmation.linkSentTo" /> <strong>${requestAttribute!""}</strong>.</p>
+    
+    <p><@u.message "create.pendingConfirmation.readEmail" /></p>
+    
+    <h3><@u.message "create.pendingConfirmation.emailFail.title" /></h3>
+    <ul>
+        <#assign href=urls.prepare() />
+        <li><@u.messageHTML key="create.pendingConfirmation.emailFail.bullet-1" args=[href] /></li>
+        <li><@u.message "create.pendingConfirmation.emailFail.bullet-2" /></li>
+        <li><@u.message "create.pendingConfirmation.emailFail.bullet-3" /></li>
+    </ul>
+</div>
 
 
 

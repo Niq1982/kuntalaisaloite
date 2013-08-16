@@ -15,9 +15,7 @@
 -->
 <@l.main "page.initiative.public" initiative.name!"">
 
-    <h1 class="name">${initiative.name!""}</h1>
-    
-    <div class="municipality">${initiative.municipality.getName(locale)}</div>
+    <@e.initiativeTitle initiative />
 
     <@e.stateInfo initiative />
 
