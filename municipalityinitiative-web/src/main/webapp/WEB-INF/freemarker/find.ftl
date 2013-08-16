@@ -49,16 +49,18 @@
     </div>
     
     <#--
-     * Initiative type - DUMMY 
+     * Initiative type - DUMMY
+     * 
+     * TODO: Add links! 
     -->
     <#if enableVerifiedInitiatives>
-    <span class="search-parameters-title filter"><label for="municipality">Tyyppi</label></span>
+    <span class="search-parameters-title filter"><label for="municipality"><@u.message "searchParameters.type" /></label></span>
     <div class="search-parameters-container cf">
         <div class="search-parameters">
-            <a class="active" href="#">Kaikki<br/>&nbsp;
-            </a><a class="" href="#">Kuntalaisaloite<br/>&nbsp;
-            </a><a class="" href="#"> Valtuustokäsittelyyn<br/>tähtäävä aloite
-            </a><a class="" href="#">Aloite kunnallisesta<br/>kansanäänestyksestä</a>
+            <a class="active" href="#"><@u.messageHTML "searchParameters.type.all" />
+            </a><a class="" href="#"><@u.messageHTML "searchParameters.type.UNDEFINED" />
+            </a><a class="" href="#"><@u.messageHTML "searchParameters.type.COLLABORATIVE_COUNCIL" />
+            </a><a class="" href="#"><@u.messageHTML "searchParameters.type.COLLABORATIVE_CITIZEN" /></a>
             
         </div>
     </div>
@@ -165,14 +167,19 @@
             
             <span class="date trigger-tooltip" title="<@u.message "searchResults.initiative.date."+initiative.state/>" ><@u.localDate initiative.stateTime!"" /></span>
             <span class="title"><a href="${urls.view(initiative.id)}" class="name"><@u.limitStringLength initiative.name!"" 150 /></a></span>
-            <#if !initiative.public>
-                <span class="info">${initiative.municipality.getName(locale)!""}<span class="bull">&bull;</span><span class="state"><@u.message "searchResults.notPublic" /></span></span>
-            <#elseif !initiative.sentTime.present>
-                <span class="info">${initiative.municipality.getName(locale)!""}<span class="bull">&bull;</span><span class="state"><@u.message "initiative.state.collecting" /></span></span>
-            <#else>
-                <#assign sentTime><@u.localDate initiative.sentTime.value!"" /></#assign>
-                <span class="info">${initiative.municipality.getName(locale)!""}<span class="bull">&bull;</span><span class="state"><@u.message key="initiative.date.sent" args=[sentTime] /></span></span>
-            </#if>
+            <span class="info">${initiative.municipality.getName(locale)!""} <span class="bull">&bull;</span>
+            
+                <#if !initiative.public>
+                    <span class="state"><@u.message "searchResults.notPublic" /></span>
+                <#elseif !initiative.sentTime.present>
+                    <span class="state"><@u.message "initiative.state.collecting" /></span>
+                <#else>
+                    <#assign sentTime><@u.localDate initiative.sentTime.value!"" /></#assign>
+                    <span class="state"><@u.message key="initiative.date.sent" args=[sentTime] /></span>
+                </#if>
+                <span class="bull">&bull;</span>
+                <@u.message "initiative.initiativeType."+initiative.type />
+            </span>
             
         </li>
         <#if !initiative_has_next></ul></#if>

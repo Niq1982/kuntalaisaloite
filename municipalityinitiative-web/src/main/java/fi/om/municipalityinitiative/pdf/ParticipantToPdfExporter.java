@@ -73,10 +73,6 @@ public class ParticipantToPdfExporter {
         
         addEmptyLine(preface, 1);
         preface.add(new Paragraph("Osallistujat / Deltagar", subTitle));
-        
-        // TODO: If % initiative
-//        preface.add(new Paragraph("* Osallistujalla on turvakielto eikä kunta-tietoa saada väestötietojärjestelmästä", bodyText));
-//        preface.add(new Paragraph("* SV Osallistujalla on turvakielto eikä kunta-tietoa saada väestötietojärjestelmästä", bodyText));
 
         addEmptyLine(preface, 1);
         createTable(preface, participants);
@@ -165,7 +161,7 @@ public class ParticipantToPdfExporter {
             table.addCell(createCell("Jäsenyys\nMedlemskap", true));
         }
         else {
-            table.setWidths(new int[] {6, 10, 42, 18});
+            table.setWidths(new int[] {6, 10, 46, 12});
             table.addCell(createCell("Turvakielto\nSpärrmarkering", true));
         }
 
@@ -182,9 +178,6 @@ public class ParticipantToPdfExporter {
                 table.addCell(createCell(participant.getName(), false));
                 Municipality homeMunicipality = participant.getHomeMunicipality().get();
                 table.addCell(createCell(homeMunicipality.getNameFi() + "\n" + homeMunicipality.getNameSv() + "\n", false));
-                // TODO: If % initiative and participant has turvakielto
-    //            table.addCell(createCell(homeMunicipality.getNameFi() + " *\n" + homeMunicipality.getNameSv() + "\n", false));
-
 
                 String membershipType = "";
 

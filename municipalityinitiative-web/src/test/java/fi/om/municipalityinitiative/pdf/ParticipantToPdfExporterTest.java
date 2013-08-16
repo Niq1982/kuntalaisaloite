@@ -82,7 +82,7 @@ public class ParticipantToPdfExporterTest {
             VerifiedParticipant participant = new VerifiedParticipant();
             participant.setParticipateDate(new LocalDate());
             participant.setName(RandomStringUtils.randomAlphabetic(20));
-            participant.setVerified(new Random().nextInt(100) % 20 == 0);
+            participant.setVerified(new Random().nextInt(100) % 5 == 0);
             participants.add(participant);
         }
         return participants;

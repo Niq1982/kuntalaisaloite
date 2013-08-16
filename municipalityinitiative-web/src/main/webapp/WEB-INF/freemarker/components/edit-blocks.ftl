@@ -126,9 +126,9 @@
         <@spring.bind "initiative.initiativeType" /> 
         <@f.showError />
         
-        <@initiativeTypeBlock InitiativeType.UNDEFINED "normal" true />
-        <@initiativeTypeBlock InitiativeType.COLLABORATIVE_COUNCIL "two-percent" enableVerifiedInitiatives />
-        <@initiativeTypeBlock InitiativeType.COLLABORATIVE_CITIZEN "five-percent" enableVerifiedInitiatives />
+        <@initiativeTypeBlock InitiativeType.UNDEFINED true />
+        <@initiativeTypeBlock InitiativeType.COLLABORATIVE_COUNCIL enableVerifiedInitiatives />
+        <@initiativeTypeBlock InitiativeType.COLLABORATIVE_CITIZEN enableVerifiedInitiatives />
     </div>
 </#macro>
 
@@ -141,10 +141,9 @@
  * But since we cannot determine the type yet in this phase, we use type UNDEFINED. 
  *
  * @param type is the type of the initiative
- * @param labelKey is for localization
  * @param enabled enables/disables this selection
  -->
-<#macro initiativeTypeBlock type labelKey enabled=false>
+<#macro initiativeTypeBlock type enabled=false>
     <#assign verifiable=false />
     <#if type == InitiativeType.COLLABORATIVE_COUNCIL || type == InitiativeType.COLLABORATIVE_CITIZEN>
         <#assign verifiable=true />
@@ -156,8 +155,8 @@
         <label class="initiative-type trigger-tooltip" title="<@u.message "initiative.initiativeType.disabled.tooltip" />">
     </#if>
         <span class="inner">
-            <span class="type"><@u.message "initiative.initiativeType."+labelKey /><#if type == "UNDEFINED"><br/><br/></#if></span>
-            <span class="description"><@u.message "initiative.initiativeType."+labelKey+".description" /></span>
+            <span class="type"><@u.message "initiative.initiativeType."+type /><#if type == "UNDEFINED"><br/><br/></#if></span>
+            <span class="description"><@u.message "initiative.initiativeType."+type+".description" /></span>
         </span>
         <#if enabled>
             <span class="action open">

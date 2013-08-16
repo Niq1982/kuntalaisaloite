@@ -73,8 +73,8 @@
                     <span class="user-col-municipality title">Aloitteen kunta</span>
                     <span class="user-col-municipality title">Osallistujan kunta</span>
                     <br />
-                    <span class="user-col-municipality"><@municipalitySelect "municipalityId" "1" /></span>
-                    <span class="user-col-municipality" ><@municipalitySelect "homeMunicipalityId" "2" /></span>
+                    <span class="user-col-municipality"><@municipalitySelect "municipalityId" "20" /></span> <#-- Municipality id 20: Akaa -->
+                    <span class="user-col-municipality" ><@municipalitySelect "homeMunicipalityId" "20" /></span>
                 </div>
             
                 <br class="clear" />
