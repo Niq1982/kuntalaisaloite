@@ -8,6 +8,20 @@
 
 <#escape x as x?html> 
 
+<#-- For verifiable initiatives when user returns from VETUMA -->
+<#assign showNotAllowedToParticipate = !user.allowVerifiedParticipation(initiative.id, initiative.municipality) &&
+     initiative.verifiable && RequestParameters['show-participate']?? />
+     
+<#assign notAllowedToParticipateHTML>
+    <@compress single_line=true>
+        <@u.systemMessage path="warning.verifiedAuthor.notMember" type="warning" showClose=false />
+        
+        <div class="input-block-content">
+            <a href="${urls.logout()}" class="small-button"><span class="small-icon logout"><@u.message "common.logout" /></span></a><a href="${springMacroRequestContext.requestUri}" class="small-button push"><@u.message "modal.continueBrowsing" /></a>
+        </div>
+    </@compress>
+</#assign>
+
 <#--
  * Layout parameters for HTML-title and navigation.
  * 
@@ -15,6 +29,14 @@
  * pageTitle = initiative.name if exists, otherwise empty string
 -->
 <@l.main "page.initiative.public" initiative.name!"">
+
+    <#if showNotAllowedToParticipate>
+        <noscript>
+            <div class="msg-block cf">
+                <#noescape>${notAllowedToParticipateHTML!""}</#noescape>
+            </div>
+        </noscript>
+    </#if>
 
     <h1 class="name">${initiative.name!""}</h1>
     
@@ -117,22 +139,25 @@
             </div>
 
             <div id="municipalMembership" class="js-hide">
-                <div class="input-block-content hidden">
-                    <#assign href=urls.help(HelpPage.PARTICIPANTS.getUri(locale)) />
-                    <@u.systemMessage path="initiative.municipality.notEqual.participation" type="info" showClose=false args=[href] />
-                </div>
-                <div class="input-block-content">
-                    <@f.radiobutton path="participant.municipalMembership" required="required" options={
-                        "community":"initiative.municipalMembership.community",
-                        "company":"initiative.municipalMembership.company",
-                        "property":"initiative.municipalMembership.property",
-                        "none":"initiative.municipalMembership.none"
-                    } attributes="" />
-                </div>
+                <#if !initiative.verifiable>
+                    <div class="input-block-content hidden">
+                        <#assign href=urls.help(HelpPage.PARTICIPANTS.getUri(locale)) />
+                        <@u.systemMessage path="initiative.municipality.notEqual.participation" type="info" showClose=false args=[href] />
+                    </div>
+                    <div class="input-block-content">
+                        <@f.radiobutton path="participant.municipalMembership" required="required" options={
+                            "community":"initiative.municipalMembership.community",
+                            "company":"initiative.municipalMembership.company",
+                            "property":"initiative.municipalMembership.property",
+                            "none":"initiative.municipalMembership.none"
+                        } attributes="" />
+                    </div>
+                </#if>
                 
-                <div class="input-block-content is-not-member no-top-margin js-hide hidden">
+                <div class="input-block-content <#if !initiative.verifiable>is-not-member no-top-margin js-hide </#if> hidden">
                     <@u.systemMessage path="warning.participate.notMember" type="warning" showClose=false />
                 </div>
+                
             </div>
             
             <div class="input-block-content">
@@ -145,7 +170,6 @@
                 <div class="input-block-content">
                     <@f.textField path="participant.participantEmail" required="required" optional=true cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
                 </div>
-
             </#if>
 
             <div class="input-block-content">
@@ -157,6 +181,7 @@
     
     </@compress>
     </#assign>
+    
     
     <div id="participants" class="view-block public last">
         <h2><@u.message key="initiative.people.title" args=[participantCount.total] /></h2>
@@ -218,7 +243,6 @@
      * jsMessage:
      *  Warning if cookies are disabled
     -->
-    <#-- TODO: Check that what is needed here as there is nomore management -->
     <@u.modalTemplate />
     <@u.jsMessageTemplate />
     
@@ -261,6 +285,15 @@
                 return [{
                     title:      '<@u.message "participate.title" />',
                     content:    '<#noescape>${participateFormHTML?replace("'","&#39;")}</#noescape>'
+                }]
+            };
+            </#if>
+            <#-- Autoload modal with warning if user is returned from VETUMA and user is NOT allowed to participate -->
+            <#if showNotAllowedToParticipate>
+            modalData.participateFormAutoLoad = function() {
+                return [{
+                    title:      '<@u.message "participate.title" />',
+                    content:    '<#noescape>${notAllowedToParticipateHTML?replace("'","&#39;")}</#noescape>'
                 }]
             };
             </#if>

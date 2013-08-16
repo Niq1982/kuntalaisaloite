@@ -7,6 +7,9 @@
 
 <#escape x as x?html> 
 
+<#assign verifiedUserMunicipalityOk = initiative.verifiable && user.isVerifiedUser()
+    && (!user.homeMunicipality.present || user.homeMunicipality.present && user.homeMunicipality.value.id == initiative.municipality.id) />
+
 <#--
  * Layout parameters for HTML-title and navigation.
  * 
@@ -14,7 +17,7 @@
  * pageTitle = initiative.name if exists, otherwise empty string
 -->
 <@l.main "page.initiative.public" initiative.name!"">
-        
+
     <#-- Bind form for detecting validation errors -->
     <@spring.bind "authorInvitation.*" />
     <#assign validationError = spring.status.error />
@@ -134,23 +137,25 @@
                     <br class="clear" />
 
                     <div id="municipalMembership" class="js-hide">
-                        <div class="input-block-content hidden">
-                            <#assign href="#" />
-                            <@u.systemMessage path="initiative.municipality.notEqual" type="info" showClose=false args=[href] />
-                        </div>
-                        <div class="input-block-content">
-                            <@f.radiobutton path="authorInvitation.municipalMembership" required="required" options={
-                                "community":"initiative.municipalMembership.community",
-                                "company":"initiative.municipalMembership.company",
-                                "property":"initiative.municipalMembership.property"
-                            } attributes="" key="initiative.municipalMembership" />
-                            <br/>
-                            <@f.radiobutton path="authorInvitation.municipalMembership" required="required" options={
-                                "none":"initiative.municipalMembership.none"
-                            } attributes="" key="initiative.municipalMembership" header=false/>
-                        </div>
+                        <#if !initiative.verifiable>
+                            <div class="input-block-content hidden">
+                                <#assign href="#" />
+                                <@u.systemMessage path="initiative.municipality.notEqual" type="info" showClose=false args=[href] />
+                            </div>
+                            <div class="input-block-content">
+                                <@f.radiobutton path="authorInvitation.municipalMembership" required="required" options={
+                                    "community":"initiative.municipalMembership.community",
+                                    "company":"initiative.municipalMembership.company",
+                                    "property":"initiative.municipalMembership.property"
+                                } attributes="" key="initiative.municipalMembership" />
+                                <br/>
+                                <@f.radiobutton path="authorInvitation.municipalMembership" required="required" options={
+                                    "none":"initiative.municipalMembership.none"
+                                } attributes="" key="initiative.municipalMembership" header=false/>
+                            </div>
+                        </#if>
 
-                        <div class="input-block-content is-not-member no-top-margin js-hide hidden">
+                        <div class="input-block-content <#if !initiative.verifiable>is-not-member no-top-margin js-hide</#if> hidden">
                             <@u.systemMessage path="warning.normalAuthor.notMember" type="warning" showClose=false />
                         </div>
                     </div>
@@ -234,9 +239,9 @@
                 }]
             };
             
-            <#-- Autoload modal if it has errors or user returns from VETUMA -->
+            <#-- Autoload modal if it has errors or user returns from VETUMA and is allowed to accept invitation -->
             <#if hasErrors?? && hasErrors ||
-                 (initiative.verifiable && user.isVerifiedUser() && RequestParameters['show-invitation']??)>
+                 (!user.hasRightToInitiative(initiative.id) && verifiedUserMunicipalityOk && RequestParameters['show-invitation']??)>
             modalData.acceptInvitationAutoLoad = function() {
                 return [{
                     title:      '<@u.message "invitation.accept.confirm.title" />',
