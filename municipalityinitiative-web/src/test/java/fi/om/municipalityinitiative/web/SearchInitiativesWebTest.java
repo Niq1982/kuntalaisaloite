@@ -24,14 +24,14 @@ public class SearchInitiativesWebTest extends WebTestBase {
     @Test
     public void municipalities_are_listed() {
         overrideDriverToFirefox(true);
-
-        testHelper.createTestMunicipality("Tuusula");
         open(urls.search());
 
         WebElement municipalities = getElement(By.id("municipality_chzn"));
 
         System.out.println(municipalities.getText());
-        assertThat(municipalities.getText(), containsString("Tuusula"));
+        String municipalitiesRawText = municipalities.getText();
+        assertThat(municipalitiesRawText, containsString(HELSINKI));
+        assertThat(municipalitiesRawText, containsString(VANTAA));
 
 
     }
