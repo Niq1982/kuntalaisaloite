@@ -5,7 +5,6 @@ import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -29,32 +28,24 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     /**
      * Form values as constants.
      */
-    private static final String MUNICIPALITY_1 = "Vantaa";
-    private static final String MUNICIPALITY_2 = "Helsinki";
     private static final String PARTICIPANT_NAME = "Ossi Osallistuja";
     private static final String PARTICIPANT_EMAIL = "test@test.com";
     private static final String AUTHOR_MESSAGE = "Tässä on viesti";
     public static final String VERIFIED_INITIATIVE_AURHOR_SSN = "000000-0000";
     public static final String OTHER_USER_SSN = "111111-1111";
 
-    private Long municipality1Id;
-    private Long municipality2Id;
-    private Long normalInitiativeId;
-    private Long verifiedInitiativeId;
+    private Long normalInitiativeHelsinki;
+    private Long verifiedInitiativeHelsinki;
 
-    @Before
-    public void setup() {
-        testHelper.dbCleanup();
-        municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
-        municipality2Id = testHelper.createTestMunicipality(MUNICIPALITY_2);
-        //normalInitiativeId = testHelper.create(municipality1Id, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
-        normalInitiativeId = testHelper.createDefaultInitiative(
-                new TestHelper.InitiativeDraft(municipality1Id)
+    @Override
+    public void childSetup() {
+        normalInitiativeHelsinki = testHelper.createDefaultInitiative(
+                new TestHelper.InitiativeDraft(HELSINKI_ID)
                         .withState(InitiativeState.PUBLISHED)
                         .withType(InitiativeType.COLLABORATIVE)
                         .withParticipantCount(0)
         );
-        verifiedInitiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(municipality1Id)
+        verifiedInitiativeHelsinki = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
                 .withState(InitiativeState.PUBLISHED)
                 .withParticipantCount(0)
                 .applyAuthor(VERIFIED_INITIATIVE_AURHOR_SSN)
@@ -64,7 +55,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
     @Test
     public void participate_normal_initiative_shows_validation_errors() {
-        open(urls.view(normalInitiativeId));
+        open(urls.view(normalInitiativeHelsinki));
 
         clickLinkContaining(getMessage(MSG_BTN_PARTICIPATE));
         getElemContaining(getMessage(MSG_BTN_SAVE), "button").click();
@@ -73,7 +64,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
     @Test
     public void participate_to_normal_initiative_with_public_name() {
-        open(urls.view(normalInitiativeId));
+        open(urls.view(normalInitiativeHelsinki));
 
         clickLinkContaining(getMessage(MSG_BTN_PARTICIPATE));
 
@@ -93,10 +84,10 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
     @Test
     public void participating_to_initiative_when_not_logged_in_redirects_to_vetuma_and_back_to_participation_page() {
-        open(urls.view(verifiedInitiativeId));
+        open(urls.view(verifiedInitiativeHelsinki));
 
         clickLinkContaining("Tunnistaudu ja osallistu");
-        enterVetumaLoginInformationAndSubmit("111111-1111", MUNICIPALITY_1);
+        enterVetumaLoginInformationAndSubmit("111111-1111", HELSINKI);
         assertTitle(TestHelper.DEFAULT_INITIATIVE_NAME + " - Kuntalaisaloitepalvelu");
         assertThat(participateToInitiativeButton().isPresent(), is(true));
 
@@ -104,8 +95,8 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
     @Test
     public void participate_to_verified_initiative_shows_success_message_and_increases_participant_count_on_page() {
-        vetumaLogin("111111-1111", MUNICIPALITY_1);
-        open(urls.view(verifiedInitiativeId));
+        vetumaLogin("111111-1111", HELSINKI);
+        open(urls.view(verifiedInitiativeHelsinki));
 
         Integer originalParticipantCountOnPage = Integer.valueOf(getElement(By.className("user-count-total")).getText());
 
@@ -128,8 +119,8 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
     @Test
     public void participating_to_verified_initiative_is_not_allowed_if_wrong_homeMunicipality() {
-        vetumaLogin(OTHER_USER_SSN, MUNICIPALITY_2);
-        open(urls.view(verifiedInitiativeId));
+        vetumaLogin(OTHER_USER_SSN, VANTAA);
+        open(urls.view(verifiedInitiativeHelsinki));
 
         assertTextContainedByClass("msg-warning", "Et ole aloitteen kunnan jäsen, joten et voi osallistua aloitteeseen.");
         assertThat(participateToInitiativeButton().isPresent(), is(false));
@@ -151,15 +142,15 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     public void participate_to_normal_initiative_with_private_name_and_select_membership_type() {
         overrideDriverToFirefox(true); // Municipality select need firefox driver
 
-        open(urls.view(normalInitiativeId));
+        open(urls.view(normalInitiativeHelsinki));
 
         clickLinkContaining(getMessage(MSG_BTN_PARTICIPATE));
 
         inputText("participantName", PARTICIPANT_NAME);
         getElemContaining(getMessage(PARTICIPANT_SHOW_NAME), "span").click();
 
-        clickLinkContaining(MUNICIPALITY_1);
-        getElemContaining(MUNICIPALITY_2, "li").click();
+        clickLinkContaining(HELSINKI);
+        getElemContaining(VANTAA, "li").click();
 
         getElemContaining(getMessage(MEMBERSHIP_RADIO), "span").click();
 
@@ -178,7 +169,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
     @Test
     public void public_user_contacts_authors_shows_success_message(){
-        open(urls.view(normalInitiativeId));
+        open(urls.view(normalInitiativeHelsinki));
         
         clickLinkContaining("Ota yhteyttä aloitteen vastuuhenkilöön");
         

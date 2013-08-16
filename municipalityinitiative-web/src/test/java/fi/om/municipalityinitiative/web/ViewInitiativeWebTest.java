@@ -4,7 +4,6 @@ import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import org.joda.time.DateTime;
-import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -19,17 +18,13 @@ public class ViewInitiativeWebTest extends WebTestBase {
      */
     private static final String MANAGEMENT_WARNING_TITLE = "management.title";
     private static final String INITIATIVE_VIEW_HEADER = "initiative.proposal.title";
-    public static final String MUNICIPALITY_NAME = "Tuusula";
-    private Long municipalityId;
     private Long draftInitiativeId;
 
-    @Before
-    public void setup() {
-        municipalityId = testHelper.createTestMunicipality(MUNICIPALITY_NAME);
+    @Override
+    public void childSetup() {
+        draftInitiativeId = testHelper.createDraft(HELSINKI_ID);
 
-        draftInitiativeId = testHelper.createDraft(municipalityId);
-
-        draftInitiativeId = testHelper.createDraft(municipalityId);
+        draftInitiativeId = testHelper.createDraft(HELSINKI_ID);
     }
 
     @Test
@@ -48,7 +43,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
     @Test
     public void management_view_shows_404_if_logged_in_with_wrong_management_hash() {
 
-        Long otherInitiative = testHelper.createDraft(municipalityId);
+        Long otherInitiative = testHelper.createDraft(HELSINKI_ID);
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
 
         open(urls.getManagement(draftInitiativeId));
@@ -57,13 +52,13 @@ public class ViewInitiativeWebTest extends WebTestBase {
 
     @Test
     public void accepted_but_not_published_initiative_cannot_be_viewed_if_not_logged_in() {
-        open(urls.view(testHelper.createCollaborativeAccepted(municipalityId)));
+        open(urls.view(testHelper.createCollaborativeAccepted(HELSINKI_ID)));
         assert404();
     }
 
     @Test
     public void not_published_initiative_cannot_be_viewed_if_wrong_author() {
-        Long otherInitiative = testHelper.createDraft(municipalityId);
+        Long otherInitiative = testHelper.createDraft(HELSINKI_ID);
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
 
         open(urls.view(draftInitiativeId));
@@ -72,7 +67,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
 
     @Test
     public void initiative_with_fixState_other_than_ok_can_not_be_viewed_if_not_logged_in_as_author() {
-        Long initiative = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(municipalityId)
+        Long initiative = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
                 .withState(InitiativeState.PUBLISHED)
                 .withFixState(FixState.REVIEW));
 
@@ -96,7 +91,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
 
     @Test
     public void management_view_redirects_to_create_page_if_initiative_name_is_empty() {
-        Long emptyDraftId = testHelper.createEmptyDraft(municipalityId);
+        Long emptyDraftId = testHelper.createEmptyDraft(HELSINKI_ID);
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         open(urls.management(emptyDraftId));
 
@@ -108,7 +103,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
 
         DateTime stateTime = new DateTime(2011, 1, 1, 0, 0);
         String title = "Yeah rock rock";
-        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(municipalityId)
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
                 .withState(InitiativeState.PUBLISHED)
                 .withStateTime(stateTime)
                 .withName(title));
@@ -125,12 +120,12 @@ public class ViewInitiativeWebTest extends WebTestBase {
 
         DateTime stateTime = new DateTime(2011, 1, 1, 0, 0);
         String title = "Yeah rock rock";
-        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(municipalityId)
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
                 .withState(InitiativeState.PUBLISHED)
                 .withStateTime(stateTime)
                 .withName(title));
 
-        open(urls.iframe(municipalityId));
+        open(urls.iframe(HELSINKI_ID));
         assertThat(getElement(By.tagName("li")).getText(), containsString(stateTime.toString("dd.MM.yyyy")));
         assertThat(getElement(By.tagName("li")).getText(), containsString(title));
     }

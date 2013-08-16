@@ -9,7 +9,6 @@ import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.VerifiedAuthor;
 import fi.om.municipalityinitiative.dto.service.NormalParticipant;
 import fi.om.municipalityinitiative.dto.service.VerifiedParticipant;
-import fi.om.municipalityinitiative.dto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
@@ -34,13 +33,6 @@ public class ParticipantService {
     private InitiativeDao initiativeDao;
 
     public ParticipantService() {
-    }
-
-    @Transactional(readOnly = true)
-    public ParticipantCount getParticipantCount(Long initiativeId) {
-        return initiativeDao.isVerifiableInitiative(initiativeId)
-                ? participantDao.getVerifiedParticipantCount(initiativeId)
-                : participantDao.getNormalParticipantCount(initiativeId);
     }
 
     @Transactional(readOnly = true)

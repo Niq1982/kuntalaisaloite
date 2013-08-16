@@ -89,7 +89,7 @@ public class PublicInitiativeController extends BaseController {
                     authorService.findPublicAuthors(initiativeId),
                     municipalityService.findAllMunicipalities(locale),
                     initiativeInfo.getParticipantCount(),
-            new ParticipantUICreateDto(),
+                    new ParticipantUICreateDto(),
                     userService.hasManagementRightForInitiative(initiativeId, request),
                     new AuthorUIMessage()).view(model, Urls.get(locale).alt().view(initiativeId));
         }
@@ -175,10 +175,11 @@ public class PublicInitiativeController extends BaseController {
                 Urls urls = Urls.get(locale);
                 return redirectWithMessage(urls.view(initiativeId), RequestMessage.PARTICIPATE, request);
             } else {
+                InitiativeViewInfo publicInitiative = publicInitiativeService.getPublicInitiative(initiativeId);
                 return ViewGenerator.collaborativeView(
-                        publicInitiativeService.getPublicInitiative(initiativeId),
+                        publicInitiative,
                         authorService.findPublicAuthors(initiativeId), municipalityService.findAllMunicipalities(locale),
-                        participantService.getParticipantCount(initiativeId),
+                        publicInitiative.getParticipantCount(),
                         participant,
                         userService.hasManagementRightForInitiative(initiativeId, request),
                         new AuthorUIMessage()).view(model, Urls.get(locale).alt().view(initiativeId));
@@ -203,7 +204,7 @@ public class PublicInitiativeController extends BaseController {
                     : urls.view(initiativeId);
 
             return ViewGenerator.participantList(initiativeInfo,
-                    participantService.getParticipantCount(initiativeId),
+                    initiativeInfo.getParticipantCount(),
                     participantService.findPublicParticipants(initiativeId),
                     previousPageURI,
                     userService.hasManagementRightForInitiative(initiativeId, request)
@@ -247,7 +248,7 @@ public class PublicInitiativeController extends BaseController {
         return ViewGenerator.invitationView(initiativeInfo,
                 municipalityService.findAllMunicipalities(locale),
                 authorService.findPublicAuthors(initiativeId),
-                participantService.getParticipantCount(initiativeId),
+                initiativeInfo.getParticipantCount(),
                 authorInvitationUIConfirmDto
         ).view(model, Urls.get(locale).alt().invitation(initiativeId, confirmCode));
     }
@@ -264,7 +265,7 @@ public class PublicInitiativeController extends BaseController {
             return ViewGenerator.invitationView(initiativeInfo,
                     municipalityService.findAllMunicipalities(locale),
                     authorService.findPublicAuthors(initiativeId),
-                    participantService.getParticipantCount(initiativeId),
+                    initiativeInfo.getParticipantCount(),
                     confirmDto
             ).view(model, Urls.get(locale).alt().invitation(initiativeId, confirmDto.getConfirmCode()));
 
@@ -321,10 +322,11 @@ public class PublicInitiativeController extends BaseController {
             return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.AUTHOR_MESSAGE_ADDED, request);
         }
         else {
-            return ViewGenerator.collaborativeView(publicInitiativeService.getPublicInitiative(initiativeId),
+            InitiativeViewInfo publicInitiative = publicInitiativeService.getPublicInitiative(initiativeId);
+            return ViewGenerator.collaborativeView(publicInitiative,
                     authorService.findPublicAuthors(initiativeId),
                     municipalityService.findAllMunicipalities(locale),
-                    participantService.getParticipantCount(initiativeId),
+                    publicInitiative.getParticipantCount(),
                     new ParticipantUICreateDto(),
                     userService.hasManagementRightForInitiative(initiativeId, request),
                     authorUIMessage).view(model, Urls.get(locale).alt().view(initiativeId));

@@ -100,6 +100,7 @@ public class JdbcParticipantDao implements ParticipantDao {
     }
 
     @Override
+    // FIXME: Remove
     public ParticipantCount getNormalParticipantCount(Long initiativeId) {
 
         MaybeHoldingHashMap<Boolean, Long> map = new MaybeHoldingHashMap<>(queryFactory
@@ -117,6 +118,7 @@ public class JdbcParticipantDao implements ParticipantDao {
     }
 
     @Override
+    // FIXME: Remove
     public ParticipantCount getVerifiedParticipantCount(Long initiativeId) {
         MaybeHoldingHashMap<Boolean, Long> map = new MaybeHoldingHashMap<>(queryFactory
                 .from(QVerifiedParticipant.verifiedParticipant)

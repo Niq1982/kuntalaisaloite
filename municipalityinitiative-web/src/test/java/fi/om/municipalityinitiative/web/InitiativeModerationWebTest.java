@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.web;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -12,24 +11,21 @@ public class InitiativeModerationWebTest extends WebTestBase {
      * Form values as constants.
      */
     private static final String COMMENT = "Moderoijan saate";
-    
-    private Long testMunicipality1Id;
 
-    @Before
-    public void setup() {
-        testMunicipality1Id = testHelper.createTestMunicipality("Tuusula");
+    @Override
+    public void childSetup() {
     }
 
     @Test
     public void moderationpage_shows_404_if_not_logged_in() {
-        open(urls.moderation(testHelper.createCollaborativeAccepted(testMunicipality1Id)));
+        open(urls.moderation(testHelper.createCollaborativeAccepted(HELSINKI_ID)));
 //        assertThat(driver.getCurrentUrl(), startsWith(urls.login()));
         assert404();
     }
 
     @Test
     public void moderation_page_fails_if_logged_in_as_author() {
-        Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality1Id);
+        Long initiativeId = testHelper.createCollaborativeAccepted(HELSINKI_ID);
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
 
         open(urls.moderation(initiativeId));
@@ -38,7 +34,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
 
     @Test
     public void accept_initiative(){
-        Long initiativeId = testHelper.createCollaborativeReview(testMunicipality1Id);
+        Long initiativeId = testHelper.createCollaborativeReview(HELSINKI_ID);
 
         loginAsOmUser();
 
@@ -57,7 +53,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
 
     @Test
     public void reject_initiative(){
-        Long initiativeId = testHelper.createCollaborativeReview(testMunicipality1Id);
+        Long initiativeId = testHelper.createCollaborativeReview(HELSINKI_ID);
 
         loginAsOmUser();
 
@@ -74,7 +70,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
     
     @Test
     public void return_published_initiative_to_fix_and_send_it_to_review_and_accept_it(){
-        Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality1Id);
+        Long initiativeId = testHelper.createCollaborativeAccepted(HELSINKI_ID);
 
         loginAsOmUser();
         open(urls.moderation(initiativeId));
@@ -106,7 +102,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
     
     @Test
     public void resend_management_hash(){
-        Long initiativeId = testHelper.createCollaborativeReview(testMunicipality1Id);
+        Long initiativeId = testHelper.createCollaborativeReview(HELSINKI_ID);
 
         loginAsOmUser();
 

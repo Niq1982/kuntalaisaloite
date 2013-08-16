@@ -63,6 +63,11 @@ public abstract class WebTestBase {
 
     private static Server jettyServer;
 
+    protected static final String VANTAA = "Vantaa";
+    protected static Long VANTAA_ID;
+    protected static final String HELSINKI = "Helsinki";
+    protected static Long HELSINKI_ID;
+
     @BeforeClass
     public static synchronized void initialize() {
         if (jettyServer == null) {
@@ -96,8 +101,18 @@ public abstract class WebTestBase {
             urls = Urls.FI;
         }
         NotTooFastSubmitValidator.disable(); // Disable fast-submit validation at ui-tests
-        testHelper.dbCleanup();
+        if (HELSINKI_ID == null) {
+            testHelper.dbCleanup();
+            VANTAA_ID = testHelper.createTestMunicipality(VANTAA);
+            HELSINKI_ID = testHelper.createTestMunicipality(HELSINKI);
+        }
+        else {
+            testHelper.dbCleanupAllButMunicipalities();
+        }
+        childSetup();
     }
+
+    protected abstract void childSetup();
 
     protected final void overrideDriverToFirefox(boolean firefox) {
         formatDriver(firefox ? "ff" : "default");

@@ -78,6 +78,12 @@ public class TestHelper {
 
     @Transactional(readOnly=false)
     public void dbCleanup() {
+        dbCleanupAllButMunicipalities();
+        queryFactory.delete(QMunicipality.municipality).execute();
+    }
+
+    @Transactional(readOnly = false)
+    public void dbCleanupAllButMunicipalities() {
         queryFactory.delete(QAuthorMessage.authorMessage).execute();
         queryFactory.delete(QAuthorInvitation.authorInvitation).execute();
         queryFactory.delete(QAuthor.author).execute();
@@ -86,7 +92,6 @@ public class TestHelper {
         queryFactory.delete(QVerifiedParticipant.verifiedParticipant).execute();
         queryFactory.delete(QVerifiedUser.verifiedUser).execute();
         queryFactory.delete(QMunicipalityInitiative.municipalityInitiative).execute();
-        queryFactory.delete(QMunicipality.municipality).execute();
         queryFactory.delete(QInfoText.infoText).execute();
         queryFactory.delete(QAdminUser.adminUser).execute();
         authorLoginUserHolder = null;

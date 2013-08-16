@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.web;
 
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -25,13 +24,9 @@ public class InitiativeCreateWebTest extends WebTestBase {
     private static final String CONTACT_PHONE = "012-3456789";
     private static final String CONTACT_ADDRESS = "Osoitekatu 1 A, 00000 Helsinki";
     private static final String USER_SSN = "000000-0000";
-    private Long testMunicipality1Id;
-    private Long testMunicipality2Id;
 
-    @Before
-    public void setup() {
-        testMunicipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
-        testMunicipality2Id = testHelper.createTestMunicipality(MUNICIPALITY_2);
+    @Override
+    public void childSetup() {
     }
 
     @Test
@@ -122,7 +117,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
     @Test
     public void editing_normal_initiative_shows_success_message() {
-        Long initiativeId = testHelper.createEmptyDraft(testMunicipality1Id);
+        Long initiativeId = testHelper.createEmptyDraft(HELSINKI_ID);
 
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
 
@@ -133,7 +128,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
     @Test
     public void editing_verified_initiative_shows_success_message() {
-        Long initiativeId = testHelper.createVerifiedInitiative(new InitiativeDraft(testMunicipality1Id).applyAuthor(USER_SSN).toInitiativeDraft());
+        Long initiativeId = testHelper.createVerifiedInitiative(new InitiativeDraft(HELSINKI_ID).applyAuthor(USER_SSN).toInitiativeDraft());
         vetumaLogin(USER_SSN, MUNICIPALITY_1);
         open(urls.edit(initiativeId));
 
@@ -152,7 +147,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     @Test
     public void editing_verified_initiative_shows_validation_errors() {
 
-        Long initiativeId = testHelper.createVerifiedInitiative(new InitiativeDraft(testMunicipality1Id)
+        Long initiativeId = testHelper.createVerifiedInitiative(new InitiativeDraft(HELSINKI_ID)
                         .withName("")
                         .applyAuthor(USER_SSN)
                         .toInitiativeDraft()
@@ -168,7 +163,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
     @Test
     public void edit_page_opens_if_logged_in_as_author() {
-        Long initiative = testHelper.createDraft(testMunicipality1Id);
+        Long initiative = testHelper.createDraft(HELSINKI_ID);
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         open(urls.getEdit(initiative));
 //        assertThat(driver.getTitle(), is("asdasd"));
@@ -177,14 +172,14 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
     @Test
     public void edit_page_fails_if_not_logged_in() {
-        Long initiative = testHelper.createDraft(testMunicipality1Id);
+        Long initiative = testHelper.createDraft(HELSINKI_ID);
         open(urls.getEdit(initiative));
         assert404();
     }
 
     @Test
     public void edit_page_fails_if_logged_in_as_om() {
-        Long initiative = testHelper.createDraft(testMunicipality1Id);
+        Long initiative = testHelper.createDraft(HELSINKI_ID);
         loginAsOmUser();
         open(urls.getEdit(initiative));
         assert404();
@@ -192,10 +187,10 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
     @Test
     public void edit_page_fails_if_logged_in_as_another_author() {
-        Long otherInitiative = testHelper.createDraft(testMunicipality1Id);
+        Long otherInitiative = testHelper.createDraft(HELSINKI_ID);
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
 
-        Long initiative = testHelper.createDraft(testMunicipality1Id);
+        Long initiative = testHelper.createDraft(HELSINKI_ID);
         open(urls.getEdit(initiative));
         assert404();
     }
@@ -203,7 +198,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     // Create initiative with state DRAFT and send it to REVIEW
     @Test
     public void send_to_review() {
-        Long initiativeId = testHelper.createDraft(testMunicipality1Id);
+        Long initiativeId = testHelper.createDraft(HELSINKI_ID);
 
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         open(urls.management(initiativeId));
@@ -220,20 +215,20 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
     @Test
     public void update_page_fails_if_not_logged_in() {
-        open(urls.update(testHelper.createDraft(testMunicipality1Id)));
+        open(urls.update(testHelper.createDraft(HELSINKI_ID)));
         assert404();
     }
 
     @Test
     public void update_fails_if_logged_in_as_om_user() {
         loginAsOmUser();
-        open(urls.update(testHelper.createDraft(testMunicipality1Id)));
+        open(urls.update(testHelper.createDraft(HELSINKI_ID)));
         assert404();
     }
 
     @Test
     public void update_page_opens_if_logged_in_as_author() {
-        Long initiative = testHelper.createCollaborativeAccepted(testMunicipality1Id);
+        Long initiative = testHelper.createCollaborativeAccepted(HELSINKI_ID);
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         open(urls.update(initiative));
         assertTitle("Muokkaa kuntalaisaloitetta - Kuntalaisaloitepalvelu");
