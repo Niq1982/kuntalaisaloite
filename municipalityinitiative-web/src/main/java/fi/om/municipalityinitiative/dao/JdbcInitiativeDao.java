@@ -27,6 +27,7 @@ import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 
 import javax.annotation.Resource;
 
@@ -58,6 +59,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
     PostgresQueryFactory queryFactory;
 
     @Override
+    @Cacheable(value = "initiativeList")
     public List<InitiativeListInfo> find(InitiativeSearch search) {
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
@@ -203,6 +205,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
+    @Cacheable(value = "initiativeCount")
     public InitiativeCounts getPublicInitiativeCounts(Maybe<Long> municipality) {
         Expression<String> caseBuilder = new CaseBuilder()
                 .when(municipalityInitiative.sent.isNull())

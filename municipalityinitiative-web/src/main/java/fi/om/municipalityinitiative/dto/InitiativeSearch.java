@@ -107,4 +107,37 @@ public class InitiativeSearch {
         mostParticipants, leastParticipants,
         oldest, latest
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof InitiativeSearch)) {
+            return false;
+        }
+
+        InitiativeSearch that = (InitiativeSearch) obj;
+        return equals(this.getMunicipality(), that.getMunicipality())
+                && equals(this.getLimit(), that.getLimit())
+                && equals(this.getOffset(), that.getOffset())
+                && equals(this.getOrderBy(), that.getOrderBy())
+                && equals(this.getShow(), that.getShow());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = offset != null ? offset.hashCode() : 0;
+        result = 31 * result + (limit != null ? limit.hashCode() : 0);
+        result = 31 * result + orderBy.hashCode();
+        result = 31 * result + show.hashCode();
+        result = 31 * result + (municipality != null ? municipality.hashCode() : 0);
+        result = 31 * result + (search != null ? search.hashCode() : 0);
+        return result;
+    }
+
+    private static <E extends Object> boolean equals(E o1, E o2) {
+        if (o1 == null && o2 == null)
+            return true;
+        else if (o1 == null || o2 == null)
+            return false;
+        else return o1.equals(o2);
+    }
 }

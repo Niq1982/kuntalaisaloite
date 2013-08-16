@@ -56,4 +56,21 @@ public class Maybe<T> {
     public String toString() {
         return optional.isPresent() ? optional.toString() : "";
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Maybe maybe = (Maybe) o;
+
+        if (!optional.equals(maybe.optional)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return optional.hashCode();
+    }
 }
