@@ -4,7 +4,6 @@ import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import org.joda.time.DateTime;
-import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -23,8 +22,8 @@ public class ViewInitiativeWebTest extends WebTestBase {
     private Long municipalityId;
     private Long draftInitiativeId;
 
-    @Before
-    public void setup() {
+    @Override
+    public void childSetup() {
         municipalityId = testHelper.createTestMunicipality(MUNICIPALITY_NAME);
 
         draftInitiativeId = testHelper.createDraft(municipalityId);

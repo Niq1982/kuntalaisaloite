@@ -10,6 +10,11 @@ import static org.hamcrest.Matchers.is;
 
 public class SearchInitiativesWebTest extends WebTestBase {
 
+    @Override
+    public void childSetup() {
+
+    }
+
     @Test
     public void page_opens_when_navigation_link_clicked() {
         open(urls.search());

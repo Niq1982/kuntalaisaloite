@@ -5,7 +5,6 @@ import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -42,8 +41,8 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     private Long normalInitiativeId;
     private Long verifiedInitiativeId;
 
-    @Before
-    public void setup() {
+    @Override
+    public void childSetup() {
         testHelper.dbCleanup();
         municipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
         municipality2Id = testHelper.createTestMunicipality(MUNICIPALITY_2);

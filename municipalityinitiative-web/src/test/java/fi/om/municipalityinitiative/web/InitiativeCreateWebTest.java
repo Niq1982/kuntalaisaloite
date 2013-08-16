@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.web;
 
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -28,8 +27,8 @@ public class InitiativeCreateWebTest extends WebTestBase {
     private Long testMunicipality1Id;
     private Long testMunicipality2Id;
 
-    @Before
-    public void setup() {
+    @Override
+    public void childSetup() {
         testMunicipality1Id = testHelper.createTestMunicipality(MUNICIPALITY_1);
         testMunicipality2Id = testHelper.createTestMunicipality(MUNICIPALITY_2);
     }

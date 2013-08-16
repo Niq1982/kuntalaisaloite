@@ -12,6 +12,11 @@ import static org.hamcrest.Matchers.not;
  */
 public class ApiTest extends WebTestBase {
 
+    @Override
+    public void childSetup() {
+
+    }
+
     @Test
     public void api_page_opens() {
         open(urls.api());

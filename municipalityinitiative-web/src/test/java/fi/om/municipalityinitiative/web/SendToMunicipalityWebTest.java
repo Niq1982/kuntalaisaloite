@@ -19,6 +19,11 @@ public class SendToMunicipalityWebTest extends WebTestBase {
      */
     private static final String MUNICIPALITY_1 = "Vantaa";
     private static final String COMMENT = "Saate kunnalle";
+
+    @Override
+    public void childSetup() {
+
+    }
     
     @Test
     public void send_to_municipality() {
