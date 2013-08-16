@@ -26,20 +26,18 @@
                 <span class="switch-view"><a href="${urls.participantList(initiative.id)}"><@u.message key="participantList.title" /> &bull; ${participantCount.publicNames!""} <@u.message key="participantList.title.count" /></a></span>
             </h2>
 
-            <@participantListManage participants />
-
             <#if initiative.verifiable>
-                <br/>
                 <#assign secureCount = 0/>
                 <#list participants as participant>
                     <#if !participant.participant.verified>
                         <#assign secureCount = secureCount+1/>
                     </#if>
-
                 </#list>
 
-                Turvakieltoja ${secureCount} kpl.
+                <#if (secureCount > 0)><p><@u.message key="participantList.secureCount" args=[secureCount] /></p></#if>
             </#if>
+
+            <@participantListManage participants />
 
         </div>
     <#else>
