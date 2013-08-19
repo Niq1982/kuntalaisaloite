@@ -162,8 +162,8 @@
         <label class="initiative-type trigger-tooltip" title="<@u.message "initiative.initiativeType.disabled.tooltip" />">
     </#if>
         <span class="inner">
-            <#-- TODO: Finalize type icon -->
-            <span class="icon-32 secondary">${typeNumber}</span><span class="type"><@u.message "initiative.initiativeType."+type /><#if type == "UNDEFINED"><br/><br/></#if></span>
+            <span class="icon-32 secondary left">${typeNumber}</span>
+            <span class="type"><@u.message "initiative.initiativeType."+type /><#if type == "UNDEFINED"><br/><br/></#if></span>
             <span class="description"><@u.message "initiative.initiativeType."+type+".description" /></span>
         </span>
         <#if enabled>
