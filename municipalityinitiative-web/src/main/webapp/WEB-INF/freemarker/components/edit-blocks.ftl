@@ -363,7 +363,7 @@
         <div class="input-block-extra">
             <div class="input-block-extra-content">
                 <@f.helpText "help.contactInfo.name" />
-                <@f.helpText "help.contactInfo.contactDetails" />
+                <@f.helpText "help.contactInfo.contactDetails.verifiable" />
             </div>
         </div>
 

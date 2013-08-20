@@ -31,5 +31,5 @@
     
     <@b.separator />
 
-    <@b.emailFooter type />
+    <@b.emailFooter type=type showManagement=false />
 </#macro>

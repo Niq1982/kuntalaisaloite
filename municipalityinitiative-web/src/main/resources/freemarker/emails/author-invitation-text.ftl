@@ -8,11 +8,17 @@
 
 
 <@u.message "email.author.invitation.title" />
+<#if initiative.type.verifiable>
+    <@u.message "email.author.invitation.title."+initiative.type />
+</#if>
 
 
 <@b.initiativeDetails type=type showDate=true />
 
 <@u.message "email.author.invitation.description" />
+
+
+<#if initiative.type.verifiable><@u.message "email.author.invitation.authenticate" /></#if>
 
 
 <@u.message "email.invitationViewLink" />
@@ -24,18 +30,24 @@ ${url}
 
 <@b.separator />
 
-<@b.emailFooter type />
+<@b.emailFooter type=type showManagement=false />
 
 
 <@b.separator />
 <#global switchLocale = altLocale />
 
 <@u.message "email.author.invitation.title" />
+<#if initiative.type.verifiable>
+    <@u.message "email.author.invitation.title."+initiative.type />
+</#if>
 
 
 <@b.initiativeDetails type=type showDate=true />
 
 <@u.message "email.author.invitation.description" />
+
+
+<#if initiative.type.verifiable><@u.message "email.author.invitation.authenticate" /></#if>
 
 
 <@u.message "email.invitationViewLink" />
@@ -47,6 +59,6 @@ ${urlSv}
 
 <@b.separator />
 
-<@b.emailFooter type />
+<@b.emailFooter type=type showManagement=false />
 
 <#global switchLocale = locale />
