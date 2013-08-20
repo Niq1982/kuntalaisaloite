@@ -9,6 +9,8 @@
 
 <#assign verifiedUserMunicipalityOk = initiative.verifiable && user.isVerifiedUser()
     && (!user.homeMunicipality.present || user.homeMunicipality.present && user.homeMunicipality.value.id == initiative.municipality.id) />
+<#assign showInvitation = (!user.hasRightToInitiative(initiative.id) && verifiedUserMunicipalityOk && RequestParameters['show-invitation']??) />
+
 
 <#--
  * Layout parameters for HTML-title and navigation.
@@ -34,7 +36,7 @@
         <#if user.hasRightToInitiative(initiative.id) && initiative.isVerifiable()> <#-- Only disallow double-invitation-acceptance for verified initiatives -->
             <@u.systemMessage path="warning.author.alreadyAuthor" type="warning" showClose=false />
         <#else>
-            <div class="msg-block ${validationError?string("hidden","")}">
+            <div class="msg-block ${(validationError || showInvitation)?string("hidden","")}">
                 <div class="system-msg msg-info">
                     <h2><@u.message "invitation.view.title" /></h2>
                     
@@ -181,7 +183,7 @@
         </@compress>
     </#assign>
 
-    <#if validationError || RequestParameters['invitation-accept']?? && RequestParameters['invitation-accept'] == "confirm">
+    <#if showInvitation || validationError || RequestParameters['invitation-accept']?? && RequestParameters['invitation-accept'] == "confirm">
         <noscript>
             <div class="msg-block">
                 <h2><@u.message "invitation.accept.confirm.title" /></h2>
@@ -238,8 +240,7 @@
             };
             
             <#-- Autoload modal if it has errors or user returns from VETUMA and is allowed to accept invitation -->
-            <#if hasErrors?? && hasErrors ||
-                 (!user.hasRightToInitiative(initiative.id) && verifiedUserMunicipalityOk && RequestParameters['show-invitation']??)>
+            <#if hasErrors?? && hasErrors || showInvitation>
             modalData.acceptInvitationAutoLoad = function() {
                 return [{
                     title:      '<@u.message "invitation.accept.confirm.title" />',
