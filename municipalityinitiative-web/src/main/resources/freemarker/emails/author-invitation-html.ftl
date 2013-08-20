@@ -27,7 +27,7 @@
     
     <@u.spacer "15" />
     
-    <@b.emailFooter type />
+    <@b.emailFooter type=type showManagement=false />
     
     <@u.spacer "15" />
     
@@ -50,7 +50,7 @@
     
     <@u.spacer "15" />
     
-    <@b.emailFooter type />
+    <@b.emailFooter type=type showManagement=false />
     
     <@u.spacer "15" />
     

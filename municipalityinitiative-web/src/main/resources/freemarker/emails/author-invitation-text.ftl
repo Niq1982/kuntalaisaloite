@@ -24,7 +24,7 @@ ${url}
 
 <@b.separator />
 
-<@b.emailFooter type />
+<@b.emailFooter type=type showManagement=false />
 
 
 <@b.separator />
@@ -47,6 +47,6 @@ ${urlSv}
 
 <@b.separator />
 
-<@b.emailFooter type />
+<@b.emailFooter type=type showManagement=false />
 
 <#global switchLocale = locale />
