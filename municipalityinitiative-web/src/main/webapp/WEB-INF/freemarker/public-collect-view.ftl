@@ -187,16 +187,18 @@
         <div class="initiative-content-row">
             <@e.initiativeAuthor authors />
         
-            <p><a href="?contactAuthorForm=true#form-contact-author" class="js-contact-author"><span class="icon-small icon-16 envelope margin-right"></span> <@u.message key="contactAuthor.link" args=[authors.publicNameCount+authors.privateNameCount] /></a></p>
+            <#if initiative.state == InitiativeState.PUBLISHED>
+                <p><a href="?contactAuthorForm=true#form-contact-author" class="js-contact-author"><span class="icon-small icon-16 envelope margin-right"></span> <@u.message key="contactAuthor.link" args=[authors.publicNameCount+authors.privateNameCount] /></a></p>
             
-            <#if (RequestParameters['formError']?? && RequestParameters['formError'] == "contactAuthor")
-                                    || (RequestParameters['contactAuthorForm']?? && RequestParameters['contactAuthorForm'] == "true")>
-                <noscript>
-                    <div id="form-contact-author" class="form-container cf top-margin">
-                        <h3><@u.message key="contactAuthor.title" args=[authors.publicNameCount+authors.privateNameCount] /></h3>
-                        <#noescape>${contactAuthorForm}</#noescape>
-                    </div>
-                </noscript>
+                <#if (RequestParameters['formError']?? && RequestParameters['formError'] == "contactAuthor")
+                                        || (RequestParameters['contactAuthorForm']?? && RequestParameters['contactAuthorForm'] == "true")>
+                    <noscript>
+                        <div id="form-contact-author" class="form-container cf top-margin">
+                            <h3><@u.message key="contactAuthor.title" args=[authors.publicNameCount+authors.privateNameCount] /></h3>
+                            <#noescape>${contactAuthorForm}</#noescape>
+                        </div>
+                    </noscript>
+                </#if>
             </#if>
         </div>
         <#--
