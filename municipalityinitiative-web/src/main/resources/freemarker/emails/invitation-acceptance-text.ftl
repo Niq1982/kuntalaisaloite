@@ -12,7 +12,11 @@
 <@u.message "email.author.invitation.accepted.description" />
 
 
-<@b.adminViewLink type />
+<#if initiative.type.verifiable>
+    TODO
+<#else>
+    <@b.adminViewLink type />
+</#if>
 
 
 <@b.separator />

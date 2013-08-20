@@ -1,5 +1,7 @@
 package fi.om.municipalityinitiative.service.operations;
 
+import java.util.Locale;
+
 import fi.om.municipalityinitiative.dao.*;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.Initiative;
@@ -11,6 +13,7 @@ import fi.om.municipalityinitiative.dto.ui.PrepareSafeInitiativeUICreateDto;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
+import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -28,6 +31,9 @@ public class VerifiedInitiativeServiceOperations {
 
     @Resource
     private ParticipantDao participantDao;
+    
+    @Resource
+    private EmailService emailService;
 
     @Resource
     private InitiativeDao initiativeDao;
@@ -54,7 +60,7 @@ public class VerifiedInitiativeServiceOperations {
     }
 
     @Transactional(readOnly = false)
-    public VerifiedUser doConfirmInvitation(VerifiedUser verifiedUser, Long initiativeId, AuthorInvitationUIConfirmDto confirmDto) {
+    public VerifiedUser doConfirmInvitation(VerifiedUser verifiedUser, Long initiativeId, AuthorInvitationUIConfirmDto confirmDto, Locale locale) {
 
         Initiative initiative = initiativeDao.get(initiativeId);
         assertAllowance("Accept invitation", ManagementSettings.of(initiative).isAllowInviteAuthors());
@@ -72,6 +78,9 @@ public class VerifiedInitiativeServiceOperations {
                 authorDao.addVerifiedAuthor(initiativeId, verifiedUserId);
 
                 authorDao.deleteAuthorInvitation(initiativeId, confirmDto.getConfirmCode());
+                
+                emailService.sendAuthorConfirmedInvitation(initiativeId, invitation.getEmail(), null, locale);
+                
                 return verifiedUser;
 
             }

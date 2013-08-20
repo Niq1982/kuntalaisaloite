@@ -50,7 +50,7 @@ public class VerifiedInitiativeService {
             municipalityException(confirmDto.getMunicipality());
         }
 
-        operations.doConfirmInvitation(verifiedUser, initiativeId, confirmDto);
+        operations.doConfirmInvitation(verifiedUser, initiativeId, confirmDto, locale);
 
         // TODO: Already participated/author
     }
