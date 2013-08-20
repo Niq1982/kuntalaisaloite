@@ -167,7 +167,7 @@ public class AuthorsWebTest extends WebTestBase {
         AuthorInvitation invitation = testHelper.createInvitation(verifiedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
         vetumaLogin("111111-1111", VANTAA);
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
-        assertTextContainedByClass("msg-warning", "Väestötietojärjestelmän mukaan kotikuntasi ei ole kunta jota aloite koskee, joten et voi liittyä aloitteen vastuuhenkilöksi. Kiitos mielenkiinnosta!");
+        assertTextContainedByClass("msg-warning", "Väestötietojärjestelmän mukaan kotikuntasi ei ole kunta, jota aloite koskee, joten et voi liittyä aloitteen vastuuhenkilöksi. Kiitos mielenkiinnosta!");
         assertThat(acceptInvitationButton().isPresent(), is(false));
         assertThat(rejectInvitationButton().isPresent(), is(true));
     }
