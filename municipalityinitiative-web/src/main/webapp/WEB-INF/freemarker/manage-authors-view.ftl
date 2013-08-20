@@ -195,7 +195,7 @@
             <@u.systemMessage path="invitation.description" type="info" showClose=false />
         </div>
 
-        <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-send" class="sodirty">
+        <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-send" class="sodirty" novalidate>
             <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
             
             <div class="input-block-content no-top-margin">
