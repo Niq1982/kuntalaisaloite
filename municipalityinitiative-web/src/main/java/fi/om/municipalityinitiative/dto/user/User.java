@@ -22,6 +22,10 @@ public abstract class User {
         return new VerifiedUser(verifiedUserId, hash, contactInfo, initiatives, initiativesWithParticipation, homeMunicipality);
     }
 
+    public static VerifiedUser verifiedUser(VerifiedUserId verifiedUserId, String hash, ContactInfo contactInfo, Set<Long> initiatives, Set<Long> initiativesWithParticipation, Maybe<Municipality> homeMunicipality, boolean isAdult) {
+        return new VerifiedUser(verifiedUserId, hash, contactInfo, initiatives, initiativesWithParticipation, homeMunicipality, isAdult);
+    }
+
     public static User anonym() {
         return new AnonymUser();
     }

@@ -37,7 +37,7 @@ public class AuthorsWebTest extends WebTestBase {
     public static final String CONTACT_PHONE = "040111222";
     public static final String HYLKÄÄ_KUTSU = "invitation.reject";
     public static final String HYVÄKSY_KUTSUN_HYLKÄÄMINEN = "invitation.reject.confirm";
-    public static final String VERIFIED_USER_AUTHOR_SSN = "000000-0000";
+    public static final String VERIFIED_USER_AUTHOR_SSN = "010190-0001";
     private Long normalInitiativeId;
     private Long verifiedInitiativeId;
 

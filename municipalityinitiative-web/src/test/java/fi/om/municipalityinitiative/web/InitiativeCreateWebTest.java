@@ -23,7 +23,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     private static final String CONTACT_EMAIL = "test@test.com";
     private static final String CONTACT_PHONE = "012-3456789";
     private static final String CONTACT_ADDRESS = "Osoitekatu 1 A, 00000 Helsinki";
-    private static final String USER_SSN = "000000-0000";
+    private static final String USER_SSN = "010190-0000";
 
     @Override
     public void childSetup() {
