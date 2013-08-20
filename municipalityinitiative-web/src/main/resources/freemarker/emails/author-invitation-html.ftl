@@ -7,17 +7,23 @@
 <#escape x as x?html>
 
 <#assign title><@u.message "email.author.invitation.title" /></#assign>
+<#if initiative.type.verifiable>
+    <#assign title><@u.message "email.author.invitation.title."+initiative.type /></#assign>
+</#if>
+
 <#assign url = urls.invitation(initiative.id, authorInvitation.confirmationCode) />
 <#assign urlSv = urls.alt().invitation(initiative.id, authorInvitation.confirmationCode) />
+
+
 
 <@l.emailHtml title=title footer=false>
 
     <#-- Finnish part -->
-
     <@b.mainContentBlock title> 
         <@b.initiativeDetails type=type showDate=true />
     
         <p style="${pBothMargins!""}"><@u.message "email.author.invitation.description" /></p>
+        <#if initiative.type.verifiable><p style="${pBothMargins!""}"><@u.message "email.author.invitation.authenticate" /></p></#if>
         
         <#assign label><@u.message "email.invitationViewLink" /></#assign>
         <@u.button label url "green" />
@@ -36,11 +42,15 @@
     <#global switchLocale = altLocale />
 
     <#assign title><@u.message "email.author.invitation.title" /></#assign>
+    <#if initiative.type.verifiable>
+        <#assign title><@u.message "email.author.invitation.title."+initiative.type /></#assign>
+    </#if>
     
     <@b.mainContentBlock title>
         <@b.initiativeDetails type=type showDate=true />
     
         <p style="${pBothMargins!""}"><@u.message "email.author.invitation.description" /></p>
+        <#if initiative.type.verifiable><p style="${pBothMargins!""}"><@u.message "email.author.invitation.authenticate" /></p></#if>
         
         <#assign label><@u.message "email.invitationViewLink" /></#assign>
         <@u.button label urlSv "green" />

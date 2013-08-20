@@ -90,7 +90,8 @@
         <p style="${footerFont!""}"><@u.message "email.footer.sendFrom"+postFix /><br/>
 
         <#if showManagement && initiative.type.verifiable && !initiative.sent>
-            <@u.message "email.footer.managementLink" /><br/><@u.link urls.get(switchLocale!locale).loginToManagement(initiative.id) />
+            <#assign title><@u.message "email.footer.managementLink" /></#assign>
+            <@u.link urls.get(switchLocale!locale).loginToManagement(initiative.id) title />
         <#elseif managementHash?has_content && !initiative.sent>
             <@u.message "email.footer.managementLink" /><br/><@u.link urls.get(switchLocale!locale).loginAuthor(managementHash) />
         <#elseif initiative.state?? && initiative.state == "PUBLISHED" && initiative.fixState == "OK">
