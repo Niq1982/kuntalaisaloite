@@ -59,8 +59,8 @@ public class UserService {
         storeLoggedInUser(request, adminUser);
     }
 
-    private static void storeLoggedInUser(HttpServletRequest request, User adminUser) {
-        request.getSession().setAttribute(LOGIN_USER_PARAMETER, adminUser);
+    private static void storeLoggedInUser(HttpServletRequest request, User user) {
+        request.getSession().setAttribute(LOGIN_USER_PARAMETER, user);
     }
 
     private String saltAndEncryptPassword(String password) {
@@ -162,7 +162,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = false)
-    public void login(String hash, String fullName, String address, Maybe<Municipality> vetumaMunicipality, HttpServletRequest request, HttpServletResponse response) {
+    public void login(String hash, String fullName, String address, Maybe<Municipality> vetumaMunicipality, boolean adult, HttpServletRequest request, HttpServletResponse response) {
 
         ContactInfo contactInfo;
         Set<Long> initiativesWithManagementRight;
@@ -201,7 +201,7 @@ public class UserService {
             municipality = Maybe.absent();
         }
 
-        storeLoggedInUser(request, User.verifiedUser(verifiedUserId, hash, contactInfo, initiativesWithManagementRight, initiativesWithParticipation, municipality));
+        storeLoggedInUser(request, User.verifiedUser(verifiedUserId, hash, contactInfo, initiativesWithManagementRight, initiativesWithParticipation, municipality, adult));
     }
 
     public void putPrepareDataForVetuma(PrepareInitiativeUICreateDto initiative, HttpServletRequest request) {
@@ -233,6 +233,7 @@ public class UserService {
         if (user instanceof VerifiedUser) {
             Maybe<VerifiedUser> verifiedUser = userDao.getVerifiedUser(((VerifiedUser) user).getHash());
             if (verifiedUser.isPresent()) {
+                verifiedUser.get().readAdultValue((VerifiedUser) user);
                 session.setAttribute(LOGIN_USER_PARAMETER, verifiedUser.get());
             }
         }

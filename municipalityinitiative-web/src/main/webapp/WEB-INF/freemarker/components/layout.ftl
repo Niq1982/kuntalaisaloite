@@ -265,6 +265,11 @@
                      <#if user.isVerifiedUser()>
                         <div class="header-dropdown">
                             <a href="#" class="header-tool-link user-name dropdown-toggle">${user.contactInfo.name}<#if user.homeMunicipality.present>, ${user.homeMunicipality.value.getName(locale)}</#if>
+                                <#if user.adult>
+                                    aikunen
+                                <#else>
+                                    lapsi
+                                </#if>
                                 <span class="icon-small settings"></span></a>
                             <ul id="user-menu" class="dropdown-menu user-menu">
                                 <li><a href="${urls.ownInitiatives()}"><@u.message "page.ownInitiatives" /></a></li>
