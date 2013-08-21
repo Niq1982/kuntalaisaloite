@@ -38,6 +38,18 @@
         
         // Clear selection button
         abbr {
+            top:0;
+            right:34px;
+            height:34px;
+            width:34px;
+            //margin-top:-5px;
+            background:url("../../img/chosen-sprite.png?version=${timestamp}") no-repeat -115px 12px;
+            
+            &:hover {
+                background-position:-179px 12px;
+            }
+        }
+        /*abbr {
             top:50%;
             right:39px;
             height:10px;
@@ -48,7 +60,7 @@
             &:hover {
                 background-position:-96px 0;
             }
-        }
+        }*/
         
         // Dropdown active
         &.chzn-single-with-drop {
