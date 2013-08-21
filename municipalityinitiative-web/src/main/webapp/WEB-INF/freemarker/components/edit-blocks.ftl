@@ -398,6 +398,32 @@
         </div>
     </div>
 </#macro>
-      
+
+<#--
+ * sessionExpired
+ *
+ * Generates a modal when user's session has expired.
+ * This is used in edit and update views.
+ -->
+<#macro sessionExpired>
+    <script type="text/javascript">
+        modalData.sessionHasEnded = function() {
+            return [{
+                title:      '<@u.message "modal.sessionHasEnded.title" />',
+                content:    '<@u.messageHTML "modal.sessionHasEnded" />'
+            }]
+        };
+
+        var sessionLength = 1000 * 60 * 30; // 30 minutes
+    
+        function sessionExpired() {
+            generateModal(modalData.sessionHasEnded(), 'minimal');
+        }
+        
+        setTimeout("sessionExpired()", sessionLength);
+    </script>
+</#macro>
+
+
 </#escape> 
 
