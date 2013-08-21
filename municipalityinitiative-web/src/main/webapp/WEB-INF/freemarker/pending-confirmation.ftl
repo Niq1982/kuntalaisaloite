@@ -23,7 +23,7 @@
     <@u.requestMessage requestMessages />
 </#if>
 
-<div class="msg-block">
+<div class="view-block first">
     <p><@u.message "create.pendingConfirmation.linkSentTo" /> <strong>${requestAttribute!""}</strong>.</p>
     
     <p><@u.message "create.pendingConfirmation.readEmail" /></p>
