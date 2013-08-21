@@ -492,14 +492,14 @@ var municipalitySelection = (function() {
 
 		// If user's home municipality is verified by VTJ
 		if (verifiedHome.length > 0){
-			if ( select.val() == "" || select.val() == verifiedHome.data('initiative-municipality') ) {
+			if ( select.val() === "" || select.val() == verifiedHome.data('initiative-municipality') ) {
 				return true;
 			} else {
 				return false;
 			}
 		// In the create form we have two selects
 		} else if (select.length > 0){
-			if ( selectHome.val() == select.val() ) {
+			if ( select.val() === "" || selectHome.val() == select.val()) {
 				return true;
 			} else {
 				return false;
