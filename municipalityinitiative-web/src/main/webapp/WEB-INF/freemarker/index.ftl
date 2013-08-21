@@ -4,12 +4,12 @@
 
 <#escape x as x?html> 
 <@l.main "page.frontpage">
- 
+
+<div class="image-container"> 
  <#if requestMessages?? && (requestMessages?size > 0)>
     <div class="container"><@u.requestMessage requestMessages /></div>
 </#if>
- 
-<div class="image-container"></div>
+</div>
 
 <div class="container">
     <div class="big-link-holder">
