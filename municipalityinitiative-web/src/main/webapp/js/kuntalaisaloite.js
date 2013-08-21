@@ -444,12 +444,18 @@ var initiativeType = (function() {
 
 	type.click(function(){
 		var thisObj = $(this);
-
+		
 		if(!thisObj.hasClass('selected')) {
 			resetTypes(true);
 			setSelected(thisObj);
-			toggleSubmitBlock();	
-		}	
+			toggleSubmitBlock();
+		} else {
+			resetTypes(true);
+			emailBlock.hide();
+			vetumaBlock.hide();
+		}
+		
+		return false;
 	});
 
 	return {

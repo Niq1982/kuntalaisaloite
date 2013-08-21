@@ -42,6 +42,9 @@
     -o-transition: @property @delay @easing;
 }
 
+// Mixing
+//
+// Gradients 
 .gradient (@start, @stop){
     background: @start;
     background: linear-gradient(top,  @start, @stop);
@@ -74,4 +77,10 @@
     background: -webkit-gradient(linear, left top, left bottom, from(@grayGradientActive1), to(@grayGradientActive2));
     background: -moz-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
     background: -o-linear-gradient(top,  @grayGradientActive1,  @grayGradientActive2);
+}
+
+.boxSizing(@style: border-box){
+    box-sizing: @style;
+    -webkit-box-sizing: @style; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: @style;    /* Firefox, other Gecko */
 }
