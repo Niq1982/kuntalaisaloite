@@ -1204,7 +1204,8 @@ var tooltip = (function() {
 				effect:		'fade',
 				placement:	'top right', // FIXME: this doesn't seem to work correctly
 				offset:		[-5, 0],
-				trigger:	'hover'
+				trigger:	'hover',
+				predelay: 	500			// Small delay before showing tooltip for more relaxed behaviour.
 			}).dynamic({
 				left: { direction: 'right' },
 				right: { direction: 'left' },
