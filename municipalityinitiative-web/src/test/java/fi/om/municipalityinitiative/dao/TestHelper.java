@@ -239,6 +239,7 @@ public class TestHelper {
                 .set(QAuthor.author.phone, authorDraft.authorPhone)
                 .set(QAuthor.author.participantId, lastParticipantId)
                 .set(QAuthor.author.managementHash, generateHash(40))
+                .set(QAuthor.author.initiativeId, authorDraft.initiativeId)
                 .execute();
         authorLoginUserHolder = new LoginUserHolder(User.normalUser(new NormalAuthorId(lastAuthorId), Collections.singleton(lastInitiativeId)));
 

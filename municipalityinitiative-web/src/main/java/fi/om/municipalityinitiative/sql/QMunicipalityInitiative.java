@@ -62,6 +62,8 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
 
     public final com.mysema.query.sql.ForeignKey<QAuthorInvitation> _authorInvitationInitiativeIdFk = createInvForeignKey(id, "initiative_id");
 
+    public final com.mysema.query.sql.ForeignKey<QAuthor> _authorInitiativeIdFk = createInvForeignKey(id, "initiative_id");
+
     public final com.mysema.query.sql.ForeignKey<QParticipant> _participantMunicipalityInitiativeIdFk = createInvForeignKey(id, "municipality_initiative_id");
 
     public final com.mysema.query.sql.ForeignKey<QVerifiedAuthor> _verifiedAuthorInitiativeFk = createInvForeignKey(id, "initiative_id");

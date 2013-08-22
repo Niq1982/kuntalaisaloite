@@ -87,6 +87,7 @@ create index participant_initiative_index on participant(municipality_initiative
 
 create table author (
     participant_id bigserial,
+    initiative_id bigserial,
     management_hash varchar(40),  -- TODO: CHAR
 
     phone varchar(30),
@@ -94,11 +95,13 @@ create table author (
 
 	constraint management_hash_u unique(management_hash),
     constraint author_pk primary key (participant_id),
-    constraint author_participant_fk foreign key (participant_id) references participant(id)
+    constraint author_participant_fk foreign key (participant_id) references participant(id),
+    constraint author_initiative_id_fk foreign key (initiative_id) references municipality_initiative(id)
 );
 
 create index author_id_index on author(participant_id);
 create index author_management_hash_index on author(management_hash);
+create index author_initiative_id_index on author(initiative_id);
 
 create table author_invitation (
     initiative_id bigserial,
@@ -113,54 +116,5 @@ create table author_invitation (
 );
 
 create index author_invitation_pk_index on author_invitation(initiative_id, confirmation_code);
-
---CREATE OR REPLACE FUNCTION initiative_author_count(given_initiative_id bigint) RETURNS bigint AS $$
---    SELECT count(participant_id) from author, participant where participant.id = author.participant_id and participant.municipality_initiative_id = $1;
---$$ LANGUAGE 'sql';
-
---
---alter table municipality_initiative add constraint municipality_initiative_has_authors check (initiative_author_count(id) > 0);
---set constraints municipality_initiative_has_authors deferred;
-
---
---CREATE OR REPLACE FUNCTION initiative_author_count_after_author_delete() RETURNS trigger AS $$
---    BEGIN
---        IF  -- Initiative is not deleted
---            (SELECT count(id) from municipality_initiative where id = (select distinct municipality_initiative_id from participant where participant.id = OLD.participant_id)) != 0
---            and
---            -- Has no authors
---            (SELECT count(participant_id) from author a, participant p
---                where p.id = a.participant_id and p.municipality_initiative_id = (select p2.municipality_initiative_id from participant p2 where p2.id = OLD.participant_id)) = 0
---            then RAISE EXCEPTION 'Final author cannot be deleted';
---        END IF;
---        RETURN null;
---    END
---
---$$ LANGUAGE 'plpgsql';
---
---CREATE CONSTRAINT TRIGGER initiative_has_authors_trigger
---    AFTER DELETE ON author
---    DEFERRABLE INITIALLY DEFERRED
---FOR EACH ROW EXECUTE PROCEDURE initiative_author_count_after_author_delete();
---
---CREATE OR REPLACE FUNCTION initiative_author_count_after_participant_delete() RETURNS trigger AS $$
---    BEGIN
---        IF  -- Initiative is not deleted
---            (SELECT count(id) from municipality_initiative where id = OLD.municipality_initiative_id) != 0
---            and
---            -- Has no authors
---            (SELECT count(participant_id) from author a, participant p
---                where p.id = a.participant_id and p.municipality_initiative_id = OLD.municipality_initiative_id) = 0
---            then RAISE EXCEPTION 'Final author cannot be deleted';
---        END IF;
---        RETURN null;
---    END
---
---$$ LANGUAGE 'plpgsql';
---
---CREATE CONSTRAINT TRIGGER initiative_has_authors_trigger_after_participant_delete
---    AFTER DELETE ON participant
---    DEFERRABLE INITIALLY DEFERRED
---FOR EACH ROW EXECUTE PROCEDURE initiative_author_count_after_participant_delete();
 
 insert into schema_version (script) values ('01_schema.sql');

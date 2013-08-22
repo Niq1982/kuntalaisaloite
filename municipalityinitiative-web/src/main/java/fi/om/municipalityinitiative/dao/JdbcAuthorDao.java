@@ -43,6 +43,7 @@ public class JdbcAuthorDao implements AuthorDao {
         JdbcInitiativeDao.assertSingleAffection(queryFactory.insert(QAuthor.author)
                 .set(QAuthor.author.managementHash, managementHash)
                 .set(QAuthor.author.participantId, participantId)
+                .set(QAuthor.author.initiativeId, initiativeId)
                 .execute());
         return new NormalAuthorId(participantId);
     }

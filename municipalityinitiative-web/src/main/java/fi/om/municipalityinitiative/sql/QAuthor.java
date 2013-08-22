@@ -1,11 +1,13 @@
 package fi.om.municipalityinitiative.sql;
 
-import static com.mysema.query.types.PathMetadataFactory.*;
-
-import com.mysema.query.types.*;
-import com.mysema.query.types.path.*;
+import com.mysema.query.types.Path;
+import com.mysema.query.types.PathMetadata;
+import com.mysema.query.types.path.NumberPath;
+import com.mysema.query.types.path.StringPath;
 
 import javax.annotation.Generated;
+
+import static com.mysema.query.types.PathMetadataFactory.forVariable;
 
 
 /**
@@ -20,6 +22,8 @@ public class QAuthor extends com.mysema.query.sql.RelationalPathBase<QAuthor> {
 
     public final StringPath address = createString("address");
 
+    public final NumberPath<Long> initiativeId = createNumber("initiative_id", Long.class);
+
     public final StringPath managementHash = createString("management_hash");
 
     public final NumberPath<Long> participantId = createNumber("participant_id", Long.class);
@@ -27,6 +31,8 @@ public class QAuthor extends com.mysema.query.sql.RelationalPathBase<QAuthor> {
     public final StringPath phone = createString("phone");
 
     public final com.mysema.query.sql.PrimaryKey<QAuthor> authorPk = createPrimaryKey(participantId);
+
+    public final com.mysema.query.sql.ForeignKey<QMunicipalityInitiative> authorInitiativeIdFk = createForeignKey(initiativeId, "id");
 
     public final com.mysema.query.sql.ForeignKey<QParticipant> authorParticipantFk = createForeignKey(participantId, "id");
 
