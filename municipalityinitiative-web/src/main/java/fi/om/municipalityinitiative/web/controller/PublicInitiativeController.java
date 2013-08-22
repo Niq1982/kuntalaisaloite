@@ -188,7 +188,8 @@ public class PublicInitiativeController extends BaseController {
     }
 
     @RequestMapping(value={ PARITICIPANT_LIST_FI, PARITICIPANT_LIST_SV }, method=GET)
-    public String participantList(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
+    public String participantList(@PathVariable("id") Long initiativeId, @RequestParam(defaultValue = "0", value = "limit") int offset,
+                                  Model model, Locale locale, HttpServletRequest request) {
         Urls urls = Urls.get(locale);
         String alternativeURL = urls.alt().participantList(initiativeId);
 
@@ -205,9 +206,10 @@ public class PublicInitiativeController extends BaseController {
 
             return ViewGenerator.participantList(initiativeInfo,
                     initiativeInfo.getParticipantCount(),
-                    participantService.findPublicParticipants(initiativeId),
+                    participantService.findPublicParticipants(offset, initiativeId),
                     previousPageURI,
-                    userService.hasManagementRightForInitiative(initiativeId, request)
+                    userService.hasManagementRightForInitiative(initiativeId, request),
+                    offset
             ).view(model, alternativeURL);
         }
     }

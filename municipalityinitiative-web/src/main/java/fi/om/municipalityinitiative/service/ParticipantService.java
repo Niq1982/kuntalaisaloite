@@ -13,6 +13,7 @@ import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
+import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -36,13 +37,13 @@ public class ParticipantService {
     }
 
     @Transactional(readOnly = true)
-    public List<ParticipantListInfo> findPublicParticipants(Long initiativeId) {
+    public List<ParticipantListInfo> findPublicParticipants(int offset, Long initiativeId) {
 
         if (initiativeDao.isVerifiableInitiative(initiativeId)) {
             return toVerifiedListInfo(participantDao.findVerifiedPublicParticipants(initiativeId), initiativeId);
         }
         else {
-            return toNormalListInfo(participantDao.findNormalPublicParticipants(initiativeId), initiativeId);
+            return toNormalListInfo(participantDao.findNormalPublicParticipants(initiativeId, offset, Urls.MAX_PARTICIPANT_LIST_LIMIT), initiativeId);
         }
 
     }

@@ -80,7 +80,8 @@ public class ViewGenerator {
                                                 ParticipantCount participantCount,
                                                 List<ParticipantListInfo> publicParticipants,
                                                 String previousPageURI,
-                                                boolean hasManagementRightForInitiative) {
+                                                boolean hasManagementRightForInitiative,
+                                                int offset) {
         return new ViewGenerator(PARTICIPANT_LIST,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
@@ -88,6 +89,7 @@ public class ViewGenerator {
                         .add("participantCount", participantCount)
                         .add("previousPageURI", previousPageURI)
                         .add("hasManagementRightForInitiative", hasManagementRightForInitiative)
+                        .add("offset", offset)
                         .build());
     }
     

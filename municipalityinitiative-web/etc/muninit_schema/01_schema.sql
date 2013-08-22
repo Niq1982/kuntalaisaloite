@@ -22,7 +22,7 @@ create table municipality (
 
 	constraint municipality_pk primary key(id),
 	constraint municipality_name_u unique(name),
-	constraint municipality_name_sv_u unique(name)
+	constraint municipality_name_sv_u unique(name_sv)
 );
 create index municipality_id_index on municipality(id);
 

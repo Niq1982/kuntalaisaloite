@@ -145,6 +145,20 @@ public class JdbcParticipantDao implements ParticipantDao {
     }
 
     @Override
+    public List<NormalParticipant> findNormalPublicParticipants(Long initiativeId, int offset, int limit) {
+        return queryFactory.query()
+                .from(participant)
+                .where(participant.municipalityInitiativeId.eq(initiativeId))
+                .leftJoin(participant.participantMunicipalityFk, QMunicipality.municipality)
+                .where(participant.showName.eq(true))
+                .where(participant.confirmationCode.isNull())
+                .orderBy(participant.id.desc())
+                .offset(offset)
+                .limit(limit)
+                .list(Mappings.normalParticipantMapping);
+    }
+
+    @Override
     public List<NormalParticipant> findNormalAllParticipants(Long initiativeId) {
         return queryFactory.query()
                 .from(participant)
