@@ -76,8 +76,8 @@
  -->
 <#macro button message url color="">
     <#if color="green">
-        <#assign bgColor="#76b522" />
-        <#assign borderColor="#387d0e" />
+        <#assign bgColor="#7a7a20" />
+        <#assign borderColor="#38380e" />
         <#assign textColor="#ffffff" />
     <#else>
         <#-- Gray as default -->
