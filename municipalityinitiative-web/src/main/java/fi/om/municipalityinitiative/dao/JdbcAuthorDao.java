@@ -27,7 +27,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static fi.om.municipalityinitiative.dao.JdbcInitiativeDao.assertSingleAffection;
-import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 
 @SQLExceptionTranslated
 public class JdbcAuthorDao implements AuthorDao {
@@ -118,13 +117,18 @@ public class JdbcAuthorDao implements AuthorDao {
 
     @Override
     public List<NormalAuthor> findNormalAuthors(Long initiativeId) {
-            return queryFactory.from(municipalityInitiative)
-                    .innerJoin(municipalityInitiative._participantMunicipalityInitiativeIdFk, QParticipant.participant)
-                    .innerJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
-                    .innerJoin(QParticipant.participant.participantMunicipalityFk, QMunicipality.municipality)
-                    .where(municipalityInitiative.id.eq(initiativeId))
-                    .orderBy(QParticipant.participant.id.asc())
-                    .list(Mappings.normalAuthorMapping);
+//            return queryFactory.from(municipalityInitiative)
+//                    .innerJoin(municipalityInitiative._participantMunicipalityInitiativeIdFk, QParticipant.participant)
+//                    .innerJoin(QParticipant.participant._authorParticipantFk, QAuthor.author)
+//                    .innerJoin(QParticipant.participant.participantMunicipalityFk, QMunicipality.municipality)
+//                    .where(municipalityInitiative.id.eq(initiativeId))
+//                    .orderBy(QParticipant.participant.id.asc())
+//                    .list(Mappings.normalAuthorMapping);
+        return queryFactory.from(QAuthor.author)
+                .where(QAuthor.author.initiativeId.eq(initiativeId))
+                .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
+                .innerJoin(QParticipant.participant.participantMunicipalityFk, QMunicipality.municipality)
+                .list(Mappings.normalAuthorMapping);
     }
 
     @Override
