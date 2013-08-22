@@ -187,7 +187,7 @@
         <div class="initiative-content-row">
             <@e.initiativeAuthor authors />
 
-            <#if !user.hasRightToInitiative(initiative.id) && initiative.state == InitiativeState.PUBLISHED>
+            <#if initiative.state == InitiativeState.PUBLISHED>
                 <p><a href="?contactAuthorForm=true#form-contact-author" class="js-contact-author"><span class="icon-small icon-16 envelope margin-right"></span> <@u.message key="contactAuthor.link" args=[authors.publicNameCount+authors.privateNameCount] /></a></p>
             
                 <#if (RequestParameters['formError']?? && RequestParameters['formError'] == "contactAuthor")

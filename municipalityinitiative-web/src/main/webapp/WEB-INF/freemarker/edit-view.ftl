@@ -28,7 +28,7 @@
     <div class="msg-block">
         <div class="system-msg msg-info">
             <#assign municipality><#if updateData.municipality??>${initiative.municipality.getName(locale)!""}</#if></#assign>
-            <h3><@u.message key="initiative.info.title" args=[municipality] /></h3>
+            <h3><@u.message "initiative.initiativeType."+initiative.type /> <@u.message key="initiative.info.municipality" args=[municipality] /></h3>
             <@u.message "initiative.required" /> <span class="icon-small required"></span>
         </div>
     </div>
@@ -102,6 +102,8 @@
         }]
     };
 </script>
+
+<@edit.sessionExpired />
 
 
 </@l.main>

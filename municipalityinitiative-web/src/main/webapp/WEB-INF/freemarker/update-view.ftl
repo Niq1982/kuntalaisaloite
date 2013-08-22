@@ -110,6 +110,7 @@
     };
 </script>
 
+<@edit.sessionExpired />
 
 </@l.main>
 </#escape>

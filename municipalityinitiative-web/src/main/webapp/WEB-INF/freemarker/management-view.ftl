@@ -329,7 +329,6 @@
         </noscript>
         </#if>
     </#if> <#-- /managementSettings.allowSendFixToReview -->
-    
 
     <#--
      * Management VIEW modals
