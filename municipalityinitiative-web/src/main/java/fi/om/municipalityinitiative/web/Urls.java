@@ -179,6 +179,8 @@ public final class Urls {
 
     public static final int MAX_INITIATIVE_SEARCH_LIMIT = 500;
 
+    public static final int MAX_PARTICIPANT_LIST_LIMIT = 50;
+
     // New uris
 
     public static final String SEARCH_FI = "/fi/hae";

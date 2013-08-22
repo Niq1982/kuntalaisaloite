@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
+import fi.om.municipalityinitiative.web.Urls;
 import org.junit.Test;
 
 import javax.annotation.Resource;
@@ -28,13 +29,40 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
     @Test
     public void findPublicParticipants_for_verified_initiative() {
         Long initiativeId = createVerifiedInitiativeWithAuthor();
-        assertThat(participantService.findPublicParticipants(initiativeId), hasSize(1));
+        assertThat(participantService.findPublicParticipants(0, initiativeId), hasSize(1));
     }
 
     @Test
     public void findPublicParticipants_for_normal_initiative() {
         Long initiativeId = createNormalInitiativeWithAuthor();
-        assertThat(participantService.findPublicParticipants(initiativeId), hasSize(1));
+        assertThat(participantService.findPublicParticipants(0, initiativeId), hasSize(1));
+    }
+
+    @Test
+    public void findPublicParticipants_limits_results() {
+        Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipalityId));
+
+        int participantCount = 101;
+        createParticipants(initiativeId, participantCount);
+
+        // Get without offset, should be limited
+        assertThat(participantService.findPublicParticipants(0, initiativeId), hasSize(Urls.MAX_PARTICIPANT_LIST_LIMIT));
+
+        int offset = 60;
+
+        // Use offset, result is the content of "last page"
+        List<ParticipantListInfo> lastOnes = participantService.findPublicParticipants(offset, initiativeId);
+        assertThat(lastOnes, hasSize(participantCount- offset));
+
+        assertThat(lastOnes.get(0).getParticipant().getName(), is(String.valueOf(participantCount - offset)));
+        assertThat(lastOnes.get(lastOnes.size()-1).getParticipant().getName(), is("1"));
+
+    }
+
+    private void createParticipants(Long initiativeId, int participantCount) {
+        for (int i = 0; i < participantCount; ++i) {
+            testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withParticipantName(String.valueOf(i+1)));
+        }
     }
 
     @Test
@@ -54,7 +82,7 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         Long initiativeId = createNormalInitiativeWithAuthor();
         testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withPublicName(true));
 
-        List<ParticipantListInfo> publicParticipants = participantService.findPublicParticipants(initiativeId);
+        List<ParticipantListInfo> publicParticipants = participantService.findPublicParticipants(0, initiativeId);
         precondition(publicParticipants, hasSize(2));
 
         assertThat(publicParticipants.get(0).isAuthor(), is(false));
@@ -66,7 +94,7 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         Long initiativeId = createVerifiedInitiativeWithAuthor();
         testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withPublicName(true));
 
-        List<ParticipantListInfo> publicParticipants = participantService.findPublicParticipants(initiativeId);
+        List<ParticipantListInfo> publicParticipants = participantService.findPublicParticipants(0, initiativeId);
         precondition(publicParticipants, hasSize(2));
 
         assertThat(publicParticipants.get(0).isAuthor(), is(false));
