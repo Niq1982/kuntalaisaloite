@@ -113,7 +113,7 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     }
 
     private InitiativeListInfo getSingleInitiativeInfo() {
-        List<InitiativeListInfo> initiatives = service.findMunicipalityInitiatives(new InitiativeSearch().setShow(InitiativeSearch.Show.all), TestHelper.authorLoginUserHolder);
+        List<InitiativeListInfo> initiatives = service.findMunicipalityInitiatives(new InitiativeSearch().setShow(InitiativeSearch.Show.all), TestHelper.authorLoginUserHolder).list;
         precondition(initiatives, hasSize(1));
         return initiatives.get(0);
     }

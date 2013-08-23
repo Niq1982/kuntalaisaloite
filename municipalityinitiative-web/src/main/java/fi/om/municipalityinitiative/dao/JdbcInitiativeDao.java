@@ -17,6 +17,7 @@ import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
+import fi.om.municipalityinitiative.dto.ui.InitiativeListWithCount;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.QMunicipality;
@@ -60,7 +61,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     @Cacheable(value = "initiativeList")
-    public List<InitiativeListInfo> find(InitiativeSearch search) {
+    public InitiativeListWithCount find(InitiativeSearch search) {
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
                 .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
@@ -70,9 +71,11 @@ public class JdbcInitiativeDao implements InitiativeDao {
         filterByTitle(query, search.getSearch());
         filterByMunicipality(query, search.getMunicipality());
         orderBy(query, search.getOrderBy());
+        long rows = query.count();
         restrictResults(query, search);
 
-        return query.list(Mappings.initiativeListInfoMapping);
+
+        return new InitiativeListWithCount(query.list(Mappings.initiativeListInfoMapping), rows);
     }
 
     @Override

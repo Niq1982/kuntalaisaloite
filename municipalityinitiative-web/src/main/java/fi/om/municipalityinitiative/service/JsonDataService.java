@@ -47,7 +47,7 @@ public class JsonDataService {
     @Transactional(readOnly = true)
     public List<InitiativeListJson> findJsonInitiatives(InitiativeSearch search) {
         List<InitiativeListJson> result = Lists.newArrayList();
-        for (InitiativeListInfo initiativeListInfo : initiativeDao.find(search)) {
+        for (InitiativeListInfo initiativeListInfo : initiativeDao.find(search).list) {
             result.add(new InitiativeListJson(initiativeListInfo));
         }
         return result;
