@@ -26,7 +26,7 @@
     </h1>
 
     <div class="msg-block">
-        <div class="system-msg msg-info">Tällä sivulla listan niistä luomistasi aloitteista, jotka tähtäävät 2 tai 5 prosenttiin kunnan äänioikeutetuista asukkaista.</div>
+        <@u.systemMessage path="ownInitiatives.description" type="info" showClose=false />
     </div>
     
 
@@ -35,6 +35,7 @@
     <#list initiatives as initiative>
         <#if initiative_index == 0><ul></#if>
         <li <#if initiative_index == 0>class="first"</#if>>
+            <a href="${urls.management(initiative.id)}">
 
             <span class="participants">
                 <span class="participants-container">
@@ -50,13 +51,13 @@
 
             <span class="date trigger-tooltip" title="<@u.message "searchResults.initiative.date."+initiative.state />" ><@u.localDate initiative.stateTime /></span>
             <span class="title">
-                <a href="${urls.management(initiative.id)}" class="name">
+                <span class="name">
                     <#if initiative.name??>
                         <@u.limitStringLength initiative.name!"" 150 />
                     <#else>
-                        Luonnos
+                        <@u.message "initiative.draft" />
                     </#if>
-                </a>
+                </span>
             </span>
             <#if !initiative.public>
                 <span class="info">${initiative.municipality.getName(locale)!""}<span class="bull">&bull;</span><span class="state"><@u.message "searchResults.notPublic" /></span></span>
@@ -67,6 +68,7 @@
                 <span class="info">${initiative.municipality.getName(locale)!""}<span class="bull">&bull;</span><span class="state"><@u.message key="initiative.date.sent" args=[sentTime] /></span></span>
             </#if>
 
+            </a>
         </li>
         <#if !initiative_has_next></ul></#if>
     </#list>
