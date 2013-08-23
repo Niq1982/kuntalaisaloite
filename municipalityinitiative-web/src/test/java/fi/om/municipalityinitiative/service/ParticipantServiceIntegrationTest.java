@@ -68,13 +68,13 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
     @Test
     public void findAllParticipants_for_verified_initiative() {
         Long initiativeId = createVerifiedInitiativeWithAuthor();
-        assertThat(participantService.findAllParticipants(initiativeId, TestHelper.authorLoginUserHolder), hasSize(1));
+        assertThat(participantService.findAllParticipants(initiativeId, TestHelper.authorLoginUserHolder, 0), hasSize(1));
     }
 
     @Test
     public void findAllParticipants_for_normal_initiative() {
         Long initiativeId = createNormalInitiativeWithAuthor();
-        assertThat(participantService.findAllParticipants(initiativeId, TestHelper.authorLoginUserHolder), hasSize(1));
+        assertThat(participantService.findAllParticipants(initiativeId, TestHelper.authorLoginUserHolder, 0), hasSize(1));
     }
 
     @Test

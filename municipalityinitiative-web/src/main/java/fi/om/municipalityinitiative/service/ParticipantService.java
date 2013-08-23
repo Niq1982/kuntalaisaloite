@@ -49,14 +49,14 @@ public class ParticipantService {
     }
 
     @Transactional(readOnly = true)
-    public List<ParticipantListInfo> findAllParticipants(Long initiativeId, LoginUserHolder loginUserHolder) {
+    public List<ParticipantListInfo> findAllParticipants(Long initiativeId, LoginUserHolder loginUserHolder, int offset) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
         if (initiativeDao.isVerifiableInitiative(initiativeId)) {
-            return toVerifiedListInfo(participantDao.findVerifiedAllParticipants(initiativeId), initiativeId);
+            return toVerifiedListInfo(participantDao.findVerifiedAllParticipants(initiativeId, offset, Urls.MAX_PARTICIPANT_LIST_LIMIT), initiativeId);
         }
         else {
-            return toNormalListInfo(participantDao.findNormalAllParticipants(initiativeId), initiativeId);
+            return toNormalListInfo(participantDao.findNormalAllParticipants(initiativeId, offset, Urls.MAX_PARTICIPANT_LIST_LIMIT), initiativeId);
         }
     }
 

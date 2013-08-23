@@ -279,7 +279,9 @@ public class InitiativeManagementController extends BaseController {
     }
 
     @RequestMapping(value={ PARITICIPANT_LIST_MANAGE_FI, PARITICIPANT_LIST_MANAGE_SV }, method=GET)
-    public String participantListManage(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
+    public String participantListManage(@PathVariable("id") Long initiativeId,
+                                        @RequestParam(value = "offset", defaultValue = "0") int offset,
+                                        Model model, Locale locale, HttpServletRequest request) {
         Urls urls = Urls.get(locale);
         String alternativeURL = urls.alt().participantListManage(initiativeId);
 
@@ -298,7 +300,7 @@ public class InitiativeManagementController extends BaseController {
 
             return ViewGenerator.participantListManage(initiativeInfo,
                     initiativeInfo.getParticipantCount(),
-                    participantService.findAllParticipants(initiativeId, loginUserHolder),
+                    participantService.findAllParticipants(initiativeId, loginUserHolder, offset),
                     previousPageURI
             ).view(model, alternativeURL);
         }

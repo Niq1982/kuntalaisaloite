@@ -5,10 +5,8 @@ import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import fi.om.municipalityinitiative.dto.service.NormalParticipant;
 import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.dto.service.VerifiedParticipant;
-import fi.om.municipalityinitiative.dto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
-import fi.om.municipalityinitiative.util.MaybeHoldingHashMap;
 import fi.om.municipalityinitiative.util.Membership;
 
 import javax.annotation.Resource;
@@ -100,39 +98,6 @@ public class JdbcParticipantDao implements ParticipantDao {
     }
 
     @Override
-    // FIXME: Remove
-    public ParticipantCount getNormalParticipantCount(Long initiativeId) {
-
-        MaybeHoldingHashMap<Boolean, Long> map = new MaybeHoldingHashMap<>(queryFactory
-                .from(participant)
-                .where(participant.municipalityInitiativeId.eq(initiativeId))
-                .where(participant.confirmationCode.isNull())
-                .groupBy(participant.showName)
-                .map(participant.showName, participant.count()));
-
-        ParticipantCount participantCount = new ParticipantCount();
-        participantCount.setPublicNames(map.get(true).or(0L));
-        participantCount.setPrivateNames(map.get(false).or(0L));
-        return participantCount;
-
-    }
-
-    @Override
-    // FIXME: Remove
-    public ParticipantCount getVerifiedParticipantCount(Long initiativeId) {
-        MaybeHoldingHashMap<Boolean, Long> map = new MaybeHoldingHashMap<>(queryFactory
-                .from(QVerifiedParticipant.verifiedParticipant)
-                .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
-                .groupBy(QVerifiedParticipant.verifiedParticipant.showName)
-                .map(QVerifiedParticipant.verifiedParticipant.showName, QVerifiedParticipant.verifiedParticipant.count()));
-
-        ParticipantCount participantCount = new ParticipantCount();
-        participantCount.setPublicNames(map.get(true).or(0L));
-        participantCount.setPrivateNames(map.get(false).or(0L));
-        return participantCount;
-    }
-
-    @Override
     public List<NormalParticipant> findNormalPublicParticipants(Long initiativeId) {
         return queryFactory.query()
                 .from(participant)
@@ -159,13 +124,15 @@ public class JdbcParticipantDao implements ParticipantDao {
     }
 
     @Override
-    public List<NormalParticipant> findNormalAllParticipants(Long initiativeId) {
+    public List<NormalParticipant> findNormalAllParticipants(Long initiativeId, int offset, int limit) {
         return queryFactory.query()
                 .from(participant)
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
                 .where(participant.confirmationCode.isNull())
                 .leftJoin(participant.participantMunicipalityFk, QMunicipality.municipality)
                 .orderBy(participant.id.desc())
+                .limit(limit)
+                .offset(offset)
                 .list(Mappings.normalParticipantMapping);
     }
 
@@ -182,12 +149,15 @@ public class JdbcParticipantDao implements ParticipantDao {
     }
 
     @Override
-    public List<VerifiedParticipant> findVerifiedAllParticipants(Long initiativeId) {
+    public List<VerifiedParticipant> findVerifiedAllParticipants(Long initiativeId, int offset, int limit) {
         return queryFactory.from(QVerifiedParticipant.verifiedParticipant)
                 .innerJoin(QVerifiedParticipant.verifiedParticipant.verifiedParticipantVerifiedUserFk, QVerifiedUser.verifiedUser)
                 .innerJoin(QVerifiedParticipant.verifiedParticipant.verifiedParticipantInitiativeFk, QMunicipalityInitiative.municipalityInitiative)
                 .leftJoin(QMunicipalityInitiative.municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
                 .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
+                .orderBy(QVerifiedParticipant.verifiedParticipant.participateTime.desc(), QVerifiedUser.verifiedUser.id.desc())
+                .limit(limit)
+                .offset(offset)
                 .list(Mappings.verifiedParticipantMapping);
     }
 

@@ -40,5 +40,6 @@ create table verified_participant (
     constraint verified_participant_verified_user_fk foreign key (verified_user_id) references verified_user(id)
 );
 create index verified_participant_initiative_id_index on verified_participant(initiative_id);
+create index verified_participant_initiative_id_ordered_index on verified_participant(initiative_id, participate_time);
 create index verified_participant_user_id_index on verified_participant(verified_user_id);
 
