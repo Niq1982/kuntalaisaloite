@@ -16,7 +16,7 @@
 
 <@b.separator />
 
-<@b.emailFooter type />
+<@b.emailFooter type=type postFix="" managementHash=managementHash/>
 
 <#-- Swedish part -->
 <#global switchLocale = altLocale />
@@ -33,6 +33,6 @@
 <@s.statusInfo emailMessageType type />
 <@b.separator />
 
-<@b.emailFooter type />
+<@b.emailFooter type=type postFix="" managementHash=managementHash/>
 
 <#global switchLocale = locale />
