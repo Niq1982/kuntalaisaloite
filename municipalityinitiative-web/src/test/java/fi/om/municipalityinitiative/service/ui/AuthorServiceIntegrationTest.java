@@ -179,6 +179,23 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
     }
 
     @Test
+    public void confirm_normal_author_invitation_increases_public_names_count() {
+        Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality);
+        AuthorInvitation invitation = createInvitation(initiativeId);
+
+        AuthorInvitationUIConfirmDto confirmDto = ReflectionTestUtils.modifyAllFields(new AuthorInvitationUIConfirmDto());
+        confirmDto.getContactInfo().setShowName(true);
+        confirmDto.assignInitiativeMunicipality(testMunicipality);
+        confirmDto.setHomeMunicipality(testMunicipality);
+        confirmDto.setConfirmCode(invitation.getConfirmationCode());
+
+        int originalPublicParticipantCount = testHelper.getInitiative(initiativeId).getParticipantCountPublic();
+        authorService.confirmAuthorInvitation(initiativeId, confirmDto, Locales.LOCALE_FI);
+        assertThat(testHelper.getInitiative(initiativeId).getParticipantCountPublic(), is(originalPublicParticipantCount + 1));
+
+    }
+
+    @Test
     public void confirm_author_with_rejected_invitation_throws_exception() {
         Long initiativeId = testHelper.createCollaborativeAccepted(testMunicipality);
         AuthorInvitation rejectedInvitation = createRejectedInvitation(initiativeId);

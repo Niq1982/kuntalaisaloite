@@ -77,22 +77,24 @@ public class JdbcParticipantDao implements ParticipantDao {
 
     @Override
     // Preparing because we do not know participants name
-    public Long prepareParticipant(Long initiativeId, Long homeMunicipality, String email, Membership membership) {
+    public Long prepareParticipant(Long initiativeId, Long homeMunicipality, String email, Membership membership, boolean showName) {
         Long participantId = queryFactory.insert(participant)
                 .set(participant.municipalityId, homeMunicipality)
                 .set(participant.municipalityInitiativeId, initiativeId)
                 .set(participant.email, email)
                 .set(participant.membershipType, membership)
-                .set(participant.showName, true) // Default is true
+                .set(participant.showName, showName) // Default is true
                 .executeWithKey(participant.id);
 
         // Increase denormalized participantCount if collaborative initiative.
-        // DB constraint will also fail if trying to increase count for non-collaborative initiative
-        queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
+        SQLUpdateClause updateParticipantCount = queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
                 .set(QMunicipalityInitiative.municipalityInitiative.participantCount,
                         QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
-                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
-                .execute();
+                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId));
+        if (showName) {
+            updateParticipantCount.set(QMunicipalityInitiative.municipalityInitiative.participantCountPublic, QMunicipalityInitiative.municipalityInitiative.participantCountPublic.add(1));
+        }
+        updateParticipantCount.execute();
 
         return participantId;
     }

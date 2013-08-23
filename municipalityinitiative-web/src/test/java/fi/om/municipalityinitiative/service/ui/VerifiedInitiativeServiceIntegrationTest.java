@@ -23,10 +23,7 @@ import fi.om.municipalityinitiative.sql.QAuthorInvitation;
 import fi.om.municipalityinitiative.sql.QVerifiedAuthor;
 import fi.om.municipalityinitiative.sql.QVerifiedParticipant;
 import fi.om.municipalityinitiative.sql.QVerifiedUser;
-import fi.om.municipalityinitiative.util.InitiativeState;
-import fi.om.municipalityinitiative.util.InitiativeType;
-import fi.om.municipalityinitiative.util.Locales;
-import fi.om.municipalityinitiative.util.Maybe;
+import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -483,6 +480,26 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
         thrown.expect(DuplicateKeyException.class);
         service.createParticipant(verifiedLoginUserHolder, initiativeId, participantCreateDto());
+    }
+
+    @Test
+    public void confirm_verified_author_invitation_increases_public_names_count() {
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.ACCEPTED));
+
+        AuthorInvitation invitation = authorInvitation(initiativeId);
+        testHelper.addAuthorInvitation(invitation, false);
+
+        AuthorInvitationUIConfirmDto confirmDto = ReflectionTestUtils.modifyAllFields(new AuthorInvitationUIConfirmDto());
+        confirmDto.getContactInfo().setShowName(true);
+        confirmDto.assignInitiativeMunicipality(testMunicipality.getId());
+        confirmDto.setHomeMunicipality(testMunicipality.getId());
+        confirmDto.setConfirmCode(invitation.getConfirmationCode());
+
+        int originalPublicParticipantCount = testHelper.getInitiative(initiativeId).getParticipantCountPublic();
+        service.confirmVerifiedAuthorInvitation(verifiedUserHolderWithMunicipalityId(Maybe.of(testMunicipality.getId())), initiativeId, confirmDto, Locales.LOCALE_FI);
+
+        assertThat(testHelper.getInitiative(initiativeId).getParticipantCountPublic(), is(originalPublicParticipantCount + 1));
+
     }
 
     private static AuthorInvitation authorInvitation(Long initiativeId) {

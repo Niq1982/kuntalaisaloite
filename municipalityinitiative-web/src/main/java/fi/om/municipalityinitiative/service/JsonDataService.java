@@ -54,7 +54,6 @@ public class JsonDataService {
     }
 
     @Transactional(readOnly = true)
-    // FIXME: Remove getNormalParticipantCount and make usable with verified initiatives
     public InitiativeJson getInitiative(Long id) {
         Initiative initiativeInfo = initiativeDao.get(id);
         ParticipantCount participantCount = new ParticipantCount();
@@ -85,7 +84,7 @@ public class JsonDataService {
         initiative.setCollaborative(true);
         initiative.setStateTime(new LocalDate(2012, 12, 1));
         initiative.setId(1L);
-        initiative.setName("Koirat pois lähiöistä");
+        initiative.setName("Tämä on esimerkkialoitteen otsikko");
         initiative.setParticipantCount(2);
         return Collections.singletonList(new InitiativeListJson(initiative));
     }
@@ -107,8 +106,8 @@ public class JsonDataService {
 
         Initiative initiativeInfo = new Initiative();
         initiativeInfo.setId(1L);
-        initiativeInfo.setName("Koirat pois lähiöistä");
-        initiativeInfo.setProposal("Kakkaa on joka paikassa");
+        initiativeInfo.setName("Tämä on esimerkkialoitteen otsikko");
+        initiativeInfo.setProposal("Tämä on esimerkkialoitteen sisältö");
         initiativeInfo.setMunicipality(ApiController.TAMPERE);
         initiativeInfo.setSentTime(Maybe.<LocalDate>fromNullable(null));
         initiativeInfo.setStateTime(new LocalDate(2010, 1, 1));

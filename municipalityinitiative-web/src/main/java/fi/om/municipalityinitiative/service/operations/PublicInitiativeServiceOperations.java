@@ -53,8 +53,8 @@ public class PublicInitiativeServiceOperations {
         Long participantId = participantDao.prepareParticipant(preparedInitiativeData.initiativeId,
                 createDto.getHomeMunicipality(),
                 createDto.getParticipantEmail(),
-                createDto.hasMunicipalMembership() ? createDto.getMunicipalMembership() : Membership.none
-        );
+                createDto.hasMunicipalMembership() ? createDto.getMunicipalMembership() : Membership.none,
+                true);
         preparedInitiativeData.managementHash = RandomHashGenerator.longHash();
         preparedInitiativeData.authorId = authorDao.createAuthor(preparedInitiativeData.initiativeId, participantId, preparedInitiativeData.managementHash);
         return preparedInitiativeData;
