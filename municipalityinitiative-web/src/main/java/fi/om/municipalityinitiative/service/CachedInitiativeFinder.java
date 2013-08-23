@@ -24,7 +24,7 @@ public class CachedInitiativeFinder {
         search.setShow(InitiativeSearch.Show.all);
         search.setOrderBy(InitiativeSearch.OrderBy.latest);
 
-        return initiativeService.findMunicipalityInitiatives(search, new LoginUserHolder<>(User.anonym()));
+        return initiativeService.findMunicipalityInitiatives(search, new LoginUserHolder<>(User.anonym())).list;
 
     }
 }

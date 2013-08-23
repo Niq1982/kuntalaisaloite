@@ -3,7 +3,6 @@ package fi.om.municipalityinitiative.dao;
 import fi.om.municipalityinitiative.dto.service.NormalParticipant;
 import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.dto.service.VerifiedParticipant;
-import fi.om.municipalityinitiative.dto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.Membership;
 
@@ -17,19 +16,15 @@ public interface ParticipantDao {
 
     void confirmParticipation(Long participantId, String confirmationCode);
 
-    // FIXME: Remove
-    ParticipantCount getNormalParticipantCount(Long initiativeId);
-
-    // FIXME: Remove
-    ParticipantCount getVerifiedParticipantCount(Long initiativeId);
-
     List<NormalParticipant> findNormalPublicParticipants(Long initiativeId);
 
-    List<NormalParticipant> findNormalAllParticipants(Long initiativeId);
+    List<NormalParticipant> findNormalPublicParticipants(Long initiativeId, int offset, int limit);
 
-    List<VerifiedParticipant> findVerifiedPublicParticipants(Long initiativeId);
+    List<NormalParticipant> findNormalAllParticipants(Long initiativeId, int offset, int limit);
 
-    List<VerifiedParticipant> findVerifiedAllParticipants(Long initiativeId);
+    List<VerifiedParticipant> findVerifiedPublicParticipants(Long initiativeId, int offset, int limit);
+
+    List<VerifiedParticipant> findVerifiedAllParticipants(Long initiativeId, int offset, int limit);
 
     Long getInitiativeIdByParticipant(Long participantId);
 
@@ -38,6 +33,4 @@ public interface ParticipantDao {
     void updateVerifiedParticipantShowName(Long initiativeId, String hash, boolean showName);
 
     void addVerifiedParticipant(Long initiativeId, VerifiedUserId userId, boolean showName, boolean verifiedMunicipality);
-
-    List<NormalParticipant> findNormalPublicParticipants(Long initiativeId, int offset, int limit);
 }

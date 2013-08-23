@@ -69,7 +69,7 @@ public class PublicInitiativeController extends BaseController {
         List<Municipality> municipalities = municipalityService.findAllMunicipalities(locale);
         LoginUserHolder loginUserHolder = new LoginUserHolder(userService.getUser(request));
         SearchParameterQueryString queryString = new SearchParameterQueryString(search);
-        return ViewGenerator.searchView(publicInitiativeService.findMunicipalityInitiatives(search, loginUserHolder),
+        return ViewGenerator.searchView(publicInitiativeService.findMunicipalityInitiatives(search, loginUserHolder).list,
                 municipalities,
                 search,
                 queryString,
@@ -352,7 +352,7 @@ public class PublicInitiativeController extends BaseController {
         search.setShow(InitiativeSearch.Show.all);
 
         LoginUserHolder loginUserHolder = new LoginUserHolder(User.anonym());
-        return ViewGenerator.iframeSearch(publicInitiativeService.findMunicipalityInitiatives(search, loginUserHolder),
+        return ViewGenerator.iframeSearch(publicInitiativeService.findMunicipalityInitiatives(search, loginUserHolder).list,
                 municipalities,
                 search,
                 new SearchParameterQueryString(search),

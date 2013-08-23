@@ -47,7 +47,7 @@ public class JsonDataService {
     @Transactional(readOnly = true)
     public List<InitiativeListJson> findJsonInitiatives(InitiativeSearch search) {
         List<InitiativeListJson> result = Lists.newArrayList();
-        for (InitiativeListInfo initiativeListInfo : initiativeDao.find(search)) {
+        for (InitiativeListInfo initiativeListInfo : initiativeDao.find(search).list) {
             result.add(new InitiativeListJson(initiativeListInfo));
         }
         return result;
@@ -56,10 +56,14 @@ public class JsonDataService {
     @Transactional(readOnly = true)
     // FIXME: Remove getNormalParticipantCount and make usable with verified initiatives
     public InitiativeJson getInitiative(Long id) {
+        Initiative initiativeInfo = initiativeDao.get(id);
+        ParticipantCount participantCount = new ParticipantCount();
+        participantCount.setPublicNames(initiativeInfo.getParticipantCountPublic());
+        participantCount.setPrivateNames(initiativeInfo.getParticipantCount() - participantCount.getPublicNames());
         return InitiativeJson.from(
-                initiativeDao.get(id),
+                initiativeInfo,
                 participantDao.findNormalPublicParticipants(id),
-                participantDao.getNormalParticipantCount(id),
+                participantCount,
                 authorService.findPublicAuthors(id));
 
     }

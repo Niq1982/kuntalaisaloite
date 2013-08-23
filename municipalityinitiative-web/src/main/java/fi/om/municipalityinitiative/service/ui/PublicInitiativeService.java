@@ -17,7 +17,6 @@ import fi.om.municipalityinitiative.util.Maybe;
 
 import javax.annotation.Resource;
 
-import java.util.List;
 import java.util.Locale;
 
 import static fi.om.municipalityinitiative.service.operations.PublicInitiativeServiceOperations.ParticipantCreatedData;
@@ -35,7 +34,7 @@ public class PublicInitiativeService {
     @Resource
     private EncryptionService encryptionService;
 
-    public List<InitiativeListInfo> findMunicipalityInitiatives(InitiativeSearch search, LoginUserHolder loginUserHolder) {
+    public InitiativeListWithCount findMunicipalityInitiatives(InitiativeSearch search, LoginUserHolder loginUserHolder) {
 
         // XXX: This switching from all to omAll is pretty nasty, because value must be set back to original after usage
         // because UI is not prepared to omAll value, it's only for dao actually.
@@ -47,7 +46,7 @@ public class PublicInitiativeService {
             loginUserHolder.assertOmUser();
         }
 
-        List<InitiativeListInfo> initiativeListInfos = operations.findInitiatives(search);
+        InitiativeListWithCount initiativeListInfos = operations.findInitiatives(search);
         if (search.getShow() == InitiativeSearch.Show.omAll)
             search.setShow(InitiativeSearch.Show.all);
         return initiativeListInfos;

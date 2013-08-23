@@ -88,7 +88,7 @@ public class EfficiencyTest {
                 public List<InitiativeListInfo> call() throws Exception {
 //                    currentlyMiningDatabase.incrementAndGet();
                     long l = System.currentTimeMillis();
-                    List<InitiativeListInfo> initiatives = service.findMunicipalityInitiatives(new InitiativeSearch(), new LoginUserHolder<>(User.anonym()));
+                    List<InitiativeListInfo> initiatives = service.findMunicipalityInitiatives(new InitiativeSearch(), new LoginUserHolder<>(User.anonym())).list;
                     System.out.println("Duration: " + (System.currentTimeMillis() - l));
 
 //                    System.out.println(currentlyMiningDatabase);

@@ -3,22 +3,22 @@ package fi.om.municipalityinitiative.service.operations;
 import fi.om.municipalityinitiative.dao.*;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
-import fi.om.municipalityinitiative.dto.service.*;
-import fi.om.municipalityinitiative.dto.ui.*;
-import fi.om.municipalityinitiative.dto.user.User;
+import fi.om.municipalityinitiative.dto.service.AuthorMessage;
+import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.ManagementSettings;
+import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
+import fi.om.municipalityinitiative.dto.ui.AuthorUIMessage;
+import fi.om.municipalityinitiative.dto.ui.InitiativeListWithCount;
+import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
+import fi.om.municipalityinitiative.dto.ui.PrepareInitiativeUICreateDto;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
-import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
-import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-
-import java.util.Collections;
-import java.util.List;
 
 import static fi.om.municipalityinitiative.util.SecurityUtil.assertAllowance;
 
@@ -110,7 +110,7 @@ public class PublicInitiativeServiceOperations {
     }
 
     @Transactional(readOnly = true)
-    public List<InitiativeListInfo> findInitiatives(InitiativeSearch search) {
+    public InitiativeListWithCount findInitiatives(InitiativeSearch search) {
         return initiativeDao.find(search);
     }
 

@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
+import fi.om.municipalityinitiative.dto.ui.InitiativeListWithCount;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
@@ -15,7 +16,7 @@ import java.util.List;
 
 public interface InitiativeDao {
 
-    List<InitiativeListInfo> find(InitiativeSearch search);
+    InitiativeListWithCount find(InitiativeSearch search);
 
     Initiative get(Long initiativeId);
 
