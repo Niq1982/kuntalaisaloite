@@ -40,7 +40,7 @@ public class ParticipantService {
     public List<ParticipantListInfo> findPublicParticipants(int offset, Long initiativeId) {
 
         if (initiativeDao.isVerifiableInitiative(initiativeId)) {
-            return toVerifiedListInfo(participantDao.findVerifiedPublicParticipants(initiativeId), initiativeId);
+            return toVerifiedListInfo(participantDao.findVerifiedPublicParticipants(initiativeId, offset, Urls.MAX_PARTICIPANT_LIST_LIMIT), initiativeId);
         }
         else {
             return toNormalListInfo(participantDao.findNormalPublicParticipants(initiativeId, offset, Urls.MAX_PARTICIPANT_LIST_LIMIT), initiativeId);

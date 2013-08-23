@@ -170,12 +170,14 @@ public class JdbcParticipantDao implements ParticipantDao {
     }
 
     @Override
-    public List<VerifiedParticipant> findVerifiedPublicParticipants(Long initiativeId) {
+    public List<VerifiedParticipant> findVerifiedPublicParticipants(Long initiativeId, int offset, int limit) {
         return queryFactory.from(QVerifiedParticipant.verifiedParticipant)
                 .innerJoin(QVerifiedParticipant.verifiedParticipant.verifiedParticipantVerifiedUserFk, QVerifiedUser.verifiedUser)
                 .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
                 .where(QVerifiedParticipant.verifiedParticipant.showName.eq(true))
                 .orderBy(QVerifiedParticipant.verifiedParticipant.participateTime.desc(), QVerifiedUser.verifiedUser.id.desc())
+                .limit(limit)
+                .offset(offset)
                 .list(Mappings.verifiedParticipantMapping);
     }
 

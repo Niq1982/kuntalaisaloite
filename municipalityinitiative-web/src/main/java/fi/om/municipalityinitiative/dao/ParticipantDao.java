@@ -27,7 +27,7 @@ public interface ParticipantDao {
 
     List<NormalParticipant> findNormalAllParticipants(Long initiativeId);
 
-    List<VerifiedParticipant> findVerifiedPublicParticipants(Long initiativeId);
+    List<VerifiedParticipant> findVerifiedPublicParticipants(Long initiativeId, int offset, int maxParticipantListLimit);
 
     List<VerifiedParticipant> findVerifiedAllParticipants(Long initiativeId);
 

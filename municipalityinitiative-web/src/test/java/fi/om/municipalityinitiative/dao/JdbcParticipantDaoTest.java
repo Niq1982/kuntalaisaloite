@@ -143,7 +143,7 @@ public class JdbcParticipantDaoTest {
     public void find_verified_public_participants_sets_all_data() {
         Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipalityId).applyAuthor().toInitiativeDraft());
 
-        List<VerifiedParticipant> participants = participantDao.findVerifiedPublicParticipants(initiativeId);
+        List<VerifiedParticipant> participants = participantDao.findVerifiedPublicParticipants(initiativeId, 0, fi.om.municipalityinitiative.web.Urls.MAX_PARTICIPANT_LIST_LIMIT);
         assertThat(participants, hasSize(1));
         VerifiedParticipant participant = participants.get(0);
 
@@ -185,10 +185,21 @@ public class JdbcParticipantDaoTest {
                 .withParticipantName("Public Participant")
                 .withPublicName(true));
 
-        List<VerifiedParticipant> participants = participantDao.findVerifiedPublicParticipants(initiativeId);
+        List<VerifiedParticipant> participants = participantDao.findVerifiedPublicParticipants(initiativeId, 0, fi.om.municipalityinitiative.web.Urls.MAX_PARTICIPANT_LIST_LIMIT);
         assertThat(participants, hasSize(1));
         assertThat(participants.get(0).getName(), is("Public Participant"));
 
+    }
+
+    @Test
+    public void find_verified_public_participants_uses_offset_and_limit() {
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipalityId));
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withParticipantName("1"));
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withParticipantName("2"));
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withParticipantName("3"));
+        List<VerifiedParticipant> result = participantDao.findVerifiedPublicParticipants(initiativeId, 1, 1);
+        assertThat(result, hasSize(1));
+        assertThat(result.get(0).getName(), is("2"));
     }
 
     @Test
