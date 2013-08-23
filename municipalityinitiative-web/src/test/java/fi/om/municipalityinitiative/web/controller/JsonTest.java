@@ -64,14 +64,14 @@ public class JsonTest {
                 "\"nameFi\":\"Tampere\",\n" +
                 "\"nameSv\":\"Tammerfors\"\n" +
                 "},\n" +
-                "\"name\":\"Koirat pois lähiöistä\",\n" +
+                "\"name\":\"Tämä on esimerkkialoitteen otsikko\",\n" +
                 "\"participantCount\":{\n" +
                 "\"externalNames\":0,\n" +
                 "\"privateNames\":10,\n" +
                 "\"publicNames\":1,\n" +
                 "\"total\":11\n" +
                 "},\n" +
-                "\"proposal\":\"Kakkaa on joka paikassa\",\n" +
+                "\"proposal\":\"Tämä on esimerkkialoitteen sisältö\",\n" +
                 "\"publicParticipants\":[\n" +
                 "{\n" +
                 "\"municipality\":{\n" +
@@ -102,7 +102,7 @@ public class JsonTest {
                 "\"nameFi\":\"Tampere\",\n" +
                 "\"nameSv\":\"Tammerfors\"\n" +
                 "},\n" +
-                "\"name\":\"Koirat pois lähiöistä\",\n" +
+                "\"name\":\"Tämä on esimerkkialoitteen otsikko\",\n" +
                 "\"participantCount\":2,\n" +
                 "\"publishDate\":\"2012-12-01\",\n" +
                 "\"sentTime\":\"2012-12-24\"\n" +
