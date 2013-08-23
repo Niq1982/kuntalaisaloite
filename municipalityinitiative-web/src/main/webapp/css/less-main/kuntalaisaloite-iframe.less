@@ -776,6 +776,16 @@ ul, ol {
     }
 }
 
+.smallestWidth(){
+    .small-button {
+        padding:0 4px;
+        
+        .small-icon {
+            padding-left:25px;
+        }
+    }
+}
+
 // IE8- fallbacks for media query
 .ie6, .ie7, .ie8 {
 
@@ -785,6 +795,7 @@ ul, ol {
     
     body.small {
         .smallWidth();
+        .smallestWidth();
     }
 }
 .ie6, .ie7 {
@@ -802,4 +813,8 @@ ul, ol {
 
 @media (max-width: 300px) {
     .smallWidth();
+}
+
+@media (max-width: 230px) {
+    .smallestWidth();
 }
