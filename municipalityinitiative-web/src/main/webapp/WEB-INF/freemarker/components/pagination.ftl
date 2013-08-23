@@ -69,7 +69,7 @@
         <#if queryString??>
             <#assign urlParam = queryString.withOffset(prev) />
         <#else>
-            <#assign urlParam = "?limit=" + prev  />
+            <#assign urlParam = "?offset=" + prev  />
         </#if>
         
         <a href="${springMacroRequestContext.requestUri}${urlParam}" class="prev"><span class="icon-small arrow-left"></span> <@u.message "pagination.prev" /></a>
@@ -98,7 +98,7 @@
         <#if queryString??>
             <#assign urlParam = queryString.withOffset(params.offset + params.limit) />
         <#else>
-            <#assign urlParam = "?limit=" + next  />
+            <#assign urlParam = "?offset=" + next  />
         </#if>
     
         <a href="${springMacroRequestContext.requestUri}${urlParam}" class="next"><@u.message "pagination.next" /> <span class="icon-small arrow-right"></span></a>

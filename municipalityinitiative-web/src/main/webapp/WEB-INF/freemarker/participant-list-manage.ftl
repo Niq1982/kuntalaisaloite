@@ -1,6 +1,7 @@
 <#import "components/layout.ftl" as l />
 <#import "components/utils.ftl" as u />
 <#import "components/elements.ftl" as e />
+<#import "components/pagination.ftl" as p />
 
 <#escape x as x?html> 
 
@@ -35,8 +36,18 @@
                 <#if (secureCount > 0)><p><@u.message key="participantList.secureCount" args=[secureCount] /></p></#if>
             </#if>
 
+            <#assign paginationParams = {
+                "total":      participantCount.total,
+                "limit":      50,
+                "offset":     offset,
+                "enableLimits": false
+            } />
+            
+            <@p.pagination paginationParams "top" />
+            
             <@participantListManage participants />
-
+    
+            <@p.pagination paginationParams "bottom" />
         </div>
     <#else>
         <#-- Confirm Delete form for NOSCRIPT users -->

@@ -188,7 +188,7 @@ public class PublicInitiativeController extends BaseController {
     }
 
     @RequestMapping(value={ PARITICIPANT_LIST_FI, PARITICIPANT_LIST_SV }, method=GET)
-    public String participantList(@PathVariable("id") Long initiativeId, @RequestParam(defaultValue = "0", value = "limit") int offset,
+    public String participantList(@PathVariable("id") Long initiativeId, @RequestParam(defaultValue = "0", value = "offset") int offset,
                                   Model model, Locale locale, HttpServletRequest request) {
         Urls urls = Urls.get(locale);
         String alternativeURL = urls.alt().participantList(initiativeId);

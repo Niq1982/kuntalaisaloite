@@ -96,12 +96,14 @@ public class ViewGenerator {
     public static ViewGenerator participantListManage(InitiativeViewInfo initiativeInfo,
                                                       ParticipantCount participantCount,
                                                       List<ParticipantListInfo> publicParticipants,
+                                                      int offset,
                                                       String previousPageURI) {
         return new ViewGenerator(PARTICIPANT_LIST_MANAGE,
                 new AttributeBuilder()
                 .add("initiative", initiativeInfo)
                 .add("participants", publicParticipants)
                 .add("participantCount", participantCount)
+                .add("offset", offset)
                 .add("previousPageURI", previousPageURI)
                 .build());
     }

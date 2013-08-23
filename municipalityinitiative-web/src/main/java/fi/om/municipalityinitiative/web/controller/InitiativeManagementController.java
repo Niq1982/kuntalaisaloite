@@ -301,6 +301,7 @@ public class InitiativeManagementController extends BaseController {
             return ViewGenerator.participantListManage(initiativeInfo,
                     initiativeInfo.getParticipantCount(),
                     participantService.findAllParticipants(initiativeId, loginUserHolder, offset),
+                    offset,
                     previousPageURI
             ).view(model, alternativeURL);
         }
