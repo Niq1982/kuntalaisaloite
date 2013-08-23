@@ -73,36 +73,47 @@
     <br class="clear" />
     
     <noscript>
-        <div class="input-block-content">
+        <div class="input-block-content no-top-margin">
             <div class="system-msg msg-info">
                 <#assign href= "${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" />
-                <@u.messageHTML key="initiative.municipality.different" args=[href] />
+                
+                <#if !user.isVerifiedUser()>
+                    <@u.messageHTML key="initiative.municipality.different" args=[href] />
+                <#else>
+                    <@u.messageHTML key="initiative.municipality.different.verifiedUser" args=[href] />
+                </#if>
             </div>
         </div>
     </noscript>
     
     <div id="municipalMembership" class="municipality-not-equal js-hide">
-        <div class="input-block-content hidden">
-            <#assign href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" />
-            <@u.systemMessage path="initiative.municipality.notEqual" type="info" showClose=false args=[href] />
-        </div>
-        <div class="input-block-content">
-            <@f.radiobutton path="initiative.municipalMembership" required="required" options={
-                "community":"initiative.municipalMembership.community",
-                "company":"initiative.municipalMembership.company",
-                "property":"initiative.municipalMembership.property"
-
-            } attributes="" />
-            <br/>
-            <@f.radiobutton path="initiative.municipalMembership" required="required" options={
-                "none":"initiative.municipalMembership.none"
-            } attributes="" header=false/>
-
-        </div>
-        
-        <div class="input-block-content is-not-member no-top-margin js-hide hidden">
-            <@u.systemMessage path="warning.initiative.notMember" type="warning" showClose=false />
-        </div>
+        <#if !user.isVerifiedUser()>
+            <div class="input-block-content hidden">
+                <#assign href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" />
+                <@u.systemMessage path="initiative.municipality.notEqual" type="info" showClose=false args=[href] />
+            </div>
+            <div class="input-block-content">
+                <@f.radiobutton path="initiative.municipalMembership" required="required" options={
+                    "community":"initiative.municipalMembership.community",
+                    "company":"initiative.municipalMembership.company",
+                    "property":"initiative.municipalMembership.property"
+    
+                } attributes="" />
+                <br/>
+                <@f.radiobutton path="initiative.municipalMembership" required="required" options={
+                    "none":"initiative.municipalMembership.none"
+                } attributes="" header=false/>
+    
+            </div>
+            
+            <div class="input-block-content is-not-member no-top-margin js-hide hidden">
+                <@u.systemMessage path="warning.initiative.notMember" type="warning" showClose=false />
+            </div>
+        <#else>
+            <div class="input-block-content no-top-margin hidden">
+                <@u.systemMessage path="warning.verifiedAuthor.notInhabitant" type="warning" showClose=false />
+            </div>
+        </#if>
     </div>
 </#macro>
 
@@ -112,6 +123,7 @@
  * Choose the type of the initiative
  * - Normal
  * - 2% and 5% with VETUMA
+ * - If user is authenticated he/she will not be able to do regular initiative
  *
  * Prints help-texts and validation errors in this block
  -->
@@ -127,9 +139,9 @@
         <@spring.bind "initiative.initiativeType" /> 
         <@f.showError />
         
-        <@initiativeTypeBlock InitiativeType.UNDEFINED true />
-        <@initiativeTypeBlock InitiativeType.COLLABORATIVE_COUNCIL enableVerifiedInitiatives />
-        <@initiativeTypeBlock InitiativeType.COLLABORATIVE_CITIZEN enableVerifiedInitiatives />
+        <@initiativeTypeBlock type=InitiativeType.UNDEFINED enabled=!user.isVerifiedUser() />
+        <@initiativeTypeBlock type=InitiativeType.COLLABORATIVE_COUNCIL enabled=enableVerifiedInitiatives />
+        <@initiativeTypeBlock type=InitiativeType.COLLABORATIVE_CITIZEN enabled=enableVerifiedInitiatives />
     </div>
 </#macro>
 
@@ -160,7 +172,7 @@
     <#if enabled>
         <label class="initiative-type enabled ${(spring.stringStatusValue == type)?string("selected","")}" data-verifiable="${verifiable?string}">
     <#else>
-        <label class="initiative-type trigger-tooltip" title="<@u.message "initiative.initiativeType.disabled.tooltip" />">
+        <label class="initiative-type trigger-tooltip" title="<@u.message "initiative.initiativeType.disabled.tooltip."+type />">
     </#if>
         <span class="inner">
             <span class="icon-32 secondary left">${typeNumber}</span>
@@ -185,7 +197,7 @@
         <#else>
             <span class="action blocked">
                 <span class="checkbox disabled"></span>
-                <span class="push"><@u.message "initiative.initiativeType.disabled" /></span>
+                <span class="push"><@u.message "initiative.initiativeType.disabled."+type /></span>
             </span>
         </#if>
     </label>

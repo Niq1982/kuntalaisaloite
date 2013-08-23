@@ -145,7 +145,15 @@
     -->
 </div>
 
-<@p.pagination currentSearch.limit!500 currentSearch.offset!0 "top" />
+<#assign paginationParams = {
+    "total":      initiativeCounts[currentSearch.show],
+    "limit":      currentSearch.limit!500,
+    "offset":     currentSearch.offset!0,
+    "queryString": queryString,
+    "enableLimits": true
+} />
+
+<@p.pagination paginationParams "top" />
 
 <div class="search-results">
 <#if initiatives?? && (initiatives?size > 0)>
@@ -194,7 +202,7 @@
 
 </div>
 
-<@p.pagination currentSearch.limit!500 currentSearch.offset!0 "bottom" />
+<@p.pagination paginationParams "bottom" />
 
 
 </@l.main>

@@ -8,13 +8,14 @@
  * Print link to pages
  * Current page is displayed as a span
  *
- * @param totalItems is the total amount of filtered initiatives
- * @param limit is the current limit
- * @param offset is the current offset
+ * @param params is an object containing:
+ *  - total is the total amount of filtered initiatives
+ *  - limit is the current limit
+ *  - offset is the current offset
 -->
-<#macro pages totalItems limit offset>
-    <#assign totalPages = (totalItems / limit)?ceiling />
-    <#assign currOffset= (offset / limit)?floor + 1 />
+<#macro pages params>
+    <#assign totalPages = (params.total / params.limit)?ceiling />
+    <#assign currOffset= (params.offset / params.limit)?floor + 1 />
     
     <span class="page-numbers">
         <@u.message "pagination.page" /> <span>${currOffset} / ${totalPages}</span>
@@ -24,6 +25,8 @@
 
 <#--
  * numbers
+ *
+ * Not in use. If enabled it will need update before usage (add params object).
  *
  * Print link to pages
  * Current page is displayed as a span
@@ -43,7 +46,7 @@
         <#if currOffset == offset>
             <span>${page}</span>
         <#else>
-            <a href="${urls.search()}${queryString.withOffset(currOffset)}">${page}</a>
+            <a href="${springMacroRequestContext.requestUri}${queryString.withOffset(currOffset)}">${page}</a>
         </#if>
         
         <#if !page_has_next></span></#if>
@@ -56,13 +59,21 @@
  * Print previous page link
  * Do not display link if the first page is active
  *
- * @param limit is the current limit
- * @param offset is the current offset
+ * @param params is an object containing:
+ *  - limit is the current limit
+ *  - offset is the current offset
 -->
-<#macro previousPage limit offset>
-    <#assign prev = offset - limit />
+<#macro previousPage params>
+    <#assign prev = params.offset - params.limit />
     <#if (prev >= 0)>
-        <a href="${urls.search()}${queryString.withOffset(prev)}" class="prev"><span class="icon-small arrow-left"></span> <@u.message "pagination.prev" /></a>
+        <#if queryString??>
+            <#assign urlParam = queryString.withOffset(prev) />
+        <#else>
+            <#assign urlParam = "?limit=" + prev  />
+        </#if>
+        
+        <a href="${springMacroRequestContext.requestUri}${urlParam}" class="prev"><span class="icon-small arrow-left"></span> <@u.message "pagination.prev" /></a>
+        
     <#else>
         <span class="prev"><span class="icon-small arrow-left"></span> <@u.message "pagination.prev" /></span>
     </#if>
@@ -74,16 +85,23 @@
  * Print next page link
  * Do not display link if there is no more pages
  *
- * @param totalItems is the total amount of filtered initiatives
- * @param limit is the current limit
- * @param offset is the current offset
+ * @param params is an object containing:
+ *  - total is the total amount of filtered initiatives
+ *  - limit is the current limit
+ *  - offset is the current offset
 -->
-<#macro nextPage totalItems limit offset>
-    <#assign totalPages = (totalItems / limit)?ceiling />
-    <#assign next = offset + limit />
+<#macro nextPage params>
+    <#assign totalPages = (params.total / params.limit)?ceiling />
+    <#assign next = params.offset + params.limit />
     
-    <#if (next < totalPages * limit)>
-        <a href="${urls.search()}${queryString.withOffset(offset + limit)}" class="next"><@u.message "pagination.next" /> <span class="icon-small arrow-right"></span></a>
+    <#if (next < totalPages * params.limit)>
+        <#if queryString??>
+            <#assign urlParam = queryString.withOffset(params.offset + params.limit) />
+        <#else>
+            <#assign urlParam = "?limit=" + next  />
+        </#if>
+    
+        <a href="${springMacroRequestContext.requestUri}${urlParam}" class="next"><@u.message "pagination.next" /> <span class="icon-small arrow-right"></span></a>
     <#else>
         <span class="next"><@u.message "pagination.next" /> <span class="icon-small arrow-right"></span></span>
     </#if>
@@ -105,7 +123,7 @@
         <@u.message "pagination.limiter" />
         <#list limits as l>
             <#if l != limit>
-                <a href="${urls.search()}${queryString.withLimit(l)}">${l}</a>
+                <a href="${springMacroRequestContext.requestUri}${queryString.withLimit(l)}">${l}</a>
             <#else>
                 <span class="active">${l}</span>
             </#if>
@@ -120,32 +138,30 @@
  * Print pagination if more than 1 page
  * Show pagination when more than minimum pagination count
  *
- * @param limit is the current limit
- * @param offset is the current offset
+ * @param params is an object
+ * @param cssClass for custom class
 -->
-<#macro pagination limit offset cssClass="">
+<#macro pagination params cssClass>
     <#assign limits = [20, 100, 500]>
-    <#assign totalInitiatives = initiativeCounts[currentSearch.show] />
-    <#assign totalPages = (totalInitiatives / limit)?ceiling />
-    <#assign showPagination = currentSearch.limit ?? && (totalPages > 1) />
-    <#assign showLimits = (totalInitiatives > limits[0]) />
+    <#assign totalPages = (params.total / params.limit)?ceiling />
+    <#assign showPagination = (totalPages > 1) />
+    <#assign showLimits = (params.total > limits[0]) />
 
     <#if showPagination || showLimits>
         <div class="pagination cf ${cssClass}">
             
                 <#if showPagination>
                     <div class="pagination-links">
-                        <@previousPage limit offset />
+                        <@previousPage params />
             
-                        <@pages totalInitiatives limit offset />
-                        <#--<@numbers totalInitiatives limit offset />-->
+                        <@pages params />
                         
-                        <@nextPage totalInitiatives limit offset />
+                        <@nextPage params />
                     </div>
                 </#if>
             
-                <#if showLimits>
-                    <@limiters limits limit 500 />
+                <#if params.enableLimits && showLimits>
+                    <@limiters limits params.limit 500 />
                 </#if>
             
          </div>

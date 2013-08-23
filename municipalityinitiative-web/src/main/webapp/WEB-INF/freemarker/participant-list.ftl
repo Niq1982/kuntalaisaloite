@@ -1,6 +1,7 @@
 <#import "components/layout.ftl" as l />
 <#import "components/utils.ftl" as u />
 <#import "components/elements.ftl" as e />
+<#import "components/pagination.ftl" as p />
 
 <#escape x as x?html> 
 
@@ -26,10 +27,19 @@
         <h2><@u.message key="participantList.title" /><span class="bull">&bull;</span>${participantCount.publicNames!""} <@u.message key="participantList.title.count" />
             <#if !initiative.isVerifiable() && hasManagementRightForInitiative><span class="switch-view"><a href="${urls.participantListManage(initiative.id)}" class="trigger-tooltip" title="<@u.message "manageParticipants.tooltip" />"><@u.message "manageParticipants.title" /></a></span></#if>
         </h2>
-
-        <p>Nyt sitä paginaatioo! Yhteensä osallistujia ${participantCount.publicNames} ja limitti on 50. Offsettihän taas on ${offset}</p>
-        <#-- limitti ois kyl sit kans Urls.MAX_PARTICIPANT_LIST_LIMIT, viittis kovakoodaa mut tiä taas miten sen jaksaas tänne tuara. -->
+        
+        <#assign paginationParams = {
+            "total":      participantCount.publicNames,
+            "limit":      50,
+            "offset":     offset,
+            "enableLimits": false
+        } />
+        
+        <@p.pagination paginationParams "top" />
+        
         <@participantList participants />
+
+        <@p.pagination paginationParams "bottom" />
     </div>
     
     <#if hasManagementRightForInitiative>
