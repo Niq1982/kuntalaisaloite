@@ -133,7 +133,7 @@
 
                 <p><@u.message "sendToReview.doNotCollect.confirm.description" /></p>
                 
-                <form action="${springMacroRequestContext.requestUri}" method="POST" >
+                <form action="${springMacroRequestContext.requestUri}?formError=sendToReviewDoNotCollect" method="POST" >
                     <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
 
                     <div class="input-block-content">
@@ -258,7 +258,7 @@
 
                 <@u.errorsSummary path="comment.*" prefix="comment."/>
 
-                <form action="${springMacroRequestContext.requestUri}" method="POST" >
+                <form action="${springMacroRequestContext.requestUri}?formError=sendToMunicipality" method="POST" >
                     <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
 
                     <div class="input-block-content">
@@ -370,6 +370,15 @@
                 }]
             };
         </#if>
+        <#-- Autoload modal if it has errors -->
+        <#if RequestParameters['formError']?? && RequestParameters['formError'] == "sendToReviewDoNotCollect">
+        modalData.sendToReviewDoNotCollectAutoLoad = function() {
+            return [{
+                title:      '<@u.message "sendToReview.doNotCollect.confirm.title" />',
+                content:    '<#noescape>${sendToReviewDoNotCollect?replace("'","&#39;")}</#noescape>'
+            }]
+        };
+        </#if>
         
         <#-- Modal: Confirm send for publish. -->
         <#if sendFixToReview??>    
@@ -404,6 +413,15 @@
         <#-- Modal: Confirm send to municipality. -->
         <#if sendToMunicipality??>    
             modalData.sendToMunicipality = function() {
+                return [{
+                    title:      '<@u.message "sendToMunicipality.confirm.title" />',
+                    content:    '<#noescape>${sendToMunicipality?replace("'","&#39;")}</#noescape>'
+                }]
+            };
+        </#if>
+        <#-- Autoload modal if it has errors -->
+        <#if RequestParameters['formError']?? && RequestParameters['formError'] == "sendToMunicipality">
+            modalData.sendToMunicipalityAutoLoad = function() {
                 return [{
                     title:      '<@u.message "sendToMunicipality.confirm.title" />',
                     content:    '<#noescape>${sendToMunicipality?replace("'","&#39;")}</#noescape>'

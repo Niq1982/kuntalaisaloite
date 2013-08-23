@@ -1046,6 +1046,10 @@ $('.municipality-filter').change( function() {
 			console.log(e);
 		}
 	});
+	// Send initiative to review auto load
+	if( typeof modalData != 'undefined' && typeof modalData.sendToReviewDoNotCollectAutoLoad != 'undefined' ){
+		generateModal(modalData.sendToReviewDoNotCollectAutoLoad(), 'minimal');
+	}
 	
 	// Send initiative to review and collect participants
 	$('.js-send-to-review-collect').click(function(){
@@ -1086,6 +1090,10 @@ $('.municipality-filter').change( function() {
 			console.log(e);
 		}
 	});
+	
+	if( typeof modalData != 'undefined' && typeof modalData.sendToMunicipalityAutoLoad != 'undefined' ){
+		generateModal(modalData.sendToMunicipalityAutoLoad(), 'minimal');
+	}
 	
 	// Accept author invitation
 	$('.js-accept-invitation').click(function(){
