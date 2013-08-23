@@ -13,15 +13,15 @@
 -->
 <@l.main "page.initiative.participants" initiative.name!"">
 
-    <@e.initiativeTitle initiative />
-    
-    <@e.stateInfo initiative />
-    
     <#if hasManagementRightForInitiative>
         <@u.returnPrevious urls.management(initiative.id) "link.to.managementView" />
     <#else>
         <@u.returnPrevious urls.view(initiative.id) "link.to.publicView" />
     </#if>
+
+    <@e.initiativeTitle initiative />
+    
+    <@e.stateInfo initiative />
     
     <div class="view-block single public cf">
         <h2><@u.message key="participantList.title" /><span class="bull">&bull;</span>${participantCount.publicNames!""} <@u.message key="participantList.title.count" />

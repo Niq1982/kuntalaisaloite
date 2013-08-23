@@ -15,6 +15,8 @@
 -->
 <@l.main "page.initiative.public" initiative.name!"">
 
+    <@u.returnPrevious urls.search() + "?orderBy=latestSent&show=sent" "link.to.searchView" />
+
     <@e.initiativeTitle initiative />
 
     <@e.stateInfo initiative />
@@ -24,12 +26,14 @@
         <@e.initiativeView initiative />
     </div>
     
-    <div class="view-block public">
+    <div class="view-block public last">
         <div class="initiative-content-row last">
             <h2><@u.message key="initiative.people.title" args=[1] /></h2>
             <@e.initiativeAuthor authors />
         </div>
     </div>
+    
+    
 
     <#--
      * Social media buttons
@@ -37,6 +41,8 @@
     <#if initiative.state == InitiativeState.PUBLISHED>
         <@some.some pageTitle=initiative.name!"" />
     </#if>
+    
+    <@u.returnPrevious urls.search() + "?orderBy=latestSent&show=sent" "link.to.searchView" />
 
 </@l.main>
 

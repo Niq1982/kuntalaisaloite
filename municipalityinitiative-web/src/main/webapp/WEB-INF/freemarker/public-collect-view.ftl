@@ -38,11 +38,14 @@
         </noscript>
     </#if>
 
-    <@e.initiativeTitle initiative />
-
     <#if hasManagementRightForInitiative && !initiative.sent>
-        <a class="small-button right" href="${urls.management(initiative.id)}"><span class="small-icon management"><@u.message "link.to.managementView" /></span></a>
+        <#--<a class="small-button right" href="${urls.management(initiative.id)}"><span class="small-icon management"><@u.message "link.to.managementView" /></span></a>-->
+        <@u.returnPrevious urls.management(initiative.id) "link.to.managementView" />
+    <#else>
+        <@u.returnPrevious urls.search() "link.to.searchView" />
     </#if>
+
+    <@e.initiativeTitle initiative />
     
     <@e.stateInfo initiative />
 
@@ -223,6 +226,12 @@
             </div>
         </#if>
     </div>
+    
+    <#if hasManagementRightForInitiative && !initiative.sent>
+        <@u.returnPrevious urls.management(initiative.id) "link.to.managementView" />
+    <#else>
+        <@u.returnPrevious urls.search() "link.to.searchView" />
+    </#if>
 
     <#--
      * Social media buttons

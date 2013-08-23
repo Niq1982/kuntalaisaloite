@@ -199,7 +199,6 @@ public class PublicInitiativeController extends BaseController {
             throw new NotFoundException("Initiative is not collaborative",initiativeId);
         }
         else {
-
             String previousPageURI = urls.management(initiativeId).equals(request.getHeader("referer"))
                     ? urls.management(initiativeId)
                     : urls.view(initiativeId);

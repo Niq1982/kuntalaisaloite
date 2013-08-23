@@ -13,11 +13,11 @@
 -->
 <@l.main "page.initiative.participants" initiative.name!"">
 
+    <@u.returnPrevious urls.management(initiative.id) "link.to.managementView" />
+
     <@e.initiativeTitle initiative />
     
     <@e.stateInfo initiative />
-    
-    <@u.returnPrevious urls.management(initiative.id) "link.to.managementView" />
 
     <#if !RequestParameters['deleteParticipant']??>
         <div class="view-block single public cf">
