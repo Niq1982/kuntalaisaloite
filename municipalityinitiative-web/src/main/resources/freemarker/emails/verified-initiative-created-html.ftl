@@ -13,9 +13,13 @@
 <@l.emailHtml title>
 
     <@b.mainContentBlock title>
+        <@b.initiativeDetails type=type showDate=true />
+    
         <p style="${pBothMargins!""}"><@u.message "email.verified.initiative.created.description" /></p>
-
-        <p style="${smallFont!""}"><@u.link urls.loginToManagement(initiative.id) urls.loginToManagement(initiative.id) /></p>
+        <p style="${pBothMargins!""}">
+            <#assign title><@u.message "email.footer.managementLink" /></#assign>
+            <@u.link urls.get(switchLocale!locale).loginToManagement(initiative.id) title />
+        </p>
 
     </@b.mainContentBlock>
 

@@ -106,6 +106,7 @@
         </table>
     <#else>
         <@u.message "email.footer.sendFrom"+postFix />
+        
         <#if showManagement && initiative.type.verifiable && !initiative.sent>
             <@u.message "email.footer.managementLink" />
             
