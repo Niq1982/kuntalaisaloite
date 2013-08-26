@@ -5,7 +5,6 @@ import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.service.FileImageFinder;
 import fi.om.municipalityinitiative.service.ImageFinder;
 import fi.om.municipalityinitiative.service.InfoTextService;
-import fi.om.municipalityinitiative.service.UserService;
 import fi.om.municipalityinitiative.util.InfoTextCategory;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.HelpPage;
@@ -41,9 +40,6 @@ public class InfoTextController extends BaseController {
 
     @Resource
     public InfoTextService infoTextService;
-
-    @Resource
-    public UserService userService;
 
     @Resource
     ImageFinder imageFinder;

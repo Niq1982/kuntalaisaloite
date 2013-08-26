@@ -2,7 +2,6 @@ package fi.om.municipalityinitiative.web.controller;
 
 import fi.om.municipalityinitiative.dto.ui.MunicipalityUIEditDto;
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
-import fi.om.municipalityinitiative.service.UserService;
 import fi.om.municipalityinitiative.service.ValidationService;
 import fi.om.municipalityinitiative.service.ui.ModerationService;
 import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
@@ -34,9 +33,6 @@ public class ModerationController extends BaseController{
 
     @Resource
     private ModerationService moderationService;
-
-    @Resource
-    private UserService userService;
 
     @Resource
     private ValidationService validationService;

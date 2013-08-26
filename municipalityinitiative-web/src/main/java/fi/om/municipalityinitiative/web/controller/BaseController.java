@@ -33,16 +33,17 @@ public class BaseController {
 
     static final String REQUEST_ATTRIBUTE_KEY = "requestAttribute";
     
-    public final String ALT_URI_ATTR = "altUri";
-    public final String CURRENT_URI_ATTR = "currentUri";
+    static final String ALT_URI_ATTR = "altUri";
 
-    public final String OM_PICIW_ID = "omPiwicId";
+    static final String CURRENT_URI_ATTR = "currentUri";
+
+    static final String OM_PICIW_ID = "omPiwicId";
 
     @Resource
     private EnvironmentSettings environmentSettings;
 
     @Resource
-    BeansWrapper freemarkerObjectWrapper;
+    private BeansWrapper freemarkerObjectWrapper;
 
     @Resource // TODO: Remove when at production
     private StatusService statusService;
