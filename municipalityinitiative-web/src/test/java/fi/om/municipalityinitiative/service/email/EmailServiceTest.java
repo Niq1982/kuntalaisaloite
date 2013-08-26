@@ -222,7 +222,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         emailService.sendVeritiedInitiativeManagementLink(initiativeId(), Locales.LOCALE_FI);
 
         assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
-        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Olet tallentanut luonnoksen kuntalaisaloitteesta kuntalaisaloitepalveluun"));
+        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Aloiteluonnoksesi on tallennettu Kuntalaisaloite.fi-palveluun"));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(Urls.get(Locales.LOCALE_FI).loginToManagement(initiativeId())));
 
     }
