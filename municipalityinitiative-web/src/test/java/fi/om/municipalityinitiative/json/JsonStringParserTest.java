@@ -42,7 +42,7 @@ public class JsonStringParserTest {
         initiative.setSentTime(Maybe.of(new LocalDate(2010, 5, 5))); // Cannot be absent at this point, mapper tries to get it's value
         initiative.setCreateTime(new LocalDate(2010, 1, 1));
 
-        InitiativeJson initiativeJson = InitiativeJson.from(initiative, publicParticipants, participantCount, null);
+        InitiativeJson initiativeJson = InitiativeJson.from(initiative, participantCount, null);
 
         new MappingJackson2HttpMessageConverter().getObjectMapper().writeValueAsString(initiative);
 

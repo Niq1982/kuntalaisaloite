@@ -61,7 +61,6 @@ public class JsonDataService {
         participantCount.setPrivateNames(initiativeInfo.getParticipantCount() - participantCount.getPublicNames());
         return InitiativeJson.from(
                 initiativeInfo,
-                participantDao.findNormalPublicParticipants(id),
                 participantCount,
                 authorService.findPublicAuthors(id));
 
@@ -116,7 +115,7 @@ public class JsonDataService {
 
         PublicAuthors authors = new PublicAuthors(createAuthors());
 
-        InitiativeJson initiativeJson = InitiativeJson.from(initiativeInfo, publicParticipants, participantCount, authors);
+        InitiativeJson initiativeJson = InitiativeJson.from(initiativeInfo, participantCount, authors);
 
         return initiativeJson;
 

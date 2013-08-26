@@ -47,4 +47,6 @@ public interface InitiativeDao {
     boolean isVerifiableInitiative(Long initiativeId);
 
     List<InitiativeListInfo> findInitiatives(VerifiedUserId verifiedUserId);
+
+    void denormalizeParticipantCountForNormalInitiative(Long initiativeId);
 }

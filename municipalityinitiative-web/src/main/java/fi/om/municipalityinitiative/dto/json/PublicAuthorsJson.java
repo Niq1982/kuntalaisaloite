@@ -4,7 +4,6 @@ import fi.om.municipalityinitiative.dto.ui.AuthorInfo;
 import fi.om.municipalityinitiative.dto.ui.PublicAuthors;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class PublicAuthorsJson {
@@ -19,7 +18,7 @@ public class PublicAuthorsJson {
         return parseAuthors(publicAuthors.getPublicAuthors());
     }
 
-    private List<AuthorJson> parseAuthors(List<AuthorInfo> publicAuthors) {
+    private static List<AuthorJson> parseAuthors(List<AuthorInfo> publicAuthors) {
         List<AuthorJson> authorJsons = new ArrayList<>();
         for (AuthorInfo publicAuthor : publicAuthors) {
             authorJsons.add(new AuthorJson(publicAuthor));
@@ -27,11 +26,11 @@ public class PublicAuthorsJson {
         return authorJsons;
     }
 
-    public int getPublicNameCount() {
+    public int getPublicNames() {
         return publicAuthors.getPublicNameCount();
     }
 
-    public int getPrivateNameCount() {
+    public int getPrivateNames() {
         return publicAuthors.getPrivateNameCount();
     }
 }
