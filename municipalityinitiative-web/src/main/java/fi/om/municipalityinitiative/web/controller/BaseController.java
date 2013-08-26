@@ -139,7 +139,7 @@ public class BaseController {
     protected void addPiwicIdIfNotAuthenticated(Model model, HttpServletRequest request) {
 
         if (!userService.getLoginUserHolder(request).isVerifiedUser()) {
-            model.addAttribute(OM_PICIW_ID, omPiwicId);
+            model.addAttribute(OM_PICIW_ID, omPiwicId.orNull());
         }
     }
 
