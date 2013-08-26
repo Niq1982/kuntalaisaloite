@@ -83,11 +83,13 @@ public class InitiativeManagementService {
         initiativeDao.editInitiativeDraft(initiativeId, editDto);
         if (initiative.getType().isNotVerifiable()) {
             authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId(), editDto.getContactInfo());
+            initiativeDao.denormalizeParticipantCountForNormalInitiative(initiativeId);
         }
         else {
             String hash = loginUserHolder.getVerifiedUser().getHash();
             userDao.updateUserInformation(hash, editDto.getContactInfo());
             participantDao.updateVerifiedParticipantShowName(initiativeId, hash, editDto.getContactInfo().isShowName());
+            // TODO: denormalizeParticipantCountForVerifiedInitiative
 
             if (Strings.isNullOrEmpty(initiative.getName())) {
                 emailService.sendVeritiedInitiativeManagementLink(initiativeId, locale);
@@ -154,11 +156,13 @@ public class InitiativeManagementService {
         initiativeDao.updateExtraInfo(initiativeId, updateDto.getExtraInfo(), updateDto.getExternalParticipantCount());
         if (initiative.getType().isNotVerifiable()) {
             authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId(), updateDto.getContactInfo());
+            initiativeDao.denormalizeParticipantCountForNormalInitiative(initiativeId);
         }
         else {
             String hash = loginUserHolder.getVerifiedUser().getHash();
             userDao.updateUserInformation(hash, updateDto.getContactInfo());
             participantDao.updateVerifiedParticipantShowName(initiativeId, hash, updateDto.getContactInfo().isShowName());
+            // TODO: Denormalize participantcount
         }
     }
 

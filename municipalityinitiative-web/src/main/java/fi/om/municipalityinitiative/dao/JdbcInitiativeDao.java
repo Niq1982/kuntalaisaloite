@@ -20,10 +20,7 @@ import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListWithCount;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
-import fi.om.municipalityinitiative.sql.QMunicipality;
-import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
-import fi.om.municipalityinitiative.sql.QVerifiedAuthor;
-import fi.om.municipalityinitiative.sql.QVerifiedUser;
+import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -88,6 +85,23 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .where(QMunicipalityInitiative.municipalityInitiative.name.isNotEmpty())
                 .orderBy(QMunicipalityInitiative.municipalityInitiative.id.desc())
                 .list(Mappings.initiativeListInfoMapping);
+    }
+
+    @Override
+    public void denormalizeParticipantCountForNormalInitiative(Long initiativeId) {
+
+        // Querydsl: subquery?
+        long publicParticipants = queryFactory.from(QMunicipalityInitiative.municipalityInitiative)
+                .innerJoin(QMunicipalityInitiative.municipalityInitiative._participantMunicipalityInitiativeIdFk, QParticipant.participant)
+                .where(QParticipant.participant.confirmationCode.isNull())
+                .where(QParticipant.participant.showName.eq(true))
+                .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
+                .count();
+
+        assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
+                .set(QMunicipalityInitiative.municipalityInitiative.participantCountPublic, (int) publicParticipants)
+                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
+                .execute());
     }
 
     private static void orderBy(PostgresQuery query, InitiativeSearch.OrderBy orderBy) {
