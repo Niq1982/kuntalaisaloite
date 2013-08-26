@@ -294,16 +294,29 @@
  * adminViewLink
  *
  -->
-<#macro adminViewLink type="">
-    <#assign adminURL = urls.get(switchLocale!locale).loginAuthor(managementHash) />
-    
-    <#if type == "html">
-        <p style="${pBothMargins!""}"><@u.message "email.adminViewLink" /></p>
-        <p style="${pBothMargins!""} ${smallFont!""}"><@u.link adminURL adminURL /></p>
+<#macro adminViewLink type="" verified=false>
+    <#if verified>
+        <#if type == "html">
+            <p style="${pBothMargins!""}"><@u.message "email.adminViewLink" /></p>
+            <p style="${pBothMargins!""}">
+                <#assign title><@u.message "email.footer.managementLink" /></#assign>
+                <@u.link urls.get(switchLocale!locale).loginToManagement(initiative.id) title />
+            </p>
+        <#else>
+            <@u.message "email.adminViewLink" />
+            
+            ${urls.get(switchLocale!locale).loginToManagement(initiative.id)}
+        </#if>
     <#else>
-        <@u.message "email.adminViewLink" />
-        
-        ${adminURL}
+        <#assign adminURL = urls.get(switchLocale!locale).loginAuthor(managementHash)>
+        <#if type == "html">
+            <p style="${pBothMargins!""}"><@u.message "email.adminViewLink" /></p>
+            <p style="${pBothMargins!""} ${smallFont!""}"><@u.link adminURL adminURL /></p>
+        <#else>
+            <@u.message "email.adminViewLink" />
+            
+            ${adminURL}
+        </#if>
     </#if>
 </#macro>
 

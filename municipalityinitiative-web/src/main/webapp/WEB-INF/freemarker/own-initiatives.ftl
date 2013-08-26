@@ -36,38 +36,40 @@
         <#if initiative_index == 0><ul></#if>
         <li <#if initiative_index == 0>class="first"</#if>>
             <a href="${urls.management(initiative.id)}">
-
-            <span class="participants">
-                <span class="participants-container">
+                <span class="participants">
+                    <span class="participants-container">
+                        <#if !initiative.public>
+                            <span class="no-participants"><@u.message "searchResults.notPublic" /></span>
+                        <#elseif !initiative.collaborative>
+                            <span class="no-participants"><@u.message "searchResults.notCollaborative" /></span>
+                        <#else>
+                            <span class="participant-count trigger-tooltip" title="<@u.message "searchResults.sumOfParticipants" />">${initiative.participantCount!""}</span>
+                        </#if>
+                    </span>
+                </span>
+    
+                <span class="date trigger-tooltip" title="<@u.message "searchResults.initiative.date."+initiative.state />" ><@u.localDate initiative.stateTime /></span>
+                <span class="title">
+                    <span class="name">
+                        <#if initiative.name??>
+                            <@u.limitStringLength initiative.name!"" 150 />
+                        <#else>
+                            <@u.message "initiative.draft" />
+                        </#if>
+                    </span>
+                </span>
+                <span class="info">
                     <#if !initiative.public>
-                        <span class="no-participants"><@u.message "searchResults.notPublic" /></span>
-                    <#elseif !initiative.collaborative>
-                        <span class="no-participants"><@u.message "searchResults.notCollaborative" /></span>
+                        ${initiative.municipality.getName(locale)!""}<span class="bull">&bull;</span><span class="state"><@u.message "searchResults.notPublic" /></span>
+                    <#elseif !initiative.sentTime.present>
+                        ${initiative.municipality.getName(locale)!""}<span class="bull">&bull;</span><span class="state"><@u.message "initiative.state.collecting" /></span>
                     <#else>
-                        <span class="participant-count trigger-tooltip" title="<@u.message "searchResults.sumOfParticipants" />">${initiative.participantCount!""}</span>
+                        <#assign sentTime><@u.localDate initiative.sentTime.value!"" /></#assign>
+                        ${initiative.municipality.getName(locale)!""}<span class="bull">&bull;</span><span class="state"><@u.message key="initiative.date.sent" args=[sentTime] /></span>
                     </#if>
+                    <span class="bull">&bull;</span>
+                    <@u.message "initiative.initiativeType."+initiative.type />
                 </span>
-            </span>
-
-            <span class="date trigger-tooltip" title="<@u.message "searchResults.initiative.date."+initiative.state />" ><@u.localDate initiative.stateTime /></span>
-            <span class="title">
-                <span class="name">
-                    <#if initiative.name??>
-                        <@u.limitStringLength initiative.name!"" 150 />
-                    <#else>
-                        <@u.message "initiative.draft" />
-                    </#if>
-                </span>
-            </span>
-            <#if !initiative.public>
-                <span class="info">${initiative.municipality.getName(locale)!""}<span class="bull">&bull;</span><span class="state"><@u.message "searchResults.notPublic" /></span></span>
-            <#elseif !initiative.sentTime.present>
-                <span class="info">${initiative.municipality.getName(locale)!""}<span class="bull">&bull;</span><span class="state"><@u.message "initiative.state.collecting" /></span></span>
-            <#else>
-                <#assign sentTime><@u.localDate initiative.sentTime.value!"" /></#assign>
-                <span class="info">${initiative.municipality.getName(locale)!""}<span class="bull">&bull;</span><span class="state"><@u.message key="initiative.date.sent" args=[sentTime] /></span></span>
-            </#if>
-
             </a>
         </li>
         <#if !initiative_has_next></ul></#if>

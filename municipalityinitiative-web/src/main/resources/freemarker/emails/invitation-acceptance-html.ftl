@@ -14,12 +14,9 @@
         <@b.initiativeDetails type=type showDate=true />
     
         <p style="${pBothMargins!""}"><@u.message "email.author.invitation.accepted.description" /></p>
+        
+        <@b.adminViewLink type initiative.type.verifiable />
 
-        <#if initiative.type.verifiable>
-            TODO
-        <#else>
-            <@b.adminViewLink type />
-        </#if>
     </@b.mainContentBlock>
     
     <@u.spacer "15" />
