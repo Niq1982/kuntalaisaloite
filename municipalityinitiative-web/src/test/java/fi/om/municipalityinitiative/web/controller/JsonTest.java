@@ -44,7 +44,7 @@ public class JsonTest {
         String join = joinAsString(initiatives);
         assertThat(join, is("{\n" +
                 "\"authors\":{\n" +
-                "\"privateNameCount\":1,\n" +
+                "\"privateNames\":1,\n" +
                 "\"publicAuthors\":[\n" +
                 "{\n" +
                 "\"municipality\":{\n" +
@@ -55,7 +55,7 @@ public class JsonTest {
                 "\"name\":\"Teemu Teekkari\"\n" +
                 "}]\n" +
                 ",\n" +
-                "\"publicNameCount\":1\n" +
+                "\"publicNames\":1\n" +
                 "},\n" +
                 "\"collaborative\":true,\n" +
                 "\"id\":\"http://baseUrl/api/v0/initiatives/1\",\n" +
@@ -72,17 +72,6 @@ public class JsonTest {
                 "\"total\":11\n" +
                 "},\n" +
                 "\"proposal\":\"Tämä on esimerkkialoitteen sisältö\",\n" +
-                "\"publicParticipants\":[\n" +
-                "{\n" +
-                "\"municipality\":{\n" +
-                "\"id\":\"http://baseUrl/api/v0/municipalities/1\",\n" +
-                "\"nameFi\":\"Tampere\",\n" +
-                "\"nameSv\":\"Tammerfors\"\n" +
-                "},\n" +
-                "\"name\":\"Teemu Teekkari\",\n" +
-                "\"participateDate\":\"2010-01-01\"\n" +
-                "}]\n" +
-                ",\n" +
                 "\"publishDate\":\"2010-01-01\",\n" +
                 "\"sentTime\":null\n" +
                 "}"));
