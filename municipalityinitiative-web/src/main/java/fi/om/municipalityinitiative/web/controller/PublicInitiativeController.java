@@ -59,8 +59,8 @@ public class PublicInitiativeController extends BaseController {
     @Resource
     private VerifiedInitiativeService verifiedInitiativeService;
 
-    public PublicInitiativeController(boolean optimizeResources, String resourcesVersion) {
-        super(optimizeResources, resourcesVersion);
+    public PublicInitiativeController(boolean optimizeResources, String resourcesVersion, Maybe<Integer> piwikId) {
+        super(optimizeResources, resourcesVersion, piwikId);
     }
 
     @RequestMapping(value={SEARCH_FI, SEARCH_SV}, method=GET)
@@ -69,6 +69,9 @@ public class PublicInitiativeController extends BaseController {
         List<Municipality> municipalities = municipalityService.findAllMunicipalities(locale);
         LoginUserHolder loginUserHolder = new LoginUserHolder(userService.getUser(request));
         SearchParameterQueryString queryString = new SearchParameterQueryString(search);
+
+        addPiwicIdIfNotAuthenticated(model, request);
+
         return ViewGenerator.searchView(publicInitiativeService.findMunicipalityInitiatives(search, loginUserHolder).list,
                 municipalities,
                 search,
@@ -83,6 +86,8 @@ public class PublicInitiativeController extends BaseController {
                        Model model, Locale locale, HttpServletRequest request) {
 
         InitiativeViewInfo initiativeInfo = publicInitiativeService.getInitiative(initiativeId, userService.getLoginUserHolder(request));
+
+        addPiwicIdIfNotAuthenticated(model, request);
 
         if (initiativeInfo.isCollaborative()) {
             return ViewGenerator.collaborativeView(initiativeInfo,
@@ -101,6 +106,9 @@ public class PublicInitiativeController extends BaseController {
 
     @RequestMapping(value = { PREPARE_FI, PREPARE_SV }, method = GET)
     public String prepareGet(Model model, Locale locale, HttpServletRequest request) {
+
+        addPiwicIdIfNotAuthenticated(model, request);
+
         return ViewGenerator.prepareView(
                 new PrepareInitiativeUICreateDto(),
                 municipalityService.findAllMunicipalities(locale)
@@ -194,6 +202,8 @@ public class PublicInitiativeController extends BaseController {
         String alternativeURL = urls.alt().participantList(initiativeId);
 
         InitiativeViewInfo initiativeInfo = publicInitiativeService.getPublicInitiative(initiativeId);
+
+        addPiwicIdIfNotAuthenticated(model, request);
 
         if (!initiativeInfo.isCollaborative()) {
             throw new NotFoundException("Initiative is not collaborative",initiativeId);

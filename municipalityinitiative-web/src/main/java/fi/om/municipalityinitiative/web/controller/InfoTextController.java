@@ -1,7 +1,6 @@
 package fi.om.municipalityinitiative.web.controller;
 
 import fi.om.municipalityinitiative.dto.InfoTextSubject;
-import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.service.FileImageFinder;
 import fi.om.municipalityinitiative.service.ImageFinder;
@@ -33,10 +32,9 @@ import java.util.Map;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
 import static fi.om.municipalityinitiative.web.Views.*;
-
+import static fi.om.municipalityinitiative.web.WebConstants.JSON;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static fi.om.municipalityinitiative.web.WebConstants.JSON;
 
 @Controller
 public class InfoTextController extends BaseController {
@@ -76,7 +74,7 @@ public class InfoTextController extends BaseController {
         model.addAttribute("content", infoTextService.getPublished(localizedPageName));
         model.addAttribute("omUser", userService.getUser(request).isOmUser());
 
-        addPiwicIdIfNotAuthenticated(model);
+        addPiwicIdIfNotAuthenticated(model, request);
 
         return HELP_VIEW;
     }
@@ -92,7 +90,7 @@ public class InfoTextController extends BaseController {
         model.addAttribute("pageUri", pageUri);
         model.addAttribute("omUser", userService.getUser(request).isOmUser());
 
-        addPiwicIdIfNotAuthenticated(model);
+        addPiwicIdIfNotAuthenticated(model, request);
 
         return NEWS_VIEW;
     }

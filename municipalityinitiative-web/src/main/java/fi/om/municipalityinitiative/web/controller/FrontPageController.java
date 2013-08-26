@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import java.util.Locale;
 
@@ -39,13 +40,13 @@ public class FrontPageController extends BaseController {
     }
     
     @RequestMapping({ FRONT_FI, FRONT_SV })
-    public String frontpage(Model model, Locale locale) {
+    public String frontpage(Model model, HttpServletRequest request, Locale locale) {
         Urls urls = Urls.get(locale);
 
         model.addAttribute(ALT_URI_ATTR, urls.alt().frontpage());
         model.addAttribute("initiatives", initiativeFinder.frontPageInitiatives());
         model.addAttribute("municipalities", municipalityService.findAllMunicipalities(locale));
-        addPiwicIdIfNotAuthenticated(model);
+        addPiwicIdIfNotAuthenticated(model, request);
 
         return INDEX_VIEW;
     }

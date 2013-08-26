@@ -211,7 +211,7 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
 
     @Bean
     public PublicInitiativeController initiativePublicController() {
-        return new PublicInitiativeController(optimizeResources(env), resourcesVersion(env));
+        return new PublicInitiativeController(optimizeResources(env), resourcesVersion(env), omPiwicId(env));
     }
 
     @Bean

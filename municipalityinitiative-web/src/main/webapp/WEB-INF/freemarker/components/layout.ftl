@@ -408,11 +408,11 @@
     /*]]>*/
     </script>
 
-    <#if omPiwicId??>
+    <#if omPiwicId.present>
         <script type="text/javascript">
         <!-- Piwik -->
             var piwikDomain = 'log.otakantaa.fi';
-            var piwikSiteId = '${omPiwicId}';
+            var piwikSiteId = '${omPiwicId.value}';
             var pkBaseURL = (("https:" == document.location.protocol) ? "https://" + piwikDomain + "/" : "http://" + piwikDomain + "/");
             document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
         </script>
