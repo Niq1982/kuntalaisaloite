@@ -101,6 +101,7 @@ public final class Urls {
 
     public static final String VETUMA_ERROR_SV = "/sv/loginerror";
     public static final String VETUMA_AGE_ERROR_PARAMETER = "age";
+    public static final String TARGET = "target";
 
     public static Urls FI = null;
     
@@ -235,11 +236,11 @@ public final class Urls {
     public static final String MANAGE_AUTHORS_FI = "/fi/vastuuhenkilot" + "/" + ID_PARAMETER;
 
     public static final String MANAGE_AUTHORS_SV = "/sv/ansvarpersoner" + "/" + ID_PARAMETER;
-    
+
     public static final String INVITATION_FI = "/fi/kutsu" + "/" + ID_PARAMETER;
-    
+
     public static final String INVITATION_SV = "/sv/inbjudan" + "/" + ID_PARAMETER;
-    
+
     public static final String INVITATION_REJECTED_FI =    "/fi/kutsu-hylatty" + "/" + ID_PARAMETER;
 
     public static final String INVITATION_REJECTED_SV  =    "/sv/inbjudan-avbojts" + "/" + ID_PARAMETER;
@@ -247,7 +248,7 @@ public final class Urls {
     public static final String IFRAME_GENERATOR_FI = "/fi/leijuke";
 
     public static final String IFRAME_GENERATOR_SV = "/sv/widget";
-    
+
     public static final String IFRAME_FI = "/fi/iframe";
 
     public static final String IFRAME_SV = "/sv/iframe";
@@ -259,14 +260,14 @@ public final class Urls {
     public static final String STATUS =  "/status";
 
     private final String baseUrl;
-    
+
     private final Locale locale;
 
     public static void initUrls(String baseUrl) {
         FI = new Urls(baseUrl, LOCALE_FI);
         SV = new Urls(baseUrl, LOCALE_SV);
     }
-    
+
     private Urls(String baseUrl, Locale locale) {
         this.baseUrl = baseUrl;
         this.locale = locale;
@@ -308,11 +309,11 @@ public final class Urls {
     public String view(Long initiativeId) {
         return getLocalizedPageUrl(VIEW_FI, VIEW_SV).replace(ID_PARAMETER, initiativeId.toString());
     }
-    
+
     public String participantList(Long initiativeId) {
         return getLocalizedPageUrl(PARITICIPANT_LIST_FI, PARITICIPANT_LIST_SV).replace(ID_PARAMETER, initiativeId.toString());
     }
-    
+
     public String participantListManage(Long initiativeId) {
         return getLocalizedPageUrl(PARITICIPANT_LIST_MANAGE_FI, PARITICIPANT_LIST_MANAGE_SV).replace(ID_PARAMETER, initiativeId.toString());
     }
@@ -320,7 +321,7 @@ public final class Urls {
     public String management(Long initiativeId) {
         return getManagement(initiativeId);
     }
-    
+
     public String moderation(Long initiativeId) {
         return getModeration(initiativeId);
     }
@@ -328,7 +329,7 @@ public final class Urls {
     public String edit(Long initiativeId) {
         return getEdit(initiativeId);
     }
-    
+
     public String manageAuthors(Long initiativeId) {
         return getManageAuthors(initiativeId);
     }
@@ -369,19 +370,19 @@ public final class Urls {
     public String iframe(Long municipalityId) {
         return iframe() + "?" + PARAM_MUNICIPALITY + "=" + municipalityId;
     }
-    
+
     public String iframeGenerator() {
         return getLocalizedPageUrl(IFRAME_GENERATOR_FI, IFRAME_GENERATOR_SV);
     }
-    
+
     public String getManagement(Long id) {
         return getLocalizedPageUrl(MANAGEMENT_FI, MANAGEMENT_SV).replace(ID_PARAMETER, id.toString());
     }
-    
+
     public String getModeration(Long id) {
         return getLocalizedPageUrl(MODERATION_FI, MODERATION_SV).replace(ID_PARAMETER, id.toString());
     }
-    
+
     public String getManageAuthors(Long id) {
         return getLocalizedPageUrl(MANAGE_AUTHORS_FI, MANAGE_AUTHORS_SV).replace(ID_PARAMETER, id.toString());
     }
@@ -417,7 +418,7 @@ public final class Urls {
     public String search() {
         return getLocalizedPageUrl(SEARCH_FI, SEARCH_SV);
     }
-    
+
     public String news() {
         return getLocalizedPageUrl(NEWS_FI, NEWS_SV);
     }
@@ -425,9 +426,18 @@ public final class Urls {
     public String prepare() {
         return getLocalizedPageUrl(PREPARE_FI, PREPARE_SV);
     }
-    
+
     public String authenticate() {
         return getLocalizedPageUrl(AUTHENTICATE_FI, AUTHENTICATE_SV);
+    }
+
+    public String authenticate(String target) {
+
+        if (Strings.isNullOrEmpty(target)) {
+            target = baseUrl;
+        }
+
+        return getLocalizedPageUrl(AUTHENTICATE_FI, AUTHENTICATE_SV) + "?" + TARGET + "=" + urlEncode(target);
     }
 
     public String pendingConfirmation(Long initiativeId) {
@@ -442,8 +452,8 @@ public final class Urls {
         if (Strings.isNullOrEmpty(target)) {
             target = baseUrl;
         }
-        
-        return login() + "?target=" + urlEncode(target);
+
+        return login() + "?"+ TARGET +"=" + urlEncode(target);
     }
 
     public String moderatorLogin() {
@@ -457,15 +467,15 @@ public final class Urls {
     public String logout() {
         return getLocalizedPageUrl(LOGOUT_FI, LOGOUT_SV);
     }
-    
+
     public Locale getLocale() {
         return locale;
     }
-    
+
     public String getLang() {
         return locale.getLanguage();
     }
-    
+
     public Urls alt() {
         if (this.equals(FI)) {
             return SV;
@@ -477,16 +487,28 @@ public final class Urls {
     public Locale getAltLocale() {
         return alt().getLocale();
     }
-    
+
     public String getAltLang() {
         return getAltLocale().getLanguage();
     }
-    
+
     public static Urls get(Locale locale) {
         if (Locales.LOCALE_SV.equals(locale)) {
             return SV;
         } else {
             return FI;
+        }
+    }
+
+    private static String urlEncode(String s) {
+        if (s == null) {
+            return "";
+        } else {
+            try {
+                return URLEncoder.encode(s, ENCODING);
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -503,28 +525,16 @@ public final class Urls {
         //TODO: add other chars or find some existing converter ...
         return ret;
     }
-    
-    private static String urlEncode(String s) {
-        if (s == null) {
-            return "";
-        } else {
-            try {
-                return URLEncoder.encode(s, ENCODING);
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
 
     public boolean isLoginPage(String target) {
         return target.startsWith(login());
     }
 
-
     public String municipalityModeration() {
         return getLocalizedPageUrl(MUNICIPALITY_MODERATION, MUNICIPALITY_MODERATION);
 
     }
+
 
     public String helpEdit(String localizedPageName) {
         return getLocalizedPageUrl(HELP_EDIT_FI, HELP_EDIT_SV).replace(HELP_PAGE_PARAMETER, localizedPageName);
