@@ -33,16 +33,17 @@ public class BaseController {
 
     static final String REQUEST_ATTRIBUTE_KEY = "requestAttribute";
     
-    public final String ALT_URI_ATTR = "altUri";
-    public final String CURRENT_URI_ATTR = "currentUri";
+    static final String ALT_URI_ATTR = "altUri";
 
-    public final String OM_PICIW_ID = "omPiwicId";
+    static final String CURRENT_URI_ATTR = "currentUri";
+
+    static final String OM_PICIW_ID = "omPiwicId";
 
     @Resource
     private EnvironmentSettings environmentSettings;
 
     @Resource
-    BeansWrapper freemarkerObjectWrapper;
+    private BeansWrapper freemarkerObjectWrapper;
 
     @Resource // TODO: Remove when at production
     private StatusService statusService;
@@ -136,11 +137,11 @@ public class BaseController {
     }
 
 
-    protected void addPiwicIdIfNotAuthenticated(Model model) {
-//        boolean isAuthenticated = userService.getCurrentUser(false).isAuthenticated();
-//        if (!isAuthenticated) {
-//            model.addAttribute(OM_PICIW_ID, omPiwicId.orNull());
-//        }
+    protected void addPiwicIdIfNotAuthenticated(Model model, HttpServletRequest request) {
+
+        if (!userService.getLoginUserHolder(request).isVerifiedUser()) {
+            model.addAttribute(OM_PICIW_ID, omPiwicId.orNull());
+        }
     }
 
     @ModelAttribute

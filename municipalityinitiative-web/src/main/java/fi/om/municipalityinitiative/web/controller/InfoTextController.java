@@ -1,12 +1,10 @@
 package fi.om.municipalityinitiative.web.controller;
 
 import fi.om.municipalityinitiative.dto.InfoTextSubject;
-import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.service.FileImageFinder;
 import fi.om.municipalityinitiative.service.ImageFinder;
 import fi.om.municipalityinitiative.service.InfoTextService;
-import fi.om.municipalityinitiative.service.UserService;
 import fi.om.municipalityinitiative.util.InfoTextCategory;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.HelpPage;
@@ -33,19 +31,15 @@ import java.util.Map;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
 import static fi.om.municipalityinitiative.web.Views.*;
-
+import static fi.om.municipalityinitiative.web.WebConstants.JSON;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static fi.om.municipalityinitiative.web.WebConstants.JSON;
 
 @Controller
 public class InfoTextController extends BaseController {
 
     @Resource
     public InfoTextService infoTextService;
-
-    @Resource
-    public UserService userService;
 
     @Resource
     ImageFinder imageFinder;
@@ -76,7 +70,7 @@ public class InfoTextController extends BaseController {
         model.addAttribute("content", infoTextService.getPublished(localizedPageName));
         model.addAttribute("omUser", userService.getUser(request).isOmUser());
 
-        addPiwicIdIfNotAuthenticated(model);
+        addPiwicIdIfNotAuthenticated(model, request);
 
         return HELP_VIEW;
     }
@@ -92,7 +86,7 @@ public class InfoTextController extends BaseController {
         model.addAttribute("pageUri", pageUri);
         model.addAttribute("omUser", userService.getUser(request).isOmUser());
 
-        addPiwicIdIfNotAuthenticated(model);
+        addPiwicIdIfNotAuthenticated(model, request);
 
         return NEWS_VIEW;
     }

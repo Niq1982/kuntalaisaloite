@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.web.controller;
 
-import fi.om.municipalityinitiative.service.UserService;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -25,9 +23,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 public class DefaultLoginController extends BaseLoginController {
 
     protected static final String TARGET_SESSION_PARAM = DefaultLoginController.class.getName() + ".target";
-
-    @Resource
-    UserService userService;
 
     public DefaultLoginController(String baseUrl, boolean optimizeResources, String resourcesVersion) {
         super(baseUrl, optimizeResources, resourcesVersion);
