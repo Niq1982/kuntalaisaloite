@@ -242,7 +242,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     @Cacheable(value = "initiativeCount")
-    public InitiativeCounts getPublicInitiativeCounts(Maybe<Long> municipality) {
+    public InitiativeCounts getPublicInitiativeCounts(Maybe<Long> municipality, InitiativeSearch.Type initiativeType) {
         Expression<String> caseBuilder = new CaseBuilder()
                 .when(municipalityInitiative.sent.isNull())
                 .then(new ConstantImpl<String>(InitiativeSearch.Show.collecting.name()))

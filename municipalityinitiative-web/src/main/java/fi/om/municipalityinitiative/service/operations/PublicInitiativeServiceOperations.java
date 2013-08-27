@@ -130,7 +130,7 @@ public class PublicInitiativeServiceOperations {
             return initiativeDao.getAllInitiativeCounts(municipality);
         }
         else {
-            return initiativeDao.getPublicInitiativeCounts(municipality);
+            return initiativeDao.getPublicInitiativeCounts(municipality, InitiativeSearch.Type.all);
         }
     }
 

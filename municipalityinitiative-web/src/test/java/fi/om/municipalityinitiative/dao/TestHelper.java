@@ -144,10 +144,14 @@ public class TestHelper {
 
     @Transactional
     public Long create(Long municipalityId, InitiativeState state, InitiativeType type) {
-        return createDefaultInitiative(new InitiativeDraft(municipalityId)
+        InitiativeDraft initiativeDraft = new InitiativeDraft(municipalityId)
                 .withState(state)
                 .withType(type)
-                .applyAuthor().toInitiativeDraft());
+                .applyAuthor().toInitiativeDraft();
+        if (type == InitiativeType.SINGLE && state == InitiativeState.PUBLISHED) {
+            initiativeDraft.withSent(DateTime.now());
+        }
+        return createDefaultInitiative(initiativeDraft);
     }
 
     @Transactional

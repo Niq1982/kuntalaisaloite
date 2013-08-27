@@ -20,7 +20,7 @@ public interface InitiativeDao {
 
     Initiative get(Long initiativeId);
 
-    InitiativeCounts getPublicInitiativeCounts(Maybe<Long> municipality);
+    InitiativeCounts getPublicInitiativeCounts(Maybe<Long> municipality, InitiativeSearch.Type all);
 
     Long prepareInitiative(Long municipalityId);
 
