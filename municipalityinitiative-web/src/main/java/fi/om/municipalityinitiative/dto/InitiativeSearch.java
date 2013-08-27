@@ -37,6 +37,7 @@ public class InitiativeSearch {
         initiativeSearch.municipality = this.municipality;
         initiativeSearch.search = this.search;
         initiativeSearch.show = this.show;
+        initiativeSearch.type = this.type;
         return initiativeSearch;
     }
 

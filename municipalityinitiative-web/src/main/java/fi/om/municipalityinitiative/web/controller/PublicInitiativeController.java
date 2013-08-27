@@ -76,7 +76,7 @@ public class PublicInitiativeController extends BaseController {
                 search,
                 queryString,
                 solveMunicipalityFromListById(municipalities, search.getMunicipality()),
-                publicInitiativeService.getInitiativeCounts(Maybe.fromNullable(search.getMunicipality()), loginUserHolder))
+                publicInitiativeService.getInitiativeCounts(search, loginUserHolder))
                 .view(model, Urls.get(locale).alt().search()+queryString.get());
     }
 

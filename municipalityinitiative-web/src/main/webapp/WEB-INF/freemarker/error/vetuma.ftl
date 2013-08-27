@@ -2,7 +2,7 @@
 <#import "../components/utils.ftl" as u />
 
 <#escape x as x?html>
-<@l.error "error.404.title">
+<@l.error "error.vetuma.title">
 
     <#if ageError?? && ageError>
 

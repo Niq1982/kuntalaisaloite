@@ -13,7 +13,6 @@ import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.operations.PublicInitiativeServiceOperations;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
-import fi.om.municipalityinitiative.util.Maybe;
 
 import javax.annotation.Resource;
 
@@ -92,11 +91,11 @@ public class PublicInitiativeService {
         return InitiativeViewInfo.parse(initiative);
     }
 
-    public InitiativeCounts getInitiativeCounts(Maybe<Long> municipality, LoginUserHolder loginUserHolder) {
+    public InitiativeCounts getInitiativeCounts(InitiativeSearch search, LoginUserHolder loginUserHolder) {
         if (loginUserHolder.getUser().isNotOmUser()) {
-            return operations.getInitiativeCounts(municipality);
+            return operations.getInitiativeCounts(search, false);
         }
-        else return operations.getInitiativeCounts(municipality, true);
+        else return operations.getInitiativeCounts(search,true);
     }
 
     public Long confirmParticipation(Long participantId, String confirmationCode) {

@@ -120,17 +120,12 @@ public class PublicInitiativeServiceOperations {
     }
 
     @Transactional(readOnly = true)
-    public InitiativeCounts getInitiativeCounts(Maybe<Long> municipality) {
-        return getInitiativeCounts(municipality, false);
-    }
-
-    @Transactional(readOnly = true)
-    public InitiativeCounts getInitiativeCounts(Maybe<Long> municipality, boolean all) {
+    public InitiativeCounts getInitiativeCounts(InitiativeSearch search, boolean all) {
         if (all) {
-            return initiativeDao.getAllInitiativeCounts(municipality);
+            return initiativeDao.getAllInitiativeCounts(Maybe.fromNullable(search.getMunicipality()));
         }
         else {
-            return initiativeDao.getPublicInitiativeCounts(municipality, InitiativeSearch.Type.all);
+            return initiativeDao.getPublicInitiativeCounts(Maybe.fromNullable(search.getMunicipality()), search.getType());
         }
     }
 
