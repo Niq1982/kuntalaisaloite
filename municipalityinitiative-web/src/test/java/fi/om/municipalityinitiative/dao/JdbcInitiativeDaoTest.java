@@ -629,6 +629,38 @@ public class JdbcInitiativeDaoTest {
         assertThat(initiative.getParticipantCountPublic(), is(2));
     }
 
+    @Test
+    public void find_filters_by_type_all() {
+        createPublicInitiativesOfAllType();
+        assertThat(initiativeDao.find(new InitiativeSearch().setType(InitiativeSearch.Type.all)).list, hasSize(InitiativeType.values().length));
+    }
+
+    @Test
+    public void find_filters_by_type_normal() {
+        createPublicInitiativesOfAllType();
+        List<InitiativeListInfo> list = initiativeDao.find(new InitiativeSearch().setType(InitiativeSearch.Type.normal)).list;
+        assertThat(list, hasSize(3));
+        for (InitiativeListInfo initiativeListInfo : list) {
+            assertThat(initiativeListInfo.getType().isVerifiable(), is(false));
+        }
+    }
+
+    @Test
+    public void find_filters_by_type_citizen() {
+        createPublicInitiativesOfAllType();
+        List<InitiativeListInfo> result = initiativeDao.find(new InitiativeSearch().setType(InitiativeSearch.Type.citizen)).list;
+        assertThat(result, hasSize(1));
+        assertThat(result.get(0).getType(), is(InitiativeType.COLLABORATIVE_CITIZEN));
+    }
+
+
+
+    private void createPublicInitiativesOfAllType() {
+        for (InitiativeType initiativeType : InitiativeType.values()) {
+            testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, initiativeType);
+        }
+    }
+
     private static InitiativeSearch initiativeSearch() {
         return new InitiativeSearch().setShow(InitiativeSearch.Show.all);
     }

@@ -65,6 +65,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 ;
 
         filterByState(query, search);
+        filterByType(query, search.getType());
         filterByTitle(query, search.getSearch());
         filterByMunicipality(query, search.getMunicipality());
         orderBy(query, search.getOrderBy());
@@ -73,6 +74,21 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
 
         return new InitiativeListWithCount(query.list(Mappings.initiativeListInfoMapping), rows);
+    }
+
+    private static void filterByType(PostgresQuery query, InitiativeSearch.Type type) {
+        switch (type) {
+            case normal:
+                query.where(QMunicipalityInitiative.municipalityInitiative.type.in(InitiativeType.COLLABORATIVE, InitiativeType.SINGLE, InitiativeType.UNDEFINED));
+                break;
+            case citizen:
+                query.where(QMunicipalityInitiative.municipalityInitiative.type.eq(InitiativeType.COLLABORATIVE_CITIZEN));
+                break;
+            case all:
+            default:
+
+
+        }
     }
 
     @Override
