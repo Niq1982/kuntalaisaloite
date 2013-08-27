@@ -279,7 +279,7 @@
                     <a href="${urls.logout()}" id="logout" class="header-tool-link logout"><@u.message "common.logout"/><span class="icon-small logout"></span></a>
 
                 <#elseif enableVerifiedInitiatives>
-                    <a href="${urls.authenticate()}" title="<@u.message "authenticate.title"/>" class="header-tool-link login"><@u.message "authenticate.title"/></a>
+                    <a href="${vetumaLoginToCurrentPage}" title="<@u.message "authenticate.title"/>" class="header-tool-link login"><@u.message "authenticate.title"/></a>
                 </#if>
             </div>
 
