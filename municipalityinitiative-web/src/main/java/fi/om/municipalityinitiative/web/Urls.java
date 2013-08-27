@@ -100,6 +100,7 @@ public final class Urls {
     public static final String VETUMA_ERROR_FI = "/fi/loginerror";
 
     public static final String VETUMA_ERROR_SV = "/sv/loginerror";
+    public static final String VETUMA_AGE_ERROR_PARAMETER = "age";
 
     public static Urls FI = null;
     
@@ -549,4 +550,7 @@ public final class Urls {
         return login((this.equals(FI) ? MANAGEMENT_FI : MANAGEMENT_SV).replace(ID_PARAMETER, initiativeId.toString()));
     }
 
+    public String notAdultError() {
+        return getLocalizedPageUrl(VETUMA_ERROR_FI, VETUMA_ERROR_SV) + "?"+ VETUMA_AGE_ERROR_PARAMETER;
+    }
 }

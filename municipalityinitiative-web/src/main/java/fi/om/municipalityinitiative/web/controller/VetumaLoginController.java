@@ -137,12 +137,15 @@ public class VetumaLoginController extends DefaultLoginController {
 
             String ssn = vetumaResponse.getSsn();
 
+            if (!isAdult(ssn)) {
+                return redirect(urls.notAdultError());
+            }
+
             userService.login(encryptionService.registeredUserHash(ssn),
                     vtjData.getFullName(),
                     locale.equals(Locales.LOCALE_FI) ? vtjData.getAddressFi() : vtjData.getAddressSv(),
                     vtjData.getMunicipality(),
-                    isAdult(ssn),
-                    request, response);
+                    request);
 
             Maybe<PrepareInitiativeUICreateDto> prepareDataForVetuma = userService.popPrepareDataForVetuma(request);
             if (prepareDataForVetuma.isPresent()) { // User has been redirected to vetuma after starting to create initiative

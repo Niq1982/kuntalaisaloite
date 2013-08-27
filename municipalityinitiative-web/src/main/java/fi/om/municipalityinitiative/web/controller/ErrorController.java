@@ -23,6 +23,13 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @Controller
 public class ErrorController {
 
+    @RequestMapping(value = {VETUMA_ERROR_FI, VETUMA_ERROR_SV}, method = GET, params = Urls.VETUMA_AGE_ERROR_PARAMETER)
+    public String vetumaLoginErrorNotAdult(HttpServletRequest request, Locale locale, Model model) {
+        addModelDefaults(model, Urls.get(locale));
+        model.addAttribute("ageError", true);
+        return Views.ERROR_VETUMA_VIEW;
+    }
+
     @RequestMapping(value = {VETUMA_ERROR_FI, VETUMA_ERROR_SV}, method = GET)
     public String vetumaLoginError(HttpServletRequest request, Locale locale, Model model) {
         addModelDefaults(model, Urls.get(locale));
