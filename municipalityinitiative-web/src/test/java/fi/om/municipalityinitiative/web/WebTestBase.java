@@ -381,4 +381,8 @@ public abstract class WebTestBase {
     protected void assertPageHasValidationErrors() {
         assertMsgContainedByClass("msg-error", "formError.summary.title");
     }
+
+    protected void assertLoginLinkIsVisibleAtHeader() {
+        assertTextContainedByClass("logged-in-info", "Tunnistaudu aloitteen ylläpitoon");
+    }
 }
