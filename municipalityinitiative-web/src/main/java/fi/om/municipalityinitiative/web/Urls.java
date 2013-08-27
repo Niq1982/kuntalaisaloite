@@ -181,6 +181,8 @@ public final class Urls {
 
     public static final int MAX_PARTICIPANT_LIST_LIMIT = 50;
 
+    public static final int MAX_IFRAME_INITIATIVE_COUNT = 10;
+
     // New uris
 
     public static final String SEARCH_FI = "/fi/hae";

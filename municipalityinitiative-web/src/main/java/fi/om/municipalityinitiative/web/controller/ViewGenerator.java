@@ -108,20 +108,12 @@ public class ViewGenerator {
                 .build());
     }
 
-    public static ViewGenerator iframeSearch(List<InitiativeListInfo> initiatives,
-                                             List<Municipality> municipalities,
-                                             InitiativeSearch currentSearch,
-                                             SearchParameterQueryString queryString,
-                                             Maybe<Municipality> currentMunicipality,
-                                             InitiativeCounts initiativeCounts) {
+    public static ViewGenerator iframeSearch(List<InitiativeListInfo> initiatives, Maybe<Municipality> currentMunicipality, SearchParameterQueryString searchParameterQueryString) {
         return new ViewGenerator(IFRAME_VIEW,
                 new AttributeBuilder()
                         .add("initiatives", initiatives)
-                        .add("municipalities", municipalities)
-                        .add("currentSearch", currentSearch)
-                        .add("queryString", queryString)
                         .add("currentMunicipality", currentMunicipality)
-                        .add("initiativeCounts", initiativeCounts)
+                        .add("queryString", searchParameterQueryString)
                         .build()
         );
     }

@@ -230,6 +230,11 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
     }
 
     @Bean
+    public IFrameController iFrameController() {
+        return new IFrameController(optimizeResources(env), resourcesVersion(env));
+    }
+
+    @Bean
     public InfoTextController infoTextController() {
         return new InfoTextController(optimizeResources(env), resourcesVersion(env), omPiwicId(env));
     }

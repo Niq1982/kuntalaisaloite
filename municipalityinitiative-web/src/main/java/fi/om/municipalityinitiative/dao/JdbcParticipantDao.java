@@ -5,6 +5,7 @@ import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import fi.om.municipalityinitiative.dto.service.NormalParticipant;
 import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.dto.service.VerifiedParticipant;
+import fi.om.municipalityinitiative.exceptions.InvalidParticipationConfirmationException;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.Membership;
@@ -29,7 +30,7 @@ public class JdbcParticipantDao implements ParticipantDao {
             throw new NullPointerException("confirmationCode may not be null: Participation would be accepted without participantCount increasing.");
         }
 
-        Long participantId = queryFactory.insert(participant)
+        return queryFactory.insert(participant)
                 .set(participant.municipalityId, createDto.getHomeMunicipality())
                 .set(participant.municipalityInitiativeId, createDto.getMunicipalityInitiativeId())
                 .set(participant.name, createDto.getParticipantName())
@@ -38,20 +39,19 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .set(participant.confirmationCode, confirmationCode)
                 .set(participant.membershipType, createDto.getMunicipalMembership())
                 .executeWithKey(participant.id);
-
-        return participantId;
     }
 
     @Override
     public void confirmParticipation(Long participantId, String confirmationCode) {
 
-        // TODO: Handle errors if code or participant id invalid.
-        // TODO: Show some error message to user
-
-        boolean showName = queryFactory.from(QParticipant.participant)
+        Boolean showName = queryFactory.from(QParticipant.participant)
                 .where(QParticipant.participant.id.eq(participantId))
                 .where(QParticipant.participant.confirmationCode.eq(confirmationCode))
                 .singleResult(QParticipant.participant.showName);
+
+        if (showName == null) {
+            throw new InvalidParticipationConfirmationException("Participant:" + participantId + ", code:" + confirmationCode);
+        }
 
         assertSingleAffection(queryFactory.update(QParticipant.participant)
                 .setNull(QParticipant.participant.confirmationCode)

@@ -4,7 +4,6 @@ import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
-import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.InvalidHomeMunicipalityException;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.MunicipalityService;
@@ -349,35 +348,6 @@ public class PublicInitiativeController extends BaseController {
                                        HttpServletRequest request, Locale locale) {
         Long initiativeId = publicInitiativeService.confirmAndSendAuthorMessage(confirmationCode);
         return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.AUTHOR_MESSAGE_SENT, request);
-    }
-
-    @RequestMapping(value={IFRAME_FI, IFRAME_SV}, method=GET)
-    public String iframe(InitiativeSearch search, Model model, Locale locale, HttpServletRequest request) {
-        Urls urls = Urls.get(locale);
-        model.addAttribute(ALT_URI_ATTR, urls.alt().search());
-
-        List<Municipality> municipalities = municipalityService.findAllMunicipalities(locale);
-
-        search.setShow(InitiativeSearch.Show.all);
-
-        LoginUserHolder loginUserHolder = new LoginUserHolder(User.anonym());
-        return ViewGenerator.iframeSearch(publicInitiativeService.findMunicipalityInitiatives(search, loginUserHolder).list,
-                municipalities,
-                search,
-                new SearchParameterQueryString(search),
-                solveMunicipalityFromListById(municipalities, search.getMunicipality()),
-                publicInitiativeService.getInitiativeCounts(Maybe.fromNullable(search.getMunicipality()), loginUserHolder)
-        ).view(model, urls.alt().iframe());
-    }
-
-    @RequestMapping(value={IFRAME_GENERATOR_FI, IFRAME_GENERATOR_SV}, method=GET)
-    public String iframeGenerator(Model model, Locale locale, HttpServletRequest request) {
-        Urls urls = Urls.get(locale);
-        model.addAttribute(ALT_URI_ATTR, urls.alt().search());
-
-        List<Municipality> municipalities = municipalityService.findAllMunicipalities(locale);
-
-        return ViewGenerator.iframeGenerator(municipalities).view(model, urls.alt().iframeGenerator());
     }
 
     private static Maybe<Municipality> solveMunicipalityFromListById(List<Municipality> municipalities, Long municipalityId){
