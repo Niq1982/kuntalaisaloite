@@ -84,6 +84,9 @@ public class JdbcInitiativeDao implements InitiativeDao {
             case citizen:
                 query.where(QMunicipalityInitiative.municipalityInitiative.type.eq(InitiativeType.COLLABORATIVE_CITIZEN));
                 break;
+            case council:
+                query.where(QMunicipalityInitiative.municipalityInitiative.type.eq(InitiativeType.COLLABORATIVE_COUNCIL));
+                break;
             case all:
             default:
 

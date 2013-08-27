@@ -653,6 +653,14 @@ public class JdbcInitiativeDaoTest {
         assertThat(result.get(0).getType(), is(InitiativeType.COLLABORATIVE_CITIZEN));
     }
 
+    @Test
+    public void find_filters_by_type_council() {
+        createPublicInitiativesOfAllType();
+        List<InitiativeListInfo> result = initiativeDao.find(new InitiativeSearch().setType(InitiativeSearch.Type.council)).list;
+        assertThat(result, hasSize(1));
+        assertThat(result.get(0).getType(), is(InitiativeType.COLLABORATIVE_COUNCIL));
+    }
+
 
 
     private void createPublicInitiativesOfAllType() {
