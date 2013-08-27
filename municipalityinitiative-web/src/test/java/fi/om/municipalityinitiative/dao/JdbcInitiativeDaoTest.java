@@ -676,6 +676,58 @@ public class JdbcInitiativeDaoTest {
         assertThat(all.getAll(), is(5L));
     }
 
+    @Test
+    public void counts_initiatives_according_to_selected_type_if_normal() {
+
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.SINGLE);
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_COUNCIL);
+
+        InitiativeCounts all = initiativeDao.getPublicInitiativeCounts(Maybe.<Long>absent(), InitiativeSearch.Type.normal);
+        assertThat(all.collecting, is(2L));
+        assertThat(all.sent, is(1L));
+        assertThat(all.getAll(), is(3L));
+    }
+
+    @Test
+    public void counts_initiatives_according_to_selected_type_if_citizen() {
+
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.SINGLE);
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.SINGLE);
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_COUNCIL);
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_COUNCIL);
+
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
+
+        InitiativeCounts all = initiativeDao.getPublicInitiativeCounts(Maybe.<Long>absent(), InitiativeSearch.Type.citizen);
+        assertThat(all.collecting, is(1L));
+        assertThat(all.sent, is(0L));
+        assertThat(all.getAll(), is(1L));
+    }
+
+    @Test
+    public void counts_initiatives_according_to_selected_type_if_council() {
+
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.SINGLE);
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.SINGLE);
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
+
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_COUNCIL);
+
+        InitiativeCounts all = initiativeDao.getPublicInitiativeCounts(Maybe.<Long>absent(), InitiativeSearch.Type.council);
+        assertThat(all.collecting, is(1L));
+        assertThat(all.sent, is(0L));
+        assertThat(all.getAll(), is(1L));
+    }
+
     private void createPublicInitiativesOfAllType() {
         for (InitiativeType initiativeType : InitiativeType.values()) {
             testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, initiativeType);

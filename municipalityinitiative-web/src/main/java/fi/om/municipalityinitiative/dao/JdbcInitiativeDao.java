@@ -254,6 +254,8 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .where(municipalityInitiative.state.eq(InitiativeState.PUBLISHED))
                 .where(municipalityInitiative.fixState.eq(FixState.OK));
 
+        filterByType(from, initiativeType);
+
         if (municipality.isPresent()) {
             from.where(municipalityInitiative.municipalityId.eq(municipality.get()));
         }
