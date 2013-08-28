@@ -44,7 +44,13 @@
     
     <@u.spacer "15" />
     
-    <@b.emailFooter type=type managementHash=managementHash/>
+    <@b.contentBlock type>
+        <@b.adminViewLink type=type verified=initiative.type.verifiable />
+    </@b.contentBlock>
+    
+    <@u.spacer "15" />
+    
+    <@b.emailFooter type=type />
     
     <@u.spacer "15" />
 </#macro>

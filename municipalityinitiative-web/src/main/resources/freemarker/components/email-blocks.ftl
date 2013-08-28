@@ -78,52 +78,34 @@
  *
  * @param type 'text' or 'html'
  * @param postFix
- * @param managementHash if given, managementlink will be shown instead of regular public link
- * @param showManagement default as true, used in verified initiatives
  -->
-<#macro emailFooter type="" postFix="" managementHash="" showManagement=true>
+<#macro emailFooter type="" postFix="">
     <#if type=="html">
         <table border="0" cellspacing="0" cellpadding="0" width="640" style="border:0;">
         <tr>
             <td style="text-align:center; ${footerFont!""}">
     
-        <p style="${footerFont!""}"><@u.message "email.footer.sendFrom"+postFix /><br/>
-
-        <#-- TODO: check what should be removed and what not
-        <#if showManagement && initiative.type.verifiable && !initiative.sent>
-            <#assign title><@u.message "email.footer.managementLink" /></#assign>
-            <@u.link urls.get(switchLocale!locale).loginToManagement(initiative.id) title />
-        <#elseif managementHash?has_content && !initiative.sent>
-            <@u.message "email.footer.managementLink" /><br/><@u.link urls.get(switchLocale!locale).loginAuthor(managementHash) />
-        <#elseif initiative.state?? && initiative.state == "PUBLISHED" && initiative.fixState == "OK">
-            <@u.message "email.footer.viewLink"+postFix /><br/><@u.link urls.get(switchLocale!locale).view(initiative.id) />
-        </#if>
-        -->
-        </p>
-        <br/>
-        <p style="${footerFont!""}"><@u.message "email.footer" /></p>
+                <p style="${footerFont!""}">
+                    <@u.message "email.footer.sendFrom"+postFix />
+                    <br/>
+                    <#if initiative.state?? && initiative.state == "PUBLISHED" && initiative.fixState == "OK">
+                        <@u.message "email.footer.viewLink"+postFix /><br/><@u.link urls.get(switchLocale!locale).view(initiative.id) />
+                    </#if>
+                </p>
+                <br/>
+                <p style="${footerFont!""}"><@u.message "email.footer" /></p>
         
-        </td>
+            </td>
         </tr>
         </table>
     <#else>
         <@u.message "email.footer.sendFrom"+postFix />
         
-        <#-- TODO: check what should be removed and what not
-        <#if showManagement && initiative.type.verifiable && !initiative.sent>
-            <@u.message "email.footer.managementLink" />
-            
-            ${urls.get(switchLocale!locale).loginToManagement(initiative.id)}
-        <#elseif managementHash?has_content && !initiative.sent>
-            <@u.message "email.footer.managementLink" />
-            
-            ${urls.get(switchLocale!locale).loginAuthor(managementHash)}
-        <#elseif initiative.state?? && initiative.state == "PUBLISHED" && initiative.fixState == "OK">
+        <#if initiative.state?? && initiative.state == "PUBLISHED" && initiative.fixState == "OK">
             <@u.message "email.footer.viewLink"+postFix />
             
             ${urls.get(switchLocale!locale).view(initiative.id)}
         </#if>
-        -->
         
         <@u.message "email.footer" />
     </#if>

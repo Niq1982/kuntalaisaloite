@@ -24,7 +24,13 @@
     
     <@u.spacer "15" />
     
-    <@b.emailFooter type=type postFix="" managementHash=managementHash/>
+    <@b.contentBlock type>
+        <@b.adminViewLink type=type verified=initiative.type.verifiable />
+    </@b.contentBlock>
+    
+    <@u.spacer "15" />
+    
+    <@b.emailFooter type />
     
     <@u.spacer "15" />
     
@@ -44,7 +50,13 @@
     
     <@u.spacer "15" />
     
-    <@b.emailFooter type=type postFix="" managementHash=managementHash/>
+    <@b.contentBlock type>
+        <@b.adminViewLink type=type verified=initiative.type.verifiable />
+    </@b.contentBlock>
+    
+    <@u.spacer "15" />
+    
+    <@b.emailFooter type />
     
     <@u.spacer "15" />
     

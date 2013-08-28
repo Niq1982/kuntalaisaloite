@@ -16,7 +16,10 @@
 
 <@b.separator />
 
-<@b.emailFooter type=type postFix="" managementHash=managementHash/>
+<@b.adminViewLink type=type verified=initiative.type.verifiable />
+<@b.separator />
+
+<@b.emailFooter type />
 
 <#-- Swedish part -->
 <#global switchLocale = altLocale />
@@ -33,6 +36,9 @@
 <@s.statusInfo emailMessageType type />
 <@b.separator />
 
-<@b.emailFooter type=type postFix="" managementHash=managementHash/>
+<@b.adminViewLink type=type verified=initiative.type.verifiable />
+<@b.separator />
+
+<@b.emailFooter type />
 
 <#global switchLocale = locale />

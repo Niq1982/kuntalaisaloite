@@ -30,6 +30,11 @@
     
     <@b.contactInfo contactInfo type />
     
+    
+    <@b.separator />
+    
+    <@b.adminViewLink type=type verified=initiative.type.verifiable />
+    
     <@b.separator />
 
     <@b.emailFooter type />

@@ -84,15 +84,7 @@ public class EmailServiceStatusEmailTest extends MailSendingEmailServiceTestBase
         emailService.sendStatusEmail(initiativeId, EmailMessageType.REJECTED_BY_OM);
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.loginAuthor(managementHash())));
     }
-
-    @Test
-    public void sent_initiative_contains_no_managementLink() throws Exception {
-        Long initiativeId = testHelper.createSingleSent(getMunicipalityId());
-        emailService.sendStatusEmail(initiativeId, EmailMessageType.REJECTED_BY_OM);
-        assertThat(javaMailSenderFake.getMessageContent().html, not(containsString(urls.loginAuthor(managementHash()))));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.view(initiativeId)));
-    }
-
+    
     @Test
     public void status_emails_sent_to_authors_contains_separate_management_links() throws Exception {
         Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(getMunicipalityId())
