@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.web.controller;
 
+import com.google.common.base.Strings;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
@@ -38,18 +39,30 @@ public class DefaultLoginController extends BaseLoginController {
 
     @RequestMapping(value = MODERATOR_LOGIN, method = RequestMethod.GET)
     public String moderatorLoginGet(@RequestParam(required = false) String target, Model model, Locale locale, HttpServletRequest request, HttpServletResponse response) {
-//        // NOTE: Needed for VETUMA
-//        response.setContentType("text/html;charset=ISO-8859-1");
         model.addAttribute("target", target);
+        if (userService.getUser(request).isOmUser() && !Strings.isNullOrEmpty(target)) {
+            return contextRelativeRedirect(target);
+        }
         return MODERATOR_LOGIN_VIEW;
     }
 
     @RequestMapping(value = MODERATOR_LOGIN, method = RequestMethod.POST)
     public RedirectView moderatorLoginPost(@RequestParam String u,
                                            @RequestParam String p,
+                                           @RequestParam(required = false) String target,
                                            Model model, Locale locale, HttpServletRequest request) {
+
+        System.out.println("asd");
         userService.adminLogin(u, p, request);
-        return new RedirectView(Urls.get(Locales.LOCALE_FI).frontpage());
+        if (Strings.isNullOrEmpty(target)) {
+            return new RedirectView(Urls.get(locale).frontpage());
+        }
+        else {
+            System.out.println("ok");
+            System.out.println(Urls.get(locale).getBaseUrl() + target);
+            return new RedirectView(Urls.get(locale).getBaseUrl() + target);
+        }
+
     }
 
     @RequestMapping(value =  {LOGIN_FI, LOGIN_SV}, method = RequestMethod.GET, params = PARAM_MANAGEMENT_CODE)

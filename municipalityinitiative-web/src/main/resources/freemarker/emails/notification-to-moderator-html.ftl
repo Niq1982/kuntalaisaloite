@@ -26,7 +26,7 @@
     
     <@b.contentBlock type>
         <h4 style="${h4!""}"><@u.message "email.notification.to.moderator.moderateLink" /></h4>
-        <p style="${pBottomMargin}"><@u.link urls.moderation(initiative.id) /></p>
+        <p style="${pBottomMargin}"><@u.link urls.moderatorLogin(initiative.id) /></p>
     </@b.contentBlock>
 
     <@u.spacer "15" />

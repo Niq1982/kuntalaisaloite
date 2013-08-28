@@ -19,6 +19,7 @@
 
         <form name="login" accept-charset="UTF-8" action="${springMacroRequestContext.requestUri}" method="post">
             <input type="hidden" name="CSRFToken" value="${CSRFToken!""}"/>
+            <input type="hidden" name="target" value="${target!""}"/>
             
             <div class="input-block-content no-top-margin">
                 <label for="u" class="input-header">
@@ -33,7 +34,7 @@
                 <input type="password" maxlength="30" class="medium-fixed" value="" name="p" id="p" />
             </div>
             <br class="clear" />
-            
+
             <button type="submit" name="Login" value="<@u.message "common.login" />" class="small-button"><span class="small-icon next"><@u.message "common.login" /></span></button>
         </form>
         <br />
