@@ -152,7 +152,7 @@
 </div>
 
 <#assign paginationParams = {
-    "total":      initiativeCounts[currentSearch.show],
+    "total":      initiatives.count,
     "limit":      currentSearch.limit!500,
     "offset":     currentSearch.offset!0,
     "queryString": queryString,
@@ -163,7 +163,7 @@
 
 <div class="search-results">
 <#if initiatives?? && (initiatives?size > 0)>
-    <#list initiatives as initiative>
+    <#list initiatives.list as initiative>
         <#if initiative_index == 0><ul></#if>
         <li <#if initiative_index == 0>class="first"</#if>>
             <a href="${urls.view(initiative.id)}">

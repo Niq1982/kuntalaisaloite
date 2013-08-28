@@ -58,7 +58,7 @@ public class ViewGenerator {
         );
     }
 
-    public static ViewGenerator searchView(List<InitiativeListInfo> initiatives,
+    public static ViewGenerator searchView(InitiativeListWithCount initiatives,
                                            List<Municipality> municipalities,
                                            InitiativeSearch currentSearch,
                                            SearchParameterQueryString queryString,

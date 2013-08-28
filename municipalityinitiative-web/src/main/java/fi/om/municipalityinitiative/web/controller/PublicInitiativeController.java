@@ -71,7 +71,7 @@ public class PublicInitiativeController extends BaseController {
 
         addPiwicIdIfNotAuthenticated(model, request);
 
-        return ViewGenerator.searchView(publicInitiativeService.findMunicipalityInitiatives(search, loginUserHolder).list,
+        return ViewGenerator.searchView(publicInitiativeService.findMunicipalityInitiatives(search, loginUserHolder),
                 municipalities,
                 search,
                 queryString,
