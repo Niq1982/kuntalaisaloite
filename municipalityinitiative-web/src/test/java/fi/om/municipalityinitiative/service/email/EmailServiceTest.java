@@ -61,7 +61,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_EMAIL));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_NAME));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_PHONE));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.moderation(initiativeId())));
+        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.moderatorLogin(initiativeId())));
         
     }
 
