@@ -44,14 +44,17 @@ public class JdbcParticipantDao implements ParticipantDao {
     @Override
     public void confirmParticipation(Long participantId, String confirmationCode) {
 
-        Boolean showName = queryFactory.from(QParticipant.participant)
+        Object[] columns = queryFactory.from(QParticipant.participant)
                 .where(QParticipant.participant.id.eq(participantId))
                 .where(QParticipant.participant.confirmationCode.eq(confirmationCode))
-                .singleResult(QParticipant.participant.showName);
+                .singleResult(QParticipant.participant.showName, QParticipant.participant.municipalityInitiativeId);
 
-        if (showName == null) {
+        if (columns == null || columns.length == 0) {
             throw new InvalidParticipationConfirmationException("Participant:" + participantId + ", code:" + confirmationCode);
         }
+
+        Boolean showName = (boolean) columns[0];
+        long initiativeIdByParticipant = (long) columns[1];
 
         assertSingleAffection(queryFactory.update(QParticipant.participant)
                 .setNull(QParticipant.participant.confirmationCode)
@@ -59,20 +62,21 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .where(QParticipant.participant.confirmationCode.eq(confirmationCode))
                 .execute());
 
-        Long initiativeIdByParticipant = getInitiativeIdByParticipant(participantId);
         if (showName) {
             assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
                     .set(QMunicipalityInitiative.municipalityInitiative.participantCountPublic,
                             QMunicipalityInitiative.municipalityInitiative.participantCountPublic.add(1))
+                    .set(QMunicipalityInitiative.municipalityInitiative.participantCount,
+                            QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
+                    .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeIdByParticipant))
+                    .execute());
+        } else {
+            assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
+                    .set(QMunicipalityInitiative.municipalityInitiative.participantCount,
+                            QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
                     .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeIdByParticipant))
                     .execute());
         }
-
-        assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
-                .set(QMunicipalityInitiative.municipalityInitiative.participantCount,
-                        QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
-                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeIdByParticipant))
-                .execute());
     }
 
     @Override
