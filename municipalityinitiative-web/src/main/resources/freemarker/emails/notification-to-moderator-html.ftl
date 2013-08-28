@@ -28,7 +28,7 @@
         <h4 style="${h4!""}"><@u.message "email.notification.to.moderator.moderate.title" /></h4>
         <p style="${pBothMargins!""}">
             <#assign title><@u.message "email.notification.to.moderator.moderate.linkLabel" /></#assign>
-            <@u.link urls.moderation(initiative.id) title />
+            <@u.link urls.moderatorLogin(initiative.id) title />
         </p>
         
     </@b.contentBlock>

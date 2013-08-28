@@ -460,6 +460,10 @@ public final class Urls {
         return getLocalizedPageUrl(MODERATOR_LOGIN, MODERATOR_LOGIN);
     }
 
+    public String moderatorLogin(Long initiativeId) {
+        return getLocalizedPageUrl(MODERATOR_LOGIN, MODERATOR_LOGIN) + "?" + TARGET + "=" + urlEncode(MODERATION_FI.replace(ID_PARAMETER, initiativeId.toString()));
+    }
+
     public String testDataGeneration() {
         return getLocalizedPageUrl(TEST_DATA_GENERATION_FI, TEST_DATA_GENERATION_SV);
     }
