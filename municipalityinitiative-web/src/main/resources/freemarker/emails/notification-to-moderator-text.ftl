@@ -15,7 +15,7 @@
 <@u.message "email.notification.to.moderator.moderate.title" />
     
 <@u.message "email.notification.to.moderator.moderate.linkLabel" />:
-${urls.moderation(initiative.id)}
+${urls.moderatorLogin(initiative.id)}
 
 <@b.separator />
 
