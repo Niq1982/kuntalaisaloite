@@ -57,14 +57,24 @@ public class JdbcInitiativeDao implements InitiativeDao {
     PostgresQueryFactory queryFactory;
 
     @Override
+    public InitiativeListWithCount findUnCached(InitiativeSearch search) {
+        return find(search);
+    }
+
+    @Override
     @Cacheable(value = "initiativeList")
-    public InitiativeListWithCount find(InitiativeSearch search) {
+    public InitiativeListWithCount findCached(InitiativeSearch search) {
+        return find(search);
+    }
+
+    private InitiativeListWithCount find(InitiativeSearch search) {
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
                 .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
                 ;
 
         filterByState(query, search);
+        filterByType(query, search.getType());
         filterByTitle(query, search.getSearch());
         filterByMunicipality(query, search.getMunicipality());
         orderBy(query, search.getOrderBy());
@@ -73,6 +83,24 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
 
         return new InitiativeListWithCount(query.list(Mappings.initiativeListInfoMapping), rows);
+    }
+
+    private static void filterByType(PostgresQuery query, InitiativeSearch.Type type) {
+        switch (type) {
+            case normal:
+                query.where(QMunicipalityInitiative.municipalityInitiative.type.in(InitiativeType.COLLABORATIVE, InitiativeType.SINGLE, InitiativeType.UNDEFINED));
+                break;
+            case citizen:
+                query.where(QMunicipalityInitiative.municipalityInitiative.type.eq(InitiativeType.COLLABORATIVE_CITIZEN));
+                break;
+            case council:
+                query.where(QMunicipalityInitiative.municipalityInitiative.type.eq(InitiativeType.COLLABORATIVE_COUNCIL));
+                break;
+            case all:
+            default:
+
+
+        }
     }
 
     @Override
@@ -223,7 +251,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     @Cacheable(value = "initiativeCount")
-    public InitiativeCounts getPublicInitiativeCounts(Maybe<Long> municipality) {
+    public InitiativeCounts getPublicInitiativeCounts(Maybe<Long> municipality, InitiativeSearch.Type initiativeType) {
         Expression<String> caseBuilder = new CaseBuilder()
                 .when(municipalityInitiative.sent.isNull())
                 .then(new ConstantImpl<String>(InitiativeSearch.Show.collecting.name()))
@@ -234,6 +262,8 @@ public class JdbcInitiativeDao implements InitiativeDao {
         PostgresQuery from = queryFactory.from(municipalityInitiative)
                 .where(municipalityInitiative.state.eq(InitiativeState.PUBLISHED))
                 .where(municipalityInitiative.fixState.eq(FixState.OK));
+
+        filterByType(from, initiativeType);
 
         if (municipality.isPresent()) {
             from.where(municipalityInitiative.municipalityId.eq(municipality.get()));

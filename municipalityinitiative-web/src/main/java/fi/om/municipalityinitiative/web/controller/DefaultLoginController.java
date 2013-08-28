@@ -29,9 +29,10 @@ public class DefaultLoginController extends BaseLoginController {
     }
     
     @RequestMapping(value =  {AUTHENTICATE_FI, AUTHENTICATE_SV}, method = RequestMethod.GET)
-    public String authenticateGet(Model model, Locale locale, HttpServletRequest request) {
+    public String authenticateGet(@RequestParam(value = Urls.TARGET, required = false) String target, Model model, Locale locale, HttpServletRequest request) {
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().authenticate());
+        model.addAttribute("target", target == null ? (locale.equals(Locales.LOCALE_FI) ? Urls.AUTHENTICATE_FI : Urls.AUTHENTICATE_SV) : target);
         return AUTHENTICATE_VIEW;
     }
 

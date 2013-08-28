@@ -9,6 +9,7 @@ public class InitiativeSearch {
     private Show show = Show.collecting;
     private Long municipality;
     private String search;
+    private Type type = Type.all;
 
     public Long getMunicipality() {
         return municipality;
@@ -36,6 +37,7 @@ public class InitiativeSearch {
         initiativeSearch.municipality = this.municipality;
         initiativeSearch.search = this.search;
         initiativeSearch.show = this.show;
+        initiativeSearch.type = this.type;
         return initiativeSearch;
     }
 
@@ -101,11 +103,27 @@ public class InitiativeSearch {
         }
     }
 
+    public Type getType() {
+        return type;
+    }
+
+    public InitiativeSearch setType(Type type) {
+        this.type = type;
+        return this;
+    }
+
     public enum OrderBy {
         oldestSent, latestSent,
         id,
         mostParticipants, leastParticipants,
         oldest, latest
+    }
+
+    public enum Type {
+        all,
+        normal,
+        council,
+        citizen
     }
 
     @Override
@@ -119,6 +137,7 @@ public class InitiativeSearch {
                 && equals(this.getLimit(), that.getLimit())
                 && equals(this.getOffset(), that.getOffset())
                 && equals(this.getOrderBy(), that.getOrderBy())
+                && equals(this.getType(), that.getType())
                 && equals(this.getShow(), that.getShow());
     }
 
@@ -129,6 +148,7 @@ public class InitiativeSearch {
         result = 31 * result + orderBy.hashCode();
         result = 31 * result + show.hashCode();
         result = 31 * result + (municipality != null ? municipality.hashCode() : 0);
+        result = 31 * result + type.hashCode();
         result = 31 * result + (search != null ? search.hashCode() : 0);
         return result;
     }

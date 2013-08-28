@@ -28,10 +28,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.util.ByteArrayDataSource;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.*;
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
@@ -107,7 +104,11 @@ public class EmailMessageConstructor {
             for (String to : recipients) {
                 helper.addTo(to);
             }
-            helper.setFrom(environmentSettings.getDefaultReplyTo());
+            try {
+                helper.setFrom(environmentSettings.getDefaultReplyTo(), "Kuntalaisaloite");
+            } catch (UnsupportedEncodingException e) {
+                helper.setFrom(environmentSettings.getDefaultReplyTo());
+            }
             helper.setReplyTo(environmentSettings.getDefaultReplyTo());
             helper.setSubject(subject);
             helper.setText(text, html);

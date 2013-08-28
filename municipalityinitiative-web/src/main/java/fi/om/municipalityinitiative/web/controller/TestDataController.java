@@ -79,7 +79,9 @@ public class TestDataController extends BaseController {
             if (selectedInitiative.initiative.isCollaborative()) {
                 for (int j = 0; j < participants.size(); j++) {
                     Integer participantAmount = parseIntegerParameter(request, "participantAmount[" + j + "]", 1);
-                    testDataService.createTestParticipant(initiativeId, participants.get(j), participantAmount);
+                    for (int count = 0; count < participantAmount; ++count) {
+                        testDataService.createTestParticipant(initiativeId, participants.get(j));
+                    }
                 }
             }
         }

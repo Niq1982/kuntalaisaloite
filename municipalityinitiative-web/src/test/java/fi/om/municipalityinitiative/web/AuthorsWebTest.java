@@ -259,6 +259,17 @@ public class AuthorsWebTest extends WebTestBase {
         assertTextContainedByClass("msg-success", "Vastuuhenkilö poistettu");
     }
 
+    @Test
+    public void login_when_under_aged_gives_error_and_does_not_log_user_in() {
+        vetumaLogin("010199-0000", "Helsinki");
+
+        assertTitle("Tunnistautuminen epäonnistui - Kuntalaisaloitepalvelu");
+        assertThat(getElement(By.tagName("h1")).getText(), containsString("olet alaikäinen"));
+
+        open(urls.frontpage());
+        assertLoginLinkIsVisibleAtHeader();
+    }
+
     private void assertInvitationPageIsGone(AuthorInvitation invitation) {
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
         assertThat(getElement(By.tagName("h1")).getText(), is(getMessage("error.410.invitation.not.valid.error.message.title")));

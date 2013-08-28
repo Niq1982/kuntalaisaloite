@@ -5,6 +5,7 @@ import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import fi.om.municipalityinitiative.dto.service.NormalParticipant;
 import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.dto.service.VerifiedParticipant;
+import fi.om.municipalityinitiative.exceptions.InvalidParticipationConfirmationException;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.Membership;
@@ -29,7 +30,7 @@ public class JdbcParticipantDao implements ParticipantDao {
             throw new NullPointerException("confirmationCode may not be null: Participation would be accepted without participantCount increasing.");
         }
 
-        Long participantId = queryFactory.insert(participant)
+        return queryFactory.insert(participant)
                 .set(participant.municipalityId, createDto.getHomeMunicipality())
                 .set(participant.municipalityInitiativeId, createDto.getMunicipalityInitiativeId())
                 .set(participant.name, createDto.getParticipantName())
@@ -38,20 +39,22 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .set(participant.confirmationCode, confirmationCode)
                 .set(participant.membershipType, createDto.getMunicipalMembership())
                 .executeWithKey(participant.id);
-
-        return participantId;
     }
 
     @Override
     public void confirmParticipation(Long participantId, String confirmationCode) {
 
-        // TODO: Handle errors if code or participant id invalid.
-        // TODO: Show some error message to user
-
-        boolean showName = queryFactory.from(QParticipant.participant)
+        Object[] columns = queryFactory.from(QParticipant.participant)
                 .where(QParticipant.participant.id.eq(participantId))
                 .where(QParticipant.participant.confirmationCode.eq(confirmationCode))
-                .singleResult(QParticipant.participant.showName);
+                .singleResult(QParticipant.participant.showName, QParticipant.participant.municipalityInitiativeId);
+
+        if (columns == null || columns.length == 0) {
+            throw new InvalidParticipationConfirmationException("Participant:" + participantId + ", code:" + confirmationCode);
+        }
+
+        Boolean showName = (boolean) columns[0];
+        long initiativeIdByParticipant = (long) columns[1];
 
         assertSingleAffection(queryFactory.update(QParticipant.participant)
                 .setNull(QParticipant.participant.confirmationCode)
@@ -59,20 +62,21 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .where(QParticipant.participant.confirmationCode.eq(confirmationCode))
                 .execute());
 
-        Long initiativeIdByParticipant = getInitiativeIdByParticipant(participantId);
         if (showName) {
             assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
                     .set(QMunicipalityInitiative.municipalityInitiative.participantCountPublic,
                             QMunicipalityInitiative.municipalityInitiative.participantCountPublic.add(1))
+                    .set(QMunicipalityInitiative.municipalityInitiative.participantCount,
+                            QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
+                    .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeIdByParticipant))
+                    .execute());
+        } else {
+            assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
+                    .set(QMunicipalityInitiative.municipalityInitiative.participantCount,
+                            QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
                     .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeIdByParticipant))
                     .execute());
         }
-
-        assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
-                .set(QMunicipalityInitiative.municipalityInitiative.participantCount,
-                        QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
-                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeIdByParticipant))
-                .execute());
     }
 
     @Override

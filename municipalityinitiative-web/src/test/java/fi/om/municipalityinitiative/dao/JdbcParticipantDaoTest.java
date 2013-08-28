@@ -298,12 +298,38 @@ public class JdbcParticipantDaoTest {
     public void confirming_participant_makes_participation_public() {
 
         String participantConfirmationCode = "someConfirmationCode";
-        Long participantId = participantDao.create(participantCreateDto(), participantConfirmationCode);
+        ParticipantCreateDto createDto = participantCreateDto();
+        createDto.setShowName(true);
+        Long participantId = participantDao.create(createDto, participantConfirmationCode);
         participantDao.create(participantCreateDto(), CONFIRMATION_CODE); // Some other unconfirmed participant
 
         int originalParticipants = testHelper.getInitiative(testInitiativeId).getParticipantCount();
+        int originalParticipantsPublic = testHelper.getInitiative(testInitiativeId).getParticipantCountPublic();
+
         participantDao.confirmParticipation(participantId, participantConfirmationCode);
+
         assertThat(testHelper.getInitiative(testInitiativeId).getParticipantCount(), is(originalParticipants+1));
+        assertThat(testHelper.getInitiative(testInitiativeId).getParticipantCountPublic(), is(originalParticipantsPublic+1));
+    }
+
+    @Test
+    public void confirming_participant_with_hidden_name_increases_participantCount_but_not_publicCount() {
+
+        String participantConfirmationCode = "someConfirmationCode";
+        ParticipantCreateDto createDto = participantCreateDto();
+        createDto.setShowName(false);
+        Long participantId = participantDao.create(createDto, participantConfirmationCode);
+
+        participantDao.create(participantCreateDto(), CONFIRMATION_CODE); // Some other unconfirmed participant
+
+        int originalParticipants = testHelper.getInitiative(testInitiativeId).getParticipantCount();
+        int originalParticipantsPublic = testHelper.getInitiative(testInitiativeId).getParticipantCountPublic();
+
+        participantDao.confirmParticipation(participantId, participantConfirmationCode);
+
+        assertThat(testHelper.getInitiative(testInitiativeId).getParticipantCount(), is(originalParticipants+1));
+        assertThat(testHelper.getInitiative(testInitiativeId).getParticipantCountPublic(), is(originalParticipantsPublic));
+
     }
 
     @Test

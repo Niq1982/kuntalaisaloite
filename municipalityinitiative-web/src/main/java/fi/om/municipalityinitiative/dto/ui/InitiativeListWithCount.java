@@ -11,4 +11,12 @@ public class InitiativeListWithCount {
         this.list = list;
         this.count = count;
     }
+
+    public List<InitiativeListInfo> getList() {
+        return list;
+    }
+
+    public long getCount() {
+        return count;
+    }
 }

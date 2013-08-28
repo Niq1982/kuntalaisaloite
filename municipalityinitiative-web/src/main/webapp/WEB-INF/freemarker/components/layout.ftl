@@ -274,7 +274,7 @@
                     <a href="${urls.logout()}" id="logout" class="header-tool-link logout"><@u.message "common.logout"/><span class="icon-small logout"></span></a>
 
                 <#elseif enableVerifiedInitiatives>
-                    <a href="${urls.authenticate()}" title="<@u.message "authenticate.title"/>" class="header-tool-link login"><@u.message "authenticate.title"/></a>
+                    <a href="${urls.authenticate(currentRequestUri)}" title="<@u.message "authenticate.title"/>" class="header-tool-link login"><@u.message "authenticate.title"/></a>
                 </#if>
             </div>
 
@@ -404,21 +404,21 @@
     </script>
 
     <#if omPiwicId??>
-        <script type="text/javascript">
         <!-- Piwik -->
-            var piwikDomain = 'log.otakantaa.fi';
-            var piwikSiteId = '${omPiwicId}';
-            var pkBaseURL = (("https:" == document.location.protocol) ? "https://" + piwikDomain + "/" : "http://" + piwikDomain + "/");
-            document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
-        </script>
         <script type="text/javascript">
-            try {
-                var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", piwikSiteId);
-                piwikTracker.trackPageView();
-                piwikTracker.enableLinkTracking();
-            } catch (err) { }
-        <!-- End Piwik Tracking Code -->
+          var _paq = _paq || [];
+          _paq.push(["trackPageView"]);
+          _paq.push(["enableLinkTracking"]);
+
+          (function() {
+            var u=(("https:" == document.location.protocol) ? "https" : "http") + "://log.otakantaa.fi/";
+            _paq.push(["setTrackerUrl", u+"piwik.php"]);
+            _paq.push(["setSiteId", "${omPiwicId}"]);
+            var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0]; g.type="text/javascript";
+            g.defer=true; g.async=true; g.src=u+"piwik.js"; s.parentNode.insertBefore(g,s);
+          })();
         </script>
+        <!-- End Piwik Code -->
     </#if>
 
 </body>

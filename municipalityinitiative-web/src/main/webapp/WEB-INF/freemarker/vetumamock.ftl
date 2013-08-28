@@ -27,7 +27,12 @@ function randomSSN() {
 
 </script>
 
-<p>Tämä sivu korvaa vetuman. Muu järjestelmä luulee oikeasti keskustelevansa vetuman kanssa.</p>
+<h2>Tämän sivun tilalla tulee olemaan <a href="http://www.suomi.fi/suomifi/tyohuone/yhteiset_palvelut/verkkotunnistaminen_ja_maksaminen_vetuma/">Vetuma-palvelu</a>, jolla kirjaudutaan palveluun pankkitunnuksilla.</h2>
+<p>Testivaiheessa Vetuma on korvattu tällä sivulla, jonka avulla voit syöttää vapaasti Vetumasta saatavaa tietoa.<br/>
+Huomaathan, että voit myös antaa minkä tahansa henkilötunnuksen vapaasti. Antamaasi henkilötunnusta ei näytetä palvelussa eikä sitä tallenneta selkokielisenä. <br/>
+Aloitteet ja osallistumiset liitetään yhteen henkilötunnukseen. Jos haluat palata luomasi aloitteen hallintaan myöhemmin, joudut käyttämään samaa henkilötunnusta kuin aloitetta luodessa.</p>
+
+<p>Ä, ö ja å -kirjaimet nimessä aiheuttavat tällä hetkellä epäonnistuneen kirjautumisen.</p>
 
 <form action="/vetumamockreturn" method="post">
 

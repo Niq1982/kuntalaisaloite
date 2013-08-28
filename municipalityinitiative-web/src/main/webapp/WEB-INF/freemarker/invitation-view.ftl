@@ -48,7 +48,7 @@
                         <#if user.isVerifiedUser()>
                             <@u.systemMessage path="warning.verifiedAuthor.notMember" type="warning" showClose=false />
                         <#else>
-                            <a class="small-button" href="${vetumaLoginToCurrentPage}${urls.urlPercentEncode("&show-invitation")}"><span class="small-icon save-and-send"><@u.message "action.invitation.authenticate" /></span></a>
+                            <a class="small-button" href="${urls.login(currentRequestUri+"&show-invitation")}"><span class="small-icon save-and-send"><@u.message "action.invitation.authenticate" /></span></a>
                         </#if>
                         <a href="?invitation=${authorInvitation.confirmCode!""}&invitation-reject=confirm" title="<@u.message "invitation.reject" />" class="small-button gray js-reject-invitation"><span class="small-icon cancel"><@u.message "invitation.reject" /></span></a>
                     <#else>

@@ -1,22 +1,18 @@
 package fi.om.municipalityinitiative.web;
 
-import java.io.IOException;
-import java.util.UUID;
-
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import fi.om.municipalityinitiative.dao.InvitationNotValidException;
-import fi.om.municipalityinitiative.exceptions.InvalidLoginException;
+import fi.om.municipalityinitiative.exceptions.*;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.util.NestedServletException;
 
-import fi.om.municipalityinitiative.exceptions.NotFoundException;
-import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
-import fi.om.municipalityinitiative.exceptions.AuthenticationRequiredException;
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.util.UUID;
 
 public class ErrorFilter implements Filter {
     
@@ -53,7 +49,10 @@ public class ErrorFilter implements Filter {
 
             if (nested instanceof InvitationNotValidException) {
                 handeInvitationNotValid(request, response, e);
-            } else if (nested instanceof NotFoundException) {
+            } else if (nested instanceof InvalidParticipationConfirmationException) {
+                handleParticipationNotValid(request, response, e);
+            }
+            else if (nested instanceof NotFoundException) {
                 handleNotFound(request, response, e);
             } else if (nested instanceof AccessDeniedException
                     || nested instanceof AuthenticationRequiredException
@@ -68,8 +67,15 @@ public class ErrorFilter implements Filter {
 
     private void handeInvitationNotValid(HttpServletRequest request, HttpServletResponse response, Throwable e) throws IOException {
         log.info(getErrorMessage("Invitation not valid: " + e.getMessage(), null, request));
-        log.info("Invitation not valid", e);
+        //log.info("Invitation not valid", e);
         request.setAttribute("errorMessage", "error.410.invitation.not.valid.error.message");
+        response.sendError(HttpServletResponse.SC_GONE);
+    }
+
+    private void handleParticipationNotValid(HttpServletRequest request, HttpServletResponse response, Throwable e) throws IOException {
+        log.info(getErrorMessage("Participation confirmation not valid: " + e.getMessage(), null, request));
+        //log.info("Participation confirmation not valid", e);
+        request.setAttribute("errorMessage", "error.410.participation.confirmation.not.valid.error.message");
         response.sendError(HttpServletResponse.SC_GONE);
     }
 

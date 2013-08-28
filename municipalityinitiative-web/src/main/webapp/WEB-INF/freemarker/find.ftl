@@ -57,10 +57,16 @@
     <span class="search-parameters-title filter"><label for="municipality"><@u.message "searchParameters.type" /></label></span>
     <div class="search-parameters-container cf">
         <div class="search-parameters">
+        <#--
             <a class="active" href="#"><@u.messageHTML "searchParameters.type.all" />
             </a><a class="" href="#"><@u.messageHTML "searchParameters.type.UNDEFINED" />
             </a><a class="" href="#"><@u.messageHTML "searchParameters.type.COLLABORATIVE_COUNCIL" />
             </a><a class="" href="#"><@u.messageHTML "searchParameters.type.COLLABORATIVE_CITIZEN" /></a>
+        -->
+            <@u.searchLink parameter="withTypeAll" cssClass=(currentSearch.type == "all")?string('active','') />
+            <@u.searchLink parameter="withTypeNormal" cssClass=(currentSearch.type == "normal")?string('active','') />
+            <@u.searchLink parameter="withTypeCouncil" cssClass=(currentSearch.type == "council")?string('active','')  />
+            <@u.searchLink parameter="withTypeCitizen" cssClass=(currentSearch.type == "citizen")?string('active','')  />
             
         </div>
     </div>
@@ -146,7 +152,7 @@
 </div>
 
 <#assign paginationParams = {
-    "total":      initiativeCounts[currentSearch.show],
+    "total":      initiatives.count,
     "limit":      currentSearch.limit!500,
     "offset":     currentSearch.offset!0,
     "queryString": queryString,
@@ -157,7 +163,7 @@
 
 <div class="search-results">
 <#if initiatives?? && (initiatives?size > 0)>
-    <#list initiatives as initiative>
+    <#list initiatives.list as initiative>
         <#if initiative_index == 0><ul></#if>
         <li <#if initiative_index == 0>class="first"</#if>>
             <a href="${urls.view(initiative.id)}">
