@@ -53,11 +53,9 @@ public class TestDataService {
     }
     
     @Transactional(readOnly = false)
-    public void createTestParticipant(Long initiativeId, ParticipantUICreateDto createDto, int amount) {
-        for (int i = 0; i < amount; ++i) {
-            Long participantId = participantDao.create(ParticipantCreateDto.parse(createDto, initiativeId), "confirmationCode");
-            participantDao.confirmParticipation(participantId, "confirmationCode");
-        }
+    public void createTestParticipant(Long initiativeId, ParticipantUICreateDto createDto) {
+        Long participantId = participantDao.create(ParticipantCreateDto.parse(createDto, initiativeId), "confirmationCode");
+        participantDao.confirmParticipation(participantId, "confirmationCode");
     }
     
 }
