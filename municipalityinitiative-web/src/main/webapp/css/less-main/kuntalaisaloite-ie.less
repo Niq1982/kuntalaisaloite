@@ -133,14 +133,18 @@ a, button {
     }
     
     .initiative-types {
+        .disable-mask {
+            filter: progid:DXImageTransform.Microsoft.Alpha(opacity = 0);
+        }
+    
         .initiative-type {
             &:hover {
                 border:1px solid #aaa;
             }
             
-            &.unselected {
+            /*&.unselected {
                 filter: progid:DXImageTransform.Microsoft.Alpha(opacity = 60);
-            }
+            }*/
         }
     }
     

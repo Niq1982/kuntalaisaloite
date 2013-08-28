@@ -444,7 +444,7 @@ var initiativeType = (function() {
 
 	type.click(function(){
 		var thisObj = $(this);
-		
+
 		if(!thisObj.hasClass('selected')) {
 			resetTypes(true);
 			setSelected(thisObj);
