@@ -139,8 +139,36 @@ public class SearchParameterQueryString {
                 .setMunicipality(original.getMunicipality())
                 .setOrderBy(InitiativeSearch.OrderBy.latest));
     }
-    
+
     public String getWithMunicipality(Long municipalityId) {
         return generateParameters(new InitiativeSearch().setMunicipality(municipalityId));
+    }
+
+    public String getWithTypeAll() {
+        return generateParameters(new InitiativeSearch()
+                .setShow(original.getShow())
+                .setMunicipality(original.getMunicipality())
+                .setType(InitiativeSearch.Type.all));
+    }
+
+    public String getWithTypeNormal() {
+        return generateParameters(new InitiativeSearch()
+                .setShow(original.getShow())
+                .setMunicipality(original.getMunicipality())
+                .setType(InitiativeSearch.Type.normal));
+    }
+
+    public String getWithTypeCitizen() {
+        return generateParameters(new InitiativeSearch()
+                .setShow(original.getShow())
+                .setMunicipality(original.getMunicipality())
+                .setType(InitiativeSearch.Type.citizen));
+    }
+
+    public String getWithTypeCouncil() {
+        return generateParameters(new InitiativeSearch()
+                .setShow(original.getShow())
+                .setMunicipality(original.getMunicipality())
+                .setType(InitiativeSearch.Type.council));
     }
 }

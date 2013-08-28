@@ -124,6 +124,31 @@ public class SearchParameterQueryStringTest {
         assertThat(parameters, is("?orderBy=latest&show=fix&municipality=1&type=all"));
     }
 
+    @Test
+    public void get_with_type_all() {
+        String parameters = new SearchParameterQueryString(initiativeSearch).getWithTypeAll();
+        assertThat(parameters, is("?orderBy=latest&show=collecting&municipality=1&type=all"));
+    }
+
+    @Test
+    public void get_with_type_normal() {
+        String parameters = new SearchParameterQueryString(initiativeSearch).getWithTypeNormal();
+        assertThat(parameters, is("?orderBy=latest&show=collecting&municipality=1&type=normal"));
+    }
+
+    @Test
+    public void get_with_type_council() {
+        String parameters = new SearchParameterQueryString(initiativeSearch).getWithTypeCouncil();
+        assertThat(parameters, is("?orderBy=latest&show=collecting&municipality=1&type=council"));
+    }
+
+    @Test
+    public void get_with_type_citizen() {
+        String parameters = new SearchParameterQueryString(initiativeSearch).getWithTypeCitizen();
+        assertThat(parameters, is("?orderBy=latest&show=collecting&municipality=1&type=citizen"));
+    }
+
+
 
 
 }

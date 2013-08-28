@@ -57,10 +57,16 @@
     <span class="search-parameters-title filter"><label for="municipality"><@u.message "searchParameters.type" /></label></span>
     <div class="search-parameters-container cf">
         <div class="search-parameters">
+        <#--
             <a class="active" href="#"><@u.messageHTML "searchParameters.type.all" />
             </a><a class="" href="#"><@u.messageHTML "searchParameters.type.UNDEFINED" />
             </a><a class="" href="#"><@u.messageHTML "searchParameters.type.COLLABORATIVE_COUNCIL" />
             </a><a class="" href="#"><@u.messageHTML "searchParameters.type.COLLABORATIVE_CITIZEN" /></a>
+        -->
+            <@u.searchLink parameter="withTypeAll" cssClass=(currentSearch.type == "all")?string('active','') />
+            <@u.searchLink parameter="withTypeNormal" cssClass=(currentSearch.type == "normal")?string('active','') />
+            <@u.searchLink parameter="withTypeCouncil" cssClass=(currentSearch.type == "council")?string('active','')  />
+            <@u.searchLink parameter="withTypeCitizen" cssClass=(currentSearch.type == "citizen")?string('active','')  />
             
         </div>
     </div>
