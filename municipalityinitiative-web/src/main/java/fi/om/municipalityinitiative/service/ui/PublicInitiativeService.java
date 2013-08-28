@@ -45,7 +45,7 @@ public class PublicInitiativeService {
             loginUserHolder.assertOmUser();
         }
 
-        InitiativeListWithCount initiativeListInfos = operations.findInitiatives(search);
+        InitiativeListWithCount initiativeListInfos = operations.findInitiatives(search, loginUserHolder.getUser().isOmUser());
         if (search.getShow() == InitiativeSearch.Show.omAll)
             search.setShow(InitiativeSearch.Show.all);
         return initiativeListInfos;

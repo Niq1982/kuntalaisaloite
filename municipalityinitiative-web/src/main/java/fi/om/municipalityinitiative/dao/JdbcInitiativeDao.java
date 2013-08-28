@@ -57,8 +57,17 @@ public class JdbcInitiativeDao implements InitiativeDao {
     PostgresQueryFactory queryFactory;
 
     @Override
+    public InitiativeListWithCount findUnCached(InitiativeSearch search) {
+        return find(search);
+    }
+
+    @Override
     @Cacheable(value = "initiativeList")
-    public InitiativeListWithCount find(InitiativeSearch search) {
+    public InitiativeListWithCount findCached(InitiativeSearch search) {
+        return find(search);
+    }
+
+    private InitiativeListWithCount find(InitiativeSearch search) {
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
                 .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)

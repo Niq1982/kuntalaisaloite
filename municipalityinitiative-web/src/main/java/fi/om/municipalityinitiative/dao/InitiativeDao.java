@@ -16,7 +16,7 @@ import java.util.List;
 
 public interface InitiativeDao {
 
-    InitiativeListWithCount find(InitiativeSearch search);
+    InitiativeListWithCount findCached(InitiativeSearch search);
 
     Initiative get(Long initiativeId);
 
@@ -49,4 +49,6 @@ public interface InitiativeDao {
     List<InitiativeListInfo> findInitiatives(VerifiedUserId verifiedUserId);
 
     void denormalizeParticipantCountForNormalInitiative(Long initiativeId);
+
+    InitiativeListWithCount findUnCached(InitiativeSearch search);
 }

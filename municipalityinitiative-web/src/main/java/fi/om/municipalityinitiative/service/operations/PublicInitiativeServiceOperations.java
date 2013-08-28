@@ -110,8 +110,11 @@ public class PublicInitiativeServiceOperations {
     }
 
     @Transactional(readOnly = true)
-    public InitiativeListWithCount findInitiatives(InitiativeSearch search) {
-        return initiativeDao.find(search);
+    public InitiativeListWithCount findInitiatives(InitiativeSearch search, boolean skipCache) {
+        if (skipCache) {
+            return initiativeDao.findUnCached(search);
+        }
+        return initiativeDao.findCached(search);
     }
 
     @Transactional(readOnly = true)

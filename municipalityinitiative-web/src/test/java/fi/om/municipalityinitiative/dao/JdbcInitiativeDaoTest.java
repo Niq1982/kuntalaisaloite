@@ -56,7 +56,7 @@ public class JdbcInitiativeDaoTest {
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.SINGLE);
         testHelper.createSingleSent(testMunicipality.getId());
 
-        List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch()).list;
+        List<InitiativeListInfo> result = initiativeDao.findCached(initiativeSearch()).list;
         assertThat(result.size(), is(4));
     }
 
@@ -65,19 +65,19 @@ public class JdbcInitiativeDaoTest {
         testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.ACCEPTED));
 
-        assertThat(initiativeDao.find(initiativeSearch()).list, hasSize(0));
+        assertThat(initiativeDao.findCached(initiativeSearch()).list, hasSize(0));
     }
 
     @Test
     public void find_does_not_find_if_fixState_not_OK() {
         Long initiative = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED));
-        precondition(initiativeDao.find(initiativeSearch()).list, hasSize(1));
+        precondition(initiativeDao.findCached(initiativeSearch()).list, hasSize(1));
 
         initiativeDao.updateInitiativeFixState(initiative, FixState.FIX);
-        assertThat(initiativeDao.find(initiativeSearch()).list, hasSize(0));
+        assertThat(initiativeDao.findCached(initiativeSearch()).list, hasSize(0));
         initiativeDao.updateInitiativeFixState(initiative, FixState.REVIEW);
-        assertThat(initiativeDao.find(initiativeSearch()).list, hasSize(0));
+        assertThat(initiativeDao.findCached(initiativeSearch()).list, hasSize(0));
     }
 
     @Test
@@ -190,8 +190,8 @@ public class JdbcInitiativeDaoTest {
 
         InitiativeSearch search = initiativeSearch().setShow(InitiativeSearch.Show.all);
 
-        assertThat(initiativeDao.find(search.setLimit(2)).list, hasSize(2));
-        assertThat(initiativeDao.find(search.setLimit(1)).list, hasSize(1));
+        assertThat(initiativeDao.findCached(search.setLimit(2)).list, hasSize(2));
+        assertThat(initiativeDao.findCached(search.setLimit(1)).list, hasSize(1));
     }
 
     @Test
@@ -201,10 +201,10 @@ public class JdbcInitiativeDaoTest {
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.SINGLE);
 
         InitiativeSearch search = initiativeSearch().setShow(InitiativeSearch.Show.all);
-        precondition(initiativeDao.find(search).list, hasSize(2));
+        precondition(initiativeDao.findCached(search).list, hasSize(2));
 
-        assertThat(initiativeDao.find(search.setOffset(1)).list, hasSize(1));
-        assertThat(initiativeDao.find(search.setOffset(2)).list, hasSize(0));
+        assertThat(initiativeDao.findCached(search.setOffset(1)).list, hasSize(1));
+        assertThat(initiativeDao.findCached(search.setOffset(2)).list, hasSize(0));
     }
 
     @Test
@@ -222,11 +222,11 @@ public class JdbcInitiativeDaoTest {
 
         InitiativeSearch initiativeSearch = initiativeSearch().setShow(InitiativeSearch.Show.all);
 
-        List<InitiativeListInfo> oldestSentFirst = initiativeDao.find(initiativeSearch.setOrderBy(InitiativeSearch.OrderBy.oldestSent)).list;
+        List<InitiativeListInfo> oldestSentFirst = initiativeDao.findCached(initiativeSearch.setOrderBy(InitiativeSearch.OrderBy.oldestSent)).list;
         precondition(oldestSentFirst, hasSize(2)); // Precondition
         assertThat(oldestSentFirst.get(0).getId(), is(oldestId));
 
-        List<InitiativeListInfo> latestSentFirst = initiativeDao.find(initiativeSearch.setOrderBy(InitiativeSearch.OrderBy.latestSent)).list;
+        List<InitiativeListInfo> latestSentFirst = initiativeDao.findCached(initiativeSearch.setOrderBy(InitiativeSearch.OrderBy.latestSent)).list;
         precondition(latestSentFirst, hasSize(2)); // Precondition
         assertThat(latestSentFirst.get(0).getId(), is(latestId));
     }
@@ -249,11 +249,11 @@ public class JdbcInitiativeDaoTest {
 
         InitiativeSearch initiativeSearch = initiativeSearch().setShow(InitiativeSearch.Show.all);
 
-        List<InitiativeListInfo> mostParticipantsFirst = initiativeDao.find(initiativeSearch.setOrderBy(InitiativeSearch.OrderBy.mostParticipants)).list;
+        List<InitiativeListInfo> mostParticipantsFirst = initiativeDao.findCached(initiativeSearch.setOrderBy(InitiativeSearch.OrderBy.mostParticipants)).list;
         precondition(mostParticipantsFirst, hasSize(3)); // Precondition
         assertThat(mostParticipantsFirst.get(0).getId(), is(mostParticipants));
 
-        List<InitiativeListInfo> leastParticipantsFirst = initiativeDao.find(initiativeSearch.setOrderBy(InitiativeSearch.OrderBy.leastParticipants)).list;
+        List<InitiativeListInfo> leastParticipantsFirst = initiativeDao.findCached(initiativeSearch.setOrderBy(InitiativeSearch.OrderBy.leastParticipants)).list;
         precondition(leastParticipantsFirst, hasSize(3)); // Precondition
         assertThat(leastParticipantsFirst.get(0).getId(), is(leastParticipants));
     }
@@ -273,11 +273,11 @@ public class JdbcInitiativeDaoTest {
 
         InitiativeSearch initiativeSearch = initiativeSearch().setShow(InitiativeSearch.Show.all);
 
-        List<InitiativeListInfo> mostParticipantsFirst = initiativeDao.find(initiativeSearch.setOrderBy(InitiativeSearch.OrderBy.mostParticipants)).list;
+        List<InitiativeListInfo> mostParticipantsFirst = initiativeDao.findCached(initiativeSearch.setOrderBy(InitiativeSearch.OrderBy.mostParticipants)).list;
         precondition(mostParticipantsFirst, hasSize(3)); // Precondition
         assertThat(mostParticipantsFirst.get(0).getId(), is(mostParticipants));
 
-        List<InitiativeListInfo> leastParticipantsFirst = initiativeDao.find(initiativeSearch.setOrderBy(InitiativeSearch.OrderBy.leastParticipants)).list;
+        List<InitiativeListInfo> leastParticipantsFirst = initiativeDao.findCached(initiativeSearch.setOrderBy(InitiativeSearch.OrderBy.leastParticipants)).list;
         precondition(leastParticipantsFirst, hasSize(3)); // Precondition
         assertThat(leastParticipantsFirst.get(0).getId(), is(leastParticipants));
     }
@@ -287,7 +287,7 @@ public class JdbcInitiativeDaoTest {
         Long first = testHelper.createSingleSent(testMunicipality.getId());
         Long second = testHelper.createSingleSent(testMunicipality.getId());
 
-        List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch()).list;
+        List<InitiativeListInfo> result = initiativeDao.findCached(initiativeSearch()).list;
         assertThat(second, is(result.get(0).getId()));
         assertThat(first, is(result.get(1).getId()));
     }
@@ -303,7 +303,7 @@ public class JdbcInitiativeDaoTest {
         InitiativeSearch search = initiativeSearch();
         search.setMunicipality(municipalityId);
 
-        List<InitiativeListInfo> result = initiativeDao.find(search).list;
+        List<InitiativeListInfo> result = initiativeDao.findCached(search).list;
         assertThat(result, hasSize(1));
         assertThat(result.get(0).getId(), is(shouldBeFound));
     }
@@ -312,7 +312,7 @@ public class JdbcInitiativeDaoTest {
     public void sets_type_to_listView_object() {
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
 
-        List<InitiativeListInfo> all = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.all)).list;
+        List<InitiativeListInfo> all = initiativeDao.findCached(initiativeSearch().setShow(InitiativeSearch.Show.all)).list;
         assertThat(all, hasSize(1));
         assertThat(all.get(0).getType(), is(InitiativeType.COLLABORATIVE));
     }
@@ -321,7 +321,7 @@ public class JdbcInitiativeDaoTest {
     public void does_not_set_collaborative_to_listView_if_not_collaborative() {
 
         testHelper.createSingleSent(testMunicipality.getId());
-        List<InitiativeListInfo> all = initiativeDao.find(initiativeSearch()).list;
+        List<InitiativeListInfo> all = initiativeDao.findCached(initiativeSearch()).list;
         assertThat(all, hasSize(1));
         assertThat(all.get(0).isCollaborative(), is(false));
     }
@@ -334,7 +334,7 @@ public class JdbcInitiativeDaoTest {
                 .withParticipantCount(17)
                 .withExternalParticipantCount(10));
 
-        List<InitiativeListInfo> all = initiativeDao.find(initiativeSearch()).list;
+        List<InitiativeListInfo> all = initiativeDao.findCached(initiativeSearch()).list;
         assertThat(all, hasSize(1));
         assertThat(all.get(0).getParticipantCount(), is(27L));
     }
@@ -344,7 +344,7 @@ public class JdbcInitiativeDaoTest {
 
         testHelper.createSingleSent(testMunicipality.getId());
 
-        List<InitiativeListInfo> all = initiativeDao.find(initiativeSearch()).list;
+        List<InitiativeListInfo> all = initiativeDao.findCached(initiativeSearch()).list;
         assertThat(all, hasSize(1));
         assertThat(all.get(0).getSentTime().isPresent(), is(true));
     }
@@ -354,7 +354,7 @@ public class JdbcInitiativeDaoTest {
 
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
 
-        List<InitiativeListInfo> all = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.all)).list;
+        List<InitiativeListInfo> all = initiativeDao.findCached(initiativeSearch().setShow(InitiativeSearch.Show.all)).list;
         assertThat(all, hasSize(1));
         assertThat(all.get(0).getSentTime().isPresent(), is(false));
     }
@@ -372,7 +372,7 @@ public class JdbcInitiativeDaoTest {
         InitiativeSearch search = initiativeSearch();
         search.setSearch("SHOULD be found ääöö");
 
-        List<InitiativeListInfo> result = initiativeDao.find(search).list;
+        List<InitiativeListInfo> result = initiativeDao.findCached(search).list;
 
         assertThat(result, hasSize(1));
         assertThat(result.get(0).getId(), is(shouldBeFound));
@@ -385,7 +385,7 @@ public class JdbcInitiativeDaoTest {
                 .withState(InitiativeState.PUBLISHED)
                 .withSent(new DateTime(2010, 1, 1, 0, 0)));
 
-        List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.sent)).list;
+        List<InitiativeListInfo> result = initiativeDao.findCached(initiativeSearch().setShow(InitiativeSearch.Show.sent)).list;
         assertThat(result, hasSize(1));
         assertThat(result.get(0).getId(), is(collaborativeSent));
     }
@@ -396,7 +396,7 @@ public class JdbcInitiativeDaoTest {
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withState(InitiativeState.PUBLISHED)
                 .withSent(null));
-        List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.sent)).list;
+        List<InitiativeListInfo> result = initiativeDao.findCached(initiativeSearch().setShow(InitiativeSearch.Show.sent)).list;
         assertThat(result, hasSize(0));
     }
 
@@ -404,7 +404,7 @@ public class JdbcInitiativeDaoTest {
     public void finds_by_sent_finds_not_collaborative_if_sent() {
         Long singleSent = testHelper.createSingleSent(testMunicipality.getId());
 
-        List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.sent)).list;
+        List<InitiativeListInfo> result = initiativeDao.findCached(initiativeSearch().setShow(InitiativeSearch.Show.sent)).list;
 
         assertThat(result, hasSize(1));
         assertThat(result.get(0).getId(), is(singleSent));
@@ -417,7 +417,7 @@ public class JdbcInitiativeDaoTest {
 
         Long draft = testHelper.createDraft(testMunicipality.getId());
 
-        List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.draft)).list;
+        List<InitiativeListInfo> result = initiativeDao.findCached(initiativeSearch().setShow(InitiativeSearch.Show.draft)).list;
 
         assertThat(result, hasSize(1));
         assertThat(result.get(0).getId(), is(draft));
@@ -429,7 +429,7 @@ public class JdbcInitiativeDaoTest {
         Long draft = testHelper.createDraft(testMunicipality.getId());
         Long emptyDraft = testHelper.createEmptyDraft(testMunicipality.getId());
 
-        List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.draft)).list;
+        List<InitiativeListInfo> result = initiativeDao.findCached(initiativeSearch().setShow(InitiativeSearch.Show.draft)).list;
 
         assertThat(result, hasSize(1));
         assertThat(result.get(0).getId(), is(draft));
@@ -443,8 +443,8 @@ public class JdbcInitiativeDaoTest {
                 .withFixState(FixState.FIX)
                 .withState(InitiativeState.PUBLISHED));
 
-        assertThat(initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.draft)).list, hasSize(0)); // Previous implementation
-        assertThat(initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.fix)).list, hasSize(1)); // Previous implementation
+        assertThat(initiativeDao.findCached(initiativeSearch().setShow(InitiativeSearch.Show.draft)).list, hasSize(0)); // Previous implementation
+        assertThat(initiativeDao.findCached(initiativeSearch().setShow(InitiativeSearch.Show.fix)).list, hasSize(1)); // Previous implementation
 
     }
 
@@ -455,7 +455,7 @@ public class JdbcInitiativeDaoTest {
                 .withFixState(FixState.REVIEW)
                 .withState(InitiativeState.PUBLISHED));
 
-        assertThat(initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.review)).list, hasSize(1));
+        assertThat(initiativeDao.findCached(initiativeSearch().setShow(InitiativeSearch.Show.review)).list, hasSize(1));
     }
 
     @Test
@@ -465,7 +465,7 @@ public class JdbcInitiativeDaoTest {
 
         Long review = testHelper.createCollaborativeReview(testMunicipality.getId());
 
-        List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.review)).list;
+        List<InitiativeListInfo> result = initiativeDao.findCached(initiativeSearch().setShow(InitiativeSearch.Show.review)).list;
 
         assertThat(result, hasSize(1));
         assertThat(result.get(0).getId(), is(review));
@@ -481,7 +481,7 @@ public class JdbcInitiativeDaoTest {
 
         Long accepted = testHelper.createCollaborativeAccepted(testMunicipality.getId());
 
-        List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.accepted)).list;
+        List<InitiativeListInfo> result = initiativeDao.findCached(initiativeSearch().setShow(InitiativeSearch.Show.accepted)).list;
 
         assertThat(result, hasSize(1));
         assertThat(result.get(0).getId(), is(accepted));
@@ -495,14 +495,14 @@ public class JdbcInitiativeDaoTest {
         }
         Long singleSent = testHelper.createSingleSent(testMunicipality.getId());
 
-        assertThat(initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.omAll)).list, hasSize(InitiativeState.values().length + 1));
+        assertThat(initiativeDao.findCached(initiativeSearch().setShow(InitiativeSearch.Show.omAll)).list, hasSize(InitiativeState.values().length + 1));
 
     }
 
     @Test
     public void find_by_om_all_does_not_return_initiatives_at_prepare_state() {
         testHelper.createEmptyDraft(testMunicipality.getId());
-        assertThat(initiativeDao.find(initiativeSearch().setShow(InitiativeSearch.Show.omAll)).list, hasSize(0));
+        assertThat(initiativeDao.findCached(initiativeSearch().setShow(InitiativeSearch.Show.omAll)).list, hasSize(0));
     }
 
     @Test
@@ -631,14 +631,14 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void find_filters_by_type_all() {
         createPublicInitiativesOfAllType();
-        List<InitiativeListInfo> list = initiativeDao.find(initiativeSearch().setType(InitiativeSearch.Type.all)).list;
+        List<InitiativeListInfo> list = initiativeDao.findCached(initiativeSearch().setType(InitiativeSearch.Type.all)).list;
         assertThat(list, hasSize(InitiativeType.values().length));
     }
 
     @Test
     public void find_filters_by_type_normal() {
         createPublicInitiativesOfAllType();
-        List<InitiativeListInfo> list = initiativeDao.find(initiativeSearch().setType(InitiativeSearch.Type.normal)).list;
+        List<InitiativeListInfo> list = initiativeDao.findCached(initiativeSearch().setType(InitiativeSearch.Type.normal)).list;
         assertThat(list, hasSize(3));
         for (InitiativeListInfo initiativeListInfo : list) {
             assertThat(initiativeListInfo.getType().isVerifiable(), is(false));
@@ -648,7 +648,7 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void find_filters_by_type_citizen() {
         createPublicInitiativesOfAllType();
-        List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch().setType(InitiativeSearch.Type.citizen)).list;
+        List<InitiativeListInfo> result = initiativeDao.findCached(initiativeSearch().setType(InitiativeSearch.Type.citizen)).list;
         assertThat(result, hasSize(1));
         assertThat(result.get(0).getType(), is(InitiativeType.COLLABORATIVE_CITIZEN));
     }
@@ -656,7 +656,7 @@ public class JdbcInitiativeDaoTest {
     @Test
     public void find_filters_by_type_council() {
         createPublicInitiativesOfAllType();
-        List<InitiativeListInfo> result = initiativeDao.find(initiativeSearch().setType(InitiativeSearch.Type.council)).list;
+        List<InitiativeListInfo> result = initiativeDao.findCached(initiativeSearch().setType(InitiativeSearch.Type.council)).list;
         assertThat(result, hasSize(1));
         assertThat(result.get(0).getType(), is(InitiativeType.COLLABORATIVE_COUNCIL));
     }
