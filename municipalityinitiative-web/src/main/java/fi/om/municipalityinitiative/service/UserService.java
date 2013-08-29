@@ -30,15 +30,15 @@ public class UserService {
     static final String VETUMA_PREPARED_INITIATIVE = "vetumaPreparedInitiative";
 
     @Resource
-    UserDao userDao;
+    private UserDao userDao;
 
     @Resource
-    AuthorDao authorDao;
+    private AuthorDao authorDao;
 
     @Resource
-    MunicipalityDao municipalityDao;
+    private MunicipalityDao municipalityDao;
 
-    String omUserSalt;
+    private String omUserSalt;
 
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 

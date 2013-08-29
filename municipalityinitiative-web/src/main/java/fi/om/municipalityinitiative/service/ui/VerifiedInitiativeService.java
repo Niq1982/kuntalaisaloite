@@ -1,13 +1,10 @@
 package fi.om.municipalityinitiative.service.ui;
 
 import fi.om.municipalityinitiative.dto.service.Municipality;
-import fi.om.municipalityinitiative.dto.service.PrepareSafeInitiativeCreateDto;
 import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUIConfirmDto;
-import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.dto.ui.PrepareSafeInitiativeUICreateDto;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
-import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.InvalidHomeMunicipalityException;
 import fi.om.municipalityinitiative.service.operations.VerifiedInitiativeServiceOperations;
@@ -30,13 +27,7 @@ public class VerifiedInitiativeService {
             return municipalityException(uiCreateDto.getMunicipality());
         }
 
-        // TODO: Check user age.
-
-        Long initiativeId = operations.doPrepareSafeInitiative(verifiedUser, uiCreateDto);
-
-        // TODO: Email
-
-        return initiativeId;
+        return operations.doPrepareSafeInitiative(verifiedUser, uiCreateDto);
 
     }
 
