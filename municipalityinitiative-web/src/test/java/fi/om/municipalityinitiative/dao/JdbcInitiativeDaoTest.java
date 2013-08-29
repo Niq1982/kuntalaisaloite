@@ -629,6 +629,20 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
+    public void update_denormalized_participant_count_for_verified_initiative() {
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()));
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withPublicName(true));
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withPublicName(true));
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withPublicName(false));
+
+        initiativeDao.denormalizeParticipantCountForVerifiedInitiative(initiativeId);
+
+        Initiative initiative = testHelper.getInitiative(initiativeId);
+        assertThat(initiative.getParticipantCount(), is(3));
+        assertThat(initiative.getParticipantCountPublic(), is(2));
+    }
+
+    @Test
     public void find_filters_by_type_all() {
         createPublicInitiativesOfAllType();
         List<InitiativeListInfo> list = initiativeDao.findCached(initiativeSearch().setType(InitiativeSearch.Type.all)).list;

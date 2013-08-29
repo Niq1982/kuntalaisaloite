@@ -89,7 +89,7 @@ public class InitiativeManagementService {
             String hash = loginUserHolder.getVerifiedUser().getHash();
             userDao.updateUserInformation(hash, editDto.getContactInfo());
             participantDao.updateVerifiedParticipantShowName(initiativeId, hash, editDto.getContactInfo().isShowName());
-            // TODO: denormalizeParticipantCountForVerifiedInitiative
+            initiativeDao.denormalizeParticipantCountForVerifiedInitiative(initiativeId);
 
             if (Strings.isNullOrEmpty(initiative.getName())) {
                 emailService.sendVeritiedInitiativeManagementLink(initiativeId, locale);
@@ -162,7 +162,7 @@ public class InitiativeManagementService {
             String hash = loginUserHolder.getVerifiedUser().getHash();
             userDao.updateUserInformation(hash, updateDto.getContactInfo());
             participantDao.updateVerifiedParticipantShowName(initiativeId, hash, updateDto.getContactInfo().isShowName());
-            // TODO: Denormalize participantcount
+            initiativeDao.denormalizeParticipantCountForVerifiedInitiative(initiativeId);
         }
     }
 

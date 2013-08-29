@@ -132,6 +132,21 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .execute());
     }
 
+    @Override
+    public void denormalizeParticipantCountForVerifiedInitiative(Long initiativeId) {
+        long publicParticipants = queryFactory.from(QMunicipalityInitiative.municipalityInitiative)
+                .innerJoin(QMunicipalityInitiative.municipalityInitiative._verifiedParticipantInitiativeFk, QVerifiedParticipant.verifiedParticipant)
+                .where(QVerifiedParticipant.verifiedParticipant.showName.eq(true))
+                .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
+                .count();
+
+        assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
+                .set(QMunicipalityInitiative.municipalityInitiative.participantCountPublic, (int) publicParticipants)
+                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
+                .execute());
+
+    }
+
     private static void orderBy(PostgresQuery query, InitiativeSearch.OrderBy orderBy) {
         switch (orderBy) {
             case latestSent:

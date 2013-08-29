@@ -42,8 +42,6 @@ public class VerifiedInitiativeService {
         }
 
         operations.doConfirmInvitation(verifiedUser, initiativeId, confirmDto, locale);
-
-        // TODO: Already participated/author
     }
 
     public void createParticipant(LoginUserHolder loginUserHolder, Long initiativeId, ParticipantUICreateDto createDto) {
