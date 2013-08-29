@@ -243,7 +243,7 @@
 -->
 <#macro securityFilters honeySpot=true>
     <input type="hidden" name="CSRFToken" value="${CSRFToken!""}"/>
-    <#if honeySpot><input type="text" name="email" id="email" tabindex="-1" /></#if>
+    <#if honeySpot><input type="text" name="email" id="email" tabindex="-1" class="noprint" /></#if>
 </#macro>
 
 <#--

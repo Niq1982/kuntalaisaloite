@@ -12,7 +12,7 @@
 </div>
 
 <div class="container">
-    <div class="big-link-holder">
+    <div class="big-link-holder noprint">
         <a href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" class="big-link"><@u.message "front.bigLink" /> <span class="arrow"></span></a>
     </div>
 
@@ -40,7 +40,7 @@
                 </div>
                 <div class="col-2">
                 
-                    <div class="front-block block-2">
+                    <div class="front-block block-2 noprint">
                         <h2><@u.message "front.browse.title" /></h2>
             
                         <p><@u.message "front.browse.description" /></p>

@@ -1,14 +1,23 @@
+@textColor:     #000;
+@headingColor:  #111;
+@borderColor:   #000;
+@linkColor:     #0089f2;
+
+
+
 // Hide unwanted elements
+.noprint,
 .hide, .js .js-hide, .hidden, .help, .close-msg {
     display:none;
 }
 
-#accesskeys,
+#accesskeys, #back-to-top,
 #header-tools, #header-additional-content,
 #main-navigation, .navigation, 
 .block-link, .switch-view, .msg-summary .system-msg,
 .initiative-content-tools, button, .small-button, .large-button,
-#footer { display:none;}
+select, .chzn-container,
+noscript { display:none;}
 
 html {
     margin:0; padding:0;
@@ -16,11 +25,11 @@ html {
 }
 body {
     font-family: 'PT Sans', "Trebuchet MS", Helvetica, sans-serif;
-    color:#000;
+    color:@textColor;
     line-height:1.4em;
 }
 
-a { color:#0089f2; }
+a { color:@linkColor; }
 img { max-width:100%; }
 br.clear { display:none; }
 
@@ -52,7 +61,7 @@ div {
     display:block;
     font-size:1.5em;
     line-height:1em;    
-    color: #111;
+    color: @headingColor;
     font-weight:normal;
 }
 
@@ -77,25 +86,27 @@ h1, h2, h3, h4, h5, h6, p {
 
 h1 {
     font-size:1.5em;
-    line-height:1em;    
+    line-height:1.2em;
     clear: both;
-    color: #111;
+    color: @headingColor;
     font-weight:normal;
 }
+
 .extra-info {
     display:block;
-    margin:-0.5em 0 1em 0;   
+    margin:1em 0;   
 }
 
 
 h2 {
-    color: #111;
+    color: @headingColor;
     margin-bottom:0.5em;
+    margin-top:2em;
     font-weight:normal;
 }
 
 h3 {
-    color: #111;
+    color: @headingColor;
     margin-bottom:0.5em;
     font-weight:normal;
 }
@@ -136,11 +147,16 @@ blockquote {
     font-style:italic;
 }
 
-.vote-count {
+
+.participants-block {
+    float:left;
+    margin:0 20px 0 0;
+}
+.user-count-total {
     font-size:1.7em;
     font-style:italic;
 }
-.internal-vote-count {
+.user-count {
     font-size:1.2em;
     font-style:italic;
 }
@@ -165,60 +181,7 @@ blockquote {
     margin-top:2em;
 }
 
-// Flow state indicator 
 
-.flow-state-indicator {
-    overflow: hidden;
-    margin-bottom:2em;
-    color: #000;
-    line-height:1.1em;
-
-    .flow-state-content {
-        display:inline;
-        margin:0 0.5em;
-    }
-    
-
-    .flow-state-step {
-        display:inline;
-        
-        // print separator element with CSS content
-        &:before {
-            //content: "»";
-            content:'\2192';
-        }    
-        &:first-child {
-            .flow-state-content {
-                margin-left:0;
-            }    
-        
-            &:before {
-                content: "";
-            }
-        } 
-        
-        &.active {
-            font-weight:bold;
-        }
-        
-        &.checked {
-            text-decoration:line-through;
-            color:#888;
-        }
-        
-        &.failed {
-
-        }
-        
-        &.done {
-
-        }
-
-         &.canceled {
-
-        }
-    }
-}
 
 // System-message
 .system-msg {
@@ -227,7 +190,7 @@ blockquote {
         display:block;
         padding:1em;
         margin:2em 0;
-        border:1px solid #000;
+        border:1px solid @borderColor;
         
         .msg-info {
             background:#fff;
@@ -245,7 +208,7 @@ blockquote {
 // Search results
 .search-results {
     a {
-        color:#000;
+        color:@textColor;
         text-decoration:none;
     }
 
@@ -314,4 +277,11 @@ blockquote {
         
     }
 
+}
+
+#footer {
+    display:block;
+    margin:2em 0 0 0;
+    padding:1em 0 0 0;
+    border-top:1px solid @borderColor;
 }

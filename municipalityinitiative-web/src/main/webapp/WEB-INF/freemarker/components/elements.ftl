@@ -153,7 +153,7 @@
         </#if>
     </#if>
     
-    <br/>
+    
     <div class="participants-block">
         <span class="user-count-total">${participantCount.total+initiative.externalParticipantCount}</span>
     </div>
@@ -173,7 +173,7 @@
     </#list>
     
     <#if !admin && !initiative.sentTime.present && !participateSuccess>
-        <div class="participants-block ${showForm?string("hidden","")}">
+        <div class="participants-block ${showForm?string("hidden","")} noprint">
         <#if initiative.verifiable && !user.isVerifiedUser()>
                 <a class="small-button" href="${urls.login(currentRequestUri+"?show-participate")}"><span class="small-icon save-and-send"><@u.message "action.authenticate" /></span></a>
         <#else>
@@ -183,13 +183,13 @@
         </#if>
         </div>
         <#if !user.hasParticipatedToInitiative(initiative.id)>
-            <div class="participants-block last ${showForm?string("hidden","")}">
+            <div class="participants-block last ${showForm?string("hidden","")} noprint">
                 <a title="<@u.messageHTML "action.participate.infoLink.title" />" href="${urls.help(HelpPage.PARTICIPANTS.getUri(locale))}"><@u.messageHTML "action.participate.infoLink" /></a>
             </div>
         </#if>
     </#if>
     <#if !admin && initiative.sentTime.present>
-        <div class="participants-block last">
+        <div class="participants-block last noprint">
             <div class="participate not-allowed">
                 <@u.systemMessage path="participate.sentToMunicipality" type="info" showClose=false />
             </div>

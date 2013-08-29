@@ -27,7 +27,7 @@
         </#if>
     </h1>
 
-<div class="view-block search-options cf">
+<div class="view-block search-options cf noprint">
 
     <#--
      * Municipality filter

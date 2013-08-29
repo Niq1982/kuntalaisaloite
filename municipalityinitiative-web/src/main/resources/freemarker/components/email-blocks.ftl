@@ -299,7 +299,8 @@
     <#else>
         <#assign adminURL = urls.get(switchLocale!locale).loginAuthor(managementHash)>
         <#if type == "html">
-            <p style="${pBothMargins!""}"><@u.message "email.adminViewLink" /></p>
+            <h4 style="${h4!""}"><@u.message "email.management.title" /></h4>
+            <p style="${pBottomMargin!""}"><@u.message "email.adminViewLink" /></p>
             <p style="${pBothMargins!""} ${smallFont!""}"><@u.link adminURL adminURL /></p>
         <#else>
             <@u.message "email.adminViewLink" />
