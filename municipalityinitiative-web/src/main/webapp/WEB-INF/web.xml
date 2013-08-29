@@ -156,14 +156,6 @@
         <filter-name>securityFilter</filter-name>
         <url-pattern>/sv/*</url-pattern>
     </filter-mapping>
-    <filter-mapping>
-        <filter-name>securityFilter</filter-name>
-        <url-pattern>/support-votes/*</url-pattern>
-    </filter-mapping>
-    <filter-mapping>
-        <filter-name>securityFilter</filter-name>
-        <url-pattern>/services/*</url-pattern>
-    </filter-mapping>
 
     <servlet>
         <servlet-name>dispatcher</servlet-name>
