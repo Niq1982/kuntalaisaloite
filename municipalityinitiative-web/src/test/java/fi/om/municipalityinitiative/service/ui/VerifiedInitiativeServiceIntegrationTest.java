@@ -298,9 +298,17 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
     }
 
     @Test
-    @Ignore("Implement after participation")
     public void accepting_invitation_if_already_participated_adds_only_author_and_combines_to_participation() {
-        // TODO: Implement after participation
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.ACCEPTED).applyAuthor().toInitiativeDraft());
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()));
+
+        LoginUserHolder<VerifiedUser> loginUserHolder = new LoginUserHolder<>(
+                User.verifiedUser(new VerifiedUserId(testHelper.getLastVerifiedUserId()), testHelper.getPreviousUserSsnHash(), new ContactInfo(), Collections.<Long>emptySet(), Collections.<Long>emptySet(), Maybe.<Municipality>absent())
+        );
+
+        testHelper.addAuthorInvitation(authorInvitation(initiativeId), false);
+
+        service.confirmVerifiedAuthorInvitation(loginUserHolder, initiativeId, authorInvitationConfirmDto(), Locales.LOCALE_FI);
     }
 
     @Test

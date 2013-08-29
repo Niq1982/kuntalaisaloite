@@ -51,4 +51,6 @@ public interface InitiativeDao {
     void denormalizeParticipantCountForNormalInitiative(Long initiativeId);
 
     InitiativeListWithCount findUnCached(InitiativeSearch search);
+
+    void denormalizeParticipantCountForVerifiedInitiative(Long initiativeId);
 }

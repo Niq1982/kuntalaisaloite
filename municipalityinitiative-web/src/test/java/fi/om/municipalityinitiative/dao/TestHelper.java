@@ -336,6 +336,7 @@ public class TestHelper {
                 .execute();
 
         increaseParticipantCount(authorDraft.initiativeId);
+        this.lastVerifiedUserId = verifiedUserId;
     }
 
 

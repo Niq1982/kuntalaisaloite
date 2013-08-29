@@ -1,7 +1,5 @@
 package fi.om.municipalityinitiative.service.operations;
 
-import java.util.Locale;
-
 import fi.om.municipalityinitiative.dao.*;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.Initiative;
@@ -20,6 +18,8 @@ import fi.om.municipalityinitiative.util.Maybe;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+
+import java.util.Locale;
 
 import static fi.om.municipalityinitiative.util.SecurityUtil.assertAllowance;
 
@@ -74,12 +74,16 @@ public class VerifiedInitiativeServiceOperations {
                 VerifiedUserId verifiedUserId = getVerifiedUserIdAndCreateIfNecessary(verifiedUser.getHash(), verifiedUser.getContactInfo(), verifiedUser.getHomeMunicipality());
                 userDao.updateUserInformation(verifiedUser.getHash(), confirmDto.getContactInfo());
 
-                participantDao.addVerifiedParticipant(initiativeId, verifiedUserId, confirmDto.getContactInfo().isShowName(), verifiedUser.getHomeMunicipality().isPresent());
+                // TODO: Improve
+                if (!userDao.getVerifiedUser(verifiedUser.getHash()).get().getInitiativesWithParticipation().contains(initiativeId)) {
+                    participantDao.addVerifiedParticipant(initiativeId, verifiedUserId, confirmDto.getContactInfo().isShowName(), verifiedUser.getHomeMunicipality().isPresent());
+                }
+
                 authorDao.addVerifiedAuthor(initiativeId, verifiedUserId);
 
                 authorDao.deleteAuthorInvitation(initiativeId, confirmDto.getConfirmCode());
                 
-                emailService.sendAuthorConfirmedInvitation(initiativeId, invitation.getEmail(), null, locale);
+                emailService.sendAuthorConfirmedInvitation(initiativeId, invitation.getEmail(), null, locale); // FIXME: Get out of transaction
                 
                 return verifiedUser;
 

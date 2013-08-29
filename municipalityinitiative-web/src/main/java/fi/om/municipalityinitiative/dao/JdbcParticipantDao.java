@@ -195,13 +195,18 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .set(QVerifiedParticipant.verifiedParticipant.verified, verifiedMunicipality)
                 .execute());
 
-        SQLUpdateClause update = queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
-                .set(QMunicipalityInitiative.municipalityInitiative.participantCount, QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
-                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId));
         if (showName) {
-            update.set(QMunicipalityInitiative.municipalityInitiative.participantCountPublic, QMunicipalityInitiative.municipalityInitiative.participantCountPublic.add(1));
+            assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
+                    .set(QMunicipalityInitiative.municipalityInitiative.participantCount, QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
+                    .set(QMunicipalityInitiative.municipalityInitiative.participantCountPublic, QMunicipalityInitiative.municipalityInitiative.participantCountPublic.add(1))
+                    .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId)).execute());
         }
-        assertSingleAffection(update.execute());
+        else {
+            assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
+                    .set(QMunicipalityInitiative.municipalityInitiative.participantCount, QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
+                    .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
+                    .execute());
+        }
 
     }
 
