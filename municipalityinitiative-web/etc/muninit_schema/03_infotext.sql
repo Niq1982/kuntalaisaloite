@@ -56,5 +56,3 @@ insert into info_text (languageCode, category, uri, published_subject, draft_sub
 insert into info_text (languageCode, category, uri, published_subject, draft_subject, published, draft, orderPosition) values ('SV', 'KUNTALAISALOITE', 'andra-former-av-initiativ', '', 'Andra former av initiativ', 'Innehållet uppdateras', 'Innehållet uppdateras', 1300);
 insert into info_text (languageCode, category, uri, published_subject, draft_subject, published, draft, orderPosition) values ('FI', 'KUNTALAISALOITE', 'briefly-in-english', '', 'Briefly in english', 'The content is currently being updated', 'The content is currently being updated', 1400);
 insert into info_text (languageCode, category, uri, published_subject, draft_subject, published, draft, orderPosition) values ('SV', 'KUNTALAISALOITE', 'briefly_in_english', '', 'Briefly in english', 'The content is currently being updated', 'The content is currently being updated', 1400);
-
-insert into schema_version (script) values ('03_infotext.sql');

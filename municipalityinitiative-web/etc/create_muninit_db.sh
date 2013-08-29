@@ -66,8 +66,7 @@ ls muninit_schema/*.sql | sort -f |
   do
     echo "-- $file"
     psql -U postgres -d muninitdb --single-transaction -f "$file"
-    #psql -U postgres -d muninitdb -c "insert into municipalityinitiative.schema_version (script) values ('$file');" || exit
-    #psql -U postgres -d muninitdb -c "insert into municipalityinitiative.schema_version (script) values ('$file');" || exit
+    psql -U postgres -e -d muninitdb -c "insert into municipalityinitiative.schema_version (script) values ('$file');" || exit 1    
   done
 
 # Grant required rights

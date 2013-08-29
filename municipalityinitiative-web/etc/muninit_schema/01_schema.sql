@@ -116,5 +116,3 @@ create table author_invitation (
 );
 
 create index author_invitation_pk_index on author_invitation(initiative_id, confirmation_code);
-
-insert into schema_version (script) values ('01_schema.sql');

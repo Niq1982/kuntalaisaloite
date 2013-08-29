@@ -1,4 +1,3 @@
--- TODO: Indexes
 
 create table verified_user(
     id bigserial,

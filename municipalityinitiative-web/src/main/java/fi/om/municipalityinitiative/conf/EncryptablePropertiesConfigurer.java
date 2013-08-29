@@ -1,32 +1,25 @@
 package fi.om.municipalityinitiative.conf;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Properties;
-
+import com.google.common.io.Files;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.spring31.properties.EncryptablePropertiesPropertySource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContextException;
 import org.springframework.context.EnvironmentAware;
-import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.core.env.Environment;
-import org.springframework.core.env.MutablePropertySources;
-import org.springframework.core.env.PropertiesPropertySource;
-import org.springframework.core.env.PropertySource;
+import org.springframework.core.env.*;
 import org.springframework.core.io.Resource;
 
-import com.google.common.io.Files;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Properties;
 
 public class EncryptablePropertiesConfigurer implements BeanFactoryPostProcessor, EnvironmentAware {
 
-    private static final Logger log = LoggerFactory.getLogger(EncryptablePropertiesConfigurer.class);
+//    private static final Logger log = LoggerFactory.getLogger(EncryptablePropertiesConfigurer.class);
 
     private static final int KEY_OBTENTION_ITERATIONS = 1000;
 
@@ -68,7 +61,7 @@ public class EncryptablePropertiesConfigurer implements BeanFactoryPostProcessor
             }
             propertySources.addFirst(propertySource);
         } else {
-            log.warn(location.toString() + " not found.");
+//            log.warn(location.toString() + " not found.");
         }
     }
     
@@ -85,7 +78,7 @@ public class EncryptablePropertiesConfigurer implements BeanFactoryPostProcessor
         try {
             return Files.toString(new File(System.getProperty("user.home"), ".initpass"), Charset.forName("US-ASCII")).trim();
         } catch (IOException e) {
-            log.warn(MISSING_PASSWORD_MESSAGE);
+//            log.warn(MISSING_PASSWORD_MESSAGE);
             return null;
         }
     }
