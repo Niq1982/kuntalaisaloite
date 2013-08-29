@@ -207,7 +207,7 @@
     -->
     <#noescape>${editorStyles!""}</#noescape>
 
-    <link href='https://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic' rel='stylesheet' type='text/css' />    
+    <#--<link href='https://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic' rel='stylesheet' type='text/css' />-->    
 </head>
 <body class="${locale}">
     <p id="accesskeys">

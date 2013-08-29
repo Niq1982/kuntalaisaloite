@@ -27,6 +27,12 @@
         <@u.text authorMessage.message pBottomMargin!"" />
 
     </@b.mainContentBlock>
+    
+    <@u.spacer "15" />
+    
+    <@b.contentBlock type>
+        <@b.adminViewLink type=type verified=initiative.type.verifiable />
+    </@b.contentBlock>
 
     <@u.spacer "15" />
     
@@ -52,6 +58,12 @@
         <@u.text authorMessage.message pBottomMargin!"" />
 
     </@b.mainContentBlock>
+    
+    <@u.spacer "15" />
+    
+    <@b.contentBlock type>
+        <@b.adminViewLink type=type verified=initiative.type.verifiable />
+    </@b.contentBlock>
 
     <@u.spacer "15" />
     

@@ -12,8 +12,10 @@
 <@b.authorList type />
 <@b.separator />
     
-<@u.message "email.notification.to.moderator.moderateLink" />:
-${urls.moderation(initiative.id)}
+<@u.message "email.notification.to.moderator.moderate.title" />
+    
+<@u.message "email.notification.to.moderator.moderate.linkLabel" />:
+${urls.moderatorLogin(initiative.id)}
 
 <@b.separator />
 

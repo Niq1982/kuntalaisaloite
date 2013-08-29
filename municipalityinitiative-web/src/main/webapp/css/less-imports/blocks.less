@@ -123,6 +123,10 @@
         bottom:0;
         left:33%;
         z-index:9999;
+        
+        // Fix for IE - lte IE8 for opacity is defined in -ie.less
+        background:#fff;
+        opacity:0;
     }
 
     .initiative-type {

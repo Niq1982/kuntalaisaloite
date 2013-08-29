@@ -42,7 +42,7 @@
     
     <@u.spacer "15" />
     
-    <@b.emailFooter type=type showManagement=false />
+    <@b.emailFooter type=type />
     
     <@u.spacer "15" />
 </#macro>

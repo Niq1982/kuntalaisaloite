@@ -78,44 +78,30 @@
  *
  * @param type 'text' or 'html'
  * @param postFix
- * @param managementHash if given, managementlink will be shown instead of regular public link
- * @param showManagement default as true, used in verified initiatives
  -->
-<#macro emailFooter type="" postFix="" managementHash="" showManagement=true>
+<#macro emailFooter type="" postFix="">
     <#if type=="html">
         <table border="0" cellspacing="0" cellpadding="0" width="640" style="border:0;">
         <tr>
             <td style="text-align:center; ${footerFont!""}">
     
-        <p style="${footerFont!""}"><@u.message "email.footer.sendFrom"+postFix /><br/>
-
-        <#if showManagement && initiative.type.verifiable && !initiative.sent>
-            <#assign title><@u.message "email.footer.managementLink" /></#assign>
-            <@u.link urls.get(switchLocale!locale).loginToManagement(initiative.id) title />
-        <#elseif managementHash?has_content && !initiative.sent>
-            <@u.message "email.footer.managementLink" /><br/><@u.link urls.get(switchLocale!locale).loginAuthor(managementHash) />
-        <#elseif initiative.state?? && initiative.state == "PUBLISHED" && initiative.fixState == "OK">
-            <@u.message "email.footer.viewLink"+postFix /><br/><@u.link urls.get(switchLocale!locale).view(initiative.id) />
-        </#if>
-        </p>
-        <br/>
-        <p style="${footerFont!""}"><@u.message "email.footer" /></p>
+                <p style="${footerFont!""}">
+                    <@u.message "email.footer.sendFrom"+postFix />
+                    <br/>
+                    <#if initiative.state?? && initiative.state == "PUBLISHED" && initiative.fixState == "OK">
+                        <@u.message "email.footer.viewLink"+postFix /><br/><@u.link urls.get(switchLocale!locale).view(initiative.id) />
+                    </#if>
+                </p>
+                <br/>
+                <p style="${footerFont!""}"><@u.message "email.footer" /></p>
         
-        </td>
+            </td>
         </tr>
         </table>
     <#else>
         <@u.message "email.footer.sendFrom"+postFix />
         
-        <#if showManagement && initiative.type.verifiable && !initiative.sent>
-            <@u.message "email.footer.managementLink" />
-            
-            ${urls.get(switchLocale!locale).loginToManagement(initiative.id)}
-        <#elseif managementHash?has_content && !initiative.sent>
-            <@u.message "email.footer.managementLink" />
-            
-            ${urls.get(switchLocale!locale).loginAuthor(managementHash)}
-        <#elseif initiative.state?? && initiative.state == "PUBLISHED" && initiative.fixState == "OK">
+        <#if initiative.state?? && initiative.state == "PUBLISHED" && initiative.fixState == "OK">
             <@u.message "email.footer.viewLink"+postFix />
             
             ${urls.get(switchLocale!locale).view(initiative.id)}
@@ -297,13 +283,16 @@
 <#macro adminViewLink type="" verified=false>
     <#if verified>
         <#if type == "html">
-            <p style="${pBothMargins!""}"><@u.message "email.adminViewLink" /></p>
+            <h4 style="${h4!""}"><@u.message "email.management.title" /></h4>
+            <p style="${pBottomMargin!""}"><@u.message "email.management.description" /></p>
             <p style="${pBothMargins!""}">
-                <#assign title><@u.message "email.footer.managementLink" /></#assign>
+                <#assign title><@u.message "email.management.linkLabel" /></#assign>
                 <@u.link urls.get(switchLocale!locale).loginToManagement(initiative.id) title />
             </p>
         <#else>
-            <@u.message "email.adminViewLink" />
+            <@u.message "email.management.title" />
+        
+            <@u.message "email.management.description" />
             
             ${urls.get(switchLocale!locale).loginToManagement(initiative.id)}
         </#if>
