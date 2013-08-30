@@ -17,8 +17,13 @@
     <div class="msg-block cf">
         <h1><@u.message "authenticate.title" /></h1>
 
-        <p>Voit tunnistautua ja ylläpitää niitä luomiasia aloitteita, jotka tähtäävät 2 tai 5 prosenttiin kunnan äänioikeutetuista asukkaista.</p>
-        <p>Tavallisia Kuntalaisaloitteita voi ylläpitää ainoastaan sähköpostiin lähetetyllä ylläpitolinkillä.</p>
+        <p><@u.message "authenticate.paragraph1" /></p>
+        <ul>
+            <li><@u.message "authenticate.listItem1" /></li>
+            <li><@u.message "authenticate.listItem2" /></li>
+        </ul>
+
+        <p><@u.message "authenticate.paragraph2" /></p>
             
         <p><a href="${urls.login(target)}" class="small-button"><span class="small-icon next"><@u.message "common.continueToAuthenticate" /></span></a></p>
     </div>
