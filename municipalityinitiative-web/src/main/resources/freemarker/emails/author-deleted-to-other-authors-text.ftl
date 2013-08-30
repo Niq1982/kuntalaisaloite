@@ -25,8 +25,9 @@
     <@b.initiativeDetails type=type showDate=true />
             
     <@u.message messageKeyPrefix+".description"/>
-    <@u.message key=messageKeyPrefix+".deletedAuthor" />
     
+    
+    <@u.message key=messageKeyPrefix+".deletedAuthor" />
     
     <@b.contactInfo contactInfo type />
     

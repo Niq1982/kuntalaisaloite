@@ -16,8 +16,11 @@
 
 <@b.separator />
 
+<#-- Do not add admin-link when initiative is not collectable (eg. is sent straight to municipality) -->
+<#if emailMessageType != EmailMessageType.ACCEPTED_BY_OM_AND_SENT>
 <@b.adminViewLink type=type verified=initiative.type.verifiable />
 <@b.separator />
+</#if>
 
 <@b.emailFooter type />
 
@@ -36,8 +39,11 @@
 <@s.statusInfo emailMessageType type />
 <@b.separator />
 
+<#-- Do not add admin-link when initiative is not collectable (eg. is sent straight to municipality) -->
+<#if emailMessageType != EmailMessageType.ACCEPTED_BY_OM_AND_SENT>
 <@b.adminViewLink type=type verified=initiative.type.verifiable />
 <@b.separator />
+</#if>
 
 <@b.emailFooter type />
 

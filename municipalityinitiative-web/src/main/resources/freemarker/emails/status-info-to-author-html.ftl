@@ -24,11 +24,16 @@
     
     <@u.spacer "15" />
     
-    <@b.contentBlock type>
-        <@b.adminViewLink type=type verified=initiative.type.verifiable />
-    </@b.contentBlock>
+    <#-- Do not add admin-link when initiative is not collectable (eg. is sent straight to municipality) -->
+    <#if emailMessageType != EmailMessageType.ACCEPTED_BY_OM_AND_SENT>
     
-    <@u.spacer "15" />
+        <@b.contentBlock type>
+            <@b.adminViewLink type=type verified=initiative.type.verifiable />
+        </@b.contentBlock>
+        
+        <@u.spacer "15" />
+    
+    </#if>
     
     <@b.emailFooter type />
     
@@ -50,11 +55,16 @@
     
     <@u.spacer "15" />
     
-    <@b.contentBlock type>
-        <@b.adminViewLink type=type verified=initiative.type.verifiable />
-    </@b.contentBlock>
+    <#-- Do not add admin-link when initiative is not collectable (eg. is sent straight to municipality) -->
+    <#if emailMessageType != EmailMessageType.ACCEPTED_BY_OM_AND_SENT>
     
-    <@u.spacer "15" />
+        <@b.contentBlock type>
+            <@b.adminViewLink type=type verified=initiative.type.verifiable />
+        </@b.contentBlock>
+        
+        <@u.spacer "15" />
+    
+    </#if>
     
     <@b.emailFooter type />
     

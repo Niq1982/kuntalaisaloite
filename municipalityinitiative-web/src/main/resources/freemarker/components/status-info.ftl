@@ -15,8 +15,6 @@
  *  ACCEPTED_BY_OM
  *  ACCEPTED_BY_OM_FIX
  *  REJECTED_BY_OM
- *  INVITATION_ACCEPTED: TODO
- *  INVITATION_REJECTED: TODO
  *  PUBLISHED_COLLECTING
  *  SENT_TO_MUNICIPALITY
  *
@@ -132,28 +130,6 @@
         
         <@b.initiativeDetails "text" />
     </#if>
-
-<#elseif messageType == EmailMessageType.INVITATION_ACCEPTED>
-    <#-- TEXT -->
-    <#assign statusInfo>
-        TODO
-    </#assign>
-    
-    <#-- HTML -->
-    <#assign statusInfoHTML>
-        TODO
-    </#assign>
-
-<#elseif messageType == EmailMessageType.INVITATION_REJECTED>
-    <#-- TEXT -->
-    <#assign statusInfo>
-        TODO
-    </#assign>
-    
-    <#-- HTML -->
-    <#assign statusInfoHTML>
-        TODO
-    </#assign>
 
 <#elseif messageType == EmailMessageType.PUBLISHED_COLLECTING>
     <#if renderType == "html">
