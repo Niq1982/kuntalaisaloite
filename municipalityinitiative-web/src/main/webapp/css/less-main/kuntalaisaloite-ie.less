@@ -1,3 +1,6 @@
+// Import variables and mixings
+@import '../less-imports/vars';
+
 // Gradients are made as images for IE
 
 /*.dimmed (@opacity) {
@@ -19,7 +22,7 @@ a, button {
     
     a {
         &:hover { background:#fff url("../../img/ie/gradient-gray-hover.png?version=${timestamp}") center bottom repeat-x; }
-        &.active { background:#09a3b4 url("../../img/ie/gradient-main.png?version=${timestamp}") center bottom repeat-x; }
+        &.active { background:@mainColorLight url("../../img/ie/gradient-main.png?version=${timestamp}") center bottom repeat-x; }
     }
 }
 .search-sort-links {
@@ -29,7 +32,7 @@ a, button {
         }
     
         &.active {
-            background:#09a3b4 url("../../img/ie/gradient-main.png?version=${timestamp}") center bottom repeat-x;
+            background:@mainColorLight url("../../img/ie/gradient-main.png?version=${timestamp}") center bottom repeat-x;
         }
     }
 }

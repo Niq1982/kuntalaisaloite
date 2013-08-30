@@ -38,7 +38,7 @@
         </div>
     
         <div class="view-block last">
-            <div class="initiative-content-row">
+            <div class="initiative-content-row invitations">
                 <h2><@u.message "invitations.title" /></h2>
     
                 <@listInvitations invitations />

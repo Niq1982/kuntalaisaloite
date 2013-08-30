@@ -1,6 +1,8 @@
 @textColor:     #000;
 @headingColor:  #111;
+@textColorLight:#999;
 @borderColor:   #000;
+@borderColorLight:   #999;
 @linkColor:     #0089f2;
 
 
@@ -13,7 +15,7 @@
 
 #accesskeys, #back-to-top,
 #header-tools, #header-additional-content,
-#main-navigation, .navigation, 
+#main-navigation, .navigation, .pagination, 
 .block-link, .switch-view, .msg-summary .system-msg,
 .initiative-content-tools, button, .small-button, .large-button,
 select, .chzn-container,
@@ -142,6 +144,12 @@ ul, ol {
     }
 }
 
+.bull {
+    margin:0 0.5em;
+    font-size:0.8em;
+    color:@textColorLight;
+}
+
 blockquote {
     margin-bottom:2em;
     font-style:italic;
@@ -159,6 +167,12 @@ blockquote {
 .user-count {
     font-size:1.2em;
     font-style:italic;
+}
+
+.participant-list {
+    .date {
+        margin-right:1em;
+    }
 }
 
 // Initiative
@@ -179,6 +193,12 @@ blockquote {
 }
 .content-block-header {
     margin-top:2em;
+}
+
+.invitations {
+    .author {
+        div, span { display:block; }
+    }
 }
 
 
@@ -220,11 +240,9 @@ blockquote {
     
     li {
         overflow:hidden; // clearfix
-        position:relative;
-        display:block;
         margin-bottom:0.7em;
         padding-top:0.7em;
-        border-top:1px solid #eee;
+        border-top:1px solid @borderColorLight;
         
         &.first { border:0; }
     }
@@ -234,52 +252,26 @@ blockquote {
     }
     .title {
         display:block;
-        margin:0 15em 0 7em;
+        margin:0 6em 0 7em;
         font-weight:bold;
     }
     .info {
         display:block;
         margin-left:7em;
-        color:#999;
+        color:@textColorLight;
     }
     
-    .support-votes-details {
+    .participants {
         float:right;
-        width:13em;
-        
-        .support-votes-container {
-            position:relative;
-            display:block;
-            text-align:right;
-        }
-        
-        .support-votes {
-            position:relative;
-            z-index:2;
-            font-size:1.3em;
-            //font-style:italic;
-        }
-        
-        .bar {
-            display:none;
-        }
-        
-        .internal-support-votes {
-            display:inline-block;
-            width:100%;
-            text-align:right;
-            font-size:0.8em;
-        }
-        .internal-count {
-            font-size:1.2em;
-            font-weight:bold;
-        }
-        
+        width:4em;
+        font-size:2em;
+        text-align:right;
     }
 
 }
 
 #footer {
+    clear:both;
     display:block;
     margin:2em 0 0 0;
     padding:1em 0 0 0;
