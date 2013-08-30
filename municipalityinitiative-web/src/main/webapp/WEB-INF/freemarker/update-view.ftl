@@ -29,7 +29,7 @@
         <div class="system-msg msg-info">
             <h2><@u.message "initiative.update.title" /></h2>
             <p><@u.message "initiative.update.description" /></p>
-            <@u.message "initiative.required" /> <span class="icon-small required"></span>
+            <@f.fieldRequiredInfo />
         </div>
     </div>
 

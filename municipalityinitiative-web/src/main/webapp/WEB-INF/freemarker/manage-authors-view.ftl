@@ -14,6 +14,8 @@
 -->
 <@l.main "page.initiative.manageAuthors" initiative.name!"">
 
+    <@u.returnPrevious urls.management(initiative.id) "link.to.managementView" />
+
     <@u.errorsSummary path="newInvitation.*" prefix="newInvitation."/>
 
     <div class="msg-block">
@@ -26,7 +28,7 @@
     
     <@e.stateInfo initiative />
     
-    <@u.returnPrevious urls.management(initiative.id) "link.to.managementView" />
+    
 
     <#if !RequestParameters['deleteAuthor']??>
         <div class="view-block ">
@@ -198,7 +200,9 @@
         <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-send" class="sodirty" novalidate>
             <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
             
-            <div class="input-block-content no-top-margin">
+            <div class="input-block-content">
+                <p><@f.fieldRequiredInfo /></p>
+            
                 <@f.textField path="newInvitation.authorName" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_NAME_MAX />
                 <@f.textField path="newInvitation.authorEmail" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
             </div>

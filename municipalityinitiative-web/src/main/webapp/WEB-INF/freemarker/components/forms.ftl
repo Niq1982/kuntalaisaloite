@@ -234,6 +234,17 @@
     </#if>
 </#macro>
 
+
+<#--
+ * fieldRequiredInfo
+ *
+ * General infotext for required fields
+ *
+-->
+<#macro fieldRequiredInfo>
+    <@u.message "initiative.required" /> <span class="icon-small required"></span>
+</#macro>
+
 <#--
  * securityFilters
  *

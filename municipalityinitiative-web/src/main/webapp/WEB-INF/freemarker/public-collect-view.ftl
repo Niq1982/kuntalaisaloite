@@ -72,6 +72,7 @@
             </div>
             
             <div class="input-block-content">
+                <p><@f.fieldRequiredInfo /></p>
                 <@f.textarea path="authorMessage.message" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.AUTHOR_MESSAGE_MAX?string("#") />
             </div>
             
@@ -121,6 +122,7 @@
             </div>
             
              <div class="input-block-content">
+                <p><@f.fieldRequiredInfo /></p>
                 <div class="column col-1of2">
                     <#if initiative.verifiable && user.isVerifiedUser()>
                          <div class="input-header"><@u.message "contactInfo.verified.name" /></div>
