@@ -43,8 +43,6 @@ public class EmailServiceStatusEmailTest extends MailSendingEmailServiceTestBase
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_MUNICIPALITY));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.view(initiativeId())));
         assertThat(javaMailSenderFake.getMessageContent().html, containsString("Kuntalaisaloitteesi on julkaistu Kuntalaisaloite.fi-palvelussa ja lähetetty kuntaan"));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.loginAuthor(managementHash())));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.alt().loginAuthor(managementHash())));
         // TODO: assertThat(getMessageContent().html, containsString("SV Kuntalaisaloitteesi on julkaistu Kuntalaisaloite.fi-palvelussa ja lähetetty kuntaan"));
     }
 
