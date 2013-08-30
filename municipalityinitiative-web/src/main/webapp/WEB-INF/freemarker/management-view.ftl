@@ -86,9 +86,9 @@
             
                 <div class="msg-block">
                     <div class="system-msg msg-info">
-                        <h2><@u.message "management.sendToReview.collect.title" /></h2>
+                        <h2><@u.message "management.sendToReview.verifiable.title" /></h2>
                         
-                        <p><@u.message "management.sendToReview.description.verifiable" /></p>
+                        <p><@u.message "management.sendToReview.verifiable.description" /></p>
             
                         <a href="${managementURL}?send-to-review=confirm-collect#send-to-review" id="js-send-to-review-collect" class="small-button js-send-to-review-collect"><span class="small-icon save-and-send"><@u.messageHTML "action.sendToReview" /></span></a>
                     </div>
@@ -176,7 +176,7 @@
         <#if sendToReviewAndCollectConfirm>
         <noscript>
             <div id="send-to-review" class="msg-block cf">
-                <h2><@u.message "sendToReview.collect.confirm.title.nojs" /></h2>
+                <h2><@u.message "sendToReview.collect.confirm.title" /></h2>
                 <#noescape>${sendToReviewCollect}</#noescape>
             </div>
         </noscript>
@@ -246,7 +246,7 @@
         <noscript>
             <div id="start-collecting" class="msg-block cf">
                 <#noescape>
-                    <h2><@u.message "startCollecting.confirm.title.nojs" /></h2>
+                    <h2><@u.message "startCollecting.confirm.title" /></h2>
                     ${startCollecting}
                 </#noescape>
             </div>

@@ -375,7 +375,7 @@
     <div class="input-block cf">
         <div class="input-block-extra">
             <div class="input-block-extra-content">
-                <@f.helpText "help.contactInfo.name" />
+                <@f.helpText "help.contactInfo.name.verifiable" />
                 <@f.helpText "help.contactInfo.contactDetails.verifiable" />
             </div>
         </div>
