@@ -1224,7 +1224,6 @@ var tooltip = (function() {
 				left: { direction: 'right' },
 				right: { direction: 'left' },
 				top: { direction: 'bottom' }
-
 			});
 		}
 	}
