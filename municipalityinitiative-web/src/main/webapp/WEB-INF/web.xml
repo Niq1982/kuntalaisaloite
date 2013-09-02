@@ -135,7 +135,7 @@
         <filter-name>resourceCacheFilter</filter-name>
         <url-pattern>/img/*</url-pattern>
     </filter-mapping>
-        <filter-mapping>
+    <filter-mapping>
         <filter-name>resourceCacheFilter</filter-name>
         <url-pattern>/files/*</url-pattern>
     </filter-mapping>

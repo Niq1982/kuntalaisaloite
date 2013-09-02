@@ -31,7 +31,7 @@
     <div id="header-tools">
         <div id="header-tools-content">
             <div id="aloite-links">
-                <a href="https://www.kansalaisaloite.fi/${locale}""><@u.message "otherServices.initiative"/></a><span class="hide"> | </span><a class="active" href="${urls.baseUrl}/${locale}"><@u.message "otherServices.municipalityinitiative"/></a>
+                <a href="https://www.kansalaisaloite.fi/${locale}"><@u.message "otherServices.initiative"/></a><span class="hide"> | </span><a class="active" href="${urls.baseUrl}/${locale}"><@u.message "otherServices.municipalityinitiative"/></a>
             </div>
         </div>
     </div>
@@ -172,6 +172,11 @@
     <meta property="og:image" content="${urls.baseUrl}/img/logo-share.png?version=${resourcesVersion}" />
     
     <link href="${urls.baseUrl}/favicon.ico?version=${resourcesVersion}" rel="shortcut icon" type="image/vnd.microsoft.icon" />
+    
+    <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/fonts.css?version=${resourcesVersion}" />
+    <!--[if IE ]>
+        <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/fonts-ie.css?version=${resourcesVersion}" />
+    <![endif]-->
    
     <#if optimizeResources>
         <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/style.min.css?version=${resourcesVersion}" />
@@ -241,7 +246,7 @@
     <div id="header-tools">
         <div id="header-tools-content">
             <div id="aloite-links">
-                <a href="https://www.kansalaisaloite.fi/${locale}""><@u.message "otherServices.initiative"/></a><span class="hide"> | </span><a class="active" href="${urls.baseUrl}/${locale}"><@u.message "otherServices.municipalityinitiative"/></a>
+                <a href="https://www.kansalaisaloite.fi/${locale}"><@u.message "otherServices.initiative"/></a><span class="hide"> | </span><a class="active" href="${urls.baseUrl}/${locale}"><@u.message "otherServices.municipalityinitiative"/></a>
             </div>
             <div class="other-services-container">
                 <a class="other-services-select" href="http://www.otakantaa.fi/${locale}-FI" target="_blank"> <#-- Add class "dropdown-toggle" for dropdown -->
