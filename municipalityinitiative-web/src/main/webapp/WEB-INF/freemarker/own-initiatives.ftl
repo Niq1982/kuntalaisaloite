@@ -27,6 +27,11 @@
 
     <div class="msg-block">
         <@u.systemMessage path="ownInitiatives.description" type="info" showClose=false />
+        
+        <#-- Search results EMPTY -->
+        <#if !initiatives?? || initiatives?size == 0>
+            <@u.systemMessage path="searchResults.noResults" type="info" cssClass="first" showClose=false />
+        </#if>    
     </div>
     
 
@@ -74,12 +79,6 @@
         </li>
         <#if !initiative_has_next></ul></#if>
     </#list>
-
-<#-- Search results EMPTY -->
-<#else>
-    <div class="msg-block">
-        <@u.systemMessage path="searchResults.noResults" type="info" cssClass="first" showClose=false />
-    </div>
 </#if>
 
 </div>

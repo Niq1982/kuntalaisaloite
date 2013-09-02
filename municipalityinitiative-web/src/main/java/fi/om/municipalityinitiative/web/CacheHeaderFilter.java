@@ -58,6 +58,10 @@ public class CacheHeaderFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         
+        if (request.getRequestURI().endsWith(".eot")) {
+            response.setHeader("content-type", "font/eot");
+        }
+        
         if (optimizeResources) {
             if (resourceFilter) {
                 if (hasVersionInfo(request)) {
