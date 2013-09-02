@@ -62,6 +62,10 @@ public class CacheHeaderFilter implements Filter {
             response.setHeader("content-type", "font/eot");
         }
         
+        if (request.getRequestURI().endsWith(".woff")) {
+            response.setHeader("content-type", "font/woff");
+        }
+        
         if (optimizeResources) {
             if (resourceFilter) {
                 if (hasVersionInfo(request)) {

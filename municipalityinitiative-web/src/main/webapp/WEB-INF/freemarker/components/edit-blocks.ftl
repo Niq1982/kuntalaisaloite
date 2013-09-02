@@ -131,7 +131,8 @@
     <div class="input-block-content">
         <div class="input-header margin">
             <@u.message "initiative.initiativeType" /> <span class="icon-small required trigger-tooltip"></span>
-            <span class="instruction-text"><@u.messageHTML key="initiative.initiativeType.optional" args=["#"] /></span>
+            <#assign href= "${urls.help(HelpPage.INITIATIVE_TYPES.getUri(locale))}" />
+            <span class="instruction-text"><@u.messageHTML key="initiative.initiativeType.optional" args=[href] /></span>
         </div>
     </div>
     

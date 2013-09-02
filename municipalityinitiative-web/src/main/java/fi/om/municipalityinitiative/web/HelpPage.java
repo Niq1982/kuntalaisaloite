@@ -7,7 +7,8 @@ public enum HelpPage {
     CONTACT("yhteystiedot", "kontaktuppgifter"),
     ORGANIZERS("ohjeet-vastuuhenkilolle", "anvisningar-for-ansvarspersoner"),
     PARTICIPANTS("ohje-osallistujalle", "ohje-osallistujalle_sv"),
-    INITIATIVE_STEPS("aloitteen-vaiheet", "initiativets-skeden");
+    INITIATIVE_STEPS("aloitteen-vaiheet", "initiativets-skeden"),
+    INITIATIVE_TYPES("kuntalaisaloitteen-muodot", "formen-av-ett-invanarinitiativ");
 
     private String uriFi;
     private String uriSv;
