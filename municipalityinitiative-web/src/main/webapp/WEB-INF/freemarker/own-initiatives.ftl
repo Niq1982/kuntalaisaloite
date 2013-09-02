@@ -26,17 +26,17 @@
     </h1>
 
     <div class="msg-block">
-        <@u.systemMessage path="ownInitiatives.description" type="info" showClose=false />
+        <@u.systemMessage path="ownInitiatives.description" type="info" cssClass="first" showClose=false />
         
-        <#-- Search results EMPTY -->
+        <#-- Initiative list EMPTY -->
         <#if !initiatives?? || initiatives?size == 0>
-            <@u.systemMessage path="searchResults.noResults" type="info" cssClass="first" showClose=false />
+            <@u.systemMessage path="ownInitiatives.empty" type="info" showClose=false />
         </#if>    
     </div>
     
 
-<div class="search-results">
 <#if initiatives?? && (initiatives?size > 0)>
+<div class="search-results">
     <#list initiatives as initiative>
         <#if initiative_index == 0><ul></#if>
         <li <#if initiative_index == 0>class="first"</#if>>
@@ -79,9 +79,9 @@
         </li>
         <#if !initiative_has_next></ul></#if>
     </#list>
+</div>
 </#if>
 
-</div>
 
 
 </@l.main>
