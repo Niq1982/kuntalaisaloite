@@ -6,7 +6,7 @@ public enum HelpPage {
     NEWS("tiedotteet", "aktuellt"),
     CONTACT("yhteystiedot", "kontaktuppgifter"),
     ORGANIZERS("ohjeet-vastuuhenkilolle", "anvisningar-for-ansvarspersoner"),
-    PARTICIPANTS("ohje-osallistujalle", "ohje-osallistujalle_sv"),
+    PARTICIPANTS("ohje-osallistujalle", "anvisningar-for-deltagare"),
     INITIATIVE_STEPS("aloitteen-vaiheet", "initiativets-skeden"),
     INITIATIVE_TYPES("kuntalaisaloitteen-muodot", "formen-av-ett-invanarinitiativ");
 

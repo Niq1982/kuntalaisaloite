@@ -15,14 +15,32 @@
  *
  * @param map is the hashMap for navigation items
  * @param titleKey is for navigation block title
+ * @param cssClass is used for box-style links
 -->
-<#macro navigation map titleKey="">
-    <#if titleKey?has_content><h3 class="navi-title"><@u.message titleKey /></h3></#if>
-    <ul class="navi block-style">
+<#macro navigation map titleKey="" cssClass="">
+    <#if cssClass == "box">
         <#list map as link>
-            <li ><a href="${urls.help(link.uri)}" <#if link.uri == helpPage>class="active"</#if>>${link.subject}</a></li>
+            <a href="${urls.help(link.uri)}" class="${(link.uri == helpPage)?string("active","")} ${cssClass} ${link_has_next?string("","last")}">
+                <#-- TODO: correct way to choose iconClass -->
+                <#if link_index == 0>
+                    <#assign iconClass="author" />
+                <#elseif link_index == 1>
+                    <#assign iconClass="participants" />
+                <#else>
+                    <#assign iconClass="info" />
+                </#if>
+            
+                <span class="help-nav-icon icon-${iconClass}">${link.subject}</span>
+            </a>
         </#list>
-    </ul>
+    <#else>
+        <#if titleKey?has_content><h3 class="navi-title"><@u.message titleKey /></h3></#if>
+        <ul class="navi block-style">
+            <#list map as link>
+                <li><a href="${urls.help(link.uri)}" <#if link.uri == helpPage>class="active"</#if>>${link.subject}</a></li>
+            </#list>
+        </ul>
+    </#if>
 </#macro>
 
 <#--
@@ -36,7 +54,7 @@
     <div class="columns cf">
 
         <div class="column col-1of4 navigation">
-            <@navigation categoryLinksMap['MAIN'] "" />
+            <@navigation categoryLinksMap['MAIN'] "" "box" />
             <@navigation categoryLinksMap['KUNTALAISALOITE_FI'] "help.service.title" />
             <@navigation categoryLinksMap['KUNTALAISALOITE'] "help.general.title" />
         </div>
