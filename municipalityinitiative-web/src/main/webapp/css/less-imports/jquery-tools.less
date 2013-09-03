@@ -107,7 +107,10 @@
     }
 }
 // had to add important rule here. other solution would be reset CSS on modal load
-#exposeMask { z-index:9997 !important; width:100% !important; }
+#exposeMask {
+    z-index:9997 !important;
+    width:100% !important; // Fixes mask width issue when zooming with WP8
+}
 
 // Tooltip
 // 

@@ -8,12 +8,12 @@
 }*/
 
 a, button {
-    &.large-button, &.small-button,
+    &.large-button, &.small-button, &.box,
     &.gray, &.disabled {
         background:#fff url("../../img/ie/gradient-gray.png?version=${timestamp}") left bottom repeat-x;
         
         &:hover { background:#fff url("../../img/ie/gradient-gray-hover.png?version=${timestamp}") left bottom repeat-x; }
-        &:active { background:#fff url("../../img/ie/gradient-gray-active.png?version=${timestamp}") left bottom repeat-x; }
+        &:active, &.active { background:#fff url("../../img/ie/gradient-gray-active.png?version=${timestamp}") left bottom repeat-x; }
     }
 }
 

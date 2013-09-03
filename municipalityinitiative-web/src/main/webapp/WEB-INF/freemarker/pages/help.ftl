@@ -21,7 +21,7 @@
     <#if cssClass == "box">
         <#list map as link>
             <a href="${urls.help(link.uri)}" class="${(link.uri == helpPage)?string("active","")} ${cssClass} ${link_has_next?string("","last")}">
-                <#-- TODO: correct way to choose iconClass -->
+                <#-- NOTE: we could also use urls (fi/sv) to determine the class -->
                 <#if link_index == 0>
                     <#assign iconClass="author" />
                 <#elseif link_index == 1>

@@ -14,22 +14,40 @@
  *
  * @param map is the hashMap for navigation items
  * @param titleKey is for navigation block title
+ * @param cssClass is used for box-style links
 -->
-<#macro navigation map titleKey="">
-    <#if titleKey?has_content><h3 class="navi-title"><@u.message titleKey /></h3></#if>
-    <ul class="navi block-style">
+<#macro navigation map titleKey="" cssClass="">
+    <#if cssClass == "box">
         <#list map as link>
-        <li>
-            <a href="${urls.helpEdit(link.uri)}" <#if link.uri == helpPage>class="active"</#if>>
-                <#if ((link.subject!"")?has_content)>
-                    ${link.subject}
+            <a href="${urls.help(link.uri)}" class="${(link.uri == helpPage)?string("active","")} ${cssClass} ${link_has_next?string("","last")}">
+                <#-- NOTE: we could also use urls (fi/sv) to determine the class -->
+                <#if link_index == 0>
+                    <#assign iconClass="author" />
+                <#elseif link_index == 1>
+                    <#assign iconClass="participants" />
                 <#else>
-                    <@u.message "editor.emptyTitlePlaceholder" />
+                    <#assign iconClass="info" />
                 </#if>
+            
+                <span class="help-nav-icon icon-${iconClass}">${link.subject}</span>
             </a>
-        </li>
         </#list>
-    </ul>
+    <#else>
+        <#if titleKey?has_content><h3 class="navi-title"><@u.message titleKey /></h3></#if>
+        <ul class="navi block-style">
+            <#list map as link>
+            <li>
+                <a href="${urls.helpEdit(link.uri)}" <#if link.uri == helpPage>class="active"</#if>>
+                    <#if ((link.subject!"")?has_content)>
+                        ${link.subject}
+                    <#else>
+                        <@u.message "editor.emptyTitlePlaceholder" />
+                    </#if>
+                </a>
+            </li>
+            </#list>
+        </ul>
+    </#if>
 </#macro>
 
 <#--
@@ -43,7 +61,7 @@
 
     <div class="columns cf">
         <div class="column col-1of4 navigation">
-            <@navigation categoryLinksMap['MAIN'] "" />
+            <@navigation categoryLinksMap['MAIN'] "" "box" />
             <@navigation categoryLinksMap['KUNTALAISALOITE_FI'] "help.service.title" />
             <@navigation categoryLinksMap['KUNTALAISALOITE'] "help.general.title" />
             <@navigation categoryLinksMap['TIEDOTTEET'] "help.news.title" />
