@@ -125,19 +125,13 @@ input:-ms-input-placeholder, input:-ms-textarea-placeholder { color:#999;  }// f
 textarea, input[type="text"] {
     font-family: 'PT Sans', "Trebuchet MS", Helvetica, sans-serif;
 
-    &.has-error {
-        border-color:#be3730 !important;  box-shadow:inset 2px 2px 2px rgba(0,0,0,0.1);
+    &.error {
+        border-color:@errorColor !important;  box-shadow:inset 2px 2px 2px rgba(0,0,0,0.1);
     }
 }
 
 // Hide honeyspot antispam input field from users
 #email { display:none; }
-
-// Error for more general use
-.has-error {
-    color:#be3730;
-    font-weight:bold;
-}
 
 input.datepicker {
     width: 110px;

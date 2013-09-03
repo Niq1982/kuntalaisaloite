@@ -13,7 +13,7 @@
 <#macro showError cssClass="">
     <#if spring.status.error>
         <#list spring.status.errorMessages as error>
-            <#noescape><div id="${spring.status.expression}-error" class="system-msg msg-error ${cssClass}">${error!''}</div></#noescape>
+            <#noescape><div id="${spring.status.expression}-error" class="field-error ${cssClass}"><span class="icon-small icon-16 cancel"></span> <span class="push">${error!''}</span></div></#noescape>
         </#list>
     </#if>
 </#macro>
@@ -63,10 +63,11 @@
 -->
 <#macro textField path required optional cssClass="" attributes="" maxLength="" fieldType="text" key="">
     <@spring.bind path />  
+    
 
     <@formLabel path required optional key>
         <@showError />
-        <@spring.formInput path, 'class="'+cssClass+'" '+required+' maxlength="'+maxLength+'" '+attributes fieldType />
+        <@spring.formInput path, 'class="'+cssClass+' '+spring.status.error?string("error","")+'" '+required+' maxlength="'+maxLength+'" '+attributes fieldType />
     </@formLabel>
 </#macro>
 
@@ -86,7 +87,7 @@
     
     <@showError cssClass=cssErrorClass />
     
-    <@spring.formInput path, 'class="'+cssClass+'" '+required+' maxlength="'+maxLength+'" '+attributes />
+    <@spring.formInput path, 'class="'+cssClass+' '+spring.status.error?string("error","")+'" '+required+' maxlength="'+maxLength+'" '+attributes />
 </#macro>
 
 <#--
@@ -106,7 +107,7 @@
 
     <@formLabel path required optional key>
         <@showError />
-        <@spring.formTextarea path, 'class="'+cssClass+'" '+required+' maxlength="'+maxLength+'" ' />
+        <@spring.formTextarea path, 'class="'+cssClass+' '+spring.status.error?string("error","")+'" '+required+' maxlength="'+maxLength+'" ' />
     
     </@formLabel>
 </#macro>

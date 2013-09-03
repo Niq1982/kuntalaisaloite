@@ -16,6 +16,11 @@
 
 <@l.main page pageTitle!"">
 
+    <#-- REMOVE!! testing successmessage styles -->
+    <div class="system-msg msg-success ">
+        Linkki yhteydenottopyynnön vahvistamiseen on lähetetty sähköpostiisi<span class="close-msg">x</span>
+    </div>
+
     <h1><@u.message page /></h1>
 
     <#-- Create form errors summary -->

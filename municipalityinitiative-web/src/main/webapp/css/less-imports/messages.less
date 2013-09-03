@@ -12,14 +12,14 @@
     position:relative;
     padding: 15px 25px 15px 60px;
     margin:1em 0;
-    border-width:1px; // separated for better overriding
+    //border-width:1px; // separated for better overriding
     border-style:solid;
+    border:none;
 
     font-size:0.9em;
     text-align:left;
 
     &.msg-info {
-        border-color:@borderGray;
         background: @grayGradient2 url("../../img/icon-msg-info.png?version=${timestamp}") no-repeat 20px 15px;
         
         .close-msg {
@@ -28,8 +28,7 @@
     }
 
     &.msg-warning {
-        border-color:#e9c000;
-        background: #f7e489 url("../../img/icon-msg-warning.png?version=${timestamp}") no-repeat 18px 15px;
+        background: @warningColor url("../../img/icon-msg-warning.png?version=${timestamp}") no-repeat 18px 15px;
 
         .close-msg {
             background:#e9c000;
@@ -38,7 +37,6 @@
 
     &.msg-error {
         color:#fff;
-        border-color:@redGradient2;
         background: #fa353d url("../../img/icon-msg-error.png?version=${timestamp}") no-repeat 15px 15px;
         
         a {
@@ -57,13 +55,14 @@
     }
 
     &.msg-success {
-        border: 1px solid #7aa63f;
-        background: #b6eb7c url("../../img/icon-msg-success.png?version=${timestamp}") no-repeat 15px 15px;
-        color:#254000;
+        padding:23px 25px 23px 60px;
+    
+        background: @successColor url("../../img/icon-msg-success.png?version=${timestamp}") no-repeat 15px 15px;
+        color:#fff;
         
         .close-msg {
-            background:#58831d;
-            color: #b6eb7c;
+            background:@mainColorDark;
+            color: @successColor;
         }
     }
     
@@ -99,6 +98,17 @@
     }    
 }
 
+.field-error {
+    margin:0 0 -0.2em 0;
+    padding:6px 25px 6px 20px;
+    //padding:6px 25px 6px 60px;
+    //background: @grayGradient2 url("../../img/icon-msg-error.png?version=${timestamp}") no-repeat 20px 15px;
+    background: @grayGradient2;
+    
+    font-size:0.9em;
+    color: @errorColor;
+}
+
 // Exception for the frontpage
 // Message floats over the images
 .image-container {
@@ -119,6 +129,19 @@
     background:#fff url("../../img/icon-msg-summary.png?version=${timestamp}") no-repeat 32px 27px;
     
     h1 { margin-top:1em; }
+    
+    &.errors-summary {
+        background-image: url("../../img/icon-errors-summary.png?version=${timestamp}");
+        border-left:4px solid @errorColor;
+
+        h3 {
+            color: @errorColor;
+        }
+        
+        a {
+            color: @bodyColor;
+        }
+    }
     
     .msg-info {
         background:#fff;

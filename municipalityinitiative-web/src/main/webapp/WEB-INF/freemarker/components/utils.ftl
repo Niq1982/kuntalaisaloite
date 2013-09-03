@@ -358,9 +358,9 @@
     <@spring.bind path />
     <#if spring.status.error>
         <#global hasErrors=true />
-        <div id="errors-summary" class="system-msg msg-error">
-            <@message "formError.summary.title" />
-            <ul>
+        <div id="errors-summary" class="msg-block errors-summary">
+            <h3><@message "formError.summary.title" /></h3>
+            <ul class="no-style">
                 <#list spring.status.errors.allErrors as error>
                     <li><#if error.field??><strong><a href="#${error.field}-error"><@message prefix+fieldLabelKey(error.field) /></a>:</strong> </#if><#noescape>${springMacroRequestContext.getMessage(error)}</#noescape></li>
                 </#list>
