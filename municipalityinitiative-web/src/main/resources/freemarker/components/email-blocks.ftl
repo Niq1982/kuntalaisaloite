@@ -16,15 +16,15 @@
             <td colspan="3" style="background:${blockBGcolor!""};">
             <table border="0" cellspacing="0" cellpadding="0" style="width:100%;">
                 <tr>
-                    <td width="20" ><@u.spacer "0" /></td>
-                    <td style="${defaultFont!""}">
+                    <td width="20" style="background:${blockBGcolor!""};"><@u.spacer "0" /></td>
+                    <td style="${blockBGcolor!""}; ${defaultFont!""}">
 
                         <#-- Email content -->
                         <#nested />
                                 
                         <@u.spacer "5" />
                     </td>
-                    <td width="20"><@u.spacer "0" /></td>
+                    <td width="20" style="background:${blockBGcolor!""};"><@u.spacer "0" /></td>
                 </tr>
             </table>
             </td>
@@ -46,11 +46,11 @@
 
         <table border="0" cellspacing="0" cellpadding="0" width="640" style="background:${blockBGcolor!""}; border-radius:5px; text-align:left; ${defaultFont!""}">
             <tr>
-                <td width="640">
+                <td width="640" style="background:${blockBGcolor!""};">
                 <table border="0" cellspacing="0" cellpadding="0" style="width:100%;">
                     <tr>
-                        <td width="20" ><@u.spacer "0" /></td>
-                        <td style="${defaultFont!""}">
+                        <td width="20" style="background:${blockBGcolor!""};"><@u.spacer "0" /></td>
+                        <td style="${blockBGcolor!""}; ${defaultFont!""}">
                             <@u.spacer "5" />
                             
                             <#-- HTML content -->
@@ -58,7 +58,7 @@
 
                             <@u.spacer "5" />
                         </td>
-                        <td width="20"><@u.spacer "0" /></td>
+                        <td width="20" style="background:${blockBGcolor!""};"><@u.spacer "0" /></td>
                     </tr>
                 </table>
                 </td>

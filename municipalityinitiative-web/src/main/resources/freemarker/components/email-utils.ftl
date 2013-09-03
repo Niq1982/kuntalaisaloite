@@ -86,11 +86,17 @@
         <#assign textColor="#ffffff" />
     </#if>
 
-    <a href="${url}" style="color:${textColor}; text-decoration:none">
-        <span style="background:${bgColor}; border:1px solid ${borderColor}; font-size:13px; font-family:Arial, sans-serif;">
-        &nbsp;&nbsp;&nbsp;${message}&nbsp;&nbsp;&nbsp;
-        </span>
-    </a>
+    <table border="0" cellspacing="0" cellpadding="0">        
+      <tr>
+        <td style="background:${bgColor};">
+        <a href="${url}" style="color:${textColor}; text-decoration:none">
+            <span style="background:${bgColor}; border:1px solid ${borderColor}; font-size:13px; font-family:Arial, sans-serif;">
+                &nbsp;&nbsp;&nbsp;${message}&nbsp;&nbsp;&nbsp;
+            </span>
+        </a>
+        </td>
+      </tr>
+    </table>
 
 </#macro>
 

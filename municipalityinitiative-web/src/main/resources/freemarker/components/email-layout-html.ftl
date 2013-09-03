@@ -31,7 +31,7 @@
 
     <table border="0" cellspacing="0" cellpadding="0" style="font-family:${defaultFontFamily!"Arial, sans-serif"};" width="100%" bgcolor="${bodyBGcolor!""}">
     <tr>
-        <td align="center">
+        <td align="center"style="background:${bodyBGcolor!""};">
             <@u.spacer "15" />
 
             <#-- Email content -->
