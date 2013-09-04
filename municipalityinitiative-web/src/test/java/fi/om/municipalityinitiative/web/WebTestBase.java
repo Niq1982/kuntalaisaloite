@@ -379,7 +379,7 @@ public abstract class WebTestBase {
     }
 
     protected void assertPageHasValidationErrors() {
-        assertMsgContainedByClass("msg-error", "formError.summary.title");
+        assertMsgContainedByClass("errors-summary", "formError.summary.title");
     }
 
     protected void assertLoginLinkIsVisibleAtHeader() {
