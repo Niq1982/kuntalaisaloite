@@ -5,7 +5,17 @@
 <#escape x as x?html> 
 <@l.main "page.frontpage">
 
-<div class="image-container"> 
+<div class="image-container">
+<#-- TODO: finalize -->
+ 
+ <#--
+ <div class="front-system-msg">
+    <div class="container">
+        <div class="system-msg msg-success wide">Olet nyt kirjautunut ulos verkkopalvelusta <span class="close-msg">x</span></div>
+    </div>
+</div>
+-->
+ 
  <#if requestMessages?? && (requestMessages?size > 0)>
     <div class="container"><@u.requestMessage requestMessages /></div>
 </#if>

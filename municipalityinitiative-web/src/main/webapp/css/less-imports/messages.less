@@ -18,7 +18,7 @@
     font-size:0.9em;
     text-align:left;
     
-    background:url("../../img/icon-system-messages.png?version=${timestamp}") no-repeat -3000px center;
+    background:url("../../img/icon-system-messages.png?version=${timestamp}") no-repeat 0 center;
         
     .close-msg {
         position:absolute;
@@ -142,10 +142,17 @@
 // Exception for the frontpage
 // Message floats over the images
 // TODO: logout success message
-.image-container {
+.front-system-msg {
+    background: #f6f6f6;
+    
     .system-msg {
-        top:1em;
         margin:0;
+        
+        &.msg-success {
+            padding-left:60px;
+            background:url("../../img/icon-system-messages.png?version=${timestamp}") no-repeat -986px center;
+            color: @bodyColor;
+        }
     }
 }
 
