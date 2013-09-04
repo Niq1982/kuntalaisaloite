@@ -35,11 +35,11 @@
             "enableLimits": false
         } />
         
-        <@p.pagination paginationParams "top" />
+        <@p.pagination paginationParams "participants top" />
         
         <@participantList participants />
 
-        <@p.pagination paginationParams "bottom" />
+        <@p.pagination paginationParams "participants bottom" />
     </div>
     
     <#if hasManagementRightForInitiative>
