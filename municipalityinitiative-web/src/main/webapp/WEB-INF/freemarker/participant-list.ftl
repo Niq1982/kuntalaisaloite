@@ -28,6 +28,17 @@
             <#if !initiative.isVerifiable() && hasManagementRightForInitiative><span class="switch-view"><a href="${urls.participantListManage(initiative.id)}" class="trigger-tooltip" title="<@u.message "manageParticipants.tooltip" />"><@u.message "manageParticipants.title" /></a></span></#if>
         </h2>
         
+        <#if initiative.verifiable && hasManagementRightForInitiative>
+            <#assign secureCount = 0/>
+            <#list participants as participant>
+                <#if !participant.participant.verified>
+                    <#assign secureCount = secureCount+1/>
+                </#if>
+            </#list>
+
+            <#if (secureCount > 0)><p><@u.message key="participantList.secureCount" args=[secureCount] /></p></#if>
+        </#if>
+        
         <#assign paginationParams = {
             "total":      participantCount.publicNames,
             "limit":      50,
