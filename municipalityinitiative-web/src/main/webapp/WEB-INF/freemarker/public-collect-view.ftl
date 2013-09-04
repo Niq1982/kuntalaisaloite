@@ -14,7 +14,7 @@
      
 <#assign notAllowedToParticipateHTML>
     <@compress single_line=true>
-        <@u.systemMessage path="warning.verifiedAuthor.notMember" type="warning" showClose=false />
+        <@u.systemMessage path="warning.verifiedAuthor.notMember" type="warning" />
         
         <div class="input-block-content">
             <a href="${urls.logout()}" class="small-button"><span class="small-icon logout"><@u.message "common.logout" /></span></a><a href="${springMacroRequestContext.requestUri}" class="small-button push"><@u.message "modal.continueBrowsing" /></a>
@@ -68,7 +68,7 @@
             <@f.securityFilters/>
 
             <div class="input-block-content no-top-margin">
-                <@u.systemMessage path="contactAuthor.description" args=[authors.publicNameCount+authors.privateNameCount] type="info" showClose=false />  
+                <@u.systemMessage path="contactAuthor.description" args=[authors.publicNameCount+authors.privateNameCount] type="info" />  
             </div>
             
             <div class="input-block-content">
@@ -118,7 +118,7 @@
             </#if>
 
             <div class="input-block-content no-top-margin">
-                <@u.systemMessage path="participate.contactInfo.description"+infoKeyPostfix type="info" showClose=false />  
+                <@u.systemMessage path="participate.contactInfo.description"+infoKeyPostfix type="info" />  
             </div>
             
              <div class="input-block-content">
@@ -145,7 +145,7 @@
                 <#if !initiative.verifiable>
                     <div class="input-block-content hidden">
                         <#assign href=urls.help(HelpPage.PARTICIPANTS.getUri(locale)) />
-                        <@u.systemMessage path="initiative.municipality.notEqual.participation" type="info" showClose=false args=[href] />
+                        <@u.systemMessage path="initiative.municipality.notEqual.participation" type="info" args=[href] />
                     </div>
                     <div class="input-block-content">
                         <@f.radiobutton path="participant.municipalMembership" required="required" options={
@@ -158,7 +158,7 @@
                 </#if>
                 
                 <div class="input-block-content <#if !initiative.verifiable>is-not-member no-top-margin js-hide </#if> hidden">
-                    <@u.systemMessage path="warning.participate.notMember" type="warning" showClose=false />
+                    <@u.systemMessage path="warning.participate.notMember" type="warning" />
                 </div>
                 
             </div>

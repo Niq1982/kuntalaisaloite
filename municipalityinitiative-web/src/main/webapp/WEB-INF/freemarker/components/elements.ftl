@@ -104,7 +104,7 @@
 <#macro initiativeContactInfo authorList showTitle=true showRenewManagementHash=false>
     <#if showTitle><h3><@u.message key="initiative.authors.title" args=[authorList?size] /></h3></#if>
     
-    <@u.systemMessage path="initiative.authors.contactinfo.notPublic" type="info" showClose=false />
+    <@u.systemMessage path="initiative.authors.contactinfo.notPublic" type="info" />
     <br />
     
     <#list authorList as a>
@@ -145,11 +145,11 @@
     
     <#if initiative.verifiable && !initiative.sentTime.present && !user.hasRightToInitiative(initiative.id)>
         <#if user.hasParticipatedToInitiative(initiative.id)>
-            <@u.systemMessage path="warning.already.participated" type="warning" showClose=false />
+            <@u.systemMessage path="warning.already.participated" type="warning" />
         <#elseif user.isVerifiedUser() && !user.allowVerifiedParticipation(initiative.id, initiative.municipality)>
-            <@u.systemMessage path="warning.participate.notMember" type="warning" showClose=false />
+            <@u.systemMessage path="warning.participate.notMember" type="warning" />
         <#elseif ((user.isVerifiedUser() && !user.homeMunicipality.present) || !user.isVerifiedUser()) >
-            <@u.systemMessage path="participate.verifiable.info"+user.isVerifiedUser()?string(".verifiedUser","") type="info" showClose=false />
+            <@u.systemMessage path="participate.verifiable.info"+user.isVerifiedUser()?string(".verifiedUser","") type="info" />
         </#if>
     </#if>
     
@@ -191,7 +191,7 @@
     <#if !admin && initiative.sentTime.present>
         <div class="participants-block last noprint">
             <div class="participate not-allowed">
-                <@u.systemMessage path="participate.sentToMunicipality" type="info" showClose=false />
+                <@u.systemMessage path="participate.sentToMunicipality" type="info" />
             </div>
         </div>
     </#if>

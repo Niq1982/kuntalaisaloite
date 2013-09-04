@@ -34,7 +34,7 @@
     -->
     <#if !RequestParameters['invitation-reject']?? && !RequestParameters['invitation-accept']??>
         <#if user.hasRightToInitiative(initiative.id) && initiative.isVerifiable()> <#-- Only disallow double-invitation-acceptance for verified initiatives -->
-            <@u.systemMessage path="warning.author.alreadyAuthor" type="warning" showClose=false />
+            <@u.systemMessage path="warning.author.alreadyAuthor" type="warning" />
         <#else>
             <div class="msg-block ${(validationError || showInvitation)?string("hidden","")}">
                 <div class="system-msg msg-info">
@@ -46,7 +46,7 @@
 
                     <#if initiative.verifiable && (!user.isVerifiedUser() || (user.homeMunicipality.present && user.homeMunicipality.value.id != initiative.municipality.id))>
                         <#if user.isVerifiedUser()>
-                            <@u.systemMessage path="warning.verifiedAuthor.notMember" type="warning" showClose=false />
+                            <@u.systemMessage path="warning.verifiedAuthor.notMember" type="warning" />
                         <#else>
                             <a class="small-button" href="${urls.login(currentRequestUri+"&show-invitation")}"><span class="small-icon save-and-send"><@u.message "action.invitation.authenticate" /></span></a>
                         </#if>
@@ -111,7 +111,7 @@
                 <#-- Hide the whole acceptance dialog if initiative is verified and vetumalogin is needed -->
             <#else>
 
-                <@u.systemMessage path="invitation.accept.confirm.description" type="info" showClose=false />
+                <@u.systemMessage path="invitation.accept.confirm.description" type="info" />
 
                 <@u.errorsSummary path="authorInvitation.*" prefix="initiative."/>
 
@@ -142,7 +142,7 @@
                         <#if !initiative.verifiable>
                             <div class="input-block-content hidden">
                                 <#assign href="#" />
-                                <@u.systemMessage path="initiative.municipality.notEqual" type="info" showClose=false args=[href] />
+                                <@u.systemMessage path="initiative.municipality.notEqual" type="info" args=[href] />
                             </div>
                             <div class="input-block-content">
                                 <@f.radiobutton path="authorInvitation.municipalMembership" required="required" options={
@@ -158,7 +158,7 @@
                         </#if>
 
                         <div class="input-block-content <#if !initiative.verifiable>is-not-member no-top-margin js-hide</#if> hidden">
-                            <@u.systemMessage path="warning.normalAuthor.notMember" type="warning" showClose=false />
+                            <@u.systemMessage path="warning.normalAuthor.notMember" type="warning" />
                         </div>
                     </div>
 

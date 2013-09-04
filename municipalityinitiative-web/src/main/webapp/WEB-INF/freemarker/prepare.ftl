@@ -68,7 +68,7 @@
             <div class="input-block cf">
     
                 <div class="input-block-content">
-                    <@u.systemMessage path="initiative.prepare.verifiable.info"+user.isVerifiedUser()?string(".verifiedUser","") type="info" showClose=false args=["#"] />
+                    <@u.systemMessage path="initiative.prepare.verifiable.info"+user.isVerifiedUser()?string(".verifiedUser","") type="info" args=["#"] />
                 </div>
 
                 <div class="input-block-content">

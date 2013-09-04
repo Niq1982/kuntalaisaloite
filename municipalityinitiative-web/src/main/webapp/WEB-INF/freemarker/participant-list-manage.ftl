@@ -180,7 +180,7 @@
             <@participantDetailsById participants RequestParameters['deleteParticipant'] />
         </#if>
         
-        <@u.systemMessage path="deleteParticipant.confirm.warning" type="warning" showClose=false />
+        <@u.systemMessage path="deleteParticipant.confirm.warning" type="warning" />
         
         <div class="input-block-content">
             <button type="submit" name="${UrlConstants.ACTION_DELETE_PARTICIPANT}" id="modal-${UrlConstants.ACTION_DELETE_PARTICIPANT}" value="${UrlConstants.ACTION_DELETE_PARTICIPANT}" class="small-button"><span class="small-icon cancel"><@u.message "action.deleteParticipant.confirm" /></button>

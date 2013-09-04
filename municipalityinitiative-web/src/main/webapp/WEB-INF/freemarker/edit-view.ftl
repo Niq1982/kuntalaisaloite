@@ -54,7 +54,7 @@
         
         <div class="" id="form-action-panel">
             <div class="msg-block">
-                <@u.systemMessage path="initiative.saveDraft.description" type="info" showClose=false />
+                <@u.systemMessage path="initiative.saveDraft.description" type="info" />
             </div>
 
             <button class="large-button" value="true" name="${UrlConstants.ACTION_SAVE}" type="submit"><span class="large-icon save-and-send"><@u.messageHTML "action.saveDraft" /></span></button>

@@ -55,7 +55,7 @@
 
     <div class="input-block-content">
         <#assign href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" />
-        <@u.systemMessage path="initiative.municipality.description" type="info" showClose=false args=[href] />
+        <@u.systemMessage path="initiative.municipality.description" type="info" args=[href] />
     </div>
     
     <div class="input-block-content">       
@@ -90,7 +90,7 @@
         <#if !user.isVerifiedUser()>
             <div class="input-block-content hidden">
                 <#assign href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" />
-                <@u.systemMessage path="initiative.municipality.notEqual" type="info" showClose=false args=[href] />
+                <@u.systemMessage path="initiative.municipality.notEqual" type="info" args=[href] />
             </div>
             <div class="input-block-content">
                 <@f.radiobutton path="initiative.municipalMembership" required="required" options={
@@ -107,11 +107,11 @@
             </div>
             
             <div class="input-block-content is-not-member no-top-margin js-hide hidden">
-                <@u.systemMessage path="warning.initiative.notMember" type="warning" showClose=false />
+                <@u.systemMessage path="warning.initiative.notMember" type="warning" />
             </div>
         <#else>
             <div class="input-block-content no-top-margin hidden">
-                <@u.systemMessage path="warning.verifiedAuthor.notInhabitant" type="warning" showClose=false />
+                <@u.systemMessage path="warning.verifiedAuthor.notInhabitant" type="warning" />
             </div>
         </#if>
     </div>
@@ -222,9 +222,9 @@
     
     <div class="input-block-content">
         <#if noscript>
-            <@u.systemMessage path="initiative.participantEmail.description.noscript"+user.isVerifiedUser()?string(".verifiedUser","") type="info" showClose=false />
+            <@u.systemMessage path="initiative.participantEmail.description.noscript"+user.isVerifiedUser()?string(".verifiedUser","") type="info" />
         <#else>
-            <@u.systemMessage path="initiative.participantEmail.description" type="info" showClose=false />
+            <@u.systemMessage path="initiative.participantEmail.description" type="info" />
         </#if>
     </div>
 
@@ -254,7 +254,7 @@
 
         <div class="input-block-content">
             <#assign href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" />
-            <@u.systemMessage path="initiative.proposal.description" type="info" showClose=false args=[href] />
+            <@u.systemMessage path="initiative.proposal.description" type="info" args=[href] />
         </div>
         
         <div class="input-block-content">
@@ -329,7 +329,7 @@
         </div>
 
         <div class="input-block-content">
-            <@u.systemMessage path="contactInfo.ownDetails.description" type="info" showClose=false />  
+            <@u.systemMessage path="contactInfo.ownDetails.description" type="info" />  
         </div>
         
         <div class="input-block-content">
@@ -346,7 +346,7 @@
         </div>
 
         <div class="input-block-content">
-            <@u.systemMessage path="contactInfo.description" type="info" showClose=false />
+            <@u.systemMessage path="contactInfo.description" type="info" />
         </div>
 
         <div class="input-block-content">
@@ -382,7 +382,7 @@
         </div>
 
         <div class="input-block-content">
-            <@u.systemMessage path="contactInfo.ownDetails.description" type="info" showClose=false />
+            <@u.systemMessage path="contactInfo.ownDetails.description" type="info" />
         </div>
 
         <div class="input-block-content">
@@ -400,7 +400,7 @@
         </div>
 
         <div class="input-block-content">
-            <@u.systemMessage path="contactInfo.description" type="info" showClose=false />
+            <@u.systemMessage path="contactInfo.description" type="info" />
         </div>
 
         <div class="input-block-content">

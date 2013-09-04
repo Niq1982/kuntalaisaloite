@@ -194,7 +194,7 @@
         <h3><@u.message "invitations.addAuthor.title" /></h3>
         
         <div class="input-block-content no-top-margin">
-            <@u.systemMessage path="invitation.description" type="info" showClose=false />
+            <@u.systemMessage path="invitation.description" type="info" />
         </div>
 
         <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-send" class="sodirty" novalidate>
@@ -259,7 +259,7 @@
             <@authorDetailsById authors RequestParameters['deleteAuthor'] />
         </#if>
         
-        <@u.systemMessage path="deleteAuthor.confirm.warning" type="warning" showClose=false />
+        <@u.systemMessage path="deleteAuthor.confirm.warning" type="warning" />
         
         <div class="input-block-content">
             <button type="submit" name="${UrlConstants.ACTION_DELETE_AUTHOR}" id="modal-${UrlConstants.ACTION_DELETE_AUTHOR}" value="${UrlConstants.ACTION_DELETE_AUTHOR}" class="small-button"><span class="small-icon cancel"><@u.message "action.deleteAuthor.confirm" /></button>

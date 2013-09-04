@@ -99,7 +99,7 @@
                 <div class="view-block">
                     <h2><@u.message "management.sendToReview.title" /></h2>
                     
-                    <@u.systemMessage path="management.sendToReview.description" type="info" showClose=false />
+                    <@u.systemMessage path="management.sendToReview.description" type="info" />
             
                     <br/>
                     <div class="column col-1of2">

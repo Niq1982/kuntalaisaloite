@@ -26,11 +26,11 @@
     </h1>
 
     <div class="msg-block">
-        <@u.systemMessage path="ownInitiatives.description" type="info" cssClass="first" showClose=false />
+        <@u.systemMessage path="ownInitiatives.description" type="info" cssClass="first" />
         
         <#-- Initiative list EMPTY -->
         <#if !initiatives?? || initiatives?size == 0>
-            <@u.systemMessage path="ownInitiatives.empty" type="info" showClose=false />
+            <@u.systemMessage path="ownInitiatives.empty" type="info" />
         </#if>    
     </div>
     

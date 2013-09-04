@@ -80,7 +80,7 @@
                             
                         <#-- Search results EMPTY -->
                         <#else>
-                            <@u.systemMessage path="front.listEmpty" type="info" showClose=false />
+                            <@u.systemMessage path="front.listEmpty" type="info" />
                         </#if>
                     </div>
                 

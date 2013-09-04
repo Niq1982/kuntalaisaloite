@@ -47,7 +47,7 @@
 
     &.msg-info {
         background-color: @infoColor;
-        background-position: -2986px center;
+        background-position: -2986px 1em;  // icon is tied to top as info-boxes can have multiple lines
         
         .close-msg {
             background:@borderGray;
@@ -131,8 +131,6 @@
 .field-error {
     margin:0 0 -0.2em 0;
     padding:6px 25px 6px 20px;
-    //padding:6px 25px 6px 60px;
-    //background: @grayGradient2 url("../../img/icon-msg-error.png?version=${timestamp}") no-repeat 20px 15px;
     background: @grayGradient2;
     
     font-size:0.9em;
@@ -143,6 +141,7 @@
 
 // Exception for the frontpage
 // Message floats over the images
+// TODO: logout success message
 .image-container {
     .system-msg {
         top:1em;
@@ -155,7 +154,6 @@
     margin:1em 0 30px 0;
     padding:15px 25px 15px 126px;
     font-size:0.9em;
-    //border-left:4px solid #c3cc13;
     border-left:4px solid @secondaryColor;
     
     background:#fff url("../../img/icon-msg-summary.png?version=${timestamp}") no-repeat 32px 27px;
@@ -190,5 +188,16 @@
         &:first-child {
             border:0;
         }
+    }
+}
+
+// Use smaller version inside the modals.
+.modal {
+    .msg-block.errors-summary {
+        margin:0;
+        padding:15px 25px 15px 60px;
+        background:url("../../img/icon-system-messages.png?version=${timestamp}") no-repeat -1986px 1em;
+        border-left:none;
+        
     }
 }
