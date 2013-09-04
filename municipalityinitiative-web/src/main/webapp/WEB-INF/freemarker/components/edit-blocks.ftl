@@ -229,7 +229,7 @@
     </div>
 
     <div class="input-block-content">
-        <@f.textField path="initiative.participantEmail" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
+        <@f.textField path="initiative.participantEmail" required="required" optional=false cssClass="large" attributes='data-type="email"' maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
     </div>
 </#macro>
 

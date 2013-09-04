@@ -204,7 +204,7 @@
                 <p><@f.fieldRequiredInfo /></p>
             
                 <@f.textField path="newInvitation.authorName" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_NAME_MAX />
-                <@f.textField path="newInvitation.authorEmail" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
+                <@f.textField path="newInvitation.authorEmail" required="required" optional=false cssClass="large" attributes='data-type="email"' maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
             </div>
 
             <div class="input-block-content no-top-margin">

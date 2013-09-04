@@ -81,7 +81,7 @@
             </div>
             
             <div class="input-block-content">
-                <@f.textField path="authorMessage.contactEmail" required="required" optional=true cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
+                <@f.textField path="authorMessage.contactEmail" required="required" optional=true cssClass="large" attributes='data-type="email"' maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
             </div>
 
             <div class="input-block-content">
@@ -171,7 +171,7 @@
 
             <#else>
                 <div class="input-block-content">
-                    <@f.textField path="participant.participantEmail" required="required" optional=true cssClass="large" maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
+                    <@f.textField path="participant.participantEmail" required="required" optional=true cssClass="large" attributes='data-type="email"' maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
                 </div>
             </#if>
 

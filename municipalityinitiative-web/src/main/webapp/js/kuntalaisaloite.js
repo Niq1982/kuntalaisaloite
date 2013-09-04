@@ -432,7 +432,8 @@ var initiativeType = (function() {
 		}
 
 		// Reset error messages when user switches initiative type
-		$('.msg-error').remove();
+		$('.field-error').remove();
+		$('input[type="text"], textarea').removeClass('error');
 	};
 
 	if(checkErrors().normal){
@@ -714,6 +715,58 @@ var municipalitySelection = (function() {
 
 
 /**
+* Clear field errors
+* ======================
+* 
+* Remove red-border from fields with error
+* when user is typing
+* 
+*/
+
+var clearFieldErrors = (function() {
+	function init(){
+		var input = 		$('input[type="text"], textarea'),
+			errorClass =	'error',
+			hasErrors = ($('#errors-summary').length > 0),
+			
+		isEmail = function(e){
+			return (e.data('type') === 'email');
+		},
+		toggleError = function(field, clear){
+			if (clear) {
+				field.removeClass(errorClass);
+			} else {
+				field.addClass(errorClass);
+			}
+		};
+		
+	    input.keyup(function(e) {
+	    	var thisField = $(this);
+	    	
+	    	if ( isEmail(thisField) ) {
+	    		if (validateEmail(thisField.val())) {
+	    			toggleError(thisField, true);
+				} else if (hasErrors) {
+					toggleError(thisField, false);
+	    		}
+	    	} else {
+	    		toggleError(thisField, true);
+	    	}
+	    });
+	}
+    
+    init();
+    
+    // return for modal
+    return {
+    	init:init
+    };
+}());
+
+//clearFieldErrors.init();
+
+
+/**
 * Simple form validation
 * ======================
 * 
@@ -979,6 +1032,7 @@ $('.municipality-filter').change( function() {
 		    },
 		    onLoad: function(){
 		    	tooltip.load();
+		    	clearFieldErrors.init();
 		    },
 		    closeOnClick: false,	// disable this for modal dialog-type of overlays
 		    load: true				// load it immediately after the construction
@@ -1255,7 +1309,6 @@ $.DirtyForms.dialog = {
 		try {
 			generateModal(modalData.formModifiedNotification(), "minimal");
 		} catch(e) {
-			// TODO: What to do in here? Should we just skip confirmation?
 			console.log(e);
 		}
 	},
@@ -1324,7 +1377,7 @@ var editMunicipality = (function() {
 	
 	$('.js-edit-municipality').click( function(){
 		$('.municipalities .active').removeClass('active');
-		$('.msg-error').remove(); // do not keep errors when user clicks to open modal
+		$('.field-error').remove(); // do not keep errors when user clicks to open modal
 		$(this).addClass('active');
 	});
 	
