@@ -176,7 +176,7 @@
  *        Css-class 'auto-hide' removes message in a defined interval if enabled in JavaScript.
  * @param showClose show button for closing message
 -->
-<#macro systemMessage path type="" cssClass="" showClose=true args=[]>
+<#macro systemMessage path type="" cssClass="" showClose=false args=[]>
     <#if type!="">
         <div class="system-msg msg-${type} ${cssClass}">
             <@messageHTML path args /><#if showClose><span class="close-msg">x</span></#if>
@@ -237,7 +237,6 @@
                     <#elseif requestMessage == RequestMessage.PARTICIPATE_VERIFIABLE>
                         <@messageHTML requestMessage />
                         <a href="${urls.logout()}" class="small-button"><span class="small-icon logout"><@message "common.logout" /></span></a><a href="${urls.baseUrl}/${locale}" class="small-button push close"><@message "modal.continueBrowsing" /></a>
-                        
                     <#else>
                         <@messageHTML requestMessage />
                     </#if>
@@ -257,7 +256,7 @@
                     Use cssClass 'auto-hide' if message is removed automatically with a delay.
                     Requires function to be enabled from JavaScript.
                 -->
-                <@systemMessage path=requestMessage type="success" cssClass="" />
+                <@systemMessage path=requestMessage type="success" cssClass="wide" />
             <#else>
                 <@systemMessage path=requestMessage type=requestMessage.type?lower_case />
             </#if>
@@ -362,7 +361,7 @@
             <h3><@message "formError.summary.title" /></h3>
             <ul class="no-style">
                 <#list spring.status.errors.allErrors as error>
-                    <li><#if error.field??><strong><a href="#${error.field}-error"><@message prefix+fieldLabelKey(error.field) /></a>:</strong> </#if><#noescape>${springMacroRequestContext.getMessage(error)}</#noescape></li>
+                    <li><#if error.field??><strong><@message prefix+fieldLabelKey(error.field) />:</strong> </#if><#noescape>${springMacroRequestContext.getMessage(error)}</#noescape></li>
                 </#list>
             </ul>
         </div>

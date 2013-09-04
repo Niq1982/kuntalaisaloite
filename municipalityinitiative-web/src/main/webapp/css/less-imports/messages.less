@@ -12,15 +12,42 @@
     position:relative;
     padding: 15px 25px 15px 60px;
     margin:1em 0;
-    //border-width:1px; // separated for better overriding
     border-style:solid;
     border:none;
 
     font-size:0.9em;
     text-align:left;
+    
+    background:url("../../img/icon-system-messages.png?version=${timestamp}") no-repeat -3000px center;
+        
+    .close-msg {
+        position:absolute;
+        right:15px;
+        top:50%;
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        line-height: 13px;
+        text-align: center;
+        font-size:0.85em;
+        margin-top:-8px;
+        
+        font-family: Verdana, sans-serif;
+        color:#fff;
+        opacity:0.5;
+        cursor:pointer;
+        
+        .transition(opacity, 0.3s, ease-in);
+    }
+    &:hover {
+        .close-msg {
+            opacity:1;
+        }
+    }  
 
     &.msg-info {
-        background: @grayGradient2 url("../../img/icon-msg-info.png?version=${timestamp}") no-repeat 20px 15px;
+        background-color: @infoColor;
+        background-position: -2986px center;
         
         .close-msg {
             background:@borderGray;
@@ -28,7 +55,8 @@
     }
 
     &.msg-warning {
-        background: @warningColor url("../../img/icon-msg-warning.png?version=${timestamp}") no-repeat 18px 15px;
+        background-color: @warningColor;
+        background-position: -3986px center;
 
         .close-msg {
             background:#e9c000;
@@ -36,8 +64,10 @@
     }
 
     &.msg-error {
+        background-color: @errorColor;
+        background-position: -1986px center;
+        
         color:#fff;
-        background: #fa353d url("../../img/icon-msg-error.png?version=${timestamp}") no-repeat 15px 15px;
         
         a {
             color:#fff;
@@ -55,15 +85,39 @@
     }
 
     &.msg-success {
-        padding:23px 25px 23px 60px;
-    
-        background: @successColor url("../../img/icon-msg-success.png?version=${timestamp}") no-repeat 15px 15px;
+        background-color: @successColor;
+        background-position: 14px center;
+        
         color:#fff;
         
         .close-msg {
             background:@mainColorDark;
-            color: @successColor;
+            color: #fff;
+            font-size:0.8em;
         }
+        
+        &.wide {
+            padding:23px 25px 23px 90px;
+            background-position: 46px center;
+            font-size:1em;
+            
+            .close-msg {
+                right:26px;
+            }
+        }
+        
+        &.frontpage {
+        
+            color:#fff;
+            font-size:1em;
+            
+            .close-msg {
+                background:@mainColorDark;
+                color: @successColor;
+            }
+        
+        }
+        
     }
     
     // General message style for narrow columns
@@ -71,31 +125,7 @@
         background-image:none;
         padding:5px;
         margin:5px 5px 5px 0;
-    }
-    
-    .close-msg {
-        position:absolute;
-        right:15px;
-        top:18px;
-        display: inline-block;
-        width: 16px;
-        height: 16px;
-        line-height: 13px;
-        //border-radius:0.2em;
-        text-align: center;
-        font-size:0.85em;
-        
-        color:#fff;
-        opacity:0.5;
-        cursor:pointer;
-        
-        .transition(opacity, 0.3s, ease-in);
-    }
-    &:hover {
-        .close-msg {
-            opacity:1;
-        }
-    }    
+    }  
 }
 
 .field-error {
@@ -107,6 +137,8 @@
     
     font-size:0.9em;
     color: @errorColor;
+    
+    .message { margin-left:1.2em; }
 }
 
 // Exception for the frontpage

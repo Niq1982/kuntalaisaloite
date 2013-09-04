@@ -13,7 +13,7 @@
 <#macro showError cssClass="">
     <#if spring.status.error>
         <#list spring.status.errorMessages as error>
-            <#noescape><div id="${spring.status.expression}-error" class="field-error ${cssClass}"><span class="icon-small icon-16 cancel"></span> <span class="push">${error!''}</span></div></#noescape>
+            <#noescape><div id="${spring.status.expression}-error" class="field-error ${cssClass}"><span class="icon-small icon-16 cancel"></span> <span class="message">${error!''}</span></div></#noescape>
         </#list>
     </#if>
 </#macro>
