@@ -99,8 +99,7 @@
                 <div class="view-block">
                     <h2><@u.message "management.sendToReview.title" /></h2>
                     
-                    <#-- TODO: FIX link -->
-                    <#assign href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" />
+                    <#assign href="${urls.help(HelpPage.TERMS_OF_USE.getUri(locale))}" />
                     <@u.systemMessage path="management.sendToReview.description" type="info" args=[href] />
             
                     <br/>
