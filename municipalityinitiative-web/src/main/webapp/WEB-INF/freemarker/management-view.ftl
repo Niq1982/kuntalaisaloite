@@ -99,7 +99,9 @@
                 <div class="view-block">
                     <h2><@u.message "management.sendToReview.title" /></h2>
                     
-                    <@u.systemMessage path="management.sendToReview.description" type="info" />
+                    <#-- TODO: FIX link -->
+                    <#assign href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" />
+                    <@u.systemMessage path="management.sendToReview.description" type="info" args=[href] />
             
                     <br/>
                     <div class="column col-1of2">
