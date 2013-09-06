@@ -175,15 +175,16 @@
  * @param cssClass for custom styling. Multiple classes are separated with space.
  *        Css-class 'auto-hide' removes message in a defined interval if enabled in JavaScript.
  * @param showClose show button for closing message
+ * @param useCloseTarget if set to false a another parent element can be used as target
 -->
-<#macro systemMessage path type="" cssClass="" showClose=false args=[]>
+<#macro systemMessage path type="" cssClass="" showClose=false useCloseTarget=true args=[]>
     <#if type!="">
-        <div class="system-msg msg-${type} ${cssClass}">
+        <div class="system-msg msg-${type} ${cssClass} <#if showClose && useCloseTarget>js-close-msg-target</#if>">
             <@messageHTML path args /><#if showClose><span class="close-msg">x</span></#if>
         </div>
     <#else>
         <#assign msgType=path?split('.') />
-        <div class="system-msg msg-${msgType[0]} ${cssClass}">
+        <div class="system-msg msg-${msgType[0]} ${cssClass} <#if showClose && useCloseTarget>js-close-msg-target</#if>">
             <@messageHTML path args /><#if showClose><span class="close-msg">x</span></#if>
         </div>
     </#if>
@@ -262,6 +263,33 @@
             </#if>
         </#if>
     </#list>
+</#macro>
+
+<#--
+ * frontpageRequestMessage
+ *
+ * Request message uses systemMessage macro to show messages.
+ * Message types are SUCCESS and WARNING (INFO and ERROR might be implemented later on).
+ *
+ * @param messageList
+-->
+<#macro frontpageRequestMessage messageList>
+    
+    <#list messageList as requestMessage>
+        <div class="front-system-msg js-close-msg-target reveal-msg">
+            <div class="container">
+    
+                <#if requestMessage.type == RequestMessageType.SUCCESS>
+                    <@systemMessage path=requestMessage type="success" cssClass="wide" showClose=true useCloseTarget=false />
+                <#else>
+                    <#-- NOT in use for frontpage at this moment. Some styling is needed -->
+                    <@systemMessage path=requestMessage type=requestMessage.type?lower_case />
+                </#if>
+
+            </div>
+        </div>
+    </#list>
+            
 </#macro>
 
 <#--

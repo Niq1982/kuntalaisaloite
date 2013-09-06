@@ -140,10 +140,18 @@
 }
 
 // Exception for the frontpage
-// Message floats over the images
-// TODO: logout success message
+@frontSystemMsgHeight: 4.28em;
+
 .front-system-msg {
     background: #f6f6f6;
+    height:0;
+    overflow:hidden;
+
+    .transition(height, 0.7s, cubic-bezier(1.000, 0.000, 0.000, 1.000));
+    
+    &.animate {
+        height:@frontSystemMsgHeight;
+    }
     
     .system-msg {
         margin:0;
@@ -152,7 +160,18 @@
             padding-left:60px;
             background:url("../../img/icon-system-messages.png?version=${timestamp}") no-repeat -986px center;
             color: @bodyColor;
+            
+            .close-msg {
+                background:@borderGray;
+                color:#f6f6f6;
+            }
         }
+    }
+}
+// NOJS users has to see the message
+.no-js {
+    .front-system-msg {
+        height:@frontSystemMsgHeight;
     }
 }
 

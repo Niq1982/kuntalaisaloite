@@ -1,5 +1,5 @@
 @font-face {
-  font-family: 'PT Sans';
+  font-family: "PT Sans";
   font-style: normal;
   font-weight: 400;
   
@@ -9,7 +9,7 @@
   
 }
 @font-face {
-  font-family: 'PT Sans';
+  font-family: "PT Sans";
   font-style: normal;
   font-weight: 700;
   
@@ -18,7 +18,7 @@
        url("fonts/PTSans-Bold.ttf") format("truetype");
 }
 @font-face {
-  font-family: 'PT Sans';
+  font-family: "PT Sans";
   font-style: italic;
   font-weight: 400;
   
@@ -27,7 +27,7 @@
        url("fonts/PTSans-Italic.ttf") format("truetype");
 }
 @font-face {
-  font-family: 'PT Sans';
+  font-family: "PT Sans";
   font-style: italic;
   font-weight: 700;
   

@@ -1,4 +1,3 @@
-
 var localization,
 	generateModal,
 	generateJsMessage,
@@ -245,12 +244,17 @@ $(document).ready(function () {
 	    console = { log: function() {} };
 	}
 	
+	// Reveal system message
+	$('.reveal-msg').addClass('animate'); // for CSS3 transition used in frontpage logout-message
+	
 	// Remove system message
 	$('.close-msg').click(function(){
-		var parent = $(this).closest('div').fadeOut('speedSlow', function(){
+		var parent = $(this).closest('.js-close-msg-target').fadeOut('speedSlow', function(){
 			parent.remove();
 		}); 
 	});
+	
+	
 	
 	// Action for external links
 	$('a.external').click(function(){
