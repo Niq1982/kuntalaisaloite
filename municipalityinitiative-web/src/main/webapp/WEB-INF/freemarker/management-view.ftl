@@ -121,10 +121,10 @@
                         
                         <br class="clear" />
                         <div class="column col-60">
-                            <a href="${managementURL}?send-to-review=confirm-collect#send-to-review" id="js-send-to-review-collect" class="large-button js-send-to-review-collect"><span class="large-icon save-and-send"><@u.messageHTML "action.sendToReview.bigBtn" /></span></a>
+                            <a href="${managementURL}?send-to-review=confirm-collect#send-to-review" id="js-send-to-review-collect" class="large-button js-send-to-review-collect"><span class="large-icon next"><@u.messageHTML "action.sendToReview.bigBtn" /></span></a>
                         </div>
                         <div class="column col-40 last">
-                            <a href="${managementURL}?send-to-review=confirm#send-to-review" id="js-send-to-review" class="large-button js-send-to-review"><span class="large-icon mail"><@u.messageHTML "action.sendToReview.doNotCollect" /></span></a>
+                            <a href="${managementURL}?send-to-review=confirm#send-to-review" id="js-send-to-review" class="large-button js-send-to-review"><span class="large-icon next-secondary"><@u.messageHTML "action.sendToReview.doNotCollect" /></span></a>
                         </div>
                         <br class="clear" />
                         

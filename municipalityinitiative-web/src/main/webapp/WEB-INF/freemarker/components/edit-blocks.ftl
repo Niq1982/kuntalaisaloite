@@ -222,7 +222,11 @@
     
     <div class="input-block-content">
         <#if noscript>
-            <@u.systemMessage path="initiative.participantEmail.description.noscript"+user.isVerifiedUser()?string(".verifiedUser","") type="info" />
+            <#if enableVerifiedInitiatives>
+                <@u.systemMessage path="initiative.participantEmail.description.noscript"+user.isVerifiedUser()?string(".verifiedUser","") type="info" />
+            <#else>
+                <@u.systemMessage path="initiative.participantEmail.description.noscript.NOVETUMA" type="info" />
+            </#if>
         <#else>
             <@u.systemMessage path="initiative.participantEmail.description" type="info" />
         </#if>
