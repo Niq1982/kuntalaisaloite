@@ -24,10 +24,6 @@ ${authorMessage.message}
 
 <@b.separator />
 
-<@b.adminViewLink type=type verified=initiative.type.verifiable />
-
-<@b.separator />
-
 <@b.emailFooter type />
 
 <#-- Switch language -->
@@ -51,10 +47,6 @@ ${authorMessage.contactEmail}
 <@u.message keyPrefix+".message" />
 
 ${authorMessage.message}
-
-<@b.separator />
-
-<@b.adminViewLink type=type verified=initiative.type.verifiable />
 
 <@b.separator />
 
