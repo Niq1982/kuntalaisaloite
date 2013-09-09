@@ -40,7 +40,7 @@ public class BaseController {
     static final String OM_PICIW_ID = "omPiwicId";
 
     @Resource
-    private EnvironmentSettings environmentSettings;
+    protected EnvironmentSettings environmentSettings;
 
     @Resource
     private BeansWrapper freemarkerObjectWrapper;
