@@ -2,7 +2,6 @@ package fi.om.municipalityinitiative.web.controller;
 
 import com.google.common.base.Strings;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
-import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
@@ -15,7 +14,6 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.util.Locale;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
