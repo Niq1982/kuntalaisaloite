@@ -103,23 +103,33 @@
                     <@u.systemMessage path="management.sendToReview.description" type="info" args=[href] />
             
                     <br/>
-                    <div class="column col-1of2">
-                        <h3><@u.message "management.sendToReview.collect.title" /></h3>
-                        <p><@u.message "management.sendToReview.collect" /></p>
+                    <div class="faux-cols">
+                        <div class="column col-60">
+                            <h3><@u.message "management.sendToReview.collect.title" /></h3>
+    
+                            <div class="choose-workflow"> </div>
+                            
+                            <p><@u.message "management.sendToReview.collect" /></p>
+                        </div>
+                        <div class="column col-40 last">
+                            <h3><@u.message "management.sendToReview.doNotCollect.title" /><br /><br /></h3>
+                            
+                            <div class="choose-workflow send"> </div>
+                            
+                            <p><@u.message "management.sendToReview.doNotCollect" /></p>
+                        </div>
+                        
+                        <br class="clear" />
+                        <div class="column col-60">
+                            <a href="${managementURL}?send-to-review=confirm-collect#send-to-review" id="js-send-to-review-collect" class="large-button js-send-to-review-collect"><span class="large-icon save-and-send"><@u.messageHTML "action.sendToReview.bigBtn" /></span></a>
+                        </div>
+                        <div class="column col-40 last">
+                            <a href="${managementURL}?send-to-review=confirm#send-to-review" id="js-send-to-review" class="large-button js-send-to-review"><span class="large-icon mail"><@u.messageHTML "action.sendToReview.doNotCollect" /></span></a>
+                        </div>
+                        <br class="clear" />
+                        
+                        <div class="border pos-60"> </div>
                     </div>
-                    <div class="column col-1of2 last">
-                        <h3><@u.message "management.sendToReview.doNotCollect.title" /><br /><br /></h3>
-                        <p><@u.message "management.sendToReview.doNotCollect" /></p>
-                    </div>
-                    
-                    <br class="clear" />
-                    <div class="column col-1of2">
-                        <a href="${managementURL}?send-to-review=confirm-collect#send-to-review" id="js-send-to-review-collect" class="large-button js-send-to-review-collect"><span class="large-icon save-and-send"><@u.messageHTML "action.sendToReview.bigBtn" /></span></a>
-                    </div>
-                    <div class="column col-1of2 last">
-                        <a href="${managementURL}?send-to-review=confirm#send-to-review" id="js-send-to-review" class="large-button js-send-to-review"><span class="large-icon mail"><@u.messageHTML "action.sendToReview.doNotCollect" /></span></a>
-                    </div>
-                    <br class="clear" />
                 </div>
             
             </#if>
