@@ -174,13 +174,13 @@
     
     <#if !admin && !initiative.sentTime.present && !participateSuccess>
         <div class="participants-block ${showForm?string("hidden","")} noprint">
-        <#if initiative.verifiable && !user.isVerifiedUser()>
-                <a class="small-button" href="${urls.login(currentRequestUri+"?show-participate")}"><span class="small-icon save-and-send"><@u.message "action.authenticate" /></span></a>
-        <#else>
-            <#if !user.hasParticipatedToInitiative(initiative.id) && (!initiative.verifiable || user.homeMunicipality.notPresent || (user.homeMunicipality.value.id == initiative.municipality.id))>
-                <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>
+            <#if initiative.verifiable && !user.isVerifiedUser()>
+                    <a class="small-button" href="${urls.login(currentRequestUri+"?show-participate")}"><span class="small-icon save-and-send"><@u.message "action.authenticate" /></span></a>
+            <#else>
+                <#if !user.hasParticipatedToInitiative(initiative.id) && (!initiative.verifiable || user.homeMunicipality.notPresent || (user.homeMunicipality.value.id == initiative.municipality.id))>
+                    <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>
+                </#if>
             </#if>
-        </#if>
         </div>
         <#if !user.hasParticipatedToInitiative(initiative.id)>
             <div class="participants-block last ${showForm?string("hidden","")} noprint">
