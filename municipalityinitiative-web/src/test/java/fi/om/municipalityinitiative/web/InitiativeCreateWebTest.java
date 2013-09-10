@@ -251,7 +251,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         getElemContaining(getMessage(MSG_BTN_PREPARE_SEND), "button").click();
 
         String msgSuccessPrepare = MSG_SUCCESS_PREPARE;
-        assertSuccesPageWithMessage(msgSuccessPrepare);
+        assertTextByTag("h1", "Linkki aloitteen tekemiseen on lähetetty sähköpostiisi");
         assertTextByTag("strong", CONTACT_EMAIL);
         System.out.println("--- add_initiative_content OK");
     }
