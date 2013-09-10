@@ -105,7 +105,7 @@ public class EmailMessageConstructor {
                 helper.addTo(to);
             }
             try {
-                helper.setFrom(environmentSettings.getDefaultReplyTo(), "Kuntalaisaloite");
+                helper.setFrom(environmentSettings.getDefaultReplyTo(), "Kuntalaisaloitepalvelu");
             } catch (UnsupportedEncodingException e) {
                 helper.setFrom(environmentSettings.getDefaultReplyTo());
             }
