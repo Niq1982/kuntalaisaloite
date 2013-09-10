@@ -38,8 +38,7 @@
         </noscript>
     </#if>
 
-    <#if hasManagementRightForInitiative && !initiative.sent>
-        <#--<a class="small-button right" href="${urls.management(initiative.id)}"><span class="small-icon management"><@u.message "link.to.managementView" /></span></a>-->
+    <#if user.hasRightToInitiative(initiative.id) && !initiative.sent>
         <@u.returnPrevious urls.management(initiative.id) "link.to.managementView" />
     <#else>
         <@u.returnPrevious urls.search() "link.to.searchView" />
@@ -229,7 +228,7 @@
         </#if>
     </div>
     
-    <#if hasManagementRightForInitiative && !initiative.sent>
+    <#if user.hasRightToInitiative(initiative.id) && !initiative.sent>
         <@u.returnPrevious urls.management(initiative.id) "link.to.managementView" />
     <#else>
         <@u.returnPrevious urls.search() "link.to.searchView" />
