@@ -159,6 +159,10 @@
     </filter-mapping>
     <filter-mapping>
         <filter-name>securityFilter</filter-name>
+        <url-pattern>/om-login/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>securityFilter</filter-name>
         <url-pattern>/sv/*</url-pattern>
     </filter-mapping>
 
