@@ -52,14 +52,11 @@ public class DefaultLoginController extends BaseLoginController {
                                            @RequestParam(required = false) String target,
                                            Model model, Locale locale, HttpServletRequest request) {
 
-        System.out.println("asd");
         userService.adminLogin(u, p, request);
         if (Strings.isNullOrEmpty(target)) {
             return new RedirectView(Urls.get(locale).frontpage());
         }
         else {
-            System.out.println("ok");
-            System.out.println(Urls.get(locale).getBaseUrl() + target);
             return new RedirectView(Urls.get(locale).getBaseUrl() + target);
         }
 
