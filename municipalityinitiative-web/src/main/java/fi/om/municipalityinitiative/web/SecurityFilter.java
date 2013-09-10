@@ -112,10 +112,10 @@ public class SecurityFilter implements Filter {
             try {
                 csrfToken = verifyAndGetCurrentCSRFToken(request);
             } catch (CSRFException e) {
-                log.info("CSRF tokens invalid, creating fresh session " + request.getRequestURL().toString());
+                log.info("CSRF tokens invalid, creating fresh session " + request.getRequestURL().toString() + " ("+e.getMessage()+")");
                 request.getSession().invalidate();
-                request.setAttribute(COOKIE_ERROR, true);
                 csrfToken = initializeCSRFToken(request, response);
+                request.setAttribute(COOKIE_ERROR, true);
             }
         }
         else if (IS_POST(request)) {
@@ -152,8 +152,10 @@ public class SecurityFilter implements Filter {
         String sessionToken = (String) getExistingSession(request).getAttribute(CSRF_TOKEN_NAME);
 
         // Just to be sure no one has hijacked our session
-        if (cookieToken == null || !cookieToken.equals(sessionToken)) {
-            throw new CSRFException("CSRF session token missing or doesn't match cookie");
+        if (cookieToken == null) {
+            throw new CSRFException("CSRF session token missing ");
+        } else if (!cookieToken.equals(sessionToken)) {
+            throw new CSRFException("CSRF session doesn't match cookie");
         }
 
         // Double Submit Cookie
