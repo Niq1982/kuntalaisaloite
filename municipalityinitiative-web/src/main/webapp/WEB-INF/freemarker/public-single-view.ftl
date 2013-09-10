@@ -15,7 +15,11 @@
 -->
 <@l.main "page.initiative.public" initiative.name!"">
 
-    <@u.returnPrevious urls.search() + "?orderBy=latestSent&show=sent" "link.to.searchView" />
+    <#if user.hasRightToInitiative(initiative.id) && !initiative.sent>
+        <@u.returnPrevious urls.management(initiative.id) "link.to.managementView" />
+    <#else>
+        <@u.returnPrevious urls.search() + "?orderBy=latestSent&show=sent" "link.to.searchView" />
+    </#if>
 
     <@e.initiativeTitle initiative />
 
