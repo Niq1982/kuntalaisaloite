@@ -7,6 +7,8 @@ import fi.om.municipalityinitiative.exceptions.CookiesRequiredException;
 import fi.om.municipalityinitiative.exceptions.VerifiedLoginRequiredException;
 import fi.om.municipalityinitiative.service.EncryptionService;
 import fi.om.municipalityinitiative.util.UrlHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.NestedServletException;
@@ -31,9 +33,11 @@ public class SecurityFilter implements Filter {
     public static final String UNWANTED_HIDDEN_EMAIL_FIELD = "email";
     private UrlHelper urlPathHelper = new UrlHelper();
 
+    private final Logger log = LoggerFactory.getLogger(SecurityFilter.class);
+
     @Resource
     private EncryptionService encryptionService;
-    
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
     }
@@ -43,10 +47,10 @@ public class SecurityFilter implements Filter {
         response.setHeader("Pragma", "no-cache");                                   // HTTP 1.0
         response.setDateHeader("Expires", 0);                                       // Proxies
     }
-    
+
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
-            FilterChain chain) throws IOException, ServletException {
+                         FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
@@ -108,6 +112,8 @@ public class SecurityFilter implements Filter {
             try {
                 csrfToken = verifyAndGetCurrentCSRFToken(request);
             } catch (CSRFException e) {
+                log.info("CSRF tokens invalid, creating fresh session " + request.getRequestURL().toString());
+                request.getSession().invalidate();
                 request.setAttribute(COOKIE_ERROR, true);
                 csrfToken = initializeCSRFToken(request, response);
             }
@@ -194,7 +200,7 @@ public class SecurityFilter implements Filter {
         // For enabling httpOnly we need to write the raw cookie data instead of response.addCookie(cookie)
         response.setHeader("SET-COOKIE", name+"="+value+"; Path="+contextPath+"; Secure; HttpOnly");
     }
-    
+
     private void propagateException(Exception e) throws IOException, ServletException {
         Throwables.propagateIfInstanceOf(e, IOException.class);
         Throwables.propagateIfInstanceOf(e, ServletException.class);
