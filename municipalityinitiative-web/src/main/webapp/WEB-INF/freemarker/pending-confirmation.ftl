@@ -18,10 +18,6 @@
 <@l.main page="page.pending.confirmation" pageTitle=pageTitle!"" requestMessagesON=false>
 
 <h1><#noescape>${pageTitle!""}</#noescape></h1>
-    
-<#if requestMessages?? && (requestMessages?size > 0)>
-    <@u.requestMessage requestMessages />
-</#if>
 
 <div class="view-block first">
     <p><@u.message "create.pendingConfirmation.linkSentTo" /> <strong>${requestAttribute!""}</strong>.</p>
