@@ -94,7 +94,6 @@ public class PublicInitiativeController extends BaseController {
                     municipalityService.findAllMunicipalities(locale),
                     initiativeInfo.getParticipantCount(),
                     new ParticipantUICreateDto(),
-                    userService.hasManagementRightForInitiative(initiativeId, request),
                     new AuthorUIMessage()).view(model, Urls.get(locale).alt().view(initiativeId));
         }
         else {
@@ -188,7 +187,6 @@ public class PublicInitiativeController extends BaseController {
                         authorService.findPublicAuthors(initiativeId), municipalityService.findAllMunicipalities(locale),
                         publicInitiative.getParticipantCount(),
                         participant,
-                        userService.hasManagementRightForInitiative(initiativeId, request),
                         new AuthorUIMessage()).view(model, Urls.get(locale).alt().view(initiativeId));
             }
         }
@@ -338,7 +336,6 @@ public class PublicInitiativeController extends BaseController {
                     municipalityService.findAllMunicipalities(locale),
                     publicInitiative.getParticipantCount(),
                     new ParticipantUICreateDto(),
-                    userService.hasManagementRightForInitiative(initiativeId, request),
                     authorUIMessage).view(model, Urls.get(locale).alt().view(initiativeId));
         }
     }
