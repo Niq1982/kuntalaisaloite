@@ -45,6 +45,11 @@
         <param-value>prod</param-value>
     </context-param>
 
+    <context-param>
+        <param-name>org.mortbay.jetty.servlet.SessionURL</param-name>
+        <param-value>none</param-value>
+    </context-param>
+
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
@@ -151,6 +156,10 @@
     <filter-mapping>
         <filter-name>securityFilter</filter-name>
         <url-pattern>/fi/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>securityFilter</filter-name>
+        <url-pattern>/om-login/*</url-pattern>
     </filter-mapping>
     <filter-mapping>
         <filter-name>securityFilter</filter-name>
