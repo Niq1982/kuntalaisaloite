@@ -55,4 +55,13 @@ public class EnvironmentSettings {
     public boolean isEnableVerifiedInitiatives() {
         return enableVerifiedInitiatives;
     }
+
+    public boolean hasAnyTestOptionsEnabled() {
+        return testConsoleOutput
+                || testSendTo.isPresent()
+                || testSendModeratorEmailsToAuthor
+                || testSendMunicipalityEmailsToAuthor;
+
+
+    }
 }
