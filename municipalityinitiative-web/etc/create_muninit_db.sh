@@ -43,7 +43,7 @@ fi
 export PGCLIENTENCODING="UTF8"
 
 # Create database as superuser
-psql -U postgres <<EOF
+psql -h localhost -U postgres <<EOF
 DROP DATABASE IF EXISTS muninitdb;
 DROP USER IF EXISTS municipalityinitiative;
 
@@ -53,7 +53,7 @@ CREATE USER municipalityinitiative WITH PASSWORD '$DBPWD';
 EOF
 
 # Create schema 
-psql -U postgres -d muninitdb <<EOF
+psql -h localhost -U postgres -d muninitdb <<EOF
 CREATE SCHEMA municipalityinitiative;
 \q
 EOF
@@ -65,12 +65,12 @@ ls muninit_schema/*.sql | sort -f |
   while read file
   do
     echo "-- $file"
-    psql -U postgres -d muninitdb --single-transaction -f "$file"
-    psql -U postgres -e -d muninitdb -c "insert into municipalityinitiative.schema_version (script) values ('$file');" || exit 1    
+    psql -h localhost -U postgres -d muninitdb --single-transaction -f "$file"
+    psql -h localhost -U postgres -e -d muninitdb -c "insert into municipalityinitiative.schema_version (script) values ('$file');" || exit 1    
   done
 
 # Grant required rights
-psql -U postgres -d muninitdb <<EOF
+psql -h localhost -U postgres -d muninitdb <<EOF
 GRANT CONNECT, TEMP ON DATABASE muninitdb TO municipalityinitiative;
 GRANT USAGE ON SCHEMA municipalityinitiative TO municipalityinitiative;
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA municipalityinitiative TO municipalityinitiative;

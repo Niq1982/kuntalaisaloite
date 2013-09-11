@@ -13,7 +13,7 @@ echo "== create_test_schema.sh =="
 export PGCLIENTENCODING="UTF8"
 
 # Drop/create schema 
-psql -U postgres -d muninitdb <<EOF
+psql -h localhost -U postgres -d muninitdb <<EOF
 DROP SCHEMA IF EXISTS muninitest CASCADE;
 DROP USER IF EXISTS muninitest;
 
@@ -29,11 +29,11 @@ ls muninit_schema/*.sql | sort -f |
   while read file
   do
     echo "-- $file"
-    psql -U postgres -d muninitdb --single-transaction -f "$file"
+    psql -h localhost -U postgres -d muninitdb --single-transaction -f "$file"
   done
 
 # Grant required rights
-psql -U postgres -d muninitdb <<EOF
+psql -h localhost -U postgres -d muninitdb <<EOF
 GRANT CONNECT, TEMP ON DATABASE muninitdb TO muninitest;
 GRANT USAGE ON SCHEMA muninitest TO muninitest;
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA muninitest TO muninitest;
