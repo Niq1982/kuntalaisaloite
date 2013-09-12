@@ -92,11 +92,9 @@ public class AuthorServiceOperations {
 
     private ContactInfo deleteVerifiedAuthor(Long initiativeId, VerifiedUserId authorToDelete) {
 
-        // TODO: Check if author is found?
-        // TODO: Check that not final author?
-
         ContactInfo contactInfo = authorDao.getVerifiedAuthor(initiativeId, authorToDelete).getContactInfo();
-        authorDao.deleteAuthor(initiativeId, authorToDelete);
+        authorDao.deleteAuthorAndParticipant(initiativeId, authorToDelete);
+        initiativeDao.denormalizeParticipantCountForVerifiedInitiative(initiativeId);
         return contactInfo;
     }
 
@@ -112,7 +110,8 @@ public class AuthorServiceOperations {
         }
         else {
             ContactInfo deletedAuthorContactInfo = authorDao.getNormalAuthor(authorToDelete).getContactInfo();
-            authorDao.deleteAuthor(authorToDelete);
+            authorDao.deleteAuthorAndParticipant(authorToDelete);
+            initiativeDao.denormalizeParticipantCountForNormalInitiative(initiativeId);
             return deletedAuthorContactInfo;
         }
     }

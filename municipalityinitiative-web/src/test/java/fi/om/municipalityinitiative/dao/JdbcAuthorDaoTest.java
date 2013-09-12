@@ -113,7 +113,7 @@ public class JdbcAuthorDaoTest {
         int originalAuthorCount = authorDao.findNormalAuthors(initiativeId).size();
         long originalParticipantCount = participantCountOfInitiative(initiativeId);
 
-        authorDao.deleteAuthor(new NormalAuthorId(authorId));
+        authorDao.deleteAuthorAndParticipant(new NormalAuthorId(authorId));
 
         assertThat(authorDao.findNormalAuthors(initiativeId), hasSize(originalAuthorCount - 1));
         assertThat(participantCountOfInitiative(initiativeId), is(originalParticipantCount - 1));
@@ -128,7 +128,7 @@ public class JdbcAuthorDaoTest {
         int originalAuthorCount = authorDao.findNormalAuthors(initiativeId).size();
         int originalParticipantCount = testHelper.getInitiative(initiativeId).getParticipantCount();
 
-        authorDao.deleteAuthor(new NormalAuthorId(authorId));
+        authorDao.deleteAuthorAndParticipant(new NormalAuthorId(authorId));
 
         assertThat(authorDao.findNormalAuthors(initiativeId), hasSize(originalAuthorCount - 1));
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(originalParticipantCount - 1));
@@ -145,7 +145,7 @@ public class JdbcAuthorDaoTest {
 
         thrown.expect(OperationNotAllowedException.class);
         thrown.expectMessage(containsString("Deleting last author is forbidden"));
-        authorDao.deleteAuthor(testHelper.getLastNormalAuthorId());
+        authorDao.deleteAuthorAndParticipant(testHelper.getLastNormalAuthorId());
     }
 
     @Test

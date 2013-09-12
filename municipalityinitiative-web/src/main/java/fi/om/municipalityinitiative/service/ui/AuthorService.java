@@ -109,7 +109,7 @@ public class AuthorService {
     private String createAuthorAndParticipant(Long initiativeId, AuthorInvitationUIConfirmDto confirmDto) {
         ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(confirmDto, initiativeId);
         String managementHash = RandomHashGenerator.longHash();
-        Long participantId = participantDao.prepareParticipant(initiativeId, confirmDto.getHomeMunicipality(), participantCreateDto.getEmail(), participantCreateDto.getMunicipalMembership(), confirmDto.getContactInfo().isShowName());
+        Long participantId = participantDao.prepareConfirmedParticipant(initiativeId, confirmDto.getHomeMunicipality(), participantCreateDto.getEmail(), participantCreateDto.getMunicipalMembership(), confirmDto.getContactInfo().isShowName());
         NormalAuthorId authorId = authorDao.createAuthor(initiativeId, participantId, managementHash);
         authorDao.updateAuthorInformation(authorId, confirmDto.getContactInfo());
         return managementHash;
