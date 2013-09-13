@@ -33,8 +33,6 @@ public class SecurityFilter implements Filter {
     public static final String UNWANTED_HIDDEN_EMAIL_FIELD = "email";
     private UrlHelper urlPathHelper = new UrlHelper();
 
-    private final Logger log = LoggerFactory.getLogger(SecurityFilter.class);
-
     @Resource
     private EncryptionService encryptionService;
 
@@ -112,7 +110,6 @@ public class SecurityFilter implements Filter {
             try {
                 csrfToken = verifyAndGetCurrentCSRFToken(request);
             } catch (CSRFException e) {
-                log.info("CSRF tokens invalid, creating fresh session " + request.getRequestURL().toString() + " ("+e.getMessage()+")");
                 request.getSession().invalidate();
                 csrfToken = initializeCSRFToken(request, response);
                 request.setAttribute(COOKIE_ERROR, true);
