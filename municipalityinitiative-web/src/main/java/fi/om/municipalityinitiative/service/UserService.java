@@ -56,7 +56,7 @@ public class UserService {
     }
 
     private static void storeLoggedInUser(HttpServletRequest request, User adminUser) {
-        request.getSession().setAttribute(LOGIN_USER_PARAMETER, adminUser);
+        request.getSession(true).setAttribute(LOGIN_USER_PARAMETER, adminUser);
     }
 
     private String saltAndEncryptPassword(String password) {

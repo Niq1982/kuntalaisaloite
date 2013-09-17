@@ -39,6 +39,7 @@ public class VetumaMockController extends BaseController {
         model.addAttribute("vetumaRequest", vetumaLoginResponse);
         model.addAttribute("municipalities", municipalityService.findAllMunicipalities(Locales.LOCALE_FI));
         // model.addAttribute("vetumaMac", encryptionService.vetumaMAC(vetumaLoginResponse.toMACString()));
+        response.setContentType("text/html; charset=ISO-8859-1");
         return "vetumamock";
 
     }
@@ -59,6 +60,7 @@ public class VetumaMockController extends BaseController {
 
         model.addAttribute("vetumaRequest", vetumaLoginResponse);
         model.addAttribute("vetumaRequestMAC", encryptionService.vetumaMAC(vetumaLoginResponse.toMACString()));
+        response.setContentType("text/html; charset=ISO-8859-1");
         return "vetumamockreturn";
 
     }

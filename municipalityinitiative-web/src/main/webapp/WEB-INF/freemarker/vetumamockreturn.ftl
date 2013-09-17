@@ -1,7 +1,9 @@
 <#escape x as x?html>
 <!DOCTYPE HTML>
 <html>
-<head></head>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
 <body>
 
 <form action="${vetumaRequest.RETURL}" method="post">

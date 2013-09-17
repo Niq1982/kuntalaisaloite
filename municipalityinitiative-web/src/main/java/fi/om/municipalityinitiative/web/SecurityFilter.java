@@ -113,11 +113,11 @@ public class SecurityFilter implements Filter {
                 request.setAttribute(COOKIE_ERROR, true);
             }
         }
-        else if (IS_POST(request)) {
+        else if (IS_POST(request) && !Urls.isVetumaURI(request.getRequestURI())) {
             csrfToken = verifyAndGetCurrentCSRFToken(request);
         }
         else {
-            throw new RuntimeException("Invalid method: " + request.getMethod());
+            return;
         }
 
         request.setAttribute(CSRF_TOKEN_NAME, csrfToken);
