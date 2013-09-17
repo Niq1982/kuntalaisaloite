@@ -155,7 +155,6 @@ public class SecurityFilter implements Filter {
 
         // Double Submit Cookie
         if (IS_POST(request) && !Urls.isVetumaURI(request.getRequestURI())) { // Do not check CSRF when returning from vetuma, it's impossible and unnecessary
-            System.out.println(request.getRequestURI());
             String requestToken = request.getParameter(CSRF_TOKEN_NAME);
             if (requestToken == null || !requestToken.equals(sessionToken)) {
                 throw new CSRFException("CSRFToken -request parameter missing or doesn't match session");
