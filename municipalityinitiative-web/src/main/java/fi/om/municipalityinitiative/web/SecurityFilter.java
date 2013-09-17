@@ -7,8 +7,6 @@ import fi.om.municipalityinitiative.exceptions.CookiesRequiredException;
 import fi.om.municipalityinitiative.exceptions.VerifiedLoginRequiredException;
 import fi.om.municipalityinitiative.service.EncryptionService;
 import fi.om.municipalityinitiative.util.UrlHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.NestedServletException;
@@ -76,7 +74,7 @@ public class SecurityFilter implements Filter {
     }
 
     private void verifiedLoginRequired(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.sendRedirect(Urls.FI.login(urlPathHelper.getOriginalRequestUriWithQueryString(request)));
+        response.sendRedirect(Urls.FI.vetumaLogin(urlPathHelper.getOriginalRequestUriWithQueryString(request)));
     }
 
     private void authenticationRequired(AuthenticationRequiredException e, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -88,7 +86,7 @@ public class SecurityFilter implements Filter {
 //            target.append(request.getQueryString());
 //        }
 //
-//        response.sendRedirect(Urls.FI.login(target.toString()));
+//        response.sendRedirect(Urls.FI.vetumaLogin(target.toString()));
         propagateException(e);
     }
 
@@ -156,7 +154,8 @@ public class SecurityFilter implements Filter {
         }
 
         // Double Submit Cookie
-        if (IS_POST(request)) {
+        if (IS_POST(request) && !Urls.isVetumaURI(request.getRequestURI())) { // Do not check CSRF when returning from vetuma, it's impossible and unnecessary
+            System.out.println(request.getRequestURI());
             String requestToken = request.getParameter(CSRF_TOKEN_NAME);
             if (requestToken == null || !requestToken.equals(sessionToken)) {
                 throw new CSRFException("CSRFToken -request parameter missing or doesn't match session");

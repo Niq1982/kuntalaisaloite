@@ -111,7 +111,7 @@ public class ErrorFilter implements Filter {
         if (caseId != null) {
             sb.append("  CASE: ").append(caseId).append("\n");
         }
-        // NOTE: Referee is NOT logged - it might expose personal data (like SSN (hetu) from Vetuma login response)
+        // NOTE: Referee is NOT logged - it might expose personal data (like SSN (hetu) from Vetuma vetumaLogin response)
         sb.append("  UA: ").append(request.getHeader("User-Agent")).append("\n");
         sb.append("  IP: ").append(request.getRemoteAddr());
         

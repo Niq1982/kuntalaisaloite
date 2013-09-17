@@ -358,7 +358,7 @@ public abstract class WebTestBase {
     }
 
     protected void vetumaLogin(String userSsn, String municipality) {
-        open(urls.login());
+        open(urls.vetumaLogin());
         enterVetumaLoginInformationAndSubmit(userSsn, municipality);
     }
 

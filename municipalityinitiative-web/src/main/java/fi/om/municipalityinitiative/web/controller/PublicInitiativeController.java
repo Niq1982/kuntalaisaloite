@@ -142,7 +142,7 @@ public class PublicInitiativeController extends BaseController {
             }
             else {
                 userService.putPrepareDataForVetuma(initiative, request);
-                return contextRelativeRedirect(urls.login());
+                return contextRelativeRedirect(urls.vetumaLogin());
             }
         }
         else {
