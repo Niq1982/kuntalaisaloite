@@ -85,7 +85,8 @@ public abstract class WebTestBase {
     @Before
     public void init() {
         if (urls == null) {
-            Urls.initUrls(env.getRequiredProperty(PropertyNames.baseURL), env.getRequiredProperty(PropertyNames.iframeBaseUrl), env.getRequiredProperty(PropertyNames.baseURL));
+            String baseUrl = env.getRequiredProperty(PropertyNames.baseURL);
+            Urls.initUrls(baseUrl, baseUrl, baseUrl);
             urls = Urls.FI;
         }
 

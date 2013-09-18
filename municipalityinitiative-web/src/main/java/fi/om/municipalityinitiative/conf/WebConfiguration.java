@@ -198,7 +198,8 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
     @Bean
     public MappingJackson2HttpMessageConverter jsonConverter() {
 
-        final String apiBaseUrl = env.getRequiredProperty(PropertyNames.apiBaseUrl);
+        String baseUrl = env.getRequiredProperty(PropertyNames.baseURL);
+        String apiBaseUrl = env.getProperty(PropertyNames.apiBaseUrl, baseUrl);
 
         return JsonConverterFactory.JacksonHttpConverterWithModules(apiBaseUrl);
     }

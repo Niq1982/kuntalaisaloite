@@ -372,7 +372,7 @@ public final class Urls {
     }
 
     public String iframe() {
-        return iframeBaseUrl + "/" + locale.toString();
+        return iframeBaseUrl + (this.equals(FI) ? IFRAME_FI : IFRAME_SV);
     }
 
     public String iframe(Long municipalityId) {
