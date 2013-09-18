@@ -92,6 +92,7 @@ public class ParticipantService {
     public void deleteParticipant(Long initiativeId, LoginUserHolder loginUserHolder, Long participantId) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         participantDao.deleteParticipant(initiativeId, participantId);
+        initiativeDao.denormalizeParticipantCountForNormalInitiative(initiativeId);
     }
 
 }
