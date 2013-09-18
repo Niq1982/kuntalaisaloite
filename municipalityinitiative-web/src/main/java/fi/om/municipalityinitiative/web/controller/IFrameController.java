@@ -30,8 +30,17 @@ public class IFrameController extends BaseController {
         super(optimizeResources, resourcesVersion);
     }
 
-    @RequestMapping(value={IFRAME_FI, IFRAME_SV}, method=GET)
+    @RequestMapping(value = {IFRAME_FI, IFRAME_SV}, method = GET)
     public String iframe(InitiativeSearch search,
+                         Model model,
+                         Locale locale,
+                         HttpServletRequest request) {
+
+        return iframeOld(search, model, locale, request);
+    }
+
+    @RequestMapping(value={IFRAME_OLD_FI, IFRAME_OLD_SV}, method=GET)
+    public String iframeOld(InitiativeSearch search,
                          Model model,
                          Locale locale,
                          HttpServletRequest request) {

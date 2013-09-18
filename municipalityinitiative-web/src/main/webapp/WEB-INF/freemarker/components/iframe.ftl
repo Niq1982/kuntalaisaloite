@@ -134,7 +134,7 @@
             <iframe id="kuntalaisaloite-leijuke"
                     frameborder="0"
                     scrolling="no"
-                    src="${urls.baseUrl}/{{:lang}}/iframe?municipality={{:municipality}}&amp;limit={{:limit}}&amp;orderBy=latest&amp;width={{:width}}&amp;height={{:height}}"
+                    src="${urls.iframe()}?municipality={{:municipality}}&amp;limit={{:limit}}&amp;orderBy=latest&amp;width={{:width}}&amp;height={{:height}}"
                     width="{{:width}}"
                     height="{{:height}}" onload="iFrameLoaded('kuntalaisaloite-leijuke', 'iframe-placeholder')">
             </iframe>
@@ -144,7 +144,7 @@
                 <iframe id="kuntalaisaloite-leijuke"
                     frameborder="0"
                     scrolling="no"
-                    src="${urls.baseUrl}/{{:lang}}/iframe?municipality={{:municipality}}&amp;limit={{:limit}}&amp;orderBy=latest&amp;width={{:width}}&amp;height={{:height}}"
+                    src="${urls.iframe()}?municipality={{:municipality}}&amp;limit={{:limit}}&amp;orderBy=latest&amp;width={{:width}}&amp;height={{:height}}"
                     width="{{:width}}"
                     height="{{:height}}">
                 </iframe>

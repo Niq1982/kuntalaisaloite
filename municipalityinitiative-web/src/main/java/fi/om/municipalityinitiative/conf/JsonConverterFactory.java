@@ -9,7 +9,7 @@ import fi.om.municipalityinitiative.json.JsonIdAnnotationIntrospector;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 public class JsonConverterFactory {
-    public static MappingJackson2HttpMessageConverter JacksonHttpConverterWithModules(final String baseUrl) {
+    public static MappingJackson2HttpMessageConverter JacksonHttpConverterWithModules(final String apiBaseUrl) {
 
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
 
@@ -30,7 +30,7 @@ public class JsonConverterFactory {
             @Override
             public void setupModule(SetupContext context) {
                 context.appendAnnotationIntrospector(
-                        new JsonIdAnnotationIntrospector(baseUrl));
+                        new JsonIdAnnotationIntrospector(apiBaseUrl));
             }
 
         });

@@ -251,9 +251,13 @@ public final class Urls {
 
     public static final String IFRAME_GENERATOR_SV = "/sv/widget";
 
-    public static final String IFRAME_FI = "/fi/iframe";
+    public static final String IFRAME_OLD_FI = "/fi/iframe";
 
-    public static final String IFRAME_SV = "/sv/iframe";
+    public static final String IFRAME_OLD_SV = "/sv/iframe";
+
+    public static final String IFRAME_FI = "/iframe/fi";
+
+    public static final String IFRAME_SV = "/iframe/sv";
 
     public static final String OWN_INITIATIVES_FI = "/fi/omat";
 
@@ -263,15 +267,21 @@ public final class Urls {
 
     private final String baseUrl;
 
+    private final String iframeBaseUrl;
+
+    private final String apiBaseUrl;
+
     private final Locale locale;
 
-    public static void initUrls(String baseUrl) {
-        FI = new Urls(baseUrl, LOCALE_FI);
-        SV = new Urls(baseUrl, LOCALE_SV);
+    public static void initUrls(String baseUrl, String iframeBaseUrl, String apiBaseUrl) {
+        FI = new Urls(baseUrl, iframeBaseUrl, apiBaseUrl, LOCALE_FI);
+        SV = new Urls(baseUrl, iframeBaseUrl, apiBaseUrl, LOCALE_SV);
     }
 
-    private Urls(String baseUrl, Locale locale) {
+    private Urls(String baseUrl, String iframeBaseUrl, String apiBaseUrl, Locale locale) {
         this.baseUrl = baseUrl;
+        this.iframeBaseUrl = iframeBaseUrl;
+        this.apiBaseUrl = apiBaseUrl;
         this.locale = locale;
     }
 
@@ -362,7 +372,7 @@ public final class Urls {
     }
 
     public String iframe() {
-        return getLocalizedPageUrl(IFRAME_FI, IFRAME_SV);
+        return iframeBaseUrl + "/" + locale.toString();
     }
 
     public String iframe(Long municipalityId) {
@@ -398,15 +408,15 @@ public final class Urls {
     }
 
     public String api() {
-        return baseUrl+API;
+        return apiBaseUrl+API;
     }
 
     public String initiatives() {
-        return baseUrl + INITIATIVES;
+        return apiBaseUrl + INITIATIVES;
     }
 
     public String municipalities() {
-        return baseUrl + MUNICIPALITIES;
+        return apiBaseUrl + MUNICIPALITIES;
     }
 
     public String invitation(Long initiativeId, String confirmationCode) {

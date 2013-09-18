@@ -85,9 +85,7 @@ public abstract class WebTestBase {
     @Before
     public void init() {
         if (urls == null) {
-            Urls.initUrls(env.getRequiredProperty(PropertyNames.baseURL));
-            String[] defaultProfiles = env.getDefaultProfiles();
-
+            Urls.initUrls(env.getRequiredProperty(PropertyNames.baseURL), env.getRequiredProperty(PropertyNames.iframeBaseUrl), env.getRequiredProperty(PropertyNames.baseURL));
             urls = Urls.FI;
         }
 
@@ -96,10 +94,6 @@ public abstract class WebTestBase {
 
         formatDriver(driverType);
 
-        if (urls == null) {
-            Urls.initUrls("https://localhost:" + PORT);
-            urls = Urls.FI;
-        }
         NotTooFastSubmitValidator.disable(); // Disable fast-submit validation at ui-tests
         if (HELSINKI_ID == null) {
             testHelper.dbCleanup();
