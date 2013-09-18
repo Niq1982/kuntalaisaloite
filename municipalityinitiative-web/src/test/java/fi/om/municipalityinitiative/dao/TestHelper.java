@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.dao;
 
 import com.mysema.query.sql.RelationalPathBase;
 import com.mysema.query.sql.dml.SQLInsertClause;
+import com.mysema.query.sql.dml.SQLUpdateClause;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Path;
 import com.mysema.query.types.Predicate;
@@ -285,7 +286,7 @@ public class TestHelper {
                 .set(QVerifiedParticipant.verifiedParticipant.verified, authorDraft.participantMunicipality != null)
                 .execute();
 
-        increaseParticipantCount(authorDraft.initiativeId);
+        increaseParticipantCount(authorDraft);
 
         ContactInfo contactInfo = new ContactInfo();
         contactInfo.setAddress(authorDraft.authorAddress);
@@ -309,11 +310,15 @@ public class TestHelper {
         return lastVerifiedUserId;
     }
 
-    private void increaseParticipantCount(Long initiativeId) {
-        queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
-                .set(QMunicipalityInitiative.municipalityInitiative.participantCount, QMunicipalityInitiative.municipalityInitiative.participantCount.add(1))
-                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
-                .execute();
+    private void increaseParticipantCount(AuthorDraft authorDraft) {
+        SQLUpdateClause updateClause = queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
+                .set(QMunicipalityInitiative.municipalityInitiative.participantCount, QMunicipalityInitiative.municipalityInitiative.participantCount.add(1));
+
+        if (authorDraft.publicName) {
+            updateClause.set(QMunicipalityInitiative.municipalityInitiative.participantCountPublic, QMunicipalityInitiative.municipalityInitiative.participantCountPublic.add(1));
+        }
+
+        updateClause.where(QMunicipalityInitiative.municipalityInitiative.id.eq(authorDraft.initiativeId)).execute();
     }
 
     @Transactional(readOnly = false)
@@ -335,7 +340,7 @@ public class TestHelper {
                 .set(QVerifiedParticipant.verifiedParticipant.verified, authorDraft.participantMunicipality != null)
                 .execute();
 
-        increaseParticipantCount(authorDraft.initiativeId);
+        increaseParticipantCount(authorDraft);
         this.lastVerifiedUserId = verifiedUserId;
     }
 
@@ -348,7 +353,7 @@ public class TestHelper {
     @Transactional(readOnly = false)
     public Long createDefaultParticipant(AuthorDraft authorDraft) {
 
-        increaseParticipantCount(authorDraft.initiativeId);
+        increaseParticipantCount(authorDraft);
 
         return queryFactory.insert(QParticipant.participant)
                 .set(QParticipant.participant.municipalityId, authorDraft.participantMunicipality)

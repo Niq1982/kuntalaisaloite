@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
 import fi.om.municipalityinitiative.web.Urls;
 import org.junit.Test;
@@ -99,7 +100,26 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
 
         assertThat(publicParticipants.get(0).isAuthor(), is(false));
         assertThat(publicParticipants.get(1).isAuthor(), is(true));
+    }
 
+    @Test
+    public void delete_participant_decreses_participant_count() {
+        Long initiativeId = testHelper.createDefaultInitiative(
+                new TestHelper.InitiativeDraft(testMunicipalityId)
+                        .applyAuthor().withPublicName(false)
+                        .toInitiativeDraft()
+        );
+        Long participantId = testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withPublicName(true));
+
+        Initiative initiative = testHelper.getInitiative(initiativeId);
+        precondition(initiative.getParticipantCountPublic(), is(1));
+        precondition(initiative.getParticipantCount(), is(2));
+
+        participantService.deleteParticipant(initiativeId, TestHelper.authorLoginUserHolder, participantId);
+
+        Initiative updated = testHelper.getInitiative(initiativeId);
+        assertThat(updated.getParticipantCount(), is(1));
+        assertThat(updated.getParticipantCountPublic(), is(0));
     }
 
     private Long createNormalInitiativeWithAuthor() {
