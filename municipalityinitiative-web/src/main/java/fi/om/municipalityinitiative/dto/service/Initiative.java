@@ -163,4 +163,8 @@ public class Initiative {
     public void setParticipantCountPublic(int participantCountPublic) {
         this.participantCountPublic = participantCountPublic;
     }
+
+    public boolean isPublic() {
+        return state == InitiativeState.PUBLISHED && fixState == FixState.OK;
+    }
 }

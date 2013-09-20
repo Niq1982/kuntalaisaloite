@@ -85,7 +85,7 @@ public class PublicInitiativeService {
 
     public InitiativeViewInfo getInitiative(Long initiativeId, LoginUserHolder loginUserHolder) {
         Initiative initiative = operations.getInitiative(initiativeId);
-        if (initiative.getState() != InitiativeState.PUBLISHED || initiative.getFixState() != FixState.OK) {
+        if (!initiative.isPublic()) {
             loginUserHolder.assertViewRightsForInitiative(initiative.getId());
         }
         return InitiativeViewInfo.parse(initiative);
