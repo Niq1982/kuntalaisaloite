@@ -99,6 +99,7 @@ public class TestHelper {
         queryFactory.delete(QMunicipalityInitiative.municipalityInitiative).execute();
         queryFactory.delete(QInfoText.infoText).execute();
         queryFactory.delete(QAdminUser.adminUser).execute();
+        queryFactory.delete(QEmail.email).execute();
         authorLoginUserHolder = null;
         lastInitiativeId = null;
         lastAuthorId = null;

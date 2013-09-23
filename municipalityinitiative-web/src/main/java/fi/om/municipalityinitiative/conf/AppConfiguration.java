@@ -135,6 +135,11 @@ public class AppConfiguration {
     }
 
     @Bean
+    public EmailDao emailDao() {
+        return new JdbcEmailDao();
+    }
+
+    @Bean
     public MunicipalityDao municipalityDao() {
         return new JdbcMunicipalityDao();
     }
