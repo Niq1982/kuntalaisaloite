@@ -29,7 +29,6 @@ public class EmailSender {
 
     private static final Logger log = LoggerFactory.getLogger(EmailSender.class);
 
-
     @Resource
     private EmailDao emailDao;
 
@@ -56,7 +55,7 @@ public class EmailSender {
                 emailDao.succeed(emailDto.getEmailId());
             } catch (Throwable t) {
                 log.error("Email sending failed: " + emailDto.getRecipientsAsString(), t);
-                emailDao.failed(emailDto.getEmailId()); // If this fails, will throw an exception and the scheduled task is halted
+                emailDao.failed(emailDto.getEmailId()); // If this fails, will throw an exception and the scheduled task is stopped
             }
             return true;
         }

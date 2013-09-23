@@ -13,24 +13,33 @@ public class EmailSenderScheduler {
 
     public static final int DELAY_BETWEEN_EMAILS_MILLIS = 300;
 
+    public static final int FIXED_DELAY = 5000;
+
     @Resource
     private EmailSender emailSender;
 
     private AtomicBoolean interrupted = new AtomicBoolean(false);
 
-    @Scheduled(fixedDelay = 5000)
+    @Scheduled(fixedDelay = FIXED_DELAY)
     public void sendEmails() {
             if (interrupted.get()) {
                 return;
             }
             try {
-                boolean hadEmailForSending;
+                boolean hadEmailForSending = false;
                 do {
+                    if (hadEmailForSending) {
+                        Thread.sleep(DELAY_BETWEEN_EMAILS_MILLIS);
+                    }
                     hadEmailForSending = emailSender.sendNextEmail();
                 }
                 while (hadEmailForSending);
 
             } catch (Throwable e) {
+                // emailSender.sendNextEmail() is responsible for checking errors and saving the
+                // send-status of email to database. If if throws any exception in any case,
+                // it was not able to save the sent-state to database.
+                // Stop executing this thread immediately to avoid email-spamming.
                 stop();
                 log.error("Unknown error while sending emails, task stopped", e);
             }
