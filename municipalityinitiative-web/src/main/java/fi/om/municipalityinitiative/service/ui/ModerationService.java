@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.operations.ModerationServiceOperations;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -23,6 +24,7 @@ public class ModerationService {
     @Resource
     ModerationServiceOperations moderationServiceOperations;
 
+    @Transactional(readOnly = false)
     public void accept(OmLoginUserHolder loginUserHolder, Long initiativeId, String moderatorComment, Locale locale) {
         loginUserHolder.assertOmUser();
         ModerationServiceOperations.AcceptResult acceptResult = moderationServiceOperations.doAccept(initiativeId, moderatorComment);
@@ -42,6 +44,7 @@ public class ModerationService {
         }
     }
 
+    @Transactional(readOnly = false)
     public void reject(OmLoginUserHolder loginUserHolder, Long initiativeId, String moderatorComment) {
         loginUserHolder.assertOmUser();
         moderationServiceOperations.doReject(initiativeId, moderatorComment);
@@ -63,6 +66,7 @@ public class ModerationService {
         moderationServiceOperations.doUpdateMunicipality(editDto);
     }
 
+    @Transactional(readOnly = false)
     public void sendInitiativeBackForFixing(OmLoginUserHolder omLoginUserHolder, Long initiativeId, String moderatorComment) {
 
         omLoginUserHolder.assertOmUser();
@@ -70,6 +74,7 @@ public class ModerationService {
         emailService.sendStatusEmail(initiativeId, EmailMessageType.REJECTED_BY_OM);
     }
 
+    @Transactional(readOnly = false)
     public void renewManagementHash(OmLoginUserHolder omLoginUserHolder, Long authorId) {
         omLoginUserHolder.assertOmUser();
 

@@ -7,9 +7,11 @@ import fi.om.municipalityinitiative.conf.AppConfiguration.AppDevConfiguration;
 import fi.om.municipalityinitiative.conf.AppConfiguration.ProdPropertiesConfiguration;
 import fi.om.municipalityinitiative.conf.AppConfiguration.TestPropertiesConfigurer;
 import fi.om.municipalityinitiative.dao.*;
+import fi.om.municipalityinitiative.dto.service.EmailSenderScheduler;
 import fi.om.municipalityinitiative.dto.service.TestDataService;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.service.email.EmailMessageConstructor;
+import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.email.EmailServiceDataProvider;
 import fi.om.municipalityinitiative.service.operations.*;
 import fi.om.municipalityinitiative.service.ui.*;
@@ -35,6 +37,7 @@ import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.jdbc.support.SQLExceptionTranslator;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
@@ -50,6 +53,7 @@ import java.util.concurrent.Executors;
 @Configuration
 @EnableTransactionManagement(proxyTargetClass=false)
 @EnableAspectJAutoProxy(proxyTargetClass=false)
+@EnableScheduling
 @Import({ProdPropertiesConfiguration.class, TestPropertiesConfigurer.class, JdbcConfiguration.class, AppDevConfiguration.class})
 public class AppConfiguration {
 
@@ -259,6 +263,11 @@ public class AppConfiguration {
     }
 
     @Bean
+    EmailSenderScheduler emailSenderScheduler() {
+        return new EmailSenderScheduler();
+    }
+
+    @Bean
     public ValidationService validationService() {
         return new ValidationServiceImpl();
     }
@@ -342,8 +351,8 @@ public class AppConfiguration {
     }
 
     @Bean
-    public TaskedEmailService emailService() {
-        return new TaskedEmailService();
+    public EmailService emailService() {
+        return new EmailService();
     }
 
     @Bean

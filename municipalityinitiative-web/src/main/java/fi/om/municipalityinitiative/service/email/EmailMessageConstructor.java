@@ -38,11 +38,6 @@ import java.util.Map;
 
 public class EmailMessageConstructor {
 
-    private static final String FILE_NAME = "Kuntalaisaloite_{0}_{1}_osallistujat.pdf";
-
-    @Resource
-    private JavaMailSender javaMailSender;
-
     @Resource
     private EnvironmentSettings environmentSettings;
 
@@ -53,77 +48,6 @@ public class EmailMessageConstructor {
     private EmailDao emailDao;
 
     private static final Logger log = LoggerFactory.getLogger(EmailMessageConstructor.class);
-
-    private static void addAttachment(MimeMessageHelper multipart, Initiative initiative, List<? extends Participant> participants) {
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()){
-            new ParticipantToPdfExporter(initiative, participants).createPdf(outputStream);
-
-            byte[] bytes = outputStream.toByteArray();
-            DataSource dataSource = new ByteArrayDataSource(bytes, "application/pdf");
-
-            String fileName = MessageFormat.format(FILE_NAME, new LocalDate().toString("yyyy-MM-dd"), initiative.getId());
-
-            multipart.addAttachment(fileName, dataSource);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public MimeMessageHelper parseBasicEmailData(List<String> recipients, String subject, String templateName, Map<String, Object> dataMap) {
-
-        String text = processTemplate(templateName + "-text", dataMap);
-        String html = processTemplate(templateName + "-html", dataMap);
-
-        text = stripTextRows(text, 2);
-
-        if (environmentSettings.getTestSendTo().isPresent()) {
-            System.out.println("Replaced recipients email with: " + environmentSettings.getTestSendTo().get());
-
-            StringBuilder recipientsString = new StringBuilder();
-            for (String s : recipients) {
-                if (recipientsString.length() > 0) recipientsString.append(", ");
-                recipientsString.append(s);
-            }
-
-            text = "TEST OPTION REPLACED THE EMAIL ADDRESS!\nThe original address was: " + recipientsString.toString() + "\n\n\n-------------\n" + text;
-            html = "TEST OPTION REPLACED THE EMAIL ADDRESS!\nThe original address was: " + recipientsString.toString() + "<hr>" + html;
-            recipients = Collections.singletonList(environmentSettings.getTestSendTo().get());
-        }
-
-        Assert.notNull(recipients, "recipients");
-        Assert.isTrue(recipients.size() != 0, "recipients has recipients");
-
-        if (environmentSettings.isTestConsoleOutput()) {
-            System.out.println("----------------------------------------------------------");
-            System.out.println("To: " + recipients);
-            System.out.println("Reply-to: " + environmentSettings.getDefaultReplyTo());
-            System.out.println("Subject: " + subject);
-            System.out.println("---");
-            System.out.println(text);
-            System.out.println("----------------------------------------------------------");
-            return null;
-        }
-
-        try {
-            MimeMessageHelper helper = new MimeMessageHelper(javaMailSender.createMimeMessage(), true, "UTF-8");
-            for (String to : recipients) {
-                helper.addTo(to);
-            }
-            try {
-                helper.setFrom(environmentSettings.getDefaultReplyTo(), solveEmailFrom());
-            } catch (UnsupportedEncodingException e) {
-                helper.setFrom(environmentSettings.getDefaultReplyTo());
-            }
-            helper.setReplyTo(environmentSettings.getDefaultReplyTo());
-            helper.setSubject(subject);
-            helper.setText(text, html);
-            return helper;
-
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
 
     private String solveEmailFrom() {
         return "Kuntalaisaloitepalvelu" + (environmentSettings.hasAnyTestOptionsEnabled() ? " TEST" : "");
@@ -219,40 +143,14 @@ public class EmailMessageConstructor {
             Assert.notNull(dataMap, "dataMap");
 
             log.info("About to send email to " + recipients + ": " + subject);
+            emailDao.addEmail(initiativeId, subject, recipients,
+                    processTemplate(templateName + "-html", dataMap),
+                    processTemplate(templateName + "-text", dataMap),
+                    solveEmailFrom(),
+                    environmentSettings.getDefaultReplyTo(),
+                    attachmentInitiative.isPresent() ? EmailAttachmentType.PARTICIPANTS : EmailAttachmentType.NONE
+                    );
 
-            MimeMessageHelper mimeMessageHelper = parseBasicEmailData(recipients, subject, templateName, dataMap);
-
-            if (mimeMessageHelper == null) { // If testConsoleOutput was true, email was printed instead of sending
-                System.out.println("No email to send");
-                return;
-            }
-
-            if (attachmentInitiative.isPresent()) {
-                addAttachment(mimeMessageHelper, attachmentInitiative.get(), attachmentParticipants.get());
-            }
-
-            try {
-                javaMailSender.send(mimeMessageHelper.getMimeMessage());
-                emailDao.addEmail(initiativeId, subject, recipients,
-                        processTemplate(templateName + "-html", dataMap),
-                        processTemplate(templateName + "-text", dataMap),
-                        solveEmailFrom(),
-                        environmentSettings.getDefaultReplyTo(),
-                        attachmentInitiative.isPresent() ? EmailAttachmentType.PARTICIPANTS : EmailAttachmentType.NONE
-                        );
-                log.info("Email sent.");
-            } catch (MailSendException e) {
-                Address[] recipients;
-                String subject;
-                try {
-                    recipients = mimeMessageHelper.getMimeMessage().getRecipients(Message.RecipientType.TO);
-                    subject = mimeMessageHelper.getMimeMessage().getSubject();
-                } catch (MessagingException messagingException) {
-                    throw new RuntimeException(messagingException);
-                }
-                log.error("Failed to send email to "+recipients[0].toString() + ": "+subject, e);
-                // TODO: Retry?
-            }
         }
     }
 }

@@ -168,23 +168,34 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     }
 
     @Test
-    public void public_user_contacts_authors_shows_success_message(){
-        open(urls.view(normalInitiativeHelsinki));
-        
+    public void public_user_contacts_authors_shows_success_message() {
+
+        Long initiativeWithAuthor = testHelper.createDefaultInitiative(
+                new TestHelper.InitiativeDraft(HELSINKI_ID)
+                        .withState(InitiativeState.PUBLISHED)
+                        .withType(InitiativeType.COLLABORATIVE)
+                        .withParticipantCount(0)
+                        .applyAuthor()
+                        .withPublicName(false)
+                        .toInitiativeDraft()
+        );
+
+        open(urls.view(initiativeWithAuthor));
+
         clickLinkContaining("Ota yhteyttä aloitteen vastuuhenkilöön");
-        
+
         inputText("message", AUTHOR_MESSAGE);
         inputText("contactName", PARTICIPANT_NAME);
         inputText("contactEmail", PARTICIPANT_EMAIL);
-        
+
         getElemContaining("Lähetä viesti", "button").click();
-        
+
         assertTextContainedByClass("msg-success", "Linkki yhteydenottopyynnön vahvistamiseen on lähetetty sähköpostiisi");
-        
+
         open(urls.confirmAuthorMessage(RandomHashGenerator.getPrevious()));
-        
+
         assertTextContainedByClass("msg-success", "Viesti on nyt lähetetty vastuuhenkilöille");
-        
+
     }
 
     

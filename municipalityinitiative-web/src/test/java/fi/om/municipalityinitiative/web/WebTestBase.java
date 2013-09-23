@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.StartJetty;
 import fi.om.municipalityinitiative.conf.PropertyNames;
 import fi.om.municipalityinitiative.conf.WebTestConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.dto.service.EmailSenderScheduler;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -45,8 +46,11 @@ public abstract class WebTestBase {
 
     protected static final int PORT = 8445; // NOTE: must match port in test.properties/baseUrl
 
+//    @Mocked
+//    EmailService emailService;
+
     @Mocked
-    EmailService emailService;
+    EmailSenderScheduler emailSenderScheduler;
 
     @Resource
     protected TestHelper testHelper;
