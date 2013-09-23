@@ -2,17 +2,24 @@ package fi.om.municipalityinitiative.dao;
 
 import com.mysema.query.Tuple;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
+import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
+import com.mysema.query.types.expr.DateTimeExpression;
 import fi.om.municipalityinitiative.dto.InfoTextSubject;
 import fi.om.municipalityinitiative.dto.service.EmailDto;
 import fi.om.municipalityinitiative.sql.QEmail;
 import fi.om.municipalityinitiative.sql.QInfoText;
 import fi.om.municipalityinitiative.util.EmailAttachmentType;
+import org.joda.time.DateTime;
 
 import javax.annotation.Resource;
 import java.util.List;
 
+import static fi.om.municipalityinitiative.dao.JdbcInitiativeDao.assertSingleAffection;
+
 public class JdbcEmailDao implements EmailDao {
+
+    private static final Expression<DateTime> CURRENT_TIME = DateTimeExpression.currentTimestamp(DateTime.class);
 
     @Resource
     PostgresQueryFactory queryFactory;
@@ -39,10 +46,26 @@ public class JdbcEmailDao implements EmailDao {
     }
 
     @Override
-    public List<EmailDto> findSendableEmails() {
+    public List<EmailDto> findUntriedEmails() {
         return queryFactory.from(QEmail.email)
                 .where(QEmail.email.tried.eq(false))
                 .list(emailMapping);
+    }
+
+    @Override
+    public EmailDto get(Long emailId) {
+        return queryFactory.from(QEmail.email)
+                .where(QEmail.email.id.eq(emailId))
+                .uniqueResult(emailMapping);
+    }
+
+    @Override
+    public void succeed(Long emailId) {
+        assertSingleAffection(queryFactory.update(QEmail.email)
+                .set(QEmail.email.succeeded, CURRENT_TIME)
+                .set(QEmail.email.tried, true)
+                .where(QEmail.email.id.eq(emailId))
+                .execute());
     }
 
     private static final MappingProjection<EmailDto> emailMapping

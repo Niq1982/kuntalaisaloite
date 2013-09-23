@@ -6,6 +6,7 @@ import fi.om.municipalityinitiative.util.EmailAttachmentType;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,8 +18,10 @@ import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 
+import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 
@@ -54,12 +57,29 @@ public class JdbcEmailDaoTest {
     }
 
     @Test
-    public void find_sendable_emails() {
+    public void find_untried_emails() {
         createSendableEmail();
-        List<EmailDto> sendableEmails = emailDao.findSendableEmails();
-        assertThat(sendableEmails, hasSize(1));
+        List<EmailDto> untriedEmails = emailDao.findUntriedEmails();
+        assertThat(untriedEmails, hasSize(1));
 
-        ReflectionTestUtils.assertNoNullFields(sendableEmails.get(0));
+        ReflectionTestUtils.assertNoNullFields(untriedEmails.get(0));
+    }
+
+    @Test
+    public void mark_email_as_sent_sets_success_time() {
+        Long sendableEmail = createSendableEmail();
+        EmailDto unsent = emailDao.get(sendableEmail);
+        precondition(unsent.getSucceeded().isPresent(), is(false));
+        precondition(unsent.getFailed().isPresent(), is(false));
+        precondition(unsent.isTried(), is(false));
+
+        emailDao.succeed(sendableEmail);
+
+        EmailDto sent = emailDao.get(sendableEmail);
+
+        assertThat(sent.isTried(), is(true));
+        assertThat(sent.getSucceeded().isPresent(), is(true));
+        assertThat(sent.getFailed().isPresent(), is(false));
 
     }
 

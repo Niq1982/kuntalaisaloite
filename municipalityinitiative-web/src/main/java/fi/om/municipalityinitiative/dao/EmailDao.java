@@ -16,5 +16,9 @@ public interface EmailDao {
                   String replyTo,
                   EmailAttachmentType attachmentType);
 
-    List<EmailDto> findSendableEmails();
+    List<EmailDto> findUntriedEmails();
+
+    EmailDto get(Long emailId);
+
+    void succeed(Long emailId);
 }
