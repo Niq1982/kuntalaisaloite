@@ -3,20 +3,19 @@ package fi.om.municipalityinitiative.dto.service;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
-import com.mysema.query.types.query.ListSubQuery;
-import com.sun.deploy.util.StringUtils;
 import fi.om.municipalityinitiative.util.EmailAttachmentType;
+import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.DateTime;
-import org.mockito.internal.util.collections.ListUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class EmailDto {
 
     public static final String EMAIL_SEPARATOR = ";";
 
-    private Long initiativeId;
+    private final Long emailId;
+
+    private final Long initiativeId;
 
     private List<String> recipients;
 
@@ -30,62 +29,20 @@ public class EmailDto {
 
     private String sender;
 
-    private DateTime sent;
+    private Maybe<DateTime> succeeded;
 
-    private DateTime failed;
+    private Maybe<DateTime> failed;
 
-    private boolean status;
+    private boolean tried;
 
-    private EmailAttachmentType attachmentType = EmailAttachmentType.NONE;
+    private EmailAttachmentType attachmentType;
 
-    public EmailDto(Long initiativeId) {
+    public EmailDto(Long emailId, Long initiativeId) {
+        this.emailId = emailId;
         this.initiativeId = initiativeId;
     }
 
-    public EmailDto withRecipients(List<String> recipients) {
-        this.recipients = recipients;
-        return this;
-    }
 
-    public EmailDto withSubject(String subject) {
-        this.subject = subject;
-        return this;
-    }
-
-    public EmailDto withContent(String bodyHtml, String bodyText) {
-        this.bodyHtml = bodyHtml;
-        this.bodyText = bodyText;
-        return this;
-    }
-
-    public EmailDto withSender(String senderName, String replyTo) {
-        this.sender = senderName;
-        this.replyTo = replyTo;
-        return this;
-    }
-
-    public EmailDto withSent(DateTime sent, boolean status) {
-        if (sent == null && status) {
-            throw new IllegalStateException("Email had no sent-time but status was sent!");
-        }
-        if (sent != null && !status) {
-            throw new IllegalStateException("Email had sent-time but status was not sent!");
-        }
-
-        this.sent = sent;
-        this.status = status;
-        return this;
-    }
-
-    public EmailDto withFailed(DateTime failed) {
-        this.failed = failed;
-        return this;
-    }
-
-    public EmailDto withAttachment(EmailAttachmentType attachmentType) {
-        this.attachmentType = attachmentType;
-        return this;
-    }
 
     public static List<String> parseEmails(String source) {
         return Lists.newArrayList(Splitter.on(EMAIL_SEPARATOR)
@@ -109,6 +66,46 @@ public class EmailDto {
                 .join(emails);
 
 
+    }
+
+    public void setRecipients(List<String> recipients) {
+        this.recipients = recipients;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public void setBodyHtml(String bodyHtml) {
+        this.bodyHtml = bodyHtml;
+    }
+
+    public void setBodyText(String bodyText) {
+        this.bodyText = bodyText;
+    }
+
+    public void setReplyTo(String replyTo) {
+        this.replyTo = replyTo;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+
+    public void setSucceeded(DateTime succeeded) {
+        this.succeeded = Maybe.fromNullable(succeeded);
+    }
+
+    public void setFailed(DateTime failed) {
+        this.failed = Maybe.fromNullable(failed);
+    }
+
+    public void setTried(boolean tried) {
+        this.tried = tried;
+    }
+
+    public void setAttachmentType(EmailAttachmentType attachmentType) {
+        this.attachmentType = attachmentType;
     }
 
     public Long getInitiativeId() {
@@ -143,16 +140,16 @@ public class EmailDto {
         return sender;
     }
 
-    public DateTime getSent() {
-        return sent;
+    public Maybe<DateTime> getSucceeded() {
+        return succeeded;
     }
 
-    public DateTime getFailed() {
+    public Maybe<DateTime> getFailed() {
         return failed;
     }
 
-    public boolean isStatus() {
-        return status;
+    public boolean isTried() {
+        return tried;
     }
 
     public EmailAttachmentType getAttachmentType() {

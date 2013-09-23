@@ -14,8 +14,8 @@ create table email (
     attachment emailAttachmentType default 'NONE',
 
     succeeded timestamp,
-    failed timestamp,
-    status boolean default false,
+    last_failed timestamp,
+    tried boolean constraint email_tried_nn not null default false,
 
     constraint email_pk primary key (id),
     constraint email_initiative_id foreign key (initiative_id) references municipality_initiative(id)
@@ -23,4 +23,4 @@ create table email (
 );
 
 
-create index email_status_index on email(status);
+create index email_tried_index on email(tried);

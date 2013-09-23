@@ -24,11 +24,11 @@ public class QEmail extends com.mysema.query.sql.RelationalPathBase<QEmail> {
 
     public final StringPath bodyText = createString("body_text");
 
-    public final DateTimePath<org.joda.time.DateTime> failed = createDateTime("failed", org.joda.time.DateTime.class);
-
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final NumberPath<Long> initiativeId = createNumber("initiative_id", Long.class);
+
+    public final DateTimePath<org.joda.time.DateTime> lastFailed = createDateTime("last_failed", org.joda.time.DateTime.class);
 
     public final StringPath recipients = createString("recipients");
 
@@ -36,11 +36,11 @@ public class QEmail extends com.mysema.query.sql.RelationalPathBase<QEmail> {
 
     public final StringPath sender = createString("sender");
 
-    public final BooleanPath status = createBoolean("status");
-
     public final StringPath subject = createString("subject");
 
     public final DateTimePath<org.joda.time.DateTime> succeeded = createDateTime("succeeded", org.joda.time.DateTime.class);
+
+    public final BooleanPath tried = createBoolean("tried");
 
     public final com.mysema.query.sql.PrimaryKey<QEmail> emailPk = createPrimaryKey(id);
 
