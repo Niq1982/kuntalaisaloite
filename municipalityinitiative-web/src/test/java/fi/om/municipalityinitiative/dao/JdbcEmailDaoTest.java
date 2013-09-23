@@ -2,10 +2,7 @@ package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dto.service.EmailDto;
-import fi.om.municipalityinitiative.util.EmailAttachmentType;
-import fi.om.municipalityinitiative.util.InitiativeState;
-import fi.om.municipalityinitiative.util.InitiativeType;
-import fi.om.municipalityinitiative.util.ReflectionTestUtils;
+import fi.om.municipalityinitiative.util.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +17,7 @@ import java.util.List;
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 
@@ -62,6 +60,14 @@ public class JdbcEmailDaoTest {
         assertThat(untriedEmails, hasSize(1));
 
         ReflectionTestUtils.assertNoNullFields(untriedEmails.get(0));
+    }
+
+    @Test
+    public void get_untried_email_for_update() {
+        Long emailId = createSendableEmail();
+        Maybe<EmailDto> untriedEmailForUpdate = emailDao.getUntriedEmailForUpdate();
+        assertThat(untriedEmailForUpdate.isPresent(), is(true));
+        assertThat(untriedEmailForUpdate.get().getEmailId(), is(emailId));
     }
 
     @Test
@@ -111,6 +117,25 @@ public class JdbcEmailDaoTest {
         List<EmailDto> untriedEmails = emailDao.findUntriedEmails();
         assertThat(untriedEmails, hasSize(1));
         assertThat(untriedEmails.get(0).getEmailId(), is(untried));
+
+    }
+
+    @Test
+    public void get_untried_email_for_update_returns_only_untried_emails() {
+        Long untried = createSendableEmail();
+
+        Long failed = createSendableEmail();
+        emailDao.failed(failed);
+
+        Long succeeded = createSendableEmail();
+        emailDao.succeed(succeeded);
+
+        Maybe<EmailDto> untriedEmail = emailDao.getUntriedEmailForUpdate();
+        assertThat(untriedEmail.isPresent(), is(true));
+        assertThat(untriedEmail.get().getEmailId(), is(untried));
+
+        emailDao.succeed(untriedEmail.get().getEmailId());
+        assertThat(emailDao.getUntriedEmailForUpdate().isPresent(), is(false));
 
     }
 

@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.dao;
 
 import fi.om.municipalityinitiative.dto.service.EmailDto;
 import fi.om.municipalityinitiative.util.EmailAttachmentType;
+import fi.om.municipalityinitiative.util.Maybe;
 
 import java.util.List;
 
@@ -15,6 +16,8 @@ public interface EmailDao {
                   String sender,
                   String replyTo,
                   EmailAttachmentType attachmentType);
+
+    Maybe<EmailDto> getUntriedEmailForUpdate();
 
     List<EmailDto> findUntriedEmails();
 

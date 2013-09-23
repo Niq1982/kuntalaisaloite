@@ -8,6 +8,7 @@ import com.mysema.query.types.expr.DateTimeExpression;
 import fi.om.municipalityinitiative.dto.service.EmailDto;
 import fi.om.municipalityinitiative.sql.QEmail;
 import fi.om.municipalityinitiative.util.EmailAttachmentType;
+import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.DateTime;
 
 import javax.annotation.Resource;
@@ -48,6 +49,14 @@ public class JdbcEmailDao implements EmailDao {
         return queryFactory.from(QEmail.email)
                 .where(QEmail.email.tried.eq(false))
                 .list(emailMapping);
+    }
+
+    @Override
+    public Maybe<EmailDto> getUntriedEmailForUpdate() {
+        return Maybe.fromNullable(queryFactory.from(QEmail.email)
+                .where(QEmail.email.tried.eq(false))
+                .forUpdate()
+                .singleResult(emailMapping));
     }
 
     @Override

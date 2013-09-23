@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.conf.AppConfiguration.AppDevConfiguration;
 import fi.om.municipalityinitiative.conf.AppConfiguration.ProdPropertiesConfiguration;
 import fi.om.municipalityinitiative.conf.AppConfiguration.TestPropertiesConfigurer;
 import fi.om.municipalityinitiative.dao.*;
+import fi.om.municipalityinitiative.dto.service.EmailSender;
 import fi.om.municipalityinitiative.dto.service.EmailSenderScheduler;
 import fi.om.municipalityinitiative.dto.service.TestDataService;
 import fi.om.municipalityinitiative.service.*;
@@ -265,6 +266,11 @@ public class AppConfiguration {
     @Bean
     EmailSenderScheduler emailSenderScheduler() {
         return new EmailSenderScheduler();
+    }
+
+    @Bean
+    EmailSender emailSender() {
+        return new EmailSender();
     }
 
     @Bean

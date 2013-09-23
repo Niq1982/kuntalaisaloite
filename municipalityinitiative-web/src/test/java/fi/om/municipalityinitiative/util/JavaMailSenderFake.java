@@ -8,14 +8,26 @@ import org.springframework.mail.javamail.MimeMessagePreparator;
 
 import javax.mail.internet.MimeMessage;
 import java.io.InputStream;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class JavaMailSenderFake implements JavaMailSender {
 
     JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
 
+    private AtomicInteger sentMessages = new AtomicInteger(0);
+
     @Override
     public void send(MimeMessage mimeMessage) throws MailException {
-        // Do not send a thing.
+        sentMessages.addAndGet(1);
+
+    }
+
+    public int getSentMessages() {
+        return sentMessages.get();
+    }
+
+    public void clearSentMessages() {
+        sentMessages.set(0);
     }
 
     // Not used:
