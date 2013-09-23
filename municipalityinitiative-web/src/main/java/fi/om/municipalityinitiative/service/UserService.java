@@ -56,7 +56,7 @@ public class UserService {
     }
 
     private static void storeLoggedInUser(HttpServletRequest request, User adminUser) {
-        request.getSession().setAttribute(LOGIN_USER_PARAMETER, adminUser);
+        request.getSession(true).setAttribute(LOGIN_USER_PARAMETER, adminUser);
     }
 
     private String saltAndEncryptPassword(String password) {
@@ -129,7 +129,7 @@ public class UserService {
     }
 
     public static Maybe<User> getOptionalLoginUser(HttpServletRequest request) {
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
         if (session == null)
             return Maybe.absent();
 

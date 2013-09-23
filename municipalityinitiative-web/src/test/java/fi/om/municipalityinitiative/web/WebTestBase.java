@@ -85,9 +85,8 @@ public abstract class WebTestBase {
     @Before
     public void init() {
         if (urls == null) {
-            Urls.initUrls(env.getRequiredProperty(PropertyNames.baseURL));
-            String[] defaultProfiles = env.getDefaultProfiles();
-
+            String baseUrl = env.getRequiredProperty(PropertyNames.baseURL);
+            Urls.initUrls(baseUrl, baseUrl, baseUrl);
             urls = Urls.FI;
         }
 
@@ -96,10 +95,6 @@ public abstract class WebTestBase {
 
         formatDriver(driverType);
 
-        if (urls == null) {
-            Urls.initUrls("https://localhost:" + PORT);
-            urls = Urls.FI;
-        }
         NotTooFastSubmitValidator.disable(); // Disable fast-submit validation at ui-tests
         if (HELSINKI_ID == null) {
             testHelper.dbCleanup();
@@ -358,7 +353,7 @@ public abstract class WebTestBase {
     }
 
     protected void vetumaLogin(String userSsn, String municipality) {
-        open(urls.login());
+        open(urls.vetumaLogin());
         enterVetumaLoginInformationAndSubmit(userSsn, municipality);
     }
 

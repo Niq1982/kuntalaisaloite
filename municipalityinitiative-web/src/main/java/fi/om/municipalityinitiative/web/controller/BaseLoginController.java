@@ -3,7 +3,6 @@ package fi.om.municipalityinitiative.web.controller;
 import java.util.regex.Pattern;
 
 import fi.om.municipalityinitiative.web.Urls;
-import fi.om.municipalityinitiative.web.controller.BaseController;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -26,7 +25,7 @@ public abstract class BaseLoginController extends BaseController {
     protected String getValidLoginTarget(String target, Urls urls) {
         if (!Strings.isNullOrEmpty(target) 
                 && (!ILLEGAL_TARGET.matcher(target).find() || target.startsWith(baseUrl))
-                && !urls.isLoginPage(target)) {
+                && !urls.isVetumaLoginPage(target)) {
             return target;
         } else {
             return urls.frontpage();

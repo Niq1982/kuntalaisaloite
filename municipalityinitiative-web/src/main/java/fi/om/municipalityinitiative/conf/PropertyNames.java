@@ -70,4 +70,9 @@ public final class PropertyNames {
     public static final String omPiwicId = "om.piwic.id";
 
     public static final String appVersion = "appVersion";
+
+    public static final String iframeBaseUrl = "urls.iframe.url";
+
+    public static final String apiBaseUrl = "urls.api.url";
+
 }

@@ -3,6 +3,8 @@
 <html>
 <head>
 
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
 <style type="text/css">
 
     html, body {
@@ -96,7 +98,6 @@ function randomSSN() {
 
 <p>Testipalvelussa vahvan s&auml;hk&ouml;inen tunnistautuminen on korvattu t&auml;ll&auml; sivulla, jonka avulla voit sy&ouml;tt&auml;&auml; vapaasti V&auml;est&ouml;tietoj&auml;rjestelm&auml;st&auml; saatavaa tietoa.</p>
 <p>Huomaathan, ett&auml; voit antaa henkil&ouml;tunnukseksi mink&auml; tahansa numerosarjan, kunhan siin&auml; on sama merkkim&auml;&auml;r&auml; kuin henkil&ouml;tunnuksessa. Antamaasi henkil&ouml;tunnusta ei n&auml;ytet&auml; palvelussa eik&auml; sit&auml; tallenneta selkokielisen&auml;. Jos haluat my&ouml;hemmin palata yll&auml;pit&auml;m&auml;&auml;n tekem&auml;&auml;si aloitetta tai aloitetta, johon liityt vastuuhenkil&ouml;ksi, tulee sinun k&auml;ytt&auml;&auml; aina samaa henkil&ouml;tunnusta.</p>
-<p>Nimess&auml; olevat &auml;-, &ouml;- ja &aring;-kirjaimet aiheuttavat t&auml;ll&auml; hetkell&auml; ep&auml;onnistuneen kirjautumisen.</p>
 
 <div class="hr"></div>
 

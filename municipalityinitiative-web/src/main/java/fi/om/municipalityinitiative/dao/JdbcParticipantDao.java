@@ -81,7 +81,7 @@ public class JdbcParticipantDao implements ParticipantDao {
 
     @Override
     // Preparing because we do not know participants name
-    public Long prepareParticipant(Long initiativeId, Long homeMunicipality, String email, Membership membership, boolean showName) {
+    public Long prepareConfirmedParticipant(Long initiativeId, Long homeMunicipality, String email, Membership membership, boolean showName) {
         Long participantId = queryFactory.insert(participant)
                 .set(participant.municipalityId, homeMunicipality)
                 .set(participant.municipalityInitiativeId, initiativeId)

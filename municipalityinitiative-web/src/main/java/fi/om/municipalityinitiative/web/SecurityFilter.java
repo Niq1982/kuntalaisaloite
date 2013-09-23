@@ -33,7 +33,7 @@ public class SecurityFilter implements Filter {
 
     @Resource
     private EncryptionService encryptionService;
-    
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
     }
@@ -43,10 +43,10 @@ public class SecurityFilter implements Filter {
         response.setHeader("Pragma", "no-cache");                                   // HTTP 1.0
         response.setDateHeader("Expires", 0);                                       // Proxies
     }
-    
+
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
-            FilterChain chain) throws IOException, ServletException {
+                         FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
@@ -74,7 +74,7 @@ public class SecurityFilter implements Filter {
     }
 
     private void verifiedLoginRequired(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.sendRedirect(Urls.FI.login(urlPathHelper.getOriginalRequestUriWithQueryString(request)));
+        response.sendRedirect(Urls.FI.vetumaLogin(urlPathHelper.getOriginalRequestUriWithQueryString(request)));
     }
 
     private void authenticationRequired(AuthenticationRequiredException e, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -86,7 +86,7 @@ public class SecurityFilter implements Filter {
 //            target.append(request.getQueryString());
 //        }
 //
-//        response.sendRedirect(Urls.FI.login(target.toString()));
+//        response.sendRedirect(Urls.FI.vetumaLogin(target.toString()));
         propagateException(e);
     }
 
@@ -108,15 +108,16 @@ public class SecurityFilter implements Filter {
             try {
                 csrfToken = verifyAndGetCurrentCSRFToken(request);
             } catch (CSRFException e) {
-                request.setAttribute(COOKIE_ERROR, true);
+                request.getSession().invalidate();
                 csrfToken = initializeCSRFToken(request, response);
+                request.setAttribute(COOKIE_ERROR, true);
             }
         }
-        else if (IS_POST(request)) {
+        else if (IS_POST(request) && !Urls.isVetumaURI(request.getRequestURI())) {
             csrfToken = verifyAndGetCurrentCSRFToken(request);
         }
         else {
-            throw new RuntimeException("Invalid method: " + request.getMethod());
+            return;
         }
 
         request.setAttribute(CSRF_TOKEN_NAME, csrfToken);
@@ -146,12 +147,14 @@ public class SecurityFilter implements Filter {
         String sessionToken = (String) getExistingSession(request).getAttribute(CSRF_TOKEN_NAME);
 
         // Just to be sure no one has hijacked our session
-        if (cookieToken == null || !cookieToken.equals(sessionToken)) {
-            throw new CSRFException("CSRF session token missing or doesn't match cookie");
+        if (cookieToken == null) {
+            throw new CSRFException("CSRF session token missing ");
+        } else if (!cookieToken.equals(sessionToken)) {
+            throw new CSRFException("CSRF session doesn't match cookie");
         }
 
         // Double Submit Cookie
-        if (IS_POST(request)) {
+        if (IS_POST(request) && !Urls.isVetumaURI(request.getRequestURI())) { // Do not check CSRF when returning from vetuma, it's impossible and unnecessary
             String requestToken = request.getParameter(CSRF_TOKEN_NAME);
             if (requestToken == null || !requestToken.equals(sessionToken)) {
                 throw new CSRFException("CSRFToken -request parameter missing or doesn't match session");
@@ -194,7 +197,7 @@ public class SecurityFilter implements Filter {
         // For enabling httpOnly we need to write the raw cookie data instead of response.addCookie(cookie)
         response.setHeader("SET-COOKIE", name+"="+value+"; Path="+contextPath+"; Secure; HttpOnly");
     }
-    
+
     private void propagateException(Exception e) throws IOException, ServletException {
         Throwables.propagateIfInstanceOf(e, IOException.class);
         Throwables.propagateIfInstanceOf(e, ServletException.class);

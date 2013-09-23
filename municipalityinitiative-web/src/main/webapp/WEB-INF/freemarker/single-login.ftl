@@ -19,7 +19,7 @@
     
         <p><@u.message "login.description" /></p>
     
-        <form action="${urls.login()}" method="post">
+        <form action="${urls.loginAuthor()}" method="post">
             <input type="hidden" name="CSRFToken" value="${CSRFToken!""}"/>
             <input type="hidden" name="management" value="${managementHash}"/>
             

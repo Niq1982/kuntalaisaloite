@@ -17,6 +17,7 @@ import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.dto.ui.ParticipantCount;
 import fi.om.municipalityinitiative.dto.ui.PublicAuthors;
+import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -56,6 +57,11 @@ public class JsonDataService {
     @Transactional(readOnly = true)
     public InitiativeJson getInitiative(Long id) {
         Initiative initiativeInfo = initiativeDao.get(id);
+
+        if (!initiativeInfo.isPublic()) {
+            throw new AccessDeniedException("No access for initiative with id: " + id);
+        }
+
         ParticipantCount participantCount = new ParticipantCount();
         participantCount.setPublicNames(initiativeInfo.getParticipantCountPublic());
         participantCount.setPrivateNames(initiativeInfo.getParticipantCount() - participantCount.getPublicNames());

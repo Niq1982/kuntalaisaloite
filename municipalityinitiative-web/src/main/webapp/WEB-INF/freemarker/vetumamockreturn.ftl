@@ -1,7 +1,9 @@
 <#escape x as x?html>
 <!DOCTYPE HTML>
 <html>
-<head></head>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
 <body>
 
 <form action="${vetumaRequest.RETURL}" method="post">
@@ -19,7 +21,6 @@
         <input type="hidden" name="STATUS" value="${vetumaRequest.STATUS}"/>
         <input type="hidden" name="MAC" value="${vetumaRequestMAC}"/>
         <input type="hidden" name="VTJDATA" value="${vetumaRequest.VTJDATA}"/>
-        <input type="hidden" name="CSRFToken" value="${CSRFToken!}"/>
         <input id="returnsubmit" type="submit" value="Palaa palveluun"/>
 
 </form>

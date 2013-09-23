@@ -40,7 +40,7 @@ public interface AuthorDao {
 
     VerifiedAuthor getVerifiedAuthor(Long initiativeId, VerifiedUserId userId);
 
-    void deleteAuthor(NormalAuthorId authorId);
+    void deleteAuthorAndParticipant(NormalAuthorId authorId);
 
     void updateManagementHash(NormalAuthorId authorId, String newManagementHash);
 
@@ -52,5 +52,5 @@ public interface AuthorDao {
 
     List<String> findVerifiedAuthorEmails(Long initiativeId);
 
-    void deleteAuthor(Long initiativeId, VerifiedUserId authorToDelete);
+    void deleteAuthorAndParticipant(Long initiativeId, VerifiedUserId authorToDelete);
 }

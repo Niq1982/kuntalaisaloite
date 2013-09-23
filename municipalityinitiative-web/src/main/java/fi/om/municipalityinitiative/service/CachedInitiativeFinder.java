@@ -53,6 +53,7 @@ public class CachedInitiativeFinder {
     @Transactional(readOnly = true)
     public List<InitiativeListInfo> findIframeInitiatives(InitiativeSearch search) {
         search.setLimit(Math.min(search.getLimit(), Urls.MAX_IFRAME_INITIATIVE_COUNT));
+        search.setShow(InitiativeSearch.Show.all);
         return initiativeDao.findCached(search).list;
     }
 }

@@ -37,8 +37,7 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static fi.om.municipalityinitiative.web.Urls.LOGIN_FI;
-import static fi.om.municipalityinitiative.web.Urls.LOGIN_SV;
+import static fi.om.municipalityinitiative.web.Urls.*;
 import static fi.om.municipalityinitiative.web.Views.VETUMA_LOGIN_VIEW;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -69,7 +68,7 @@ public class VetumaLoginController extends DefaultLoginController {
     /*
     * Login
     */
-    @RequestMapping(value={LOGIN_FI, LOGIN_SV}, method=GET)
+    @RequestMapping(value={VETUMA_FI, VETUMA_SV}, method=GET)
     public ModelAndView vetumaLoginGet(@RequestParam(required = false) String target, HttpServletRequest request, HttpSession session, Locale locale, Model model) {
         Urls urls = Urls.get(locale);
 
@@ -88,9 +87,9 @@ public class VetumaLoginController extends DefaultLoginController {
             // Set request specific fields
             vetumaRequest.setTimestamp(new DateTime());
             vetumaRequest.setLG(locale.getLanguage());
-            vetumaRequest.setRETURL(urls.login());
-            vetumaRequest.setCANURL(urls.login());
-            vetumaRequest.setERRURL(urls.login());
+            vetumaRequest.setRETURL(urls.vetumaLogin());
+            vetumaRequest.setCANURL(urls.vetumaLogin());
+            vetumaRequest.setERRURL(urls.vetumaLogin());
 
             // Assign MAC
             String mac = encryptionService.vetumaMAC(vetumaRequest.toMACString());
@@ -103,7 +102,7 @@ public class VetumaLoginController extends DefaultLoginController {
         }
     }
 
-    @RequestMapping(value={LOGIN_FI, LOGIN_SV}, method=POST)
+    @RequestMapping(value={VETUMA_FI, VETUMA_SV}, method=POST)
     public View vetumaLoginPost(
             VetumaLoginResponse vetumaResponse,
             Locale locale,

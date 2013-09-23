@@ -182,7 +182,7 @@ public class JdbcAuthorDao implements AuthorDao {
     }
 
     @Override
-    public void deleteAuthor(NormalAuthorId authorId) {
+    public void deleteAuthorAndParticipant(NormalAuthorId authorId) {
 
         Long initiativeId = queryFactory.from(QAuthor.author)
                 .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
@@ -191,8 +191,7 @@ public class JdbcAuthorDao implements AuthorDao {
 
         // Lock all authors of the initiative from another transactions
         queryFactory.from(QAuthor.author)
-                .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
-                .where(QParticipant.participant.municipalityInitiativeId.eq(initiativeId))
+                .where(QAuthor.author.initiativeId.eq(initiativeId))
                 .forUpdate().of(QAuthor.author).list(QAuthor.author.participantId);
 
         assertSingleAffection(queryFactory.delete(QAuthor.author)
@@ -214,8 +213,7 @@ public class JdbcAuthorDao implements AuthorDao {
     }
 
     @Override
-    public void deleteAuthor(Long initiativeId, VerifiedUserId authorToDelete) {
-
+    public void deleteAuthorAndParticipant(Long initiativeId, VerifiedUserId authorToDelete) {
 
         // Lock all authors of the initiative from another transactions
 
@@ -243,7 +241,6 @@ public class JdbcAuthorDao implements AuthorDao {
                 .count();
 
         assertNotZero(authorCount, "Deleting last verified author is forbidden");
-
 
     }
 
@@ -301,9 +298,10 @@ public class JdbcAuthorDao implements AuthorDao {
         return queryFactory.from(QVerifiedAuthor.verifiedAuthor)
                 .innerJoin(QVerifiedAuthor.verifiedAuthor.verifiedAuthorVerifiedUserFk, QVerifiedUser.verifiedUser)
                 .innerJoin(QVerifiedUser.verifiedUser._verifiedParticipantVerifiedUserFk, QVerifiedParticipant.verifiedParticipant)
-                .leftJoin(QVerifiedUser.verifiedUser.verifiedUserMunicipalityFk, QMunicipality.municipality)
                 .where(QVerifiedAuthor.verifiedAuthor.initiativeId.eq(initiativeId))
                 .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
+                .innerJoin(QVerifiedAuthor.verifiedAuthor.verifiedAuthorInitiativeFk, QMunicipalityInitiative.municipalityInitiative)
+                .innerJoin(QMunicipalityInitiative.municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
                 .list(Mappings.verifiedAuthorMapper);
     }
 }

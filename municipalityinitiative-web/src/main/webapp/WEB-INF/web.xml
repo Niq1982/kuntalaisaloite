@@ -26,6 +26,11 @@
     </context-param>
 
     <context-param>
+        <param-name>org.eclipse.jetty.servlet.SessionIdPathParameterName</param-name>
+        <param-value>none</param-value>
+    </context-param>
+
+    <context-param>
         <param-name>contextClass</param-name>
         <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
     </context-param>
@@ -90,13 +95,22 @@
     </filter>
     <filter-mapping>
         <filter-name>iso88591CharsetFilter</filter-name>
-        <url-pattern>/fi/login</url-pattern>
+        <url-pattern>/fi/vetuma</url-pattern>
     </filter-mapping>
     <filter-mapping>
         <filter-name>iso88591CharsetFilter</filter-name>
-        <url-pattern>/sv/login</url-pattern>
+        <url-pattern>/sv/vetuma</url-pattern>
     </filter-mapping>
-    
+
+    <filter-mapping>
+        <filter-name>iso88591CharsetFilter</filter-name>
+        <url-pattern>/vetumamockreturn</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>iso88591CharsetFilter</filter-name>
+        <url-pattern>/vetumamock</url-pattern>
+    </filter-mapping>
+
     <filter>
         <filter-name>errorFilter</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -156,6 +170,10 @@
     <filter-mapping>
         <filter-name>securityFilter</filter-name>
         <url-pattern>/fi/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>securityFilter</filter-name>
+        <url-pattern>/om-login/*</url-pattern>
     </filter-mapping>
     <filter-mapping>
         <filter-name>securityFilter</filter-name>

@@ -54,10 +54,10 @@ public class DefaultLoginController extends BaseLoginController {
 
         userService.adminLogin(u, p, request);
         if (Strings.isNullOrEmpty(target)) {
-            return new RedirectView(Urls.get(locale).frontpage());
+            return new RedirectView(Urls.get(locale).frontpage(), false, true, false);
         }
         else {
-            return new RedirectView(Urls.get(locale).getBaseUrl() + target);
+            return new RedirectView(Urls.get(locale).getBaseUrl() + target, false, true, false);
         }
 
     }
@@ -104,6 +104,6 @@ public class DefaultLoginController extends BaseLoginController {
             throw new AccessDeniedException("Access denied");
         }
         userService.adminLogin(u, p, request);
-        return new RedirectView(Urls.get(Locales.LOCALE_FI).frontpage());
+        return new RedirectView(Urls.get(Locales.LOCALE_FI).frontpage(), false, true, false);
     }
 }

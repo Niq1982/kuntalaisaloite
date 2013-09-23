@@ -55,6 +55,10 @@ public final class Urls {
 
     public static final String LOGIN_SV =        "/sv/login";
 
+    public static final String VETUMA_FI =        "/fi/vetuma";
+
+    public static final String VETUMA_SV =        "/sv/vetuma";
+
     public static final String MODERATOR_LOGIN = "/om-login";
 
     public static final String LOGOUT_FI =       "/fi/logout";
@@ -153,8 +157,6 @@ public final class Urls {
 
     public static final String ACTION_CONTACT_AUTHOR = "action-contact-author";
 
-    public static final String ACTION_VOTE = "action-vote";
-
     // Actions for the content editor
 
     public static final String ACTION_EDITOR_SAVE_DRAFT = "action-editor-save-draft";
@@ -249,9 +251,13 @@ public final class Urls {
 
     public static final String IFRAME_GENERATOR_SV = "/sv/widget";
 
-    public static final String IFRAME_FI = "/fi/iframe";
+    public static final String IFRAME_OLD_FI = "/fi/iframe";
 
-    public static final String IFRAME_SV = "/sv/iframe";
+    public static final String IFRAME_OLD_SV = "/sv/iframe";
+
+    public static final String IFRAME_FI = "/iframe/fi";
+
+    public static final String IFRAME_SV = "/iframe/sv";
 
     public static final String OWN_INITIATIVES_FI = "/fi/omat";
 
@@ -261,15 +267,21 @@ public final class Urls {
 
     private final String baseUrl;
 
+    private final String iframeBaseUrl;
+
+    private final String apiBaseUrl;
+
     private final Locale locale;
 
-    public static void initUrls(String baseUrl) {
-        FI = new Urls(baseUrl, LOCALE_FI);
-        SV = new Urls(baseUrl, LOCALE_SV);
+    public static void initUrls(String baseUrl, String iframeBaseUrl, String apiBaseUrl) {
+        FI = new Urls(baseUrl, iframeBaseUrl, apiBaseUrl, LOCALE_FI);
+        SV = new Urls(baseUrl, iframeBaseUrl, apiBaseUrl, LOCALE_SV);
     }
 
-    private Urls(String baseUrl, Locale locale) {
+    private Urls(String baseUrl, String iframeBaseUrl, String apiBaseUrl, Locale locale) {
         this.baseUrl = baseUrl;
+        this.iframeBaseUrl = iframeBaseUrl;
+        this.apiBaseUrl = apiBaseUrl;
         this.locale = locale;
     }
 
@@ -351,10 +363,6 @@ public final class Urls {
         return getLocalizedPageUrl(UPDATE_FI, UPDATE_SV).replace(ID_PARAMETER, initiativeId.toString());
     }
 
-    public String vote(Long initiativeId) {
-        return view(initiativeId) + "?" + ACTION_VOTE;
-    }
-
     public String initiative(Long initiativeId) {
         return baseUrl + INITIATIVE.replace(ID_PARAMETER, initiativeId.toString());
     }
@@ -364,7 +372,7 @@ public final class Urls {
     }
 
     public String iframe() {
-        return getLocalizedPageUrl(IFRAME_FI, IFRAME_SV);
+        return iframeBaseUrl + (this.equals(FI) ? IFRAME_FI : IFRAME_SV);
     }
 
     public String iframe(Long municipalityId) {
@@ -387,24 +395,28 @@ public final class Urls {
         return getLocalizedPageUrl(MANAGE_AUTHORS_FI, MANAGE_AUTHORS_SV).replace(ID_PARAMETER, id.toString());
     }
 
-    public String login() {
-        return getLocalizedPageUrl(LOGIN_FI, LOGIN_SV);
+    public String vetumaLogin() {
+        return getLocalizedPageUrl(VETUMA_FI, VETUMA_SV);
     }
 
     public String loginAuthor(String managementHash) {
-        return login() + "?" + PARAM_MANAGEMENT_CODE + "=" + managementHash;
+        return loginAuthor() + "?" + PARAM_MANAGEMENT_CODE + "=" + managementHash;
+    }
+
+    public String loginAuthor() {
+        return getLocalizedPageUrl(LOGIN_FI, LOGIN_SV);
     }
 
     public String api() {
-        return baseUrl+API;
+        return apiBaseUrl+API;
     }
 
     public String initiatives() {
-        return baseUrl + INITIATIVES;
+        return apiBaseUrl + INITIATIVES;
     }
 
     public String municipalities() {
-        return baseUrl + MUNICIPALITIES;
+        return apiBaseUrl + MUNICIPALITIES;
     }
 
     public String invitation(Long initiativeId, String confirmationCode) {
@@ -448,12 +460,12 @@ public final class Urls {
         return baseUrl + CONTENT_EDITOR_HELP;
     }
 
-    public String login(String target) {
+    public String vetumaLogin(String target) {
         if (Strings.isNullOrEmpty(target)) {
             target = baseUrl;
         }
 
-        return login() + "?"+ TARGET +"=" + urlEncode(target);
+        return vetumaLogin() + "?"+ TARGET +"=" + urlEncode(target);
     }
 
     public String moderatorLogin() {
@@ -530,8 +542,8 @@ public final class Urls {
         return ret;
     }
 
-    public boolean isLoginPage(String target) {
-        return target.startsWith(login());
+    public boolean isVetumaLoginPage(String target) {
+        return target.startsWith(vetumaLogin());
     }
 
     public String municipalityModeration() {
@@ -561,10 +573,14 @@ public final class Urls {
     }
 
     public String loginToManagement(Long initiativeId) {
-        return login((this.equals(FI) ? MANAGEMENT_FI : MANAGEMENT_SV).replace(ID_PARAMETER, initiativeId.toString()));
+        return vetumaLogin((this.equals(FI) ? MANAGEMENT_FI : MANAGEMENT_SV).replace(ID_PARAMETER, initiativeId.toString()));
     }
 
     public String notAdultError() {
         return getLocalizedPageUrl(VETUMA_ERROR_FI, VETUMA_ERROR_SV) + "?"+ VETUMA_AGE_ERROR_PARAMETER;
+    }
+
+    public static boolean isVetumaURI(String uri) {
+        return VETUMA_FI.equals(uri) || VETUMA_SV.equals(uri);
     }
 }

@@ -7,7 +7,7 @@ import org.joda.time.Days;
 
 public class AuthorInvitation {
 
-    private static final Days INVITATION_EXPIRE_TIME = Days.days(1); // TODO: Move to properties later
+    private static final Days INVITATION_EXPIRE_TIME = Days.days(7); // TODO: Move to properties later
 
     private Long initiativeId;
     private String confirmationCode;

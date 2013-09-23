@@ -29,7 +29,7 @@ public class TestDataService {
         String managementHash = RandomHashGenerator.randomString(10);
 
         Long initiativeId = initiativeDao.prepareInitiative(template.initiative.getMunicipality().getId());
-        Long participantId = participantDao.prepareParticipant(initiativeId, template.initiative.getMunicipality().getId(), null, Membership.community, template.getAuthor().getContactInfo().isShowName());
+        Long participantId = participantDao.prepareConfirmedParticipant(initiativeId, template.initiative.getMunicipality().getId(), null, Membership.community, template.getAuthor().getContactInfo().isShowName());
         NormalAuthorId authorId = authorDao.createAuthor(initiativeId, participantId, managementHash);
 
         InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto();

@@ -81,6 +81,16 @@ public class JdbcAuthorDaoTest {
     }
 
     @Test
+    public void find_verified_authors_links_municipalities_from_the_initiative_not_from_author() {
+        Long anotherMunicipality = testHelper.createTestMunicipality("Another municipality");
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality).applyAuthor().withParticipantMunicipality(anotherMunicipality).toInitiativeDraft());
+
+        VerifiedAuthor verifiedAuthor = authorDao.findVerifiedAuthors(initiativeId).get(0);
+        assertThat(verifiedAuthor.getMunicipality().isPresent(), is(true));
+        assertThat(verifiedAuthor.getMunicipality().get().getId(), is(testMunicipality));
+    }
+
+    @Test
     public void login_as_author_returns_authors_initiative() {
         Long collaborativeAccepted = testHelper.createCollaborativeAccepted(testMunicipality);
 
@@ -113,7 +123,7 @@ public class JdbcAuthorDaoTest {
         int originalAuthorCount = authorDao.findNormalAuthors(initiativeId).size();
         long originalParticipantCount = participantCountOfInitiative(initiativeId);
 
-        authorDao.deleteAuthor(new NormalAuthorId(authorId));
+        authorDao.deleteAuthorAndParticipant(new NormalAuthorId(authorId));
 
         assertThat(authorDao.findNormalAuthors(initiativeId), hasSize(originalAuthorCount - 1));
         assertThat(participantCountOfInitiative(initiativeId), is(originalParticipantCount - 1));
@@ -128,7 +138,7 @@ public class JdbcAuthorDaoTest {
         int originalAuthorCount = authorDao.findNormalAuthors(initiativeId).size();
         int originalParticipantCount = testHelper.getInitiative(initiativeId).getParticipantCount();
 
-        authorDao.deleteAuthor(new NormalAuthorId(authorId));
+        authorDao.deleteAuthorAndParticipant(new NormalAuthorId(authorId));
 
         assertThat(authorDao.findNormalAuthors(initiativeId), hasSize(originalAuthorCount - 1));
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(originalParticipantCount - 1));
@@ -145,7 +155,7 @@ public class JdbcAuthorDaoTest {
 
         thrown.expect(OperationNotAllowedException.class);
         thrown.expectMessage(containsString("Deleting last author is forbidden"));
-        authorDao.deleteAuthor(testHelper.getLastNormalAuthorId());
+        authorDao.deleteAuthorAndParticipant(testHelper.getLastNormalAuthorId());
     }
 
     @Test

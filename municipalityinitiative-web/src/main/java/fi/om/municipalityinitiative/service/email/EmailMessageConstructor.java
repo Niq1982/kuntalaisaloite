@@ -105,7 +105,7 @@ public class EmailMessageConstructor {
                 helper.addTo(to);
             }
             try {
-                helper.setFrom(environmentSettings.getDefaultReplyTo(), "Kuntalaisaloitepalvelu");
+                helper.setFrom(environmentSettings.getDefaultReplyTo(), solveEmailFrom());
             } catch (UnsupportedEncodingException e) {
                 helper.setFrom(environmentSettings.getDefaultReplyTo());
             }
@@ -118,6 +118,10 @@ public class EmailMessageConstructor {
             throw new RuntimeException(e);
         }
 
+    }
+
+    private String solveEmailFrom() {
+        return "Kuntalaisaloitepalvelu" + (environmentSettings.hasAnyTestOptionsEnabled() ? " TEST" : "");
     }
 
     private static String stripTextRows(String text, int maxEmptyRows) {

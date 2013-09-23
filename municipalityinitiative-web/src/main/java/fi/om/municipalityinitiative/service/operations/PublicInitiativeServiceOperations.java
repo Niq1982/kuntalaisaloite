@@ -50,7 +50,7 @@ public class PublicInitiativeServiceOperations {
         PreparedInitiativeData preparedInitiativeData = new PreparedInitiativeData();
 
         preparedInitiativeData.initiativeId = initiativeDao.prepareInitiative(createDto.getMunicipality());
-        Long participantId = participantDao.prepareParticipant(preparedInitiativeData.initiativeId,
+        Long participantId = participantDao.prepareConfirmedParticipant(preparedInitiativeData.initiativeId,
                 createDto.getHomeMunicipality(),
                 createDto.getParticipantEmail(),
                 createDto.hasMunicipalMembership() ? createDto.getMunicipalMembership() : Membership.none,

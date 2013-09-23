@@ -173,8 +173,9 @@
     
     <link href="${urls.baseUrl}/favicon.ico?version=${resourcesVersion}" rel="shortcut icon" type="image/vnd.microsoft.icon" />
     
-    <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/fonts.css?version=${resourcesVersion}" />
-    <!--[if IE ]>
+    <#-- TODO: Fix local @font-face and remove Google fonts below -->
+    <#--<link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/fonts.css?version=${resourcesVersion}" />-->
+    <#--<!--[if IE ]>
         <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/fonts-ie.css?version=${resourcesVersion}" />
     <![endif]-->
    
@@ -212,7 +213,8 @@
     -->
     <#noescape>${editorStyles!""}</#noescape>
 
-    <#--<link href='https://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic' rel='stylesheet' type='text/css' />-->    
+    <#-- TODO: Remove when local @font-face is fixed -->
+    <link href="https://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
 </head>
 <body class="${locale}">
     <p id="accesskeys">

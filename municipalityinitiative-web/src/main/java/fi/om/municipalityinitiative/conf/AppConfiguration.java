@@ -425,6 +425,9 @@ public class AppConfiguration {
 
     @PostConstruct
     public void initUrls() {
-        Urls.initUrls(env.getRequiredProperty(PropertyNames.baseURL));
+        String baseUrl = env.getRequiredProperty(PropertyNames.baseURL);
+        Urls.initUrls(baseUrl,
+                env.getProperty(PropertyNames.iframeBaseUrl, baseUrl),
+                env.getProperty(PropertyNames.apiBaseUrl, baseUrl));
     }
 }
