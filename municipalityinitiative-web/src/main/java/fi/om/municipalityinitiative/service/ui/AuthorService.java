@@ -42,6 +42,7 @@ public class AuthorService {
     @Resource
     private AuthorServiceOperations operations;
 
+    @Transactional(readOnly = false)
     public void createAuthorInvitation(Long initiativeId, LoginUserHolder loginUserHolder, AuthorInvitationUICreateDto uiCreateDto) {
 
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
@@ -51,6 +52,7 @@ public class AuthorService {
 
     }
 
+    @Transactional(readOnly = false)
     public void resendInvitation(Long initiativeId, LoginUserHolder loginUserHolder, String confirmationCode) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
@@ -71,6 +73,7 @@ public class AuthorService {
         return findAuthors(initiativeId);
     }
 
+    @Transactional(readOnly = false)
     public void deleteAuthor(Long initiativeId, LoginUserHolder loginUserHolder, Long authorId) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 

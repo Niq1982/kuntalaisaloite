@@ -166,6 +166,7 @@ public class InitiativeManagementService {
         }
     }
 
+    @Transactional(readOnly = false)
     public void sendReviewAndStraightToMunicipality(Long initiativeId, LoginUserHolder loginUserHolder, String sentComment) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         operations.doSendReviewStraightToMunicipality(initiativeId, sentComment);
@@ -174,6 +175,7 @@ public class InitiativeManagementService {
         emailService.sendNotificationToModerator(initiativeId);
     }
 
+    @Transactional(readOnly = false)
     public void sendReviewWithUndefinedType(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
@@ -183,6 +185,7 @@ public class InitiativeManagementService {
         emailService.sendNotificationToModerator(initiativeId);
     }
 
+    @Transactional(readOnly = false)
     public void sendFixToReview(Long initiativeId, LoginUserHolder requiredLoginUserHolder) {
         requiredLoginUserHolder.assertManagementRightsForInitiative(initiativeId);
         operations.toSendFixToReview(initiativeId);
@@ -191,12 +194,14 @@ public class InitiativeManagementService {
         emailService.sendNotificationToModerator(initiativeId);
     }
 
+    @Transactional(readOnly = false)
     public void publishAndStartCollecting(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         operations.doPublishAndStartCollecting(initiativeId);
         emailService.sendStatusEmail(initiativeId, EmailMessageType.PUBLISHED_COLLECTING);
     }
 
+    @Transactional(readOnly = false)
     public void sendToMunicipality(Long initiativeId, LoginUserHolder requiredLoginUserHolder, String sentComment, Locale locale) {
 
         requiredLoginUserHolder.assertManagementRightsForInitiative(initiativeId);

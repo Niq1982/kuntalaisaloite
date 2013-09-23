@@ -25,6 +25,7 @@ import javax.annotation.Resource;
 import javax.inject.Inject;
 
 import java.util.Collections;
+import java.util.List;
 
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 import static fi.om.municipalityinitiative.sql.QParticipant.participant;
@@ -96,10 +97,10 @@ public class TestHelper {
         queryFactory.delete(QVerifiedAuthor.verifiedAuthor).execute();
         queryFactory.delete(QVerifiedParticipant.verifiedParticipant).execute();
         queryFactory.delete(QVerifiedUser.verifiedUser).execute();
+        queryFactory.delete(QEmail.email).execute();
         queryFactory.delete(QMunicipalityInitiative.municipalityInitiative).execute();
         queryFactory.delete(QInfoText.infoText).execute();
         queryFactory.delete(QAdminUser.adminUser).execute();
-        queryFactory.delete(QEmail.email).execute();
         authorLoginUserHolder = null;
         lastInitiativeId = null;
         lastAuthorId = null;
@@ -729,6 +730,17 @@ public class TestHelper {
                 .where(QMunicipalityInitiative.municipalityInitiative.id.eq(id))
                 .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
                 .uniqueResult(Mappings.initiativeInfoMapping);
+    }
+
+    @Transactional
+    public List<EmailDto> getQueuedEmails() {
+        List<EmailDto> list = queryFactory.from(QEmail.email)
+                .where(QEmail.email.tried.eq(false))
+                .list(JdbcEmailDao.emailMapping);
+        for (EmailDto emailDto : list) {
+            ReflectionTestUtils.assertNoNullFields(emailDto);
+        }
+        return list;
     }
 
     public String getPreviousTestManagementHash() {

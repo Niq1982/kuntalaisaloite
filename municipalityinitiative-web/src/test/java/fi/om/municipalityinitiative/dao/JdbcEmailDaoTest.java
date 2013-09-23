@@ -34,6 +34,7 @@ public class JdbcEmailDaoTest {
     public static final String BODYTEXT = "bodytext";
     public static final String SENDER = "sender";
     public static final String REPLYTO = "replyto";
+
     @Resource
     TestHelper testHelper;
 

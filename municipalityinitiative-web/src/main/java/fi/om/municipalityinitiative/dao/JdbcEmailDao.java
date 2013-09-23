@@ -75,7 +75,7 @@ public class JdbcEmailDao implements EmailDao {
                 .execute());
     }
 
-    private static final MappingProjection<EmailDto> emailMapping
+    static final MappingProjection<EmailDto> emailMapping
             = new MappingProjection<EmailDto>(EmailDto.class, QEmail.email.all()) {
         @Override
         protected EmailDto map(Tuple row) {

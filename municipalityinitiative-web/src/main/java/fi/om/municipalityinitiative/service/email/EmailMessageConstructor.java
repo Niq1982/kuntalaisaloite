@@ -6,9 +6,11 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.mysema.commons.lang.Assert;
 import fi.om.municipalityinitiative.conf.EnvironmentSettings;
+import fi.om.municipalityinitiative.dao.EmailDao;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.pdf.ParticipantToPdfExporter;
+import fi.om.municipalityinitiative.util.EmailAttachmentType;
 import fi.om.municipalityinitiative.util.Maybe;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -46,6 +48,9 @@ public class EmailMessageConstructor {
 
     @Resource
     private FreeMarkerConfigurer freemarkerConfig;
+
+    @Resource
+    private EmailDao emailDao;
 
     private static final Logger log = LoggerFactory.getLogger(EmailMessageConstructor.class);
 
@@ -162,20 +167,22 @@ public class EmailMessageConstructor {
         }
     }
 
-    public EmailMessageDraft fromTemplate(String templateName) {
-        return new EmailMessageDraft(templateName);
+    public EmailMessageDraft fromTemplate(Long initiativeId, String templateName) {
+        return new EmailMessageDraft(initiativeId, templateName);
     }
 
     public class EmailMessageDraft {
+        private final Long initiativeId;
+        private final String templateName;
         private List<String> recipients = Lists.newArrayList();
         private String subject;
-        private String templateName;
         private Map<String, Object> dataMap;
 
         private Maybe<Initiative> attachmentInitiative = Maybe.absent();
         private Maybe<? extends List<? extends Participant>> attachmentParticipants = Maybe.absent();
 
-        public EmailMessageDraft(String templateName) {
+        public EmailMessageDraft(Long initiativeId, String templateName) {
+            this.initiativeId = initiativeId;
             this.templateName = templateName;
         }
 
@@ -226,6 +233,13 @@ public class EmailMessageConstructor {
 
             try {
                 javaMailSender.send(mimeMessageHelper.getMimeMessage());
+                emailDao.addEmail(initiativeId, subject, recipients,
+                        processTemplate(templateName + "-html", dataMap),
+                        processTemplate(templateName + "-text", dataMap),
+                        solveEmailFrom(),
+                        environmentSettings.getDefaultReplyTo(),
+                        attachmentInitiative.isPresent() ? EmailAttachmentType.PARTICIPANTS : EmailAttachmentType.NONE
+                        );
                 log.info("Email sent.");
             } catch (MailSendException e) {
                 Address[] recipients;
