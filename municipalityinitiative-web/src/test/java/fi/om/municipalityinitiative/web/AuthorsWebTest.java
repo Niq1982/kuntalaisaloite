@@ -68,6 +68,7 @@ public class AuthorsWebTest extends WebTestBase {
         
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_INVITATION_SENT);
         assertTextContainedByXPath("//div[@class='view-block last']//span[@class='status']", getMessage(MSG_INVITATION_UNCONFIRMED));
+        assertTotalEmailsInQueue(1);
     }
 
     @Test

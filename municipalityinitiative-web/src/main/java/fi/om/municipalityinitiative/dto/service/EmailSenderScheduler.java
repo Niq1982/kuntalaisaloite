@@ -126,7 +126,7 @@ public class EmailSenderScheduler {
                 addAttachment(helper, initiative, participants);
             }
 
-            // javaMailSender.send(helper.getMimeMessage());
+            javaMailSender.send(helper.getMimeMessage());
             System.out.println(javaMailSender.getClass());
         }
 
