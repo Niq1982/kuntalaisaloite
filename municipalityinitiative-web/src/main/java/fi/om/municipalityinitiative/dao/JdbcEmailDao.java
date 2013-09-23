@@ -5,10 +5,8 @@ import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
 import com.mysema.query.types.expr.DateTimeExpression;
-import fi.om.municipalityinitiative.dto.InfoTextSubject;
 import fi.om.municipalityinitiative.dto.service.EmailDto;
 import fi.om.municipalityinitiative.sql.QEmail;
-import fi.om.municipalityinitiative.sql.QInfoText;
 import fi.om.municipalityinitiative.util.EmailAttachmentType;
 import org.joda.time.DateTime;
 
@@ -68,6 +66,15 @@ public class JdbcEmailDao implements EmailDao {
                 .execute());
     }
 
+    @Override
+    public void failed(Long emailId) {
+        assertSingleAffection(queryFactory.update(QEmail.email)
+                .set(QEmail.email.lastFailed, CURRENT_TIME)
+                .set(QEmail.email.tried, true)
+                .where(QEmail.email.id.eq(emailId))
+                .execute());
+    }
+
     private static final MappingProjection<EmailDto> emailMapping
             = new MappingProjection<EmailDto>(EmailDto.class, QEmail.email.all()) {
         @Override
@@ -76,7 +83,7 @@ public class JdbcEmailDao implements EmailDao {
             emailDto.setAttachmentType(row.get(QEmail.email.attachment));
             emailDto.setBodyHtml(row.get(QEmail.email.bodyHtml));
             emailDto.setBodyText(row.get(QEmail.email.bodyText));
-            emailDto.setFailed(row.get(QEmail.email.lastFailed));
+            emailDto.setLastFailed(row.get(QEmail.email.lastFailed));
             emailDto.setSucceeded(row.get(QEmail.email.succeeded));
             emailDto.setTried(row.get(QEmail.email.tried));
             emailDto.setReplyTo(row.get(QEmail.email.replyTo));

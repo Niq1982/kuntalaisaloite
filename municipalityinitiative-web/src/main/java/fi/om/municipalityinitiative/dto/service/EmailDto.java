@@ -31,7 +31,7 @@ public class EmailDto {
 
     private Maybe<DateTime> succeeded;
 
-    private Maybe<DateTime> failed;
+    private Maybe<DateTime> lastFailed;
 
     private boolean tried;
 
@@ -96,8 +96,8 @@ public class EmailDto {
         this.succeeded = Maybe.fromNullable(succeeded);
     }
 
-    public void setFailed(DateTime failed) {
-        this.failed = Maybe.fromNullable(failed);
+    public void setLastFailed(DateTime lastFailed) {
+        this.lastFailed = Maybe.fromNullable(lastFailed);
     }
 
     public void setTried(boolean tried) {
@@ -144,8 +144,8 @@ public class EmailDto {
         return succeeded;
     }
 
-    public Maybe<DateTime> getFailed() {
-        return failed;
+    public Maybe<DateTime> getLastFailed() {
+        return lastFailed;
     }
 
     public boolean isTried() {
@@ -154,5 +154,9 @@ public class EmailDto {
 
     public EmailAttachmentType getAttachmentType() {
         return attachmentType;
+    }
+
+    public Long getEmailId() {
+        return emailId;
     }
 }

@@ -21,4 +21,6 @@ public interface EmailDao {
     EmailDto get(Long emailId);
 
     void succeed(Long emailId);
+
+    void failed(Long sendableEmail);
 }

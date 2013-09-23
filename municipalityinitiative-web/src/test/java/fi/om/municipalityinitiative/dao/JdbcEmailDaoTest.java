@@ -6,7 +6,6 @@ import fi.om.municipalityinitiative.util.EmailAttachmentType;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +20,6 @@ import java.util.List;
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 
@@ -70,7 +68,7 @@ public class JdbcEmailDaoTest {
         Long sendableEmail = createSendableEmail();
         EmailDto unsent = emailDao.get(sendableEmail);
         precondition(unsent.getSucceeded().isPresent(), is(false));
-        precondition(unsent.getFailed().isPresent(), is(false));
+        precondition(unsent.getLastFailed().isPresent(), is(false));
         precondition(unsent.isTried(), is(false));
 
         emailDao.succeed(sendableEmail);
@@ -79,7 +77,39 @@ public class JdbcEmailDaoTest {
 
         assertThat(sent.isTried(), is(true));
         assertThat(sent.getSucceeded().isPresent(), is(true));
-        assertThat(sent.getFailed().isPresent(), is(false));
+        assertThat(sent.getLastFailed().isPresent(), is(false));
+    }
+
+    @Test
+    public void mark_email_as_failed_sets_failure_time() {
+        Long sendableEmail = createSendableEmail();
+        EmailDto unsent = emailDao.get(sendableEmail);
+        precondition(unsent.getSucceeded().isPresent(), is(false));
+        precondition(unsent.getLastFailed().isPresent(), is(false));
+        precondition(unsent.isTried(), is(false));
+
+        emailDao.failed(sendableEmail);
+
+        EmailDto sent = emailDao.get(sendableEmail);
+
+        assertThat(sent.isTried(), is(true));
+        assertThat(sent.getLastFailed().isPresent(), is(true));
+        assertThat(sent.getSucceeded().isPresent(), is(false));
+    }
+
+    @Test
+    public void find_untried_emails_returns_only_untried_emails() {
+        Long untried = createSendableEmail();
+
+        Long failed = createSendableEmail();
+        emailDao.failed(failed);
+
+        Long succeeded = createSendableEmail();
+        emailDao.succeed(succeeded);
+
+        List<EmailDto> untriedEmails = emailDao.findUntriedEmails();
+        assertThat(untriedEmails, hasSize(1));
+        assertThat(untriedEmails.get(0).getEmailId(), is(untried));
 
     }
 
