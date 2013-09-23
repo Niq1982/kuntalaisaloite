@@ -95,6 +95,8 @@ public class AuthorsWebTest extends WebTestBase {
 
         assertInvitationPageIsGone(invitation);
 
+        assertTotalEmailsInQueue(1);
+
     }
 
     @Test
@@ -109,6 +111,8 @@ public class AuthorsWebTest extends WebTestBase {
         clickDialogButton("Hyväksy ja tallenna tiedot");
 
         assertPageHasValidationErrors();
+
+        assertTotalEmailsInQueue(0);
     }
 
     @Test
@@ -189,6 +193,7 @@ public class AuthorsWebTest extends WebTestBase {
 
         clickDialogButton("Hyväksy ja tallenna tiedot");
         assertTextContainedByClass("msg-success", "Liittymisesi vastuuhenkilöksi on nyt vahvistettu ja olet kirjautunut sisään palveluun.");
+        assertTotalEmailsInQueue(1);
 
     }
 
@@ -218,6 +223,7 @@ public class AuthorsWebTest extends WebTestBase {
         assertTextContainedByClass("msg-success", "Olet hylännyt kutsun vastuuhenkilöksi eikä tietojasi ole tallennettu aloitteeseen");
 
         assertInvitationPageIsGone(invitation);
+        assertTotalEmailsInQueue(0);
 
     }
     
@@ -239,6 +245,7 @@ public class AuthorsWebTest extends WebTestBase {
         getElemContaining("Poista", "button").click();
         
         assertTextContainedByClass("msg-success", "Osallistuja poistettu");
+        assertTotalEmailsInQueue(0);
         
     }
     
@@ -258,6 +265,7 @@ public class AuthorsWebTest extends WebTestBase {
         getElemContaining("Poista vastuuhenkilö", "button").click();
         
         assertTextContainedByClass("msg-success", "Vastuuhenkilö poistettu");
+        assertTotalEmailsInQueue(2);
     }
 
     @Test
