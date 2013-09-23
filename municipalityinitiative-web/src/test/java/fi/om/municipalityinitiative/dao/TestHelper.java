@@ -30,6 +30,7 @@ import java.util.List;
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 import static fi.om.municipalityinitiative.sql.QParticipant.participant;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
 public class TestHelper {
@@ -537,6 +538,13 @@ public class TestHelper {
         insert.execute();
     }
 
+    @Transactional(readOnly = true)
+    public EmailDto getSingleQueuedEmail() {
+        List<EmailDto> queuedEmails = getQueuedEmails();
+        assertThat(queuedEmails, hasSize(1));
+        return queuedEmails.get(0);
+    }
+
     public static class AuthorDraft {
 
         public Long initiativeId;
@@ -736,6 +744,7 @@ public class TestHelper {
     public List<EmailDto> getQueuedEmails() {
         List<EmailDto> list = queryFactory.from(QEmail.email)
                 .where(QEmail.email.tried.eq(false))
+                .orderBy(QEmail.email.id.asc())
                 .list(JdbcEmailDao.emailMapping);
         for (EmailDto emailDto : list) {
             ReflectionTestUtils.assertNoNullFields(emailDto);
