@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Lists;
+import fi.om.municipalityinitiative.dao.EmailDao;
 import fi.om.municipalityinitiative.dao.JdbcSchemaVersionDao;
 import fi.om.municipalityinitiative.dto.SchemaVersion;
 import fi.om.municipalityinitiative.util.TaskExecutorAspect;
@@ -35,6 +36,9 @@ public class StatusServiceImpl implements StatusService {
 
     @Resource
     private TaskExecutorAspect taskExecutorAspect;
+
+    @Resource
+    private EmailDao emailDao;
 
     public static class KeyValueInfo {
         private String key;
@@ -76,6 +80,8 @@ public class StatusServiceImpl implements StatusService {
         list.add(new KeyValueInfo("appBuildTimeStamp", getFormattedBuildTimeStamp(resourcesVersion)));
 //        list.add(new KeyValueInfo("initiativeCount", initiativeDao.getInitiativeCount()));
         list.add(new KeyValueInfo("taskQueueLength", taskExecutorAspect.getQueueLength()));
+        list.add(new KeyValueInfo("emailQueueLength", emailDao.findUntriedEmails().size()));
+        list.add(new KeyValueInfo("failedEmails", emailDao.findFailedEmails().size()));
 
         return list;
     }

@@ -23,4 +23,6 @@ public interface EmailDao {
     void succeed(Long emailId);
 
     void failed(Long sendableEmail);
+
+    List<EmailDto> findFailedEmails();
 }

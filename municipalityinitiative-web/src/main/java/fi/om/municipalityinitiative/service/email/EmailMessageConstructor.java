@@ -142,7 +142,7 @@ public class EmailMessageConstructor {
             Assert.notNull(templateName, "templateName");
             Assert.notNull(dataMap, "dataMap");
 
-            log.info("About to send email to " + recipients + ": " + subject);
+            log.info("Persisting email to " + recipients + ": " + subject);
             emailDao.addEmail(initiativeId, subject, recipients,
                     processTemplate(templateName + "-html", dataMap),
                     processTemplate(templateName + "-text", dataMap),

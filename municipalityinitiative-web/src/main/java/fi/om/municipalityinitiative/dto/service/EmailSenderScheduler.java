@@ -50,14 +50,14 @@ public class EmailSenderScheduler {
     private AtomicBoolean interrupted = new AtomicBoolean(false);
 
     @Transactional(readOnly = false)
-    @Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelay = 5000)
     // TODO: Make scheduled function not transactional so we can even halt the scheduling at transaction errors to avoid multiple email-spamming when any sudden errors occure
+    // TODO: Make every email-sending in own transaction?
     public void sendEmails() {
             if (interrupted.get()) {
                 return;
             }
             try {
-                log.info("Checking emails");
                 loopAndSendEmails();
             } catch (Throwable e) {
                 stop();

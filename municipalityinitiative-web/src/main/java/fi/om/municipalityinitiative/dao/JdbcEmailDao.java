@@ -51,6 +51,14 @@ public class JdbcEmailDao implements EmailDao {
     }
 
     @Override
+    public List<EmailDto> findFailedEmails() {
+        return queryFactory.from(QEmail.email)
+                .where(QEmail.email.lastFailed.isNotNull())
+                .where(QEmail.email.succeeded.isNull())
+                .list(emailMapping);
+    }
+
+    @Override
     public EmailDto get(Long emailId) {
         return queryFactory.from(QEmail.email)
                 .where(QEmail.email.id.eq(emailId))
