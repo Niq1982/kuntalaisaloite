@@ -6,6 +6,7 @@ import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.dto.service.EmailDto;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
+import fi.om.municipalityinitiative.util.EmailAttachmentType;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.Urls;
 import org.junit.Before;
@@ -38,6 +39,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getRecipientsAsString(), is(AUTHOR_EMAIL));
         assertThat(email.getSubject(), is("Olet saanut linkin kuntalaisaloitteen tekemiseen Kuntalaisaloite.fi-palvelussa"));
         assertThat(email.getBodyHtml(), containsString(urls.loginAuthor(MANAGEMENT_HASH)));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
     }
 
     @Test
@@ -52,6 +54,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getBodyHtml(), containsString(urls.loginAuthor(MANAGEMENT_HASH)));
         assertThat(email.getBodyHtml(), containsString(urls.alt().loginAuthor(MANAGEMENT_HASH)));
         assertThat(email.getBodyHtml(), containsString(INITIATIVE_NAME));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
     }
     
     @Test
@@ -72,6 +75,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getBodyHtml(), containsString(AUTHOR_NAME));
         assertThat(email.getBodyHtml(), containsString(AUTHOR_PHONE));
         assertThat(email.getBodyHtml(), containsString(urls.moderatorLogin(initiativeId())));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
         
     }
 
@@ -90,6 +94,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
         assertThat(email.getBodyHtml(), containsString(INITIATIVE_NAME));
         assertThat(email.getBodyHtml(), containsString(urls.confirmParticipant(participantId, confirmationCode)));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
     }
 
     @Test
@@ -111,6 +116,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getBodyHtml(), containsString(urls.view(initiativeId())));
         assertThat(email.getBodyHtml(), containsString(EXTRA_INFO));
         assertThat(email.getBodyHtml(), containsString(SENT_COMMENT));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
     }
 
     @Test
@@ -134,6 +140,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getBodyHtml(), containsString(contactInfo.getPhone()));
         assertThat(email.getBodyHtml(), containsString(urls.loginAuthor(managementHash())));
         assertThat(email.getBodyHtml(), containsString(urls.alt().loginAuthor(managementHash())));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
     }
 
     @Test
@@ -148,6 +155,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getBodyHtml(), containsString("Et ole enää aloitteen vastuuhenkilö"));
         assertThat(email.getBodyHtml(), containsString(INITIATIVE_NAME));
         assertThat(email.getBodyHtml(), containsString(INITIATIVE_MUNICIPALITY));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
     }
 
     @Test
@@ -164,6 +172,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
         assertThat(email.getBodyHtml(), containsString(urls.invitation(initiativeId(), authorInvitation.getConfirmationCode())));
         assertThat(email.getBodyHtml(), containsString(urls.alt().invitation(initiativeId(), authorInvitation.getConfirmationCode())));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
 
     }
 
@@ -182,6 +191,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getBodyHtml(), containsString(AUTHOR_EMAIL));
         assertThat(email.getBodyHtml(), containsString(AUTHOR_ADDRESS));
         assertThat(email.getBodyHtml(), containsString(AUTHOR_PHONE));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.PARTICIPANTS));
     }
 
     @Test
@@ -199,6 +209,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getBodyHtml(), containsString(AUTHOR_EMAIL));
         assertThat(email.getBodyHtml(), containsString(AUTHOR_ADDRESS));
         assertThat(email.getBodyHtml(), containsString(AUTHOR_PHONE));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.PARTICIPANTS));
     }
 
     @Test
@@ -208,6 +219,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
         EmailDto email = testHelper.getSingleQueuedEmail();
         assertThat(email.getBodyHtml(), containsString(Urls.get(Locales.LOCALE_FI).loginAuthor("hash")));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
 
     }
 
@@ -226,6 +238,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getBodyHtml(), containsString(authorMessage.getContactEmail()));
         assertThat(email.getBodyHtml(), containsString(authorMessage.getContactName()));
         assertThat(email.getBodyHtml(), containsString(urls.confirmAuthorMessage(confirmationCode)));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
 
     }
 
@@ -245,6 +258,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getBodyHtml(), containsString(authorMessage.getMessage()));
         assertThat(email.getBodyHtml(), containsString(urls.view(initiativeId())));
         assertThat(email.getBodyHtml(), containsString(urls.alt().view(initiativeId())));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
 
     }
 
@@ -257,6 +271,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getRecipientsAsString(), is(AUTHOR_EMAIL));
         assertThat(email.getSubject(), is("Aloiteluonnoksesi on tallennettu Kuntalaisaloite.fi-palveluun"));
         assertThat(email.getBodyHtml(), containsString(Urls.get(Locales.LOCALE_FI).loginToManagement(initiativeId())));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
 
     }
 

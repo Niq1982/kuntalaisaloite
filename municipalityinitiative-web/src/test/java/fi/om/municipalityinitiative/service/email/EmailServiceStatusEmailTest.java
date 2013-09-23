@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.service.email;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.service.EmailDto;
+import fi.om.municipalityinitiative.util.EmailAttachmentType;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.Urls;
 import org.junit.Before;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
 @Transactional
@@ -35,6 +37,7 @@ public class EmailServiceStatusEmailTest extends MailSendingEmailServiceTestBase
         assertThat(email.getSubject(), is("Kuntalaisaloitteesi on hyväksytty / Ditt invånarinitiativ har godkänts"));
         assertThat(email.getBodyHtml(), containsString(MODERATOR_COMMENT));
         assertThat(email.getBodyHtml(), containsString(urls.loginAuthor(managementHash())));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
     }
 
     @Test
@@ -48,6 +51,7 @@ public class EmailServiceStatusEmailTest extends MailSendingEmailServiceTestBase
         assertThat(email.getBodyHtml(), containsString(INITIATIVE_MUNICIPALITY));
         assertThat(email.getBodyHtml(), containsString(urls.view(initiativeId())));
         assertThat(email.getBodyHtml(), containsString("Kuntalaisaloitteesi on julkaistu Kuntalaisaloite.fi-palvelussa ja lähetetty kuntaan"));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
     }
 
     @Test
@@ -61,6 +65,7 @@ public class EmailServiceStatusEmailTest extends MailSendingEmailServiceTestBase
         assertThat(email.getBodyHtml(), containsString(MODERATOR_COMMENT));
         assertThat(email.getBodyHtml(), containsString(urls.loginAuthor(managementHash())));
         assertThat(email.getBodyHtml(), containsString(urls.alt().loginAuthor(managementHash())));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
     }
 
     @Test
@@ -75,6 +80,7 @@ public class EmailServiceStatusEmailTest extends MailSendingEmailServiceTestBase
         //assertThat(email.getBodyHtml(), containsString(urls.view(initiativeId())));
         assertThat(email.getBodyHtml(), containsString(urls.loginAuthor(managementHash())));
         assertThat(email.getBodyHtml(), containsString(urls.alt().loginAuthor(managementHash())));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
     }
 
     @Test
@@ -85,6 +91,7 @@ public class EmailServiceStatusEmailTest extends MailSendingEmailServiceTestBase
         assertThat(email.getRecipientsAsString(), is(AUTHOR_EMAIL));
         assertThat(email.getBodyHtml(), containsString(INITIATIVE_NAME));
         assertThat(email.getSubject(), is("Aloitteesi on lähetetty kuntaan / Ditt initiativ har skickats till kommunen"));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
     }
 
     @Test
@@ -93,6 +100,7 @@ public class EmailServiceStatusEmailTest extends MailSendingEmailServiceTestBase
         emailService.sendStatusEmail(initiativeId, EmailMessageType.REJECTED_BY_OM);
         EmailDto email = testHelper.getSingleQueuedEmail();
         assertThat(email.getBodyHtml(), containsString(urls.loginAuthor(managementHash())));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
     }
     
     @Test
@@ -109,7 +117,9 @@ public class EmailServiceStatusEmailTest extends MailSendingEmailServiceTestBase
         emailService.sendStatusEmail(initiativeId, EmailMessageType.REJECTED_BY_OM);
 
         List<EmailDto> sentMessages = testHelper.getQueuedEmails();
-        // TODO: Order may differ;
+        assertThat(sentMessages, hasSize(2));
+
+        // TODO: Assert management-hash links - order may differ;
 
     }
 

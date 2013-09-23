@@ -35,7 +35,6 @@ import static org.hamcrest.Matchers.is;
 
 public class TestHelper {
 
-
     public static final String DEFAULT_INITIATIVE_NAME = "Initiative name";
     public static final String DEFAULT_PROPOSAL = "Proposal";
     public static final InitiativeState DEFAULT_STATE = InitiativeState.DRAFT;
