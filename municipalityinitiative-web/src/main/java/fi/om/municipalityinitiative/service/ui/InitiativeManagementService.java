@@ -66,10 +66,6 @@ public class InitiativeManagementService {
         return InitiativeDraftUIEditDto.parse(initiative,contactInfo);
     }
 
-    private ManagementSettings getManagementSettings(Long initiativeId) {
-        return ManagementSettings.of(initiativeDao.get(initiativeId));
-    }
-
     @Transactional(readOnly = false)
     // FIXME: get email-sending out of transaction. Check if other similar cases.
     public void editInitiativeDraft(Long initiativeId, LoginUserHolder loginUserHolder, InitiativeDraftUIEditDto editDto, Locale locale) {
@@ -243,7 +239,6 @@ public class InitiativeManagementService {
             emailService.sendCollaborativeToAuthors(initiativeId);
             emailService.sendCollaborativeToMunicipality(initiativeId, locale);
         }
-
 
     }
 

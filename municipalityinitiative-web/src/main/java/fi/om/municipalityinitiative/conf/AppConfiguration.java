@@ -10,7 +10,6 @@ import fi.om.municipalityinitiative.dao.*;
 import fi.om.municipalityinitiative.dto.service.TestDataService;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.service.email.*;
-import fi.om.municipalityinitiative.service.operations.AuthorServiceOperations;
 import fi.om.municipalityinitiative.service.operations.ModerationServiceOperations;
 import fi.om.municipalityinitiative.service.operations.VerifiedInitiativeServiceOperations;
 import fi.om.municipalityinitiative.service.ui.*;
@@ -164,11 +163,6 @@ public class AppConfiguration {
     @Bean
     public AuthorService authorService() {
         return new AuthorService();
-    }
-
-    @Bean
-    public AuthorServiceOperations authorServiceOperations() {
-        return new AuthorServiceOperations();
     }
 
     @Bean
