@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.dto.service;
+package fi.om.municipalityinitiative.service.email;
 
 public class EmailSenderTest extends EmailSenderTestBase {
 

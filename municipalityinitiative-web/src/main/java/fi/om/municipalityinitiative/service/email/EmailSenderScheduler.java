@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.dto.service;
+package fi.om.municipalityinitiative.service.email;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

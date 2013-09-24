@@ -1,9 +1,10 @@
-package fi.om.municipalityinitiative.dto.service;
+package fi.om.municipalityinitiative.service.email;
 
 import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dao.EmailDao;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.service.ServiceIntegrationTestBase;
+import fi.om.municipalityinitiative.service.email.EmailSender;
 import fi.om.municipalityinitiative.util.JavaMailSenderFake;
 import org.junit.Test;
 import org.springframework.mail.MailException;

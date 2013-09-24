@@ -1,9 +1,12 @@
-package fi.om.municipalityinitiative.dto.service;
+package fi.om.municipalityinitiative.service.email;
 
 import fi.om.municipalityinitiative.conf.EnvironmentSettings;
 import fi.om.municipalityinitiative.dao.EmailDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
+import fi.om.municipalityinitiative.dto.service.EmailDto;
+import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.pdf.ParticipantToPdfExporter;
 import fi.om.municipalityinitiative.service.id.Id;
 import fi.om.municipalityinitiative.util.EmailAttachmentType;
