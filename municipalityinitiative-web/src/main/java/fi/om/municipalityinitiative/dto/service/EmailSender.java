@@ -65,45 +65,54 @@ public class EmailSender {
     private void constructAndSendEmail(EmailDto emailDto) throws MessagingException {
 
         if (environmentSettings.isTestConsoleOutput()) {
-            System.out.println("----------------------------------------------------------");
-            System.out.println("To: " + emailDto.getRecipientsAsString());
-            System.out.println("Reply-to: " + environmentSettings.getDefaultReplyTo());
-            System.out.println("Subject: " + emailDto.getSubject());
-            System.out.println("---");
-            System.out.println(emailDto.getBodyText());
-            System.out.println("----------------------------------------------------------");
+            printEmail(emailDto);
         }
         else {
-
-            if (environmentSettings.getTestSendTo().isPresent()) {
-                emailDto.setRecipients(Collections.singletonList(environmentSettings.getTestSendTo().get()));
-            }
-
-            MimeMessageHelper helper = new MimeMessageHelper(javaMailSender.createMimeMessage(), true, "UTF-8");
-            for (String to : emailDto.getRecipientsList()) {
-                helper.addTo(to);
-            }
-            try {
-                helper.setFrom(emailDto.getReplyTo(), emailDto.getSender());
-            } catch (UnsupportedEncodingException e) {
-                helper.setFrom(emailDto.getReplyTo());
-            }
-            helper.setReplyTo(emailDto.getReplyTo());
-            helper.setSubject(emailDto.getSubject());
-            helper.setText(emailDto.getBodyText(), emailDto.getBodyHtml());
-
-            if (emailDto.getAttachmentType() == EmailAttachmentType.PARTICIPANTS) {
-                Initiative initiative = initiativeDao.get(emailDto.getInitiativeId());
-                List<? extends Participant<? extends Id>> participants = initiative.getType().isVerifiable() ?
-                        participantDao.findVerifiedAllParticipants(initiative.getId(), 0, Integer.MAX_VALUE)
-                        : participantDao.findNormalAllParticipants(initiative.getId(), 0, Integer.MAX_VALUE);
-
-                addAttachment(helper, initiative, participants);
-            }
-
+            MimeMessageHelper helper = constructEmail(emailDto);
             javaMailSender.send(helper.getMimeMessage());
         }
 
+    }
+
+    private void printEmail(EmailDto emailDto) {
+        System.out.println("----------------------------------------------------------");
+        System.out.println("To: " + emailDto.getRecipientsAsString());
+        System.out.println("Reply-to: " + environmentSettings.getDefaultReplyTo());
+        System.out.println("Subject: " + emailDto.getSubject());
+        System.out.println("---");
+        System.out.println(emailDto.getBodyText());
+        System.out.println("----------------------------------------------------------");
+    }
+
+    private MimeMessageHelper constructEmail(EmailDto emailDto) throws MessagingException {
+        if (environmentSettings.getTestSendTo().isPresent()) {
+            emailDto.setRecipients(Collections.singletonList(environmentSettings.getTestSendTo().get()));
+        }
+
+        MimeMessageHelper helper = new MimeMessageHelper(javaMailSender.createMimeMessage(), true, "UTF-8");
+        for (String to : emailDto.getRecipientsList()) {
+            helper.addTo(to);
+        }
+        try {
+            helper.setFrom(emailDto.getReplyTo(), emailDto.getSender());
+        } catch (UnsupportedEncodingException e) {
+            helper.setFrom(emailDto.getReplyTo());
+        }
+        helper.setReplyTo(emailDto.getReplyTo());
+        helper.setSubject(emailDto.getSubject());
+        helper.setText(emailDto.getBodyText(), emailDto.getBodyHtml());
+
+        if (emailDto.getAttachmentType() == EmailAttachmentType.PARTICIPANTS) {
+            Initiative initiative = initiativeDao.get(emailDto.getInitiativeId());
+            addAttachment(helper, initiative, getParticipants(initiative));
+        }
+        return helper;
+    }
+
+    private List<? extends Participant<? extends Id>> getParticipants(Initiative initiative) {
+        return initiative.getType().isVerifiable()
+                ? participantDao.findVerifiedAllParticipants(initiative.getId(), 0, Integer.MAX_VALUE)
+                : participantDao.findNormalAllParticipants(initiative.getId(), 0, Integer.MAX_VALUE);
     }
 
     private static final String FILE_NAME = "Kuntalaisaloite_{0}_{1}_osallistujat.pdf";
