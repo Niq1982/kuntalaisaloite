@@ -15,16 +15,17 @@ import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
+import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
-import fi.om.municipalityinitiative.service.operations.InitiativeManagementServiceOperations;
+import fi.om.municipalityinitiative.util.FixState;
+import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-
 import java.util.List;
 import java.util.Locale;
 
@@ -40,9 +41,6 @@ public class InitiativeManagementService {
 
     @Resource
     EmailService emailService;
-
-    @Resource
-    InitiativeManagementServiceOperations operations;
 
     @Resource
     UserDao userDao;
@@ -103,9 +101,9 @@ public class InitiativeManagementService {
     public InitiativeUIUpdateDto getInitiativeForUpdate(Long initiativeId, LoginUserHolder loginUserHolder) {
 
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        assertAllowance("Update initiative", getManagementSettings(initiativeId).isAllowUpdate());
-
         Initiative initiative = initiativeDao.get(initiativeId);
+
+        assertAllowance("Update initiative", ManagementSettings.of(initiative).isAllowUpdate());
 
         ContactInfo contactInfo;
         if (initiative.getType().isNotVerifiable()) {
@@ -147,7 +145,6 @@ public class InitiativeManagementService {
     }
 
     @Transactional(readOnly = false)
-    // TODO Tests for safe initiatives
     public void updateInitiative(Long initiativeId, LoginUserHolder loginUserHolder, InitiativeUIUpdateDto updateDto) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         Initiative initiative = initiativeDao.get(initiativeId);
@@ -169,7 +166,16 @@ public class InitiativeManagementService {
     @Transactional(readOnly = false)
     public void sendReviewAndStraightToMunicipality(Long initiativeId, LoginUserHolder loginUserHolder, String sentComment) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        operations.doSendReviewStraightToMunicipality(initiativeId, sentComment);
+        Initiative initiative = initiativeDao.get(initiativeId);
+        assertAllowance("Send review", ManagementSettings.of(initiative).isAllowSendToReview());
+
+        if (initiative.getType().isVerifiable()) {
+            throw new OperationNotAllowedException("Verifiable initiative cannot be sent straight to municipality");
+        }
+
+        initiativeDao.updateInitiativeState(initiativeId, InitiativeState.REVIEW);
+        initiativeDao.updateInitiativeType(initiativeId, InitiativeType.SINGLE);
+        initiativeDao.updateSentComment(initiativeId, sentComment);
 
         emailService.sendStatusEmail(initiativeId, EmailMessageType.SENT_TO_REVIEW);
         emailService.sendNotificationToModerator(initiativeId);
@@ -179,7 +185,12 @@ public class InitiativeManagementService {
     public void sendReviewWithUndefinedType(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        operations.doSendReviewWithUndefinedType(initiativeId);
+        Initiative initiative = initiativeDao.get(initiativeId);
+        assertAllowance("Send review", ManagementSettings.of(initiative).isAllowSendToReview());
+        initiativeDao.updateInitiativeState(initiativeId, InitiativeState.REVIEW);
+        if (initiative.getType().isNotVerifiable()) {
+            initiativeDao.updateInitiativeType(initiativeId, InitiativeType.UNDEFINED);
+        }
 
         emailService.sendStatusEmail(initiativeId, EmailMessageType.SENT_TO_REVIEW);
         emailService.sendNotificationToModerator(initiativeId);
@@ -188,7 +199,8 @@ public class InitiativeManagementService {
     @Transactional(readOnly = false)
     public void sendFixToReview(Long initiativeId, LoginUserHolder requiredLoginUserHolder) {
         requiredLoginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        operations.toSendFixToReview(initiativeId);
+        assertAllowance("Send fix to review", ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowSendFixToReview());
+        initiativeDao.updateInitiativeFixState(initiativeId, FixState.REVIEW);
 
         emailService.sendStatusEmail(initiativeId, EmailMessageType.SENT_FIX_TO_REVIEW);
         emailService.sendNotificationToModerator(initiativeId);
@@ -197,7 +209,15 @@ public class InitiativeManagementService {
     @Transactional(readOnly = false)
     public void publishAndStartCollecting(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        operations.doPublishAndStartCollecting(initiativeId);
+        Initiative initiative = initiativeDao.get(initiativeId);
+        assertAllowance("Publish initiative", ManagementSettings.of(initiative).isAllowPublish());
+
+        if (initiative.getType() == InitiativeType.UNDEFINED) { // Not verifiable initiative
+            initiativeDao.updateInitiativeType(initiativeId, InitiativeType.COLLABORATIVE);
+        }
+
+        initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
+
         emailService.sendStatusEmail(initiativeId, EmailMessageType.PUBLISHED_COLLECTING);
     }
 
@@ -206,15 +226,25 @@ public class InitiativeManagementService {
 
         requiredLoginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        InitiativeType initiativeType = operations.doSendToMunicipality(initiativeId, sentComment);
+        Initiative initiative = initiativeDao.get(initiativeId);
 
-        if (initiativeType.isCollaborative()) {
-            emailService.sendCollaborativeToAuthors(initiativeId);
-            emailService.sendCollaborativeToMunicipality(initiativeId, locale);
-        } else {
+        assertAllowance("Send to municipality", ManagementSettings.of(initiative).isAllowSendToMunicipality());
+
+        initiativeDao.markInitiativeAsSent(initiativeId);
+        initiativeDao.updateSentComment(initiativeId, sentComment);
+
+        if (!initiative.getType().isCollaborative()) {
+            initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
+            initiativeDao.updateInitiativeType(initiativeId, InitiativeType.SINGLE);
             emailService.sendStatusEmail(initiativeId, EmailMessageType.SENT_TO_MUNICIPALITY);
             emailService.sendSingleToMunicipality(initiativeId, locale);
         }
+        else {
+            emailService.sendCollaborativeToAuthors(initiativeId);
+            emailService.sendCollaborativeToMunicipality(initiativeId, locale);
+        }
+
+
     }
 
     @Transactional(readOnly = true)
