@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.activation.DataSource;
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
@@ -73,7 +74,8 @@ public class EmailSender {
         else {
             MimeMessageHelper helper = constructEmail(emailDto);
             //throw new RuntimeException("Some exception");
-            javaMailSender.send(helper.getMimeMessage());
+//            javaMailSender.send(helper.getMimeMessage());
+            javaMailSender.send((MimeMessage) null);
         }
 
     }
