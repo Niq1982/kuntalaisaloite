@@ -96,7 +96,7 @@ public class PublicInitiativeServiceOperations {
 
     @Transactional(readOnly = false)
     public Long doConfirmParticipation(Long participantId, String confirmationCode) {
-        Long initiativeId = participantDao.getInitiativeIdByParticipant(participantId);
+        Long initiativeId = participantDao.getInitiativeIdByParticipant(participantId);  // FIXME: Gives null if no participant found,
         assertAllowance("Confirm participation", getManagementSettings(initiativeId).isAllowParticipate());
 
         participantDao.confirmParticipation(participantId, confirmationCode);
