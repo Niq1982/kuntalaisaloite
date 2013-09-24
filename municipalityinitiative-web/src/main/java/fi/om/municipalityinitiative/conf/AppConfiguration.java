@@ -180,11 +180,6 @@ public class AppConfiguration {
     }
 
     @Bean
-    public PublicInitiativeServiceOperations publicInitiativeServiceOperations() {
-        return new PublicInitiativeServiceOperations();
-    }
-
-    @Bean
     public InitiativeManagementServiceOperations initiativeManagementServiceOperations() {
         return new InitiativeManagementServiceOperations();
     }
