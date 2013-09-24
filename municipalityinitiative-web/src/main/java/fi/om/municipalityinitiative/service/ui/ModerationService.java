@@ -40,49 +40,41 @@ public class ModerationService {
     @Transactional(readOnly = false)
     public void accept(OmLoginUserHolder loginUserHolder, Long initiativeId, String moderatorComment, Locale locale) {
         loginUserHolder.assertOmUser();
-        AcceptResult result;
         Initiative initiative = initiativeDao.get(initiativeId);
 
         if (!ManagementSettings.of(initiative).isAllowOmAccept()) {
             throw new OperationNotAllowedException("Not allowed to accept initiative");
         }
 
-        if (initiative.getState() == InitiativeState.REVIEW) {
-            Long initiativeId1 = initiative.getId();
+        initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
 
-            initiativeDao.updateModeratorComment(initiativeId1, moderatorComment);
-            if (initiative.getType().equals(InitiativeType.SINGLE)) {
-                initiativeDao.updateInitiativeState(initiativeId1, InitiativeState.PUBLISHED);
-                initiativeDao.markInitiativeAsSent(initiativeId1);
-                result = AcceptResult.ACCEPTED_DRAFT_AND_SENT;
-            } else {
-                initiativeDao.updateInitiativeState(initiativeId1, InitiativeState.ACCEPTED);
-                result = AcceptResult.ACCEPTED_DRAFT;
-            }
+        if (initiative.getState() == InitiativeState.REVIEW) {
+            acceptInitiativeDraft(locale, initiative);
         }
         else if (initiative.getFixState() == FixState.REVIEW) {
-            initiativeDao.updateInitiativeFixState(initiativeId, FixState.OK);
-            initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
-            result = AcceptResult.ACCEPTED_FIX;
+            acceptInitiativeFix(initiativeId);
         }
         else {
-            throw new IllegalStateException("Unable to accept initiative with state " + initiative.getState() + " and fixState " + initiative.getFixState());
+            // We should never get here.
+            throw new IllegalStateException("Unable to accept initiative + " + initiativeId + " with state " + initiative.getState() + " and fixState " + initiative.getFixState());
         }
-        AcceptResult acceptResult = result;
+    }
 
-        if (acceptResult == AcceptResult.ACCEPTED_DRAFT_AND_SENT) {
-            emailService.sendStatusEmail(initiativeId, EmailMessageType.ACCEPTED_BY_OM_AND_SENT);
-            emailService.sendSingleToMunicipality(initiativeId, locale);
+    private void acceptInitiativeDraft(Locale locale, Initiative initiative) {
+        if (initiative.getType().equals(InitiativeType.SINGLE)) {
+            initiativeDao.updateInitiativeState(initiative.getId(), InitiativeState.PUBLISHED);
+            initiativeDao.markInitiativeAsSent(initiative.getId());
+            emailService.sendStatusEmail(initiative.getId(), EmailMessageType.ACCEPTED_BY_OM_AND_SENT);
+            emailService.sendSingleToMunicipality(initiative.getId(), locale);
+        } else {
+            initiativeDao.updateInitiativeState(initiative.getId(), InitiativeState.ACCEPTED);
+            emailService.sendStatusEmail(initiative.getId(), EmailMessageType.ACCEPTED_BY_OM);
         }
-        else if (acceptResult == AcceptResult.ACCEPTED_DRAFT) {
-            emailService.sendStatusEmail(initiativeId, EmailMessageType.ACCEPTED_BY_OM);
-        }
-        else if (acceptResult == AcceptResult.ACCEPTED_FIX) {
-            emailService.sendStatusEmail(initiativeId, EmailMessageType.ACCEPTED_BY_OM_FIX);
-        }
-        else {
-            throw new IllegalStateException("Unable to accept initiative with id:"+ initiativeId);
-        }
+    }
+
+    private void acceptInitiativeFix(Long initiativeId) {
+        initiativeDao.updateInitiativeFixState(initiativeId, FixState.OK);
+        emailService.sendStatusEmail(initiativeId, EmailMessageType.ACCEPTED_BY_OM_FIX);
     }
 
     @Transactional(readOnly = false)
