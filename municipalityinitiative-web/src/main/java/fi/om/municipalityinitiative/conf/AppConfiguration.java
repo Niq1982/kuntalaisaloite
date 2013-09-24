@@ -10,7 +10,6 @@ import fi.om.municipalityinitiative.dao.*;
 import fi.om.municipalityinitiative.dto.service.TestDataService;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.service.email.*;
-import fi.om.municipalityinitiative.service.operations.ModerationServiceOperations;
 import fi.om.municipalityinitiative.service.operations.VerifiedInitiativeServiceOperations;
 import fi.om.municipalityinitiative.service.ui.*;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -178,11 +177,6 @@ public class AppConfiguration {
     @Bean
     public ModerationService omInitiativeService() {
         return new ModerationService();
-    }
-
-    @Bean
-    public ModerationServiceOperations moderationServiceOperations() {
-        return new ModerationServiceOperations();
     }
 
     @Bean
