@@ -142,9 +142,4 @@ public class ModerationService {
         }
     }
 
-    public enum AcceptResult {
-        ACCEPTED_FIX,
-        ACCEPTED_DRAFT,
-        ACCEPTED_DRAFT_AND_SENT
-    }
 }
