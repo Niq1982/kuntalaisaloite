@@ -6,9 +6,11 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.mysema.commons.lang.Assert;
 import fi.om.municipalityinitiative.conf.EnvironmentSettings;
+import fi.om.municipalityinitiative.dao.EmailDao;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.pdf.ParticipantToPdfExporter;
+import fi.om.municipalityinitiative.util.EmailAttachmentType;
 import fi.om.municipalityinitiative.util.Maybe;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -36,115 +38,19 @@ import java.util.Map;
 
 public class EmailMessageConstructor {
 
-    private static final String FILE_NAME = "Kuntalaisaloite_{0}_{1}_osallistujat.pdf";
-
-    @Resource
-    private JavaMailSender javaMailSender;
-
     @Resource
     private EnvironmentSettings environmentSettings;
 
     @Resource
     private FreeMarkerConfigurer freemarkerConfig;
 
+    @Resource
+    private EmailDao emailDao;
+
     private static final Logger log = LoggerFactory.getLogger(EmailMessageConstructor.class);
-
-    private static void addAttachment(MimeMessageHelper multipart, Initiative initiative, List<? extends Participant> participants) {
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()){
-            new ParticipantToPdfExporter(initiative, participants).createPdf(outputStream);
-
-            byte[] bytes = outputStream.toByteArray();
-            DataSource dataSource = new ByteArrayDataSource(bytes, "application/pdf");
-
-            String fileName = MessageFormat.format(FILE_NAME, new LocalDate().toString("yyyy-MM-dd"), initiative.getId());
-
-            multipart.addAttachment(fileName, dataSource);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public MimeMessageHelper parseBasicEmailData(List<String> recipients, String subject, String templateName, Map<String, Object> dataMap) {
-
-        String text = processTemplate(templateName + "-text", dataMap);
-        String html = processTemplate(templateName + "-html", dataMap);
-
-        text = stripTextRows(text, 2);
-
-        if (environmentSettings.getTestSendTo().isPresent()) {
-            System.out.println("Replaced recipients email with: " + environmentSettings.getTestSendTo().get());
-
-            StringBuilder recipientsString = new StringBuilder();
-            for (String s : recipients) {
-                if (recipientsString.length() > 0) recipientsString.append(", ");
-                recipientsString.append(s);
-            }
-
-            text = "TEST OPTION REPLACED THE EMAIL ADDRESS!\nThe original address was: " + recipientsString.toString() + "\n\n\n-------------\n" + text;
-            html = "TEST OPTION REPLACED THE EMAIL ADDRESS!\nThe original address was: " + recipientsString.toString() + "<hr>" + html;
-            recipients = Collections.singletonList(environmentSettings.getTestSendTo().get());
-        }
-
-        Assert.notNull(recipients, "recipients");
-        Assert.isTrue(recipients.size() != 0, "recipients has recipients");
-
-        if (environmentSettings.isTestConsoleOutput()) {
-            System.out.println("----------------------------------------------------------");
-            System.out.println("To: " + recipients);
-            System.out.println("Reply-to: " + environmentSettings.getDefaultReplyTo());
-            System.out.println("Subject: " + subject);
-            System.out.println("---");
-            System.out.println(text);
-            System.out.println("----------------------------------------------------------");
-            return null;
-        }
-
-        try {
-            MimeMessageHelper helper = new MimeMessageHelper(javaMailSender.createMimeMessage(), true, "UTF-8");
-            for (String to : recipients) {
-                helper.addTo(to);
-            }
-            try {
-                helper.setFrom(environmentSettings.getDefaultReplyTo(), solveEmailFrom());
-            } catch (UnsupportedEncodingException e) {
-                helper.setFrom(environmentSettings.getDefaultReplyTo());
-            }
-            helper.setReplyTo(environmentSettings.getDefaultReplyTo());
-            helper.setSubject(subject);
-            helper.setText(text, html);
-            return helper;
-
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
 
     private String solveEmailFrom() {
         return "Kuntalaisaloitepalvelu" + (environmentSettings.hasAnyTestOptionsEnabled() ? " TEST" : "");
-    }
-
-    private static String stripTextRows(String text, int maxEmptyRows) {
-        List<String> rows = Lists.newArrayList(Splitter.on('\n').trimResults().split(text));
-
-        int emptyRows = maxEmptyRows;
-        for (int i = rows.size()-1; i >= 0; i--) {
-            if (Strings.isNullOrEmpty(rows.get(i))) {
-                emptyRows++;
-            } else {
-                emptyRows = 0;
-            }
-            if (emptyRows > maxEmptyRows) {
-                rows.remove(i);
-            }
-        }
-
-        //remove remaining empty rows from the beginning
-        while (rows.size() > 0 && Strings.isNullOrEmpty(rows.get(0))) {
-            rows.remove(0);
-        }
-
-        return Joiner.on("\r\n").join(rows);
     }
 
     private String processTemplate(String templateName, Map<String, Object> dataMap) {
@@ -162,20 +68,22 @@ public class EmailMessageConstructor {
         }
     }
 
-    public EmailMessageDraft fromTemplate(String templateName) {
-        return new EmailMessageDraft(templateName);
+    public EmailMessageDraft fromTemplate(Long initiativeId, String templateName) {
+        return new EmailMessageDraft(initiativeId, templateName);
     }
 
     public class EmailMessageDraft {
+        private final Long initiativeId;
+        private final String templateName;
         private List<String> recipients = Lists.newArrayList();
         private String subject;
-        private String templateName;
         private Map<String, Object> dataMap;
 
         private Maybe<Initiative> attachmentInitiative = Maybe.absent();
         private Maybe<? extends List<? extends Participant>> attachmentParticipants = Maybe.absent();
 
-        public EmailMessageDraft(String templateName) {
+        public EmailMessageDraft(Long initiativeId, String templateName) {
+            this.initiativeId = initiativeId;
             this.templateName = templateName;
         }
 
@@ -211,34 +119,15 @@ public class EmailMessageConstructor {
             Assert.notNull(templateName, "templateName");
             Assert.notNull(dataMap, "dataMap");
 
-            log.info("About to send email to " + recipients + ": " + subject);
+            log.info("Persisting email to " + recipients + ": " + subject);
+            emailDao.addEmail(initiativeId, subject, recipients,
+                    processTemplate(templateName + "-html", dataMap),
+                    processTemplate(templateName + "-text", dataMap),
+                    solveEmailFrom(),
+                    environmentSettings.getDefaultReplyTo(),
+                    attachmentInitiative.isPresent() ? EmailAttachmentType.PARTICIPANTS : EmailAttachmentType.NONE
+                    );
 
-            MimeMessageHelper mimeMessageHelper = parseBasicEmailData(recipients, subject, templateName, dataMap);
-
-            if (mimeMessageHelper == null) { // If testConsoleOutput was true, email was printed instead of sending
-                System.out.println("No email to send");
-                return;
-            }
-
-            if (attachmentInitiative.isPresent()) {
-                addAttachment(mimeMessageHelper, attachmentInitiative.get(), attachmentParticipants.get());
-            }
-
-            try {
-                javaMailSender.send(mimeMessageHelper.getMimeMessage());
-                log.info("Email sent.");
-            } catch (MailSendException e) {
-                Address[] recipients;
-                String subject;
-                try {
-                    recipients = mimeMessageHelper.getMimeMessage().getRecipients(Message.RecipientType.TO);
-                    subject = mimeMessageHelper.getMimeMessage().getSubject();
-                } catch (MessagingException messagingException) {
-                    throw new RuntimeException(messagingException);
-                }
-                log.error("Failed to send email to "+recipients[0].toString() + ": "+subject, e);
-                // TODO: Retry?
-            }
         }
     }
 }

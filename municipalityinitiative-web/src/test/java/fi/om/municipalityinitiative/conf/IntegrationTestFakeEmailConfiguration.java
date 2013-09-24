@@ -30,4 +30,6 @@ public class IntegrationTestFakeEmailConfiguration {
     public JavaMailSenderFake javaMailSender() {
         return new JavaMailSenderFake();
     }
+
+
 }

@@ -13,6 +13,7 @@ import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.operations.PublicInitiativeServiceOperations;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -51,10 +52,12 @@ public class PublicInitiativeService {
         return initiativeListInfos;
     }
 
+    @Transactional(readOnly = false)
     public ManagementSettings getManagementSettings(Long initiativeId) {
         return operations.getManagementSettings(initiativeId);
     }
 
+    @Transactional(readOnly = false)
     public Long createParticipant(ParticipantUICreateDto participant, Long initiativeId, Locale locale) {
 
         ParticipantCreatedData participantCreatedData
@@ -71,6 +74,7 @@ public class PublicInitiativeService {
         return participantCreatedData.participantId;
     }
 
+    @Transactional(readOnly = false)
     public Long prepareInitiative(PrepareInitiativeUICreateDto createDto, Locale locale) {
 
         PreparedInitiativeData preparedInitiativeData = operations.doPrepareInitiative(createDto);
@@ -79,10 +83,12 @@ public class PublicInitiativeService {
         return preparedInitiativeData.initiativeId;
     }
 
+    @Transactional(readOnly = false)
     public InitiativeViewInfo getPublicInitiative(Long initiativeId) {
         return getInitiative(initiativeId, new LoginUserHolder<>(User.anonym()));
     }
 
+    @Transactional(readOnly = false)
     public InitiativeViewInfo getInitiative(Long initiativeId, LoginUserHolder loginUserHolder) {
         Initiative initiative = operations.getInitiative(initiativeId);
         if (!initiative.isPublic()) {
@@ -102,11 +108,13 @@ public class PublicInitiativeService {
         return operations.doConfirmParticipation(participantId, confirmationCode);
     }
 
+    @Transactional(readOnly = false)
     public void addAuthorMessage(AuthorUIMessage authorUIMessage, Locale locale) {
         AuthorMessage authorMessage = operations.doAddAuthorMessage(authorUIMessage);
         emailService.sendAuthorMessageConfirmationEmail(authorMessage.getInitiativeId(), authorMessage, locale);
     }
 
+    @Transactional(readOnly = false)
     public Long confirmAndSendAuthorMessage(String confirmationCode) {
         AuthorMessage authorMessage = operations.doConfirmAuthorMessage(confirmationCode);
 

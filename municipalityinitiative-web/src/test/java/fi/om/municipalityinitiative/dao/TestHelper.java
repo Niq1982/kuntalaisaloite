@@ -25,14 +25,16 @@ import javax.annotation.Resource;
 import javax.inject.Inject;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 import static fi.om.municipalityinitiative.sql.QParticipant.participant;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
 public class TestHelper {
-
 
     public static final String DEFAULT_INITIATIVE_NAME = "Initiative name";
     public static final String DEFAULT_PROPOSAL = "Proposal";
@@ -96,6 +98,7 @@ public class TestHelper {
         queryFactory.delete(QVerifiedAuthor.verifiedAuthor).execute();
         queryFactory.delete(QVerifiedParticipant.verifiedParticipant).execute();
         queryFactory.delete(QVerifiedUser.verifiedUser).execute();
+        queryFactory.delete(QEmail.email).execute();
         queryFactory.delete(QMunicipalityInitiative.municipalityInitiative).execute();
         queryFactory.delete(QInfoText.infoText).execute();
         queryFactory.delete(QAdminUser.adminUser).execute();
@@ -535,6 +538,38 @@ public class TestHelper {
         insert.execute();
     }
 
+    @Transactional(readOnly = true)
+    public EmailDto getSingleQueuedEmail() {
+        List<EmailDto> queuedEmails = getQueuedEmails();
+        assertThat(queuedEmails, hasSize(1));
+        return queuedEmails.get(0);
+    }
+
+    @Transactional(readOnly = false)
+    public Long createRandomEmail(Long initiativeId) {
+        return queryFactory.insert(QEmail.email)
+                .set(QEmail.email.attachment, EmailAttachmentType.NONE)
+                .set(QEmail.email.subject, randomString())
+                .set(QEmail.email.bodyHtml, randomString())
+                .set(QEmail.email.bodyText, randomString())
+                .set(QEmail.email.initiativeId, initiativeId)
+                .set(QEmail.email.recipients, randomString())
+                .set(QEmail.email.sender, randomString())
+                .set(QEmail.email.replyTo, randomString())
+                .executeWithKey(QEmail.email.id);
+    }
+
+    private static String randomString() {
+        return String.valueOf(new Random().nextLong());
+    }
+
+    @Transactional(readOnly = true)
+    public EmailDto getEmail(Long emailId) {
+        return queryFactory.from(QEmail.email)
+                .where(QEmail.email.id.eq(emailId))
+                .uniqueResult(JdbcEmailDao.emailMapping);
+    }
+
     public static class AuthorDraft {
 
         public Long initiativeId;
@@ -728,6 +763,18 @@ public class TestHelper {
                 .where(QMunicipalityInitiative.municipalityInitiative.id.eq(id))
                 .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
                 .uniqueResult(Mappings.initiativeInfoMapping);
+    }
+
+    @Transactional
+    public List<EmailDto> getQueuedEmails() {
+        List<EmailDto> list = queryFactory.from(QEmail.email)
+                .where(QEmail.email.tried.eq(false))
+                .orderBy(QEmail.email.id.asc())
+                .list(JdbcEmailDao.emailMapping);
+        for (EmailDto emailDto : list) {
+            ReflectionTestUtils.assertNoNullFields(emailDto);
+        }
+        return list;
     }
 
     public String getPreviousTestManagementHash() {

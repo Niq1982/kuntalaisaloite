@@ -74,12 +74,15 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         getElemContaining(getMessage(MSG_BTN_SAVE), "button").click();
         
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_PARTICIPATE);
+
+        assertTotalEmailsInQueue(1);
        
         assertThat(getOptionalElemContaining(getMessage(MSG_BTN_PARTICIPATE), "a").isPresent(), is(false));
         
         open(urls.confirmParticipant(testHelper.getLastParticipantId(), RandomHashGenerator.getPrevious()));
         
         assertTextContainedByClass("public-names", "1 nimi julkaistu palvelussa");
+
     }
 
     @Test
@@ -160,6 +163,8 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_PARTICIPATE);
 
+        assertTotalEmailsInQueue(1);
+
         assertThat(getOptionalElemContaining(getMessage(MSG_BTN_PARTICIPATE), "a").isPresent(), is(false));
 
         open(urls.confirmParticipant(testHelper.getLastParticipantId(), RandomHashGenerator.getPrevious()));
@@ -168,23 +173,38 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     }
 
     @Test
-    public void public_user_contacts_authors_shows_success_message(){
-        open(urls.view(normalInitiativeHelsinki));
-        
+    public void public_user_contacts_authors_shows_success_message() {
+
+        Long initiativeWithAuthor = testHelper.createDefaultInitiative(
+                new TestHelper.InitiativeDraft(HELSINKI_ID)
+                        .withState(InitiativeState.PUBLISHED)
+                        .withType(InitiativeType.COLLABORATIVE)
+                        .withParticipantCount(0)
+                        .applyAuthor()
+                        .withPublicName(false)
+                        .toInitiativeDraft()
+        );
+
+        open(urls.view(initiativeWithAuthor));
+
         clickLinkContaining("Ota yhteyttä aloitteen vastuuhenkilöön");
-        
+
         inputText("message", AUTHOR_MESSAGE);
         inputText("contactName", PARTICIPANT_NAME);
         inputText("contactEmail", PARTICIPANT_EMAIL);
-        
+
         getElemContaining("Lähetä viesti", "button").click();
-        
+
+        assertTotalEmailsInQueue(1);
+
         assertTextContainedByClass("msg-success", "Linkki yhteydenottopyynnön vahvistamiseen on lähetetty sähköpostiisi");
-        
+
         open(urls.confirmAuthorMessage(RandomHashGenerator.getPrevious()));
-        
+
         assertTextContainedByClass("msg-success", "Viesti on nyt lähetetty vastuuhenkilöille");
-        
+
+        assertTotalEmailsInQueue(2);
+
     }
 
     

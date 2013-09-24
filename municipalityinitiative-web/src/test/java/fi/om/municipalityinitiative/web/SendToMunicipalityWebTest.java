@@ -36,6 +36,8 @@ public class SendToMunicipalityWebTest extends WebTestBase {
         inputText("comment", COMMENT);
         getElemContaining(getMessage(MSG_BTN_SEND_CONFIRM), "button").click();
         assertMsgContainedByClass("msg-success",  MSG_SUCCESS_SEND);
+
+        assertTotalEmailsInQueue(2);
     }
     
 }

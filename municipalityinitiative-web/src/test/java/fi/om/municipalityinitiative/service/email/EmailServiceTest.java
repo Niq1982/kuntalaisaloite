@@ -3,17 +3,21 @@ package fi.om.municipalityinitiative.service.email;
 import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
+import fi.om.municipalityinitiative.dto.service.EmailDto;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
+import fi.om.municipalityinitiative.util.EmailAttachmentType;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.Urls;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
+@Transactional
 public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
     private static final String MANAGEMENT_HASH = "managementHash";
@@ -30,9 +34,12 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
     public void prepare_initiative_sets_subject_and_login_url() throws Exception {
         emailService.sendPrepareCreatedEmail(initiativeId(), new NormalAuthorId(authorId()), MANAGEMENT_HASH, Locales.LOCALE_FI);
 
-        assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
-        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Olet saanut linkin kuntalaisaloitteen tekemiseen Kuntalaisaloite.fi-palvelussa"));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.loginAuthor(MANAGEMENT_HASH)));
+        EmailDto email = testHelper.getSingleQueuedEmail();
+
+        assertThat(email.getRecipientsAsString(), is(AUTHOR_EMAIL));
+        assertThat(email.getSubject(), is("Olet saanut linkin kuntalaisaloitteen tekemiseen Kuntalaisaloite.fi-palvelussa"));
+        assertThat(email.getBodyHtml(), containsString(urls.loginAuthor(MANAGEMENT_HASH)));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
     }
 
     @Test
@@ -40,28 +47,35 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
         emailService.sendManagementHashRenewed(initiativeId(), MANAGEMENT_HASH, authorId());
 
-        assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
-        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Sinulle on luotu uusi aloitteen ylläpitolinkki Kuntalaisaloite.fi-palvelussa / En ny hanteringslänk har skapats för dig i webbtjänsten Invånarinitiativ.fi"));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.loginAuthor(MANAGEMENT_HASH)));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.alt().loginAuthor(MANAGEMENT_HASH)));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_NAME));
+        EmailDto email = testHelper.getSingleQueuedEmail();
+
+        assertThat(email.getRecipientsAsString(), is(AUTHOR_EMAIL));
+        assertThat(email.getSubject(), is("Sinulle on luotu uusi aloitteen ylläpitolinkki Kuntalaisaloite.fi-palvelussa / En ny hanteringslänk har skapats för dig i webbtjänsten Invånarinitiativ.fi"));
+        assertThat(email.getBodyHtml(), containsString(urls.loginAuthor(MANAGEMENT_HASH)));
+        assertThat(email.getBodyHtml(), containsString(urls.alt().loginAuthor(MANAGEMENT_HASH)));
+        assertThat(email.getBodyHtml(), containsString(INITIATIVE_NAME));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
     }
     
     @Test
     public void review_notification_to_moderator_contains_all_information() throws Exception {
 
         emailService.sendNotificationToModerator(initiativeId());
-        assertThat(javaMailSenderFake.getSingleRecipient(), is(IntegrationTestFakeEmailConfiguration.EMAIL_DEFAULT_OM));
-        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Kuntalaisaloite tarkastettavaksi"));
+
+        EmailDto email = testHelper.getSingleQueuedEmail();
         
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_NAME));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_PROPOSAL));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_MUNICIPALITY));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_ADDRESS));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_EMAIL));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_NAME));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_PHONE));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.moderatorLogin(initiativeId())));
+        assertThat(email.getRecipientsAsString(), is(IntegrationTestFakeEmailConfiguration.EMAIL_DEFAULT_OM));
+        assertThat(email.getSubject(), is("Kuntalaisaloite tarkastettavaksi"));
+        
+        assertThat(email.getBodyHtml(), containsString(INITIATIVE_NAME));
+        assertThat(email.getBodyHtml(), containsString(INITIATIVE_PROPOSAL));
+        assertThat(email.getBodyHtml(), containsString(INITIATIVE_MUNICIPALITY));
+        assertThat(email.getBodyHtml(), containsString(AUTHOR_ADDRESS));
+        assertThat(email.getBodyHtml(), containsString(AUTHOR_EMAIL));
+        assertThat(email.getBodyHtml(), containsString(AUTHOR_NAME));
+        assertThat(email.getBodyHtml(), containsString(AUTHOR_PHONE));
+        assertThat(email.getBodyHtml(), containsString(urls.moderatorLogin(initiativeId())));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
         
     }
 
@@ -72,11 +86,15 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         String participantEmail = "participant@example.com";
 
         emailService.sendParticipationConfirmation(initiativeId(), participantEmail, participantId, confirmationCode, Locales.LOCALE_FI);
-        assertThat(javaMailSenderFake.getSingleRecipient(), is(participantEmail));
-        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Aloitteeseen osallistumisen vahvistaminen"));
 
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_NAME));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.confirmParticipant(participantId, confirmationCode)));
+        EmailDto email = testHelper.getSingleQueuedEmail();
+        
+        assertThat(email.getRecipientsAsString(), is(participantEmail));
+        assertThat(email.getSubject(), is("Aloitteeseen osallistumisen vahvistaminen"));
+
+        assertThat(email.getBodyHtml(), containsString(INITIATIVE_NAME));
+        assertThat(email.getBodyHtml(), containsString(urls.confirmParticipant(participantId, confirmationCode)));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
     }
 
     @Test
@@ -84,18 +102,21 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
         emailService.sendSingleToMunicipality(initiativeId(), Locales.LOCALE_FI);
 
-        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Kuntalaisaloite: "+ INITIATIVE_NAME));
-        assertThat(javaMailSenderFake.getSingleRecipient(), is(MUNICIPALITY_EMAIL));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_NAME));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_PROPOSAL));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_MUNICIPALITY));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_ADDRESS));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_EMAIL));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_NAME));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_PHONE));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.view(initiativeId())));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(EXTRA_INFO));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(SENT_COMMENT));
+        EmailDto email = testHelper.getSingleQueuedEmail();
+
+        assertThat(email.getSubject(), is("Kuntalaisaloite: "+ INITIATIVE_NAME));
+        assertThat(email.getRecipientsAsString(), is(MUNICIPALITY_EMAIL));
+        assertThat(email.getBodyHtml(), containsString(INITIATIVE_NAME));
+        assertThat(email.getBodyHtml(), containsString(INITIATIVE_PROPOSAL));
+        assertThat(email.getBodyHtml(), containsString(INITIATIVE_MUNICIPALITY));
+        assertThat(email.getBodyHtml(), containsString(AUTHOR_ADDRESS));
+        assertThat(email.getBodyHtml(), containsString(AUTHOR_EMAIL));
+        assertThat(email.getBodyHtml(), containsString(AUTHOR_NAME));
+        assertThat(email.getBodyHtml(), containsString(AUTHOR_PHONE));
+        assertThat(email.getBodyHtml(), containsString(urls.view(initiativeId())));
+        assertThat(email.getBodyHtml(), containsString(EXTRA_INFO));
+        assertThat(email.getBodyHtml(), containsString(SENT_COMMENT));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
     }
 
     @Test
@@ -107,28 +128,34 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         contactInfo.setPhone("Puhnummi");
         emailService.sendAuthorDeletedEmailToOtherAuthors(initiativeId(), contactInfo);
 
-        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Vastuuhenkilö on poistettu aloitteestasi / Ansvarspersonen har tagits bort från ditt initiativ"));
-        assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_NAME));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_MUNICIPALITY));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(contactInfo.getAddress()));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(contactInfo.getEmail()));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(contactInfo.getName()));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(contactInfo.getPhone()));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.loginAuthor(managementHash())));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.alt().loginAuthor(managementHash())));
+        EmailDto email = testHelper.getSingleQueuedEmail();
+
+        assertThat(email.getSubject(), is("Vastuuhenkilö on poistettu aloitteestasi / Ansvarspersonen har tagits bort från ditt initiativ"));
+        assertThat(email.getRecipientsAsString(), is(AUTHOR_EMAIL));
+        assertThat(email.getBodyHtml(), containsString(INITIATIVE_NAME));
+        assertThat(email.getBodyHtml(), containsString(INITIATIVE_MUNICIPALITY));
+        assertThat(email.getBodyHtml(), containsString(contactInfo.getAddress()));
+        assertThat(email.getBodyHtml(), containsString(contactInfo.getEmail()));
+        assertThat(email.getBodyHtml(), containsString(contactInfo.getName()));
+        assertThat(email.getBodyHtml(), containsString(contactInfo.getPhone()));
+        assertThat(email.getBodyHtml(), containsString(urls.loginAuthor(managementHash())));
+        assertThat(email.getBodyHtml(), containsString(urls.alt().loginAuthor(managementHash())));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
     }
 
     @Test
     public void author_has_been_deleted_email_to_author_contains_all_information() throws Exception {
         emailService.sendAuthorDeletedEmailToDeletedAuthor(initiativeId(), AUTHOR_EMAIL);
 
-        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Sinut on poistettu aloitteen vastuuhenkilöistä / Du har tagits bort som ansvarsperson för initiativet"));
-        assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
+        EmailDto email = testHelper.getSingleQueuedEmail();
 
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString("Et ole enää aloitteen vastuuhenkilö"));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_NAME));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(INITIATIVE_MUNICIPALITY));
+        assertThat(email.getSubject(), is("Sinut on poistettu aloitteen vastuuhenkilöistä / Du har tagits bort som ansvarsperson för initiativet"));
+        assertThat(email.getRecipientsAsString(), is(AUTHOR_EMAIL));
+
+        assertThat(email.getBodyHtml(), containsString("Et ole enää aloitteen vastuuhenkilö"));
+        assertThat(email.getBodyHtml(), containsString(INITIATIVE_NAME));
+        assertThat(email.getBodyHtml(), containsString(INITIATIVE_MUNICIPALITY));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
     }
 
     @Test
@@ -138,11 +165,14 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         authorInvitation.setConfirmationCode("rockrock");
         emailService.sendAuthorInvitation(initiativeId(), authorInvitation);
 
-        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), containsString("Sinut on kutsuttu vastuuhenkilöksi kuntalaisaloitteeseen"));
-        assertThat(javaMailSenderFake.getSingleRecipient(), is(authorInvitation.getEmail()));
+        EmailDto email = testHelper.getSingleQueuedEmail();
 
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.invitation(initiativeId(), authorInvitation.getConfirmationCode())));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.alt().invitation(initiativeId(), authorInvitation.getConfirmationCode())));
+        assertThat(email.getSubject(), containsString("Sinut on kutsuttu vastuuhenkilöksi kuntalaisaloitteeseen"));
+        assertThat(email.getRecipientsAsString(), is(authorInvitation.getEmail()));
+
+        assertThat(email.getBodyHtml(), containsString(urls.invitation(initiativeId(), authorInvitation.getConfirmationCode())));
+        assertThat(email.getBodyHtml(), containsString(urls.alt().invitation(initiativeId(), authorInvitation.getConfirmationCode())));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
 
     }
 
@@ -150,37 +180,46 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
     public void collaborative_to_municipality_contains_all_information() throws Exception {
         emailService.sendCollaborativeToMunicipality(initiativeId(), Locales.LOCALE_FI);
 
-        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Kuntalaisaloite: "+ INITIATIVE_NAME));
-        assertThat(javaMailSenderFake.getSingleRecipient(), is(MUNICIPALITY_EMAIL));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(EXTRA_INFO));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(SENT_COMMENT));
+        EmailDto email = testHelper.getSingleQueuedEmail();
 
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_NAME));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_EMAIL));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_ADDRESS));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_PHONE));
+        assertThat(email.getSubject(), is("Kuntalaisaloite: "+ INITIATIVE_NAME));
+        assertThat(email.getRecipientsAsString(), is(MUNICIPALITY_EMAIL));
+        assertThat(email.getBodyHtml(), containsString(EXTRA_INFO));
+        assertThat(email.getBodyHtml(), containsString(SENT_COMMENT));
+
+        assertThat(email.getBodyHtml(), containsString(AUTHOR_NAME));
+        assertThat(email.getBodyHtml(), containsString(AUTHOR_EMAIL));
+        assertThat(email.getBodyHtml(), containsString(AUTHOR_ADDRESS));
+        assertThat(email.getBodyHtml(), containsString(AUTHOR_PHONE));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.PARTICIPANTS));
     }
 
     @Test
     public void collaborative_to_authors_contains_all_information() throws Exception {
         emailService.sendCollaborativeToAuthors(initiativeId());
 
-        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Aloite on lähetetty kuntaan"));
-        assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(EXTRA_INFO));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(SENT_COMMENT));
+        EmailDto email = testHelper.getSingleQueuedEmail();
 
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_NAME));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_EMAIL));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_ADDRESS));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(AUTHOR_PHONE));
+        assertThat(email.getSubject(), is("Aloite on lähetetty kuntaan"));
+        assertThat(email.getRecipientsAsString(), is(AUTHOR_EMAIL));
+        assertThat(email.getBodyHtml(), containsString(EXTRA_INFO));
+        assertThat(email.getBodyHtml(), containsString(SENT_COMMENT));
+
+        assertThat(email.getBodyHtml(), containsString(AUTHOR_NAME));
+        assertThat(email.getBodyHtml(), containsString(AUTHOR_EMAIL));
+        assertThat(email.getBodyHtml(), containsString(AUTHOR_ADDRESS));
+        assertThat(email.getBodyHtml(), containsString(AUTHOR_PHONE));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.PARTICIPANTS));
     }
 
     @Test
     public void send_invitation_acceptance() throws Exception {
 
         emailService.sendAuthorConfirmedInvitation(initiativeId(), AUTHOR_EMAIL, "hash", Locales.LOCALE_FI);
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(Urls.get(Locales.LOCALE_FI).loginAuthor("hash")));
+
+        EmailDto email = testHelper.getSingleQueuedEmail();
+        assertThat(email.getBodyHtml(), containsString(Urls.get(Locales.LOCALE_FI).loginAuthor("hash")));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
 
     }
 
@@ -191,12 +230,15 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         authorMessage.setConfirmationCode(confirmationCode);
         emailService.sendAuthorMessageConfirmationEmail(initiativeId(), authorMessage, Locales.LOCALE_FI);
 
-        assertThat(javaMailSenderFake.getSingleRecipient(), is(authorMessage.getContactEmail()));
-        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Olet lähettämässä viestiä aloitteen vastuuhenkilöille"));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(authorMessage.getMessage()));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(authorMessage.getContactEmail()));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(authorMessage.getContactName()));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.confirmAuthorMessage(confirmationCode)));
+        EmailDto email = testHelper.getSingleQueuedEmail();
+
+        assertThat(email.getRecipientsAsString(), is(authorMessage.getContactEmail()));
+        assertThat(email.getSubject(), is("Olet lähettämässä viestiä aloitteen vastuuhenkilöille"));
+        assertThat(email.getBodyHtml(), containsString(authorMessage.getMessage()));
+        assertThat(email.getBodyHtml(), containsString(authorMessage.getContactEmail()));
+        assertThat(email.getBodyHtml(), containsString(authorMessage.getContactName()));
+        assertThat(email.getBodyHtml(), containsString(urls.confirmAuthorMessage(confirmationCode)));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
 
     }
 
@@ -207,13 +249,16 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
         emailService.sendAuthorMessages(initiativeId(), authorMessage);
 
-        assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
-        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Olet saanut yhteydenoton aloitteeseesi liittyen / Du har kontaktats gällande ditt initiativ"));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(authorMessage.getContactEmail()));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(authorMessage.getContactName()));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(authorMessage.getMessage()));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.view(initiativeId())));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(urls.alt().view(initiativeId())));
+        EmailDto email = testHelper.getSingleQueuedEmail();
+
+        assertThat(email.getRecipientsAsString(), is(AUTHOR_EMAIL));
+        assertThat(email.getSubject(), is("Olet saanut yhteydenoton aloitteeseesi liittyen / Du har kontaktats gällande ditt initiativ"));
+        assertThat(email.getBodyHtml(), containsString(authorMessage.getContactEmail()));
+        assertThat(email.getBodyHtml(), containsString(authorMessage.getContactName()));
+        assertThat(email.getBodyHtml(), containsString(authorMessage.getMessage()));
+        assertThat(email.getBodyHtml(), containsString(urls.view(initiativeId())));
+        assertThat(email.getBodyHtml(), containsString(urls.alt().view(initiativeId())));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
 
     }
 
@@ -221,9 +266,12 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
     public void verified_initiative_created_contains_all_information() throws Exception {
         emailService.sendVeritiedInitiativeManagementLink(initiativeId(), Locales.LOCALE_FI);
 
-        assertThat(javaMailSenderFake.getSingleRecipient(), is(AUTHOR_EMAIL));
-        assertThat(javaMailSenderFake.getSingleSentMessage().getSubject(), is("Aloiteluonnoksesi on tallennettu Kuntalaisaloite.fi-palveluun"));
-        assertThat(javaMailSenderFake.getMessageContent().html, containsString(Urls.get(Locales.LOCALE_FI).loginToManagement(initiativeId())));
+        EmailDto email = testHelper.getSingleQueuedEmail();
+
+        assertThat(email.getRecipientsAsString(), is(AUTHOR_EMAIL));
+        assertThat(email.getSubject(), is("Aloiteluonnoksesi on tallennettu Kuntalaisaloite.fi-palveluun"));
+        assertThat(email.getBodyHtml(), containsString(Urls.get(Locales.LOCALE_FI).loginToManagement(initiativeId())));
+        assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
 
     }
 

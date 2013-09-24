@@ -4,7 +4,6 @@ import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.util.InitiativeState;
-import fi.om.municipalityinitiative.util.JavaMailSenderFake;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.context.MessageSource;
@@ -35,11 +34,6 @@ public abstract class MailSendingEmailServiceTestBase {
     @Resource
     protected TestHelper testHelper;
 
-    // This replaces the JavaMailSender used by EmailService.
-    // May be used for asserting "sent" emails.
-    @Resource
-    protected JavaMailSenderFake javaMailSenderFake;
-
     @Resource
     private MessageSource messageSource;
 
@@ -47,7 +41,6 @@ public abstract class MailSendingEmailServiceTestBase {
 
     @Before
     public void setup() {
-        javaMailSenderFake.clearSentMessages();
 
         testHelper.dbCleanup();
         testMunicipality = testHelper.createTestMunicipality(INITIATIVE_MUNICIPALITY);
