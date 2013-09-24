@@ -41,6 +41,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         openAndAssertPreparePage();
         select_municipality(false);
         fill_in_preparation_form();
+        assertTotalEmailsInQueue(1);
     }
 
     @Test
@@ -142,6 +143,30 @@ public class InitiativeCreateWebTest extends WebTestBase {
         clickByName(Urls.ACTION_SAVE);
 
         assertSuccesPageWithMessage(MSG_SUCCESS_SAVE_DRAFT);
+        assertTotalEmailsInQueue(0);
+    }
+
+    @Test
+    public void editing_verified_initiative_for_first_time_shows_success_message_and_sends_email() {
+        Long initiativeId = testHelper.createVerifiedInitiative(new InitiativeDraft(HELSINKI_ID)
+                .withName("")
+                .applyAuthor(USER_SSN).toInitiativeDraft());
+
+        vetumaLogin(USER_SSN, MUNICIPALITY_1);
+        open(urls.edit(initiativeId));
+
+        inputText("name", NAME);
+        inputText("proposal", PROPOSAL);
+
+        inputText("contactInfo.phone", CONTACT_PHONE);
+        inputText("contactInfo.address", CONTACT_ADDRESS);
+        inputText("contactInfo.email", CONTACT_EMAIL);
+
+        clickByName(Urls.ACTION_SAVE);
+
+        assertSuccesPageWithMessage(MSG_SUCCESS_SAVE_DRAFT);
+
+        assertTotalEmailsInQueue(1);
     }
 
     @Test
@@ -211,6 +236,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         
         // Assert that initiative name and proposal cannot be edited in REVIEW-state
         update_initiative(initiativeId); // XXX: Why does send_to_review -test update initiative?
+        assertTotalEmailsInQueue(2);
     }
 
     @Test
@@ -254,6 +280,8 @@ public class InitiativeCreateWebTest extends WebTestBase {
         assertTextByTag("h1", "Linkki aloitteen tekemiseen on lähetetty sähköpostiisi");
         assertTextByTag("strong", CONTACT_EMAIL);
         System.out.println("--- add_initiative_content OK");
+        assertTotalEmailsInQueue(1);
+
     }
 
     public void fill_in_initiative_content() {
