@@ -92,6 +92,34 @@ public class JdbcEmailDao implements EmailDao {
                 .execute());
     }
 
+    @Override
+    public List<EmailDto> findNotSucceeded(long offset) {
+        return queryFactory.from(QEmail.email)
+                .where(QEmail.email.succeeded.isNull())
+                .orderBy(QEmail.email.id.desc())
+                .list(emailMapping);
+    }
+
+    @Override
+    public void retryFailedEmails() {
+        queryFactory.update(QEmail.email)
+                .set(QEmail.email.tried, false)
+                .where(QEmail.email.tried.eq(true))
+                .where(QEmail.email.lastFailed.isNotNull())
+                .where(QEmail.email.succeeded.isNull())
+                .execute();
+    }
+
+    @Override
+    public List<EmailDto> findSucceeded(long offset) {
+        return queryFactory.from(QEmail.email)
+                .where(QEmail.email.succeeded.isNotNull())
+                .orderBy(QEmail.email.succeeded.desc())
+                .offset(offset)
+                .limit(50)
+                .list(emailMapping);
+    }
+
     static final MappingProjection<EmailDto> emailMapping
             = new MappingProjection<EmailDto>(EmailDto.class, QEmail.email.all()) {
         @Override

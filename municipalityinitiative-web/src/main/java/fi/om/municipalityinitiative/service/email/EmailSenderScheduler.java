@@ -45,8 +45,16 @@ public class EmailSenderScheduler {
             }
     }
 
-    private void stop() {
-        this.interrupted.set(true);
+    public void stop() {
+        interrupted.set(true);
+    }
+
+    public void start() {
+        interrupted.set(false);
+    }
+
+    public boolean isRunning() {
+        return !interrupted.get();
     }
 
 

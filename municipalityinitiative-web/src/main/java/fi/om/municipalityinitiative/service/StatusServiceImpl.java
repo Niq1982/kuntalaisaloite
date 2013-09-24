@@ -4,6 +4,8 @@ import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dao.EmailDao;
 import fi.om.municipalityinitiative.dao.JdbcSchemaVersionDao;
 import fi.om.municipalityinitiative.dto.SchemaVersion;
+import fi.om.municipalityinitiative.dto.service.EmailDto;
+import fi.om.municipalityinitiative.service.email.EmailSenderScheduler;
 import fi.om.municipalityinitiative.util.TaskExecutorAspect;
 import fi.om.municipalityinitiative.web.Urls;
 import org.joda.time.DateTime;
@@ -36,6 +38,10 @@ public class StatusServiceImpl implements StatusService {
 
     @Resource
     private TaskExecutorAspect taskExecutorAspect;
+
+
+    @Resource
+    private EmailSenderScheduler emailSenderScheduler;
 
     @Resource
     private EmailDao emailDao;
@@ -146,6 +152,24 @@ public class StatusServiceImpl implements StatusService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<EmailDto> findFailedEmails() {
+        return emailDao.findFailedEmails();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<EmailDto> findSucceededEmails(Long offset) {
+        return emailDao.findSucceeded(offset);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<EmailDto> findNotSucceededEmails() {
+        return emailDao.findNotSucceeded(0);
+    }
+
+    @Override
     public String getAppVersion() {
         return appVersion;
     }
@@ -170,6 +194,17 @@ public class StatusServiceImpl implements StatusService {
         return buildTimeStamp;
     }
 
+    @Override
+    @Transactional(readOnly = false)
+    public void resendFailedEmailsAndContinueScheduledMailSender() {
+        emailDao.retryFailedEmails();
+        emailSenderScheduler.start();
+    }
+
+    @Override
+    public boolean isEmailTaskRunning() {
+        return emailSenderScheduler.isRunning();
+    }
 
 }
 

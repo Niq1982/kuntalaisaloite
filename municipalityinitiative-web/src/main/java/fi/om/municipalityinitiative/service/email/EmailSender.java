@@ -72,6 +72,7 @@ public class EmailSender {
         }
         else {
             MimeMessageHelper helper = constructEmail(emailDto);
+            //throw new RuntimeException("Some exception");
             javaMailSender.send(helper.getMimeMessage());
         }
 

@@ -28,4 +28,10 @@ public interface EmailDao {
     void failed(Long sendableEmail);
 
     List<EmailDto> findFailedEmails();
+
+    List<EmailDto> findSucceeded(long offset);
+
+    List<EmailDto> findNotSucceeded(long offset);
+
+    void retryFailedEmails();
 }
