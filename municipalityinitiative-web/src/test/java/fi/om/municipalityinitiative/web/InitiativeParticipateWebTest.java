@@ -74,12 +74,15 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         getElemContaining(getMessage(MSG_BTN_SAVE), "button").click();
         
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_PARTICIPATE);
+
+        assertTotalEmailsInQueue(1);
        
         assertThat(getOptionalElemContaining(getMessage(MSG_BTN_PARTICIPATE), "a").isPresent(), is(false));
         
         open(urls.confirmParticipant(testHelper.getLastParticipantId(), RandomHashGenerator.getPrevious()));
         
         assertTextContainedByClass("public-names", "1 nimi julkaistu palvelussa");
+
     }
 
     @Test
@@ -160,6 +163,8 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_PARTICIPATE);
 
+        assertTotalEmailsInQueue(1);
+
         assertThat(getOptionalElemContaining(getMessage(MSG_BTN_PARTICIPATE), "a").isPresent(), is(false));
 
         open(urls.confirmParticipant(testHelper.getLastParticipantId(), RandomHashGenerator.getPrevious()));
@@ -190,11 +195,15 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
         getElemContaining("Lähetä viesti", "button").click();
 
+        assertTotalEmailsInQueue(1);
+
         assertTextContainedByClass("msg-success", "Linkki yhteydenottopyynnön vahvistamiseen on lähetetty sähköpostiisi");
 
         open(urls.confirmAuthorMessage(RandomHashGenerator.getPrevious()));
 
         assertTextContainedByClass("msg-success", "Viesti on nyt lähetetty vastuuhenkilöille");
+
+        assertTotalEmailsInQueue(2);
 
     }
 
