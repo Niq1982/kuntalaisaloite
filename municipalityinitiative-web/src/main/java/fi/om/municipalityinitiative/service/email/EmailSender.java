@@ -89,6 +89,7 @@ public class EmailSender {
 
     private MimeMessageHelper constructEmail(EmailDto emailDto) throws MessagingException {
         if (environmentSettings.getTestSendTo().isPresent()) {
+            log.warn("Replaced recipients email with: "+ environmentSettings.getTestSendTo());
             emailDto.setRecipients(Collections.singletonList(environmentSettings.getTestSendTo().get()));
         }
 

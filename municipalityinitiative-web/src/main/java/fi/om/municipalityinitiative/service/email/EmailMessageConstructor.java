@@ -53,29 +53,6 @@ public class EmailMessageConstructor {
         return "Kuntalaisaloitepalvelu" + (environmentSettings.hasAnyTestOptionsEnabled() ? " TEST" : "");
     }
 
-    private static String stripTextRows(String text, int maxEmptyRows) {
-        List<String> rows = Lists.newArrayList(Splitter.on('\n').trimResults().split(text));
-
-        int emptyRows = maxEmptyRows;
-        for (int i = rows.size()-1; i >= 0; i--) {
-            if (Strings.isNullOrEmpty(rows.get(i))) {
-                emptyRows++;
-            } else {
-                emptyRows = 0;
-            }
-            if (emptyRows > maxEmptyRows) {
-                rows.remove(i);
-            }
-        }
-
-        //remove remaining empty rows from the beginning
-        while (rows.size() > 0 && Strings.isNullOrEmpty(rows.get(0))) {
-            rows.remove(0);
-        }
-
-        return Joiner.on("\r\n").join(rows);
-    }
-
     private String processTemplate(String templateName, Map<String, Object> dataMap) {
         final Configuration cfg = freemarkerConfig.getConfiguration();
 
