@@ -55,7 +55,6 @@ public class EmailSender {
     @Transactional(readOnly = false)
     public void failed(EmailDto emailDto) {
         emailDao.failed(emailDto.getEmailId());
-//        throw new RuntimeException("moi");
     }
 
     @Transactional(readOnly = false)
@@ -70,8 +69,6 @@ public class EmailSender {
             MimeMessageHelper helper = constructEmail(emailDto);
             javaMailSender.send(helper.getMimeMessage());
         }
-//        throw new RuntimeException("error while sending email");
-
     }
 
     private void printEmail(EmailDto emailDto) {

@@ -18,7 +18,7 @@
     <#elseif emailDto.lastFailed.present>
         <@dateTime emailDto.lastFailed.value/>
    <#else>
-        TRIED - STATUS UNKNOWN
+        UNKNOWN
    </#if>
    <br/>
    ${emailDto.recipientsAsString}
@@ -28,8 +28,9 @@
 <@l.main "page.status">
 
     <h1>Status page</h1>
-    <h1>Email sending: <#if isInFailureState>IN FAILURE STATE<#else>OK</#if></h1>
     <#if hasFailedEmails><h2>HAS FAILED EMAILS</h2></#if>
+    <h1>Emails in queue: ${untriedEmails?size}</h1>
+    <#if (untriedEmails?size > 10)><h1>FAILURE: Many emails in queue</h1></#if>
 
     <h3>Application</h3>
     <table class="data status">

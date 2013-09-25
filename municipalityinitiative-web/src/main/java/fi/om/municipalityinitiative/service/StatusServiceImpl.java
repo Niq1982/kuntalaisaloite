@@ -90,10 +90,15 @@ public class StatusServiceImpl implements StatusService {
         list.add(new KeyValueInfo("appBuildTimeStamp", getFormattedBuildTimeStamp(resourcesVersion)));
 //        list.add(new KeyValueInfo("initiativeCount", initiativeDao.getInitiativeCount()));
         list.add(new KeyValueInfo("taskQueueLength", taskExecutorAspect.getQueueLength()));
-        list.add(new KeyValueInfo("emailQueueLength", emailDao.findUntriedEmails().size()));
         list.add(new KeyValueInfo("unsucceededEmails", emailDao.findTriedNotSucceeded().size()));
 
         return list;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<EmailDto> findUntriedEmails() {
+        return emailDao.findUntriedEmails();
     }
 
     @Override
@@ -203,12 +208,6 @@ public class StatusServiceImpl implements StatusService {
     public void resendFailedEmailsAndContinueScheduledMailSender() {
         long resentEmails = emailDao.retryFailedEmails();
         log.info("Moderator marked " + resentEmails + " emails for resending.");
-        emailSenderScheduler.start();
-    }
-
-    @Override
-    public boolean isEmailTaskRunning() {
-        return emailSenderScheduler.isRunning();
     }
 
 }

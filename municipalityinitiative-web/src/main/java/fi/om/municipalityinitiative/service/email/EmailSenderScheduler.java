@@ -20,13 +20,8 @@ public class EmailSenderScheduler {
     @Resource
     private EmailSender emailSender;
 
-    private AtomicBoolean interrupted = new AtomicBoolean(false);
-
     @Scheduled(fixedDelay = FIXED_DELAY)
     public void sendEmails() {
-            if (interrupted.get()) {
-                return;
-            }
             try {
                 Maybe<EmailDto> lastSentEmail = Maybe.absent();
                 do {
@@ -50,25 +45,8 @@ public class EmailSenderScheduler {
                 while (lastSentEmail.isPresent());
 
             } catch (Throwable e) {
-                // emailSender.sendNextEmail() is responsible for checking errors and saving the
-                // send-status of email to database. If if throws any exception in any case,
-                // it was not able to save the sent-state to database.
-                // Stop executing this thread immediately to avoid email-spamming.
-//                stop();
-                log.error("Unknown error while sending emails, task stopped", e);
+                log.error("Unknown error while popping and sending email", e);
             }
-    }
-
-    public void stop() {
-        interrupted.set(true);
-    }
-
-    public void start() {
-        interrupted.set(false);
-    }
-
-    public boolean isRunning() {
-        return !interrupted.get();
     }
 
 }

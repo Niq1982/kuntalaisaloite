@@ -41,7 +41,8 @@ public class StatusPageController extends BaseController {
 
         List<EmailDto> failedEmails = statusService.findTriedNotSucceededEmails();
         model.addAttribute("hasFailedEmails", !failedEmails.isEmpty());
-        model.addAttribute("isInFailureState", !statusService.isEmailTaskRunning());
+
+        model.addAttribute("untriedEmails", statusService.findUntriedEmails());
 
         if (emailOffset != null) {
             model.addAttribute("showEmails", emailOffset);

@@ -28,5 +28,6 @@ public interface StatusService {
 
     void resendFailedEmailsAndContinueScheduledMailSender();
 
-    boolean isEmailTaskRunning();
+    @Transactional(readOnly = true)
+    List<EmailDto> findUntriedEmails();
 }
