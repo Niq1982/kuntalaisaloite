@@ -21,7 +21,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     private static final String MSG_SUCCESS_PARTICIPATE = "success.participate";
     private static final String MSG_SUCCESS_PARTICIPATE_VERIFIABLE = "success.participate-verifiable.title";
     private static final String MSG_BTN_PARTICIPATE = "action.participate";
-    private static final String MSG_BTN_SAVE = "action.save";
+    private static final String MSG_BTN_SEND_CONFIRMATION = "action.send.confirmation";
     private static final String PARTICIPANT_SHOW_NAME = "participant.showName";
     private static final String MEMBERSHIP_RADIO = "initiative.municipalMembership.community";
     
@@ -58,7 +58,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         open(urls.view(normalInitiativeHelsinki));
 
         clickLinkContaining(getMessage(MSG_BTN_PARTICIPATE));
-        getElemContaining(getMessage(MSG_BTN_SAVE), "button").click();
+        getElemContaining(getMessage(MSG_BTN_SEND_CONFIRMATION), "button").click();
         assertPageHasValidationErrors();
     }
 
@@ -71,7 +71,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         inputText("participantName", PARTICIPANT_NAME);
         inputText("participantEmail", PARTICIPANT_EMAIL);
         
-        getElemContaining(getMessage(MSG_BTN_SAVE), "button").click();
+        getElemContaining(getMessage(MSG_BTN_SEND_CONFIRMATION), "button").click();
         
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_PARTICIPATE);
 
@@ -107,7 +107,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         participateToInitiativeButton().get().click();
 
         // Vetuma participant has no information to fill
-        getElemContaining(getMessage(MSG_BTN_SAVE), "button").click();
+        getElemContaining(getMessage(MSG_BTN_SEND_CONFIRMATION), "button").click();
 
         assertMsgContainedByClass("modal-title", MSG_SUCCESS_PARTICIPATE_VERIFIABLE);
         Integer newParticipantCountOnPage = Integer.valueOf(getElement(By.className("user-count-total")).getText());
@@ -159,7 +159,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
         inputText("participantEmail", PARTICIPANT_EMAIL);
 
-        getElemContaining(getMessage(MSG_BTN_SAVE), "button").click();
+        getElemContaining(getMessage(MSG_BTN_SEND_CONFIRMATION), "button").click();
 
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_PARTICIPATE);
 
