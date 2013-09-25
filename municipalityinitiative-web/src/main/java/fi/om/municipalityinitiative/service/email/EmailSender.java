@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.activation.DataSource;
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
@@ -49,24 +48,21 @@ public class EmailSender {
     private EnvironmentSettings environmentSettings;
 
     @Transactional(readOnly = false)
-    public boolean sendNextEmail() throws InterruptedException {
-        Maybe<EmailDto> maybeEmailDto = emailDao.getUntriedEmailForUpdate();
-        if (maybeEmailDto.isPresent()) {
-            EmailDto emailDto = maybeEmailDto.get();
-            try {
-                log.info("Sending email to " + emailDto.getRecipientsAsString() + " - " + emailDto.getSubject());
-                constructAndSendEmail(emailDto);
-                emailDao.succeed(emailDto.getEmailId());
-            } catch (Throwable t) {
-                log.error("Email sending failed: " + emailDto.getRecipientsAsString(), t);
-                emailDao.failed(emailDto.getEmailId()); // If this fails, will throw an exception and the scheduled task is stopped
-            }
-            return true;
-        }
-        return false;
+    public Maybe<EmailDto> popUntriedEmail() {
+        return emailDao.popUntriedEmailForUpdate();
     }
 
-    private void constructAndSendEmail(EmailDto emailDto) throws MessagingException {
+    @Transactional(readOnly = false)
+    public void failed(EmailDto emailDto) {
+        emailDao.failed(emailDto.getEmailId());
+    }
+
+    @Transactional(readOnly = false)
+    public void succeed(EmailDto emailDto) {
+        emailDao.succeed(emailDto.getEmailId());
+    }
+
+    public void constructAndSendEmail(EmailDto emailDto) throws MessagingException {
 
         if (environmentSettings.isTestConsoleOutput()) {
             printEmail(emailDto);
@@ -140,7 +136,7 @@ public class EmailSender {
     }
 
     // Package protected for test-usage
-    void setJavaMailSender(JavaMailSender javaMailSender) {
-        this.javaMailSender = javaMailSender;
-    }
+    void setJavaMailSender(JavaMailSender javaMailSender) { this.javaMailSender = javaMailSender; }
+    void setEmailDao(EmailDao emailDao) { this.emailDao = emailDao; }
+    EmailDao getEmailDao() { return this.emailDao; }
 }

@@ -17,7 +17,7 @@ public interface EmailDao {
                   String replyTo,
                   EmailAttachmentType attachmentType);
 
-    Maybe<EmailDto> getUntriedEmailForUpdate();
+    Maybe<EmailDto> popUntriedEmailForUpdate();
 
     List<EmailDto> findUntriedEmails();
 

@@ -65,7 +65,7 @@ public class JdbcEmailDaoTest {
     @Test
     public void get_untried_email_for_update() {
         Long emailId = createSendableEmail();
-        Maybe<EmailDto> untriedEmailForUpdate = emailDao.getUntriedEmailForUpdate();
+        Maybe<EmailDto> untriedEmailForUpdate = emailDao.popUntriedEmailForUpdate();
         assertThat(untriedEmailForUpdate.isPresent(), is(true));
         assertThat(untriedEmailForUpdate.get().getEmailId(), is(emailId));
     }
@@ -130,12 +130,12 @@ public class JdbcEmailDaoTest {
         Long succeeded = createSendableEmail();
         emailDao.succeed(succeeded);
 
-        Maybe<EmailDto> untriedEmail = emailDao.getUntriedEmailForUpdate();
+        Maybe<EmailDto> untriedEmail = emailDao.popUntriedEmailForUpdate();
         assertThat(untriedEmail.isPresent(), is(true));
         assertThat(untriedEmail.get().getEmailId(), is(untried));
 
         emailDao.succeed(untriedEmail.get().getEmailId());
-        assertThat(emailDao.getUntriedEmailForUpdate().isPresent(), is(false));
+        assertThat(emailDao.popUntriedEmailForUpdate().isPresent(), is(false));
 
     }
 

@@ -52,11 +52,19 @@ public class JdbcEmailDao implements EmailDao {
     }
 
     @Override
-    public Maybe<EmailDto> getUntriedEmailForUpdate() {
-        return Maybe.fromNullable(queryFactory.from(QEmail.email)
+    public Maybe<EmailDto> popUntriedEmailForUpdate() {
+        Maybe<EmailDto> emailDtoMaybe = Maybe.fromNullable(queryFactory.from(QEmail.email)
                 .where(QEmail.email.tried.eq(false))
                 .forUpdate()
                 .singleResult(emailMapping));
+
+        if (emailDtoMaybe.isPresent()) {
+            assertSingleAffection(queryFactory.update(QEmail.email)
+                    .where(QEmail.email.id.eq(emailDtoMaybe.get().getEmailId()))
+                    .set(QEmail.email.tried, true)
+                    .execute());
+        }
+        return emailDtoMaybe;
     }
 
     @Override
