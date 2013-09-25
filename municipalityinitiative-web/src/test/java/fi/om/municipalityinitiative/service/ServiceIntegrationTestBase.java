@@ -46,17 +46,17 @@ public abstract class ServiceIntegrationTestBase {
 
     protected void assertFirstSentEmail(String expectedRecipient, String expectedSubjectPropertyKey, String... argsInSubject) throws MessagingException {
 
-        assertThat(testHelper.getQueuedEmails(), hasSize(2));
+        assertThat(testHelper.findQueuedEmails(), hasSize(2));
 
-        EmailDto email = testHelper.getQueuedEmails().get(0);
+        EmailDto email = testHelper.findQueuedEmails().get(0);
         assertMessage(expectedRecipient, expectedSubjectPropertyKey, email, argsInSubject);
 
     }
     protected void assertSecondSentEmail(String expectedRecipient, String expectedSubjectPropertyKey, String... argsInSubject) throws MessagingException {
 
-        assertThat(testHelper.getQueuedEmails(), hasSize(2));
+        assertThat(testHelper.findQueuedEmails(), hasSize(2));
 
-        EmailDto email = testHelper.getQueuedEmails().get(1);
+        EmailDto email = testHelper.findQueuedEmails().get(1);
         assertMessage(expectedRecipient, expectedSubjectPropertyKey, email, argsInSubject);
     }
 

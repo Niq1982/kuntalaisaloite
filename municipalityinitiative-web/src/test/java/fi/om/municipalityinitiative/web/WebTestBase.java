@@ -383,6 +383,6 @@ public abstract class WebTestBase {
     }
 
     protected void assertTotalEmailsInQueue(int count) {
-        assertThat(testHelper.getQueuedEmails(), hasSize(count));
+        assertThat(testHelper.findQueuedEmails(), hasSize(count));
     }
 }

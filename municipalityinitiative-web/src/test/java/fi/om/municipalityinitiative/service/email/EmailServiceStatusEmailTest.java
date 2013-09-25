@@ -116,7 +116,7 @@ public class EmailServiceStatusEmailTest extends MailSendingEmailServiceTestBase
 
         emailService.sendStatusEmail(initiativeId, EmailMessageType.REJECTED_BY_OM);
 
-        List<EmailDto> sentMessages = testHelper.getQueuedEmails();
+        List<EmailDto> sentMessages = testHelper.findQueuedEmails();
         assertThat(sentMessages, hasSize(2));
 
         // TODO: Assert management-hash links - order may differ;

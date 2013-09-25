@@ -32,7 +32,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import javax.annotation.Resource;
-import javax.mail.internet.MimeMessage;
 
 import java.util.Collections;
 import java.util.List;
@@ -415,7 +414,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         assertThat(countAllNormalAuthors(), is(1L));
 
 
-        List<EmailDto> emails = testHelper.getQueuedEmails();
+        List<EmailDto> emails = testHelper.findQueuedEmails();
         assertThat(emails, hasSize(2));
 
         assertThat(emails.get(0).getRecipientsAsString(), is("author_left@example.com"));

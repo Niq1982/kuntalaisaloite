@@ -540,7 +540,7 @@ public class TestHelper {
 
     @Transactional(readOnly = true)
     public EmailDto getSingleQueuedEmail() {
-        List<EmailDto> queuedEmails = getQueuedEmails();
+        List<EmailDto> queuedEmails = findQueuedEmails();
         assertThat(queuedEmails, hasSize(1));
         return queuedEmails.get(0);
     }
@@ -766,7 +766,7 @@ public class TestHelper {
     }
 
     @Transactional
-    public List<EmailDto> getQueuedEmails() {
+    public List<EmailDto> findQueuedEmails() {
         List<EmailDto> list = queryFactory.from(QEmail.email)
                 .where(QEmail.email.tried.eq(false))
                 .orderBy(QEmail.email.id.asc())
@@ -775,6 +775,14 @@ public class TestHelper {
             ReflectionTestUtils.assertNoNullFields(emailDto);
         }
         return list;
+    }
+
+    @Transactional
+    public List<EmailDto> findTriedEmails() {
+        return queryFactory.from(QEmail.email)
+                .where(QEmail.email.tried.eq(true))
+                .orderBy(QEmail.email.id.asc())
+                .list(JdbcEmailDao.emailMapping);
     }
 
     public String getPreviousTestManagementHash() {

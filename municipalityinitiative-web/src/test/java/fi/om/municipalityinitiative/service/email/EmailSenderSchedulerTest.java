@@ -57,29 +57,8 @@ public class EmailSenderSchedulerTest extends ServiceIntegrationTestBase {
         multipleConcurrentSendExecutions();
 
         assertThat(javaMailSenderFake.getSentMessages(), is(5));
-        assertThat(testHelper.getQueuedEmails(), hasSize(0));
-    }
-
-    @Test
-    public void concurrent_sending_tries_will_not_re_send_any_emails_if_getting_email_fails() throws InterruptedException {
-        emailSender.setEmailDao(getNextEmailFailingEmailDao());
-
-        createRandomEmails(5);
-        multipleConcurrentSendExecutions();
-
-        assertThat(javaMailSenderFake.getSentMessages(), is(0));
-        assertThat(testHelper.getQueuedEmails(), hasSize(5));
-    }
-
-    @Test
-    public void concurrent_sending_tries_will_not_re_send_any_emails_if_succeeding_email_fails() throws InterruptedException {
-        emailSender.setEmailDao(successFailingEmailDao());
-
-        createRandomEmails(5);
-        multipleConcurrentSendExecutions();
-
-        assertThat(javaMailSenderFake.getSentMessages(), is(5));
-        assertThat(testHelper.getQueuedEmails(), hasSize(0));
+        assertThat(testHelper.findQueuedEmails(), hasSize(0));
+        assertThat(testHelper.findTriedEmails(), hasSize(5));
     }
 
     @Test
@@ -91,6 +70,48 @@ public class EmailSenderSchedulerTest extends ServiceIntegrationTestBase {
         precondition(testHelper.getEmail(emailId).getLastFailed().isPresent(), is(false));
         emailSenderScheduler.sendEmails();
         assertThat(testHelper.getEmail(emailId).getLastFailed().isPresent(), is(true));
+
+        assertThat(javaMailSenderFake.getSentMessages(), is(0));
+        assertThat(testHelper.findQueuedEmails(), hasSize(0));
+        assertThat(testHelper.findTriedEmails(), hasSize(1));
+    }
+
+    @Test
+    public void concurrent_sending_tries_will_not_resend_any_emails_if_getting_email_fails() throws InterruptedException {
+        emailSender.setEmailDao(popNextEmailFailingEmailDao());
+
+        createRandomEmails(5);
+        multipleConcurrentSendExecutions();
+
+        assertThat(javaMailSenderFake.getSentMessages(), is(0));
+        assertThat(testHelper.findQueuedEmails(), hasSize(5));
+        assertThat(testHelper.findTriedEmails(), hasSize(0));
+    }
+
+    @Test
+    public void concurrent_sending_tries_will_not_re_send_any_emails_if_sending_is_ok_but_marking_as_succeeded_fails() throws InterruptedException {
+        emailSender.setEmailDao(successFailingEmailDao());
+
+        createRandomEmails(5);
+        multipleConcurrentSendExecutions();
+
+        assertThat(javaMailSenderFake.getSentMessages(), is(5)); // Emails are sent, this simulates jdbc-error after sending.
+        assertThat(testHelper.findQueuedEmails(), hasSize(0));
+        assertThat(testHelper.findTriedEmails(), hasSize(5));
+    }
+
+    @Test
+    public void concurrent_sending_with_failing_email_send_and_failure_when_marking_email_as_sent() throws InterruptedException {
+        emailSender.setJavaMailSender(failingJavaMailSenderFake());
+        emailSender.setEmailDao(failureFailingEmailDao());
+
+        createRandomEmails(5);
+        multipleConcurrentSendExecutions();
+
+        assertThat(javaMailSenderFake.getSentMessages(), is(0)); // Emails are sent, this simulates jdbc-error after sending.
+        assertThat(testHelper.findQueuedEmails(), hasSize(0));
+        assertThat(testHelper.findTriedEmails(), hasSize(5));
+
     }
 
     private void multipleConcurrentSendExecutions() throws InterruptedException {
@@ -144,7 +165,7 @@ public class EmailSenderSchedulerTest extends ServiceIntegrationTestBase {
         };
     }
 
-    private EmailDao getNextEmailFailingEmailDao() {
+    private EmailDao popNextEmailFailingEmailDao() {
         return new ReplicatedEmailDao() {
             @Override
             public Maybe<EmailDto> popUntriedEmailForUpdate() {
