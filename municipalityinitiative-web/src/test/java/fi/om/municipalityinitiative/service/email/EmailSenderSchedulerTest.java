@@ -108,7 +108,7 @@ public class EmailSenderSchedulerTest extends ServiceIntegrationTestBase {
         createRandomEmails(5);
         multipleConcurrentSendExecutions();
 
-        assertThat(javaMailSenderFake.getSentMessages(), is(0)); // Emails are sent, this simulates jdbc-error after sending.
+        assertThat(javaMailSenderFake.getSentMessages(), is(0));
         assertThat(testHelper.findQueuedEmails(), hasSize(0));
         assertThat(testHelper.findTriedEmails(), hasSize(5));
 
