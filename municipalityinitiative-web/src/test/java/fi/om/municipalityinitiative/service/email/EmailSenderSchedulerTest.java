@@ -8,6 +8,7 @@ import fi.om.municipalityinitiative.service.ServiceIntegrationTestBase;
 import fi.om.municipalityinitiative.util.EmailAttachmentType;
 import fi.om.municipalityinitiative.util.JavaMailSenderFake;
 import fi.om.municipalityinitiative.util.Maybe;
+import org.junit.After;
 import org.junit.Test;
 import org.springframework.mail.MailException;
 
@@ -41,13 +42,14 @@ public class EmailSenderSchedulerTest extends ServiceIntegrationTestBase {
 
     @Override
     protected void childSetup() {
-        emailSender.setJavaMailSender(javaMailSenderFake);
         javaMailSenderFake.clearSentMessages();
-
-        emailSender.setEmailDao(emailDao); // Reset original emailDao in case it's overriden by previous test
-
+        emailSender.setJavaMailSender(javaMailSenderFake);
         initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testHelper.createTestMunicipality("municipalityName")));
+    }
 
+    @After
+    public void resetEmailDao() {
+        emailSender.setEmailDao(emailDao); // Reset original emailDao in case it's overriden by previous test
     }
 
     @Test
