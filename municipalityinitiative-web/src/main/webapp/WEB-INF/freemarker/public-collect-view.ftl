@@ -84,7 +84,7 @@
             </div>
 
             <div class="input-block-content">
-                <button id="participate" type="submit" name="${UrlConstants.ACTION_CONTACT_AUTHOR}" value="true" class="small-button"><span class="small-icon mail"><@u.message "action.sendMessage" /></span></button>
+                <button id="contact-author" type="submit" name="${UrlConstants.ACTION_CONTACT_AUTHOR}" value="true" class="small-button"><span class="small-icon mail"><@u.message "action.sendMessage" /></span></button>
                 <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
             </div>
         
@@ -175,7 +175,8 @@
             </#if>
 
             <div class="input-block-content">
-                <button id="participate" type="submit" name="save" value="true" class="small-button"><span class="small-icon save-and-send"><@u.message "action.save" /></span></button>
+                <@u.systemMessage type="warning" path="participate.confirmation.notification"/>
+                <button id="participate" type="submit" name="save" value="true" class="small-button"><span class="small-icon save-and-send"><@u.message "action.send.confirmation" /></span></button>
                 <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
             </div>
         
