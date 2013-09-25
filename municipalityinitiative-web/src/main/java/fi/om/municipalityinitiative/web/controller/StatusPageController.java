@@ -39,7 +39,7 @@ public class StatusPageController extends BaseController {
         model.addAttribute("configurationTestInfoRows", statusService.getConfigurationTestInfo());
         model.addAttribute("systemInfoRows", statusService.getSystemInfo());
 
-        List<EmailDto> failedEmails = statusService.findFailedEmails();
+        List<EmailDto> failedEmails = statusService.findTriedNotSucceededEmails();
         model.addAttribute("hasFailedEmails", !failedEmails.isEmpty());
         model.addAttribute("isInFailureState", !statusService.isEmailTaskRunning());
 

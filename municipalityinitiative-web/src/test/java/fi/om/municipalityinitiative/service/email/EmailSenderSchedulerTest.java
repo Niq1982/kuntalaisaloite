@@ -200,8 +200,13 @@ public class EmailSenderSchedulerTest extends ServiceIntegrationTestBase {
         }
 
         @Override
-        public void retryFailedEmails() {
-            emailDao.retryFailedEmails();
+        public long retryFailedEmails() {
+            return emailDao.retryFailedEmails();
+        }
+
+        @Override
+        public List<EmailDto> findTriedNotSucceeded() {
+            return emailDao.findTriedNotSucceeded();
         }
     }
 

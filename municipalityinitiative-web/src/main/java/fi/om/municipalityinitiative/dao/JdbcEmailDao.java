@@ -33,7 +33,7 @@ public class JdbcEmailDao implements EmailDao {
                          String replyTo,
                          EmailAttachmentType attachmentType) {
         return queryFactory.insert(QEmail.email)
-            .set(QEmail.email.attachment, attachmentType)
+                .set(QEmail.email.attachment, attachmentType)
                 .set(QEmail.email.subject, subject)
                 .set(QEmail.email.bodyHtml, bodyHtml)
                 .set(QEmail.email.bodyText, bodyText)
@@ -76,6 +76,15 @@ public class JdbcEmailDao implements EmailDao {
     }
 
     @Override
+    public List<EmailDto> findTriedNotSucceeded() {
+        return queryFactory.from(QEmail.email)
+                .where(QEmail.email.tried.eq(true))
+                .where(QEmail.email.succeeded.isNull())
+                .list(emailMapping);
+
+    }
+
+    @Override
     public EmailDto get(Long emailId) {
         return queryFactory.from(QEmail.email)
                 .where(QEmail.email.id.eq(emailId))
@@ -109,13 +118,22 @@ public class JdbcEmailDao implements EmailDao {
     }
 
     @Override
-    public void retryFailedEmails() {
-        queryFactory.update(QEmail.email)
+    public long retryFailedEmails() {
+        long failedEmails = queryFactory.update(QEmail.email)
                 .set(QEmail.email.tried, false)
                 .where(QEmail.email.tried.eq(true))
                 .where(QEmail.email.lastFailed.isNotNull())
                 .where(QEmail.email.succeeded.isNull())
                 .execute();
+
+        long unknownStatus = queryFactory.update(QEmail.email)
+                .set(QEmail.email.tried, false)
+                .where(QEmail.email.tried.eq(true))
+                .where(QEmail.email.lastFailed.isNull())
+                .where(QEmail.email.succeeded.isNull())
+                .execute();
+
+        return failedEmails+unknownStatus;
     }
 
     @Override

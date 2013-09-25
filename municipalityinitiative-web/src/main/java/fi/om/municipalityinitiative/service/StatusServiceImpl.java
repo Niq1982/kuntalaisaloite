@@ -11,6 +11,8 @@ import fi.om.municipalityinitiative.web.Urls;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -19,6 +21,8 @@ import java.lang.management.ManagementFactory;
 import java.util.List;
 
 public class StatusServiceImpl implements StatusService {
+
+    private static final Logger log = LoggerFactory.getLogger(StatusServiceImpl.class);
 
     private final DateTime appStartTime = DateTime.now();
 
@@ -87,7 +91,7 @@ public class StatusServiceImpl implements StatusService {
 //        list.add(new KeyValueInfo("initiativeCount", initiativeDao.getInitiativeCount()));
         list.add(new KeyValueInfo("taskQueueLength", taskExecutorAspect.getQueueLength()));
         list.add(new KeyValueInfo("emailQueueLength", emailDao.findUntriedEmails().size()));
-        list.add(new KeyValueInfo("failedEmails", emailDao.findFailedEmails().size()));
+        list.add(new KeyValueInfo("unsucceededEmails", emailDao.findTriedNotSucceeded().size()));
 
         return list;
     }
@@ -153,8 +157,8 @@ public class StatusServiceImpl implements StatusService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<EmailDto> findFailedEmails() {
-        return emailDao.findFailedEmails();
+    public List<EmailDto> findTriedNotSucceededEmails() {
+        return emailDao.findTriedNotSucceeded();
     }
 
     @Override
@@ -197,7 +201,8 @@ public class StatusServiceImpl implements StatusService {
     @Override
     @Transactional(readOnly = false)
     public void resendFailedEmailsAndContinueScheduledMailSender() {
-        emailDao.retryFailedEmails();
+        long resentEmails = emailDao.retryFailedEmails();
+        log.info("Moderator marked " + resentEmails + " emails for resending.");
         emailSenderScheduler.start();
     }
 

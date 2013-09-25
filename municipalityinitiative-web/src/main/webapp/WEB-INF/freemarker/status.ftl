@@ -18,7 +18,7 @@
     <#elseif emailDto.lastFailed.present>
         <@dateTime emailDto.lastFailed.value/>
    <#else>
-        NOT SENT
+        TRIED - STATUS UNKNOWN
    </#if>
    <br/>
    ${emailDto.recipientsAsString}

@@ -33,5 +33,7 @@ public interface EmailDao {
 
     List<EmailDto> findNotSucceeded(long offset);
 
-    void retryFailedEmails();
+    long retryFailedEmails();
+
+    List<EmailDto> findTriedNotSucceeded();
 }

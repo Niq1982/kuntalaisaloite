@@ -20,7 +20,7 @@ public interface StatusService {
 
     String getAppVersion();
 
-    List<EmailDto> findFailedEmails();
+    List<EmailDto> findTriedNotSucceededEmails();
 
     List<EmailDto> findSucceededEmails(Long offset);
 
