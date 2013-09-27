@@ -49,7 +49,6 @@ import java.util.concurrent.Executors;
 @Configuration
 @EnableTransactionManagement(proxyTargetClass=false)
 @EnableAspectJAutoProxy(proxyTargetClass=false)
-@EnableScheduling
 @Import({ProdPropertiesConfiguration.class, TestPropertiesConfigurer.class, JdbcConfiguration.class, AppDevConfiguration.class})
 public class AppConfiguration {
 
