@@ -4,18 +4,24 @@ import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dto.Author;
+import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.user.NormalLoginUser;
+import fi.om.municipalityinitiative.dto.user.User;
+import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
+import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
-import fi.om.municipalityinitiative.service.operations.AuthorServiceOperations;
+import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
+import org.joda.time.DateTime;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -39,22 +45,39 @@ public class AuthorService {
     @Resource
     private EmailService emailService;
 
-    @Resource
-    private AuthorServiceOperations operations;
-
+    @Transactional(readOnly = false)
     public void createAuthorInvitation(Long initiativeId, LoginUserHolder loginUserHolder, AuthorInvitationUICreateDto uiCreateDto) {
 
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        AuthorInvitation authorInvitation = operations.doCreateAuthorInvitation(initiativeId, uiCreateDto);
+        Initiative initiative = initiativeDao.get(initiativeId);
+        assertAllowance("Invite authors", ManagementSettings.of(initiative).isAllowInviteAuthors());
+
+        AuthorInvitation authorInvitation1 = new AuthorInvitation();
+        authorInvitation1.setInitiativeId(initiativeId);
+        authorInvitation1.setEmail(uiCreateDto.getAuthorEmail());
+        authorInvitation1.setName(uiCreateDto.getAuthorName());
+        authorInvitation1.setConfirmationCode(RandomHashGenerator.shortHash());
+        authorInvitation1.setInvitationTime(new DateTime());
+
+        authorDao.addAuthorInvitation(authorInvitation1);
+        AuthorInvitation authorInvitation = authorInvitation1;
         emailService.sendAuthorInvitation(initiativeId, authorInvitation);
 
     }
 
+    @Transactional(readOnly = false)
     public void resendInvitation(Long initiativeId, LoginUserHolder loginUserHolder, String confirmationCode) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        AuthorInvitation authorInvitation = operations.doResendInvitation(initiativeId, confirmationCode);
+        Initiative initiative = initiativeDao.get(initiativeId);
+        assertAllowance("Invite authors", ManagementSettings.of(initiative).isAllowInviteAuthors());
+
+        AuthorInvitation authorInvitation = authorDao.getAuthorInvitation(initiativeId, confirmationCode);
+        authorDao.deleteAuthorInvitation(initiativeId, confirmationCode);
+
+        authorInvitation.setInvitationTime(DateTime.now());
+        authorDao.addAuthorInvitation(authorInvitation);
         emailService.sendAuthorInvitation(initiativeId, authorInvitation);
     }
 
@@ -71,10 +94,32 @@ public class AuthorService {
         return findAuthors(initiativeId);
     }
 
+    @Transactional(readOnly = false)
     public void deleteAuthor(Long initiativeId, LoginUserHolder loginUserHolder, Long authorId) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        ContactInfo deletedAuthorContactInfo = operations.doDeleteAuthor(initiativeId, authorId, loginUserHolder.getUser());
+        User user = loginUserHolder.getUser();
+        ContactInfo deletedAuthorContactInfo;
+
+        if (initiativeDao.isVerifiableInitiative(initiativeId)) {
+            VerifiedUser currentUser = (VerifiedUser) user;
+            VerifiedUserId authorToDelete = new VerifiedUserId(authorId);
+
+            if (currentUser.getAuthorId().toLong() == authorId) {
+                throw new OperationNotAllowedException("Removing yourself from authors is not allowed");
+            }
+            deletedAuthorContactInfo = deleteVerifiedAuthor(initiativeId, authorToDelete);
+        }
+
+        else {
+            NormalLoginUser currentUser = (NormalLoginUser) user;
+            NormalAuthorId authorToDelete = new NormalAuthorId(authorId);
+
+            if (currentUser.getAuthorId().toLong() == authorId) {
+                throw new OperationNotAllowedException("Removing yourself from authors is not allowed");
+            }
+            deletedAuthorContactInfo = deleteNormalAuthor(initiativeId, authorToDelete);
+        }
 
         emailService.sendAuthorDeletedEmailToOtherAuthors(initiativeId, deletedAuthorContactInfo);
         emailService.sendAuthorDeletedEmailToDeletedAuthor(initiativeId, deletedAuthorContactInfo.getEmail());
@@ -95,8 +140,6 @@ public class AuthorService {
 
                 invitation.assertNotRejectedOrExpired();
 
-                // TODO: Get emails out of transaction?
-
                 authorDao.deleteAuthorInvitation(initiativeId, confirmDto.getConfirmCode());
                 String managementHash = createAuthorAndParticipant(initiativeId, confirmDto);
                 emailService.sendAuthorConfirmedInvitation(initiativeId, invitation.getEmail(), managementHash, locale);
@@ -115,22 +158,19 @@ public class AuthorService {
         return managementHash;
     }
 
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = true)
     public AuthorInvitationConfirmViewData getAuthorInvitationConfirmData(Long initiativeId, String confirmCode, LoginUserHolder unknownLoginUserHolder) {
 
-        boolean isVerifiableInitiative = initiativeDao.isVerifiableInitiative(initiativeId);
-//        if (isVerifiableInitiative) {
-//            unknownLoginUserHolder.getVerifiedUser(); // Throws exception if not verified
-//        }
+        Initiative initiative = initiativeDao.get(initiativeId);
 
         AuthorInvitation authorInvitation = authorDao.getAuthorInvitation(initiativeId, confirmCode);
         authorInvitation.assertNotRejectedOrExpired();
 
         AuthorInvitationUIConfirmDto confirmDto = new AuthorInvitationUIConfirmDto();
-        confirmDto.assignInitiativeMunicipality(initiativeDao.get(initiativeId).getMunicipality().getId());
+        confirmDto.assignInitiativeMunicipality(initiative.getMunicipality().getId());
         confirmDto.setConfirmCode(authorInvitation.getConfirmationCode());
 
-        if (!isVerifiableInitiative) {
+        if (!initiative.getType().isVerifiable()) {
             confirmDto.setContactInfo(new ContactInfo());
             confirmDto.getContactInfo().setName(authorInvitation.getName());
             confirmDto.getContactInfo().setEmail(authorInvitation.getEmail());
@@ -147,7 +187,7 @@ public class AuthorService {
 
         AuthorInvitationConfirmViewData data = new AuthorInvitationConfirmViewData();
         data.authorInvitationUIConfirmDto = confirmDto;
-        data.initiativeViewInfo = InitiativeViewInfo.parse(initiativeDao.get(initiativeId));
+        data.initiativeViewInfo = InitiativeViewInfo.parse(initiative);
         return data;
     }
 
@@ -173,6 +213,41 @@ public class AuthorService {
     @Transactional(readOnly = false)
     public void rejectInvitation(Long initiativeId, String confirmCode) {
         authorDao.rejectAuthorInvitation(initiativeId, confirmCode);
+    }
+
+    private ContactInfo deleteVerifiedAuthor(Long initiativeId, VerifiedUserId authorToDelete) {
+
+        ContactInfo contactInfo = authorDao.getVerifiedAuthor(initiativeId, authorToDelete).getContactInfo();
+        authorDao.deleteAuthorAndParticipant(initiativeId, authorToDelete);
+        initiativeDao.denormalizeParticipantCountForVerifiedInitiative(initiativeId);
+        return contactInfo;
+    }
+
+    private ContactInfo deleteNormalAuthor(Long initiativeId, NormalAuthorId authorToDelete) {
+
+        List<NormalAuthor> authors = authorDao.findNormalAuthors(initiativeId);
+
+        if (!hasAuthor(authorToDelete, authors)) {
+            throw new NotFoundException("Author", "initiative: " + initiativeId + ", author: " + authorToDelete);
+        }
+        else if (authors.size() < 2) {
+            throw new OperationNotAllowedException("Unable to delete author. Initiative has only " + authors.size() +" author(s)");
+        }
+        else {
+            ContactInfo deletedAuthorContactInfo = authorDao.getNormalAuthor(authorToDelete).getContactInfo();
+            authorDao.deleteAuthorAndParticipant(authorToDelete);
+            initiativeDao.denormalizeParticipantCountForNormalInitiative(initiativeId);
+            return deletedAuthorContactInfo;
+        }
+    }
+
+    private static boolean hasAuthor(NormalAuthorId authorId, List<NormalAuthor> authors) {
+        for (NormalAuthor author : authors) {
+            if (author.getId().equals(authorId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

@@ -1,21 +1,32 @@
 package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Lists;
+import fi.om.municipalityinitiative.dao.EmailDao;
 import fi.om.municipalityinitiative.dao.JdbcSchemaVersionDao;
 import fi.om.municipalityinitiative.dto.SchemaVersion;
+import fi.om.municipalityinitiative.dto.service.EmailDto;
+import fi.om.municipalityinitiative.exceptions.NotFoundException;
+import fi.om.municipalityinitiative.service.email.EmailSenderScheduler;
+import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.TaskExecutorAspect;
+import fi.om.municipalityinitiative.web.HelpPage;
 import fi.om.municipalityinitiative.web.Urls;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
 import java.lang.management.ManagementFactory;
 import java.util.List;
+import java.util.Locale;
 
 public class StatusServiceImpl implements StatusService {
+
+    private static final Logger log = LoggerFactory.getLogger(StatusServiceImpl.class);
 
     private final DateTime appStartTime = DateTime.now();
 
@@ -35,6 +46,16 @@ public class StatusServiceImpl implements StatusService {
 
     @Resource
     private TaskExecutorAspect taskExecutorAspect;
+
+
+    @Resource
+    private EmailSenderScheduler emailSenderScheduler;
+
+    @Resource
+    private EmailDao emailDao;
+
+    @Resource
+    private InfoTextService infoTextService;
 
     public static class KeyValueInfo {
         private String key;
@@ -76,8 +97,15 @@ public class StatusServiceImpl implements StatusService {
         list.add(new KeyValueInfo("appBuildTimeStamp", getFormattedBuildTimeStamp(resourcesVersion)));
 //        list.add(new KeyValueInfo("initiativeCount", initiativeDao.getInitiativeCount()));
         list.add(new KeyValueInfo("taskQueueLength", taskExecutorAspect.getQueueLength()));
+        list.add(new KeyValueInfo("unsucceededEmails", emailDao.findTriedNotSucceeded().size()));
 
         return list;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<EmailDto> findUntriedEmails() {
+        return emailDao.findUntriedEmails();
     }
 
     @Override
@@ -140,6 +168,24 @@ public class StatusServiceImpl implements StatusService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<EmailDto> findTriedNotSucceededEmails() {
+        return emailDao.findTriedNotSucceeded();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<EmailDto> findSucceededEmails(Long offset) {
+        return emailDao.findSucceeded(offset);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<EmailDto> findNotSucceededEmails() {
+        return emailDao.findNotSucceeded(0);
+    }
+
+    @Override
     public String getAppVersion() {
         return appVersion;
     }
@@ -164,6 +210,33 @@ public class StatusServiceImpl implements StatusService {
         return buildTimeStamp;
     }
 
+    @Override
+    @Transactional(readOnly = false)
+    public void resendFailedEmailsAndContinueScheduledMailSender() {
+        long resentEmails = emailDao.retryFailedEmails();
+        log.info("Moderator marked " + resentEmails + " emails for resending.");
+    }
+
+    @Override
+    public List<KeyValueInfo> getInvalidHelpUris() {
+
+
+        List<KeyValueInfo> list = Lists.newArrayList();
+        for (HelpPage helpPage : HelpPage.values()) {
+            addHelpUriStatus(list, helpPage, Locales.LOCALE_FI);
+            addHelpUriStatus(list, helpPage, Locales.LOCALE_SV);
+        }
+        return list;
+    }
+
+    private void addHelpUriStatus(List<KeyValueInfo> list, HelpPage helpPage, Locale locale) {
+        try {
+            infoTextService.getPublished(helpPage.getUri(locale.toLanguageTag()));
+            list.add(new KeyValueInfo("OK", Urls.get(locale).help(helpPage.getUri(locale.toLanguageTag()))));
+        } catch (NotFoundException e) {
+            list.add(new KeyValueInfo("FAILURE", Urls.get(locale).help(helpPage.getUri(locale.toLanguageTag()))));
+        }
+    }
 
 }
 

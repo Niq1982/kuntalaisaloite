@@ -9,9 +9,8 @@ import fi.om.municipalityinitiative.conf.AppConfiguration.TestPropertiesConfigur
 import fi.om.municipalityinitiative.dao.*;
 import fi.om.municipalityinitiative.dto.service.TestDataService;
 import fi.om.municipalityinitiative.service.*;
-import fi.om.municipalityinitiative.service.email.EmailMessageConstructor;
-import fi.om.municipalityinitiative.service.email.EmailServiceDataProvider;
-import fi.om.municipalityinitiative.service.operations.*;
+import fi.om.municipalityinitiative.service.email.*;
+import fi.om.municipalityinitiative.service.operations.VerifiedInitiativeServiceOperations;
 import fi.om.municipalityinitiative.service.ui.*;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.TaskExecutorAspect;
@@ -35,6 +34,7 @@ import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.jdbc.support.SQLExceptionTranslator;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
@@ -42,7 +42,6 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.inject.Inject;
-
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -135,6 +134,11 @@ public class AppConfiguration {
     }
 
     @Bean
+    public EmailDao emailDao() {
+        return new JdbcEmailDao();
+    }
+
+    @Bean
     public MunicipalityDao municipalityDao() {
         return new JdbcMunicipalityDao();
     }
@@ -160,23 +164,8 @@ public class AppConfiguration {
     }
 
     @Bean
-    public AuthorServiceOperations authorServiceOperations() {
-        return new AuthorServiceOperations();
-    }
-
-    @Bean
     public PublicInitiativeService publicInitiativeService() {
         return new PublicInitiativeService();
-    }
-
-    @Bean
-    public PublicInitiativeServiceOperations publicInitiativeServiceOperations() {
-        return new PublicInitiativeServiceOperations();
-    }
-
-    @Bean
-    public InitiativeManagementServiceOperations initiativeManagementServiceOperations() {
-        return new InitiativeManagementServiceOperations();
     }
 
     @Bean
@@ -187,11 +176,6 @@ public class AppConfiguration {
     @Bean
     public ModerationService omInitiativeService() {
         return new ModerationService();
-    }
-
-    @Bean
-    public ModerationServiceOperations moderationServiceOperations() {
-        return new ModerationServiceOperations();
     }
 
     @Bean
@@ -251,6 +235,16 @@ public class AppConfiguration {
     @Bean
     EmailServiceDataProvider emailServiceDataProvider() {
         return new EmailServiceDataProvider();
+    }
+
+    @Bean
+    EmailSenderScheduler emailSenderScheduler() {
+        return new EmailSenderScheduler();
+    }
+
+    @Bean
+    EmailSender emailSender() {
+        return new EmailSender();
     }
 
     @Bean
@@ -337,8 +331,8 @@ public class AppConfiguration {
     }
 
     @Bean
-    public TaskedEmailService emailService() {
-        return new TaskedEmailService();
+    public EmailService emailService() {
+        return new EmailService();
     }
 
     @Bean

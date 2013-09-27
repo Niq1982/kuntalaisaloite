@@ -48,6 +48,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_ACCEPT_INITIATIVE);
 
         assertTextContainedByClass("extra-info", "Aloite on hyväksytty");
+        assertTotalEmailsInQueue(1);
 
     }
 
@@ -66,6 +67,8 @@ public class InitiativeModerationWebTest extends WebTestBase {
         clickByName(Urls.ACTION_REJECT_INITIATIVE);
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_REJECT_INITIATIVE);
         assertTextContainedByClass("extra-info", "Aloite odottaa julkaisuun lähetystä");
+        assertTotalEmailsInQueue(1);
+
     }
     
     @Test
@@ -80,14 +83,16 @@ public class InitiativeModerationWebTest extends WebTestBase {
         getElemContaining("Palauta aloite", "button").click();
         
         assertTextContainedByClass("msg-success","Aloite palautettu korjattavaksi");
-        
+        assertTotalEmailsInQueue(1);
+
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         
         clickLinkContaining("Lähetä aloite tarkastettavaksi");
         getElemContaining("Lähetä aloite tarkastettavaksi", "button").click();
         
         assertTextContainedByClass("msg-success","Aloite lähetetty tarkastettavaksi");
-        
+        assertTotalEmailsInQueue(3);
+
         logout();
         loginAsOmUser();
         open(urls.moderation(initiativeId));
@@ -97,6 +102,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
         getElemContaining("Hyväksy aloite", "button").click();
         
         assertTextContainedByClass("msg-success","Aloite on hyväksytty");
+        assertTotalEmailsInQueue(4);
     }
     
     
@@ -112,6 +118,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
         getElemContaining("Luo ja lähetä uusi ylläpitolinkki", "button").click();
 
         assertTextContainedByClass("msg-success", "Uusi ylläpitolinkki lähetetty");
+        assertTotalEmailsInQueue(1);
 
     }
 }

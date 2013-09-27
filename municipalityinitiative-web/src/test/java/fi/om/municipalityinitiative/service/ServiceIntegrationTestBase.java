@@ -2,7 +2,7 @@ package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
-import fi.om.municipalityinitiative.util.JavaMailSenderFake;
+import fi.om.municipalityinitiative.dto.service.EmailDto;
 import fi.om.municipalityinitiative.util.Locales;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -12,19 +12,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={IntegrationTestFakeEmailConfiguration.class})
 public abstract class ServiceIntegrationTestBase {
-
-    @Resource
-    protected JavaMailSenderFake javaMailSenderFake;
 
     @Resource
     protected TestHelper testHelper;
@@ -34,7 +29,6 @@ public abstract class ServiceIntegrationTestBase {
 
     @Before
     public void setUp() throws Exception {
-        javaMailSenderFake.clearSentMessages();
         testHelper.dbCleanup();
         childSetup();
     }
@@ -42,31 +36,34 @@ public abstract class ServiceIntegrationTestBase {
     protected abstract void childSetup();
 
     protected void assertUniqueSentEmail(String expectedRecipient, String expectedSubjectPropertyKey, String... argsInSubject) throws InterruptedException, MessagingException {
-        MimeMessage singleSentMessage = javaMailSenderFake.getSingleSentMessage();
+//        MimeMessage singleSentMessage = javaMailSenderFake.getSingleSentMessage();
+//
+//        assertMessage(expectedRecipient, expectedSubjectPropertyKey, singleSentMessage, argsInSubject);
 
-        assertMessage(expectedRecipient, expectedSubjectPropertyKey, singleSentMessage, argsInSubject);
+        EmailDto email = testHelper.getSingleQueuedEmail();
+        assertMessage(expectedRecipient, expectedSubjectPropertyKey, email, argsInSubject);
     }
 
     protected void assertFirstSentEmail(String expectedRecipient, String expectedSubjectPropertyKey, String... argsInSubject) throws MessagingException {
 
-        List<MimeMessage> sentMessages = javaMailSenderFake.getSentMessages(2);
-        MimeMessage firstSentMessage = sentMessages.get(0);
+        assertThat(testHelper.findQueuedEmails(), hasSize(2));
 
-        assertMessage(expectedRecipient, expectedSubjectPropertyKey, firstSentMessage, argsInSubject);
+        EmailDto email = testHelper.findQueuedEmails().get(0);
+        assertMessage(expectedRecipient, expectedSubjectPropertyKey, email, argsInSubject);
 
     }
     protected void assertSecondSentEmail(String expectedRecipient, String expectedSubjectPropertyKey, String... argsInSubject) throws MessagingException {
 
-        List<MimeMessage> sentMessages = javaMailSenderFake.getSentMessages(2);
-        MimeMessage secondSendMessage = sentMessages.get(1);
+        assertThat(testHelper.findQueuedEmails(), hasSize(2));
 
-        assertMessage(expectedRecipient, expectedSubjectPropertyKey, secondSendMessage, argsInSubject);
+        EmailDto email = testHelper.findQueuedEmails().get(1);
+        assertMessage(expectedRecipient, expectedSubjectPropertyKey, email, argsInSubject);
     }
 
-    private void assertMessage(String expectedRecipient, String expectedSubjectPropertyKey, MimeMessage secondSendMessage, String[] argsInSubject) throws MessagingException {
-        assertThat(JavaMailSenderFake.getSingleRecipient(secondSendMessage), is(expectedRecipient));
+    private void assertMessage(String expectedRecipient, String expectedSubjectPropertyKey, EmailDto emailDto, String[] argsInSubject) throws MessagingException {
+        assertThat(emailDto.getRecipientsAsString(), is(expectedRecipient));
         String expectedSubject = messageSource.getMessage(expectedSubjectPropertyKey, argsInSubject, Locales.LOCALE_FI);
-        assertThat(secondSendMessage.getSubject(), is(expectedSubject));
+        assertThat(emailDto.getSubject(), is(expectedSubject));
     }
 
 }

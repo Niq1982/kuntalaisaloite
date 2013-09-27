@@ -71,6 +71,7 @@ public class JdbcConfiguration {
         configuration.register("municipality_initiative", "fix_state", new EnumAsObjectType<>(FixState.class));
         configuration.register("info_text", "category", new EnumAsObjectType<>(InfoTextCategory.class));
         configuration.register("info_text", "languageCode", new EnumAsObjectType<>(LanguageCode.class));
+        configuration.register("email", "attachment", new EnumAsObjectType<>(EmailAttachmentType.class));
         return configuration;
     }
 

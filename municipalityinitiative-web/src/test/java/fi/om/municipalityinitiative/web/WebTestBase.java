@@ -5,7 +5,7 @@ import fi.om.municipalityinitiative.StartJetty;
 import fi.om.municipalityinitiative.conf.PropertyNames;
 import fi.om.municipalityinitiative.conf.WebTestConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
-import fi.om.municipalityinitiative.service.email.EmailService;
+import fi.om.municipalityinitiative.service.email.EmailSenderScheduler;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.TestUtil;
@@ -30,11 +30,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
-
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
@@ -46,7 +46,7 @@ public abstract class WebTestBase {
     protected static final int PORT = 8445; // NOTE: must match port in test.properties/baseUrl
 
     @Mocked
-    EmailService emailService;
+    EmailSenderScheduler emailSenderScheduler;
 
     @Resource
     protected TestHelper testHelper;
@@ -144,6 +144,7 @@ public abstract class WebTestBase {
     @After
     public void teardown() {
         //driver.quit();
+        emailSenderScheduler.sendEmails();
         driver.manage().deleteAllCookies();
     }
 
@@ -379,5 +380,9 @@ public abstract class WebTestBase {
 
     protected void assertLoginLinkIsVisibleAtHeader() {
         assertTextContainedByClass("logged-in-info", "Tunnistaudu aloitteen ylläpitoon");
+    }
+
+    protected void assertTotalEmailsInQueue(int count) {
+        assertThat(testHelper.findQueuedEmails(), hasSize(count));
     }
 }

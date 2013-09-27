@@ -52,9 +52,9 @@ public class EmailServiceDataProvider {
 
     public List<? extends Participant> findAllParticipants(Long initiativeId) {
         if (initiativeDao.isVerifiableInitiative(initiativeId)) {
-            return participantDao.findVerifiedAllParticipants(initiativeId, 0, fi.om.municipalityinitiative.web.Urls.MAX_PARTICIPANT_LIST_LIMIT);
+            return participantDao.findVerifiedAllParticipants(initiativeId, 0, Integer.MAX_VALUE);
         }
-        return participantDao.findNormalAllParticipants(initiativeId, 0, fi.om.municipalityinitiative.web.Urls.MAX_PARTICIPANT_LIST_LIMIT);
+        return participantDao.findNormalAllParticipants(initiativeId, 0, Integer.MAX_VALUE);
     }
 
     public String getMunicipalityEmail(Long id) {

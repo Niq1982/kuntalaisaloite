@@ -1,4 +1,4 @@
-package fi.om.municipalityinitiative.util;
+package fi.om.municipalityinitiative.conf;
 
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;

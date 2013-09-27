@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.dao.InvitationNotValidException;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
+import fi.om.municipalityinitiative.dto.service.EmailDto;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUIConfirmDto;
 import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUICreateDto;
@@ -31,7 +32,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import javax.annotation.Resource;
-import javax.mail.internet.MimeMessage;
 
 import java.util.Collections;
 import java.util.List;
@@ -413,18 +413,16 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
         assertThat(countAllNormalAuthors(), is(1L));
 
-        List<MimeMessage> sentMessages = javaMailSenderFake.getSentMessages(2);
 
-        assertThat("2 mails are sent", sentMessages, hasSize(2));
+        List<EmailDto> emails = testHelper.findQueuedEmails();
+        assertThat(emails, hasSize(2));
 
-        MimeMessage messageToOtherAuthors = sentMessages.get(0);
-        assertThat(messageToOtherAuthors.getAllRecipients()[0].toString(), is("author_left@example.com"));
-        assertThat(messageToOtherAuthors.getSubject(), containsString("Vastuuhenkilö on poistettu aloitteestasi"));
-        assertThat(JavaMailSenderFake.getMessageContent(messageToOtherAuthors).html, containsString(TestHelper.DEFAULT_PARTICIPANT_EMAIL));
+        assertThat(emails.get(0).getRecipientsAsString(), is("author_left@example.com"));
+        assertThat(emails.get(0).getSubject(), containsString("Vastuuhenkilö on poistettu aloitteestasi"));
+        assertThat(emails.get(0).getBodyHtml(), containsString(TestHelper.DEFAULT_PARTICIPANT_EMAIL));
 
-        MimeMessage messageToDeletedAuthor = sentMessages.get(1);
-        assertThat(JavaMailSenderFake.getSingleRecipient(messageToDeletedAuthor), is(TestHelper.DEFAULT_PARTICIPANT_EMAIL));
-        assertThat(messageToDeletedAuthor.getSubject(), containsString("Sinut on poistettu aloitteen vastuuhenkilöistä"));
+        assertThat(emails.get(1).getRecipientsAsString(), is(TestHelper.DEFAULT_PARTICIPANT_EMAIL));
+        assertThat(emails.get(1).getSubject(), containsString("Sinut on poistettu aloitteen vastuuhenkilöistä"));
 
     }
 
