@@ -75,6 +75,18 @@
         <p><a href="${urls.statusPage}?emails=0">Show emails</a></p>
     </#if>
 
+    <h3>Hard coded URL:s</h3>
+    <table class="data status">
+        <tbody>
+            <#list hardCodedUris as hardCodedUri>
+            <tr>
+                <td>${hardCodedUri.key}</td>
+                <td>${hardCodedUri.value}</td>
+            </tr>
+            </#list>
+        </tbody>
+    </table>
+
     <h3>SchemaVersion</h3>
     <table class="data status">
         <tbody>

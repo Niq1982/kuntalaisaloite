@@ -28,6 +28,7 @@ public interface StatusService {
 
     void resendFailedEmailsAndContinueScheduledMailSender();
 
-    @Transactional(readOnly = true)
     List<EmailDto> findUntriedEmails();
+
+    List<KeyValueInfo> getInvalidHelpUris();
 }

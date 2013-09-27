@@ -5,8 +5,11 @@ import fi.om.municipalityinitiative.dao.EmailDao;
 import fi.om.municipalityinitiative.dao.JdbcSchemaVersionDao;
 import fi.om.municipalityinitiative.dto.SchemaVersion;
 import fi.om.municipalityinitiative.dto.service.EmailDto;
+import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.email.EmailSenderScheduler;
+import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.TaskExecutorAspect;
+import fi.om.municipalityinitiative.web.HelpPage;
 import fi.om.municipalityinitiative.web.Urls;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
@@ -19,6 +22,7 @@ import javax.annotation.Resource;
 
 import java.lang.management.ManagementFactory;
 import java.util.List;
+import java.util.Locale;
 
 public class StatusServiceImpl implements StatusService {
 
@@ -49,6 +53,9 @@ public class StatusServiceImpl implements StatusService {
 
     @Resource
     private EmailDao emailDao;
+
+    @Resource
+    private InfoTextService infoTextService;
 
     public static class KeyValueInfo {
         private String key;
@@ -208,6 +215,27 @@ public class StatusServiceImpl implements StatusService {
     public void resendFailedEmailsAndContinueScheduledMailSender() {
         long resentEmails = emailDao.retryFailedEmails();
         log.info("Moderator marked " + resentEmails + " emails for resending.");
+    }
+
+    @Override
+    public List<KeyValueInfo> getInvalidHelpUris() {
+
+
+        List<KeyValueInfo> list = Lists.newArrayList();
+        for (HelpPage helpPage : HelpPage.values()) {
+            addHelpUriStatus(list, helpPage, Locales.LOCALE_FI);
+            addHelpUriStatus(list, helpPage, Locales.LOCALE_SV);
+        }
+        return list;
+    }
+
+    private void addHelpUriStatus(List<KeyValueInfo> list, HelpPage helpPage, Locale locale) {
+        try {
+            infoTextService.getPublished(helpPage.getUri(locale.toLanguageTag()));
+            list.add(new KeyValueInfo("OK", Urls.get(locale).help(helpPage.getUri(locale.toLanguageTag()))));
+        } catch (NotFoundException e) {
+            list.add(new KeyValueInfo("FAILURE", Urls.get(locale).help(helpPage.getUri(locale.toLanguageTag()))));
+        }
     }
 
 }

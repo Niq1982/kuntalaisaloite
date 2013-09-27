@@ -68,7 +68,12 @@
             <div class="input-block cf">
     
                 <div class="input-block-content">
-                    <@u.systemMessage path="initiative.prepare.verifiable.info"+user.isVerifiedUser()?string(".verifiedUser","") type="info" args=["#"] />
+                    <#if locale == "fi">
+                        <#assign vetumaUrl = "http://www.suomi.fi/suomifi/tyohuone/yhteiset_palvelut/verkkotunnistaminen_ja_maksaminen_vetuma/">
+                    <#else>
+                        <#assign vetumaUrl = "http://www.suomi.fi/suomifi/arbetsrum/allmant/sprakversionen_fattas/index.html">
+                    </#if>
+                    <@u.systemMessage path="initiative.prepare.verifiable.info"+user.isVerifiedUser()?string(".verifiedUser","") type="info" args=[vetumaUrl] />
                 </div>
 
                 <div class="input-block-content">

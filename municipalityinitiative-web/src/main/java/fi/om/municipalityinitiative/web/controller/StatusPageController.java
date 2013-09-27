@@ -38,6 +38,7 @@ public class StatusPageController extends BaseController {
         model.addAttribute("configurationInfoRows", statusService.getConfigurationInfo());
         model.addAttribute("configurationTestInfoRows", statusService.getConfigurationTestInfo());
         model.addAttribute("systemInfoRows", statusService.getSystemInfo());
+        model.addAttribute("hardCodedUris", statusService.getInvalidHelpUris());
 
         List<EmailDto> failedEmails = statusService.findTriedNotSucceededEmails();
         model.addAttribute("hasFailedEmails", !failedEmails.isEmpty());
