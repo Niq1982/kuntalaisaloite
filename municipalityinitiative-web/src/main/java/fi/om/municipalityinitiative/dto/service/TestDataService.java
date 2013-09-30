@@ -3,14 +3,21 @@ package fi.om.municipalityinitiative.dto.service;
 import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
+import fi.om.municipalityinitiative.dao.UserDao;
+import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
+import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.user.User;
+import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
+import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.*;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Random;
 
 public class TestDataService {
 
@@ -21,11 +28,23 @@ public class TestDataService {
     AuthorDao authorDao;
 
     @Resource
+    UserDao userDao;
+
+    @Resource
     private ParticipantDao participantDao;
 
     @Transactional(readOnly = false)
-    public Long createTestMunicipalityInitiative(TestDataTemplates.InitiativeTemplate template) {
+    public Long createTestMunicipalityInitiative(TestDataTemplates.InitiativeTemplate template, LoginUserHolder<User> loginUserHolder) {
 
+        if (template.getInitiative().getType().isNotVerifiable()) {
+            return createDefaultInitiative(template);
+        }
+        else {
+            return createVerifiableInitiative(template, loginUserHolder.getVerifiedUser());
+        }
+    }
+
+    private Long createDefaultInitiative(TestDataTemplates.InitiativeTemplate template) {
         String managementHash = RandomHashGenerator.randomString(10);
 
         Long initiativeId = initiativeDao.prepareInitiative(template.initiative.getMunicipality().getId());
@@ -51,11 +70,44 @@ public class TestDataService {
 
         return initiativeId;
     }
-    
+
+    private Long createVerifiableInitiative(TestDataTemplates.InitiativeTemplate template, VerifiedUser currentVerifiedUser) {
+        Long initiativeId = initiativeDao.prepareVerifiedInitiative(template.getInitiative().getMunicipality().getId(), template.getInitiative().getType());
+        Maybe<VerifiedUser> userMaybe = userDao.getVerifiedUser(currentVerifiedUser.getHash());
+        if (userMaybe.isNotPresent()) {
+            ContactInfo contactInfo = currentVerifiedUser.getContactInfo();
+            contactInfo.setEmail(template.getAuthor().getContactInfo().getEmail());
+            userDao.addVerifiedUser(currentVerifiedUser.getHash(), contactInfo, currentVerifiedUser.getHomeMunicipality());
+        }
+
+        VerifiedUserId verifiedUserId = userDao.getVerifiedUserId(currentVerifiedUser.getHash()).get();
+        participantDao.addVerifiedParticipant(initiativeId, verifiedUserId, template.getAuthor().getContactInfo().isShowName(), true);
+        authorDao.addVerifiedAuthor(initiativeId, verifiedUserId);
+
+        InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto();
+        editDto.setName(template.initiative.getName());
+        editDto.setContactInfo(template.author.getContactInfo());
+        editDto.setProposal(template.initiative.getProposal());
+        editDto.setExtraInfo(template.initiative.getExtraInfo());
+        initiativeDao.editInitiativeDraft(initiativeId, editDto);
+        initiativeDao.updateInitiativeState(initiativeId, template.initiative.getState());
+
+        return initiativeId;
+    }
+
     @Transactional(readOnly = false)
     public void createTestParticipant(Long initiativeId, ParticipantUICreateDto createDto) {
         Long participantId = participantDao.create(ParticipantCreateDto.parse(createDto, initiativeId), "confirmationCode");
         participantDao.confirmParticipation(participantId, "confirmationCode");
     }
-    
+
+    @Transactional(readOnly = false)
+    public void createVerifiedTestParticipant(Long initiativeId, ParticipantUICreateDto participantUICreateDto) {
+
+        ContactInfo contactInfo = new ContactInfo();
+        contactInfo.setEmail(participantUICreateDto.getParticipantEmail());
+        contactInfo.setName(participantUICreateDto.getParticipantName());
+        VerifiedUserId verifiedUserId = userDao.addVerifiedUser(RandomHashGenerator.randomString(30), contactInfo, Maybe.<Municipality>absent());
+        participantDao.addVerifiedParticipant(initiativeId, verifiedUserId, participantUICreateDto.getShowName(), participantUICreateDto.getShowName() && (new Random().nextInt() % 5 == 0));
+    }
 }

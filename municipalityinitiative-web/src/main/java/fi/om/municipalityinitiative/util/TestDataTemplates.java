@@ -40,8 +40,9 @@ public class TestDataTemplates {
    
     private static List<InitiativeTemplate> createInitiativeTemplateList(Long municipality, String email) {
         List<InitiativeTemplate> initiatives = Lists.newArrayList();
-        initiatives.add(createInitiativeTemplate(municipality, INITIATIVE_1_NAME, INITIATIVE_1_PROPOSAL, INITIATIVE_1_EXTRAINFO, false, email));
-        initiatives.add(createInitiativeTemplate(municipality, INITIATIVE_2_NAME, INITIATIVE_2_PROPOSAL, INITIATIVE_2_EXTRAINFO, true, email));
+        initiatives.add(createInitiativeTemplate(municipality, INITIATIVE_1_NAME, INITIATIVE_1_PROPOSAL, INITIATIVE_1_EXTRAINFO, InitiativeType.SINGLE, email));
+        initiatives.add(createInitiativeTemplate(municipality, INITIATIVE_2_NAME, INITIATIVE_2_PROPOSAL, INITIATIVE_2_EXTRAINFO, InitiativeType.COLLABORATIVE, email));
+        initiatives.add(createInitiativeTemplate(municipality, INITIATIVE_3_NAME, INITIATIVE_3_PROPOSAL, INITIATIVE_3_EXTRAINFO, InitiativeType.COLLABORATIVE_COUNCIL, email));
         return initiatives;
     }
 
@@ -52,7 +53,7 @@ public class TestDataTemplates {
         return participants;
     }
     
-    private static InitiativeTemplate createInitiativeTemplate(Long municipality, String name, String proposal, String extraInfo, boolean collaborative, String email) {
+    private static InitiativeTemplate createInitiativeTemplate(Long municipality, String name, String proposal, String extraInfo, InitiativeType type, String email) {
         InitiativeTemplate initiativeTemplate = new InitiativeTemplate();
         initiativeTemplate.initiative = new Initiative();
 
@@ -60,7 +61,7 @@ public class TestDataTemplates {
         initiativeTemplate.initiative.setName(name);
         initiativeTemplate.initiative.setProposal(proposal);
         initiativeTemplate.initiative.setExtraInfo(extraInfo);
-        initiativeTemplate.initiative.setType(collaborative ? InitiativeType.COLLABORATIVE : InitiativeType.SINGLE);
+        initiativeTemplate.initiative.setType(type);
         initiativeTemplate.initiative.setState(InitiativeState.PUBLISHED);
         initiativeTemplate.author = new NormalAuthor();
         initiativeTemplate.author.setContactInfo(contactInfo());

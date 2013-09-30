@@ -175,9 +175,14 @@
             </#if>
 
             <div class="input-block-content">
-                <@u.systemMessage type="warning" path="participate.confirmation.notification"/>
-                <br/>
-                <button id="participate" type="submit" name="save" value="true" class="small-button"><span class="small-icon save-and-send"><@u.message "action.send.confirmation" /></span></button>
+                <#if initiative.verifiable>
+                    <button id="participate" type="submit" name="save" value="true" class="small-button"><span class="small-icon save-and-send"><@u.message "action.save" /></span></button>
+                <#else>
+                    <@u.systemMessage type="warning" path="participate.confirmation.notification"/>
+                    <br/>
+                    <button id="participate" type="submit" name="save" value="true" class="small-button"><span class="small-icon save-and-send"><@u.message "action.send.confirmation" /></span></button>
+                </#if>
+
                 <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
             </div>
         

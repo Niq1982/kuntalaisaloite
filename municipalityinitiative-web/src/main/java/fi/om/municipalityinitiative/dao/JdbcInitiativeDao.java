@@ -421,7 +421,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    public Long prepareSafeInitiative(Long municipalityId, InitiativeType initiativeType) {
+    public Long prepareVerifiedInitiative(Long municipalityId, InitiativeType initiativeType) {
         return queryFactory.insert(municipalityInitiative)
                 .set(municipalityInitiative.municipalityId, municipalityId)
                 .set(municipalityInitiative.type, initiativeType)
