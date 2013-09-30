@@ -74,13 +74,18 @@ public class TestDataController extends BaseController {
 
         Long initiativeId = null;
         for (int i = 0; i < amount; ++i) {
-            initiativeId = testDataService.createTestMunicipalityInitiative(selectedInitiative);
-            
+            initiativeId = testDataService.createTestMunicipalityInitiative(selectedInitiative, userService.getLoginUserHolder(request));
+            userService.refreshUserData(request);
+
             if (selectedInitiative.initiative.isCollaborative()) {
                 for (int j = 0; j < participants.size(); j++) {
                     Integer participantAmount = parseIntegerParameter(request, "participantAmount[" + j + "]", 1);
                     for (int count = 0; count < participantAmount; ++count) {
-                        testDataService.createTestParticipant(initiativeId, participants.get(j));
+                        if (selectedInitiative.initiative.getType().isNotVerifiable()) {
+                            testDataService.createTestParticipant(initiativeId, participants.get(j));
+                        } else {
+                            testDataService.createVerifiedTestParticipant(initiativeId, participants.get(j));
+                        }
                     }
                 }
             }

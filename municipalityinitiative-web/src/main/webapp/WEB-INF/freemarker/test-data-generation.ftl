@@ -146,12 +146,17 @@
                             <tr>
                                 <td>
                                 <label class="initiative">
-                                    <input type="radio" id="selections[${testInitiative_index}]" name="initiative" value="${testInitiative_index}" <#if testInitiative_index == 1>checked="checked"</#if> class="select" />  
-                                    <span class="initiative-title">${testInitiative.initiative.name!""}</span>
+                                    <input type="radio" ${(testInitiative.initiative.type.verifiable && !user.isVerifiedUser())?string("disabled","")} id="selections[${testInitiative_index}]" name="initiative" value="${testInitiative_index}" <#if testInitiative_index == 1>checked="checked"</#if> class="select" />
+                                    <span class="initiative-title">
+                                        ${testInitiative.initiative.name!""}
+                                        <#if testInitiative.initiative.type.verifiable && !user.isVerifiedUser()>
+                                            <br/><a href="/fi/tunnistaudu?target=%2Ffi%2Ftestdata">Kirjaudu sisään luodaksesi vetuma-aloitteen</a>
+                                        </#if>
+                                    </span>
                                 </label>
                                 </td>
                                 <td>
-                                    ${(testInitiative.initiative.collaborative)?string("kyllä","ei")}
+                                    ${testInitiative.initiative.type}
                                 </td>
     
                         </#list>

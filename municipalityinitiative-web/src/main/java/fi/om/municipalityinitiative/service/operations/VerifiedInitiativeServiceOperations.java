@@ -48,7 +48,7 @@ public class VerifiedInitiativeServiceOperations {
     public Long doPrepareSafeInitiative(VerifiedUser verifiedUser, PrepareSafeInitiativeUICreateDto createDto) {
         assertMunicipalityIsActive(createDto.getMunicipality());
 
-        Long initiativeId = initiativeDao.prepareSafeInitiative(createDto.getMunicipality(), createDto.getInitiativeType());
+        Long initiativeId = initiativeDao.prepareVerifiedInitiative(createDto.getMunicipality(), createDto.getInitiativeType());
         VerifiedUserId verifiedUserId = getVerifiedUserIdAndCreateIfNecessary(verifiedUser.getHash(), verifiedUser.getContactInfo(), verifiedUser.getHomeMunicipality());
 
         boolean showName = true;
