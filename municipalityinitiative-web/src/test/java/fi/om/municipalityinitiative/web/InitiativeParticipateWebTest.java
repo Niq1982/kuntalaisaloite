@@ -107,7 +107,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         participateToInitiativeButton().get().click();
 
         // Vetuma participant has no information to fill
-        getElemContaining(getMessage(MSG_BTN_SEND_CONFIRMATION), "button").click();
+        getElemContaining("Tallenna", "button").click();
 
         assertMsgContainedByClass("modal-title", MSG_SUCCESS_PARTICIPATE_VERIFIABLE);
         Integer newParticipantCountOnPage = Integer.valueOf(getElement(By.className("user-count-total")).getText());
