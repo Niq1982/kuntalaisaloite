@@ -62,6 +62,7 @@ public class EmailSender {
         emailDao.succeed(emailDto.getEmailId());
     }
 
+    @Transactional(readOnly = true)
     public void constructAndSendEmail(EmailDto emailDto) throws MessagingException {
         if (environmentSettings.isTestConsoleOutput()) {
             printEmail(emailDto);
