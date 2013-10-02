@@ -25,7 +25,7 @@
     <#-- For testing ribbons locally:
     <#assign prodTestSite>${localSite}</#assign>
     <#assign localSite>https://localhost:8443x</#assign>
-    -->
+   -->
     
     <#assign blueColor>ribbon-default</#assign> <#-- BLUE gradient -->
     <#assign redColor>ribbon-red</#assign> <#-- RED gradient -->
@@ -45,23 +45,23 @@
         <#-- no ribbon in localhost (should look like production) -->
         
     <#else>
+    	<#if urls.baseUrl?starts_with(testSite) || urls.baseUrl?starts_with(prodTestSite)>
+            <div class="test-padge"> </div>
+        </#if>
         <div class="debug-ribbon top fixed ${ribbonColor}">
+        	
             <div class="container">
                 <#if urls.baseUrl?starts_with(testSite) || urls.baseUrl?starts_with(prodTestSite)>
 
-                    Tämä on kuntalaisaloitepalvelun testiversio. Palvelu lähettää sinulle sähköposteja, joten annathan toimivan sähköpostiosoitteesi.
-                    Testipalvelussa tehdyt aloitteet ja muut tiedot poistetaan säännöllisesti ilman erillistä ilmoitusta, eivätkä aloitteet välity kunnalle. <br/>
+                    T&auml;m&auml; on kuntalaisaloitepalvelun testiversio. Palvelu l&auml;hett&auml;&auml; sinulle s&auml;hk&ouml;posteja, joten annathan toimivan s&auml;hk&ouml;postiosoitteesi. Testipalvelussa tehdyt aloitteet ja muut tiedot poistetaan s&auml;&auml;nn&ouml;llisesti ilman erillist&auml; ilmoitusta, eiv&auml;tk&auml; aloitteet v&auml;lity kunnalle.<br/>
                     Anna palautetta testipalvelusta <a href="mailto:kuntalaisaloite.om@om.fi">kuntalaisaloite.om@om.fi</a>
 
                 <#elseif urls.baseUrl?starts_with(devSite) >
-                    Tämä on oikeusministeriön kuntalaisaloiteverkkopalvelun kehitysversio.
-                    <br/>Sovellus voi toimia arvaamattomasti ja sisältää päätöntä dataa.
+                    T&auml;m&auml; on oikeusministeri&ouml;n kuntalaisaloiteverkkopalvelun kehitysversio.
+                    <br/>Sovellus voi toimia arvaamattomasti ja sis&auml;lt&auml;&auml; p&auml;&auml;t&ouml;nt&auml; dataa.
                 </#if>
             </div>
         </div>
-        <#if urls.baseUrl?starts_with(testSite) || urls.baseUrl?starts_with(prodTestSite)>
-            <div class="container relative"><div class="test-padge <#if infoRibbon??>has-info-ribbon</#if>"> </div></div>
-        </#if>
     </#if>
     
     <#if infoRibbon??>
@@ -86,7 +86,7 @@
     <#elseif urls.baseUrl?starts_with(devSite) || urls.baseUrl?starts_with(testSite)>
         <div class="debug-ribbon bottom ${ribbonColor}">
             <div class="container">
-                Eri tiloissa olevia valmiita testialoitteita pääset luomaan täältä: <a href="${urls.testDataGeneration()}">Testidatan generointi</a>
+                Eri tiloissa olevia valmiita testialoitteita p&auml;&auml;set luomaan t&auml;&auml;lt&auml;: <a href="${urls.testDataGeneration()}">Testidatan generointi</a>
             </div>
         </div>
     </#if>

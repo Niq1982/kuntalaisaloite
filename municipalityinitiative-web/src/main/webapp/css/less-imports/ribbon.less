@@ -65,14 +65,11 @@
 }
 .container.relative { position:relative; }
 .test-padge {
-    position:absolute;
-    top:50px;
-    left:423px;
-    width:180px;
-    height:97px;
-    background:url("../img/test-padge.png?version=${timestamp}") repeat-x bottom left;
-    
-    &.has-info-ribbon {
-        top:90px;
-    }
+    z-index: 9000;
+    position:fixed;
+    top:0;
+    left:0;
+    width:85px;
+    height:85px;
+    background:url("../../img/test-padge.png?version=${timestamp}") 0 0 no-repeat;
 }
