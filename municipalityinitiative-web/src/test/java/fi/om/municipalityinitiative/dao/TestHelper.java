@@ -546,9 +546,9 @@ public class TestHelper {
     }
 
     @Transactional(readOnly = false)
-    public Long createRandomEmail(Long initiativeId) {
+    public Long createRandomEmail(Long initiativeId, EmailAttachmentType attachmentType) {
         return queryFactory.insert(QEmail.email)
-                .set(QEmail.email.attachment, EmailAttachmentType.NONE)
+                .set(QEmail.email.attachment, attachmentType)
                 .set(QEmail.email.subject, randomString())
                 .set(QEmail.email.bodyHtml, randomString())
                 .set(QEmail.email.bodyText, randomString())
