@@ -31,10 +31,17 @@
     <@e.initiativeTitle initiative />
     
     <@e.stateInfo initiative />
-
     <div class="view-block first">
         <@e.initiativeView initiative />
+
     </div>
+
+    <form id="form-upload-image" enctype="multipart/form-data" action="/addimage/${initiative.id}" method="POST">
+        <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+        <input type="hidden" name="locale" value="{locale.toLanguageTag()}"/>
+        <input type="file" name="image">
+        <input type="submit" value="Tallenna tiedosto"/>
+    </form>
     
     <div class="view-block cf">
         <h2><@u.message key="initiative.people.title" args=[participantCount.total] /></h2>

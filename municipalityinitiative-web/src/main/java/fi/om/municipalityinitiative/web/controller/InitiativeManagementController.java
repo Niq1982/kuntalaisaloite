@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
+import fi.om.municipalityinitiative.service.AttachmentService;
 import fi.om.municipalityinitiative.service.ParticipantService;
 import fi.om.municipalityinitiative.service.ValidationService;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
@@ -19,10 +20,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -47,7 +51,11 @@ public class InitiativeManagementController extends BaseController {
     @Resource
     private AuthorService authorService;
     
-    @Resource ParticipantService participantService;
+    @Resource
+    ParticipantService participantService;
+
+    @Resource
+    AttachmentService attachmentService;
 
     public InitiativeManagementController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
@@ -360,6 +368,17 @@ public class InitiativeManagementController extends BaseController {
         participantService.deleteParticipant(initiativeId, userService.getRequiredLoginUserHolder(request), participantId);
         
         return redirectWithMessage(Urls.get(locale).participantListManage(initiativeId), RequestMessage.PARTICIPANT_DELETED, request);
+    }
+
+    @RequestMapping(value = "/addimage/{id}", method = POST)
+    public String addAttachment(@PathVariable("id") Long initiativeId,
+                                @RequestParam("image") MultipartFile file,
+                                @RequestParam("locale") String localeString,
+                                DefaultMultipartHttpServletRequest request) throws IOException {
+
+        Locale locale = Locale.forLanguageTag(localeString);
+        attachmentService.addAttachment(initiativeId, userService.getLoginUserHolder(request), file);
+        return redirectWithMessage(Urls.get(locale).management(initiativeId), RequestMessage.INFORMATION_SAVED, request);
     }
 
     

@@ -22,6 +22,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
 
 import java.io.IOException;
+import java.util.Map;
 
 public class SecurityFilter implements Filter {
 
@@ -138,6 +139,8 @@ public class SecurityFilter implements Filter {
 
     private String verifyAndGetCurrentCSRFToken(HttpServletRequest request) {
         Cookie cookie = WebUtils.getCookie(request, CSRF_TOKEN_NAME);
+
+        Map parameterMap = request.getParameterMap();
 
         if (cookie == null) {
             throw new CSRFException("CSRF cookie missing");

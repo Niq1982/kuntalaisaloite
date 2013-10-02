@@ -279,6 +279,11 @@ public class AppConfiguration {
     public XmlEscape fmXmlEscape() {
         return new XmlEscape();
     }
+
+    @Bean
+    public AttachmentService attachmentService() {
+        return new AttachmentService(env.getRequiredProperty(PropertyNames.attachmentDir));
+    }
     
     @Bean
     public MessageSource messageSource() {
