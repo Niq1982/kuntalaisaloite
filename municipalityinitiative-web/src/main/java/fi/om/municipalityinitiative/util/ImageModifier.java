@@ -1,7 +1,5 @@
 package fi.om.municipalityinitiative.util;
 
-import org.apache.commons.io.IOUtils;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -12,14 +10,11 @@ import java.io.OutputStream;
 
 public class ImageModifier {
 
-    public static final Integer MAX_WIDTH = 1000;
-    public static final Integer MAX_HEIGHT = 500;
-
-    public static void modify(InputStream inputStream, OutputStream outputStream, String formatName) throws IOException {
+    public static void modify(InputStream inputStream, OutputStream outputStream, String formatName, int maxWidth, int maxHeight) throws IOException {
 
         BufferedImage originalImage = ImageIO.read(inputStream);
         int type = originalImage.getType() == 0? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
-        Size size = new Size(originalImage.getWidth(), originalImage.getHeight());
+        Size size = new Size(originalImage.getWidth(), originalImage.getHeight(), maxWidth, maxHeight);
 
         if (size.isScaled()) {
 
@@ -29,6 +24,7 @@ public class ImageModifier {
         else {
             ImageIO.write(originalImage, formatName, outputStream);
         }
+
     }
 
     private static BufferedImage resizeImage(BufferedImage originalImage, int type, int width, int height){
@@ -42,18 +38,18 @@ public class ImageModifier {
 
     public static class Size {
 
-        private final Integer height;
-        private final Integer width;
+        private final int height;
+        private final int width;
         private Double scale;
 
-        public Size(Integer width, Integer height) {
+        public Size(int width, int height, int maxWidth, int maxHeight) {
             scale = null;
 
-            if (height > MAX_HEIGHT) {
-                scale = (double) MAX_HEIGHT / (double) height;
+            if (height > maxHeight) {
+                scale = (double) maxHeight / (double) height;
             }
-            if (width > MAX_WIDTH) {
-                double width_scale = (double) MAX_WIDTH / (double) width;
+            if (width > maxWidth) {
+                double width_scale = (double) maxWidth / (double) width;
                 if (scale == null || width_scale < scale) {
                     scale = width_scale;
                 }

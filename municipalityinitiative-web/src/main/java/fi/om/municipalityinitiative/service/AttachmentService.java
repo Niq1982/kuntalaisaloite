@@ -1,17 +1,23 @@
 package fi.om.municipalityinitiative.service;
 
+import fi.om.municipalityinitiative.dao.AttachmentDao;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.util.ImageModifier;
-import org.joda.time.DateTime;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.regex.Pattern;
 
 public class AttachmentService {
+
+    public static final Integer MAX_WIDTH = 1000;
+    public static final Integer MAX_HEIGHT = 500;
+    public static final Integer THUMBNAIL_MAX_WIDTH = 100;
+    public static final Integer THUMBNAIL_MAX_HEIGHT = 100;
 
     public static final String[] FILE_TYPES = { "png", "jpg" };
     public static final String[] CONTENT_TYPES = { "image/png", "image/jpg", "image/jpeg" };
@@ -20,50 +26,52 @@ public class AttachmentService {
 
     private String attachmentDir;
 
+    @Resource
+    AttachmentDao attachmentDao;
+
     public AttachmentService(String attachmentDir) {
         this.attachmentDir = attachmentDir;
     }
 
-
+    @Transactional(readOnly = false)
     public void addAttachment(Long initiativeId, LoginUserHolder<User> loginUserHolder, MultipartFile file) throws IOException {
-        // loginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        validateAndSaveFile(file);
-    }
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-    public void validateAndSaveFile(MultipartFile multipartFile) throws IOException {
-        assertFileName(multipartFile.getOriginalFilename());
-        assertContentType(multipartFile.getContentType());
+        file.getSize(); // TODO: Don't allow too large files
 
-        String fileType = multipartFile.getOriginalFilename().split("\\.")[1];
-        File file = new File(attachmentDir + "/" + id + "." + fileType);
+        String fileType = parseFileType(file.getOriginalFilename());
+        assertFileType(fileType);
+        assertContentType(file.getContentType());
 
-        try (FileOutputStream fileOutputStream = new FileOutputStream(file, false)) {
-            ImageModifier.modify(multipartFile.getInputStream(), fileOutputStream, fileType);
-            fileOutputStream.write(multipartFile.getBytes());
+        Long attachmentId = attachmentDao.addAttachment(initiativeId, file.getOriginalFilename());
+
+        File realFile = new File(attachmentDir + "/" + attachmentId + "." + fileType);
+        try (FileOutputStream fileOutputStream = new FileOutputStream(realFile, false)) {
+            ImageModifier.modify(file.getInputStream(), fileOutputStream, fileType, MAX_WIDTH, MAX_HEIGHT);
+            fileOutputStream.write(file.getBytes());
         }
-
+        File thumbnailFile = new File(attachmentDir + "/" + attachmentId + "_thumbnail." + fileType);
+        try (FileOutputStream fileOutputStream = new FileOutputStream(thumbnailFile, false)) {
+            ImageModifier.modify(file.getInputStream(), fileOutputStream, fileType, THUMBNAIL_MAX_WIDTH, THUMBNAIL_MAX_HEIGHT);
+            fileOutputStream.write(file.getBytes());
+        }
     }
 
-    private static void assertFileName(String fileName) {
-        if (!isAcceptableFile(fileName)) {
+    public static void assertFileType(String givenFileType) {
+        for (String fileType : FILE_TYPES) {
+            if (fileType.equals(givenFileType))
+                return;
+        }
+        throw new RuntimeException("Invalid fileName");
+    }
+
+    private static String parseFileType(String fileName) {
+        String[] split = fileName.split("\\.");
+        if (split.length == 1) {
             throw new RuntimeException("Invalid filename");
         }
-    }
 
-    public static boolean isAcceptableFile(String fileName) {
-
-        String[] split = fileName.split("\\.");
-        if (split.length != 2)
-            return false;
-
-        String filePattern = split[1];
-
-        for (String fileType : FILE_TYPES) {
-            if (filePattern.equals(fileType))
-                return true;
-        }
-
-        return false;
+        return split[split.length-1];
     }
 
     private static void assertContentType(String contentType) {
