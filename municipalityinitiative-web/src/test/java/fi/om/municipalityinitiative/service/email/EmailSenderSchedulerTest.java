@@ -67,7 +67,7 @@ public class EmailSenderSchedulerTest extends ServiceIntegrationTestBase {
     public void failing_to_send_email_marks_it_as_failed() throws InterruptedException {
         emailSender.setJavaMailSender(failingJavaMailSenderFake());
 
-        Long emailId = testHelper.createRandomEmail(initiativeId);
+        Long emailId = testHelper.createRandomEmail(initiativeId, EmailAttachmentType.NONE);
 
         precondition(testHelper.getEmail(emailId).getLastFailed().isPresent(), is(false));
         emailSenderScheduler.sendEmails();
@@ -113,7 +113,13 @@ public class EmailSenderSchedulerTest extends ServiceIntegrationTestBase {
         assertThat(javaMailSenderFake.getSentMessages(), is(0));
         assertThat(testHelper.findQueuedEmails(), hasSize(0));
         assertThat(testHelper.findTriedEmails(), hasSize(5));
+    }
 
+    @Test
+    public void sends_emails_with_attachments() {
+        testHelper.createRandomEmail(initiativeId, EmailAttachmentType.PARTICIPANTS);
+        emailSenderScheduler.sendEmails();
+        assertThat(javaMailSenderFake.getSentMessages(), is(1));
     }
 
     private void multipleConcurrentSendExecutions() throws InterruptedException {
@@ -136,7 +142,7 @@ public class EmailSenderSchedulerTest extends ServiceIntegrationTestBase {
 
     private void createRandomEmails(int count) {
         for (int i = 0; i < count; ++i) {
-            testHelper.createRandomEmail(initiativeId);
+            testHelper.createRandomEmail(initiativeId, EmailAttachmentType.NONE);
         }
     }
 
