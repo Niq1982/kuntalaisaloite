@@ -18,6 +18,8 @@ public class QAttachment extends com.mysema.query.sql.RelationalPathBase<QAttach
 
     public static final QAttachment attachment = new QAttachment("attachment");
 
+    public final BooleanPath accepted = createBoolean("accepted");
+
     public final DateTimePath<org.joda.time.DateTime> added = createDateTime("added", org.joda.time.DateTime.class);
 
     public final StringPath contentType = createString("content_type");

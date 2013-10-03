@@ -36,6 +36,7 @@
 
     </div>
 
+    <@e.attachmentsView attachments />
     <form id="form-upload-image" enctype="multipart/form-data" action="/addimage/${initiative.id}" method="POST">
         <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
         <input type="hidden" name="locale" value="{locale.toLanguageTag()}"/>

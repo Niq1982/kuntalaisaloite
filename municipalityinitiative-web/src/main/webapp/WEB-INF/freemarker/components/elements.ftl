@@ -25,6 +25,20 @@
     </#if>
 </#macro>
 
+<#macro attachmentsView attachments>
+    <div class="view-block public">
+        <h2>Kuvej</h2>
+        <#list attachments as attachment>
+            <a href="${urls.attachment(attachment.attachmentId)}">
+                <img src="${urls.getAttachmentThumbnail(attachment.attachmentId)}"/>
+                ${attachment.fileName}
+            </a>
+            <br/>
+        </#list>
+    </div>
+</#macro>
+
+
 <#-- 
  * initiativeTitle
  * 

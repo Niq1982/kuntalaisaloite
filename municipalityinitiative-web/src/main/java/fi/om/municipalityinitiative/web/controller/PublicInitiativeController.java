@@ -97,12 +97,15 @@ public class PublicInitiativeController extends BaseController {
             return ViewGenerator.collaborativeView(initiativeInfo,
                     authorService.findPublicAuthors(initiativeId),
                     municipalityService.findAllMunicipalities(locale),
+                    attachmentService.findAttachments(initiativeId),
                     initiativeInfo.getParticipantCount(),
                     new ParticipantUICreateDto(),
                     new AuthorUIMessage()).view(model, Urls.get(locale).alt().view(initiativeId));
         }
         else {
-            return ViewGenerator.singleView(initiativeInfo, authorService.findPublicAuthors(initiativeId))
+            return ViewGenerator.singleView(initiativeInfo,
+                    authorService.findPublicAuthors(initiativeId),
+                    attachmentService.findAttachments(initiativeId))
                     .view(model, Urls.get(locale).alt().view(initiativeId));
         }
     }
@@ -190,7 +193,7 @@ public class PublicInitiativeController extends BaseController {
                 return ViewGenerator.collaborativeView(
                         publicInitiative,
                         authorService.findPublicAuthors(initiativeId), municipalityService.findAllMunicipalities(locale),
-                        publicInitiative.getParticipantCount(),
+                        attachmentService.findAttachments(initiativeId), publicInitiative.getParticipantCount(),
                         participant,
                         new AuthorUIMessage()).view(model, Urls.get(locale).alt().view(initiativeId));
             }
@@ -339,7 +342,7 @@ public class PublicInitiativeController extends BaseController {
             return ViewGenerator.collaborativeView(publicInitiative,
                     authorService.findPublicAuthors(initiativeId),
                     municipalityService.findAllMunicipalities(locale),
-                    publicInitiative.getParticipantCount(),
+                    attachmentService.findAttachments(initiativeId), publicInitiative.getParticipantCount(),
                     new ParticipantUICreateDto(),
                     authorUIMessage).view(model, Urls.get(locale).alt().view(initiativeId));
         }

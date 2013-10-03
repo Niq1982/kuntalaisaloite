@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
+import fi.om.municipalityinitiative.dto.service.AttachmentFileInfo;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.service.Municipality;
@@ -41,7 +42,7 @@ public class ViewGenerator {
     public static ViewGenerator collaborativeView(InitiativeViewInfo municipalityInitiative,
                                                   PublicAuthors publicAuthors,
                                                   List<Municipality> allMunicipalities,
-                                                  ParticipantCount participantCount,
+                                                  List<AttachmentFileInfo> attachments, ParticipantCount participantCount,
                                                   ParticipantUICreateDto participantUICreateDto,
                                                   AuthorUIMessage authorUIMessage) {
         return new ViewGenerator(Views.PUBLIC_COLLECT_VIEW,
@@ -52,6 +53,7 @@ public class ViewGenerator {
                         .add("participantCount", participantCount)
                         .add("participant", participantUICreateDto)
                         .add("authorMessage", authorUIMessage)
+                        .add("attachments", attachments)
                         .build()
         );
     }
@@ -123,11 +125,12 @@ public class ViewGenerator {
                         .build());
     }
 
-    public static ViewGenerator singleView(InitiativeViewInfo initiativeInfo, PublicAuthors publicAuthors) {
+    public static ViewGenerator singleView(InitiativeViewInfo initiativeInfo, PublicAuthors publicAuthors, List<AttachmentFileInfo> attachments) {
         return new ViewGenerator(Views.PUBLIC_SINGLE_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
                         .add("authors", publicAuthors)
+                        .add("attachments", attachments)
                         .build());
     }
 
@@ -141,7 +144,7 @@ public class ViewGenerator {
         );
     }
 
-    public static ViewGenerator managementView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, ParticipantCount participantCount, CommentUIDto commentUIDto) {
+    public static ViewGenerator managementView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, List<AttachmentFileInfo> attachments, ParticipantCount participantCount, CommentUIDto commentUIDto) {
         return new ViewGenerator(MANAGEMENT_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
@@ -149,6 +152,7 @@ public class ViewGenerator {
                         .add("authors", authors)
                         .add("participantCount", participantCount)
                         .add("comment", commentUIDto)
+                        .add("attachments", attachments)
                         .build()
         );
     }

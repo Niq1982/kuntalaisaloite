@@ -52,7 +52,10 @@
     <div class="view-block public first">
         <@e.initiativeView initiative />
     </div>
-    
+
+
+    <@e.attachmentsView attachments />
+
     <#assign contactAuthorForm>
     <@compress single_line=true>
     

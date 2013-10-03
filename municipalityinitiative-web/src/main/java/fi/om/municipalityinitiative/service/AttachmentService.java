@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 public class AttachmentService {
 
@@ -120,5 +121,16 @@ public class AttachmentService {
                 return;
         }
         throw new RuntimeException("Invalid content-type:" + contentType);
+    }
+
+    @Transactional(readOnly = true)
+    public List<AttachmentFileInfo> findAttachments(Long initiativeId) {
+        return attachmentDao.findAttachments(initiativeId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<AttachmentFileInfo> findAllAttachments(Long initiativeId) {
+        // TODO: All attachments
+        return attachmentDao.findAttachments(initiativeId);
     }
 }

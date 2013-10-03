@@ -27,10 +27,11 @@ public class JdbcAttachmentDao implements AttachmentDao{
     }
 
     @Override
-    public List<Long> findAttachments(Long initiativeId) {
+    public List<AttachmentFileInfo> findAttachments(Long initiativeId) {
         return queryFactory.from(QAttachment.attachment)
                 .where(QAttachment.attachment.initiativeId.eq(initiativeId))
-                .list(QAttachment.attachment.id);
+                .where(QAttachment.attachment.accepted.eq(true))
+                .list(attachmentMapper);
 
     }
 
@@ -38,6 +39,7 @@ public class JdbcAttachmentDao implements AttachmentDao{
     public List<AttachmentFileInfo> find(Long initiativeId) {
         return queryFactory.from(QAttachment.attachment)
                 .where(QAttachment.attachment.initiativeId.eq(initiativeId))
+                .where(QAttachment.attachment.accepted.eq(true))
                 .list(attachmentMapper);
     }
 
@@ -45,6 +47,7 @@ public class JdbcAttachmentDao implements AttachmentDao{
     public AttachmentFileInfo getAttachment(Long attachmentId) {
         return queryFactory.from(QAttachment.attachment)
                 .where(QAttachment.attachment.id.eq(attachmentId))
+                .where(QAttachment.attachment.accepted.eq(true))
                 .uniqueResult(attachmentMapper);
     }
 

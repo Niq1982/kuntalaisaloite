@@ -7,7 +7,7 @@ import java.util.List;
 public interface AttachmentDao {
     Long addAttachment(Long initiativeId, String originalFilename, String contentType);
 
-    List<Long> findAttachments(Long initiativeId);
+    List<AttachmentFileInfo> findAttachments(Long initiativeId);
 
     List<AttachmentFileInfo> find(Long initiativeId);
 
