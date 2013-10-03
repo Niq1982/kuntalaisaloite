@@ -265,6 +265,10 @@ public final class Urls {
 
     public static final String STATUS =  "/status";
 
+    public static final String ATTACHMENT = "/attachment/" + ID_PARAMETER;
+
+    public static final String ATTACHMENT_THUMBNAIL = "/thumbnail/" + ID_PARAMETER;
+
     private final String baseUrl;
 
     private final String iframeBaseUrl;
@@ -474,6 +478,14 @@ public final class Urls {
 
     public String moderatorLogin(Long initiativeId) {
         return getLocalizedPageUrl(MODERATOR_LOGIN, MODERATOR_LOGIN) + "?" + TARGET + "=" + urlEncode(MODERATION_FI.replace(ID_PARAMETER, initiativeId.toString()));
+    }
+
+    public String attachment(Long id) {
+        return baseUrl + ATTACHMENT.replace(ID_PARAMETER, id.toString());
+    }
+
+    public String getAttachmentThumbnail(Long id) {
+        return baseUrl + ATTACHMENT_THUMBNAIL.replace(ID_PARAMETER, id.toString());
     }
 
     public String testDataGeneration() {

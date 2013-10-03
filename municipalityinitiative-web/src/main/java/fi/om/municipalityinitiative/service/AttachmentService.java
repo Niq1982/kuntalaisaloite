@@ -74,16 +74,16 @@ public class AttachmentService {
 
     @Transactional(readOnly = true)
     // TODO: Cache
-    public AttachmentFile getAttachment(Long initiativeId, Long attachmentId) throws IOException {
-        AttachmentFileInfo attachmentInfo = attachmentDao.getAttachment(initiativeId, attachmentId);
+    public AttachmentFile getAttachment(Long attachmentId) throws IOException {
+        AttachmentFileInfo attachmentInfo = attachmentDao.getAttachment(attachmentId);
         byte[] attachmentBytes = getFileBytes(getFilePath(attachmentId));
         return new AttachmentFile(attachmentInfo, attachmentBytes);
     }
 
     @Transactional(readOnly = true)
     // TODO: Cache
-    public AttachmentFile getThumbnail(Long initiativeId, Long attachmentId) throws IOException {
-        AttachmentFileInfo attachmentInfo = attachmentDao.getAttachment(initiativeId, attachmentId);
+    public AttachmentFile getThumbnail(Long attachmentId) throws IOException {
+        AttachmentFileInfo attachmentInfo = attachmentDao.getAttachment(attachmentId);
         byte[] attachmentBytes = getFileBytes(getThumbnailPath(attachmentId));
 
         return new AttachmentFile(attachmentInfo, attachmentBytes);

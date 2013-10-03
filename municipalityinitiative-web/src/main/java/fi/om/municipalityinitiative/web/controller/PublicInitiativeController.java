@@ -352,13 +352,17 @@ public class PublicInitiativeController extends BaseController {
         return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.AUTHOR_MESSAGE_SENT, request);
     }
 
-    @RequestMapping(value = "attachments" +"/{initiativeId}/{attachmentId}")
-    public void getImage(@PathVariable Long initiativeId,
-                         @PathVariable Long attachmentId,
-                         HttpServletResponse response) throws IOException {
+    @RequestMapping(value = Urls.ATTACHMENT)
+    public void getImage(@PathVariable Long id, HttpServletResponse response) throws IOException {
+        attachmentFileResponse(response, attachmentService.getAttachment(id));
+    }
 
-        AttachmentFile file = attachmentService.getAttachment(initiativeId, attachmentId);
+    @RequestMapping(value = Urls.ATTACHMENT_THUMBNAIL)
+    public void getThumbnail(@PathVariable Long id, HttpServletResponse response) throws IOException {
+        attachmentFileResponse(response, attachmentService.getThumbnail(id));
+    }
 
+    private void attachmentFileResponse(HttpServletResponse response, AttachmentFile file) throws IOException {
         response.setContentType(MediaType.parseMediaType(file.getContentType()).toString());
         response.setContentLength(file.getBytes().length);
         response.setHeader("Last-Modified", file.getCreateTime().toString("E, dd MMM yyyy HH:mm:ss z"));
