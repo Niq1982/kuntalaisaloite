@@ -20,6 +20,8 @@ public class QAttachment extends com.mysema.query.sql.RelationalPathBase<QAttach
 
     public final DateTimePath<org.joda.time.DateTime> added = createDateTime("added", org.joda.time.DateTime.class);
 
+    public final StringPath contentType = createString("content_type");
+
     public final StringPath filename = createString("filename");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);

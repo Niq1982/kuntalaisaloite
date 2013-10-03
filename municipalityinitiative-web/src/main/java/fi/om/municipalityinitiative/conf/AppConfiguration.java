@@ -284,6 +284,11 @@ public class AppConfiguration {
     public AttachmentService attachmentService() {
         return new AttachmentService(env.getRequiredProperty(PropertyNames.attachmentDir));
     }
+
+    @Bean
+    public AttachmentDao attachmentDao() {
+        return new JdbcAttachmentDao();
+    }
     
     @Bean
     public MessageSource messageSource() {

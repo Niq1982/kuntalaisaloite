@@ -1,9 +1,12 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dao.AttachmentDao;
+import fi.om.municipalityinitiative.dto.service.AttachmentFile;
+import fi.om.municipalityinitiative.dto.service.AttachmentFileInfo;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.util.ImageModifier;
+import org.aspectj.util.FileUtil;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,6 +14,7 @@ import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class AttachmentService {
 
@@ -27,10 +31,13 @@ public class AttachmentService {
     private String attachmentDir;
 
     @Resource
-    AttachmentDao attachmentDao;
+    private AttachmentDao attachmentDao;
 
     public AttachmentService(String attachmentDir) {
         this.attachmentDir = attachmentDir;
+    }
+
+    public AttachmentService() { // For spring AOP
     }
 
     @Transactional(readOnly = false)
@@ -43,21 +50,54 @@ public class AttachmentService {
         assertFileType(fileType);
         assertContentType(file.getContentType());
 
-        Long attachmentId = attachmentDao.addAttachment(initiativeId, file.getOriginalFilename());
+        Long attachmentId = attachmentDao.addAttachment(initiativeId, file.getOriginalFilename(), file.getContentType());
 
-        File realFile = new File(attachmentDir + "/" + attachmentId + "." + fileType);
+        File realFile = new File(getFilePath(attachmentId));
         try (FileOutputStream fileOutputStream = new FileOutputStream(realFile, false)) {
             ImageModifier.modify(file.getInputStream(), fileOutputStream, fileType, MAX_WIDTH, MAX_HEIGHT);
             fileOutputStream.write(file.getBytes());
         }
-        File thumbnailFile = new File(attachmentDir + "/" + attachmentId + "_thumbnail." + fileType);
+        File thumbnailFile = new File(getThumbnailPath(attachmentId));
         try (FileOutputStream fileOutputStream = new FileOutputStream(thumbnailFile, false)) {
             ImageModifier.modify(file.getInputStream(), fileOutputStream, fileType, THUMBNAIL_MAX_WIDTH, THUMBNAIL_MAX_HEIGHT);
             fileOutputStream.write(file.getBytes());
         }
     }
 
-    public static void assertFileType(String givenFileType) {
+    private String getFilePath(Long attachmentId) {
+        return attachmentDir + "/" + attachmentId;
+    }
+
+    private String getThumbnailPath(Long attachmentId) {
+        return attachmentDir + "/" + attachmentId + "_thumbnail";
+    }
+
+    @Transactional(readOnly = true)
+    // TODO: Cache
+    public AttachmentFile getAttachment(Long initiativeId, Long attachmentId) throws IOException {
+        AttachmentFileInfo attachmentInfo = attachmentDao.getAttachment(initiativeId, attachmentId);
+        byte[] attachmentBytes = getFileBytes(getFilePath(attachmentId));
+        return new AttachmentFile(attachmentInfo, attachmentBytes);
+    }
+
+    @Transactional(readOnly = true)
+    // TODO: Cache
+    public AttachmentFile getThumbnail(Long initiativeId, Long attachmentId) throws IOException {
+        AttachmentFileInfo attachmentInfo = attachmentDao.getAttachment(initiativeId, attachmentId);
+        byte[] attachmentBytes = getFileBytes(getThumbnailPath(attachmentId));
+
+        return new AttachmentFile(attachmentInfo, attachmentBytes);
+    }
+
+    private byte[] getFileBytes(String filePath) throws IOException {
+        File file = new File(filePath);
+        byte[] bytes = FileUtil.readAsByteArray(file);
+        return Arrays.copyOf(bytes, bytes.length);
+    }
+
+
+
+    private static void assertFileType(String givenFileType) {
         for (String fileType : FILE_TYPES) {
             if (fileType.equals(givenFileType))
                 return;

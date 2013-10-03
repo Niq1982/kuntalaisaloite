@@ -1,14 +1,13 @@
 package fi.om.municipalityinitiative.web.controller;
 
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
+import fi.om.municipalityinitiative.dto.service.AttachmentFile;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.exceptions.InvalidHomeMunicipalityException;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
-import fi.om.municipalityinitiative.service.MunicipalityService;
-import fi.om.municipalityinitiative.service.ParticipantService;
-import fi.om.municipalityinitiative.service.ValidationService;
+import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
 import fi.om.municipalityinitiative.service.ui.VerifiedInitiativeService;
@@ -18,6 +17,7 @@ import fi.om.municipalityinitiative.validation.NormalInitiative;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.SearchParameterQueryString;
 import fi.om.municipalityinitiative.web.Urls;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,7 +28,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -57,6 +59,9 @@ public class PublicInitiativeController extends BaseController {
 
     @Resource
     private VerifiedInitiativeService verifiedInitiativeService;
+
+    @Resource
+    private AttachmentService attachmentService;
 
     public PublicInitiativeController(boolean optimizeResources, String resourcesVersion, Maybe<Integer> piwikId) {
         super(optimizeResources, resourcesVersion, piwikId);
@@ -345,6 +350,20 @@ public class PublicInitiativeController extends BaseController {
                                        HttpServletRequest request, Locale locale) {
         Long initiativeId = publicInitiativeService.confirmAndSendAuthorMessage(confirmationCode);
         return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.AUTHOR_MESSAGE_SENT, request);
+    }
+
+    @RequestMapping(value = "attachments" +"/{initiativeId}/{attachmentId}")
+    public void getImage(@PathVariable Long initiativeId,
+                         @PathVariable Long attachmentId,
+                         HttpServletResponse response) throws IOException {
+
+        AttachmentFile file = attachmentService.getAttachment(initiativeId, attachmentId);
+
+        response.setContentType(MediaType.parseMediaType(file.getContentType()).toString());
+        response.setContentLength(file.getBytes().length);
+        response.setHeader("Last-Modified", file.getCreateTime().toString("E, dd MMM yyyy HH:mm:ss z"));
+        response.setHeader("Cache-Control", "public, max-age=3153600");
+        response.getOutputStream().write(file.getBytes());
     }
 
     private static Maybe<Municipality> solveMunicipalityFromListById(List<Municipality> municipalities, Long municipalityId){
