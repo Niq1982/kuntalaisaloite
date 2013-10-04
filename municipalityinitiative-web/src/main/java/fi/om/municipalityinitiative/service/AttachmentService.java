@@ -83,20 +83,25 @@ public class AttachmentService {
     // TODO: Cache
     public AttachmentFile getAttachment(Long attachmentId, LoginUserHolder loginUserHolder) throws IOException {
         AttachmentFileInfo attachmentInfo = attachmentDao.getAttachment(attachmentId);
-        if (!attachmentInfo.isAccepted()) {
-            loginUserHolder.assertViewRightsForInitiative(attachmentInfo.getInitiativeId());
-        }
+        assertViewAllowance(loginUserHolder, attachmentInfo);
         byte[] attachmentBytes = getFileBytes(getFilePath(attachmentId));
         return new AttachmentFile(attachmentInfo, attachmentBytes);
     }
 
     @Transactional(readOnly = true)
     // TODO: Cache
-    public AttachmentFile getThumbnail(Long attachmentId) throws IOException {
+    public AttachmentFile getThumbnail(Long attachmentId, LoginUserHolder loginUserHolder) throws IOException {
         AttachmentFileInfo attachmentInfo = attachmentDao.getAttachment(attachmentId);
+        assertViewAllowance(loginUserHolder, attachmentInfo);
         byte[] attachmentBytes = getFileBytes(getThumbnailPath(attachmentId));
 
         return new AttachmentFile(attachmentInfo, attachmentBytes);
+    }
+
+    private void assertViewAllowance(LoginUserHolder loginUserHolder, AttachmentFileInfo attachmentInfo) {
+        if (!attachmentInfo.isAccepted()) {
+            loginUserHolder.assertViewRightsForInitiative(attachmentInfo.getInitiativeId());
+        }
     }
 
     private byte[] getFileBytes(String filePath) throws IOException {

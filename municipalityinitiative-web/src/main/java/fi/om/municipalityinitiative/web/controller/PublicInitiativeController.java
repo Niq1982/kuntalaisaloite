@@ -362,7 +362,7 @@ public class PublicInitiativeController extends BaseController {
 
     @RequestMapping(value = Urls.ATTACHMENT_THUMBNAIL)
     public void getThumbnail(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        attachmentFileResponse(response, attachmentService.getThumbnail(id));
+        attachmentFileResponse(response, attachmentService.getThumbnail(id, userService.getLoginUserHolder(request)));
     }
 
     private void attachmentFileResponse(HttpServletResponse response, AttachmentFile file) throws IOException {
