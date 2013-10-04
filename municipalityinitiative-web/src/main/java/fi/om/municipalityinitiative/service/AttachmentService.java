@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.dto.service.AttachmentFile;
 import fi.om.municipalityinitiative.dto.service.AttachmentFileInfo;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
+import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
 import fi.om.municipalityinitiative.util.ImageModifier;
 import org.aspectj.util.FileUtil;
 import org.springframework.transaction.annotation.Transactional;
@@ -108,13 +109,13 @@ public class AttachmentService {
             if (fileType.equals(givenFileType))
                 return;
         }
-        throw new RuntimeException("Invalid fileName");
+        throw new InvalidAttachmentException("Invalid fileName");
     }
 
     private static String parseFileType(String fileName) {
         String[] split = fileName.split("\\.");
         if (split.length == 1) {
-            throw new RuntimeException("Invalid filename");
+            throw new InvalidAttachmentException("Invalid filename");
         }
 
         return split[split.length-1];
@@ -125,7 +126,7 @@ public class AttachmentService {
             if (type.equals(contentType))
                 return;
         }
-        throw new RuntimeException("Invalid content-type:" + contentType);
+        throw new InvalidAttachmentException("Invalid content-type:" + contentType);
     }
 
     @Transactional(readOnly = true)

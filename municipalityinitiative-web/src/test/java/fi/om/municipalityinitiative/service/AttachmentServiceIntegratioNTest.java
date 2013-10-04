@@ -4,6 +4,7 @@ import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.service.AttachmentFileInfo;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
+import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
 import org.junit.Test;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -75,6 +76,16 @@ public class AttachmentServiceIntegrationTest extends ServiceIntegrationTestBase
         precondition(attachmentService.findAllAttachments(initiativeId, TestHelper.authorLoginUserHolder), hasSize(0));
         attachmentService.addAttachment(initiativeId, TestHelper.authorLoginUserHolder, multiPartFileMock("anyfile.jpg", "image/jpeg"), "someDescription");
         assertThat(attachmentService.findAllAttachments(initiativeId, TestHelper.authorLoginUserHolder), hasSize(1));
+    }
+
+    @Test(expected = InvalidAttachmentException.class)
+    public void saving_file_fails_if_invalid_filename() throws IOException {
+        attachmentService.addAttachment(initiativeId, TestHelper.authorLoginUserHolder, multiPartFileMock("anyfile.gif", "image/jpeg"), "someDescription");
+    }
+
+    @Test(expected = InvalidAttachmentException.class)
+    public void saving_file_fails_if_invalid_content_type() throws IOException {
+        attachmentService.addAttachment(initiativeId, TestHelper.authorLoginUserHolder, multiPartFileMock("anyfile.jpg", "application/pdf"), "someDescription");
     }
 
     private static MultipartFile multiPartFileMock(String fileName, String contentType) throws IOException {
