@@ -52,6 +52,14 @@ public class JdbcAttachmentDao implements AttachmentDao{
                 .uniqueResult(attachmentMapper);
     }
 
+    @Override
+    public void acceptAttachments(long initiativeId) {
+        queryFactory.update(QAttachment.attachment)
+                .set(QAttachment.attachment.accepted, true)
+                .where(QAttachment.attachment.initiativeId.eq(initiativeId))
+                .execute();
+    }
+
     static Expression<AttachmentFileInfo> attachmentMapper
             =  new MappingProjection<AttachmentFileInfo>(AttachmentFileInfo.class,QAttachment.attachment.all()) {
         @Override

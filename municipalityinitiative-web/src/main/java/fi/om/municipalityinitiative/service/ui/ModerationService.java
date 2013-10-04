@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.service.ui;
 
+import fi.om.municipalityinitiative.dao.AttachmentDao;
 import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dao.MunicipalityDao;
@@ -37,6 +38,9 @@ public class ModerationService {
     @Resource
     MunicipalityDao municipalityDao;
 
+    @Resource
+    AttachmentDao attachmentDao;
+
     @Transactional(readOnly = false)
     public void accept(OmLoginUserHolder loginUserHolder, Long initiativeId, String moderatorComment, Locale locale) {
         loginUserHolder.assertOmUser();
@@ -47,6 +51,7 @@ public class ModerationService {
         }
 
         initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
+        attachmentDao.acceptAttachments(initiativeId);
 
         if (initiative.getState() == InitiativeState.REVIEW) {
             acceptInitiativeDraft(locale, initiative);

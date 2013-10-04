@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.service.ui;
 
+import fi.om.municipalityinitiative.dao.AttachmentDao;
 import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dto.service.Initiative;
@@ -34,6 +35,7 @@ public class ModerationServiceTest {
     private InitiativeDao initiativeDaoMock;
 
     private OmLoginUserHolder loginUserHolder;
+    private AttachmentDao attachmentDaoMock;
 
     @Before
     public void setup() throws Exception {
@@ -46,6 +48,8 @@ public class ModerationServiceTest {
 
         moderationService.initiativeDao = initiativeDaoMock;
         moderationService.authorDao = authorDaoMock;
+        attachmentDaoMock = mock(AttachmentDao.class);
+        moderationService.attachmentDao = attachmentDaoMock;
 
         stub(authorDaoMock.findNormalAuthorEmails(anyLong())).toReturn(Collections.singletonList("")); // Avoid nullpointer temporarily
 
@@ -77,6 +81,13 @@ public class ModerationServiceTest {
     public void accepting_initiative_checks_that_it_can_be_accepted() {
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.ACCEPTED, InitiativeType.UNDEFINED));
         moderationService.accept(loginUserHolder, INITIATIVE_ID, "", null);
+    }
+
+    @Test
+    public void accepting_initiative_sets_all_attachments_accepted() {
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.REVIEW, InitiativeType.UNDEFINED));
+        moderationService.accept(loginUserHolder, INITIATIVE_ID, "", null);
+        verify(attachmentDaoMock).acceptAttachments(INITIATIVE_ID);
     }
 
     @Test
