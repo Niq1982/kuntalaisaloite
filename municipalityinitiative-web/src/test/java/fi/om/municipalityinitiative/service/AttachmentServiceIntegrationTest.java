@@ -18,7 +18,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.stub;
 
-public class AttachmentServiceIntegrationTestRenamedForJenkins extends ServiceIntegrationTestBase {
+public class AttachmentServiceIntegrationTest extends ServiceIntegrationTestBase {
 
     @Resource
     TestHelper testHelper;
