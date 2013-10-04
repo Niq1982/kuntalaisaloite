@@ -269,6 +269,10 @@ public final class Urls {
 
     public static final String ATTACHMENT_THUMBNAIL = "/thumbnail/" + ID_PARAMETER;
 
+    public static final String ADD_ATTACHMENT = "/add-attachment/" + ID_PARAMETER;
+
+    public static final String DELETE_ATTACHMENT = "/delete-image/" + ID_PARAMETER;
+
     private final String baseUrl;
 
     private final String iframeBaseUrl;
@@ -486,6 +490,15 @@ public final class Urls {
 
     public String getAttachmentThumbnail(Long id) {
         return baseUrl + ATTACHMENT_THUMBNAIL.replace(ID_PARAMETER, id.toString());
+    }
+
+    public String addAttachment(Long initiativeId) {
+        return baseUrl + ADD_ATTACHMENT.replace(ID_PARAMETER, initiativeId.toString());
+
+    }
+
+    public String deleteAttachment(Long attachmentId) {
+        return baseUrl + DELETE_ATTACHMENT.replace(ID_PARAMETER, attachmentId.toString());
     }
 
     public String testDataGeneration() {

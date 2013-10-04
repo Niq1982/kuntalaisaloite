@@ -45,7 +45,7 @@ public class JdbcAttachmentDaoTest {
         testHelper.addAttachment(initiativeId, "kakka kuva", false);
         testHelper.addAttachment(initiativeId, "hyvä kuva", true);
 
-        List<AttachmentFileInfo> attachments = attachmentDao.findAttachments(initiativeId);
+        List<AttachmentFileInfo> attachments = attachmentDao.findAcceptedAttachments(initiativeId);
         assertThat(attachments, hasSize(1));
         assertThat(attachments.get(0).getDescription(), is("hyvä kuva"));
     }
@@ -79,13 +79,13 @@ public class JdbcAttachmentDaoTest {
         Long anotherInitiativeId = createInitiative();
         testHelper.addAttachment(anotherInitiativeId, "asd", false);
 
-        precondition(attachmentDao.findAttachments(initiativeId), hasSize(0));
-        precondition(attachmentDao.findAttachments(anotherInitiativeId), hasSize(0));
+        precondition(attachmentDao.findAcceptedAttachments(initiativeId), hasSize(0));
+        precondition(attachmentDao.findAcceptedAttachments(anotherInitiativeId), hasSize(0));
 
         attachmentDao.acceptAttachments(initiativeId);
 
-        assertThat(attachmentDao.findAttachments(initiativeId), hasSize(1));
-        assertThat(attachmentDao.findAttachments(anotherInitiativeId), hasSize(0));
+        assertThat(attachmentDao.findAcceptedAttachments(initiativeId), hasSize(1));
+        assertThat(attachmentDao.findAcceptedAttachments(anotherInitiativeId), hasSize(0));
     }
 
     @Test
@@ -95,13 +95,13 @@ public class JdbcAttachmentDaoTest {
         Long anotherInitiativeId = createInitiative();
         testHelper.addAttachment(anotherInitiativeId, "asd", true);
 
-        precondition(attachmentDao.findAttachments(initiativeId), hasSize(1));
-        precondition(attachmentDao.findAttachments(anotherInitiativeId), hasSize(1));
+        precondition(attachmentDao.findAcceptedAttachments(initiativeId), hasSize(1));
+        precondition(attachmentDao.findAcceptedAttachments(anotherInitiativeId), hasSize(1));
 
         attachmentDao.rejectAttachments(initiativeId);
 
-        assertThat(attachmentDao.findAttachments(initiativeId), hasSize(0));
-        assertThat(attachmentDao.findAttachments(anotherInitiativeId), hasSize(1));
+        assertThat(attachmentDao.findAcceptedAttachments(initiativeId), hasSize(0));
+        assertThat(attachmentDao.findAcceptedAttachments(anotherInitiativeId), hasSize(1));
     }
 
     @Test

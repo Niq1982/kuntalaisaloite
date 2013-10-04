@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.dto.service.AttachmentFile;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.InvalidHomeMunicipalityException;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.*;
@@ -89,7 +90,8 @@ public class PublicInitiativeController extends BaseController {
     public String view(@PathVariable("id") Long initiativeId,
                        Model model, Locale locale, HttpServletRequest request) {
 
-        InitiativeViewInfo initiativeInfo = publicInitiativeService.getInitiative(initiativeId, userService.getLoginUserHolder(request));
+        LoginUserHolder loginUserHolder = userService.getLoginUserHolder(request);
+        InitiativeViewInfo initiativeInfo = publicInitiativeService.getInitiative(initiativeId, loginUserHolder);
 
         addPiwicIdIfNotAuthenticated(model, request);
 
@@ -97,7 +99,7 @@ public class PublicInitiativeController extends BaseController {
             return ViewGenerator.collaborativeView(initiativeInfo,
                     authorService.findPublicAuthors(initiativeId),
                     municipalityService.findAllMunicipalities(locale),
-                    attachmentService.findAttachments(initiativeId),
+                    attachmentService.findAttachments(initiativeId, loginUserHolder),
                     initiativeInfo.getParticipantCount(),
                     new ParticipantUICreateDto(),
                     new AuthorUIMessage()).view(model, Urls.get(locale).alt().view(initiativeId));
@@ -105,7 +107,7 @@ public class PublicInitiativeController extends BaseController {
         else {
             return ViewGenerator.singleView(initiativeInfo,
                     authorService.findPublicAuthors(initiativeId),
-                    attachmentService.findAttachments(initiativeId))
+                    attachmentService.findAttachments(initiativeId, loginUserHolder))
                     .view(model, Urls.get(locale).alt().view(initiativeId));
         }
     }
@@ -193,7 +195,7 @@ public class PublicInitiativeController extends BaseController {
                 return ViewGenerator.collaborativeView(
                         publicInitiative,
                         authorService.findPublicAuthors(initiativeId), municipalityService.findAllMunicipalities(locale),
-                        attachmentService.findAttachments(initiativeId), publicInitiative.getParticipantCount(),
+                        attachmentService.findAttachments(initiativeId, loginUserHolder), publicInitiative.getParticipantCount(),
                         participant,
                         new AuthorUIMessage()).view(model, Urls.get(locale).alt().view(initiativeId));
             }
@@ -342,7 +344,7 @@ public class PublicInitiativeController extends BaseController {
             return ViewGenerator.collaborativeView(publicInitiative,
                     authorService.findPublicAuthors(initiativeId),
                     municipalityService.findAllMunicipalities(locale),
-                    attachmentService.findAttachments(initiativeId), publicInitiative.getParticipantCount(),
+                    attachmentService.findAcceptedAttachments(initiativeId), publicInitiative.getParticipantCount(),
                     new ParticipantUICreateDto(),
                     authorUIMessage).view(model, Urls.get(locale).alt().view(initiativeId));
         }

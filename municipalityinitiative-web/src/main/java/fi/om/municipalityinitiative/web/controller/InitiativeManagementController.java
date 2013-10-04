@@ -372,7 +372,7 @@ public class InitiativeManagementController extends BaseController {
         return redirectWithMessage(Urls.get(locale).participantListManage(initiativeId), RequestMessage.PARTICIPANT_DELETED, request);
     }
 
-    @RequestMapping(value = "/addimage/{id}", method = POST)
+    @RequestMapping(value = ADD_ATTACHMENT, method = POST)
     public String addAttachment(@PathVariable("id") Long initiativeId,
                                 @RequestParam("image") MultipartFile file,
                                 @RequestParam("locale") String localeString,
@@ -386,7 +386,7 @@ public class InitiativeManagementController extends BaseController {
         attachmentService.addAttachment(initiativeId, userService.getLoginUserHolder(request), file, description);
         return redirectWithMessage(Urls.get(locale).management(initiativeId), RequestMessage.ATTACHMENT_ADDED, request);
     }
-    @RequestMapping(value = ("deleteimage/{id}"), method = POST)
+    @RequestMapping(value = DELETE_ATTACHMENT, method = POST)
     public String deleteAttachment(@PathVariable("id") Long attachmentId,
                                    @RequestParam("locale") String localeString,
                                    HttpServletRequest request,

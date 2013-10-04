@@ -146,8 +146,18 @@ public class AttachmentService {
     }
 
     @Transactional(readOnly = true)
-    public List<AttachmentFileInfo> findAttachments(Long initiativeId) {
-        return attachmentDao.findAttachments(initiativeId);
+    public List<AttachmentFileInfo> findAcceptedAttachments(Long initiativeId) {
+        return attachmentDao.findAcceptedAttachments(initiativeId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<AttachmentFileInfo> findAttachments(Long initiativeId, LoginUserHolder loginUserHolder) {
+        if (loginUserHolder.getUser().isOmUser() || loginUserHolder.hasManagementRightsForInitiative(initiativeId)) {
+            return attachmentDao.findAllAttachments(initiativeId);
+        }
+        else {
+            return attachmentDao.findAcceptedAttachments(initiativeId);
+        }
     }
 
     @Transactional(readOnly = true)

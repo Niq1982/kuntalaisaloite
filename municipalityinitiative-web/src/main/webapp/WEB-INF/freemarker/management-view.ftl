@@ -40,7 +40,7 @@
     <#if managementSettings.allowAddAttachments>
         <div class="view-block">
         <h2>Lisää kuvej</h2>
-        <form id="form-upload-image" enctype="multipart/form-data" action="/addimage/${initiative.id}" method="POST">
+        <form id="form-upload-image" enctype="multipart/form-data" action="${urls.addAttachment(initiative.id)}" method="POST">
             <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
             <input type="hidden" name="locale" value="{locale.toLanguageTag()}"/>
             <input type="file" name="image">
