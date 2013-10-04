@@ -1,9 +1,11 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
-import fi.om.municipalityinitiative.dto.service.AttachmentFileInfo;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
+import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
+import fi.om.municipalityinitiative.util.FixState;
+import fi.om.municipalityinitiative.util.InitiativeState;
 import org.aspectj.util.FileUtil;
 import org.junit.Test;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,10 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.mock;
@@ -32,7 +32,10 @@ public class AttachmentServiceIntegrationTest extends ServiceIntegrationTestBase
 
     @Override
     protected void childSetup() {
-        initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testHelper.createTestMunicipality("mun")).applyAuthor().toInitiativeDraft());
+        initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testHelper.createTestMunicipality("mun"))
+                .withState(InitiativeState.DRAFT)
+                .applyAuthor()
+                .toInitiativeDraft());
     }
 
     @Test
@@ -68,6 +71,17 @@ public class AttachmentServiceIntegrationTest extends ServiceIntegrationTestBase
     @Test(expected = InvalidAttachmentException.class)
     public void saving_file_fails_if_invalid_content_type() throws IOException {
         attachmentService.addAttachment(initiativeId, TestHelper.authorLoginUserHolder, multiPartFileMock("anyfile.jpg", "application/pdf"), "someDescription");
+    }
+
+    @Test(expected = OperationNotAllowedException.class)
+    public void saving_file_is_disabllowed_if_at_published_state() throws IOException {
+        Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testHelper.createTestMunicipality("someMunicipality"))
+                .withState(InitiativeState.PUBLISHED)
+                .withFixState(FixState.OK)
+                .applyAuthor()
+                .toInitiativeDraft());
+
+        attachmentService.addAttachment(initiativeId, TestHelper.authorLoginUserHolder, null, null);
     }
 
     @Test(expected = AccessDeniedException.class)

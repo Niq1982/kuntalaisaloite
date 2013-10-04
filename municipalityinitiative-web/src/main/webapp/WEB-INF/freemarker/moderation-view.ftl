@@ -133,10 +133,13 @@
     
     <@e.stateInfo initiative />
 
+
     <div class="view-block first">
-        <@e.initiativeView initiative />        
+        <@e.initiativeView initiative />
     </div>
-    
+
+    <@e.attachmentsView attachments />
+
     <div class="view-block">
         <div class="initiative-content-row last">
             <h2><@u.message key="initiative.people.title" args=[authors?size] /></h2>

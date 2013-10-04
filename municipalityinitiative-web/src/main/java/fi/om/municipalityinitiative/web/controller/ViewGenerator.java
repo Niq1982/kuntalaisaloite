@@ -134,12 +134,13 @@ public class ViewGenerator {
                         .build());
     }
 
-    public static ViewGenerator moderationView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors) {
+    public static ViewGenerator moderationView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, List<AttachmentFileInfo> allAttachments) {
         return new ViewGenerator(MODERATION_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
                         .add("managementSettings", managementSettings)
                         .add("authors", authors)
+                        .add("attachments", allAttachments)
                         .build()
         );
     }

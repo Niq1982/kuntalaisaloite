@@ -1,11 +1,14 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dao.AttachmentDao;
+import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dto.service.AttachmentFile;
 import fi.om.municipalityinitiative.dto.service.AttachmentFileInfo;
+import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
+import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.util.ImageModifier;
 import org.aspectj.util.FileUtil;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +39,9 @@ public class AttachmentService {
     private AttachmentDao attachmentDao;
 
     @Resource
+    private InitiativeDao initiativeDao;
+
+    @Resource
     private ImageModifier imageModifier;
 
     public AttachmentService(String attachmentDir) {
@@ -49,7 +55,9 @@ public class AttachmentService {
     public void addAttachment(Long initiativeId, LoginUserHolder<User> loginUserHolder, MultipartFile file, String description) throws IOException {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        // TODO: isAllowFullEdit
+        if (!ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowAddAttachments()) {
+            throw new OperationNotAllowedException("Add attachments");
+        }
 
         file.getSize(); // TODO: Don't allow too large files
 

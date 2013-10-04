@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.web.controller;
 
 import fi.om.municipalityinitiative.dto.ui.MunicipalityUIEditDto;
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
+import fi.om.municipalityinitiative.service.AttachmentService;
 import fi.om.municipalityinitiative.service.ValidationService;
 import fi.om.municipalityinitiative.service.ui.ModerationService;
 import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
@@ -37,6 +38,9 @@ public class ModerationController extends BaseController{
     @Resource
     private ValidationService validationService;
 
+    @Resource
+    private AttachmentService attachmentService;
+
     public ModerationController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
     }
@@ -49,7 +53,8 @@ public class ModerationController extends BaseController{
 
         return ViewGenerator.moderationView(publicInitiativeService.getInitiative(initiativeId, loginUserHolder),
                 publicInitiativeService.getManagementSettings(initiativeId),
-                moderationService.findAuthors(loginUserHolder, initiativeId)
+                moderationService.findAuthors(loginUserHolder, initiativeId),
+                attachmentService.findAllAttachments(initiativeId, loginUserHolder)
         ).view(model, Urls.get(locale).alt().moderation(initiativeId));
     }
 

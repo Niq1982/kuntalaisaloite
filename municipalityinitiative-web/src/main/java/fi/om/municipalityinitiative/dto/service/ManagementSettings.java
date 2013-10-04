@@ -63,7 +63,10 @@ public class ManagementSettings {
         }
 
         return false;
+    }
 
+    public boolean isAllowAddAttachments() {
+        return initiative.getState() == InitiativeState.DRAFT || initiative.getFixState() == FixState.FIX;
     }
 
 

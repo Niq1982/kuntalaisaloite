@@ -33,17 +33,22 @@
     <@e.stateInfo initiative />
     <div class="view-block first">
         <@e.initiativeView initiative />
-
     </div>
 
     <@e.attachmentsView attachments />
-    <form id="form-upload-image" enctype="multipart/form-data" action="/addimage/${initiative.id}" method="POST">
-        <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-        <input type="hidden" name="locale" value="{locale.toLanguageTag()}"/>
-        <input type="file" name="image">
-        <label>Anna liitteelle selkeä ja kuvaava otsiko: <input type="text" name="description" maxlenth="${InitiativeConstants.ATTACHMENT_DESCRIPTION_MAX}"/></label>
-        <input type="submit" value="Tallenna tiedosto"/>
-    </form>
+
+    <#if managementSettings.allowAddAttachments>
+        <div class="view-block">
+        <h2>Lisää kuvej</h2>
+        <form id="form-upload-image" enctype="multipart/form-data" action="/addimage/${initiative.id}" method="POST">
+            <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+            <input type="hidden" name="locale" value="{locale.toLanguageTag()}"/>
+            <input type="file" name="image">
+            <label>Anna liitteelle selkeä ja kuvaava otsiko: <input type="text" name="description" maxlenth="${InitiativeConstants.ATTACHMENT_DESCRIPTION_MAX}"/></label>
+            <input type="submit" value="Tallenna tiedosto"/>
+        </form>
+        </div>
+    </#if>
     
     <div class="view-block cf">
         <h2><@u.message key="initiative.people.title" args=[participantCount.total] /></h2>
