@@ -1,7 +1,9 @@
 package fi.om.municipalityinitiative.conf;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.service.AttachmentService;
 import fi.om.municipalityinitiative.service.email.EmailService;
+import fi.om.municipalityinitiative.util.ImageModifier;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +12,8 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 import java.io.File;
+
+import static org.mockito.Mockito.mock;
 
 @Configuration
 @Import(AppConfiguration.class)
@@ -32,6 +36,16 @@ public class IntegrationTestConfiguration {
         File file = new File(System.getProperty("user.dir"), "src/main/webapp/WEB-INF/messages");
         messageSource.setBasenames(file.toURI().toString());
         return messageSource;
+    }
+
+    @Bean
+    public AttachmentService attachmentService() {
+        return new AttachmentService(System.getProperty("java.io.tmpdir"));
+    }
+
+    @Bean
+    ImageModifier imageModifier() {
+        return mock(ImageModifier.class);
     }
 
 }

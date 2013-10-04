@@ -10,7 +10,7 @@ import java.io.OutputStream;
 
 public class ImageModifier {
 
-    public static void modify(InputStream inputStream, OutputStream outputStream, String formatName, int maxWidth, int maxHeight) throws IOException {
+    public void modify(InputStream inputStream, OutputStream outputStream, String formatName, int maxWidth, int maxHeight) throws IOException {
 
         BufferedImage originalImage = ImageIO.read(inputStream);
         int type = originalImage.getType() == 0? BufferedImage.TYPE_INT_ARGB : originalImage.getType();

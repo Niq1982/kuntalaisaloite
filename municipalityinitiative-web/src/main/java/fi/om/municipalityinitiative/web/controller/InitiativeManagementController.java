@@ -90,7 +90,7 @@ public class InitiativeManagementController extends BaseController {
         return ViewGenerator.managementView(initiativeInfo,
                 publicInitiativeService.getManagementSettings(initiativeId),
                 authorService.findAuthors(initiativeId, loginUserHolder),
-                attachmentService.findAllAttachments(initiativeId),
+                attachmentService.findAllAttachments(initiativeId, loginUserHolder),
                 initiativeInfo.getParticipantCount(),
                 new CommentUIDto()
         ).view(model, Urls.get(locale).alt().getManagement(initiativeId));
@@ -215,7 +215,7 @@ public class InitiativeManagementController extends BaseController {
             return ViewGenerator.managementView(municipalityInitiative,
                     publicInitiativeService.getManagementSettings(initiativeId),
                     authorService.findAuthors(initiativeId, loginUserHolder),
-                    attachmentService.findAllAttachments(initiativeId), municipalityInitiative.getParticipantCount(),
+                    attachmentService.findAllAttachments(initiativeId, loginUserHolder), municipalityInitiative.getParticipantCount(),
                     commentUIDto)
                     .view(model, Urls.get(locale).alt().moderation(initiativeId));
         }
@@ -257,7 +257,7 @@ public class InitiativeManagementController extends BaseController {
             return ViewGenerator.managementView(municipalityInitiative,
                     publicInitiativeService.getManagementSettings(initiativeId),
                     authorService.findAuthors(initiativeId, loginUserHolder),
-                    attachmentService.findAllAttachments(initiativeId), municipalityInitiative.getParticipantCount(),
+                    attachmentService.findAllAttachments(initiativeId, loginUserHolder), municipalityInitiative.getParticipantCount(),
                     commentUIDto)
                     .view(model, Urls.get(locale).alt().moderation(initiativeId));
         }

@@ -12,6 +12,7 @@ import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.service.email.*;
 import fi.om.municipalityinitiative.service.operations.VerifiedInitiativeServiceOperations;
 import fi.om.municipalityinitiative.service.ui.*;
+import fi.om.municipalityinitiative.util.ImageModifier;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.TaskExecutorAspect;
 import fi.om.municipalityinitiative.validation.LocalValidatorFactoryBeanFix;
@@ -425,6 +426,11 @@ public class AppConfiguration {
     @Bean
     public CacheHeaderFilter apiFilter() {
         return new CacheHeaderFilter(WebConfiguration.optimizeResources(env), 5);
+    }
+
+    @Bean
+    public ImageModifier imageModifier() {
+        return new ImageModifier();
     }
 
     @PostConstruct

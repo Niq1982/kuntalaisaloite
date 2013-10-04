@@ -34,6 +34,9 @@ public class AttachmentService {
     @Resource
     private AttachmentDao attachmentDao;
 
+    @Resource
+    private ImageModifier imageModifier;
+
     public AttachmentService(String attachmentDir) {
         this.attachmentDir = attachmentDir;
     }
@@ -45,6 +48,8 @@ public class AttachmentService {
     public void addAttachment(Long initiativeId, LoginUserHolder<User> loginUserHolder, MultipartFile file, String description) throws IOException {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
+        // TODO: isAllowFullEdit
+
         file.getSize(); // TODO: Don't allow too large files
 
         String fileType = parseFileType(file.getOriginalFilename());
@@ -55,12 +60,12 @@ public class AttachmentService {
 
         File realFile = new File(getFilePath(attachmentId));
         try (FileOutputStream fileOutputStream = new FileOutputStream(realFile, false)) {
-            ImageModifier.modify(file.getInputStream(), fileOutputStream, fileType, MAX_WIDTH, MAX_HEIGHT);
+            imageModifier.modify(file.getInputStream(), fileOutputStream, fileType, MAX_WIDTH, MAX_HEIGHT);
             fileOutputStream.write(file.getBytes());
         }
         File thumbnailFile = new File(getThumbnailPath(attachmentId));
         try (FileOutputStream fileOutputStream = new FileOutputStream(thumbnailFile, false)) {
-            ImageModifier.modify(file.getInputStream(), fileOutputStream, fileType, THUMBNAIL_MAX_WIDTH, THUMBNAIL_MAX_HEIGHT);
+            imageModifier.modify(file.getInputStream(), fileOutputStream, fileType, THUMBNAIL_MAX_WIDTH, THUMBNAIL_MAX_HEIGHT);
             fileOutputStream.write(file.getBytes());
         }
     }
@@ -129,8 +134,8 @@ public class AttachmentService {
     }
 
     @Transactional(readOnly = true)
-    public List<AttachmentFileInfo> findAllAttachments(Long initiativeId) {
-        // TODO: All attachments
-        return attachmentDao.findAttachments(initiativeId);
+    public List<AttachmentFileInfo> findAllAttachments(Long initiativeId, LoginUserHolder loginUserHolder) {
+        loginUserHolder.assertViewRightsForInitiative(initiativeId);
+        return attachmentDao.findAllAttachments(initiativeId);
     }
 }

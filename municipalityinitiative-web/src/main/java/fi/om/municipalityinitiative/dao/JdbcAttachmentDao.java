@@ -36,6 +36,13 @@ public class JdbcAttachmentDao implements AttachmentDao{
     }
 
     @Override
+    public List<AttachmentFileInfo> findAllAttachments(Long initiativeId) {
+        return queryFactory.from(QAttachment.attachment)
+                .where(QAttachment.attachment.initiativeId.eq(initiativeId))
+                .list(attachmentMapper);
+    }
+
+    @Override
     public List<AttachmentFileInfo> find(Long initiativeId) {
         return queryFactory.from(QAttachment.attachment)
                 .where(QAttachment.attachment.initiativeId.eq(initiativeId))

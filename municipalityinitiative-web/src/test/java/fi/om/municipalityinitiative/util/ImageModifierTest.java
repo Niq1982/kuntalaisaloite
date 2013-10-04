@@ -18,7 +18,7 @@ public class ImageModifierTest {
         FileInputStream inputStream = new FileInputStream("/Users/paulika/Desktop/jees.png");
 
         try (FileOutputStream outputStream = new FileOutputStream("/Users/paulika/Desktop/aa.png")) {
-            ImageModifier.modify(inputStream, outputStream, "png", MAX_WIDTH, MAX_HEIGHT);
+            new ImageModifier().modify(inputStream, outputStream, "png", MAX_WIDTH, MAX_HEIGHT);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -92,6 +92,7 @@ public class TestHelper {
     @Transactional(readOnly = false)
     public void dbCleanupAllButMunicipalities() {
         queryFactory.delete(QAuthorMessage.authorMessage).execute();
+        queryFactory.delete(QAttachment.attachment).execute();
         queryFactory.delete(QAuthorInvitation.authorInvitation).execute();
         queryFactory.delete(QAuthor.author).execute();
         queryFactory.delete(QParticipant.participant).execute();
@@ -783,6 +784,16 @@ public class TestHelper {
                 .where(QEmail.email.tried.eq(true))
                 .orderBy(QEmail.email.id.asc())
                 .list(JdbcEmailDao.emailMapping);
+    }
+
+    @Transactional(readOnly = false)
+    public void  addAttachment(Long initiativeId, String description, boolean accepted) {
+        queryFactory.insert(QAttachment.attachment)
+                .set(QAttachment.attachment.initiativeId, initiativeId)
+                .set(QAttachment.attachment.description, description)
+                .set(QAttachment.attachment.contentType, "any")
+                .set(QAttachment.attachment.accepted, accepted)
+                .executeWithKey(QAttachment.attachment.id);
     }
 
     public String getPreviousTestManagementHash() {
