@@ -154,8 +154,8 @@ public class AttachmentServiceIntegrationTest extends ServiceIntegrationTestBase
     }
 
     private void createDummyTempAttachmentFile(Long attachmentId) {
-        FileUtil.writeAsString(new File(attachmentService.getAttachmentDir() + attachmentId), ""); // Just some dummy file which this test will find
-        FileUtil.writeAsString(new File(attachmentService.getAttachmentDir() + attachmentId+"_thumbnail"), ""); // Just some dummy file which this test will find
+        FileUtil.writeAsString(new File(attachmentService.getAttachmentDir() + attachmentId), "asd"); // Just some dummy file which this test will find
+        FileUtil.writeAsString(new File(attachmentService.getAttachmentDir() + attachmentId+"_thumbnail"), "asd"); // Just some dummy file which this test will find
     }
 
     private static MultipartFile multiPartFileMock(String fileName, String contentType) throws IOException {
