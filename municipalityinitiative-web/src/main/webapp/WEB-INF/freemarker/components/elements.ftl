@@ -33,7 +33,7 @@
                 <img src="${urls.getAttachmentThumbnail(attachment.attachmentId)}"/>
                 ${attachment.description}
             </a>
-            <#if user.hasRightToInitiative(initiative.id) && managementSettings.allowAddAttachments>
+            <#if managementSettings?? && user.hasRightToInitiative(initiative.id) && managementSettings.allowAddAttachments>
                 <form action="${urls.deleteAttachment(attachment.attachmentId)}" method="POST">
                     <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
                     <input type="hidden" name="locale" value="{locale.toLanguageTag()}"/>
