@@ -14,4 +14,6 @@ public interface AttachmentDao {
     AttachmentFileInfo getAttachment(Long attachmentId);
 
     void acceptAttachments(long initiativeId);
+
+    void rejectAttachments(Long initiativeId);
 }

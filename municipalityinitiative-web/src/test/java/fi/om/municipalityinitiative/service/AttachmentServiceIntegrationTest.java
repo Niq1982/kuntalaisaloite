@@ -36,25 +36,6 @@ public class AttachmentServiceIntegrationTest extends ServiceIntegrationTestBase
     }
 
     @Test
-    public void find_attachments_finds_only_accepted_attachments() {
-        testHelper.addAttachment(initiativeId, "kakka kuva", false);
-        testHelper.addAttachment(initiativeId, "hyvä kuva", true);
-
-        List<AttachmentFileInfo> attachments = attachmentService.findAttachments(initiativeId);
-        assertThat(attachments, hasSize(1));
-        assertThat(attachments.get(0).getDescription(), is("hyvä kuva"));
-    }
-
-    @Test
-    public void find_all_attachments() {
-        testHelper.addAttachment(initiativeId, "kakka kuva", false);
-        testHelper.addAttachment(initiativeId, "hyvä kuva", true);
-
-        List<AttachmentFileInfo> attachments = attachmentService.findAllAttachments(initiativeId, TestHelper.authorLoginUserHolder);
-        assertThat(attachments, hasSize(2));
-    }
-
-    @Test
     public void find_all_attachments_is_ok_with_om_or_management_rights() {
         testHelper.addAttachment(initiativeId, "ok", false);
         assertThat(attachmentService.findAllAttachments(initiativeId, TestHelper.authorLoginUserHolder), hasSize(1));
