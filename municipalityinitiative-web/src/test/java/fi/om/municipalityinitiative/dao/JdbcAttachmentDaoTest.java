@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -101,6 +102,20 @@ public class JdbcAttachmentDaoTest {
 
         assertThat(attachmentDao.findAttachments(initiativeId), hasSize(0));
         assertThat(attachmentDao.findAttachments(anotherInitiativeId), hasSize(1));
+    }
+
+    @Test
+    public void delete_attachment() {
+        testHelper.addAttachment(initiativeId, "description", true);
+        Long attachmentToDelete = testHelper.addAttachment(initiativeId, "description", true);
+
+        precondition(attachmentDao.findAllAttachments(initiativeId), hasSize(2));
+
+        attachmentDao.deleteAttachment(attachmentToDelete);
+
+        List<AttachmentFileInfo> attachmentsAfterDelete = attachmentDao.findAllAttachments(initiativeId);
+        assertThat(attachmentsAfterDelete, hasSize(1));
+        assertThat(attachmentsAfterDelete.get(0).getAttachmentId(), is(not(attachmentToDelete)));
     }
 
     private Long createInitiative() {

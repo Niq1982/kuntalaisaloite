@@ -11,6 +11,8 @@ import org.springframework.util.Assert;
 import javax.annotation.Resource;
 import java.util.List;
 
+import static fi.om.municipalityinitiative.dao.JdbcInitiativeDao.assertSingleAffection;
+
 @SQLExceptionTranslated
 public class JdbcAttachmentDao implements AttachmentDao{
 
@@ -66,6 +68,13 @@ public class JdbcAttachmentDao implements AttachmentDao{
                 .set(QAttachment.attachment.accepted, false)
                 .where(QAttachment.attachment.initiativeId.eq(initiativeId))
                 .execute();
+    }
+
+    @Override
+    public void deleteAttachment(Long attachmentId) {
+        assertSingleAffection(queryFactory.delete(QAttachment.attachment)
+                .where(QAttachment.attachment.id.eq(attachmentId))
+                .execute());
     }
 
     static Expression<AttachmentFileInfo> attachmentMapper

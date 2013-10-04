@@ -16,4 +16,6 @@ public interface AttachmentDao {
     void acceptAttachments(long initiativeId);
 
     void rejectAttachments(Long initiativeId);
+
+    void deleteAttachment(Long attachmentId);
 }

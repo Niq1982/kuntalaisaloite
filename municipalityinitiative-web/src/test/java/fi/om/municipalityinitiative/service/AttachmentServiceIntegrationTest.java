@@ -4,6 +4,7 @@ import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
+import fi.om.municipalityinitiative.sql.QAttachment;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import org.aspectj.util.FileUtil;
@@ -15,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.mock;
@@ -134,6 +136,21 @@ public class AttachmentServiceIntegrationTest extends ServiceIntegrationTestBase
         attachmentService.getThumbnail(attachmentId, TestHelper.omLoginUser);
         attachmentService.getThumbnail(attachmentId, TestHelper.authorLoginUserHolder);
         attachmentService.getThumbnail(attachmentId, TestHelper.unknownLoginUserHolder);
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void delete_attachment_requires_management_rights() {
+        Long attachmentId = testHelper.addAttachment(initiativeId, "asd", true);
+        attachmentService.deleteAttachment(attachmentId, TestHelper.unknownLoginUserHolder);
+    }
+
+    @Test
+    public void delete_attachment_allows_deleting_if_author() {
+        Long attachmentId = testHelper.addAttachment(initiativeId, "moi", true);
+
+        precondition(testHelper.countAll(QAttachment.attachment), is(1L));
+        attachmentService.deleteAttachment(attachmentId, TestHelper.authorLoginUserHolder);
+        assertThat(testHelper.countAll(QAttachment.attachment), is(0L));
     }
 
     private void createDummyTempAttachmentFile(Long attachmentId) {

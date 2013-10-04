@@ -159,4 +159,14 @@ public class AttachmentService {
     String getAttachmentDir() { // For tests
         return attachmentDir;
     }
+
+    @Transactional(readOnly = false)
+    public Long deleteAttachment(Long attachmentId, LoginUserHolder loginUserHolder) {
+
+        AttachmentFileInfo attachmentFileInfo = attachmentDao.getAttachment(attachmentId);
+        loginUserHolder.assertManagementRightsForInitiative(attachmentFileInfo.getInitiativeId());
+        attachmentDao.deleteAttachment(attachmentId);
+        return attachmentFileInfo.getInitiativeId();
+
+    }
 }

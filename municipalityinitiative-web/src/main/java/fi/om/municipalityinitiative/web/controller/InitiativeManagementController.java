@@ -25,6 +25,7 @@ import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequ
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.List;
@@ -383,7 +384,17 @@ public class InitiativeManagementController extends BaseController {
 
         Locale locale = Locale.forLanguageTag(localeString);
         attachmentService.addAttachment(initiativeId, userService.getLoginUserHolder(request), file, description);
-        return redirectWithMessage(Urls.get(locale).management(initiativeId), RequestMessage.INFORMATION_SAVED, request);
+        return redirectWithMessage(Urls.get(locale).management(initiativeId), RequestMessage.ATTACHMENT_ADDED, request);
+    }
+    @RequestMapping(value = ("deleteimage/{id}"), method = POST)
+    public String deleteAttachment(@PathVariable("id") Long attachmentId,
+                                   @RequestParam("locale") String localeString,
+                                   HttpServletRequest request,
+                                   HttpServletResponse response) {
+        Locale locale = Locale.forLanguageTag(localeString);
+
+        Long initiativeId = attachmentService.deleteAttachment(attachmentId, userService.getLoginUserHolder(request));
+        return redirectWithMessage(Urls.get(locale).management(initiativeId), RequestMessage.ATTACHMENT_DELETED, request);
     }
 
     
