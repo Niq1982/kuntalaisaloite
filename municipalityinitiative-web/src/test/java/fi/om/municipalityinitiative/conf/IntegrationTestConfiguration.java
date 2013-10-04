@@ -4,6 +4,7 @@ import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.service.AttachmentService;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.util.ImageModifier;
+import org.aspectj.util.FileUtil;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,7 +41,7 @@ public class IntegrationTestConfiguration {
 
     @Bean
     public AttachmentService attachmentService() {
-        return new AttachmentService(System.getProperty("java.io.tmpdir"));
+        return new AttachmentService(FileUtil.getTempDir(null).getAbsolutePath()+"/");
     }
 
     @Bean

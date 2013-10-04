@@ -154,7 +154,7 @@ public class AttachmentServiceIntegrationTest extends ServiceIntegrationTestBase
     }
 
     private void createDummyTempAttachmentFile(Long attachmentId) {
-        FileUtil.writeAsString(new File(attachmentService.getAttachmentDir() + attachmentId), "asd"); // Just some dummy file which this test will find
+        FileUtil.writeAsString(new File(attachmentDir + attachmentId), "asd"); // Just some dummy file which this test will find
         FileUtil.writeAsString(new File(attachmentService.getAttachmentDir() + attachmentId+"_thumbnail"), "asd"); // Just some dummy file which this test will find
     }
 
