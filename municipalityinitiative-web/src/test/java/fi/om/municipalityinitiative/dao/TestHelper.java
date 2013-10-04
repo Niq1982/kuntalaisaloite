@@ -787,8 +787,8 @@ public class TestHelper {
     }
 
     @Transactional(readOnly = false)
-    public void  addAttachment(Long initiativeId, String description, boolean accepted) {
-        queryFactory.insert(QAttachment.attachment)
+    public Long addAttachment(Long initiativeId, String description, boolean accepted) {
+        return queryFactory.insert(QAttachment.attachment)
                 .set(QAttachment.attachment.initiativeId, initiativeId)
                 .set(QAttachment.attachment.description, description)
                 .set(QAttachment.attachment.contentType, "any")

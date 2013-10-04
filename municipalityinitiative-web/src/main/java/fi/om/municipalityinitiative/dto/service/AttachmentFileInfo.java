@@ -8,6 +8,7 @@ public class AttachmentFileInfo {
     private String description;
     private String contentType;
     private DateTime createTime;
+    private boolean accepted;
 
     public void setInitiativeId(Long initiativeId) {
         this.initiativeId = initiativeId;
@@ -47,5 +48,13 @@ public class AttachmentFileInfo {
 
     public DateTime getCreateTime() {
         return createTime;
+    }
+
+    public boolean isAccepted() {
+        return accepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        this.accepted = accepted;
     }
 }

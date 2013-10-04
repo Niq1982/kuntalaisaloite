@@ -4,10 +4,12 @@ import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.service.AttachmentFileInfo;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
+import org.aspectj.util.FileUtil;
 import org.junit.Test;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -85,6 +87,36 @@ public class AttachmentServiceIntegrationTest extends ServiceIntegrationTestBase
     @Test(expected = InvalidAttachmentException.class)
     public void saving_file_fails_if_invalid_content_type() throws IOException {
         attachmentService.addAttachment(initiativeId, TestHelper.authorLoginUserHolder, multiPartFileMock("anyfile.jpg", "application/pdf"), "someDescription");
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void get_unaccepted_attachment_is_forbidden_if_not_author() throws IOException {
+        Long attachmentId = testHelper.addAttachment(initiativeId, "asd", false);
+        attachmentService.getAttachment(attachmentId, TestHelper.unknownLoginUserHolder);
+    }
+
+    @Test
+    public void get_unaccepted_attachment_is_allowed_if_author_or_om() throws IOException {
+        Long attachmentId = testHelper.addAttachment(initiativeId, "asd", false);
+
+        createDummyTempAttachmentFile(attachmentId);
+
+        attachmentService.getAttachment(attachmentId, TestHelper.omLoginUser);
+        attachmentService.getAttachment(attachmentId, TestHelper.authorLoginUserHolder);
+    }
+
+    @Test
+    public void get_accepted_attachment_is_allowed() throws IOException {
+        Long attachmentId = testHelper.addAttachment(initiativeId, "asd", true);
+
+        createDummyTempAttachmentFile(attachmentId);
+        attachmentService.getAttachment(attachmentId, TestHelper.omLoginUser);
+        attachmentService.getAttachment(attachmentId, TestHelper.authorLoginUserHolder);
+        attachmentService.getAttachment(attachmentId, TestHelper.unknownLoginUserHolder);
+    }
+
+    private void createDummyTempAttachmentFile(Long attachmentId) {
+        FileUtil.writeAsString(new File(attachmentService.getAttachmentDir() + attachmentId), ""); // Just some dummy file which this test will find
     }
 
     private static MultipartFile multiPartFileMock(String fileName, String contentType) throws IOException {

@@ -6,6 +6,7 @@ import com.mysema.query.types.Expression;
 import com.mysema.query.types.MappingProjection;
 import fi.om.municipalityinitiative.dto.service.AttachmentFileInfo;
 import fi.om.municipalityinitiative.sql.QAttachment;
+import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -46,10 +47,9 @@ public class JdbcAttachmentDao implements AttachmentDao{
 
     @Override
     public AttachmentFileInfo getAttachment(Long attachmentId) {
-        return queryFactory.from(QAttachment.attachment)
+        return notNull(queryFactory.from(QAttachment.attachment)
                 .where(QAttachment.attachment.id.eq(attachmentId))
-                .where(QAttachment.attachment.accepted.eq(true))
-                .uniqueResult(attachmentMapper);
+                .uniqueResult(attachmentMapper));
     }
 
     @Override
@@ -71,7 +71,13 @@ public class JdbcAttachmentDao implements AttachmentDao{
             attachmentFileInfo.setDescription(row.get(QAttachment.attachment.description));
             attachmentFileInfo.setCreateTime(row.get(QAttachment.attachment.added));
             attachmentFileInfo.setInitiativeId(row.get(QAttachment.attachment.initiativeId));
+            attachmentFileInfo.setAccepted(row.get(QAttachment.attachment.accepted));
             return attachmentFileInfo;
         }
     };
+
+    private static <T extends Object> T notNull(T object) {
+        Assert.notNull(object);
+        return object;
+    }
 }

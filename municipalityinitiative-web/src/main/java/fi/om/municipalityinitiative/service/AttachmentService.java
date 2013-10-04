@@ -81,8 +81,11 @@ public class AttachmentService {
 
     @Transactional(readOnly = true)
     // TODO: Cache
-    public AttachmentFile getAttachment(Long attachmentId) throws IOException {
+    public AttachmentFile getAttachment(Long attachmentId, LoginUserHolder loginUserHolder) throws IOException {
         AttachmentFileInfo attachmentInfo = attachmentDao.getAttachment(attachmentId);
+        if (!attachmentInfo.isAccepted()) {
+            loginUserHolder.assertViewRightsForInitiative(attachmentInfo.getInitiativeId());
+        }
         byte[] attachmentBytes = getFileBytes(getFilePath(attachmentId));
         return new AttachmentFile(attachmentInfo, attachmentBytes);
     }
@@ -138,5 +141,9 @@ public class AttachmentService {
     public List<AttachmentFileInfo> findAllAttachments(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertViewRightsForInitiative(initiativeId);
         return attachmentDao.findAllAttachments(initiativeId);
+    }
+
+    String getAttachmentDir() { // For tests
+        return attachmentDir;
     }
 }
