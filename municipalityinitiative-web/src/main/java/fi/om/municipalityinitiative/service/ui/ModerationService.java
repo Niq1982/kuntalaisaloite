@@ -100,6 +100,7 @@ public class ModerationService {
             throw new IllegalStateException("Invalid state for rejecting, there's something wrong with the code");
         }
         initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
+        attachmentDao.rejectAttachments(initiativeId);
         emailService.sendStatusEmail(initiativeId, EmailMessageType.REJECTED_BY_OM);
     }
 
@@ -131,6 +132,7 @@ public class ModerationService {
         }
         initiativeDao.updateInitiativeFixState(initiativeId, FixState.FIX);
         initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
+        attachmentDao.rejectAttachments(initiativeId);
         emailService.sendStatusEmail(initiativeId, EmailMessageType.REJECTED_BY_OM);
     }
 

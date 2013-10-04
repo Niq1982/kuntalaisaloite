@@ -175,6 +175,13 @@ public class ModerationServiceTest {
     }
 
     @Test
+    public void rejecting_initiative_sets_all_attachments_rejected() {
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.REVIEW, InitiativeType.UNDEFINED));
+        moderationService.reject(loginUserHolder, INITIATIVE_ID, "");
+        verify(attachmentDaoMock).rejectAttachments(INITIATIVE_ID);
+    }
+
+    @Test
     public void accepting_fixState_review_initiative_sets_moderator_comment_and_fixState() {
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(publishedCollaborative(FixState.REVIEW));
 
@@ -222,6 +229,13 @@ public class ModerationServiceTest {
     public void sendInitiativeBackForFixing_checks_that_initiative_may_be_sent_back() {
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.DRAFT, InitiativeType.UNDEFINED));
         moderationService.sendInitiativeBackForFixing(loginUserHolder, INITIATIVE_ID, "");
+    }
+
+    @Test
+    public void sendInitiativeBackForFixing_rejects_all_attachments() {
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE));
+        moderationService.sendInitiativeBackForFixing(loginUserHolder, INITIATIVE_ID, "");
+        verify(attachmentDaoMock).rejectAttachments(INITIATIVE_ID);
     }
 
     @Test
