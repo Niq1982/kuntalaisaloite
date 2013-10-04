@@ -11,7 +11,5 @@ public interface AttachmentDao {
 
     List<AttachmentFileInfo> findAllAttachments(Long initiativeId);
 
-    List<AttachmentFileInfo> find(Long initiativeId);
-
     AttachmentFileInfo getAttachment(Long attachmentId);
 }
