@@ -42,7 +42,7 @@ public class AttachmentService {
     }
 
     @Transactional(readOnly = false)
-    public void addAttachment(Long initiativeId, LoginUserHolder<User> loginUserHolder, MultipartFile file) throws IOException {
+    public void addAttachment(Long initiativeId, LoginUserHolder<User> loginUserHolder, MultipartFile file, String description) throws IOException {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
         file.getSize(); // TODO: Don't allow too large files
@@ -51,7 +51,7 @@ public class AttachmentService {
         assertFileType(fileType);
         assertContentType(file.getContentType());
 
-        Long attachmentId = attachmentDao.addAttachment(initiativeId, file.getOriginalFilename(), file.getContentType());
+        Long attachmentId = attachmentDao.addAttachment(initiativeId, description, file.getContentType());
 
         File realFile = new File(getFilePath(attachmentId));
         try (FileOutputStream fileOutputStream = new FileOutputStream(realFile, false)) {

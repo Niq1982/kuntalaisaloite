@@ -41,6 +41,7 @@
         <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
         <input type="hidden" name="locale" value="{locale.toLanguageTag()}"/>
         <input type="file" name="image">
+        <label>Anna liitteelle selkeä ja kuvaava otsiko: <input type="text" name="description" maxlenth="${InitiativeConstants.ATTACHMENT_DESCRIPTION_MAX}"/></label>
         <input type="submit" value="Tallenna tiedosto"/>
     </form>
     

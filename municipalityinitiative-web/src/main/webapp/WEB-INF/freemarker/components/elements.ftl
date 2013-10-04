@@ -31,7 +31,7 @@
         <#list attachments as attachment>
             <a href="${urls.attachment(attachment.attachmentId)}">
                 <img src="${urls.getAttachmentThumbnail(attachment.attachmentId)}"/>
-                ${attachment.fileName}
+                ${attachment.description}
             </a>
             <br/>
         </#list>

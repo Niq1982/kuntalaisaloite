@@ -5,7 +5,7 @@ import org.joda.time.DateTime;
 public class AttachmentFileInfo {
     private Long initiativeId;
     private Long attachmentId;
-    private String fileName;
+    private String description;
     private String contentType;
     private DateTime createTime;
 
@@ -17,8 +17,8 @@ public class AttachmentFileInfo {
         this.attachmentId = attachmentId;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public void setContentType(String contentType) {
@@ -37,8 +37,8 @@ public class AttachmentFileInfo {
         return attachmentId;
     }
 
-    public String getFileName() {
-        return fileName;
+    public String getDescription() {
+        return description;
     }
 
     public String getContentType() {
@@ -49,4 +49,3 @@ public class AttachmentFileInfo {
         return createTime;
     }
 }
-

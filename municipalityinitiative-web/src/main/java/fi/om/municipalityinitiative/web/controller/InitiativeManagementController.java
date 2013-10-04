@@ -375,10 +375,14 @@ public class InitiativeManagementController extends BaseController {
     public String addAttachment(@PathVariable("id") Long initiativeId,
                                 @RequestParam("image") MultipartFile file,
                                 @RequestParam("locale") String localeString,
+                                @RequestParam("description") String description,
                                 DefaultMultipartHttpServletRequest request) throws IOException {
 
+        // TODO: CSRF-check
+        // TODO: Validate description length
+
         Locale locale = Locale.forLanguageTag(localeString);
-        attachmentService.addAttachment(initiativeId, userService.getLoginUserHolder(request), file);
+        attachmentService.addAttachment(initiativeId, userService.getLoginUserHolder(request), file, description);
         return redirectWithMessage(Urls.get(locale).management(initiativeId), RequestMessage.INFORMATION_SAVED, request);
     }
 

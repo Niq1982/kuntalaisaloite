@@ -21,7 +21,7 @@ public class AttachmentFile {
     }
 
     public String getFileName() {
-        return info.getFileName();
+        return info.getDescription();
     }
 
     public String getContentType() {

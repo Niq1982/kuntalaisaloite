@@ -10,4 +10,5 @@ public class InitiativeConstants {
     public static final int CONTACT_PHONE_MAX = 30;
     public static final int CONTACT_ADDRESS_MAX = 256;
     public static final int AUTHOR_MESSAGE_MAX = 1024;
+    public static final int ATTACHMENT_DESCRIPTION_MAX = 100;
 }

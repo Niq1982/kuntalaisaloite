@@ -1,6 +1,6 @@
 create table attachment (
     id bigserial,
-    filename varchar(50) constraint attachment_filename_nn not null,
+    description varchar(100) constraint attachment_filename_nn not null,
     initiative_id bigserial,
 
     added timestamp default now(),
