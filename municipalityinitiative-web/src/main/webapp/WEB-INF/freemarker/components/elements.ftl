@@ -30,7 +30,7 @@
         <h2>Kuvej</h2>
         <#list attachments as attachment>
             <a href="${urls.attachment(attachment.attachmentId)}">
-                <img src="${urls.getAttachmentThumbnail(attachment.attachmentId)}"/>
+                <img src="<#if attachment.pdf>/img/pdficon_large.png<#else>${urls.getAttachmentThumbnail(attachment.attachmentId)}</#if>"/>
                 ${attachment.description}
             </a>
             <#if managementSettings?? && user.hasRightToInitiative(initiative.id) && managementSettings.allowAddAttachments>
@@ -43,6 +43,14 @@
             <br/>
         </#list>
     </div>
+</#macro>
+
+<#macro thumbnailUrl attachment>
+    <#if attachment.pdf>
+        $(urls.baseUrl}/img/pdficon_large.png
+    <#else>
+
+    </#if>
 </#macro>
 
 

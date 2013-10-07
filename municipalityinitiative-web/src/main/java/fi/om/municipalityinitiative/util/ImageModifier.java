@@ -1,19 +1,20 @@
 package fi.om.municipalityinitiative.util;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.im4java.core.*;
-import org.im4java.process.Pipe;
+import org.im4java.core.ConvertCmd;
+import org.im4java.core.IM4JavaException;
+import org.im4java.core.IMOperation;
+import org.im4java.core.Info;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 
 public class ImageModifier {
 
     public void modify(InputStream inputStream, String resultFilePath, String fileType, int maxWidth, int maxHeight) throws IOException, IM4JavaException, InterruptedException {
-
 
         File tempFile = File.createTempFile(RandomHashGenerator.shortHash(), "." + fileType);
         try (FileOutputStream output = new FileOutputStream(tempFile)) {
@@ -37,14 +38,6 @@ public class ImageModifier {
 
     }
 
-//    private static BufferedImage resizeImage(BufferedImage originalImage, int type, int width, int height){
-//        BufferedImage resizedImage = new BufferedImage(width, height, type);
-//        Graphics2D g = resizedImage.createGraphics();
-//        g.drawImage(originalImage, 0, 0, width, height, null);
-//        g.dispose();
-//
-//        return resizedImage;
-//    }
 
     public static class Size {
 

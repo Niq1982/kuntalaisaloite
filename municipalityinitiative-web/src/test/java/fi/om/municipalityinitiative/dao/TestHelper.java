@@ -792,6 +792,7 @@ public class TestHelper {
                 .set(QAttachment.attachment.initiativeId, initiativeId)
                 .set(QAttachment.attachment.description, description)
                 .set(QAttachment.attachment.contentType, "any")
+                .set(QAttachment.attachment.fileType, "any")
                 .set(QAttachment.attachment.accepted, accepted)
                 .executeWithKey(QAttachment.attachment.id);
     }

@@ -5,7 +5,7 @@ import fi.om.municipalityinitiative.dto.service.AttachmentFileInfo;
 import java.util.List;
 
 public interface AttachmentDao {
-    Long addAttachment(Long initiativeId, String description, String contentType);
+    Long addAttachment(Long initiativeId, String description, String contentType, String fileType);
 
     List<AttachmentFileInfo> findAcceptedAttachments(Long initiativeId);
 

@@ -7,21 +7,22 @@ import fi.om.municipalityinitiative.dto.service.AttachmentFileInfo;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
+import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.FileUploadException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.util.ImageModifier;
+import org.apache.commons.io.FileUtils;
 import org.aspectj.util.FileUtil;
 import org.im4java.core.InfoException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,8 +33,8 @@ public class AttachmentService {
     public static final Integer THUMBNAIL_MAX_WIDTH = 100;
     public static final Integer THUMBNAIL_MAX_HEIGHT = 100;
 
-    public static final String[] FILE_TYPES = { "png", "jpg" };
-    public static final String[] CONTENT_TYPES = { "image/png", "image/jpg", "image/jpeg" };
+    public static final String[] FILE_TYPES = { "png", "jpg", "pdf" };
+    public static final String[] CONTENT_TYPES = { "image/png", "image/jpg", "image/jpeg", "application/pdf" };
 
     private String attachmentDir;
 
@@ -69,11 +70,18 @@ public class AttachmentService {
         assertFileType(fileType);
         assertContentType(file.getContentType());
 
-        Long attachmentId = attachmentDao.addAttachment(initiativeId, description, file.getContentType());
+        Long attachmentId = attachmentDao.addAttachment(initiativeId, description, file.getContentType(), fileType);
 
         try {
-            imageModifier.modify(file.getInputStream(), getFilePath(attachmentId), fileType, MAX_WIDTH, MAX_HEIGHT);
-            imageModifier.modify(file.getInputStream(), getThumbnailPath(attachmentId), fileType, THUMBNAIL_MAX_WIDTH, THUMBNAIL_MAX_HEIGHT);
+            if (AttachmentFileInfo.isPdfContentType(file.getContentType())) {
+                try (FileOutputStream fileOutputStream = new FileOutputStream(getFilePath(attachmentId))) {
+                    fileOutputStream.write(file.getBytes());
+                }
+             }
+            else {
+                imageModifier.modify(file.getInputStream(), getFilePath(attachmentId), fileType, MAX_WIDTH, MAX_HEIGHT);
+                imageModifier.modify(file.getInputStream(), getThumbnailPath(attachmentId), fileType, THUMBNAIL_MAX_WIDTH, THUMBNAIL_MAX_HEIGHT);
+            }
         } catch (Throwable t) {
             log.error("Error while uploading file: " + file.getOriginalFilename(), t);
             throw new FileUploadException(t);
@@ -105,8 +113,11 @@ public class AttachmentService {
     public AttachmentFile getThumbnail(Long attachmentId, LoginUserHolder loginUserHolder) throws IOException {
         AttachmentFileInfo attachmentInfo = attachmentDao.getAttachment(attachmentId);
         assertViewAllowance(loginUserHolder, attachmentInfo);
-        byte[] attachmentBytes = getFileBytes(getThumbnailPath(attachmentId));
+        if (attachmentInfo.isPdf()) {
+            throw new AccessDeniedException("no thumbnail for pdf");
+        }
 
+        byte[] attachmentBytes = getFileBytes(getThumbnailPath(attachmentId));
         return new AttachmentFile(attachmentInfo, attachmentBytes);
     }
 

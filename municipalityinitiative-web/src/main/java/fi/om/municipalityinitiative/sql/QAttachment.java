@@ -26,6 +26,8 @@ public class QAttachment extends com.mysema.query.sql.RelationalPathBase<QAttach
 
     public final StringPath description = createString("description");
 
+    public final StringPath fileType = createString("file_type");
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final NumberPath<Long> initiativeId = createNumber("initiative_id", Long.class);

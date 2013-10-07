@@ -61,7 +61,7 @@ public class JdbcAttachmentDaoTest {
 
     @Test
     public void add_and_get_attachment() {
-        Long attachmentID = attachmentDao.addAttachment(initiativeId, "description", "contentType");
+        Long attachmentID = attachmentDao.addAttachment(initiativeId, "description", "contentType", "typ");
         AttachmentFileInfo attachment = attachmentDao.getAttachment(attachmentID);
         assertThat(attachment.getDescription(), is("description"));
         assertThat(attachment.getContentType(), is("contentType"));
@@ -69,6 +69,7 @@ public class JdbcAttachmentDaoTest {
         assertThat(attachment.isAccepted(), is(false));
         assertThat(attachment.getInitiativeId(), is(initiativeId));
         assertThat(attachment.getAttachmentId(), is(attachmentID));
+        assertThat(attachment.getFileType(), is("typ"));
     }
 
 

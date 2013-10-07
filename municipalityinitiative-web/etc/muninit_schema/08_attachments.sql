@@ -5,6 +5,7 @@ create table attachment (
 
     added timestamp default now(),
     content_type varchar(20) constraint attachment_content_type_nn not null,
+    file_type varchar(3) constraint attachment_file_type_nn not null,
     accepted boolean constraint attachment_accepted_nn not null default false,
 
     constraint attachment_pk primary key (id),

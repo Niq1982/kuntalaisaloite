@@ -9,6 +9,7 @@ public class AttachmentFileInfo {
     private String contentType;
     private DateTime createTime;
     private boolean accepted;
+    private String fileType;
 
     public void setInitiativeId(Long initiativeId) {
         this.initiativeId = initiativeId;
@@ -56,5 +57,25 @@ public class AttachmentFileInfo {
 
     public void setAccepted(boolean accepted) {
         this.accepted = accepted;
+    }
+
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
+    }
+
+    public String getFileType() {
+        return fileType;
+    }
+
+    public boolean isPdf() {
+        return isPdfContentType(contentType);
+    }
+
+    public static boolean isPdfContentType(String contentType) {
+        return contentType.equals("application/pdf");
+    }
+
+    public String getFileName() {
+        return description.replaceAll("[^a-zA-Z0-9]", "_") + "." + fileType;
     }
 }

@@ -20,11 +20,12 @@ public class JdbcAttachmentDao implements AttachmentDao{
     private PostgresQueryFactory queryFactory;
 
     @Override
-    public Long addAttachment(Long initiativeId, String description, String contentType) {
+    public Long addAttachment(Long initiativeId, String description, String contentType, String fileType) {
         return queryFactory.insert(QAttachment.attachment)
                 .set(QAttachment.attachment.initiativeId, initiativeId)
                 .set(QAttachment.attachment.description, description)
                 .set(QAttachment.attachment.contentType, contentType)
+                .set(QAttachment.attachment.fileType, fileType)
                 .executeWithKey(QAttachment.attachment.id);
 
     }
@@ -89,6 +90,7 @@ public class JdbcAttachmentDao implements AttachmentDao{
             attachmentFileInfo.setCreateTime(row.get(QAttachment.attachment.added));
             attachmentFileInfo.setInitiativeId(row.get(QAttachment.attachment.initiativeId));
             attachmentFileInfo.setAccepted(row.get(QAttachment.attachment.accepted));
+            attachmentFileInfo.setFileType(row.get(QAttachment.attachment.fileType));
             return attachmentFileInfo;
         }
     };
