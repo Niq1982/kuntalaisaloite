@@ -42,8 +42,8 @@ public class JdbcAttachmentDaoTest {
 
     @Test
     public void find_attachments_finds_only_accepted_attachments() {
-        testHelper.addAttachment(initiativeId, "kakka kuva", false);
-        testHelper.addAttachment(initiativeId, "hyvä kuva", true);
+        testHelper.addAttachment(initiativeId, "kakka kuva", false, "jpg");
+        testHelper.addAttachment(initiativeId, "hyvä kuva", true, "jpg");
 
         List<AttachmentFileInfo> attachments = attachmentDao.findAcceptedAttachments(initiativeId);
         assertThat(attachments, hasSize(1));
@@ -52,8 +52,8 @@ public class JdbcAttachmentDaoTest {
 
     @Test
     public void find_all_attachments() {
-        testHelper.addAttachment(initiativeId, "kakka kuva", false);
-        testHelper.addAttachment(initiativeId, "hyvä kuva", true);
+        testHelper.addAttachment(initiativeId, "kakka kuva", false, "jpg");
+        testHelper.addAttachment(initiativeId, "hyvä kuva", true, "jpg");
 
         List<AttachmentFileInfo> attachments = attachmentDao.findAllAttachments(initiativeId);
         assertThat(attachments, hasSize(2));
@@ -75,10 +75,10 @@ public class JdbcAttachmentDaoTest {
 
     @Test
     public void accept_initiatives_attachments() {
-        testHelper.addAttachment(initiativeId, "description", false);
+        testHelper.addAttachment(initiativeId, "description", false, "jpg");
 
         Long anotherInitiativeId = createInitiative();
-        testHelper.addAttachment(anotherInitiativeId, "asd", false);
+        testHelper.addAttachment(anotherInitiativeId, "asd", false, "jpg");
 
         precondition(attachmentDao.findAcceptedAttachments(initiativeId), hasSize(0));
         precondition(attachmentDao.findAcceptedAttachments(anotherInitiativeId), hasSize(0));
@@ -91,10 +91,10 @@ public class JdbcAttachmentDaoTest {
 
     @Test
     public void reject_initiative_attachments() {
-        testHelper.addAttachment(initiativeId, "description", true);
+        testHelper.addAttachment(initiativeId, "description", true, "jpg");
 
         Long anotherInitiativeId = createInitiative();
-        testHelper.addAttachment(anotherInitiativeId, "asd", true);
+        testHelper.addAttachment(anotherInitiativeId, "asd", true, "jpg");
 
         precondition(attachmentDao.findAcceptedAttachments(initiativeId), hasSize(1));
         precondition(attachmentDao.findAcceptedAttachments(anotherInitiativeId), hasSize(1));
@@ -107,8 +107,8 @@ public class JdbcAttachmentDaoTest {
 
     @Test
     public void delete_attachment() {
-        testHelper.addAttachment(initiativeId, "description", true);
-        Long attachmentToDelete = testHelper.addAttachment(initiativeId, "description", true);
+        testHelper.addAttachment(initiativeId, "description", true, "jpg");
+        Long attachmentToDelete = testHelper.addAttachment(initiativeId, "description", true, "jpg");
 
         precondition(attachmentDao.findAllAttachments(initiativeId), hasSize(2));
 
