@@ -19,6 +19,8 @@ public final class Urls {
 
     public static final String INFO_PAGE_PARAMETER = "{infoPage}";
 
+    public static final String FILENAME_PARAMETER = "{fileName}";
+
     public static final String FRONT =        "/";
 
     public static final String FRONT_FI =     "/fi";
@@ -265,7 +267,7 @@ public final class Urls {
 
     public static final String STATUS =  "/status";
 
-    public static final String ATTACHMENT = "/attachment/" + ID_PARAMETER;
+    public static final String ATTACHMENT = "/attachment/" + ID_PARAMETER + "/" + FILENAME_PARAMETER;
 
     public static final String ATTACHMENT_THUMBNAIL = "/thumbnail/" + ID_PARAMETER;
 
@@ -484,8 +486,8 @@ public final class Urls {
         return getLocalizedPageUrl(MODERATOR_LOGIN, MODERATOR_LOGIN) + "?" + TARGET + "=" + urlEncode(MODERATION_FI.replace(ID_PARAMETER, initiativeId.toString()));
     }
 
-    public String attachment(Long id) {
-        return baseUrl + ATTACHMENT.replace(ID_PARAMETER, id.toString());
+    public String attachment(Long id, String fileName) {
+        return baseUrl + ATTACHMENT.replace(ID_PARAMETER, id.toString()).replace(FILENAME_PARAMETER, fileName);
     }
 
     public String getAttachmentThumbnail(Long id) {

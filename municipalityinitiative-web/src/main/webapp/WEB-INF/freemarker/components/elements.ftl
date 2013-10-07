@@ -29,7 +29,7 @@
     <div class="view-block public">
         <h2>Kuvej</h2>
         <#list attachments as attachment>
-            <a href="${urls.attachment(attachment.attachmentId)}">
+            <a href="${urls.attachment(attachment.attachmentId, attachment.fileName)}">
                 <img src="<#if attachment.pdf>/img/pdficon_large.png<#else>${urls.getAttachmentThumbnail(attachment.attachmentId)}</#if>"/>
                 ${attachment.description}
             </a>
