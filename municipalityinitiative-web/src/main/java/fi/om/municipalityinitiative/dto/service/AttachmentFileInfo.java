@@ -77,6 +77,13 @@ public class AttachmentFileInfo {
     }
 
     public String getFileName() {
-        return description.replaceAll("[^a-zA-Z0-9]", "_") + "." + fileType;
+        return description
+                .replace('ä', 'a')
+                .replace("Ä", "A")
+                .replace("ö", "o")
+                .replace("Ö", "O")
+                .replace("å", "a")
+                .replace("Å", "A")
+                .replaceAll("[^a-zA-Z0-9]", "_") + "." + fileType;
     }
 }

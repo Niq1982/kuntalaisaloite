@@ -19,7 +19,7 @@ public final class Urls {
 
     public static final String INFO_PAGE_PARAMETER = "{infoPage}";
 
-    public static final String FILENAME_PARAMETER = "{fileName}";
+    public static final String FILENAME_PARAMETER = "{fileName:.*}";
 
     public static final String FRONT =        "/";
 
