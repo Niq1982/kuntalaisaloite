@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.dto.service;
 
+import com.google.common.net.MediaType;
 import org.joda.time.DateTime;
 
 public class AttachmentFileInfo {
@@ -72,7 +73,7 @@ public class AttachmentFileInfo {
     }
 
     public static boolean isPdfContentType(String contentType) {
-        return contentType.equals("application/pdf");
+        return contentType.equals(MediaType.PDF.toString());
     }
 
     public String getFileName() {
