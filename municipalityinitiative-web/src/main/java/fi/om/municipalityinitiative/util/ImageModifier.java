@@ -27,7 +27,6 @@ public class ImageModifier {
 
         Size size = new Size(info.getImageWidth(), info.getImageHeight(), maxWidth, maxHeight);
         ConvertCmd cmd = new ConvertCmd();
-        cmd.setSearchPath("/opt/ImageMagick/");
 
         IMOperation op = new IMOperation();
         op.addImage(tempFile.getAbsolutePath());
