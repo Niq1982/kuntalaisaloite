@@ -2,12 +2,14 @@ package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
+import fi.om.municipalityinitiative.exceptions.FileUploadException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.sql.QAttachment;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import org.aspectj.util.FileUtil;
+import org.im4java.core.InfoException;
 import org.junit.Test;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -54,29 +56,29 @@ public class AttachmentServiceIntegrationTest extends ServiceIntegrationTestBase
     }
 
     @Test(expected = AccessDeniedException.class)
-    public void saving_file_requires_management_rights() throws IOException {
+    public void saving_file_requires_management_rights() throws IOException, InfoException, FileUploadException, InvalidAttachmentException {
         attachmentService.addAttachment(initiativeId, TestHelper.unknownLoginUserHolder, multiPartFileMock("", ""), "");
     }
 
     @Test
-    public void saving_file_succeeds() throws IOException {
+    public void saving_file_succeeds() throws IOException, InfoException, FileUploadException, InvalidAttachmentException {
         precondition(attachmentService.findAllAttachments(initiativeId, TestHelper.authorLoginUserHolder), hasSize(0));
         attachmentService.addAttachment(initiativeId, TestHelper.authorLoginUserHolder, multiPartFileMock("anyfile.jpg", "image/jpeg"), "someDescription");
         assertThat(attachmentService.findAllAttachments(initiativeId, TestHelper.authorLoginUserHolder), hasSize(1));
     }
 
     @Test(expected = InvalidAttachmentException.class)
-    public void saving_file_fails_if_invalid_filename() throws IOException {
+    public void saving_file_fails_if_invalid_filename() throws IOException, InfoException, FileUploadException, InvalidAttachmentException {
         attachmentService.addAttachment(initiativeId, TestHelper.authorLoginUserHolder, multiPartFileMock("anyfile.gif", "image/jpeg"), "someDescription");
     }
 
     @Test(expected = InvalidAttachmentException.class)
-    public void saving_file_fails_if_invalid_content_type() throws IOException {
+    public void saving_file_fails_if_invalid_content_type() throws IOException, InfoException, FileUploadException, InvalidAttachmentException {
         attachmentService.addAttachment(initiativeId, TestHelper.authorLoginUserHolder, multiPartFileMock("anyfile.jpg", "application/pdf"), "someDescription");
     }
 
     @Test(expected = OperationNotAllowedException.class)
-    public void saving_file_is_disabllowed_if_at_published_state() throws IOException {
+    public void saving_file_is_disabllowed_if_at_published_state() throws IOException, InfoException, FileUploadException, InvalidAttachmentException {
         Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testHelper.createTestMunicipality("someMunicipality"))
                 .withState(InitiativeState.PUBLISHED)
                 .withFixState(FixState.OK)

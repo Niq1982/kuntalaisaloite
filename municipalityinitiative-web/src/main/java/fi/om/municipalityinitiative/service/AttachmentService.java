@@ -7,10 +7,14 @@ import fi.om.municipalityinitiative.dto.service.AttachmentFileInfo;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
+import fi.om.municipalityinitiative.exceptions.FileUploadException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.util.ImageModifier;
 import org.aspectj.util.FileUtil;
+import org.im4java.core.InfoException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,9 +35,9 @@ public class AttachmentService {
     public static final String[] FILE_TYPES = { "png", "jpg" };
     public static final String[] CONTENT_TYPES = { "image/png", "image/jpg", "image/jpeg" };
 
-    private long id = 0;
-
     private String attachmentDir;
+
+    private static final Logger log = LoggerFactory.getLogger(AttachmentService.class);
 
     @Resource
     private AttachmentDao attachmentDao;
@@ -51,8 +55,8 @@ public class AttachmentService {
     public AttachmentService() { // For spring AOP
     }
 
-    @Transactional(readOnly = false)
-    public void addAttachment(Long initiativeId, LoginUserHolder<User> loginUserHolder, MultipartFile file, String description) throws IOException {
+    @Transactional(readOnly = false, rollbackFor = Throwable.class)
+    public void addAttachment(Long initiativeId, LoginUserHolder<User> loginUserHolder, MultipartFile file, String description) throws FileUploadException, InvalidAttachmentException {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
         if (!ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowAddAttachments()) {
@@ -67,16 +71,14 @@ public class AttachmentService {
 
         Long attachmentId = attachmentDao.addAttachment(initiativeId, description, file.getContentType());
 
-        File realFile = new File(getFilePath(attachmentId));
-        try (FileOutputStream fileOutputStream = new FileOutputStream(realFile, false)) {
-            imageModifier.modify(file.getInputStream(), fileOutputStream, fileType, MAX_WIDTH, MAX_HEIGHT);
-            fileOutputStream.write(file.getBytes());
+        try {
+            imageModifier.modify(file.getInputStream(), getFilePath(attachmentId), fileType, MAX_WIDTH, MAX_HEIGHT);
+            imageModifier.modify(file.getInputStream(), getThumbnailPath(attachmentId), fileType, THUMBNAIL_MAX_WIDTH, THUMBNAIL_MAX_HEIGHT);
+        } catch (Throwable t) {
+            log.error("Error while uploading file: " + file.getOriginalFilename(), t);
+            throw new FileUploadException(t);
         }
-        File thumbnailFile = new File(getThumbnailPath(attachmentId));
-        try (FileOutputStream fileOutputStream = new FileOutputStream(thumbnailFile, false)) {
-            imageModifier.modify(file.getInputStream(), fileOutputStream, fileType, THUMBNAIL_MAX_WIDTH, THUMBNAIL_MAX_HEIGHT);
-            fileOutputStream.write(file.getBytes());
-        }
+
     }
 
     private String getFilePath(Long attachmentId) {
@@ -89,6 +91,7 @@ public class AttachmentService {
 
     @Transactional(readOnly = true)
     // TODO: Cache
+    // TODO: Handle if errors?
     public AttachmentFile getAttachment(Long attachmentId, LoginUserHolder loginUserHolder) throws IOException {
         AttachmentFileInfo attachmentInfo = attachmentDao.getAttachment(attachmentId);
         assertViewAllowance(loginUserHolder, attachmentInfo);
@@ -98,6 +101,7 @@ public class AttachmentService {
 
     @Transactional(readOnly = true)
     // TODO: Cache
+    // TODO: Return empty if errors
     public AttachmentFile getThumbnail(Long attachmentId, LoginUserHolder loginUserHolder) throws IOException {
         AttachmentFileInfo attachmentInfo = attachmentDao.getAttachment(attachmentId);
         assertViewAllowance(loginUserHolder, attachmentInfo);
@@ -120,7 +124,7 @@ public class AttachmentService {
 
 
 
-    private static void assertFileType(String givenFileType) {
+    private static void assertFileType(String givenFileType) throws InvalidAttachmentException {
         for (String fileType : FILE_TYPES) {
             if (fileType.equals(givenFileType))
                 return;
@@ -128,7 +132,7 @@ public class AttachmentService {
         throw new InvalidAttachmentException("Invalid fileName");
     }
 
-    private static String parseFileType(String fileName) {
+    private static String parseFileType(String fileName) throws InvalidAttachmentException {
         String[] split = fileName.split("\\.");
         if (split.length == 1) {
             throw new InvalidAttachmentException("Invalid filename");
@@ -137,7 +141,7 @@ public class AttachmentService {
         return split[split.length-1];
     }
 
-    private static void assertContentType(String contentType) {
+    private static void assertContentType(String contentType) throws InvalidAttachmentException {
         for (String type : CONTENT_TYPES) {
             if (type.equals(contentType))
                 return;

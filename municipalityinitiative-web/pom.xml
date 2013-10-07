@@ -71,7 +71,7 @@
         </repository>
         <repository>
             <id>sonatype</id>
-            <url>https://oss.sonatype.org/content/groups/public/</url>
+            <url>http://oss.sonatype.org/content/groups/public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -81,7 +81,7 @@
         </repository>
         <repository>
             <id>sonatype2</id>
-            <url>https://oss.sonatype.org/content/repositories/releases/</url>
+            <url>http://oss.sonatype.org/content/repositories/releases/</url>
             <releases>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
@@ -90,6 +90,10 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
+            <repository>
+                <id>cedarsoft-thirdparty</id>
+                <url>http://maven.cedarsoft.com/content/repositories/thirdparty/</url>
+            </repository>
         <!-- <repository> <id>dwr</id> <url>http://download.java.net/maven/2/</url> 
             <layout>default</layout> <releases><enabled>true</enabled></releases> <snapshots><enabled>true</enabled></snapshots> 
             </repository> -->
@@ -111,6 +115,12 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-library</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.im4java</groupId>
+            <artifactId>im4java</artifactId>
+            <version>1.2.0</version>
         </dependency>
 
         <!-- Misc -->

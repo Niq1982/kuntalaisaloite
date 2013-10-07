@@ -1,5 +1,7 @@
 package fi.om.municipalityinitiative.util;
 
+import org.im4java.core.IM4JavaException;
+import org.im4java.core.InfoException;
 import org.junit.Test;
 
 import java.io.FileInputStream;
@@ -14,19 +16,15 @@ public class ImageModifierTest {
     private static final int MAX_WIDTH = 1000;
     private static final int MAX_HEIGHT = 500;
 
-    public static void main(String[] params) throws IOException {
-        FileInputStream inputStream = new FileInputStream("/Users/paulika/Desktop/jees.png");
-
-        try (FileOutputStream outputStream = new FileOutputStream("/Users/paulika/Desktop/aa.png")) {
-            new ImageModifier().modify(inputStream, outputStream, "png", MAX_WIDTH, MAX_HEIGHT);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        finally {
-            inputStream.close();
-        }
+    public static void main(String[] params) throws IOException, IM4JavaException, InterruptedException {
+        FileInputStream inputStream = new FileInputStream("/Users/paulika/Desktop/aloite.png");
+        new ImageModifier().modify(inputStream, "/Users/paulika/Desktop/aa.png", "png", MAX_WIDTH, MAX_HEIGHT);
     }
 
+//    @Test
+//    public void jee() throws IOException {
+//        main(new String[0]);
+//    }
 
     @Test
     public void resizes_by_50_prosent_if_over_width() {

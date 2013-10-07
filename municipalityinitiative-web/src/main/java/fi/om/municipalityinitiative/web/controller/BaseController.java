@@ -103,7 +103,7 @@ public class BaseController {
 
 
 
-    protected String redirectWithMessage(String targetUri, RequestMessage requestMessage, HttpServletRequest request) {
+    protected static String redirectWithMessage(String targetUri, RequestMessage requestMessage, HttpServletRequest request) {
         addRequestMessage(requestMessage, null, request);
         return contextRelativeRedirect(targetUri);
     }
