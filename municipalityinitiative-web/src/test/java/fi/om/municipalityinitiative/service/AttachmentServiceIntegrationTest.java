@@ -18,15 +18,20 @@ import java.io.File;
 import java.io.IOException;
 
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.stub;
 
 public class AttachmentServiceIntegrationTest extends ServiceIntegrationTestBase {
 
     public static final String JPG = "jpg";
+    public static final String DESCRIPTION = "asd";
+    public static final String FILE_NAME = DESCRIPTION + "." + JPG;
+
     @Resource
     TestHelper testHelper;
 
@@ -91,39 +96,53 @@ public class AttachmentServiceIntegrationTest extends ServiceIntegrationTestBase
 
     @Test(expected = AccessDeniedException.class)
     public void get_unaccepted_attachment_is_forbidden_if_unknown() throws IOException {
-        Long attachmentId = testHelper.addAttachment(initiativeId, "asd", false, JPG);
-        attachmentService.getAttachment(attachmentId, TestHelper.unknownLoginUserHolder);
+        Long attachmentId = testHelper.addAttachment(initiativeId, DESCRIPTION, false, JPG);
+        attachmentService.getAttachment(attachmentId, FILE_NAME, TestHelper.unknownLoginUserHolder);
     }
 
     @Test
     public void get_unaccepted_attachment_is_allowed_if_author_or_om() throws IOException {
-        Long attachmentId = testHelper.addAttachment(initiativeId, "asd", false, JPG);
+        Long attachmentId = testHelper.addAttachment(initiativeId, DESCRIPTION, false, JPG);
 
         createDummyTempAttachmentFile(attachmentId);
 
-        attachmentService.getAttachment(attachmentId, TestHelper.omLoginUser);
-        attachmentService.getAttachment(attachmentId, TestHelper.authorLoginUserHolder);
+        attachmentService.getAttachment(attachmentId, FILE_NAME, TestHelper.omLoginUser);
+        attachmentService.getAttachment(attachmentId, FILE_NAME, TestHelper.authorLoginUserHolder);
+    }
+
+    @Test
+    public void get_attachment_with_invalid_filename_throws_access_denied_exception() throws IOException {
+        Long attachmentId = testHelper.addAttachment(initiativeId, DESCRIPTION, true, JPG);
+
+        createDummyTempAttachmentFile(attachmentId);
+        attachmentService.getAttachment(attachmentId, FILE_NAME, TestHelper.omLoginUser);
+        try {
+            attachmentService.getAttachment(attachmentId, FILE_NAME + "ASD", TestHelper.unknownLoginUserHolder);
+            fail("Should have failed due invalid attachment filename");
+        } catch (AccessDeniedException e) {
+            assertThat(e.getMessage(), containsString("Invalid filename"));
+        }
     }
 
     @Test
     public void get_accepted_attachment_is_allowed() throws IOException {
-        Long attachmentId = testHelper.addAttachment(initiativeId, "asd", true, JPG);
+        Long attachmentId = testHelper.addAttachment(initiativeId, DESCRIPTION, true, JPG);
 
         createDummyTempAttachmentFile(attachmentId);
-        attachmentService.getAttachment(attachmentId, TestHelper.omLoginUser);
-        attachmentService.getAttachment(attachmentId, TestHelper.authorLoginUserHolder);
-        attachmentService.getAttachment(attachmentId, TestHelper.unknownLoginUserHolder);
+        attachmentService.getAttachment(attachmentId, FILE_NAME, TestHelper.omLoginUser);
+        attachmentService.getAttachment(attachmentId, FILE_NAME, TestHelper.authorLoginUserHolder);
+        attachmentService.getAttachment(attachmentId, FILE_NAME, TestHelper.unknownLoginUserHolder);
     }
 
     @Test(expected = AccessDeniedException.class)
     public void get_unaccepted_thumbnail_is_forbidden_if_unknown() throws IOException {
-        Long attachmentId = testHelper.addAttachment(initiativeId, "asd", false, JPG);
+        Long attachmentId = testHelper.addAttachment(initiativeId, DESCRIPTION, false, JPG);
         attachmentService.getThumbnail(attachmentId, TestHelper.unknownLoginUserHolder);
     }
 
     @Test
     public void get_unaccepted_thumbnail_is_allowed_if_author_or_om() throws IOException {
-        Long attachmentId = testHelper.addAttachment(initiativeId, "asd", false, JPG);
+        Long attachmentId = testHelper.addAttachment(initiativeId, DESCRIPTION, false, JPG);
 
         createDummyTempAttachmentFile(attachmentId);
 
@@ -133,7 +152,7 @@ public class AttachmentServiceIntegrationTest extends ServiceIntegrationTestBase
 
     @Test
     public void get_accepted_thumbnail_is_allowed() throws IOException {
-        Long attachmentId = testHelper.addAttachment(initiativeId, "asd", true, JPG);
+        Long attachmentId = testHelper.addAttachment(initiativeId, DESCRIPTION, true, JPG);
 
         createDummyTempAttachmentFile(attachmentId);
         attachmentService.getThumbnail(attachmentId, TestHelper.omLoginUser);
@@ -143,7 +162,7 @@ public class AttachmentServiceIntegrationTest extends ServiceIntegrationTestBase
 
     @Test(expected = AccessDeniedException.class)
     public void delete_attachment_requires_management_rights() {
-        Long attachmentId = testHelper.addAttachment(initiativeId, "asd", true, JPG);
+        Long attachmentId = testHelper.addAttachment(initiativeId, DESCRIPTION, true, JPG);
         attachmentService.deleteAttachment(attachmentId, TestHelper.unknownLoginUserHolder);
     }
 
@@ -157,8 +176,8 @@ public class AttachmentServiceIntegrationTest extends ServiceIntegrationTestBase
     }
 
     private void createDummyTempAttachmentFile(Long attachmentId) {
-        FileUtil.writeAsString(new File(attachmentService.getAttachmentDir() + attachmentId + "." + JPG), "asd"); // Just some dummy file which this test will find
-        FileUtil.writeAsString(new File(attachmentService.getAttachmentDir() + attachmentId + "_thumbnail." + JPG), "asd"); // Just some dummy file which this test will find
+        FileUtil.writeAsString(new File(attachmentService.getAttachmentDir() + attachmentId + "." + JPG), DESCRIPTION); // Just some dummy file which this test will find
+        FileUtil.writeAsString(new File(attachmentService.getAttachmentDir() + attachmentId + "_thumbnail." + JPG), DESCRIPTION); // Just some dummy file which this test will find
     }
 
     private static MultipartFile multiPartFileMock(String fileName, String contentType) throws IOException {

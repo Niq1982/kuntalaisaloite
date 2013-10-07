@@ -97,8 +97,13 @@ public class AttachmentService {
     @Transactional(readOnly = true)
     // TODO: Cache
     // TODO: Handle if errors?
-    public AttachmentFile getAttachment(Long attachmentId, LoginUserHolder loginUserHolder) throws IOException {
+    public AttachmentFile getAttachment(Long attachmentId, String fileName, LoginUserHolder loginUserHolder) throws IOException {
         AttachmentFileInfo attachmentInfo = attachmentDao.getAttachment(attachmentId);
+
+        if (!attachmentInfo.getFileName().equals(fileName)) {
+            throw new AccessDeniedException("Invalid filename for attachment " + attachmentId + " - " + fileName);
+        }
+
         assertViewAllowance(loginUserHolder, attachmentInfo);
         byte[] attachmentBytes = getFileBytes(getFilePath(attachmentId, attachmentInfo.getFileType()));
         return new AttachmentFile(attachmentInfo, attachmentBytes);

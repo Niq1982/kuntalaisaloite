@@ -361,7 +361,7 @@ public class PublicInitiativeController extends BaseController {
     public void getImage(@PathVariable Long id,
                          @PathVariable String fileName,
                          HttpServletRequest request, HttpServletResponse response) throws IOException {
-        attachmentFileResponse(response, attachmentService.getAttachment(id, userService.getLoginUserHolder(request)));
+        attachmentFileResponse(response, attachmentService.getAttachment(id, fileName, userService.getLoginUserHolder(request)));
     }
 
     @RequestMapping(value = Urls.ATTACHMENT_THUMBNAIL)
