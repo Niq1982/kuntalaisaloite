@@ -15,7 +15,7 @@ public class AttachmentFileInfoTest {
 
         attachmentFileInfo.setDescription("tässä joku 787% hassu");
 
-        assertThat(attachmentFileInfo.getFileName(), is("t_ss__joku_787__hassu.jpg"));
+        assertThat(attachmentFileInfo.getFileName(), is("tassa_joku_787__hassu.jpg"));
     }
 
 }
