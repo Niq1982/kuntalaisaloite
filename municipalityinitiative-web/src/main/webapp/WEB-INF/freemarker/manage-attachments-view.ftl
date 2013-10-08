@@ -31,13 +31,31 @@
 	    <#if managementSettings.allowAddAttachments>
 	        
 	        <h2>Lisää liitteitä</h2>
-	        <form id="form-upload-image" enctype="multipart/form-data" action="${urls.addAttachment(initiative.id)}" method="POST">
-	            <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-	            <input type="hidden" name="locale" value="{locale.toLanguageTag()}"/>
-	            <input type="file" name="image">
-	            <label>Anna liitteelle selkeä ja kuvaava otsiko: <input type="text" name="description" maxlenth="${InitiativeConstants.ATTACHMENT_DESCRIPTION_MAX}"/></label>
-	            <input type="submit" value="Tallenna tiedosto"/>
-	        </form>
+			<div class="initiative-content-row cf">
+		        <form id="form-upload-image" enctype="multipart/form-data" action="${urls.addAttachment(initiative.id)}" method="POST">
+		            <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+		            <input type="hidden" name="locale" value="{locale.toLanguageTag()}"/>
+		            
+		            <div class="input-block-content no-top-margin">
+		            	<input type="file" name="image">
+		            </div>
+		            
+		            <div class="input-block-content"> 
+					    <label for="name" class="input-header">
+					            Anna liitteelle selkeä ja kuvaava otsikko
+					    </label>
+	
+				    	<input type="text" name="description" class="large" maxlength="${InitiativeConstants.ATTACHMENT_DESCRIPTION_MAX}"/>
+				    </div>
+		            
+		            <div class="input-block-content no-top-margin">
+		            	<#--<input type="submit" value="Tallenna tiedosto"/>-->
+		            	
+		            	<button type="submit" class="small-button" ><span class="small-icon save-and-send">Tallenna tiedosto</span></button>
+	            	</div>
+		        </form>
+	        </div>
+	        
 	    </#if>
     
     	<@e.attachmentsView attachments true />

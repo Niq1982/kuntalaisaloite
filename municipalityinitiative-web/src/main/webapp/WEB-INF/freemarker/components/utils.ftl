@@ -297,20 +297,18 @@
  *
  * First chapter of the initiative proposal. Summary length is defined in SummaryMethod.java
  * 
- * @param locale 'fi'
+ * @param inputText string to be shortened
  * @param type 'text' or 'html'
  -->
-<#macro shortenText localizedMap type="text">
-<#-- FIXME: Does not work in municipality initiative ATM.
+<#macro shortenText inputText type="text">
 <@compress single_line=true>
-    <#assign inputText>${summaryMethod(localizedMap[locale]!"")}</#assign>
+    <#assign shortenedText>${summaryMethod(inputText!"")}</#assign>
     <#if type == "html">
-        <#noescape>${inputText?replace('\n','<br/>')}</#noescape>
+        <#noescape>${shortenedText?replace('\n','<br/>')}</#noescape>
     <#else>
-        <#noescape>${inputText}</#noescape>
+        <#noescape>${shortenedText}</#noescape>
     </#if>
 </@compress>
--->
 </#macro>
 
 <#--

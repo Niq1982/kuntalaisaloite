@@ -418,11 +418,11 @@ public class InitiativeManagementController extends BaseController {
         try {
             attachmentService.addAttachment(initiativeId, userService.getLoginUserHolder(request), file, description);
         } catch (FileUploadException e) {
-            return redirectWithMessage(Urls.get(locale).management(initiativeId), RequestMessage.ATTACHMENT_FAILURE, request);
+            return redirectWithMessage(Urls.get(locale).manageAttachments(initiativeId), RequestMessage.ATTACHMENT_FAILURE, request);
         } catch (InvalidAttachmentException e) {
-            return redirectWithMessage(Urls.get(locale).management(initiativeId), RequestMessage.ATTACHMENT_INVALID, request);
+            return redirectWithMessage(Urls.get(locale).manageAttachments(initiativeId), RequestMessage.ATTACHMENT_INVALID, request);
         }
-        return redirectWithMessage(Urls.get(locale).management(initiativeId), RequestMessage.ATTACHMENT_ADDED, request);
+        return redirectWithMessage(Urls.get(locale).manageAttachments(initiativeId), RequestMessage.ATTACHMENT_ADDED, request);
     }
     @RequestMapping(value = DELETE_ATTACHMENT, method = POST)
     public String deleteAttachment(@PathVariable("id") Long attachmentId,
@@ -432,7 +432,7 @@ public class InitiativeManagementController extends BaseController {
         Locale locale = Locale.forLanguageTag(localeString);
 
         Long initiativeId = attachmentService.deleteAttachment(attachmentId, userService.getLoginUserHolder(request));
-        return redirectWithMessage(Urls.get(locale).management(initiativeId), RequestMessage.ATTACHMENT_DELETED, request);
+        return redirectWithMessage(Urls.get(locale).manageAttachments(initiativeId), RequestMessage.ATTACHMENT_DELETED, request);
     }
 
     
