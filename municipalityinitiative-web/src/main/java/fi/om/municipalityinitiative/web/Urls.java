@@ -361,7 +361,7 @@ public final class Urls {
     }
     
     public String manageAttachments(Long initiativeId) {
-        return getManageAuthors(initiativeId);
+        return getManageAttachments(initiativeId);
     }
 
     public String confirmParticipant(Long participantId, String confirmCode) {

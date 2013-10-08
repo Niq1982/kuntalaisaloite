@@ -17,7 +17,9 @@
         <@u.text initiative.proposal!"" />
     </div>
     
-    <@e.attachmentsView attachments />
+    <#if attachments??>
+    	<@e.attachmentsView attachments false />
+    </#if>
 
     <#if (initiative.extraInfo)?has_content>
         <h2><@u.message "initiative.extraInfo.title" /></h2>
@@ -27,26 +29,109 @@
     </#if>
 </#macro>
 
-<#macro attachmentsView attachments>
+<#-- 
+ * initiativeViewManage
+ * 
+ * Generates initiative's public view block
+ *
+ * @param initiative is initiative
+-->
+<#macro initiativeViewManage initiative>
+    <h2><@u.message "initiative.proposal.title" /></h2>
+
+    <div class="initiative-content-row ${((initiative.extraInfo)?has_content)?string("","last")}">
+        <@u.text initiative.proposal!"" />
+    </div>
+
+   	<#if managementSettings.allowAddAttachments>
+    	<@e.attachmentsView attachments false />
+    
+    	<div class="initiative-content-row">
+    		<a href="${urls.manageAttachments(initiative.id)}" class="small-button"><span class="small-icon add">Lisää kuvia tai liitetiedostoja</span></a>
+		</div>
+    </#if>
+
+    <#if (initiative.extraInfo)?has_content>
+        <h2><@u.message "initiative.extraInfo.title" /></h2>
+        <div class="initiative-content-row last">
+            <@u.text initiative.extraInfo!"" />
+        </div>
+    </#if>
+</#macro>
+
+<#macro attachmentsView attachments manage=false>
 	<#if attachments?size gt 0>
     	<h3>Liitteet</h3>
    	
-	    <#list attachments as attachment>
-	        <a href="${urls.attachment(attachment.attachmentId, attachment.fileName)}">
-	            <img src="<#if attachment.pdf>/img/pdficon_large.png<#else>${urls.getAttachmentThumbnail(attachment.attachmentId)}</#if>"/>
-	            ${attachment.description}
-	        </a>
-	        <#if managementSettings?? && user.hasRightToInitiative(initiative.id) && managementSettings.allowAddAttachments>
-	            <form action="${urls.deleteAttachment(attachment.attachmentId)}" method="POST">
-	                <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-	                <input type="hidden" name="locale" value="{locale.toLanguageTag()}"/>
-	                <input type="submit" value="X"/>
-	            </form>
-	        </#if>
-	        <br/>
-	    </#list>
+   		<div class="initiative-content-row cf"> 
+		    <#list attachments as attachment>
+		    	<#if !attachment.pdf>
+		    		
+			    	<#--<div class="column col-1of5 ${((attachment_index + 1) % 5 == 0)?string("last","")}">-->
+			    	<div class="column col-1of5">
+				        <a href="${urls.attachment(attachment.attachmentId, attachment.fileName)}" class="thumbnail">
+				            <img src="${urls.getAttachmentThumbnail(attachment.attachmentId)}"/>
+				            <span class="img-label">${attachment.description}</span>
+			            </a>
+				            
+				            <#if manage && managementSettings?? && user.hasRightToInitiative(initiative.id) && managementSettings.allowAddAttachments>
+			                    <a  href="?deleteAttachment=${attachment.attachmentId}" class="js-delete-attachment trigger-tooltip"
+			                        data-id="${attachment.attachmentId}"
+			                        data-name="${attachment.description}" title="Poista kuva"><span class="icon-small icon-16 cancel"></span></a></span>
+							        </a>
+					        </#if>
+				        
+				        <#--<#if manage && managementSettings?? && user.hasRightToInitiative(initiative.id) && managementSettings.allowAddAttachments>
+				            <form action="${urls.deleteAttachment(attachment.attachmentId)}" method="POST">
+				                <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+				                <input type="hidden" name="locale" value="{locale.toLanguageTag()}"/>
+				                <input type="submit" value="X"/>
+				            </form>
+				        </#if>-->
+			        </div>
+		            <#--<#if ((attachment_index + 1) % 5 == 0) || !attachment_has_next><br class="clear" /></#if>-->
+		            
+	            </#if>
+		    </#list>
+	    </div>
+	    
+	    <div class="initiative-content-row"> 
+		    <#list attachments as attachment>
+		    	<#if attachment.pdf>
+
+		    		<#if attachment_index == 0><ul class="no-style"></#if>
+		    		
+				        <li><a href="${urls.attachment(attachment.attachmentId, attachment.fileName)}" class="pdf-attachment">
+				            <img src="/img/pdficon_large.png"/>
+				            <span class="pdf-label">${attachment.description}</span>
+				            </a>
+				            
+				            <#if manage && managementSettings?? && user.hasRightToInitiative(initiative.id) && managementSettings.allowAddAttachments>
+			                    <a  href="?deleteAttachment=${attachment.attachmentId}" class="js-delete-attachment trigger-tooltip"
+			                        data-id="${attachment.attachmentId}"
+			                        data-name="${attachment.description}" title="Poista liitetiedosto"><span class="icon-small icon-16 cancel"></span></a></span>
+							        </a>
+					        </#if>
+				        
+				        
+				        <#--<#if manage && managementSettings?? && user.hasRightToInitiative(initiative.id) && managementSettings.allowAddAttachments>
+				            <form action="${urls.deleteAttachment(attachment.attachmentId)}" method="POST">
+				                <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+				                <input type="hidden" name="locale" value="{locale.toLanguageTag()}"/>
+				                <input type="submit" value="X"/>
+				            </form>
+				        </#if>-->
+				        
+				        </li>
+			        
+			        <#if !attachment_has_next></ul></#if>
+			        
+	            </#if>
+		    </#list>
+	    </div>
     </#if>
 </#macro>
+
 
 <#macro thumbnailUrl attachment>
     <#if attachment.pdf>

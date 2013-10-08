@@ -16,28 +16,33 @@
 -->
 
 <@l.main page="page.manageAttachments">
+
+	<@u.returnPrevious managementURL "link.to.managementView" />
     
     <div class="msg-block">
         <div class="system-msg msg-info">
             <h2>Hallitse liitteitä</h2>
-            <p>Ohjetekstiä...</p>
+            <p>Voit lisätä aloitteelle jpg-, png- ja pdf-muotoisia liitetiedostoja aloitteelle. Liitetiedostoja eoi voi enää lisätä tai poistaa aloitteen julkaisun jälkeen.</p>
+            <p>Jpg- ja png-kuvien maksimikoko on 1000x1000 pikseliä, ja pdf-tiedoston maksimikoko on X.0 MB</p>
         </div>
     </div>
     
-    <@u.returnPrevious managementURL "link.to.managementView" />
-
-    <#if managementSettings.allowAddAttachments>
-        <div class="view-block cf">
-        <h2>Lisää liitteitä</h2>
-        <form id="form-upload-image" enctype="multipart/form-data" action="${urls.addAttachment(initiative.id)}" method="POST">
-            <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-            <input type="hidden" name="locale" value="{locale.toLanguageTag()}"/>
-            <input type="file" name="image">
-            <label>Anna liitteelle selkeä ja kuvaava otsiko: <input type="text" name="description" maxlenth="${InitiativeConstants.ATTACHMENT_DESCRIPTION_MAX}"/></label>
-            <input type="submit" value="Tallenna tiedosto"/>
-        </form>
-        </div>
-    </#if>
+    <div class="view-block cf">
+	    <#if managementSettings.allowAddAttachments>
+	        
+	        <h2>Lisää liitteitä</h2>
+	        <form id="form-upload-image" enctype="multipart/form-data" action="${urls.addAttachment(initiative.id)}" method="POST">
+	            <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+	            <input type="hidden" name="locale" value="{locale.toLanguageTag()}"/>
+	            <input type="file" name="image">
+	            <label>Anna liitteelle selkeä ja kuvaava otsiko: <input type="text" name="description" maxlenth="${InitiativeConstants.ATTACHMENT_DESCRIPTION_MAX}"/></label>
+	            <input type="submit" value="Tallenna tiedosto"/>
+	        </form>
+	    </#if>
+    
+    	<@e.attachmentsView attachments true />
+    
+    </div>
     
     <@u.returnPrevious managementURL "link.to.managementView" />
     
