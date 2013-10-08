@@ -16,6 +16,8 @@
     <div class="initiative-content-row ${((initiative.extraInfo)?has_content)?string("","last")}">
         <@u.text initiative.proposal!"" />
     </div>
+    
+    <@e.attachmentsView attachments />
 
     <#if (initiative.extraInfo)?has_content>
         <h2><@u.message "initiative.extraInfo.title" /></h2>
@@ -26,23 +28,24 @@
 </#macro>
 
 <#macro attachmentsView attachments>
-    <div class="view-block public">
-        <h2>Kuvej</h2>
-        <#list attachments as attachment>
-            <a href="${urls.attachment(attachment.attachmentId, attachment.fileName)}">
-                <img src="<#if attachment.pdf>/img/pdficon_large.png<#else>${urls.getAttachmentThumbnail(attachment.attachmentId)}</#if>"/>
-                ${attachment.description}
-            </a>
-            <#if managementSettings?? && user.hasRightToInitiative(initiative.id) && managementSettings.allowAddAttachments>
-                <form action="${urls.deleteAttachment(attachment.attachmentId)}" method="POST">
-                    <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-                    <input type="hidden" name="locale" value="{locale.toLanguageTag()}"/>
-                    <input type="submit" value="X"/>
-                </form>
-            </#if>
-            <br/>
-        </#list>
-    </div>
+	<#if attachments?size gt 0>
+    	<h3>Liitteet</h3>
+   	
+	    <#list attachments as attachment>
+	        <a href="${urls.attachment(attachment.attachmentId, attachment.fileName)}">
+	            <img src="<#if attachment.pdf>/img/pdficon_large.png<#else>${urls.getAttachmentThumbnail(attachment.attachmentId)}</#if>"/>
+	            ${attachment.description}
+	        </a>
+	        <#if managementSettings?? && user.hasRightToInitiative(initiative.id) && managementSettings.allowAddAttachments>
+	            <form action="${urls.deleteAttachment(attachment.attachmentId)}" method="POST">
+	                <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+	                <input type="hidden" name="locale" value="{locale.toLanguageTag()}"/>
+	                <input type="submit" value="X"/>
+	            </form>
+	        </#if>
+	        <br/>
+	    </#list>
+    </#if>
 </#macro>
 
 <#macro thumbnailUrl attachment>
