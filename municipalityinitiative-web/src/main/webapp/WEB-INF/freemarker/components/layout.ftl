@@ -93,7 +93,7 @@
  * @param pageTitle for example initiative's title. Used in HTML title.
  * @param requestMessagesON can be assigned to show request messages in main macro (default is true)
  -->
-<#macro main page pageTitle="" requestMessagesON=true>
+<#macro main page pageTitle="" requestMessagesON=true canonical=currentUri>
 
 <#-- Main navigation navigation items for HTML title, navigation and breadcrumb -->
 <#assign naviItems = [
@@ -149,7 +149,7 @@
         document.documentElement.className = document.documentElement.className.replace(/(\s|^)no-js(\s|$)/, '$1js$2');
     </script>
     
-    <link rel="canonical" href="${currentUri}" />
+    <link rel="canonical" href="${canonical}" />
     
     <#-- Get initiative's proposal's abstract if exists, otherwise show default description -->
     <#if initiative??>

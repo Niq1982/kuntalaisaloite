@@ -10,8 +10,10 @@
  * 
  * page = "page.initiative.public" or "page.initiative.unnamed"
  * pageTitle = initiative.name if exists, otherwise empty string
+ * canonical = optional URL otherwise currentUri is used
 -->
-<@l.main "page.initiative.participants" initiative.name!"">
+
+<@l.main page="page.initiative.participants" pageTitle=initiative.name!"" canonical=urls.view(initiative.id)>
 
     <#if hasManagementRightForInitiative>
         <@u.returnPrevious urls.management(initiative.id) "link.to.managementView" />
