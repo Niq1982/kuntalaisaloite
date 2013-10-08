@@ -240,6 +240,10 @@ public final class Urls {
     public static final String MANAGE_AUTHORS_FI = "/fi/vastuuhenkilot" + "/" + ID_PARAMETER;
 
     public static final String MANAGE_AUTHORS_SV = "/sv/ansvarpersoner" + "/" + ID_PARAMETER;
+    
+    public static final String MANAGE_ATTACHMENTS_FI = "/fi/liitteet" + "/" + ID_PARAMETER;
+
+    public static final String MANAGE_ATTACHMENTS_SV = "/sv/bilagor" + "/" + ID_PARAMETER;
 
     public static final String INVITATION_FI = "/fi/kutsu" + "/" + ID_PARAMETER;
 
@@ -355,6 +359,10 @@ public final class Urls {
     public String manageAuthors(Long initiativeId) {
         return getManageAuthors(initiativeId);
     }
+    
+    public String manageAttachments(Long initiativeId) {
+        return getManageAttachments(initiativeId);
+    }
 
     public String confirmParticipant(Long participantId, String confirmCode) {
         return getLocalizedPageUrl(PARTICIPATING_CONFIRMATION_FI, PARTICIPATING_CONFIRMATION_SV).replace(ID_PARAMETER, participantId.toString())
@@ -403,6 +411,10 @@ public final class Urls {
 
     public String getManageAuthors(Long id) {
         return getLocalizedPageUrl(MANAGE_AUTHORS_FI, MANAGE_AUTHORS_SV).replace(ID_PARAMETER, id.toString());
+    }
+    
+    public String getManageAttachments(Long id) {
+        return getLocalizedPageUrl(MANAGE_ATTACHMENTS_FI, MANAGE_ATTACHMENTS_SV).replace(ID_PARAMETER, id.toString());
     }
 
     public String vetumaLogin() {
