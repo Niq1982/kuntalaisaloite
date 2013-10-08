@@ -100,6 +100,32 @@ public class InitiativeManagementController extends BaseController {
                 new CommentUIDto()
         ).view(model, Urls.get(locale).alt().getManagement(initiativeId));
     }
+    
+    @RequestMapping(value={ MANAGE_ATTACHMENTS_FI, MANAGE_ATTACHMENTS_SV }, method=GET)
+    public String manageAttachmentsView(@PathVariable("id") Long initiativeId,
+                                 Model model, Locale locale, HttpServletRequest request) {
+
+        LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
+        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
+
+        InitiativeViewInfo initiativeInfo = initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder);
+
+        if (initiativeInfo.isSent()) {
+            return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.ALREADY_SENT, request);
+        }
+
+        if (initiativeInfo.hasNeverBeenSaved()) {
+            return contextRelativeRedirect(Urls.get(locale).edit(initiativeId));
+        }
+
+        return ViewGenerator.manageAttachmentsView(initiativeInfo,
+                publicInitiativeService.getManagementSettings(initiativeId),
+                authorService.findAuthors(initiativeId, loginUserHolder),
+                attachmentService.findAllAttachments(initiativeId, loginUserHolder),
+                initiativeInfo.getParticipantCount(),
+                new CommentUIDto()
+        ).view(model, Urls.get(locale).alt().getManagement(initiativeId));
+    }
 
     @RequestMapping(value={ EDIT_FI, EDIT_SV }, method=GET)
     public String editView(@PathVariable("id") Long initiativeId,
