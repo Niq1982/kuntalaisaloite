@@ -43,9 +43,9 @@
         <@u.text initiative.proposal!"" />
     </div>
 
-   	<#if managementSettings.allowAddAttachments>
-    	<@e.attachmentsView attachments false />
+	<@e.attachmentsView attachments false />
     
+    <#if managementSettings.allowAddAttachments>
     	<div class="initiative-content-row">
     		<a href="${urls.manageAttachments(initiative.id)}" class="small-button"><span class="small-icon add">Lisää kuvia tai liitetiedostoja</span></a>
 		</div>
@@ -61,9 +61,10 @@
 
 <#macro attachmentsView attachments manage=false>
 	<#if attachments?size gt 0>
+		<div class="initiative-content-row cf"> 
     	<h3>Liitteet</h3>
    	
-   		<div class="initiative-content-row cf"> 
+   		
 		    <#list attachments as attachment>
 		    	<#if !attachment.pdf>
 		    		
