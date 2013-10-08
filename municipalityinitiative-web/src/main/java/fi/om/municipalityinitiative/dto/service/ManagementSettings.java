@@ -66,7 +66,7 @@ public class ManagementSettings {
     }
 
     public boolean isAllowAddAttachments() {
-        return initiative.getState() == InitiativeState.DRAFT || initiative.getFixState() == FixState.FIX;
+        return initiative.getState() == InitiativeState.DRAFT;
     }
 
 
