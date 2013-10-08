@@ -14,6 +14,7 @@ import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.service.ui.InitiativeManagementService;
 import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
 import fi.om.municipalityinitiative.web.RequestMessage;
+import fi.om.municipalityinitiative.web.SecurityFilter;
 import fi.om.municipalityinitiative.web.Urls;
 import org.im4java.core.InfoException;
 import org.springframework.stereotype.Controller;
@@ -382,7 +383,9 @@ public class InitiativeManagementController extends BaseController {
                                 @RequestParam("description") String description,
                                 DefaultMultipartHttpServletRequest request) throws IOException, InfoException {
 
-        // TODO: CSRF-check
+        // CSRF Must be validated here because SecurityFilter is not able to handle MultipartHttpServletRequest.
+        SecurityFilter.verifyAndGetCurrentCSRFToken(request);
+
         // TODO: Validate description length
 
         Locale locale = Locale.forLanguageTag(localeString);

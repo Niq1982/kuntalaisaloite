@@ -137,10 +137,8 @@ public class SecurityFilter implements Filter {
     }
 
 
-    private String verifyAndGetCurrentCSRFToken(HttpServletRequest request) {
+    public static String verifyAndGetCurrentCSRFToken(HttpServletRequest request) {
         Cookie cookie = WebUtils.getCookie(request, CSRF_TOKEN_NAME);
-
-        Map parameterMap = request.getParameterMap();
 
         if (cookie == null) {
             throw new CSRFException("CSRF cookie missing");
@@ -166,7 +164,7 @@ public class SecurityFilter implements Filter {
         return sessionToken;
     }
 
-    private @NotNull HttpSession getExistingSession(HttpServletRequest request) {
+    private static HttpSession getExistingSession(HttpServletRequest request) {
         HttpSession session = getOptionalSession(request);
         if (session == null) {
             throw new CookiesRequiredException();
@@ -176,12 +174,8 @@ public class SecurityFilter implements Filter {
     }
 
     private @Nullable
-    HttpSession getOptionalSession(HttpServletRequest request) {
-        return getRequest().getSession(true);
-    }
-
-    private HttpServletRequest getRequest() {
-        return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+    static HttpSession getOptionalSession(HttpServletRequest request) {
+        return request.getSession(true);
     }
 
     private void csrfException(Exception e, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
