@@ -210,14 +210,14 @@ public final class Urls {
     public static final String VIEW_FI = "/fi/aloite" + "/" + ID_PARAMETER;
 
     public static final String VIEW_SV = "/sv/initiativ" + "/" + ID_PARAMETER;
-    
-    public static final String PARITICIPANT_LIST_FI = VIEW_FI + "/osallistujat";
 
-    public static final String PARITICIPANT_LIST_SV = VIEW_SV + "/deltagare";
-    
-    public static final String PARITICIPANT_LIST_MANAGE_FI = VIEW_FI + "/osallistujahallinta";
+    public static final String PARITICIPANT_LIST_FI = "/fi/osallistujat/" + ID_PARAMETER;
 
-    public static final String PARITICIPANT_LIST_MANAGE_SV = VIEW_SV + "/deltagarhantering";
+    public static final String PARITICIPANT_LIST_SV = "/sv/deltagare/" + ID_PARAMETER;
+
+    public static final String PARITICIPANT_LIST_MANAGE_FI = "/fi/osallistujahallinta/" + ID_PARAMETER;
+
+    public static final String PARITICIPANT_LIST_MANAGE_SV = "/sv/deltagarhantering/" + ID_PARAMETER;
 
     public static final String MANAGEMENT_FI = "/fi/yllapito" + "/" + ID_PARAMETER;
 
