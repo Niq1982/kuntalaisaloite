@@ -32,7 +32,7 @@ public class FileImageFinderTest {
 
         List<FileImageFinder.FileJson> images = imageFinder.getImages();
 
-        assertThat(images.size(), is(4));
+        assertThat(images.size(), is(6));
 
         for (FileImageFinder.FileJson s : images) {
             assertThat(FileImageFinder.isAcceptableFile(s.getFile()), is(true));
