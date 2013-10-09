@@ -1,38 +1,24 @@
 package fi.om.municipalityinitiative.service.email;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Splitter;
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.mysema.commons.lang.Assert;
 import fi.om.municipalityinitiative.conf.EnvironmentSettings;
 import fi.om.municipalityinitiative.dao.EmailDao;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Participant;
-import fi.om.municipalityinitiative.pdf.ParticipantToPdfExporter;
 import fi.om.municipalityinitiative.util.EmailAttachmentType;
 import fi.om.municipalityinitiative.util.Maybe;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.mail.MailSendException;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
-import javax.activation.DataSource;
 import javax.annotation.Resource;
-import javax.mail.Address;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.util.ByteArrayDataSource;
-
-import java.io.*;
-import java.text.MessageFormat;
-import java.util.Collections;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 
@@ -127,6 +113,14 @@ public class EmailMessageConstructor {
                     environmentSettings.getDefaultReplyTo(),
                     attachmentInitiative.isPresent() ? EmailAttachmentType.PARTICIPANTS : EmailAttachmentType.NONE
                     );
+
+            // Uncomment this if you want to print all email-html files for preview etc and run EmailTests.
+//            try {
+//                String content = processTemplate(templateName + "-html", dataMap);
+//                new FileOutputStream(subject.replace("/", "")+".html").write(content.getBytes());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
 
         }
     }

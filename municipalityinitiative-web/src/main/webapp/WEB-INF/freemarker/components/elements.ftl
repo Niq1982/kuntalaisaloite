@@ -18,7 +18,7 @@
     </div>
     
     <#if attachments??>
-    	<@e.attachmentsView attachments false />
+    	<@e.attachmentsView attachments />
     </#if>
 
     <#if (initiative.extraInfo)?has_content>
@@ -43,7 +43,7 @@
         <@u.text initiative.proposal!"" />
     </div>
 
-	<@e.attachmentsView attachments false />
+	<@e.attachmentsView attachments />
     
     <#if managementSettings.allowAddAttachments>
     	<div class="initiative-content-row">
@@ -61,26 +61,26 @@
 
 <#macro attachmentsView attachments manage=false>
 	<#if attachments?size gt 0>
-		<div class="initiative-content-row cf"> 
+		<div class="initiative-content-row thumbnail-list cf"> 
     	<h3>Liitteet</h3>
    	
    		
-		    <#list attachments as attachment>
-		    	<#if !attachment.pdf>
-		    		
-			    	<#--<div class="column col-1of5 ${((attachment_index + 1) % 5 == 0)?string("last","")}">-->
-			    	<div class="column col-1of5">
-				        <a href="${urls.attachment(attachment.attachmentId, attachment.fileName)}" class="thumbnail">
-				            <img src="${urls.getAttachmentThumbnail(attachment.attachmentId)}"/>
-				            <span class="img-label">${attachment.description}</span>
-			            </a>
-				            
+		    <#list attachments.images as attachment>
+
+			    	<div class="column col-1of5 ${((attachment_index + 1) % 5 == 0)?string("last","")}">
+			    		<span class="thumbnail">
+					        <a href="${urls.attachment(attachment.attachmentId, attachment.fileName)}" title="${attachment.description}">
+					            <img src="${urls.getAttachmentThumbnail(attachment.attachmentId)}" alt="${attachment.description}" />    
+				            </a>
+			            </span>
+			            <span class="img-label">${attachment.description}
 				            <#if manage && managementSettings?? && user.hasRightToInitiative(initiative.id) && managementSettings.allowAddAttachments>
-			                    <a  href="?deleteAttachment=${attachment.attachmentId}" class="js-delete-attachment trigger-tooltip"
+			                    <a  href="?deleteAttachment=${attachment.attachmentId}" class="js-delete-attachment delete-attachment trigger-tooltip"
 			                        data-id="${attachment.attachmentId}"
 			                        data-name="${attachment.description}" title="Poista kuva"><span class="icon-small icon-16 cancel"></span></a></span>
 							        </a>
 					        </#if>
+				        </span>
 				        
 				        <#--<#if manage && managementSettings?? && user.hasRightToInitiative(initiative.id) && managementSettings.allowAddAttachments>
 				            <form action="${urls.deleteAttachment(attachment.attachmentId)}" method="POST">
@@ -90,21 +90,20 @@
 				            </form>
 				        </#if>-->
 			        </div>
-		            <#--<#if ((attachment_index + 1) % 5 == 0) || !attachment_has_next><br class="clear" /></#if>-->
-		            
-	            </#if>
+		            <#if ((attachment_index + 1) % 5 == 0) || !attachment_has_next><br class="clear" /></#if>
+
 		    </#list>
 	    </div>
 	    
 	    <div class="initiative-content-row"> 
-		    <#list attachments as attachment>
-		    	<#if attachment.pdf>
+		    <#list attachments.pdfs as attachment>
 
 		    		<#if attachment_index == 0><ul class="no-style"></#if>
 		    		
-				        <li><a href="${urls.attachment(attachment.attachmentId, attachment.fileName)}" class="pdf-attachment">
-				            <img src="/img/pdficon_large.png"/>
-				            <span class="pdf-label">${attachment.description}</span>
+				        <li class="pdf-attachment">
+				        	<a href="${urls.attachment(attachment.attachmentId, attachment.fileName)}">
+					            <img src="/img/pdficon_large.png"/>
+					            <span class="pdf-label">${attachment.description}</span>
 				            </a>
 				            
 				            <#if manage && managementSettings?? && user.hasRightToInitiative(initiative.id) && managementSettings.allowAddAttachments>
@@ -124,10 +123,8 @@
 				        </#if>-->
 				        
 				        </li>
-			        
+
 			        <#if !attachment_has_next></ul></#if>
-			        
-	            </#if>
 		    </#list>
 	    </div>
     </#if>

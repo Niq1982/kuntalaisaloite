@@ -16,17 +16,17 @@ import javax.annotation.Resource;
 @ContextConfiguration(classes={IntegrationTestFakeEmailConfiguration.class})
 public abstract class MailSendingEmailServiceTestBase {
 
-    public static final String INITIATIVE_NAME = "Some name whatever";
-    public static final String INITIATIVE_PROPOSAL = "Some proposal whatever";
-    public static final String INITIATIVE_MUNICIPALITY = "Some municipality";
-    public static final String AUTHOR_PHONE = "Phone number";
+    public static final String INITIATIVE_NAME = "Koiria paljon helsinkiin";
+    public static final String INITIATIVE_PROPOSAL = "Niita olisi saatava nyt joka paikkaan";
+    public static final String INITIATIVE_MUNICIPALITY = "Helsinki";
+    public static final String AUTHOR_PHONE = "04040404";
     public static final String AUTHOR_EMAIL = "sender.email@example.com";
-    public static final String AUTHOR_NAME = "Sender Name";
-    public static final String AUTHOR_ADDRESS = "Sender address";
+    public static final String AUTHOR_NAME = "Pakkeli Kakkeli";
+    public static final String AUTHOR_ADDRESS = "Joku katu 4C3";
     public static final String MUNICIPALITY_EMAIL = INITIATIVE_MUNICIPALITY.replace(" ","_")+"@example.com"; // @see TestHelper.createTestMunicipality
-    public static final String EXTRA_INFO = "Some state comment";
-    public static final String MODERATOR_COMMENT = "Some moderator comment";
-    public static final String SENT_COMMENT = "Some sent comment";
+    public static final String EXTRA_INFO = "www.lisatiedot.comt";
+    public static final String MODERATOR_COMMENT = "Ruma on aloite";
+    public static final String SENT_COMMENT = "Terveisia kunnalle";
 
     @Resource
     protected EmailService emailService;

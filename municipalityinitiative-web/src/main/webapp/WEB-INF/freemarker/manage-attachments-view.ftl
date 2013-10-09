@@ -35,31 +35,33 @@
 			<div class="initiative-content-row cf">
 		        <form id="form-upload-image" enctype="multipart/form-data" action="${urls.addAttachment(initiative.id)}" method="POST">
 		            <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-		            <input type="hidden" name="locale" value="{locale.toLanguageTag()}"/>
+		            <input type="hidden" name="locale" value="${locale}"/>
 		            
 		            <div class="input-block-content no-top-margin">
-		            	<input type="file" name="image">
+		            	<input type="file" name="image" chars="40" />
 		            </div>
 		            
 		            <div class="input-block-content"> 
 					    <label for="name" class="input-header">
-				        	Anna liitteelle selkeä ja kuvaava otsikko. Liitteen otsikko tulee näkyviin aloitteen sivulle.
+				        	Anna liitteelle selkeä ja kuvaava otsikko
+				        	<span class="instruction-text">Liitteen otsikko tulee näkyviin aloitteen sivulle</span>
 					    </label>
 	
 				    	<input type="text" name="description" class="large" maxlength="${InitiativeConstants.ATTACHMENT_DESCRIPTION_MAX}"/>
 				    </div>
 		            
 		            <div class="input-block-content no-top-margin">
-		            	<#--<input type="submit" value="Tallenna tiedosto"/>-->
-		            	
 		            	<button type="submit" class="small-button" ><span class="small-icon save-and-send">Tallenna tiedosto</span></button>
 	            	</div>
 		        </form>
 	        </div>
-	        
 	    </#if>
     
-    	<@e.attachmentsView attachments true />
+    	<@e.attachmentsView attachments=attachments manage=true />
+    	
+    	<div class="initiative-content-row cf last">
+        	<a href="${managementURL}" class="small-button" >Valmis</a>
+        </div>
     
     </div>
     

@@ -51,8 +51,8 @@ public class AttachmentServiceIntegrationTest extends ServiceIntegrationTestBase
     @Test
     public void find_all_attachments_is_ok_with_om_or_management_rights() {
         testHelper.addAttachment(initiativeId, "ok", false, JPG);
-        assertThat(attachmentService.findAllAttachments(initiativeId, TestHelper.authorLoginUserHolder), hasSize(1));
-        assertThat(attachmentService.findAllAttachments(initiativeId, TestHelper.omLoginUser), hasSize(1));
+        assertThat(attachmentService.findAllAttachments(initiativeId, TestHelper.authorLoginUserHolder).getAll(), hasSize(1));
+        assertThat(attachmentService.findAllAttachments(initiativeId, TestHelper.omLoginUser).getAll(), hasSize(1));
     }
 
     @Test(expected = AccessDeniedException.class)
@@ -68,9 +68,9 @@ public class AttachmentServiceIntegrationTest extends ServiceIntegrationTestBase
 
     @Test
     public void saving_file_succeeds() throws IOException, InfoException, FileUploadException, InvalidAttachmentException {
-        precondition(attachmentService.findAllAttachments(initiativeId, TestHelper.authorLoginUserHolder), hasSize(0));
+        precondition(attachmentService.findAllAttachments(initiativeId, TestHelper.authorLoginUserHolder).getAll(), hasSize(0));
         attachmentService.addAttachment(initiativeId, TestHelper.authorLoginUserHolder, multiPartFileMock("anyfile.jpg", "image/jpeg"), "someDescription");
-        assertThat(attachmentService.findAllAttachments(initiativeId, TestHelper.authorLoginUserHolder), hasSize(1));
+        assertThat(attachmentService.findAllAttachments(initiativeId, TestHelper.authorLoginUserHolder).getAll(), hasSize(1));
     }
 
     @Test(expected = InvalidAttachmentException.class)

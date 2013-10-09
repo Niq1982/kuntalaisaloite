@@ -387,7 +387,7 @@
       <script type="text/javascript" src="${urls.baseUrl}/js/jquery.dirtyforms.min.js?version=${resourcesVersion}"></script>
       <script type="text/javascript" src="${urls.baseUrl}/js/jsrender.min.js?version=${resourcesVersion}"></script>
       <script type="text/javascript" src="${urls.baseUrl}/js/chosen.jquery.min.js?version=${resourcesVersion}"></script>
-      <script type="text/javascript" src="${urls.baseUrl}/js/jquery.scrollTo.min.js?version=${resourcesVersion}"></script>
+      <script type="text/javascript" src="${urls.baseUrl}/js/jquery.magnific-popup.min.js?version=${resourcesVersion}"></script>
       <script type="text/javascript" src="${urls.baseUrl}/js/kuntalaisaloite.js?version=${resourcesVersion}"></script>
     </#if>
 

@@ -1,14 +1,56 @@
 .thumbnail {
-
-}
-.pdf-attachment {
-	li { margin-bottom:1em; }
+	display:table;
+	line-height: 0;
 	
-	img {
-		vertical-align:bottom;
+	a {
+		display: table-cell;
+		margin-bottom: 0.5em;
+		height: 110px;
+		width: 165px;
+		background: #f1f1f1;
+		text-align: center;
+		vertical-align: middle;
+		
+		.transition(background, 0.2s, linear);
+		
+		&:hover {
+			background: #e2e2e2;
+		}
 	}
 }
 
 .img-label {
-	display:block;
+	display: block;
+	margin-top: 0.5em;
+	margin-bottom: 1em;
+	font-size: 0.9em;
+	
+	position: relative;
+	padding-right:20px;
+	
+	.delete-attachment {
+		position: absolute;
+		top: 0;
+		right: 0;
+	}
+}
+
+.pdf-attachment {
+	margin-bottom: 1em;
+	
+	img {
+		vertical-align: bottom;
+	}
+	.pdf-label {
+		margin:0 0.5em;
+	}
+}
+
+// Magnific popup overrides
+.mfp-title {
+	padding-right: 70px;
+}
+.mfp-counter {
+	width: 70px;
+	text-align:right;
 }
