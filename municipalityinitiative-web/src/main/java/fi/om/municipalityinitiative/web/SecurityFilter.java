@@ -7,8 +7,6 @@ import fi.om.municipalityinitiative.exceptions.CookiesRequiredException;
 import fi.om.municipalityinitiative.exceptions.VerifiedLoginRequiredException;
 import fi.om.municipalityinitiative.service.EncryptionService;
 import fi.om.municipalityinitiative.util.UrlHelper;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.NestedServletException;
 import org.springframework.web.util.WebUtils;
 
@@ -19,10 +17,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.validation.constraints.NotNull;
 
 import java.io.IOException;
-import java.util.Map;
 
 public class SecurityFilter implements Filter {
 
@@ -114,11 +110,14 @@ public class SecurityFilter implements Filter {
                 request.setAttribute(COOKIE_ERROR, true);
             }
         }
-        else if (IS_POST(request) && !Urls.isVetumaURI(request.getRequestURI())) {
-            csrfToken = verifyAndGetCurrentCSRFToken(request);
-        }
         else {
-            return;
+            String uri = request.getRequestURI();
+            if (IS_POST(request) && !isSkipCsrfURI(uri)) {
+                csrfToken = verifyAndGetCurrentCSRFToken(request);
+            }
+            else {
+                return;
+            }
         }
 
         request.setAttribute(CSRF_TOKEN_NAME, csrfToken);
@@ -155,13 +154,32 @@ public class SecurityFilter implements Filter {
         }
 
         // Double Submit Cookie
-        if (IS_POST(request) && !Urls.isVetumaURI(request.getRequestURI())) { // Do not check CSRF when returning from vetuma, it's impossible and unnecessary
+        if (IS_POST(request)) {
             String requestToken = request.getParameter(CSRF_TOKEN_NAME);
             if (requestToken == null || !requestToken.equals(sessionToken)) {
                 throw new CSRFException("CSRFToken -request parameter missing or doesn't match session");
             }
         }
         return sessionToken;
+    }
+
+    private static final String[] skipCsrfURIs = new String[] {
+            Urls.VETUMA_FI,
+            Urls.VETUMA_SV,
+            Urls.MANAGE_ATTACHMENTS_FI,
+            Urls.MANAGE_ATTACHMENTS_SV
+    };
+
+    private static boolean isSkipCsrfURI(String requestURI) {
+
+        for (String skipCsrfURI : skipCsrfURIs) {
+            if (requestURI.startsWith(skipCsrfURI)) {
+                System.out.println("Skipping crsf-check for uri: " + requestURI);
+                return true;
+            }
+        }
+        System.out.println("CSRF CHECK");
+        return false;
     }
 
     private static HttpSession getExistingSession(HttpServletRequest request) {

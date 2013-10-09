@@ -33,7 +33,7 @@
 	        <h2>Lisää liitteitä</h2>
 			<div class="initiative-content-row cf">
 			    <@u.errorsSummary path="attachment.*" prefix="attachment."/>
-		        <form id="form-upload-image" enctype="multipart/form-data" action="${urls.addAttachment(initiative.id)}" method="POST">
+		        <form id="form-upload-image" enctype="multipart/form-data" action="${urls.manageAttachments(initiative.id)}" method="POST">
 		            <@f.securityFilters/>
                     <@spring.bind "attachment" />
 		            <input type="hidden" name="locale" value="${locale}"/>
@@ -48,8 +48,8 @@
 		            
 		            <div class="input-block-content no-top-margin">
 		            	<#--<input type="submit" value="Tallenna tiedosto"/>-->
-		            	
-		            	<button type="submit" class="small-button" ><span class="small-icon save-and-send">Tallenna tiedosto</span></button>
+
+		            	<button type="submit" name="${UrlConstants.ACTION_ADD_ATTACHMENT}" class="small-button" ><span class="small-icon save-and-send">Tallenna tiedosto</span></button>
 	            	</div>
 		        </form>
 	        </div>
