@@ -19,6 +19,7 @@ import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
 import org.springframework.core.env.Environment;
+import com.google.common.net.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -574,6 +575,7 @@ public class TestHelper {
     public static class AuthorDraft {
 
         public Long initiativeId;
+
         public final Maybe<InitiativeDraft> initiativeDraftMaybe;
         public Long participantMunicipality;
         public Membership municipalityMembership = Membership.none;
@@ -583,7 +585,6 @@ public class TestHelper {
         public String authorAddress = DEFAULT_AUTHOR_ADDRESS;
         public String authorPhone = DEFAULT_AUTHOR_PHONE;
         public Maybe<String> userSsn = Maybe.absent();
-
         public AuthorDraft(Long initiativeId, Long participantMunicipality) {
             this.initiativeId = initiativeId;
             this.initiativeDraftMaybe = Maybe.absent();
@@ -610,11 +611,11 @@ public class TestHelper {
             return this;
         }
 
-
         public AuthorDraft withAuthorAddress(String authorAddress) {
             this.authorAddress = authorAddress;
             return this;
         }
+
 
         public AuthorDraft withAuthorPhone(String authorPhone) {
             this.authorPhone = authorPhone;
@@ -639,29 +640,29 @@ public class TestHelper {
             initiativeId = lastInitiativeId;
             return this;
         }
-    }
 
+    }
     public static class InitiativeDraft {
 
         public final Long municipalityId;
 
         public String name = DEFAULT_INITIATIVE_NAME;
+
         public String proposal = DEFAULT_PROPOSAL;
         public String extraInfo = DEFAULT_EXTRA_INFO;
         public String sentComment = DEFAULT_SENT_COMMENT;
         public InitiativeState state = DEFAULT_STATE;
         public InitiativeType type = DEFAULT_TYPE;
-
         public DateTime sent = DEFAULT_SENT_TIME;
+
         public DateTime modified = DEFAULT_CREATE_TIME;
         public DateTime stateTime = DEFAULT_STATE_TIME;
-
         public Integer participantCount = 0;
+
         public Maybe<AuthorDraft> authorDraft = Maybe.absent();
         public FixState fixState = FixState.OK;
         public String moderatorComment;
         public Integer externalParticipantCount = DEFAULT_EXTERNAL_PARTICIPANT_COUNT;
-
         public AuthorDraft applyAuthor() {
             this.authorDraft = Maybe.of(new AuthorDraft(this, municipalityId));
             return this.authorDraft.get();
@@ -742,8 +743,8 @@ public class TestHelper {
             this.stateTime = stateTime;
             return this;
         }
-    }
 
+    }
     public Long getLastInitiativeId() {
         return lastInitiativeId;
     }
@@ -788,13 +789,36 @@ public class TestHelper {
 
     @Transactional(readOnly = false)
     public Long addAttachment(Long initiativeId, String description, boolean accepted, String fileType) {
-        return queryFactory.insert(QAttachment.attachment)
+        return addAttachment(initiativeId, description, accepted, fileType, null);
+    }
+
+    @Transactional(readOnly = false)
+    public Long addAttachment(Long initiativeId, String description, boolean accepted, String fileType, Long forcedAttachmentId) {
+        String contentType;
+
+        switch (fileType) {
+            case "jpg":
+                contentType = MediaType.JPEG.type();
+                break;
+            case "pdf":
+                contentType = MediaType.PDF.type();
+                break;
+            default:
+                throw new IllegalArgumentException("no test-implementatino for filetype: " + fileType);
+        }
+
+        SQLInsertClause insert = queryFactory.insert(QAttachment.attachment)
                 .set(QAttachment.attachment.initiativeId, initiativeId)
                 .set(QAttachment.attachment.description, description)
-                .set(QAttachment.attachment.contentType, "any")
+                .set(QAttachment.attachment.contentType, contentType)
                 .set(QAttachment.attachment.fileType, fileType)
-                .set(QAttachment.attachment.accepted, accepted)
-                .executeWithKey(QAttachment.attachment.id);
+                .set(QAttachment.attachment.accepted, accepted);
+
+        if (forcedAttachmentId != null) {
+            insert.set(QAttachment.attachment.id, forcedAttachmentId);
+        }
+
+        return insert.executeWithKey(QAttachment.attachment.id);
     }
 
     public String getPreviousTestManagementHash() {

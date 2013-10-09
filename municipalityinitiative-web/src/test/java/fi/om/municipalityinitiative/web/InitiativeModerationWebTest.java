@@ -4,6 +4,9 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 
 import static fi.om.municipalityinitiative.web.MessageSourceKeys.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.core.IsNot.not;
 
 public class InitiativeModerationWebTest extends WebTestBase {
 
@@ -70,42 +73,42 @@ public class InitiativeModerationWebTest extends WebTestBase {
         assertTotalEmailsInQueue(1);
 
     }
-    
+
     @Test
     public void return_published_initiative_to_fix_and_send_it_to_review_and_accept_it(){
         Long initiativeId = testHelper.createCollaborativeAccepted(HELSINKI_ID);
 
         loginAsOmUser();
         open(urls.moderation(initiativeId));
-        
+
         clickLinkContaining("Palauta aloite");
         inputTextByCSS("#commentReject",COMMENT);
         getElemContaining("Palauta aloite", "button").click();
-        
+
         assertTextContainedByClass("msg-success","Aloite palautettu korjattavaksi");
         assertTotalEmailsInQueue(1);
 
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
-        
+
         clickLinkContaining("Lähetä aloite tarkastettavaksi");
         getElemContaining("Lähetä aloite tarkastettavaksi", "button").click();
-        
+
         assertTextContainedByClass("msg-success","Aloite lähetetty tarkastettavaksi");
         assertTotalEmailsInQueue(3);
 
         logout();
         loginAsOmUser();
         open(urls.moderation(initiativeId));
-        
+
         clickLinkContaining("Hyväksy aloite");
         inputTextByCSS("#commentAccept",COMMENT);
         getElemContaining("Hyväksy aloite", "button").click();
-        
+
         assertTextContainedByClass("msg-success","Aloite on hyväksytty");
         assertTotalEmailsInQueue(4);
     }
-    
-    
+
+
     @Test
     public void resend_management_hash(){
         Long initiativeId = testHelper.createCollaborativeReview(HELSINKI_ID);
@@ -121,4 +124,33 @@ public class InitiativeModerationWebTest extends WebTestBase {
         assertTotalEmailsInQueue(1);
 
     }
+
+    @Test
+    public void moderadion_page_lists_attachments() {
+        String imageDescription = "jpg-attachment name";
+        String imageFileName = "jpg_attachment_name"; // Parsed from imageDescription
+        long imageAttachmentId = -1L;
+
+        String pdfDescription = "pdf-attachment name";
+        String pdfFileName = "pdf_attachment_name";
+        long pdfAttachmentId = -2L;
+
+        Long initiativeId = testHelper.createCollaborativeReview(HELSINKI_ID);
+        testHelper.addAttachment(initiativeId, imageDescription, false, "jpg", imageAttachmentId); // src/test/resources/-1.jpg
+        testHelper.addAttachment(initiativeId, pdfDescription, false, "pdf", pdfAttachmentId); // does not matter because will not be loaded, it's just a link resource.
+
+        loginAsOmUser();
+
+        open(urls.moderation(initiativeId));
+
+        assertThat(driver.getPageSource(), containsString(urls.getAttachmentThumbnail(imageAttachmentId)));
+        assertThat(driver.getPageSource(), containsString(urls.attachment(imageAttachmentId, imageFileName)));
+
+
+//        assertThat(driver.getPageSource(), not(containsString(urls.getAttachmentThumbnail(pdfAttachmentId))));
+//        assertThat(driver.getPageSource(), containsString(urls.getBaseUrl()+"/img/pdficon_large.png"));
+//        assertThat(driver.getPageSource(), containsString(urls.attachment(pdfAttachmentId, pdfFileName)));
+    }
+
+
 }
