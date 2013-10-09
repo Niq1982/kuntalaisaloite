@@ -509,7 +509,7 @@ public final class Urls {
     }
 
     public String addAttachment(Long initiativeId) {
-        return getLocalizedPageUrl(MANAGE_ATTACHMENTS_FI, MANAGE_ATTACHMENTS_SV).replace(ID_PARAMETER, initiativeId.toString());
+        return getLocalizedPageUrl(MANAGE_ATTACHMENTS_FI+ID_PARAMETER, MANAGE_ATTACHMENTS_SV+ID_PARAMETER).replace(ID_PARAMETER, initiativeId.toString());
 
     }
 
