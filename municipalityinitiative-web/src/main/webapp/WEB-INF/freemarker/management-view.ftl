@@ -35,8 +35,6 @@
         <@e.initiativeViewManage initiative />
     </div>
 
-
-    
     <div class="view-block cf">
         <h2><@u.message key="initiative.people.title" args=[participantCount.total] /></h2>
         

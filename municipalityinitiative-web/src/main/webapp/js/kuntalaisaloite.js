@@ -31,6 +31,23 @@ localization = {
 		} else {
 			return "Toimintoa ei voitu suorittaa. Ole hyvä ja yritä uudelleen muutaman minuutin kuluttua.";
 		}
+	},
+	magnificPopup:function(locale){
+	  if (locale === 'sv'){
+	    return {
+        prev: 'SV: Edellinen (Vasen nuoli näppäin)', // title for left button
+        next: 'SV: Seuraava (Oikea nuoli näppäin)', // title for right button
+        image: 'Bild',
+        loadError: 'SV: Kuvaa ei voitu ladata.'
+      }; 
+    } else {
+      return {
+        prev: 'Edellinen (Vasen nuoli näppäin)', // title for left button
+        next: 'Seuraava (Oikea nuoli näppäin)', // title for right button
+        image: 'Kuva',
+        loadError: 'Kuvaa ei voitu ladata.'
+      };
+    }
 	}
 };
 
@@ -1260,6 +1277,21 @@ $('.municipality-filter').change( function() {
 			console.log(e);
 		}
 	});
+	
+	//Delete author
+  $('.js-delete-attachment').click(function(e){
+    e.preventDefault();
+    
+    $('.js-delete-attachment.active').removeClass('active');
+    $(this).addClass('active');
+    
+    try {
+      generateModal(modalData.deleteAttachment(), 'full', deleteAttachment.getAttachment);
+      return false;
+    } catch(e) {
+      console.log(e);
+    }
+  });
 
 	
 /**
@@ -1461,6 +1493,34 @@ var deleteAuthor = (function() {
 }());
 
 /**
+* Delete attachment
+* ================
+*/
+var deleteAttachment = (function() {
+  return {
+    getAttachment: function(){
+      var attachment =        $('.js-delete-attachment.active'),
+          form =              $('#delete-attachment-form'),
+          selAttachment =     $('#selected-attachment'),
+          attachmentInput =   $('#authorId'),
+          typeImage =         attachment.data('type') === 'image' ? true : false,
+          attachmentDetails = '';
+      
+      if (typeImage) {
+        attachmentDetails = '<p>' + attachment.data("name") + '</p><img src="' + attachment.data("src") + '" alt="' + attachment.data("name") + '" />';
+      } else {
+        attachmentDetails = '<p class="pdf-attachment"><img src="/img/pdficon_large.png"/> <span class="pdf-label">' + attachment.data("name") + '</span></p>';
+      }
+
+      selAttachment.html(attachmentDetails);
+      
+      attachmentInput.val(attachment.data("id"));
+    }
+  };
+
+}());
+
+/**
 * Renew author management hash
 * ============================
 */
@@ -1594,5 +1654,37 @@ if (window.hasIFrame){
 	
 }());
 }
+
+/**
+* Image popup
+* ===========
+* 
+*/
+(function() {
+  
+  $('.thumbnail-list').magnificPopup({
+    delegate: '.thumbnail a', // child items selector, by clicking on it popup will open
+    type: 'image',
+    gallery: {
+      enabled: true, // set to true to enable gallery
+
+      preload: [1,2], // will load 2 next items and 1 that is before current
+
+      navigateByImgClick: true,
+
+      arrowMarkup: '<a title="%title%" type="button" class="mfp-arrow mfp-arrow-%dir%"></a>', // markup of an arrow button
+
+      tPrev: localization.magnificPopup(locale).prev, // title for left button
+      tNext: localization.magnificPopup(locale).next, // title for right button
+      tCounter: '<span class="mfp-counter">' + localization.magnificPopup(locale).image + ': %curr% / %total%</span>' // markup of counter
+    },
+    image: {
+      tError: localization.magnificPopup(locale).loadError
+    },
+    prelodaer: true
+    // other options
+  });
+
+}());
 
 });
