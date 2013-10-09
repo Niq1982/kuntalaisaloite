@@ -156,7 +156,7 @@
     
     <#list attachments.pdfs as attachment>
         <#if attachment.attachmentId?string == id>
-            <p class="pdf-attachment"><@u.icon type="pdf" /> <span class="pdf-label">${attachment.description}</span></p>            
+            <p class="pdf-attachment"><@u.fileIcon type="pdf" /> <span class="pdf-label">${attachment.description}</span></p>            
         </#if>
     </#list>
 </#macro>

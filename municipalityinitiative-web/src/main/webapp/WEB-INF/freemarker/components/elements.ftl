@@ -103,7 +103,7 @@
 	    		
 			        <li class="pdf-attachment">
 			        	<a href="${urls.attachment(attachment.attachmentId, attachment.fileName)}" target="_blank">
-				            <@u.icon type="pdf" />
+				            <@u.fileIcon type="pdf" />
 				            <span class="pdf-label">${attachment.description}</span>
 			            </a>
 			            
