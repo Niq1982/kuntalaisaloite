@@ -37,23 +37,14 @@
 		            <@f.securityFilters/>
                     <@spring.bind "attachment" />
 		            <input type="hidden" name="locale" value="${locale}"/>
-
-
-
-		            <div class="input-block-content no-top-margin">
-		            	<input type="file" name="image">
-		            </div>
 		            
 		            <div class="input-block-content">
-		             <#--
-					    <label for="name" class="input-header">
-					            Anna liitteelle selkeä ja kuvaava otsikko
-					    </label>
-	
-				    	<input type="text" name="description" class="large" maxlength="${InitiativeConstants.ATTACHMENT_DESCRIPTION_MAX}"/>
-				    	-->
 				    	<@f.textField path="attachment.description" required="" optional=false maxLength="${InitiativeConstants.ATTACHMENT_DESCRIPTION_MAX}" />
 				    </div>
+
+                    <div class="input-block-content no-top-margin">
+                        <@f.uploadField path="attachment.image" />
+                    </div>
 		            
 		            <div class="input-block-content no-top-margin">
 		            	<#--<input type="submit" value="Tallenna tiedosto"/>-->
