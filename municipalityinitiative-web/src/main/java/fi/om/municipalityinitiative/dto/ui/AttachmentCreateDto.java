@@ -4,7 +4,6 @@ import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Size;
 
 public class AttachmentCreateDto {
@@ -13,7 +12,7 @@ public class AttachmentCreateDto {
     private String locale;
 
     @NotEmpty
-    @Max(InitiativeConstants.ATTACHMENT_DESCRIPTION_MAX)
+    @Size(max = InitiativeConstants.ATTACHMENT_DESCRIPTION_MAX)
     private String description;
 
     public MultipartFile getImage() {

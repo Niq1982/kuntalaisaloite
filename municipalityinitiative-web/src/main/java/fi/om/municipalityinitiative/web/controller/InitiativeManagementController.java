@@ -120,8 +120,8 @@ public class InitiativeManagementController extends BaseController {
         return ViewGenerator.manageAttachmentsView(initiativeInfo,
                 publicInitiativeService.getManagementSettings(initiativeId),
                 attachmentService.findAllAttachments(initiativeId, loginUserHolder),
-                new AttachmentCreateDto()
-        ).view(model, Urls.get(locale).alt().getManagement(initiativeId));
+                new AttachmentCreateDto(),
+                AttachmentService.ImageProperties.get()).view(model, Urls.get(locale).alt().getManagement(initiativeId));
     }
 
     @RequestMapping(value={ EDIT_FI, EDIT_SV }, method=GET)
@@ -419,8 +419,11 @@ public class InitiativeManagementController extends BaseController {
             return ViewGenerator.manageAttachmentsView(
                     initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder),
                     publicInitiativeService.getManagementSettings(initiativeId),
-                    attachmentService.findAttachments(initiativeId, loginUserHolder), attachmentCreateDto)
+                    attachmentService.findAttachments(initiativeId, loginUserHolder),
+                    attachmentCreateDto,
+                    AttachmentService.ImageProperties.get())
                     .view(model, Urls.get(locale).alt().manageAttachments(initiativeId));
+
         }
 
         try {
