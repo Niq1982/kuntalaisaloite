@@ -21,16 +21,17 @@
     
     <div class="msg-block">
         <div class="system-msg msg-info">
-            <h2>Hallitse liitteitä</h2>
-            <p>Voit lisätä aloitteelle jpg-, png- ja pdf-muotoisia liitetiedostoja aloitteelle. Liitetiedostoja eoi voi enää lisätä tai poistaa aloitteen julkaisun jälkeen.</p>
-            <p>Jpg- ja png-kuvien maksimikoko on 1000x1000 pikseliä, ja pdf-tiedoston maksimikoko on X.0 MB</p>
+            <h2>Ylläpidä liitteitä</h2>
+			<p>Voit liitää aloitteeseen jpg- ja png-kuvia sekä pdf-tiedostoja. Liitteitä ei voi enää lisätä tai poistaa aloitteen tarkastuksen ja julkaisun jälkeen. Liitteet näkyvät lisäysjärjestyksessä ja pdf-tiedostot ovat omassa listassaan kuvien alla.</p>
+			<p>Liitettävien tiedostojen maksimikoko on 2 MB. Jpg- ja png-kuvien maksimimitta on 1000 x 1000 pikseliä, ja tätä suuremmat kuvat pienennetään automaattisesti.</p>
+			<p>Ota huomioon, että sinulla tai jollain aloitteen vastuuhenkilöistä tulee olla käyttöoikeus liitettäviin kuviin ja tiedostoihin.<br/><a href="#">Lue lisää</a></p>
         </div>
     </div>
     
     <div class="view-block cf">
 	    <#if managementSettings.allowAddAttachments>
 	        
-	        <h2>Lisää liitteitä</h2>
+	        <h2>Liitä tiedostoja</h2>
 			<div class="initiative-content-row cf">
 		        <form id="form-upload-image" enctype="multipart/form-data" action="${urls.addAttachment(initiative.id)}" method="POST">
 		            <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
@@ -42,7 +43,7 @@
 		            
 		            <div class="input-block-content"> 
 					    <label for="name" class="input-header">
-					            Anna liitteelle selkeä ja kuvaava otsikko
+				        	Anna liitteelle selkeä ja kuvaava otsikko. Liitteen otsikko tulee näkyviin aloitteen sivulle.
 					    </label>
 	
 				    	<input type="text" name="description" class="large" maxlength="${InitiativeConstants.ATTACHMENT_DESCRIPTION_MAX}"/>

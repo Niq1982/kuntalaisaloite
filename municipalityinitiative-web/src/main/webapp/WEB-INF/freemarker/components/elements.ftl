@@ -47,7 +47,7 @@
     
     <#if managementSettings.allowAddAttachments>
     	<div class="initiative-content-row">
-    		<a href="${urls.manageAttachments(initiative.id)}" class="small-button"><span class="small-icon add">Lisää kuvia tai liitetiedostoja</span></a>
+    		<a href="${urls.manageAttachments(initiative.id)}" class="small-button"><span class="small-icon add">Liitä kuvia tai tiedostoja</span></a>
 		</div>
     </#if>
 
