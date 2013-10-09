@@ -47,7 +47,7 @@
     
     <#if managementSettings.allowAddAttachments>
     	<div class="initiative-content-row">
-    		<a href="${urls.manageAttachments(initiative.id)}" class="small-button"><span class="small-icon add">Liitä kuvia tai tiedostoja</span></a>
+    		<a href="${urls.manageAttachments(initiative.id)}" class="small-button"><span class="small-icon add"><@u.message "attachment.add.btn" /></span></a>
 		</div>
     </#if>
 
@@ -59,38 +59,39 @@
     </#if>
 </#macro>
 
+<#-- 
+ * attachmentsView
+ * 
+ * Generates attachment PDF and thumbnail list with manage option
+ *
+ * @param attachments is all attachments
+ * @param manage boolean for showing delete-button. Default is false
+-->
 <#macro attachmentsView attachments manage=false>
 	<#if attachments?size gt 0>
 		<div class="initiative-content-row thumbnail-list cf"> 
-    	<h3>Liitteet</h3>
-   	
-   		
+    	<h3><@u.message "attachments.title" /></h3>
+
 		    <#list attachments.images as attachment>
 
-			    	<div class="column col-1of5 ${((attachment_index + 1) % 5 == 0)?string("last","")}">
-			    		<span class="thumbnail">
-					        <a href="${urls.attachment(attachment.attachmentId, attachment.fileName)}" title="${attachment.description}">
-					            <img src="${urls.getAttachmentThumbnail(attachment.attachmentId)}" alt="${attachment.description}" />    
-				            </a>
-			            </span>
-			            <span class="img-label">${attachment.description}
-				            <#if manage && managementSettings?? && user.hasRightToInitiative(initiative.id) && managementSettings.allowAddAttachments>
-			                    <a  href="?deleteAttachment=${attachment.attachmentId}" class="js-delete-attachment delete-attachment trigger-tooltip"
-			                        data-id="${attachment.attachmentId}"
-			                        data-name="${attachment.description}" title="Poista kuva"><span class="icon-small icon-16 cancel"></span></a></span>
-							        </a>
-					        </#if>
-				        </span>
-				        
-				        <#--<#if manage && managementSettings?? && user.hasRightToInitiative(initiative.id) && managementSettings.allowAddAttachments>
-				            <form action="${urls.deleteAttachment(attachment.attachmentId)}" method="POST">
-				                <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-				                <input type="hidden" name="locale" value="{locale.toLanguageTag()}"/>
-				                <input type="submit" value="X"/>
-				            </form>
-				        </#if>-->
-			        </div>
-		            <#if ((attachment_index + 1) % 5 == 0) || !attachment_has_next><br class="clear" /></#if>
+		    	<div class="column col-1of5 ${((attachment_index + 1) % 5 == 0)?string("last","")}">
+		    		<span class="thumbnail">
+				        <a href="${urls.attachment(attachment.attachmentId, attachment.fileName)}" title="${attachment.description}" target="_blank">
+				            <img src="${urls.getAttachmentThumbnail(attachment.attachmentId)}" alt="${attachment.description}" />    
+			            </a>
+		            </span>
+		            <span class="img-label">${attachment.description}
+			            <#if manage && managementSettings?? && user.hasRightToInitiative(initiative.id) && managementSettings.allowAddAttachments>
+		                    <a  href="?deleteAttachment=${attachment.attachmentId}" class="js-delete-attachment delete-attachment trigger-tooltip"
+		                        data-id="${attachment.attachmentId}"
+		                        data-name="${attachment.description}"
+		                        data-type="image"
+		                        data-src="${urls.getAttachmentThumbnail(attachment.attachmentId)}" title="<@u.message "deleteAttachment.btn" />"><span class="icon-small icon-16 cancel"></span></a></span>
+						    </a>
+				        </#if>
+			        </span>
+		        </div>
+	            <#if ((attachment_index + 1) % 5 == 0) || !attachment_has_next><br class="clear" /></#if>
 
 		    </#list>
 	    </div>
@@ -98,47 +99,28 @@
 	    <div class="initiative-content-row"> 
 		    <#list attachments.pdfs as attachment>
 
-		    		<#if attachment_index == 0><ul class="no-style"></#if>
-		    		
-				        <li class="pdf-attachment">
-				        	<a href="${urls.attachment(attachment.attachmentId, attachment.fileName)}">
-					            <img src="/img/pdficon_large.png"/>
-					            <span class="pdf-label">${attachment.description}</span>
-				            </a>
-				            
-				            <#if manage && managementSettings?? && user.hasRightToInitiative(initiative.id) && managementSettings.allowAddAttachments>
-			                    <a  href="?deleteAttachment=${attachment.attachmentId}" class="js-delete-attachment trigger-tooltip"
-			                        data-id="${attachment.attachmentId}"
-			                        data-name="${attachment.description}" title="Poista liitetiedosto"><span class="icon-small icon-16 cancel"></span></a></span>
-							        </a>
-					        </#if>
-				        
-				        
-				        <#--<#if manage && managementSettings?? && user.hasRightToInitiative(initiative.id) && managementSettings.allowAddAttachments>
-				            <form action="${urls.deleteAttachment(attachment.attachmentId)}" method="POST">
-				                <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-				                <input type="hidden" name="locale" value="{locale.toLanguageTag()}"/>
-				                <input type="submit" value="X"/>
-				            </form>
-				        </#if>-->
-				        
-				        </li>
+	    		<#if attachment_index == 0><ul class="no-style"></#if>
+	    		
+			        <li class="pdf-attachment">
+			        	<a href="${urls.attachment(attachment.attachmentId, attachment.fileName)}" target="_blank">
+				            <@u.icon type="pdf" />
+				            <span class="pdf-label">${attachment.description}</span>
+			            </a>
+			            
+			            <#if manage && managementSettings?? && user.hasRightToInitiative(initiative.id) && managementSettings.allowAddAttachments>
+		                    <a  href="?deleteAttachment=${attachment.attachmentId}" class="js-delete-attachment trigger-tooltip"
+		                        data-id="${attachment.attachmentId}"
+		                        data-name="${attachment.description}"
+		                        data-type="pdf" title="<@u.message "deleteAttachment.btn" />"><span class="icon-small icon-16 cancel"></span></a></span>
+						    </a>
+				        </#if>				        
+			        </li>
 
-			        <#if !attachment_has_next></ul></#if>
+		        <#if !attachment_has_next></ul></#if>
 		    </#list>
 	    </div>
     </#if>
 </#macro>
-
-
-<#macro thumbnailUrl attachment>
-    <#if attachment.pdf>
-        $(urls.baseUrl}/img/pdficon_large.png
-    <#else>
-
-    </#if>
-</#macro>
-
 
 <#-- 
  * initiativeTitle

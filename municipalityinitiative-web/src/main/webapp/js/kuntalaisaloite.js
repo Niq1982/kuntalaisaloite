@@ -1277,6 +1277,21 @@ $('.municipality-filter').change( function() {
 			console.log(e);
 		}
 	});
+	
+	//Delete author
+  $('.js-delete-attachment').click(function(e){
+    e.preventDefault();
+    
+    $('.js-delete-attachment.active').removeClass('active');
+    $(this).addClass('active');
+    
+    try {
+      generateModal(modalData.deleteAttachment(), 'full', deleteAttachment.getAttachment);
+      return false;
+    } catch(e) {
+      console.log(e);
+    }
+  });
 
 	
 /**
@@ -1474,6 +1489,34 @@ var deleteAuthor = (function() {
 			authorInput.val(author.data("id"));
 		}
 	};
+
+}());
+
+/**
+* Delete attachment
+* ================
+*/
+var deleteAttachment = (function() {
+  return {
+    getAttachment: function(){
+      var attachment =        $('.js-delete-attachment.active'),
+          form =              $('#delete-attachment-form'),
+          selAttachment =     $('#selected-attachment'),
+          attachmentInput =   $('#authorId'),
+          typeImage =         attachment.data('type') === 'image' ? true : false,
+          attachmentDetails = '';
+      
+      if (typeImage) {
+        attachmentDetails = '<p>' + attachment.data("name") + '</p><img src="' + attachment.data("src") + '" alt="' + attachment.data("name") + '" />';
+      } else {
+        attachmentDetails = '<p class="pdf-attachment"><img src="/img/pdficon_large.png"/> <span class="pdf-label">' + attachment.data("name") + '</span></p>';
+      }
+
+      selAttachment.html(attachmentDetails);
+      
+      attachmentInput.val(attachment.data("id"));
+    }
+  };
 
 }());
 

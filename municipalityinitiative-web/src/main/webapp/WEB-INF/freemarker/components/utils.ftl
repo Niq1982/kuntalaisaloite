@@ -154,6 +154,17 @@
 </#macro>
 
 <#--
+ * icon
+ *
+ * @param type 
+-->
+<#macro icon type>
+	<#if type=="pdf">
+    	<img src="${urls.baseUrl}/img/pdficon_large.png" alt="PDF icon" />
+    </#if>
+</#macro>
+
+<#--
  * returnPrevious
  *
  * @param url 

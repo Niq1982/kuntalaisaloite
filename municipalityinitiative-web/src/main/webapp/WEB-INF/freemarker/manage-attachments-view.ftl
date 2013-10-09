@@ -18,55 +18,75 @@
 <@l.main page="page.manageAttachments">
 
 	<@u.returnPrevious managementURL "link.to.managementView" />
+	
+	<@u.errorsSummary path="attachment.*" prefix="attachment."/>
     
     <div class="msg-block">
         <div class="system-msg msg-info">
-            <h2>Ylläpidä liitteitä</h2>
-			<p>Voit liitää aloitteeseen jpg- ja png-kuvia sekä pdf-tiedostoja. Liitteitä ei voi enää lisätä tai poistaa aloitteen tarkastuksen ja julkaisun jälkeen. Liitteet näkyvät lisäysjärjestyksessä ja pdf-tiedostot ovat omassa listassaan kuvien alla.</p>
-			<p>Liitettävien tiedostojen maksimikoko on 2 MB. Jpg- ja png-kuvien maksimimitta on 1000 x 1000 pikseliä, ja tätä suuremmat kuvat pienennetään automaattisesti.</p>
-			<p>Ota huomioon, että sinulla tai jollain aloitteen vastuuhenkilöistä tulee olla käyttöoikeus liitettäviin kuviin ja tiedostoihin.<br/><a href="#">Lue lisää</a></p>
+            <h2><@u.message "attachmentManage.title" /></h2>
+			<p><@u.message "attachmentManage.description.1" /></p>
+			<p><@u.message "attachmentManage.description.2" /></p>
+			<p><@u.message "attachmentManage.description.3" /><br/><a href="#"><@u.message "attachmentManage.readMore" /></a></p>
         </div>
     </div>
     
-    <div class="view-block cf">
-	    <#if managementSettings.allowAddAttachments>
-	        
-	        <h2>Liitä tiedostoja</h2>
-			<div class="initiative-content-row cf">
-			    <@u.errorsSummary path="attachment.*" prefix="attachment."/>
-		        <form id="form-upload-image" enctype="multipart/form-data" action="${urls.addAttachment(initiative.id)}" method="POST">
-		            <@f.securityFilters/>
-                    <@spring.bind "attachment" />
-		            <input type="hidden" name="locale" value="${locale}"/>
-		            
-		            <div class="input-block-content no-top-margin">
-		            	<input type="file" name="image" chars="40" />
-		            </div>
-				    	
-		            <div class="input-block-content">
-				    	<@f.textField path="attachment.description" required="" optional=true maxLength="${InitiativeConstants.ATTACHMENT_DESCRIPTION_MAX}" />
-				    </div>
-
-                    <div class="input-block-content no-top-margin">
-                        <@f.uploadField path="attachment.image" />
-                    </div>
-		            
-		            <div class="input-block-content no-top-margin">
-		            	<button type="submit" class="small-button" ><span class="small-icon save-and-send">Tallenna tiedosto</span></button>
-	            	</div>
-		        </form>
+    <#if !RequestParameters['deleteAttachment']??>
+    
+	    <div class="view-block cf">
+		    <#if managementSettings.allowAddAttachments>
+		    
+		    	
+		        
+		        <h2><@u.message "attachment.add.title" /></h2>
+				<div class="initiative-content-row cf">
+				    
+			        <form id="form-upload-image" enctype="multipart/form-data" action="${urls.addAttachment(initiative.id)}" method="POST">
+			            <@f.securityFilters/>
+	                    <@spring.bind "attachment" />
+			            <input type="hidden" name="locale" value="${locale}"/>
+			            
+			            <div class="input-block-content no-top-margin">
+	                        <@f.uploadField path="attachment.image" />
+	                    </div>
+					    	
+			            <div class="input-block-content">
+					    	<@f.textField path="attachment.description" required="" optional=true cssClass="large" maxLength=InitiativeConstants.ATTACHMENT_DESCRIPTION_MAX />
+					    </div>
+			            
+			            <div class="input-block-content no-top-margin">
+			            	<button type="submit" class="small-button" ><span class="small-icon save-and-send"><@u.message "attachment.save" /></span></button>
+		            	</div>
+			        </form>
+		        </div>
+		    </#if>
+	    
+	    	<@e.attachmentsView attachments=attachments manage=true />
+	    	
+	    	<div class="initiative-content-row cf last">
+	        	<a href="${managementURL}" class="small-button" ><@u.message "attachment.ready" /></a>
 	        </div>
-	    </#if>
+	    
+	    </div>
     
-    	<@e.attachmentsView attachments=attachments manage=true />
-    	
-    	<div class="initiative-content-row cf last">
-        	<a href="${managementURL}" class="small-button" >Valmis</a>
+    <#else>
+        <#-- Confirm Delete form for NOSCRIPT users -->
+        <div class="msg-block cf">
+        	<div class="system-msg msg-info cf">
+            	<h2><@u.message "deleteAttachment.confirm.title" /></h2>
+        	
+            	<@deleteAattachmentForm modal=false />
+            </div>
         </div>
-    
-    </div>
+    </#if>
     
     <@u.returnPrevious managementURL "link.to.managementView" />
+    
+    <#-- HTML for confirm delete Modal -->
+    <#assign deleteAattachment>
+        <@compress single_line=true>
+            <@deleteAattachmentForm />
+        </@compress>
+    </#assign>
     
 
     <#--
@@ -97,18 +117,14 @@
             };
         </#if>
         
-        <#-- Modal: Confirm remove attachment -->
-        <#-- TODO:
-        <#if startCollecting??>    
-            modalData.startCollecting = function() {
-                return [{
-                    title:      '<@u.message "startCollecting.confirm.title" />',
-                    content:    '<#noescape>${startCollecting?replace("'","&#39;")}</#noescape>'
-                }]
-            };
-        </#if>
-        -->
-            
+        <#-- Modal: Confirm remove attachment -->   
+        modalData.deleteAttachment = function() {
+            return [{
+                title:      '<@u.message "deleteAttachment.confirm.title" />',
+                content:    '<#noescape>${deleteAattachment?replace("'","&#39;")}</#noescape>'
+            }]
+        };
+
         var messageData = {};
 
         <#-- jsMessage: Warning if cookies are not enabled -->
@@ -121,5 +137,56 @@
     </script>
 
 </@l.main>
+
+<#-- 
+ * attachmentDetailsById
+ *
+ * Prints attachment's details by id
+ *
+ * @param list is attachments object list
+ * @param id is attachment's id
+-->
+<#macro attachmentDetailsById id>
+    <#list attachments.images as attachment>
+        <#if attachment.id?string == id>
+            <h4 class="header">${attachment.description}</h4>
+            <img src="${urls.getAttachmentThumbnail(attachment.attachmentId)}" alt="${attachment.description}" />
+        </#if>
+    </#list>
+    
+    <#list attachments.pdfs as attachment>
+        <#if attachment.attachmentId?string == id>
+            <p class="pdf-attachment"><@u.icon type="pdf" /> <span class="pdf-label">${attachment.description}</span></p>            
+        </#if>
+    </#list>
+</#macro>
+
+<#-- 
+ * deleteAattachmentForm
+ *
+ * Generates a form for deleting attachment
+ *
+ * @param modal is a boolean for selecting either JS- or NOSCRIPT-version
+-->
+<#macro deleteAattachmentForm modal=true>
+	<#if !modal><#assign attachmentId = RequestParameters['deleteAttachment']?number /></#if>
+
+    <form id="delete-attachment-form" action="<#if !modal>${urls.deleteAttachment(attachmentId)}</#if>" method="POST">
+        <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+        <input type="hidden" name="locale" value="${locale}"/>
+        
+        <#if modal>
+            <div id="selected-attachment" class="details"></div>
+            <br/>
+        <#else>
+            <@attachmentDetailsById RequestParameters['deleteAttachment'] />
+        </#if>
+        
+        <div class="input-block-content">
+            <button type="submit" class="small-button"><span class="small-icon cancel"><@u.message "deleteAttachment.btn" /></button>
+            <a href="${springMacroRequestContext.requestUri}" class="push close"><@u.message "action.cancel" /></a>
+        </div>
+    </form>
+</#macro>
 
 </#escape> 
