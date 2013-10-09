@@ -37,7 +37,7 @@ public class AttachmentService {
 
     public static final String[] FILE_TYPES = { "png", "jpg", "jpeg", "pdf" };
     public static final String[] CONTENT_TYPES = { "image/png", "image/jpg", "image/jpeg", "application/pdf" };
-    public static final int MAX_FILESIZE_IN_BYTES = 1024 * 8;
+    public static final int MAX_FILESIZE_IN_BYTES = 1024 * 2 * 8;
     public static final int MAX_ATTACHMENTS = 10;
 
     private String attachmentDir;
