@@ -96,7 +96,6 @@ public class AttachmentService {
 
     @Transactional(readOnly = true)
     // TODO: Cache
-    // TODO: Handle if errors?
     public AttachmentFile getAttachment(Long attachmentId, String fileName, LoginUserHolder loginUserHolder) throws IOException {
         AttachmentFileInfo attachmentInfo = attachmentDao.getAttachment(attachmentId);
 
@@ -111,7 +110,6 @@ public class AttachmentService {
 
     @Transactional(readOnly = true)
     // TODO: Cache
-    // TODO: Return empty if errors
     public AttachmentFile getThumbnail(Long attachmentId, LoginUserHolder loginUserHolder) throws IOException {
         AttachmentFileInfo attachmentInfo = attachmentDao.getAttachment(attachmentId);
         assertViewAllowance(loginUserHolder, attachmentInfo);

@@ -6,6 +6,7 @@ import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
+import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.InvalidHomeMunicipalityException;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.*;
@@ -18,6 +19,8 @@ import fi.om.municipalityinitiative.validation.NormalInitiative;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.SearchParameterQueryString;
 import fi.om.municipalityinitiative.web.Urls;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -63,6 +66,8 @@ public class PublicInitiativeController extends BaseController {
 
     @Resource
     private AttachmentService attachmentService;
+
+    private static final Logger log = LoggerFactory.getLogger(PublicInitiativeController.class);
 
     public PublicInitiativeController(boolean optimizeResources, String resourcesVersion, Maybe<Integer> piwikId) {
         super(optimizeResources, resourcesVersion, piwikId);
@@ -361,12 +366,25 @@ public class PublicInitiativeController extends BaseController {
     public void getImage(@PathVariable Long id,
                          @PathVariable String fileName,
                          HttpServletRequest request, HttpServletResponse response) throws IOException {
-        attachmentFileResponse(response, attachmentService.getAttachment(id, fileName, userService.getLoginUserHolder(request)));
+        try {
+            AttachmentFile attachment = attachmentService.getAttachment(id, fileName, userService.getLoginUserHolder(request));
+            attachmentFileResponse(response, attachment);
+        } catch (Throwable t) {
+            log.error("Attachment not found: " + id + "," + fileName, t);
+            throw new AccessDeniedException("Attachment not found: " + id + ", "+fileName);
+        }
     }
 
     @RequestMapping(value = Urls.ATTACHMENT_THUMBNAIL)
     public void getThumbnail(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        attachmentFileResponse(response, attachmentService.getThumbnail(id, userService.getLoginUserHolder(request)));
+
+        try {
+            AttachmentFile thumbnail = attachmentService.getThumbnail(id, userService.getLoginUserHolder(request));
+            attachmentFileResponse(response, thumbnail);
+        } catch (Throwable t) {
+            log.error("Thumbnail not found: " + id, t);
+            throw new AccessDeniedException("Thumbnail not found: " + id);
+        }
     }
 
     private void attachmentFileResponse(HttpServletResponse response, AttachmentFile file) throws IOException {
