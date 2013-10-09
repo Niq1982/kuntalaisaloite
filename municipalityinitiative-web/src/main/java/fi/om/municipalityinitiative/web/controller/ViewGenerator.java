@@ -159,15 +159,13 @@ public class ViewGenerator {
         );
     }
     
-    public static ViewGenerator manageAttachmentsView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, AttachmentService.Attachments attachments, ParticipantCount participantCount, CommentUIDto commentUIDto) {
+    public static ViewGenerator manageAttachmentsView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, AttachmentService.Attachments attachments, AttachmentCreateDto attachmentCreateDto) {
         return new ViewGenerator(MANAGE_ATTACHMENTS_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
                         .add("managementSettings", managementSettings)
-                        .add("authors", authors)
-                        .add("participantCount", participantCount)
-                        .add("comment", commentUIDto)
                         .add("attachments", attachments)
+                        .add("attachment", attachmentCreateDto)
                         .build()
         );
     }

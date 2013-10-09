@@ -19,6 +19,14 @@
 </#macro>
 
 
+<#macro uploadField path cssClass="" attributes="" maxLength="" cssErrorClass="">
+    <@spring.bind path />
+
+    <@showError cssClass=cssErrorClass />
+
+
+</#macro>
+
 <#--
  * formLabel
  *

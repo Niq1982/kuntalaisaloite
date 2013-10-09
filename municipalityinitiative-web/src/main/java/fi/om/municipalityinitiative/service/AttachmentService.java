@@ -6,6 +6,7 @@ import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dto.service.AttachmentFile;
 import fi.om.municipalityinitiative.dto.service.AttachmentFileInfo;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
+import fi.om.municipalityinitiative.dto.ui.AttachmentCreateDto;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
@@ -17,11 +18,13 @@ import org.aspectj.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,6 +37,8 @@ public class AttachmentService {
 
     public static final String[] FILE_TYPES = { "png", "jpg", "jpeg", "pdf" };
     public static final String[] CONTENT_TYPES = { "image/png", "image/jpg", "image/jpeg", "application/pdf" };
+    public static final int MAX_FILESIZE_IN_BYTES = 1024 * 8;
+    public static final int MAX_ATTACHMENTS = 10;
 
     private String attachmentDir;
 
@@ -47,6 +52,9 @@ public class AttachmentService {
 
     @Resource
     private ImageModifier imageModifier;
+
+    @Resource
+    private ValidationService validationService;
 
     public AttachmentService(String attachmentDir) {
         this.attachmentDir = attachmentDir;
@@ -76,7 +84,7 @@ public class AttachmentService {
                 try (FileOutputStream fileOutputStream = new FileOutputStream(getFilePath(attachmentId, fileType))) {
                     fileOutputStream.write(file.getBytes());
                 }
-             }
+            }
             else {
                 imageModifier.modify(file.getInputStream(), getFilePath(attachmentId, fileType), fileType, MAX_WIDTH, MAX_HEIGHT);
                 imageModifier.modify(file.getInputStream(), getThumbnailPath(attachmentId, fileType), fileType, THUMBNAIL_MAX_WIDTH, THUMBNAIL_MAX_HEIGHT);
@@ -196,6 +204,38 @@ public class AttachmentService {
         loginUserHolder.assertManagementRightsForInitiative(attachmentFileInfo.getInitiativeId());
         attachmentDao.deleteAttachment(attachmentId);
         return attachmentFileInfo.getInitiativeId();
+    }
+
+    @Transactional(readOnly = true)
+    public boolean validationSuccessful(Long initiativeId, AttachmentCreateDto attachmentCreateDto, BindingResult bindingResult, Model model) {
+
+        if (attachmentDao.findAllAttachments(initiativeId).size() >= MAX_ATTACHMENTS) {
+            addAttachmentValidationError(bindingResult, "attachment.error.too.many.attachments", String.valueOf(MAX_ATTACHMENTS));
+        }
+        else {
+            validationService.validationSuccessful(attachmentCreateDto, bindingResult, model);
+            if (attachmentCreateDto.getImage().getSize() == 0) {
+                addAttachmentValidationError(bindingResult, "attachment.error.NotEmpty", "");
+            }
+            else {
+                try {
+                    assertFileType(parseFileType(attachmentCreateDto.getImage().getOriginalFilename()));
+                } catch (InvalidAttachmentException e) {
+                    addAttachmentValidationError(bindingResult, "attachment.error.invalid.file.type", Arrays.toString(FILE_TYPES));
+                }
+
+                if (attachmentCreateDto.getImage().getSize() > MAX_FILESIZE_IN_BYTES) {
+                    addAttachmentValidationError(bindingResult, "attachment.error.too.large.file", String.valueOf(MAX_FILESIZE_IN_BYTES / 8) + "KB");
+                }
+            }
+        }
+
+
+        return bindingResult.getErrorCount() == 0;
+    }
+
+    private void addAttachmentValidationError(BindingResult bindingResult, String message, String argument) {
+        bindingResult.addError(new FieldError("attachment", "image", "", false, new String[]{message}, new String[]{argument}, message));
     }
 
     public static class Attachments {
