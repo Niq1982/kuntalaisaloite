@@ -798,10 +798,10 @@ public class TestHelper {
 
         switch (fileType) {
             case "jpg":
-                contentType = MediaType.JPEG.type();
+                contentType = MediaType.JPEG.toString();
                 break;
             case "pdf":
-                contentType = MediaType.PDF.type();
+                contentType = MediaType.PDF.toString();
                 break;
             default:
                 throw new IllegalArgumentException("no test-implementatino for filetype: " + fileType);

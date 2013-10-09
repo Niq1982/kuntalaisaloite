@@ -143,13 +143,15 @@ public class InitiativeModerationWebTest extends WebTestBase {
 
         open(urls.moderation(initiativeId));
 
+        // Assert image url and thumbnail
         assertThat(driver.getPageSource(), containsString(urls.getAttachmentThumbnail(imageAttachmentId)));
         assertThat(driver.getPageSource(), containsString(urls.attachment(imageAttachmentId, imageFileName)));
 
 
-//        assertThat(driver.getPageSource(), not(containsString(urls.getAttachmentThumbnail(pdfAttachmentId))));
-//        assertThat(driver.getPageSource(), containsString(urls.getBaseUrl()+"/img/pdficon_large.png"));
-//        assertThat(driver.getPageSource(), containsString(urls.attachment(pdfAttachmentId, pdfFileName)));
+        // Assert no thumbnail for pdf, but instead pdf icon and link to pdf.
+        assertThat(driver.getPageSource(), not(containsString(urls.getAttachmentThumbnail(pdfAttachmentId))));
+        assertThat(driver.getPageSource(), containsString("/img/pdficon_large.png"));
+        assertThat(driver.getPageSource(), containsString(urls.attachment(pdfAttachmentId, pdfFileName)));
     }
 
 
