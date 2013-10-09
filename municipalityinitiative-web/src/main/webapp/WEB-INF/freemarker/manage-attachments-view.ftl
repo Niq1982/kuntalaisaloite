@@ -33,22 +33,23 @@
 	        
 	        <h2>Liitä tiedostoja</h2>
 			<div class="initiative-content-row cf">
+			    <@u.errorsSummary path="attachment.*" prefix="attachment."/>
 		        <form id="form-upload-image" enctype="multipart/form-data" action="${urls.addAttachment(initiative.id)}" method="POST">
-		            <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+		            <@f.securityFilters/>
+                    <@spring.bind "attachment" />
 		            <input type="hidden" name="locale" value="${locale}"/>
 		            
 		            <div class="input-block-content no-top-margin">
 		            	<input type="file" name="image" chars="40" />
 		            </div>
-		            
-		            <div class="input-block-content"> 
-					    <label for="name" class="input-header">
-				        	Anna liitteelle selkeä ja kuvaava otsikko
-				        	<span class="instruction-text">Liitteen otsikko tulee näkyviin aloitteen sivulle</span>
-					    </label>
-	
-				    	<input type="text" name="description" class="large" maxlength="${InitiativeConstants.ATTACHMENT_DESCRIPTION_MAX}"/>
+				    	
+		            <div class="input-block-content">
+				    	<@f.textField path="attachment.description" required="" optional=true maxLength="${InitiativeConstants.ATTACHMENT_DESCRIPTION_MAX}" />
 				    </div>
+
+                    <div class="input-block-content no-top-margin">
+                        <@f.uploadField path="attachment.image" />
+                    </div>
 		            
 		            <div class="input-block-content no-top-margin">
 		            	<button type="submit" class="small-button" ><span class="small-icon save-and-send">Tallenna tiedosto</span></button>

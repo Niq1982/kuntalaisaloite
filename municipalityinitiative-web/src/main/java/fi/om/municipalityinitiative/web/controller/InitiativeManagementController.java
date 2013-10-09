@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 import javax.annotation.Resource;
@@ -120,11 +119,9 @@ public class InitiativeManagementController extends BaseController {
 
         return ViewGenerator.manageAttachmentsView(initiativeInfo,
                 publicInitiativeService.getManagementSettings(initiativeId),
-                authorService.findAuthors(initiativeId, loginUserHolder),
                 attachmentService.findAllAttachments(initiativeId, loginUserHolder),
-                initiativeInfo.getParticipantCount(),
-                new CommentUIDto()
-        ).view(model, Urls.get(locale).alt().getManagement(initiativeId));
+                new AttachmentCreateDto(),
+                AttachmentService.ImageProperties.get()).view(model, Urls.get(locale).alt().getManagement(initiativeId));
     }
 
     @RequestMapping(value={ EDIT_FI, EDIT_SV }, method=GET)
@@ -404,19 +401,33 @@ public class InitiativeManagementController extends BaseController {
 
     @RequestMapping(value = ADD_ATTACHMENT, method = POST)
     public String addAttachment(@PathVariable("id") Long initiativeId,
-                                @RequestParam("image") MultipartFile file,
-                                @RequestParam("locale") String localeString,
-                                @RequestParam("description") String description,
+                                @ModelAttribute("attachment") AttachmentCreateDto attachmentCreateDto,
+//                                @RequestParam("file") MultipartFile image,
+                                Model model,
+                                BindingResult bindingResult,
                                 DefaultMultipartHttpServletRequest request) throws IOException, InfoException {
 
         // CSRF Must be validated here because SecurityFilter is not able to handle MultipartHttpServletRequest.
         SecurityFilter.verifyAndGetCurrentCSRFToken(request);
 
-        // TODO: Validate description length
+        // TODO: Validate whole world.
 
-        Locale locale = Locale.forLanguageTag(localeString);
+
+        Locale locale = Locale.forLanguageTag(attachmentCreateDto.getLocale());
+        if (!attachmentService.validationSuccessful(initiativeId, attachmentCreateDto, bindingResult, model)) {
+            LoginUserHolder<User> loginUserHolder = userService.getLoginUserHolder(request);
+            return ViewGenerator.manageAttachmentsView(
+                    initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder),
+                    publicInitiativeService.getManagementSettings(initiativeId),
+                    attachmentService.findAttachments(initiativeId, loginUserHolder),
+                    attachmentCreateDto,
+                    AttachmentService.ImageProperties.get())
+                    .view(model, Urls.get(locale).alt().manageAttachments(initiativeId));
+
+        }
+
         try {
-            attachmentService.addAttachment(initiativeId, userService.getLoginUserHolder(request), file, description);
+            attachmentService.addAttachment(initiativeId, userService.getLoginUserHolder(request), attachmentCreateDto.getImage(), attachmentCreateDto.getDescription());
         } catch (FileUploadException e) {
             return redirectWithMessage(Urls.get(locale).manageAttachments(initiativeId), RequestMessage.ATTACHMENT_FAILURE, request);
         } catch (InvalidAttachmentException e) {

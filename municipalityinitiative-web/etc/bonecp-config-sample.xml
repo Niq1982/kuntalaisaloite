@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Default options loaded by BoneCP. Modify as per your needs. This file has
+<!-- Default options loaded by BoneCP. Modify as per your needs. This image has
      been automatically generated. -->
 <bonecp-config>
     <default-config>
@@ -150,7 +150,7 @@
         <property name="maxConnectionAgeInSeconds">0</property>
 
         <!-- Sets the configFile. If configured, this will cause the pool to initialise using 
-             the config file in the same way as if calling new BoneCPConfig(filename). -->
+             the config image in the same way as if calling new BoneCPConfig(filename). -->
         <!-- <property name="configFile">(null or no default value)</property> -->
 
         <!-- Sets the queue serviceOrder. Values currently understood are FIFO and LIFO. -->

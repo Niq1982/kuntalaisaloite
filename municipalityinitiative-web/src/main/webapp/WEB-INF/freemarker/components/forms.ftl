@@ -19,6 +19,12 @@
 </#macro>
 
 
+<#macro uploadField path cssClass="" attributes="" maxLength="" cssErrorClass="">
+    <@spring.bind path />
+    <@showError cssClass=cssErrorClass />
+    <input type="file" name="image">
+</#macro>
+
 <#--
  * formLabel
  *
