@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.service;
 
+import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dao.AttachmentDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dto.service.AttachmentFile;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,7 +32,7 @@ public class AttachmentService {
     public static final Integer THUMBNAIL_MAX_WIDTH = 100;
     public static final Integer THUMBNAIL_MAX_HEIGHT = 100;
 
-    public static final String[] FILE_TYPES = { "png", "jpg", "pdf" };
+    public static final String[] FILE_TYPES = { "png", "jpg", "jpeg", "pdf" };
     public static final String[] CONTENT_TYPES = { "image/png", "image/jpg", "image/jpeg", "application/pdf" };
 
     private String attachmentDir;
@@ -163,24 +165,24 @@ public class AttachmentService {
     }
 
     @Transactional(readOnly = true)
-    public List<AttachmentFileInfo> findAcceptedAttachments(Long initiativeId) {
-        return attachmentDao.findAcceptedAttachments(initiativeId);
+    public Attachments findAcceptedAttachments(Long initiativeId) {
+        return new Attachments(attachmentDao.findAcceptedAttachments(initiativeId));
     }
 
     @Transactional(readOnly = true)
-    public List<AttachmentFileInfo> findAttachments(Long initiativeId, LoginUserHolder loginUserHolder) {
+    public Attachments findAttachments(Long initiativeId, LoginUserHolder loginUserHolder) {
         if (loginUserHolder.getUser().isOmUser() || loginUserHolder.hasManagementRightsForInitiative(initiativeId)) {
-            return attachmentDao.findAllAttachments(initiativeId);
+            return new Attachments(attachmentDao.findAllAttachments(initiativeId));
         }
         else {
-            return attachmentDao.findAcceptedAttachments(initiativeId);
+            return new Attachments(attachmentDao.findAcceptedAttachments(initiativeId));
         }
     }
 
     @Transactional(readOnly = true)
-    public List<AttachmentFileInfo> findAllAttachments(Long initiativeId, LoginUserHolder loginUserHolder) {
+    public Attachments findAllAttachments(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertViewRightsForInitiative(initiativeId);
-        return attachmentDao.findAllAttachments(initiativeId);
+        return new Attachments(attachmentDao.findAllAttachments(initiativeId));
     }
 
     String getAttachmentDir() { // For tests
@@ -194,6 +196,35 @@ public class AttachmentService {
         loginUserHolder.assertManagementRightsForInitiative(attachmentFileInfo.getInitiativeId());
         attachmentDao.deleteAttachment(attachmentId);
         return attachmentFileInfo.getInitiativeId();
+    }
 
+    public static class Attachments {
+        private final List<AttachmentFileInfo> images = Lists.newArrayList();
+        private final List<AttachmentFileInfo> pdfs = Lists.newArrayList();
+
+        public Attachments(List<AttachmentFileInfo> attachments) {
+            for (AttachmentFileInfo attachment : attachments) {
+                if (attachment.isPdf()) {
+                    pdfs.add(attachment);
+                }
+                else {
+                    images.add(attachment);
+                }
+            }
+        }
+
+        public List<AttachmentFileInfo> getImages() {
+            return images;
+        }
+
+        public List<AttachmentFileInfo> getPdfs() {
+            return pdfs;
+        }
+
+        public List<AttachmentFileInfo> getAll() {
+            List<AttachmentFileInfo> all = Lists.newArrayList(images);
+            all.addAll(pdfs);
+            return all;
+        }
     }
 }

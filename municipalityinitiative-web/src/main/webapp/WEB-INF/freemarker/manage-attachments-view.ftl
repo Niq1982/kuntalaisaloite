@@ -58,7 +58,7 @@
 	        
 	    </#if>
     
-    	<@e.attachmentsView attachments true />
+    	<@e.attachmentsView attachments=attachments manage=true />
     
     </div>
     

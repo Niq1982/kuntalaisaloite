@@ -18,7 +18,7 @@
     </div>
     
     <#if attachments??>
-    	<@e.attachmentsView attachments false />
+    	<@e.attachmentsView attachments />
     </#if>
 
     <#if (initiative.extraInfo)?has_content>
@@ -43,7 +43,7 @@
         <@u.text initiative.proposal!"" />
     </div>
 
-	<@e.attachmentsView attachments false />
+	<@e.attachmentsView attachments />
     
     <#if managementSettings.allowAddAttachments>
     	<div class="initiative-content-row">
@@ -65,9 +65,8 @@
     	<h3>Liitteet</h3>
    	
    		
-		    <#list attachments as attachment>
-		    	<#if !attachment.pdf>
-		    		
+		    <#list attachments.images as attachment>
+
 			    	<#--<div class="column col-1of5 ${((attachment_index + 1) % 5 == 0)?string("last","")}">-->
 			    	<div class="column col-1of5">
 				        <a href="${urls.attachment(attachment.attachmentId, attachment.fileName)}" class="thumbnail">
@@ -91,14 +90,12 @@
 				        </#if>-->
 			        </div>
 		            <#--<#if ((attachment_index + 1) % 5 == 0) || !attachment_has_next><br class="clear" /></#if>-->
-		            
-	            </#if>
+
 		    </#list>
 	    </div>
 	    
 	    <div class="initiative-content-row"> 
-		    <#list attachments as attachment>
-		    	<#if attachment.pdf>
+		    <#list attachments.pdfs as attachment>
 
 		    		<#if attachment_index == 0><ul class="no-style"></#if>
 		    		
@@ -124,10 +121,8 @@
 				        </#if>-->
 				        
 				        </li>
-			        
+
 			        <#if !attachment_has_next></ul></#if>
-			        
-	            </#if>
 		    </#list>
 	    </div>
     </#if>

@@ -9,6 +9,7 @@ import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.*;
+import fi.om.municipalityinitiative.service.AttachmentService;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.SearchParameterQueryString;
 import fi.om.municipalityinitiative.web.Views;
@@ -42,7 +43,7 @@ public class ViewGenerator {
     public static ViewGenerator collaborativeView(InitiativeViewInfo municipalityInitiative,
                                                   PublicAuthors publicAuthors,
                                                   List<Municipality> allMunicipalities,
-                                                  List<AttachmentFileInfo> attachments, ParticipantCount participantCount,
+                                                  AttachmentService.Attachments attachments, ParticipantCount participantCount,
                                                   ParticipantUICreateDto participantUICreateDto,
                                                   AuthorUIMessage authorUIMessage) {
         return new ViewGenerator(Views.PUBLIC_COLLECT_VIEW,
@@ -125,7 +126,7 @@ public class ViewGenerator {
                         .build());
     }
 
-    public static ViewGenerator singleView(InitiativeViewInfo initiativeInfo, PublicAuthors publicAuthors, List<AttachmentFileInfo> attachments) {
+    public static ViewGenerator singleView(InitiativeViewInfo initiativeInfo, PublicAuthors publicAuthors, AttachmentService.Attachments attachments) {
         return new ViewGenerator(Views.PUBLIC_SINGLE_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
@@ -134,7 +135,7 @@ public class ViewGenerator {
                         .build());
     }
 
-    public static ViewGenerator moderationView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, List<AttachmentFileInfo> allAttachments) {
+    public static ViewGenerator moderationView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, AttachmentService.Attachments allAttachments) {
         return new ViewGenerator(MODERATION_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
@@ -145,7 +146,7 @@ public class ViewGenerator {
         );
     }
 
-    public static ViewGenerator managementView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, List<AttachmentFileInfo> attachments, ParticipantCount participantCount, CommentUIDto commentUIDto) {
+    public static ViewGenerator managementView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, AttachmentService.Attachments attachments, ParticipantCount participantCount, CommentUIDto commentUIDto) {
         return new ViewGenerator(MANAGEMENT_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
@@ -158,7 +159,7 @@ public class ViewGenerator {
         );
     }
     
-    public static ViewGenerator manageAttachmentsView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, List<AttachmentFileInfo> attachments, ParticipantCount participantCount, CommentUIDto commentUIDto) {
+    public static ViewGenerator manageAttachmentsView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, AttachmentService.Attachments attachments, ParticipantCount participantCount, CommentUIDto commentUIDto) {
         return new ViewGenerator(MANAGE_ATTACHMENTS_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
