@@ -25,7 +25,7 @@
         <div class="system-msg msg-info">
             <h2><@u.message "attachmentManage.title" /></h2>
 			<p><@u.message "attachmentManage.description.1" /></p>
-			<p><@u.message "attachmentManage.description.2" /></p>
+			<p><@u.message key="attachmentManage.description.2" args=[imageProperties.getMaxFilesizeInKilobytes(), imageProperties.getMaxWidth(), imageProperties.getMaxHeight()] /></p>
 			<p><@u.message "attachmentManage.description.3" /><br/><a href="#"><@u.message "attachmentManage.readMore" /></a></p>
         </div>
     </div>
