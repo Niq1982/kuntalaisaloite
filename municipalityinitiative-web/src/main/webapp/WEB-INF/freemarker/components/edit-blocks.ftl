@@ -75,7 +75,7 @@
     <noscript>
         <div class="input-block-content no-top-margin">
             <div class="system-msg msg-info">
-                <#assign href= "${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" />
+                <#assign href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" />
                 
                 <#if !user.isVerifiedUser()>
                     <@u.messageHTML key="initiative.municipality.different" args=[href] />
@@ -111,7 +111,8 @@
             </div>
         <#else>
             <div class="input-block-content no-top-margin hidden">
-                <@u.systemMessage path="warning.verifiedAuthor.notInhabitant" type="warning" />
+            	<#assign href="${urls.help(HelpPage.ORGANIZERS.getUri(locale))}" />
+                <@u.systemMessage path="warning.verifiedAuthor.notInhabitant" type="warning" args=[href] />
             </div>
         </#if>
     </div>
