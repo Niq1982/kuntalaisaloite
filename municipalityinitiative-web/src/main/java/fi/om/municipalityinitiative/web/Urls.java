@@ -106,7 +106,9 @@ public final class Urls {
     public static final String VETUMA_ERROR_FI = "/fi/loginerror";
 
     public static final String VETUMA_ERROR_SV = "/sv/loginerror";
+
     public static final String VETUMA_AGE_ERROR_PARAMETER = "age";
+
     public static final String TARGET = "target";
 
     public static Urls FI = null;
@@ -158,6 +160,8 @@ public final class Urls {
     public static final String ACTION_DELETE_PARTICIPANT = "action-delete-participant";
 
     public static final String ACTION_CONTACT_AUTHOR = "action-contact-author";
+
+    public static final String ACTION_ADD_ATTACHMENT = "action-add-attachment";
 
     // Actions for the content editor
 
@@ -241,9 +245,9 @@ public final class Urls {
 
     public static final String MANAGE_AUTHORS_SV = "/sv/ansvarpersoner" + "/" + ID_PARAMETER;
     
-    public static final String MANAGE_ATTACHMENTS_FI = "/fi/liitteet" + "/" + ID_PARAMETER;
+    public static final String MANAGE_ATTACHMENTS_FI = "/fi/liitteet" + "/";
 
-    public static final String MANAGE_ATTACHMENTS_SV = "/sv/bilagor" + "/" + ID_PARAMETER;
+    public static final String MANAGE_ATTACHMENTS_SV = "/sv/bilagor" + "/";
 
     public static final String INVITATION_FI = "/fi/kutsu" + "/" + ID_PARAMETER;
 
@@ -274,8 +278,6 @@ public final class Urls {
     public static final String ATTACHMENT = "/attachment/" + ID_PARAMETER + "/" + FILENAME_PARAMETER;
 
     public static final String ATTACHMENT_THUMBNAIL = "/thumbnail/" + ID_PARAMETER;
-
-    public static final String ADD_ATTACHMENT = "/add-attachment/" + ID_PARAMETER;
 
     public static final String DELETE_ATTACHMENT = "/delete-image/" + ID_PARAMETER;
 
@@ -414,7 +416,7 @@ public final class Urls {
     }
     
     public String getManageAttachments(Long id) {
-        return getLocalizedPageUrl(MANAGE_ATTACHMENTS_FI, MANAGE_ATTACHMENTS_SV).replace(ID_PARAMETER, id.toString());
+        return getLocalizedPageUrl(MANAGE_ATTACHMENTS_FI+ID_PARAMETER, MANAGE_ATTACHMENTS_SV+ID_PARAMETER).replace(ID_PARAMETER, id.toString());
     }
 
     public String vetumaLogin() {
@@ -507,7 +509,7 @@ public final class Urls {
     }
 
     public String addAttachment(Long initiativeId) {
-        return baseUrl + ADD_ATTACHMENT.replace(ID_PARAMETER, initiativeId.toString());
+        return getLocalizedPageUrl(MANAGE_ATTACHMENTS_FI+ID_PARAMETER, MANAGE_ATTACHMENTS_SV+ID_PARAMETER).replace(ID_PARAMETER, initiativeId.toString());
 
     }
 
@@ -619,7 +621,4 @@ public final class Urls {
         return getLocalizedPageUrl(VETUMA_ERROR_FI, VETUMA_ERROR_SV) + "?"+ VETUMA_AGE_ERROR_PARAMETER;
     }
 
-    public static boolean isVetumaURI(String uri) {
-        return VETUMA_FI.equals(uri) || VETUMA_SV.equals(uri);
-    }
 }

@@ -100,7 +100,7 @@ public class InitiativeManagementController extends BaseController {
         ).view(model, Urls.get(locale).alt().getManagement(initiativeId));
     }
     
-    @RequestMapping(value={ MANAGE_ATTACHMENTS_FI, MANAGE_ATTACHMENTS_SV }, method=GET)
+    @RequestMapping(value={ MANAGE_ATTACHMENTS_FI+ID_PARAMETER, MANAGE_ATTACHMENTS_SV+ID_PARAMETER }, method=GET)
     public String manageAttachmentsView(@PathVariable("id") Long initiativeId,
                                  Model model, Locale locale, HttpServletRequest request) {
 
@@ -399,21 +399,19 @@ public class InitiativeManagementController extends BaseController {
         return redirectWithMessage(Urls.get(locale).participantListManage(initiativeId), RequestMessage.PARTICIPANT_DELETED, request);
     }
 
-    @RequestMapping(value = ADD_ATTACHMENT, method = POST)
+    @RequestMapping(value = {MANAGE_ATTACHMENTS_FI+ID_PARAMETER, MANAGE_ATTACHMENTS_SV+ID_PARAMETER}, method = POST, params = ACTION_ADD_ATTACHMENT)
     public String addAttachment(@PathVariable("id") Long initiativeId,
                                 @ModelAttribute("attachment") AttachmentCreateDto attachmentCreateDto,
-//                                @RequestParam("file") MultipartFile image,
                                 Model model,
                                 BindingResult bindingResult,
-                                DefaultMultipartHttpServletRequest request) throws IOException, InfoException {
+                                DefaultMultipartHttpServletRequest request,
+                                Locale locale) throws IOException, InfoException {
 
         // CSRF Must be validated here because SecurityFilter is not able to handle MultipartHttpServletRequest.
         SecurityFilter.verifyAndGetCurrentCSRFToken(request);
 
         // TODO: Validate whole world.
 
-
-        Locale locale = Locale.forLanguageTag(attachmentCreateDto.getLocale());
         if (!attachmentService.validationSuccessful(initiativeId, attachmentCreateDto, bindingResult, model)) {
             LoginUserHolder<User> loginUserHolder = userService.getLoginUserHolder(request);
             return ViewGenerator.manageAttachmentsView(

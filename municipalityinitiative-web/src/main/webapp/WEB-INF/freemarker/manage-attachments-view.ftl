@@ -29,7 +29,7 @@
 			<p><@u.message "attachmentManage.description.3" /><br/><a href="#"><@u.message "attachmentManage.readMore" /></a></p>
         </div>
     </div>
-    
+
     <#if !RequestParameters['deleteAttachment']??>
     
 	    <div class="view-block cf">
@@ -54,7 +54,7 @@
 					    </div>
 			            
 			            <div class="input-block-content no-top-margin">
-			            	<button type="submit" class="small-button" ><span class="small-icon save-and-send"><@u.message "attachment.save" /></span></button>
+			            	<button type="submit" name="${UrlConstants.ACTION_ADD_ATTACHMENT}" class="small-button" ><span class="small-icon save-and-send"><@u.message "attachment.save" /></span></button>
 		            	</div>
 			        </form>
 		        </div>
@@ -64,6 +64,7 @@
 	    	
 	    	<div class="initiative-content-row cf last">
 	        	<a href="${managementURL}" class="small-button" ><@u.message "attachment.ready" /></a>
+
 	        </div>
 	    
 	    </div>

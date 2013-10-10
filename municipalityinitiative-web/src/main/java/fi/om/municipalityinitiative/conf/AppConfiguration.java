@@ -104,10 +104,10 @@ public class AppConfiguration {
      * BEANS
      */
 
-    @Bean
-    public CommonsMultipartResolver multipartResolver() {
-        return new CommonsMultipartResolver();
-    }
+//    @Bean
+//    public CommonsMultipartResolver multipartResolver() {
+//        return new CommonsMultipartResolver();
+//    }
 
     @Bean
     public AuthorMessageDao authorMessageDao() {
