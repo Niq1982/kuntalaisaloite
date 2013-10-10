@@ -444,5 +444,17 @@ public class InitiativeManagementController extends BaseController {
         return redirectWithMessage(Urls.get(locale).manageAttachments(initiativeId), RequestMessage.ATTACHMENT_DELETED, request);
     }
 
+    @RequestMapping(value = {MANAGE_ATTACHMENTS_FI+ID_PARAMETER, MANAGE_ATTACHMENTS_SV+ID_PARAMETER}, method = POST, params = ACTION_DELETE_ATTACHMENT)
+    public String deleteAttachment(@PathVariable("id") Long initiativeId,
+                                   @RequestParam("attachmentId") Long attachmentId,
+                                   HttpServletRequest request,
+                                   Locale locale) {
+
+        // CSRF Must be validated here because SecurityFilter is not able to handle MultipartHttpServletRequest.
+        SecurityFilter.verifyAndGetCurrentCSRFToken(request);
+        attachmentService.deleteAttachment(attachmentId, userService.getLoginUserHolder(request));
+        return redirectWithMessage(Urls.get(locale).manageAttachments(initiativeId), RequestMessage.ATTACHMENT_DELETED, request);
+    }
+
     
 }

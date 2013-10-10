@@ -163,6 +163,8 @@ public final class Urls {
 
     public static final String ACTION_ADD_ATTACHMENT = "action-add-attachment";
 
+    public static final String ACTION_DELETE_ATTACHMENT = "action-delete-attachment";
+
     // Actions for the content editor
 
     public static final String ACTION_EDITOR_SAVE_DRAFT = "action-editor-save-draft";
