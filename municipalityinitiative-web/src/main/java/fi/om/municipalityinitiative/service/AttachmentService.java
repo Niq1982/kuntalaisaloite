@@ -264,8 +264,8 @@ public class AttachmentService {
         public static final int THUMBNAIL_MAX_WIDTH = 100;
         public static final int THUMBNAIL_MAX_HEIGHT = 100;
         public static final String[] FILE_TYPES = { "png", "jpg", "jpeg", "pdf" };
-        public static final int MAX_FILESIZE_IN_BYTES = 1024 * 2 * 8;
-        public static final String MAX_FILESIZE_IN_KILOBYTES = String.valueOf(ImageProperties.MAX_FILESIZE_IN_BYTES / 8) + " KB";
+        public static final int MAX_FILESIZE_IN_BYTES = 1024 * 1024 * 2;
+        public static final String MAX_FILESIZE_IN_KILOBYTES = String.valueOf(ImageProperties.MAX_FILESIZE_IN_BYTES / 1024 / 1024) + " MB";
         public static final int MAX_ATTACHMENTS = 10;
 
         public static final String[] CONTENT_TYPES = { "image/png", "image/jpg", "image/jpeg", "application/pdf" };
