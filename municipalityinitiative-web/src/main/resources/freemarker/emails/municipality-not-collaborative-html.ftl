@@ -35,6 +35,12 @@
     
     <@u.spacer "15" />
 
+    <@b.contentBlock type>
+        <@b.attachments type/>
+    </@b.contentBlock>
+
+    <@u.spacer "15" />
+
 </@l.emailHtml>
 
 </#escape>  

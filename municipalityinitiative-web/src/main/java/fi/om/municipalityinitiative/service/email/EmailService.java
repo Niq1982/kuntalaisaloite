@@ -88,11 +88,13 @@ public class EmailService {
         List<? extends Author> authors = dataProvider.findAuthors(initiative.getId());
         String municipalityEmail = solveMunicipalityEmail(initiative);
 
+        Map<String, Object> dataMap = toDataMap(initiative, authors, locale);
+        dataMap.put("attachmentCount", dataProvider.getAcceptedAttachmentCount(initiativeId));
         emailMessageConstructor
                 .fromTemplate(initiativeId, NOT_COLLECTABLE_TEMPLATE)
                 .addRecipient(municipalityEmail)
                 .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_NOT_COLLABORATIVE_MUNICIPALITY_SUBJECT, toArray(initiative.getName()), locale))
-                .withDataMap(toDataMap(initiative, authors, locale))
+                .withDataMap(dataMap)
                 .send();
     }
 
@@ -129,7 +131,7 @@ public class EmailService {
                 .send();
     }
 
-    
+
     public void sendCollaborativeToMunicipality(Long initiativeId, Locale locale) {
 
         Initiative initiative = dataProvider.get(initiativeId);

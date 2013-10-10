@@ -22,4 +22,8 @@
 
 <@b.separator />
 
+<@b.attachments type/>
+
+<@b.separator />
+
 <@b.emailFooter type ".sentToMunicipality" />

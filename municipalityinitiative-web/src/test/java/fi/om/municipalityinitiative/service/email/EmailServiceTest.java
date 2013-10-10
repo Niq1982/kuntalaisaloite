@@ -101,6 +101,9 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
     @Test
     public void single_to_municipality_contains_all_information() throws Exception {
 
+        testHelper.addAttachment(initiativeId(), "accepted", true, "jpg");
+        testHelper.addAttachment(initiativeId(), "not accepted", false, "jpg");
+
         emailService.sendSingleToMunicipality(initiativeId(), Locales.LOCALE_FI);
 
         EmailDto email = testHelper.getSingleQueuedEmail();
@@ -118,6 +121,8 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getBodyHtml(), containsString(EXTRA_INFO));
         assertThat(email.getBodyHtml(), containsString(SENT_COMMENT));
         assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
+        assertThat(email.getBodyHtml(), containsString("1 liitetiedosto"));
+
     }
 
     @Test
