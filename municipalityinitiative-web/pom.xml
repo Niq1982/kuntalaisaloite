@@ -478,7 +478,7 @@
                                 <jsSourceFile>jquery.dirtyforms.min.js</jsSourceFile>
                                 <jsSourceFile>jsrender.min.js</jsSourceFile>
                                 <jsSourceFile>chosen.jquery.min.js</jsSourceFile>
-                                <jsSourceFile>jquery.scrollTo.min.js</jsSourceFile>
+                                <jsSourceFile>jquery.magnific-popup.min.js</jsSourceFile>
                                 <jsSourceFile>kuntalaisaloite.js</jsSourceFile>
                             </jsSourceFiles>
                             <jsFinalFile>script.js</jsFinalFile>
