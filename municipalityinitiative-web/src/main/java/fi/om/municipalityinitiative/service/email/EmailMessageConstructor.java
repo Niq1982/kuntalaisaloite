@@ -65,8 +65,7 @@ public class EmailMessageConstructor {
         private String subject;
         private Map<String, Object> dataMap;
 
-        private Maybe<Initiative> attachmentInitiative = Maybe.absent();
-        private Maybe<? extends List<? extends Participant>> attachmentParticipants = Maybe.absent();
+        private EmailAttachmentType attachmentType = EmailAttachmentType.NONE;
 
         public EmailMessageDraft(Long initiativeId, String templateName) {
             this.initiativeId = initiativeId;
@@ -92,12 +91,6 @@ public class EmailMessageConstructor {
             return this;
         }
 
-        public EmailMessageDraft withAttachment(Initiative initiative, List<? extends Participant> participants) {
-            this.attachmentInitiative = Maybe.of(initiative);
-            this.attachmentParticipants = Maybe.of(participants);
-            return this;
-        }
-
         public void send() {
 
             Assert.isTrue(recipients.size() > 0, "recipients");
@@ -111,7 +104,7 @@ public class EmailMessageConstructor {
                     processTemplate(templateName + "-text", dataMap),
                     solveEmailFrom(),
                     environmentSettings.getDefaultReplyTo(),
-                    attachmentInitiative.isPresent() ? EmailAttachmentType.PARTICIPANTS : EmailAttachmentType.NONE
+                    attachmentType
                     );
 
             // Uncomment this if you want to print all email-html files for preview etc and run EmailTests.
@@ -122,6 +115,11 @@ public class EmailMessageConstructor {
 //                e.printStackTrace();
 //            }
 
+        }
+
+        public EmailMessageDraft withAttachment(EmailAttachmentType attachmentType) {
+            this.attachmentType = attachmentType;
+            return this;
         }
     }
 }

@@ -8,6 +8,7 @@ import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
+import fi.om.municipalityinitiative.util.EmailAttachmentType;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.Urls;
 import org.slf4j.Logger;
@@ -140,7 +141,7 @@ public class EmailService {
                 .addRecipient(municipalityEmail)
                 .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_COLLABORATIVE_MUNICIPALITY_SUBJECT, toArray(initiative.getName()), locale))
                 .withDataMap(toDataMap(initiative, dataProvider.findAuthors(initiativeId), locale))
-                .withAttachment(initiative, dataProvider.findAllParticipants(initiativeId))
+                .withAttachment(EmailAttachmentType.PARTICIPANTS)
                 .send();
     }
 
@@ -153,7 +154,7 @@ public class EmailService {
                 .addRecipients(dataProvider.getAuthorEmails(initiativeId))
                 .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_COLLABORATIVE_AUTHOR_SUBJECT, toArray(), locale))
                 .withDataMap(toDataMap(initiative, dataProvider.findAuthors(initiativeId), locale))
-                .withAttachment(initiative, dataProvider.findAllParticipants(initiativeId))
+                .withAttachment(EmailAttachmentType.PARTICIPANTS)
                 .send();
     }
 

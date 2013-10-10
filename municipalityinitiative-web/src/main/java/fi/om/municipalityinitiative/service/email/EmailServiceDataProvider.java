@@ -50,13 +50,6 @@ public class EmailServiceDataProvider {
         return authorDao.findNormalAuthorEmails(initiativeId);
     }
 
-    public List<? extends Participant> findAllParticipants(Long initiativeId) {
-        if (initiativeDao.isVerifiableInitiative(initiativeId)) {
-            return participantDao.findVerifiedAllParticipants(initiativeId, 0, Integer.MAX_VALUE);
-        }
-        return participantDao.findNormalAllParticipants(initiativeId, 0, Integer.MAX_VALUE);
-    }
-
     public String getMunicipalityEmail(Long id) {
         return municipalityDao.getMunicipalityEmail(id);
     }
