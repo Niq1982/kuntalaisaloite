@@ -113,7 +113,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
     private void assertPreparePageWithInvalidMunicipalityWarning() {
         assertPreparePageTitle();
-        assertTextContainedByClass("msg-warning", "Väestötietojärjestelmän mukaan kotikuntasi ei ole aloitteen kunta. Et voi tehdä aloitetta valitsemaasi kuntaan.");
+        assertTextContainedByClass("msg-warning", "Väestötietojärjestelmän mukaan kotikuntasi ei ole kunta, jolle aloite on osoitettu. Et voi tehdä aloitetta valitsemaasi kuntaan.");
     }
 
     @Test
