@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNot.not;
 
 @Transactional
 public class EmailServiceTest extends MailSendingEmailServiceTestBase {
@@ -178,6 +179,10 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
 
     @Test
     public void collaborative_to_municipality_contains_all_information() throws Exception {
+
+        testHelper.addAttachment(initiativeId(), "accepted", true, "jpg");
+        testHelper.addAttachment(initiativeId(), "not accepted", false, "jpg");
+
         emailService.sendCollaborativeToMunicipality(initiativeId(), Locales.LOCALE_FI);
 
         EmailDto email = testHelper.getSingleQueuedEmail();
@@ -192,10 +197,15 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getBodyHtml(), containsString(AUTHOR_ADDRESS));
         assertThat(email.getBodyHtml(), containsString(AUTHOR_PHONE));
         assertThat(email.getAttachmentType(), is(EmailAttachmentType.PARTICIPANTS));
+        assertThat(email.getBodyHtml(), containsString("1 liitetiedosto"));
     }
 
     @Test
     public void collaborative_to_authors_contains_all_information() throws Exception {
+
+        testHelper.addAttachment(initiativeId(), "accepted", true, "jpg");
+        testHelper.addAttachment(initiativeId(), "not accepted", false, "jpg");
+
         emailService.sendCollaborativeToAuthors(initiativeId());
 
         EmailDto email = testHelper.getSingleQueuedEmail();
@@ -210,6 +220,16 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getBodyHtml(), containsString(AUTHOR_ADDRESS));
         assertThat(email.getBodyHtml(), containsString(AUTHOR_PHONE));
         assertThat(email.getAttachmentType(), is(EmailAttachmentType.PARTICIPANTS));
+        assertThat(email.getBodyHtml(), containsString("1 liitetiedosto"));
+    }
+
+    @Test
+    public void collaborative_to_authors_has_no_information_of_attachments_if_has_not_any() {
+        emailService.sendCollaborativeToAuthors(initiativeId());
+
+        EmailDto email = testHelper.getSingleQueuedEmail();
+        assertThat(email.getBodyHtml(), not(containsString("liitetiedosto")));
+
     }
 
     @Test

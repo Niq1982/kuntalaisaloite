@@ -219,6 +219,18 @@
     </#if>
 </#macro>
 
+<#macro attachments type>
+    <#if (attachmentCount > 0)>
+        <#if type == "html">
+            <h4 style="${h4!""}"><@u.messageHTML key="email.attachmentCount.total" args=[attachmentCount] /></h4>
+            <p style="${pBottomMargin!""}"><@u.message "email.attachmentCount.info" /></p>
+        <#else>
+            <@u.message key="email.attachmentCount.total" /> ${attachmentCount}
+            <@u.message "email.attachmentCount.info" />
+        </#if>
+    </#if>
+</#macro>
+
 <#--
  * comment
  *

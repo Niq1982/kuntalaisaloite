@@ -1,10 +1,7 @@
 package fi.om.municipalityinitiative.service.email;
 
 import com.google.common.collect.Maps;
-import fi.om.municipalityinitiative.dao.AuthorDao;
-import fi.om.municipalityinitiative.dao.InitiativeDao;
-import fi.om.municipalityinitiative.dao.MunicipalityDao;
-import fi.om.municipalityinitiative.dao.ParticipantDao;
+import fi.om.municipalityinitiative.dao.*;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Participant;
@@ -31,6 +28,9 @@ public class EmailServiceDataProvider {
 
     @Resource
     MunicipalityDao municipalityDao;
+
+    @Resource
+    AttachmentDao attachmentDao;
 
     public Initiative get(Long initiativeId) {
         return initiativeDao.get(initiativeId);
@@ -67,5 +67,9 @@ public class EmailServiceDataProvider {
             return authorEmails;
         }
         return authorDao.getManagementLinksByAuthorEmails(initiativeId);
+    }
+
+    public int getAcceptedAttachmentCount(Long initiativeId) {
+        return attachmentDao.findAcceptedAttachments(initiativeId).size();
     }
 }
