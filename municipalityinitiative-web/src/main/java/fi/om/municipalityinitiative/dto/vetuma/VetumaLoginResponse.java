@@ -18,7 +18,7 @@ public class VetumaLoginResponse extends VetumaResponse{
 
     private static final String SSN_REGEXP =
             "HETU=([0-9]{6}" + // Six digits
-                    "[-Aa]" + // - or A
+                    "[+-Aa]" + // +, - or A
                     "[0-9]{3}" + // Three digits
                     "[A-Za-z0-9])"; // One letter or digit
 
@@ -94,7 +94,8 @@ public class VetumaLoginResponse extends VetumaResponse{
         if (!Strings.isNullOrEmpty(EXTRADATA)) {
             Matcher matcher = SSN_PATTERN.matcher(EXTRADATA);
             if (matcher.matches()) {
-                ssn = matcher.group(1).toUpperCase();
+                String group = matcher.group(1);
+                ssn = group.toUpperCase();
             }
         }
         return ssn;
