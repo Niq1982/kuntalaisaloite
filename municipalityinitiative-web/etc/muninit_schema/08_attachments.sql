@@ -12,4 +12,5 @@ create table attachment (
     constraint attachment_initiative_id foreign key (initiative_id) references municipality_initiative(id)
 );
 
+create index attachment_id_index on attachment(id);
 create index attachment_initiative_id_index on attachment(initiative_id);
