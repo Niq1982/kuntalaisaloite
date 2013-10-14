@@ -1,11 +1,16 @@
 package fi.om.municipalityinitiative.web;
 
+import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.util.InitiativeState;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
 import static fi.om.municipalityinitiative.dao.TestHelper.InitiativeDraft;
 import static fi.om.municipalityinitiative.web.MessageSourceKeys.*;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 
 public class InitiativeCreateWebTest extends WebTestBase {
@@ -258,6 +263,39 @@ public class InitiativeCreateWebTest extends WebTestBase {
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         open(urls.update(initiative));
         assertTitle("Muokkaa kuntalaisaloitetta - Kuntalaisaloitepalvelu");
+    }
+
+
+    @Test
+    public void attachment_page_lists_attachments() {
+        Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID).withState(InitiativeState.DRAFT).applyAuthor().toInitiativeDraft());
+
+        testHelper.addAttachment(initiativeId, "pdf name", false, "pdf");
+
+        loginAsAuthorForLastTestHelperCreatedNormalInitiative();
+
+        open(urls.manageAttachments(initiativeId));
+        assertThat(driver.getPageSource(), containsString("/img/pdficon_large.png"));
+        assertThat(driver.getPageSource(), containsString("/pdf_name.pdf"));
+
+        // FF-driver apparently can't handle the js-trick for changinf #attachmentId:s value - don't know how to fix.
+
+//        getElement(By.className("js-delete-attachment")).click();
+//        clickDialogButton("Poista liitetiedosto");
+//
+//        assertThat(driver.getPageSource(), not(containsString("/img/pdficon_large.png")));
+//        assertThat(driver.getPageSource(), not(containsString("/pdf_name.pdf")));
+//        assertTitle("Ylläpidä liitteitä - Kuntalaisaloitepalvelu");
+    }
+
+    @Test
+    public void adding_attachment_validates_fields() {
+        Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID).withState(InitiativeState.DRAFT).applyAuthor().toInitiativeDraft());
+        loginAsAuthorForLastTestHelperCreatedNormalInitiative();
+        open(urls.manageAttachments(initiativeId));
+
+        clickDialogButton("Tallenna tiedosto");
+        assertPageHasValidationErrors();
     }
 
     public void select_municipality(boolean homeMunicipalityVerified) {

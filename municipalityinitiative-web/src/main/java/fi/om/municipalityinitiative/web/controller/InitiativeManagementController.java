@@ -105,7 +105,6 @@ public class InitiativeManagementController extends BaseController {
                                  Model model, Locale locale, HttpServletRequest request) {
 
         LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
-        loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
         InitiativeViewInfo initiativeInfo = initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder);
 

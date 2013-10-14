@@ -1,11 +1,14 @@
 package fi.om.municipalityinitiative.web;
 
+import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.util.InitiativeState;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
 import static fi.om.municipalityinitiative.web.MessageSourceKeys.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.theInstance;
 import static org.hamcrest.core.IsNot.not;
 
 public class InitiativeModerationWebTest extends WebTestBase {
@@ -153,6 +156,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
         assertThat(driver.getPageSource(), containsString("/img/pdficon_large.png"));
         assertThat(driver.getPageSource(), containsString(urls.attachment(pdfAttachmentId, pdfFileName)));
     }
+
 
 
 }
