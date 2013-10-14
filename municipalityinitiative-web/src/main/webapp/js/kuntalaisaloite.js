@@ -1502,7 +1502,7 @@ var deleteAttachment = (function() {
       var attachment =        $('.js-delete-attachment.active'),
           form =              $('#delete-attachment-form'),
           selAttachment =     $('#selected-attachment'),
-          attachmentInput =   $('#authorId'),
+          attachmentInput =   $('#attachmentId'),
           typeImage =         attachment.data('type') === 'image' ? true : false,
           attachmentDetails = '';
       

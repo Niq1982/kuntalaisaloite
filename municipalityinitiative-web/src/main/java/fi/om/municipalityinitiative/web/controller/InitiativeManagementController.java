@@ -433,20 +433,20 @@ public class InitiativeManagementController extends BaseController {
         }
         return redirectWithMessage(Urls.get(locale).manageAttachments(initiativeId), RequestMessage.ATTACHMENT_ADDED, request);
     }
-    @RequestMapping(value = DELETE_ATTACHMENT, method = POST)
-    public String deleteAttachment(@PathVariable("id") Long attachmentId,
-                                   @RequestParam("locale") String localeString,
-                                   HttpServletRequest request,
-                                   HttpServletResponse response) {
-        Locale locale = Locale.forLanguageTag(localeString);
-
-        Long initiativeId = attachmentService.deleteAttachment(attachmentId, userService.getLoginUserHolder(request));
-        return redirectWithMessage(Urls.get(locale).manageAttachments(initiativeId), RequestMessage.ATTACHMENT_DELETED, request);
-    }
+//    @RequestMapping(value = DELETE_ATTACHMENT, method = POST)
+//    public String deleteAttachment(@PathVariable("id") Long attachmentId,
+//                                   @RequestParam("locale") String localeString,
+//                                   HttpServletRequest request,
+//                                   HttpServletResponse response) {
+//        Locale locale = Locale.forLanguageTag(localeString);
+//
+//        Long initiativeId = attachmentService.deleteAttachment(attachmentId, userService.getLoginUserHolder(request));
+//        return redirectWithMessage(Urls.get(locale).manageAttachments(initiativeId), RequestMessage.ATTACHMENT_DELETED, request);
+//    }
 
     @RequestMapping(value = {MANAGE_ATTACHMENTS_FI+ID_PARAMETER, MANAGE_ATTACHMENTS_SV+ID_PARAMETER}, method = POST, params = ACTION_DELETE_ATTACHMENT)
     public String deleteAttachment(@PathVariable("id") Long initiativeId,
-                                   @RequestParam("attachmentId") Long attachmentId,
+                                   @RequestParam(PARAM_ATTACHMENT_ID) Long attachmentId,
                                    HttpServletRequest request,
                                    Locale locale) {
 

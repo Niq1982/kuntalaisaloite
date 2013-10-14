@@ -131,6 +131,8 @@ public final class Urls {
     
     public static final String PARAM_PARTICIPANT_ID = "participantId";
 
+    public static final String PARAM_ATTACHMENT_ID = "attachmentId";
+
     public static final String ACTION_SAVE = "action-save";
 
     public static final String ACTION_SEND_TO_REVIEW = "action-send-to-review";
@@ -280,8 +282,6 @@ public final class Urls {
     public static final String ATTACHMENT = "/attachment/" + ID_PARAMETER + "/" + FILENAME_PARAMETER;
 
     public static final String ATTACHMENT_THUMBNAIL = "/thumbnail/" + ID_PARAMETER;
-
-    public static final String DELETE_ATTACHMENT = "/delete-image/" + ID_PARAMETER;
 
     private final String baseUrl;
 
@@ -513,10 +513,6 @@ public final class Urls {
     public String addAttachment(Long initiativeId) {
         return getLocalizedPageUrl(MANAGE_ATTACHMENTS_FI+ID_PARAMETER, MANAGE_ATTACHMENTS_SV+ID_PARAMETER).replace(ID_PARAMETER, initiativeId.toString());
 
-    }
-
-    public String deleteAttachment(Long attachmentId) {
-        return baseUrl + DELETE_ATTACHMENT.replace(ID_PARAMETER, attachmentId.toString());
     }
 
     public String testDataGeneration() {
