@@ -1,19 +1,61 @@
+.frontpage-image (@index:1) {
+    background-image:url("../../img/front-images/front-strip-@{index}.jpg?version=${timestamp}");
+}
+
+.frontpage-image-retina (@index:1) {
+    background-image:url("../../img/front-images/front-strip-@{index}-2x.jpg?version=${timestamp}");
+}
+
 // Frontpage
 .image-container {
     position:relative;
-    width:100%;
-    height:371px;
-    padding-bottom:10px;
-    background:#fff url("../../img/front-images/frontpage-images.jpg?version=${timestamp}") center top repeat-x;
+    height:370px;
+    border:10px solid #fff;
+    border-top:0;
+    background-color: #fff;
+    background-position: center top;
+    background-repeat: repeat-x;
+    
+    .frontpage-image(1);
+    
+    &.image-2 {
+    	.frontpage-image(2);
+    }
+    &.image-3 {
+    	.frontpage-image(3);
+    }
+    &.image-4 {
+    	.frontpage-image(4);
+    }
+    
+    @media @highdensity {
+    	background-size: cover;
+    	
+    	.frontpage-image-retina(1);
+    	
+		&.image-2 {
+	    	.frontpage-image-retina(2);
+	    }
+	    &.image-3 {
+	    	.frontpage-image-retina(3);
+	    }
+	    &.image-4 {
+	    	.frontpage-image-retina(4);
+	    }
+    }
+    
 }
 
-.front .container { position: relative; }
+.front .container {
+	position: relative;
+	padding: 0 10px;
+}
 .big-link-holder {
     position: absolute;
-    top: -381px;
-    left: 0;
+    top: -380px;
+    left: 10px;
     width: 470px;
-    height:371px;
+    height:370px;
 
     .big-link {
         position: absolute;

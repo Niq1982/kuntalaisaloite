@@ -239,7 +239,16 @@
         }
     }
 }
-.front #header { margin-bottom:0; }
+.front #header {
+	margin-bottom:0;
+	border-bottom: 0;
+	
+	.header-wrap-front {
+		margin: 0 10px;
+		border-bottom: 1px solid @borderGray;
+	}
+	
+}
 
 // Exceptions for swedish page 
 .sv {

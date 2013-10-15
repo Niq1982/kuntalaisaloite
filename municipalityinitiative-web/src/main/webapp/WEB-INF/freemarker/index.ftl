@@ -5,7 +5,25 @@
 <#escape x as x?html> 
 <@l.main "page.frontpage">
 
-<div class="image-container">
+<#assign imageNumber="1">
+
+<#function rand min max>
+  <#local now = .now?long?c />
+  <#local randomNum = _rand +
+    ("0." + now?substring(now?length-1) + now?substring(now?length-2))?number />
+  <#if (randomNum > 1)>
+    <#assign _rand = randomNum % 1 />
+  <#else>
+    <#assign _rand = randomNum />
+  </#if>
+  <#return (min + ((max - min) * _rand))?round />
+</#function>
+
+<#assign _rand = 0.36 />
+<#assign imageNumber = rand(1, 4)?c />
+
+
+<div class="image-container image-${imageNumber}">
 <#if requestMessages?? && (requestMessages?size > 0)>
     <@u.frontpageRequestMessage requestMessages />
 </#if>

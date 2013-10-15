@@ -292,6 +292,7 @@
 
       
     <div id="header">
+    	<#if page == "page.frontpage"><div class="header-wrap-front"></#if>
         <div id="header-content">
 
             <a id="logo" href="${urls.baseUrl}/${locale}" accesskey="1" title="<@u.message "siteName" />">
@@ -321,6 +322,7 @@
             </#if>
         
         </div>
+        <#if page == "page.frontpage"></div></#if>
     </div>
     
     <#if page == "page.frontpage">
