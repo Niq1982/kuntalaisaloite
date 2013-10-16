@@ -17,6 +17,8 @@ import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.SecurityFilter;
 import fi.om.municipalityinitiative.web.Urls;
 import org.im4java.core.InfoException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,8 +30,6 @@ import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequ
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -60,6 +60,8 @@ public class InitiativeManagementController extends BaseController {
 
     @Resource
     AttachmentService attachmentService;
+
+    private static final Logger log = LoggerFactory.getLogger(InitiativeManagementController.class);
 
     public InitiativeManagementController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
@@ -426,22 +428,14 @@ public class InitiativeManagementController extends BaseController {
         try {
             attachmentService.addAttachment(initiativeId, userService.getLoginUserHolder(request), attachmentCreateDto.getImage(), attachmentCreateDto.getDescription());
         } catch (FileUploadException e) {
+            log.warn("FileUploadException: ", e);
             return redirectWithMessage(Urls.get(locale).manageAttachments(initiativeId), RequestMessage.ATTACHMENT_FAILURE, request);
         } catch (InvalidAttachmentException e) {
+            log.warn("InvalidAttachmentException: ", e);
             return redirectWithMessage(Urls.get(locale).manageAttachments(initiativeId), RequestMessage.ATTACHMENT_INVALID, request);
         }
         return redirectWithMessage(Urls.get(locale).manageAttachments(initiativeId), RequestMessage.ATTACHMENT_ADDED, request);
     }
-//    @RequestMapping(value = DELETE_ATTACHMENT, method = POST)
-//    public String deleteAttachment(@PathVariable("id") Long attachmentId,
-//                                   @RequestParam("locale") String localeString,
-//                                   HttpServletRequest request,
-//                                   HttpServletResponse response) {
-//        Locale locale = Locale.forLanguageTag(localeString);
-//
-//        Long initiativeId = attachmentService.deleteAttachment(attachmentId, userService.getLoginUserHolder(request));
-//        return redirectWithMessage(Urls.get(locale).manageAttachments(initiativeId), RequestMessage.ATTACHMENT_DELETED, request);
-//    }
 
     @RequestMapping(value = {MANAGE_ATTACHMENTS_FI+ID_PARAMETER, MANAGE_ATTACHMENTS_SV+ID_PARAMETER}, method = POST, params = ACTION_DELETE_ATTACHMENT)
     public String deleteAttachment(@PathVariable("id") Long initiativeId,

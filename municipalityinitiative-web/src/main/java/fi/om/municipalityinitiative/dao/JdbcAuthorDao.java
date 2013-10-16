@@ -3,8 +3,10 @@ package fi.om.municipalityinitiative.dao;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.mysema.query.Tuple;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.types.Expression;
+import com.mysema.query.types.MappingProjection;
 import com.mysema.query.types.expr.DateTimeExpression;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.NormalAuthor;
@@ -32,6 +34,75 @@ import static fi.om.municipalityinitiative.dao.JdbcInitiativeDao.assertSingleAff
 public class JdbcAuthorDao implements AuthorDao {
 
     private static final Expression<DateTime> CURRENT_TIME = DateTimeExpression.currentTimestamp(DateTime.class);
+    public static Expression<NormalAuthor> normalAuthorMapping =
+            new MappingProjection<NormalAuthor>(NormalAuthor.class,
+                    QMunicipality.municipality.all(),
+                    QParticipant.participant.all(),
+                    QAuthor.author.all()) {
+                @Override
+                protected NormalAuthor map(Tuple row) {
+
+                    ContactInfo contactInfo = new ContactInfo();
+                    contactInfo.setAddress(row.get(QAuthor.author.address));
+                    contactInfo.setPhone(row.get(QAuthor.author.phone));
+                    contactInfo.setEmail(row.get(QParticipant.participant.email));
+                    contactInfo.setName(row.get(QParticipant.participant.name));
+                    contactInfo.setShowName(Boolean.TRUE.equals(row.get(QParticipant.participant.showName)));
+
+                    NormalAuthor author = new NormalAuthor();
+                    author.setId(new NormalAuthorId(row.get(QAuthor.author.participantId)));
+                    author.setCreateTime(row.get(QParticipant.participant.participateTime));
+                    author.setContactInfo(contactInfo);
+                    author.setMunicipality(Maybe.of(Mappings.parseMunicipality(row)));
+
+                    return author;
+
+                }
+            };
+    public static Expression<VerifiedAuthor> verifiedAuthorMapper = new MappingProjection<VerifiedAuthor>(VerifiedAuthor.class,
+            QVerifiedAuthor.verifiedAuthor.all(),
+            QVerifiedParticipant.verifiedParticipant.all(),
+            QVerifiedUser.verifiedUser.all(),
+            QMunicipality.municipality.all()) {
+        @Override
+        protected VerifiedAuthor map(Tuple row) {
+            VerifiedAuthor author = new VerifiedAuthor();
+
+            ContactInfo contactInfo = new ContactInfo();
+            contactInfo.setPhone(row.get(QVerifiedUser.verifiedUser.phone));
+            contactInfo.setName(row.get(QVerifiedUser.verifiedUser.name));
+            contactInfo.setAddress(row.get(QVerifiedUser.verifiedUser.address));
+            contactInfo.setEmail(row.get(QVerifiedUser.verifiedUser.email));
+            contactInfo.setShowName(row.get(QVerifiedParticipant.verifiedParticipant.showName)); // currently has not null constraint
+
+            author.setContactInfo(contactInfo);
+            author.setId(new VerifiedUserId(row.get(QVerifiedUser.verifiedUser.id)));
+            author.setCreateTime(row.get(QVerifiedParticipant.verifiedParticipant.participateTime));
+
+            author.setMunicipality(Mappings.parseMaybeMunicipality(row));
+
+            return author;
+        }
+    };
+    public static Expression<AuthorInvitation> authorInvitationMapping =
+            new MappingProjection<AuthorInvitation>(AuthorInvitation.class,
+                    QAuthorInvitation.authorInvitation.all()) {
+
+                @Override
+                protected AuthorInvitation map(Tuple row) {
+                    AuthorInvitation authorInvitation = new AuthorInvitation();
+
+                    authorInvitation.setConfirmationCode(row.get(QAuthorInvitation.authorInvitation.confirmationCode));
+                    authorInvitation.setInitiativeId(row.get(QAuthorInvitation.authorInvitation.initiativeId));
+                    authorInvitation.setEmail(row.get(QAuthorInvitation.authorInvitation.email));
+                    authorInvitation.setInvitationTime(row.get(QAuthorInvitation.authorInvitation.invitationTime));
+                    authorInvitation.setName(row.get(QAuthorInvitation.authorInvitation.name));
+                    authorInvitation.setRejectTime(Maybe.fromNullable(row.get(QAuthorInvitation.authorInvitation.rejectTime)));
+
+                    return authorInvitation;
+
+                }
+            };
 
     @Resource
     PostgresQueryFactory queryFactory;
@@ -80,7 +151,7 @@ public class JdbcAuthorDao implements AuthorDao {
         AuthorInvitation authorInvitation = queryFactory.from(QAuthorInvitation.authorInvitation)
                 .where(QAuthorInvitation.authorInvitation.initiativeId.eq(initiativeId))
                 .where(QAuthorInvitation.authorInvitation.confirmationCode.eq(confirmationCode))
-                .singleResult(Mappings.authorInvitationMapping);
+                .singleResult(authorInvitationMapping);
         if (authorInvitation == null) {
             throw new InvitationNotValidException("No invitation: " + initiativeId + ", " + confirmationCode);
         }
@@ -112,7 +183,7 @@ public class JdbcAuthorDao implements AuthorDao {
         return queryFactory.from(QAuthorInvitation.authorInvitation)
                 .where(QAuthorInvitation.authorInvitation.initiativeId.eq(initiativeId))
                 .orderBy(QAuthorInvitation.authorInvitation.invitationTime.asc())
-                .list(Mappings.authorInvitationMapping);
+                .list(authorInvitationMapping);
     }
 
     @Override
@@ -129,7 +200,7 @@ public class JdbcAuthorDao implements AuthorDao {
                 .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
                 .innerJoin(QParticipant.participant.participantMunicipalityFk, QMunicipality.municipality)
                 .orderBy(QParticipant.participant.id.asc())
-                .list(Mappings.normalAuthorMapping);
+                .list(normalAuthorMapping);
     }
 
     @Override
@@ -163,7 +234,7 @@ public class JdbcAuthorDao implements AuthorDao {
                 .where(QAuthor.author.participantId.eq(authorId.toLong()))
                 .innerJoin(QAuthor.author.authorParticipantFk, QParticipant.participant)
                 .innerJoin(QParticipant.participant.participantMunicipalityFk, QMunicipality.municipality)
-                .uniqueResult(Mappings.normalAuthorMapping);
+                .uniqueResult(normalAuthorMapping);
     }
 
     @Override
@@ -177,7 +248,7 @@ public class JdbcAuthorDao implements AuthorDao {
                 .where(QVerifiedUser.verifiedUser.id.eq(userId.toLong()))
                 .where(QVerifiedAuthor.verifiedAuthor.initiativeId.eq(initiativeId))
                 .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
-                .uniqueResult(Mappings.verifiedAuthorMapper);
+                .uniqueResult(verifiedAuthorMapper);
 
     }
 
@@ -302,6 +373,6 @@ public class JdbcAuthorDao implements AuthorDao {
                 .where(QVerifiedParticipant.verifiedParticipant.initiativeId.eq(initiativeId))
                 .innerJoin(QVerifiedAuthor.verifiedAuthor.verifiedAuthorInitiativeFk, QMunicipalityInitiative.municipalityInitiative)
                 .innerJoin(QMunicipalityInitiative.municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
-                .list(Mappings.verifiedAuthorMapper);
+                .list(verifiedAuthorMapper);
     }
 }

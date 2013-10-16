@@ -1,13 +1,19 @@
 package fi.om.municipalityinitiative.dao;
 
+import com.mysema.query.Tuple;
 import com.mysema.query.sql.dml.SQLUpdateClause;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
+import com.mysema.query.types.Expression;
+import com.mysema.query.types.MappingProjection;
+import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.service.NormalParticipant;
 import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.dto.service.VerifiedParticipant;
 import fi.om.municipalityinitiative.exceptions.InvalidParticipationConfirmationException;
+import fi.om.municipalityinitiative.service.id.NormalParticipantId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
+import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 
 import javax.annotation.Resource;
@@ -20,6 +26,48 @@ import static fi.om.municipalityinitiative.sql.QParticipant.participant;
 @SQLExceptionTranslated
 public class JdbcParticipantDao implements ParticipantDao {
 
+    public static Expression<VerifiedParticipant> verifiedParticipantMapping = new MappingProjection<VerifiedParticipant>(
+            VerifiedParticipant.class,
+            QVerifiedParticipant.verifiedParticipant.participateTime,
+            QVerifiedParticipant.verifiedParticipant.verified,
+            QVerifiedUser.verifiedUser.name,
+            QVerifiedUser.verifiedUser.email,
+            QVerifiedUser.verifiedUser.id
+    ) {
+        @Override
+        protected VerifiedParticipant map(Tuple row) {
+            VerifiedParticipant participant = new VerifiedParticipant();
+
+            participant.setEmail(row.get(QVerifiedUser.verifiedUser.email));
+            participant.setVerified(row.get(QVerifiedParticipant.verifiedParticipant.verified));
+            participant.setParticipateDate(row.get(QVerifiedParticipant.verifiedParticipant.participateTime));
+            participant.setName(row.get(QVerifiedUser.verifiedUser.name));
+            participant.setId(new VerifiedUserId(row.get(QVerifiedUser.verifiedUser.id)));
+
+            return participant;
+        }
+    };
+    public static Expression<NormalParticipant> normalParticipantMapping =
+            new MappingProjection<NormalParticipant>(NormalParticipant.class,
+                    participant.all(), QMunicipality.municipality.all()) {
+                @Override
+                protected NormalParticipant map(Tuple row) {
+                    NormalParticipant par = new NormalParticipant();
+                    par.setParticipateDate(row.get(participant.participateTime));
+                    par.setName(row.get(participant.name));
+                    par.setEmail(row.get(participant.email));
+                    par.setMembership(row.get(participant.membershipType));
+                    if (row.get(QMunicipality.municipality.id) != null) {
+                        par.setHomeMunicipality(Maybe.of(Mappings.parseMunicipality(row)));
+                    }
+                    else {
+                        par.setHomeMunicipality(Maybe.<Municipality>absent());
+                    }
+                    par.setId(new NormalParticipantId(row.get(participant.id)));
+                    return par;
+
+                }
+            };
     @Resource
     PostgresQueryFactory queryFactory;
 
@@ -112,7 +160,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .where(participant.showName.eq(true))
                 .where(participant.confirmationCode.isNull())
                 .orderBy(participant.id.desc())
-                .list(Mappings.normalParticipantMapping);
+                .list(normalParticipantMapping);
     }
 
     @Override
@@ -126,7 +174,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .orderBy(participant.id.desc())
                 .offset(offset)
                 .limit(limit)
-                .list(Mappings.normalParticipantMapping);
+                .list(normalParticipantMapping);
     }
 
     @Override
@@ -139,7 +187,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .orderBy(participant.id.desc())
                 .limit(limit)
                 .offset(offset)
-                .list(Mappings.normalParticipantMapping);
+                .list(normalParticipantMapping);
     }
 
     @Override
@@ -151,7 +199,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .orderBy(QVerifiedParticipant.verifiedParticipant.participateTime.desc(), QVerifiedUser.verifiedUser.id.desc())
                 .limit(limit)
                 .offset(offset)
-                .list(Mappings.verifiedParticipantMapping);
+                .list(verifiedParticipantMapping);
     }
 
     @Override
@@ -164,7 +212,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .orderBy(QVerifiedParticipant.verifiedParticipant.participateTime.desc(), QVerifiedUser.verifiedUser.id.desc())
                 .limit(limit)
                 .offset(offset)
-                .list(Mappings.verifiedParticipantMapping);
+                .list(verifiedParticipantMapping);
     }
 
     @Override
