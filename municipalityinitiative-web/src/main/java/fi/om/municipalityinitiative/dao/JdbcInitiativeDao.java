@@ -1,11 +1,14 @@
 package fi.om.municipalityinitiative.dao;
 
+import com.google.common.base.Strings;
 import com.mysema.commons.lang.Assert;
+import com.mysema.query.Tuple;
 import com.mysema.query.sql.postgres.PostgresQuery;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.support.Expressions;
 import com.mysema.query.types.ConstantImpl;
 import com.mysema.query.types.Expression;
+import com.mysema.query.types.MappingProjection;
 import com.mysema.query.types.Predicate;
 import com.mysema.query.types.expr.BooleanExpression;
 import com.mysema.query.types.expr.CaseBuilder;
@@ -48,6 +51,51 @@ public class JdbcInitiativeDao implements InitiativeDao {
     private static final BooleanExpression STATE_IS_COLLECTING = municipalityInitiative.sent.isNull().and(IS_PUBLIC);
     private static final BooleanExpression STATE_IS_SENT = municipalityInitiative.sent.isNotNull().and(IS_PUBLIC);
     private static final BooleanExpression STATE_IS_FIX = municipalityInitiative.fixState.eq(FixState.FIX);
+    public static Expression<InitiativeListInfo> initiativeListInfoMapping =
+            new MappingProjection<InitiativeListInfo>(InitiativeListInfo.class,
+                    municipalityInitiative.all(),
+                    QMunicipality.municipality.all()) {
+                @Override
+                protected InitiativeListInfo map(Tuple row) {
+                    InitiativeListInfo info = new InitiativeListInfo();
+                    info.setId(row.get(municipalityInitiative.id));
+                    info.setName(row.get(municipalityInitiative.name));
+                    info.setMunicipality(Mappings.parseMunicipality(row));
+                    info.setCollaborative(InitiativeType.isCollaborative(row.get(municipalityInitiative.type)));
+                    info.setSentTime(Mappings.maybeLocalDate(row.get(municipalityInitiative.sent)));
+                    info.setParticipantCount(Mappings.nullToZero(row.get(municipalityInitiative.participantCount)) + Mappings.nullToZero(row.get(municipalityInitiative.externalparticipantcount)));
+                    info.setType(row.get(municipalityInitiative.type));
+                    info.setState(row.get(municipalityInitiative.state));
+                    info.setStateTime(row.get(municipalityInitiative.stateTimestamp).toLocalDate());
+                    return info;
+                }
+            };
+    public static Expression<Initiative> initiativeInfoMapping =
+            new MappingProjection<Initiative>(Initiative.class,
+                    municipalityInitiative.all(),
+                    QMunicipality.municipality.all()) {
+                @Override
+                protected Initiative map(Tuple row) {
+                    Initiative info = new Initiative();
+                    info.setId(row.get(municipalityInitiative.id));
+                    info.setCreateTime(row.get(municipalityInitiative.modified).toLocalDate());
+                    info.setName(row.get(municipalityInitiative.name));
+                    info.setMunicipality(Mappings.parseMunicipality(row));
+                    info.setType(row.get(municipalityInitiative.type));
+                    info.setProposal(row.get(municipalityInitiative.proposal));
+                    info.setSentTime(Mappings.maybeLocalDate(row.get(municipalityInitiative.sent)));
+                    info.setState(row.get(municipalityInitiative.state));
+                    info.setStateTime(row.get(municipalityInitiative.stateTimestamp).toLocalDate());
+                    info.setExtraInfo(row.get(municipalityInitiative.extraInfo));
+                    info.setModeratorComment(Strings.nullToEmpty(row.get(municipalityInitiative.moderatorComment)));
+                    info.setParticipantCount(row.get(municipalityInitiative.participantCount));
+                    info.setSentComment(row.get(municipalityInitiative.sentComment));
+                    info.setFixState(row.get(municipalityInitiative.fixState));
+                    info.setExternalParticipantCount(Mappings.nullToZero(row.get(municipalityInitiative.externalparticipantcount)));
+                    info.setParticipantCountPublic(Mappings.nullToZero(row.get(municipalityInitiative.participantCountPublic)));
+                    return info;
+                }
+            };
 
     private final Logger log = LoggerFactory.getLogger(JdbcInitiativeDao.class);
 
@@ -82,7 +130,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
         restrictResults(query, search);
 
 
-        return new InitiativeListWithCount(query.list(Mappings.initiativeListInfoMapping), rows);
+        return new InitiativeListWithCount(query.list(initiativeListInfoMapping), rows);
     }
 
     private static void filterByType(PostgresQuery query, InitiativeSearch.Type type) {
@@ -112,7 +160,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .where(QVerifiedUser.verifiedUser.id.eq(verifiedUserId.toLong()))
                 .where(QMunicipalityInitiative.municipalityInitiative.name.isNotEmpty())
                 .orderBy(QMunicipalityInitiative.municipalityInitiative.id.desc())
-                .list(Mappings.initiativeListInfoMapping);
+                .list(initiativeListInfoMapping);
     }
 
     @Override
@@ -257,7 +305,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
                 .where(municipalityInitiative.id.eq(initiativeId));
 
-        Initiative initiative = query.uniqueResult(Mappings.initiativeInfoMapping);
+        Initiative initiative = query.uniqueResult(initiativeInfoMapping);
         if (initiative == null) {
             throw new NotFoundException("initiative", initiativeId);
         }

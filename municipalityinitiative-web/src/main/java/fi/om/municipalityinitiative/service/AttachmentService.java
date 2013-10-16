@@ -140,13 +140,13 @@ public class AttachmentService {
             if (fileType.equals(givenFileType))
                 return;
         }
-        throw new InvalidAttachmentException("Invalid fileName");
+        throw new InvalidAttachmentException("Invalid fileName: "+givenFileType);
     }
 
     private static String parseFileType(String fileName) throws InvalidAttachmentException {
         String[] split = fileName.split("\\.");
         if (split.length == 1) {
-            throw new InvalidAttachmentException("Invalid filename");
+            throw new InvalidAttachmentException("Invalid filename: " + fileName);
         }
 
         return split[split.length-1];

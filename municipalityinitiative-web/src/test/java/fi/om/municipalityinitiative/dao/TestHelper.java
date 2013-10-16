@@ -490,14 +490,14 @@ public class TestHelper {
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
                 .leftJoin(participant.participantMunicipalityFk, QMunicipality.municipality)
                 .orderBy(participant.id.desc())
-                .uniqueResult(Mappings.normalParticipantMapping);
+                .uniqueResult(JdbcParticipantDao.normalParticipantMapping);
     }
 
     @Transactional(readOnly = true)
     public AuthorInvitation getAuthorInvitation(String confirmationCode) {
         return queryFactory.from(QAuthorInvitation.authorInvitation)
                 .where(QAuthorInvitation.authorInvitation.confirmationCode.eq(confirmationCode))
-                .uniqueResult(Mappings.authorInvitationMapping);
+                .uniqueResult(JdbcAuthorDao.authorInvitationMapping);
     }
 
     @Transactional(readOnly = false)
@@ -764,7 +764,7 @@ public class TestHelper {
         return queryFactory.from(QMunicipalityInitiative.municipalityInitiative)
                 .where(QMunicipalityInitiative.municipalityInitiative.id.eq(id))
                 .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
-                .uniqueResult(Mappings.initiativeInfoMapping);
+                .uniqueResult(JdbcInitiativeDao.initiativeInfoMapping);
     }
 
     @Transactional
