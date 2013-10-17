@@ -510,11 +510,6 @@ public final class Urls {
         return baseUrl + ATTACHMENT_THUMBNAIL.replace(ID_PARAMETER, id.toString());
     }
 
-    public String addAttachment(Long initiativeId) {
-        return getLocalizedPageUrl(MANAGE_ATTACHMENTS_FI+ID_PARAMETER, MANAGE_ATTACHMENTS_SV+ID_PARAMETER).replace(ID_PARAMETER, initiativeId.toString());
-
-    }
-
     public String testDataGeneration() {
         return getLocalizedPageUrl(TEST_DATA_GENERATION_FI, TEST_DATA_GENERATION_SV);
     }

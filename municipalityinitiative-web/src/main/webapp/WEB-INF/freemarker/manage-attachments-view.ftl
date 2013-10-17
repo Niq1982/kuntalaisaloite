@@ -34,13 +34,11 @@
     
 	    <div class="view-block cf">
 		    <#if managementSettings.allowAddAttachments>
-		    
-		    	
-		        
+
 		        <h2><@u.message "attachment.add.title" /></h2>
 				<div class="initiative-content-row cf">
 				    
-			        <form id="form-upload-image" enctype="multipart/form-data" action="${urls.addAttachment(initiative.id)}" method="POST">
+			        <form id="form-upload-image" enctype="multipart/form-data" action="${urls.getManageAttachments(initiative.id)}" method="POST">
 			            <@f.securityFilters/>
 	                    <@spring.bind "attachment" />
 			            <input type="hidden" name="locale" value="${locale}"/>
@@ -149,7 +147,7 @@
 -->
 <#macro attachmentDetailsById id>
     <#list attachments.images as attachment>
-        <#if attachment.id?string == id>
+        <#if attachment.attachmentId?string == id>
             <h4 class="header">${attachment.description}</h4>
             <img src="${urls.getAttachmentThumbnail(attachment.attachmentId)}" alt="${attachment.description}" />
         </#if>
@@ -172,7 +170,7 @@
 <#macro deleteAattachmentForm modal=true>
 	<#if !modal><#assign attachmentId = RequestParameters['deleteAttachment']?number /></#if>
 
-    <form id="delete-attachment-form" action="<#if !modal>${urls.getManageAttachments(attachmentId)}</#if>" method="POST">
+    <form id="delete-attachment-form" action="<#if !modal>${urls.getManageAttachments(initiative.id)}</#if>" method="POST">
         <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
         <input type="hidden" id="attachmentId" name="${UrlConstants.PARAM_ATTACHMENT_ID}" value="<#if !modal>${RequestParameters['deleteAttachment']}</#if>"/>
         
