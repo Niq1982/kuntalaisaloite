@@ -125,43 +125,35 @@ public class AttachmentService {
         }
     }
 
-    private static boolean isPDF(File tempFile) throws IOException {
+    static boolean isPDF(File file) throws IOException {
 
-        byte[] ba = Files.toByteArray(tempFile); //Its a google guava library
-
-        byte b0 = ba[0];
-        byte b1 = ba[1];
-        byte b2 = ba[2];
-        byte b3 = ba[3];
-        return (b0 == 0x25)
-                && (b1 == 0x50)
-                && (b2 == 0x44)
-                && (b3 == 0x46);
-
+        byte[] ba = Files.toByteArray(file); //Its a google guava library
+        return (ba[0] == 0x25)
+                && (ba[1] == 0x50)
+                && (ba[2] == 0x44)
+                && (ba[3] == 0x46);
     }
 
-    public static boolean isJPEG(File file) throws IOException {
+    static boolean isJPEG(File file) throws IOException {
         byte[] ba = Files.toByteArray(file); //Its a google guava library
         int i = 0;
         return (ba[i] & 0xFF) == 0xFF && (ba[i + 1] & 0xFF) == 0xD8 && (ba[ba.length - 2] & 0xFF) == 0xFF
                 && (ba[ba.length - 1] & 0xFF) == 0xD9;
     }
 
-    public static boolean isPNG(File tempFile) throws IOException {
+    static boolean isPNG(File file) throws IOException {
         int numRead;
         byte[] signature = new byte[8];
         byte[] pngIdBytes = { -119, 80, 78, 71, 13, 10, 26, 10 };
 
         // if first 8 bytes are PNG then return PNG reader
-        try (InputStream is = new FileInputStream(tempFile)) {
+        try (InputStream is = new FileInputStream(file)) {
             numRead = is.read(signature);
             if (numRead == -1)
                 throw new IOException("Trying to read from 0 byte stream");
         }
         return numRead == 8 && Arrays.equals(signature, pngIdBytes);
     }
-
-
 
     private String getFilePath(Long attachmentId, String fileType) {
         return attachmentDir + "/" + attachmentId + "." + fileType;
