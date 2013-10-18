@@ -1,11 +1,10 @@
 package fi.om.municipalityinitiative.util;
 
 import org.im4java.core.IM4JavaException;
-import org.im4java.core.InfoException;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -17,8 +16,7 @@ public class ImageModifierTest {
     private static final int MAX_HEIGHT = 500;
 
     public static void main(String[] params) throws IOException, IM4JavaException, InterruptedException {
-        FileInputStream inputStream = new FileInputStream("/Users/paulika/Desktop/aloite.png");
-        new ImageModifier().modify(inputStream, "/Users/paulika/Desktop/aa.png", "png", MAX_WIDTH, MAX_HEIGHT);
+        new ImageModifier().modify(new File("/Users/paulika/Desktop/aloite.png"), "/Users/paulika/Desktop/aa.png", MAX_WIDTH, MAX_HEIGHT);
     }
 
 //    @Test

@@ -213,7 +213,7 @@ public class PublicInitiativeController extends BaseController {
         Urls urls = Urls.get(locale);
         String alternativeURL = urls.alt().participantList(initiativeId);
 
-        InitiativeViewInfo initiativeInfo = publicInitiativeService.getPublicInitiative(initiativeId);
+        InitiativeViewInfo initiativeInfo = publicInitiativeService.getInitiative(initiativeId, userService.getLoginUserHolder(request));
 
         addPiwicIdIfNotAuthenticated(model, request);
 

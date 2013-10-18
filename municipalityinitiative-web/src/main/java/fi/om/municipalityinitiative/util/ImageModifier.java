@@ -6,23 +6,12 @@ import org.im4java.core.IM4JavaException;
 import org.im4java.core.IMOperation;
 import org.im4java.core.Info;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 
 public class ImageModifier {
 
-    public void modify(InputStream inputStream, String resultFilePath, String fileType, int maxWidth, int maxHeight) throws IOException, IM4JavaException, InterruptedException {
-
-        File tempFile = File.createTempFile(RandomHashGenerator.shortHash(), "." + fileType);
-        try (FileOutputStream output = new FileOutputStream(tempFile)) {
-            IOUtils.write(IOUtils.toByteArray(inputStream), output);
-        }
-        finally {
-            inputStream.close();
-        }
+    public void modify(File tempFile, String resultFilePath, int maxWidth, int maxHeight) throws IOException, IM4JavaException, InterruptedException {
 
         Info info = new Info(tempFile.getAbsolutePath(), true);
 

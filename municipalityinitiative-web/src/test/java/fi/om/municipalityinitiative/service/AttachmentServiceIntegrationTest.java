@@ -10,6 +10,7 @@ import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import org.aspectj.util.FileUtil;
 import org.im4java.core.InfoException;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -173,6 +174,11 @@ public class AttachmentServiceIntegrationTest extends ServiceIntegrationTestBase
         precondition(testHelper.countAll(QAttachment.attachment), is(1L));
         attachmentService.deleteAttachment(attachmentId, TestHelper.authorLoginUserHolder);
         assertThat(testHelper.countAll(QAttachment.attachment), is(0L));
+    }
+
+    @Test
+    public void check_file_is_jpeg() throws IOException {
+        assertThat(AttachmentService.isJPEG(new File(System.getProperty("user.dir") + "/src/main/webapp/img/border.png")), is(true));
     }
 
     private void createDummyTempAttachmentFile(Long attachmentId) {
