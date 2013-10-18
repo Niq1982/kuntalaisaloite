@@ -1456,14 +1456,17 @@ var deleteParticipant = (function() {
 		getParticipant: function(){
 			var participant =			$('.js-delete-participant.active'),
 				municipality =			$('.municipalities .active'),
-				form = 					$('#delete-participant-form'),
+				form = 					    $('#delete-participant-form'),
 				selParticipant =		$('#selected-participant'),
 				participantInput =		$('#participantId'),
+				participantNameId =  'participant-name',
 				participantDetails =	'<li><span class="date">' + participant.data("date") + '</span>' +
-										'<span class="name-container"><span class="name">' + participant.data("name") + '</span>' +
+										'<span class="name-container"><span id="' + participantNameId + '" class="name"></span>' +
 										'<span class="home-municipality"><span class="bull">&bull;</span>' + participant.data("municipality") + '</span></li>';
 
 			selParticipant.html(participantDetails);
+			// Avoid XSS
+      $('#'+participantNameId).text(participant.data('name'));
 			
 			participantInput.val(participant.data("id"));
 		}
@@ -1482,12 +1485,15 @@ var deleteAuthor = (function() {
 				form =					$('#delete-author-form'),
 				selAuthor =				$('#selected-author'),
 				authorInput =			$('#authorId'),
-				authorDetails =			'<h4 class="header">'  + author.data("name") + '</h4><div class="contact-info">' +
+				authorNameId =  'author-name',
+				authorDetails =			'<h4 id="' + authorNameId + '" class="header"></h4><div class="contact-info">' +
 										author.data("email") + '<br/>' +
 										author.data("address") + (author.data("address") !== "" ? '<br/>' : '') +
 										author.data("phone") +'</div>';
 
 			selAuthor.html(authorDetails);
+			// Avoid XSS
+      $('#'+authorNameId).text(author.data('name'));
 			
 			authorInput.val(author.data("id"));
 		}
@@ -1506,18 +1512,21 @@ var deleteAttachment = (function() {
           form =              $('#delete-attachment-form'),
           selAttachment =     $('#selected-attachment'),
           attachmentInput =   $('#attachmentId'),
+          attachmentNameId =  'attachment-name',
           typeImage =         attachment.data('type') === 'image' ? true : false,
           attachmentDetails = '';
       
       if (typeImage) {
-        attachmentDetails = '<p>' + attachment.data("name") + '</p><img src="' + attachment.data("src") + '" alt="' + attachment.data("name") + '" />';
+        attachmentDetails = '<p id="' + attachmentNameId + '"></p><img src="' + attachment.data("src") + '" />';
       } else {
-        attachmentDetails = '<p class="pdf-attachment"><img src="/img/pdficon_large.png"/> <span class="pdf-label">' + attachment.data("name") + '</span></p>';
+        attachmentDetails = '<p class="pdf-attachment"><img src="/img/pdficon_large.png"/> <span id="' + attachmentNameId + '" class="pdf-label"></span></p>';
       }
 
       selAttachment.html(attachmentDetails);
+      // Avoid XSS
+      $('#'+attachmentNameId).text(attachment.data('name'));
       
-      attachmentInput.val(attachment.data("id"));
+      attachmentInput.val(attachment.data('id'));
     }
   };
 
