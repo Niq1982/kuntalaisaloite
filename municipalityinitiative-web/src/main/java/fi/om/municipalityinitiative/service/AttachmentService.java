@@ -14,6 +14,8 @@ import fi.om.municipalityinitiative.exceptions.FileUploadException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.util.ImageModifier;
+import fi.om.municipalityinitiative.util.RandomHashGenerator;
+import org.apache.commons.io.IOUtils;
 import org.aspectj.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,27 +63,44 @@ public class AttachmentService {
             throw new OperationNotAllowedException("Add attachments");
         }
 
-        file.getSize(); // TODO: Don't allow too large files
+        // Double check, is checked at validation also
+        if (file.getSize() > ImageProperties.MAX_FILESIZE_IN_BYTES) {
+            throw new InvalidAttachmentException("Too large file: " + file.getSize());
+        }
 
+        // Some checks for valid filename
         String fileType = parseFileType(file.getOriginalFilename());
         assertFileType(fileType);
         assertContentType(file.getContentType());
 
-        Long attachmentId = attachmentDao.addAttachment(initiativeId, description, file.getContentType(), fileType);
 
+        File tempFile = null;
         try {
+
+            // Create temp-file for proper file handling
+            tempFile = File.createTempFile(RandomHashGenerator.shortHash(), "." + fileType);
+            try (FileOutputStream output = new FileOutputStream(tempFile)) {
+                IOUtils.write(IOUtils.toByteArray(file.getInputStream()), output);
+            }
+
+            Long attachmentId = attachmentDao.addAttachment(initiativeId, description, file.getContentType(), fileType);
+
             if (AttachmentFileInfo.isPdfContentType(file.getContentType())) {
-                try (FileOutputStream fileOutputStream = new FileOutputStream(getFilePath(attachmentId, fileType))) {
-                    fileOutputStream.write(file.getBytes());
-                }
+                FileUtil.copyValidFiles(tempFile, new File(getFilePath(attachmentId, fileType)));
             }
             else {
-                imageModifier.modify(file.getInputStream(), getFilePath(attachmentId, fileType), fileType, ImageProperties.MAX_WIDTH, ImageProperties.MAX_HEIGHT);
-                imageModifier.modify(file.getInputStream(), getThumbnailPath(attachmentId, fileType), fileType, ImageProperties.THUMBNAIL_MAX_WIDTH, ImageProperties.THUMBNAIL_MAX_HEIGHT);
+                imageModifier.modify(tempFile, getFilePath(attachmentId, fileType), ImageProperties.MAX_WIDTH, ImageProperties.MAX_HEIGHT);
+                imageModifier.modify(tempFile, getThumbnailPath(attachmentId, fileType), ImageProperties.THUMBNAIL_MAX_WIDTH, ImageProperties.THUMBNAIL_MAX_HEIGHT);
             }
+
         } catch (Throwable t) {
             log.error("Error while uploading file: " + file.getOriginalFilename(), t);
             throw new FileUploadException(t);
+        } finally {
+            if (tempFile != null) {
+                tempFile.delete();
+            }
+
         }
 
     }
