@@ -1,6 +1,8 @@
 package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Lists;
+import com.google.common.io.Files;
+import com.itextpdf.text.pdf.PdfReader;
 import fi.om.municipalityinitiative.dao.AttachmentDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dto.service.AttachmentFile;
@@ -94,7 +96,10 @@ public class AttachmentService {
                 imageModifier.modify(tempFile, getThumbnailPath(attachmentId, fileType), ImageProperties.THUMBNAIL_MAX_WIDTH, ImageProperties.THUMBNAIL_MAX_HEIGHT);
             }
 
-        } catch (Throwable t) {
+        } catch (InvalidAttachmentException e) {
+            throw e;
+        }
+        catch (Throwable t) {
             log.error("Error while uploading file: " + file.getOriginalFilename(), t);
             throw new FileUploadException(t);
         } finally {
@@ -109,16 +114,54 @@ public class AttachmentService {
         if ((fileType.equals("jpg") || fileType.equals("jpeg")) && isJPEG(tempFile)) {
             return;
         }
-        if (fileType.equals("png")) {
+        if (fileType.equals("png") && isPNG(tempFile)) {
             return;
         }
-        if (fileType.equals("pdf")) {
+        if (fileType.equals("pdf") && isPDF(tempFile)) {
             return;
         }
         else {
             throw new InvalidAttachmentException("File content was invalid for filetype: " + fileType);
         }
     }
+
+    private static boolean isPDF(File tempFile) throws IOException {
+
+        byte[] ba = Files.toByteArray(tempFile); //Its a google guava library
+
+        byte b0 = ba[0];
+        byte b1 = ba[1];
+        byte b2 = ba[2];
+        byte b3 = ba[3];
+        return (b0 == 0x25)
+                && (b1 == 0x50)
+                && (b2 == 0x44)
+                && (b3 == 0x46);
+
+    }
+
+    public static boolean isJPEG(File file) throws IOException {
+        byte[] ba = Files.toByteArray(file); //Its a google guava library
+        int i = 0;
+        return (ba[i] & 0xFF) == 0xFF && (ba[i + 1] & 0xFF) == 0xD8 && (ba[ba.length - 2] & 0xFF) == 0xFF
+                && (ba[ba.length - 1] & 0xFF) == 0xD9;
+    }
+
+    public static boolean isPNG(File tempFile) throws IOException {
+        int numRead;
+        byte[] signature = new byte[8];
+        byte[] pngIdBytes = { -119, 80, 78, 71, 13, 10, 26, 10 };
+
+        // if first 8 bytes are PNG then return PNG reader
+        try (InputStream is = new FileInputStream(tempFile)) {
+            numRead = is.read(signature);
+            if (numRead == -1)
+                throw new IOException("Trying to read from 0 byte stream");
+        }
+        return numRead == 8 && Arrays.equals(signature, pngIdBytes);
+    }
+
+
 
     private String getFilePath(Long attachmentId, String fileType) {
         return attachmentDir + "/" + attachmentId + "." + fileType;
@@ -167,8 +210,6 @@ public class AttachmentService {
         return Arrays.copyOf(bytes, bytes.length);
     }
 
-
-
     private static void assertFileType(String givenFileType) throws InvalidAttachmentException {
         for (String fileType : ImageProperties.FILE_TYPES) {
             if (fileType.equals(givenFileType))
@@ -184,15 +225,6 @@ public class AttachmentService {
         }
 
         return split[split.length-1];
-    }
-
-    public static Boolean isJPEG(File file) throws IOException {
-        DataInputStream ins = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
-        try {
-            return ins.readInt() == 0xffd8ffe0;
-        } finally {
-            ins.close();
-        }
     }
 
     private static void assertContentType(String contentType) throws InvalidAttachmentException {
@@ -311,7 +343,7 @@ public class AttachmentService {
         public static final String MAX_FILESIZE_IN_KILOBYTES = String.valueOf(ImageProperties.MAX_FILESIZE_IN_BYTES / 1024 / 1024) + " MB";
         public static final int MAX_ATTACHMENTS = 10;
 
-        public static final String[] CONTENT_TYPES = { "image/png", "image/jpg", "image/jpeg", "application/pdf" };
+        public static final String[] CONTENT_TYPES = { "image/png", "image/jpg", "image/jpeg", "application/pdf", "image/pjpeg", "image/x-png" };
         private static final ImageProperties imageProperties = new ImageProperties();
 
         private ImageProperties() { }
