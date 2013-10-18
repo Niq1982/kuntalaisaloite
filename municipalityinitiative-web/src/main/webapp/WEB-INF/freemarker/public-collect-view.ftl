@@ -76,7 +76,7 @@
             </div>
             
              <div class="input-block-content">
-                <@f.textField path="authorMessage.contactName" required="required" optional=false cssClass="large" maxLength="512" maxLength=InitiativeConstants.CONTACT_NAME_MAX />
+                <@f.textField path="authorMessage.contactName" required="required" optional=false cssClass="large"  maxLength=InitiativeConstants.CONTACT_NAME_MAX />
             </div>
             
             <div class="input-block-content">
@@ -127,7 +127,7 @@
                          <div class="input-header"><@u.message "contactInfo.verified.name" /></div>
                          <div class="input-placeholder">${user.contactInfo.name}</div>
                      <#else>
-                        <@f.textField path="participant.participantName" required="required" optional=false cssClass="large" maxLength="512" />
+                        <@f.textField path="participant.participantName" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_NAME_MAX />
                      </#if>
                 </div>
                 <div class="column col-1of2 last">
