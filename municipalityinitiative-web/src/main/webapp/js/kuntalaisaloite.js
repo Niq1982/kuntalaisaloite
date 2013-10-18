@@ -182,7 +182,7 @@ $(document).ready(function () {
 			$('.auto-hide').fadeOut(speedSlow);
 		}, speedAutoHide);
 	}
-
+	
 	// Validate emails
 	var validateEmail = function (email) {
 		var re;
@@ -559,11 +559,12 @@ var municipalitySelection = (function() {
 			toggleMembershipRadios(homeMunicipalitySelect);
 		}
 		
-		if (!equalMunicipalitys() && !$("input[name=municipalMembership]").is(':checked')){
+		// Does not work properly
+		/*if (!equalMunicipalitys() && !$("input[name=municipalMembership]").is(':checked')){
 			disableSubmit(true);
 		} else {
 			disableSubmit(false);
-		}
+		}*/
 		
 		showMembership(!equalMunicipalitys());
 
@@ -620,8 +621,8 @@ var municipalitySelection = (function() {
 	
 	// Disable or enable submitting "Save and collect"
 	function disableSubmit(disable){
-		//$('button#action-send-confirm, button#participate').disableButton(disable);
-		//$('button#participate').disableButton(disable); // use general form validation
+	  //$('button#action-send-confirm, button#participate').disableButton(disable);
+		$('button#participate').disableButton(disable); // use general form validation
 	}
 	
 	// Toggle the radiobutton selection for municipality membership
@@ -631,14 +632,16 @@ var municipalitySelection = (function() {
 		if( equalMunicipalitys() ){
 			municipalityNotEqual.stop(false,true).slideUp(slideOptions);
 			preventContinuing(false);
-			disableSubmit(true);
+			disableSubmit(false);
 			showMembership(false);
 		} else {
 			municipalityNotEqual.stop(false,true).slideDown(slideOptions);
 			if (!validationErrors){
 				preventContinuing(true);
 			}
-			disableSubmit(false);
+			if (Init.isVerifiedInitiative()) {
+			  disableSubmit(true);
+			}
 			showMembership(true);
 		}
 	};
