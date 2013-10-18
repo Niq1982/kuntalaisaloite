@@ -53,11 +53,26 @@
         <div id="prepare-form-email" class="form-block-container toggle-disable js-hide">
             <div class="input-block cf">
             
-                <@edit.authorEmailBlock />
+            	<#if user.isVerifiedUser()>
+            		<div class="input-block-content">
+	                    <#if locale == "fi">
+	                        <#assign vetumaUrl = "http://www.suomi.fi/suomifi/tyohuone/yhteiset_palvelut/verkkotunnistaminen_ja_maksaminen_vetuma/" />
+	                    <#else>
+	                        <#assign vetumaUrl = "http://www.suomi.fi/suomifi/arbetsrum/allmant/sprakversionen_fattas/index.html" />
+	                    </#if>
+	                    <@u.systemMessage path="initiative.prepare.verifiable.info"+user.isVerifiedUser()?string(".verifiedUser","") type="info" args=[vetumaUrl] />
+	                </div>
                 
-                <div class="input-block-content no-top-margin">
-                    <@edit.buttons type="save" /><#-- <span class="fill-in-all push hidden"><@u.message "initiative.fillInAllFields" /></span>-->
-                </div>
+                	<div class="input-block-content">
+	                    <@edit.buttons type="verify" />
+	                </div>
+                <#else>
+                	<@edit.authorEmailBlock />
+                
+	                <div class="input-block-content no-top-margin">
+	                    <@edit.buttons type="save" /><#-- <span class="fill-in-all push hidden"><@u.message "initiative.fillInAllFields" /></span>-->
+	                </div>
+                </#if>
                 
             </div>
         </div>
@@ -69,9 +84,9 @@
     
                 <div class="input-block-content">
                     <#if locale == "fi">
-                        <#assign vetumaUrl = "http://www.suomi.fi/suomifi/tyohuone/yhteiset_palvelut/verkkotunnistaminen_ja_maksaminen_vetuma/">
+                        <#assign vetumaUrl = "http://www.suomi.fi/suomifi/tyohuone/yhteiset_palvelut/verkkotunnistaminen_ja_maksaminen_vetuma/" />
                     <#else>
-                        <#assign vetumaUrl = "http://www.suomi.fi/suomifi/arbetsrum/allmant/sprakversionen_fattas/index.html">
+                        <#assign vetumaUrl = "http://www.suomi.fi/suomifi/arbetsrum/allmant/sprakversionen_fattas/index.html" />
                     </#if>
                     <@u.systemMessage path="initiative.prepare.verifiable.info"+user.isVerifiedUser()?string(".verifiedUser","") type="info" args=[vetumaUrl] />
                 </div>

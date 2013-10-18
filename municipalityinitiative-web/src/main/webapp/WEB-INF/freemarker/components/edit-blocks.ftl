@@ -212,9 +212,8 @@
  * Add confirmation email for author
  * Prints help-texts and validation errors in this block
  *
- * Noscript user gets two different versions weather he/she is authenticated or not.
  -->
-<#macro authorEmailBlock noscript=false>
+<#macro authorEmailBlock>
     <div class="input-block-extra">
         <div class="input-block-extra-content">
             <@f.helpText "help.participantEmail" />
@@ -224,10 +223,16 @@
     <div class="input-block-content">
         
         <noscript>
+        	<#if locale == "fi">
+	            <#assign vetumaUrl = "http://www.suomi.fi/suomifi/tyohuone/yhteiset_palvelut/verkkotunnistaminen_ja_maksaminen_vetuma/" />
+	        <#else>
+	            <#assign vetumaUrl = "http://www.suomi.fi/suomifi/arbetsrum/allmant/sprakversionen_fattas/index.html" />
+	        </#if>
+        
             <#if enableVerifiedInitiatives>
-                <@u.systemMessage path="initiative.participantEmail.description.noscript"+user.isVerifiedUser()?string(".verifiedUser","") type="info" />
+                <@u.systemMessage path="initiative.participantEmail.description.noscript"+user.isVerifiedUser()?string(".verifiedUser","") type="info" args=[vetumaUrl] />
             <#else>
-                <@u.systemMessage path="initiative.participantEmail.description.noscript.NOVETUMA" type="info" />
+                <@u.systemMessage path="initiative.participantEmail.description.noscript.NOVETUMA" type="info" args=[vetumaUrl] />
             </#if>
         </noscript>
         
