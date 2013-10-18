@@ -94,6 +94,21 @@ public class AttachmentServiceIntegrationTest extends ServiceIntegrationTestBase
         attachmentService.addAttachment(initiativeId, TestHelper.authorLoginUserHolder, multiPartFileMock("anyfile.jpg", "text"), "someDescription");
     }
 
+    @Test(expected = InvalidAttachmentException.class)
+    public void saving_file_fails_if_invalid_file_content_for_jpg() throws IOException, FileUploadException, InvalidAttachmentException {
+        attachmentService.addAttachment(initiativeId, TestHelper.authorLoginUserHolder, multiPartFileMock("anyfile.jpg", "image/jpeg", TEST_PNG_FILE), "someDescription");
+    }
+
+    @Test(expected = InvalidAttachmentException.class)
+    public void saving_file_fails_if_invalid_file_content_for_png() throws IOException, FileUploadException, InvalidAttachmentException {
+        attachmentService.addAttachment(initiativeId, TestHelper.authorLoginUserHolder, multiPartFileMock("anyfile.png", "image/png", TEST_JPG_FILE), "someDescription");
+    }
+
+    @Test(expected = InvalidAttachmentException.class)
+    public void saving_file_fails_if_invalid_file_content_for_pdf() throws IOException, FileUploadException, InvalidAttachmentException {
+        attachmentService.addAttachment(initiativeId, TestHelper.authorLoginUserHolder, multiPartFileMock("anyfile.pdf", "application/pdf", TEST_PNG_FILE), "someDescription");
+    }
+
     @Test(expected = OperationNotAllowedException.class)
     public void saving_file_is_disabllowed_if_at_published_state() throws IOException, InfoException, FileUploadException, InvalidAttachmentException {
         Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testHelper.createTestMunicipality("someMunicipality"))
