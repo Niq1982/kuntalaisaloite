@@ -73,7 +73,6 @@ public class AttachmentService {
         assertFileType(fileType);
         assertContentType(file.getContentType());
 
-
         File tempFile = null;
         try {
 
@@ -82,6 +81,8 @@ public class AttachmentService {
             try (FileOutputStream output = new FileOutputStream(tempFile)) {
                 IOUtils.write(IOUtils.toByteArray(file.getInputStream()), output);
             }
+
+            assertRealFileContent(tempFile, fileType);
 
             Long attachmentId = attachmentDao.addAttachment(initiativeId, description, file.getContentType(), fileType);
 
@@ -102,7 +103,21 @@ public class AttachmentService {
             }
 
         }
+    }
 
+    private static void assertRealFileContent(File tempFile, String fileType) throws IOException, InvalidAttachmentException {
+        if ((fileType.equals("jpg") || fileType.equals("jpeg")) && isJPEG(tempFile)) {
+            return;
+        }
+        if (fileType.equals("png")) {
+            return;
+        }
+        if (fileType.equals("pdf")) {
+            return;
+        }
+        else {
+            throw new InvalidAttachmentException("File content was invalid for filetype: " + fileType);
+        }
     }
 
     private String getFilePath(Long attachmentId, String fileType) {
@@ -169,6 +184,15 @@ public class AttachmentService {
         }
 
         return split[split.length-1];
+    }
+
+    public static Boolean isJPEG(File file) throws IOException {
+        DataInputStream ins = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
+        try {
+            return ins.readInt() == 0xffd8ffe0;
+        } finally {
+            ins.close();
+        }
     }
 
     private static void assertContentType(String contentType) throws InvalidAttachmentException {
@@ -332,4 +356,6 @@ public class AttachmentService {
             return CONTENT_TYPES;
         }
     }
+
+
 }
