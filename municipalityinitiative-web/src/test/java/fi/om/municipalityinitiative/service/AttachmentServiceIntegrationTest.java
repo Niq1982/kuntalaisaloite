@@ -9,13 +9,10 @@ import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.sql.QAttachment;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
-import org.apache.commons.io.IOUtils;
 import org.aspectj.util.FileUtil;
 import org.im4java.core.InfoException;
-import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.web.multipart.MultipartFile;
-import sun.plugin.util.UIUtil;
 
 import javax.annotation.Resource;
 import java.io.File;
