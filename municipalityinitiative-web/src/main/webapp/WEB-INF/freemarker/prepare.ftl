@@ -50,7 +50,7 @@
             </div>
         </div>
 
-        <div id="prepare-form-email" class="form-block-container toggle-disable js-hide hidden">
+        <div id="prepare-form-email" class="form-block-container toggle-disable js-hide">
             <div class="input-block cf">
             
                 <@edit.authorEmailBlock />
@@ -85,20 +85,6 @@
             
         </div>
         </#if>
-        
-        <noscript>
-            <div class="form-block-container toggle-disable">
-                <div class="input-block cf">
-                
-                    <@edit.authorEmailBlock noscript=true />
-                    
-                    <div class="input-block-content no-top-margin">
-                        <@edit.buttons type="next" />
-                    </div>
-                    
-                </div>
-            </div>
-        </noscript>
         
     </form>
 

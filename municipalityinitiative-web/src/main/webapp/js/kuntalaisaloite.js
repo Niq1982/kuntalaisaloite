@@ -620,7 +620,7 @@ var municipalitySelection = (function() {
 	
 	// Disable or enable submitting "Save and collect"
 	function disableSubmit(disable){
-		//$('button#action-send-confirm, button#participate').disableButton(disable);
+		$('button#participate').disableButton(disable);
 		//$('button#participate').disableButton(disable); // use general form validation
 	}
 	
@@ -631,14 +631,14 @@ var municipalitySelection = (function() {
 		if( equalMunicipalitys() ){
 			municipalityNotEqual.stop(false,true).slideUp(slideOptions);
 			preventContinuing(false);
-			disableSubmit(true);
+			disableSubmit(false);
 			showMembership(false);
 		} else {
 			municipalityNotEqual.stop(false,true).slideDown(slideOptions);
 			if (!validationErrors){
 				preventContinuing(true);
 			}
-			disableSubmit(false);
+			disableSubmit(true);
 			showMembership(true);
 		}
 	};
