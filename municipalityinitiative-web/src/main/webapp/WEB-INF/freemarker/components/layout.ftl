@@ -406,7 +406,8 @@
     
     var Init = {
         getLocale:function(){return "${locale}"},
-        getDateFormat:function(){return "${springMacroRequestContext.getMessage('date.format')?string?lower_case}"}
+        getDateFormat:function(){return "${springMacroRequestContext.getMessage('date.format')?string?lower_case}"},
+        isVerifiedInitiative:function(){ <#if initiative?? && initiative.isVerifiable??>return ${initiative.isVerifiable()?string}</#if> }
     };
     
     /*]]>*/
