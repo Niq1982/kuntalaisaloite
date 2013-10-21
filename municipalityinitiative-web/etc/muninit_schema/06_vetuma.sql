@@ -1,7 +1,7 @@
 
 create table verified_user(
     id bigserial,
-    hash varchar(64) constraint inituser_hash_nn not null, -- sha256(ssn & sharedSecret)
+    hash varchar(64) constraint inituser_hash_nn not null, -- base64 sha256(ssn & userSecret)
     name varchar(100),
     phone varchar(30),
     address varchar(256),
