@@ -244,7 +244,7 @@
         
         <@contentBlock "html">
             <h4 style="${h4!""}"><@u.message key /></h4>
-            <p style="${pBottomMargin!""}">${msg}</p>
+            <@u.text content=msg style=pBottomMargin />
         </@contentBlock>
         
     <#else>
@@ -263,7 +263,7 @@
     <#if msg != "">
         <#if type == "html">
             <h4 style="${h4!""}"><@u.message "email.commentFromOM" /></h4>
-            <p style="${pBottomMargin!""} font-style:italic;">${msg}</p>
+            <@u.text content=msg style=pBottomMargin + " font-style:italic;" />
         <#else>
             <@u.message "email.commentFromOM" />:
             ${msg}
