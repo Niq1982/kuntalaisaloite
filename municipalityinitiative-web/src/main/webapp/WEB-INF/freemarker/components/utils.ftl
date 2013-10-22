@@ -179,11 +179,24 @@
  *
  * @param url 
  * @param labelKey
+ * @param useJsBack is handy when returning for example to search page with parameters
 -->
-<#macro returnPrevious url labelKey>
-    <p class="noprint"><a href="${url}">&laquo; <@message labelKey /></a></p>
-    
-    <#--<a href="${url}" class="small-button margin"><span class="small-icon previous"><@message labelKey /></span></a>-->
+<#macro returnPrevious url labelKey useJsBack=false>
+	<p class="noprint">
+	
+	<#if useJsBack>
+		<noscript>
+			<a href="${url}" >&laquo; <@message labelKey /></a>
+		</noscript>
+	    
+	    <script>
+		    document.write('<a href="javascript: history.go(-1)">&laquo; <@message labelKey /></a>');
+		</script>
+	<#else>
+		<a href="${url}" >&laquo; <@message labelKey /></a>
+	</#if>
+	
+	</p>
 </#macro>
 
 <#--

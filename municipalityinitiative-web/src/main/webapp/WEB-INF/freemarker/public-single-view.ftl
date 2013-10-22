@@ -18,7 +18,7 @@
     <#if user.hasRightToInitiative(initiative.id) && !initiative.sent>
         <@u.returnPrevious urls.management(initiative.id) "link.to.managementView" />
     <#else>
-        <@u.returnPrevious urls.search() + "?orderBy=latestSent&show=sent" "link.to.searchView" />
+        <@u.returnPrevious url=urls.search() + "?orderBy=latestSent&show=sent" labelKey="link.to.searchView" useJsBack=true />
     </#if>
 
     <@e.initiativeTitle initiative />
@@ -46,7 +46,11 @@
         <@some.some pageTitle=initiative.name!"" />
     </#if>
     
-    <@u.returnPrevious urls.search() + "?orderBy=latestSent&show=sent" "link.to.searchView" />
+    <#if user.hasRightToInitiative(initiative.id) && !initiative.sent>
+        <@u.returnPrevious urls.management(initiative.id) "link.to.managementView" />
+    <#else>
+        <@u.returnPrevious url=urls.search() + "?orderBy=latestSent&show=sent" labelKey="link.to.searchView" useJsBack=true />
+    </#if>
 
 </@l.main>
 

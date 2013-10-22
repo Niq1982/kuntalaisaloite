@@ -45,7 +45,7 @@
     <#if user.hasRightToInitiative(initiative.id) && !initiative.sent>
         <@u.returnPrevious urls.management(initiative.id) "link.to.managementView" />
     <#else>
-        <@u.returnPrevious urls.search() "link.to.searchView" />
+        <@u.returnPrevious url=urls.search() labelKey="link.to.searchView" useJsBack=true />
     </#if>
 
     <@e.initiativeTitle initiative />
@@ -242,7 +242,7 @@
     <#if user.hasRightToInitiative(initiative.id) && !initiative.sent>
         <@u.returnPrevious urls.management(initiative.id) "link.to.managementView" />
     <#else>
-        <@u.returnPrevious urls.search() "link.to.searchView" />
+        <@u.returnPrevious url=urls.search() labelKey="link.to.searchView" useJsBack=true />
     </#if>
 
     <#--
