@@ -97,6 +97,16 @@
 </#macro>
 
 <#-- 
+ * stripHtmlTags
+ * 
+ * Macro for simple cases for stripping of HTML tags.
+ *
+ * @param input as string
+-->
+<#macro stripHtmlTags input="">${input?replace("</?[^>]+(>|$)", "", "r")}</#macro>
+
+
+<#-- 
  * icon
  * 
  * Macro for generating an icon with tooltip

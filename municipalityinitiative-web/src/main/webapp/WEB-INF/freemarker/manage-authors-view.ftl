@@ -121,7 +121,11 @@
                 <h4 class="header">${a.contactInfo.name}, <@u.solveMunicipality a.municipality/></h4>
                 <div class="contact-info">
                     <@u.scrambleEmail a.contactInfo.email!"" /><br />
-                    <#if a.contactInfo.address?? && a.contactInfo.address != ""><#noescape>${a.contactInfo.address?replace('\n','<br/>')!""}</#noescape><br /></#if>
+                    <#if a.contactInfo.address?? && a.contactInfo.address != "">
+                    	<#assign safeAddress><@u.stripHtmlTags a.contactInfo.address!"" /></#assign>
+                    	<#noescape>${safeAddress?replace('\n','<br/>')!""}</#noescape>
+                    	<br />
+                	</#if>
                     ${a.contactInfo.phone!""}
                 </div>
             </div>
@@ -131,10 +135,10 @@
                 <#if a.id != user.authorId>
                 <span class="action"><span class="icon-small icon-16 cancel"></span> <a href="?deleteAuthor=${a.id!""}" class="js-delete-author"
                     data-id="${a.id!""}"
-                    data-name="${a.contactInfo.name!""}"
-                    data-email="${a.contactInfo.email!""}"
-                    data-address="${a.contactInfo.address!""}"
-                    data-phone="${a.contactInfo.phone!""}"><@u.message "deleteAuthor.delete" /></a></span>
+                    data-name="<@u.stripHtmlTags a.contactInfo.name!"" />"
+                    data-email="<@u.stripHtmlTags a.contactInfo.email!"" />"
+                    data-address="<@u.stripHtmlTags a.contactInfo.address!"" />"
+                    data-phone="<@u.stripHtmlTags a.contactInfo.phone!"" />"><@u.message "deleteAuthor.delete" /></a></span>
                 </#if>
             </div>
         </div>
@@ -230,7 +234,11 @@
             <h4 class="header">${a.contactInfo.name}, <@u.solveMunicipality a.municipality/></h4>
             <div class="contact-info">
                 ${a.contactInfo.email!""}<br />
-                <#if a.contactInfo.address?? && a.contactInfo.address != ""><#noescape>${a.contactInfo.address?replace('\n','<br/>')!""}</#noescape><br /></#if>
+                <#if a.contactInfo.address?? && a.contactInfo.address != "">
+                	<#assign safeAddress><@u.stripHtmlTags a.contactInfo.address!"" /></#assign>
+                	<#noescape>${safeAddress?replace('\n','<br/>')!""}</#noescape>
+                	<br />
+            	</#if>
                 ${a.contactInfo.phone!""}
             </div>
         </#if>

@@ -129,7 +129,7 @@
                     <a  href="?deleteParticipant=${participant.participant.id!""}" class="js-delete-participant"
                         data-id="${participant.participant.id!""}"
                         data-date="<@u.localDate participant.participant.participateDate!"" />"
-                        data-name="${participant.participant.name!""}"
+                        data-name="<@u.stripHtmlTags participant.participant.name!"" />"
                         data-municipality="<@u.solveMunicipality participant.participant.homeMunicipality />"><@u.message "deleteParticipant.delete" /></a></span></li>
                 <#else>
                     <span class="bull">&bull;</span> <@u.message "deleteParticipant.authorCannotBeDeleted" />
@@ -150,9 +150,9 @@
 -->
 <#macro participantDetailsById participants id>
     <#list participants as participant>
-        <#if participant.id?string == id>
+        <#if participant.participant.id?string == id>
             <ul class="participant-list no-style">
-                <li><span class="date"><@u.localDate participant.participateDate!"" /></span> <span class="name-container"><span class="name">${participant.name!""}</span> <span class="home-municipality"><span class="bull">&bull;</span> <@u.solveMunicipality participant.homeMunicipality/></span></li>
+                <li><span class="date"><@u.localDate participant.participant.participateDate!"" /></span> <span class="name-container"><span class="name">${participant.participant.name!""}</span> <span class="home-municipality"><span class="bull">&bull;</span> <@u.solveMunicipality participant.participant.homeMunicipality/></span></li>
             </ul>
         </#if>
     </#list>

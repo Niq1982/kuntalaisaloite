@@ -80,11 +80,11 @@
 				            <img src="${urls.getAttachmentThumbnail(attachment.attachmentId)}" alt="${attachment.description}" />    
 			            </a>
 		            </span>
-		            <span class="img-label">${attachment.description}
+		            <span class="img-label"><@u.stripHtmlTags attachment.description />
 			            <#if manage && managementSettings?? && user.hasRightToInitiative(initiative.id) && managementSettings.allowAddAttachments>
 		                    <a  href="?deleteAttachment=${attachment.attachmentId}" class="js-delete-attachment delete-attachment trigger-tooltip"
 		                        data-id="${attachment.attachmentId}"
-		                        data-name="${attachment.description}"
+		                        data-name="<@u.stripHtmlTags attachment.description />"
 		                        data-type="image"
 		                        data-src="${urls.getAttachmentThumbnail(attachment.attachmentId)}" title="<@u.message "deleteAttachment.btn" />"><span class="icon-small icon-16 cancel"></span></a></span>
 						    </a>
@@ -92,7 +92,7 @@
 			        </span>
 		        </div>
 	            <#if ((attachment_index + 1) % 5 == 0) || !attachment_has_next><br class="clear" /></#if>
-
+	           
 		    </#list>
 	    </div>
 	    
@@ -104,18 +104,18 @@
 			        <li class="pdf-attachment">
 			        	<a href="${urls.attachment(attachment.attachmentId, attachment.fileName)}" target="_blank">
 				            <@u.fileIcon type="pdf" />
-				            <span class="pdf-label">${attachment.description}</span>
+				            <span class="pdf-label"><@u.stripHtmlTags attachment.description /></span>
 			            </a>
 			            
 			            <#if manage && managementSettings?? && user.hasRightToInitiative(initiative.id) && managementSettings.allowAddAttachments>
 		                    <a  href="?deleteAttachment=${attachment.attachmentId}" class="js-delete-attachment trigger-tooltip"
 		                        data-id="${attachment.attachmentId}"
-		                        data-name="${attachment.description}"
+		                        data-name="<@u.stripHtmlTags attachment.description />"
 		                        data-type="pdf" title="<@u.message "deleteAttachment.btn" />"><span class="icon-small icon-16 cancel"></span></a></span>
 						    </a>
 				        </#if>				        
 			        </li>
-
+				
 		        <#if !attachment_has_next></ul></#if>
 		    </#list>
 	    </div>
@@ -210,7 +210,7 @@
             <#if showRenewManagementHash>
                 <a  href="#" class="js-renew-management-hash trigger-tooltip" title="<@u.message "moderator.renewManagementHash.tooltip" />"
                     data-id="${a.id}"
-                    data-name="${a.contactInfo.name!""}"
+                    data-name="<@u.stripHtmlTags a.contactInfo.name!"" />"
                     data-municipality="<@u.solveMunicipality a.municipality/>"
                     data-address="${a.contactInfo.address!""}"
                     data-email="${a.contactInfo.email!""}"
@@ -219,7 +219,11 @@
             <br />
             <@u.scrambleEmail a.contactInfo.email!"" />
             <br />
-            <#if a.contactInfo.address?? && a.contactInfo.address != ""><#noescape>${a.contactInfo.address?replace('\n','<br/>')!""}</#noescape><br /></#if>
+            <#if a.contactInfo.address?? && a.contactInfo.address != "">
+            	<#assign safeAddress><@u.stripHtmlTags a.contactInfo.address!"" /></#assign>
+            	<#noescape>${safeAddress?replace('\n','<br/>')!""}</#noescape>
+            	<br />
+        	</#if>
             ${a.contactInfo.phone!""}</p>
         </div>
         <#if ((a_index + 1) % 3 == 0) || !a_has_next><br class="clear" /></#if>
