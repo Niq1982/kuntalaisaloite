@@ -34,7 +34,7 @@ public class EmailServiceStatusEmailTest extends MailSendingEmailServiceTestBase
         EmailDto email = testHelper.getSingleQueuedEmail();
         
         assertThat(email.getRecipientsAsString(), is(AUTHOR_EMAIL));
-        assertThat(email.getSubject(), is("Palvelun ylläpito on tarkastanut aloitteesi / Ditt invånarinitiativ har godkänts"));
+        assertThat(email.getSubject(), is("Palvelun ylläpito on tarkastanut aloitteesi / Administratören för tjänsten har granskat ditt initiativ"));
         assertThat(email.getBodyHtml(), containsString(MODERATOR_COMMENT));
         assertThat(email.getBodyHtml(), containsString(urls.loginAuthor(managementHash())));
         assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
