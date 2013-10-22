@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
+import org.joda.time.DateTime;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -165,6 +166,19 @@ public class AuthorsWebTest extends WebTestBase {
         assertTextContainedByClass("msg-warning", "Olet jo aloitteen vastuuhenkilö, joten et voi hyväksyä vastuuhenkilökutsua");
         assertThat(acceptInvitationButton().isPresent(), is(false));
         assertThat(rejectInvitationButton().isPresent(), is(false));
+    }
+
+    @Test
+    public void accepting_expired_invitation_shows_gone_page() {
+        AuthorInvitation authorInvitation = new AuthorInvitation();
+        authorInvitation.setConfirmationCode("asd");
+        authorInvitation.setInvitationTime(DateTime.now().minusMonths(1));
+        authorInvitation.setInitiativeId(normalInitiativeId);
+        authorInvitation.setEmail("asd@example.com");
+        authorInvitation.setName("name");
+        testHelper.addAuthorInvitation(authorInvitation, false);
+
+        assertInvitationPageIsGone(authorInvitation);
     }
 
     @Test
