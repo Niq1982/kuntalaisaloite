@@ -619,10 +619,10 @@ var municipalitySelection = (function() {
 		}
 	};
 	
-	// Disable or enable submitting "Save and collect"
 	function disableSubmit(disable){
 	  //$('button#action-send-confirm, button#participate').disableButton(disable);
-		$('button#participate').disableButton(disable); // use general form validation
+	  $('button#modal-action-accept-invitation').disableButton(disable); // disable accept invitation button
+		$('button#participate').disableButton(disable); // disable participate button
 	}
 	
 	// Toggle the radiobutton selection for municipality membership
