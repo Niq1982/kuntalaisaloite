@@ -29,8 +29,6 @@
     <div class="view-block public first">
         <@e.initiativeView initiative />
     </div>
-
-    <@e.attachmentsView attachments />
     
     <div class="view-block public last">
         <div class="initiative-content-row last">
