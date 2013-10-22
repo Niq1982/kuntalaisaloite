@@ -248,7 +248,7 @@
         <#if user.hasParticipatedToInitiative(initiative.id)>
             <@u.systemMessage path="warning.already.participated" type="warning" />
         <#elseif user.isVerifiedUser() && !user.allowVerifiedParticipation(initiative.id, initiative.municipality)>
-            <@u.systemMessage path="warning.participate.notMember" type="warning" />
+            <@u.systemMessage path="warning.participant.notMember" type="warning" />
         <#elseif ((user.isVerifiedUser() && !user.homeMunicipality.present) || !user.isVerifiedUser()) >
             <@u.systemMessage path="participate.verifiable.info"+user.isVerifiedUser()?string(".verifiedUser","") type="info" />
         </#if>

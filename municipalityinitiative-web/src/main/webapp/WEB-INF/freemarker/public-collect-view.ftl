@@ -14,8 +14,12 @@
      
 <#assign notAllowedToParticipateHTML>
     <@compress single_line=true>
-        <@u.systemMessage path="warning.verifiedAuthor.notMember" type="warning" />
-        
+    	<#if user.hasParticipatedToInitiative(initiative.id)>
+        	<@u.systemMessage path="warning.already.participated" type="warning" />
+       	<#else>
+       		<@u.systemMessage path="warning.participant.notMember" type="warning" />
+        </#if>
+
         <div class="input-block-content">
             <a href="${urls.logout()}" class="small-button"><span class="small-icon logout"><@u.message "common.logout" /></span></a><a href="${springMacroRequestContext.requestUri}" class="small-button push"><@u.message "modal.continueBrowsing" /></a>
         </div>
@@ -157,7 +161,7 @@
                 </#if>
                 
                 <div class="input-block-content <#if !initiative.verifiable>is-not-member no-top-margin js-hide </#if> hidden">
-                    <@u.systemMessage path="warning.participate.notMember" type="warning" />
+                    <@u.systemMessage path="warning.participant.notMember" type="warning" />
                 </div>
                 
             </div>
