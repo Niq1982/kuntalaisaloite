@@ -213,7 +213,9 @@ $(document).ready(function () {
 
 	/**
 	 *	Prevent double clicks
-	 * 
+	 *
+	 *  To disable this feature use CSS class: disable-dbl-click-check
+	 *  To disalbe only the messages use CSS class: dbl-click-check-no-msg
 	 */
 	$("button").live('click', function () {
 		var btnClicked, firstBtnInForm, $loader, $submitInfo, $submitWarning;
@@ -240,16 +242,20 @@ $(document).ready(function () {
 					return false;
 				});
 				btnClicked.append($loader);
-				setTimeout(function() {
-					firstBtnInForm.before($submitInfo);
-				}, 5000);
-				setTimeout(function() {
-					btnClicked.removeClass("disabled clicked");
-					siblingButtons.removeClass("disabled clicked");
-					$loader.remove();
-					$submitInfo.remove();
-					firstBtnInForm.before($submitWarning);
-				}, 30000);
+				
+				if (!btnClicked.hasClass('dbl-click-check-no-msg')){
+  				setTimeout(function() {
+  					firstBtnInForm.before($submitInfo);
+  				}, 5000);
+  				setTimeout(function() {
+  					btnClicked.removeClass("disabled clicked");
+  					siblingButtons.removeClass("disabled clicked");
+  					$loader.remove();
+  					$submitInfo.remove();
+  					firstBtnInForm.before($submitWarning);
+  				}, 30000);
+				}
+				
 			} else {
 				return false;
 			}
