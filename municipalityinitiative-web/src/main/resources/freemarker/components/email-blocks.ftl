@@ -6,7 +6,7 @@
 
 <#macro mainContentBlock title="">
 
-    <table border="0" cellspacing="0" cellpadding="0" width="640" style="${blockBGcolor!""}; border-radius:5px; text-align:left; ${defaultFont!""}">
+    <table border="0" cellspacing="0" cellpadding="0" width="640" style="${blockBGcolor!""}; text-align:left; ${defaultFont!""}">
         <tr style="color:${blockBGcolor!""};">
             <td width="20" style="background:${blockBGcolor!""};"><@u.spacer "0" /></td>
             <td width="550" style="background:${blockBGcolor!""}; text-align:left;"><@u.spacer "15" /><h4 style="${bigTitle!""}">${title}</h4></th>
@@ -17,7 +17,7 @@
             <table border="0" cellspacing="0" cellpadding="0" style="width:100%;">
                 <tr>
                     <td width="20" style="background:${blockBGcolor!""};"><@u.spacer "0" /></td>
-                    <td style="${blockBGcolor!""}; ${defaultFont!""}">
+                    <td style="background:${blockBGcolor!""}; ${defaultFont!""}; text-align:left;">
 
                         <#-- Email content -->
                         <#nested />
@@ -44,13 +44,13 @@
 <#macro contentBlock type="">
     <#if type == "html">
 
-        <table border="0" cellspacing="0" cellpadding="0" width="640" style="background:${blockBGcolor!""}; border-radius:5px; text-align:left; ${defaultFont!""}">
+        <table border="0" cellspacing="0" cellpadding="0" width="640" style="background:${blockBGcolor!""}; text-align:left; ${defaultFont!""}">
             <tr>
-                <td width="640" style="background:${blockBGcolor!""};">
-                <table border="0" cellspacing="0" cellpadding="0" style="width:100%;">
+                <td width="640" style="background:${blockBGcolor!""}; text-align:left;">
+                <table border="0" cellspacing="0" cellpadding="0" style="width:100%; text-align:left;">
                     <tr>
                         <td width="20" style="background:${blockBGcolor!""};"><@u.spacer "0" /></td>
-                        <td style="${blockBGcolor!""}; ${defaultFont!""}">
+                        <td style="background:${blockBGcolor!""}; ${defaultFont!""}; text-align:left;">
                             <@u.spacer "5" />
                             
                             <#-- HTML content -->
