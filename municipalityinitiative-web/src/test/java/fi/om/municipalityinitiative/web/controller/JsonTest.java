@@ -73,7 +73,8 @@ public class JsonTest {
                 "},\n" +
                 "\"proposal\":\"Tämä on esimerkkialoitteen sisältö\",\n" +
                 "\"publishDate\":\"2010-01-01\",\n" +
-                "\"sentTime\":null\n" +
+                "\"sentTime\":null,\n" +
+                "\"type\":\"COLLABORATIVE\"\n"+
                 "}"));
     }
 
@@ -94,7 +95,8 @@ public class JsonTest {
                 "\"name\":\"Tämä on esimerkkialoitteen otsikko\",\n" +
                 "\"participantCount\":2,\n" +
                 "\"publishDate\":\"2012-12-01\",\n" +
-                "\"sentTime\":\"2012-12-24\"\n" +
+                "\"sentTime\":\"2012-12-24\",\n" +
+                "\"type\":\"COLLABORATIVE_CITIZEN\"\n"+
                 "}]"));
     }
 

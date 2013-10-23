@@ -91,6 +91,7 @@ public class JsonDataService {
         initiative.setId(1L);
         initiative.setName("Tämä on esimerkkialoitteen otsikko");
         initiative.setParticipantCount(2);
+        initiative.setType(InitiativeType.COLLABORATIVE_CITIZEN);
         return Collections.singletonList(new InitiativeListJson(initiative));
     }
 

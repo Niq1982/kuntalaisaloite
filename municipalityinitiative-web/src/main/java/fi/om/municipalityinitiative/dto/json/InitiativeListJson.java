@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.json.JsonId;
 import fi.om.municipalityinitiative.json.LocalDateJsonSerializer;
+import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.web.Urls;
 import org.joda.time.LocalDate;
 
@@ -36,6 +37,10 @@ public class InitiativeListJson {
 
     public boolean isCollaborative() {
         return initiative.isCollaborative();
+    }
+
+    public InitiativeType getType() {
+        return initiative.getType();
     }
 
     @JsonSerialize(using=LocalDateJsonSerializer.class)
