@@ -110,13 +110,13 @@ public class AttachmentService {
     }
 
     private static void assertRealFileContent(File tempFile, String fileType) throws IOException, InvalidAttachmentException {
-        if ((fileType.equals("jpg") || fileType.equals("jpeg")) && isJPEG(tempFile)) {
+        if ((fileType.equalsIgnoreCase("jpg") || fileType.equalsIgnoreCase("jpeg")) && isJPEG(tempFile)) {
             return;
         }
-        if (fileType.equals("png") && isPNG(tempFile)) {
+        if (fileType.equalsIgnoreCase("png") && isPNG(tempFile)) {
             return;
         }
-        if (fileType.equals("pdf") && isPDF(tempFile)) {
+        if (fileType.equalsIgnoreCase("pdf") && isPDF(tempFile)) {
             return;
         }
         else {
@@ -203,7 +203,7 @@ public class AttachmentService {
 
     private static void assertFileType(String givenFileType) throws InvalidAttachmentException {
         for (String fileType : ImageProperties.FILE_TYPES) {
-            if (fileType.equals(givenFileType))
+            if (fileType.equalsIgnoreCase(givenFileType))
                 return;
         }
         throw new InvalidAttachmentException("Invalid fileName: "+givenFileType);
@@ -220,7 +220,7 @@ public class AttachmentService {
 
     private static void assertContentType(String contentType) throws InvalidAttachmentException {
         for (String type : ImageProperties.CONTENT_TYPES) {
-            if (type.equals(contentType))
+            if (type.equalsIgnoreCase(contentType))
                 return;
         }
         throw new InvalidAttachmentException("Invalid content-type:" + contentType);

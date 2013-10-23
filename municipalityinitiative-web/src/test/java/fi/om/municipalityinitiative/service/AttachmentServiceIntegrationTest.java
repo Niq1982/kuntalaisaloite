@@ -38,13 +38,13 @@ import static org.mockito.Mockito.*;
 
 public class AttachmentServiceIntegrationTest extends ServiceIntegrationTestBase {
 
-    public static final String JPG = "jpg";
+    public static final String JPG = "jpG";
     public static final String DESCRIPTION = "asd";
     public static final String FILE_NAME = DESCRIPTION + "." + JPG;
-    public static final File TEST_JPG_FILE = new File(System.getProperty("user.dir") + "/src/test/resources/jpg-content-type.jpg");
-    public static final File TEST_PNG_FILE = new File(System.getProperty("user.dir") + "/src/test/resources/png-content-type.png");
-    public static final File TEST_PDF_FILE = new File(System.getProperty("user.dir") + "/src/test/resources/testi.pdf");
-    public static final File TEST_TXT_FILE_CONTENT_WITH_JPG_SUFFIX = new File(System.getProperty("user.dir") + "/src/test/resources/text-content-type.jpg");
+    public static final File TEST_JPG_FILE = new File(System.getProperty("user.dir") + "/src/test/resources/jpg-content-type.jpG");
+    public static final File TEST_PNG_FILE = new File(System.getProperty("user.dir") + "/src/test/resources/png-content-type.pnG");
+    public static final File TEST_PDF_FILE = new File(System.getProperty("user.dir") + "/src/test/resources/testi.pdF");
+    public static final File TEST_TXT_FILE_CONTENT_WITH_JPG_SUFFIX = new File(System.getProperty("user.dir") + "/src/test/resources/text-content-type.jpG");
 
     @Resource
     TestHelper testHelper;
@@ -83,9 +83,9 @@ public class AttachmentServiceIntegrationTest extends ServiceIntegrationTestBase
     @Test
     public void saving_file_succeeds() throws IOException, InfoException, FileUploadException, InvalidAttachmentException {
         precondition(attachmentService.findAllAttachments(initiativeId, TestHelper.authorLoginUserHolder).getAll(), hasSize(0));
-        attachmentService.addAttachment(initiativeId, TestHelper.authorLoginUserHolder, multiPartFileMock("anyfile.jpg", "image/jpeg", TEST_JPG_FILE), "someDescription");
-        attachmentService.addAttachment(initiativeId, TestHelper.authorLoginUserHolder, multiPartFileMock("anyfile.png", "image/png", TEST_PNG_FILE), "someDescription");
-        attachmentService.addAttachment(initiativeId, TestHelper.authorLoginUserHolder, multiPartFileMock("anyfile.pdf", "application/pdf", TEST_PDF_FILE), "someDescription");
+        attachmentService.addAttachment(initiativeId, TestHelper.authorLoginUserHolder, multiPartFileMock("anyfile.jpG", "image/jpeg", TEST_JPG_FILE), "someDescription");
+        attachmentService.addAttachment(initiativeId, TestHelper.authorLoginUserHolder, multiPartFileMock("anyfile.pnG", "image/pnG", TEST_PNG_FILE), "someDescription");
+        attachmentService.addAttachment(initiativeId, TestHelper.authorLoginUserHolder, multiPartFileMock("anyfile.pdF", "application/pdF", TEST_PDF_FILE), "someDescription");
         assertThat(attachmentService.findAllAttachments(initiativeId, TestHelper.authorLoginUserHolder).getAll(), hasSize(3));
     }
 
@@ -96,22 +96,22 @@ public class AttachmentServiceIntegrationTest extends ServiceIntegrationTestBase
 
     @Test(expected = InvalidAttachmentException.class)
     public void saving_file_fails_if_invalid_content_type() throws IOException, InfoException, FileUploadException, InvalidAttachmentException {
-        attachmentService.addAttachment(initiativeId, TestHelper.authorLoginUserHolder, multiPartFileMock("anyfile.jpg", "text"), "someDescription");
+        attachmentService.addAttachment(initiativeId, TestHelper.authorLoginUserHolder, multiPartFileMock("anyfile.jpG", "text"), "someDescription");
     }
 
     @Test(expected = InvalidAttachmentException.class)
     public void saving_file_fails_if_invalid_file_content_for_jpg() throws IOException, FileUploadException, InvalidAttachmentException {
-        attachmentService.addAttachment(initiativeId, TestHelper.authorLoginUserHolder, multiPartFileMock("anyfile.jpg", "image/jpeg", TEST_PNG_FILE), "someDescription");
+        attachmentService.addAttachment(initiativeId, TestHelper.authorLoginUserHolder, multiPartFileMock("anyfile.jpG", "image/jpeg", TEST_PNG_FILE), "someDescription");
     }
 
     @Test(expected = InvalidAttachmentException.class)
     public void saving_file_fails_if_invalid_file_content_for_png() throws IOException, FileUploadException, InvalidAttachmentException {
-        attachmentService.addAttachment(initiativeId, TestHelper.authorLoginUserHolder, multiPartFileMock("anyfile.png", "image/png", TEST_JPG_FILE), "someDescription");
+        attachmentService.addAttachment(initiativeId, TestHelper.authorLoginUserHolder, multiPartFileMock("anyfile.pnG", "image/pnG", TEST_JPG_FILE), "someDescription");
     }
 
     @Test(expected = InvalidAttachmentException.class)
     public void saving_file_fails_if_invalid_file_content_for_pdf() throws IOException, FileUploadException, InvalidAttachmentException {
-        attachmentService.addAttachment(initiativeId, TestHelper.authorLoginUserHolder, multiPartFileMock("anyfile.pdf", "application/pdf", TEST_PNG_FILE), "someDescription");
+        attachmentService.addAttachment(initiativeId, TestHelper.authorLoginUserHolder, multiPartFileMock("anyfile.pdF", "application/pdF", TEST_PNG_FILE), "someDescription");
     }
 
     @Test(expected = OperationNotAllowedException.class)

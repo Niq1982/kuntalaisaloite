@@ -796,7 +796,7 @@ public class TestHelper {
     public Long addAttachment(Long initiativeId, String description, boolean accepted, String fileType, Long forcedAttachmentId) {
         String contentType;
 
-        switch (fileType) {
+        switch (fileType.toLowerCase()) {
             case "jpg":
                 contentType = MediaType.JPEG.toString();
                 break;
