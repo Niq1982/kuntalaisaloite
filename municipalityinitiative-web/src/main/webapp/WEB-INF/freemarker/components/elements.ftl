@@ -176,7 +176,7 @@
 
     <#if (publicAuthors.publicNameCount > 0)>
         <#list publicAuthors.publicAuthors as publicAuthor>
-            <div class="column ${((publicAuthor_index + 1) % 3 == 0)?string("last","")}">
+            <div class="column author-list ${((publicAuthor_index + 1) % 3 == 0)?string("last","")}">
                 <h4 class="header">${publicAuthor.name}</h4>
                 <p><@u.solveMunicipality municipality=publicAuthor.municipality/></p>
             </div>
@@ -205,7 +205,7 @@
     <br />
     
     <#list authorList as a>
-        <div class="column author ${((a_index + 1) % 3 == 0)?string("last","")}">
+        <div class="column author author-list ${((a_index + 1) % 3 == 0)?string("last","")}">
             <p><strong>${a.contactInfo.name!""}</strong>, <@u.solveMunicipality a.municipality/>
             <#if showRenewManagementHash>
                 <a  href="#" class="js-renew-management-hash trigger-tooltip" title="<@u.message "moderator.renewManagementHash.tooltip" />"

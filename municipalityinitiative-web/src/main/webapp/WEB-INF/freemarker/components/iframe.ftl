@@ -4,6 +4,8 @@
 
 <#escape x as x?html> 
 
+<#assign iframeUrl = urls.baseUrl+"/iframe" />
+
 <#--
  * initiativeIframe (Leijuke)
  *
@@ -20,7 +22,7 @@
     <#assign iframeHTML><iframe id="${id}"
             frameborder="0"
             scrolling="no"
-            src="${urls.baseUrl}/${locale}/iframe?municipality=${municipality}&amp;limit=${limit}&amp;orderBy=latest&amp;width=${width}&amp;height=${height}"
+            src="${iframeUrl}/${locale}?municipality=${municipality}&amp;limit=${limit}&amp;orderBy=latest&amp;width=${width}&amp;height=${height}"
             width="${width}"
             height="${height}">
     </iframe></#assign>
@@ -134,7 +136,7 @@
             <iframe id="kuntalaisaloite-leijuke"
                     frameborder="0"
                     scrolling="no"
-                    src="${urls.iframe()}?municipality={{:municipality}}&amp;limit={{:limit}}&amp;orderBy=latest&amp;width={{:width}}&amp;height={{:height}}"
+                    src="${iframeUrl}/{{:lang}}?municipality={{:municipality}}&amp;limit={{:limit}}&amp;orderBy=latest&amp;width={{:width}}&amp;height={{:height}}"
                     width="{{:width}}"
                     height="{{:height}}" onload="iFrameLoaded('kuntalaisaloite-leijuke', 'iframe-placeholder')">
             </iframe>
@@ -144,7 +146,7 @@
                 <iframe id="kuntalaisaloite-leijuke"
                     frameborder="0"
                     scrolling="no"
-                    src="${urls.iframe()}?municipality={{:municipality}}&amp;limit={{:limit}}&amp;orderBy=latest&amp;width={{:width}}&amp;height={{:height}}"
+                    src="${iframeUrl}/{{:lang}}?municipality={{:municipality}}&amp;limit={{:limit}}&amp;orderBy=latest&amp;width={{:width}}&amp;height={{:height}}"
                     width="{{:width}}"
                     height="{{:height}}">
                 </iframe>
