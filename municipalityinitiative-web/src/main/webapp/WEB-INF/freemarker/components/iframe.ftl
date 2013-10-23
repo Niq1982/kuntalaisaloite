@@ -4,7 +4,7 @@
 
 <#escape x as x?html> 
 
-<#assign iframeUrl = urls.baseUrl+"/iframe" />
+<#assign iframeUrl = urls.iframeBaseUrl+"/iframe" />
 
 <#--
  * initiativeIframe (Leijuke)

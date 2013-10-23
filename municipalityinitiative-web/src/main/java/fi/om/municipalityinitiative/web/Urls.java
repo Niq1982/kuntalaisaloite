@@ -453,6 +453,10 @@ public final class Urls {
         return getLocalizedPageUrl(INVITATION_REJECTED_FI, INVITATION_REJECTED_SV).replace(ID_PARAMETER, initiativeId.toString());
     }
 
+    public String getIframeBaseUrl() {
+        return iframeBaseUrl;
+    }
+
     public String search() {
         return getLocalizedPageUrl(SEARCH_FI, SEARCH_SV);
     }
