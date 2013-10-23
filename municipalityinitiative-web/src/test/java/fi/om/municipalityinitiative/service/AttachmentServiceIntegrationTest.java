@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.service;
 
-import com.google.common.io.Files;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.FileUploadException;
@@ -9,32 +8,22 @@ import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.sql.QAttachment;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.aspectj.util.FileUtil;
-import org.hamcrest.Matchers;
 import org.im4java.core.InfoException;
 import org.junit.Test;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
-import static org.hamcrest.CoreMatchers.any;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.*;
 
 public class AttachmentServiceIntegrationTest extends ServiceIntegrationTestBase {
 
