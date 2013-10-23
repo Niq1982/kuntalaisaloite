@@ -48,15 +48,15 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
 
         @Inject Environment env;
 
-        @Bean
-        public VetumaLoginController vetumaLoginController() {
-            return new VetumaLoginController(
-                    env.getRequiredProperty(PropertyNames.baseURL),
-                    optimizeResources(env),
-                    resourcesVersion(env),
-                    env.getRequiredProperty(PropertyNames.vetumaURL)
-            );
-        }
+//        @Bean
+//        public VetumaLoginController vetumaLoginController() {
+//            return new VetumaLoginController(
+//                    env.getRequiredProperty(PropertyNames.baseURL),
+//                    optimizeResources(env),
+//                    resourcesVersion(env),
+//                    env.getRequiredProperty(PropertyNames.vetumaURL)
+//            );
+//        }
 
         @Bean
         public TestDataController devController() {
@@ -102,14 +102,14 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
 
         @Inject Environment env;
 
-        @Bean
-        public DefaultLoginController loginController() {
-            return new DefaultLoginController(
-                    env.getRequiredProperty(PropertyNames.baseURL),
-                    optimizeResources(env),
-                    resourcesVersion(env)
-            );
-        }
+//        @Bean
+//        public DefaultLoginController loginController() {
+//            return new DefaultLoginController(
+//                    env.getRequiredProperty(PropertyNames.baseURL),
+//                    optimizeResources(env),
+//                    resourcesVersion(env)
+//            );
+//        }
 
     }
 
@@ -139,6 +139,16 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
     /*
      * BEANS
      */
+
+    @Bean
+    public VetumaLoginController vetumaLoginController() {
+        return new VetumaLoginController(
+                env.getRequiredProperty(PropertyNames.baseURL),
+                optimizeResources(env),
+                resourcesVersion(env),
+                env.getRequiredProperty(PropertyNames.vetumaURL)
+        );
+    }
 
     @Bean
     public LocaleResolver localeResolver() {
