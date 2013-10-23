@@ -9,24 +9,32 @@ import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.sql.QAttachment;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.aspectj.util.FileUtil;
+import org.hamcrest.Matchers;
 import org.im4java.core.InfoException;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
+import static org.hamcrest.CoreMatchers.any;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
+import static org.mockito.Mockito.*;
 
 public class AttachmentServiceIntegrationTest extends ServiceIntegrationTestBase {
 
@@ -69,7 +77,7 @@ public class AttachmentServiceIntegrationTest extends ServiceIntegrationTestBase
 
     @Test(expected = AccessDeniedException.class)
     public void saving_file_requires_management_rights() throws IOException, InfoException, FileUploadException, InvalidAttachmentException {
-        attachmentService.addAttachment(initiativeId, TestHelper.unknownLoginUserHolder, multiPartFileMock("", ""), "");
+        attachmentService.addAttachment(initiativeId, TestHelper.unknownLoginUserHolder, multiPartFileMock("anyname", "anycontenttype"), "asd");
     }
 
     @Test
@@ -228,20 +236,35 @@ public class AttachmentServiceIntegrationTest extends ServiceIntegrationTestBase
     }
 
     private static MultipartFile multiPartFileMock(String fileName, String contentType) throws IOException {
-        MultipartFile multiPartFileMock = mock(MultipartFile.class);
+
+        return new MockMultipartFile(fileName, fileName, contentType, new byte[0]);
+
+        /*MultipartFile multiPartFileMock = mock(MultipartFile.class);
         stub(multiPartFileMock.getOriginalFilename()).toReturn(fileName);
         stub(multiPartFileMock.getContentType()).toReturn(contentType);
         stub(multiPartFileMock.getBytes()).toReturn(new byte[0]);
-        return multiPartFileMock;
+        return multiPartFileMock;*/
     }
 
-    private static MultipartFile multiPartFileMock(String fileName, String contentType, File file) throws IOException {
-        MultipartFile multiPartFileMock = mock(MultipartFile.class);
+    private static MultipartFile multiPartFileMock(String fileName, String contentType, final File file) throws IOException {
+
+        return new MockMultipartFile(fileName, fileName, contentType, FileUtil.readAsByteArray(file));
+
+        /*MultipartFile multiPartFileMock = mock(MultipartFile.class);
         stub(multiPartFileMock.getOriginalFilename()).toReturn(fileName);
         stub(multiPartFileMock.getContentType()).toReturn(contentType);
         stub(multiPartFileMock.getBytes()).toReturn(Files.toByteArray(file));
         stub(multiPartFileMock.getInputStream()).toReturn(new FileInputStream(file));
-        return multiPartFileMock;
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object argument = invocation.getArguments()[0];
+                File givenFile = (File) argument;
+                FileUtil.copyDir(file, givenFile);
+                return null;
+            }
+        }).when(multiPartFileMock).transferTo(Mockito.any(File.class));
+        return multiPartFileMock;*/
 
     }
 
