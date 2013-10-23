@@ -218,7 +218,7 @@ public class InitiativeManagementController extends BaseController {
         LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        if (validationService.validationErrors(updateDto, bindingResult, model)) {
+        if (validationService.validationErrors(updateDto, bindingResult, model, solveValidationGroup(publicInitiativeService.getInitiative(initiativeId, loginUserHolder)))) {
 
             return ViewGenerator.updateView(initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder),
                     updateDto,
