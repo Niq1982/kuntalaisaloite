@@ -174,11 +174,9 @@ public class SecurityFilter implements Filter {
 
         for (String skipCsrfURI : skipCsrfURIs) {
             if (requestURI.startsWith(skipCsrfURI)) {
-                System.out.println("Skipping crsf-check for uri: " + requestURI);
                 return true;
             }
         }
-        System.out.println("CSRF CHECK");
         return false;
     }
 

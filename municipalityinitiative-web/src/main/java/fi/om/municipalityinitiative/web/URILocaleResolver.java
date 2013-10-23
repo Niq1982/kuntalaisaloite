@@ -19,6 +19,12 @@ public class URILocaleResolver implements LocaleResolver {
         } 
         
         else {
+
+            // Iframe has different uri to prevent usage of securityFilter, so it's locale must be checked here separatedly.
+            if (request.getRequestURI().startsWith(Urls.IFRAME_SV)) {
+                return Locales.LOCALE_SV;
+            }
+
             String uri = request.getRequestURI();
             
             if (uri.startsWith(request.getContextPath() + Urls.FRONT_SV)) {
