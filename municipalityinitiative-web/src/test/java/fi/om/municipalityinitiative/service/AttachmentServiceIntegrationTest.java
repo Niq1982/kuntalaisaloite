@@ -41,10 +41,10 @@ public class AttachmentServiceIntegrationTest extends ServiceIntegrationTestBase
     public static final String JPG = "jpG";
     public static final String DESCRIPTION = "asd";
     public static final String FILE_NAME = DESCRIPTION + "." + JPG;
-    public static final File TEST_JPG_FILE = new File(System.getProperty("user.dir") + "/src/test/resources/jpg-content-type.jpG");
-    public static final File TEST_PNG_FILE = new File(System.getProperty("user.dir") + "/src/test/resources/png-content-type.pnG");
-    public static final File TEST_PDF_FILE = new File(System.getProperty("user.dir") + "/src/test/resources/testi.pdF");
-    public static final File TEST_TXT_FILE_CONTENT_WITH_JPG_SUFFIX = new File(System.getProperty("user.dir") + "/src/test/resources/text-content-type.jpG");
+    public static final File TEST_JPG_FILE = new File(System.getProperty("user.dir") + "/src/test/resources/jpg-content-type.jpg");
+    public static final File TEST_PNG_FILE = new File(System.getProperty("user.dir") + "/src/test/resources/png-content-type.png");
+    public static final File TEST_PDF_FILE = new File(System.getProperty("user.dir") + "/src/test/resources/testi.pdf");
+    public static final File TEST_TXT_FILE_CONTENT_WITH_JPG_SUFFIX = new File(System.getProperty("user.dir") + "/src/test/resources/text-content-type.jpg");
 
     @Resource
     TestHelper testHelper;
