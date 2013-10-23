@@ -80,9 +80,8 @@ public class AttachmentService {
 
             // Create temp-file for proper file handling
             tempFile = File.createTempFile(RandomHashGenerator.shortHash(), "." + fileType);
-            try (FileOutputStream output = new FileOutputStream(tempFile)) {
-                IOUtils.write(IOUtils.toByteArray(file.getInputStream()), output);
-            }
+
+            file.transferTo(tempFile);
 
             assertRealFileContent(tempFile, fileType);
 

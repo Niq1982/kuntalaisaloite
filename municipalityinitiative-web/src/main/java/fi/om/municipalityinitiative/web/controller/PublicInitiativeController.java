@@ -369,6 +369,8 @@ public class PublicInitiativeController extends BaseController {
         try {
             AttachmentFile attachment = attachmentService.getAttachment(id, fileName, userService.getLoginUserHolder(request));
             attachmentFileResponse(response, attachment);
+        } catch (AccessDeniedException e) {
+            throw e;
         } catch (Throwable t) {
             log.error("Attachment not found: " + id + "," + fileName, t);
             throw new AccessDeniedException("Attachment not found: " + id + ", "+fileName);
