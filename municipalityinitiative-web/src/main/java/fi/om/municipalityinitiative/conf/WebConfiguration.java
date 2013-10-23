@@ -71,26 +71,6 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
             return new VetumaMockController(optimizeResources(env), resourcesVersion(env));
         }
 
-        @Bean
-        public VetumaLoginRequest loginRequestDefaults() {
-            VetumaLoginRequest request = new VetumaLoginRequest();
-
-            // Constants
-            request.setTYPE(LOGIN);
-            request.setAU(EXTAUTH);
-            request.setEXTRADATA("VTJTT=VTJ-VETUMA-Perus");
-
-            // Configured (encrypted)
-            request.setRCVID(env.getRequiredProperty(PropertyNames.vetumaRCVID));
-            request.setSO(env.getRequiredProperty(PropertyNames.vetumaSO));
-            request.setSOLIST(env.getRequiredProperty(PropertyNames.vetumaSOLIST));
-            request.setAP(env.getRequiredProperty(PropertyNames.vetumaAP));
-            request.setAPPNAME(env.getRequiredProperty(PropertyNames.vetumaAPPNAME));
-            request.setAPPID(env.getRequiredProperty(PropertyNames.vetumaAPPID));
-
-            return request;
-        }
-
     }
 
     /**
@@ -148,6 +128,26 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
                 resourcesVersion(env),
                 env.getRequiredProperty(PropertyNames.vetumaURL)
         );
+    }
+
+    @Bean
+    public VetumaLoginRequest loginRequestDefaults() {
+        VetumaLoginRequest request = new VetumaLoginRequest();
+
+        // Constants
+        request.setTYPE(LOGIN);
+        request.setAU(EXTAUTH);
+        request.setEXTRADATA("VTJTT=VTJ-VETUMA-Perus");
+
+        // Configured (encrypted)
+        request.setRCVID(env.getRequiredProperty(PropertyNames.vetumaRCVID));
+        request.setSO(env.getRequiredProperty(PropertyNames.vetumaSO));
+        request.setSOLIST(env.getRequiredProperty(PropertyNames.vetumaSOLIST));
+        request.setAP(env.getRequiredProperty(PropertyNames.vetumaAP));
+        request.setAPPNAME(env.getRequiredProperty(PropertyNames.vetumaAPPNAME));
+        request.setAPPID(env.getRequiredProperty(PropertyNames.vetumaAPPID));
+
+        return request;
     }
 
     @Bean
