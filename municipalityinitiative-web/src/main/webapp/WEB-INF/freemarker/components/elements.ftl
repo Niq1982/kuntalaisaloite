@@ -76,8 +76,8 @@
 
 		    	<div class="column col-1of5 ${((attachment_index + 1) % 5 == 0)?string("last","")}">
 		    		<span class="thumbnail">
-				        <a href="${urls.attachment(attachment.attachmentId, attachment.fileName)}" title="${attachment.description}" target="_blank">
-				            <img src="${urls.getAttachmentThumbnail(attachment.attachmentId)}" alt="${attachment.description}" />    
+				        <a href="${urls.attachment(attachment.attachmentId, attachment.fileName)}" target="_blank">
+				            <img src="${urls.getAttachmentThumbnail(attachment.attachmentId)}" alt="<@u.stripHtmlTags attachment.description />" />    
 			            </a>
 		            </span>
 		            <span class="img-label"><@u.stripHtmlTags attachment.description />
