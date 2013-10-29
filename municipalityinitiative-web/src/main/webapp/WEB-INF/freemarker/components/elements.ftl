@@ -74,7 +74,7 @@
 
 		    <#list attachments.images as attachment>
 
-		    	<div class="column col-1of5 ${((attachment_index + 1) % 5 == 0)?string("last","")}">
+		    	<div class="column col-1of4 ${((attachment_index + 1) % 4 == 0)?string("last","")}">
 		    		<span class="thumbnail">
 				        <a href="${urls.attachment(attachment.attachmentId, attachment.fileName)}" target="_blank">
 				            <img src="${urls.getAttachmentThumbnail(attachment.attachmentId)}" alt="<@u.stripHtmlTags attachment.description />" />    
@@ -91,7 +91,7 @@
 				        </#if>
 			        </span>
 		        </div>
-	            <#if ((attachment_index + 1) % 5 == 0) || !attachment_has_next><br class="clear" /></#if>
+	            <#if ((attachment_index + 1) % 4 == 0) || !attachment_has_next><br class="clear" /></#if>
 	           
 		    </#list>
 	    </div>

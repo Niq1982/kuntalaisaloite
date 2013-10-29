@@ -50,7 +50,7 @@
 <@l.main "page.info" pageTitle!"">
       
     <div class="columns cf">
-        <div class="column col-1of4 navigation">
+        <div class="column col-1of4 extra-margin navigation">
                   
             <h3 class="navi-title"><@u.message "info.title" /></h3>
                  
