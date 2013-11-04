@@ -31,7 +31,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 
 import javax.annotation.Resource;
-
 import java.util.List;
 
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
@@ -213,10 +212,10 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 query.orderBy(municipalityInitiative.id.desc());
                 break;
             case mostParticipants:
-                query.orderBy(municipalityInitiative.participantCount.desc(), municipalityInitiative.id.desc());
+                query.orderBy(municipalityInitiative.participantCount.add(municipalityInitiative.externalparticipantcount).desc(), municipalityInitiative.id.desc());
                 break;
             case leastParticipants:
-                query.orderBy(municipalityInitiative.participantCount.asc(), municipalityInitiative.id.asc());
+                query.orderBy(municipalityInitiative.participantCount.add(municipalityInitiative.externalparticipantcount).asc(), municipalityInitiative.id.asc());
                 break;
             default:
                 throw new RuntimeException("Order by not implemented:" + orderBy);

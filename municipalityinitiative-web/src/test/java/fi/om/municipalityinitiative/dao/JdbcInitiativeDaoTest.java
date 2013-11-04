@@ -19,7 +19,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-
 import java.util.List;
 
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
@@ -237,7 +236,8 @@ public class JdbcInitiativeDaoTest {
         Long mostParticipants = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE)
-                .withParticipantCount(10));
+                .withExternalParticipantCount(3)
+                .withParticipantCount(3));
         Long leastParticipants = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE)
