@@ -70,7 +70,7 @@
 <#macro attachmentsView attachments manage=false>
 	<#if (attachments.images?size + attachments.pdfs?size) gt 0>
 		<div class="initiative-content-row thumbnail-list cf"> 
-    	<h3><@u.message "attachments.title" /></h3> ${attachments?size}
+    	<h3><@u.message "attachments.title" /></h3>
 
 		    <#list attachments.images as attachment>
 
