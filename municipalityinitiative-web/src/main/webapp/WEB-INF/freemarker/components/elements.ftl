@@ -68,9 +68,9 @@
  * @param manage boolean for showing delete-button. Default is false
 -->
 <#macro attachmentsView attachments manage=false>
-	<#if attachments?size gt 0>
+	<#if (attachments.images?size + attachments.pdfs?size) gt 0>
 		<div class="initiative-content-row thumbnail-list cf"> 
-    	<h3><@u.message "attachments.title" /></h3>
+    	<h3><@u.message "attachments.title" /></h3> ${attachments?size}
 
 		    <#list attachments.images as attachment>
 
@@ -96,9 +96,8 @@
 		    </#list>
 	    </div>
 	    
-	    <div class="initiative-content-row"> 
+	    <div class="initiative-content-row">
 		    <#list attachments.pdfs as attachment>
-
 	    		<#if attachment_index == 0><ul class="no-style"></#if>
 	    		
 			        <li class="pdf-attachment">
