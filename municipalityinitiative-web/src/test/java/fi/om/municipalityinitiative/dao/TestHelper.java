@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.dao;
 
+import com.google.common.net.MediaType;
 import com.mysema.query.sql.RelationalPathBase;
 import com.mysema.query.sql.dml.SQLInsertClause;
 import com.mysema.query.sql.dml.SQLUpdateClause;
@@ -19,12 +20,10 @@ import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
 import org.springframework.core.env.Environment;
-import com.google.common.net.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -52,7 +51,7 @@ public class TestHelper {
     public static final DateTime DEFAULT_CREATE_TIME = DateTime.now();
     public static final DateTime DEFAULT_STATE_TIME = DEFAULT_CREATE_TIME;
     public static final String DEFAULT_SENT_COMMENT = "some default sent comment";
-    public static final Integer DEFAULT_EXTERNAL_PARTICIPANT_COUNT = 10;
+    public static final Integer DEFAULT_EXTERNAL_PARTICIPANT_COUNT = 0;
 
     public static LoginUserHolder authorLoginUserHolder;
     public static LoginUserHolder unknownLoginUserHolder = new LoginUserHolder(User.anonym());
