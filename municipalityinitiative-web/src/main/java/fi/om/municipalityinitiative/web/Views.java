@@ -23,6 +23,8 @@ public final class Views {
 
     public static final String ERROR_410_VIEW = "error/410";
 
+    public static final String ERROR_409_VIEW = "error/409";
+
     public static final String API_VIEW = "api";
     
     public static final String NEWS_VIEW = "pages/news";

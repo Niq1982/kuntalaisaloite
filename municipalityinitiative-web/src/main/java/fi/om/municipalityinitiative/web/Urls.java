@@ -87,6 +87,8 @@ public final class Urls {
 
     public static final String ERROR_410 = "/410";
 
+    public static final String ERROR_409 = "/409";
+
     public static final String NEWS_FI = "/fi/uutiset";
     
     public static final String NEWS_SV = "/sv/nyheter";

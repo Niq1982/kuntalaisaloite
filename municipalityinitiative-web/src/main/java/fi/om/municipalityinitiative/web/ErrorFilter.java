@@ -10,7 +10,6 @@ import org.springframework.web.util.NestedServletException;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.util.UUID;
 
@@ -51,6 +50,8 @@ public class ErrorFilter implements Filter {
                 handeInvitationNotValid(request, response, e);
             } else if (nested instanceof InvalidParticipationConfirmationException) {
                 handleParticipationNotValid(request, response, e);
+            } else if (nested instanceof OperationNotAllowedException) {
+                handleOperationNotAllowed(request, response, e);
             }
             else if (nested instanceof NotFoundException) {
                 handleNotFound(request, response, e);
@@ -63,6 +64,13 @@ public class ErrorFilter implements Filter {
                 handleUnexpectedError(request, response, e);
             }
         }
+    }
+
+    private void handleOperationNotAllowed(HttpServletRequest request, HttpServletResponse response, Throwable e) throws IOException {
+        log.info(getErrorMessage("Operation not allowed:" + e.getMessage(), null, request));
+        //log.info("Invitation not valid", e);
+        request.setAttribute("errorMessage", "error.409.operation.not.allowed");
+        response.sendError(HttpServletResponse.SC_CONFLICT);
     }
 
     private void handeInvitationNotValid(HttpServletRequest request, HttpServletResponse response, Throwable e) throws IOException {

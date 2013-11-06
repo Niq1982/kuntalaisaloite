@@ -232,6 +232,11 @@
         <error-code>410</error-code>
         <location>/410</location>
     </error-page>
+
+    <error-page>
+        <error-code>409</error-code>
+        <location>/409</location>
+    </error-page>
     
     <error-page>
         <error-code>404</error-code>

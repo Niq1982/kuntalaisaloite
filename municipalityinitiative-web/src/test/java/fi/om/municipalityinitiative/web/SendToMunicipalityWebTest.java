@@ -1,7 +1,9 @@
 package fi.om.municipalityinitiative.web;
 
+import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
+import org.joda.time.DateTime;
 import org.junit.Test;
 
 public class SendToMunicipalityWebTest extends WebTestBase {
@@ -32,12 +34,29 @@ public class SendToMunicipalityWebTest extends WebTestBase {
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         
         open(urls.management(initiativeId));
+        sendToMunicipality();
+        assertMsgContainedByClass("msg-success",  MSG_SUCCESS_SEND);
+        assertTotalEmailsInQueue(2);
+    }
+
+    @Test
+    public void trying_operation_which_initiative_state_prevents_shows_error_page() {
+        Long initiativeId = testHelper.create(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+
+        loginAsAuthorForLastTestHelperCreatedNormalInitiative();
+        open(urls.management(initiativeId));
+
+        testHelper.updateField(initiativeId, QMunicipalityInitiative.municipalityInitiative.sent, DateTime.now());
+
+        sendToMunicipality();
+
+        assertTitle("Toiminto ei ole sallittu - Kuntalaisaloitepalvelu");
+    }
+
+    private void sendToMunicipality() {
         clickLinkContaining(getMessage(MSG_BTN_SEND));
         inputText("comment", COMMENT);
         getElemContaining(getMessage(MSG_BTN_SEND_CONFIRM), "button").click();
-        assertMsgContainedByClass("msg-success",  MSG_SUCCESS_SEND);
-
-        assertTotalEmailsInQueue(2);
     }
-    
+
 }

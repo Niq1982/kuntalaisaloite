@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.util.Locale;
 import java.util.Map;
 
@@ -60,12 +59,19 @@ public class ErrorController {
     }
 
     @RequestMapping(ERROR_410)
-    public String resourceGone(Locale locale, HttpServletRequest request, HttpServletResponse response, Model model) {
+    public String resourceGone(Locale locale, HttpServletResponse response, Model model) {
         response.setStatus(HttpStatus.GONE.value());
         Urls urls = Urls.get(locale);
         addModelDefaults(model, urls);
         return ERROR_410_VIEW;
+    }
 
+    @RequestMapping(ERROR_409)
+    public String operationNotAllowed(Locale locale, HttpServletResponse response, Model model) {
+        response.setStatus(HttpStatus.CONFLICT.value());
+        Urls urls = Urls.get(locale);
+        addModelDefaults(model, urls);
+        return ERROR_409_VIEW;
     }
 
     private void addModelDefaults(Model model, Urls urls) {
