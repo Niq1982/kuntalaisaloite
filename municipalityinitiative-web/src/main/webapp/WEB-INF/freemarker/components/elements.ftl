@@ -68,16 +68,16 @@
  * @param manage boolean for showing delete-button. Default is false
 -->
 <#macro attachmentsView attachments manage=false>
-	<#if attachments?size gt 0>
+	<#if (attachments.images?size + attachments.pdfs?size) gt 0>
 		<div class="initiative-content-row thumbnail-list cf"> 
     	<h3><@u.message "attachments.title" /></h3>
 
 		    <#list attachments.images as attachment>
 
-		    	<div class="column col-1of5 ${((attachment_index + 1) % 5 == 0)?string("last","")}">
+		    	<div class="column col-1of4 ${((attachment_index + 1) % 4 == 0)?string("last","")}">
 		    		<span class="thumbnail">
-				        <a href="${urls.attachment(attachment.attachmentId, attachment.fileName)}" title="${attachment.description}" target="_blank">
-				            <img src="${urls.getAttachmentThumbnail(attachment.attachmentId)}" alt="${attachment.description}" />    
+				        <a href="${urls.attachment(attachment.attachmentId, attachment.fileName)}" target="_blank">
+				            <img src="${urls.getAttachmentThumbnail(attachment.attachmentId)}" alt="<@u.stripHtmlTags attachment.description />" />    
 			            </a>
 		            </span>
 		            <span class="img-label"><@u.stripHtmlTags attachment.description />
@@ -91,14 +91,13 @@
 				        </#if>
 			        </span>
 		        </div>
-	            <#if ((attachment_index + 1) % 5 == 0) || !attachment_has_next><br class="clear" /></#if>
+	            <#if ((attachment_index + 1) % 4 == 0) || !attachment_has_next><br class="clear" /></#if>
 	           
 		    </#list>
 	    </div>
 	    
-	    <div class="initiative-content-row"> 
+	    <div class="initiative-content-row">
 		    <#list attachments.pdfs as attachment>
-
 	    		<#if attachment_index == 0><ul class="no-style"></#if>
 	    		
 			        <li class="pdf-attachment">

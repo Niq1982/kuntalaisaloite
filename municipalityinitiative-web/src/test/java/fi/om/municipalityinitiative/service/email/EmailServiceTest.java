@@ -121,7 +121,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getBodyHtml(), containsString(EXTRA_INFO));
         assertThat(email.getBodyHtml(), containsString(SENT_COMMENT));
         assertThat(email.getAttachmentType(), is(EmailAttachmentType.NONE));
-        assertThat(email.getBodyHtml(), containsString("1 liitetiedosto"));
+        assertThat(email.getBodyHtml(), containsString("1 liite"));
 
     }
 
@@ -202,7 +202,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getBodyHtml(), containsString(AUTHOR_ADDRESS));
         assertThat(email.getBodyHtml(), containsString(AUTHOR_PHONE));
         assertThat(email.getAttachmentType(), is(EmailAttachmentType.PARTICIPANTS));
-        assertThat(email.getBodyHtml(), containsString("1 liitetiedosto"));
+        assertThat(email.getBodyHtml(), containsString("1 liite"));
     }
 
     @Test
@@ -225,7 +225,7 @@ public class EmailServiceTest extends MailSendingEmailServiceTestBase {
         assertThat(email.getBodyHtml(), containsString(AUTHOR_ADDRESS));
         assertThat(email.getBodyHtml(), containsString(AUTHOR_PHONE));
         assertThat(email.getAttachmentType(), is(EmailAttachmentType.PARTICIPANTS));
-        assertThat(email.getBodyHtml(), containsString("1 liitetiedosto"));
+        assertThat(email.getBodyHtml(), containsString("1 liite"));
     }
 
     @Test

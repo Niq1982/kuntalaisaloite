@@ -60,7 +60,7 @@
 <@l.main page="page.help" pageTitle=pageTitle!"" requestMessagesON=false>
 
     <div class="columns cf">
-        <div class="column col-1of4 navigation">
+        <div class="column col-1of4 extra-margin navigation">
             <@navigation categoryLinksMap['MAIN'] "" "box" />
             <@navigation categoryLinksMap['KUNTALAISALOITE_FI'] "help.service.title" />
             <@navigation categoryLinksMap['KUNTALAISALOITE'] "help.general.title" />
