@@ -142,7 +142,7 @@
         <div class="initiative-content-row last">
             <h2><@u.message key="initiative.people.title" args=[authors?size] /></h2>
             
-            <@e.initiativeContactInfo authorList=authors showRenewManagementHash=!initiative.verifiable/>
+            <@e.initiativeContactInfo authorList=authors showRenewManagementHash=!initiative.verifiable && !initiative.sent/>
         </div>
     </div>
     
