@@ -10,7 +10,6 @@ import fi.om.municipalityinitiative.dao.*;
 import fi.om.municipalityinitiative.dto.service.TestDataService;
 import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.service.email.*;
-import fi.om.municipalityinitiative.service.operations.VerifiedInitiativeServiceOperations;
 import fi.om.municipalityinitiative.service.ui.*;
 import fi.om.municipalityinitiative.util.ImageModifier;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -35,9 +34,7 @@ import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.jdbc.support.SQLExceptionTranslator;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import javax.annotation.PostConstruct;
@@ -212,11 +209,6 @@ public class AppConfiguration {
     @Bean
     public VerifiedInitiativeService verifiedInitiativeService() {
         return new VerifiedInitiativeService();
-    }
-
-    @Bean
-    public VerifiedInitiativeServiceOperations verifiedInitiativeServiceOperations() {
-        return new VerifiedInitiativeServiceOperations();
     }
 
     @Bean
