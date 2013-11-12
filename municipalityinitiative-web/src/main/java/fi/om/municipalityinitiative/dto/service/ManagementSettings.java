@@ -34,7 +34,8 @@ public class ManagementSettings {
     }
 
     public boolean isAllowSendToMunicipality() {
-        return (initiative.getState().equals(InitiativeState.ACCEPTED) || initiative.getState().equals(InitiativeState.PUBLISHED))
+        return ((initiative.getState().equals(InitiativeState.ACCEPTED) && initiative.getType().isNotVerifiable()) // Only normal initiatives may be sent straight to municipality
+                || initiative.getState().equals(InitiativeState.PUBLISHED))
                 && initiative.getSentTime().isNotPresent()
                 && initiative.getFixState() == FixState.OK;
     }

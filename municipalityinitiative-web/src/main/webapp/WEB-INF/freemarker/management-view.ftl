@@ -193,7 +193,7 @@
         </#if>
     </#if> <#-- /managementSettings.allowSendToReview -->
     
-    <#if managementSettings.allowSendToMunicipality>
+    <#if managementSettings.allowSendToMunicipality || managementSettings.allowInviteAuthors || managementSettings.allowPublish>
         <#assign startCollectingConfirm = false />
         <#assign sendToMunicipalityConfirm = false />
         
@@ -207,6 +207,7 @@
     
         <#if !sendToMunicipalityConfirm && !startCollectingConfirm>
             <div class="msg-block">
+
                 <#if managementSettings.allowPublish>
                     <div class="system-msg msg-info">
                         <h2 id="start-collecting"><@u.message "startCollecting.title" /></h2>
@@ -219,21 +220,24 @@
                         <@u.message "collecting.info" />
                     </div>
                 </#if>
-            
-                <div class="system-msg msg-info">
-                <#-- TODO: managementSettings.allowInviteAuthors -->
-                    <h2><@u.message "addAuthors.title" /></h2>
-                    <p><@u.message "addAuthors.description" /></p> <#--<@u.link href=urls.manageAuthors(initiative.id) labelKey="addAuthors.link" />-->
-                    
-                    <a href="${urls.manageAuthors(initiative.id)}" class="small-button"><span class="small-icon user"><@u.message "addAuthors.link" /></span></a>
-                </div>
-               
-                <div class="system-msg msg-info">
-                    <h2 id="send-to-municipality"><@u.message "sendToMunicipality.title" /></h2>
-                    <p><@u.message "sendToMunicipality.description" /></p>
-        
-                    <a href="${managementURL}?send-to-municipality=confirm#send-to-municipality" id="js-send-to-municipality" class="small-button js-send-to-municipality"><span class="small-icon mail"><@u.message "action.sendToMunicipality" /></span></a>
-                </div>
+
+                <#if managementSettings.allowInviteAuthors>
+                    <div class="system-msg msg-info">
+                        <h2><@u.message "addAuthors.title" /></h2>
+                        <p><@u.message "addAuthors.description" /></p> <#--<@u.link href=urls.manageAuthors(initiative.id) labelKey="addAuthors.link" />-->
+
+                        <a href="${urls.manageAuthors(initiative.id)}" class="small-button"><span class="small-icon user"><@u.message "addAuthors.link" /></span></a>
+                    </div>
+                </#if>
+
+                <#if managementSettings.allowSendToMunicipality>
+                    <div class="system-msg msg-info">
+                        <h2 id="send-to-municipality"><@u.message "sendToMunicipality.title" /></h2>
+                        <p><@u.message "sendToMunicipality.description" /></p>
+
+                        <a href="${managementURL}?send-to-municipality=confirm#send-to-municipality" id="js-send-to-municipality" class="small-button js-send-to-municipality"><span class="small-icon mail"><@u.message "action.sendToMunicipality" /></span></a>
+                    </div>
+                </#if>
             </div>
         </#if>
         

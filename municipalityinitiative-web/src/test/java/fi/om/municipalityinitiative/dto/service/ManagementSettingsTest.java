@@ -106,6 +106,7 @@ public class ManagementSettingsTest {
 
         final Initiative initiative = new Initiative();
         initiative.setFixState(FixState.OK);
+        initiative.setType(InitiativeType.UNDEFINED);
         assertExpectedOnlyWithGivenStates(initiative, new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
@@ -115,10 +116,41 @@ public class ManagementSettingsTest {
     }
 
     @Test
+    public void may_not_be_sent_to_municipality_if_verified_initiative_and_not_published() throws Exception {
+        final Initiative initiative = new Initiative();
+        initiative.setFixState(FixState.OK);
+        initiative.setType(InitiativeType.COLLABORATIVE_COUNCIL);
+
+        assertExpectedOnlyWithGivenStates(initiative, new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return ManagementSettings.of(initiative).isAllowSendToMunicipality();
+            }
+        }, true, InitiativeState.PUBLISHED);
+    }
+
+    @Test
     public void never_able_to_send_to_municipality_if_already_sent() throws Exception {
         final Initiative initiative = new Initiative();
         initiative.setSentTime(Maybe.of(new LocalDate(2010, 1, 1)));
 
+        initiative.setType(InitiativeType.UNDEFINED);
+        assertExpectedOnlyWithGivenStates(initiative, new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return ManagementSettings.of(initiative).isAllowSendToMunicipality();
+            }
+        }, false, InitiativeState.values());
+
+        initiative.setType(InitiativeType.COLLABORATIVE_COUNCIL);
+        assertExpectedOnlyWithGivenStates(initiative, new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return ManagementSettings.of(initiative).isAllowSendToMunicipality();
+            }
+        }, false, InitiativeState.values());
+
+        initiative.setType(InitiativeType.COLLABORATIVE);
         assertExpectedOnlyWithGivenStates(initiative, new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
