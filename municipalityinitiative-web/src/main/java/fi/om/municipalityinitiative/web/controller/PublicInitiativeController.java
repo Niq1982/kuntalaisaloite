@@ -5,11 +5,13 @@ import fi.om.municipalityinitiative.dto.service.AttachmentFile;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
-import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.InvalidHomeMunicipalityException;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
-import fi.om.municipalityinitiative.service.*;
+import fi.om.municipalityinitiative.service.AttachmentService;
+import fi.om.municipalityinitiative.service.MunicipalityService;
+import fi.om.municipalityinitiative.service.ParticipantService;
+import fi.om.municipalityinitiative.service.ValidationService;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
 import fi.om.municipalityinitiative.service.ui.VerifiedInitiativeService;
@@ -33,7 +35,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -389,7 +390,7 @@ public class PublicInitiativeController extends BaseController {
         }
     }
 
-    private void attachmentFileResponse(HttpServletResponse response, AttachmentFile file) throws IOException {
+    private static void attachmentFileResponse(HttpServletResponse response, AttachmentFile file) throws IOException {
         response.setContentType(MediaType.parseMediaType(file.getContentType()).toString());
         response.setContentLength(file.getBytes().length);
         response.setHeader("Last-Modified", file.getCreateTime().toString("E, dd MMM yyyy HH:mm:ss z"));

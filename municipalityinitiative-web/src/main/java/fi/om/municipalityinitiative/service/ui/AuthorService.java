@@ -25,7 +25,6 @@ import org.joda.time.DateTime;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-
 import java.util.List;
 import java.util.Locale;
 
@@ -53,15 +52,14 @@ public class AuthorService {
         Initiative initiative = initiativeDao.get(initiativeId);
         assertAllowance("Invite authors", ManagementSettings.of(initiative).isAllowInviteAuthors());
 
-        AuthorInvitation authorInvitation1 = new AuthorInvitation();
-        authorInvitation1.setInitiativeId(initiativeId);
-        authorInvitation1.setEmail(uiCreateDto.getAuthorEmail());
-        authorInvitation1.setName(uiCreateDto.getAuthorName());
-        authorInvitation1.setConfirmationCode(RandomHashGenerator.shortHash());
-        authorInvitation1.setInvitationTime(new DateTime());
+        AuthorInvitation authorInvitation = new AuthorInvitation();
+        authorInvitation.setInitiativeId(initiativeId);
+        authorInvitation.setEmail(uiCreateDto.getAuthorEmail());
+        authorInvitation.setName(uiCreateDto.getAuthorName());
+        authorInvitation.setConfirmationCode(RandomHashGenerator.shortHash());
+        authorInvitation.setInvitationTime(new DateTime());
 
-        authorDao.addAuthorInvitation(authorInvitation1);
-        AuthorInvitation authorInvitation = authorInvitation1;
+        authorDao.addAuthorInvitation(authorInvitation);
         emailService.sendAuthorInvitation(initiativeId, authorInvitation);
 
     }
