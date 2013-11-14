@@ -258,9 +258,9 @@
             <version>1.6.12</version>
         </dependency>
         <dependency>
-            <groupId>com.itextpdf</groupId>
-            <artifactId>itextpdf</artifactId>
-            <version>5.3.4</version>
+            <groupId>com.lowagie</groupId>
+            <artifactId>itext</artifactId>
+            <version>2.1.7</version>
         </dependency>
 
         <!-- Owasp html sanitizer -->

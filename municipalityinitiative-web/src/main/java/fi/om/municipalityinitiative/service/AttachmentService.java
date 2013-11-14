@@ -2,7 +2,6 @@ package fi.om.municipalityinitiative.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
-import com.itextpdf.text.pdf.PdfReader;
 import fi.om.municipalityinitiative.dao.AttachmentDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dto.service.AttachmentFile;
@@ -17,7 +16,6 @@ import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.util.ImageModifier;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
-import org.apache.commons.io.IOUtils;
 import org.aspectj.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +26,10 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 

@@ -1,16 +1,18 @@
 package fi.om.municipalityinitiative.pdf;
 
 import com.google.common.collect.Lists;
-import com.itextpdf.text.*;
-import com.itextpdf.text.Font.FontFamily;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.lowagie.text.*;
+import com.lowagie.text.pdf.BaseFont;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 import fi.om.municipalityinitiative.dto.service.*;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Membership;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.OutputStream;
 import java.util.List;
@@ -19,26 +21,38 @@ public class ParticipantToPdfExporter {
 
     public static final String DATETIME_FORMAT = "dd.MM.yyyy HH:mm:ss";
     public static final String DATE_FORMAT = "dd.MM.yyyy";
-    public static final FontFamily FONT_FAMILY = Font.FontFamily.HELVETICA;
 
-    private static Font mainTitle = new Font(FONT_FAMILY, 16, Font.BOLD);
-    private static Font subTitle = new Font(FONT_FAMILY, 14, Font.BOLD);
-    private static Font redFont = new Font(FONT_FAMILY, 12, Font.NORMAL, BaseColor.RED);
-    private static Font bodyText = new Font(FONT_FAMILY, 10, Font.NORMAL);
-    private static Font bodyTextItalic = new Font(FONT_FAMILY, 10, Font.ITALIC);
-    private static Font smallBold = new Font(FONT_FAMILY, 10, Font.BOLD);
-    
     public static final String COMMUNITY = "A";
     public static final String COMPANY = "B";
     public static final String PROPERTY = "C";
-
 
     private Document document;
 
     private final Initiative initiative;
     private final List<? extends Participant> participants;
 
+    private static final Logger log = LoggerFactory.getLogger(ParticipantToPdfExporter.class);
+    private final Font mainTitle;
+    private final Font subTitle;
+    private final Font bodyText;
+    private final Font smallBold;
+
+
     public ParticipantToPdfExporter(Initiative initiative, List<? extends Participant> participants) {
+
+        BaseFont fontFamily;
+        try {
+            fontFamily = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, true);
+        } catch (Exception e) {
+            log.error("Unable to initialize object", e);
+            throw new RuntimeException(e);
+        }
+
+        mainTitle = new Font(fontFamily, 16, Font.BOLD);
+        subTitle = new Font(fontFamily, 14, Font.BOLD);
+        bodyText = new Font(fontFamily, 10, Font.NORMAL);
+        smallBold = new Font(fontFamily, 10, Font.BOLD);
+
         this.initiative = initiative;
         this.participants = participants;
     }
@@ -49,6 +63,7 @@ public class ParticipantToPdfExporter {
         }
         try {
             document = new Document();
+
             PdfWriter.getInstance(document, outputStream);
             document.open();
             addMetaData();
@@ -59,7 +74,8 @@ public class ParticipantToPdfExporter {
             document = null;
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Unable to create pdf", e);
+            throw new RuntimeException(e);
         } finally {
             if (document != null) {
                 document.close();
@@ -73,7 +89,7 @@ public class ParticipantToPdfExporter {
         Paragraph preface = new Paragraph();
         
         addEmptyLine(preface, 1);
-        preface.add(new Paragraph("Osallistujat / Deltagar", subTitle));
+        preface.add(new Paragraph("Osallistujat / Deltagar", new Font()));
 
         addEmptyLine(preface, 1);
         createTable(preface, participants);
@@ -88,7 +104,7 @@ public class ParticipantToPdfExporter {
 
             lastPage.add(new Paragraph("Jäsenyysperuste, jos osallistuja ei ole kunnan asukas", subTitle));
 
-            com.itextpdf.text.List list = new com.itextpdf.text.List(true, 20);
+            com.lowagie.text.List list = new com.lowagie.text.List(true, 20);
             list.add(new ListItem(COMMUNITY + ": Nimenkirjoitusoikeus yhteisössä, laitoksessa tai säätiössä, jonka kotipaikka on aloitetta koskevassa kunnassa", bodyText));
             list.add(new ListItem(COMPANY + ": Nimenkirjoitusoikeus yrityksessä, jonka kotipaikka on aloitetta koskevassa kunnassa", bodyText));
             list.add(new ListItem(PROPERTY + ": Hallinto-oikeus tai omistus kiinteään omaisuuteen aloitetta koskevassa kunnassa", bodyText));
@@ -99,7 +115,7 @@ public class ParticipantToPdfExporter {
 
             lastPage.add(new Paragraph("SV Jäsenyysperuste, jos osallistuja ei ole kunnan asukas", subTitle));
 
-            list = new com.itextpdf.text.List(true, 20);
+            list = new com.lowagie.text.List(true, 20);
             list.add(new ListItem(COMMUNITY + ": Har namnteckningsrätt i ett samfund, en institution eller stiftelse vars hemort finns i den kommun som initiativet gäller", bodyText));
             list.add(new ListItem(COMPANY + ": Har namnteckningsrätt i ett företag vars hemort finns i den kommun som initiativet gäller", bodyText));
             list.add(new ListItem(PROPERTY + ": Äger eller besitter egendom i den kommun som initiativet gäller", bodyText));
@@ -217,7 +233,7 @@ public class ParticipantToPdfExporter {
         subCatPart.add(table);
     }
 
-    private static PdfPCell createCell(String header, boolean tableHead) {
+    private PdfPCell createCell(String header, boolean tableHead) {
         Font fontStyle = bodyText;
 
         if (tableHead) {
