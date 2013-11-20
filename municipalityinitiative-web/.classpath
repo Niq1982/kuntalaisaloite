@@ -48,7 +48,12 @@
   <classpathentry kind="var" path="M2_REPO/org/springframework/spring-tx/3.1.2.RELEASE/spring-tx-3.1.2.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-tx/3.1.2.RELEASE/spring-tx-3.1.2.RELEASE-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/aspectj/aspectjrt/1.6.12/aspectjrt-1.6.12.jar" sourcepath="M2_REPO/org/aspectj/aspectjrt/1.6.12/aspectjrt-1.6.12-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/aspectj/aspectjweaver/1.6.12/aspectjweaver-1.6.12.jar" sourcepath="M2_REPO/org/aspectj/aspectjweaver/1.6.12/aspectjweaver-1.6.12-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/com/itextpdf/itextpdf/5.3.4/itextpdf-5.3.4.jar" sourcepath="M2_REPO/com/itextpdf/itextpdf/5.3.4/itextpdf-5.3.4-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/lowagie/itext/2.1.7/itext-2.1.7.jar" sourcepath="M2_REPO/com/lowagie/itext/2.1.7/itext-2.1.7-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/bouncycastle/bcmail-jdk14/138/bcmail-jdk14-138.jar"/>
+  <classpathentry kind="var" path="M2_REPO/bouncycastle/bcprov-jdk14/138/bcprov-jdk14-138.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/bouncycastle/bctsp-jdk14/1.38/bctsp-jdk14-1.38.jar" sourcepath="M2_REPO/org/bouncycastle/bctsp-jdk14/1.38/bctsp-jdk14-1.38-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/bouncycastle/bcprov-jdk14/1.38/bcprov-jdk14-1.38.jar" sourcepath="M2_REPO/org/bouncycastle/bcprov-jdk14/1.38/bcprov-jdk14-1.38-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/bouncycastle/bcmail-jdk14/1.38/bcmail-jdk14-1.38.jar" sourcepath="M2_REPO/org/bouncycastle/bcmail-jdk14/1.38/bcmail-jdk14-1.38-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/googlecode/owasp-java-html-sanitizer/owasp-java-html-sanitizer/r156/owasp-java-html-sanitizer-r156.jar" sourcepath="M2_REPO/com/googlecode/owasp-java-html-sanitizer/owasp-java-html-sanitizer/r156/owasp-java-html-sanitizer-r156-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-fileupload/commons-fileupload/1.2.2/commons-fileupload-1.2.2.jar" sourcepath="M2_REPO/commons-fileupload/commons-fileupload/1.2.2/commons-fileupload-1.2.2-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-io/commons-io/2.4/commons-io-2.4.jar" sourcepath="M2_REPO/commons-io/commons-io/2.4/commons-io-2.4-sources.jar"/>
