@@ -97,18 +97,21 @@ public class SearchParameterQueryString {
         return generateParameters(new InitiativeSearch()
                 .setShow(InitiativeSearch.Show.sent)
                 .setMunicipality(original.getMunicipality())
+                .setType(original.getType())
                 .setOrderBy(InitiativeSearch.OrderBy.latestSent));
     }
     public String getWithStateCollecting() {
         return generateParameters(new InitiativeSearch()
                 .setShow(InitiativeSearch.Show.collecting)
                 .setMunicipality(original.getMunicipality())
+                .setType(original.getType())
                 .setOrderBy(InitiativeSearch.OrderBy.latest));
     }
     public String getWithStateAll() {
         return generateParameters(new InitiativeSearch()
                 .setShow(InitiativeSearch.Show.all)
                 .setMunicipality(original.getMunicipality())
+                .setType(original.getType())
                 .setOrderBy(InitiativeSearch.OrderBy.latest));
     }
 
@@ -116,6 +119,7 @@ public class SearchParameterQueryString {
         return generateParameters(new InitiativeSearch()
                 .setShow(InitiativeSearch.Show.draft)
                 .setMunicipality(original.getMunicipality())
+                .setType(original.getType())
                 .setOrderBy(InitiativeSearch.OrderBy.latest));
     }
 
@@ -123,6 +127,7 @@ public class SearchParameterQueryString {
         return generateParameters(new InitiativeSearch()
                 .setShow(InitiativeSearch.Show.accepted)
                 .setMunicipality(original.getMunicipality())
+                .setType(original.getType())
                 .setOrderBy(InitiativeSearch.OrderBy.latest));
     }
 
@@ -130,6 +135,7 @@ public class SearchParameterQueryString {
         return generateParameters(new InitiativeSearch()
                 .setShow(InitiativeSearch.Show.review)
                 .setMunicipality(original.getMunicipality())
+                .setType(original.getType())
                 .setOrderBy(InitiativeSearch.OrderBy.latest));
     }
     
@@ -137,6 +143,7 @@ public class SearchParameterQueryString {
         return generateParameters(new InitiativeSearch()
                 .setShow(InitiativeSearch.Show.fix)
                 .setMunicipality(original.getMunicipality())
+                .setType(original.getType())
                 .setOrderBy(InitiativeSearch.OrderBy.latest));
     }
 
