@@ -1,9 +1,17 @@
 package fi.om.municipalityinitiative.util;
 
 public enum InitiativeType {
+
+    // Only normal initiative may have UNDEFINED type until author decides what to do with it
     UNDEFINED,
+
+    // Normal initiative is marked as SINGLE when author decides it will be sent straight to municipality
     SINGLE,
+
+    // Normal initiative is marked as collaborative when the author decides to start collecting participants
     COLLABORATIVE,
+
+    // Type for verified initiative is chosen by author when initiative draft is created.
     COLLABORATIVE_COUNCIL,
     COLLABORATIVE_CITIZEN;
 
