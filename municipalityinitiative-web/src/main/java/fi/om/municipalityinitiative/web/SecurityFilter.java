@@ -93,34 +93,29 @@ public class SecurityFilter implements Filter {
         }
     }
 
-    private static boolean IS_POST(HttpServletRequest request) {
-        return request.getMethod().equals("POST");
-    }
-
     private void verifyOrInitializeCsrfToken(HttpServletRequest request, HttpServletResponse response) {
 
         String csrfToken;
 
         if (IS_GET(request)) {
             try {
+                // CSRF Token and cookies are initialized on every page, because even participating needs cookies
                 csrfToken = verifyAndGetCurrentCSRFToken(request);
             } catch (CSRFException e) {
                 request.getSession().invalidate();
                 csrfToken = initializeCSRFToken(request, response);
                 request.setAttribute(COOKIE_ERROR, true);
             }
+            request.setAttribute(CSRF_TOKEN_NAME, csrfToken);
         }
-        else {
-            String uri = request.getRequestURI();
-            if (IS_POST(request) && !isSkipCsrfURI(uri)) {
-                csrfToken = verifyAndGetCurrentCSRFToken(request);
-            }
-            else {
-                return;
-            }
+        else if (IS_POST(request) && !isSkipCsrfURI(request.getRequestURI())) {
+            csrfToken = verifyAndGetCurrentCSRFToken(request);
+            request.setAttribute(CSRF_TOKEN_NAME, csrfToken);
         }
+    }
 
-        request.setAttribute(CSRF_TOKEN_NAME, csrfToken);
+    private static boolean IS_POST(HttpServletRequest request) {
+        return request.getMethod().equals("POST");
     }
 
     private static boolean IS_GET(HttpServletRequest request) {
@@ -145,6 +140,7 @@ public class SecurityFilter implements Filter {
 
         String cookieToken = cookie.getValue();
         String sessionToken = (String) getExistingSession(request).getAttribute(CSRF_TOKEN_NAME);
+        String requestToken = request.getParameter(CSRF_TOKEN_NAME);
 
         // Just to be sure no one has hijacked our session
         if (cookieToken == null) {
@@ -154,11 +150,8 @@ public class SecurityFilter implements Filter {
         }
 
         // Double Submit Cookie
-        if (IS_POST(request)) {
-            String requestToken = request.getParameter(CSRF_TOKEN_NAME);
-            if (requestToken == null || !requestToken.equals(sessionToken)) {
-                throw new CSRFException("CSRFToken -request parameter missing or doesn't match session");
-            }
+        if (requestToken == null || !requestToken.equals(sessionToken)) {
+            throw new CSRFException("CSRFToken -request parameter missing or doesn't match session");
         }
         return sessionToken;
     }
