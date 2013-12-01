@@ -166,7 +166,7 @@ $(document).ready(function () {
 		speedSlow =		'slow',		
 		speedAutoHide =	'15000',					// Delay for hiding success-messages (if enabled)
 		vpHeight =		$(window).height(),			// Viewport height
-		vpWidth =		$(window).width(),			// Viewport width
+		vpWidth = window.innerWidth,          // Viewport width
 		isIE7 =			$('html').hasClass('ie7'),	// Boolean for IE7. Used browser detection instead of jQuery.support().
 		isIE8 =			$('html').hasClass('ie8'),	// Boolean for IE8. Used browser detection instead of jQuery.support().
 		locale =		Init.getLocale(),			// Current locale: fi, sv
@@ -1074,9 +1074,11 @@ $('.municipality-filter').change( function() {
 		// Adjust modal when user resizes viewport
 		$(window).bind('resize', function(){
 			vpHeight = $(this).height();
-			vpWidth = $(this).width();
-			modal.css('top',topPos()+'px');
-			
+			//vpWidth = $(this).width();
+			vpWidth = window.innerWidth;
+			// Adjust only horizontal position
+			//modal.css('top',topPos()+'px');
+						
 			adjustModal(modal, modalType, $scrollable);
 		});
 	};
