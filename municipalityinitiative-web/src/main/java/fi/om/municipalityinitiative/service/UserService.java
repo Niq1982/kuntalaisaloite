@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import java.util.Set;
 
 public class UserService {
@@ -52,11 +51,11 @@ public class UserService {
     @Transactional(readOnly = true)
     public void adminLogin(String userName, String password, HttpServletRequest request) {
         User adminUser = userDao.getAdminUser(userName, saltAndEncryptPassword(password));
-        storeLoggedInUser(request, adminUser);
+        storeLoggedInUserSession(request, adminUser);
     }
 
-    private static void storeLoggedInUser(HttpServletRequest request, User adminUser) {
-        request.getSession(true).setAttribute(LOGIN_USER_PARAMETER, adminUser);
+    private static void storeLoggedInUserSession(HttpServletRequest request, User user) {
+        request.getSession(true).setAttribute(LOGIN_USER_PARAMETER, user);
     }
 
     private String saltAndEncryptPassword(String password) {
@@ -73,7 +72,7 @@ public class UserService {
             throw new InvalidLoginException("Invalid login credentials");
         }
 
-        storeLoggedInUser(request, User.normalUser(authorId.get(), initiativeIds));
+        storeLoggedInUserSession(request, User.normalUser(authorId.get(), initiativeIds));
 
         return initiativeIds.iterator().next();
     }
@@ -106,7 +105,7 @@ public class UserService {
                 && loginUserHolderMaybe.get().hasManagementRightsForInitiative(initiativeId);
     }
 
-    private Maybe<LoginUserHolder> parseLoginUser(HttpServletRequest request) {
+    private static Maybe<LoginUserHolder> parseLoginUser(HttpServletRequest request) {
 
         Maybe<User> user = getOptionalLoginUser(request);
 
@@ -116,6 +115,8 @@ public class UserService {
 
         if (user.get().isNotOmUser()) {
             // FIXME: assertStillAuthor(user.get().getAuthorId(), request);
+            // Because management rights are stored in session, it's possible that author has management rights
+            // as long as it's session is valid even that author is deleted.
         }
 
         return Maybe.of(new LoginUserHolder(user.get()));
@@ -197,7 +198,7 @@ public class UserService {
             municipality = Maybe.absent();
         }
 
-        storeLoggedInUser(request, User.verifiedUser(verifiedUserId, hash, contactInfo, initiativesWithManagementRight, initiativesWithParticipation, municipality));
+        storeLoggedInUserSession(request, User.verifiedUser(verifiedUserId, hash, contactInfo, initiativesWithManagementRight, initiativesWithParticipation, municipality));
     }
 
     public void putPrepareDataForVetuma(PrepareInitiativeUICreateDto initiative, HttpServletRequest request) {

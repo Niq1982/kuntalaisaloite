@@ -17,7 +17,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.io.IOException;
 
 public class SecurityFilter implements Filter {
@@ -93,29 +92,25 @@ public class SecurityFilter implements Filter {
         }
     }
 
-    private void verifyOrInitializeCsrfToken(HttpServletRequest request, HttpServletResponse response) {
+    private static boolean IS_POST(HttpServletRequest request) {
+        return request.getMethod().equals("POST");
+    }
 
-        String csrfToken;
+    private void verifyOrInitializeCsrfToken(HttpServletRequest request, HttpServletResponse response) {
 
         if (IS_GET(request)) {
             try {
-                // CSRF Token and cookies are initialized on every page, because even participating needs cookies
-                csrfToken = verifyAndGetCurrentCSRFToken(request);
+                verifyAndGetCurrentCSRFToken(request);
             } catch (CSRFException e) {
                 request.getSession().invalidate();
-                csrfToken = initializeCSRFToken(request, response);
                 request.setAttribute(COOKIE_ERROR, true);
+                request.setAttribute(CSRF_TOKEN_NAME, initializeCSRFToken(request, response));
             }
-            request.setAttribute(CSRF_TOKEN_NAME, csrfToken);
         }
         else if (IS_POST(request) && !isSkipCsrfURI(request.getRequestURI())) {
-            csrfToken = verifyAndGetCurrentCSRFToken(request);
-            request.setAttribute(CSRF_TOKEN_NAME, csrfToken);
+            request.setAttribute(CSRF_TOKEN_NAME, verifyAndGetCurrentCSRFToken(request));
         }
-    }
 
-    private static boolean IS_POST(HttpServletRequest request) {
-        return request.getMethod().equals("POST");
     }
 
     private static boolean IS_GET(HttpServletRequest request) {
@@ -140,7 +135,6 @@ public class SecurityFilter implements Filter {
 
         String cookieToken = cookie.getValue();
         String sessionToken = (String) getExistingSession(request).getAttribute(CSRF_TOKEN_NAME);
-        String requestToken = request.getParameter(CSRF_TOKEN_NAME);
 
         // Just to be sure no one has hijacked our session
         if (cookieToken == null) {
@@ -150,15 +144,22 @@ public class SecurityFilter implements Filter {
         }
 
         // Double Submit Cookie
-        if (requestToken == null || !requestToken.equals(sessionToken)) {
-            throw new CSRFException("CSRFToken -request parameter missing or doesn't match session");
+        if (IS_POST(request)) {
+            String requestToken = request.getParameter(CSRF_TOKEN_NAME);
+            if (requestToken == null || !requestToken.equals(sessionToken)) {
+                throw new CSRFException("CSRFToken -request parameter missing or doesn't match session");
+            }
         }
         return sessionToken;
     }
 
     private static final String[] skipCsrfURIs = new String[] {
+            // CSRF-check is skipped when returning from vetuma
             Urls.VETUMA_FI,
             Urls.VETUMA_SV,
+
+            // Regular CSRF-check is skipped when adding attachments
+            // @see fi.om.municipalityinitiative.web.controller.InitiativeManagementController#addAttachment
             Urls.MANAGE_ATTACHMENTS_FI,
             Urls.MANAGE_ATTACHMENTS_SV
     };
