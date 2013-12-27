@@ -52,6 +52,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title><#noescape>${pageTitle}</#noescape> - <@u.message "siteName" /></title> 
     
     <link href="${urls.baseUrl}/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
@@ -69,7 +70,7 @@
                 <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-ie.css" />
             <![endif]-->
         </noscript>
-        <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/less-main/kuntalaisaloite-iframe.less" />
+        <link rel="stylesheet/less" type="text/css" media="screen" href="https://localhost:8443/css/less-main/kuntalaisaloite-iframe.less" />
         <!--[if IE ]>
             <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/less-main/kuntalaisaloite-ie.less">
         <![endif]-->
