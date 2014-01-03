@@ -195,10 +195,9 @@ public class ParticipantToPdfExporter {
         table.setHeaderRows(1);
 
         int count = 0;
-        participants = Lists.reverse(participants);
-        for (Participant participanta : participants) {
+        for (Participant p : Lists.reverse(participants)) {
             if (initiative.getType().isNotVerifiable()) {
-                NormalParticipant participant = (NormalParticipant) participanta;
+                NormalParticipant participant = (NormalParticipant) p;
                 ++count;
                 table.addCell(createCell(String.valueOf(count), false));
                 table.addCell(createCell(participant.getParticipateDate().toString(DATE_FORMAT), false));
@@ -221,7 +220,7 @@ public class ParticipantToPdfExporter {
                 table.addCell(createCell(membershipType, false));
             }
             else {
-                VerifiedParticipant participant = (VerifiedParticipant) participanta;
+                VerifiedParticipant participant = (VerifiedParticipant) p;
                 ++count;
                 table.addCell(createCell(String.valueOf(count), false));
                 table.addCell(createCell(participant.getParticipateDate().toString(DATE_FORMAT), false));
