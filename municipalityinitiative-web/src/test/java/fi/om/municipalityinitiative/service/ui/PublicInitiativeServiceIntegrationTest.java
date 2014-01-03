@@ -12,19 +12,20 @@ import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.ServiceIntegrationTestBase;
 import fi.om.municipalityinitiative.service.email.EmailSubjectPropertyKeys;
 import fi.om.municipalityinitiative.sql.QAuthorMessage;
+import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.*;
 import org.joda.time.LocalDate;
 import org.junit.Test;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
-
 import java.util.List;
 
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.fail;
 
 
 public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTestBase {
@@ -182,6 +183,24 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
     public void addAuthorMessage_sends_verification_email() throws MessagingException, InterruptedException {
         service.addAuthorMessage(authorUIMessage(), Locales.LOCALE_FI);
         assertUniqueSentEmail(authorUIMessage().getContactEmail(), EmailSubjectPropertyKeys.EMAIL_AUTHOR_MESSAGE_CONFIRMATION_SUBJECT);
+    }
+
+    // This test might not be valid until end of times, it was just used to verify
+    // that transaction is not committed if exception is thrown.
+    @Test
+    public void transaction_is_rollbacked_if_exception_is_thrown() {
+
+        Long initiativesAtFirst = testHelper.countAll(QMunicipalityInitiative.municipalityInitiative);
+        PrepareInitiativeUICreateDto createDto = new PrepareInitiativeUICreateDto();
+        createDto.setMunicipality(testMunicipality.getId());
+        try {
+            service.prepareInitiative(createDto, Locales.LOCALE_FI);
+            fail("Should have thrown exception");
+        } catch (Throwable t) {
+            precondition(t, instanceOf(DataIntegrityViolationException.class)); // Creating participant should throw this after the initiative has been created
+            assertThat(initiativesAtFirst, is(testHelper.countAll(QMunicipalityInitiative.municipalityInitiative)));
+        }
+
     }
 
     private AuthorUIMessage authorUIMessage() {
