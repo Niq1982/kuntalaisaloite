@@ -3,7 +3,7 @@ package fi.om.municipalityinitiative.dto;
 import fi.om.municipalityinitiative.util.InfoTextHtmlSanitizer;
 import org.joda.time.DateTime;
 
-public class InfoPageText {
+public final class InfoPageText {
     private final String uri;
     private final String subject;
     private final String content;

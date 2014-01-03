@@ -73,7 +73,7 @@ public class InitiativeJson {
         }
     }
 
-    private static class CollaborativeInitiativeJson extends InitiativeJson {
+    private static final class CollaborativeInitiativeJson extends InitiativeJson {
         private ParticipantCountJson participantCount;
 
         private CollaborativeInitiativeJson(Initiative initiative,

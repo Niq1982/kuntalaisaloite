@@ -4,7 +4,6 @@ import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
-import fi.om.municipalityinitiative.dto.service.AttachmentFileInfo;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.service.Municipality;
@@ -20,7 +19,7 @@ import java.util.Map;
 
 import static fi.om.municipalityinitiative.web.Views.*;
 
-public class ViewGenerator {
+public final class ViewGenerator {
 
     private static final String ALT_URI_ATTR = "altUri";
 

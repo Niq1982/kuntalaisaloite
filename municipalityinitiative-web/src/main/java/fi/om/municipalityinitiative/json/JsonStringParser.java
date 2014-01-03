@@ -67,7 +67,7 @@ public class JsonStringParser {
         return jsonData;
     }
 
-    public static class IndentedString {
+    public static final class IndentedString {
         int indent;
         String value;
         private String parent;

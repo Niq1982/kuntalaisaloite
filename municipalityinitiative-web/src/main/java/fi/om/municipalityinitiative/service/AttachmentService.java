@@ -323,7 +323,7 @@ public class AttachmentService {
         }
     }
 
-    public static class ImageProperties {
+    public static final class ImageProperties {
 
         public static final int MAX_WIDTH = 1000;
 

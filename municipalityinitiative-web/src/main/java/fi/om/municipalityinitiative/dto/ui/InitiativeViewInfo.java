@@ -9,7 +9,7 @@ import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.LocalDate;
 
-public class InitiativeViewInfo {
+public final class InitiativeViewInfo {
 
     private final Initiative initiative;
 
