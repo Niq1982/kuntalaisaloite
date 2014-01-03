@@ -6,9 +6,10 @@ import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.Maybe;
 
+import java.io.Serializable;
 import java.util.Set;
 
-public abstract class User {
+public abstract class User implements Serializable {
 
     public static OmLoginUser omUser(String name) {
         return new OmLoginUser(name);

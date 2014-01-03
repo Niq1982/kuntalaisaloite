@@ -10,11 +10,11 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 @ValidMunicipalMembership(groups = NormalInitiative.class)
-public class PrepareInitiativeUICreateDto extends ParticipantUICreateBase {
+public class PrepareInitiativeUICreateDto extends ParticipantUICreateBase implements Serializable {
 
-    // Is set as null if normal initiative because we do not know if creator wants to gather any other people
     @NotNull(groups = {NormalInitiative.class, VerifiedInitiative.class})
     private InitiativeType initiativeType;
 
