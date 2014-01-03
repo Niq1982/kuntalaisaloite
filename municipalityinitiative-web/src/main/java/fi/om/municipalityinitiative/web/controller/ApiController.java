@@ -1,10 +1,11 @@
 package fi.om.municipalityinitiative.web.controller;
 
-import fi.om.municipalityinitiative.json.JsonStringParser;
+import com.google.common.base.Optional;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.json.InitiativeJson;
 import fi.om.municipalityinitiative.dto.json.InitiativeListJson;
 import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.json.JsonStringParser;
 import fi.om.municipalityinitiative.service.JsonDataService;
 import fi.om.municipalityinitiative.web.JsonpObject;
 import fi.om.municipalityinitiative.web.Views;
@@ -17,12 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
 import static fi.om.municipalityinitiative.web.WebConstants.JSON;
@@ -45,7 +43,7 @@ public class ApiController extends BaseController {
     }
 
     @RequestMapping(API)
-    public String api(Model model, Locale locale, HttpServletRequest request) throws IOException {
+    public String api(Model model) throws IOException {
 
         InitiativeJson initiativeJsonObject = jsonDataService.createInitiativeJsonObject();
         String json = jsonConverter.getObjectMapper().writeValueAsString(initiativeJsonObject);
@@ -65,12 +63,10 @@ public class ApiController extends BaseController {
     @RequestMapping(value=INITIATIVES, method=GET, produces=JSON)
     public @ResponseBody
     List<InitiativeListJson> initiativeList(@RequestParam(value = JSON_OFFSET, required = false) Integer offset,
-                                            @RequestParam(value = JSON_LIMIT, required = false) Integer limit,
+                                            @RequestParam(value = JSON_LIMIT, required = false) Integer givenLimit,
                                             @RequestParam(value = JSON_MUNICIPALITY, required = false) Long municipality) {
 
-        if (limit == null) {
-            limit = DEFAULT_INITIATIVE_JSON_RESULT_COUNT;
-        }
+        int limit = Optional.fromNullable(givenLimit).or(DEFAULT_INITIATIVE_JSON_RESULT_COUNT);
 
         InitiativeSearch search = new InitiativeSearch();
         search.setLimit(Math.min(MAX_INITIATIVE_JSON_RESULT_COUNT, limit));
