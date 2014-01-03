@@ -22,7 +22,6 @@ import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.DateTime;
 
 import javax.annotation.Resource;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,7 +33,7 @@ import static fi.om.municipalityinitiative.dao.JdbcInitiativeDao.assertSingleAff
 public class JdbcAuthorDao implements AuthorDao {
 
     private static final Expression<DateTime> CURRENT_TIME = DateTimeExpression.currentTimestamp(DateTime.class);
-    public static Expression<NormalAuthor> normalAuthorMapping =
+    static final Expression<NormalAuthor> normalAuthorMapping =
             new MappingProjection<NormalAuthor>(NormalAuthor.class,
                     QMunicipality.municipality.all(),
                     QParticipant.participant.all(),
@@ -59,7 +58,7 @@ public class JdbcAuthorDao implements AuthorDao {
 
                 }
             };
-    public static Expression<VerifiedAuthor> verifiedAuthorMapper = new MappingProjection<VerifiedAuthor>(VerifiedAuthor.class,
+    static final Expression<VerifiedAuthor> verifiedAuthorMapper = new MappingProjection<VerifiedAuthor>(VerifiedAuthor.class,
             QVerifiedAuthor.verifiedAuthor.all(),
             QVerifiedParticipant.verifiedParticipant.all(),
             QVerifiedUser.verifiedUser.all(),
@@ -84,7 +83,7 @@ public class JdbcAuthorDao implements AuthorDao {
             return author;
         }
     };
-    public static Expression<AuthorInvitation> authorInvitationMapping =
+    static final Expression<AuthorInvitation> authorInvitationMapping =
             new MappingProjection<AuthorInvitation>(AuthorInvitation.class,
                     QAuthorInvitation.authorInvitation.all()) {
 

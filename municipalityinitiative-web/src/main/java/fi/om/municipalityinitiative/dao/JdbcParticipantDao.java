@@ -17,7 +17,6 @@ import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 
 import javax.annotation.Resource;
-
 import java.util.List;
 
 import static fi.om.municipalityinitiative.dao.JdbcInitiativeDao.assertSingleAffection;
@@ -26,7 +25,7 @@ import static fi.om.municipalityinitiative.sql.QParticipant.participant;
 @SQLExceptionTranslated
 public class JdbcParticipantDao implements ParticipantDao {
 
-    public static Expression<VerifiedParticipant> verifiedParticipantMapping = new MappingProjection<VerifiedParticipant>(
+    static final Expression<VerifiedParticipant> verifiedParticipantMapping = new MappingProjection<VerifiedParticipant>(
             VerifiedParticipant.class,
             QVerifiedParticipant.verifiedParticipant.participateTime,
             QVerifiedParticipant.verifiedParticipant.verified,
@@ -47,7 +46,7 @@ public class JdbcParticipantDao implements ParticipantDao {
             return participant;
         }
     };
-    public static Expression<NormalParticipant> normalParticipantMapping =
+    static final Expression<NormalParticipant> normalParticipantMapping =
             new MappingProjection<NormalParticipant>(NormalParticipant.class,
                     participant.all(), QMunicipality.municipality.all()) {
                 @Override

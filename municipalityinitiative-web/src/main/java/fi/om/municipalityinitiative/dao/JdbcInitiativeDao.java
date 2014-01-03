@@ -50,7 +50,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
     private static final BooleanExpression STATE_IS_COLLECTING = municipalityInitiative.sent.isNull().and(IS_PUBLIC);
     private static final BooleanExpression STATE_IS_SENT = municipalityInitiative.sent.isNotNull().and(IS_PUBLIC);
     private static final BooleanExpression STATE_IS_FIX = municipalityInitiative.fixState.eq(FixState.FIX);
-    public static Expression<InitiativeListInfo> initiativeListInfoMapping =
+    static final Expression<InitiativeListInfo> initiativeListInfoMapping =
             new MappingProjection<InitiativeListInfo>(InitiativeListInfo.class,
                     municipalityInitiative.all(),
                     QMunicipality.municipality.all()) {
@@ -69,7 +69,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     return info;
                 }
             };
-    public static Expression<Initiative> initiativeInfoMapping =
+    static final Expression<Initiative> initiativeInfoMapping =
             new MappingProjection<Initiative>(Initiative.class,
                     municipalityInitiative.all(),
                     QMunicipality.municipality.all()) {

@@ -13,7 +13,7 @@ import javax.annotation.Resource;
 @SQLExceptionTranslated
 public class JdbcAuthorMessageDao implements AuthorMessageDao {
 
-    static public Expression<AuthorMessage> authorMessageMapping = new MappingProjection<AuthorMessage>(AuthorMessage.class,
+    static public final Expression<AuthorMessage> authorMessageMapping = new MappingProjection<AuthorMessage>(AuthorMessage.class,
             QAuthorMessage.authorMessage.all()) {
         @Override
         protected AuthorMessage map(Tuple row) {
