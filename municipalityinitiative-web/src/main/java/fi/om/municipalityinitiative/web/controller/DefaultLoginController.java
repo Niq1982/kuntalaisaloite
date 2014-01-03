@@ -1,7 +1,6 @@
 package fi.om.municipalityinitiative.web.controller;
 
 import com.google.common.base.Strings;
-import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
@@ -85,25 +84,4 @@ public class DefaultLoginController extends BaseLoginController {
         return redirectWithMessage(urls.frontpage(), RequestMessage.LOGOUT, request);
     }
 
-    @RequestMapping(value = "/testimestarimiekkonen", method = RequestMethod.GET)
-    public String TESTIMESTARILOGIN(@RequestParam(required = false) String target, Model model, Locale locale, HttpServletRequest request, HttpServletResponse response) {
-        if (!environmentSettings.isEnableVerifiedInitiatives()) {
-            throw new AccessDeniedException("Access denied");
-        }
-//        // NOTE: Needed for VETUMA
-//        response.setContentType("text/html;charset=ISO-8859-1");
-        model.addAttribute("target", target);
-        return MODERATOR_LOGIN_VIEW;
-    }
-
-    @RequestMapping(value = "/testimestarimiekkonen", method = RequestMethod.POST)
-    public RedirectView TESTIMESTARILOGIN(@RequestParam String u,
-                                          @RequestParam String p,
-                                          Model model, Locale locale, HttpServletRequest request) {
-        if (!environmentSettings.isEnableVerifiedInitiatives()) {
-            throw new AccessDeniedException("Access denied");
-        }
-        userService.adminLogin(u, p, request);
-        return new RedirectView(Urls.get(Locales.LOCALE_FI).frontpage(), false, true, false);
-    }
 }

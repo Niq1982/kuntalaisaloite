@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.dto.service.TestDataService;
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.util.InitiativeState;
+import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.util.TestDataTemplates;
 import fi.om.municipalityinitiative.web.Urls;
@@ -12,21 +13,22 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.FlashMap;
 import org.springframework.web.servlet.support.RequestContextUtils;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import static fi.om.municipalityinitiative.web.Urls.TEST_DATA_GENERATION_FI;
 import static fi.om.municipalityinitiative.web.Urls.TEST_DATA_GENERATION_SV;
-import static fi.om.municipalityinitiative.web.Views.TEST_DATA_GENERATION;
-import static fi.om.municipalityinitiative.web.Views.contextRelativeRedirect;
+import static fi.om.municipalityinitiative.web.Views.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -96,6 +98,21 @@ public class TestDataController extends BaseController {
         return contextRelativeRedirect(urls.testDataGeneration());
     }
 
+    // Enable custom login-url for external testers
+    @RequestMapping(value = "/testimestarimiekkonen", method = RequestMethod.GET)
+    public String TESTIMESTARILOGIN(@RequestParam(required = false) String target, Model model, Locale locale, HttpServletRequest request, HttpServletResponse response) {
+        model.addAttribute("target", target);
+        return MODERATOR_LOGIN_VIEW;
+    }
+
+    @RequestMapping(value = "/testimestarimiekkonen", method = RequestMethod.POST)
+    public RedirectView TESTIMESTARILOGIN(@RequestParam String u,
+                                          @RequestParam String p,
+                                          Model model, Locale locale, HttpServletRequest request) {
+        userService.adminLogin(u, p, request);
+        return new RedirectView(Urls.get(Locales.LOCALE_FI).frontpage(), false, true, false);
+    }
+
     private static Integer parseIntegerParameter(HttpServletRequest request, String parameterName, Integer defaultValue) {
         Integer participantAmount = defaultValue;
         if (!Strings.isNullOrEmpty(request.getParameter(parameterName))) {
@@ -105,12 +122,12 @@ public class TestDataController extends BaseController {
     }
 
     protected static final String RESULT_INFO_KEY = "resultInfo";
-    
+
+
     protected static void putResultInfo(String resultInfo, HttpServletRequest request) {
         FlashMap flashMap = RequestContextUtils.getOutputFlashMap(request);
         flashMap.put(RESULT_INFO_KEY, resultInfo);
     }
-
 
     protected static String getResultInfo(HttpServletRequest request) {
         Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request);
@@ -120,5 +137,5 @@ public class TestDataController extends BaseController {
             return null;
         }
     }
-    
+
 }
