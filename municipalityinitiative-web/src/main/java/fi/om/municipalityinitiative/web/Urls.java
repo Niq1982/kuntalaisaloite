@@ -476,12 +476,7 @@ public final class Urls {
     }
 
     public String authenticate(String target) {
-
-        if (Strings.isNullOrEmpty(target)) {
-            target = baseUrl;
-        }
-
-        return getLocalizedPageUrl(AUTHENTICATE_FI, AUTHENTICATE_SV) + "?" + TARGET + "=" + urlEncode(target);
+        return getLocalizedPageUrl(AUTHENTICATE_FI, AUTHENTICATE_SV) + "?" + TARGET + "=" + urlEncode(Strings.isNullOrEmpty(target) ? baseUrl : target);
     }
 
     public String pendingConfirmation(Long initiativeId) {
