@@ -488,11 +488,7 @@ public final class Urls {
     }
 
     public String vetumaLogin(String target) {
-        if (Strings.isNullOrEmpty(target)) {
-            target = baseUrl;
-        }
-
-        return vetumaLogin() + "?"+ TARGET +"=" + urlEncode(target);
+        return vetumaLogin() + "?"+ TARGET +"=" + urlEncode(Strings.isNullOrEmpty(target) ? baseUrl : target);
     }
 
     public String moderatorLogin() {
