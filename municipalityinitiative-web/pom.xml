@@ -20,7 +20,7 @@
         <!-- Dependency Versions -->
         <jetty.version>7.5.4.v20111024</jetty.version>
         <spring.version>3.1.2.RELEASE</spring.version>
-        <querydsl.version>2.7.3</querydsl.version>
+        <querydsl.version>3.3.0</querydsl.version>
         <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
         <jasypt.version>1.9.0</jasypt.version>
         <jmockit.version>0.999.16</jmockit.version>

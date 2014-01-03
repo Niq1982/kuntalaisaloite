@@ -1,23 +1,27 @@
 package fi.om.municipalityinitiative.querydsl;
 
-import java.io.File;
-import java.sql.Connection;
-import java.sql.SQLException;
-
-import javax.sql.DataSource;
-
+import com.mysema.query.sql.Configuration;
+import com.mysema.query.sql.codegen.DefaultNamingStrategy;
+import com.mysema.query.sql.codegen.MetaDataExporter;
+import fi.om.municipalityinitiative.conf.JdbcConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 
-import com.mysema.query.sql.Configuration;
-import com.mysema.query.sql.codegen.DefaultNamingStrategy;
-import com.mysema.query.sql.codegen.MetaDataExporter;
-
-import fi.om.municipalityinitiative.conf.JdbcConfiguration;
+import javax.sql.DataSource;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class ExportQTypes {
+
+    public static final String NAME_PREFIX = "Q";
+    public static final String PACKAGE_NAME = "fi.om.municipalityinitiative.sql";
+    public static final String TARGET_FOLDER = "src/main/java";
 
     @org.springframework.context.annotation.Configuration
     @Import(JdbcConfiguration.class)
@@ -31,17 +35,18 @@ public class ExportQTypes {
         Configuration configuration = ctx.getBean(Configuration.class);
 
         MetaDataExporter exporter = new MetaDataExporter();
-        exporter.setPackageName("fi.om.municipalityinitiative.sql");
+        exporter.setPackageName(PACKAGE_NAME);
         exporter.setSchemaPattern("municipalityinitiative");
         exporter.setInnerClassesForKeys(false);
-        exporter.setNamePrefix("Q");
+        exporter.setNamePrefix(NAME_PREFIX);
         exporter.setNamingStrategy(new DefaultNamingStrategy());
-        exporter.setTargetFolder(new File("src/main/java"));
+        exporter.setTargetFolder(new File(TARGET_FOLDER));
         exporter.setConfiguration(configuration);
 
         Connection conn = null;
         try {
             conn = dataSource.getConnection();
+            deleteOldQTypes(TARGET_FOLDER, PACKAGE_NAME);
             exporter.export(conn.getMetaData());
         } catch (Exception e) {
             e.printStackTrace();
@@ -53,5 +58,20 @@ public class ExportQTypes {
             }
         }
     }
-    
+
+    private static void deleteOldQTypes(final String target, final String pack)
+            throws IOException {
+        Path targetDir = FileSystems.getDefault().getPath(target, pack.replace(".", "/"));
+        Files.walkFileTree(targetDir, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
+                if (path.getFileName().toString().startsWith(NAME_PREFIX)) {
+                    System.out.println("Delete " + path + ": " + path.toFile().delete());
+                }
+                return FileVisitResult.CONTINUE;
+            }
+        });
+    }
+
+
 }

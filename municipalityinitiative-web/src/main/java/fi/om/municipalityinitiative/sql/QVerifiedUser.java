@@ -1,11 +1,14 @@
 package fi.om.municipalityinitiative.sql;
 
-import static com.mysema.query.types.PathMetadataFactory.*;
-
-import com.mysema.query.types.*;
-import com.mysema.query.types.path.*;
+import com.mysema.query.sql.ColumnMetadata;
+import com.mysema.query.types.Path;
+import com.mysema.query.types.PathMetadata;
+import com.mysema.query.types.path.NumberPath;
+import com.mysema.query.types.path.StringPath;
 
 import javax.annotation.Generated;
+
+import static com.mysema.query.types.PathMetadataFactory.forVariable;
 
 
 /**
@@ -26,7 +29,7 @@ public class QVerifiedUser extends com.mysema.query.sql.RelationalPathBase<QVeri
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final NumberPath<Long> municipalityId = createNumber("municipality_id", Long.class);
+    public final NumberPath<Long> municipalityId = createNumber("municipalityId", Long.class);
 
     public final StringPath name = createString("name");
 
@@ -41,15 +44,28 @@ public class QVerifiedUser extends com.mysema.query.sql.RelationalPathBase<QVeri
     public final com.mysema.query.sql.ForeignKey<QVerifiedAuthor> _verifiedAuthorVerifiedUserFk = createInvForeignKey(id, "verified_user_id");
 
     public QVerifiedUser(String variable) {
-        super(QVerifiedUser.class, forVariable(variable), "municipalityinitiative", "verified_user");
+        super(QVerifiedUser.class,  forVariable(variable), "municipalityinitiative", "verified_user");
+        addMetadata();
     }
 
     public QVerifiedUser(Path<? extends QVerifiedUser> path) {
         super(path.getType(), path.getMetadata(), "municipalityinitiative", "verified_user");
+        addMetadata();
     }
 
     public QVerifiedUser(PathMetadata<?> metadata) {
-        super(QVerifiedUser.class, metadata, "municipalityinitiative", "verified_user");
+        super(QVerifiedUser.class,  metadata, "municipalityinitiative", "verified_user");
+        addMetadata();
+    }
+
+    public void addMetadata() {
+        addMetadata(address, ColumnMetadata.named("address").ofType(12).withSize(256));
+        addMetadata(email, ColumnMetadata.named("email").ofType(12).withSize(100));
+        addMetadata(hash, ColumnMetadata.named("hash").ofType(12).withSize(64).notNull());
+        addMetadata(id, ColumnMetadata.named("id").ofType(-5).withSize(19).notNull());
+        addMetadata(municipalityId, ColumnMetadata.named("municipality_id").ofType(-5).withSize(19));
+        addMetadata(name, ColumnMetadata.named("name").ofType(12).withSize(100));
+        addMetadata(phone, ColumnMetadata.named("phone").ofType(12).withSize(30));
     }
 
 }

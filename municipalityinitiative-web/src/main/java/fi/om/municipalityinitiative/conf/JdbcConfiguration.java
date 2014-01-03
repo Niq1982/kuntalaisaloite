@@ -21,7 +21,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.sql.DataSource;
-
 import java.sql.Connection;
 
 @Configuration
@@ -70,7 +69,7 @@ public class JdbcConfiguration {
         configuration.register("participant", "membership_type", new EnumAsObjectType<>(Membership.class));
         configuration.register("municipality_initiative", "fix_state", new EnumAsObjectType<>(FixState.class));
         configuration.register("info_text", "category", new EnumAsObjectType<>(InfoTextCategory.class));
-        configuration.register("info_text", "languageCode", new EnumAsObjectType<>(LanguageCode.class));
+        configuration.register("info_text", "languagecode", new EnumAsObjectType<>(LanguageCode.class));
         configuration.register("email", "attachment", new EnumAsObjectType<>(EmailAttachmentType.class));
         return configuration;
     }

@@ -1,11 +1,14 @@
 package fi.om.municipalityinitiative.sql;
 
-import static com.mysema.query.types.PathMetadataFactory.*;
-
-import com.mysema.query.types.*;
-import com.mysema.query.types.path.*;
+import com.mysema.query.sql.ColumnMetadata;
+import com.mysema.query.types.Path;
+import com.mysema.query.types.PathMetadata;
+import com.mysema.query.types.path.NumberPath;
+import com.mysema.query.types.path.StringPath;
 
 import javax.annotation.Generated;
+
+import static com.mysema.query.types.PathMetadataFactory.forVariable;
 
 
 /**
@@ -20,11 +23,11 @@ public class QAuthor extends com.mysema.query.sql.RelationalPathBase<QAuthor> {
 
     public final StringPath address = createString("address");
 
-    public final NumberPath<Long> initiativeId = createNumber("initiative_id", Long.class);
+    public final NumberPath<Long> initiativeId = createNumber("initiativeId", Long.class);
 
-    public final StringPath managementHash = createString("management_hash");
+    public final StringPath managementHash = createString("managementHash");
 
-    public final NumberPath<Long> participantId = createNumber("participant_id", Long.class);
+    public final NumberPath<Long> participantId = createNumber("participantId", Long.class);
 
     public final StringPath phone = createString("phone");
 
@@ -35,15 +38,26 @@ public class QAuthor extends com.mysema.query.sql.RelationalPathBase<QAuthor> {
     public final com.mysema.query.sql.ForeignKey<QParticipant> authorParticipantFk = createForeignKey(participantId, "id");
 
     public QAuthor(String variable) {
-        super(QAuthor.class, forVariable(variable), "municipalityinitiative", "author");
+        super(QAuthor.class,  forVariable(variable), "municipalityinitiative", "author");
+        addMetadata();
     }
 
     public QAuthor(Path<? extends QAuthor> path) {
         super(path.getType(), path.getMetadata(), "municipalityinitiative", "author");
+        addMetadata();
     }
 
     public QAuthor(PathMetadata<?> metadata) {
-        super(QAuthor.class, metadata, "municipalityinitiative", "author");
+        super(QAuthor.class,  metadata, "municipalityinitiative", "author");
+        addMetadata();
+    }
+
+    public void addMetadata() {
+        addMetadata(address, ColumnMetadata.named("address").ofType(12).withSize(256));
+        addMetadata(initiativeId, ColumnMetadata.named("initiative_id").ofType(-5).withSize(19).notNull());
+        addMetadata(managementHash, ColumnMetadata.named("management_hash").ofType(12).withSize(40));
+        addMetadata(participantId, ColumnMetadata.named("participant_id").ofType(-5).withSize(19).notNull());
+        addMetadata(phone, ColumnMetadata.named("phone").ofType(12).withSize(30));
     }
 
 }

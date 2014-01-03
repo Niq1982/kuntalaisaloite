@@ -91,17 +91,17 @@ public class JdbcParticipantDao implements ParticipantDao {
     @Override
     public void confirmParticipation(Long participantId, String confirmationCode) {
 
-        Object[] columns = queryFactory.from(QParticipant.participant)
+        Tuple columns = queryFactory.from(QParticipant.participant)
                 .where(QParticipant.participant.id.eq(participantId))
                 .where(QParticipant.participant.confirmationCode.eq(confirmationCode))
                 .singleResult(QParticipant.participant.showName, QParticipant.participant.municipalityInitiativeId);
 
-        if (columns == null || columns.length == 0) {
+        if (columns == null || columns.size() == 0) {
             throw new InvalidParticipationConfirmationException("Participant:" + participantId + ", code:" + confirmationCode);
         }
 
-        Boolean showName = (boolean) columns[0];
-        long initiativeIdByParticipant = (long) columns[1];
+        Boolean showName = columns.get(QParticipant.participant.showName);
+        long initiativeIdByParticipant = columns.get(QParticipant.participant.municipalityInitiativeId);
 
         assertSingleAffection(queryFactory.update(QParticipant.participant)
                 .setNull(QParticipant.participant.confirmationCode)
@@ -109,7 +109,7 @@ public class JdbcParticipantDao implements ParticipantDao {
                 .where(QParticipant.participant.confirmationCode.eq(confirmationCode))
                 .execute());
 
-        if (showName) {
+        if (Boolean.TRUE.equals(showName)) {
             assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
                     .set(QMunicipalityInitiative.municipalityInitiative.participantCountPublic,
                             QMunicipalityInitiative.municipalityInitiative.participantCountPublic.add(1))
