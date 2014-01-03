@@ -23,7 +23,6 @@ public class TestDataService {
 
     @Resource
     InitiativeDao initiativeDao;
-
     @Resource
     AuthorDao authorDao;
 
@@ -32,6 +31,8 @@ public class TestDataService {
 
     @Resource
     private ParticipantDao participantDao;
+
+    private static final Random randomizer = new Random();
 
     @Transactional(readOnly = false)
     public Long createTestMunicipalityInitiative(TestDataTemplates.InitiativeTemplate template, LoginUserHolder<User> loginUserHolder) {
@@ -108,6 +109,7 @@ public class TestDataService {
         contactInfo.setEmail(participantUICreateDto.getParticipantEmail());
         contactInfo.setName(participantUICreateDto.getParticipantName());
         VerifiedUserId verifiedUserId = userDao.addVerifiedUser(RandomHashGenerator.randomString(30), contactInfo, Maybe.<Municipality>absent());
-        participantDao.addVerifiedParticipant(initiativeId, verifiedUserId, participantUICreateDto.getShowName(), participantUICreateDto.getShowName() && (new Random().nextInt() % 5 == 0));
+        participantDao.addVerifiedParticipant(initiativeId, verifiedUserId, participantUICreateDto.getShowName(), participantUICreateDto.getShowName() && (randomizer.nextInt() % 5 == 0));
     }
+
 }
