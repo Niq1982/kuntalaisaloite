@@ -3,20 +3,16 @@ package fi.om.municipalityinitiative.web.controller;
 import com.google.common.base.Joiner;
 import fi.om.municipalityinitiative.conf.JsonConverterFactory;
 import fi.om.municipalityinitiative.json.JsonStringParser;
-import fi.om.municipalityinitiative.util.Locales;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.ui.ExtendedModelMap;
-
-import javax.servlet.http.HttpServletRequest;
 
 import java.io.IOException;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.mock;
 
 /**
  * This class is used to verify that generated json data will never change without noticing.
@@ -34,7 +30,7 @@ public class JsonTest {
     public void setup() throws IOException {
         apiController.jsonConverter = jsonConverter;
         model = new ExtendedModelMap();
-        apiController.api(model, Locales.LOCALE_FI, mock(HttpServletRequest.class));
+        apiController.api(model);
 
     }
 

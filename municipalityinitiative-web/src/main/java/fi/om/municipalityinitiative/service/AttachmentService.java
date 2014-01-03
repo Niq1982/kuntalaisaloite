@@ -325,22 +325,22 @@ public class AttachmentService {
 
     public static final class ImageProperties {
 
-        public static final int MAX_WIDTH = 1000;
+        private static final int MAX_WIDTH = 1000;
 
-        public static final int MAX_HEIGHT = 1000;
-        public static final int THUMBNAIL_MAX_WIDTH = 200;
-        public static final int THUMBNAIL_MAX_HEIGHT = 200;
-        public static final String[] FILE_TYPES = { "png", "jpg", "jpeg", "pdf" };
-        public static final int MAX_FILESIZE_IN_BYTES = 1024 * 1024 * 2;
-        public static final String MAX_FILESIZE_IN_KILOBYTES = String.valueOf(ImageProperties.MAX_FILESIZE_IN_BYTES / 1024 / 1024) + " MB";
-        public static final int MAX_ATTACHMENTS = 10;
+        private static final int MAX_HEIGHT = 1000;
+        private static final int THUMBNAIL_MAX_WIDTH = 200;
+        private static final int THUMBNAIL_MAX_HEIGHT = 200;
+        private static final String[] FILE_TYPES = { "png", "jpg", "jpeg", "pdf" };
+        private static final int MAX_FILESIZE_IN_BYTES = 1024 * 1024 * 2;
+        private static final String MAX_FILESIZE_IN_KILOBYTES = String.valueOf(ImageProperties.MAX_FILESIZE_IN_BYTES / 1024 / 1024) + " MB";
+        private static final int MAX_ATTACHMENTS = 10;
 
-        public static final String[] CONTENT_TYPES = { "image/png", "image/jpg", "image/jpeg", "application/pdf", "image/pjpeg", "image/x-png" };
+        private static final String[] CONTENT_TYPES = { "image/png", "image/jpg", "image/jpeg", "application/pdf", "image/pjpeg", "image/x-png" };
         private static final ImageProperties imageProperties = new ImageProperties();
 
         private ImageProperties() { }
 
-        public static ImageProperties get() {
+        public static ImageProperties instance() {
             return imageProperties;
         }
 
