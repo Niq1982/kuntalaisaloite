@@ -1,7 +1,7 @@
 package fi.om.municipalityinitiative.web.controller;
 
 import fi.om.municipalityinitiative.dto.service.EmailDto;
-import fi.om.municipalityinitiative.service.StatusServiceImpl;
+import fi.om.municipalityinitiative.service.StatusService;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.InfoRibbon;
 import fi.om.municipalityinitiative.web.Urls;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
+
 import java.util.List;
 
 import static fi.om.municipalityinitiative.web.Urls.STATUS;
@@ -23,7 +24,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class StatusPageController extends BaseController {
 
     @Resource
-    StatusServiceImpl statusService;
+    StatusService statusService;
 
     public StatusPageController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);

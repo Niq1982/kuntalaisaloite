@@ -212,7 +212,7 @@ public class AppConfiguration {
     }
 
     @Bean
-    public StatusServiceImpl statusService() {
+    public StatusService statusService() {
         String testEmailSendTo = env.getProperty(PropertyNames.testEmailSendTo);
         boolean testEmailConsoleOutput = env.getProperty(PropertyNames.testEmailConsoleOutput, Boolean.class, TEST_EMAIL_CONSOLE_OUTPUT_DEFAULT);
         int messageSourceCacheSeconds = env.getProperty(PropertyNames.testMessageSourceCacheSeconds, Integer.class, TEST_MESSAGE_SOURCE_CACHE_SECONDS_DEFAULT);
