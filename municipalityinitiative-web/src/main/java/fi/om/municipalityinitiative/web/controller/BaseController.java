@@ -5,7 +5,6 @@ import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.conf.EnvironmentSettings;
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
-import fi.om.municipalityinitiative.service.StatusService;
 import fi.om.municipalityinitiative.service.UserService;
 import fi.om.municipalityinitiative.util.*;
 import fi.om.municipalityinitiative.validation.NormalInitiative;
@@ -20,7 +19,6 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -44,9 +42,6 @@ public class BaseController {
 
     @Resource
     private BeansWrapper freemarkerObjectWrapper;
-
-    @Resource // TODO: Remove when at production
-    private StatusService statusService;
 
     @Resource
     protected UserService userService;
@@ -162,7 +157,6 @@ public class BaseController {
         model.addAttribute("infoRibbon", InfoRibbon.getInfoRibbonText(locale));
         String originalRequestUriWithQueryString = urlHelper.getOriginalRequestUriWithQueryString(request);
         model.addAttribute("currentRequestUri", originalRequestUriWithQueryString);
-        model.addAttribute("appVersion", statusService.getAppVersion());
 
         try {
             model.addAttribute("UrlConstants", freemarkerObjectWrapper.getStaticModels().get(Urls.class.getName()));

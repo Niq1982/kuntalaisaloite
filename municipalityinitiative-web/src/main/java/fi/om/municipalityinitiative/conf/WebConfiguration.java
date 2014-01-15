@@ -27,7 +27,6 @@ import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 
 import javax.inject.Inject;
-
 import java.util.List;
 import java.util.Locale;
 
@@ -47,16 +46,6 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
     public static class WebDevConfiguration {
 
         @Inject Environment env;
-
-//        @Bean
-//        public VetumaLoginController vetumaLoginController() {
-//            return new VetumaLoginController(
-//                    env.getRequiredProperty(PropertyNames.baseURL),
-//                    optimizeResources(env),
-//                    resourcesVersion(env),
-//                    env.getRequiredProperty(PropertyNames.vetumaURL)
-//            );
-//        }
 
         @Bean
         public TestDataController devController() {
@@ -81,15 +70,6 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
     public static class WebProdConfiguration {
 
         @Inject Environment env;
-
-//        @Bean
-//        public DefaultLoginController loginController() {
-//            return new DefaultLoginController(
-//                    env.getRequiredProperty(PropertyNames.baseURL),
-//                    optimizeResources(env),
-//                    resourcesVersion(env)
-//            );
-//        }
 
     }
 

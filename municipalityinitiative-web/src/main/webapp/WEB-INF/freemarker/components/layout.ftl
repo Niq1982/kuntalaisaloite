@@ -116,7 +116,6 @@
 </#assign>
 
 <!DOCTYPE HTML>
-<!-- version ${appVersion} -->
 <!--[if lt IE 7 ]> <html lang="${locale}" class="no-js ie6"> <![endif]-->
 <!--[if IE 7 ]>    <html lang="${locale}" class="no-js ie7"> <![endif]-->
 <!--[if IE 8 ]>    <html lang="${locale}" class="no-js ie8"> <![endif]-->
