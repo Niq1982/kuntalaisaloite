@@ -19,12 +19,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-
 import java.lang.management.ManagementFactory;
 import java.util.List;
 import java.util.Locale;
 
-public class StatusServiceImpl implements StatusService {
+public class StatusServiceImpl {
 
     private static final Logger log = LoggerFactory.getLogger(StatusServiceImpl.class);
 
