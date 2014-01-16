@@ -14,10 +14,11 @@ import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 
+import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
+import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 
@@ -74,10 +75,10 @@ public class JdbcEmailDaoTest {
 
     @Test
     public void pop_untried_email_for_update_returns_the_email_only_once() {
-        precondition(emailDao.popUntriedEmailForUpdate().isPresent(), is(false));
+        precondition(emailDao.popUntriedEmailForUpdate(), isNotPresent());
         createSendableEmail();
-        assertThat(emailDao.popUntriedEmailForUpdate().isPresent(), is(true));
-        assertThat(emailDao.popUntriedEmailForUpdate().isPresent(), is(false));
+        assertThat(emailDao.popUntriedEmailForUpdate(), isPresent());
+        assertThat(emailDao.popUntriedEmailForUpdate(), isNotPresent());
     }
 
     @Test
