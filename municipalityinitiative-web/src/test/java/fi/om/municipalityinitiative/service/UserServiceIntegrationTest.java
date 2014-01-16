@@ -16,6 +16,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
+import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -103,7 +105,7 @@ public class UserServiceIntegrationTest extends ServiceIntegrationTestBase{
         assertThat(loginUserHolder.getVerifiedUser().getHash(), is(notNullValue()));
         assertThat(loginUserHolder.getVerifiedUser().getContactInfo().getName(), is(name));
         assertThat(loginUserHolder.getVerifiedUser().getContactInfo().getAddress(), is(address));
-        assertThat(loginUserHolder.getVerifiedUser().getHomeMunicipality().isPresent(), is(true));
+        assertThat(loginUserHolder.getVerifiedUser().getHomeMunicipality(), isPresent());
         assertThat(loginUserHolder.getVerifiedUser().getHomeMunicipality().get().getId(), is(municipalityId));
         assertThat(loginUserHolder.getVerifiedUser().getHomeMunicipality().get().getNameFi(), is(municipalityName));
     }
@@ -112,7 +114,7 @@ public class UserServiceIntegrationTest extends ServiceIntegrationTestBase{
     public void vetuma_login_sets_municipality_absent_if_not_found() {
         userService.login("anyHash", "Full Name", "Address", Maybe.<Municipality>absent(), requestMock);
         LoginUserHolder<User> loginUserHolder = userService.getLoginUserHolder(requestMock);
-        assertThat(loginUserHolder.getVerifiedUser().getHomeMunicipality().isPresent(), is(false));
+        assertThat(loginUserHolder.getVerifiedUser().getHomeMunicipality(), isNotPresent());
 
     }
 
@@ -154,7 +156,7 @@ public class UserServiceIntegrationTest extends ServiceIntegrationTestBase{
         VerifiedUser verifiedUser = userDao.getVerifiedUser(userSsnHash).get();
         assertThat(verifiedUser.getContactInfo().getName(), is(newName));
         assertThat(verifiedUser.getContactInfo().getAddress(), is(oldAddress));
-        assertThat(verifiedUser.getHomeMunicipality().isPresent(), is(false));
+        assertThat(verifiedUser.getHomeMunicipality(), isNotPresent());
     }
 
     @Test
@@ -177,7 +179,7 @@ public class UserServiceIntegrationTest extends ServiceIntegrationTestBase{
         assertThat(verifiedUser.getContactInfo().getAddress(), is(oldAddress));
         assertThat(verifiedUser.getContactInfo().getPhone(), is(oldPhone));
         assertThat(verifiedUser.getContactInfo().getEmail(), is(oldEmail));
-        assertThat(verifiedUser.getHomeMunicipality().isPresent(), is(false));
+        assertThat(verifiedUser.getHomeMunicipality(), isNotPresent());
     }
 
 

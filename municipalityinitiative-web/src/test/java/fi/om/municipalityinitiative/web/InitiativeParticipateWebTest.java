@@ -10,6 +10,8 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
+import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -77,7 +79,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
         assertTotalEmailsInQueue(1);
        
-        assertThat(getOptionalElemContaining(getMessage(MSG_BTN_PARTICIPATE), "a").isPresent(), is(false));
+        assertThat(getOptionalElemContaining(getMessage(MSG_BTN_PARTICIPATE), "a"), isNotPresent());
         
         open(urls.confirmParticipant(testHelper.getLastParticipantId(), RandomHashGenerator.getPrevious()));
         
@@ -92,7 +94,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         clickLinkContaining("Tunnistaudu ja osallistu");
         enterVetumaLoginInformationAndSubmit("111111-1111", HELSINKI);
         assertTitle(TestHelper.DEFAULT_INITIATIVE_NAME + " - Kuntalaisaloitepalvelu");
-        assertThat(participateToInitiativeButton().isPresent(), is(true));
+        assertThat(participateToInitiativeButton(), isPresent());
 
     }
 
@@ -103,7 +105,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
         Integer originalParticipantCountOnPage = Integer.valueOf(getElement(By.className("user-count-total")).getText());
 
-        assertThat(participateToInitiativeButton().isPresent(), is(true));
+        assertThat(participateToInitiativeButton(), isPresent());
         participateToInitiativeButton().get().click();
 
         // Vetuma participant has no information to fill
@@ -115,7 +117,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         assertThat(newParticipantCountOnPage, is(originalParticipantCountOnPage + 1));
 
         assertTextContainedByClass("msg-warning", "Olet jo osallistunut tähän aloitteeseen");
-        assertThat(participateToInitiativeButton().isPresent(), is(false));
+        assertThat(participateToInitiativeButton(), isNotPresent());
 
 
     }
@@ -126,7 +128,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         open(urls.view(verifiedInitiativeHelsinki));
 
         assertTextContainedByClass("msg-warning", "Et ole aloitteen kunnan jäsen, joten et voi osallistua aloitteeseen.");
-        assertThat(participateToInitiativeButton().isPresent(), is(false));
+        assertThat(participateToInitiativeButton(), isNotPresent());
     }
 
     @Test
@@ -165,7 +167,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
         assertTotalEmailsInQueue(1);
 
-        assertThat(getOptionalElemContaining(getMessage(MSG_BTN_PARTICIPATE), "a").isPresent(), is(false));
+        assertThat(getOptionalElemContaining(getMessage(MSG_BTN_PARTICIPATE), "a"), isNotPresent());
 
         open(urls.confirmParticipant(testHelper.getLastParticipantId(), RandomHashGenerator.getPrevious()));
 

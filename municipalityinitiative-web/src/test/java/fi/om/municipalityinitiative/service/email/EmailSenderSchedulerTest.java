@@ -19,6 +19,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
+import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -69,9 +71,9 @@ public class EmailSenderSchedulerTest extends ServiceIntegrationTestBase {
 
         Long emailId = testHelper.createRandomEmail(initiativeId, EmailAttachmentType.NONE);
 
-        precondition(testHelper.getEmail(emailId).getLastFailed().isPresent(), is(false));
+        precondition(testHelper.getEmail(emailId).getLastFailed(), isNotPresent());
         emailSenderScheduler.sendEmails();
-        assertThat(testHelper.getEmail(emailId).getLastFailed().isPresent(), is(true));
+        assertThat(testHelper.getEmail(emailId).getLastFailed(), isPresent());
 
         assertThat(javaMailSenderFake.getSentMessages(), is(0));
         assertThat(testHelper.findQueuedEmails(), hasSize(0));

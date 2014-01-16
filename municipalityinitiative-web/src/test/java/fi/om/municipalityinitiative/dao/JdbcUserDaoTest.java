@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
+import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
+import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -48,7 +50,7 @@ public class JdbcUserDaoTest {
         ContactInfo contactInfo = contactInfo();
         VerifiedUserId verifiedUserId = userDao.addVerifiedUser(HASH, contactInfo, testMunicipality);
         Maybe<VerifiedUser> verifiedUser = userDao.getVerifiedUser(HASH);
-        assertThat(verifiedUser.isPresent(), is(true));
+        assertThat(verifiedUser, isPresent());
         assertThat(verifiedUserId, is(notNullValue()));
         ReflectionTestUtils.assertReflectionEquals(verifiedUser.get().getContactInfo(), contactInfo);
         assertThat(verifiedUser.get().getHomeMunicipality().get().getId(), is(testMunicipality.get().getId()));
@@ -79,13 +81,13 @@ public class JdbcUserDaoTest {
 
         VerifiedUser result = userDao.getVerifiedUser(HASH).get();
         assertThat(result.getContactInfo().getName(), is(newName));
-        assertThat(result.getHomeMunicipality().isPresent(), is(true));
+        assertThat(result.getHomeMunicipality(), isPresent());
         assertThat(result.getHomeMunicipality().get().getNameFi(), is(newMunicipalityName));
     }
 
     @Test
     public void get_returns_absent_if_not_found() {
-        assertThat(userDao.getVerifiedUser("unknown-user-hash").isPresent(), is(false));
+        assertThat(userDao.getVerifiedUser("unknown-user-hash"), isNotPresent());
     }
 
     private static ContactInfo contactInfo() {

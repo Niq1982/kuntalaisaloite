@@ -22,10 +22,11 @@ import org.junit.Test;
 
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
+import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
@@ -341,7 +342,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         Initiative collecting = testHelper.getInitiative(accepted);
         assertThat(collecting.getState(), is(InitiativeState.PUBLISHED));
         assertThat(collecting.getType(), is(InitiativeType.COLLABORATIVE));
-        assertThat(collecting.getSentTime().isPresent(), is(false));
+        assertThat(collecting.getSentTime(), isNotPresent());
     }
 
     @Test
@@ -380,7 +381,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         Initiative sent = testHelper.getInitiative(accepted);
         assertThat(sent.getState(), is(InitiativeState.PUBLISHED));
         assertThat(sent.getType(), is(InitiativeType.SINGLE));
-        assertThat(sent.getSentTime().isPresent(), is(true));
+        assertThat(sent.getSentTime(), isPresent());
         assertThat(sent.getSentComment(), is("some sent comment"));
     }
 
@@ -430,7 +431,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         service.sendToMunicipality(collaborative, TestHelper.authorLoginUserHolder, "my sent comment", null);
 
         Initiative sent = testHelper.getInitiative(collaborative);
-        assertThat(sent.getSentTime().isPresent(), is(true));
+        assertThat(sent.getSentTime(), isPresent());
         assertThat(sent.getSentComment(), is("my sent comment"));
     }
 
@@ -440,7 +441,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         service.sendToMunicipality(initiativeId, TestHelper.authorLoginUserHolder, "comment for municipality", null);
         Initiative sent = testHelper.getInitiative(initiativeId);
         assertThat(sent.getType(), is(InitiativeType.SINGLE));
-        assertThat(sent.getSentTime().isPresent(), is(true));
+        assertThat(sent.getSentTime(), isPresent());
         assertThat(sent.getSentComment(), is("comment for municipality"));
     }
 
@@ -450,7 +451,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         service.sendToMunicipality(initiativeId, TestHelper.authorLoginUserHolder, "comment for municipality", null);
         Initiative sent = testHelper.getInitiative(initiativeId);
         assertThat(sent.getType(), is(InitiativeType.COLLABORATIVE));
-        assertThat(sent.getSentTime().isPresent(), is(true));
+        assertThat(sent.getSentTime(), isPresent());
         assertThat(sent.getSentComment(), is("comment for municipality"));
     }
 

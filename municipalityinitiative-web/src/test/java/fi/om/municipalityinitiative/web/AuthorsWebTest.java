@@ -11,6 +11,8 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
+import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
 import static fi.om.municipalityinitiative.web.MessageSourceKeys.MSG_SUCCESS_INVITATION_SENT;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -126,7 +128,7 @@ public class AuthorsWebTest extends WebTestBase {
         enterVetumaLoginInformationAndSubmit("111111-1111", HELSINKI);
 
         assertTitle(TestHelper.DEFAULT_INITIATIVE_NAME + " - Kuntalaisaloitepalvelu");
-        assertThat(acceptInvitationButton().isPresent(), is(true));
+        assertThat(acceptInvitationButton(), isPresent());
     }
 
     @Test
@@ -152,8 +154,8 @@ public class AuthorsWebTest extends WebTestBase {
 
         AuthorInvitation invitation = testHelper.createInvitation(publishedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
-        assertThat(acceptInvitationButton().isPresent(), is(true));
-        assertThat(rejectInvitationButton().isPresent(), is(true));
+        assertThat(acceptInvitationButton(), isPresent());
+        assertThat(rejectInvitationButton(), isPresent());
     }
 
     @Test
@@ -164,8 +166,8 @@ public class AuthorsWebTest extends WebTestBase {
         vetumaLogin(VERIFIED_USER_AUTHOR_SSN, HELSINKI);
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
         assertTextContainedByClass("msg-warning", "Olet jo aloitteen vastuuhenkilö, joten et voi hyväksyä vastuuhenkilökutsua");
-        assertThat(acceptInvitationButton().isPresent(), is(false));
-        assertThat(rejectInvitationButton().isPresent(), is(false));
+        assertThat(acceptInvitationButton(), isNotPresent());
+        assertThat(rejectInvitationButton(), isNotPresent());
     }
 
     @Test
@@ -187,8 +189,8 @@ public class AuthorsWebTest extends WebTestBase {
         vetumaLogin("111111-1111", VANTAA);
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
         assertTextContainedByClass("msg-warning", "Väestötietojärjestelmän mukaan kotikuntasi ei ole kunta, jota aloite koskee, joten et voi liittyä aloitteen vastuuhenkilöksi. Kiitos mielenkiinnosta!");
-        assertThat(acceptInvitationButton().isPresent(), is(false));
-        assertThat(rejectInvitationButton().isPresent(), is(true));
+        assertThat(acceptInvitationButton(), isNotPresent());
+        assertThat(rejectInvitationButton(), isPresent());
     }
 
     @Test
@@ -196,8 +198,8 @@ public class AuthorsWebTest extends WebTestBase {
         AuthorInvitation invitation = testHelper.createInvitation(verifiedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
         vetumaLogin("111111-1111", HELSINKI);
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
-        assertThat(acceptInvitationButton().isPresent(), is(true));
-        assertThat(rejectInvitationButton().isPresent(), is(true));
+        assertThat(acceptInvitationButton(), isPresent());
+        assertThat(rejectInvitationButton(), isPresent());
 
         acceptInvitationButton().get().click();
 

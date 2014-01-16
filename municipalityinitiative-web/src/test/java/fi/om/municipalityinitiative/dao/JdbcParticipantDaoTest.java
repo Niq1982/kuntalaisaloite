@@ -19,9 +19,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-
 import java.util.List;
 
+import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static fi.om.municipalityinitiative.web.Urls.MAX_PARTICIPANT_LIST_LIMIT;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -260,7 +260,7 @@ public class JdbcParticipantDaoTest {
         List<NormalParticipant> participants = participantDao.findNormalAllParticipants(testInitiativeId, 0, MAX_PARTICIPANT_LIST_LIMIT);
 
         NormalParticipant participant = participants.get(0);
-        assertThat(participant.getHomeMunicipality().isPresent(), is(true));
+        assertThat(participant.getHomeMunicipality(), isPresent());
 
         assertThat(participant.getHomeMunicipality().get().getNameFi(), is("Some other Municipality"));
         assertThat(participant.getHomeMunicipality().get().getNameSv(), is("Some other Municipality sv"));
@@ -275,7 +275,7 @@ public class JdbcParticipantDaoTest {
         List<NormalParticipant> participants = participantDao.findNormalPublicParticipants(testInitiativeId);
 
         NormalParticipant participant = participants.get(0);
-        assertThat(participant.getHomeMunicipality().isPresent(), is(true));
+        assertThat(participant.getHomeMunicipality(), isPresent());
         assertThat(participant.getHomeMunicipality().get().getNameFi(), is("Some other Municipality"));
         assertThat(participant.getHomeMunicipality().get().getNameSv(), is("Some other Municipality sv"));
     }

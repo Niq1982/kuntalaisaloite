@@ -21,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.List;
 
+import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
+import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
@@ -95,7 +97,7 @@ public class JdbcInitiativeDaoTest {
         assertThat(initiative.getStateTime(), is(notNullValue()));
         assertThat(initiative.getName(), is(TestHelper.DEFAULT_INITIATIVE_NAME));
         assertThat(initiative.getProposal(), is(TestHelper.DEFAULT_PROPOSAL));
-        assertThat(initiative.getSentTime().isPresent(), is(true));
+        assertThat(initiative.getSentTime(), isPresent());
         assertThat(initiative.getState(), is(TestHelper.DEFAULT_STATE));
         assertThat(initiative.getType(), is(InitiativeType.COLLABORATIVE_CITIZEN));
         assertThat(initiative.getParticipantCount(), is(1));
@@ -154,15 +156,15 @@ public class JdbcInitiativeDaoTest {
         Long original = testHelper.createEmptyDraft(testMunicipality.getId()); // Even drafts may be marked as sent by dao
         Long someOther = testHelper.createEmptyDraft(testMunicipality.getId()); // Even drafts may be marked as sent by dao
 
-        precondition(initiativeDao.get(original).getSentTime().isPresent(), is(false));
+        precondition(initiativeDao.get(original).getSentTime(), isNotPresent());
 
         initiativeDao.markInitiativeAsSent(original);
 
         Initiative markedAsSent = initiativeDao.get(original);
         Initiative notMarkedAsSent = initiativeDao.get(someOther);
 
-        assertThat(markedAsSent.getSentTime().isPresent(), is(true));
-        assertThat(notMarkedAsSent.getSentTime().isPresent(), is(false));
+        assertThat(markedAsSent.getSentTime(), isPresent());
+        assertThat(notMarkedAsSent.getSentTime(), isNotPresent());
     }
 
     @Test
@@ -346,7 +348,7 @@ public class JdbcInitiativeDaoTest {
 
         List<InitiativeListInfo> all = initiativeDao.findCached(initiativeSearch()).list;
         assertThat(all, hasSize(1));
-        assertThat(all.get(0).getSentTime().isPresent(), is(true));
+        assertThat(all.get(0).getSentTime(), isPresent());
     }
 
     @Test
@@ -356,7 +358,7 @@ public class JdbcInitiativeDaoTest {
 
         List<InitiativeListInfo> all = initiativeDao.findCached(initiativeSearch().setShow(InitiativeSearch.Show.all)).list;
         assertThat(all, hasSize(1));
-        assertThat(all.get(0).getSentTime().isPresent(), is(false));
+        assertThat(all.get(0).getSentTime(), isNotPresent());
     }
 
     @Test

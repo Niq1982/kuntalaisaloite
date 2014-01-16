@@ -67,10 +67,10 @@ public class JdbcEmailDaoTest {
     public void pop_untried_email_for_update_returns_the_email() {
         Long emailId = createSendableEmail();
         Maybe<EmailDto> untriedEmailForUpdate = emailDao.popUntriedEmailForUpdate();
-        assertThat(untriedEmailForUpdate.isPresent(), is(true));
+        assertThat(untriedEmailForUpdate, isPresent());
         assertThat(untriedEmailForUpdate.get().getEmailId(), is(emailId));
 
-        assertThat(emailDao.popUntriedEmailForUpdate().isPresent(), is(false));
+        assertThat(emailDao.popUntriedEmailForUpdate(), isNotPresent());
     }
 
     @Test
@@ -85,8 +85,8 @@ public class JdbcEmailDaoTest {
     public void mark_email_as_sent_sets_success_time() {
         Long sendableEmail = createSendableEmail();
         EmailDto unsent = emailDao.get(sendableEmail);
-        precondition(unsent.getSucceeded().isPresent(), is(false));
-        precondition(unsent.getLastFailed().isPresent(), is(false));
+        precondition(unsent.getSucceeded(), isNotPresent());
+        precondition(unsent.getLastFailed(), isNotPresent());
         precondition(unsent.isTried(), is(false));
 
         emailDao.succeed(sendableEmail);
@@ -94,16 +94,16 @@ public class JdbcEmailDaoTest {
         EmailDto sent = emailDao.get(sendableEmail);
 
         assertThat(sent.isTried(), is(true));
-        assertThat(sent.getSucceeded().isPresent(), is(true));
-        assertThat(sent.getLastFailed().isPresent(), is(false));
+        assertThat(sent.getSucceeded(), isPresent());
+        assertThat(sent.getLastFailed(), isNotPresent());
     }
 
     @Test
     public void mark_email_as_failed_sets_failure_time() {
         Long sendableEmail = createSendableEmail();
         EmailDto unsent = emailDao.get(sendableEmail);
-        precondition(unsent.getSucceeded().isPresent(), is(false));
-        precondition(unsent.getLastFailed().isPresent(), is(false));
+        precondition(unsent.getSucceeded(), isNotPresent());
+        precondition(unsent.getLastFailed(), isNotPresent());
         precondition(unsent.isTried(), is(false));
 
         emailDao.failed(sendableEmail);
@@ -111,8 +111,8 @@ public class JdbcEmailDaoTest {
         EmailDto sent = emailDao.get(sendableEmail);
 
         assertThat(sent.isTried(), is(true));
-        assertThat(sent.getLastFailed().isPresent(), is(true));
-        assertThat(sent.getSucceeded().isPresent(), is(false));
+        assertThat(sent.getLastFailed(), isPresent());
+        assertThat(sent.getSucceeded(), isNotPresent());
     }
 
     @Test
@@ -142,11 +142,11 @@ public class JdbcEmailDaoTest {
         emailDao.succeed(succeeded);
 
         Maybe<EmailDto> untriedEmail = emailDao.popUntriedEmailForUpdate();
-        assertThat(untriedEmail.isPresent(), is(true));
+        assertThat(untriedEmail, isPresent());
         assertThat(untriedEmail.get().getEmailId(), is(untried));
 
         emailDao.succeed(untriedEmail.get().getEmailId());
-        assertThat(emailDao.popUntriedEmailForUpdate().isPresent(), is(false));
+        assertThat(emailDao.popUntriedEmailForUpdate(), isNotPresent());
 
     }
 

@@ -23,10 +23,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-
 import java.util.Map;
 import java.util.Set;
 
+import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
+import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
@@ -86,7 +87,7 @@ public class JdbcAuthorDaoTest {
         Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality).applyAuthor().withParticipantMunicipality(anotherMunicipality).toInitiativeDraft());
 
         VerifiedAuthor verifiedAuthor = authorDao.findVerifiedAuthors(initiativeId).get(0);
-        assertThat(verifiedAuthor.getMunicipality().isPresent(), is(true));
+        assertThat(verifiedAuthor.getMunicipality(), isPresent());
         assertThat(verifiedAuthor.getMunicipality().get().getId(), is(testMunicipality));
     }
 
@@ -182,7 +183,7 @@ public class JdbcAuthorDaoTest {
         assertThat(verifiedAuthor.getContactInfo().getPhone(), is(TestHelper.DEFAULT_AUTHOR_PHONE));
         assertThat(verifiedAuthor.getContactInfo().getName(), is(TestHelper.DEFAULT_PARTICIPANT_NAME));
         assertThat(verifiedAuthor.getContactInfo().isShowName(), is(TestHelper.DEFAULT_PUBLIC_NAME));
-        assertThat(verifiedAuthor.getMunicipality().isPresent(), is(true));
+        assertThat(verifiedAuthor.getMunicipality(), isPresent());
         assertThat(verifiedAuthor.getMunicipality().get().getId(), is(testMunicipality));
         assertThat(verifiedAuthor.getCreateTime(), is(new LocalDate()));
         assertThat(verifiedAuthor.getId(), is(new VerifiedUserId(testHelper.getLastVerifiedUserId())));
@@ -197,7 +198,7 @@ public class JdbcAuthorDaoTest {
 
         VerifiedAuthor verifiedAuthor = authorDao.getVerifiedAuthor(initiativeId, new VerifiedUserId(testHelper.getLastVerifiedUserId()));
 
-        assertThat(verifiedAuthor.getMunicipality().isPresent(), is(false));
+        assertThat(verifiedAuthor.getMunicipality(), isNotPresent());
 
     }
 

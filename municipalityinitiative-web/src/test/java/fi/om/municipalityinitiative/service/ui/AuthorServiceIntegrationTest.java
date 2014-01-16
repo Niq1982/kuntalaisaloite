@@ -25,6 +25,7 @@ import fi.om.municipalityinitiative.sql.QAuthorInvitation;
 import fi.om.municipalityinitiative.sql.QVerifiedAuthor;
 import fi.om.municipalityinitiative.sql.QVerifiedParticipant;
 import fi.om.municipalityinitiative.util.*;
+import org.hamcrest.Matcher;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Rule;
@@ -32,7 +33,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import javax.annotation.Resource;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -41,6 +41,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import static fi.om.municipalityinitiative.service.ui.AuthorService.AuthorInvitationConfirmViewData;
+import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -530,7 +531,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
         assertThat(author.getContactInfo().getEmail(), is(TestHelper.DEFAULT_PARTICIPANT_EMAIL));
         assertThat(author.getContactInfo().getPhone(), is(TestHelper.DEFAULT_AUTHOR_PHONE));
         assertThat(author.getContactInfo().isShowName(), is(TestHelper.DEFAULT_PUBLIC_NAME));
-        assertThat(author.getMunicipality().isPresent(), is(true));
+        assertThat(author.getMunicipality(), (Matcher<? super Maybe>) isPresent());
         assertThat(author.getCreateTime(), is(notNullValue()));
         assertThat(author.getId(), is(notNullValue()));
     }

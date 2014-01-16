@@ -33,9 +33,9 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-
 import java.util.Collections;
 
+import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
 import static fi.om.municipalityinitiative.util.ReflectionTestUtils.assertReflectionEquals;
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -378,7 +378,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         service.confirmVerifiedAuthorInvitation(verifiedUserHolderForInitiative(initiativeId), initiativeId, confirmDto, Locales.LOCALE_FI);
 
         Maybe<VerifiedUser> verifiedUser = userDao.getVerifiedUser(HASH);
-        assertThat(verifiedUser.isPresent(), is(true));
+        assertThat(verifiedUser, isPresent());
         assertReflectionEquals(verifiedUser.get().getContactInfo(), contactInfo());
     }
 
