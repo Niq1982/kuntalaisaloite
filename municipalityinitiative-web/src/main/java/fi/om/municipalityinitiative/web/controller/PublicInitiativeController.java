@@ -82,7 +82,7 @@ public class PublicInitiativeController extends BaseController {
     public String search(InitiativeSearch search, Model model, Locale locale, HttpServletRequest request) {
 
         List<Municipality> municipalities = municipalityService.findAllMunicipalities(locale);
-        LoginUserHolder loginUserHolder = new LoginUserHolder(userService.getUser(request));
+        LoginUserHolder loginUserHolder = new LoginUserHolder<>(userService.getUser(request));
         SearchParameterQueryString queryString = new SearchParameterQueryString(search);
 
         addPiwicIdIfNotAuthenticated(model, request);
@@ -148,7 +148,7 @@ public class PublicInitiativeController extends BaseController {
             if (loginUserHolder.isVerifiedUser()) {
                 long initiativeId;
                 try {
-                    initiativeId = verifiedInitiativeService.prepareSafeInitiative(loginUserHolder, PrepareSafeInitiativeUICreateDto.parse(initiative));
+                    initiativeId = verifiedInitiativeService.prepareVerifiedInitiative(loginUserHolder, PrepareSafeInitiativeUICreateDto.parse(initiative));
                 } catch (InvalidHomeMunicipalityException e) {
                     return redirectWithMessage(urls.prepare(), RequestMessage.INVALID_HOME_MUNICIPALITY, request);
                 }

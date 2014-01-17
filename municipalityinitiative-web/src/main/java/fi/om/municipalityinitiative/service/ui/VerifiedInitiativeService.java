@@ -46,7 +46,7 @@ public class VerifiedInitiativeService {
     private AuthorDao authorDao;
 
     @Transactional(readOnly = false)
-    public long prepareSafeInitiative(LoginUserHolder loginUserHolder, PrepareSafeInitiativeUICreateDto uiCreateDto) {
+    public long prepareVerifiedInitiative(LoginUserHolder loginUserHolder, PrepareSafeInitiativeUICreateDto uiCreateDto) {
 
         VerifiedUser verifiedUser = loginUserHolder.getVerifiedUser();
 
