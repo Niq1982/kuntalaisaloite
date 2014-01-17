@@ -108,11 +108,10 @@ public class TestDataController extends BaseController {
     }
 
     private static Integer parseIntegerParameter(HttpServletRequest request, String parameterName, Integer defaultValue) {
-        Integer participantAmount = defaultValue;
         if (!Strings.isNullOrEmpty(request.getParameter(parameterName))) {
-            participantAmount = Integer.valueOf(request.getParameter(parameterName));
+            return Integer.valueOf(request.getParameter(parameterName));
         }
-        return participantAmount;
+        return defaultValue;
     }
 
 }
