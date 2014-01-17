@@ -8,7 +8,7 @@ import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
-import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
+import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
@@ -22,7 +22,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -40,7 +39,7 @@ public class EfficiencyTest {
     private static Long municipality;
 
     @Resource
-    private PublicInitiativeService service;
+    private NormalInitiativeService service;
 
     @Resource
     private TestHelper testHelper;

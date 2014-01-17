@@ -24,7 +24,7 @@ import javax.annotation.Resource;
 import java.util.Locale;
 
 
-public class PublicInitiativeService {
+public class NormalInitiativeService {
     
     @Resource
     private ParticipantDao participantDao;

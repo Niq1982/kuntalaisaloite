@@ -13,7 +13,7 @@ import fi.om.municipalityinitiative.service.MunicipalityService;
 import fi.om.municipalityinitiative.service.ParticipantService;
 import fi.om.municipalityinitiative.service.ValidationService;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
-import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
+import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
 import fi.om.municipalityinitiative.service.ui.VerifiedInitiativeService;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -51,7 +51,7 @@ public class PublicInitiativeController extends BaseController {
     private MunicipalityService municipalityService;
 
     @Resource
-    private PublicInitiativeService publicInitiativeService;
+    private NormalInitiativeService normalInitiativeService;
 
     @Resource
     private ValidationService validationService;
@@ -83,12 +83,12 @@ public class PublicInitiativeController extends BaseController {
 
         addPiwicIdIfNotAuthenticated(model, request);
 
-        return ViewGenerator.searchView(publicInitiativeService.findMunicipalityInitiatives(search, loginUserHolder),
+        return ViewGenerator.searchView(normalInitiativeService.findMunicipalityInitiatives(search, loginUserHolder),
                 municipalities,
                 search,
                 queryString,
                 solveMunicipalityFromListById(municipalities, search.getMunicipality()),
-                publicInitiativeService.getInitiativeCounts(search, loginUserHolder))
+                normalInitiativeService.getInitiativeCounts(search, loginUserHolder))
                 .view(model, Urls.get(locale).alt().search()+queryString.get());
     }
 
@@ -97,7 +97,7 @@ public class PublicInitiativeController extends BaseController {
                        Model model, Locale locale, HttpServletRequest request) {
 
         LoginUserHolder loginUserHolder = userService.getLoginUserHolder(request);
-        InitiativeViewInfo initiativeInfo = publicInitiativeService.getInitiative(initiativeId, loginUserHolder);
+        InitiativeViewInfo initiativeInfo = normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
 
         addPiwicIdIfNotAuthenticated(model, request);
 
@@ -163,7 +163,7 @@ public class PublicInitiativeController extends BaseController {
         }
         else {
 
-            Long initiativeId = publicInitiativeService.prepareInitiative(initiative, locale);
+            Long initiativeId = normalInitiativeService.prepareInitiative(initiative, locale);
 
             addRequestAttribute(initiative.getParticipantEmail(), request); // To be shown at confirmation page
             return redirectWithMessage(urls.pendingConfirmation(initiativeId), RequestMessage.PREPARE, request);
@@ -177,7 +177,7 @@ public class PublicInitiativeController extends BaseController {
                               BindingResult bindingResult, Model model, Locale locale, HttpServletRequest request) {
 
         LoginUserHolder loginUserHolder = userService.getLoginUserHolder(request);
-        InitiativeViewInfo initiative = publicInitiativeService.getInitiative(initiativeId, loginUserHolder);
+        InitiativeViewInfo initiative = normalInitiativeService.getPublicInitiative(initiativeId);
         participant.assignMunicipality(initiative.getMunicipality().getId());
 
         if (initiative.isVerifiable()) {
@@ -197,7 +197,7 @@ public class PublicInitiativeController extends BaseController {
                 Urls urls = Urls.get(locale);
                 return redirectWithMessage(urls.view(initiativeId), RequestMessage.PARTICIPATE, request);
             } else {
-                InitiativeViewInfo publicInitiative = publicInitiativeService.getPublicInitiative(initiativeId);
+                InitiativeViewInfo publicInitiative = normalInitiativeService.getPublicInitiative(initiativeId);
                 return ViewGenerator.collaborativeView(
                         publicInitiative,
                         authorService.findPublicAuthors(initiativeId), municipalityService.findAllMunicipalities(locale),
@@ -214,7 +214,7 @@ public class PublicInitiativeController extends BaseController {
         Urls urls = Urls.get(locale);
         String alternativeURL = urls.alt().participantList(initiativeId);
 
-        InitiativeViewInfo initiativeInfo = publicInitiativeService.getInitiative(initiativeId, userService.getLoginUserHolder(request));
+        InitiativeViewInfo initiativeInfo = normalInitiativeService.getInitiative(initiativeId, userService.getLoginUserHolder(request));
 
         addPiwicIdIfNotAuthenticated(model, request);
 
@@ -342,11 +342,11 @@ public class PublicInitiativeController extends BaseController {
 
         authorUIMessage.setInitiativeId(initiativeId);
         if (validationService.validationSuccessful(authorUIMessage, bindingResult, model)) {
-            publicInitiativeService.addAuthorMessage(authorUIMessage, locale);
+            normalInitiativeService.addAuthorMessage(authorUIMessage, locale);
             return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.AUTHOR_MESSAGE_ADDED, request);
         }
         else {
-            InitiativeViewInfo publicInitiative = publicInitiativeService.getPublicInitiative(initiativeId);
+            InitiativeViewInfo publicInitiative = normalInitiativeService.getPublicInitiative(initiativeId);
             return ViewGenerator.collaborativeView(publicInitiative,
                     authorService.findPublicAuthors(initiativeId),
                     municipalityService.findAllMunicipalities(locale),
@@ -359,7 +359,7 @@ public class PublicInitiativeController extends BaseController {
     @RequestMapping(value = {AUTHOR_MESSAGE_FI, AUTHOR_MESSAGE_SV}, method = GET)
     public String confirmAuthorMessage(@RequestParam(PARAM_CONFIRMATION_CODE) String confirmationCode,
                                        HttpServletRequest request, Locale locale) {
-        Long initiativeId = publicInitiativeService.confirmAndSendAuthorMessage(confirmationCode);
+        Long initiativeId = normalInitiativeService.confirmAndSendAuthorMessage(confirmationCode);
         return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.AUTHOR_MESSAGE_SENT, request);
     }
 
