@@ -193,7 +193,7 @@ public class PublicInitiativeController extends BaseController {
         else {
 
             if (validationService.validationSuccessful(participant, bindingResult, model, NormalInitiative.class)) {
-                publicInitiativeService.createParticipant(participant, initiativeId, locale);
+                participantService.createParticipant(participant, initiativeId, locale);
                 Urls urls = Urls.get(locale);
                 return redirectWithMessage(urls.view(initiativeId), RequestMessage.PARTICIPATE, request);
             } else {
@@ -242,7 +242,7 @@ public class PublicInitiativeController extends BaseController {
                                        Locale locale,
                                        HttpServletRequest request) {
         Urls urls = Urls.get(locale);
-        Long initiativeId = publicInitiativeService.confirmParticipation(participantId, confirmationCode);
+        Long initiativeId = participantService.confirmParticipation(participantId, confirmationCode);
         return redirectWithMessage(urls.view(initiativeId), RequestMessage.CONFIRM_PARTICIPATION, request);
     }
 
