@@ -11,6 +11,7 @@ import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
+import fi.om.municipalityinitiative.exceptions.InvalidParticipationConfirmationException;
 import fi.om.municipalityinitiative.service.EncryptionService;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
@@ -152,12 +153,15 @@ public class PublicInitiativeService {
 
     @Transactional(readOnly = false)
     public Long confirmParticipation(Long participantId, String confirmationCode) {
-        Long initiativeId = participantDao.getInitiativeIdByParticipant(participantId);  // FIXME: Gives null if no participant found,
-        assertAllowance("Confirm participation", ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowParticipate());
+        Maybe<Long> initiativeId = participantDao.getInitiativeIdByParticipant(participantId);
+        if (initiativeId.isNotPresent()) {
+            throw new InvalidParticipationConfirmationException("No participant with id: " + participantId);
+        }
 
+        assertAllowance("Confirm participation", ManagementSettings.of(initiativeDao.get(initiativeId.get())).isAllowParticipate());
         participantDao.confirmParticipation(participantId, confirmationCode);
 
-        return initiativeId;
+        return initiativeId.get();
     }
 
     @Transactional(readOnly = false)

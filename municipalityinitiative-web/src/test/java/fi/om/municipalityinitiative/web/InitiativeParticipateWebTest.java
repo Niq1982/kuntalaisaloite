@@ -88,6 +88,14 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     }
 
     @Test
+    public void confirming_participation_with_invalid_participant_id_shows_correct_error_page() {
+
+        open(urls.confirmParticipant(-1L, "asdasd")); // Invalid participant id
+        assertThat(pageTitle(), is("Sivua ei voida näyttää - Kuntalaisaloitepalvelu"));
+        assertTextByTag("h1", "Yritit avata linkin, joka vahvistaa aloitteeseen osallistumisen");
+    }
+
+    @Test
     public void participating_to_initiative_when_not_logged_in_redirects_to_vetuma_and_back_to_participation_page() {
         open(urls.view(verifiedInitiativeHelsinki));
 
@@ -118,7 +126,6 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
         assertTextContainedByClass("msg-warning", "Olet jo osallistunut tähän aloitteeseen");
         assertThat(participateToInitiativeButton(), isNotPresent());
-
 
     }
 

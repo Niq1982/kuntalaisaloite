@@ -215,10 +215,10 @@ public class JdbcParticipantDao implements ParticipantDao {
     }
 
     @Override
-    public Long getInitiativeIdByParticipant(Long participantId) {
-        return queryFactory.from(QParticipant.participant)
+    public Maybe<Long> getInitiativeIdByParticipant(Long participantId) {
+        return Maybe.fromNullable(queryFactory.from(QParticipant.participant)
                 .where(QParticipant.participant.id.eq(participantId))
-                .singleResult(QParticipant.participant.municipalityInitiativeId);
+                .singleResult(QParticipant.participant.municipalityInitiativeId));
     }
 
     @Override
