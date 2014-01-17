@@ -571,6 +571,16 @@ public class TestHelper {
                 .uniqueResult(JdbcEmailDao.emailMapping);
     }
 
+    @Transactional(readOnly = false)
+    public Long createUnconfirmedParticipant(AuthorDraft authorDraft, String confirmCode) {
+        Long defaultParticipant = createDefaultParticipant(authorDraft);
+        queryFactory.update(QParticipant.participant)
+                .where(QParticipant.participant.id.eq(defaultParticipant))
+                .set(QParticipant.participant.confirmationCode, confirmCode)
+                .execute();
+        return defaultParticipant;
+    }
+
     public static class AuthorDraft {
 
         public Long initiativeId;
