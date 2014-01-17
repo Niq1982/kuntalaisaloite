@@ -33,17 +33,6 @@ public class VerifiedUser extends User{
         this.initiativesWithParticipation = initiativesWithParticipation;
     }
 
-    public VerifiedUser(VerifiedUserId verifiedUserId, String hash, ContactInfo contactInfo, Set<Long> initiativesWithManagementRight, Set<Long> initiativesWithParticipation, Maybe<Municipality> homeMunicipality, boolean adult) {
-        this.hash = hash;
-        this.authorId = verifiedUserId;
-        // This is needed after we've logged in and participating or creating an initiative.
-        // Data must be updated always when updating something at the UI
-        this.contactInfo = contactInfo;
-        this.initiativesWithManagementRight = initiativesWithManagementRight;
-        this.homeMunicipality = homeMunicipality;
-        this.initiativesWithParticipation = initiativesWithParticipation;
-    }
-
     @Override
     public boolean isOmUser() {
         return false;
