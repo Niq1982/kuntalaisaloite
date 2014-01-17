@@ -29,7 +29,7 @@ public class ParticipantCreateDtoTest {
     @Test
     public void municipal_membership_is_none_if_municipalities_are_the_same() {
         ParticipantUICreateDto participantUICreateDto = new ParticipantUICreateDto();
-        participantUICreateDto.assignMunicipality(1L);
+        participantUICreateDto.assignInitiativeMunicipality(1L);
         participantUICreateDto.setHomeMunicipality(1L);
         participantUICreateDto.setMunicipalMembership(Membership.company);
 
@@ -39,7 +39,7 @@ public class ParticipantCreateDtoTest {
     @Test
     public void municipal_membership_is_given_if_municipalities_are_not_the_same() {
         ParticipantUICreateDto participantUICreateDto = new ParticipantUICreateDto();
-        participantUICreateDto.assignMunicipality(1L);
+        participantUICreateDto.assignInitiativeMunicipality(1L);
         participantUICreateDto.setHomeMunicipality(2L);
         participantUICreateDto.setMunicipalMembership(Membership.company);
 

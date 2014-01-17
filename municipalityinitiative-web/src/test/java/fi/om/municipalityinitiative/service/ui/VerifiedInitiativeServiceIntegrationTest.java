@@ -429,8 +429,8 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         precondition(testHelper.countAll(QVerifiedUser.verifiedUser), is(0L));
         precondition(testHelper.countAll(QVerifiedParticipant.verifiedParticipant), is(0L));
 
-        service.createParticipant(verifiedLoginUserHolder, firstInitiative, participantCreateDto());
-        service.createParticipant(verifiedLoginUserHolder, secondInitiative, participantCreateDto());
+        service.createParticipant(participantCreateDto(), firstInitiative, verifiedLoginUserHolder);
+        service.createParticipant(participantCreateDto(), secondInitiative, verifiedLoginUserHolder);
 
         assertThat(testHelper.countAll(QVerifiedUser.verifiedUser), is(1L));
         assertThat(testHelper.countAll(QVerifiedParticipant.verifiedParticipant), is(2L));
@@ -444,7 +444,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         thrown.expect(InvalidHomeMunicipalityException.class);
 
         LoginUserHolder<VerifiedUser> loginUserHolder = verifiedUserHolderWithMunicipalityId(Maybe.of(testHelper.createTestMunicipality("Other Municipality")));
-        service.createParticipant(loginUserHolder, initiativeId, participantCreateDto());
+        service.createParticipant(participantCreateDto(), initiativeId, loginUserHolder);
     }
 
     @Test
@@ -456,7 +456,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         ParticipantUICreateDto createDto = participantCreateDto();
         createDto.setHomeMunicipality(testHelper.createTestMunicipality("Some other municipality"));
 
-        service.createParticipant(verifiedUserHolderWithMunicipalityId(Maybe.<Long>absent()), initiativeId, createDto);
+        service.createParticipant(createDto, initiativeId, verifiedUserHolderWithMunicipalityId(Maybe.<Long>absent()));
     }
 
     @Test
@@ -467,7 +467,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
                 .toInitiativeDraft());
 
         thrown.expect(OperationNotAllowedException.class);
-        service.createParticipant(verifiedLoginUserHolder, initiativeId, participantCreateDto());
+        service.createParticipant(participantCreateDto(), initiativeId, verifiedLoginUserHolder);
     }
 
     @Test
@@ -476,7 +476,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         Long initiativeId = createVerifiedCollaborative();
         precondition(testHelper.getInitiative(initiativeId).getParticipantCount(), is(0));
 
-        service.createParticipant(verifiedLoginUserHolder, initiativeId, participantCreateDto());
+        service.createParticipant(participantCreateDto(), initiativeId, verifiedLoginUserHolder);
 
         assertThat(testHelper.getInitiative(initiativeId).getParticipantCount(), is(1));
     }
@@ -484,10 +484,10 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
     @Test
     public void participating_if_already_participated_throws_exception() {
         Long initiativeId = createVerifiedCollaborative();
-        service.createParticipant(verifiedLoginUserHolder, initiativeId, participantCreateDto());
+        service.createParticipant(participantCreateDto(), initiativeId, verifiedLoginUserHolder);
 
         thrown.expect(DuplicateKeyException.class);
-        service.createParticipant(verifiedLoginUserHolder, initiativeId, participantCreateDto());
+        service.createParticipant(participantCreateDto(), initiativeId, verifiedLoginUserHolder);
     }
 
     @Test
@@ -534,7 +534,7 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
         ParticipantUICreateDto createDto = new ParticipantUICreateDto();
 
         createDto.setHomeMunicipality(testMunicipality.getId());
-        createDto.assignMunicipality(testMunicipality.getId());
+        createDto.assignInitiativeMunicipality(testMunicipality.getId());
         createDto.setShowName(true);
         return createDto;
     }

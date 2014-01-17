@@ -39,21 +39,19 @@ public final class ViewGenerator {
         return viewName;
     }
 
-    public static ViewGenerator collaborativeView(InitiativeViewInfo municipalityInitiative,
-                                                  PublicAuthors publicAuthors,
-                                                  List<Municipality> allMunicipalities,
-                                                  AttachmentService.Attachments attachments, ParticipantCount participantCount,
+    public static ViewGenerator collaborativeView(InitiativePageInfo initiative,
+                                                  List<Municipality> municipalities,
                                                   ParticipantUICreateDto participantUICreateDto,
                                                   AuthorUIMessage authorUIMessage) {
         return new ViewGenerator(Views.PUBLIC_COLLECT_VIEW,
                 new AttributeBuilder()
-                        .add("initiative", municipalityInitiative)
-                        .add("authors", publicAuthors)
-                        .add("municipalities", allMunicipalities)
-                        .add("participantCount", participantCount)
+                        .add("initiative", initiative.initiative)
+                        .add("authors", initiative.authors)
+                        .add("municipalities", municipalities)
+                        .add("participantCount", initiative.initiative.getParticipantCount())
+                        .add("attachments", initiative.attachments)
                         .add("participant", participantUICreateDto)
                         .add("authorMessage", authorUIMessage)
-                        .add("attachments", attachments)
                         .build()
         );
     }
@@ -125,12 +123,12 @@ public final class ViewGenerator {
                         .build());
     }
 
-    public static ViewGenerator singleView(InitiativeViewInfo initiativeInfo, PublicAuthors publicAuthors, AttachmentService.Attachments attachments) {
+    public static ViewGenerator singleView(InitiativePageInfo initiativePageView) {
         return new ViewGenerator(Views.PUBLIC_SINGLE_VIEW,
                 new AttributeBuilder()
-                        .add("initiative", initiativeInfo)
-                        .add("authors", publicAuthors)
-                        .add("attachments", attachments)
+                        .add("initiative", initiativePageView.initiative)
+                        .add("authors", initiativePageView.authors)
+                        .add("attachments", initiativePageView.attachments)
                         .build());
     }
 

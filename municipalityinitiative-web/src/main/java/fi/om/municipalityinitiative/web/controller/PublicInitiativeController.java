@@ -14,6 +14,7 @@ import fi.om.municipalityinitiative.service.ParticipantService;
 import fi.om.municipalityinitiative.service.ValidationService;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
+import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
 import fi.om.municipalityinitiative.service.ui.VerifiedInitiativeService;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -51,9 +52,6 @@ public class PublicInitiativeController extends BaseController {
     private MunicipalityService municipalityService;
 
     @Resource
-    private NormalInitiativeService normalInitiativeService;
-
-    @Resource
     private ValidationService validationService;
 
     @Resource
@@ -61,6 +59,12 @@ public class PublicInitiativeController extends BaseController {
 
     @Resource
     private AuthorService authorService;
+
+    @Resource
+    private PublicInitiativeService publicInitiativeService;
+
+    @Resource
+    private NormalInitiativeService normalInitiativeService;
 
     @Resource
     private VerifiedInitiativeService verifiedInitiativeService;
@@ -89,7 +93,7 @@ public class PublicInitiativeController extends BaseController {
                 queryString,
                 solveMunicipalityFromListById(municipalities, search.getMunicipality()),
                 normalInitiativeService.getInitiativeCounts(search, loginUserHolder))
-                .view(model, Urls.get(locale).alt().search()+queryString.get());
+                .view(model, Urls.get(locale).alt().search() + queryString.get());
     }
 
     @RequestMapping(value={ VIEW_FI, VIEW_SV }, method=GET)
@@ -97,24 +101,19 @@ public class PublicInitiativeController extends BaseController {
                        Model model, Locale locale, HttpServletRequest request) {
 
         LoginUserHolder loginUserHolder = userService.getLoginUserHolder(request);
-        InitiativeViewInfo initiativeInfo = normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
 
         addPiwicIdIfNotAuthenticated(model, request);
 
-        if (initiativeInfo.isCollaborative()) {
-            return ViewGenerator.collaborativeView(initiativeInfo,
-                    authorService.findPublicAuthors(initiativeId),
+        InitiativePageInfo initiativePageView = publicInitiativeService.getInitiativePageDto(initiativeId, loginUserHolder);
+        if (initiativePageView.isCollaborative()) {
+
+            return ViewGenerator.collaborativeView(initiativePageView,
                     municipalityService.findAllMunicipalities(locale),
-                    attachmentService.findAttachments(initiativeId, loginUserHolder),
-                    initiativeInfo.getParticipantCount(),
                     new ParticipantUICreateDto(),
                     new AuthorUIMessage()).view(model, Urls.get(locale).alt().view(initiativeId));
         }
         else {
-            return ViewGenerator.singleView(initiativeInfo,
-                    authorService.findPublicAuthors(initiativeId),
-                    attachmentService.findAttachments(initiativeId, loginUserHolder))
-                    .view(model, Urls.get(locale).alt().view(initiativeId));
+            return ViewGenerator.singleView(initiativePageView).view(model, Urls.get(locale).alt().view(initiativeId));
         }
     }
 
@@ -177,31 +176,26 @@ public class PublicInitiativeController extends BaseController {
                               BindingResult bindingResult, Model model, Locale locale, HttpServletRequest request) {
 
         LoginUserHolder loginUserHolder = userService.getLoginUserHolder(request);
-        InitiativeViewInfo initiative = normalInitiativeService.getPublicInitiative(initiativeId);
-        participant.assignMunicipality(initiative.getMunicipality().getId());
+        InitiativePageInfo initiativePageInfo = publicInitiativeService.getInitiativePageInfo(initiativeId);
+        participant.assignInitiativeMunicipality(initiativePageInfo.initiative.getMunicipality().getId());
 
-        if (initiative.isVerifiable()) {
+        if (initiativePageInfo.isVerifiable()) {
             try {
-                verifiedInitiativeService.createParticipant(loginUserHolder, initiativeId, participant);
+                verifiedInitiativeService.createParticipant(participant, initiativeId, loginUserHolder);
                 userService.refreshUserData(request);
             } catch (InvalidHomeMunicipalityException e) {
                 return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.INVALID_HOME_MUNICIPALITY, request);
             }
-
             return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.PARTICIPATE_VERIFIABLE, request);
         }
         else {
-
             if (validationService.validationSuccessful(participant, bindingResult, model, NormalInitiative.class)) {
                 participantService.createParticipant(participant, initiativeId, locale);
                 Urls urls = Urls.get(locale);
                 return redirectWithMessage(urls.view(initiativeId), RequestMessage.PARTICIPATE, request);
             } else {
-                InitiativeViewInfo publicInitiative = normalInitiativeService.getPublicInitiative(initiativeId);
-                return ViewGenerator.collaborativeView(
-                        publicInitiative,
-                        authorService.findPublicAuthors(initiativeId), municipalityService.findAllMunicipalities(locale),
-                        attachmentService.findAttachments(initiativeId, loginUserHolder), publicInitiative.getParticipantCount(),
+                return ViewGenerator.collaborativeView(initiativePageInfo,
+                        municipalityService.findAllMunicipalities(locale),
                         participant,
                         new AuthorUIMessage()).view(model, Urls.get(locale).alt().view(initiativeId));
             }
@@ -346,11 +340,9 @@ public class PublicInitiativeController extends BaseController {
             return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.AUTHOR_MESSAGE_ADDED, request);
         }
         else {
-            InitiativeViewInfo publicInitiative = normalInitiativeService.getPublicInitiative(initiativeId);
+            InitiativePageInfo publicInitiative = publicInitiativeService.getInitiativePageInfo(initiativeId);
             return ViewGenerator.collaborativeView(publicInitiative,
-                    authorService.findPublicAuthors(initiativeId),
                     municipalityService.findAllMunicipalities(locale),
-                    attachmentService.findAcceptedAttachments(initiativeId), publicInitiative.getParticipantCount(),
                     new ParticipantUICreateDto(),
                     authorUIMessage).view(model, Urls.get(locale).alt().view(initiativeId));
         }

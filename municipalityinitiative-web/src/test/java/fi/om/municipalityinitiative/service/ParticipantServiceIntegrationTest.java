@@ -163,7 +163,7 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         participant.setParticipantEmail("participant@example.com");
         participant.setShowName(true);
         participant.setHomeMunicipality(testMunicipalityId);
-        participant.assignMunicipality(testMunicipalityId);
+        participant.assignInitiativeMunicipality(testMunicipalityId);
         return participant;
     }
 

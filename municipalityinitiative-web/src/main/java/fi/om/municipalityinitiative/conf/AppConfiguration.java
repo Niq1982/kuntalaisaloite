@@ -162,8 +162,13 @@ public class AppConfiguration {
     }
 
     @Bean
-    public NormalInitiativeService publicInitiativeService() {
+    public NormalInitiativeService normalInitiativeService() {
         return new NormalInitiativeService();
+    }
+
+    @Bean
+    public PublicInitiativeService publicInitiativeService() {
+        return new PublicInitiativeService();
     }
 
     @Bean

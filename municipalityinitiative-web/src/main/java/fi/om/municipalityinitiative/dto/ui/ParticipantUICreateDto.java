@@ -49,7 +49,7 @@ public class ParticipantUICreateDto
         return municipality;
     }
 
-    public void assignMunicipality(Long municipality) {
+    public void assignInitiativeMunicipality(Long municipality) {
         this.municipality = municipality;
     }
 
