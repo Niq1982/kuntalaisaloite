@@ -7,20 +7,29 @@ import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.VerifiedAuthor;
+import fi.om.municipalityinitiative.dto.service.ManagementSettings;
 import fi.om.municipalityinitiative.dto.service.NormalParticipant;
+import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.dto.service.VerifiedParticipant;
 import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
+import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
+import fi.om.municipalityinitiative.exceptions.InvalidParticipationConfirmationException;
+import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
+import fi.om.municipalityinitiative.util.Maybe;
+import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
+
+import static fi.om.municipalityinitiative.util.SecurityUtil.assertAllowance;
 
 public class ParticipantService {
 
@@ -32,6 +41,9 @@ public class ParticipantService {
 
     @Resource
     private InitiativeDao initiativeDao;
+
+    @Resource
+    private EmailService emailService;
 
     public ParticipantService() {
     }
@@ -93,6 +105,42 @@ public class ParticipantService {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         participantDao.deleteParticipant(initiativeId, participantId);
         initiativeDao.denormalizeParticipantCountForNormalInitiative(initiativeId);
+    }
+
+    @Transactional(readOnly = false)
+    public Long confirmParticipation(Long participantId, String confirmationCode) {
+        Maybe<Long> initiativeId = participantDao.getInitiativeIdByParticipant(participantId);
+        if (initiativeId.isNotPresent()) {
+            throw new InvalidParticipationConfirmationException("No participant with id: " + participantId);
+        }
+
+        assertAllowance("Confirm participation", ManagementSettings.of(initiativeDao.get(initiativeId.get())).isAllowParticipate());
+        participantDao.confirmParticipation(participantId, confirmationCode);
+
+        return initiativeId.get();
+    }
+
+    @Transactional(readOnly = false)
+    public Long createParticipant(ParticipantUICreateDto participant, Long initiativeId, Locale locale) {
+
+        assertAllowance("Allowed to participate", ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowParticipate());
+
+        ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(participant, initiativeId);
+        participantCreateDto.setMunicipalityInitiativeId(initiativeId);
+
+
+        String confirmationCode = RandomHashGenerator.shortHash();
+        Long participantId = participantDao.create(participantCreateDto, confirmationCode);
+
+        emailService.sendParticipationConfirmation(
+                initiativeId,
+                participant.getParticipantEmail(),
+                participantId,
+                confirmationCode,
+                locale
+        );
+
+        return participantId;
     }
 
 }

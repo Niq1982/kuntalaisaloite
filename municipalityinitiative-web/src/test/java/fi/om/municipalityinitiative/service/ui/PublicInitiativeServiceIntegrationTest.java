@@ -1,14 +1,14 @@
 package fi.om.municipalityinitiative.service.ui;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
-import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.AuthorMessage;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.service.NormalParticipant;
-import fi.om.municipalityinitiative.dto.ui.*;
+import fi.om.municipalityinitiative.dto.ui.AuthorUIMessage;
+import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
+import fi.om.municipalityinitiative.dto.ui.PrepareInitiativeUICreateDto;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
-import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.ServiceIntegrationTestBase;
 import fi.om.municipalityinitiative.service.email.EmailSubjectPropertyKeys;
 import fi.om.municipalityinitiative.sql.QAuthorMessage;
@@ -20,11 +20,11 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
-import java.util.List;
 
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.fail;
 
 
@@ -61,35 +61,6 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         ReflectionTestUtils.assertNoNullFields(initiative);
     }
 
-    @Test(expected = OperationNotAllowedException.class)
-    public void participating_allowance_is_checked() {
-        Long initiative = testHelper.createCollaborativeReview(testMunicipality.getId());
-
-        ParticipantUICreateDto participant = participantUICreateDto();
-        service.createParticipant(participant, initiative, null);
-    }
-
-    @Test(expected = OperationNotAllowedException.class)
-    public void accepting_participation_allowance_is_checked() {
-        Long initiative = testHelper.createSingleSent(testMunicipality.getId());
-
-        service.confirmParticipation(testHelper.getLastParticipantId(), null);
-    }
-
-    @Test
-    public void adding_participant_does_not_increase_denormalized_participantCount_but_accepting_does() throws MessagingException, InterruptedException {
-        Long initiativeId = testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
-        long originalParticipantCount = getSingleInitiativeInfo().getParticipantCount();
-
-        Long participantId = service.createParticipant(participantUICreateDto(), initiativeId, null);
-        assertThat(getSingleInitiativeInfo().getParticipantCount(), is(originalParticipantCount));
-
-        service.confirmParticipation(participantId, RandomHashGenerator.getPrevious());
-        assertThat(getSingleInitiativeInfo().getParticipantCount(), is(originalParticipantCount +1));
-
-        assertUniqueSentEmail(participantUICreateDto().getParticipantEmail(), EmailSubjectPropertyKeys.EMAIL_PARTICIPATION_CONFIRMATION_SUBJECT);
-    }
-
     @Test
     public void sets_participant_count_to_one_when_adding_new_collaborative_initiative() {
         PrepareInitiativeUICreateDto prepareInitiativeUICreateDto = new PrepareInitiativeUICreateDto();
@@ -111,12 +82,6 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         createDto.setMunicipality(unactiveMunicipality);
 
         service.prepareInitiative(createDto, null);
-    }
-
-    private InitiativeListInfo getSingleInitiativeInfo() {
-        List<InitiativeListInfo> initiatives = service.findMunicipalityInitiatives(new InitiativeSearch().setShow(InitiativeSearch.Show.all), TestHelper.authorLoginUserHolder).list;
-        precondition(initiatives, hasSize(1));
-        return initiatives.get(0);
     }
 
     @Test
@@ -210,16 +175,6 @@ public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTe
         authorUIMessage.setMessage("Message");
         authorUIMessage.setContactName("Contact Name");
         return authorUIMessage;
-    }
-
-    private static ParticipantUICreateDto participantUICreateDto() {
-        ParticipantUICreateDto participant = new ParticipantUICreateDto();
-        participant.setParticipantName("Some Name");
-        participant.setParticipantEmail("participant@example.com");
-        participant.setShowName(true);
-        participant.setHomeMunicipality(testMunicipality.getId());
-        participant.assignMunicipality(testMunicipality.getId());
-        return participant;
     }
 
     private static PrepareInitiativeUICreateDto prepareDto() {
