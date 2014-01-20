@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.dto.service.AttachmentFile;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.InvalidHomeMunicipalityException;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
@@ -208,11 +209,12 @@ public class PublicInitiativeController extends BaseController {
         Urls urls = Urls.get(locale);
         String alternativeURL = urls.alt().participantList(initiativeId);
 
-        InitiativeViewInfo initiativeInfo = normalInitiativeService.getInitiative(initiativeId, userService.getLoginUserHolder(request));
+        LoginUserHolder<User> loginUserHolder = userService.getLoginUserHolder(request);
+        ParticipantsPageInfo initiativeInfo = publicInitiativeService.getInitiativePageInfoWithParticipants(initiativeId, loginUserHolder, offset);
 
         addPiwicIdIfNotAuthenticated(model, request);
 
-        if (!initiativeInfo.isCollaborative()) {
+        if (!initiativeInfo.initiative.isCollaborative()) {
             throw new NotFoundException("Initiative is not collaborative",initiativeId);
         }
         else {
@@ -221,10 +223,8 @@ public class PublicInitiativeController extends BaseController {
                     : urls.view(initiativeId);
 
             return ViewGenerator.participantList(initiativeInfo,
-                    initiativeInfo.getParticipantCount(),
-                    participantService.findPublicParticipants(offset, initiativeId),
                     previousPageURI,
-                    userService.hasManagementRightForInitiative(initiativeId, request),
+                    loginUserHolder.hasManagementRightsForInitiative(initiativeId),
                     offset
             ).view(model, alternativeURL);
         }

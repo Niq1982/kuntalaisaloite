@@ -74,17 +74,15 @@ public final class ViewGenerator {
         );
     }
 
-    public static ViewGenerator participantList(InitiativeViewInfo initiativeInfo,
-                                                ParticipantCount participantCount,
-                                                List<ParticipantListInfo> publicParticipants,
+    public static ViewGenerator participantList(ParticipantsPageInfo initiativeInfo,
                                                 String previousPageURI,
                                                 boolean hasManagementRightForInitiative,
                                                 int offset) {
         return new ViewGenerator(PARTICIPANT_LIST,
                 new AttributeBuilder()
-                        .add("initiative", initiativeInfo)
-                        .add("participants", publicParticipants)
-                        .add("participantCount", participantCount)
+                        .add("initiative", initiativeInfo.initiative)
+                        .add("participants", initiativeInfo.participants)
+                        .add("participantCount", initiativeInfo.initiative.getParticipantCount())
                         .add("previousPageURI", previousPageURI)
                         .add("hasManagementRightForInitiative", hasManagementRightForInitiative)
                         .add("offset", offset)
