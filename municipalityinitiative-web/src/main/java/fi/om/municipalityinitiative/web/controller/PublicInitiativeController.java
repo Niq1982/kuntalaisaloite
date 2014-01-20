@@ -82,18 +82,17 @@ public class PublicInitiativeController extends BaseController {
     @RequestMapping(value={SEARCH_FI, SEARCH_SV}, method=GET)
     public String search(InitiativeSearch search, Model model, Locale locale, HttpServletRequest request) {
 
-        List<Municipality> municipalities = municipalityService.findAllMunicipalities(locale);
         LoginUserHolder loginUserHolder = new LoginUserHolder<>(userService.getUser(request));
         SearchParameterQueryString queryString = new SearchParameterQueryString(search);
 
         addPiwicIdIfNotAuthenticated(model, request);
 
-        return ViewGenerator.searchView(normalInitiativeService.findMunicipalityInitiatives(search, loginUserHolder),
-                municipalities,
+        InitiativeListPageInfo pageInfo = publicInitiativeService.getInitiativeListPageInfo(search, loginUserHolder, locale);
+
+        return ViewGenerator.searchView(pageInfo,
                 search,
                 queryString,
-                solveMunicipalityFromListById(municipalities, search.getMunicipality()),
-                normalInitiativeService.getInitiativeCounts(search, loginUserHolder))
+                solveMunicipalityFromListById(pageInfo.municipalities, search.getMunicipality()))
                 .view(model, Urls.get(locale).alt().search() + queryString.get());
     }
 
@@ -340,8 +339,7 @@ public class PublicInitiativeController extends BaseController {
             return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.AUTHOR_MESSAGE_ADDED, request);
         }
         else {
-            InitiativePageInfo publicInitiative = publicInitiativeService.getInitiativePageInfo(initiativeId);
-            return ViewGenerator.collaborativeView(publicInitiative,
+            return ViewGenerator.collaborativeView(publicInitiativeService.getInitiativePageInfo(initiativeId),
                     municipalityService.findAllMunicipalities(locale),
                     new ParticipantUICreateDto(),
                     authorUIMessage).view(model, Urls.get(locale).alt().view(initiativeId));

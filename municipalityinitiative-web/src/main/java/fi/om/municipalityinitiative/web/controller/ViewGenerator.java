@@ -2,7 +2,6 @@ package fi.om.municipalityinitiative.web.controller;
 
 import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.dto.Author;
-import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
@@ -56,20 +55,18 @@ public final class ViewGenerator {
         );
     }
 
-    public static ViewGenerator searchView(InitiativeListWithCount initiatives,
-                                           List<Municipality> municipalities,
+    public static ViewGenerator searchView(InitiativeListPageInfo info,
                                            InitiativeSearch currentSearch,
                                            SearchParameterQueryString queryString,
-                                           Maybe<Municipality> currentMunicipality,
-                                           InitiativeCounts initiativeCounts) {
+                                           Maybe<Municipality> currentMunicipality) {
         return new ViewGenerator(SEARCH_VIEW,
                 new AttributeBuilder()
-                        .add("initiatives", initiatives)
-                        .add("municipalities", municipalities)
+                        .add("initiatives", info.initiatives)
+                        .add("municipalities", info.municipalities)
+                        .add("initiativeCounts", info.initiativeCounts)
                         .add("currentSearch", currentSearch)
                         .add("queryString", queryString)
                         .add("currentMunicipality", currentMunicipality)
-                        .add("initiativeCounts", initiativeCounts)
                         .build()
         );
     }
