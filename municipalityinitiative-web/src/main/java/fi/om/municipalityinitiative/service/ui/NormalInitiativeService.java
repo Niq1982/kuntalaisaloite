@@ -121,7 +121,7 @@ public class NormalInitiativeService {
             return initiativeDao.getPublicInitiativeCounts(Maybe.fromNullable(search.getMunicipality()), search.getType());
         }
         else {
-            return initiativeDao.getAllInitiativeCounts(Maybe.fromNullable(search.getMunicipality()));
+            return initiativeDao.getAllInitiativeCounts(Maybe.fromNullable(search.getMunicipality()), search.getType());
         }
     }
 

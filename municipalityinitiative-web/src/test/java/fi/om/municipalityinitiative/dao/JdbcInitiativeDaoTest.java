@@ -577,14 +577,57 @@ public class JdbcInitiativeDaoTest {
         testHelper.create(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.UNDEFINED);
         testHelper.create(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.UNDEFINED);
 
-        Long aLong = testHelper.countAll(QMunicipalityInitiative.municipalityInitiative);
-        InitiativeCounts counts = initiativeDao.getAllInitiativeCounts(Maybe.<Long>absent());
+        InitiativeCounts counts = initiativeDao.getAllInitiativeCounts(Maybe.<Long>absent(), InitiativeSearch.Type.all);
         assertThat(counts.fix, is(1L));
         assertThat(counts.review, is(2L));
         assertThat(counts.accepted, is(3L));
         assertThat(counts.sent, is(4L));
         assertThat(counts.collecting, is(5L));
         assertThat(counts.draft, is(6L));
+
+    }
+
+    @Test
+    public void counts_all_initiatives_by_state_and_initiatiative_type_when_collaborative_citizen() {
+
+        // 0
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withFixState(FixState.FIX)
+                .withState(InitiativeState.PUBLISHED)
+                .withType(InitiativeType.COLLABORATIVE));
+        //1
+        testHelper.create(testMunicipality.getId(), InitiativeState.REVIEW, InitiativeType.UNDEFINED);
+        testHelper.create(testMunicipality.getId(), InitiativeState.REVIEW, InitiativeType.COLLABORATIVE_CITIZEN);
+        //2
+        testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.UNDEFINED);
+        testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.COLLABORATIVE_CITIZEN);
+        testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.COLLABORATIVE_CITIZEN);
+        //3
+        testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED).withType(InitiativeType.COLLABORATIVE_CITIZEN).withSent(DateTime.now()));
+        testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED).withType(InitiativeType.COLLABORATIVE_CITIZEN).withSent(DateTime.now()));
+        testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED).withType(InitiativeType.COLLABORATIVE_CITIZEN).withSent(DateTime.now()));
+        testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED).withType(InitiativeType.COLLABORATIVE_COUNCIL).withSent(DateTime.now()));
+        //4
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
+        testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        // 5
+        testHelper.create(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.COLLABORATIVE_CITIZEN);
+        testHelper.create(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.COLLABORATIVE_CITIZEN);
+        testHelper.create(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.COLLABORATIVE_CITIZEN);
+        testHelper.create(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.COLLABORATIVE_CITIZEN);
+        testHelper.create(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.COLLABORATIVE_CITIZEN);
+        testHelper.create(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.UNDEFINED);
+
+        InitiativeCounts counts = initiativeDao.getAllInitiativeCounts(Maybe.<Long>absent(), InitiativeSearch.Type.citizen);
+        assertThat(counts.fix, is(0L));
+        assertThat(counts.review, is(1L));
+        assertThat(counts.accepted, is(2L));
+        assertThat(counts.sent, is(3L));
+        assertThat(counts.collecting, is(4L));
+        assertThat(counts.draft, is(5L));
 
     }
 
