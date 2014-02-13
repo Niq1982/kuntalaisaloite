@@ -1,17 +1,53 @@
-@infoGraphBulbSize: 1.8em;
+.circle(@size, @color){
+	display: inline-block;
+	width: @size;
+	height: @size;
+	line-height: @size;
+	margin-bottom: 0.3em;
+	background-color: @color;
+
+	.rounded-corners(100%);
+}
+
+.infoGraphSprite(@xIndex, @yIndex, @offsetSize: 100px){
+	background-repeat: no-repeat;
+	background-position: (-@xIndex*@offsetSize) (-@yIndex*@offsetSize);
+
+	@media @highdensity {
+		background-size: 300px 400px;
+	}
+}
+
+.infoGraphVerticalCenter(@height){
+	display: block;
+	position: relative;
+	top: 50%;
+	margin:-@height/2 auto 0 auto;
+}
 
 .info-graph {
 
 	background: #fff;
 	text-align: center;
 
-	p.small {
+	h4 {
+		margin-bottom: 0;
 		font-size: 0.9em;
+	}
+
+	p {
+		font-size: 0.9em;
+
+		&.small {
+			font-size: 0.8em;
+		}
 	}
 
 	.span {
 		display: block;
 		float: left;
+
+		padding: 0 10px;
 
 		.boxSizing();
 	}
@@ -39,21 +75,96 @@
 	}
 
 	.content {
+		min-height: 260px;
 		margin-left: 22%;
+		padding-left: 30px;
+		padding-right: 30px;
 		background: #fff;
+
+		* { line-height: 1.2; }
 	}
 
 	.order {
-		display: inline-block;
-		width: @infoGraphBulbSize;
-		height: @infoGraphBulbSize;
-		line-height: @infoGraphBulbSize;
-		margin-bottom: 0.3em;
-
-		background: #fff;
+		.circle(58px, #fff);
 		font-size: 2em;
+	}
 
-		.rounded-corners(100%);
+	.type {
+		.circle(88px, #f0f0f0);	
+	}
+
+	.icon {
+		display: inline-block;
+
+		background-image: url("../../img/info-graph-icons.png?version=${timestamp}");
+
+		@media @highdensity {
+			background-image: url("../../img/info-graph-icons-2x.png?version=${timestamp}");
+			background-size: 300px 400px;
+		}
+
+		&.member {
+			width: 50px;
+			height: 49px;
+
+			.infoGraphSprite(0, 0);
+		}
+
+		&.right-to-vote {
+			width: 50px;
+			height: 49px;
+
+			.infoGraphSprite(1, 0);
+		}
+
+		&.normal {
+			width: 30px;
+			height: 41px;
+			//vertical-align: middle;
+
+			.infoGraphVerticalCenter(41px);
+			.infoGraphSprite(0, 1);
+		}
+
+		&.two-percent {
+			width: 30px;
+			height: 41px;
+			//vertical-align: middle;
+
+			.infoGraphVerticalCenter(41px);
+			.infoGraphSprite(1, 1);
+		}
+
+		&.five-percent {
+			width: 30px;
+			height: 41px;
+			//vertical-align: middle;
+
+			.infoGraphVerticalCenter(41px);
+			.infoGraphSprite(2, 1);
+		}
+
+		&.no-collect {
+			width: 90px;
+			height: 56px;
+
+			.infoGraphSprite(0, 2);
+		}
+
+		&.collect {
+			width: 90px;
+			height: 56px;
+
+			.infoGraphSprite(1, 2);
+		}
+
+		&.municipality {
+			width: 77px;
+			height: 79px;
+
+			.infoGraphSprite(0, 3);
+		}
+
 	}
 
 }
