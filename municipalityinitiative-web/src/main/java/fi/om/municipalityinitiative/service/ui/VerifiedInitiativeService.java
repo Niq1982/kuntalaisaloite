@@ -46,7 +46,7 @@ public class VerifiedInitiativeService {
     private AuthorDao authorDao;
 
     @Transactional(readOnly = false)
-    public long prepareSafeInitiative(LoginUserHolder loginUserHolder, PrepareSafeInitiativeUICreateDto uiCreateDto) {
+    public long prepareVerifiedInitiative(LoginUserHolder loginUserHolder, PrepareSafeInitiativeUICreateDto uiCreateDto) {
 
         VerifiedUser verifiedUser = loginUserHolder.getVerifiedUser();
 
@@ -108,7 +108,7 @@ public class VerifiedInitiativeService {
     }
 
     @Transactional(readOnly = false)
-    public void createParticipant(LoginUserHolder loginUserHolder, Long initiativeId, ParticipantUICreateDto createDto) {
+    public void createParticipant(ParticipantUICreateDto createDto, Long initiativeId, LoginUserHolder loginUserHolder) {
         VerifiedUser verifiedUser = loginUserHolder.getVerifiedUser();
 
         if (municipalityMismatch(createDto.getMunicipality(), createDto.getHomeMunicipality(), verifiedUser.getHomeMunicipality())) {

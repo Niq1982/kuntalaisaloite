@@ -23,7 +23,6 @@ import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequ
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -51,7 +50,17 @@ public class InfoTextController extends BaseController {
     @RequestMapping(value={ HELP_INDEX_FI, HELP_INDEX_SV }, method=GET)
     public String help(Model model, Locale locale, HttpServletRequest request) {
 
-        return help(getUriForFirstSubject(locale), model, locale, request);
+        Urls urls = Urls.get(locale);
+
+        model.addAttribute(ALT_URI_ATTR, urls.alt().help(""));
+        model.addAttribute("helpPage", "");
+        model.addAttribute("categoryLinksMap", infoTextService.getPublicSubjectList(locale));
+        model.addAttribute("content", null);
+        model.addAttribute("omUser", userService.getUser(request).isOmUser());
+
+        addPiwicIdIfNotAuthenticated(model, request);
+
+        return HELP_VIEW;
 
     }
 

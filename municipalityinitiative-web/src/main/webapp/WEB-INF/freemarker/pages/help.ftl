@@ -8,7 +8,11 @@
 
 <#escape x as x?html>
 
-<#assign pageTitle>${content.subject}</#assign>
+<#if content??>
+    <#assign pageTitle>${content.subject}</#assign>
+<#else>
+    <#assign pageTitle>jee</#assign>
+</#if>
 
 <#--
  * Navigation for subpages (public view)
@@ -66,9 +70,13 @@
         </#if>
 
         <div class="column col-3of4 last">
-            <h1>${content.subject!""}</h1>
-
-            <#noescape>${content.content!""}</#noescape>
+            <#if content??>
+                <h1>${content.subject!""}</h1>
+                <#noescape>${content.content!""}</#noescape>
+            <#else>
+                <h1>Otsikkoo jee</h1>
+                Moikkelis
+            </#if>
         </div>
     </div>
 

@@ -28,10 +28,10 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.fail;
 
 
-public class PublicInitiativeServiceIntegrationTest extends ServiceIntegrationTestBase {
+public class NormalInitiativeServiceIntegrationTest extends ServiceIntegrationTestBase {
 
     @Resource
-    private PublicInitiativeService service;
+    private NormalInitiativeService service;
 
     private static Municipality testMunicipality;
 

@@ -12,7 +12,7 @@ import fi.om.municipalityinitiative.service.ParticipantService;
 import fi.om.municipalityinitiative.service.ValidationService;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.service.ui.InitiativeManagementService;
-import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
+import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.SecurityFilter;
 import fi.om.municipalityinitiative.web.Urls;
@@ -47,7 +47,7 @@ public class InitiativeManagementController extends BaseController {
     private InitiativeManagementService initiativeManagementService;
     
     @Resource
-    private PublicInitiativeService publicInitiativeService;
+    private NormalInitiativeService normalInitiativeService;
 
     @Resource
     private ValidationService validationService;
@@ -94,7 +94,7 @@ public class InitiativeManagementController extends BaseController {
         }
 
         return ViewGenerator.managementView(initiativeInfo,
-                publicInitiativeService.getManagementSettings(initiativeId),
+                normalInitiativeService.getManagementSettings(initiativeId),
                 authorService.findAuthors(initiativeId, loginUserHolder),
                 attachmentService.findAllAttachments(initiativeId, loginUserHolder),
                 initiativeInfo.getParticipantCount(),
@@ -119,7 +119,7 @@ public class InitiativeManagementController extends BaseController {
         }
 
         return ViewGenerator.manageAttachmentsView(initiativeInfo,
-                publicInitiativeService.getManagementSettings(initiativeId),
+                normalInitiativeService.getManagementSettings(initiativeId),
                 attachmentService.findAllAttachments(initiativeId, loginUserHolder),
                 new AttachmentCreateDto(),
                 AttachmentService.ImageProperties.instance()).view(model, Urls.get(locale).alt().getManagement(initiativeId));
@@ -132,13 +132,13 @@ public class InitiativeManagementController extends BaseController {
         LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        ManagementSettings managementSettings = publicInitiativeService.getManagementSettings(initiativeId);
+        ManagementSettings managementSettings = normalInitiativeService.getManagementSettings(initiativeId);
 
         Urls urls = Urls.get(locale);
         if (managementSettings.isAllowEdit()) {
             InitiativeDraftUIEditDto initiativeDraft = initiativeManagementService.getInitiativeDraftForEdit(initiativeId, loginUserHolder);
             return ViewGenerator.editView(
-                    publicInitiativeService.getInitiative(initiativeId, loginUserHolder),
+                    normalInitiativeService.getInitiative(initiativeId, loginUserHolder),
                     Strings.isNullOrEmpty(initiativeDraft.getName()),
                     initiativeDraft,
                     initiativeManagementService.getAuthorInformation(initiativeId, loginUserHolder),
@@ -164,7 +164,7 @@ public class InitiativeManagementController extends BaseController {
         LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        InitiativeViewInfo initiative = publicInitiativeService.getInitiative(initiativeId, loginUserHolder);
+        InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
 
         if (validationService.validationErrors(editDto, bindingResult, model, solveValidationGroup(initiative))) {
 
@@ -190,7 +190,7 @@ public class InitiativeManagementController extends BaseController {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
         Urls urls = Urls.get(locale);
-        ManagementSettings managementSettings = publicInitiativeService.getManagementSettings(initiativeId);
+        ManagementSettings managementSettings = normalInitiativeService.getManagementSettings(initiativeId);
 
         if (managementSettings.isAllowUpdate()) {
 
@@ -218,7 +218,7 @@ public class InitiativeManagementController extends BaseController {
         LoginUserHolder loginUserHolder = userService.getRequiredLoginUserHolder(request);
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        if (validationService.validationErrors(updateDto, bindingResult, model, solveValidationGroup(publicInitiativeService.getInitiative(initiativeId, loginUserHolder)))) {
+        if (validationService.validationErrors(updateDto, bindingResult, model, solveValidationGroup(normalInitiativeService.getInitiative(initiativeId, loginUserHolder)))) {
 
             return ViewGenerator.updateView(initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder),
                     updateDto,
@@ -242,7 +242,7 @@ public class InitiativeManagementController extends BaseController {
             LoginUserHolder<User> loginUserHolder = userService.getLoginUserHolder(request);
             InitiativeViewInfo municipalityInitiative = initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder);
             return ViewGenerator.managementView(municipalityInitiative,
-                    publicInitiativeService.getManagementSettings(initiativeId),
+                    normalInitiativeService.getManagementSettings(initiativeId),
                     authorService.findAuthors(initiativeId, loginUserHolder),
                     attachmentService.findAllAttachments(initiativeId, loginUserHolder), municipalityInitiative.getParticipantCount(),
                     commentUIDto)
@@ -284,7 +284,7 @@ public class InitiativeManagementController extends BaseController {
             LoginUserHolder<User> loginUserHolder = userService.getLoginUserHolder(request);
             InitiativeViewInfo municipalityInitiative = initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder);
             return ViewGenerator.managementView(municipalityInitiative,
-                    publicInitiativeService.getManagementSettings(initiativeId),
+                    normalInitiativeService.getManagementSettings(initiativeId),
                     authorService.findAuthors(initiativeId, loginUserHolder),
                     attachmentService.findAllAttachments(initiativeId, loginUserHolder), municipalityInitiative.getParticipantCount(),
                     commentUIDto)
@@ -309,7 +309,7 @@ public class InitiativeManagementController extends BaseController {
         }
 
         return ViewGenerator.manageAuthorsView(initiativeInfo,
-                publicInitiativeService.getManagementSettings(initiativeId),
+                normalInitiativeService.getManagementSettings(initiativeId),
                 authorService.findAuthors(initiativeId, loginUserHolder),
                 authorService.findAuthorInvitations(initiativeId, loginUserHolder),
                 new AuthorInvitationUICreateDto()
@@ -361,7 +361,7 @@ public class InitiativeManagementController extends BaseController {
         }
         else {
             return ViewGenerator.manageAuthorsView(initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder),
-                    publicInitiativeService.getManagementSettings(initiativeId),
+                    normalInitiativeService.getManagementSettings(initiativeId),
                     authorService.findAuthors(initiativeId, loginUserHolder),
                     authorService.findAuthorInvitations(initiativeId, loginUserHolder),
                     authorInvitationUICreateDto).view(model, Urls.get(locale).alt().manageAuthors(initiativeId));
@@ -417,7 +417,7 @@ public class InitiativeManagementController extends BaseController {
             LoginUserHolder<User> loginUserHolder = userService.getLoginUserHolder(request);
             return ViewGenerator.manageAttachmentsView(
                     initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder),
-                    publicInitiativeService.getManagementSettings(initiativeId),
+                    normalInitiativeService.getManagementSettings(initiativeId),
                     attachmentService.findAttachments(initiativeId, loginUserHolder),
                     attachmentCreateDto,
                     AttachmentService.ImageProperties.instance())

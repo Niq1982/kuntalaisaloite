@@ -77,7 +77,7 @@ public class TestDataTemplates {
         ParticipantUICreateDto participant = new ParticipantUICreateDto();
 
         participant.setParticipantName(name);
-        participant.assignMunicipality(municipality);
+        participant.assignInitiativeMunicipality(municipality);
         participant.setHomeMunicipality(municipality);
         participant.setMunicipalMembership(Membership.property);
         participant.setShowName(showName);

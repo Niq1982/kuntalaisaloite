@@ -342,7 +342,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    public InitiativeCounts getAllInitiativeCounts(Maybe<Long> municipality) {
+    public InitiativeCounts getAllInitiativeCounts(Maybe<Long> municipality, InitiativeSearch.Type initiativeType) {
         String unknownStateFound = "unknownStateFound";
         Expression<String> caseBuilder = new CaseBuilder()
                 .when(STATE_IS_COLLECTING)
@@ -362,6 +362,8 @@ public class JdbcInitiativeDao implements InitiativeDao {
         SimpleExpression<String> showCategory = Expressions.as(caseBuilder, "showCategory");
 
         PostgresQuery from = queryFactory.from(municipalityInitiative).where(STATE_NOT_PREPARE);
+
+        filterByType(from, initiativeType);
 
         if (municipality.isPresent()) {
             from.where(municipalityInitiative.municipalityId.eq(municipality.get()));

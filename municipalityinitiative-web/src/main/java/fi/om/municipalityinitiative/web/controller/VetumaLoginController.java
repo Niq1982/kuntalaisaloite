@@ -32,12 +32,12 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static fi.om.municipalityinitiative.web.Urls.*;
+import static fi.om.municipalityinitiative.web.Urls.VETUMA_FI;
+import static fi.om.municipalityinitiative.web.Urls.VETUMA_SV;
 import static fi.om.municipalityinitiative.web.Views.VETUMA_LOGIN_VIEW;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -150,7 +150,7 @@ public class VetumaLoginController extends DefaultLoginController {
             if (prepareDataForVetuma.isPresent()) { // User has been redirected to vetuma after starting to create initiative
                 long initiativeId;
                 try {
-                     initiativeId = verifiedInitiativeService.prepareSafeInitiative(userService.getRequiredLoginUserHolder(request), PrepareSafeInitiativeUICreateDto.parse(prepareDataForVetuma.get()));
+                     initiativeId = verifiedInitiativeService.prepareVerifiedInitiative(userService.getRequiredLoginUserHolder(request), PrepareSafeInitiativeUICreateDto.parse(prepareDataForVetuma.get()));
                 } catch (InvalidHomeMunicipalityException e) {
                     return redirectWithMessageToTarget(urls.prepare(), RequestMessage.INVALID_HOME_MUNICIPALITY, request);
                 }

@@ -2,7 +2,6 @@ package fi.om.municipalityinitiative.web.controller;
 
 import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.dto.Author;
-import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
@@ -39,54 +38,48 @@ public final class ViewGenerator {
         return viewName;
     }
 
-    public static ViewGenerator collaborativeView(InitiativeViewInfo municipalityInitiative,
-                                                  PublicAuthors publicAuthors,
-                                                  List<Municipality> allMunicipalities,
-                                                  AttachmentService.Attachments attachments, ParticipantCount participantCount,
+    public static ViewGenerator collaborativeView(InitiativePageInfo initiative,
+                                                  List<Municipality> municipalities,
                                                   ParticipantUICreateDto participantUICreateDto,
                                                   AuthorUIMessage authorUIMessage) {
         return new ViewGenerator(Views.PUBLIC_COLLECT_VIEW,
                 new AttributeBuilder()
-                        .add("initiative", municipalityInitiative)
-                        .add("authors", publicAuthors)
-                        .add("municipalities", allMunicipalities)
-                        .add("participantCount", participantCount)
+                        .add("initiative", initiative.initiative)
+                        .add("authors", initiative.authors)
+                        .add("municipalities", municipalities)
+                        .add("participantCount", initiative.initiative.getParticipantCount())
+                        .add("attachments", initiative.attachments)
                         .add("participant", participantUICreateDto)
                         .add("authorMessage", authorUIMessage)
-                        .add("attachments", attachments)
                         .build()
         );
     }
 
-    public static ViewGenerator searchView(InitiativeListWithCount initiatives,
-                                           List<Municipality> municipalities,
+    public static ViewGenerator searchView(InitiativeListPageInfo info,
                                            InitiativeSearch currentSearch,
                                            SearchParameterQueryString queryString,
-                                           Maybe<Municipality> currentMunicipality,
-                                           InitiativeCounts initiativeCounts) {
+                                           Maybe<Municipality> currentMunicipality) {
         return new ViewGenerator(SEARCH_VIEW,
                 new AttributeBuilder()
-                        .add("initiatives", initiatives)
-                        .add("municipalities", municipalities)
+                        .add("initiatives", info.initiatives)
+                        .add("municipalities", info.municipalities)
+                        .add("initiativeCounts", info.initiativeCounts)
                         .add("currentSearch", currentSearch)
                         .add("queryString", queryString)
                         .add("currentMunicipality", currentMunicipality)
-                        .add("initiativeCounts", initiativeCounts)
                         .build()
         );
     }
 
-    public static ViewGenerator participantList(InitiativeViewInfo initiativeInfo,
-                                                ParticipantCount participantCount,
-                                                List<ParticipantListInfo> publicParticipants,
+    public static ViewGenerator participantList(ParticipantsPageInfo initiativeInfo,
                                                 String previousPageURI,
                                                 boolean hasManagementRightForInitiative,
                                                 int offset) {
         return new ViewGenerator(PARTICIPANT_LIST,
                 new AttributeBuilder()
-                        .add("initiative", initiativeInfo)
-                        .add("participants", publicParticipants)
-                        .add("participantCount", participantCount)
+                        .add("initiative", initiativeInfo.initiative)
+                        .add("participants", initiativeInfo.participants)
+                        .add("participantCount", initiativeInfo.initiative.getParticipantCount())
                         .add("previousPageURI", previousPageURI)
                         .add("hasManagementRightForInitiative", hasManagementRightForInitiative)
                         .add("offset", offset)
@@ -125,12 +118,12 @@ public final class ViewGenerator {
                         .build());
     }
 
-    public static ViewGenerator singleView(InitiativeViewInfo initiativeInfo, PublicAuthors publicAuthors, AttachmentService.Attachments attachments) {
+    public static ViewGenerator singleView(InitiativePageInfo initiativePageView) {
         return new ViewGenerator(Views.PUBLIC_SINGLE_VIEW,
                 new AttributeBuilder()
-                        .add("initiative", initiativeInfo)
-                        .add("authors", publicAuthors)
-                        .add("attachments", attachments)
+                        .add("initiative", initiativePageView.initiative)
+                        .add("authors", initiativePageView.authors)
+                        .add("attachments", initiativePageView.attachments)
                         .build());
     }
 
