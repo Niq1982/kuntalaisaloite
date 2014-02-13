@@ -202,26 +202,37 @@ public abstract class WebTestBase {
         String text = getMessage(messageKey);
         assertTextContainedByClass(className, text);
     }
-    
-    protected void assertTextContainedByClass(String className, String text) {
+
+    protected static void assertTextNotContainedByClass(String className, String text) {
+        if (elementsContainText(driver.findElements(By.className(className)), text)) {
+            fail("Should have NOT found text '" + text + "'with className: " + className + " - but text(s) found.");
+        }
+
+    }
+    protected static void assertTextContainedByClass(String className, String text) {
         System.out.println("--- assertTextContainedByClass --------------- " + className + ": " + text);
         List<String> elementTexts = Lists.newArrayList();
         List<WebElement> elements = driver.findElements(By.className(className));
+        if (!elementsContainText(elements, text)) {
+            System.out.println("--- assertTextContainedByClass --------------- " + className + ": " + text);
+            for (WebElement element : elements) {
+                elementTexts.add(element.getText().trim());
+            }
+            fail(className + " class with text " + text + " not found. Texts found: " + TestUtil.listValues(elementTexts) + " (Page title: "+driver.getTitle()+")");
+        }
+    }
+
+    private static boolean elementsContainText(List<WebElement> elements, String text) {
         for (WebElement element : elements) {
-            assertNotNull(element); 
+            assertNotNull(element);
             String elementText = element.getText().trim();
-            elementTexts.add(elementText);
             if (elementText.contains(text)) {
-                return;
+                return true;
             }
         }
-        System.out.println("--- assertTextContainedByClass --------------- " + className + ": " + text);
-        for (WebElement element : elements) {
-            System.out.println("*** '" + element.getText().trim() + "'");
-        }
-        fail(className + " class with text " + text + " not found. Texts found: " + TestUtil.listValues(elementTexts) + " (Page title: "+driver.getTitle()+")");
+        return false;
     }
-    
+
     protected void assertTextContainedByXPath(String xpathExpression, String text) {
 
         List<String> elementTexts = Lists.newArrayList();

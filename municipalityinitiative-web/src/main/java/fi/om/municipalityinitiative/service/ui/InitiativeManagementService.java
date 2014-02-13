@@ -67,7 +67,6 @@ public class InitiativeManagementService {
     }
 
     @Transactional(readOnly = false)
-    // FIXME: get email-sending out of transaction. Check if other similar cases.
     public void editInitiativeDraft(Long initiativeId, LoginUserHolder loginUserHolder, InitiativeDraftUIEditDto editDto, Locale locale) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 

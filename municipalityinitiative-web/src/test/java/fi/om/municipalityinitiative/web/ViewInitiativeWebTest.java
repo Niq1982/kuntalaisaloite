@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.web;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
+import fi.om.municipalityinitiative.util.InitiativeType;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -22,7 +23,6 @@ public class ViewInitiativeWebTest extends WebTestBase {
 
     @Override
     public void childSetup() {
-        draftInitiativeId = testHelper.createDraft(HELSINKI_ID);
 
         draftInitiativeId = testHelper.createDraft(HELSINKI_ID);
     }
@@ -96,6 +96,37 @@ public class ViewInitiativeWebTest extends WebTestBase {
         open(urls.management(emptyDraftId));
 
         assertThat(driver.getCurrentUrl(), is(urls.edit(emptyDraftId)));
+    }
+
+    @Test
+    public void view_participants_page_shows_public_accepted_participants() {
+        Long defaultInitiative = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
+                .withState(InitiativeState.PUBLISHED)
+                .withType(InitiativeType.COLLABORATIVE));
+
+        String publicName = "Public Name";
+        String privateName = "Private Name";
+        String notAcceptedName = "NotAcceptedName";
+
+        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(defaultInitiative, HELSINKI_ID)
+                .withParticipantName(publicName)
+                .withPublicName(true));
+
+        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(defaultInitiative, HELSINKI_ID)
+                .withParticipantName(privateName)
+                .withPublicName(false));
+
+        testHelper.createUnconfirmedParticipant(new TestHelper.AuthorDraft(defaultInitiative, HELSINKI_ID)
+                .withPublicName(true)
+                .withParticipantName(notAcceptedName), "someConfirmationCode");
+
+        open(urls.participantList(defaultInitiative));
+
+        assertTextContainedByClass("name-container", publicName);
+
+        assertTextNotContainedByClass("name-container", privateName);
+        assertTextNotContainedByClass("name-container", notAcceptedName);
+
     }
 
     @Test

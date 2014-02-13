@@ -11,7 +11,6 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -32,7 +31,7 @@ public class ParticipantUICreateDtoTest {
     public void municipalMembership_is_needed_if_municipalities_are_not_the_same() {
         ParticipantUICreateDto dto = createParticipantWithNameAndEmail();
 
-        dto.assignMunicipality(1L);
+        dto.assignInitiativeMunicipality(1L);
         dto.setHomeMunicipality(2L);
         dto.setMunicipalMembership(null);
 
@@ -47,7 +46,7 @@ public class ParticipantUICreateDtoTest {
     public void municipalMembership_cannot_be_false_if_municipalities_are_not_the_same() {
         ParticipantUICreateDto dto = createParticipantWithNameAndEmail();
 
-        dto.assignMunicipality(1L);
+        dto.assignInitiativeMunicipality(1L);
         dto.setHomeMunicipality(2L);
         dto.setMunicipalMembership(Membership.none);
 
@@ -62,7 +61,7 @@ public class ParticipantUICreateDtoTest {
     public void municipalMembership_can_be_true_if_municipalities_are_not_the_same() {
         ParticipantUICreateDto dto = createParticipantWithNameAndEmail();
 
-        dto.assignMunicipality(1L);
+        dto.assignInitiativeMunicipality(1L);
         dto.setHomeMunicipality(2L);
         dto.setMunicipalMembership(Membership.community);
 
@@ -92,7 +91,7 @@ public class ParticipantUICreateDtoTest {
     private ParticipantUICreateDto validParticipant() {
         ParticipantUICreateDto dto = createParticipantWithNameAndEmail();
 
-        dto.assignMunicipality(1L);
+        dto.assignInitiativeMunicipality(1L);
         dto.setHomeMunicipality(2L);
         dto.setMunicipalMembership(Membership.community);
         return dto;

@@ -5,7 +5,7 @@ import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.service.AttachmentService;
 import fi.om.municipalityinitiative.service.ValidationService;
 import fi.om.municipalityinitiative.service.ui.ModerationService;
-import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
+import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.Locale;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
@@ -30,7 +29,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class ModerationController extends BaseController{
 
     @Resource
-    private PublicInitiativeService publicInitiativeService;
+    private NormalInitiativeService normalInitiativeService;
 
     @Resource
     private ModerationService moderationService;
@@ -51,8 +50,8 @@ public class ModerationController extends BaseController{
 
         OmLoginUserHolder loginUserHolder = userService.getRequiredOmLoginUserHolder(request);
 
-        return ViewGenerator.moderationView(publicInitiativeService.getInitiative(initiativeId, loginUserHolder),
-                publicInitiativeService.getManagementSettings(initiativeId),
+        return ViewGenerator.moderationView(normalInitiativeService.getInitiative(initiativeId, loginUserHolder),
+                normalInitiativeService.getManagementSettings(initiativeId),
                 moderationService.findAuthors(loginUserHolder, initiativeId),
                 attachmentService.findAllAttachments(initiativeId, loginUserHolder)
         ).view(model, Urls.get(locale).alt().moderation(initiativeId));
