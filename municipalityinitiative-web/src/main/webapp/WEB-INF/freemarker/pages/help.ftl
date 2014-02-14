@@ -11,7 +11,8 @@
 <#if content??>
     <#assign pageTitle>${content.subject}</#assign>
 <#else>
-    <#assign pageTitle>jee</#assign>
+	<#-- Static page for the info graph -->
+    <#assign pageTitle><@u.message "infoGraph.title" /></#assign>
 </#if>
 
 <#--
@@ -74,129 +75,8 @@
                 <h1>${content.subject!""}</h1>
                 <#noescape>${content.content!""}</#noescape>
             <#else>
-                <h1>Kuntalaisaloite lyhyesti</h1>
-                
-                <div class="info-graph">
-                  <div class="block cf">
-                        <div class="header top-pad">
-                        
-                              <span class="order">1</span>
-                              <h3>Valitaan<br/>aloitetyyppi</h3>
-                        
-                        </div>
-                        <div class="content top-pad cf">
-                        
-                              <p>Aloitteen tekeminen alkaa valitsemalla yksi kolmesta aloitetyypistä. Riippuen aloitteen tekijästä, on mahdollista valita tavallinen aloite tai kannatukseen tähtäävä aloite.</p>
-                              
-                              <div class="span span-1">
-                                    <span class="icon member"></span>
-                                    
-                                    <h4>Kunnan jäsen</h4>
-                                    <p class="small"><a href="#">Kuka luetaan kunnan jäseneksi?</a></p>
-                              </div>
-                              
-                              <div class="span span-2">
-                                    <span class="icon right-to-vote"></span>
-                                    
-                                    <h4>Äänioikeutettu kuntalainen</h4>
-                                    <p class="small"><a href="#">Olenko äänioikeutettu kuntalainen?</a></p>
-                              </div>
-                              
-                              <br class="clear" />
-                              <div class="">nuolipalkki</div>
-                              
-                              <div class="span span-1">
-                                    <span class="type">
-                                    	<span class="icon normal"></span>
-                                    </span>
-                                    
-                                    <h4>Tavallinen</h4>
-                                    <p>kuntalaisaloite</p>
-                              </div>
-                              <div class="span span-1">
-                                    <span class="type">
-                                    	<span class="icon two-percent"></span>
-                                    </span>
-                                    
-                                    <h4>2% kannatus</h4>
-                                    <p>valtuustokäsittelyyn tähtäävä aloite</p>
-                              </div>
-                              <div class="span span-1">
-                                    <span class="type">
-                                    	<span class="icon five-percent"></span>
-                                    </span>
-                                    
-                                    <h4>5% kannatus</h4>
-                                    <p>aloite kunnallisesta kansanäänestyksestä</p>
-                              </div>
-                        
-                              <p class="small"><a href="#">Mistä tiedän mikä aloitemuoto pitäisi valita ja mikä on niiden ero?</a></p>
-                              
-                              <br class="clear" />
-                              <div class="">nuolipalkki</div>
-                        </div>
-                  </div>
-                  
-                  <div class="block cf">
-                        <div class="header top-pad">
-                        
-                              <span class="order">2</span>
-                              <h3>Aloitteeseen<br/>kerätään<br/>osallistujia</h3>
-                        
-                        </div>
-                        <div class="content top-pad cf">
-                        
-                              <div class="span span-1">
-                                    <span class="icon no-collect"></span>
-                                    
-                                    <p>Tavallisen aloitteen voi lähettää suoraan kuntaan, jos ei halua kerätä siihen muita osallistujia.</p>
-                              </div>
-                              <div class="span span-2">
-                                    <span class="icon collect"></span>
-                                    
-                                    <p>Aloitteeseen kerätään allekirjoituksia, eli osallistujia. Kun aloitteen tekijöiden mielestä osallistujia on tarpeeksi, he lähettävät aloitteen kuntaan.</p>
-                                    <p class="small"><a href="#">Mitä aloitteen osallistujien kerääminen on käytännössä?</a></p>
-                              </div>
-                        
-                              <br class="clear" />
-                              <div class="">nuolipalkki</div>
-                        
-                        </div>
-                  </div>
-                  
-                  <div class="block cf">
-                        <div class="header top-pad">
-                        
-                              <span class="order">3</span>
-                              <h3>Aloite<br/>lähetetään<br/>kuntaan</h3>
-                              
-                        </div>
-                        <div class="content top-pad cf">
-                        
-                              <span class="icon municipality"></span>
-                              
-                              <p>Kunta käsittelee saapuneet aloitteet omien käytäntöjensä mukaan.</p>
-                              <p class="small"><a href="#">Lue miten kotikuntasi käsittelee aloitteita.</a></p>
-                        
-                        </div>
-                  </div>
-                  
-                  <div class="block cf">
-                        <div class="header top-pad">
-                        
-                              <span class="order">4</span>
-                              <h3>Aloitteesta<br/>tehdään<br/>päätös</h3>
-                        
-                        </div>
-                        <div class="content top-pad cf">
-                        
-                              <p>Kunta tekee aloitteesta päätöksen, joka lähetetään tiedoksi aloitteen vastuuhenkilöille.</p>
-                        
-                        </div>
-                  </div>
-            
-            </div>
-                
+            	<#-- Static content for the info graph -->
+                <#include "include_info_graph.ftl" />
             </#if>
         </div>
     </div>
