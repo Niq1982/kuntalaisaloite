@@ -5,65 +5,41 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.eclipse.jetty.webapp.WebAppContext;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 public class JettyServer {
 
-    private static final String SPRING_PROFILES_ACTIVE = "spring.profiles.active";
-    private static final String JETTY_PORT = "jetty.port";
-    private static final String JETTY_THREAD_POOL_COUNT = "jetty.thread.pool";
+    public static class JettyProperties {
+        public final int jettyPort;
+        public final int jettyThreadPoolCount;
+        public final String springProfile;
+        public final String log4jConfigPath;
 
-    public static void main(String[] args) {
-        try {
-            startService(Integer.parseInt(getSystemProperty(JETTY_PORT)), getSystemProperty(SPRING_PROFILES_ACTIVE)).join();
-        } catch (Exception e) {
-            e.printStackTrace();
+        public JettyProperties(int jettyPort, int jettyThreadPoolCount,
+                               String springProfile, String log4jConfigPath) {
+            this.jettyPort = jettyPort;
+            this.jettyThreadPoolCount = jettyThreadPoolCount;
+            this.springProfile = springProfile;
+            this.log4jConfigPath = log4jConfigPath;
         }
     }
 
-    protected static Server startService(int port, String profile) throws IOException {
-        PropertyConfigurator.configure(configurationFile("log4j.properties"));
-        Server server = new Server(port);
-        server.setThreadPool(new QueuedThreadPool(Integer.parseInt(getSystemProperty(JETTY_THREAD_POOL_COUNT))));
+    public static void start(JettyProperties properties) throws Throwable {
+            PropertyConfigurator.configure(properties.log4jConfigPath);
+            Server server = new Server(properties.jettyPort);
+            server.setThreadPool(new QueuedThreadPool(properties.jettyThreadPoolCount));
 
-        WebAppContext context = new WebAppContext();
-        context.setDescriptor("src/main/webapp/WEB-INF/web.xml");
-        context.setResourceBase("src/main/webapp/");
-        context.setContextPath("/");
-        context.setParentLoaderPriority(true);
-        context.setInitParameter("org.eclipse.jetty.servlet.Default.useFileMappedBuffer", "false");
+            WebAppContext context = new WebAppContext();
+            context.setDescriptor("src/main/webapp/WEB-INF/web.xml");
+            context.setResourceBase("src/main/webapp/");
+            context.setContextPath("/");
+            context.setParentLoaderPriority(true);
+            context.setInitParameter("org.eclipse.jetty.servlet.Default.useFileMappedBuffer", "false"); // TODO: TRUE ? FALSE ?
 
-        if (profile != null) {
-            context.setInitParameter("spring.profiles.active", profile);
-        }
+            context.setInitParameter("spring.profiles.active", properties.springProfile);
 
-        server.setHandler(context);
-
-        try {
+            server.setHandler(context);
             server.start();
-            return server;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+            server.join();
     }
 
-    private static String configurationFile(String s) throws FileNotFoundException {
-
-        File file = new File(new File(getSystemProperty("java.class.path")).getParentFile().getAbsoluteFile().getPath() + "/config/" + s);
-        if (!file.exists()) {
-            throw new FileNotFoundException("Configuration file not found: " + file.getPath());
-        }
-        return file.getPath();
-    }
-
-    protected static String getSystemProperty(String variableName) {
-        String s = System.getProperty(variableName);
-        if (s == null) {
-            throw new NullPointerException("System property was null: " + variableName);
-        }
-        return s;
-    }
 
 }
