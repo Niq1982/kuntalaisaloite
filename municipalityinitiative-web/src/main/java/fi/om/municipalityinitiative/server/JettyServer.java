@@ -1,7 +1,6 @@
 package fi.om.municipalityinitiative.server;
 
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.util.Log4jConfigListener;
@@ -30,7 +29,7 @@ public class JettyServer {
         LoggerFactory.getLogger(JettyServer.class).info("NYT ALETAAN LUOMAAN SERVERII");
 
         Server server = new Server(properties.jettyPort);
-        server.setThreadPool(new QueuedThreadPool(properties.jettyThreadPoolCount));
+        // TODO: server.setThreadPool(new QueuedThreadPool(properties.jettyThreadPoolCount));
 
         WebAppContext context = new WebAppContext();
 

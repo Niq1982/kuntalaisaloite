@@ -1,10 +1,8 @@
 package fi.om.municipalityinitiative;
 
 import fi.om.municipalityinitiative.conf.PropertyNames;
-import org.eclipse.jetty.http.ssl.SslContextFactory;
-import org.eclipse.jetty.server.Connector;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.ssl.SslSelectChannelConnector;
+import org.eclipse.jetty.server.*;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 public class StartJetty {
@@ -26,12 +24,23 @@ public class StartJetty {
 
     public static Server startService(int port, String profile) {
         Server server = new Server();
-        SslContextFactory sslContext = new SslContextFactory("keystore");
-        sslContext.setKeyStorePassword("aloitepalvelu");
 
-        SslSelectChannelConnector sslConnector = new SslSelectChannelConnector(sslContext);
+//        ServerConnector http = new ServerConnector(server,new HttpConnectionFactory());
+//        http.setPort(8080);
+//        server.addConnector(http);
+
+        SslContextFactory sslContextFactory = new SslContextFactory();
+        sslContextFactory.setKeyStorePath("keystore");
+        sslContextFactory.setKeyStorePassword("aloitepalvelu");
+
+        HttpConfiguration https_config = new HttpConfiguration();
+        https_config.addCustomizer(new SecureRequestCustomizer());
+
+        ServerConnector sslConnector = new ServerConnector(server,
+                new SslConnectionFactory(sslContextFactory,"http/1.1"),
+                new HttpConnectionFactory(https_config));
         sslConnector.setPort(port);
-        server.setConnectors(new Connector[] { sslConnector });
+        server.addConnector(sslConnector);
 
         WebAppContext context = new WebAppContext();
         context.setDescriptor("src/main/webapp/WEB-INF/web.xml");
