@@ -8,7 +8,7 @@
     <artifactId>municipalityinitiative-web</artifactId>
     <name>Kuntalaisaloitepalvelu</name>
     <version>2.1.5-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
 
     <properties>
         <finalName>root</finalName>
@@ -100,6 +100,24 @@
     </repositories>
 
     <dependencies>
+
+        <!-- Jetty -->
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>${jetty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+            <version>${jetty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-webapp</artifactId>
+            <version>${jetty.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
@@ -177,7 +195,7 @@
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>2.5</version>
-            <scope>provided</scope>
+            <!--<scope>provided</scope>-->
         </dependency>
         <dependency>
             <groupId>javax.mail</groupId>
@@ -190,25 +208,25 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>${log4j.version}</version>
-            <scope>provided</scope>
+            <!--<scope>provided</scope>-->
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
-            <scope>provided</scope>
+            <!--<scope>provided</scope>-->
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>${slf4j.version}</version>
-            <scope>provided</scope>
+            <!--<scope>provided</scope>-->
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
             <version>1.6.6</version>
-            <scope>provided</scope>
+            <!--<scope>provided</scope>-->
         </dependency>
 
         <!-- Hibernate Validator -->
@@ -336,25 +354,6 @@
         </dependency>
         <!-- <dependency> <groupId>com.googlecode.jmockit</groupId><artifactId>jmockit-coverage</artifactId> 
             <version>${jmockit.version}</version> <scope>runtime</scope> </dependency> -->
-        <!-- Jetty -->
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-            <version>${jetty.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-servlet</artifactId>
-            <version>${jetty.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-webapp</artifactId>
-            <version>${jetty.version}</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
@@ -393,6 +392,17 @@
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
+            <resource>
+                <!-- Minify plugin exports minified css files under target/tmp.
+                    Filtering plugin copies them from target back to src -->
+                <!-- Filtering plugin was not able to filter files if sourcedir=targetdir -->
+                <directory>${project.build.directory}/tmp/css</directory>
+                <includes>
+                    <include>*.css</include>
+                </includes>
+                <filtering>true</filtering>
+                <targetPath>${basedir}/src/main/webapp/css</targetPath>
+            </resource>
         </resources>
         <testResources>
             <testResource>
@@ -401,6 +411,81 @@
             </testResource>
         </testResources>
         <plugins>
+
+            <plugin>
+                <groupId>org.lesscss</groupId>
+                <artifactId>lesscss-maven-plugin</artifactId>
+                <version>1.3.3</version>
+                <configuration>
+                    <sourceDirectory>${project.basedir}/src/main/webapp/css/less-main</sourceDirectory>
+                    <!--<sourceDirectory>${project.build.directory}/classes</sourceDirectory>-->
+                    <!-- NOTE: These are compiled into src for noscript and faster web testing -->
+                    <outputDirectory>${project.basedir}/src/main/webapp/css</outputDirectory>
+                    <!--
+                    <outputDirectory>${project.build.directory}/${project.build.finalName}/css</outputDirectory>
+                     -->
+                    <compress>true</compress>
+
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>${project.artifactId}-standalone</finalName>
+                            <transformers>
+                                <!-- http://maven.apache.org/plugins/maven-shade-plugin/examples/resource-transformers.html -->
+                                <!-- http://stackoverflow.com/questions/10584752/spring-3-namespacehandler-issues-with-maven-shade-plugin -->
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer">
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ApacheNoticeResourceTransformer">
+                                    <addHeader>false</addHeader>
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/spring.handlers</resource>
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/spring.schemas</resource>
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <manifestEntries>
+                                        <Main-Class>fi.om.municipalityinitiative.server.JettyServer</Main-Class>
+                                        <!--<Build-Number>${buildNumber}</Build-Number> &lt;!&ndash; Git revision &ndash;&gt;-->
+                                    </manifestEntries>
+                                </transformer>
+                            </transformers>
+
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
@@ -418,37 +503,6 @@
                     </argLine>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <configuration>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.lesscss</groupId>
-                <artifactId>lesscss-maven-plugin</artifactId>
-                <version>1.3.3</version>
-                <configuration>
-                    <sourceDirectory>${project.basedir}/src/main/webapp/css/less-main</sourceDirectory>
-                    <!-- NOTE: These are compiled into src for noscript and faster web testing -->
-                    <outputDirectory>${project.basedir}/src/main/webapp/css</outputDirectory>
-                    <!-- 
-                    <outputDirectory>${project.build.directory}/${project.build.finalName}/css</outputDirectory>
-                     -->
-                    <compress>true</compress>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-
-            </plugin>
 
             <plugin>
                 <groupId>com.samaxes.maven</groupId>
@@ -457,9 +511,9 @@
                 <executions>
                     <execution>
                         <id>default-minify</id>
-                        <phase>process-resources</phase>
+                        <phase>generate-resources</phase>
                         <configuration>
-                            <webappTargetDir>${basedir}/src/main/webapp</webappTargetDir>
+                            <webappTargetDir>target/tmp</webappTargetDir>
                             <cssSourceDir>css</cssSourceDir>
                             <cssSourceFiles>
                                 <cssSourceFile>normalize.css</cssSourceFile>
@@ -467,6 +521,47 @@
                                 <cssSourceFile>kuntalaisaloite.css</cssSourceFile>
                             </cssSourceFiles>
                             <cssFinalFile>style.css</cssFinalFile>
+                        </configuration>
+                        <goals>
+                            <goal>minify</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>iframe-minify</id>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <webappTargetDir>target/tmp</webappTargetDir>
+                            <cssSourceDir>css</cssSourceDir>
+                            <cssSourceFiles>
+                                <cssSourceFile>normalize.css</cssSourceFile>
+                                <cssSourceFile>kuntalaisaloite-iframe.css</cssSourceFile>
+                            </cssSourceFiles>
+                            <cssFinalFile>style-iframe.css</cssFinalFile>
+                        </configuration>
+                        <goals>
+                            <goal>minify</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>ie-minify</id>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <webappTargetDir>target/tmp</webappTargetDir>
+                            <cssSourceDir>css</cssSourceDir>
+                            <cssSourceFiles>
+                                <cssSourceFile>kuntalaisaloite-ie.css</cssSourceFile>
+                            </cssSourceFiles>
+                            <cssFinalFile>kuntalaisaloite-ie.css</cssFinalFile>
+                        </configuration>
+                        <goals>
+                            <goal>minify</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>js-minify</id>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <webappTargetDir>${basedir}/src/main/webapp</webappTargetDir>
                             <jsSourceDir>js</jsSourceDir>
                             <jsSourceFiles>
                                 <jsSourceFile>jquery-1.7.2.min.js</jsSourceFile>
@@ -487,57 +582,8 @@
                             <goal>minify</goal>
                         </goals>
                     </execution>
-                    <execution>
-                        <id>iframe-minify</id>
-                        <phase>process-resources</phase>
-                        <configuration>
-                            <webappTargetDir>${basedir}/src/main/webapp</webappTargetDir>
-                            <cssSourceDir>css</cssSourceDir>
-                            <cssSourceFiles>
-                                <cssSourceFile>normalize.css</cssSourceFile>
-                                <cssSourceFile>kuntalaisaloite-iframe.css</cssSourceFile>
-                            </cssSourceFiles>
-                            <cssFinalFile>style-iframe.css</cssFinalFile>
-                        </configuration>
-                        <goals>
-                            <goal>minify</goal>
-                        </goals>
-                    </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <configuration>
-                    <webResources>
-                        <resource>
-                            <!-- this is relative to the pom.xml directory -->
-                            <directory>src/main/webapp/css</directory>
-                            <targetPath>css</targetPath>
-                            <filtering>true</filtering>
-                        </resource>
-                    </webResources>
-                </configuration>
-            </plugin>
-            <!--
-              <plugin>
-                  <groupId>org.codehaus.mojo</groupId>
-                  <artifactId>buildnumber-maven-plugin</artifactId>
-                  <executions>
-                      <execution>
-                          <phase>validate</phase>
-                          <goals>
-                              <goal>create</goal>
-                          </goals>
-                      </execution>
-                  </executions>
-                  <configuration>
-                      <doCheck>false</doCheck>
-                      <doUpdate>false</doUpdate>
-                      <timestampFormat>{0, date, yyyyMMddHHmmss}</timestampFormat>
-                  </configuration>
-              </plugin>
-               -->
         </plugins>
     </build>
 </project>

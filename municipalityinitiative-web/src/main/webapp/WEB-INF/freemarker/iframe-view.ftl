@@ -60,14 +60,14 @@
     <#if optimizeResources>
         <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/style-iframe.min.css?version=${resourcesVersion}" />
         <!--[if IE ]>
-        <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-ie.css?version=${resourcesVersion}" />
+        <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-ie.min.css?version=${resourcesVersion}" />
         <![endif]-->
     <#else>
         <link rel="stylesheet" type="text/css" href="${urls.baseUrl}/css/normalize.css" />
         <noscript>
             <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-iframe.css" />
             <!--[if IE ]>
-                <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-ie.css" />
+                <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-ie.min.css" />
             <![endif]-->
         </noscript>
         <link rel="stylesheet/less" type="text/css" media="screen" href="https://localhost:8443/css/less-main/kuntalaisaloite-iframe.less" />
