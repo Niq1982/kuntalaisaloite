@@ -403,6 +403,10 @@
                 <filtering>true</filtering>
                 <targetPath>${basedir}/src/main/webapp/css</targetPath>
             </resource>
+            <resource>
+                <targetPath>src/main/webapp</targetPath>
+                <directory>src/main/webapp</directory>
+            </resource>
         </resources>
         <testResources>
             <testResource>
@@ -584,6 +588,15 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 </project>
