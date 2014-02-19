@@ -1,10 +1,10 @@
 package fi.om.municipalityinitiative.web;
 
 import com.google.common.collect.Lists;
-import fi.om.municipalityinitiative.StartJetty;
 import fi.om.municipalityinitiative.conf.PropertyNames;
 import fi.om.municipalityinitiative.conf.WebTestConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.server.JettyServer;
 import fi.om.municipalityinitiative.service.email.EmailSenderScheduler;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -69,9 +69,10 @@ public abstract class WebTestBase {
     protected static Long HELSINKI_ID;
 
     @BeforeClass
-    public static synchronized void initialize() {
+    public static synchronized void initialize() throws Throwable {
         if (jettyServer == null) {
-            jettyServer = StartJetty.startService(PORT, "test");
+//            jettyServer = StartJetty.startService(PORT, "test");
+            jettyServer = JettyServer.start(new JettyServer.JettyProperties(PORT, 10, "test", System.getProperty("user.dir") + "/src/test/resources/log4j.properties"));
             try {
                 while (!jettyServer.isStarted()) {
                     Thread.sleep(250);

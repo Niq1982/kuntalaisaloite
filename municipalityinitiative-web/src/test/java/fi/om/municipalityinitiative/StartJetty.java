@@ -11,7 +11,11 @@ public class StartJetty {
     
     public static final int PORT = 8443;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Throwable {
+
+//        String log4jPath = System.getProperty("user.dir") + "/src/test/resources/log4j.properties";
+//        JettyServer.start(new JettyServer.JettyProperties(PORT,10,"dev",log4jPath));
+
         try {
             System.setProperty(PropertyNames.optimizeResources, "false");
             startService(PORT, "dev").join();
@@ -25,26 +29,23 @@ public class StartJetty {
         SslContextFactory sslContext = new SslContextFactory("keystore");
         sslContext.setKeyStorePassword("aloitepalvelu");
 
-//        SelectChannelConnector connector = new SelectChannelConnector();
-//        connector.setPort(8080);
-        
         SslSelectChannelConnector sslConnector = new SslSelectChannelConnector(sslContext);
         sslConnector.setPort(port);
         server.setConnectors(new Connector[] { sslConnector });
-                
+
         WebAppContext context = new WebAppContext();
         context.setDescriptor("src/main/webapp/WEB-INF/web.xml");
         context.setResourceBase("src/main/webapp/");
         context.setContextPath("/");
         context.setParentLoaderPriority(true);
         context.setInitParameter("org.eclipse.jetty.servlet.Default.useFileMappedBuffer", "false");
-        
+
         if (profile != null) {
             context.setInitParameter("spring.profiles.active", profile);
         }
 
         server.setHandler(context);
-        
+
         try {
             server.start();
             return server;

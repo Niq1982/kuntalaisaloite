@@ -1,9 +1,10 @@
 package fi.om.municipalityinitiative.server;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.eclipse.jetty.webapp.WebAppContext;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.util.Log4jConfigListener;
 
 public class JettyServer {
 
@@ -22,23 +23,35 @@ public class JettyServer {
         }
     }
 
-    public static void start(JettyProperties properties) throws Throwable {
-            PropertyConfigurator.configure(properties.log4jConfigPath);
-            Server server = new Server(properties.jettyPort);
-            server.setThreadPool(new QueuedThreadPool(properties.jettyThreadPoolCount));
+    public static Server start(JettyProperties properties) throws Throwable {
+//            PropertyConfigurator.configure(properties.log4jConfigPath);
 
-            WebAppContext context = new WebAppContext();
-            context.setDescriptor("src/main/webapp/WEB-INF/web.xml");
-            context.setResourceBase("src/main/webapp/");
-            context.setContextPath("/");
-            context.setParentLoaderPriority(true);
-            context.setInitParameter("org.eclipse.jetty.servlet.Default.useFileMappedBuffer", "false"); // TODO: TRUE ? FALSE ?
 
-            context.setInitParameter("spring.profiles.active", properties.springProfile);
+        LoggerFactory.getLogger(JettyServer.class).info("NYT ALETAAN LUOMAAN SERVERII");
 
-            server.setHandler(context);
-            server.start();
-            server.join();
+        Server server = new Server(properties.jettyPort);
+        server.setThreadPool(new QueuedThreadPool(properties.jettyThreadPoolCount));
+
+        WebAppContext context = new WebAppContext();
+
+        // Logging configured per environment:
+        context.addEventListener(new Log4jConfigListener());
+        context.setInitParameter("log4jConfigLocation", "file:" + properties.log4jConfigPath);
+        context.setInitParameter("log4jExposeWebAppRoot", "false");
+
+        context.setDescriptor("src/main/webapp/WEB-INF/web.xml");
+        context.setResourceBase("src/main/webapp/");
+        context.setContextPath("/");
+        context.setParentLoaderPriority(true);
+        context.setInitParameter("org.eclipse.jetty.servlet.Default.useFileMappedBuffer", "false"); // TODO: TRUE ? FALSE ?
+
+        context.setInitParameter("spring.profiles.active", properties.springProfile);
+
+        server.setHandler(context);
+        server.start();
+        System.out.println("Joining server");
+        server.join();
+        return server;
     }
 
 
