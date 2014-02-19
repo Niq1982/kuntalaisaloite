@@ -61,8 +61,7 @@ public class JettyServer {
         context.setInitParameter("log4jConfigLocation", "file:" + properties.log4jConfigPath);
         context.setInitParameter("log4jExposeWebAppRoot", "false");
 
-        context.setDescriptor("src/main/webapp/WEB-INF/web.xml");
-        // System.out.println(new ClassPathResource("src/main/webapp").getURI().toString());
+        context.setDescriptor(new ClassPathResource("src/main/webapp/WEB-INF/web.xml").getURI().toString());
         context.setResourceBase(new ClassPathResource("src/main/webapp").getURI().toString());
 
         context.setContextPath("/");
