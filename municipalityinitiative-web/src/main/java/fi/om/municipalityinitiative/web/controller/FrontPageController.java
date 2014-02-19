@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.web.controller;
 
 import fi.om.municipalityinitiative.service.CachedInitiativeFinder;
 import fi.om.municipalityinitiative.service.MunicipalityService;
+import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.stereotype.Controller;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.Locale;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
@@ -36,7 +36,7 @@ public class FrontPageController extends BaseController {
     @RequestMapping(FRONT)
     public String frontpage() {
         // XXX Select locale using Accept-Language header
-        return contextRelativeRedirect(Urls.FRONT_FI);
+        return contextRelativeRedirect(Urls.get(Locales.LOCALE_FI).frontpage());
     }
     
     @RequestMapping({ FRONT_FI, FRONT_SV })

@@ -18,7 +18,7 @@
         <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
 
         <!-- Dependency Versions -->
-        <jetty.version>9.1.0.v20131115</jetty.version>
+        <jetty.version>9.1.2.v20140210</jetty.version>
         <spring.version>3.1.2.RELEASE</spring.version>
         <querydsl.version>3.3.0</querydsl.version>
         <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
