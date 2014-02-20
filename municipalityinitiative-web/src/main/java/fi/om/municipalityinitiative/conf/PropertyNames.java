@@ -2,6 +2,8 @@ package fi.om.municipalityinitiative.conf;
 
 public final class PropertyNames {
 
+    public static final String isTestEmailSender = "test.mail.sender";
+
     private PropertyNames() {}
 
     public static final String omImageDirection = "om.image.directory";

@@ -361,7 +361,8 @@ public class AppConfiguration {
                 moderatorSendTo,
                 testSendMunicipalityEmailsToAuthor,
                 testSendModeratorEmailsToAuthor,
-                Boolean.valueOf(env.getRequiredProperty(PropertyNames.enableVerifiedInitiatives)));
+                Boolean.valueOf(env.getRequiredProperty(PropertyNames.enableVerifiedInitiatives)),
+                Boolean.valueOf(env.getRequiredProperty(PropertyNames.isTestEmailSender)));
     }
 
     @Bean

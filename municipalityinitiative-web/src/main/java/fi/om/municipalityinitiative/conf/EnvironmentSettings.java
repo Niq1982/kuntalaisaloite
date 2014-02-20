@@ -11,6 +11,8 @@ public class EnvironmentSettings {
     private final String moderatorEmail;
     private final boolean testSendModeratorEmailsToAuthor;
     private final boolean enableVerifiedInitiatives;
+    private final boolean isTestEmailSender;
+
 
     public EnvironmentSettings(String defaultReplyTo,
                                Maybe<String> testSendTo,
@@ -18,7 +20,8 @@ public class EnvironmentSettings {
                                String moderatorEmail,
                                boolean testSendMunicipalityEmailsToAuthor,
                                boolean testSendModeratorEmailsToAuthor,
-                               boolean enableVerifiedInitiatives) {
+                               boolean enableVerifiedInitiatives,
+                               boolean isTestEmailSender) {
         this.defaultReplyTo = defaultReplyTo;
         this.testSendTo = testSendTo;
         this.testConsoleOutput = testConsoleOutput;
@@ -26,6 +29,7 @@ public class EnvironmentSettings {
         this.testSendMunicipalityEmailsToAuthor = testSendMunicipalityEmailsToAuthor;
         this.testSendModeratorEmailsToAuthor = testSendModeratorEmailsToAuthor;
         this.enableVerifiedInitiatives = enableVerifiedInitiatives;
+        this.isTestEmailSender = isTestEmailSender;
     }
 
     public String getDefaultReplyTo() {
@@ -56,11 +60,16 @@ public class EnvironmentSettings {
         return enableVerifiedInitiatives;
     }
 
+    public boolean isTestEmailSender() {
+        return isTestEmailSender;
+    }
+
     public boolean hasAnyTestOptionsEnabled() {
         return testConsoleOutput
                 || testSendTo.isPresent()
                 || testSendModeratorEmailsToAuthor
-                || testSendMunicipalityEmailsToAuthor;
+                || testSendMunicipalityEmailsToAuthor
+                || isTestEmailSender;
 
 
     }
