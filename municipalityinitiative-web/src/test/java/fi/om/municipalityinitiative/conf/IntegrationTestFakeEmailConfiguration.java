@@ -23,7 +23,8 @@ public class IntegrationTestFakeEmailConfiguration {
                 EMAIL_DEFAULT_OM,
                 false,
                 false,
-                true, Boolean.valueOf(env.getRequiredProperty(PropertyNames.isTestEmailSender)));
+                true,
+                true);
     }
 
     @Bean
