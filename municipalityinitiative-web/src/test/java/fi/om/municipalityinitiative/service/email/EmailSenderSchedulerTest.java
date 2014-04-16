@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
@@ -55,7 +56,7 @@ public class EmailSenderSchedulerTest extends ServiceIntegrationTestBase {
     }
 
     @Test
-    public void concurrent_sending_tries_will_not_re_send_any_emails() throws InterruptedException {
+    public void concurrent_sending_tries_will_not_re_send_any_emails() throws Exception {
 
         createRandomEmails(5);
         multipleConcurrentSendExecutions();
@@ -81,7 +82,7 @@ public class EmailSenderSchedulerTest extends ServiceIntegrationTestBase {
     }
 
     @Test
-    public void concurrent_sending_tries_will_not_resend_any_emails_if_getting_email_fails() throws InterruptedException {
+    public void concurrent_sending_tries_will_not_resend_any_emails_if_getting_email_fails() throws Exception {
         emailSender.setEmailDao(popNextEmailFailingEmailDao());
 
         createRandomEmails(5);
@@ -93,7 +94,7 @@ public class EmailSenderSchedulerTest extends ServiceIntegrationTestBase {
     }
 
     @Test
-    public void concurrent_sending_tries_will_not_re_send_any_emails_if_sending_is_ok_but_marking_as_succeeded_fails() throws InterruptedException {
+    public void concurrent_sending_tries_will_not_re_send_any_emails_if_sending_is_ok_but_marking_as_succeeded_fails() throws Exception {
         emailSender.setEmailDao(successFailingEmailDao());
 
         createRandomEmails(5);
@@ -105,7 +106,7 @@ public class EmailSenderSchedulerTest extends ServiceIntegrationTestBase {
     }
 
     @Test
-    public void concurrent_sending_with_failing_email_send_and_failure_when_marking_email_as_sent() throws InterruptedException {
+    public void concurrent_sending_with_failing_email_send_and_failure_when_marking_email_as_sent() throws Exception {
         emailSender.setJavaMailSender(failingJavaMailSenderFake());
         emailSender.setEmailDao(failureFailingEmailDao());
 
@@ -124,7 +125,7 @@ public class EmailSenderSchedulerTest extends ServiceIntegrationTestBase {
         assertThat(javaMailSenderFake.getSentMessages(), is(1));
     }
 
-    private void multipleConcurrentSendExecutions() throws InterruptedException {
+    private void multipleConcurrentSendExecutions() throws Exception {
         ExecutorService executor = Executors.newCachedThreadPool();
 
         List<Callable<Boolean>> executions = Lists.newArrayList();
@@ -139,7 +140,9 @@ public class EmailSenderSchedulerTest extends ServiceIntegrationTestBase {
             });
         }
 
-        executor.invokeAll(executions);
+        for (Future<Boolean> f : executor.invokeAll(executions)) {
+            f.get();
+        }
     }
 
     private void createRandomEmails(int count) {
