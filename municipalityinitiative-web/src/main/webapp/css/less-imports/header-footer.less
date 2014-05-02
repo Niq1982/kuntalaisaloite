@@ -4,7 +4,7 @@
     background: #f1f1f1 url("../../img/other-services-bg.png?version=${timestamp}") repeat-x bottom left;
     position: relative;
     z-index:2;
-    
+
     .logged-in-info {
         font-size: 0.9em;
         border-left: 1px solid black;
@@ -12,15 +12,18 @@
         float: right;
 
         .header-tool-link, .header-tool-text {
+            max-width: 300px;
             position:relative;
             color: @lightGray;
-            padding:0 38px 0 15px; 
+            padding:0 38px 0 15px;
             line-height:40px;
             float: left;
             display: block;
             border-left: 1px solid #5a5a5a;
             border-right: 1px solid black;
             margin: 0px;
+
+            .makeEllipsis();
 
             &.login {
                 padding:0 15px 0 15px;
@@ -30,9 +33,9 @@
         .header-tool-link:hover {
             color: white;
         }
-        
+
         .header-tool-text {
-            padding:0 15px; 
+            padding:0 15px;
         }
     }
 
@@ -41,7 +44,7 @@
         width: 960px;
         margin: 0 auto;
         position: relative;
-        
+
         #aloite-links {
             float: left;
             overflow: hidden;
@@ -49,14 +52,20 @@
 
             a {
                 display: inline-block;
-                padding: 7px 20px 30px 20px;
-                background: @lightGray; 
-                margin: 8px 10px 0px 0px;
+                padding: 8px 10px 30px 10px;
+                background: @lightGray;
+                margin: 8px 0 0 0;
                 color: #393939;
-                z-index: 999;       
-                font-size: 0.9em;
+                z-index: 999;
+                font-size: 14px;
 
-                .rounded-corners;
+                .transition(background, 0.2s, linear);
+
+                .rounded-corners();
+
+                &:hover {
+                    background: @borderGrayLight;
+                }
             }
 
             a.active {
@@ -86,11 +95,11 @@
             margin: 9px 0px 0px 6px;
             padding: 5px 3px 10px 10px;
             z-index: 998;
-            
+
             &:hover {
                 color:#fff;
             }
-            
+
             .icon-small {
                 margin:0 0 -2px 3px;
             }
@@ -104,7 +113,7 @@
             background: #fff;
 
             .icon-small.dropdown-icon { background-position:-96px -13px; }
-        }        
+        }
     }
 }
 
@@ -128,7 +137,7 @@
     font-size: 80%;
     width: 13em;
     box-shadow: 2px 2px 2px rgba(0,0,0,0.1);
-    
+
     &.user-menu {
         left:auto;
         right:0;
@@ -178,7 +187,7 @@
     padding-top:18px;
     margin-bottom:2.3em;
     background:#fff;
-    
+
     border-bottom: 1px solid @borderGray;
 
     #header-content {
@@ -202,7 +211,7 @@
         width: 354px;
         height:72px;
         background:url("../../img/logo-kuntalaisaloite.png?version=${timestamp}") 0 0 no-repeat;
-        
+
         /* NOTE: SVG could be used
         background-image: url("../../img/logo-kuntalaisaloite.svg?version=${timestamp}"), none;
         background-size: contain;*/
@@ -224,7 +233,7 @@
             font-size: 1.1em;
             padding:0.2em 0.9em 0.5em 0.9em;
             border-right:1px solid @borderGray;
-            
+
             .transition(color, 0.2s, ease-in);
         }
 
@@ -242,20 +251,20 @@
 .front #header {
 	margin-bottom:0;
 	border-bottom: 0;
-	
+
 	.header-wrap-front {
 		margin: 0 10px;
 		border-bottom: 1px solid @borderGray;
 	}
-	
+
 }
 
-// Exceptions for swedish page 
+// Exceptions for swedish page
 .sv {
     &.font-size-large #header #main-navigation a {
         padding:0.2em 0.5em 0.5em 0.5em;
     }
-    
+
     #header #logo {
         width: 349px;
         background:url("../../img/logo-invanarinitiativ.png?version=${timestamp}") 0 0 no-repeat;
@@ -268,14 +277,14 @@
     padding:0;
 
     &.block-style {
-    
+
         li {
             display:block;
-            
+
             &.separator {
-                
+
             }
-            
+
             a {
                 display:block;
                 margin-bottom:1em;
@@ -290,7 +299,7 @@
 
 #footer {
     position:absolute;
-    left:0; bottom:0; 
+    left:0; bottom:0;
     width:100%;
     background:#fff;
     border-top:1px solid #ccc;
@@ -312,12 +321,12 @@
 
     .oikeusministerio {
         width:525px;
-        
+
         p { margin-top:0.3em; }
     }
 
     .viestintavirasto {
-        background-position:0 -400px;   
+        background-position:0 -400px;
     }
 
     ul {

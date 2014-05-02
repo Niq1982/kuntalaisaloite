@@ -1,6 +1,6 @@
 // Mixing
 //
-// Rounded corners 
+// Rounded corners
 //
 // Styleguide 2.1
 
@@ -32,7 +32,7 @@
 
 // Mixing
 //
-// Transition 
+// Transition
 //
 // Styleguide 2.2
 .transition (@property, @delay, @easing) {
@@ -44,7 +44,7 @@
 
 // Mixing
 //
-// Gradients 
+// Gradients
 .gradient (@start, @stop){
     background: @start;
     background: linear-gradient(top,  @start, @stop);
@@ -83,4 +83,12 @@
     box-sizing: @style;
     -webkit-box-sizing: @style; /* Safari/Chrome, other WebKit */
     -moz-box-sizing: @style;    /* Firefox, other Gecko */
+}
+
+.makeEllipsis(){
+    white-space:nowrap;
+    overflow:hidden;
+    -ms-text-overflow:ellipsis;
+    -o-text-overflow:ellipsis;
+    text-overflow:ellipsis;
 }
