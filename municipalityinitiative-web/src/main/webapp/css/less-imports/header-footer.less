@@ -12,7 +12,6 @@
         float: right;
 
         .header-tool-link, .header-tool-text {
-            max-width: 300px;
             position:relative;
             color: @lightGray;
             padding:0 38px 0 15px;
@@ -23,7 +22,17 @@
             border-right: 1px solid black;
             margin: 0px;
 
-            .makeEllipsis();
+            .user-name {
+                display: block;
+                max-width: 300px;
+                .makeEllipsis();
+
+                .ie8 & {
+                    white-space: normal;
+                    height: 40px;
+                    float: left;
+                }
+            }
 
             &.login {
                 padding:0 15px 0 15px;
@@ -38,6 +47,7 @@
             padding:0 15px;
         }
     }
+
 
     #header-tools-content {
         text-align: right;

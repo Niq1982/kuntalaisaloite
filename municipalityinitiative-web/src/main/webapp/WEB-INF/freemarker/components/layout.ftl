@@ -250,7 +250,7 @@
                 <#if user.isLoggedIn()>
                     <#if user.isOmUser()>
                         <div class="header-dropdown">
-                            <a href="#" class="header-tool-link user-name dropdown-toggle">${user.name} <span class="icon-small settings"></span></a>
+                            <a href="#" class="header-tool-link dropdown-toggle"><span class="user-name">${user.name}</span><span class="icon-small settings"></span></a>
                             <ul id="user-menu" class="dropdown-menu user-menu">
                                 <li><a href="${urls.municipalityModeration()}"><@u.message "om.municipality.moderation" /></a></li>
                                 <#if initiative??>
@@ -260,19 +260,17 @@
                             </ul>
                         </div>
                     </#if>
-                     <#if user.isVerifiedUser()>
+                    <#if user.isVerifiedUser()>
                         <div class="header-dropdown">
                         	<#assign userName>${user.contactInfo.name}<#if user.homeMunicipality.present>, ${user.homeMunicipality.value.getName(locale)}</#if></#assign>
-                        
-                            <a href="#" class="header-tool-link user-name dropdown-toggle" title="${userName}">${userName}
-                                <span class="icon-small settings"></span></a>
+
+                            <a href="#" class="header-tool-link user-name dropdown-toggle" title="${userName}"><span class="user-name">${userName}</span><span class="icon-small settings"></span></a>
                             <ul id="user-menu" class="dropdown-menu user-menu">
                                 <li><a href="${urls.ownInitiatives()}"><@u.message "page.ownInitiatives" /></a></li>
                                 <li><a href="${urls.logout()}" id="logout"><@u.message "common.logout"/></a></li>
                             </ul>
                         </div>
                     </#if>
-
 
                 <#elseif enableVerifiedInitiatives>
                     <a href="${urls.authenticate(currentRequestUri)}" title="<@u.message "authenticate.title"/>" class="header-tool-link login"><@u.message "authenticate.title"/></a>
