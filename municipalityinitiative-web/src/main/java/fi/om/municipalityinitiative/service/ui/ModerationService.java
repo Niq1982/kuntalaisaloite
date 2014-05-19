@@ -102,6 +102,7 @@ public class ModerationService {
         }
         initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
         attachmentDao.rejectAttachments(initiativeId);
+        reviewHistoryDao.addRejected(initiativeId, moderatorComment);
         emailService.sendStatusEmail(initiativeId, EmailMessageType.REJECTED_BY_OM);
     }
 
