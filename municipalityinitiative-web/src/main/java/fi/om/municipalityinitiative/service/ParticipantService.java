@@ -103,6 +103,7 @@ public class ParticipantService {
     @Transactional(readOnly = false)
     public void deleteParticipant(Long initiativeId, LoginUserHolder loginUserHolder, Long participantId) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
+        assertAllowance("Delete participant", ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowParticipation());
         participantDao.deleteParticipant(initiativeId, participantId);
         initiativeDao.denormalizeParticipantCountForNormalInitiative(initiativeId);
     }
@@ -114,7 +115,7 @@ public class ParticipantService {
             throw new InvalidParticipationConfirmationException("No participant with id: " + participantId);
         }
 
-        assertAllowance("Confirm participation", ManagementSettings.of(initiativeDao.get(initiativeId.get())).isAllowParticipate());
+        assertAllowance("Confirm participation", ManagementSettings.of(initiativeDao.get(initiativeId.get())).isAllowParticipation());
         participantDao.confirmParticipation(participantId, confirmationCode);
 
         return initiativeId.get();
@@ -123,7 +124,7 @@ public class ParticipantService {
     @Transactional(readOnly = false)
     public Long createParticipant(ParticipantUICreateDto participant, Long initiativeId, Locale locale) {
 
-        assertAllowance("Allowed to participate", ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowParticipate());
+        assertAllowance("Allowed to participate", ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowParticipation());
 
         ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(participant, initiativeId);
         participantCreateDto.setMunicipalityInitiativeId(initiativeId);

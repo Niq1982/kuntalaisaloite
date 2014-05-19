@@ -11,6 +11,7 @@ import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.web.Urls;
 import org.hamcrest.Matchers;
+import org.joda.time.DateTime;
 import org.junit.Test;
 
 import javax.annotation.Resource;
@@ -113,6 +114,8 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
     public void delete_participant_decreses_participant_count() {
         Long initiativeId = testHelper.createDefaultInitiative(
                 new TestHelper.InitiativeDraft(testMunicipalityId)
+                        .withState(InitiativeState.PUBLISHED)
+                        .withType(InitiativeType.COLLABORATIVE)
                         .applyAuthor().withPublicName(false)
                         .toInitiativeDraft()
         );
@@ -127,6 +130,23 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         Initiative updated = testHelper.getInitiative(initiativeId);
         assertThat(updated.getParticipantCount(), is(1));
         assertThat(updated.getParticipantCountPublic(), is(0));
+    }
+
+    @Test(expected = OperationNotAllowedException.class)
+    public void delete_participant_is_forbidden_if_initiative_sent_to_municipality() {
+        Long initiativeId = testHelper.createDefaultInitiative(
+                new TestHelper.InitiativeDraft(testMunicipalityId)
+                        .withSent(new DateTime())
+                        .applyAuthor().withPublicName(false)
+                        .toInitiativeDraft()
+        );
+        Long participantId = testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withPublicName(true));
+
+        Initiative initiative = testHelper.getInitiative(initiativeId);
+        precondition(initiative.getParticipantCountPublic(), is(1));
+        precondition(initiative.getParticipantCount(), is(2));
+
+        participantService.deleteParticipant(initiativeId, TestHelper.authorLoginUserHolder, participantId);
     }
 
     @Test(expected = OperationNotAllowedException.class)

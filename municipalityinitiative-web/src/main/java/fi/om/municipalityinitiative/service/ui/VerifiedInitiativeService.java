@@ -114,7 +114,7 @@ public class VerifiedInitiativeService {
         if (municipalityMismatch(createDto.getMunicipality(), createDto.getHomeMunicipality(), verifiedUser.getHomeMunicipality())) {
             municipalityException(createDto.getMunicipality());
         }
-        assertAllowance("Participate to initiative", ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowParticipate());
+        assertAllowance("Participate to initiative", ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowParticipation());
 
         VerifiedUserId verifiedUserId = getVerifiedUserIdAndCreateIfNecessary(verifiedUser.getHash(), verifiedUser.getContactInfo(), verifiedUser.getHomeMunicipality());
         participantDao.addVerifiedParticipant(initiativeId, verifiedUserId, createDto.getShowName(), verifiedUser.getHomeMunicipality().isPresent());
