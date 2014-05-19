@@ -96,10 +96,14 @@ public class AuthorService {
     public void deleteAuthor(Long initiativeId, LoginUserHolder loginUserHolder, Long authorId) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
+        Initiative initiative = initiativeDao.get(initiativeId);
+
+        assertAllowance("Invite authors", ManagementSettings.of(initiative).isAllowInviteAuthors());
+
         User user = loginUserHolder.getUser();
         ContactInfo deletedAuthorContactInfo;
 
-        if (initiativeDao.isVerifiableInitiative(initiativeId)) {
+        if (initiative.getType().isVerifiable()) {
             VerifiedUser currentUser = (VerifiedUser) user;
             VerifiedUserId authorToDelete = new VerifiedUserId(authorId);
 

@@ -376,6 +376,19 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
     }
 
     @Test
+    public void deleting_author_not_allowed_after_initiative_sent_to_municipality() {
+        Long initiative = testHelper.createSingleSent(testMunicipality);
+        Long anotherAuthor = testHelper.getLastNormalAuthorId().toLong();
+        Long currentAuthor = testHelper.createDefaultAuthorAndParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality).withParticipantEmail("author_left@example.com"));
+
+        precondition(countAllNormalAuthors(), is(2L));
+
+        thrown.expect(OperationNotAllowedException.class);
+        thrown.expectMessage(containsString("Operation not allowed: Invite authors"));
+        authorService.deleteAuthor(initiative, TestHelper.authorLoginUserHolder, anotherAuthor);
+    }
+
+    @Test
     public void deleting_author_fails_if_initiativeId_and_authorId_mismatch() {
         Long initiative1 = testHelper.createCollaborativeAccepted(testMunicipality);
         Long author1 = testHelper.createDefaultAuthorAndParticipant(new TestHelper.AuthorDraft(initiative1, testMunicipality));
@@ -430,7 +443,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
     @Test
     public void deleting_verified_author_deletes_author_and_participant_and_decreases_participantCount() throws Exception {
 
-        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality).applyAuthor().toInitiativeDraft());
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality).withState(InitiativeState.ACCEPTED).applyAuthor().toInitiativeDraft());
         Long originalAuthor = testHelper.getLastVerifiedUserId();
 
         testHelper.createVerifiedAuthorAndParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipality));
@@ -446,7 +459,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
 
     @Test
     public void deleting_verified_author_fails_if_trying_to_delete_myself() {
-        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality).applyAuthor().toInitiativeDraft());
+        Long initiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality).withState(InitiativeState.ACCEPTED).applyAuthor().toInitiativeDraft());
         Long authorId = testHelper.getLastVerifiedUserId();
 
         thrown.expect(OperationNotAllowedException.class);
@@ -482,7 +495,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
     @Test
     public void two_concurrent_tries_to_delete_two_last_verified_authors_will_fail() {
 
-        final Long initiative = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality).applyAuthor().toInitiativeDraft());
+        final Long initiative = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(testMunicipality).withState(InitiativeState.ACCEPTED).applyAuthor().toInitiativeDraft());
 
         final Long author1 = testHelper.getLastVerifiedUserId();
         final Long author2 = testHelper.createVerifiedAuthorAndParticipant(new TestHelper.AuthorDraft(initiative, testMunicipality));
@@ -552,8 +565,7 @@ public class AuthorServiceIntegrationTest extends ServiceIntegrationTestBase {
                 future.get();
             }
         } catch (Exception e) {
-            // e.printStackTrace();
-
+            e.printStackTrace();
         } finally {
             executor.shutdownNow();
         }
