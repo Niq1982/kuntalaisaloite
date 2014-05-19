@@ -79,9 +79,6 @@ public class TestHelper {
         this.queryFactory = queryFactory;
     }
 
-//    @Resource
-//    private org.springframework.cache.ehcache.EhCacheCacheManager cacheManager;
-
     @Transactional(readOnly=false)
     public void dbCleanup() {
         dbCleanupAllButMunicipalities();
@@ -92,6 +89,7 @@ public class TestHelper {
     @Transactional(readOnly = false)
     public void dbCleanupAllButMunicipalities() {
         queryFactory.delete(QAuthorMessage.authorMessage).execute();
+        queryFactory.delete(QReviewHistory.reviewHistory).execute();
         queryFactory.delete(QAttachment.attachment).execute();
         queryFactory.delete(QAuthorInvitation.authorInvitation).execute();
         queryFactory.delete(QAuthor.author).execute();
@@ -579,6 +577,13 @@ public class TestHelper {
                 .set(QParticipant.participant.confirmationCode, confirmCode)
                 .execute();
         return defaultParticipant;
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReviewHistoryRow> getInitiativeReviewHistory(Long initiativeId) {
+        return queryFactory.from(QReviewHistory.reviewHistory)
+                .where(QReviewHistory.reviewHistory.initiativeId.eq(initiativeId))
+                .list(JdbcReviewHistoryDao.reviewHistoryRowWrapper);
     }
 
     public static class AuthorDraft {

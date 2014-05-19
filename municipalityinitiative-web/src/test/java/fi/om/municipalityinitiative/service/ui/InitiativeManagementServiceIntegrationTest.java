@@ -4,6 +4,7 @@ import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.service.ReviewHistoryRow;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeUIUpdateDto;
@@ -12,10 +13,7 @@ import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.ServiceIntegrationTestBase;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
 import fi.om.municipalityinitiative.service.email.EmailSubjectPropertyKeys;
-import fi.om.municipalityinitiative.util.FixState;
-import fi.om.municipalityinitiative.util.InitiativeState;
-import fi.om.municipalityinitiative.util.InitiativeType;
-import fi.om.municipalityinitiative.util.ReflectionTestUtils;
+import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
@@ -24,13 +22,13 @@ import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.fail;
 
 public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrationTestBase {
@@ -251,6 +249,21 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
         assertThat(updated.getState(), is(InitiativeState.REVIEW));
         assertThat(updated.getType(), is(InitiativeType.SINGLE));
+    }
+
+    @Test
+    public void send_to_review_and_straight_to_municipality_adds_review_history_line() {
+
+        Long initiativeId = testHelper.createDraft(testMunicipality.getId());
+        service.sendReviewAndStraightToMunicipality(initiativeId, TestHelper.authorLoginUserHolder, null);
+
+        List<ReviewHistoryRow> reviewHistory = testHelper.getInitiativeReviewHistory(initiativeId);
+        assertThat(reviewHistory, hasSize(1));
+        assertThat(reviewHistory.get(0).getType(), is(ReviewHistoryType.REVIEW_SENT));
+
+        assertThat(reviewHistory.get(0).getSnapshot().get(), containsString(TestHelper.DEFAULT_INITIATIVE_NAME));
+        assertThat(reviewHistory.get(0).getSnapshot().get(), containsString(TestHelper.DEFAULT_EXTRA_INFO));
+
     }
 
     @Test

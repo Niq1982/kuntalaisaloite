@@ -54,7 +54,7 @@ public class JdbcReviewHistoryDao implements ReviewHistoryDao {
                 .list(reviewHistoryRowWrapper);
     }
 
-    private static Expression<ReviewHistoryRow> reviewHistoryRowWrapper =
+    public static Expression<ReviewHistoryRow> reviewHistoryRowWrapper =
             new MappingProjection<ReviewHistoryRow>(ReviewHistoryRow.class, reviewHistory.all()) {
 
                 @Override

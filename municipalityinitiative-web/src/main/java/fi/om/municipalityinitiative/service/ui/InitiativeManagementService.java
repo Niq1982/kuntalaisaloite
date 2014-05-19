@@ -2,10 +2,7 @@ package fi.om.municipalityinitiative.service.ui;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import fi.om.municipalityinitiative.dao.AuthorDao;
-import fi.om.municipalityinitiative.dao.InitiativeDao;
-import fi.om.municipalityinitiative.dao.ParticipantDao;
-import fi.om.municipalityinitiative.dao.UserDao;
+import fi.om.municipalityinitiative.dao.*;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.VerifiedAuthor;
@@ -19,10 +16,7 @@ import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
-import fi.om.municipalityinitiative.util.FixState;
-import fi.om.municipalityinitiative.util.InitiativeState;
-import fi.om.municipalityinitiative.util.InitiativeType;
-import fi.om.municipalityinitiative.util.Maybe;
+import fi.om.municipalityinitiative.util.*;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -47,6 +41,9 @@ public class InitiativeManagementService {
 
     @Resource
     ParticipantDao participantDao;
+
+    @Resource
+    private ReviewHistoryDao reviewHistoryDao;
 
     @Transactional(readOnly = true)
     public InitiativeDraftUIEditDto getInitiativeDraftForEdit(Long initiativeId, LoginUserHolder loginUserHolder) {
@@ -171,6 +168,7 @@ public class InitiativeManagementService {
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.REVIEW);
         initiativeDao.updateInitiativeType(initiativeId, InitiativeType.SINGLE);
         initiativeDao.updateSentComment(initiativeId, sentComment);
+        reviewHistoryDao.addReview(initiativeId, InitiativeSnapshotCreator.create(initiative));
 
         emailService.sendStatusEmail(initiativeId, EmailMessageType.SENT_TO_REVIEW);
         emailService.sendNotificationToModerator(initiativeId);
