@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.service.ui;
 import fi.om.municipalityinitiative.dao.AttachmentDao;
 import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
+import fi.om.municipalityinitiative.dao.ReviewHistoryDao;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
@@ -35,7 +36,10 @@ public class ModerationServiceTest {
     private InitiativeDao initiativeDaoMock;
 
     private OmLoginUserHolder loginUserHolder;
+
     private AttachmentDao attachmentDaoMock;
+
+    private ReviewHistoryDao reviewHistoryDaoMock;
 
     @Before
     public void setup() throws Exception {
@@ -50,6 +54,8 @@ public class ModerationServiceTest {
         moderationService.authorDao = authorDaoMock;
         attachmentDaoMock = mock(AttachmentDao.class);
         moderationService.attachmentDao = attachmentDaoMock;
+        reviewHistoryDaoMock = mock(ReviewHistoryDao.class);
+        moderationService.reviewHistoryDao = reviewHistoryDaoMock;
 
         stub(authorDaoMock.findNormalAuthorEmails(anyLong())).toReturn(Collections.singletonList("")); // Avoid nullpointer temporarily
 
@@ -88,6 +94,16 @@ public class ModerationServiceTest {
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.REVIEW, InitiativeType.UNDEFINED));
         moderationService.accept(loginUserHolder, INITIATIVE_ID, "", null);
         verify(attachmentDaoMock).acceptAttachments(INITIATIVE_ID);
+    }
+
+    @Test
+    public void accepting_initiative_adds_review_history_information() {
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.REVIEW, InitiativeType.UNDEFINED));
+
+        String moderatorComment = "Some moderator comment";
+        moderationService.accept(loginUserHolder, INITIATIVE_ID, moderatorComment, null);
+
+        verify(reviewHistoryDaoMock).addAccepted(INITIATIVE_ID, moderatorComment);
     }
 
     @Test
