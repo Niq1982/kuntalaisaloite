@@ -193,8 +193,10 @@ public class InitiativeManagementService {
     @Transactional(readOnly = false)
     public void sendFixToReview(Long initiativeId, LoginUserHolder requiredLoginUserHolder) {
         requiredLoginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        assertAllowance("Send fix to review", ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowSendFixToReview());
+        Initiative initiative = initiativeDao.get(initiativeId);
+        assertAllowance("Send fix to review", ManagementSettings.of(initiative).isAllowSendFixToReview());
         initiativeDao.updateInitiativeFixState(initiativeId, FixState.REVIEW);
+        reviewHistoryDao.addReview(initiativeId, InitiativeSnapshotCreator.create(initiative));
 
         emailService.sendStatusEmail(initiativeId, EmailMessageType.SENT_FIX_TO_REVIEW);
         emailService.sendNotificationToModerator(initiativeId);

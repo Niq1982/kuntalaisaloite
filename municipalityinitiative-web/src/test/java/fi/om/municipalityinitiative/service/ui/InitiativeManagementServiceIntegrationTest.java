@@ -282,6 +282,26 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     }
 
     @Test
+    public void send_fix_to_review_adds_review_history_line() {
+
+        Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                        .withState(InitiativeState.PUBLISHED)
+                        .withFixState(FixState.FIX)
+                        .applyAuthor()
+                        .toInitiativeDraft()
+        );
+        service.sendFixToReview(initiativeId, TestHelper.authorLoginUserHolder);
+
+        List<ReviewHistoryRow> reviewHistory = testHelper.getInitiativeReviewHistory(initiativeId);
+        assertThat(reviewHistory, hasSize(1));
+        assertThat(reviewHistory.get(0).getType(), is(ReviewHistoryType.REVIEW_SENT));
+
+        assertThat(reviewHistory.get(0).getSnapshot().get(), containsString(TestHelper.DEFAULT_INITIATIVE_NAME));
+        assertThat(reviewHistory.get(0).getSnapshot().get(), containsString(TestHelper.DEFAULT_EXTRA_INFO));
+        assertThat(reviewHistory.get(0).getSnapshot().get(), containsString(TestHelper.DEFAULT_PROPOSAL));
+    }
+
+    @Test
     public void send_initiative_as_review_and_straight_to_municipality_sends_emails_to_author_and_moderator() throws MessagingException {
         service.sendReviewAndStraightToMunicipality(testHelper.createDraft(testMunicipality.getId()), TestHelper.authorLoginUserHolder, null);
         assertFirstSentEmail(TestHelper.DEFAULT_PARTICIPANT_EMAIL, EmailSubjectPropertyKeys.EMAIL_STATUS_INFO_PREFIX + EmailMessageType.SENT_TO_REVIEW.name()+".subject");
