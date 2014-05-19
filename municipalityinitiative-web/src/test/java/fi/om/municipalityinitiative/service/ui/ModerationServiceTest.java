@@ -117,6 +117,17 @@ public class ModerationServiceTest {
     }
 
     @Test
+    public void sending_initiative_back_for_fixing_adds_review_history_information() {
+        stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE));
+
+        String moderatorComment = "Some moderator comment";
+        moderationService.sendInitiativeBackForFixing(loginUserHolder, INITIATIVE_ID, moderatorComment);
+
+        verify(reviewHistoryDaoMock).addRejected(INITIATIVE_ID, moderatorComment);
+    }
+
+
+    @Test
     public void accepting_initiative_sets_state_as_accepted_and_saves_comment_if_type_is_undefined() {
 
         stub(initiativeDaoMock.get(INITIATIVE_ID)).toReturn(initiative(InitiativeState.REVIEW, InitiativeType.UNDEFINED));
