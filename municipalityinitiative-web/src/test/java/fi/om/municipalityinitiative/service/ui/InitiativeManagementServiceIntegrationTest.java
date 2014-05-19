@@ -263,7 +263,22 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
         assertThat(reviewHistory.get(0).getSnapshot().get(), containsString(TestHelper.DEFAULT_INITIATIVE_NAME));
         assertThat(reviewHistory.get(0).getSnapshot().get(), containsString(TestHelper.DEFAULT_EXTRA_INFO));
+        assertThat(reviewHistory.get(0).getSnapshot().get(), containsString(TestHelper.DEFAULT_PROPOSAL));
+    }
 
+    @Test
+    public void send_undefined_to_review_adds_review_history_line() {
+
+        Long initiativeId = testHelper.createDraft(testMunicipality.getId());
+        service.sendReviewWithUndefinedType(initiativeId, TestHelper.authorLoginUserHolder);
+
+        List<ReviewHistoryRow> reviewHistory = testHelper.getInitiativeReviewHistory(initiativeId);
+        assertThat(reviewHistory, hasSize(1));
+        assertThat(reviewHistory.get(0).getType(), is(ReviewHistoryType.REVIEW_SENT));
+
+        assertThat(reviewHistory.get(0).getSnapshot().get(), containsString(TestHelper.DEFAULT_INITIATIVE_NAME));
+        assertThat(reviewHistory.get(0).getSnapshot().get(), containsString(TestHelper.DEFAULT_EXTRA_INFO));
+        assertThat(reviewHistory.get(0).getSnapshot().get(), containsString(TestHelper.DEFAULT_PROPOSAL));
     }
 
     @Test

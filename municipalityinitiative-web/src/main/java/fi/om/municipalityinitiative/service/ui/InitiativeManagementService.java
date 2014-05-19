@@ -181,6 +181,7 @@ public class InitiativeManagementService {
         Initiative initiative = initiativeDao.get(initiativeId);
         assertAllowance("Send review", ManagementSettings.of(initiative).isAllowSendToReview());
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.REVIEW);
+        reviewHistoryDao.addReview(initiativeId, InitiativeSnapshotCreator.create(initiative));
         if (initiative.getType().isNotVerifiable()) {
             initiativeDao.updateInitiativeType(initiativeId, InitiativeType.UNDEFINED);
         }
