@@ -71,6 +71,7 @@ public class JdbcConfiguration {
         configuration.register("info_text", "category", new EnumAsObjectType<>(InfoTextCategory.class));
         configuration.register("info_text", "languagecode", new EnumAsObjectType<>(LanguageCode.class));
         configuration.register("email", "attachment", new EnumAsObjectType<>(EmailAttachmentType.class));
+        configuration.register("review_history", "type", new EnumAsObjectType<>(ReviewHistoryType.class));
         return configuration;
     }
 

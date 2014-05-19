@@ -137,6 +137,11 @@ public class AppConfiguration {
     }
 
     @Bean
+    public ReviewHistoryDao reviewHistoryDao() {
+        return new JdbcReviewHistoryDao();
+    }
+
+    @Bean
     public MunicipalityDao municipalityDao() {
         return new JdbcMunicipalityDao();
     }
