@@ -113,7 +113,7 @@ public class ParticipantToPdfExporter {
 
             addEmptyLine(lastPage, 1);
 
-            lastPage.add(new Paragraph("SV Jäsenyysperuste, jos osallistuja ei ole kunnan asukas", subTitle));
+            lastPage.add(new Paragraph("Villkor för medlemskap, ifall deltagaren inte är bosatt i kommunen", subTitle));
 
             list = new com.lowagie.text.List(true, 20);
             list.add(new ListItem(COMMUNITY + ": Har namnteckningsrätt i ett samfund, en institution eller stiftelse vars hemort finns i den kommun som initiativet gäller", bodyText));

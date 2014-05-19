@@ -122,7 +122,10 @@
     <#if type == "html">
         <h4 style="${h4!""}">${initiative.name!""}</h4>
         <p style="${pBottomMargin!""}">${initiative.municipality.getLocalizedName(switchLocale!locale)!""}</p>
-        <#if showDate><p style="${pBothMargins!""}"><@u.message "email.date.create" /> <@u.localDate initiative.createTime /></p></#if>
+        <#if showDate>
+            <p style="${pBothMargins!""}"><@u.message "email.date.create" /> <@u.localDate initiative.createTime /></p>
+            <p style="${pBothMargins!""}"><@u.message "email.date.published" /> <@u.localDate initiative.stateTime /></p>
+        </#if>
         <#if showProposal><@u.text initiative.proposal /></#if>
         
         <#if showExtraInfo && (initiative.extraInfo)?has_content>
@@ -132,8 +135,11 @@
     <#else>
         "${initiative.name!""}"
         ${initiative.municipality.getLocalizedName(switchLocale!locale)!""}
-        
-        <#if showDate><@u.message "email.date.create" /> <@u.localDate initiative.createTime /></#if>
+
+        <#if showDate>
+            <@u.message "email.date.create" /> <@u.localDate initiative.createTime />
+            <@u.message "email.date.published" /> <@u.localDate initiative.stateTime/>
+        </#if>
 
         <#if showProposal>${initiative.proposal}</#if>
         
