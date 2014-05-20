@@ -22,7 +22,6 @@ public class InitiativeModerationWebTest extends WebTestBase {
     @Test
     public void moderationpage_shows_404_if_not_logged_in() {
         open(urls.moderation(testHelper.createCollaborativeAccepted(HELSINKI_ID)));
-//        assertThat(driver.getCurrentUrl(), startsWith(urls.vetumaLogin()));
         assert404();
     }
 
@@ -43,13 +42,11 @@ public class InitiativeModerationWebTest extends WebTestBase {
 
         open(urls.moderation(initiativeId));
 
-        getElemContaining(getMessage(MSG_BTN_ACCEPT_INITIATIVE), "a").click();
+        clickLink("Hyväksy aloite");
+        getElement(By.name(Urls.PARAM_SENT_COMMENT)).sendKeys(COMMENT);
+        clickButton("Hyväksy aloite");
 
-        inputTextByCSS("#commentAccept",COMMENT);
-
-        clickByName(Urls.ACTION_ACCEPT_INITIATIVE);
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_ACCEPT_INITIATIVE);
-
         assertTextContainedByClass("extra-info", "Aloite on hyväksytty");
 
         assertReviewHistoryElement("Hyväksytty julkaistavaksi", COMMENT);
@@ -104,7 +101,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
         loginAsOmUser();
         open(urls.moderation(initiativeId));
 
-        clickLinkContaining("Palauta aloite");
+        clickLink("Palauta aloite");
         inputTextByCSS("#commentReject",COMMENT);
         getElemContaining("Palauta aloite", "button").click();
 
@@ -113,7 +110,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
 
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
 
-        clickLinkContaining("Lähetä aloite tarkastettavaksi");
+        clickLink("Lähetä aloite tarkastettavaksi");
         getElemContaining("Lähetä aloite tarkastettavaksi", "button").click();
 
         assertTextContainedByClass("msg-success","Aloite lähetetty tarkastettavaksi");
@@ -123,7 +120,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
         loginAsOmUser();
         open(urls.moderation(initiativeId));
 
-        clickLinkContaining("Hyväksy aloite");
+        clickLink("Hyväksy aloite");
         inputTextByCSS("#commentAccept",COMMENT);
         getElemContaining("Hyväksy aloite", "button").click();
 

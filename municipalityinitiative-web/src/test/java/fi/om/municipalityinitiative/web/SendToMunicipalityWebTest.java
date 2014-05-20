@@ -54,7 +54,7 @@ public class SendToMunicipalityWebTest extends WebTestBase {
     }
 
     private void sendToMunicipality() {
-        clickLinkContaining(getMessage(MSG_BTN_SEND));
+        clickLink(getMessage(MSG_BTN_SEND));
         inputText("comment", COMMENT);
         getElemContaining(getMessage(MSG_BTN_SEND_CONFIRM), "button").click();
     }

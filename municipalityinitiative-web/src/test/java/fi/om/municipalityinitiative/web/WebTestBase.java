@@ -282,8 +282,12 @@ public abstract class WebTestBase {
         findElementWhenClickable(By.id(id)).click();
     }
 
-    protected void clickLinkContaining(String text) {
+    protected void clickLink(String text) {
         findElementWhenClickable(By.partialLinkText(text)).click();
+    }
+
+    protected void clickButton(String containing) {
+        getElemContaining(containing, "button").click();
     }
 
     protected WebElement findElementWhenClickable(By by) {

@@ -60,9 +60,9 @@ public class AuthorsWebTest extends WebTestBase {
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         
         open(urls.management(normalInitiativeId));
-        clickLinkContaining(getMessage(MSG_ADD_AUTHORS_LINK));
+        clickLink(getMessage(MSG_ADD_AUTHORS_LINK));
         
-        clickLinkContaining(getMessage(MSG_BTN_ADD_AUTHOR));
+        clickLink(getMessage(MSG_BTN_ADD_AUTHOR));
         
         inputText("authorName", CONTACT_NAME);
         inputText("authorEmail", CONTACT_EMAIL);
@@ -252,8 +252,8 @@ public class AuthorsWebTest extends WebTestBase {
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         open(urls.management(publishedInitiativeId));
         
-        clickLinkContaining("Osallistujahallinta");
-        clickLinkContaining("Poista osallistuja");
+        clickLink("Osallistujahallinta");
+        clickLink("Poista osallistuja");
         
         // NOTE: We could assert that modal has correct Participant details,
         //       but as DOM is updated after the modal is loaded we would need a tiny delay for that
@@ -272,8 +272,8 @@ public class AuthorsWebTest extends WebTestBase {
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         open(urls.management(normalInitiativeId));
         
-        clickLinkContaining("Ylläpidä vastuuhenkilöitä");
-        clickLinkContaining("Poista vastuuhenkilö");
+        clickLink("Ylläpidä vastuuhenkilöitä");
+        clickLink("Poista vastuuhenkilö");
         
         // NOTE: We could assert that modal has correct Author details,
         //       but as DOM is updated after the modal is loaded we would need a tiny delay for that

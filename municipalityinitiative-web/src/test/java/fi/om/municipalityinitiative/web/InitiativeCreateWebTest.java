@@ -8,7 +8,6 @@ import org.openqa.selenium.By;
 
 import static fi.om.municipalityinitiative.dao.TestHelper.InitiativeDraft;
 import static fi.om.municipalityinitiative.web.MessageSourceKeys.*;
-import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
@@ -299,7 +298,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
     }
 
     public void select_municipality(boolean homeMunicipalityVerified) {
-        clickLinkContaining(getMessage(SELECT_MUNICIPALITY));
+        clickLink(getMessage(SELECT_MUNICIPALITY));
         getElemContaining(MUNICIPALITY_1, "li").click();
 
         if (!homeMunicipalityVerified) {

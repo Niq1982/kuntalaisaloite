@@ -59,7 +59,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     public void participate_normal_initiative_shows_validation_errors() {
         open(urls.view(normalInitiativeHelsinki));
 
-        clickLinkContaining(getMessage(MSG_BTN_PARTICIPATE));
+        clickLink(getMessage(MSG_BTN_PARTICIPATE));
         getElemContaining(getMessage(MSG_BTN_SEND_CONFIRMATION), "button").click();
         assertPageHasValidationErrors();
     }
@@ -68,7 +68,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     public void participate_to_normal_initiative_with_public_name() {
         open(urls.view(normalInitiativeHelsinki));
 
-        clickLinkContaining(getMessage(MSG_BTN_PARTICIPATE));
+        clickLink(getMessage(MSG_BTN_PARTICIPATE));
 
         inputText("participantName", PARTICIPANT_NAME);
         inputText("participantEmail", PARTICIPANT_EMAIL);
@@ -111,7 +111,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     public void participating_to_initiative_when_not_logged_in_redirects_to_vetuma_and_back_to_participation_page() {
         open(urls.view(verifiedInitiativeHelsinki));
 
-        clickLinkContaining("Tunnistaudu ja osallistu");
+        clickLink("Tunnistaudu ja osallistu");
         enterVetumaLoginInformationAndSubmit("111111-1111", HELSINKI);
         assertTitle(TestHelper.DEFAULT_INITIATIVE_NAME + " - Kuntalaisaloitepalvelu");
         assertThat(participateToInitiativeButton(), isPresent());
@@ -168,12 +168,12 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
         open(urls.view(normalInitiativeHelsinki));
 
-        clickLinkContaining(getMessage(MSG_BTN_PARTICIPATE));
+        clickLink(getMessage(MSG_BTN_PARTICIPATE));
 
         inputText("participantName", PARTICIPANT_NAME);
         getElemContaining(getMessage(PARTICIPANT_SHOW_NAME), "span").click();
 
-        clickLinkContaining(HELSINKI);
+        clickLink(HELSINKI);
         getElemContaining(VANTAA, "li").click();
 
         getElemContaining(getMessage(MEMBERSHIP_RADIO), "span").click();
@@ -208,7 +208,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
         open(urls.view(initiativeWithAuthor));
 
-        clickLinkContaining("Ota yhteyttä aloitteen vastuuhenkilöön");
+        clickLink("Ota yhteyttä aloitteen vastuuhenkilöön");
 
         inputText("message", AUTHOR_MESSAGE);
         inputText("contactName", PARTICIPANT_NAME);
