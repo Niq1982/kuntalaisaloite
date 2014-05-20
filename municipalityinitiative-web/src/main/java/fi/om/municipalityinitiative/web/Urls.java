@@ -113,6 +113,8 @@ public final class Urls {
 
     public static final String TARGET = "target";
 
+    public static final String HISTORY_ITEM_PARAMETER = "historyItem";
+
     public static Urls FI = null;
     
     public static Urls SV = null;
@@ -413,6 +415,10 @@ public final class Urls {
 
     public String getModeration(Long id) {
         return getLocalizedPageUrl(MODERATION_FI, MODERATION_SV).replace(ID_PARAMETER, id.toString());
+    }
+
+    public String moderation(Long id, Long historyItemId) {
+        return getModeration(id) + "?" + HISTORY_ITEM_PARAMETER + "=" + historyItemId.toString();
     }
 
     public String getManageAuthors(Long id) {

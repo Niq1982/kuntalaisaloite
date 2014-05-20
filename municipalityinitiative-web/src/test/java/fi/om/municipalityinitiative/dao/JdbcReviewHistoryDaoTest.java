@@ -45,7 +45,7 @@ public class JdbcReviewHistoryDaoTest {
         String moderatorComment = "Moderator comment";
         reviewHistoryDao.addRejected(initiativeId, moderatorComment);
 
-        List<ReviewHistoryRow> histories = reviewHistoryDao.findReviewHistories(initiativeId);
+        List<ReviewHistoryRow> histories = reviewHistoryDao.findReviewHistoriesOrderedByTime(initiativeId);
 
         assertThat(histories, hasSize(1));
         assertThat(histories.get(0).getMessage(), isPresent());
@@ -59,7 +59,7 @@ public class JdbcReviewHistoryDaoTest {
         String moderatorComment = "Moderator comment";
         reviewHistoryDao.addAccepted(initiativeId, moderatorComment);
 
-        List<ReviewHistoryRow> histories = reviewHistoryDao.findReviewHistories(initiativeId);
+        List<ReviewHistoryRow> histories = reviewHistoryDao.findReviewHistoriesOrderedByTime(initiativeId);
 
         assertThat(histories, hasSize(1));
         assertThat(histories.get(0).getMessage(), isPresent());
@@ -74,7 +74,7 @@ public class JdbcReviewHistoryDaoTest {
 
         reviewHistoryDao.addReview(initiativeId, initiativeSnapshot);
 
-        List<ReviewHistoryRow> histories = reviewHistoryDao.findReviewHistories(initiativeId);
+        List<ReviewHistoryRow> histories = reviewHistoryDao.findReviewHistoriesOrderedByTime(initiativeId);
 
         assertThat(histories, hasSize(1));
         assertThat(histories.get(0).getMessage(), isNotPresent());

@@ -4,6 +4,7 @@ import fi.om.municipalityinitiative.dao.*;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
+import fi.om.municipalityinitiative.dto.service.ReviewHistoryRow;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityEditDto;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityUIEditDto;
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
@@ -155,6 +156,12 @@ public class ModerationService {
         for (Long initiativeId : authorDao.getAuthorsInitiatives(newManagementHash)) {
             emailService.sendManagementHashRenewed(initiativeId, newManagementHash, authorId);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReviewHistoryRow> findReviewHistory(OmLoginUserHolder omLoginUserHolder, Long initiativeId) {
+        omLoginUserHolder.assertOmUser();
+        return reviewHistoryDao.findReviewHistoriesOrderedByTime(initiativeId);
     }
 
 }

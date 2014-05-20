@@ -6,10 +6,19 @@ import org.joda.time.DateTime;
 
 public class ReviewHistoryRow {
 
+    private Long id;
     private ReviewHistoryType type;
     private DateTime created;
     private Maybe<String> message;
     private Maybe<String> snapshot;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public ReviewHistoryType getType() {
         return type;

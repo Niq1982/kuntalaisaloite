@@ -47,7 +47,7 @@ public class JdbcReviewHistoryDao implements ReviewHistoryDao {
     }
 
     @Override
-    public List<ReviewHistoryRow> findReviewHistories(Long initiativeId) {
+    public List<ReviewHistoryRow> findReviewHistoriesOrderedByTime(Long initiativeId) {
         return queryFactory.from(reviewHistory)
                 .where(reviewHistory.initiativeId.eq(initiativeId))
                 .orderBy(reviewHistory.created.desc())
@@ -60,6 +60,7 @@ public class JdbcReviewHistoryDao implements ReviewHistoryDao {
                 @Override
                 protected ReviewHistoryRow map(Tuple row) {
                     ReviewHistoryRow reviewHistoryRow = new ReviewHistoryRow();
+                    reviewHistoryRow.setId(row.get(reviewHistory.id));
                     reviewHistoryRow.setCreated(row.get(reviewHistory.created));
                     reviewHistoryRow.setMessage(Maybe.fromNullable(row.get(reviewHistory.message)));
                     reviewHistoryRow.setSnapshot(Maybe.fromNullable(row.get(reviewHistory.initiativeSnapshot)));

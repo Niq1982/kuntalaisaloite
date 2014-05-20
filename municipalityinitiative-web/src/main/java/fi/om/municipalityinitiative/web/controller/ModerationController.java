@@ -46,14 +46,17 @@ public class ModerationController extends BaseController{
 
     @RequestMapping(value={ MODERATION_FI, MODERATION_SV }, method=GET)
     public String moderationView(@PathVariable("id") Long initiativeId,
+                                 @RequestParam(value = HISTORY_ITEM_PARAMETER, required = false) Long historyItemId,
                                  Model model, Locale locale, HttpServletRequest request) {
 
         OmLoginUserHolder loginUserHolder = userService.getRequiredOmLoginUserHolder(request);
 
+        System.out.println("Item: " + historyItemId);
         return ViewGenerator.moderationView(normalInitiativeService.getInitiative(initiativeId, loginUserHolder),
                 normalInitiativeService.getManagementSettings(initiativeId),
                 moderationService.findAuthors(loginUserHolder, initiativeId),
-                attachmentService.findAllAttachments(initiativeId, loginUserHolder)
+                attachmentService.findAllAttachments(initiativeId, loginUserHolder),
+                moderationService.findReviewHistory(loginUserHolder, initiativeId)
         ).view(model, Urls.get(locale).alt().moderation(initiativeId));
     }
 
