@@ -164,4 +164,9 @@ public class ModerationService {
         return reviewHistoryDao.findReviewHistoriesAndCommentsOrderedByTime(initiativeId);
     }
 
+    @Transactional(readOnly = false)
+    public void addComment(OmLoginUserHolder requiredOmLoginUserHolder, Long initiativeId, String comment) {
+        requiredOmLoginUserHolder.assertOmUser();
+        reviewHistoryDao.addReviewComment(initiativeId, requiredOmLoginUserHolder.getUser().getName() + ": " + comment);
+    }
 }

@@ -137,6 +137,8 @@ public final class Urls {
 
     public static final String PARAM_ATTACHMENT_ID = "attachmentId";
 
+    public static final String ACTION_MODERATOR_ADD_COMMENT = "moderatorComment";
+
     public static final String ACTION_SAVE = "action-save";
 
     public static final String ACTION_SEND_TO_REVIEW = "action-send-to-review";

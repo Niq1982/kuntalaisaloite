@@ -71,6 +71,17 @@ public class ModerationController extends BaseController{
         ).view(model, Urls.get(locale).alt().moderation(initiativeId));
     }
 
+    @RequestMapping(value = {MODERATION_FI, MODERATION_SV}, method = POST, params= ACTION_MODERATOR_ADD_COMMENT)
+    public String addModeratorComment(@PathVariable("id") Long initiativeId,
+                                      @RequestParam(value = HISTORY_ITEM_PARAMETER, required = false) Long historyItemId,
+                                      @RequestParam(value = ACTION_MODERATOR_ADD_COMMENT, required = true) String comment,
+                                      Model model, Locale locale, HttpServletRequest request) {
+
+        moderationService.addComment(userService.getRequiredOmLoginUserHolder(request), initiativeId, comment);
+        return moderationView(initiativeId, historyItemId, model, locale, request);
+
+    }
+
     @RequestMapping(value = {MODERATION_FI, MODERATION_SV}, method = POST, params = ACTION_ACCEPT_INITIATIVE)
     public String acceptInitiative(@PathVariable("id") Long initiativeId,
                                    @RequestParam(PARAM_SENT_COMMENT) String comment,

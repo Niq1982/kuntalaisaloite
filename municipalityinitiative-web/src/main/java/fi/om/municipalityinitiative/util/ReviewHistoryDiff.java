@@ -41,7 +41,7 @@ public class ReviewHistoryDiff {
     }
 
     private static List<String> split(String s) {
-        return Lists.newArrayList(s.split("\n"));
+        return Lists.newArrayList(s.split("\n|\\. "));
     }
 
     private static ReviewHistoryDiff noReviewHistory(String s) {
