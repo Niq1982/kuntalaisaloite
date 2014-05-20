@@ -62,14 +62,9 @@ public class InitiativeModerationWebTest extends WebTestBase {
         loginAsOmUser();
         open(urls.moderation(initiativeId));
         getElement(By.name(Urls.ACTION_MODERATOR_ADD_COMMENT)).sendKeys(COMMENT);
-        getElemContaining("Lisää merkintä", "button").click();
+        clickButton("Lisää merkintä");
 
         assertReviewHistoryElement("Oikeusministeriön merkintä", COMMENT);
-    }
-
-    private void assertReviewHistoryElement(String historyItemHeader, String historyItemMessage) {
-        assertTextContainedByClass("review-history-description", historyItemHeader);
-        assertTextContainedByClass("review-history-message", historyItemMessage);
     }
 
     @Test
@@ -103,31 +98,34 @@ public class InitiativeModerationWebTest extends WebTestBase {
 
         clickLink("Palauta aloite");
         inputTextByCSS("#commentReject",COMMENT);
-        getElemContaining("Palauta aloite", "button").click();
+        clickButton("Palauta aloite");
 
-        assertTextContainedByClass("msg-success","Aloite palautettu korjattavaksi");
+        assertSuccessMessage("Aloite palautettu korjattavaksi");
+        assertReviewHistoryElement("Palautettu korjattavaksi", COMMENT);
         assertTotalEmailsInQueue(1);
 
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
 
         clickLink("Lähetä aloite tarkastettavaksi");
-        getElemContaining("Lähetä aloite tarkastettavaksi", "button").click();
+        clickButton("Lähetä aloite tarkastettavaksi");
 
-        assertTextContainedByClass("msg-success","Aloite lähetetty tarkastettavaksi");
+        assertSuccessMessage("Aloite lähetetty tarkastettavaksi");
         assertTotalEmailsInQueue(3);
 
         logout();
         loginAsOmUser();
         open(urls.moderation(initiativeId));
 
+        assertReviewHistoryElement("Lähetetty tarkastettavaksi", null);
+
         clickLink("Hyväksy aloite");
         inputTextByCSS("#commentAccept",COMMENT);
-        getElemContaining("Hyväksy aloite", "button").click();
+        clickButton("Hyväksy aloite");
 
-        assertTextContainedByClass("msg-success","Aloite on hyväksytty");
+        assertSuccessMessage("Aloite on hyväksytty");
+        assertReviewHistoryElement("Hyväksytty julkaistavaksi", COMMENT);
         assertTotalEmailsInQueue(4);
     }
-
 
     @Test
     public void resend_management_hash(){
@@ -144,6 +142,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
         assertTotalEmailsInQueue(1);
 
     }
+
 
     @Test
     public void moderadion_page_lists_attachments() {
@@ -172,6 +171,13 @@ public class InitiativeModerationWebTest extends WebTestBase {
         assertThat(driver.getPageSource(), not(containsString(urls.getAttachmentThumbnail(pdfAttachmentId))));
         assertThat(driver.getPageSource(), containsString("/img/pdficon_large.png"));
         assertThat(driver.getPageSource(), containsString(urls.attachment(pdfAttachmentId, pdfFileName)));
+    }
+
+    private void assertReviewHistoryElement(String historyItemHeader, String historyItemMessage) {
+        assertTextContainedByClass("review-history-description", historyItemHeader);
+        if (historyItemMessage != null) {
+            assertTextContainedByClass("review-history-message", historyItemMessage);
+        }
     }
 
 

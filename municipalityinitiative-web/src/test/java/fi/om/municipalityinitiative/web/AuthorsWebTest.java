@@ -164,7 +164,7 @@ public class AuthorsWebTest extends WebTestBase {
 
         vetumaLogin(VERIFIED_USER_AUTHOR_SSN, HELSINKI);
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
-        assertTextContainedByClass("msg-warning", "Olet jo aloitteen vastuuhenkilö, joten et voi hyväksyä vastuuhenkilökutsua");
+        assertWarningMessage("Olet jo aloitteen vastuuhenkilö, joten et voi hyväksyä vastuuhenkilökutsua");
         assertThat(acceptInvitationButton(), isNotPresent());
         assertThat(rejectInvitationButton(), isNotPresent());
     }
@@ -187,7 +187,7 @@ public class AuthorsWebTest extends WebTestBase {
         AuthorInvitation invitation = testHelper.createInvitation(verifiedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
         vetumaLogin("111111-1111", VANTAA);
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
-        assertTextContainedByClass("msg-warning", "Väestötietojärjestelmän mukaan kotikuntasi ei ole kunta, jota aloite koskee, joten et voi liittyä aloitteen vastuuhenkilöksi. Kiitos mielenkiinnosta!");
+        assertWarningMessage("Väestötietojärjestelmän mukaan kotikuntasi ei ole kunta, jota aloite koskee, joten et voi liittyä aloitteen vastuuhenkilöksi. Kiitos mielenkiinnosta!");
         assertThat(acceptInvitationButton(), isNotPresent());
         assertThat(rejectInvitationButton(), isPresent());
     }

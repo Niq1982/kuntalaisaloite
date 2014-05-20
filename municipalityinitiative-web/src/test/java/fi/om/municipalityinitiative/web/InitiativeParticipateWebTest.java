@@ -136,7 +136,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
         assertThat(newParticipantCountOnPage, is(originalParticipantCountOnPage + 1));
 
-        assertTextContainedByClass("msg-warning", "Olet jo osallistunut tähän aloitteeseen");
+        assertWarningMessage("Olet jo osallistunut tähän aloitteeseen");
         assertThat(participateToInitiativeButton(), isNotPresent());
 
     }
@@ -146,7 +146,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         vetumaLogin(OTHER_USER_SSN, VANTAA);
         open(urls.view(verifiedInitiativeHelsinki));
 
-        assertTextContainedByClass("msg-warning", "Et ole aloitteen kunnan jäsen, joten et voi osallistua aloitteeseen.");
+        assertWarningMessage("Et ole aloitteen kunnan jäsen, joten et voi osallistua aloitteeseen.");
         assertThat(participateToInitiativeButton(), isNotPresent());
     }
 

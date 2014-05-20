@@ -208,6 +208,10 @@ public abstract class WebTestBase {
         assertTextContainedByClass("msg-success", text);
     }
 
+    protected void assertWarningMessage(String text) {
+        assertTextContainedByClass("msg-warning", text);
+    }
+
     protected static void assertTextContainedByClass(String className, String text) {
         System.out.println("--- assertTextContainedByClass --------------- " + className + ": " + text);
         List<String> elementTexts = Lists.newArrayList();
