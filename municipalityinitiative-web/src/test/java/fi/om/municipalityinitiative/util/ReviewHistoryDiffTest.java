@@ -13,7 +13,9 @@ import java.util.List;
 
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
+import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
 public class ReviewHistoryDiffTest {
@@ -104,6 +106,20 @@ public class ReviewHistoryDiffTest {
         assertThat(diff.get(8).modificationType, isPresent());
         assertThat(diff.get(8).modificationType.get(), is(Delta.TYPE.DELETE));
         assertThat(diff.get(8).line, is("Rivi kuus"));
+
+    }
+
+    @Test
+    public void review_history_diff_shows_all_lines_as_new_if_no_old_revision() {
+        ReviewHistoryDiff diffWithoutPrevious = ReviewHistoryDiff.from(rows, 1L);
+
+        precondition(diffWithoutPrevious.getNewText().get(0), is("First sent"));
+        precondition(diffWithoutPrevious.getOldText(), isNotPresent());
+
+        assertThat(diffWithoutPrevious.getDiff(), hasSize(1));
+        assertThat(diffWithoutPrevious.getDiff().get(0).modificationType, isPresent());
+        assertThat(diffWithoutPrevious.getDiff().get(0).modificationType.get(), is(Delta.TYPE.INSERT));
+        assertThat(diffWithoutPrevious.getDiff().get(0).line, is("First sent"));
 
     }
 
