@@ -137,7 +137,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
         open(urls.moderation(initiativeId));
         findElementWhenClickable(By.className("resend")).click();
 
-        getElemContaining("Luo ja lähetä uusi ylläpitolinkki", "button").click();
+        clickButton("Luo ja lähetä uusi ylläpitolinkki");
 
         assertSuccessMessage("Uusi ylläpitolinkki lähetetty");
         assertTotalEmailsInQueue(1);
