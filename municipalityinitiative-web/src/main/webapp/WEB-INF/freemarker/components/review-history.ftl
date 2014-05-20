@@ -44,7 +44,7 @@
                 <ul>
                 <#list histories as row>
                     <#--<div class="review-history-row" style="margin-bottom:10px">-->
-                    <li style="padding-bottom:10px">
+                    <li style="padding-bottom:10px" class="review-history-row">
                         <span class=review-history-time" style="padding-right:5px "><@u.dateTime row.created/></span>
                         <span class="review-history-description"><@u.message key="review.history.type."+row.type/></span>
                         <div class="review-history-message" style="padding-left:137px">

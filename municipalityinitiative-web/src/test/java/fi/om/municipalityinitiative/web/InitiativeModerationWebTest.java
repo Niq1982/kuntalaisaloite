@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.web;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 import static fi.om.municipalityinitiative.web.MessageSourceKeys.MSG_BTN_REJECT_INITIATIVE;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -49,7 +50,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
         assertSuccessMessage("Aloite on hyväksytty");
         assertTextContainedByClass("extra-info", "Aloite on hyväksytty");
 
-        assertReviewHistoryElement("Hyväksytty julkaistavaksi", COMMENT);
+        assertThatFirstReviewHistoryElementIs("Hyväksytty julkaistavaksi", COMMENT);
         assertTotalEmailsInQueue(1);
 
     }
@@ -64,7 +65,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
         getElement(By.name(Urls.ACTION_MODERATOR_ADD_COMMENT)).sendKeys(COMMENT);
         clickButton("Lisää merkintä");
 
-        assertReviewHistoryElement("Oikeusministeriön merkintä", COMMENT);
+        assertThatFirstReviewHistoryElementIs("Oikeusministeriön merkintä", COMMENT);
     }
 
     @Test
@@ -83,7 +84,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
         assertSuccessMessage("Aloite palautettu korjattavaksi");
         assertTextContainedByClass("extra-info", "Aloite odottaa julkaisuun lähetystä");
 
-        assertReviewHistoryElement("Palautettu korjattavaksi", COMMENT);
+        assertThatFirstReviewHistoryElementIs("Palautettu korjattavaksi", COMMENT);
 
         assertTotalEmailsInQueue(1);
 
@@ -97,11 +98,11 @@ public class InitiativeModerationWebTest extends WebTestBase {
         open(urls.moderation(initiativeId));
 
         clickLink("Palauta aloite");
-        inputTextByCSS("#commentReject",COMMENT);
+        inputTextByCSS("#commentReject","hylkäys kommentti");
         clickButton("Palauta aloite");
 
         assertSuccessMessage("Aloite palautettu korjattavaksi");
-        assertReviewHistoryElement("Palautettu korjattavaksi", COMMENT);
+        assertThatFirstReviewHistoryElementIs("Palautettu korjattavaksi", "hylkäys kommentti");
         assertTotalEmailsInQueue(1);
 
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
@@ -116,14 +117,14 @@ public class InitiativeModerationWebTest extends WebTestBase {
         loginAsOmUser();
         open(urls.moderation(initiativeId));
 
-        assertReviewHistoryElement("Lähetetty tarkastettavaksi", null);
+        assertThatFirstReviewHistoryElementIs("Lähetetty tarkastettavaksi", null);
 
         clickLink("Hyväksy aloite");
-        inputTextByCSS("#commentAccept",COMMENT);
+        inputTextByCSS("#commentAccept","hyväksyntäkommentti");
         clickButton("Hyväksy aloite");
 
         assertSuccessMessage("Aloite on hyväksytty");
-        assertReviewHistoryElement("Hyväksytty julkaistavaksi", COMMENT);
+        assertThatFirstReviewHistoryElementIs("Hyväksytty julkaistavaksi", "hyväksyntäkommentti");
         assertTotalEmailsInQueue(4);
     }
 
@@ -173,11 +174,16 @@ public class InitiativeModerationWebTest extends WebTestBase {
         assertThat(driver.getPageSource(), containsString(urls.attachment(pdfAttachmentId, pdfFileName)));
     }
 
-    private void assertReviewHistoryElement(String historyItemHeader, String historyItemMessage) {
-        assertTextContainedByClass("review-history-description", historyItemHeader);
+    private void assertThatFirstReviewHistoryElementIs(String historyItemHeader, String historyItemMessage) {
+        WebElement element = getElement(By.className("review-history-row"));
+        assertThat(element.getText(), containsString(historyItemHeader));
         if (historyItemMessage != null) {
-            assertTextContainedByClass("review-history-message", historyItemMessage);
+            assertThat(element.getText(), containsString(historyItemMessage));
         }
+//        assertTextContainedByClass("review-history-description", historyItemHeader);
+//        if (historyItemMessage != null) {
+//            assertTextContainedByClass("review-history-message", historyItemMessage);
+//        }
     }
 
 
