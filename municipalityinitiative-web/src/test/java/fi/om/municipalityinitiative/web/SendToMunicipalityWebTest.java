@@ -34,7 +34,7 @@ public class SendToMunicipalityWebTest extends WebTestBase {
         
         open(urls.management(initiativeId));
         sendToMunicipality();
-        assertTextContainedByClass("msg-success",  "Aloite on lähetetty kuntaan ja julkaistu Kuntalaisaloite.fi-palvelussa");
+        assertSuccessMessage( "Aloite on lähetetty kuntaan ja julkaistu Kuntalaisaloite.fi-palvelussa");
         assertTotalEmailsInQueue(2);
     }
 

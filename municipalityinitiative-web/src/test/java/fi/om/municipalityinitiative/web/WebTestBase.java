@@ -202,8 +202,12 @@ public abstract class WebTestBase {
         if (elementsContainText(driver.findElements(By.className(className)), text)) {
             fail("Should have NOT found text '" + text + "'with className: " + className + " - but text(s) found.");
         }
-
     }
+
+    protected void assertSuccessMessage(String text) {
+        assertTextContainedByClass("msg-success", text);
+    }
+
     protected static void assertTextContainedByClass(String className, String text) {
         System.out.println("--- assertTextContainedByClass --------------- " + className + ": " + text);
         List<String> elementTexts = Lists.newArrayList();

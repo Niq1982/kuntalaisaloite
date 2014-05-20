@@ -236,7 +236,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         assertTextContainedByClass("modal-title", "Julkaise aloite Kuntalaisaloite.fi-palvelussa ja lähetä se kuntaan.");
 
         clickByName(Urls.ACTION_SEND_TO_REVIEW);
-        assertTextContainedByClass("msg-success", "Aloite lähetetty tarkastettavaksi");
+        assertSuccessMessage("Aloite lähetetty tarkastettavaksi");
         
         // Assert that initiative name and proposal cannot be edited in REVIEW-state
         update_initiative(initiativeId); // XXX: Why does send_to_review -test update initiative?
@@ -350,11 +350,11 @@ public class InitiativeCreateWebTest extends WebTestBase {
         inputText("contactInfo.address", "Updated");
 
         clickByName(Urls.ACTION_UPDATE_INITIATIVE);
-        assertTextContainedByClass("msg-success", "Aloitteen tiedot päivitetty");
+        assertSuccessMessage("Aloitteen tiedot päivitetty");
     }
 
     private void assertSuccessDraftSaved() {
-        assertTextContainedByClass("msg-success", "Luonnos tallennettu");
+        assertSuccessMessage("Luonnos tallennettu");
     }
 
     private void openAndAssertPreparePage() {

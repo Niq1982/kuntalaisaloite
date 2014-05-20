@@ -75,7 +75,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         
         getElemContaining(getMessage(MSG_BTN_SEND_CONFIRMATION), "button").click();
         
-        assertTextContainedByClass("msg-success", "Vahvistuslinkki on lähetetty antamaasi sähköpostiosoitteeseen");
+        assertSuccessMessage("Vahvistuslinkki on lähetetty antamaasi sähköpostiosoitteeseen");
 
         assertTotalEmailsInQueue(1);
        
@@ -99,7 +99,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         assertParticipationLinkInvalidPage();
 
         open(urls.confirmParticipant(participantId, RandomHashGenerator.getPrevious()));
-        assertTextContainedByClass("msg-success", "Osallistumisesi aloitteeseen on nyt vahvistettu");
+        assertSuccessMessage("Osallistumisesi aloitteeseen on nyt vahvistettu");
     }
 
     private void assertParticipationLinkInvalidPage() {
@@ -182,7 +182,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
         getElemContaining(getMessage(MSG_BTN_SEND_CONFIRMATION), "button").click();
 
-        assertTextContainedByClass("msg-success", "Vahvistuslinkki on lähetetty antamaasi sähköpostiosoitteeseen");
+        assertSuccessMessage("Vahvistuslinkki on lähetetty antamaasi sähköpostiosoitteeseen");
 
         assertTotalEmailsInQueue(1);
 
@@ -218,11 +218,11 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
         assertTotalEmailsInQueue(1);
 
-        assertTextContainedByClass("msg-success", "Linkki yhteydenottopyynnön vahvistamiseen on lähetetty sähköpostiisi");
+        assertSuccessMessage("Linkki yhteydenottopyynnön vahvistamiseen on lähetetty sähköpostiisi");
 
         open(urls.confirmAuthorMessage(RandomHashGenerator.getPrevious()));
 
-        assertTextContainedByClass("msg-success", "Viesti on nyt lähetetty vastuuhenkilöille");
+        assertSuccessMessage("Viesti on nyt lähetetty vastuuhenkilöille");
 
         assertTotalEmailsInQueue(2);
 

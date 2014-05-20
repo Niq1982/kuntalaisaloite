@@ -46,7 +46,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
         getElement(By.name(Urls.PARAM_SENT_COMMENT)).sendKeys(COMMENT);
         clickButton("Hyväksy aloite");
 
-        assertTextContainedByClass("msg-success", "Aloite on hyväksytty");
+        assertSuccessMessage("Aloite on hyväksytty");
         assertTextContainedByClass("extra-info", "Aloite on hyväksytty");
 
         assertReviewHistoryElement("Hyväksytty julkaistavaksi", COMMENT);
@@ -85,7 +85,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
         inputTextByCSS("#commentReject",COMMENT);
 
         clickByName(Urls.ACTION_REJECT_INITIATIVE);
-        assertTextContainedByClass("msg-success", "Aloite palautettu korjattavaksi");
+        assertSuccessMessage("Aloite palautettu korjattavaksi");
         assertTextContainedByClass("extra-info", "Aloite odottaa julkaisuun lähetystä");
 
         assertReviewHistoryElement("Palautettu korjattavaksi", COMMENT);
@@ -140,7 +140,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
 
         getElemContaining("Luo ja lähetä uusi ylläpitolinkki", "button").click();
 
-        assertTextContainedByClass("msg-success", "Uusi ylläpitolinkki lähetetty");
+        assertSuccessMessage("Uusi ylläpitolinkki lähetetty");
         assertTotalEmailsInQueue(1);
 
     }

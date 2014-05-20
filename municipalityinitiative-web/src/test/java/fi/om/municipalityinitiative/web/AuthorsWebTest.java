@@ -68,7 +68,7 @@ public class AuthorsWebTest extends WebTestBase {
         
         getElemContaining(getMessage(MSG_BTN_SEND), "button").click();
         
-        assertTextContainedByClass("msg-success", "Kutsu lähetetty");
+        assertSuccessMessage("Kutsu lähetetty");
         assertTextContainedByXPath("//div[@class='view-block last']//span[@class='status']", getMessage(MSG_INVITATION_UNCONFIRMED));
         assertTotalEmailsInQueue(1);
     }
@@ -87,7 +87,7 @@ public class AuthorsWebTest extends WebTestBase {
         getElementByLabel("Osoite", "textarea").sendKeys(CONTACT_ADDRESS);
         clickDialogButton("Hyväksy ja tallenna tiedot");
 
-        assertTextContainedByClass("msg-success", "Liittymisesi vastuuhenkilöksi on nyt vahvistettu ja olet kirjautunut sisään palveluun.");
+        assertSuccessMessage("Liittymisesi vastuuhenkilöksi on nyt vahvistettu ja olet kirjautunut sisään palveluun.");
 
         clickDialogButton("Muokkaa aloitetta");
         assertThat(getElementByLabel("Etu- ja sukunimi", "input").getAttribute("value"), containsString(CONTACT_NAME));
@@ -207,7 +207,7 @@ public class AuthorsWebTest extends WebTestBase {
         getElementByLabel("Puhelin", "input").sendKeys(CONTACT_PHONE);
 
         clickDialogButton("Hyväksy ja tallenna tiedot");
-        assertTextContainedByClass("msg-success", "Liittymisesi vastuuhenkilöksi on nyt vahvistettu ja olet kirjautunut sisään palveluun.");
+        assertSuccessMessage("Liittymisesi vastuuhenkilöksi on nyt vahvistettu ja olet kirjautunut sisään palveluun.");
         assertTotalEmailsInQueue(1);
 
     }
@@ -235,7 +235,7 @@ public class AuthorsWebTest extends WebTestBase {
         clickDialogButtonMsg(HYLKÄÄ_KUTSU);
         clickDialogButtonMsg(HYVÄKSY_KUTSUN_HYLKÄÄMINEN);
 
-        assertTextContainedByClass("msg-success", "Olet hylännyt kutsun vastuuhenkilöksi eikä tietojasi ole tallennettu aloitteeseen");
+        assertSuccessMessage("Olet hylännyt kutsun vastuuhenkilöksi eikä tietojasi ole tallennettu aloitteeseen");
 
         assertInvitationPageIsGone(invitation);
         assertTotalEmailsInQueue(0);
@@ -259,7 +259,7 @@ public class AuthorsWebTest extends WebTestBase {
         
         getElemContaining("Poista", "button").click();
         
-        assertTextContainedByClass("msg-success", "Osallistuja poistettu");
+        assertSuccessMessage("Osallistuja poistettu");
         assertTotalEmailsInQueue(0);
         
     }
@@ -279,7 +279,7 @@ public class AuthorsWebTest extends WebTestBase {
         
         getElemContaining("Poista vastuuhenkilö", "button").click();
         
-        assertTextContainedByClass("msg-success", "Vastuuhenkilö poistettu");
+        assertSuccessMessage("Vastuuhenkilö poistettu");
         assertTotalEmailsInQueue(2);
     }
 
