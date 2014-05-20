@@ -1,14 +1,11 @@
 package fi.om.municipalityinitiative.web;
 
-import fi.om.municipalityinitiative.dao.TestHelper;
-import fi.om.municipalityinitiative.util.InitiativeState;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
 import static fi.om.municipalityinitiative.web.MessageSourceKeys.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.theInstance;
 import static org.hamcrest.core.IsNot.not;
 
 public class InitiativeModerationWebTest extends WebTestBase {
@@ -54,8 +51,15 @@ public class InitiativeModerationWebTest extends WebTestBase {
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_ACCEPT_INITIATIVE);
 
         assertTextContainedByClass("extra-info", "Aloite on hyväksytty");
+
+        assertReviewHistoryElement("Hyväksytty julkaistavaksi", COMMENT);
         assertTotalEmailsInQueue(1);
 
+    }
+
+    private void assertReviewHistoryElement(String historyItemHeader, String historyItemMessage) {
+        assertTextContainedByClass("review-history-description", historyItemHeader);
+        assertTextContainedByClass("review-history-message", historyItemMessage);
     }
 
     @Test
@@ -73,6 +77,9 @@ public class InitiativeModerationWebTest extends WebTestBase {
         clickByName(Urls.ACTION_REJECT_INITIATIVE);
         assertMsgContainedByClass("msg-success", MSG_SUCCESS_REJECT_INITIATIVE);
         assertTextContainedByClass("extra-info", "Aloite odottaa julkaisuun lähetystä");
+
+        assertReviewHistoryElement("Palautettu korjattavaksi", COMMENT);
+
         assertTotalEmailsInQueue(1);
 
     }

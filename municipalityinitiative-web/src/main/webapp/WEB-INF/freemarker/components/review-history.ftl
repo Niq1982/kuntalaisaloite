@@ -41,20 +41,25 @@
 
 
             <div>
+                <ul>
                 <#list histories as row>
-                    <div class="review-history-row" style="margin-bottom:10px">
-                        <span class=review-history-time" style="padding-right:5px"><@u.dateTime row.created/></span>
-                        <span class="review-history-details">
-                            <@u.message key="review.history.type."+row.type/><br/>
+                    <#--<div class="review-history-row" style="margin-bottom:10px">-->
+                    <li style="padding-bottom:10px">
+                        <span class=review-history-time" style="padding-right:5px "><@u.dateTime row.created/></span>
+                        <span class="review-history-description"><@u.message key="review.history.type."+row.type/></span>
+                        <div class="review-history-message" style="padding-left:137px">
                             <#if row.message.present>
-                                    ${row.message.value}
+                            ${row.message.value}
                             </#if>
                             <#if row.type = "REVIEW_SENT">
-                                <br><a href="${urls.moderation(initiative.id, row.id)}"><@u.message key="review.history.show.diff"/></a>
+                                <a href="${urls.moderation(initiative.id, row.id)}"><@u.message key="review.history.show.diff"/></a>
                             </#if>
-                        </span>
-                    </div>
+                        </div>
+
+                    <#--</div>-->
+                    </li>
                 </#list>
+                </ul>
             </div>
 
             <#if reviewHistoryDiff.present>
