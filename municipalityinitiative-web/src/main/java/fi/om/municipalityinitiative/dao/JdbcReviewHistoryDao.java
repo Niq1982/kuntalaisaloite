@@ -38,6 +38,16 @@ public class JdbcReviewHistoryDao implements ReviewHistoryDao {
     }
 
     @Override
+    public void addReviewComment(Long initiativeId, String message) {
+        queryFactory.insert(reviewHistory)
+                .set(reviewHistory.initiativeId, initiativeId)
+                .set(reviewHistory.message, message)
+                .set(reviewHistory.type, ReviewHistoryType.REVIEW_COMMENT)
+                .executeWithKeys(reviewHistory.id);
+
+    }
+
+    @Override
     public void addReview(Long initiativeId, String initiativeSnapshot) {
         queryFactory.insert(reviewHistory)
                 .set(reviewHistory.initiativeId, initiativeId)
@@ -47,9 +57,18 @@ public class JdbcReviewHistoryDao implements ReviewHistoryDao {
     }
 
     @Override
+    public List<ReviewHistoryRow> findReviewHistoriesAndCommentsOrderedByTime(Long initiativeId) {
+        return queryFactory.from(reviewHistory)
+                .where(reviewHistory.initiativeId.eq(initiativeId))
+                .orderBy(reviewHistory.created.desc())
+                .list(reviewHistoryRowWrapper);
+    }
+
+    @Override
     public List<ReviewHistoryRow> findReviewHistoriesOrderedByTime(Long initiativeId) {
         return queryFactory.from(reviewHistory)
                 .where(reviewHistory.initiativeId.eq(initiativeId))
+                .where(reviewHistory.type.ne(ReviewHistoryType.REVIEW_COMMENT))
                 .orderBy(reviewHistory.created.desc())
                 .list(reviewHistoryRowWrapper);
     }

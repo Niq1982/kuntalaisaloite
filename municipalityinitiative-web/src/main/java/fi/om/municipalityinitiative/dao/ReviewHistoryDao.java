@@ -10,7 +10,11 @@ public interface ReviewHistoryDao {
 
     void addAccepted(Long initiativeId, String moderatorComment);
 
+    void addReviewComment(Long initiativeId, String message);
+
     List<ReviewHistoryRow> findReviewHistoriesOrderedByTime(Long initiativeId);
 
     void addReview(Long initiativeId, String initiativeSnapshot);
+
+    List<ReviewHistoryRow> findReviewHistoriesAndCommentsOrderedByTime(Long initiativeId);
 }

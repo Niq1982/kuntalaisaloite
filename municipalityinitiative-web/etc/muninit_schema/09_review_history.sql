@@ -1,5 +1,5 @@
 drop type if exists reviewHistoryType;
-create type reviewHistoryType as enum ('REVIEW_REJECT', 'REVIEW_ACCEPT', 'REVIEW_SENT');
+create type reviewHistoryType as enum ('REVIEW_REJECT', 'REVIEW_ACCEPT', 'REVIEW_SENT', 'REVIEW_COMMENT');
 
 create table review_history (
     id bigserial,
@@ -14,5 +14,6 @@ create table review_history (
     constraint review_history_initiative_id foreign key (initiative_id) references municipality_initiative(id),
 
     constraint review_row_valid check (((type = 'REVIEW_REJECT' or type = 'REVIEW_ACCEPT') and initiative_snapshot is null)
-                                   or ((type = 'REVIEW_SENT') and initiative_snapshot is not null and message is null))
+                                   or ((type = 'REVIEW_SENT') and initiative_snapshot is not null and message is null)
+                                   or ((type = 'REVIEW_COMMENT' and initiative_snapshot is null and message is not null)))
 );

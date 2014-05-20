@@ -81,6 +81,29 @@ public class JdbcReviewHistoryDaoTest {
         assertThat(histories.get(0).getSnapshot(), isPresent());
         assertThat(histories.get(0).getSnapshot().get(), is(initiativeSnapshot));
         assertThat(histories.get(0).getType(), is(ReviewHistoryType.REVIEW_SENT));
+    }
+
+    @Test
+    public void added_review_comment_not_shown_on_review_history_list() {
+        String message = "Some moderator comment";
+
+        reviewHistoryDao.addReviewComment(initiativeId, message);
+
+        assertThat(reviewHistoryDao.findReviewHistoriesOrderedByTime(initiativeId), hasSize(0));
+    }
+
+    @Test
+    public void added_review_comment_is_shown_on_review_history_and_comment_list() {
+        String message = "Some moderator comment";
+
+        reviewHistoryDao.addReviewComment(initiativeId, message);
+
+        List<ReviewHistoryRow> historiesAndComments = reviewHistoryDao.findReviewHistoriesAndCommentsOrderedByTime(initiativeId);
+        assertThat(historiesAndComments, hasSize(1));
+        assertThat(historiesAndComments.get(0).getType(), is(ReviewHistoryType.REVIEW_COMMENT));
+        assertThat(historiesAndComments.get(0).getMessage(), isPresent());
+        assertThat(historiesAndComments.get(0).getMessage().get(), is(message));
+        assertThat(historiesAndComments.get(0).getSnapshot(), isNotPresent());
 
     }
 }
