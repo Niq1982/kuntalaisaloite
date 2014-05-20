@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.web.controller;
 
+import fi.om.municipalityinitiative.dto.service.ReviewHistoryRow;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityUIEditDto;
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.service.AttachmentService;
@@ -7,6 +8,8 @@ import fi.om.municipalityinitiative.service.ValidationService;
 import fi.om.municipalityinitiative.service.ui.ModerationService;
 import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
 import fi.om.municipalityinitiative.util.Locales;
+import fi.om.municipalityinitiative.util.Maybe;
+import fi.om.municipalityinitiative.util.ReviewHistoryDiff;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.stereotype.Controller;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Locale;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
@@ -51,12 +55,19 @@ public class ModerationController extends BaseController{
 
         OmLoginUserHolder loginUserHolder = userService.getRequiredOmLoginUserHolder(request);
 
-        System.out.println("Item: " + historyItemId);
+        List<ReviewHistoryRow> reviewHistory = moderationService.findReviewHistory(loginUserHolder, initiativeId);
+
+        Maybe<ReviewHistoryDiff> reviewHistoryDiff = Maybe.absent();
+        if (historyItemId != null) {
+            reviewHistoryDiff = Maybe.of(ReviewHistoryDiff.from(reviewHistory, historyItemId));
+        }
+
         return ViewGenerator.moderationView(normalInitiativeService.getInitiative(initiativeId, loginUserHolder),
                 normalInitiativeService.getManagementSettings(initiativeId),
                 moderationService.findAuthors(loginUserHolder, initiativeId),
                 attachmentService.findAllAttachments(initiativeId, loginUserHolder),
-                moderationService.findReviewHistory(loginUserHolder, initiativeId)
+                reviewHistory,
+                reviewHistoryDiff
         ).view(model, Urls.get(locale).alt().moderation(initiativeId));
     }
 

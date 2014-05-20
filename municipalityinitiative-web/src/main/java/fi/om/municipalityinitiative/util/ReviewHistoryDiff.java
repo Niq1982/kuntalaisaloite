@@ -132,5 +132,13 @@ public class ReviewHistoryDiff {
             this.modificationType = Maybe.absent();
             this.line = line;
         }
+
+        public Maybe<Delta.TYPE> getModificationType() {
+            return modificationType;
+        }
+
+        public String getLine() {
+            return line;
+        }
     }
 }
