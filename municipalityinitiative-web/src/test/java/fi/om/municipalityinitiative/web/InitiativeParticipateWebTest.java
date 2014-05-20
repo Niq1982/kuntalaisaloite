@@ -75,7 +75,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         
         getElemContaining(getMessage(MSG_BTN_SEND_CONFIRMATION), "button").click();
         
-        assertMsgContainedByClass("msg-success", MSG_SUCCESS_PARTICIPATE);
+        assertTextContainedByClass("msg-success", "Vahvistuslinkki on lähetetty antamaasi sähköpostiosoitteeseen");
 
         assertTotalEmailsInQueue(1);
        
@@ -131,7 +131,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         // Vetuma participant has no information to fill
         getElemContaining("Tallenna", "button").click();
 
-        assertMsgContainedByClass("modal-title", MSG_SUCCESS_PARTICIPATE_VERIFIABLE);
+        assertTextContainedByClass("modal-title", "Osallistumisesi aloitteeseen on nyt vahvistettu");
         Integer newParticipantCountOnPage = Integer.valueOf(getElement(By.className("user-count-total")).getText());
 
         assertThat(newParticipantCountOnPage, is(originalParticipantCountOnPage + 1));
@@ -182,7 +182,7 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
         getElemContaining(getMessage(MSG_BTN_SEND_CONFIRMATION), "button").click();
 
-        assertMsgContainedByClass("msg-success", MSG_SUCCESS_PARTICIPATE);
+        assertTextContainedByClass("msg-success", "Vahvistuslinkki on lähetetty antamaasi sähköpostiosoitteeseen");
 
         assertTotalEmailsInQueue(1);
 

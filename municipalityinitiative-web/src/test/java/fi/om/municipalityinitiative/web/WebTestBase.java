@@ -197,11 +197,6 @@ public abstract class WebTestBase {
         }
         fail(tag + " tag with text " + text + " not found. Texts found: " + TestUtil.listValues(elementTexts) + " (Page title: "+driver.getTitle()+")");
     }
-    
-    protected void assertMsgContainedByClass(String className, String messageKey) {
-        String text = getMessage(messageKey);
-        assertTextContainedByClass(className, text);
-    }
 
     protected static void assertTextNotContainedByClass(String className, String text) {
         if (elementsContainText(driver.findElements(By.className(className)), text)) {
@@ -390,7 +385,7 @@ public abstract class WebTestBase {
     }
 
     protected void assertPageHasValidationErrors() {
-        assertMsgContainedByClass("errors-summary", "formError.summary.title");
+        assertTextContainedByClass("errors-summary", "Tietoja ei tallennettu. Syöttämissäsi tiedoissa oli seuraavia virheitä:");
     }
 
     protected void assertLoginLinkIsVisibleAtHeader() {

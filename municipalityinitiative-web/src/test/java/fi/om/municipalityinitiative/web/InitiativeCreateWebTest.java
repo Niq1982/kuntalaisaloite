@@ -146,7 +146,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
         clickByName(Urls.ACTION_SAVE);
 
-        assertSuccesPageWithMessage(MSG_SUCCESS_SAVE_DRAFT);
+        assertSuccessDraftSaved();
         assertTotalEmailsInQueue(0);
     }
 
@@ -168,7 +168,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
         clickByName(Urls.ACTION_SAVE);
 
-        assertSuccesPageWithMessage(MSG_SUCCESS_SAVE_DRAFT);
+        assertSuccessDraftSaved();
 
         assertTotalEmailsInQueue(1);
     }
@@ -233,10 +233,10 @@ public class InitiativeCreateWebTest extends WebTestBase {
         open(urls.management(initiativeId));
 
         clickById("js-send-to-review");
-        assertMsgContainedByClass("modal-title", MSG_SEND_TO_REVIEW_CONFIRM);
+        assertTextContainedByClass("modal-title", "Julkaise aloite Kuntalaisaloite.fi-palvelussa ja lähetä se kuntaan.");
 
         clickByName(Urls.ACTION_SEND_TO_REVIEW);
-        assertMsgContainedByClass("msg-success", MSG_SUCCESS_SEND_TO_REVIEW);
+        assertTextContainedByClass("msg-success", "Aloite lähetetty tarkastettavaksi");
         
         // Assert that initiative name and proposal cannot be edited in REVIEW-state
         update_initiative(initiativeId); // XXX: Why does send_to_review -test update initiative?
@@ -333,7 +333,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         
         clickByName(Urls.ACTION_SAVE);
 
-        assertSuccesPageWithMessage(MSG_SUCCESS_SAVE_DRAFT);
+        assertSuccessDraftSaved();
 
         System.out.println("--- add_contact_info OK");
     }
@@ -350,11 +350,11 @@ public class InitiativeCreateWebTest extends WebTestBase {
         inputText("contactInfo.address", "Updated");
 
         clickByName(Urls.ACTION_UPDATE_INITIATIVE);
-        assertMsgContainedByClass("msg-success", MSG_SUCCESS_UPDATE);
+        assertTextContainedByClass("msg-success", "Aloitteen tiedot päivitetty");
     }
 
-    private void assertSuccesPageWithMessage(String msgSuccessPrepare) {
-        assertMsgContainedByClass("msg-success", msgSuccessPrepare);
+    private void assertSuccessDraftSaved() {
+        assertTextContainedByClass("msg-success", "Luonnos tallennettu");
     }
 
     private void openAndAssertPreparePage() {

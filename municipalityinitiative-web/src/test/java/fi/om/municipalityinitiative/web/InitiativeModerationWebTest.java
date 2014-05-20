@@ -3,7 +3,7 @@ package fi.om.municipalityinitiative.web;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
-import static fi.om.municipalityinitiative.web.MessageSourceKeys.*;
+import static fi.om.municipalityinitiative.web.MessageSourceKeys.MSG_BTN_REJECT_INITIATIVE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.IsNot.not;
@@ -46,7 +46,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
         getElement(By.name(Urls.PARAM_SENT_COMMENT)).sendKeys(COMMENT);
         clickButton("Hyväksy aloite");
 
-        assertMsgContainedByClass("msg-success", MSG_SUCCESS_ACCEPT_INITIATIVE);
+        assertTextContainedByClass("msg-success", "Aloite on hyväksytty");
         assertTextContainedByClass("extra-info", "Aloite on hyväksytty");
 
         assertReviewHistoryElement("Hyväksytty julkaistavaksi", COMMENT);
@@ -85,7 +85,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
         inputTextByCSS("#commentReject",COMMENT);
 
         clickByName(Urls.ACTION_REJECT_INITIATIVE);
-        assertMsgContainedByClass("msg-success", MSG_SUCCESS_REJECT_INITIATIVE);
+        assertTextContainedByClass("msg-success", "Aloite palautettu korjattavaksi");
         assertTextContainedByClass("extra-info", "Aloite odottaa julkaisuun lähetystä");
 
         assertReviewHistoryElement("Palautettu korjattavaksi", COMMENT);

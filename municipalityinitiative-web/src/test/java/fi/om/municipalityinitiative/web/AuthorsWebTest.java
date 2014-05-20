@@ -13,7 +13,6 @@ import org.openqa.selenium.WebElement;
 
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
-import static fi.om.municipalityinitiative.web.MessageSourceKeys.MSG_SUCCESS_INVITATION_SENT;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
@@ -69,7 +68,7 @@ public class AuthorsWebTest extends WebTestBase {
         
         getElemContaining(getMessage(MSG_BTN_SEND), "button").click();
         
-        assertMsgContainedByClass("msg-success", MSG_SUCCESS_INVITATION_SENT);
+        assertTextContainedByClass("msg-success", "Kutsu lähetetty");
         assertTextContainedByXPath("//div[@class='view-block last']//span[@class='status']", getMessage(MSG_INVITATION_UNCONFIRMED));
         assertTotalEmailsInQueue(1);
     }
