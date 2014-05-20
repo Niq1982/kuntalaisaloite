@@ -161,7 +161,7 @@ public class ModerationService {
     @Transactional(readOnly = true)
     public List<ReviewHistoryRow> findReviewHistory(OmLoginUserHolder omLoginUserHolder, Long initiativeId) {
         omLoginUserHolder.assertOmUser();
-        return reviewHistoryDao.findReviewHistoriesOrderedByTime(initiativeId);
+        return reviewHistoryDao.findReviewHistoriesAndCommentsOrderedByTime(initiativeId);
     }
 
 }
