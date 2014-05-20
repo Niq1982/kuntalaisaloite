@@ -57,6 +57,19 @@ public class InitiativeModerationWebTest extends WebTestBase {
 
     }
 
+    @Test
+    public void add_moderator_comment() {
+
+        Long initiativeId = testHelper.createCollaborativeReview(HELSINKI_ID);
+
+        loginAsOmUser();
+        open(urls.moderation(initiativeId));
+        getElement(By.name(Urls.ACTION_MODERATOR_ADD_COMMENT)).sendKeys(COMMENT);
+        getElemContaining("Lisää merkintä", "button").click();
+
+        assertReviewHistoryElement("Oikeusministeriön merkintä", COMMENT);
+    }
+
     private void assertReviewHistoryElement(String historyItemHeader, String historyItemMessage) {
         assertTextContainedByClass("review-history-description", historyItemHeader);
         assertTextContainedByClass("review-history-message", historyItemMessage);
