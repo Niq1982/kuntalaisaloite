@@ -10,19 +10,27 @@
         <div class="msg-block">
             <h2><@u.message key="review.history.title"/></h2>
 
-            <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-accept" class="sodirty cf">
-                <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+			<div class="toggle-container">
+				<div class="js-open-block hidden">
+	                <a class="small-button gray js-btn-open-block" data-open-block="js-block-container" href="#"><span class="small-icon save-and-send"><@u.message "review.history.add.comment" /></span></a>
+	            </div>
+				
+				<div class="cf js-block-container js-hide">
+		            <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-accept" class="sodirty cf">
+		                <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+		
+		                <div class="input-block-content no-top-margin">
+		                    <textarea class="collapse" name="${UrlConstants.ACTION_MODERATOR_ADD_COMMENT}" maxlength="${InitiativeConstants.INITIATIVE_COMMENT_MAX}"></textarea>
+		                </div>
+		
+		                <div class="input-block-content">
+		                    <button type="submit"  class="small-button"><span class="small-icon save-and-send"><@u.message "review.history.add.comment" /></span></button>
+		                    <a href="#" class="push js-btn-close-block hidden"><@u.message "action.cancel" /></a>
+		                </div>
+		            </form>
+	            </div>
+            </div>
 
-                <div class="input-block-content no-top-margin">
-                    <textarea name="${UrlConstants.ACTION_MODERATOR_ADD_COMMENT}" maxlength="${InitiativeConstants.INITIATIVE_COMMENT_MAX}"></textarea>
-                </div>
-
-                <div class="input-block-content">
-                    <button type="submit"  class="small-button"><span class="small-icon save-and-send"><@u.message "review.history.add.comment" /></span></button>
-                </div>
-            </form>
-
-			
             <ul class="review-history">
             <#list histories as row>                
                 <li>
