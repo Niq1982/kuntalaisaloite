@@ -33,7 +33,7 @@
 
             <ul class="review-history">
             <#list histories as row>                
-                <li>
+                <li class="review-history-row">
                 	<span class="date"><@u.dateTime row.created/></span>
                 	<span class="title"><@u.message key="review.history.type."+row.type/></span>
                     <div class="info">
