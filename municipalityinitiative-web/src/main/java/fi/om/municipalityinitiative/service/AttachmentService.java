@@ -127,7 +127,7 @@ public class AttachmentService {
 
     static boolean isPDF(File file) throws IOException {
 
-        byte[] ba = Files.toByteArray(file); //Its a google guava library
+        byte[] ba = Files.toByteArray(file);
         return ba[0] == 37
                 && ba[1] == 80
                 && ba[2] == 68
