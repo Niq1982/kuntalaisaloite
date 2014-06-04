@@ -62,6 +62,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
 
         loginAsOmUser();
         open(urls.moderation(initiativeId));
+        clickLink("Lisää merkintä");
         getElement(By.name(Urls.ACTION_MODERATOR_ADD_COMMENT)).sendKeys(COMMENT);
         clickButton("Lisää merkintä");
 

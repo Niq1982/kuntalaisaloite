@@ -30,50 +30,52 @@
                 <@u.message key="moderation.acceptance.single."+initiative.single?string("true", "false")/>
             </p>
 
-            <div class="js-open-block hidden">
-                <a class="small-button gray js-btn-open-block" data-open-block="js-block-container" href="#"><span class="small-icon save-and-send"><@u.message "action.accept" /></span></a>
-                <a class="small-button gray push js-btn-open-block" data-open-block="js-block-container-alt" href="#"><span class="small-icon cancel"><@u.message "action.reject" /></span></a>
-            </div>
-
-            <div class="cf js-block-container js-hide">
-                <noscript>
-                    <@f.cookieWarning moderationURL />
-                </noscript>
-
-                <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-accept" class="sodirty">
-                    <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-
-                    <div class="input-block-content no-top-margin">
-                        <textarea name="${UrlConstants.PARAM_SENT_COMMENT}" id="commentAccept" class="collapse" maxlength="${InitiativeConstants.INITIATIVE_COMMENT_MAX}"></textarea>
-                    </div>
-
-                    <div class="input-block-content">
-                        <button type="submit" name="${UrlConstants.ACTION_ACCEPT_INITIATIVE}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.accept" /></span></button>
-                        <a href="${springMacroRequestContext.requestUri}#participants" class="push js-btn-close-block hidden"><@u.message "action.cancel" /></a>
-                    </div>
-                    <br/><br/>
-                </form>
-            </div>
-
-            <div class="cf js-block-container-alt js-hide">
-                <noscript>
-                    <@f.cookieWarning moderationURL />
-                </noscript>
-
-                <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-reject" class="sodirty">
-                    <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-
-                    <div class="input-block-content no-top-margin">
-                        <textarea name="${UrlConstants.PARAM_SENT_COMMENT}" id="commentReject" class="collapse" maxlength="${InitiativeConstants.INITIATIVE_COMMENT_MAX}"></textarea>
-                    </div>
-
-                    <div class="input-block-content">
-                        <button type="submit" name="${UrlConstants.ACTION_REJECT_INITIATIVE}" class="small-button"><span class="small-icon cancel"><@u.message "action.reject" /></span></button>
-                        <a href="${springMacroRequestContext.requestUri}#participants" class="push js-btn-close-block hidden"><@u.message "action.cancel" /></a>
-                    </div>
-
-                    <br/><br/>
-                </form>
+			<div class="toggle-container">
+	            <div class="js-open-block hidden">
+	                <a class="small-button gray js-btn-open-block" data-open-block="js-block-container" href="#"><span class="small-icon save-and-send"><@u.message "action.accept" /></span></a>
+	                <a class="small-button gray push js-btn-open-block" data-open-block="js-block-container-alt" href="#"><span class="small-icon cancel"><@u.message "action.reject" /></span></a>
+	            </div>
+	
+	            <div class="cf js-block-container js-hide">
+	                <noscript>
+	                    <@f.cookieWarning moderationURL />
+	                </noscript>
+	
+	                <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-accept" class="sodirty">
+	                    <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+	
+	                    <div class="input-block-content no-top-margin">
+	                        <textarea name="${UrlConstants.PARAM_SENT_COMMENT}" id="commentAccept" class="collapse" maxlength="${InitiativeConstants.INITIATIVE_COMMENT_MAX}"></textarea>
+	                    </div>
+	
+	                    <div class="input-block-content">
+	                        <button type="submit" name="${UrlConstants.ACTION_ACCEPT_INITIATIVE}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.accept" /></span></button>
+	                        <a href="${springMacroRequestContext.requestUri}#participants" class="push js-btn-close-block hidden"><@u.message "action.cancel" /></a>
+	                    </div>
+	                    <br/><br/>
+	                </form>
+	            </div>
+	
+	            <div class="cf js-block-container-alt js-hide">
+	                <noscript>
+	                    <@f.cookieWarning moderationURL />
+	                </noscript>
+	
+	                <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-reject" class="sodirty">
+	                    <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+	
+	                    <div class="input-block-content no-top-margin">
+	                        <textarea name="${UrlConstants.PARAM_SENT_COMMENT}" id="commentReject" class="collapse" maxlength="${InitiativeConstants.INITIATIVE_COMMENT_MAX}"></textarea>
+	                    </div>
+	
+	                    <div class="input-block-content">
+	                        <button type="submit" name="${UrlConstants.ACTION_REJECT_INITIATIVE}" class="small-button"><span class="small-icon cancel"><@u.message "action.reject" /></span></button>
+	                        <a href="${springMacroRequestContext.requestUri}#participants" class="push js-btn-close-block hidden"><@u.message "action.cancel" /></a>
+	                    </div>
+	
+	                    <br/><br/>
+	                </form>
+	            </div>
             </div>
         </div>
     </#if>
@@ -86,28 +88,31 @@
             <h2><@u.message "sendBackForFixing.title" /></h2>
             <p><@u.message "sendBackForFixing.description" /></p>
 
-            <div class="js-open-block hidden">
-                <a class="small-button gray js-btn-open-block" data-open-block="js-block-container" href="#"><span class="small-icon cancel"><@u.message "action.reject" /></span></a>
-            </div>
 
-            <div class="cf js-block-container js-hide">
-                <noscript>
-                    <@f.cookieWarning moderationURL />
-                </noscript>
-
-                <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-reject" class="sodirty">
-                    <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-
-                    <div class="input-block-content no-top-margin">
-                        <textarea name="${UrlConstants.PARAM_SENT_COMMENT}" id="commentReject" class="collapse" maxlength="${InitiativeConstants.INITIATIVE_COMMENT_MAX}" ></textarea>
-                    </div>
-
-                    <div class="input-block-content">
-                        <button type="submit" name="${UrlConstants.ACTION_SEND_TO_FIX}" class="small-button"><span class="small-icon cancel"><@u.message "action.reject" /></span></button>
-                        <a href="${springMacroRequestContext.requestUri}#participants" class="push js-btn-close-block hidden"><@u.message "action.cancel" /></a>
-                    </div>
-                    <br/><br/>
-                </form>
+			<div class="toggle-container">
+	            <div class="js-open-block hidden">
+	                <a class="small-button gray js-btn-open-block" data-open-block="js-block-container" href="#"><span class="small-icon cancel"><@u.message "action.reject" /></span></a>
+	            </div>
+	
+	            <div class="cf js-block-container js-hide">
+	                <noscript>
+	                    <@f.cookieWarning moderationURL />
+	                </noscript>
+	
+	                <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-reject" class="sodirty">
+	                    <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+	
+	                    <div class="input-block-content no-top-margin">
+	                        <textarea name="${UrlConstants.PARAM_SENT_COMMENT}" id="commentReject" class="collapse" maxlength="${InitiativeConstants.INITIATIVE_COMMENT_MAX}" ></textarea>
+	                    </div>
+	
+	                    <div class="input-block-content">
+	                        <button type="submit" name="${UrlConstants.ACTION_SEND_TO_FIX}" class="small-button"><span class="small-icon cancel"><@u.message "action.reject" /></span></button>
+	                        <a href="${springMacroRequestContext.requestUri}#participants" class="push js-btn-close-block hidden"><@u.message "action.cancel" /></a>
+	                    </div>
+	                    <br/><br/>
+	                </form>
+	            </div>
             </div>
         </div>
     </#if>
