@@ -25,7 +25,6 @@ import fi.om.municipalityinitiative.sql.QVerifiedParticipant;
 import fi.om.municipalityinitiative.sql.QVerifiedUser;
 import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -237,12 +236,6 @@ public class VerifiedInitiativeServiceIntegrationTest extends ServiceIntegration
 
         service.prepareVerifiedInitiative(verifiedUserHolderWithMunicipalityId(Maybe.<Long>absent()), createDto);
 
-    }
-
-    @Test
-    @Ignore
-    public void preparing_safe_initiative_sends_email() {
-        // TODO: Implement
     }
 
     @Test
