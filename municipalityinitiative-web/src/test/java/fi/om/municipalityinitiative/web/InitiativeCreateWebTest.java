@@ -2,7 +2,6 @@ package fi.om.municipalityinitiative.web;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.util.InitiativeState;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -98,21 +97,6 @@ public class InitiativeCreateWebTest extends WebTestBase {
         getElemContaining("Valtuustokäsittelyyn tähtäävä aloite", "span").click();
         getElemContaining("Aloita aloitteen tekeminen", "button").click();
         assertTitle("Tee kuntalaisaloite - Kuntalaisaloitepalvelu");
-    }
-
-    // This test probably is not needed for very long, because we should prevent the submit with etc. javascript.
-    // Although it would be nice to keep this for non-javascript-versions if needed...
-    @Ignore ("It is not possible to select wrong municipality in JS version")
-    @Test
-    public void first_logging_in_before_creating_verified_initiative_shows_error_if_wrong_municipality_after_submitting() {
-        overrideDriverToFirefox(true);
-        vetumaLogin(USER_SSN, MUNICIPALITY_2);
-
-        openAndAssertPreparePage();
-        select_municipality(false);
-        getElemContaining("Valtuustokäsittelyyn tähtäävä aloite", "span").click();
-        getElemContaining("Siirry tunnistautumaan", "button").click();
-        assertPreparePageWithInvalidMunicipalityWarning();
     }
 
     private void assertPreparePageWithInvalidMunicipalityWarning() {
