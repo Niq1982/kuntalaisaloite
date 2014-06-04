@@ -288,8 +288,6 @@ public class InitiativeCreateWebTest extends WebTestBase {
         if (!homeMunicipalityVerified) {
             assertTextContainedByXPath("//div[@id='homeMunicipality_chzn']/a/span", MUNICIPALITY_1);
         }
-
-        System.out.println("--- select_municipality OK");
     }
 
     public void fill_in_preparation_form() {
@@ -300,7 +298,6 @@ public class InitiativeCreateWebTest extends WebTestBase {
         String msgSuccessPrepare = MSG_SUCCESS_PREPARE;
         assertTextByTag("h1", "Linkki aloitteen tekemiseen on lähetetty sähköpostiisi");
         assertTextByTag("strong", CONTACT_EMAIL);
-        System.out.println("--- add_initiative_content OK");
         assertTotalEmailsInQueue(1);
 
     }
@@ -318,8 +315,6 @@ public class InitiativeCreateWebTest extends WebTestBase {
         clickByName(Urls.ACTION_SAVE);
 
         assertSuccessDraftSaved();
-
-        System.out.println("--- add_contact_info OK");
     }
     
     public void update_initiative(Long initiativeId) {
