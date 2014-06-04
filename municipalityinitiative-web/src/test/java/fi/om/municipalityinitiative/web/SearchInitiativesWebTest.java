@@ -5,10 +5,8 @@ import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import org.joda.time.DateTime;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -28,19 +26,19 @@ public class SearchInitiativesWebTest extends WebTestBase {
     }
 
     @Test
-    @Ignore("God damn selenium why won't you work")
     public void municipalities_are_listed() {
         overrideDriverToFirefox(true);
         open(urls.search());
 
-        WebElement municipalities = getElement(By.id("municipality_chzn"));
+        clickLink("Kaikki kunnat");
 
-        System.out.println(municipalities.getText());
-        String municipalitiesRawText = municipalities.getText();
+        String municipalitiesRawText = getChosenResultsRawText();
         assertThat(municipalitiesRawText, containsString(HELSINKI));
         assertThat(municipalitiesRawText, containsString(VANTAA));
+    }
 
-
+    private String getChosenResultsRawText() {
+        return getElement(By.className("chzn-results")).getText();
     }
 
     @Test
