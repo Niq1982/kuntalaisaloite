@@ -6,7 +6,6 @@ import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.DateTime;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -197,8 +196,6 @@ public class AuthorsWebTest extends WebTestBase {
         AuthorInvitation invitation = testHelper.createInvitation(verifiedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
         vetumaLogin("111111-1111", HELSINKI);
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
-        assertThat(acceptInvitationButton(), isPresent());
-        assertThat(rejectInvitationButton(), isPresent());
 
         acceptInvitationButton().get().click();
 
@@ -221,9 +218,38 @@ public class AuthorsWebTest extends WebTestBase {
     }
 
     @Test
-    @Ignore("Implement")
-    public void accepting_verified_author_invitation_when_unknown_municipality_from_vetuma_does_something(){
-        // TODO: Implemente
+    public void accepting_verified_author_invitation_when_unknown_municipality_from_vetuma_preselects_initiatives_municipality_and_allows_accepting(){
+        AuthorInvitation invitation = testHelper.createInvitation(verifiedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
+        vetumaLogin("111111-1111", null);
+        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
+
+        acceptInvitationButton().get().click();
+
+        getElementByLabel("Osoite", "textarea").sendKeys(CONTACT_ADDRESS);
+        getElementByLabel("Sähköpostiosoite", "input").sendKeys(CONTACT_EMAIL);
+        getElementByLabel("Puhelin", "input").sendKeys(CONTACT_PHONE);
+
+        assertThat(findElementWhenClickable(By.id("homeMunicipality_chzn")).getText(), is(HELSINKI));
+
+        clickDialogButton("Hyväksy ja tallenna tiedot");
+        assertSuccessMessage("Liittymisesi vastuuhenkilöksi on nyt vahvistettu ja olet kirjautunut sisään palveluun.");
+        assertTotalEmailsInQueue(1);
+    }
+
+    @Test
+    public void accepting_verified_author_invitation_when_unknown_municipality_prevents_accepting_if_user_selects_wrong_municipality() {
+
+        AuthorInvitation invitation = testHelper.createInvitation(verifiedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
+        vetumaLogin("111111-1111", null);
+        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
+
+        acceptInvitationButton().get().click();
+
+        clickLink(HELSINKI); // Chosen select box default value. Expects helsinki to be selected by default.
+        getElemContaining(VANTAA, "li").click();
+
+        assertTextContainedByClass("msg-warning", "Et ole aloitteen kunnan jäsen");
+
     }
 
     @Test

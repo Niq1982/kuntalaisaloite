@@ -387,6 +387,9 @@ public abstract class WebTestBase {
             }
         }
         inputText("EXTRADATA", "HETU=" + userSsn);
+        if (municipalityName == null) {
+            municipalityName = "Ei kuntaa (Turvakielto)";
+        }
         new Select(findElementWhenClickable(By.name("municipalityCode"))).selectByVisibleText(municipalityName);
         getElement(By.id("formsubmit")).click();
         getElement(By.id("returnsubmit")).click();
