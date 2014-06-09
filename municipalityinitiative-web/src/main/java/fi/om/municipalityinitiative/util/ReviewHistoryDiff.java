@@ -1,12 +1,15 @@
 package fi.om.municipalityinitiative.util;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import difflib.Delta;
 import difflib.DiffUtils;
 import difflib.Patch;
 import fi.om.municipalityinitiative.dto.service.ReviewHistoryRow;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class ReviewHistoryDiff {
     private Maybe<List<String>> oldText;
@@ -41,7 +44,12 @@ public class ReviewHistoryDiff {
     }
 
     private static List<String> split(String s) {
-        return Lists.newArrayList(s.split("\n|\\. "));
+
+        return Splitter.on(Pattern.compile("\n|\\. "))
+                .omitEmptyStrings()
+                .trimResults()
+                .splitToList(s);
+
     }
 
     private static ReviewHistoryDiff noReviewHistory(String s) {
@@ -78,6 +86,10 @@ public class ReviewHistoryDiff {
     public static List<DiffLine> getSomeDiff(Patch patch, List<String> oldLines) {
 
         List<Delta> deltas = patch.getDeltas();
+
+        for (Delta delta : deltas) {
+            LoggerFactory.getLogger(ReviewHistoryDiff.class).info(delta.toString());
+        }
 
         List<DiffLine> diffLines = Lists.newArrayList();
         Delta currentDelta = popNextDelta(deltas);
