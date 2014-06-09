@@ -89,8 +89,10 @@ public class ReviewHistoryDiff {
                 if (currentDelta.getType() == Delta.TYPE.CHANGE) {
                     addDiffLines(diffLines, Delta.TYPE.DELETE, currentDelta.getOriginal().getLines());
                     addDiffLines(diffLines, Delta.TYPE.INSERT, currentDelta.getRevised().getLines());
+                    i += currentDelta.getOriginal().getLines().size() -1;
                 } else if (currentDelta.getType() == Delta.TYPE.DELETE) {
                     addDiffLines(diffLines, Delta.TYPE.DELETE, currentDelta.getOriginal().getLines());
+                    i += currentDelta.getOriginal().getLines().size() -1;
                 } else if (currentDelta.getType() == Delta.TYPE.INSERT) {
                     addDiffLines(diffLines, Delta.TYPE.INSERT, currentDelta.getRevised().getLines());
                     diffLines.add(new DiffLine(oldLines.get(i)));
