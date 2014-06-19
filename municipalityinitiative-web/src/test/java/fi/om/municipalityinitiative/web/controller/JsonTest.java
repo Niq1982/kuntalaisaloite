@@ -101,8 +101,6 @@ public class JsonTest {
         List<JsonStringParser.IndentedString> municipalities = getJsonDataListFromModel("municipalities");
         String join = joinAsString(municipalities);
 
-        System.out.println(join);
-
         assertThat(join, is("[\n" +
                 "{\n" +
                 "\"id\":\"http://baseUrl/api/v1/municipalities/1\",\n" +

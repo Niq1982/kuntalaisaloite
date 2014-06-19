@@ -127,18 +127,17 @@ public class AttachmentService {
 
     static boolean isPDF(File file) throws IOException {
 
-        byte[] ba = Files.toByteArray(file); //Its a google guava library
-        return (ba[0] == 0x25)
-                && (ba[1] == 0x50)
-                && (ba[2] == 0x44)
-                && (ba[3] == 0x46);
+        byte[] ba = Files.toByteArray(file);
+        return ba[0] == 37
+                && ba[1] == 80
+                && ba[2] == 68
+                && ba[3] == 70;
     }
 
     static boolean isJPEG(File file) throws IOException {
-        byte[] ba = Files.toByteArray(file); //Its a google guava library
-        int i = 0;
-        return (ba[i] & 0xFF) == 0xFF && (ba[i + 1] & 0xFF) == 0xD8 && (ba[ba.length - 2] & 0xFF) == 0xFF
-                && (ba[ba.length - 1] & 0xFF) == 0xD9;
+        byte[] ba = Files.toByteArray(file);
+        return (ba[0] & 255) == 255 && (ba[1] & 255) == 216 && (ba[ba.length - 2] & 255) == 255
+                && (ba[ba.length - 1] & 255) == 217;
     }
 
     static boolean isPNG(File file) throws IOException {
@@ -146,7 +145,6 @@ public class AttachmentService {
         byte[] signature = new byte[8];
         byte[] pngIdBytes = { -119, 80, 78, 71, 13, 10, 26, 10 };
 
-        // if first 8 bytes are PNG then return PNG reader
         try (InputStream is = new FileInputStream(file)) {
             numRead = is.read(signature);
             if (numRead == -1)

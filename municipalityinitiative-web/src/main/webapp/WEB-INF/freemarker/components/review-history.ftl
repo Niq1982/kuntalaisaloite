@@ -38,7 +38,7 @@
                 	<span class="title"><@u.message key="review.history.type."+row.type/></span>
                     <div class="info">
                         <#if row.message.present>
-                        ${row.message.value}
+                            <@u.text row.message.value/>
                         </#if>
                         <#if row.type = "REVIEW_SENT">
                             <a href="${urls.moderation(initiative.id, row.id)}#diff"><@u.message key="review.history.show.diff"/></a>

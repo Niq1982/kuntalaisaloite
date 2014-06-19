@@ -2,7 +2,6 @@ package fi.om.municipalityinitiative.web;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.util.InitiativeState;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -98,21 +97,6 @@ public class InitiativeCreateWebTest extends WebTestBase {
         getElemContaining("Valtuustokäsittelyyn tähtäävä aloite", "span").click();
         getElemContaining("Aloita aloitteen tekeminen", "button").click();
         assertTitle("Tee kuntalaisaloite - Kuntalaisaloitepalvelu");
-    }
-
-    // This test probably is not needed for very long, because we should prevent the submit with etc. javascript.
-    // Although it would be nice to keep this for non-javascript-versions if needed...
-    @Ignore ("It is not possible to select wrong municipality in JS version")
-    @Test
-    public void first_logging_in_before_creating_verified_initiative_shows_error_if_wrong_municipality_after_submitting() {
-        overrideDriverToFirefox(true);
-        vetumaLogin(USER_SSN, MUNICIPALITY_2);
-
-        openAndAssertPreparePage();
-        select_municipality(false);
-        getElemContaining("Valtuustokäsittelyyn tähtäävä aloite", "span").click();
-        getElemContaining("Siirry tunnistautumaan", "button").click();
-        assertPreparePageWithInvalidMunicipalityWarning();
     }
 
     private void assertPreparePageWithInvalidMunicipalityWarning() {
@@ -304,8 +288,6 @@ public class InitiativeCreateWebTest extends WebTestBase {
         if (!homeMunicipalityVerified) {
             assertTextContainedByXPath("//div[@id='homeMunicipality_chzn']/a/span", MUNICIPALITY_1);
         }
-
-        System.out.println("--- select_municipality OK");
     }
 
     public void fill_in_preparation_form() {
@@ -316,7 +298,6 @@ public class InitiativeCreateWebTest extends WebTestBase {
         String msgSuccessPrepare = MSG_SUCCESS_PREPARE;
         assertTextByTag("h1", "Linkki aloitteen tekemiseen on lähetetty sähköpostiisi");
         assertTextByTag("strong", CONTACT_EMAIL);
-        System.out.println("--- add_initiative_content OK");
         assertTotalEmailsInQueue(1);
 
     }
@@ -334,8 +315,6 @@ public class InitiativeCreateWebTest extends WebTestBase {
         clickByName(Urls.ACTION_SAVE);
 
         assertSuccessDraftSaved();
-
-        System.out.println("--- add_contact_info OK");
     }
     
     public void update_initiative(Long initiativeId) {

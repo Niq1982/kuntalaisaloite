@@ -91,7 +91,6 @@ public abstract class WebTestBase {
         }
 
         String driverType = env.getProperty("test.web-driver", "default");
-        System.out.println("*** driverType = " + driverType);
 
         formatDriver(driverType);
 
@@ -191,10 +190,6 @@ public abstract class WebTestBase {
             }
             elementTexts.add(element.getText().trim());
         }
-        System.out.println("--- assertTextByTag --------------- " + tag + ": " + text);
-        for (WebElement element : elements) {
-            System.out.println("*** '" + element.getText().trim() + "'");
-        }
         fail(tag + " tag with text " + text + " not found. Texts found: " + TestUtil.listValues(elementTexts) + " (Page title: "+driver.getTitle()+")");
     }
 
@@ -213,11 +208,9 @@ public abstract class WebTestBase {
     }
 
     protected static void assertTextContainedByClass(String className, String text) {
-        System.out.println("--- assertTextContainedByClass --------------- " + className + ": " + text);
         List<String> elementTexts = Lists.newArrayList();
         List<WebElement> elements = driver.findElements(By.className(className));
         if (!elementsContainText(elements, text)) {
-            System.out.println("--- assertTextContainedByClass --------------- " + className + ": " + text);
             for (WebElement element : elements) {
                 elementTexts.add(element.getText().trim());
             }
@@ -248,9 +241,7 @@ public abstract class WebTestBase {
                 return;
             }
         }
-        System.out.println("--- assertTextContainedByXPath --------------- " + xpathExpression + ": " + text);
         for (WebElement element : elements) {
-            System.out.println("*** '" + element.getText().trim() + "'");
         }
         fail(xpathExpression + " xpath with text " + text + " not found. Texts found: " + TestUtil.listValues(elementTexts) + " (Page title: "+driver.getTitle()+")");
 
@@ -262,8 +253,6 @@ public abstract class WebTestBase {
     protected void assertTitle(String text) {
         String title = driver.getTitle();
 
-        System.out.println("--- assertTitle --------------- : " + text);
-        System.out.println("*** '" + title.trim() + "'");
         assertThat(title, is(text));
     }
 
@@ -387,6 +376,9 @@ public abstract class WebTestBase {
             }
         }
         inputText("EXTRADATA", "HETU=" + userSsn);
+        if (municipalityName == null) {
+            municipalityName = "Ei kuntaa (Turvakielto)";
+        }
         new Select(findElementWhenClickable(By.name("municipalityCode"))).selectByVisibleText(municipalityName);
         getElement(By.id("formsubmit")).click();
         getElement(By.id("returnsubmit")).click();

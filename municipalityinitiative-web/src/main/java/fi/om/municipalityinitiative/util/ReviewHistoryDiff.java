@@ -1,12 +1,15 @@
 package fi.om.municipalityinitiative.util;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import difflib.Delta;
 import difflib.DiffUtils;
 import difflib.Patch;
 import fi.om.municipalityinitiative.dto.service.ReviewHistoryRow;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class ReviewHistoryDiff {
     private Maybe<List<String>> oldText;
@@ -41,7 +44,12 @@ public class ReviewHistoryDiff {
     }
 
     private static List<String> split(String s) {
-        return Lists.newArrayList(s.split("\n|\\. "));
+
+        return Splitter.on(Pattern.compile("\n|\\. "))
+                .omitEmptyStrings()
+                .trimResults()
+                .splitToList(s);
+
     }
 
     private static ReviewHistoryDiff noReviewHistory(String s) {
@@ -79,6 +87,10 @@ public class ReviewHistoryDiff {
 
         List<Delta> deltas = patch.getDeltas();
 
+        for (Delta delta : deltas) {
+            LoggerFactory.getLogger(ReviewHistoryDiff.class).info(delta.toString());
+        }
+
         List<DiffLine> diffLines = Lists.newArrayList();
         Delta currentDelta = popNextDelta(deltas);
         for (int i = 0; i < oldLines.size(); ++i) {
@@ -89,8 +101,10 @@ public class ReviewHistoryDiff {
                 if (currentDelta.getType() == Delta.TYPE.CHANGE) {
                     addDiffLines(diffLines, Delta.TYPE.DELETE, currentDelta.getOriginal().getLines());
                     addDiffLines(diffLines, Delta.TYPE.INSERT, currentDelta.getRevised().getLines());
+                    i += currentDelta.getOriginal().getLines().size() -1;
                 } else if (currentDelta.getType() == Delta.TYPE.DELETE) {
                     addDiffLines(diffLines, Delta.TYPE.DELETE, currentDelta.getOriginal().getLines());
+                    i += currentDelta.getOriginal().getLines().size() -1;
                 } else if (currentDelta.getType() == Delta.TYPE.INSERT) {
                     addDiffLines(diffLines, Delta.TYPE.INSERT, currentDelta.getRevised().getLines());
                     diffLines.add(new DiffLine(oldLines.get(i)));

@@ -272,7 +272,7 @@
             <@u.text content=msg style=pBottomMargin + " font-style:italic;" />
         <#else>
             <@u.message "email.commentFromOM" />:
-            ${msg}
+            <@u.text msg/>
         </#if>
     </#if>
 </#macro>

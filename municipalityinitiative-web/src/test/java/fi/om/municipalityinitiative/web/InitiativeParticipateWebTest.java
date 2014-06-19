@@ -5,7 +5,6 @@ import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -151,11 +150,37 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     }
 
     @Test
-    @Ignore("Implement")
-    public void participating_to_verified_initiative_when_private_home_municipality_from_vetuma() {
-        vetumaLogin(OTHER_USER_SSN, "Ei kuntaa");
+    public void participating_to_verified_initiative_when_private_home_municipality_from_vetuma_succeeds() {
+        vetumaLogin(OTHER_USER_SSN, null);
 
-        // Implement
+        open(urls.view(verifiedInitiativeHelsinki));
+
+        assertThat(participateToInitiativeButton(), isPresent());
+        participateToInitiativeButton().get().click();
+
+        assertThat(findElementWhenClickable(By.id("homeMunicipality_chzn")).getText(), is(HELSINKI));
+
+        // Vetuma participant has no information to fill
+        getElemContaining("Tallenna", "button").click();
+
+        assertTextContainedByClass("modal-title", "Osallistumisesi aloitteeseen on nyt vahvistettu");
+    }
+
+    @Test
+    public void participating_to_verified_initiative_when_private_home_municipality_from_vetuma_is_prevented_if_user_selects_wrong_municipality() {
+        vetumaLogin(OTHER_USER_SSN, null);
+
+        open(urls.view(verifiedInitiativeHelsinki));
+
+        assertThat(participateToInitiativeButton(), isPresent());
+        participateToInitiativeButton().get().click();
+
+        assertThat(findElementWhenClickable(By.id("homeMunicipality_chzn")).getText(), is(HELSINKI));
+
+        clickLink(HELSINKI); // Chosen select box default value. Expects helsinki to be selected by default.
+        getElemContaining(VANTAA, "li").click();
+
+        assertTextContainedByClass("msg-warning", "Et ole aloitteen kunnan jäsen");
     }
 
     private Maybe<WebElement> participateToInitiativeButton() {
