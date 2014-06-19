@@ -66,7 +66,7 @@
         </div>
         <div class="span span-1">
           <span class="icon collect-two-percent"></span>
-          <p><@u.message "infoGraph.collect.COLLABORATIVE" /></p>
+          <p><@u.message "infoGraph.collect.COLLABORATIVE_COUNCIL" /></p>
         </div>
         <div class="span span-1">
           <span class="icon collect-five-percent"></span>
