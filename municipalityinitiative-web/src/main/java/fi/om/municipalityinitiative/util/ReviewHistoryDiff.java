@@ -117,6 +117,11 @@ public class ReviewHistoryDiff {
 
         }
 
+        while (currentDelta != null) {
+            addDiffLines(diffLines, Delta.TYPE.INSERT, currentDelta.getRevised().getLines());
+            currentDelta = popNextDelta(deltas);
+        }
+
         return diffLines;
     }
 

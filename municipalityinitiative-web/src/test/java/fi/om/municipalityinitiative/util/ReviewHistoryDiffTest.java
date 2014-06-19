@@ -185,6 +185,45 @@ public class ReviewHistoryDiffTest {
     }
 
     @Test
+    public void shows_lines_if_added_to_bottom() {
+        rows = Lists.newArrayList();
+
+        rows.add(row(1, ReviewHistoryType.REVIEW_SENT, new LocalDate(2010, 1, 1), "Rivi yksi\n" +
+                "Rivi kaksi\n" +
+                "Rivi kolme"));
+
+        rows.add(row(2, ReviewHistoryType.REVIEW_SENT, new LocalDate(2010, 1, 3), "Rivi yksi\n" +
+                "Rivi kaksi\n" +
+                "Rivi kolme\n" +
+                "Rivi neljä\n" +
+                "Rivi viisi"));
+
+        Collections.reverse(rows);
+
+        List<ReviewHistoryDiff.DiffLine> diff = ReviewHistoryDiff.from(rows, 2L).getDiff();
+
+        assertThat(diff.get(0).modificationType, isNotPresent());
+        assertThat(diff.get(0).line, is("Rivi yksi"));
+
+        assertThat(diff.get(1).modificationType, isNotPresent());
+        assertThat(diff.get(1).line, is("Rivi kaksi"));
+
+        assertThat(diff.get(2).modificationType, isNotPresent());
+        assertThat(diff.get(2).line, is("Rivi kolme"));
+
+        assertThat(diff.get(3).modificationType, isPresent());
+        assertThat(diff.get(3).modificationType.get(), is(INSERT));
+        assertThat(diff.get(3).line, is("Rivi neljä"));
+
+        assertThat(diff.get(4).modificationType, isPresent());
+        assertThat(diff.get(4).modificationType.get(), is(INSERT));
+        assertThat(diff.get(4).line, is("Rivi viisi"));
+
+
+        printDiff(diff);
+    }
+
+    @Test
     public void shows_remove_and_multiple_add() {
 
         rows = Lists.newArrayList();
