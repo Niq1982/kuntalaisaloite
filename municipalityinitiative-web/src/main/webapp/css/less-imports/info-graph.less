@@ -33,10 +33,6 @@
 	background: #fff;
 	text-align: center;
 
-	h4 {
-		margin-bottom: 0;
-	}
-
 	p {
 		font-size: 0.9em;
 
@@ -46,7 +42,7 @@
 	}
 
 	.span {
-		display: block;
+		position: relative;
 		float: left;
 
 		padding: 0 10px;
@@ -97,20 +93,25 @@
 	}
 
 	.content {
-		min-height: 260px;
 		margin-left: 22%;
 		padding-left: 30px;
 		padding-right: 30px;
+		padding-bottom: 20px;
 		background: #fff;
 
 		* { line-height: 1.2; }
 
 		.c-group { position: relative; }
-		.c-group-1 {  }
-		.c-group-2 { padding:40px 0; }
-		.c-group-3 { }
-		.c-group-4 { padding-top: 20px; }
-		.c-group-5 { padding-top: 50px; }
+		.c-group-1 { }
+		.c-group-2 { }
+		.c-group-3 {
+			min-height: 200px;
+			padding-top: 20px;
+		}
+		.c-group-4 {
+			padding-top: 50px;
+			padding-bottom: 70px;
+		}
 	}
 
 	.order {
@@ -118,7 +119,7 @@
 		font-size: 2em;
 
 		.ie7 &, .ie8 & {
-			background:url("../../img/ie/info-graph-circles-fallback.png?version=${timestamp}") 0 0 no-repeat;	
+			background:url("../../img/ie/info-graph-circles-fallback.png?version=${timestamp}") 0 0 no-repeat;
 		}
 	}
 
@@ -126,7 +127,7 @@
 		.circle(88px, #f0f0f0);
 
 		.ie7 &, .ie8 & {
-			background:url("../../img/ie/info-graph-circles-fallback.png?version=${timestamp}") -100px 0 no-repeat;	
+			background:url("../../img/ie/info-graph-circles-fallback.png?version=${timestamp}") -100px 0 no-repeat;
 		}
 	}
 
@@ -163,29 +164,33 @@
 		}
 
 		&.normal {
-			.infoGraphSprite(0, 1);
-		}
-
-		&.two-percent {
-			.infoGraphSprite(1, 1);
-		}
-
-		&.five-percent {
-			.infoGraphSprite(2, 1);
-		}
-
-		&.no-collect {
-			width: 90px;
-			height: 56px;
-
 			.infoGraphSprite(0, 2);
 		}
 
-		&.collect {
-			width: 90px;
-			height: 56px;
-
+		&.two-percent {
 			.infoGraphSprite(1, 2);
+		}
+
+		&.five-percent {
+			.infoGraphSprite(2, 2);
+		}
+
+		&.collect-normal {
+			width: 100px;
+			height: 50px;
+			.infoGraphSprite(0, 0);
+		}
+
+		&.collect-two-percent {
+			width: 68px;
+			height: 50px;
+			.infoGraphSprite(2, 0);
+		}
+
+		&.collect-five-percent {
+			width: 111px;
+			height: 50px;
+			.infoGraphSprite(0, 1);
 		}
 
 		&.municipality {
@@ -214,11 +219,31 @@
 			&.left { left: 0; }
 			&.right { right: 0; }
 
+			// TODO: refactor class names
+			&.line-10 {
+				width: @infoGraphVerLineWidth;
+				left: 50%;
+				margin-left: -@infoGraphVerLineWidth/2;
+			}
+			&.line-30 {
+				// width: 1/3*100%;
+				width: 160px;
+
+				&.middle {
+					left: 50%;
+					// margin-left: -1/6*100%;
+					margin-left: -80px;
+				}
+
+			}
 			&.line-20 { width: 80px; }
+			&.line-20 { width: 80px; }
+			&.line-45 { width: 236px; }
 			&.line-50 { width: 245px; }
 			&.line-55 { width: 325px; }
 			&.line-60 { width: 327px; }
 			&.line-70 { width: 410px; }
+			&.line-100 { width: 100%; }
 
 			&.pullup {
 				top: -9px;
@@ -251,7 +276,7 @@
 					border-top: 8px solid @infoGraphBlack;
 				}
 			}
-		
+
 
 			.arrow {
 				position: absolute;
@@ -262,7 +287,10 @@
 				// general
 				&.right { right: 0; }
 				&.left { left: 0; }
-				&.middle { left: 50%; }
+				&.middle {
+					left: 50%;
+					margin-left: -@infoGraphVerLineWidth/2;
+				}
 
 				// custom: group-line-arrow
 				&.arrow-1-2-2 { right: 240px; }
@@ -273,8 +301,8 @@
 					position: absolute;
 					left: 0;
 					bottom: -8px;
-					width: 0; 
-					height: 0; 
+					width: 0;
+					height: 0;
 					border-left: 7px solid transparent;
 					border-right: 7px solid transparent;
 				}
