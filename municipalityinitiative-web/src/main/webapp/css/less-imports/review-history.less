@@ -53,6 +53,7 @@
     .diff-col {
         float: left;
         width: 50%;
+        margin-bottom: 20px;
 
         .boxSizing();
 
@@ -83,5 +84,24 @@
         }
 
     }
+}
+
+.diff-block-colors {
+	clear: both;
+	
+	.diff-color {
+		display: inline-block;
+		width: 16px;
+		height: 16px;
+		margin-right: .5em;
+		vertical-align: top;
+	
+		&.insert { background: @colorDiffInsert; }
+		&.delete { background: @colorDiffDelete;}
+	}
+	
+	.label {
+		margin-right: 2em;
+	}
 }
 

@@ -66,7 +66,7 @@ public class InitiativeModerationWebTest extends WebTestBase {
         getElement(By.name(Urls.ACTION_MODERATOR_ADD_COMMENT)).sendKeys(COMMENT);
         clickButton("Lisää merkintä");
 
-        assertThatFirstReviewHistoryElementIs("Oikeusministeriön merkintä", COMMENT);
+        assertThatFirstReviewHistoryElementIs("Moderoinnin merkintä", COMMENT);
     }
 
     @Test
