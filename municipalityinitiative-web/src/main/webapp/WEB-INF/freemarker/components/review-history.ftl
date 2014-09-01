@@ -69,7 +69,7 @@
                             <#else>
                                 <li class="diff-prefix">
                             </#if>
-                            ${difRow.line}
+                            ${difRow.line}&nbsp;
                         </li>
                         </#list>
                     </ul>
@@ -81,7 +81,7 @@
                     <#if reviewHistoryDiff.value.oldText.present>
                         <ul class="diff-list">
                         <#list reviewHistoryDiff.value.oldText.value as oldTextLine>
-                            <li>${oldTextLine}</li>
+                            <li>${oldTextLine}&nbsp;</li>
                         </#list>
                         </ul>
                     </#if>

@@ -46,7 +46,6 @@ public class ReviewHistoryDiff {
     private static List<String> split(String s) {
 
         return Splitter.on(Pattern.compile("\n|\\. "))
-                .omitEmptyStrings()
                 .trimResults()
                 .splitToList(s);
 
