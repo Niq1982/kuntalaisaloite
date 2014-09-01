@@ -23,9 +23,10 @@
 
     <#if (initiative.extraInfo)?has_content>
         <h2><@u.message "initiative.extraInfo.title" /></h2>
-        <div class="initiative-content-row last">
+        <div class="initiative-content-row last replace-links">
             <@u.text initiative.extraInfo!"" />
         </div>
+
     </#if>
 </#macro>
 
@@ -53,7 +54,7 @@
 
     <#if (initiative.extraInfo)?has_content>
         <h2><@u.message "initiative.extraInfo.title" /></h2>
-        <div class="initiative-content-row last">
+        <div class="initiative-content-row last replace-links">
             <@u.text initiative.extraInfo!"" />
         </div>
     </#if>

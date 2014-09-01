@@ -277,6 +277,7 @@ $(document).ready(function () {
 		});
 	});
 
+	$('.replace-links').linkReplacer();
 
 
 	// Action for external links

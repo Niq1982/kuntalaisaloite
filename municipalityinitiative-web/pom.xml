@@ -40,7 +40,7 @@
                 </testResources>
             </build>
         </profile>
-        <!-- Use -Dweb-driver=[ff,ie] parameter to control which browser 
+        <!-- Use -Dweb-driver=[ff,ie] parameter to control which browser
             is used for testing. -->
     </profiles>
 
@@ -94,8 +94,8 @@
                 <id>cedarsoft-thirdparty</id>
                 <url>http://maven.cedarsoft.com/content/repositories/thirdparty/</url>
             </repository>
-        <!-- <repository> <id>dwr</id> <url>http://download.java.net/maven/2/</url> 
-            <layout>default</layout> <releases><enabled>true</enabled></releases> <snapshots><enabled>true</enabled></snapshots> 
+        <!-- <repository> <id>dwr</id> <url>http://download.java.net/maven/2/</url>
+            <layout>default</layout> <releases><enabled>true</enabled></releases> <snapshots><enabled>true</enabled></snapshots>
             </repository> -->
     </repositories>
 
@@ -157,7 +157,7 @@
                 <artifactId>bcprov-jdk15on</artifactId>
                 <version>1.48</version>
         </dependency>
-                    
+
         <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
@@ -341,7 +341,7 @@
             <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
-        <!-- <dependency> <groupId>com.googlecode.jmockit</groupId><artifactId>jmockit-coverage</artifactId> 
+        <!-- <dependency> <groupId>com.googlecode.jmockit</groupId><artifactId>jmockit-coverage</artifactId>
             <version>${jmockit.version}</version> <scope>runtime</scope> </dependency> -->
         <!-- Jetty -->
         <dependency>
@@ -441,7 +441,7 @@
                     <sourceDirectory>${project.basedir}/src/main/webapp/css/less-main</sourceDirectory>
                     <!-- NOTE: These are compiled into src for noscript and faster web testing -->
                     <outputDirectory>${project.basedir}/src/main/webapp/css</outputDirectory>
-                    <!-- 
+                    <!--
                     <outputDirectory>${project.build.directory}/${project.build.finalName}/css</outputDirectory>
                      -->
                     <compress>true</compress>
@@ -486,6 +486,7 @@
                                 <jsSourceFile>jsrender.min.js</jsSourceFile>
                                 <jsSourceFile>chosen.jquery.min.js</jsSourceFile>
                                 <jsSourceFile>jquery.magnific-popup.min.js</jsSourceFile>
+                                <jsSourceFile>jquery.linkreplacer.js</jsSourceFile>
                                 <jsSourceFile>kuntalaisaloite.js</jsSourceFile>
                             </jsSourceFiles>
                             <jsFinalFile>script.js</jsFinalFile>
