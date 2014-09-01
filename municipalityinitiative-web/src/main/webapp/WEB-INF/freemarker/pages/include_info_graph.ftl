@@ -8,8 +8,9 @@
  	<div class="block cf">
     <@header "infoGraph.choose.title" 1 />
 
-    <div class="content top-pad cf">
-			 <div class="c-group c-group-1 cf">
+    <div class="content choose-type-section top-pad cf">
+      <div class="vetuma-section"><div class="title"><@u.message "infoGraph.vetumaBox.title" /></div></div>
+      <div class="c-group c-group-1 cf">
         <div class="span span-1">
           <h4><@u.message "infoGraph.choose.type.COLLABORATIVE.title" /></h4>
         </div>
@@ -46,7 +47,7 @@
 	<div class="block cf">
 		<@header "infoGraph.collect.title" 2 />
 
-    <div class="content top-pad cf">
+    <div class="content collect-section top-pad cf">
       <div class="lines line-group-2">
         <div class="line line-30 left green">
           <@arrow "middle" />
@@ -113,6 +114,8 @@
       		</div>
 
         	<div class="c-group c-group-4">
+        		<span class="icon envelope"></span>
+        		
         		<p><@u.messageHTML "infoGraph.decision.description" /></p>
             </div>
         </div>

@@ -93,6 +93,7 @@
 	}
 
 	.content {
+		position: relative;
 		margin-left: 22%;
 		padding-left: 30px;
 		padding-right: 30px;
@@ -100,6 +101,14 @@
 		background: #fff;
 
 		* { line-height: 1.2; }
+		
+		&.choose-type-section {
+			padding-top: 60px;
+		}
+		
+		&.collect-section {
+			padding-bottom: 40px;
+		}
 
 		.c-group { position: relative; }
 		.c-group-1 { }
@@ -109,8 +118,32 @@
 			padding-top: 20px;
 		}
 		.c-group-4 {
-			padding-top: 50px;
 			padding-bottom: 70px;
+		}
+	}
+
+	.vetuma-section {
+		z-index: 10;
+		position: absolute;
+		right: 25px;
+		top: 45px;
+		width: 333px;
+		height: 28em;
+		min-height: 405px;
+		border: 2px dashed @borderGray;
+		
+		html[lang="sv"] & {
+			height: 31.2em;
+		}
+		
+		.ie8 & {
+			min-height: 425px;
+		}
+		
+		.title {
+			position: relative;
+			top: -1.4em;
+			text-align: center;
 		}
 	}
 
@@ -200,6 +233,13 @@
 			.infoGraphSprite(0, 3);
 		}
 
+		&.envelope {
+			width: 77px;
+			height: 79px;
+
+			.infoGraphSprite(1, 3);
+		}
+
 	}
 
 	.lines {
@@ -219,7 +259,6 @@
 			&.left { left: 0; }
 			&.right { right: 0; }
 
-			// TODO: refactor class names
 			&.line-10 {
 				width: @infoGraphVerLineWidth;
 				left: 50%;
@@ -227,22 +266,24 @@
 			}
 			&.line-30 {
 				// width: 1/3*100%;
-				width: 160px;
+				width: 150px;
+				
+				&.left {
+					left: 5px;
+				}
 
 				&.middle {
 					left: 50%;
-					// margin-left: -1/6*100%;
-					margin-left: -80px;
+					margin-left: -75px;
+				}
+				
+				&.right {
+					right: 5px;
 				}
 
 			}
-			&.line-20 { width: 80px; }
-			&.line-20 { width: 80px; }
+			
 			&.line-45 { width: 236px; }
-			&.line-50 { width: 245px; }
-			&.line-55 { width: 325px; }
-			&.line-60 { width: 327px; }
-			&.line-70 { width: 410px; }
 			&.line-100 { width: 100%; }
 
 			&.pullup {
