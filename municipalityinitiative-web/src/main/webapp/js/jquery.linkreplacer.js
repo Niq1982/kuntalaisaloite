@@ -4,7 +4,7 @@
   $.fn.linkReplacer = function (options) {
 
     function checkProtocol(url) {
-      return url.indexOf('www') === 0 ? 'http://' + url : url;
+      return url.indexOf('http') === -1 ? 'http://' + url : url;
     }
 
     function replacer(match){
@@ -12,7 +12,7 @@
     }
 
     function replaceLinks(text) {
-      var exp = /\b((?:https?:\/\/|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/ig;
+      var exp = /\b((?:https?:\/\/|www\d{0,3}[.]|[a-zåäöA-ZÅÄÖ0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/ig;
 
       return text.replace(exp, replacer);
     }
