@@ -59,7 +59,7 @@
             <@u.searchLink parameter="withTypeNormal" cssClass=(currentSearch.type == "normal")?string('active','') tooltip=false />
             <@u.searchLink parameter="withTypeCouncil" cssClass=(currentSearch.type == "council")?string('active','')  tooltip=false />
             <@u.searchLink parameter="withTypeCitizen" cssClass=(currentSearch.type == "citizen")?string('active','')  tooltip=false />
-            
+
         </div>
     </div>
     </#if>
@@ -86,11 +86,11 @@
                     </div>
                     <div class="search-parameters">
                 </#if>
-                
+
+                <@u.searchLink parameter="withStateAll" cssClass=(currentSearch.show == "all")?string('active','') count=initiativeCounts.all/>
                 <@u.searchLink parameter="withStateCollecting" cssClass=(currentSearch.show == "collecting")?string('active','') count=initiativeCounts.collecting />
                 <@u.searchLink parameter="withStateSent" cssClass=(currentSearch.show == "sent")?string('active','') count=initiativeCounts.sent/>
-                <@u.searchLink parameter="withStateAll" cssClass=(currentSearch.show == "all")?string('active','') count=initiativeCounts.all/>
-                
+
             </div>
             <br class="clear" />
     </div>
