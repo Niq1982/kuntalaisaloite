@@ -6,7 +6,7 @@ public class InitiativeSearch {
     private Integer offset;
     private Integer limit;
     private OrderBy orderBy = OrderBy.latest;
-    private Show show = Show.collecting;
+    private Show show = Show.all;
     private Long municipality;
     private String search;
     private Type type = Type.all;
