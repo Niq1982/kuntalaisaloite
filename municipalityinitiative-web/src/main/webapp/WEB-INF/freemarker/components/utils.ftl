@@ -190,7 +190,16 @@
 		</noscript>
 	    
 	    <script>
-		    document.write('<a href="javascript: history.go(-1)">&laquo; <@message labelKey /></a>');
+	    	(function(){
+	    		var prevPage = '${urls.search()}';
+	    	
+	    		// Preserve sort-parameters
+	    		if (document.referrer.indexOf('${urls.search()}') !== -1) {
+	    			prevPage = 'javascript: history.go(-1)';
+	    		}
+	    		
+	    		document.write('<a href="' + prevPage + '">&laquo; <@message labelKey /></a>');
+	    	})();
 		</script>
 	<#else>
 		<a href="${url}" >&laquo; <@message labelKey /></a>
