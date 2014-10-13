@@ -31,13 +31,18 @@ public class EmailReportService {
     private List<Initiative> getInitiativesAcceptedButNotPublishedIn(Days days) {
         List<Initiative> result = Lists.newArrayList();
 
-        for (Initiative initiative : initiativeDao.findAllByStateChangeAfter(InitiativeState.ACCEPTED, new LocalDate().minus(days))) {
+        for (Initiative initiative : initiativeDao.findAllByStateChangeBefore(InitiativeState.ACCEPTED, new LocalDate().minus(days))) {
             if (initiative.getLastEmailReportType() == null) {
                 result.add(initiative);
             }
         }
         return result;
 
+    }
+
+    @Transactional(readOnly = false)
+    public void sendQuarterReports() {
+        List<Initiative> publishedNotSent = initiativeDao.findAllPublishedNotSent();
     }
 
 }

@@ -808,7 +808,7 @@ public class JdbcInitiativeDaoTest {
                         .withStateTime(today)
         );
 
-        List<Initiative> accepted = initiativeDao.findAllByStateChangeAfter(InitiativeState.ACCEPTED, today.toLocalDate().plusDays(1));
+        List<Initiative> accepted = initiativeDao.findAllByStateChangeBefore(InitiativeState.ACCEPTED, today.toLocalDate().plusDays(1));
         assertThat(accepted, hasSize(1));
         assertThat(accepted.get(0).getName(), is("accepted"));
     }
@@ -833,10 +833,28 @@ public class JdbcInitiativeDaoTest {
                         .withStateTime(today)
         );
 
-        assertThat(initiativeDao.findAllByStateChangeAfter(InitiativeState.ACCEPTED, today.toLocalDate().plusDays(1)), hasSize(1));
-        assertThat(initiativeDao.findAllByStateChangeAfter(InitiativeState.ACCEPTED, today.toLocalDate().plusDays(2)), hasSize(1));
-        assertThat(initiativeDao.findAllByStateChangeAfter(InitiativeState.ACCEPTED, today.toLocalDate()), is(empty()));
-        assertThat(initiativeDao.findAllByStateChangeAfter(InitiativeState.ACCEPTED, today.minusDays(1).toLocalDate()), is(empty()));
+        assertThat(initiativeDao.findAllByStateChangeBefore(InitiativeState.ACCEPTED, today.toLocalDate().plusDays(1)), hasSize(1));
+        assertThat(initiativeDao.findAllByStateChangeBefore(InitiativeState.ACCEPTED, today.toLocalDate().plusDays(2)), hasSize(1));
+        assertThat(initiativeDao.findAllByStateChangeBefore(InitiativeState.ACCEPTED, today.toLocalDate()), is(empty()));
+        assertThat(initiativeDao.findAllByStateChangeBefore(InitiativeState.ACCEPTED, today.minusDays(1).toLocalDate()), is(empty()));
+
+    }
+
+    @Test
+    public void find_all_published_not_sent() {
+        testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.COLLABORATIVE);
+        testHelper.create(testMunicipality.getId(), InitiativeState.REVIEW, InitiativeType.COLLABORATIVE);
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withName("Published")
+                .withState(InitiativeState.PUBLISHED)
+                .withSent(null));
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withName("Published and sent")
+                .withState(InitiativeState.PUBLISHED)
+                .withSent(new DateTime()));
+
+        assertThat(initiativeDao.findAllPublishedNotSent(), hasSize(1));
+        assertThat(initiativeDao.findAllPublishedNotSent().get(0).getName(), is("Published"));
 
     }
 

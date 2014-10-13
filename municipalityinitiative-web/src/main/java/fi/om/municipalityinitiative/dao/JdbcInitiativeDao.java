@@ -168,12 +168,21 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    public List<Initiative> findAllByStateChangeAfter(InitiativeState accepted, LocalDate date) {
+    public List<Initiative> findAllByStateChangeBefore(InitiativeState accepted, LocalDate date) {
         DateTime dateTimeAtMidnight = date.toDateTime(new LocalTime(0, 0));
         return queryFactory.from(QMunicipalityInitiative.municipalityInitiative)
                 .where(QMunicipalityInitiative.municipalityInitiative.state.eq(accepted))
                 .where(QMunicipalityInitiative.municipalityInitiative.stateTimestamp.before(dateTimeAtMidnight))
                 .innerJoin(QMunicipalityInitiative.municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
+                .list(initiativeInfoMapping);
+    }
+
+    @Override
+    public List<Initiative> findAllPublishedNotSent() {
+        return queryFactory.from(municipalityInitiative)
+                .where(municipalityInitiative.sent.isNull())
+                .where(municipalityInitiative.state.eq(InitiativeState.PUBLISHED))
+                .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
                 .list(initiativeInfoMapping);
     }
 

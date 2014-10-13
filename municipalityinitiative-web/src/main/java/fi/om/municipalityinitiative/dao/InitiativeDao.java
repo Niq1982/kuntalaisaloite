@@ -57,7 +57,9 @@ public interface InitiativeDao {
 
     void denormalizeParticipantCountForVerifiedInitiative(Long initiativeId);
 
-    List<Initiative> findAllByStateChangeAfter(InitiativeState accepted, LocalDate date);
+    List<Initiative> findAllByStateChangeBefore(InitiativeState accepted, LocalDate date);
 
     void markInitiativeReportSent(Long id, EmailReportType type, DateTime today);
+
+    List<Initiative> findAllPublishedNotSent();
 }
