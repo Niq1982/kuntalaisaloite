@@ -17,6 +17,11 @@ public class JobExecutor {
     @Scheduled(cron = EVERY_DAY_AT_MIDNIGHT)
     public void sendReportEmailsForInitiativesAcceptedButNotPublished() {
         emailReportService.sendReportEmailsForInitiativesAcceptedButNotPublished();
+    }
 
+    @Scheduled(cron = EVERY_DAY_AT_MIDNIGHT)
+    @PostConstruct
+    public void sendQuarterReportsForInitiatives() {
+        emailReportService.sendQuarterReports();
     }
 }
