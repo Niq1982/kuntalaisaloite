@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 
@@ -45,7 +45,7 @@ public class EmailReportServiceTest {
                 .toInitiativeDraft());
 
         emailReportService.sendReportEmailsForInitiativesAcceptedButNotPublished();
-        assertThat(testHelper.getSingleQueuedEmail().getSubject(), is("Aloitteesi odottaa vielä julkaisua"));
+        assertThat(testHelper.getSingleQueuedEmail().getSubject(), containsString("Aloitteesi odottaa vielä julkaisua"));
 
         emailReportService.sendReportEmailsForInitiativesAcceptedButNotPublished();
         assertThat(testHelper.findQueuedEmails(), hasSize(1)); // Is not sent again
