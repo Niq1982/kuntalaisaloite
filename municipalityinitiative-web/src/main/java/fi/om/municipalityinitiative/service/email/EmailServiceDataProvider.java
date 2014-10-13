@@ -71,10 +71,4 @@ public class EmailServiceDataProvider {
         return attachmentDao.findAcceptedAttachments(initiativeId).size();
     }
 
-    public List<Initiative> getInitiativesAcceptedButNotPublished() {
-
-//        List<Initiative> allAccepted = initiativeDao.findAllByStateChangeAfter(InitiativeState.ACCEPTED, new LocalDate().minusWeeks(2));
-        return null;
-
-    }
 }

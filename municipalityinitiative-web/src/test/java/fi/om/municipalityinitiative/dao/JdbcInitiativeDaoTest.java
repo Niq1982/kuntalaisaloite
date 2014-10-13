@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
+import fi.om.municipalityinitiative.service.email.EmailReportType;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.*;
@@ -88,6 +89,7 @@ public class JdbcInitiativeDaoTest {
         Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withSent(new DateTime(2010, 1, 1, 0, 0))
+                .witEmailReportSent(EmailReportType.IN_ACCEPTED, new DateTime())
                 .applyAuthor().withParticipantMunicipality(authorsMunicipalityId)
                 .toInitiativeDraft());
 
@@ -835,6 +837,21 @@ public class JdbcInitiativeDaoTest {
         assertThat(initiativeDao.findAllByStateChangeAfter(InitiativeState.ACCEPTED, today.toLocalDate().plusDays(2)), hasSize(1));
         assertThat(initiativeDao.findAllByStateChangeAfter(InitiativeState.ACCEPTED, today.toLocalDate()), is(empty()));
         assertThat(initiativeDao.findAllByStateChangeAfter(InitiativeState.ACCEPTED, today.minusDays(1).toLocalDate()), is(empty()));
+
+    }
+
+    @Test
+    public void mark_initiative_report_sent_marks_it_as_sent() {
+        DateTime now = DateTime.now();
+        Long accepted = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.ACCEPTED));
+
+        precondition(testHelper.getInitiative(accepted).getLastEmailReportTime(), is(nullValue()));
+        precondition(testHelper.getInitiative(accepted).getLastEmailReportType(), is(nullValue()));
+
+        initiativeDao.markInitiativeReportSent(accepted, EmailReportType.IN_ACCEPTED, now);
+
+        assertThat(testHelper.getInitiative(accepted).getLastEmailReportTime(), is(now));
+        assertThat(testHelper.getInitiative(accepted).getLastEmailReportType(), is(EmailReportType.IN_ACCEPTED));
 
     }
 

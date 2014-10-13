@@ -318,6 +318,11 @@ public class AppConfiguration {
         config.setFreemarkerVariables(variables);
         return config;
     }
+
+    @Bean
+    public EmailReportService emailReportService() {
+        return new EmailReportService();
+    }
     
     @Bean
     public BeansWrapper freemarkerObjectWrapper(FreeMarkerConfigurer configurer) {

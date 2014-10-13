@@ -14,6 +14,7 @@ import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.service.EncryptionService;
+import fi.om.municipalityinitiative.service.email.EmailReportType;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
@@ -222,6 +223,8 @@ public class TestHelper {
         insert.set(municipalityInitiative.fixState, initiativeDraft.fixState);
         insert.set(municipalityInitiative.moderatorComment, initiativeDraft.moderatorComment);
         insert.set(municipalityInitiative.stateTimestamp, initiativeDraft.stateTime);
+        insert.set(municipalityInitiative.lastEmailReportTime, initiativeDraft.emailReportDateTime);
+        insert.set(municipalityInitiative.lastEmailReportType, initiativeDraft.emailReportType);
 
         lastInitiativeId = insert.executeWithKey(municipalityInitiative.id);
 
@@ -677,6 +680,9 @@ public class TestHelper {
         public FixState fixState = FixState.OK;
         public String moderatorComment;
         public Integer externalParticipantCount = DEFAULT_EXTERNAL_PARTICIPANT_COUNT;
+        public EmailReportType emailReportType;
+        public DateTime emailReportDateTime;
+
         public AuthorDraft applyAuthor() {
             this.authorDraft = Maybe.of(new AuthorDraft(this, municipalityId));
             return this.authorDraft.get();
@@ -758,6 +764,11 @@ public class TestHelper {
             return this;
         }
 
+        public InitiativeDraft witEmailReportSent(EmailReportType emailReportType, DateTime dateTime) {
+            this.emailReportType = emailReportType;
+            this.emailReportDateTime = dateTime;
+            return this;
+        }
     }
     public Long getLastInitiativeId() {
         return lastInitiativeId;

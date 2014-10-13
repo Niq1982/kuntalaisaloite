@@ -6,11 +6,13 @@ import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListWithCount;
+import fi.om.municipalityinitiative.service.email.EmailReportType;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import java.util.List;
@@ -56,4 +58,6 @@ public interface InitiativeDao {
     void denormalizeParticipantCountForVerifiedInitiative(Long initiativeId);
 
     List<Initiative> findAllByStateChangeAfter(InitiativeState accepted, LocalDate date);
+
+    void markInitiativeReportSent(Long id, EmailReportType type, DateTime today);
 }

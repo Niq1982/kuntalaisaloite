@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 
 import javax.annotation.Resource;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -336,6 +335,11 @@ public class EmailService {
             values.put(value.name(), value);
         }
         dataMap.put(enumType.getSimpleName(), values);
+    }
+
+    public void sendInitiativeAcceptedButNotPublishedEmail(Initiative initiative) {
+
+
     }
 
     public static class EmailLocalizationProvider {

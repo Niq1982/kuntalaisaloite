@@ -22,6 +22,7 @@ import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListWithCount;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
+import fi.om.municipalityinitiative.service.email.EmailReportType;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.*;
@@ -94,6 +95,8 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     info.setFixState(row.get(municipalityInitiative.fixState));
                     info.setExternalParticipantCount(Mappings.nullToZero(row.get(municipalityInitiative.externalparticipantcount)));
                     info.setParticipantCountPublic(Mappings.nullToZero(row.get(municipalityInitiative.participantCountPublic)));
+                    info.setLastEmailReportTime(row.get(municipalityInitiative.lastEmailReportTime));
+                    info.setLastEmailReportType(row.get(municipalityInitiative.lastEmailReportType));
                     return info;
                 }
             };
@@ -172,6 +175,16 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .where(QMunicipalityInitiative.municipalityInitiative.stateTimestamp.before(dateTimeAtMidnight))
                 .innerJoin(QMunicipalityInitiative.municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
                 .list(initiativeInfoMapping);
+    }
+
+    @Override
+    public void markInitiativeReportSent(Long id, EmailReportType type, DateTime today) {
+        assertSingleAffection(queryFactory.update(municipalityInitiative)
+                .set(municipalityInitiative.lastEmailReportTime, today)
+                .set(municipalityInitiative.lastEmailReportType, type)
+                .where(municipalityInitiative.id.eq(id))
+                .execute());
+
     }
 
     @Override
