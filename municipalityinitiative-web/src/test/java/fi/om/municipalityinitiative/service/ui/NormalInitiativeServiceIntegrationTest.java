@@ -52,10 +52,11 @@ public class NormalInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 
     @Test
     public void all_fields_are_set_when_getting_municipalityInitiativeInfo() throws Exception {
-        Long initiativeId = testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
 
-        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+        Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withSent(new DateTime())
+                .withState(InitiativeState.PUBLISHED)
+                .withType(InitiativeType.COLLABORATIVE)
                 .witEmailReportSent(EmailReportType.IN_ACCEPTED, new DateTime())
                 .applyAuthor()
                 .toInitiativeDraft());
