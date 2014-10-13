@@ -11,6 +11,7 @@ import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
+import org.joda.time.LocalDate;
 
 import java.util.List;
 
@@ -53,4 +54,6 @@ public interface InitiativeDao {
     InitiativeListWithCount findUnCached(InitiativeSearch search);
 
     void denormalizeParticipantCountForVerifiedInitiative(Long initiativeId);
+
+    List<Initiative> findAllByStateChangeAfter(InitiativeState accepted, LocalDate date);
 }

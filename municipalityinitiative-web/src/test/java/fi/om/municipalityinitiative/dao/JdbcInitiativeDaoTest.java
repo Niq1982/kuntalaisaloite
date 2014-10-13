@@ -787,6 +787,57 @@ public class JdbcInitiativeDaoTest {
         assertThat(all.getAll(), is(1L));
     }
 
+    @Test
+    public void find_all_by_state_returns_only_with_given_state() {
+        DateTime today = DateTime.now();
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                        .withName("accepted")
+                        .withState(InitiativeState.ACCEPTED)
+                        .withStateTime(today)
+        );
+
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                        .withState(InitiativeState.REVIEW)
+                        .withStateTime(today)
+        );
+
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                        .withState(InitiativeState.PUBLISHED)
+                        .withStateTime(today)
+        );
+
+        List<Initiative> accepted = initiativeDao.findAllByStateChangeAfter(InitiativeState.ACCEPTED, today.toLocalDate().plusDays(1));
+        assertThat(accepted, hasSize(1));
+        assertThat(accepted.get(0).getName(), is("accepted"));
+    }
+
+    @Test
+    public void find_all_by_state_retusn_only_stateChanges_after_given_date() {
+
+        DateTime today = DateTime.now();
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                        .withName("accepted")
+                        .withState(InitiativeState.ACCEPTED)
+                        .withStateTime(today)
+        );
+
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                        .withState(InitiativeState.REVIEW)
+                        .withStateTime(today)
+        );
+
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                        .withState(InitiativeState.PUBLISHED)
+                        .withStateTime(today)
+        );
+
+        assertThat(initiativeDao.findAllByStateChangeAfter(InitiativeState.ACCEPTED, today.toLocalDate().plusDays(1)), hasSize(1));
+        assertThat(initiativeDao.findAllByStateChangeAfter(InitiativeState.ACCEPTED, today.toLocalDate().plusDays(2)), hasSize(1));
+        assertThat(initiativeDao.findAllByStateChangeAfter(InitiativeState.ACCEPTED, today.toLocalDate()), is(empty()));
+        assertThat(initiativeDao.findAllByStateChangeAfter(InitiativeState.ACCEPTED, today.minusDays(1).toLocalDate()), is(empty()));
+
+    }
+
     private void createPublicInitiativesOfAllType() {
         for (InitiativeType initiativeType : InitiativeType.values()) {
             testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, initiativeType);

@@ -8,6 +8,7 @@ import com.mysema.query.sql.types.DateTimeType;
 import com.mysema.query.sql.types.EnumAsObjectType;
 import com.mysema.query.sql.types.LocalDateType;
 import com.mysema.query.types.Ops;
+import fi.om.municipalityinitiative.service.email.EmailReportType;
 import fi.om.municipalityinitiative.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,6 +67,7 @@ public class JdbcConfiguration {
         configuration.register(new LocalDateType());
         configuration.register("municipality_initiative", "type", new EnumAsObjectType<>(InitiativeType.class));
         configuration.register("municipality_initiative", "state", new EnumAsObjectType<>(InitiativeState.class));
+        configuration.register("municipality_initiative", "last_email_report_type", new EnumAsObjectType<>(EmailReportType.class));
         configuration.register("participant", "membership_type", new EnumAsObjectType<>(Membership.class));
         configuration.register("municipality_initiative", "fix_state", new EnumAsObjectType<>(FixState.class));
         configuration.register("info_text", "category", new EnumAsObjectType<>(InfoTextCategory.class));

@@ -26,6 +26,8 @@ import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
@@ -160,6 +162,16 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .where(QMunicipalityInitiative.municipalityInitiative.name.isNotEmpty())
                 .orderBy(QMunicipalityInitiative.municipalityInitiative.id.desc())
                 .list(initiativeListInfoMapping);
+    }
+
+    @Override
+    public List<Initiative> findAllByStateChangeAfter(InitiativeState accepted, LocalDate date) {
+        DateTime dateTimeAtMidnight = date.toDateTime(new LocalTime(0, 0));
+        return queryFactory.from(QMunicipalityInitiative.municipalityInitiative)
+                .where(QMunicipalityInitiative.municipalityInitiative.state.eq(accepted))
+                .where(QMunicipalityInitiative.municipalityInitiative.stateTimestamp.before(dateTimeAtMidnight))
+                .innerJoin(QMunicipalityInitiative.municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
+                .list(initiativeInfoMapping);
     }
 
     @Override
