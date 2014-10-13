@@ -202,6 +202,11 @@ public class AppConfiguration {
     }
 
     @Bean
+    public JobExecutor jobExecutor() {
+        return new JobExecutor();
+    }
+
+    @Bean
     public UserService userService() {
         return new UserService(env.getRequiredProperty(PropertyNames.omUserSalt));
     }

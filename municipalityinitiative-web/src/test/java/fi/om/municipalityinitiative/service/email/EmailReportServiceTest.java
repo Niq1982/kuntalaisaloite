@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.service.email;
 import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.util.InitiativeState;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +14,7 @@ import javax.annotation.Resource;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={IntegrationTestFakeEmailConfiguration.class})
@@ -33,13 +35,19 @@ public class EmailReportServiceTest {
     }
 
     @Test
-    public void sends_accepted_but_not_published_emails() {
+    public void sends_accepted_but_not_published_emails_once() {
 
         testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality)
-                .withState(InitiativeState.ACCEPTED));
+                .withState(InitiativeState.ACCEPTED)
+                .withStateTime(new DateTime().minusDays(15))
+                .applyAuthor()
+                .withParticipantEmail("author@example.com")
+                .toInitiativeDraft());
 
         emailReportService.sendReportEmailsForInitiativesAcceptedButNotPublished();
-
         assertThat(testHelper.getSingleQueuedEmail().getSubject(), is("Aloitteesi odottaa vielä julkaisua"));
+
+        emailReportService.sendReportEmailsForInitiativesAcceptedButNotPublished();
+        assertThat(testHelper.findQueuedEmails(), hasSize(1)); // Is not sent again
     }
 }

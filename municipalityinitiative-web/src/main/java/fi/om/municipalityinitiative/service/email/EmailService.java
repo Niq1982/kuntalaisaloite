@@ -37,6 +37,7 @@ public class EmailService {
     private static final String AUTHOR_MESSAGE_CONFIRMATION = "author-message-confirmation";
     private static final String AUTHOR_MESSAGE_TO_AUTHORS = "author-message-to-authors";
     private static final String VERIFIED_INITIATIVE_CREATED = "verified-initiative-created";
+    private static final String INITIATIVE_ACCEPTED_BUT_NOT_PUBLISHED = "report-accepted-but-not-published";
 
     @Resource
     EmailServiceDataProvider dataProvider;
@@ -63,6 +64,25 @@ public class EmailService {
                 .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.EMAIL_AUTHOR_INVITATION_ACCEPTED_SUBJECT, toArray(), locale))
                 .withDataMap(dataMap)
                 .send();
+
+    }
+
+    public void sendInitiativeAcceptedButNotPublishedEmail(Initiative initiative) {
+
+        Map<String, String> managementLinksByAuthorEmails = dataProvider.getManagementLinksByAuthorEmails(initiative.getId());
+
+        for (Map.Entry<String, String> managementHashByAuthorEmail : managementLinksByAuthorEmails.entrySet()) {
+            HashMap<String, Object> dataMap = toDataMap(initiative, Locales.LOCALE_FI);
+            dataMap.put("managementHash", managementHashByAuthorEmail.getValue());
+            emailMessageConstructor
+                    .fromTemplate(initiative.getId(), INITIATIVE_ACCEPTED_BUT_NOT_PUBLISHED)
+                    .addRecipient(managementHashByAuthorEmail.getKey())
+                    .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.REPORT_ACCEPTED_BUT_NOT_PUBLISHED, toArray(), Locales.LOCALE_FI))
+                    .withDataMap(dataMap)
+                    .send();
+        }
+
+
 
     }
 
@@ -335,11 +355,6 @@ public class EmailService {
             values.put(value.name(), value);
         }
         dataMap.put(enumType.getSimpleName(), values);
-    }
-
-    public void sendInitiativeAcceptedButNotPublishedEmail(Initiative initiative) {
-
-
     }
 
     public static class EmailLocalizationProvider {
