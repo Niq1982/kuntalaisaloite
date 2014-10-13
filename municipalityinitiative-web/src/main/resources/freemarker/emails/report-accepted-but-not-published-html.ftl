@@ -12,7 +12,7 @@
 
     <#assign title><@u.message keyPrefix+".title" /></#assign>
 
-    <@l.emailHtml title>
+    <@l.emailHtml title=title footer=false>
 
         <@b.mainContentBlock title>
             <@b.initiativeDetails type />
@@ -41,11 +41,12 @@
 
 
 
-        <@b.mainContentBlock title>
+        <#assign titleSv><@u.message keyPrefix+".title" /></#assign>
+        <@b.mainContentBlock titleSv>
             <@b.initiativeDetails type />
 
-        <p style="${pBothMargins!""}"><@u.message keyPrefix+".description"/> <@u.localDate initiative.stateTime/></p>
-        <p style="${pBothMargins!""}"><@u.message keyPrefix+".description.2" /></p>
+            <p style="${pBothMargins!""}"><@u.message keyPrefix+".description"/> <@u.localDate initiative.stateTime/></p>
+            <p style="${pBothMargins!""}"><@u.message keyPrefix+".description.2" /></p>
 
             <@b.adminViewLink type=type verified=initiative.type.verifiable />
         </@b.mainContentBlock>
