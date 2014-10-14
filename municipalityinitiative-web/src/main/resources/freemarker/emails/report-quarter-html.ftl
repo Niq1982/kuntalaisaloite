@@ -38,8 +38,9 @@
         <#global switchLocale = altLocale />
 
 
+        <#assign titleSv><@u.message keyPrefix+".title" /></#assign>
 
-        <@b.mainContentBlock title>
+        <@b.mainContentBlock titleSv>
             <@b.initiativeDetails type />
 
         <p style="${pBothMargins!""}"><@u.message key=keyPrefix+".description" args=[publishDateFormatted, initiative.participantCount]/></p>
