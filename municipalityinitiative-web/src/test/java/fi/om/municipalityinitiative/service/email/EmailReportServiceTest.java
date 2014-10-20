@@ -45,6 +45,22 @@ public class EmailReportServiceTest {
     }
 
     @Test
+    public void does_not_send_accepted_but_not_published_before_two_weeks_has_passed() {
+
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality)
+                .withState(InitiativeState.ACCEPTED)
+                .withStateTime(new DateTime().minusDays(13))
+                .applyAuthor()
+                .withParticipantEmail("author@example.com")
+                .toInitiativeDraft());
+
+        emailReportService.sendReportEmailsForInitiativesAcceptedButNotPublished();
+
+        assertThat(testHelper.findQueuedEmails(), hasSize(0));
+
+    }
+
+    @Test
     public void sends_accepted_but_not_published_emails_once() {
 
         testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality)
@@ -86,7 +102,7 @@ public class EmailReportServiceTest {
 
     @Test
     public void send_quarter_report_for_normal_initiative_once_if_not_sent_before() {
-        DateTime stateTime = new DateTime(2010, 1, 1, 0, 0);
+        DateTime stateTime = new DateTime().minusMonths(6).minusDays(1);
         Long verifiedInitiative = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality)
                 .withState(InitiativeState.PUBLISHED)
                 .withParticipantCount(13)
@@ -102,7 +118,7 @@ public class EmailReportServiceTest {
         assertThat(singleQueuedEmail.getRecipientsAsString(), is("author@example.com"));
         assertThat(singleQueuedEmail.getSubject(), containsString("Aloitteesi kerää edelleen osallistujia"));
         assertThat(singleQueuedEmail.getBodyHtml(), containsString(
-                "Kuntalaisaloitteesi on julkaistu palvelussa 01.01.2010 ja siellä se on kerännyt 14 osallistujaa"
+                "Kuntalaisaloitteesi on julkaistu palvelussa "+ stateTime.toString("dd.MM.yyyy") +" ja siellä se on kerännyt 14 osallistujaa"
         ));
         assertThat(singleQueuedEmail.getBodyHtml(), containsString(urls.loginAuthor(RandomHashGenerator.getPrevious())));
 

@@ -13,8 +13,11 @@ import java.util.List;
 public class EmailReportService {
 
 
+    private static final ReadablePeriod QUARTER_REPORT_FIRST_SEND_AFTER_PUBLISH = Months.SIX;
     private static final ReadablePeriod QUARTER_REPORT_INTERVAL = Months.THREE;
-    public static final Days ACCEPTED_BUT_NOT_PUBLISHED_EMAIL_DELAY = Days.days(14);
+
+    private static final ReadablePeriod ACCEPTED_BUT_NOT_PUBLISHED_EMAIL_DELAY = Days.days(14);
+
     @Resource
     private EmailService emailService;
 
@@ -53,7 +56,7 @@ public class EmailReportService {
         List<Initiative> result = Lists.newArrayList();
 
         for (Initiative initiative : initiativeDao.findAllPublishedNotSent()) {
-            if (quarterReporPreviouslytSentThreeMonthsAgo(initiative)
+            if (quarterReporPreviouslySentThreeMonthsAgo(initiative)
                     || quarterReportNeverSentAndTimeToSend(initiative)) {
                 result.add(initiative);
             }
@@ -63,10 +66,10 @@ public class EmailReportService {
 
     private boolean quarterReportNeverSentAndTimeToSend(Initiative initiative) {
         return (initiative.getLastEmailReportType() == null || initiative.getLastEmailReportType() == EmailReportType.IN_ACCEPTED)
-                && initiative.getStateTime().isBefore(new LocalDate().minus(QUARTER_REPORT_INTERVAL));
+                && initiative.getStateTime().isBefore(new LocalDate().minus(QUARTER_REPORT_FIRST_SEND_AFTER_PUBLISH));
     }
 
-    private boolean quarterReporPreviouslytSentThreeMonthsAgo(Initiative initiative) {
+    private boolean quarterReporPreviouslySentThreeMonthsAgo(Initiative initiative) {
         return initiative.getLastEmailReportType() == EmailReportType.QUARTER_REPORT
                 && initiative.getLastEmailReportTime().toLocalDate().isBefore(new LocalDate().minus(QUARTER_REPORT_INTERVAL));
     }
