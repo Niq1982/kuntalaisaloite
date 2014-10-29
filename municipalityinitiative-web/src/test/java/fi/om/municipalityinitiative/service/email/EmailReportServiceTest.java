@@ -118,7 +118,7 @@ public class EmailReportServiceTest {
         assertThat(singleQueuedEmail.getRecipientsAsString(), is("author@example.com"));
         assertThat(singleQueuedEmail.getSubject(), containsString("Aloitteesi kerää edelleen osallistujia"));
         assertThat(singleQueuedEmail.getBodyHtml(), containsString(
-                "Kuntalaisaloitteesi on julkaistu palvelussa "+ stateTime.toString("dd.MM.yyyy") +" ja siellä se on kerännyt 14 osallistujaa"
+                "Kuntalaisaloitteesi on julkaistu palvelussa "+ stateTime.toString("d.M.yyyy") +" ja siellä se on kerännyt 14 osallistujaa"
         ));
         assertThat(singleQueuedEmail.getBodyHtml(), containsString(urls.loginAuthor(RandomHashGenerator.getPrevious())));
 

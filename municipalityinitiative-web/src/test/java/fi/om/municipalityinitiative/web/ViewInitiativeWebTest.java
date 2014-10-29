@@ -142,7 +142,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
         open(urls.iframe());
 
         assertThat(driver.getTitle(), is("Sisältöä näyttävä widget eli leijuke - Kuntalaisaloitepalvelu"));
-        assertThat(getElement(By.tagName("li")).getText(), containsString(stateTime.toString("dd.MM.yyyy")));
+        assertThat(getElement(By.tagName("li")).getText(), containsString(stateTime.toString("d.M.yyyy")));
         assertThat(getElement(By.tagName("li")).getText(), containsString(title));
     }
 
@@ -157,7 +157,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
                 .withName(title));
 
         open(urls.iframe(HELSINKI_ID));
-        assertThat(getElement(By.tagName("li")).getText(), containsString(stateTime.toString("dd.MM.yyyy")));
+        assertThat(getElement(By.tagName("li")).getText(), containsString(stateTime.toString("d.M.yyyy")));
         assertThat(getElement(By.tagName("li")).getText(), containsString(title));
     }
 
