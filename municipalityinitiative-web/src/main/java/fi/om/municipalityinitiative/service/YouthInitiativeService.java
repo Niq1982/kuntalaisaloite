@@ -30,12 +30,15 @@ public class YouthInitiativeService {
     private MunicipalityDao municipalityDao;
 
     @Transactional
-    public String prepareYouthInitiative(YouthInitiativeCreateDto createDto) {
+    public Long prepareYouthInitiative(YouthInitiativeCreateDto createDto) {
 
         Long municipality = createDto.getMunicipality();
         if (!municipalityDao.getMunicipality(municipality).isActive()) {
             throw new AccessDeniedException("Municipality is not active for initiatives: " + municipality);
         }
-        return "ok";
+
+        Long youthInitiativeId = initiativeDao.prepareYouthInitiative(createDto.getYouthInitiativeId(), createDto.getName(), createDto.getProposal(), createDto.getExtraInfo(), createDto.getMunicipality());
+
+        return youthInitiativeId;
     }
 }

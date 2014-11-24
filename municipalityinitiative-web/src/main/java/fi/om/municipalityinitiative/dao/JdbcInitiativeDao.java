@@ -187,6 +187,18 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
+    public Long prepareYouthInitiative(long youthInitiativeId, String name, String proposal, String extraInfo, Long municipality) {
+        return queryFactory.insert(municipalityInitiative)
+                .set(municipalityInitiative.youthInitiativeId, youthInitiativeId)
+                .set(municipalityInitiative.name, name)
+                .set(municipalityInitiative.proposal, proposal)
+                .set(municipalityInitiative.extraInfo, extraInfo)
+                .set(municipalityInitiative.municipalityId, municipality)
+                .set(municipalityInitiative.type, InitiativeType.UNDEFINED)
+                .executeWithKey(municipalityInitiative.id);
+    }
+
+    @Override
     public void markInitiativeReportSent(Long id, EmailReportType type, DateTime today) {
         assertSingleAffection(queryFactory.update(municipalityInitiative)
                 .set(municipalityInitiative.lastEmailReportTime, today)

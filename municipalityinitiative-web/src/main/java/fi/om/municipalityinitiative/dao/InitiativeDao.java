@@ -62,4 +62,7 @@ public interface InitiativeDao {
     void markInitiativeReportSent(Long id, EmailReportType type, DateTime today);
 
     List<Initiative> findAllPublishedNotSent();
+
+    Long prepareYouthInitiative(long youthInitiativeId, String name, String proposal, String extraInfo, Long municipality);
+
 }
