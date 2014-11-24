@@ -3,7 +3,7 @@ package fi.om.municipalityinitiative.service;
 import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.YouthInitiativeCreateDto;
-import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
+import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,7 +33,21 @@ public class YouthInitiativeServiceTest {
         YouthInitiativeCreateDto editDto = new YouthInitiativeCreateDto();
 
         editDto.setMunicipality(id);
-        assertThat(youthInitiativeService.prepareYouthInitiative(editDto, -1L), is("ok"));
+
+        ContactInfo contactInfo = new ContactInfo();
+        contactInfo.setName("testinimi");
+        contactInfo.setAddress("testiosoite");
+        contactInfo.setEmail("testiemail");
+        contactInfo.setPhone("1234567");
+        contactInfo.setShowName(true);
+
+        editDto.setContactInfo(contactInfo);
+        editDto.setYouthInitiativeId(-1L);
+        editDto.setName("testialoite");
+        editDto.setProposal("sisältö");
+        editDto.setExtraInfo("lisätiedot");
+
+        assertThat(youthInitiativeService.prepareYouthInitiative(editDto), is("ok"));
     }
 
 }

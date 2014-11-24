@@ -30,7 +30,7 @@ public class YouthInitiativeService {
     private MunicipalityDao municipalityDao;
 
     @Transactional
-    public String prepareYouthInitiative(YouthInitiativeCreateDto createDto, Long youthInitiativeId) {
+    public String prepareYouthInitiative(YouthInitiativeCreateDto createDto) {
 
         Long municipality = createDto.getMunicipality();
         if (!municipalityDao.getMunicipality(municipality).isActive()) {
