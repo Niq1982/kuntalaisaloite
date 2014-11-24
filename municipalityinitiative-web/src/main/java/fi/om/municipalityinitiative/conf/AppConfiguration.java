@@ -177,6 +177,9 @@ public class AppConfiguration {
     }
 
     @Bean
+    public YouthInitiativeService youthInitiativeService() { return new YouthInitiativeService(); }
+
+    @Bean
     public InitiativeManagementService initiativeManagementService() {
         return new InitiativeManagementService();
     }
