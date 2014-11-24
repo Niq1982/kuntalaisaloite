@@ -15,8 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
+import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.hamcrest.Matchers.is;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -48,6 +50,30 @@ public class YouthInitiativeServiceTest {
 
     @Test
     public void youthInitiativeIsCreated() {
+        YouthInitiativeCreateDto editDto = youthInitiativeCreateDto();
+
+        Long initiativeId = youthInitiativeService.prepareYouthInitiative(editDto);
+
+        Initiative createdInitiative = testHelper.getInitiative(initiativeId);
+
+        assertThat(createdInitiative.getName(), is(editDto.getName()));
+        assertThat(createdInitiative.getProposal(), is(editDto.getProposal()));
+        assertThat(createdInitiative.getExtraInfo(), is(editDto.getExtraInfo()));
+        assertThat(createdInitiative.getMunicipality().getId(), is(editDto.getMunicipality()));
+        assertThat(createdInitiative.getYouthInitiativeId(), isPresent());
+        assertThat(createdInitiative.getYouthInitiativeId().get(), is(editDto.getYouthInitiativeId()));
+    }
+
+
+    // TODO: Test that participant is created
+
+    // TODO: Test that author is created
+
+    // TODO: Test that generated has is returned
+
+    // TODO: Test that email with admin-link is sent to author
+
+    private YouthInitiativeCreateDto youthInitiativeCreateDto() {
         YouthInitiativeCreateDto editDto = new YouthInitiativeCreateDto();
 
         editDto.setMunicipality(activeMunicipality);
@@ -64,16 +90,7 @@ public class YouthInitiativeServiceTest {
         editDto.setName("testialoite");
         editDto.setProposal("sisältö");
         editDto.setExtraInfo("lisätiedot");
-
-        Long initiativeId = youthInitiativeService.prepareYouthInitiative(editDto);
-
-        Initiative createdInitiative = testHelper.getInitiative(initiativeId);
-
-        assertThat(createdInitiative.getName(), is(editDto.getName()));
-        assertThat(createdInitiative.getProposal(), is(editDto.getProposal()));
-        assertThat(createdInitiative.getExtraInfo(), is(editDto.getExtraInfo()));
-        assertThat(createdInitiative.getMunicipality().getId(), is(editDto.getMunicipality()));
-
+        return editDto;
     }
 
 

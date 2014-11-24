@@ -31,6 +31,15 @@ public class Initiative {
     private FixState fixState;
     private DateTime lastEmailReportTime;
     private EmailReportType lastEmailReportType;
+    private Maybe<Long> youthInitiativeId = Maybe.absent();
+
+    public Maybe<Long> getYouthInitiativeId() {
+        return youthInitiativeId;
+    }
+
+    public void setYouthInitiativeId(Long youthInitiativeId) {
+        this.youthInitiativeId = Maybe.of(youthInitiativeId);
+    }
 
     public String getName() {
         return name;

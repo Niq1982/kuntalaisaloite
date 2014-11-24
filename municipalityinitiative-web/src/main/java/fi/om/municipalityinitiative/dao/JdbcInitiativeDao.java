@@ -97,6 +97,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     info.setParticipantCountPublic(Mappings.nullToZero(row.get(municipalityInitiative.participantCountPublic)));
                     info.setLastEmailReportTime(row.get(municipalityInitiative.lastEmailReportTime));
                     info.setLastEmailReportType(row.get(municipalityInitiative.lastEmailReportType));
+                    info.setYouthInitiativeId(row.get(municipalityInitiative.youthInitiativeId));
                     return info;
                 }
             };
