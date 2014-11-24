@@ -1,13 +1,14 @@
 package fi.om.municipalityinitiative.sql;
 
-import com.mysema.query.sql.ColumnMetadata;
-import com.mysema.query.types.Path;
-import com.mysema.query.types.PathMetadata;
+import static com.mysema.query.types.PathMetadataFactory.*;
+
 import com.mysema.query.types.path.*;
 
+import com.mysema.query.types.PathMetadata;
 import javax.annotation.Generated;
+import com.mysema.query.types.Path;
 
-import static com.mysema.query.types.PathMetadataFactory.forVariable;
+import com.mysema.query.sql.ColumnMetadata;
 
 
 /**

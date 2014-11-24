@@ -1,16 +1,14 @@
 package fi.om.municipalityinitiative.sql;
 
-import com.mysema.query.sql.ColumnMetadata;
-import com.mysema.query.types.Path;
+import static com.mysema.query.types.PathMetadataFactory.*;
+
+import com.mysema.query.types.path.*;
+
 import com.mysema.query.types.PathMetadata;
-import com.mysema.query.types.path.DateTimePath;
-import com.mysema.query.types.path.EnumPath;
-import com.mysema.query.types.path.NumberPath;
-import com.mysema.query.types.path.StringPath;
-
 import javax.annotation.Generated;
+import com.mysema.query.types.Path;
 
-import static com.mysema.query.types.PathMetadataFactory.forVariable;
+import com.mysema.query.sql.ColumnMetadata;
 
 
 /**
@@ -58,6 +56,8 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
     public final DateTimePath<org.joda.time.DateTime> stateTimestamp = createDateTime("stateTimestamp", org.joda.time.DateTime.class);
 
     public final EnumPath<fi.om.municipalityinitiative.util.InitiativeType> type = createEnum("type", fi.om.municipalityinitiative.util.InitiativeType.class);
+
+    public final NumberPath<Long> youthInitiativeId = createNumber("youthInitiativeId", Long.class);
 
     public final com.mysema.query.sql.PrimaryKey<QMunicipalityInitiative> municipalityInitiativePk = createPrimaryKey(id);
 
@@ -115,6 +115,7 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
         addMetadata(state, ColumnMetadata.named("state").ofType(1111).withSize(2147483647).notNull());
         addMetadata(stateTimestamp, ColumnMetadata.named("state_timestamp").ofType(93).withSize(29).withDigits(6).notNull());
         addMetadata(type, ColumnMetadata.named("type").ofType(1111).withSize(2147483647).notNull());
+        addMetadata(youthInitiativeId, ColumnMetadata.named("youth_initiative_id").ofType(-5).withSize(19));
     }
 
 }
