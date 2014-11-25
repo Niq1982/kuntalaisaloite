@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.dto.service;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import fi.om.municipalityinitiative.json.JsonId;
 import fi.om.municipalityinitiative.util.Locales;
@@ -45,7 +44,6 @@ public class Municipality {
         return getLocalizedName(Locale.forLanguageTag(locale));
     }
 
-    @JsonIgnore
     public boolean isActive() {
         return active;
     }
