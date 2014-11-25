@@ -44,6 +44,7 @@ public class JsonTest {
                 "\"publicAuthors\":[\n" +
                 "{\n" +
                 "\"municipality\":{\n" +
+                "\"active\":false,\n" +
                 "\"id\":\"http://baseUrl/api/v1/municipalities/1\",\n" +
                 "\"nameFi\":\"Tampere\",\n" +
                 "\"nameSv\":\"Tammerfors\"\n" +
@@ -56,6 +57,7 @@ public class JsonTest {
                 "\"collaborative\":true,\n" +
                 "\"id\":\"http://baseUrl/api/v1/initiatives/1\",\n" +
                 "\"municipality\":{\n" +
+                "\"active\":false,\n" +
                 "\"id\":\"http://baseUrl/api/v1/municipalities/1\",\n" +
                 "\"nameFi\":\"Tampere\",\n" +
                 "\"nameSv\":\"Tammerfors\"\n" +
@@ -84,6 +86,7 @@ public class JsonTest {
                 "\"collaborative\":true,\n" +
                 "\"id\":\"http://baseUrl/api/v1/initiatives/1\",\n" +
                 "\"municipality\":{\n" +
+                "\"active\":false,\n" +
                 "\"id\":\"http://baseUrl/api/v1/municipalities/1\",\n" +
                 "\"nameFi\":\"Tampere\",\n" +
                 "\"nameSv\":\"Tammerfors\"\n" +
@@ -103,6 +106,7 @@ public class JsonTest {
 
         assertThat(join, is("[\n" +
                 "{\n" +
+                "\"active\":false,\n" +
                 "\"id\":\"http://baseUrl/api/v1/municipalities/1\",\n" +
                 "\"nameFi\":\"Tampere\",\n" +
                 "\"nameSv\":\"Tammerfors\"\n" +
