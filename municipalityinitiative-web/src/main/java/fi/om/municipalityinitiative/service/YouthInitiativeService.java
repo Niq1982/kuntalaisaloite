@@ -48,9 +48,6 @@ public class YouthInitiativeService {
                 Membership.none,
                 true);
 
-
-
-
         String managementHash = RandomHashGenerator.longHash();
         NormalAuthorId authorId = authorDao.createAuthor(youthInitiativeId, participantId, managementHash);
 
@@ -61,7 +58,7 @@ public class YouthInitiativeService {
         contactInfo.setShowName(true);
         authorDao.updateAuthorInformation(authorId, contactInfo);
 
-        emailService.sendPrepareCreatedEmail(youthInitiativeId, authorId, managementHash, Locales.LOCALE_FI);
+        emailService.sendPrepareCreatedEmail(youthInitiativeId, authorId, managementHash, Locales.forLanguageTag(createDto.getLocale()));
 
         return new YouthInitiativeCreateResult(youthInitiativeId, managementHash);
     }

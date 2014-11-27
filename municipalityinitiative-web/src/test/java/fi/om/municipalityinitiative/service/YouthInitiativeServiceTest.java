@@ -134,6 +134,18 @@ public class YouthInitiativeServiceTest {
 
     }
 
+    @Test
+    public void email_is_sent_in_swedish_if_swedish_locale() {
+
+        YouthInitiativeCreateDto editDto = youthInitiativeCreateDto();
+        editDto.setLocale("sv");
+
+        youthInitiativeService.prepareYouthInitiative(editDto);
+
+        EmailDto sentEmail = testHelper.getSingleQueuedEmail();
+        assertThat(sentEmail.getSubject(), is("Du har fått en länk för att skapa ett initiativ i webbtjänsten Invånarinitiativ.fi"));
+    }
+
 
     private YouthInitiativeCreateDto youthInitiativeCreateDto() {
         YouthInitiativeCreateDto editDto = new YouthInitiativeCreateDto();

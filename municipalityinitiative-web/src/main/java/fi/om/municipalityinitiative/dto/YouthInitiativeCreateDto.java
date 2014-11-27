@@ -7,6 +7,7 @@ public class YouthInitiativeCreateDto {
     private String proposal;
     private String extraInfo;
     private long youthInitiativeId;
+    private String locale;
 
     public void setMunicipality(Long municipality) {
         this.municipality = municipality;
@@ -54,6 +55,14 @@ public class YouthInitiativeCreateDto {
 
     public long getYouthInitiativeId() {
         return youthInitiativeId;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
+
+    public String getLocale() {
+        return locale;
     }
 
     public static class ContactInfo {
