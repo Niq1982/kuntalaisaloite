@@ -28,6 +28,7 @@
         </div>
 
     </#if>
+
 </#macro>
 
 <#-- 
@@ -58,6 +59,14 @@
             <@u.text initiative.extraInfo!"" />
         </div>
     </#if>
+
+    <#if (initiative.youthInitiativeId.present)>
+        <h2>Tämä aloite on tuotu nuortenidea.fi -palvelusta</h2>
+            <div class="initiative-content-row last">
+            Siirry idean sivulle osoitteesta <a href="moi">moi</a>
+            </div>
+    </#if>
+
 </#macro>
 
 <#-- 
