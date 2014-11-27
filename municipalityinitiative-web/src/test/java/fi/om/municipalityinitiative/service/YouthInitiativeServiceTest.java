@@ -1,13 +1,19 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
+import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.YouthInitiativeCreateDto;
+import fi.om.municipalityinitiative.dto.service.EmailDto;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.NormalParticipant;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
+import fi.om.municipalityinitiative.util.RandomHashGenerator;
+import fi.om.municipalityinitiative.validation.NormalInitiative;
+import fi.om.municipalityinitiative.web.Urls;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,13 +28,14 @@ import java.util.List;
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={IntegrationTestFakeEmailConfiguration.class})
 public class YouthInitiativeServiceTest {
+
+    @Resource
+    private AuthorDao authorDao;
 
     @Resource
     private ParticipantDao participantDao;
@@ -45,7 +52,7 @@ public class YouthInitiativeServiceTest {
     public void setup() {
         unactiveMunicipality = testHelper.createTestMunicipality(randomAlphabetic(10), false);
         activeMunicipality = testHelper.createTestMunicipality(randomAlphabetic(10), true);
-
+        testHelper.clearSentEmails();
     }
 
     @Test(expected = AccessDeniedException.class)
@@ -60,7 +67,7 @@ public class YouthInitiativeServiceTest {
     public void youthInitiativeIsCreated() {
         YouthInitiativeCreateDto editDto = youthInitiativeCreateDto();
 
-        Long initiativeId = youthInitiativeService.prepareYouthInitiative(editDto);
+        Long initiativeId = youthInitiativeService.prepareYouthInitiative(editDto).getYouthInitiativeId();
 
         Initiative createdInitiative = testHelper.getInitiative(initiativeId);
 
@@ -70,6 +77,7 @@ public class YouthInitiativeServiceTest {
         assertThat(createdInitiative.getMunicipality().getId(), is(editDto.getMunicipality()));
         assertThat(createdInitiative.getYouthInitiativeId(), isPresent());
         assertThat(createdInitiative.getYouthInitiativeId().get(), is(editDto.getYouthInitiativeId()));
+
     }
 
     @Transactional
@@ -77,7 +85,7 @@ public class YouthInitiativeServiceTest {
     public void participantIsAddedWhenCreated() {
         YouthInitiativeCreateDto editDto = youthInitiativeCreateDto();
 
-        Long initiativeId = youthInitiativeService.prepareYouthInitiative(editDto);
+        Long initiativeId = youthInitiativeService.prepareYouthInitiative(editDto).getYouthInitiativeId();
 
         Initiative createdInitiative = testHelper.getInitiative(initiativeId);
 
@@ -90,12 +98,37 @@ public class YouthInitiativeServiceTest {
         assertThat(normalAllParticipants.get(0).getEmail(), is(editDto.getContactInfo().getEmail()));
     }
 
+    @Transactional
+    @Test
+    public void authorIsCreated() {
+        YouthInitiativeCreateDto editDto = youthInitiativeCreateDto();
 
-    // TODO: Test that author is created
+        Long initiativeId = youthInitiativeService.prepareYouthInitiative(editDto).getYouthInitiativeId();
 
-    // TODO: Test that generated has is returned
+        Initiative createdInitiative = testHelper.getInitiative(initiativeId);
 
-    // TODO: Test that email with admin-link is sent to author
+        List<NormalAuthor> normalAuthors = authorDao.findNormalAuthors(createdInitiative.getId());
+        assertThat(normalAuthors, hasSize(1));
+        assertThat(normalAuthors.get(0).getContactInfo().getEmail(), is(editDto.getContactInfo().getEmail()));
+    }
+
+    @Test
+    public void generated_hash_is_returned_and_sent_via_email() {
+
+        YouthInitiativeCreateDto editDto = youthInitiativeCreateDto();
+
+        YouthInitiativeService.YouthInitiativeCreateResult result = youthInitiativeService.prepareYouthInitiative(editDto);
+
+        assertThat(result.getManagementHash(), is(RandomHashGenerator.getPrevious()));
+
+        EmailDto sentEmail = testHelper.getSingleQueuedEmail();
+
+        assertThat(sentEmail.getSubject(), is("Olet saanut linkin kuntalaisaloitteen tekemiseen Kuntalaisaloite.fi-palvelussa"));
+        assertThat(sentEmail.getRecipientsAsString(), is(editDto.getContactInfo().getEmail()));
+        assertThat(sentEmail.getBodyHtml(), containsString(result.getManagementHash()));
+
+    }
+
 
     private YouthInitiativeCreateDto youthInitiativeCreateDto() {
         YouthInitiativeCreateDto editDto = new YouthInitiativeCreateDto();

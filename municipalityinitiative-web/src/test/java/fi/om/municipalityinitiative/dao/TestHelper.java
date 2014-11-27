@@ -589,6 +589,11 @@ public class TestHelper {
                 .list(JdbcReviewHistoryDao.reviewHistoryRowWrapper);
     }
 
+    @Transactional
+    public void clearSentEmails() {
+        queryFactory.delete(QEmail.email).execute();
+    }
+
     public static class AuthorDraft {
 
         public Long initiativeId;

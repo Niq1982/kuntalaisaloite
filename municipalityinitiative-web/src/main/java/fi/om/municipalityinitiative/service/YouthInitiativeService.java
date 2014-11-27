@@ -5,7 +5,10 @@ import fi.om.municipalityinitiative.dto.YouthInitiativeCreateDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.service.email.EmailService;
+import fi.om.municipalityinitiative.service.id.NormalAuthorId;
+import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.Membership;
+import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -25,13 +28,10 @@ public class YouthInitiativeService {
     private EmailService emailService;
 
     @Resource
-    private AuthorMessageDao authorMessageDao;
-
-    @Resource
     private MunicipalityDao municipalityDao;
 
     @Transactional
-    public Long prepareYouthInitiative(YouthInitiativeCreateDto createDto) {
+    public YouthInitiativeCreateResult prepareYouthInitiative(YouthInitiativeCreateDto createDto) {
 
         Long municipality = createDto.getMunicipality();
         if (!municipalityDao.getMunicipality(municipality).isActive()) {
@@ -47,6 +47,30 @@ public class YouthInitiativeService {
                 Membership.none,
                 true);
 
-        return youthInitiativeId;
+        String managementHash = RandomHashGenerator.longHash();
+        NormalAuthorId authorId = authorDao.createAuthor(youthInitiativeId, participantId, managementHash);
+
+        emailService.sendPrepareCreatedEmail(youthInitiativeId, authorId, managementHash, Locales.LOCALE_FI);
+
+        return new YouthInitiativeCreateResult(youthInitiativeId, managementHash);
+    }
+
+    public class YouthInitiativeCreateResult {
+
+        private final Long youthInitiativeId;
+        private final String managementHash;
+
+        public YouthInitiativeCreateResult(Long youthInitiativeId, String managementHash) {
+            this.youthInitiativeId = youthInitiativeId;
+            this.managementHash = managementHash;
+        }
+
+        public Long getYouthInitiativeId() {
+            return youthInitiativeId;
+        }
+
+        public String getManagementHash() {
+            return managementHash;
+        }
     }
 }
