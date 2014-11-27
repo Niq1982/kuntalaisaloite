@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 
@@ -17,7 +18,7 @@ public class YouthInitiativeController {
     private YouthInitiativeService youthInitiativeService;
 
     @RequestMapping(value="/services/nua/1.0/create", method=RequestMethod.POST)
-    public YouthInitiativeService.YouthInitiativeCreateResult createYouthInitiative(@RequestBody YouthInitiativeCreateDto youthInitiative) {
+    public @ResponseBody YouthInitiativeService.YouthInitiativeCreateResult createYouthInitiative(@RequestBody YouthInitiativeCreateDto youthInitiative) {
         return youthInitiativeService.prepareYouthInitiative(youthInitiative);
     }
 }
