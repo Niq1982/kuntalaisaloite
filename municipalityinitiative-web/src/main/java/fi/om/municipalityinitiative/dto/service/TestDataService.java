@@ -4,12 +4,14 @@ import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dao.UserDao;
+import fi.om.municipalityinitiative.dto.YouthInitiativeCreateDto;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
+import fi.om.municipalityinitiative.service.YouthInitiativeService;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.*;
@@ -23,6 +25,7 @@ public class TestDataService {
 
     @Resource
     InitiativeDao initiativeDao;
+
     @Resource
     AuthorDao authorDao;
 
@@ -32,12 +35,20 @@ public class TestDataService {
     @Resource
     private ParticipantDao participantDao;
 
+    @Resource
+    private YouthInitiativeService youthInitiativeService;
+
     private static final Random randomizer = new Random();
 
     @Transactional(readOnly = false)
     public Long createTestMunicipalityInitiative(TestDataTemplates.InitiativeTemplate template, LoginUserHolder<User> loginUserHolder) {
 
         if (template.getInitiative().getType().isNotVerifiable()) {
+
+            if (template.getInitiative().getYouthInitiativeId().isPresent()) {
+                return createYouthInitiative(template);
+            }
+
             return createDefaultInitiative(template);
         }
         else {
@@ -94,6 +105,27 @@ public class TestDataService {
         initiativeDao.updateInitiativeState(initiativeId, template.initiative.getState());
 
         return initiativeId;
+    }
+
+    private Long createYouthInitiative(TestDataTemplates.InitiativeTemplate template) {
+
+        YouthInitiativeCreateDto createDto = new YouthInitiativeCreateDto();
+
+        createDto.setMunicipality(template.getInitiative().getMunicipality().getId());
+        createDto.setExtraInfo(template.getInitiative().getExtraInfo());
+        createDto.setName(template.getInitiative().getName());
+        createDto.setProposal(template.getInitiative().getProposal());
+        createDto.setYouthInitiativeId(template.getInitiative().getYouthInitiativeId().get());
+
+        YouthInitiativeCreateDto.ContactInfo contactInfo = new YouthInitiativeCreateDto.ContactInfo();
+        contactInfo.setEmail(template.author.getContactInfo().getEmail());
+        contactInfo.setMunicipality(template.initiative.getMunicipality().getId());
+        contactInfo.setName(template.author.getContactInfo().getName());
+        contactInfo.setPhone(template.author.getContactInfo().getPhone());
+        createDto.setContactInfo(contactInfo);
+
+        return youthInitiativeService.prepareYouthInitiative(createDto).getYouthInitiativeId();
+
     }
 
     @Transactional(readOnly = false)

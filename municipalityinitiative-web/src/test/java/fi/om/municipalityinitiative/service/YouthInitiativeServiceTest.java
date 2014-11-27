@@ -9,10 +9,9 @@ import fi.om.municipalityinitiative.dto.YouthInitiativeCreateDto;
 import fi.om.municipalityinitiative.dto.service.EmailDto;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.NormalParticipant;
-import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
+import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
-import fi.om.municipalityinitiative.validation.NormalInitiative;
 import fi.om.municipalityinitiative.web.Urls;
 import org.junit.Before;
 import org.junit.Test;
@@ -97,6 +96,7 @@ public class YouthInitiativeServiceTest {
 
         assertThat(normalAllParticipants.get(0).getEmail(), is(editDto.getContactInfo().getEmail()));
         assertThat(normalAllParticipants.get(0).getHomeMunicipality().get().getId(), is(editDto.getContactInfo().getMunicipality()));
+        assertThat(normalAllParticipants.get(0).getName(), is(editDto.getContactInfo().getName()));
     }
 
     @Transactional
@@ -112,6 +112,8 @@ public class YouthInitiativeServiceTest {
         assertThat(normalAuthors, hasSize(1));
         assertThat(normalAuthors.get(0).getContactInfo().getEmail(), is(editDto.getContactInfo().getEmail()));
         assertThat(normalAuthors.get(0).getMunicipality().get().getId(), is(editDto.getContactInfo().getMunicipality()));
+        assertThat(normalAuthors.get(0).getContactInfo().getName(), is(editDto.getContactInfo().getName()));
+        assertThat(normalAuthors.get(0).getContactInfo().getPhone(), is(editDto.getContactInfo().getPhone()));
     }
 
     @Test
@@ -121,14 +123,28 @@ public class YouthInitiativeServiceTest {
 
         YouthInitiativeService.YouthInitiativeCreateResult result = youthInitiativeService.prepareYouthInitiative(editDto);
 
-        assertThat(result.getManagementHash(), is(RandomHashGenerator.getPrevious()));
+        assertThat(result.getManagementLink(), is(Urls.FI.loginAuthor(RandomHashGenerator.getPrevious())));
 
         EmailDto sentEmail = testHelper.getSingleQueuedEmail();
 
         assertThat(sentEmail.getSubject(), is("Olet saanut linkin kuntalaisaloitteen tekemiseen Kuntalaisaloite.fi-palvelussa"));
         assertThat(sentEmail.getRecipientsAsString(), is(editDto.getContactInfo().getEmail()));
-        assertThat(sentEmail.getBodyHtml(), containsString(result.getManagementHash()));
+        assertThat(sentEmail.getBodyHtml(), containsString(result.getManagementLink()));
 
+    }
+
+    @Test
+    public void email_is_sent_in_swedish_if_swedish_locale() {
+
+        YouthInitiativeCreateDto editDto = youthInitiativeCreateDto();
+        editDto.setLocale("sv");
+
+        YouthInitiativeService.YouthInitiativeCreateResult result = youthInitiativeService.prepareYouthInitiative(editDto);
+
+        assertThat(result.getManagementLink(), is(Urls.SV.loginAuthor(RandomHashGenerator.getPrevious())));
+
+        EmailDto sentEmail = testHelper.getSingleQueuedEmail();
+        assertThat(sentEmail.getSubject(), is("Du har fått en länk för att skapa ett initiativ i webbtjänsten Invånarinitiativ.fi"));
     }
 
 

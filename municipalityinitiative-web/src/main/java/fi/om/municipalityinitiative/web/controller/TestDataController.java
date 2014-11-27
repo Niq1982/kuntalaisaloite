@@ -59,6 +59,7 @@ public class TestDataController extends BaseController {
             @RequestParam String authorEmail,
             @RequestParam Long homeMunicipalityId,
             @RequestParam Long municipalityId,
+            @RequestParam Long youthInitiativeId,
             Model model, Locale locale, HttpServletRequest request) {
         Urls urls = Urls.get(locale);
 
@@ -66,6 +67,10 @@ public class TestDataController extends BaseController {
 
         TestDataTemplates.InitiativeTemplate selectedInitiative = initiatives.get(parseIntegerParameter(request, "initiative", 0));
         selectedInitiative.initiative.setState(state);
+
+        if (youthInitiativeId != null) {
+            selectedInitiative.initiative.setYouthInitiativeId(youthInitiativeId);
+        }
 
         List<ParticipantUICreateDto> participants = TestDataTemplates.getParticipantTemplates(homeMunicipalityId);
 

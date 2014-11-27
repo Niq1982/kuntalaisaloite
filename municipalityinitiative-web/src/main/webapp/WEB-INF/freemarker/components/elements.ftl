@@ -28,6 +28,14 @@
         </div>
 
     </#if>
+
+    <#if (initiative.youthInitiativeId.present)>
+    <h2>Tämä aloite on tuotu nuortenideat.fi -palvelusta</h2>
+    <div class="initiative-content-row last">
+      Siirry idean sivulle osoitteesta <a href="${urls.youthInitiativeWebUrl(initiative.youthInitiativeId.value)}">${urls.youthInitiativeWebUrl(initiative.youthInitiativeId.value)}</a>
+    </div>
+    </#if>
+
 </#macro>
 
 <#-- 
@@ -58,6 +66,14 @@
             <@u.text initiative.extraInfo!"" />
         </div>
     </#if>
+
+    <#if (initiative.youthInitiativeId.present)>
+        <h2>Tämä aloite on tuotu nuortenideat.fi -palvelusta</h2>
+            <div class="initiative-content-row last">
+            Siirry idean sivulle osoitteesta <a href="${urls.youthInitiativeWebUrl(initiative.youthInitiativeId.value)}">${urls.youthInitiativeWebUrl(initiative.youthInitiativeId.value)}</a>
+            </div>
+    </#if>
+
 </#macro>
 
 <#-- 

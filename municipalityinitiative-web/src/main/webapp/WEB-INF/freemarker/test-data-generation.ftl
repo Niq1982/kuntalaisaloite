@@ -169,17 +169,20 @@
                  <div class="user-details">
                     <span class="user-col title">Lukumäärä</span>
                     <span class="user-col title">Tila</span>
-                    <br />
+                    <span class="user-col title">Nuorten idea</span>
+                   <br />
                     <span class="user-col "><input type="text" class="small" value="1" id="amount" name="amount"></span>
-                    <span class="user-col "><select class="small" name="state">
+                    <span class="user-col ">
+                    <select class="small" name="state">
 
-                    <option value="DRAFT">DRAFT</option>
-                    <option value="REVIEW">REVIEW</option>
-                    <option value="ACCEPTED">ACCEPTED</option>
-                    <option selected="selected" value="PUBLISHED">PUBLISHED</option>
+                        <option value="DRAFT">DRAFT</option>
+                        <option value="REVIEW">REVIEW</option>
+                        <option value="ACCEPTED">ACCEPTED</option>
+                        <option selected="selected" value="PUBLISHED">PUBLISHED</option>
 
                     </select>
                     </span>
+                    <span class="user-col "><input type="number" class="small" value="" id="isyouthinitiative" name="youthInitiativeId" placeholder="3"></span>
 
                 </div>
             </div> 
