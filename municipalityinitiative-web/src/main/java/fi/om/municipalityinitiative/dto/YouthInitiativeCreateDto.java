@@ -1,10 +1,8 @@
 package fi.om.municipalityinitiative.dto;
 
-import fi.om.municipalityinitiative.dto.ui.ContactInfo;
-
 public class YouthInitiativeCreateDto {
     private Long municipality;
-    private ContactInfo contactInfo;
+    private ContactInfo contactInfo = new ContactInfo();
     private String name;
     private String proposal;
     private String extraInfo;
@@ -58,5 +56,42 @@ public class YouthInitiativeCreateDto {
         return youthInitiativeId;
     }
 
+    public static class ContactInfo {
+        private String name;
+        private String email;
+        private String phone;
+        private Long municipality;
 
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
+
+        public Long getMunicipality() {
+            return municipality;
+        }
+
+        public void setMunicipality(Long municipality) {
+            this.municipality = municipality;
+        }
+    }
 }

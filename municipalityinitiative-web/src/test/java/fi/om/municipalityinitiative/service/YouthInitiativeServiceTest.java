@@ -135,12 +135,10 @@ public class YouthInitiativeServiceTest {
 
         editDto.setMunicipality(activeMunicipality);
 
-        ContactInfo contactInfo = new ContactInfo();
+        YouthInitiativeCreateDto.ContactInfo contactInfo = new YouthInitiativeCreateDto.ContactInfo();
         contactInfo.setName("testinimi");
-        contactInfo.setAddress("testiosoite");
         contactInfo.setEmail("testiemail");
         contactInfo.setPhone("1234567");
-        contactInfo.setShowName(true);
 
         editDto.setContactInfo(contactInfo);
         editDto.setYouthInitiativeId(-1L);
