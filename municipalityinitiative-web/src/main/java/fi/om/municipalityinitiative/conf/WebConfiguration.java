@@ -111,6 +111,11 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
     }
 
     @Bean
+    public YouthInitiativeController youthInitiativeController() {
+        return new YouthInitiativeController();
+    }
+
+    @Bean
     public VetumaLoginRequest loginRequestDefaults() {
         VetumaLoginRequest request = new VetumaLoginRequest();
 

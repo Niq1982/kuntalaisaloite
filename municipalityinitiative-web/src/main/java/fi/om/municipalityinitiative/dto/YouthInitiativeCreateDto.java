@@ -57,4 +57,6 @@ public class YouthInitiativeCreateDto {
     public long getYouthInitiativeId() {
         return youthInitiativeId;
     }
+
+
 }
