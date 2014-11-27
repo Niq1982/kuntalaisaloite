@@ -1,9 +1,11 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
+import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.YouthInitiativeCreateDto;
 import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.NormalParticipant;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import org.junit.Before;
@@ -15,15 +17,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
+import java.util.List;
+
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={IntegrationTestFakeEmailConfiguration.class})
 public class YouthInitiativeServiceTest {
+
+    @Resource
+    private ParticipantDao participantDao;
 
     @Resource
     private YouthInitiativeService youthInitiativeService;
@@ -64,8 +72,24 @@ public class YouthInitiativeServiceTest {
         assertThat(createdInitiative.getYouthInitiativeId().get(), is(editDto.getYouthInitiativeId()));
     }
 
+    @Transactional
+    @Test
+    public void participantIsAddedWhenCreated() {
+        YouthInitiativeCreateDto editDto = youthInitiativeCreateDto();
 
-    // TODO: Test that participant is created
+        Long initiativeId = youthInitiativeService.prepareYouthInitiative(editDto);
+
+        Initiative createdInitiative = testHelper.getInitiative(initiativeId);
+
+        assertThat(createdInitiative.getParticipantCount(), is(1));
+        assertThat(createdInitiative.getParticipantCountPublic(), is(1));
+
+        List<NormalParticipant> normalAllParticipants = participantDao.findNormalAllParticipants(createdInitiative.getId(), 0, 10);
+        assertThat(normalAllParticipants, hasSize(1));
+
+        assertThat(normalAllParticipants.get(0).getEmail(), is(editDto.getContactInfo().getEmail()));
+    }
+
 
     // TODO: Test that author is created
 

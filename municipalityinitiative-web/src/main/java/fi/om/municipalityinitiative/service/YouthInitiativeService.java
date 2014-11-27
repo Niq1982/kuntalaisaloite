@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.dto.YouthInitiativeCreateDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.service.email.EmailService;
+import fi.om.municipalityinitiative.util.Membership;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -38,6 +39,13 @@ public class YouthInitiativeService {
         }
 
         Long youthInitiativeId = initiativeDao.prepareYouthInitiative(createDto.getYouthInitiativeId(), createDto.getName(), createDto.getProposal(), createDto.getExtraInfo(), createDto.getMunicipality());
+
+        Long participantId = participantDao.prepareConfirmedParticipant(
+                youthInitiativeId,
+                createDto.getMunicipality(),
+                createDto.getContactInfo().getEmail(),
+                Membership.none,
+                true);
 
         return youthInitiativeId;
     }
