@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.service.email;
 import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import org.joda.time.*;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,8 +57,9 @@ public class EmailReportService {
         List<Initiative> result = Lists.newArrayList();
 
         for (Initiative initiative : initiativeDao.findAllPublishedNotSent()) {
-            if (quarterReporPreviouslySentThreeMonthsAgo(initiative)
-                    || quarterReportNeverSentAndTimeToSend(initiative)) {
+            if ((quarterReporPreviouslySentThreeMonthsAgo(initiative)
+                    || quarterReportNeverSentAndTimeToSend(initiative))
+                    && initiative.getFixState() == FixState.OK) {
                 result.add(initiative);
             }
         }
