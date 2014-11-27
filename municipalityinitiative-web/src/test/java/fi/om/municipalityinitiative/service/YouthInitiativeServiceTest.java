@@ -97,6 +97,7 @@ public class YouthInitiativeServiceTest {
 
         assertThat(normalAllParticipants.get(0).getEmail(), is(editDto.getContactInfo().getEmail()));
         assertThat(normalAllParticipants.get(0).getHomeMunicipality().get().getId(), is(editDto.getContactInfo().getMunicipality()));
+        assertThat(normalAllParticipants.get(0).getName(), is(editDto.getContactInfo().getName()));
     }
 
     @Transactional
@@ -112,6 +113,8 @@ public class YouthInitiativeServiceTest {
         assertThat(normalAuthors, hasSize(1));
         assertThat(normalAuthors.get(0).getContactInfo().getEmail(), is(editDto.getContactInfo().getEmail()));
         assertThat(normalAuthors.get(0).getMunicipality().get().getId(), is(editDto.getContactInfo().getMunicipality()));
+        assertThat(normalAuthors.get(0).getContactInfo().getName(), is(editDto.getContactInfo().getName()));
+        assertThat(normalAuthors.get(0).getContactInfo().getPhone(), is(editDto.getContactInfo().getPhone()));
     }
 
     @Test

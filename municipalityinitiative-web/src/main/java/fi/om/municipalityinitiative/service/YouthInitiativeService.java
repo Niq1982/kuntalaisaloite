@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dao.*;
 import fi.om.municipalityinitiative.dto.YouthInitiativeCreateDto;
+import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.service.email.EmailService;
@@ -47,8 +48,18 @@ public class YouthInitiativeService {
                 Membership.none,
                 true);
 
+
+
+
         String managementHash = RandomHashGenerator.longHash();
         NormalAuthorId authorId = authorDao.createAuthor(youthInitiativeId, participantId, managementHash);
+
+        ContactInfo contactInfo = new ContactInfo();
+        contactInfo.setEmail(createDto.getContactInfo().getEmail());
+        contactInfo.setPhone(createDto.getContactInfo().getPhone());
+        contactInfo.setName(createDto.getContactInfo().getName());
+        contactInfo.setShowName(true);
+        authorDao.updateAuthorInformation(authorId, contactInfo);
 
         emailService.sendPrepareCreatedEmail(youthInitiativeId, authorId, managementHash, Locales.LOCALE_FI);
 
