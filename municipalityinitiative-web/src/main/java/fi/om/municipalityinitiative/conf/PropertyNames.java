@@ -77,6 +77,8 @@ public final class PropertyNames {
 
     public static final String apiBaseUrl = "urls.api.url";
 
+    public static final String youthInitiativeBaseUrl = "youth.initiative.base.url";
+
     public static final String attachmentDir = "attachment.directory";
 
 }

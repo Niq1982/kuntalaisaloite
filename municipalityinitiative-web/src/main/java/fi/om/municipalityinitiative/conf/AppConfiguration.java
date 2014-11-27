@@ -454,6 +454,7 @@ public class AppConfiguration {
         String baseUrl = env.getRequiredProperty(PropertyNames.baseURL);
         Urls.initUrls(baseUrl,
                 env.getProperty(PropertyNames.iframeBaseUrl, baseUrl),
-                env.getProperty(PropertyNames.apiBaseUrl, baseUrl));
+                env.getProperty(PropertyNames.apiBaseUrl, baseUrl),
+                env.getRequiredProperty(PropertyNames.youthInitiativeBaseUrl));
     }
 }

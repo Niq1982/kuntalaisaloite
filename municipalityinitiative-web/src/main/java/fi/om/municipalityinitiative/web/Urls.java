@@ -297,16 +297,19 @@ public final class Urls {
 
     private final Locale locale;
 
-    public static void initUrls(String baseUrl, String iframeBaseUrl, String apiBaseUrl) {
-        FI = new Urls(baseUrl, iframeBaseUrl, apiBaseUrl, LOCALE_FI);
-        SV = new Urls(baseUrl, iframeBaseUrl, apiBaseUrl, LOCALE_SV);
+    private final String youthInitiativeBaseUrl;
+
+    public static void initUrls(String baseUrl, String iframeBaseUrl, String apiBaseUrl, String youthInitiativeUrl) {
+        FI = new Urls(baseUrl, iframeBaseUrl, apiBaseUrl, LOCALE_FI, youthInitiativeUrl);
+        SV = new Urls(baseUrl, iframeBaseUrl, apiBaseUrl, LOCALE_SV, youthInitiativeUrl);
     }
 
-    private Urls(String baseUrl, String iframeBaseUrl, String apiBaseUrl, Locale locale) {
+    private Urls(String baseUrl, String iframeBaseUrl, String apiBaseUrl, Locale locale, String youthInitiativeBaseUrl) {
         this.baseUrl = baseUrl;
         this.iframeBaseUrl = iframeBaseUrl;
         this.apiBaseUrl = apiBaseUrl;
         this.locale = locale;
+        this.youthInitiativeBaseUrl = youthInitiativeBaseUrl;
     }
 
     public String getBaseUrl() {
@@ -389,6 +392,10 @@ public final class Urls {
 
     private String getUpdate(Long initiativeId) {
         return getLocalizedPageUrl(UPDATE_FI, UPDATE_SV).replace(ID_PARAMETER, initiativeId.toString());
+    }
+
+    public String youthInitiativeWebUrl(Long youthInitiativeId) {
+        return youthInitiativeBaseUrl + "/ideat/"+youthInitiativeId;
     }
 
     public String initiative(Long initiativeId) {
