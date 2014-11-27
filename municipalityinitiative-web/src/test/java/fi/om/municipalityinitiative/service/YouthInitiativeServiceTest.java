@@ -10,7 +10,6 @@ import fi.om.municipalityinitiative.dto.service.EmailDto;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.NormalParticipant;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
-import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.web.Urls;
 import org.junit.Before;
@@ -21,7 +20,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-
 import java.util.List;
 
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
@@ -66,7 +64,7 @@ public class YouthInitiativeServiceTest {
     public void youthInitiativeIsCreated() {
         YouthInitiativeCreateDto editDto = youthInitiativeCreateDto();
 
-        Long initiativeId = youthInitiativeService.prepareYouthInitiative(editDto).getYouthInitiativeId();
+        Long initiativeId = youthInitiativeService.prepareYouthInitiative(editDto).getInitiativeId();
 
         Initiative createdInitiative = testHelper.getInitiative(initiativeId);
 
@@ -84,7 +82,7 @@ public class YouthInitiativeServiceTest {
     public void participantIsAddedWhenCreated() {
         YouthInitiativeCreateDto editDto = youthInitiativeCreateDto();
 
-        Long initiativeId = youthInitiativeService.prepareYouthInitiative(editDto).getYouthInitiativeId();
+        Long initiativeId = youthInitiativeService.prepareYouthInitiative(editDto).getInitiativeId();
 
         Initiative createdInitiative = testHelper.getInitiative(initiativeId);
 
@@ -104,7 +102,7 @@ public class YouthInitiativeServiceTest {
     public void authorIsCreated() {
         YouthInitiativeCreateDto editDto = youthInitiativeCreateDto();
 
-        Long initiativeId = youthInitiativeService.prepareYouthInitiative(editDto).getYouthInitiativeId();
+        Long initiativeId = youthInitiativeService.prepareYouthInitiative(editDto).getInitiativeId();
 
         Initiative createdInitiative = testHelper.getInitiative(initiativeId);
 

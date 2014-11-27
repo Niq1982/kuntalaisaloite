@@ -124,7 +124,7 @@ public class TestDataService {
         contactInfo.setPhone(template.author.getContactInfo().getPhone());
         createDto.setContactInfo(contactInfo);
 
-        return youthInitiativeService.prepareYouthInitiative(createDto).getYouthInitiativeId();
+        return youthInitiativeService.prepareYouthInitiative(createDto).getInitiativeId();
 
     }
 

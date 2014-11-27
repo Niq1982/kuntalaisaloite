@@ -1,6 +1,9 @@
 package fi.om.municipalityinitiative.service;
 
-import fi.om.municipalityinitiative.dao.*;
+import fi.om.municipalityinitiative.dao.AuthorDao;
+import fi.om.municipalityinitiative.dao.InitiativeDao;
+import fi.om.municipalityinitiative.dao.MunicipalityDao;
+import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dto.YouthInitiativeCreateDto;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
@@ -68,16 +71,16 @@ public class YouthInitiativeService {
 
     public class YouthInitiativeCreateResult {
 
-        private final Long youthInitiativeId;
+        private final Long initiativeId;
         private final String managementLink;
 
-        public YouthInitiativeCreateResult(Long youthInitiativeId, String managementLink) {
-            this.youthInitiativeId = youthInitiativeId;
+        public YouthInitiativeCreateResult(Long initiativeId, String managementLink) {
+            this.initiativeId = initiativeId;
             this.managementLink = managementLink;
         }
 
-        public Long getYouthInitiativeId() {
-            return youthInitiativeId;
+        public Long getInitiativeId() {
+            return initiativeId;
         }
 
         public String getManagementLink() {
