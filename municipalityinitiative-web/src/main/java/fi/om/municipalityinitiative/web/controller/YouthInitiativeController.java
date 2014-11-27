@@ -18,7 +18,29 @@ public class YouthInitiativeController {
     private YouthInitiativeService youthInitiativeService;
 
     @RequestMapping(value="/services/nua/1.0/create", method=RequestMethod.POST)
-    public @ResponseBody YouthInitiativeService.YouthInitiativeCreateResult createYouthInitiative(@RequestBody YouthInitiativeCreateDto youthInitiative) {
-        return youthInitiativeService.prepareYouthInitiative(youthInitiative);
+    public @ResponseBody Failable<YouthInitiativeService.YouthInitiativeCreateResult> createYouthInitiative(@RequestBody YouthInitiativeCreateDto youthInitiative) {
+
+        try {
+            return new Failable<>(youthInitiativeService.prepareYouthInitiative(youthInitiative));
+        } catch (Throwable t) {
+            return new Failable<>(t.getMessage());
+        }
+
+    }
+
+    public class Failable<T> {
+
+        public final String failure;
+        public final T result;
+
+        public Failable(T youthInitiativeCreateResult) {
+            failure = null;
+            result = youthInitiativeCreateResult;
+        }
+
+        public Failable(String error) {
+            failure = error;
+            result = null;
+        }
     }
 }
