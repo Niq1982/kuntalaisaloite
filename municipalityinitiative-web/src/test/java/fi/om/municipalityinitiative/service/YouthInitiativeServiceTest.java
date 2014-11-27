@@ -96,6 +96,7 @@ public class YouthInitiativeServiceTest {
         assertThat(normalAllParticipants, hasSize(1));
 
         assertThat(normalAllParticipants.get(0).getEmail(), is(editDto.getContactInfo().getEmail()));
+        assertThat(normalAllParticipants.get(0).getHomeMunicipality().get().getId(), is(editDto.getContactInfo().getMunicipality()));
     }
 
     @Transactional
@@ -110,6 +111,7 @@ public class YouthInitiativeServiceTest {
         List<NormalAuthor> normalAuthors = authorDao.findNormalAuthors(createdInitiative.getId());
         assertThat(normalAuthors, hasSize(1));
         assertThat(normalAuthors.get(0).getContactInfo().getEmail(), is(editDto.getContactInfo().getEmail()));
+        assertThat(normalAuthors.get(0).getMunicipality().get().getId(), is(editDto.getContactInfo().getMunicipality()));
     }
 
     @Test
@@ -139,6 +141,7 @@ public class YouthInitiativeServiceTest {
         contactInfo.setName("testinimi");
         contactInfo.setEmail("testiemail");
         contactInfo.setPhone("1234567");
+        contactInfo.setMunicipality(unactiveMunicipality);
 
         editDto.setContactInfo(contactInfo);
         editDto.setYouthInitiativeId(-1L);

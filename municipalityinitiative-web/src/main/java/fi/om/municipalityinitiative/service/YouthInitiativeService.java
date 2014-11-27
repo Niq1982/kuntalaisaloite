@@ -42,7 +42,7 @@ public class YouthInitiativeService {
 
         Long participantId = participantDao.prepareConfirmedParticipant(
                 youthInitiativeId,
-                createDto.getMunicipality(),
+                createDto.getContactInfo().getMunicipality(),
                 createDto.getContactInfo().getEmail(),
                 Membership.none,
                 true);
