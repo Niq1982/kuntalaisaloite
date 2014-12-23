@@ -10,6 +10,7 @@ import fi.om.municipalityinitiative.dto.service.EmailDto;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.NormalParticipant;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
+import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.web.Urls;
 import org.junit.Before;
@@ -95,6 +96,25 @@ public class YouthInitiativeServiceTest {
         assertThat(normalAllParticipants.get(0).getEmail(), is(editDto.getContactInfo().getEmail()));
         assertThat(normalAllParticipants.get(0).getHomeMunicipality().get().getId(), is(editDto.getContactInfo().getMunicipality()));
         assertThat(normalAllParticipants.get(0).getName(), is(editDto.getContactInfo().getName()));
+        assertThat(normalAllParticipants.get(0).getMembership(), is(Membership.none));
+    }
+
+    @Transactional
+    @Test
+    public void participant_membership_is_added() {
+        YouthInitiativeCreateDto editDto = youthInitiativeCreateDto();
+        editDto.getContactInfo().setMembership(Membership.community);
+
+        Long initiativeId = youthInitiativeService.prepareYouthInitiative(editDto).getInitiativeId();
+
+        Initiative createdInitiative = testHelper.getInitiative(initiativeId);
+
+        assertThat(createdInitiative.getParticipantCount(), is(1));
+        assertThat(createdInitiative.getParticipantCountPublic(), is(1));
+
+        List<NormalParticipant> normalAllParticipants = participantDao.findNormalAllParticipants(createdInitiative.getId(), 0, 10);
+        assertThat(normalAllParticipants, hasSize(1));
+        assertThat(normalAllParticipants.get(0).getMembership(), is(Membership.community));
     }
 
     @Transactional

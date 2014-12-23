@@ -1,5 +1,7 @@
 package fi.om.municipalityinitiative.dto;
 
+import fi.om.municipalityinitiative.util.Membership;
+
 public class YouthInitiativeCreateDto {
     private Long municipality;
     private ContactInfo contactInfo = new ContactInfo();
@@ -70,6 +72,15 @@ public class YouthInitiativeCreateDto {
         private String email;
         private String phone;
         private Long municipality;
+        private Membership membership = Membership.none;
+
+        public Membership getMembership() {
+            return membership;
+        }
+
+        public void setMembership(Membership membership) {
+            this.membership = membership;
+        }
 
         public String getName() {
             return name;

@@ -10,7 +10,6 @@ import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.util.Locales;
-import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,7 +48,7 @@ public class YouthInitiativeService {
                 youthInitiativeId,
                 createDto.getContactInfo().getMunicipality(),
                 createDto.getContactInfo().getEmail(),
-                Membership.none,
+                createDto.getContactInfo().getMembership(),
                 true);
 
         String managementHash = RandomHashGenerator.longHash();
