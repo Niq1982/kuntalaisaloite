@@ -13,6 +13,7 @@ import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
+import fi.om.municipalityinitiative.service.YouthInitiativeWebServiceNotifier;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
@@ -44,6 +45,9 @@ public class InitiativeManagementService {
 
     @Resource
     private ReviewHistoryDao reviewHistoryDao;
+
+    @Resource
+    private YouthInitiativeWebServiceNotifier youthInitiativeWebServiceNotifier;
 
     @Transactional(readOnly = true)
     public InitiativeDraftUIEditDto getInitiativeDraftForEdit(Long initiativeId, LoginUserHolder loginUserHolder) {
@@ -215,6 +219,9 @@ public class InitiativeManagementService {
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
 
         emailService.sendStatusEmail(initiativeId, EmailMessageType.PUBLISHED_COLLECTING);
+        if (initiative.getYouthInitiativeId().isPresent()) {
+            youthInitiativeWebServiceNotifier.informInitiativePublished(initiative);
+        }
     }
 
     @Transactional(readOnly = false)
@@ -238,6 +245,10 @@ public class InitiativeManagementService {
         else {
             emailService.sendCollaborativeToAuthors(initiativeId);
             emailService.sendCollaborativeToMunicipality(initiativeId, locale);
+        }
+
+        if (initiative.getYouthInitiativeId().isPresent()) {
+            youthInitiativeWebServiceNotifier.informInitiativeSentToMunicipality(initiative);
         }
 
     }

@@ -244,6 +244,11 @@ public class AppConfiguration {
     }
 
     @Bean
+    public YouthInitiativeWebServiceNotifier youthInitiativeWebServiceNotifier() {
+        return new YouthInitiativeWebServiceNotifier(env.getRequiredProperty(PropertyNames.youthInitiativeBaseUrl));
+    }
+
+    @Bean
     EmailServiceDataProvider emailServiceDataProvider() {
         return new EmailServiceDataProvider();
     }

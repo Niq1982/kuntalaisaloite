@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import fi.om.municipalityinitiative.dto.service.TestDataService;
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.service.MunicipalityService;
+import fi.om.municipalityinitiative.service.YouthInitiativeWebServiceNotifier;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.Locales;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
@@ -40,6 +41,11 @@ public class TestDataController extends BaseController {
     
     public TestDataController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
+    }
+
+    @RequestMapping(value="/api/kua/1.0/initiative/{youthInitiativeId}/status/create/")
+    public YouthInitiativeWebServiceNotifier.Response nuaTestUri() {
+        return new YouthInitiativeWebServiceNotifier.Response();
     }
 
     @RequestMapping(value={TEST_DATA_GENERATION_FI, TEST_DATA_GENERATION_SV}, method=GET)
