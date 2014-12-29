@@ -75,11 +75,11 @@ public class YouthInitiativeCreateDto {
         private Membership membership = Membership.none;
 
         public Membership getMembership() {
-            return membership;
+            return membership == null ? Membership.none : membership;
         }
 
         public void setMembership(Membership membership) {
-            this.membership = membership;
+            this.membership = membership == null ? Membership.none : membership;
         }
 
         public String getName() {
