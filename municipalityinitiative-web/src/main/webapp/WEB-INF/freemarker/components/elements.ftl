@@ -181,6 +181,40 @@
 </#macro>
 
 <#-- 
+ * progress
+ * 
+ * Generates initiative's progress graph
+ *
+ * @param initiative is initiative
+-->
+<#macro progress initiative steps>
+	<div class="initiative-progress-container">
+	    <div class="initiative-progress steps-${steps?size}">    
+		    <div class="initiative-progress-bar">
+		    	<span><span class="done"></span></span>
+		    	<span><span class="done"></span></span>
+		    	<span><span class="done"></span></span>
+		    	<span><span class="done"></span></span>
+		    	<span><span class="done"></span></span>
+		    	<span><span class=""></span></span>
+		    	<span><span class=""></span></span>
+		    	<span><span class=""> </span></span>
+		    </div>
+		    
+		    <div>
+		    	<#list steps as step>
+				    <div class="step ${step?string("done", "")}">
+				    	<div class="step-icon"> </div>
+				    	<span class="label">Aloite on julkaistu 15.10.2014</span>
+				    </div>
+			    </#list>
+		    </div>
+		</div>
+	</div>
+</#macro>
+
+
+<#-- 
  * initiativeAuthor
  * 
  * Generates initiative's public author name

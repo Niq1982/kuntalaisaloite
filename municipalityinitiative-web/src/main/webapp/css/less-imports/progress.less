@@ -1,0 +1,154 @@
+@progressContainerHeight: 150px;
+@stepSize: 94px; // use even values to prevent half pixles
+@stepLabelWidth: 200px;
+@progBarItemWidth: 1 / 8 * 100%;
+@progBarHeight: 10px; // use even values to prevent half pixles
+@progBarBorderSize: @progBarHeight / 2;
+@progBarColor: #fff;
+@progBarColorDone: @mainColorLight;
+
+.initiative-progress-container {
+ height: @progressContainerHeight;
+}
+
+.initiative-progress {
+  box-sizing: border-box;
+  position: relative;
+  height: @stepSize;
+  margin: 0 200 + @stepLabelWidth / 2;
+
+  .step {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    width: 0;
+
+    &:first-child {
+      left: 0;
+    }
+
+    &:last-child {
+      right: 0;
+    }
+
+    .step-icon {
+      display: inline-block;
+      width: @stepSize;
+      height: @stepSize;
+      border-radius: 100%;
+      margin-left: -@stepSize / 2;
+      background: @progBarColor;
+    }
+
+    .label {
+      display: inline-block;
+      width: @stepLabelWidth;
+      margin-left: -@stepLabelWidth / 2;
+      text-align: center;
+    }
+
+    &.done {
+      .step-icon {
+        background: @progBarColorDone;
+      }
+    }
+  }
+
+  &.steps-3 {
+    margin: 0 100 + @stepLabelWidth / 2;
+
+    .step:nth-child(2) {
+      left: 50%;
+    }
+  }
+
+  &.steps-4 {
+    margin: 0 50 + @stepLabelWidth / 2;
+
+    .step:nth-child(2) {
+      left: 1 / 3 * 100%;
+    }
+
+    .step:nth-child(3) {
+      left: 2 / 3 * 100%;
+    }
+  }
+
+  &.steps-5 {
+    margin: 0 @stepLabelWidth / 2;
+
+    .step:nth-child(2) {
+      left: 1 / 4 * 100%;
+    }
+
+    .step:nth-child(3) {
+      left: 2 / 4 * 100%;
+    }
+
+    .step:nth-child(4) {
+      left: 3 / 4 * 100%;
+    }
+  }
+}
+
+.initiative-progress-bar {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  left: 10px;
+  margin-top: -@progBarHeight / 2;
+  overflow: hidden;
+  white-space: nowrap;
+
+   > span {
+    box-sizing: border-box;
+    position: relative;
+    top: -@progBarBorderSize + 1;
+    display: inline-block;
+    width: @progBarItemWidth;
+    padding: 0 1px;
+
+    span {
+      position: relative;
+      display: inline-block;
+      height: @progBarHeight;
+      width: 100%;
+      background: @progBarColor;
+
+      &:before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: -@progBarBorderSize;
+        margin-top: -@progBarBorderSize;
+        border-width: @progBarBorderSize 0 @progBarBorderSize @progBarBorderSize;
+        border-style: solid;
+        border-color: @progBarColor @progBarColor @progBarColor transparent;
+      }
+
+      &:after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: -@progBarBorderSize;
+        margin-top: -@progBarBorderSize;
+        border-top: @progBarBorderSize solid transparent;
+        border-bottom: @progBarBorderSize solid transparent;
+        border-left: @progBarBorderSize solid @progBarColor;
+      }
+
+      &.done {
+        background: @progBarColorDone;
+
+        &:before {
+          border-color: @progBarColorDone @progBarColorDone @progBarColorDone transparent;
+        }
+
+        &:after {
+          border-left-color: @progBarColorDone;
+        }
+      }
+    }
+
+  }
+}

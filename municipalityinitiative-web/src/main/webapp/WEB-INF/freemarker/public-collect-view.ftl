@@ -50,7 +50,16 @@
 
     <@e.initiativeTitle initiative />
     
-    <@e.stateInfo initiative />
+    <#--<@e.stateInfo initiative />-->
+    
+    <#-- TEST layout with stepCount -->
+    <@e.progress initiative=initiative steps=[true, true] />
+    
+    <@e.progress initiative=initiative steps=[true, false, false] />
+    
+    <@e.progress initiative=initiative steps=[true, true, false, false] />
+    
+    <@e.progress initiative=initiative steps=[true, true, true, true, false] />
 
     <#-- VIEW BLOCKS -->
     <div class="view-block public first">
