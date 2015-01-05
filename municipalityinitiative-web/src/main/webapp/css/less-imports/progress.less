@@ -1,7 +1,8 @@
 @progressContainerHeight: 150px;
 @stepSize: 94px; // use even values to prevent half pixles
 @stepLabelWidth: 200px;
-@progBarItemWidth: 1 / 8 * 100%;
+// @progBarItemWidth: 1 / 8 * 100%;
+@progBarItemWidth: 72px;
 @progBarHeight: 10px; // use even values to prevent half pixles
 @progBarBorderSize: @progBarHeight / 2;
 @progBarColor: #fff;
@@ -11,102 +12,26 @@
  height: @progressContainerHeight;
 }
 
-.initiative-progress {
-  box-sizing: border-box;
-  position: relative;
-  height: @stepSize;
-  margin: 0 200 + @stepLabelWidth / 2;
-
-  .step {
-    display: inline-block;
-    position: absolute;
-    top: 0;
-    width: 0;
-
-    &:first-child {
-      left: 0;
-    }
-
-    &:last-child {
-      right: 0;
-    }
-
-    .step-icon {
-      display: inline-block;
-      width: @stepSize;
-      height: @stepSize;
-      border-radius: 100%;
-      margin-left: -@stepSize / 2;
-      background: @progBarColor;
-    }
-
-    .label {
-      display: inline-block;
-      width: @stepLabelWidth;
-      margin-left: -@stepLabelWidth / 2;
-      text-align: center;
-    }
-
-    &.done {
-      .step-icon {
-        background: @progBarColorDone;
-      }
-    }
-  }
-
-  &.steps-3 {
-    margin: 0 100 + @stepLabelWidth / 2;
-
-    .step:nth-child(2) {
-      left: 50%;
-    }
-  }
-
-  &.steps-4 {
-    margin: 0 50 + @stepLabelWidth / 2;
-
-    .step:nth-child(2) {
-      left: 1 / 3 * 100%;
-    }
-
-    .step:nth-child(3) {
-      left: 2 / 3 * 100%;
-    }
-  }
-
-  &.steps-5 {
-    margin: 0 @stepLabelWidth / 2;
-
-    .step:nth-child(2) {
-      left: 1 / 4 * 100%;
-    }
-
-    .step:nth-child(3) {
-      left: 2 / 4 * 100%;
-    }
-
-    .step:nth-child(4) {
-      left: 3 / 4 * 100%;
-    }
-  }
-}
-
 .initiative-progress-bar {
   position: absolute;
   top: 50%;
-  right: 10px;
-  left: 10px;
+  width: 100%;
+  left: 0;
   margin-top: -@progBarHeight / 2;
   overflow: hidden;
   white-space: nowrap;
+  font-size: 0;
 
    > span {
     box-sizing: border-box;
     position: relative;
     top: -@progBarBorderSize + 1;
     display: inline-block;
+    // float: left;
     width: @progBarItemWidth;
     padding: 0 1px;
+    margin: 0 2px;
+    font-size: 16px;
 
     span {
       position: relative;
@@ -149,6 +74,196 @@
         }
       }
     }
+  }
 
+  &.bar-items-2 {
+    // margin-left: -30px;
+    margin-left: -2 * 2 * 2px;
+
+    > span {
+      width: 1/2 * 100%;
+      margin: 0 2px;
+    }
+  }
+
+  &.bar-items-3 {
+    // margin-left: -30px;
+    margin-left: -3 * 2 * 2px;
+
+    > span {
+      width: 1/3 * 100%;
+      margin: 0 2px;
+    }
+  }
+
+  &.bar-items-4 {
+    margin-left: -4 * 2 * 2px;
+    > span {
+      width: 1/4 * 100%;
+      // width: 24%;
+      // margin: 0 0.5%;
+    }
+  }
+
+  &.bar-items-8 {
+    // margin-left: -30px;
+    margin-left: -8 * 2 * 2px;
+
+    > span {
+      width: 1/8 * 100%;
+      // margin: 0 0.25%;
+      // width: 12%;
+    }
+  }
+
+  &.bar-items-9 {
+    // margin-left: -30px;
+    margin-left: -9 * 2 * 2px;
+
+    > span {
+      width: 1/9 * 100%;
+      margin: 0 2px;
+    }
+  }
+}
+
+
+.initiative-progress {
+  box-sizing: border-box;
+  position: relative;
+  height: @stepSize;
+  margin: 0 @stepLabelWidth / 2;
+
+  .step {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    width: 0;
+
+    &:first-child {
+      left: 0;
+    }
+
+    &:last-child {
+      right: 0;
+    }
+
+    .step-icon-holder {
+      position: relative;
+      display: inline-block;
+      width: @stepSize;
+      height: @stepSize;
+      border-radius: 100%;
+      margin-left: -@stepSize / 2;
+      background: @progBarColor;
+
+      i {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin: -32px 0 0 -32px;
+      }
+    }
+
+    .label {
+      display: inline-block;
+      width: @stepLabelWidth;
+      margin-left: -@stepLabelWidth / 2;
+      text-align: center;
+    }
+
+    &.done {
+      .step-icon-holder {
+        background: @progBarColorDone;
+      }
+    }
+
+    &:not(.done) {
+      .step-icon-holder {
+        i {
+          opacity: .3;
+        }
+      }
+    }
+  }
+
+  &.steps-2 {
+    margin: 0 217 + @stepLabelWidth / 2;
+  }
+
+  &.steps-3 {
+    .step:nth-child(2) {
+      left: 50%;
+    }
+
+    .initiative-progress-bar:nth-child(1) {
+      left: 0;
+      width: 50%;
+    }
+
+    .initiative-progress-bar:nth-child(2) {
+      left: 50%;
+      width: 50%;
+    }
+  }
+
+  &.steps-4 {
+    .step:nth-child(2) {
+      left: 1 / 3 * 100%;
+    }
+
+    .step:nth-child(3) {
+      left: 2 / 3 * 100%;
+    }
+
+    .initiative-progress-bar:nth-child(1) {
+      left: 0;
+      width: 1 / 3 * 100%;
+    }
+
+    .initiative-progress-bar:nth-child(2) {
+      left: 1 / 3 * 100%;
+      width: 1 / 3 * 100%;
+    }
+
+    .initiative-progress-bar:nth-child(3) {
+      left: 2 / 3 * 100%;
+      width: 1 / 3 * 100%;
+    }
+  }
+
+  &.steps-5 {
+    .step:nth-child(2) {
+      left: 1 / 4 * 100%;
+    }
+
+    .step:nth-child(3) {
+      left: 2 / 4 * 100%;
+    }
+
+    .step:nth-child(4) {
+      left: 3 / 4 * 100%;
+    }
+
+
+    .initiative-progress-bar:nth-child(1) {
+      left: 0;
+      width: 1 / 4 * 100%;
+    }
+
+    .initiative-progress-bar:nth-child(2) {
+      left: 1 / 4 * 100%;
+      width: 1 / 4 * 100%;
+    }
+
+    .initiative-progress-bar:nth-child(3) {
+      left: 2 / 4 * 100%;
+      width: 1 / 4 * 100%;
+    }
+
+    .initiative-progress-bar:nth-child(4) {
+      left: 3 / 4 * 100%;
+      width: 1 / 4 * 100%;
+    }
   }
 }

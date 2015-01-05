@@ -2,6 +2,7 @@
 <#import "components/layout.ftl" as l />
 <#import "components/utils.ftl" as u />
 <#import "components/elements.ftl" as e />
+<#import "components/progress.ftl" as prog />
 <#import "components/forms.ftl" as f />
 <#import "components/edit-blocks.ftl" as edit />
 <#import "components/some.ftl" as some />
@@ -52,14 +53,7 @@
     
     <#--<@e.stateInfo initiative />-->
     
-    <#-- TEST layout with stepCount -->
-    <@e.progress initiative=initiative steps=[true, true] />
-    
-    <@e.progress initiative=initiative steps=[true, false, false] />
-    
-    <@e.progress initiative=initiative steps=[true, true, false, false] />
-    
-    <@e.progress initiative=initiative steps=[true, true, true, true, false] />
+    <@prog.progress initiative=initiative />
 
     <#-- VIEW BLOCKS -->
     <div class="view-block public first">

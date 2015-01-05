@@ -1,4 +1,4 @@
-// Import variables and mixings
+// Import variables and mixins
 @import '../less-imports/vars';
 
 // Gradients are made as images for IE
@@ -11,7 +11,7 @@ a, button {
     &.large-button, &.small-button, &.box,
     &.gray, &.disabled {
         background:#fff url("../../img/ie/gradient-gray.png?version=${timestamp}") left bottom repeat-x;
-        
+
         &:hover { background:#fff url("../../img/ie/gradient-gray-hover.png?version=${timestamp}") left bottom repeat-x; }
         &:active, &.active { background:#fff url("../../img/ie/gradient-gray-active.png?version=${timestamp}") left bottom repeat-x; }
     }
@@ -19,7 +19,7 @@ a, button {
 
 .search-parameters {
     background:#fff url("../../img/ie/gradient-gray-light.png?version=${timestamp}") center bottom repeat-x;
-    
+
     a {
         &:hover { background:#fff url("../../img/ie/gradient-gray-hover.png?version=${timestamp}") center bottom repeat-x; }
         &.active { background:@mainColorLight url("../../img/ie/gradient-main.png?version=${timestamp}") center bottom repeat-x; }
@@ -30,7 +30,7 @@ a, button {
         &:hover {
             background:#fff url("../../img/ie/gradient-gray-light.png?version=${timestamp}") left bottom repeat-x;
         }
-    
+
         &.active {
             background:@mainColorLight url("../../img/ie/gradient-main.png?version=${timestamp}") center bottom repeat-x;
         }
@@ -40,10 +40,10 @@ a, button {
 .modal {
     .modal-header {
         background:#fff url("../../img/ie/gradient-gray.png?version=${timestamp}") left bottom repeat-x;
-        
+
         .close {
             background:#fff url("../../img/ie/gradient-gray.png?version=${timestamp}") left bottom repeat-x;
-        
+
             &:hover { background:#fff url("../../img/ie/gradient-gray-hover.png?version=${timestamp}") left bottom repeat-x; }
             &:active { background:#fff url("../../img/ie/gradient-gray-active.png?version=${timestamp}") left bottom repeat-x; }
         }
@@ -53,7 +53,7 @@ a, button {
 .initiative-types {
     .initiative-type {
         background:#fff url("../../img/ie/gradient-gray-light.png?version=${timestamp}") center bottom repeat-x;
-        
+
         .action.open {
             background:#fff url("../../img/ie/gradient-gray.png?version=${timestamp}") center bottom repeat-x;
         }
@@ -63,7 +63,7 @@ a, button {
 // IE 6 & 7 specific styles
 .ie6, .ie7  {
     #header { position:relative; }
-    
+
      // Frontpage big link
     .big-link-holder {
         .big-link {
@@ -72,52 +72,52 @@ a, button {
     }
     .support-votes, .font-size-toggle a,
     .initiative-content-row { display:inline-block; }
-    
+
     .font-size-toggle a {
         line-height:19px;
     }
 
-    
+
     // CSS Tables
     .table {
         display:inline-block;
-    
-        .row { 
+
+        .row {
             clear:both;
         }
         .cell {
             float:left;
         }
     }
-    
-    // Icons 
+
+    // Icons
     .icon-small { margin-bottom:0.3em; }
     .push { position:static; margin-left:1em; }
-    
+
     .search-parameters {
         display:inline;
     }
-    
+
     .participant-list, .search-results {
         li { height:1%; }
-    }     
-    
+    }
+
     .inline-style {
         display:inline;
         margin:0;
     }
-    
+
     .checkbox { top:1px; }
-    
+
     // Attachments - thumbnail
     .thumbnail {
 		display:block;
-		
+
 		a {
 			display: block;
 		}
 	}
-} 
+}
 
 // IE 6 & 7 & 8 specific styles
 .ie6, .ie7, .ie8  {
@@ -132,34 +132,34 @@ a, button {
            filter: progid:DXImageTransform.Microsoft.Alpha(opacity = 60);
         }
     }
-    
+
     .icon-32 {
         &.secondary {
             background:transparent url("../../img/ie/icon-32-orange.png?version=${timestamp}") 0 0 no-repeat;
         }
     }
-    
+
     .content-block-header.disabled {
         background:#60a5ad;
         //filter: progid:DXImageTransform.Microsoft.Alpha(opacity = 60);
     }
-    
+
     .initiative-types {
         .disable-mask {
             filter: progid:DXImageTransform.Microsoft.Alpha(opacity = 0);
         }
-    
+
         .initiative-type {
             &:hover {
                 border:1px solid #aaa;
             }
-            
+
             /*&.unselected {
                 filter: progid:DXImageTransform.Microsoft.Alpha(opacity = 60);
             }*/
         }
     }
-    
+
     .form-block-container {
         .mask {
             background:#fff;
