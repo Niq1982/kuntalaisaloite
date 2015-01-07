@@ -144,7 +144,7 @@
 
     <@e.initiativeTitle initiative />
 
-    <#--<@e.stateInfo initiative />-->
+    <@e.stateInfo initiative />
     <@prog.progress initiative=initiative public=false />
 
 
