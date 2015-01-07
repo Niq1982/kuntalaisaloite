@@ -9,13 +9,13 @@
  *
  * @param steps is a hashMap for initiative's progress steps
 -->
-<#macro progressBar steps>
+<#macro progressBar steps fixStateOk>
 	<@compress single_line=true>
 	<#list steps as step>
 		<#if step_index lt steps?size - 1>
 		    <div class="initiative-progress-bar bar-items-${barItems}">
 		    	<#list 1..barItems as i>
-		    		<span><span class="${(steps[step_index+1].done || step.done && i_index == 0)?string("done", "")}"></span></span>
+		    		<span><span class="${(steps[step_index+1].done || step.done && i_index == 0)?string("done", "")}  ${(!fixStateOk && (step.icon != "draft" && step.icon != "mgmnt" || (step.icon == "mgmnt" && i != 1)))?string("disabled", "")}"></span></span>
 		    	</#list>
 		    </div>
 	    </#if>
@@ -30,10 +30,10 @@
  *
  * @param steps is a hashMap for initiative's progress steps
 -->
-<#macro progressSteps steps>
+<#macro progressSteps steps fixStateOk>
 	<div>
 		<#list steps as step>
-		    <div class="step ${step.done?string("done", "")}">
+		    <div class="step ${step.done?string("done", "")} ${(!fixStateOk && (step.icon != "draft" && step.icon != "mgmnt"))?string("disabled", "")}">
 		    	<div class="step-icon-holder"><i class="icon-progress icon-${step.icon}"></i></div>
 		    	<span class="label"><#noescape>${step.label}</#noescape></span>
 		    </div>
@@ -187,8 +187,8 @@
 
 	<div class="initiative-progress-container">
 	    <div class="initiative-progress steps-${steps?size}">
-	    	<@progressBar steps />
-	    	<@progressSteps steps />
+	    	<@progressBar steps initiative.fixState == FixState.OK />
+	    	<@progressSteps steps initiative.fixState == FixState.OK />
 		</div>
 	</div>
 </#macro>

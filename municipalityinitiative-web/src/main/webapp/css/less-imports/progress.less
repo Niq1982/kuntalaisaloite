@@ -5,6 +5,7 @@
 @progBarBorderSize: @progBarHeight / 2;
 @progBarColor: #fff;
 @progBarColorDone: @mainColorLight;
+@progBarColorDisabled: #ccc;
 
 .progressBarItems(@count) {
   margin-left: -@count * 2 * 2px;
@@ -90,6 +91,18 @@
         &:after {
           border-left-color: @progBarColorDone;
         }
+
+        &.disabled {
+          background: @progBarColorDisabled;
+
+          &:before {
+            border-color: @progBarColorDisabled @progBarColorDisabled @progBarColorDisabled transparent;
+          }
+
+          &:after {
+            border-left-color: @progBarColorDisabled;
+          }
+        }
       }
     }
   }
@@ -162,6 +175,16 @@
 
         .ie8 & {
           background: transparent url("@{imagesPath}/ie/progress-step.png?version=${timestamp}") no-repeat 0 -100px;
+        }
+      }
+
+      &.disabled {
+        .step-icon-holder {
+          background: @progBarColorDisabled;
+
+          .ie8 & {
+            background: transparent url("@{imagesPath}/ie/progress-step.png?version=${timestamp}") no-repeat 0 -200px;
+          }
         }
       }
     }
