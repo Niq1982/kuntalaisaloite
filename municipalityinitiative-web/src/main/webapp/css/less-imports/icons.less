@@ -11,7 +11,7 @@
 .large-icon {
     padding-left: 40px;
 
-    background: transparent url("../../img/button-large-sprite.png?version=${timestamp}") no-repeat 0 0;
+    background: transparent url("@{imagesPath}/button-large-sprite.png?version=${timestamp}") no-repeat 0 0;
 
     &.save-and-send {       background-position: 0 2px;      }
     &.save-as-draft {       background-position: 0 -150px;   }
@@ -36,7 +36,7 @@
 .small-icon {
     padding-left: 30px;
 
-    background: transparent url("../../img/button-small-sprite.png?version=${timestamp}") no-repeat 0 0;
+    background: transparent url("@{imagesPath}/button-small-sprite.png?version=${timestamp}") no-repeat 0 0;
 
     &.save-and-send {       background-position: 0 12px;     }
     &.save-as-draft {       background-position: 0 -140px;   }
@@ -65,7 +65,7 @@
     width:16px;
     height:16px;
 
-    background: transparent url("../../img/button-small-sprite.png?version=${timestamp}") no-repeat 0 0;
+    background: transparent url("@{imagesPath}/button-small-sprite.png?version=${timestamp}") no-repeat 0 0;
 
     &.save-and-send {       background-position: 0 0;     }
     &.save-as-draft {       background-position: 0 -150px;   }
@@ -92,7 +92,7 @@
     margin:0 0.5em -0.5em 0;
 
     &.pdf {
-        background:url("../../img/pdficon_large.png?version=${timestamp}") no-repeat 0 0;
+        background:url("@{imagesPath}/pdficon_large.png?version=${timestamp}") no-repeat 0 0;
     }
 }
 
@@ -107,7 +107,7 @@
     display:inline-block;
     width:12px;
     height:12px;
-    background: transparent url("../../img/icons-sprite.png?version=${timestamp}") 0 0 no-repeat;
+    background: transparent url("@{imagesPath}/icons-sprite.png?version=${timestamp}") 0 0 no-repeat;
 
     &.margin-right { margin-right:0.2em; }
 
@@ -211,7 +211,7 @@
 .help-nav-icon {
     padding:14px 20px 14px 40px;
 
-    background: transparent url("../../img/help-page-link-icons.png?version=${timestamp}") no-repeat 0 0;
+    background: transparent url("@{imagesPath}/help-page-link-icons.png?version=${timestamp}") no-repeat 0 0;
 
     &.icon-author { background-position: 0 center; }
     &.icon-participants { background-position: -300px center; }
@@ -225,8 +225,8 @@
     width: 64px;
     height: 64px;
 
-    background: transparent url("../../img/kua-progress-icons.png?version=${timestamp}") no-repeat 0 0;
-    background-image: url("../../img/kua-progress-icons.svg?version=${timestamp}"), none;
+    background: transparent url("@{imagesPath}/kua-progress-icons.png?version=${timestamp}") no-repeat 0 0;
+    background-image: url("@{imagesPath}/kua-progress-icons.svg?version=${timestamp}"), none;
     background-position: -100% -100%;
 
     &.icon-publish {

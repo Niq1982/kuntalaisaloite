@@ -3,6 +3,45 @@
 <#escape x as x?html>
 
 <#-- 
+ * progressBar
+ * 
+ * Generates progress bar between each progress step
+ *
+ * @param steps is a hashMap for initiative's progress steps
+-->
+<#macro progressBar steps>
+	<@compress single_line=true>
+	<#list steps as step>
+		<#if step_index lt steps?size - 1>
+		    <div class="initiative-progress-bar bar-items-${barItems}">
+		    	<#list 1..barItems as i>
+		    		<span><span class="${(steps[step_index+1].done || step.done && i_index == 0)?string("done", "")}"></span></span>
+		    	</#list>
+		    </div>
+	    </#if>
+	</#list>
+	</@compress>
+</#macro>
+
+<#-- 
+ * progressSteps
+ * 
+ * Generates initiative's progress steps
+ *
+ * @param steps is a hashMap for initiative's progress steps
+-->
+<#macro progressSteps steps>
+	<div>
+		<#list steps as step>
+		    <div class="step ${step.done?string("done", "")}">
+		    	<div class="step-icon-holder"><i class="icon-progress icon-${step.icon}"></i></div>
+		    	<span class="label"><#noescape>${step.label}</#noescape></span>
+		    </div>
+	    </#list>
+	</div>
+</#macro>
+
+<#-- 
  * progress
  * 
  * Generates initiative's progress graph
@@ -109,7 +148,7 @@
 	
 		<#-- COLLABORATIVE or UNDEFINED -->
 		<#if initiative.collaborative || (!initiative.collaborative && !initiative.single)>				
-			<#assign steps = [
+	    <#assign steps = [
 				{
 					"label": initiativeDraftCreated,
 					"done": isDraftDone,
@@ -148,26 +187,8 @@
 
 	<div class="initiative-progress-container">
 	    <div class="initiative-progress steps-${steps?size}">
-	    	<@compress single_line=true>
-	    	<#list steps as step>
-	    		<#if step_index lt steps?size - 1>
-				    <div class="initiative-progress-bar bar-items-${barItems}">
-				    	<#list 1..barItems as i>
-				    		<span><span class="done"></span></span>
-				    	</#list>
-				    </div>
-			    </#if>
-		    </#list>
-		    </@compress>
-		    
-		    <div>
-		    	<#list steps as step>
-				    <div class="step ${step.done?string("done", "")}">
-				    	<div class="step-icon-holder"><i class="icon-progress icon-${step.icon}"></i></div>
-				    	<span class="label"><#noescape>${step.label}</#noescape></span>
-				    </div>
-			    </#list>
-		    </div>
+	    	<@progressBar steps />
+	    	<@progressSteps steps />
 		</div>
 	</div>
 </#macro>
