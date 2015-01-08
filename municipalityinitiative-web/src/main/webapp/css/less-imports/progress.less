@@ -16,15 +16,30 @@
 }
 
 .progressBar(@nth, @childs) {
-  .initiative-progress-bar:nth-child(@nth) {
+  .initiative-progress-bar:nth-child(@{nth}) {
     left: (@nth - 1) / (@childs - 1) * 100%;
     width: 1 / (@childs - 1) * 100%;
+  }
+
+  // Use fallback for IE8
+  .ie8 & {
+    .initiative-progress-bar.nth-child-@{nth} {
+      left: (@nth - 1) / (@childs - 1) * 100%;
+      width: 1 / (@childs - 1) * 100%;
+    }
   }
 }
 
 .progressStepPosition(@nth, @steps) {
-  .step:nth-child(@nth) {
+  .step:nth-child(@{nth}) {
     left: (@nth - 1) / (@steps - 1) * 100%;
+  }
+
+  // Use fallback for IE8
+  .ie8 & {
+    .step.nth-child-@{nth} {
+      left: (@nth - 1) / (@steps - 1) * 100%;
+    }
   }
 }
 
@@ -139,6 +154,12 @@
 
     &:last-child {
       right: 0;
+    }
+
+    .ie8 & {
+      &.last-child {
+        right: 0;
+      }
     }
 
     .step-icon-holder {

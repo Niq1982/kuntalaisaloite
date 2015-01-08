@@ -6,6 +6,7 @@
  * progressBar
  * 
  * Generates progress bar between each progress step
+ * Add fallbacks for pseudo CSS selectors for IE8
  *
  * @param steps is a hashMap for initiative's progress steps
 -->
@@ -13,7 +14,7 @@
 	<@compress single_line=true>
 	<#list steps as step>
 		<#if step_index lt steps?size - 1>
-		    <div class="initiative-progress-bar bar-items-${barItems}">
+		    <div class="initiative-progress-bar bar-items-${barItems} nth-child-${step_index + 1}">
 		    	<#list 1..barItems as i>
 		    		<span><span class="${(steps[step_index+1].done || step.done && i_index == 0)?string("done", "")}  ${(!fixStateOk && (step.icon != "draft" && step.icon != "mgmnt" || (step.icon == "mgmnt" && i != 1)))?string("disabled", "")}"></span></span>
 		    	</#list>
@@ -27,13 +28,14 @@
  * progressSteps
  * 
  * Generates initiative's progress steps
+ * Add fallbacks for pseudo CSS selectors for IE8
  *
  * @param steps is a hashMap for initiative's progress steps
 -->
 <#macro progressSteps steps fixStateOk>
 	<div>
 		<#list steps as step>
-		    <div class="step ${step.done?string("done", "")} ${(!fixStateOk && (step.icon != "draft" && step.icon != "mgmnt"))?string("disabled", "")}">
+		    <div class="step nth-child-${step_index + 1} ${step_has_next?string("","last-child")} ${step.done?string("done", "")} ${(!fixStateOk && (step.icon != "draft" && step.icon != "mgmnt"))?string("disabled", "")}">
 		    	<div class="step-icon-holder"><i class="icon-progress icon-${step.icon}"></i></div>
 		    	<span class="label"><#noescape>${step.label}</#noescape></span>
 		    </div>
