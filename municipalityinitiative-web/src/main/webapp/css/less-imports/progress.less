@@ -1,6 +1,6 @@
 @progressContainerHeight: 150px;
 @stepSize: 94px; // use even values to prevent half pixels
-@stepLabelWidth: 200px;
+@stepLabelWidth: 8.75em; // 140px
 @progBarHeight: 10px; // use even values to prevent half pixels
 @progBarBorderSize: @progBarHeight / 2;
 @progBarColor: #fff;
@@ -220,7 +220,7 @@
   }
 
   &.steps-2 {
-    margin: 0 217 + @stepLabelWidth / 2;
+    margin: 0 13.5 + @stepLabelWidth / 2; // em -> 0 286px (216 + 140/2)
   }
 
   &.steps-3 {

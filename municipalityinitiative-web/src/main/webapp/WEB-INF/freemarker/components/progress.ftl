@@ -10,13 +10,16 @@
  *
  * @param steps is a hashMap for initiative's progress steps
 -->
-<#macro progressBar steps fixStateOk>
+<#macro progressBar steps fixState>
 	<@compress single_line=true>
 	<#list steps as step>
 		<#if step_index lt steps?size - 1>
 		    <div class="initiative-progress-bar bar-items-${barItems} nth-child-${step_index + 1}">
 		    	<#list 1..barItems as i>
-		    		<span><span class="${(steps[step_index+1].done || step.done && i_index == 0)?string("done", "")}  ${(!fixStateOk && (step.icon != "draft" && step.icon != "mgmnt" || (step.icon == "mgmnt" && i != 1)))?string("disabled", "")}"></span></span>
+		    		<#assign disableClass="" />
+		    		<#if (fixState != FixState.OK && (step.icon != "draft" && step.icon != "mgmnt" || (step.icon == "mgmnt" && i != 1)))><#assign disableClass="disabled" /></#if>
+		    		<#if fixState == FixState.FIX && step.icon == "draft" && i != 1 || (fixState == FixState.FIX && step.icon == "mgmnt")><#assign disableClass="disabled" /></#if>
+		    		<span><span class="${(steps[step_index+1].done || step.done && i_index == 0)?string("done", "")} ${disableClass}"></span></span>
 		    	</#list>
 		    </div>
 	    </#if>
@@ -32,10 +35,13 @@
  *
  * @param steps is a hashMap for initiative's progress steps
 -->
-<#macro progressSteps steps fixStateOk>
+<#macro progressSteps steps fixState>
 	<div>
 		<#list steps as step>
-		    <div class="step nth-child-${step_index + 1} ${step_has_next?string("","last-child")} ${step.done?string("done", "")} ${(!fixStateOk && (step.icon != "draft" && step.icon != "mgmnt"))?string("disabled", "")}">
+			<#assign disableClass="" />
+    		<#if (fixState != FixState.OK && (step.icon != "draft" && step.icon != "mgmnt"))><#assign disableClass="disabled" /></#if>
+    		<#if fixState == FixState.FIX && step.icon != "draft"><#assign disableClass="disabled" /></#if>
+		    <div class="step nth-child-${step_index + 1} ${step_has_next?string("","last-child")} ${step.done?string("done", "")} ${disableClass}">
 		    	<div class="step-icon-holder"><i class="icon-progress icon-${step.icon}"></i></div>
 		    	<span class="label"><#noescape>${step.label}</#noescape></span>
 		    </div>
@@ -59,21 +65,15 @@
 	<#assign isManagementDone = !isPublishDone && (initiative.state == InitiativeState.REVIEW || initiative.state == InitiativeState.ACCEPTED) || isPublishDone />
 
 	<#assign createTime><@u.localDate initiative.createTime /></#assign>
-    <#assign initiativeCreated>Aloite on julkaistu<br/>${createTime}</#assign>
-
-	<#if initiative.sentTime.present>
-        <#assign sentTime><@u.localDate initiative.sentTime.value /></#assign>
-        <#assign sendToMunicipality>Aloite lähetetty kuntaan<br/>${sentTime}</#assign>
-    <#else>
-    	<#assign sendToMunicipality>Aloite lähetetään kuntaan</#assign>
-   	</#if>
+    <#assign initiativePublished><@u.message "progress.public.published" /><br/>${createTime}</#assign>
+    <#assign sendToMunicipality><@u.message "progress.public.sent" /><#if initiative.sentTime.present><br/><@u.localDate initiative.sentTime.value /></#if></#assign>
 
 	<#-- PUBLIC VIEW -->
 	<#if public>
 		<#-- SINGLE -->
 		<#assign steps = [
 			{
-				"label": initiativeCreated,
+				"label": initiativePublished,
 				"done": isPublishDone,
 				"icon": "publish"
 			},
@@ -87,14 +87,14 @@
 		<#-- COLLABORATIVE -->
 		<#if initiative.collaborative>
 			<#if initiative.fixState != FixState.OK>
-		        <#assign initiativeCollecting><@u.message key="initiative.fixStateInfo."+initiative.fixState /></#assign>
+		        <#assign initiativeCollecting><@u.message "progress.management.review" /></#assign>
 		    <#elseif initiative.state?? && initiative.state == InitiativeState.PUBLISHED>
-		    	<#assign initiativeCollecting>Aloite kerää osallistujia</#assign>
+		    	<#assign initiativeCollecting><@u.message "progress.public.collecting" /></#assign>
 		    </#if>
 				
 			<#assign steps = [
 				{
-					"label": initiativeCreated,
+					"label": initiativePublished,
 					"done": isPublishDone,
 					"icon": "publish"
 				},
@@ -113,16 +113,27 @@
   
   	<#-- MANAGEMENT/MODERATION VIEW -->
   	<#else>
-		<#assign createTime><@u.localDate initiative.createTime /></#assign>
-		<#assign initiativeDraftCreated>Aloite on luotu<br/>${createTime}</#assign>
+		<#assign initiativeDraftCreated><@u.message "progress.management.draft" /></#assign>
+		<#assign initiativeReview><@u.message "progress.management.review" /></#assign>
+		<#assign initiativeCollecting><@u.message "progress.management.collecting" /></#assign>
 		
 	    <#if isCollectDone>
-	    	<#assign initiativePublish>Aloite on julkaistu</#assign>
-	    	<#assign initiativeCollecting>Aloite kerää osallistujia</#assign>
+	    	<#assign initiativePublish><@u.message "progress.management.published" /></#assign>
+	    	<#assign initiativePublishSingle>${initiativePublish}</#assign>
+	    	
 	    <#else>
-	    	<#assign initiativePublish>Aloite julkaistaan</#assign>
-	    	<#assign initiativeCollecting>Osallistujien kerääminen</#assign>
+	    	<#assign initiativePublish><@u.message "progress.management.publish" /></#assign>
+	    	<#assign initiativePublishSingle><@u.message "progress.management.publish.single" /></#assign>
 	    </#if>
+	    
+		<#if initiative.sentTime.present>
+	        <#assign sentTime><@u.localDate initiative.sentTime.value /></#assign>
+	        <#assign sendToMunicipality><@u.message "progress.management.sent" /><br/>${sentTime}</#assign>
+	        <#assign sendToMunicipalitySingle><@u.message "progress.management.sent" /><br/>${sentTime}</#assign>
+	    <#else>
+	    	<#assign sendToMunicipality><@u.message "progress.management.send" /></#assign>
+	    	<#assign sendToMunicipalitySingle><@u.message "progress.management.send.single" /></#assign>
+	   	</#if>
 		    
 		<#-- SINGLE -->
     	<#assign steps = [
@@ -132,17 +143,17 @@
 				"icon": "draft"
 			},
 			{
-				"label": "Aloite odottaa hyväksyntää",
+				"label": initiativeReview,
 				"done": isManagementDone,
 				"icon": "mgmnt"
 			},
 			{
-				"label": initiativePublish,
+				"label": initiativePublishSingle,
 				"done": isPublishDone,
 				"icon": "mgmnt-publish"
 			},
 			{
-				"label": sendToMunicipality,
+				"label": sendToMunicipalitySingle,
 				"done": isSentDone,
 				"icon": "sent"
 			}
@@ -157,7 +168,7 @@
 					"icon": "draft"
 				},
 				{
-					"label": "Aloitteen ylläpito",
+					"label": initiativeReview,
 					"done": isManagementDone,
 					"icon": "mgmnt"
 				},
@@ -189,8 +200,8 @@
 
 	<div class="initiative-progress-container">
 	    <div class="initiative-progress steps-${steps?size}">
-	    	<@progressBar steps initiative.fixState == FixState.OK />
-	    	<@progressSteps steps initiative.fixState == FixState.OK />
+	    	<@progressBar steps initiative.fixState />
+	    	<@progressSteps steps initiative.fixState />
 		</div>
 	</div>
 </#macro>
