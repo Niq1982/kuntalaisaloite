@@ -24,9 +24,7 @@
 
     <@e.initiativeTitle initiative />
 
-    <@e.stateInfo initiative />
-    
-    <@prog.progress initiative=initiative />
+    <@prog.progress initiative />
 
     <#-- VIEW BLOCKS -->
     <div class="view-block public first">

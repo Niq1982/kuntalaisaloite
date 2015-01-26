@@ -151,35 +151,6 @@
     <div class="municipality">${initiative.municipality.getName(locale)} <span class="bull">&bull;</span> <@u.message "initiative.initiativeType."+initiative.type /></div>
 </#macro>
 
-<#-- 
- * stateInfo
- * 
- * Generates initiative's state dates
- *
- * @param initiative is initiative
--->
-<#macro stateInfo initiative>
-    
-    <span class="extra-info">
-        <#if initiative.sentTime.present>
-            <#assign sentTime><@u.localDate initiative.sentTime.value /></#assign>
-            <@u.message key="initiative.date.sent" args=[sentTime] />
-        <#else>
-            <#assign createTime><@u.localDate initiative.createTime /></#assign>
-            <@u.message key="initiative.date.create" args=[createTime] />
-            <#assign stateTime><@u.localDate initiative.stateTime/></#assign>
-            
-            <#if initiative.fixState != FixState.OK>
-                <span class="bull">&bull;</span> <@u.message key="initiative.fixStateInfo."+initiative.fixState />
-            <#elseif initiative.state??>
-                <span class="bull">&bull;</span> <@u.message key="initiative.stateInfo."+initiative.state args=[stateTime]/>
-                <#if initiative.state == InitiativeState.PUBLISHED && initiative.collaborative><@u.message key="initiative.stateInfo.collecting" /></#if>
-            </#if>
-        </#if>
-    </span>
-
-</#macro>
-
 
 <#-- 
  * initiativeAuthor

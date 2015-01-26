@@ -86,11 +86,7 @@
 	
 		<#-- COLLABORATIVE -->
 		<#if initiative.collaborative>
-			<#if initiative.fixState != FixState.OK>
-		        <#assign initiativeCollecting><@u.message "progress.management.review" /></#assign>
-		    <#elseif initiative.state?? && initiative.state == InitiativeState.PUBLISHED>
-		    	<#assign initiativeCollecting><@u.message "progress.public.collecting" /></#assign>
-		    </#if>
+		    <#assign initiativeCollecting><@u.message "progress.public.collecting" /></#assign>
 				
 			<#assign steps = [
 				{
@@ -120,7 +116,6 @@
 	    <#if isCollectDone>
 	    	<#assign initiativePublish><@u.message "progress.management.published" /></#assign>
 	    	<#assign initiativePublishSingle>${initiativePublish}</#assign>
-	    	
 	    <#else>
 	    	<#assign initiativePublish><@u.message "progress.management.publish" /></#assign>
 	    	<#assign initiativePublishSingle><@u.message "progress.management.publish.single" /></#assign>

@@ -4,6 +4,7 @@
 <#import "components/elements.ftl" as e />
 <#import "components/forms.ftl" as f />
 <#import "components/some.ftl" as some />
+<#import "components/progress.ftl" as prog />
 
 <#escape x as x?html> 
 
@@ -196,7 +197,7 @@
 
     <@e.initiativeTitle initiative />
     
-    <@e.stateInfo initiative />
+    <@prog.progress initiative />
 
     <#-- VIEW BLOCKS -->
     <div class="view-block public first">
