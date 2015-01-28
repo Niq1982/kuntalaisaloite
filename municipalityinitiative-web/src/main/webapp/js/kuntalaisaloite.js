@@ -211,6 +211,27 @@ $(document).ready(function () {
 		}
 	};
 
+	// Fire participantGraph
+    // if (window.participantGraph && window.participantGraph.votes.length > 0) {
+   	if (window.participantGraph) {
+      $(window).on('resize', function () {
+        $('#participantGraph').html('').participantGraph({
+          data: window.participantGraph,
+          color: '#949426',
+          colorHl: '#e2a31c',
+          colorToolTip: '#7a7a20',
+          width : $('#participantGraph').parent().width() || 960,
+          height : 250,
+          leftgutter : 35,
+          rightgutter : 30,
+          bottomgutter : 20,
+          topgutter : 20,
+          cumulative : true,
+          max : 50000
+        });
+      }).trigger('resize');
+    }
+
 	/**
 	 *	Prevent double clicks
 	 *

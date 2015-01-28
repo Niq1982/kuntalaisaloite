@@ -97,3 +97,11 @@
 .iconPosition(@xIndex, @yIndex, @offsetSize: 16) {
     background-position: (-@xIndex*@offsetSize)+0px (-@yIndex*@offsetSize)+0px;
 }
+
+.backgroundImage(@fileName, @size: 100%, @postFix: "") {
+  background-position: 0 0;
+  background-repeat: no-repeat;
+  background-size: @size;
+  background-image: url("@{imagesPath}/@{fileName}@{postFix}.png");
+  background-image: url("@{imagesPath}/@{fileName}.svg"), none;
+}

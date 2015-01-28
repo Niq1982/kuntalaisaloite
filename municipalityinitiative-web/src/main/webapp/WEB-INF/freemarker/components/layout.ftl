@@ -383,6 +383,9 @@
       <script type="text/javascript" src="${urls.baseUrl}/js/chosen.jquery.min.js?version=${resourcesVersion}"></script>
       <script type="text/javascript" src="${urls.baseUrl}/js/jquery.magnific-popup.min.js?version=${resourcesVersion}"></script>
       <script type="text/javascript" src="${urls.baseUrl}/js/jquery.linkreplacer.js?version=${resourcesVersion}"></script>
+      <script type="text/javascript" src="${urls.baseUrl}/js/moment.min.js?version=${resourcesVersion}"></script>
+      <script type="text/javascript" src="${urls.baseUrl}/js/raphael.min.js?version=${resourcesVersion}"></script>
+      <script type="text/javascript" src="${urls.baseUrl}/js/jquery.participantgraph.js?version=${resourcesVersion}"></script>
       <script type="text/javascript" src="${urls.baseUrl}/js/kuntalaisaloite.js?version=${resourcesVersion}"></script>
     </#if>
 

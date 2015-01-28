@@ -487,6 +487,9 @@
                                 <jsSourceFile>chosen.jquery.min.js</jsSourceFile>
                                 <jsSourceFile>jquery.magnific-popup.min.js</jsSourceFile>
                                 <jsSourceFile>jquery.linkreplacer.js</jsSourceFile>
+                                <jsSourceFile>moment.min.js</jsSourceFile>
+                                <jsSourceFile>raphael.min.js</jsSourceFile>
+                                <jsSourceFile>jquery.participantgraph.js</jsSourceFile>
                                 <jsSourceFile>kuntalaisaloite.js</jsSourceFile>
                             </jsSourceFiles>
                             <jsFinalFile>script.js</jsFinalFile>
