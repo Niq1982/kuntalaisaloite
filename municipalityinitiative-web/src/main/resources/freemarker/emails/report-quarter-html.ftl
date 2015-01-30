@@ -49,9 +49,11 @@
             <@b.adminViewLink type=type verified=initiative.type.verifiable />
         </@b.mainContentBlock>
 
+        <@u.spacer "15" />
 
+        <@b.emailFooter type />
 
-
+        <@u.spacer "15" />
 
         <#global switchLocale = altLocale />
 
