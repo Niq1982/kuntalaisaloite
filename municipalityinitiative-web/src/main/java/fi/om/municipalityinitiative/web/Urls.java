@@ -395,7 +395,7 @@ public final class Urls {
     }
 
     public String youthInitiativeWebUrl(Long youthInitiativeId) {
-        return youthInitiativeBaseUrl + "/ideat/"+youthInitiativeId;
+        return youthInitiativeBaseUrl + (this.equals(FI) ? "/fi" : "/sv") + "/ideat/" + youthInitiativeId;
     }
 
     public String initiative(Long initiativeId) {
