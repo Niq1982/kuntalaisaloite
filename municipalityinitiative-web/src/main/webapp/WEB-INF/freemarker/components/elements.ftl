@@ -1,7 +1,7 @@
 <#import "utils.ftl" as u />
 <#import "forms.ftl" as f />
 
-<#escape x as x?html> 
+<#escape x as x?html>
 
 <#-- 
  * initiativeView
@@ -16,7 +16,7 @@
     <div class="initiative-content-row ${((initiative.extraInfo)?has_content)?string("","last")}">
         <@u.text initiative.proposal!"" />
     </div>
-    
+
     <#if attachments??>
     	<@e.attachmentsView attachments />
     </#if>
@@ -30,9 +30,9 @@
     </#if>
 
     <#if (initiative.youthInitiativeId.present)>
-    <h2>Tämä aloite on tuotu nuortenideat.fi -palvelusta</h2>
+    <h2><@u.message "initiative.youthInitiative.title" /></h2>
     <div class="initiative-content-row last">
-      Siirry idean sivulle osoitteesta <a href="${urls.youthInitiativeWebUrl(initiative.youthInitiativeId.value)}">${urls.youthInitiativeWebUrl(initiative.youthInitiativeId.value)}</a>
+        <@u.message "initiative.youthInitiative.link" /> <a href="${urls.youthInitiativeWebUrl(initiative.youthInitiativeId.value)}">${urls.youthInitiativeWebUrl(initiative.youthInitiativeId.value)}</a>
     </div>
     </#if>
 
@@ -53,7 +53,7 @@
     </div>
 
 	<@e.attachmentsView attachments />
-    
+
     <#if managementSettings.allowAddAttachments>
     	<div class="initiative-content-row">
     		<a href="${urls.manageAttachments(initiative.id)}" class="small-button"><span class="small-icon add"><@u.message "attachment.add.btn" /></span></a>
@@ -68,9 +68,9 @@
     </#if>
 
     <#if (initiative.youthInitiativeId.present)>
-        <h2>Tämä aloite on tuotu nuortenideat.fi -palvelusta</h2>
+        <h2><@u.message "initiative.youthInitiative.title" /></h2>
             <div class="initiative-content-row last">
-            Siirry idean sivulle osoitteesta <a href="${urls.youthInitiativeWebUrl(initiative.youthInitiativeId.value)}">${urls.youthInitiativeWebUrl(initiative.youthInitiativeId.value)}</a>
+            <@u.message "initiative.youthInitiative.link" /> <a href="${urls.youthInitiativeWebUrl(initiative.youthInitiativeId.value)}">${urls.youthInitiativeWebUrl(initiative.youthInitiativeId.value)}</a>
             </div>
     </#if>
 
@@ -86,7 +86,7 @@
 -->
 <#macro attachmentsView attachments manage=false>
 	<#if (attachments.images?size + attachments.pdfs?size) gt 0>
-		<div class="initiative-content-row thumbnail-list cf"> 
+		<div class="initiative-content-row thumbnail-list cf">
     	<h3><@u.message "attachments.title" /></h3>
 
 		    <#list attachments.images as attachment>
@@ -94,7 +94,7 @@
 		    	<div class="column col-1of4 ${((attachment_index + 1) % 4 == 0)?string("last","")}">
 		    		<span class="thumbnail">
 				        <a href="${urls.attachment(attachment.attachmentId, attachment.fileName)}" target="_blank">
-				            <img src="${urls.getAttachmentThumbnail(attachment.attachmentId)}" alt="<@u.stripHtmlTags attachment.description />" />    
+				            <img src="${urls.getAttachmentThumbnail(attachment.attachmentId)}" alt="<@u.stripHtmlTags attachment.description />" />
 			            </a>
 		            </span>
 		            <span class="img-label"><@u.stripHtmlTags attachment.description />
@@ -109,29 +109,29 @@
 			        </span>
 		        </div>
 	            <#if ((attachment_index + 1) % 4 == 0) || !attachment_has_next><br class="clear" /></#if>
-	           
+
 		    </#list>
 	    </div>
-	    
+
 	    <div class="initiative-content-row">
 		    <#list attachments.pdfs as attachment>
 	    		<#if attachment_index == 0><ul class="no-style"></#if>
-	    		
+
 			        <li class="pdf-attachment">
 			        	<a href="${urls.attachment(attachment.attachmentId, attachment.fileName)}" target="_blank">
 				            <@u.fileIcon type="pdf" />
 				            <span class="pdf-label"><@u.stripHtmlTags attachment.description /></span>
 			            </a>
-			            
+
 			            <#if manage && managementSettings?? && user.hasRightToInitiative(initiative.id) && managementSettings.allowAddAttachments>
 		                    <a  href="?deleteAttachment=${attachment.attachmentId}" class="js-delete-attachment trigger-tooltip"
 		                        data-id="${attachment.attachmentId}"
 		                        data-name="<@u.stripHtmlTags attachment.description />"
 		                        data-type="pdf" title="<@u.message "deleteAttachment.btn" />"><span class="icon-small icon-16 cancel"></span></a></span>
 						    </a>
-				        </#if>				        
+				        </#if>
 			        </li>
-				
+
 		        <#if !attachment_has_next></ul></#if>
 		    </#list>
 	    </div>
@@ -147,7 +147,7 @@
 -->
 <#macro initiativeTitle initiative>
     <h1 class="name">${initiative.name!""}</h1>
-    
+
     <div class="municipality">${initiative.municipality.getName(locale)} <span class="bull">&bull;</span> <@u.message "initiative.initiativeType."+initiative.type /></div>
 </#macro>
 
@@ -159,7 +159,7 @@
  * @param initiative is initiative
 -->
 <#macro stateInfo initiative>
-    
+
     <span class="extra-info">
         <#if initiative.sentTime.present>
             <#assign sentTime><@u.localDate initiative.sentTime.value /></#assign>
@@ -168,7 +168,7 @@
             <#assign createTime><@u.localDate initiative.createTime /></#assign>
             <@u.message key="initiative.date.create" args=[createTime] />
             <#assign stateTime><@u.localDate initiative.stateTime/></#assign>
-            
+
             <#if initiative.fixState != FixState.OK>
                 <span class="bull">&bull;</span> <@u.message key="initiative.fixStateInfo."+initiative.fixState />
             <#elseif initiative.state??>
@@ -198,7 +198,7 @@
             </div>
             <#if ((publicAuthor_index + 1) % 3 == 0) || !publicAuthor_has_next><br class="clear" /></#if>
         </#list>
-    
+
     </#if>
     <#if (publicAuthors.publicNameCount == 0) && (publicAuthors.privateNameCount == 1)>
         <p><@u.message key="authors.onlyOnePrivate" /></p>
@@ -216,10 +216,10 @@
 -->
 <#macro initiativeContactInfo authorList showTitle=true showRenewManagementHash=false>
     <#if showTitle><h3><@u.message key="initiative.authors.title" args=[authorList?size] /></h3></#if>
-    
+
     <@u.systemMessage path="initiative.authors.contactinfo.notPublic" type="info" />
     <br />
-    
+
     <#list authorList as a>
         <div class="column author author-list ${((a_index + 1) % 3 == 0)?string("last","")}">
             <p><strong>${a.contactInfo.name!""}</strong>, <@u.solveMunicipality a.municipality/>
@@ -259,7 +259,7 @@
 <#macro participants formHTML="" showForm=true admin=false>
     <h3><@u.message key="initiative.participants.title" args=[participantCount.total+initiative.externalParticipantCount] />
     <#if admin && !initiative.isVerifiable()><span class="switch-view"><a href="${urls.participantListManage(initiative.id)}" class="trigger-tooltip" title="<@u.message "manageParticipants.tooltip" />"><@u.message "manageParticipants.title" /></a></span></#if></h3>
-    
+
     <#if initiative.verifiable && !initiative.sentTime.present && !user.hasRightToInitiative(initiative.id)>
         <#if user.hasParticipatedToInitiative(initiative.id)>
             <@u.systemMessage path="warning.already.participated" type="warning" />
@@ -269,8 +269,8 @@
             <@u.systemMessage path="participate.verifiable.info"+user.isVerifiedUser()?string(".verifiedUser","") type="info" />
         </#if>
     </#if>
-    
-    
+
+
     <div class="participants-block">
         <span class="user-count-total">${participantCount.total+initiative.externalParticipantCount}</span>
     </div>
@@ -281,14 +281,14 @@
             <#if (initiative.externalParticipantCount > 0)><span class="private-names"><@u.message key="participantCount.externalNames" args=[initiative.externalParticipantCount]/></span></p></#if>
         </span>
     </div>
-    
+
     <#assign participateSuccess=false />
     <#list requestMessages as requestMessage>
         <#if requestMessage == RequestMessage.PARTICIPATE>
             <#assign participateSuccess=true />
         </#if>
     </#list>
-    
+
     <#if !admin && !initiative.sentTime.present && !participateSuccess>
         <div class="participants-block ${showForm?string("hidden","")} noprint">
             <#if initiative.verifiable && !user.isVerifiedUser()>
