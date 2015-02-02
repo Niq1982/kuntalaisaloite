@@ -72,7 +72,7 @@ public class EmailReportServiceTest {
 
         emailReportService.sendReportEmailsForInitiativesAcceptedButNotPublished();
         EmailDto singleQueuedEmail = testHelper.getSingleQueuedEmail();
-        assertThat(singleQueuedEmail.getSubject(), containsString("Aloitteesi odottaa vielä julkaisua"));
+        assertThat(singleQueuedEmail.getSubject(), containsString("Aloitteesi odottaa julkaisua kuntalaisaloite.fi-palvelussa"));
         assertThat(singleQueuedEmail.getBodyHtml(), containsString(urls.loginAuthor(RandomHashGenerator.getPrevious())));
         assertThat(singleQueuedEmail.getRecipientsAsString(), is("author@example.com"));
 
@@ -93,7 +93,7 @@ public class EmailReportServiceTest {
         emailReportService.sendReportEmailsForInitiativesAcceptedButNotPublished();
         EmailDto singleQueuedEmail = testHelper.getSingleQueuedEmail();
         assertThat(singleQueuedEmail.getRecipientsAsString(), is("author@example.com"));
-        assertThat(singleQueuedEmail.getSubject(), containsString("Aloitteesi odottaa vielä julkaisua"));
+        assertThat(singleQueuedEmail.getSubject(), containsString("Aloitteesi odottaa julkaisua kuntalaisaloite.fi-palvelussa"));
         assertThat(singleQueuedEmail.getBodyHtml(), containsString(urls.loginToManagement(verifiedInitiative)));
 
         emailReportService.sendReportEmailsForInitiativesAcceptedButNotPublished();
@@ -116,9 +116,9 @@ public class EmailReportServiceTest {
 
         EmailDto singleQueuedEmail = testHelper.getSingleQueuedEmail();
         assertThat(singleQueuedEmail.getRecipientsAsString(), is("author@example.com"));
-        assertThat(singleQueuedEmail.getSubject(), containsString("Aloitteesi kerää edelleen osallistujia"));
+        assertThat(singleQueuedEmail.getSubject(), containsString("Aloitteesi on edelleen auki kuntalaisaloite.fi-palvelussa"));
         assertThat(singleQueuedEmail.getBodyHtml(), containsString(
-                "Kuntalaisaloitteesi on julkaistu palvelussa "+ stateTime.toString("d.M.yyyy") +" ja siellä se on kerännyt 14 osallistujaa"
+                "Aloitteesi on julkaistu kuntalaisaloite.fi-palvelussa "+stateTime.toString("d.M.yyyy")+" ja se on kerännyt 14 osallistujaa."
         ));
         assertThat(singleQueuedEmail.getBodyHtml(), containsString(urls.loginAuthor(RandomHashGenerator.getPrevious())));
 
