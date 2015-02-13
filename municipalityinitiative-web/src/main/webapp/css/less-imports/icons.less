@@ -10,8 +10,8 @@
 // Styleguide 4.2.1
 .large-icon {
     padding-left: 40px;
-    
-    background: transparent url("../../img/button-large-sprite.png?version=${timestamp}") no-repeat 0 0;
+
+    background: transparent url("@{imagesPath}/button-large-sprite.png?version=${timestamp}") no-repeat 0 0;
 
     &.save-and-send {       background-position: 0 2px;      }
     &.save-as-draft {       background-position: 0 -150px;   }
@@ -35,8 +35,8 @@
 // Styleguide 4.2.2
 .small-icon {
     padding-left: 30px;
-    
-    background: transparent url("../../img/button-small-sprite.png?version=${timestamp}") no-repeat 0 0;
+
+    background: transparent url("@{imagesPath}/button-small-sprite.png?version=${timestamp}") no-repeat 0 0;
 
     &.save-and-send {       background-position: 0 12px;     }
     &.save-as-draft {       background-position: 0 -140px;   }
@@ -64,8 +64,8 @@
     display:inline-block;
     width:16px;
     height:16px;
-    
-    background: transparent url("../../img/button-small-sprite.png?version=${timestamp}") no-repeat 0 0;
+
+    background: transparent url("@{imagesPath}/button-small-sprite.png?version=${timestamp}") no-repeat 0 0;
 
     &.save-and-send {       background-position: 0 0;     }
     &.save-as-draft {       background-position: 0 -150px;   }
@@ -90,9 +90,9 @@
     width:32px;
     height:32px;
     margin:0 0.5em -0.5em 0;
-    
+
     &.pdf {
-        background:url("../../img/pdficon_large.png?version=${timestamp}") no-repeat 0 0; 
+        background:url("@{imagesPath}/pdficon_large.png?version=${timestamp}") no-repeat 0 0;
     }
 }
 
@@ -100,43 +100,43 @@
 // .required        - Form required field
 // .confirmed       - Confirmed author
 // .unconfirmed     - Unconfirmed author
-// 
+//
 // Styleguide 3.4
 
 .icon-small {
     display:inline-block;
     width:12px;
     height:12px;
-    background: transparent url("../../img/icons-sprite.png?version=${timestamp}") 0 0 no-repeat;
-    
+    background: transparent url("@{imagesPath}/icons-sprite.png?version=${timestamp}") 0 0 no-repeat;
+
     &.margin-right { margin-right:0.2em; }
-    
+
     &.icon-16 {
         position:relative;
         top:0.2em;
         width:16px;
         height:16px;
     }
-    
+
     &.settings, &.logout {
         position:absolute;
         right:15px;
         top:50%;
         margin-top:-6px;
     }
-    
+
     &.settings {
         background-position:-48px 0;
     }
     &.logout {
         background-position:-80px 0;
     }
-    
+
     &.dropdown-icon {
         margin-left:3px;
         background-position:-96px 3px;
     }
-    
+
     &.required { background-position:0 0; }         // Required field
     &.unconfirmed { background-position:-16px 0; }  // Unconfirmed author
     &.confirmed { background-position:-32px 0; }    // Confirmed author
@@ -155,7 +155,7 @@
         height:16px;
         margin:1px 0 0 4px;
         background-position:-112px 0;
-    
+
         &.less { background-position:-128px 0; }
     }
     &.arrow-right {
@@ -166,7 +166,7 @@
     }
     &.arrow-right-3 {
         background-position:-179px -15px;
-        
+
         &.floated {                                 // For info system-messages
             float:left;
             margin:0.2em 0 0 -16px;
@@ -181,7 +181,7 @@
     &.arrow-left-3 {
         background-position:-208px -15px;
     }
-    
+
     &.help {
         width:27px;
         height:21px;
@@ -193,12 +193,12 @@
     width:32px;
     height:32px;
     line-height:31px;
-    
+
     text-align:center;
     font-size:1.3em;
     font-weight:bold;
     color:#fff;
-    
+
     .rounded-corners(1em);
 
     &.secondary {
@@ -210,10 +210,47 @@
 // Help page link icons
 .help-nav-icon {
     padding:14px 20px 14px 40px;
-    
-    background: transparent url("../../img/help-page-link-icons.png?version=${timestamp}") no-repeat 0 0;
+
+    background: transparent url("@{imagesPath}/help-page-link-icons.png?version=${timestamp}") no-repeat 0 0;
 
     &.icon-author { background-position: 0 center; }
     &.icon-participants { background-position: -300px center; }
     &.icon-info { background-position: -600px center; }
+}
+
+
+// Initiative progress icons
+.icon-progress {
+    display: inline-block;
+    width: 64px;
+    height: 64px;
+
+    background: transparent url("@{imagesPath}/kua-progress-icons.png?version=${timestamp}") no-repeat 0 0;
+    background-image: url("@{imagesPath}/kua-progress-icons.svg?version=${timestamp}"), none;
+    background-position: -100% -100%;
+
+    &.icon-publish {
+        .iconPosition(0, 0, 64);
+    }
+
+    &.icon-collect {
+        .iconPosition(1, 0, 64);
+    }
+
+    &.icon-sent {
+        .iconPosition(2, 0, 64);
+    }
+
+
+    &.icon-draft {
+        .iconPosition(0, 1, 64);
+    }
+
+    &.icon-mgmnt {
+        .iconPosition(1, 1, 64);
+    }
+
+    &.icon-mgmnt-publish {
+        .iconPosition(2, 1, 64);
+    }
 }

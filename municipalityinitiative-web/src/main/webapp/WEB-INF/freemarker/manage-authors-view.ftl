@@ -3,6 +3,7 @@
 <#import "components/utils.ftl" as u />
 <#import "components/elements.ftl" as e />
 <#import "components/forms.ftl" as f />
+<#import "components/progress.ftl" as prog />
 
 <#escape x as x?html> 
 
@@ -26,12 +27,10 @@
 
     <@e.initiativeTitle initiative />
     
-    <@e.stateInfo initiative />
+    <@prog.progress initiative=initiative public=false />
     
-    
-
     <#if !RequestParameters['deleteAuthor']??>
-        <div class="view-block ">
+        <div class="view-block first">
             <div class="initiative-content-row last">
                 <h2><@u.message "authors.title" /></h2>
             

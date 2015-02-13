@@ -92,3 +92,8 @@
     -o-text-overflow:ellipsis;
     text-overflow:ellipsis;
 }
+
+// Icons
+.iconPosition(@xIndex, @yIndex, @offsetSize: 16) {
+    background-position: (-@xIndex*@offsetSize)+0px (-@yIndex*@offsetSize)+0px;
+}

@@ -1,7 +1,7 @@
 #header-tools {
     height: 40px;
     width: 100%;
-    background: #f1f1f1 url("../../img/other-services-bg.png?version=${timestamp}") repeat-x bottom left;
+    background: #f1f1f1 url("@{imagesPath}/other-services-bg.png?version=${timestamp}") repeat-x bottom left;
     position: relative;
     z-index:2;
 
@@ -182,7 +182,7 @@
         color: #444;
         background: #fff;
         .icon-small.dropdown-icon {
-            background: #fff url("../../img/icons-sprite.png?version=${timestamp}") no-repeat -96px -13px;
+            background: #fff url("@{imagesPath}/icons-sprite.png?version=${timestamp}") no-repeat -96px -13px;
         }
     }
 
@@ -219,11 +219,9 @@
         display:block;
         width: 354px;
         height:72px;
-        background:url("../../img/logo-kuntalaisaloite.png?version=${timestamp}") 0 0 no-repeat;
-
-        /* NOTE: SVG could be used
-        background-image: url("../../img/logo-kuntalaisaloite.svg?version=${timestamp}"), none;
-        background-size: contain;*/
+        background:url("@{imagesPath}/logo-kuntalaisaloite.png?version=${timestamp}") 0 0 no-repeat;
+        background-image: url("@{imagesPath}/logo-kuntalaisaloite.svg?version=${timestamp}"), none;
+        background-size: contain;
     }
     #logo span { display:none; }
 
@@ -276,7 +274,8 @@
 
     #header #logo {
         width: 349px;
-        background:url("../../img/logo-invanarinitiativ.png?version=${timestamp}") 0 0 no-repeat;
+        background:url("@{imagesPath}/logo-invanarinitiativ.png?version=${timestamp}") 0 0 no-repeat;
+        background-image: url("@{imagesPath}/logo-invanarinitiativ.svg?version=${timestamp}"), none;
     }
 }
 
@@ -325,7 +324,7 @@
         margin-right: 95px;
         padding-left: 50px;
         height: 120px;
-        background: transparent url("../../img/footer-logos.png?version=${timestamp}") no-repeat top left;
+        background: transparent url("@{imagesPath}/footer-logos.png?version=${timestamp}") no-repeat top left;
     }
 
     .oikeusministerio {

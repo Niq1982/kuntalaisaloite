@@ -2,6 +2,7 @@
 <#import "components/layout.ftl" as l />
 <#import "components/utils.ftl" as u />
 <#import "components/elements.ftl" as e />
+<#import "components/progress.ftl" as prog />
 <#import "components/forms.ftl" as f />
 <#import "components/some.ftl" as some />
 
@@ -23,7 +24,7 @@
 
     <@e.initiativeTitle initiative />
 
-    <@e.stateInfo initiative />
+    <@prog.progress initiative />
 
     <#-- VIEW BLOCKS -->
     <div class="view-block public first">

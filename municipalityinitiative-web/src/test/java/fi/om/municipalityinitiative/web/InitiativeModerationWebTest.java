@@ -48,7 +48,6 @@ public class InitiativeModerationWebTest extends WebTestBase {
         clickButton("Hyväksy aloite");
 
         assertSuccessMessage("Aloite on hyväksytty");
-        assertTextContainedByClass("extra-info", "Aloite on hyväksytty");
 
         assertThatFirstReviewHistoryElementIs("Hyväksytty julkaistavaksi", COMMENT);
         assertTotalEmailsInQueue(1);
@@ -83,7 +82,6 @@ public class InitiativeModerationWebTest extends WebTestBase {
 
         clickByName(Urls.ACTION_REJECT_INITIATIVE);
         assertSuccessMessage("Aloite palautettu korjattavaksi");
-        assertTextContainedByClass("extra-info", "Aloite odottaa julkaisuun lähetystä");
 
         assertThatFirstReviewHistoryElementIs("Palautettu korjattavaksi", COMMENT);
 

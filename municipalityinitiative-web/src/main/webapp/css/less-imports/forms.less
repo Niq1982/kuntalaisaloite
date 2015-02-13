@@ -6,8 +6,8 @@
 // Exception for link-area. Use more generic solution if needed elsewhere also.
 .initiative-links-area .instruction-text {
     margin-bottom:1em;
-    
-   
+
+
 }
 
 .initiative-links-area {
@@ -16,7 +16,7 @@
         line-height:30px;
         margin-bottom:0;
         padding:0 0.3em;
-    } 
+    }
 }
 
 // Input fields
@@ -25,15 +25,15 @@
 input[type="text"],
 input[type="email"],
 input[type="password"], {
-    
+
     border: 1px solid @borderGray;
     background: #fefefe;
     font-size: 1em;
     padding: 0.3em;
     margin: 0.2em 0em 1em 0em;
-    
+
     .transition(box-shadow, 0.2s, ease-in);
-    
+
     &.large {
         //width:581px;
         width:98%;
@@ -54,7 +54,7 @@ input[type="password"], {
         line-height:34px;
         padding:0 0.3em;
     }
-    
+
     &.disabled {
         background:@bodyBackground;
     }
@@ -66,7 +66,7 @@ input[type="password"], {
     margin:0.2em 0em 1em 0em;
     font-size: 1em;
     line-height:1.8em;
-    
+
     &.disabled {
         background:@bodyBackground;
     }
@@ -80,14 +80,14 @@ textarea {
     height: 6em;
     border: 1px solid @borderGray;
     resize:vertical;
-    
+
     .transition(box-shadow, 0.2s, ease-in);
-    
+
     &.noresize { resize:none; }
-    
+
     &.textarea-tall {
         min-height: 17em;
-    }    
+    }
 }
 textarea:focus, input[type="text"]:focus, .email-input.focus {
     box-shadow:0 0 5px rgba(0,0,0,0.2);
@@ -96,7 +96,7 @@ textarea:focus, input[type="text"]:focus, .email-input.focus {
 .js {
     textarea {
         &.collapse {
-            height: 1.5em;            
+            height: 1.5em;
             .transition(height, 0.15s, ease-in);
         }
         &.expand {
@@ -120,7 +120,7 @@ input[type="text"] {
 
 input:-moz-placeholder, textarea:-moz-placeholder { color:#999; }
 ::-webkit-input-placeholder, ::-webkit-textarea-placeholder { color:#999; }
-input:-ms-input-placeholder, input:-ms-textarea-placeholder { color:#999;  }// for IE10 
+input:-ms-input-placeholder, input:-ms-textarea-placeholder { color:#999;  }// for IE10
 
 textarea, input[type="text"] {
     font-family: 'PT Sans', "Trebuchet MS", Helvetica, sans-serif;
@@ -136,7 +136,7 @@ textarea, input[type="text"] {
 input.datepicker {
     width: 110px;
     margin: 0;
-    background: white url("../../img/icons-sprite.png?version=${timestamp}") 97px -57px no-repeat;
+    background: white url("@{imagesPath}/icons-sprite.png?version=${timestamp}") 97px -57px no-repeat;
 }
 
 label  {
@@ -145,7 +145,7 @@ label  {
     input[type="radio"], input[type="checkbox"] {
         margin: 2px 8px 0 0;
         float: left;
-        
+
         &.no-float { float:none; }
     }
 
@@ -154,9 +154,9 @@ label  {
         margin:0 0 0.5em 1.5em;
         line-height:1.2em;
     }
-    
+
     &.inline { display:inline; }
-    
+
     input[type="text"]{
         display:block;
     }
@@ -171,7 +171,7 @@ label  {
     margin-right:30px; // prevent overlapping with help-icon
     margin-bottom: 0.2em;
     font-size: 1.17em;
-    
+
     &.margin {
         margin-bottom: 0.5em;
     }

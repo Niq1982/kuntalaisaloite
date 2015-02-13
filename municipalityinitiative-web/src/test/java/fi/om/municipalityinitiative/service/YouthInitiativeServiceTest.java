@@ -13,6 +13,7 @@ import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.web.Urls;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +22,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+
 import java.util.List;
+import java.util.Random;
 
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
@@ -178,7 +181,7 @@ public class YouthInitiativeServiceTest {
         contactInfo.setMunicipality(unactiveMunicipality);
 
         editDto.setContactInfo(contactInfo);
-        editDto.setYouthInitiativeId(-1L);
+        editDto.setYouthInitiativeId(new Random().nextLong());
         editDto.setName("testialoite");
         editDto.setProposal("sisältö");
         editDto.setExtraInfo("lisätiedot");
