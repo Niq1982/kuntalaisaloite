@@ -1,8 +1,8 @@
 #header {
     width: 100%;
-    padding-top:18px;
-    margin-bottom:2.3em;
-    background:#fff;
+    padding-top: 18px;
+    margin-bottom: 2.3em;
+    background: #fff;
 
     border-bottom: 1px solid @borderGray;
 
@@ -35,7 +35,7 @@
         background-image: url("@{imagesPath}/logo-kuntalaisaloite.svg?version=${timestamp}"), none;
         background-size: contain;
     }
-    #logo span { display:none; }
+    #logo span { display: none; }
 
     #main-navigation {
         margin: 0;
@@ -43,7 +43,7 @@
         position: absolute;
         left: 0;
         bottom: 0;
-        border-left:1px solid #ccc;
+        border-left: 1px solid #ccc;
 
         a {
             display: inline-block;
@@ -62,12 +62,12 @@
 
         .active a {
             color: black;
-            font-weight:bold;
+            font-weight: bold;
         }
     }
 }
 .front #header {
-	margin-bottom:0;
+	margin-bottom: 0;
 	border-bottom: 0;
 
 	.header-wrap-front {
@@ -80,83 +80,37 @@
 // Exceptions for swedish page
 .sv {
     &.font-size-large #header #main-navigation a {
-        padding:0.2em 0.5em 0.5em 0.5em;
+        padding: 0.2em 0.5em 0.5em 0.5em;
     }
 
     #header #logo {
         width: 349px;
-        background:url("@{imagesPath}/logo-invanarinitiativ.png?version=${timestamp}") 0 0 no-repeat;
+        background: url("@{imagesPath}/logo-invanarinitiativ.png?version=${timestamp}") 0 0 no-repeat;
         background-image: url("@{imagesPath}/logo-invanarinitiativ.svg?version=${timestamp}"), none;
     }
 }
 
 
 .navi {
-    margin:0.3em 1em 0 0;
-    padding:0;
+    margin: 0.3em 1em 0 0;
+    padding: 0;
 
     &.block-style {
 
         li {
-            display:block;
+            display: block;
 
             &.separator {
 
             }
 
             a {
-                display:block;
-                margin-bottom:1em;
+                display: block;
+                margin-bottom: 1em;
             }
             .active {
-                font-weight:bold;
+                font-weight: bold;
             }
-        }
-    }
-}
-
-// TODO: replace with common OM footer
-#footer {
-    position:absolute;
-    left:0; bottom:0;
-    width:100%;
-    background:#fff;
-    border-top:1px solid #ccc;
-    color: #434343;
-    padding: 50px 0px;
-    font-size: 0.9em;
-
-    .block, .footer-links {
-        float: left;
-    }
-
-    .block {
-        width: 190px;
-        margin-right: 95px;
-        padding-left: 50px;
-        height: 120px;
-        background: transparent url("@{imagesPath}/footer-logos.png?version=${timestamp}") no-repeat top left;
-    }
-
-    .oikeusministerio {
-        width:525px;
-
-        p { margin-top:0.3em; }
-    }
-
-    .viestintavirasto {
-        background-position:0 -400px;
-    }
-
-    ul {
-        width: 280px;
-        text-align: left;
-        list-style: none;
-        margin: 0px;
-        padding: 0px;
-
-        li {
-            line-height: 1.4em;
         }
     }
 }

@@ -31,7 +31,7 @@
     <#include "om-header.ftl" />
 
     <div id="header">
-        <div id="header-content">
+        <div class="header-content">
             <a id="logo" href="${urls.baseUrl}/${locale}" accesskey="1" title="<@u.message "siteName" />">
                 <span><@u.message "siteName" /></span>
             </a>
@@ -45,34 +45,7 @@
         </div>
     </div>
 
-    <div id="footer">
-        <div class="container">
-            <div class="block oikeusministerio">
-                <p>
-                    <@u.message "footer.ministerOfJustice"/><br/>
-                    <#-- <a href="${urls.infoIndex()}/<@u.message "InfoPage.OM" />"><@u.message "common.readMore" /> &rarr;</a>-->
-                </p>
-            </div>
-            <#--
-            <div class="block viestintavirasto">
-                <p>
-                    <@u.messageHTML "footer.ficora"/><br/>
-                    <a href="${urls.infoIndex()}/<@u.message "InfoPage.VIVI" />"><@u.message "common.readMore" /> &rarr;</a>
-                </p>
-            </div>
-            -->
-            <#-- TODO: links
-            <div class="footer-links">
-                <ul>
-                </ul>
-            </div>
-            -->
-            <br class="clear"/>
-        </div>
-
-        <a href="#header-tools" accesskey="3" id="back-to-top"><@u.message "accesskey.backToTop" /></a>
-    </div>
-
+    <#include "om-footer.ftl" />
 </div>
 </body>
 </html>
@@ -265,7 +238,7 @@
 	                    <#if user.isVerifiedUser()>
 	                        <div class="header-dropdown">
 	                        	<#assign userName>${user.contactInfo.name}<#if user.homeMunicipality.present>, ${user.homeMunicipality.value.getName(locale)}</#if></#assign>
-	
+
 	                            <a href="#" class="header-tool-link user-name dropdown-toggle" title="${userName}"><span class="user-name">${userName}</span><span class="icon-small arrow-down-black"></span></a>
 	                            <ul id="user-menu" class="dropdown-menu user-menu">
 	                                <li><a href="${urls.ownInitiatives()}"><@u.message "page.ownInitiatives" /></a></li>
@@ -273,7 +246,7 @@
 	                            </ul>
 	                        </div>
 	                    </#if>
-	
+
 	                <#elseif enableVerifiedInitiatives>
 	                    <a href="${urls.authenticate(currentRequestUri)}" title="<@u.message "authenticate.title"/>" class="header-tool-link login"><@u.message "authenticate.title"/></a>
 	                </#if>
@@ -319,33 +292,7 @@
         </div>
     </#if>
 
-    <div id="footer">
-        <div class="container">
-            <div class="block oikeusministerio">
-                <p>
-                    <@u.message "footer.ministerOfJustice"/><br/>
-                    <#-- <a href="${urls.infoIndex()}/<@u.enumDescription InfoPage.OM />"><@u.message "common.readMore" /> <span class="icon-small arrow-right-2"></span></a>-->
-                </p>
-            </div>
-            <#--
-            <div class="block viestintavirasto">
-                <p>
-                    <@u.messageHTML "footer.ficora"/><br/>
-                    <a href="${urls.infoIndex()}/<@u.enumDescription InfoPage.VIVI />"><@u.message "common.readMore" /> <span class="icon-small arrow-right-2"></span></a>
-                </p>
-            </div>
-            -->
-            <#--
-            <div class="footer-links">
-                <ul>
-                </ul>
-            </div>
-            -->
-            <br class="clear"/>
-        </div>
-
-        <a href="#header-tools" accesskey="3" id="back-to-top"><@u.message "accesskey.backToTop" /></a>
-    </div>
+    <#include "om-footer.ftl" />
 
     <#-- NOTE: Extra footer for test sites STARTS ----------------------------- -->
     <@r.bottomRibbon/>
