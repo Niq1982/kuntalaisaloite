@@ -24,7 +24,8 @@
     topgutter : 20,
     cumulative : true,
     zoomed : true, // NOTE: Set to false when max count is available
-    max : 50000 // Not available ATM
+    max : 50000, // Not available ATM
+    curve: 'none' // none, cubic
   };
 
   var setEndDate = function (start, end, minDays) {
@@ -54,7 +55,7 @@
       // TEST DATA STARTS
       var testEnd, testStart, testCurrent;
       // Ended - less than 30 days
-      testStart = moment().subtract('days', 10).format(DATE_FORMAT);
+      testStart = moment().subtract('days', 3).format(DATE_FORMAT);
       testEnd = moment().subtract('days', 1).format(DATE_FORMAT);
 
       // Ended - more than 30 days
@@ -82,6 +83,7 @@
       // Override data with random data for developing purposes
       // args: firstDate, lastDate, daily, tolerance
       settings.data.votes = testDataGererator(testStart, testCurrent, 25, 50);
+      // settings.data.votes = testDataGererator(testStart, testCurrent, 10, 3);
       settings.data.startDate = testStart;
       settings.data.endDate = testEnd;
       // TEST DATA ENDS
@@ -503,12 +505,29 @@
       var y = Math.round(height - bottomgutter - Y * data[i] - 1),
         x = Math.round(leftgutter + X * i + xLabels * 0.5);
 
+      // Move to: M x y
+      // Line to: L x y
+      // Cubic: C x1 y1, x2 y2, x y
+      // Quadratic: Q x1 y1, x y
+
+      // Starting point
       if (!i) {
-        p = ['M', x, y, 'C', x, y];
-        p0 = ['M', x, height - bottomgutter, 'C', x, height - bottomgutter];
-        bgpp = ['M', leftgutter + xLabels * 0.5, height - bottomgutter + 1, 'L', x, y, 'C', x, y];
-        bgpp0 = ['M', leftgutter + xLabels * 0.5, height - bottomgutter, 'L', x, height - bottomgutter + 1, 'C', x, height - bottomgutter];
+        if (settings.curve === 'cubic') {
+          // Cubic bezier
+          p = ['M', x, y, 'C', x, y];
+          p0 = ['M', x, height - bottomgutter, 'C', x, height - bottomgutter];
+          bgpp = ['M', leftgutter + xLabels * 0.5, height - bottomgutter + 1, 'L', x, y, 'C', x, y];
+          bgpp0 = ['M', leftgutter + xLabels * 0.5, height - bottomgutter, 'L', x, height - bottomgutter + 1, 'C', x, height - bottomgutter];
+        } else {
+          // Straight line
+          p = ['M', x, y, 'L', x, y];
+          p0 = ['M', x, height - bottomgutter, 'L', x, height - bottomgutter];
+          bgpp = ['M', leftgutter + xLabels * 0.5, height - bottomgutter + 1, 'L', x, y];
+          bgpp0 = ['M', leftgutter + xLabels * 0.5, height - bottomgutter, 'L', x, height - bottomgutter + 1];
+        }
       }
+
+      // Steps on X axis
       if (i && i < ii - 1) {
         var Y0 = Math.round(height - bottomgutter - Y * data[i - 1]),
           X0 = Math.round(leftgutter + X * (i - 0.5)),
@@ -516,10 +535,19 @@
           X2 = Math.round(leftgutter + X * (i + 1.5)),
           a = getAnchors(X0, Y0, x, y, X2, Y2);
 
-        p = p.concat([a.x1, a.y1, x, y, a.x2, a.y2]);
-        p0 = p0.concat([a.x1, height - bottomgutter, x, height - bottomgutter, a.x2, height - bottomgutter]);
-        bgpp = bgpp.concat([a.x1, a.y1, x, y, a.x2, a.y2]);
-        bgpp0 = bgpp0.concat([a.x1, height - bottomgutter, x, height - bottomgutter, a.x2, height - bottomgutter]);
+        if (settings.curve === 'cubic') {
+          // Cubic bezier
+          p = p.concat([a.x1, a.y1, x, y, a.x2, a.y2]);
+          p0 = p0.concat([a.x1, height - bottomgutter, x, height - bottomgutter, a.x2, height - bottomgutter]);
+          bgpp = bgpp.concat([a.x1, a.y1, x, y, a.x2, a.y2]);
+          bgpp0 = bgpp0.concat([a.x1, height - bottomgutter, x, height - bottomgutter, a.x2, height - bottomgutter]);
+        } else {
+          // Line
+          p = p.concat([x, y]);
+          p0 = p0.concat([x, height - bottomgutter]);
+          bgpp = bgpp.concat([x, y]);
+          bgpp0 = bgpp0.concat([x, height - bottomgutter]);
+        }
       }
 
       // Put a marker for the first day when there is no line.
