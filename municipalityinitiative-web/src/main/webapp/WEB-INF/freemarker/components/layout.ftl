@@ -28,14 +28,10 @@
 <body>
 <div id="wrapper">
 
-    <div id="header-tools">
-        <div id="header-tools-content">
-            <#include "header-links.ftl" />
-        </div>
-    </div>
+    <#include "om-header.ftl" />
 
     <div id="header">
-        <div id="header-content">
+        <div class="header-content">
             <a id="logo" href="${urls.baseUrl}/${locale}" accesskey="1" title="<@u.message "siteName" />">
                 <span><@u.message "siteName" /></span>
             </a>
@@ -49,34 +45,7 @@
         </div>
     </div>
 
-    <div id="footer">
-        <div class="container">
-            <div class="block oikeusministerio">
-                <p>
-                    <@u.message "footer.ministerOfJustice"/><br/>
-                    <#-- <a href="${urls.infoIndex()}/<@u.message "InfoPage.OM" />"><@u.message "common.readMore" /> &rarr;</a>-->
-                </p>
-            </div>
-            <#--
-            <div class="block viestintavirasto">
-                <p>
-                    <@u.messageHTML "footer.ficora"/><br/>
-                    <a href="${urls.infoIndex()}/<@u.message "InfoPage.VIVI" />"><@u.message "common.readMore" /> &rarr;</a>
-                </p>
-            </div>
-            -->
-            <#-- TODO: links
-            <div class="footer-links">
-                <ul>
-                </ul>
-            </div>
-            -->
-            <br class="clear"/>
-        </div>
-
-        <a href="#header-tools" accesskey="3" id="back-to-top"><@u.message "accesskey.backToTop" /></a>
-    </div>
-
+    <#include "om-footer.ftl" />
 </div>
 </body>
 </html>
@@ -242,15 +211,22 @@
     <@r.topRibbon/>
     <#-- NOTE: Extra title for test sites ENDS ------------------------------- -->
 
-    <div id="header-tools">
-        <div id="header-tools-content">
-            <#include "header-links.ftl" />
+    <#include "om-header.ftl" />
 
-            <div class="logged-in-info">
-                <#if user.isLoggedIn()>
-                    <#if user.isOmUser()>
-                        <div class="header-dropdown">
-                            <a href="#" class="header-tool-link dropdown-toggle"><span class="user-name">${user.name}</span><span class="icon-small settings"></span></a>
+    <div id="header">
+        <#if page == "page.frontpage"><div class="header-wrap-front"></#if>
+        <div class="header-content">
+
+            <a id="logo" href="${urls.baseUrl}/${locale}" accesskey="1" title="<@u.message "siteName" />">
+                <span><@u.message "siteName.logo" /></span>
+            </a>
+
+            <#-- Language toggle, text size -->
+            <div class="header-additional-content">
+                <div class="logged-in-info">
+                    <#if user.isLoggedIn()>
+                        <#if user.isOmUser()>
+                            <a href="#" class="header-tool-link dropdown-toggle"><span class="user-name">${user.name}</span><span class="icon-small arrow-down-black"></span></a>
                             <ul id="user-menu" class="dropdown-menu user-menu">
                                 <li><a href="${urls.municipalityModeration()}"><@u.message "om.municipality.moderation" /></a></li>
                                 <#if initiative??>
@@ -258,41 +234,23 @@
                                 </#if>
                                 <li><a href="${urls.logout()}" id="logout"><@u.message "common.logout"/></a></li>
                             </ul>
-                        </div>
+                        </#if>
+                        <#if user.isVerifiedUser()>
+                            <div class="header-dropdown">
+                                <#assign userName>${user.contactInfo.name}<#if user.homeMunicipality.present>, ${user.homeMunicipality.value.getName(locale)}</#if></#assign>
+
+                                <a href="#" class="header-tool-link user-name dropdown-toggle" title="${userName}"><span class="user-name">${userName}</span><span class="icon-small arrow-down-black"></span></a>
+                                <ul id="user-menu" class="dropdown-menu user-menu">
+                                    <li><a href="${urls.ownInitiatives()}"><@u.message "page.ownInitiatives" /></a></li>
+                                    <li><a href="${urls.logout()}" id="logout"><@u.message "common.logout"/></a></li>
+                                </ul>
+                            </div>
+                        </#if>
+
+                    <#elseif enableVerifiedInitiatives>
+                        <a href="${urls.authenticate(currentRequestUri)}" title="<@u.message "authenticate.title"/>" class="header-tool-link login"><@u.message "authenticate.title"/></a>
                     </#if>
-                    <#if user.isVerifiedUser()>
-                        <div class="header-dropdown">
-                        	<#assign userName>${user.contactInfo.name}<#if user.homeMunicipality.present>, ${user.homeMunicipality.value.getName(locale)}</#if></#assign>
-
-                            <a href="#" class="header-tool-link user-name dropdown-toggle" title="${userName}"><span class="user-name">${userName}</span><span class="icon-small settings"></span></a>
-                            <ul id="user-menu" class="dropdown-menu user-menu">
-                                <li><a href="${urls.ownInitiatives()}"><@u.message "page.ownInitiatives" /></a></li>
-                                <li><a href="${urls.logout()}" id="logout"><@u.message "common.logout"/></a></li>
-                            </ul>
-                        </div>
-                    </#if>
-
-                <#elseif enableVerifiedInitiatives>
-                    <a href="${urls.authenticate(currentRequestUri)}" title="<@u.message "authenticate.title"/>" class="header-tool-link login"><@u.message "authenticate.title"/></a>
-                </#if>
-            </div>
-
-        </div>
-
-    </div>
-
-
-
-    <div id="header">
-    	<#if page == "page.frontpage"><div class="header-wrap-front"></#if>
-        <div id="header-content">
-
-            <a id="logo" href="${urls.baseUrl}/${locale}" accesskey="1" title="<@u.message "siteName" />">
-                <span><@u.message "siteName.logo" /></span>
-            </a>
-
-            <#-- Language toggle, text size -->
-            <div id="header-additional-content">
+                </div>
                 <div class="additional-tools">
                     <a href="${altUri!"/"+altLocale}" class="language-selection"><@u.message "lang.alternative"/></a>
                     <#-- NOTE: ATM the font-size-toggle works only with JS hence the links are also generated with JS. -->
@@ -334,33 +292,7 @@
         </div>
     </#if>
 
-    <div id="footer">
-        <div class="container">
-            <div class="block oikeusministerio">
-                <p>
-                    <@u.message "footer.ministerOfJustice"/><br/>
-                    <#-- <a href="${urls.infoIndex()}/<@u.enumDescription InfoPage.OM />"><@u.message "common.readMore" /> <span class="icon-small arrow-right-2"></span></a>-->
-                </p>
-            </div>
-            <#--
-            <div class="block viestintavirasto">
-                <p>
-                    <@u.messageHTML "footer.ficora"/><br/>
-                    <a href="${urls.infoIndex()}/<@u.enumDescription InfoPage.VIVI />"><@u.message "common.readMore" /> <span class="icon-small arrow-right-2"></span></a>
-                </p>
-            </div>
-            -->
-            <#--
-            <div class="footer-links">
-                <ul>
-                </ul>
-            </div>
-            -->
-            <br class="clear"/>
-        </div>
-
-        <a href="#header-tools" accesskey="3" id="back-to-top"><@u.message "accesskey.backToTop" /></a>
-    </div>
+    <#include "om-footer.ftl" />
 
     <#-- NOTE: Extra footer for test sites STARTS ----------------------------- -->
     <@r.bottomRibbon/>
@@ -383,6 +315,7 @@
       <script type="text/javascript" src="${urls.baseUrl}/js/chosen.jquery.min.js?version=${resourcesVersion}"></script>
       <script type="text/javascript" src="${urls.baseUrl}/js/jquery.magnific-popup.min.js?version=${resourcesVersion}"></script>
       <script type="text/javascript" src="${urls.baseUrl}/js/jquery.linkreplacer.js?version=${resourcesVersion}"></script>
+      <script type="text/javascript" src="${urls.baseUrl}/js/jquery.headernav.js?version=${resourcesVersion}"></script>
       <script type="text/javascript" src="${urls.baseUrl}/js/kuntalaisaloite.js?version=${resourcesVersion}"></script>
     </#if>
 

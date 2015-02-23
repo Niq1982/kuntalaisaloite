@@ -170,7 +170,8 @@ $(document).ready(function () {
 		isIE7 =			$('html').hasClass('ie7'),	// Boolean for IE7. Used browser detection instead of jQuery.support().
 		isIE8 =			$('html').hasClass('ie8'),	// Boolean for IE8. Used browser detection instead of jQuery.support().
 		locale =		Init.getLocale(),			// Current locale: fi, sv
-		hideClass =		'js-hide';					// Set general hidden class
+		hideClass =		'js-hide',					// Set general hidden class
+		fireParticipantGraph, headerNav;
 
 /**
  * Common helpers
@@ -210,6 +211,12 @@ $(document).ready(function () {
 			switcher.html(temp);
 		}
 	};
+
+	// OM header navigation
+    headerNav = $('#headerNav');
+    headerNav.headerNav({
+      btnTitle: locale === 'sv' ? 'Visa mer' : 'Näytä lisää'
+    });
 
 	/**
 	 *	Prevent double clicks
@@ -1709,5 +1716,12 @@ if (window.hasIFrame){
   });
 
 }());
+
+
+$(window).on('resize', function () {
+  if (headerNav !== undefined) {
+    headerNav.headerNav('resize');
+  }
+}).trigger('resize');
 
 });

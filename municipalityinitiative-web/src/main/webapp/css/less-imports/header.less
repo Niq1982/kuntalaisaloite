@@ -1,0 +1,116 @@
+#header {
+    width: 100%;
+    padding-top: 18px;
+    margin-bottom: 2.3em;
+    background: #fff;
+
+    border-bottom: 1px solid @borderGray;
+
+    .header-content {
+        position: relative;
+        height: 130px;
+        width: 960px;
+        margin: 0 auto;
+
+        .header-additional-content {
+            position: absolute;
+            right: 10px;
+            top: 0;
+            text-align: right;
+            max-width: 450px;
+
+            .additional-tools {
+                font-size: 90%;
+                margin: 0.5em 1em;
+            }
+        }
+
+    }
+
+    #logo {
+        display: block;
+        width: 354px;
+        height: 72px;
+        background: url("@{imagesPath}/logo-kuntalaisaloite.png?version=${timestamp}") 0 0 no-repeat;
+        background-image: url("@{imagesPath}/logo-kuntalaisaloite.svg?version=${timestamp}"), none;
+        background-size: contain;
+    }
+    #logo span { display: none; }
+
+    #main-navigation {
+        margin: 0;
+        padding: 0;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        border-left: 1px solid #ccc;
+
+        a {
+            display: inline-block;
+            text-decoration: none;
+            color: #111;
+            font-size: 1.1em;
+            padding: 0.2em 0.9em 0.5em 0.9em;
+            border-right: 1px solid @borderGray;
+
+            .transition(color, 0.2s, ease-in);
+        }
+
+        a:hover, .active a:hover {
+            color: @secondaryColorDark;
+        }
+
+        .active a {
+            color: black;
+            font-weight: bold;
+        }
+    }
+}
+.front #header {
+	margin-bottom: 0;
+	border-bottom: 0;
+
+	.header-wrap-front {
+		margin: 0 10px;
+		border-bottom: 1px solid @borderGray;
+	}
+
+}
+
+// Exceptions for swedish page
+.sv {
+    &.font-size-large #header #main-navigation a {
+        padding: 0.2em 0.5em 0.5em 0.5em;
+    }
+
+    #header #logo {
+        width: 349px;
+        background: url("@{imagesPath}/logo-invanarinitiativ.png?version=${timestamp}") 0 0 no-repeat;
+        background-image: url("@{imagesPath}/logo-invanarinitiativ.svg?version=${timestamp}"), none;
+    }
+}
+
+
+.navi {
+    margin: 0.3em 1em 0 0;
+    padding: 0;
+
+    &.block-style {
+
+        li {
+            display: block;
+
+            &.separator {
+
+            }
+
+            a {
+                display: block;
+                margin-bottom: 1em;
+            }
+            .active {
+                font-weight: bold;
+            }
+        }
+    }
+}

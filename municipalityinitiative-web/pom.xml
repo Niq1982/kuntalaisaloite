@@ -455,6 +455,7 @@
                                 <jsSourceFile>chosen.jquery.min.js</jsSourceFile>
                                 <jsSourceFile>jquery.magnific-popup.min.js</jsSourceFile>
                                 <jsSourceFile>jquery.linkreplacer.js</jsSourceFile>
+                                <jsSourceFile>jquery.headernav.js</jsSourceFile>
                                 <jsSourceFile>kuntalaisaloite.js</jsSourceFile>
                             </jsSourceFiles>
                             <jsFinalFile>script.js</jsFinalFile>
