@@ -7,10 +7,10 @@
 		    	<a href="http://www.${(locale == "sv")?string("demokrati","demokratia")}.fi"><@u.message "otherServices.demokratia"/></a>
 
 		    <li>
-		    	<a class="active" href="${urls.baseUrl}/${locale}"><@u.message "otherServices.initiative"/></a>
+		    	<a href="https://www.kansalaisaloite.fi/${locale}"><@u.message "otherServices.initiative"/></a>
 
 		    <li>
-		    	<a href="https://www.kuntalaisaloite.fi/${locale}"><@u.message "otherServices.municipalityinitiative"/></a>
+		    	<a class="active" href="${urls.baseUrl}/${locale}"><@u.message "otherServices.municipalityinitiative"/></a>
 
 		    <li>
 		    	<a href="http://www.lausuntopalvelu.fi/"><@u.message "otherServices.lausuntopalvelu"/></a>
