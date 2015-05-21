@@ -1,5 +1,7 @@
 package fi.om.municipalityinitiative.web.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.AttachmentFile;
 import fi.om.municipalityinitiative.dto.service.Municipality;
@@ -9,10 +11,7 @@ import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.InvalidHomeMunicipalityException;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
-import fi.om.municipalityinitiative.service.AttachmentService;
-import fi.om.municipalityinitiative.service.MunicipalityService;
-import fi.om.municipalityinitiative.service.ParticipantService;
-import fi.om.municipalityinitiative.service.ValidationService;
+import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
 import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
@@ -29,10 +28,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -45,6 +41,8 @@ import static fi.om.municipalityinitiative.web.Urls.*;
 import static fi.om.municipalityinitiative.web.Views.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
+import static fi.om.municipalityinitiative.web.WebConstants.JSON;
 
 @Controller
 public class PublicInitiativeController extends BaseController {
@@ -73,7 +71,13 @@ public class PublicInitiativeController extends BaseController {
     @Resource
     private AttachmentService attachmentService;
 
+    @Resource
+    private SupportCountService supportCountService;
+
     private static final Logger log = LoggerFactory.getLogger(PublicInitiativeController.class);
+
+    private ObjectMapper objectMapper = new ObjectMapper();
+
 
     public PublicInitiativeController(boolean optimizeResources, String resourcesVersion, Maybe<Integer> piwikId) {
         super(optimizeResources, resourcesVersion, piwikId);
@@ -378,6 +382,11 @@ public class PublicInitiativeController extends BaseController {
             log.error("Thumbnail not found: " + id, t);
             throw new AccessDeniedException("Thumbnail not found: " + id);
         }
+    }
+
+    @RequestMapping(value = SUPPORTS_BY_DATE, method=GET, produces=JSON)
+    public @ResponseBody JsonNode jsonSupportsByDate(@PathVariable Long id) throws IOException {
+        return objectMapper.readTree(supportCountService.getSupportVotesPerDateJson(id));
     }
 
     private static void attachmentFileResponse(HttpServletResponse response, AttachmentFile file) throws IOException {

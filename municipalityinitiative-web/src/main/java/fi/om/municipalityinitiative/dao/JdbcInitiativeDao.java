@@ -28,6 +28,7 @@ import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +36,10 @@ import org.springframework.cache.annotation.Cacheable;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
+import static fi.om.municipalityinitiative.sql.QParticipant.participant;
 
 @SQLExceptionTranslated
 public class JdbcInitiativeDao implements InitiativeDao {
@@ -534,6 +537,25 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .uniqueResult(municipalityInitiative.type);
 
         return initiativeType != null && initiativeType.isVerifiable();
+    }
+
+    @Override
+    public List<Long> getRunningInitiativesWithSupport(DateTime date) {
+        return queryFactory.from(municipalityInitiative)
+                .where(municipalityInitiative.state.in(InitiativeState.PUBLISHED),
+                        municipalityInitiative.sent.goe(date).or(municipalityInitiative.sent.isNull()),
+                        municipalityInitiative.participantCount.gt(0))
+                .list(municipalityInitiative.id);
+    }
+
+
+    @Override
+    public Map<LocalDate,Long> getSupportVoteCountByDateUntil(Long initiativeId, LocalDate tillDay){
+        return queryFactory.from(participant)
+                .where(participant.municipalityInitiativeId.eq(initiativeId))
+                .where(participant.participateTime.loe(tillDay))
+                .groupBy(participant.participateTime)
+                .map(participant.participateTime, participant.participateTime.count());
     }
 
     public static void assertSingleAffection(long affectedRows) {

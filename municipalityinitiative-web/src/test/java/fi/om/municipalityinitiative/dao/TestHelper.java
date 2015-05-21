@@ -20,6 +20,7 @@ import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.springframework.core.env.Environment;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -370,6 +371,22 @@ public class TestHelper {
                 .executeWithKey(QParticipant.participant.id);
     }
 
+    @Transactional(readOnly = false)
+    public Long createDefaultParticipantWithDate(AuthorDraft authorDraft, org.joda.time.LocalDate date) {
+
+        increaseParticipantCount(authorDraft);
+
+        return queryFactory.insert(QParticipant.participant)
+                .set(QParticipant.participant.municipalityId, authorDraft.participantMunicipality)
+                .set(QParticipant.participant.municipalityInitiativeId, authorDraft.initiativeId)
+                .set(QParticipant.participant.name, authorDraft.participantName)
+                .set(QParticipant.participant.showName, authorDraft.publicName)
+                .set(QParticipant.participant.email, authorDraft.participantEmail)
+                .set(QParticipant.participant.membershipType, authorDraft.municipalityMembership)
+                .set(QParticipant.participant.participateTime, date)
+                .executeWithKey(QParticipant.participant.id);
+    }
+
     private String generateHash(int len) {
         previousTestManagementHash = RandomHashGenerator.randomString(len);
         return previousTestManagementHash;
@@ -593,6 +610,7 @@ public class TestHelper {
     public void clearSentEmails() {
         queryFactory.delete(QEmail.email).execute();
     }
+
 
     public static class AuthorDraft {
 
