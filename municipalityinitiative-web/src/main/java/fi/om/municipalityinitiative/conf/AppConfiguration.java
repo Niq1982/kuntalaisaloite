@@ -162,6 +162,9 @@ public class AppConfiguration {
     }
 
     @Bean
+    public SupportCountDao supportCountDao() {return new SupportCountDao();}
+
+    @Bean
     public AuthorService authorService() {
         return new AuthorService();
     }
@@ -367,6 +370,10 @@ public class AppConfiguration {
     }
 
     @Bean
+    public SupportCountService supportCountService() {return new SupportCountService();}
+
+
+    @Bean
     public EnvironmentSettings environmentSettings() {
         String defaultReplyTo = env.getRequiredProperty(PropertyNames.emailDefaultReplyTo);
         String moderatorSendTo = env.getRequiredProperty(PropertyNames.emailSendToOM);
@@ -426,7 +433,7 @@ public class AppConfiguration {
 
     @Bean
     public SecurityFilter securityFilter() {
-        return new SecurityFilter();
+        return new SecurityFilter(Boolean.valueOf(env.getProperty(PropertyNames.secureCookieEnabled)));
     }
 
     @Bean

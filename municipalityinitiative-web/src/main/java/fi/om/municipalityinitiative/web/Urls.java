@@ -289,6 +289,8 @@ public final class Urls {
 
     public static final String ATTACHMENT_THUMBNAIL = "/thumbnail/" + ID_PARAMETER;
 
+    public static final String SUPPORTS_BY_DATE = API+"/v1/supports-by-date/" + ID_PARAMETER;
+
     private final String baseUrl;
 
     private final String iframeBaseUrl;
@@ -395,7 +397,7 @@ public final class Urls {
     }
 
     public String youthInitiativeWebUrl(Long youthInitiativeId) {
-        return youthInitiativeBaseUrl + "/ideat/"+youthInitiativeId;
+        return youthInitiativeBaseUrl + (this.equals(FI) ? "/fi" : "/sv") + "/ideat/" + youthInitiativeId;
     }
 
     public String initiative(Long initiativeId) {

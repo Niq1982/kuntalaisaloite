@@ -212,6 +212,7 @@ $(document).ready(function () {
 		}
 	};
 
+
 	// Fire participantGraph
     // if (window.participantGraph && window.participantGraph.votes.length > 0) {
    	if (window.participantGraph) {
@@ -238,7 +239,7 @@ $(document).ready(function () {
     headerNav.headerNav({
       btnTitle: locale === 'sv' ? 'Visa mer' : 'Näytä lisää'
     });
-   	
+
 	/**
 	 *	Prevent double clicks
 	 *
@@ -1747,5 +1748,6 @@ $(window).on('resize', function () {
     headerNav.headerNav('resize');
   }
 }).trigger('resize');
+
 
 });

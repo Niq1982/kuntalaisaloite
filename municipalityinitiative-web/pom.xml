@@ -7,7 +7,7 @@
     <groupId>fi.om.municipalityinitiative</groupId>
     <artifactId>municipalityinitiative-web</artifactId>
     <name>Kuntalaisaloitepalvelu</name>
-    <version>2.2.10-SNAPSHOT</version>
+    <version>2.3.6-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <properties>
@@ -50,16 +50,6 @@
             <url>http://repo2.maven.org/maven2</url>
         </repository>
         <repository>
-            <id>msource</id>
-            <url>http://source.mysema.com/maven2/releases/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
             <id>libs-milestone</id>
             <url>http://repo.springsource.org/libs-milestone</url>
             <releases>
@@ -69,34 +59,6 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
-        <repository>
-            <id>sonatype</id>
-            <url>http://oss.sonatype.org/content/groups/public/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>sonatype2</id>
-            <url>http://oss.sonatype.org/content/repositories/releases/</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-            <repository>
-                <id>cedarsoft-thirdparty</id>
-                <url>http://maven.cedarsoft.com/content/repositories/thirdparty/</url>
-            </repository>
-        <!-- <repository> <id>dwr</id> <url>http://download.java.net/maven/2/</url>
-            <layout>default</layout> <releases><enabled>true</enabled></releases> <snapshots><enabled>true</enabled></snapshots>
-            </repository> -->
     </repositories>
 
     <dependencies>
@@ -423,6 +385,12 @@
                         -javaagent:${settings.localRepository}/com/googlecode/jmockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar
                         <!-- -Djmockit-coverage-outputDir=target/coverage -->
                     </argLine>
+                    <properties>
+                        <property>
+                            <name>listener</name>
+                            <value>fi.om.municipalityinitiative.conf.TestListener</value>
+                        </property>
+                    </properties>
                 </configuration>
             </plugin>
             <plugin>
@@ -491,6 +459,7 @@
                                 <jsSourceFile>raphael.min.js</jsSourceFile>
                                 <jsSourceFile>jquery.headernav.js</jsSourceFile>
                                 <jsSourceFile>jquery.participantgraph.js</jsSourceFile>
+
                                 <jsSourceFile>kuntalaisaloite.js</jsSourceFile>
                             </jsSourceFiles>
                             <jsFinalFile>script.js</jsFinalFile>

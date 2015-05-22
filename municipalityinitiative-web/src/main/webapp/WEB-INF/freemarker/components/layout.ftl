@@ -211,7 +211,9 @@
     <@r.topRibbon/>
     <#-- NOTE: Extra title for test sites ENDS ------------------------------- -->
 
+
 	<#include "om-header.ftl" />
+
 
     <div id="header">
     	<#if page == "page.frontpage"><div class="header-wrap-front"></#if>
@@ -227,6 +229,7 @@
 	                <#if user.isLoggedIn()>
 	                    <#if user.isOmUser()>
                             <a href="#" class="header-tool-link dropdown-toggle"><span class="user-name">${user.name}</span><span class="icon-small arrow-down-black"></span></a>
+
                             <ul id="user-menu" class="dropdown-menu user-menu">
                                 <li><a href="${urls.municipalityModeration()}"><@u.message "om.municipality.moderation" /></a></li>
                                 <#if initiative??>
@@ -251,6 +254,7 @@
 	                    <a href="${urls.authenticate(currentRequestUri)}" title="<@u.message "authenticate.title"/>" class="header-tool-link login"><@u.message "authenticate.title"/></a>
 	                </#if>
 	            </div>
+
                 <div class="additional-tools">
                     <a href="${altUri!"/"+altLocale}" class="language-selection"><@u.message "lang.alternative"/></a>
                     <#-- NOTE: ATM the font-size-toggle works only with JS hence the links are also generated with JS. -->
@@ -319,6 +323,7 @@
       <script type="text/javascript" src="${urls.baseUrl}/js/raphael.min.js?version=${resourcesVersion}"></script>
       <script type="text/javascript" src="${urls.baseUrl}/js/jquery.headernav.js?version=${resourcesVersion}"></script>
       <script type="text/javascript" src="${urls.baseUrl}/js/jquery.participantgraph.js?version=${resourcesVersion}"></script>
+
       <script type="text/javascript" src="${urls.baseUrl}/js/kuntalaisaloite.js?version=${resourcesVersion}"></script>
     </#if>
 

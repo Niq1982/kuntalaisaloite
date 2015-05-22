@@ -4,6 +4,7 @@ import fi.om.municipalityinitiative.conf.PropertyNames;
 import org.eclipse.jetty.http.ssl.SslContextFactory;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.server.ssl.SslSelectChannelConnector;
 import org.eclipse.jetty.webapp.WebAppContext;
 
@@ -16,7 +17,7 @@ public class StartJetty {
             System.setProperty(PropertyNames.optimizeResources, "false");
             startService(PORT, "dev").join();
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace() ;
         }
     }
 
@@ -25,12 +26,12 @@ public class StartJetty {
         SslContextFactory sslContext = new SslContextFactory("keystore");
         sslContext.setKeyStorePassword("aloitepalvelu");
 
-//        SelectChannelConnector connector = new SelectChannelConnector();
-//        connector.setPort(8080);
+        SelectChannelConnector connector = new SelectChannelConnector();
+        connector.setPort(8080);
         
-        SslSelectChannelConnector sslConnector = new SslSelectChannelConnector(sslContext);
-        sslConnector.setPort(port);
-        server.setConnectors(new Connector[] { sslConnector });
+        //SslSelectChannelConnector sslConnector = new SslSelectChannelConnector(sslContext);
+        //sslConnector.setPort(port);
+        server.setConnectors(new Connector[] { connector });
                 
         WebAppContext context = new WebAppContext();
         context.setDescriptor("src/main/webapp/WEB-INF/web.xml");

@@ -13,7 +13,6 @@ import fi.om.municipalityinitiative.validation.NotTooFastSubmitValidator;
 import mockit.Mocked;
 import org.eclipse.jetty.server.Server;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -148,10 +147,14 @@ public abstract class WebTestBase {
         driver.manage().deleteAllCookies();
     }
 
-    @AfterClass
-    public static void destrouDriver() {
+    public static void destroyDriver() {
         driver.quit();
         lastDriver = null;
+        try {
+            jettyServer.stop();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

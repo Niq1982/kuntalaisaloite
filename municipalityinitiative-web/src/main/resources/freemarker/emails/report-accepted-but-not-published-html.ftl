@@ -7,6 +7,7 @@
 <#include "../includes/styles.ftl" />
 
 <#assign keyPrefix="email.report.accepted.not.published" />
+<#assign publishDateFormatted><@u.localDate initiative.stateTime/></#assign>
 
 <#escape x as x?html>
 
@@ -17,8 +18,8 @@
         <@b.mainContentBlock title>
             <@b.initiativeDetails type />
 
-            <p style="${pBothMargins!""}"><@u.message keyPrefix+".description"/> <@u.localDate initiative.stateTime/></p>
-            <p style="${pBothMargins!""}"><@u.message keyPrefix+".description.2" /></p>
+        <p style="${pBothMargins!""}"><@u.message keyPrefix+".description"/></p>
+        <p style="${pBothMargins!""}"><@u.message key=keyPrefix+".description.2" args=[publishDateFormatted] /></p>
 
             <@b.adminViewLink type=type verified=initiative.type.verifiable />
         </@b.mainContentBlock>
@@ -45,8 +46,8 @@
         <@b.mainContentBlock titleSv>
             <@b.initiativeDetails type />
 
-            <p style="${pBothMargins!""}"><@u.message keyPrefix+".description"/> <@u.localDate initiative.stateTime/></p>
-            <p style="${pBothMargins!""}"><@u.message keyPrefix+".description.2" /></p>
+        <p style="${pBothMargins!""}"><@u.message keyPrefix+".description"/></p>
+        <p style="${pBothMargins!""}"><@u.message key=keyPrefix+".description.2" args=[publishDateFormatted] /></p>
 
             <@b.adminViewLink type=type verified=initiative.type.verifiable />
         </@b.mainContentBlock>

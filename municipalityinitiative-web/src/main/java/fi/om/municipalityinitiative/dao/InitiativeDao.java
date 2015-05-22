@@ -16,6 +16,7 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import java.util.List;
+import java.util.Map;
 
 public interface InitiativeDao {
 
@@ -64,5 +65,9 @@ public interface InitiativeDao {
     List<Initiative> findAllPublishedNotSent();
 
     Long prepareYouthInitiative(long youthInitiativeId, String name, String proposal, String extraInfo, Long municipality);
+
+    List<Long> getRunningInitiativesWithSupport(DateTime date);
+
+    Map<LocalDate,Long> getSupportVoteCountByDateUntil(Long initiativeId, LocalDate tillDay);
 
 }
