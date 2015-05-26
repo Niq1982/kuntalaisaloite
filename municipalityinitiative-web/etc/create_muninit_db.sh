@@ -26,16 +26,16 @@ else
 fi
 
 # Confirm drop/create
-read -p "Drop and create database (yes/no)? " confirmation
-confirmation="$(echo ${confirmation} | tr 'A-Z' 'a-z')"
+#read -p "Drop and create database (yes/no)? " confirmation
+#confirmation="$(echo ${confirmation} | tr 'A-Z' 'a-z')"
 
-if [[ $confirmation =~ ^(y|yes)$ ]]
-then
-     echo "== create_db.sh =="
-else
-     echo "Aborted create_db.sh!"
-     exit 3
-fi
+#if [[ $confirmation =~ ^(y|yes)$ ]]
+#then
+#     echo "== create_db.sh =="
+#else
+#     echo "Aborted create_db.sh!"
+#     exit 3
+#fi
 
 
 # Drop/create database and schema

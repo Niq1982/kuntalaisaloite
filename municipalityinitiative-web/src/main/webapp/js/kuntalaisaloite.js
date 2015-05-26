@@ -212,7 +212,30 @@ $(document).ready(function () {
 		}
 	};
 
-	// OM header navigation
+
+	// Fire participantGraph
+	if (window.participantGraph && window.participantGraph.votes.length > 0) {
+   	//if (window.participantGraph) {
+   	  fireParticipantGraph = function(){
+		  console.log(window.participantGraph);
+        $('#participantGraph').html('').participantGraph({
+          data: window.participantGraph,
+          color: '#949426',
+          colorHl: '#e2a31c',
+          colorToolTip: '#7a7a20',
+          width : $('#participantGraph').parent().width() || 960,
+          height : 250,
+          leftgutter : 35,
+          rightgutter : 30,
+          bottomgutter : 20,
+          topgutter : 20,
+          cumulative : true,
+          max : 50000
+        });
+   	  };
+    }
+
+    // OM header navigation
     headerNav = $('#headerNav');
     headerNav.headerNav({
       btnTitle: locale === 'sv' ? 'Visa mer' : 'Näytä lisää'
@@ -1717,11 +1740,15 @@ if (window.hasIFrame){
 
 }());
 
-
 $(window).on('resize', function () {
+  if (fireParticipantGraph !== undefined) {
+    fireParticipantGraph();
+  }
+
   if (headerNav !== undefined) {
     headerNav.headerNav('resize');
   }
 }).trigger('resize');
+
 
 });

@@ -52,7 +52,7 @@
     <@e.initiativeTitle initiative />
     
     <@prog.progress initiative />
-
+    
     <#-- VIEW BLOCKS -->
     <div class="view-block public first">
         <@e.initiativeView initiative />
@@ -234,8 +234,9 @@
         -->
         <#if initiative.state == InitiativeState.PUBLISHED>
             <div class="initiative-content-row last">
-                
                 <@e.participants formHTML=participateFormHTML showForm=showParticipateForm />
+                
+                <@e.participantGraph initiative supportCountData!"{}" />
             </div>
         </#if>
     </div>

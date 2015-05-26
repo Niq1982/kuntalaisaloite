@@ -3,6 +3,39 @@
 
 <#escape x as x?html>
 
+<#--
+ * participantGraph
+ *
+ * Displays participation counts Raphael.js graph
+ *
+-->
+<#macro participantGraph initiative data>
+    <div class="participant-graph">
+    	<div id="participantGraph">
+    		<noscript><@u.message key="graph.javaScriptSupport" /></noscript>
+    	</div>
+        <div class="update-info">
+        	<@u.message key="graph.updateInfo" /><br/>
+        </div>
+    </div>
+
+     <script type="text/javascript">
+        (function(window) {
+            window.participantGraph = {
+                votes : <#noescape>${data}</#noescape>,
+                startDate : <#if initiative.createTime??>'${initiative.createTime}'<#else>null</#if>,
+                endDate : <#if initiative.sentTime.present>'${initiative.sentTime.value}'<#else>null</#if>,
+                lang : {
+                    btnCumul: '<@u.message key="graph.btnCumul" />',
+                    btnDaily : '<@u.message key="graph.btnDaily" />',
+                    btnZoomIn : '<@u.message key="graph.btnZoomIn" />',
+                    btnZoomOut : '<@u.message key="graph.btnZoomOut" />'
+                }
+            };
+        }(window));
+     </script>
+</#macro>
+
 <#-- 
  * initiativeView
  * 
