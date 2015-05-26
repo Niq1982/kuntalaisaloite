@@ -41,9 +41,9 @@ public class SupportCountService {
         // Therefore the last time we'll denormalize supports for initiative is the day after it's ended.
         System.out.println ("Denormalizing support data");
 
-        DateTime yesterday = DateTime.now().minusDays(0);
+        DateTime yesterday = DateTime.now().minusDays(1);
 
-        LocalDate yesterdayLocalTime = LocalDate.now().minusDays(0);
+        LocalDate yesterdayLocalTime = LocalDate.now().minusDays(1);
 
         List<Long> initiativeIdsForRunningInitiatives = initiativeDao.getRunningInitiativesWithSupport(yesterday);
 
