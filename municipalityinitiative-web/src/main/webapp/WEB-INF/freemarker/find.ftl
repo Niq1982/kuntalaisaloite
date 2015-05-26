@@ -105,13 +105,13 @@
         <div class="column search-sort">
             <#if currentSearch.show == "sent">
                 <span class="small-icon icon-search-sort by-date-accepted">&#160;</span>
-                <div class="search-sort-links">
+                <div class="switch-buttons">
                     <@u.searchLink parameter="withOrderByLatestSent" cssClass=(currentSearch.orderBy == "latestSent")?string('active','') tooltip=false />
                     <@u.searchLink parameter="withOrderByOldestSent" cssClass=(currentSearch.orderBy == "oldestSent")?string('active','') tooltip=false />
                 </div>
             <#else>
                 <span class="small-icon icon-search-sort by-date-accepted">&#160;</span>
-                <div class="search-sort-links">
+                <div class="switch-buttons">
                     <@u.searchLink parameter="withOrderByLatest" cssClass=(currentSearch.orderBy == "latest")?string('active','') tooltip=false />
                     <@u.searchLink parameter="withOrderByOldest" cssClass=(currentSearch.orderBy == "oldest")?string('active','') tooltip=false />
                 </div>
@@ -119,7 +119,7 @@
         </div>
         <div class="column search-sort">
             <span class="small-icon icon-search-sort by-support-statements"><@u.message "searchOptions.participants" /></span>
-            <div class="search-sort-links">
+            <div class="switch-buttons">
                 <@u.searchLink parameter="withOrderByMostParticipants" cssClass=(currentSearch.orderBy == "mostParticipants")?string('active','') tooltip=false />
                 <@u.searchLink parameter="withOrderByLeastParticipants" cssClass=(currentSearch.orderBy == "leastParticipants")?string('active','') tooltip=false />
             </div>

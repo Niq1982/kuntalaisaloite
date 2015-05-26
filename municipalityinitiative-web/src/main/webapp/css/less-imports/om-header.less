@@ -1,4 +1,3 @@
-@omHeaderFontSize: 11px;
 @omHeaderHeight: 40px;
 @omHeaderTextColor: #fff;
 @omHeaderTextColorHover: #bcdade;
@@ -19,7 +18,6 @@
     height: @omHeaderHeight;
     width: 100%;
     text-transform: uppercase;
-    font-size: @omHeaderFontSize;
 
     .gradient(#434443, #2e2f2f);
 
@@ -29,7 +27,7 @@
 
     a {
         color: @omHeaderTextColor;
-        font-size: @omHeaderFontSize;
+        font-size: 11px;
 
         &:hover {
             color: @omHeaderTextColorHover;
@@ -85,11 +83,6 @@
             margin: 0;
             padding: 0;
             overflow: hidden;
-            text-align: center;
-
-            @media screen and (max-width: 991px) {
-                text-align: left;
-            }
 
             &.push {
                 position: relative;
@@ -104,8 +97,6 @@
                     display: inline-block;
                     padding: @omHeaderPad @omHeaderPad 0 @omHeaderPad;
                     line-height: @omHeaderHeight - @omHeaderPad;
-                    box-sizing: border-box;
-                    height: @omHeaderHeight;
 
                     &.active {
                         background: @omHeaderColorAct;

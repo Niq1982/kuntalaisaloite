@@ -55,22 +55,22 @@
     }
     &.disabled {
        opacity:@dimmed;
-       cursor:default;     
+       cursor:default;
     }
-    
+
     &.margin {
         margin-bottom:1em;
     }
-    
+
     &.wide {
         width:100%;
         .boxSizing(border-box);
     }
-    
+
     strong {
         display: block;
     }
-    
+
 }
 
 .small-button {
@@ -81,7 +81,7 @@
     text-align:center;
     //line-height: 1em;
     //padding: 10px 12px;
-    
+
 }
 
 // Gray and disabled button
@@ -157,19 +157,19 @@ a, button {
     outline: none;
     text-align: left;
     text-decoration: none;
-    
+
 
     color: @bodyColor;
     border: solid 1px @borderGray;
     .grayGradient();
-    
+
     span {
         display:block;
         margin-left:11px;
         line-height: 1.2em;
         font-size:0.9em;
     }
-    
+
     &.last {
         margin-bottom:1.5em;
     }
@@ -180,15 +180,36 @@ a, button {
         border-color: #b7b7b7;
         text-decoration: none;
     }
-    
+
     &:active, &:focus {
         color: @black;
         .grayGradientActive();
     }
-    
+
     &.active {
         .grayGradientHover();
         font-weight:bold;
     }
 
+}
+
+.switch-buttons {
+    display: inline;
+
+    a {
+        display: inline-block;
+        padding: 0.1em 0.5em;
+
+        &:hover {
+            .gradient(#fff, #ddd);
+            color: #000;
+        }
+
+        &.active {
+            .gradient(#adad2d, #7a7a20);
+            color: #fff;
+            text-shadow: 0px 1px 1px rgba(0,0,0,0.3);
+        }
+
+    }
 }
