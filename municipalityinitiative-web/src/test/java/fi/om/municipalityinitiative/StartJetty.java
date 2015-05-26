@@ -10,7 +10,7 @@ import org.eclipse.jetty.webapp.WebAppContext;
 
 public class StartJetty {
     
-    public static final int PORT = 8443;
+    public static final int PORT = 8080;
 
     public static void main(String[] args) {
         try {
@@ -27,7 +27,7 @@ public class StartJetty {
         sslContext.setKeyStorePassword("aloitepalvelu");
 
         SelectChannelConnector connector = new SelectChannelConnector();
-        connector.setPort(8080);
+        connector.setPort(port);
         
         //SslSelectChannelConnector sslConnector = new SslSelectChannelConnector(sslContext);
         //sslConnector.setPort(port);
