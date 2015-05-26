@@ -162,6 +162,9 @@ public class AppConfiguration {
     }
 
     @Bean
+    public SupportCountDao supportCountDao() {return new SupportCountDao();}
+
+    @Bean
     public AuthorService authorService() {
         return new AuthorService();
     }
@@ -365,6 +368,10 @@ public class AppConfiguration {
     public EmailService emailService() {
         return new EmailService();
     }
+
+    @Bean
+    public SupportCountService supportCountService() {return new SupportCountService();}
+
 
     @Bean
     public EnvironmentSettings environmentSettings() {
