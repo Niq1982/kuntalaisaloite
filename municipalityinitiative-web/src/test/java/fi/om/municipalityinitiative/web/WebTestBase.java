@@ -43,7 +43,7 @@ import static org.junit.Assert.fail;
 @ContextConfiguration(classes={WebTestConfiguration.class})
 public abstract class WebTestBase {
 
-    protected static final int PORT = 8445; // NOTE: must match port in test.properties/baseUrl
+    protected static final int PORT = 8090; // NOTE: must match port in test.properties/baseUrl
 
     @Mocked
     EmailSenderScheduler emailSenderScheduler;
