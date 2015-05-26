@@ -71,6 +71,7 @@ public class PublicInitiativeController extends BaseController {
     @Resource
     private AttachmentService attachmentService;
 
+
     @Resource
     private SupportCountService supportCountService;
 
@@ -111,6 +112,7 @@ public class PublicInitiativeController extends BaseController {
         InitiativePageInfo initiativePageView = publicInitiativeService.getInitiativePageDto(initiativeId, loginUserHolder);
         if (initiativePageView.isCollaborative()) {
 
+            addVotingInfo(initiativeId, model);
             return ViewGenerator.collaborativeView(initiativePageView,
                     municipalityService.findAllMunicipalities(locale),
                     new ParticipantUICreateDto(),
@@ -119,6 +121,11 @@ public class PublicInitiativeController extends BaseController {
         else {
             return ViewGenerator.singleView(initiativePageView).view(model, Urls.get(locale).alt().view(initiativeId));
         }
+    }
+
+    private void addVotingInfo(Long initiativeId, Model model) {
+        //TOTO add votinginfo. User must be able to see if he has voted for this.
+        model.addAttribute("supportCountData", supportCountService.getSupportVotesPerDateJson(initiativeId));
     }
 
     @RequestMapping(value = { PREPARE_FI, PREPARE_SV }, method = GET)

@@ -22,7 +22,7 @@
      <script type="text/javascript">
         (function(window) {
             window.participantGraph = {
-                participants : <#noescape>${data}</#noescape>,
+                votes : <#noescape>${data}</#noescape>,
                 startDate : <#if initiative.createTime??>'${initiative.createTime}'<#else>null</#if>,
                 endDate : <#if initiative.sentTime.present>'${initiative.sentTime.value}'<#else>null</#if>,
                 lang : {

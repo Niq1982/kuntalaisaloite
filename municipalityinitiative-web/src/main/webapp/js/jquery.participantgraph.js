@@ -82,10 +82,10 @@
 
       // Override data with random data for developing purposes
       // args: firstDate, lastDate, daily, tolerance
-      settings.data.votes = testDataGererator(testStart, testCurrent, 25, 50);
+      //settings.data.votes = testDataGererator(testStart, testCurrent, 25, 50);
       // settings.data.votes = testDataGererator(testStart, testCurrent, 10, 3);
-      settings.data.startDate = testStart;
-      settings.data.endDate = testEnd;
+      //settings.data.startDate = testStart;
+      //settings.data.endDate = testEnd;
       // TEST DATA ENDS
 
       // Fix graph enddate by minimum days

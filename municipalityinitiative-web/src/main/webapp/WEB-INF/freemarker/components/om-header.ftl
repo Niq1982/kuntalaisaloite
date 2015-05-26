@@ -1,4 +1,3 @@
-<<<<<<< local
 <#import "utils.ftl" as u />
 
 <div class="om-header">

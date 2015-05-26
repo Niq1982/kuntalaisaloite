@@ -214,9 +214,10 @@ $(document).ready(function () {
 
 
 	// Fire participantGraph
-    // if (window.participantGraph && window.participantGraph.votes.length > 0) {
-   	if (window.participantGraph) {
+	if (window.participantGraph && window.participantGraph.votes.length > 0) {
+   	//if (window.participantGraph) {
    	  fireParticipantGraph = function(){
+		  console.log(window.participantGraph);
         $('#participantGraph').html('').participantGraph({
           data: window.participantGraph,
           color: '#949426',

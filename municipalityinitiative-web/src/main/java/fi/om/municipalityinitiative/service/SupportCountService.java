@@ -39,17 +39,23 @@ public class SupportCountService {
     public void updateDenormalizedSupportCountForInitiatives() {
         // Support counts are denormalized in one-day-delay (today we will denormalize history until yesterday).
         // Therefore the last time we'll denormalize supports for initiative is the day after it's ended.
-        DateTime yesterday = DateTime.now().minusDays(1);
+        System.out.println ("Denormalizing support data");
 
-        LocalDate yesterdayLocalTime = LocalDate.now().minusDays(1);
+        DateTime yesterday = DateTime.now().minusDays(0);
+
+        LocalDate yesterdayLocalTime = LocalDate.now().minusDays(0);
 
         List<Long> initiativeIdsForRunningInitiatives = initiativeDao.getRunningInitiativesWithSupport(yesterday);
 
         for (Long initiativeForUpdating : initiativeIdsForRunningInitiatives) {
 
+            System.out.println("Denormalizing support data for init with id " + initiativeForUpdating);
+
             Map<LocalDate, Long> supportVoteCountByDateUntil = initiativeDao.getSupportVoteCountByDateUntil(initiativeForUpdating, yesterdayLocalTime );
 
             supportCountDao.saveDenormalizedSupportCountDataJson(initiativeForUpdating, toJson(supportVoteCountByDateUntil));
+
+            System.out.println(toJson(supportVoteCountByDateUntil));
 
             supportCountDao.saveDenormalizedSupportCountData(initiativeForUpdating, supportVoteCountByDateUntil);
 
