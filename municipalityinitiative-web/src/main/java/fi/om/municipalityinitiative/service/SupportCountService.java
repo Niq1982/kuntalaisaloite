@@ -5,18 +5,19 @@ import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dao.SupportCountDao;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-/**
- * Created by liisasa on 20.5.2015.
- */
 public class SupportCountService {
 
+    private static final Logger log = LoggerFactory.getLogger(SupportCountService.class);
 
     @Resource
     InitiativeDao initiativeDao;
@@ -40,19 +41,17 @@ public class SupportCountService {
     public void updateDenormalizedSupportCountForInitiatives() {
         // Support counts are denormalized in one-day-delay (today we will denormalize history until yesterday).
         // Therefore the last time we'll denormalize supports for initiative is the day after it's ended.
-        System.out.println ("Denormalizing support data");
+        log.info("Denormalizing support data");
 
-        DateTime yesterday = DateTime.now().minusDays(1);
+        LocalDate yesterday = LocalDate.now().minusDays(1);
 
-        LocalDate yesterdayLocalTime = LocalDate.now().minusDays(1);
-
-        List<Long> initiativeIdsForRunningInitiatives = initiativeDao.getRunningInitiativesWithSupport(yesterday);
+        List<Long> initiativeIdsForRunningInitiatives = initiativeDao.getInitiativesThatAreSentAtTheGivenDateOrInFutureOrStillRunning(yesterday);
 
         for (Long initiativeForUpdating : initiativeIdsForRunningInitiatives) {
 
-            System.out.println("Denormalizing support data for init with id " + initiativeForUpdating);
+            log.info("Denormalizing support data for init with id " + initiativeForUpdating);
 
-            Map<LocalDate, Long> supportVoteCountByDateUntil = initiativeDao.getSupportVoteCountByDateUntil(initiativeForUpdating, yesterdayLocalTime );
+            Map<LocalDate, Long> supportVoteCountByDateUntil = initiativeDao.getSupportVoteCountByDateUntil(initiativeForUpdating, yesterday );
 
             supportCountDao.saveDenormalizedSupportCountDataJson(initiativeForUpdating, toJson(supportVoteCountByDateUntil));
 

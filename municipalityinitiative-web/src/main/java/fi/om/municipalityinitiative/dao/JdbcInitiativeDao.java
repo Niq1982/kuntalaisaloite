@@ -541,11 +541,12 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    public List<Long> getRunningInitiativesWithSupport(DateTime date) {
+    public List<Long> getInitiativesThatAreSentAtTheGivenDateOrInFutureOrStillRunning(LocalDate date) {
+
         return queryFactory.from(municipalityInitiative)
                 .where(municipalityInitiative.state.in(InitiativeState.PUBLISHED),
-                        municipalityInitiative.sent.goe(date).or(municipalityInitiative.sent.isNull()),
-                        municipalityInitiative.participantCount.gt(0))
+                        municipalityInitiative.sent.goe(date.toLocalDateTime(new LocalTime(0, 0)).toDateTime()).or(municipalityInitiative.sent.isNull())
+                        .or(municipalityInitiative.supportCountData.isNull()))
                 .list(municipalityInitiative.id);
     }
 

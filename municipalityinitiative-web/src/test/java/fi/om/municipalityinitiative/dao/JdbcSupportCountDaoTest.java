@@ -6,6 +6,7 @@ import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
@@ -61,21 +63,21 @@ public class JdbcSupportCountDaoTest {
     @Test
     public void list_all_running_initiative_ids() {
         // Create a published initiative with 10 supports
-        Long published_id = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED).withParticipantCount(10));
+        Long published_id = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED).withParticipantCount(10).withSupporCountData("[]"));
 
         // Create a published initiative with 0 supports
-        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED).withParticipantCount(0));
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED).withParticipantCount(0).withSupporCountData("[]"));
 
         // Create a draft initiative
         testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.DRAFT));
 
         //Create a initiative that sent date is in the past
-        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED).withSent(new DateTime(2014, 1, 1, 1, 1, 1, 1)));
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED).withSent(new DateTime(2014, 1, 1, 1, 1, 1, 1)).withSupporCountData("[]"));
 
-        DateTime yesterday = DateTime.now().minusDays(1);
-        List<Long> initiativeIds = initiativeDao.getRunningInitiativesWithSupport(yesterday);
-        assertThat(initiativeIds.size(), is(1));
-        assertThat(initiativeIds.get(0), is(published_id));
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        List<Long> initiativeIds = initiativeDao.getInitiativesThatAreSentAtTheGivenDateOrInFutureOrStillRunning(yesterday);
+        assertThat(initiativeIds.size(), is(2));
+
     }
 
     @Test
@@ -84,8 +86,33 @@ public class JdbcSupportCountDaoTest {
         DateTime today = DateTime.now();
         Long published_id = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED).withParticipantCount(1).withSent(today));
 
+        LocalDate yesterday = LocalDate.now();
+        List<Long> initiativeIds = initiativeDao.getInitiativesThatAreSentAtTheGivenDateOrInFutureOrStillRunning(yesterday);
+        assertThat(initiativeIds.size(), is(1));
+        assertThat(initiativeIds.get(0), is(published_id));
+
+    }
+    @Test
+    public void do_not_get_initiative_id_that_was_sent_yesterday() {
+        //Create a initiative that sent date is today
+
         DateTime yesterday = DateTime.now().minusDays(1);
-        List<Long> initiativeIds = initiativeDao.getRunningInitiativesWithSupport(yesterday);
+        Long published_id = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withState(InitiativeState.PUBLISHED)
+                .withParticipantCount(1)
+                .withSent(yesterday)
+                .withSupporCountData("[]"));
+
+        List<Long> initiativeIds = initiativeDao.getInitiativesThatAreSentAtTheGivenDateOrInFutureOrStillRunning(LocalDate.now());
+        assertThat(initiativeIds.size(), is(0));
+    }
+    @Test
+    public void get_initiative_that_is_sent_tomorrow() {
+        //Create a initiative that sent date is today
+        DateTime tomorrow = DateTime.now().plusDays(1);
+        Long published_id = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED).withParticipantCount(1).withSent(tomorrow));
+
+        List<Long> initiativeIds = initiativeDao.getInitiativesThatAreSentAtTheGivenDateOrInFutureOrStillRunning(LocalDate.now());
         assertThat(initiativeIds.size(), is(1));
         assertThat(initiativeIds.get(0), is(published_id));
     }

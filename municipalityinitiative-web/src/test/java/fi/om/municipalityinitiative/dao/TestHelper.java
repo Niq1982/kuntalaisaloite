@@ -227,6 +227,10 @@ public class TestHelper {
         insert.set(municipalityInitiative.lastEmailReportTime, initiativeDraft.emailReportDateTime);
         insert.set(municipalityInitiative.lastEmailReportType, initiativeDraft.emailReportType);
 
+        if (initiativeDraft.supporCountData != null) {
+            insert.set(municipalityInitiative.supportCountData, initiativeDraft.supporCountData);
+        }
+
         lastInitiativeId = insert.executeWithKey(municipalityInitiative.id);
 
         if (initiativeDraft.authorDraft.isPresent()) {
@@ -729,6 +733,7 @@ public class TestHelper {
         public Integer externalParticipantCount = DEFAULT_EXTERNAL_PARTICIPANT_COUNT;
         public EmailReportType emailReportType;
         public DateTime emailReportDateTime;
+        public String supporCountData;
 
         public AuthorDraft applyAuthor() {
             this.authorDraft = Maybe.of(new AuthorDraft(this, municipalityId));
@@ -814,6 +819,11 @@ public class TestHelper {
         public InitiativeDraft witEmailReportSent(EmailReportType emailReportType, DateTime dateTime) {
             this.emailReportType = emailReportType;
             this.emailReportDateTime = dateTime;
+            return this;
+        }
+
+        public InitiativeDraft withSupporCountData(String s) {
+            this.supporCountData = s;
             return this;
         }
     }

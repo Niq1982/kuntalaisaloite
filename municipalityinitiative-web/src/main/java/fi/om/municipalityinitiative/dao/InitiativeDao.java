@@ -66,7 +66,7 @@ public interface InitiativeDao {
 
     Long prepareYouthInitiative(long youthInitiativeId, String name, String proposal, String extraInfo, Long municipality);
 
-    List<Long> getRunningInitiativesWithSupport(DateTime date);
+    List<Long> getInitiativesThatAreSentAtTheGivenDateOrInFutureOrStillRunning(LocalDate date);
 
     Map<LocalDate,Long> getSupportVoteCountByDateUntil(Long initiativeId, LocalDate tillDay);
 
