@@ -40,6 +40,7 @@ import java.util.Map;
 
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 import static fi.om.municipalityinitiative.sql.QParticipant.participant;
+import static fi.om.municipalityinitiative.sql.QVerifiedParticipant.verifiedParticipant;
 
 @SQLExceptionTranslated
 public class JdbcInitiativeDao implements InitiativeDao {
@@ -551,11 +552,24 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     public Map<LocalDate,Long> getSupportVoteCountByDateUntil(Long initiativeId, LocalDate tillDay){
-        return queryFactory.from(participant)
-                .where(participant.municipalityInitiativeId.eq(initiativeId))
-                .where(participant.participateTime.loe(tillDay))
-                .groupBy(participant.participateTime)
-                .map(participant.participateTime, participant.participateTime.count());
+
+        if (get(initiativeId).getType().isVerifiable()) {
+            return queryFactory.from(verifiedParticipant)
+                    .where(verifiedParticipant.initiativeId.eq(initiativeId))
+                    .where(verifiedParticipant.participateTime.loe(tillDay))
+                    .groupBy(verifiedParticipant.participateTime)
+                    .map(verifiedParticipant.participateTime, verifiedParticipant.participateTime.count());
+
+        }
+        else {
+            return queryFactory.from(participant)
+                    .where(participant.municipalityInitiativeId.eq(initiativeId))
+                    .where(participant.participateTime.loe(tillDay))
+                    .groupBy(participant.participateTime)
+                    .map(participant.participateTime, participant.participateTime.count());
+        }
+
+
     }
 
     public static void assertSingleAffection(long affectedRows) {

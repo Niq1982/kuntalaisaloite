@@ -349,7 +349,31 @@ public class TestHelper {
         increaseParticipantCount(authorDraft);
         this.lastVerifiedUserId = verifiedUserId;
     }
+    @Transactional(readOnly = false)
+    public Long createVerifiedParticipantWithDate(AuthorDraft authorDraft, org.joda.time.LocalDate date) {
 
+        Long verifiedUserId = queryFactory.insert(QVerifiedUser.verifiedUser)
+                .set(QVerifiedUser.verifiedUser.hash, createUserSsnHash())
+                .set(QVerifiedUser.verifiedUser.address, authorDraft.authorAddress)
+                .set(QVerifiedUser.verifiedUser.phone, authorDraft.authorPhone)
+                .set(QVerifiedUser.verifiedUser.email, authorDraft.participantEmail)
+                .set(QVerifiedUser.verifiedUser.name, authorDraft.participantName)
+                .set(QVerifiedUser.verifiedUser.municipalityId, authorDraft.participantMunicipality)
+                .executeWithKey(QVerifiedUser.verifiedUser.id);
+
+        Long id = queryFactory.insert(QVerifiedParticipant.verifiedParticipant)
+                .set(QVerifiedParticipant.verifiedParticipant.showName, authorDraft.publicName)
+                .set(QVerifiedParticipant.verifiedParticipant.initiativeId, authorDraft.initiativeId)
+                .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, verifiedUserId)
+                .set(QVerifiedParticipant.verifiedParticipant.verified, authorDraft.participantMunicipality != null)
+                .set(QVerifiedParticipant.verifiedParticipant.participateTime, date)
+                .execute();
+
+        increaseParticipantCount(authorDraft);
+        this.lastVerifiedUserId = verifiedUserId;
+
+        return id;
+    }
 
     private String createUserSsnHash() {
         previousUserSsnHash = RandomHashGenerator.shortHash();

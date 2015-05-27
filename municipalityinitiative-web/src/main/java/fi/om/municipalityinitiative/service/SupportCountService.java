@@ -24,6 +24,7 @@ public class SupportCountService {
     @Resource
     SupportCountDao supportCountDao;
 
+
     @Transactional(readOnly = true)
     public String getSupportVotesPerDateJson(Long initiativeId) {
         if (initiativeId == null) {

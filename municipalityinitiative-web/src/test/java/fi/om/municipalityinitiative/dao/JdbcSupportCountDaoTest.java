@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.dao;
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.util.InitiativeState;
+import fi.om.municipalityinitiative.util.InitiativeType;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -142,7 +143,6 @@ public class JdbcSupportCountDaoTest {
     @Test
     public void rewrite_and_get_denormalized_support_count_data() {
 
-
         Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED));
 
         Map<LocalDate, Long> supportCounts = new HashMap<>();
@@ -165,6 +165,19 @@ public class JdbcSupportCountDaoTest {
         assertThat(denormalizedSupportCountData.get(new LocalDate(2010, 1, 3)), is(20));
 
 
+    }
+
+    @Test
+    public void create_verifiable_inititative(){
+        Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED).withType(InitiativeType.COLLABORATIVE_COUNCIL));
+
+        testHelper.createVerifiedParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withPublicName(true), twoDaysAgo);
+
+        testHelper.createVerifiedParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withPublicName(true), twoDaysAgo);
+
+        Map<LocalDate, Long> supportVoteCountByDate =  initiativeDao.getSupportVoteCountByDateUntil(initiativeId, yesterday);
+
+        assertThat(supportVoteCountByDate.get(twoDaysAgo), is(2L));
     }
 
 }
