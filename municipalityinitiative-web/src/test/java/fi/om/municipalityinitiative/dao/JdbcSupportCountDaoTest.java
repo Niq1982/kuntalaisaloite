@@ -207,4 +207,14 @@ public class JdbcSupportCountDaoTest {
         assertThat(supportVoteCountByDate.get(twoDaysAgo), is(2L));
     }
 
+    @Test
+    public void create_an_old_initiative_that_has_support_but_no_denormalized_support_count_saved(){
+        DateTime old_date = new DateTime(2014, 1, 1, 1, 1, 1, 1);
+        Long published_id = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED).withParticipantCount(1).withSent(old_date));
+
+        List<Long> initiativeIds = initiativeDao.getInitiativesThatAreSentAtTheGivenDateOrInFutureOrStillRunning(LocalDate.now());
+        assertThat(initiativeIds.size(), is(1));
+        assertThat(initiativeIds.get(0), is(published_id));
+    }
+
 }
