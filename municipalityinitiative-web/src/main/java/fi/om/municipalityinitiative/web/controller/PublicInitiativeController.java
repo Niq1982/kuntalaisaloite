@@ -110,7 +110,7 @@ public class PublicInitiativeController extends BaseController {
         addPiwicIdIfNotAuthenticated(model, request);
 
         InitiativePageInfo initiativePageView = publicInitiativeService.getInitiativePageDto(initiativeId, loginUserHolder);
-        if (initiativePageView.isCollaborative()) {
+            if (initiativePageView.isCollaborative()) {
 
             addVotingInfo(initiativeId, model);
             return ViewGenerator.collaborativeView(initiativePageView,

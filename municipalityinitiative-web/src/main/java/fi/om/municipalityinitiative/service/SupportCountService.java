@@ -53,7 +53,7 @@ public class SupportCountService {
 
             supportCountDao.saveDenormalizedSupportCountDataJson(initiativeForUpdating, toJson(supportVoteCountByDateUntil));
 
-            System.out.println(toJson(supportVoteCountByDateUntil));
+            log.info(toJson(supportVoteCountByDateUntil));
 
             supportCountDao.saveDenormalizedSupportCountData(initiativeForUpdating, supportVoteCountByDateUntil);
 

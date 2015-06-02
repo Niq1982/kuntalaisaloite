@@ -31,7 +31,8 @@
   var setEndDate = function (start, end, minDays) {
     var mStart = moment(start),
       mEnd = moment(end),
-      addDays = minDays;
+      addDays = minDays,
+        subtractDays = 0;
 
     if (end) {
       if (moment(mEnd).diff(mStart, 'days') < minDays) {
@@ -42,21 +43,35 @@
     } else {
       if (moment().diff(mStart, 'days') >= minDays) {
         addDays = 0;
+        subtractDays = 1;
       }
 
-      return moment().add('days', addDays).format(DATE_FORMAT);
+      return moment().add('days', addDays).subtract('days', subtractDays).format(DATE_FORMAT);
     }
   };
+
+  // To draw the graph till the end day
+  var addDummyEndDateVotes = function(settings) {
+    var endDateHasVotes = false;
+    for (var i = 0; i < settings.data.votes.length; i++) {
+      if (settings.data.votes[i].d === settings.data.endDate) {
+        endDateHasVotes = true;
+      }
+    }
+    if (!endDateHasVotes) {
+      settings.data.votes.push({"d": settings.data.endDate, "n": 0});
+    }
+  }
 
   var methods = {
     init : function (options) {
       var settings = $.extend(defaults, options);
 
       // TEST DATA STARTS
-      var testEnd, testStart, testCurrent;
+      //var testEnd, testStart, testCurrent;
       // Ended - less than 30 days
-      testStart = moment().subtract('days', 3).format(DATE_FORMAT);
-      testEnd = moment().subtract('days', 1).format(DATE_FORMAT);
+      //testStart = moment().subtract('days', 3).format(DATE_FORMAT);
+      //testEnd = moment().subtract('days', 1).format(DATE_FORMAT);
 
       // Ended - more than 30 days
       // testStart = moment().subtract('days', 60).format(DATE_FORMAT);
@@ -78,7 +93,7 @@
       // testStart = moment().subtract('days', 2 * 365).format(DATE_FORMAT);
       // testEnd = moment().format(DATE_FORMAT);
 
-      testCurrent = moment().format(DATE_FORMAT);
+      //testCurrent = moment().format(DATE_FORMAT);
 
       // Override data with random data for developing purposes
       // args: firstDate, lastDate, daily, tolerance
@@ -90,6 +105,8 @@
 
       // Fix graph enddate by minimum days
       settings.data.endDate = setEndDate(settings.data.startDate, settings.data.endDate, MIN_GRAPH_DAYS);
+
+      addDummyEndDateVotes(settings);
 
       return this.each(function (index, element) {
         var r,
