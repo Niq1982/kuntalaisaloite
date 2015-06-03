@@ -50,18 +50,17 @@
     }
   };
 
-  // To draw the graph till the end day
-  var addDummyEndDateVotes = function(settings) {
-    var endDateHasVotes = false;
+  var addEmptyVoting = function(settings, date) {
+    var dateHasVotes = false;
     for (var i = 0; i < settings.data.votes.length; i++) {
-      if (settings.data.votes[i].d === settings.data.endDate) {
-        endDateHasVotes = true;
+      if (settings.data.votes[i].d === date) {
+        dateHasVotes = true;
       }
     }
-    if (!endDateHasVotes) {
-      settings.data.votes.push({"d": settings.data.endDate, "n": 0});
+    if (!dateHasVotes) {
+      settings.data.votes.push({"d": date, "n": 0});
     }
-  }
+  };
 
   var methods = {
     init : function (options) {
@@ -106,7 +105,10 @@
       // Fix graph enddate by minimum days
       settings.data.endDate = setEndDate(settings.data.startDate, settings.data.endDate, MIN_GRAPH_DAYS);
 
-      addDummyEndDateVotes(settings);
+      // Draw graph till yesterday
+
+      addEmptyVoting(settings, moment().subtract(1, 'days').format(DATE_FORMAT));
+
 
       return this.each(function (index, element) {
         var r,
