@@ -102,13 +102,18 @@
       //settings.data.endDate = testEnd;
       // TEST DATA ENDS
 
+      var sentDate = settings.data.endDate;
+
       // Fix graph enddate by minimum days
       settings.data.endDate = setEndDate(settings.data.startDate, settings.data.endDate, MIN_GRAPH_DAYS);
 
-      // Draw graph till yesterday
-
-      addEmptyVoting(settings, moment().subtract(1, 'days').format(DATE_FORMAT));
-
+      var yesterday = moment().subtract(1, 'days').format(DATE_FORMAT);
+      if (sentDate != null) {
+        addEmptyVoting(settings, sentDate);
+      }
+      else {
+        addEmptyVoting(settings, yesterday);
+      }
 
       return this.each(function (index, element) {
         var r,
