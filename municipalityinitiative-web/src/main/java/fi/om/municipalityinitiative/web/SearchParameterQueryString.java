@@ -3,6 +3,8 @@ package fi.om.municipalityinitiative.web;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Freemarker uses this class for generating links with get-parameters at search page.
@@ -49,8 +51,27 @@ public class SearchParameterQueryString {
             builder.append("?");
         }
         builder.append(name)
-                .append("=")
-                .append(fieldValue.toString());
+                .append("=");
+
+        if (fieldValue instanceof Collection) {
+            appendCollection(builder, (Collection) fieldValue);
+        } else {
+            builder.append(fieldValue.toString());
+        }
+
+    }
+
+    private static void appendCollection(StringBuilder builder, Collection fieldValue) {
+        boolean first = true;
+        for(Object item : fieldValue.toArray()) {
+            if (!first){
+                builder.append(",");
+            }
+            else {
+                first = false;
+            }
+            builder.append(item.toString());
+        }
     }
 
     public String get() {
