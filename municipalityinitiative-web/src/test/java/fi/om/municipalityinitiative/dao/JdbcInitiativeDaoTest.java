@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.dao;
 
+import com.mysema.query.sql.WithinGroup;
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
@@ -352,8 +353,77 @@ public class JdbcInitiativeDaoTest {
         assertThat(result, hasSize(1));
         assertThat(result.get(0).getId(), is(shouldBeFound));
     }
+    @Test
+    public void finds_several_initiatives_using_municipality_list_several_municipalities() {
 
+        Long municipalityId = testHelper.createTestMunicipality("Some municipality");
+        Long municipalityId2 = testHelper.createTestMunicipality("Some municipality 2");
 
+        ArrayList<Long> municipalities = new ArrayList<Long>();
+        municipalities.add(municipalityId);
+        municipalities.add(municipalityId2);
+
+        Long shouldBeFound = testHelper.createSingleSent(municipalityId);
+        Long shouldBeFound2 = testHelper.createSingleSent(municipalityId2);
+
+        Long shouldNotBeFound = testHelper.createSingleSent(testMunicipality.getId());
+
+        InitiativeSearch search = initiativeSearch();
+        search.setMunicipalities(municipalities);
+        search.setOrderBy(InitiativeSearch.OrderBy.id);
+
+        List<InitiativeListInfo> result = initiativeDao.findCached(search).list;
+
+        assertThat(result, hasSize(2));
+        assertThat(result.get(0).getId(), is(shouldBeFound2));
+        assertThat(result.get(1).getId(), is(shouldBeFound));
+
+    }
+    @Test
+    public void finds_all_initiatives_using_empty_municipality_list() {
+
+        Long municipalityId = testHelper.createTestMunicipality("Some municipality");
+        Long municipalityId2 = testHelper.createTestMunicipality("Some municipality 2");
+
+        ArrayList<Long> municipalities = new ArrayList<Long>();
+        municipalities.add(municipalityId);
+        municipalities.add(municipalityId2);
+
+        Long shouldBeFound = testHelper.createSingleSent(municipalityId);
+        Long shouldBeFound2 = testHelper.createSingleSent(municipalityId2);
+        Long shouldBeFound3 = testHelper.createSingleSent(testMunicipality.getId());
+
+        InitiativeSearch search = initiativeSearch();
+        search.setMunicipalities(new ArrayList<Long>());
+        search.setOrderBy(InitiativeSearch.OrderBy.id);
+
+        List<InitiativeListInfo> result = initiativeDao.findCached(search).list;
+
+        assertThat(result, hasSize(3));
+
+    }
+
+    @Test
+    public void finds_no_initiatives_using_several_municipalities_municipality_list() {
+
+        Long municipalityId = testHelper.createTestMunicipality("Some municipality");
+        Long municipalityId2 = testHelper.createTestMunicipality("Some municipality 2");
+
+        Long shouldNotBeFound = testHelper.createSingleSent(municipalityId);
+        Long shouldNotBeFound2 = testHelper.createSingleSent(municipalityId2);
+
+        ArrayList<Long> municipalities = new ArrayList<Long>();
+        municipalities.add(testMunicipality.getId());
+
+        InitiativeSearch search = initiativeSearch();
+        search.setMunicipalities(municipalities);
+        search.setOrderBy(InitiativeSearch.OrderBy.id);
+
+        List<InitiativeListInfo> result = initiativeDao.findCached(search).list;
+
+        assertThat(result, hasSize(0));
+
+    }
     @Test
     public void sets_type_to_listView_object() {
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);

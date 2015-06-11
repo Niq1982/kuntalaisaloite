@@ -4,6 +4,8 @@ import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import fi.om.municipalityinitiative.web.Urls;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -32,5 +34,15 @@ public class InitiativeSearchTest {
     @Test
     public void limit_is_default_if_not_set() {
         assertThat(new InitiativeSearch().getLimit(), is(Urls.DEFAULT_INITIATIVE_SEARCH_LIMIT));
+    }
+
+    @Test
+    public void set_municipality(){
+        InitiativeSearch search = new InitiativeSearch();
+        search.setMunicipalities(1L);
+
+        ArrayList<Long> municipalities = new ArrayList<Long>();
+        municipalities.add(1L);
+        assertThat(search.getMunicipalities(), is(municipalities));
     }
 }

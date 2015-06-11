@@ -181,10 +181,29 @@ public class ViewInitiativeWebTest extends WebTestBase {
         assertThat(getElement(By.tagName("li")).getText(), containsString(stateTime.toString("d.M.yyyy")));
         assertThat(getElement(By.tagName("li")).getText(), containsString(title));
     }
+    @Test
+    public void iframe_page_accepts_several_municipality_parameters_and_shows_initiative() {
+
+        DateTime stateTime = new DateTime(2011, 1, 1, 0, 0);
+        String title = "Yeah rock rock";
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
+                .withState(InitiativeState.PUBLISHED)
+                .withStateTime(stateTime)
+                .withName(title));
+
+        open(urls.iframe(HELSINKI_ID, HYVINKAA_ID));
+        assertThat(getElement(By.tagName("li")).getText(), containsString(stateTime.toString("d.M.yyyy")));
+        assertThat(getElement(By.tagName("li")).getText(), containsString(title));
+    }
 
     @Test
     public void iframe_page_shows_empty_list_if_no_initiatives() {
         open(urls.iframe(-1L));
+        assertThat(getElement(By.className("search-results")).getText(), is("Ei vielä yhtään aloitetta"));
+    }
+    @Test
+    public void iframe_page_shows_empty_list_if_no_initiatives_with_several_municipalities() {
+        open(urls.iframe(-1L, 2L));
         assertThat(getElement(By.className("search-results")).getText(), is("Ei vielä yhtään aloitetta"));
     }
 

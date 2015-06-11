@@ -11,6 +11,7 @@ public class InitiativeSearch {
     private OrderBy orderBy = OrderBy.latest;
     private Show show = Show.all;
     private ArrayList<Long> municipalities;
+    // This is for the old api version
     private Long municipality;
     private String search;
     private Type type = Type.all;
@@ -121,6 +122,8 @@ public class InitiativeSearch {
         this.type = type;
         return this;
     }
+
+    // The getter and setter for municipality are only for the only api usage.
     public Long getMunicipality() {
         return municipality;
     }

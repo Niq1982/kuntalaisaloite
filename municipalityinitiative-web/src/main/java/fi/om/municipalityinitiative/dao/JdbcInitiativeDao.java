@@ -130,8 +130,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
     private InitiativeListWithCount find(InitiativeSearch search) {
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
-                .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
-                ;
+                .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality);
 
         filterByState(query, search);
         filterByType(query, search.getType());

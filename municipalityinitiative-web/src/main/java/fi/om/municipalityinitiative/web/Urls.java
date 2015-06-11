@@ -418,6 +418,9 @@ public final class Urls {
         return iframe() + "?" + PARAM_MUNICIPALITY + "=" + municipalityId;
     }
 
+    public String iframe(Long ...municipalityId) {
+        return iframe() + "?" + PARAM_MUNICIPALITY + "=" + municipalityId;
+    }
     public String iframeWithOldApiMunicipality(Long municipalityId) {
         return iframe() + "?" + OLD_PARAM_MUNICIPALITY + "=" + municipalityId;
     }

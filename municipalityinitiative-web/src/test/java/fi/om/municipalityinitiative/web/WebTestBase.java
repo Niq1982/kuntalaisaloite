@@ -67,6 +67,8 @@ public abstract class WebTestBase {
     protected static Long VANTAA_ID;
     protected static final String HELSINKI = "Helsinki";
     protected static Long HELSINKI_ID;
+    protected static final String HYVINKAA = "Hyvinkää";
+    protected static Long HYVINKAA_ID;
 
     @BeforeClass
     public static synchronized void initialize() {
@@ -99,6 +101,7 @@ public abstract class WebTestBase {
             testHelper.dbCleanup();
             VANTAA_ID = testHelper.createTestMunicipality(VANTAA);
             HELSINKI_ID = testHelper.createTestMunicipality(HELSINKI);
+            HYVINKAA_ID = testHelper.createTestMunicipality(HYVINKAA);
         }
         else {
             testHelper.dbCleanupAllButMunicipalities();
