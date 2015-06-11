@@ -46,7 +46,7 @@ public class IFrameController extends BaseController {
 
         return ViewGenerator.iframeSearch(
                 cachedInitiativeFinder.findIframeInitiatives(search),
-                cachedInitiativeFinder.getMunicipality(search.getMunicipality()),
+                cachedInitiativeFinder.getMunicipalities(search.getMunicipalities()),
                 new SearchParameterQueryString(new InitiativeSearch())
         ).view(model, urls.alt().iframe());
     }

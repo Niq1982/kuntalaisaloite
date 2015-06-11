@@ -28,13 +28,13 @@ import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -136,7 +136,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
         filterByState(query, search);
         filterByType(query, search.getType());
         filterByTitle(query, search.getSearch());
-        filterByMunicipality(query, search.getMunicipality());
+        filterByMunicipality(query, Maybe.fromNullable(search.getMunicipalities()));
         orderBy(query, search.getOrderBy());
         long rows = query.count();
         restrictResults(query, search);
@@ -282,9 +282,9 @@ public class JdbcInitiativeDao implements InitiativeDao {
         }
     }
 
-    private static void filterByMunicipality(PostgresQuery query, Long municipalityId) {
-        if (municipalityId != null) {
-            query.where(municipalityInitiative.municipalityId.eq(municipalityId));
+    private static void filterByMunicipality(PostgresQuery query, Maybe<ArrayList<Long>> municipalityIds) {
+        if (municipalityIds.isPresent() && !municipalityIds.getValue().isEmpty()) {
+            query.where(municipalityInitiative.municipalityId.in(municipalityIds.getValue()));
         }
     }
 
@@ -367,7 +367,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     @Cacheable(value = "initiativeCount")
-    public InitiativeCounts getPublicInitiativeCounts(Maybe<Long> municipality, InitiativeSearch.Type initiativeType) {
+    public InitiativeCounts getPublicInitiativeCounts(Maybe<ArrayList<Long>> municipalities, InitiativeSearch.Type initiativeType) {
         Expression<String> caseBuilder = new CaseBuilder()
                 .when(municipalityInitiative.sent.isNull())
                 .then(new ConstantImpl<String>(InitiativeSearch.Show.collecting.name()))
@@ -381,8 +381,8 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
         filterByType(from, initiativeType);
 
-        if (municipality.isPresent()) {
-            from.where(municipalityInitiative.municipalityId.eq(municipality.get()));
+        if (municipalities.isPresent() && !(municipalities.getValue()).isEmpty()) {
+            from.where(municipalityInitiative.municipalityId.in(municipalities.getValue()));
         }
 
         MaybeHoldingHashMap<String, Long> map = new MaybeHoldingHashMap<>(from
@@ -396,7 +396,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    public InitiativeCounts getAllInitiativeCounts(Maybe<Long> municipality, InitiativeSearch.Type initiativeType) {
+    public InitiativeCounts getAllInitiativeCounts(Maybe<ArrayList<Long>> municipalities, InitiativeSearch.Type initiativeType) {
         String unknownStateFound = "unknownStateFound";
         Expression<String> caseBuilder = new CaseBuilder()
                 .when(STATE_IS_COLLECTING)
@@ -419,8 +419,8 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
         filterByType(from, initiativeType);
 
-        if (municipality.isPresent()) {
-            from.where(municipalityInitiative.municipalityId.eq(municipality.get()));
+        if (municipalities.isPresent() && !(municipalities.getValue()).isEmpty()) {
+            from.where(municipalityInitiative.municipalityId.in(municipalities.getValue()));
         }
 
         MaybeHoldingHashMap<String, Long> map = new MaybeHoldingHashMap<>(from

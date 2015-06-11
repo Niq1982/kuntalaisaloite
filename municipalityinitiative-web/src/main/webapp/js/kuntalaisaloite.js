@@ -1654,7 +1654,7 @@ if (window.hasIFrame){
 
 	params = function() {
 		return [{
-			municipality:	municipality.val(),
+			municipalities:	municipality.val(),
 			lang:			$('input[name="language"]:checked').val(),
 			limit:			limit.val(),
 			width:			width.val(),

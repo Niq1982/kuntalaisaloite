@@ -34,8 +34,12 @@
     <#--
      * Set current municipality
     -->
-    <#if currentMunicipality.present>
-        <#assign pageTitle><@u.message "iframe.initiatives" /> ${currentMunicipality.value.getName(locale)}</#assign>
+    <#if municipalities.present>
+        <#assign pageTitle><@u.message "iframe.initiatives" />
+            <#list municipalities.value as m>
+                ${m.getName(locale)}
+            </#list>
+        </#assign>
     <#else>
         <#assign pageTitle><@u.message "page.iframe" /></#assign>
     </#if>   
@@ -70,11 +74,11 @@
                 <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-ie.css" />
             <![endif]-->
         </noscript>
-        <link rel="stylesheet/less" type="text/css" media="screen" href="https://localhost:8443/css/less-main/kuntalaisaloite-iframe.less" />
+        <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/less-main/kuntalaisaloite-iframe.less" />
         <!--[if IE ]>
             <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/less-main/kuntalaisaloite-ie.less">
         <![endif]-->
-        <script src="${urls.baseUrl}/js/less-1.3.0.min.js" type="text/javascript"></script>
+        <script src="${urls.baseUrl}/js/less-1.7.5.min.js" type="text/javascript"></script>
     </#if>
 </head>
 
@@ -87,7 +91,7 @@
             <span><@u.message "siteName" /></span>
         </a>
 
-        <#if currentMunicipality.present>
+        <#if municipalities.present>
             <h3><#noescape>${pageTitle!""}</#noescape></h3>
         <#else>
             <h3>&nbsp;</h3>
@@ -97,7 +101,12 @@
     <div id="content-wrapper" class="container">
         <div class="mashup-buttons cf">
             <div class="column col-1of2">
-                <a href="${urls.search()}<#if currentMunicipality.present>${queryString.getWithMunicipality(currentMunicipality.value.id)}</#if>" target="_blank" rel="external" class="small-button"><span class="small-icon next"><@u.message "iframe.browseInitiatives" /></span></a>
+                <a href="${urls.search()}
+                <#if municipalities.present>
+                    <#list municipalities.value as currentMunicipality> ${queryString.getWithMunicipality(currentMunicipality.id)}</#list>"
+                </#if>
+                   target="_blank" rel="external" class="small-button"><span class="small-icon next"><@u.message "iframe.browseInitiatives" />
+                </span></a>
                 
                 <span class="description"><@u.message "iframe.browseInitiatives.description" /></span>
             </div>

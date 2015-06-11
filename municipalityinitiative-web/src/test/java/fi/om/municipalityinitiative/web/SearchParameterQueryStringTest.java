@@ -18,7 +18,7 @@ public class SearchParameterQueryStringTest {
         initiativeSearch.setOrderBy(InitiativeSearch.OrderBy.id);
         initiativeSearch.setShow(InitiativeSearch.Show.collecting);
         initiativeSearch.setType(InitiativeSearch.Type.citizen);
-        initiativeSearch.setMunicipality(1L);
+        initiativeSearch.setMunicipalities(1L);
         initiativeSearch.setSearch("pattern");
     }
 

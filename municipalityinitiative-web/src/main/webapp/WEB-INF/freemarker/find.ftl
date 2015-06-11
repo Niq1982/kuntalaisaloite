@@ -36,7 +36,7 @@
     <div class="search-parameters-container cf">
         <form action="${springMacroRequestContext.requestUri}" method="GET" id="search-form" class="search-form">
             <div class="column col-1of3">
-                <@f.municipalitySelect path="currentSearch.municipality" options=municipalities required="" cssClass="municipality-filter" showLabel=false defaultOption="currentSearch.municipality.all" allowSingleDeselect=true onlyActive=true />
+                <@f.municipalitySelect path="currentSearch.municipalities" options=municipalities required="" cssClass="municipality-filter" showLabel=false defaultOption="currentSearch.municipality.all" allowSingleDeselect=true onlyActive=true />
             </div>
             
             <#-- Submit button for NOSCRIPT users -->
@@ -132,8 +132,11 @@
 </div>
 
 <div class="search-terms">
-    <#if currentMunicipality.present>
-        <h2><@u.message "searchResults.initiativesInMunicipality" />: ${currentMunicipality.value.getName(locale)}</h2>
+    <#if currentMunicipalities.present>
+        <#list currentMunicipalities.value as currentMunicipality>
+            <h2><@u.message "searchResults.initiativesInMunicipality" />: ${currentMunicipality.getName(locale)}</h2>
+        </#list>
+
     </#if>
 
     <#--

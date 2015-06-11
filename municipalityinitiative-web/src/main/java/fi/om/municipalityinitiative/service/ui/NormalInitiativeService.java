@@ -118,10 +118,10 @@ public class NormalInitiativeService {
     @Transactional(readOnly = true)
     public InitiativeCounts getInitiativeCounts(InitiativeSearch search, LoginUserHolder loginUserHolder) {
         if (loginUserHolder.getUser().isNotOmUser()) {
-            return initiativeDao.getPublicInitiativeCounts(Maybe.fromNullable(search.getMunicipality()), search.getType());
+            return initiativeDao.getPublicInitiativeCounts(Maybe.fromNullable(search.getMunicipalities()), search.getType());
         }
         else {
-            return initiativeDao.getAllInitiativeCounts(Maybe.fromNullable(search.getMunicipality()), search.getType());
+            return initiativeDao.getAllInitiativeCounts(Maybe.fromNullable(search.getMunicipalities()), search.getType());
         }
     }
 

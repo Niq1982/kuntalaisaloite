@@ -22,7 +22,7 @@
     <#assign iframeHTML><iframe id="${id}"
             frameborder="0"
             scrolling="no"
-            src="${iframeUrl}/${locale}?municipality=${municipality}&amp;limit=${limit}&amp;orderBy=latest&amp;width=${width}&amp;height=${height}"
+            src="${iframeUrl}/${locale}?municipalities=${municipality}&amp;limit=${limit}&amp;orderBy=latest&amp;width=${width}&amp;height=${height}"
             width="${width}"
             height="${height}">
     </iframe></#assign>
@@ -51,7 +51,7 @@
             <label for="municipality" class="input-header">
                 <@u.message "iframeGenerator.municipality" />
             </label>
-            <select name="municipality" id="municipality" class="chzn-select" data-placeholder="<@u.message "initiative.chooseMunicipality" />" data-allow-single-deselect="allow">
+            <select name="municipality" id="municipality" class="chzn-select" data-placeholder="<@u.message "initiative.chooseMunicipality" />" data-allow-single-deselect="allow" multiple>
                 <option value=""><@u.message "initiative.chooseMunicipality" /></option>
                 <#list options as option>
                     <#if option.active><option value="${option.id}">${option.getName(locale)}</option></#if>
@@ -136,7 +136,7 @@
             <iframe id="kuntalaisaloite-leijuke"
                     frameborder="0"
                     scrolling="no"
-                    src="${iframeUrl}/{{:lang}}?municipality={{:municipality}}&amp;limit={{:limit}}&amp;orderBy=latest&amp;width={{:width}}&amp;height={{:height}}"
+                    src="${iframeUrl}/{{:lang}}?municipalities={{:municipalities}}&amp;limit={{:limit}}&amp;orderBy=latest&amp;width={{:width}}&amp;height={{:height}}"
                     width="{{:width}}"
                     height="{{:height}}" onload="iFrameLoaded('kuntalaisaloite-leijuke', 'iframe-placeholder')">
             </iframe>
@@ -146,7 +146,7 @@
                 <iframe id="kuntalaisaloite-leijuke"
                     frameborder="0"
                     scrolling="no"
-                    src="${iframeUrl}/{{:lang}}?municipality={{:municipality}}&amp;limit={{:limit}}&amp;orderBy=latest&amp;width={{:width}}&amp;height={{:height}}"
+                    src="${iframeUrl}/{{:lang}}?municipalities={{:municipalities}}&amp;limit={{:limit}}&amp;orderBy=latest&amp;width={{:width}}&amp;height={{:height}}"
                     width="{{:width}}"
                     height="{{:height}}">
                 </iframe>

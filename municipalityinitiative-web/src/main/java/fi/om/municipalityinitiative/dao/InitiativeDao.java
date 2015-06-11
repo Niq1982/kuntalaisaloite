@@ -15,6 +15,7 @@ import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ public interface InitiativeDao {
 
     Initiative get(Long initiativeId);
 
-    InitiativeCounts getPublicInitiativeCounts(Maybe<Long> municipality, InitiativeSearch.Type all);
+    InitiativeCounts getPublicInitiativeCounts(Maybe<ArrayList<Long>> municipalities, InitiativeSearch.Type all);
 
     Long prepareInitiative(Long municipalityId);
 
@@ -46,7 +47,7 @@ public interface InitiativeDao {
 
     void updateSentComment(Long initiativeId, String sentComment);
 
-    InitiativeCounts getAllInitiativeCounts(Maybe<Long> municipality, InitiativeSearch.Type initiativeTypeMaybe);
+    InitiativeCounts getAllInitiativeCounts(Maybe<ArrayList<Long>> municipalities, InitiativeSearch.Type initiativeTypeMaybe);
 
     boolean isVerifiableInitiative(Long initiativeId);
 

@@ -75,7 +75,7 @@ public class ApiController extends BaseController {
         if (offset != null) {
             search.setOffset(offset);
         }
-        search.setMunicipality(municipality);
+        search.setMunicipalities(municipality);
         return jsonDataService.findJsonInitiatives(search);
     }
 

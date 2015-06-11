@@ -34,6 +34,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -97,7 +98,7 @@ public class PublicInitiativeController extends BaseController {
         return ViewGenerator.searchView(pageInfo,
                 search,
                 queryString,
-                solveMunicipalityFromListById(pageInfo.municipalities, search.getMunicipality()))
+                solveMunicipalityFromListById(pageInfo.municipalities, Maybe.fromNullable(search.getMunicipalities())))
                 .view(model, Urls.get(locale).alt().search() + queryString.get());
     }
 
@@ -404,11 +405,15 @@ public class PublicInitiativeController extends BaseController {
         response.getOutputStream().write(file.getBytes());
     }
 
-    private static Maybe<Municipality> solveMunicipalityFromListById(List<Municipality> municipalities, Long municipalityId){
-        for (Municipality municipality : municipalities) {
-            if (municipality.getId().equals(municipalityId))
-                return Maybe.of(municipality);
+    private static Maybe<ArrayList<Municipality>> solveMunicipalityFromListById(List<Municipality> municipalities, Maybe<ArrayList<Long>> municipalityIds){
+        if (municipalityIds.isNotPresent()) {
+            return Maybe.absent();
         }
-        return Maybe.absent();
+        ArrayList<Municipality> currentMunicipalities =  new ArrayList<Municipality>();
+        for (Municipality municipality : municipalities) {
+            if ((municipalityIds.get().contains(municipality.getId())))
+                currentMunicipalities.add(municipality);
+        }
+        return Maybe.of(currentMunicipalities);
     }
 }

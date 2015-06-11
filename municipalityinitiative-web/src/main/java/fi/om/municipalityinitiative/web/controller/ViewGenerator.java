@@ -15,6 +15,7 @@ import fi.om.municipalityinitiative.web.SearchParameterQueryString;
 import fi.om.municipalityinitiative.web.Views;
 import org.springframework.ui.Model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -60,7 +61,7 @@ public final class ViewGenerator {
     public static ViewGenerator searchView(InitiativeListPageInfo info,
                                            InitiativeSearch currentSearch,
                                            SearchParameterQueryString queryString,
-                                           Maybe<Municipality> currentMunicipality) {
+                                           Maybe<ArrayList<Municipality>> currentMunicipalities) {
         return new ViewGenerator(SEARCH_VIEW,
                 new AttributeBuilder()
                         .add("initiatives", info.initiatives)
@@ -68,7 +69,7 @@ public final class ViewGenerator {
                         .add("initiativeCounts", info.initiativeCounts)
                         .add("currentSearch", currentSearch)
                         .add("queryString", queryString)
-                        .add("currentMunicipality", currentMunicipality)
+                        .add("currentMunicipalities", currentMunicipalities)
                         .build()
         );
     }
@@ -103,11 +104,11 @@ public final class ViewGenerator {
                 .build());
     }
 
-    public static ViewGenerator iframeSearch(List<InitiativeListInfo> initiatives, Maybe<Municipality> currentMunicipality, SearchParameterQueryString searchParameterQueryString) {
+    public static ViewGenerator iframeSearch(List<InitiativeListInfo> initiatives, Maybe<List<Municipality>> municipalities, SearchParameterQueryString searchParameterQueryString) {
         return new ViewGenerator(IFRAME_VIEW,
                 new AttributeBuilder()
                         .add("initiatives", initiatives)
-                        .add("currentMunicipality", currentMunicipality)
+                        .add("municipalities", municipalities)
                         .add("queryString", searchParameterQueryString)
                         .build()
         );

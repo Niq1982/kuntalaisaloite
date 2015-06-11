@@ -19,7 +19,7 @@
  *
  * [municipalityId, locale, limit, width, height]
 -->
-<#assign iFrameDefaults = ["", locale, 3, 250, 400]>
+<#assign iFrameDefaults = ["[]", locale, 3, 250, 400]>
 
 <#--
  * Set min and maximum values for the generated iFrame
