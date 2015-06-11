@@ -211,7 +211,7 @@ public class ViewInitiativeWebTest extends WebTestBase {
     }
     @Test
     public void test_iframe_url_function_with_several_municipalities(){
-        MatcherAssert.assertThat(urls.iframe(HELSINKI_ID, HYVINKAA_ID), Matchers.is("iframe/fi?municipalities=16,47"));
+        MatcherAssert.assertThat(urls.iframe(HELSINKI_ID, HYVINKAA_ID), Matchers.is("iframe/fi?municipalities="+HELSINKI_ID+","+HYVINKAA_ID));
     }
 
 
