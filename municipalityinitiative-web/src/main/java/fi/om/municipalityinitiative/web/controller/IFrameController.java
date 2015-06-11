@@ -27,14 +27,17 @@ public class IFrameController extends BaseController {
         super(optimizeResources, resourcesVersion);
     }
 
+
     @RequestMapping(value = {IFRAME_FI, IFRAME_SV}, method = GET)
     public String iframe(InitiativeSearch search,
                          Model model,
                          Locale locale,
                          HttpServletRequest request) {
 
+        convertOldIFrameCallToNewIfNeeded(search);
         return iframeOld(search, model, locale, request);
     }
+
 
     @RequestMapping(value={IFRAME_OLD_FI, IFRAME_OLD_SV}, method=GET)
     public String iframeOld(InitiativeSearch search,
@@ -59,6 +62,12 @@ public class IFrameController extends BaseController {
         List<Municipality> municipalities = cachedInitiativeFinder.findAllMunicipalities(locale);
 
         return ViewGenerator.iframeGenerator(municipalities).view(model, urls.alt().iframeGenerator());
+    }
+
+    private void convertOldIFrameCallToNewIfNeeded(InitiativeSearch search) {
+        if (search.getMunicipalities() == null && search.getMunicipality() != null) {
+            search.setMunicipalities(search.getMunicipality());
+        }
     }
 
 }

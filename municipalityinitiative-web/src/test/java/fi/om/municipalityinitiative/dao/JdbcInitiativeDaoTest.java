@@ -316,6 +316,45 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
+    public void finds_by_municipality_using_municipality_list() {
+
+        Long municipalityId = testHelper.createTestMunicipality("Some municipality");
+        ArrayList<Long> municipalities = new ArrayList<Long>();
+        municipalities.add(municipalityId);
+        Long shouldBeFound = testHelper.createSingleSent(municipalityId);
+        Long shouldNotBeFound = testHelper.createSingleSent(testMunicipality.getId());
+
+        InitiativeSearch search = initiativeSearch();
+        search.setMunicipalities(municipalities);
+
+        List<InitiativeListInfo> result = initiativeDao.findCached(search).list;
+        assertThat(result, hasSize(1));
+        assertThat(result.get(0).getId(), is(shouldBeFound));
+    }
+
+    @Test
+    public void finds_by_municipality_using_municipality_list_several_municipalities() {
+
+        Long municipalityId = testHelper.createTestMunicipality("Some municipality");
+        Long municipalityId2 = testHelper.createTestMunicipality("Some municipality 2");
+
+        ArrayList<Long> municipalities = new ArrayList<Long>();
+        municipalities.add(municipalityId);
+        municipalities.add(municipalityId2);
+
+        Long shouldBeFound = testHelper.createSingleSent(municipalityId);
+        Long shouldNotBeFound = testHelper.createSingleSent(testMunicipality.getId());
+
+        InitiativeSearch search = initiativeSearch();
+        search.setMunicipalities(municipalities);
+
+        List<InitiativeListInfo> result = initiativeDao.findCached(search).list;
+        assertThat(result, hasSize(1));
+        assertThat(result.get(0).getId(), is(shouldBeFound));
+    }
+
+
+    @Test
     public void sets_type_to_listView_object() {
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
 

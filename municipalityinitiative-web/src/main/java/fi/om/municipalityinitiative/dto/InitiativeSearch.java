@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.dto;
 
+import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.web.Urls;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ public class InitiativeSearch {
     private OrderBy orderBy = OrderBy.latest;
     private Show show = Show.all;
     private ArrayList<Long> municipalities;
+    private Long municipality;
     private String search;
     private Type type = Type.all;
 
@@ -117,6 +119,13 @@ public class InitiativeSearch {
     public InitiativeSearch setType(Type type) {
         this.type = type;
         return this;
+    }
+    public Long getMunicipality() {
+        return municipality;
+    }
+
+    public void setMunicipality(Long municipality) {
+        this.municipality = municipality;
     }
 
     public enum OrderBy {
