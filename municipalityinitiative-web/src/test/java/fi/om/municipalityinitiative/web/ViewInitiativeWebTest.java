@@ -209,10 +209,6 @@ public class ViewInitiativeWebTest extends WebTestBase {
         open(urls.iframe(-1L, 2L));
         assertThat(getElement(By.className("search-results")).getText(), is("Ei vielä yhtään aloitetta"));
     }
-    @Test
-    public void test_iframe_url_function_with_several_municipalities(){
-        MatcherAssert.assertThat(urls.iframe(HELSINKI_ID, HYVINKAA_ID), Matchers.is("iframe/fi?municipalities="+HELSINKI_ID+","+HYVINKAA_ID));
-    }
 
 
 
