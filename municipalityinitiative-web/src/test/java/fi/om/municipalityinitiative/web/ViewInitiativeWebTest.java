@@ -4,7 +4,10 @@ import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.joda.time.DateTime;
+import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -206,6 +209,13 @@ public class ViewInitiativeWebTest extends WebTestBase {
         open(urls.iframe(-1L, 2L));
         assertThat(getElement(By.className("search-results")).getText(), is("Ei vielä yhtään aloitetta"));
     }
+    @Test
+    public void test_iframe_url_function_with_several_municipalities(){
+        MatcherAssert.assertThat(urls.iframe(HELSINKI_ID, HYVINKAA_ID), Matchers.is("iframe/fi?municipalities=16,47"));
+    }
+
+
+
 
 
     // TODO: Redirect-tests if initiative at REVIEW, ACCEPTED, sent etc and trying to open edit/management-page

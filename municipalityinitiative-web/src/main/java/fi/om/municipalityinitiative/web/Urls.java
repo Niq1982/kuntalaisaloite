@@ -418,8 +418,15 @@ public final class Urls {
         return iframe() + "?" + PARAM_MUNICIPALITY + "=" + municipalityId;
     }
 
-    public String iframe(Long ...municipalityId) {
-        return iframe() + "?" + PARAM_MUNICIPALITY + "=" + municipalityId;
+    public String iframe(Long ...municipalityIds) {
+        String url =  iframe() + "?" + PARAM_MUNICIPALITY + "=" ;
+        for (int i = 0; i <municipalityIds.length; i++) {
+            if (i != 0) {
+                url +=",";
+            }
+            url +=""+municipalityIds[i];
+        }
+        return url;
     }
     public String iframeWithOldApiMunicipality(Long municipalityId) {
         return iframe() + "?" + OLD_PARAM_MUNICIPALITY + "=" + municipalityId;

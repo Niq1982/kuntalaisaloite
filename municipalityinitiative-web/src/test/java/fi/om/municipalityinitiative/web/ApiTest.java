@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
 /**
@@ -28,4 +29,5 @@ public class ApiTest extends WebTestBase {
         open(urls.api());
         assertThat(driver.getPageSource(), not(containsString("[api.")));
     }
+
 }
