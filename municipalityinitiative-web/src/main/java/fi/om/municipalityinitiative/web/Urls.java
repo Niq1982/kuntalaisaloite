@@ -123,7 +123,9 @@ public final class Urls {
     
     public static final String PARAM_INVITATION_CODE = "invitation";
 
-    public static final String PARAM_MUNICIPALITY = "municipality";
+    public static final String PARAM_MUNICIPALITY = "municipalities";
+
+    public static final String OLD_PARAM_MUNICIPALITY = "municipalities";
 
     public static final String PARAM_SENT_COMMENT = "comment";
 
@@ -414,6 +416,10 @@ public final class Urls {
 
     public String iframe(Long municipalityId) {
         return iframe() + "?" + PARAM_MUNICIPALITY + "=" + municipalityId;
+    }
+
+    public String iframeWithOldApiMunicipality(Long municipalityId) {
+        return iframe() + "?" + OLD_PARAM_MUNICIPALITY + "=" + municipalityId;
     }
 
     public String iframeGenerator() {

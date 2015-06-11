@@ -111,6 +111,9 @@ public class ReflectionTestUtils {
         if (type.equals(List.class)) {
             return new ArrayList<>();
         }
+        if (type.equals(ArrayList.class)) {
+            return new ArrayList<>();
+        }
 
         throw new IllegalArgumentException("unsupported type: " + type);
     }

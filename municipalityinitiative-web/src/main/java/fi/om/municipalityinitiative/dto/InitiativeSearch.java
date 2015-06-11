@@ -44,6 +44,7 @@ public class InitiativeSearch {
         initiativeSearch.offset = this.offset;
         initiativeSearch.orderBy = this.orderBy;
         initiativeSearch.municipalities = this.municipalities;
+        initiativeSearch.municipality = this.municipality;
         initiativeSearch.search = this.search;
         initiativeSearch.show = this.show;
         initiativeSearch.type = this.type;
