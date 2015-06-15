@@ -32,12 +32,20 @@
     </#if>
     
     <#--
-     * Set current municipality
+     * Set current municipalities
     -->
     <#if municipalities.present>
         <#assign pageTitle><@u.message "iframe.initiatives" />
+            <#assign i = 0/>
             <#list municipalities.value as m>
-                ${m.getName(locale)}
+                <#if i = municipalitiesSize - 2>
+                    ${m.getName(locale)} ja
+                <#elseif i lt municipalitiesSize - 1 >
+                    ${m.getName(locale)},
+                <#else>
+                    ${m.getName(locale)}
+                </#if>
+                <#assign i = i + 1>
             </#list>
         </#assign>
     <#else>

@@ -109,6 +109,7 @@ public final class ViewGenerator {
                 new AttributeBuilder()
                         .add("initiatives", initiatives)
                         .add("municipalities", municipalities)
+                        .add("municipalitiesSize", municipalities.isPresent() ? municipalities.getValue().size() : 0)
                         .add("queryString", searchParameterQueryString)
                         .build()
         );
