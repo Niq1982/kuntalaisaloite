@@ -92,7 +92,10 @@
 
 <body class="${bodyWidthClass!""} ${locale}">
 
-<div id="wrapper">
+<div id="wrapper" class=
+    <#if municipalitiesSize gt 3>
+        "several-municipalities"
+     </#if> >
 
     <div id="header" class="container">
         <a id="logo" href="${urls.baseUrl}/${locale}" target="_blank" rel="external" title="<@u.message "siteName" />">
