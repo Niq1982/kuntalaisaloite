@@ -95,6 +95,8 @@
 <div id="wrapper" class=
     <#if municipalitiesSize gt 3>
         "several-municipalities-${municipalitiesSize}"
+    <#elseif municipalitiesSize gt 100>
+        "several-municipalities-scrollable"
      </#if> >
 
     <div id="header" class="container">
