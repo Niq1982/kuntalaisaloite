@@ -153,19 +153,30 @@ body {
     float: left;
     margin-right: 20px;
 }
+@iterations: 300;
 
-.several-municipalities {
-    #content-wrapper {
-        top:88px;
-    }
+.loopingClass(@index) when (@index > 0){
 
-    #header {
+    // create the actual css selector, example will result in
+    &.several-municipalities-@{index} {
+        // your resulting css
+        #content-wrapper {
+            top: @index / 5 * 15 + 75px;
+        }
 
-        h3 {
-            min-height: 72px;
+        #header {
+            height: @index / 5 * 15 + 59px;
         }
     }
+    // next iteration
+    .loopingClass(@index - 1);
 }
+
+// end the loop when index is 0
+.loopingClass (0) {}
+
+// "call" the loopingClass the first time with highest value
+.loopingClass (@iterations);
 
 #header {
     position:relative;
@@ -733,6 +744,9 @@ ul, ol {
     }
 }
 
+
+
+
 // Responsive styles for iFrame
 .mediumWidth(){
 
@@ -741,7 +755,7 @@ ul, ol {
         padding-top:15px;
     }
 
-    #header { 
+    #header {
         #logo {
             float:left;
         }
@@ -753,25 +767,8 @@ ul, ol {
             min-height: 42px;
         }
     }
-    .several-municipalities {
-        #content-wrapper {
-            top:125px;
-            padding-top:15px;
-        }
 
-        #header {
-            #logo {
-                float:left;
-            }
-            h3 {
-                clear:both;
-                margin:0;
-                padding:0.5em 0 0 0;
-                line-height:1.4em;
-                min-height: 72px;
-            }
-        }
-    }
+
     .container {
         padding:7px;
     }
@@ -794,6 +791,31 @@ ul, ol {
     }
     
     h1 { margin-top:0; }
+    
+    @iterations: 300;
+
+    .loopingClass(@index) when (@index > 0){
+
+        // create the actual css selector, example will result in
+        &.several-municipalities-@{index} {
+            // your resulting css
+            #content-wrapper {
+                top: @index / 3 * 15 + 105px;
+            }
+
+            #header {
+                height: @index / 3 * 15 + 89px;
+            }
+        }
+        // next iteration
+        .loopingClass(@index - 1);
+    }
+
+    // end the loop when index is 0
+    .loopingClass (0) {}
+
+    // "call" the loopingClass the first time with highest value
+    .loopingClass (@iterations);
 }
 
 .smallWidth(){

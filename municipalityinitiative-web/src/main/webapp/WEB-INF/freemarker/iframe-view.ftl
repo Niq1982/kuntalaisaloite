@@ -94,7 +94,7 @@
 
 <div id="wrapper" class=
     <#if municipalitiesSize gt 3>
-        "several-municipalities"
+        "several-municipalities-${municipalitiesSize}"
      </#if> >
 
     <div id="header" class="container">
