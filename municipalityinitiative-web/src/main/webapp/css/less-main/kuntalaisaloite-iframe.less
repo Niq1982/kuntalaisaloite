@@ -161,11 +161,11 @@ body {
     &.several-municipalities-@{index} {
         // your resulting css
         #content-wrapper {
-            top: @index / 5 * 15 + 75px;
+            top: round(@index / 5) * 20 + 62px;
         }
 
         #header {
-            height: @index / 5 * 15 + 59px;
+            height: round(@index / 5) * 20 + 46px;
         }
     }
     // next iteration
@@ -182,11 +182,11 @@ body {
 .several-municipalities-scrollable {
     // your resulting css
     #content-wrapper {
-        top: 100 / 5 * 15 + 75px;
+        top: 100 / 5 * 20 + 75px;
     }
 
     #header {
-        height: 100 / 5 * 15 + 59px;
+        height: 100 / 5 * 20 + 59px;
         overflow: auto;
     }
 }
@@ -814,11 +814,11 @@ ul, ol {
         &.several-municipalities-@{index} {
             // your resulting css
             #content-wrapper {
-                top: @index / 3 * 15 + 105px;
+                top: round(@index / 3) * 20 + 90px;
             }
 
             #header {
-                height: @index / 3 * 15 + 89px;
+                height: round(@index / 3) * 20 + 74px;
             }
         }
         // next iteration
