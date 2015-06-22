@@ -133,9 +133,17 @@
 
 <div class="search-terms">
     <#if currentMunicipalities.present>
-        <#list currentMunicipalities.value as currentMunicipality>
-            <h2><@u.message "searchResults.initiativesInMunicipality" />: ${currentMunicipality.getName(locale)}</h2>
-        </#list>
+            <h2>
+                <#if currentMunicipalities.value?size = 1>
+                    <@u.message "searchResults.initiativesInMunicipality" />:
+                <#else>
+                    <@u.message "searchResults.initiativesInMunicipalities" />:
+                </#if>
+                <#list currentMunicipalities.value as currentMunicipality>
+                    ${currentMunicipality.getName(locale)}<#if currentMunicipalities.value?size - 2 = currentMunicipality_index>  <@u.message "iframe.and" /><#elseif currentMunicipality_has_next>,</#if>
+                </#list>
+
+            </h2>
 
     </#if>
 
