@@ -1,10 +1,14 @@
 package fi.om.municipalityinitiative.web;
 
+import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 
 import static org.hamcrest.core.Is.is;
@@ -12,6 +16,10 @@ import static org.junit.Assert.assertThat;
 
 public class SearchParameterQueryStringTest {
     InitiativeSearch initiativeSearch;
+
+
+    @Resource
+    private TestHelper testHelper;
 
     @Before
     public void setup() {
@@ -170,6 +178,35 @@ public class SearchParameterQueryStringTest {
         initiativeSearch.setMunicipalities(municipalities);
         String parameters = SearchParameterQueryString.generateParameters(initiativeSearch);
         assertThat(parameters, is("?offset=5&limit=10&orderBy=id&show=collecting&municipalities=1,4,5&search=pattern&type=citizen"));
+    }
+
+    @Test
+    public void get_with_municipality_ids(){
+        ArrayList<Long> municipalities = new ArrayList<Long>();
+        municipalities.add(1L);
+        municipalities.add(4L);
+        municipalities.add(5L);
+        initiativeSearch.setMunicipalities(municipalities);
+        String parameters = new SearchParameterQueryString(initiativeSearch).getWithMunicipalityIds(municipalities);
+        assertThat(parameters, is("?orderBy=latest&show=all&municipalities=1,4,5&type=all"));
+
+    }
+
+    @Test
+    public void get_with_municipalities(){
+        ArrayList<Municipality> municipalities = new ArrayList<Municipality>();
+        Municipality testMunicipality = new Municipality(1L, "fi", "sv", true);;
+        Municipality testMunicipality2 = new Municipality(4L, "fi", "sv", true);;
+        Municipality testMunicipality3 = new Municipality(5L, "fi", "sv", true);;
+
+
+        municipalities.add(testMunicipality);
+        municipalities.add(testMunicipality2);
+        municipalities.add(testMunicipality3);
+
+        String parameters = new SearchParameterQueryString(initiativeSearch).getWithMunicipalities(municipalities);
+        assertThat(parameters, is("?orderBy=latest&show=all&municipalities=1,4,5&type=all"));
+
     }
 
 

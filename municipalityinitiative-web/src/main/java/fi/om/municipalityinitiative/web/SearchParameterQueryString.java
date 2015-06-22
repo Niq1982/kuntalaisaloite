@@ -1,10 +1,12 @@
 package fi.om.municipalityinitiative.web;
 
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
+import fi.om.municipalityinitiative.dto.service.Municipality;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Freemarker uses this class for generating links with get-parameters at search page.
@@ -170,6 +172,18 @@ public class SearchParameterQueryString {
 
     public String getWithMunicipality(Long municipalityId) {
         return generateParameters(new InitiativeSearch().setMunicipalities(municipalityId));
+    }
+
+    public String getWithMunicipalities(List<Municipality> municipalities) {
+        ArrayList<Long> municipalityIds = new ArrayList<Long>();
+        for(Municipality m : municipalities) {
+            municipalityIds.add(m.getId());
+        }
+        return getWithMunicipalityIds(municipalityIds);
+    }
+
+    public String getWithMunicipalityIds(ArrayList<Long> municipalityIds) {
+        return generateParameters(new InitiativeSearch().setMunicipalities(municipalityIds));
     }
 
     public String getWithTypeAll() {

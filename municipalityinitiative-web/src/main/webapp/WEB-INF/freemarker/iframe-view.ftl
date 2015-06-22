@@ -39,7 +39,7 @@
             <#assign i = 0/>
             <#list municipalities.value as m>
                 <#if i = municipalitiesSize - 2>
-                    ${m.getName(locale)} ja
+                    ${m.getName(locale)} <@u.message "iframe.and" />
                 <#elseif i lt municipalitiesSize - 1 >
                     ${m.getName(locale)},
                 <#else>
@@ -116,7 +116,7 @@
             <div class="column col-1of2">
                 <a href="${urls.search()}
                 <#if municipalities.present>
-                    <#list municipalities.value as currentMunicipality> ${queryString.getWithMunicipality(currentMunicipality.id)}</#list>"
+                    ${queryString.getWithMunicipalities(municipalities.value)}"
                 </#if>
                    target="_blank" rel="external" class="small-button"><span class="small-icon next"><@u.message "iframe.browseInitiatives" />
                 </span></a>
@@ -136,12 +136,12 @@
                 <#if initiative_index == 0><ul></#if>
                 <li <#if initiative_index == 0>class="first"</#if>>
                     <span class="date trigger-tooltip" title="<@u.message "searchResults.initiative.date."+initiative.state />" ><@u.localDate initiative.stateTime!"" /></span>
+                    <span>${initiative.municipality.getName(locale)}</span>
                     <span class="title"><a href="${urls.view(initiative.id)}" target="_blank" rel="external" class="name"><@u.limitStringLength initiative.name!"" 150 /></a></span>
-                    
                 </li>
                 <#if !initiative_has_next></ul></#if>
             </#list>
-            
+
         <#-- Search results EMPTY -->
         <#else>
             <@u.message "iframe.noInitiatives" />

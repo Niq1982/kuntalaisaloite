@@ -126,6 +126,10 @@ public class TestHelper {
                 .executeWithKey(QMunicipality.municipality.id);
     }
 
+    public Municipality createMunicipalityDraft(Long fakeId, String name) {
+        return new Municipality(fakeId, name+"fi", name+"sv", true);
+    }
+
     public static String toEmail(String name) {
         return name.replace(" ", "_") + "@example.com";
     }
