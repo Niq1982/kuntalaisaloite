@@ -83,10 +83,10 @@
 <body class="${bodyWidthClass!""} ${locale}">
 
 <div id="wrapper" class=
-    <#if municipalitiesSize gt 3>
-        "several-municipalities-${municipalitiesSize}"
-    <#elseif municipalitiesSize gt 100>
+    <#if municipalitiesSize gt 20>
         "several-municipalities-scrollable"
+    <#elseif municipalitiesSize gt 3>
+        "several-municipalities-${municipalitiesSize}"
      </#if> >
 
     <div id="header" class="container">
