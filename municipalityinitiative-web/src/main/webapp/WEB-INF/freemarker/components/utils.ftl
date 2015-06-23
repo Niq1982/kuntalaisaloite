@@ -490,4 +490,17 @@
     <#if municipality.present>${municipality.value.getName(locale)}<#else><@message "vtj.missingMunicipalityData" /></#if>
 </#macro>
 
+
+<#--
+  * Print out a comma separated list of municipalities on current locale.
+  * Last two words separated by ja/och.
+  *
+  * @Param municipalities list of municipalities
+-->
+<#macro printMunicipalities municipalities>
+    <#list municipalities as m>
+        ${m.getName(locale)}<#if municipalities?size - 2 = m_index>  <@message "iframe.and" /><#elseif m_has_next>,</#if>
+    </#list>
+</#macro>
+
 </#escape>

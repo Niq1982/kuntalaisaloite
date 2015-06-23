@@ -136,12 +136,10 @@
             <h2>
                 <#if currentMunicipalities.value?size = 1>
                     <@u.message "searchResults.initiativesInMunicipality" />:
-                <#else>
+                <#elseif currentMunicipalities.value?size gt 1>
                     <@u.message "searchResults.initiativesInMunicipalities" />:
                 </#if>
-                <#list currentMunicipalities.value as currentMunicipality>
-                    ${currentMunicipality.getName(locale)}<#if currentMunicipalities.value?size - 2 = currentMunicipality_index>  <@u.message "iframe.and" /><#elseif currentMunicipality_has_next>,</#if>
-                </#list>
+                <@u.printMunicipalities currentMunicipalities.value />
 
             </h2>
 

@@ -36,17 +36,7 @@
     -->
     <#if municipalities.present>
         <#assign pageTitle><@u.message "iframe.initiatives" />
-            <#assign i = 0/>
-            <#list municipalities.value as m>
-                <#if i = municipalitiesSize - 2>
-                    ${m.getName(locale)} <@u.message "iframe.and" />
-                <#elseif i lt municipalitiesSize - 1 >
-                    ${m.getName(locale)},
-                <#else>
-                    ${m.getName(locale)}
-                </#if>
-                <#assign i = i + 1>
-            </#list>
+            <@u.printMunicipalities municipalities.value />
         </#assign>
     <#else>
         <#assign pageTitle><@u.message "page.iframe" /></#assign>
