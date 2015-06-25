@@ -327,7 +327,7 @@ public class InitiativeManagementController extends BaseController {
 
         InitiativeViewInfo initiativeInfo = initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder);
 
-        if (!initiativeInfo.isCollaborative() || initiativeInfo.isVerifiable()) {
+        if (!initiativeInfo.isCollaborative()) {
             return ERROR_404_VIEW;
         }
         else {
