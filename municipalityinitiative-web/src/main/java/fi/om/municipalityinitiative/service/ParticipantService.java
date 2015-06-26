@@ -18,6 +18,7 @@ import fi.om.municipalityinitiative.exceptions.InvalidParticipationConfirmationE
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
+import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.web.Urls;
@@ -104,7 +105,14 @@ public class ParticipantService {
     public void deleteParticipant(Long initiativeId, LoginUserHolder loginUserHolder, Long participantId) {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         assertAllowance("Delete participant", ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowParticipation());
-        participantDao.deleteParticipant(initiativeId, participantId);
+
+        if (initiativeDao.get(initiativeId).getType() == InitiativeType.COLLABORATIVE) {
+            participantDao.deleteParticipant(initiativeId, participantId);
+        }
+        else {
+            participantDao.deleteVerifiedParticipant(initiativeId, participantId);
+        }
+
         initiativeDao.denormalizeParticipantCountForNormalInitiative(initiativeId);
     }
 

@@ -21,6 +21,7 @@ import java.util.List;
 
 import static fi.om.municipalityinitiative.dao.JdbcInitiativeDao.assertSingleAffection;
 import static fi.om.municipalityinitiative.sql.QParticipant.participant;
+import static fi.om.municipalityinitiative.sql.QVerifiedParticipant.verifiedParticipant;
 
 @SQLExceptionTranslated
 public class JdbcParticipantDao implements ParticipantDao {
@@ -226,6 +227,18 @@ public class JdbcParticipantDao implements ParticipantDao {
         assertSingleAffection(queryFactory.delete(participant)
                 .where(participant.id.eq(participantId))
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
+                .execute());
+        assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
+                .set(QMunicipalityInitiative.municipalityInitiative.participantCount, QMunicipalityInitiative.municipalityInitiative.participantCount.subtract(1))
+                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
+                .execute());
+    }
+
+    @Override
+    public void deleteVerifiedParticipant(Long initiativeId, Long verifiedparticipantId) {
+        assertSingleAffection(queryFactory.delete(verifiedParticipant)
+                .where(verifiedParticipant.verifiedUserId.eq(verifiedparticipantId))
+                .where(verifiedParticipant.initiativeId.eq(initiativeId))
                 .execute());
         assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
                 .set(QMunicipalityInitiative.municipalityInitiative.participantCount, QMunicipalityInitiative.municipalityInitiative.participantCount.subtract(1))

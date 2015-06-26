@@ -132,6 +132,49 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         assertThat(updated.getParticipantCountPublic(), is(0));
     }
 
+    @Test
+    public void delete_verified_participant_decreases_participant_count_citizen() {
+        Long initiativeId = testHelper.createDefaultInitiative(
+                new TestHelper.InitiativeDraft(testMunicipalityId)
+                        .withState(InitiativeState.PUBLISHED)
+                        .withType(InitiativeType.COLLABORATIVE_CITIZEN)
+                        .applyAuthor().withPublicName(false)
+                        .toInitiativeDraft()
+        );
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withPublicName(true));
+
+        Initiative initiative = testHelper.getInitiative(initiativeId);
+        precondition(initiative.getParticipantCountPublic(), is(1));
+        precondition(initiative.getParticipantCount(), is(2));
+
+        participantService.deleteParticipant(initiativeId, TestHelper.authorLoginUserHolder, testHelper.getLastVerifiedUserId());
+
+        Initiative updated = testHelper.getInitiative(initiativeId);
+        assertThat(updated.getParticipantCount(), is(1));
+        assertThat(updated.getParticipantCountPublic(), is(0));
+    }
+    @Test
+    public void delete_verified_participant_decreases_participant_count_council() {
+        Long initiativeId = testHelper.createVerifiedInitiative(
+                new TestHelper.InitiativeDraft(testMunicipalityId)
+                        .withState(InitiativeState.PUBLISHED)
+                        .withType(InitiativeType.COLLABORATIVE_COUNCIL)
+                        .applyAuthor().withPublicName(false)
+                        .toInitiativeDraft()
+        );
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withPublicName(true));
+
+        Initiative initiative = testHelper.getInitiative(initiativeId);
+        precondition(initiative.getParticipantCountPublic(), is(1));
+        precondition(initiative.getParticipantCount(), is(2));
+
+        participantService.deleteParticipant(initiativeId, TestHelper.authorLoginUserHolder, testHelper.getLastVerifiedUserId());
+
+        Initiative updated = testHelper.getInitiative(initiativeId);
+        assertThat(updated.getParticipantCount(), is(1));
+        assertThat(updated.getParticipantCountPublic(), is(0));
+    }
+
     @Test(expected = OperationNotAllowedException.class)
     public void delete_participant_is_forbidden_if_initiative_sent_to_municipality() {
         Long initiativeId = testHelper.createDefaultInitiative(
