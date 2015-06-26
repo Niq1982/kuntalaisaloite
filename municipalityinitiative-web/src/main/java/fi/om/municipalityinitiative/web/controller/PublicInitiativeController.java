@@ -125,7 +125,6 @@ public class PublicInitiativeController extends BaseController {
     }
 
     private void addVotingInfo(Long initiativeId, Model model) {
-        //TOTO add votinginfo. User must be able to see if he has voted for this.
         model.addAttribute("supportCountData", supportCountService.getSupportVotesPerDateJson(initiativeId));
     }
 

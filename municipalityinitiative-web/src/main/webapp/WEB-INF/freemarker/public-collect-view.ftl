@@ -235,8 +235,9 @@
         <#if initiative.state == InitiativeState.PUBLISHED>
             <div class="initiative-content-row last">
                 <@e.participants formHTML=participateFormHTML showForm=showParticipateForm />
-                
-                <@e.participantGraph initiative supportCountData!"{}" />
+                <#if supportCountData!="[]" && participantCount.total gt 0>
+                    <@e.participantGraph initiative supportCountData!"{}" participantCount.total/>
+                </#if>
             </div>
         </#if>
     </div>

@@ -9,8 +9,15 @@
  * Displays participation counts Raphael.js graph
  *
 -->
-<#macro participantGraph initiative data>
+<#macro participantGraph initiative data totalParticipantCount>
     <div class="participant-graph">
+
+        <h3 class="inline-style">
+            <@u.message key="graph.title" />
+            <span id="internal-support-count-${initiative.id?c}" >
+                <span >${totalParticipantCount!0}</span>
+            </span>
+        </h3>
     	<div id="participantGraph">
     		<noscript><@u.message key="graph.javaScriptSupport" /></noscript>
     	</div>
