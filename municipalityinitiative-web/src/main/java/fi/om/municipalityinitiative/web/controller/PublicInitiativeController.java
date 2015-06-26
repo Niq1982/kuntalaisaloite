@@ -205,6 +205,7 @@ public class PublicInitiativeController extends BaseController {
                 Urls urls = Urls.get(locale);
                 return redirectWithMessage(urls.view(initiativeId), RequestMessage.PARTICIPATE, request);
             } else {
+                addVotingInfo(initiativeId, model);
                 return ViewGenerator.collaborativeView(initiativePageInfo,
                         municipalityService.findAllMunicipalities(locale),
                         participant,
@@ -350,6 +351,7 @@ public class PublicInitiativeController extends BaseController {
             return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.AUTHOR_MESSAGE_ADDED, request);
         }
         else {
+            addVotingInfo(initiativeId, model);
             return ViewGenerator.collaborativeView(publicInitiativeService.getInitiativePageInfo(initiativeId),
                     municipalityService.findAllMunicipalities(locale),
                     new ParticipantUICreateDto(),
