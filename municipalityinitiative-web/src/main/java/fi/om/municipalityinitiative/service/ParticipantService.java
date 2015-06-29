@@ -108,12 +108,14 @@ public class ParticipantService {
 
         if (initiativeDao.get(initiativeId).getType() == InitiativeType.COLLABORATIVE) {
             participantDao.deleteParticipant(initiativeId, participantId);
+            initiativeDao.denormalizeParticipantCountForNormalInitiative(initiativeId);
         }
         else {
             participantDao.deleteVerifiedParticipant(initiativeId, participantId);
+            initiativeDao.denormalizeParticipantCountForVerifiedInitiative(initiativeId);
         }
 
-        initiativeDao.denormalizeParticipantCountForNormalInitiative(initiativeId);
+
     }
 
     @Transactional(readOnly = false)

@@ -142,15 +142,38 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
                         .toInitiativeDraft()
         );
         testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withPublicName(true));
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withPublicName(true));
 
         Initiative initiative = testHelper.getInitiative(initiativeId);
-        precondition(initiative.getParticipantCountPublic(), is(1));
-        precondition(initiative.getParticipantCount(), is(2));
+        precondition(initiative.getParticipantCountPublic(), is(2));
+        precondition(initiative.getParticipantCount(), is(3));
 
         participantService.deleteParticipant(initiativeId, TestHelper.authorLoginUserHolder, testHelper.getLastVerifiedUserId());
 
         Initiative updated = testHelper.getInitiative(initiativeId);
-        assertThat(updated.getParticipantCount(), is(1));
+        assertThat(updated.getParticipantCount(), is(2));
+        assertThat(updated.getParticipantCountPublic(), is(1));
+    }
+    @Test
+    public void delete_verified_participant_decreases_participant_count_citizen_private_name() {
+        Long initiativeId = testHelper.createDefaultInitiative(
+                new TestHelper.InitiativeDraft(testMunicipalityId)
+                        .withState(InitiativeState.PUBLISHED)
+                        .withType(InitiativeType.COLLABORATIVE_CITIZEN)
+                        .applyAuthor().withPublicName(false)
+                        .toInitiativeDraft()
+        );
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withPublicName(false));
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId).withPublicName(false));
+
+        Initiative initiative = testHelper.getInitiative(initiativeId);
+        precondition(initiative.getParticipantCountPublic(), is(0));
+        precondition(initiative.getParticipantCount(), is(3));
+
+        participantService.deleteParticipant(initiativeId, TestHelper.authorLoginUserHolder, testHelper.getLastVerifiedUserId());
+
+        Initiative updated = testHelper.getInitiative(initiativeId);
+        assertThat(updated.getParticipantCount(), is(2));
         assertThat(updated.getParticipantCountPublic(), is(0));
     }
     @Test

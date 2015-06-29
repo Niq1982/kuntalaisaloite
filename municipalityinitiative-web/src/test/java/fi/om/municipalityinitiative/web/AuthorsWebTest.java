@@ -39,6 +39,7 @@ public class AuthorsWebTest extends WebTestBase {
     public static final String HYLKÄÄ_KUTSU = "invitation.reject";
     public static final String HYVÄKSY_KUTSUN_HYLKÄÄMINEN = "invitation.reject.confirm";
     public static final String VERIFIED_USER_AUTHOR_SSN = "010190-0001";
+    public static final String USER_SSN = "010191-0000";
     private Long normalInitiativeId;
     private Long verifiedInitiativeId;
 
@@ -289,7 +290,31 @@ public class AuthorsWebTest extends WebTestBase {
         assertTotalEmailsInQueue(0);
         
     }
-    
+
+    @Test
+    public void author_removes_verified_participant() throws InterruptedException {
+        Long publishedInitiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID).withState(InitiativeState.PUBLISHED).applyAuthor(USER_SSN).toInitiativeDraft());
+
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(publishedInitiativeId, HELSINKI_ID).withPublicName(false));
+
+        vetumaLogin(USER_SSN, HELSINKI);
+
+        Thread.sleep(100);
+
+        open(urls.management(publishedInitiativeId));
+
+        clickLink("Osallistujahallinta");
+        clickLink("Poista osallistuja");
+
+        // NOTE: We could assert that modal has correct Participant details,
+        //       but as DOM is updated after the modal is loaded we would need a tiny delay for that
+
+        getElemContaining("Poista", "button").click();
+
+        assertSuccessMessage("Osallistuja poistettu");
+        assertTotalEmailsInQueue(0);
+
+    }
     @Test
     public void author_removes_author(){
         testHelper.createDefaultAuthorAndParticipant(new TestHelper.AuthorDraft(normalInitiativeId, HELSINKI_ID));

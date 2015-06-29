@@ -31,7 +31,7 @@ public interface ParticipantDao {
 
     void deleteParticipant(Long initiativeId, Long participantId);
 
-    public void deleteVerifiedParticipant(Long initiativeId, Long participantId);
+    void deleteVerifiedParticipant(Long initiativeId, Long participantId);
 
     void updateVerifiedParticipantShowName(Long initiativeId, String hash, boolean showName);
 

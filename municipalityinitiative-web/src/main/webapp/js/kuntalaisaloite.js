@@ -1502,14 +1502,19 @@ var deleteParticipant = (function() {
 				participantInput =		$('#participantId'),
 				participantNameId =  'participant-name',
 				participantDetails =	'<li><span class="date">' + participant.data("date") + '</span>' +
-										'<span class="name-container"><span id="' + participantNameId + '" class="name"></span>' +
-										'<span class="home-municipality"><span class="bull">&bull;</span>' + participant.data("municipality") + '</span></li>';
+										'<span class="name-container"><span id="' + participantNameId + '" class="name"></span>';
+
+				if (participant.data("municipality")) {
+					participantDetails += '<span class="home-municipality"><span class="bull">&bull;</span>' + participant.data("municipality") + '</span>';
+				}
+				participantDetails += '</li>';
 
 			selParticipant.html(participantDetails);
 			// Avoid XSS
-      $('#'+participantNameId).text(participant.data('name'));
+      		$('#'+participantNameId).text(participant.data('name'));
 
 			participantInput.val(participant.data("id"));
+
 		}
 	};
 

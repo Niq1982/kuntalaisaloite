@@ -5,17 +5,16 @@ import org.eclipse.jetty.http.ssl.SslContextFactory;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
-import org.eclipse.jetty.server.ssl.SslSelectChannelConnector;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 public class StartJetty {
     
-    public static final int PORT = 8080;
+    public static final int PORT = 8090;
 
     public static void main(String[] args) {
         try {
             System.setProperty(PropertyNames.optimizeResources, "false");
-            startService(PORT, "dev").join();
+            startService(PORT, "test").join();
         } catch (Exception e) {
             e.printStackTrace() ;
         }
