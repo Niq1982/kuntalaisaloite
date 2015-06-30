@@ -52,7 +52,7 @@
                 <@u.message "iframeGenerator.municipality" />
             </label>
             <select name="municipality" id="municipality" class="chzn-select" data-placeholder="<@u.message "initiative.chooseMunicipality" />" data-allow-single-deselect="allow" multiple>
-                <option value=""><@u.message "initiative.chooseMunicipality" /></option>
+                <#-- <option value=""><@u.message "initiative.chooseMunicipality" /></option>-->
                 <#list options as option>
                     <#if option.active><option value="${option.id}">${option.getName(locale)}</option></#if>
                 </#list>

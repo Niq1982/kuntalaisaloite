@@ -126,7 +126,7 @@
                 <#if initiative_index == 0><ul></#if>
                 <li <#if initiative_index == 0>class="first"</#if>>
                     <span class="date trigger-tooltip" title="<@u.message "searchResults.initiative.date."+initiative.state />" ><@u.localDate initiative.stateTime!"" /></span>
-                    <span>${initiative.municipality.getName(locale)}</span>
+                    <#if municipalitiesSize != 1><span>${initiative.municipality.getName(locale)}</span></#if>
                     <span class="title"><a href="${urls.view(initiative.id)}" target="_blank" rel="external" class="name"><@u.limitStringLength initiative.name!"" 150 /></a></span>
                 </li>
                 <#if !initiative_has_next></ul></#if>
