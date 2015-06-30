@@ -433,7 +433,7 @@ public class AppConfiguration {
 
     @Bean
     public SecurityFilter securityFilter() {
-        return new SecurityFilter(Boolean.valueOf(env.getProperty(PropertyNames.secureCookieEnabled)));
+        return new SecurityFilter();
     }
 
     @Bean

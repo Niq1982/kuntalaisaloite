@@ -9,12 +9,12 @@ import org.eclipse.jetty.webapp.WebAppContext;
 
 public class StartJetty {
     
-    public static final int PORT = 8090;
+    public static final int PORT = 8080;
 
     public static void main(String[] args) {
         try {
             System.setProperty(PropertyNames.optimizeResources, "false");
-            startService(PORT, "test").join();
+            startService(PORT, "dev").join();
         } catch (Exception e) {
             e.printStackTrace() ;
         }

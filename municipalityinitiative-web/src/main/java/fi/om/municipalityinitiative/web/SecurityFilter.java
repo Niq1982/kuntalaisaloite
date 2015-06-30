@@ -25,7 +25,7 @@ public class SecurityFilter implements Filter {
     private static final int CSRF_TOKEN_LENGTH = 24;
     private static final String COOKIE_ERROR = "cookieError";
     public static final String UNWANTED_HIDDEN_EMAIL_FIELD = "email";
-    private final boolean secureCookieEnabled;
+
     private UrlHelper urlPathHelper = new UrlHelper();
 
     @Resource
@@ -34,10 +34,7 @@ public class SecurityFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
     }
-
-    public SecurityFilter(boolean secureCookieEnabled) {
-        this.secureCookieEnabled = secureCookieEnabled;
-    }
+    
 
     public static void setNoCache(HttpServletResponse response) {
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
