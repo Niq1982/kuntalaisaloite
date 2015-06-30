@@ -205,7 +205,8 @@ public class SecurityFilter implements Filter {
             contextPath = "/";
         }
         cookie.setPath(contextPath);
-        cookie.setSecure(this.secureCookieEnabled);
+        cookie.setSecure(request.isSecure());
+
         if (cookie.getSecure()) {
             // For enabling httpOnly we need to write the raw cookie data instead of response.addCookie(cookie)
             response.setHeader("SET-COOKIE", name + "=" + value + "; Path=" + contextPath + "; Secure; HttpOnly");
