@@ -269,6 +269,46 @@
  * @param admin is boolean for toggling participate button and participant manage -link 
 -->
 <#macro participants formHTML="" showForm=true admin=false>
+    <#assign participateSuccess=false />
+    <#list requestMessages as requestMessage>
+        <#if requestMessage == RequestMessage.PARTICIPATE>
+            <#assign participateSuccess=true />
+        </#if>
+    </#list>
+    <#if !admin && !initiative.sentTime.present && !participateSuccess>
+    <div class="participants-block ${showForm?string("hidden","")} noprint">
+        <#if initiative.verifiable && !user.isVerifiedUser()>
+            <a class="small-button" href="${urls.vetumaLogin(currentRequestUri+"?show-participate")}"><span class="small-icon save-and-send"><@u.message "action.authenticate" /></span></a>
+        <#else>
+            <#if !user.hasParticipatedToInitiative(initiative.id) && (!initiative.verifiable || user.homeMunicipality.notPresent || (user.homeMunicipality.value.id == initiative.municipality.id))>
+                <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>
+            </#if>
+        </#if>
+    </div>
+        <#if !user.hasParticipatedToInitiative(initiative.id)>
+        <div class="participants-block last ${showForm?string("hidden","")} noprint">
+            <a title="<@u.messageHTML "action.participate.infoLink.title" />" href="${urls.help(HelpPage.PARTICIPANTS.getUri(locale))}"><@u.messageHTML "action.participate.infoLink" /></a>
+        </div>
+        </#if>
+    </#if>
+    <#if !admin && initiative.sentTime.present>
+    <div class="participants-block last noprint">
+        <div class="participate not-allowed">
+            <@u.systemMessage path="participate.sentToMunicipality" type="info" />
+        </div>
+    </div>
+    </#if>
+    <#-- NOSCRIPT participate -->
+    <#if showForm>
+        <#noescape><noscript>
+            <div id="participate-form" class="form-container cf top-margin">
+                <h3><@u.message "participate.title" /></h3>
+            ${formHTML!""}
+            </div>
+        </noscript></#noescape>
+    </#if>
+    <br class="clear" />
+    <br class="clear" />
     <h3><@u.message key="initiative.participants.title" args=[participantCount.total+initiative.externalParticipantCount] />
     <#if admin><span class="switch-view"><a href="${urls.participantListManage(initiative.id)}" class="trigger-tooltip" title="<@u.message "manageParticipants.tooltip" />"><@u.message "manageParticipants.title" /></a></span></#if></h3>
 
@@ -293,48 +333,12 @@
             <#if (initiative.externalParticipantCount > 0)><span class="private-names"><@u.message key="participantCount.externalNames" args=[initiative.externalParticipantCount]/></span></p></#if>
         </span>
     </div>
-
-    <#assign participateSuccess=false />
-    <#list requestMessages as requestMessage>
-        <#if requestMessage == RequestMessage.PARTICIPATE>
-            <#assign participateSuccess=true />
-        </#if>
-    </#list>
-
-    <#if !admin && !initiative.sentTime.present && !participateSuccess>
-        <div class="participants-block ${showForm?string("hidden","")} noprint">
-            <#if initiative.verifiable && !user.isVerifiedUser()>
-                    <a class="small-button" href="${urls.vetumaLogin(currentRequestUri+"?show-participate")}"><span class="small-icon save-and-send"><@u.message "action.authenticate" /></span></a>
-            <#else>
-                <#if !user.hasParticipatedToInitiative(initiative.id) && (!initiative.verifiable || user.homeMunicipality.notPresent || (user.homeMunicipality.value.id == initiative.municipality.id))>
-                    <a class="small-button js-participate" href="?participateForm=true#participate-form"><span class="small-icon save-and-send"><@u.message "action.participate" /></span></a>
-                </#if>
-            </#if>
-        </div>
-        <#if !user.hasParticipatedToInitiative(initiative.id)>
-            <div class="participants-block last ${showForm?string("hidden","")} noprint">
-                <a title="<@u.messageHTML "action.participate.infoLink.title" />" href="${urls.help(HelpPage.PARTICIPANTS.getUri(locale))}"><@u.messageHTML "action.participate.infoLink" /></a>
-            </div>
-        </#if>
-    </#if>
-    <#if !admin && initiative.sentTime.present>
-        <div class="participants-block last noprint">
-            <div class="participate not-allowed">
-                <@u.systemMessage path="participate.sentToMunicipality" type="info" />
-            </div>
-        </div>
-    </#if>
     <br class="clear" />
 
-    <#-- NOSCRIPT participate -->
-    <#if showForm>
-        <#noescape><noscript>
-            <div id="participate-form" class="form-container cf top-margin">
-                <h3><@u.message "participate.title" /></h3>
-                ${formHTML!""}
-            </div>
-        </noscript></#noescape>
-    </#if>
+
+
+
+
 </#macro>
 
 
