@@ -10,7 +10,7 @@
 <#escape x as x?html> 
 
 <#-- For verifiable initiatives when user returns from VETUMA -->
-<#assign showNotAllowedToParticipate = !user.allowVerifiedParticipation(initiative.id, initiative.municipality) &&
+<#assign showNotAllowedToParticipate = user.isVerifiedUser() && !user.allowVerifiedParticipation(initiative.id, initiative.municipality) &&
      initiative.verifiable && RequestParameters['show-participate']?? />
      
 <#assign notAllowedToParticipateHTML>
