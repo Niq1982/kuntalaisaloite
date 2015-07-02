@@ -1712,8 +1712,161 @@ if (window.hasIFrame){
 
 }());
 }
-
 /**
+ *  Single inititative (graph) iframe
+ *
+ */
+if (window.hasIGraphFrame) {
+
+	(function () {
+		var reset =         $('.js-reset-iframe'),
+			refresh =         $('.js-update-iframe'),
+			iframeContainer = $("#iframe-container"),
+			initiativeId =    $('#initiativeId'),
+			lang =            $('input[name="language"]'),
+			defaultLang =     $('input[name="language"][value="' + locale + '"]'),
+			showTitle =       $('input[name="showTitle"]'),
+			width =           $('#width'),
+			height =          $('#height'),
+			currentLang =     locale,
+			bounds =          window.bounds,
+			api =             window.defaultData.api,
+
+			getInitiative = function (api, initiativeId, callback) {
+				if (initiativeId !== '') {
+					$.getJSON(api + '/' + initiativeId).done(function (data) {
+						if (callback) {
+							callback(data);
+						}
+					}).fail(function (e) {
+						if (callback) {
+							callback(null);
+						}
+						myConsole.log('Error loading data: ' + e.status + ' - ' + e.statusText);
+					});
+				} else {
+					if (callback) {
+						callback(null);
+					}
+				}
+			},
+
+			populateInitiativeDetails = function (params) {
+				getInitiative(api, params.initiativeId, function (data) {
+					var initiativeName = '';
+
+					if (data) {
+						initiativeName = data.name[params.lang] || data.name.fi || '';
+					}
+
+					$('#initiative-name').text(initiativeName);
+				});
+			},
+
+			generateIframe = function (params) {
+				populateInitiativeDetails(params);
+				iframeContainer.html($("#iframe-template").render(params));
+				return false;
+			},
+
+			checkBounds = function (elem) {
+				var min, max, def,
+					val = parseInt(elem.val(), 10);
+
+				switch (elem.attr('id')) {
+					case width.attr('id'):
+						min = bounds.min.width;
+						max = bounds.max.width;
+						break;
+					case height.attr('id'):
+						min = bounds.min.height;
+						max = bounds.max.height;
+						break;
+					default:
+					// nop
+				}
+
+				if (!/^\d+$/.test(val)) {
+					elem.val(min); // set to min if not even a number
+				}
+				if (val < min) {
+					elem.val(min);
+				}
+				if (val > max) {
+
+					elem.val(max);
+				}
+			},
+
+			getParams = function () {
+				return {
+					showPreview: initiativeId.val() !== '' && initiativeId.val() !== '0',
+					initiativeId: initiativeId.val(),
+					lang:     $('input[name="language"]:checked').val(),
+					showTitle: $('input[name="showTitle"]:checked').val() === 'on',
+					width:      width.val(),
+					height:     height.val()
+				};
+			},
+
+			refreshFields = function (data) {
+				initiativeId.val(data.initiativeId).trigger('liszt:updated');
+				lang.removeAttr('checked');
+				showTitle.removeAttr('checked');
+				defaultLang.attr('checked', 'checked');
+				width.val(data.width);
+				height.val(data.height);
+			};
+
+		generateIframe(getParams());
+
+		initiativeId.change(function () {
+			generateIframe(getParams());
+		});
+
+		width.add(height).change(function () {
+			delay(function () {
+				checkBounds(width);
+				checkBounds(height);
+				generateIframe(getParams());
+			}, 100);
+		});
+
+		showTitle.change(function () {
+			generateIframe(getParams());
+		});
+
+		lang.change(function () {
+			generateIframe(getParams());
+		});
+
+		reset.click(function (e) {
+			e.preventDefault();
+
+			if (window.defaultData) {
+				$.extend(window.defaultData, {
+					initiativeId: initiativeId.val()
+				});
+
+				refreshFields(window.defaultData);
+				generateIframe(getParams());
+			}
+		});
+
+		refresh.click(function (e) {
+			e.preventDefault();
+
+			generateIframe(getParams());
+		});
+
+	}());
+}
+
+
+
+
+
+	/**
 * Image popup
 * ===========
 *
