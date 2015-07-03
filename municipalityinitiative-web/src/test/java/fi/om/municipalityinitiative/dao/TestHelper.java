@@ -404,19 +404,28 @@ public class TestHelper {
     }
 
     @Transactional(readOnly = false)
-    public Long createDefaultParticipantWithDate(AuthorDraft authorDraft, org.joda.time.LocalDate date) {
+    public Long createDefaultParticipantWithDate(AuthorDraft authorDraft, LocalDate date, String confirmationCode) {
 
         increaseParticipantCount(authorDraft);
 
-        return queryFactory.insert(QParticipant.participant)
+        SQLInsertClause set = queryFactory.insert(QParticipant.participant)
                 .set(QParticipant.participant.municipalityId, authorDraft.participantMunicipality)
                 .set(QParticipant.participant.municipalityInitiativeId, authorDraft.initiativeId)
                 .set(QParticipant.participant.name, authorDraft.participantName)
                 .set(QParticipant.participant.showName, authorDraft.publicName)
                 .set(QParticipant.participant.email, authorDraft.participantEmail)
                 .set(QParticipant.participant.membershipType, authorDraft.municipalityMembership)
-                .set(QParticipant.participant.participateTime, date)
-                .executeWithKey(QParticipant.participant.id);
+                .set(QParticipant.participant.participateTime, date);
+
+        if (confirmationCode != null) {
+            set.set(QParticipant.participant.confirmationCode, confirmationCode);
+        }
+        return set.executeWithKey(QParticipant.participant.id);
+    }
+
+    @Transactional(readOnly = false)
+    public Long createDefaultParticipantWithDate(AuthorDraft authorDraft, LocalDate date) {
+        return createDefaultParticipantWithDate(authorDraft, date, null);
     }
 
     private String generateHash(int len) {

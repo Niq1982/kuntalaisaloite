@@ -102,6 +102,8 @@ public class SupportCountServiceTest {
 
         testHelper.createDefaultParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withPublicName(true), yesterday);
 
+        testHelper.createDefaultParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withPublicName(true), yesterday, "jokuconfirm");
+
         testHelper.createDefaultParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withPublicName(true), today);
 
         supportCountService.updateDenormalizedSupportCountForInitiatives();
