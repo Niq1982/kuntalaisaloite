@@ -8,6 +8,7 @@ import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +23,7 @@ import java.util.Map;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.mock;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -59,7 +61,7 @@ public class SupportCountServiceTest {
     @Test
     public void create_initiatives_and_denormalize_support_count() {
         // Create a published initiative
-        Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED));
+        Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED).withStateTime(twoDaysAgo.toDateTime(new LocalTime("12:00"))));
 
         testHelper.createDefaultParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withPublicName(true), twoDaysAgo);
 
@@ -75,11 +77,40 @@ public class SupportCountServiceTest {
 
         supportCountService.updateDenormalizedSupportCountForInitiatives();
 
-        Map<LocalDate, Long> supportVoteCountByDate =  initiativeDao.getSupportVoteCountByDateUntil(initiativeId, yesterday);
+        Map<LocalDate, Integer> supportVoteCountByDate =  supportCountDao.getDenormalizedSupportCountData(initiativeId);
 
         assertThat(supportVoteCountByDate.size(), is(2));
-        assertThat(supportVoteCountByDate.get(twoDaysAgo), is(3L));
-        assertThat(supportVoteCountByDate.get(yesterday), is(2L));
+        assertThat(supportVoteCountByDate.get(twoDaysAgo), is(3));
+        assertThat(supportVoteCountByDate.get(yesterday), is(2));
+        assertThat(supportVoteCountByDate.get(today), is(nullValue()));
+
+    }
+
+    @Test
+    public void create_initiative_and_denormalize_support_count_moves_supports_before_state_time_to_state_time() {
+
+        // Create a published initiative
+        Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.PUBLISHED).withStateTime(yesterday.toDateTime(new LocalTime("12:00"))));
+
+        testHelper.createDefaultParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withPublicName(true), twoDaysAgo);
+
+        testHelper.createDefaultParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withPublicName(true), twoDaysAgo);
+
+        testHelper.createDefaultParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withPublicName(true), twoDaysAgo);
+
+        testHelper.createDefaultParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withPublicName(true), yesterday);
+
+        testHelper.createDefaultParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withPublicName(true), yesterday);
+
+        testHelper.createDefaultParticipantWithDate(new TestHelper.AuthorDraft(initiativeId, testMunicipality.getId()).withPublicName(true), today);
+
+        supportCountService.updateDenormalizedSupportCountForInitiatives();
+
+        Map<LocalDate, Integer> supportVoteCountByDate = supportCountDao.getDenormalizedSupportCountData(initiativeId);
+
+        assertThat(supportVoteCountByDate.size(), is(1));
+         assertThat(supportVoteCountByDate.get(twoDaysAgo), is(nullValue()));
+         assertThat(supportVoteCountByDate.get(yesterday), is(5));
         assertThat(supportVoteCountByDate.get(today), is(nullValue()));
 
     }
