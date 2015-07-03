@@ -77,13 +77,13 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
     @Test
     public void findAllParticipants_for_verified_initiative() {
         Long initiativeId = createVerifiedInitiativeWithAuthor();
-        assertThat(participantService.findAllParticipants(initiativeId, TestHelper.authorLoginUserHolder, 0), hasSize(1));
+        assertParticipantListSize(initiativeId, 1);
     }
 
     @Test
     public void findAllParticipants_for_normal_initiative() {
         Long initiativeId = createNormalInitiativeWithAuthor();
-        assertThat(participantService.findAllParticipants(initiativeId, TestHelper.authorLoginUserHolder, 0), hasSize(1));
+        assertParticipantListSize(initiativeId, 1);
     }
 
     @Test
@@ -130,6 +130,12 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         Initiative updated = testHelper.getInitiative(initiativeId);
         assertThat(updated.getParticipantCount(), is(1));
         assertThat(updated.getParticipantCountPublic(), is(0));
+
+        assertParticipantListSize(initiativeId, 1);
+    }
+
+    private void assertParticipantListSize(Long initiativeId, int size) {
+        assertThat(participantService.findAllParticipants(initiativeId, TestHelper.authorLoginUserHolder, 0), hasSize(size));
     }
 
     @Test
@@ -148,7 +154,9 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         precondition(initiative.getParticipantCountPublic(), is(2));
         precondition(initiative.getParticipantCount(), is(3));
 
+        assertParticipantListSize(initiativeId, 2);
         participantService.deleteParticipant(initiativeId, TestHelper.authorLoginUserHolder, testHelper.getLastVerifiedUserId());
+        assertParticipantListSize(initiativeId, 1);
 
         Initiative updated = testHelper.getInitiative(initiativeId);
         assertThat(updated.getParticipantCount(), is(2));
@@ -170,7 +178,9 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         precondition(initiative.getParticipantCountPublic(), is(0));
         precondition(initiative.getParticipantCount(), is(3));
 
+        assertParticipantListSize(initiativeId, 2);
         participantService.deleteParticipant(initiativeId, TestHelper.authorLoginUserHolder, testHelper.getLastVerifiedUserId());
+        assertParticipantListSize(initiativeId, 1);
 
         Initiative updated = testHelper.getInitiative(initiativeId);
         assertThat(updated.getParticipantCount(), is(2));
@@ -191,7 +201,9 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         precondition(initiative.getParticipantCountPublic(), is(1));
         precondition(initiative.getParticipantCount(), is(2));
 
+        assertParticipantListSize(initiativeId, 2);
         participantService.deleteParticipant(initiativeId, TestHelper.authorLoginUserHolder, testHelper.getLastVerifiedUserId());
+        assertParticipantListSize(initiativeId, 1);
 
         Initiative updated = testHelper.getInitiative(initiativeId);
         assertThat(updated.getParticipantCount(), is(1));

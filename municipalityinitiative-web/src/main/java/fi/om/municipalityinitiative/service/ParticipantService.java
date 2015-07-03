@@ -106,7 +106,7 @@ public class ParticipantService {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
         assertAllowance("Delete participant", ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowParticipation());
 
-        if (initiativeDao.get(initiativeId).getType() == InitiativeType.COLLABORATIVE) {
+        if (initiativeDao.get(initiativeId).getType().isNotVerifiable()) {
             participantDao.deleteParticipant(initiativeId, participantId);
             initiativeDao.denormalizeParticipantCountForNormalInitiative(initiativeId);
         }
