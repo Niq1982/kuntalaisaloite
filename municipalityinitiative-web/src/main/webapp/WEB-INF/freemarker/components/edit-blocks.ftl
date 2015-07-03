@@ -295,6 +295,7 @@
                     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCO4u7Qvfrk_dshxosJwCqlK5nQY_gHE98">
             </script>
             <script type="text/javascript">
+                var marker;
                 function initialize() {
 
                     var geocoder = new google.maps.Geocoder();
@@ -302,8 +303,6 @@
                         var muncipalityCoordinates = results[0].geometry.location;
 
                         var mapOptions = {
-                            //Helsinki: 60.1733244,24.9410248 finland: 64.9146659,26.0672554
-                            //TODO esivalitse kunta
                             center: muncipalityCoordinates,
                             zoom: 8
                         };
@@ -314,16 +313,20 @@
                         placeMarker(muncipalityCoordinates, map)
 
                         google.maps.event.addListener(map, 'click', function(e) {
+
                             placeMarker(e.latLng, map);
                             $("#lat").text(e.latLng);
                         });
                     });
 
-
                 }
 
+
                 function placeMarker(position, map) {
-                    var marker = new google.maps.Marker({
+                    if (marker != null) {
+                        marker.setMap(null);
+                    }
+                    marker = new google.maps.Marker({
                         position: position,
                         map: map
                     });
