@@ -2,7 +2,7 @@
 @import '../less-imports/mixins';
 @import '../less-imports/breakpoints';
 @import '../less-imports/buttons';
-
+@import '../less-imports/blocks';
 
 
 html {
@@ -144,7 +144,7 @@ a.block-link {
 }
 
 .logo {
-    float:right;
+    float:left;
     width: 148px;
     height:30px;
     background:url("../../img/logo-kuntalaisaloite-small.png?version=${timestamp}") 0 0 no-repeat;
@@ -162,7 +162,11 @@ a.block-link {
 
 }
 
-
+.update-info {
+    margin: 1em 0 0 35px;
+    font-size: 0.8em;
+    text-align: left;
+}
 // Buttons
 //
 // .large-button - Generic class for large button, needs additional class(es) for layout
@@ -961,9 +965,11 @@ h4 {
     vertical-align: middle;
     margin-right: 1em;
 }
-.vote-count {
+.user-count-total {
+    float: left;
     font-size: 3em;
     font-style: italic;
+    line-height: 0.9em;
 
     &.internal {
         font-size: 1.2em;

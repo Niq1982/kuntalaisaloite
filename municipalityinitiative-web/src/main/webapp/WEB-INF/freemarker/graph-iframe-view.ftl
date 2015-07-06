@@ -77,11 +77,12 @@
         <a href="${urls.view(initiative.id)}" target="_blank" rel="external">
     	   <h1 class="name"><@u.text initiative.name /></h1>
         </a>
-	    <#if initiative.startDate??>
-	        <span class="extra-info"><@u.localDate initiative.startDate /></span>
+	    <#if initiative.stateTime??>
+	        <span class="extra-info"><@u.localDate initiative.stateTime /></span>
 	    </#if>
 	</#if>
-
+    <br class="clear" />
+    <@e.participantInformation showLinks=false/>
     <#if votingInfo?? && votingInfo.votingInProggress || participantCount.total gt 0>
 	    <div class="view-block">
 		    <#if supportCountData??><@e.participantGraph initiative supportCountData participantCount.total /></#if>
