@@ -10,37 +10,41 @@
  *
 -->
 <#macro participantGraph initiative data totalParticipantCount>
-    <div class="participant-graph">
+    <#if initiative.isCollaborative()>
+        <div class="participant-graph">
 
-        <h3 class="inline-style">
-            <@u.message key="graph.title" />
-            <span id="internal-support-count-${initiative.id?c}" >
-                <span >${totalParticipantCount!0}</span>
-            </span>
-        </h3>
-    	<div id="participantGraph">
-    		<noscript><@u.message key="graph.javaScriptSupport" /></noscript>
-    	</div>
-        <div class="update-info">
-        	<@u.message key="graph.updateInfo" /><br/>
+            <h3 class="inline-style">
+                <@u.message key="graph.title" />
+                <span id="internal-support-count-${initiative.id?c}" >
+                    <span >${totalParticipantCount!0}</span>
+                </span>
+            </h3>
+            <div id="participantGraph">
+                <noscript><@u.message key="graph.javaScriptSupport" /></noscript>
+            </div>
+            <div class="update-info">
+                <@u.message key="graph.updateInfo" /><br/>
+            </div>
         </div>
-    </div>
 
-     <script type="text/javascript">
-        (function(window) {
-            window.participantGraph = {
-                votes : <#noescape>${data}</#noescape>,
-                startDate : <#if initiative.stateTime??>'${initiative.stateTime}'<#else>null</#if>,
-                endDate : <#if initiative.sentTime.present>'${initiative.sentTime.value}'<#else>null</#if>,
-                lang : {
-                    btnCumul: '<@u.message key="graph.btnCumul" />',
-                    btnDaily : '<@u.message key="graph.btnDaily" />',
-                    btnZoomIn : '<@u.message key="graph.btnZoomIn" />',
-                    btnZoomOut : '<@u.message key="graph.btnZoomOut" />'
-                }
-            };
-        }(window));
-     </script>
+         <script type="text/javascript">
+            (function(window) {
+                window.participantGraph = {
+                    votes : <#noescape>${data}</#noescape>,
+                    startDate : <#if initiative.stateTime??>'${initiative.stateTime}'<#else>null</#if>,
+                    endDate : <#if initiative.sentTime.present>'${initiative.sentTime.value}'<#else>null</#if>,
+                    lang : {
+                        btnCumul: '<@u.message key="graph.btnCumul" />',
+                        btnDaily : '<@u.message key="graph.btnDaily" />',
+                        btnZoomIn : '<@u.message key="graph.btnZoomIn" />',
+                        btnZoomOut : '<@u.message key="graph.btnZoomOut" />'
+                    }
+                };
+            }(window));
+         </script>
+    <#else>
+        <h3><@u.message "initiative.notcollaborative" /></h3>
+    </#if>
 </#macro>
 
 <#-- 
