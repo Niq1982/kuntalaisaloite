@@ -565,6 +565,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
             return queryFactory.from(participant)
                     .where(participant.municipalityInitiativeId.eq(initiativeId))
                     .where(participant.participateTime.loe(tillDay))
+                    .where(participant.confirmationCode.isNull())
                     .groupBy(participant.participateTime)
                     .map(participant.participateTime, participant.participateTime.count());
         }

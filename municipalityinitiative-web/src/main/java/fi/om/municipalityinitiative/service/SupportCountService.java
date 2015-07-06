@@ -1,17 +1,17 @@
 package fi.om.municipalityinitiative.service;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dao.SupportCountDao;
+import fi.om.municipalityinitiative.dto.service.Initiative;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class SupportCountService {
 
@@ -47,18 +47,41 @@ public class SupportCountService {
 
         for (Long initiativeForUpdating : initiativeIdsForRunningInitiatives) {
 
+            Initiative initiative = initiativeDao.get(initiativeForUpdating);
+
             log.info("Denormalizing support data for init with id " + initiativeForUpdating);
 
-            Map<LocalDate, Long> supportVoteCountByDateUntil = initiativeDao.getSupportVoteCountByDateUntil(initiativeForUpdating, yesterday );
+            Map<LocalDate, Long> realSupportVotes = Maps.newHashMap();
 
-            supportCountDao.saveDenormalizedSupportCountDataJson(initiativeForUpdating, toJson(supportVoteCountByDateUntil));
+            for (Map.Entry<LocalDate, Long> localDateLongEntry : initiativeDao.getSupportVoteCountByDateUntil(initiativeForUpdating, yesterday ).entrySet()) {
 
-            log.info(toJson(supportVoteCountByDateUntil));
+                LocalDate supportDate = localDateLongEntry.getKey();
+                Long supportCount = localDateLongEntry.getValue();
 
-            supportCountDao.saveDenormalizedSupportCountData(initiativeForUpdating, supportVoteCountByDateUntil);
+                addSupportVoteDay(realSupportVotes,
+                        supportDate.isBefore(initiative.getStateTime()) ? initiative.getStateTime() : supportDate,
+                        supportCount);
+            }
+
+
+            supportCountDao.saveDenormalizedSupportCountDataJson(initiativeForUpdating, toJson(realSupportVotes));
+
+            log.info(toJson(realSupportVotes));
+
+            supportCountDao.saveDenormalizedSupportCountData(initiativeForUpdating, realSupportVotes);
 
         }
 
+    }
+
+    private void addSupportVoteDay(Map<LocalDate, Long> realSupportVotes, LocalDate localDate, Long supportCount) {
+
+        System.out.println(localDate);
+        if (!realSupportVotes.containsKey(localDate)) {
+            realSupportVotes.put(localDate, 0l);
+        }
+
+        realSupportVotes.put(localDate, realSupportVotes.get(localDate) + supportCount);
     }
 
     private String toJson(Map<LocalDate, Long> supportVoteCountByDateUntil) {

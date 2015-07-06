@@ -30,7 +30,7 @@
         (function(window) {
             window.participantGraph = {
                 votes : <#noescape>${data}</#noescape>,
-                startDate : <#if initiative.createTime??>'${initiative.createTime}'<#else>null</#if>,
+                startDate : <#if initiative.stateTime??>'${initiative.stateTime}'<#else>null</#if>,
                 endDate : <#if initiative.sentTime.present>'${initiative.sentTime.value}'<#else>null</#if>,
                 lang : {
                     btnCumul: '<@u.message key="graph.btnCumul" />',
