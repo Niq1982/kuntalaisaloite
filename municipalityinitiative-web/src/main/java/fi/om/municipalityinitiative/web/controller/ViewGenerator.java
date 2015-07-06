@@ -122,6 +122,14 @@ public final class ViewGenerator {
                         .build());
     }
 
+    public static ViewGenerator graphIFrameView() {
+        return new ViewGenerator(GRAPH_IFRAME_VIEW, new AttributeBuilder().build());
+    }
+
+    public static ViewGenerator graphIFrameGeneratorView() {
+        return new ViewGenerator(GRAPH_IFRAME_GENERATOR_VIEW, new AttributeBuilder().build());
+    }
+
     public static ViewGenerator singleView(InitiativePageInfo initiativePageView) {
         return new ViewGenerator(Views.PUBLIC_SINGLE_VIEW,
                 new AttributeBuilder()

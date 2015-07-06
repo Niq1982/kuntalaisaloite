@@ -62,6 +62,22 @@
     }
   };
 
+  function drawGraphTillYesterdayOrTillTheSentDate(settings){
+    var yesterday = moment().subtract(1, 'days').format(DATE_FORMAT);
+
+    if (settings.data.graphEndDate == null) {
+      if (settings.data.endDate != null) {
+        settings.data.graphEndDate = settings.data.endDate;
+      }
+      else {
+        settings.data.graphEndDate = yesterday
+      }
+    }
+
+    addEmptyVoting(settings, settings.data.graphEndDate);
+
+  };
+
   var methods = {
     init : function (options) {
       var settings = $.extend(defaults, options);
@@ -102,18 +118,12 @@
       //settings.data.endDate = testEnd;
       // TEST DATA ENDS
 
-      var sentDate = settings.data.endDate;
+
+      drawGraphTillYesterdayOrTillTheSentDate(settings);
+
 
       // Fix graph enddate by minimum days
       settings.data.endDate = setEndDate(settings.data.startDate, settings.data.endDate, MIN_GRAPH_DAYS);
-
-      var yesterday = moment().subtract(1, 'days').format(DATE_FORMAT);
-      if (sentDate != null) {
-        addEmptyVoting(settings, sentDate);
-      }
-      else {
-        addEmptyVoting(settings, yesterday);
-      }
 
       return this.each(function (index, element) {
         var r,
@@ -240,6 +250,7 @@
     }
     return this.path(path.join(",")).attr({stroke: color, opacity: opacity});
   };
+
 
   function separateThousands(value) {
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');

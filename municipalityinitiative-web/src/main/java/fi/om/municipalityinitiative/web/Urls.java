@@ -125,6 +125,8 @@ public final class Urls {
 
     public static final String PARAM_MUNICIPALITY = "municipalities";
 
+    public static final String PARAM_INITIATIVE = "initiative";
+
     public static final String OLD_PARAM_MUNICIPALITY = "municipalities";
 
     public static final String PARAM_SENT_COMMENT = "comment";
@@ -281,6 +283,14 @@ public final class Urls {
 
     public static final String IFRAME_SV = "/iframe/sv";
 
+    public static final String GRAPH_IFRAME_FI = "/graph-iframe/fi/" + ID_PARAMETER;
+
+    public static final String GRAPH_IFRAME_SV = "/graph-iframe/sv/" + ID_PARAMETER;
+
+    public static final String GRAPH_IFRAME_GENERATOR_FI = "/fi/graph-iframe-generator";
+
+    public static final String GRAPH_IFRAME_GENERATOR_SV = "/sv/graph-iframe-generator";
+
     public static final String OWN_INITIATIVES_FI = "/fi/omat";
 
     public static final String OWN_INITIATIVES_SV = "/sv/egen";
@@ -435,6 +445,17 @@ public final class Urls {
     public String iframeGenerator() {
         return getLocalizedPageUrl(IFRAME_GENERATOR_FI, IFRAME_GENERATOR_SV);
     }
+
+    public String graphIFrame() {
+        return iframeBaseUrl + (this.equals(FI) ? GRAPH_IFRAME_FI : GRAPH_IFRAME_SV);
+    }
+
+    public String graphIFrame(Long initiativeId) {
+        return graphIFrame() + "?" + PARAM_INITIATIVE + "=" + initiativeId;
+    }
+
+    public String graphIFrameGenerator() {return getLocalizedPageUrl(GRAPH_IFRAME_GENERATOR_FI, GRAPH_IFRAME_GENERATOR_SV);}
+
 
     public String getManagement(Long id) {
         return getLocalizedPageUrl(MANAGEMENT_FI, MANAGEMENT_SV).replace(ID_PARAMETER, id.toString());
