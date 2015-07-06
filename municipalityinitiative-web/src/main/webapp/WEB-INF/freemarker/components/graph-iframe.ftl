@@ -70,7 +70,7 @@
             <input type="text" maxlength="4" class="x-small" value="${defaults[3]}" name="height" id="height" pattern="${digit}"  />
         </div>
         <div class="column col-1of3">
-            <label for="height" class="input-header">
+            <label for="height" class="input-header no-horizontal-margin">
                 <@u.message "graph-iframeGenerator.showTitle" />
             </label>
             <div class="input-placeholder">

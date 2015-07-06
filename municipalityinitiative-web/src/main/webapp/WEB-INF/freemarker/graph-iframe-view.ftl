@@ -46,7 +46,7 @@
     <link href="${urls.baseUrl}/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
 
     <#if optimizeResources>
-        <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/style-iframe.min.css?version=${resourcesVersion}" />
+        <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-graph-iframe.min.css?version=${resourcesVersion}" />
         <!--[if IE ]>
         <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-ie.css?version=${resourcesVersion}" />
         <![endif]-->
@@ -58,10 +58,7 @@
             <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-ie.css" />
             <![endif]-->
         </noscript>
-        <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/less-main/kuntalaisaloite-iframe.less" />
-        <!--[if IE ]>
-        <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/less-main/kuntalaisaloite-ie.less">
-        <![endif]-->
+        <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/less-main/kuntalaisaloite-graph-iframe.less" />
         <script src="${urls.baseUrl}/js/less-1.7.5.min.js" type="text/javascript"></script>
     </#if>
 
