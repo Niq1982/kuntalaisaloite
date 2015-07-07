@@ -5,7 +5,6 @@ import org.springframework.web.servlet.LocaleResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.util.Locale;
 
 public class URILocaleResolver implements LocaleResolver {
@@ -25,6 +24,14 @@ public class URILocaleResolver implements LocaleResolver {
                 return Locales.LOCALE_SV;
             }
             else if (request.getRequestURI().startsWith(Urls.IFRAME_FI)) {
+                return Locales.LOCALE_FI;
+            }
+
+            // Iframe has different uri to prevent usage of securityFilter, so it's locale must be checked here separatedly.
+            if (request.getRequestURI().startsWith(Urls.GRAPH_IFRAME_BASE_SV)) {
+                return Locales.LOCALE_SV;
+            }
+            else if (request.getRequestURI().startsWith(Urls.GRAPH_IFRAME_BASE_FI)) {
                 return Locales.LOCALE_FI;
             }
 

@@ -15,6 +15,8 @@ public final class Urls {
     
     public static final String ID_PARAMETER = "{id}";
 
+    public static final String PARAM_INITIATIVE_ID = "id";
+
     public static final String HELP_PAGE_PARAMETER = "{helpPage}";
 
     public static final String INFO_PAGE_PARAMETER = "{infoPage}";
@@ -283,13 +285,17 @@ public final class Urls {
 
     public static final String IFRAME_SV = "/iframe/sv";
 
-    public static final String GRAPH_IFRAME_FI = "/graph-iframe/fi/" + ID_PARAMETER;
+    public static final String GRAPH_IFRAME_BASE_FI = "/graph-iframe/fi/";
 
-    public static final String GRAPH_IFRAME_SV = "/graph-iframe/sv/" + ID_PARAMETER;
+    public static final String GRAPH_IFRAME_BASE_SV = "/graph-iframe/sv/";
 
-    public static final String GRAPH_IFRAME_GENERATOR_FI = "/fi/graph-iframe-generator";
+    public static final String GRAPH_IFRAME_FI = GRAPH_IFRAME_BASE_FI + ID_PARAMETER;
 
-    public static final String GRAPH_IFRAME_GENERATOR_SV = "/sv/graph-iframe-generator";
+    public static final String GRAPH_IFRAME_SV = GRAPH_IFRAME_BASE_SV + ID_PARAMETER;
+
+    public static final String GRAPH_IFRAME_GENERATOR_FI = "/fi/graafi-leijuke";
+
+    public static final String GRAPH_IFRAME_GENERATOR_SV = "/sv/graph-iframe";
 
     public static final String OWN_INITIATIVES_FI = "/fi/omat";
 
@@ -559,6 +565,10 @@ public final class Urls {
 
     public String getAttachmentThumbnail(Long id) {
         return baseUrl + ATTACHMENT_THUMBNAIL.replace(ID_PARAMETER, id.toString());
+    }
+
+    public String widget(Long initiativeId) {
+        return getLocalizedPageUrl(GRAPH_IFRAME_GENERATOR_FI, GRAPH_IFRAME_GENERATOR_SV)+ "?" + PARAM_INITIATIVE_ID + "=" + initiativeId;
     }
 
     public String testDataGeneration() {

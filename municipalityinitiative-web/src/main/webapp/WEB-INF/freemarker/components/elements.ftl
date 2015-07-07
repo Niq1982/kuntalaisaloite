@@ -24,6 +24,7 @@
             </div>
             <div class="update-info">
                 <@u.message key="graph.updateInfo" /><br/>
+                <a href="${urls.widget(initiative.id)}"><@u.message key="graph.widgetLink" /></a>
             </div>
         </div>
 
@@ -326,18 +327,18 @@
         </#if>
     </#if>
 
-    <@participantInformation showLinks=true/>
+    <@participantInformation/>
 
 
 </#macro>
 
-<#macro participantInformation showLinks=true>
+<#macro participantInformation>
     <div class="participants-block">
         <span class="user-count-total">${participantCount.total+initiative.externalParticipantCount}</span>
     </div>
     <div class="participants-block separate">
             <span class="user-count-sub-total">
-                <#if (participantCount.publicNames > 0)><span class="public-names"><a class="trigger-tooltip" <#if showLinks>href="${urls.participantList(initiative.id)}"</#if> title="<@u.message key="participantCount.publicNames.show"/>"><@u.message key="participantCount.publicNames" args=[participantCount.publicNames] /></a></span><br/></#if>
+                <#if (participantCount.publicNames > 0)><span class="public-names"><a class="trigger-tooltip" href="${urls.participantList(initiative.id)}"</#if> title="<@u.message key="participantCount.publicNames.show"/>"><@u.message key="participantCount.publicNames" args=[participantCount.publicNames] /></a></span><br/>
                 <#if (participantCount.privateNames > 0)><span class="private-names"><@u.message key="participantCount.privateNames" args=[participantCount.privateNames] /></span><br/></#if>
                 <#if (initiative.externalParticipantCount > 0)><span class="private-names"><@u.message key="participantCount.externalNames" args=[initiative.externalParticipantCount]/></span></p></#if>
             </span>

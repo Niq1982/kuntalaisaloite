@@ -44,19 +44,19 @@
 
     <h1><@u.message "page.iframeGenerator" /></h1>
 
-    <p><@u.message "iframeGenerator.instruction.description" /></p>
-    <p><@u.message "iframeGenerator.instruction.links" /></p>
+    <p><@u.message "graph-iframeGenerator.instruction.description" /></p>
+    <p><@u.message "graph-iframeGenerator.instruction.links" /></p>
 
-    <h3><@u.message "iframeGenerator.instruction.setup.title" /></h3>
+    <h3><@u.message "graph-iframeGenerator.instruction.setup.title" /></h3>
 
-    <p><@u.message "iframeGenerator.instruction.setup.description" /></p>
+    <p><@u.message "graph-iframeGenerator.instruction.setup.description" /></p>
     <ul>
-        <li><@u.message key="iframeGenerator.instruction.setup.initiative" /></li>
-        <li><@u.message key="iframeGenerator.instruction.setup.lang" /></li>
-        <li><@u.message key="iframeGenerator.instruction.setup.width" args=[iFrameBounds[0], iFrameBounds[1]] /></li>
-        <li><@u.message key="iframeGenerator.instruction.setup.height" args=[iFrameBounds[2], iFrameBounds[3]] /></li>
+        <li><@u.message key="graph-iframeGenerator.instruction.setup.initiative" /></li>
+        <li><@u.message key="graph-iframeGenerator.instruction.setup.lang" /></li>
+        <li><@u.message key="graph-iframeGenerator.instruction.setup.width" args=[iFrameBounds[0], iFrameBounds[1]] /></li>
+        <li><@u.message key="graph-iframeGenerator.instruction.setup.height" args=[iFrameBounds[2], iFrameBounds[3]] /></li>
     </ul>
-    <p><@u.message "iframeGenerator.instruction.setup.refresh" /></p>
+    <p><@u.message "graph-iframeGenerator.instruction.setup.refresh" /></p>
 
     <div class="view-block first">
         <@i.initiativeIframeGenerator iFrameDefaults iFrameBounds />

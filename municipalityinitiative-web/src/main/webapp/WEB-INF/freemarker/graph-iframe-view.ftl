@@ -82,7 +82,7 @@
 	    </#if>
 	</#if>
     <br class="clear" />
-    <@e.participantInformation showLinks=false/>
+    <@e.participantInformation />
     <#if votingInfo?? && votingInfo.votingInProggress || participantCount.total gt 0>
 	    <div class="view-block">
 		    <#if supportCountData??><@e.participantGraph initiative supportCountData participantCount.total /></#if>
