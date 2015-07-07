@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -253,5 +254,23 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
     }
 
-    
+    @Test
+    public void contact_author_is_hidden_if_initiative_has_been_sent_to_municipality() {
+        DateTime yesterday = DateTime.now().minusDays(1);
+        Long initiativeWithAuthor = testHelper.createDefaultInitiative(
+                new TestHelper.InitiativeDraft(HELSINKI_ID)
+                        .withState(InitiativeState.PUBLISHED)
+                        .withType(InitiativeType.COLLABORATIVE)
+                        .withParticipantCount(0)
+                        .withSent(yesterday)
+                        .applyAuthor()
+                        .withPublicName(false)
+                        .toInitiativeDraft()
+        );
+
+        open(urls.view(initiativeWithAuthor));
+
+        assertThat(getOptionalElemContaining("Ota yhteyttä aloitteen vastuuhenkilöön", "a"), isNotPresent());
+
+    }
 }
