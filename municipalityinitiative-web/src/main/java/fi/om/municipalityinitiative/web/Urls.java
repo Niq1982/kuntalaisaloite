@@ -452,12 +452,8 @@ public final class Urls {
         return getLocalizedPageUrl(IFRAME_GENERATOR_FI, IFRAME_GENERATOR_SV);
     }
 
-    public String graphIFrame() {
-        return iframeBaseUrl + (this.equals(FI) ? GRAPH_IFRAME_FI : GRAPH_IFRAME_SV);
-    }
-
     public String graphIFrame(Long initiativeId) {
-        return graphIFrame() + "?" + PARAM_INITIATIVE + "=" + initiativeId;
+        return iframeBaseUrl + (this.equals(FI) ? GRAPH_IFRAME_BASE_FI : GRAPH_IFRAME_BASE_SV) + initiativeId;
     }
 
     public String graphIFrameGenerator() {return getLocalizedPageUrl(GRAPH_IFRAME_GENERATOR_FI, GRAPH_IFRAME_GENERATOR_SV);}
@@ -568,7 +564,7 @@ public final class Urls {
     }
 
     public String widget(Long initiativeId) {
-        return getLocalizedPageUrl(GRAPH_IFRAME_GENERATOR_FI, GRAPH_IFRAME_GENERATOR_SV)+ "?" + PARAM_INITIATIVE_ID + "=" + initiativeId;
+        return getLocalizedPageUrl(GRAPH_IFRAME_GENERATOR_FI, GRAPH_IFRAME_GENERATOR_SV)+ PARAM_INITIATIVE_ID + "=" + initiativeId;
     }
 
     public String testDataGeneration() {

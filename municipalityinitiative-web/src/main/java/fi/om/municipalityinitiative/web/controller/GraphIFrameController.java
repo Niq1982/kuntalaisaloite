@@ -37,7 +37,7 @@ public class GraphIFrameController extends BaseController {
             model.addAttribute("supportCountData", supportCountService.getSupportVotesPerDateJson(initiativeId));
         }
         model.addAttribute("participantCount", initiative.getParticipantCount());
-        return ViewGenerator.graphIFrameView().view(model, Urls.get(locale).alt().graphIFrame());
+        return ViewGenerator.graphIFrameView().view(model, Urls.get(locale).alt().graphIFrame(initiativeId));
     }
 
     @RequestMapping(value={GRAPH_IFRAME_GENERATOR_FI, GRAPH_IFRAME_GENERATOR_SV}, method = GET)

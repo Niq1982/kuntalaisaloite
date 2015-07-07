@@ -21,7 +21,7 @@
     <#if initiative??>
 	    <#if initiative.name??>
 	        <#assign page="page.initiative.public" />
-	        <#assign pageTitle><@u.text initiative.name /></#assign>
+	        <#assign pageTitle> ${initiative.name} </#assign>
 	    <#else>
 	        <#assign page="page.initiative.unnamed" />
 	        <#assign pageTitle="" />
@@ -46,14 +46,14 @@
     <link href="${urls.baseUrl}/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
 
     <#if optimizeResources>
-        <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-graph-iframe.min.css?version=${resourcesVersion}" />
+        <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/style-graph-iframe.min.css?version=${resourcesVersion}" />
         <!--[if IE ]>
         <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-ie.css?version=${resourcesVersion}" />
         <![endif]-->
     <#else>
         <link rel="stylesheet" type="text/css" href="${urls.baseUrl}/css/normalize.css" />
         <noscript>
-            <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-iframe.css" />
+            <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-graph-iframe.css" />
             <!--[if IE ]>
             <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-ie.css" />
             <![endif]-->

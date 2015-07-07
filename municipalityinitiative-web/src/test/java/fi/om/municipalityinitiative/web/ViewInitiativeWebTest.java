@@ -4,10 +4,7 @@ import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.joda.time.DateTime;
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -210,6 +207,47 @@ public class ViewInitiativeWebTest extends WebTestBase {
         assertThat(getElement(By.className("search-results")).getText(), is("Ei vielä yhtään aloitetta"));
     }
 
+    @Test
+    public void show_graph_iframe_for_initiative() {
+        DateTime stateTime = new DateTime(2011, 1, 1, 0, 0);
+        String title = "Yeah rock rock";
+        Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
+                .withState(InitiativeState.PUBLISHED)
+                .withStateTime(stateTime)
+                .withName(title));
+
+        String publicName = "Public Name";
+        String privateName = "Private Name";
+
+
+        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, HELSINKI_ID)
+                .withParticipantName(publicName)
+                .withPublicName(true));
+
+        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, HELSINKI_ID)
+                .withParticipantName(privateName)
+                .withPublicName(false));
+
+        open(urls.graphIFrame(initiativeId));
+
+        assertThat(getElement(By.className("public-names")).getText(), containsString("1 nimi julkaistu palvelussa"));
+
+        assertThat(getElement(By.className("private-names")).getText(), containsString("1 nimi ei julkaistu palvelussa"));
+    }
+    @Test
+    public void show_graph_iframe_for_initiative_with_title_and_date() {
+        DateTime stateTime = new DateTime(2011, 1, 1, 0, 0);
+        String title = "Yeah rock rock";
+        Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
+                .withState(InitiativeState.PUBLISHED)
+                .withStateTime(stateTime)
+                .withName(title));
+
+        open(urls.graphIFrame(initiativeId) + "?showTitle=true");
+        assertThat(getElement(By.tagName("p")).getText(), containsString(title));
+        assertThat(getElement(By.className("extra-info")).getText(), containsString(stateTime.toString("d.M.yyyy")));
+
+    }
 
 
 
