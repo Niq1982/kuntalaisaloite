@@ -564,7 +564,7 @@ public final class Urls {
     }
 
     public String widget(Long initiativeId) {
-        return getLocalizedPageUrl(GRAPH_IFRAME_GENERATOR_FI, GRAPH_IFRAME_GENERATOR_SV)+ PARAM_INITIATIVE_ID + "=" + initiativeId;
+        return getLocalizedPageUrl(GRAPH_IFRAME_GENERATOR_FI, GRAPH_IFRAME_GENERATOR_SV)+ "?" + PARAM_INITIATIVE_ID + "=" + initiativeId;
     }
 
     public String testDataGeneration() {
