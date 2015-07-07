@@ -1898,6 +1898,60 @@ if (window.hasIGraphFrame) {
 
 }());
 
+
+/**
+ * Map selector for selection location on map for initiative.
+ *
+ */
+(function() {
+	var marker;
+
+	function initialize(municipality) {
+
+		var geocoder = new google.maps.Geocoder();
+		geocoder.geocode({"address" : municipality}, function(results, status) {
+			var muncipalityCoordinates = results[0].geometry.location;
+
+			var mapOptions = {
+				center: muncipalityCoordinates,
+				zoom: 8
+			};
+
+			var map = new google.maps.Map(document.getElementById('map-canvas'),
+				mapOptions);
+
+			placeMarker(muncipalityCoordinates, map)
+
+			google.maps.event.addListener(map, 'click', function(e) {
+
+				placeMarker(e.latLng, map);
+				$("#lat").text(e.latLng);
+			});
+		});
+
+	}
+
+	function placeMarker(position, map) {
+		if (marker != null) {
+			marker.setMap(null);
+		}
+		marker = new google.maps.Marker({
+			position: position,
+			map: map
+		});
+		map.panTo(position);
+	}
+	console.log("${initiative.municipality.getName(locale)}");
+
+
+	$("#openMap").click(function(){
+		console.log("Open map");
+		// "${initiative.municipality.getName(locale)}"
+		initialize(modalData.initialLocation);
+		generateModal(modalData.mapContainer(), 'full');
+	});
+}());
+
 $(window).on('resize', function () {
   if (fireParticipantGraph !== undefined) {
     fireParticipantGraph();

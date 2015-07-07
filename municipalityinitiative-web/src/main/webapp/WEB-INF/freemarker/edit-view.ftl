@@ -66,6 +66,15 @@
         </div>
     </form>
 
+
+<#assign mapContainer>
+    <@compress single_line=true>
+        <div class="map-container" >
+            <div id="map-canvas"></div>
+            <div id="lat"></div>
+        </div>
+    </@compress>
+</#assign>
 <#--
  * Create page modals and jsMessage
  *
@@ -92,6 +101,15 @@
         }]
     };
 
+    modalData.mapContainer = function() {
+        return [{
+            title:      'Valitse sijainti kartalta',
+            content:    '<#noescape>${mapContainer?replace("'","&#39;")}</#noescape>'
+        }]
+    };
+
+    modalData.initialLocation = '${initiative.municipality.getName(locale)}';
+
     var messageData = {};
 
     <#-- jsMessage: Warning if cookies are not enabled -->
@@ -101,6 +119,8 @@
             content:    '<h3><@u.message "warning.cookieError.title" /></h3><div><@u.messageHTML key="warning.cookieError.description" args=[springMacroRequestContext.requestUri] /></div>'
         }]
     };
+
+
 </script>
 
 <@edit.sessionExpired />

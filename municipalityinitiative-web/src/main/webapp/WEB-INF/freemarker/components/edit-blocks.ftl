@@ -282,66 +282,15 @@
             <@f.textarea path=path+".extraInfo" key="initiative.extraInfo" required="" optional=true cssClass="textarea" maxLength=InitiativeConstants.INITIATIVE_EXTRA_INFO_MAX?string("#") />
         </div>
 
-        <div class="map-container" style="margin-top: 2em; float: left; width: 500px;">
-            <#--<@formLabel path=path+".location" key="initiative.location">
-                <@showError />
-                <@spring.formTextarea path, 'class="'+cssClass+' '+spring.status.error?string("error","")+'" '+required+' maxlength="'+maxLength+'" ' />
-
-            </@formLabel>-->
-            <style type="text/css">
-                html, body, #map-canvas { height: 400px; margin: 0; padding: 0;}
-            </style>
-            <script type="text/javascript"
-                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCO4u7Qvfrk_dshxosJwCqlK5nQY_gHE98">
-            </script>
-            <script type="text/javascript">
-                var marker;
-                function initialize() {
-
-                    var geocoder = new google.maps.Geocoder();
-                    geocoder.geocode({"address" : "${initiative.municipality.getName(locale)}"}, function(results, status) {
-                        var muncipalityCoordinates = results[0].geometry.location;
-
-                        var mapOptions = {
-                            center: muncipalityCoordinates,
-                            zoom: 8
-                        };
-
-                        var map = new google.maps.Map(document.getElementById('map-canvas'),
-                                mapOptions);
-
-                        placeMarker(muncipalityCoordinates, map)
-
-                        google.maps.event.addListener(map, 'click', function(e) {
-
-                            placeMarker(e.latLng, map);
-                            $("#lat").text(e.latLng);
-                        });
-                    });
-
-                }
-
-
-                function placeMarker(position, map) {
-                    if (marker != null) {
-                        marker.setMap(null);
-                    }
-                    marker = new google.maps.Marker({
-                        position: position,
-                        map: map
-                    });
-                    map.panTo(position);
-                }
-                console.log("${initiative.municipality.getName(locale)}");
-
-                google.maps.event.addDomListener(window, 'load', initialize);
-
-
-            </script>
-            <div id="map-canvas"></div>
-            <div id="lat"></div>
-
+        <div class="input-block-content">
+            <p class> Lisää tarkempi sijainti <a id="openMap">tästä</a></p>
         </div>
+        <#--<@formLabel path=path+".location" key="initiative.location">
+        <@showError />
+        <@spring.formTextarea path, 'class="'+cssClass+' '+spring.status.error?string("error","")+'" '+required+' maxlength="'+maxLength+'" ' />
+
+        </@formLabel>-->
+
         
     </div>
 </#macro>
