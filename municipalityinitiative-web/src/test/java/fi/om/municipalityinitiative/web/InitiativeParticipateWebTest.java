@@ -6,6 +6,7 @@ import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import org.joda.time.DateTime;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -273,4 +274,41 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         assertThat(getOptionalElemContaining("Ota yhteyttä aloitteen vastuuhenkilöön", "a"), isNotPresent());
 
     }
+
+    @Test
+    @Ignore
+    public void participating_to_normal_initiative_as_verified_user_with_correct_municipality() {
+        vetumaLogin(OTHER_USER_SSN, HELSINKI);
+
+        open(urls.view(normalInitiativeHelsinki));
+
+        Integer originalParticipantCountOnPage = Integer.valueOf(getElement(By.className("user-count-total")).getText());
+
+        assertThat(participateToInitiativeButton(), isPresent());
+        participateToInitiativeButton().get().click();
+
+        // Vetuma participant has no information to fill
+        getElemContaining("Tallenna", "button").click();
+
+        assertTextContainedByClass("modal-title", "Osallistumisesi aloitteeseen on nyt vahvistettu");
+        Integer newParticipantCountOnPage = Integer.valueOf(getElement(By.className("user-count-total")).getText());
+
+        assertThat(newParticipantCountOnPage, is(originalParticipantCountOnPage + 1));
+
+        assertWarningMessage("Olet jo osallistunut tähän aloitteeseen");
+        assertThat(participateToInitiativeButton(), isNotPresent());
+
+
+    }
+
+    @Test
+    @Ignore
+    public void participating_to_normal_initiative_is_not_allowed_if_wrong_homeMunicipality() {
+        vetumaLogin(OTHER_USER_SSN, VANTAA);
+        open(urls.view(normalInitiativeHelsinki));
+
+        assertWarningMessage("Et ole aloitteen kunnan jäsen, joten et voi osallistua aloitteeseen.");
+        assertThat(participateToInitiativeButton(), isNotPresent());
+    }
+
 }
