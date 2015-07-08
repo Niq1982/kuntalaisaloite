@@ -303,12 +303,60 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
     @Test
     @Ignore
-    public void participating_to_normal_initiative_is_not_allowed_if_wrong_homeMunicipality() {
+    public void participating_to_normal_initiative_with_wrong_municipality() {
         vetumaLogin(OTHER_USER_SSN, VANTAA);
         open(urls.view(normalInitiativeHelsinki));
 
-        assertWarningMessage("Et ole aloitteen kunnan jäsen, joten et voi osallistua aloitteeseen.");
-        assertThat(participateToInitiativeButton(), isNotPresent());
+        assertThat(participateToInitiativeButton(), isPresent());
+        participateToInitiativeButton().get().click();
+
+        getElemContaining(getMessage(MEMBERSHIP_RADIO), "span").click();
+
+        // Vetuma participant has no information to fill
+        getElemContaining("Tallenna", "button").click();
+
+        assertTextContainedByClass("modal-title", "Osallistumisesi aloitteeseen on nyt vahvistettu");
+    }
+
+    @Test
+    @Ignore
+    public void leave_municipality_blank_in_vetuma_and_choose_when_participating() {
+        vetumaLogin(OTHER_USER_SSN, null);
+
+        open(urls.view(normalInitiativeHelsinki));
+
+        assertThat(participateToInitiativeButton(), isPresent());
+        participateToInitiativeButton().get().click();
+
+        assertThat(findElementWhenClickable(By.id("homeMunicipality_chzn")).getText(), is(HELSINKI));
+
+        // Vetuma participant has no information to fill
+        getElemContaining("Tallenna", "button").click();
+
+        assertTextContainedByClass("modal-title", "Osallistumisesi aloitteeseen on nyt vahvistettu");
+    }
+
+    @Test
+    @Ignore
+    public void leave_municipality_blank_in_vetuma_and_choose_wrong_municipality_when_participating() {
+        vetumaLogin(OTHER_USER_SSN, null);
+
+        open(urls.view(normalInitiativeHelsinki));
+
+        assertThat(participateToInitiativeButton(), isPresent());
+        participateToInitiativeButton().get().click();
+
+        assertThat(findElementWhenClickable(By.id("homeMunicipality_chzn")).getText(), is(HELSINKI));
+
+        clickLink(HELSINKI); // Chosen select box default value. Expects helsinki to be selected by default.
+        getElemContaining(VANTAA, "li").click();
+
+        getElemContaining(getMessage(MEMBERSHIP_RADIO), "span").click();
+
+        // Vetuma participant has no information to fill
+        getElemContaining("Tallenna", "button").click();
+
+        assertTextContainedByClass("modal-title", "Osallistumisesi aloitteeseen on nyt vahvistettu");
     }
 
 }

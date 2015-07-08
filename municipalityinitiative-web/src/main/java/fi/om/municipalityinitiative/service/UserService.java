@@ -228,10 +228,21 @@ public class UserService {
         User user = (User) session.getAttribute(LOGIN_USER_PARAMETER);
 
         if (user instanceof VerifiedUser) {
+            // Because some participations are stored only to session (normal initiatives with verified users), we must not lose the old participationë.
+            Set<Long> originalInitiativesWithparticipation = ((VerifiedUser) user).getInitiativesWithParticipation();
             Maybe<VerifiedUser> verifiedUser = userDao.getVerifiedUser(((VerifiedUser) user).getHash());
             if (verifiedUser.isPresent()) {
+                verifiedUser.get().addParticipationToInitiative(originalInitiativesWithparticipation);
                 session.setAttribute(LOGIN_USER_PARAMETER, verifiedUser.get());
             }
         }
+    }
+
+    public void addParticipatedInitiativeToSession(HttpServletRequest request, Long initiativeId) {
+        HttpSession session = request.getSession();
+        VerifiedUser verifiedUser = (VerifiedUser) session.getAttribute(LOGIN_USER_PARAMETER);
+        verifiedUser.addParticipationToInitiative(Sets.newHashSet(initiativeId));
+        session.setAttribute(LOGIN_USER_PARAMETER, verifiedUser);
+
     }
 }

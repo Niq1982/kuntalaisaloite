@@ -235,6 +235,15 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         participantService.createParticipant(participant, initiative, null);
     }
 
+    @Test(expected = OperationNotAllowedException.class)
+    public void participating_allowance_is_checked_when_directly_participating() {
+        Long initiative = testHelper.createCollaborativeReview(testMunicipalityId);
+
+        ParticipantUICreateDto participant = participantUICreateDto();
+        participantService.createConfirmedParticipant(participant, initiative);
+    }
+
+
     @Test
     public void adding_participant_does_not_increase_denormalized_participantCount_but_accepting_does() throws MessagingException, InterruptedException {
         Long initiativeId = testHelper.create(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
@@ -247,6 +256,15 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         assertThat(getSingleInitiativeInfo().getParticipantCount(), Matchers.is(originalParticipantCount + 1));
 
         assertUniqueSentEmail(participantUICreateDto().getParticipantEmail(), EmailSubjectPropertyKeys.EMAIL_PARTICIPATION_CONFIRMATION_SUBJECT);
+    }
+    @Test
+    public void adding_confirmed_participant_increases_denormalized_participantCount() throws MessagingException, InterruptedException {
+        Long initiativeId = testHelper.create(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        int originalParticipantCount = testHelper.getInitiative(initiativeId).getParticipantCount();
+
+        Long participantId = participantService.createConfirmedParticipant(participantUICreateDto(), initiativeId);
+
+        assertThat(getSingleInitiativeInfo().getParticipantCount(), Matchers.is(originalParticipantCount + 1));
     }
 
     @Test(expected = OperationNotAllowedException.class)

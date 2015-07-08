@@ -18,7 +18,6 @@ import fi.om.municipalityinitiative.exceptions.InvalidParticipationConfirmationE
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
-import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.web.Urls;
@@ -154,4 +153,19 @@ public class ParticipantService {
         return participantId;
     }
 
+    @Transactional(readOnly = false)
+    public Long createConfirmedParticipant(ParticipantUICreateDto participant, Long initiativeId) {
+        assertAllowance("Allowed to participate", ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowParticipation());
+
+        ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(participant, initiativeId);
+        participantCreateDto.setMunicipalityInitiativeId(initiativeId);
+
+
+        String confirmationCode = RandomHashGenerator.shortHash();
+        Long participantId = participantDao.create(participantCreateDto, confirmationCode);
+
+        confirmParticipation(participantId, confirmationCode);
+
+        return participantId;
+    }
 }

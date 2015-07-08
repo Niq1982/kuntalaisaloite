@@ -128,7 +128,7 @@
              <div class="input-block-content">
                 <p><@f.fieldRequiredInfo /></p>
                 <div class="column col-1of2">
-                    <#if initiative.verifiable && user.isVerifiedUser()>
+                    <#if user.isVerifiedUser()>
                          <div class="input-header"><@u.message "contactInfo.verified.name" /></div>
                          <div class="input-placeholder">${user.contactInfo.name}</div>
                      <#else>
@@ -136,7 +136,7 @@
                      </#if>
                 </div>
                 <div class="column col-1of2 last">
-                    <#if initiative.verifiable && user.isVerifiedUser() && user.homeMunicipality.present>
+                    <#if user.isVerifiedUser() && user.homeMunicipality.present>
                         <div class="input-header"><@u.message "contactInfo.homeMunicipality" /></div>
                         <div class="input-placeholder"><@u.solveMunicipality user.homeMunicipality/></div>
                     <#else>
@@ -171,7 +171,7 @@
                 <@f.formCheckbox path="participant.showName" checked=true />
             </div>
 
-            <#if initiative.verifiable && user.isVerifiedUser()>
+            <#if user.isVerifiedUser()>
 
             <#else>
                 <div class="input-block-content">
@@ -180,7 +180,7 @@
             </#if>
 
             <div class="input-block-content">
-                <#if initiative.verifiable>
+                <#if user.isVerifiedUser()>
                     <button id="participate" type="submit" name="save" value="true" class="small-button"><span class="small-icon save-and-send"><@u.message "action.save" /></span></button>
                 <#else>
                     <@u.systemMessage type="warning" path="participate.confirmation.notification"/>
@@ -299,8 +299,18 @@
                     content:    '<#noescape>${participateFormHTML?replace("'","&#39;")}</#noescape>'
                 }]
             };
-            
-            
+
+
+            var userMunicipalityVerifiedByVetuma = false;
+            var userMunicipalityMatchesInitiativeMunicipality = false;
+
+            <#if user.isVerifiedUser() && user.homeMunicipality?? && user.homeMunicipality.isPresent()>
+                userMunicipalityVerifiedByVetuma = true;
+                <#if user.homeMunicipality.value.id == initiative.municipality.id>
+                    userMunicipalityMatchesInitiativeMunicipality = true;
+                </#if>
+            </#if>
+
             <#-- Autoload modal if it has errors or returned from VETUMA and user is allowed to participate -->
             <#if user.allowVerifiedParticipation(initiative.id, initiative.municipality) &&
                  initiative.verifiable && RequestParameters['show-participate']?? ||

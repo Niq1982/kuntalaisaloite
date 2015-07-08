@@ -602,8 +602,13 @@ var municipalitySelection = (function() {
 		} else {
 			disableSubmit(false);
 		}*/
+		if (typeof userMunicipalityVerifiedByVetuma !== 'undefined' && typeof userMunicipalityMatchesInitiativeMunicipality !== 'undefined') {
+			userMunicipalityVerifiedByVetuma ? showMembership(!userMunicipalityMatchesInitiativeMunicipality) : showMembership(!equalMunicipalitys());
 
-		showMembership(!equalMunicipalitys());
+		}
+		else {
+			showMembership(!equalMunicipalitys());
+		}
 
 		// In case of validation errors
 		initiativeType.disableVerifiable(!equalMunicipalitys());
@@ -666,7 +671,7 @@ var municipalitySelection = (function() {
 	function toggleMembershipRadios(select){
 		var	municipalMembership	= $('#municipalMembership');
 
-		if( equalMunicipalitys() ){
+		if( equalMunicipalitys() || userMunicipalityMatchesInitiativeMunicipality){
 			municipalityNotEqual.stop(false,true).slideUp(slideOptions);
 			preventContinuing(false);
 			disableSubmit(false);

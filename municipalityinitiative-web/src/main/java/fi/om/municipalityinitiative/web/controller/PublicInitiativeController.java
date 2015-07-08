@@ -40,10 +40,9 @@ import java.util.Locale;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
 import static fi.om.municipalityinitiative.web.Views.*;
+import static fi.om.municipalityinitiative.web.WebConstants.JSON;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
-
-import static fi.om.municipalityinitiative.web.WebConstants.JSON;
 
 @Controller
 public class PublicInitiativeController extends BaseController {
@@ -201,9 +200,15 @@ public class PublicInitiativeController extends BaseController {
         }
         else {
             if (validationService.validationSuccessful(participant, bindingResult, model, NormalInitiative.class)) {
-                participantService.createParticipant(participant, initiativeId, locale);
-                Urls urls = Urls.get(locale);
-                return redirectWithMessage(urls.view(initiativeId), RequestMessage.PARTICIPATE, request);
+                if (loginUserHolder.isVerifiedUser()) {
+                    participantService.createConfirmedParticipant(participant, initiativeId);
+                    userService.addParticipatedInitiativeToSession(request, initiativeId);
+                    return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.PARTICIPATE_VERIFIABLE, request);
+                } else {
+                    participantService.createParticipant(participant, initiativeId, locale);
+                    Urls urls = Urls.get(locale);
+                    return redirectWithMessage(urls.view(initiativeId), RequestMessage.PARTICIPATE, request);
+                }
             } else {
                 addVotingInfo(initiativeId, model);
                 return ViewGenerator.collaborativeView(initiativePageInfo,

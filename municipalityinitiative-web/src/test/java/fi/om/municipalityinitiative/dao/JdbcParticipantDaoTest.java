@@ -63,6 +63,7 @@ public class JdbcParticipantDaoTest {
         assertThat(testHelper.countAll(QParticipant.participant), is(2L));
     }
 
+
     @Test
     public void participant_information_is_saved() {
         precondition(participantDao.findNormalPublicParticipants(testInitiativeId), hasSize(1));
@@ -386,6 +387,16 @@ public class JdbcParticipantDaoTest {
         participantCreateDto.setParticipantName(PARTICIPANTS_NAME);
         participantCreateDto.setHomeMunicipality(otherMunicipalityId);
         participantCreateDto.setEmail(PARTICIPANT_EMAIL);
+        participantCreateDto.setShowName(PARTICIPANT_SHOW_NAME);
+        participantCreateDto.setMunicipalMembership(PARTICIPANT_MEMBERSHIP);
+        return participantCreateDto;
+    }
+
+    private ParticipantCreateDto participantCreateDtoWithoutEmail() {
+        ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
+        participantCreateDto.setMunicipalityInitiativeId(testInitiativeId);
+        participantCreateDto.setParticipantName(PARTICIPANTS_NAME);
+        participantCreateDto.setHomeMunicipality(otherMunicipalityId);
         participantCreateDto.setShowName(PARTICIPANT_SHOW_NAME);
         participantCreateDto.setMunicipalMembership(PARTICIPANT_MEMBERSHIP);
         return participantCreateDto;
