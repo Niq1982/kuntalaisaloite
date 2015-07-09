@@ -6,7 +6,6 @@ import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.DateTime;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -239,12 +238,11 @@ public class AuthorsWebTest extends WebTestBase {
     }
 
     @Test
-    @Ignore
     public void accepting_verified_author_invitation_when_unknown_municipality_prevents_accepting_if_user_selects_wrong_municipality() throws InterruptedException {
 
         AuthorInvitation invitation = testHelper.createInvitation(verifiedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
         vetumaLogin("111111-1111", null);
-        //Thread.sleep(100);
+        Thread.sleep(500);
 
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
 
