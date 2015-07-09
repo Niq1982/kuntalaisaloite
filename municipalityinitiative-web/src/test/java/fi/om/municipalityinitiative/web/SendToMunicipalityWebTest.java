@@ -43,6 +43,11 @@ public class SendToMunicipalityWebTest extends WebTestBase {
         Long initiativeId = testHelper.create(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
 
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         open(urls.management(initiativeId));
 
         testHelper.updateField(initiativeId, QMunicipalityInitiative.municipalityInitiative.sent, DateTime.now());

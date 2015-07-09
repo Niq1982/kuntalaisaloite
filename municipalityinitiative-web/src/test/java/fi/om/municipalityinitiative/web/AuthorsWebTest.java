@@ -242,7 +242,7 @@ public class AuthorsWebTest extends WebTestBase {
 
         AuthorInvitation invitation = testHelper.createInvitation(verifiedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
         vetumaLogin("111111-1111", null);
-        Thread.sleep(500);
+
 
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
 
