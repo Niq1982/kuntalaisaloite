@@ -6,7 +6,6 @@ import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import org.joda.time.DateTime;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -276,7 +275,6 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     }
 
     @Test
-    @Ignore
     public void participating_to_normal_initiative_as_verified_user_with_correct_municipality() {
         vetumaLogin(OTHER_USER_SSN, HELSINKI);
 
@@ -302,7 +300,6 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     }
 
     @Test
-    @Ignore
     public void participating_to_normal_initiative_with_wrong_municipality() {
         vetumaLogin(OTHER_USER_SSN, VANTAA);
         open(urls.view(normalInitiativeHelsinki));
@@ -319,7 +316,6 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     }
 
     @Test
-    @Ignore
     public void leave_municipality_blank_in_vetuma_and_choose_when_participating() {
         vetumaLogin(OTHER_USER_SSN, null);
 
@@ -337,7 +333,6 @@ public class InitiativeParticipateWebTest extends WebTestBase {
     }
 
     @Test
-    @Ignore
     public void leave_municipality_blank_in_vetuma_and_choose_wrong_municipality_when_participating() {
         vetumaLogin(OTHER_USER_SSN, null);
 

@@ -4,6 +4,7 @@ import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
+import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.email.EmailSubjectPropertyKeys;
 import fi.om.municipalityinitiative.util.InitiativeState;
@@ -240,7 +241,7 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         Long initiative = testHelper.createCollaborativeReview(testMunicipalityId);
 
         ParticipantUICreateDto participant = participantUICreateDto();
-        participantService.createConfirmedParticipant(participant, initiative);
+        participantService.createConfirmedParticipant(participant, initiative, new LoginUserHolder(testHelper.getVerifiedUser()));
     }
 
 
@@ -262,7 +263,7 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         Long initiativeId = testHelper.create(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         int originalParticipantCount = testHelper.getInitiative(initiativeId).getParticipantCount();
 
-        Long participantId = participantService.createConfirmedParticipant(participantUICreateDto(), initiativeId);
+        Long participantId = participantService.createConfirmedParticipant(participantUICreateDto(), initiativeId, new LoginUserHolder(testHelper.getVerifiedUser()));
 
         assertThat(getSingleInitiativeInfo().getParticipantCount(), Matchers.is(originalParticipantCount + 1));
     }

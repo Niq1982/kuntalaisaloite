@@ -19,6 +19,7 @@ import fi.om.municipalityinitiative.service.ui.VerifiedInitiativeService;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.validation.NormalInitiative;
+import fi.om.municipalityinitiative.validation.NormalInitiativeVerifiedUser;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.SearchParameterQueryString;
 import fi.om.municipalityinitiative.web.Urls;
@@ -199,23 +200,30 @@ public class PublicInitiativeController extends BaseController {
             return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.PARTICIPATE_VERIFIABLE, request);
         }
         else {
-            if (validationService.validationSuccessful(participant, bindingResult, model, NormalInitiative.class)) {
-                if (loginUserHolder.isVerifiedUser()) {
-                    participantService.createConfirmedParticipant(participant, initiativeId);
+            if (loginUserHolder.isVerifiedUser()) {
+
+                if (loginUserHolder.getVerifiedUser().getHomeMunicipality().isPresent()) {
+                    participant.setHomeMunicipality(loginUserHolder.getVerifiedUser().getHomeMunicipality().getValue().getId());
+                }
+
+                if ( (validationService.validationSuccessful(participant, bindingResult, model, NormalInitiativeVerifiedUser.class))) {
+                    participantService.createConfirmedParticipant(participant, initiativeId, loginUserHolder);
                     userService.addParticipatedInitiativeToSession(request, initiativeId);
                     return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.PARTICIPATE_VERIFIABLE, request);
-                } else {
-                    participantService.createParticipant(participant, initiativeId, locale);
-                    Urls urls = Urls.get(locale);
-                    return redirectWithMessage(urls.view(initiativeId), RequestMessage.PARTICIPATE, request);
                 }
-            } else {
-                addVotingInfo(initiativeId, model);
-                return ViewGenerator.collaborativeView(initiativePageInfo,
-                        municipalityService.findAllMunicipalities(locale),
-                        participant,
-                        new AuthorUIMessage()).view(model, Urls.get(locale).alt().view(initiativeId));
+
+            } else if (validationService.validationSuccessful(participant, bindingResult, model, NormalInitiative.class)) {
+                participantService.createParticipant(participant, initiativeId, locale);
+                Urls urls = Urls.get(locale);
+                return redirectWithMessage(urls.view(initiativeId), RequestMessage.PARTICIPATE, request);
             }
+
+            addVotingInfo(initiativeId, model);
+            return ViewGenerator.collaborativeView(initiativePageInfo,
+                    municipalityService.findAllMunicipalities(locale),
+                    participant,
+                    new AuthorUIMessage()).view(model, Urls.get(locale).alt().view(initiativeId));
+
         }
     }
 

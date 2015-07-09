@@ -154,10 +154,10 @@ public class ParticipantService {
     }
 
     @Transactional(readOnly = false)
-    public Long createConfirmedParticipant(ParticipantUICreateDto participant, Long initiativeId) {
+    public Long createConfirmedParticipant(ParticipantUICreateDto participant, Long initiativeId, LoginUserHolder loginUserHolder) {
         assertAllowance("Allowed to participate", ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowParticipation());
 
-        ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parse(participant, initiativeId);
+        ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parseParticipantFromVerifiedUser(participant, loginUserHolder.getVerifiedUser(), initiativeId);
         participantCreateDto.setMunicipalityInitiativeId(initiativeId);
 
 

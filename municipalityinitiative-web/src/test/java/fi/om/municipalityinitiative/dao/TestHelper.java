@@ -13,6 +13,7 @@ import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
+import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.service.EncryptionService;
 import fi.om.municipalityinitiative.service.email.EmailReportType;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
@@ -421,6 +422,12 @@ public class TestHelper {
             set.set(QParticipant.participant.confirmationCode, confirmationCode);
         }
         return set.executeWithKey(QParticipant.participant.id);
+    }
+
+    public VerifiedUser getVerifiedUser() {
+        ContactInfo contactInfo = new ContactInfo();
+        contactInfo.setName("Paavo Paavolainen");
+        return User.verifiedUser(new VerifiedUserId(123L), "ffafdsf", contactInfo, null, null, Maybe.of(new Municipality(1, "Oulu", "Åbo", true)));
     }
 
     @Transactional(readOnly = false)
