@@ -251,7 +251,6 @@ public class AuthorsWebTest extends WebTestBase {
         clickLink(HELSINKI); // Chosen select box default value. Expects helsinki to be selected by default.
         getElemContaining(VANTAA, "li").click();
 
-        Thread.sleep(500);
         assertTextContainedByClass("msg-warning", "Et ole aloitteen kunnan jäsen");
 
     }
@@ -301,8 +300,6 @@ public class AuthorsWebTest extends WebTestBase {
         testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(publishedInitiativeId, HELSINKI_ID).withPublicName(false));
 
         vetumaLogin(USER_SSN, HELSINKI);
-
-        Thread.sleep(100);
 
         open(urls.management(publishedInitiativeId));
 

@@ -671,7 +671,7 @@ var municipalitySelection = (function() {
 	function toggleMembershipRadios(select){
 		var	municipalMembership	= $('#municipalMembership');
 
-		if( equalMunicipalitys() || userMunicipalityMatchesInitiativeMunicipality){
+		if( equalMunicipalitys() || ((typeof userMunicipalityMatchesInitiativeMunicipality !== 'undefined') && userMunicipalityMatchesInitiativeMunicipality)){
 			municipalityNotEqual.stop(false,true).slideUp(slideOptions);
 			preventContinuing(false);
 			disableSubmit(false);
