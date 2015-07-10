@@ -2,7 +2,6 @@ var localization,
 	generateModal,
 	generateJsMessage,
 	jsMessages;
-
 /**
  * Localization
  * ==============
@@ -1914,7 +1913,7 @@ if (window.hasIGraphFrame) {
 
 			var mapOptions = {
 				center: muncipalityCoordinates,
-				zoom: 8
+				zoom: 14
 			};
 
 			var map = new google.maps.Map(document.getElementById('map-canvas'),
@@ -1941,12 +1940,9 @@ if (window.hasIGraphFrame) {
 		});
 		map.panTo(position);
 	}
-	console.log("${initiative.municipality.getName(locale)}");
 
 
 	$("#openMap").click(function(){
-		console.log("Open map");
-		// "${initiative.municipality.getName(locale)}"
 		initialize(modalData.initialLocation);
 		generateModal(modalData.mapContainer(), 'full');
 	});
