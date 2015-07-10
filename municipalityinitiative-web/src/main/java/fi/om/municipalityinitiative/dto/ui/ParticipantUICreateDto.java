@@ -25,7 +25,7 @@ public class ParticipantUICreateDto
     @Size(max = InitiativeConstants.CONTACT_EMAIL_MAX, groups = NormalInitiative.class)
     private String participantEmail;
 
-    @NotNull(groups = NormalInitiative.class)
+    @NotNull(groups = {NormalInitiative.class, NormalInitiativeVerifiedUser.class})
     private Long municipality;
 
     public String getParticipantName() {
