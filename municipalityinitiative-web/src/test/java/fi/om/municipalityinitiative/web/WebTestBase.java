@@ -197,7 +197,7 @@ public abstract class WebTestBase {
             }
             elementTexts.add(element.getText().trim());
         }
-        fail(tag + " tag with text " + text + " not found. Texts found: " + TestUtil.listValues(elementTexts) + " (Page title: "+driver.getTitle()+")");
+        fail(tag + " tag with text " + text + " not found. Texts found: " + TestUtil.listValues(elementTexts) + " (Page title: " + driver.getTitle() + ")");
     }
 
     protected static void assertTextNotContainedByClass(String className, String text) {
@@ -212,6 +212,9 @@ public abstract class WebTestBase {
 
     protected void assertWarningMessage(String text) {
         assertTextContainedByClass("msg-warning", text);
+    }
+    protected void assertInfoMessageContainsText(String text) {
+        assertTextContainedByClass("msg-info", text);
     }
 
     protected static void assertTextContainedByClass(String className, String text) {

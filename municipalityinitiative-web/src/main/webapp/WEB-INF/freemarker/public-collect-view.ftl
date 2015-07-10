@@ -113,10 +113,12 @@
             <@f.securityFilters/>
             <@f.notTooFastField participant/>
 
-            <#if initiative.verifiable && user.isVerifiedUser() && user.homeMunicipality.present>
+            <#if user.isVerifiedUser() && user.homeMunicipality.present>
                 <#assign infoKeyPostfix = ".verified" />
             <#elseif initiative.verifiable && user.isVerifiedUser() && !user.homeMunicipality.present>
                 <#assign infoKeyPostfix = ".noMunicipality" />
+            <#elseif user.isVerifiedUser() && !user.homeMunicipality.present>
+                <#assign infoKeyPostfix = ".noMunicipality.normalInitiative" />
             <#else>
                 <#assign infoKeyPostfix = "" />
             </#if>

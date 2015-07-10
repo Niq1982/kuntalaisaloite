@@ -285,6 +285,8 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         assertThat(participateToInitiativeButton(), isPresent());
         participateToInitiativeButton().get().click();
 
+        assertInfoMessageContainsText("Nimesi ja kotikuntasi on haettu");
+
         // Vetuma participant has no information to fill
         getElemContaining("Tallenna", "button").click();
 
@@ -304,6 +306,8 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         vetumaLogin(OTHER_USER_SSN, VANTAA);
         open(urls.view(normalInitiativeHelsinki));
 
+        Integer originalParticipantCountOnPage = Integer.valueOf(getElement(By.className("user-count-total")).getText());
+
         assertThat(participateToInitiativeButton(), isPresent());
         participateToInitiativeButton().get().click();
 
@@ -313,6 +317,12 @@ public class InitiativeParticipateWebTest extends WebTestBase {
         getElemContaining("Tallenna", "button").click();
 
         assertTextContainedByClass("modal-title", "Osallistumisesi aloitteeseen on nyt vahvistettu");
+        Integer newParticipantCountOnPage = Integer.valueOf(getElement(By.className("user-count-total")).getText());
+
+        assertThat(newParticipantCountOnPage, is(originalParticipantCountOnPage + 1));
+
+        assertWarningMessage("Olet jo osallistunut tähän aloitteeseen");
+        assertThat(participateToInitiativeButton(), isNotPresent());
     }
 
     @Test
@@ -323,6 +333,8 @@ public class InitiativeParticipateWebTest extends WebTestBase {
 
         assertThat(participateToInitiativeButton(), isPresent());
         participateToInitiativeButton().get().click();
+
+        assertInfoMessageContainsText("Vain nimesi voitiin hakea");
 
         assertThat(findElementWhenClickable(By.id("homeMunicipality_chzn")).getText(), is(HELSINKI));
 
