@@ -113,20 +113,17 @@ public class PublicInitiativeController extends BaseController {
         InitiativePageInfo initiativePageView = publicInitiativeService.getInitiativePageDto(initiativeId, loginUserHolder);
             if (initiativePageView.isCollaborative()) {
 
-            addVotingInfo(initiativeId, model);
             return ViewGenerator.collaborativeView(initiativePageView,
                     municipalityService.findAllMunicipalities(locale),
                     new ParticipantUICreateDto(),
-                    new AuthorUIMessage()).view(model, Urls.get(locale).alt().view(initiativeId));
+                    new AuthorUIMessage(),
+                    supportCountService.getSupportVotesPerDateJson(initiativeId)).view(model, Urls.get(locale).alt().view(initiativeId));
         }
         else {
             return ViewGenerator.singleView(initiativePageView).view(model, Urls.get(locale).alt().view(initiativeId));
         }
     }
 
-    private void addVotingInfo(Long initiativeId, Model model) {
-        model.addAttribute("supportCountData", supportCountService.getSupportVotesPerDateJson(initiativeId));
-    }
 
     @RequestMapping(value = { PREPARE_FI, PREPARE_SV }, method = GET)
     public String prepareGet(Model model, Locale locale, HttpServletRequest request) {
@@ -218,11 +215,11 @@ public class PublicInitiativeController extends BaseController {
                 return redirectWithMessage(urls.view(initiativeId), RequestMessage.PARTICIPATE, request);
             }
 
-            addVotingInfo(initiativeId, model);
             return ViewGenerator.collaborativeView(initiativePageInfo,
                     municipalityService.findAllMunicipalities(locale),
                     participant,
-                    new AuthorUIMessage()).view(model, Urls.get(locale).alt().view(initiativeId));
+                    new AuthorUIMessage(),
+                    supportCountService.getSupportVotesPerDateJson(initiativeId)).view(model, Urls.get(locale).alt().view(initiativeId));
 
         }
     }
@@ -364,11 +361,11 @@ public class PublicInitiativeController extends BaseController {
             return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.AUTHOR_MESSAGE_ADDED, request);
         }
         else {
-            addVotingInfo(initiativeId, model);
             return ViewGenerator.collaborativeView(publicInitiativeService.getInitiativePageInfo(initiativeId),
                     municipalityService.findAllMunicipalities(locale),
                     new ParticipantUICreateDto(),
-                    authorUIMessage).view(model, Urls.get(locale).alt().view(initiativeId));
+                    authorUIMessage,
+                    supportCountService.getSupportVotesPerDateJson(initiativeId)).view(model, Urls.get(locale).alt().view(initiativeId));
         }
     }
 
