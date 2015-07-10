@@ -142,7 +142,7 @@
                         <div class="input-header"><@u.message "contactInfo.homeMunicipality" /></div>
                         <div class="input-placeholder"><@u.solveMunicipality user.homeMunicipality/></div>
                     <#else>
-                        <@f.municipalitySelect path="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipality.id />
+                        <@f.municipalitySelect path="participant.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipality.id multiple=false/>
                     </#if>
                 </div>
             </div>
