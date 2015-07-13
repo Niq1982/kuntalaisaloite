@@ -225,16 +225,17 @@
  *
  * Check a value in a list to see if it is the currently selected value.
  * If so, add the 'selected="selected"' text to the output.
- * Handles values of numeric and string types.
+ * Handles values of numeric and string types. Handles also sequences but only with spring.status.actualValue. Preselected option can't be list.
  * This function is used internally but can be accessed by user code if required.
  *
  * @param value the current value in a list iteration
- * @param preSelected option. If spring.status.value has value select it.
+ * @param preSelected option. If spring.status.value has value select it. Preselected option can't be list.
 -->
 <#macro checkSelected value preSelected>
     <#if spring.stringStatusValue?has_content>
         <#if spring.stringStatusValue?is_number && spring.stringStatusValue == value?number>selected="selected"</#if>
         <#if spring.stringStatusValue?is_string && spring.stringStatusValue == value?string>selected="selected"</#if>
+        <#if spring.status.actualValue?is_sequence && spring.contains(spring.status.actualValue?default([""]), value) >selected="selected"</#if>
     <#else>
         <#if preSelected?is_number && value?is_number && preSelected == value?number>selected="selected"</#if>
         <#if preSelected?is_string && preSelected == value?string>selected="selected"</#if>

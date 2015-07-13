@@ -272,6 +272,12 @@ public abstract class WebTestBase {
         elementWhenClickable.sendKeys(text);
     }
 
+
+    protected void clickInput() {
+        WebElement e  = getElement(By.tagName("input"));
+        e.click();
+    }
+
     protected void inputTextByCSS(String css, String text) {
         findElementWhenClickable(By.cssSelector(css)).sendKeys(text);
     }
@@ -317,10 +323,10 @@ public abstract class WebTestBase {
      List<WebElement> htmlElements = driver.findElements(By.tagName(tagName));
             
         // wait.until(ExpectedConditions.elementToBeClickable(By.name(name)));
-       
+
         for (WebElement e : htmlElements) {
           if (e.getText().contains(containing)) {
-            return Maybe.of(e);
+             return Maybe.of(e);
           }
         }
         
