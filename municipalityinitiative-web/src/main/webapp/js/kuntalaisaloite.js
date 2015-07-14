@@ -1903,48 +1903,67 @@ if (window.hasIGraphFrame) {
  *
  */
 (function() {
-	var marker;
 
-	function initialize(municipality) {
+	var mapContainer = (function() {
+		var marker;
 
-		var geocoder = new google.maps.Geocoder();
-		geocoder.geocode({"address" : municipality}, function(results, status) {
-			var muncipalityCoordinates = results[0].geometry.location;
 
-			var mapOptions = {
-				center: muncipalityCoordinates,
-				zoom: 14
-			};
+		var init = function(municipality) {
 
-			var map = new google.maps.Map(document.getElementById('map-canvas'),
-				mapOptions);
+			var geocoder = new google.maps.Geocoder();
+			geocoder.geocode({"address": municipality}, function (results, status) {
+				var muncipalityCoordinates;
+				if (results.length > 0) {
+					muncipalityCoordinates = results[0].geometry.location;
+				} else {
+					// Default set to Finland
+					muncipalityCoordinates = {"lat": 64.9146659, "lng": 26.0672554};
+				}
+				var mapOptions = {
+					center: muncipalityCoordinates,
+					zoom: 14
+				};
 
-			placeMarker(muncipalityCoordinates, map)
+				var map = new google.maps.Map(document.getElementById('map-canvas'),
+					mapOptions);
 
-			google.maps.event.addListener(map, 'click', function(e) {
+				placeMarker(muncipalityCoordinates, map);
 
-				placeMarker(e.latLng, map);
-				$("#lat").text(e.latLng);
+				google.maps.event.addListener(map, 'click', function (e) {
+					placeMarker(e.latLng, map);
+					$("#lat").text(e.latLng);
+				});
 			});
-		});
 
-	}
 
-	function placeMarker(position, map) {
-		if (marker != null) {
-			marker.setMap(null);
-		}
-		marker = new google.maps.Marker({
-			position: position,
-			map: map
-		});
-		map.panTo(position);
-	}
+			$("#save-and-close").live('click', function () {
+				console.log("Location chosen");
+			});
 
+		};
+
+		function placeMarker(position, map) {
+			if (marker != null) {
+				marker.setMap(null);
+			}
+			marker = new google.maps.Marker({
+				position: position,
+				map: map
+			});
+			map.panTo(position);
+		};
+
+
+
+
+		return {
+			// Return Init-function for the modal
+			init: init
+		};
+	})();
 
 	$("#openMap").click(function(){
-		initialize(modalData.initialLocation);
-		generateModal(modalData.mapContainer(), 'full');
+		generateModal(modalData.mapContainer(), 'full', mapContainer.init(modalData.initialLocation));
 	});
 }());
 
