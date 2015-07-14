@@ -34,7 +34,7 @@ public class IFrameController extends BaseController {
                          Locale locale,
                          HttpServletRequest request) {
 
-        convertOldIFrameCallToNewIfNeeded(search);
+
         return iframeOld(search, model, locale, request);
     }
 
@@ -46,6 +46,8 @@ public class IFrameController extends BaseController {
                          HttpServletRequest request) {
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().search());
+
+        convertSingleMunipalityToListIfNeeded(search);
 
         return ViewGenerator.iframeSearch(
                 cachedInitiativeFinder.findIframeInitiatives(search),
@@ -64,7 +66,7 @@ public class IFrameController extends BaseController {
         return ViewGenerator.iframeGenerator(municipalities).view(model, urls.alt().iframeGenerator());
     }
 
-    private void convertOldIFrameCallToNewIfNeeded(InitiativeSearch search) {
+    private void convertSingleMunipalityToListIfNeeded(InitiativeSearch search) {
         if (search.getMunicipalities() == null && search.getMunicipality() != null) {
             search.setMunicipalities(search.getMunicipality());
         }

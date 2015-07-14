@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import org.joda.time.DateTime;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -127,6 +128,29 @@ public class ViewInitiativeWebTest extends WebTestBase {
         assertTextNotContainedByClass("name-container", privateName);
         assertTextNotContainedByClass("name-container", notAcceptedName);
 
+    }
+
+    @Test
+    @Ignore
+    public void iframe_page_accepts_municipality_parameter_and_shows_initiative_oldest_municipality_paramater_iframe() {
+
+        DateTime stateTime = new DateTime(2011, 1, 1, 0, 0);
+        String title = "Yeah rock rock";
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
+                .withState(InitiativeState.PUBLISHED)
+                .withStateTime(stateTime)
+                .withName(title));
+
+        open(urls.iframeWithOldestApiMunicipality(HELSINKI_ID));
+        assertThat(getElement(By.tagName("li")).getText(), containsString(stateTime.toString("d.M.yyyy")));
+        assertThat(getElement(By.tagName("li")).getText(), containsString(title));
+    }
+
+    @Test
+    @Ignore
+    public void iframe_page_shows_empty_list_if_no_initiatives_oldest_municipality_paramater_iframe() {
+        open(urls.iframeWithOldestApiMunicipality(-1L));
+        assertThat(getElement(By.className("search-results")).getText(), is("Ei vielä yhtään aloitetta"));
     }
 
     @Test

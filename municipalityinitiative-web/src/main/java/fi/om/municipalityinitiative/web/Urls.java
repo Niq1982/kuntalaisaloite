@@ -129,7 +129,7 @@ public final class Urls {
 
     public static final String PARAM_INITIATIVE = "initiative";
 
-    public static final String OLD_PARAM_MUNICIPALITY = "municipalities";
+    public static final String OLD_PARAM_MUNICIPALITY = "municipality";
 
     public static final String PARAM_SENT_COMMENT = "comment";
 
@@ -447,7 +447,9 @@ public final class Urls {
     public String iframeWithOldApiMunicipality(Long municipalityId) {
         return iframe() + "?" + OLD_PARAM_MUNICIPALITY + "=" + municipalityId;
     }
-
+    public String iframeWithOldestApiMunicipality(Long municipalityId) {
+        return iframeBaseUrl + getLocalizedPageUrl(IFRAME_OLD_FI, IFRAME_OLD_SV ) + "?" + OLD_PARAM_MUNICIPALITY + "=" + municipalityId;
+    }
     public String iframeGenerator() {
         return getLocalizedPageUrl(IFRAME_GENERATOR_FI, IFRAME_GENERATOR_SV);
     }
