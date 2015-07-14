@@ -74,8 +74,8 @@
             <div id="lat"></div>
         </div>
         <div class="input-block-content">
-            <span class="small-button green close">Tallenna</span>
-            <a class="push close"><@u.message "action.cancel" /></a>
+            <span class="small-button close" id="close-and-save">Tallenna</span>
+            <span style="color:blue" class="close push"><@u.message "action.cancel" /></span>
         </div>
     </@compress>
 </#assign>

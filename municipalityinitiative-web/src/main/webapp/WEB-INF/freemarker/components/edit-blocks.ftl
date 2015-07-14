@@ -283,7 +283,7 @@
         </div>
 
         <div class="input-block-content">
-            <p class> Lisää tarkempi sijainti <a id="openMap">tästä</a></p>
+            <p class> Lisää tarkempi sijainti <span id="openMap" style="color: blue"">tästä</span></p>
         </div>
         <#--<@formLabel path=path+".location" key="initiative.location">
         <@showError />
