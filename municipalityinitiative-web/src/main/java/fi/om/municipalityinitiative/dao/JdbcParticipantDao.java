@@ -17,11 +17,14 @@ import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 
 import javax.annotation.Resource;
+import java.util.Collection;
 import java.util.List;
 
 import static fi.om.municipalityinitiative.dao.JdbcInitiativeDao.assertSingleAffection;
+import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 import static fi.om.municipalityinitiative.sql.QParticipant.participant;
 import static fi.om.municipalityinitiative.sql.QVerifiedParticipant.verifiedParticipant;
+import static fi.om.municipalityinitiative.sql.QVerifiedUserNormalInitiatives.verifiedUserNormalInitiatives;
 
 @SQLExceptionTranslated
 public class JdbcParticipantDao implements ParticipantDao {
@@ -125,6 +128,25 @@ public class JdbcParticipantDao implements ParticipantDao {
                     .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeIdByParticipant))
                     .execute());
         }
+    }
+
+    @Override
+    public void verifiedUserParticipatesNormalInitiative(Long participantId, VerifiedUserId userId) {
+        assertSingleAffection(queryFactory.insert(verifiedUserNormalInitiatives)
+                .set(verifiedUserNormalInitiatives.participant, participantId)
+                .set(verifiedUserNormalInitiatives.verifiedUser, userId.toLong()).execute());
+    }
+
+    @Override
+    public Collection<Long> getNormalInitiativesVerifiedUserHasParticipated(VerifiedUserId userId) {
+        return queryFactory.from(verifiedUserNormalInitiatives)
+                .where(verifiedUserNormalInitiatives.verifiedUser
+                        .eq(userId.toLong()))
+                .innerJoin(participant)
+                    .on(verifiedUserNormalInitiatives.participant.eq(participant.id))
+                .innerJoin(municipalityInitiative)
+                    .on(participant.municipalityInitiativeId.eq(municipalityInitiative.id))
+                .list(municipalityInitiative.id);
     }
 
     @Override

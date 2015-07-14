@@ -1,10 +1,10 @@
 package fi.om.municipalityinitiative.service;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
+import fi.om.municipalityinitiative.dao.UserDao;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
-import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.email.EmailSubjectPropertyKeys;
 import fi.om.municipalityinitiative.util.InitiativeState;
@@ -28,6 +28,9 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
 
     @Resource
     private ParticipantService participantService;
+
+    @Resource
+    private UserDao userDao;
 
     private Long testMunicipalityId;
 
@@ -241,7 +244,7 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         Long initiative = testHelper.createCollaborativeReview(testMunicipalityId);
 
         ParticipantUICreateDto participant = participantUICreateDto();
-        participantService.createConfirmedParticipant(participant, initiative, new LoginUserHolder(testHelper.getVerifiedUser()));
+        participantService.createConfirmedParticipant(participant, initiative, TestHelper.authorLoginUserHolder);
     }
 
 
@@ -262,8 +265,9 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
     public void adding_confirmed_participant_increases_denormalized_participantCount() throws MessagingException, InterruptedException {
         Long initiativeId = testHelper.create(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         int originalParticipantCount = testHelper.getInitiative(initiativeId).getParticipantCount();
+        testHelper.createVerifiedUser(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId));
 
-        Long participantId = participantService.createConfirmedParticipant(participantUICreateDto(), initiativeId, new LoginUserHolder(testHelper.getVerifiedUser()));
+        Long participantId = participantService.createConfirmedParticipant(participantUICreateDto(), initiativeId, TestHelper.lastLoggedIntVerifiedUserHolder);
 
         assertThat(getSingleInitiativeInfo().getParticipantCount(), Matchers.is(originalParticipantCount + 1));
     }

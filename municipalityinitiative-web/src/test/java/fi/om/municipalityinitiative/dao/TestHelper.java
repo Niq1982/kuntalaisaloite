@@ -58,6 +58,7 @@ public class TestHelper {
 
     public static LoginUserHolder authorLoginUserHolder;
     public static LoginUserHolder unknownLoginUserHolder = new LoginUserHolder(User.anonym());
+    public static LoginUserHolder lastLoggedIntVerifiedUserHolder;
     public static OmLoginUserHolder omLoginUser = new OmLoginUserHolder(User.omUser(""));
 
     @Inject
@@ -384,6 +385,40 @@ public class TestHelper {
         return id;
     }
 
+    @Transactional(readOnly = false)
+    public Long createVerifiedParticipantWithVerifiedUserId(AuthorDraft authorDraft) {
+
+        Long id = queryFactory.insert(QVerifiedParticipant.verifiedParticipant)
+                .set(QVerifiedParticipant.verifiedParticipant.showName, authorDraft.publicName)
+                .set(QVerifiedParticipant.verifiedParticipant.initiativeId, authorDraft.initiativeId)
+                .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, authorDraft.verifiedUserId.getValue())
+                .set(QVerifiedParticipant.verifiedParticipant.verified, authorDraft.participantMunicipality != null)
+                .execute();
+
+        increaseParticipantCount(authorDraft);
+
+        return id;
+    }
+
+    @Transactional(readOnly = false)
+    public Long createVerifiedUser(AuthorDraft authorDraft){
+        String hash = createUserSsnHash();
+        Long verifiedUserId = queryFactory.insert(QVerifiedUser.verifiedUser)
+                .set(QVerifiedUser.verifiedUser.hash, hash)
+                .set(QVerifiedUser.verifiedUser.address, authorDraft.authorAddress)
+                .set(QVerifiedUser.verifiedUser.phone, authorDraft.authorPhone)
+                .set(QVerifiedUser.verifiedUser.email, authorDraft.participantEmail)
+                .set(QVerifiedUser.verifiedUser.name, authorDraft.participantName)
+                .set(QVerifiedUser.verifiedUser.municipalityId, authorDraft.participantMunicipality)
+                .executeWithKey(QVerifiedUser.verifiedUser.id);
+
+        this.lastVerifiedUserId = verifiedUserId;
+
+        Maybe<Municipality> participantMunicipality = Maybe.of(new Municipality(authorDraft.participantMunicipality, "name_fi", "name_sv", true));
+        this.lastLoggedIntVerifiedUserHolder = new LoginUserHolder(User.verifiedUser(new VerifiedUserId(verifiedUserId), hash, new ContactInfo(), null, null, participantMunicipality));
+        return verifiedUserId;
+    }
+
     private String createUserSsnHash() {
         previousUserSsnHash = RandomHashGenerator.shortHash();
         return previousUserSsnHash;
@@ -673,6 +708,8 @@ public class TestHelper {
         public String authorAddress = DEFAULT_AUTHOR_ADDRESS;
         public String authorPhone = DEFAULT_AUTHOR_PHONE;
         public Maybe<String> userSsn = Maybe.absent();
+        public Maybe<Long> verifiedUserId = Maybe.absent();
+
         public AuthorDraft(Long initiativeId, Long participantMunicipality) {
             this.initiativeId = initiativeId;
             this.initiativeDraftMaybe = Maybe.absent();
@@ -726,6 +763,10 @@ public class TestHelper {
 
         public AuthorDraft withInitiativeId(Long lastInitiativeId) {
             initiativeId = lastInitiativeId;
+            return this;
+        }
+        public AuthorDraft withVerifiedUserId(Long verifiedUserId) {
+            this.verifiedUserId = Maybe.of(verifiedUserId);
             return this;
         }
 

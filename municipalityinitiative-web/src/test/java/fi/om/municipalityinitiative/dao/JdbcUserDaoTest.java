@@ -5,6 +5,8 @@ import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
+import fi.om.municipalityinitiative.util.InitiativeState;
+import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.junit.Before;
@@ -20,6 +22,7 @@ import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={IntegrationTestConfiguration.class})
@@ -37,12 +40,23 @@ public class JdbcUserDaoTest {
 
     @Resource
     private UserDao userDao;
+
+    @Resource
+    ParticipantDao participantDao;
+
     private Maybe<Municipality> testMunicipality;
+    private Long testMunicipalityId;
+    private Long testInitiativeId;
+    private Long testVerifiedInitiativeId;
+    private Long otherMunicipalityId;
 
     @Before
     public void setup() throws Exception {
         testHelper.dbCleanup();
         testMunicipality = Maybe.of(new Municipality(testHelper.createTestMunicipality("Municipality"), "Municipality", "Municipality", true));
+        testMunicipalityId = testMunicipality.getValue().getId();
+        testInitiativeId = testHelper.create(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        testVerifiedInitiativeId = testHelper.create(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
     }
 
     @Test
@@ -88,6 +102,24 @@ public class JdbcUserDaoTest {
     @Test
     public void get_returns_absent_if_not_found() {
         assertThat(userDao.getVerifiedUser("unknown-user-hash"), isNotPresent());
+    }
+
+    @Test
+    public void get_initiatives_where_user_has_participated() {
+        userDao.addVerifiedUser(HASH, contactInfo(), testMunicipality);
+
+        // Verified user participates verified initiative
+        Long verifiedUserId = userDao.getVerifiedUserId(HASH).getValue().toLong();
+        testHelper.createVerifiedParticipantWithVerifiedUserId(new TestHelper.AuthorDraft(testVerifiedInitiativeId, testMunicipalityId).withVerifiedUserId(verifiedUserId));
+
+        // Verified user participates to normal initiative
+        Long participantId = testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(testInitiativeId, testMunicipalityId));
+        participantDao.verifiedUserParticipatesNormalInitiative(participantId, new VerifiedUserId(verifiedUserId));
+
+        VerifiedUser user = userDao.getVerifiedUser(HASH).getValue();
+
+        assertThat(user.getInitiativesWithParticipation(), contains(testInitiativeId, testVerifiedInitiativeId));
+
     }
 
     private static ContactInfo contactInfo() {

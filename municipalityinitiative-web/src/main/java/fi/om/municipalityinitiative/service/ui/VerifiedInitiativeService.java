@@ -136,7 +136,7 @@ public class VerifiedInitiativeService {
                 && !initiativeMunicipality.equals(vetumaMunicipality.get().getId());
     }
 
-    private VerifiedUserId getVerifiedUserIdAndCreateIfNecessary(String hash, ContactInfo contactInfo, Maybe<Municipality> homeMunicipality) {
+    public VerifiedUserId getVerifiedUserIdAndCreateIfNecessary(String hash, ContactInfo contactInfo, Maybe<Municipality> homeMunicipality) {
 
         Maybe<VerifiedUserId> verifiedUserId = userDao.getVerifiedUserId(hash);
         if (verifiedUserId.isNotPresent()) {

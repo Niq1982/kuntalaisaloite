@@ -1,14 +1,14 @@
 package fi.om.municipalityinitiative.sql;
 
-import static com.mysema.query.types.PathMetadataFactory.*;
-
-import com.mysema.query.types.path.*;
-
-import com.mysema.query.types.PathMetadata;
-import javax.annotation.Generated;
-import com.mysema.query.types.Path;
-
 import com.mysema.query.sql.ColumnMetadata;
+import com.mysema.query.types.Path;
+import com.mysema.query.types.PathMetadata;
+import com.mysema.query.types.path.NumberPath;
+import com.mysema.query.types.path.StringPath;
+
+import javax.annotation.Generated;
+
+import static com.mysema.query.types.PathMetadataFactory.forVariable;
 
 
 /**
@@ -40,6 +40,8 @@ public class QVerifiedUser extends com.mysema.query.sql.RelationalPathBase<QVeri
     public final com.mysema.query.sql.ForeignKey<QMunicipality> verifiedUserMunicipalityFk = createForeignKey(municipalityId, "id");
 
     public final com.mysema.query.sql.ForeignKey<QVerifiedParticipant> _verifiedParticipantVerifiedUserFk = createInvForeignKey(id, "verified_user_id");
+
+    public final com.mysema.query.sql.ForeignKey<QVerifiedUserNormalInitiatives> _verifiedUserNormalInitiativesVerifiedUserId = createInvForeignKey(id, "verified_user");
 
     public final com.mysema.query.sql.ForeignKey<QVerifiedAuthor> _verifiedAuthorVerifiedUserFk = createInvForeignKey(id, "verified_user_id");
 

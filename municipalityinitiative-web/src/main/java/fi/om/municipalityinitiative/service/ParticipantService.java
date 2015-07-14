@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
 import fi.om.municipalityinitiative.dao.ParticipantDao;
+import fi.om.municipalityinitiative.dao.UserDao;
 import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.VerifiedAuthor;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
@@ -14,10 +15,12 @@ import fi.om.municipalityinitiative.dto.service.VerifiedParticipant;
 import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.InvalidParticipationConfirmationException;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
+import fi.om.municipalityinitiative.service.ui.VerifiedInitiativeService;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.web.Urls;
@@ -40,10 +43,16 @@ public class ParticipantService {
     private AuthorDao authorDao;
 
     @Resource
+    private UserDao userDao;
+
+    @Resource
     private InitiativeDao initiativeDao;
 
     @Resource
     private EmailService emailService;
+
+    @Resource
+    private VerifiedInitiativeService verifiedInitiativeService;
 
     public ParticipantService() {
     }
@@ -160,11 +169,16 @@ public class ParticipantService {
         ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parseParticipantFromVerifiedUser(participant, loginUserHolder.getVerifiedUser(), initiativeId);
         participantCreateDto.setMunicipalityInitiativeId(initiativeId);
 
-
         String confirmationCode = RandomHashGenerator.shortHash();
         Long participantId = participantDao.create(participantCreateDto, confirmationCode);
 
         confirmParticipation(participantId, confirmationCode);
+
+        VerifiedUser verifiedUser = loginUserHolder.getVerifiedUser();
+
+        VerifiedUserId verifiedUserId = verifiedInitiativeService.getVerifiedUserIdAndCreateIfNecessary(verifiedUser.getHash(), verifiedUser.getContactInfo(), verifiedUser.getHomeMunicipality());
+
+        participantDao.verifiedUserParticipatesNormalInitiative(participantId, verifiedUserId);
 
         return participantId;
     }

@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.dto.service.NormalParticipant;
 import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.dto.service.ParticipantCreateDto;
 import fi.om.municipalityinitiative.dto.service.VerifiedParticipant;
+import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.QParticipant;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
@@ -19,6 +20,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Collection;
 import java.util.List;
 
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
@@ -45,6 +47,7 @@ public class JdbcParticipantDaoTest {
     TestHelper testHelper;
     private Long testMunicipalityId;
     private Long testInitiativeId;
+    private Long testVerifiedInitiativeId;
     private Long otherMunicipalityId;
 
     @Before
@@ -52,15 +55,16 @@ public class JdbcParticipantDaoTest {
         testHelper.dbCleanup();
         testMunicipalityId = testHelper.createTestMunicipality("Municipality");
         testInitiativeId = testHelper.create(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+        testVerifiedInitiativeId = testHelper.create(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
 
         otherMunicipalityId = testHelper.createTestMunicipality("Other Municipality");
     }
 
     @Test
     public void adds_new_participants() {
-        precondition(testHelper.countAll(QParticipant.participant), is(1L));
+        precondition(testHelper.countAll(QParticipant.participant), is(2L));
         participantDao.confirmParticipation(participantDao.create(participantCreateDto(), CONFIRMATION_CODE), CONFIRMATION_CODE);
-        assertThat(testHelper.countAll(QParticipant.participant), is(2L));
+        assertThat(testHelper.countAll(QParticipant.participant), is(3L));
     }
 
 
@@ -358,6 +362,20 @@ public class JdbcParticipantDaoTest {
         Long participantId = testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(testInitiativeId, testMunicipalityId));
         Long wrongInitiativeId = testHelper.createCollaborativeReview(testMunicipalityId);
         participantDao.deleteParticipant(wrongInitiativeId, participantId);
+    }
+
+    @Test
+    public void add_verified_user_normal_initiative(){
+        // Verified user participates verified initiative
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(testVerifiedInitiativeId, testMunicipalityId));
+        Long verifiedUserId = testHelper.getLastVerifiedUserId();
+
+        // Verified user participates to normal initiative
+        Long participantId = testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(testInitiativeId, testMunicipalityId));
+        participantDao.verifiedUserParticipatesNormalInitiative(participantId, new VerifiedUserId(verifiedUserId));
+
+        Collection<Long> initiatives = participantDao.getNormalInitiativesVerifiedUserHasParticipated(new VerifiedUserId(verifiedUserId));
+        assertThat(initiatives, contains(testInitiativeId));
     }
 
     private Long createConfirmedParticipant(Long initiativeId, Long homeMunicipality, boolean publicName, String participantName) {

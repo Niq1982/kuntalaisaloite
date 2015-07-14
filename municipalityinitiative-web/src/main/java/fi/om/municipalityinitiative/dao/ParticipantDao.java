@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface ParticipantDao {
@@ -16,6 +17,10 @@ public interface ParticipantDao {
     Long create(ParticipantCreateDto createDto, String confirmationCode);
 
     void confirmParticipation(Long participantId, String confirmationCode);
+
+    void verifiedUserParticipatesNormalInitiative(Long participantId, VerifiedUserId userId);
+
+    Collection<Long> getNormalInitiativesVerifiedUserHasParticipated(VerifiedUserId userId);
 
     List<NormalParticipant> findNormalPublicParticipants(Long initiativeId);
 
@@ -36,4 +41,5 @@ public interface ParticipantDao {
     void updateVerifiedParticipantShowName(Long initiativeId, String hash, boolean showName);
 
     void addVerifiedParticipant(Long initiativeId, VerifiedUserId userId, boolean showName, boolean verifiedMunicipality);
+
 }
