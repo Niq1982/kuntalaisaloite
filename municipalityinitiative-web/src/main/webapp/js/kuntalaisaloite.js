@@ -1905,41 +1905,58 @@ if (window.hasIGraphFrame) {
 (function() {
 
 	var mapContainer = (function() {
-		var marker;
-
+		var marker, selectedLocation;
 
 		var init = function(municipality) {
 
-			var geocoder = new google.maps.Geocoder();
-			geocoder.geocode({"address": municipality}, function (results, status) {
-				var muncipalityCoordinates;
-				if (results.length > 0) {
-					muncipalityCoordinates = results[0].geometry.location;
-				} else {
-					// Default set to Finland
-					muncipalityCoordinates = {"lat": 64.9146659, "lng": 26.0672554};
-				}
-				var mapOptions = {
-					center: muncipalityCoordinates,
-					zoom: 14
-				};
-
-				var map = new google.maps.Map(document.getElementById('map-canvas'),
-					mapOptions);
-
-				placeMarker(muncipalityCoordinates, map);
-
-				google.maps.event.addListener(map, 'click', function (e) {
-					placeMarker(e.latLng, map);
-					$("#lat").text(e.latLng);
+			if (municipality !== undefined) {
+				var geocoder = new google.maps.Geocoder();
+				geocoder.geocode({"address": municipality}, function (results, status) {
+					if (results.length > 0) {
+						initMap(results[0].geometry.location);
+					}
+					else {
+						// Default set to Finland
+						initMap({"lat": 64.9146659, "lng": 26.0672554});
+					}
 				});
-			});
+			} else if (selectedLocation !== undefined){
+				initMap(selectedLocation);
+			} else {
+				// Default set to Finland
+				initMap({"lat": 64.9146659, "lng": 26.0672554});
+			}
 
 
 			$("#save-and-close").live('click', function () {
-				console.log("Location chosen");
+				console.log("Location chosen. Selected location is " + selectedLocation);
+				var $selectedLocation = $("#selected-location");
+				$selectedLocation.text("Aloitteeseen on liitetty sijainti." + selectedLocation);
+				$selectedLocation.addClass("map-marker");
+
+				$("#open-remove-location").removeClass("no-visible");
+
 			});
 
+		};
+
+		var initMap = function(muncipalityCoordinates) {
+
+			var mapOptions = {
+				center: muncipalityCoordinates,
+				zoom: 14
+			};
+
+			var map = new google.maps.Map(document.getElementById('map-canvas'),
+				mapOptions);
+
+			placeMarker(muncipalityCoordinates, map);
+
+			google.maps.event.addListener(map, 'click', function (e) {
+				placeMarker(e.latLng, map);
+				$("#lat").text(e.latLng);
+				selectedLocation = e.latLng;
+			});
 		};
 
 		function placeMarker(position, map) {
@@ -1953,9 +1970,6 @@ if (window.hasIGraphFrame) {
 			map.panTo(position);
 		};
 
-
-
-
 		return {
 			// Return Init-function for the modal
 			init: init
@@ -1965,6 +1979,10 @@ if (window.hasIGraphFrame) {
 	$("#openMap").click(function(){
 		generateModal(modalData.mapContainer(), 'full', mapContainer.init(modalData.initialLocation));
 	});
+	$("#show-selected-location").click(function() {
+		generateModal(modalData.mapContainer(), 'full', mapContainer.init);
+	});
+
 }());
 
 $(window).on('resize', function () {

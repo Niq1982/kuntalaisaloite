@@ -283,8 +283,12 @@
         </div>
 
         <div class="input-block-content">
-            <p class> Lisää tarkempi sijainti <span id="openMap" style="color: blue"">tästä</span></p>
+            <p id="selected-location"> Lisää aloitteellesi tarkempi sijainti <span id="openMap" class="blue">tästä</span></p>
+            <div id="open-remove-location" class="no-visible">
+                <span id="show-selected-location" class="blue">Näytä</span> <span id="remove-selected-location" class="blue">Poista</span>
+            </div>
         </div>
+
         <#--<@formLabel path=path+".location" key="initiative.location">
         <@showError />
         <@spring.formTextarea path, 'class="'+cssClass+' '+spring.status.error?string("error","")+'" '+required+' maxlength="'+maxLength+'" ' />
