@@ -1,32 +1,32 @@
 package fi.om.municipalityinitiative.dto;
 
-import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.web.Urls;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class InitiativeSearch {
     private Integer offset;
     private Integer limit;
     private OrderBy orderBy = OrderBy.latest;
     private Show show = Show.all;
-    private ArrayList<Long> municipalities;
+    private List<Long> municipalities;
     // This is for the old api version
     private Long municipality;
     private String search;
     private Type type = Type.all;
 
-    public ArrayList<Long> getMunicipalities() {
+    public List<Long> getMunicipalities() {
         return municipalities;
     }
 
-    public InitiativeSearch setMunicipalities(ArrayList<Long> municipalities) {
+    public InitiativeSearch setMunicipalities(List<Long> municipalities) {
         this.municipalities = municipalities;
         return this;
     }
 
-    public InitiativeSearch setMunicipalities(Long municipality) {
-        ArrayList<Long> list = new ArrayList<Long>();
+    public InitiativeSearch setMunicipalities(long municipality) {
+        ArrayList<Long> list = new ArrayList<>();
         list.add(municipality);
         return this.setMunicipalities(list);
     }

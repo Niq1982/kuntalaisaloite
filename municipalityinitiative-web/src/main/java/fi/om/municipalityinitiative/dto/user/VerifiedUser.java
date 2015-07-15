@@ -90,7 +90,4 @@ public class VerifiedUser extends User{
         return initiativesWithParticipation;
     }
 
-    public void addParticipationToInitiative(Set<Long> initiativeId) {
-        initiativesWithParticipation.addAll(initiativeId);
-    }
 }

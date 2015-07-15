@@ -205,7 +205,7 @@ public class PublicInitiativeController extends BaseController {
 
                 if ( (validationService.validationSuccessful(participant, bindingResult, model, NormalInitiativeVerifiedUser.class))) {
                     participantService.createConfirmedParticipant(participant, initiativeId, loginUserHolder);
-                    userService.addParticipatedInitiativeToSession(request, initiativeId);
+                    userService.refreshUserData(request);
                     return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.PARTICIPATE_VERIFIABLE, request);
                 }
 
@@ -416,7 +416,7 @@ public class PublicInitiativeController extends BaseController {
         response.getOutputStream().write(file.getBytes());
     }
 
-    private static Maybe<ArrayList<Municipality>> solveMunicipalityFromListById(List<Municipality> municipalities, Maybe<ArrayList<Long>> municipalityIds){
+    private static Maybe<ArrayList<Municipality>> solveMunicipalityFromListById(List<Municipality> municipalities, Maybe<List<Long>> municipalityIds){
         if (municipalityIds.isNotPresent()) {
             return Maybe.absent();
         }

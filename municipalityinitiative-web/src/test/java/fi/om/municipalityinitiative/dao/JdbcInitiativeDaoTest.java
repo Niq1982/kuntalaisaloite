@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.dao;
 
-import com.mysema.query.sql.WithinGroup;
 import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
@@ -12,8 +11,6 @@ import fi.om.municipalityinitiative.service.email.EmailReportType;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.*;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -630,7 +627,7 @@ public class JdbcInitiativeDaoTest {
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         testHelper.createSingleSent(testMunicipality.getId());
 
-        InitiativeCounts initiativeCounts = initiativeDao.getPublicInitiativeCounts(Maybe.of(new ArrayList<Long>()), InitiativeSearch.Type.all);
+        InitiativeCounts initiativeCounts = initiativeDao.getPublicInitiativeCounts(emptyMunicipalityList(), InitiativeSearch.Type.all);
 
         assertThat(initiativeCounts.getCollecting(), is(2L));
         assertThat(initiativeCounts.getSent(), is(1L));
@@ -643,7 +640,7 @@ public class JdbcInitiativeDaoTest {
                 .withState(InitiativeState.PUBLISHED)
                 .withFixState(FixState.OK));
 
-        InitiativeCounts publicInitiativeCounts = initiativeDao.getPublicInitiativeCounts(Maybe.of(new ArrayList<Long>()), InitiativeSearch.Type.all);
+        InitiativeCounts publicInitiativeCounts = initiativeDao.getPublicInitiativeCounts(emptyMunicipalityList(), InitiativeSearch.Type.all);
         precondition(publicInitiativeCounts.getAll(), is(1L));
         precondition(publicInitiativeCounts.collecting, is(1L));
 
@@ -654,7 +651,7 @@ public class JdbcInitiativeDaoTest {
                 .withState(InitiativeState.PUBLISHED)
                 .withFixState(FixState.REVIEW));
 
-        publicInitiativeCounts = initiativeDao.getPublicInitiativeCounts(Maybe.of(new ArrayList<Long>()), InitiativeSearch.Type.all);
+        publicInitiativeCounts = initiativeDao.getPublicInitiativeCounts(emptyMunicipalityList(), InitiativeSearch.Type.all);
         assertThat(publicInitiativeCounts.getAll(), is(1L));
         assertThat(publicInitiativeCounts.collecting, is(1L));
     }
@@ -693,7 +690,7 @@ public class JdbcInitiativeDaoTest {
         testHelper.create(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.UNDEFINED);
         testHelper.create(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.UNDEFINED);
 
-        InitiativeCounts counts = initiativeDao.getAllInitiativeCounts(Maybe.of(new ArrayList<Long>()), InitiativeSearch.Type.all);
+        InitiativeCounts counts = initiativeDao.getAllInitiativeCounts(Maybe.<List<Long>>of(new ArrayList<Long>()), InitiativeSearch.Type.all);
         assertThat(counts.fix, is(1L));
         assertThat(counts.review, is(2L));
         assertThat(counts.accepted, is(3L));
@@ -737,7 +734,7 @@ public class JdbcInitiativeDaoTest {
         testHelper.create(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.COLLABORATIVE_CITIZEN);
         testHelper.create(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.UNDEFINED);
 
-        InitiativeCounts counts = initiativeDao.getAllInitiativeCounts(Maybe.of(new ArrayList<Long>()), InitiativeSearch.Type.citizen);
+        InitiativeCounts counts = initiativeDao.getAllInitiativeCounts(emptyMunicipalityList(), InitiativeSearch.Type.citizen);
         assertThat(counts.fix, is(0L));
         assertThat(counts.review, is(1L));
         assertThat(counts.accepted, is(2L));
@@ -756,7 +753,7 @@ public class JdbcInitiativeDaoTest {
 
         ArrayList<Long> municipalities = new ArrayList<Long>();
         municipalities.add(testMunicipality.getId());
-        InitiativeCounts initiativeCounts = initiativeDao.getPublicInitiativeCounts(Maybe.of(municipalities), InitiativeSearch.Type.all);
+        InitiativeCounts initiativeCounts = initiativeDao.getPublicInitiativeCounts(Maybe.<List<Long>>of(municipalities), InitiativeSearch.Type.all);
 
         assertThat(initiativeCounts.getCollecting(), is(1L));
     }
@@ -847,10 +844,14 @@ public class JdbcInitiativeDaoTest {
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_COUNCIL);
 
-        InitiativeCounts all = initiativeDao.getPublicInitiativeCounts(Maybe.of(new ArrayList<Long>()), InitiativeSearch.Type.all);
+        InitiativeCounts all = initiativeDao.getPublicInitiativeCounts(emptyMunicipalityList(), InitiativeSearch.Type.all);
         assertThat(all.collecting, is(4L));
         assertThat(all.sent, is(1L));
         assertThat(all.getAll(), is(5L));
+    }
+
+    private Maybe<List<Long>> emptyMunicipalityList() {
+        return Maybe.<List<Long>>of(new ArrayList<Long>());
     }
 
     @Test
@@ -863,7 +864,7 @@ public class JdbcInitiativeDaoTest {
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_COUNCIL);
 
-        InitiativeCounts all = initiativeDao.getPublicInitiativeCounts(Maybe.of(new ArrayList<Long>()), InitiativeSearch.Type.normal);
+        InitiativeCounts all = initiativeDao.getPublicInitiativeCounts(emptyMunicipalityList(), InitiativeSearch.Type.normal);
         assertThat(all.collecting, is(2L));
         assertThat(all.sent, is(1L));
         assertThat(all.getAll(), is(3L));
@@ -881,7 +882,7 @@ public class JdbcInitiativeDaoTest {
 
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
 
-        InitiativeCounts all = initiativeDao.getPublicInitiativeCounts(Maybe.of(new ArrayList<Long>()), InitiativeSearch.Type.citizen);
+        InitiativeCounts all = initiativeDao.getPublicInitiativeCounts(emptyMunicipalityList(), InitiativeSearch.Type.citizen);
         assertThat(all.collecting, is(1L));
         assertThat(all.sent, is(0L));
         assertThat(all.getAll(), is(1L));
@@ -899,7 +900,7 @@ public class JdbcInitiativeDaoTest {
 
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_COUNCIL);
 
-        InitiativeCounts all = initiativeDao.getPublicInitiativeCounts(Maybe.of(new ArrayList<Long>()), InitiativeSearch.Type.council);
+        InitiativeCounts all = initiativeDao.getPublicInitiativeCounts(emptyMunicipalityList(), InitiativeSearch.Type.council);
         assertThat(all.collecting, is(1L));
         assertThat(all.sent, is(0L));
         assertThat(all.getAll(), is(1L));

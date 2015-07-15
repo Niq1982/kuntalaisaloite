@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.web.Urls;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -41,7 +42,7 @@ public class InitiativeSearchTest {
         InitiativeSearch search = new InitiativeSearch();
         search.setMunicipalities(1L);
 
-        ArrayList<Long> municipalities = new ArrayList<Long>();
+        List<Long> municipalities = new ArrayList<Long>();
         municipalities.add(1L);
         assertThat(search.getMunicipalities(), is(municipalities));
     }

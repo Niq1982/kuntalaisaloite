@@ -34,7 +34,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -281,7 +280,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
         }
     }
 
-    private static void filterByMunicipality(PostgresQuery query, Maybe<ArrayList<Long>> municipalityIds) {
+    private static void filterByMunicipality(PostgresQuery query, Maybe<List<Long>> municipalityIds) {
         if (municipalityIds.isPresent() && !municipalityIds.getValue().isEmpty()) {
             query.where(municipalityInitiative.municipalityId.in(municipalityIds.getValue()));
         }
@@ -366,7 +365,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     @Cacheable(value = "initiativeCount")
-    public InitiativeCounts getPublicInitiativeCounts(Maybe<ArrayList<Long>> municipalities, InitiativeSearch.Type initiativeType) {
+    public InitiativeCounts getPublicInitiativeCounts(Maybe<List<Long>> municipalities, InitiativeSearch.Type initiativeType) {
         Expression<String> caseBuilder = new CaseBuilder()
                 .when(municipalityInitiative.sent.isNull())
                 .then(new ConstantImpl<String>(InitiativeSearch.Show.collecting.name()))
@@ -395,7 +394,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    public InitiativeCounts getAllInitiativeCounts(Maybe<ArrayList<Long>> municipalities, InitiativeSearch.Type initiativeType) {
+    public InitiativeCounts getAllInitiativeCounts(Maybe<List<Long>> municipalities, InitiativeSearch.Type initiativeType) {
         String unknownStateFound = "unknownStateFound";
         Expression<String> caseBuilder = new CaseBuilder()
                 .when(STATE_IS_COLLECTING)
