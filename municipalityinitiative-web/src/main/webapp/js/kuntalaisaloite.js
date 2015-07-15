@@ -1909,48 +1909,48 @@ if (window.hasIGraphFrame) {
 
 		var init = function(municipality) {
 
-			if (municipality !== undefined) {
-				var geocoder = new google.maps.Geocoder();
-				geocoder.geocode({"address": municipality}, function (results, status) {
-					if (results.length > 0) {
-						initMap(results[0].geometry.location);
-					}
-					else {
-						// Default set to Finland
-						initMap({"lat": 64.9146659, "lng": 26.0672554});
-					}
-				});
-			} else if (selectedLocation !== undefined){
-				initMap(selectedLocation);
-			} else {
-				// Default set to Finland
-				initMap({"lat": 64.9146659, "lng": 26.0672554});
-			}
+
+			var geocoder = new google.maps.Geocoder();
+
+			geocoder.geocode({"address": municipality}, function (results, status) {
+				if (results.length > 0) {
+					initMap(results[0].geometry.location);
+					selectedLocation = results[0].geometry.location;
+				}
+				else if (selectedLocation !== undefined) {
+					initMap(selectedLocation);
+				}
+				else {
+					// Default set to Finland
+					initMap({"lat": 64.9146659, "lng": 26.0672554});
+				}
+			});
 
 
 			$("#save-and-close").live('click', function () {
 				console.log("Location chosen. Selected location is " + selectedLocation);
 				var $selectedLocation = $("#selected-location");
-				$selectedLocation.text("Aloitteeseen on liitetty sijainti." + selectedLocation);
+				$selectedLocation.text("Aloitteeseen on liitetty sijainti.");
 				$selectedLocation.addClass("map-marker");
 
 				$("#open-remove-location").removeClass("no-visible");
 
 			});
 
+
 		};
 
-		var initMap = function(muncipalityCoordinates) {
+		var initMap = function(centerCoordinates) {
 
 			var mapOptions = {
-				center: muncipalityCoordinates,
+				center: centerCoordinates,
 				zoom: 14
 			};
 
 			var map = new google.maps.Map(document.getElementById('map-canvas'),
 				mapOptions);
 
-			placeMarker(muncipalityCoordinates, map);
+			placeMarker(centerCoordinates, map);
 
 			google.maps.event.addListener(map, 'click', function (e) {
 				placeMarker(e.latLng, map);
@@ -1971,7 +1971,6 @@ if (window.hasIGraphFrame) {
 		};
 
 		return {
-			// Return Init-function for the modal
 			init: init
 		};
 	})();
@@ -1982,7 +1981,9 @@ if (window.hasIGraphFrame) {
 	$("#show-selected-location").click(function() {
 		generateModal(modalData.mapContainer(), 'full', mapContainer.init);
 	});
+	$("#remove-selected-location").click(function() {
 
+	});
 }());
 
 $(window).on('resize', function () {
