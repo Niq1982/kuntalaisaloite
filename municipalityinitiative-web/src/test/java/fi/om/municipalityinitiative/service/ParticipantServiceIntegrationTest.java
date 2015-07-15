@@ -1,33 +1,41 @@
 package fi.om.municipalityinitiative.service;
 
+import fi.om.municipalityinitiative.dao.ParticipantDao;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dao.UserDao;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.ui.ParticipantListInfo;
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
+import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.service.email.EmailSubjectPropertyKeys;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
+import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import fi.om.municipalityinitiative.web.Urls;
 import org.hamcrest.Matchers;
 import org.joda.time.DateTime;
 import org.junit.Test;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import java.util.List;
+import java.util.Set;
 
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 
 public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBase{
 
     @Resource
     private ParticipantService participantService;
+
+    @Resource
+    private ParticipantDao participantDao;
 
     @Resource
     private UserDao userDao;
@@ -267,9 +275,47 @@ public class ParticipantServiceIntegrationTest extends ServiceIntegrationTestBas
         int originalParticipantCount = testHelper.getInitiative(initiativeId).getParticipantCount();
         testHelper.createVerifiedUser(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId));
 
-        Long participantId = participantService.createConfirmedParticipant(participantUICreateDto(), initiativeId, TestHelper.lastLoggedIntVerifiedUserHolder);
+        Long participantId = participantService.createConfirmedParticipant(participantUICreateDto(), initiativeId, TestHelper.lastLoggedInVerifiedUserHolder);
 
         assertThat(getSingleInitiativeInfo().getParticipantCount(), Matchers.is(originalParticipantCount + 1));
+    }
+
+    @Transactional
+    @Test
+    public void adding_confirmed_participant_to_normal_initiative_shows_in_user_session() throws MessagingException, InterruptedException {
+        Long initiativeId = testHelper.create(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+
+        testHelper.createVerifiedUser(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId));
+
+        Long participantId = participantService.createConfirmedParticipant(participantUICreateDto(), initiativeId, TestHelper.lastLoggedInVerifiedUserHolder);
+
+        Maybe<VerifiedUser> verifiedUser = refreshVerifiedUser();
+
+        Set<Long> initiativesWithParticipation = verifiedUser.getValue().getInitiativesWithParticipation();
+
+        assertThat(initiativesWithParticipation, contains(initiativeId));
+    }
+
+    @Transactional
+    @Test
+    public void removing_confirmed_user_from_normal_initiative_also_removes_the_initiative_from_verified_user() throws MessagingException, InterruptedException {
+        Long initiativeId = testHelper.create(testMunicipalityId, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+
+        testHelper.createVerifiedUser(new TestHelper.AuthorDraft(initiativeId, testMunicipalityId));
+
+        Long participantId = participantService.createConfirmedParticipant(participantUICreateDto(), initiativeId, TestHelper.lastLoggedInVerifiedUserHolder);
+
+        participantDao.deleteParticipant(initiativeId, participantId);
+
+        Maybe<VerifiedUser> verifiedUser = refreshVerifiedUser();
+
+        Set<Long> initiativesWithParticipation = verifiedUser.getValue().getInitiativesWithParticipation();
+
+        assertThat(initiativesWithParticipation, empty());
+    }
+
+    private Maybe<VerifiedUser> refreshVerifiedUser() {
+        return userDao.getVerifiedUser(((VerifiedUser) TestHelper.lastLoggedInVerifiedUserHolder.getVerifiedUser()).getHash());
     }
 
     @Test(expected = OperationNotAllowedException.class)

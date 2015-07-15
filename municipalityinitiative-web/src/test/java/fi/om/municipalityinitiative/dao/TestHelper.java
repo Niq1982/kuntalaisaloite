@@ -58,7 +58,7 @@ public class TestHelper {
 
     public static LoginUserHolder authorLoginUserHolder;
     public static LoginUserHolder unknownLoginUserHolder = new LoginUserHolder(User.anonym());
-    public static LoginUserHolder lastLoggedIntVerifiedUserHolder;
+    public static LoginUserHolder lastLoggedInVerifiedUserHolder;
     public static OmLoginUserHolder omLoginUser = new OmLoginUserHolder(User.omUser(""));
 
     @Inject
@@ -415,7 +415,7 @@ public class TestHelper {
         this.lastVerifiedUserId = verifiedUserId;
 
         Maybe<Municipality> participantMunicipality = Maybe.of(new Municipality(authorDraft.participantMunicipality, "name_fi", "name_sv", true));
-        this.lastLoggedIntVerifiedUserHolder = new LoginUserHolder(User.verifiedUser(new VerifiedUserId(verifiedUserId), hash, new ContactInfo(), null, null, participantMunicipality));
+        this.lastLoggedInVerifiedUserHolder = new LoginUserHolder(User.verifiedUser(new VerifiedUserId(verifiedUserId), hash, new ContactInfo(), null, null, participantMunicipality));
         return verifiedUserId;
     }
 
