@@ -106,15 +106,15 @@
             <div class="column col-1of2">
                 <a href="${urls.search()}
                 <#if municipalities.present>
-                    ${queryString.getWithMunicipalities(municipalities.value)}"
-                </#if>
+                    ${queryString.getWithMunicipalities(municipalities.value)}
+                </#if>"
                    target="_blank" rel="external" class="small-button"><span class="small-icon next"><@u.message "iframe.browseInitiatives" />
                 </span></a>
                 
                 <span class="description"><@u.message "iframe.browseInitiatives.description" /></span>
             </div>
             <div class="column col-1of2 last">
-                <a href="${urls.prepare()}" target="_blank" rel="external" class="small-button"><span class="small-icon add"><@u.message "iframe.createInitiative" /></span></a>
+                <a href="${urls.prepare(municipalities)}" target="_blank" rel="external" class="small-button"><span class="small-icon add"><@u.message "iframe.createInitiative" /></span></a>
             </div>
         </div>
         

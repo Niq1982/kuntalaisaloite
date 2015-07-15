@@ -1,10 +1,13 @@
 package fi.om.municipalityinitiative.web;
 
 import com.google.common.base.Strings;
+import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.util.Locales;
+import fi.om.municipalityinitiative.util.Maybe;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.Locale;
 
 import static fi.om.municipalityinitiative.util.Locales.LOCALE_FI;
@@ -82,7 +85,9 @@ public final class Urls {
     public static final String MUNICIPALITIES = API + "/v1/municipalities";
 
     public static final String MUNICIPALITY = MUNICIPALITIES + "/" + ID_PARAMETER;
-    
+
+    public static final String SINGLE_MUNICIPALITY = "municipality";
+
     public static final String ERROR_404 = "/404";
     
     public static final String ERROR_500 = "/500";
@@ -448,7 +453,7 @@ public final class Urls {
         return iframe() + "?" + OLD_PARAM_MUNICIPALITY + "=" + municipalityId;
     }
     public String iframeWithOldestApiMunicipality(Long municipalityId) {
-        return iframeBaseUrl + getLocalizedPageUrl(IFRAME_OLD_FI, IFRAME_OLD_SV ) + "?" + OLD_PARAM_MUNICIPALITY + "=" + municipalityId;
+        return iframeBaseUrl + getLocalizedPageUrl(IFRAME_OLD_FI, IFRAME_OLD_SV) + "?" + OLD_PARAM_MUNICIPALITY + "=" + municipalityId;
     }
     public String iframeGenerator() {
         return getLocalizedPageUrl(IFRAME_GENERATOR_FI, IFRAME_GENERATOR_SV);
@@ -528,6 +533,15 @@ public final class Urls {
     public String prepare() {
         return getLocalizedPageUrl(PREPARE_FI, PREPARE_SV);
     }
+
+    public String prepare(Maybe<List<Municipality>> municipalities) {
+        String url = getLocalizedPageUrl(PREPARE_FI, PREPARE_SV);
+        if (municipalities.isPresent() && municipalities.getValue().size() == 1) {
+            url+="?" + SINGLE_MUNICIPALITY + "=" + municipalities.getValue().get(0).getId();
+        }
+        return url;
+    }
+
 
     public String authenticate() {
         return getLocalizedPageUrl(AUTHENTICATE_FI, AUTHENTICATE_SV);
