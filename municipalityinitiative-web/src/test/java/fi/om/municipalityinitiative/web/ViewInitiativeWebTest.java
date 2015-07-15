@@ -5,7 +5,6 @@ import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import org.joda.time.DateTime;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -131,7 +130,6 @@ public class ViewInitiativeWebTest extends WebTestBase {
     }
 
     @Test
-    @Ignore
     public void iframe_page_accepts_municipality_parameter_and_shows_initiative_oldest_municipality_paramater_iframe() {
 
         DateTime stateTime = new DateTime(2011, 1, 1, 0, 0);
@@ -147,7 +145,6 @@ public class ViewInitiativeWebTest extends WebTestBase {
     }
 
     @Test
-    @Ignore
     public void iframe_page_shows_empty_list_if_no_initiatives_oldest_municipality_paramater_iframe() {
         open(urls.iframeWithOldestApiMunicipality(-1L));
         assertThat(getElement(By.className("search-results")).getText(), is("Ei vielä yhtään aloitetta"));

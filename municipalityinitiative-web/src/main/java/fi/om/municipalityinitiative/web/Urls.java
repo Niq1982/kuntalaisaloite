@@ -453,7 +453,7 @@ public final class Urls {
         return iframe() + "?" + OLD_PARAM_MUNICIPALITY + "=" + municipalityId;
     }
     public String iframeWithOldestApiMunicipality(Long municipalityId) {
-        return iframeBaseUrl + getLocalizedPageUrl(IFRAME_OLD_FI, IFRAME_OLD_SV) + "?" + OLD_PARAM_MUNICIPALITY + "=" + municipalityId;
+        return iframeBaseUrl + (this.equals(FI) ? IFRAME_OLD_FI : IFRAME_OLD_SV) + "?" + OLD_PARAM_MUNICIPALITY + "=" + municipalityId;
     }
     public String iframeGenerator() {
         return getLocalizedPageUrl(IFRAME_GENERATOR_FI, IFRAME_GENERATOR_SV);
