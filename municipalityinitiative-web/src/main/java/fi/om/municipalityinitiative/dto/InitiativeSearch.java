@@ -11,8 +11,6 @@ public class InitiativeSearch {
     private OrderBy orderBy = OrderBy.latest;
     private Show show = Show.all;
     private List<Long> municipalities;
-    // This is for the old api version
-    private Long municipality;
     private String search;
     private Type type = Type.all;
 
@@ -45,7 +43,6 @@ public class InitiativeSearch {
         initiativeSearch.offset = this.offset;
         initiativeSearch.orderBy = this.orderBy;
         initiativeSearch.municipalities = this.municipalities;
-        initiativeSearch.municipality = this.municipality;
         initiativeSearch.search = this.search;
         initiativeSearch.show = this.show;
         initiativeSearch.type = this.type;
@@ -121,15 +118,6 @@ public class InitiativeSearch {
     public InitiativeSearch setType(Type type) {
         this.type = type;
         return this;
-    }
-
-    // The getter and setter for municipality are only for the only api usage.
-    public Long getMunicipality() {
-        return municipality;
-    }
-
-    public void setMunicipality(Long municipality) {
-        this.municipality = municipality;
     }
 
     public enum OrderBy {
