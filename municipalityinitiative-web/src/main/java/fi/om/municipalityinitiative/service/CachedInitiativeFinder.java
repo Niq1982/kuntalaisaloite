@@ -40,13 +40,13 @@ public class CachedInitiativeFinder {
     }
 
     @Cacheable("municipality")
-    public Maybe<List<Municipality>> getMunicipalities(List<Long> municipalityIds) {
+    public Maybe<List<Municipality>> getMunicipalities(Maybe<List<Long>> municipalityIds) {
         List<Municipality> municipalities = new ArrayList<Municipality>();
-        if (municipalityIds == null) {
+        if (municipalityIds.isNotPresent()) {
             return Maybe.absent();
         }
         for (Municipality o : municipalityService.findAllMunicipalities(Locales.LOCALE_FI)) {
-            if (municipalityIds.contains(o.getId())) {
+            if (municipalityIds.getValue().contains(o.getId())) {
                 municipalities.add(o);
             }
         }
