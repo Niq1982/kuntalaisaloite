@@ -4,7 +4,6 @@ import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import org.joda.time.DateTime;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -34,17 +33,15 @@ public class ApiTest extends WebTestBase {
         assertThat(driver.getPageSource(), not(containsString("[api.")));
     }
     @Test
-    @Ignore
     public void api_initiatives() throws Exception {
 
         String collaborativeCitizenInitiativeNameHelsinki = "Aloite helsingista";
         Long id = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withState(InitiativeState.PUBLISHED)
-                .withModified(new DateTime("2015-07-14"))
+                .withStateTime(new DateTime("2015-07-14"))
                 .withName(collaborativeCitizenInitiativeNameHelsinki));
         open(urls.initiatives());
-
 
         assertThat(getElement(By.tagName("pre")).getText(), is("[{\"collaborative\":true,\"id\":" +
                 "\"http://localhost:8090/api/api/v1/initiatives/" + id + "\"," +
@@ -55,4 +52,33 @@ public class ApiTest extends WebTestBase {
                 "\"publishDate\":\"2015-07-14\",\"sentTime\":null,\"type\":\"COLLABORATIVE_CITIZEN\"}]"));
 
     }
+    @Test
+    public void api_initiatives_filter_by_municipality() throws Exception {
+
+        String collaborativeCitizenInitiativeNameHelsinki = "Aloite helsingista";
+        Long id = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
+                .withType(InitiativeType.COLLABORATIVE_CITIZEN)
+                .withState(InitiativeState.PUBLISHED)
+                .withStateTime(new DateTime("2015-07-14"))
+                .withName(collaborativeCitizenInitiativeNameHelsinki));
+
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HYVINKAA_ID)
+                .withType(InitiativeType.COLLABORATIVE_CITIZEN)
+                .withState(InitiativeState.PUBLISHED)
+                .withStateTime(new DateTime("2015-07-14"))
+                .withName(collaborativeCitizenInitiativeNameHelsinki));
+
+        open(urls.initiatives() + "?municipality=" + HELSINKI_ID);
+
+        assertThat(getElement(By.tagName("pre")).getText(), is("[{\"collaborative\":true,\"id\":" +
+                "\"http://localhost:8090/api/api/v1/initiatives/" + id + "\"," +
+                "\"municipality\":{\"active\":true," +
+                "\"id\":\"http://localhost:8090/api/api/v1/municipalities/" + HELSINKI_ID + "\"," +
+                "\"nameFi\":\"Helsinki\",\"nameSv\":\"Helsinki sv\"}," +
+                "\"name\":\"Aloite helsingista\",\"participantCount\":0," +
+                "\"publishDate\":\"2015-07-14\",\"sentTime\":null,\"type\":\"COLLABORATIVE_CITIZEN\"}]"));
+
+    }
+
+
 }
