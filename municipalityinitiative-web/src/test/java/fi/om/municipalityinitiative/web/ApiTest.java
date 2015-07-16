@@ -62,11 +62,12 @@ public class ApiTest extends WebTestBase {
                 .withStateTime(new DateTime("2015-07-14"))
                 .withName(collaborativeCitizenInitiativeNameHelsinki));
 
+        String collaborativeCitizenInitiativeNameHyvinkaa = "Aloite hyvinkäältä";
         testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HYVINKAA_ID)
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withState(InitiativeState.PUBLISHED)
                 .withStateTime(new DateTime("2015-07-14"))
-                .withName(collaborativeCitizenInitiativeNameHelsinki));
+                .withName(collaborativeCitizenInitiativeNameHyvinkaa));
 
         open(urls.initiatives() + "?municipality=" + HELSINKI_ID);
 

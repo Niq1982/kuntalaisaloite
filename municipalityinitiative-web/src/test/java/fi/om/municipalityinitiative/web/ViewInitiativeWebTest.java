@@ -142,6 +142,20 @@ public class ViewInitiativeWebTest extends WebTestBase {
         assertThat(getElement(By.tagName("li")).getText(), containsString(stateTime.toString("d.M.yyyy")));
         assertThat(getElement(By.tagName("li")).getText(), containsString(title));
     }
+    @Test
+    public void iframe_page_with_no_parameter_oldest_municipality_paramater_iframe() {
+
+        DateTime stateTime = new DateTime(2011, 1, 1, 0, 0);
+        String title = "Yeah rock rock";
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
+                .withState(InitiativeState.PUBLISHED)
+                .withStateTime(stateTime)
+                .withName(title));
+
+        open(urls.iframeWithOldestApiMunicipality());
+        assertThat(getElement(By.tagName("li")).getText(), containsString(stateTime.toString("d.M.yyyy")));
+        assertThat(getElement(By.tagName("li")).getText(), containsString(title));
+    }
 
     @Test
     public void iframe_page_accepts_municipality_parameter_and_only_shows_one_initiative_oldest_municipality_paramater_iframe() {
