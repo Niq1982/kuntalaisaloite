@@ -236,13 +236,13 @@ public final class Urls {
 
     public static final String VIEW_SV = "/sv/initiativ" + "/" + ID_PARAMETER;
 
-    public static final String PARITICIPANT_LIST_FI = "/fi/osallistujat/" + ID_PARAMETER;
+    public static final String PARTICIPANT_LIST_FI = "/fi/osallistujat/" + ID_PARAMETER;
 
-    public static final String PARITICIPANT_LIST_SV = "/sv/deltagare/" + ID_PARAMETER;
+    public static final String PARTICIPANT_LIST_SV = "/sv/deltagare/" + ID_PARAMETER;
 
-    public static final String PARITICIPANT_LIST_MANAGE_FI = "/fi/osallistujahallinta/" + ID_PARAMETER;
+    public static final String PARTICIPANT_LIST_MANAGE_FI = "/fi/osallistujahallinta/" + ID_PARAMETER;
 
-    public static final String PARITICIPANT_LIST_MANAGE_SV = "/sv/deltagarhantering/" + ID_PARAMETER;
+    public static final String PARTICIPANT_LIST_MANAGE_SV = "/sv/deltagarhantering/" + ID_PARAMETER;
 
     public static final String MANAGEMENT_FI = "/fi/yllapito" + "/" + ID_PARAMETER;
 
@@ -375,11 +375,11 @@ public final class Urls {
     }
 
     public String participantList(Long initiativeId) {
-        return getLocalizedPageUrl(PARITICIPANT_LIST_FI, PARITICIPANT_LIST_SV).replace(ID_PARAMETER, initiativeId.toString());
+        return getLocalizedPageUrl(PARTICIPANT_LIST_FI, PARTICIPANT_LIST_SV).replace(ID_PARAMETER, initiativeId.toString());
     }
 
     public String participantListManage(Long initiativeId) {
-        return getLocalizedPageUrl(PARITICIPANT_LIST_MANAGE_FI, PARITICIPANT_LIST_MANAGE_SV).replace(ID_PARAMETER, initiativeId.toString());
+        return getLocalizedPageUrl(PARTICIPANT_LIST_MANAGE_FI, PARTICIPANT_LIST_MANAGE_SV).replace(ID_PARAMETER, initiativeId.toString());
     }
 
     public String management(Long initiativeId) {
