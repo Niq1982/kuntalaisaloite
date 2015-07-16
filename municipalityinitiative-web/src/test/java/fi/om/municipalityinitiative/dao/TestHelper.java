@@ -688,6 +688,11 @@ public class TestHelper {
                 .where(QReviewHistory.reviewHistory.initiativeId.eq(initiativeId))
                 .list(JdbcReviewHistoryDao.reviewHistoryRowWrapper);
     }
+    @Transactional(readOnly = true)
+    public List<Long> getAllMunicipalities(){
+        return queryFactory.from(QMunicipality.municipality)
+                .list(QMunicipality.municipality.id);
+    }
 
     @Transactional
     public void clearSentEmails() {

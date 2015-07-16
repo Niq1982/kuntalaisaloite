@@ -83,6 +83,8 @@ public class ApiTest extends WebTestBase {
 
     @Test
     public void api_municipalities() {
+        // Prerequisites. Assumes that there are tree municipalities: Helsinki, Vantaa, Hyvinkää.
+        assertThat(testHelper.getAllMunicipalities().size(), is(3));
         open(urls.municipalities());
         assertThat(getElement(By.tagName("pre")).getText(), is("" +
                 "[{\"active\":true," +
@@ -102,6 +104,7 @@ public class ApiTest extends WebTestBase {
 
     @Test
     public void api_single_initiative(){
+;
         String collaborativeCitizenInitiativeNameHelsinki = "Aloite helsingista";
         Long id = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
