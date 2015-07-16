@@ -280,7 +280,11 @@
                     <#-- Participate to verifiable initiative -->
                     <#elseif requestMessage == RequestMessage.PARTICIPATE_VERIFIABLE>
                         <@messageHTML requestMessage />
-                        <a href="${urls.logout()}" class="small-button"><span class="small-icon logout"><@message "common.logout" /></span></a><a href="${urls.baseUrl}/${locale}" class="small-button push close"><@message "modal.continueBrowsing" /></a>
+                        <a <#if initiative??>
+                                href="${urls.logout()}?target=${urls.view(initiative.id)}"
+                            <#else>
+                                href="${urls.logout()}"
+                            </#if> class="small-button"><span class="small-icon logout"><@message "common.logout" /></span></a><a href="${urls.baseUrl}/${locale}" class="small-button push close"><@message "modal.continueBrowsing" /></a>
                     <#else>
                         <@messageHTML requestMessage />
                     </#if>

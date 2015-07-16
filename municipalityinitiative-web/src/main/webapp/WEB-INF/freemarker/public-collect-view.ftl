@@ -22,7 +22,11 @@
         </#if>
 
         <div class="input-block-content">
-            <a href="${urls.logout()}" class="small-button"><span class="small-icon logout"><@u.message "common.logout" /></span></a><a href="${springMacroRequestContext.requestUri}" class="small-button push"><@u.message "modal.continueBrowsing" /></a>
+            <a <#if initiative??>
+                    href="${urls.logout()}?target=${urls.view(initiative.id)}"
+            <#else>
+                    href="${urls.logout()}"
+            </#if> class="small-button"><span class="small-icon logout"><@u.message "common.logout" /></span></a><a href="${springMacroRequestContext.requestUri}" class="small-button push"><@u.message "modal.continueBrowsing" /></a>
         </div>
     </@compress>
 </#assign>
