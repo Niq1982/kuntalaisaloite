@@ -10,6 +10,7 @@ import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -105,6 +106,7 @@ public class JdbcUserDaoTest {
     }
 
     @Test
+    @Ignore
     public void get_initiatives_where_user_has_participated() {
         userDao.addVerifiedUser(HASH, contactInfo(), testMunicipality);
 
