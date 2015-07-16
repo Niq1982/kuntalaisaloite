@@ -81,5 +81,47 @@ public class ApiTest extends WebTestBase {
 
     }
 
+    @Test
+    public void api_municipalities() {
+        open(urls.municipalities());
+        assertThat(getElement(By.tagName("pre")).getText(), is("" +
+                "[{\"active\":true," +
+                "\"id\":\"http://localhost:8090/api/api/v1/municipalities/"+ HELSINKI_ID +"\"," +
+                "\"nameFi\":\"Helsinki\"," +
+                "\"nameSv\":\"Helsinki sv\"}," +
+                "{\"active\":true," +
+                "\"id\":\"http://localhost:8090/api/api/v1/municipalities/"+ HYVINKAA_ID +"\"," +
+                "\"nameFi\":\"Hyvinkää\"," +
+                "\"nameSv\":\"Hyvinkää sv\"}," +
+                "{\"active\":true," +
+                "\"id\":\"http://localhost:8090/api/api/v1/municipalities/"+ VANTAA_ID +"\"," +
+                "\"nameFi\":\"Vantaa\"," +
+                "\"nameSv\":\"Vantaa sv\"}]"));
+       }
 
+
+    @Test
+    public void api_single_initiative(){
+        String collaborativeCitizenInitiativeNameHelsinki = "Aloite helsingista";
+        Long id = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
+                .withType(InitiativeType.COLLABORATIVE_CITIZEN)
+                .withState(InitiativeState.PUBLISHED)
+                .withStateTime(new DateTime("2015-07-14"))
+                .withName(collaborativeCitizenInitiativeNameHelsinki));
+       open(urls.initiatives() + "/" + id);
+
+        assertThat(getElement(By.tagName("pre")).getText(), is("{\"authors\":{\"privateNames\":0,\"publicAuthors\":[]," +
+                "\"publicNames\":0}," +
+                "\"collaborative\":true," +
+                "\"id\":\"http://localhost:8090/api/api/v1/initiatives/"+id +"\"," +
+                "\"municipality\":{\"active\":true,\"id\":\"http://localhost:8090/api/api/v1/municipalities/"+ HELSINKI_ID+"\"," +
+                "\"nameFi\":\"Helsinki\",\"nameSv\":\"Helsinki sv\"}," +
+                "\"name\":\"Aloite helsingista\"," +
+                "\"participantCount\":" +
+                "{\"externalNames\":0," +
+                "\"privateNames\":0," +
+                "\"publicNames\":0,\"total\":0}," +
+                "\"proposal\":\"Proposal\"," +
+                "\"publishDate\":\"2015-07-14\",\"sentTime\":null,\"type\":\"COLLABORATIVE_CITIZEN\"}"));
+    }
 }
