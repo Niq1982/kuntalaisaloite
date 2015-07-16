@@ -42,7 +42,7 @@ public class IFrameController extends BaseController {
 
 
     @RequestMapping(value={IFRAME_OLD_FI, IFRAME_OLD_SV}, method=GET)
-    public String iframeOld(@RequestParam(value="municipality", required = true) Long municipality, InitiativeSearch search,
+    public String iframeOld(@RequestParam(value="municipality", required = false) Long municipality, InitiativeSearch search,
                          Model model,
                          Locale locale,
                          HttpServletRequest request) {
