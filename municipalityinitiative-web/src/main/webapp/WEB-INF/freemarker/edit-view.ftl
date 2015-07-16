@@ -69,13 +69,16 @@
 
 <#assign mapContainer>
     <@compress single_line=true>
+        <p>Etsi sijainti osoitteen avulla</p>
+        <input type="text" id="user-entered-address"></input>
+        <span class="small-button" id="search-location">Etsi</span>
         <div class="map-container" >
             <div id="map-canvas"></div>
             <div id="lat"></div>
         </div>
         <div class="input-block-content">
             <span class="small-button close" id="save-and-close">Tallenna</span>
-            <span style="color:blue" class="close push"><@u.message "action.cancel" /></span>
+            <span class="close push blue"><@u.message "action.cancel" /></span>
         </div>
     </@compress>
 </#assign>

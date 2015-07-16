@@ -1905,14 +1905,14 @@ if (window.hasIGraphFrame) {
 (function() {
 
 	var mapContainer = (function() {
-		var marker, selectedLocation;
+		var marker, selectedLocation, geocoder, map;
 
 		var init = function(municipality) {
 
+			geocoder = new google.maps.Geocoder();
 
-			var geocoder = new google.maps.Geocoder();
+			getLocationFromAddress( municipality, function (results, status) {
 
-			geocoder.geocode({"address": municipality}, function (results, status) {
 				if (results.length > 0) {
 					initMap(results[0].geometry.location);
 					selectedLocation = results[0].geometry.location;
@@ -1929,25 +1929,34 @@ if (window.hasIGraphFrame) {
 
 			$("#save-and-close").live('click', function () {
 				console.log("Location chosen. Selected location is " + selectedLocation);
-				var $selectedLocation = $("#selected-location");
-				$selectedLocation.text("Aloitteeseen on liitetty sijainti.");
-				$selectedLocation.addClass("map-marker");
 
+				$("#selected-location").addClass("no-visible");
 				$("#open-remove-location").removeClass("no-visible");
 
 			});
 
+			$("#search-location").live('click', function() {
+				getLocationFromAddress($("#user-entered-address").val(), function (results, status) {
+					if (results.length > 0) {
+						initMap(results[0].geometry.location);
+						selectedLocation = results[0].geometry.location;
+					}
+				});
+			});
 
+			function getLocationFromAddress(address, callback) {
+				geocoder.geocode({"address": address}, callback);
+			}
 		};
 
-		var initMap = function(centerCoordinates) {
+		function initMap(centerCoordinates) {
 
 			var mapOptions = {
 				center: centerCoordinates,
 				zoom: 14
 			};
 
-			var map = new google.maps.Map(document.getElementById('map-canvas'),
+			map = new google.maps.Map(document.getElementById('map-canvas'),
 				mapOptions);
 
 			placeMarker(centerCoordinates, map);
@@ -1982,7 +1991,8 @@ if (window.hasIGraphFrame) {
 		generateModal(modalData.mapContainer(), 'full', mapContainer.init);
 	});
 	$("#remove-selected-location").click(function() {
-
+		$("#selected-location").removeClass("no-visible");
+		$("#open-remove-location").addClass("no-visible");
 	});
 }());
 

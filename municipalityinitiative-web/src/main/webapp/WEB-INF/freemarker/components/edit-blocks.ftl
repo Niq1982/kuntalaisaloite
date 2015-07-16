@@ -285,7 +285,9 @@
         <div class="input-block-content">
             <p id="selected-location"> Lisää aloitteellesi tarkempi sijainti <span id="openMap" class="blue">tästä</span></p>
             <div id="open-remove-location" class="no-visible">
-                <span id="show-selected-location" class="blue">Näytä</span> <span id="remove-selected-location" class="blue">Poista</span>
+                <p class="map-marker">Aloitteeseen on liitetty sijainti.</p>
+                <span id="show-selected-location" class="blue">Näytä</span>
+                <span id="remove-selected-location" class="blue">Poista</span>
             </div>
         </div>
 
