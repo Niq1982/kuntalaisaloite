@@ -10,7 +10,6 @@ import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -106,13 +105,23 @@ public class JdbcUserDaoTest {
     }
 
     @Test
-    @Ignore
-    public void get_initiatives_where_user_has_participated() {
-        userDao.addVerifiedUser(HASH, contactInfo(), testMunicipality);
+    public void get_initiatives_verified_user_has_participated() {
 
+        userDao.addVerifiedUser(HASH, contactInfo(), testMunicipality);
         // Verified user participates verified initiative
         Long verifiedUserId = userDao.getVerifiedUserId(HASH).getValue().toLong();
         testHelper.createVerifiedParticipantWithVerifiedUserId(new TestHelper.AuthorDraft(testVerifiedInitiativeId, testMunicipalityId).withVerifiedUserId(verifiedUserId));
+
+        VerifiedUser user = userDao.getVerifiedUser(HASH).getValue();
+
+        assertThat(user.getInitiativesWithParticipation(), contains(testVerifiedInitiativeId));
+    }
+
+    @Test
+    public void get_normal_initiatives_verified_user_has_participated() {
+
+        userDao.addVerifiedUser(HASH, contactInfo(), testMunicipality);
+        Long verifiedUserId = userDao.getVerifiedUserId(HASH).getValue().toLong();
 
         // Verified user participates to normal initiative
         Long participantId = testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(testInitiativeId, testMunicipalityId));
@@ -120,7 +129,7 @@ public class JdbcUserDaoTest {
 
         VerifiedUser user = userDao.getVerifiedUser(HASH).getValue();
 
-        assertThat(user.getInitiativesWithParticipation(), contains(testInitiativeId, testVerifiedInitiativeId));
+        assertThat(user.getInitiativesWithParticipation(), contains(testInitiativeId));
 
     }
 
