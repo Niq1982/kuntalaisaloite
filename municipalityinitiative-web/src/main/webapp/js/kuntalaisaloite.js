@@ -1911,7 +1911,7 @@ if (window.hasIGraphFrame) {
 
 			geocoder = new google.maps.Geocoder();
 
-			getLocationFromAddress( municipality, function (results, status) {
+			getLocationFromAddress(municipality, function (results, status) {
 
 				if (results.length > 0) {
 					initMap(results[0].geometry.location);
@@ -1937,10 +1937,14 @@ if (window.hasIGraphFrame) {
 
 			$("#search-location").live('click', function() {
 				getLocationFromAddress($("#user-entered-address").val(), function (results, status) {
-					if (results.length > 0) {
+					var $ul = $("#result-list ul");
+					for (var i = 0; i < results.length; i++) {
+						$ul.append('<li>' + results[i].formatted_address + '</li>');
+					}
+					/*if (results.length > 0) {
 						initMap(results[0].geometry.location);
 						selectedLocation = results[0].geometry.location;
-					}
+					}*/
 				});
 			});
 
