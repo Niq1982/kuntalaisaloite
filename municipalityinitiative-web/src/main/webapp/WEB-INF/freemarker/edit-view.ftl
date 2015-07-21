@@ -73,7 +73,6 @@
         <input type="text" id="user-entered-address"></input>
         <#--<span class="small-button" id="search-location">Etsi</span>-->
         <div id = "result-list">
-            <ul></ul>
         </div>
 
         <div class="map-container" >

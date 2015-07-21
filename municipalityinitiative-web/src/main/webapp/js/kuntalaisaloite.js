@@ -1905,7 +1905,7 @@ if (window.hasIGraphFrame) {
 (function() {
 
 	var mapContainer = (function() {
-		var marker, selectedLocation, geocoder, map;
+		var marker, selectedLocation, geocoder, map, searchresults;
 
 		var init = function(municipality) {
 
@@ -1913,7 +1913,7 @@ if (window.hasIGraphFrame) {
 
 			getLocationFromAddress(municipality, function (results, status) {
 
-				if (results.length > 0) {
+				if (results !== undefined && results.length > 0) {
 					initMap(results[0].geometry.location);
 					selectedLocation = results[0].geometry.location;
 				}
@@ -1936,25 +1936,47 @@ if (window.hasIGraphFrame) {
 			});
 
 			$("#user-entered-address").live('input propertychange', function(){
+				var searchterm = $("#user-entered-address").val();
 				getLocationFromAddress($("#user-entered-address").val(), function (results, status) {
-					var $ul = $("#result-list ul");
-					$ul.empty();
-					for (var i = 0; i < results.length; i++) {
-						$ul.append('<li>' + results[i].formatted_address + '</li>');
+					console.log(searchterm);
+
+					$("#result-list").empty();
+
+					searchresults = results;
+					if (results !== null) {
+						var $ul = $("<ul>");
+						$("#result-list").append($ul);
+						for (var i = 0; i < results.length; i++) {
+							var $li = $('<li>' + results[i].formatted_address + '</li>');
+							$li.attr("id", i);
+							$ul.append($li);
+							console.log(results[i].formatted_address);
+						}
 					}
 
 				});
 			});
-			$("#result-list ul li").live('click', function() {
-
-					selectedLocation = this.attr('location');
-					placeMarker(selectedLocation, map);
+			$("#result-list ul li").live('click', function(event) {
+					var $this = event.target;
+					if ( searchresults[$this.id] !== undefined) {
+						selectedLocation = searchresults[$this.id].geometry.location;
+						placeMarker(selectedLocation, map);
+					}
 
 
 			});
 
 			function getLocationFromAddress(address, callback) {
-				geocoder.geocode({"address": address}, callback);
+
+				var geocoderequst = {"address": address};
+
+				if (address !== undefined) {
+					if (map !== undefined) {
+						geocoderequst.bounds = map.getBounds();
+					}
+					geocoderequst.componentRestrictions = {'country': 'FI'};
+				}
+				geocoder.geocode(geocoderequst, callback);
 			}
 		};
 
@@ -1972,8 +1994,9 @@ if (window.hasIGraphFrame) {
 
 			google.maps.event.addListener(map, 'click', function (e) {
 				placeMarker(e.latLng, map);
-				$("#lat").text(e.latLng);
+				//$("#lat").text(e.latLng);
 				selectedLocation = e.latLng;
+				console.log (e.latLng);
 			});
 		};
 
