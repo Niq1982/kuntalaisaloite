@@ -1935,17 +1935,22 @@ if (window.hasIGraphFrame) {
 
 			});
 
-			$("#search-location").live('click', function() {
+			$("#user-entered-address").live('input propertychange', function(){
 				getLocationFromAddress($("#user-entered-address").val(), function (results, status) {
 					var $ul = $("#result-list ul");
+					$ul.empty();
 					for (var i = 0; i < results.length; i++) {
 						$ul.append('<li>' + results[i].formatted_address + '</li>');
 					}
-					/*if (results.length > 0) {
-						initMap(results[0].geometry.location);
-						selectedLocation = results[0].geometry.location;
-					}*/
+
 				});
+			});
+			$("#result-list ul li").live('click', function() {
+
+					selectedLocation = this.attr('location');
+					placeMarker(selectedLocation, map);
+
+
 			});
 
 			function getLocationFromAddress(address, callback) {

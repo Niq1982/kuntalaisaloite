@@ -71,7 +71,7 @@
     <@compress single_line=true>
         <p>Etsi sijainti osoitteen avulla</p>
         <input type="text" id="user-entered-address"></input>
-        <span class="small-button" id="search-location">Etsi</span> <br/>
+        <#--<span class="small-button" id="search-location">Etsi</span>-->
         <div id = "result-list">
             <ul></ul>
         </div>
