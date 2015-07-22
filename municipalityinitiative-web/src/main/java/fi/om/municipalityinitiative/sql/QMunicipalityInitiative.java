@@ -1,14 +1,16 @@
 package fi.om.municipalityinitiative.sql;
 
-import static com.mysema.query.types.PathMetadataFactory.*;
-
-import com.mysema.query.types.path.*;
-
-import com.mysema.query.types.PathMetadata;
-import javax.annotation.Generated;
-import com.mysema.query.types.Path;
-
 import com.mysema.query.sql.ColumnMetadata;
+import com.mysema.query.types.Path;
+import com.mysema.query.types.PathMetadata;
+import com.mysema.query.types.path.DateTimePath;
+import com.mysema.query.types.path.EnumPath;
+import com.mysema.query.types.path.NumberPath;
+import com.mysema.query.types.path.StringPath;
+
+import javax.annotation.Generated;
+
+import static com.mysema.query.types.PathMetadataFactory.forVariable;
 
 
 /**
@@ -32,6 +34,10 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
     public final DateTimePath<org.joda.time.DateTime> lastEmailReportTime = createDateTime("lastEmailReportTime", org.joda.time.DateTime.class);
 
     public final EnumPath<fi.om.municipalityinitiative.service.email.EmailReportType> lastEmailReportType = createEnum("lastEmailReportType", fi.om.municipalityinitiative.service.email.EmailReportType.class);
+
+    public final StringPath locationLat = createString("locationLat");
+
+    public final StringPath locationLng = createString("locationLng");
 
     public final StringPath moderatorComment = createString("moderatorComment");
 
@@ -107,6 +113,8 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
         addMetadata(id, ColumnMetadata.named("id").ofType(-5).withSize(19).notNull());
         addMetadata(lastEmailReportTime, ColumnMetadata.named("last_email_report_time").ofType(93).withSize(29).withDigits(6));
         addMetadata(lastEmailReportType, ColumnMetadata.named("last_email_report_type").ofType(1111).withSize(2147483647));
+        addMetadata(locationLat, ColumnMetadata.named("location_lat").ofType(12).withSize(2147483647));
+        addMetadata(locationLng, ColumnMetadata.named("location_lng").ofType(12).withSize(2147483647));
         addMetadata(moderatorComment, ColumnMetadata.named("moderator_comment").ofType(12).withSize(1024));
         addMetadata(modified, ColumnMetadata.named("modified").ofType(93).withSize(29).withDigits(6).notNull());
         addMetadata(municipalityId, ColumnMetadata.named("municipality_id").ofType(-5).withSize(19).notNull());

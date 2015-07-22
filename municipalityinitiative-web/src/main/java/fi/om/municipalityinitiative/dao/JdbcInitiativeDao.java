@@ -18,6 +18,7 @@ import com.mysema.query.types.path.StringPath;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.Location;
 import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListWithCount;
@@ -103,6 +104,11 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     Long maybeYouthInitiativeID = row.get(municipalityInitiative.youthInitiativeId);
                     if (maybeYouthInitiativeID != null) {
                         info.setYouthInitiativeId(maybeYouthInitiativeID);
+                    }
+                    String maybeLocationLat = row.get(municipalityInitiative.locationLat);
+                    String maybeLocationLng = row.get(municipalityInitiative.locationLng);
+                    if (maybeLocationLng != null && maybeLocationLng != null) {
+                        info.setLocation(new Location(maybeLocationLat, maybeLocationLng));
                     }
                     return info;
                 }

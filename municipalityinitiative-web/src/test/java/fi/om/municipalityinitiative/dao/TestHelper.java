@@ -232,6 +232,8 @@ public class TestHelper {
         insert.set(municipalityInitiative.stateTimestamp, initiativeDraft.stateTime);
         insert.set(municipalityInitiative.lastEmailReportTime, initiativeDraft.emailReportDateTime);
         insert.set(municipalityInitiative.lastEmailReportType, initiativeDraft.emailReportType);
+        insert.set(municipalityInitiative.locationLat, initiativeDraft.locationLat);
+        insert.set(municipalityInitiative.locationLng, initiativeDraft.locationLng);
 
         if (initiativeDraft.supporCountData != null) {
             insert.set(municipalityInitiative.supportCountData, initiativeDraft.supporCountData);
@@ -800,6 +802,9 @@ public class TestHelper {
         public EmailReportType emailReportType;
         public DateTime emailReportDateTime;
         public String supporCountData;
+        public String locationLat;
+        public String locationLng;
+
 
         public AuthorDraft applyAuthor() {
             this.authorDraft = Maybe.of(new AuthorDraft(this, municipalityId));
@@ -892,6 +897,15 @@ public class TestHelper {
             this.supporCountData = s;
             return this;
         }
+        public InitiativeDraft withLocationLat(String s) {
+            this.locationLat = s;
+            return this;
+        }
+        public InitiativeDraft withLocationLng(String s) {
+            this.locationLng = s;
+            return this;
+        }
+
     }
     public Long getLastInitiativeId() {
         return lastInitiativeId;

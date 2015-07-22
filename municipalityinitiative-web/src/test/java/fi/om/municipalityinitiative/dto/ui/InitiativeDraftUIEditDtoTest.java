@@ -1,6 +1,7 @@
 package fi.om.municipalityinitiative.dto.ui;
 
 import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.Location;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.junit.Test;
 
@@ -13,6 +14,8 @@ public class InitiativeDraftUIEditDtoTest {
     public void parse_from_initiative() {
         Initiative originalInitiative = ReflectionTestUtils.modifyAllFields(new Initiative());
         ContactInfo originalContactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
+        Location location = new Location("423423", "342423");
+        originalInitiative.setLocation(location);
         InitiativeDraftUIEditDto dto = InitiativeDraftUIEditDto.parse(originalInitiative, originalContactInfo);
 
         assertThat(dto.getMunicipality().getId(), is(originalInitiative.getMunicipality().getId()));
@@ -25,6 +28,8 @@ public class InitiativeDraftUIEditDtoTest {
         assertThat(dto.getName(), is(originalInitiative.getName()));
         assertThat(dto.getProposal(), is(originalInitiative.getProposal()));
         assertThat(dto.getExternalParticipantCount(), is(originalInitiative.getExternalParticipantCount()));
+        assertThat(dto.getLocation().getLat(), is(location.getLat()));
+        assertThat(dto.getLocation().getLng(), is(location.getLng()));
 //        assertThat(dto.getState(), is(originalInitiative.getState()));
         ReflectionTestUtils.assertNoNullFields(dto);
 

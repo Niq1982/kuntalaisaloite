@@ -32,6 +32,7 @@ public class Initiative {
     private DateTime lastEmailReportTime;
     private EmailReportType lastEmailReportType;
     private Maybe<Long> youthInitiativeId = Maybe.absent();
+    private Maybe<Location> location;
 
     public Maybe<Long> getYouthInitiativeId() {
         return youthInitiativeId;
@@ -195,5 +196,13 @@ public class Initiative {
 
     public EmailReportType getLastEmailReportType() {
         return lastEmailReportType;
+    }
+
+    public Maybe<Location> getLocation() {
+        return this.location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = Maybe.of(location);
     }
 }

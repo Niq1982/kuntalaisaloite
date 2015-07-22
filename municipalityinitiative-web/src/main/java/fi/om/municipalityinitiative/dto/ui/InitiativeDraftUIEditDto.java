@@ -2,8 +2,8 @@ package fi.om.municipalityinitiative.dto.ui;
 
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.Location;
 import fi.om.municipalityinitiative.dto.service.Municipality;
-
 import fi.om.municipalityinitiative.validation.NormalInitiative;
 import fi.om.municipalityinitiative.validation.VerifiedInitiative;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -36,6 +36,8 @@ public class InitiativeDraftUIEditDto {
     @Min(value = 0, groups = {VerifiedInitiative.class, NormalInitiative.class} )
     private int externalParticipantCount;
 
+    private Location location;
+
     public InitiativeDraftUIEditDto() {
         // For freemarker
     }
@@ -48,6 +50,9 @@ public class InitiativeDraftUIEditDto {
         editDto.municipality = initiative.getMunicipality();
         editDto.setContactInfo(new ContactInfo(contactInfo));
         editDto.setExternalParticipantCount(initiative.getExternalParticipantCount());
+        if (initiative.getLocation().isPresent()) {
+            editDto.location = initiative.getLocation().getValue();
+        }
         return editDto;
     }
 
@@ -78,6 +83,8 @@ public class InitiativeDraftUIEditDto {
     public Municipality getMunicipality() {
         return municipality;
     }
+
+    public Location getLocation() {return location;}
 
     public ContactInfo getContactInfo() {
         return contactInfo;

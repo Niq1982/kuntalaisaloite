@@ -93,6 +93,8 @@ public class JdbcInitiativeDaoTest {
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withSent(new DateTime(2010, 1, 1, 0, 0))
                 .witEmailReportSent(EmailReportType.IN_ACCEPTED, new DateTime())
+                .withLocationLat("64.9146659")
+                .withLocationLng("26.0672554")
                 .applyAuthor().withParticipantMunicipality(authorsMunicipalityId)
                 .toInitiativeDraft());
 
@@ -108,6 +110,8 @@ public class JdbcInitiativeDaoTest {
         assertThat(initiative.getParticipantCount(), is(1));
         assertThat(initiative.getFixState(), is(FixState.OK));
         assertThat(initiative.getExternalParticipantCount(), is(TestHelper.DEFAULT_EXTERNAL_PARTICIPANT_COUNT));
+        assertThat(initiative.getLocation().getValue().getLat(), is("64.9146659"));
+        assertThat(initiative.getLocation().getValue().getLng(), is("26.0672554"));
 
         ReflectionTestUtils.assertNoNullFields(initiative);
     }
