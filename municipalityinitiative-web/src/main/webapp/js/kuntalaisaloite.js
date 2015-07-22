@@ -1907,149 +1907,202 @@ if (window.hasIGraphFrame) {
  * Map selector for selection location on map for initiative.
  *
  */
+var mapContainer = (function() {
+	var marker, selectedLocation, geocoder, map, searchresults,
+		centerOfFinland = {"lat": 64.9146659, "lng": 26.0672554},
+		selectedResultIndex = -1, // For key navigation in result list
+		ARROWUP = 38,
+		ARROWDOWN = 40,
+		ENTER = 13,
+		// functions
+		init,
+		getLocationFromAddress,
+		filterOutResultsByType,
+		updateResultsList,
+		initMap,
+		placeMarker,
+		selectListElementWithArrow;
 
+	init = function(municipality) {
 
-	var mapContainer = (function() {
+		geocoder = new google.maps.Geocoder();
 
-		var marker, selectedLocation, geocoder, map, searchresults, init, getLocationFromAddress, filterOutResultsByType, updateResultsList, initMap, placeMarker, centerOfFinland;
-
-		init = function(municipality) {
-			centerOfFinland = {"lat": 64.9146659, "lng": 26.0672554};
-
-			geocoder = new google.maps.Geocoder();
-
-			if (municipality !== undefined) {
-				getLocationFromAddress(municipality, function (results, status) {
-					if (results !== undefined && results!== null && results.length > 0) {
-						selectedLocation = results[0].geometry.location;
-						initMap(selectedLocation);
-					} else {
-						initMap(centerOfFinland);
-					}
-				});
-			} else if (selectedLocation !== undefined) {
-				initMap(selectedLocation);
-			} else {
-				initMap(centerOfFinland);
-			}
-
-			$("#save-and-close").live('click', function () {
-				console.log("Location chosen. Selected location is " + selectedLocation);
-
-				$("#selected-location").addClass("no-visible");
-				$("#open-remove-location").removeClass("no-visible");
-
-			});
-
-			$("#user-entered-address").live('input propertychange', function(){
-				var searchterm = $("#user-entered-address").val();
-				getLocationFromAddress($("#user-entered-address").val(), function (results, status) {
-					console.log(searchterm);
-
-					if (results !== undefined && results !== null) {
-						// Filter out result "Finland"
-						results = filterOutResultsByType(results, 'country');
-						if (results !== undefined && results.length > 0) {
-							updateResultsList(results);
-						}
-					}
-				});
-			});
-
-			$("#result-list ul li").live('click', function(event) {
-				var $this = event.target;
-				if ( searchresults[$this.id] !== undefined) {
-					selectedLocation = searchresults[$this.id].geometry.location;
-					placeMarker(selectedLocation, map);
+		if (municipality !== undefined) {
+			getLocationFromAddress(municipality, function (results, status) {
+				if (results !== undefined && results!== null && results.length > 0) {
+					selectedLocation = results[0].geometry.location;
+					initMap(selectedLocation);
+				} else {
+					initMap(centerOfFinland);
 				}
 			});
-		};
+		} else if (selectedLocation !== undefined) {
+			initMap(selectedLocation);
+		} else {
+			initMap(centerOfFinland);
+		}
 
-		getLocationFromAddress = function(address, callback) {
-			var geocoderequst = {"address": address};
+		$("#save-and-close").live('click', function () {
+			console.log("Location chosen. Selected location is " + selectedLocation);
 
-			if (map !== undefined) {
-				geocoderequst.bounds = map.getBounds();
-			}
-			geocoderequst.componentRestrictions = {'country': 'FI'};
+			$("#selected-location").addClass("no-visible");
+			$("#open-remove-location").removeClass("no-visible");
 
-			geocoder.geocode(geocoderequst, callback);
-		};
+		});
 
-		filterOutResultsByType = function(results, type) {
-			function doesNotContainType(type) {
-				return function(value) {return value.types.indexOf(type) === -1;};
-			}
-			return results.filter(doesNotContainType(type));
-		};
+		$("#user-entered-address").live('input propertychange', function(){
+			var searchterm = $("#user-entered-address").val();
+			getLocationFromAddress($("#user-entered-address").val(), function (results, status) {
+				console.log(searchterm);
 
-		updateResultsList = function(results) {
-			searchresults = results;
-
-			var $ul = $("<ul>");
-			$("#result-list").empty();
-			$("#result-list").append($ul);
-
-			for (var i = 0; i < searchresults.length; i++) {
-				var $li = $('<li>' + searchresults[i].formatted_address + '</li>');
-				$li.attr("id", i);
-				$ul.append($li);
-				console.log(searchresults[i].formatted_address);
-			}
-		};
-
-		initMap = function(centerCoordinates) {
-
-			var mapOptions = {
-				center: centerCoordinates,
-				zoom: 14
-			};
-
-			map = new google.maps.Map(document.getElementById('map-canvas'),
-				mapOptions);
-
-			placeMarker(centerCoordinates, map);
-
-			google.maps.event.addListener(map, 'click', function (e) {
-				placeMarker(e.latLng, map);
-				//$("#lat").text(e.latLng);
-				selectedLocation = e.latLng;
-				console.log (e.latLng);
+				if (results !== undefined && results !== null) {
+					// Filter out result "Finland"
+					results = filterOutResultsByType(results, 'country');
+					if (results !== undefined && results.length > 0) {
+						updateResultsList(results);
+					}
+				}
 			});
-		};
+		});
 
-		placeMarker = function(position, map) {
-			if (marker != null) {
-				marker.setMap(null);
+		selectListElementWithArrow = function(index) {
+			if (searchresults !== undefined || searchresults !== null || searhresults.length > 0) {
+				if (selectedResultIndex > -1 ) {
+					$(".selected").removeClass("selected");
+				}
+				if (index < 0) {
+					selectedResultIndex = -1;
+				} else if (index >= searchresults.length) {
+					selectedResultIndex = searchresults.length - 1;
+				} else {
+					selectedResultIndex = index;
+				}
+				if (selectedResultIndex > -1){
+					//JQuery nth is 1 indexed
+					$("#result-list ul li:nth-child("+selectedResultIndex + 1 +")").addClass("selected");
+				}
+
 			}
-			marker = new google.maps.Marker({
-				position: position,
-				map: map
-			});
-			map.panTo(position);
+
 		};
 
-		return {
-			init: init
+		$("#user-entered-address").live('keydown', function(event){
+
+			switch (event.which) {
+				case ARROWDOWN:
+					selectListElementWithArrow(selectedResultIndex + 1);
+					break;
+				case ARROWUP:
+					selectListElementWithArrow(selectedResultIndex - 1);
+					break;
+				case ENTER:
+					selectResultFromList(selectedResultIndex);
+					break;
+			}
+			console.log(event.which);
+		});
+
+		function selectResultFromList(index) {
+			if (index >= 0 || index < searchresults.length ) {
+				selectedLocation = searchresults[index].geometry.location;
+				placeMarker(selectedLocation, map);
+			}
 		};
-	})();
 
-	var initMap;
 
-	$("#openMap").click(function(){
-		initMap = function() {mapContainer.init(modalData.initialLocation);}
-		generateModal(modalData.mapContainer(), 'full');
-	});
+		$("#result-list ul li").live('click', function(event) {
+			var $this = event.target;
+			if ($this.id !== undefined) {
+				selectResultFromList($this.id);
+			}
+		});
+	};
 
-	$("#show-selected-location").click(function() {
-		initMap =  mapContainer.init;
-		generateModal(modalData.mapContainer(), 'full');
-	});
+	getLocationFromAddress = function(address, callback) {
+		var geocoderequst = {"address": address};
 
-	$("#remove-selected-location").click(function() {
-		$("#selected-location").removeClass("no-visible");
-		$("#open-remove-location").addClass("no-visible");
-	});
+		if (map !== undefined) {
+			geocoderequst.bounds = map.getBounds();
+		}
+		geocoderequst.componentRestrictions = {'country': 'FI'};
+
+		geocoder.geocode(geocoderequst, callback);
+	};
+
+	filterOutResultsByType = function(results, type) {
+		function doesNotContainType(type) {
+			return function(value) {return value.types.indexOf(type) === -1;};
+		}
+		return results.filter(doesNotContainType(type));
+	};
+
+	updateResultsList = function(results) {
+		searchresults = results;
+
+		var $ul = $("<ul>");
+		$("#result-list").empty();
+		$("#result-list").append($ul);
+
+		for (var i = 0; i < searchresults.length; i++) {
+			var $li = $('<li>' + searchresults[i].formatted_address + '</li>');
+			$li.attr("id", i);
+			$ul.append($li);
+			console.log(searchresults[i].formatted_address);
+		}
+	};
+
+	initMap = function(centerCoordinates) {
+
+		var mapOptions = {
+			center: centerCoordinates,
+			zoom: 14
+		};
+
+		map = new google.maps.Map(document.getElementById('map-canvas'),
+			mapOptions);
+
+		placeMarker(centerCoordinates, map);
+
+		google.maps.event.addListener(map, 'click', function (e) {
+			placeMarker(e.latLng, map);
+			//$("#lat").text(e.latLng);
+			selectedLocation = e.latLng;
+			console.log (e.latLng);
+		});
+	};
+
+	placeMarker = function(position, map) {
+		if (marker != null) {
+			marker.setMap(null);
+		}
+		marker = new google.maps.Marker({
+			position: position,
+			map: map
+		});
+		map.panTo(position);
+	};
+
+	return {
+		init: init
+	};
+})();
+
+var initMap;
+
+$("#openMap").click(function(){
+	initMap = function() {mapContainer.init(modalData.initialLocation);}
+	generateModal(modalData.mapContainer(), 'full');
+});
+
+$("#show-selected-location").click(function() {
+	initMap =  mapContainer.init;
+	generateModal(modalData.mapContainer(), 'full');
+});
+
+$("#remove-selected-location").click(function() {
+	$("#selected-location").removeClass("no-visible");
+	$("#open-remove-location").addClass("no-visible");
+});
 
 
 $(window).on('resize', function () {
