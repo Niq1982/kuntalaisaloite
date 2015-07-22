@@ -503,4 +503,11 @@
     </#list>
 </#macro>
 
+<#--
+ * Inserts a script tag that loads google maps on page.
+ *
+-->
+<#macro jsGoogleMapsLib>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCO4u7Qvfrk_dshxosJwCqlK5nQY_gHE98"></script>
+</#macro>
 </#escape>
