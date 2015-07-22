@@ -3,11 +3,13 @@ package fi.om.municipalityinitiative.web.controller;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.service.CachedInitiativeFinder;
+import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.SearchParameterQueryString;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -29,27 +31,30 @@ public class IFrameController extends BaseController {
 
 
     @RequestMapping(value = {IFRAME_FI, IFRAME_SV}, method = GET)
-    public String iframe(InitiativeSearch search,
+    public String iframe(@RequestParam(value="municipality", required = false) Long municipality,
+                         InitiativeSearch search,
                          Model model,
                          Locale locale,
                          HttpServletRequest request) {
 
-        convertOldIFrameCallToNewIfNeeded(search);
-        return iframeOld(search, model, locale, request);
+
+        return iframeOld(municipality, search, model, locale, request);
     }
 
 
     @RequestMapping(value={IFRAME_OLD_FI, IFRAME_OLD_SV}, method=GET)
-    public String iframeOld(InitiativeSearch search,
+    public String iframeOld(@RequestParam(value="municipality", required = false) Long municipality, InitiativeSearch search,
                          Model model,
                          Locale locale,
                          HttpServletRequest request) {
         Urls urls = Urls.get(locale);
         model.addAttribute(ALT_URI_ATTR, urls.alt().search());
 
+        convertSingleMunipalityToListIfNeeded(search, municipality);
+
         return ViewGenerator.iframeSearch(
                 cachedInitiativeFinder.findIframeInitiatives(search),
-                cachedInitiativeFinder.getMunicipalities(search.getMunicipalities()),
+                cachedInitiativeFinder.getMunicipalities(Maybe.fromNullable(search.getMunicipalities())),
                 new SearchParameterQueryString(new InitiativeSearch())
         ).view(model, urls.alt().iframe());
     }
@@ -64,9 +69,9 @@ public class IFrameController extends BaseController {
         return ViewGenerator.iframeGenerator(municipalities).view(model, urls.alt().iframeGenerator());
     }
 
-    private void convertOldIFrameCallToNewIfNeeded(InitiativeSearch search) {
-        if (search.getMunicipalities() == null && search.getMunicipality() != null) {
-            search.setMunicipalities(search.getMunicipality());
+    private void convertSingleMunipalityToListIfNeeded(InitiativeSearch search, Long municipality) {
+        if (search.getMunicipalities() == null && municipality != null) {
+            search.setMunicipalities(municipality);
         }
     }
 

@@ -54,23 +54,23 @@
             <label for="initiativeId" class="input-header">
                 <@u.message "graph-iframeGenerator.initiativeId" />
             </label>
-            <input type="text" maxlength="6" class="x-small" value="${defaults[0]}" name="initiativeId" id="initiativeId" pattern="${digit}" />
+            <input type="text" maxlength="6" class="small" value="${defaults[0]}" name="initiativeId" id="initiativeId" pattern="${digit}" />
         </div>
 
         <div class="column col-1of10 push-width">
             <label for="width" class="input-header">
                 <@u.message "graph-iframeGenerator.width" />
             </label>
-            <input type="text" maxlength="4" class="x-small" value="${defaults[2]}" name="width" id="width" pattern="${digit}" />
+            <input type="text" maxlength="4" class="small" value="${defaults[2]}" name="width" id="width" pattern="${digit}" />
         </div>
         <div class="column col-1of10">
             <label for="height" class="input-header">
                 <@u.message "graph-iframeGenerator.height" />
             </label>
-            <input type="text" maxlength="4" class="x-small" value="${defaults[3]}" name="height" id="height" pattern="${digit}"  />
+            <input type="text" maxlength="4" class="small" value="${defaults[3]}" name="height" id="height" pattern="${digit}"  />
         </div>
         <div class="column col-1of3">
-            <label for="height" class="input-header">
+            <label for="height" class="input-header no-horizontal-margin">
                 <@u.message "graph-iframeGenerator.showTitle" />
             </label>
             <div class="input-placeholder">

@@ -92,6 +92,7 @@ textarea {
 textarea:focus, input[type="text"]:focus, .email-input.focus {
     box-shadow:0 0 5px rgba(0,0,0,0.2);
     border: 1px solid #bbb;
+
 }
 .js {
     textarea {
@@ -106,14 +107,7 @@ textarea:focus, input[type="text"]:focus, .email-input.focus {
 }
 
 
-input[type="text"] {
-    &.invalid {
-        border:1px solid @redGradient1;
-    }
-    &.valid {
-        border:1px solid @greenGradient1;
-    }
-}
+
 // for debugging
 //.js-invalid { box-shadow: 3px 3px 3px red !important; display:block !important; }
 
@@ -193,4 +187,10 @@ label  {
     margin:-6px;
     background:#eee;
     border:1px solid @borderGray;
+}
+
+
+.no-horizontal-margin {
+    margin-left: 0px;
+    margin-right: 0px;
 }

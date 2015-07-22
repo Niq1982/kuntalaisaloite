@@ -4,16 +4,12 @@ import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.joda.time.DateTime;
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 public class ViewInitiativeWebTest extends WebTestBase {
 
@@ -133,6 +129,87 @@ public class ViewInitiativeWebTest extends WebTestBase {
     }
 
     @Test
+    public void iframe_page_accepts_municipality_parameter_and_shows_initiative_oldest_municipality_paramater_iframe() {
+
+        DateTime stateTime = new DateTime(2011, 1, 1, 0, 0);
+        String title = "Yeah rock rock";
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
+                .withState(InitiativeState.PUBLISHED)
+                .withStateTime(stateTime)
+                .withName(title));
+
+        open(urls.iframeWithOldestApiMunicipality(HELSINKI_ID));
+        assertThat(getElement(By.tagName("li")).getText(), containsString(stateTime.toString("d.M.yyyy")));
+        assertThat(getElement(By.tagName("li")).getText(), containsString(title));
+    }
+    @Test
+    public void iframe_page_with_no_parameter_oldest_municipality_paramater_iframe() {
+
+        DateTime stateTime = new DateTime(2011, 1, 1, 0, 0);
+        String title = "Yeah rock rock";
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
+                .withState(InitiativeState.PUBLISHED)
+                .withStateTime(stateTime)
+                .withName(title));
+
+        open(urls.iframeWithOldestApiMunicipality());
+        assertThat(getElement(By.tagName("li")).getText(), containsString(stateTime.toString("d.M.yyyy")));
+        assertThat(getElement(By.tagName("li")).getText(), containsString(title));
+    }
+
+    @Test
+    public void iframe_page_accepts_municipality_parameter_and_only_shows_one_initiative_oldest_municipality_paramater_iframe() {
+
+        DateTime stateTime = new DateTime(2011, 1, 1, 0, 0);
+        String title = "Yeah rock rock";
+        String titleHyvinkaa = "Hyvinkää";
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
+                .withState(InitiativeState.PUBLISHED)
+                .withStateTime(stateTime)
+                .withName(title));
+
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HYVINKAA_ID)
+                .withState(InitiativeState.PUBLISHED)
+                .withStateTime(stateTime)
+                .withName(titleHyvinkaa));
+
+        open(urls.iframeWithOldestApiMunicipality(HELSINKI_ID));
+        assertThat(getElement(By.tagName("ul")).getText(), containsString(stateTime.toString("d.M.yyyy")));
+        assertThat(getElement(By.tagName("ul")).getText(), containsString(title));
+
+        assertThat(getElement(By.tagName("ul")).getText(), not(containsString(titleHyvinkaa)));
+    }
+
+    @Test
+    public void iframe_page_accepts_limit_parameter_oldest_municipality_paramater_iframe() {
+
+        DateTime stateTime = new DateTime(2011, 1, 1, 0, 0);
+        String title = "Yeah rock rock";
+        String title2 = "Newst initiative";
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
+                .withState(InitiativeState.PUBLISHED)
+                .withStateTime(stateTime)
+                .withName(title));
+
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
+                .withState(InitiativeState.PUBLISHED)
+                .withStateTime(stateTime)
+                .withName(title2));
+
+        open(urls.iframeWithOldestApiMunicipality(HELSINKI_ID) + "&limit=1");
+        assertThat(getElement(By.tagName("ul")).getText(), containsString(stateTime.toString("d.M.yyyy")));
+        assertThat(getElement(By.tagName("ul")).getText(), containsString(title2));
+
+        assertThat(getElement(By.tagName("ul")).getText(), not(containsString(title)));
+    }
+
+    @Test
+    public void iframe_page_shows_empty_list_if_no_initiatives_oldest_municipality_paramater_iframe() {
+        open(urls.iframeWithOldestApiMunicipality(-1L));
+        assertThat(getElement(By.className("search-results")).getText(), is("Ei vielä yhtään aloitetta"));
+    }
+
+    @Test
     public void iframe_page_accepts_municipality_parameter_and_shows_initiative_old_municipality_paramater_iframe() {
 
         DateTime stateTime = new DateTime(2011, 1, 1, 0, 0);
@@ -151,6 +228,30 @@ public class ViewInitiativeWebTest extends WebTestBase {
     public void iframe_page_shows_empty_list_if_no_initiatives_old_municipality_paramater_iframe() {
         open(urls.iframeWithOldApiMunicipality(-1L));
         assertThat(getElement(By.className("search-results")).getText(), is("Ei vielä yhtään aloitetta"));
+    }
+
+
+    @Test
+    public void iframe_page_accepts_limit_parameter_old_municipality_paramater_iframe() {
+
+        DateTime stateTime = new DateTime(2011, 1, 1, 0, 0);
+        String title = "Yeah rock rock";
+        String title2 = "Newst initiative";
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
+                .withState(InitiativeState.PUBLISHED)
+                .withStateTime(stateTime)
+                .withName(title));
+
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
+                .withState(InitiativeState.PUBLISHED)
+                .withStateTime(stateTime)
+                .withName(title2));
+
+        open(urls.iframeWithOldApiMunicipality(HELSINKI_ID) + "&limit=1");
+        assertThat(getElement(By.tagName("ul")).getText(), containsString(stateTime.toString("d.M.yyyy")));
+        assertThat(getElement(By.tagName("ul")).getText(), containsString(title2));
+
+        assertThat(getElement(By.tagName("ul")).getText(), not(containsString(title)));
     }
 
     @Test
@@ -200,6 +301,29 @@ public class ViewInitiativeWebTest extends WebTestBase {
     }
 
     @Test
+    public void iframe_page_accepts_limit_parameter() {
+
+        DateTime stateTime = new DateTime(2011, 1, 1, 0, 0);
+        String title = "Yeah rock rock";
+        String title2 = "Newst initiative";
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
+                .withState(InitiativeState.PUBLISHED)
+                .withStateTime(stateTime)
+                .withName(title));
+
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
+                .withState(InitiativeState.PUBLISHED)
+                .withStateTime(stateTime)
+                .withName(title2));
+
+        open(urls.iframe(HELSINKI_ID) + "&limit=1");
+        assertThat(getElement(By.tagName("ul")).getText(), containsString(stateTime.toString("d.M.yyyy")));
+        assertThat(getElement(By.tagName("ul")).getText(), containsString(title2));
+
+        assertThat(getElement(By.tagName("ul")).getText(), not(containsString(title)));
+    }
+
+    @Test
     public void iframe_page_shows_empty_list_if_no_initiatives() {
         open(urls.iframe(-1L));
         assertThat(getElement(By.className("search-results")).getText(), is("Ei vielä yhtään aloitetta"));
@@ -210,6 +334,47 @@ public class ViewInitiativeWebTest extends WebTestBase {
         assertThat(getElement(By.className("search-results")).getText(), is("Ei vielä yhtään aloitetta"));
     }
 
+    @Test
+    public void show_graph_iframe_for_initiative() {
+        DateTime stateTime = new DateTime(2011, 1, 1, 0, 0);
+        String title = "Yeah rock rock";
+        Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
+                .withState(InitiativeState.PUBLISHED)
+                .withStateTime(stateTime)
+                .withName(title));
+
+        String publicName = "Public Name";
+        String privateName = "Private Name";
+
+
+        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, HELSINKI_ID)
+                .withParticipantName(publicName)
+                .withPublicName(true));
+
+        testHelper.createDefaultParticipant(new TestHelper.AuthorDraft(initiativeId, HELSINKI_ID)
+                .withParticipantName(privateName)
+                .withPublicName(false));
+
+        open(urls.graphIFrame(initiativeId));
+
+        assertThat(getElement(By.className("public-names")).getText(), containsString("1 nimi julkaistu palvelussa"));
+
+        assertThat(getElement(By.className("private-names")).getText(), containsString("1 nimi ei julkaistu palvelussa"));
+    }
+    @Test
+    public void show_graph_iframe_for_initiative_with_title_and_date() {
+        DateTime stateTime = new DateTime(2011, 1, 1, 0, 0);
+        String title = "Yeah rock rock";
+        Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
+                .withState(InitiativeState.PUBLISHED)
+                .withStateTime(stateTime)
+                .withName(title));
+
+        open(urls.graphIFrame(initiativeId) + "?showTitle=true");
+        assertThat(getElement(By.tagName("p")).getText(), containsString(title));
+        assertThat(getElement(By.className("extra-info")).getText(), containsString(stateTime.toString("d.M.yyyy")));
+
+    }
 
 
 

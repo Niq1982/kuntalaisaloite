@@ -21,7 +21,7 @@
     <#if initiative??>
 	    <#if initiative.name??>
 	        <#assign page="page.initiative.public" />
-	        <#assign pageTitle><@u.text initiative.name /></#assign>
+	        <#assign pageTitle> ${initiative.name} </#assign>
 	    <#else>
 	        <#assign page="page.initiative.unnamed" />
 	        <#assign pageTitle="" />
@@ -46,22 +46,19 @@
     <link href="${urls.baseUrl}/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
 
     <#if optimizeResources>
-        <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/style-iframe.min.css?version=${resourcesVersion}" />
+        <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/style-graph-iframe.min.css?version=${resourcesVersion}" />
         <!--[if IE ]>
         <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-ie.css?version=${resourcesVersion}" />
         <![endif]-->
     <#else>
         <link rel="stylesheet" type="text/css" href="${urls.baseUrl}/css/normalize.css" />
         <noscript>
-            <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-iframe.css" />
+            <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-graph-iframe.css" />
             <!--[if IE ]>
             <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-ie.css" />
             <![endif]-->
         </noscript>
-        <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/less-main/kuntalaisaloite-iframe.less" />
-        <!--[if IE ]>
-        <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/less-main/kuntalaisaloite-ie.less">
-        <![endif]-->
+        <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/less-main/kuntalaisaloite-graph-iframe.less" />
         <script src="${urls.baseUrl}/js/less-1.7.5.min.js" type="text/javascript"></script>
     </#if>
 
@@ -80,11 +77,12 @@
         <a href="${urls.view(initiative.id)}" target="_blank" rel="external">
     	   <h1 class="name"><@u.text initiative.name /></h1>
         </a>
-	    <#if initiative.startDate??>
-	        <span class="extra-info"><@u.localDate initiative.startDate /></span>
+	    <#if initiative.stateTime??>
+	        <span class="extra-info"><@u.localDate initiative.stateTime /></span>
 	    </#if>
 	</#if>
-
+    <br class="clear" />
+    <@e.participantInformation />
     <#if votingInfo?? && votingInfo.votingInProggress || participantCount.total gt 0>
 	    <div class="view-block">
 		    <#if supportCountData??><@e.participantGraph initiative supportCountData participantCount.total /></#if>

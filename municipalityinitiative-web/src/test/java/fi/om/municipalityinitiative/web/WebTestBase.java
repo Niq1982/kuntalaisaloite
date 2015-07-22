@@ -197,7 +197,7 @@ public abstract class WebTestBase {
             }
             elementTexts.add(element.getText().trim());
         }
-        fail(tag + " tag with text " + text + " not found. Texts found: " + TestUtil.listValues(elementTexts) + " (Page title: "+driver.getTitle()+")");
+        fail(tag + " tag with text " + text + " not found. Texts found: " + TestUtil.listValues(elementTexts) + " (Page title: " + driver.getTitle() + ")");
     }
 
     protected static void assertTextNotContainedByClass(String className, String text) {
@@ -212,6 +212,9 @@ public abstract class WebTestBase {
 
     protected void assertWarningMessage(String text) {
         assertTextContainedByClass("msg-warning", text);
+    }
+    protected void assertInfoMessageContainsText(String text) {
+        assertTextContainedByClass("msg-info", text);
     }
 
     protected static void assertTextContainedByClass(String className, String text) {
@@ -269,6 +272,12 @@ public abstract class WebTestBase {
         elementWhenClickable.sendKeys(text);
     }
 
+
+    protected void clickInput() {
+        WebElement e  = getElement(By.tagName("input"));
+        e.click();
+    }
+
     protected void inputTextByCSS(String css, String text) {
         findElementWhenClickable(By.cssSelector(css)).sendKeys(text);
     }
@@ -314,10 +323,10 @@ public abstract class WebTestBase {
      List<WebElement> htmlElements = driver.findElements(By.tagName(tagName));
             
         // wait.until(ExpectedConditions.elementToBeClickable(By.name(name)));
-       
+
         for (WebElement e : htmlElements) {
           if (e.getText().contains(containing)) {
-            return Maybe.of(e);
+             return Maybe.of(e);
           }
         }
         
@@ -375,6 +384,7 @@ public abstract class WebTestBase {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
     }
 
     protected void enterVetumaLoginInformationAndSubmit(String userSsn, String municipalityName) {

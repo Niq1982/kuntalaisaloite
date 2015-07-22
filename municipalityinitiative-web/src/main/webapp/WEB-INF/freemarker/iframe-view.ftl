@@ -106,15 +106,15 @@
             <div class="column col-1of2">
                 <a href="${urls.search()}
                 <#if municipalities.present>
-                    ${queryString.getWithMunicipalities(municipalities.value)}"
-                </#if>
+                    ${queryString.getWithMunicipalities(municipalities.value)}
+                </#if>"
                    target="_blank" rel="external" class="small-button"><span class="small-icon next"><@u.message "iframe.browseInitiatives" />
                 </span></a>
                 
                 <span class="description"><@u.message "iframe.browseInitiatives.description" /></span>
             </div>
             <div class="column col-1of2 last">
-                <a href="${urls.prepare()}" target="_blank" rel="external" class="small-button"><span class="small-icon add"><@u.message "iframe.createInitiative" /></span></a>
+                <a href="${urls.prepare(municipalities)}" target="_blank" rel="external" class="small-button"><span class="small-icon add"><@u.message "iframe.createInitiative" /></span></a>
             </div>
         </div>
         
@@ -126,7 +126,7 @@
                 <#if initiative_index == 0><ul></#if>
                 <li <#if initiative_index == 0>class="first"</#if>>
                     <span class="date trigger-tooltip" title="<@u.message "searchResults.initiative.date."+initiative.state />" ><@u.localDate initiative.stateTime!"" /></span>
-                    <#if municipalitiesSize != 1><span>${initiative.municipality.getName(locale)}</span></#if>
+                    <#if municipalitiesSize != 1><span class="municipality">${initiative.municipality.getName(locale)}</span></#if>
                     <span class="title"><a href="${urls.view(initiative.id)}" target="_blank" rel="external" class="name"><@u.limitStringLength initiative.name!"" 150 /></a></span>
                 </li>
                 <#if !initiative_has_next></ul></#if>

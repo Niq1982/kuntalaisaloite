@@ -16,7 +16,6 @@ import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.Maybe;
 
 import javax.annotation.Resource;
-
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -28,6 +27,9 @@ public class JdbcUserDao implements UserDao {
 
     @Resource
     PostgresQueryFactory queryFactory;
+
+    @Resource
+    ParticipantDao participantDao;
 
     @Override
     public User getAdminUser(String userName, String password) {
@@ -73,8 +75,7 @@ public class JdbcUserDao implements UserDao {
                                 verifiedUserDataWrapper.verifiedUserId = new VerifiedUserId(row.get(QVerifiedUser.verifiedUser.id));
                                 if (row.get(QVerifiedUser.verifiedUser.municipalityId) == null) {
                                     verifiedUserDataWrapper.municipalityMaybe = Maybe.absent();
-                                }
-                                else {
+                                } else {
                                     verifiedUserDataWrapper.municipalityMaybe = Maybe.of(new Municipality(
                                             row.get(QMunicipality.municipality.id),
                                             row.get(QMunicipality.municipality.name),
@@ -106,6 +107,10 @@ public class JdbcUserDao implements UserDao {
                 .innerJoin(QVerifiedParticipant.verifiedParticipant.verifiedParticipantInitiativeFk, QMunicipalityInitiative.municipalityInitiative)
                 .where(QVerifiedUser.verifiedUser.hash.eq(hash))
                 .list(QMunicipalityInitiative.municipalityInitiative.id);
+
+        Collection<Long> normalInitiativesWithParticipation = participantDao.getNormalInitiativesVerifiedUserHasParticipated(userDataMaybe.getValue().verifiedUserId);
+
+        initiativesWithParticipation.addAll(normalInitiativesWithParticipation);
 
         return Maybe.of(User.verifiedUser(userDataMaybe.get().verifiedUserId, hash, userDataMaybe.get().contactInfo, new HashSet<>(initiatives), new HashSet<>(initiativesWithParticipation), userDataMaybe.get().municipalityMaybe));
     }

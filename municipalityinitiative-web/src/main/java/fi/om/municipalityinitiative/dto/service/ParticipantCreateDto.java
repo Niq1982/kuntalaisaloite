@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.dto.service;
 import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUIConfirmDto;
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateBase;
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
+import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.util.Membership;
 
 public class ParticipantCreateDto {
@@ -37,6 +38,16 @@ public class ParticipantCreateDto {
         return participantCreateDto;
     }
 
+    public static ParticipantCreateDto parseParticipantFromVerifiedUser(ParticipantUICreateDto participant, VerifiedUser user, Long initiativeId) {
+        ParticipantCreateDto participantCreateDto = new ParticipantCreateDto();
+
+        participantCreateDto.setMunicipalityInitiativeId(initiativeId);
+        participantCreateDto.setShowName(participant.getShowName() == null ? false : participant.getShowName());
+        participantCreateDto.setParticipantName(user.getContactInfo().getName());
+        participantCreateDto.setHomeMunicipality(participant.getHomeMunicipality());
+        participantCreateDto.setMunicipalMembership(solveMembership(participant));
+        return participantCreateDto;
+    }
     private static Membership solveMembership(ParticipantUICreateBase participant) {
         return participant.getMunicipality().equals(participant.getHomeMunicipality()) ?
                 Membership.none : participant.getMunicipalMembership();

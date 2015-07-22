@@ -238,10 +238,12 @@ public class AuthorsWebTest extends WebTestBase {
     }
 
     @Test
-    public void accepting_verified_author_invitation_when_unknown_municipality_prevents_accepting_if_user_selects_wrong_municipality() {
+    public void accepting_verified_author_invitation_when_unknown_municipality_prevents_accepting_if_user_selects_wrong_municipality() throws InterruptedException {
 
         AuthorInvitation invitation = testHelper.createInvitation(verifiedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
         vetumaLogin("111111-1111", null);
+
+
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
 
         acceptInvitationButton().get().click();
@@ -298,8 +300,6 @@ public class AuthorsWebTest extends WebTestBase {
         testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(publishedInitiativeId, HELSINKI_ID).withPublicName(false));
 
         vetumaLogin(USER_SSN, HELSINKI);
-
-        Thread.sleep(100);
 
         open(urls.management(publishedInitiativeId));
 

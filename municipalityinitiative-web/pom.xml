@@ -7,7 +7,7 @@
     <groupId>fi.om.municipalityinitiative</groupId>
     <artifactId>municipalityinitiative-web</artifactId>
     <name>Kuntalaisaloitepalvelu</name>
-    <version>2.4.1-SNAPSHOT</version>
+    <version>2.4.5-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <properties>
@@ -479,6 +479,22 @@
                                 <cssSourceFile>kuntalaisaloite-iframe.css</cssSourceFile>
                             </cssSourceFiles>
                             <cssFinalFile>style-iframe.css</cssFinalFile>
+                        </configuration>
+                        <goals>
+                            <goal>minify</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>graph-iframe-minify</id>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <webappTargetDir>${basedir}/src/main/webapp</webappTargetDir>
+                            <cssSourceDir>css</cssSourceDir>
+                            <cssSourceFiles>
+                                <cssSourceFile>normalize.css</cssSourceFile>
+                                <cssSourceFile>kuntalaisaloite-graph-iframe.css</cssSourceFile>
+                            </cssSourceFiles>
+                            <cssFinalFile>style-graph-iframe.css</cssFinalFile>
                         </configuration>
                         <goals>
                             <goal>minify</goal>

@@ -19,6 +19,7 @@ import fi.om.municipalityinitiative.service.ui.VerifiedInitiativeService;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.validation.NormalInitiative;
+import fi.om.municipalityinitiative.validation.NormalInitiativeVerifiedUser;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.SearchParameterQueryString;
 import fi.om.municipalityinitiative.web.Urls;
@@ -40,10 +41,9 @@ import java.util.Locale;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
 import static fi.om.municipalityinitiative.web.Views.*;
+import static fi.om.municipalityinitiative.web.WebConstants.JSON;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
-
-import static fi.om.municipalityinitiative.web.WebConstants.JSON;
 
 @Controller
 public class PublicInitiativeController extends BaseController {
@@ -113,20 +113,17 @@ public class PublicInitiativeController extends BaseController {
         InitiativePageInfo initiativePageView = publicInitiativeService.getInitiativePageDto(initiativeId, loginUserHolder);
             if (initiativePageView.isCollaborative()) {
 
-            addVotingInfo(initiativeId, model);
             return ViewGenerator.collaborativeView(initiativePageView,
                     municipalityService.findAllMunicipalities(locale),
                     new ParticipantUICreateDto(),
-                    new AuthorUIMessage()).view(model, Urls.get(locale).alt().view(initiativeId));
+                    new AuthorUIMessage(),
+                    supportCountService.getSupportVotesPerDateJson(initiativeId)).view(model, Urls.get(locale).alt().view(initiativeId));
         }
         else {
             return ViewGenerator.singleView(initiativePageView).view(model, Urls.get(locale).alt().view(initiativeId));
         }
     }
 
-    private void addVotingInfo(Long initiativeId, Model model) {
-        model.addAttribute("supportCountData", supportCountService.getSupportVotesPerDateJson(initiativeId));
-    }
 
     @RequestMapping(value = { PREPARE_FI, PREPARE_SV }, method = GET)
     public String prepareGet(Model model, Locale locale, HttpServletRequest request) {
@@ -200,21 +197,34 @@ public class PublicInitiativeController extends BaseController {
             return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.PARTICIPATE_VERIFIABLE, request);
         }
         else {
-            if (validationService.validationSuccessful(participant, bindingResult, model, NormalInitiative.class)) {
+            if (loginUserHolder.isVerifiedUser()) {
+
+                if (loginUserHolder.getVerifiedUser().getHomeMunicipality().isPresent()) {
+                    participant.setHomeMunicipality(loginUserHolder.getVerifiedUser().getHomeMunicipality().getValue().getId());
+                }
+
+                if ( (validationService.validationSuccessful(participant, bindingResult, model, NormalInitiativeVerifiedUser.class))) {
+                    participantService.createConfirmedParticipant(participant, initiativeId, loginUserHolder);
+                    userService.refreshUserData(request);
+                    return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.PARTICIPATE_VERIFIABLE, request);
+                }
+
+            } else if (validationService.validationSuccessful(participant, bindingResult, model, NormalInitiative.class)) {
                 participantService.createParticipant(participant, initiativeId, locale);
                 Urls urls = Urls.get(locale);
                 return redirectWithMessage(urls.view(initiativeId), RequestMessage.PARTICIPATE, request);
-            } else {
-                addVotingInfo(initiativeId, model);
-                return ViewGenerator.collaborativeView(initiativePageInfo,
-                        municipalityService.findAllMunicipalities(locale),
-                        participant,
-                        new AuthorUIMessage()).view(model, Urls.get(locale).alt().view(initiativeId));
             }
+
+            return ViewGenerator.collaborativeView(initiativePageInfo,
+                    municipalityService.findAllMunicipalities(locale),
+                    participant,
+                    new AuthorUIMessage(),
+                    supportCountService.getSupportVotesPerDateJson(initiativeId)).view(model, Urls.get(locale).alt().view(initiativeId));
+
         }
     }
 
-    @RequestMapping(value={ PARITICIPANT_LIST_FI, PARITICIPANT_LIST_SV }, method=GET)
+    @RequestMapping(value={PARTICIPANT_LIST_FI, PARTICIPANT_LIST_SV}, method=GET)
     public String participantList(@PathVariable("id") Long initiativeId, @RequestParam(defaultValue = "0", value = "offset") int offset,
                                   Model model, Locale locale, HttpServletRequest request) {
         Urls urls = Urls.get(locale);
@@ -351,11 +361,11 @@ public class PublicInitiativeController extends BaseController {
             return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.AUTHOR_MESSAGE_ADDED, request);
         }
         else {
-            addVotingInfo(initiativeId, model);
             return ViewGenerator.collaborativeView(publicInitiativeService.getInitiativePageInfo(initiativeId),
                     municipalityService.findAllMunicipalities(locale),
                     new ParticipantUICreateDto(),
-                    authorUIMessage).view(model, Urls.get(locale).alt().view(initiativeId));
+                    authorUIMessage,
+                    supportCountService.getSupportVotesPerDateJson(initiativeId)).view(model, Urls.get(locale).alt().view(initiativeId));
         }
     }
 
@@ -406,7 +416,7 @@ public class PublicInitiativeController extends BaseController {
         response.getOutputStream().write(file.getBytes());
     }
 
-    private static Maybe<ArrayList<Municipality>> solveMunicipalityFromListById(List<Municipality> municipalities, Maybe<ArrayList<Long>> municipalityIds){
+    private static Maybe<ArrayList<Municipality>> solveMunicipalityFromListById(List<Municipality> municipalities, Maybe<List<Long>> municipalityIds){
         if (municipalityIds.isNotPresent()) {
             return Maybe.absent();
         }

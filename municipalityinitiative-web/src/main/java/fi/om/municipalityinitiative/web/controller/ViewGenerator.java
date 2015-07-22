@@ -44,7 +44,8 @@ public final class ViewGenerator {
     public static ViewGenerator collaborativeView(InitiativePageInfo initiative,
                                                   List<Municipality> municipalities,
                                                   ParticipantUICreateDto participantUICreateDto,
-                                                  AuthorUIMessage authorUIMessage) {
+                                                  AuthorUIMessage authorUIMessage,
+                                                  String supportCountData) {
         return new ViewGenerator(Views.PUBLIC_COLLECT_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiative.initiative)
@@ -54,6 +55,7 @@ public final class ViewGenerator {
                         .add("attachments", initiative.attachments)
                         .add("participant", participantUICreateDto)
                         .add("authorMessage", authorUIMessage)
+                        .add("supportCountData", supportCountData)
                         .build()
         );
     }

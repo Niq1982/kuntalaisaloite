@@ -10,37 +10,42 @@
  *
 -->
 <#macro participantGraph initiative data totalParticipantCount>
-    <div class="participant-graph">
+    <#if initiative.isCollaborative()>
+        <div class="participant-graph">
 
-        <h3 class="inline-style">
-            <@u.message key="graph.title" />
-            <span id="internal-support-count-${initiative.id?c}" >
-                <span >${totalParticipantCount!0}</span>
-            </span>
-        </h3>
-    	<div id="participantGraph">
-    		<noscript><@u.message key="graph.javaScriptSupport" /></noscript>
-    	</div>
-        <div class="update-info">
-        	<@u.message key="graph.updateInfo" /><br/>
+            <h3 class="inline-style">
+                <@u.message key="graph.title" />
+                <span id="internal-support-count-${initiative.id?c}" >
+                    <span >${totalParticipantCount!0}</span>
+                </span>
+            </h3>
+            <div id="participantGraph">
+                <noscript><@u.message key="graph.javaScriptSupport" /></noscript>
+            </div>
+            <div class="update-info">
+                <@u.message key="graph.updateInfo" /><br/>
+                <a href="${urls.widget(initiative.id)}"><@u.message key="graph.widgetLink" /></a>
+            </div>
         </div>
-    </div>
 
-     <script type="text/javascript">
-        (function(window) {
-            window.participantGraph = {
-                votes : <#noescape>${data}</#noescape>,
-                startDate : <#if initiative.createTime??>'${initiative.createTime}'<#else>null</#if>,
-                endDate : <#if initiative.sentTime.present>'${initiative.sentTime.value}'<#else>null</#if>,
-                lang : {
-                    btnCumul: '<@u.message key="graph.btnCumul" />',
-                    btnDaily : '<@u.message key="graph.btnDaily" />',
-                    btnZoomIn : '<@u.message key="graph.btnZoomIn" />',
-                    btnZoomOut : '<@u.message key="graph.btnZoomOut" />'
-                }
-            };
-        }(window));
-     </script>
+         <script type="text/javascript">
+            (function(window) {
+                window.participantGraph = {
+                    votes : <#noescape>${data}</#noescape>,
+                    startDate : <#if initiative.stateTime??>'${initiative.stateTime}'<#else>null</#if>,
+                    endDate : <#if initiative.sentTime.present>'${initiative.sentTime.value}'<#else>null</#if>,
+                    lang : {
+                        btnCumul: '<@u.message key="graph.btnCumul" />',
+                        btnDaily : '<@u.message key="graph.btnDaily" />',
+                        btnZoomIn : '<@u.message key="graph.btnZoomIn" />',
+                        btnZoomOut : '<@u.message key="graph.btnZoomOut" />'
+                    }
+                };
+            }(window));
+         </script>
+    <#else>
+        <h3><@u.message "initiative.notcollaborative" /></h3>
+    </#if>
 </#macro>
 
 <#-- 
@@ -312,33 +317,33 @@
     <h3><@u.message key="initiative.participants.title" args=[participantCount.total+initiative.externalParticipantCount] />
     <#if admin><span class="switch-view"><a href="${urls.participantListManage(initiative.id)}" class="trigger-tooltip" title="<@u.message "manageParticipants.tooltip" />"><@u.message "manageParticipants.title" /></a></span></#if></h3>
 
-    <#if initiative.verifiable && !initiative.sentTime.present && !user.hasRightToInitiative(initiative.id)>
+    <#if  !initiative.sentTime.present && !user.hasRightToInitiative(initiative.id)>
         <#if user.hasParticipatedToInitiative(initiative.id)>
             <@u.systemMessage path="warning.already.participated" type="warning" />
-        <#elseif user.isVerifiedUser() && !user.allowVerifiedParticipation(initiative.id, initiative.municipality)>
+        <#elseif initiative.verifiable && user.isVerifiedUser() && !user.allowVerifiedParticipation(initiative.id, initiative.municipality)>
             <@u.systemMessage path="warning.participant.notMember" type="warning" />
-        <#elseif ((user.isVerifiedUser() && !user.homeMunicipality.present) || !user.isVerifiedUser()) >
+        <#elseif initiative.verifiable && ((user.isVerifiedUser() && !user.homeMunicipality.present) || !user.isVerifiedUser()) >
             <@u.systemMessage path="participate.verifiable.info"+user.isVerifiedUser()?string(".verifiedUser","") type="info" />
         </#if>
     </#if>
 
+    <@participantInformation/>
 
+
+</#macro>
+
+<#macro participantInformation>
     <div class="participants-block">
         <span class="user-count-total">${participantCount.total+initiative.externalParticipantCount}</span>
     </div>
     <div class="participants-block separate">
-        <span class="user-count-sub-total">
-            <#if (participantCount.publicNames > 0)><span class="public-names"><a class="trigger-tooltip" href="${urls.participantList(initiative.id)}" title="<@u.message key="participantCount.publicNames.show"/>"><@u.message key="participantCount.publicNames" args=[participantCount.publicNames] /></a></span><br/></#if>
-            <#if (participantCount.privateNames > 0)><span class="private-names"><@u.message key="participantCount.privateNames" args=[participantCount.privateNames] /></span><br/></#if>
-            <#if (initiative.externalParticipantCount > 0)><span class="private-names"><@u.message key="participantCount.externalNames" args=[initiative.externalParticipantCount]/></span></p></#if>
-        </span>
+            <span class="user-count-sub-total">
+                <#if (participantCount.publicNames > 0)><span class="public-names"><a class="trigger-tooltip" href="${urls.participantList(initiative.id)}" title="<@u.message key="participantCount.publicNames.show"/>"><@u.message key="participantCount.publicNames" args=[participantCount.publicNames] /></a></span></#if><br/>
+                <#if (participantCount.privateNames > 0)><span class="private-names"><@u.message key="participantCount.privateNames" args=[participantCount.privateNames] /></span><br/></#if>
+                <#if (initiative.externalParticipantCount > 0)><span class="private-names"><@u.message key="participantCount.externalNames" args=[initiative.externalParticipantCount]/></span></p></#if>
+            </span>
     </div>
     <br class="clear" />
-
-
-
-
-
 </#macro>
 
 

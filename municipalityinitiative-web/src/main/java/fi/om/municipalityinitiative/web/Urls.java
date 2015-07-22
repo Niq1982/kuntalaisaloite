@@ -1,10 +1,13 @@
 package fi.om.municipalityinitiative.web;
 
 import com.google.common.base.Strings;
+import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.util.Locales;
+import fi.om.municipalityinitiative.util.Maybe;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.Locale;
 
 import static fi.om.municipalityinitiative.util.Locales.LOCALE_FI;
@@ -14,6 +17,8 @@ import static fi.om.municipalityinitiative.util.Locales.LOCALE_SV;
 public final class Urls {
     
     public static final String ID_PARAMETER = "{id}";
+
+    public static final String PARAM_INITIATIVE_ID = "id";
 
     public static final String HELP_PAGE_PARAMETER = "{helpPage}";
 
@@ -80,7 +85,9 @@ public final class Urls {
     public static final String MUNICIPALITIES = API + "/v1/municipalities";
 
     public static final String MUNICIPALITY = MUNICIPALITIES + "/" + ID_PARAMETER;
-    
+
+    public static final String SINGLE_MUNICIPALITY = "municipality";
+
     public static final String ERROR_404 = "/404";
     
     public static final String ERROR_500 = "/500";
@@ -127,7 +134,7 @@ public final class Urls {
 
     public static final String PARAM_INITIATIVE = "initiative";
 
-    public static final String OLD_PARAM_MUNICIPALITY = "municipalities";
+    public static final String OLD_PARAM_MUNICIPALITY = "municipality";
 
     public static final String PARAM_SENT_COMMENT = "comment";
 
@@ -229,13 +236,13 @@ public final class Urls {
 
     public static final String VIEW_SV = "/sv/initiativ" + "/" + ID_PARAMETER;
 
-    public static final String PARITICIPANT_LIST_FI = "/fi/osallistujat/" + ID_PARAMETER;
+    public static final String PARTICIPANT_LIST_FI = "/fi/osallistujat/" + ID_PARAMETER;
 
-    public static final String PARITICIPANT_LIST_SV = "/sv/deltagare/" + ID_PARAMETER;
+    public static final String PARTICIPANT_LIST_SV = "/sv/deltagare/" + ID_PARAMETER;
 
-    public static final String PARITICIPANT_LIST_MANAGE_FI = "/fi/osallistujahallinta/" + ID_PARAMETER;
+    public static final String PARTICIPANT_LIST_MANAGE_FI = "/fi/osallistujahallinta/" + ID_PARAMETER;
 
-    public static final String PARITICIPANT_LIST_MANAGE_SV = "/sv/deltagarhantering/" + ID_PARAMETER;
+    public static final String PARTICIPANT_LIST_MANAGE_SV = "/sv/deltagarhantering/" + ID_PARAMETER;
 
     public static final String MANAGEMENT_FI = "/fi/yllapito" + "/" + ID_PARAMETER;
 
@@ -283,13 +290,17 @@ public final class Urls {
 
     public static final String IFRAME_SV = "/iframe/sv";
 
-    public static final String GRAPH_IFRAME_FI = "/graph-iframe/fi/" + ID_PARAMETER;
+    public static final String GRAPH_IFRAME_BASE_FI = "/graph-iframe/fi/";
 
-    public static final String GRAPH_IFRAME_SV = "/graph-iframe/sv/" + ID_PARAMETER;
+    public static final String GRAPH_IFRAME_BASE_SV = "/graph-iframe/sv/";
 
-    public static final String GRAPH_IFRAME_GENERATOR_FI = "/fi/graph-iframe-generator";
+    public static final String GRAPH_IFRAME_FI = GRAPH_IFRAME_BASE_FI + ID_PARAMETER;
 
-    public static final String GRAPH_IFRAME_GENERATOR_SV = "/sv/graph-iframe-generator";
+    public static final String GRAPH_IFRAME_SV = GRAPH_IFRAME_BASE_SV + ID_PARAMETER;
+
+    public static final String GRAPH_IFRAME_GENERATOR_FI = "/fi/graafi-leijuke";
+
+    public static final String GRAPH_IFRAME_GENERATOR_SV = "/sv/graph-iframe";
 
     public static final String OWN_INITIATIVES_FI = "/fi/omat";
 
@@ -364,11 +375,11 @@ public final class Urls {
     }
 
     public String participantList(Long initiativeId) {
-        return getLocalizedPageUrl(PARITICIPANT_LIST_FI, PARITICIPANT_LIST_SV).replace(ID_PARAMETER, initiativeId.toString());
+        return getLocalizedPageUrl(PARTICIPANT_LIST_FI, PARTICIPANT_LIST_SV).replace(ID_PARAMETER, initiativeId.toString());
     }
 
     public String participantListManage(Long initiativeId) {
-        return getLocalizedPageUrl(PARITICIPANT_LIST_MANAGE_FI, PARITICIPANT_LIST_MANAGE_SV).replace(ID_PARAMETER, initiativeId.toString());
+        return getLocalizedPageUrl(PARTICIPANT_LIST_MANAGE_FI, PARTICIPANT_LIST_MANAGE_SV).replace(ID_PARAMETER, initiativeId.toString());
     }
 
     public String management(Long initiativeId) {
@@ -441,17 +452,18 @@ public final class Urls {
     public String iframeWithOldApiMunicipality(Long municipalityId) {
         return iframe() + "?" + OLD_PARAM_MUNICIPALITY + "=" + municipalityId;
     }
-
+    public String iframeWithOldestApiMunicipality(Long municipalityId) {
+        return iframeBaseUrl + (this.equals(FI) ? IFRAME_OLD_FI : IFRAME_OLD_SV) + "?" + OLD_PARAM_MUNICIPALITY + "=" + municipalityId;
+    }
+    public String iframeWithOldestApiMunicipality() {
+        return iframeBaseUrl + (this.equals(FI) ? IFRAME_OLD_FI : IFRAME_OLD_SV) + "?" + OLD_PARAM_MUNICIPALITY;
+    }
     public String iframeGenerator() {
         return getLocalizedPageUrl(IFRAME_GENERATOR_FI, IFRAME_GENERATOR_SV);
     }
 
-    public String graphIFrame() {
-        return iframeBaseUrl + (this.equals(FI) ? GRAPH_IFRAME_FI : GRAPH_IFRAME_SV);
-    }
-
     public String graphIFrame(Long initiativeId) {
-        return graphIFrame() + "?" + PARAM_INITIATIVE + "=" + initiativeId;
+        return iframeBaseUrl + (this.equals(FI) ? GRAPH_IFRAME_BASE_FI : GRAPH_IFRAME_BASE_SV) + initiativeId;
     }
 
     public String graphIFrameGenerator() {return getLocalizedPageUrl(GRAPH_IFRAME_GENERATOR_FI, GRAPH_IFRAME_GENERATOR_SV);}
@@ -525,6 +537,15 @@ public final class Urls {
         return getLocalizedPageUrl(PREPARE_FI, PREPARE_SV);
     }
 
+    public String prepare(Maybe<List<Municipality>> municipalities) {
+        String url = getLocalizedPageUrl(PREPARE_FI, PREPARE_SV);
+        if (municipalities.isPresent() && municipalities.getValue().size() == 1) {
+            url+="?" + SINGLE_MUNICIPALITY + "=" + municipalities.getValue().get(0).getId();
+        }
+        return url;
+    }
+
+
     public String authenticate() {
         return getLocalizedPageUrl(AUTHENTICATE_FI, AUTHENTICATE_SV);
     }
@@ -559,6 +580,10 @@ public final class Urls {
 
     public String getAttachmentThumbnail(Long id) {
         return baseUrl + ATTACHMENT_THUMBNAIL.replace(ID_PARAMETER, id.toString());
+    }
+
+    public String widget(Long initiativeId) {
+        return getLocalizedPageUrl(GRAPH_IFRAME_GENERATOR_FI, GRAPH_IFRAME_GENERATOR_SV)+ "?" + PARAM_INITIATIVE_ID + "=" + initiativeId;
     }
 
     public String testDataGeneration() {

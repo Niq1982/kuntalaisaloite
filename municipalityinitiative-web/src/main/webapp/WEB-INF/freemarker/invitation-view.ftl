@@ -134,7 +134,7 @@
                             <div class="input-header"><@u.message "contactInfo.homeMunicipality" /></div>
                             <div><@u.solveMunicipality user.homeMunicipality/></div>
                         <#else>
-                            <@f.municipalitySelect path="authorInvitation.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipality.id key="initiative.homeMunicipality" />
+                            <@f.municipalitySelect path="authorInvitation.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipality.id key="initiative.homeMunicipality" multiple=false/>
                         </#if>
                     </div>
                     <br class="clear" />
