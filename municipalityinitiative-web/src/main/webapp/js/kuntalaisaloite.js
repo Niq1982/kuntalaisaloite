@@ -1099,7 +1099,7 @@ $('.municipality-filter').change( function() {
 			onLoad: function(){
 				tooltip.load();
 				clearFieldErrors.init();
-				if (initMap) initMap();
+				if (renderMap) renderMap();
 			},
 			closeOnClick: false,	// disable this for modal dialog-type of overlays
 			load: true				// load it immediately after the construction
@@ -1921,7 +1921,11 @@ var mapContainer = (function() {
 		updateResultsList,
 		initMap,
 		placeMarker,
-		selectListElementWithArrow;
+		selectListElementWithArrow,
+		selectResultFromList,
+		setSelectedLocationOnMap,
+		emptyResultList,
+		modifyResultList;
 
 	init = function(municipality) {
 
@@ -1942,72 +1946,30 @@ var mapContainer = (function() {
 			initMap(centerOfFinland);
 		}
 
-		$("#save-and-close").live('click', function () {
-			console.log("Location chosen. Selected location is " + selectedLocation);
-
-			$("#selected-location").addClass("no-visible");
-			$("#open-remove-location").removeClass("no-visible");
-
-		});
-
 		$("#user-entered-address").live('input propertychange', function(){
-			var searchterm = $("#user-entered-address").val();
 			getLocationFromAddress($("#user-entered-address").val(), function (results, status) {
-				console.log(searchterm);
-
-				if (results !== undefined && results !== null) {
-					// Filter out result "Finland"
-					results = filterOutResultsByType(results, 'country');
-					if (results !== undefined && results.length > 0) {
-						updateResultsList(results);
-					}
+				if (results !== undefined && results !== null && results.length > 0) {
+					updateResultsList(results);
 				}
 			});
 		});
 
-		selectListElementWithArrow = function(index) {
-			if (searchresults !== undefined || searchresults !== null || searhresults.length > 0) {
-				if (selectedResultIndex > -1 ) {
-					$(".selected").removeClass("selected");
-				}
-				if (index < 0) {
-					selectedResultIndex = -1;
-				} else if (index >= searchresults.length) {
-					selectedResultIndex = searchresults.length - 1;
-				} else {
-					selectedResultIndex = index;
-				}
-				if (selectedResultIndex > -1){
-					//JQuery nth is 1 indexed
-					$("#result-list ul li:nth-child("+selectedResultIndex + 1 +")").addClass("selected");
-				}
-
-			}
-
-		};
-
 		$("#user-entered-address").live('keydown', function(event){
 
 			switch (event.which) {
+
 				case ARROWDOWN:
-					selectListElementWithArrow(selectedResultIndex + 1);
+					selectListElementWithArrow(1);
 					break;
 				case ARROWUP:
-					selectListElementWithArrow(selectedResultIndex - 1);
+					selectListElementWithArrow(-1);
 					break;
 				case ENTER:
-					selectResultFromList(selectedResultIndex);
+					setSelectedLocationOnMap();
 					break;
 			}
 			console.log(event.which);
 		});
-
-		function selectResultFromList(index) {
-			if (index >= 0 || index < searchresults.length ) {
-				selectedLocation = searchresults[index].geometry.location;
-				placeMarker(selectedLocation, map);
-			}
-		};
 
 
 		$("#result-list ul li").live('click', function(event) {
@@ -2016,6 +1978,23 @@ var mapContainer = (function() {
 				selectResultFromList($this.id);
 			}
 		});
+
+		$("#save-and-close").live('click', function () {
+			console.log("Location chosen. Selected location is " + selectedLocation);
+
+			$("#selected-location").addClass("no-visible");
+			$("#open-remove-location").removeClass("no-visible");
+
+		});
+
+		$(".modal").live('click', function() {
+			emptyResultList();
+		});
+
+		$("#result-list ul li, #user-entered-address").live('click', function() {
+			return false;
+		});
+
 	};
 
 	getLocationFromAddress = function(address, callback) {
@@ -2036,19 +2015,33 @@ var mapContainer = (function() {
 		return results.filter(doesNotContainType(type));
 	};
 
-	updateResultsList = function(results) {
-		searchresults = results;
+	updateResultsList = function(rawresults) {
+		var results = filterOutResultsByType(rawresults, 'country');
+		if (results !== undefined && results !== null && results.length > 0) {
+			modifyResultList(results);
+		}
 
+	};
+	emptyResultList = function() {
+		modifyResultList(new Array());
+	};
+
+	modifyResultList = 	function(results) {
+		searchresults = results;
 		var $ul = $("<ul>");
 		$("#result-list").empty();
-		$("#result-list").append($ul);
 
-		for (var i = 0; i < searchresults.length; i++) {
-			var $li = $('<li>' + searchresults[i].formatted_address + '</li>');
-			$li.attr("id", i);
-			$ul.append($li);
-			console.log(searchresults[i].formatted_address);
+		if (searchresults.length > 0) {
+			$("#result-list").append($ul);
+
+			for (var i = 0; i < searchresults.length; i++) {
+				var $li = $('<li>' + searchresults[i].formatted_address + '</li>');
+				$li.attr("id", i);
+				$ul.append($li);
+				console.log(searchresults[i].formatted_address);
+			}
 		}
+
 	};
 
 	initMap = function(centerCoordinates) {
@@ -2082,20 +2075,49 @@ var mapContainer = (function() {
 		map.panTo(position);
 	};
 
+	selectListElementWithArrow = function(offset) {
+		if (searchresults !== undefined || searchresults !== null || searhresults.length > 0) {
+			if (selectedResultIndex > -1 ) {
+				$(".selected").removeClass("selected");
+			}
+			if ((selectedResultIndex + offset) < 0) {
+				selectedResultIndex = -1;
+			} else if ((selectedResultIndex + offset) >= searchresults.length) {
+				selectedResultIndex = searchresults.length - 1;
+			} else {
+				selectedResultIndex = (selectedResultIndex + offset);
+			}
+			if (selectedResultIndex > -1){
+				//JQuery nth is 1 indexed
+				$("#result-list ul li:nth-child("+ (selectedResultIndex + 1) +")").addClass("selected");
+			}
+		}
+	};
+	setSelectedLocationOnMap = function() {
+		selectResultFromList(selectedResultIndex);
+	};
+	selectResultFromList = function(index) {
+		if (index >= 0 || index < searchresults.length ) {
+			selectedLocation = searchresults[index].geometry.location;
+			placeMarker(selectedLocation, map);
+		}
+	};
+
 	return {
 		init: init
 	};
+
 })();
 
-var initMap;
+var renderMap;
 
 $("#openMap").click(function(){
-	initMap = function() {mapContainer.init(modalData.initialLocation);}
+	renderMap = function() {mapContainer.init(modalData.initialLocation);}
 	generateModal(modalData.mapContainer(), 'full');
 });
 
 $("#show-selected-location").click(function() {
-	initMap =  mapContainer.init;
+	renderMap =  mapContainer.init;
 	generateModal(modalData.mapContainer(), 'full');
 });
 
