@@ -1931,6 +1931,10 @@ var mapContainer = (function() {
 	init = function(municipality) {
 
 		geocoder = new google.maps.Geocoder();
+		if (modalData.selectedLocation !== undefined) {
+			selectedLocation = new google.maps.LatLng(modalData.selectedLocation.lat, modalData.selectedLocation.lng);
+			modalData.selectedLocation = undefined;
+		}
 
 		if (municipality !== undefined) {
 			getLocationFromAddress(municipality, function (results, status) {

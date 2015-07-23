@@ -283,15 +283,16 @@
         </div>
 
         <div class="input-block-content">
-            <p id="selected-location"> Lisää aloitteellesi tarkempi sijainti <span id="openMap" class="blue">tästä</span></p>
-            <div id="open-remove-location" class="no-visible">
+            <#assign locationSelected = updateData.locationLat?? && updateData.locationLng??>
+            <p id="selected-location" <#if locationSelected> class="no-visible" </#if> > Lisää aloitteellesi tarkempi sijainti <span id="openMap" class="blue">tästä</span></p>
+            <div id="open-remove-location" <#if !locationSelected> class="no-visible" </#if> >
                 <p class="map-marker">Aloitteeseen on liitetty sijainti.</p>
                 <span id="show-selected-location" class="blue">Näytä</span>
                 <span id="remove-selected-location" class="blue">Poista</span>
             </div>
 
-            <@spring.formInput path+".locationLng" />
             <@spring.formInput path+".locationLat" />
+            <@spring.formInput path+".locationLng" />
 
         </div>
 

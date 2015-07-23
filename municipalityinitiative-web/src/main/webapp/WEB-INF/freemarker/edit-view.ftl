@@ -84,6 +84,9 @@
         </div>
     </@compress>
 </#assign>
+
+<#assign locationSelected = updateData.locationLat?? && updateData.locationLng??>
+
 <#--
  * Create page modals and jsMessage
  *
@@ -118,6 +121,9 @@
     };
 
     modalData.initialLocation = '${initiative.municipality.getName(locale)}';
+    <#if locationSelected>
+        modalData.selectedLocation = {"lat" : "${updateData.locationLat}", "lng" : "${updateData.locationLng}"};
+    </#if>
 
     var messageData = {};
 
