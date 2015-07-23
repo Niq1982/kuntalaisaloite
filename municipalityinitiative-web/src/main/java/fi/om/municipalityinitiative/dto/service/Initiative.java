@@ -32,7 +32,7 @@ public class Initiative {
     private DateTime lastEmailReportTime;
     private EmailReportType lastEmailReportType;
     private Maybe<Long> youthInitiativeId = Maybe.absent();
-    private Maybe<Location> location;
+    private Maybe<Location> location = Maybe.absent();
 
     public Maybe<Long> getYouthInitiativeId() {
         return youthInitiativeId;

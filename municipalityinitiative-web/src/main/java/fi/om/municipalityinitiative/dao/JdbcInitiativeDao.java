@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.dao;
 import com.google.common.base.Strings;
 import com.mysema.commons.lang.Assert;
 import com.mysema.query.Tuple;
+import com.mysema.query.sql.dml.SQLUpdateClause;
 import com.mysema.query.sql.postgres.PostgresQuery;
 import com.mysema.query.sql.postgres.PostgresQueryFactory;
 import com.mysema.query.support.Expressions;
@@ -455,13 +456,19 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     public void editInitiativeDraft(Long initiativeId, InitiativeDraftUIEditDto editDto) {
-
-        assertSingleAffection(queryFactory.update(municipalityInitiative)
-                .set(municipalityInitiative.name, editDto.getName())
+        SQLUpdateClause query = queryFactory.update(municipalityInitiative);
+        query.set(municipalityInitiative.name, editDto.getName())
                 .set(municipalityInitiative.proposal, editDto.getProposal())
                 .set(municipalityInitiative.modified, CURRENT_TIME)
                 .set(municipalityInitiative.extraInfo, editDto.getExtraInfo())
-                .set(municipalityInitiative.externalparticipantcount, editDto.getExternalParticipantCount())
+                .set(municipalityInitiative.externalparticipantcount, editDto.getExternalParticipantCount());
+
+        if (editDto.getLocation() != null) {
+            query.set(municipalityInitiative.locationLat, editDto.getLocation().getLat());
+            query.set(municipalityInitiative.locationLng, editDto.getLocation().getLng());
+        }
+
+        assertSingleAffection(query
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute());
 

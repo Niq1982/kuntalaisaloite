@@ -4,7 +4,9 @@ import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.Location;
 import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.email.EmailReportType;
@@ -28,6 +30,7 @@ import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 
@@ -36,6 +39,11 @@ import static org.junit.Assert.assertThat;
 @Transactional
 public class JdbcInitiativeDaoTest {
 
+    public static final String INITIATIVE_PRPOSAL = "Ehdotamme että muonion tekojärvi ruopataan.";
+    public static final String INITIATOR_NAME = "Teemu Teekkari";
+    public static final String EXTRA_INFO = "Lisätietoja seuraa perästä";
+    public static final int EXTERNAL_PARTICIPANT_COUNT = 12;
+    public static final Location LOCATION = new Location("12345", "56789");
     @Resource
     InitiativeDao initiativeDao;
 
@@ -83,6 +91,35 @@ public class JdbcInitiativeDaoTest {
         assertThat(initiativeDao.findCached(initiativeSearch()).list, hasSize(0));
         initiativeDao.updateInitiativeFixState(initiative, FixState.REVIEW);
         assertThat(initiativeDao.findCached(initiativeSearch()).list, hasSize(0));
+    }
+
+    @Test
+    public void editInitiative() {
+        Long initiativeMunicipalityId = testHelper.createTestMunicipality("Initiative municipality");
+
+
+        Long initiativeId = initiativeDao.prepareInitiative(initiativeMunicipalityId);
+
+        InitiativeDraftUIEditDto initiativeEdit = new InitiativeDraftUIEditDto();
+        initiativeEdit.setName(INITIATOR_NAME);
+        initiativeEdit.setProposal(INITIATIVE_PRPOSAL);
+        initiativeEdit.setExtraInfo(EXTRA_INFO);
+        initiativeEdit.setExternalParticipantCount(EXTERNAL_PARTICIPANT_COUNT);
+        initiativeEdit.setLocation(LOCATION);
+
+        initiativeDao.editInitiativeDraft(initiativeId, initiativeEdit);
+
+        Initiative initiative = initiativeDao.get(initiativeId);
+
+        assertThat(initiative.getName(), is(initiativeEdit.getName()));
+        assertThat(initiative.getProposal(), is(initiativeEdit.getProposal()));
+        assertThat(initiative.getExternalParticipantCount(), is(initiativeEdit.getExternalParticipantCount()));
+        assertThat(initiative.getExtraInfo(), is(initiativeEdit.getExtraInfo()));
+
+        assertThat(initiative.getLocation().isPresent(), is(true));
+        assertThat(initiative.getLocation().getValue().getLat(), is(initiativeEdit.getLocation().getLat()));
+        assertThat(initiative.getLocation().getValue().getLng(), is(initiativeEdit.getLocation().getLng()));
+
     }
 
     @Test
