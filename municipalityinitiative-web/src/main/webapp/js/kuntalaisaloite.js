@@ -1908,7 +1908,7 @@ if (window.hasIGraphFrame) {
  *
  */
 var mapContainer = (function() {
-	var marker, selectedLocation, geocoder, map, searchresults,
+	var marker, selectedLocation, tempLocation, geocoder, map, searchresults,
 		centerOfFinland = {"lat": 64.9146659, "lng": 26.0672554},
 		selectedResultIndex = -1, // For key navigation in result list
 		ARROWUP = 38,
@@ -1926,6 +1926,7 @@ var mapContainer = (function() {
 		setSelectedLocationOnMap,
 		emptyResultList,
 		modifyResultList;
+
 
 	init = function(municipality) {
 
@@ -1980,7 +1981,9 @@ var mapContainer = (function() {
 		});
 
 		$("#save-and-close").live('click', function () {
-			console.log("Location chosen. Selected location is " + selectedLocation);
+			selectedLocation = tempLocation;
+			locationlat.val(selectedLocation.A);
+			locationlng.val(selectedLocation.F);
 
 			$("#selected-location").addClass("no-visible");
 			$("#open-remove-location").removeClass("no-visible");
@@ -2057,10 +2060,8 @@ var mapContainer = (function() {
 		placeMarker(centerCoordinates, map);
 
 		google.maps.event.addListener(map, 'click', function (e) {
-			placeMarker(e.latLng, map);
-			//$("#lat").text(e.latLng);
-			selectedLocation = e.latLng;
-			console.log (e.latLng);
+			tempLocation = e.latLng;
+			placeMarker(tempLocation, map);
 		});
 	};
 
@@ -2098,8 +2099,8 @@ var mapContainer = (function() {
 	};
 	selectResultFromList = function(index) {
 		if (index >= 0 || index < searchresults.length ) {
-			selectedLocation = searchresults[index].geometry.location;
-			placeMarker(selectedLocation, map);
+			tempLocation = searchresults[index].geometry.location;
+			placeMarker(tempLocation, map);
 		}
 	};
 
@@ -2109,7 +2110,9 @@ var mapContainer = (function() {
 
 })();
 
-var renderMap;
+var renderMap,
+	locationlat = $("#locationLat"),
+	locationlng = $("#locationLng");
 
 $("#openMap").click(function(){
 	renderMap = function() {mapContainer.init(modalData.initialLocation);}
@@ -2124,6 +2127,9 @@ $("#show-selected-location").click(function() {
 $("#remove-selected-location").click(function() {
 	$("#selected-location").removeClass("no-visible");
 	$("#open-remove-location").addClass("no-visible");
+
+	locationlat.val(null);
+	locationlng.val(null);
 });
 
 

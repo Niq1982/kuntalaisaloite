@@ -34,6 +34,7 @@ import static org.junit.Assert.fail;
 
 public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrationTestBase {
 
+    public static final String LOCATION_LNG = "1234566";
     @Resource
     InitiativeManagementService service;
 
@@ -141,7 +142,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         assertThat(updated.getProposal(), is(editDto.getProposal()));
         assertThat(updated.getExtraInfo(), is(editDto.getExtraInfo()));
         assertThat(updated.getExternalParticipantCount(), is(editDto.getExternalParticipantCount()));
-        assertLocation(updated.getLocation(), editDto.getLocation());
+        assertLocation(Maybe.fromNullable(updated.getLocation()), editDto.getLocation());
 
         ReflectionTestUtils.assertNoNullFields(updated);
 
@@ -176,16 +177,16 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
         assertThat(updated.getExtraInfo(), is(editDto.getExtraInfo()));
         assertThat(updated.getExternalParticipantCount(), is(editDto.getExternalParticipantCount()));
-        assertLocation(updated.getLocation(), editDto.getLocation());
+        assertLocation(Maybe.fromNullable(updated.getLocation()), editDto.getLocation());
 
         ReflectionTestUtils.assertNoNullFields(updated);
 
     }
 
-    private void assertLocation(Location locationGiven, Location locationExpepted) {
-        assertThat(locationGiven, notNullValue());
-        assertThat(locationGiven.getLat(), is(locationExpepted.getLat()));
-        assertThat(locationGiven.getLng(), is(locationExpepted.getLng()));
+    private void assertLocation(Maybe<Location> locationGiven, Location locationExpepted) {
+        assertThat(locationGiven, isPresent());
+        assertThat(locationGiven.getValue().getLat(), is(locationExpepted.getLat()));
+        assertThat(locationGiven.getValue().getLng(), is(locationExpepted.getLng()));
     }
 
     @Test

@@ -289,6 +289,10 @@
                 <span id="show-selected-location" class="blue">Näytä</span>
                 <span id="remove-selected-location" class="blue">Poista</span>
             </div>
+
+            <@spring.formInput path+".locationLng" />
+            <@spring.formInput path+".locationLat" />
+
         </div>
 
         <#--<@formLabel path=path+".location" key="initiative.location">

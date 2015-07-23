@@ -2,10 +2,10 @@ package fi.om.municipalityinitiative.util;
 
 import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.VerifiedAuthor;
-import fi.om.municipalityinitiative.json.ObjectSerializer;
-import fi.om.municipalityinitiative.dto.Author;
+import fi.om.municipalityinitiative.dto.service.Location;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
+import fi.om.municipalityinitiative.json.ObjectSerializer;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -114,7 +114,9 @@ public class ReflectionTestUtils {
         if (type.equals(ArrayList.class)) {
             return new ArrayList<>();
         }
-
+        if (type.equals(Location.class)) {
+            return modifyAllFields(new Location("2", "3"));
+        }
         throw new IllegalArgumentException("unsupported type: " + type);
     }
 

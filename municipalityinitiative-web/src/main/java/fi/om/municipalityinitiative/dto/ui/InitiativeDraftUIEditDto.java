@@ -1,9 +1,11 @@
 package fi.om.municipalityinitiative.dto.ui;
 
+import com.google.common.base.Strings;
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Location;
 import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.exceptions.InvalidLocationException;
 import fi.om.municipalityinitiative.validation.NormalInitiative;
 import fi.om.municipalityinitiative.validation.VerifiedInitiative;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -36,7 +38,9 @@ public class InitiativeDraftUIEditDto {
     @Min(value = 0, groups = {VerifiedInitiative.class, NormalInitiative.class} )
     private int externalParticipantCount;
 
-    private Location location;
+    private String locationLat;
+
+    private String locationLng;
 
     public InitiativeDraftUIEditDto() {
         // For freemarker
@@ -51,7 +55,8 @@ public class InitiativeDraftUIEditDto {
         editDto.setContactInfo(new ContactInfo(contactInfo));
         editDto.setExternalParticipantCount(initiative.getExternalParticipantCount());
         if (initiative.getLocation().isPresent()) {
-            editDto.location = initiative.getLocation().getValue();
+            editDto.locationLat = initiative.getLocation().getValue().getLat();
+            editDto.locationLng = initiative.getLocation().getValue().getLng();
         }
         return editDto;
     }
@@ -84,9 +89,20 @@ public class InitiativeDraftUIEditDto {
         return municipality;
     }
 
-    public Location getLocation() {return location;}
+    public Location getLocation() {
+        if (!Strings.isNullOrEmpty(locationLat) && !Strings.isNullOrEmpty(this.locationLng)){
+            return new Location(this.locationLat, this.locationLng);
+        }
+        else if (Strings.isNullOrEmpty(locationLat) && Strings.isNullOrEmpty(locationLng)) {
+            return null;
+        }
+        else {
+            throw new InvalidLocationException("Invalid location. Location not saved");
+        }
 
-    public void setLocation(Location location) {this.location = location; }
+    }
+
+    public void setLocation(Location location) {this.locationLat = location.getLat(); this.locationLng = location.getLng(); }
 
     public ContactInfo getContactInfo() {
         return contactInfo;
@@ -102,5 +118,19 @@ public class InitiativeDraftUIEditDto {
 
     public int getExternalParticipantCount() {
         return externalParticipantCount;
+    }
+
+    public String getLocationLat(){
+        return this.locationLat;
+    }
+    public void setLocationLat(String locationLat){
+        this.locationLat = locationLat;
+    }
+
+    public String getLocationLng(){
+        return this.locationLng;
+    }
+    public void setLocationLng(String locationLng){
+        this.locationLng = locationLng;
     }
 }
