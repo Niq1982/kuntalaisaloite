@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.dto.service.Location;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.exceptions.InvalidLocationException;
 import fi.om.municipalityinitiative.validation.NormalInitiative;
+import fi.om.municipalityinitiative.validation.ValidLocation;
 import fi.om.municipalityinitiative.validation.VerifiedInitiative;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -14,6 +15,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
+@ValidLocation(groups = {VerifiedInitiative.class, NormalInitiative.class})
 public class InitiativeDraftUIEditDto {
 
     // Not editable after set
@@ -41,6 +43,8 @@ public class InitiativeDraftUIEditDto {
     private String locationLat;
 
     private String locationLng;
+
+    private String locationDescription;
 
     public InitiativeDraftUIEditDto() {
         // For freemarker
@@ -132,5 +136,13 @@ public class InitiativeDraftUIEditDto {
     }
     public void setLocationLng(String locationLng){
         this.locationLng = locationLng;
+    }
+
+    public String getLocationDescription() {
+        return locationDescription;
+    }
+
+    public void setLocationDescription(String locationDescription) {
+        this.locationDescription = locationDescription;
     }
 }
