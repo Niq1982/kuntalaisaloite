@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.service.ui;
 import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.Location;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.service.ReviewHistoryRow;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
@@ -125,6 +126,9 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
         Initiative randomlyFilledInitiative = ReflectionTestUtils.modifyAllFields(new Initiative());
         ContactInfo randomlyFilledContactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
+        Location location = ReflectionTestUtils.modifyAllFields(new Location("1", "2"));
+        randomlyFilledInitiative.setLocation(location);
+
         InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(randomlyFilledInitiative,randomlyFilledContactInfo);
 
         service.editInitiativeDraft(initiativeId, TestHelper.authorLoginUserHolder, editDto, fi.om.municipalityinitiative.util.Locales.LOCALE_FI);
@@ -137,6 +141,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         assertThat(updated.getProposal(), is(editDto.getProposal()));
         assertThat(updated.getExtraInfo(), is(editDto.getExtraInfo()));
         assertThat(updated.getExternalParticipantCount(), is(editDto.getExternalParticipantCount()));
+        assertLocation(updated.getLocation(), editDto.getLocation());
 
         ReflectionTestUtils.assertNoNullFields(updated);
 
@@ -154,6 +159,9 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
         Initiative randomlyFilledInitiative = ReflectionTestUtils.modifyAllFields(new Initiative());
         ContactInfo randomlyFilledContactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
+        Location location = ReflectionTestUtils.modifyAllFields(new Location("1", "2"));
+        randomlyFilledInitiative.setLocation(location);
+
         InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(randomlyFilledInitiative, randomlyFilledContactInfo);
 
         service.editInitiativeDraft(initiativeId, TestHelper.authorLoginUserHolder, editDto, fi.om.municipalityinitiative.util.Locales.LOCALE_FI);
@@ -168,9 +176,16 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
         assertThat(updated.getExtraInfo(), is(editDto.getExtraInfo()));
         assertThat(updated.getExternalParticipantCount(), is(editDto.getExternalParticipantCount()));
+        assertLocation(updated.getLocation(), editDto.getLocation());
 
         ReflectionTestUtils.assertNoNullFields(updated);
 
+    }
+
+    private void assertLocation(Location locationGiven, Location locationExpepted) {
+        assertThat(locationGiven, notNullValue());
+        assertThat(locationGiven.getLat(), is(locationExpepted.getLat()));
+        assertThat(locationGiven.getLng(), is(locationExpepted.getLng()));
     }
 
     @Test
