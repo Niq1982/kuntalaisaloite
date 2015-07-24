@@ -294,7 +294,7 @@
                     <span id="show-selected-location" class="blue">Näytä</span>
                     <span id="remove-selected-location" class="blue">Poista</span>
                 </p>
-                <@f.textarea path=path+".locationDescription" required="required" optional=false key="initiative.location-description"/>
+                <@f.textarea path=path+".locationDescription" required="required" optional=false key="updateData.locationDescription"/>
             </div>
 
             <@spring.formHiddenInput path+".locationLat" />

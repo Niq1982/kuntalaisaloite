@@ -18,11 +18,16 @@ public class LocationValidator implements ConstraintValidator<ValidLocation, Ini
         if (Strings.isNullOrEmpty(value.getLocationLat()) && Strings.isNullOrEmpty(value.getLocationLng())) {
             return true;
         }
-        else if (!Strings.isNullOrEmpty(value.getLocationLat()) && !Strings.isNullOrEmpty(value.getLocationLng())) {
-            if (!Strings.isNullOrEmpty(value.getLocationDescription())) {
-                return true;
-            }
+        else if (!Strings.isNullOrEmpty(value.getLocationLat()) && !Strings.isNullOrEmpty(value.getLocationLng()) && !Strings.isNullOrEmpty(value.getLocationDescription())) {
+            return true;
         }
-        return false;
+        else {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("ValidLocation")
+                    .addNode("locationDescription")
+                    .addConstraintViolation();
+            return false;
+        }
+
     }
 }
