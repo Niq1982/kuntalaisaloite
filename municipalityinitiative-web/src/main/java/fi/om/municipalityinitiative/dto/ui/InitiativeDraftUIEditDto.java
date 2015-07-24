@@ -58,9 +58,10 @@ public class InitiativeDraftUIEditDto {
         editDto.municipality = initiative.getMunicipality();
         editDto.setContactInfo(new ContactInfo(contactInfo));
         editDto.setExternalParticipantCount(initiative.getExternalParticipantCount());
-        if (initiative.getLocation().isPresent()) {
+        if (initiative.getLocation().isPresent() && initiative.getLocationDescription().isPresent()) {
             editDto.locationLat = initiative.getLocation().getValue().getLat();
             editDto.locationLng = initiative.getLocation().getValue().getLng();
+            editDto.locationDescription = initiative.getLocationDescription().getValue();
         }
         return editDto;
     }

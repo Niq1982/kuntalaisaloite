@@ -234,6 +234,7 @@ public class TestHelper {
         insert.set(municipalityInitiative.lastEmailReportType, initiativeDraft.emailReportType);
         insert.set(municipalityInitiative.locationLat, initiativeDraft.locationLat);
         insert.set(municipalityInitiative.locationLng, initiativeDraft.locationLng);
+        insert.set(municipalityInitiative.locationDescription, initiativeDraft.locationDescription);
 
         if (initiativeDraft.supporCountData != null) {
             insert.set(municipalityInitiative.supportCountData, initiativeDraft.supporCountData);
@@ -804,6 +805,7 @@ public class TestHelper {
         public String supporCountData;
         public String locationLat;
         public String locationLng;
+        private String locationDescription;
 
 
         public AuthorDraft applyAuthor() {
@@ -906,6 +908,10 @@ public class TestHelper {
             return this;
         }
 
+        public InitiativeDraft withLocationDescription(String s) {
+            this.locationDescription = s;
+            return this;
+        }
     }
     public Long getLastInitiativeId() {
         return lastInitiativeId;

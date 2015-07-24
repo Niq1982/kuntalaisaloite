@@ -108,8 +108,11 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     }
                     String maybeLocationLat = row.get(municipalityInitiative.locationLat);
                     String maybeLocationLng = row.get(municipalityInitiative.locationLng);
-                    if (maybeLocationLng != null && maybeLocationLng != null) {
+                    String maybeLocationDescription = row.get(municipalityInitiative.locationDescription);
+
+                    if (maybeLocationLng != null && maybeLocationLng != null && maybeLocationDescription != null) {
                         info.setLocation(new Location(maybeLocationLat, maybeLocationLng));
+                        info.setLocationDescription(maybeLocationDescription);
                     }
                     return info;
                 }
@@ -461,13 +464,16 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .set(municipalityInitiative.proposal, editDto.getProposal())
                 .set(municipalityInitiative.modified, CURRENT_TIME)
                 .set(municipalityInitiative.extraInfo, editDto.getExtraInfo())
-                .set(municipalityInitiative.externalparticipantcount, editDto.getExternalParticipantCount());
+                .set(municipalityInitiative.externalparticipantcount, editDto.getExternalParticipantCount())
+                .set(municipalityInitiative.locationDescription, editDto.getLocationDescription());
 
         if (editDto.getLocation() != null) {
             query.set(municipalityInitiative.locationLat, editDto.getLocation().getLat());
             query.set(municipalityInitiative.locationLng, editDto.getLocation().getLng());
+        } else {
+            query.setNull(municipalityInitiative.locationLat);
+            query.setNull(municipalityInitiative.locationLng);
         }
-
         assertSingleAffection(query
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute());

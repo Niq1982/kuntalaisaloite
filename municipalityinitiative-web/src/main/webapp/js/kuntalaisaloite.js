@@ -1989,8 +1989,8 @@ var mapContainer = (function() {
 			locationlat.val(selectedLocation.A);
 			locationlng.val(selectedLocation.F);
 
-			$("#selected-location").addClass("no-visible");
-			$("#open-remove-location").removeClass("no-visible");
+			selectLocation.addClass("no-visible");
+			openRemoveLocation.removeClass("no-visible");
 
 		});
 
@@ -2116,7 +2116,10 @@ var mapContainer = (function() {
 
 var renderMap,
 	locationlat = $("#locationLat"),
-	locationlng = $("#locationLng");
+	locationlng = $("#locationLng"),
+	locationDescription = $("#locationDescription"),
+	selectLocation = $("#select-location"),
+	openRemoveLocation = $("#open-remove-location");
 
 $("#openMap").click(function(){
 	renderMap = function() {mapContainer.init(modalData.initialLocation);}
@@ -2129,11 +2132,12 @@ $("#show-selected-location").click(function() {
 });
 
 $("#remove-selected-location").click(function() {
-	$("#selected-location").removeClass("no-visible");
-	$("#open-remove-location").addClass("no-visible");
+	selectLocation.removeClass("no-visible");
+	openRemoveLocation.addClass("no-visible");
 
 	locationlat.val(null);
 	locationlng.val(null);
+	locationDescription.val(null);
 });
 
 

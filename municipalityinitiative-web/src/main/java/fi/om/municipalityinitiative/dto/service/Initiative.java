@@ -33,6 +33,7 @@ public class Initiative {
     private EmailReportType lastEmailReportType;
     private Maybe<Long> youthInitiativeId = Maybe.absent();
     private Maybe<Location> location = Maybe.absent();
+    private Maybe<String> locationDescription = Maybe.absent();
 
     public Maybe<Long> getYouthInitiativeId() {
         return youthInitiativeId;
@@ -204,5 +205,13 @@ public class Initiative {
 
     public void setLocation(Location location) {
         this.location = Maybe.of(location);
+    }
+
+    public Maybe<String> getLocationDescription() {
+        return locationDescription;
+    }
+
+    public void setLocationDescription(String locationDescription) {
+        this.locationDescription = Maybe.of(locationDescription);
     }
 }

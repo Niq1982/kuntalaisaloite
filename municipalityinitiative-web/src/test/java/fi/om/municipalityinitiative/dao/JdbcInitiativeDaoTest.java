@@ -44,6 +44,9 @@ public class JdbcInitiativeDaoTest {
     public static final String EXTRA_INFO = "Lisätietoja seuraa perästä";
     public static final int EXTERNAL_PARTICIPANT_COUNT = 12;
     public static final Location LOCATION = new Location("12345", "56789");
+    public static final String LOCATION_LAT = "64.9146659";
+    public static final String LOCATION_LNG = "26.0672554";
+    public static final String LOCATION_DESCRIPTION = "Liittyy vahvasti";
     @Resource
     InitiativeDao initiativeDao;
 
@@ -106,6 +109,7 @@ public class JdbcInitiativeDaoTest {
         initiativeEdit.setExtraInfo(EXTRA_INFO);
         initiativeEdit.setExternalParticipantCount(EXTERNAL_PARTICIPANT_COUNT);
         initiativeEdit.setLocation(LOCATION);
+        initiativeEdit.setLocationDescription(LOCATION_DESCRIPTION);
 
         initiativeDao.editInitiativeDraft(initiativeId, initiativeEdit);
 
@@ -130,8 +134,9 @@ public class JdbcInitiativeDaoTest {
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withSent(new DateTime(2010, 1, 1, 0, 0))
                 .witEmailReportSent(EmailReportType.IN_ACCEPTED, new DateTime())
-                .withLocationLat("64.9146659")
-                .withLocationLng("26.0672554")
+                .withLocationLat(LOCATION_LAT)
+                .withLocationLng(LOCATION_LNG)
+                .withLocationDescription(LOCATION_DESCRIPTION)
                 .applyAuthor().withParticipantMunicipality(authorsMunicipalityId)
                 .toInitiativeDraft());
 
@@ -147,9 +152,11 @@ public class JdbcInitiativeDaoTest {
         assertThat(initiative.getParticipantCount(), is(1));
         assertThat(initiative.getFixState(), is(FixState.OK));
         assertThat(initiative.getExternalParticipantCount(), is(TestHelper.DEFAULT_EXTERNAL_PARTICIPANT_COUNT));
-        assertThat(initiative.getLocation().getValue().getLat(), is("64.9146659"));
-        assertThat(initiative.getLocation().getValue().getLng(), is("26.0672554"));
-
+        assertThat(initiative.getLocation().isPresent(), is(true));
+        assertThat(initiative.getLocation().getValue().getLat(), is(LOCATION_LAT));
+        assertThat(initiative.getLocation().getValue().getLng(), is(LOCATION_LNG));
+        assertThat(initiative.getLocationDescription().isPresent(), is(true));
+        assertThat(initiative.getLocationDescription().getValue(), is(LOCATION_DESCRIPTION));
         ReflectionTestUtils.assertNoNullFields(initiative);
     }
 

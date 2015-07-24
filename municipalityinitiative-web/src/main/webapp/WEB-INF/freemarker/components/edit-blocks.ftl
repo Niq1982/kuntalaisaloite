@@ -285,7 +285,7 @@
         <div class="input-block-content">
             <#assign locationSelected = updateData.locationLat?? && updateData.locationLng??>
 
-            <div id="selected-location" <#if locationSelected> class="no-visible" </#if> >
+            <div id="select-location" <#if locationSelected> class="no-visible" </#if> >
                 <p> Lisää aloitteellesi tarkempi sijainti <span id="openMap" class="blue">tästä</span></p>
             </div>
 

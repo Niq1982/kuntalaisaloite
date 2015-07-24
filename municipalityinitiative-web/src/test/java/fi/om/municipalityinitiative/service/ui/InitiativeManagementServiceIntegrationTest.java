@@ -35,6 +35,7 @@ import static org.junit.Assert.fail;
 public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrationTestBase {
 
     public static final String LOCATION_LNG = "1234566";
+    public static final String LOCATION_DESCRIPTION = "liittyy vahvasti";
     @Resource
     InitiativeManagementService service;
 
@@ -128,7 +129,11 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         Initiative randomlyFilledInitiative = ReflectionTestUtils.modifyAllFields(new Initiative());
         ContactInfo randomlyFilledContactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
         Location location = ReflectionTestUtils.modifyAllFields(new Location("1", "2"));
+
+        // Init Maybe.values manually
         randomlyFilledInitiative.setLocation(location);
+        randomlyFilledInitiative.setLocationDescription(LOCATION_DESCRIPTION);
+
 
         InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(randomlyFilledInitiative,randomlyFilledContactInfo);
 
@@ -159,9 +164,12 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         String originalName = TestHelper.DEFAULT_PARTICIPANT_NAME;
 
         Initiative randomlyFilledInitiative = ReflectionTestUtils.modifyAllFields(new Initiative());
-        ContactInfo randomlyFilledContactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
         Location location = ReflectionTestUtils.modifyAllFields(new Location("1", "2"));
+        randomlyFilledInitiative.setLocationDescription(LOCATION_DESCRIPTION);
         randomlyFilledInitiative.setLocation(location);
+
+        ContactInfo randomlyFilledContactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
+
 
         InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(randomlyFilledInitiative, randomlyFilledContactInfo);
 
