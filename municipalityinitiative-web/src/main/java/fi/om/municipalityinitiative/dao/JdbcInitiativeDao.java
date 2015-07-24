@@ -464,15 +464,16 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .set(municipalityInitiative.proposal, editDto.getProposal())
                 .set(municipalityInitiative.modified, CURRENT_TIME)
                 .set(municipalityInitiative.extraInfo, editDto.getExtraInfo())
-                .set(municipalityInitiative.externalparticipantcount, editDto.getExternalParticipantCount())
-                .set(municipalityInitiative.locationDescription, editDto.getLocationDescription());
+                .set(municipalityInitiative.externalparticipantcount, editDto.getExternalParticipantCount());
 
         if (editDto.getLocation() != null) {
             query.set(municipalityInitiative.locationLat, editDto.getLocation().getLat());
             query.set(municipalityInitiative.locationLng, editDto.getLocation().getLng());
+            query.set(municipalityInitiative.locationDescription, editDto.getLocationDescription());
         } else {
             query.setNull(municipalityInitiative.locationLat);
             query.setNull(municipalityInitiative.locationLng);
+            query.setNull(municipalityInitiative.locationDescription);
         }
         assertSingleAffection(query
                 .where(municipalityInitiative.id.eq(initiativeId))
