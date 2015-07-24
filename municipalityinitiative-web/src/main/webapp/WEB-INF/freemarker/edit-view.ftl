@@ -75,7 +75,6 @@
 
         <div class="map-container" >
             <div id="map-canvas"></div>
-            <div id="lat"></div>
         </div>
 
         <div class="input-block-content">
@@ -85,7 +84,7 @@
     </@compress>
 </#assign>
 
-<#assign locationSelected = updateData.locationLat?? && updateData.locationLng??>
+<#assign locationSelected = updateData.locationLat?? && updateData.locationLng?? && updateData.locationLat != "" && updateData.locationLng != "">
 
 <#--
  * Create page modals and jsMessage

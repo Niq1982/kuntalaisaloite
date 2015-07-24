@@ -71,7 +71,6 @@
         <div class="initiative-content-row last replace-links">
             <@u.text initiative.extraInfo!"" />
         </div>
-
     </#if>
 
     <#if (initiative.youthInitiativeId.present)>
@@ -83,6 +82,20 @@
 
 </#macro>
 
+<#macro map initiative>
+    <#if initiative.location.present>
+        <@u.jsGoogleMapsLib />
+    <div class="map-container initiative-content-row last">
+        <div id="map-canvas"></div>
+    </div>
+    <script type="text/javascript">
+        var initiative = {};
+        initiative.location = {"lat": "${initiative.location.value.lat}", "lng": "${initiative.location.value.lng}"};
+    </script>
+    </#if>
+
+
+</#macro>
 <#-- 
  * initiativeViewManage
  * 

@@ -1931,9 +1931,13 @@ var mapContainer = (function() {
 	init = function(municipality) {
 
 		geocoder = new google.maps.Geocoder();
+
 		if (modalData.selectedLocation !== undefined) {
 			selectedLocation = new google.maps.LatLng(modalData.selectedLocation.lat, modalData.selectedLocation.lng);
 			modalData.selectedLocation = undefined;
+		} else if (initiative.location !== undefined) {
+			selectedLocation = new google.maps.LatLng(initiative.location.lat, initiative.location.lng);
+			initiative.location = undefined;
 		}
 
 		if (municipality !== undefined) {
@@ -2122,7 +2126,7 @@ var renderMap,
 	openRemoveLocation = $("#open-remove-location");
 
 $("#openMap").click(function(){
-	renderMap = function() {mapContainer.init(modalData.initialLocation);}
+	renderMap = function() {mapContainer.init(modalData.initialLocation);};
 	generateModal(modalData.mapContainer(), 'full');
 });
 
@@ -2130,6 +2134,10 @@ $("#show-selected-location").click(function() {
 	renderMap =  mapContainer.init;
 	generateModal(modalData.mapContainer(), 'full');
 });
+
+if (typeof initiative !== 'undefined' && typeof initiative.location !== 'undefined' ) {
+	mapContainer.init();
+}
 
 $("#remove-selected-location").click(function() {
 	selectLocation.removeClass("no-visible");

@@ -31,6 +31,7 @@
     </@compress>
 </#assign>
 
+
 <#--
  * Layout parameters for HTML-title and navigation.
  * 
@@ -61,7 +62,9 @@
     <div class="view-block public first">
         <@e.initiativeView initiative />
     </div>
-
+    <div class="view-block public">
+        <@e.map initiative />
+    </div>
     <#assign contactAuthorForm>
     <@compress single_line=true>
     

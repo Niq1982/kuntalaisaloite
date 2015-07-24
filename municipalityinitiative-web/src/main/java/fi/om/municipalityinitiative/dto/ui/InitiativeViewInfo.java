@@ -2,6 +2,7 @@ package fi.om.municipalityinitiative.dto.ui;
 
 import com.google.common.base.Strings;
 import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.Location;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
@@ -92,6 +93,8 @@ public final class InitiativeViewInfo {
     public Maybe<Long> getYouthInitiativeId() {
         return initiative.getYouthInitiativeId();
     }
+
+    public Maybe<Location> getLocation() {return initiative.getLocation();}
 
     public ParticipantCount getParticipantCount() {
         ParticipantCount participantCount = new ParticipantCount();
