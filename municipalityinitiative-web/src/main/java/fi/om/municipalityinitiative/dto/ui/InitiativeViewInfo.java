@@ -96,6 +96,8 @@ public final class InitiativeViewInfo {
 
     public Maybe<Location> getLocation() {return initiative.getLocation();}
 
+    public Maybe<String> getLocationDescription() {return initiative.getLocationDescription();}
+
     public ParticipantCount getParticipantCount() {
         ParticipantCount participantCount = new ParticipantCount();
         participantCount.setPrivateNames(initiative.getParticipantCount() - initiative.getParticipantCountPublic());

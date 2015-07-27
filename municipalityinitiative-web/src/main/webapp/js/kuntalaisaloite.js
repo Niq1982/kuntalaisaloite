@@ -1935,7 +1935,7 @@ var mapContainer = (function() {
 		if (modalData.selectedLocation !== undefined) {
 			selectedLocation = new google.maps.LatLng(modalData.selectedLocation.lat, modalData.selectedLocation.lng);
 			modalData.selectedLocation = undefined;
-		} else if (initiative.location !== undefined) {
+		} else if (typeof initiative !== 'undefined' && typeof initiative.location !== 'undefined' ) {
 			selectedLocation = new google.maps.LatLng(initiative.location.lat, initiative.location.lng);
 			initiative.location = undefined;
 		}

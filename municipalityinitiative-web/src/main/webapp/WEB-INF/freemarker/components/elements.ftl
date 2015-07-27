@@ -73,27 +73,33 @@
         </div>
     </#if>
 
+    <#if initiative.location?? && initiative.location.isPresent()>
+        <@e.map initiative />
+    </#if>
+
     <#if (initiative.youthInitiativeId.present)>
-    <h2><@u.message "initiative.youthInitiative.title" /></h2>
-    <div class="initiative-content-row last">
-        <@u.message "initiative.youthInitiative.link" /> <a href="${urls.youthInitiativeWebUrl(initiative.youthInitiativeId.value)}">${urls.youthInitiativeWebUrl(initiative.youthInitiativeId.value)}</a>
-    </div>
+        <h2><@u.message "initiative.youthInitiative.title" /></h2>
+        <div class="initiative-content-row last">
+            <@u.message "initiative.youthInitiative.link" /> <a href="${urls.youthInitiativeWebUrl(initiative.youthInitiativeId.value)}">${urls.youthInitiativeWebUrl(initiative.youthInitiativeId.value)}</a>
+        </div>
     </#if>
 
 </#macro>
 
 <#macro map initiative>
-    <#if initiative.location.present>
-        <@u.jsGoogleMapsLib />
-    <div class="map-container initiative-content-row last">
-        <div id="map-canvas"></div>
-    </div>
-    <script type="text/javascript">
-        var initiative = {};
-        initiative.location = {"lat": "${initiative.location.value.lat}", "lng": "${initiative.location.value.lng}"};
-    </script>
-    </#if>
 
+        <h2><@u.message "initiative.map.title" /></h2>
+        <@u.jsGoogleMapsLib />
+        <#if initiative.locationDescription.isPresent()>
+            <@u.text initiative.locationDescription.value />
+        </#if>
+        <div class="map-container initiative-content-row last">
+            <div id="map-canvas"></div>
+        </div>
+        <script type="text/javascript">
+            var initiative = {};
+            initiative.location = {"lat": "${initiative.location.value.lat}", "lng": "${initiative.location.value.lng}"};
+        </script>
 
 </#macro>
 <#-- 
