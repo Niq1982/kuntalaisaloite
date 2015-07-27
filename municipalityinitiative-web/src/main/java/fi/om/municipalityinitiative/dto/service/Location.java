@@ -2,26 +2,26 @@ package fi.om.municipalityinitiative.dto.service;
 
 
 public class Location {
-    private String lat;
-    private String lng;
+    private Double lat;
+    private Double lng;
 
-    public Location(String lat, String lng) {
+    public Location(Double lat, Double lng) {
         this.lat = lat;
         this.lng = lng;
     }
-    public String getLat() {
+    public Double getLat() {
         return lat;
     }
 
-    public void setLat(String lat) {
+    public void setLat(Double lat) {
         this.lat = lat;
     }
 
-    public String getLng() {
+    public Double getLng() {
         return lng;
     }
 
-    public void setLng(String lng) {
+    public void setLng(Double lng) {
         this.lng = lng;
     }
 }

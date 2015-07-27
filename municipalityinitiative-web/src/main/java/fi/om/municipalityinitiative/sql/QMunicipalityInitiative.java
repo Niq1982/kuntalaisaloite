@@ -37,9 +37,9 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
 
     public final StringPath locationDescription = createString("locationDescription");
 
-    public final StringPath locationLat = createString("locationLat");
+    public final NumberPath<Double> locationLat = createNumber("locationLat", Double.class);
 
-    public final StringPath locationLng = createString("locationLng");
+    public final NumberPath<Double> locationLng = createNumber("locationLng", Double.class);
 
     public final StringPath moderatorComment = createString("moderatorComment");
 
@@ -116,8 +116,8 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
         addMetadata(lastEmailReportTime, ColumnMetadata.named("last_email_report_time").ofType(93).withSize(29).withDigits(6));
         addMetadata(lastEmailReportType, ColumnMetadata.named("last_email_report_type").ofType(1111).withSize(2147483647));
         addMetadata(locationDescription, ColumnMetadata.named("location_description").ofType(12).withSize(2147483647));
-        addMetadata(locationLat, ColumnMetadata.named("location_lat").ofType(12).withSize(2147483647));
-        addMetadata(locationLng, ColumnMetadata.named("location_lng").ofType(12).withSize(2147483647));
+        addMetadata(locationLat, ColumnMetadata.named("location_lat").ofType(2).withSize(9).withDigits(6));
+        addMetadata(locationLng, ColumnMetadata.named("location_lng").ofType(2).withSize(9).withDigits(6));
         addMetadata(moderatorComment, ColumnMetadata.named("moderator_comment").ofType(12).withSize(1024));
         addMetadata(modified, ColumnMetadata.named("modified").ofType(93).withSize(29).withDigits(6).notNull());
         addMetadata(municipalityId, ColumnMetadata.named("municipality_id").ofType(-5).withSize(19).notNull());

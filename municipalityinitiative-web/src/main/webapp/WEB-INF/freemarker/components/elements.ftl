@@ -98,7 +98,7 @@
         </div>
         <script type="text/javascript">
             var initiative = {};
-            initiative.location = {"lat": "${initiative.location.value.lat}", "lng": "${initiative.location.value.lng}"};
+            initiative.location = {"lat": "${initiative.location.value.lat?c}", "lng": "${initiative.location.value.lng?c}"};
         </script>
 
 </#macro>

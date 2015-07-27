@@ -803,8 +803,8 @@ public class TestHelper {
         public EmailReportType emailReportType;
         public DateTime emailReportDateTime;
         public String supporCountData;
-        public String locationLat;
-        public String locationLng;
+        public Double locationLat;
+        public Double locationLng;
         private String locationDescription;
 
 
@@ -899,11 +899,11 @@ public class TestHelper {
             this.supporCountData = s;
             return this;
         }
-        public InitiativeDraft withLocationLat(String s) {
+        public InitiativeDraft withLocationLat(Double s) {
             this.locationLat = s;
             return this;
         }
-        public InitiativeDraft withLocationLng(String s) {
+        public InitiativeDraft withLocationLng(Double s) {
             this.locationLng = s;
             return this;
         }

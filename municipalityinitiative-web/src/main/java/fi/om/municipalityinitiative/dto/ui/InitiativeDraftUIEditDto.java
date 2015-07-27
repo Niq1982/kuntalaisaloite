@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.dto.ui;
 
-import com.google.common.base.Strings;
 import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Location;
@@ -40,9 +39,9 @@ public class InitiativeDraftUIEditDto {
     @Min(value = 0, groups = {VerifiedInitiative.class, NormalInitiative.class} )
     private int externalParticipantCount;
 
-    private String locationLat;
+    private Double locationLat;
 
-    private String locationLng;
+    private Double locationLng;
 
     private String locationDescription;
 
@@ -95,10 +94,10 @@ public class InitiativeDraftUIEditDto {
     }
 
     public Location getLocation() {
-        if (!Strings.isNullOrEmpty(locationLat) && !Strings.isNullOrEmpty(this.locationLng)){
+        if (this.locationLat != null && this.locationLng != null){
             return new Location(this.locationLat, this.locationLng);
         }
-        else if (Strings.isNullOrEmpty(locationLat) && Strings.isNullOrEmpty(locationLng)) {
+        else if (locationLat == null && locationLng == null) {
             return null;
         }
         else {
@@ -125,17 +124,19 @@ public class InitiativeDraftUIEditDto {
         return externalParticipantCount;
     }
 
-    public String getLocationLat(){
+    public Double getLocationLat(){
         return this.locationLat;
     }
-    public void setLocationLat(String locationLat){
+
+    public void setLocationLat(Double locationLat){
         this.locationLat = locationLat;
     }
 
-    public String getLocationLng(){
+    public Double getLocationLng(){
         return this.locationLng;
     }
-    public void setLocationLng(String locationLng){
+
+    public void setLocationLng(Double locationLng){
         this.locationLng = locationLng;
     }
 

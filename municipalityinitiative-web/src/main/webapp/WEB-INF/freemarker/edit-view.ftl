@@ -14,6 +14,8 @@
 -->
 <#assign page="page.edit" />
 
+<#assign locationSelected = updateData.locationLat?? && updateData.locationLng??>
+
 <@l.main page pageTitle!"">
 
     <h1><@u.message page /></h1>
@@ -39,7 +41,7 @@
 
         <div class="form-block-container">
             <@edit.blockHeader key="initiative.initiative.title" step=1 />
-            <@edit.initiativeBlock "updateData"/>
+            <@edit.initiativeBlock "updateData" locationSelected/>
         </div>
 
         <div class="form-block-container">
@@ -84,7 +86,6 @@
     </@compress>
 </#assign>
 
-<#assign locationSelected = updateData.locationLat?? && updateData.locationLng?? && updateData.locationLat != "" && updateData.locationLng != "">
 
 <#--
  * Create page modals and jsMessage
@@ -121,7 +122,7 @@
 
     modalData.initialLocation = '${initiative.municipality.getName(locale)}';
     <#if locationSelected>
-        modalData.selectedLocation = {"lat" : "${updateData.locationLat}", "lng" : "${updateData.locationLng}"};
+        modalData.selectedLocation = {"lat" : "${updateData.locationLat?c}", "lng" : "${updateData.locationLng?c}"};
     </#if>
 
     var messageData = {};

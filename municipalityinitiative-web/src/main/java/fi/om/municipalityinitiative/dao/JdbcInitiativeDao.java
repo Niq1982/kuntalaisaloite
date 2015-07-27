@@ -106,8 +106,8 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     if (maybeYouthInitiativeID != null) {
                         info.setYouthInitiativeId(maybeYouthInitiativeID);
                     }
-                    String maybeLocationLat = row.get(municipalityInitiative.locationLat);
-                    String maybeLocationLng = row.get(municipalityInitiative.locationLng);
+                    Double maybeLocationLat = row.get(municipalityInitiative.locationLat);
+                    Double maybeLocationLng = row.get(municipalityInitiative.locationLng);
                     String maybeLocationDescription = row.get(municipalityInitiative.locationDescription);
 
                     if (maybeLocationLng != null && maybeLocationLng != null && maybeLocationDescription != null) {

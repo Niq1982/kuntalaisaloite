@@ -24,6 +24,9 @@ import static org.junit.Assert.fail;
 
 public class ReflectionTestUtils {
 
+    public static final double LAT = 23.093489;
+    public static final double LNG = 34.093220;
+
     /**
      * Sets random values to all fields recursively.
      */
@@ -68,6 +71,9 @@ public class ReflectionTestUtils {
         }
         if (type.equals(long.class) || type.equals(Long.class)) {
             return randomLong();
+        }
+        if (type.equals(double.class) || type.equals(Double.class)) {
+            return randomDouble();
         }
         if (type.equals(boolean.class)) {
             return true;
@@ -115,9 +121,13 @@ public class ReflectionTestUtils {
             return new ArrayList<>();
         }
         if (type.equals(Location.class)) {
-            return modifyAllFields(new Location("2", "3"));
+            return modifyAllFields(new Location(LAT, LNG));
         }
         throw new IllegalArgumentException("unsupported type: " + type);
+    }
+
+    private static double randomDouble() {
+        return new Random().nextDouble();
     }
 
     /**

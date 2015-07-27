@@ -11,8 +11,8 @@ import static org.hamcrest.Matchers.notNullValue;
 
 public class InitiativeDraftUIEditDtoTest {
 
-    public static final String LAT = "423423";
-    public static final String LNG = "342423";
+    public static final Double LAT = 23.894578;
+    public static final Double LNG = 23.194578;
     public static final String LOCATION_DESCRIPTION = "Liittyy sijaintiin";
 
     @Test

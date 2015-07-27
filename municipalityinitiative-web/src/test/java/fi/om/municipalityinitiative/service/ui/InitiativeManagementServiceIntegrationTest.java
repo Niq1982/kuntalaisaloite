@@ -34,8 +34,9 @@ import static org.junit.Assert.fail;
 
 public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrationTestBase {
 
-    public static final String LOCATION_LNG = "1234566";
+    public static final Double LOCATION_LNG = 23.444444;
     public static final String LOCATION_DESCRIPTION = "liittyy vahvasti";
+    private static final Double LOCATION_LAT = 23.232323;
     @Resource
     InitiativeManagementService service;
 
@@ -128,7 +129,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
         Initiative randomlyFilledInitiative = ReflectionTestUtils.modifyAllFields(new Initiative());
         ContactInfo randomlyFilledContactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
-        Location location = ReflectionTestUtils.modifyAllFields(new Location("1", "2"));
+        Location location = ReflectionTestUtils.modifyAllFields(new Location(LOCATION_LAT, LOCATION_LNG));
 
         // Init Maybe.values manually
         randomlyFilledInitiative.setLocation(location);
@@ -164,7 +165,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         String originalName = TestHelper.DEFAULT_PARTICIPANT_NAME;
 
         Initiative randomlyFilledInitiative = ReflectionTestUtils.modifyAllFields(new Initiative());
-        Location location = ReflectionTestUtils.modifyAllFields(new Location("1", "2"));
+        Location location = ReflectionTestUtils.modifyAllFields(new Location(LOCATION_LAT, LOCATION_LNG));
         randomlyFilledInitiative.setLocationDescription(LOCATION_DESCRIPTION);
         randomlyFilledInitiative.setLocation(location);
 
@@ -191,10 +192,15 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     }
 
-    private void assertLocation(Maybe<Location> locationGiven, Location locationExpepted) {
+    private void assertLocation(Maybe<Location> locationGiven, Location locationExcepted) {
         assertThat(locationGiven, isPresent());
-        assertThat(locationGiven.getValue().getLat(), is(locationExpepted.getLat()));
-        assertThat(locationGiven.getValue().getLng(), is(locationExpepted.getLng()));
+
+        assertThat(convertToSixDecimals(locationGiven.getValue().getLat()), is(convertToSixDecimals(locationExcepted.getLat())));
+        assertThat(convertToSixDecimals(locationGiven.getValue().getLng()), is(convertToSixDecimals(locationExcepted.getLng())));
+    }
+
+    private Double convertToSixDecimals(Double decimal) {
+        return Math.round(decimal*1000000.0)/1000000.0;
     }
 
     @Test

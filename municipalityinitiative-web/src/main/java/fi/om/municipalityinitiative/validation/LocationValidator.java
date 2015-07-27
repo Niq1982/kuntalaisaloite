@@ -15,10 +15,10 @@ public class LocationValidator implements ConstraintValidator<ValidLocation, Ini
 
     @Override
     public boolean isValid(InitiativeDraftUIEditDto value, ConstraintValidatorContext context) {
-        if (Strings.isNullOrEmpty(value.getLocationLat()) && Strings.isNullOrEmpty(value.getLocationLng()) && Strings.isNullOrEmpty(value.getLocationDescription())) {
+        if (value.getLocationLat() == null && value.getLocationLng() == null && Strings.isNullOrEmpty(value.getLocationDescription())) {
             return true;
         }
-        else if (!Strings.isNullOrEmpty(value.getLocationLat()) && !Strings.isNullOrEmpty(value.getLocationLng()) && !Strings.isNullOrEmpty(value.getLocationDescription())) {
+        else if (value.getLocationLat() != null && value.getLocationLng() != null && !Strings.isNullOrEmpty(value.getLocationDescription())) {
             return true;
         }
         else {

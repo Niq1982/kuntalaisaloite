@@ -43,9 +43,9 @@ public class JdbcInitiativeDaoTest {
     public static final String INITIATOR_NAME = "Teemu Teekkari";
     public static final String EXTRA_INFO = "Lisätietoja seuraa perästä";
     public static final int EXTERNAL_PARTICIPANT_COUNT = 12;
-    public static final Location LOCATION = new Location("12345", "56789");
-    public static final String LOCATION_LAT = "64.9146659";
-    public static final String LOCATION_LNG = "26.0672554";
+    public static final Double LOCATION_LAT = 64.914665;
+    public static final Double LOCATION_LNG = 26.067255;
+    public static final Location LOCATION = new Location(LOCATION_LAT, LOCATION_LNG);
     public static final String LOCATION_DESCRIPTION = "Liittyy vahvasti";
     @Resource
     InitiativeDao initiativeDao;
@@ -120,10 +120,16 @@ public class JdbcInitiativeDaoTest {
         assertThat(initiative.getExternalParticipantCount(), is(initiativeEdit.getExternalParticipantCount()));
         assertThat(initiative.getExtraInfo(), is(initiativeEdit.getExtraInfo()));
 
-        assertThat(initiative.getLocation().isPresent(), is(true));
-        assertThat(initiative.getLocation().getValue().getLat(), is(initiativeEdit.getLocation().getLat()));
-        assertThat(initiative.getLocation().getValue().getLng(), is(initiativeEdit.getLocation().getLng()));
+        assertLocation(initiative.getLocation(), initiativeEdit.getLocation());
 
+
+    }
+
+    private static void assertLocation(Maybe<Location> locationGiven, Location locationExcepted) {
+
+        assertThat(locationGiven.isPresent(), is(true));
+        assertThat(locationGiven.getValue().getLat(), is(locationExcepted.getLat()));
+        assertThat(locationGiven.getValue().getLng(), is(locationExcepted.getLng()));
     }
 
     @Test

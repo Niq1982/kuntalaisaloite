@@ -255,7 +255,7 @@
  *
  * @param locked locks some field from editing
  -->
-<#macro initiativeBlock path>
+<#macro initiativeBlock path locationSelected=false>
     <div class="input-block cf">
         <div class="input-block-extra">
             <div class="input-block-extra-content">
@@ -283,7 +283,6 @@
         </div>
 
         <div class="input-block-content">
-            <#assign locationSelected = updateData.locationLat?? && updateData.locationLng?? && updateData.locationLat != "" && updateData.locationLng != "">
 
             <div id="select-location" <#if locationSelected> class="no-visible" </#if> >
                 <p> Lisää aloitteellesi tarkempi sijainti <span id="openMap" class="blue">tästä</span></p>
