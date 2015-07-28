@@ -3,6 +3,7 @@
 <#import "components/layout.ftl" as l />
 <#import "components/utils.ftl" as u />
 <#import "components/edit-blocks.ftl" as edit />
+<#import "components/elements.ftl" as e />
 
 <#escape x as x?html>
 
@@ -71,13 +72,11 @@
 
 <#assign mapContainer>
     <@compress single_line=true>
-        <p>Etsi sijainti osoitteen avulla</p>
+        <p><@u.message key="map.searchAddress"/></p>
         <input type="text" id="user-entered-address"></input>
         <div id = "result-list"></div>
 
-        <div class="map-container" >
-            <div id="map-canvas"></div>
-        </div>
+        <@e.mapcontainer />
 
         <div class="input-block-content">
             <span class="small-button close" id="save-and-close">Tallenna</span>

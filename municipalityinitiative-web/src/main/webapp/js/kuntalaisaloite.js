@@ -2168,6 +2168,9 @@ $("#remove-selected-location").click(function() {
 	locationDescription.val(null);
 });
 
+// Map selection controllers are hidden from no-script users
+$("#map-selection").removeClass("no-visible");
+
 // Public view
 if (typeof initiative !== 'undefined' && typeof initiative.location !== 'undefined' ) {
 	mapContainer.init();

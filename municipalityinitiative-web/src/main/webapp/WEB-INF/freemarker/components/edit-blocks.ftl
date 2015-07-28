@@ -284,17 +284,21 @@
 
         <div class="input-block-content">
 
-            <div id="select-location" <#if locationSelected> class="no-visible" </#if> >
-                <p> Lisää aloitteellesi tarkempi sijainti <span id="openMap" class="blue">tästä</span></p>
+            <div id = "map-selection" class="no-visible">
+                <div id="select-location" <#if locationSelected> class="no-visible" </#if> >
+                    <p> Lisää aloitteellesi tarkempi sijainti <span id="openMap" class="blue">tästä</span></p>
+                </div>
+
+                <div id="open-remove-location" <#if !locationSelected> class="no-visible" </#if> >
+                    <p class="map-marker"><@u.message key="map.locationAttached" />
+                        <span id="show-selected-location" class="blue"><@u.message key="map.showLocation" /></span>
+                        <span id="remove-selected-location" class="blue"><@u.message key="map.removeLocation" /></span>
+                    </p>
+                    <@f.textarea path=path+".locationDescription" required="required" optional=false key="updateData.locationDescription"/>
+                </div>
             </div>
 
-            <div id="open-remove-location" <#if !locationSelected> class="no-visible" </#if> >
-                <p class="map-marker">Aloitteeseen on liitetty sijainti.
-                    <span id="show-selected-location" class="blue">Näytä</span>
-                    <span id="remove-selected-location" class="blue">Poista</span>
-                </p>
-                <@f.textarea path=path+".locationDescription" required="required" optional=false key="updateData.locationDescription"/>
-            </div>
+            <noscript><@u.message key="map.javaScriptSupport" /></noscript>
 
             <@spring.formHiddenInput path+".locationLat" />
             <@spring.formHiddenInput path+".locationLng" />

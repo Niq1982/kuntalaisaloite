@@ -93,15 +93,21 @@
         <#if initiative.locationDescription.isPresent()>
             <@u.text initiative.locationDescription.value />
         </#if>
-        <div class="map-container initiative-content-row last">
-            <div id="map-canvas"></div>
-        </div>
+        <@mapcontainer />
         <script type="text/javascript">
-            var initiative = {};
-            initiative.location = {"lat": "${initiative.location.value.lat?c}", "lng": "${initiative.location.value.lng?c}"};
+            var initiative = {location: {"lat": "${initiative.location.value.lat?c}", "lng": "${initiative.location.value.lng?c}"}};
         </script>
 
 </#macro>
+
+<#macro mapcontainer>
+    <div class="map-container initiative-content-row last">
+        <div id="map-canvas">
+            <noscript><@u.message key="map.javaScriptSupport" /></noscript>
+        </div>
+    </div>
+</#macro>
+
 <#-- 
  * initiativeViewManage
  * 
