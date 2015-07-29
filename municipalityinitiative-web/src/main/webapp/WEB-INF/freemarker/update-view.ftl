@@ -17,6 +17,7 @@
 
 <@l.main page pageTitle!"">
 
+    <#assign locationSelected = updateData.locationLat?? && updateData.locationLng?? />
 
     <#-- Create form errors summary -->
     <@u.errorsSummary path="updateData.*" prefix="updateData."/>
@@ -53,7 +54,7 @@
 
         <div class="form-block-container">
             <@edit.blockHeader key="initiative.updateInitiative.title" step=1 />
-            <@edit.updateInitiativeBlock "updateData"/>
+            <@edit.updateInitiativeBlock "updateData" locationSelected/>
         </div>
 
         <div class="form-block-container">
@@ -97,6 +98,12 @@
             content:    '<#noescape>${edit.mapContainer?replace("'","&#39;")}</#noescape>'
         }]
     };
+
+    modalData.initialLocation = '${initiative.municipality.getName(locale)}';
+
+    <#if locationSelected>
+        modalData.selectedLocation = {"lat": "${updateData.locationLat?c}", "lng": "${updateData.locationLng?c}"};
+    </#if>
 
     <#-- Modal: Form modified notification. Uses dirtyforms jQuery-plugin. -->
     modalData.formModifiedNotification = function() {

@@ -1917,7 +1917,8 @@ if (window.hasIGraphFrame) {
  *
  */
 var getMapContainer = function() {
-	var marker, selectedLocation, tempLocation, geocoder, map, searchresults,
+	var marker, tempLocation, geocoder, map, searchresults,
+		selectedLocation = null,
 		viewOnly = false,
 		centerOfFinland = {"lat": 64.9146659, "lng": 26.0672554},
 	    // For key navigation in result list
@@ -1928,53 +1929,56 @@ var getMapContainer = function() {
 		DOWN = 1,
 		UP = -1,
 		// functions
-		init,
+		initWithSelectedLocation,
+		initWithAddress,
+		initWithCoordinates,
 		getLocationFromAddress,
 		filterOutResultsByType,
 		updateResultsList,
 		initMap,
+		initListeners,
 		placeMarker,
 		selectListElementWithArrow,
 		selectResultFromList,
 		setSelectedLocationOnMap,
 		emptyResultList,
-		modifyResultList;
+		modifyResultList,
+		setViewOnly,
+		getSelectedLocation;
 
 
-	init = function(municipality) {
+	initWithSelectedLocation = function() {
+		tempLocation = selectedLocation;
+		initMap(tempLocation);
+		initListeners();
+	};
 
+	initWithAddress = function(address) {
 		geocoder = new google.maps.Geocoder();
 
-		if (municipality !== undefined) {
-			getLocationFromAddress(municipality, function (results, status) {
-				if (results !== undefined && results!== null && results.length > 0) {
-					tempLocation = results[0].geometry.location;
-					initMap(tempLocation);
-				} else {
-					initMap(centerOfFinland);
-				}
-			});
-		} else {
-
-			if (modalData.selectedLocation !== undefined) { // Author editing initiative.
-				tempLocation = new google.maps.LatLng(modalData.selectedLocation.lat, modalData.selectedLocation.lng);
-				modalData.selectedLocation = undefined;
-			} else if (typeof initiative !== 'undefined' && typeof initiative.location !== 'undefined' ) { // Public view
-				tempLocation = new google.maps.LatLng(initiative.location.lat, initiative.location.lng);
-				viewOnly = true;
-				initiative.location = undefined;
-			} else if (selectedLocation !== undefined) { // Viewing selected location in edit mode.
-				tempLocation = selectedLocation;
-			}
-
-			if (tempLocation !== undefined) {
+		getLocationFromAddress(address, function (results, status) {
+			if (results !== undefined && results !== null && results.length > 0) {
+				tempLocation = results[0].geometry.location;
 				initMap(tempLocation);
 			} else {
 				initMap(centerOfFinland);
 			}
+		});
+		initListeners()
+	};
 
+	initWithCoordinates = function(coordinates) {
+
+		tempLocation = new google.maps.LatLng(coordinates.lat, coordinates.lng)
+		if (tempLocation !== undefined) {
+			initMap(tempLocation);
+		} else {
+			initMap(centerOfFinland);
 		}
+		initListeners();
+	};
 
+	initListeners = function() {
 
 		$("#user-entered-address").live('input propertychange', function(){
 			getLocationFromAddress($("#user-entered-address").val(), function (results, status) {
@@ -2137,8 +2141,20 @@ var getMapContainer = function() {
 		}
 	};
 
+	setViewOnly = function(b) {
+		viewOnly = b;
+	};
+
+	getSelectedLocation = function() {
+		return selectedLocation;
+	};
+
 	return {
-		init: init
+		initWithSelectedLocation: initWithSelectedLocation,
+		initWithAddress: initWithAddress,
+		initWithCoordinates: initWithCoordinates,
+		setViewOnly: setViewOnly,
+		getSelectedLocation: getSelectedLocation
 	};
 
 };
@@ -2149,11 +2165,12 @@ var renderMap,
 	locationDescription = $("#locationDescription"),
 	selectLocation = $("#select-location"),
 	openRemoveLocation = $("#open-remove-location"),
-	mapContainer;
+	mapContainer,
+	mapViewContainer;
 
 $("#openMap").click(function(){
 	mapContainer = getMapContainer();
-	renderMap = function() {mapContainer.init(modalData.initialLocation);};
+	renderMap = function() {mapContainer.initWithAddress(modalData.initialLocation);};
 	generateModal(modalData.mapContainer(), 'full');
 });
 
@@ -2161,7 +2178,12 @@ $("#show-selected-location").click(function() {
 	if (mapContainer === undefined) {
 		mapContainer = getMapContainer();
 	}
-	renderMap =  mapContainer.init;
+	if (mapContainer.getSelectedLocation() !== null) {
+		renderMap = mapContainer.initWithSelectedLocation;
+	} else if (modalData.selectedLocation !== undefined) {
+		renderMap = function() {mapContainer.initWithCoordinates(modalData.selectedLocation);};
+	}
+
 	generateModal(modalData.mapContainer(), 'full');
 });
 
@@ -2181,9 +2203,11 @@ $("#map-selection").removeClass("no-visible");
 
 // Public view
 if (typeof initiative !== 'undefined' && typeof initiative.location !== 'undefined' ) {
-	mapContainer = getMapContainer();
-	mapContainer.init();
-}
+	mapViewContainer = getMapContainer();
+	mapViewContainer.setViewOnly(true);
+	mapViewContainer.initWithCoordinates(initiative.location);
+};
+
 
 $(window).on('resize', function () {
   if (fireParticipantGraph !== undefined) {

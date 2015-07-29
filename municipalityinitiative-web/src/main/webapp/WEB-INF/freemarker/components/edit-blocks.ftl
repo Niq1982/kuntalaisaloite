@@ -307,7 +307,7 @@
  *
  * @param locked locks some field from editing
  -->
-<#macro updateInitiativeBlock path>
+<#macro updateInitiativeBlock path locationSelected=false>
     <div class="input-block cf">
         <div class="input-block-extra">
             <div class="input-block-extra-content">
@@ -323,7 +323,7 @@
         </div>
 
         <div class="input-block-content">
-            <@mapSelection path false/>
+            <@mapSelection path locationSelected/>
         </div>
         
         <#if initiative.collaborative && initiative.state == InitiativeState.PUBLISHED>
