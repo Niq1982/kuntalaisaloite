@@ -5,6 +5,7 @@ import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Location;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.exceptions.InvalidLocationException;
+import fi.om.municipalityinitiative.validation.InitiativeWithLocationInformation;
 import fi.om.municipalityinitiative.validation.NormalInitiative;
 import fi.om.municipalityinitiative.validation.ValidLocation;
 import fi.om.municipalityinitiative.validation.VerifiedInitiative;
@@ -15,7 +16,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 @ValidLocation(groups = {VerifiedInitiative.class, NormalInitiative.class})
-public class InitiativeDraftUIEditDto {
+public class InitiativeDraftUIEditDto implements InitiativeWithLocationInformation {
 
     // Not editable after set
     private Municipality municipality;

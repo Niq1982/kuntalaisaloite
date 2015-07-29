@@ -2,19 +2,18 @@ package fi.om.municipalityinitiative.validation;
 
 
 import com.google.common.base.Strings;
-import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class LocationValidator implements ConstraintValidator<ValidLocation, InitiativeDraftUIEditDto>{
+public class LocationValidator implements ConstraintValidator<ValidLocation, InitiativeWithLocationInformation>{
 
     @Override
     public void initialize(ValidLocation constraintAnnotation) {
     }
 
     @Override
-    public boolean isValid(InitiativeDraftUIEditDto value, ConstraintValidatorContext context) {
+    public boolean isValid(InitiativeWithLocationInformation value, ConstraintValidatorContext context) {
         if (value.getLocationLat() == null && value.getLocationLng() == null && Strings.isNullOrEmpty(value.getLocationDescription())) {
             return true;
         }
