@@ -101,7 +101,7 @@
 
         <p><a href="#" class="js-reset-iframe"><@u.message "graph-iframeGenerator.reset" /></a></p>
 
-        <div id="iframe-container"></div>
+        <div id="iframe-container" class="graph-iframe"></div>
 
         <script type="text/javascript">
         	(function(window){
