@@ -88,7 +88,7 @@
 -->
 <@u.modalTemplate />
 <@u.jsMessageTemplate />
-
+<@u.jsGoogleMapsLib />
 <script type="text/javascript">
     var modalData = {};
 

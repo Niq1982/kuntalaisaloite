@@ -512,6 +512,10 @@
  *
 -->
 <#macro jsGoogleMapsLib>
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCO4u7Qvfrk_dshxosJwCqlK5nQY_gHE98"></script>
+    <script type="text/javascript">
+        if (typeof google === 'undefined') {
+            document.write('<script  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCO4u7Qvfrk_dshxosJwCqlK5nQY_gHE98"></'+'script>');
+        }
+    </script>
 </#macro>
 </#escape>

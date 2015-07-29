@@ -1917,7 +1917,8 @@ if (window.hasIGraphFrame) {
  *
  */
 var getMapContainer = function() {
-	var marker, tempLocation, geocoder, map, searchresults,
+	var marker, tempLocation, map, searchresults,
+		geocoder= new google.maps.Geocoder(),
 		selectedLocation = null,
 		viewOnly = false,
 		centerOfFinland = {"lat": 64.9146659, "lng": 26.0672554},
@@ -1954,7 +1955,6 @@ var getMapContainer = function() {
 	};
 
 	initWithAddress = function(address) {
-		geocoder = new google.maps.Geocoder();
 
 		getLocationFromAddress(address, function (results, status) {
 			if (results !== undefined && results !== null && results.length > 0) {
