@@ -1746,7 +1746,7 @@ if (window.hasIGraphFrame) {
 						if (callback) {
 							callback(null);
 						}
-						myConsole.log('Error loading data: ' + e.status + ' - ' + e.statusText);
+						//myConsole.log('Error loading data: ' + e.status + ' - ' + e.statusText);
 					});
 				} else {
 					if (callback) {
