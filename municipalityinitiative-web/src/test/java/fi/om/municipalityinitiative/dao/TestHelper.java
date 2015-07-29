@@ -55,6 +55,9 @@ public class TestHelper {
     public static final DateTime DEFAULT_STATE_TIME = DEFAULT_CREATE_TIME;
     public static final String DEFAULT_SENT_COMMENT = "some default sent comment";
     public static final Integer DEFAULT_EXTERNAL_PARTICIPANT_COUNT = 0;
+    public static final String LOCATION_DESCRIPTION = "sijainnin kuvaus";
+    public static final double LOCATION_LNG = 23.456789;
+    public static final double LOCATION_LAT = 23.455678;
 
     public static LoginUserHolder authorLoginUserHolder;
     public static LoginUserHolder unknownLoginUserHolder = new LoginUserHolder(User.anonym());
@@ -150,6 +153,16 @@ public class TestHelper {
         return createDefaultInitiative(new InitiativeDraft(municipalityId)
                 .withState(InitiativeState.ACCEPTED)
                 .withType(InitiativeType.COLLABORATIVE)
+                .applyAuthor().toInitiativeDraft());
+    }
+    @Transactional
+    public Long createCollaborativeAcceptedWithLocationInformation(Long municipalityId) {
+        return createDefaultInitiative(new InitiativeDraft(municipalityId)
+                .withState(InitiativeState.ACCEPTED)
+                .withType(InitiativeType.COLLABORATIVE)
+                .withLocationLat(LOCATION_LAT)
+                .withLocationLng(LOCATION_LNG)
+                .withLocationDescription(LOCATION_DESCRIPTION)
                 .applyAuthor().toInitiativeDraft());
     }
 

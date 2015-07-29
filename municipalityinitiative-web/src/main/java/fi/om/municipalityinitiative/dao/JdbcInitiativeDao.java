@@ -542,6 +542,17 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
+    public void updateInitiativeLocation(Long initiativeId, Double locationLat, Double locationLng, String locationDescription) {
+
+        assertSingleAffection(queryFactory.update(municipalityInitiative)
+                .set(municipalityInitiative.locationLat, locationLat)
+                .set(municipalityInitiative.locationLng, locationLng)
+                .set(municipalityInitiative.locationDescription, locationDescription)
+                .where(municipalityInitiative.id.eq(initiativeId))
+                .execute());
+    }
+
+    @Override
     public Long prepareVerifiedInitiative(Long municipalityId, InitiativeType initiativeType) {
         return queryFactory.insert(municipalityInitiative)
                 .set(municipalityInitiative.municipalityId, municipalityId)

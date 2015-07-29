@@ -70,20 +70,6 @@
     </form>
 
 
-<#assign mapContainer>
-    <@compress single_line=true>
-        <p><@u.message key="map.searchAddress"/></p>
-        <input type="text" id="user-entered-address"></input>
-        <div id = "result-list"></div>
-
-        <@e.mapcontainer />
-
-        <div class="input-block-content">
-            <span class="small-button close" id="save-and-close">Tallenna</span>
-            <span class="close push blue"><@u.message "action.cancel" /></span>
-        </div>
-    </@compress>
-</#assign>
 
 
 <#--
@@ -114,8 +100,8 @@
 
     modalData.mapContainer = function() {
         return [{
-            title:      'Valitse sijainti kartalta',
-            content:    '<#noescape>${mapContainer?replace("'","&#39;")}</#noescape>'
+            title:      '<@u.message "map.mapModalTitle" />',
+            content:    '<#noescape>${edit.mapContainer?replace("'","&#39;")}</#noescape>'
         }]
     };
 

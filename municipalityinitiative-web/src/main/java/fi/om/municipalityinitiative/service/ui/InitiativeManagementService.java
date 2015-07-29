@@ -113,6 +113,11 @@ public class InitiativeManagementService {
         updateDto.setContactInfo(contactInfo);
         updateDto.setExtraInfo(initiative.getExtraInfo());
         updateDto.setExternalParticipantCount(initiative.getExternalParticipantCount());
+        if (initiative.getLocation().isPresent() && initiative.getLocationDescription().isPresent()) {
+            updateDto.setLocationLat(initiative.getLocation().getValue().getLat());
+            updateDto.setLocationLng(initiative.getLocation().getValue().getLng());
+            updateDto.setLocationDescription(initiative.getLocationDescription().getValue());
+        }
 
         return updateDto;
     }
@@ -147,6 +152,7 @@ public class InitiativeManagementService {
         assertAllowance("Update initiative", ManagementSettings.of(initiative).isAllowUpdate());
 
         initiativeDao.updateExtraInfo(initiativeId, updateDto.getExtraInfo(), updateDto.getExternalParticipantCount());
+        initiativeDao.updateInitiativeLocation(initiativeId, updateDto.getLocationLat(), updateDto.getLocationLng(), updateDto.getLocationDescription());
         if (initiative.getType().isNotVerifiable()) {
             authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId(), updateDto.getContactInfo());
             initiativeDao.denormalizeParticipantCountForNormalInitiative(initiativeId);

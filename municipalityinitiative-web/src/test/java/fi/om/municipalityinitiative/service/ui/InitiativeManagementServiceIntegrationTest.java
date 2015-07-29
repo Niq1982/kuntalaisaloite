@@ -105,7 +105,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     @Test
     public void get_initiative_for_update_sets_all_required_information() {
-        Long initiativeId = testHelper.createCollaborativeReview(testMunicipality.getId());
+        Long initiativeId = testHelper.createCollaborativeAcceptedWithLocationInformation(testMunicipality.getId());
         InitiativeUIUpdateDto initiativeForUpdate = service.getInitiativeForUpdate(initiativeId, TestHelper.authorLoginUserHolder);
         ReflectionTestUtils.assertNoNullFields(initiativeForUpdate);
     }

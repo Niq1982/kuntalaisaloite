@@ -1,6 +1,7 @@
 <#import "/spring.ftl" as spring />
 <#import "utils.ftl" as u />
 <#import "forms.ftl" as f />
+<#import "elements.ftl" as e />
 
 <#escape x as x?html> 
 
@@ -283,26 +284,7 @@
         </div>
 
         <div class="input-block-content">
-
-            <div id = "map-selection" class="no-visible">
-                <div id="select-location" <#if locationSelected> class="no-visible" </#if> >
-                    <p> Lisää aloitteellesi tarkempi sijainti <span id="openMap" class="blue">tästä</span></p>
-                </div>
-
-                <div id="open-remove-location" <#if !locationSelected> class="no-visible" </#if> >
-                    <p class="map-marker"><@u.message key="map.locationAttached" />
-                        <span id="show-selected-location" class="blue"><@u.message key="map.showLocation" /></span>
-                        <span id="remove-selected-location" class="blue"><@u.message key="map.removeLocation" /></span>
-                    </p>
-                    <@f.textarea path=path+".locationDescription" required="required" optional=false key="updateData.locationDescription"/>
-                </div>
-            </div>
-
-            <noscript><@u.message key="map.javaScriptSupport" /></noscript>
-
-            <@spring.formHiddenInput path+".locationLat" />
-            <@spring.formHiddenInput path+".locationLng" />
-
+            <@mapSelection path locationSelected/>
         </div>
 
         <#--<@formLabel path=path+".location" key="initiative.location">
@@ -338,6 +320,10 @@
 
         <div class="input-block-content">
             <@f.textarea path=path+".extraInfo" required="" optional=true cssClass="textarea" key="initiative.extraInfo" maxLength=InitiativeConstants.INITIATIVE_EXTRA_INFO_MAX?string("#") />
+        </div>
+
+        <div class="input-block-content">
+            <@mapSelection path false/>
         </div>
         
         <#if initiative.collaborative && initiative.state == InitiativeState.PUBLISHED>
@@ -454,6 +440,59 @@
             <@f.verifiedContactInfo path=path+".contactInfo" />
         </div>
     </div>
+</#macro>
+
+<#--
+  * mapContainer
+  *
+  * Modal for selecting location from map.
+  * Requires Javascript.
+  *
+-->
+<#assign mapContainer>
+    <@compress single_line=true>
+        <p><@u.message key="map.searchAddress"/></p>
+        <input type="text" id="user-entered-address"></input>
+        <div id = "result-list"></div>
+
+        <div class="map-container initiative-content-row last">
+            <div id="map-canvas"></div>
+        </div>
+
+        <div class="input-block-content">
+            <span class="small-button close" id="save-and-close"><@u.message "map.save" /></span>
+            <span class="close push blue"><@u.message "action.cancel" /></span>
+        </div>
+    </@compress>
+</#assign>
+
+<#--
+ * mapSelection
+ *
+ * Open modal for selecting and editing location on map.
+ * Requires Javascript.
+ *
+ * @param location has already been selected
+-->
+<#macro mapSelection path locationSelected=false>
+    <div id = "map-selection" class="no-visible">
+        <div id="select-location" <#if locationSelected> class="no-visible" </#if> >
+            <p> <@u.message "map.selectLocation" /> <span id="openMap" class="blue"><@u.message "map.here" /></span></p>
+        </div>
+
+        <div id="open-remove-location" <#if !locationSelected> class="no-visible" </#if> >
+            <p class="map-marker"><@u.message key="map.locationAttached" />
+                <span id="show-selected-location" class="blue"><@u.message key="map.showLocation" /></span>
+                <span id="remove-selected-location" class="blue"><@u.message key="map.removeLocation" /></span>
+            </p>
+            <@f.textarea path=path+".locationDescription" required="required" optional=false key="updateData.locationDescription"/>
+        </div>
+    </div>
+
+    <noscript><@u.message key="map.javaScriptSupport" /></noscript>
+
+    <@spring.formHiddenInput path+".locationLat" />
+    <@spring.formHiddenInput path+".locationLng" />
 </#macro>
 
 <#--

@@ -91,6 +91,13 @@
 <script type="text/javascript">
     var modalData = {};
 
+    modalData.mapContainer = function() {
+        return [{
+            title:      '<@u.message "map.mapModalTitle" />',
+            content:    '<#noescape>${edit.mapContainer?replace("'","&#39;")}</#noescape>'
+        }]
+    };
+
     <#-- Modal: Form modified notification. Uses dirtyforms jQuery-plugin. -->
     modalData.formModifiedNotification = function() {
         return [{

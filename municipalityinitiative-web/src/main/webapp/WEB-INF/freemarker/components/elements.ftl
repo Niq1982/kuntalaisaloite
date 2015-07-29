@@ -74,7 +74,7 @@
     </#if>
 
     <#if initiative.location?? && initiative.location.isPresent()>
-        <@e.map initiative />
+        <@map initiative />
     </#if>
 
     <#if (initiative.youthInitiativeId.present)>
@@ -93,19 +93,15 @@
         <#if initiative.locationDescription.isPresent()>
             <@u.text initiative.locationDescription.value />
         </#if>
-        <@mapcontainer />
+        <div class="map-container initiative-content-row last">
+            <div id="map-canvas-view">
+                <noscript><@u.message key="map.javaScriptSupport" /></noscript>
+            </div>
+        </div>
         <script type="text/javascript">
             var initiative = {location: {"lat": "${initiative.location.value.lat?c}", "lng": "${initiative.location.value.lng?c}"}};
         </script>
 
-</#macro>
-
-<#macro mapcontainer>
-    <div class="map-container initiative-content-row last">
-        <div id="map-canvas">
-            <noscript><@u.message key="map.javaScriptSupport" /></noscript>
-        </div>
-    </div>
 </#macro>
 
 <#-- 
