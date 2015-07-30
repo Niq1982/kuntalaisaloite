@@ -1933,12 +1933,15 @@ var getMapContainer = function() {
 		initWithSelectedLocation,
 		initWithAddress,
 		initWithCoordinates,
+		initMap,
+		initListeners,
 		getLocationFromAddress,
 		filterOutResultsByType,
 		updateResultsList,
-		initMap,
-		initListeners,
 		placeMarker,
+		removeCurrentSelectionInResultList,
+		highlightCurrentSelectionInResultList,
+		indexIsInSearchResultListRange,
 		selectListElementWithArrow,
 		selectResultFromList,
 		setSelectedLocationOnMap,
@@ -1969,27 +1972,23 @@ var getMapContainer = function() {
 
 	initWithCoordinates = function(coordinates) {
 
-		tempLocation = new google.maps.LatLng(coordinates.lat, coordinates.lng)
-		if (tempLocation !== undefined) {
-			initMap(tempLocation);
-		} else {
-			initMap(centerOfFinland);
-		}
+		tempLocation = new google.maps.LatLng(coordinates.lat, coordinates.lng);
+		initMap(tempLocation);
 		initListeners();
 	};
 
 	initListeners = function() {
 
-		$("#user-entered-address").live('input propertychange', function(){
-			getLocationFromAddress($("#user-entered-address").val(), function (results, status) {
-				if (results !== undefined && results !== null && results.length > 0) {
-					updateResultsList(results);
-				}
-			});
-		});
+		$("#user-entered-address").live('input propertychange keydown', function(event){
 
-		$("#user-entered-address").live('keydown', function(event){
-
+			var runSearch = function() {
+				console.log("run search");
+				getLocationFromAddress($("#user-entered-address").val(), function (results, status) {
+					if (results !== undefined && results !== null && results.length > 0) {
+						updateResultsList(results);
+					}
+				});
+			};
 			switch (event.which) {
 
 				case ARROWDOWN:
@@ -1999,17 +1998,24 @@ var getMapContainer = function() {
 					selectListElementWithArrow(UP);
 					break;
 				case ENTER:
-					setSelectedLocationOnMap();
+					if (indexIsInSearchResultListRange(selectedResultIndex)) {
+						setSelectedLocationOnMap();
+					} else {
+						runSearch();
+					}
 					break;
-			}
+				default:
+					runSearch();
 
+			}
 		});
 
 
-		$("#result-list ul li").live('click', function(event) {
-			var $this = event.target;
-			if ($this.id !== undefined) {
-				selectResultFromList($this.id);
+
+		$("#result-list").find("li").live('click', function(event) {
+			var index = $(this).attr("item-index");
+			if (index !== undefined) {
+				selectResultFromList(index);
 			}
 		});
 
@@ -2027,56 +2033,13 @@ var getMapContainer = function() {
 			emptyResultList();
 		});
 
-		$("#result-list ul li, #user-entered-address").live('click', function() {
+		$("#result-list").find("li").live('click', function() {
 			return false;
 		});
 
-	};
-
-	getLocationFromAddress = function(address, callback) {
-		var geocoderequst = {"address": address};
-
-		if (map !== undefined) {
-			geocoderequst.bounds = map.getBounds();
-		}
-		geocoderequst.componentRestrictions = {'country': 'FI'};
-
-		geocoder.geocode(geocoderequst, callback);
-	};
-
-	filterOutResultsByType = function(results, type) {
-		function doesNotContainType(type) {
-			return function(value) {return value.types.indexOf(type) === -1;};
-		}
-		return results.filter(doesNotContainType(type));
-	};
-
-	updateResultsList = function(rawresults) {
-		var results = filterOutResultsByType(rawresults, 'country');
-		if (results !== undefined && results !== null && results.length > 0) {
-			modifyResultList(results);
-		}
-
-	};
-	emptyResultList = function() {
-		modifyResultList(new Array());
-	};
-
-	modifyResultList = 	function(results) {
-		searchresults = results;
-		var $ul = $("<ul>");
-		$("#result-list").empty();
-
-		if (searchresults.length > 0) {
-			$("#result-list").append($ul);
-
-			for (var i = 0; i < searchresults.length; i++) {
-				var $li = $('<li>' + searchresults[i].formatted_address + '</li>');
-				$li.attr("id", i);
-				$ul.append($li);
-				console.log(searchresults[i].formatted_address);
-			}
-		}
+		$("#user-entered-address").live('click', function() {
+			return false;
+		});
 
 	};
 
@@ -2113,21 +2076,85 @@ var getMapContainer = function() {
 		map.panTo(position);
 	};
 
+	getLocationFromAddress = function(address, callback) {
+		var geocoderequst = {"address": address};
+
+		if (map !== undefined) {
+			geocoderequst.bounds = map.getBounds();
+		}
+		geocoderequst.componentRestrictions = {'country': 'FI'};
+
+		geocoder.geocode(geocoderequst, callback);
+	};
+
+	filterOutResultsByType = function(results, type) {
+		function doesNotContainType(type) {
+			return function(value) {return value.types.indexOf(type) === -1;};
+		}
+		return results.filter(doesNotContainType(type));
+	};
+
+	updateResultsList = function(rawresults) {
+		var results = filterOutResultsByType(rawresults, 'country');
+		if (results !== undefined && results !== null && results.length > 0) {
+			modifyResultList(results);
+		}
+
+	};
+	emptyResultList = function() {
+		modifyResultList([]);
+	};
+
+	modifyResultList = 	function(results) {
+		searchresults = results;
+		selectedResultIndex = -1;
+
+		$("#result-list").empty();
+
+		if (searchresults.length > 0) {
+			var $ul = $("<ul>");
+			$("#result-list").append($ul);
+
+			for (var i = 0; i < searchresults.length; i++) {
+				var $li = $('<li>' + searchresults[i].formatted_address + '</li>');
+				$li.attr("item-index", i);
+				$ul.append($li);
+				console.log(searchresults[i].formatted_address);
+			}
+		}
+
+	};
+
+	removeCurrentSelectionInResultList = function() {
+		$(".selected").removeClass("selected");
+	};
+
+	highlightCurrentSelectionInResultList = function () {
+		//JQuery nth is 1 indexed
+		$("#result-list").find("ul li:nth-child("+ (selectedResultIndex + 1) +")").addClass("selected");
+	};
+
+	indexIsInSearchResultListRange = function (index) {
+		return index >= 0 && index < searchresults.length;
+	};
+
 	selectListElementWithArrow = function(offset) {
 		if (searchresults !== undefined || searchresults !== null || searhresults.length > 0) {
-			if (selectedResultIndex > -1 ) {
-				$(".selected").removeClass("selected");
+
+			if (indexIsInSearchResultListRange(selectedResultIndex)) {
+				removeCurrentSelectionInResultList();
 			}
-			if ((selectedResultIndex + offset) < 0) {
+
+			if (indexIsInSearchResultListRange(selectedResultIndex + offset)) {
+				selectedResultIndex += offset;
+			} else if ((selectedResultIndex + offset) < 0) {
 				selectedResultIndex = -1;
 			} else if ((selectedResultIndex + offset) >= searchresults.length) {
 				selectedResultIndex = searchresults.length - 1;
-			} else {
-				selectedResultIndex = (selectedResultIndex + offset);
 			}
-			if (selectedResultIndex > -1){
-				//JQuery nth is 1 indexed
-				$("#result-list ul li:nth-child("+ (selectedResultIndex + 1) +")").addClass("selected");
+
+			if (indexIsInSearchResultListRange(selectedResultIndex)){
+				highlightCurrentSelectionInResultList();
 			}
 		}
 	};
