@@ -461,7 +461,7 @@
 
         <div class="input-block-content">
             <span class="small-button close" id="save-and-close"><@u.message "map.save" /></span>
-            <span class="close push blue"><@u.message "action.cancel" /></span>
+            <a class="close push"><@u.message "action.cancel" /></a>
         </div>
     </@compress>
 </#assign>
@@ -477,14 +477,17 @@
 <#macro mapSelection path locationSelected=false>
     <div id = "map-selection" class="no-visible">
         <div id="select-location" <#if locationSelected> class="no-visible" </#if> >
-            <p> <@u.message "map.selectLocation" /> <span id="openMap" class="blue"><@u.message "map.here" /></span></p>
+            <p> <@u.message "map.selectLocation" /> <a id="openMap"><@u.message "map.here" /></a></p>
         </div>
 
         <div id="open-remove-location" <#if !locationSelected> class="no-visible" </#if> >
-            <p class="map-marker"><@u.message key="map.locationAttached" />
-                <span id="show-selected-location" class="blue"><@u.message key="map.showLocation" /></span>
-                <span id="remove-selected-location" class="blue"><@u.message key="map.removeLocation" /></span>
+            <p id="show-selected-location" class="map-marker">
+                <a><@u.message key="map.locationAttached" /></a>
+                <a class="trigger-tooltip">
+                    <span id="remove-selected-location" class="icon-small icon-16 cancel"></span>
+                </a>
             </p>
+
             <@f.textarea path=path+".locationDescription" required="required" optional=false key="updateData.locationDescription"/>
         </div>
     </div>
