@@ -133,6 +133,10 @@
         </div>
     </#if>
 
+    <#if initiative.location?? && initiative.location.present>
+        <@map initiative />
+    </#if>
+
     <#if (initiative.youthInitiativeId.present)>
         <h2><@u.message "initiative.youthInitiative.title" /></h2>
             <div class="initiative-content-row last">

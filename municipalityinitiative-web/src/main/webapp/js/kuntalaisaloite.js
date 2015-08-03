@@ -1427,7 +1427,7 @@ $.DirtyForms.dialog = {
 
 (function() {
 	var ignoreHelper = {
-		ignoreAnchorSelector: 'a[rel="external"], .modal a, a.openMap'
+		ignoreAnchorSelector: 'a[rel="external"], .modal a, a#openMap'
 	};
 
 	$.DirtyForms.helpers.push(ignoreHelper);
@@ -1982,7 +1982,6 @@ var getMapContainer = function() {
 		$("#user-entered-address").live('input propertychange keydown', function(event){
 
 			var runSearch = function() {
-				console.log("run search");
 				getLocationFromAddress($("#user-entered-address").val(), function (results, status) {
 					if (results !== undefined && results !== null && results.length > 0) {
 						updateResultsList(results);
@@ -2233,7 +2232,7 @@ if (typeof initiative !== 'undefined' && typeof initiative.location !== 'undefin
 	mapViewContainer = getMapContainer();
 	mapViewContainer.setViewOnly(true);
 	mapViewContainer.initWithCoordinates(initiative.location);
-};
+}
 
 
 $(window).on('resize', function () {
