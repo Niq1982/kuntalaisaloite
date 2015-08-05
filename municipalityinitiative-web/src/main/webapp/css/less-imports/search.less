@@ -16,7 +16,15 @@ h3 {
 .search-options {
     margin-bottom:2em;
 
+    @media @mobile, @tablet  {
+        padding: 20px 35px 30px 20px;
+    }
+    @media  @desktop, @desktop-xl {
+        padding: 20px  35px 30px 55px;
+    }
     .search-form {
+        float: left;
+
         button {
             margin-left:32px;
             vertical-align:bottom;
@@ -150,8 +158,9 @@ h3 {
 //
 // Styleguide 9.1
 .search-parameters-container {
-    margin-left:100px;
+
     margin-bottom:1em;
+    //margin-left:100px;
 
     /*
     .search-parameters {
@@ -179,11 +188,30 @@ h3 {
     .gradient (#fff, #f5f5f5);
 
     a {
-        display:inline-block;
-        padding:5px 20px;
-        //line-height:35px;
-        color:#444;
-        text-align:center;
+        @media @mobile, @tablet  {
+            display:block;
+            padding:5px 20px;
+            //line-height:35px;
+            color:#444;
+            text-align:center;
+            border-bottom:1px solid @borderGray;
+        }
+        @media  @desktop {
+            display:inline-block;
+            padding:5px 20px;
+            //line-height:35px;
+            color:#444;
+            text-align:center;
+        }
+        @media @desktop-xl{
+            display:inline-block;
+            padding:5px 20px;
+            //line-height:35px;
+            color:#444;
+            text-align:center;
+        }
+
+
 
         /*&:first-child {
             .rounded-corners-top-left (@cornerRadiusXtraSmall);

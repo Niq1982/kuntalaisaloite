@@ -8,22 +8,55 @@
 
     .header-content {
         position: relative;
-        height: 130px;
-        width: 960px;
+
+
         margin: 0 auto;
 
-        .header-additional-content {
-            position: absolute;
-            right: 10px;
-            top: 0;
-            text-align: right;
-            max-width: 450px;
+        @media @mobile, @tablet  {
+            width: 90%;
+            height: 200px;
+        }
 
-            .additional-tools {
-                font-size: 90%;
-                margin: 0.5em 0;
-                min-width: 450px; // Fixes cutting of the font size buttons in Chrome/Safari
+        @media @mobile, @tablet{
+            .header-additional-content {
+                position: absolute;
+                left: 0px;
+                top: 100px;
+                max-width: 450px;
+
+                .additional-tools {
+                    font-size: 90%;
+                    margin: 0.5em 0;
+                    min-width: 300px; // Fixes cutting of the font size buttons in Chrome/Safari
+                }
             }
+        }
+
+        @media @desktop{
+            width: 75%;
+            height: 130px;
+        }
+
+        @media @desktop-xl{
+            width: 65%;
+            height: 130px;
+        }
+
+        @media @desktop, @desktop-xl {
+            .header-additional-content {
+                position: absolute;
+                right: 10px;
+                top: 0;
+                text-align: right;
+                max-width: 450px;
+
+                .additional-tools {
+                    font-size: 90%;
+                    margin: 0.5em 0;
+                    min-width: 450px; // Fixes cutting of the font size buttons in Chrome/Safari
+                }
+            }
+
         }
 
     }

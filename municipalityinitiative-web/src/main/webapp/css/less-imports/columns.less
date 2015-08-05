@@ -4,7 +4,16 @@
 }
 
 .container {
-    width: 960px;
+    @media @mobile, @tablet  {
+        width: 90%;
+    }
+    @media  @desktop{
+        width: 75%;
+    }
+    @media @desktop-xl{
+        width: 65%;
+    }
+
     margin: 0 auto;
     clear: both;
 }
