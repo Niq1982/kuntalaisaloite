@@ -171,7 +171,7 @@ $(document).ready(function () {
 		isIE8 =			$('html').hasClass('ie8'),	// Boolean for IE8. Used browser detection instead of jQuery.support().
 		locale =		Init.getLocale(),			// Current locale: fi, sv
 		hideClass =		'js-hide',					// Set general hidden class
-		fireParticipantGraph, headerNav;
+		fireParticipantGraph, headerNav, mainNav;
 
 /**
  * Common helpers
@@ -239,6 +239,9 @@ $(document).ready(function () {
     headerNav.headerNav({
       btnTitle: locale === 'sv' ? 'Visa mer' : 'Näytä lisää'
     });
+
+	mainNav = $('#main-navigation');
+	mainNav.mainNav({});
 
 	/**
 	 *	Prevent double clicks
@@ -1909,6 +1912,10 @@ $(window).on('resize', function () {
 
   if (headerNav !== undefined) {
     headerNav.headerNav('resize');
+  }
+
+  if (mainNav !== undefined) {
+	  mainNav.mainNav('resize');
   }
 }).trigger('resize');
 

@@ -77,20 +77,38 @@ h3 {
         }
     }
 
-    .date {
-        float:left;
-        color: @secondaryTextColor;
+    @media @mobile, @tablet  {
+        .date {
+            color: @secondaryTextColor;
+        }
+        .title {
+            display:block;
+            margin:0 0 0 0;
+        }
+        .info {
+            display:block;
+            font-size:0.9em;
+            margin-left:0px;
+            color: @secondaryTextColor;
+        }
     }
-    .title {
-        display:block;
-        margin:0 15em 0 100px;
+    @media @desktop, @desktop-xl {
+        .date {
+            float:left;
+            color: @secondaryTextColor;
+        }
+        .title {
+            display:block;
+            margin:0 15em 0 100px;
+        }
+        .info {
+            display:block;
+            font-size:0.9em;
+            margin-left:100px;
+            color: @secondaryTextColor;
+        }
     }
-    .info {
-        display:block;
-        font-size:0.9em;
-        margin-left:100px;
-        color: @secondaryTextColor;
-    }
+
     /*.state {
         margin-left:1em;
     }*/
