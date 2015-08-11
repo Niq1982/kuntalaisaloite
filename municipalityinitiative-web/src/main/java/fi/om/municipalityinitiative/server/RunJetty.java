@@ -26,7 +26,10 @@ public class RunJetty {
 
     private static String configurationFile(String fileName) throws FileNotFoundException {
 
-        File userDir = new File(getSystemProperty("user.dir"));
+        System.out.println("path " + getSystemProperty("java.class.path"));
+        System.out.println("parent" + new File(getSystemProperty("java.class.path")).getParentFile());
+
+        File userDir = new File(getSystemProperty("java.class.path")).getParentFile();
         if (userDir == null) {
             throw new InvalidParameterException("Give the whole path to jar-file instead of just: " + getSystemProperty("java.class.path"));
         }
