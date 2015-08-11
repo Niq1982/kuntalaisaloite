@@ -1,5 +1,7 @@
 package fi.om.municipalityinitiative.web.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.AttachmentFile;
 import fi.om.municipalityinitiative.dto.service.Municipality;
@@ -9,10 +11,7 @@ import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.InvalidHomeMunicipalityException;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
-import fi.om.municipalityinitiative.service.AttachmentService;
-import fi.om.municipalityinitiative.service.MunicipalityService;
-import fi.om.municipalityinitiative.service.ParticipantService;
-import fi.om.municipalityinitiative.service.ValidationService;
+import fi.om.municipalityinitiative.service.*;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
 import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
@@ -20,6 +19,7 @@ import fi.om.municipalityinitiative.service.ui.VerifiedInitiativeService;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.validation.NormalInitiative;
+import fi.om.municipalityinitiative.validation.NormalInitiativeVerifiedUser;
 import fi.om.municipalityinitiative.web.RequestMessage;
 import fi.om.municipalityinitiative.web.SearchParameterQueryString;
 import fi.om.municipalityinitiative.web.Urls;
@@ -29,20 +29,19 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import static fi.om.municipalityinitiative.web.Urls.*;
 import static fi.om.municipalityinitiative.web.Views.*;
+import static fi.om.municipalityinitiative.web.WebConstants.JSON;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -73,7 +72,14 @@ public class PublicInitiativeController extends BaseController {
     @Resource
     private AttachmentService attachmentService;
 
+
+    @Resource
+    private SupportCountService supportCountService;
+
     private static final Logger log = LoggerFactory.getLogger(PublicInitiativeController.class);
+
+    private ObjectMapper objectMapper = new ObjectMapper();
+
 
     public PublicInitiativeController(boolean optimizeResources, String resourcesVersion, Maybe<Integer> piwikId) {
         super(optimizeResources, resourcesVersion, piwikId);
@@ -92,7 +98,7 @@ public class PublicInitiativeController extends BaseController {
         return ViewGenerator.searchView(pageInfo,
                 search,
                 queryString,
-                solveMunicipalityFromListById(pageInfo.municipalities, search.getMunicipality()))
+                solveMunicipalityFromListById(pageInfo.municipalities, Maybe.fromNullable(search.getMunicipalities())))
                 .view(model, Urls.get(locale).alt().search() + queryString.get());
     }
 
@@ -105,17 +111,19 @@ public class PublicInitiativeController extends BaseController {
         addPiwicIdIfNotAuthenticated(model, request);
 
         InitiativePageInfo initiativePageView = publicInitiativeService.getInitiativePageDto(initiativeId, loginUserHolder);
-        if (initiativePageView.isCollaborative()) {
+            if (initiativePageView.isCollaborative()) {
 
             return ViewGenerator.collaborativeView(initiativePageView,
                     municipalityService.findAllMunicipalities(locale),
                     new ParticipantUICreateDto(),
-                    new AuthorUIMessage()).view(model, Urls.get(locale).alt().view(initiativeId));
+                    new AuthorUIMessage(),
+                    supportCountService.getSupportVotesPerDateJson(initiativeId)).view(model, Urls.get(locale).alt().view(initiativeId));
         }
         else {
             return ViewGenerator.singleView(initiativePageView).view(model, Urls.get(locale).alt().view(initiativeId));
         }
     }
+
 
     @RequestMapping(value = { PREPARE_FI, PREPARE_SV }, method = GET)
     public String prepareGet(Model model, Locale locale, HttpServletRequest request) {
@@ -189,20 +197,34 @@ public class PublicInitiativeController extends BaseController {
             return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.PARTICIPATE_VERIFIABLE, request);
         }
         else {
-            if (validationService.validationSuccessful(participant, bindingResult, model, NormalInitiative.class)) {
+            if (loginUserHolder.isVerifiedUser()) {
+
+                if (loginUserHolder.getVerifiedUser().getHomeMunicipality().isPresent()) {
+                    participant.setHomeMunicipality(loginUserHolder.getVerifiedUser().getHomeMunicipality().getValue().getId());
+                }
+
+                if ( (validationService.validationSuccessful(participant, bindingResult, model, NormalInitiativeVerifiedUser.class))) {
+                    participantService.createConfirmedParticipant(participant, initiativeId, loginUserHolder);
+                    userService.refreshUserData(request);
+                    return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.PARTICIPATE_VERIFIABLE, request);
+                }
+
+            } else if (validationService.validationSuccessful(participant, bindingResult, model, NormalInitiative.class)) {
                 participantService.createParticipant(participant, initiativeId, locale);
                 Urls urls = Urls.get(locale);
                 return redirectWithMessage(urls.view(initiativeId), RequestMessage.PARTICIPATE, request);
-            } else {
-                return ViewGenerator.collaborativeView(initiativePageInfo,
-                        municipalityService.findAllMunicipalities(locale),
-                        participant,
-                        new AuthorUIMessage()).view(model, Urls.get(locale).alt().view(initiativeId));
             }
+
+            return ViewGenerator.collaborativeView(initiativePageInfo,
+                    municipalityService.findAllMunicipalities(locale),
+                    participant,
+                    new AuthorUIMessage(),
+                    supportCountService.getSupportVotesPerDateJson(initiativeId)).view(model, Urls.get(locale).alt().view(initiativeId));
+
         }
     }
 
-    @RequestMapping(value={ PARITICIPANT_LIST_FI, PARITICIPANT_LIST_SV }, method=GET)
+    @RequestMapping(value={PARTICIPANT_LIST_FI, PARTICIPANT_LIST_SV}, method=GET)
     public String participantList(@PathVariable("id") Long initiativeId, @RequestParam(defaultValue = "0", value = "offset") int offset,
                                   Model model, Locale locale, HttpServletRequest request) {
         Urls urls = Urls.get(locale);
@@ -342,7 +364,8 @@ public class PublicInitiativeController extends BaseController {
             return ViewGenerator.collaborativeView(publicInitiativeService.getInitiativePageInfo(initiativeId),
                     municipalityService.findAllMunicipalities(locale),
                     new ParticipantUICreateDto(),
-                    authorUIMessage).view(model, Urls.get(locale).alt().view(initiativeId));
+                    authorUIMessage,
+                    supportCountService.getSupportVotesPerDateJson(initiativeId)).view(model, Urls.get(locale).alt().view(initiativeId));
         }
     }
 
@@ -380,6 +403,11 @@ public class PublicInitiativeController extends BaseController {
         }
     }
 
+    @RequestMapping(value = SUPPORTS_BY_DATE, method=GET, produces=JSON)
+    public @ResponseBody JsonNode jsonSupportsByDate(@PathVariable Long id) throws IOException {
+        return objectMapper.readTree(supportCountService.getSupportVotesPerDateJson(id));
+    }
+
     private static void attachmentFileResponse(HttpServletResponse response, AttachmentFile file) throws IOException {
         response.setContentType(MediaType.parseMediaType(file.getContentType()).toString());
         response.setContentLength(file.getBytes().length);
@@ -388,11 +416,15 @@ public class PublicInitiativeController extends BaseController {
         response.getOutputStream().write(file.getBytes());
     }
 
-    private static Maybe<Municipality> solveMunicipalityFromListById(List<Municipality> municipalities, Long municipalityId){
-        for (Municipality municipality : municipalities) {
-            if (municipality.getId().equals(municipalityId))
-                return Maybe.of(municipality);
+    private static Maybe<ArrayList<Municipality>> solveMunicipalityFromListById(List<Municipality> municipalities, Maybe<List<Long>> municipalityIds){
+        if (municipalityIds.isNotPresent()) {
+            return Maybe.absent();
         }
-        return Maybe.absent();
+        ArrayList<Municipality> currentMunicipalities =  new ArrayList<Municipality>();
+        for (Municipality municipality : municipalities) {
+            if ((municipalityIds.get().contains(municipality.getId())))
+                currentMunicipalities.add(municipality);
+        }
+        return Maybe.of(currentMunicipalities);
     }
 }

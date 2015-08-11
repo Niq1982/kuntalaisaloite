@@ -7,10 +7,10 @@ var localization,
  * Localization
  * ==============
  * - Returns localized texts for JavaScript-elements.
- * 
+ *
  * */
 localization = {
-	
+
 	chosenNoResults:function(locale){
 		if (locale === 'sv'){
 			return "Inga träffar";
@@ -39,7 +39,7 @@ localization = {
         next: 'SV: Seuraava (Oikea nuoli näppäin)', // title for right button
         image: 'Bild',
         loadError: 'SV: Kuvaa ei voitu ladata.'
-      }; 
+      };
     } else {
       return {
         prev: 'Edellinen (Vasen nuoli näppäin)', // title for left button
@@ -57,7 +57,7 @@ localization = {
  * - Gets modalContent containing all HTML
  * - Uses jsRender to render template into the modal container
  * - Shows modal template with the defined content
- * 
+ *
  * */
 generateModal = function (modalContent, modalType, callback) {
 	$("#modal-container").html($("#modal-template").render(modalContent));
@@ -72,7 +72,7 @@ generateModal = function (modalContent, modalType, callback) {
  *  - HTML content inside the message-container
  *  - type of the message eg. info, success, warning, error
  * - print the message before the defined elem eg. form
- * 
+ *
  * */
 generateJsMessage = function (elem, object) {
 	elem.before($("#jsMessage-template").render(object));
@@ -81,21 +81,21 @@ generateJsMessage = function (elem, object) {
 
 
 /**
- * 
+ *
  * jsMessage-loaders
  * =================
- * 
+ *
  * System messages that are loaded for JS-users.
- * 
+ *
  * Load once on page. Loaded separately also for modals.
- * 
+ *
  * */
 jsMessages = (function(){
 	// Check if user has cookies enabled. Some mobile browsers do not support navigator.cookieEnabled
 	var cookieEnabled = navigator.cookieEnabled ||
 			("cookie" in document && (document.cookie.length > 0 ||
 					(document.cookie = "cookieTest").indexOf.call(document.cookie, "cookieTest") > -1));
-	
+
 	return {
 		Load: function(){
 			if( !cookieEnabled && typeof messageData !== 'undefined' && typeof messageData.warningCookiesDisabled !== 'undefined' ){
@@ -111,16 +111,16 @@ jsMessages.Load();
  * Load chosen
  * ===========
  * Little helper for loading chosen
- * 
+ *
  * - Chosen.js requires that first option is empty. We empty the default value which is for NOSCRIPT-users.
  * - Initialize chosen with localized text
  * - Set option for clearing selection
- * 
+ *
  * */
 jQuery.fn.loadChosen = function(){
 	var self = $(this),
 		allowSingleDeselect = typeof self.attr('data-allow-single-deselect') !== 'undefined' && self.attr('data-allow-single-deselect') !== false;
-	
+
 	self.find('option:first').text('');
 	self.chosen(
 		{
@@ -133,7 +133,7 @@ jQuery.fn.loadChosen = function(){
 /**
  * Disable or enable button
  * ========================
- * 
+ *
  * */
 jQuery.fn.disableButton = function(disable){
 	var btn = $(this);
@@ -142,13 +142,13 @@ jQuery.fn.disableButton = function(disable){
 		btn.attr('disabled','disabled').addClass('disabled');
 	} else {
 		btn.removeAttr('disabled').removeClass('disabled');
-	}	
+	}
 };
 
 /**
  * Common delay
  * ============
- * 
+ *
  * */
 var delay = (function(){
 	var timer = 0;
@@ -158,19 +158,20 @@ var delay = (function(){
 	};
 })();
 
-$(document).ready(function () {	
+$(document).ready(function () {
 	// Define general variables
 	var $body =			$('body'),
 		speedFast =		'200',						// General speeds for animations
-		speedVeryFast =	'10',			 
-		speedSlow =		'slow',		
+		speedVeryFast =	'10',
+		speedSlow =		'slow',
 		speedAutoHide =	'15000',					// Delay for hiding success-messages (if enabled)
 		vpHeight =		$(window).height(),			// Viewport height
 		vpWidth = window.innerWidth,          // Viewport width
 		isIE7 =			$('html').hasClass('ie7'),	// Boolean for IE7. Used browser detection instead of jQuery.support().
 		isIE8 =			$('html').hasClass('ie8'),	// Boolean for IE8. Used browser detection instead of jQuery.support().
 		locale =		Init.getLocale(),			// Current locale: fi, sv
-		hideClass =		'js-hide';					// Set general hidden class
+		hideClass =		'js-hide',					// Set general hidden class
+		fireParticipantGraph, headerNav;
 
 /**
  * Common helpers
@@ -182,26 +183,26 @@ $(document).ready(function () {
 			$('.auto-hide').fadeOut(speedSlow);
 		}, speedAutoHide);
 	}
-	
+
 	// Validate emails
 	var validateEmail = function (email) {
 		var re;
 		re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		return re.test(email);
 	};
-	
+
 	// Switch content between element's HTML and data-alttext -attribute
 	// When elem-argument is used, function switches content inside elem.
 	jQuery.fn.switchContent = function(elem){
 		var switcher, temp;
-		
+
 		if ( elem === null){
 			elem = false;
 		}
-		
+
 		switcher = $(this);
 		temp = switcher.data('alttext');
-		
+
 		if (elem){
 			switcher.data('alttext', elem.html());
 			elem.html(temp);
@@ -210,6 +211,34 @@ $(document).ready(function () {
 			switcher.html(temp);
 		}
 	};
+
+
+	// Fire participantGraph
+	if (window.participantGraph && window.participantGraph.votes.length > 0) {
+   	//if (window.participantGraph) {
+   	  fireParticipantGraph = function(){
+        $('#participantGraph').html('').participantGraph({
+          data: window.participantGraph,
+          color: '#949426',
+          colorHl: '#e2a31c',
+          colorToolTip: '#7a7a20',
+          width : $('#participantGraph').parent().width() || 960,
+          height : 250,
+          leftgutter : 35,
+          rightgutter : 30,
+          bottomgutter : 20,
+          topgutter : 20,
+          cumulative : true,
+          max : 50000
+        });
+   	  };
+    }
+
+    // OM header navigation
+    headerNav = $('#headerNav');
+    headerNav.headerNav({
+      btnTitle: locale === 'sv' ? 'Visa mer' : 'Näytä lisää'
+    });
 
 	/**
 	 *	Prevent double clicks
@@ -220,7 +249,7 @@ $(document).ready(function () {
 	$("button").live('click', function () {
 		var btnClicked, firstBtnInForm, $loader, $submitInfo, $submitWarning;
 		btnClicked = $(this);
-		
+
 		// Disable in some cases
 		if (!btnClicked.hasClass('disable-dbl-click-check')){
 			// We may have more than one submit button. For example in create.
@@ -229,11 +258,11 @@ $(document).ready(function () {
 			$loader = $('<span class="loader" />');
 			$submitInfo = $('<div class="system-msg msg-info">'+localization.getSubmitInfo(locale)+'</div>');
 			$submitWarning = $('<div id="submit-warning" class="system-msg msg-warning">'+localization.getSubmitWarning(locale)+'</div>');
-			
+
 			$("#submit-warning").remove(); // Clear warning
-			
+
 			btnClicked.css('position','relative'); // Set button relative for loader animation position
-			
+
 			// Separate classes for styling and function, so that would not mess up classes and functions.
 			if (!btnClicked.hasClass("clicked")){
 				btnClicked.addClass("disabled clicked");
@@ -242,7 +271,7 @@ $(document).ready(function () {
 					return false;
 				});
 				btnClicked.append($loader);
-				
+
 				if (!btnClicked.hasClass('dbl-click-check-no-msg')){
   				setTimeout(function() {
   					firstBtnInForm.before($submitInfo);
@@ -255,36 +284,37 @@ $(document).ready(function () {
   					firstBtnInForm.before($submitWarning);
   				}, 30000);
 				}
-				
+
 			} else {
 				return false;
 			}
 		}
 	});
-	
+
 	// Console fix for IE
 	if (typeof console === "undefined") {
 		console = { log: function() {} };
 	}
-	
+
 	// Reveal system message
 	$('.reveal-msg').addClass('animate'); // for CSS3 transition used in frontpage logout-message
-	
+
 	// Remove system message
 	$('.close-msg').click(function(){
 		var parent = $(this).closest('.js-close-msg-target').fadeOut('speedSlow', function(){
 			parent.remove();
-		}); 
+		});
 	});
-	
-	
-	
+
+	$('.replace-links').linkReplacer();
+
+
 	// Action for external links
 	$('a.external').click(function(){
 		window.open( $(this).attr('href') );
 		return false;
 	});
-	
+
 	// TOP ribbon
 	/*var $topRibbon = $('.debug-ribbon.top.fixed');
 	$topRibbon
@@ -296,26 +326,26 @@ $(document).ready(function () {
 		$('.js-remove').remove();
 	}
 	jsRemove();
-	
-	
+
+
 /**
  *	Toggle dropdown menus
  *  =====================
  * */
 (function(){
 	var $dToggle, $dMenu, clickedVisible;
-	$dToggle = $('.dropdown-toggle'); 
+	$dToggle = $('.dropdown-toggle');
 	$dMenu = $('.dropdown-menu');
-	
+
 	$dToggle.click(function (e) {
 		if( !$(this).next($dMenu).is(':visible') ){
 			clickedVisible = true;
 		} else {
 			clickedVisible = false;
 		}
-		
+
 		clearMenus();
-		
+
 		if( clickedVisible ){
 			$(this)
 			.addClass('active')
@@ -336,34 +366,34 @@ $(document).ready(function () {
 }());
 
 /**
- * 
+ *
  * Change the font-size
  * ====================
  * - Uses jQuery Cookie: https://github.com/carhartl/jquery-cookie
  * - Toggles a class for body-element (font-size-small, font-size-medium, font-size-large)
  * - Sets and gets fontSizeClass-cookie
- * 
+ *
  * */
 (function() {
 	var $fontSizeToggler, fontSizeClass;
-	
+
 	$fontSizeToggler = $('.font-size-toggle a');
 	fontSizeClass = "font-size-medium";
-	
+
 	// Get cookie value for the fontSize
 	if( $.cookie("fontSizeClass") !== null ){
 		fontSizeClass = $.cookie("fontSizeClass");
 	}
-	
+
 	$('.font-size-toggle .'+fontSizeClass).addClass('active');
 	$body.addClass(fontSizeClass);
-	
+
 	$fontSizeToggler.click(function(){
 		var thisItem = $(this);
-		
+
 		$fontSizeToggler.find('span').removeClass('active');
 		thisItem.find('span').addClass('active');
-		
+
 		if ( thisItem.hasClass('font-size-small-link') ){
 			fontSizeClass= "font-size-small";
 		} else if ( thisItem.hasClass('font-size-large-link') ){
@@ -371,12 +401,12 @@ $(document).ready(function () {
 		} else {
 			fontSizeClass= "font-size-medium";
 		}
-		
+
 		$body.removeClass("font-size-small font-size-medium font-size-large").addClass(fontSizeClass);
-		
+
 		// Set current fontSize as a cookie value.
 		$.cookie("fontSizeClass", fontSizeClass, { expires: 30, path: '/' });
-		
+
 		return false;
 	});
 }());
@@ -385,8 +415,8 @@ $(document).ready(function () {
 /**
 * Choose initiative type
 * ======================
-* 
-* Prepare initiative form functions 
+*
+* Prepare initiative form functions
 *
 */
 var initiativeType = (function() {
@@ -399,7 +429,7 @@ var initiativeType = (function() {
 		emailBlock =	$('#prepare-form-email');
 		vetumaBlock =	$('#prepare-form-vetuma');
 		mask =			$('<div class="disable-mask" />'),
-	
+
 	typeNormalSelected = function(){
 		return $('input[value="UNDEFINED"]').is(':checked');
 	},
@@ -482,7 +512,7 @@ var initiativeType = (function() {
 			emailBlock.hide();
 			vetumaBlock.hide();
 		}
-		
+
 		return false;
 	});
 
@@ -494,12 +524,12 @@ var initiativeType = (function() {
 /**
 * Municipality selection
 * ======================
-* 
+*
 * - Initializes Chosen select
 * - Updates home municipality automatically
 * - Toggles home municipality membership radiobuttons
 * - Prevents or allows proceeding to next step in the form
-*/	
+*/
 var municipalitySelection = (function() {
 	var chznSelect					= $(".chzn-select"),
 		municipalitySelect			= $('#municipality'),					// Matches select-element
@@ -507,10 +537,10 @@ var municipalitySelection = (function() {
 		selectedMunicipalityElem	= $('#selected-municipality'),			// Municipality text in the second step in the form
 		municipalityNotEqual		= $('.municipality-not-equal'),			// Membership selections if municipalitys are not same
 		municipalMembershipRadios	= $("input[name=municipalMembership]"),	// Membership radiobuttons for initiative's municipality
-		
+
 		// If form has validation errors: true / false
 		validationErrors = $('#form-initiative').hasClass('has-errors'),
-	
+
 	// Checks which one of the selects we are using
 	isHomeMunicipality = function(select){
 		if (select.attr('id') === homeMunicipalitySelect.attr('id') ) {
@@ -548,36 +578,41 @@ var municipalitySelection = (function() {
 		}
 	},
 	slideOptions = {
-		duration: speedFast, 
+		duration: speedFast,
 		easing: 'easeOutExpo'
 	},
-	
+
 	// Initialize form state on page load
 	init = function(){
 		// IE7 not supported
 		if(!isIE7){
 			$(".chzn-select").loadChosen();
 		}
-		
+
 		updateSelectedMunicipality();
-		
+
 		if (validationErrors){
 			toggleMembershipRadios(homeMunicipalitySelect);
 		}
-		
+
 		// Does not work properly
 		/*if (!equalMunicipalitys() && !$("input[name=municipalMembership]").is(':checked')){
 			disableSubmit(true);
 		} else {
 			disableSubmit(false);
 		}*/
-		
-		showMembership(!equalMunicipalitys());
+		if (typeof userMunicipalityVerifiedByVetuma !== 'undefined' && typeof userMunicipalityMatchesInitiativeMunicipality !== 'undefined') {
+			userMunicipalityVerifiedByVetuma ? showMembership(!userMunicipalityMatchesInitiativeMunicipality) : showMembership(!equalMunicipalitys());
+
+		}
+		else {
+			showMembership(!equalMunicipalitys());
+		}
 
 		// In case of validation errors
 		initiativeType.disableVerifiable(!equalMunicipalitys());
 	};
-	
+
 	// update text in the municipality data in the form step 2
 	function updateSelectedMunicipality(){
 		var selectedMunicipality = municipalitySelect.find('option:selected').text();
@@ -585,11 +620,11 @@ var municipalitySelection = (function() {
 			selectedMunicipalityElem.text(selectedMunicipality);
 		}
 	};
-	
+
 	// Update home municipality automatically
 	function updateHomeMunicipality(select){
 		var selectedMunicipalityId, selectedMunicipalityName;
-		
+
 		selectedMunicipalityId = select.val();
 		selectedMunicipalityName = select.find('option:selected').text();
 
@@ -602,7 +637,7 @@ var municipalitySelection = (function() {
 			.trigger("liszt:updated"); // updates dynamically the second chosen element
 		}
 	};
-	
+
 	// Disable form
 	function preventContinuing(prevent){
 		var authorEmail			= $('#participantEmail'),
@@ -610,11 +645,11 @@ var municipalitySelection = (function() {
 			toggleDisableInput	= toggleDisable.find('input, select, textarea, button'),
 			mask				= $('.mask'),
 			btnParticipate		= $("button#participate");
-		
+
 		//btnParticipate.disableButton(prevent); // use general form validation
-		
+
 		mask.remove();
-		
+
 		if (prevent) {
 			toggleDisableInput.attr('disabled','disabled');
 			toggleDisable.addClass('disabled');
@@ -624,18 +659,18 @@ var municipalitySelection = (function() {
 			toggleDisable.removeClass('disabled');
 		}
 	};
-	
+
 	function disableSubmit(disable){
 	  //$('button#action-send-confirm, button#participate').disableButton(disable);
 	  $('button#modal-action-accept-invitation').disableButton(disable); // disable accept invitation button
 		$('button#participate').disableButton(disable); // disable participate button
 	}
-	
+
 	// Toggle the radiobutton selection for municipality membership
 	function toggleMembershipRadios(select){
 		var	municipalMembership	= $('#municipalMembership');
-		
-		if( equalMunicipalitys() ){
+
+		if( equalMunicipalitys() || ((typeof userMunicipalityMatchesInitiativeMunicipality !== 'undefined') && userMunicipalityMatchesInitiativeMunicipality)){
 			municipalityNotEqual.stop(false,true).slideUp(slideOptions);
 			preventContinuing(false);
 			disableSubmit(false);
@@ -651,18 +686,18 @@ var municipalitySelection = (function() {
 			showMembership(true);
 		}
 	};
-	
+
 	// Toggle warning for not being a member of the municipality
 	function warningNotMember(show){
 		var warning = $('.is-not-member');
-		
+
 		if (show){
 			warning.fadeIn(speedFast);
 		} else {
 			warning.hide();
 		}
 	}
-	
+
 	// Toggle membership radiobuttons
 	function showMembership(show){
 		var	municipalMembership	= $('#municipalMembership'),
@@ -674,38 +709,38 @@ var municipalitySelection = (function() {
 		} else {
 			municipalMembership.addClass(hideClass);
 			radios.removeAttr('required');
-		}		
+		}
 	}
 
 	// Assure that is member of the chosen municipality
 	jQuery.fn.assureMembership = function(){
 		var cb, btn, isNotMember;
-		
+
 		cb = $(this);
 		//btn = $('#action-send-confirm, button#participate');
 		btn = $('button#participate');
-		isNotMember = function(){			
+		isNotMember = function(){
 			return ( $("input[name=municipalMembership]:checked").val() === "none" );
 		};
-		
+
 		// Use live as this is fired also in the modal
 		cb.live('change',function(){
 			var disable = isNotMember();
-			
+
 			//btn.disableButton( disable ); // use general form validation
 			preventContinuing( disable );
 			warningNotMember( disable );
 		});
 	};
 	municipalMembershipRadios.assureMembership();
-	
+
 	// Listen municipality selects
 	$('.municipality-select').live('change', function() {
 		var thisSelect					= $(this),
 			checkedMembership			= $("input[name=municipalMembership]:checked"),
 			radioMunicipalMembership	= $("input[name=municipalMembership]"),
 			equalMun					= true;
-		
+
 		// Update home municipality automatically
 		if (!isHomeMunicipality(thisSelect)){
 			updateHomeMunicipality(thisSelect);
@@ -715,15 +750,15 @@ var municipalitySelection = (function() {
 		}
 
 		equalMun = equalMunicipalitys();
-		
+
 		initiativeType.disableVerifiable(!equalMun);
- 
+
 		// Clear radiobutton on change.
 		radioMunicipalMembership.removeAttr('checked');
-		
+
 		toggleMembershipRadios(thisSelect);
 		warningNotMember(false);
-		
+
 		// Disable / enable proceeding to the next form steps
 		if ( checkedMembership.length === 0){
 			preventContinuing(!equalMun);
@@ -731,26 +766,26 @@ var municipalitySelection = (function() {
 			municipalMembershipRadios.removeAttr('checked');
 		}
 	});
-	
+
 	// Initialize form state on page load
 	init();
-	
+
 	return {
 		// Return Init-function for the modal
 		init: init,
 		equalMunicipalitys: equalMunicipalitys
     };
-	
+
 }());
 
 
 /**
 * Clear field errors
 * ======================
-* 
+*
 * Remove red-border from fields with error
 * when user is typing
-* 
+*
 */
 
 var clearFieldErrors = (function() {
@@ -758,7 +793,7 @@ var clearFieldErrors = (function() {
 		var input =			$('input[type="text"], textarea'),
 			errorClass =	'error',
 			hasErrors =		($('#errors-summary').length > 0),
-			
+
 		isEmail = function(e){
 			return (e.data('type') === 'email');
 		},
@@ -769,10 +804,10 @@ var clearFieldErrors = (function() {
 				field.addClass(errorClass);
 			}
 		};
-		
+
 		input.keyup(function(e) {
 			var thisField = $(this);
-			
+
 			if ( isEmail(thisField) ) {
 				if (validateEmail(thisField.val())) {
 					toggleError(thisField, true);
@@ -799,7 +834,7 @@ var clearFieldErrors = (function() {
 /**
 * Simple form validation
 * ======================
-* 
+*
 * - Loops through fields that has attribute 'required' in given form
 * - If field is defined, validate it only
 * - If field is invalid, add class 'js-invalid'
@@ -812,7 +847,7 @@ var clearFieldErrors = (function() {
 			required =		form.find('[required]'),
 			classInvalid =	'js-invalid',
 			submitBtn =		form.find('[type="submit"]'),
-		
+
 		updateField = function(elem, valid){
 			if (valid) {
 				elem.removeClass(classInvalid);
@@ -849,7 +884,7 @@ var clearFieldErrors = (function() {
 		// Validate only field if defined otherwise loop through entire form
 		if (field !== null && field !== undefined) {
 			if (field.attr('required')) {
-				
+
 				validateField(field);
 				form = field.closest('.js-validate');
 				submitBtn = form.find('[type="submit"]');
@@ -857,7 +892,7 @@ var clearFieldErrors = (function() {
 		} else {
 			required.each(function(){
 				validateField($(this));
-			});			
+			});
 		}
 
 		if (form.find('.'+classInvalid).length > 0){
@@ -874,7 +909,7 @@ var clearFieldErrors = (function() {
 /**
 * Validate forms
 * ==============
-* 
+*
 * Validate forms that have class 'js-validate'
 *
 * TODO: Does not work correctly with both inline and modal forms
@@ -915,65 +950,67 @@ var clearFieldErrors = (function() {
 			init(form);
 		}
 	};
-	
+
 }());*/
 
 
 /**
 * Toggle form
 * ===========
-* 
-* FIXME: Alternative block does not work
+*
 */
 (function() {
-	var btnHolder	= $('.js-open-block'),
-		btn			= $('.js-btn-open-block'),
+	var btn			= $('.js-btn-open-block'),
 		block		= $('.js-block-container, .js-block-container-alt'),
 		btnClose	= block.find('.js-btn-close-block'),
 		tArea		= block.find('textarea');
 
 	btn.click(function(){
+		var container = $(this).closest('.toggle-container');
 		var elemClass = $(this).data('open-block');
-		
+		var btnHolder = $(this).parent('.js-open-block');
+
 		btnHolder.hide();
-		$('.'+elemClass).fadeIn(speedFast);
-		
+		container.find('.'+elemClass).fadeIn(speedFast);
+
 		return false;
 	});
-	
+
 	btnClose.click(function(){
-		block.hide();
-		btnHolder.fadeIn(speedFast);
-		
+		var container = $(this).closest('.toggle-container');
+		container.find('.js-block-container, .js-block-container-alt').hide();
+
+		container.find('.js-open-block').fadeIn(speedFast);
+
 		return false;
 	});
-	
+
 	tArea.focus(function(){
 		$(this).addClass("expand");
 	});
-	
+
 }());
-	
+
 
 /**
 * External participant count
 * ==========================
-* 
+*
 * Replace empty val with 0
 *
-*/ 
+*/
 $('#externalParticipantCount').blur(function(){
 	var input = $(this);
 	if (input.val() === ""){
 		input.val(0);
 	}
 });
-	
-	
+
+
 /**
 * Search form
 * ===========
-* 
+*
 * Submit form on select.
 * Used in frontpage and search-page
 *
@@ -981,17 +1018,17 @@ $('#externalParticipantCount').blur(function(){
 
 $('.municipality-filter').change( function() {
 	var thisSelect = $(this);
-	
+
 	// Set a small delay so that focus is correctly fired after chance-event.
 	// Free text search not yet implemented
 	//setTimeout(function () { $('#search').focus(); }, 50);
-	
+
 	$('#search-form').submit();
-	
-});	
-	
+
+});
+
 /**
- * 
+ *
  * Modal: jQuery tools - Overlay
  * =============================
  * - Load modal with defined configurations
@@ -1000,10 +1037,10 @@ $('.municipality-filter').change( function() {
  * - Types
  *  - minimal: for simple confirms
  *  - full: for accept invitation
- * 
+ *
  * FIXME:
  * - Form buttons are pushed to the bottom when scrollbars are visible. Add some space after the form.
- *  
+ *
  * */
 (function() {
 	jQuery.fn.loadModal = function(modalType, callback){
@@ -1011,7 +1048,7 @@ $('.municipality-filter').change( function() {
 			modal 			= $(this),
 			$modalContent 	= modal.children('.modal-content'),
 			$scrollable 	= $modalContent.children('.scrollable'), // Used when content can be very long. For examples in namelists.
-		
+
 		topPos = function(){
 			if ((modalType === "full" || modalType === "fixed") && (modal.height() < vpHeight) ) {
 				return Math.floor((vpHeight-modal.height())/2);
@@ -1021,16 +1058,16 @@ $('.municipality-filter').change( function() {
 			} else {
 				return 10; // 10 px
 			}
-			
+
 		},
 		modalFixed = function(){
 			if(modalType === "full") {
 				return false;
 			} else {
 				return true;
-			} 
+			}
 		};
-		
+
 		modal.overlay({
 			fixed: modalFixed(),	// modal position
 			top: topPos(),			// custom top position
@@ -1046,12 +1083,12 @@ $('.municipality-filter').change( function() {
 				});
 
 				jsMessages.Load();
-				
-				// TODO: 
+
+				// TODO:
 				//validateListener.init($('.js-validate'));
 
 				if (callback) callback();					// Callback for dynamically updated data
-				
+
 				setTimeout(function () {
 					jsRemove();
 
@@ -1067,7 +1104,7 @@ $('.municipality-filter').change( function() {
 			closeOnClick: false,	// disable this for modal dialog-type of overlays
 			load: true				// load it immediately after the construction
 		}).addClass(modalType);
-		
+
 		// Adjust modal after load
 		adjustModal(modal, modalType, $scrollable);
 
@@ -1078,25 +1115,25 @@ $('.municipality-filter').change( function() {
 			vpWidth = window.innerWidth;
 			// Adjust only horizontal position
 			//modal.css('top',topPos()+'px');
-						
+
 			adjustModal(modal, modalType, $scrollable);
 		});
 	};
-	
+
 	// Adjust modal's position and height
 	var adjustModal = function(modal, modalType, $scrollable){
 		var modalPosX;
 		modalPosX = (vpWidth - modal.width())/2;
 		if (modal.width() > vpWidth) {
 			modal.css('left','1%');	// quick fix for mobile devices
-		} else { 
+		} else {
 			modal.css('left',modalPosX);
 		}
-		
+
 		$scrollable.css('max-height', 0.75*vpHeight); // Adjust value if needed
 
 		if (modalType === "minimal"){
-			
+
 			if (modal.height() > vpHeight) {
 				modal.css('position','absolute');
 			} else {
@@ -1104,25 +1141,25 @@ $('.municipality-filter').change( function() {
 			}
 		}
 	};
-	
+
 }());
-	
+
 
 /**
- * 
+ *
  * Modal-loaders
  * =============
  * - Uses class-based actions
  * - Modals loaded also on page load if correct data exists
  * - Calls generateModal() with modalData variable which includes all HTML content for the modal
- * 
+ *
  * */
-	
+
 	// Initiative saved and ready to collect participants
 	if( typeof modalData !== 'undefined' && typeof modalData.requestMessage !== 'undefined' ){
 		generateModal(modalData.requestMessage(), 'minimal');
-	}	
-	
+	}
+
 	// Send initiative to review
 	$('.js-send-to-review').click(function(){
 		try {
@@ -1136,7 +1173,7 @@ $('.municipality-filter').change( function() {
 	if( typeof modalData !== 'undefined' && typeof modalData.sendToReviewDoNotCollectAutoLoad !== 'undefined' ){
 		generateModal(modalData.sendToReviewDoNotCollectAutoLoad(), 'minimal');
 	}
-	
+
 	// Send initiative to review and collect participants
 	$('.js-send-to-review-collect').click(function(){
 		try {
@@ -1146,7 +1183,7 @@ $('.municipality-filter').change( function() {
 			console.log(e);
 		}
 	});
-	
+
 	// Send fix to review
 	$('.js-send-fix-to-review').click(function(){
 		try {
@@ -1166,9 +1203,9 @@ $('.municipality-filter').change( function() {
 			console.log(e);
 		}
 	});
-	
+
 	// Send initiative to municipality
-	$('.js-send-to-municipality').click(function(){		
+	$('.js-send-to-municipality').click(function(){
 		try {
 			generateModal(modalData.sendToMunicipality(), 'minimal');
 			return false;
@@ -1176,11 +1213,11 @@ $('.municipality-filter').change( function() {
 			console.log(e);
 		}
 	});
-	
+
 	if( typeof modalData !== 'undefined' && typeof modalData.sendToMunicipalityAutoLoad !== 'undefined' ){
 		generateModal(modalData.sendToMunicipalityAutoLoad(), 'minimal');
 	}
-	
+
 	// Accept author invitation
 	$('.js-accept-invitation').click(function(){
 		try {
@@ -1190,11 +1227,11 @@ $('.municipality-filter').change( function() {
 			console.log(e);
 		}
 	});
-	
+
 	if( typeof modalData !== 'undefined' && typeof modalData.acceptInvitationAutoLoad !== 'undefined' ){
 		generateModal(modalData.acceptInvitationAutoLoad(), 'full', municipalitySelection.init);
 	}
-	
+
 	// Accept author invitation
 	$('.js-reject-invitation').click(function(){
 		try {
@@ -1204,8 +1241,8 @@ $('.municipality-filter').change( function() {
 			console.log(e);
 		}
 	});
-	
-	
+
+
 	// Participate initiative
 	$('.js-participate').click(function(){
 		try {
@@ -1215,11 +1252,11 @@ $('.municipality-filter').change( function() {
 			console.log(e);
 		}
 	});
-	
+
 	if( typeof modalData !== 'undefined' && typeof modalData.participateFormAutoLoad !== 'undefined' ){
 		generateModal(modalData.participateFormAutoLoad(), 'full', municipalitySelection.init);
 	}
-	
+
 	// Contact author
 	$('.js-contact-author').click(function(){
 		try {
@@ -1229,15 +1266,15 @@ $('.municipality-filter').change( function() {
 			console.log(e);
 		}
 	});
-	
+
 	if( typeof modalData !== 'undefined' && typeof modalData.contactAuthorFormAutoLoad !== 'undefined' ){
 		generateModal(modalData.contactAuthorFormAutoLoad(), 'full');
 	}
-	
+
 	$('.js-renew-management-hash').click(function(){
 		$('.js-renew-management-hash.active').removeClass('active');
 		$(this).addClass('active');
-		
+
 		try {
 			generateModal(modalData.renewManagementHash(), 'full', renewManagementHash.getAuthor);
 			return false;
@@ -1245,12 +1282,12 @@ $('.municipality-filter').change( function() {
 			console.log(e);
 		}
 	});
-	
+
 	// Edit municipality
 	$('.js-edit-municipality').click(function(){
 		$('.municipalities .active').removeClass('active');
 		$(this).addClass('active');
-		
+
 		try {
 			generateModal(modalData.editMunicipalityDetails(), 'full', editMunicipality.getActive);
 			return false;
@@ -1258,16 +1295,16 @@ $('.municipality-filter').change( function() {
 			console.log(e);
 		}
 	});
-	
+
 	if( typeof modalData !== 'undefined' && typeof modalData.editMunicipalityDetailsInvalid !== 'undefined' ){
 		generateModal(modalData.editMunicipalityDetailsInvalid(), 'full');
 	}
-	
+
 	// Delete participant
 	$('.js-delete-participant').click(function(){
 		$('.js-delete-participant.active').removeClass('active');
 		$(this).addClass('active');
-		
+
 		try {
 			generateModal(modalData.deleteParticipant(), 'full', deleteParticipant.getParticipant);
 			return false;
@@ -1275,12 +1312,12 @@ $('.municipality-filter').change( function() {
 			console.log(e);
 		}
 	});
-	
+
 	// Delete author
 	$('.js-delete-author').click(function(){
 		$('.js-delete-author.active').removeClass('active');
 		$(this).addClass('active');
-		
+
 		try {
 			generateModal(modalData.deleteAuthor(), 'full', deleteAuthor.getAuthor);
 			return false;
@@ -1288,14 +1325,14 @@ $('.municipality-filter').change( function() {
 			console.log(e);
 		}
 	});
-	
+
 	//Delete author
   $('.js-delete-attachment').click(function(e){
     e.preventDefault();
-    
+
     $('.js-delete-attachment.active').removeClass('active');
     $(this).addClass('active');
-    
+
     try {
       generateModal(modalData.deleteAttachment(), 'full', deleteAttachment.getAttachment);
       return false;
@@ -1304,12 +1341,12 @@ $('.municipality-filter').change( function() {
     }
   });
 
-	
+
 /**
- * 
+ *
  * Tooltip: jQuery tools - Tooltip
  * ===============================
- * 
+ *
  * */
 var tooltip = (function() {
 	return {
@@ -1331,23 +1368,23 @@ var tooltip = (function() {
 })();
 
 tooltip.load();
-	
+
 
 /**
  * DirtyForms jQuery plugin
  * ========================
  * http://mal.co.nz/code/jquery-dirty-forms/
- * 
+ *
  * - Checks if form is modified and fires up a notification
  * - To improve usage, LiveQuery could be used
  *   http://brandonaaron.net/code/livequery/docs
  * - $.DirtyForms.dialog overrides plugin's default facebox-dialog
- * 
+ *
  * */
-	
+
 $.DirtyForms.dialog = {
 	ignoreAnchorSelector: 'a[rel="external"], .modal a', // Ignore external links
-		
+
 	// Selector is a selector string for dialog content. Used to determine if event targets are inside a dialog
 	selector : '.modal .modal-content',
 
@@ -1394,9 +1431,9 @@ $('form.sodirty').dirtyForms();
 /**
 * Manage municipalities
 * =====================
-* 
+*
 * TODO: Finalize
-* 
+*
 */
 var editMunicipality = (function() {
 	// remove this if municipality dropdown select is not used
@@ -1405,48 +1442,48 @@ var editMunicipality = (function() {
 		var form = $('#municipality-form');
 		var municipality = $('#municipalities').find('li[data-id='+thisSelect.val()+']');
 		var selMunicipality = $('#selected-municipality');
-		
+
 		if ( municipality.data('id') !== undefined ) {
 			selMunicipality.text(municipality.text());
 		} else {
 			selMunicipality.html(selMunicipality.data('empty'));
 		}
-		
+
 		form.find('#id').attr('value',municipality.data('id'));
 		if( municipality.data('active') === true ){
 			form.find('#active').attr('checked','checked');
 		} else {
 			form.find('#active').removeAttr('checked');
 		}
-		
+
 		form.find('#municipalityEmail').val(municipality.data('email'));
-	});	
-	
+	});
+
 	$('.js-edit-municipality').click( function(){
 		$('.municipalities .active').removeClass('active');
 		$('.field-error').remove(); // do not keep errors when user clicks to open modal
 		$(this).addClass('active');
 	});
-	
+
 	$('.js-toggle-active').click(function(e){
 		e.preventDefault();
-		
+
 		$(this).find('span:first').toggleClass('less');
 		$('.municipalities tbody tr.not-active').toggleClass(hideClass);
 	});
-	
+
 	return {
 		getActive: function(){
 			var municipality = $('.municipalities .active');
 			var form = $('#municipality-form');
 			var selMunicipality = $('#selected-municipality');
-			
+
 			if ( municipality.data('id') !== undefined ) {
 				selMunicipality.text(municipality.text());
 			} else {
 				selMunicipality.html(selMunicipality.data('empty'));
 			}
-			
+
 			form.find('#id').attr('value',municipality.data('id'));
 			form.find('input[type=radio][name=active][value='+municipality.data('active')+']').attr('checked','checked');
 			form.find('#municipalityEmail').val(municipality.data('email'));
@@ -1469,14 +1506,19 @@ var deleteParticipant = (function() {
 				participantInput =		$('#participantId'),
 				participantNameId =  'participant-name',
 				participantDetails =	'<li><span class="date">' + participant.data("date") + '</span>' +
-										'<span class="name-container"><span id="' + participantNameId + '" class="name"></span>' +
-										'<span class="home-municipality"><span class="bull">&bull;</span>' + participant.data("municipality") + '</span></li>';
+										'<span class="name-container"><span id="' + participantNameId + '" class="name"></span>';
+
+				if (participant.data("municipality")) {
+					participantDetails += '<span class="home-municipality"><span class="bull">&bull;</span>' + participant.data("municipality") + '</span>';
+				}
+				participantDetails += '</li>';
 
 			selParticipant.html(participantDetails);
 			// Avoid XSS
-      $('#'+participantNameId).text(participant.data('name'));
-			
+      		$('#'+participantNameId).text(participant.data('name'));
+
 			participantInput.val(participant.data("id"));
+
 		}
 	};
 
@@ -1502,7 +1544,7 @@ var deleteAuthor = (function() {
 			selAuthor.html(authorDetails);
 			// Avoid XSS
       $('#'+authorNameId).text(author.data('name'));
-			
+
 			authorInput.val(author.data("id"));
 		}
 	};
@@ -1523,7 +1565,7 @@ var deleteAttachment = (function() {
           attachmentNameId =  'attachment-name',
           typeImage =         attachment.data('type') === 'image' ? true : false,
           attachmentDetails = '';
-      
+
       if (typeImage) {
         attachmentDetails = '<p id="' + attachmentNameId + '"></p><img src="' + attachment.data("src") + '" />';
       } else {
@@ -1533,7 +1575,7 @@ var deleteAttachment = (function() {
       selAttachment.html(attachmentDetails);
       // Avoid XSS
       $('#'+attachmentNameId).text(attachment.data('name'));
-      
+
       attachmentInput.val(attachment.data('id'));
     }
   };
@@ -1557,7 +1599,7 @@ var renewManagementHash = (function() {
 										author.data("phone") +'</div>';
 
 			selAuthor.html(authorDetails);
-			
+
 			authorInput.val(author.data("id"));
 		}
 	};
@@ -1569,7 +1611,7 @@ var renewManagementHash = (function() {
 * ==================
 */
 if (window.hasIFrame){
-	
+
 (function() {
 	var reset =				$('.js-reset-iframe'),
 		refresh =			$('.js-update-iframe'),
@@ -1582,15 +1624,15 @@ if (window.hasIFrame){
 		height =			$('#height'),
 		currentLang =		locale,
 		bounds =			window.bounds,
-		
+
 	generateIframe = function (params) {
 		iframeContainer.html($("#iframe-template").render(params));
 		return false;
 	},
-	
+
 	checkBounds = function(elem){
 		var min, max, def;
-		
+
 		switch(elem.attr('id')) {
 			case limit.attr('id'):
 				min = bounds.min.limit;
@@ -1607,7 +1649,7 @@ if (window.hasIFrame){
 			default:
 				// nop
 		}
-		
+
 		if (!/^\d+$/.test(elem.val())) {
 			elem.val(min); // set to min if not even a number
 		}
@@ -1618,10 +1660,10 @@ if (window.hasIFrame){
 			elem.val(max);
 		}
 	},
-	
+
 	params = function() {
 		return [{
-			municipality:	municipality.val(),
+			municipalities:	municipality.val(),
 			lang:			$('input[name="language"]:checked').val(),
 			limit:			limit.val(),
 			width:			width.val(),
@@ -1646,7 +1688,7 @@ if (window.hasIFrame){
 
 	limit.add(width).add(height).keyup(function(){
 		var thisObj = $(this);
-		
+
 		delay(function(){
 			checkBounds(thisObj);
 			generateIframe(params());
@@ -1665,23 +1707,176 @@ if (window.hasIFrame){
 			generateIframe(window.defaultData);
 		}
 	});
-	
+
 	refresh.click(function(e){
 		e.preventDefault();
 
 		generateIframe(params());
 	});
-	
+
 }());
 }
-
 /**
+ *  Single inititative (graph) iframe
+ *
+ */
+if (window.hasIGraphFrame) {
+
+	(function () {
+		var reset =         $('.js-reset-iframe'),
+			refresh =         $('.js-update-iframe'),
+			iframeContainer = $("#iframe-container"),
+			initiativeId =    $('#initiativeId'),
+			lang =            $('input[name="language"]'),
+			defaultLang =     $('input[name="language"][value="' + locale + '"]'),
+			showTitle =       $('input[name="showTitle"]'),
+			width =           $('#width'),
+			height =          $('#height'),
+			currentLang =     locale,
+			bounds =          window.bounds,
+			api =             window.defaultData.api,
+
+			getInitiative = function (api, initiativeId, callback) {
+				if (initiativeId !== '') {
+					$.getJSON(api + '/' + initiativeId).done(function (data) {
+						if (callback) {
+							callback(data);
+						}
+					}).fail(function (e) {
+						if (callback) {
+							callback(null);
+						}
+						//myConsole.log('Error loading data: ' + e.status + ' - ' + e.statusText);
+					});
+				} else {
+					if (callback) {
+						callback(null);
+					}
+				}
+			},
+
+			populateInitiativeDetails = function (params) {
+				getInitiative(api, params.initiativeId, function (data) {
+					var initiativeName = '';
+
+					if (data) {
+						initiativeName = data.name[params.lang] || data.name.fi || '';
+					}
+
+					$('#initiative-name').text(initiativeName);
+				});
+			},
+
+			generateIframe = function (params) {
+				populateInitiativeDetails(params);
+				iframeContainer.html($("#iframe-template").render(params));
+				return false;
+			},
+
+			checkBounds = function (elem) {
+				var min, max, def,
+					val = parseInt(elem.val(), 10);
+
+				switch (elem.attr('id')) {
+					case width.attr('id'):
+						min = bounds.min.width;
+						max = bounds.max.width;
+						break;
+					case height.attr('id'):
+						min = bounds.min.height;
+						max = bounds.max.height;
+						break;
+					default:
+					// nop
+				}
+
+				if (!/^\d+$/.test(val)) {
+					elem.val(min); // set to min if not even a number
+				}
+				if (val < min) {
+					elem.val(min);
+				}
+				if (val > max) {
+
+					elem.val(max);
+				}
+			},
+
+			getParams = function () {
+				return {
+					showPreview: initiativeId.val() !== '' && initiativeId.val() !== '0',
+					initiativeId: initiativeId.val(),
+					lang:     $('input[name="language"]:checked').val(),
+					showTitle: $('input[name="showTitle"]:checked').val() === 'on',
+					width:      width.val(),
+					height:     height.val()
+				};
+			},
+
+			refreshFields = function (data) {
+				initiativeId.val(data.initiativeId).trigger('liszt:updated');
+				lang.removeAttr('checked');
+				showTitle.removeAttr('checked');
+				defaultLang.attr('checked', 'checked');
+				width.val(data.width);
+				height.val(data.height);
+			};
+
+		generateIframe(getParams());
+
+		initiativeId.change(function () {
+			generateIframe(getParams());
+		});
+
+		width.add(height).change(function () {
+			delay(function () {
+				checkBounds(width);
+				checkBounds(height);
+				generateIframe(getParams());
+			}, 100);
+		});
+
+		showTitle.change(function () {
+			generateIframe(getParams());
+		});
+
+		lang.change(function () {
+			generateIframe(getParams());
+		});
+
+		reset.click(function (e) {
+			e.preventDefault();
+
+			if (window.defaultData) {
+				$.extend(window.defaultData, {
+					initiativeId: initiativeId.val()
+				});
+
+				refreshFields(window.defaultData);
+				generateIframe(getParams());
+			}
+		});
+
+		refresh.click(function (e) {
+			e.preventDefault();
+
+			generateIframe(getParams());
+		});
+
+	}());
+}
+
+
+
+
+
+	/**
 * Image popup
 * ===========
-* 
+*
 */
 (function() {
-  
+
   $('.thumbnail-list').magnificPopup({
     delegate: '.thumbnail a', // child items selector, by clicking on it popup will open
     type: 'image',
@@ -1706,5 +1901,16 @@ if (window.hasIFrame){
   });
 
 }());
+
+$(window).on('resize', function () {
+  if (fireParticipantGraph !== undefined) {
+    fireParticipantGraph();
+  }
+
+  if (headerNav !== undefined) {
+    headerNav.headerNav('resize');
+  }
+}).trigger('resize');
+
 
 });

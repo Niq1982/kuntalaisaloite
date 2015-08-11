@@ -2,6 +2,7 @@
 <#import "components/utils.ftl" as u />
 <#import "components/elements.ftl" as e />
 <#import "components/pagination.ftl" as p />
+<#import "components/progress.ftl" as prog />
 
 <#escape x as x?html> 
 
@@ -17,10 +18,10 @@
 
     <@e.initiativeTitle initiative />
     
-    <@e.stateInfo initiative />
+    <@prog.progress initiative=initiative public=false />
 
     <#if !RequestParameters['deleteParticipant']??>
-        <div class="view-block single public cf">
+        <div class="view-block first single public cf">
             <h2><@u.message "manageParticipants.title" />
                 <span class="switch-view"><a href="${urls.participantList(initiative.id)}"><@u.message key="participantList.title" /> &bull; ${participantCount.publicNames!""} <@u.message key="participantList.title.count" /></a></span>
             </h2>
@@ -120,21 +121,21 @@
         <#if participant_index == 0><ul class="participant-list no-style"></#if>
             <li><span class="date"><@u.localDate participant.participant.participateDate!"" /></span> <span class="name-container"><span class="name">${participant.participant.name!""}</span>
                 
-            <#-- IF initiative IS verifiable user should NOT end up here - like never -->
-            <#if !initiative.verifiable>
-                <span class="home-municipality"><span class="bull">&bull;</span> <@u.solveMunicipality participant.participant.homeMunicipality/></span>
-                
-                <#if !participant.isAuthor()>
-                    <span class="bull">&bull;</span>
-                    <a  href="?deleteParticipant=${participant.participant.id!""}" class="js-delete-participant"
-                        data-id="${participant.participant.id!""}"
-                        data-date="<@u.localDate participant.participant.participateDate!"" />"
-                        data-name="<@u.stripHtmlTags participant.participant.name!"" />"
-                        data-municipality="<@u.solveMunicipality participant.participant.homeMunicipality />"><@u.message "deleteParticipant.delete" /></a></span></li>
-                <#else>
-                    <span class="bull">&bull;</span> <@u.message "deleteParticipant.authorCannotBeDeleted" />
-                </#if>
+            <#-- Show home municipality for non-verified participants  -->
+            <#if !initiative.isVerifiable()><span class="home-municipality"><span class="bull">&bull;</span> <@u.solveMunicipality participant.participant.homeMunicipality/></span></#if>
+
+            <#-- Generate links for removing author -->
+            <#if !participant.isAuthor()>
+                <span class="bull">&bull;</span>
+                <a  href="?deleteParticipant=${participant.participant.id!""}" class="js-delete-participant"
+                    data-id="${participant.participant.id!""}"
+                    data-date="<@u.localDate participant.participant.participateDate!"" />"
+                    data-name="<@u.stripHtmlTags participant.participant.name!"" />"
+                    <#if !initiative.isVerifiable()>data-municipality="<@u.solveMunicipality participant.participant.homeMunicipality /></#if>"><@u.message "deleteParticipant.delete" /></a></span></li>
+            <#else>
+                <span class="bull">&bull;</span> <@u.message "deleteParticipant.authorCannotBeDeleted" />
             </#if>
+
             
         <#if !participant_has_next></ul></#if>
     </#list>
@@ -152,7 +153,10 @@
     <#list participants as participant>
         <#if participant.participant.id?string == id>
             <ul class="participant-list no-style">
-                <li><span class="date"><@u.localDate participant.participant.participateDate!"" /></span> <span class="name-container"><span class="name">${participant.participant.name!""}</span> <span class="home-municipality"><span class="bull">&bull;</span> <@u.solveMunicipality participant.participant.homeMunicipality/></span></li>
+                <li>
+                    <span class="date"><@u.localDate participant.participant.participateDate!"" /></span> <span class="name-container"><span class="name">${participant.participant.name!""}</span>
+                    <#if !initiative.isVerifiable()><span class="home-municipality"><span class="bull">&bull;</span> <@u.solveMunicipality participant.participant.homeMunicipality/></span></#if>
+                </li>
             </ul>
         </#if>
     </#list>

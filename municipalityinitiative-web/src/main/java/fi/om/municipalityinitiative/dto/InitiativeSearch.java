@@ -2,24 +2,32 @@ package fi.om.municipalityinitiative.dto;
 
 import fi.om.municipalityinitiative.web.Urls;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class InitiativeSearch {
     private Integer offset;
     private Integer limit;
     private OrderBy orderBy = OrderBy.latest;
-    private Show show = Show.collecting;
-    private Long municipality;
+    private Show show = Show.all;
+    private List<Long> municipalities;
     private String search;
     private Type type = Type.all;
 
-    public Long getMunicipality() {
-        return municipality;
+    public List<Long> getMunicipalities() {
+        return municipalities;
     }
 
-    public InitiativeSearch setMunicipality(Long municipality) {
-        this.municipality = municipality;
+    public InitiativeSearch setMunicipalities(List<Long> municipalities) {
+        this.municipalities = municipalities;
         return this;
     }
 
+    public InitiativeSearch setMunicipalities(long municipality) {
+        ArrayList<Long> list = new ArrayList<>();
+        list.add(municipality);
+        return this.setMunicipalities(list);
+    }
     public String getSearch() {
         return search;
     }
@@ -34,7 +42,7 @@ public class InitiativeSearch {
         initiativeSearch.limit = this.limit;
         initiativeSearch.offset = this.offset;
         initiativeSearch.orderBy = this.orderBy;
-        initiativeSearch.municipality = this.municipality;
+        initiativeSearch.municipalities = this.municipalities;
         initiativeSearch.search = this.search;
         initiativeSearch.show = this.show;
         initiativeSearch.type = this.type;
@@ -133,7 +141,7 @@ public class InitiativeSearch {
         }
 
         InitiativeSearch that = (InitiativeSearch) obj;
-        return equals(this.getMunicipality(), that.getMunicipality())
+        return equals(this.getMunicipalities(), that.getMunicipalities())
                 && equals(this.getLimit(), that.getLimit())
                 && equals(this.getOffset(), that.getOffset())
                 && equals(this.getOrderBy(), that.getOrderBy())
@@ -147,7 +155,7 @@ public class InitiativeSearch {
         result = 31 * result + (limit != null ? limit.hashCode() : 0);
         result = 31 * result + orderBy.hashCode();
         result = 31 * result + show.hashCode();
-        result = 31 * result + (municipality != null ? municipality.hashCode() : 0);
+        result = 31 * result + (municipalities != null ? municipalities.hashCode() : 0);
         result = 31 * result + type.hashCode();
         result = 31 * result + (search != null ? search.hashCode() : 0);
         return result;

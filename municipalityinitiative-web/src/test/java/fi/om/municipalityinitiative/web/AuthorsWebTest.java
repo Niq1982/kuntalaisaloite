@@ -6,14 +6,12 @@ import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.DateTime;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
-import static fi.om.municipalityinitiative.web.MessageSourceKeys.MSG_SUCCESS_INVITATION_SENT;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
@@ -41,6 +39,7 @@ public class AuthorsWebTest extends WebTestBase {
     public static final String HYLKÄÄ_KUTSU = "invitation.reject";
     public static final String HYVÄKSY_KUTSUN_HYLKÄÄMINEN = "invitation.reject.confirm";
     public static final String VERIFIED_USER_AUTHOR_SSN = "010190-0001";
+    public static final String USER_SSN = "010191-0000";
     private Long normalInitiativeId;
     private Long verifiedInitiativeId;
 
@@ -60,16 +59,16 @@ public class AuthorsWebTest extends WebTestBase {
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         
         open(urls.management(normalInitiativeId));
-        clickLinkContaining(getMessage(MSG_ADD_AUTHORS_LINK));
+        clickLink(getMessage(MSG_ADD_AUTHORS_LINK));
         
-        clickLinkContaining(getMessage(MSG_BTN_ADD_AUTHOR));
+        clickLink(getMessage(MSG_BTN_ADD_AUTHOR));
         
         inputText("authorName", CONTACT_NAME);
         inputText("authorEmail", CONTACT_EMAIL);
         
         getElemContaining(getMessage(MSG_BTN_SEND), "button").click();
         
-        assertMsgContainedByClass("msg-success", MSG_SUCCESS_INVITATION_SENT);
+        assertSuccessMessage("Kutsu lähetetty");
         assertTextContainedByXPath("//div[@class='view-block last']//span[@class='status']", getMessage(MSG_INVITATION_UNCONFIRMED));
         assertTotalEmailsInQueue(1);
     }
@@ -88,7 +87,7 @@ public class AuthorsWebTest extends WebTestBase {
         getElementByLabel("Osoite", "textarea").sendKeys(CONTACT_ADDRESS);
         clickDialogButton("Hyväksy ja tallenna tiedot");
 
-        assertTextContainedByClass("msg-success", "Liittymisesi vastuuhenkilöksi on nyt vahvistettu ja olet kirjautunut sisään palveluun.");
+        assertSuccessMessage("Liittymisesi vastuuhenkilöksi on nyt vahvistettu ja olet kirjautunut sisään palveluun.");
 
         clickDialogButton("Muokkaa aloitetta");
         assertThat(getElementByLabel("Etu- ja sukunimi", "input").getAttribute("value"), containsString(CONTACT_NAME));
@@ -165,7 +164,7 @@ public class AuthorsWebTest extends WebTestBase {
 
         vetumaLogin(VERIFIED_USER_AUTHOR_SSN, HELSINKI);
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
-        assertTextContainedByClass("msg-warning", "Olet jo aloitteen vastuuhenkilö, joten et voi hyväksyä vastuuhenkilökutsua");
+        assertWarningMessage("Olet jo aloitteen vastuuhenkilö, joten et voi hyväksyä vastuuhenkilökutsua");
         assertThat(acceptInvitationButton(), isNotPresent());
         assertThat(rejectInvitationButton(), isNotPresent());
     }
@@ -188,7 +187,7 @@ public class AuthorsWebTest extends WebTestBase {
         AuthorInvitation invitation = testHelper.createInvitation(verifiedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
         vetumaLogin("111111-1111", VANTAA);
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
-        assertTextContainedByClass("msg-warning", "Väestötietojärjestelmän mukaan kotikuntasi ei ole kunta, jota aloite koskee, joten et voi liittyä aloitteen vastuuhenkilöksi. Kiitos mielenkiinnosta!");
+        assertWarningMessage("Väestötietojärjestelmän mukaan kotikuntasi ei ole kunta, jota aloite koskee, joten et voi liittyä aloitteen vastuuhenkilöksi. Kiitos mielenkiinnosta!");
         assertThat(acceptInvitationButton(), isNotPresent());
         assertThat(rejectInvitationButton(), isPresent());
     }
@@ -198,8 +197,6 @@ public class AuthorsWebTest extends WebTestBase {
         AuthorInvitation invitation = testHelper.createInvitation(verifiedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
         vetumaLogin("111111-1111", HELSINKI);
         open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
-        assertThat(acceptInvitationButton(), isPresent());
-        assertThat(rejectInvitationButton(), isPresent());
 
         acceptInvitationButton().get().click();
 
@@ -208,7 +205,7 @@ public class AuthorsWebTest extends WebTestBase {
         getElementByLabel("Puhelin", "input").sendKeys(CONTACT_PHONE);
 
         clickDialogButton("Hyväksy ja tallenna tiedot");
-        assertTextContainedByClass("msg-success", "Liittymisesi vastuuhenkilöksi on nyt vahvistettu ja olet kirjautunut sisään palveluun.");
+        assertSuccessMessage("Liittymisesi vastuuhenkilöksi on nyt vahvistettu ja olet kirjautunut sisään palveluun.");
         assertTotalEmailsInQueue(1);
 
     }
@@ -222,9 +219,40 @@ public class AuthorsWebTest extends WebTestBase {
     }
 
     @Test
-    @Ignore("Implement")
-    public void accepting_verified_author_invitation_when_unknown_municipality_from_vetuma_does_something(){
-        // TODO: Implemente
+    public void accepting_verified_author_invitation_when_unknown_municipality_from_vetuma_preselects_initiatives_municipality_and_allows_accepting(){
+        AuthorInvitation invitation = testHelper.createInvitation(verifiedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
+        vetumaLogin("111111-1111", null);
+        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
+
+        acceptInvitationButton().get().click();
+
+        getElementByLabel("Osoite", "textarea").sendKeys(CONTACT_ADDRESS);
+        getElementByLabel("Sähköpostiosoite", "input").sendKeys(CONTACT_EMAIL);
+        getElementByLabel("Puhelin", "input").sendKeys(CONTACT_PHONE);
+
+        assertThat(findElementWhenClickable(By.id("homeMunicipality_chzn")).getText(), is(HELSINKI));
+
+        clickDialogButton("Hyväksy ja tallenna tiedot");
+        assertSuccessMessage("Liittymisesi vastuuhenkilöksi on nyt vahvistettu ja olet kirjautunut sisään palveluun.");
+        assertTotalEmailsInQueue(1);
+    }
+
+    @Test
+    public void accepting_verified_author_invitation_when_unknown_municipality_prevents_accepting_if_user_selects_wrong_municipality() throws InterruptedException {
+
+        AuthorInvitation invitation = testHelper.createInvitation(verifiedInitiativeId, CONTACT_NAME, CONTACT_EMAIL);
+        vetumaLogin("111111-1111", null);
+
+
+        open(urls.invitation(invitation.getInitiativeId(), invitation.getConfirmationCode()));
+
+        acceptInvitationButton().get().click();
+
+        clickLink(HELSINKI); // Chosen select box default value. Expects helsinki to be selected by default.
+        getElemContaining(VANTAA, "li").click();
+
+        assertTextContainedByClass("msg-warning", "Et ole aloitteen kunnan jäsen");
+
     }
 
     @Test
@@ -236,7 +264,7 @@ public class AuthorsWebTest extends WebTestBase {
         clickDialogButtonMsg(HYLKÄÄ_KUTSU);
         clickDialogButtonMsg(HYVÄKSY_KUTSUN_HYLKÄÄMINEN);
 
-        assertTextContainedByClass("msg-success", "Olet hylännyt kutsun vastuuhenkilöksi eikä tietojasi ole tallennettu aloitteeseen");
+        assertSuccessMessage("Olet hylännyt kutsun vastuuhenkilöksi eikä tietojasi ole tallennettu aloitteeseen");
 
         assertInvitationPageIsGone(invitation);
         assertTotalEmailsInQueue(0);
@@ -252,19 +280,41 @@ public class AuthorsWebTest extends WebTestBase {
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         open(urls.management(publishedInitiativeId));
         
-        clickLinkContaining("Osallistujahallinta");
-        clickLinkContaining("Poista osallistuja");
+        clickLink("Osallistujahallinta");
+        clickLink("Poista osallistuja");
         
         // NOTE: We could assert that modal has correct Participant details,
         //       but as DOM is updated after the modal is loaded we would need a tiny delay for that
         
         getElemContaining("Poista", "button").click();
         
-        assertTextContainedByClass("msg-success", "Osallistuja poistettu");
+        assertSuccessMessage("Osallistuja poistettu");
         assertTotalEmailsInQueue(0);
         
     }
-    
+
+    @Test
+    public void author_removes_verified_participant() throws InterruptedException {
+        Long publishedInitiativeId = testHelper.createVerifiedInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID).withState(InitiativeState.PUBLISHED).applyAuthor(USER_SSN).toInitiativeDraft());
+
+        testHelper.createVerifiedParticipant(new TestHelper.AuthorDraft(publishedInitiativeId, HELSINKI_ID).withPublicName(false));
+
+        vetumaLogin(USER_SSN, HELSINKI);
+
+        open(urls.management(publishedInitiativeId));
+
+        clickLink("Osallistujahallinta");
+        clickLink("Poista osallistuja");
+
+        // NOTE: We could assert that modal has correct Participant details,
+        //       but as DOM is updated after the modal is loaded we would need a tiny delay for that
+
+        getElemContaining("Poista", "button").click();
+
+        assertSuccessMessage("Osallistuja poistettu");
+        assertTotalEmailsInQueue(0);
+
+    }
     @Test
     public void author_removes_author(){
         testHelper.createDefaultAuthorAndParticipant(new TestHelper.AuthorDraft(normalInitiativeId, HELSINKI_ID));
@@ -272,15 +322,15 @@ public class AuthorsWebTest extends WebTestBase {
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
         open(urls.management(normalInitiativeId));
         
-        clickLinkContaining("Ylläpidä vastuuhenkilöitä");
-        clickLinkContaining("Poista vastuuhenkilö");
+        clickLink("Ylläpidä vastuuhenkilöitä");
+        clickLink("Poista vastuuhenkilö");
         
         // NOTE: We could assert that modal has correct Author details,
         //       but as DOM is updated after the modal is loaded we would need a tiny delay for that
         
         getElemContaining("Poista vastuuhenkilö", "button").click();
         
-        assertTextContainedByClass("msg-success", "Vastuuhenkilö poistettu");
+        assertSuccessMessage("Vastuuhenkilö poistettu");
         assertTotalEmailsInQueue(2);
     }
 

@@ -70,20 +70,6 @@ public class ParticipantUICreateDtoTest {
         assertThat(violations, hasSize(0));
     }
 
-    @Test
-    public void too_fast_submit() {
-
-        ParticipantUICreateDto dto = validParticipant();
-        dto.setRandomNumber(DateTime.now().minusSeconds(2).getMillis());
-
-        Set<ConstraintViolation<ParticipantUICreateDto>> violations = validate(dto);
-
-        assertThat(violations, hasSize(1));
-        assertThat(getFirst(violations).getPropertyPath().toString(), is("randomNumber"));
-        assertThat(getFirst(violations).getMessage(), is("{NotTooFastSubmit}"));
-
-    }
-
     private static Set<ConstraintViolation<ParticipantUICreateDto>> validate(ParticipantUICreateDto dto) {
         return validator.validate(dto, NormalInitiative.class);
     }

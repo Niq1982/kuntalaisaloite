@@ -1,9 +1,11 @@
 package fi.om.municipalityinitiative.dto.service;
 
+import fi.om.municipalityinitiative.service.email.EmailReportType;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 public class Initiative {
@@ -27,6 +29,17 @@ public class Initiative {
     private int participantCountPublic;
     private String sentComment;
     private FixState fixState;
+    private DateTime lastEmailReportTime;
+    private EmailReportType lastEmailReportType;
+    private Maybe<Long> youthInitiativeId = Maybe.absent();
+
+    public Maybe<Long> getYouthInitiativeId() {
+        return youthInitiativeId;
+    }
+
+    public void setYouthInitiativeId(Long youthInitiativeId) {
+        this.youthInitiativeId = Maybe.of(youthInitiativeId);
+    }
 
     public String getName() {
         return name;
@@ -166,5 +179,21 @@ public class Initiative {
 
     public boolean isPublic() {
         return state == InitiativeState.PUBLISHED && fixState == FixState.OK;
+    }
+
+    public void setLastEmailReportTime(DateTime lastEmailReportTime) {
+        this.lastEmailReportTime = lastEmailReportTime;
+    }
+
+    public DateTime getLastEmailReportTime() {
+        return lastEmailReportTime;
+    }
+
+    public void setLastEmailReportType(EmailReportType lastEmailReportType) {
+        this.lastEmailReportType = lastEmailReportType;
+    }
+
+    public EmailReportType getLastEmailReportType() {
+        return lastEmailReportType;
     }
 }

@@ -43,7 +43,7 @@ import static org.junit.Assert.fail;
 @ContextConfiguration(classes={WebTestConfiguration.class})
 public abstract class WebTestBase {
 
-    protected static final int PORT = 8445; // NOTE: must match port in test.properties/baseUrl
+    protected static final int PORT = 8090; // NOTE: must match port in test.properties/baseUrl
 
     @Mocked
     EmailSenderScheduler emailSenderScheduler;
@@ -67,6 +67,8 @@ public abstract class WebTestBase {
     protected static Long VANTAA_ID;
     protected static final String HELSINKI = "Helsinki";
     protected static Long HELSINKI_ID;
+    protected static final String HYVINKAA = "Hyvinkää";
+    protected static Long HYVINKAA_ID;
 
     @BeforeClass
     public static synchronized void initialize() throws Throwable {
@@ -86,12 +88,11 @@ public abstract class WebTestBase {
     public void init() {
         if (urls == null) {
             String baseUrl = env.getRequiredProperty(PropertyNames.baseURL);
-            Urls.initUrls(baseUrl, baseUrl, baseUrl);
+            Urls.initUrls(baseUrl, baseUrl, baseUrl, "www.nua.fi");
             urls = Urls.FI;
         }
 
         String driverType = env.getProperty("test.web-driver", "default");
-        System.out.println("*** driverType = " + driverType);
 
         formatDriver(driverType);
 
@@ -100,6 +101,7 @@ public abstract class WebTestBase {
             testHelper.dbCleanup();
             VANTAA_ID = testHelper.createTestMunicipality(VANTAA);
             HELSINKI_ID = testHelper.createTestMunicipality(HELSINKI);
+            HYVINKAA_ID = testHelper.createTestMunicipality(HYVINKAA);
         }
         else {
             testHelper.dbCleanupAllButMunicipalities();
@@ -148,11 +150,15 @@ public abstract class WebTestBase {
         driver.manage().deleteAllCookies();
     }
 
-//    @AfterClass
-//    public static void destrouDriver() {
-//        driver.quit();
-//        lastDriver = null;
-//    }
+    public static void destroyDriver() {
+        driver.quit();
+        lastDriver = null;
+        try {
+            jettyServer.stop();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
     //@AfterClass
@@ -191,30 +197,30 @@ public abstract class WebTestBase {
             }
             elementTexts.add(element.getText().trim());
         }
-        System.out.println("--- assertTextByTag --------------- " + tag + ": " + text);
-        for (WebElement element : elements) {
-            System.out.println("*** '" + element.getText().trim() + "'");
-        }
-        fail(tag + " tag with text " + text + " not found. Texts found: " + TestUtil.listValues(elementTexts) + " (Page title: "+driver.getTitle()+")");
-    }
-    
-    protected void assertMsgContainedByClass(String className, String messageKey) {
-        String text = getMessage(messageKey);
-        assertTextContainedByClass(className, text);
+        fail(tag + " tag with text " + text + " not found. Texts found: " + TestUtil.listValues(elementTexts) + " (Page title: " + driver.getTitle() + ")");
     }
 
     protected static void assertTextNotContainedByClass(String className, String text) {
         if (elementsContainText(driver.findElements(By.className(className)), text)) {
             fail("Should have NOT found text '" + text + "'with className: " + className + " - but text(s) found.");
         }
-
     }
+
+    protected void assertSuccessMessage(String text) {
+        assertTextContainedByClass("msg-success", text);
+    }
+
+    protected void assertWarningMessage(String text) {
+        assertTextContainedByClass("msg-warning", text);
+    }
+    protected void assertInfoMessageContainsText(String text) {
+        assertTextContainedByClass("msg-info", text);
+    }
+
     protected static void assertTextContainedByClass(String className, String text) {
-        System.out.println("--- assertTextContainedByClass --------------- " + className + ": " + text);
         List<String> elementTexts = Lists.newArrayList();
         List<WebElement> elements = driver.findElements(By.className(className));
         if (!elementsContainText(elements, text)) {
-            System.out.println("--- assertTextContainedByClass --------------- " + className + ": " + text);
             for (WebElement element : elements) {
                 elementTexts.add(element.getText().trim());
             }
@@ -245,9 +251,7 @@ public abstract class WebTestBase {
                 return;
             }
         }
-        System.out.println("--- assertTextContainedByXPath --------------- " + xpathExpression + ": " + text);
         for (WebElement element : elements) {
-            System.out.println("*** '" + element.getText().trim() + "'");
         }
         fail(xpathExpression + " xpath with text " + text + " not found. Texts found: " + TestUtil.listValues(elementTexts) + " (Page title: "+driver.getTitle()+")");
 
@@ -259,8 +263,6 @@ public abstract class WebTestBase {
     protected void assertTitle(String text) {
         String title = driver.getTitle();
 
-        System.out.println("--- assertTitle --------------- : " + text);
-        System.out.println("*** '" + title.trim() + "'");
         assertThat(title, is(text));
     }
 
@@ -268,6 +270,12 @@ public abstract class WebTestBase {
         WebElement elementWhenClickable = findElementWhenClickable(By.name(fieldName));
         elementWhenClickable.clear();
         elementWhenClickable.sendKeys(text);
+    }
+
+
+    protected void clickInput() {
+        WebElement e  = getElement(By.tagName("input"));
+        e.click();
     }
 
     protected void inputTextByCSS(String css, String text) {
@@ -282,8 +290,12 @@ public abstract class WebTestBase {
         findElementWhenClickable(By.id(id)).click();
     }
 
-    protected void clickLinkContaining(String text) {
+    protected void clickLink(String text) {
         findElementWhenClickable(By.partialLinkText(text)).click();
+    }
+
+    protected void clickButton(String containing) {
+        getElemContaining(containing, "button").click();
     }
 
     protected WebElement findElementWhenClickable(By by) {
@@ -311,10 +323,10 @@ public abstract class WebTestBase {
      List<WebElement> htmlElements = driver.findElements(By.tagName(tagName));
             
         // wait.until(ExpectedConditions.elementToBeClickable(By.name(name)));
-       
+
         for (WebElement e : htmlElements) {
           if (e.getText().contains(containing)) {
-            return Maybe.of(e);
+             return Maybe.of(e);
           }
         }
         
@@ -367,6 +379,11 @@ public abstract class WebTestBase {
     protected void vetumaLogin(String userSsn, String municipality) {
         open(urls.vetumaLogin());
         enterVetumaLoginInformationAndSubmit(userSsn, municipality);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     protected void enterVetumaLoginInformationAndSubmit(String userSsn, String municipalityName) {
@@ -380,13 +397,16 @@ public abstract class WebTestBase {
             }
         }
         inputText("EXTRADATA", "HETU=" + userSsn);
+        if (municipalityName == null) {
+            municipalityName = "Ei kuntaa (Turvakielto)";
+        }
         new Select(findElementWhenClickable(By.name("municipalityCode"))).selectByVisibleText(municipalityName);
         getElement(By.id("formsubmit")).click();
         getElement(By.id("returnsubmit")).click();
     }
 
     protected void assertPageHasValidationErrors() {
-        assertMsgContainedByClass("errors-summary", "formError.summary.title");
+        assertTextContainedByClass("errors-summary", "Tietoja ei tallennettu. Syöttämissäsi tiedoissa oli seuraavia virheitä:");
     }
 
     protected void assertLoginLinkIsVisibleAtHeader() {

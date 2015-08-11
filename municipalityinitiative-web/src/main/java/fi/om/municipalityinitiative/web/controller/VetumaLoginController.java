@@ -160,11 +160,11 @@ public class VetumaLoginController extends DefaultLoginController {
 
             return redirectToTarget(session);
         } else {
-            if (!VetumaResponse.Status.CANCELLED.equals(status)) {   // Usually errors are REJECTED or FAILURE. Failure often has "Cannot use VTJ" and errorcode 8001
-                log.error("VetumaLoginResponse:\nSTATUS = {}\nEXTRADATA = {}", status, vetumaResponse.getEXTRADATA());
-                return redirect(urls.vetumaError());
+            if (VetumaResponse.Status.CANCELLED.equals(status)) { // Usually errors are REJECTED or FAILURE. Failure often has "Cannot use VTJ" and errorcode 8001
+                return redirectToTarget(session);
             }
-            return redirect(urls.frontpage());
+            log.error("VetumaLoginResponse:\nSTATUS = {}\nEXTRADATA = {}", status, vetumaResponse.getEXTRADATA());
+            return redirect(urls.vetumaError());
         }
     }
 

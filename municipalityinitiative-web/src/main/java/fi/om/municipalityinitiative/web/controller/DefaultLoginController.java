@@ -78,10 +78,12 @@ public class DefaultLoginController extends BaseLoginController {
     }
 
     @RequestMapping(value={LOGOUT_FI, LOGOUT_SV}, method=GET)
-    public String logout(Locale locale, HttpServletRequest request, HttpServletResponse response) {
-        Urls urls = Urls.get(locale);
+    public String logout(@RequestParam(required = false) String target, Locale locale, HttpServletRequest request, HttpServletResponse response) {
         userService.logout(request);
-        return redirectWithMessage(urls.frontpage(), RequestMessage.LOGOUT, request);
+        if (target != null) {
+            return redirectWithMessage(target, RequestMessage.LOGOUT, request);
+        }
+        return redirectWithMessage(Urls.get(locale).frontpage(), RequestMessage.LOGOUT, request);
     }
 
 }

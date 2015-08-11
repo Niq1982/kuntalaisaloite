@@ -6,13 +6,17 @@ import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListWithCount;
+import fi.om.municipalityinitiative.service.email.EmailReportType;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import java.util.List;
+import java.util.Map;
 
 public interface InitiativeDao {
 
@@ -20,7 +24,7 @@ public interface InitiativeDao {
 
     Initiative get(Long initiativeId);
 
-    InitiativeCounts getPublicInitiativeCounts(Maybe<Long> municipality, InitiativeSearch.Type all);
+    InitiativeCounts getPublicInitiativeCounts(Maybe<List<Long>> municipalities, InitiativeSearch.Type all);
 
     Long prepareInitiative(Long municipalityId);
 
@@ -42,7 +46,7 @@ public interface InitiativeDao {
 
     void updateSentComment(Long initiativeId, String sentComment);
 
-    InitiativeCounts getAllInitiativeCounts(Maybe<Long> municipality, InitiativeSearch.Type initiativeTypeMaybe);
+    InitiativeCounts getAllInitiativeCounts(Maybe<List<Long>> municipalities, InitiativeSearch.Type initiativeTypeMaybe);
 
     boolean isVerifiableInitiative(Long initiativeId);
 
@@ -53,4 +57,17 @@ public interface InitiativeDao {
     InitiativeListWithCount findUnCached(InitiativeSearch search);
 
     void denormalizeParticipantCountForVerifiedInitiative(Long initiativeId);
+
+    List<Initiative> findAllByStateChangeBefore(InitiativeState accepted, LocalDate date);
+
+    void markInitiativeReportSent(Long id, EmailReportType type, DateTime today);
+
+    List<Initiative> findAllPublishedNotSent();
+
+    Long prepareYouthInitiative(long youthInitiativeId, String name, String proposal, String extraInfo, Long municipality);
+
+    List<Long> getInitiativesThatAreSentAtTheGivenDateOrInFutureOrStillRunning(LocalDate date);
+
+    Map<LocalDate,Long> getSupportVoteCountByDateUntil(Long initiativeId, LocalDate tillDay);
+
 }

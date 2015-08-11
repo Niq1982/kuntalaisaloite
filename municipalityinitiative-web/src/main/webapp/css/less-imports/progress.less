@@ -1,0 +1,249 @@
+@progressContainerHeight: 150px;
+@stepSize: 94px; // use even values to prevent half pixels
+@stepLabelWidth: 8.75em; // 140px
+@progBarHeight: 10px; // use even values to prevent half pixels
+@progBarBorderSize: @progBarHeight / 2;
+@progBarColor: #fff;
+@progBarColorDone: @mainColorLight;
+@progBarColorDisabled: #ccc;
+
+.progressBarItems(@count) {
+  margin-left: -@count * 2 * 2px;
+
+  > span {
+    width: 1/@count * 100%;
+  }
+}
+
+.progressBar(@nth, @childs) {
+  .initiative-progress-bar:nth-child(@{nth}) {
+    left: (@nth - 1) / (@childs - 1) * 100%;
+    width: 1 / (@childs - 1) * 100%;
+  }
+
+  // Use fallback for IE8
+  .ie8 & {
+    .initiative-progress-bar.nth-child-@{nth} {
+      left: (@nth - 1) / (@childs - 1) * 100%;
+      width: 1 / (@childs - 1) * 100%;
+    }
+  }
+}
+
+.progressStepPosition(@nth, @steps) {
+  .step:nth-child(@{nth}) {
+    left: (@nth - 1) / (@steps - 1) * 100%;
+  }
+
+  // Use fallback for IE8
+  .ie8 & {
+    .step.nth-child-@{nth} {
+      left: (@nth - 1) / (@steps - 1) * 100%;
+    }
+  }
+}
+
+.initiative-progress-container {
+ height: @progressContainerHeight;
+}
+
+.initiative-progress-bar {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  left: 0;
+  margin-top: -@progBarHeight / 2;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 0;
+
+   > span {
+    box-sizing: border-box;
+    position: relative;
+    top: -@progBarBorderSize + 1;
+    display: inline-block;
+    width: 100%;
+    padding: 0 1px;
+    margin: 0 2px;
+    font-size: 16px;
+
+    span {
+      position: relative;
+      display: inline-block;
+      height: @progBarHeight;
+      width: 100%;
+      background: @progBarColor;
+
+      &:before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: -@progBarBorderSize;
+        margin-top: -@progBarBorderSize;
+        border-width: @progBarBorderSize 0 @progBarBorderSize @progBarBorderSize;
+        border-style: solid;
+        border-color: @progBarColor @progBarColor @progBarColor transparent;
+      }
+
+      &:after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: -@progBarBorderSize;
+        margin-top: -@progBarBorderSize;
+        border-top: @progBarBorderSize solid transparent;
+        border-bottom: @progBarBorderSize solid transparent;
+        border-left: @progBarBorderSize solid @progBarColor;
+      }
+
+      &.done {
+        background: @progBarColorDone;
+
+        &:before {
+          border-color: @progBarColorDone @progBarColorDone @progBarColorDone transparent;
+        }
+
+        &:after {
+          border-left-color: @progBarColorDone;
+        }
+
+        &.disabled {
+          background: @progBarColorDisabled;
+
+          &:before {
+            border-color: @progBarColorDisabled @progBarColorDisabled @progBarColorDisabled transparent;
+          }
+
+          &:after {
+            border-left-color: @progBarColorDisabled;
+          }
+        }
+      }
+    }
+  }
+
+  &.bar-items-2 {
+    .progressBarItems(2);
+  }
+
+  &.bar-items-3 {
+    .progressBarItems(3);
+  }
+
+  &.bar-items-4 {
+    .progressBarItems(4);
+  }
+}
+
+
+.initiative-progress {
+  box-sizing: border-box;
+  position: relative;
+  height: @stepSize;
+  margin: 0 @stepLabelWidth / 2;
+
+  .step {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    width: 0;
+
+    &:first-child {
+      left: 0;
+    }
+
+    &:last-child {
+      right: 0;
+    }
+
+    .ie8 & {
+      &.last-child {
+        right: 0;
+      }
+    }
+
+    .step-icon-holder {
+      position: relative;
+      display: inline-block;
+      width: @stepSize;
+      height: @stepSize;
+      border-radius: 100%;
+      margin-left: -@stepSize / 2;
+      background: @progBarColor;
+
+      .ie8 & {
+        background: transparent url("@{imagesPath}/ie/progress-step.png?version=${timestamp}") no-repeat 0 0;
+      }
+
+      i {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin: -32px 0 0 -32px;
+      }
+    }
+
+    .label {
+      display: inline-block;
+      width: @stepLabelWidth;
+      margin-left: -@stepLabelWidth / 2;
+      text-align: center;
+    }
+
+    &.done {
+      .step-icon-holder {
+        background: @progBarColorDone;
+
+        .ie8 & {
+          background: transparent url("@{imagesPath}/ie/progress-step.png?version=${timestamp}") no-repeat 0 -100px;
+        }
+      }
+
+      &.disabled {
+        .step-icon-holder {
+          background: @progBarColorDisabled;
+
+          .ie8 & {
+            background: transparent url("@{imagesPath}/ie/progress-step.png?version=${timestamp}") no-repeat 0 -200px;
+          }
+        }
+      }
+    }
+
+    &:not(.done) {
+      .step-icon-holder {
+        i {
+          opacity: .3;
+        }
+      }
+    }
+  }
+
+  &.steps-2 {
+    margin: 0 13.5 + @stepLabelWidth / 2; // em -> 0 286px (216 + 140/2)
+  }
+
+  &.steps-3 {
+    .progressStepPosition(2, 3);
+    .progressBar(1, 3);
+    .progressBar(2, 3);
+  }
+
+  &.steps-4 {
+    .progressStepPosition(2, 4);
+    .progressStepPosition(3, 4);
+    .progressBar(1, 4);
+    .progressBar(2, 4);
+    .progressBar(3, 4);
+  }
+
+  &.steps-5 {
+    .progressStepPosition(2, 5);
+    .progressStepPosition(3, 5);
+    .progressStepPosition(4, 5);
+    .progressBar(1, 5);
+    .progressBar(2, 5);
+    .progressBar(3, 5);
+    .progressBar(4, 5);
+  }
+}

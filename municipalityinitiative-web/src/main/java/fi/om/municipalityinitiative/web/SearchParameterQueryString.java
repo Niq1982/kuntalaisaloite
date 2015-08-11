@@ -1,8 +1,12 @@
 package fi.om.municipalityinitiative.web;
 
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
+import fi.om.municipalityinitiative.dto.service.Municipality;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Freemarker uses this class for generating links with get-parameters at search page.
@@ -49,8 +53,27 @@ public class SearchParameterQueryString {
             builder.append("?");
         }
         builder.append(name)
-                .append("=")
-                .append(fieldValue.toString());
+                .append("=");
+
+        if (fieldValue instanceof Collection) {
+            appendCollection(builder, (Collection) fieldValue);
+        } else {
+            builder.append(fieldValue.toString());
+        }
+
+    }
+
+    private static void appendCollection(StringBuilder builder, Collection fieldValue) {
+        boolean first = true;
+        for(Object item : fieldValue.toArray()) {
+            if (!first){
+                builder.append(",");
+            }
+            else {
+                first = false;
+            }
+            builder.append(item.toString());
+        }
     }
 
     public String get() {
@@ -96,21 +119,21 @@ public class SearchParameterQueryString {
     public String getWithStateSent() {
         return generateParameters(new InitiativeSearch()
                 .setShow(InitiativeSearch.Show.sent)
-                .setMunicipality(original.getMunicipality())
+                .setMunicipalities(original.getMunicipalities())
                 .setType(original.getType())
                 .setOrderBy(InitiativeSearch.OrderBy.latestSent));
     }
     public String getWithStateCollecting() {
         return generateParameters(new InitiativeSearch()
                 .setShow(InitiativeSearch.Show.collecting)
-                .setMunicipality(original.getMunicipality())
+                .setMunicipalities(original.getMunicipalities())
                 .setType(original.getType())
                 .setOrderBy(InitiativeSearch.OrderBy.latest));
     }
     public String getWithStateAll() {
         return generateParameters(new InitiativeSearch()
                 .setShow(InitiativeSearch.Show.all)
-                .setMunicipality(original.getMunicipality())
+                .setMunicipalities(original.getMunicipalities())
                 .setType(original.getType())
                 .setOrderBy(InitiativeSearch.OrderBy.latest));
     }
@@ -118,7 +141,7 @@ public class SearchParameterQueryString {
     public String getWithStateDraft() {
         return generateParameters(new InitiativeSearch()
                 .setShow(InitiativeSearch.Show.draft)
-                .setMunicipality(original.getMunicipality())
+                .setMunicipalities(original.getMunicipalities())
                 .setType(original.getType())
                 .setOrderBy(InitiativeSearch.OrderBy.latest));
     }
@@ -126,7 +149,7 @@ public class SearchParameterQueryString {
     public String getWithStateAccepted() {
         return generateParameters(new InitiativeSearch()
                 .setShow(InitiativeSearch.Show.accepted)
-                .setMunicipality(original.getMunicipality())
+                .setMunicipalities(original.getMunicipalities())
                 .setType(original.getType())
                 .setOrderBy(InitiativeSearch.OrderBy.latest));
     }
@@ -134,7 +157,7 @@ public class SearchParameterQueryString {
     public String getWithStateReview() {
         return generateParameters(new InitiativeSearch()
                 .setShow(InitiativeSearch.Show.review)
-                .setMunicipality(original.getMunicipality())
+                .setMunicipalities(original.getMunicipalities())
                 .setType(original.getType())
                 .setOrderBy(InitiativeSearch.OrderBy.latest));
     }
@@ -142,40 +165,52 @@ public class SearchParameterQueryString {
     public String getWithStateFix() {
         return generateParameters(new InitiativeSearch()
                 .setShow(InitiativeSearch.Show.fix)
-                .setMunicipality(original.getMunicipality())
+                .setMunicipalities(original.getMunicipalities())
                 .setType(original.getType())
                 .setOrderBy(InitiativeSearch.OrderBy.latest));
     }
 
     public String getWithMunicipality(Long municipalityId) {
-        return generateParameters(new InitiativeSearch().setMunicipality(municipalityId));
+        return generateParameters(new InitiativeSearch().setMunicipalities(municipalityId));
+    }
+
+    public String getWithMunicipalities(List<Municipality> municipalities) {
+        ArrayList<Long> municipalityIds = new ArrayList<Long>();
+        for(Municipality m : municipalities) {
+            municipalityIds.add(m.getId());
+        }
+        return getWithMunicipalityIds(municipalityIds);
+    }
+
+    public String getWithMunicipalityIds(ArrayList<Long> municipalityIds) {
+        return generateParameters(new InitiativeSearch().setMunicipalities(municipalityIds));
     }
 
     public String getWithTypeAll() {
         return generateParameters(new InitiativeSearch()
                 .setShow(original.getShow())
-                .setMunicipality(original.getMunicipality())
+                .setMunicipalities(original.getMunicipalities())
                 .setType(InitiativeSearch.Type.all));
     }
 
     public String getWithTypeNormal() {
         return generateParameters(new InitiativeSearch()
                 .setShow(original.getShow())
-                .setMunicipality(original.getMunicipality())
+                .setMunicipalities(original.getMunicipalities())
                 .setType(InitiativeSearch.Type.normal));
     }
 
     public String getWithTypeCitizen() {
         return generateParameters(new InitiativeSearch()
                 .setShow(original.getShow())
-                .setMunicipality(original.getMunicipality())
+                .setMunicipalities(original.getMunicipalities())
                 .setType(InitiativeSearch.Type.citizen));
     }
 
     public String getWithTypeCouncil() {
         return generateParameters(new InitiativeSearch()
                 .setShow(original.getShow())
-                .setMunicipality(original.getMunicipality())
+                .setMunicipalities(original.getMunicipalities())
                 .setType(InitiativeSearch.Type.council));
     }
 }

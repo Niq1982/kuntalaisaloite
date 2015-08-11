@@ -44,11 +44,11 @@ public class ManagementSettings {
         return initiative.getState().equals(InitiativeState.ACCEPTED) && initiative.getFixState().equals(FixState.OK);
     }
 
-    public boolean isAllowParticipate() {
-        return !(initiative.getState() != InitiativeState.PUBLISHED
-                || initiative.getSentTime().isPresent()
-                || !initiative.isCollaborative()
-                || initiative.getFixState() != FixState.OK);
+    public boolean isAllowParticipation() {
+        return initiative.getState() == InitiativeState.PUBLISHED
+                && !initiative.getSentTime().isPresent()
+                && initiative.isCollaborative()
+                && initiative.getFixState() == FixState.OK;
     }
 
     public boolean isAllowInviteAuthors() {

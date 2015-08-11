@@ -17,10 +17,14 @@ import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.Membership;
 
 import javax.annotation.Resource;
+import java.util.Collection;
 import java.util.List;
 
 import static fi.om.municipalityinitiative.dao.JdbcInitiativeDao.assertSingleAffection;
+import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 import static fi.om.municipalityinitiative.sql.QParticipant.participant;
+import static fi.om.municipalityinitiative.sql.QVerifiedParticipant.verifiedParticipant;
+import static fi.om.municipalityinitiative.sql.QVerifiedUserNormalInitiatives.verifiedUserNormalInitiatives;
 
 @SQLExceptionTranslated
 public class JdbcParticipantDao implements ParticipantDao {
@@ -127,6 +131,25 @@ public class JdbcParticipantDao implements ParticipantDao {
     }
 
     @Override
+    public void verifiedUserParticipatesNormalInitiative(Long participantId, VerifiedUserId userId) {
+        assertSingleAffection(queryFactory.insert(verifiedUserNormalInitiatives)
+                .set(verifiedUserNormalInitiatives.participant, participantId)
+                .set(verifiedUserNormalInitiatives.verifiedUser, userId.toLong()).execute());
+    }
+
+    @Override
+    public Collection<Long> getNormalInitiativesVerifiedUserHasParticipated(VerifiedUserId userId) {
+        return queryFactory.from(verifiedUserNormalInitiatives)
+                .where(verifiedUserNormalInitiatives.verifiedUser
+                        .eq(userId.toLong()))
+                .innerJoin(participant)
+                    .on(verifiedUserNormalInitiatives.participant.eq(participant.id))
+                .innerJoin(municipalityInitiative)
+                    .on(participant.municipalityInitiativeId.eq(municipalityInitiative.id))
+                .list(municipalityInitiative.id);
+    }
+
+    @Override
     // Preparing because we do not know participants name
     public Long prepareConfirmedParticipant(Long initiativeId, Long homeMunicipality, String email, Membership membership, boolean showName) {
         Long participantId = queryFactory.insert(participant)
@@ -226,6 +249,18 @@ public class JdbcParticipantDao implements ParticipantDao {
         assertSingleAffection(queryFactory.delete(participant)
                 .where(participant.id.eq(participantId))
                 .where(participant.municipalityInitiativeId.eq(initiativeId))
+                .execute());
+        assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
+                .set(QMunicipalityInitiative.municipalityInitiative.participantCount, QMunicipalityInitiative.municipalityInitiative.participantCount.subtract(1))
+                .where(QMunicipalityInitiative.municipalityInitiative.id.eq(initiativeId))
+                .execute());
+    }
+
+    @Override
+    public void deleteVerifiedParticipant(Long initiativeId, Long verifiedparticipantId) {
+        assertSingleAffection(queryFactory.delete(verifiedParticipant)
+                .where(verifiedParticipant.verifiedUserId.eq(verifiedparticipantId))
+                .where(verifiedParticipant.initiativeId.eq(initiativeId))
                 .execute());
         assertSingleAffection(queryFactory.update(QMunicipalityInitiative.municipalityInitiative)
                 .set(QMunicipalityInitiative.municipalityInitiative.participantCount, QMunicipalityInitiative.municipalityInitiative.participantCount.subtract(1))

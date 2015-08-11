@@ -5,10 +5,8 @@ import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import org.joda.time.DateTime;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -28,19 +26,99 @@ public class SearchInitiativesWebTest extends WebTestBase {
     }
 
     @Test
-    @Ignore("God damn selenium why won't you work")
     public void municipalities_are_listed() {
         overrideDriverToFirefox(true);
         open(urls.search());
 
-        WebElement municipalities = getElement(By.id("municipality_chzn"));
+        clickInput();
 
-        System.out.println(municipalities.getText());
-        String municipalitiesRawText = municipalities.getText();
+        String municipalitiesRawText = getChosenResultsRawText();
+        assertThat(municipalitiesRawText, containsString(HELSINKI));
+        assertThat(municipalitiesRawText, containsString(VANTAA));
+    }
+
+    @Test
+    public void search_by_municipality() {
+        overrideDriverToFirefox(true);
+
+        String collaborativeCitizenInitiativeNameHelsinki = "Collaborative Citizen Helsinki";
+
+        String collaborativeCitizenInitiativeNameVantaa = "Collaborative Citizen Vantaa";
+
+
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
+                .withType(InitiativeType.COLLABORATIVE_CITIZEN)
+                .withState(InitiativeState.PUBLISHED)
+                .withName(collaborativeCitizenInitiativeNameHelsinki));
+
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(VANTAA_ID)
+                .withType(InitiativeType.COLLABORATIVE_CITIZEN)
+                .withState(InitiativeState.PUBLISHED)
+                .withName(collaborativeCitizenInitiativeNameVantaa));
+
+        open(urls.search());
+
+        clickInput();
+
+        String municipalitiesRawText = getChosenResultsRawText();
         assertThat(municipalitiesRawText, containsString(HELSINKI));
         assertThat(municipalitiesRawText, containsString(VANTAA));
 
+        clickById("municipalities_chzn_o_1");
 
+        assertTextContainedByClass("search-results", collaborativeCitizenInitiativeNameHelsinki);
+        assertTextNotContainedByClass("search-results", collaborativeCitizenInitiativeNameVantaa);
+    }
+
+    @Test
+    public void search_by_several_municipalities() {
+        overrideDriverToFirefox(true);
+
+        String collaborativeCitizenInitiativeNameHelsinki = "Collaborative Citizen Helsinki";
+
+        String collaborativeCitizenInitiativeNameVantaa = "Collaborative Citizen Vantaa";
+
+
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(HELSINKI_ID)
+                .withType(InitiativeType.COLLABORATIVE_CITIZEN)
+                .withState(InitiativeState.PUBLISHED)
+                .withName(collaborativeCitizenInitiativeNameHelsinki));
+
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(VANTAA_ID)
+                .withType(InitiativeType.COLLABORATIVE_CITIZEN)
+                .withState(InitiativeState.PUBLISHED)
+                .withName(collaborativeCitizenInitiativeNameVantaa));
+
+        open(urls.search());
+
+        clickInput();
+
+        String municipalitiesRawText = getChosenResultsRawText();
+        assertThat(municipalitiesRawText, containsString(HELSINKI));
+        assertThat(municipalitiesRawText, containsString(HYVINKAA));
+        assertThat(municipalitiesRawText, containsString(VANTAA));
+
+        clickById("municipalities_chzn_o_1");
+
+        assertTextContainedByClass("search-results", collaborativeCitizenInitiativeNameHelsinki);
+        assertTextNotContainedByClass("search-results", collaborativeCitizenInitiativeNameVantaa);
+
+        clickInput();
+
+        municipalitiesRawText = getChosenResultsRawText();
+        assertThat(municipalitiesRawText, containsString(VANTAA));
+        assertThat(municipalitiesRawText, containsString(HYVINKAA));
+
+        clickById("municipalities_chzn_o_3");
+
+        assertTextContainedByClass("search-results", collaborativeCitizenInitiativeNameHelsinki);
+        assertTextContainedByClass("search-results", collaborativeCitizenInitiativeNameVantaa);
+
+    }
+
+
+    private String getChosenResultsRawText() {
+        return getElement(By.className("chzn-results")).getText();
     }
 
     @Test

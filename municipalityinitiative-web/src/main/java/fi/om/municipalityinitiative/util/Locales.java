@@ -22,5 +22,12 @@ public final class Locales {
             return LOCALE_FI;
         }
     }
+
+    public static Locale forLanguageTag(String languageTag) {
+        if (SV.equals(languageTag)) {
+            return LOCALE_SV;
+        }
+        return LOCALE_FI;
+    }
     
 }

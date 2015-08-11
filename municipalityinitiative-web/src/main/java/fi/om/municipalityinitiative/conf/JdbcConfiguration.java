@@ -9,6 +9,7 @@ import com.mysema.query.sql.types.DateTimeType;
 import com.mysema.query.sql.types.EnumAsObjectType;
 import com.mysema.query.sql.types.LocalDateType;
 import com.mysema.query.types.Ops;
+import fi.om.municipalityinitiative.service.email.EmailReportType;
 import fi.om.municipalityinitiative.util.*;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -56,7 +57,7 @@ public class JdbcConfiguration {
     public DataSource dataSource() throws IOException {
         BoneCPDataSource dataSource;
         try {
-            File file = new File(new File(System.getProperty("java.class.path")).getParentFile().getAbsoluteFile().getPath() + "/config/bonecp-config.xml");
+            File file = new File(new File(System.getProperty("java.class.path")).getParentFile().getParentFile().getAbsoluteFile().getPath() + "/config/bonecp-config.xml");
             if (!file.exists()) {
                 log.warn("\n");
                 log.warn("BONECP-CONFIG-FILE NOT FOUND at /config/bonecp-config.xml!");
@@ -87,11 +88,13 @@ public class JdbcConfiguration {
         configuration.register(new LocalDateType());
         configuration.register("municipality_initiative", "type", new EnumAsObjectType<>(InitiativeType.class));
         configuration.register("municipality_initiative", "state", new EnumAsObjectType<>(InitiativeState.class));
+        configuration.register("municipality_initiative", "last_email_report_type", new EnumAsObjectType<>(EmailReportType.class));
         configuration.register("participant", "membership_type", new EnumAsObjectType<>(Membership.class));
         configuration.register("municipality_initiative", "fix_state", new EnumAsObjectType<>(FixState.class));
         configuration.register("info_text", "category", new EnumAsObjectType<>(InfoTextCategory.class));
         configuration.register("info_text", "languagecode", new EnumAsObjectType<>(LanguageCode.class));
         configuration.register("email", "attachment", new EnumAsObjectType<>(EmailAttachmentType.class));
+        configuration.register("review_history", "type", new EnumAsObjectType<>(ReviewHistoryType.class));
         return configuration;
     }
 

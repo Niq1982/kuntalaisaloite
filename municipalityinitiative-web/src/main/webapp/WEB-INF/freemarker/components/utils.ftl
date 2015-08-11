@@ -190,7 +190,16 @@
 		</noscript>
 	    
 	    <script>
-		    document.write('<a href="javascript: history.go(-1)">&laquo; <@message labelKey /></a>');
+	    	(function(){
+	    		var prevPage = '${urls.search()}';
+	    	
+	    		// Preserve sort-parameters
+	    		if (document.referrer.indexOf('${urls.search()}') !== -1) {
+	    			prevPage = 'javascript: history.go(-1)';
+	    		}
+	    		
+	    		document.write('<a href="' + prevPage + '">&laquo; <@message labelKey /></a>');
+	    	})();
 		</script>
 	<#else>
 		<a href="${url}" >&laquo; <@message labelKey /></a>
@@ -271,7 +280,11 @@
                     <#-- Participate to verifiable initiative -->
                     <#elseif requestMessage == RequestMessage.PARTICIPATE_VERIFIABLE>
                         <@messageHTML requestMessage />
-                        <a href="${urls.logout()}" class="small-button"><span class="small-icon logout"><@message "common.logout" /></span></a><a href="${urls.baseUrl}/${locale}" class="small-button push close"><@message "modal.continueBrowsing" /></a>
+                        <a <#if initiative??>
+                                href="${urls.logout()}?target=${urls.view(initiative.id)}"
+                            <#else>
+                                href="${urls.logout()}"
+                            </#if> class="small-button"><span class="small-icon logout"><@message "common.logout" /></span></a><a href="${urls.baseUrl}/${locale}" class="small-button push close"><@message "modal.continueBrowsing" /></a>
                     <#else>
                         <@messageHTML requestMessage />
                     </#if>
@@ -479,6 +492,19 @@
 
 <#macro solveMunicipality municipality>
     <#if municipality.present>${municipality.value.getName(locale)}<#else><@message "vtj.missingMunicipalityData" /></#if>
+</#macro>
+
+
+<#--
+  * Print out a comma separated list of municipalities on current locale.
+  * Last two words separated by ja/och.
+  *
+  * @Param municipalities list of municipalities
+-->
+<#macro printMunicipalities municipalities>
+    <#list municipalities as m>
+        ${m.getName(locale)}<#if municipalities?size - 2 = m_index>  <@message "iframe.and" /><#elseif m_has_next>,</#if>
+    </#list>
 </#macro>
 
 </#escape>

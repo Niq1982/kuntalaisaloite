@@ -3,9 +3,9 @@
 // .facebook    - Facebook
 // .google      - Google
 // .twitter     - Twitter
-// 
+//
 // Styleguide 11.
-.some-links { 
+.some-links {
     margin-bottom:1em;
     text-align:center;
 
@@ -15,7 +15,7 @@
         line-height:32px;
         margin-right:1em;
     }
-    
+
     .icon-some {
         display:inline-block;
         height:48px;
@@ -23,13 +23,13 @@
         margin-right:1em;
         opacity:0.9;
         .transition(opacity, 0.1s, ease-in);
-        
-        background:url("../../img/icons-sprite.png?version=${timestamp}") no-repeat 0 -196px;
-        
+
+        background:url("@{imagesPath}/icons-sprite.png?version=${timestamp}") no-repeat 0 -196px;
+
         &.facebook  { background-position:0 -196px; }
         &.google    { background-position:-64px -196px; }
         &.twitter   { background-position:-128px -196px; }
-        
+
         &:hover { opacity:1; }
     }
 }

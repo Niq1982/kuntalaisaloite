@@ -4,12 +4,10 @@ import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.dao.*;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.Initiative;
-import fi.om.municipalityinitiative.dto.service.Participant;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,4 +70,5 @@ public class EmailServiceDataProvider {
     public int getAcceptedAttachmentCount(Long initiativeId) {
         return attachmentDao.findAcceptedAttachments(initiativeId).size();
     }
+
 }

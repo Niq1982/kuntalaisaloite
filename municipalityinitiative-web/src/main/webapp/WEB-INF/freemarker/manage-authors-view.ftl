@@ -3,6 +3,7 @@
 <#import "components/utils.ftl" as u />
 <#import "components/elements.ftl" as e />
 <#import "components/forms.ftl" as f />
+<#import "components/progress.ftl" as prog />
 
 <#escape x as x?html> 
 
@@ -26,12 +27,10 @@
 
     <@e.initiativeTitle initiative />
     
-    <@e.stateInfo initiative />
+    <@prog.progress initiative=initiative public=false />
     
-    
-
     <#if !RequestParameters['deleteAuthor']??>
-        <div class="view-block ">
+        <div class="view-block first">
             <div class="initiative-content-row last">
                 <h2><@u.message "authors.title" /></h2>
             
@@ -190,33 +189,35 @@
     <@spring.bind "newInvitation.*" />
     <#assign validationError = spring.status.error />
 
-    <div class="js-open-block hidden ${validationError?string("js-hide","")}">
-        <a class="small-button gray js-btn-open-block" data-open-block="js-block-container" href="#"><span class="small-icon add"><@u.message "action.addAuthor" /></span></a>
-    </div>
-
-    <div class="cf js-block-container ${validationError?string("","js-hide")}">
-        <h3><@u.message "invitations.addAuthor.title" /></h3>
-        
-        <div class="input-block-content no-top-margin">
-            <@u.systemMessage path="invitation.description" type="info" />
-        </div>
-
-        <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-send" class="sodirty" novalidate>
-            <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
-            
-            <div class="input-block-content">
-                <p><@f.fieldRequiredInfo /></p>
-            
-                <@f.textField path="newInvitation.authorName" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_NAME_MAX />
-                <@f.textField path="newInvitation.authorEmail" required="required" optional=false cssClass="large" attributes='data-type="email"' maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
-            </div>
-
-            <div class="input-block-content no-top-margin">
-                <button type="submit" name="${UrlConstants.ACTION_ACCEPT_INITIATIVE}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.sendInvitation" /></span></button>
-                <a href="${springMacroRequestContext.requestUri}" class="push ${validationError?string("","js-btn-close-block hidden")}"><@u.message "action.cancel" /></a>
-            </div>
-            <br/><br/>
-        </form>
+	<div class="toggle-container">
+	    <div class="js-open-block hidden ${validationError?string("js-hide","")}">
+	        <a class="small-button gray js-btn-open-block" data-open-block="js-block-container" href="#"><span class="small-icon add"><@u.message "action.addAuthor" /></span></a>
+	    </div>
+	
+	    <div class="cf js-block-container ${validationError?string("","js-hide")}">
+	        <h3><@u.message "invitations.addAuthor.title" /></h3>
+	        
+	        <div class="input-block-content no-top-margin">
+	            <@u.systemMessage path="invitation.description" type="info" />
+	        </div>
+	
+	        <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-send" class="sodirty" novalidate>
+	            <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
+	            
+	            <div class="input-block-content">
+	                <p><@f.fieldRequiredInfo /></p>
+	            
+	                <@f.textField path="newInvitation.authorName" required="required" optional=false cssClass="large" maxLength=InitiativeConstants.CONTACT_NAME_MAX />
+	                <@f.textField path="newInvitation.authorEmail" required="required" optional=false cssClass="large" attributes='data-type="email"' maxLength=InitiativeConstants.CONTACT_EMAIL_MAX />
+	            </div>
+	
+	            <div class="input-block-content no-top-margin">
+	                <button type="submit" name="${UrlConstants.ACTION_ACCEPT_INITIATIVE}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.sendInvitation" /></span></button>
+	                <a href="${springMacroRequestContext.requestUri}" class="push ${validationError?string("","js-btn-close-block hidden")}"><@u.message "action.cancel" /></a>
+	            </div>
+	            <br/><br/>
+	        </form>
+	    </div>
     </div>
 </#macro>
 

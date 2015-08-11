@@ -2,10 +2,7 @@ package fi.om.municipalityinitiative.service.ui;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import fi.om.municipalityinitiative.dao.AuthorDao;
-import fi.om.municipalityinitiative.dao.InitiativeDao;
-import fi.om.municipalityinitiative.dao.ParticipantDao;
-import fi.om.municipalityinitiative.dao.UserDao;
+import fi.om.municipalityinitiative.dao.*;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.VerifiedAuthor;
@@ -16,13 +13,11 @@ import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
+import fi.om.municipalityinitiative.service.YouthInitiativeWebServiceNotifier;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
-import fi.om.municipalityinitiative.util.FixState;
-import fi.om.municipalityinitiative.util.InitiativeState;
-import fi.om.municipalityinitiative.util.InitiativeType;
-import fi.om.municipalityinitiative.util.Maybe;
+import fi.om.municipalityinitiative.util.*;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -47,6 +42,12 @@ public class InitiativeManagementService {
 
     @Resource
     ParticipantDao participantDao;
+
+    @Resource
+    private ReviewHistoryDao reviewHistoryDao;
+
+    @Resource
+    private YouthInitiativeWebServiceNotifier youthInitiativeWebServiceNotifier;
 
     @Transactional(readOnly = true)
     public InitiativeDraftUIEditDto getInitiativeDraftForEdit(Long initiativeId, LoginUserHolder loginUserHolder) {
@@ -171,6 +172,7 @@ public class InitiativeManagementService {
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.REVIEW);
         initiativeDao.updateInitiativeType(initiativeId, InitiativeType.SINGLE);
         initiativeDao.updateSentComment(initiativeId, sentComment);
+        reviewHistoryDao.addReview(initiativeId, InitiativeSnapshotCreator.create(initiative));
 
         emailService.sendStatusEmail(initiativeId, EmailMessageType.SENT_TO_REVIEW);
         emailService.sendNotificationToModerator(initiativeId);
@@ -183,6 +185,7 @@ public class InitiativeManagementService {
         Initiative initiative = initiativeDao.get(initiativeId);
         assertAllowance("Send review", ManagementSettings.of(initiative).isAllowSendToReview());
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.REVIEW);
+        reviewHistoryDao.addReview(initiativeId, InitiativeSnapshotCreator.create(initiative));
         if (initiative.getType().isNotVerifiable()) {
             initiativeDao.updateInitiativeType(initiativeId, InitiativeType.UNDEFINED);
         }
@@ -194,8 +197,10 @@ public class InitiativeManagementService {
     @Transactional(readOnly = false)
     public void sendFixToReview(Long initiativeId, LoginUserHolder requiredLoginUserHolder) {
         requiredLoginUserHolder.assertManagementRightsForInitiative(initiativeId);
-        assertAllowance("Send fix to review", ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowSendFixToReview());
+        Initiative initiative = initiativeDao.get(initiativeId);
+        assertAllowance("Send fix to review", ManagementSettings.of(initiative).isAllowSendFixToReview());
         initiativeDao.updateInitiativeFixState(initiativeId, FixState.REVIEW);
+        reviewHistoryDao.addReview(initiativeId, InitiativeSnapshotCreator.create(initiative));
 
         emailService.sendStatusEmail(initiativeId, EmailMessageType.SENT_FIX_TO_REVIEW);
         emailService.sendNotificationToModerator(initiativeId);
@@ -214,6 +219,9 @@ public class InitiativeManagementService {
         initiativeDao.updateInitiativeState(initiativeId, InitiativeState.PUBLISHED);
 
         emailService.sendStatusEmail(initiativeId, EmailMessageType.PUBLISHED_COLLECTING);
+        if (initiative.getYouthInitiativeId().isPresent()) {
+            youthInitiativeWebServiceNotifier.informInitiativePublished(initiative);
+        }
     }
 
     @Transactional(readOnly = false)
@@ -237,6 +245,10 @@ public class InitiativeManagementService {
         else {
             emailService.sendCollaborativeToAuthors(initiativeId);
             emailService.sendCollaborativeToMunicipality(initiativeId, locale);
+        }
+
+        if (initiative.getYouthInitiativeId().isPresent()) {
+            youthInitiativeWebServiceNotifier.informInitiativeSentToMunicipality(initiative);
         }
 
     }

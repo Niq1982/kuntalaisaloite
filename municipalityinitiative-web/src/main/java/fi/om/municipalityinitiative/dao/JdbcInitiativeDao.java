@@ -22,18 +22,24 @@ import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListWithCount;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
+import fi.om.municipalityinitiative.service.email.EmailReportType;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
+import static fi.om.municipalityinitiative.sql.QParticipant.participant;
+import static fi.om.municipalityinitiative.sql.QVerifiedParticipant.verifiedParticipant;
 
 @SQLExceptionTranslated
 public class JdbcInitiativeDao implements InitiativeDao {
@@ -92,6 +98,12 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     info.setFixState(row.get(municipalityInitiative.fixState));
                     info.setExternalParticipantCount(Mappings.nullToZero(row.get(municipalityInitiative.externalparticipantcount)));
                     info.setParticipantCountPublic(Mappings.nullToZero(row.get(municipalityInitiative.participantCountPublic)));
+                    info.setLastEmailReportTime(row.get(municipalityInitiative.lastEmailReportTime));
+                    info.setLastEmailReportType(row.get(municipalityInitiative.lastEmailReportType));
+                    Long maybeYouthInitiativeID = row.get(municipalityInitiative.youthInitiativeId);
+                    if (maybeYouthInitiativeID != null) {
+                        info.setYouthInitiativeId(maybeYouthInitiativeID);
+                    }
                     return info;
                 }
             };
@@ -117,13 +129,12 @@ public class JdbcInitiativeDao implements InitiativeDao {
     private InitiativeListWithCount find(InitiativeSearch search) {
         PostgresQuery query = queryFactory
                 .from(municipalityInitiative)
-                .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
-                ;
+                .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality);
 
         filterByState(query, search);
         filterByType(query, search.getType());
         filterByTitle(query, search.getSearch());
-        filterByMunicipality(query, search.getMunicipality());
+        filterByMunicipality(query, Maybe.fromNullable(search.getMunicipalities()));
         orderBy(query, search.getOrderBy());
         long rows = query.count();
         restrictResults(query, search);
@@ -160,6 +171,47 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .where(QMunicipalityInitiative.municipalityInitiative.name.isNotEmpty())
                 .orderBy(QMunicipalityInitiative.municipalityInitiative.id.desc())
                 .list(initiativeListInfoMapping);
+    }
+
+    @Override
+    public List<Initiative> findAllByStateChangeBefore(InitiativeState accepted, LocalDate date) {
+        DateTime dateTimeAtMidnight = date.toDateTime(new LocalTime(0, 0));
+        return queryFactory.from(QMunicipalityInitiative.municipalityInitiative)
+                .where(QMunicipalityInitiative.municipalityInitiative.state.eq(accepted))
+                .where(QMunicipalityInitiative.municipalityInitiative.stateTimestamp.before(dateTimeAtMidnight))
+                .innerJoin(QMunicipalityInitiative.municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
+                .list(initiativeInfoMapping);
+    }
+
+    @Override
+    public List<Initiative> findAllPublishedNotSent() {
+        return queryFactory.from(municipalityInitiative)
+                .where(municipalityInitiative.sent.isNull())
+                .where(municipalityInitiative.state.eq(InitiativeState.PUBLISHED))
+                .innerJoin(municipalityInitiative.municipalityInitiativeMunicipalityFk, QMunicipality.municipality)
+                .list(initiativeInfoMapping);
+    }
+
+    @Override
+    public Long prepareYouthInitiative(long youthInitiativeId, String name, String proposal, String extraInfo, Long municipality) {
+        return queryFactory.insert(municipalityInitiative)
+                .set(municipalityInitiative.youthInitiativeId, youthInitiativeId)
+                .set(municipalityInitiative.name, name)
+                .set(municipalityInitiative.proposal, proposal)
+                .set(municipalityInitiative.extraInfo, extraInfo)
+                .set(municipalityInitiative.municipalityId, municipality)
+                .set(municipalityInitiative.type, InitiativeType.UNDEFINED)
+                .executeWithKey(municipalityInitiative.id);
+    }
+
+    @Override
+    public void markInitiativeReportSent(Long id, EmailReportType type, DateTime today) {
+        assertSingleAffection(queryFactory.update(municipalityInitiative)
+                .set(municipalityInitiative.lastEmailReportTime, today)
+                .set(municipalityInitiative.lastEmailReportType, type)
+                .where(municipalityInitiative.id.eq(id))
+                .execute());
+
     }
 
     @Override
@@ -228,9 +280,9 @@ public class JdbcInitiativeDao implements InitiativeDao {
         }
     }
 
-    private static void filterByMunicipality(PostgresQuery query, Long municipalityId) {
-        if (municipalityId != null) {
-            query.where(municipalityInitiative.municipalityId.eq(municipalityId));
+    private static void filterByMunicipality(PostgresQuery query, Maybe<List<Long>> municipalityIds) {
+        if (municipalityIds.isPresent() && !municipalityIds.getValue().isEmpty()) {
+            query.where(municipalityInitiative.municipalityId.in(municipalityIds.getValue()));
         }
     }
 
@@ -313,7 +365,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     @Cacheable(value = "initiativeCount")
-    public InitiativeCounts getPublicInitiativeCounts(Maybe<Long> municipality, InitiativeSearch.Type initiativeType) {
+    public InitiativeCounts getPublicInitiativeCounts(Maybe<List<Long>> municipalities, InitiativeSearch.Type initiativeType) {
         Expression<String> caseBuilder = new CaseBuilder()
                 .when(municipalityInitiative.sent.isNull())
                 .then(new ConstantImpl<String>(InitiativeSearch.Show.collecting.name()))
@@ -327,8 +379,8 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
         filterByType(from, initiativeType);
 
-        if (municipality.isPresent()) {
-            from.where(municipalityInitiative.municipalityId.eq(municipality.get()));
+        if (municipalities.isPresent() && !(municipalities.getValue()).isEmpty()) {
+            from.where(municipalityInitiative.municipalityId.in(municipalities.getValue()));
         }
 
         MaybeHoldingHashMap<String, Long> map = new MaybeHoldingHashMap<>(from
@@ -342,7 +394,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
-    public InitiativeCounts getAllInitiativeCounts(Maybe<Long> municipality, InitiativeSearch.Type initiativeType) {
+    public InitiativeCounts getAllInitiativeCounts(Maybe<List<Long>> municipalities, InitiativeSearch.Type initiativeType) {
         String unknownStateFound = "unknownStateFound";
         Expression<String> caseBuilder = new CaseBuilder()
                 .when(STATE_IS_COLLECTING)
@@ -365,8 +417,8 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
         filterByType(from, initiativeType);
 
-        if (municipality.isPresent()) {
-            from.where(municipalityInitiative.municipalityId.eq(municipality.get()));
+        if (municipalities.isPresent() && !(municipalities.getValue()).isEmpty()) {
+            from.where(municipalityInitiative.municipalityId.in(municipalities.getValue()));
         }
 
         MaybeHoldingHashMap<String, Long> map = new MaybeHoldingHashMap<>(from
@@ -484,6 +536,40 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .uniqueResult(municipalityInitiative.type);
 
         return initiativeType != null && initiativeType.isVerifiable();
+    }
+
+    @Override
+    public List<Long> getInitiativesThatAreSentAtTheGivenDateOrInFutureOrStillRunning(LocalDate date) {
+
+        return queryFactory.from(municipalityInitiative)
+                .where(municipalityInitiative.state.in(InitiativeState.PUBLISHED),
+                        municipalityInitiative.sent.goe(date.toLocalDateTime(new LocalTime(0, 0)).toDateTime()).or(municipalityInitiative.sent.isNull())
+                        .or(municipalityInitiative.supportCountData.isNull()))
+                .list(municipalityInitiative.id);
+    }
+
+
+    @Override
+    public Map<LocalDate,Long> getSupportVoteCountByDateUntil(Long initiativeId, LocalDate tillDay){
+
+        if (get(initiativeId).getType().isVerifiable()) {
+            return queryFactory.from(verifiedParticipant)
+                    .where(verifiedParticipant.initiativeId.eq(initiativeId))
+                    .where(verifiedParticipant.participateTime.loe(tillDay))
+                    .groupBy(verifiedParticipant.participateTime)
+                    .map(verifiedParticipant.participateTime, verifiedParticipant.participateTime.count());
+
+        }
+        else {
+            return queryFactory.from(participant)
+                    .where(participant.municipalityInitiativeId.eq(initiativeId))
+                    .where(participant.participateTime.loe(tillDay))
+                    .where(participant.confirmationCode.isNull())
+                    .groupBy(participant.participateTime)
+                    .map(participant.participateTime, participant.participateTime.count());
+        }
+
+
     }
 
     public static void assertSingleAffection(long affectedRows) {

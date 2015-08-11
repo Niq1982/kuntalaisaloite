@@ -36,7 +36,7 @@
     <div class="search-parameters-container cf">
         <form action="${springMacroRequestContext.requestUri}" method="GET" id="search-form" class="search-form">
             <div class="column col-1of3">
-                <@f.municipalitySelect path="currentSearch.municipality" options=municipalities required="" cssClass="municipality-filter" showLabel=false defaultOption="currentSearch.municipality.all" allowSingleDeselect=true onlyActive=true />
+                <@f.municipalitySelect path="currentSearch.municipalities" options=municipalities required="" cssClass="municipality-filter" showLabel=false defaultOption="currentSearch.municipality.all" allowSingleDeselect=true onlyActive=true multiple=true/>
             </div>
             
             <#-- Submit button for NOSCRIPT users -->
@@ -59,7 +59,7 @@
             <@u.searchLink parameter="withTypeNormal" cssClass=(currentSearch.type == "normal")?string('active','') tooltip=false />
             <@u.searchLink parameter="withTypeCouncil" cssClass=(currentSearch.type == "council")?string('active','')  tooltip=false />
             <@u.searchLink parameter="withTypeCitizen" cssClass=(currentSearch.type == "citizen")?string('active','')  tooltip=false />
-            
+
         </div>
     </div>
     </#if>
@@ -86,11 +86,11 @@
                     </div>
                     <div class="search-parameters">
                 </#if>
-                
+
+                <@u.searchLink parameter="withStateAll" cssClass=(currentSearch.show == "all")?string('active','') count=initiativeCounts.all/>
                 <@u.searchLink parameter="withStateCollecting" cssClass=(currentSearch.show == "collecting")?string('active','') count=initiativeCounts.collecting />
                 <@u.searchLink parameter="withStateSent" cssClass=(currentSearch.show == "sent")?string('active','') count=initiativeCounts.sent/>
-                <@u.searchLink parameter="withStateAll" cssClass=(currentSearch.show == "all")?string('active','') count=initiativeCounts.all/>
-                
+
             </div>
             <br class="clear" />
     </div>
@@ -105,13 +105,13 @@
         <div class="column search-sort">
             <#if currentSearch.show == "sent">
                 <span class="small-icon icon-search-sort by-date-accepted">&#160;</span>
-                <div class="search-sort-links">
+                <div class="switch-buttons">
                     <@u.searchLink parameter="withOrderByLatestSent" cssClass=(currentSearch.orderBy == "latestSent")?string('active','') tooltip=false />
                     <@u.searchLink parameter="withOrderByOldestSent" cssClass=(currentSearch.orderBy == "oldestSent")?string('active','') tooltip=false />
                 </div>
             <#else>
                 <span class="small-icon icon-search-sort by-date-accepted">&#160;</span>
-                <div class="search-sort-links">
+                <div class="switch-buttons">
                     <@u.searchLink parameter="withOrderByLatest" cssClass=(currentSearch.orderBy == "latest")?string('active','') tooltip=false />
                     <@u.searchLink parameter="withOrderByOldest" cssClass=(currentSearch.orderBy == "oldest")?string('active','') tooltip=false />
                 </div>
@@ -119,7 +119,7 @@
         </div>
         <div class="column search-sort">
             <span class="small-icon icon-search-sort by-support-statements"><@u.message "searchOptions.participants" /></span>
-            <div class="search-sort-links">
+            <div class="switch-buttons">
                 <@u.searchLink parameter="withOrderByMostParticipants" cssClass=(currentSearch.orderBy == "mostParticipants")?string('active','') tooltip=false />
                 <@u.searchLink parameter="withOrderByLeastParticipants" cssClass=(currentSearch.orderBy == "leastParticipants")?string('active','') tooltip=false />
             </div>
@@ -132,8 +132,17 @@
 </div>
 
 <div class="search-terms">
-    <#if currentMunicipality.present>
-        <h2><@u.message "searchResults.initiativesInMunicipality" />: ${currentMunicipality.value.getName(locale)}</h2>
+    <#if currentMunicipalities.present>
+            <h2>
+                <#if currentMunicipalities.value?size = 1>
+                    <@u.message "searchResults.initiativesInMunicipality" />:
+                <#elseif currentMunicipalities.value?size gt 1>
+                    <@u.message "searchResults.initiativesInMunicipalities" />:
+                </#if>
+                <@u.printMunicipalities currentMunicipalities.value />
+
+            </h2>
+
     </#if>
 
     <#--

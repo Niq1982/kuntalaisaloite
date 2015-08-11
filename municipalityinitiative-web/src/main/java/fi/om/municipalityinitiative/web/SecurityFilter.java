@@ -25,6 +25,7 @@ public class SecurityFilter implements Filter {
     private static final int CSRF_TOKEN_LENGTH = 24;
     private static final String COOKIE_ERROR = "cookieError";
     public static final String UNWANTED_HIDDEN_EMAIL_FIELD = "email";
+
     private UrlHelper urlPathHelper = new UrlHelper();
 
     @Resource
@@ -33,6 +34,7 @@ public class SecurityFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
     }
+    
 
     public static void setNoCache(HttpServletResponse response) {
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
@@ -200,9 +202,15 @@ public class SecurityFilter implements Filter {
             contextPath = "/";
         }
         cookie.setPath(contextPath);
-        cookie.setSecure(true);
-        // For enabling httpOnly we need to write the raw cookie data instead of response.addCookie(cookie)
-        response.setHeader("SET-COOKIE", name+"="+value+"; Path="+contextPath+"; Secure; HttpOnly");
+        cookie.setSecure(request.isSecure());
+
+        if (cookie.getSecure()) {
+            // For enabling httpOnly we need to write the raw cookie data instead of response.addCookie(cookie)
+            response.setHeader("SET-COOKIE", name + "=" + value + "; Path=" + contextPath + "; Secure; HttpOnly");
+        }
+        else {
+            response.setHeader("SET-COOKIE", name + "=" + value + "; Path=" + contextPath + "; HttpOnly");
+        }
     }
 
     private void propagateException(Exception e) throws IOException, ServletException {

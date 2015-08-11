@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
+import fi.om.municipalityinitiative.service.email.EmailReportType;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.*;
@@ -19,12 +20,15 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.Matchers.*;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -88,6 +92,7 @@ public class JdbcInitiativeDaoTest {
         Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withSent(new DateTime(2010, 1, 1, 0, 0))
+                .witEmailReportSent(EmailReportType.IN_ACCEPTED, new DateTime())
                 .applyAuthor().withParticipantMunicipality(authorsMunicipalityId)
                 .toInitiativeDraft());
 
@@ -303,13 +308,121 @@ public class JdbcInitiativeDaoTest {
         Long shouldNotBeFound = testHelper.createSingleSent(testMunicipality.getId());
 
         InitiativeSearch search = initiativeSearch();
-        search.setMunicipality(municipalityId);
+        search.setMunicipalities(municipalityId);
 
         List<InitiativeListInfo> result = initiativeDao.findCached(search).list;
         assertThat(result, hasSize(1));
         assertThat(result.get(0).getId(), is(shouldBeFound));
     }
 
+    @Test
+    public void finds_by_municipality_using_municipality_list() {
+
+        Long municipalityId = testHelper.createTestMunicipality("Some municipality");
+        ArrayList<Long> municipalities = new ArrayList<Long>();
+        municipalities.add(municipalityId);
+        Long shouldBeFound = testHelper.createSingleSent(municipalityId);
+        Long shouldNotBeFound = testHelper.createSingleSent(testMunicipality.getId());
+
+        InitiativeSearch search = initiativeSearch();
+        search.setMunicipalities(municipalities);
+
+        List<InitiativeListInfo> result = initiativeDao.findCached(search).list;
+        assertThat(result, hasSize(1));
+        assertThat(result.get(0).getId(), is(shouldBeFound));
+    }
+
+    @Test
+    public void finds_by_municipality_using_municipality_list_several_municipalities() {
+
+        Long municipalityId = testHelper.createTestMunicipality("Some municipality");
+        Long municipalityId2 = testHelper.createTestMunicipality("Some municipality 2");
+
+        ArrayList<Long> municipalities = new ArrayList<Long>();
+        municipalities.add(municipalityId);
+        municipalities.add(municipalityId2);
+
+        Long shouldBeFound = testHelper.createSingleSent(municipalityId);
+        Long shouldNotBeFound = testHelper.createSingleSent(testMunicipality.getId());
+
+        InitiativeSearch search = initiativeSearch();
+        search.setMunicipalities(municipalities);
+
+        List<InitiativeListInfo> result = initiativeDao.findCached(search).list;
+        assertThat(result, hasSize(1));
+        assertThat(result.get(0).getId(), is(shouldBeFound));
+    }
+    @Test
+    public void finds_several_initiatives_using_municipality_list_several_municipalities() {
+
+        Long municipalityId = testHelper.createTestMunicipality("Some municipality");
+        Long municipalityId2 = testHelper.createTestMunicipality("Some municipality 2");
+
+        ArrayList<Long> municipalities = new ArrayList<Long>();
+        municipalities.add(municipalityId);
+        municipalities.add(municipalityId2);
+
+        Long shouldBeFound = testHelper.createSingleSent(municipalityId);
+        Long shouldBeFound2 = testHelper.createSingleSent(municipalityId2);
+
+        Long shouldNotBeFound = testHelper.createSingleSent(testMunicipality.getId());
+
+        InitiativeSearch search = initiativeSearch();
+        search.setMunicipalities(municipalities);
+        search.setOrderBy(InitiativeSearch.OrderBy.id);
+
+        List<InitiativeListInfo> result = initiativeDao.findCached(search).list;
+
+        assertThat(result, hasSize(2));
+        assertThat(result.get(0).getId(), is(shouldBeFound2));
+        assertThat(result.get(1).getId(), is(shouldBeFound));
+
+    }
+    @Test
+    public void finds_all_initiatives_using_empty_municipality_list() {
+
+        Long municipalityId = testHelper.createTestMunicipality("Some municipality");
+        Long municipalityId2 = testHelper.createTestMunicipality("Some municipality 2");
+
+        ArrayList<Long> municipalities = new ArrayList<Long>();
+        municipalities.add(municipalityId);
+        municipalities.add(municipalityId2);
+
+        Long shouldBeFound = testHelper.createSingleSent(municipalityId);
+        Long shouldBeFound2 = testHelper.createSingleSent(municipalityId2);
+        Long shouldBeFound3 = testHelper.createSingleSent(testMunicipality.getId());
+
+        InitiativeSearch search = initiativeSearch();
+        search.setMunicipalities(new ArrayList<Long>());
+        search.setOrderBy(InitiativeSearch.OrderBy.id);
+
+        List<InitiativeListInfo> result = initiativeDao.findCached(search).list;
+
+        assertThat(result, hasSize(3));
+
+    }
+
+    @Test
+    public void finds_no_initiatives_using_several_municipalities_municipality_list() {
+
+        Long municipalityId = testHelper.createTestMunicipality("Some municipality");
+        Long municipalityId2 = testHelper.createTestMunicipality("Some municipality 2");
+
+        Long shouldNotBeFound = testHelper.createSingleSent(municipalityId);
+        Long shouldNotBeFound2 = testHelper.createSingleSent(municipalityId2);
+
+        ArrayList<Long> municipalities = new ArrayList<Long>();
+        municipalities.add(testMunicipality.getId());
+
+        InitiativeSearch search = initiativeSearch();
+        search.setMunicipalities(municipalities);
+        search.setOrderBy(InitiativeSearch.OrderBy.id);
+
+        List<InitiativeListInfo> result = initiativeDao.findCached(search).list;
+
+        assertThat(result, hasSize(0));
+
+    }
     @Test
     public void sets_type_to_listView_object() {
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
@@ -514,7 +627,7 @@ public class JdbcInitiativeDaoTest {
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
         testHelper.createSingleSent(testMunicipality.getId());
 
-        InitiativeCounts initiativeCounts = initiativeDao.getPublicInitiativeCounts(Maybe.<Long>absent(), InitiativeSearch.Type.all);
+        InitiativeCounts initiativeCounts = initiativeDao.getPublicInitiativeCounts(emptyMunicipalityList(), InitiativeSearch.Type.all);
 
         assertThat(initiativeCounts.getCollecting(), is(2L));
         assertThat(initiativeCounts.getSent(), is(1L));
@@ -527,7 +640,7 @@ public class JdbcInitiativeDaoTest {
                 .withState(InitiativeState.PUBLISHED)
                 .withFixState(FixState.OK));
 
-        InitiativeCounts publicInitiativeCounts = initiativeDao.getPublicInitiativeCounts(Maybe.<Long>absent(), InitiativeSearch.Type.all);
+        InitiativeCounts publicInitiativeCounts = initiativeDao.getPublicInitiativeCounts(emptyMunicipalityList(), InitiativeSearch.Type.all);
         precondition(publicInitiativeCounts.getAll(), is(1L));
         precondition(publicInitiativeCounts.collecting, is(1L));
 
@@ -538,7 +651,7 @@ public class JdbcInitiativeDaoTest {
                 .withState(InitiativeState.PUBLISHED)
                 .withFixState(FixState.REVIEW));
 
-        publicInitiativeCounts = initiativeDao.getPublicInitiativeCounts(Maybe.<Long>absent(), InitiativeSearch.Type.all);
+        publicInitiativeCounts = initiativeDao.getPublicInitiativeCounts(emptyMunicipalityList(), InitiativeSearch.Type.all);
         assertThat(publicInitiativeCounts.getAll(), is(1L));
         assertThat(publicInitiativeCounts.collecting, is(1L));
     }
@@ -577,7 +690,7 @@ public class JdbcInitiativeDaoTest {
         testHelper.create(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.UNDEFINED);
         testHelper.create(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.UNDEFINED);
 
-        InitiativeCounts counts = initiativeDao.getAllInitiativeCounts(Maybe.<Long>absent(), InitiativeSearch.Type.all);
+        InitiativeCounts counts = initiativeDao.getAllInitiativeCounts(Maybe.<List<Long>>of(new ArrayList<Long>()), InitiativeSearch.Type.all);
         assertThat(counts.fix, is(1L));
         assertThat(counts.review, is(2L));
         assertThat(counts.accepted, is(3L));
@@ -621,7 +734,7 @@ public class JdbcInitiativeDaoTest {
         testHelper.create(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.COLLABORATIVE_CITIZEN);
         testHelper.create(testMunicipality.getId(), InitiativeState.DRAFT, InitiativeType.UNDEFINED);
 
-        InitiativeCounts counts = initiativeDao.getAllInitiativeCounts(Maybe.<Long>absent(), InitiativeSearch.Type.citizen);
+        InitiativeCounts counts = initiativeDao.getAllInitiativeCounts(emptyMunicipalityList(), InitiativeSearch.Type.citizen);
         assertThat(counts.fix, is(0L));
         assertThat(counts.review, is(1L));
         assertThat(counts.accepted, is(2L));
@@ -638,7 +751,9 @@ public class JdbcInitiativeDaoTest {
                 .withState(InitiativeState.PUBLISHED)
                 .withType(InitiativeType.COLLABORATIVE));
 
-        InitiativeCounts initiativeCounts = initiativeDao.getPublicInitiativeCounts(Maybe.of(testMunicipality.getId()), InitiativeSearch.Type.all);
+        ArrayList<Long> municipalities = new ArrayList<Long>();
+        municipalities.add(testMunicipality.getId());
+        InitiativeCounts initiativeCounts = initiativeDao.getPublicInitiativeCounts(Maybe.<List<Long>>of(municipalities), InitiativeSearch.Type.all);
 
         assertThat(initiativeCounts.getCollecting(), is(1L));
     }
@@ -729,10 +844,14 @@ public class JdbcInitiativeDaoTest {
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_COUNCIL);
 
-        InitiativeCounts all = initiativeDao.getPublicInitiativeCounts(Maybe.<Long>absent(), InitiativeSearch.Type.all);
+        InitiativeCounts all = initiativeDao.getPublicInitiativeCounts(emptyMunicipalityList(), InitiativeSearch.Type.all);
         assertThat(all.collecting, is(4L));
         assertThat(all.sent, is(1L));
         assertThat(all.getAll(), is(5L));
+    }
+
+    private Maybe<List<Long>> emptyMunicipalityList() {
+        return Maybe.<List<Long>>of(new ArrayList<Long>());
     }
 
     @Test
@@ -745,7 +864,7 @@ public class JdbcInitiativeDaoTest {
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_COUNCIL);
 
-        InitiativeCounts all = initiativeDao.getPublicInitiativeCounts(Maybe.<Long>absent(), InitiativeSearch.Type.normal);
+        InitiativeCounts all = initiativeDao.getPublicInitiativeCounts(emptyMunicipalityList(), InitiativeSearch.Type.normal);
         assertThat(all.collecting, is(2L));
         assertThat(all.sent, is(1L));
         assertThat(all.getAll(), is(3L));
@@ -763,7 +882,7 @@ public class JdbcInitiativeDaoTest {
 
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_CITIZEN);
 
-        InitiativeCounts all = initiativeDao.getPublicInitiativeCounts(Maybe.<Long>absent(), InitiativeSearch.Type.citizen);
+        InitiativeCounts all = initiativeDao.getPublicInitiativeCounts(emptyMunicipalityList(), InitiativeSearch.Type.citizen);
         assertThat(all.collecting, is(1L));
         assertThat(all.sent, is(0L));
         assertThat(all.getAll(), is(1L));
@@ -781,10 +900,94 @@ public class JdbcInitiativeDaoTest {
 
         testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE_COUNCIL);
 
-        InitiativeCounts all = initiativeDao.getPublicInitiativeCounts(Maybe.<Long>absent(), InitiativeSearch.Type.council);
+        InitiativeCounts all = initiativeDao.getPublicInitiativeCounts(emptyMunicipalityList(), InitiativeSearch.Type.council);
         assertThat(all.collecting, is(1L));
         assertThat(all.sent, is(0L));
         assertThat(all.getAll(), is(1L));
+    }
+
+    @Test
+    public void find_all_by_state_returns_only_with_given_state() {
+        DateTime today = DateTime.now();
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                        .withName("accepted")
+                        .withState(InitiativeState.ACCEPTED)
+                        .withStateTime(today)
+        );
+
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                        .withState(InitiativeState.REVIEW)
+                        .withStateTime(today)
+        );
+
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                        .withState(InitiativeState.PUBLISHED)
+                        .withStateTime(today)
+        );
+
+        List<Initiative> accepted = initiativeDao.findAllByStateChangeBefore(InitiativeState.ACCEPTED, today.toLocalDate().plusDays(1));
+        assertThat(accepted, hasSize(1));
+        assertThat(accepted.get(0).getName(), is("accepted"));
+    }
+
+    @Test
+    public void find_all_by_state_retusn_only_stateChanges_after_given_date() {
+
+        DateTime today = DateTime.now();
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                        .withName("accepted")
+                        .withState(InitiativeState.ACCEPTED)
+                        .withStateTime(today)
+        );
+
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                        .withState(InitiativeState.REVIEW)
+                        .withStateTime(today)
+        );
+
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                        .withState(InitiativeState.PUBLISHED)
+                        .withStateTime(today)
+        );
+
+        assertThat(initiativeDao.findAllByStateChangeBefore(InitiativeState.ACCEPTED, today.toLocalDate().plusDays(1)), hasSize(1));
+        assertThat(initiativeDao.findAllByStateChangeBefore(InitiativeState.ACCEPTED, today.toLocalDate().plusDays(2)), hasSize(1));
+        assertThat(initiativeDao.findAllByStateChangeBefore(InitiativeState.ACCEPTED, today.toLocalDate()), is(empty()));
+        assertThat(initiativeDao.findAllByStateChangeBefore(InitiativeState.ACCEPTED, today.minusDays(1).toLocalDate()), is(empty()));
+
+    }
+
+    @Test
+    public void find_all_published_not_sent() {
+        testHelper.create(testMunicipality.getId(), InitiativeState.ACCEPTED, InitiativeType.COLLABORATIVE);
+        testHelper.create(testMunicipality.getId(), InitiativeState.REVIEW, InitiativeType.COLLABORATIVE);
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withName("Published")
+                .withState(InitiativeState.PUBLISHED)
+                .withSent(null));
+        testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withName("Published and sent")
+                .withState(InitiativeState.PUBLISHED)
+                .withSent(new DateTime()));
+
+        assertThat(initiativeDao.findAllPublishedNotSent(), hasSize(1));
+        assertThat(initiativeDao.findAllPublishedNotSent().get(0).getName(), is("Published"));
+
+    }
+
+    @Test
+    public void mark_initiative_report_sent_marks_it_as_sent() {
+        DateTime now = DateTime.now();
+        Long accepted = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId()).withState(InitiativeState.ACCEPTED));
+
+        precondition(testHelper.getInitiative(accepted).getLastEmailReportTime(), is(nullValue()));
+        precondition(testHelper.getInitiative(accepted).getLastEmailReportType(), is(nullValue()));
+
+        initiativeDao.markInitiativeReportSent(accepted, EmailReportType.IN_ACCEPTED, now);
+
+        assertThat(testHelper.getInitiative(accepted).getLastEmailReportTime(), is(now));
+        assertThat(testHelper.getInitiative(accepted).getLastEmailReportType(), is(EmailReportType.IN_ACCEPTED));
+
     }
 
     private void createPublicInitiativesOfAllType() {

@@ -1,6 +1,6 @@
 // Mixing
 //
-// Rounded corners 
+// Rounded corners
 //
 // Styleguide 2.1
 
@@ -32,7 +32,7 @@
 
 // Mixing
 //
-// Transition 
+// Transition
 //
 // Styleguide 2.2
 .transition (@property, @delay, @easing) {
@@ -44,7 +44,7 @@
 
 // Mixing
 //
-// Gradients 
+// Gradients
 .gradient (@start, @stop){
     background: @start;
     background: linear-gradient(top,  @start, @stop);
@@ -83,4 +83,41 @@
     box-sizing: @style;
     -webkit-box-sizing: @style; /* Safari/Chrome, other WebKit */
     -moz-box-sizing: @style;    /* Firefox, other Gecko */
+}
+
+// Triangle
+.triangleBase() {
+    content: '';
+    display: inline-block;
+    width: 0;
+    height: 0;
+}
+
+.triangleRight(@size, @color) {
+    .triangleBase();
+
+    border-top: @size solid transparent;
+    border-bottom: @size solid transparent;
+    border-left: @size solid @color;
+}
+
+.makeEllipsis(){
+    white-space:nowrap;
+    overflow:hidden;
+    -ms-text-overflow:ellipsis;
+    -o-text-overflow:ellipsis;
+    text-overflow:ellipsis;
+}
+
+// Icons
+.iconPosition(@xIndex, @yIndex, @offsetSize: 16) {
+    background-position: (-@xIndex*@offsetSize)+0px (-@yIndex*@offsetSize)+0px;
+}
+
+.backgroundImage(@fileName, @size: 100%, @postFix: "") {
+  background-position: 0 0;
+  background-repeat: no-repeat;
+  background-size: @size;
+  background-image: url("@{imagesPath}/@{fileName}@{postFix}.png");
+  background-image: url("@{imagesPath}/@{fileName}.svg"), none;
 }

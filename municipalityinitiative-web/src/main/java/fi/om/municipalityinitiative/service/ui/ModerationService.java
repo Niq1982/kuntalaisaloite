@@ -1,16 +1,15 @@
 package fi.om.municipalityinitiative.service.ui;
 
-import fi.om.municipalityinitiative.dao.AttachmentDao;
-import fi.om.municipalityinitiative.dao.AuthorDao;
-import fi.om.municipalityinitiative.dao.InitiativeDao;
-import fi.om.municipalityinitiative.dao.MunicipalityDao;
+import fi.om.municipalityinitiative.dao.*;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.ManagementSettings;
+import fi.om.municipalityinitiative.dto.service.ReviewHistoryRow;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityEditDto;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityUIEditDto;
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
+import fi.om.municipalityinitiative.service.YouthInitiativeWebServiceNotifier;
 import fi.om.municipalityinitiative.service.email.EmailMessageType;
 import fi.om.municipalityinitiative.service.email.EmailService;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
@@ -41,6 +40,12 @@ public class ModerationService {
     @Resource
     AttachmentDao attachmentDao;
 
+    @Resource
+    ReviewHistoryDao reviewHistoryDao;
+
+    @Resource
+    YouthInitiativeWebServiceNotifier youthInitiativeWebServiceNotifier;
+
     @Transactional(readOnly = false)
     public void accept(OmLoginUserHolder loginUserHolder, Long initiativeId, String moderatorComment, Locale locale) {
         loginUserHolder.assertOmUser();
@@ -52,6 +57,7 @@ public class ModerationService {
 
         initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
         attachmentDao.acceptAttachments(initiativeId);
+        reviewHistoryDao.addAccepted(initiativeId, moderatorComment);
 
         if (initiative.getState() == InitiativeState.REVIEW) {
             acceptInitiativeDraft(locale, initiative);
@@ -71,6 +77,9 @@ public class ModerationService {
             initiativeDao.markInitiativeAsSent(initiative.getId());
             emailService.sendStatusEmail(initiative.getId(), EmailMessageType.ACCEPTED_BY_OM_AND_SENT);
             emailService.sendSingleToMunicipality(initiative.getId(), locale);
+            if (initiative.getYouthInitiativeId().isPresent()) {
+                youthInitiativeWebServiceNotifier.informInitiativeSentToMunicipality(initiative);
+            }
         } else {
             initiativeDao.updateInitiativeState(initiative.getId(), InitiativeState.ACCEPTED);
             emailService.sendStatusEmail(initiative.getId(), EmailMessageType.ACCEPTED_BY_OM);
@@ -101,6 +110,7 @@ public class ModerationService {
         }
         initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
         attachmentDao.rejectAttachments(initiativeId);
+        reviewHistoryDao.addRejected(initiativeId, moderatorComment);
         emailService.sendStatusEmail(initiativeId, EmailMessageType.REJECTED_BY_OM);
     }
 
@@ -137,6 +147,7 @@ public class ModerationService {
         }
         initiativeDao.updateInitiativeFixState(initiativeId, FixState.FIX);
         initiativeDao.updateModeratorComment(initiativeId, moderatorComment);
+        reviewHistoryDao.addRejected(initiativeId, moderatorComment);
         attachmentDao.rejectAttachments(initiativeId);
         emailService.sendStatusEmail(initiativeId, EmailMessageType.REJECTED_BY_OM);
     }
@@ -154,4 +165,15 @@ public class ModerationService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public List<ReviewHistoryRow> findReviewHistory(OmLoginUserHolder omLoginUserHolder, Long initiativeId) {
+        omLoginUserHolder.assertOmUser();
+        return reviewHistoryDao.findReviewHistoriesAndCommentsOrderedByTime(initiativeId);
+    }
+
+    @Transactional(readOnly = false)
+    public void addComment(OmLoginUserHolder requiredOmLoginUserHolder, Long initiativeId, String comment) {
+        requiredOmLoginUserHolder.assertOmUser();
+        reviewHistoryDao.addReviewComment(initiativeId, requiredOmLoginUserHolder.getUser().getName() + ": " + comment);
+    }
 }

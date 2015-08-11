@@ -214,7 +214,7 @@ public class ManagementSettingsTest {
         assertExpectedOnlyWithGivenStates(initiative, new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                return ManagementSettings.of(initiative).isAllowParticipate();
+                return ManagementSettings.of(initiative).isAllowParticipation();
             }
         }, true, InitiativeState.PUBLISHED);
     }
@@ -226,10 +226,10 @@ public class ManagementSettingsTest {
         initiative.setState(InitiativeState.PUBLISHED);
         initiative.setFixState(FixState.OK);
 
-        precondition(ManagementSettings.of(initiative).isAllowParticipate(), is(true));
+        precondition(ManagementSettings.of(initiative).isAllowParticipation(), is(true));
         initiative.setSentTime(Maybe.of(new LocalDate(2010, 1, 1)));
 
-        assertThat(ManagementSettings.of(initiative).isAllowParticipate(), is(false));
+        assertThat(ManagementSettings.of(initiative).isAllowParticipation(), is(false));
     }
 
     @Test
@@ -239,10 +239,10 @@ public class ManagementSettingsTest {
         initiative.setState(InitiativeState.PUBLISHED);
         initiative.setFixState(FixState.OK);
 
-        precondition(ManagementSettings.of(initiative).isAllowParticipate(), is(true));
+        precondition(ManagementSettings.of(initiative).isAllowParticipation(), is(true));
         initiative.setType(InitiativeType.SINGLE);
 
-        assertThat(ManagementSettings.of(initiative).isAllowParticipate(), is(false));
+        assertThat(ManagementSettings.of(initiative).isAllowParticipation(), is(false));
     }
 
     @Test
@@ -253,12 +253,12 @@ public class ManagementSettingsTest {
         initiative.setState(InitiativeState.PUBLISHED);
         initiative.setFixState(FixState.OK);
 
-        precondition(ManagementSettings.of(initiative).isAllowParticipate(), is(true));
+        precondition(ManagementSettings.of(initiative).isAllowParticipation(), is(true));
 
         initiative.setFixState(FixState.FIX);
-        assertThat(ManagementSettings.of(initiative).isAllowParticipate(), is(false));
+        assertThat(ManagementSettings.of(initiative).isAllowParticipation(), is(false));
         initiative.setFixState(FixState.REVIEW);
-        assertThat(ManagementSettings.of(initiative).isAllowParticipate(), is(false));
+        assertThat(ManagementSettings.of(initiative).isAllowParticipation(), is(false));
 
     }
 

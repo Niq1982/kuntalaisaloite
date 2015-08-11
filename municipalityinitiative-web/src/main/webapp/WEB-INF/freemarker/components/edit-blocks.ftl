@@ -59,7 +59,7 @@
     </div>
     
     <div class="input-block-content">       
-        <@f.municipalitySelect path="initiative.municipality" options=municipalities required="required" cssClass="municipality-select" preSelected=municipality onlyActive=true/>
+        <@f.municipalitySelect path="initiative.municipality" options=municipalities required="required" cssClass="municipality-select" preSelected=municipality onlyActive=true multiple=false/>
     </div>
     <div class="input-block-content">
         <#if user.isVerifiedUser() && user.homeMunicipality.present>
@@ -67,7 +67,7 @@
             <div class="input-header"><@u.message "contactInfo.homeMunicipality" /></div>
             <div id="verifiedHomeMunicipality" class="input-placeholder" data-initiative-municipality="${user.homeMunicipality.value.id}"><@u.solveMunicipality user.homeMunicipality /></div>
         <#else>
-            <@f.municipalitySelect path="initiative.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=municipality />
+            <@f.municipalitySelect path="initiative.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=municipality multiple=false/>
         </#if>
     </div>
     <br class="clear" />

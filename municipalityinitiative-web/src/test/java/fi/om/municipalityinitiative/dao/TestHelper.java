@@ -13,12 +13,15 @@ import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
+import fi.om.municipalityinitiative.dto.user.VerifiedUser;
 import fi.om.municipalityinitiative.service.EncryptionService;
+import fi.om.municipalityinitiative.service.email.EmailReportType;
 import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.*;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.springframework.core.env.Environment;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,6 +58,7 @@ public class TestHelper {
 
     public static LoginUserHolder authorLoginUserHolder;
     public static LoginUserHolder unknownLoginUserHolder = new LoginUserHolder(User.anonym());
+    public static LoginUserHolder lastLoggedInVerifiedUserHolder;
     public static OmLoginUserHolder omLoginUser = new OmLoginUserHolder(User.omUser(""));
 
     @Inject
@@ -79,9 +83,6 @@ public class TestHelper {
         this.queryFactory = queryFactory;
     }
 
-//    @Resource
-//    private org.springframework.cache.ehcache.EhCacheCacheManager cacheManager;
-
     @Transactional(readOnly=false)
     public void dbCleanup() {
         dbCleanupAllButMunicipalities();
@@ -92,6 +93,7 @@ public class TestHelper {
     @Transactional(readOnly = false)
     public void dbCleanupAllButMunicipalities() {
         queryFactory.delete(QAuthorMessage.authorMessage).execute();
+        queryFactory.delete(QReviewHistory.reviewHistory).execute();
         queryFactory.delete(QAttachment.attachment).execute();
         queryFactory.delete(QAuthorInvitation.authorInvitation).execute();
         queryFactory.delete(QAuthor.author).execute();
@@ -124,6 +126,10 @@ public class TestHelper {
                 .set(QMunicipality.municipality.email, toEmail(name))
                 .set(QMunicipality.municipality.active, isActive)
                 .executeWithKey(QMunicipality.municipality.id);
+    }
+
+    public Municipality createMunicipalityDraft(Long fakeId, String name) {
+        return new Municipality(fakeId, name+"fi", name+"sv", true);
     }
 
     public static String toEmail(String name) {
@@ -224,6 +230,12 @@ public class TestHelper {
         insert.set(municipalityInitiative.fixState, initiativeDraft.fixState);
         insert.set(municipalityInitiative.moderatorComment, initiativeDraft.moderatorComment);
         insert.set(municipalityInitiative.stateTimestamp, initiativeDraft.stateTime);
+        insert.set(municipalityInitiative.lastEmailReportTime, initiativeDraft.emailReportDateTime);
+        insert.set(municipalityInitiative.lastEmailReportType, initiativeDraft.emailReportType);
+
+        if (initiativeDraft.supporCountData != null) {
+            insert.set(municipalityInitiative.supportCountData, initiativeDraft.supporCountData);
+        }
 
         lastInitiativeId = insert.executeWithKey(municipalityInitiative.id);
 
@@ -347,7 +359,65 @@ public class TestHelper {
         increaseParticipantCount(authorDraft);
         this.lastVerifiedUserId = verifiedUserId;
     }
+    @Transactional(readOnly = false)
+    public Long createVerifiedParticipantWithDate(AuthorDraft authorDraft, org.joda.time.LocalDate date) {
 
+        Long verifiedUserId = queryFactory.insert(QVerifiedUser.verifiedUser)
+                .set(QVerifiedUser.verifiedUser.hash, createUserSsnHash())
+                .set(QVerifiedUser.verifiedUser.address, authorDraft.authorAddress)
+                .set(QVerifiedUser.verifiedUser.phone, authorDraft.authorPhone)
+                .set(QVerifiedUser.verifiedUser.email, authorDraft.participantEmail)
+                .set(QVerifiedUser.verifiedUser.name, authorDraft.participantName)
+                .set(QVerifiedUser.verifiedUser.municipalityId, authorDraft.participantMunicipality)
+                .executeWithKey(QVerifiedUser.verifiedUser.id);
+
+        Long id = queryFactory.insert(QVerifiedParticipant.verifiedParticipant)
+                .set(QVerifiedParticipant.verifiedParticipant.showName, authorDraft.publicName)
+                .set(QVerifiedParticipant.verifiedParticipant.initiativeId, authorDraft.initiativeId)
+                .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, verifiedUserId)
+                .set(QVerifiedParticipant.verifiedParticipant.verified, authorDraft.participantMunicipality != null)
+                .set(QVerifiedParticipant.verifiedParticipant.participateTime, date)
+                .execute();
+
+        increaseParticipantCount(authorDraft);
+        this.lastVerifiedUserId = verifiedUserId;
+
+        return id;
+    }
+
+    @Transactional(readOnly = false)
+    public Long createVerifiedParticipantWithVerifiedUserId(AuthorDraft authorDraft) {
+
+        Long id = queryFactory.insert(QVerifiedParticipant.verifiedParticipant)
+                .set(QVerifiedParticipant.verifiedParticipant.showName, authorDraft.publicName)
+                .set(QVerifiedParticipant.verifiedParticipant.initiativeId, authorDraft.initiativeId)
+                .set(QVerifiedParticipant.verifiedParticipant.verifiedUserId, authorDraft.verifiedUserId.getValue())
+                .set(QVerifiedParticipant.verifiedParticipant.verified, authorDraft.participantMunicipality != null)
+                .execute();
+
+        increaseParticipantCount(authorDraft);
+
+        return id;
+    }
+
+    @Transactional(readOnly = false)
+    public Long createVerifiedUser(AuthorDraft authorDraft){
+        String hash = createUserSsnHash();
+        Long verifiedUserId = queryFactory.insert(QVerifiedUser.verifiedUser)
+                .set(QVerifiedUser.verifiedUser.hash, hash)
+                .set(QVerifiedUser.verifiedUser.address, authorDraft.authorAddress)
+                .set(QVerifiedUser.verifiedUser.phone, authorDraft.authorPhone)
+                .set(QVerifiedUser.verifiedUser.email, authorDraft.participantEmail)
+                .set(QVerifiedUser.verifiedUser.name, authorDraft.participantName)
+                .set(QVerifiedUser.verifiedUser.municipalityId, authorDraft.participantMunicipality)
+                .executeWithKey(QVerifiedUser.verifiedUser.id);
+
+        this.lastVerifiedUserId = verifiedUserId;
+
+        Maybe<Municipality> participantMunicipality = Maybe.of(new Municipality(authorDraft.participantMunicipality, "name_fi", "name_sv", true));
+        this.lastLoggedInVerifiedUserHolder = new LoginUserHolder(User.verifiedUser(new VerifiedUserId(verifiedUserId), hash, new ContactInfo(), null, null, participantMunicipality));
+        return verifiedUserId;
+    }
 
     private String createUserSsnHash() {
         previousUserSsnHash = RandomHashGenerator.shortHash();
@@ -367,6 +437,37 @@ public class TestHelper {
                 .set(QParticipant.participant.email, authorDraft.participantEmail)
                 .set(QParticipant.participant.membershipType, authorDraft.municipalityMembership)
                 .executeWithKey(QParticipant.participant.id);
+    }
+
+    @Transactional(readOnly = false)
+    public Long createDefaultParticipantWithDate(AuthorDraft authorDraft, LocalDate date, String confirmationCode) {
+
+        increaseParticipantCount(authorDraft);
+
+        SQLInsertClause set = queryFactory.insert(QParticipant.participant)
+                .set(QParticipant.participant.municipalityId, authorDraft.participantMunicipality)
+                .set(QParticipant.participant.municipalityInitiativeId, authorDraft.initiativeId)
+                .set(QParticipant.participant.name, authorDraft.participantName)
+                .set(QParticipant.participant.showName, authorDraft.publicName)
+                .set(QParticipant.participant.email, authorDraft.participantEmail)
+                .set(QParticipant.participant.membershipType, authorDraft.municipalityMembership)
+                .set(QParticipant.participant.participateTime, date);
+
+        if (confirmationCode != null) {
+            set.set(QParticipant.participant.confirmationCode, confirmationCode);
+        }
+        return set.executeWithKey(QParticipant.participant.id);
+    }
+
+    public VerifiedUser getVerifiedUser() {
+        ContactInfo contactInfo = new ContactInfo();
+        contactInfo.setName("Paavo Paavolainen");
+        return User.verifiedUser(new VerifiedUserId(123L), "ffafdsf", contactInfo, null, null, Maybe.of(new Municipality(1, "Oulu", "Åbo", true)));
+    }
+
+    @Transactional(readOnly = false)
+    public Long createDefaultParticipantWithDate(AuthorDraft authorDraft, LocalDate date) {
+        return createDefaultParticipantWithDate(authorDraft, date, null);
     }
 
     private String generateHash(int len) {
@@ -581,6 +682,24 @@ public class TestHelper {
         return defaultParticipant;
     }
 
+    @Transactional(readOnly = true)
+    public List<ReviewHistoryRow> getInitiativeReviewHistory(Long initiativeId) {
+        return queryFactory.from(QReviewHistory.reviewHistory)
+                .where(QReviewHistory.reviewHistory.initiativeId.eq(initiativeId))
+                .list(JdbcReviewHistoryDao.reviewHistoryRowWrapper);
+    }
+    @Transactional(readOnly = true)
+    public List<Long> getAllMunicipalities(){
+        return queryFactory.from(QMunicipality.municipality)
+                .list(QMunicipality.municipality.id);
+    }
+
+    @Transactional
+    public void clearSentEmails() {
+        queryFactory.delete(QEmail.email).execute();
+    }
+
+
     public static class AuthorDraft {
 
         public Long initiativeId;
@@ -594,6 +713,8 @@ public class TestHelper {
         public String authorAddress = DEFAULT_AUTHOR_ADDRESS;
         public String authorPhone = DEFAULT_AUTHOR_PHONE;
         public Maybe<String> userSsn = Maybe.absent();
+        public Maybe<Long> verifiedUserId = Maybe.absent();
+
         public AuthorDraft(Long initiativeId, Long participantMunicipality) {
             this.initiativeId = initiativeId;
             this.initiativeDraftMaybe = Maybe.absent();
@@ -649,6 +770,10 @@ public class TestHelper {
             initiativeId = lastInitiativeId;
             return this;
         }
+        public AuthorDraft withVerifiedUserId(Long verifiedUserId) {
+            this.verifiedUserId = Maybe.of(verifiedUserId);
+            return this;
+        }
 
     }
     public static class InitiativeDraft {
@@ -672,6 +797,10 @@ public class TestHelper {
         public FixState fixState = FixState.OK;
         public String moderatorComment;
         public Integer externalParticipantCount = DEFAULT_EXTERNAL_PARTICIPANT_COUNT;
+        public EmailReportType emailReportType;
+        public DateTime emailReportDateTime;
+        public String supporCountData;
+
         public AuthorDraft applyAuthor() {
             this.authorDraft = Maybe.of(new AuthorDraft(this, municipalityId));
             return this.authorDraft.get();
@@ -753,6 +882,16 @@ public class TestHelper {
             return this;
         }
 
+        public InitiativeDraft witEmailReportSent(EmailReportType emailReportType, DateTime dateTime) {
+            this.emailReportType = emailReportType;
+            this.emailReportDateTime = dateTime;
+            return this;
+        }
+
+        public InitiativeDraft withSupporCountData(String s) {
+            this.supporCountData = s;
+            return this;
+        }
     }
     public Long getLastInitiativeId() {
         return lastInitiativeId;

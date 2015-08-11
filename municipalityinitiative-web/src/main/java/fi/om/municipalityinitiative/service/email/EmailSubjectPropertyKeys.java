@@ -17,4 +17,6 @@ public class EmailSubjectPropertyKeys {
     public static final String EMAIL_AUTHOR_MESSAGE_TO_AUTHORS_SUBJECT = "email.author.message.to.authors.subject";
 
     public static final String EMAIL_VERIFIED_INITIATIVE_CREATED_SUBJECT = "email.verified.initiative.created.subject";
+    public static final String REPORT_ACCEPTED_BUT_NOT_PUBLISHED = "email.report.accepted.not.published.subject";
+    public static final String REPORT_QUARTER = "email.report.quarter.subject";
 }

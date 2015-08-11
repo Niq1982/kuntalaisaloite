@@ -11,7 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -27,7 +27,7 @@ public class CachedInitiativeFinder {
     @Transactional(readOnly = true)
     public List<InitiativeListInfo> frontPageInitiatives() {
         InitiativeSearch search = new InitiativeSearch();
-        search.setLimit(3);
+        search.setLimit(5);
         search.setShow(InitiativeSearch.Show.all);
         search.setOrderBy(InitiativeSearch.OrderBy.latest);
 
@@ -40,13 +40,17 @@ public class CachedInitiativeFinder {
     }
 
     @Cacheable("municipality")
-    public Maybe<Municipality> getMunicipality(Long municipalityId) {
+    public Maybe<List<Municipality>> getMunicipalities(Maybe<List<Long>> municipalityIds) {
+        List<Municipality> municipalities = new ArrayList<Municipality>();
+        if (municipalityIds.isNotPresent()) {
+            return Maybe.absent();
+        }
         for (Municipality o : municipalityService.findAllMunicipalities(Locales.LOCALE_FI)) {
-            if (o.getId().equals(municipalityId)) {
-                return Maybe.of(o);
+            if (municipalityIds.getValue().contains(o.getId())) {
+                municipalities.add(o);
             }
         }
-        return Maybe.absent();
+        return Maybe.fromNullable(municipalities);
     }
 
     @Cacheable("iframe")

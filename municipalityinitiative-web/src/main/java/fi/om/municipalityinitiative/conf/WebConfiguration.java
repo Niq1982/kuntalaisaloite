@@ -111,6 +111,11 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
     }
 
     @Bean
+    public YouthInitiativeController youthInitiativeController() {
+        return new YouthInitiativeController();
+    }
+
+    @Bean
     public VetumaLoginRequest loginRequestDefaults() {
         VetumaLoginRequest request = new VetumaLoginRequest();
 
@@ -230,6 +235,12 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
     public IFrameController iFrameController() {
         return new IFrameController(optimizeResources(env), resourcesVersion(env));
     }
+
+    @Bean
+    public GraphIFrameController graphIFrameController() {
+        return new GraphIFrameController(optimizeResources(env), resourcesVersion(env));
+    }
+
 
     @Bean
     public InfoTextController infoTextController() {

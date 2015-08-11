@@ -2,13 +2,11 @@ package fi.om.municipalityinitiative.web;
 
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.util.InitiativeState;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
 import static fi.om.municipalityinitiative.dao.TestHelper.InitiativeDraft;
 import static fi.om.municipalityinitiative.web.MessageSourceKeys.*;
-import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
@@ -101,24 +99,9 @@ public class InitiativeCreateWebTest extends WebTestBase {
         assertTitle("Tee kuntalaisaloite - Kuntalaisaloitepalvelu");
     }
 
-    // This test probably is not needed for very long, because we should prevent the submit with etc. javascript.
-    // Although it would be nice to keep this for non-javascript-versions if needed...
-    @Ignore ("It is not possible to select wrong municipality in JS version")
-    @Test
-    public void first_logging_in_before_creating_verified_initiative_shows_error_if_wrong_municipality_after_submitting() {
-        overrideDriverToFirefox(true);
-        vetumaLogin(USER_SSN, MUNICIPALITY_2);
-
-        openAndAssertPreparePage();
-        select_municipality(false);
-        getElemContaining("Valtuustokäsittelyyn tähtäävä aloite", "span").click();
-        getElemContaining("Siirry tunnistautumaan", "button").click();
-        assertPreparePageWithInvalidMunicipalityWarning();
-    }
-
     private void assertPreparePageWithInvalidMunicipalityWarning() {
         assertPreparePageTitle();
-        assertTextContainedByClass("msg-warning", "Väestötietojärjestelmän mukaan kotikuntasi ei ole kunta, jolle aloite on osoitettu. Et voi tehdä aloitetta valitsemaasi kuntaan.");
+        assertWarningMessage("Väestötietojärjestelmän mukaan kotikuntasi ei ole kunta, jolle aloite on osoitettu. Et voi tehdä aloitetta valitsemaasi kuntaan.");
     }
 
     @Test
@@ -147,7 +130,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
         clickByName(Urls.ACTION_SAVE);
 
-        assertSuccesPageWithMessage(MSG_SUCCESS_SAVE_DRAFT);
+        assertSuccessDraftSaved();
         assertTotalEmailsInQueue(0);
     }
 
@@ -169,7 +152,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
 
         clickByName(Urls.ACTION_SAVE);
 
-        assertSuccesPageWithMessage(MSG_SUCCESS_SAVE_DRAFT);
+        assertSuccessDraftSaved();
 
         assertTotalEmailsInQueue(1);
     }
@@ -234,10 +217,10 @@ public class InitiativeCreateWebTest extends WebTestBase {
         open(urls.management(initiativeId));
 
         clickById("js-send-to-review");
-        assertMsgContainedByClass("modal-title", MSG_SEND_TO_REVIEW_CONFIRM);
+        assertTextContainedByClass("modal-title", "Julkaise aloite Kuntalaisaloite.fi-palvelussa ja lähetä se kuntaan.");
 
         clickByName(Urls.ACTION_SEND_TO_REVIEW);
-        assertMsgContainedByClass("msg-success", MSG_SUCCESS_SEND_TO_REVIEW);
+        assertSuccessMessage("Aloite lähetetty tarkastettavaksi");
         
         // Assert that initiative name and proposal cannot be edited in REVIEW-state
         update_initiative(initiativeId); // XXX: Why does send_to_review -test update initiative?
@@ -299,14 +282,12 @@ public class InitiativeCreateWebTest extends WebTestBase {
     }
 
     public void select_municipality(boolean homeMunicipalityVerified) {
-        clickLinkContaining(getMessage(SELECT_MUNICIPALITY));
+        clickLink(getMessage(SELECT_MUNICIPALITY));
         getElemContaining(MUNICIPALITY_1, "li").click();
 
         if (!homeMunicipalityVerified) {
             assertTextContainedByXPath("//div[@id='homeMunicipality_chzn']/a/span", MUNICIPALITY_1);
         }
-
-        System.out.println("--- select_municipality OK");
     }
 
     public void fill_in_preparation_form() {
@@ -317,7 +298,6 @@ public class InitiativeCreateWebTest extends WebTestBase {
         String msgSuccessPrepare = MSG_SUCCESS_PREPARE;
         assertTextByTag("h1", "Linkki aloitteen tekemiseen on lähetetty sähköpostiisi");
         assertTextByTag("strong", CONTACT_EMAIL);
-        System.out.println("--- add_initiative_content OK");
         assertTotalEmailsInQueue(1);
 
     }
@@ -334,9 +314,7 @@ public class InitiativeCreateWebTest extends WebTestBase {
         
         clickByName(Urls.ACTION_SAVE);
 
-        assertSuccesPageWithMessage(MSG_SUCCESS_SAVE_DRAFT);
-
-        System.out.println("--- add_contact_info OK");
+        assertSuccessDraftSaved();
     }
     
     public void update_initiative(Long initiativeId) {
@@ -351,11 +329,11 @@ public class InitiativeCreateWebTest extends WebTestBase {
         inputText("contactInfo.address", "Updated");
 
         clickByName(Urls.ACTION_UPDATE_INITIATIVE);
-        assertMsgContainedByClass("msg-success", MSG_SUCCESS_UPDATE);
+        assertSuccessMessage("Aloitteen tiedot päivitetty");
     }
 
-    private void assertSuccesPageWithMessage(String msgSuccessPrepare) {
-        assertMsgContainedByClass("msg-success", msgSuccessPrepare);
+    private void assertSuccessDraftSaved() {
+        assertSuccessMessage("Luonnos tallennettu");
     }
 
     private void openAndAssertPreparePage() {

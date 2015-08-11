@@ -12,7 +12,6 @@ public class SendToMunicipalityWebTest extends WebTestBase {
     /**
      * Localization keys as constants.
      */
-    private static final String MSG_SUCCESS_SEND = "success.publish-and-send";
     private static final String MSG_BTN_SEND = "action.sendToMunicipality";
     private static final String MSG_BTN_SEND_CONFIRM = "action.sendToMunicipality.confirm";
     
@@ -35,7 +34,7 @@ public class SendToMunicipalityWebTest extends WebTestBase {
         
         open(urls.management(initiativeId));
         sendToMunicipality();
-        assertMsgContainedByClass("msg-success",  MSG_SUCCESS_SEND);
+        assertSuccessMessage( "Aloite on lähetetty kuntaan ja julkaistu Kuntalaisaloite.fi-palvelussa");
         assertTotalEmailsInQueue(2);
     }
 
@@ -44,6 +43,11 @@ public class SendToMunicipalityWebTest extends WebTestBase {
         Long initiativeId = testHelper.create(HELSINKI_ID, InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
 
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         open(urls.management(initiativeId));
 
         testHelper.updateField(initiativeId, QMunicipalityInitiative.municipalityInitiative.sent, DateTime.now());
@@ -54,7 +58,7 @@ public class SendToMunicipalityWebTest extends WebTestBase {
     }
 
     private void sendToMunicipality() {
-        clickLinkContaining(getMessage(MSG_BTN_SEND));
+        clickLink(getMessage(MSG_BTN_SEND));
         inputText("comment", COMMENT);
         getElemContaining(getMessage(MSG_BTN_SEND_CONFIRM), "button").click();
     }

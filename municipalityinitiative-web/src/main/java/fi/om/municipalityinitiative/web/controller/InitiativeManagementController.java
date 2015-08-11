@@ -316,7 +316,7 @@ public class InitiativeManagementController extends BaseController {
         ).view(model, Urls.get(locale).alt().manageAuthors(initiativeId));
     }
 
-    @RequestMapping(value={ PARITICIPANT_LIST_MANAGE_FI, PARITICIPANT_LIST_MANAGE_SV }, method=GET)
+    @RequestMapping(value={PARTICIPANT_LIST_MANAGE_FI, PARTICIPANT_LIST_MANAGE_SV}, method=GET)
     public String participantListManage(@PathVariable("id") Long initiativeId,
                                         @RequestParam(value = "offset", defaultValue = "0") int offset,
                                         Model model, Locale locale, HttpServletRequest request) {
@@ -327,7 +327,7 @@ public class InitiativeManagementController extends BaseController {
 
         InitiativeViewInfo initiativeInfo = initiativeManagementService.getMunicipalityInitiative(initiativeId, loginUserHolder);
 
-        if (!initiativeInfo.isCollaborative() || initiativeInfo.isVerifiable()) {
+        if (!initiativeInfo.isCollaborative()) {
             return ERROR_404_VIEW;
         }
         else {
@@ -390,7 +390,7 @@ public class InitiativeManagementController extends BaseController {
         return redirectWithMessage(Urls.get(locale).manageAuthors(initiativeId), RequestMessage.AUTHOR_DELETED, request);
     }
     
-    @RequestMapping(value = {PARITICIPANT_LIST_MANAGE_FI, PARITICIPANT_LIST_MANAGE_SV}, method = POST)
+    @RequestMapping(value = {PARTICIPANT_LIST_MANAGE_FI, PARTICIPANT_LIST_MANAGE_SV}, method = POST)
     public String deleteParticipant(@PathVariable("id") Long initiativeId,
                                      @RequestParam(PARAM_PARTICIPANT_ID) Long participantId,
                                      Locale locale, HttpServletRequest request) {

@@ -34,3 +34,5 @@ syntax: regexp
 ^municipalityinitiative-web/src/main/webapp/css/print\.css$
 ^municipalityinitiative-web/src/main/webapp/js/script\.min\.js$
 ^municipalityinitiative-web/src/main/webapp/js/script\.js$
+syntax: regexp
+^municipalityinitiative-web/src/test/resources/app\.properties$

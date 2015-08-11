@@ -1,0 +1,1 @@
+ALTER TABLE municipality_initiative ALTER COLUMN extra_info TYPE varchar(10000);

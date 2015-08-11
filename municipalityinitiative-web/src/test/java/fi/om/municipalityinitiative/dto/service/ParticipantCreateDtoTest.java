@@ -1,13 +1,19 @@
 package fi.om.municipalityinitiative.dto.service;
 
 import fi.om.municipalityinitiative.dto.ui.AuthorInvitationUIConfirmDto;
+import fi.om.municipalityinitiative.dto.ui.ContactInfo;
 import fi.om.municipalityinitiative.dto.ui.ParticipantUICreateDto;
+import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
+import fi.om.municipalityinitiative.dto.user.User;
+import fi.om.municipalityinitiative.dto.user.VerifiedUser;
+import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.util.Membership;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
 
 public class ParticipantCreateDtoTest {
 
@@ -59,6 +65,29 @@ public class ParticipantCreateDtoTest {
         assertThat(participantCreateDto.getParticipantName(), is(invitationUIConfirmDto.getContactInfo().getName()));
 
         ReflectionTestUtils.assertNoNullFields(participantCreateDto);
+
+    }
+
+    @Test
+    public void parse_from_invitationConfirmDto_and_LoginUserHolder() {
+        ParticipantUICreateDto uiCreateDto = ReflectionTestUtils.modifyAllFields(new ParticipantUICreateDto());
+
+        long randomId = 123L;
+        String randomHash = "dfjafdoaslfkj";
+        ContactInfo contactInfo = new ContactInfo();
+        contactInfo.setName("Paavo Pesusieni");
+
+
+        VerifiedUser user = User.verifiedUser(new VerifiedUserId(randomId), randomHash, contactInfo, null, null, null);
+
+        ParticipantCreateDto participantCreateDto = ParticipantCreateDto.parseParticipantFromVerifiedUser(uiCreateDto, new LoginUserHolder<>(user).getVerifiedUser(), 121L);
+
+        assertThat(participantCreateDto.getMunicipalMembership(), is(uiCreateDto.getMunicipalMembership()));
+        assertThat(participantCreateDto.getEmail(), isEmptyOrNullString());
+        assertThat(participantCreateDto.getHomeMunicipality(), is(uiCreateDto.getHomeMunicipality()));
+        assertThat(participantCreateDto.getMunicipalityInitiativeId(), is(121L));
+        assertThat(participantCreateDto.getParticipantName(), is(user.getContactInfo().getName()));
+
 
     }
 

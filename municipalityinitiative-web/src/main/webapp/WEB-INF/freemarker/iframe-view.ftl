@@ -32,10 +32,12 @@
     </#if>
     
     <#--
-     * Set current municipality
+     * Set current municipalities
     -->
-    <#if currentMunicipality.present>
-        <#assign pageTitle><@u.message "iframe.initiatives" /> ${currentMunicipality.value.getName(locale)}</#assign>
+    <#if municipalities.present>
+        <#assign pageTitle><@u.message "iframe.initiatives" />
+            <@u.printMunicipalities municipalities.value />
+        </#assign>
     <#else>
         <#assign pageTitle><@u.message "page.iframe" /></#assign>
     </#if>   
@@ -70,24 +72,29 @@
                 <link rel="stylesheet" type="text/css" media="screen" href="${urls.baseUrl}/css/kuntalaisaloite-ie.min.css" />
             <![endif]-->
         </noscript>
-        <link rel="stylesheet/less" type="text/css" media="screen" href="https://localhost:8443/css/less-main/kuntalaisaloite-iframe.less" />
+        <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/less-main/kuntalaisaloite-iframe.less" />
         <!--[if IE ]>
             <link rel="stylesheet/less" type="text/css" media="screen" href="${urls.baseUrl}/css/less-main/kuntalaisaloite-ie.less">
         <![endif]-->
-        <script src="${urls.baseUrl}/js/less-1.3.0.min.js" type="text/javascript"></script>
+        <script src="${urls.baseUrl}/js/less-1.7.5.min.js" type="text/javascript"></script>
     </#if>
 </head>
 
 <body class="${bodyWidthClass!""} ${locale}">
 
-<div id="wrapper">
+<div id="wrapper" class=
+    <#if municipalitiesSize gt 20>
+        "several-municipalities-scrollable"
+    <#elseif municipalitiesSize gt 3>
+        "several-municipalities-${municipalitiesSize}"
+     </#if> >
 
     <div id="header" class="container">
         <a id="logo" href="${urls.baseUrl}/${locale}" target="_blank" rel="external" title="<@u.message "siteName" />">
             <span><@u.message "siteName" /></span>
         </a>
 
-        <#if currentMunicipality.present>
+        <#if municipalities.present>
             <h3><#noescape>${pageTitle!""}</#noescape></h3>
         <#else>
             <h3>&nbsp;</h3>
@@ -97,12 +104,17 @@
     <div id="content-wrapper" class="container">
         <div class="mashup-buttons cf">
             <div class="column col-1of2">
-                <a href="${urls.search()}<#if currentMunicipality.present>${queryString.getWithMunicipality(currentMunicipality.value.id)}</#if>" target="_blank" rel="external" class="small-button"><span class="small-icon next"><@u.message "iframe.browseInitiatives" /></span></a>
+                <a href="${urls.search()}
+                <#if municipalities.present>
+                    ${queryString.getWithMunicipalities(municipalities.value)}
+                </#if>"
+                   target="_blank" rel="external" class="small-button"><span class="small-icon next"><@u.message "iframe.browseInitiatives" />
+                </span></a>
                 
                 <span class="description"><@u.message "iframe.browseInitiatives.description" /></span>
             </div>
             <div class="column col-1of2 last">
-                <a href="${urls.prepare()}" target="_blank" rel="external" class="small-button"><span class="small-icon add"><@u.message "iframe.createInitiative" /></span></a>
+                <a href="${urls.prepare(municipalities)}" target="_blank" rel="external" class="small-button"><span class="small-icon add"><@u.message "iframe.createInitiative" /></span></a>
             </div>
         </div>
         
@@ -114,12 +126,12 @@
                 <#if initiative_index == 0><ul></#if>
                 <li <#if initiative_index == 0>class="first"</#if>>
                     <span class="date trigger-tooltip" title="<@u.message "searchResults.initiative.date."+initiative.state />" ><@u.localDate initiative.stateTime!"" /></span>
+                    <#if municipalitiesSize != 1><span class="municipality">${initiative.municipality.getName(locale)}</span></#if>
                     <span class="title"><a href="${urls.view(initiative.id)}" target="_blank" rel="external" class="name"><@u.limitStringLength initiative.name!"" 150 /></a></span>
-                    
                 </li>
                 <#if !initiative_has_next></ul></#if>
             </#list>
-            
+
         <#-- Search results EMPTY -->
         <#else>
             <@u.message "iframe.noInitiatives" />

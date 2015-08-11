@@ -3,6 +3,7 @@
 <#import "components/utils.ftl" as u />
 <#import "components/forms.ftl" as f />
 <#import "components/elements.ftl" as e />
+<#import "components/progress.ftl" as prog />
 
 <#escape x as x?html> 
 
@@ -30,7 +31,8 @@
 
     <@e.initiativeTitle initiative />
     
-    <@e.stateInfo initiative />
+    <@prog.progress initiative=initiative public=false />
+    
     <div class="view-block first">
         <@e.initiativeViewManage initiative />
     </div>

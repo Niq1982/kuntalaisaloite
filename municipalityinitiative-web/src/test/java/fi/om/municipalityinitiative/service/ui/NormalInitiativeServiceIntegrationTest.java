@@ -10,10 +10,12 @@ import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.dto.ui.PrepareInitiativeUICreateDto;
 import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.service.ServiceIntegrationTestBase;
+import fi.om.municipalityinitiative.service.email.EmailReportType;
 import fi.om.municipalityinitiative.service.email.EmailSubjectPropertyKeys;
 import fi.om.municipalityinitiative.sql.QAuthorMessage;
 import fi.om.municipalityinitiative.sql.QMunicipalityInitiative;
 import fi.om.municipalityinitiative.util.*;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -50,7 +52,14 @@ public class NormalInitiativeServiceIntegrationTest extends ServiceIntegrationTe
 
     @Test
     public void all_fields_are_set_when_getting_municipalityInitiativeInfo() throws Exception {
-        Long initiativeId = testHelper.create(testMunicipality.getId(), InitiativeState.PUBLISHED, InitiativeType.COLLABORATIVE);
+
+        Long initiativeId = testHelper.createDefaultInitiative(new TestHelper.InitiativeDraft(testMunicipality.getId())
+                .withSent(new DateTime())
+                .withState(InitiativeState.PUBLISHED)
+                .withType(InitiativeType.COLLABORATIVE)
+                .witEmailReportSent(EmailReportType.IN_ACCEPTED, new DateTime())
+                .applyAuthor()
+                .toInitiativeDraft());
         InitiativeViewInfo initiative = service.getPublicInitiative(initiativeId);
         assertThat(initiative.getState(), is(InitiativeState.PUBLISHED));
         assertThat(initiative.getMunicipality().getId(), is(testMunicipality.getId()));

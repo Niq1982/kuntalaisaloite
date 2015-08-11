@@ -2,10 +2,9 @@ package fi.om.municipalityinitiative.util;
 
 import fi.om.municipalityinitiative.dto.NormalAuthor;
 import fi.om.municipalityinitiative.dto.VerifiedAuthor;
-import fi.om.municipalityinitiative.json.ObjectSerializer;
-import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
+import fi.om.municipalityinitiative.json.ObjectSerializer;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -109,6 +108,9 @@ public class ReflectionTestUtils {
             return modifyAllFields(new VerifiedAuthor());
         }
         if (type.equals(List.class)) {
+            return new ArrayList<>();
+        }
+        if (type.equals(ArrayList.class)) {
             return new ArrayList<>();
         }
 

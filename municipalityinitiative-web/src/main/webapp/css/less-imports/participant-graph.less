@@ -1,0 +1,68 @@
+@graphGutterLeft: 35px;
+@graphMarginTop: 1em;
+
+.participant-graph {
+
+    margin-top: @graphMarginTop;
+    margin-left: -@graphGutterLeft;
+
+    h3 {
+        margin-left: @graphGutterLeft;
+        margin-right: 15px;
+    }
+
+    .icon {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+
+        .backgroundImage("icons-participant-graph");
+
+        background-size: 48px auto;
+
+        vertical-align: baseline;
+
+        &.zoom-in {
+            .iconPosition(0, 0, 24px);
+        }
+        &.zoom-out {
+            .iconPosition(1, 0, 24px);
+        }
+        &.cumulative {
+            .iconPosition(0, 1, 24px);
+        }
+        &.daily {
+            .iconPosition(1, 1, 24px);
+        }
+    }
+
+    .graph-actions {
+        position: relative;
+        z-index: 10;
+        float: right;
+        margin-bottom: -15px;
+
+        a {
+            margin-left: 1em;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+
+            &.act {
+                display: none;
+            }
+        }
+
+    }
+
+    .update-info {
+        margin: 1em 0 0 @graphGutterLeft;
+        font-size: 0.8em;
+        text-align: left;
+
+        .no-js & {
+            display: none;
+        }
+    }
+
+}

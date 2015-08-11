@@ -149,6 +149,11 @@ public class AppConfiguration {
     }
 
     @Bean
+    public ReviewHistoryDao reviewHistoryDao() {
+        return new JdbcReviewHistoryDao();
+    }
+
+    @Bean
     public MunicipalityDao municipalityDao() {
         return new JdbcMunicipalityDao();
     }
@@ -169,6 +174,9 @@ public class AppConfiguration {
     }
 
     @Bean
+    public SupportCountDao supportCountDao() {return new SupportCountDao();}
+
+    @Bean
     public AuthorService authorService() {
         return new AuthorService();
     }
@@ -182,6 +190,9 @@ public class AppConfiguration {
     public PublicInitiativeService publicInitiativeService() {
         return new PublicInitiativeService();
     }
+
+    @Bean
+    public YouthInitiativeService youthInitiativeService() { return new YouthInitiativeService(); }
 
     @Bean
     public InitiativeManagementService initiativeManagementService() {
@@ -206,6 +217,11 @@ public class AppConfiguration {
     @Bean
     public ParticipantService participantService() {
         return new ParticipantService();
+    }
+
+    @Bean
+    public JobExecutor jobExecutor() {
+        return new JobExecutor();
     }
 
     @Bean
@@ -240,6 +256,11 @@ public class AppConfiguration {
                 WebConfiguration.optimizeResources(env),
                 WebConfiguration.resourcesVersion(env),
                 WebConfiguration.appVersion(env));
+    }
+
+    @Bean
+    public YouthInitiativeWebServiceNotifier youthInitiativeWebServiceNotifier() {
+        return new YouthInitiativeWebServiceNotifier(env.getRequiredProperty(PropertyNames.youthInitiativeBaseUrl));
     }
 
     @Bean
@@ -325,6 +346,11 @@ public class AppConfiguration {
         config.setFreemarkerVariables(variables);
         return config;
     }
+
+    @Bean
+    public EmailReportService emailReportService() {
+        return new EmailReportService();
+    }
     
     @Bean
     public BeansWrapper freemarkerObjectWrapper(FreeMarkerConfigurer configurer) {
@@ -356,6 +382,10 @@ public class AppConfiguration {
     }
 
     @Bean
+    public SupportCountService supportCountService() {return new SupportCountService();}
+
+
+    @Bean
     public EnvironmentSettings environmentSettings() {
         String defaultReplyTo = env.getRequiredProperty(PropertyNames.emailDefaultReplyTo);
         String moderatorSendTo = env.getRequiredProperty(PropertyNames.emailSendToOM);
@@ -373,7 +403,8 @@ public class AppConfiguration {
                 moderatorSendTo,
                 testSendMunicipalityEmailsToAuthor,
                 testSendModeratorEmailsToAuthor,
-                Boolean.valueOf(env.getRequiredProperty(PropertyNames.enableVerifiedInitiatives)));
+                Boolean.valueOf(env.getRequiredProperty(PropertyNames.enableVerifiedInitiatives)),
+                Boolean.valueOf(env.getRequiredProperty(PropertyNames.isTestEmailSender)));
     }
 
     @Bean
@@ -447,6 +478,7 @@ public class AppConfiguration {
         String baseUrl = env.getRequiredProperty(PropertyNames.baseURL);
         Urls.initUrls(baseUrl,
                 env.getProperty(PropertyNames.iframeBaseUrl, baseUrl),
-                env.getProperty(PropertyNames.apiBaseUrl, baseUrl));
+                env.getProperty(PropertyNames.apiBaseUrl, baseUrl),
+                env.getRequiredProperty(PropertyNames.youthInitiativeBaseUrl));
     }
 }

@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 
 import javax.annotation.Resource;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -38,6 +37,8 @@ public class EmailService {
     private static final String AUTHOR_MESSAGE_CONFIRMATION = "author-message-confirmation";
     private static final String AUTHOR_MESSAGE_TO_AUTHORS = "author-message-to-authors";
     private static final String VERIFIED_INITIATIVE_CREATED = "verified-initiative-created";
+    private static final String INITIATIVE_ACCEPTED_BUT_NOT_PUBLISHED = "report-accepted-but-not-published";
+    private static final String INITIATIVE_QUARTER_REPORT = "report-quarter";
 
     @Resource
     EmailServiceDataProvider dataProvider;
@@ -65,6 +66,38 @@ public class EmailService {
                 .withDataMap(dataMap)
                 .send();
 
+    }
+
+    public void sendInitiativeAcceptedButNotPublishedEmail(Initiative initiative) {
+
+        Map<String, String> managementLinksByAuthorEmails = dataProvider.getManagementLinksByAuthorEmails(initiative.getId());
+
+        for (Map.Entry<String, String> managementHashByAuthorEmail : managementLinksByAuthorEmails.entrySet()) {
+            HashMap<String, Object> dataMap = toDataMap(initiative, Locales.LOCALE_FI);
+            dataMap.put("managementHash", managementHashByAuthorEmail.getValue());
+            emailMessageConstructor
+                    .fromTemplate(initiative.getId(), INITIATIVE_ACCEPTED_BUT_NOT_PUBLISHED)
+                    .addRecipient(managementHashByAuthorEmail.getKey())
+                    .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.REPORT_ACCEPTED_BUT_NOT_PUBLISHED, toArray(), Locales.LOCALE_FI))
+                    .withDataMap(dataMap)
+                    .send();
+        }
+
+    }
+
+    public void sendQuarterReport(Initiative initiative) {
+        Map<String, String> managementLinksByAuthorEmails = dataProvider.getManagementLinksByAuthorEmails(initiative.getId());
+
+        for (Map.Entry<String, String> managementHashByAuthorEmail : managementLinksByAuthorEmails.entrySet()) {
+            HashMap<String, Object> dataMap = toDataMap(initiative, Locales.LOCALE_FI);
+            dataMap.put("managementHash", managementHashByAuthorEmail.getValue());
+            emailMessageConstructor
+                    .fromTemplate(initiative.getId(), INITIATIVE_QUARTER_REPORT)
+                    .addRecipient(managementHashByAuthorEmail.getKey())
+                    .withSubject(messageSource.getMessage(EmailSubjectPropertyKeys.REPORT_QUARTER, toArray(), Locales.LOCALE_FI))
+                    .withDataMap(dataMap)
+                    .send();
+        }
     }
 
     public void sendAuthorInvitation(Long initiativeId, AuthorInvitation authorInvitation) {

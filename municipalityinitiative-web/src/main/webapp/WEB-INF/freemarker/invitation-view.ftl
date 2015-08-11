@@ -4,6 +4,7 @@
 <#import "components/elements.ftl" as e />
 <#import "components/forms.ftl" as f />
 <#import "components/some.ftl" as some />
+<#import "components/progress.ftl" as prog />
 
 <#escape x as x?html> 
 
@@ -133,7 +134,7 @@
                             <div class="input-header"><@u.message "contactInfo.homeMunicipality" /></div>
                             <div><@u.solveMunicipality user.homeMunicipality/></div>
                         <#else>
-                            <@f.municipalitySelect path="authorInvitation.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipality.id key="initiative.homeMunicipality" />
+                            <@f.municipalitySelect path="authorInvitation.homeMunicipality" options=municipalities required="required" cssClass="municipality-select" preSelected=initiative.municipality.id key="initiative.homeMunicipality" multiple=false/>
                         </#if>
                     </div>
                     <br class="clear" />
@@ -196,7 +197,7 @@
 
     <@e.initiativeTitle initiative />
     
-    <@e.stateInfo initiative />
+    <@prog.progress initiative />
 
     <#-- VIEW BLOCKS -->
     <div class="view-block public first">

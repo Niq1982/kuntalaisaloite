@@ -1,14 +1,12 @@
 package fi.om.municipalityinitiative.web;
 
-import fi.om.municipalityinitiative.dao.TestHelper;
-import fi.om.municipalityinitiative.util.InitiativeState;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
-import static fi.om.municipalityinitiative.web.MessageSourceKeys.*;
+import static fi.om.municipalityinitiative.web.MessageSourceKeys.MSG_BTN_REJECT_INITIATIVE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.theInstance;
 import static org.hamcrest.core.IsNot.not;
 
 public class InitiativeModerationWebTest extends WebTestBase {
@@ -25,7 +23,6 @@ public class InitiativeModerationWebTest extends WebTestBase {
     @Test
     public void moderationpage_shows_404_if_not_logged_in() {
         open(urls.moderation(testHelper.createCollaborativeAccepted(HELSINKI_ID)));
-//        assertThat(driver.getCurrentUrl(), startsWith(urls.vetumaLogin()));
         assert404();
     }
 
@@ -46,16 +43,29 @@ public class InitiativeModerationWebTest extends WebTestBase {
 
         open(urls.moderation(initiativeId));
 
-        getElemContaining(getMessage(MSG_BTN_ACCEPT_INITIATIVE), "a").click();
+        clickLink("Hyväksy aloite");
+        getElement(By.name(Urls.PARAM_SENT_COMMENT)).sendKeys(COMMENT);
+        clickButton("Hyväksy aloite");
 
-        inputTextByCSS("#commentAccept",COMMENT);
+        assertSuccessMessage("Aloite on hyväksytty");
 
-        clickByName(Urls.ACTION_ACCEPT_INITIATIVE);
-        assertMsgContainedByClass("msg-success", MSG_SUCCESS_ACCEPT_INITIATIVE);
-
-        assertTextContainedByClass("extra-info", "Aloite on hyväksytty");
+        assertThatFirstReviewHistoryElementIs("Hyväksytty julkaistavaksi", COMMENT);
         assertTotalEmailsInQueue(1);
 
+    }
+
+    @Test
+    public void add_moderator_comment() {
+
+        Long initiativeId = testHelper.createCollaborativeReview(HELSINKI_ID);
+
+        loginAsOmUser();
+        open(urls.moderation(initiativeId));
+        clickLink("Lisää merkintä");
+        getElement(By.name(Urls.ACTION_MODERATOR_ADD_COMMENT)).sendKeys(COMMENT);
+        clickButton("Lisää merkintä");
+
+        assertThatFirstReviewHistoryElementIs("Moderoinnin merkintä", COMMENT);
     }
 
     @Test
@@ -71,8 +81,10 @@ public class InitiativeModerationWebTest extends WebTestBase {
         inputTextByCSS("#commentReject",COMMENT);
 
         clickByName(Urls.ACTION_REJECT_INITIATIVE);
-        assertMsgContainedByClass("msg-success", MSG_SUCCESS_REJECT_INITIATIVE);
-        assertTextContainedByClass("extra-info", "Aloite odottaa julkaisuun lähetystä");
+        assertSuccessMessage("Aloite palautettu korjattavaksi");
+
+        assertThatFirstReviewHistoryElementIs("Palautettu korjattavaksi", COMMENT);
+
         assertTotalEmailsInQueue(1);
 
     }
@@ -84,33 +96,36 @@ public class InitiativeModerationWebTest extends WebTestBase {
         loginAsOmUser();
         open(urls.moderation(initiativeId));
 
-        clickLinkContaining("Palauta aloite");
-        inputTextByCSS("#commentReject",COMMENT);
-        getElemContaining("Palauta aloite", "button").click();
+        clickLink("Palauta aloite");
+        inputTextByCSS("#commentReject","hylkäys kommentti");
+        clickButton("Palauta aloite");
 
-        assertTextContainedByClass("msg-success","Aloite palautettu korjattavaksi");
+        assertSuccessMessage("Aloite palautettu korjattavaksi");
+        assertThatFirstReviewHistoryElementIs("Palautettu korjattavaksi", "hylkäys kommentti");
         assertTotalEmailsInQueue(1);
 
         loginAsAuthorForLastTestHelperCreatedNormalInitiative();
 
-        clickLinkContaining("Lähetä aloite tarkastettavaksi");
-        getElemContaining("Lähetä aloite tarkastettavaksi", "button").click();
+        clickLink("Lähetä aloite tarkastettavaksi");
+        clickButton("Lähetä aloite tarkastettavaksi");
 
-        assertTextContainedByClass("msg-success","Aloite lähetetty tarkastettavaksi");
+        assertSuccessMessage("Aloite lähetetty tarkastettavaksi");
         assertTotalEmailsInQueue(3);
 
         logout();
         loginAsOmUser();
         open(urls.moderation(initiativeId));
 
-        clickLinkContaining("Hyväksy aloite");
-        inputTextByCSS("#commentAccept",COMMENT);
-        getElemContaining("Hyväksy aloite", "button").click();
+        assertThatFirstReviewHistoryElementIs("Lähetetty tarkastettavaksi", null);
 
-        assertTextContainedByClass("msg-success","Aloite on hyväksytty");
+        clickLink("Hyväksy aloite");
+        inputTextByCSS("#commentAccept","hyväksyntäkommentti");
+        clickButton("Hyväksy aloite");
+
+        assertSuccessMessage("Aloite on hyväksytty");
+        assertThatFirstReviewHistoryElementIs("Hyväksytty julkaistavaksi", "hyväksyntäkommentti");
         assertTotalEmailsInQueue(4);
     }
-
 
     @Test
     public void resend_management_hash(){
@@ -121,12 +136,13 @@ public class InitiativeModerationWebTest extends WebTestBase {
         open(urls.moderation(initiativeId));
         findElementWhenClickable(By.className("resend")).click();
 
-        getElemContaining("Luo ja lähetä uusi ylläpitolinkki", "button").click();
+        clickButton("Luo ja lähetä uusi ylläpitolinkki");
 
-        assertTextContainedByClass("msg-success", "Uusi ylläpitolinkki lähetetty");
+        assertSuccessMessage("Uusi ylläpitolinkki lähetetty");
         assertTotalEmailsInQueue(1);
 
     }
+
 
     @Test
     public void moderadion_page_lists_attachments() {
@@ -155,6 +171,18 @@ public class InitiativeModerationWebTest extends WebTestBase {
         assertThat(driver.getPageSource(), not(containsString(urls.getAttachmentThumbnail(pdfAttachmentId))));
         assertThat(driver.getPageSource(), containsString("/img/pdficon_large.png"));
         assertThat(driver.getPageSource(), containsString(urls.attachment(pdfAttachmentId, pdfFileName)));
+    }
+
+    private void assertThatFirstReviewHistoryElementIs(String historyItemHeader, String historyItemMessage) {
+        WebElement element = getElement(By.className("review-history-row"));
+        assertThat(element.getText(), containsString(historyItemHeader));
+        if (historyItemMessage != null) {
+            assertThat(element.getText(), containsString(historyItemMessage));
+        }
+//        assertTextContainedByClass("review-history-description", historyItemHeader);
+//        if (historyItemMessage != null) {
+//            assertTextContainedByClass("review-history-message", historyItemMessage);
+//        }
     }
 
 

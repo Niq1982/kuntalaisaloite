@@ -128,16 +128,17 @@
 }
 
 /* @group Multi Chosen */
+
 .chzn-container-multi .chzn-choices {
   background-color: #fff;
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(1%, #eeeeee), color-stop(15%, #ffffff));
+  /*background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(1%, #eeeeee), color-stop(15%, #ffffff));
   background-image: -webkit-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
   background-image: -moz-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
   background-image: -o-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
-  background-image: linear-gradient(#eeeeee 1%, #ffffff 15%);
-  border: 1px solid #aaa;
-  margin: 0;
-  padding: 0;
+  background-image: linear-gradient(#eeeeee 1%, #ffffff 15%);*/
+  border: 1px solid rgb(204, 204, 204);
+  margin: 0.3em 0em 0em 0em;
+  padding: 0.2em;
   cursor: text;
   overflow: hidden;
   height: auto !important;
@@ -151,7 +152,6 @@
 .chzn-container-multi .chzn-choices .search-field {
   white-space: nowrap;
   margin: 0;
-  padding: 0;
 }
 .chzn-container-multi .chzn-choices .search-field input {
   color: #666;
@@ -190,10 +190,11 @@
   color: #333;
   border: 1px solid #aaaaaa;
   line-height: 13px;
-  padding: 3px 20px 3px 5px;
+  padding: 0.5em 1.4em 0 0.5em;
   margin: 3px 0 3px 5px;
   position: relative;
   cursor: default;
+  height: 20px;
 }
 .chzn-container-multi .chzn-choices .search-choice.search-choice-disabled {
   background-color: #e4e4e4;
@@ -216,17 +217,18 @@
   position: absolute;
   right: 3px;
   top: 4px;
-  width: 12px;
-  height: 13px;
+  width: 20px;
+  height: 20px;
   font-size: 1px;
-  /*background: url('chosen-sprite.png') right top no-repeat;*/
+  background: url('../../img/arrows_remove.png') right top no-repeat;
+  background-size: 20px 20px;
 }
-.chzn-container-multi .chzn-choices .search-choice .search-choice-close:hover {
+/*.chzn-container-multi .chzn-choices .search-choice .search-choice-close:hover {
   background-position: right -11px;
 }
 .chzn-container-multi .chzn-choices .search-choice-focus .search-choice-close {
   background-position: right -11px;
-}
+} */
 /* @end */
 
 /* @group Results */
@@ -353,6 +355,7 @@
 .chzn-container-active .chzn-choices .search-field input {
   color: #111 !important;
 }
+
 /* @end */
 
 /* @group Disabled Support */
