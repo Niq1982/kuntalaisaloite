@@ -1917,7 +1917,9 @@ if (window.hasIGraphFrame) {
  *
  */
 var getMapContainer = function() {
-	var marker, tempLocation, map, searchresults,
+	var markers= [],
+		tempLocations = [],
+		map, searchresults,
 		geocoder= new google.maps.Geocoder(),
 		selectedLocation = null,
 		viewOnly = false,
@@ -1952,8 +1954,8 @@ var getMapContainer = function() {
 
 
 	initWithSelectedLocation = function() {
-		tempLocation = selectedLocation;
-		initMap(tempLocation);
+		tempLocations.push(selectedLocation);
+		initMap(tempLocations[0]);
 		initListeners();
 	};
 
@@ -1961,8 +1963,8 @@ var getMapContainer = function() {
 
 		getLocationFromAddress(address, function (results, status) {
 			if (results !== undefined && results !== null && results.length > 0) {
-				tempLocation = results[0].geometry.location;
-				initMap(tempLocation);
+				tempLocations.push(results[0].geometry.location);
+				initMap(tempLocations[0]);
 			} else {
 				initMap(centerOfFinland);
 			}
@@ -1972,8 +1974,8 @@ var getMapContainer = function() {
 
 	initWithCoordinates = function(coordinates) {
 
-		tempLocation = new google.maps.LatLng(coordinates.lat, coordinates.lng);
-		initMap(tempLocation);
+		tempLocations.push(new google.maps.LatLng(coordinates.lat, coordinates.lng));
+		initMap(tempLocations[0]);
 		initListeners();
 	};
 
@@ -2019,7 +2021,7 @@ var getMapContainer = function() {
 		});
 
 		$("#save-and-close").live('click', function () {
-			selectedLocation = tempLocation;
+			selectedLocation = tempLocations[0];
 			locationlat.val(selectedLocation.lat());
 			locationlng.val(selectedLocation.lng());
 
@@ -2053,8 +2055,8 @@ var getMapContainer = function() {
 			map = new google.maps.Map(document.getElementById('map-canvas'),
 				mapOptions);
 			google.maps.event.addListener(map, 'click', function (e) {
-				tempLocation = e.latLng;
-				placeMarker(tempLocation, map);
+				tempLocations.push(e.latLng);
+				placeMarker(tempLocations[tempLocations.length - 1], map);
 			});
 
 		} else {
@@ -2065,13 +2067,13 @@ var getMapContainer = function() {
 	};
 
 	placeMarker = function(position, map) {
-		if (marker != null) {
+		/*if (marker != null) {
 			marker.setMap(null);
-		}
-		marker = new google.maps.Marker({
+		} */
+		markers.push(new google.maps.Marker({
 			position: position,
 			map: map
-		});
+		}));
 		map.panTo(position);
 	};
 
