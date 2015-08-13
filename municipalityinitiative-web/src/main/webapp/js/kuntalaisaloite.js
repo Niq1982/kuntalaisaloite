@@ -1427,7 +1427,7 @@ $.DirtyForms.dialog = {
 
 (function() {
 	var ignoreHelper = {
-		ignoreAnchorSelector: 'a[rel="external"], .modal a, a#openMap'
+		ignoreAnchorSelector: 'a[rel="external"], .modal a, a#openMap, .map-marker a'
 	};
 
 	$.DirtyForms.helpers.push(ignoreHelper);
