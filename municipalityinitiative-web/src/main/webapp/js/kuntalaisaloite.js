@@ -2134,11 +2134,11 @@ var getMapContainer = function() {
 	};
 
 	indexIsInSearchResultListRange = function (index) {
-		return index >= 0 && index < searchresults.length;
+		return index >= 0 && index < searchresults.length && searchresults.length > 0;
 	};
 
 	selectListElementWithArrow = function(offset) {
-		if (searchresults !== undefined || searchresults !== null || searhresults.length > 0) {
+		if (searchresults !== undefined && searchresults !== null && searchresults.length > 0) {
 
 			if (indexIsInSearchResultListRange(selectedResultIndex)) {
 				removeCurrentSelectionInResultList();
@@ -2161,7 +2161,7 @@ var getMapContainer = function() {
 		selectResultFromList(selectedResultIndex);
 	};
 	selectResultFromList = function(index) {
-		if (index >= 0 || index < searchresults.length ) {
+		if (indexIsInSearchResultListRange(index)) {
 			tempLocation = searchresults[index].geometry.location;
 			placeMarker(tempLocation, map);
 		}

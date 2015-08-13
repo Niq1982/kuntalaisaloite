@@ -483,10 +483,10 @@
         <div id="open-remove-location" <#if !locationSelected> class="no-visible" </#if> >
             <p id="show-selected-location" class="map-marker">
                 <a><@u.message key="map.locationAttached" /></a>
-                <a class="trigger-tooltip">
-                    <span id="remove-selected-location" class="icon-small icon-16 cancel"></span>
-                </a>
             </p>
+            <a class="trigger-tooltip">
+                <span id="remove-selected-location" class="icon-small icon-16 cancel"></span>
+            </a>
 
             <@f.textarea path=path+".locationDescription" required="required" optional=false key="updateData.locationDescription"/>
         </div>
