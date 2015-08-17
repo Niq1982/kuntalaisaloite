@@ -1921,7 +1921,7 @@ var getMapContainer = function() {
 		tempLocations = [],
 		map, searchresults,
 		geocoder= new google.maps.Geocoder(),
-		selectedLocation = null,
+		selectedLocations = [],
 		viewOnly = false,
 		centerOfFinland = {"lat": 64.9146659, "lng": 26.0672554},
 	    // For key navigation in result list
@@ -1954,7 +1954,8 @@ var getMapContainer = function() {
 
 
 	initWithSelectedLocation = function() {
-		tempLocations.push(selectedLocation);
+		tempLocations = selectedLocations.slice();
+		// TODO init map with several locations
 		initMap(tempLocations[0]);
 		initListeners();
 	};
@@ -1972,9 +1973,11 @@ var getMapContainer = function() {
 		initListeners()
 	};
 
-	initWithCoordinates = function(coordinates) {
-
-		tempLocations.push(new google.maps.LatLng(coordinates.lat, coordinates.lng));
+	initWithCoordinates = function(locations) {
+		for (var i = 0;  i < locations.length; i++) {
+			tempLocations.push(new google.maps.LatLng(locations[i].lat, locations[i].lng));
+		}
+		// TODO try to find a way to init map centering to several locations
 		initMap(tempLocations[0]);
 		initListeners();
 	};
@@ -2021,9 +2024,14 @@ var getMapContainer = function() {
 		});
 
 		$("#save-and-close").live('click', function () {
-			selectedLocation = tempLocations[0];
-			locationlat.val(selectedLocation.lat());
-			locationlng.val(selectedLocation.lng());
+			selectedLocations = tempLocations.slice();
+
+			$.each(selectedLocations, function(index, value) {
+				var row = createLocationRow();
+				$(row).find("[id$=locationLat]").val(value.lat());
+				$(row).find("[id$=locationLng]").val(value.lng());
+
+			});
 
 			selectLocation.addClass("no-visible");
 			openRemoveLocation.removeClass("no-visible");
@@ -2174,7 +2182,7 @@ var getMapContainer = function() {
 	};
 
 	getSelectedLocation = function() {
-		return selectedLocation;
+		return selectedLocations;
 	};
 
 	return {
@@ -2187,14 +2195,32 @@ var getMapContainer = function() {
 
 };
 
+var $locationContainer = $('#new-locations');
+var index = $locationContainer.data("index");
+var createLocationRow = function () {
+	var locations = {
+		newLocationIndex: index.toString()
+	};
+	index += 1;
+	return $locationContainer.append($("#locationTemplate").render(locations));
+
+};
+
+
 var renderMap,
-	locationlat = $("#locationLat"),
-	locationlng = $("#locationLng"),
+	selectedLocations,
 	locationDescription = $("#locationDescription"),
 	selectLocation = $("#select-location"),
 	openRemoveLocation = $("#open-remove-location"),
 	mapContainer,
 	mapViewContainer;
+
+
+
+// Select all locations
+$.each( $('.locationRow'), function(index, value) {
+	selectedLocations.push(value.find("[id=$locationLat]"), value.find("[id=$locationLng]"))
+});
 
 $("#openMap").click(function(){
 	mapContainer = getMapContainer();
@@ -2208,8 +2234,8 @@ $("#show-selected-location").click(function() {
 	}
 	if (mapContainer.getSelectedLocation() !== null) {
 		renderMap = mapContainer.initWithSelectedLocation;
-	} else if (modalData.selectedLocation !== undefined) {
-		renderMap = function() {mapContainer.initWithCoordinates(modalData.selectedLocation);};
+	} else if (selectedLocations.length > 0) {
+		renderMap = function() {mapContainer.initWithCoordinates(selectedLocations);};
 	}
 
 	generateModal(modalData.mapContainer(), 'full');
@@ -2221,8 +2247,7 @@ $("#remove-selected-location").click(function() {
 	openRemoveLocation.addClass("no-visible");
 	mapContainer = null;
 
-	locationlat.val(null);
-	locationlng.val(null);
+	// TODO remove selected locations
 	locationDescription.val(null);
 });
 

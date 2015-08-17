@@ -494,8 +494,32 @@
 
     <noscript><@u.message key="map.javaScriptSupport" /></noscript>
 
-    <@spring.formHiddenInput path+".locationLat" />
-    <@spring.formHiddenInput path+".locationLng" />
+    <#assign newLocationIndex=updateData.locations?size />
+
+    <!-- Existing locations -->
+    <#list updateData.locations as location>
+        <div class="locationRow">
+            <@spring.formHiddenInput path+".locations[${location_index}].locationLat" />
+            <@spring.formHiddenInput path+".locations[${location_index}].locationLng" />
+        </div>
+    </#list>
+
+    <!-- New locations -->
+    <div id = "new-locations" data-index="${newLocationIndex}"></div>
+
+    <!-- Location template -->
+    <script id="locationTemplate" type="text/x-jsrender">
+        <div>
+            <label>
+                <input type="text" class="medium" value="" id="locations[{{>newLocationIndex}}].locationLat" name="locations[{{>newLocationIndex}}].locationLat" />
+            </label>
+            <label>
+                <input type="text" class="medium" value="" id="locations[{{>newLocationIndex}}].locationLng" name="locations[{{>newLocationIndex}}].locationLng" />
+            </label>
+        </div>
+    </script>
+
+
 </#macro>
 
 <#--

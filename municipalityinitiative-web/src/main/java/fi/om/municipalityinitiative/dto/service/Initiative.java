@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.dto.service;
 
+import com.google.common.collect.Lists;
 import fi.om.municipalityinitiative.service.email.EmailReportType;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
@@ -7,6 +8,8 @@ import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+
+import java.util.List;
 
 public class Initiative {
 
@@ -32,7 +35,7 @@ public class Initiative {
     private DateTime lastEmailReportTime;
     private EmailReportType lastEmailReportType;
     private Maybe<Long> youthInitiativeId = Maybe.absent();
-    private Maybe<Location> location = Maybe.absent();
+    private List<Location> location = Lists.newArrayList();
     private Maybe<String> locationDescription = Maybe.absent();
 
     public Maybe<Long> getYouthInitiativeId() {
@@ -199,12 +202,12 @@ public class Initiative {
         return lastEmailReportType;
     }
 
-    public Maybe<Location> getLocation() {
+    public List<Location> getLocation() {
         return this.location;
     }
 
-    public void setLocation(Location location) {
-        this.location = Maybe.of(location);
+    public void setLocation(List<Location> location) {
+        this.location = location;
     }
 
     public Maybe<String> getLocationDescription() {

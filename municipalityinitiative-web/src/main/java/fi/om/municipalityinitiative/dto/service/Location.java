@@ -9,6 +9,10 @@ public class Location {
         this.lat = lat;
         this.lng = lng;
     }
+    // For Spring form binding.
+    public Location() {
+
+    }
     public Double getLat() {
         return lat;
     }

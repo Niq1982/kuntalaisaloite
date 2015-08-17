@@ -19,7 +19,6 @@ import com.mysema.query.types.path.StringPath;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.Initiative;
-import fi.om.municipalityinitiative.dto.service.Location;
 import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListWithCount;
@@ -111,7 +110,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     String maybeLocationDescription = row.get(municipalityInitiative.locationDescription);
 
                     if (maybeLocationLng != null && maybeLocationLng != null && maybeLocationDescription != null) {
-                        info.setLocation(new Location(maybeLocationLat, maybeLocationLng));
+                       // info.setLocation(new Location(maybeLocationLat, maybeLocationLng));
                         info.setLocationDescription(maybeLocationDescription);
                     }
                     return info;
@@ -466,7 +465,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .set(municipalityInitiative.extraInfo, editDto.getExtraInfo())
                 .set(municipalityInitiative.externalparticipantcount, editDto.getExternalParticipantCount());
 
-        if (editDto.getLocation() != null) {
+        /*if (editDto.getLocation() != null) {
             query.set(municipalityInitiative.locationLat, editDto.getLocation().getLat());
             query.set(municipalityInitiative.locationLng, editDto.getLocation().getLng());
             query.set(municipalityInitiative.locationDescription, editDto.getLocationDescription());
@@ -474,7 +473,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
             query.setNull(municipalityInitiative.locationLat);
             query.setNull(municipalityInitiative.locationLng);
             query.setNull(municipalityInitiative.locationDescription);
-        }
+        }*/
         assertSingleAffection(query
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute());

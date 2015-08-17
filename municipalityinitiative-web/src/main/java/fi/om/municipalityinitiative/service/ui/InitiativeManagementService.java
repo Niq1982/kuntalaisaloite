@@ -113,11 +113,11 @@ public class InitiativeManagementService {
         updateDto.setContactInfo(contactInfo);
         updateDto.setExtraInfo(initiative.getExtraInfo());
         updateDto.setExternalParticipantCount(initiative.getExternalParticipantCount());
-        if (initiative.getLocation().isPresent() && initiative.getLocationDescription().isPresent()) {
+        /* if (initiative.getLocation().isPresent() && initiative.getLocationDescription().isPresent()) {
             updateDto.setLocationLat(initiative.getLocation().getValue().getLat());
             updateDto.setLocationLng(initiative.getLocation().getValue().getLng());
             updateDto.setLocationDescription(initiative.getLocationDescription().getValue());
-        }
+        }*/
 
         return updateDto;
     }

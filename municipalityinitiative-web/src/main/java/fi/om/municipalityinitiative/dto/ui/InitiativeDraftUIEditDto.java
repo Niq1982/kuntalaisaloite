@@ -4,7 +4,6 @@ import fi.om.municipalityinitiative.dto.InitiativeConstants;
 import fi.om.municipalityinitiative.dto.service.Initiative;
 import fi.om.municipalityinitiative.dto.service.Location;
 import fi.om.municipalityinitiative.dto.service.Municipality;
-import fi.om.municipalityinitiative.exceptions.InvalidLocationException;
 import fi.om.municipalityinitiative.validation.InitiativeWithLocationInformation;
 import fi.om.municipalityinitiative.validation.NormalInitiative;
 import fi.om.municipalityinitiative.validation.ValidLocation;
@@ -14,6 +13,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @ValidLocation(groups = {VerifiedInitiative.class, NormalInitiative.class})
 public class InitiativeDraftUIEditDto implements InitiativeWithLocationInformation {
@@ -40,9 +41,7 @@ public class InitiativeDraftUIEditDto implements InitiativeWithLocationInformati
     @Min(value = 0, groups = {VerifiedInitiative.class, NormalInitiative.class} )
     private int externalParticipantCount;
 
-    private Double locationLat;
-
-    private Double locationLng;
+    private List<Location> locations = new ArrayList<Location>();
 
     private String locationDescription;
 
@@ -58,11 +57,7 @@ public class InitiativeDraftUIEditDto implements InitiativeWithLocationInformati
         editDto.municipality = initiative.getMunicipality();
         editDto.setContactInfo(new ContactInfo(contactInfo));
         editDto.setExternalParticipantCount(initiative.getExternalParticipantCount());
-        if (initiative.getLocation().isPresent() && initiative.getLocationDescription().isPresent()) {
-            editDto.locationLat = initiative.getLocation().getValue().getLat();
-            editDto.locationLng = initiative.getLocation().getValue().getLng();
-            editDto.locationDescription = initiative.getLocationDescription().getValue();
-        }
+        editDto.setLocations(initiative.getLocation());
         return editDto;
     }
 
@@ -94,21 +89,6 @@ public class InitiativeDraftUIEditDto implements InitiativeWithLocationInformati
         return municipality;
     }
 
-    public Location getLocation() {
-        if (this.locationLat != null && this.locationLng != null){
-            return new Location(this.locationLat, this.locationLng);
-        }
-        else if (locationLat == null && locationLng == null) {
-            return null;
-        }
-        else {
-            throw new InvalidLocationException("Invalid location. Location not saved");
-        }
-
-    }
-
-    public void setLocation(Location location) {this.locationLat = location.getLat(); this.locationLng = location.getLng(); }
-
     public ContactInfo getContactInfo() {
         return contactInfo;
     }
@@ -125,21 +105,14 @@ public class InitiativeDraftUIEditDto implements InitiativeWithLocationInformati
         return externalParticipantCount;
     }
 
-    public Double getLocationLat(){
-        return this.locationLat;
+    public List<Location> getLocations(){
+        return this.locations;
     }
 
-    public void setLocationLat(Double locationLat){
-        this.locationLat = locationLat;
+    public void setLocations(List<Location> locations){
+        this.locations = locations;
     }
 
-    public Double getLocationLng(){
-        return this.locationLng;
-    }
-
-    public void setLocationLng(Double locationLng){
-        this.locationLng = locationLng;
-    }
 
     public String getLocationDescription() {
         return locationDescription;

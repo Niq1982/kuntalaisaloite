@@ -10,6 +10,8 @@ import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.LocalDate;
 
+import java.util.List;
+
 public final class InitiativeViewInfo {
 
     private final Initiative initiative;
@@ -94,7 +96,7 @@ public final class InitiativeViewInfo {
         return initiative.getYouthInitiativeId();
     }
 
-    public Maybe<Location> getLocation() {return initiative.getLocation();}
+    public List<Location> getLocation() {return initiative.getLocation();}
 
     public Maybe<String> getLocationDescription() {return initiative.getLocationDescription();}
 

@@ -15,7 +15,7 @@
 -->
 <#assign page="page.edit" />
 
-<#assign locationSelected = updateData.locationLat?? && updateData.locationLng??>
+<#assign locationSelected = updateData.locations?? && updateData.locations?size gt 0>
 
 <@l.main page pageTitle!"">
 
@@ -105,10 +105,6 @@
         }]
     };
 
-    modalData.initialLocation = '${initiative.municipality.getName(locale)}';
-    <#if locationSelected>
-        modalData.selectedLocation = {"lat" : "${updateData.locationLat?c}", "lng" : "${updateData.locationLng?c}"};
-    </#if>
 
     var messageData = {};
 

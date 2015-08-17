@@ -73,7 +73,7 @@
         </div>
     </#if>
 
-    <#if initiative.location?? && initiative.location.isPresent()>
+    <#if initiative.location?? && initiative.location?size gt 0>
         <@map initiative />
     </#if>
 
@@ -99,7 +99,7 @@
             </div>
         </div>
         <script type="text/javascript">
-            var initiative = {location: {"lat": "${initiative.location.value.lat?c}", "lng": "${initiative.location.value.lng?c}"}};
+            var initiative = {location: {"lat": "${initiative.location[0].lat?c}", "lng": "${initiative.location[0].lng?c}"}};
         </script>
 
 </#macro>
@@ -133,7 +133,7 @@
         </div>
     </#if>
 
-    <#if initiative.location?? && initiative.location.present>
+    <#if initiative.location?? && initiative.location?size gt 0>
         <@map initiative />
     </#if>
 

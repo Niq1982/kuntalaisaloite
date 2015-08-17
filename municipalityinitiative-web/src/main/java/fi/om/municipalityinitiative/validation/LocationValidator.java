@@ -1,8 +1,6 @@
 package fi.om.municipalityinitiative.validation;
 
 
-import com.google.common.base.Strings;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
@@ -14,7 +12,7 @@ public class LocationValidator implements ConstraintValidator<ValidLocation, Ini
 
     @Override
     public boolean isValid(InitiativeWithLocationInformation value, ConstraintValidatorContext context) {
-        if (value.getLocationLat() == null && value.getLocationLng() == null && Strings.isNullOrEmpty(value.getLocationDescription())) {
+        /*if (value.getLocationLat() == null && value.getLocationLng() == null && Strings.isNullOrEmpty(value.getLocationDescription())) {
             return true;
         }
         else if (value.getLocationLat() != null && value.getLocationLng() != null && !Strings.isNullOrEmpty(value.getLocationDescription())) {
@@ -26,7 +24,8 @@ public class LocationValidator implements ConstraintValidator<ValidLocation, Ini
                     .addNode("locationDescription")
                     .addConstraintViolation();
             return false;
-        }
+        }*/
+        return true;
 
     }
 }
