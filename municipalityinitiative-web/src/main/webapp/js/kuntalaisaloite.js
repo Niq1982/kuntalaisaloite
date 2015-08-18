@@ -1949,7 +1949,7 @@ var getMapContainer = function() {
 		emptyResultList,
 		modifyResultList,
 		setViewOnly,
-		getSelectedLocation;
+		getSelectedLocations;
 
 
 	initWithSelectedLocation = function() {
@@ -2179,7 +2179,7 @@ var getMapContainer = function() {
 		viewOnly = b;
 	};
 
-	getSelectedLocation = function() {
+	getSelectedLocations = function() {
 		return selectedLocations;
 	};
 
@@ -2188,7 +2188,7 @@ var getMapContainer = function() {
 		initWithAddress: initWithAddress,
 		initWithCoordinates: initWithCoordinates,
 		setViewOnly: setViewOnly,
-		getSelectedLocation: getSelectedLocation
+		getSelectedLocations: getSelectedLocations
 	};
 
 };
@@ -2234,7 +2234,7 @@ var renderMap,
 
 // Select all locations
 $.each( $('.locationRow'), function(index, value) {
-	selectedLocations.push(value.find("[id$=.lat]").val(), value.find("[id$=.lng]").val())
+	selectedLocations.push({lat : $(value).find("[id$=lat]").val(), lng : $(value).find("[id$=lng]").val()});
 });
 
 $("#openMap").click(function(){
@@ -2247,7 +2247,7 @@ $("#show-selected-location").click(function() {
 	if (mapContainer === undefined) {
 		mapContainer = getMapContainer();
 	}
-	if (mapContainer.getSelectedLocation() !== null) {
+	if (mapContainer.getSelectedLocations().length > 0) {
 		renderMap = mapContainer.initWithSelectedLocation;
 	} else if (selectedLocations.length > 0) {
 		renderMap = function() {mapContainer.initWithCoordinates(selectedLocations);};
@@ -2262,7 +2262,7 @@ $("#remove-selected-location").click(function() {
 	openRemoveLocation.addClass("no-visible");
 	mapContainer = null;
 
-	// TODO remove selected locations
+	locationFields.emptyAllRows();
 	locationDescription.val(null);
 });
 
