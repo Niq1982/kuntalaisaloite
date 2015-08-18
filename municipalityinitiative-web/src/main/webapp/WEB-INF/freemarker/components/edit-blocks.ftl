@@ -496,13 +496,15 @@
 
     <#assign newLocationIndex=updateData.locations?size />
 
-    <!-- Existing locations -->
-    <#list updateData.locations as location>
-        <div class="locationRow">
-            <@spring.formHiddenInput path+".locations[${location_index}].lat" />
-            <@spring.formHiddenInput path+".locations[${location_index}].lng" />
-        </div>
-    </#list>
+    <div id="old-locations">
+        <!-- Existing locations -->
+        <#list updateData.locations as location>
+            <div class="locationRow">
+                <@spring.formHiddenInput path+".locations[${location_index}].lat" />
+                <@spring.formHiddenInput path+".locations[${location_index}].lng" />
+            </div>
+        </#list>
+    </div>
 
     <!-- New locations -->
     <div id = "new-locations" data-index="${newLocationIndex}"></div>

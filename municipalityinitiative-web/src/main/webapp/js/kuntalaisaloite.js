@@ -2195,8 +2195,16 @@ var getMapContainer = function() {
 
 var locationFields = (function() {
 	var $locationContainer = $('#new-locations');
+	var $oldLocationsContainer = $('#old-locations');
+
 	var firstIndex = $locationContainer.data("index");
 	var index = firstIndex;
+
+	var removeOldRows = function() {
+		firstIndex = 0;
+		index = firstIndex;
+		$oldLocationsContainer.empty();
+	};
 
 	var emptyAllRows = function(){
 		index = firstIndex;
@@ -2215,7 +2223,8 @@ var locationFields = (function() {
 	};
 	return {
 		emptyAllRows: emptyAllRows,
-		createLocationRow: createLocationRow
+		createLocationRow: createLocationRow,
+		removeOldRows: removeOldRows
 	}
 
 })();
@@ -2263,6 +2272,7 @@ $("#remove-selected-location").click(function() {
 	mapContainer = null;
 
 	locationFields.emptyAllRows();
+	locationFields.removeOldRows();
 	locationDescription.val(null);
 });
 
