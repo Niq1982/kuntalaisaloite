@@ -1941,6 +1941,7 @@ var getMapContainer = function() {
 		filterOutResultsByType,
 		updateResultsList,
 		placeMarker,
+		removeMarkers,
 		removeCurrentSelectionInResultList,
 		highlightCurrentSelectionInResultList,
 		indexIsInSearchResultListRange,
@@ -1954,8 +1955,7 @@ var getMapContainer = function() {
 
 	initWithSelectedLocation = function() {
 		tempLocations = selectedLocations.slice();
-		// TODO init map with several locations
-		initMap(tempLocations[0]);
+		initMap(tempLocations);
 		initListeners();
 	};
 
@@ -1964,9 +1964,9 @@ var getMapContainer = function() {
 		getLocationFromAddress(address, function (results, status) {
 			if (results !== undefined && results !== null && results.length > 0) {
 				tempLocations.push(results[0].geometry.location);
-				initMap(tempLocations[0]);
+				initMap(tempLocations);
 			} else {
-				initMap(centerOfFinland);
+				initMap([centerOfFinland]);
 			}
 		});
 		initListeners()
@@ -1976,8 +1976,7 @@ var getMapContainer = function() {
 		for (var i = 0;  i < locations.length; i++) {
 			tempLocations.push(new google.maps.LatLng(locations[i].lat, locations[i].lng));
 		}
-		// TODO try to find a way to init map centering to several locations
-		initMap(tempLocations[0]);
+		initMap(tempLocations);
 		initListeners();
 	};
 
@@ -1987,7 +1986,7 @@ var getMapContainer = function() {
 
 			var runSearch = function() {
 				getLocationFromAddress($("#user-entered-address").val(), function (results, status) {
-					if (results !== undefined && results !== null && results.length > 0) {
+					if (results !== undefined && results !== null) {
 						updateResultsList(results);
 					}
 				});
@@ -2009,11 +2008,8 @@ var getMapContainer = function() {
 					break;
 				default:
 					runSearch();
-
 			}
 		});
-
-
 
 		$("#result-list").find("li").die('click').live('click', function(event) {
 			// TODO use data here instead of attribute
@@ -2052,16 +2048,18 @@ var getMapContainer = function() {
 
 	};
 
-	initMap = function(centerCoordinates) {
+	initMap = function(coordinates) {
 
+		// TODO try to find a way to init map centering to several locations
 		var mapOptions = {
-			center: centerCoordinates,
+			center: coordinates[0],
 			zoom: 14
 		};
 
 		if(!viewOnly) {
 			map = new google.maps.Map(document.getElementById('map-canvas'),
 				mapOptions);
+
 			google.maps.event.addListener(map, 'click', function (e) {
 				tempLocations.push(e.latLng);
 				placeMarker(tempLocations[tempLocations.length - 1], map);
@@ -2071,13 +2069,23 @@ var getMapContainer = function() {
 			map = new google.maps.Map(document.getElementById('map-canvas-view'),
 				mapOptions);
 		}
-		placeMarker(centerCoordinates, map);
+		// Remove old markers
+		removeMarkers();
+
+		$.each(coordinates, function(index, value) {
+			placeMarker(value, map);
+		});
+
+	};
+
+	removeMarkers = function() {
+		$.each(markers, function(index, value) {
+			value.setMap(null);
+		});
+		markers = [];
 	};
 
 	placeMarker = function(position, map) {
-		/*if (marker != null) {
-			marker.setMap(null);
-		} */
 		markers.push(new google.maps.Marker({
 			position: position,
 			map: map
@@ -2280,10 +2288,10 @@ $("#remove-selected-location").click(function() {
 $("#map-selection").removeClass("no-visible");
 
 // Public view
-if (typeof initiative !== 'undefined' && typeof initiative.location !== 'undefined' ) {
+if (typeof initiative !== 'undefined' && typeof initiative.locations !== 'undefined' ) {
 	mapViewContainer = getMapContainer();
 	mapViewContainer.setViewOnly(true);
-	mapViewContainer.initWithCoordinates([initiative.location]);
+	mapViewContainer.initWithCoordinates(initiative.locations);
 }
 
 
