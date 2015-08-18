@@ -8,6 +8,7 @@ import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.FileUploadException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
 import fi.om.municipalityinitiative.service.AttachmentService;
+import fi.om.municipalityinitiative.service.LocationService;
 import fi.om.municipalityinitiative.service.ParticipantService;
 import fi.om.municipalityinitiative.service.ValidationService;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
@@ -60,6 +61,9 @@ public class InitiativeManagementController extends BaseController {
 
     @Resource
     AttachmentService attachmentService;
+
+    @Resource
+    LocationService locationService;
 
     private static final Logger log = LoggerFactory.getLogger(InitiativeManagementController.class);
 

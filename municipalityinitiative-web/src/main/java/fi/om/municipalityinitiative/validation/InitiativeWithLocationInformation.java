@@ -8,5 +8,4 @@ public interface InitiativeWithLocationInformation {
 
     List<Location> getLocations();
 
-    String getLocationDescription();
 }

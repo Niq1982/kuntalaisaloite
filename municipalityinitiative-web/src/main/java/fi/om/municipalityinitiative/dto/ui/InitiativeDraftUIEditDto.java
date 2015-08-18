@@ -43,13 +43,11 @@ public class InitiativeDraftUIEditDto implements InitiativeWithLocationInformati
 
     private List<Location> locations = new ArrayList<Location>();
 
-    private String locationDescription;
-
     public InitiativeDraftUIEditDto() {
         // For freemarker
     }
 
-    public static InitiativeDraftUIEditDto parse(Initiative initiative, ContactInfo contactInfo) {
+    public static InitiativeDraftUIEditDto parse(Initiative initiative, ContactInfo contactInfo, List<Location> locations) {
         InitiativeDraftUIEditDto editDto = new InitiativeDraftUIEditDto();
         editDto.setExtraInfo(initiative.getExtraInfo());
         editDto.setName(initiative.getName());
@@ -57,7 +55,7 @@ public class InitiativeDraftUIEditDto implements InitiativeWithLocationInformati
         editDto.municipality = initiative.getMunicipality();
         editDto.setContactInfo(new ContactInfo(contactInfo));
         editDto.setExternalParticipantCount(initiative.getExternalParticipantCount());
-        editDto.setLocations(initiative.getLocation());
+        editDto.setLocations(locations);
         return editDto;
     }
 
@@ -114,11 +112,4 @@ public class InitiativeDraftUIEditDto implements InitiativeWithLocationInformati
     }
 
 
-    public String getLocationDescription() {
-        return locationDescription;
-    }
-
-    public void setLocationDescription(String locationDescription) {
-        this.locationDescription = locationDescription;
-    }
 }

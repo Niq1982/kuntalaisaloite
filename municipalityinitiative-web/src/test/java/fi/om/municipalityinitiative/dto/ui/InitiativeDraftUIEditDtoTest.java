@@ -1,8 +1,11 @@
 package fi.om.municipalityinitiative.dto.ui;
 
 import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.Location;
 import fi.om.municipalityinitiative.util.ReflectionTestUtils;
 import org.junit.Test;
+
+import java.util.ArrayList;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -17,12 +20,11 @@ public class InitiativeDraftUIEditDtoTest {
     public void parse_from_initiative() {
         Initiative originalInitiative = ReflectionTestUtils.modifyAllFields(new Initiative());
         // Set maybe fields manually
-        //originalInitiative.setLocation(new Location(LAT, LNG));
-        originalInitiative.setLocationDescription(LOCATION_DESCRIPTION);
+
 
         ContactInfo originalContactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
 
-        InitiativeDraftUIEditDto dto = InitiativeDraftUIEditDto.parse(originalInitiative, originalContactInfo);
+        InitiativeDraftUIEditDto dto = InitiativeDraftUIEditDto.parse(originalInitiative, originalContactInfo, new ArrayList<Location>());
 
         assertThat(dto.getMunicipality().getId(), is(originalInitiative.getMunicipality().getId()));
 //        assertThat(dto.getState(), is(originalInitiative.getState()));

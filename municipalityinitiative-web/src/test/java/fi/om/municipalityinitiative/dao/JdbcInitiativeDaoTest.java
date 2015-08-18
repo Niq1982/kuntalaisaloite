@@ -109,7 +109,7 @@ public class JdbcInitiativeDaoTest {
         initiativeEdit.setExtraInfo(EXTRA_INFO);
         initiativeEdit.setExternalParticipantCount(EXTERNAL_PARTICIPANT_COUNT);
         //initiativeEdit.setLocation(LOCATION);
-        initiativeEdit.setLocationDescription(LOCATION_DESCRIPTION);
+
 
         initiativeDao.editInitiativeDraft(initiativeId, initiativeEdit);
 
@@ -158,11 +158,7 @@ public class JdbcInitiativeDaoTest {
         assertThat(initiative.getParticipantCount(), is(1));
         assertThat(initiative.getFixState(), is(FixState.OK));
         assertThat(initiative.getExternalParticipantCount(), is(TestHelper.DEFAULT_EXTERNAL_PARTICIPANT_COUNT));
-        //assertThat(initiative.getLocation().isPresent(), is(true));
-        //assertThat(initiative.getLocation().getValue().getLat(), is(LOCATION_LAT));
-        //assertThat(initiative.getLocation().getValue().getLng(), is(LOCATION_LNG));
-        assertThat(initiative.getLocationDescription().isPresent(), is(true));
-        assertThat(initiative.getLocationDescription().getValue(), is(LOCATION_DESCRIPTION));
+
         ReflectionTestUtils.assertNoNullFields(initiative);
     }
 

@@ -245,9 +245,7 @@ public class TestHelper {
         insert.set(municipalityInitiative.stateTimestamp, initiativeDraft.stateTime);
         insert.set(municipalityInitiative.lastEmailReportTime, initiativeDraft.emailReportDateTime);
         insert.set(municipalityInitiative.lastEmailReportType, initiativeDraft.emailReportType);
-        insert.set(municipalityInitiative.locationLat, initiativeDraft.locationLat);
-        insert.set(municipalityInitiative.locationLng, initiativeDraft.locationLng);
-        insert.set(municipalityInitiative.locationDescription, initiativeDraft.locationDescription);
+
 
         if (initiativeDraft.supporCountData != null) {
             insert.set(municipalityInitiative.supportCountData, initiativeDraft.supporCountData);

@@ -105,14 +105,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     if (maybeYouthInitiativeID != null) {
                         info.setYouthInitiativeId(maybeYouthInitiativeID);
                     }
-                    Double maybeLocationLat = row.get(municipalityInitiative.locationLat);
-                    Double maybeLocationLng = row.get(municipalityInitiative.locationLng);
-                    String maybeLocationDescription = row.get(municipalityInitiative.locationDescription);
 
-                    if (maybeLocationLng != null && maybeLocationLng != null && maybeLocationDescription != null) {
-                       // info.setLocation(new Location(maybeLocationLat, maybeLocationLng));
-                        info.setLocationDescription(maybeLocationDescription);
-                    }
                     return info;
                 }
             };
@@ -465,15 +458,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .set(municipalityInitiative.extraInfo, editDto.getExtraInfo())
                 .set(municipalityInitiative.externalparticipantcount, editDto.getExternalParticipantCount());
 
-        /*if (editDto.getLocation() != null) {
-            query.set(municipalityInitiative.locationLat, editDto.getLocation().getLat());
-            query.set(municipalityInitiative.locationLng, editDto.getLocation().getLng());
-            query.set(municipalityInitiative.locationDescription, editDto.getLocationDescription());
-        } else {
-            query.setNull(municipalityInitiative.locationLat);
-            query.setNull(municipalityInitiative.locationLng);
-            query.setNull(municipalityInitiative.locationDescription);
-        }*/
         assertSingleAffection(query
                 .where(municipalityInitiative.id.eq(initiativeId))
                 .execute());
@@ -540,16 +524,6 @@ public class JdbcInitiativeDao implements InitiativeDao {
                 .execute());
     }
 
-    @Override
-    public void updateInitiativeLocation(Long initiativeId, Double locationLat, Double locationLng, String locationDescription) {
-
-        assertSingleAffection(queryFactory.update(municipalityInitiative)
-                .set(municipalityInitiative.locationLat, locationLat)
-                .set(municipalityInitiative.locationLng, locationLng)
-                .set(municipalityInitiative.locationDescription, locationDescription)
-                .where(municipalityInitiative.id.eq(initiativeId))
-                .execute());
-    }
 
     @Override
     public Long prepareVerifiedInitiative(Long municipalityId, InitiativeType initiativeType) {

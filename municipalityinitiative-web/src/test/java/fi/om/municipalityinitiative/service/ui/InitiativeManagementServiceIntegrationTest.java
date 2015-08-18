@@ -23,6 +23,7 @@ import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
@@ -87,7 +88,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     public void editing_initiative_throws_exception_if_wrong_author() {
         Long initiativeId = testHelper.createDraft(testMunicipality.getId());
 
-        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(ReflectionTestUtils.modifyAllFields(new Initiative()), new ContactInfo());
+        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(ReflectionTestUtils.modifyAllFields(new Initiative()), new ContactInfo(), new ArrayList<Location>());
 
         service.editInitiativeDraft(initiativeId, TestHelper.unknownLoginUserHolder, editDto, fi.om.municipalityinitiative.util.Locales.LOCALE_FI);
     }
@@ -133,10 +134,10 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
         // Init Maybe.values manually
         //randomlyFilledInitiative.setLocation(location);
-        randomlyFilledInitiative.setLocationDescription(LOCATION_DESCRIPTION);
+        //randomlyFilledInitiative.setLocationDescription(LOCATION_DESCRIPTION);
 
 
-        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(randomlyFilledInitiative,randomlyFilledContactInfo);
+        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(randomlyFilledInitiative,randomlyFilledContactInfo, new ArrayList<Location>());
 
         service.editInitiativeDraft(initiativeId, TestHelper.authorLoginUserHolder, editDto, fi.om.municipalityinitiative.util.Locales.LOCALE_FI);
 
@@ -166,13 +167,13 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
         Initiative randomlyFilledInitiative = ReflectionTestUtils.modifyAllFields(new Initiative());
         Location location = ReflectionTestUtils.modifyAllFields(new Location(LOCATION_LAT, LOCATION_LNG));
-        randomlyFilledInitiative.setLocationDescription(LOCATION_DESCRIPTION);
+        //randomlyFilledInitiative.setLocationDescription(LOCATION_DESCRIPTION);
        // randomlyFilledInitiative.setLocation(location);
 
         ContactInfo randomlyFilledContactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
 
 
-        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(randomlyFilledInitiative, randomlyFilledContactInfo);
+        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(randomlyFilledInitiative, randomlyFilledContactInfo, new ArrayList<Location>());
 
         service.editInitiativeDraft(initiativeId, TestHelper.authorLoginUserHolder, editDto, fi.om.municipalityinitiative.util.Locales.LOCALE_FI);
 

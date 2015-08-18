@@ -73,8 +73,8 @@
         </div>
     </#if>
 
-    <#if initiative.location?? && initiative.location?size gt 0>
-        <@map initiative />
+    <#if locations?? && locations?size gt 0>
+        <@map locations />
     </#if>
 
     <#if (initiative.youthInitiativeId.present)>
@@ -86,20 +86,18 @@
 
 </#macro>
 
-<#macro map initiative>
+<#macro map locations>
 
         <h2><@u.message "initiative.map.title" /></h2>
         <@u.jsGoogleMapsLib />
-        <#if initiative.locationDescription.isPresent()>
-            <@u.text initiative.locationDescription.value />
-        </#if>
+
         <div class="map-container initiative-content-row last">
             <div id="map-canvas-view">
                 <noscript><@u.message key="map.javaScriptSupport" /></noscript>
             </div>
         </div>
         <script type="text/javascript">
-            var initiative = {location: {"lat": "${initiative.location[0].lat?c}", "lng": "${initiative.location[0].lng?c}"}};
+            var initiative = {location: {"lat": "${locations[0].lat?c}", "lng": "${locations[0].lng?c}"}};
         </script>
 
 </#macro>

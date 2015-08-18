@@ -56,6 +56,7 @@ public final class ViewGenerator {
                         .add("participant", participantUICreateDto)
                         .add("authorMessage", authorUIMessage)
                         .add("supportCountData", supportCountData)
+                        .add("locations", initiative.locations)
                         .build()
         );
     }

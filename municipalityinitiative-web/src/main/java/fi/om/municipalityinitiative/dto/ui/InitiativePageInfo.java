@@ -1,17 +1,22 @@
 package fi.om.municipalityinitiative.dto.ui;
 
+import fi.om.municipalityinitiative.dto.service.Location;
 import fi.om.municipalityinitiative.service.AttachmentService;
+
+import java.util.List;
 
 public class InitiativePageInfo {
 
         public final InitiativeViewInfo initiative;
         public final PublicAuthors authors;
         public final AttachmentService.Attachments attachments;
+        public final List<Location> locations;
 
-        public InitiativePageInfo(InitiativeViewInfo initiative, PublicAuthors authors, AttachmentService.Attachments attachments) {
+        public InitiativePageInfo(InitiativeViewInfo initiative, PublicAuthors authors, AttachmentService.Attachments attachments, List<Location> locations) {
             this.initiative = initiative;
             this.authors = authors;
             this.attachments = attachments;
+            this.locations = locations;
         }
 
         public boolean isCollaborative() {

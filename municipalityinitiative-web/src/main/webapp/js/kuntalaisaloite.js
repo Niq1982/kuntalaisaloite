@@ -1946,7 +1946,6 @@ var getMapContainer = function() {
 		indexIsInSearchResultListRange,
 		selectListElementWithArrow,
 		selectResultFromList,
-		setSelectedLocationOnMap,
 		emptyResultList,
 		modifyResultList,
 		setViewOnly,
@@ -1984,7 +1983,7 @@ var getMapContainer = function() {
 
 	initListeners = function() {
 
-		$("#user-entered-address").live('input propertychange keydown', function(event){
+		$("#user-entered-address").die('keydown').live('input propertychange keydown', function(event){
 
 			var runSearch = function() {
 				getLocationFromAddress($("#user-entered-address").val(), function (results, status) {
@@ -2003,7 +2002,7 @@ var getMapContainer = function() {
 					break;
 				case ENTER:
 					if (indexIsInSearchResultListRange(selectedResultIndex)) {
-						setSelectedLocationOnMap();
+						selectResultFromList(selectedResultIndex);
 					} else {
 						runSearch();
 					}
@@ -2016,7 +2015,8 @@ var getMapContainer = function() {
 
 
 
-		$("#result-list").find("li").live('click', function(event) {
+		$("#result-list").find("li").die('click').live('click', function(event) {
+			// TODO use data here instead of attribute
 			var index = $(this).attr("item-index");
 			if (index !== undefined) {
 				selectResultFromList(index);
@@ -2024,13 +2024,13 @@ var getMapContainer = function() {
 		});
 
 		$("#save-and-close").live('click', function () {
+
+			locationFields.emptyAllRows();
+
 			selectedLocations = tempLocations.slice();
 
 			$.each(selectedLocations, function(index, value) {
-				var row = createLocationRow();
-				$(row).find("[id$=locationLat]").val(value.lat());
-				$(row).find("[id$=locationLng]").val(value.lng());
-
+				locationFields.createLocationRow(value.lat(), value.lng());
 			});
 
 			selectLocation.addClass("no-visible");
@@ -2167,13 +2167,11 @@ var getMapContainer = function() {
 			}
 		}
 	};
-	setSelectedLocationOnMap = function() {
-		selectResultFromList(selectedResultIndex);
-	};
+
 	selectResultFromList = function(index) {
 		if (indexIsInSearchResultListRange(index)) {
-			tempLocation = searchresults[index].geometry.location;
-			placeMarker(tempLocation, map);
+			tempLocations.push(searchresults[index].geometry.location);
+			placeMarker(tempLocations[tempLocations.length - 1], map);
 		}
 	};
 
@@ -2195,20 +2193,37 @@ var getMapContainer = function() {
 
 };
 
-var $locationContainer = $('#new-locations');
-var index = $locationContainer.data("index");
-var createLocationRow = function () {
-	var locations = {
-		newLocationIndex: index.toString()
-	};
-	index += 1;
-	return $locationContainer.append($("#locationTemplate").render(locations));
+var locationFields = (function() {
+	var $locationContainer = $('#new-locations');
+	var firstIndex = $locationContainer.data("index");
+	var index = firstIndex;
 
-};
+	var emptyAllRows = function(){
+		index = firstIndex;
+		$locationContainer.empty();
+	};
+
+	var createLocationRow = function (lat, lng) {
+		var locations = {
+			newLocationIndex: index.toString(),
+			locationLat : lat,
+			locationLng: lng
+		};
+		index += 1;
+		$locationContainer.append($("#locationTemplate").render(locations));
+
+	};
+	return {
+		emptyAllRows: emptyAllRows,
+		createLocationRow: createLocationRow
+	}
+
+})();
+
 
 
 var renderMap,
-	selectedLocations,
+	selectedLocations = [],
 	locationDescription = $("#locationDescription"),
 	selectLocation = $("#select-location"),
 	openRemoveLocation = $("#open-remove-location"),
@@ -2219,7 +2234,7 @@ var renderMap,
 
 // Select all locations
 $.each( $('.locationRow'), function(index, value) {
-	selectedLocations.push(value.find("[id=$locationLat]"), value.find("[id=$locationLng]"))
+	selectedLocations.push(value.find("[id$=.lat]").val(), value.find("[id$=.lng]").val())
 });
 
 $("#openMap").click(function(){
@@ -2258,7 +2273,7 @@ $("#map-selection").removeClass("no-visible");
 if (typeof initiative !== 'undefined' && typeof initiative.location !== 'undefined' ) {
 	mapViewContainer = getMapContainer();
 	mapViewContainer.setViewOnly(true);
-	mapViewContainer.initWithCoordinates(initiative.location);
+	mapViewContainer.initWithCoordinates([initiative.location]);
 }
 
 

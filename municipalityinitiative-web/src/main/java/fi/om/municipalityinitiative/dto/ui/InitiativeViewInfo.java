@@ -2,15 +2,12 @@ package fi.om.municipalityinitiative.dto.ui;
 
 import com.google.common.base.Strings;
 import fi.om.municipalityinitiative.dto.service.Initiative;
-import fi.om.municipalityinitiative.dto.service.Location;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import org.joda.time.LocalDate;
-
-import java.util.List;
 
 public final class InitiativeViewInfo {
 
@@ -96,9 +93,6 @@ public final class InitiativeViewInfo {
         return initiative.getYouthInitiativeId();
     }
 
-    public List<Location> getLocation() {return initiative.getLocation();}
-
-    public Maybe<String> getLocationDescription() {return initiative.getLocationDescription();}
 
     public ParticipantCount getParticipantCount() {
         ParticipantCount participantCount = new ParticipantCount();

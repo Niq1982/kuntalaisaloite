@@ -34,8 +34,6 @@ public interface InitiativeDao {
 
     void updateExtraInfo(Long initiativeId, String extraInfo, Integer externalParticipantCount);
 
-    void updateInitiativeLocation(Long initiativeId, Double locationLat, Double locationLng, String locationDescription);
-
     void updateInitiativeState(Long initiativeId, InitiativeState state);
 
     void updateInitiativeFixState(Long initiativeId, FixState fixState);

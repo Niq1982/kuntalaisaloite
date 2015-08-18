@@ -35,12 +35,6 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
 
     public final EnumPath<fi.om.municipalityinitiative.service.email.EmailReportType> lastEmailReportType = createEnum("lastEmailReportType", fi.om.municipalityinitiative.service.email.EmailReportType.class);
 
-    public final StringPath locationDescription = createString("locationDescription");
-
-    public final NumberPath<Double> locationLat = createNumber("locationLat", Double.class);
-
-    public final NumberPath<Double> locationLng = createNumber("locationLng", Double.class);
-
     public final StringPath moderatorComment = createString("moderatorComment");
 
     public final DateTimePath<org.joda.time.DateTime> modified = createDateTime("modified", org.joda.time.DateTime.class);
@@ -74,6 +68,8 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
     public final com.mysema.query.sql.ForeignKey<QMunicipality> municipalityInitiativeMunicipalityFk = createForeignKey(municipalityId, "id");
 
     public final com.mysema.query.sql.ForeignKey<QAuthor> _authorInitiativeIdFk = createInvForeignKey(id, "initiative_id");
+
+    public final com.mysema.query.sql.ForeignKey<QLocation> _locationInitiativeId = createInvForeignKey(id, "initiative_id");
 
     public final com.mysema.query.sql.ForeignKey<QInitiativeSupportVoteDay> _supportVoteDayInitiativeIdFk = createInvForeignKey(id, "initiative_id");
 
@@ -115,9 +111,6 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
         addMetadata(id, ColumnMetadata.named("id").ofType(-5).withSize(19).notNull());
         addMetadata(lastEmailReportTime, ColumnMetadata.named("last_email_report_time").ofType(93).withSize(29).withDigits(6));
         addMetadata(lastEmailReportType, ColumnMetadata.named("last_email_report_type").ofType(1111).withSize(2147483647));
-        addMetadata(locationDescription, ColumnMetadata.named("location_description").ofType(12).withSize(2147483647));
-        addMetadata(locationLat, ColumnMetadata.named("location_lat").ofType(2).withSize(9).withDigits(6));
-        addMetadata(locationLng, ColumnMetadata.named("location_lng").ofType(2).withSize(9).withDigits(6));
         addMetadata(moderatorComment, ColumnMetadata.named("moderator_comment").ofType(12).withSize(1024));
         addMetadata(modified, ColumnMetadata.named("modified").ofType(93).withSize(29).withDigits(6).notNull());
         addMetadata(municipalityId, ColumnMetadata.named("municipality_id").ofType(-5).withSize(19).notNull());

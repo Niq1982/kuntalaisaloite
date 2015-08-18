@@ -488,7 +488,7 @@
                 <span id="remove-selected-location" class="icon-small icon-16 cancel"></span>
             </a>
 
-            <@f.textarea path=path+".locationDescription" required="required" optional=false key="updateData.locationDescription"/>
+           <#-- <@f.textarea path=path+".locationDescription" required="required" optional=false key="updateData.locationDescription"/>-->
         </div>
     </div>
 
@@ -499,8 +499,8 @@
     <!-- Existing locations -->
     <#list updateData.locations as location>
         <div class="locationRow">
-            <@spring.formHiddenInput path+".locations[${location_index}].locationLat" />
-            <@spring.formHiddenInput path+".locations[${location_index}].locationLng" />
+            <@spring.formHiddenInput path+".locations[${location_index}].lat" />
+            <@spring.formHiddenInput path+".locations[${location_index}].lng" />
         </div>
     </#list>
 
@@ -511,10 +511,10 @@
     <script id="locationTemplate" type="text/x-jsrender">
         <div>
             <label>
-                <input type="text" class="medium" value="" id="locations[{{>newLocationIndex}}].locationLat" name="locations[{{>newLocationIndex}}].locationLat" />
+                <input type="text" class="medium" value="{{>locationLat}}" id="locations[{{>newLocationIndex}}].lat" name="locations[{{>newLocationIndex}}].lat" />
             </label>
             <label>
-                <input type="text" class="medium" value="" id="locations[{{>newLocationIndex}}].locationLng" name="locations[{{>newLocationIndex}}].locationLng" />
+                <input type="text" class="medium" value="{{>locationLng}}" id="locations[{{>newLocationIndex}}].lng" name="locations[{{>newLocationIndex}}].lng" />
             </label>
         </div>
     </script>
