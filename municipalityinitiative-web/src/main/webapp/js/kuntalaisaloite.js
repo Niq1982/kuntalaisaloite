@@ -2080,7 +2080,7 @@ var getMapContainer = function() {
 			});
 
 		}
-	
+
 		removeMarkers();
 		if (tempLocations.length > 0) {
 			var bounds = new google.maps.LatLngBounds();

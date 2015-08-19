@@ -5,7 +5,6 @@ create table location (
 
   location_lat NUMERIC(9, 6),
   location_lng NUMERIC(9, 6),
-  location_description text,
 
   constraint location_pk primary key (id),
   constraint location_initiative_id foreign key (initiative_id) references municipality_initiative(id)

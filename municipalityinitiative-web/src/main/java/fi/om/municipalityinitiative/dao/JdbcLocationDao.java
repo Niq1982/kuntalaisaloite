@@ -24,7 +24,6 @@ public class JdbcLocationDao implements LocationDao{
             Location l = new Location();
             l.setLat(tuple.get(location.locationLat));
             l.setLng(tuple.get(location.locationLng));
-            l.setLocationDescription(tuple.get(location.locationDescription));
             return l;
         }
     };
@@ -39,7 +38,6 @@ public class JdbcLocationDao implements LocationDao{
     private void addLocation(Long initiativeId, Location l){
         queryFactory.insert(location).set(location.locationLat, l.getLat())
                 .set(location.locationLng, l.getLng())
-                .set(location.locationDescription, l.getLocationDescription())
                 .set(location.initiativeId, initiativeId).execute();
     }
 
