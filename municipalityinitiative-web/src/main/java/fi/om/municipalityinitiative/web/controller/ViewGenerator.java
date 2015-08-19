@@ -3,10 +3,7 @@ package fi.om.municipalityinitiative.web.controller;
 import com.google.common.collect.Maps;
 import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
-import fi.om.municipalityinitiative.dto.service.AuthorInvitation;
-import fi.om.municipalityinitiative.dto.service.ManagementSettings;
-import fi.om.municipalityinitiative.dto.service.Municipality;
-import fi.om.municipalityinitiative.dto.service.ReviewHistoryRow;
+import fi.om.municipalityinitiative.dto.service.*;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.service.AttachmentService;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -142,7 +139,7 @@ public final class ViewGenerator {
                         .build());
     }
 
-    public static ViewGenerator moderationView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, AttachmentService.Attachments allAttachments, List<ReviewHistoryRow> reviewHistory, Maybe<ReviewHistoryDiff> reviewHistoryDiff) {
+    public static ViewGenerator moderationView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, AttachmentService.Attachments allAttachments, List<ReviewHistoryRow> reviewHistory, Maybe<ReviewHistoryDiff> reviewHistoryDiff, List<Location> locations) {
         return new ViewGenerator(MODERATION_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
@@ -151,6 +148,7 @@ public final class ViewGenerator {
                         .add("attachments", allAttachments)
                         .add("reviewHistories", reviewHistory)
                         .add("reviewHistoryDiff", reviewHistoryDiff)
+                        .add("locations", locations)
                         .build()
         );
     }
