@@ -380,10 +380,11 @@ public abstract class WebTestBase {
         open(urls.vetumaLogin());
         enterVetumaLoginInformationAndSubmit(userSsn, municipality);
         try {
-            Thread.sleep(1000);
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
     }
 
     protected void enterVetumaLoginInformationAndSubmit(String userSsn, String municipalityName) {

@@ -196,4 +196,6 @@ public class Initiative {
     public EmailReportType getLastEmailReportType() {
         return lastEmailReportType;
     }
+
+
 }

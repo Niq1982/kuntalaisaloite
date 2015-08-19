@@ -165,6 +165,9 @@ public class AppConfiguration {
     public SupportCountDao supportCountDao() {return new SupportCountDao();}
 
     @Bean
+    public LocationDao locationDao() {return new JdbcLocationDao();}
+
+    @Bean
     public AuthorService authorService() {
         return new AuthorService();
     }
@@ -206,6 +209,9 @@ public class AppConfiguration {
     public ParticipantService participantService() {
         return new ParticipantService();
     }
+
+    @Bean
+    public LocationService locationService() { return new  LocationService();}
 
     @Bean
     public JobExecutor jobExecutor() {

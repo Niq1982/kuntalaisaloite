@@ -4,6 +4,7 @@ import fi.om.municipalityinitiative.dto.service.ReviewHistoryRow;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityUIEditDto;
 import fi.om.municipalityinitiative.dto.user.OmLoginUserHolder;
 import fi.om.municipalityinitiative.service.AttachmentService;
+import fi.om.municipalityinitiative.service.LocationService;
 import fi.om.municipalityinitiative.service.ValidationService;
 import fi.om.municipalityinitiative.service.ui.ModerationService;
 import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
@@ -44,6 +45,9 @@ public class ModerationController extends BaseController{
     @Resource
     private AttachmentService attachmentService;
 
+    @Resource
+    private LocationService locationService;
+
     public ModerationController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
     }
@@ -67,7 +71,8 @@ public class ModerationController extends BaseController{
                 moderationService.findAuthors(loginUserHolder, initiativeId),
                 attachmentService.findAllAttachments(initiativeId, loginUserHolder),
                 reviewHistory,
-                reviewHistoryDiff
+                reviewHistoryDiff,
+                locationService.getLocations(initiativeId)
         ).view(model, Urls.get(locale).alt().moderation(initiativeId));
     }
 

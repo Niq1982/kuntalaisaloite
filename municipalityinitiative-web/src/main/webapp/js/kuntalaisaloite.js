@@ -2,7 +2,6 @@ var localization,
 	generateModal,
 	generateJsMessage,
 	jsMessages;
-
 /**
  * Localization
  * ==============
@@ -1100,6 +1099,10 @@ $('.municipality-filter').change( function() {
 			onLoad: function(){
 				tooltip.load();
 				clearFieldErrors.init();
+				if (renderMap) {
+					renderMap();
+					renderMap = null;
+				}
 			},
 			closeOnClick: false,	// disable this for modal dialog-type of overlays
 			load: true				// load it immediately after the construction
@@ -1383,8 +1386,6 @@ tooltip.load();
  * */
 
 $.DirtyForms.dialog = {
-	ignoreAnchorSelector: 'a[rel="external"], .modal a', // Ignore external links
-
 	// Selector is a selector string for dialog content. Used to determine if event targets are inside a dialog
 	selector : '.modal .modal-content',
 
@@ -1423,6 +1424,14 @@ $.DirtyForms.dialog = {
 		return false;
 	}
 };
+
+(function() {
+	var ignoreHelper = {
+		ignoreAnchorSelector: 'a[rel="external"], .modal a, a#openMap, .map-marker a'
+	};
+
+	$.DirtyForms.helpers.push(ignoreHelper);
+})();
 
 // Listen forms that have class 'sodirty'
 $('form.sodirty').dirtyForms();
@@ -1901,6 +1910,420 @@ if (window.hasIGraphFrame) {
   });
 
 }());
+
+
+/**
+ * Map selector for selecting location on map for initiative.
+ *
+ */
+var getMapContainer = function() {
+	var markers= [],
+		tempLocations = [],
+		selectedLocations = [],
+		map,
+		searchresults,
+		geocoder= new google.maps.Geocoder(),
+		viewOnly = false,
+		centerOfFinland = {"lat": 64.9146659, "lng": 26.0672554},
+	    // For key navigation in result list
+		selectedResultIndex = -1,
+		ARROWUP = 38,
+		ARROWDOWN = 40,
+		ENTER = 13,
+		DOWN = 1,
+		UP = -1,
+		// functions
+		initWithSelectedLocation,
+		initWithAddress,
+		initWithCoordinates,
+		initMap,
+		initListeners,
+		removeLocation,
+		getLocationFromAddress,
+		filterOutResultsByType,
+		updateResultsList,
+		placeMarker,
+		removeMarkers,
+		removeMarker,
+		removeCurrentSelectionInResultList,
+		highlightCurrentSelectionInResultList,
+		indexIsInSearchResultListRange,
+		selectListElementWithArrow,
+		selectResultFromList,
+		emptyResultList,
+		modifyResultList,
+		setViewOnly,
+		getSelectedLocations;
+
+	removeLocation = function(location) {
+		var index = tempLocations.indexOf(location);
+		if (index !== -1) {
+			tempLocations.splice(index, 1);
+		}
+	};
+
+	initWithSelectedLocation = function() {
+		tempLocations = selectedLocations.slice();
+		initMap(tempLocations);
+		initListeners();
+	};
+
+	initWithAddress = function(address) {
+
+		getLocationFromAddress(address, function (results, status) {
+			if (results !== undefined && results !== null && results.length > 0) {
+				initMap([results[0].geometry.location]);
+			} else {
+				initMap([centerOfFinland]);
+			}
+		});
+		initListeners()
+	};
+
+	initWithCoordinates = function(locations) {
+		for (var i = 0;  i < locations.length; i++) {
+			tempLocations.push(new google.maps.LatLng(locations[i].lat, locations[i].lng));
+		}
+		initMap(tempLocations);
+		initListeners();
+	};
+
+	initListeners = function() {
+
+		$("#user-entered-address").die('keydown').live('input propertychange keydown', function(event){
+
+			var runSearch = function() {
+				getLocationFromAddress($("#user-entered-address").val(), function (results, status) {
+					if (results !== undefined && results !== null) {
+						updateResultsList(results);
+					}
+				});
+			};
+			switch (event.which) {
+
+				case ARROWDOWN:
+					selectListElementWithArrow(DOWN);
+					break;
+				case ARROWUP:
+					selectListElementWithArrow(UP);
+					break;
+				case ENTER:
+					if (indexIsInSearchResultListRange(selectedResultIndex)) {
+						selectResultFromList(selectedResultIndex);
+					} else {
+						runSearch();
+					}
+					break;
+				default:
+					runSearch();
+			}
+		});
+
+		$("#result-list").find("li").die('click').live('click', function(event) {
+			// TODO use data here instead of attribute
+			var index = $(this).attr("item-index");
+			if (index !== undefined) {
+				selectResultFromList(index);
+			}
+		});
+
+		$("#save-and-close").die('click').live('click', function () {
+			if (tempLocations.length === 0 ) {
+				removeSelectedLocation.trigger('click');
+			}
+			else {
+				locationFields.emptyAllRows();
+
+				selectedLocations = tempLocations.slice();
+
+				$.each(selectedLocations, function(index, value) {
+					locationFields.createLocationRow(value.lat(), value.lng());
+				});
+
+				selectLocation.addClass("no-visible");
+				editLocation.removeClass("no-visible");
+			}
+
+		});
+
+		$(".modal").live('click', function() {
+			emptyResultList();
+		});
+
+		$("#result-list").find("li").live('click', function() {
+			return false;
+		});
+
+		$("#user-entered-address").live('click', function() {
+			return false;
+		});
+
+	};
+
+	initMap = function(coordinates) {
+
+		var mapOptions = {
+			center: coordinates[0],
+			zoom: 14
+		};
+
+		if(viewOnly) {
+			map = new google.maps.Map(document.getElementById('map-canvas-view'),
+				mapOptions);
+		} else {
+			map = new google.maps.Map(document.getElementById('map-canvas'),
+				mapOptions);
+
+			google.maps.event.addListener(map, 'click', function (e) {
+				tempLocations.push(e.latLng);
+				placeMarker(tempLocations[tempLocations.length - 1], map);
+			});
+
+		}
+
+		removeMarkers();
+		if (tempLocations.length > 0) {
+			var bounds = new google.maps.LatLngBounds();
+			$.each(tempLocations, function(index, value) {
+				placeMarker(value, map);
+				bounds.extend(value)
+			});
+			// If there is only one location. No need to use bounds, since map will center to given location.
+			if(tempLocations.length > 1) {
+				map.fitBounds(bounds);
+			}
+
+		}
+
+
+	};
+
+	removeMarkers = function() {
+		$.each(markers, function(index, value) {
+			value.setMap(null);
+		});
+		markers = [];
+	};
+
+	removeMarker = function(marker) {
+		marker.setMap(null);
+		var index = markers.indexOf(marker);
+		if (index !== -1){
+			markers.splice(index, 1);
+		}
+	};
+
+	placeMarker = function(position, map) {
+		var marker = new google.maps.Marker({
+			position: position,
+			map: map
+		});
+
+		if (!viewOnly){
+			marker.addListener('click', function() {
+				removeMarker(marker);
+				removeLocation(marker.position);
+			});
+		}
+
+		markers.push(marker);
+
+		map.panTo(position);
+
+
+	};
+
+	getLocationFromAddress = function(address, callback) {
+		var geocoderequst = {"address": address};
+
+		if (map !== undefined) {
+			geocoderequst.bounds = map.getBounds();
+		}
+		geocoderequst.componentRestrictions = {'country': 'FI'};
+
+		geocoder.geocode(geocoderequst, callback);
+	};
+
+	filterOutResultsByType = function(results, type) {
+		function doesNotContainType(type) {
+			return function(value) {return value.types.indexOf(type) === -1;};
+		}
+		return results.filter(doesNotContainType(type));
+	};
+
+	updateResultsList = function(rawresults) {
+		var results = filterOutResultsByType(rawresults, 'country');
+		if (results !== undefined && results !== null) {
+			modifyResultList(results);
+		}
+
+	};
+	emptyResultList = function() {
+		modifyResultList([]);
+	};
+
+	modifyResultList = 	function(results) {
+		searchresults = results;
+		selectedResultIndex = -1;
+
+		$("#result-list").empty();
+
+		if (searchresults.length > 0) {
+			var $ul = $("<ul>");
+			$("#result-list").append($ul);
+
+			for (var i = 0; i < searchresults.length; i++) {
+				var $li = $('<li>' + searchresults[i].formatted_address + '</li>');
+				$li.attr("item-index", i);
+				$ul.append($li);
+				console.log(searchresults[i].formatted_address);
+			}
+		}
+
+	};
+
+	removeCurrentSelectionInResultList = function() {
+		$(".selected").removeClass("selected");
+	};
+
+	highlightCurrentSelectionInResultList = function () {
+		//JQuery nth is 1 indexed
+		$("#result-list").find("ul li:nth-child("+ (selectedResultIndex + 1) +")").addClass("selected");
+	};
+
+	indexIsInSearchResultListRange = function (index) {
+		return index >= 0 && index < searchresults.length && searchresults.length > 0;
+	};
+
+	selectListElementWithArrow = function(offset) {
+		if (searchresults !== undefined && searchresults !== null && searchresults.length > 0) {
+
+			if (indexIsInSearchResultListRange(selectedResultIndex)) {
+				removeCurrentSelectionInResultList();
+			}
+
+			if (indexIsInSearchResultListRange(selectedResultIndex + offset)) {
+				selectedResultIndex += offset;
+			} else if ((selectedResultIndex + offset) < 0) {
+				selectedResultIndex = -1;
+			} else if ((selectedResultIndex + offset) >= searchresults.length) {
+				selectedResultIndex = searchresults.length - 1;
+			}
+
+			if (indexIsInSearchResultListRange(selectedResultIndex)){
+				highlightCurrentSelectionInResultList();
+			}
+		}
+	};
+
+	selectResultFromList = function(index) {
+		if (indexIsInSearchResultListRange(index)) {
+			tempLocations.push(searchresults[index].geometry.location);
+			placeMarker(tempLocations[tempLocations.length - 1], map);
+		}
+	};
+
+	setViewOnly = function(b) {
+		viewOnly = b;
+	};
+
+	getSelectedLocations = function() {
+		return selectedLocations;
+	};
+
+	return {
+		initWithSelectedLocation: initWithSelectedLocation,
+		initWithAddress: initWithAddress,
+		initWithCoordinates: initWithCoordinates,
+		setViewOnly: setViewOnly,
+		getSelectedLocations: getSelectedLocations
+	};
+
+};
+
+var locationFields = (function() {
+	var $locationContainer = $('#new-locations');
+	var $oldLocationsContainer = $('#old-locations');
+	var index = 0;
+
+	var emptyAllRows = function(){
+		index = 0;
+		$oldLocationsContainer.empty();
+		$locationContainer.empty();
+	};
+
+	var createLocationRow = function (lat, lng) {
+		var locations = {
+			newLocationIndex: index.toString(),
+			locationLat : lat,
+			locationLng: lng
+		};
+		index += 1;
+		$locationContainer.append($("#locationTemplate").render(locations));
+
+	};
+	return {
+		emptyAllRows: emptyAllRows,
+		createLocationRow: createLocationRow
+	}
+
+})();
+
+
+
+var renderMap,
+	selectedLocations = [],
+	selectLocation = $("#select-location"),
+	editLocation = $("#open-remove-location"),
+	removeSelectedLocation = $("#remove-selected-location"),
+	mapContainer,
+	mapViewContainer;
+
+
+
+$.each( $('.locationRow'), function(index, value) {
+	selectedLocations.push({lat : $(value).find("[id$=lat]").val(), lng : $(value).find("[id$=lng]").val()});
+});
+
+// Map selection controllers are hidden from no-script users
+$("#map-selection").removeClass("no-visible");
+
+$("#openMap").click(function(){
+	mapContainer = getMapContainer();
+	renderMap = function() {mapContainer.initWithAddress(modalData.initiaveMunicipality);};
+	generateModal(modalData.mapContainer(), 'full');
+});
+
+$("#show-selected-location").click(function() {
+	if (mapContainer === undefined) {
+		mapContainer = getMapContainer();
+	}
+	if (mapContainer.getSelectedLocations().length > 0) {
+		renderMap = mapContainer.initWithSelectedLocation;
+	} else if (selectedLocations.length > 0) {
+		renderMap = function() {mapContainer.initWithCoordinates(selectedLocations);};
+	}
+
+	generateModal(modalData.mapContainer(), 'full');
+});
+
+
+removeSelectedLocation.click(function() {
+	selectLocation.removeClass("no-visible");
+	editLocation.addClass("no-visible");
+	mapContainer = null;
+	locationFields.emptyAllRows();
+
+});
+
+
+// Public view
+if (typeof initiative !== 'undefined' && typeof initiative.locations !== 'undefined' ) {
+	mapViewContainer = getMapContainer();
+	mapViewContainer.setViewOnly(true);
+	mapViewContainer.initWithCoordinates(initiative.locations);
+}
+
 
 $(window).on('resize', function () {
   if (fireParticipantGraph !== undefined) {

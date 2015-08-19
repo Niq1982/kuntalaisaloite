@@ -71,15 +71,37 @@
         <div class="initiative-content-row last replace-links">
             <@u.text initiative.extraInfo!"" />
         </div>
+    </#if>
 
+    <#if locations?? && locations?size gt 0>
+        <@map locations />
     </#if>
 
     <#if (initiative.youthInitiativeId.present)>
-    <h2><@u.message "initiative.youthInitiative.title" /></h2>
-    <div class="initiative-content-row last">
-        <@u.message "initiative.youthInitiative.link" /> <a href="${urls.youthInitiativeWebUrl(initiative.youthInitiativeId.value)}">${urls.youthInitiativeWebUrl(initiative.youthInitiativeId.value)}</a>
-    </div>
+        <h2><@u.message "initiative.youthInitiative.title" /></h2>
+        <div class="initiative-content-row last">
+            <@u.message "initiative.youthInitiative.link" /> <a href="${urls.youthInitiativeWebUrl(initiative.youthInitiativeId.value)}">${urls.youthInitiativeWebUrl(initiative.youthInitiativeId.value)}</a>
+        </div>
     </#if>
+
+</#macro>
+
+<#macro map locations>
+
+        <h2><@u.message "initiative.map.title" /></h2>
+        <@u.jsGoogleMapsLib />
+
+        <div class="map-container initiative-content-row last">
+            <div id="map-canvas-view">
+                <noscript><@u.message key="map.javaScriptSupport" /></noscript>
+            </div>
+        </div>
+        <script type="text/javascript">
+            var initiative = {locations: []};
+            <#list locations as location>
+                initiative.locations.push({lat: "${locations[location_index].lat?c}", lng: "${locations[location_index].lng?c}"});
+            </#list>
+        </script>
 
 </#macro>
 
@@ -110,6 +132,10 @@
         <div class="initiative-content-row last replace-links">
             <@u.text initiative.extraInfo!"" />
         </div>
+    </#if>
+
+    <#if locations?? && locations?size gt 0>
+        <@map locations />
     </#if>
 
     <#if (initiative.youthInitiativeId.present)>

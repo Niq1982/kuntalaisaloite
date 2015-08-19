@@ -17,6 +17,7 @@
 
 <@l.main page pageTitle!"">
 
+    <#assign locationSelected = updateData.locations?? && updateData.locations?size gt 0/>
 
     <#-- Create form errors summary -->
     <@u.errorsSummary path="updateData.*" prefix="updateData."/>
@@ -53,7 +54,7 @@
 
         <div class="form-block-container">
             <@edit.blockHeader key="initiative.updateInitiative.title" step=1 />
-            <@edit.updateInitiativeBlock "updateData"/>
+            <@edit.updateInitiativeBlock "updateData" locationSelected/>
         </div>
 
         <div class="form-block-container">
@@ -87,9 +88,18 @@
 -->
 <@u.modalTemplate />
 <@u.jsMessageTemplate />
-
+<@u.jsGoogleMapsLib />
 <script type="text/javascript">
     var modalData = {};
+
+    modalData.mapContainer = function() {
+        return [{
+            title:      '<@u.message "map.mapModalTitle" />',
+            content:    '<#noescape>${edit.mapContainer?replace("'","&#39;")}</#noescape>'
+        }]
+    };
+
+    modalData.initiaveMunicipality = '${initiative.municipality.getName(locale)}';
 
     <#-- Modal: Form modified notification. Uses dirtyforms jQuery-plugin. -->
     modalData.formModifiedNotification = function() {

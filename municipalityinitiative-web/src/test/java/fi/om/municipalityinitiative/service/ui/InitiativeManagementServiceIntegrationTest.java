@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.service.ui;
 import fi.om.municipalityinitiative.conf.IntegrationTestFakeEmailConfiguration;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.Location;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.service.ReviewHistoryRow;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
@@ -22,6 +23,7 @@ import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 import static fi.om.municipalityinitiative.util.MaybeMatcher.isNotPresent;
@@ -33,6 +35,9 @@ import static org.junit.Assert.fail;
 
 public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrationTestBase {
 
+    public static final Double LOCATION_LNG = 23.444444;
+    public static final String LOCATION_DESCRIPTION = "liittyy vahvasti";
+    private static final Double LOCATION_LAT = 23.232323;
     @Resource
     InitiativeManagementService service;
 
@@ -83,7 +88,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
     public void editing_initiative_throws_exception_if_wrong_author() {
         Long initiativeId = testHelper.createDraft(testMunicipality.getId());
 
-        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(ReflectionTestUtils.modifyAllFields(new Initiative()), new ContactInfo());
+        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(ReflectionTestUtils.modifyAllFields(new Initiative()), new ContactInfo(), new ArrayList<Location>());
 
         service.editInitiativeDraft(initiativeId, TestHelper.unknownLoginUserHolder, editDto, fi.om.municipalityinitiative.util.Locales.LOCALE_FI);
     }
@@ -101,7 +106,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
     @Test
     public void get_initiative_for_update_sets_all_required_information() {
-        Long initiativeId = testHelper.createCollaborativeReview(testMunicipality.getId());
+        Long initiativeId = testHelper.createCollaborativeAcceptedWithLocationInformation(testMunicipality.getId());
         InitiativeUIUpdateDto initiativeForUpdate = service.getInitiativeForUpdate(initiativeId, TestHelper.authorLoginUserHolder);
         ReflectionTestUtils.assertNoNullFields(initiativeForUpdate);
     }
@@ -125,7 +130,14 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
         Initiative randomlyFilledInitiative = ReflectionTestUtils.modifyAllFields(new Initiative());
         ContactInfo randomlyFilledContactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
-        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(randomlyFilledInitiative,randomlyFilledContactInfo);
+        Location location = ReflectionTestUtils.modifyAllFields(new Location(LOCATION_LAT, LOCATION_LNG));
+
+        // Init Maybe.values manually
+        //randomlyFilledInitiative.setLocation(location);
+        //randomlyFilledInitiative.setLocationDescription(LOCATION_DESCRIPTION);
+
+
+        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(randomlyFilledInitiative,randomlyFilledContactInfo, new ArrayList<Location>());
 
         service.editInitiativeDraft(initiativeId, TestHelper.authorLoginUserHolder, editDto, fi.om.municipalityinitiative.util.Locales.LOCALE_FI);
 
@@ -137,6 +149,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         assertThat(updated.getProposal(), is(editDto.getProposal()));
         assertThat(updated.getExtraInfo(), is(editDto.getExtraInfo()));
         assertThat(updated.getExternalParticipantCount(), is(editDto.getExternalParticipantCount()));
+       // assertLocation(Maybe.fromNullable(updated.getLocation()), editDto.getLocation());
 
         ReflectionTestUtils.assertNoNullFields(updated);
 
@@ -153,8 +166,14 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         String originalName = TestHelper.DEFAULT_PARTICIPANT_NAME;
 
         Initiative randomlyFilledInitiative = ReflectionTestUtils.modifyAllFields(new Initiative());
+        Location location = ReflectionTestUtils.modifyAllFields(new Location(LOCATION_LAT, LOCATION_LNG));
+        //randomlyFilledInitiative.setLocationDescription(LOCATION_DESCRIPTION);
+       // randomlyFilledInitiative.setLocation(location);
+
         ContactInfo randomlyFilledContactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
-        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(randomlyFilledInitiative, randomlyFilledContactInfo);
+
+
+        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(randomlyFilledInitiative, randomlyFilledContactInfo, new ArrayList<Location>());
 
         service.editInitiativeDraft(initiativeId, TestHelper.authorLoginUserHolder, editDto, fi.om.municipalityinitiative.util.Locales.LOCALE_FI);
 
@@ -168,9 +187,21 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
         assertThat(updated.getExtraInfo(), is(editDto.getExtraInfo()));
         assertThat(updated.getExternalParticipantCount(), is(editDto.getExternalParticipantCount()));
+  //      assertLocation(Maybe.fromNullable(updated.getLocation()), editDto.getLocation());
 
         ReflectionTestUtils.assertNoNullFields(updated);
 
+    }
+
+    private void assertLocation(Maybe<Location> locationGiven, Location locationExcepted) {
+        assertThat(locationGiven, isPresent());
+
+        assertThat(convertToSixDecimals(locationGiven.getValue().getLat()), is(convertToSixDecimals(locationExcepted.getLat())));
+        assertThat(convertToSixDecimals(locationGiven.getValue().getLng()), is(convertToSixDecimals(locationExcepted.getLng())));
+    }
+
+    private Double convertToSixDecimals(Double decimal) {
+        return Math.round(decimal*1000000.0)/1000000.0;
     }
 
     @Test

@@ -1,0 +1,54 @@
+.map-container {
+  margin-top: 2em;
+}
+#map-canvas, #map-canvas-view {
+  height: 400px;
+  width: 500px;
+  margin-top: 1em;
+  padding: 0;
+}
+
+.map-marker {
+  background: url("@{imagesPath}/google-maps-marker.png?version=${timestamp}") no-repeat left;
+  background-size: 20px 30px;
+  height: 30px;
+  padding-left: 35px;
+  cursor:pointer;
+  display: inline-block;
+  a {
+    margin-right: 5px;
+  }
+}
+.blue {
+  color: blue;
+}
+.no-visible {
+  display: none;
+}
+
+#user-entered-address {
+  width: 300px;
+  margin-bottom: 0px;
+}
+#result-list {
+  ul {
+    border-color: black;
+    border-width: 1px;
+    border-style: solid;
+    width: 310px;
+    padding-left: 0;
+  }
+  li {
+    display: inline-block;
+    width: 305px;
+    padding-left: 5px;
+
+    &:hover, &.selected {
+      background-color: @mainColorLight;
+      cursor: default;
+    }
+  }
+
+
+
+}

@@ -35,6 +35,9 @@ public class InitiativeManagementService {
     AuthorDao authorDao;
 
     @Resource
+    LocationDao locationDao;
+
+    @Resource
     EmailService emailService;
 
     @Resource
@@ -64,7 +67,8 @@ public class InitiativeManagementService {
             VerifiedAuthor verifiedAuthor = authorDao.getVerifiedAuthor(initiativeId, verifiedUser.getAuthorId());
             contactInfo = verifiedAuthor.getContactInfo();
         }
-        return InitiativeDraftUIEditDto.parse(initiative,contactInfo);
+
+        return InitiativeDraftUIEditDto.parse(initiative,contactInfo,locationDao.getLocations(initiativeId));
     }
 
     @Transactional(readOnly = false)
@@ -75,6 +79,8 @@ public class InitiativeManagementService {
 
         assertAllowance("Edit initiative", ManagementSettings.of(initiative).isAllowEdit());
         initiativeDao.editInitiativeDraft(initiativeId, editDto);
+        locationDao.removeLocations(initiativeId);
+        locationDao.setLocations(initiativeId, editDto.getLocations());
         if (initiative.getType().isNotVerifiable()) {
             authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId(), editDto.getContactInfo());
             initiativeDao.denormalizeParticipantCountForNormalInitiative(initiativeId);
@@ -113,6 +119,7 @@ public class InitiativeManagementService {
         updateDto.setContactInfo(contactInfo);
         updateDto.setExtraInfo(initiative.getExtraInfo());
         updateDto.setExternalParticipantCount(initiative.getExternalParticipantCount());
+        updateDto.setLocations(locationDao.getLocations(initiativeId));
 
         return updateDto;
     }
@@ -147,6 +154,10 @@ public class InitiativeManagementService {
         assertAllowance("Update initiative", ManagementSettings.of(initiative).isAllowUpdate());
 
         initiativeDao.updateExtraInfo(initiativeId, updateDto.getExtraInfo(), updateDto.getExternalParticipantCount());
+
+        locationDao.removeLocations(initiativeId);
+        locationDao.setLocations(initiativeId, updateDto.getLocations());
+
         if (initiative.getType().isNotVerifiable()) {
             authorDao.updateAuthorInformation(loginUserHolder.getNormalLoginUser().getAuthorId(), updateDto.getContactInfo());
             initiativeDao.denormalizeParticipantCountForNormalInitiative(initiativeId);

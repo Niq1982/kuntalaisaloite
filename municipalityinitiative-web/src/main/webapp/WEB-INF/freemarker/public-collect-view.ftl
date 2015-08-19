@@ -31,6 +31,7 @@
     </@compress>
 </#assign>
 
+
 <#--
  * Layout parameters for HTML-title and navigation.
  * 

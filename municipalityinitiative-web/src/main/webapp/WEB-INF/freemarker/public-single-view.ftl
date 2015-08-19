@@ -30,7 +30,7 @@
     <div class="view-block public first">
         <@e.initiativeView initiative />
     </div>
-    
+
     <div class="view-block public last">
         <div class="initiative-content-row last">
             <h2><@u.message key="initiative.people.title" args=[1] /></h2>

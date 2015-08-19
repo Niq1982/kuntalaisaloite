@@ -55,6 +55,9 @@ public class TestHelper {
     public static final DateTime DEFAULT_STATE_TIME = DEFAULT_CREATE_TIME;
     public static final String DEFAULT_SENT_COMMENT = "some default sent comment";
     public static final Integer DEFAULT_EXTERNAL_PARTICIPANT_COUNT = 0;
+    public static final String LOCATION_DESCRIPTION = "sijainnin kuvaus";
+    public static final double LOCATION_LNG = 23.456789;
+    public static final double LOCATION_LAT = 23.455678;
 
     public static LoginUserHolder authorLoginUserHolder;
     public static LoginUserHolder unknownLoginUserHolder = new LoginUserHolder(User.anonym());
@@ -152,6 +155,16 @@ public class TestHelper {
                 .withType(InitiativeType.COLLABORATIVE)
                 .applyAuthor().toInitiativeDraft());
     }
+    @Transactional
+    public Long createCollaborativeAcceptedWithLocationInformation(Long municipalityId) {
+        return createDefaultInitiative(new InitiativeDraft(municipalityId)
+                .withState(InitiativeState.ACCEPTED)
+                .withType(InitiativeType.COLLABORATIVE)
+                .withLocationLat(LOCATION_LAT)
+                .withLocationLng(LOCATION_LNG)
+                .withLocationDescription(LOCATION_DESCRIPTION)
+                .applyAuthor().toInitiativeDraft());
+    }
 
     @Transactional
     public Long create(Long municipalityId, InitiativeState state, InitiativeType type) {
@@ -232,6 +245,7 @@ public class TestHelper {
         insert.set(municipalityInitiative.stateTimestamp, initiativeDraft.stateTime);
         insert.set(municipalityInitiative.lastEmailReportTime, initiativeDraft.emailReportDateTime);
         insert.set(municipalityInitiative.lastEmailReportType, initiativeDraft.emailReportType);
+
 
         if (initiativeDraft.supporCountData != null) {
             insert.set(municipalityInitiative.supportCountData, initiativeDraft.supporCountData);
@@ -800,6 +814,10 @@ public class TestHelper {
         public EmailReportType emailReportType;
         public DateTime emailReportDateTime;
         public String supporCountData;
+        public Double locationLat;
+        public Double locationLng;
+        private String locationDescription;
+
 
         public AuthorDraft applyAuthor() {
             this.authorDraft = Maybe.of(new AuthorDraft(this, municipalityId));
@@ -890,6 +908,19 @@ public class TestHelper {
 
         public InitiativeDraft withSupporCountData(String s) {
             this.supporCountData = s;
+            return this;
+        }
+        public InitiativeDraft withLocationLat(Double s) {
+            this.locationLat = s;
+            return this;
+        }
+        public InitiativeDraft withLocationLng(Double s) {
+            this.locationLng = s;
+            return this;
+        }
+
+        public InitiativeDraft withLocationDescription(String s) {
+            this.locationDescription = s;
             return this;
         }
     }

@@ -93,6 +93,7 @@ public final class InitiativeViewInfo {
         return initiative.getYouthInitiativeId();
     }
 
+
     public ParticipantCount getParticipantCount() {
         ParticipantCount participantCount = new ParticipantCount();
         participantCount.setPrivateNames(initiative.getParticipantCount() - initiative.getParticipantCountPublic());

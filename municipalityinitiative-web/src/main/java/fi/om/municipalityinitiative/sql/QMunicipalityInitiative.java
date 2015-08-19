@@ -1,14 +1,16 @@
 package fi.om.municipalityinitiative.sql;
 
-import static com.mysema.query.types.PathMetadataFactory.*;
-
-import com.mysema.query.types.path.*;
-
-import com.mysema.query.types.PathMetadata;
-import javax.annotation.Generated;
-import com.mysema.query.types.Path;
-
 import com.mysema.query.sql.ColumnMetadata;
+import com.mysema.query.types.Path;
+import com.mysema.query.types.PathMetadata;
+import com.mysema.query.types.path.DateTimePath;
+import com.mysema.query.types.path.EnumPath;
+import com.mysema.query.types.path.NumberPath;
+import com.mysema.query.types.path.StringPath;
+
+import javax.annotation.Generated;
+
+import static com.mysema.query.types.PathMetadataFactory.forVariable;
 
 
 /**
@@ -66,6 +68,8 @@ public class QMunicipalityInitiative extends com.mysema.query.sql.RelationalPath
     public final com.mysema.query.sql.ForeignKey<QMunicipality> municipalityInitiativeMunicipalityFk = createForeignKey(municipalityId, "id");
 
     public final com.mysema.query.sql.ForeignKey<QAuthor> _authorInitiativeIdFk = createInvForeignKey(id, "initiative_id");
+
+    public final com.mysema.query.sql.ForeignKey<QLocation> _locationInitiativeId = createInvForeignKey(id, "initiative_id");
 
     public final com.mysema.query.sql.ForeignKey<QInitiativeSupportVoteDay> _supportVoteDayInitiativeIdFk = createInvForeignKey(id, "initiative_id");
 

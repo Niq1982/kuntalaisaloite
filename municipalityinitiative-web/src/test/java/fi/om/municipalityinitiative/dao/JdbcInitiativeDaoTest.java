@@ -4,7 +4,9 @@ import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.Initiative;
+import fi.om.municipalityinitiative.dto.service.Location;
 import fi.om.municipalityinitiative.dto.service.Municipality;
+import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.email.EmailReportType;
@@ -28,6 +30,7 @@ import static fi.om.municipalityinitiative.util.MaybeMatcher.isPresent;
 import static fi.om.municipalityinitiative.util.TestUtil.precondition;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 
@@ -36,6 +39,14 @@ import static org.junit.Assert.assertThat;
 @Transactional
 public class JdbcInitiativeDaoTest {
 
+    public static final String INITIATIVE_PRPOSAL = "Ehdotamme että muonion tekojärvi ruopataan.";
+    public static final String INITIATOR_NAME = "Teemu Teekkari";
+    public static final String EXTRA_INFO = "Lisätietoja seuraa perästä";
+    public static final int EXTERNAL_PARTICIPANT_COUNT = 12;
+    public static final Double LOCATION_LAT = 64.914665;
+    public static final Double LOCATION_LNG = 26.067255;
+    public static final Location LOCATION = new Location(LOCATION_LAT, LOCATION_LNG);
+    public static final String LOCATION_DESCRIPTION = "Liittyy vahvasti";
     @Resource
     InitiativeDao initiativeDao;
 
@@ -86,6 +97,42 @@ public class JdbcInitiativeDaoTest {
     }
 
     @Test
+    public void editInitiative() {
+        Long initiativeMunicipalityId = testHelper.createTestMunicipality("Initiative municipality");
+
+
+        Long initiativeId = initiativeDao.prepareInitiative(initiativeMunicipalityId);
+
+        InitiativeDraftUIEditDto initiativeEdit = new InitiativeDraftUIEditDto();
+        initiativeEdit.setName(INITIATOR_NAME);
+        initiativeEdit.setProposal(INITIATIVE_PRPOSAL);
+        initiativeEdit.setExtraInfo(EXTRA_INFO);
+        initiativeEdit.setExternalParticipantCount(EXTERNAL_PARTICIPANT_COUNT);
+        //initiativeEdit.setLocation(LOCATION);
+
+
+        initiativeDao.editInitiativeDraft(initiativeId, initiativeEdit);
+
+        Initiative initiative = initiativeDao.get(initiativeId);
+
+        assertThat(initiative.getName(), is(initiativeEdit.getName()));
+        assertThat(initiative.getProposal(), is(initiativeEdit.getProposal()));
+        assertThat(initiative.getExternalParticipantCount(), is(initiativeEdit.getExternalParticipantCount()));
+        assertThat(initiative.getExtraInfo(), is(initiativeEdit.getExtraInfo()));
+
+        //assertLocation(initiative.getLocation(), initiativeEdit.getLocation());
+
+
+    }
+
+    private static void assertLocation(Maybe<Location> locationGiven, Location locationExcepted) {
+
+        assertThat(locationGiven.isPresent(), is(true));
+        assertThat(locationGiven.getValue().getLat(), is(locationExcepted.getLat()));
+        assertThat(locationGiven.getValue().getLng(), is(locationExcepted.getLng()));
+    }
+
+    @Test
     public void get_returns_all_information() {
         Long authorsMunicipalityId = testHelper.createTestMunicipality("Authors Municipality");
 
@@ -93,6 +140,9 @@ public class JdbcInitiativeDaoTest {
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withSent(new DateTime(2010, 1, 1, 0, 0))
                 .witEmailReportSent(EmailReportType.IN_ACCEPTED, new DateTime())
+                .withLocationLat(LOCATION_LAT)
+                .withLocationLng(LOCATION_LNG)
+                .withLocationDescription(LOCATION_DESCRIPTION)
                 .applyAuthor().withParticipantMunicipality(authorsMunicipalityId)
                 .toInitiativeDraft());
 
