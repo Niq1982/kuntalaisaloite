@@ -10,6 +10,7 @@ import fi.om.municipalityinitiative.validation.VerifiedInitiative;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 @ValidLocation(groups = {VerifiedInitiative.class, NormalInitiative.class})
@@ -24,7 +25,7 @@ public class InitiativeUIUpdateDto implements InitiativeWithLocationInformation 
     @Valid
     private ContactInfo contactInfo;
 
-    private List<Location> locations;
+    private List<Location> locations =  new ArrayList<Location>();
 
     public String getExtraInfo() {
         return extraInfo;

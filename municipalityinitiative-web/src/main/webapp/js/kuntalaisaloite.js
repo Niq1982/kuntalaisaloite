@@ -2238,8 +2238,7 @@ var getMapContainer = function() {
 var locationFields = (function() {
 	var $locationContainer = $('#new-locations');
 	var $oldLocationsContainer = $('#old-locations');
-
-	var index = $locationContainer.data("index");
+	var index = 0;
 
 	var emptyAllRows = function(){
 		index = 0;

@@ -487,14 +487,10 @@
             <a class="trigger-tooltip">
                 <span id="remove-selected-location" class="icon-small icon-16 cancel"></span>
             </a>
-
-           <#-- <@f.textarea path=path+".locationDescription" required="required" optional=false key="updateData.locationDescription"/>-->
         </div>
     </div>
 
     <noscript><@u.message key="map.javaScriptSupport" /></noscript>
-
-    <#assign newLocationIndex=updateData.locations?size />
 
     <div id="old-locations">
         <!-- Existing locations -->
@@ -507,7 +503,7 @@
     </div>
 
     <!-- New locations -->
-    <div id = "new-locations" data-index="${newLocationIndex}"></div>
+    <div id = "new-locations"></div>
 
     <!-- Location template -->
     <script id="locationTemplate" type="text/x-jsrender">

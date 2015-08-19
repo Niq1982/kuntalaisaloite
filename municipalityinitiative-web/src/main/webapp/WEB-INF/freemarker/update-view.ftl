@@ -17,7 +17,7 @@
 
 <@l.main page pageTitle!"">
 
-    <#assign locationSelected = updateData.locationLat?? && updateData.locationLng?? />
+    <#assign locationSelected = updateData.locations?? && updateData.locations?size gt 0/>
 
     <#-- Create form errors summary -->
     <@u.errorsSummary path="updateData.*" prefix="updateData."/>
@@ -99,11 +99,7 @@
         }]
     };
 
-    modalData.initialLocation = '${initiative.municipality.getName(locale)}';
-
-    <#if locationSelected>
-        modalData.selectedLocation = {"lat": "${updateData.locationLat?c}", "lng": "${updateData.locationLng?c}"};
-    </#if>
+    modalData.initiaveMunicipality = '${initiative.municipality.getName(locale)}';
 
     <#-- Modal: Form modified notification. Uses dirtyforms jQuery-plugin. -->
     modalData.formModifiedNotification = function() {
