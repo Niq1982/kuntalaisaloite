@@ -1919,9 +1919,9 @@ if (window.hasIGraphFrame) {
 var getMapContainer = function() {
 	var markers= [],
 		tempLocations = [],
+		selectedLocations = [],
 		map, searchresults,
 		geocoder= new google.maps.Geocoder(),
-		selectedLocations = [],
 		viewOnly = false,
 		centerOfFinland = {"lat": 64.9146659, "lng": 26.0672554},
 	    // For key navigation in result list
@@ -2020,7 +2020,7 @@ var getMapContainer = function() {
 		});
 
 		$("#save-and-close").live('click', function () {
-
+			
 			locationFields.emptyAllRows();
 
 			selectedLocations = tempLocations.slice();
@@ -2205,17 +2205,11 @@ var locationFields = (function() {
 	var $locationContainer = $('#new-locations');
 	var $oldLocationsContainer = $('#old-locations');
 
-	var firstIndex = $locationContainer.data("index");
-	var index = firstIndex;
-
-	var removeOldRows = function() {
-		firstIndex = 0;
-		index = firstIndex;
-		$oldLocationsContainer.empty();
-	};
+	var index = $locationContainer.data("index");
 
 	var emptyAllRows = function(){
-		index = firstIndex;
+		index = 0;
+		$oldLocationsContainer.empty();
 		$locationContainer.empty();
 	};
 
@@ -2232,7 +2226,6 @@ var locationFields = (function() {
 	return {
 		emptyAllRows: emptyAllRows,
 		createLocationRow: createLocationRow,
-		removeOldRows: removeOldRows
 	}
 
 })();
@@ -2280,7 +2273,6 @@ $("#remove-selected-location").click(function() {
 	mapContainer = null;
 
 	locationFields.emptyAllRows();
-	locationFields.removeOldRows();
 	locationDescription.val(null);
 });
 
