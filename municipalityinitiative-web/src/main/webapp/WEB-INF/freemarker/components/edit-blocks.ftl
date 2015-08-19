@@ -509,10 +509,10 @@
     <script id="locationTemplate" type="text/x-jsrender">
         <div>
             <label>
-                <input type="text" class="medium" value="{{>locationLat}}" id="locations[{{>newLocationIndex}}].lat" name="locations[{{>newLocationIndex}}].lat" />
+                <input type="hidden" class="medium" value="{{>locationLat}}" id="locations[{{>newLocationIndex}}].lat" name="locations[{{>newLocationIndex}}].lat" />
             </label>
             <label>
-                <input type="text" class="medium" value="{{>locationLng}}" id="locations[{{>newLocationIndex}}].lng" name="locations[{{>newLocationIndex}}].lng" />
+                <input type="hidden" class="medium" value="{{>locationLng}}" id="locations[{{>newLocationIndex}}].lng" name="locations[{{>newLocationIndex}}].lng" />
             </label>
         </div>
     </script>
