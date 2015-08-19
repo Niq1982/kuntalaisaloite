@@ -105,6 +105,7 @@
         }]
     };
 
+    modalData.initiaveMunicipality = '${initiative.municipality.getName(locale)}';
 
     var messageData = {};
 
