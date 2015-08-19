@@ -2062,7 +2062,6 @@ var getMapContainer = function() {
 
 	initMap = function(coordinates) {
 
-		// TODO try to find a way to init map centering to several locations
 		var mapOptions = {
 			center: coordinates[0],
 			zoom: 14
@@ -2081,12 +2080,21 @@ var getMapContainer = function() {
 			});
 
 		}
-		// Remove old markers
+	
 		removeMarkers();
+		if (tempLocations.length > 0) {
+			var bounds = new google.maps.LatLngBounds();
+			$.each(tempLocations, function(index, value) {
+				placeMarker(value, map);
+				bounds.extend(value)
+			});
+			// If there is only one location. No need to use bounds, since map will center to given location.
+			if(tempLocations.length > 1) {
+				map.fitBounds(bounds);
+			}
 
-		$.each(tempLocations, function(index, value) {
-			placeMarker(value, map);
-		});
+		}
+
 
 	};
 
