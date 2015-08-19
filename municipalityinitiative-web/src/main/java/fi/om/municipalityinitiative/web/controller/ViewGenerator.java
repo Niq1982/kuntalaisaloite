@@ -153,7 +153,7 @@ public final class ViewGenerator {
         );
     }
 
-    public static ViewGenerator managementView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, AttachmentService.Attachments attachments, ParticipantCount participantCount, CommentUIDto commentUIDto) {
+    public static ViewGenerator managementView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, AttachmentService.Attachments attachments, ParticipantCount participantCount, List<Location> locations, CommentUIDto commentUIDto) {
         return new ViewGenerator(MANAGEMENT_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
@@ -162,6 +162,7 @@ public final class ViewGenerator {
                         .add("participantCount", participantCount)
                         .add("comment", commentUIDto)
                         .add("attachments", attachments)
+                        .add("locations", locations)
                         .build()
         );
     }

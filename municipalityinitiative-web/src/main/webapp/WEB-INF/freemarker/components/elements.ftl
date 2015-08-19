@@ -134,8 +134,8 @@
         </div>
     </#if>
 
-    <#if initiative.location?? && initiative.location?size gt 0>
-        <@map initiative />
+    <#if locations?? && locations?size gt 0>
+        <@map locations />
     </#if>
 
     <#if (initiative.youthInitiativeId.present)>
