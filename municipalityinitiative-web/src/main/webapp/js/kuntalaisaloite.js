@@ -1972,8 +1972,7 @@ var getMapContainer = function() {
 
 		getLocationFromAddress(address, function (results, status) {
 			if (results !== undefined && results !== null && results.length > 0) {
-				tempLocations.push(results[0].geometry.location);
-				initMap(tempLocations);
+				initMap([results[0].geometry.location]);
 			} else {
 				initMap([centerOfFinland]);
 			}
@@ -2045,7 +2044,6 @@ var getMapContainer = function() {
 				editLocation.removeClass("no-visible");
 			}
 
-
 		});
 
 		$(".modal").live('click', function() {
@@ -2086,7 +2084,7 @@ var getMapContainer = function() {
 		// Remove old markers
 		removeMarkers();
 
-		$.each(coordinates, function(index, value) {
+		$.each(tempLocations, function(index, value) {
 			placeMarker(value, map);
 		});
 
