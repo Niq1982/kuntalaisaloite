@@ -1427,7 +1427,7 @@ $.DirtyForms.dialog = {
 
 (function() {
 	var ignoreHelper = {
-		ignoreAnchorSelector: 'a[rel="external"], .modal a, a#openMap, .map-marker a'
+		ignoreAnchorSelector: 'a[rel="external"], .modal a, a#openMap, .map-marker a,  a #remove-selected-location'
 	};
 
 	$.DirtyForms.helpers.push(ignoreHelper);
@@ -1927,11 +1927,7 @@ var getMapContainer = function() {
 		centerOfFinland = {"lat": 64.9146659, "lng": 26.0672554},
 	    // For key navigation in result list
 		selectedResultIndex = -1,
-		ARROWUP = 38,
-		ARROWDOWN = 40,
-		ENTER = 13,
-		DOWN = 1,
-		UP = -1,
+
 		// functions
 		initWithSelectedLocation,
 		initWithAddress,
@@ -1953,7 +1949,11 @@ var getMapContainer = function() {
 		emptyResultList,
 		modifyResultList,
 		setViewOnly,
-		getSelectedLocations;
+		getSelectedLocations,
+		saveLocations,
+		selectSearchResultFromMap;
+
+
 
 	removeLocation = function(location) {
 		var index = tempLocations.indexOf(location);
@@ -1965,7 +1965,7 @@ var getMapContainer = function() {
 	initWithSelectedLocation = function() {
 		tempLocations = selectedLocations.slice();
 		initMap(tempLocations);
-		initListeners();
+
 	};
 
 	initWithAddress = function(address) {
@@ -1977,7 +1977,7 @@ var getMapContainer = function() {
 				initMap([centerOfFinland]);
 			}
 		});
-		initListeners()
+
 	};
 
 	initWithCoordinates = function(locations) {
@@ -1985,80 +1985,9 @@ var getMapContainer = function() {
 			tempLocations.push(new google.maps.LatLng(locations[i].lat, locations[i].lng));
 		}
 		initMap(tempLocations);
-		initListeners();
-	};
-
-	initListeners = function() {
-
-		$("#user-entered-address").die('keydown').live('input propertychange keydown', function(event){
-
-			var runSearch = function() {
-				getLocationFromAddress($("#user-entered-address").val(), function (results, status) {
-					if (results !== undefined && results !== null) {
-						updateResultsList(results);
-					}
-				});
-			};
-			switch (event.which) {
-
-				case ARROWDOWN:
-					selectListElementWithArrow(DOWN);
-					break;
-				case ARROWUP:
-					selectListElementWithArrow(UP);
-					break;
-				case ENTER:
-					if (indexIsInSearchResultListRange(selectedResultIndex)) {
-						selectResultFromList(selectedResultIndex);
-					} else {
-						runSearch();
-					}
-					break;
-				default:
-					runSearch();
-			}
-		});
-
-		$("#result-list").find("li").die('click').live('click', function(event) {
-			// TODO use data here instead of attribute
-			var index = $(this).attr("item-index");
-			if (index !== undefined) {
-				selectResultFromList(index);
-			}
-		});
-
-		$("#save-and-close").die('click').live('click', function () {
-			if (tempLocations.length === 0 ) {
-				removeSelectedLocation.trigger('click');
-			}
-			else {
-				locationFields.emptyAllRows();
-
-				selectedLocations = tempLocations.slice();
-
-				$.each(selectedLocations, function(index, value) {
-					locationFields.createLocationRow(value.lat(), value.lng());
-				});
-
-				selectLocation.addClass("no-visible");
-				editLocation.removeClass("no-visible");
-			}
-
-		});
-
-		$(".modal").live('click', function() {
-			emptyResultList();
-		});
-
-		$("#result-list").find("li").live('click', function() {
-			return false;
-		});
-
-		$("#user-entered-address").live('click', function() {
-			return false;
-		});
 
 	};
+
 
 	initMap = function(coordinates) {
 
@@ -2082,19 +2011,17 @@ var getMapContainer = function() {
 		}
 
 		removeMarkers();
-		if (tempLocations.length > 0) {
-			var bounds = new google.maps.LatLngBounds();
-			$.each(tempLocations, function(index, value) {
-				placeMarker(value, map);
-				bounds.extend(value)
-			});
-			// If there is only one location. No need to use bounds, since map will center to given location.
-			if(tempLocations.length > 1) {
-				map.fitBounds(bounds);
-			}
 
+		var bounds = new google.maps.LatLngBounds();
+
+		$.each(tempLocations, function(index, value) {
+			placeMarker(value, map);
+			bounds.extend(value)
+		});
+		// If there is only one location, map will center to given location.
+		if(tempLocations.length > 1) {
+			map.fitBounds(bounds);
 		}
-
 
 	};
 
@@ -2231,12 +2158,34 @@ var getMapContainer = function() {
 		return selectedLocations;
 	};
 
+	saveLocations = function() {
+		selectedLocations = tempLocations.slice();
+		return selectedLocations;
+	};
+
+	selectSearchResultFromMap = function() {
+		if (indexIsInSearchResultListRange(selectedResultIndex)) {
+			selectResultFromList(selectedResultIndex);
+			return true;
+		} else{
+			return false;
+		}
+	};
+
+
 	return {
 		initWithSelectedLocation: initWithSelectedLocation,
 		initWithAddress: initWithAddress,
 		initWithCoordinates: initWithCoordinates,
 		setViewOnly: setViewOnly,
-		getSelectedLocations: getSelectedLocations
+		getSelectedLocations: getSelectedLocations,
+		getLocationFromAddress: getLocationFromAddress,
+		updateResultsList: updateResultsList,
+		selectListElementWithArrow: selectListElementWithArrow,
+		selectSearchResultFromMap: selectSearchResultFromMap,
+		emptyResultList: emptyResultList,
+		saveLocations: saveLocations,
+		selectResultFromList: selectResultFromList
 	};
 
 };
@@ -2270,59 +2219,113 @@ var locationFields = (function() {
 })();
 
 
+var renderMap;
 
-var renderMap,
-	selectedLocations = [],
-	selectLocation = $("#select-location"),
-	editLocation = $("#open-remove-location"),
-	removeSelectedLocation = $("#remove-selected-location"),
-	mapContainer,
-	mapViewContainer;
+(function() {
+	var ARROWUP = 38,
+		ARROWDOWN = 40,
+		ENTER = 13,
+		DOWN = 1,
+		UP = -1,
+		selectedLocations = [],
+		selectLocation = $("#select-location"),
+		editLocation = $("#open-remove-location"),
+		removeSelectedLocation = $("#remove-selected-location"),
+		mapContainer,
+		mapViewContainer;
 
+	$.each( $('.locationRow'), function(index, value) {
+		selectedLocations.push({lat : $(value).find("[id$=lat]").val(), lng : $(value).find("[id$=lng]").val()});
+	});
 
+	// Map selection controllers are hidden from no-script users
+	$("#map-selection").removeClass("no-visible");
 
-$.each( $('.locationRow'), function(index, value) {
-	selectedLocations.push({lat : $(value).find("[id$=lat]").val(), lng : $(value).find("[id$=lng]").val()});
-});
-
-// Map selection controllers are hidden from no-script users
-$("#map-selection").removeClass("no-visible");
-
-$("#openMap").click(function(){
-	mapContainer = getMapContainer();
-	renderMap = function() {mapContainer.initWithAddress(modalData.initiaveMunicipality);};
-	generateModal(modalData.mapContainer(), 'full');
-});
-
-$("#show-selected-location").click(function() {
-	if (mapContainer === undefined) {
+	$("#openMap").click(function(){
 		mapContainer = getMapContainer();
+		renderMap = function() {mapContainer.initWithAddress(modalData.initiaveMunicipality);};
+		generateModal(modalData.mapContainer(), 'full');
+	});
+
+	$("#show-selected-location").click(function() {
+		if (mapContainer === undefined) {
+			mapContainer = getMapContainer();
+		}
+		if (mapContainer.getSelectedLocations().length > 0) {
+			renderMap = mapContainer.initWithSelectedLocation;
+		} else if (selectedLocations.length > 0) {
+			renderMap = function() {mapContainer.initWithCoordinates(selectedLocations);};
+		}
+
+		generateModal(modalData.mapContainer(), 'full');
+	});
+
+	removeSelectedLocation.click(function() {
+		selectLocation.removeClass("no-visible");
+		editLocation.addClass("no-visible");
+		mapContainer = null;
+		locationFields.emptyAllRows();
+
+	});
+
+	// Public view
+	if (typeof initiative !== 'undefined' && typeof initiative.locations !== 'undefined' ) {
+		mapViewContainer = getMapContainer();
+		mapViewContainer.setViewOnly(true);
+		mapViewContainer.initWithCoordinates(initiative.locations);
 	}
-	if (mapContainer.getSelectedLocations().length > 0) {
-		renderMap = mapContainer.initWithSelectedLocation;
-	} else if (selectedLocations.length > 0) {
-		renderMap = function() {mapContainer.initWithCoordinates(selectedLocations);};
-	}
 
-	generateModal(modalData.mapContainer(), 'full');
-});
+	$("#user-entered-address").live('input propertychange keydown', function(event){
 
+		var runSearch = function() {
+			mapContainer.getLocationFromAddress($("#user-entered-address").val(),
+				function (results, status) {
+					if (results !== undefined && results !== null) {
+						mapContainer.updateResultsList(results);
+					}
+			});
+		};
+		switch (event.which) {
 
-removeSelectedLocation.click(function() {
-	selectLocation.removeClass("no-visible");
-	editLocation.addClass("no-visible");
-	mapContainer = null;
-	locationFields.emptyAllRows();
+			case ARROWDOWN:
+				mapContainer.selectListElementWithArrow(DOWN);
+				break;
+			case ARROWUP:
+				mapContainer.selectListElementWithArrow(UP);
+				break;
+			case ENTER:
+				if (!mapContainer.selectSearchResultFromMap()) {
+					runSearch();
+				}
+				break;
+			default:
+				runSearch();
+		}
+	});
 
-});
+	$("#result-list").find("li").live('click', function(event) {
+		// TODO use data here instead of attribute
+		var index = $(this).attr("item-index");
+		if (index !== undefined) {
+			mapContainer.selectResultFromList(index);
+		}
+	});
 
+	$("#save-and-close").die('click').live('click', function () {
 
-// Public view
-if (typeof initiative !== 'undefined' && typeof initiative.locations !== 'undefined' ) {
-	mapViewContainer = getMapContainer();
-	mapViewContainer.setViewOnly(true);
-	mapViewContainer.initWithCoordinates(initiative.locations);
-}
+		locationFields.emptyAllRows();
+
+		$.each(mapContainer.saveLocations(), function(index, value) {
+			locationFields.createLocationRow(value.lat(), value.lng());
+		});
+
+		selectLocation.addClass("no-visible");
+		editLocation.removeClass("no-visible");
+
+	});
+
+})();
+
 
 
 $(window).on('resize', function () {
