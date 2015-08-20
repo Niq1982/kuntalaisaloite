@@ -2101,7 +2101,7 @@ var getMapContainer = function() {
 
 			for (var i = 0; i < searchresults.length; i++) {
 				var $li = $('<li>' + searchresults[i].formatted_address + '</li>');
-				$li.attr("item-index", i);
+				$li.data("item-index", i);
 				$ul.append($li);
 				console.log(searchresults[i].formatted_address);
 			}
@@ -2304,8 +2304,7 @@ var renderMap;
 	});
 
 	$("#result-list").find("li").live('click', function(event) {
-		// TODO use data here instead of attribute
-		var index = $(this).attr("item-index");
+		var index = $(this).data("item-index");
 		if (index !== undefined) {
 			mapContainer.selectResultFromList(index);
 		}
