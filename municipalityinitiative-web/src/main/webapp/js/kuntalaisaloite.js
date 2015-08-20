@@ -1951,7 +1951,8 @@ var getMapContainer = function() {
 		setViewOnly,
 		getSelectedLocations,
 		saveLocations,
-		selectSearchResultFromMap;
+		selectSearchResultFromMap,
+		enableSaveAndClose;
 
 
 
@@ -1960,6 +1961,7 @@ var getMapContainer = function() {
 		if (index !== -1) {
 			tempLocations.splice(index, 1);
 		}
+		enableSaveAndClose(tempLocations.length > 0);
 	};
 
 	initWithSelectedLocation = function() {
@@ -2006,8 +2008,12 @@ var getMapContainer = function() {
 			google.maps.event.addListener(map, 'click', function (e) {
 				tempLocations.push(e.latLng);
 				placeMarker(tempLocations[tempLocations.length - 1], map);
+				enableSaveAndClose(true);
 			});
 
+			if(tempLocations.length > 0) {
+				enableSaveAndClose(true);
+			}
 		}
 
 		removeMarkers();
@@ -2022,6 +2028,7 @@ var getMapContainer = function() {
 		if(tempLocations.length > 1) {
 			map.fitBounds(bounds);
 		}
+
 
 	};
 
@@ -2147,6 +2154,7 @@ var getMapContainer = function() {
 		if (indexIsInSearchResultListRange(index)) {
 			tempLocations.push(searchresults[index].geometry.location);
 			placeMarker(tempLocations[tempLocations.length - 1], map);
+			enableSaveAndClose(true);
 		}
 	};
 
@@ -2172,6 +2180,9 @@ var getMapContainer = function() {
 		}
 	};
 
+	enableSaveAndClose = function(b) {
+		$("#save-and-close").toggleClass("disabled", !b);
+	};
 
 	return {
 		initWithSelectedLocation: initWithSelectedLocation,
@@ -2231,6 +2242,7 @@ var renderMap;
 		selectLocation = $("#select-location"),
 		editLocation = $("#open-remove-location"),
 		removeSelectedLocation = $("#remove-selected-location"),
+		saveAndClose = $("#save-and-close"),
 		mapContainer,
 		mapViewContainer;
 
@@ -2310,17 +2322,22 @@ var renderMap;
 		}
 	});
 
-	$("#save-and-close").die('click').live('click', function () {
+	saveAndClose.die('click').live('click', function () {
 
-		locationFields.emptyAllRows();
+		var savedLocations = mapContainer.saveLocations();
 
-		$.each(mapContainer.saveLocations(), function(index, value) {
-			locationFields.createLocationRow(value.lat(), value.lng());
-		});
+		if (savedLocations.length > 0) {
+			$('.modal .close').trigger('click');
 
-		selectLocation.addClass("no-visible");
-		editLocation.removeClass("no-visible");
+			locationFields.emptyAllRows();
 
+			$.each(savedLocations, function(index, value) {
+				locationFields.createLocationRow(value.lat(), value.lng());
+			});
+
+			selectLocation.addClass("no-visible");
+			editLocation.removeClass("no-visible");
+		}
 	});
 
 })();

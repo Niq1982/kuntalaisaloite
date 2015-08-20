@@ -460,7 +460,7 @@
         </div>
 
         <div class="input-block-content">
-            <span class="small-button close" id="save-and-close"><@u.message "map.save" /></span>
+            <span class="small-button disabled" id="save-and-close"><@u.message "map.save" /></span>
             <a class="close push"><@u.message "action.cancel" /></a>
         </div>
     </@compress>
