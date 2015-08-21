@@ -2243,6 +2243,7 @@ var renderMap;
 		editLocation = $("#open-remove-location"),
 		removeSelectedLocation = $("#remove-selected-location"),
 		saveAndClose = $("#save-and-close"),
+		searchField = $("#user-entered-address"),
 		mapContainer,
 		mapViewContainer;
 
@@ -2287,18 +2288,24 @@ var renderMap;
 		mapViewContainer.initWithCoordinates(initiative.locations);
 	}
 
-	$("#user-entered-address").live('input propertychange keydown', function(event){
-
-		var runSearch = function() {
-			mapContainer.getLocationFromAddress($("#user-entered-address").val(),
-				function (results, status) {
-					if (results !== undefined && results !== null) {
-						mapContainer.updateResultsList(results);
-					}
+	var runSearch = function() {
+		mapContainer.getLocationFromAddress($("#user-entered-address").val(),
+			function (results, status) {
+				if (results !== undefined && results !== null) {
+					mapContainer.updateResultsList(results);
+				}
 			});
-		};
-		switch (event.which) {
+	};
 
+	$("#user-entered-address").live("click", function() {
+		if($("#user-entered-address").val()) {
+			runSearch();
+		}
+	});
+
+	searchField.live('input propertychange keydown', function(event){
+
+		switch (event.which) {
 			case ARROWDOWN:
 				mapContainer.selectListElementWithArrow(DOWN);
 				break;
@@ -2340,9 +2347,11 @@ var renderMap;
 		}
 	});
 
-	$(document).delegate(".modal", "click", function(){
+	$(document).delegate("#modal-container .modal", "click", function(){
 		mapContainer.emptyResultList();
 	});
+
+
 
 })();
 
