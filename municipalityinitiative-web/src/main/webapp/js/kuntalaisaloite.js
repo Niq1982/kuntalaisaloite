@@ -2315,7 +2315,7 @@ var renderMap;
 		}
 	});
 
-	$("#result-list").find("li").live('click', function(event) {
+	$("#result-list li").live('click', function(event) {
 		var index = $(this).data("item-index");
 		if (index !== undefined) {
 			mapContainer.selectResultFromList(index);
@@ -2338,6 +2338,10 @@ var renderMap;
 			selectLocation.addClass("no-visible");
 			editLocation.removeClass("no-visible");
 		}
+	});
+
+	$(document).delegate(".modal", "click", function(){
+		mapContainer.emptyResultList();
 	});
 
 })();
