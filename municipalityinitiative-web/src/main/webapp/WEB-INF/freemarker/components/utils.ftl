@@ -514,7 +514,7 @@
 <#macro jsGoogleMapsLib>
     <script type="text/javascript">
         if (typeof google === 'undefined') {
-            document.write('<script src="https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}"></'+'script>');
+            document.write('<script src="https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&language=${locale}"></'+'script>');
         }
     </script>
 </#macro>
