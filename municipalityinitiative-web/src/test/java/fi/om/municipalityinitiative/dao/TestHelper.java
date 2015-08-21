@@ -20,22 +20,23 @@ import fi.om.municipalityinitiative.service.id.NormalAuthorId;
 import fi.om.municipalityinitiative.service.id.VerifiedUserId;
 import fi.om.municipalityinitiative.sql.*;
 import fi.om.municipalityinitiative.util.*;
+import org.hamcrest.core.Is;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.junit.Assert;
 import org.springframework.core.env.Environment;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static fi.om.municipalityinitiative.sql.QMunicipalityInitiative.municipalityInitiative;
 import static fi.om.municipalityinitiative.sql.QParticipant.participant;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNull.notNullValue;
 
 public class TestHelper {
 
@@ -58,6 +59,7 @@ public class TestHelper {
     public static final String LOCATION_DESCRIPTION = "sijainnin kuvaus";
     public static final double LOCATION_LNG = 23.456789;
     public static final double LOCATION_LAT = 23.455678;
+    public static final List<Location> LOCATIONS = new ArrayList<Location>() {{ add(new Location(LOCATION_LAT, LOCATION_LNG));}};
 
     public static LoginUserHolder authorLoginUserHolder;
     public static LoginUserHolder unknownLoginUserHolder = new LoginUserHolder(User.anonym());
@@ -105,6 +107,7 @@ public class TestHelper {
         queryFactory.delete(QVerifiedParticipant.verifiedParticipant).execute();
         queryFactory.delete(QVerifiedUser.verifiedUser).execute();
         queryFactory.delete(QEmail.email).execute();
+        queryFactory.delete(QLocation.location).execute();
         queryFactory.delete(QMunicipalityInitiative.municipalityInitiative).execute();
         queryFactory.delete(QInfoText.infoText).execute();
         queryFactory.delete(QAdminUser.adminUser).execute();
@@ -160,9 +163,7 @@ public class TestHelper {
         return createDefaultInitiative(new InitiativeDraft(municipalityId)
                 .withState(InitiativeState.ACCEPTED)
                 .withType(InitiativeType.COLLABORATIVE)
-                .withLocationLat(LOCATION_LAT)
-                .withLocationLng(LOCATION_LNG)
-                .withLocationDescription(LOCATION_DESCRIPTION)
+                .withLocations(LOCATIONS)
                 .applyAuthor().toInitiativeDraft());
     }
 
@@ -251,7 +252,13 @@ public class TestHelper {
             insert.set(municipalityInitiative.supportCountData, initiativeDraft.supporCountData);
         }
 
+
+
         lastInitiativeId = insert.executeWithKey(municipalityInitiative.id);
+
+        if (initiativeDraft.locations.size() > 0  ) {
+            createLocations(initiativeDraft.locations, lastInitiativeId);
+        }
 
         if (initiativeDraft.authorDraft.isPresent()) {
             initiativeDraft.authorDraft.get().withInitiativeId(lastInitiativeId);
@@ -263,6 +270,16 @@ public class TestHelper {
             }
         }
         return lastInitiativeId;
+    }
+
+    @Transactional(readOnly = false)
+    private void createLocations(List<Location> locations, Long initiativeId) {
+        for(Location location : locations) {
+            queryFactory.insert(QLocation.location)
+                    .set(QLocation.location.initiativeId, initiativeId)
+                    .set(QLocation.location.locationLat, location.getLat())
+                    .set(QLocation.location.locationLng, location.getLng()).execute();
+        }
     }
 
     @Transactional(readOnly = false)
@@ -814,9 +831,7 @@ public class TestHelper {
         public EmailReportType emailReportType;
         public DateTime emailReportDateTime;
         public String supporCountData;
-        public Double locationLat;
-        public Double locationLng;
-        private String locationDescription;
+        public List<Location> locations = new ArrayList<Location>();
 
 
         public AuthorDraft applyAuthor() {
@@ -910,19 +925,11 @@ public class TestHelper {
             this.supporCountData = s;
             return this;
         }
-        public InitiativeDraft withLocationLat(Double s) {
-            this.locationLat = s;
-            return this;
-        }
-        public InitiativeDraft withLocationLng(Double s) {
-            this.locationLng = s;
+        public InitiativeDraft withLocations(List<Location> locations) {
+            this.locations = new ArrayList<Location>(locations);
             return this;
         }
 
-        public InitiativeDraft withLocationDescription(String s) {
-            this.locationDescription = s;
-            return this;
-        }
     }
     public Long getLastInitiativeId() {
         return lastInitiativeId;
@@ -1010,6 +1017,41 @@ public class TestHelper {
 
     public Long getLastVerifiedUserId() {
         return lastVerifiedUserId;
+    }
+
+
+
+    public void assertLocations(List<Location> locations, List<Location> exceptedLocations) {
+        Assert.assertThat(locations.size(), Is.is(exceptedLocations.size()));
+
+        sortLocations(locations);
+        sortLocations(exceptedLocations);
+
+        for (int i = 0; i<locations.size(); i++) {
+            assertLocation(locations.get(i), exceptedLocations.get(i));
+        }
+    }
+
+
+    public static void sortLocations(List<Location> locations) {
+        Collections.sort(locations, new Comparator<Location>() {
+            @Override
+            public int compare(Location location1, Location location2) {
+                return location1.getLat().compareTo(location2.getLat());
+            }
+        });
+    }
+
+    public static void assertLocation(Location location1, Location location2) {
+        Assert.assertThat(location1, Is.is(notNullValue()));
+        Assert.assertThat(location2, Is.is(notNullValue()));
+
+        Assert.assertThat(convertToSixDecimals(location1.getLat()), Is.is(convertToSixDecimals(location2.getLat())));
+        Assert.assertThat(convertToSixDecimals(location2.getLng()), Is.is(convertToSixDecimals(location2.getLng())));
+    }
+
+    private static Double convertToSixDecimals(Double decimal) {
+        return Math.round(decimal*1000000.0)/1000000.0;
     }
 }
 

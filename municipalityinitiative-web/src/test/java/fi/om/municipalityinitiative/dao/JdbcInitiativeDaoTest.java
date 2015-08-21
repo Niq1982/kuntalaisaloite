@@ -4,7 +4,6 @@ import fi.om.municipalityinitiative.conf.IntegrationTestConfiguration;
 import fi.om.municipalityinitiative.dto.InitiativeCounts;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.Initiative;
-import fi.om.municipalityinitiative.dto.service.Location;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.InitiativeDraftUIEditDto;
 import fi.om.municipalityinitiative.dto.ui.InitiativeListInfo;
@@ -43,12 +42,13 @@ public class JdbcInitiativeDaoTest {
     public static final String INITIATOR_NAME = "Teemu Teekkari";
     public static final String EXTRA_INFO = "Lisätietoja seuraa perästä";
     public static final int EXTERNAL_PARTICIPANT_COUNT = 12;
-    public static final Double LOCATION_LAT = 64.914665;
-    public static final Double LOCATION_LNG = 26.067255;
-    public static final Location LOCATION = new Location(LOCATION_LAT, LOCATION_LNG);
-    public static final String LOCATION_DESCRIPTION = "Liittyy vahvasti";
+
+
     @Resource
     InitiativeDao initiativeDao;
+
+    @Resource
+    LocationDao locationDao;
 
     @Resource
     TestHelper testHelper;
@@ -108,29 +108,25 @@ public class JdbcInitiativeDaoTest {
         initiativeEdit.setProposal(INITIATIVE_PRPOSAL);
         initiativeEdit.setExtraInfo(EXTRA_INFO);
         initiativeEdit.setExternalParticipantCount(EXTERNAL_PARTICIPANT_COUNT);
-        //initiativeEdit.setLocation(LOCATION);
+        initiativeEdit.setLocations(testHelper.LOCATIONS);
 
 
         initiativeDao.editInitiativeDraft(initiativeId, initiativeEdit);
+        locationDao.removeLocations(initiativeId);
+        locationDao.setLocations(initiativeId, initiativeEdit.getLocations());
 
         Initiative initiative = initiativeDao.get(initiativeId);
+
 
         assertThat(initiative.getName(), is(initiativeEdit.getName()));
         assertThat(initiative.getProposal(), is(initiativeEdit.getProposal()));
         assertThat(initiative.getExternalParticipantCount(), is(initiativeEdit.getExternalParticipantCount()));
         assertThat(initiative.getExtraInfo(), is(initiativeEdit.getExtraInfo()));
-
-        //assertLocation(initiative.getLocation(), initiativeEdit.getLocation());
-
+        testHelper.assertLocations(locationDao.getLocations(initiativeId), initiativeEdit.getLocations());
 
     }
 
-    private static void assertLocation(Maybe<Location> locationGiven, Location locationExcepted) {
 
-        assertThat(locationGiven.isPresent(), is(true));
-        assertThat(locationGiven.getValue().getLat(), is(locationExcepted.getLat()));
-        assertThat(locationGiven.getValue().getLng(), is(locationExcepted.getLng()));
-    }
 
     @Test
     public void get_returns_all_information() {
@@ -140,9 +136,6 @@ public class JdbcInitiativeDaoTest {
                 .withType(InitiativeType.COLLABORATIVE_CITIZEN)
                 .withSent(new DateTime(2010, 1, 1, 0, 0))
                 .witEmailReportSent(EmailReportType.IN_ACCEPTED, new DateTime())
-                .withLocationLat(LOCATION_LAT)
-                .withLocationLng(LOCATION_LNG)
-                .withLocationDescription(LOCATION_DESCRIPTION)
                 .applyAuthor().withParticipantMunicipality(authorsMunicipalityId)
                 .toInitiativeDraft());
 
@@ -158,6 +151,7 @@ public class JdbcInitiativeDaoTest {
         assertThat(initiative.getParticipantCount(), is(1));
         assertThat(initiative.getFixState(), is(FixState.OK));
         assertThat(initiative.getExternalParticipantCount(), is(TestHelper.DEFAULT_EXTERNAL_PARTICIPANT_COUNT));
+
 
         ReflectionTestUtils.assertNoNullFields(initiative);
     }
@@ -1049,5 +1043,6 @@ public class JdbcInitiativeDaoTest {
     private static InitiativeSearch initiativeSearch() {
         return new InitiativeSearch().setShow(InitiativeSearch.Show.all);
     }
+
 
 }

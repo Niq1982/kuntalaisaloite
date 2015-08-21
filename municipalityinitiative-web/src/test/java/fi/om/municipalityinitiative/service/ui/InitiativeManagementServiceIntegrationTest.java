@@ -35,9 +35,7 @@ import static org.junit.Assert.fail;
 
 public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrationTestBase {
 
-    public static final Double LOCATION_LNG = 23.444444;
-    public static final String LOCATION_DESCRIPTION = "liittyy vahvasti";
-    private static final Double LOCATION_LAT = 23.232323;
+
     @Resource
     InitiativeManagementService service;
 
@@ -130,14 +128,12 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
         Initiative randomlyFilledInitiative = ReflectionTestUtils.modifyAllFields(new Initiative());
         ContactInfo randomlyFilledContactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
-        Location location = ReflectionTestUtils.modifyAllFields(new Location(LOCATION_LAT, LOCATION_LNG));
+        List<Location> locations = new ArrayList<Location>();
+        locations.add(ReflectionTestUtils.modifyAllFields(new Location()));
+        locations.add(ReflectionTestUtils.modifyAllFields(new Location()));
+        locations.add(ReflectionTestUtils.modifyAllFields(new Location()));
 
-        // Init Maybe.values manually
-        //randomlyFilledInitiative.setLocation(location);
-        //randomlyFilledInitiative.setLocationDescription(LOCATION_DESCRIPTION);
-
-
-        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(randomlyFilledInitiative,randomlyFilledContactInfo, new ArrayList<Location>());
+        InitiativeDraftUIEditDto editDto = InitiativeDraftUIEditDto.parse(randomlyFilledInitiative,randomlyFilledContactInfo, locations);
 
         service.editInitiativeDraft(initiativeId, TestHelper.authorLoginUserHolder, editDto, fi.om.municipalityinitiative.util.Locales.LOCALE_FI);
 
@@ -149,7 +145,7 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         assertThat(updated.getProposal(), is(editDto.getProposal()));
         assertThat(updated.getExtraInfo(), is(editDto.getExtraInfo()));
         assertThat(updated.getExternalParticipantCount(), is(editDto.getExternalParticipantCount()));
-       // assertLocation(Maybe.fromNullable(updated.getLocation()), editDto.getLocation());
+        testHelper.assertLocations(updated.getLocations(), editDto.getLocations());
 
         ReflectionTestUtils.assertNoNullFields(updated);
 
@@ -166,9 +162,6 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
         String originalName = TestHelper.DEFAULT_PARTICIPANT_NAME;
 
         Initiative randomlyFilledInitiative = ReflectionTestUtils.modifyAllFields(new Initiative());
-        Location location = ReflectionTestUtils.modifyAllFields(new Location(LOCATION_LAT, LOCATION_LNG));
-        //randomlyFilledInitiative.setLocationDescription(LOCATION_DESCRIPTION);
-       // randomlyFilledInitiative.setLocation(location);
 
         ContactInfo randomlyFilledContactInfo = ReflectionTestUtils.modifyAllFields(new ContactInfo());
 
@@ -187,22 +180,12 @@ public class InitiativeManagementServiceIntegrationTest extends ServiceIntegrati
 
         assertThat(updated.getExtraInfo(), is(editDto.getExtraInfo()));
         assertThat(updated.getExternalParticipantCount(), is(editDto.getExternalParticipantCount()));
-  //      assertLocation(Maybe.fromNullable(updated.getLocation()), editDto.getLocation());
 
         ReflectionTestUtils.assertNoNullFields(updated);
 
     }
 
-    private void assertLocation(Maybe<Location> locationGiven, Location locationExcepted) {
-        assertThat(locationGiven, isPresent());
 
-        assertThat(convertToSixDecimals(locationGiven.getValue().getLat()), is(convertToSixDecimals(locationExcepted.getLat())));
-        assertThat(convertToSixDecimals(locationGiven.getValue().getLng()), is(convertToSixDecimals(locationExcepted.getLng())));
-    }
-
-    private Double convertToSixDecimals(Double decimal) {
-        return Math.round(decimal*1000000.0)/1000000.0;
-    }
 
     @Test
     public void get_initiative_draft_for_edit_receives_correct_information_if_verified_initiative() {

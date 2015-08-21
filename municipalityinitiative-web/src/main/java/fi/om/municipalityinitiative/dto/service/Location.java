@@ -29,4 +29,6 @@ public class Location {
         this.lng = lng;
     }
 
+
+
 }
