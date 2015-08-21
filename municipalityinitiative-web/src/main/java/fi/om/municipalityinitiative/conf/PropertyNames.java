@@ -13,7 +13,8 @@ public final class PropertyNames {
     public static final String baseURL = "app.baseURL"; 
     
     public static final String registeredUserSecret = "security.registeredUserSecret";
-    
+
+    public static final String googleMapsApiKey = "googlemaps.apikey";
     
     public static final String jdbcDriver = "jdbc.driver";
     

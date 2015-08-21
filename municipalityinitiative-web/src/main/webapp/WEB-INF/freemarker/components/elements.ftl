@@ -88,7 +88,6 @@
 
 <#macro map locations>
 
-        <h2><@u.message "initiative.map.title" /></h2>
         <@u.jsGoogleMapsLib />
 
         <div class="map-container initiative-content-row last">

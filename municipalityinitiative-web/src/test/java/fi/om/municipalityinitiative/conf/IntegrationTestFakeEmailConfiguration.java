@@ -15,6 +15,8 @@ public class IntegrationTestFakeEmailConfiguration {
     
     public static final String EMAIL_DEFAULT_OM = "om@example.com";
 
+    private String googleMapsApiKey = "googlemapsapikey";
+
     @Bean
     public EnvironmentSettings environmentSettings() {
         return new EnvironmentSettings(EMAIL_DEFAULT_REPLY_TO,
@@ -24,7 +26,8 @@ public class IntegrationTestFakeEmailConfiguration {
                 false,
                 false,
                 true,
-                true);
+                true,
+                googleMapsApiKey);
     }
 
     @Bean
