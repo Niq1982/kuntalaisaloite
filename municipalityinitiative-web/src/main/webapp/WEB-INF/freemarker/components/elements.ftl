@@ -98,7 +98,7 @@
         <script type="text/javascript">
             var initiative = {locations: []};
             <#list locations as location>
-                initiative.locations.push({lat: "${locations[location_index].lat?c}", lng: "${locations[location_index].lng?c}"});
+                initiative.locations.push({lat: ${locations[location_index].lat?c}, lng: ${locations[location_index].lng?c}});
             </#list>
         </script>
 

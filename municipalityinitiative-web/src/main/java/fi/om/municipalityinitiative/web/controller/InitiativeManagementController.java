@@ -204,6 +204,7 @@ public class InitiativeManagementController extends BaseController {
                     initiativeManagementService.getInitiativeForUpdate(initiativeId, loginUserHolder),
                     initiativeManagementService.getAuthorInformation(initiativeId, loginUserHolder),
                     authorService.findAuthors(initiativeId, loginUserHolder),
+                    locationService.getLocations(initiativeId),
                     urls.getManagement(initiativeId)
             ).view(model, urls.alt().update(initiativeId));
 
@@ -229,6 +230,7 @@ public class InitiativeManagementController extends BaseController {
                     updateDto,
                     initiativeManagementService.getAuthorInformation(initiativeId, loginUserHolder),
                     authorService.findAuthors(initiativeId, loginUserHolder),
+                    locationService.getLocations(initiativeId),
                     urls.getManagement(initiativeId)
             ).view(model, urls.alt().update(initiativeId));
         }

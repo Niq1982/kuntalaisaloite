@@ -451,17 +451,19 @@
 -->
 <#assign mapContainer>
     <@compress single_line=true>
-        <p><@u.message key="map.searchAddress"/></p>
-        <input type="text" id="user-entered-address"></input>
-        <div id = "result-list"></div>
+        <div id="map-modal">
+            <p><@u.message key="map.searchAddress"/></p>
+            <input type="text" id="user-entered-address"></input>
+            <div id = "result-list"></div>
 
-        <div class="map-container initiative-content-row last">
-            <div id="map-canvas"></div>
-        </div>
+            <div class="map-container initiative-content-row last">
+                <div id="map-canvas"></div>
+            </div>
 
-        <div class="input-block-content">
-            <span class="small-button disabled" id="save-and-close"><@u.message "map.save" /></span>
-            <a class="close push"><@u.message "action.cancel" /></a>
+            <div class="input-block-content">
+                <span class="small-button disabled" id="save-and-close"><@u.message "map.save" /></span>
+                <a class="close push"><@u.message "action.cancel" /></a>
+            </div>
         </div>
     </@compress>
 </#assign>

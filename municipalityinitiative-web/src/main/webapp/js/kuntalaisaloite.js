@@ -1919,7 +1919,6 @@ if (window.hasIGraphFrame) {
 var getMapContainer = function() {
 	var markers= [],
 		tempLocations = [],
-		selectedLocations = [],
 		map,
 		searchresults,
 		geocoder= new google.maps.Geocoder(),
@@ -1949,26 +1948,9 @@ var getMapContainer = function() {
 		emptyResultList,
 		modifyResultList,
 		setViewOnly,
-		getSelectedLocations,
-		saveLocations,
 		selectSearchResultFromMap,
 		enableSaveAndClose;
 
-
-
-	removeLocation = function(location) {
-		var index = tempLocations.indexOf(location);
-		if (index !== -1) {
-			tempLocations.splice(index, 1);
-		}
-		enableSaveAndClose(tempLocations.length > 0);
-	};
-
-	initWithSelectedLocation = function() {
-		tempLocations = selectedLocations.slice();
-		initMap(tempLocations);
-
-	};
 
 	initWithAddress = function(address) {
 
@@ -1983,9 +1965,9 @@ var getMapContainer = function() {
 	};
 
 	initWithCoordinates = function(locations) {
-		for (var i = 0;  i < locations.length; i++) {
-			tempLocations.push(new google.maps.LatLng(locations[i].lat, locations[i].lng));
-		}
+		$.each( locations, function(index, value) {
+			tempLocations.push(new google.maps.LatLng(value.lat, value.lng));
+		});
 		initMap(tempLocations);
 
 	};
@@ -2011,9 +1993,6 @@ var getMapContainer = function() {
 				enableSaveAndClose(true);
 			});
 
-			if(tempLocations.length > 0) {
-				enableSaveAndClose(true);
-			}
 		}
 
 		removeMarkers();
@@ -2126,7 +2105,7 @@ var getMapContainer = function() {
 	};
 
 	indexIsInSearchResultListRange = function (index) {
-		return index >= 0 && index < searchresults.length && searchresults.length > 0;
+		return index >= 0 && index < searchresults.length;
 	};
 
 	selectListElementWithArrow = function(offset) {
@@ -2162,15 +2141,6 @@ var getMapContainer = function() {
 		viewOnly = b;
 	};
 
-	getSelectedLocations = function() {
-		return selectedLocations;
-	};
-
-	saveLocations = function() {
-		selectedLocations = tempLocations.slice();
-		return selectedLocations;
-	};
-
 	selectSearchResultFromMap = function() {
 		if (indexIsInSearchResultListRange(selectedResultIndex)) {
 			selectResultFromList(selectedResultIndex);
@@ -2184,19 +2154,27 @@ var getMapContainer = function() {
 		$("#save-and-close").toggleClass("disabled", !b);
 	};
 
+
+	removeLocation = function(location) {
+		var index = tempLocations.indexOf(location);
+		if (index !== -1) {
+			tempLocations.splice(index, 1);
+		}
+		enableSaveAndClose(tempLocations.length > 0);
+	};
+
+
 	return {
-		initWithSelectedLocation: initWithSelectedLocation,
 		initWithAddress: initWithAddress,
 		initWithCoordinates: initWithCoordinates,
 		setViewOnly: setViewOnly,
-		getSelectedLocations: getSelectedLocations,
 		getLocationFromAddress: getLocationFromAddress,
 		updateResultsList: updateResultsList,
 		selectListElementWithArrow: selectListElementWithArrow,
 		selectSearchResultFromMap: selectSearchResultFromMap,
 		emptyResultList: emptyResultList,
-		saveLocations: saveLocations,
-		selectResultFromList: selectResultFromList
+		selectResultFromList: selectResultFromList,
+		tempLocations: tempLocations
 	};
 
 };
@@ -2205,26 +2183,35 @@ var locationFields = (function() {
 	var $locationContainer = $('#new-locations');
 	var $oldLocationsContainer = $('#old-locations');
 	var index = 0;
+	var selectedLocations = [];
 
 	var emptyAllRows = function(){
 		index = 0;
 		$oldLocationsContainer.empty();
 		$locationContainer.empty();
+		selectedLocations = [];
 	};
 
 	var createLocationRow = function (lat, lng) {
-		var locations = {
+		var location = {
 			newLocationIndex: index.toString(),
 			locationLat : lat,
 			locationLng: lng
 		};
 		index += 1;
-		$locationContainer.append($("#locationTemplate").render(locations));
+		$locationContainer.append($("#locationTemplate").render(location));
+		selectedLocations.push({lat : lat, lng : lng});
 
 	};
+
+	$.each( $('.locationRow'), function(index, value) {
+		selectedLocations.push({lat : $(value).find("[id$=lat]").val(), lng : $(value).find("[id$=lng]").val()});
+	});
+
 	return {
 		emptyAllRows: emptyAllRows,
-		createLocationRow: createLocationRow
+		createLocationRow: createLocationRow,
+		selectedLocations: selectedLocations
 	}
 
 })();
@@ -2238,7 +2225,6 @@ var renderMap;
 		ENTER = 13,
 		DOWN = 1,
 		UP = -1,
-		selectedLocations = [],
 		selectLocation = $("#select-location"),
 		editLocation = $("#open-remove-location"),
 		removeSelectedLocation = $("#remove-selected-location"),
@@ -2247,12 +2233,18 @@ var renderMap;
 		mapContainer,
 		mapViewContainer;
 
-	$.each( $('.locationRow'), function(index, value) {
-		selectedLocations.push({lat : $(value).find("[id$=lat]").val(), lng : $(value).find("[id$=lng]").val()});
-	});
+
+
+	// Public view
+	if (typeof initiative !== 'undefined' && typeof initiative.locations !== 'undefined' ) {
+		mapViewContainer = getMapContainer();
+		mapViewContainer.setViewOnly(true);
+		mapViewContainer.initWithCoordinates(initiative.locations);
+	}
 
 	// Map selection controllers are hidden from no-script users
 	$("#map-selection").removeClass("no-visible");
+
 
 	$("#openMap").click(function(){
 		mapContainer = getMapContainer();
@@ -2264,11 +2256,8 @@ var renderMap;
 		if (mapContainer === undefined) {
 			mapContainer = getMapContainer();
 		}
-		if (mapContainer.getSelectedLocations().length > 0) {
-			renderMap = mapContainer.initWithSelectedLocation;
-		} else if (selectedLocations.length > 0) {
-			renderMap = function() {mapContainer.initWithCoordinates(selectedLocations);};
-		}
+
+		renderMap = function() {mapContainer.initWithCoordinates(locationFields.selectedLocations);};
 
 		generateModal(modalData.mapContainer(), 'full');
 	});
@@ -2281,12 +2270,7 @@ var renderMap;
 
 	});
 
-	// Public view
-	if (typeof initiative !== 'undefined' && typeof initiative.locations !== 'undefined' ) {
-		mapViewContainer = getMapContainer();
-		mapViewContainer.setViewOnly(true);
-		mapViewContainer.initWithCoordinates(initiative.locations);
-	}
+
 
 	var runSearch = function() {
 		mapContainer.getLocationFromAddress($("#user-entered-address").val(),
@@ -2331,14 +2315,12 @@ var renderMap;
 
 	saveAndClose.die('click').live('click', function () {
 
-		var savedLocations = mapContainer.saveLocations();
-
-		if (savedLocations.length > 0) {
+		if (mapContainer.tempLocations.length > 0) {
 			$('.modal .close').trigger('click');
 
 			locationFields.emptyAllRows();
 
-			$.each(savedLocations, function(index, value) {
+			$.each(mapContainer.tempLocations, function(index, value) {
 				locationFields.createLocationRow(value.lat(), value.lng());
 			});
 
@@ -2347,7 +2329,7 @@ var renderMap;
 		}
 	});
 
-	$(document).delegate("#modal-container .modal", "click", function(){
+	$(document).delegate("#map-modal", "click", function(){
 		mapContainer.emptyResultList();
 	});
 

@@ -179,7 +179,7 @@ public final class ViewGenerator {
         );
     }
 
-    public static ViewGenerator updateView(InitiativeViewInfo initiative, InitiativeUIUpdateDto initiativeForUpdate, Author authorInformation, List<? extends Author> authors, String previousPageURI) {
+    public static ViewGenerator updateView(InitiativeViewInfo initiative, InitiativeUIUpdateDto initiativeForUpdate, Author authorInformation, List<? extends Author> authors, List<Location> locations, String previousPageURI) {
         return new ViewGenerator(UPDATE_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiative)
@@ -187,6 +187,7 @@ public final class ViewGenerator {
                         .add("author", authorInformation)
                         .add("authors", authors)
                         .add("previousPageURI", previousPageURI)
+                        .add("locations", locations)
                         .build()
         );
     }
