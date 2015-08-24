@@ -73,7 +73,7 @@
         </div>
     </#if>
 
-    <#if locations?? && locations?size gt 0>
+    <#if locations?? && locations?size gt 0 && !currentRequestUri?ends_with("show-participate")>
         <@map locations />
     </#if>
 
