@@ -1949,7 +1949,10 @@ var getMapContainer = function() {
 		modifyResultList,
 		setViewOnly,
 		selectSearchResultFromMap,
-		enableSaveAndClose;
+		enableSaveAndClose,
+		modified,
+		isModified,
+		getTempLocations;
 
 
 	initWithAddress = function(address) {
@@ -1965,6 +1968,7 @@ var getMapContainer = function() {
 	};
 
 	initWithCoordinates = function(locations) {
+		tempLocations = [];
 		$.each( locations, function(index, value) {
 			tempLocations.push(new google.maps.LatLng(value.lat, value.lng));
 		});
@@ -2008,6 +2012,7 @@ var getMapContainer = function() {
 			map.fitBounds(bounds);
 		}
 
+		modified = false;
 
 	};
 
@@ -2151,6 +2156,7 @@ var getMapContainer = function() {
 	};
 
 	enableSaveAndClose = function(b) {
+		modified = true;
 		$("#save-and-close").toggleClass("disabled", !b);
 	};
 
@@ -2161,6 +2167,14 @@ var getMapContainer = function() {
 			tempLocations.splice(index, 1);
 		}
 		enableSaveAndClose(tempLocations.length > 0);
+	};
+
+	isModified  = function() {
+		return modified;
+	};
+
+	getTempLocations = function() {
+		return tempLocations;
 	};
 
 
@@ -2174,7 +2188,8 @@ var getMapContainer = function() {
 		selectSearchResultFromMap: selectSearchResultFromMap,
 		emptyResultList: emptyResultList,
 		selectResultFromList: selectResultFromList,
-		tempLocations: tempLocations
+		isModified: isModified,
+		getTempLocations: getTempLocations
 	};
 
 };
@@ -2204,14 +2219,19 @@ var locationFields = (function() {
 
 	};
 
+	var getSelectedLocations = function() {
+		return selectedLocations;
+	};
+
 	$.each( $('.locationRow'), function(index, value) {
 		selectedLocations.push({lat : $(value).find("[id$=lat]").val(), lng : $(value).find("[id$=lng]").val()});
 	});
 
+
 	return {
 		emptyAllRows: emptyAllRows,
 		createLocationRow: createLocationRow,
-		selectedLocations: selectedLocations
+		getSelectedLocations: getSelectedLocations
 	}
 
 })();
@@ -2257,7 +2277,7 @@ var renderMap;
 			mapContainer = getMapContainer();
 		}
 
-		renderMap = function() {mapContainer.initWithCoordinates(locationFields.selectedLocations);};
+		renderMap = function() {mapContainer.initWithCoordinates(locationFields.getSelectedLocations());};
 
 		generateModal(modalData.mapContainer(), 'full');
 	});
@@ -2314,13 +2334,13 @@ var renderMap;
 	});
 
 	saveAndClose.die('click').live('click', function () {
-
-		if (mapContainer.tempLocations.length > 0) {
+		
+		if (mapContainer.isModified() && mapContainer.getTempLocations().length > 0) {
 			$('.modal .close').trigger('click');
 
 			locationFields.emptyAllRows();
 
-			$.each(mapContainer.tempLocations, function(index, value) {
+			$.each(mapContainer.getTempLocations(), function(index, value) {
 				locationFields.createLocationRow(value.lat(), value.lng());
 			});
 
