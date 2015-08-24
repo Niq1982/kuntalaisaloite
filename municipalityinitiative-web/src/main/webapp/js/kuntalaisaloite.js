@@ -2334,7 +2334,7 @@ var renderMap;
 	});
 
 	saveAndClose.die('click').live('click', function () {
-		
+
 		if (mapContainer.isModified() && mapContainer.getTempLocations().length > 0) {
 			$('.modal .close').trigger('click');
 

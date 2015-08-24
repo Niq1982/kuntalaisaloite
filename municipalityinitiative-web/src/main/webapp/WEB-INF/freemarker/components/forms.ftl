@@ -190,6 +190,7 @@
  * @param attributes any additional attributes for the element (such as class
  *        or CSS styles or size
  * @param preSelected the predefined value for the select
+ * @param multiple if allows selecting several munipalities
 -->
 <#macro municipalitySelect path options required="" cssClass="" attributes="" preSelected="" showLabel=true defaultOption="initiative.chooseMunicipality" allowSingleDeselect=false key="" onlyActive=false multiple=false>
     <@spring.bind path />
