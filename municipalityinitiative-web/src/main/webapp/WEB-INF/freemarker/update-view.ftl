@@ -88,7 +88,9 @@
 -->
 <@u.modalTemplate />
 <@u.jsMessageTemplate />
-<@u.jsGoogleMapsLib />
+<#if googleMapsEnabled>
+    <@u.jsGoogleMapsLib />
+</#if>
 <script type="text/javascript">
     var modalData = {};
 

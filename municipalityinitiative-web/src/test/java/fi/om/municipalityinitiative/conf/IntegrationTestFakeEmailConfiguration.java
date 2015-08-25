@@ -17,6 +17,8 @@ public class IntegrationTestFakeEmailConfiguration {
 
     private String googleMapsApiKey = "googlemapsapikey";
 
+    private boolean googleMapsEnabled = false;
+
     @Bean
     public EnvironmentSettings environmentSettings() {
         return new EnvironmentSettings(EMAIL_DEFAULT_REPLY_TO,
@@ -27,7 +29,8 @@ public class IntegrationTestFakeEmailConfiguration {
                 false,
                 true,
                 true,
-                googleMapsApiKey);
+                googleMapsApiKey,
+                googleMapsEnabled);
     }
 
     @Bean

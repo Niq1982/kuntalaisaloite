@@ -13,6 +13,7 @@ public class EnvironmentSettings {
     private final boolean enableVerifiedInitiatives;
     private final boolean isTestEmailSender;
     private final String googleMapsApiKey;
+    private final boolean googleMapsEnabled;
 
 
     public EnvironmentSettings(String defaultReplyTo,
@@ -23,7 +24,8 @@ public class EnvironmentSettings {
                                boolean testSendModeratorEmailsToAuthor,
                                boolean enableVerifiedInitiatives,
                                boolean isTestEmailSender,
-                               String googleMapsApiKey) {
+                               String googleMapsApiKey,
+                               boolean googleMapsEnabled) {
         this.defaultReplyTo = defaultReplyTo;
         this.testSendTo = testSendTo;
         this.testConsoleOutput = testConsoleOutput;
@@ -33,6 +35,7 @@ public class EnvironmentSettings {
         this.enableVerifiedInitiatives = enableVerifiedInitiatives;
         this.isTestEmailSender = isTestEmailSender;
         this.googleMapsApiKey = googleMapsApiKey;
+        this.googleMapsEnabled = googleMapsEnabled;
     }
 
     public String getDefaultReplyTo() {
@@ -79,5 +82,9 @@ public class EnvironmentSettings {
 
     public String getGoogleMapsApiKey() {
         return googleMapsApiKey;
+    }
+
+    public boolean isGoogleMapsEnabled() {
+        return googleMapsEnabled;
     }
 }

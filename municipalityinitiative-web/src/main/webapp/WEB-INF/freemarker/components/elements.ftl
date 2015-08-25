@@ -73,7 +73,8 @@
         </div>
     </#if>
 
-    <#if locations?? && locations?size gt 0 && !currentRequestUri?ends_with("show-participate")>
+    <#assign pageIsConfirmParticipation = currentRequestUri?ends_with("show-participate")/>
+    <#if locations?? && locations?size gt 0 && !pageIsConfirmParticipation && googleMapsEnabled>
         <@map locations />
     </#if>
 

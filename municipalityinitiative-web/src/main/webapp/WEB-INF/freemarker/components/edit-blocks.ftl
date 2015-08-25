@@ -283,10 +283,11 @@
             <@f.textarea path=path+".extraInfo" key="initiative.extraInfo" required="" optional=true cssClass="textarea" maxLength=InitiativeConstants.INITIATIVE_EXTRA_INFO_MAX?string("#") />
         </div>
 
-        <div class="input-block-content">
-            <@mapSelection path locationSelected/>
-        </div>
-
+        <#if googleMapsEnabled>
+            <div class="input-block-content">
+                <@mapSelection path locationSelected/>
+            </div>
+        </#if>
         <#--<@formLabel path=path+".location" key="initiative.location">
         <@showError />
         <@spring.formTextarea path, 'class="'+cssClass+' '+spring.status.error?string("error","")+'" '+required+' maxlength="'+maxLength+'" ' />
@@ -322,10 +323,11 @@
             <@f.textarea path=path+".extraInfo" required="" optional=true cssClass="textarea" key="initiative.extraInfo" maxLength=InitiativeConstants.INITIATIVE_EXTRA_INFO_MAX?string("#") />
         </div>
 
-        <div class="input-block-content">
-            <@mapSelection path locationSelected/>
-        </div>
-        
+        <#if googleMapsEnabled>
+            <div class="input-block-content">
+                <@mapSelection path locationSelected/>
+            </div>
+        </#if>
         <#if initiative.collaborative && initiative.state == InitiativeState.PUBLISHED>
             <div class="input-block-content">
                 <@f.textField path=path+".externalParticipantCount" required="" cssClass="small" optional=false  maxLength=7 />

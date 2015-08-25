@@ -158,6 +158,7 @@ public class BaseController {
         String originalRequestUriWithQueryString = urlHelper.getOriginalRequestUriWithQueryString(request);
         model.addAttribute("currentRequestUri", originalRequestUriWithQueryString);
         model.addAttribute("googleMapsApiKey", environmentSettings.getGoogleMapsApiKey());
+        model.addAttribute("googleMapsEnabled", environmentSettings.isGoogleMapsEnabled());
 
         try {
             model.addAttribute("UrlConstants", freemarkerObjectWrapper.getStaticModels().get(Urls.class.getName()));

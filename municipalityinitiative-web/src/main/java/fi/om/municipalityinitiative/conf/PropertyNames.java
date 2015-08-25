@@ -4,6 +4,7 @@ public final class PropertyNames {
 
     public static final String isTestEmailSender = "test.mail.sender";
 
+
     private PropertyNames() {}
 
     public static final String omImageDirection = "om.image.directory";
@@ -15,6 +16,8 @@ public final class PropertyNames {
     public static final String registeredUserSecret = "security.registeredUserSecret";
 
     public static final String googleMapsApiKey = "googlemaps.apikey";
+
+    public static final String googleMapsEnabled = "googlemaps.enabled";
     
     public static final String jdbcDriver = "jdbc.driver";
     

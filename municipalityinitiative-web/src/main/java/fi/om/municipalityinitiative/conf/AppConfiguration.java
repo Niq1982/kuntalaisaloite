@@ -399,7 +399,8 @@ public class AppConfiguration {
                 testSendModeratorEmailsToAuthor,
                 Boolean.valueOf(env.getRequiredProperty(PropertyNames.enableVerifiedInitiatives)),
                 Boolean.valueOf(env.getRequiredProperty(PropertyNames.isTestEmailSender)),
-                String.valueOf(env.getRequiredProperty(PropertyNames.googleMapsApiKey)));
+                String.valueOf(env.getRequiredProperty(PropertyNames.googleMapsApiKey)),
+                Boolean.valueOf(env.getRequiredProperty(PropertyNames.googleMapsEnabled)));
     }
 
     @Bean
