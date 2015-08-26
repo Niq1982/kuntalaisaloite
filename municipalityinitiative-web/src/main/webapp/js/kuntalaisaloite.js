@@ -2090,12 +2090,12 @@ var getMapContainer = function() {
 			var $ul = $("<ul>");
 			$("#result-list").append($ul);
 
-			for (var i = 0; i < searchresults.length; i++) {
-				var $li = $('<li>' + searchresults[i].formatted_address + '</li>');
-				$li.data("item-index", i);
+			$.each(searchresults, function(index, value) {
+				var $li = $('<li>' + value.formatted_address + '</li>');
+				$li.data("item-index", index);
 				$ul.append($li);
-				console.log(searchresults[i].formatted_address);
-			}
+				console.log(value.formatted_address);
+			});
 		}
 
 	};
@@ -2156,7 +2156,7 @@ var getMapContainer = function() {
 	};
 
 	enableSaveAndClose = function(b) {
-		modified = true;
+		modified = b;
 		$("#save-and-close").toggleClass("disabled", !b);
 	};
 
