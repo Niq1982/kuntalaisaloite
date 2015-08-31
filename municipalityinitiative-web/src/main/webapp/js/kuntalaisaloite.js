@@ -2041,12 +2041,16 @@ var getMapContainer = function() {
 			marker.addListener('click', function() {
 				removeMarker(marker);
 				removeLocation(marker.position);
+
 			});
+
+			selectedLocationsVisualization.addLocation(position.lat().toFixed(3) + ", " + position.lng().toFixed(3));
 		}
 
 		markers.push(marker);
 
 		map.panTo(position);
+
 
 
 	};
@@ -2061,6 +2065,7 @@ var getMapContainer = function() {
 
 		geocoder.geocode(geocoderequst, callback);
 	};
+
 
 	filterOutResultsByType = function(results, type) {
 		function doesNotContainType(type) {
@@ -2165,6 +2170,8 @@ var getMapContainer = function() {
 		var index = tempLocations.indexOf(location);
 		if (index !== -1) {
 			tempLocations.splice(index, 1);
+			selectedLocationsVisualization.removeLocation(index);
+
 		}
 		enableSaveAndClose(tempLocations.length > 0);
 	};
@@ -2176,6 +2183,7 @@ var getMapContainer = function() {
 	getTempLocations = function() {
 		return tempLocations;
 	};
+
 
 
 	return {
@@ -2236,6 +2244,19 @@ var locationFormFields = (function() {
 
 })();
 
+
+var selectedLocationsVisualization = (function(){
+
+	return {
+		addLocation : function(locationName) {
+			$("#selectedLocations ul").append($("<li class='map-marker'>"+ locationName +"</li>"));
+		},
+		removeLocation: function(index) {
+			//JQuery nth is 1 indexed
+			$("#selectedLocations").find("ul li:nth-child("+ (index + 1) +")").remove();
+		}
+	};
+})();
 
 var renderMap;
 

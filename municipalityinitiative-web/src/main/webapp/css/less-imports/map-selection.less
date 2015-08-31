@@ -9,16 +9,21 @@
 }
 
 .map-marker {
-  background: url("@{imagesPath}/google-maps-marker.png?version=${timestamp}") no-repeat left;
+  background: url("@{imagesPath}/google-maps-marker.png?version=${timestamp}") no-repeat 5%;
   background-size: 20px 30px;
   height: 30px;
-  padding-left: 35px;
+  padding-left: 40px;
   cursor:pointer;
-  display: inline-block;
+
   a {
     margin-right: 5px;
   }
 }
+
+#show-selected-location {
+  display: inline-block;
+}
+
 .blue {
   color: blue;
 }
@@ -46,7 +51,24 @@
       cursor: default;
     }
   }
+}
 
+#selectedLocations {
+  position: absolute;
+  right: 10px;
+  top: 134px;
+  margin-top: 1em;
 
-
+  ul {
+    list-style-type: none;
+    li {
+      border: 1px solid #cccccc;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      padding-right: 5px;
+      margin-bottom: -1px;
+      &:hover {
+      }
+    }
+  }
 }
