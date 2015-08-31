@@ -1948,7 +1948,7 @@ var getMapContainer = function() {
 		emptyResultList,
 		modifyResultList,
 		setViewOnly,
-		selectSearchResultFromMap,
+		selectSearchResultFromList,
 		enableSaveAndClose,
 		modified,
 		isModified,
@@ -2146,7 +2146,7 @@ var getMapContainer = function() {
 		viewOnly = b;
 	};
 
-	selectSearchResultFromMap = function() {
+	selectSearchResultFromList = function() {
 		if (indexIsInSearchResultListRange(selectedResultIndex)) {
 			selectResultFromList(selectedResultIndex);
 			return true;
@@ -2185,7 +2185,7 @@ var getMapContainer = function() {
 		getLocationFromAddress: getLocationFromAddress,
 		updateResultsList: updateResultsList,
 		selectListElementWithArrow: selectListElementWithArrow,
-		selectSearchResultFromMap: selectSearchResultFromMap,
+		selectSearchResultFromList: selectSearchResultFromList,
 		emptyResultList: emptyResultList,
 		selectResultFromList: selectResultFromList,
 		isModified: isModified,
@@ -2194,7 +2194,7 @@ var getMapContainer = function() {
 
 };
 
-var locationFields = (function() {
+var locationFormFields = (function() {
 	var $locationContainer = $('#new-locations');
 	var $oldLocationsContainer = $('#old-locations');
 	var index = 0;
@@ -2277,7 +2277,7 @@ var renderMap;
 			mapContainer = getMapContainer();
 		}
 
-		renderMap = function() {mapContainer.initWithCoordinates(locationFields.getSelectedLocations());};
+		renderMap = function() {mapContainer.initWithCoordinates(locationFormFields.getSelectedLocations());};
 
 		generateModal(modalData.mapContainer(), 'full');
 	});
@@ -2286,7 +2286,7 @@ var renderMap;
 		selectLocation.removeClass("no-visible");
 		editLocation.addClass("no-visible");
 		mapContainer = null;
-		locationFields.emptyAllRows();
+		locationFormFields.emptyAllRows();
 
 	});
 
@@ -2317,7 +2317,7 @@ var renderMap;
 				mapContainer.selectListElementWithArrow(UP);
 				break;
 			case ENTER:
-				if (!mapContainer.selectSearchResultFromMap()) {
+				if (!mapContainer.selectSearchResultFromList()) {
 					runSearch();
 				}
 				break;
@@ -2338,10 +2338,10 @@ var renderMap;
 		if (mapContainer.isModified() && mapContainer.getTempLocations().length > 0) {
 			$('.modal .close').trigger('click');
 
-			locationFields.emptyAllRows();
+			locationFormFields.emptyAllRows();
 
 			$.each(mapContainer.getTempLocations(), function(index, value) {
-				locationFields.createLocationRow(value.lat(), value.lng());
+				locationFormFields.createLocationRow(value.lat(), value.lng());
 			});
 
 			selectLocation.addClass("no-visible");
