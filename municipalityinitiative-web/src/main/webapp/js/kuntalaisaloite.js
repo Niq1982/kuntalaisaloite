@@ -2044,7 +2044,7 @@ var getMapContainer = function() {
 
 			});
 
-			selectedLocationsVisualization.addLocation(position.lat().toFixed(3) + ", " + position.lng().toFixed(3));
+			//selectedLocationsVisualization.addLocation(position.lat().toFixed(3) + ", " + position.lng().toFixed(3));
 		}
 
 		markers.push(marker);
@@ -2170,7 +2170,7 @@ var getMapContainer = function() {
 		var index = tempLocations.indexOf(location);
 		if (index !== -1) {
 			tempLocations.splice(index, 1);
-			selectedLocationsVisualization.removeLocation(index);
+			//selectedLocationsVisualization.removeLocation(index);
 
 		}
 		enableSaveAndClose(tempLocations.length > 0);
@@ -2249,7 +2249,7 @@ var selectedLocationsVisualization = (function(){
 
 	return {
 		addLocation : function(locationName) {
-			$("#selectedLocations ul").append($("<li class='map-marker'>"+ locationName +"</li>"));
+			$("#selectedLocations ul").append($("<li class='map-marker'>"+ locationName +"<span class='icon-small icon-16 cancel'></span> </li>"));
 		},
 		removeLocation: function(index) {
 			//JQuery nth is 1 indexed
