@@ -14,7 +14,17 @@
 
         @media @mobile, @tablet  {
             width: 90%;
-            height: 200px;
+            height: 130px;
+        }
+
+        @media @desktop{
+            width: 75%;
+            height: 130px;
+        }
+
+        @media @desktop-xl{
+            width: 65%;
+            height: 130px;
         }
 
         @media @mobile, @tablet{
@@ -31,17 +41,6 @@
                 }
             }
         }
-
-        @media @desktop{
-            width: 75%;
-            height: 130px;
-        }
-
-        @media @desktop-xl{
-            width: 65%;
-            height: 130px;
-        }
-
         @media @desktop, @desktop-xl{
             .header-additional-content {
                 position: absolute;
@@ -239,4 +238,8 @@
             }
         }
     }
+}
+
+.hidden {
+    display: none;
 }

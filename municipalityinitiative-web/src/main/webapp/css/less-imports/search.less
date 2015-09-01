@@ -120,7 +120,10 @@ h3 {
 
     .participants {
         float:right;
-        width:5em;
+        @media @mobile {
+            width:5em;
+        }
+        width:15em;
         text-align:right;
 
         .participant-count {

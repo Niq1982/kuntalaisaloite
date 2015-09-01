@@ -4,7 +4,8 @@
     'use strict';
 
     var DROP_CLASS = 'drop'
-        , SHOW_BTN_CLASS = 'show';
+        , SHOW_BTN_CLASS = 'show'
+        , HIDDEN = "hidden";
 
     var defaults = {
             btnTitle: 'Näytä lisää'
@@ -28,6 +29,29 @@
             }
         },
 
+        collapseAdditionalHeaderContents = function(ul, b) {
+            $(".logged-in-info").removeClass(HIDDEN);
+            $(".additional-tools").removeClass(HIDDEN);
+
+            $("li").remove(".additionalHeader");
+
+            if (b) {
+                var $li1 = $("<li class='"+DROP_CLASS+" additionalHeader' > </li>");
+                var $li2 = $("<li class='"+DROP_CLASS+" additionalHeader' > </li>");
+
+                $li1.append($(".logged-in-info").find("a").clone());
+                $li2.append($(".additional-tools").find("a").clone());
+
+                $(".logged-in-info").addClass(HIDDEN);
+                $(".additional-tools").addClass(HIDDEN);
+
+                ul.append($li1);
+                ul.append($li2);
+
+            }
+
+        },
+
         handleResize = function (el) {
             var ul = el.find('ul').first()
                 , li = ul.find('li')
@@ -49,7 +73,10 @@
             // Drop all if only one remaining
             if (li.length > 1 && $(li[1]).hasClass(DROP_CLASS)) {
                 $(li[0]).addClass(DROP_CLASS);
+
             }
+
+            collapseAdditionalHeaderContents(ul, droppedCount > 0);
 
             toggleMenu(ul, false);
             toggleBtn.toggleClass(SHOW_BTN_CLASS, droppedCount > 0);
