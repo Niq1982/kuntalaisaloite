@@ -2115,11 +2115,11 @@ var getMapContainer = function() {
 	};
 
 	indexIsInSearchResultListRange = function (index) {
-		return index >= 0 && index < searchresults.length;
+		return searchresults && index >= 0 && index < searchresults.length;
 	};
 
 	selectListElementWithArrow = function(offset) {
-		if (searchresults !== undefined && searchresults !== null && searchresults.length > 0) {
+		if (searchresults && searchresults.length > 0) {
 
 			if (indexIsInSearchResultListRange(selectedResultIndex)) {
 				removeCurrentSelectionInResultList();
@@ -2162,7 +2162,7 @@ var getMapContainer = function() {
 
 	enableSaveAndClose = function(b) {
 		modified = b;
-		$("#save-and-close").toggleClass("disabled", !b);
+		$("#save-and-close").disableButton(!b);
 	};
 
 
