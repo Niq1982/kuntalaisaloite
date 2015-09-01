@@ -171,7 +171,8 @@ $(document).ready(function () {
 		isIE8 =			$('html').hasClass('ie8'),	// Boolean for IE8. Used browser detection instead of jQuery.support().
 		locale =		Init.getLocale(),			// Current locale: fi, sv
 		hideClass =		'js-hide',					// Set general hidden class
-		fireParticipantGraph, headerNav, mainNav;
+		fireParticipantGraph, headerNav, mainNav,
+		initiativeTypeSearchParameter;
 
 /**
  * Common helpers
@@ -242,6 +243,11 @@ $(document).ready(function () {
 
 	mainNav = $('#main-navigation');
 	mainNav.mainNav({});
+
+	initiativeTypeSearchParameter = $(".search-parameters").each(function(index, element) {
+		$(element).searchFilter();
+	});
+
 
 	/**
 	 *	Prevent double clicks

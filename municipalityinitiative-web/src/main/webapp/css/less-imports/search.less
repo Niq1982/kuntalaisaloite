@@ -194,6 +194,8 @@ h3 {
 
 }
 .search-parameters {
+
+
     //margin-left:140px;
     display:inline-block;
     //float:right;
@@ -206,29 +208,22 @@ h3 {
     .gradient (#fff, #f5f5f5);
 
     a {
-        @media @mobile, @tablet  {
-            display:block;
-            padding:5px 20px;
-            //line-height:35px;
-            color:#444;
-            text-align:center;
-            border-bottom:1px solid @borderGray;
-        }
-        @media  @desktop {
-            display:inline-block;
-            padding:5px 20px;
-            //line-height:35px;
-            color:#444;
-            text-align:center;
-        }
-        @media @desktop-xl{
-            display:inline-block;
-            padding:5px 20px;
-            //line-height:35px;
-            color:#444;
-            text-align:center;
-        }
 
+        @media @mobile, @tablet  {
+            .hide {
+                display: none;
+            }
+
+        }
+        @media @desktop, @desktop-xl  {
+
+            display:inline-block;
+            padding:5px 20px;
+            //line-height:35px;
+            color:#444;
+            text-align:center;
+
+        }
 
 
         /*&:first-child {
@@ -285,7 +280,13 @@ h3 {
 // Pagination
 //
 // Styleguide 9.3
+
 .pagination {
+
+    @media @mobile {
+        display: none;
+    }
+
     margin:2em 0 1em;
 
     &.bottom {
@@ -352,5 +353,31 @@ h3 {
         border:1px solid @borderGray;
         color:#fff;
     }
+
+}
+
+
+
+
+.search-filter-toggle {
+
+    @media @mobile, @tablet  {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+
+        background-position: 0 0;
+        background-repeat: no-repeat;
+        background-size: 16px;
+        background-image: url("@{imagesPath}/arrows_down.png");
+
+    }
+    @media  @desktop {
+        display: none;
+    }
+    @media @desktop-xl{
+        display: none;
+    }
+
 
 }
