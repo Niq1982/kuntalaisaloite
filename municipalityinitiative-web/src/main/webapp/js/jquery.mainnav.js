@@ -59,7 +59,7 @@
 
             li.each(function (index, element) {
                 var el = $(element);
-
+                console.log("el.position().top " + el.position().top + " li.first().position().top " + li.first().position().top);
                 if (el.position().top > li.first().position().top) {
                     el.addClass(DROP_CLASS);
                     droppedCount++;
@@ -67,10 +67,12 @@
                     el.removeClass(DROP_CLASS);
                 }
             });
+            console.log("----------");
 
-            // Drop all if only one remaining
-            if (li.length > 1 && $(li[1]).hasClass(DROP_CLASS)) {
+            // Drop all if only two remaining
+            if (li.length > 2 && $(li[2]).hasClass(DROP_CLASS)) {
                 $(li[0]).addClass(DROP_CLASS);
+                $(li[1]).addClass(DROP_CLASS);
 
             }
 

@@ -5,22 +5,18 @@
 
 
 
-    var setup = function (that) {
+    var setup = function (searchParameters) {
 
-        $(that).find("a").each(function(index, element) {
-            $(element).addClass("hide");
-            console.log(index + ":th element is " + element);
-        });
+
         var toggleBtn = $('<a href="#" class="search-filter-toggle" ></a>');
 
-        $(that).append(toggleBtn);
+        $(searchParameters).after(toggleBtn);
 
-        toggleBtn.click(function() {console.log("button clicked")})
+        toggleBtn.click(function() {$(searchParameters).toggleClass("dropdown-menu");})
 
     };
 
-    $.fn.searchFilter = function (methodOrOptions) {
-
+    $.fn.searchFilter = function() {
         setup(this);
     };
 

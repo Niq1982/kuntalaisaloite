@@ -53,7 +53,7 @@
     -->
     <#if enableVerifiedInitiatives>
     <span class="search-parameters-title filter"><label for="municipality"><@u.message "searchParameters.type" /></label></span>
-    <div class="search-parameters-container cf">
+    <div class="search-parameters-container cf buttons">
         <div class="search-parameters">
             <@u.searchLink parameter="withTypeAll" cssClass=(currentSearch.type == "all")?string('active','') tooltip=false />
             <@u.searchLink parameter="withTypeNormal" cssClass=(currentSearch.type == "normal")?string('active','') tooltip=false />
@@ -76,7 +76,7 @@
      * Search filters for OM and public view
     -->
     <span class="search-parameters-title filter"><@u.message "searchOptions.filter" /></span>
-        <div class="search-parameters-container">
+        <div class="search-parameters-container buttons">
             <div class="search-parameters">
                 <#if user.isOmUser()>
                         <@u.searchLink parameter="withStateDraft" cssClass=(currentSearch.show == "draft")?string('active','') count=initiativeCounts.draft/>
