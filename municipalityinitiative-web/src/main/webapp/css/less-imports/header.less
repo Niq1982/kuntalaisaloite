@@ -27,35 +27,18 @@
             height: 130px;
         }
 
-        @media @mobile, @tablet{
-            .header-additional-content {
-                position: absolute;
-                left: 0px;
-                top: 100px;
-                max-width: 450px;
+        .header-additional-content {
+            position: absolute;
+            right: 10px;
+            top: 0;
+            text-align: right;
+            max-width: 450px;
 
-                .additional-tools {
-                    font-size: 90%;
-                    margin: 0.5em 0;
-                    min-width: 300px; // Fixes cutting of the font size buttons in Chrome/Safari
-                }
+            .additional-tools {
+                font-size: 90%;
+                margin: 0.5em 0;
+                min-width: 450px; // Fixes cutting of the font size buttons in Chrome/Safari
             }
-        }
-        @media @desktop, @desktop-xl{
-            .header-additional-content {
-                position: absolute;
-                right: 10px;
-                top: 0;
-                text-align: right;
-                max-width: 450px;
-
-                .additional-tools {
-                    font-size: 90%;
-                    margin: 0.5em 0;
-                    min-width: 450px; // Fixes cutting of the font size buttons in Chrome/Safari
-                }
-            }
-
         }
 
     }

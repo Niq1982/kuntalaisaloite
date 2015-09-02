@@ -13,7 +13,8 @@
         }
         , settings = {}
         , dropdownContainer
-        , toggleBtn;
+        , toggleBtn
+        , mainHeaderItemsCount = 5;
 
     var setup = function (options) {
             settings = $.extend(defaults, options);
@@ -29,24 +30,21 @@
             }
         },
 
-        collapseAdditionalHeaderContents = function(ul, b) {
-            $(".logged-in-info").removeClass(HIDDEN);
-            $(".additional-tools").removeClass(HIDDEN);
+        collapseAdditionalHeaderContents = function(ul, toggleAdditionalHeadersToDropDown) {
+            var loggedInInfo = $(".logged-in-info"),
+                additionalTools = $(".additional-tools");
 
-            $("li").remove(".additionalHeader");
+            ul.children(".additionalHeader").remove();
 
-            if (b) {
-                var $li1 = $("<li class='"+DROP_CLASS+" additionalHeader' > </li>");
-                var $li2 = $("<li class='"+DROP_CLASS+" additionalHeader' > </li>");
+            loggedInInfo.removeClass(HIDDEN);
+            additionalTools.removeClass(HIDDEN);
 
-                $li1.append($(".logged-in-info").find("a").clone());
-                $li2.append($(".additional-tools").find("a").clone());
+            if (toggleAdditionalHeadersToDropDown) {
+                ul.append($("<li class='"+DROP_CLASS+" additionalHeader' > </li>").append(loggedInInfo.find("a").clone()));
+                ul.append($("<li class='"+DROP_CLASS+" additionalHeader' > </li>").append(additionalTools.find("a").clone()));
 
-                $(".logged-in-info").addClass(HIDDEN);
-                $(".additional-tools").addClass(HIDDEN);
-
-                ul.append($li1);
-                ul.append($li2);
+                loggedInInfo.addClass(HIDDEN);
+                additionalTools.addClass(HIDDEN);
 
             }
 
@@ -76,7 +74,7 @@
 
             }
 
-            collapseAdditionalHeaderContents(ul, droppedCount > 0);
+            collapseAdditionalHeaderContents(ul, $(li[mainHeaderItemsCount - 1]).hasClass(DROP_CLASS));
 
             toggleMenu(ul, false);
             toggleBtn.toggleClass(SHOW_BTN_CLASS, droppedCount > 0);
