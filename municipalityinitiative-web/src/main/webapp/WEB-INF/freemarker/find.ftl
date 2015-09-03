@@ -117,7 +117,7 @@
             </#if>
         </div>
         <div class="column search-sort">
-            <span class="small-icon icon-search-sort by-support-statements"><@u.message "searchOptions.participants" /></span>
+            <span class="small-icon icon-search-sort by-support-statements"><span class="text-content"><@u.message "searchOptions.participants" /></span>&#160;</span>
             <div class="switch-buttons">
                 <@u.searchLink parameter="withOrderByMostParticipants" cssClass=(currentSearch.orderBy == "mostParticipants")?string('active','') tooltip=false />
                 <@u.searchLink parameter="withOrderByLeastParticipants" cssClass=(currentSearch.orderBy == "leastParticipants")?string('active','') tooltip=false />

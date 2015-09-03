@@ -309,6 +309,14 @@ h3 {
     background:url("@{imagesPath}/icons-search.png?version=${timestamp}") no-repeat 0 0;
 
     &.by-support-statements {
+        @media @mobile{
+            margin-right:0;
+            .text-content {
+                display: none;
+
+            }
+        }
+
         background-position:0 -126px;
     }
 

@@ -19,7 +19,6 @@
     var setup = function (options) {
             settings = $.extend(defaults, options);
             dropdownContainer = $('<div class="header-nav-dropdown" />');
-           // toggleBtn = $('<a href="#" class="toggle-dropdown" title="' + settings.btnTitle + '">' + settings.btnMenu + '</a>');
             toggleBtn = $("#main-navigation .toggle-dropdown");
         },
 

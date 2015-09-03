@@ -270,7 +270,7 @@
                 <div id="main-navigation">
 
                     <ul>
-                        <li><a href="#" class="toggle-dropdown"> <i class="om-header-nav-icon"></i></a></li>
+                        <li><a href="#" class="toggle-dropdown" title="Näytä lisää"> <i class="om-header-nav-icon"></i></a></li>
                         <#list naviItems as item>
                             <li <#if item.naviName == page>class="active"</#if>><a href="${item.naviUrl}"><@u.message item.naviName /></a></li>
                         </#list>
