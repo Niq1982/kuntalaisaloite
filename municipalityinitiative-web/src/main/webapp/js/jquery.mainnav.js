@@ -19,7 +19,8 @@
     var setup = function (options) {
             settings = $.extend(defaults, options);
             dropdownContainer = $('<div class="header-nav-dropdown" />');
-            toggleBtn = $('<a href="#" class="toggle-dropdown" title="' + settings.btnTitle + '">' + settings.btnMenu + '</a>');
+           // toggleBtn = $('<a href="#" class="toggle-dropdown" title="' + settings.btnTitle + '">' + settings.btnMenu + '</a>');
+            toggleBtn = $("#main-navigation .toggle-dropdown");
         },
 
         toggleMenu = function (ul, show) {
@@ -57,36 +58,39 @@
                 , visible = false;
 
 
-            li.each(function (index, element) {
-                var el = $(element);
-                console.log("el.position().top " + el.position().top + " li.first().position().top " + li.first().position().top);
-                if (el.position().top > li.first().position().top) {
-                    el.addClass(DROP_CLASS);
-                    droppedCount++;
-                } else {
-                    el.removeClass(DROP_CLASS);
+            if (li.length > 1) {
+
+                li.each(function (index, element) {
+                    var el = $(element);
+                    console.log("el.position().top " + el.position().top + " li.first().position().top " + li.first().position().top);
+                    if (el.position().top > $(li[1]).position().top) {
+                        el.addClass(DROP_CLASS);
+                        droppedCount++;
+                    } else {
+                        el.removeClass(DROP_CLASS);
+                    }
+                });
+                console.log("----------");
+
+                // Drop all if only two remaining
+                if (li.length > 2 && $(li[2]).hasClass(DROP_CLASS)) {
+                    $(li[1]).addClass(DROP_CLASS);
+
                 }
-            });
-            console.log("----------");
 
-            // Drop all if only two remaining
-            if (li.length > 2 && $(li[2]).hasClass(DROP_CLASS)) {
-                $(li[0]).addClass(DROP_CLASS);
-                $(li[1]).addClass(DROP_CLASS);
+                collapseAdditionalHeaderContents(ul, $(li[mainHeaderItemsCount - 1]).hasClass(DROP_CLASS));
 
+                toggleMenu(ul, false);
+                // TODO take into account togglebtn size when dropping menu items.
+                toggleBtn.toggleClass(SHOW_BTN_CLASS, droppedCount > 0);
+                ul.toggleClass('push', droppedCount > 0);
+
+                toggleBtn.click(function (e) {
+                    e.preventDefault();
+                    visible = !visible;
+                    toggleMenu(ul, visible);
+                });
             }
-
-            collapseAdditionalHeaderContents(ul, $(li[mainHeaderItemsCount - 1]).hasClass(DROP_CLASS));
-
-            toggleMenu(ul, false);
-            toggleBtn.toggleClass(SHOW_BTN_CLASS, droppedCount > 0);
-            ul.toggleClass('push', droppedCount > 0);
-
-            toggleBtn.click(function (e) {
-                e.preventDefault();
-                visible = !visible;
-                toggleMenu(ul, visible);
-            });
         };
 
     // Public methods
@@ -97,7 +101,7 @@
 
                 setup(options);
 
-                $this.append(toggleBtn);
+                //$this.append(toggleBtn);
                 $this.append(dropdownContainer);
             });
         },

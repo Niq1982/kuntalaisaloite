@@ -268,7 +268,9 @@
 
             <#if (naviItems?size > 0) >
                 <div id="main-navigation">
+
                     <ul>
+                        <li><a href="#" class="toggle-dropdown"> <i class="om-header-nav-icon"></i></a></li>
                         <#list naviItems as item>
                             <li <#if item.naviName == page>class="active"</#if>><a href="${item.naviUrl}"><@u.message item.naviName /></a></li>
                         </#list>

@@ -59,16 +59,25 @@
         position: absolute;
         left: 0;
         bottom: 0;
-        border-left: 1px solid #ccc;
 
 
 
         > ul {
             height: 35px;
 
+            li:nth-of-type(2)
+            {
+                @media @desktop, @desktop-xl {
+                    a {
+                        border-left: 1px solid @borderGray;
+                    }
+                }
+
+            }
+
             &.push {
                 position: relative;
-                padding-left: 3em;
+
             }
 
             li.drop {
@@ -134,10 +143,11 @@
         }
 
         .toggle-dropdown {
-            display: none;
-            position: absolute;
-            left: @omHeaderPad;
-            top: 0;
+            visibility: hidden;
+            //display: none;
+            //position: absolute;
+            //left: @omHeaderPad;
+            //top: 0;
             margin: 0 0 0 0;
             padding: 0 10px 0 10px;
             line-height: @omHeaderHeight - @omHeaderPad;
@@ -149,7 +159,8 @@
             background-color: black;
 
             &.show {
-                display: inline-block;
+               //display: inline-block;
+                visibility: visible;
             }
         }
 
