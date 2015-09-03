@@ -42,6 +42,7 @@
     
                     <div class="front-block block-1">
                         <h1><@u.message "front.hero.title" /></h1>
+                        <div class="kua-logo"></div>
             
                         <p><@u.message "front.hero.description-1" /></p>
                         <p><@u.message "front.hero.description-2" /></p>
@@ -59,6 +60,7 @@
                 
                     <div class="front-block block-2 noprint">
                         <h2><@u.message "front.browse.title" /></h2>
+                        <div class="question-mark-logo"></div>
             
                         <p><@u.message "front.browse.description" /></p>
                         
@@ -84,6 +86,7 @@
                     
                     <div class="front-block block-3">
                         <h2><@u.message "front.latest.title" /></h2>
+                        <div class="last-added-initiatives"></div>
                     
                         <#if initiatives?? && (initiatives?size > 0)>
                             <#list initiatives as initiative>

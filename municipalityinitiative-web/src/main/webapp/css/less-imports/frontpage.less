@@ -10,7 +10,9 @@
 .image-container {
     position:relative;
     height:370px;
-    border:10px solid #fff;
+    @media @tablet, @desktop, @desktop-xl {
+        border:10px solid #fff;
+    }
     border-top:0;
     background-color: #fff;
     background-position: center top;
@@ -45,6 +47,13 @@
     }
 
 }
+@media @mobile {
+    .front {
+        background-color: white;
+    }
+}
+
+
 
 .front .container {
 	position: relative;
@@ -54,85 +63,200 @@
     position: absolute;
     top: -380px;
     left: 10px;
-    width: 470px;
     height:370px;
 
-    .big-link {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        display: block;
-        padding:42px 50px 45px 100px;
+    @media @mobile {
+        width: 95%;
+        .big-link {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            display: block;
+            padding: 2% 3%;
 
-        font-size: 40px;
-        color: #fff;
-        background: @mainColorLight;
+            font-size: 20px;
+            color: #fff;
+            background: @mainColorLight;
 
-        .transition(background-color, 0.2s, ease-in);
+            .transition(background-color, 0.2s, ease-in);
 
-        &:hover {
-            background-color:@mainColor;
+            border-color: #bbb #888 #666 #aaa;
+            border-width: 1px 2px 2px 1px;
+            border-style: solid;
+
+            &:hover {
+                background-color: @mainColor;
+            }
+
+            .arrow {
+                position: relative;
+                top: 0.1em;
+                left: 0.45em;
+                display: inline-block;
+                width: 29px;
+                height: 29px;
+                background: url("@{imagesPath}/icons-sprite.png?version=${timestamp}") -192px -96px no-repeat;
+            }
         }
+    }
+    @media @tablet, @desktop, @desktop-xl{
+        width: 470px;
 
-        .arrow {
-            position: relative;
-            top: 0.1em;
-            left: 0.45em;
-            display: inline-block;
-            width: 29px;
-            height: 29px;
-            background: url("@{imagesPath}/icons-sprite.png?version=${timestamp}") -192px -96px no-repeat;
+        .big-link {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            display: block;
+            padding: 42px 50px 45px 100px;
+
+            font-size: 40px;
+            color: #fff;
+            background: @mainColorLight;
+
+            .transition(background-color, 0.2s, ease-in);
+
+            &:hover {
+                background-color: @mainColor;
+            }
+
+            .arrow {
+                position: relative;
+                top: 0.1em;
+                left: 0.45em;
+                display: inline-block;
+                width: 29px;
+                height: 29px;
+                background: url("@{imagesPath}/icons-sprite.png?version=${timestamp}") -192px -96px no-repeat;
+            }
         }
     }
 }
 
 .front-container {
     min-height:441px;
-    margin:0 -60px 0px -66px;
-    padding:0 0 0 66px;
+
+
     //background:url("@{imagesPath}/bg-front.jpg?version=${timestamp}") -2px 0 no-repeat;
 
-    .faux-columns {
-        width:960px;
-        margin-bottom:50px;
-        background:url("@{imagesPath}/faux-columns.png?version=${timestamp}") 0 0 repeat-y;
+    @media @mobile {
+        .faux-columns {
+            width:100%;
+            margin-bottom:50px;
+            background-color: white;
 
-        .col-1 {
-            width:470px;
-            float:left;
+            .col-1 {
+                width:100%;
+                float:left;
+            }
+            .col-2 {
+                width:100%;
+                float:left;
+            }
         }
-        .col-2 {
-            width:470px;
-            float:right;
+        .front-block {
+            padding:0 5px 5px 5px;
+            margin-top: 37px;
+
+
+
+            &.block-2 {
+                padding-bottom:50px;
+               // background-position:-970px 0;
+                border-bottom:20px solid @bodyBackground;
+            }
+            &.block-3 {
+               // background-position:-1970px 0;
+            }
+
+            .bottom {
+                padding-top:1.8em;
+            }
+        }
+
+        h1 {
+            font-size: 1.3em;
+            margin:0 0 1.5em 0;
+            line-height: 1.25em;
+            color:#7a7a20;
+
+        }
+        .kua-logo {
+            background:url("@{imagesPath}/block-icons.png?version=${timestamp}") 0 0 no-repeat;
+            height: 50px;
+            width: 15%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 1.5em;
+        }
+
+        .question-mark-logo {
+            background:url("@{imagesPath}/block-icons.png?version=${timestamp}") -1000px 0 no-repeat;
+            height: 50px;
+            width: 15%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 1.5em;
+        }
+
+        .last-added-initiatives {
+            background:url("@{imagesPath}/block-icons.png?version=${timestamp}") -2000px 0 no-repeat;
+            height: 50px;
+            width: 15%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 1.5em;
+        }
+
+    }
+
+    @media @tablet, @desktop, @desktop-xl {
+
+        margin:0 -60px 0px -66px;
+        padding:0 0 0 66px;
+
+        .faux-columns {
+            width: 100%;
+            margin-bottom: 50px;
+            background: url("@{imagesPath}/faux-columns.png?version=${timestamp}") 0 0 repeat-y;
+            background-size: 100%;
+
+            .col-1 {
+                width: 50%;
+                float: left;
+            }
+            .col-2 {
+                width: 50%;
+                float: right;
+            }
+        }
+        .front-block {
+            padding:0 50px 45px 100px;
+            margin-top: 37px;
+
+            background:url("@{imagesPath}/block-icons.png?version=${timestamp}") 30px 0 no-repeat;
+
+            &.block-2 {
+                padding-bottom:50px;
+                background-position:-970px 0;
+                border-bottom:20px solid @bodyBackground;
+            }
+            &.block-3 {
+                background-position:-1970px 0;
+            }
+
+            .bottom {
+                padding-top:1.8em;
+            }
+        }
+
+        h1 {
+            font-size: 1.3em;
+            margin:0 0 1.5em 0;
+            line-height: 1.25em;
+            color:#7a7a20;
         }
     }
 
-    .front-block {
-        padding:0 50px 45px 100px;
-        margin-top: 37px;
-
-        background:url("@{imagesPath}/block-icons.png?version=${timestamp}") 30px 0 no-repeat;
-
-        &.block-2 {
-            padding-bottom:50px;
-            background-position:-970px 0;
-            border-bottom:20px solid @bodyBackground;
-        }
-        &.block-3 {
-            background-position:-1970px 0;
-        }
-
-        .bottom {
-            padding-top:1.8em;
-        }
-    }
-
-    h1 {
-        font-size: 1.3em;
-        margin:0 0 1.5em 0;
-        line-height: 1.25em;
-        color:#7a7a20;
-    }
 
     .initiative-list {
         li {
