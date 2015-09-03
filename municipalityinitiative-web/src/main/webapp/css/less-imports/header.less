@@ -14,7 +14,7 @@
 
         @media @mobile, @tablet  {
             width: 90%;
-            height: 130px;
+            height: 40px;
         }
 
         @media @desktop{
@@ -46,10 +46,17 @@
     #logo {
         display: block;
         width: 90%;
-        height: 72px;
+
         background: url("@{imagesPath}/logo-kuntalaisaloite.png?version=${timestamp}") 0 0 no-repeat;
         background-image: url("@{imagesPath}/logo-kuntalaisaloite.svg?version=${timestamp}"), none;
         background-size: contain;
+
+        @media @mobile {
+            height: 32px;
+        }
+        @media @tablet, @desktop, @desktop-xl {
+            height: 72px;
+        }
     }
     #logo span { display: none; }
 
@@ -57,10 +64,17 @@
         margin: 0;
         padding: 0;
         position: absolute;
-        left: 0;
-        bottom: 0;
 
+        @media @mobile {
+            right: 5px;
+            top: 0;
+            width: 20px;
 
+        }
+        @media @tablet, @desktop, @desktop-xl {
+            left: 0;
+            bottom: 0;
+        }
 
         > ul {
             height: 35px;
@@ -156,12 +170,21 @@
             text-align: center;
             font-size: 20px;
             outline: none;
-            background-color: black;
+            border: 0;
 
             &.show {
                //display: inline-block;
                 visibility: visible;
             }
+
+            .hamburger-nav-icon-black {
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+
+                .backgroundImage('arrows_hamburger_black', 20px auto);
+            }
+
         }
 
         .header-nav-dropdown {
