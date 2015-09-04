@@ -16,14 +16,20 @@ h3 {
 .search-options {
     margin-bottom:2em;
 
-    @media @mobile, @tablet  {
+    @media @mobile {
+        padding: 20px 30px;
+    }
+    
+    @media @tablet  {
         padding: 20px 35px 30px 20px;
     }
     @media  @desktop, @desktop-xl {
         padding: 20px  35px 30px 55px;
+
     }
     .search-form {
         float: left;
+        width: 80%;
 
         button {
             margin-left:32px;
@@ -301,22 +307,26 @@ h3 {
 //
 // Styleguide 9.2
 .search-sort {
-    //width:370px;
+
     width:300px;
+
+    @media @mobile {
+        margin-bottom: 1em;
+    }
 }
 .icon-search-sort {
     margin-right:0.5em;
     background:url("@{imagesPath}/icons-search.png?version=${timestamp}") no-repeat 0 0;
 
-    &.by-support-statements {
-        @media @mobile{
-            margin-right:0;
+    @media @mobile {
+        &.by-support-statements {
+            margin-right: 0;
             .text-content {
                 display: none;
-
             }
         }
-
+    }
+    &.by-support-statements {
         background-position:0 -126px;
     }
 

@@ -1,6 +1,14 @@
 // Chosen overrides
+
 .chzn-select {
-    width:250px;
+
+    @media @mobile {
+        width: 90%;
+    }
+    @media @tablet, @desktop, @desktop-xl {
+        width:250px;
+    }
+
 }
 .chzn-container {
     display:block;

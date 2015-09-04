@@ -35,7 +35,7 @@
     <span class="search-parameters-title filter"><label for="municipality"><@u.message "searchOptions.municipality" /></label></span>
     <div class="search-parameters-container cf">
         <form action="${springMacroRequestContext.requestUri}" method="GET" id="search-form" class="search-form">
-            <div class="column col-1of3">
+            <div>
                 <@f.municipalitySelect path="currentSearch.municipalities" options=municipalities required="" cssClass="municipality-filter" showLabel=false defaultOption="currentSearch.municipality.all" allowSingleDeselect=true onlyActive=true multiple=true/>
             </div>
             
