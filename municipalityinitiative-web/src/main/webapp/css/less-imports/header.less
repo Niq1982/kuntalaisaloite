@@ -43,6 +43,10 @@
             text-align: right;
             max-width: 450px;
 
+            @media @mobile {
+                visibility: hidden;
+            }
+
             .additional-tools {
                 font-size: 90%;
                 margin: 0.5em 0;
@@ -78,6 +82,10 @@
             right: 5px;
             top: 0;
             width: 20px;
+
+            li {
+                visibility: hidden;
+            }
 
         }
         @media @tablet, @desktop, @desktop-xl {
@@ -154,6 +162,9 @@
             box-shadow: 2px 2px 2px rgba(0,0,0,0.1);
             text-transform: none;
 
+            li {
+                visibility: visible;
+            }
             a {
                 display: block;
                 color: #444;
