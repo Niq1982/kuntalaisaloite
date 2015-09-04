@@ -9,22 +9,31 @@
     .header-content {
         position: relative;
 
-
-        margin: 0 auto;
-
-        @media @mobile, @tablet  {
+        @media @mobile  {
             width: 90%;
             height: 40px;
+            margin: 0;
+            padding-left: 5px
         }
+
+        @media @tablet{
+            width: 75%;
+            height: 130px;
+            margin: 0 auto;
+        }
+
 
         @media @desktop{
             width: 75%;
             height: 130px;
+            margin: 0 auto;
+
         }
 
         @media @desktop-xl{
             width: 65%;
             height: 130px;
+            margin: 0 auto;
         }
 
         .header-additional-content {
@@ -96,6 +105,10 @@
 
             li.drop {
                 visibility: hidden; // use hidden as we need element measurements
+                @media @mobile {
+                    position: absolute;
+                    right: 0;
+                }
             }
 
             a {
@@ -121,9 +134,14 @@
 
         .dropdown-menu {
             display: none;
-            position: absolute;
-            right: 0;
-            top: 40px;
+
+
+            @media @tablet, @desktop, @desktop-xl {
+                position: absolute;
+                right: 0;
+                top: 40px;
+            }
+
             text-align: left;
             background: white;
             border: 1px solid #c0c0c0;
@@ -189,13 +207,23 @@
 
         .header-nav-dropdown {
             position: absolute;
-            top: 0;
-            left: 0;
+            @media @mobile {
+                top: 41px;
+                right: 0;
+                
+            }
+            @media @tablet, @desktop, @desktop-xl {
+                top: 0;
+                left: 0;
+            }
+
 
             .dropdown-menu {
                 display: block;
-                left: 0;
-                right: auto;
+                @media @tablet, @desktop, @desktop-xl {
+                    left: 0;
+                    right: auto;
+                }
 
                 li {
                     display: none;
@@ -212,11 +240,16 @@
 	margin-bottom: 0;
 	border-bottom: 0;
 
-	.header-wrap-front {
-		margin: 0 10px;
-		border-bottom: 1px solid @borderGray;
-	}
+    @media @mobile{
+        margin: 0 0;
+    }
 
+    @media @tablet, @desktop, @desktop-xl {
+        .header-wrap-front {
+            margin: 0 10px;
+            border-bottom: 1px solid @borderGray;
+        }
+    }
 }
 
 // Exceptions for swedish page
