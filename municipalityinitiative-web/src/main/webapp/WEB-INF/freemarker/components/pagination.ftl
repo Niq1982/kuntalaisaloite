@@ -167,5 +167,15 @@
          </div>
      </#if>
  </#macro>
+
+<#--
+ * showMore
+ * Pagination for mobile view.
+-->
+<#macro showMore params>
+    <#if params.total gt params.limit>
+        <a class="show-more" href="${springMacroRequestContext.requestUri}${queryString.withLimit(params.limit + 100)}">Näytä lisää</a>
+    </#if>
+</#macro>
  
- </#escape>
+</#escape>
