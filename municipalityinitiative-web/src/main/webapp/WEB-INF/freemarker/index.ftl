@@ -86,7 +86,7 @@
                     
                     <div class="front-block block-3">
                         <h2><@u.message "front.latest.title" /></h2>
-                        <div class="last-added-initiatives"></div>
+                        <div class="last-added-initiatives-logo"></div>
                     
                         <#if initiatives?? && (initiatives?size > 0)>
                             <#list initiatives as initiative>

@@ -184,7 +184,7 @@
         .kua-logo {
             background:url("@{imagesPath}/block-icons.png?version=${timestamp}") 0 0 no-repeat;
             height: 50px;
-            width: 15%;
+            width: 42px;
             margin-left: auto;
             margin-right: auto;
             margin-bottom: 1.5em;
@@ -193,16 +193,16 @@
         .question-mark-logo {
             background:url("@{imagesPath}/block-icons.png?version=${timestamp}") -1000px 0 no-repeat;
             height: 50px;
-            width: 15%;
+            width: 42px;
             margin-left: auto;
             margin-right: auto;
             margin-bottom: 1.5em;
         }
 
-        .last-added-initiatives {
+        .last-added-initiatives-logo {
             background:url("@{imagesPath}/block-icons.png?version=${timestamp}") -2000px 0 no-repeat;
             height: 50px;
-            width: 15%;
+            width: 42px;
             margin-left: auto;
             margin-right: auto;
             margin-bottom: 1.5em;
@@ -210,7 +210,51 @@
 
     }
 
-    @media @tablet, @desktop, @desktop-xl {
+    @media @tablet {
+        .faux-columns {
+            width: 100%;
+            margin-bottom: 50px;
+            background: url("@{imagesPath}/faux-columns.png?version=${timestamp}") 0 0 repeat-y;
+            background-size: 100%;
+
+            .col-1 {
+                width: 50%;
+                float: left;
+            }
+            .col-2 {
+                width: 50%;
+                float: right;
+            }
+        }
+        .front-block {
+            padding:0 50px 45px 100px;
+            margin-top: 37px;
+
+            background:url("@{imagesPath}/block-icons.png?version=${timestamp}") 30px 0 no-repeat;
+
+            &.block-2 {
+                padding-bottom:50px;
+                background-position:-970px 0;
+                border-bottom:20px solid @bodyBackground;
+            }
+            &.block-3 {
+                background-position:-1970px 0;
+            }
+
+            .bottom {
+                padding-top:1.8em;
+            }
+        }
+
+        h1 {
+            font-size: 1.3em;
+            margin:0 0 1.5em 0;
+            line-height: 1.25em;
+            color:#7a7a20;
+        }
+    }
+
+    @media @desktop, @desktop-xl {
 
         margin:0 -60px 0px -66px;
         padding:0 0 0 66px;
