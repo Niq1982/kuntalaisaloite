@@ -61,7 +61,8 @@
 
                 li.each(function (index, element) {
                     var el = $(element);
-                    if (el.position().top > $(li[1]).position().top) {
+                    console.log("el.position().top > $(li[1]).position().top " + el.position().top  + " " +  $(li[0]).position().top);
+                    if (el.position().top > $(li[0]).position().top) {
                         el.addClass(DROP_CLASS);
                         droppedCount++;
                     } else {
@@ -69,6 +70,7 @@
                     }
                 });
 
+                console.log("--------");
                 // Drop all if only two remaining
                 if (li.length > 2 && $(li[2]).hasClass(DROP_CLASS)) {
                     $(li[1]).addClass(DROP_CLASS);
