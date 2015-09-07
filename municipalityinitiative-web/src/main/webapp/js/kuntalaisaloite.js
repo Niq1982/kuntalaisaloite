@@ -1932,9 +1932,11 @@ var getMapContainer = function() {
 		initWithAddress,
 		initWithCoordinates,
 		initMap,
-		initListeners,
 		removeLocation,
 		getLocationFromAddress,
+		getAddressFromLocation,
+		parseAddressFromAddressComponents,
+		createSelectedLocationListElement,
 		filterOutResultsByType,
 		updateResultsList,
 		placeMarker,
@@ -1992,6 +1994,9 @@ var getMapContainer = function() {
 				mapOptions);
 
 			google.maps.event.addListener(map, 'click', function (e) {
+				var fallBackPosition = e.latLng.lat().toFixed(3) + ", " + e.latLng.lng().toFixed(3);
+				createSelectedLocationListElement(e.latLng, fallBackPosition);
+
 				tempLocations.push(e.latLng);
 				placeMarker(tempLocations[tempLocations.length - 1], map);
 				enableSaveAndClose(true);
@@ -2004,6 +2009,9 @@ var getMapContainer = function() {
 		var bounds = new google.maps.LatLngBounds();
 
 		$.each(tempLocations, function(index, value) {
+			var fallBackPosition = value.lat().toFixed(3) + ", " + value.lng().toFixed(3);
+			createSelectedLocationListElement(value, fallBackPosition);
+
 			placeMarker(value, map);
 			bounds.extend(value)
 		});
@@ -2043,15 +2051,11 @@ var getMapContainer = function() {
 				removeLocation(marker.position);
 
 			});
-
-			//selectedLocationsVisualization.addLocation(position.lat().toFixed(3) + ", " + position.lng().toFixed(3));
 		}
 
 		markers.push(marker);
 
 		map.panTo(position);
-
-
 
 	};
 
@@ -2066,6 +2070,51 @@ var getMapContainer = function() {
 		geocoder.geocode(geocoderequst, callback);
 	};
 
+	getAddressFromLocation = function(location, callback) {
+		var geocoderequst = {"location": location};
+
+		geocoder.geocode(geocoderequst, callback);
+	};
+
+	parseAddressFromAddressComponents = function(address_components) {
+
+		var selectComponentByType = function (components, type) {
+			var matches = $.grep(components, function (element) {
+				return element.types.indexOf(type) > -1
+			});
+			if (matches && matches.length > 0) {
+				return matches[0].long_name;
+			} else {
+				return "";
+			}
+		};
+
+		var streetName = selectComponentByType(address_components, "route");
+		var streetNumber = selectComponentByType(address_components, "street_number");
+		var postalCode = selectComponentByType(address_components, "postal_code");
+		var municipality = selectComponentByType(address_components, "administrative_area_level_3");
+
+		var address = streetName + " " + streetNumber;
+
+		streetNumber !== "" ? address += ", " : address += " ";
+
+		address += postalCode + " " + municipality;
+
+		return address;
+
+	};
+	createSelectedLocationListElement = function(location, fallbackLocation){
+
+		getAddressFromLocation(location, function(results, status) {
+
+			if (results && results.length > 0) {
+				selectedLocationsVisualization.addLocation(parseAddressFromAddressComponents(results[0].address_components));
+
+			} else {
+				selectedLocationsVisualization.addLocation(fallbackLocation);
+			}
+		});
+	};
 
 	filterOutResultsByType = function(results, type) {
 		function doesNotContainType(type) {
@@ -2141,7 +2190,10 @@ var getMapContainer = function() {
 
 	selectResultFromList = function(index) {
 		if (indexIsInSearchResultListRange(index)) {
-			tempLocations.push(searchresults[index].geometry.location);
+			var selectedListItem = searchresults[index];
+			selectedLocationsVisualization.addLocation(parseAddressFromAddressComponents(selectedListItem.address_components));
+
+			tempLocations.push(selectedListItem.geometry.location);
 			placeMarker(tempLocations[tempLocations.length - 1], map);
 			enableSaveAndClose(true);
 		}
@@ -2170,7 +2222,7 @@ var getMapContainer = function() {
 		var index = tempLocations.indexOf(location);
 		if (index !== -1) {
 			tempLocations.splice(index, 1);
-			//selectedLocationsVisualization.removeLocation(index);
+			selectedLocationsVisualization.removeLocation(index);
 
 		}
 		enableSaveAndClose(tempLocations.length > 0);

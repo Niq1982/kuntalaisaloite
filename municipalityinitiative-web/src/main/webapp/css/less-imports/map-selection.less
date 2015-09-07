@@ -3,7 +3,7 @@
 }
 #map-canvas, #map-canvas-view {
   height: 400px;
-  width: 500px;
+  width: 430px;
   margin-top: 1em;
   padding: 0;
 }
@@ -64,15 +64,23 @@
 
   ul {
     list-style-type: none;
+    padding: 0 20px 0 0;
+
     li {
       border: 1px solid #cccccc;
       padding-top: 7px;
-      padding-right: 5px;
+      padding-right: 25px;
       margin-bottom: -1px;
-      height: 35px;
+      height: 60px;
+      width: 140px;
+      position: relative;
 
       .icon-small {
         margin-left: 10px;
+        position: absolute;
+        top: 25px;
+        right: 7px;
+        width: 15px;
       }
 
       &:hover {
