@@ -2073,6 +2073,8 @@ var getMapContainer = function() {
 	getAddressFromLocation = function(location, callback) {
 		var geocoderequst = {"location": location};
 
+		geocoderequst.language = "fi";
+
 		geocoder.geocode(geocoderequst, callback);
 	};
 
