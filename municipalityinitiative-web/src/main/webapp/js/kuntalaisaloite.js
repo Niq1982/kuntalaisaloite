@@ -1928,7 +1928,6 @@ var getMapContainer = function() {
 		selectedResultIndex = -1,
 
 		// functions
-		initWithSelectedLocation,
 		initWithAddress,
 		initWithCoordinates,
 		initMap,
@@ -1956,10 +1955,13 @@ var getMapContainer = function() {
 		isModified,
 		getTempLocationByAddress,
 		getTempLocations,
-		centerMapToPosition;
+		centerMapToPosition,
+		removeMarkerByPosition;
 
 
 	initWithAddress = function(address) {
+		selectedLocationsVisualization.init();
+		tempLocations = [];
 
 		getLocationFromAddress(address, function (results, status) {
 			if (results !== undefined && results !== null && results.length > 0) {
@@ -2041,6 +2043,19 @@ var getMapContainer = function() {
 			value.setMap(null);
 		});
 		markers = [];
+	};
+
+	removeMarkerByPosition = function(location) {
+		var indexToRemove = -1;
+		for (var i = 0; i < markers.length; i++) {
+			if (markers[i].position === location) {
+				indexToRemove = i;
+			}
+		}
+		if (indexToRemove > -1) {
+			removeMarker(markers[indexToRemove]);
+		}
+
 	};
 
 	removeMarker = function(marker) {
@@ -2248,7 +2263,8 @@ var getMapContainer = function() {
 		if (index !== -1) {
 			tempLocations.splice(index, 1);
 			selectedLocationsVisualization.removeLocation(location.address);
-			removeMarker(location.marker);
+			removeMarkerByPosition(location);
+
 		}
 		enableSaveAndClose(tempLocations.length > 0);
 	};
