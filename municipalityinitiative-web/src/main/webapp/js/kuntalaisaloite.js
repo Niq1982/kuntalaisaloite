@@ -1954,7 +1954,9 @@ var getMapContainer = function() {
 		enableSaveAndClose,
 		modified,
 		isModified,
-		getTempLocations;
+		getTempLocationByAddress,
+		getTempLocations,
+		centerMapToPosition;
 
 
 	initWithAddress = function(address) {
@@ -2055,18 +2057,24 @@ var getMapContainer = function() {
 			map: map
 		});
 
+		position.marker = marker;
+
 		if (!viewOnly){
 			marker.addListener('click', function() {
-				removeMarker(marker);
 				removeLocation(marker.position);
-
 			});
 		}
 
 		markers.push(marker);
 
-		map.panTo(position);
+		centerMapToPosition(position);
 
+	};
+
+	centerMapToPosition = function(position) {
+		if(position) {
+			map.panTo(position);
+		}
 	};
 
 	getLocationFromAddress = function(address, callback) {
@@ -2240,6 +2248,7 @@ var getMapContainer = function() {
 		if (index !== -1) {
 			tempLocations.splice(index, 1);
 			selectedLocationsVisualization.removeLocation(location.address);
+			removeMarker(location.marker);
 		}
 		enableSaveAndClose(tempLocations.length > 0);
 	};
@@ -2248,8 +2257,19 @@ var getMapContainer = function() {
 		return modified;
 	};
 
-	getTempLocations = function() {
+	getTempLocationByAddress = function(address){
+		function hasAddress(address) {
+			return function(value) {return value.address === address};
+		}
+		var locationsByAddress = tempLocations.filter(hasAddress(address));
+		if (locationsByAddress.length > 0) {
+			return locationsByAddress[0];
+		} else {
+			return null;
+		}
+	};
 
+	getTempLocations = function() {
 		return tempLocations;
 	};
 
@@ -2266,7 +2286,10 @@ var getMapContainer = function() {
 		emptyResultList: emptyResultList,
 		selectResultFromList: selectResultFromList,
 		isModified: isModified,
-		getTempLocations: getTempLocations
+		getTempLocationByAddress: getTempLocationByAddress,
+		getTempLocations: getTempLocations,
+		centerMapToPosition: centerMapToPosition,
+		removeLocation: removeLocation
 	};
 
 };
@@ -2316,13 +2339,16 @@ var locationFormFields = (function() {
 
 var selectedLocationsVisualization = (function(){
 	var locations = [];
+
 	return {
 		init : function () {
 			locations = [];
 		},
 		addLocation : function(address) {
 			locations.push (address);
-			$("#selectedLocations ul").append($("<li class='map-marker'>"+ address +"<span class='icon-small icon-16 cancel'></span> </li>"));
+			var $li = $("<li class='map-marker'>"+ address +"<span class='icon-small icon-16 cancel'></span> </li>");
+			$li.data("address", address);
+			$("#selectedLocations ul").append($li);
 		},
 		removeLocation: function(address) {
 			var index = locations.indexOf(address);
@@ -2332,7 +2358,8 @@ var selectedLocationsVisualization = (function(){
 				$("#selectedLocations").find("ul li:nth-child("+ (index + 1) +")").remove();
 			}
 		}
-	};
+	}
+
 })();
 
 var renderMap;
@@ -2452,6 +2479,26 @@ var renderMap;
 		mapContainer.emptyResultList();
 	});
 
+	$("#selectedLocations ul li ").live("click", function(e){
+		var address = $(this).data("address");
+		if (address) {
+			var location = mapContainer.getTempLocationByAddress(address);
+			if (location) {
+				mapContainer.centerMapToPosition(location);
+			}
+		}
+
+	});
+
+	$("#selectedLocations ul li.map-marker .cancel").live("click", function(e){
+		var address = $(this).parent().data("address");
+		if (address) {
+			var location =  mapContainer.getTempLocationByAddress(address);
+			if (location) {
+				mapContainer.removeLocation(location);
+			}
+		}
+	});
 
 
 })();
