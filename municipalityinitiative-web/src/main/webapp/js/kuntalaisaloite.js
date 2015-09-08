@@ -2448,6 +2448,10 @@ var renderMap;
 		}
 	});
 
+	$("#search-locations-button").live("click", function() {
+		runSearch();
+	});
+
 	searchField.live('input propertychange keydown', function(event){
 
 		switch (event.which) {
@@ -2463,7 +2467,7 @@ var renderMap;
 				}
 				break;
 			default:
-				runSearch();
+				mapContainer.emptyResultList();
 		}
 	});
 

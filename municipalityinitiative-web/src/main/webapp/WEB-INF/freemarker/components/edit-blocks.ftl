@@ -456,6 +456,7 @@
         <div id="map-modal">
             <p><@u.message key="map.searchAddress"/></p>
             <input type="text" id="user-entered-address"></input>
+            <button id="search-locations-button" name="search" class="small-button disable-dbl-click-check">Hae</button>
             <div id = "result-list"></div>
 
             <div class="map-container initiative-content-row last">
