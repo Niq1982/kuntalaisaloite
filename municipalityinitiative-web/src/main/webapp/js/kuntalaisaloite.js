@@ -1911,6 +1911,12 @@ if (window.hasIGraphFrame) {
 }());
 
 $(window).on('resize', function () {
+	// Break points (in pixels)
+	var MOBILE = 529;
+	var TABLET = 949;
+	var DESKTOP = 1128;
+	var DESKTOPXL = 1129;
+
   if (fireParticipantGraph !== undefined) {
     fireParticipantGraph();
   }
@@ -1922,6 +1928,13 @@ $(window).on('resize', function () {
   if (mainNav !== undefined) {
 	  mainNav.mainNav('resize');
   }
+
+  if ($(window).width() > MOBILE) {
+	  $(".municipality-filter").addClass("chzn-select");
+	  $(".municipality-filter").chosen();
+  }
+
+
 }).trigger('resize');
 
 
