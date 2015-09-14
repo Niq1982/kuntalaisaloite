@@ -1983,10 +1983,8 @@ var getMapContainer = function() {
 			var fallBackPosition;
 			if (value.address) {
 				fallBackPosition = value.address;
-				console.log("using address as fallback address");
 			} else {
 				fallBackPosition = location.lat().toFixed(3) + ", " + location.lng().toFixed(3);
-				console.log("using coordinates as fall back addesss");
 			}
 			createSelectedLocationListElement(location, fallBackPosition);
 		});
@@ -2186,7 +2184,6 @@ var getMapContainer = function() {
 				var $li = $('<li>' + value.formatted_address + '</li>');
 				$li.data("item-index", index);
 				$ul.append($li);
-				console.log(value.formatted_address);
 			});
 		}
 

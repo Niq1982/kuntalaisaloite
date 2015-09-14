@@ -134,7 +134,7 @@
         </div>
     </#if>
 
-    <#if locations?? && locations?size gt 0>
+    <#if locations?? && locations?size gt 0 && googleMapsEnabled>
         <@map locations />
     </#if>
 
