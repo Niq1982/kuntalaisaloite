@@ -14,6 +14,9 @@ public abstract class User implements Serializable {
     public static OmLoginUser omUser(String name) {
         return new OmLoginUser(name);
     }
+    public static MunicipalityLoginUser municipalityLoginUser(String name) {
+        return new MunicipalityLoginUser(name);
+    }
 
     public static NormalLoginUser normalUser(NormalAuthorId authorId, Set<Long> authorsInitiatives) {
         return new NormalLoginUser(authorId, authorsInitiatives);

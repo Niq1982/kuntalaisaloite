@@ -254,6 +254,14 @@ public final class Urls {
 
     public static final String MUNICIPALITY_MODERATION = "/fi/kuntahallinta";
 
+    public static final String MUNICIPALITY_DECISION_FI = "/fi/kunnanvastaus";
+
+    public static final String MUNICIPALITY_DECISION_SV = "/sv/kunnanvastaus";
+
+    public static final String MUNICIPALITY_LOGIN_FI = "/fi/municipality-login";
+
+    public static final String MUNICIPALITY_LOGIN_SV = "/sv/municipality-login";
+
     public static final String EDIT_FI = "/fi/muokkaa" + "/" + ID_PARAMETER;
 
     public static final String EDIT_SV = "/sv/redigera" + "/" + ID_PARAMETER;
@@ -690,4 +698,7 @@ public final class Urls {
         return getLocalizedPageUrl(VETUMA_ERROR_FI, VETUMA_ERROR_SV) + "?"+ VETUMA_AGE_ERROR_PARAMETER;
     }
 
+    public String getMunicipalityDecisionView(Long initiativeId) {
+        return getLocalizedPageUrl(MUNICIPALITY_DECISION_FI, MUNICIPALITY_DECISION_SV)+ "?" + PARAM_INITIATIVE_ID + "=" + initiativeId;
+    }
 }

@@ -235,4 +235,7 @@ public class UserService {
         }
     }
 
+    public MunicipalityUserHolder getRequiredMunicipalityUserHolder(HttpServletRequest request) {
+        return null;
+    }
 }

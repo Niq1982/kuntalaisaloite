@@ -153,6 +153,17 @@ public final class ViewGenerator {
         );
     }
 
+    public static ViewGenerator municipalityDecisionView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors,  AttachmentService.Attachments allAttachments){
+        return new ViewGenerator("municipality-decision-view",
+                new AttributeBuilder()
+                    .add("initiative", initiativeInfo)
+                    .add("managementSettings", managementSettings)
+                    .add("authors", authors)
+                    .add("attachments", allAttachments)
+                    .build()
+                );
+        }
+
     public static ViewGenerator managementView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, AttachmentService.Attachments attachments, ParticipantCount participantCount, List<Location> locations, CommentUIDto commentUIDto) {
         return new ViewGenerator(MANAGEMENT_VIEW,
                 new AttributeBuilder()
@@ -257,6 +268,7 @@ public final class ViewGenerator {
                         .add("initiatives", initiatives).build()
         );
     }
+
 
     private static class AttributeBuilder {
         private Map<String, Object> attributes = Maps.newHashMap();
