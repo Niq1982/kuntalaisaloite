@@ -246,7 +246,7 @@ $(document).ready(function () {
 	$(".search-parameters").each(function(index, element) {
 		$(element).searchFilter();
 	});
-	$(".search-parameters-title.sort").searchFilter();
+	$(".search-sort").searchSort();
 
 
 	/**

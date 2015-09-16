@@ -166,26 +166,28 @@ h3 {
 //
 // Styleguide 9.1
 .search-parameters-title {
-    float:left;
-    width:6.3em;
 
-    &.filter {
-        line-height:35px;
+    @media @tablet, @desktop, @desktop-xl {
+        float:left;
+        &.filter {
+            line-height:35px;
+        }
+        width:6.3em;
+
+        &.sort {
+            padding:0.1em 0;
+        }
     }
 
-    &.sort {
-        padding:0.1em 0;
-    }
+
+
     @media @mobile {
         width: auto;
+        display: block;
+        padding: 20px 0;
+        font-size: 24px;
     }
 
-    /*@media @mobile{
-        width: auto;
-        &.sort {
-            display: none;
-        }
-    };*/
 
 }
 
@@ -325,9 +327,11 @@ h3 {
 // Styleguide 9.2
 .search-sort {
 
-    width:300px;
+    width:auto;
 
     @media @mobile {
+        width: 80%;
+        display: none;
         a {
             display: block
         }
@@ -447,7 +451,7 @@ h3 {
 .search-filter-toggle {
 
     @media @mobile  {
-        display: inline-block;
+
         width: 20px;
         height: 20px;
 
@@ -456,8 +460,8 @@ h3 {
         background-size: 20px;
         background-image: url("@{imagesPath}/arrows_down.png");
 
-        margin-right: 10px;
-        padding: 10px 10px 10px 0;
+        margin-left: 10px;
+        padding: 0 10px ;
 
     }
     @media @tablet, @desktop, @desktop-xl {

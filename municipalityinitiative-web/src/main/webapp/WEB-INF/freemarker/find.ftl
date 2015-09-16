@@ -52,7 +52,7 @@
      * Initiative type 
     -->
     <#if enableVerifiedInitiatives>
-    <span class="search-parameters-title filter"><label for="municipality"><@u.message "searchParameters.type" /></label></span>
+    <span class="search-parameters-title filter"><label for="municipality"><@u.message "searchParameters.type" /><a href="#" class="search-filter-toggle" ></a></label></span>
     <div class="search-parameters-container cf buttons">
         <div class="search-parameters">
             <@u.searchLink parameter="withTypeAll" cssClass=(currentSearch.type == "all")?string('active','') tooltip=false />
@@ -75,7 +75,7 @@
     <#--
      * Search filters for OM and public view
     -->
-    <span class="search-parameters-title filter"><@u.message "searchOptions.filter" /></span>
+    <span class="search-parameters-title filter"><@u.message "searchOptions.filter" /><a href="#" class="search-filter-toggle" ></a></span>
         <div class="search-parameters-container buttons">
             <div class="search-parameters">
                 <#if user.isOmUser()>
@@ -100,7 +100,7 @@
      * Sort only if more than 1 to sort
     -->
     <#--<#if (initiativeCounts[currentSearch.show] > 1)>-->
-        <span class="search-parameters-title sort"><@u.message "searchOptions.sort" /></span>
+        <span class="search-parameters-title sort"><@u.message "searchOptions.sort" /><a href="#" class="search-filter-toggle" ></a></span>
         <div class="column search-sort">
             <#if currentSearch.show == "sent">
                 <span class="small-icon icon-search-sort by-date-accepted">&#160;</span>

@@ -7,12 +7,9 @@
 
     var setup = function (searchParameters) {
 
-
-        var toggleBtn = $('<a href="#" class="search-filter-toggle" ></a>');
-
-        $(searchParameters).after(toggleBtn);
-
-        toggleBtn.click(function() {$(searchParameters).toggleClass("dropdown-menu");})
+        var toggleBtn = $(searchParameters).parent().prev().find(".search-filter-toggle");
+        toggleBtn.click(function() {
+            $(searchParameters).toggleClass("dropdown-menu");})
 
     };
 
