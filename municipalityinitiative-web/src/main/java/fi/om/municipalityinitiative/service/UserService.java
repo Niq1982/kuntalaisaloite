@@ -251,6 +251,7 @@ public class UserService {
         return new MunicipalityUserHolder((MunicipalityLoginUser) loginUserHolder.get().getUser());
     }
 
+    @Transactional(readOnly = true)
     public Long municipalityUserLogin(String managementHash, HttpServletRequest request) {
         Long initiativeId = municipalityUserDao.getInitiativeId(managementHash);
         if (initiativeId == null) {

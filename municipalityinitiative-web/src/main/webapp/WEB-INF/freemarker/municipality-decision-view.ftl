@@ -4,8 +4,6 @@
 <#import "components/forms.ftl" as f />
 <#import "components/elements.ftl" as e />
 <#import "components/progress.ftl" as prog />
-<#import "components/review-history.ftl" as rh />
-
 <#escape x as x?html>
 
 <#assign moderationURL = urls.moderation(initiative.id) />
@@ -118,7 +116,6 @@
         </div>
     </#if>
 
-<@rh.reviewHistories reviewHistories/>
     <#--
      * Renew author management hash
     -->

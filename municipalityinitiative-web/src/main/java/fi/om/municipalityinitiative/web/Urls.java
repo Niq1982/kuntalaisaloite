@@ -254,9 +254,9 @@ public final class Urls {
 
     public static final String MUNICIPALITY_MODERATION = "/fi/kuntahallinta";
 
-    public static final String MUNICIPALITY_DECISION_FI = "/fi/kunnanvastaus";
+    public static final String MUNICIPALITY_DECISION_FI = "/fi/kunnanvastaus" + "/" + ID_PARAMETER;
 
-    public static final String MUNICIPALITY_DECISION_SV = "/sv/kunnanvastaus";
+    public static final String MUNICIPALITY_DECISION_SV = "/sv/kunnanvastaus" + "/" + ID_PARAMETER;
 
     public static final String MUNICIPALITY_LOGIN_FI = "/fi/municipality-login";
 
@@ -699,6 +699,6 @@ public final class Urls {
     }
 
     public String getMunicipalityDecisionView(Long initiativeId) {
-        return getLocalizedPageUrl(MUNICIPALITY_DECISION_FI, MUNICIPALITY_DECISION_SV)+ "?" + PARAM_INITIATIVE_ID + "=" + initiativeId;
+        return getLocalizedPageUrl(MUNICIPALITY_DECISION_FI, MUNICIPALITY_DECISION_SV).replace(ID_PARAMETER, initiativeId.toString());
     }
 }
