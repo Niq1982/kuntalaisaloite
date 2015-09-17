@@ -168,6 +168,9 @@ public class AppConfiguration {
     public LocationDao locationDao() {return new JdbcLocationDao();}
 
     @Bean
+    public MunicipalityUserDao municipalityUserDao() {return new JdbcMunicipalityUserDao() ;}
+
+    @Bean
     public AuthorService authorService() {
         return new AuthorService();
     }

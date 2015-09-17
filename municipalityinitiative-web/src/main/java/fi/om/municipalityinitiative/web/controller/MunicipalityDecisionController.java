@@ -3,8 +3,9 @@ package fi.om.municipalityinitiative.web.controller;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityDecisionDto;
 import fi.om.municipalityinitiative.dto.user.MunicipalityUserHolder;
 import fi.om.municipalityinitiative.service.AttachmentService;
-import fi.om.municipalityinitiative.service.ui.ModerationService;
+import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
+import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -27,7 +28,7 @@ public class MunicipalityDecisionController extends BaseController{
     private NormalInitiativeService normalInitiativeService;
 
     @Resource
-    private ModerationService moderationService;
+    private AuthorService authorService;
 
     @Resource
     private AttachmentService attachmentService;
@@ -38,17 +39,15 @@ public class MunicipalityDecisionController extends BaseController{
 
     @RequestMapping(value = {MUNICIPALITY_DECISION_FI, MUNICIPALITY_DECISION_SV}, method = GET)
     public String municipalityModerationView(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
-        //TODO write tests for get Required MunicipalityUserHolder
+        //TODO write tests for getRequiredMunicipalityUserHolder
         MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request);
-       /* return ViewGenerator.municipalityDecisionView(
+        return ViewGenerator.municipalityDecisionView(
                 normalInitiativeService.getInitiative(initiativeId, loginUserHolder),
                 normalInitiativeService.getManagementSettings(initiativeId),
-                moderationService.findAuthors(loginUserHolder, initiativeId),
+                authorService.findAuthors(initiativeId, loginUserHolder),
                 attachmentService.findAllAttachments(initiativeId, loginUserHolder)
+        ).view(model, Urls.get(locale).alt().municipalityModeration());
 
-
-        ).view(model, Urls.get(locale).alt().municipalityModeration());*/
-        return "";
     }
 
     @RequestMapping(value = {MUNICIPALITY_DECISION_FI, MUNICIPALITY_DECISION_SV}, method = POST)

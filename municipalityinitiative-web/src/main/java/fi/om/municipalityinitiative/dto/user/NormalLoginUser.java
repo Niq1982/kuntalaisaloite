@@ -37,6 +37,11 @@ public class NormalLoginUser extends User {
     }
 
     @Override
+    public boolean isMunicipalityUser() {
+        return false;
+    }
+
+    @Override
     public boolean isOmUser() {
         return false;
     }

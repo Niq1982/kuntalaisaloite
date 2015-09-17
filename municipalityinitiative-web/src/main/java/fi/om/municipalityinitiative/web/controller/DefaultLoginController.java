@@ -90,10 +90,8 @@ public class DefaultLoginController extends BaseLoginController {
     @RequestMapping(value = {MUNICIPALITY_LOGIN_FI, MUNICIPALITY_LOGIN_SV}, method = RequestMethod.GET, params = PARAM_MANAGEMENT_CODE)
     public RedirectView municipalityLoginPost(@RequestParam(PARAM_MANAGEMENT_CODE) String managementHash,
                                               Model model, Locale locale, HttpServletRequest request) {
-        Long initiativeId = 806L;
-        // TODO parse initiative id from hash and create municipality user
         // TODO write tests
-        //Long initiativeId = userService.authorLogin(managementHash, request);
+        Long initiativeId = userService.municipalityUserLogin(managementHash, request);
         return new RedirectView(Urls.get(locale).getMunicipalityDecisionView(initiativeId), false, true, false);
     }
 

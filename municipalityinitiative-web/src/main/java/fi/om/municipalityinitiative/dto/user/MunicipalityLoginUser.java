@@ -6,10 +6,10 @@ import fi.om.municipalityinitiative.dto.service.Municipality;
 public class MunicipalityLoginUser extends User {
 
 
-    private final String name;
+    private final Long initiativeId;
 
-    MunicipalityLoginUser(String name) {
-        this.name = name;
+    MunicipalityLoginUser(Long initiativeId) {
+        this.initiativeId = initiativeId;
     }
 
     @Override
@@ -24,7 +24,7 @@ public class MunicipalityLoginUser extends User {
 
     @Override
     public boolean hasRightToInitiative(Long initiativeId) {
-        return false;
+       return this.initiativeId.equals(initiativeId);
     }
 
     @Override
@@ -39,6 +39,11 @@ public class MunicipalityLoginUser extends User {
 
     @Override
     public boolean isLoggedIn() {
-        return false;
+        return true;
+    }
+
+    @Override
+    public boolean isMunicipalityUser() {
+        return true;
     }
 }

@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.service;
 import com.google.common.collect.Sets;
 import fi.om.municipalityinitiative.dao.AuthorDao;
 import fi.om.municipalityinitiative.dao.MunicipalityDao;
+import fi.om.municipalityinitiative.dao.MunicipalityUserDao;
 import fi.om.municipalityinitiative.dao.UserDao;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.ContactInfo;
@@ -33,6 +34,9 @@ public class UserService {
 
     @Resource
     private AuthorDao authorDao;
+
+    @Resource
+    private MunicipalityUserDao municipalityUserDao;
 
     @Resource
     private MunicipalityDao municipalityDao;
@@ -236,6 +240,23 @@ public class UserService {
     }
 
     public MunicipalityUserHolder getRequiredMunicipalityUserHolder(HttpServletRequest request) {
-        return null;
+
+        Maybe<LoginUserHolder> loginUserHolder = parseLoginUser(request);
+
+        if (loginUserHolder.isNotPresent()) {
+            throw new AuthenticationRequiredException();
+        }
+        loginUserHolder.get().assertMunicipalityLoginUser();
+
+        return new MunicipalityUserHolder((MunicipalityLoginUser) loginUserHolder.get().getUser());
+    }
+
+    public Long municipalityUserLogin(String managementHash, HttpServletRequest request) {
+        Long initiativeId = municipalityUserDao.getInitiativeId(managementHash);
+        if (initiativeId == null) {
+            throw new InvalidLoginException("Invalid login credentials");
+        }
+        storeLoggedInUserSession(request, User.municipalityLoginUser(initiativeId));
+        return initiativeId;
     }
 }

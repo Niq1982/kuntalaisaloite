@@ -14,8 +14,9 @@ public abstract class User implements Serializable {
     public static OmLoginUser omUser(String name) {
         return new OmLoginUser(name);
     }
-    public static MunicipalityLoginUser municipalityLoginUser(String name) {
-        return new MunicipalityLoginUser(name);
+
+    public static MunicipalityLoginUser municipalityLoginUser(Long initiativeId) {
+        return new MunicipalityLoginUser(initiativeId);
     }
 
     public static NormalLoginUser normalUser(NormalAuthorId authorId, Set<Long> authorsInitiatives) {
@@ -45,5 +46,11 @@ public abstract class User implements Serializable {
     public abstract boolean allowVerifiedParticipation(Long initiativeId, Municipality municipality);
 
     public abstract boolean isLoggedIn();
+
+    public abstract boolean isMunicipalityUser();
+
+    public boolean isNotMunicipalityLoginUser() {
+        return !isMunicipalityUser();
+    }
 
 }
