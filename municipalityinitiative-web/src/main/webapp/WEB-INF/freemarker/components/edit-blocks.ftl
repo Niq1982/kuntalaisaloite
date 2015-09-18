@@ -288,13 +288,7 @@
                 <@mapSelection path locationSelected/>
             </div>
         </#if>
-        <#--<@formLabel path=path+".location" key="initiative.location">
-        <@showError />
-        <@spring.formTextarea path, 'class="'+cssClass+' '+spring.status.error?string("error","")+'" '+required+' maxlength="'+maxLength+'" ' />
 
-        </@formLabel>-->
-
-        
     </div>
 </#macro>
 
@@ -466,6 +460,7 @@
                 <ul></ul>
             </div>
 
+
             <div class="input-block-content">
                 <span class="small-button disabled" id="save-and-close"><@u.message "map.save" /></span>
                 <a class="close push"><@u.message "action.cancel" /></a>
@@ -489,11 +484,11 @@
         </div>
 
         <div id="open-remove-location" <#if !locationSelected> class="no-visible" </#if> >
-            <p id="show-selected-location" class="map-marker">
+            <p id="show-selected-location" class="map-marker trigger-tooltip" title="<@u.message key="map.showSelectedLocation" />">
                 <a><@u.message key="map.locationAttached" /></a>
             </p>
             <a class="trigger-tooltip">
-                <span id="remove-selected-location" class="icon-small icon-16 cancel"></span>
+                <span id="remove-selected-location" class="icon-small icon-16 cancel trigger-tooltip" title="<@u.message key="map.removeLocation" />"></span>
             </a>
         </div>
     </div>
