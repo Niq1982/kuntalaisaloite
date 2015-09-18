@@ -163,7 +163,11 @@ public class SecurityFilter implements Filter {
             // Regular CSRF-check is skipped when adding attachments
             // @see fi.om.municipalityinitiative.web.controller.InitiativeManagementController#addAttachment
             Urls.MANAGE_ATTACHMENTS_FI,
-            Urls.MANAGE_ATTACHMENTS_SV
+            Urls.MANAGE_ATTACHMENTS_SV,
+
+            Urls.MUNICIPALITY_DECISION_FI_BASE_URL,
+            Urls.MUNICIPALITY_DECISION_SV_BASE_URL
+
     };
 
     private static boolean isSkipCsrfURI(String requestURI) {

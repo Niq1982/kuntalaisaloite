@@ -21,21 +21,28 @@
      * Show moderation block
     -->
 
-    <div class="msg-block">
+    <div class="msg-block cf">
         <h2><@u.message "municipality.decision.giveDecision" /></h2>
         <p><@u.message key="municipality.decision.description" /></p>
 
         <div>
-            <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-accept" class="sodirty">
+            <form action="${springMacroRequestContext.requestUri}" method="POST" id="form-accept" class="sodirty" enctype="multipart/form-data">
                 <input type="hidden" name="CSRFToken" value="${CSRFToken}"/>
 
+                <@spring.bind "decision" />
+
                 <div class="input-block-content no-top-margin">
-                    <textarea name="${UrlConstants.PARAM_SENT_COMMENT}" id="commentAccept" class="collapse" maxlength="${InitiativeConstants.INITIATIVE_COMMENT_MAX}"></textarea>
+                    <textarea path="decision.description" name="description" id="commentAccept" class="collapse" maxlength="${InitiativeConstants.INITIATIVE_COMMENT_MAX}"></textarea>
+                </div>
+
+                <input type="hidden" name="locale" value="${locale}"/>
+
+                <div class="input-block-content">
+                    <@f.uploadField path="decision.files" name="files" />
                 </div>
 
                 <div class="input-block-content">
-                    <button type="submit" name="${UrlConstants.ACTION_ACCEPT_INITIATIVE}" class="small-button"><span class="small-icon save-and-send"><@u.message "action.accept" /></span></button>
-                    <a href="${springMacroRequestContext.requestUri}#participants" class="push js-btn-close-block hidden"><@u.message "action.cancel" /></a>
+                    <button type="submit" class="small-button"><span class="small-icon save-and-send"><@u.message "decision.submit" /></span></button>
                 </div>
                 <br/><br/>
             </form>

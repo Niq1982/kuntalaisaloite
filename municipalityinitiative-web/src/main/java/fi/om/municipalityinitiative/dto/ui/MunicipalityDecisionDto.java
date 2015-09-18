@@ -11,6 +11,7 @@ import java.util.List;
 public class MunicipalityDecisionDto {
 
     private List<MultipartFile> files;
+
     private String locale;
 
     @NotEmpty

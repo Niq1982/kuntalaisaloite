@@ -160,6 +160,7 @@ public final class ViewGenerator {
                     .add("managementSettings", managementSettings)
                     .add("authors", authors)
                     .add("attachments", allAttachments)
+                    .add("decision", new MunicipalityDecisionDto())
                     .build()
                 );
         }
