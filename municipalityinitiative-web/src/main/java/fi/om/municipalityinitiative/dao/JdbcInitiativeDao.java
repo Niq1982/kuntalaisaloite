@@ -515,6 +515,11 @@ public class JdbcInitiativeDao implements InitiativeDao {
     }
 
     @Override
+    public void updateInitiativeDecision(Long initiativeId, String decisionText) {
+        // TODO implement
+    }
+
+    @Override
     public void updateExtraInfo(Long initiativeId, String extraInfo, Integer externalParticipantCount) {
 
         assertSingleAffection(queryFactory.update(municipalityInitiative)

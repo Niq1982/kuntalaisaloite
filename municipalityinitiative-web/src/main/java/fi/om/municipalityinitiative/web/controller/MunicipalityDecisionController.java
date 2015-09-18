@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.web.controller;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityDecisionDto;
 import fi.om.municipalityinitiative.dto.user.MunicipalityUserHolder;
 import fi.om.municipalityinitiative.service.AttachmentService;
+import fi.om.municipalityinitiative.service.DecisionService;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
 import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
 import fi.om.municipalityinitiative.web.SecurityFilter;
@@ -36,6 +37,10 @@ public class MunicipalityDecisionController extends BaseController{
     @Resource
     private AttachmentService attachmentService;
 
+    @Resource
+    private DecisionService decisionService;
+
+
     public MunicipalityDecisionController(boolean optimizeResources, String resourcesVersion) {
         super(optimizeResources, resourcesVersion);
     }
@@ -64,6 +69,7 @@ public class MunicipalityDecisionController extends BaseController{
         // CSRF Must be validated here because SecurityFilter is not able to handle MultipartHttpServletRequest.
         SecurityFilter.verifyAndGetCurrentCSRFToken(request);
         //TODO save the decision
+        decisionService.setDecision(decision, initiativeId);
         MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request);
         return ViewGenerator.municipalityDecisionView(
                 normalInitiativeService.getInitiative(initiativeId, loginUserHolder),

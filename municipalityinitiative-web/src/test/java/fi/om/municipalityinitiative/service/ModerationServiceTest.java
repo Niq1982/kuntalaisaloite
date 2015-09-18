@@ -47,7 +47,7 @@ public class ModerationServiceTest extends ServiceIntegrationTestBase {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            assertThat(authors, hasSize(1));
+            assertThat(authors, hasSize(0));
         }
     }
 

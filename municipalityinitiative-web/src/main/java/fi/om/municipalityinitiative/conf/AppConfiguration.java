@@ -227,6 +227,16 @@ public class AppConfiguration {
     }
 
     @Bean
+    public DecisionService decisionService() {
+        return new DecisionService();
+    }
+
+    @Bean
+    public DecisionAttachmentDao decisionAttachmentDao(){
+        return new JdbcDecisionAttachmentDao();
+    }
+
+    @Bean
     public ImageFinder imageFinder() {
         return new FileImageFinder(env.getRequiredProperty(PropertyNames.omImageDirection), env.getRequiredProperty(PropertyNames.baseURL));
     }

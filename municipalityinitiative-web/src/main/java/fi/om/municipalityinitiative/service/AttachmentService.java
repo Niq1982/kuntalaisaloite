@@ -17,6 +17,7 @@ import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.util.ImageModifier;
 import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import org.aspectj.util.FileUtil;
+import org.im4java.core.IM4JavaException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,39 +63,20 @@ public class AttachmentService {
     public void addAttachment(Long initiativeId, LoginUserHolder<User> loginUserHolder, MultipartFile file, String description) throws FileUploadException, InvalidAttachmentException {
         loginUserHolder.assertManagementRightsForInitiative(initiativeId);
 
-        if (!ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowAddAttachments()) {
-            throw new OperationNotAllowedException("Add attachments");
-        }
+        assertPrivilege(initiativeId);
+        assertFileSize(file);
 
-        // Double check, is checked at validation also
-        if (file.getSize() > ImageProperties.MAX_FILESIZE_IN_BYTES) {
-            throw new InvalidAttachmentException("Too large file: " + file.getSize());
-        }
 
-        // Some checks for valid filename
-        String fileType = parseFileType(file.getOriginalFilename());
-        assertFileType(fileType);
-        assertContentType(file.getContentType());
+        String fileType = getFileType(file);
+
 
         File tempFile = null;
         try {
-
-            // Create temp-file for proper file handling
-            tempFile = File.createTempFile(RandomHashGenerator.shortHash(), "." + fileType);
-
-            file.transferTo(tempFile);
-
-            assertRealFileContent(tempFile, fileType);
+            tempFile = createTempFile(file, fileType);
 
             Long attachmentId = attachmentDao.addAttachment(initiativeId, description, file.getContentType(), fileType);
 
-            if (AttachmentFileInfo.isPdfContentType(file.getContentType())) {
-                FileUtil.copyValidFiles(tempFile, new File(getFilePath(attachmentId, fileType)));
-            }
-            else {
-                imageModifier.modify(tempFile, getFilePath(attachmentId, fileType), ImageProperties.MAX_WIDTH, ImageProperties.MAX_HEIGHT);
-                imageModifier.modify(tempFile, getThumbnailPath(attachmentId, fileType), ImageProperties.THUMBNAIL_MAX_WIDTH, ImageProperties.THUMBNAIL_MAX_HEIGHT);
-            }
+            saveFileToDisk(file, fileType, tempFile, attachmentId);
 
         } catch (InvalidAttachmentException e) {
             throw e;
@@ -108,6 +90,48 @@ public class AttachmentService {
             }
 
         }
+    }
+
+    private void assertPrivilege(Long initiativeId) {
+        if (!ManagementSettings.of(initiativeDao.get(initiativeId)).isAllowAddAttachments()) {
+            throw new OperationNotAllowedException("Add attachments");
+        }
+    }
+
+    private void assertFileSize(MultipartFile file) throws InvalidAttachmentException {
+        // Double check, is checked at validation also
+        if (file.getSize() > ImageProperties.MAX_FILESIZE_IN_BYTES) {
+            throw new InvalidAttachmentException("Too large file: " + file.getSize());
+        }
+    }
+
+    private String getFileType(MultipartFile file) throws InvalidAttachmentException {
+        // Some checks for valid filename
+        String fileType = parseFileType(file.getOriginalFilename());
+        assertFileType(fileType);
+        assertContentType(file.getContentType());
+        return fileType;
+    }
+
+    private void saveFileToDisk(MultipartFile file, String fileType, File tempFile, Long attachmentId) throws IOException, IM4JavaException, InterruptedException {
+        if (AttachmentFileInfo.isPdfContentType(file.getContentType())) {
+            FileUtil.copyValidFiles(tempFile, new File(getFilePath(attachmentId, fileType)));
+        }
+        else {
+            imageModifier.modify(tempFile, getFilePath(attachmentId, fileType), ImageProperties.MAX_WIDTH, ImageProperties.MAX_HEIGHT);
+            imageModifier.modify(tempFile, getThumbnailPath(attachmentId, fileType), ImageProperties.THUMBNAIL_MAX_WIDTH, ImageProperties.THUMBNAIL_MAX_HEIGHT);
+        }
+    }
+
+    private File createTempFile(MultipartFile file, String fileType) throws IOException, InvalidAttachmentException {
+        File tempFile = null;
+        // Create temp-file for proper file handling
+        tempFile = File.createTempFile(RandomHashGenerator.shortHash(), "." + fileType);
+
+        file.transferTo(tempFile);
+
+        assertRealFileContent(tempFile, fileType);
+        return tempFile;
     }
 
     private static void assertRealFileContent(File tempFile, String fileType) throws IOException, InvalidAttachmentException {
