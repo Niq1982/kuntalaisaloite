@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.dto.service.DecisionAttachmentFile;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityDecisionDto;
 import fi.om.municipalityinitiative.service.ui.MunicipalityDecisionInfo;
 import fi.om.municipalityinitiative.util.Maybe;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -22,9 +23,10 @@ public class DecisionService {
     private InitiativeDao initiativeDao;
 
     public Maybe<MunicipalityDecisionInfo> getDecision(Long initiativeId) {
-        return null;
+        return Maybe.absent();
     }
 
+    @Transactional
     public void setDecision(MunicipalityDecisionDto decision, Long initiativeId) {
         decisionAttachmentDao.removeAttachments(initiativeId);
         addAttachments(decision.getFiles(), initiativeId);
