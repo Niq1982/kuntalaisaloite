@@ -5,13 +5,17 @@ import org.joda.time.DateTime;
 
 public class DecisionAttachmentFile extends AttachmentFileBase{
 
-    private final Long initiativeId;
+    private Long attachmentId;
 
-    private final String fileName;
+    private Long initiativeId;
 
-    private final String contentType;
+    private String fileName;
+
+    private String contentType;
 
     private String fileType;
+
+    private DateTime createTime;
 
     public DecisionAttachmentFile(String fileName, String fileType, String contentType, Long initiativeId){
         this.fileName = fileName;
@@ -19,30 +23,34 @@ public class DecisionAttachmentFile extends AttachmentFileBase{
         this.fileType  = fileType;
         this.initiativeId = initiativeId;
     }
+    public DecisionAttachmentFile(){
+
+
+    }
 
     @Override
     public Long getInitiativeId() {
-        return null;
+        return initiativeId;
     }
 
     @Override
     public Long getAttachmentId() {
-        return null;
+        return attachmentId;
     }
 
     @Override
     public String getFileName() {
-        return null;
+        return fileName;
     }
 
     @Override
     public String getContentType() {
-        return null;
+        return contentType;
     }
 
     @Override
     public DateTime getCreateTime() {
-        return null;
+        return createTime;
     }
 
     public String getFileType() {
@@ -51,5 +59,25 @@ public class DecisionAttachmentFile extends AttachmentFileBase{
 
     public void setFileType(String fileType) {
         this.fileType = fileType;
+    }
+
+    public void setInitiativeId(Long initiativeId) {
+        this.initiativeId = initiativeId;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
+    public void setAttachmentId(Long id) {
+        this.attachmentId = id;
+    }
+
+    public void setCreateTime(DateTime createTime) {
+        this.createTime = createTime;
     }
 }

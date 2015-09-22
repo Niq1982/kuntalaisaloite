@@ -7,12 +7,9 @@ import java.util.List;
 
 public interface DecisionAttachmentDao {
 
+    void addAttachment(Long initiativeId, DecisionAttachmentFile attachment);
 
+    void removeAttachment(Long attachmentId);
 
-    public void addAttachment(DecisionAttachmentFile attachment, Long initiativeId);
-
-    public void removeAttachments(Long initiativeId);
-
-    public List<DecisionAttachmentFile>  findAllAttachments(Long initiativeId);
-
+    List<DecisionAttachmentFile> findAllAttachments(Long initiativeId);
 }

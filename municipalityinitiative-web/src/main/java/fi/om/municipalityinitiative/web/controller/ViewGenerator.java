@@ -6,6 +6,7 @@ import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.*;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.service.AttachmentService;
+import fi.om.municipalityinitiative.service.AttachmentUtil;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.ReviewHistoryDiff;
 import fi.om.municipalityinitiative.web.SearchParameterQueryString;
@@ -179,7 +180,7 @@ public final class ViewGenerator {
         );
     }
     
-    public static ViewGenerator manageAttachmentsView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, AttachmentService.Attachments attachments, AttachmentCreateDto attachmentCreateDto, AttachmentService.ImageProperties imageProperties) {
+    public static ViewGenerator manageAttachmentsView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, AttachmentService.Attachments attachments, AttachmentCreateDto attachmentCreateDto, AttachmentUtil.ImageProperties imageProperties) {
         return new ViewGenerator(MANAGE_ATTACHMENTS_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)

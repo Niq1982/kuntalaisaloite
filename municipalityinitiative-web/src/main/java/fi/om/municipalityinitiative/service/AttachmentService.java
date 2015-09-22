@@ -67,7 +67,7 @@ public class AttachmentService {
         assertFileSize(file);
 
 
-        String fileType = getFileType(file);
+        String fileType = AttachmentUtil.getFileType(file);
 
 
         File tempFile = null;
@@ -100,26 +100,19 @@ public class AttachmentService {
 
     private void assertFileSize(MultipartFile file) throws InvalidAttachmentException {
         // Double check, is checked at validation also
-        if (file.getSize() > ImageProperties.MAX_FILESIZE_IN_BYTES) {
+        if (file.getSize() > AttachmentUtil.ImageProperties.MAX_FILESIZE_IN_BYTES) {
             throw new InvalidAttachmentException("Too large file: " + file.getSize());
         }
     }
 
-    private String getFileType(MultipartFile file) throws InvalidAttachmentException {
-        // Some checks for valid filename
-        String fileType = parseFileType(file.getOriginalFilename());
-        assertFileType(fileType);
-        assertContentType(file.getContentType());
-        return fileType;
-    }
 
     private void saveFileToDisk(MultipartFile file, String fileType, File tempFile, Long attachmentId) throws IOException, IM4JavaException, InterruptedException {
         if (AttachmentFileInfo.isPdfContentType(file.getContentType())) {
             FileUtil.copyValidFiles(tempFile, new File(getFilePath(attachmentId, fileType)));
         }
         else {
-            imageModifier.modify(tempFile, getFilePath(attachmentId, fileType), ImageProperties.MAX_WIDTH, ImageProperties.MAX_HEIGHT);
-            imageModifier.modify(tempFile, getThumbnailPath(attachmentId, fileType), ImageProperties.THUMBNAIL_MAX_WIDTH, ImageProperties.THUMBNAIL_MAX_HEIGHT);
+            imageModifier.modify(tempFile, getFilePath(attachmentId, fileType), AttachmentUtil.ImageProperties.MAX_WIDTH, AttachmentUtil.ImageProperties.MAX_HEIGHT);
+            imageModifier.modify(tempFile, getThumbnailPath(attachmentId, fileType), AttachmentUtil.ImageProperties.THUMBNAIL_MAX_WIDTH, AttachmentUtil.ImageProperties.THUMBNAIL_MAX_HEIGHT);
         }
     }
 
@@ -224,13 +217,6 @@ public class AttachmentService {
         return Arrays.copyOf(bytes, bytes.length);
     }
 
-    private static void assertFileType(String givenFileType) throws InvalidAttachmentException {
-        for (String fileType : ImageProperties.FILE_TYPES) {
-            if (fileType.equalsIgnoreCase(givenFileType))
-                return;
-        }
-        throw new InvalidAttachmentException("Invalid fileName: "+givenFileType);
-    }
 
     private static String parseFileType(String fileName) throws InvalidAttachmentException {
         String[] split = fileName.split("\\.");
@@ -242,7 +228,7 @@ public class AttachmentService {
     }
 
     private static void assertContentType(String contentType) throws InvalidAttachmentException {
-        for (String type : ImageProperties.CONTENT_TYPES) {
+        for (String type : AttachmentUtil.ImageProperties.CONTENT_TYPES) {
             if (type.equalsIgnoreCase(contentType))
                 return;
         }
@@ -286,8 +272,8 @@ public class AttachmentService {
     @Transactional(readOnly = true)
     public boolean validationSuccessful(Long initiativeId, AttachmentCreateDto attachmentCreateDto, BindingResult bindingResult, Model model) {
 
-        if (attachmentDao.findAllAttachments(initiativeId).size() >= ImageProperties.MAX_ATTACHMENTS) {
-            addAttachmentValidationError(bindingResult, "attachment.error.too.many.attachments", String.valueOf(ImageProperties.MAX_ATTACHMENTS));
+        if (attachmentDao.findAllAttachments(initiativeId).size() >= AttachmentUtil.ImageProperties.MAX_ATTACHMENTS) {
+            addAttachmentValidationError(bindingResult, "attachment.error.too.many.attachments", String.valueOf(AttachmentUtil.ImageProperties.MAX_ATTACHMENTS));
         }
         else {
             validationService.validationSuccessful(attachmentCreateDto, bindingResult, model);
@@ -296,13 +282,13 @@ public class AttachmentService {
             }
             else {
                 try {
-                    assertFileType(parseFileType(attachmentCreateDto.getImage().getOriginalFilename()));
+                    AttachmentUtil.assertFileType(parseFileType(attachmentCreateDto.getImage().getOriginalFilename()));
                 } catch (InvalidAttachmentException e) {
-                    addAttachmentValidationError(bindingResult, "attachment.error.invalid.file.type", Arrays.toString(ImageProperties.FILE_TYPES));
+                    addAttachmentValidationError(bindingResult, "attachment.error.invalid.file.type", Arrays.toString(AttachmentUtil.ImageProperties.FILE_TYPES));
                 }
 
-                if (attachmentCreateDto.getImage().getSize() > ImageProperties.MAX_FILESIZE_IN_BYTES) {
-                    addAttachmentValidationError(bindingResult, "attachment.error.too.large.file", ImageProperties.MAX_FILESIZE_IN_KILOBYTES);
+                if (attachmentCreateDto.getImage().getSize() > AttachmentUtil.ImageProperties.MAX_FILESIZE_IN_BYTES) {
+                    addAttachmentValidationError(bindingResult, "attachment.error.too.large.file", AttachmentUtil.ImageProperties.MAX_FILESIZE_IN_KILOBYTES);
                 }
             }
         }
@@ -342,64 +328,6 @@ public class AttachmentService {
             List<AttachmentFileInfo> all = Lists.newArrayList(images);
             all.addAll(pdfs);
             return all;
-        }
-    }
-
-    public static final class ImageProperties {
-
-        private static final int MAX_WIDTH = 1000;
-
-        private static final int MAX_HEIGHT = 1000;
-        private static final int THUMBNAIL_MAX_WIDTH = 200;
-        private static final int THUMBNAIL_MAX_HEIGHT = 200;
-        private static final String[] FILE_TYPES = { "png", "jpg", "jpeg", "pdf" };
-        private static final int MAX_FILESIZE_IN_BYTES = 1024 * 1024 * 2;
-        private static final String MAX_FILESIZE_IN_KILOBYTES = String.valueOf(ImageProperties.MAX_FILESIZE_IN_BYTES / 1024 / 1024) + " MB";
-        private static final int MAX_ATTACHMENTS = 10;
-
-        private static final String[] CONTENT_TYPES = { "image/png", "image/jpg", "image/jpeg", "application/pdf", "image/pjpeg", "image/x-png" };
-        private static final ImageProperties imageProperties = new ImageProperties();
-
-        private ImageProperties() { }
-
-        public static ImageProperties instance() {
-            return imageProperties;
-        }
-
-        public Integer getMaxWidth() {
-            return MAX_WIDTH;
-        }
-
-        public Integer getMaxHeight() {
-            return MAX_HEIGHT;
-        }
-
-        public Integer getThumbnailMaxWidth() {
-            return THUMBNAIL_MAX_WIDTH;
-        }
-
-        public Integer getThumbnailMaxHeight() {
-            return THUMBNAIL_MAX_HEIGHT;
-        }
-
-        public String[] getFileTypes() {
-            return FILE_TYPES;
-        }
-
-        public int getMaxFilesizeInBytes() {
-            return MAX_FILESIZE_IN_BYTES;
-        }
-
-        public String getMaxFilesizeInKilobytes() {
-            return MAX_FILESIZE_IN_KILOBYTES;
-        }
-
-        public int getMaxAttachments() {
-            return MAX_ATTACHMENTS;
-        }
-
-        public String[] getContentTypes() {
-            return CONTENT_TYPES;
         }
     }
 

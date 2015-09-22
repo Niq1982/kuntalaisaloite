@@ -516,7 +516,10 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
     @Override
     public void updateInitiativeDecision(Long initiativeId, String decisionText) {
-        // TODO implement
+        assertSingleAffection(queryFactory.update(municipalityInitiative)
+            .set(municipalityInitiative.municipalityDecision, decisionText)
+            .where(municipalityInitiative.id.eq(initiativeId))
+            .execute());
     }
 
     @Override
@@ -559,7 +562,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
 
 
     @Override
-    public Map<LocalDate,Long> getSupportVoteCountByDateUntil(Long initiativeId, LocalDate tillDay){
+    public Map<LocalDate,Long> getSupportVoteCountByDateUntil(Long initiativeId, LocalDate tillDay) {
 
         if (get(initiativeId).getType().isVerifiable()) {
             return queryFactory.from(verifiedParticipant)
@@ -568,8 +571,7 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     .groupBy(verifiedParticipant.participateTime)
                     .map(verifiedParticipant.participateTime, verifiedParticipant.participateTime.count());
 
-        }
-        else {
+        } else {
             return queryFactory.from(participant)
                     .where(participant.municipalityInitiativeId.eq(initiativeId))
                     .where(participant.participateTime.loe(tillDay))
@@ -577,9 +579,8 @@ public class JdbcInitiativeDao implements InitiativeDao {
                     .groupBy(participant.participateTime)
                     .map(participant.participateTime, participant.participateTime.count());
         }
-
-
     }
+
 
     public static void assertSingleAffection(long affectedRows) {
         Assert.isTrue(affectedRows == 1, "Should have affected only one row. Affected: " + affectedRows);
