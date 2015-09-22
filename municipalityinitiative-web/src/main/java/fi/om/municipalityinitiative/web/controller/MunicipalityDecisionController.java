@@ -1,12 +1,15 @@
 package fi.om.municipalityinitiative.web.controller;
 
+import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityDecisionDto;
 import fi.om.municipalityinitiative.dto.user.MunicipalityUserHolder;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
 import fi.om.municipalityinitiative.service.AttachmentService;
 import fi.om.municipalityinitiative.service.DecisionService;
 import fi.om.municipalityinitiative.service.ui.AuthorService;
+import fi.om.municipalityinitiative.service.ui.MunicipalityDecisionInfo;
 import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
+import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.web.SecurityFilter;
 import fi.om.municipalityinitiative.web.Urls;
 import org.springframework.stereotype.Controller;
@@ -50,11 +53,21 @@ public class MunicipalityDecisionController extends BaseController{
     public String municipalityModerationView(@PathVariable("id") Long initiativeId, Model model, Locale locale, HttpServletRequest request) {
         //TODO write tests for getRequiredMunicipalityUserHolder
         MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request);
+
+        InitiativeViewInfo initiative =  normalInitiativeService.getInitiative(initiativeId, loginUserHolder);
+
+        Maybe<MunicipalityDecisionInfo> decisionInfo = Maybe.absent();
+
+        if (initiative.getDecisionText().isPresent()) {
+            decisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiative.getDecisionText().getValue(), decisionService.getDecisionAttachments(initiativeId)));
+        }
+
         return ViewGenerator.municipalityDecisionView(
                 normalInitiativeService.getInitiative(initiativeId, loginUserHolder),
                 normalInitiativeService.getManagementSettings(initiativeId),
                 authorService.findAuthors(initiativeId, loginUserHolder),
-                attachmentService.findAllAttachments(initiativeId, loginUserHolder)
+                attachmentService.findAllAttachments(initiativeId, loginUserHolder),
+                decisionInfo
         ).view(model, Urls.get(locale).alt().municipalityModeration());
 
     }
@@ -69,7 +82,6 @@ public class MunicipalityDecisionController extends BaseController{
 
         // CSRF Must be validated here because SecurityFilter is not able to handle MultipartHttpServletRequest.
         SecurityFilter.verifyAndGetCurrentCSRFToken(request);
-        //TODO save the decision
         try {
             decisionService.setDecision(decision, initiativeId);
         } catch (InvalidAttachmentException e) {
@@ -80,8 +92,9 @@ public class MunicipalityDecisionController extends BaseController{
                 normalInitiativeService.getInitiative(initiativeId, loginUserHolder),
                 normalInitiativeService.getManagementSettings(initiativeId),
                 authorService.findAuthors(initiativeId, loginUserHolder),
-                attachmentService.findAllAttachments(initiativeId, loginUserHolder)
-        ).view(model, Urls.get(locale).alt().municipalityModeration());
+                attachmentService.findAllAttachments(initiativeId, loginUserHolder),
+                Maybe.of(MunicipalityDecisionInfo.build(decision.getDescription(), decisionService.getDecisionAttachments(initiativeId)))
+                ).view(model, Urls.get(locale).alt().municipalityModeration());
     }
 
 }

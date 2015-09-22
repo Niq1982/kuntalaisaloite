@@ -32,6 +32,7 @@ public class Initiative {
     private DateTime lastEmailReportTime;
     private EmailReportType lastEmailReportType;
     private Maybe<Long> youthInitiativeId = Maybe.absent();
+    private Maybe<String> decision = Maybe.absent();
 
     public Maybe<Long> getYouthInitiativeId() {
         return youthInitiativeId;
@@ -198,4 +199,10 @@ public class Initiative {
     }
 
 
+    public void setDecision(String decision){
+        this.decision = Maybe.of(decision);
+    }
+    public Maybe<String> getDecision() {
+        return decision;
+    }
 }

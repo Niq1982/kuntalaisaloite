@@ -93,6 +93,9 @@ public final class InitiativeViewInfo {
         return initiative.getYouthInitiativeId();
     }
 
+    public Maybe<String> getDecisionText() {
+        return initiative.getDecision();
+    }
 
     public ParticipantCount getParticipantCount() {
         ParticipantCount participantCount = new ParticipantCount();

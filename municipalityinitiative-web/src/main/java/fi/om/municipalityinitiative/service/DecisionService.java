@@ -37,7 +37,7 @@ public class DecisionService {
     }
 
     @Transactional(readOnly = true)
-    public List<DecisionAttachmentFile> getDecision(Long initiativeId) {
+    public List<DecisionAttachmentFile> getDecisionAttachments(Long initiativeId) {
         return decisionAttachmentDao.findAllAttachments(initiativeId);
     }
 

@@ -1,11 +1,14 @@
 package fi.om.municipalityinitiative.service;
 
 
-import fi.om.municipalityinitiative.dao.DecisionAttachmentDao;
 import fi.om.municipalityinitiative.dao.TestHelper;
 import fi.om.municipalityinitiative.dto.service.DecisionAttachmentFile;
+import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityDecisionDto;
+import fi.om.municipalityinitiative.dto.user.MunicipalityUserHolder;
+import fi.om.municipalityinitiative.dto.user.User;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
+import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
 import org.aspectj.util.FileUtil;
 import org.junit.Test;
 import org.springframework.mock.web.MockMultipartFile;
@@ -28,7 +31,7 @@ public class DecisionServiceTest extends ServiceIntegrationTestBase  {
     private DecisionService decisionService;
 
     @Resource
-    private DecisionAttachmentDao decisionAttachmentDao;
+    private NormalInitiativeService normalInitiativeService;
 
     private Long testMunicipalityId;
 
@@ -63,7 +66,7 @@ public class DecisionServiceTest extends ServiceIntegrationTestBase  {
 
         } finally {
 
-            List<DecisionAttachmentFile> decisionAttachments = decisionService.getDecision(initiativeId);
+            List<DecisionAttachmentFile> decisionAttachments = decisionService.getDecisionAttachments(initiativeId);
 
             assertThat(decisionAttachments.size(), is(1));
 
@@ -79,6 +82,11 @@ public class DecisionServiceTest extends ServiceIntegrationTestBase  {
 
             assertThat(fileInfo.getFileName(), is(TESTI_PDF));
 
+            InitiativeViewInfo initiative = normalInitiativeService.getInitiative(initiativeId, new MunicipalityUserHolder(User.municipalityLoginUser(initiativeId)));
+
+            assertThat(initiative.getDecisionText().isPresent(), is(true));
+
+            assertThat(initiative.getDecisionText().getValue(), is(DECISION_DESCRIPTION));
         }
 
     }
@@ -97,7 +105,7 @@ public class DecisionServiceTest extends ServiceIntegrationTestBase  {
             e.printStackTrace();
         } finally {
 
-            List<DecisionAttachmentFile> decisionAttachments = decisionService.getDecision(initiativeId);
+            List<DecisionAttachmentFile> decisionAttachments = decisionService.getDecisionAttachments(initiativeId);
 
             assertThat(decisionAttachments.size(), is(1));
 
@@ -105,7 +113,7 @@ public class DecisionServiceTest extends ServiceIntegrationTestBase  {
 
             decisionService.removeAttachmentFromDecision(fileInfo.getAttachmentId(), initiativeId);
 
-            decisionAttachments = decisionService.getDecision(initiativeId);
+            decisionAttachments = decisionService.getDecisionAttachments(initiativeId);
 
             assertThat(decisionAttachments.size(), is(0));
 

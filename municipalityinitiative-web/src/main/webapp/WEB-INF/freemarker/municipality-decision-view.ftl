@@ -18,7 +18,23 @@
 <@l.main page="page.moderation" pageTitle=initiative.name!"">
 
     <#--
-     * Show moderation block
+     * Show decision
+    -->
+    <#if decisionInfo.isPresent()>
+        <div class="view-block cf">
+            <div class="initiative-content-row last">
+                <h2><@u.message "municipality.decision" /></h2>
+                <p>${decisionInfo.getValue().getDecisionText()}</p>
+                <ul>
+                <#list decisionInfo.getValue().getAttachments() as attachment>
+                       <li>${attachment.fileName}</li>
+                </#list>
+                </ul>
+            </div>
+        </div>
+    </#if>
+    <#--
+     * Show Municipality decision form
     -->
 
     <div class="msg-block cf">
@@ -38,7 +54,7 @@
                 <input type="hidden" name="locale" value="${locale}"/>
 
                 <div class="input-block-content">
-                    <@f.uploadField path="decision.files" name="files" />
+                    <@f.uploadField path="decision.files" name="files" multiple=true/>
                 </div>
 
                 <div class="input-block-content">

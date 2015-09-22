@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.dto.service.*;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.service.AttachmentService;
 import fi.om.municipalityinitiative.service.AttachmentUtil;
+import fi.om.municipalityinitiative.service.ui.MunicipalityDecisionInfo;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.util.ReviewHistoryDiff;
 import fi.om.municipalityinitiative.web.SearchParameterQueryString;
@@ -154,7 +155,7 @@ public final class ViewGenerator {
         );
     }
 
-    public static ViewGenerator municipalityDecisionView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors,  AttachmentService.Attachments allAttachments){
+    public static ViewGenerator municipalityDecisionView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors,  AttachmentService.Attachments allAttachments, Maybe<MunicipalityDecisionInfo> decisionInfoMaybe){
         return new ViewGenerator("municipality-decision-view",
                 new AttributeBuilder()
                     .add("initiative", initiativeInfo)
@@ -162,6 +163,7 @@ public final class ViewGenerator {
                     .add("authors", authors)
                     .add("attachments", allAttachments)
                     .add("decision", new MunicipalityDecisionDto())
+                    .add("decisionInfo", decisionInfoMaybe)
                     .build()
                 );
         }
