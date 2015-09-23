@@ -1,5 +1,5 @@
 alter table municipality_initiative add column municipality_decision text;
-alter table municipality_initiative add column municipality_decision_date date;
+alter table municipality_initiative add column municipality_decision_date timestamp;
 
 create table decision_attachment (
   id bigserial,
