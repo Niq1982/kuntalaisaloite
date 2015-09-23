@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.util.FixState;
 import fi.om.municipalityinitiative.util.InitiativeState;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 public final class InitiativeViewInfo {
@@ -96,6 +97,8 @@ public final class InitiativeViewInfo {
     public Maybe<String> getDecisionText() {
         return initiative.getDecision();
     }
+
+    public Maybe<DateTime> getDecisionDate() {return initiative.getDecisionDate();}
 
     public ParticipantCount getParticipantCount() {
         ParticipantCount participantCount = new ParticipantCount();

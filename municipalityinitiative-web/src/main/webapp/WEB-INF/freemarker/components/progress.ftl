@@ -63,10 +63,12 @@
 	<#assign isCollectDone = !isSentDone && initiative.state == InitiativeState.PUBLISHED || isSentDone />
 	<#assign isPublishDone = isCollectDone />
 	<#assign isManagementDone = !isPublishDone && (initiative.state == InitiativeState.REVIEW || initiative.state == InitiativeState.ACCEPTED) || isPublishDone />
+	<#assign isMunicipalityDecision = initiative.getDecisionText().isPresent()/>
 
 	<#assign createTime><@u.localDate initiative.createTime /></#assign>
     <#assign initiativePublished><@u.message "progress.public.published" /><br/>${createTime}</#assign>
     <#assign sendToMunicipality><@u.message "progress.public.sent" /><#if initiative.sentTime.present><br/><@u.localDate initiative.sentTime.value /></#if></#assign>
+	<#assign municipalityDecision><@u.message "progress.public.decision"/><#if initiative.getDecisionDate().isPresent()><br/><@u.localDate initiative.getDecisionDate().value /></#if></#assign>
 
 	<#-- PUBLIC VIEW -->
 	<#if public>
@@ -81,6 +83,11 @@
 				"label": sendToMunicipality,
 				"done": isSentDone,
 				"icon": "sent"
+			},
+			{
+				"label": municipalityDecision,
+				"done": isMunicipalityDecision,
+				"icon": "decision"
 			}
 		]>
 	
@@ -103,6 +110,11 @@
 					"label": sendToMunicipality,
 					"done": isSentDone,
 					"icon": "sent"
+				},
+				{
+				"label": municipalityDecision,
+				"done": isMunicipalityDecision,
+				"icon": "decision"
 				}
 			]>
 	    </#if>
