@@ -44,7 +44,8 @@ public final class ViewGenerator {
                                                   List<Municipality> municipalities,
                                                   ParticipantUICreateDto participantUICreateDto,
                                                   AuthorUIMessage authorUIMessage,
-                                                  String supportCountData) {
+                                                  String supportCountData,
+                                                  Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo) {
         return new ViewGenerator(Views.PUBLIC_COLLECT_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiative.initiative)
@@ -56,6 +57,7 @@ public final class ViewGenerator {
                         .add("authorMessage", authorUIMessage)
                         .add("supportCountData", supportCountData)
                         .add("locations", initiative.locations)
+                        .add("decisionInfo", municipalityDecisionInfo)
                         .build()
         );
     }
@@ -132,12 +134,13 @@ public final class ViewGenerator {
         return new ViewGenerator(GRAPH_IFRAME_GENERATOR_VIEW, new AttributeBuilder().build());
     }
 
-    public static ViewGenerator singleView(InitiativePageInfo initiativePageView) {
+    public static ViewGenerator singleView(InitiativePageInfo initiativePageView, Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo) {
         return new ViewGenerator(Views.PUBLIC_SINGLE_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativePageView.initiative)
                         .add("authors", initiativePageView.authors)
                         .add("attachments", initiativePageView.attachments)
+                        .add("decisionInfo", municipalityDecisionInfo)
                         .build());
     }
 

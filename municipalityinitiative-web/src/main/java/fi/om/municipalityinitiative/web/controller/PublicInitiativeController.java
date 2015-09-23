@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.AttachmentFile;
+import fi.om.municipalityinitiative.dto.service.DecisionAttachmentFile;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
@@ -12,10 +13,7 @@ import fi.om.municipalityinitiative.exceptions.AccessDeniedException;
 import fi.om.municipalityinitiative.exceptions.InvalidHomeMunicipalityException;
 import fi.om.municipalityinitiative.exceptions.NotFoundException;
 import fi.om.municipalityinitiative.service.*;
-import fi.om.municipalityinitiative.service.ui.AuthorService;
-import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
-import fi.om.municipalityinitiative.service.ui.PublicInitiativeService;
-import fi.om.municipalityinitiative.service.ui.VerifiedInitiativeService;
+import fi.om.municipalityinitiative.service.ui.*;
 import fi.om.municipalityinitiative.util.InitiativeType;
 import fi.om.municipalityinitiative.util.Maybe;
 import fi.om.municipalityinitiative.validation.NormalInitiative;
@@ -72,6 +70,8 @@ public class PublicInitiativeController extends BaseController {
     @Resource
     private AttachmentService attachmentService;
 
+    @Resource
+    private DecisionService decisionService;
 
     @Resource
     private SupportCountService supportCountService;
@@ -111,17 +111,30 @@ public class PublicInitiativeController extends BaseController {
         addPiwicIdIfNotAuthenticated(model, request);
 
         InitiativePageInfo initiativePageView = publicInitiativeService.getInitiativePageDto(initiativeId, loginUserHolder);
-            if (initiativePageView.isCollaborative()) {
+
+        Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo = getMunicipalityDecisionInfoMaybe(initiativeId, initiativePageView);
+
+        if (initiativePageView.isCollaborative()) {
 
             return ViewGenerator.collaborativeView(initiativePageView,
                     municipalityService.findAllMunicipalities(locale),
                     new ParticipantUICreateDto(),
                     new AuthorUIMessage(),
-                    supportCountService.getSupportVotesPerDateJson(initiativeId)).view(model, Urls.get(locale).alt().view(initiativeId));
+                    supportCountService.getSupportVotesPerDateJson(initiativeId),
+                    municipalityDecisionInfo).view(model, Urls.get(locale).alt().view(initiativeId));
         }
         else {
-            return ViewGenerator.singleView(initiativePageView).view(model, Urls.get(locale).alt().view(initiativeId));
+            return ViewGenerator.singleView(initiativePageView, municipalityDecisionInfo).view(model, Urls.get(locale).alt().view(initiativeId));
         }
+    }
+
+    private Maybe<MunicipalityDecisionInfo> getMunicipalityDecisionInfoMaybe(@PathVariable("id") Long initiativeId, InitiativePageInfo initiativePageView) {
+        Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo = Maybe.absent();
+        if (initiativePageView.initiative != null && initiativePageView.initiative.getDecisionText().isPresent()) {
+            List<DecisionAttachmentFile> decisionAttachments = decisionService.getDecisionAttachments(initiativeId);
+            municipalityDecisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiativePageView.initiative.getDecisionText().getValue(), decisionAttachments));
+        }
+        return municipalityDecisionInfo;
     }
 
 
@@ -219,7 +232,8 @@ public class PublicInitiativeController extends BaseController {
                     municipalityService.findAllMunicipalities(locale),
                     participant,
                     new AuthorUIMessage(),
-                    supportCountService.getSupportVotesPerDateJson(initiativeId)).view(model, Urls.get(locale).alt().view(initiativeId));
+                    supportCountService.getSupportVotesPerDateJson(initiativeId),
+                    getMunicipalityDecisionInfoMaybe(initiativeId, initiativePageInfo)).view(model, Urls.get(locale).alt().view(initiativeId));
 
         }
     }
@@ -361,11 +375,14 @@ public class PublicInitiativeController extends BaseController {
             return redirectWithMessage(Urls.get(locale).view(initiativeId), RequestMessage.AUTHOR_MESSAGE_ADDED, request);
         }
         else {
-            return ViewGenerator.collaborativeView(publicInitiativeService.getInitiativePageInfo(initiativeId),
+            InitiativePageInfo initiativePageInfo = publicInitiativeService.getInitiativePageInfo(initiativeId);
+            return ViewGenerator.collaborativeView(initiativePageInfo,
                     municipalityService.findAllMunicipalities(locale),
                     new ParticipantUICreateDto(),
                     authorUIMessage,
-                    supportCountService.getSupportVotesPerDateJson(initiativeId)).view(model, Urls.get(locale).alt().view(initiativeId));
+                    supportCountService.getSupportVotesPerDateJson(initiativeId),
+                    getMunicipalityDecisionInfoMaybe(initiativeId, initiativePageInfo)
+            ).view(model, Urls.get(locale).alt().view(initiativeId));
         }
     }
 

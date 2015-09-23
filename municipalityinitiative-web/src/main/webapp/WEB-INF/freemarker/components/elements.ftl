@@ -373,4 +373,19 @@
 </#macro>
 
 
+<#macro decisionBlock decisionInfo>
+    <div class="view-block cf">
+        <div class="initiative-content-row last">
+            <h2><@u.message "municipality.decision" /></h2>
+            <p>${decisionInfo.getDecisionText()}</p>
+            <ul>
+                <#list decisionInfo.getAttachments() as attachment>
+                    <li>${attachment.fileName}</li>
+                </#list>
+            </ul>
+        </div>
+    </div>
+</#macro>
+
+
 </#escape> 
