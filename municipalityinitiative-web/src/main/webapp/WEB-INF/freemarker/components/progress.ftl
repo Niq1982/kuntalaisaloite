@@ -83,13 +83,16 @@
 				"label": sendToMunicipality,
 				"done": isSentDone,
 				"icon": "sent"
-			},
-			{
-				"label": municipalityDecision,
-				"done": isMunicipalityDecision,
-				"icon": "decision"
 			}
+
 		]>
+		<#if isMunicipalityDecision>
+			<#assign steps = steps + [{
+			"label": municipalityDecision,
+			"done": isMunicipalityDecision,
+			"icon": "decision"
+			}]/>
+		</#if>
 	
 		<#-- COLLABORATIVE -->
 		<#if initiative.collaborative>
@@ -110,14 +113,18 @@
 					"label": sendToMunicipality,
 					"done": isSentDone,
 					"icon": "sent"
-				},
-				{
+				}
+
+			]>
+			<#if isMunicipalityDecision>
+				<#assign steps = steps + [{
 				"label": municipalityDecision,
 				"done": isMunicipalityDecision,
 				"icon": "decision"
-				}
-			]>
-	    </#if>
+				}]/>
+			</#if>
+
+		</#if>
   
   	<#-- MANAGEMENT/MODERATION VIEW -->
   	<#else>
