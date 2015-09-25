@@ -450,7 +450,7 @@
         <div id="map-modal">
             <p><@u.message key="map.searchAddress"/></p>
             <input type="text" id="user-entered-address"></input>
-            <button id="search-locations-button" name="search" class="small-button disable-dbl-click-check">Hae</button>
+            <button id="search-locations-button" name="search" class="small-button disable-dbl-click-check"><@u.message key="map.search"/></button>
             <div id = "result-list"></div>
 
             <div class="map-container initiative-content-row last">
@@ -463,7 +463,7 @@
 
             <div class="input-block-content">
                 <span class="small-button disabled" id="save-and-close"><@u.message "map.save" /></span>
-                <a class="close push"><@u.message "action.cancel" /></a>
+                <a class="close push"><@u.message "map.cancel" /></a>
             </div>
         </div>
     </@compress>
