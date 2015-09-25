@@ -20,7 +20,7 @@
  * @param initiativeId sets the initiative
  * @param showTitle is the option for showing initiative title and date
 -->
-<#macro initiativeIframe initiativeId id="kansalaisaloite-leijuke" embed=true width="600" height="700" showTitle=true><@compress single_line=true>
+<#macro initiativeIframe initiativeId id="kuntalaisaloite-leijuke" embed=true width="600" height="700" showTitle=true><@compress single_line=true>
     <#assign iframeHTML><iframe id="${id}"
             frameborder="0"
             scrolling="no"
@@ -138,17 +138,17 @@
             
             {{if showPreview}}
 	            <div id="iframe-placeholder" style="width:{{:width}}px; height:{{:height}}px;"><span class="loader"></span></div>
-	            <iframe id="kansalaisaloite-leijuke"
+	            <iframe id="kuntalaisaloite-leijuke"
 	                    frameborder="0"
 	                    scrolling="no"
 	                    src="${iframeUrl}/{{:lang}}/{{:initiativeId}}?showTitle={{:showTitle}}"
 	                    width="{{:width}}"
-	                    height="{{:height}}" onload="iFrameLoaded('kansalaisaloite-leijuke', 'iframe-placeholder')">
+	                    height="{{:height}}" onload="iFrameLoaded('kuntalaisaloite-leijuke', 'iframe-placeholder')">
 	            </iframe>
 	
 	            <#assign iFrameSrc>
 	            <@compress single_line=true>
-	                <iframe id="kansalaisaloite-leijuke"
+	                <iframe id="kuntalaisaloite-leijuke"
 	                    frameborder="0"
 	                    scrolling="no"
 	                    src="${iframeUrl}/{{:lang}}/{{:initiativeId}}?showTitle={{:showTitle}}"
@@ -172,13 +172,13 @@
 
         <p><@u.message "graph-iframeGenerator.nojs.description" /></p>
 
-        <@i.initiativeIframe initiativeId="1" id="kansalaisaloite-leijuke" embed=true width=defaults[2] height=defaults[3] />
+        <@i.initiativeIframe initiativeId="1" id="kuntalaisaloite-leijuke" embed=true width=defaults[2] height=defaults[3] />
 
         <br/><br/>
         <h2><@u.message "graph-iframeGenerator.source.title" /></h2>
         <p><@u.message "graph-iframeGenerator.nojs.source" /></p>
 
-        <@i.initiativeIframe initiativeId="1" id="kansalaisaloite-leijuke" embed=false width=defaults[2] height=defaults[3] />
+        <@i.initiativeIframe initiativeId="1" id="kuntalaisaloite-leijuke" embed=false width=defaults[2] height=defaults[3] />
     </noscript>
 </#macro>
 
