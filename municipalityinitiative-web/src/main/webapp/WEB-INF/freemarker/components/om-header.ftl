@@ -34,8 +34,9 @@
 		};
 
 	</script>
-	<div class="placeholder"></div>
-	<iframe id="searchIframe" src=${urls.getSuperSearchIframeUrl()}> </iframe>
+	<div class="placeholder">
+		<iframe id="searchIframe" src=${urls.getSuperSearchIframeUrl()}> </iframe>
+    </div>
 <#else>
 	<div class="om-header">
 		<div id="headerNav" class="header-nav">
