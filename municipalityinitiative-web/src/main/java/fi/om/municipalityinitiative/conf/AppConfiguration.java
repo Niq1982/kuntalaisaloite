@@ -400,7 +400,8 @@ public class AppConfiguration {
                 Boolean.valueOf(env.getRequiredProperty(PropertyNames.enableVerifiedInitiatives)),
                 Boolean.valueOf(env.getRequiredProperty(PropertyNames.isTestEmailSender)),
                 String.valueOf(env.getRequiredProperty(PropertyNames.googleMapsApiKey)),
-                Boolean.valueOf(env.getRequiredProperty(PropertyNames.googleMapsEnabled)));
+                Boolean.valueOf(env.getRequiredProperty(PropertyNames.googleMapsEnabled)),
+                Boolean.valueOf(env.getRequiredProperty(PropertyNames.superSearchEnabled)));
     }
 
     @Bean
@@ -475,6 +476,7 @@ public class AppConfiguration {
         Urls.initUrls(baseUrl,
                 env.getProperty(PropertyNames.iframeBaseUrl, baseUrl),
                 env.getProperty(PropertyNames.apiBaseUrl, baseUrl),
-                env.getRequiredProperty(PropertyNames.youthInitiativeBaseUrl));
+                env.getRequiredProperty(PropertyNames.youthInitiativeBaseUrl),
+                env.getRequiredProperty(PropertyNames.superSearchBaseUrl));
     }
 }

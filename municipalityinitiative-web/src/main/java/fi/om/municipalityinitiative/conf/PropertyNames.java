@@ -4,7 +4,6 @@ public final class PropertyNames {
 
     public static final String isTestEmailSender = "test.mail.sender";
 
-
     private PropertyNames() {}
 
     public static final String omImageDirection = "om.image.directory";
@@ -18,6 +17,8 @@ public final class PropertyNames {
     public static final String googleMapsApiKey = "googlemaps.apikey";
 
     public static final String googleMapsEnabled = "googlemaps.enabled";
+
+    public static final String superSearchEnabled = "supersearch.enabled";
     
     public static final String jdbcDriver = "jdbc.driver";
     
@@ -82,6 +83,8 @@ public final class PropertyNames {
     public static final String apiBaseUrl = "urls.api.url";
 
     public static final String youthInitiativeBaseUrl = "youth.initiative.base.url";
+
+    public static final String superSearchBaseUrl = "supersearch.baseurl";
 
     public static final String attachmentDir = "attachment.directory";
 

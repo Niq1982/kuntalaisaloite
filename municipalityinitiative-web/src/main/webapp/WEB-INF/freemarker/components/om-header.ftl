@@ -1,32 +1,70 @@
 <#import "utils.ftl" as u />
 
-<div class="om-header">
-    <div id="headerNav" class="header-nav">
-	    <ul>
-		    <li>
-		    	<a href="http://www.${(locale == "sv")?string("demokrati","demokratia")}.fi"><@u.message "otherServices.demokratia"/></a>
+<#if superSearchEnabled>
+	<style>
+		#searchIframe {
+			width: 100%;
+			border: none;
+			height: 45px;
+			z-index: 999;
+			position:absolute;
+			top :0px;
+		}
+		.placeholder {
+			position:relative;
+			width: 100%;
+			height: 45px;
+		}
 
-		    <li>
-		    	<a href="https://www.kansalaisaloite.fi/${locale}"><@u.message "otherServices.initiative"/></a>
+	</style>
 
-		    <li>
-		    	<a class="active" href="${urls.baseUrl}/${locale}"><@u.message "otherServices.municipalityinitiative"/></a>
+	<script type="text/javascript">
 
-		    <li>
-		    	<a href="http://www.lausuntopalvelu.fi/"><@u.message "otherServices.lausuntopalvelu"/></a>
-	
-			<li>
-		    	<a href="http://www.${(locale == "sv")?string("ungasideer","nuortenideat")}.fi"><@u.message "otherServices.nuortenIdeat"/></a>
+		var navBarHeight = "45px";
+		var searchFormOpenHeight = "100vh";
 
-		    <li>
-		    	<a href="http://www.otakantaa.fi/${locale}-FI"><@u.message "otherServices.otaKantaa"/></a>
+		window.onmessage = function(e){
+			// TODO ensure origin
+			var message = e.data;
+			if (message.searchPanelOpen === true) {
+				$("#searchIframe").height(searchFormOpenHeight);
+			} else if (message.searchPanelOpen === false) {
+				$("#searchIframe").height(navBarHeight);
+			}
+		};
 
-		    <li>
-		    	<a href="http://www.vaalit.fi/${locale}"><@u.message "otherServices.vaalit"/></a>
+	</script>
+	<div class="placeholder"></div>
+	<iframe id="searchIframe" src=${urls.getSuperSearchIframeUrl()}> </iframe>
+<#else>
+	<div class="om-header">
+		<div id="headerNav" class="header-nav">
+			<ul>
+				<li>
+					<a href="http://www.${(locale == "sv")?string("demokrati","demokratia")}.fi"><@u.message "otherServices.demokratia"/></a>
 
-		    <li>
-		    	<a href="http://www.yhdenvertaisuus.fi/${(locale == "sv")?string("vad_da_equality_fi","")}"><@u.message "otherServices.yhdenvertaisuus"/></a>
-		</ul>
+				<li>
+					<a href="https://www.kansalaisaloite.fi/${locale}"><@u.message "otherServices.initiative"/></a>
+
+				<li>
+					<a class="active" href="${urls.baseUrl}/${locale}"><@u.message "otherServices.municipalityinitiative"/></a>
+
+				<li>
+					<a href="http://www.lausuntopalvelu.fi/"><@u.message "otherServices.lausuntopalvelu"/></a>
+
+				<li>
+					<a href="http://www.${(locale == "sv")?string("ungasideer","nuortenideat")}.fi"><@u.message "otherServices.nuortenIdeat"/></a>
+
+				<li>
+					<a href="http://www.otakantaa.fi/${locale}-FI"><@u.message "otherServices.otaKantaa"/></a>
+
+				<li>
+					<a href="http://www.vaalit.fi/${locale}"><@u.message "otherServices.vaalit"/></a>
+
+				<li>
+					<a href="http://www.yhdenvertaisuus.fi/${(locale == "sv")?string("vad_da_equality_fi","")}"><@u.message "otherServices.yhdenvertaisuus"/></a>
+			</ul>
+		</div>
+
 	</div>
-
-</div>
+</#if>

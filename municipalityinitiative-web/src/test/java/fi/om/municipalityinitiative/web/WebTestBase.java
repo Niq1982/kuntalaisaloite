@@ -88,7 +88,7 @@ public abstract class WebTestBase {
     public void init() {
         if (urls == null) {
             String baseUrl = env.getRequiredProperty(PropertyNames.baseURL);
-            Urls.initUrls(baseUrl, baseUrl, baseUrl, "www.nua.fi");
+            Urls.initUrls(baseUrl, baseUrl, baseUrl, "www.nua.fi", "superhaku.demo.solita.fi");
             urls = Urls.FI;
         }
 

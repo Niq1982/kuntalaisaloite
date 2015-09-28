@@ -314,6 +314,10 @@ public final class Urls {
 
     public static final String SUPPORTS_BY_DATE = API+"/v1/supports-by-date/" + ID_PARAMETER;
 
+    private static final String  SUPERSEARCH_LAN_PARAMETER = "/#/?lan=";
+
+    private static final String SUPERSEARCH_SITE_PARAMETER = "&site=";
+
     private final String baseUrl;
 
     private final String iframeBaseUrl;
@@ -324,17 +328,21 @@ public final class Urls {
 
     private final String youthInitiativeBaseUrl;
 
-    public static void initUrls(String baseUrl, String iframeBaseUrl, String apiBaseUrl, String youthInitiativeUrl) {
-        FI = new Urls(baseUrl, iframeBaseUrl, apiBaseUrl, LOCALE_FI, youthInitiativeUrl);
-        SV = new Urls(baseUrl, iframeBaseUrl, apiBaseUrl, LOCALE_SV, youthInitiativeUrl);
+    private final String superSearchBaseUrl;
+
+
+    public static void initUrls(String baseUrl, String iframeBaseUrl, String apiBaseUrl, String youthInitiativeUrl, String superSearchBaseUrl) {
+        FI = new Urls(baseUrl, iframeBaseUrl, apiBaseUrl, LOCALE_FI, youthInitiativeUrl, superSearchBaseUrl);
+        SV = new Urls(baseUrl, iframeBaseUrl, apiBaseUrl, LOCALE_SV, youthInitiativeUrl, superSearchBaseUrl);
     }
 
-    private Urls(String baseUrl, String iframeBaseUrl, String apiBaseUrl, Locale locale, String youthInitiativeBaseUrl) {
+    private Urls(String baseUrl, String iframeBaseUrl, String apiBaseUrl, Locale locale, String youthInitiativeBaseUrl, String superSearchBaseUrl) {
         this.baseUrl = baseUrl;
         this.iframeBaseUrl = iframeBaseUrl;
         this.apiBaseUrl = apiBaseUrl;
         this.locale = locale;
         this.youthInitiativeBaseUrl = youthInitiativeBaseUrl;
+        this.superSearchBaseUrl =  superSearchBaseUrl;
     }
 
     public String getBaseUrl() {
@@ -421,6 +429,11 @@ public final class Urls {
 
     public String youthInitiativeWebUrl(Long youthInitiativeId) {
         return youthInitiativeBaseUrl + (this.equals(FI) ? "/fi" : "/sv") + "/ideat/" + youthInitiativeId;
+    }
+
+    public String getSuperSearchIframeUrl() {
+
+        return superSearchBaseUrl + SUPERSEARCH_LAN_PARAMETER + (this.equals(FI) ? "fi" : "sv") + SUPERSEARCH_SITE_PARAMETER + "kuntalaisaloite.fi";
     }
 
     public String initiative(Long initiativeId) {
