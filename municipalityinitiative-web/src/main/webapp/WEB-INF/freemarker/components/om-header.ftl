@@ -20,17 +20,18 @@
 
 	<script type="text/javascript">
 
-		var navBarHeight = "45px";
-		var searchFormOpenHeight = "100vh";
-
 		window.onmessage = function(e){
-			// TODO ensure origin
-			var message = e.data;
-			if (message.searchPanelOpen === true) {
-				$("#searchIframe").height(searchFormOpenHeight);
-			} else if (message.searchPanelOpen === false) {
-				$("#searchIframe").height(navBarHeight);
+            if (event.origin === "${urls.superSearchIFrameOrigin()}") {
+                var message = e.data;
+				if (message) {
+                    var height = message.height;
+                    if (height) {
+                        $("#searchIframe").height(height);
+                    }
+				}
+
 			}
+
 		};
 
 	</script>

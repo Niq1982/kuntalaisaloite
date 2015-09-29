@@ -436,6 +436,9 @@ public final class Urls {
         return superSearchBaseUrl + SUPERSEARCH_LAN_PARAMETER + (this.equals(FI) ? "fi" : "sv") + SUPERSEARCH_SITE_PARAMETER + "kuntalaisaloite.fi";
     }
 
+    public String superSearchIFrameOrigin (){
+        return superSearchBaseUrl;
+    }
     public String initiative(Long initiativeId) {
         return baseUrl + INITIATIVE.replace(ID_PARAMETER, initiativeId.toString());
     }
