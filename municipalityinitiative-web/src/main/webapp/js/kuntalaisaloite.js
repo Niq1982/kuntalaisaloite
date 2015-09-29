@@ -166,8 +166,10 @@ $(document).ready(function () {
 		speedAutoHide =	'15000',					// Delay for hiding success-messages (if enabled)
 		vpHeight =		$(window).height(),			// Viewport height
 		vpWidth = window.innerWidth,          // Viewport width
+		isIE6 =			$('html').hasClass('ie6'),	// Boolean for IE6. Used browser detection instead of jQuery.support().
 		isIE7 =			$('html').hasClass('ie7'),	// Boolean for IE7. Used browser detection instead of jQuery.support().
 		isIE8 =			$('html').hasClass('ie8'),	// Boolean for IE8. Used browser detection instead of jQuery.support().
+		isIE9 =			$('html').hasClass('ie9'),	// Boolean for IE9. Used browser detection instead of jQuery.support().
 		locale =		Init.getLocale(),			// Current locale: fi, sv
 		hideClass =		'js-hide',					// Set general hidden class
 		fireParticipantGraph, headerNav;
@@ -182,7 +184,11 @@ $(document).ready(function () {
 			$('.auto-hide').fadeOut(speedSlow);
 		}, speedAutoHide);
 	}
-
+	if (showSuperSearch && !isIE6 && !isIE7 && !isIE8 && !isIE9) {
+		$(".super-search-placeholder").show();
+		$(".super-search-placeholder").append("<iframe id=\"searchIframe\" src=" + superSearchUrl  + "</iframe>");
+		$(".om-header").hide();
+	}
 	// Validate emails
 	var validateEmail = function (email) {
 		var re;
