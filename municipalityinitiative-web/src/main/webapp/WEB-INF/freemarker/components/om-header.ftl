@@ -1,6 +1,6 @@
 <#import "utils.ftl" as u />
 
-<script type="application/javascript">
+<script type="text/javascript">
 	<#if superSearchEnabled>
 		var showSuperSearch = true;
 		var superSearchUrl = "${urls.getSuperSearchIframeUrl()}";
