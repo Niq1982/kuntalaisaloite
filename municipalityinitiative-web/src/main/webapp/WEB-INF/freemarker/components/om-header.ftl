@@ -21,7 +21,7 @@
 	<script type="text/javascript">
 
 		window.onmessage = function(e){
-            if (event.origin === "${urls.superSearchIFrameOrigin()}") {
+            if (e.origin === "${urls.superSearchIFrameOrigin()}") {
                 var message = e.data;
 				if (message) {
                     var height = message.height;
