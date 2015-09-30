@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.AttachmentFile;
-import fi.om.municipalityinitiative.dto.service.DecisionAttachmentFile;
 import fi.om.municipalityinitiative.dto.service.Municipality;
 import fi.om.municipalityinitiative.dto.ui.*;
 import fi.om.municipalityinitiative.dto.user.LoginUserHolder;
@@ -131,8 +130,7 @@ public class PublicInitiativeController extends BaseController {
     private Maybe<MunicipalityDecisionInfo> getMunicipalityDecisionInfoMaybe(@PathVariable("id") Long initiativeId, InitiativePageInfo initiativePageView) {
         Maybe<MunicipalityDecisionInfo> municipalityDecisionInfo = Maybe.absent();
         if (initiativePageView.initiative != null && initiativePageView.initiative.getDecisionText().isPresent()) {
-            List<DecisionAttachmentFile> decisionAttachments = decisionService.getDecisionAttachments(initiativeId);
-            municipalityDecisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiativePageView.initiative.getDecisionText().getValue(), decisionAttachments));
+            municipalityDecisionInfo = Maybe.of(MunicipalityDecisionInfo.build(initiativePageView.initiative.getDecisionText().getValue(), decisionService.getDecisionAttachments(initiativeId)));
         }
         return municipalityDecisionInfo;
     }

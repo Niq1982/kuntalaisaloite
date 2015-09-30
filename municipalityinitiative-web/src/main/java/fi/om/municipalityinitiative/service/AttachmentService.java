@@ -1,6 +1,5 @@
 package fi.om.municipalityinitiative.service;
 
-import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 import fi.om.municipalityinitiative.dao.AttachmentDao;
 import fi.om.municipalityinitiative.dao.InitiativeDao;
@@ -15,9 +14,7 @@ import fi.om.municipalityinitiative.exceptions.FileUploadException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
 import fi.om.municipalityinitiative.exceptions.OperationNotAllowedException;
 import fi.om.municipalityinitiative.util.ImageModifier;
-import fi.om.municipalityinitiative.util.RandomHashGenerator;
 import org.aspectj.util.FileUtil;
-import org.im4java.core.IM4JavaException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +29,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.List;
 
 public class AttachmentService {
 
@@ -72,11 +68,11 @@ public class AttachmentService {
 
         File tempFile = null;
         try {
-            tempFile = createTempFile(file, fileType);
+            tempFile = AttachmentUtil.createTempFile(file, fileType);
 
             Long attachmentId = attachmentDao.addAttachment(initiativeId, description, file.getContentType(), fileType);
 
-            saveFileToDisk(file, fileType, tempFile, attachmentId);
+            AttachmentUtil.saveFileToDisk(imageModifier, file, fileType, tempFile, attachmentId, attachmentDir);
 
         } catch (InvalidAttachmentException e) {
             throw e;
@@ -106,42 +102,6 @@ public class AttachmentService {
     }
 
 
-    private void saveFileToDisk(MultipartFile file, String fileType, File tempFile, Long attachmentId) throws IOException, IM4JavaException, InterruptedException {
-        if (AttachmentFileInfo.isPdfContentType(file.getContentType())) {
-            FileUtil.copyValidFiles(tempFile, new File(getFilePath(attachmentId, fileType)));
-        }
-        else {
-            imageModifier.modify(tempFile, getFilePath(attachmentId, fileType), AttachmentUtil.ImageProperties.MAX_WIDTH, AttachmentUtil.ImageProperties.MAX_HEIGHT);
-            imageModifier.modify(tempFile, getThumbnailPath(attachmentId, fileType), AttachmentUtil.ImageProperties.THUMBNAIL_MAX_WIDTH, AttachmentUtil.ImageProperties.THUMBNAIL_MAX_HEIGHT);
-        }
-    }
-
-    private File createTempFile(MultipartFile file, String fileType) throws IOException, InvalidAttachmentException {
-        File tempFile = null;
-        // Create temp-file for proper file handling
-        tempFile = File.createTempFile(RandomHashGenerator.shortHash(), "." + fileType);
-
-        file.transferTo(tempFile);
-
-        assertRealFileContent(tempFile, fileType);
-        return tempFile;
-    }
-
-    private static void assertRealFileContent(File tempFile, String fileType) throws IOException, InvalidAttachmentException {
-        if ((fileType.equalsIgnoreCase("jpg") || fileType.equalsIgnoreCase("jpeg")) && isJPEG(tempFile)) {
-            return;
-        }
-        if (fileType.equalsIgnoreCase("png") && isPNG(tempFile)) {
-            return;
-        }
-        if (fileType.equalsIgnoreCase("pdf") && isPDF(tempFile)) {
-            return;
-        }
-        else {
-            throw new InvalidAttachmentException("File content was invalid for filetype: " + fileType);
-        }
-    }
-
     static boolean isPDF(File file) throws IOException {
 
         byte[] ba = Files.toByteArray(file);
@@ -170,13 +130,7 @@ public class AttachmentService {
         return numRead == 8 && Arrays.equals(signature, pngIdBytes);
     }
 
-    private String getFilePath(Long attachmentId, String fileType) {
-        return attachmentDir + "/" + attachmentId + "." + fileType;
-    }
 
-    private String getThumbnailPath(Long attachmentId, String fileType) {
-        return attachmentDir + "/" + attachmentId + "_thumbnail" + "." + fileType;
-    }
 
     @Transactional(readOnly = true)
     // TODO: Cache
@@ -188,7 +142,7 @@ public class AttachmentService {
         }
 
         assertViewAllowance(loginUserHolder, attachmentInfo);
-        byte[] attachmentBytes = getFileBytes(getFilePath(attachmentId, attachmentInfo.getFileType()));
+        byte[] attachmentBytes = getFileBytes(AttachmentUtil.getFilePath(attachmentId, attachmentInfo.getFileType(), attachmentDir));
         return new AttachmentFile(attachmentInfo, attachmentBytes);
     }
 
@@ -201,7 +155,7 @@ public class AttachmentService {
             throw new AccessDeniedException("no thumbnail for pdf");
         }
 
-        byte[] attachmentBytes = getFileBytes(getThumbnailPath(attachmentId, attachmentInfo.getFileType()));
+        byte[] attachmentBytes = getFileBytes(AttachmentUtil.getThumbnailPath(attachmentId, attachmentInfo.getFileType(), attachmentDir));
         return new AttachmentFile(attachmentInfo, attachmentBytes);
     }
 
@@ -236,24 +190,24 @@ public class AttachmentService {
     }
 
     @Transactional(readOnly = true)
-    public Attachments findAcceptedAttachments(Long initiativeId) {
-        return new Attachments(attachmentDao.findAcceptedAttachments(initiativeId));
+    public AttachmentUtil.Attachments findAcceptedAttachments(Long initiativeId) {
+        return new AttachmentUtil.Attachments(attachmentDao.findAcceptedAttachments(initiativeId));
     }
 
     @Transactional(readOnly = true)
-    public Attachments findAttachments(Long initiativeId, LoginUserHolder loginUserHolder) {
+    public AttachmentUtil.Attachments findAttachments(Long initiativeId, LoginUserHolder loginUserHolder) {
         if (loginUserHolder.getUser().isOmUser() || loginUserHolder.hasManagementRightsForInitiative(initiativeId)) {
-            return new Attachments(attachmentDao.findAllAttachments(initiativeId));
+            return new AttachmentUtil.Attachments(attachmentDao.findAllAttachments(initiativeId));
         }
         else {
-            return new Attachments(attachmentDao.findAcceptedAttachments(initiativeId));
+            return new AttachmentUtil.Attachments(attachmentDao.findAcceptedAttachments(initiativeId));
         }
     }
 
     @Transactional(readOnly = true)
-    public Attachments findAllAttachments(Long initiativeId, LoginUserHolder loginUserHolder) {
+    public AttachmentUtil.Attachments findAllAttachments(Long initiativeId, LoginUserHolder loginUserHolder) {
         loginUserHolder.assertViewRightsForInitiative(initiativeId);
-        return new Attachments(attachmentDao.findAllAttachments(initiativeId));
+        return new AttachmentUtil.Attachments(attachmentDao.findAllAttachments(initiativeId));
     }
 
     String getAttachmentDir() { // For tests
@@ -299,36 +253,6 @@ public class AttachmentService {
 
     private void addAttachmentValidationError(BindingResult bindingResult, String message, String argument) {
         bindingResult.addError(new FieldError("attachment", "image", "", false, new String[]{message}, new String[]{argument}, message));
-    }
-
-    public static class Attachments {
-        private final List<AttachmentFileInfo> images = Lists.newArrayList();
-        private final List<AttachmentFileInfo> pdfs = Lists.newArrayList();
-
-        public Attachments(List<AttachmentFileInfo> attachments) {
-            for (AttachmentFileInfo attachment : attachments) {
-                if (attachment.isPdf()) {
-                    pdfs.add(attachment);
-                }
-                else {
-                    images.add(attachment);
-                }
-            }
-        }
-
-        public List<AttachmentFileInfo> getImages() {
-            return images;
-        }
-
-        public List<AttachmentFileInfo> getPdfs() {
-            return pdfs;
-        }
-
-        public List<AttachmentFileInfo> getAll() {
-            List<AttachmentFileInfo> all = Lists.newArrayList(images);
-            all.addAll(pdfs);
-            return all;
-        }
     }
 
 

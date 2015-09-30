@@ -1,5 +1,6 @@
 package fi.om.municipalityinitiative.dto.service;
 
+import com.google.common.net.MediaType;
 import org.joda.time.DateTime;
 
 public abstract class AttachmentFileBase {
@@ -14,4 +15,15 @@ public abstract class AttachmentFileBase {
 
     public abstract DateTime getCreateTime();
 
+    public abstract boolean isPdf();
+
+    public abstract  boolean isAccepted();
+
+    public abstract String getFileType();
+
+    public abstract String getDescription();
+
+    public static boolean isPdfContentType(String contentType) {
+        return contentType.equals(MediaType.PDF.toString());
+    }
 }

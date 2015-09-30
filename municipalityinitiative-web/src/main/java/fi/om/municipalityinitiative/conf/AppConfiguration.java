@@ -228,7 +228,7 @@ public class AppConfiguration {
 
     @Bean
     public DecisionService decisionService() {
-        return new DecisionService();
+        return new DecisionService(env.getRequiredProperty(PropertyNames.decisionAttachmentDir));
     }
 
     @Bean

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface DecisionAttachmentDao {
 
-    void addAttachment(Long initiativeId, DecisionAttachmentFile attachment);
+    Long addAttachment(Long initiativeId, DecisionAttachmentFile attachment);
 
     void removeAttachment(Long attachmentId);
 

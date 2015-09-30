@@ -378,11 +378,7 @@
         <div class="initiative-content-row last">
             <h2><@u.message "municipality.decision" /></h2>
             <p>${decisionInfo.getDecisionText()}</p>
-            <ul>
-                <#list decisionInfo.getAttachments() as attachment>
-                    <li>${attachment.fileName}</li>
-                </#list>
-            </ul>
+            <@attachmentsView attachments=decisionInfo.attachments manage=true />
         </div>
     </div>
 </#macro>

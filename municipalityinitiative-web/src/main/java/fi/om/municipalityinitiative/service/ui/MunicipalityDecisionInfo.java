@@ -1,15 +1,13 @@
 package fi.om.municipalityinitiative.service.ui;
 
 
-import fi.om.municipalityinitiative.dto.service.DecisionAttachmentFile;
-
-import java.util.List;
+import fi.om.municipalityinitiative.service.AttachmentUtil;
 
 public class MunicipalityDecisionInfo {
 
     private String decisionText;
 
-    private List<DecisionAttachmentFile> attachments;
+    private AttachmentUtil.Attachments attachments;
 
     public String getDecisionText() {
         return decisionText;
@@ -19,15 +17,15 @@ public class MunicipalityDecisionInfo {
         this.decisionText = decisionText;
     }
 
-    public List<DecisionAttachmentFile> getAttachments() {
+    public AttachmentUtil.Attachments getAttachments() {
         return attachments;
     }
 
-    public void setAttachments(List<DecisionAttachmentFile> attachments) {
+    public void setAttachments(AttachmentUtil.Attachments attachments) {
         this.attachments = attachments;
     }
 
-    public static MunicipalityDecisionInfo build(String decisionText, List<DecisionAttachmentFile> attachments) {
+    public static MunicipalityDecisionInfo build(String decisionText, AttachmentUtil.Attachments attachments) {
         MunicipalityDecisionInfo municipalityDecisionInfo =  new MunicipalityDecisionInfo();
         municipalityDecisionInfo.setDecisionText(decisionText);
         municipalityDecisionInfo.setAttachments(attachments);

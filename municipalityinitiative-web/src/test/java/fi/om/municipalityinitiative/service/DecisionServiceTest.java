@@ -7,6 +7,7 @@ import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityDecisionDto;
 import fi.om.municipalityinitiative.dto.user.MunicipalityUserHolder;
 import fi.om.municipalityinitiative.dto.user.User;
+import fi.om.municipalityinitiative.exceptions.FileUploadException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
 import fi.om.municipalityinitiative.service.ui.NormalInitiativeService;
 import org.aspectj.util.FileUtil;
@@ -66,11 +67,11 @@ public class DecisionServiceTest extends ServiceIntegrationTestBase  {
 
         } finally {
 
-            List<DecisionAttachmentFile> decisionAttachments = decisionService.getDecisionAttachments(initiativeId);
+            AttachmentUtil.Attachments decisionAttachments = decisionService.getDecisionAttachments(initiativeId);
 
-            assertThat(decisionAttachments.size(), is(1));
+            assertThat(decisionAttachments.getAll().size(), is(1));
 
-            DecisionAttachmentFile fileInfo = decisionAttachments.get(0);
+            DecisionAttachmentFile fileInfo = (DecisionAttachmentFile)decisionAttachments.getAll().get(0);
 
             assertThat(fileInfo.getFileType(), is(FILE_TYPE));
 
@@ -105,23 +106,23 @@ public class DecisionServiceTest extends ServiceIntegrationTestBase  {
             e.printStackTrace();
         } finally {
 
-            List<DecisionAttachmentFile> decisionAttachments = decisionService.getDecisionAttachments(initiativeId);
+            AttachmentUtil.Attachments decisionAttachments = decisionService.getDecisionAttachments(initiativeId);
 
-            assertThat(decisionAttachments.size(), is(1));
+            assertThat(decisionAttachments.getAll().size(), is(1));
 
-            DecisionAttachmentFile fileInfo = decisionAttachments.get(0);
+            DecisionAttachmentFile fileInfo = (DecisionAttachmentFile) decisionAttachments.getAll().get(0);
 
             decisionService.removeAttachmentFromDecision(fileInfo.getAttachmentId(), initiativeId);
 
             decisionAttachments = decisionService.getDecisionAttachments(initiativeId);
 
-            assertThat(decisionAttachments.size(), is(0));
+            assertThat(decisionAttachments.getAll().size(), is(0));
 
 
         }
     }
 
-    private MunicipalityDecisionDto createDefaultMunicipalityDecisionWithAttachment(Long initiativeId) throws IOException, InvalidAttachmentException {
+    private MunicipalityDecisionDto createDefaultMunicipalityDecisionWithAttachment(Long initiativeId) throws IOException, InvalidAttachmentException, FileUploadException {
         MunicipalityDecisionDto decision = new MunicipalityDecisionDto();
 
         List<MultipartFile> files = new ArrayList<MultipartFile>();

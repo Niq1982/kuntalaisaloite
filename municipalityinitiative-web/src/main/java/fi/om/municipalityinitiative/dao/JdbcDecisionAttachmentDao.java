@@ -18,8 +18,8 @@ public class JdbcDecisionAttachmentDao implements DecisionAttachmentDao {
     private PostgresQueryFactory queryFactory;
 
     @Override
-    public void addAttachment(Long initiativeId, DecisionAttachmentFile attachment) {
-        queryFactory.insert(decisionAttachment)
+    public Long addAttachment(Long initiativeId, DecisionAttachmentFile attachment) {
+        return queryFactory.insert(decisionAttachment)
                 .set(decisionAttachment.initiativeId, initiativeId)
                 .set(decisionAttachment.description, attachment.getFileName())
                 .set(decisionAttachment.contentType, attachment.getContentType())

@@ -3,6 +3,7 @@ package fi.om.municipalityinitiative.web.controller;
 import fi.om.municipalityinitiative.dto.ui.InitiativeViewInfo;
 import fi.om.municipalityinitiative.dto.ui.MunicipalityDecisionDto;
 import fi.om.municipalityinitiative.dto.user.MunicipalityUserHolder;
+import fi.om.municipalityinitiative.exceptions.FileUploadException;
 import fi.om.municipalityinitiative.exceptions.InvalidAttachmentException;
 import fi.om.municipalityinitiative.service.AttachmentService;
 import fi.om.municipalityinitiative.service.DecisionService;
@@ -85,6 +86,8 @@ public class MunicipalityDecisionController extends BaseController{
         try {
             decisionService.setDecision(decision, initiativeId);
         } catch (InvalidAttachmentException e) {
+            e.printStackTrace();
+        } catch (FileUploadException e) {
             e.printStackTrace();
         }
         MunicipalityUserHolder loginUserHolder = userService.getRequiredMunicipalityUserHolder(request);

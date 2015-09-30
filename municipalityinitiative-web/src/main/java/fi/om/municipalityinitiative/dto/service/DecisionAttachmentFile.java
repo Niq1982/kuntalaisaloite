@@ -53,8 +53,24 @@ public class DecisionAttachmentFile extends AttachmentFileBase{
         return createTime;
     }
 
+    @Override
+    public boolean isPdf() {
+        return isPdfContentType(contentType);
+    }
+
+    @Override
+    public boolean isAccepted() {
+        return true;
+    }
+
+    @Override
     public String getFileType() {
         return fileType;
+    }
+
+    @Override
+    public String getDescription() {
+        return fileName;
     }
 
     public void setFileType(String fileType) {

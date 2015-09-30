@@ -5,7 +5,6 @@ import fi.om.municipalityinitiative.dto.Author;
 import fi.om.municipalityinitiative.dto.InitiativeSearch;
 import fi.om.municipalityinitiative.dto.service.*;
 import fi.om.municipalityinitiative.dto.ui.*;
-import fi.om.municipalityinitiative.service.AttachmentService;
 import fi.om.municipalityinitiative.service.AttachmentUtil;
 import fi.om.municipalityinitiative.service.ui.MunicipalityDecisionInfo;
 import fi.om.municipalityinitiative.util.Maybe;
@@ -144,7 +143,7 @@ public final class ViewGenerator {
                         .build());
     }
 
-    public static ViewGenerator moderationView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, AttachmentService.Attachments allAttachments, List<ReviewHistoryRow> reviewHistory, Maybe<ReviewHistoryDiff> reviewHistoryDiff, List<Location> locations) {
+    public static ViewGenerator moderationView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, AttachmentUtil.Attachments allAttachments, List<ReviewHistoryRow> reviewHistory, Maybe<ReviewHistoryDiff> reviewHistoryDiff, List<Location> locations) {
         return new ViewGenerator(MODERATION_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
@@ -158,7 +157,7 @@ public final class ViewGenerator {
         );
     }
 
-    public static ViewGenerator municipalityDecisionView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors,  AttachmentService.Attachments allAttachments, Maybe<MunicipalityDecisionInfo> decisionInfoMaybe){
+    public static ViewGenerator municipalityDecisionView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors,  AttachmentUtil.Attachments allAttachments, Maybe<MunicipalityDecisionInfo> decisionInfoMaybe){
         return new ViewGenerator("municipality-decision-view",
                 new AttributeBuilder()
                     .add("initiative", initiativeInfo)
@@ -171,7 +170,7 @@ public final class ViewGenerator {
                 );
         }
 
-    public static ViewGenerator managementView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, AttachmentService.Attachments attachments, ParticipantCount participantCount, List<Location> locations, CommentUIDto commentUIDto) {
+    public static ViewGenerator managementView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, List<? extends Author> authors, AttachmentUtil.Attachments attachments, ParticipantCount participantCount, List<Location> locations, CommentUIDto commentUIDto) {
         return new ViewGenerator(MANAGEMENT_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
@@ -185,7 +184,7 @@ public final class ViewGenerator {
         );
     }
     
-    public static ViewGenerator manageAttachmentsView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, AttachmentService.Attachments attachments, AttachmentCreateDto attachmentCreateDto, AttachmentUtil.ImageProperties imageProperties) {
+    public static ViewGenerator manageAttachmentsView(InitiativeViewInfo initiativeInfo, ManagementSettings managementSettings, AttachmentUtil.Attachments attachments, AttachmentCreateDto attachmentCreateDto, AttachmentUtil.ImageProperties imageProperties) {
         return new ViewGenerator(MANAGE_ATTACHMENTS_VIEW,
                 new AttributeBuilder()
                         .add("initiative", initiativeInfo)
