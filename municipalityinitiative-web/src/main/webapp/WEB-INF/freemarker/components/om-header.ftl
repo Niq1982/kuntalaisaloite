@@ -7,7 +7,7 @@
 	<#else>
 		var showSuperSearch = false;
 	</#if>
-</script> 
+</script>
 
 <#if superSearchEnabled>
 	<style>
